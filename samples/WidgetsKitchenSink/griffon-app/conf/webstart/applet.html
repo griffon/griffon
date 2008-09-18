@@ -13,6 +13,7 @@
                       archive:'@appletJars@',
                       width:'640', height:'480'} ;
     var parameters = {fontSize:16,
+                      java_arguments: "-Djnlp.packEnabled=true",
                       jnlp_href:'@griffonAppCodebase@/applet.jnlp',
                       draggable:'true',
                       image:'griffon.jpeg',
@@ -24,9 +25,10 @@
 </script>
 <!--
 <APPLET CODEBASE='@griffonAppCodebase@'
-	    CODE='griffon.applet.GriffonApplet.class'
+        CODE='griffon.applet.GriffonApplet.class'
         ARCHIVE='@appletJars@'
         WIDTH='640' HEIGHT='480'>
+    <PARAM NAME="java_arguments" VALUE="-Djnlp.packEnabled=true">
     <PARAM NAME='jnlp_href' VALUE='@griffonAppCodebase@/applet.jnlp'>
     <PARAM NAME='dragggable' VALUE='true'>
     <PARAM NAME='image' VALUE='griffon.jpeg'>

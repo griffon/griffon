@@ -28,6 +28,7 @@ Ant.property(environment:"env")
 griffonHome = Ant.antProject.properties."env.GRIFFON_HOME"
 
 includeTargets << new File ( "${griffonHome}/scripts/Init.groovy" )
+includeTargets << new File( "${griffonHome}/scripts/CreateIntegrationTest.groovy")
 
 target ('default': "Creates a new MVC triad") {
     depends(checkVersion)
@@ -37,9 +38,9 @@ target ('default': "Creates a new MVC triad") {
 target (createMVC : "Creates a new MVC Triad") {
 
     typeName = "Model"
-	artifactName = "Model"
-	artifactPath = "griffon-app/models"
-	createArtifact()
+    artifactName = "Model"
+    artifactPath = "griffon-app/models"
+    createArtifact()
 
     typeName = "View"
     artifactName = "View"
@@ -50,6 +51,7 @@ target (createMVC : "Creates a new MVC Triad") {
     artifactName = "Controller"
     artifactPath = "griffon-app/controllers"
     createArtifact()
+    createTestSuite()
 
     //TODO tweak Application.groovy
 }

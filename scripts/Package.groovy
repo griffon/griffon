@@ -178,9 +178,9 @@ target( packageApp : "Implementation of package target") {
     //loadPlugins()
     //generateWebXml()
 
+    checkKey()
     copyLibs()
     jarFiles()
-    signFiles()
     generateJNLP()
     event("PackagingEnd",[])
 }
@@ -216,21 +216,27 @@ target(jarFiles: "Jar up the package files") {
 
     Ant.mkdir(dir:jardir)
 
-    Ant.jar(destfile:"$jardir/${config.griffon.jars.jarName}") {
+    String destFileName = "$jardir/${config.griffon.jars.jarName}"
+    Ant.jar(destfile:destFileName) {
         fileset(dir:classesDirPath)
         fileset(dir:i18nDir)
     }
-    //TODO pack200 these files as well...
-    //TODO also unpack, so code signing will work.
+    griffonCopyDist(destFileName, jardir, true)
 }
 
 target(copyLibs: "Copy Library Files") {
     jardir = Ant.antProject.replaceProperties(config.griffon.jars.destDir)
 
-    Ant.copy(todir:jardir) { fileset(dir:"${griffonHome}/dist", includes:"griffon-rt-*.jar") }
-    Ant.copy(todir:jardir) { fileset(dir:"${griffonHome}/lib/", includes:"groovy-all-*.jar") }
+    fileset(dir:"${griffonHome}/dist", includes:"griffon-rt-*.jar").each {
+        griffonCopyDist(it.toString(), jardir)
+    }
+    fileset(dir:"${griffonHome}/lib", includes:"groovy-all-*.jar").each {
+        griffonCopyDist(it.toString(), jardir)
+    }
 
-    Ant.copy(todir:jardir) { fileset(dir:"${basedir}/lib/", includes:"*.jar") }
+    fileset(dir:"${basedir}/lib/", includes:"*.jar").each {
+        griffonCopyDist(it.toString(), jardir)
+    }
     Ant.copy(todir:jardir) { fileset(dir:"${basedir}/lib/", includes:"*.dll") }
     Ant.copy(todir:jardir) { fileset(dir:"${basedir}/lib/", includes:"*.so") }
 
@@ -238,9 +244,50 @@ target(copyLibs: "Copy Library Files") {
     //TODO also unpack, so code signing will work.
 }
 
-target(signFiles: "Sign all of the files") {
-    checkKey()
+def griffonCopyDist(jarname, targetDir, boolean force = false) {
+    File srcFile = new File(jarname);
+    if (!srcFile.exists()) {
+        event("StatusFinal", ["Source jar does not exist: ${srcFile.getName()}"])
+        exit(1)
+    }
+    File targetFile = new File(targetDir + File.separator + srcFile.getName());
 
+    // first do a copy, but not
+    //  if sourcedir == targetdir
+    //  if source older than newer
+
+    // no need to check for identical files, if a is b, a.lastModified == b.lastModifed
+    // no need to check if target exists, last modifed on a non-existant file is 0L
+    // but if we are not lazy, copy anyway
+    long originalLastMod = targetFile.lastModified()
+    force = force || !(config.signingkey?.params?.lazy)
+
+    Ant.copy(file:srcFile, toFile:targetFile, overwrite:force)
+
+    if (!force && targetFile.lastModified() <= originalLastMod) {
+        // nothing changed and we aren't forcing anything
+        return
+    }
+
+    //TODO strip old signatures?
+
+    def packOptions = [
+        '-S-1', // bug fix, signing large (1MB+) files will validate
+        '-mlatest', // smaller files, set modification time on the files to latest
+        '-Htrue', // smaller files, always use DEFLATE hint
+        '-O', // smaller files, reorder files if it makes things smaller
+    ]
+    // repack so we can sign pack200
+    Ant.exec(executable:'pack200') {
+        for (option in packOptions) {
+            arg(value:option)
+        }
+        arg(value:'--repack')
+        arg(value:targetFile)
+    }
+
+
+    // sign jar
     Map signJarParams = [:]
     for (key in ['alias', 'storepass', 'keystore', 'storetype', 'keypass', 'sigfile', 'verbose', 'internalsf', 'sectionsonly', 'lazy', 'maxmemory', 'preservelastmodified', 'tsaurl', 'tsacert']) {
         if (config.signingkey.params."$key") {
@@ -249,8 +296,24 @@ target(signFiles: "Sign all of the files") {
     }
 
     Ant.signjar(signJarParams) {
-        fileset(dir:jardir, includes:"*.jar")
+        fileset(dir:targetDir, includes:"*.jar")
     }
+
+    // do the for-real packing
+    Ant.exec(executable:'pack200') {
+        for (option in packOptions) {
+            arg(value:option)
+        }
+        arg(value:"${targetFile}.pack.gz")
+        arg(value:targetFile)
+    }
+
+    //TODO validate?
+
+    //TODO versioning?
+    // check for version number
+    //   copy to version numberd file if version # available
+
 }
 
 target(generateJNLP:"Generates the JNLP File") {
