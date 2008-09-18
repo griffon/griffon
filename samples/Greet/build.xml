@@ -1,0 +1,41 @@
+<project name="greet" default="test">
+
+    <condition property="griffon" value="griffon.bat">
+        <os family="windows"/>
+    </condition>
+    <property name="griffon" value="griffon" />
+
+	<!-- ================================= 
+          target: clean              
+         ================================= -->
+    <target name="clean" description="--> Cleans a Griffon application">
+		<exec executable="${griffon}" failonerror="true">
+			<arg value="clean"/>
+		</exec>                               
+    </target>
+
+	<!-- ================================= 
+          target: war              
+         ================================= -->
+    <target name="war" description="--> Creates a WAR of a Griffon application">
+		<exec executable="${griffon}" failonerror="true">
+			<arg value="war"/>
+		</exec>                               
+    </target>
+	
+	<!-- ================================= 
+          target: test              
+         ================================= -->
+    <target name="test" description="--> Run a Griffon applications unit tests">
+		<exec executable="${griffon}" failonerror="true">
+			<arg value="test-app"/>
+		</exec>                               
+    </target>
+	
+	<!-- ================================= 
+          target: deploy              
+         ================================= -->
+    <target name="deploy" depends="war" description="--> The deploy target (initially empty)">
+        <!-- TODO -->
+    </target>
+</project>

@@ -1,0 +1,32 @@
+<project name="griffon-checkstyle">
+    <taskdef resource="checkstyletask.properties"
+             classpath="cruise/checkstyle/lib/checkstyle-all-4.3.jar"/>
+    <target name="checkstyle" description="Generate checkstyle output.">
+        <!--<delete dir="${griffon.checkstyle.output}"/>-->
+        <!--<mkdir dir="${griffon.checkstyle.output}"/>-->
+        <!--<checkstyle config="cruise/checkstyle/sun_checks.xml"-->
+                    <!--failureProperty="checkstyle.failure"-->
+                    <!--failOnViolation="false">-->
+                    <!---->
+            <!--<formatter type="xml" tofile="${griffon.checkstyle.output}/checkstyle_report.xml"/>-->
+            <!---->
+            <!--<fileset dir="${griffon.src.commons}" includes="**/*.java"/>-->
+            <!--<fileset dir="${griffon.src.web}" includes="**/*.java"/>-->
+            <!--<fileset dir="${griffon.src.war}" includes="**/*.java"/>-->
+            <!--<fileset dir="${griffon.src.persistence}" includes="**/*.java"/>-->
+            <!--<fileset dir="${griffon.src.scaffolding}" includes="**/*.java"/>-->
+            <!--<fileset dir="${griffon.src.tiger}" includes="**/*.java"/>-->
+
+            <!--<fileset dir="${griffon.test.src.web}" includes="**/*.java"/>-->
+            <!--<fileset dir="${griffon.test.src.persistence}" includes="**/*.java"/>-->
+            <!--<fileset dir="${griffon.test.src.scaffolding}" includes="**/*.java"/>-->
+            <!--<fileset dir="${griffon.test.src.commons}" includes="**/*.java"/>-->
+            <!--<fileset dir="${griffon.test.src.web}" includes="**/*.java"/>-->
+
+        <!--</checkstyle>-->
+        <!--<style in="${griffon.checkstyle.output}/checkstyle_report.xml"-->
+               <!--out="${griffon.checkstyle.output}/checkstyle_report.html"-->
+               <!--style="cruise/checkstyle/checkstyle-noframes.xsl"/>-->
+    </target>
+
+</project>

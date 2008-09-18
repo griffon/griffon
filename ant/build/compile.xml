@@ -1,0 +1,73 @@
+<project name="griffon-compile">
+
+    <taskdef name="groovyc"  classname="org.codehaus.groovy.ant.Groovyc" classpathref="classpath" />
+    <taskdef name="ubercompile" classname="org.codehaus.groovy.ant.UberCompileTask" classpathref="classpath" />
+
+    <target name="build-init">
+        <mkdir dir="${griffon.build}"/>
+        <mkdir dir="${griffon.test.build}"/>
+        <mkdir dir="${griffon.test.reports}"/>
+        <mkdir dir="${griffon.dist}"/>
+        <!--<mkdir dir="${griffon.stubs}" />-->
+    </target>
+
+    <target name="build" depends="build-init" description="compile Java and Groovy sources" >
+
+        <copy todir="${griffon.build}">
+            <fileset dir="${griffon.src.commons}" includes="**/*.properties" />
+            <!--<fileset dir="${griffon.src.web}" includes="**/*.properties" />-->
+            <!--<fileset dir="${griffon.src.persistence}" includes="**/*.properties" />-->
+            <!--<fileset dir="${griffon.src.scaffolding}" includes="**/*.properties" />-->
+            <!--<fileset dir="${griffon.src.groovy}" includes="**/*.properties" />-->
+            <fileset dir="${griffon.src.main}" includes="**/*.properties" />
+        </copy>
+
+        <groovyc fork="true" includeantruntime="false" destdir="${griffon.build}"  encoding="UTF-8">
+            <classpath>
+                <pathelement location="${griffon.build}"/>
+                <path refid="classpath"/>
+            </classpath>
+            <src path="${griffon.src.commons}"/>
+            <!--<src path="${griffon.src.web}"/>-->
+            <!--<src path="${griffon.src.persistence}"/>-->
+            <!--<src path="${griffon.src.scaffolding}"/>-->
+            <!--<src path="${griffon.src.groovy}"/>-->
+            <src path="${griffon.src.main}"/>
+
+            <javac deprecation="on" debug="yes" source="1.5" target="1.5" />
+        </groovyc>
+
+
+        <mkdir dir="${griffon.build}/META-INF"  />
+        <manifest file="${griffon.build}/META-INF/MANIFEST.MF">
+          <attribute name="Built-By" value="${user.name}"/>
+          <attribute name="Implementation-Title" value="griffon"/>
+          <attribute name="Implementation-Version" value="${griffon.version}"/>
+          <attribute name="Implementation-Vendor" value="griffon.org"/>
+        </manifest>
+
+        <!--<antcall target="build:java5" />-->
+    </target>
+
+    <!--<target name="build:checkj5">-->
+        <!--<echo>Building Java 5 code for Java version: ${ant.java.version}</echo>-->
+        <!--<condition property="is.java.5">-->
+            <!--<or>-->
+                <!--<equals arg1="${ant.java.version}" arg2="1.5"/>-->
+                <!--<equals arg1="${ant.java.version}" arg2="1.6"/>-->
+                <!--<equals arg1="${ant.java.version}" arg2="1.7"/>-->
+            <!--</or>-->
+        <!--</condition>-->
+    <!--</target>-->
+
+    <!--<target name="build:java5" depends="build:checkj5" if="is.java.5">-->
+        <!--build java 5 sources-->
+        <!--<javac srcdir="${griffon.src.tiger}" destdir="${griffon.build}" debug="on" deprecation="on" optimize="off">-->
+               <!--<classpath>-->
+              <!--<pathelement path="${griffon.build}"/>-->
+               <!--</classpath>  -->
+               <!--<classpath refid="classpath"/>        -->
+        <!--</javac>-->
+    <!--</target>-->
+
+</project>

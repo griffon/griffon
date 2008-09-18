@@ -1,0 +1,62 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+        "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+  <title></title>
+
+<script>
+// from http://weblogs.java.net/blog/joshy/archive/2008/08/a_better_applet_1.html
+function generateInlineAppletTag(appletID, screenshotID) {
+    var attributes = {
+                      codebase:'@griffonAppCodebase@',
+                      code:'griffon.applet.GriffonApplet.class',
+                      archive:'@appletJars@',
+                      width:'320', height:'640'} ;
+    var parameters = {fontSize:16,
+                      jnlp_href:'@griffonAppCodebase@/applet.jnlp',
+                      draggable:'true',
+                      image:'griffon.jpeg',
+                      boxmessage:'Loading @griffonAppName@',
+                      boxbgcolor:'#FFFFFF', boxfgcolor:'#000000',
+                      codebase_lookup: 'false'} ;
+    
+    
+    var appletTag = document.createElement("applet");
+    
+    for (var attribute in attributes) {
+        appletTag.setAttribute(attribute,attributes[attribute]);
+    }
+    
+    if (parameters != 'undefined' && parameters != null) {
+        for (var parameter in parameters) {
+            var param = document.createElement("PARAM");
+            param.setAttribute("name",parameter);
+            param.setAttribute("value",parameters[parameter]);
+            appletTag.appendChild(param);
+        }
+    }
+    
+    
+    var bodyRef = document.getElementById(appletID);
+    var screenshot = document.getElementById(screenshotID);
+    bodyRef.removeChild(screenshot);
+    bodyRef.appendChild(appletTag);
+}
+</script>
+</head>
+<body>
+<div id="appletDiv">
+<a id="screenshot1" href="javascript:generateInlineAppletTag('appletDiv','screenshot1');"><img src="greetfake.jpg" border="0"/></a>
+</div>
+
+<!--
+<APPLET CODEBASE='@griffonAppCodebase@'
+	CODE='griffon.applet.GriffonApplet.class'
+        ARCHIVE='@appletJars@'
+        WIDTH='320' HEIGHT='640'>
+    <PARAM NAME='jnlp_href' VALUE='@griffonAppCodebase@/applet.jnlp'>
+    <PARAM NAME='codebase_lookup' VALUE='false'>
+</APPLET>
+-->
+</body>
+</html>

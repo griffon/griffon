@@ -1,0 +1,172 @@
+<project name="griffon-release">
+
+    <target name="create-tmp-release-dir">
+        <delete dir="${dir.location}" failonerror="false" quiet="true"/>
+        <mkdir dir="${dir.location}"/>
+    </target>
+
+    <target name="copy-dir">
+        <mkdir dir="${dir.location}"/>
+        <copy todir="${dir.destination}" failonerror="true" overwrite="true" verbose="false">
+            <fileset dir="${dir.location}" excludes="**/CVS/**,${dir.excludes}"/>
+        </copy>
+    </target>
+
+    <target name="copy-common-release-content">
+        <antcall target="copy-dir">
+            <param name="dir.excludes" value=""/>
+            <param name="dir.location" value="lib"/>
+            <param name="dir.destination" value="${release.dir}/lib"/>
+        </antcall>
+        <antcall target="copy-dir">
+            <param name="dir.excludes" value=""/>
+            <param name="dir.location" value="bin"/>
+            <param name="dir.destination" value="${release.dir}/bin"/>
+        </antcall>
+        <antcall target="copy-dir">
+            <param name="dir.excludes" value=""/>
+            <param name="dir.location" value="ant"/>
+            <param name="dir.destination" value="${release.dir}/ant"/>
+        </antcall>
+        <antcall target="copy-dir">
+            <param name="dir.excludes" value=""/>
+            <param name="dir.location" value="media"/>
+            <param name="dir.destination" value="${release.dir}/media"/>
+        </antcall>
+        <antcall target="copy-dir">
+            <param name="dir.excludes" value=""/>
+            <param name="dir.location" value="scripts"/>
+            <param name="dir.destination" value="${release.dir}/scripts"/>
+        </antcall>
+        <antcall target="copy-dir">
+            <param name="dir.excludes" value=""/>
+            <param name="dir.location" value="conf"/>
+            <param name="dir.destination" value="${release.dir}/conf"/>
+        </antcall>
+        <antcall target="copy-dir">
+            <param name="dir.excludes" value="*/griffon-app/conf/keys/**,*/target/**"/>
+            <param name="dir.location" value="samples"/>
+            <param name="dir.destination" value="${release.dir}/samples"/>
+        </antcall>
+        <antcall target="copy-dir">
+            <param name="dir.excludes" value=""/>
+            <param name="dir.location" value="doc"/>
+            <param name="dir.destination" value="${release.dir}/doc"/>
+        </antcall>
+        <copy todir="${release.dir}">
+            <fileset dir=".">
+                <include name="build.xml"/>
+                <include name="build.properties"/>
+                <include name="LICENSE"/>
+                <include name="INSTALL"/>
+                <include name="README"/>
+            </fileset>
+        </copy>
+    </target>
+
+    <target name="copy-exclusive-binary-release-content">
+        <antcall target="copy-dir">
+            <param name="dir.location" value="src/griffon"/>
+            <param name="dir.destination" value="${release.dir}/src/griffon"/>
+        </antcall>
+        <antcall target="copy-dir">
+            <param name="dir.location" value="src/war"/>
+            <param name="dir.destination" value="${release.dir}/src/war"/>
+        </antcall>
+        <copy todir="${release.dir}/dist">
+            <fileset dir="${griffon.dist}" includes="*.jar">
+                <exclude name="*.zip"/>
+                <exclude name="*.tar.gz"/>
+            </fileset>
+        </copy>
+    </target>
+
+    <target name="copy-exclusive-source-release-content">
+        <antcall target="copy-dir">
+            <param name="dir.location" value="cruise/coverage/lib"/>
+            <param name="dir.destination" value="${release.dir}/cruise/coverage/lib"/>
+        </antcall>
+        <antcall target="copy-dir">
+            <param name="dir.location" value="src"/>
+            <param name="dir.destination" value="${release.dir}/src"/>
+        </antcall>
+        <antcall target="copy-dir">
+            <param name="dir.location" value="test"/>
+            <param name="dir.destination" value="${release.dir}/test"/>
+        </antcall>
+        <copy todir="${release.dir}/dist">
+            <fileset dir="${griffon.dist}" includes="*.jar">
+                <exclude name="*.zip"/>
+                <exclude name="*.tar.gz"/>
+            </fileset>
+        </copy>
+    </target>
+
+    <target name="create-archives">
+        <delete file="${archive}.zip" failonerror="true"/>
+        <zip basedir="${archive.dir}" destfile="${griffon.dist}/${archive}.zip"/>
+        <delete file="${archive}.tar.gz" failonerror="true"/>
+        <tar destfile="dist/${archive}.tar.gz" compression="gzip" longfile="gnu">
+             <!--Here we need to base on archive.dir so the tar has the griffon-VERSION/ prefix dir
+                 but need to include/exclude files relative to this prefix dir or they don't
+                 get found, obviously-->
+            <tarfileset dir="${archive.dir}">
+                <exclude name="${griffon.release.base.dir.name}/bin/cygriffon"/>
+                <exclude name="${griffon.release.base.dir.name}/bin/griffon"/>
+                <exclude name="${griffon.release.base.dir.name}/bin/griffon-debug"/>
+                <exclude name="${griffon.release.base.dir.name}/bin/griffon-0.4"/>
+                <exclude name="${griffon.release.base.dir.name}/bin/startgriffon"/>
+                <exclude name="${griffon.release.base.dir.name}/ant/bin/ant"/>
+            </tarfileset>
+            <tarfileset dir="${archive.dir}" mode="755">
+                <include name="${griffon.release.base.dir.name}/bin/cygriffon"/>
+                <include name="${griffon.release.base.dir.name}/bin/griffon"/>
+                <include name="${griffon.release.base.dir.name}/bin/griffon-debug"/>
+                <include name="${griffon.release.base.dir.name}/ant/bin/ant"/>
+                <include name="${griffon.release.base.dir.name}/bin/griffon-0.4"/>
+                <include name="${griffon.release.base.dir.name}/bin/startgriffon"/>
+            </tarfileset>
+        </tar>
+    </target>
+
+    <target name="create-release-package">
+        <property name="griffon.release" value="${release.name}"/>
+        <property name="griffon.release.base.dir.name" value="griffon-${griffon.version}"/>
+        <property name="griffon.release.dir" location="tmp/${griffon.release.base.dir.name}"/>
+        <antcall target="create-tmp-release-dir">
+            <param name="dir.location" value="${griffon.release.dir}"/>
+        </antcall>
+        <antcall target="copy-common-release-content">
+            <param name="release.dir" value="${griffon.release.dir}"/>
+        </antcall>
+        <antcall target="create-release-package:extra-target"/>
+        <antcall target="create-archives">
+            <param name="archive" value="${griffon.release}"/>
+            <param name="archive.dir" value="tmp"/>
+            <param name="archive.release.dir" value="tmp"/>
+        </antcall>
+        <delete dir="${griffon.release.dir}" failonerror="true"/>
+    </target>
+
+    <target name="create-release-package:extra-target" if="extra.target">
+        <echo>Copying extra binary release content</echo>
+        <antcall target="${extra.target}">
+            <param name="release.dir" value="${griffon.release.dir}"/>
+        </antcall>
+    </target>
+
+    <target name="create-binary-release">
+        <antcall target="create-release-package">
+            <param name="release.name" value="${griffon.dist.binary}"/>
+            <param name="extra.target" value="copy-exclusive-binary-release-content"/>
+        </antcall>
+    </target>
+
+    <target name="create-source-release">
+        <antcall target="create-release-package">
+            <param name="release.name" value="${griffon.dist.source}"/>
+            <param name="extra.target" value="copy-exclusive-source-release-content"/>
+        </antcall>
+    </target>
+
+</project>

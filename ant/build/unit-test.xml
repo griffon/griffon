@@ -1,0 +1,137 @@
+<project name="griffon-unit-test">
+                 
+  <condition property="_skipTests_">
+    <istrue value="${skipTests}"/>
+  </condition>
+
+    <target name="test-with-coverage" depends="build-test, instrument-for-coverage, run-test,test-report,coverage-report" description="Compile and Run the unit tests while measuring coverage">
+        <!--<fail if="griffon.test.failure">The tests failed. Have a look at ${griffon.test.reports}</fail>-->
+    </target>
+    <target name="test" depends="clean-instrumented, run-test,test-report" unless="_skipTests_" description="Compile and Run the unit tests plainly">
+        <fail if="griffon.test.failure">The tests failed. Have a look at ${griffon.test.reports}</fail>
+    </target>
+
+    <!--<taskdef resource="tasks.properties">-->
+        <!--<classpath>-->
+            <!--<pathelement path="${griffon.build}" />-->
+            <!--<fileset dir="cruise/coverage/lib" includes="*.jar" />-->
+        <!--</classpath>-->
+        <!--<classpath refid="classpath" />-->
+    <!--</taskdef>-->
+    <!--<taskdef name="groovyc" classname="org.codehaus.groovy.ant.Groovyc">-->
+        <!--<classpath refid="classpath" />-->
+    <!--</taskdef>-->
+
+
+    <property name="coverage.build" value="cruise/coverage/build/instrumented-classes" />
+    <property name="coverage.report" value="cruise/coverage/report" />
+
+    <target name="clean-instrumented">
+        <!--<delete quiet="true" dir="${coverage.build}" />-->
+        <!--<mkdir dir="${coverage.build}" />-->
+    </target>
+
+    <target name="instrument-for-coverage" depends="clean-instrumented">
+        <!--<delete file="cobertura.ser" quiet="true" />-->
+        <!--<cobertura-instrument todir="${coverage.build}">-->
+            <!--<fileset dir="${griffon.build}" includes="**/*.class" />-->
+        <!--</cobertura-instrument>-->
+    </target>
+
+    <target name="coverage-report">
+        <!--<delete quiet="true">-->
+            <!--<fileset dir="${coverage.report}" />-->
+        <!--</delete>-->
+        <!--<mkdir dir="${coverage.report}" />-->
+        <!--<cobertura-report format="html" destdir="cruise/coverage/report">-->
+            <!--<fileset dir="${griffon.src.commons}" />-->
+            <!--<fileset dir="${griffon.src.groovy}" />-->
+            <!--<fileset dir="${griffon.src.web}" />-->
+            <!--<fileset dir="${griffon.src.persistence}" />-->
+            <!--<fileset dir="${griffon.src.scaffolding}" />-->
+        <!--</cobertura-report>-->
+    </target>
+
+    <target name="build-test" depends="build">
+
+        <groovyc destdir="${griffon.test.build}" fork="true" >
+            <src path="${griffon.test.src.commons}" />
+            <!--<src path="${griffon.test.src.web}" />-->
+            <!--<src path="${griffon.test.src.persistence}" />-->
+            <!--<src path="${griffon.test.src.scaffolding}" />-->
+            <!--<src path="src/test" />-->
+            <javac debug="on" deprecation="on" encoding="UTF-8"/>
+            <classpath refid="classpath" />
+            <classpath location="${griffon.test.build}" />
+            <classpath location="${griffon.build}" />
+        </groovyc>
+        <copy todir="${griffon.test.build}">
+            <fileset dir="${griffon.test.src.commons}" excludes="**/*.java,**/*.groovy"/>
+        </copy>
+
+    </target>
+
+
+    <target name="defineTestingScope">
+        <!--Sets the test value to all tests ('*') if no value is provided-->
+        <condition property="test" value="*">
+            <not>
+                <isset property="test" />
+            </not>
+        </condition>
+        <condition property="test.isolated" value="true">
+            <equals arg1="${test}" arg2="*" />
+        </condition>
+    </target>
+
+    <target name="run-test" depends="defineTestingScope, build-test" unless="_skipTests_">
+        <delete dir="${griffon.test.reports}" />
+        <mkdir dir="${griffon.test.reports}" />
+        <echo>Test being run ${test} from ${griffon.test.build}</echo>
+        <junit fork="true" maxmemory="512m" forkmode="once">
+            <!-- only fork VMs as needed -->
+            <sysproperty key="griffon.cli.testing" value="true"/>
+            <jvmarg value="-server" />
+            <jvmarg value="-Xmx512M" />
+            <jvmarg value="-XX:MaxPermSize=256m"/>
+            <classpath location="${coverage.build}" />
+            <!-- must be first in cp!    -->
+            <!--<classpath location="cruise/coverage/lib/cobertura.jar" />-->
+            <classpath location="${griffon.build}" />
+            <!-- only neede for coverage -->
+            <classpath location="${griffon.test.build}" />
+            <!--<classpath location="${griffon.test.src.web}" />-->
+            <classpath location="${griffon.test.src.commons}" />
+            <!--<classpath location="${griffon.test.src.persistence}" />-->
+            <!--<classpath location="${griffon.test.src.scaffolding}" />-->
+            <!--<classpath location="${griffon.test.src.groovy}" />-->
+            <!--<classpath location="${griffon.test.src.tiger}" />-->
+            <!-- needed to load codecs -->
+            <!--<classpath location="${griffon.src.codecs}" />-->
+            <!-- System classpath last because of overrides -->
+            <classpath refid="classpath" />
+            <formatter type="xml" />
+            <batchtest todir="${griffon.test.reports}" failureproperty="griffon.test.failure">
+                <fileset dir="${griffon.test.build}">
+                    <include name="**/${test}Test.class" />
+                    <include name="**/${test}Tests.class" />
+                    <exclude name="**/Abstract*" />
+                    <exclude name="**/TransactionalServiceReloadTests*" />
+                </fileset>
+            </batchtest>
+            <!--<test todir="${griffon.test.reports}" name="org.codehaus.groovy.griffon.reload.TransactionalServiceReloadTests" fork="true" if="test.isolated" />-->
+
+        </junit>
+    </target>
+
+    <target name="test-report" depends="clean-instrumented, run-test" description="Runs unit tests and generates HTML report">
+        <mkdir dir="${griffon.test.html.reports}" />
+        <junitreport todir="${griffon.test.html.reports}">
+            <fileset dir="${griffon.test.reports}">
+                <include name="TEST-*.xml" />
+            </fileset>
+            <report format="frames" todir="${griffon.test.html.reports}" />
+        </junitreport>
+        <fail if="griffon.test.failure">The tests failed. Have a look at ${griffon.test.html.reports}/index.html</fail>
+    </target>
+</project>
