@@ -207,7 +207,6 @@ target(checkKey: "Check to see if the keystore exists")  {
                 genKeyParams[key] = config.signingkey.params[key]
             }
         }
-	println genKeyParams
         Ant.genkey(genKeyParams)
     }
 }

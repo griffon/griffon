@@ -27,7 +27,7 @@ class GriffonPlatformHelper {
         System.setProperty("apple.laf.useScreenMenuBar", "true")
 
         // set menu bar title
-        System.setProperty("com.apple.mrj.application.apple.menu.about.name", app.getConfig().application.title)
+        System.setProperty("com.apple.mrj.application.apple.menu.about.name", app.getConfig().application?.title ?: 'Griffon')
         // we may want to have a more specific option like applicaiton.shortTitle, that is used first
 
         // exit handler

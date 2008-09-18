@@ -9,3 +9,4 @@ mvcGroups {
 }
 
 //application.frameClass = 'javax.swing.JFrame'
+application.title="Widgets Kitchen Sink"

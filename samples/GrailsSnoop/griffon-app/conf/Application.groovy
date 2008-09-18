@@ -5,3 +5,5 @@ mvcGroups {
         controller = 'GrailsSnoopController'
     }
 }
+
+application.title="Grails Snoop"

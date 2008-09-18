@@ -6,5 +6,9 @@ mvcGroups {
     }
 }
 
-// If you want some non-standard application class, apply it here
-//application.frameClass = 'javax.swing.JFrame'
+application {
+    title="@griffon.app.class.name@"
+
+    // If you want some non-standard application class, apply it here
+    //frameClass = 'javax.swing.JFrame'
+}

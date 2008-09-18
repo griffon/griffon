@@ -38,7 +38,7 @@ class GriffonScriptRunner {
     static griffonHome
     static baseDir
     static userHome = System.properties.'user.home'
-    static version = "0.0"; //GriffonUtil.getGriffonVersion()
+    static version = "0.0.1"; //GriffonUtil.getGriffonVersion()
     static classesDir
     static rootLoader
 

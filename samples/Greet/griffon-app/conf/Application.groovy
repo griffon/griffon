@@ -8,3 +8,4 @@ mvcGroups {
     }
 }
 
+application.title="Greet"
