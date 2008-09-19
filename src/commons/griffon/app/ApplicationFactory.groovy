@@ -141,11 +141,14 @@ class ApplicationFactory extends AbstractFactory {
             }
         }
 
-        if (builder.context.pack) {
-            node.pack()
-        }
-        if (builder.context.show) {
-            node.visible = true
+        // can't pack or show an applet...
+        if (node instanceof Window) {
+            if (builder.context.pack) {
+                node.pack()
+            }
+            if (builder.context.show) {
+                node.visible = true
+            }  
         }
 
         builder.removeAttributeDelegate(builder.context.defaultButtonDelegate)

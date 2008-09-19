@@ -22,8 +22,6 @@
  */
 package griffon.builder
 
-import groovy.util.Factory
-import groovy.util.FactoryBuilderSupport
 import org.codehaus.groovy.runtime.InvokerHelper
 
 class UberBuilder extends FactoryBuilderSupport {
@@ -295,7 +293,7 @@ class UberInterceptorMetaClass extends DelegatingMetaClass {
                     }
                 } catch (MissingMethodException mme2) {
                     if (mme2.method != methodName) {
-                        throw mme
+                        throw mme2
                     }
                     // drop the exception, there will be many
                 }
@@ -305,7 +303,7 @@ class UberInterceptorMetaClass extends DelegatingMetaClass {
                 return factory.invokeMethod(methodName, arguments);
             } catch (MissingMethodException mme2) {
                 if (mme2.method != methodName) {
-                    throw mme
+                    throw mme2
                 }
                 //LOGME mme2.printStackTrace(System.out);
                 // chain secondary exception
@@ -337,7 +335,7 @@ class UberInterceptorMetaClass extends DelegatingMetaClass {
                     }
                 } catch (MissingMethodException mme2) {
                     if (mme2.method != methodName) {
-                        throw mme
+                        throw mme2
                     }
 
                     // drop the exception, there will be many
@@ -379,7 +377,7 @@ class UberInterceptorMetaClass extends DelegatingMetaClass {
                     }
                 } catch (MissingMethodException mme2) {
                     if (mme2.method != methodName) {
-                        throw mme
+                        throw mme2
                     }
                     // drop the exception, there will be many
                 }
@@ -389,7 +387,7 @@ class UberInterceptorMetaClass extends DelegatingMetaClass {
                 return factory.invokeMethod(methodName, arguments);
             } catch (MissingMethodException mme2) {
                 if (mme2.method != methodName) {
-                    throw mme
+                    throw mme2
                 }
                 // chain secondary exception
                 Throwable root = mme;
