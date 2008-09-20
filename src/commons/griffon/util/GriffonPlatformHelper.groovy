@@ -36,7 +36,7 @@ class GriffonPlatformHelper {
                 Binding bindings = new Binding()
                 bindings.app = app
 
-                GroovyShell shell = new GroovyShell(GriffonPlatformHelper.getClass().getClassLoader(), binding)
+                GroovyShell shell = new GroovyShell(GriffonPlatformHelper.getClass().getClassLoader(), bindings)
                 macOSXHandler = shell.evaluate("""
                     package griffon.util
 
