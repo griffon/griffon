@@ -75,7 +75,10 @@ class CompositeBuilderHelper {
             ignoreMissingPropertyException {
                 if( addon.factories ) addFactories(uberBuilder, addon.factories)
             }
-            // TODO add explicitMethods, explicitProperties
+            def methods = addon.metaClass.getMetaProperty("methods")
+            if( methods ) addMethods(uberBuilder, methods)
+            def properties = addon.metaClass.getMetaProperty("properties")
+            if( properties ) addMethods(uberBuilder, properties)
         }
     }
 
@@ -100,7 +103,12 @@ class CompositeBuilderHelper {
                 case "factories":
                     addFactories(uberBuilder, feature.value)
                     break
-                // TODO add explicitMethods, explicitProperties ??
+                case "methods":
+                    addMethods(uberBuilder, feature.value)
+                    break
+                case "properties":
+                    addProperties(uberBuilder, feature.value)
+                    break
             }
         }
     }
@@ -188,4 +196,25 @@ class CompositeBuilderHelper {
             uberBuilder.registerBeanFactory(nodeName, groupName, klass)
         }
     }
+
+    private static addMethods( UberBuilder uberBuilder, groupedMethods ) {
+        // TODO handle catch-all groupName "*" ?
+        groupedMethods.each { groupName, methods ->
+            uberBuilder.registrationGroup.get(groupName, new TreeSet<String>())
+            methods.each { name, method ->
+                uberBuilder.registerExplicitMethod( name, groupName, method )
+            }
+        }
+    }
+
+    private static addProperties( UberBuilder uberBuilder, groupedProperties ) {
+        // TODO handle catch-all groupName "*" ?
+        groupedProperties.each { groupName, properties ->
+            uberBuilder.registrationGroup.get(groupName, new TreeSet<String>())
+            properties.each { name, propertyTuple ->
+                uberBuilder.registerExplicitProperty( name, groupName, propertyTuple.get, propertyTuple.set )
+            }
+        }
+    }
+
 }
