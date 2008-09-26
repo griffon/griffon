@@ -38,14 +38,8 @@
     <import file="ant/build/eclipse.xml"   />
 
     <target name="cruise"
-            depends="clean,build, test-with-coverage, jar, javadoc, package"
-            description="to be started by the CruiseControl build server">
-        <delete dir="dist/coverage/" quiet="true"/>
-        <mkdir dir="dist/coverage/"/>
-        <move todir="dist/coverage/">
-            <fileset dir="${coverage.report}"/>
-        </move>
-     </target>
+            depends="clean,build, test, jar, javadoc, package"
+            description="to be started by the CruiseControl build server"/>
 
 
 </project>
