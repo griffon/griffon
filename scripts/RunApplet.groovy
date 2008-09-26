@@ -48,6 +48,7 @@ target(runApp: "Does the actual command line execution") {
         webstartVM = [System.properties['java.home'], 'bin', 'javaws'].join(File.separator)
     }
 
+    // TODO set proxy settings
     // start the processess
     Process p = "$webstartVM ${config.griffon.applet.jnlp}".execute(null as String[], jardir)
 

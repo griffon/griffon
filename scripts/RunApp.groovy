@@ -28,7 +28,7 @@ includeTargets << new File("${griffonHome}/scripts/Package.groovy")
 //includeTargets << new File ( "${griffonHome}/scripts/_PackagePlugins.groovy" )
 
 target('default': "Runs the applicaiton from the command line") {
-    depends(checkVersion)
+    depends(checkVersion, configureProxy)
     runApp()
 }
 

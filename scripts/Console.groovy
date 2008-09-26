@@ -33,7 +33,7 @@ griffonHome = Ant.antProject.properties."env.GRIFFON_HOME"
 includeTargets << new File ( "${griffonHome}/scripts/Bootstrap.groovy" )
 
 target ('default': "Load the Griffon interactive Swing console") {
-	depends( checkVersion, packageApp, classpath)
+	depends( checkVersion, configureProxy, packageApp, classpath)
 	console()
 }            
 
