@@ -85,13 +85,25 @@
     </target>
 
     <target name="run-test" depends="defineTestingScope, build-test" unless="_skipTests_">
+        <condition property='junit.jvm' value='xvfb-run' else='java'>
+            <and>
+                <os family='unix'/>
+                <istrue value="${junit.xvfb}"/>
+            </and>
+        </condition>
+        <condition property='junit.jvm-switch' value='java -server' else='-server'>
+            <and>
+                <os family='unix'/>
+                <istrue value="${junit.xvfb}"/>
+            </and>
+        </condition>
         <delete dir="${griffon.test.reports}" />
         <mkdir dir="${griffon.test.reports}" />
         <echo>Test being run ${test} from ${griffon.test.build}</echo>
-        <junit fork="true" maxmemory="512m" forkmode="once">
+        <junit fork="true" maxmemory="512m" forkmode="once" jvm='${junit.jvm}'>
             <!-- only fork VMs as needed -->
             <sysproperty key="griffon.cli.testing" value="true"/>
-            <jvmarg value="-server" />
+            <jvmarg line="${junit.jvm-switch}" />
             <jvmarg value="-Xmx512M" />
             <jvmarg value="-XX:MaxPermSize=256m"/>
             <classpath location="${coverage.build}" />
@@ -114,7 +126,7 @@
             <batchtest todir="${griffon.test.reports}" failureproperty="griffon.test.failure">
                 <fileset dir="${griffon.test.build}">
                     <include name="**/${test}Test.class" />
-                    <include name="**/${test}Tests.class" />
+                    <include name="**/$test}Tests.class" />
                     <exclude name="**/Abstract*" />
                     <exclude name="**/TransactionalServiceReloadTests*" />
                 </fileset>
