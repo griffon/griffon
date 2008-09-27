@@ -641,6 +641,7 @@ populateRootLoader = {rootLoader, jarFiles ->
 }
 
 target(configureProxy: "The implementation target") {
+    proxySettings = ""
     def scriptFile = new File("${userHome}/.griffon/scripts/ProxyConfig.groovy")
     if (scriptFile.exists()) {
         includeTargets << scriptFile.text
@@ -653,6 +654,12 @@ target(configureProxy: "The implementation target") {
             println "Configured HTTP proxy: ${proxyHost}:${proxyPort}${proxyConfig.proxyUser ? '(' + proxyUser + ')' : ''}"
             // ... for Ant. We can remove this line with Ant 1.7.0 as it uses system properties.
             Ant.setproxy(proxyhost: proxyHost, proxyport: proxyPort, proxyuser: proxyUser, proxypassword: proxyPassword)
+
+            proxySettings += "-Dproxy.host=$proxyHost "
+            proxySettings += "-Dproxy.port=$proxyPort "
+            proxySettings += "-Dproxy.user=$proxyUser "
+            proxySettings += "-Dproxy.password=$proxyPassword "
+
             // ... for all other code
             System.properties.putAll(["http.proxyHost": proxyHost, "http.proxyPort": proxyPort, "http.proxyUserName": proxyUser, "http.proxyPassword": proxyPassword])
         }

@@ -49,7 +49,7 @@ target(runApp: "Does the actual command line execution") {
     }
 
     // start the processess
-    Process p = "$javaVM -classpath ${runtimeJars.collect {f -> f.name}.join(File.pathSeparator)} griffon.application.SingleFrameApplication".execute(null as String[], jardir)
+    Process p = "$javaVM -classpath ${runtimeJars.collect {f -> f.name}.join(File.pathSeparator)} $proxySettings griffon.application.SingleFrameApplication".execute(null as String[], jardir)
 
     // pipe the output
     p.consumeProcessOutput(System.out, System.err)
