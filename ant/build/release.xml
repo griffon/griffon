@@ -69,10 +69,6 @@
             <param name="dir.location" value="src/griffon"/>
             <param name="dir.destination" value="${release.dir}/src/griffon"/>
         </antcall>
-        <antcall target="copy-dir">
-            <param name="dir.location" value="src/war"/>
-            <param name="dir.destination" value="${release.dir}/src/war"/>
-        </antcall>
         <copy todir="${release.dir}/dist">
             <fileset dir="${griffon.dist}" includes="*.jar">
                 <exclude name="*.zip"/>

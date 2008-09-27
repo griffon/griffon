@@ -16,13 +16,11 @@
 package org.codehaus.groovy.griffon.cli
 
 import gant.Gant
-//import griffon.util.GriffonUtil
-//import org.springframework.core.io.support.PathMatchingResourcePatternResolver
-import org.codehaus.groovy.griffon.commons.GriffonClassUtils
-import org.codehaus.groovy.griffon.commons.GriffonContext
 import org.codehaus.groovy.griffon.commons.GriffonClassUtils
 import org.codehaus.groovy.griffon.commons.GriffonContext
 
+//import griffon.util.GriffonUtil
+//import org.springframework.core.io.support.PathMatchingResourcePatternResolver
 /**
  * Class that handles Griffon command line interface for running scripts
  *
@@ -166,9 +164,14 @@ Griffon home is set to: ${griffonHome}
         return scriptName
     }
 
-    static ENV_ARGS = [dev:GriffonContext.ENV_DEVELOPMENT,prod:GriffonContext.ENV_PRODUCTION,test:GriffonContext.ENV_TEST]
+    static ENV_ARGS = [
+            dev:GriffonContext.ENV_DEVELOPMENT,
+            prod:GriffonContext.ENV_PRODUCTION,
+            test:GriffonContext.ENV_TEST]
     // this map contains default environments for several scripts in form 'script-name':'env-code'
-    static DEFAULT_ENVS = ['war': GriffonContext.ENV_PRODUCTION,'test-app':GriffonContext.ENV_TEST,'run-webtest':GriffonContext.ENV_TEST]
+    static DEFAULT_ENVS = [
+            'test-app':GriffonContext.ENV_TEST,
+            'run-webtest':GriffonContext.ENV_TEST]
     private static isEnvironmentArgs(env) {
         ENV_ARGS.keySet().contains(env)
     }
