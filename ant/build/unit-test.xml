@@ -86,7 +86,8 @@
     </target>
 
     <target name="run-test" depends="defineTestingScope, build-test" unless="_skipTests_">
-        <condition property='junit.jvm' value='xvfb-run' else='java'>
+        <property name="xvfb-run.bin" value="xvfb-run"/>
+        <condition property='junit.jvm' value='${xvfb-run.bin}' else='java'>
             <and>
                 <os family='unix'/>
                 <istrue value="${junit.xvfb}"/>
