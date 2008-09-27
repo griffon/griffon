@@ -56,6 +56,7 @@
 
         <groovyc destdir="${griffon.test.build}" fork="true" >
             <src path="${griffon.test.src.commons}" />
+            <src path="${griffon.test.src.buildtime}" />
             <!--<src path="${griffon.test.src.web}" />-->
             <!--<src path="${griffon.test.src.persistence}" />-->
             <!--<src path="${griffon.test.src.scaffolding}" />-->
@@ -126,7 +127,7 @@
             <batchtest todir="${griffon.test.reports}" failureproperty="griffon.test.failure">
                 <fileset dir="${griffon.test.build}">
                     <include name="**/${test}Test.class" />
-                    <include name="**/$test}Tests.class" />
+                    <include name="**/${test}Tests.class" />
                     <exclude name="**/Abstract*" />
                     <exclude name="**/TransactionalServiceReloadTests*" />
                 </fileset>
