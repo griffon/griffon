@@ -1,5 +1,5 @@
 <project name="griffon-unit-test">
-                 
+
   <condition property="_skipTests_">
     <istrue value="${skipTests}"/>
   </condition>
@@ -85,46 +85,84 @@
         </condition>
     </target>
 
-    <target name="run-test" depends="defineTestingScope, build-test" unless="_skipTests_">
+    <target name="junit-macro" depends="junit-macro-vfb,junit-macro-novfb"/>
+
+    <target name="junit-macro-vfb" if="junit.xvfb">
+        <macrodef name="grifjunit">
+            <element name="junit-elements" implicit="true"/>
+            <attribute name="fork" default="yes"/>
+            <attribute name="maxmemory" default="512m"/>
+            <attribute name="forkmode" default="once"/> 
+            <sequential>
+                <property name="xvfb.display" value="89"/>
+                <tempfile property="xauth.file" deleteonexit="true" prefix="xauth"/>
+                <echo file="${xauth.file}">localhost
+</echo>
+                <parallel>
+                  <exec executable="Xvfb">
+                    <arg value=":${xvfb.display}"/>
+                    <arg value="-auth"/>
+                    <arg value="${xauth.file}"/>
+                  </exec>
+                  <sequential> 
+                    <sleep seconds="1"/> <!-- sleep so Xvfb can start -->
+                    <junit fork="@{fork}" maxmemory="@{maxmemory}" forkmode="@{forkmode}">
+                      <env key="DISPLAY" value=":${xvfb.display}"/>
+                      <junit-elements/>
+                    </junit>
+                    <exec executable="pkill">
+                      <arg line="-9 Xvfb"/>
+                    </exec>
+                  </sequential>
+                </parallel>
+            </sequential>        
+        </macrodef>
+    </target>
+
+    <target name="junit-macro-novfb" unless="junit.xvfb">
+        <macrodef name="grifjunit">
+            <element name="junit-elements" implicit="true"/>
+            <attribute name="fork" default="yes"/>
+            <attribute name="maxmemory" default="512m"/>
+            <attribute name="forkmode" default="once"/>
+            <sequential>
+                <junit fork="@{fork}" maxmemory="@{maxmemory}" forkmode="@{forkmode}">
+                    <junit-elements/>
+                </junit>
+            </sequential>        
+        </macrodef>
+    </target>
+
+
+    <target name="run-test" depends="defineTestingScope, build-test, junit-macro" unless="_skipTests_">
         <property name="xvfb-run.bin" value="xvfb-run"/>
-        <chmod file="ant/bin/xvfb-run" perm="ugo+rx"/>
-        <condition property='junit.jvm' value='${xvfb-run.bin}' else='java'>
-            <and>
-                <os family='unix'/>
-                <istrue value="${junit.xvfb}"/>
-            </and>
-        </condition>
-        <condition property='junit.jvm-switch' value='java -server' else='-server'>
-            <and>
-                <os family='unix'/>
-                <istrue value="${junit.xvfb}"/>
-            </and>
-        </condition>
         <delete dir="${griffon.test.reports}" />
         <mkdir dir="${griffon.test.reports}" />
         <echo>Test being run ${test} from ${griffon.test.build}</echo>
-        <junit fork="true" maxmemory="512m" forkmode="once" jvm='${junit.jvm}'>
-            <!-- only fork VMs as needed -->
+        <grifjunit fork="true" maxmemory="512m" forkmode="once">
+            
             <sysproperty key="griffon.cli.testing" value="true"/>
-            <jvmarg line="${junit.jvm-switch}" />
+            
+            <jvmarg value="-server" />
             <jvmarg value="-Xmx512M" />
             <jvmarg value="-XX:MaxPermSize=256m"/>
-            <classpath location="${coverage.build}" />
+            
             <!-- must be first in cp!    -->
-            <!--<classpath location="cruise/coverage/lib/cobertura.jar" />-->
-            <classpath location="${griffon.build}" />
+            <classpath location="${coverage.build}" />
+
             <!-- only neede for coverage -->
+            <!--<classpath location="cruise/coverage/lib/cobertura.jar" />-->
+
+            <classpath location="${griffon.build}" />
             <classpath location="${griffon.test.build}" />
-            <!--<classpath location="${griffon.test.src.web}" />-->
             <classpath location="${griffon.test.src.commons}" />
-            <!--<classpath location="${griffon.test.src.persistence}" />-->
-            <!--<classpath location="${griffon.test.src.scaffolding}" />-->
-            <!--<classpath location="${griffon.test.src.groovy}" />-->
-            <!--<classpath location="${griffon.test.src.tiger}" />-->
+
             <!-- needed to load codecs -->
             <!--<classpath location="${griffon.src.codecs}" />-->
+
             <!-- System classpath last because of overrides -->
             <classpath refid="classpath" />
+            
             <formatter type="xml" />
             <batchtest todir="${griffon.test.reports}" failureproperty="griffon.test.failure">
                 <fileset dir="${griffon.test.build}">
@@ -134,9 +172,7 @@
                     <exclude name="**/TransactionalServiceReloadTests*" />
                 </fileset>
             </batchtest>
-            <!--<test todir="${griffon.test.reports}" name="org.codehaus.groovy.griffon.reload.TransactionalServiceReloadTests" fork="true" if="test.isolated" />-->
-
-        </junit>
+        </grifjunit>
     </target>
 
     <target name="test-report" depends="clean-instrumented, run-test" description="Runs unit tests and generates HTML report">
