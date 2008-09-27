@@ -17,8 +17,8 @@ package griffon.util
 
 import griffon.builder.UberBuilder
 import java.awt.Toolkit
-import javax.swing.SwingUtilities
 import javax.swing.JFrame
+import javax.swing.SwingUtilities
 
 /**
  * Created by IntelliJ IDEA.
@@ -97,7 +97,7 @@ class GriffonApplicationHelper {
     }
 
     public static void runScriptInsideEDT(String scriptName, IGriffonApplication app) {
-        def script = null
+        def script
         try {
             script = GriffonApplicationHelper.classLoader.loadClass(scriptName).newInstance(app.bindings)
         } catch (ClassNotFoundException cnfe) {
@@ -144,19 +144,19 @@ class GriffonApplicationHelper {
         app.controllers[mvcName] = controller
         app.builders[mvcName] = builder
 
-        safeSet(model,      "controller", controller)
-        safeSet(model,      "view",       view)
-        safeSet(view,       "model",      model)
-        safeSet(view,       "controller", controller)
-        safeSet(controller, "model",      model)
-        safeSet(controller, 'view',       view)
-        safeSet(controller, "builder",    builder)
+        [model, view, controller, builder].each {
+            // if the property doesn't exist, safeSet is a no-op
+            safeSet(it, "model",      model)
+            safeSet(it, "view",       view)
+            safeSet(it, "controller", controller)
+            safeSet(it, "builder",    builder)
+        }
 
-        safeCall(model,          "grinit")
-        safeCall(controller,     "grinit")
+        [model, view, controller].each {
+            //if the nethod doesn't exist, safeCall is a no-op
+            safeCall(it, "grinit")
+        }
 
-        builder.controller = controller
-        builder.model = model
         builder.edt({builder.build(view) })
 
         return [model, view, controller]
