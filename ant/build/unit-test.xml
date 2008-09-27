@@ -87,6 +87,7 @@
 
     <target name="run-test" depends="defineTestingScope, build-test" unless="_skipTests_">
         <property name="xvfb-run.bin" value="xvfb-run"/>
+        <chmod file="ant/bin/xvfb-run" perm="ugo+rx"/>
         <condition property='junit.jvm' value='${xvfb-run.bin}' else='java'>
             <and>
                 <os family='unix'/>
