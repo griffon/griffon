@@ -27,6 +27,8 @@
 //import org.codehaus.groovy.griffon.cli.support.CommandLineResourceLoader;
 //import griffon.spring.*
 //import org.springframework.web.context.WebApplicationContext
+import org.codehaus.groovy.tools.LoaderConfiguration
+import org.codehaus.groovy.tools.RootLoader
 
 Ant.property(environment:"env")                             
 griffonHome = Ant.antProject.properties."env.GRIFFON_HOME"    
@@ -34,38 +36,39 @@ griffonHome = Ant.antProject.properties."env.GRIFFON_HOME"
 includeTargets << new File ( "${griffonHome}/scripts/Package.groovy" )  
 
 target ('default': "This target will load the Griffon application context into the command window with a variable named 'ctx'") {
-	bootstrap()
+    depends(packageApp)
+    bootstrap()
 }
 
 parentContext = null // default parent context is null
        
 target(loadApp:"Loads the Griffon application object") {
-	event("AppLoadStart", ["Loading Griffon Application"])
-//	profile("Loading parent ApplicationContext") {
-//		def builder = parentContext ? new WebBeanBuilder(parentContext) :  new WebBeanBuilder()
-//		beanDefinitions = builder.beans {
-//			resourceHolder(org.codehaus.groovy.griffon.commons.spring.GriffonResourceHolder) {
-//				this.resources = "file:${basedir}/**/griffon-app/**/*.groovy"
-//			}
-//			griffonResourceLoader(org.codehaus.groovy.griffon.commons.GriffonResourceLoaderFactoryBean) {
-//				griffonResourceHolder = resourceHolder
-//			}
-//			griffonApplication(org.codehaus.groovy.griffon.commons.DefaultGriffonApplication.class, ref("griffonResourceLoader"))
-//			pluginMetaManager(DefaultPluginMetaManager, resolveResources("file:${basedir}/plugins/*/plugin.xml"))
-//		}		
-//	}
+    event("AppLoadStart", ["Loading Griffon Application"])
+//    profile("Loading parent ApplicationContext") {
+//        def builder = parentContext ? new WebBeanBuilder(parentContext) :  new WebBeanBuilder()
+//        beanDefinitions = builder.beans {
+//            resourceHolder(org.codehaus.groovy.griffon.commons.spring.GriffonResourceHolder) {
+//                this.resources = "file:${basedir}/**/griffon-app/**/*.groovy"
+//            }
+//            griffonResourceLoader(org.codehaus.groovy.griffon.commons.GriffonResourceLoaderFactoryBean) {
+//                griffonResourceHolder = resourceHolder
+//            }
+//            griffonApplication(org.codehaus.groovy.griffon.commons.DefaultGriffonApplication.class, ref("griffonResourceLoader"))
+//            pluginMetaManager(DefaultPluginMetaManager, resolveResources("file:${basedir}/plugins/*/plugin.xml"))
+//        }        
+//    }
 //                                                   
-//	appCtx = beanDefinitions.createApplicationContext()
-//	def ctx = appCtx
+//    appCtx = beanDefinitions.createApplicationContext()
+//    def ctx = appCtx
 //
     // The mock servlet context needs to resolve resources relative to the 'web-app'
     // directory. We also need to use a FileSystemResourceLoader, otherwise paths are
     // evaluated against the classpath - not what we want!
 //    servletContext = new MockServletContext('web-app', new FileSystemResourceLoader())
 //    ctx.servletContext = servletContext
-//	griffonApp = ctx.griffonApplication 
-//	ApplicationHolder.application = griffonApp
-//	classLoader = griffonApp.classLoader
+//    griffonApp = ctx.griffonApplication 
+//    ApplicationHolder.application = griffonApp
+//    classLoader = griffonApp.classLoader
 //      packageApp()
 //    PluginManagerHolder.pluginManager = null
 //    loadPlugins()
@@ -73,18 +76,33 @@ target(loadApp:"Loads the Griffon application object") {
 //    pluginManager.application = griffonApp
 //    pluginManager.doArtefactConfiguration()
 //    griffonApp.initialise()
-	event("AppLoadEnd", ["Loading Griffon Application"])
+
+
+    LoaderConfiguration loaderConfig = new LoaderConfiguration()
+    loaderConfig.setRequireMain(false);
+
+    // calculate the needed jars
+    File jardir = new File(Ant.antProject.replaceProperties(config.griffon.jars.destDir))
+    jardir.eachFileMatch(~/.*\.jar/) {jarFile ->
+        loaderConfig.addFile(jarFile)
+    }
+
+    def rootLoader = new RootLoader(loaderConfig)
+    griffonApp = rootLoader.loadClass('griffon.application.SingleFrameApplication', false).newInstance()
+    griffonApp.bootstrap()
+
+    event("AppLoadEnd", ["Loading Griffon Application"])
 }                                      
 target(configureApp:"Configures the Griffon application and builds an ApplicationContext") {
-//	event("ConfigureAppStart", [griffonApp, appCtx])	
+//    event("ConfigureAppStart", [griffonApp, appCtx])    
 //    appCtx.resourceLoader = new  CommandLineResourceLoader()
-//	profile("Performing runtime Spring configuration") {
-//	    def config = new org.codehaus.groovy.griffon.commons.spring.GriffonRuntimeConfigurator(griffonApp,appCtx)
+//    profile("Performing runtime Spring configuration") {
+//        def config = new org.codehaus.groovy.griffon.commons.spring.GriffonRuntimeConfigurator(griffonApp,appCtx)
 //       appCtx = config.configure(servletContext)
 //        servletContext.setAttribute(ApplicationAttributes.APPLICATION_CONTEXT,appCtx );
 //        servletContext.setAttribute(WebApplicationContext.ROOT_WEB_APPLICATION_CONTEXT_ATTRIBUTE, appCtx);
-//	}
-//	event("ConfigureAppEnd", [griffonApp, appCtx])		
+//    }
+//    event("ConfigureAppEnd", [griffonApp, appCtx])        
 }
 
 monitorCallback = {}
@@ -115,5 +133,5 @@ target(monitorApp:"Monitors an application for changes using the PluginManager a
 }
 
 target(bootstrap: "The implementation target") {  
-	depends(loadApp, configureApp)
+    depends(loadApp, configureApp)
 }

@@ -39,8 +39,8 @@ target ('default': "Load the Griffon interactive Swing console") {
 
 target(console:"The console implementation target") {
 
-    classLoader = new URLClassLoader([classesDir.toURL()] as URL[], rootLoader)
-    Thread.currentThread().setContextClassLoader(classLoader)
+//    classLoader = new URLClassLoader([classesDir.toURL()] as URL[], rootLoader)
+//    Thread.currentThread().setContextClassLoader(classLoader)
     loadApp()
     configureApp()
     createConsole()
@@ -63,9 +63,9 @@ target(console:"The console implementation target") {
 target(createConsole:"Creates a new console") {
     def b = new Binding()
 //    b.ctx = appCtx
-//    b.griffonApplication = griffonApp
-    classLoader = new URLClassLoader([classesDir.toURL()] as URL[], rootLoader)
-    consoleui = new Console(/*griffonApp.*/classLoader?.getRootLoader(), b)
+    b.griffonApplication = griffonApp
+//    classLoader = new URLClassLoader([classesDir.toURL()] as URL[], rootLoader)
+    consoleui = new groovy.ui.Console(griffonApp.class.classLoader, b)
 //    consoleui.beforeExecution = {
 //        appCtx.getBeansOfType(PersistenceContextInterceptor).each { k,v ->
 //            v.init()
