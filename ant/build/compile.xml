@@ -22,7 +22,8 @@
             <fileset dir="${griffon.src.main}" includes="**/*.properties" />
         </copy>
 
-        <groovyc fork="true" includeantruntime="false" destdir="${griffon.build}"  encoding="UTF-8">
+        <!-- fork is broken in g1.6b2S -->
+        <groovyc fork="false" includeantruntime="false" destdir="${griffon.build}"  encoding="UTF-8">
             <classpath>
                 <pathelement location="${griffon.build}"/>
                 <path refid="classpath"/>

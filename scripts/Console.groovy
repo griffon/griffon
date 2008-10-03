@@ -63,7 +63,7 @@ target(console:"The console implementation target") {
 target(createConsole:"Creates a new console") {
     def b = new Binding()
 //    b.ctx = appCtx
-    b.griffonApplication = griffonApp
+    b.app = griffonApp
 //    classLoader = new URLClassLoader([classesDir.toURL()] as URL[], rootLoader)
     consoleui = new groovy.ui.Console(griffonApp.class.classLoader, b)
 //    consoleui.beforeExecution = {

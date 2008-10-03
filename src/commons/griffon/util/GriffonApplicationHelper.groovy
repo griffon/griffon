@@ -44,7 +44,9 @@ class GriffonApplicationHelper {
         def view
         def controller
 
-        [model, view, controller] = createMVCGroup(app, 'root')
+        // syntax of multiple asignment has changed in g1.6b2
+        //[model, view, controller] = createMVCGroup(app, 'root')
+        view = createMVCGroup(app, 'root')[1]
 
 
         // attach the root panel
