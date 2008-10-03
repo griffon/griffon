@@ -38,9 +38,11 @@ class SingleFrameApplication implements IGriffonApplication {
         GriffonApplicationHelper.prepare(this);
     }
 
-    public void show() {
+    public void realize() {
         GriffonApplicationHelper.startup(this)
+    }
 
+    public void show() {
         if (appFrames.size() > 0) {
             appFrames[0].show()
         }
@@ -94,6 +96,7 @@ class SingleFrameApplication implements IGriffonApplication {
     public static void main(String[] args) {
         SingleFrameApplication sfa = new SingleFrameApplication();
         sfa.bootstrap();
+        sfa.realize();
         sfa.show();
     }
 }
