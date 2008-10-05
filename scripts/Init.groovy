@@ -27,7 +27,6 @@ import org.springframework.core.io.support.PathMatchingResourcePatternResolver
 import org.codehaus.groovy.control.*
 import org.springframework.core.io.FileSystemResource
 import org.codehaus.groovy.griffon.commons.GriffonContext
-import org.codehaus.groovy.griffon.commons.GriffonContext
 
 Ant.property(environment: "env")
 
@@ -185,6 +184,20 @@ loadEventHooks = {
             f = new File(it, "scripts/Events.groovy")
             if (f.exists()) {
                 println "Found events script in plugin ${it.name}"
+                loadEventScript(f)
+            }
+        }
+    }
+
+    pluginsDir = new File("${griffonHome}/plugins")
+    if (pluginsDir.exists()) {
+        pluginsDir.eachDir { pluginInstallDir ->
+            def latestVersionFile = new File(pluginInstallDir,"latest")
+            if (!latestVersionFile.exists()) return
+            def latestPluginVersion = latestVersionFile.text.trim()
+            f = new File("${pluginInstallDir}/${latestPluginVersion}/scripts/Events.groovy")
+            if (f.exists()) {
+                println "Found events script in plugin ${pluginInstallDir.name}"
                 loadEventScript(f)
             }
         }
@@ -483,13 +496,32 @@ target(createArtifact: "Creates a specific Griffon artifact") {
     // first check for presence of template in application
     templateFile = "${basedir}/src/templates/artifacts/${artifactName}.groovy"
     if (!new File(templateFile).exists()) {
-        // now check for template provided by plugins
+        // now check for template provided by local plugins
         def pluginTemplateFiles = resolveResources("plugins/*/src/templates/artifacts/${artifactName}.groovy")
         if (pluginTemplateFiles) {
             templateFile = pluginTemplateFiles[0].path
         } else {
-            // template not found in application, use default template
-            templateFile = "${griffonHome}/src/griffon/templates/artifacts/${artifactName}.groovy"
+            // now check for template provided by framework plugins
+            def found = false
+            def basePluginsDir = new File("${griffonHome}/plugins")
+            if (basePluginsDir.exists()) {
+                for( pluginInstallDir in basePluginsDir.list()) {
+                    pluginInstallDir = new File(basePluginsDir,pluginInstallDir)
+                    def latestVersionFile = new File(pluginInstallDir,"latest")
+                    if (!latestVersionFile.exists()) continue
+                    def latestPluginVersion = latestVersionFile.text.trim()
+                    def artifactTemplate = new File("${pluginInstallDir}/${latestPluginVersion}/src/templates/artifacts/${artifactName}.groovy")
+                    if(artifactTemplate.exists()) {
+                        templateFile = artifactTemplate
+                        found = true
+                        break
+                    }
+                }
+            }
+            if (!found) {
+                // template not found, use default template
+                templateFile = "${griffonHome}/src/griffon/templates/artifacts/${artifactName}.groovy"
+            }
         }
     }
     Ant.copy(file: templateFile, tofile: artifactFile, overwrite: true)

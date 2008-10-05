@@ -36,7 +36,9 @@ target ('default': "Cleans a Griffon project") {
 }
 
 target ( clean: "Implementation of clean") {
+    event("CleanStart", [])
     depends( checkVersion, classpath, cleanCompiledSources, cleanGriffonApp) //, cleanWarFile)
+    event("CleanEnd", [])
 }
 
 target ( cleanCompiledSources : "Cleans compiled Java and Groovy sources") {
