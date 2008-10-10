@@ -39,7 +39,7 @@ Ant.property(environment:"env")
 griffonHome = Ant.antProject.properties."env.GRIFFON_HOME"
 
 includeTargets << new File ( "${griffonHome}/scripts/Compile.groovy" )
-//includeTargets << new File ( "${griffonHome}/scripts/_PackagePlugins.groovy" )
+includeTargets << new File ( "${griffonHome}/scripts/_PackagePlugins.groovy" )
 
 //scaffoldDir = "${basedir}/web-app/WEB-INF/templates/scaffolding"
 configFile = new File("${basedir}/griffon-app/conf/Config.groovy")
