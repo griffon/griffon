@@ -80,7 +80,7 @@ Griffon home is set to: ${griffonHome}
 
 
             //def scriptsAllowedOutsideProject = ['CreateApp','CreatePlugin','PackagePlugin','Help','ListPlugins','PluginInfo','SetProxy']
-            def scriptsAllowedOutsideProject = ['CreateApp','HelloWorld','Help','SetProxy']
+            def scriptsAllowedOutsideProject = ['CreateApp','CreatePlugin','HelloWorld','Help','SetProxy']
             if(!new File(baseDir.absolutePath, "griffon-app").exists() && (!scriptsAllowedOutsideProject.contains(scriptName))) {
                 println "${baseDir.absolutePath} does not appear to be part of a Griffon application."
                 println 'The following commands are supported outside of a project:'
@@ -216,11 +216,16 @@ Griffon home is set to: ${griffonHome}
             try {
                 // framework plugins
                 def basePluginsDir = new File("${griffonHome}/plugins")
-                basePluginsDir.eachDir { pluginInstallDir ->
-                    def latestPluginVersion = new File(pluginInstallDir,"latest").text.trim()
-                    def scriptFile = new File("${pluginInstallDir}/${latestPluginVersion}/scripts/${scriptName}.groovy")
-                    if(scriptFile.exists()) {
-                        potentialScripts << scriptFile
+                if( basePluginsDir.exists() ) {
+                    basePluginsDir.eachDir { pluginInstallDir ->
+                        def latestPluginVersionFile = new File(pluginInstallDir,"latest")
+                        if( latestPluginVersionFile.exists() ){
+                            def latestPluginVersion = latestPluginVersionFile.text.trim()
+                            def scriptFile = new File("${pluginInstallDir}/${latestPluginVersion}/scripts/${scriptName}.groovy")
+                            if(scriptFile.exists()) {
+                                potentialScripts << scriptFile
+                            }
+                        }
                     }
                 }
             }
