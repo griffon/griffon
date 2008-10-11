@@ -189,19 +189,19 @@ loadEventHooks = {
         }
     }
 
-    pluginsDir = new File("${griffonHome}/plugins")
-    if (pluginsDir.exists()) {
-        pluginsDir.eachDir { pluginInstallDir ->
-            def latestVersionFile = new File(pluginInstallDir,"latest")
-            if (!latestVersionFile.exists()) return
-            def latestPluginVersion = latestVersionFile.text.trim()
-            f = new File("${pluginInstallDir}/${latestPluginVersion}/scripts/Events.groovy")
-            if (f.exists()) {
-                println "Found events script in plugin ${pluginInstallDir.name}"
-                loadEventScript(f)
-            }
-        }
-    }
+//     pluginsDir = new File("${griffonHome}/plugins")
+//     if (pluginsDir.exists()) {
+//         pluginsDir.eachDir { pluginInstallDir ->
+//             def latestVersionFile = new File(pluginInstallDir,"latest")
+//             if (!latestVersionFile.exists()) return
+//             def latestPluginVersion = latestVersionFile.text.trim()
+//             f = new File("${pluginInstallDir}/${latestPluginVersion}/scripts/Events.groovy")
+//             if (f.exists()) {
+//                 println "Found events script in plugin ${pluginInstallDir.name}"
+//                 loadEventScript(f)
+//             }
+//         }
+//     }
 }
 
 void loadEventScript(theFile) {
@@ -502,26 +502,26 @@ target(createArtifact: "Creates a specific Griffon artifact") {
             templateFile = pluginTemplateFiles[0].path
         } else {
             // now check for template provided by framework plugins
-            def found = false
-            def basePluginsDir = new File("${griffonHome}/plugins")
-            if (basePluginsDir.exists()) {
-                for( pluginInstallDir in basePluginsDir.list()) {
-                    pluginInstallDir = new File(basePluginsDir,pluginInstallDir)
-                    def latestVersionFile = new File(pluginInstallDir,"latest")
-                    if (!latestVersionFile.exists()) continue
-                    def latestPluginVersion = latestVersionFile.text.trim()
-                    def artifactTemplate = new File("${pluginInstallDir}/${latestPluginVersion}/src/templates/artifacts/${artifactName}.groovy")
-                    if(artifactTemplate.exists()) {
-                        templateFile = artifactTemplate
-                        found = true
-                        break
-                    }
-                }
-            }
-            if (!found) {
+//             def found = false
+//             def basePluginsDir = new File("${griffonHome}/plugins")
+//             if (basePluginsDir.exists()) {
+//                 for( pluginInstallDir in basePluginsDir.list()) {
+//                     pluginInstallDir = new File(basePluginsDir,pluginInstallDir)
+//                     def latestVersionFile = new File(pluginInstallDir,"latest")
+//                     if (!latestVersionFile.exists()) continue
+//                     def latestPluginVersion = latestVersionFile.text.trim()
+//                     def artifactTemplate = new File("${pluginInstallDir}/${latestPluginVersion}/src/templates/artifacts/${artifactName}.groovy")
+//                     if(artifactTemplate.exists()) {
+//                         templateFile = artifactTemplate
+//                         found = true
+//                         break
+//                     }
+//                 }
+//             }
+//             if (!found) {
                 // template not found, use default template
                 templateFile = "${griffonHome}/src/griffon/templates/artifacts/${artifactName}.groovy"
-            }
+//             }
         }
     }
     Ant.copy(file: templateFile, tofile: artifactFile, overwrite: true)

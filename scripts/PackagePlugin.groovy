@@ -79,11 +79,6 @@ target(packagePlugin:"Implementation target") {
     }
 
     if(!pluginFile) Ant.fail("Plugin file not found for plugin project")
-    
-    //def urls = classLoader.getURLs() as List
-    //urls << new File("${basedir}").toURI().toURL()
-    //ClassLoader contextLoader = Thread.currentThread().getContextClassLoader()
-    //classLoader = new URLClassLoader(urls as URL[], contextLoader)
 
     try {
         pluginClass = classLoader.loadClass(pluginFile.name[0..-8])
@@ -102,7 +97,8 @@ target(packagePlugin:"Implementation target") {
     def xml = new MarkupBuilder(writer)
     def props = ['author','authorEmail','title','description','documentation']
 //    def resourceList = GriffonResourceLoaderHolder.resourceLoader.getResources()
-    xml.plugin(name:"${pluginName}",version:"${plugin.version}") {
+//    def local = plugin.properties['local'] ?: true
+    xml.plugin(name:"${pluginName}",version:"${plugin.version}"/*,local:"${(local ?: false*/)}") {
         props.each {
             if( plugin.properties[it] ) "${it}"(plugin.properties[it])
         }

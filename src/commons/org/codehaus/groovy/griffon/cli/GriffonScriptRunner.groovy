@@ -80,7 +80,7 @@ Griffon home is set to: ${griffonHome}
 
 
             //def scriptsAllowedOutsideProject = ['CreateApp','CreatePlugin','PackagePlugin','Help','ListPlugins','PluginInfo','SetProxy']
-            def scriptsAllowedOutsideProject = ['CreateApp','CreatePlugin','PackagePlugin','HelloWorld','Help','SetProxy']
+            def scriptsAllowedOutsideProject = ['CreateApp',/*'CreatePlugin','PackagePlugin',*/'HelloWorld','Help','SetProxy']
             if(!new File(baseDir.absolutePath, "griffon-app").exists() && (!scriptsAllowedOutsideProject.contains(scriptName))) {
                 println "${baseDir.absolutePath} does not appear to be part of a Griffon application."
                 println 'The following commands are supported outside of a project:'
@@ -213,50 +213,50 @@ Griffon home is set to: ${griffonHome}
                 }
             }
 
-            try {
-                // framework plugins
-                def basePluginsDir = new File("${griffonHome}/plugins")
-                if( basePluginsDir.exists() ) {
-                    basePluginsDir.eachDir { pluginInstallDir ->
-                        def latestPluginVersionFile = new File(pluginInstallDir,"latest")
-                        if( latestPluginVersionFile.exists() ){
-                            def latestPluginVersion = latestPluginVersionFile.text.trim()
-                            def scriptFile = new File("${pluginInstallDir}/${latestPluginVersion}/scripts/${scriptName}.groovy")
-                            if(scriptFile.exists()) {
-                                potentialScripts << scriptFile
-                            }
-                        }
-                    }
-                }
-            }
-            
-            try {
-                // application plugins
-                def pluginScripts = RESOLVER.getResources("file:${baseDir.absolutePath}/plugins/*/scripts/${scriptName}.groovy")
-                potentialScripts += pluginScripts.collect { it.file }
-            }
-            catch(Exception e) {
-                println "Note: No plugin scripts found"
-            }
+//             try {
+//                 // framework plugins
+//                 def basePluginsDir = new File("${griffonHome}/plugins")
+//                 if( basePluginsDir.exists() ) {
+//                     basePluginsDir.eachDir { pluginInstallDir ->
+//                         def latestPluginVersionFile = new File(pluginInstallDir,"latest")
+//                         if( latestPluginVersionFile.exists() ){
+//                             def latestPluginVersion = latestPluginVersionFile.text.trim()
+//                             def scriptFile = new File("${pluginInstallDir}/${latestPluginVersion}/scripts/${scriptName}.groovy")
+//                             if(scriptFile.exists()) {
+//                                 potentialScripts << scriptFile
+//                             }
+//                         }
+//                     }
+//                 }
+//             }
 
-            // Get the paths of any installed plugins and add them to the
-            // initial binding as '<pluginName>PluginDir'.
-            binding = new Binding()
-            try {
-
-                def plugins = RESOLVER.getResources("file:${baseDir.absolutePath}/plugins/*/*GriffonPlugin.groovy")
-
-                plugins.each { resource ->
-                    def matcher = resource.filename =~ /(\S+)GriffonPlugin.groovy/
-                    def pluginName = GriffonClassUtils.getPropertyName(matcher[0][1])
-
-                    // Add the plugin path to the binding.
-                    binding.setVariable("${pluginName}PluginDir", resource.file.parentFile)
-                }
-            }
-            catch(Exception e) {
-                // No plugins found.
-            }
+//             try {
+//                 // application plugins
+//                 def pluginScripts = RESOLVER.getResources("file:${baseDir.absolutePath}/plugins/*/scripts/${scriptName}.groovy")
+//                 potentialScripts += pluginScripts.collect { it.file }
+//             }
+//             catch(Exception e) {
+//                 println "Note: No plugin scripts found"
+//             }
+//
+//             // Get the paths of any installed plugins and add them to the
+//             // initial binding as '<pluginName>PluginDir'.
+//             binding = new Binding()
+//             try {
+//
+//                 def plugins = RESOLVER.getResources("file:${baseDir.absolutePath}/plugins/*/*GriffonPlugin.groovy")
+//
+//                 plugins.each { resource ->
+//                     def matcher = resource.filename =~ /(\S+)GriffonPlugin.groovy/
+//                     def pluginName = GriffonClassUtils.getPropertyName(matcher[0][1])
+//
+//                     // Add the plugin path to the binding.
+//                     binding.setVariable("${pluginName}PluginDir", resource.file.parentFile)
+//                 }
+//             }
+//             catch(Exception e) {
+//                 // No plugins found.
+//             }
             SCRIPT_CACHE[scriptName] = new CachedScript(binding:binding, potentialScripts:potentialScripts)
         }
 

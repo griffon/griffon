@@ -381,7 +381,7 @@ log4j.rootLogger=error,stdout
 
 }
 
-//target(loadPlugins:"Loads Griffon' plugins") {
+target(loadPlugins:"Loads Griffon' plugins") {
 //    if(!PluginManagerHolder.pluginManager) { // plugin manager already loaded?
 //        compConfig.setTargetDirectory(classesDir)
 //        def unit = new CompilationUnit ( compConfig , null , new GroovyClassLoader(classLoader) )
@@ -437,7 +437,7 @@ log4j.rootLogger=error,stdout
 //        // from any target.
 //        pluginManager = PluginManagerHolder.pluginManager
 //    }
-//}
+}
 
 //target( generateWebXml : "Generates the web.xml file") {
 //    depends(classpath)
