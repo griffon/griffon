@@ -18,24 +18,25 @@ import groovy.ui.Console
 
 /**
  * Gant script that loads the Griffon console
- * 
+ *
  * @author Graeme Rocher
  *
  * @since 0.4
  */
 
 //import org.codehaus.griffon.commons.GriffonClassUtils as GCU
-//import groovy.text.SimpleTemplateEngine  
+//import groovy.text.SimpleTemplateEngine
 //import org.codehaus.griffon.support.*
 Ant.property(environment:"env")
-griffonHome = Ant.antProject.properties."env.GRIFFON_HOME"    
+griffonHome = Ant.antProject.properties."env.GRIFFON_HOME"
 
 includeTargets << new File ( "${griffonHome}/scripts/Bootstrap.groovy" )
+skipJarSigning = true
 
 target ('default': "Load the Griffon interactive Swing console") {
-	depends( checkVersion, configureProxy, packageApp, classpath)
-	console()
-}            
+    depends( checkVersion, configureProxy, packageApp, classpath)
+    console()
+}
 
 target(console:"The console implementation target") {
 

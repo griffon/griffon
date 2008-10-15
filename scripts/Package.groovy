@@ -178,7 +178,7 @@ target( packageApp : "Implementation of package target") {
     //loadPlugins()
     //generateWebXml()
 
-    checkKey()
+    if (!skipJarSigning) checkKey()
     copyLibs()
     jarFiles()
     generateJNLP()
@@ -287,16 +287,18 @@ def griffonCopyDist(jarname, targetDir, boolean force = false) {
     }
 
 
-    // sign jar
-    Map signJarParams = [:]
-    for (key in ['alias', 'storepass', 'keystore', 'storetype', 'keypass', 'sigfile', 'verbose', 'internalsf', 'sectionsonly', 'lazy', 'maxmemory', 'preservelastmodified', 'tsaurl', 'tsacert']) {
-        if (config.signingkey.params."$key") {
-            signJarParams[key] = config.signingkey.params[key]
+    if (!skipJarSigning) {
+        // sign jar
+        Map signJarParams = [:]
+        for (key in ['alias', 'storepass', 'keystore', 'storetype', 'keypass', 'sigfile', 'verbose', 'internalsf', 'sectionsonly', 'lazy', 'maxmemory', 'preservelastmodified', 'tsaurl', 'tsacert']) {
+            if (config.signingkey.params."$key") {
+                signJarParams[key] = config.signingkey.params[key]
+            }
         }
-    }
 
-    Ant.signjar(signJarParams) {
-        fileset(dir:targetDir, includes:"*.jar")
+        Ant.signjar(signJarParams) {
+            fileset(dir:targetDir, includes:"*.jar")
+        }
     }
 
     // do the for-real packing
