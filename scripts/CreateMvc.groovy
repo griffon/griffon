@@ -22,8 +22,6 @@
  *
  */
 
-import org.codehaus.groovy.griffon.commons.GriffonClassUtils as GCU
-
 Ant.property(environment:"env")
 griffonHome = Ant.antProject.properties."env.GRIFFON_HOME"
 

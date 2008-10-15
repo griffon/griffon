@@ -4,94 +4,12 @@
         <delete>
             <fileset dir="${griffon.dist}" includes="*"/>
         </delete>
-        <!--<jar destfile="${griffon.dist}/griffon-test-${griffon.version}.jar" manifest="${griffon.build}/META-INF/MANIFEST.MF">-->
-            <!--<fileset dir="${griffon.build}">-->
-                  <!--<include name="META-INF/**" />-->
-                  <!--<include name="griffon/test/**" />-->
-              <!--</fileset>-->
-        <!--</jar>-->
-        <!--<jar destfile="${griffon.dist}/griffon-spring-${griffon.version}.jar" manifest="${griffon.build}/META-INF/MANIFEST.MF">-->
-            <!--<fileset dir="${griffon.build}">-->
-                  <!--<include name="META-INF/**" />-->
-                  <!--<include name="griffon/spring/**" />-->
-                  <!--<include name="**/groovy/griffon/commons/spring/**" />-->
-              <!--</fileset>            -->
-        <!--</jar>-->
-        <jar destfile="${griffon.dist}/griffon-cli-${griffon.version}.jar" manifest="${griffon.build}/META-INF/MANIFEST.MF">
-            <fileset dir="${griffon.build}">
-                  <include name="META-INF/**" />
-                  <include name="**/groovy/griffon/cli/support/GriffonRootLoader*" />
-                  <include name="**/groovy/griffon/cli/support/GriffonStarter*" />
-              </fileset>
+        <jar destfile="${griffon.dist}/griffon-cli-${griffon.version}.jar" manifest="${griffon.build.cli}/META-INF/MANIFEST.MF">
+            <fileset dir="${griffon.build.cli}"/>
         </jar>
-        <jar destfile="${griffon.dist}/griffon-core-${griffon.version}.jar" manifest="${griffon.build}/META-INF/MANIFEST.MF">
-              <fileset dir="${griffon.build}">
-                  <include name="META-INF/**" />
-                  <include name="griffon/ui/**" />
-                  <include name="griffon/util/**" />
-                  <include name="**/groovy/griffon/beans/factory/**" />
-                  <include name="**/groovy/griffon/cli/**" />
-                  <include name="**/groovy/griffon/commons/**" />
-                  <include name="**/groovy/griffon/compiler/**" />
-                  <include name="**/groovy/griffon/orm/support/**" />
-                  <include name="**/groovy/griffon/exceptions/**" />
-                  <include name="**/groovy/griffon/support/**" />
-                  <include name="**/groovy/griffon/validation/**" />
-                  <include name="**/groovy/griffon/plugins/**" />
-                  <exclude name="**/groovy/griffon/cli/support/griffonRootLoader*" />
-                  <exclude name="**/groovy/griffon/cli/support/griffonStarter*" />
-                  <exclude name="**/groovy/griffon/commons/spring/**" />
-                  <exclude name="**/groovy/griffon/plugins/orm/hibernate**" />
-                  <exclude name="**/groovy/griffon/plugins/web/**" />
-                  <exclude name="**/groovy/griffon/plugins/converters/**" />
-                  <exclude name="**/groovy/griffon/plugins/webflow/**" />
-                  <exclude name="**/groovy/griffon/plugins/scafolding/**" />
-                  <exclude name="**/groovy/griffon/validation/Hibernate**" />
-              </fileset>
+        <jar destfile="${griffon.dist}/griffon-rt-${griffon.version}.jar" manifest="${griffon.build.rt}/META-INF/MANIFEST.MF">
+              <fileset dir="${griffon.build.rt}"/>
         </jar>
-        <jar destfile="${griffon.dist}/griffon-rt-${griffon.version}.jar" manifest="${griffon.build}/META-INF/MANIFEST.MF">
-              <fileset dir="${griffon.build}">
-                  <include name="griffon/**" />
-              </fileset>
-        </jar>
-        <!--<jar destfile="${griffon.dist}/griffon-gorm-${griffon.version}.jar" manifest="${griffon.build}/META-INF/MANIFEST.MF">-->
-              <!--<fileset dir="${griffon.build}">-->
-                  <!--<include name="META-INF/**" />    -->
-                  <!--<include name="griffon/orm/**" />-->
-                  <!--<include name="**/groovy/griffon/orm/hibernate/**" />-->
-                  <!--<include name="**/groovy/griffon/plugins/orm/hibernate/**" />-->
-                  <!--<include name="**/groovy/griffon/validation/Hibernate**" />-->
-              <!--</fileset>-->
-        <!--</jar>-->
-        <!--<jar destfile="${griffon.dist}/griffon-web-${griffon.version}.jar" manifest="${griffon.build}/META-INF/MANIFEST.MF">-->
-             <!--<fileset dir="${griffon.build}">-->
-                  <!--<include name="META-INF/**" />    -->
-                  <!--<include name="griffon/converters/**" />-->
-                  <!--<include name="griffon/util/**" />-->
-                  <!--<exclude name="griffon/util/Generate**" />-->
-                  <!--<include name="**/groovy/griffon/web/**" />-->
-                 <!--<include name="**/groovy/griffon/plugins/web/**" />-->
-                 <!--<include name="**/groovy/griffon/plugins/converters/**" />-->
-
-                  <!--<include name="**/groovy/griffon/webflow/**" />-->
-              <!--</fileset>               -->
-        <!--</jar>-->
-        <!--<jar destfile="${griffon.dist}/griffon-webflow-${griffon.version}.jar" manifest="${griffon.build}/META-INF/MANIFEST.MF">-->
-             <!--<fileset dir="${griffon.build}">-->
-                  <!--<include name="META-INF/**" />    -->
-                  <!--<include name="**/groovy/griffon/webflow/**" />-->
-                 <!--<include name="**/groovy/griffon/plugins/webflow/**" />-->
-              <!--</fileset>-->
-        <!--</jar>-->
-        <!--<jar destfile="${griffon.dist}/griffon-crud-${griffon.version}.jar" manifest="${griffon.build}/META-INF/MANIFEST.MF">-->
-            <!--<fileset dir="${griffon.build}">-->
-                 <!--<include name="META-INF/**" />    -->
-                 <!--<include name="griffon/util/Generate**" />-->
-                 <!--<include name="**/groovy/griffon/scaffolding/**" />-->
-                <!--<include name="**/groovy/griffon/plugins/scafolding/**" />-->
-             <!--</fileset>-->
-
-        <!--</jar>-->
     </target>
 
     <target name="package-minimal" depends="clean,jar" description="Creates a minimal archive that can be used for integrating a griffon project with an existing build system.">

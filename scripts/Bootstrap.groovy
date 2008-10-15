@@ -13,23 +13,23 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-//import org.codehaus.groovy.griffon.commons.GriffonClassUtils as GCU
-//import org.codehaus.groovy.griffon.commons.ApplicationAttributes;
-//import org.codehaus.groovy.griffon.commons.GriffonApplication;
-//import org.codehaus.groovy.griffon.commons.ApplicationHolder;
-//import org.codehaus.groovy.griffon.commons.spring.GriffonRuntimeConfigurator;
+//import org.codehaus.griffon.commons.GriffonClassUtils as GCU
+//import org.codehaus.griffon.commons.ApplicationAttributes;
+//import org.codehaus.griffon.commons.GriffonApplication;
+//import org.codehaus.griffon.commons.ApplicationHolder;
+//import org.codehaus.griffon.commons.spring.GriffonRuntimeConfigurator;
 //import org.springframework.context.ApplicationContext;
-//import org.codehaus.groovy.griffon.plugins.*
+//import org.codehaus.griffon.plugins.*
 //import org.springframework.core.io.*
 //import org.springframework.context.ConfigurableApplicationContext;
 //import org.springframework.context.support.ClassPathXmlApplicationContext;
 //import org.springframework.mock.web.MockServletContext
-//import org.codehaus.groovy.griffon.cli.support.CommandLineResourceLoader;
+//import org.codehaus.griffon.cli.support.CommandLineResourceLoader;
 //import griffon.spring.*
 //import org.springframework.web.context.WebApplicationContext
 //import org.codehaus.groovy.tools.LoaderConfiguration
 //import org.codehaus.groovy.tools.RootLoader
-//import org.codehaus.groovy.griffon.cli.support.GriffonRootLoader
+//import org.codehaus.griffon.cli.support.GriffonRootLoader
 
 Ant.property(environment:"env")
 griffonHome = Ant.antProject.properties."env.GRIFFON_HOME"
@@ -48,13 +48,13 @@ target(loadApp:"Loads the Griffon application object") {
 //    profile("Loading parent ApplicationContext") {
 //        def builder = parentContext ? new WebBeanBuilder(parentContext) :  new WebBeanBuilder()
 //        beanDefinitions = builder.beans {
-//            resourceHolder(org.codehaus.groovy.griffon.commons.spring.GriffonResourceHolder) {
+//            resourceHolder(org.codehaus.griffon.commons.spring.GriffonResourceHolder) {
 //                this.resources = "file:${basedir}/**/griffon-app/**/*.groovy"
 //            }
-//            griffonResourceLoader(org.codehaus.groovy.griffon.commons.GriffonResourceLoaderFactoryBean) {
+//            griffonResourceLoader(org.codehaus.griffon.commons.GriffonResourceLoaderFactoryBean) {
 //                griffonResourceHolder = resourceHolder
 //            }
-//            griffonApplication(org.codehaus.groovy.griffon.commons.DefaultGriffonApplication.class, ref("griffonResourceLoader"))
+//            griffonApplication(org.codehaus.griffon.commons.DefaultGriffonApplication.class, ref("griffonResourceLoader"))
 //            pluginMetaManager(DefaultPluginMetaManager, resolveResources("file:${basedir}/plugins/*/plugin.xml"))
 //        }
 //    }
@@ -90,7 +90,7 @@ target(configureApp:"Configures the Griffon application and builds an Applicatio
 //    event("ConfigureAppStart", [griffonApp, appCtx])
 //    appCtx.resourceLoader = new  CommandLineResourceLoader()
 //    profile("Performing runtime Spring configuration") {
-//        def config = new org.codehaus.groovy.griffon.commons.spring.GriffonRuntimeConfigurator(griffonApp,appCtx)
+//        def config = new org.codehaus.griffon.commons.spring.GriffonRuntimeConfigurator(griffonApp,appCtx)
 //       appCtx = config.configure(servletContext)
 //        servletContext.setAttribute(ApplicationAttributes.APPLICATION_CONTEXT,appCtx );
 //        servletContext.setAttribute(WebApplicationContext.ROOT_WEB_APPLICATION_CONTEXT_ATTRIBUTE, appCtx);

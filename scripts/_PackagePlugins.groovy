@@ -21,8 +21,6 @@
  *
  * @since 0.4
  */
-import org.codehaus.groovy.griffon.commons.GriffonClassUtils as GCU  
-
 GCL = new GroovyClassLoader()
 
 Ant.property(environment:"env")   

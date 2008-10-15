@@ -55,19 +55,17 @@
     <target name="build-test" depends="build">
 
         <groovyc destdir="${griffon.test.build}" fork="true" >
-            <src path="${griffon.test.src.commons}" />
-            <src path="${griffon.test.src.buildtime}" />
-            <!--<src path="${griffon.test.src.web}" />-->
-            <!--<src path="${griffon.test.src.persistence}" />-->
-            <!--<src path="${griffon.test.src.scaffolding}" />-->
-            <!--<src path="src/test" />-->
+            <src path="${griffon.test.src.cli}" />
+            <src path="${griffon.test.src.rt}" />
             <javac debug="on" deprecation="on" encoding="UTF-8"/>
             <classpath refid="classpath" />
             <classpath location="${griffon.test.build}" />
-            <classpath location="${griffon.build}" />
+            <classpath location="${griffon.build.cli}" />
+            <classpath location="${griffon.build.rt}" />
         </groovyc>
         <copy todir="${griffon.test.build}">
-            <fileset dir="${griffon.test.src.commons}" excludes="**/*.java,**/*.groovy"/>
+            <fileset dir="${griffon.test.src.cli}" excludes="**/*.java,**/*.groovy"/>
+            <fileset dir="${griffon.test.src.rt}" excludes="**/*.java,**/*.groovy"/>
         </copy>
 
     </target>
@@ -153,9 +151,11 @@
             <!-- only neede for coverage -->
             <!--<classpath location="cruise/coverage/lib/cobertura.jar" />-->
 
-            <classpath location="${griffon.build}" />
+            <classpath location="${griffon.build.cli}" />
+            <classpath location="${griffon.build.rt}" />
             <classpath location="${griffon.test.build}" />
-            <classpath location="${griffon.test.src.commons}" />
+            <classpath location="${griffon.test.src.cli}" />
+            <classpath location="${griffon.test.src.rt}" />
 
             <!-- needed to load codecs -->
             <!--<classpath location="${griffon.src.codecs}" />-->

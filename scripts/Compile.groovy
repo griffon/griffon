@@ -22,10 +22,10 @@
  * @since 0.4
  */
 
-//import org.codehaus.groovy.griffon.commons.GriffonClassUtils as GCU
-//import org.codehaus.groovy.griffon.compiler.support.GriffonResourceLoader
-//import org.codehaus.groovy.griffon.compiler.support.GriffonResourceLoaderHolder
-//import org.codehaus.groovy.griffon.compiler.injection.*
+//import org.codehaus.griffon.commons.GriffonClassUtils as GCU
+//import org.codehaus.griffon.compiler.support.GriffonResourceLoader
+//import org.codehaus.griffon.compiler.support.GriffonResourceLoaderHolder
+//import org.codehaus.griffon.compiler.injection.*
 //import org.springframework.core.io.*
 //import groovy.text.SimpleTemplateEngine
 //import org.codehaus.groovy.ant.*
@@ -43,7 +43,7 @@ if(!Ant.antProject.properties."groovyJarSet") {
     }
 }
 Ant.taskdef (     name : 'groovyc' ,
-//                classname : 'org.codehaus.groovy.griffon.compiler.GriffonCompiler' ,
+//                classname : 'org.codehaus.griffon.compiler.GriffonCompiler' ,
                                 classname : 'org.codehaus.groovy.ant.Groovyc' ,
                 classpathref : 'groovyJarSet' )
 

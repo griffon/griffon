@@ -23,13 +23,13 @@
  * @since 0.4
  */
 
-//import org.codehaus.groovy.griffon.commons.GriffonClassUtils as GCU
+//import org.codehaus.griffon.commons.GriffonClassUtils as GCU
 //import groovy.text.SimpleTemplateEngine
 //import org.springframework.core.io.support.PathMatchingResourcePatternResolver
 //import org.springframework.core.io.*
-//import org.codehaus.groovy.griffon.plugins.*
-//import org.codehaus.groovy.griffon.commons.*
-//import org.codehaus.groovy.griffon.commons.cfg.*
+//import org.codehaus.griffon.plugins.*
+//import org.codehaus.griffon.commons.*
+//import org.codehaus.griffon.commons.cfg.*
 //import org.codehaus.groovy.control.*
 //import org.springframework.util.Log4jConfigurer
 //import griffon.util.*
@@ -504,7 +504,7 @@ recompileCheck = { lastModified, callback ->
     try {
         def ant = new AntBuilder()
         ant.taskdef (     name : 'groovyc' ,
-//                        classname : 'org.codehaus.groovy.griffon.compiler.GriffonCompiler' ,
+//                        classname : 'org.codehaus.griffon.compiler.GriffonCompiler' ,
                         classname : 'org.codehaus.groovy.ant.Groovyc' ,
         )
         def griffonDir = resolveResources("file:${basedir}/griffon-app/*")

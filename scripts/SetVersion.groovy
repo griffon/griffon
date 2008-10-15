@@ -23,9 +23,6 @@
  * @since 0.5
  */
 
-import org.codehaus.groovy.griffon.commons.GriffonClassUtils as GCU
-import groovy.text.SimpleTemplateEngine
-
 Ant.property(environment:"env")
 griffonHome = Ant.antProject.properties."env.GRIFFON_HOME"
 

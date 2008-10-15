@@ -125,7 +125,7 @@ if "x" == "x%CLASSPATH%" goto after_classpath
 set CP=%CP%;%CLASSPATH%
 :after_classpath
 
-set STARTER_MAIN_CLASS=org.codehaus.groovy.griffon.cli.support.GriffonStarter
+set STARTER_MAIN_CLASS=org.codehaus.griffon.cli.support.GriffonStarter
 set STARTER_CONF=%GRIFFON_HOME%\conf\groovy-starter.conf
 
 set JAVA_EXE=%JAVA_HOME%\bin\java.exe

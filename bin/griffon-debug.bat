@@ -14,5 +14,5 @@ if "%DIRNAME%" == "" set DIRNAME=.\
 
 set JAVA_OPTS=-Xdebug -Xnoagent -Dgriffon.full.stacktrace=true -Djava.compiler=NONE -Xrunjdwp:transport=dt_socket,server=y,suspend=n,address=5005
 
-CALL "%DIRNAME%\startGriffon.bat" "%DIRNAME%" org.codehaus.groovy.griffon.cli.GriffonScriptRunner %*
+CALL "%DIRNAME%\startGriffon.bat" "%DIRNAME%" org.codehaus.griffon.cli.GriffonScriptRunner %*
 

@@ -5,6 +5,8 @@
 
     <target name="build-init">
         <mkdir dir="${griffon.build}"/>
+        <mkdir dir="${griffon.build.rt}"/>
+        <mkdir dir="${griffon.build.cli}"/>
         <mkdir dir="${griffon.test.build}"/>
         <mkdir dir="${griffon.test.reports}"/>
         <mkdir dir="${griffon.dist}"/>
@@ -13,38 +15,48 @@
 
     <target name="build" depends="build-init" description="compile Java and Groovy sources" >
 
-        <copy todir="${griffon.build}">
-            <fileset dir="${griffon.src.commons}" includes="**/*.properties" />
-            <!--<fileset dir="${griffon.src.web}" includes="**/*.properties" />-->
-            <!--<fileset dir="${griffon.src.persistence}" includes="**/*.properties" />-->
-            <!--<fileset dir="${griffon.src.scaffolding}" includes="**/*.properties" />-->
-            <!--<fileset dir="${griffon.src.groovy}" includes="**/*.properties" />-->
-            <fileset dir="${griffon.src.main}" includes="**/*.properties" />
+        <copy todir="${griffon.build.rt}">
+            <fileset dir="${griffon.src.rt}" includes="**/*.properties" />
         </copy>
 
-        <!-- fork is broken in g1.6b2S -->
-        <groovyc fork="false" includeantruntime="false" destdir="${griffon.build}"  encoding="UTF-8">
+        <groovyc fork="true" includeantruntime="false" destdir="${griffon.build.rt}"  encoding="UTF-8">
             <classpath>
-                <pathelement location="${griffon.build}"/>
+                <pathelement location="${griffon.build.rt}"/>
                 <path refid="classpath"/>
             </classpath>
-            <src path="${griffon.src.commons}"/>
-            <!--<src path="${griffon.src.web}"/>-->
-            <!--<src path="${griffon.src.persistence}"/>-->
-            <!--<src path="${griffon.src.scaffolding}"/>-->
-            <!--<src path="${griffon.src.groovy}"/>-->
-            <src path="${griffon.src.main}"/>
+            <src path="${griffon.src.rt}"/>
+            <javac deprecation="on" debug="yes" source="1.5" target="1.5" />
+        </groovyc>
 
+        <mkdir dir="${griffon.build.rt}/META-INF"  />
+        <manifest file="${griffon.build.rt}/META-INF/MANIFEST.MF">
+          <attribute name="Built-By" value="${user.name}"/>
+          <attribute name="Implementation-Title" value="griffon-rt"/>
+          <attribute name="Implementation-Version" value="${griffon.version}"/>
+          <attribute name="Implementation-Vendor" value="griffon.codehaus.org"/>
+        </manifest>
+
+        <copy todir="${griffon.build.cli}">
+            <fileset dir="${griffon.src.cli}" includes="**/*.properties" />
+        </copy>
+
+        <groovyc fork="true" includeantruntime="false" destdir="${griffon.build.cli}"  encoding="UTF-8">
+            <classpath>
+                <pathelement location="${griffon.build.cli}"/>
+                <pathelement location="${griffon.build.rt}"/>
+                <path refid="classpath"/>
+            </classpath>
+            <src path="${griffon.src.cli}"/>
             <javac deprecation="on" debug="yes" source="1.5" target="1.5" />
         </groovyc>
 
 
-        <mkdir dir="${griffon.build}/META-INF"  />
-        <manifest file="${griffon.build}/META-INF/MANIFEST.MF">
+        <mkdir dir="${griffon.build.cli}/META-INF"  />
+        <manifest file="${griffon.build.cli}/META-INF/MANIFEST.MF">
           <attribute name="Built-By" value="${user.name}"/>
-          <attribute name="Implementation-Title" value="griffon"/>
+          <attribute name="Implementation-Title" value="griffon-cli"/>
           <attribute name="Implementation-Version" value="${griffon.version}"/>
-          <attribute name="Implementation-Vendor" value="griffon.org"/>
+          <attribute name="Implementation-Vendor" value="griffon.codehaus.org"/>
         </manifest>
 
         <!--<antcall target="build:java5" />-->

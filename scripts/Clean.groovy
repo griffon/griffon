@@ -22,7 +22,7 @@
  * @since 0.4
  */
 
-//import org.codehaus.groovy.griffon.commons.GriffonClassUtils as GCU
+//import org.codehaus.griffon.commons.GriffonClassUtils as GCU
 //import groovy.text.SimpleTemplateEngine
 
 Ant.property(environment:"env")
