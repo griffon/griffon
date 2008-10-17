@@ -171,6 +171,8 @@ Griffon home is set to: ${griffonHome}
     // this map contains default environments for several scripts in form 'script-name':'env-code'
     static DEFAULT_ENVS = [
             'test-app':GriffonContext.ENV_TEST,
+            'console':GriffonContext.ENV_TEST,
+            'shell':GriffonContext.ENV_TEST,
             'run-webtest':GriffonContext.ENV_TEST]
     private static isEnvironmentArgs(env) {
         ENV_ARGS.keySet().contains(env)

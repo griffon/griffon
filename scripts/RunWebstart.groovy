@@ -12,14 +12,21 @@ griffonHome = Ant.antProject.properties."env.GRIFFON_HOME"
 includeTargets << new File("${griffonHome}/scripts/Package.groovy")
 //includeTargets << new File ( "${griffonHome}/scripts/_PackagePlugins.groovy" )
 
-target('default': "Runs the applicaiton from the command line") {
+target('default': "Runs the applicaiton from Java WebStart") {
     depends(checkVersion)
+
     runApp()
+
 }
 
 
 target(runApp: "Does the actual command line execution") {
     depends(packageApp)
+
+    if ((config.griffon.jars.sign != [:]) && !config.griffon.jars.sign) {
+        event("StatusFinal", ["Cannot run WebStart application because Webstart requires code signing.\n  in Config.groovy griffon.jars.sign = false"])
+        exit(1)
+    }
 
     // calculate the needed jars
     File jardir = new File(Ant.antProject.replaceProperties(config.griffon.jars.destDir))

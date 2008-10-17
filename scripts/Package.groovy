@@ -1,3 +1,6 @@
+import java.util.zip.ZipEntry
+import java.util.zip.ZipFile
+
 /*
 * Copyright 2004-2008 the original author or authors.
 *
@@ -178,7 +181,7 @@ target( packageApp : "Implementation of package target") {
     //loadPlugins()
     //generateWebXml()
 
-    if (!skipJarSigning) checkKey()
+    checkKey()
     copyLibs()
     jarFiles()
     generateJNLP()
@@ -186,28 +189,30 @@ target( packageApp : "Implementation of package target") {
 }
 
 target(checkKey: "Check to see if the keystore exists")  {
-    // check for passwords
-    // pw is echoed, but jarsigner does that too...
-    // when we go to 1.6 only we should use java.io.Console
-    if (!config.signingkey.params.storepass) {
-        print "Enter the keystore password:"
-        config.signingkey.params.storepass = System.in.newReader().readLine()
-    }
-    if (!config.signingkey.params.keypass) {
-        print "Enter the key password [blank if same as keystore] :"
-        config.signingkey.params.keypass = System.in.newReader().readLine() ?: config.signingkey.params.storepass
-    }
-
-    if (!(new File(Ant.antProject.replaceProperties(config.signingkey.params.keystore)).exists())) {
-        println "Auto-generating a local self-signed key"
-        Map genKeyParams = [:]
-        genKeyParams.dname =  'CN=Auto Gen Self-Signed Key -- Not for Production, OU=Development, O=Griffon'
-        for (key in ['alias', 'storepass', 'keystore', 'storetype', 'keypass', 'sigalg', 'keyalg', 'verbose', 'dname', 'validity', 'keysize']) {
-            if (config.signingkey.params."$key") {
-                genKeyParams[key] = config.signingkey.params[key]
-            }
+    if ((config.griffon.jars.sign == [:]) || config.griffon.jars.sign) {
+        // check for passwords
+        // pw is echoed, but jarsigner does that too...
+        // when we go to 1.6 only we should use java.io.Console
+        if (!config.signingkey.params.storepass) {
+            print "Enter the keystore password:"
+            config.signingkey.params.storepass = System.in.newReader().readLine()
         }
-        Ant.genkey(genKeyParams)
+        if (!config.signingkey.params.keypass) {
+            print "Enter the key password [blank if same as keystore] :"
+            config.signingkey.params.keypass = System.in.newReader().readLine() ?: config.signingkey.params.storepass
+        }
+
+        if (!(new File(Ant.antProject.replaceProperties(config.signingkey.params.keystore)).exists())) {
+            println "Auto-generating a local self-signed key"
+            Map genKeyParams = [:]
+            genKeyParams.dname =  'CN=Auto Gen Self-Signed Key -- Not for Production, OU=Development, O=Griffon'
+            for (key in ['alias', 'storepass', 'keystore', 'storetype', 'keypass', 'sigalg', 'keyalg', 'verbose', 'dname', 'validity', 'keysize']) {
+                if (config.signingkey.params."$key") {
+                    genKeyParams[key] = config.signingkey.params[key]
+                }
+            }
+            Ant.genkey(genKeyParams)
+        }
     }
 }
 
@@ -240,8 +245,31 @@ target(copyLibs: "Copy Library Files") {
     Ant.copy(todir:jardir) { fileset(dir:"${basedir}/lib/", includes:"*.dll") }
     Ant.copy(todir:jardir) { fileset(dir:"${basedir}/lib/", includes:"*.so") }
 
-    //TODO pack200 these files as well...
-    //TODO also unpack, so code signing will work.
+}
+
+/**
+ * The presence of a .SF, .DSA, or .RSA file in meta-inf means yes
+ */
+boolean isJarSigned(File jarFile, File targetFile) {
+    File fileToSearch  = targetFile.exists() ? targetFile : jarFile;
+
+    ZipFile zf = new ZipFile(fileToSearch)
+    try {
+        // don't use .each {}, cannot break out of closure
+        Enumeration<ZipEntry> entriesEnum = zf.entries()
+        while (entriesEnum.hasMoreElements()) {
+            ZipEntry ze = entriesEnum.nextElement()
+            if (ze.name ==~ 'META-INF/\\w{1,8}\\.(SF|RSA|DSA)') {
+                // found a signature file
+                return true
+            }
+            // possible optimization, expect META-INF first?  stop looking when we see other dirs?
+        }
+        // found no signature files
+        return false
+    } finally {
+        zf.close()
+    }
 }
 
 def griffonCopyDist(jarname, targetDir, boolean force = false) {
@@ -252,22 +280,36 @@ def griffonCopyDist(jarname, targetDir, boolean force = false) {
     }
     File targetFile = new File(targetDir + File.separator + srcFile.getName());
 
-    // first do a copy, but not
-    //  if sourcedir == targetdir
-    //  if source older than newer
-
-    // no need to check for identical files, if a is b, a.lastModified == b.lastModifed
-    // no need to check if target exists, last modifed on a non-existant file is 0L
-    // but if we are not lazy, copy anyway
+    // first do a copy
     long originalLastMod = targetFile.lastModified()
     force = force || !(config.signingkey?.params?.lazy)
 
     Ant.copy(file:srcFile, toFile:targetFile, overwrite:force)
 
-    if (!force && targetFile.lastModified() <= originalLastMod) {
-        // nothing changed and we aren't forcing anything
-        return
+    // we may already be copied, but not packed or signed
+    // first see if the config calls for packing or signing
+    // (do this funny dance because unset == true)
+    boolean configSaysJarPacking = (config.griffon.jars.pack == [:]) || config.griffon.jars.pack
+    boolean configSaysJarSigning = (config.griffon.jars.sign == [:]) || config.griffon.jars.sign
+
+    boolean doJarSigning = configSaysJarSigning
+    boolean doJarPacking = configSaysJarPacking
+
+    // if we should sign, check if the jar is already signed
+    // don't pack if it appears newer and we're not forced
+    if (doJarPacking && !force) {
+        doJarSigning = !isJarSigned(srcFile, targetFile)
     }
+
+    // if we should pack, check for forcing or a newer .pack.gz file
+    // don't pack if it appears newer and we're not forced
+    if (doJarPacking && !force) {
+        doJarPacking = !new File(targetFile.path + ".pack.gz").exists()
+    }
+
+    // packaging quirk, if we sign or pack, we must do both if either calls for a re-do
+    doJarSigning = doJarSigning || (configSaysJarSigning && doJarPacking)
+    doJarPacking = doJarPacking || (configSaysJarPacking && doJarSigning)
 
     //TODO strip old signatures?
 
@@ -278,16 +320,17 @@ def griffonCopyDist(jarname, targetDir, boolean force = false) {
         '-O', // smaller files, reorder files if it makes things smaller
     ]
     // repack so we can sign pack200
-    Ant.exec(executable:'pack200') {
-        for (option in packOptions) {
-            arg(value:option)
+    if (doJarPacking) {
+        Ant.exec(executable:'pack200') {
+            for (option in packOptions) {
+                arg(value:option)
+            }
+            arg(value:'--repack')
+            arg(value:targetFile)
         }
-        arg(value:'--repack')
-        arg(value:targetFile)
     }
 
-
-    if (!skipJarSigning) {
+    if (doJarSigning) {
         // sign jar
         Map signJarParams = [:]
         for (key in ['alias', 'storepass', 'keystore', 'storetype', 'keypass', 'sigfile', 'verbose', 'internalsf', 'sectionsonly', 'lazy', 'maxmemory', 'preservelastmodified', 'tsaurl', 'tsacert']) {
@@ -296,25 +339,27 @@ def griffonCopyDist(jarname, targetDir, boolean force = false) {
             }
         }
 
-        Ant.signjar(signJarParams) {
-            fileset(dir:targetDir, includes:"*.jar")
-        }
+	    signJarParams.jar = targetFile.path
+        Ant.signjar(signJarParams)
     }
 
-    // do the for-real packing
-    Ant.exec(executable:'pack200') {
-        for (option in packOptions) {
-            arg(value:option)
+    if (doJarPacking) {
+        // do the for-real packing
+        Ant.exec(executable:'pack200') {
+            for (option in packOptions) {
+                arg(value:option)
+            }
+            arg(value:"${targetFile}.pack.gz")
+            arg(value:targetFile)
         }
-        arg(value:"${targetFile}.pack.gz")
-        arg(value:targetFile)
+
+        //TODO? validate packed jar is signed properly
+
+        //TODO? versioning
+        // check for version number
+        //   copy to version numberd file if version # available
+
     }
-
-    //TODO validate?
-
-    //TODO versioning?
-    // check for version number
-    //   copy to version numberd file if version # available
 
 }
 

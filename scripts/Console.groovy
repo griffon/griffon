@@ -31,7 +31,6 @@ Ant.property(environment:"env")
 griffonHome = Ant.antProject.properties."env.GRIFFON_HOME"
 
 includeTargets << new File ( "${griffonHome}/scripts/Bootstrap.groovy" )
-skipJarSigning = true
 
 target ('default': "Load the Griffon interactive Swing console") {
     depends( checkVersion, configureProxy, packageApp, classpath)

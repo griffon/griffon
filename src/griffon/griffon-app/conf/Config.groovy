@@ -36,6 +36,7 @@ environments {
     development {
         signingkey {
             params {
+                sigfile = "GRIFFON"
                 keystore = "${basedir}/griffon-app/conf/keys/devKeystore"
                 alias = 'development'
                 storepass = 'BadStorePassword'
@@ -45,9 +46,20 @@ environments {
         }
 
     }
+    environments {
+        test {
+            griffon {
+                jars {
+                    sign = false
+                    pack = false
+                }
+            }
+        }
+    }
     production {
         signingkey {
             params {
+                sigfile = "GRIFFON"
                 keystore = "CHANGE ME"
                 alias = 'CHAMGE ME'
                 // NOTE: for production keys it is more secure to rely on key prompting
@@ -59,7 +71,7 @@ environments {
 
         griffon {
             jars {
-                destDir = "${basedir}/target"
+                destDir = "${basedir}/staging"
             }
             webstart {
                 codebase = "CHANGE ME"
@@ -70,7 +82,9 @@ environments {
 
 griffon {
     jars {
-        destDir = "${basedir}/target"
+        sign = true
+        pack = true
+        destDir = "${basedir}/staging"
         jarName = "${appName}.jar"
     }
     webstart {

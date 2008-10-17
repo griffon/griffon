@@ -50,7 +50,6 @@ baseName = baseFile.name
 userHome = Ant.antProject.properties."user.home"
 griffonApp = null
 eventsClassLoader = new GroovyClassLoader(getClass().classLoader)
-skipJarSigning = false
 
 
 // common directories and paths

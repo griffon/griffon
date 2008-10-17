@@ -59,7 +59,7 @@ environments {
 
         griffon {
             jars {
-                destDir = "${basedir}/target"
+                destDir = "${basedir}/staging"
             }
             webstart {
                 codebase = "CHANGE ME"
@@ -70,7 +70,9 @@ environments {
 
 griffon {
     jars {
-        destDir = "${basedir}/target"
+        sign = true
+        pack = true
+        destDir = "${basedir}/staging"
         jarName = "${appName}.jar"
     }
     webstart {

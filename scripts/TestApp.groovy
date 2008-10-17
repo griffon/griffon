@@ -1,16 +1,15 @@
-import org.codehaus.griffon.commons.GriffonClassUtils as GCU
-//import griffon.util.GriffonWebUtil as GWU
-
 import java.lang.reflect.Modifier
 import junit.framework.TestCase
 import junit.framework.TestResult
 import junit.framework.TestSuite
-import org.apache.commons.logging.LogFactory
 import org.apache.tools.ant.taskdefs.optional.junit.JUnitTest
 import org.apache.tools.ant.taskdefs.optional.junit.PlainJUnitResultFormatter
 import org.apache.tools.ant.taskdefs.optional.junit.XMLJUnitResultFormatter
-//import griffon.util.IGriffonApplication
 import org.codehaus.griffon.support.GriffonTestSuite
+
+//import griffon.util.GriffonWebUtil as GWU
+
+//import griffon.util.IGriffonApplication
 //import org.codehaus.groovy.griffon.support.PersistenceContextInterceptor
 //import org.codehaus.groovy.griffon.web.servlet.GriffonApplicationAttributes
 //import org.springframework.transaction.support.TransactionCallback
@@ -51,7 +50,6 @@ compilationFailures = []
 includeTargets << new File("${griffonHome}/scripts/Bootstrap.groovy")
 
 generateLog4jFile = true
-skipJarSigning = true
 
 target('default': "Run a Griffon applications unit tests") {
     depends(classpath, checkVersion, configureProxy)

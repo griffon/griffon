@@ -39,6 +39,7 @@ environments {
             params {
                 keystore = '${base.dir}/griffon-app/conf/keys/devKeystore'
                 alias = 'development'
+                sigfile = "GRIFFON"
                 storepass = 'BadStorePassword'
                 keypass   = 'BadKeyPassword'
 	            lazy      = true
@@ -47,7 +48,27 @@ environments {
 
         griffon {
             jars {
-                destDir = "${basedir}/target"
+                sign = true
+                pack = true
+                destDir = "${basedir}/staging"
+                jarName = "${appName}.jar"
+            }
+            webstart {
+                codebase = "${new File(griffon.jars.destDir).toURI().toASCIIString()}"
+                jnlp = "greet.jnlp"
+            }
+            applet {
+                jnlp = "applet.jnlp"
+                html = "applet.html"
+            }
+        }
+    }
+    test {
+        griffon {
+            jars {
+                sign = false
+                pack = false
+                destDir = "${basedir}/staging"
                 jarName = "${appName}.jar"
             }
             webstart {
@@ -65,6 +86,7 @@ environments {
             params {
                 keystore = '${base.dir}/griffon-app/conf/keys/productionKeystore'
                 alias = 'greetkey'
+                sigfile = "GRIFFON"
                 //storepass = 'BadStorePassword' // no value means we will prompt
                 //keypass   = 'BadKeyPassword' // no value means we will prompt
             }
@@ -72,6 +94,8 @@ environments {
 
         griffon {
             jars {
+                sign = true
+                pack = true
                 destDir = '${basedir}/../../bin-dist/greet'
                 jarName = "${appName}.jar"
             }
