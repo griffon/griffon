@@ -1,0 +1,164 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<project name="griffon-installer" basedir="." default="create-installer">
+
+  <property name="griffon.installer.dir" value="${griffon.target}/installer" />
+
+  <target name="prepare-installer">
+      <taskdef name="izpack"
+               classpath="${basedir}/installer/lib/izpack-standalone-compiler-4.1.0.jar"
+               classname="com.izforge.izpack.ant.IzPackTask"/>
+
+<!--
+      <antcall target="package"/>
+-->
+      <mkdir dir="${griffon.installer.dir}" />
+      <unzip src="${griffon.dist}/${griffon.dist.binary}.zip" dest="${griffon.installer.dir}/binary" />
+      <unzip src="${griffon.dist}/${griffon.dist.source}.zip" dest="${griffon.installer.dir}/source" />
+      <copy todir="${griffon.installer.dir}/resources">
+          <fileset dir="${basedir}/installer/resources" />
+      </copy>
+
+      <property name="app.group" value="Griffon" />
+      <property name="app.name" value="griffon" />
+      <property name="app.title" value="Griffon" />
+      <property name="app.version" value="${griffon.version}" />
+      <property name="app.subpath" value="${app.name}-${app.version}" />
+  </target>
+  
+  <target name="create-installer" depends="prepare-installer" >
+      <izpack basedir="${griffon.installer.dir}"
+              output="${griffon.target}/griffon-installer-${griffon.version}.jar"
+              compression="deflate"
+              compressionlevel="9">
+      <config><![CDATA[
+<installation version="1.0">
+  <variables>
+    <variable name="appGroup" value="@{app.group}"/>
+    <variable name="appTitle" value="@{app.title}"/>
+    <variable name="appSubPath" value="@{app.subpath}"/>
+    <variable name="appVersion" value="@{app.version}"/>
+    <!-- pre-select desktop shortcut checkbox -->
+    <variable name="DesktopShortcutCheckboxEnabled" value="true" />
+  </variables>
+  <native type="izpack" name="ShellLink.dll"/>
+  <native type="3rdparty" name="COIOSHelper.dll" stage="both">
+    <os family="windows"/>
+  </native>
+  <info>
+    <javaversion>1.5</javaversion>
+    <appname>@{app.title}</appname>
+    <appsubpath>@{app.subpath}</appsubpath>
+    <appversion>@{app.version}</appversion>
+
+    <!-- following appears in HelloPanel -->
+    <authors>
+      <author name="the Griffon team" email="dev@griffon.codehaus.org"/>
+    </authors>
+    <url>http://griffon.codehaus.org</url>
+  </info>
+
+  <guiprefs width="800" height="600" resizable="yes">
+    <modifier key="allXGap" value="5"/>
+    <modifier key="allYGap" value="5"/>
+    <modifier key="paragraphYGap" value="15"/>
+    <modifier key="useHeadingPanel" value="yes"/>
+    <modifier key="headingLineCount" value="1"/>
+    <modifier key="headingFontSize" value="2"/>
+    <modifier key="headingBackgroundColor" value="0x00ffffff"/>
+    <modifier key="headingPanelCounter" value="text"/>
+    <modifier key="headingPanelCounterPos" value="inHeading"/>
+    <laf name="metouia">
+       <os family="unix" />
+    </laf>
+  </guiprefs>
+
+  <locale>
+    <langpack iso3="eng"/>
+    <langpack iso3="deu"/>
+    <langpack iso3="fra"/>
+    <langpack iso3="jpn"/>
+    <langpack iso3="ita"/>
+    <langpack iso3="por"/>
+    <langpack iso3="rus"/>
+    <langpack iso3="spa"/>
+  </locale>
+
+  <resources>
+    <res id="Heading.image" src="resources/groovy.png" />
+    <res id="HTMLLicencePanel.licence" src="resources/asl2.html" />
+
+    <!-- FIXME: parse=yes results in a blank panel -->
+    <res id="HTMLInfoPanel.info"
+	src="resources/README-Griffon.html" parse="no" />
+
+    <res id="TargetPanel.dir.unix" src="resources/target_unix.txt" parse="yes" />
+    <res id="Win_NT_shortcutSpec.xml" src="resources/winShortcutSpec.xml" />
+    <res id="shortcutSpec.xml" src="resources/emptyShortcutSpec.xml" />
+    <res id="ProcessPanel.Spec.xml" src="resources/processSpec.xml" />
+<!--
+    <res id="installer.langsel.img" src="resources/groovy-splash.png" />
+-->
+    <res id="RegistrySpec.xml" src="resources/RegistrySpec.xml" />
+  </resources>
+
+  <native type="izpack" name="ShellLink.dll"/>
+
+  <panels>
+    <panel classname="HelloPanel"/>
+    <panel classname="HTMLInfoPanel"/>
+    <panel classname="HTMLLicencePanel"/>
+    <panel classname="TargetPanel" /> 
+    <panel classname="PacksPanel"/>
+    <panel classname="SummaryPanel"/>
+    <panel classname="InstallPanel"/>
+    <panel classname="ProcessPanel"/>
+    <panel classname="ShortcutPanel" /> 
+    <panel classname="FinishPanel"/>
+  </panels>
+  
+  <listeners>
+    <listener installer="SummaryLoggerInstallerListener"/>
+    <listener installer="RegistryInstallerListener"
+              uninstaller="RegistryUninstallerListener">
+      <os family="windows"/>
+    </listener>
+  </listeners>
+
+  <packs>
+    <pack name="Griffon binary" required="yes">
+      <description>Griffon binary files installation.</description>
+
+      <fileset dir="binary/griffon-@{griffon.version}"
+      	targetdir="$INSTALL_PATH">
+      </fileset>
+
+      <!--
+      <file src="resources/README-Griffon.html"
+	targetdir="$INSTALL_PATH" />
+      <parsable targetfile="$INSTALL_PATH/README-Griffon.html" />
+      -->
+
+      <file src="resources/pre-uninstall.bat"
+	targetdir="$INSTALL_PATH/Uninstaller" os="windows" />
+      <parsable targetfile="$INSTALL_PATH/Uninstaller/pre-uninstall.bat" os="windows" />
+      <executable targetfile="$INSTALL_PATH/Uninstaller/pre-uninstall.bat" os="windows" stage="uninstall" />
+
+      <executable targetfile="$INSTALL_PATH/bin/griffon" os="unix" />
+      <executable targetfile="$INSTALL_PATH/bin/startGriffon" os="unix"/>
+    </pack>
+
+    <pack name="Griffon source" required="no">
+      <description>Griffon source installation.</description>
+
+      <fileset dir="source/griffon-@{griffon.version}"
+        targetdir="$INSTALL_PATH">
+      </fileset>
+    </pack>
+  </packs>
+
+</installation>
+      ]]></config>
+      </izpack>
+  </target>
+
+</project>
