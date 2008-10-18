@@ -1,6 +1,32 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
 <project name="griffon-installer" basedir=".">
 
+  <target name="test-osx">
+      <condition property="os.isOSX" value="true">
+          <and>
+              <os family="mac"/>
+              <and>
+                  <os family="unix"/>
+              </and>
+          </and>
+      </condition>
+      <fail message="You are not running on OSX" unless="os.isOSX" />
+      <echo>You are running ${os.name} ${os.arch} ${os.version}</echo>
+  </target>
+
+  <target name="test-linux">
+      <condition property="os.isLinux" value="true">
+          <and>
+              <os family="unix"/>
+              <and>
+                  <os name="Linux"/>
+              </and>
+          </and>
+      </condition>
+      <fail message="You are not running on Linux" unless="os.isLinux" />
+      <echo>You are running ${os.name} ${os.arch} ${os.version}</echo>
+  </target>
+
   <target name="prepare-installer-izpack">
       <property name="griffon.installer.izpack.dir" value="${griffon.target}/installer/izpack" />
       <taskdef name="izpack"
@@ -25,7 +51,7 @@
       <property name="app.subpath" value="${app.name}-${app.version}" />
 
       <izpack basedir="${griffon.installer.izpack.dir}"
-              output="${griffon.target}/griffon-installer-${griffon.version}.jar"
+              output="${griffon.dist}/griffon-installer-${griffon.version}.jar"
               compression="deflate"
               compressionlevel="9">
       <config><![CDATA[
@@ -159,7 +185,8 @@
       </izpack>
   </target>
 
-  <target name="prepare-installer-rpm">
+  <target name="prepare-installer-rpm" depends="test-linux" >
+      <antcall target="package"/>
       <property name="griffon.installer.rpm.dir" value="${griffon.target}/installer/rpm" />
 
       <mkdir dir="${griffon.installer.rpm.dir}/BUILD" />
@@ -178,7 +205,6 @@
   </target>
 
   <target name="create-installer-rpm" depends="prepare-installer-rpm" >
-      <antcall target="package"/>
       <unzip src="${griffon.dist}/${griffon.dist.binary}.zip" 
              dest="${griffon.installer.rpm.dir}/BUILD" />
       <copy todir="${griffon.installer.rpm.dir}/SOURCES"
@@ -187,8 +213,21 @@
            topDir="${griffon.installer.rpm.dir}"
            cleanBuildDir="false"
            failOnError="true"/>
-      <copy tofile="${griffon.target}/griffon-${griffon.version.rpm}-1.noarch.rpm"
+      <copy tofile="${griffon.dist}/griffon-${griffon.version.rpm}-1.noarch.rpm"
             file="${griffon.installer.rpm.dir}/RPMS/noarch/griffon-${griffon.version.rpm}-1.noarch.rpm" />
+  </target>
+
+  <target name="prepare-installer-dmg" depends="test-osx" >
+      <antcall target="package"/>
+      <property name="griffon.installer.dmg.dir" value="${griffon.target}/installer/dmg" />
+      <mkdir dir="${griffon.installer.dmg.dir}" />
+      <unzip src="${griffon.dist}/${griffon.dist.binary}.zip" dest="${griffon.installer.dmg.dir}" />
+  </target>
+
+  <target name="create-installer-dmg" depends="prepare-installer-dmg" >
+      <exec executable="hdiutil">
+         <arg line="create -srcfolder ${griffon.installer.dmg.dir} ${griffon.dist}/griffon-${griffon.version}.dmg" />
+      </exec>
   </target>
 
 </project>
