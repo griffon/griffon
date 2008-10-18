@@ -1,32 +1,30 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<project name="griffon-installer" basedir="." default="create-installer">
+<project name="griffon-installer" basedir=".">
 
-  <property name="griffon.installer.dir" value="${griffon.target}/installer" />
-
-  <target name="prepare-installer">
+  <target name="prepare-installer-izpack">
+      <property name="griffon.installer.izpack.dir" value="${griffon.target}/installer/izpack" />
       <taskdef name="izpack"
-               classpath="${basedir}/installer/lib/izpack-standalone-compiler-4.1.0.jar"
+               classpath="${basedir}/installer/izpack/lib/izpack-standalone-compiler-4.1.0.jar"
                classname="com.izforge.izpack.ant.IzPackTask"/>
 
-<!--
       <antcall target="package"/>
--->
-      <mkdir dir="${griffon.installer.dir}" />
-      <unzip src="${griffon.dist}/${griffon.dist.binary}.zip" dest="${griffon.installer.dir}/binary" />
-      <unzip src="${griffon.dist}/${griffon.dist.source}.zip" dest="${griffon.installer.dir}/source" />
-      <copy todir="${griffon.installer.dir}/resources">
-          <fileset dir="${basedir}/installer/resources" />
-      </copy>
 
+      <mkdir dir="${griffon.installer.izpack.dir}" />
+      <unzip src="${griffon.dist}/${griffon.dist.binary}.zip" dest="${griffon.installer.izpack.dir}/binary" />
+      <unzip src="${griffon.dist}/${griffon.dist.source}.zip" dest="${griffon.installer.izpack.dir}/source" />
+      <copy todir="${griffon.installer.izpack.dir}/resources">
+          <fileset dir="${basedir}/installer/izpack/resources" />
+      </copy>
+  </target>
+  
+  <target name="create-installer-izpack" depends="prepare-installer-izpack" >
       <property name="app.group" value="Griffon" />
       <property name="app.name" value="griffon" />
       <property name="app.title" value="Griffon" />
       <property name="app.version" value="${griffon.version}" />
       <property name="app.subpath" value="${app.name}-${app.version}" />
-  </target>
-  
-  <target name="create-installer" depends="prepare-installer" >
-      <izpack basedir="${griffon.installer.dir}"
+
+      <izpack basedir="${griffon.installer.izpack.dir}"
               output="${griffon.target}/griffon-installer-${griffon.version}.jar"
               compression="deflate"
               compressionlevel="9">
@@ -159,6 +157,38 @@
 </installation>
       ]]></config>
       </izpack>
+  </target>
+
+  <target name="prepare-installer-rpm">
+      <property name="griffon.installer.rpm.dir" value="${griffon.target}/installer/rpm" />
+
+      <mkdir dir="${griffon.installer.rpm.dir}/BUILD" />
+      <mkdir dir="${griffon.installer.rpm.dir}/SOURCES" />
+      <mkdir dir="${griffon.installer.rpm.dir}/SPECS" />
+      <mkdir dir="${griffon.installer.rpm.dir}/SRPMS" />
+      <mkdir dir="${griffon.installer.rpm.dir}/RPMS/noarch" />
+
+      <copy todir="${griffon.installer.rpm.dir}/SPECS" 
+            file="${basedir}/installer/rpm/griffon.spec" />
+
+      <replace file="${griffon.installer.rpm.dir}/SPECS/griffon.spec">
+          <replaceFilter token="@griffon.version@" value="${griffon.version}" />
+          <replaceFilter token="@griffon.version.rpm@" value="${griffon.version.rpm}" />
+      </replace>
+  </target>
+
+  <target name="create-installer-rpm" depends="prepare-installer-rpm" >
+      <antcall target="package"/>
+      <unzip src="${griffon.dist}/${griffon.dist.binary}.zip" 
+             dest="${griffon.installer.rpm.dir}/BUILD" />
+      <copy todir="${griffon.installer.rpm.dir}/SOURCES"
+            file="${griffon.dist}/${griffon.dist.source}.zip" />
+      <rpm specFile="griffon.spec"
+           topDir="${griffon.installer.rpm.dir}"
+           cleanBuildDir="false"
+           failOnError="true"/>
+      <copy tofile="${griffon.target}/griffon-${griffon.version.rpm}-1.noarch.rpm"
+            file="${griffon.installer.rpm.dir}/RPMS/noarch/griffon-${griffon.version.rpm}-1.noarch.rpm" />
   </target>
 
 </project>
