@@ -36,6 +36,7 @@ environments {
     development {
         signingkey {
             params {
+                sigfile = "GRIFFON"
                 keystore = "${basedir}/griffon-app/conf/keys/devKeystore"
                 alias = 'development'
                 storepass = 'BadStorePassword'
@@ -48,6 +49,7 @@ environments {
     production {
         signingkey {
             params {
+                sigfile = "GRIFFON"
                 keystore = "CHANGE ME"
                 alias = 'CHAMGE ME'
                 // NOTE: for production keys it is more secure to rely on key prompting

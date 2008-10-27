@@ -486,48 +486,6 @@ target(loadPlugins:"Loads Griffon' plugins") {
 //    }
 }
 
-//target( generateWebXml : "Generates the web.xml file") {
-//    depends(classpath)
-//
-//    if(config.griffon.config.base.webXml) {
-//        def customWebXml =resolveResources(config.griffon.config.base.webXml)
-//        if(customWebXml)
-//            webXml = customWebXml[0]
-//        else {
-//            event("StatusError", [ "Custom web.xml defined in config [${config.griffon.config.base.webXml}] could not be found." ])
-//            exit(1)
-//        }
-//    }
-//    else {
-//        webXml = new FileSystemResource("${basedir}/src/templates/war/web.xml")
-//        if(!webXml.exists()) {
-//            def tmpWebXml = "${userHome}/.griffon/${griffonVersion}/projects/${baseName}/web.xml.tmp"
-//            Ant.copy(file:"${griffonHome}/src/war/WEB-INF/web${servletVersion}.template.xml", tofile:tmpWebXml)
-//
-//            Ant.replace(file:tmpWebXml, token:"@griffon.project.key@", value:"${griffonAppName}")
-//
-//           webXml = new FileSystemResource(tmpWebXml)
-//        }
-//    }
-//    def sw = new StringWriter()
-//
-//    try {
-//        profile("generating web.xml from $webXml") {
-//            event("WebXmlStart", [webXml.filename])
-//            pluginManager.doWebDescriptor(webXml, sw)
-//            webXmlFile.withWriter {
-//                it << sw.toString()
-//            }
-//            event("WebXmlEnd", [webXml.filename])
-//        }
-//    }
-//    catch(Exception e) {
-//        event("StatusError", [ e.message ])
-//        exit(1)
-//    }
-//
-//}
-//
 //target(packageTemplates: "Packages templates into the app") {
 //    Ant.mkdir(dir:scaffoldDir)
 //    if(new File("${basedir}/src/templates/scaffolding").exists()) {

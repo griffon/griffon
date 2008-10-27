@@ -31,8 +31,6 @@ import org.springframework.core.io.support.PathMatchingResourcePatternResolver
 
 Ant.property(environment: "env")
 
-servletVersion = System.getProperty("servlet.version") ? System.getProperty("servlet.version") : "2.4"
-
 griffonHome = Ant.antProject.properties."env.GRIFFON_HOME"
 Ant.property(file: "${griffonHome}/build.properties")
 
@@ -99,7 +97,6 @@ if (new File("${basedir}/application.properties").exists()) {
     griffonAppName = props.'app.name'
     griffonAppVersion = props.'app.version'
     appGriffonVersion = props.'app.griffon.version'
-    servletVersion = props.'app.servlet.version' ? props.'app.servlet.version' : servletVersion
 }
 
 // If no app name property (upgraded/new/edited project) default to basedir
@@ -113,7 +110,7 @@ else
 
 
 configSlurper = new ConfigSlurper(griffonEnv)
-configSlurper.setBinding(griffonHome:griffonHome, appName:griffonAppName, appVersion:griffonAppVersion, userHome:userHome, basedir:basedir, servletVersion:servletVersion)
+configSlurper.setBinding(griffonHome:griffonHome, appName:griffonAppName, appVersion:griffonAppVersion, userHome:userHome, basedir:basedir)
 
 
 profile = {String name, Closure callable ->
@@ -332,37 +329,22 @@ target(createStructure: "Creates the application directory structure") {
         mkdir(dir: "${basedir}/scripts")
         mkdir(dir: "${basedir}/src")
         mkdir(dir: "${basedir}/src/main")
-//        mkdir(dir: "${basedir}/griffon-app/services")
-//        mkdir(dir: "${basedir}/griffon-app/domain")
-//        mkdir(dir: "${basedir}/griffon-app/taglib")
-//        mkdir(dir: "${basedir}/griffon-app/utils")
-//        mkdir(dir: "${basedir}/griffon-app/views/layouts")
-//        mkdir(dir: "${basedir}/test")
-//        mkdir(dir: "${basedir}/test/unit")
-//        mkdir(dir: "${basedir}/test/integration")
-//        mkdir(dir: "${basedir}/web-app")
-//        mkdir(dir: "${basedir}/web-app/js")
-//        mkdir(dir: "${basedir}/web-app/css")
-//        mkdir(dir: "${basedir}/web-app/images")
-//        mkdir(dir: "${basedir}/web-app/META-INF")
-//        mkdir(dir: "${basedir}/griffon-app/conf/spring")
-//        mkdir(dir: "${basedir}/griffon-app/conf/hibernate")
     }
 }
 
 target(checkVersion: "Stops build if app expects different Griffon version") {
-//    if (new File("${basedir}/application.properties").exists()) {
-//        if (appGriffonVersion != griffonVersion) {
-//            event("StatusFinal", ["Application expects griffon version [$appGriffonVersion], but GRIFFON_HOME is version " +
-//                    "[$griffonVersion] - use the correct Griffon version or run 'griffon upgrade' if this Griffon " +
-//                    "version is newer than the version your application expects."])
-//            exit(1)
-//        }
-//    } else {
-//        // We know this is pre-0.5 application
-//        event("StatusFinal", ["Application is pre-Griffon 0.5, please run: griffon upgrade"])
-//        exit(1)
-//    }
+    if (new File("${basedir}/application.properties").exists()) {
+        if (appGriffonVersion != griffonVersion) {
+            event("StatusFinal", ["Application expects griffon version [$appGriffonVersion], but GRIFFON_HOME is version " +
+                    "[$griffonVersion] - use the correct Griffon version or run 'griffon upgrade' if this Griffon " +
+                    "version is newer than the version your application expects."])
+            exit(1)
+        }
+    } else {
+        // Griffon has always had version numbers, this is an error state
+        event("StatusFinal", ["Application is an unknown Griffon version, please run: griffon upgrade"])
+        exit(1)
+    }
 }
 
 
@@ -416,32 +398,12 @@ target(copyBasics: "Copies the basic resources required for a Griffon app to fun
         replace(dir: "${basedir}", includes: "*.*",
                 token: "@griffon.project.name@", value: "${griffonAppName}")
 
-//        copy(todir: "${basedir}/web-app/WEB-INF") {
-//            fileset(dir: "${griffonHome}/src/war/WEB-INF") {
-//                include(name: "applicationContext.xml")
-//                exclude(name: "log4j.properties")
-//                include(name: "sitemesh.xml")
-//            }
-//        }
-
-//        copy(todir: "${basedir}/web-app/WEB-INF/tld") {
-//            fileset(dir: "${griffonHome}/src/war/WEB-INF/tld/${servletVersion}")
-//            fileset(dir: "${griffonHome}/src/war/WEB-INF/tld", includes: "spring.tld")
-//            fileset(dir: "${griffonHome}/src/war/WEB-INF/tld", includes: "griffon.tld")
-//        }
     }
 }
 target(init: "main init target") {
     depends(createStructure, copyBasics)
 
     Ant.sequential {
-//        copy(todir: "${basedir}/web-app") {
-//            fileset(dir: "${griffonHome}/src/war") {
-//                include(name: "**/**")
-//                exclude(name: "WEB-INF/**")
-//            }
-//        }
-
         copy(todir: "${basedir}/griffon-app") {
             fileset(dir: "${griffonHome}/src/griffon/griffon-app",  includes: "**/**", excludes: "**/taglib/**, **/utils/**")
         }
@@ -454,12 +416,7 @@ target("default": "Initializes a Griffon application. Warning: This target will 
     depends(init)
 }
 
-target(createArtifact: "Creates a specific Griffon artifact") {
-    depends(promptForName)
-
-    Ant.mkdir(dir: "${basedir}/${artifactPath}")
-
-    // Extract the package name if one is given.
+extractArtifactName = {args -> 
     def name = args
     def pkg = null
     def pos = args.lastIndexOf('.')
@@ -467,6 +424,17 @@ target(createArtifact: "Creates a specific Griffon artifact") {
         pkg = name[0..<pos]
         name = name[(pos + 1)..-1]
     }
+    return [pkg, name]
+}
+
+target(createArtifact: "Creates a specific Griffon artifact") {
+    depends(promptForName)
+
+    Ant.mkdir(dir: "${basedir}/${artifactPath}")
+
+    // Extract the package name if one is given.
+    def (pkg, name) = extractArtifactName(args)
+
 
     // Convert the package into a file path.
     def pkgPath = ''
@@ -554,14 +522,9 @@ griffonClasspath = {pluginLibs, griffonDir ->
     pathelement(location: "${basedir}/test/unit")
     pathelement(location: "${basedir}/test/integration")
     pathelement(location: "${basedir}/web-app")
-//    pathelement(location: "${basedir}/web-app/WEB-INF")
-//    pathelement(location: "${basedir}/web-app/WEB-INF/classes")
     for (pluginLib in pluginLibs) {
         fileset(dir: pluginLib.file.absolutePath)
     }
-//    if (new File("${basedir}/web-app/WEB-INF/lib").exists()) {
-//        fileset(dir: "${basedir}/web-app/WEB-INF/lib")
-//    }
     fileset(dir: "${griffonHome}/lib")
     fileset(dir: "${griffonHome}/dist")
     if (new File("${basedir}/lib").exists()) {
@@ -604,7 +567,6 @@ void setClasspath() {
         //rootLoader?.addURL(dir.URL)
     }
     cpath << classesDirPath << File.pathSeparator
-//    cpath << "${basedir}/web-app/WEB-INF"
     for (jar in jarFiles) {
         cpath << jar.file.absolutePath << File.pathSeparator
     }
@@ -616,7 +578,6 @@ void setClasspath() {
     rootLoader = getClass().classLoader.rootLoader
     populateRootLoader(rootLoader, jarFiles)
 
-    //rootLoader?.addURL(new File("${basedir}/griffon-app/conf/hibernate").toURL())
     rootLoader?.addURL(new File("${basedir}/src/java").toURL())
     rootLoader?.addURL(new File("${basedir}/src/java").toURL())
 
@@ -669,8 +630,6 @@ populateRootLoader = {rootLoader, jarFiles ->
     for(jar in getExtraDependencies()) {
         rootLoader?.addURL(jar.URL)
     }
-//    rootLoader?.addURL(new File("${basedir}/web-app/WEB-INF/classes").toURL())
-//    rootLoader?.addURL(new File("${basedir}/web-app/WEB-INF").toURL())
 }
 
 target(configureProxy: "The implementation target") {

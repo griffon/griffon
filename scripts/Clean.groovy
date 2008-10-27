@@ -22,9 +22,6 @@
  * @since 0.4
  */
 
-//import org.codehaus.griffon.commons.GriffonClassUtils as GCU
-//import groovy.text.SimpleTemplateEngine
-
 Ant.property(environment:"env")
 griffonHome = Ant.antProject.properties."env.GRIFFON_HOME"
 
@@ -37,7 +34,7 @@ target ('default': "Cleans a Griffon project") {
 
 target ( clean: "Implementation of clean") {
     event("CleanStart", [])
-    depends( checkVersion, classpath, cleanCompiledSources, cleanGriffonApp) //, cleanWarFile)
+    depends( classpath, cleanCompiledSources, cleanTestReports)
     event("CleanEnd", [])
 }
 
@@ -54,19 +51,6 @@ target ( cleanCompiledSources : "Cleans compiled Java and Groovy sources") {
     Ant.delete(dir:Ant.antProject.replaceProperties(config.griffon.jars.destDir), includes:'**/*.*')
 }
 
-target (cleanGriffonApp : "Cleans the Griffon application sources") {
-    //def appDir = "${basedir}/web-app/WEB-INF/griffon-app"
-    //Ant.delete(dir:appDir)
+target ( cleanTestReports:"Cleans the test reports") {
+	Ant.delete(dir:"${basedir}/test/reports", failonerror:false)
 }
-
-//target (cleanWarFile : "Cleans the deployable .war file") {
-//    def fileName = griffonAppName
-//    def version = Ant.antProject.properties.'app.version'
-//    if (version) {
-//        version = '-'+version
-//    } else {
-//        version = ''
-//    }
-//    warName = "${basedir}/${fileName}${version}.war"
-//    Ant.delete(file:warName, failonerror:false)
-//}
