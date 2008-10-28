@@ -1,5 +1,7 @@
 package org.codehaus.griffon.cli
 
+import org.codehaus.griffon.commons.GriffonClassUtils as GCU
+
 class CreateMvcTests extends AbstractCliTests {
     def appDir
 
@@ -8,10 +10,10 @@ class CreateMvcTests extends AbstractCliTests {
 
         tryMvc('Book')
         tryMvc('org.example.Author')
-        tryMvc('project-item', 'ProjectItem')
+        tryMvc('project-item')
     }
 
-	void testCreateControllerCreatesViewDirectory() {
+	void testCreatesDirectories() {
         appDir = createTestApp()
 
 		System.setProperty("griffon.cli.args", "Book")
@@ -25,22 +27,21 @@ class CreateMvcTests extends AbstractCliTests {
         assertTrue "${bookControllerFile} does not exist", new File(bookControllerFile).exists()
 	}
 
-    void tryMvc(String className) {
-        tryMvc(className, className)
-    }
-
-    void tryMvc(String scriptArg, String className) {
+    void tryMvc(String name) {
         // Run the create controller script with a single argument.
-        System.setProperty("griffon.cli.args", scriptArg)
+        System.setProperty("griffon.cli.args", name)
         gantRun( ["-f", "scripts/CreateMvc.groovy"] as String[])
 
         // Extract any package from the class name.
         def pkg = null
-        def pos = className.lastIndexOf('.')
+        def pos = name.lastIndexOf('.')
         if (pos != -1) {
-            pkg = className[0..<pos]
-            className = className[(pos + 1)..-1]
+            pkg = name[0..<pos]
+            name = name[(pos + 1)..-1]
         }
+        def className = GCU.getClassNameRepresentation(name)
+
+        def fqn = "${pkg?pkg:''}${pkg?'.':''}$className"
 
         def pkgPath = ''
         if (pkg) {
@@ -61,5 +62,10 @@ class CreateMvcTests extends AbstractCliTests {
         def controllerFile = new File("${appDir}/griffon-app/controllers/${pkgPath}${className}Controller.groovy")
         assert controllerFile.exists()
         assert controllerFile.text =~ "^${pkg ? 'package ' + pkg : ''}\\s*class ${className}Controller \\{"
+
+        // check that mvc group has been added to Application.groovy
+        def applicationConf = new File("${appDir}/griffon-app/conf/Application.groovy")
+        assert applicationConf.exists()
+        assert applicationConf.text =~ "mvcGroups\\s*\\{\\s*$name\\s\\{\\s*model\\s*=\\s*'${fqn}Model'\\s*view\\s*=\\s*'${fqn}View'\\s*controller\\s*=\\s*'${fqn}Controller'\\s*\\}\\s*\\}"
     }
 }

@@ -1,16 +1,16 @@
 root {
     'groovy.swing.SwingBuilder' {
         controller = ['Threading']
-        view = "*"
+        view = '*'
     }
     'griffon.app.ApplicationBuilder' {
-        view = "*"
+        view = '*'
     }
 }
 /*
 jx {
     'groovy.swing.SwingXBuilder' {
-        view = "*"
+        view = '*'
     }
 }
 */

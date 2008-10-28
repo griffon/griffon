@@ -32,6 +32,8 @@ import org.codehaus.griffon.commons.GriffonContext
  * for 0.1
  *   - add in Config.groovy griffon.jars.pack=true and griffon.jars.sign=true
  *   - signingkey.params.sigfile is set to GRIFFON for ease of identifying signing file
+ *   - startup MVC groups are now configurable in Application.groovy
+ *     via application.startupGroups list
  */
 
 //import org.codehaus.griffon.plugins.GriffonPluginUtils
@@ -121,6 +123,33 @@ target( upgrade: "main upgrade target") {
                     if(packJars == [:]) it.writeLine "${indent}griffon.jars.pack=false // jars were not automatically packed in Griffon 0.0"
                     if(signJars == [:]) it.writeLine "${indent}griffon.jars.sign=true // jars were automatically isgned in Griffon 0.0"
                     if(signingKeyFile == [:]) it.writeLine "${indent}signingkey.params.sigfile='GRIFFON' // may safely be removed, but calling upgrade will restore it"
+                    if (indent != '') {
+                        it.writeLine('    }\n}')
+                    }
+                }
+            }
+        }
+
+        // if Applicaiton.groovy exists and it does not contain values added
+        // since 0.0 then sensible defaultsare provided which keep previous
+        // behavior even if it is not the default in the current version.
+        def applicationFile = new File(baseFile, '/griffon-app/conf/Application.groovy')
+        if(applicationFile.exists()) {
+            def configSlurper = new ConfigSlurper(System.getProperty(GriffonContext.ENVIRONMENT))
+            def configObject = configSlurper.parse(applicationFile.toURI().toURL())
+
+            def startupGroups = configObject.application.startupGroups
+
+            if([startupGroups].contains([:])) {
+                event("StatusUpdate", [ "Adding properties to Applicaiton.groovy"])
+                applicationFile.withWriterAppend {
+                    def indent = ''
+                    it.writeLine '\n// The following properties have been added by the Upgrade process...'
+                    if (!Boolean.valueOf(System.getProperty(GriffonContext.ENVIRONMENT_DEFAULT))) {
+                        indent = '        '
+                        it.writeLine "environments {\n    ${System.getProperty(GriffonContext.ENVIRONMENT)} {"
+                    }
+                    if(startupGroups == [:]) it.writeLine "${indent}application.startupGroups=['root'] // default startup group from 0.0"
                     if (indent != '') {
                         it.writeLine('    }\n}')
                     }

@@ -40,21 +40,8 @@ class GriffonApplicationHelper {
         // this is where a composite gets made and composites are added
         // for now we punt and make a SwingBuilder
 
-        def model
-        def view
-        def controller
-
-        // syntax of multiple asignment has changed in g1.6b2
-        //[model, view, controller] = createMVCGroup(app, 'root')
-        view = createMVCGroup(app, 'root')[1]
-
-
-        // attach the root panel
-        if (app.config.primaryView) {
-            app.attachRootPanel(view[app.config.primaryView])
-        }
-        if (app.config.primaryMenuBar) {
-            app.attachMenuBar(view[app.config.primaryMenuBar])
+        app.config.application.startupGroups.each {group ->
+            createMVCGroup(app, group) 
         }
 
         app.startup();

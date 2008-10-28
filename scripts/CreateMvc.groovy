@@ -51,5 +51,21 @@ target (createMVC : "Creates a new MVC Triad") {
     createArtifact()
     createTestSuite()
 
+    def (pkg, name) = extractArtifactName(args)
+    def fqn = "${pkg?pkg:''}${pkg?'.':''}${GCU.getClassNameRepresentation(name)}"
+
+    new File("${basedir}/griffon-app/conf/Application.groovy").append("""
+
+// MVC Group for "$args"
+mvcGroups {
+    $name {
+        model = '${fqn}Model'
+        view = '${fqn}View'
+        controller = '${fqn}Controller'
+    }
+}
+""")
+
+
     //TODO tweak Application.groovy
 }
