@@ -24,7 +24,7 @@ environments {
         signingkey {
             params {
                 sigfile = 'GRIFFON'
-                keystore = '${basedir}/griffon-app/conf/keys/devKeystore'
+                keystore = "${basedir}/griffon-app/conf/keys/devKeystore"
                 alias = 'development'
                 storepass = 'BadStorePassword'
                 keypass   = 'BadKeyPassword'
@@ -58,7 +58,7 @@ environments {
 
         griffon {
             jars {
-                destDir = '${basedir}/staging'
+                destDir = "${basedir}/staging"
             }
             webstart {
                 codebase = 'CHANGE ME'
@@ -71,11 +71,11 @@ griffon {
     jars {
         sign = true
         pack = true
-        destDir = '${basedir}/staging'
-        jarName = '${appName}.jar'
+        destDir = "${basedir}/staging"
+        jarName = "${appName}.jar"
     }
     webstart {
-        codebase = '${new File(griffon.jars.destDir).toURI().toASCIIString()}'
+        codebase = "${new File(griffon.jars.destDir).toURI().toASCIIString()}"
         jnlp = 'application.jnlp'
     }
     applet {
