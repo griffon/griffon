@@ -56,18 +56,23 @@ target (createMVC : "Creates a new MVC Triad") {
     def (pkg, name) = extractArtifactName(args)
     def fqn = "${pkg?pkg:''}${pkg?'.':''}${GCU.getClassNameRepresentation(name)}"
 
-    new File("${basedir}/griffon-app/conf/Application.groovy").append("""
-
-// MVC Group for "$args"
+    def applicationConfigFile = new File("${basedir}/griffon-app/conf/Application.groovy")
+    def configText = applicationConfigFile.text
+    if (!(configText =~ /\s*mvcGroups\s*\{/)) {
+        configText += """
 mvcGroups {
+}
+"""
+    }
+    applicationConfigFile.withWriter { it.write configText.replaceAll(/\s*mvcGroups\s*\{/, """
+mvcGroups {
+    // MVC Group for "$args"
     $name {
         model = '${fqn}Model'
         view = '${fqn}View'
         controller = '${fqn}Controller'
     }
-}
-""")
+""") }
 
 
-    //TODO tweak Application.groovy
 }
