@@ -116,13 +116,14 @@ class GriffonApplicationHelper {
         return klass
     }
 
-    public static createMVCGroup(IGriffonApplication app, def mvcType, def mvcName = mvcType) {
+    public static createMVCGroup(IGriffonApplication app, def mvcType, def mvcName = mvcType, Map bindArgs = [:]) {
         Class modelKlass = createInstance(mvcType, "model", app)
         Class viewKlass = createInstance(mvcType, "view", app)
         Class controllerKlass = createInstance(mvcType, "controller", app)
 
         UberBuilder builder = CompositeBuilderHelper.createBuilder(app,
             [model:modelKlass, view:viewKlass, controller:controllerKlass])
+        bindArgs.each {k, v -> builder.setVariable k, v }
 
         def model = modelKlass.newInstance()
         def view = viewKlass.newInstance()
