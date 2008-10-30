@@ -1,8 +1,12 @@
-consoleWindow = application(title:'Console', pack:true, locationByPlatform:true) {
+import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea
+import org.fife.ui.rsyntaxtextarea.SyntaxConstants
+
+consoleFrame = application(title:'Console', pack:true, locationByPlatform:true) {
     menuBar {
         menu("File") {
             menuItem("New Window", actionPerformed:controller.&newWindow)
-            menuItem("Close Window", actionPerformed:{consoleWindow.dispose()})
+            menuItem("Prefeneces", actionPerformed:controller.&prefernces)
+            menuItem("Close Window", actionPerformed:{consoleFrame.dispose()})
         }
     }
 
@@ -10,11 +14,13 @@ consoleWindow = application(title:'Console', pack:true, locationByPlatform:true)
         borderLayout()
 
         scrollPane(constraints:CENTER) {
-            textArea(text:bind(target:model, targetProperty:'scriptSource'),
+            editorPane = new RSyntaxTextArea()
+            editorPane.restoreDefaultSyntaxHighlightingColorScheme()
+            widget(editorPane, syntaxEditingStyle: SyntaxConstants.GROOVY_SYNTAX_STYLE,
+                text:bind(target:model, targetProperty:'scriptSource'),
                 enabled: bind {model.enabled},
                 columns:40, rows:10)
         }
-
         hbox(constraints:SOUTH) {
             button("Execute", actionPerformed:controller.&executeScript,
                 enabled: bind {model.enabled})
