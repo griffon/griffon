@@ -34,6 +34,7 @@ import org.codehaus.griffon.commons.GriffonContext
  *   - signingkey.params.sigfile is set to GRIFFON for ease of identifying signing file
  *   - startup MVC groups are now configurable in Application.groovy
  *     via application.startupGroups list
+ *   - insure testing dirs are present for test-app: test/integration ant test/unit
  */
 
 //import org.codehaus.griffon.plugins.GriffonPluginUtils
@@ -93,10 +94,15 @@ target( upgrade: "main upgrade target") {
         delete(dir:"${basedir}/tmp", failonerror:false)
 
         // don't do this, first IDE Support files need to work
-        // createIDESupportFiles()
+        createIDESupportFiles()
 
         // remove from grails: a bunch of servlet stuff
         // remove from grails: adding new files in grails-app/conf
+
+        mkdir(dir: "${basedir}/test")
+        mkdir(dir: "${basedir}/test/integration")
+        mkdir(dir: "${basedir}/test/unit")
+
         // remove from grails: URLMappings
 
         // if Config.groovy exists and it does not contain values added
@@ -167,19 +173,7 @@ target( upgrade: "main upgrade target") {
             entry(key:"app.griffon.version", value:"$griffonVersion")
         }
 
-        //TODO tweak eclipse classpaths with new grifon lib versions
-        //replaceregexp(match:"^.*Griffon_HOME.*\$", replace:"", flags:"gm") {
-        //    fileset(dir:"${basedir}", includes:".classpath")
-        //}
-        //
-        //replace(dir:"${basedir}",
-        //        includes:".classpath",
-        //        token:"</classpath>",
-        //        value:"<classpathentry kind=\"var\" path=\"Griffon_HOME/ant/lib/ant.jar\"/>\n${eclipseClasspathLibs()}${eclipseClasspathGriffonJars()}\n</classpath>")
-        //replaceregexp(match:"^\\s*", replace:"", flags:"gm") {
-        //    fileset(dir:"${basedir}", includes:".classpath")
-        //}
-
+        replaceTokens()
     }
 
     // proceed plugin-specific upgrade logic contained in 'scripts/_Upgrade.groovy' under plugin's root

@@ -10,8 +10,8 @@ import org.codehaus.griffon.support.GriffonTestSuite
 //import griffon.util.GriffonWebUtil as GWU
 
 //import griffon.util.IGriffonApplication
-//import org.codehaus.groovy.griffon.support.PersistenceContextInterceptor
-//import org.codehaus.groovy.griffon.web.servlet.GriffonApplicationAttributes
+//import org.codehaus.griffon.support.PersistenceContextInterceptor
+//import org.codehaus.griffon.web.servlet.GriffonApplicationAttributes
 //import org.springframework.transaction.support.TransactionCallback
 //import org.springframework.transaction.support.TransactionTemplate
 //import org.springframework.web.context.request.RequestContextHolder

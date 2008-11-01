@@ -273,7 +273,7 @@ getGriffonLibs = {
     def result = ''
     (new File("${griffonHome}/lib")).eachFileMatch(~/.*\.jar/) {file ->
         if (!file.name.startsWith("gant-")) {
-            result += "<classpathentry kind=\"var\" path=\"GRIFFON_HOME/lib/${file.name}\" />\n\n"
+            result += "    <classpathentry kind=\"var\" path=\"GRIFFON_HOME/lib/${file.name}\"/>\n"
         }
     }
     result
@@ -281,7 +281,7 @@ getGriffonLibs = {
 getGriffonJar = {args ->
     result = ''
     (new File("${griffonHome}/dist")).eachFileMatch(~/^griffon-.*\.jar/) {file ->
-        result += "<classpathentry kind=\"var\" path=\"GRIFFON_HOME/dist/${file.name}\" />\n\n"
+        result += "    <classpathentry kind=\"var\" path=\"GRIFFON_HOME/dist/${file.name}\"/>\n"
     }
     result
 }
@@ -329,6 +329,9 @@ target(createStructure: "Creates the application directory structure") {
         mkdir(dir: "${basedir}/scripts")
         mkdir(dir: "${basedir}/src")
         mkdir(dir: "${basedir}/src/main")
+        mkdir(dir: "${basedir}/test")
+        mkdir(dir: "${basedir}/test/integration")
+        mkdir(dir: "${basedir}/test/unit")
     }
 }
 
