@@ -22,15 +22,12 @@
  * @since 0.4
  */
 
-Ant.property(environment:"env")
-griffonHome = Ant.antProject.properties."env.GRIFFON_HOME"
-
-includeTargets << new File ( "${griffonHome}/scripts/Init.groovy" )
-includeTargets << new File ( "${griffonHome}/scripts/Package.groovy" )
-
-target ('default': "Cleans a Griffon project") {
+defaultTarget("Cleans a Griffon project") {
     clean()
 }
+
+includeTargets << griffonScript("Init" )
+includeTargets << griffonScript("Package" )
 
 target ( clean: "Implementation of clean") {
     event("CleanStart", [])

@@ -37,12 +37,13 @@ import org.codehaus.griffon.commons.GriffonContext
  *   - insure testing dirs are present for test-app: test/integration ant test/unit
  */
 
-//import org.codehaus.griffon.plugins.GriffonPluginUtils
-Ant.property(environment:"env")
-griffonHome = Ant.antProject.properties."env.GRIFFON_HOME"
+defaultTarget("Upgrades a Griffon application from a previous version of Griffon") {
+    depends( upgrade )
+}
 
-includeTargets << new File ( "${griffonHome}/scripts/CreateApp.groovy" )
-includeTargets << new File ( "${griffonHome}/scripts/Clean.groovy" )
+//import org.codehaus.griffon.plugins.GriffonPluginUtils
+includeTargets << griffonScript("CreateApp" )
+includeTargets << griffonScript("Clean" )
 
 target( upgrade: "main upgrade target") {
 
@@ -206,8 +207,4 @@ target( upgrade: "main upgrade target") {
     //event("StatusUpdate", [ "Please make sure you view the README for important information about changes to your source code."])
 
     event("StatusFinal", [ "Project upgraded"])
-}
-
-target("default": "Upgrades a Griffon application from a previous version of Griffon") {
-    depends( upgrade )
 }

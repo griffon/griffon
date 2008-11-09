@@ -22,14 +22,12 @@
  * @since 0.4
  */
 
-Ant.property(environment:"env")
-griffonHome = Ant.antProject.properties."env.GRIFFON_HOME"
-
-includeTargets << new File ( "${griffonHome}/scripts/Init.groovy" )
-target ('default': "Creates a new Griffon unit test. A unit test requires that you mock out access to dynamic methods, but executes a lot quicker") {
+defaultTarget("Creates a new Griffon unit test. A unit test requires that you mock out access to dynamic methods, but executes a lot quicker") {
     typeName =""
     depends( checkVersion, createTestSuite )
 }
+
+includeTargets << griffonScript("Init" )
 
 target (createTestSuite: "Implementation of create-test-suite") {
     typeName <<= "Tests"

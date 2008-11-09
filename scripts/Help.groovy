@@ -24,10 +24,11 @@ import org.codehaus.griffon.commons.GriffonClassUtils as GCU
  * @since 0.4
  */
 
-Ant.property(environment:"env")
-griffonHome = Ant.antProject.properties."env.GRIFFON_HOME"
+defaultTarget("Prints out the help for each script") {
+    helpTarget()
+}
 
-includeTargets << new File ( "${griffonHome}/scripts/Init.groovy" )
+includeTargets << griffonScript("Init" )
 
 class HelpEvaluatingCategory {
     static defaultTask = ""
@@ -56,7 +57,7 @@ boolean shouldGenerateHelp(File script) {
 }
 
 
-target ( 'default' : "Prints out the help for each script") {
+target ( 'helpTarget' : "Prints out the help for each script") {
     Ant.mkdir(dir:griffonTmp)
     def scripts = []
     resolveResources("file:${griffonHome}/scripts/**.groovy").each { if (!it.file.name.startsWith('_')) scripts << it.file }

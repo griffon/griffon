@@ -22,14 +22,12 @@
  * @since 0.5.5
  */
 
-Ant.property(environment:"env")
-griffonHome = Ant.antProject.properties."env.GRIFFON_HOME"
-includeTargets << new File ( "${griffonHome}/scripts/Init.groovy" )
-
-target ( "default" : "Sets HTTP proxy configuration for Griffon") {
+defaultTarget("Sets HTTP proxy configuration for Griffon") {
    depends(configureProxy)
    setProxy()
 }
+
+includeTargets << griffonScript("Init" )
 
 target(setProxy:"Implementation target") {
     Ant.mkdir( dir:"${userHome}/.griffon/scripts" )

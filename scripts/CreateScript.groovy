@@ -22,17 +22,15 @@
  * @since 0.4
  */
 
-Ant.property(environment:"env")                             
-griffonHome = Ant.antProject.properties."env.GRIFFON_HOME"    
-
-includeTargets << new File ( "${griffonHome}/scripts/Init.groovy" )  
-
-target ('default': "Creates a Griffon Gant Script") {
+defaultTarget("Creates a Griffon Gant Script") {
     depends(checkVersion)
 
-    typeName = "" 
-    artifactName = "Script"     
+    typeName = ""
+    artifactName = "Script"
     artifactPath = "scripts"
-        
+
     createArtifact()
 }
+
+includeTargets << griffonScript("Init" )
+

@@ -30,9 +30,6 @@ import groovy.xml.MarkupBuilder
 
 appName = ""
 
-Ant.property(environment:"env")
-griffonHome = Ant.antProject.properties."env.GRIFFON_HOME"
-
 pluginIncludes = [
     "application.properties",
     "*GriffonPlugin.groovy",
@@ -60,14 +57,14 @@ pluginExcludes = [
     "**/CVS/**"
 ]
 
-includeTargets << new File ( "${griffonHome}/scripts/Init.groovy" )
-includeTargets << new File ( "${griffonHome}/scripts/Compile.groovy" )
-includeTargets << new File ( "${griffonHome}/scripts/CreateApp.groovy" )
-includeTargets << new File ( "${griffonHome}/scripts/Package.groovy" )
-
-target ( "default" : "Packages a Griffon plugin into a zip for distribution") {
+defaultTarget("Packages a Griffon plugin into a zip for distribution") {
    packagePlugin()
 }
+
+includeTargets << griffonScript("Init" )
+includeTargets << griffonScript("Compile" )
+includeTargets << griffonScript("CreateApp" )
+includeTargets << griffonScript("Package" )
 
 target(packagePlugin:"Implementation target") {
     depends (checkVersion,packagePlugins, packageApp,compile)
@@ -99,7 +96,7 @@ target(packagePlugin:"Implementation target") {
     def props = ['author','authorEmail','title','description','documentation']
 //    def resourceList = GriffonResourceLoaderHolder.resourceLoader.getResources()
 //    def local = plugin.properties['local'] ?: true
-    xml.plugin(name:"${pluginName}",version:"${plugin.version}"/*,local:"${(local ?: false*/)}") {
+    xml.plugin(name:"${pluginName}",version:"${plugin.version}"/*,local:"${(local ?: false)}"*/) {
         props.each {
             if( plugin.properties[it] ) "${it}"(plugin.properties[it])
         }

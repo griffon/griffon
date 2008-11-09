@@ -31,15 +31,12 @@
 //import org.codehaus.groovy.tools.RootLoader
 //import org.codehaus.griffon.cli.support.GriffonRootLoader
 
-Ant.property(environment:"env")
-griffonHome = Ant.antProject.properties."env.GRIFFON_HOME"
-
-includeTargets << new File ( "${griffonHome}/scripts/Package.groovy" )
-
-target ('default': "This target will load the Griffon application context into the command window with a variable named 'ctx'") {
+defaultTarget("This target will load the Griffon application context into the command window with a variable named 'ctx'") {
     depends(packageApp)
     bootstrap()
 }
+
+includeTargets << griffonScript("Package" )
 
 parentContext = null // default parent context is null
 

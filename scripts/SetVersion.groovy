@@ -23,12 +23,13 @@
  * @since 0.5
  */
 
-Ant.property(environment:"env")
-griffonHome = Ant.antProject.properties."env.GRIFFON_HOME"
+defaultTarget("Sets the current application version") {
+    setVersion()
+}
 
-includeTargets << new File ( "${griffonHome}/scripts/Init.groovy" )
+includeTargets << griffonScript("Init" )
 
-target ('default': "Sets the current application version") {
+target ('setVersion': "Sets the current application version") {
     if(args != null) {
         Ant.property(name:"app.version.new", value: args)
     } else {

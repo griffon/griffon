@@ -17,7 +17,7 @@ class CreateMvcTests extends AbstractCliTests {
         appDir = createTestApp()
 
 		System.setProperty("griffon.cli.args", "Book")
-		gantRun( ["-f", "scripts/CreateMvc.groovy"] as String[])
+		gantRun("CreateMvc")
 
         def bookModelFile = "${appDir}/griffon-app/models/BookModel.groovy"
         assertTrue "${bookModelFile} does not exist", new File(bookModelFile).exists()
@@ -30,7 +30,7 @@ class CreateMvcTests extends AbstractCliTests {
     void tryMvc(String name) {
         // Run the create controller script with a single argument.
         System.setProperty("griffon.cli.args", name)
-        gantRun( ["-f", "scripts/CreateMvc.groovy"] as String[])
+        gantRun("CreateMvc")
 
         // Extract any package from the class name.
         def pkg = null

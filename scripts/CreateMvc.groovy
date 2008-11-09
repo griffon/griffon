@@ -24,16 +24,14 @@
 
 import org.codehaus.griffon.commons.GriffonClassUtils as GCU
 
-Ant.property(environment:"env")
-griffonHome = Ant.antProject.properties."env.GRIFFON_HOME"
-
-includeTargets << new File ( "${griffonHome}/scripts/Init.groovy" )
-includeTargets << new File( "${griffonHome}/scripts/CreateIntegrationTest.groovy")
-
-target ('default': "Creates a new MVC triad") {
+defaultTarget("Creates a new MVC triad") {
     depends(checkVersion)
     createMVC()
 }
+
+includeTargets << griffonScript("Init")
+includeTargets << griffonScript("CreateIntegrationTest")
+
 
 target (createMVC : "Creates a new MVC Triad") {
 

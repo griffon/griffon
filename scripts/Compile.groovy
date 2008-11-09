@@ -32,10 +32,11 @@
 //import org.codehaus.groovy.control.*
 //import java.security.CodeSource
 
-Ant.property(environment:"env")
-griffonHome = Ant.antProject.properties."env.GRIFFON_HOME"
+defaultTarget("Performs compilation on any source files (Java or Groovy) in the 'src' tree") {
+    compile()
+}
 
-includeTargets << new File ( "${griffonHome}/scripts/Init.groovy" )
+includeTargets << griffonScript("Init" )
 
 if(!Ant.antProject.properties."groovyJarSet") {
     Ant.path ( id : 'groovyJarSet' ) {
@@ -50,9 +51,6 @@ Ant.taskdef (     name : 'groovyc' ,
 
 
 
-target ('default': "Performs compilation on any source files (Java or Groovy) in the 'src' tree") {
-    compile()
-}
 
 compilerClasspath = { testSources ->
 

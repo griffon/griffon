@@ -21,16 +21,13 @@
  */
 
 
-Ant.property(environment: "env")
-griffonHome = Ant.antProject.properties."env.GRIFFON_HOME"
-
-includeTargets << new File("${griffonHome}/scripts/Package.groovy")
-//includeTargets << new File ( "${griffonHome}/scripts/_PackagePlugins.groovy" )
-
-target('default': "Runs the applicaiton from the command line") {
+defaultTarget("Runs the applicaiton from the command line") {
     depends(checkVersion, configureProxy)
     runApp()
 }
+
+includeTargets << griffonScript("Package")
+//includeTargets << griffonScript("_PackagePlugins.groovy" )
 
 
 target(runApp: "Does the actual command line execution") {

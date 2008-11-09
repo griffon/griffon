@@ -37,12 +37,14 @@ import java.util.zip.ZipFile
 //import org.springframework.util.Log4jConfigurer
 //import griffon.util.*
 
+defaultTarget ("Packages a Griffon application.") {
+     depends( checkVersion)
 
-Ant.property(environment:"env")
-griffonHome = Ant.antProject.properties."env.GRIFFON_HOME"
+     packageApp()
+}
 
-includeTargets << new File ( "${griffonHome}/scripts/Compile.groovy" )
-includeTargets << new File ( "${griffonHome}/scripts/_PackagePlugins.groovy" )
+includeTargets << griffonScript("Compile" )
+includeTargets << griffonScript("_PackagePlugins" )
 
 //scaffoldDir = "${basedir}/web-app/WEB-INF/templates/scaffolding"
 configFile = new File("${basedir}/griffon-app/conf/Config.groovy")
@@ -56,11 +58,6 @@ String i18nDir = null
 String jardir = null
 
 
-target ('default': "Packages a Griffon application.") {
-     depends( checkVersion)
-
-     packageApp()
-}
 
 target( createConfig: "Creates the configuration object") {
    if(configFile.exists()) {

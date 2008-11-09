@@ -26,14 +26,11 @@ import org.codehaus.griffon.commons.GriffonClassUtils as GCU
  */
 appName = ""
 
-Ant.property(environment:"env")   
-griffonHome = Ant.antProject.properties."env.GRIFFON_HOME"    
-
-includeTargets << new File ( "${griffonHome}/scripts/CreateApp.groovy" )
-
-target ( "default" : "Creates a Griffon plug-in project, including the necessary directory structure and commons files") {
+defaultTarget("Creates a Griffon plug-in project, including the necessary directory structure and commons files") {
    createPlugin()
-}     
+}
+
+includeTargets << griffonScript("CreateApp" )
 
 target( createPlugin: "The implementation target")  {
     depends( appName, createStructure, updateAppProperties, copyBasics, createIDESupportFiles )

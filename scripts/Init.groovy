@@ -415,11 +415,11 @@ target(init: "main init target") {
     }
 }
 
-target("default": "Initializes a Griffon application. Warning: This target will overwrite artifacts,use the 'upgrade' target for upgrades.") {
+defaultTarget("Initializes a Griffon application. Warning: This target will overwrite artifacts,use the 'upgrade' target for upgrades.") {
     depends(init)
 }
 
-extractArtifactName = {args -> 
+extractArtifactName = {args ->
     def name = args
     def pkg = null
     def pos = args.lastIndexOf('.')

@@ -46,6 +46,13 @@ public interface GriffonContext { // extends ApplicationContextAware {
      * The name of the system property whose value contains the location, during development, of the Griffon working directory where temporary files are generated to
      */
     static final String WORK_DIR = "griffon.work.dir";
+
+    /**
+     * The directory where temporary project resources and plug-ins are kept
+     */
+    String PROJECT_WORK_DIR = "project.work.dir";
+
+
     /**
      * The name of the system property whose value contains the location, during development, of the current Griffon projects resources directory
      */

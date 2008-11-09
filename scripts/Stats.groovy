@@ -23,12 +23,13 @@
 
 import groovy.text.SimpleTemplateEngine
 
-Ant.property(environment:"env")
-griffonHome = Ant.antProject.properties."env.GRIFFON_HOME"
+defaultTarget("Generates basic stats for a Griffon project") {
+    stats()
+}
 
-includeTargets << new File ( "${griffonHome}/scripts/Init.groovy" )
+includeTargets << griffonScript("Init" )
 
-target ('default': "Generates basic stats for a Griffon project") {
+target ('stats': "Generates basic stats for a Griffon project") {
 
     // maps file path to
     def pathToInfo = [

@@ -40,22 +40,20 @@ import org.codehaus.griffon.support.GriffonTestSuite
  * @since 0.4
  */
 
-Ant.property(environment: "env")
-griffonHome = Ant.antProject.properties."env.GRIFFON_HOME"
 griffonApp = null
 appCtx = null
 result = new TestResult()
 compilationFailures = []
 
-includeTargets << new File("${griffonHome}/scripts/Bootstrap.groovy")
-
-generateLog4jFile = true
-
-target('default': "Run a Griffon applications unit tests") {
+defaultTarget("Run a Griffon applications unit tests") {
     depends(classpath, checkVersion, configureProxy)
 
     testApp()
 }
+
+includeTargets << griffonScript("Bootstrap")
+
+generateLog4jFile = true
 
 testDir = "${basedir}/test/reports"
 

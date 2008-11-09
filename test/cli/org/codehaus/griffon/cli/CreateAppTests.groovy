@@ -5,7 +5,7 @@ class CreateAppTests extends AbstractCliTests {
 
 	void testCreateApp() {
 
-	    gantRun(['-f', 'scripts/CreateApp.groovy'] as String[])
+	    gantRun("CreateApp")
 
 	    // test basic structure
 		assert new File("${appBase}/testapp").exists()

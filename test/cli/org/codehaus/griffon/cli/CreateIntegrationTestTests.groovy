@@ -18,7 +18,7 @@ class CreateIntegrationTestTests extends AbstractCliTests {
     void tryIntegrationTest(String scriptArg, String className) {
         // Run the create integration test script with a single argument.
         System.setProperty("griffon.cli.args", scriptArg)
-        gantRun( ["-f", "scripts/CreateIntegrationTest.groovy"] as String[])
+        gantRun("CreateIntegrationTest")
 
         // Extract any package from the class name.
         def pkg = null

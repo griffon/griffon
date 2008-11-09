@@ -22,14 +22,12 @@
  * @since 0.4
  */
 
-Ant.property(environment:"env")
-griffonHome = Ant.antProject.properties."env.GRIFFON_HOME"
-
-includeTargets << new File ( "${griffonHome}/scripts/Init.groovy" )
-target ('default': "Creates a new Griffon integration test which loads the whole Griffon environment when run") {
+defaultTarget("Creates a new Griffon integration test which loads the whole Griffon environment when run") {
    typeName = ""
    depends( checkVersion, createTestSuite )
 }
+
+includeTargets << griffonScript("Init" )
 
 target (createTestSuite: "Implementation of create-test-suite") {
    typeName <<= "Tests"

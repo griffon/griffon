@@ -25,21 +25,18 @@ import org.codehaus.groovy.tools.shell.IO
  * @since 0.4
  */
 
-//import org.codehaus.griffon.commons.GriffonClassUtils as GCU
-//import groovy.text.SimpleTemplateEngine   
-//import org.codehaus.griffon.support.*
-Ant.property(environment:"env")
-griffonHome = Ant.antProject.properties."env.GRIFFON_HOME"    
-
-includeTargets << new File ( "${griffonHome}/scripts/Bootstrap.groovy" )
-
-target ('default': "Load the Griffon interactive shell") {
-	depends( configureproxy, packageApp )
+defaultTarget("Load the Griffon interactive shell") {
+	depends( configureProxy, packageApp )
         jardir = Ant.antProject.replaceProperties(config.griffon.jars.destDir)
         Ant.copy(todir:jardir) { fileset(dir:"${griffonHome}/lib/", includes:"jline-*.jar") }
         classpath()
 	shell()
-}            
+}
+
+//import org.codehaus.griffon.commons.GriffonClassUtils as GCU
+//import groovy.text.SimpleTemplateEngine   
+//import org.codehaus.griffon.support.*
+includeTargets << griffonScript("Bootstrap" )
 
 target(shell:"The shell implementation target") {
 

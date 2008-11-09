@@ -27,15 +27,13 @@ import groovy.ui.Console
 //import org.codehaus.griffon.commons.GriffonClassUtils as GCU
 //import groovy.text.SimpleTemplateEngine
 //import org.codehaus.griffon.support.*
-Ant.property(environment:"env")
-griffonHome = Ant.antProject.properties."env.GRIFFON_HOME"
 
-includeTargets << new File ( "${griffonHome}/scripts/Bootstrap.groovy" )
-
-target ('default': "Load the Griffon interactive Swing console") {
+defaultTarget("Load the Griffon interactive Swing console") {
     depends( checkVersion, configureProxy, packageApp, classpath)
     console()
 }
+
+includeTargets << griffonScript("Bootstrap" )
 
 target(console:"The console implementation target") {
 
