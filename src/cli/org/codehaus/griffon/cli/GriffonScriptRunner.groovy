@@ -168,7 +168,7 @@ Griffon home is ${ !griffonHome ? 'not set' : 'set to: ' + griffonHome}
         }
         catch(Throwable t) {
             println "Error executing script ${scriptName}: ${t.message}"
-            //GriffonUtil.deepSanitize(t)
+            GriffonUtil.deepSanitize(t)
             t.printStackTrace(System.out)
             System.exit(1)
         }
