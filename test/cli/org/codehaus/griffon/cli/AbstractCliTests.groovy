@@ -91,8 +91,8 @@ abstract class AbstractCliTests extends GroovyTestCase {
         System.setProperty(GriffonContext.PROJECT_CLASSES_DIR, "$workDir/projects/classes")
         System.setProperty(GriffonContext.PROJECT_TEST_CLASSES_DIR, "$workDir/projects/test-classes")
         System.setProperty(GriffonContext.PROJECT_RESOURCES_DIR, "$workDir/projects/resources")
-        //System.setProperty(GriffonContext.PLUGINS_DIR, "")
-        //System.setProperty(GriffonContext.GLOBAL_PLUGINS_DIR, "")
+        System.setProperty(GriffonContext.PLUGINS_DIR, "")
+        System.setProperty(GriffonContext.GLOBAL_PLUGINS_DIR, "")
         System.setProperty("griffon.script.profile","true")
 
         LoaderConfiguration loaderConfig = new LoaderConfiguration()
