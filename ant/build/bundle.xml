@@ -1,21 +1,70 @@
 <project name="griffon-bundle">
+    <property name="targetDistDirectory" value="${griffon.dist}"/>
 
-    <target name="jar" depends="build-test" description="Build the entire source, run all tests and create the griffon JAR file.">
+    <target name="-jar-app-files" description="Bundles all the template files for applications and plugins into a JAR files.">
+        <!-- Clear the old JAR files out. -->
         <delete>
-            <fileset dir="${griffon.dist}" includes="*"/>
-        </delete>
+			<fileset dir="${griffon.target}" includes="griffon-*-files.jar"/>
+		</delete>
+
+        <!-- Package up the files that are shared by both applications and plugins. -->
+        <jar destfile="${griffon.target}/griffon-shared-files.jar">
+            <fileset dir="${basedir}/src/griffon" includes="build.xml"/>
+            <!--<zipfileset dir="${basedir}/src/war" prefix="web-app">-->
+                <!--<include name="WEB-INF/applicationContext.xml"/>-->
+                <!--<include name="WEB-INF/applicationContext.xml"/>-->
+                <!--<include name="WEB-INF/sitemesh.xml"/>-->
+                <!--<include name="WEB-INF/tld/*.tld"/>-->
+            <!--</zipfileset>-->
+            <!--<fileset dir="${basedir}/src/griffon">-->
+                <!--<include name="griffon-app/conf/DataSource.groovy"/>-->
+                <!--<include name="griffon-app/conf/UrlMappings.groovy"/>-->
+            <!--</fileset>-->
+        </jar>
+
+        <!-- Package up ide files separate for upgrade script. -->
+        <jar destfile="${griffon.target}/griffon-ide-files.jar">
+            <fileset dir="${basedir}/src/griffon/templates/ide-support/eclipse"/>
+            <fileset dir="${basedir}/src/griffon/templates/ide-support/textmate" includes="project.tmproj"/>
+        </jar>
+        <!-- Package up the files that are exclusive to applications. -->
+        <jar destfile="${griffon.target}/griffon-app-files.jar">
+            <!--<zipfileset dir="${basedir}/src/war" prefix="web-app">-->
+                <!--<exclude name="WEB-INF/**"/>-->
+            <!--</zipfileset>-->
+            <fileset dir="${basedir}/src/griffon">
+                <include name="griffon-app/**"/>
+                <!--<exclude name="griffon-app/taglib/**"/>-->
+                <!--<exclude name="griffon-app/utils/**"/>-->
+                <!--<exclude name="griffon-app/conf/DataSource.groovy"/>-->
+                <!--<exclude name="griffon-app/conf/UrlMappings.groovy"/>-->
+            </fileset>
+        </jar>
+
+        <!-- Package up the files that are exclusive to plugins. -->
+        <!--<jar destfile="${griffon.target}/griffon-plugin-files.jar">-->
+            <!--<fileset dir="${basedir}/src/griffon/templates/plugins"/>-->
+        <!--</jar>-->
+    </target>
+    <target name="jar" depends="build,build-scripts,-jar-app-files" description="Build the entire source, run all tests and create the Griffon JAR file.">
+		<delete>
+			<fileset dir="${griffon.dist}" includes="*"/>
+		</delete>
         <jar destfile="${griffon.dist}/griffon-cli-${griffon.version}.jar" manifest="${griffon.build.cli}/META-INF/MANIFEST.MF">
             <fileset dir="${griffon.build.cli}"/>
         </jar>
         <jar destfile="${griffon.dist}/griffon-rt-${griffon.version}.jar" manifest="${griffon.build.rt}/META-INF/MANIFEST.MF">
               <fileset dir="${griffon.build.rt}"/>
         </jar>
+        <jar destfile="${griffon.dist}/griffon-resources-${griffon.version}.jar" manifest="${griffon.build.cli}/META-INF/MANIFEST.MF">
+            <fileset dir="${griffon.target}" includes="*.jar"/>
+        </jar>
     </target>
 
-    <target name="package-minimal" depends="clean,jar" description="Creates a minimal archive that can be used for integrating a griffon project with an existing build system.">
+    <target name="package-minimal" depends="clean,jar" description="Creates a minimal archive that can be used for integrating a Griffon project with an existing build system.">
         <property name="archive" value="griffon-${griffon.version}-minimal"/>
 
-         <!--The files to include in the minimal distribution. -->
+        <!-- The files to include in the minimal distribution. -->
         <patternset id="files.pkg.minimal">
             <include name="${griffon.dist}/*.jar"/>
             <include name="${griffon.lib}/*.jar"/>
@@ -33,12 +82,12 @@
             </fileset>
         </delete>
 
-         <!--Create a ZIP distribution... -->
+        <!-- Create a ZIP distribution... -->
         <zip basedir="${basedir}" destfile="${griffon.dist}/${archive}.zip">
             <patternset refid="files.pkg.minimal"/>
         </zip>
 
-         <!--... and a tarball one. -->
+        <!-- ... and a tarball one. -->
         <tar destfile="${griffon.dist}/${archive}.tar.gz" compression="gzip" longfile="gnu">
             <tarfileset dir="${basedir}">
                 <patternset refid="files.pkg.minimal"/>
@@ -46,13 +95,13 @@
         </tar>
     </target>
 
-    <target name="package" depends="clean,test,jar,javadoc" description="Create the release archives for griffon.">
-        <delete failonerror="true">
-            <fileset dir="${griffon.dist}">
+    <target name="package" depends="clean,test,jar,javadoc" description="Create the release archives for Griffon.">
+    	<delete failonerror="true">
+		    <fileset dir="${griffon.dist}">
                 <include name="*.zip"/>
                 <include name="*.tar.gz"/>
-            </fileset>
-        </delete>
+		    </fileset>
+		</delete>
         <delete dir="tmp" failonerror="true"/>
         <antcall target="create-binary-release"/>
         <antcall target="create-source-release"/>

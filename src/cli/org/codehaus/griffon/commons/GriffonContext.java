@@ -45,67 +45,74 @@ public interface GriffonContext { // extends ApplicationContextAware {
     /**
      * The name of the system property whose value contains the location, during development, of the Griffon working directory where temporary files are generated to
      */
-    static final String WORK_DIR = "griffon.work.dir";
+    String WORK_DIR = "griffon.work.dir";
 
     /**
      * The directory where temporary project resources and plug-ins are kept
      */
     String PROJECT_WORK_DIR = "project.work.dir";
 
+    /**
+     * The path to the plug-ins directory for the application
+     */
+    String PLUGINS_DIR = "griffon.plugins.dir";
+    /**
+     * The path to the global plug-ins directory for the application
+     */
+    String GLOBAL_PLUGINS_DIR = "griffon.global.plugins.dir";
+    /**
+     * The name of the system property whose value contains the location, during development, of the current Griffon projects resources directory
+     */
+    String PROJECT_RESOURCES_DIR = "griffon.project.resource.dir";
 
     /**
      * The name of the system property whose value contains the location, during development, of the current Griffon projects resources directory
      */
-    static final String PROJECT_RESOURCES_DIR = "griffon.project.resource.dir";
-
+    String PROJECT_CLASSES_DIR = "griffon.project.class.dir";
     /**
      * The name of the system property whose value contains the location, during development, of the current Griffon projects resources directory
      */
-    static final String PROJECT_CLASSES_DIR = "griffon.project.class.dir";
-    /**
-     * The name of the system property whose value contains the location, during development, of the current Griffon projects resources directory
-     */
-    static final String PROJECT_TEST_CLASSES_DIR = "griffon.project.test.class.dir";
+    String PROJECT_TEST_CLASSES_DIR = "griffon.project.test.class.dir";
 
 
     /**
      * The id of the griffon application within a bean context
      */
-    static final String APPLICATION_ID = "griffonApplication";
+    String APPLICATION_ID = "griffonApplication";
     /**
      * Constant used to resolve the environment via System.getProperty(ENVIRONMENT)
      */
-    static final String ENVIRONMENT = "griffon.env";
+    String ENVIRONMENT = "griffon.env";
 
     /**
      * Constants that indicates whether this GriffonApplication is running in the default environment
      */
-    static final String ENVIRONMENT_DEFAULT = "griffon.env.default";
+    String ENVIRONMENT_DEFAULT = "griffon.env.default";
 
     /**
      * Constant for the development environment
      */
-    static final String ENV_DEVELOPMENT = "development";
+    String ENV_DEVELOPMENT = "development";
     /**
      * Constant for the application data source, primarly for backward compatability for those applications
      * that use ApplicationDataSource.groovy
      */
-    static final String ENV_APPLICATION = "application";
+    String ENV_APPLICATION = "application";
 
     /**
      * Constant for the production environment
      */
-    static final String ENV_PRODUCTION = "production";
+    String ENV_PRODUCTION = "production";
 
     /*
      * Constant for the test environment
      */
-    static final String ENV_TEST  = "test";
+    String ENV_TEST  = "test";
 
     /**
      * The name of the class that provides configuration
      */
-    static final String CONFIG_CLASS = "Config";
+    String CONFIG_CLASS = "Config";
 
     /**
      * Returns the ConfigObject instance

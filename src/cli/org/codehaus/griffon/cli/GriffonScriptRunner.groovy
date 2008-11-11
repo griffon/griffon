@@ -132,8 +132,8 @@ Griffon home is ${ !griffonHome ? 'not set' : 'set to: ' + griffonHome}
         System.setProperty(GriffonContext.PROJECT_TEST_CLASSES_DIR, projectPaths["testDirPath"])
         System.setProperty(GriffonContext.PROJECT_RESOURCES_DIR, projectPaths["resourcesDirPath"])
         System.setProperty(GriffonContext.PROJECT_WORK_DIR, projectPaths["projectWorkDir"])
-//        System.setProperty(GriffonContext.PLUGINS_DIR, projectPaths["pluginsDirPath"])
-//        System.setProperty(GriffonContext.GLOBAL_PLUGINS_DIR, projectPaths["globalPluginsDirPath"])
+        System.setProperty(GriffonContext.PLUGINS_DIR, projectPaths["pluginsDirPath"])
+        System.setProperty(GriffonContext.GLOBAL_PLUGINS_DIR, projectPaths["globalPluginsDirPath"])
 
         // Add some extra binding variables that are now available.
         bindingVars["griffonEnv"] = System.getProperty(GriffonContext.ENVIRONMENT)
@@ -276,7 +276,7 @@ Griffon home is ${ !griffonHome ? 'not set' : 'set to: ' + griffonHome}
 			binding = cachedScript.binding
 		}
 		else if (new File(griffonHome).exists()) {
-            //def pluginsDirPath = projectPaths["pluginsDirPath"]
+            def pluginsDirPath = projectPaths["pluginsDirPath"]
 
             potentialScripts = []
             def resourceResolver = { path ->
@@ -549,8 +549,8 @@ Griffon home is ${ !griffonHome ? 'not set' : 'set to: ' + griffonHome}
         def classesDir = getPropertyValue(GriffonContext.PROJECT_CLASSES_DIR, "$projectWorkDir/classes")
         def resourcesDirPath = getPropertyValue(GriffonContext.PROJECT_RESOURCES_DIR, "$projectWorkDir/resources")
         def testDirPath = getPropertyValue(GriffonContext.PROJECT_TEST_CLASSES_DIR, "$projectWorkDir/test-classes")
-//        def pluginsDirPath = getPropertyValue(GriffonContext.PLUGINS_DIR, "$projectWorkDir/plugins")
-//        def globalPluginsDirPath = getPropertyValue(GriffonContext.GLOBAL_PLUGINS_DIR, "$griffonWorkDir/global-plugins")
+        def pluginsDirPath = getPropertyValue(GriffonContext.PLUGINS_DIR, "$projectWorkDir/plugins")
+        def globalPluginsDirPath = getPropertyValue(GriffonContext.GLOBAL_PLUGINS_DIR, "$griffonWorkDir/global-plugins")
 
         def paths = [:]
         paths["griffonWorkDir"] = griffonWorkDir
@@ -558,8 +558,8 @@ Griffon home is ${ !griffonHome ? 'not set' : 'set to: ' + griffonHome}
         paths["classesDirPath"] = classesDir
         paths["resourcesDirPath"] = resourcesDirPath
         paths["testDirPath"] = testDirPath
-//        paths["pluginsDirPath"] = pluginsDirPath
-//        paths["globalPluginsDirPath"] = globalPluginsDirPath
+        paths["pluginsDirPath"] = pluginsDirPath
+        paths["globalPluginsDirPath"] = globalPluginsDirPath
         return paths
     }
 

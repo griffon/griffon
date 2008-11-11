@@ -220,7 +220,9 @@ target(jarFiles: "Jar up the package files") {
 
     String destFileName = "$jardir/${config.griffon.jars.jarName}"
     Ant.jar(destfile:destFileName) {
-        fileset(dir:classesDirPath)
+        fileset(dir:classesDirPath) {
+            exclude(name:'Config*.class')
+        }
         fileset(dir:i18nDir)
     }
     griffonCopyDist(destFileName, jardir, true)
@@ -381,7 +383,7 @@ target(generateJNLP:"Generates the JNLP File") {
 
     Ant.replace(dir:jardir, includes:"*.jnlp,*.html") {
         replacefilter(token:"@griffonAppName@", value:"${griffonAppName}" )
-        replacefilter(token:"@griffonAppVersion@", value:"${griffonAppName}" )
+        replacefilter(token:"@griffonAppVersion@", value:"${griffonAppVersion}" )
         replacefilter(token:"@griffonAppCodebase@", value:"${config.griffon.webstart.codebase}")
         replacefilter(token:"@jnlpJars@", value:jnlpJars )
         replacefilter(token:"@appletJars@", value:appletJars )
@@ -423,64 +425,6 @@ log4j.appender.stdout.layout=org.apache.log4j.PatternLayout
 log4j.rootLogger=error,stdout
 '''
 
-}
-
-target(loadPlugins:"Loads Griffon' plugins") {
-//    if(!PluginManagerHolder.pluginManager) { // plugin manager already loaded?
-//        compConfig.setTargetDirectory(classesDir)
-//        def unit = new CompilationUnit ( compConfig , null , new GroovyClassLoader(classLoader) )
-//        def pluginFiles = pluginResources.file
-//
-//        for(plugin in pluginFiles) {
-//            def className = plugin.name - '.groovy'
-//            def classFile = new File("${classesDirPath}/${className}.class")
-//            if(plugin.lastModified() > classFile.lastModified())
-//                  unit.addSource ( plugin )
-//        }
-//
-//        try {
-//            profile("compiling plugins") {
-//                unit.compile ()
-//            }
-//            def application
-//            def pluginClasses = []
-//            profile("construct plugin manager with ${pluginFiles.inspect()}") {
-//                for(plugin in pluginFiles) {
-//                   def className = plugin.name - '.groovy'
-//                   pluginClasses << classLoader.loadClass(className)
-//                }
-//                if(griffonApp == null) {
-//                    griffonApp = new DefaultGriffonContext(new Class[0], new GroovyClassLoader(classLoader))
-//                }
-//                pluginManager = new DefaultGriffonPluginManager(pluginClasses as Class[], griffonApp)
-//
-//                PluginManagerHolder.setPluginManager(pluginManager)
-//            }
-//            profile("loading plugins") {
-//                event("PluginLoadStart", [pluginManager])
-//                pluginManager.loadPlugins()
-//
-//
-//                def loadedPlugins = pluginManager.allPlugins?.findAll { pluginClasses.contains(it.instance.getClass()) }*.name
-//                if(loadedPlugins)
-//                    event("StatusUpdate", ["Loading with installed plug-ins: ${loadedPlugins}"])
-//
-//                pluginManager.doArtefactConfiguration()
-//                griffonApp.initialise()
-//                event("PluginLoadEnd", [pluginManager])
-//            }
-//        }
-//        catch (Exception e) {
-//            GriffonUtil.deepSanitize(e).printStackTrace()
-//            event("StatusFinal", [ "Error loading plugin manager: " + e.message ])
-//            exit(1)
-//        }
-//    }
-//    else {
-//        // Add the plugin manager to the binding so that it can be accessed
-//        // from any target.
-//        pluginManager = PluginManagerHolder.pluginManager
-//    }
 }
 
 //target(packageTemplates: "Packages templates into the app") {

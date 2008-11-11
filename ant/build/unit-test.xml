@@ -132,7 +132,7 @@
     </target>
 
 
-    <target name="run-test" depends="defineTestingScope, build-test, junit-macro" unless="_skipTests_">
+    <target name="run-test" depends="defineTestingScope, build-test, -jar-app-files, junit-macro" unless="_skipTests_">
         <property name="xvfb-run.bin" value="xvfb-run"/>
         <delete dir="${griffon.test.reports}" />
         <mkdir dir="${griffon.test.reports}" />

@@ -1,6 +1,9 @@
+@artifact.package@defaultTarget("The description of the script goes here!") {
+    depends(@artifact.key@)
+}
+
 includeTargets << griffonScript("Init")
 
-target(main: "The description of the script goes here!") {
+target('@artifact.key@': "The description of the script goes here!") {
 	// TODO: Implement script here
 }
-setDefaultTarget(main)

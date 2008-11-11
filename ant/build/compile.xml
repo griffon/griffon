@@ -62,6 +62,18 @@
         <!--<antcall target="build:java5" />-->
     </target>
 
+    <target name="build-scripts" depends="build">
+        <mkdir dir="${griffon.target}/compiled-scripts"/>
+        <groovyc destdir="${griffon.target}/compiled-scripts"  encoding="UTF-8" fork="true">
+            <classpath>
+                <pathelement location="${griffon.build}"/>
+                <path refid="classpath"/>
+            </classpath>
+            <src path="${basedir}/scripts"/>
+        </groovyc>
+    </target>
+
+
     <!--<target name="build:checkj5">-->
         <!--<echo>Building Java 5 code for Java version: ${ant.java.version}</echo>-->
         <!--<condition property="is.java.5">-->

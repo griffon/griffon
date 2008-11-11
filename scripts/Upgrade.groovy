@@ -173,8 +173,6 @@ target( upgrade: "main upgrade target") {
             entry(key:"app.name", value:"$griffonAppName")
             entry(key:"app.griffon.version", value:"$griffonVersion")
         }
-
-        replaceTokens()
     }
 
     // proceed plugin-specific upgrade logic contained in 'scripts/_Upgrade.groovy' under plugin's root

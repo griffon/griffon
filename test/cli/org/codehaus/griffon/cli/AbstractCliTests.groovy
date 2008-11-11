@@ -3,9 +3,9 @@ package org.codehaus.griffon.cli
 import org.codehaus.groovy.tools.LoaderConfiguration
 import org.codehaus.groovy.tools.RootLoader
 import org.codehaus.groovy.tools.LoaderConfiguration
-//import org.codehaus.groovy.grails.plugins.PluginManagerHolder
+//import org.codehaus.groovy.griffon.plugins.PluginManagerHolder
 import org.codehaus.griffon.commons.GriffonContext
-//import org.codehaus.groovy.grails.plugins.GrailsPluginUtils
+//import org.codehaus.groovy.griffon.plugins.GriffonPluginUtils
 import org.codehaus.gant.GantBinding
 import gant.Gant
 import org.codehaus.griffon.commons.GriffonUtil
@@ -142,8 +142,8 @@ abstract class AbstractCliTests extends GroovyTestCase {
         binding.setVariable("classesDirPath", System.getProperty(GriffonContext.PROJECT_CLASSES_DIR))
         binding.setVariable("resourcesDirPath", System.getProperty(GriffonContext.PROJECT_RESOURCES_DIR))
         binding.setVariable("testDirPath", System.getProperty(GriffonContext.PROJECT_TEST_CLASSES_DIR))
-//        binding.setVariable("pluginsDirPath", System.getProperty(GriffonContext.PLUGINS_DIR))
-//        binding.setVariable("globalPluginsDirPath", System.getProperty(GriffonContext.GLOBAL_PLUGINS_DIR))
+        binding.setVariable("pluginsDirPath", System.getProperty(GriffonContext.PLUGINS_DIR))
+        binding.setVariable("globalPluginsDirPath", System.getProperty(GriffonContext.GLOBAL_PLUGINS_DIR))
 
         def gant = new Gant(
                 new File("./scripts/${scriptName}.groovy"),

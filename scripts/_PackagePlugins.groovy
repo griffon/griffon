@@ -1,12 +1,12 @@
 /*
  * Copyright 2004-2005 the original author or authors.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -16,21 +16,19 @@
 
 /**
  * Gant script that handles the packaging of Griffon plug-ins
- * 
+ *
  * @author Graeme Rocher
  *
  * @since 0.4
  */
+import org.codehaus.griffon.commons.GriffonClassUtils as GCU  
+
 GCL = new GroovyClassLoader()
-
-Ant.property(environment:"env")   
-griffonHome = Ant.antProject.properties."env.GRIFFON_HOME"
-
 pluginResources = []
 
 target( packagePlugins : "Packages any Griffon plugins that are installed for this project") {
-    depends( classpath )
-    try {
+	depends( classpath )
+	try {
 
         def basePluginFile = baseFile.listFiles().find { it.name.endsWith("GriffonPlugin.groovy")}
         def basePlugin = null
@@ -42,22 +40,22 @@ target( packagePlugins : "Packages any Griffon plugins that are installed for th
 
         pluginResources += resolveResources("file:${basedir}/plugins/*/*GriffonPlugin.groovy").toList()
            for(p in pluginResources) {
-               def pluginBase = p.file.parentFile.canonicalFile
-               def pluginPath = pluginBase.absolutePath
-               def pluginName = pluginBase.name
-               def pluginNameWithVersion = pluginBase.name
+	   		def pluginBase = p.file.parentFile.canonicalFile
+	     	def pluginPath = pluginBase.absolutePath
+			def pluginName = pluginBase.name
+			def pluginNameWithVersion = pluginBase.name
 
-               Ant.sequential {
+	   		Ant.sequential {
 //                if(new File("${pluginBase}/griffon-app/conf/hibernate").exists()) {
 //                       copy(todir:classesDirPath, failonerror:false) {
 //                           fileset(dir:"${pluginBase}/griffon-app/conf/hibernate", includes:"**", excludes:"*.groovy")
 //                       }
 //                }
-                if(new File("${pluginBase}/griffon-app/conf").exists()) {
-                       copy(todir:classesDirPath, failonerror:false) {
-                           fileset(dir:"${pluginBase}/griffon-app/conf", includes:"*", excludes:"*.groovy")
-                       }
-                }
+				if(new File("${pluginBase}/griffon-app/conf").exists()) {
+		   			copy(todir:classesDirPath, failonerror:false) {
+		   				fileset(dir:"${pluginBase}/griffon-app/conf", includes:"*", excludes:"*.groovy")
+		   			}
+				}
 //                if(new File("${pluginPath}/web-app").exists()) {
 //                    Ant.mkdir(dir:"${basedir}/web-app/plugins/${pluginName}")
 //                    if(basePlugin != p) {
@@ -66,11 +64,11 @@ target( packagePlugins : "Packages any Griffon plugins that are installed for th
 //                           }
 //                    }
 //                }
-               }
-           }
+            }
+        }
     }
-    catch(Exception e) {
+	catch(Exception e) {
         e.printStackTrace(System.out)
-    }
+	}
 }
 
