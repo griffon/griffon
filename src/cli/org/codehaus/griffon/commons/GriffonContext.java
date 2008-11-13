@@ -16,6 +16,7 @@
 package org.codehaus.griffon.commons;
 
 import groovy.lang.GroovyClassLoader;
+import groovy.util.ConfigObject;
 
 import java.util.Map;
 
@@ -119,7 +120,7 @@ public interface GriffonContext { // extends ApplicationContextAware {
      *
      * @return The ConfigObject instance
      */
-//    public ConfigObject getConfig();
+    public ConfigObject getConfig();
 
 
     /**

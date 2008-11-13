@@ -1,5 +1,5 @@
 /*
-* Copyright 2004-2005 the original author or authors.
+* Copyright 2004-2009 the original author or authors.
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
@@ -21,8 +21,8 @@ import groovy.xml.dom.DOMCategory
 //import org.apache.xml.serialize.XMLSerializer
 import org.codehaus.groovy.control.CompilationUnit
 import org.codehaus.griffon.commons.DefaultGriffonContext
-//import org.codehaus.griffon.plugins.DefaultGriffonPluginManager
-//import org.codehaus.griffon.plugins.GriffonPluginUtils
+import org.codehaus.griffon.plugins.DefaultGriffonPluginManager
+import org.codehaus.griffon.plugins.GriffonPluginUtils
 //import org.codehaus.griffon.plugins.PluginManagerHolder
 import java.util.regex.Matcher
 import org.codehaus.griffon.commons.GriffonUtil
@@ -44,8 +44,10 @@ import javax.xml.transform.dom.DOMSource
 includeTargets << griffonScript("_GriffonEvents")
 includeTargets << griffonScript("_GriffonProxy")
 
-DEFAULT_PLUGIN_DIST = "http://plugins.griffon.org"
+DEFAULT_PLUGIN_DIST = "http://svn.codehais.org/griffon/plugins"
+//DEFAULT_PLUGIN_DIST = new File("C:/svn/codehaus.org/griffon/plugins").toURI().toASCIIString()
 BINARY_PLUGIN_DIST = "http://plugins.griffon.org/dist"
+//BINARY_PLUGIN_DIST = "${DEFAULT_PLUGIN_DIST}/dist"
 REMOTE_PLUGIN_LIST = "${DEFAULT_PLUGIN_DIST}/.plugin-meta/plugins-list.xml"
 
 // Properties
@@ -53,6 +55,7 @@ pluginsListFile = new File("${pluginsHome}/plugins-list.xml")
 pluginsList = null
 //indentingOutputFormat = new OutputFormat("XML", "UTF-8", true)
 globalInstall = false
+pluginsBase = "${griffonWorkDir}/plugins".toString().replaceAll('\\\\','/')
 
 
 // Targets
@@ -79,74 +82,74 @@ target(resolveDependencies:"Resolve plug-in dependencies") {
     }
 }
 target(loadPlugins:"Loads Griffon' plugins") {
-//    if(!PluginManagerHolder.pluginManager) { // plugin manager already loaded?
-//		compConfig.setTargetDirectory(classesDir)
-//	    def unit = new CompilationUnit ( compConfig , null , new GroovyClassLoader(classLoader) )
-//		def pluginFiles = getPluginDescriptors()
-//
-//        for(plugin in pluginFiles) {
-//            def pluginFile = plugin.file
-//            def className = pluginFile.name - '.groovy'
-//	        def classFile = new File("${classesDirPath}/${className}.class")
-//
-//            if(pluginFile.lastModified() > classFile.lastModified())
-//	              unit.addSource ( pluginFile )
-//		}
-//
-//        try {
-//            profile("compiling plugins") {
-//	    		unit.compile ()
-//			}
-//			def application
-//            def pluginClasses = []
-//            profile("construct plugin manager with ${pluginFiles.inspect()}") {
-//				for(plugin in pluginFiles) {
-//				   def className = plugin.file.name - '.groovy'
-//	               pluginClasses << classLoader.loadClass(className)
-//				}
-//
-//                profile("creating plugin manager with classes ${pluginClasses}") {
-//                    if(griffonApp == null) {
-//                        griffonApp = new DefaultGriffonContext(new Class[0], new GroovyClassLoader(classLoader))
-//                    }
-//                    pluginManager = new DefaultGriffonPluginManager(pluginClasses as Class[], griffonApp)
-//
-//                    PluginManagerHolder.setPluginManager(pluginManager)
-//                }
-//	        }
-//	        profile("loading plugins") {
-//				event("PluginLoadStart", [pluginManager])
-//	            pluginManager.loadPlugins()
-//
-//
-//                def loadedPlugins = pluginManager.allPlugins?.findAll { pluginClasses.contains(it.instance.getClass()) }*.name
-//                if(loadedPlugins)
-//                    event("StatusUpdate", ["Loading with installed plug-ins: ${loadedPlugins}"])
-//
-//                if(pluginManager.failedLoadPlugins) {
-//                    event("StatusError", ["Error: The following plug-ins failed to load due to missing dependencies: ${pluginManager.failedLoadPlugins*.name}"])
-//                    for(p in pluginManager.failedLoadPlugins) {
-//                        println "- Plugin: $p.name, Dependencies: $p.dependencyNames"
-//                    }
-//                    exit(1)
-//                }
-//
-//                pluginManager.doArtefactConfiguration()
-//                griffonApp.initialise()
-//                event("PluginLoadEnd", [pluginManager])
-//            }
-//	    }
-//        catch (Exception e) {
-//            GriffonUtil.deepSanitize(e).printStackTrace()
-//            event("StatusFinal", [ "Error loading plugin manager: " + e.message ])
-//			exit(1)
-//	    }
-//    }
-//    else {
-//        // Add the plugin manager to the binding so that it can be accessed
-//        // from any target.
-//        pluginManager = PluginManagerHolder.pluginManager
-//    }
+    if(!PluginManagerHolder.pluginManager) { // plugin manager already loaded?
+		compConfig.setTargetDirectory(classesDir)
+	    def unit = new CompilationUnit ( compConfig , null , new GroovyClassLoader(classLoader) )
+		def pluginFiles = getPluginDescriptors()
+
+        for(plugin in pluginFiles) {
+            def pluginFile = plugin.file
+            def className = pluginFile.name - '.groovy'
+	        def classFile = new File("${classesDirPath}/${className}.class")
+
+            if(pluginFile.lastModified() > classFile.lastModified())
+	              unit.addSource ( pluginFile )
+		}
+
+        try {
+            profile("compiling plugins") {
+	    		unit.compile ()
+			}
+			def application
+            def pluginClasses = []
+            profile("construct plugin manager with ${pluginFiles.inspect()}") {
+				for(plugin in pluginFiles) {
+				   def className = plugin.file.name - '.groovy'
+	               pluginClasses << classLoader.loadClass(className)
+				}
+
+                profile("creating plugin manager with classes ${pluginClasses}") {
+                    if(griffonApp == null) {
+                        griffonApp = new DefaultGriffonContext(new Class[0], new GroovyClassLoader(classLoader))
+                    }
+                    pluginManager = new DefaultGriffonPluginManager(pluginClasses as Class[], griffonApp)
+
+                    PluginManagerHolder.setPluginManager(pluginManager)
+                }
+	        }
+	        profile("loading plugins") {
+				event("PluginLoadStart", [pluginManager])
+	            pluginManager.loadPlugins()
+
+
+                def loadedPlugins = pluginManager.allPlugins?.findAll { pluginClasses.contains(it.instance.getClass()) }*.name
+                if(loadedPlugins)
+                    event("StatusUpdate", ["Loading with installed plug-ins: ${loadedPlugins}"])
+
+                if(pluginManager.failedLoadPlugins) {
+                    event("StatusError", ["Error: The following plug-ins failed to load due to missing dependencies: ${pluginManager.failedLoadPlugins*.name}"])
+                    for(p in pluginManager.failedLoadPlugins) {
+                        println "- Plugin: $p.name, Dependencies: $p.dependencyNames"
+                    }
+                    exit(1)
+                }
+
+                pluginManager.doArtefactConfiguration()
+                griffonApp.initialise()
+                event("PluginLoadEnd", [pluginManager])
+            }
+	    }
+        catch (Exception e) {
+            GriffonUtil.deepSanitize(e).printStackTrace()
+            event("StatusFinal", [ "Error loading plugin manager: " + e.message ])
+			exit(1)
+	    }
+    }
+    else {
+        // Add the plugin manager to the binding so that it can be accessed
+        // from any target.
+        pluginManager = PluginManagerHolder.pluginManager
+    }
 }
 
 target(updatePluginsList:"Updates the plug-in list from the remote plugin-list.xml") {

@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-//import org.codehaus.griffon.plugins.GriffonPluginUtils
+import org.codehaus.griffon.plugins.GriffonPluginUtils
 
 /**
  * Gant script containing the Griffon build event system.
@@ -84,19 +84,20 @@ loadEventHooks = {
     }
 
     // Look for plugin-supplied scripts
-//    def pluginDirs = GriffonPluginUtils.getPluginDirectories()
-//    pluginDirs.each { String dir ->
-//        def pluginsDir = new File(dir)
-//        if (pluginsDir.exists()) {
-//            pluginsDir.eachDir() {
-//                f = new File(it, "scripts/Events.groovy")
-//                if (f.exists()) {
-//                    println "Found events script in plugin ${it.name}"
-//                    loadEventScript(f)
-//                }
-//            }
-//        }
-//    }
+    def pluginDirs = GriffonPluginUtils.getPluginDirectories()
+    pluginDirs.each { String dir ->
+        println dir
+        def pluginsDir = new File(dir)
+        if (pluginsDir.exists()) {
+            pluginsDir.eachDir() {
+                f = new File(it, "scripts/Events.groovy")
+                if (f.exists()) {
+                    println "Found events script in plugin ${it.name}"
+                    loadEventScript(f)
+                }
+            }
+        }
+    }
 }
 
 void loadEventScript(theFile) {
