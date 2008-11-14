@@ -44,7 +44,7 @@ import javax.xml.transform.dom.DOMSource
 includeTargets << griffonScript("_GriffonEvents")
 includeTargets << griffonScript("_GriffonProxy")
 
-DEFAULT_PLUGIN_DIST = "http://svn.codehais.org/griffon/plugins"
+DEFAULT_PLUGIN_DIST = "http://svn.codehaus.org/griffon/plugins"
 //DEFAULT_PLUGIN_DIST = new File("C:/svn/codehaus.org/griffon/plugins").toURI().toASCIIString()
 BINARY_PLUGIN_DIST = "http://plugins.griffon.org/dist"
 //BINARY_PLUGIN_DIST = "${DEFAULT_PLUGIN_DIST}/dist"
