@@ -84,7 +84,7 @@ target(loadApp:"Loads the Griffon application object") {
     event("AppLoadEnd", ["Loading Griffon Application"])
 }
 target(configureApp:"Configures the Griffon application and builds an ApplicationContext") {
-    event("ConfigureAppStart", [griffonApp, appCtx])
+    event("ConfigureAppStart", [griffonApp/*, appCtx*/])
 //    appCtx.resourceLoader = new  CommandLineResourceLoader()
 //    profile("Performing runtime Spring configuration") {
 //        def config = new org.codehaus.griffon.commons.spring.GriffonRuntimeConfigurator(griffonApp,appCtx)
@@ -92,7 +92,7 @@ target(configureApp:"Configures the Griffon application and builds an Applicatio
 //        servletContext.setAttribute(ApplicationAttributes.APPLICATION_CONTEXT,appCtx );
 //        servletContext.setAttribute(WebApplicationContext.ROOT_WEB_APPLICATION_CONTEXT_ATTRIBUTE, appCtx);
 //    }
-    event("ConfigureAppEnd", [griffonApp, appCtx])
+    event("ConfigureAppEnd", [griffonApp/*, appCtx*/])
 }
 
 monitorCallback = {}

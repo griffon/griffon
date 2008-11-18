@@ -1,23 +1,25 @@
+//import griffon.util.GriffonWebUtil as GWU
+
 import java.lang.reflect.Modifier
 import junit.framework.TestCase
 import junit.framework.TestResult
 import junit.framework.TestSuite
+import org.apache.commons.logging.LogFactory
 import org.apache.tools.ant.taskdefs.optional.junit.JUnitTest
-import org.apache.tools.ant.taskdefs.optional.junit.PlainJUnitResultFormatter
-import org.apache.tools.ant.taskdefs.optional.junit.XMLJUnitResultFormatter
+import org.codehaus.griffon.commons.GriffonContext
 import org.codehaus.griffon.support.GriffonTestSuite
-
-//import griffon.util.GriffonWebUtil as GWU
-
-//import griffon.util.IGriffonApplication
 //import org.codehaus.griffon.support.PersistenceContextInterceptor
 //import org.codehaus.griffon.web.servlet.GriffonApplicationAttributes
-//import org.springframework.transaction.support.TransactionCallback
-//import org.springframework.transaction.support.TransactionTemplate
-//import org.springframework.web.context.request.RequestContextHolder
+import org.springframework.transaction.support.TransactionCallback
+import org.springframework.transaction.support.TransactionTemplate
+import org.springframework.web.context.request.RequestContextHolder
+import junit.framework.Test
+import junit.framework.AssertionFailedError
+//import griffon.util.GriffonUtil
+//import griffon.util.GriffonNameUtils
 
 /*
-* Copyright 2004-2008 the original author or authors.
+* Copyright 2004-2005 the original author or authors.
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
@@ -114,11 +116,13 @@ target(testApp: "The test app implementation target") {
         produceReports()
     }
     catch (Exception ex) {
+        GriffonUtil.deepSanitize(ex)
+        println "Error occured running tests: $ex.message"
         ex.printStackTrace()
+        exit(1)
     }
-    finally {
-        processResults()
-    }
+    processResults()
+
 }
 target(packageTests: "Puts some useful things on the classpath") {
     Ant.copy(todir: testDirPath) {
@@ -155,7 +159,6 @@ target(compileTests: "Compiles the test cases") {
         Ant.groovyc(destdir: destDir,
 //                projectName: griffonAppName,
                 classpathref: "griffon.classpath",
-//                resourcePattern: "file:${basedir}/**/griffon-app/**/*.groovy",
                 compilerClasspath.curry(true))
     }
     catch (Exception e) {
@@ -163,8 +166,8 @@ target(compileTests: "Compiles the test cases") {
         exit(1)
     }
 
-    classLoader = new URLClassLoader([new File(destDir).toURI().toURL()] as URL[], getClass().classLoader.rootLoader)
-    Thread.currentThread().contextClassLoader = classLoader
+    classLoader.addURL(new File(destDir).toURI().toURL())
+//    Thread.currentThread().contextClassLoader = classLoader
 
     event("CompileEnd", ['tests'])
 }
@@ -199,7 +202,7 @@ def populateTestSuite = {suite, testFiles, classLoader, String base ->
         } catch (Exception e) {
             compilationFailures << r.file.name
             event("StatusFinal", ["Error loading test: ${e.message}"])
-            e.printStackTrace()
+            GriffonUtil.deepSanitize(e.printStackTrace())
             exit(1)
         }
     }
@@ -217,8 +220,8 @@ def runTests = {suite, TestResult result, Closure callback ->
                     def errBytes = new ByteArrayOutputStream()
                     System.out = new PrintStream(outBytes)
                     System.err = new PrintStream(errBytes)
-                    def xmlOutput = new XMLJUnitResultFormatter(output: xmlOut)
-                    def plainOutput = new PlainJUnitResultFormatter(output: plainOut)
+                    def xmlOutput = new XMLFormatter(output: xmlOut)
+                    def plainOutput = new PlainFormatter(output: plainOut)
                     def junitTest = new JUnitTest(test.name)
                     plainOutput.startTestSuite(junitTest)
                     xmlOutput.startTestSuite(junitTest)
@@ -303,13 +306,13 @@ target(runUnitTests: "Run Griffon' unit tests under the test/unit directory") {
 
             def start = new Date()
             runTests(suite, result) {test, invocation ->
-//                 for (cls in griffonApp.allArtefacts) {
-//                     def emc = new ExpandoMetaClass(cls, true, true)
-//                     emc.initialize()
-//                     def log = LogFactory.getLog(cls)
-//                     emc.getLog = {-> log }
-//                     GroovySystem.metaClassRegistry.setMetaClass(cls, emc)
-//                 }
+//                for (cls in griffonApp.allArtefacts) {
+//                    def emc = new ExpandoMetaClass(cls, true, true)
+//                    emc.initialize()
+//                    def log = LogFactory.getLog(cls)
+//                    emc.getLog = {-> log }
+//                    GroovySystem.metaClassRegistry.setMetaClass(cls, emc)
+//                }
                 invocation()
             }
             def end = new Date()
@@ -373,38 +376,38 @@ target(runIntegrationTests: "Runs Griffon' tests under the test/integration dire
 
                 def savedOut = System.out
                 runTests(suite, result) {test, invocation ->
-//                     name = test.name[0..-6]
-//                     def webRequest = GWU.bindMockWebRequest(appCtx)
-//                     webRequest.getServletContext().setAttribute(GriffonApplicationAttributes.APPLICATION_CONTEXT, appCtx)
+//                    name = test.name[0..-6]
+//                    def webRequest = GWU.bindMockWebRequest(appCtx)
+//                    webRequest.getServletContext().setAttribute(GriffonApplicationAttributes.APPLICATION_CONTEXT, appCtx)
 //
-//                     // @todo this is horrible and dirty, should find a better way
-//                     if (name.endsWith("Controller")) {
+//                    // @todo this is horrible and dirty, should find a better way
+//                    if (name.endsWith("Controller")) {
 //                         webRequest.controllerName = GCU.getLogicalPropertyName(name, "Controller")
-//                     }
-//                     else {
-//                         // Provide a default 'current' controller name.
-//                         webRequest.controllerName = "test"
-//                     }
+//                    }
+//                    else {
+//                        // Provide a default 'current' controller name.
+//                        webRequest.controllerName = "test"
+//                    }
 //
-//                     def callable = {status ->
-//                         invocation()
-//                         status?.setRollbackOnly()
-//                     }
-//                     if (test.isTransactional()) {
-//                         if (appCtx.transactionManager) {
-//                             def template = new TransactionTemplate(appCtx.transactionManager)
-//                             template.execute(callable as TransactionCallback)
-//                         } else {
-//                             System.out = savedOut
-//                             println "Error: There is no test datasource defined and integration test ${test.name} does not set transactional = false"
-//                             println "Tests aborted"
-//                             exit(1)
-//                         }
-//                     }
-//                     else {
-//                         callable.call()
-//                     }
-//                     RequestContextHolder.setRequestAttributes(null);
+//                    def callable = {status ->
+//                        invocation()
+//                        status?.setRollbackOnly()
+//                    }
+//                    if (test.isTransactional()) {
+//                        if (appCtx.transactionManager) {
+//                            def template = new TransactionTemplate(appCtx.transactionManager)
+//                            template.execute(callable as TransactionCallback)
+//                        } else {
+//                            System.out = savedOut
+//                            println "Error: There is no test datasource defined and integration test ${test.name} does not set transactional = false"
+//                            println "Tests aborted"
+//                            exit(1)
+//                        }
+//                    }
+//                    else {
+//                        callable.call()
+//                    }
+//                    RequestContextHolder.setRequestAttributes(null);
                     invocation()
                 }
                 def end = new Date()
@@ -493,4 +496,36 @@ def getTestNames(testNamesString) {
     }
 
     return testNamesString
+}
+/**
+ * Extended junit formatters that santizes stack traces
+ *
+ */
+class PlainFormatter extends org.apache.tools.ant.taskdefs.optional.junit.PlainJUnitResultFormatter{
+
+    public void addFailure(Test test, Throwable throwable) {
+        GriffonUtil.deepSanitize(throwable)
+        super.addFailure(test, (Throwable)throwable);
+    }
+
+
+    public void addError(Test test, Throwable throwable) {
+        GriffonUtil.deepSanitize(throwable)
+        super.addError(test, throwable);
+    }
+
+
+}
+class XMLFormatter extends org.apache.tools.ant.taskdefs.optional.junit.XMLJUnitResultFormatter{
+
+    public void addFailure(Test test, Throwable throwable) {
+        GriffonUtil.deepSanitize(throwable)
+        super.addFailure(test, (Throwable)throwable);
+    }
+
+    public void addError(Test test, Throwable throwable) {
+        GriffonUtil.deepSanitize(throwable)
+        super.addError(test, throwable);
+    }
+
 }

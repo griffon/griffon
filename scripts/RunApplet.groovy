@@ -20,8 +20,10 @@
  * Time: 10:35:06 PM
  */
 
+import org.codehaus.griffon.commons.ConfigurationHolder
 
-defaultTarget("Runs the application from the command line") {
+
+defaultTarget("Runs the applet from Java WebStart") {
     depends(checkVersion)
     runApp()
 }
@@ -29,8 +31,12 @@ defaultTarget("Runs the application from the command line") {
 includeTargets << griffonScript("Package")
 includeTargets << griffonScript("_PackagePlugins" )
 
-target(runApp: "Does the actual command line execution") {
-    depends(packageApp)
+
+target(tweakConfig:' tweaks for webstart') {
+    ConfigurationHolder.config.griffon.jars.sign = true
+}
+target(runApp: "Runs the action Applet") {
+    depends(createConfig, tweakConfig, packageApp)
 
     // calculate the needed jars
     File jardir = new File(Ant.antProject.replaceProperties(config.griffon.jars.destDir))
