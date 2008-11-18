@@ -41,7 +41,7 @@ target( createApp: "The implementation target")  {
     ant.replace(dir:"${basedir}/griffon-app/conf", includes:"**/*.*", standardGriffonFilters)
 
     classpath()
-    //loadPlugins()
+    loadPlugins()
 	//generateWebXml()
 
     // Create a message bundle to get the user started.

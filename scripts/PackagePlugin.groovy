@@ -20,7 +20,7 @@ import groovy.xml.MarkupBuilder
 
 /**
  * Gant script that handles the packaging of a Griffon plugin into a distribution zipfile
- * 
+ *
  * @author Graeme Rocher
  *
  * @since 0.4
@@ -43,7 +43,7 @@ pluginIncludes = [
 
 pluginExcludes = [
 //    "web-app/WEB-INF/**",
-//    "web-app/plugins/**",    
+//    "web-app/plugins/**",
 //    "griffon-app/conf/spring/resources.groovy",
 //    "griffon-app/conf/*DataSource.groovy",
     "griffon-app/conf/Application.groovy",
@@ -53,7 +53,7 @@ pluginExcludes = [
 //    "griffon-app/conf/UrlMappings.groovy",
 //    "griffon-app/conf/log4j.*.properties",
     "**/.svn/**",
-    "test/**",    
+    "test/**",
     "**/CVS/**"
 ]
 

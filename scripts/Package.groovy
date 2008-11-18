@@ -1,6 +1,3 @@
-import java.util.zip.ZipEntry
-import java.util.zip.ZipFile
-
 /*
 * Copyright 2004-2008 the original author or authors.
 *
@@ -25,6 +22,10 @@ import java.util.zip.ZipFile
  *
  * @since 0.4
  */
+
+import java.util.zip.ZipEntry
+import java.util.zip.ZipFile
+import org.codehaus.griffon.commons.ConfigurationHolder
 
 //import org.codehaus.griffon.commons.GriffonClassUtils as GCU
 //import groovy.text.SimpleTemplateEngine
@@ -59,63 +60,68 @@ String jardir = null
 
 
 
-target( createConfig: "Creates the configuration object") {
-   if(configFile.exists()) {
+target(createConfig: "Creates the configuration object") {
+    depends(compile)
+    if (configFile.exists()) {
+        def configClass
         try {
-            config = configSlurper.parse(classLoader.loadClass("Config"))
-            config.setConfigFile(configFile.toURI().toURL())
-//            ConfigurationHolder.setConfig(config)
+            configClass = classLoader.loadClass("Config")
+        } catch (ClassNotFoundException cnfe) {
+            println "WARNING: No Config.groovy found for the application."
         }
-        catch(Exception e) {
-            e.printStackTrace()
-            event("StatusFinal", ["Failed to compile configuration file ${configFile}: ${e.message}"])
-            exit(1)
+        if (configClass) {
+            try {
+                config = configSlurper.parse(configClass)
+                config.setConfigFile(configFile.toURI().toURL())
+
+                ConfigurationHolder.setConfig(config)
+            }
+            catch (Exception e) {
+                logError("Failed to compile configuration file", e)
+                exit(1)
+            }
         }
-
-   }
-    if(applicationFile.exists()) {
-         try {
-             applicationConfig = configSlurper.parse(classLoader.loadClass("Application"))
-             applicationConfig.setConfigFile(applicationFile.toURI().toURL())
- //            ConfigurationHolder.setConfig(config)
-         }
-         catch(Exception e) {
-             e.printStackTrace()
-             event("StatusFinal", ["Failed to compile configuration file ${configFile}: ${e.message}"])
-             exit(1)
-         }
-
     }
-//   def dataSourceFile = new File("${basedir}/griffon-app/conf/DataSource.groovy")
+    if (applicationFile.exists()) {
+        def applicationConfigClass
+        try {
+            applicationConfigClass = classLoader.loadClass("Application")
+        } catch (ClassNotFoundException cnfe) {
+            println "WARNING: No Appliciton.groovy found for the application."
+        }
+        if (applicationConfigClass) {
+            try {
+                applicationConfig = configSlurper.parse(applicationConfigClass)
+                applicationConfig.setConfigFile(applicationFile.toURI().toURL())
+
+                //ConfigurationHolder.setConfig(config)
+            }
+            catch (Exception e) {
+                logError("Failed to compile Application configuration file", e)
+                exit(1)
+            }
+        }
+    }
+//   def dataSourceFile = new File("${basedir}/grails-app/conf/DataSource.groovy")
 //   if(dataSourceFile.exists()) {
-//        try {
-//           def dataSourceConfig = configSlurper.parse(classLoader.loadClass("DataSource"))
-//           config.merge(dataSourceConfig)
-//           ConfigurationHolder.setConfig(config)
-//        }
+//		try {
+//		   def dataSourceConfig = configSlurper.parse(classLoader.loadClass("DataSource"))
+//		   config.merge(dataSourceConfig)
+//		   ConfigurationHolder.setConfig(config)
+//		}
+//		catch(ClassNotFoundException e) {
+//			println "WARNING: DataSource.groovy not found, assuming dataSource bean is configured by Spring..."
+//		}
 //        catch(Exception e) {
-//            println "WARNING: DataSource.groovy not found, assuming dataSource bean is configured by Spring..."
+//            logError("Error loading DataSource.groovy",e)
+//            exit(1)
 //        }
 //   }
 //   ConfigurationHelper.initConfig(config, null, classLoader)
 }
 
 target( packageApp : "Implementation of package target") {
-    depends(createStructure) //,packagePlugins)
-
-    try {
-        profile("compile") {
-            compile()
-        }
-    }
-    catch(Exception e) {
-        event("StatusFinal", ["Compilation error: ${e.message}"])
-        e.printStackTrace()
-        exit(1)
-    }
-    profile("creating config") {
-        createConfig()
-    }
+    depends(compile,createConfig, createStructure, packagePlugins)
 
     // flag if <application>.jar is up to date
     jardir = Ant.antProject.replaceProperties(config.griffon.jars.destDir)
@@ -175,7 +181,7 @@ target( packageApp : "Implementation of package target") {
     }
     //Log4jConfigurer.initLogging("file:${log4jFile.absolutePath}")
 
-    //loadPlugins()
+    loadPlugins()
     //generateWebXml()
 
     checkKey()
@@ -214,18 +220,19 @@ target(checkKey: "Check to see if the keystore exists")  {
 }
 
 target(jarFiles: "Jar up the package files") {
-    if (Ant.antProject.properties.appJarUpToDate) return
-
+    boolean upToDate = Ant.antProject.properties.appJarUpToDate
     Ant.mkdir(dir:jardir)
 
     String destFileName = "$jardir/${config.griffon.jars.jarName}"
-    Ant.jar(destfile:destFileName) {
-        fileset(dir:classesDirPath) {
-            exclude(name:'Config*.class')
+    if (!upToDate) {
+        Ant.jar(destfile:destFileName) {
+            fileset(dir:classesDirPath) {
+                exclude(name:'Config*.class')
+            }
+            fileset(dir:i18nDir)
         }
-        fileset(dir:i18nDir)
     }
-    griffonCopyDist(destFileName, jardir, true)
+    griffonCopyDist(destFileName, jardir, !upToDate)
 }
 
 target(copyLibs: "Copy Library Files") {
@@ -295,8 +302,8 @@ def griffonCopyDist(jarname, targetDir, boolean force = false) {
     boolean doJarPacking = configSaysJarPacking
 
     // if we should sign, check if the jar is already signed
-    // don't pack if it appears newer and we're not forced
-    if (doJarPacking && !force) {
+    // don't sign if it appears signed and we're not forced
+    if (doJarSigning && !force) {
         doJarSigning = !isJarSigned(srcFile, targetFile)
     }
 

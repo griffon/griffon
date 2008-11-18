@@ -17,11 +17,11 @@ package org.codehaus.griffon.commons
 import java.beans.PropertyDescriptor
 import java.lang.reflect.Field
 import java.lang.reflect.Method
-import java.lang.reflect.Modifier;
+import java.lang.reflect.Modifier
 
 
-//import org.apache.commons.lang.StringUtils;
-//import org.springframework.beans.*;
+import org.apache.commons.lang.StringUtils
+import org.springframework.beans.*;
 //import org.springframework.util.Assert;
 
 /**
@@ -90,20 +90,19 @@ public class GriffonClassUtils {
      * @return The value of the property or null if none exists
      */
     public static Object getPropertyValueOfNewInstance(Class clazz, String propertyName, Class propertyType) {
-        throw new RuntimeException("Not Implemented Yet");
-//        // validate
-//        if(clazz == null || StringUtils.isBlank(propertyName))
-//            return null;
-//
-//        Object instance = null;
-//        try {
-//            instance = BeanUtils.instantiateClass(clazz);
-//        } catch (BeanInstantiationException e) {
-//            return null;
-//        }
-//
-//
-//        return getPropertyOrStaticPropertyOrFieldValue(instance, propertyName);
+        // validate
+        if(clazz == null || StringUtils.isBlank(propertyName))
+            return null;
+
+        Object instance = null;
+        try {
+            instance = BeanUtils.instantiateClass(clazz);
+        } catch (BeanInstantiationException e) {
+            return null;
+        }
+
+
+        return getPropertyOrStaticPropertyOrFieldValue(instance, propertyName);
     }
 
     /**
@@ -115,20 +114,19 @@ public class GriffonClassUtils {
      * @return The value of the property or null if none exists
      */
     public static Object getPropertyValueOfNewInstance(Class clazz, String propertyName) {
-        throw new RuntimeException("Not Implemented Yet");
-//        // validate
-//        if(clazz == null || StringUtils.isBlank(propertyName))
-//            return null;
-//
-//        Object instance = null;
-//        try {
-//            instance = BeanUtils.instantiateClass(clazz);
-//        } catch (BeanInstantiationException e) {
-//            return null;
-//        }
-//
-//
-//        return getPropertyOrStaticPropertyOrFieldValue(instance, propertyName);
+        // validate
+        if(clazz == null || StringUtils.isBlank(propertyName))
+            return null;
+
+        Object instance = null;
+        try {
+            instance = BeanUtils.instantiateClass(clazz);
+        } catch (BeanInstantiationException e) {
+            return null;
+        }
+
+
+        return getPropertyOrStaticPropertyOrFieldValue(instance, propertyName);
     }
 
 
@@ -140,19 +138,18 @@ public class GriffonClassUtils {
      * @return The PropertyDescriptor
      */
     public static PropertyDescriptor getPropertyDescriptorForValue(Object instance, Object propertyValue) {
-        throw new RuntimeException("Not Implemented Yet");
-//        if(instance == null || propertyValue == null)
-//            return null;
-//
-//        BeanWrapper wrapper = new BeanWrapperImpl(instance);
-//        PropertyDescriptor[] descriptors = wrapper.getPropertyDescriptors();
-//
-//        for (int i = 0; i < descriptors.length; i++) {
-//            Object value = wrapper.getPropertyValue( descriptors[i].getName() );
-//            if(propertyValue.equals(value))
-//                return descriptors[i];
-//        }
-//        return null;
+        if(instance == null || propertyValue == null)
+            return null;
+
+        BeanWrapper wrapper = new BeanWrapperImpl(instance);
+        PropertyDescriptor[] descriptors = wrapper.getPropertyDescriptors();
+
+        for (int i = 0; i < descriptors.length; i++) {
+            Object value = wrapper.getPropertyValue( descriptors[i].getName() );
+            if(propertyValue.equals(value))
+                return descriptors[i];
+        }
+        return null;
     }
     /**
      * Returns the type of the given property contained within the specified class
@@ -163,22 +160,21 @@ public class GriffonClassUtils {
      * @return The property type or null if none exists
      */
     public static Class getPropertyType(Class clazz, String propertyName) {
-        throw new RuntimeException("Not Implemented Yet");
-//        if(clazz == null || StringUtils.isBlank(propertyName))
-//            return null;
-//
-//        try {
-//            BeanWrapper wrapper = new BeanWrapperImpl(clazz);
-//            if(wrapper.isReadableProperty(propertyName)) {
-//                return wrapper.getPropertyType(propertyName);
-//            }
-//            else {
-//                return null;
-//            }
-//        } catch (Exception e) {
-//            // if there are any errors in instantiating just return null for the moment
-//            return null;
-//        }
+        if(clazz == null || StringUtils.isBlank(propertyName))
+            return null;
+
+        try {
+            BeanWrapper wrapper = new BeanWrapperImpl(clazz);
+            if(wrapper.isReadableProperty(propertyName)) {
+                return wrapper.getPropertyType(propertyName);
+            }
+            else {
+                return null;
+            }
+        } catch (Exception e) {
+            // if there are any errors in instantiating just return null for the moment
+            return null;
+        }
     }
 
     /**
@@ -190,27 +186,26 @@ public class GriffonClassUtils {
      * @return An array of PropertyDescriptor instances
      */
     public static PropertyDescriptor[] getPropertiesOfType(Class clazz, Class propertyType) {
-        throw new RuntimeException("Not Implemented Yet");
-//        if(clazz == null || propertyType == null)
-//            return new PropertyDescriptor[0];
-//
-//        Set properties = new HashSet();
-//        try {
-//            BeanWrapper wrapper = new BeanWrapperImpl(clazz.newInstance());
-//            PropertyDescriptor[] descriptors = wrapper.getPropertyDescriptors();
-//
-//            for (int i = 0; i < descriptors.length; i++) {
-//                Class currentPropertyType = descriptors[i].getPropertyType();
-//                if(isTypeInstanceOfPropertyType(propertyType, currentPropertyType)) {
-//                    properties.add(descriptors[i]);
-//                }
-//            }
-//
-//        } catch (Exception e) {
-//            // if there are any errors in instantiating just return null for the moment
-//            return new PropertyDescriptor[0];
-//        }
-//        return (PropertyDescriptor[])properties.toArray( new PropertyDescriptor[ properties.size() ] );
+        if(clazz == null || propertyType == null)
+            return new PropertyDescriptor[0];
+
+        Set properties = new HashSet();
+        try {
+            BeanWrapper wrapper = new BeanWrapperImpl(clazz.newInstance());
+            PropertyDescriptor[] descriptors = wrapper.getPropertyDescriptors();
+
+            for (int i = 0; i < descriptors.length; i++) {
+                Class currentPropertyType = descriptors[i].getPropertyType();
+                if(isTypeInstanceOfPropertyType(propertyType, currentPropertyType)) {
+                    properties.add(descriptors[i]);
+                }
+            }
+
+        } catch (Exception e) {
+            // if there are any errors in instantiating just return null for the moment
+            return new PropertyDescriptor[0];
+        }
+        return (PropertyDescriptor[])properties.toArray( new PropertyDescriptor[ properties.size() ] );
     }
 
     private static boolean isTypeInstanceOfPropertyType(Class type, Class propertyType) {
@@ -226,23 +221,22 @@ public class GriffonClassUtils {
      * @return A PropertyDescriptor instance or null if none exists
      */
     public static PropertyDescriptor getProperty(Class clazz, String propertyName, Class propertyType) {
-        throw new RuntimeException("Not Implemented Yet");
-//        if(clazz == null || propertyName == null || propertyType == null)
-//            return null;
-//
-//        try {
-//            BeanWrapper wrapper = new BeanWrapperImpl(clazz.newInstance());
-//            PropertyDescriptor pd = wrapper.getPropertyDescriptor(propertyName);
-//            if(pd.getPropertyType().equals( propertyType )) {
-//                return pd;
-//            }
-//            else {
-//                return null;
-//            }
-//        } catch (Exception e) {
-//            // if there are any errors in instantiating just return null for the moment
-//            return null;
-//        }
+        if(clazz == null || propertyName == null || propertyType == null)
+            return null;
+
+        try {
+            BeanWrapper wrapper = new BeanWrapperImpl(clazz.newInstance());
+            PropertyDescriptor pd = wrapper.getPropertyDescriptor(propertyName);
+            if(pd.getPropertyType().equals( propertyType )) {
+                return pd;
+            }
+            else {
+                return null;
+            }
+        } catch (Exception e) {
+            // if there are any errors in instantiating just return null for the moment
+            return null;
+        }
     }
 
     /**
@@ -557,28 +551,27 @@ public class GriffonClassUtils {
      */
     public static boolean isStaticProperty( Class clazz, String propertyName)
     {
-        throw new RuntimeException("Not Implemented Yet");
-//        Method getter = BeanUtils.findDeclaredMethod(clazz, getGetterName(propertyName), null);
-//        if (getter != null)
-//        {
-//            return isPublicStatic(getter);
-//        }
-//        else
-//        {
-//            try
-//            {
-//                Field f = clazz.getDeclaredField(propertyName);
-//                if (f != null)
-//                {
-//                    return isPublicStatic(f);
-//                }
-//            }
-//            catch (NoSuchFieldException e)
-//            {
-//            }
-//        }
-//
-//        return false;
+        Method getter = BeanUtils.findDeclaredMethod(clazz, getGetterName(propertyName), null);
+        if (getter != null)
+        {
+            return isPublicStatic(getter);
+        }
+        else
+        {
+            try
+            {
+                Field f = clazz.getDeclaredField(propertyName);
+                if (f != null)
+                {
+                    return isPublicStatic(f);
+                }
+            }
+            catch (NoSuchFieldException e)
+            {
+            }
+        }
+
+        return false;
     }
 
     /**
@@ -623,27 +616,26 @@ public class GriffonClassUtils {
      */
     public static Object getStaticPropertyValue(Class clazz, String name)
     {
-        throw new RuntimeException("Not Implemented Yet");
-//        Method getter = BeanUtils.findDeclaredMethod(clazz, getGetterName(name), null);
-//        try
-//        {
-//            if (getter != null)
-//            {
-//                return getter.invoke(null, null);
-//            }
-//            else
-//            {
-//                Field f = clazz.getDeclaredField(name);
-//                if (f != null)
-//                {
-//                    return f.get(null);
-//                }
-//            }
-//        }
-//        catch (Exception e)
-//        {
-//        }
-//        return null;
+        Method getter = BeanUtils.findDeclaredMethod(clazz, getGetterName(name), null);
+        try
+        {
+            if (getter != null)
+            {
+                return getter.invoke(null, null);
+            }
+            else
+            {
+                Field f = clazz.getDeclaredField(name);
+                if (f != null)
+                {
+                    return f.get(null);
+                }
+            }
+        }
+        catch (Exception e)
+        {
+        }
+        return null;
     }
 
     /**
@@ -661,30 +653,29 @@ public class GriffonClassUtils {
      */
     public static Object getPropertyOrStaticPropertyOrFieldValue(Object obj, String name) //throws BeansException
     {
-        throw new RuntimeException("Not Implemented Yet");
-//        BeanWrapper ref = new BeanWrapperImpl(obj);
-//        if (ref.isReadableProperty(name)) {
-//            return ref.getPropertyValue(name);
-//        }
-//        else
-//        {
-//            // Look for public fields
-//            if (isPublicField(obj, name))
-//            {
-//                return getFieldValue(obj, name);
-//            }
-//
-//            // Look for statics
-//            Class clazz = obj.getClass();
-//            if (isStaticProperty(clazz, name))
-//            {
-//                return getStaticPropertyValue(clazz, name);
-//            }
-//            else
-//            {
-//               return null;
-//            }
-//        }
+        BeanWrapper ref = new BeanWrapperImpl(obj);
+        if (ref.isReadableProperty(name)) {
+            return ref.getPropertyValue(name);
+        }
+        else
+        {
+            // Look for public fields
+            if (isPublicField(obj, name))
+            {
+                return getFieldValue(obj, name);
+            }
+
+            // Look for statics
+            Class clazz = obj.getClass();
+            if (isStaticProperty(clazz, name))
+            {
+                return getStaticPropertyValue(clazz, name);
+            }
+            else
+            {
+               return null;
+            }
+        }
     }
 
     /**
@@ -739,18 +730,17 @@ public class GriffonClassUtils {
      * @return True if the property is inherited
      */
     public static boolean isPropertyInherited(Class clz, String propertyName) {
-        throw new RuntimeException("Not Implemented Yet");
-//        if(clz == null) return false;
-//        if(StringUtils.isBlank(propertyName))
-//            throw new IllegalArgumentException("Argument [propertyName] cannot be null or blank");
-//
-//        Class superClass = clz.getSuperclass();
-//
-//        PropertyDescriptor pd = BeanUtils.getPropertyDescriptor(superClass, propertyName);
-//        if (pd != null && pd.getReadMethod() != null) {
-//            return true;
-//        }
-//        return false;
+        if(clz == null) return false;
+        if(StringUtils.isBlank(propertyName))
+            throw new IllegalArgumentException("Argument [propertyName] cannot be null or blank");
+
+        Class superClass = clz.getSuperclass();
+
+        PropertyDescriptor pd = BeanUtils.getPropertyDescriptor(superClass, propertyName);
+        if (pd != null && pd.getReadMethod() != null) {
+            return true;
+        }
+        return false;
     }
 
     /**

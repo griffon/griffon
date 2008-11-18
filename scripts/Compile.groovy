@@ -55,9 +55,9 @@ Ant.taskdef (     name : 'groovyc' ,
 compilerClasspath = { testSources ->
 
     def excludedPaths = ["resources", "i18n", "conf"] // conf gets special handling
-//    def pluginResources = resolveResources("file:${basedir}/plugins/*/griffon-app/*").toList() +
-//                          resolveResources("file:${basedir}/plugins/*/src/java").toList() +
-//                          resolveResources("file:${basedir}/plugins/*/src/groovy").toList()
+    def pluginResources = resolveResources("file:${basedir}/plugins/*/griffon-app/*").toList() +
+                          resolveResources("file:${basedir}/plugins/*/src/java").toList() +
+                          resolveResources("file:${basedir}/plugins/*/src/groovy").toList()
 
     for(dir in new File("${basedir}/griffon-app").listFiles()) {
         if(!excludedPaths.contains(dir.name) && dir.isDirectory())
@@ -69,11 +69,11 @@ compilerClasspath = { testSources ->
 //    src(path: "${basedir}/griffon-app/conf/spring")
 
     excludedPaths.remove("conf")
-//    for(dir in pluginResources.file) {
-//        if(!excludedPaths.contains(dir.name) && dir.isDirectory()) {
-//            src(path:"${dir}")
-//        }
-//     }
+    for(dir in pluginResources.file) {
+        if(!excludedPaths.contains(dir.name) && dir.isDirectory()) {
+            src(path:"${dir}")
+        }
+     }
 
 
     src(path:"${basedir}/src/main")

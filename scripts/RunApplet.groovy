@@ -21,13 +21,13 @@
  */
 
 
-defaultTarget("Runs the applicaiton from the command line") {
+defaultTarget("Runs the application from the command line") {
     depends(checkVersion)
     runApp()
 }
 
 includeTargets << griffonScript("Package")
-//includeTargets << griffonScript("_PackagePlugins" )
+includeTargets << griffonScript("_PackagePlugins" )
 
 target(runApp: "Does the actual command line execution") {
     depends(packageApp)

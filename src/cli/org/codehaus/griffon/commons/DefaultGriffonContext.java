@@ -386,11 +386,10 @@ public class DefaultGriffonContext extends GroovyObjectSupport implements Griffo
     }
 
     public ConfigObject getConfig() {
-        ConfigObject c = null; //ConfigurationHolder.getConfig();
-        //noinspection ConstantConditions
+        ConfigObject c = ConfigurationHolder.getConfig();
         if (c == null) {
             ConfigSlurper configSlurper = new ConfigSlurper(GriffonUtil.getEnvironment());
-            Map<String, Object> binding = new HashMap<String, Object>();
+            Map binding = new HashMap();
 
             // configure config slurper binding
             binding.put(CONFIG_BINDING_USER_HOME, System.getProperty("user.home"));
@@ -404,7 +403,7 @@ public class DefaultGriffonContext extends GroovyObjectSupport implements Griffo
                         .loadClass(CONFIG_CLASS);
 
                 c = configSlurper.parse(scriptClass);
-//                ConfigurationHolder.setConfig(c);
+                ConfigurationHolder.setConfig(c);
             } catch (ClassNotFoundException e) {
                 log.debug("Could not find config class [" + CONFIG_CLASS + "]. This is probably nothing to worry about, it is not required to have a config: " + e.getMessage());
                 // ignore, it is ok not to have a configuration file
@@ -420,10 +419,10 @@ public class DefaultGriffonContext extends GroovyObjectSupport implements Griffo
                 log.debug("Cound not find data source class [" + DATA_SOURCE_CLASS + "]. This may be what you are expecting, but will result in Griffon loading with an in-memory database");
                 // ignore
             }
+            if (c == null) c = new ConfigObject();
+//            ConfigurationHelper.initConfig(c,null, getClassLoader());
+            ConfigurationHolder.setConfig(c);
         }
-        if (c == null) c = new ConfigObject();
-//        ConfigurationHelper.initConfig(c,null, getClassLoader());
-//        ConfigurationHolder.setConfig(c);
         return c;
     }
 

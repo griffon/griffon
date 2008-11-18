@@ -1,5 +1,3 @@
-import org.codehaus.griffon.commons.GriffonContext
-
 /*
 * Copyright 2004-2008 the original author or authors.
 *
@@ -37,11 +35,13 @@ import org.codehaus.griffon.commons.GriffonContext
  *   - insure testing dirs are present for test-app: test/integration ant test/unit
  */
 
+import org.codehaus.griffon.commons.GriffonContext
+import org.codehaus.griffon.plugins.GriffonPluginUtils
+
 defaultTarget("Upgrades a Griffon application from a previous version of Griffon") {
     depends( upgrade )
 }
 
-//import org.codehaus.griffon.plugins.GriffonPluginUtils
 includeTargets << griffonScript("CreateApp" )
 includeTargets << griffonScript("Clean" )
 
@@ -137,7 +137,7 @@ target( upgrade: "main upgrade target") {
             }
         }
 
-        // if Applicaiton.groovy exists and it does not contain values added
+        // if Application.groovy exists and it does not contain values added
         // since 0.0 then sensible defaultsare provided which keep previous
         // behavior even if it is not the default in the current version.
         def applicationFile = new File(baseFile, '/griffon-app/conf/Application.groovy')
@@ -148,7 +148,7 @@ target( upgrade: "main upgrade target") {
             def startupGroups = configObject.application.startupGroups
 
             if([startupGroups].contains([:])) {
-                event("StatusUpdate", [ "Adding properties to Applicaiton.groovy"])
+                event("StatusUpdate", [ "Adding properties to Application.groovy"])
                 applicationFile.withWriterAppend {
                     def indent = ''
                     it.writeLine '\n// The following properties have been added by the Upgrade process...'
@@ -176,30 +176,27 @@ target( upgrade: "main upgrade target") {
     }
 
     // proceed plugin-specific upgrade logic contained in 'scripts/_Upgrade.groovy' under plugin's root
+    def plugins = GriffonPluginUtils.getPluginDirectories(pluginsDirPath)
+    if(plugins) {
+        for(pluginDir in plugins) {
+            def f = new File(pluginDir)
+            if(f.isDirectory() && f.name != 'core' ) {
+                // fix for Windows-style path with backslashes
 
+                def pluginBase = "${basedir}/plugins/${f.name}".toString().replaceAll("\\\\","/")
+                // proceed _Upgrade.groovy plugin script if exists
+                def upgradeScript = new File ( "${pluginBase}/scripts/_Upgrade.groovy" )
+                if( upgradeScript.exists() ) {
+                    event("StatusUpdate", [ "Executing ${f.name} plugin upgrade script"])
+                    // instrumenting plugin scripts adding 'pluginBasedir' variable
+                    def instrumentedUpgradeScript = "def pluginBasedir = '${pluginBase}'\n" + upgradeScript.text
+                    // we are using text form of script here to prevent Gant caching
+                    includeTargets << instrumentedUpgradeScript
+                }
+            }
+        }
 
-
-//    def plugins = GriffonPluginUtils.getPluginDirectories(pluginsDirPath)
-//    if(plugins) {
-//        for(pluginDir in plugins) {
-//            def f = new File(pluginDir)
-//            if(f.isDirectory() && f.name != 'core' ) {
-//                // fix for Windows-style path with backslashes
-//
-//                def pluginBase = "${basedir}/plugins/${f.name}".toString().replaceAll("\\\\","/")
-//                // proceed _Upgrade.groovy plugin script if exists
-//                def upgradeScript = new File ( "${pluginBase}/scripts/_Upgrade.groovy" )
-//                if( upgradeScript.exists() ) {
-//                    event("StatusUpdate", [ "Executing ${f.name} plugin upgrade script"])
-//                    // instrumenting plugin scripts adding 'pluginBasedir' variable
-//                    def instrumentedUpgradeScript = "def pluginBasedir = '${pluginBase}'\n" + upgradeScript.text
-//                    // we are using text form of script here to prevent Gant caching
-//                    includeTargets << instrumentedUpgradeScript
-//                }
-//            }
-//        }
-//
-//    }
+    }
 
     //TODO create an upgrade README
     //event("StatusUpdate", [ "Please make sure you view the README for important information about changes to your source code."])

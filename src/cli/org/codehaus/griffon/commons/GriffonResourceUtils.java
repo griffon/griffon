@@ -227,7 +227,7 @@ public class GriffonResourceUtils {
 //    }
 
 
-//    private static final Pattern PLUGIN_PATTERN = Pattern.compile(".+?(/plugins/.+?/"+GRIFFON_APP_DIR+"/.+)");
+    private static final Pattern PLUGIN_PATTERN = Pattern.compile(".+?(/plugins/.+?/"+GRIFFON_APP_DIR+"/.+)");
 
     /**
      * This method will take a Griffon resource (one located inside the griffon-app dir) and get its relative path inside the WEB-INF directory

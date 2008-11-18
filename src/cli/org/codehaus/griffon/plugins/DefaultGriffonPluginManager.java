@@ -247,7 +247,7 @@ public class DefaultGriffonPluginManager extends AbstractGriffonPluginManager im
           }
           if(!delayedEvictions.isEmpty()) {
               processDelayedEvictions();
-          }
+          }                                                   
 
           initializePlugins();
           initialised = true;

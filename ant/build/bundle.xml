@@ -42,9 +42,9 @@
         </jar>
 
         <!-- Package up the files that are exclusive to plugins. -->
-        <!--<jar destfile="${griffon.target}/griffon-plugin-files.jar">-->
-            <!--<fileset dir="${basedir}/src/griffon/templates/plugins"/>-->
-        <!--</jar>-->
+        <jar destfile="${griffon.target}/griffon-plugin-files.jar">
+            <fileset dir="${basedir}/src/griffon/templates/plugins"/>
+        </jar>
     </target>
     <target name="jar" depends="build,build-scripts,-jar-app-files" description="Build the entire source, run all tests and create the Griffon JAR file.">
 		<delete>

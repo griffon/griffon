@@ -21,7 +21,7 @@ import org.codehaus.griffon.commons.GriffonClassUtils as GCU
 import org.codehaus.griffon.commons.GriffonContext
 import org.codehaus.griffon.commons.GriffonUtil
 import org.codehaus.gant.GantBinding
-//import org.codehaus.griffon.plugins.GriffonPluginUtils
+import org.codehaus.griffon.plugins.GriffonPluginUtils
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver
 import org.springframework.core.io.Resource
 import org.springframework.util.FileCopyUtils
@@ -88,7 +88,7 @@ Griffon home is ${ !griffonHome ? 'not set' : 'set to: ' + griffonHome}
             System.exit(0)
         }
 
-        userHome = System.getProperty("user.home")
+        userHome = System.getProperty("user.home").replace('\\', '/') // replace is to deal with windows paths
         rootLoader = getClass().classLoader?.rootLoader ?: Thread.currentThread().getContextClassLoader().rootLoader
 
         // Work out the base directory for this project.
@@ -143,7 +143,7 @@ Griffon home is ${ !griffonHome ? 'not set' : 'set to: ' + griffonHome}
 
         // Check whether we are currently inside a Griffon project and
         // if not, check whether the script can be run outside a project.
-        def scriptsAllowedOutsideProject = ['CreateApp',/*'CreatePlugin','PackagePlugin',*/'Help',/*'ListPlugins','PluginInfo',*/'SetProxy']
+        def scriptsAllowedOutsideProject = ['CreateApp','CreatePlugin','PackagePlugin','Help','ListPlugins','PluginInfo','SetProxy']
         if(!new File(basedirPath, "griffon-app").exists() && (!scriptsAllowedOutsideProject.contains(scriptName))) {
             println "${basedirPath} does not appear to be part of a Griffon application."
             println 'The following commands are supported outside of a project:'
@@ -286,7 +286,7 @@ Griffon home is ${ !griffonHome ? 'not set' : 'set to: ' + griffonHome}
                     return [] as Resource[]
                 }
             }
-            def availableScripts = /*FIXMEGriffonPluginUtils.*/getAvailableScripts(griffonHome,/*pluginsDirPath,*/basedirPath,resourceResolver)
+            def availableScripts = GriffonPluginUtils.getAvailableScripts(griffonHome,pluginsDirPath,basedirPath,resourceResolver)
 
             availableScripts.each { Resource res ->
                 if(res.file.name == "${scriptName}.groovy") {
@@ -296,21 +296,21 @@ Griffon home is ${ !griffonHome ? 'not set' : 'set to: ' + griffonHome}
             // Get the paths of any installed plugins and add them to the
 	        // initial binding as '<pluginName>PluginDir'.
 	        binding = new GantBinding()
-//	        try {
-//
-//	            def plugins = GriffonPluginUtils.getPluginDescriptors(basedirPath, pluginsDirPath,resourceResolver)
-//
-//	            plugins.each { resource ->
-//	                def matcher = resource.filename =~ /(\S+)GriffonPlugin.groovy/
-//	                def pluginName = GriffonClassUtils.getPropertyName(matcher[0][1])
-//
-//	                // Add the plugin path to the binding.
-//	                binding.setVariable("${pluginName}PluginDir", resource.file.parentFile)
-//	            }
-//	        }
-//	        catch(Exception e) {
-//	            // No plugins found.
-//	        }
+	        try {
+
+	            def plugins = GriffonPluginUtils.getPluginDescriptors(basedirPath, pluginsDirPath, resourceResolver)
+
+	            plugins.each { resource ->
+	                def matcher = resource.filename =~ /(\S+)GriffonPlugin.groovy/
+	                def pluginName = GriffonClassUtils.getPropertyName(matcher[0][1])
+
+	                // Add the plugin path to the binding.
+	                binding.setVariable("${pluginName}PluginDir", resource.file.parentFile)
+	            }
+	        }
+	        catch(Exception e) {
+	            // No plugins found.
+	        }
 			SCRIPT_CACHE[scriptName] = new CachedScript(binding:binding, potentialScripts:potentialScripts)
 		}
 
@@ -575,43 +575,6 @@ Griffon home is ${ !griffonHome ? 'not set' : 'set to: ' + griffonHome}
         // default.
         return value != null ? value : defaultValue
     }
-
-    //TODO move to GriffonPluginUtils
-    /**
-     * A default resolve used if none is specified to the resource resolving methods in this class
-     */
-    static final DEFAULT_RESOURCE_RESOLVER = {pattern ->
-        try {
-            return RESOLVER.getResources(pattern)
-        }
-        catch (Throwable e) {
-            return [] as Resource[]
-        }
-    }
-    static availableScripts
-
-    //TODO move to GriffonPluginUtils
-    /**
-     * Obtains an array of all Gant scripts that are availabe for execution in a Griffon application
-     */
-    static synchronized Resource[] getAvailableScripts(String griffonHome,
-                                        //String pluginDirPath,
-                                        String basedir,
-                                        Closure resourceResolver = DEFAULT_RESOURCE_RESOLVER) {
-      if(!availableScripts) {
-
-          def scripts = []
-          def userHome = System.getProperty("user.home")
-          resourceResolver("file:${griffonHome}/scripts/**.groovy").each { if (!it.file.name.startsWith('_')) scripts << it }
-          resourceResolver("file:${basedir}/scripts/*.groovy").each { if (!it.file.name.startsWith('_')) scripts << it }
-          //getPluginScripts(pluginDirPath).each { if (!it.file.name.startsWith('_')) scripts << it }
-          resourceResolver("file:${userHome}/.griffon/scripts/*.groovy").each { if (!it.file.name.startsWith('_')) scripts << it }
-          availableScripts = scripts as Resource[]
-      }
-      return availableScripts
-    }
-
-
 }
 
 class CachedScript {

@@ -44,7 +44,7 @@ class GriffonApplet extends JApplet implements IGriffonApplication {
     }
 
     public void start() {
-        //GriffonApplicaitonHelper.callReady()
+        //GriffonApplicationHelper.callReady()
         // skip the EDT sillyness, just call ready
         ready()
     }

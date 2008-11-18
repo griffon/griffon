@@ -86,7 +86,6 @@ loadEventHooks = {
     // Look for plugin-supplied scripts
     def pluginDirs = GriffonPluginUtils.getPluginDirectories()
     pluginDirs.each { String dir ->
-        println dir
         def pluginsDir = new File(dir)
         if (pluginsDir.exists()) {
             pluginsDir.eachDir() {

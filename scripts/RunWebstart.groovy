@@ -5,17 +5,23 @@
  * Time: 10:35:06 PM
  */
 
+import org.codehaus.griffon.commons.ConfigurationHolder
 
-defaultTarget("Runs the applicaiton from Java WebStart") {
+
+defaultTarget("Runs the application from Java WebStart") {
     depends(checkVersion)
     runApp()
 }
 
 includeTargets << griffonScript("Package")
-//includeTargets << griffonScript("_PackagePlugins" )
+includeTargets << griffonScript("_PackagePlugins" )
 
+
+target(tweakConfig:' tweaks for webstart') {
+    ConfigurationHolder.config.griffon.jars.sign = true
+}
 target(runApp: "Does the actual command line execution") {
-    depends(packageApp)
+    depends(createConfig, tweakConfig, packageApp)
 
     if ((config.griffon.jars.sign != [:]) && !config.griffon.jars.sign) {
         event("StatusFinal", ["Cannot run WebStart application because Webstart requires code signing.\n  in Config.groovy griffon.jars.sign = false"])

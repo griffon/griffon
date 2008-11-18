@@ -33,13 +33,11 @@ environments {
         }
 
     }
-    environments {
-        test {
-            griffon {
-                jars {
-                    sign = false
-                    pack = false
-                }
+    test {
+        griffon {
+            jars {
+                sign = false
+                pack = false
             }
         }
     }
@@ -58,6 +56,8 @@ environments {
 
         griffon {
             jars {
+                sign = true
+                pack = true
                 destDir = "${basedir}/staging"
             }
             webstart {
@@ -69,8 +69,8 @@ environments {
 
 griffon {
     jars {
-        sign = true
-        pack = true
+        sign = false
+        pack = false
         destDir = "${basedir}/staging"
         jarName = "${appName}.jar"
     }

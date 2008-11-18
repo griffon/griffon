@@ -23,7 +23,7 @@ import org.codehaus.groovy.control.CompilationUnit
 import org.codehaus.griffon.commons.DefaultGriffonContext
 import org.codehaus.griffon.plugins.DefaultGriffonPluginManager
 import org.codehaus.griffon.plugins.GriffonPluginUtils
-//import org.codehaus.griffon.plugins.PluginManagerHolder
+import org.codehaus.griffon.plugins.PluginManagerHolder
 import java.util.regex.Matcher
 import org.codehaus.griffon.commons.GriffonUtil
 import javax.xml.transform.TransformerFactory
@@ -44,10 +44,10 @@ import javax.xml.transform.dom.DOMSource
 includeTargets << griffonScript("_GriffonEvents")
 includeTargets << griffonScript("_GriffonProxy")
 
-DEFAULT_PLUGIN_DIST = "http://svn.codehaus.org/griffon/plugins"
-//DEFAULT_PLUGIN_DIST = new File("C:/svn/codehaus.org/griffon/plugins").toURI().toASCIIString()
-BINARY_PLUGIN_DIST = "http://plugins.griffon.org/dist"
-//BINARY_PLUGIN_DIST = "${DEFAULT_PLUGIN_DIST}/dist"
+//DEFAULT_PLUGIN_DIST = "http://svn.codehaus.org/griffon/plugins"
+DEFAULT_PLUGIN_DIST = new File("C:/svn/codehaus.org/griffon/plugins").toURI().toASCIIString()
+//BINARY_PLUGIN_DIST = "http://plugins.griffon.org/dist"
+BINARY_PLUGIN_DIST = "${DEFAULT_PLUGIN_DIST}/dist"
 REMOTE_PLUGIN_LIST = "${DEFAULT_PLUGIN_DIST}/.plugin-meta/plugins-list.xml"
 
 // Properties
@@ -78,7 +78,7 @@ target(resolveDependencies:"Resolve plug-in dependencies") {
     if(installedPlugins) {
         classpathSet = false
         classpath()
-        PluginManagerHolder.pluginManager = null
+        at PluginManagerHolder.pluginManager = null
     }
 }
 target(loadPlugins:"Loads Griffon' plugins") {
@@ -134,7 +134,7 @@ target(loadPlugins:"Loads Griffon' plugins") {
                     exit(1)
                 }
 
-                pluginManager.doArtefactConfiguration()
+                //pluginManager.doArtefactConfiguration()
                 griffonApp.initialise()
                 event("PluginLoadEnd", [pluginManager])
             }
@@ -155,6 +155,7 @@ target(loadPlugins:"Loads Griffon' plugins") {
 target(updatePluginsList:"Updates the plug-in list from the remote plugin-list.xml") {
     try {
         println "Reading remote plug-in list ..."
+        println pluginsListFile
         if(!pluginsListFile.exists())
             readRemotePluginList()
 

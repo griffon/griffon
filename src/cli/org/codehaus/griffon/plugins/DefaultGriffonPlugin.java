@@ -109,7 +109,7 @@ public class DefaultGriffonPlugin extends AbstractGriffonPlugin implements Griff
     }
 
     private void initialisePlugin(Class pluginClass) {
-        //this.pluginGriffonClass = new GriffonPluginClass(pluginClass);
+        this.pluginGriffonClass = new GriffonPluginClass(pluginClass);
         this.plugin = (GroovyObject)this.pluginGriffonClass.newInstance();
         this.pluginBean = new BeanWrapperImpl(this.plugin);
 

@@ -19,7 +19,7 @@
 //import org.codehaus.griffon.commons.ApplicationHolder;
 //import org.codehaus.griffon.commons.spring.GriffonRuntimeConfigurator;
 //import org.springframework.context.ApplicationContext;
-//import org.codehaus.griffon.plugins.*
+import org.codehaus.griffon.plugins.*
 //import org.springframework.core.io.*
 //import org.springframework.context.ConfigurableApplicationContext;
 //import org.springframework.context.support.ClassPathXmlApplicationContext;
@@ -64,13 +64,13 @@ target(loadApp:"Loads the Griffon application object") {
     // evaluated against the classpath - not what we want!
 //    servletContext = new MockServletContext('web-app', new FileSystemResourceLoader())
 //    ctx.servletContext = servletContext
-//    griffonApp = ctx.griffonApplication 
+//    griffonApp = ctx.griffonApplication
 //    ApplicationHolder.application = griffonApp
 //    classLoader = griffonApp.classLoader
-//      packageApp()
-//    PluginManagerHolder.pluginManager = null
-//    loadPlugins()
-//    pluginManager = PluginManagerHolder.pluginManager
+      packageApp()
+    PluginManagerHolder.pluginManager = null
+    loadPlugins()
+    pluginManager = PluginManagerHolder.pluginManager
 //    pluginManager.application = griffonApp
 //    pluginManager.doArtefactConfiguration()
 //    griffonApp.initialise()
@@ -84,7 +84,7 @@ target(loadApp:"Loads the Griffon application object") {
     event("AppLoadEnd", ["Loading Griffon Application"])
 }
 target(configureApp:"Configures the Griffon application and builds an ApplicationContext") {
-//    event("ConfigureAppStart", [griffonApp, appCtx])
+    event("ConfigureAppStart", [griffonApp, appCtx])
 //    appCtx.resourceLoader = new  CommandLineResourceLoader()
 //    profile("Performing runtime Spring configuration") {
 //        def config = new org.codehaus.griffon.commons.spring.GriffonRuntimeConfigurator(griffonApp,appCtx)
@@ -92,7 +92,7 @@ target(configureApp:"Configures the Griffon application and builds an Applicatio
 //        servletContext.setAttribute(ApplicationAttributes.APPLICATION_CONTEXT,appCtx );
 //        servletContext.setAttribute(WebApplicationContext.ROOT_WEB_APPLICATION_CONTEXT_ATTRIBUTE, appCtx);
 //    }
-//    event("ConfigureAppEnd", [griffonApp, appCtx])
+    event("ConfigureAppEnd", [griffonApp, appCtx])
 }
 
 monitorCallback = {}

@@ -16,7 +16,7 @@
 import org.codehaus.groovy.control.CompilerConfiguration
 import org.springframework.core.io.Resource
 import org.springframework.core.io.FileSystemResource
-//import org.codehaus.griffon.plugins.GriffonPluginUtils
+import org.codehaus.griffon.plugins.GriffonPluginUtils
 
 /**
  * Gant script containing the Griffon classpath setup.
@@ -39,24 +39,24 @@ target(classpath: "Sets the Griffon classpath") {
  */
 getPluginLibDirs = {
     return new Resource[0]
-//    GriffonPluginUtils.getPluginLibDirectories(pluginsDirPath, resolveResources)
+    GriffonPluginUtils.getPluginLibDirectories(pluginsDirPath, resolveResources)
 }
 
 /**
  * Obtains an array of all plug-in JAR files as Spring Resource objects
  */
-//getPluginJarFiles = {
-//    GriffonPluginUtils.getPluginJarFiles(pluginsDirPath, resolveResources)
-//}
+getPluginJarFiles = {
+    GriffonPluginUtils.getPluginJarFiles(pluginsDirPath, resolveResources)
+}
 
 getJarFiles = {->
     def jarFiles = resolveResources("file:${basedir}/lib/*.jar").toList()
-    //def pluginJars = getPluginJarFiles()
+    def pluginJars = getPluginJarFiles()
 
-//    for (pluginJar in pluginJars) {
-//        boolean matches = jarFiles.any {it.file.name == pluginJar.file.name}
-//        if (!matches) jarFiles.add(pluginJar)
-//    }
+    for (pluginJar in pluginJars) {
+        boolean matches = jarFiles.any {it.file.name == pluginJar.file.name}
+        if (!matches) jarFiles.add(pluginJar)
+    }
 
     def userJars = resolveResources("file:${userHome}/.griffon/lib/*.jar")
     for (userJar in userJars) {

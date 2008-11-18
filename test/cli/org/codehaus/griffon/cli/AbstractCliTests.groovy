@@ -3,12 +3,13 @@ package org.codehaus.griffon.cli
 import org.codehaus.groovy.tools.LoaderConfiguration
 import org.codehaus.groovy.tools.RootLoader
 import org.codehaus.groovy.tools.LoaderConfiguration
-//import org.codehaus.groovy.griffon.plugins.PluginManagerHolder
+import org.codehaus.griffon.plugins.PluginManagerHolder
 import org.codehaus.griffon.commons.GriffonContext
-//import org.codehaus.groovy.griffon.plugins.GriffonPluginUtils
+import org.codehaus.griffon.plugins.GriffonPluginUtils
 import org.codehaus.gant.GantBinding
 import gant.Gant
 import org.codehaus.griffon.commons.GriffonUtil
+import org.codehaus.griffon.commons.ConfigurationHolder
 
 //import org.codehaus.griffon.plugins.PluginManagerHolder
 
@@ -54,10 +55,14 @@ abstract class AbstractCliTests extends GroovyTestCase {
 	}
 
 	void tearDown() {
-        ExpandoMetaClass.disableGlobally()
-        //PluginManagerHolder.pluginManager = null
-        def griffonDir = System.getProperty("user.home") + '/.griffon/projects'
+        //Thread.currentThread().contextClassLoader = savedContextLoader
+
         ant.delete(dir:appBase, failonerror:false)
+
+        ExpandoMetaClass.disableGlobally()
+
+        ConfigurationHolder.config = null
+        PluginManagerHolder.pluginManager = null
         ant = null
 	}
 

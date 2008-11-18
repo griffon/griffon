@@ -28,7 +28,7 @@ class GriffonPlatformHelper {
 
         // set menu bar title
         System.setProperty("com.apple.mrj.application.apple.menu.about.name", app.getConfig().application?.title ?: 'Griffon')
-        // we may want to have a more specific option like applicaiton.shortTitle, that is used first
+        // we may want to have a more specific option like application.shortTitle, that is used first
 
         // exit handler
         if (!macOSXHandler) {
