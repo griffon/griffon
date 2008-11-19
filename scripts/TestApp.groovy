@@ -15,8 +15,8 @@ import org.springframework.transaction.support.TransactionTemplate
 import org.springframework.web.context.request.RequestContextHolder
 import junit.framework.Test
 import junit.framework.AssertionFailedError
-//import griffon.util.GriffonUtil
 //import griffon.util.GriffonNameUtils
+import org.codehaus.griffon.commons.GriffonUtil
 
 /*
 * Copyright 2004-2005 the original author or authors.
@@ -100,19 +100,18 @@ target(testApp: "The test app implementation target") {
         integrationOnly = true
     }
 
-
     compileTests()
     packageTests()
 
     try {
-        event("AllTestsStart", ["Starting test-app"])
+        event("AllTestsStart", ["Starting test-app", unitOnly, integrationOnly])
         if (!integrationOnly) {
             runUnitTests()
         }
         if (!unitOnly) {
             runIntegrationTests()
         }
-        event("AllTestsEnd", ["Finishing test-app"])
+        event("AllTestsEnd", ["Finishing test-app", unitOnly, integrationOnly])
         produceReports()
     }
     catch (Exception ex) {

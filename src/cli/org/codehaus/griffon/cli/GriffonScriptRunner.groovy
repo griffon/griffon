@@ -267,7 +267,7 @@ Griffon home is ${ !griffonHome ? 'not set' : 'set to: ' + griffonHome}
     }
 
 	static SCRIPT_CACHE = [:]
-	static callPluginOrGriffonScript(scriptName) {
+	public static callPluginOrGriffonScript(scriptName) {
 		def potentialScripts
 		def binding
 		if(SCRIPT_CACHE[scriptName]) {

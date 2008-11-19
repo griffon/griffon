@@ -367,8 +367,9 @@ pluginInstallFail = {String msg, plugin ->
  * Caches a local plugin into the plugins directory
  */
 cacheLocalPlugin = { pluginFile ->
-    fullPluginName = "${pluginFile.name[7..-5]}"
+    fullPluginName = "${pluginFile.name[8..-5]}"
     Ant.copy(file: pluginFile, tofile: "${pluginsBase}/griffon-${fullPluginName}.zip")
+    Ant.copy(file: pluginFile, tofile: "${pluginsDirPath}/griffon-${fullPluginName}.zip")
 }
 /**
  * Stores a plug-in from the plug-in central repo into the local plugin cache
