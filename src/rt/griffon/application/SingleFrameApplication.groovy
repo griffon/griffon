@@ -18,6 +18,7 @@ package griffon.application
 import griffon.util.GriffonApplicationHelper
 import griffon.util.IGriffonApplication
 import java.awt.event.WindowEvent
+import griffon.util.GriffonExceptionHandler
 
 /**
  *@author Danno.Ferrin
@@ -94,9 +95,12 @@ class SingleFrameApplication implements IGriffonApplication {
     }
 
     public static void main(String[] args) {
+        GriffonExceptionHandler.registerExceptionHandler()
         SingleFrameApplication sfa = new SingleFrameApplication();
         sfa.bootstrap();
         sfa.realize();
         sfa.show();
     }
 }
+
+

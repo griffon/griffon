@@ -25,6 +25,7 @@ import org.codehaus.griffon.plugins.GriffonPluginUtils
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver
 import org.springframework.core.io.Resource
 import org.springframework.util.FileCopyUtils
+import griffon.util.GriffonExceptionHandler
 
 /**
  * Class that handles Griffon command line interface for running scripts
@@ -53,6 +54,7 @@ class GriffonScriptRunner {
 
 
     static main(String[] args) {
+        GriffonExceptionHandler.registerExceptionHandler()
 
         // Get hold of the Griffon_HOME environment variable if it is
         // available.

@@ -25,6 +25,8 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.net.URL;
 
+import griffon.util.GriffonExceptionHandler;
+
 /**
  * @author Graeme Rocher
  * @since 1.0
@@ -164,6 +166,7 @@ public class GriffonStarter {
 
     public static void main(String args[]) {
         try {
+            GriffonExceptionHandler.registerExceptionHandler();
             rootLoader(args);
         } catch (Throwable t) {
             t.printStackTrace();

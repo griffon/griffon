@@ -52,6 +52,7 @@
 		</delete>
         <jar destfile="${griffon.dist}/griffon-cli-${griffon.version}.jar" manifest="${griffon.build.cli}/META-INF/MANIFEST.MF">
             <fileset dir="${griffon.build.cli}"/>
+            <fileset dir="${griffon.build.rt}" includes="griffon/util/GriffonExceptionHandler.class"/>
         </jar>
         <jar destfile="${griffon.dist}/griffon-rt-${griffon.version}.jar" manifest="${griffon.build.rt}/META-INF/MANIFEST.MF">
               <fileset dir="${griffon.build.rt}"/>
