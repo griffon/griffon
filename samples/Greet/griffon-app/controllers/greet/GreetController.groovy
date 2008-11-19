@@ -36,7 +36,7 @@ class GreetController {
     Action userSelected
     Action tweetAction
 
-    void grinit() {
+    void mvcGroupInit(args) {
         loginAction = action(
             name: 'Login',
             enabled: bind {model.allowSelection},
