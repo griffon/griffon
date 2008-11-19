@@ -100,9 +100,10 @@ class GriffonApplicationHelper {
 
         Class klass = classLoader.loadClass(app.config.mvcGroups[mvcName][className]);
 
-        // inject app via EMC
+        // inject defaults into emc
         // this also insures EMC metaclasses later
         klass.metaClass.app = app
+        klass.metaClass.createMVCGroup = GriffonApplicationHelper.&createMVCGroup.curry(app)
         return klass
     }
 
