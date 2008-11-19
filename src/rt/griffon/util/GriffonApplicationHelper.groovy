@@ -74,16 +74,6 @@ class GriffonApplicationHelper {
         }
     }
 
-    static void safeCall(reciever, method) {
-        try {
-            reciever."$method"()
-        } catch (MissingMethodException mme) {
-            if (mme.method != method) {
-                throw mme
-            }
-            /* else ignore*/
-        }
-    }
 
     public static void runScriptInsideEDT(String scriptName, IGriffonApplication app) {
         def script
@@ -143,8 +133,15 @@ class GriffonApplicationHelper {
         }
 
         [model, view, controller].each {
-            //if the nethod doesn't exist, safeCall is a no-op
-            safeCall(it, "grinit")
+            try {
+                it.mvcGroupInit(bindArgs)
+            } catch (MissingMethodException mme) {
+                if (mme.method != 'mvcGroupInit') {
+                    throw mme
+                }
+                // MME on mvcGroupInit means they didn't define
+                // an init method.  This is not an error.
+            }
         }
 
         builder.edt({builder.build(view) })
