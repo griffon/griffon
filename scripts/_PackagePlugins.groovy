@@ -30,15 +30,8 @@ target( packagePlugins : "Packages any Griffon plugins that are installed for th
 	depends( classpath )
 	try {
 
-        def basePluginFile = baseFile.listFiles().find { it.name.endsWith("GriffonPlugin.groovy")}
-        def basePlugin = null
-
-        if(basePluginFile) {
-            basePlugin = new org.springframework.core.io.FileSystemResource(basePluginFile)
-            pluginResources << basePlugin
-        }
-
-        pluginResources += resolveResources("file:${basedir}/plugins/*/*GriffonPlugin.groovy").toList()
+		pluginResources = getPluginDescriptors()
+        basePlugin = getBasePluginDescriptor()
            for(p in pluginResources) {
 	   		def pluginBase = p.file.parentFile.canonicalFile
 	     	def pluginPath = pluginBase.absolutePath
@@ -46,29 +39,29 @@ target( packagePlugins : "Packages any Griffon plugins that are installed for th
 			def pluginNameWithVersion = pluginBase.name
 
 	   		Ant.sequential {
-//                if(new File("${pluginBase}/griffon-app/conf/hibernate").exists()) {
-//                       copy(todir:classesDirPath, failonerror:false) {
-//                           fileset(dir:"${pluginBase}/griffon-app/conf/hibernate", includes:"**", excludes:"*.groovy")
-//                       }
-//                }
+//				if(new File("${pluginBase}/griffon-app/conf/hibernate").exists()) {
+//		   			copy(todir:classesDirPath, failonerror:false) {
+//		   				fileset(dir:"${pluginBase}/griffon-app/conf/hibernate", includes:"**", excludes:"*.groovy")
+//		   			}
+//				}
 				if(new File("${pluginBase}/griffon-app/conf").exists()) {
 		   			copy(todir:classesDirPath, failonerror:false) {
 		   				fileset(dir:"${pluginBase}/griffon-app/conf", includes:"*", excludes:"*.groovy")
 		   			}
 				}
-//                if(new File("${pluginPath}/web-app").exists()) {
-//                    Ant.mkdir(dir:"${basedir}/web-app/plugins/${pluginName}")
-//                    if(basePlugin != p) {
-//                          copy(todir:"${basedir}/web-app/plugins/${pluginName}") {
-//                               fileset(dir:"${pluginBase}/web-app", includes:"**", excludes:"**/WEB-INF/**, **/META-INF/**")
-//                           }
-//                    }
-//                }
-            }
-        }
-    }
+//	            if(new File("${pluginPath}/web-app").exists()) {
+//					Ant.mkdir(dir:"${basedir}/web-app/plugins/${pluginName}")
+//					if(basePlugin != p) {
+//			  			copy(todir:"${basedir}/web-app/plugins/${pluginName}") {
+//			   				fileset(dir:"${pluginBase}/web-app", includes:"**", excludes:"**/WEB-INF/**, **/META-INF/**")
+//			   			}
+//					}
+//				}
+	   		}
+	   	}
+	}
 	catch(Exception e) {
-        e.printStackTrace(System.out)
+        logError("Error packaging plugins", e)
 	}
 }
 

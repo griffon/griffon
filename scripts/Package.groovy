@@ -102,7 +102,7 @@ target(createConfig: "Creates the configuration object") {
             }
         }
     }
-//   def dataSourceFile = new File("${basedir}/grails-app/conf/DataSource.groovy")
+//   def dataSourceFile = new File("${basedir}/griffon-app/conf/DataSource.groovy")
 //   if(dataSourceFile.exists()) {
 //		try {
 //		   def dataSourceConfig = configSlurper.parse(classLoader.loadClass("DataSource"))
@@ -461,17 +461,17 @@ recompileCheck = { lastModified, callback ->
                         classname : 'org.codehaus.groovy.ant.Groovyc' ,
         )
         def griffonDir = resolveResources("file:${basedir}/griffon-app/*")
-        def pluginLibs = resolveResources("file:${basedir}/plugins/*/lib")
-        ant.path(id:"griffon.classpath",griffonClasspath.curry(pluginLibs, griffonDir))
+        ant.path(id:"griffon.classpath",griffonClasspath.curry(getPluginLibDirs(), griffonDir))
 
         ant.groovyc(destdir:classesDirPath,
                     classpathref:"griffon.classpath",
                     resourcePattern:"file:${basedir}/**/griffon-app/**/*.groovy",
                     encoding:"UTF-8",
                     projectName:baseName) {
-                    src(path:"${basedir}/src/groovy")
-                    src(path:"${basedir}/griffon-app/domain")
-                    src(path:"${basedir}/src/java")
+                    src(path:"${basedir}/griffon-app/models")
+                    src(path:"${basedir}/griffon-app/views")
+                    src(path:"${basedir}/griffon-app/controllers")
+                    src(path:"${basedir}/src/main")
                     javac(classpathref:"griffon.classpath", debug:"yes")
 
                 }
@@ -479,9 +479,7 @@ recompileCheck = { lastModified, callback ->
     }
     catch(Exception e) {
         compilationError = true
-        event("StatusUpdate", ["Error automatically restarting container: ${e.message}"])
-        GriffonUtil.sanitize(e)
-        e.printStackTrace()
+        logError("Error automatically restarting container",e)
     }
 
     def tmp = classesDir.lastModified()
@@ -492,8 +490,7 @@ recompileCheck = { lastModified, callback ->
             callback()
         }
         catch(Exception e) {
-            event("StatusUpdate", ["Error automatically restarting container: ${e.message}"])
-            e.printStackTrace()
+            logError("Error automatically restarting container",e)
         }
 
         finally {

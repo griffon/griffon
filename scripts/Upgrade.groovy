@@ -84,11 +84,6 @@ target( upgrade: "main upgrade target") {
 
     clean()
 
-    def coreTaglibs = new File("${basedir}/plugins/core")
-
-    Ant.delete(dir:"${coreTaglibs}", failonerror:false)
-
-
     Ant.sequential {
         // removed from grails: move test dir, also has source control chceks
 
@@ -177,17 +172,17 @@ target( upgrade: "main upgrade target") {
 
     // proceed plugin-specific upgrade logic contained in 'scripts/_Upgrade.groovy' under plugin's root
     def plugins = GriffonPluginUtils.getPluginDirectories(pluginsDirPath)
-    if(plugins) {
-        for(pluginDir in plugins) {
+    if (plugins) {
+        for (pluginDir in plugins) {
             def f = new File(pluginDir)
-            if(f.isDirectory() && f.name != 'core' ) {
+            if (f.isDirectory() && f.name != 'core') {
                 // fix for Windows-style path with backslashes
 
-                def pluginBase = "${basedir}/plugins/${f.name}".toString().replaceAll("\\\\","/")
+                def pluginBase = "${basedir}/plugins/${f.name}".toString().replaceAll("\\\\", "/")
                 // proceed _Upgrade.groovy plugin script if exists
-                def upgradeScript = new File ( "${pluginBase}/scripts/_Upgrade.groovy" )
-                if( upgradeScript.exists() ) {
-                    event("StatusUpdate", [ "Executing ${f.name} plugin upgrade script"])
+                def upgradeScript = new File("${pluginBase}/scripts/_Upgrade.groovy")
+                if (upgradeScript.exists()) {
+                    event("StatusUpdate", ["Executing ${f.name} plugin upgrade script"])
                     // instrumenting plugin scripts adding 'pluginBasedir' variable
                     def instrumentedUpgradeScript = "def pluginBasedir = '${pluginBase}'\n" + upgradeScript.text
                     // we are using text form of script here to prevent Gant caching

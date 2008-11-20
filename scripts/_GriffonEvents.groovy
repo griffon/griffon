@@ -70,14 +70,14 @@ event = {String name, def args ->
 
 loadEventHooks = {
     // Look for user script
-    def f = new File(userHome, ".griffon/scripts/Events.groovy")
+    def f = new File(userHome, ".griffon/scripts/_Events.groovy")
     if (f.exists()) {
         println "Found user events script"
         loadEventScript(f)
     }
 
     // Look for app-supplied scripts
-    f = new File(basedir, "scripts/Events.groovy")
+    f = new File(basedir, "scripts/_Events.groovy")
     if (f.exists()) {
         println "Found application events script"
         loadEventScript(f)
@@ -89,7 +89,7 @@ loadEventHooks = {
         def pluginsDir = new File(dir)
         if (pluginsDir.exists()) {
             pluginsDir.eachDir() {
-                f = new File(it, "scripts/Events.groovy")
+                f = new File(it, "scripts/_Events.groovy")
                 if (f.exists()) {
                     println "Found events script in plugin ${it.name}"
                     loadEventScript(f)
