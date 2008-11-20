@@ -43,6 +43,12 @@ class GriffonPlatformHelper {
                     import com.apple.mrj.*
 
                     class GriffonMacOsSupport implements MRJQuitHandler, MRJAboutHandler {
+                        def app
+                    
+                        public GriffonMacOsSupport(def app) {
+                            this.app = app
+                        }
+                    
                         public void handleAbout() {
                             return // FIXME we can do better
                         }
@@ -53,7 +59,7 @@ class GriffonPlatformHelper {
 
                     }
 
-                    def handler = new GriffonMacOsSupport()
+                    def handler = new GriffonMacOsSupport(app)
                     MRJApplicationUtils.registerAboutHandler(handler)
                     MRJApplicationUtils.registerQuitHandler(handler)
 
