@@ -78,7 +78,7 @@ target(resolveDependencies:"Resolve plug-in dependencies") {
     if(installedPlugins) {
         classpathSet = false
         classpath()
-        at PluginManagerHolder.pluginManager = null
+        PluginManagerHolder.pluginManager = null
     }
 }
 target(loadPlugins:"Loads Griffon' plugins") {

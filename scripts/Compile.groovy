@@ -22,42 +22,30 @@
  * @since 0.4
  */
 
-//import org.codehaus.griffon.commons.GriffonClassUtils as GCU
-//import org.codehaus.griffon.compiler.support.GriffonResourceLoader
-//import org.codehaus.griffon.compiler.support.GriffonResourceLoaderHolder
-//import org.codehaus.griffon.compiler.injection.*
-//import org.springframework.core.io.*
-//import groovy.text.SimpleTemplateEngine
-//import org.codehaus.groovy.ant.*
-//import org.codehaus.groovy.control.*
-//import java.security.CodeSource
+//import griffon.util.GriffonUtil
 
 defaultTarget("Performs compilation on any source files (Java or Groovy) in the 'src' tree") {
     compile()
 }
 
-includeTargets << griffonScript("Init" )
+includeTargets << griffonScript("Init")
 
 if(!Ant.antProject.properties."groovyJarSet") {
     Ant.path ( id : 'groovyJarSet' ) {
         fileset ( dir : "${griffonHome}/lib" , includes : "*.jar" )
-    }
+}
 }
 Ant.taskdef (     name : 'groovyc' ,
 //                classname : 'org.codehaus.griffon.compiler.GriffonCompiler' ,
                                 classname : 'org.codehaus.groovy.ant.Groovyc' ,
                 classpathref : 'groovyJarSet' )
 
-
-
-
-
 compilerClasspath = { testSources ->
 
     def excludedPaths = ["resources", "i18n", "conf"] // conf gets special handling
-    def pluginResources = getPluginSourceFiles()
+	def pluginResources = getPluginSourceFiles()
 
-    for(dir in new File("${basedir}/griffon-app").listFiles()) {
+	for(dir in new File("${basedir}/griffon-app").listFiles()) {
         if(!excludedPaths.contains(dir.name) && dir.isDirectory())
             src(path:"${dir}")
     }
@@ -66,7 +54,7 @@ compilerClasspath = { testSources ->
     // This stops resources.groovy becoming "spring.resources"
 //    src(path: "${basedir}/griffon-app/conf/spring")
 
-    excludedPaths.remove("conf")
+	excludedPaths.remove("conf")
     for(dir in pluginResources.file) {
         if(!excludedPaths.contains(dir.name) && dir.isDirectory()) {
             src(path:"${dir}")
@@ -78,28 +66,32 @@ compilerClasspath = { testSources ->
     include(name:'**/*.groovy')
     include(name:'**/*.java')
     javac(classpathref:"griffon.classpath", debug:"yes")
-    if(testSources) {
+	if(testSources) {
          src(path:"${basedir}/test/unit")
          src(path:"${basedir}/test/integration")
-    }
+	}
 }
 
 target(compile : "Implementation of compilation phase") {
     event("CompileStart", ['source'])
+    depends(resolveDependencies)
 
-    Ant.mkdir(dir:classesDirPath)
-    try {
-       Ant.groovyc(destdir:classesDirPath,
+    profile("Compiling sources to location [$classesDirPath]") {
+
+        Ant.mkdir(dir:classesDirPath)
+        try {
+            Ant.groovyc(destdir:classesDirPath,
 //                       projectName:baseName,
-                   classpathref:"griffon.classpath",
+                    classpathref:"griffon.classpath",
 //                       resourcePattern:"file:${basedir}/**/griffon-app/**/*.groovy",
-                   encoding:"UTF-8",
-                   compilerClasspath.curry(false))
-    }
-    catch(Exception e) {
-        event("StatusFinal", ["Compilation error: ${e.message}"])
-        exit(1)
-    }
+                    encoding:"UTF-8",
+                    compilerClasspath.curry(false))
+        }
+        catch(Exception e) {
+            event("StatusFinal", ["Compilation error: ${e.message}"])
+            exit(1)
+        }
+//        classLoader.addURL(classesDir.toURI().toURL())
 
     // TODO review
     // compile *GriffonPlugin.groovy if it exists
@@ -123,7 +115,7 @@ target(compile : "Implementation of compilation phase") {
     ClassLoader contextLoader = Thread.currentThread().getContextClassLoader()
     classLoader = new URLClassLoader([classesDir.toURI().toURL()] as URL[], contextLoader)
 
-    event("CompileEnd", ['source'])
+        event("CompileEnd", ['source'])
+    }
+
 }
-
-

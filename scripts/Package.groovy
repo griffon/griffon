@@ -237,6 +237,7 @@ target(jarFiles: "Jar up the package files") {
 
 target(copyLibs: "Copy Library Files") {
     jardir = Ant.antProject.replaceProperties(config.griffon.jars.destDir)
+    event("CopyLibsStart", [jardir])
 
     fileset(dir:"${griffonHome}/dist", includes:"griffon-rt-*.jar").each {
         griffonCopyDist(it.toString(), jardir)
@@ -251,6 +252,7 @@ target(copyLibs: "Copy Library Files") {
     Ant.copy(todir:jardir) { fileset(dir:"${basedir}/lib/", includes:"*.dll") }
     Ant.copy(todir:jardir) { fileset(dir:"${basedir}/lib/", includes:"*.so") }
 
+    event("CopyLibsEnd", [jardir])
 }
 
 /**
@@ -453,50 +455,50 @@ log4j.rootLogger=error,stdout
 // Checks whether the project's sources have changed since the last
 // compilation, and then performs a recompilation if this is the case.
 // Returns the updated 'lastModified' value.
-recompileCheck = { lastModified, callback ->
-    try {
-        def ant = new AntBuilder()
-        ant.taskdef (     name : 'groovyc' ,
-//                        classname : 'org.codehaus.griffon.compiler.GriffonCompiler' ,
-                        classname : 'org.codehaus.groovy.ant.Groovyc' ,
-        )
-        def griffonDir = resolveResources("file:${basedir}/griffon-app/*")
-        ant.path(id:"griffon.classpath",griffonClasspath.curry(getPluginLibDirs(), griffonDir))
-
-        ant.groovyc(destdir:classesDirPath,
-                    classpathref:"griffon.classpath",
-                    resourcePattern:"file:${basedir}/**/griffon-app/**/*.groovy",
-                    encoding:"UTF-8",
-                    projectName:baseName) {
-                    src(path:"${basedir}/griffon-app/models")
-                    src(path:"${basedir}/griffon-app/views")
-                    src(path:"${basedir}/griffon-app/controllers")
-                    src(path:"${basedir}/src/main")
-                    javac(classpathref:"griffon.classpath", debug:"yes")
-
-                }
-        ant = null
-    }
-    catch(Exception e) {
-        compilationError = true
-        logError("Error automatically restarting container",e)
-    }
-
-    def tmp = classesDir.lastModified()
-    if(lastModified < tmp) {
-
-        // run another compile JIT
-        try {
-            callback()
-        }
-        catch(Exception e) {
-            logError("Error automatically restarting container",e)
-        }
-
-        finally {
-           lastModified = classesDir.lastModified()
-        }
-    }
-
-    return lastModified
-}
+//recompileCheck = { lastModified, callback ->
+//    try {
+//        def ant = new AntBuilder()
+//        ant.taskdef (     name : 'groovyc' ,
+////                        classname : 'org.codehaus.griffon.compiler.GriffonCompiler' ,
+//                        classname : 'org.codehaus.groovy.ant.Groovyc' ,
+//        )
+//        def griffonDir = resolveResources("file:${basedir}/griffon-app/*")
+//        ant.path(id:"griffon.classpath",griffonClasspath.curry(getPluginLibDirs(), griffonDir))
+//
+//        ant.groovyc(destdir:classesDirPath,
+//                    classpathref:"griffon.classpath",
+//                    resourcePattern:"file:${basedir}/**/griffon-app/**/*.groovy",
+//                    encoding:"UTF-8",
+//                    projectName:baseName) {
+//                    src(path:"${basedir}/griffon-app/models")
+//                    src(path:"${basedir}/griffon-app/views")
+//                    src(path:"${basedir}/griffon-app/controllers")
+//                    src(path:"${basedir}/src/main")
+//                    javac(classpathref:"griffon.classpath", debug:"yes")
+//
+//                }
+//        ant = null
+//    }
+//    catch(Exception e) {
+//        compilationError = true
+//        logError("Error automatically restarting container",e)
+//    }
+//
+//    def tmp = classesDir.lastModified()
+//    if(lastModified < tmp) {
+//
+//        // run another compile JIT
+//        try {
+//            callback()
+//        }
+//        catch(Exception e) {
+//            logError("Error automatically restarting container",e)
+//        }
+//
+//        finally {
+//           lastModified = classesDir.lastModified()
+//        }
+//    }
+//
+//    return lastModified
+//}
