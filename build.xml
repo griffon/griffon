@@ -41,12 +41,7 @@
 
     <target name="cruise"
             depends="clean,build, test, jar, javadoc, package"
-            description="to be started by the CruiseControl build server">
-        <!-- deal with bamboo bug, latest artifacts are only on the top level -->
-        <move todir=".">
-            <fileset dir="${griffon.dist}" includes="*z*"/>
-        </move>
-    </target>
+            description="to be started by the CruiseControl build server"/>
 
 
 </project>
