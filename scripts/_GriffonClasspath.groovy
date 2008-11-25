@@ -14,7 +14,6 @@
  * limitations under the License.
  */
 import org.codehaus.groovy.control.CompilerConfiguration
-import org.springframework.core.io.Resource
 import org.springframework.core.io.FileSystemResource
 import org.codehaus.griffon.plugins.GriffonPluginUtils
 
@@ -38,7 +37,6 @@ target(classpath: "Sets the Griffon classpath") {
  * Obtains all of the plug-in Lib directories
  */
 getPluginLibDirs = {
-    return new Resource[0]
     GriffonPluginUtils.getPluginLibDirectories(pluginsDirPath, resolveResources)
 }
 
@@ -83,8 +81,19 @@ populateRootLoader = {rootLoader, jarFiles ->
 	for(jar in getExtraDependencies()) {
     	rootLoader?.addURL(jar.URL)
 	}
-    rootLoader?.addURL(new File("${basedir}/web-app/WEB-INF/classes").toURI().toURL())
-    rootLoader?.addURL(new File("${basedir}/web-app/WEB-INF").toURI().toURL())
+}
+
+defaultCompilerDependencies = { antBuilder ->
+    if (antBuilder) {
+        delegate = antBuilder
+        resolveStrategy = Closure.DELEGATE_FIRST
+    }
+
+    fileset(dir: "${griffonHome}/lib")
+    fileset(dir: "${griffonHome}/dist")
+    if (new File("${basedir}/lib").exists()) {
+        fileset(dir: "${basedir}/lib")
+    }
 }
 
 griffonClasspath = {pluginLibs, griffonDir ->
@@ -92,15 +101,13 @@ griffonClasspath = {pluginLibs, griffonDir ->
     pathelement(location: "${basedir}")
     pathelement(location: "${basedir}/test/unit")
     pathelement(location: "${basedir}/test/integration")
-    pathelement(location: "${basedir}/web-app")
+
     for (pluginLib in pluginLibs) {
         fileset(dir: pluginLib.file.absolutePath)
     }
-    fileset(dir: "${griffonHome}/lib")
-    fileset(dir: "${griffonHome}/dist")
-    if (new File("${basedir}/lib").exists()) {
-        fileset(dir: "${basedir}/lib")
-    }
+//    if (new File("${basedir}/web-app/WEB-INF/lib").exists()) {
+//        fileset(dir: "${basedir}/web-app/WEB-INF/lib")
+//    }
     for (d in griffonDir) {
         pathelement(location: "${d.file.absolutePath}")
     }
@@ -111,6 +118,9 @@ griffonClasspath = {pluginLibs, griffonDir ->
 		callable.resolveStrategy = Closure.DELEGATE_FIRST
 		callable()
 	}
+    else {
+        defaultCompilerDependencies(delegate)
+    }
 }
 
 void setClasspath() {
@@ -141,8 +151,8 @@ void setClasspath() {
     compConfig = new CompilerConfiguration()
     compConfig.setClasspath(cpath.toString());
     compConfig.sourceEncoding = "UTF-8"
-    rootLoader = getClass().classLoader.rootLoader
-    populateRootLoader(rootLoader, jarFiles)
+//    rootLoader = getClass().classLoader.rootLoader
+//    populateRootLoader(rootLoader, jarFiles)
 
     rootLoader?.addURL(new File("${basedir}/griffon-app/conf/hibernate").toURI().toURL())
     rootLoader?.addURL(new File("${basedir}/src/java").toURI().toURL())
@@ -157,6 +167,5 @@ void setClasspath() {
     }
     rootLoader?.addURL(resourcesDir.toURI().toURL())
 
-    parentLoader = getClass().getClassLoader()
     classpathSet = true
 }

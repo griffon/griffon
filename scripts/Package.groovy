@@ -280,7 +280,7 @@ boolean isJarSigned(File jarFile, File targetFile) {
     }
 }
 
-def griffonCopyDist(jarname, targetDir, boolean force = false) {
+griffonCopyDist =  { jarname, targetDir, boolean force = false ->
     File srcFile = new File(jarname);
     if (!srcFile.exists()) {
         event("StatusFinal", ["Source jar does not exist: ${srcFile.getName()}"])

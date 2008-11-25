@@ -33,7 +33,7 @@ includeTargets << griffonScript("Init")
 if(!Ant.antProject.properties."groovyJarSet") {
     Ant.path ( id : 'groovyJarSet' ) {
         fileset ( dir : "${griffonHome}/lib" , includes : "*.jar" )
-}
+    }
 }
 Ant.taskdef (     name : 'groovyc' ,
 //                classname : 'org.codehaus.griffon.compiler.GriffonCompiler' ,
