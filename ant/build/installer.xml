@@ -41,6 +41,9 @@
       <copy todir="${griffon.installer.izpack.dir}/resources">
           <fileset dir="${basedir}/installer/izpack/resources" />
       </copy>
+      <replace dir="${griffon.installer.izpack.dir}">
+          <replaceFilter token="@griffon.version@" value="${griffon.version}" />
+      </replace>
   </target>
   
   <target name="create-installer-izpack" depends="prepare-installer-izpack" >
