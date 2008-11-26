@@ -15,6 +15,8 @@
  */
 package griffon.app
 
+import java.util.concurrent.locks.ReentrantLock
+
 /**
  * Created by IntelliJ IDEA.
  *@author Danno.Ferrin
@@ -23,12 +25,25 @@ package griffon.app
  */
 class ApplicationBuilder extends FactoryBuilderSupport {
 
+    protected ReentrantLock contextLock;
+
     public ApplicationBuilder(boolean init = true) {
         super(init)
+        contextLock = new ReentrantLock(false); // fair queueing is tempting...
     }
 
     public void registerVisuals() {
         registerFactory 'application', new ApplicationFactory()
     }
 
+
+    protected Object dispathNodeCall(Object name, Object args) {
+        //TODO we should consider using tryLock(50ms) if we do this in the EDT
+        contextLock.lock()
+        try {
+           return super.dispathNodeCall(name, args)
+        } finally {
+            contextLock.unlock()
+        }
+    }
 }

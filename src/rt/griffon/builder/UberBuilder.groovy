@@ -23,13 +23,17 @@
 package griffon.builder
 
 import org.codehaus.groovy.runtime.InvokerHelper
+import java.util.concurrent.locks.ReentrantLock
 
 class UberBuilder extends FactoryBuilderSupport {
 
     protected final Map builderLookup = new LinkedHashMap()
     protected final List<UberBuilderRegistration> builderRegistration = new LinkedList<UberBuilderRegistration>()
 
+    protected ReentrantLock contextLock;
+
     public UberBuilder() {
+        contextLock = new ReentrantLock(false); // fair queueing is tempting...
         loadBuilderLookups()
     }
 
@@ -106,6 +110,15 @@ class UberBuilder extends FactoryBuilderSupport {
         builderRegistration.add(new UberBuilderRegistration(prefix, factory))
     }
 
+    protected Object dispathNodeCall(Object name, Object args) {
+        //TODO we should consider using tryLock(50ms) if we do this in the EDT
+        contextLock.lock()
+        try {
+           return super.dispathNodeCall(name, args)
+        } finally {
+            contextLock.unlock()
+        }
+    }
 
     Factory resolveFactory(Object name, Map attributes, Object value) {
         for (UberBuilderRegistration ubr in builderRegistration) {
