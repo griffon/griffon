@@ -350,7 +350,7 @@ target(runIntegrationTests: "Runs Griffon' tests under the test/integration dire
 //        if (app.parentContext == null) {
 //            app.applicationContext = appCtx
 //        }
-//        def classLoader = app.classLoader
+        def classLoader = griffonContext.classLoader
         //def classLoader = griffonApp.class.classLoader
         def suite = new TestSuite()
 

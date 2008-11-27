@@ -22,8 +22,12 @@ import groovy.util.ConfigSlurper;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.Resource;
+import org.codehaus.groovy.runtime.StackTraceUtils;
 
 import java.util.*;
+import java.io.IOException;
 //import java.util.regex.Matcher;
 //import java.util.regex.Pattern;
 
@@ -55,7 +59,7 @@ public class DefaultGriffonContext extends GroovyObjectSupport implements Griffo
     //private static final Pattern GETCLASSESMETH_PATTERN = Pattern.compile("(get)(\\w+)(Classes)");
     //private static final Pattern ISCLASS_PATTERN = Pattern.compile("(is)(\\w+)(Class)");
     //private static final Pattern GETCLASS_PATTERN = Pattern.compile("(get)(\\w+)Class");
-//    private static final String PROJECT_META_FILE = "application.properties";
+    private static final String PROJECT_META_FILE = "application.properties";
     private static final String DATA_SOURCE_CLASS = "DataSource";
 
     private GroovyClassLoader cl = null;
@@ -188,14 +192,14 @@ public class DefaultGriffonContext extends GroovyObjectSupport implements Griffo
 
     protected Map<Object, Object> loadMetadata() {
         final Properties meta = new Properties();
-//        Resource r = new ClassPathResource(PROJECT_META_FILE);
-//        try {
-//            meta.load(r.getInputStream());
-//        }
-//        catch (IOException e) {
-//            StackTraceUtils.deepSanitize(e);
-//            log.warn("No application metadata file found at " + r);
-//        }
+        Resource r = new ClassPathResource(PROJECT_META_FILE);
+        try {
+            meta.load(r.getInputStream());
+        }
+        catch (IOException e) {
+            StackTraceUtils.deepSanitize(e);
+            log.warn("No application metadata file found at " + r);
+        }
         if (System.getProperty(GriffonContext.ENVIRONMENT) != null) {
             meta.setProperty(GriffonContext.ENVIRONMENT, System.getProperty(GriffonContext.ENVIRONMENT));
         }
@@ -273,10 +277,10 @@ public class DefaultGriffonContext extends GroovyObjectSupport implements Griffo
 //        return allArtefactClassesArray;
 //    }
 
-    private Class[] populateAllClasses() {
-        this.allClasses = loadedClasses.toArray(new Class[loadedClasses.size()]);
-        return allClasses;
-    }
+//    private Class[] populateAllClasses() {
+//        this.allClasses = loadedClasses.toArray(new Class[loadedClasses.size()]);
+//        return allClasses;
+//    }
 
     /**
      * Configures the loaded classes within the GriffonApplication instance using the registered ArtefactHandler instances
@@ -838,8 +842,7 @@ public class DefaultGriffonContext extends GroovyObjectSupport implements Griffo
         if (log.isDebugEnabled()) {
             log.debug("loaded classes: [" + loadedClasses + "]");
         }
-        //Class[] classes =
-                populateAllClasses();
+        //Class[] classes = populateAllClasses();
         //configureLoadedClasses(classes);
         this.initialised = true;
     }

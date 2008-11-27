@@ -113,7 +113,7 @@ target(compile : "Implementation of compilation phase") {
     }
 
     ClassLoader contextLoader = Thread.currentThread().getContextClassLoader()
-    classLoader = new URLClassLoader([classesDir.toURI().toURL()] as URL[], contextLoader)
+        classLoader.addURL(classesDir.toURI().toURL())
 
         event("CompileEnd", ['source'])
     }

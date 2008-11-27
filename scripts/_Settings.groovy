@@ -84,6 +84,7 @@ else
 args = System.getProperty("griffon.cli.args")
 classesDir = new File(classesDirPath)
 griffonApp = null
+griffonContext = null
 griffonTmp = "${griffonWorkDir}/tmp"
 isPluginProject = baseFile.listFiles().find { it.name.endsWith("GriffonPlugin.groovy") }
 

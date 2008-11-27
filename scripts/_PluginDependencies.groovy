@@ -109,10 +109,10 @@ target(loadPlugins:"Loads Griffon' plugins") {
 				}
 
                 profile("creating plugin manager with classes ${pluginClasses}") {
-                    if(griffonApp == null) {
-                        griffonApp = new DefaultGriffonContext(new Class[0], new GroovyClassLoader(classLoader))
+                    if(griffonContext == null) {
+                        griffonContext = new DefaultGriffonContext(new Class[0], new GroovyClassLoader(classLoader))
                     }
-                    pluginManager = new DefaultGriffonPluginManager(pluginClasses as Class[], griffonApp)
+                    pluginManager = new DefaultGriffonPluginManager(pluginClasses as Class[], griffonContext)
 
                     PluginManagerHolder.setPluginManager(pluginManager)
                 }
@@ -135,7 +135,7 @@ target(loadPlugins:"Loads Griffon' plugins") {
                 }
 
                 //pluginManager.doArtefactConfiguration()
-                griffonApp.initialise()
+                griffonContext.initialise()
                 event("PluginLoadEnd", [pluginManager])
             }
 	    }
