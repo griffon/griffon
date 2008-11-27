@@ -133,6 +133,7 @@ target( showHelp: "Show help for a particular command") {
 			}
 			catch(Throwable t) {
 				println "Error creating help for ${file}: ${t.message}"
+                GriffonUtil.deepSanitize(t)
 				t.printStackTrace(System.out)
 			}
 		} else {

@@ -21,6 +21,7 @@
 //import org.springframework.context.ApplicationContext;
 import org.codehaus.griffon.plugins.*
 import org.codehaus.griffon.commons.DefaultGriffonContext
+import org.codehaus.griffon.commons.GriffonContextHolder
 //import org.springframework.core.io.*
 //import org.springframework.context.ConfigurableApplicationContext;
 //import org.springframework.context.support.ClassPathXmlApplicationContext;
@@ -67,9 +68,9 @@ target(loadApp:"Loads the Griffon application object") {
 //    ctx.servletContext = servletContext
 //    griffonApp = ctx.griffonApplication
     griffonContext = new DefaultGriffonContext(new Class[0], new GroovyClassLoader(classLoader))
-//    ApplicationHolder.application = griffonApp
-    classLoader = griffonApp.classLoader
-      packageApp()
+    GriffonContextHolder.griffonContext = griffonContext
+    classLoader = griffonContext.classLoader
+    packageApp()
     PluginManagerHolder.pluginManager = null
     loadPlugins()
     pluginManager = PluginManagerHolder.pluginManager

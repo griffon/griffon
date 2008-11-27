@@ -201,7 +201,8 @@ def populateTestSuite = {suite, testFiles, classLoader, String base ->
         } catch (Exception e) {
             compilationFailures << r.file.name
             event("StatusFinal", ["Error loading test: ${e.message}"])
-            GriffonUtil.deepSanitize(e.printStackTrace())
+            GriffonUtil.deepSanitize(e).
+            e.printStackTrace(System.out)
             exit(1)
         }
     }
@@ -323,6 +324,7 @@ target(runUnitTests: "Run Griffon' unit tests under the test/unit directory") {
     }
     catch (Exception e) {
         event("StatusFinal", ["Error running unit tests: ${e.toString()}"])
+        GriffonUtil.deepSanitize(e)
         e.printStackTrace()
     }
 }
@@ -423,6 +425,7 @@ target(runIntegrationTests: "Runs Griffon' tests under the test/integration dire
     }
     catch (Throwable e) {
         event("StatusUpdate", ["Error executing tests ${e.message}"])
+        GriffonUtil.deepSanitize(e)
         e.printStackTrace(System.out)
         event("StatusFinal", ["Error running tests: ${e.toString()}"])
         exit(1)

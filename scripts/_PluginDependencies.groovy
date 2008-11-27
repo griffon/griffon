@@ -140,7 +140,8 @@ target(loadPlugins:"Loads Griffon' plugins") {
             }
 	    }
         catch (Exception e) {
-            GriffonUtil.deepSanitize(e).printStackTrace()
+            GriffonUtil.deepSanitize(e)
+            e.printStackTrace(System.out)
             event("StatusFinal", [ "Error loading plugin manager: " + e.message ])
 			exit(1)
 	    }

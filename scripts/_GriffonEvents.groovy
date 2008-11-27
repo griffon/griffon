@@ -139,6 +139,7 @@ void loadEventScript(theFile) {
         entriesToRemove.each { script.binding.variables.remove(it) }
     } catch (Throwable t) {
         println "Unable to load event script $theFile: ${t.message}"
+        GriffonUtil.deepSanitize(t)
         t.printStackTrace()
     }
 }

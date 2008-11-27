@@ -26,7 +26,7 @@ public abstract class GriffonContextHolder {
         return griffonContext;
     }
 
-    public static void setApplication(GriffonContext griffonContext) {
+    public static void setGriffonContext(GriffonContext griffonContext) {
         GriffonContextHolder.griffonContext = griffonContext;
     }
 }
