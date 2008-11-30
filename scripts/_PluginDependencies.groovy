@@ -636,3 +636,14 @@ def buildPluginInfo(root, pluginName) {
         }
     }
 }
+
+// --------
+/**
+ * Loads a plugin script - see installer-plugin for an example
+ */
+pluginScript = { String pluginName, String scriptName ->
+    def parent = getPluginDirForName(pluginName)?.file?.toString()
+    def potentialScript = new File(parent+"/scripts",scriptName - ".groovy" + ".groovy")
+    return potentialScript.exists() ? potentialScript : rootLoader.loadClass(scriptName)
+}
+

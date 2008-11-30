@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 import org.codehaus.griffon.plugins.GriffonPluginUtils
+import org.codehaus.griffon.commons.GriffonUtil
 
 /**
  * Gant script containing the Griffon build event system.
