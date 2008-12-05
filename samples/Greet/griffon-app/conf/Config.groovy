@@ -48,8 +48,8 @@ environments {
 
         griffon {
             jars {
-                sign = true
-                pack = true
+                sign = false
+                pack = false
                 destDir = "${basedir}/staging"
                 jarName = "${appName}.jar"
             }

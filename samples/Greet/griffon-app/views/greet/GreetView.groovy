@@ -25,17 +25,18 @@ import javax.swing.Timer
 
 tweetLineFont = new java.awt.Font("Ariel", 0, 12)
 tweetTimeFont = new java.awt.Font("Ariel", 0, 9)
-def userCell = label(border: emptyBorder(3))
-userCellRenderer = {list, user, index, isSelected, isFocused ->
-    if (user) {
-        userCell.icon = controller.twitterService.imageMap[user.profile_image_url as String]
-        userCell.text = "<html>$user.screen_name<br>$user.name<br>$user.location<br>"
-    } else {
-        userCell.icon = null
-        userCell.text = null
+userCellRenderer = listCellRenderer {
+    def userCell = label(border: emptyBorder(3))
+    onRender {
+        if (value) {
+            userCell.icon = controller.twitterService.imageMap[value.profile_image_url as String]
+            userCell.text = "<html>$value.screen_name<br>$value.name<br>$value.location<br>"
+        } else {
+            userCell.icon = null
+            userCell.text = null
+        }
     }
-    userCell
-} as ListCellRenderer
+}
 
 application(title:"Greet - A Groovy Twitter Client", size:[320,640], locationByPlatform:true) {
 
