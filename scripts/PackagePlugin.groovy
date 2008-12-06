@@ -67,7 +67,9 @@ includeTargets << griffonScript("CreateApp" )
 includeTargets << griffonScript("Package" )
 
 target(packagePlugin:"Implementation target") {
-    depends (checkVersion,packagePlugins, packageApp,compile)
+    //depends (checkVersion,packagePlugins, packageApp,compile)
+    depends (checkVersion,packagePlugins,/*packageApp,*/compile)
+
 
     def pluginFile
     new File("${basedir}").eachFile {
@@ -89,7 +91,7 @@ target(packagePlugin:"Implementation target") {
         Ant.fail("Cannot instantiate plugin file")
     }
     pluginName = GCU.getScriptName(GCU.getLogicalName(pluginClass, "GriffonPlugin"))
-
+    println "plugin - $pluginName"
     // Generate plugin.xml descriptor from info in *GriffonPlugin.groovy
     new File("${basedir}/plugin.xml").delete()
     def writer = new IndentPrinter( new PrintWriter( new FileWriter("${basedir}/plugin.xml")))

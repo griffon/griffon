@@ -25,7 +25,7 @@
 
 import java.util.zip.ZipEntry
 import java.util.zip.ZipFile
-import org.codehaus.griffon.commons.ConfigurationHolder
+import org.codehaus.griffon.commons.*
 
 //import org.codehaus.griffon.commons.GriffonClassUtils as GCU
 //import groovy.text.SimpleTemplateEngine
@@ -192,7 +192,7 @@ target( packageApp : "Implementation of package target") {
 }
 
 target(checkKey: "Check to see if the keystore exists")  {
-    if ((config.griffon.jars.sign == [:]) || config.griffon.jars.sign) {
+    if (config.griffon.jars.sign) {
         // check for passwords
         // pw is echoed, but jarsigner does that too...
         // when we go to 1.6 only we should use java.io.Console
@@ -297,8 +297,8 @@ griffonCopyDist =  { jarname, targetDir, boolean force = false ->
     // we may already be copied, but not packed or signed
     // first see if the config calls for packing or signing
     // (do this funny dance because unset == true)
-    boolean configSaysJarPacking = (config.griffon.jars.pack == [:]) || config.griffon.jars.pack
-    boolean configSaysJarSigning = (config.griffon.jars.sign == [:]) || config.griffon.jars.sign
+    boolean configSaysJarPacking = config.griffon.jars.pack
+    boolean configSaysJarSigning = config.griffon.jars.sign
 
     boolean doJarSigning = configSaysJarSigning
     boolean doJarPacking = configSaysJarPacking
