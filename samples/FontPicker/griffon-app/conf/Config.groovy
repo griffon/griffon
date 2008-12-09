@@ -1,31 +1,18 @@
-// locations to search for config files that get merged into the main config
-// config files can either be Java properties files or ConfigSlurper scripts
-
-// griffon.config.locations = [ "classpath:${appName}-config.properties",
-//                             "classpath:${appName}-config.groovy",
-//                             "file:${userHome}/.griffon/${appName}-config.properties",
-//                             "file:${userHome}/.griffon/${appName}-config.groovy"]
-
-// if(System.properties["${appName}.config.location"]) {
-//    griffon.config.locations << "file:" + System.properties["${appName}.config.location"]
-// }
-
-
 // log4j configuration
 log4j {
-    appender.stdout = "org.apache.log4j.ConsoleAppender"
-    appender.'stdout.layout'="org.apache.log4j.PatternLayout"
+    appender.stdout = 'org.apache.log4j.ConsoleAppender'
+    appender.'stdout.layout'='org.apache.log4j.PatternLayout'
     appender.'stdout.layout.ConversionPattern'='[%r] %c{2} %m%n'
-    appender.errors = "org.apache.log4j.FileAppender"
-    appender.'errors.layout'="org.apache.log4j.PatternLayout"
+    appender.errors = 'org.apache.log4j.FileAppender'
+    appender.'errors.layout'='org.apache.log4j.PatternLayout'
     appender.'errors.layout.ConversionPattern'='[%r] %c{2} %m%n'
-    appender.'errors.File'="stacktrace.log"
-    rootLogger="error,stdout"
+    appender.'errors.File'='stacktrace.log'
+    rootLogger='error,stdout'
     logger {
-        griffon="error"
-        StackTrace="error,errors"
+        griffon='error'
+        StackTrace='error,errors'
         org {
-            codehaus.groovy.griffon.commons="info" // core / classloading
+            codehaus.griffon.commons='info' // core / classloading
         }
     }
     additivity.StackTrace=false
@@ -36,7 +23,7 @@ environments {
     development {
         signingkey {
             params {
-                sigfile = "GRIFFON"
+                sigfile = 'GRIFFON'
                 keystore = "${basedir}/griffon-app/conf/keys/devKeystore"
                 alias = 'development'
                 storepass = 'BadStorePassword'
@@ -46,11 +33,19 @@ environments {
         }
 
     }
+    test {
+        griffon {
+            jars {
+                sign = false
+                pack = false
+            }
+        }
+    }
     production {
         signingkey {
             params {
-                sigfile = "GRIFFON"
-                keystore = "CHANGE ME"
+                sigfile = 'GRIFFON'
+                keystore = 'CHANGE ME'
                 alias = 'CHAMGE ME'
                 // NOTE: for production keys it is more secure to rely on key prompting
                 // no value means we will prompt //storepass = 'BadStorePassword'
@@ -61,10 +56,12 @@ environments {
 
         griffon {
             jars {
+                sign = true
+                pack = true
                 destDir = "${basedir}/staging"
             }
             webstart {
-                codebase = "CHANGE ME"
+                codebase = 'CHANGE ME'
             }
         }
     }
@@ -72,18 +69,18 @@ environments {
 
 griffon {
     jars {
-        sign = true
-        pack = true
+        sign = false
+        pack = false
         destDir = "${basedir}/staging"
         jarName = "${appName}.jar"
     }
     webstart {
         codebase = "${new File(griffon.jars.destDir).toURI().toASCIIString()}"
-        jnlp = "application.jnlp"
+        jnlp = 'application.jnlp'
     }
     applet {
-        jnlp = "applet.jnlp"
-        html = "applet.html"
+        jnlp = 'applet.jnlp'
+        html = 'applet.html'
     }
 }
 
