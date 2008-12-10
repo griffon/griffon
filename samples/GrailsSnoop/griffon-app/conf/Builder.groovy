@@ -3,16 +3,15 @@ root {
         controller = ['Threading']
         view = "*"
     }
-    'org.kordamp.groovy.swing.jide.JideBuilder' {
-        view = "*"
-    }
     'griffon.app.ApplicationBuilder' {
         view = "*"
     }
 }
 
+root.'griffon.builder.jide.JideBuilder'.view = '*'
+
 jx {
-  'groovy.swing.SwingXBuilder' {
-      view = '*'
-   }
+    'groovy.swing.SwingXBuilder' {
+        view = '*'
+    }
 }
