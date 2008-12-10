@@ -37,9 +37,9 @@ ERROR_MESSAGE = """
 You need to specify either the direct URL of the plugin or the name and version
 of a distributed Griffon plugin found at ${DEFAULT_PLUGIN_DIST}
 For example:
-'griffon install-plugin acegi 0.1'
+'griffon install-plugin swingx-builder 0.1'
 or
-'griffon install-plugin ${BINARY_PLUGIN_DIST}/griffon-acegi-0.1.zip"""
+'griffon install-plugin ${BINARY_PLUGIN_DIST}/griffon-swingx-builder-0.1.zip"""
 
 globalInstall = false
 

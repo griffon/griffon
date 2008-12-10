@@ -17,8 +17,6 @@ import org.codehaus.griffon.commons.GriffonClassUtils as GCU
 
 import groovy.xml.DOMBuilder
 import groovy.xml.dom.DOMCategory
-//import org.apache.xml.serialize.OutputFormat
-//import org.apache.xml.serialize.XMLSerializer
 import org.codehaus.groovy.control.CompilationUnit
 import org.codehaus.griffon.commons.DefaultGriffonContext
 import org.codehaus.griffon.plugins.DefaultGriffonPluginManager
@@ -26,6 +24,7 @@ import org.codehaus.griffon.plugins.GriffonPluginUtils
 import org.codehaus.griffon.plugins.PluginManagerHolder
 import java.util.regex.Matcher
 import org.codehaus.griffon.commons.GriffonUtil
+import javax.xml.transform.OutputKeys
 import javax.xml.transform.TransformerFactory
 import javax.xml.transform.Transformer
 import javax.xml.transform.Result
@@ -46,12 +45,12 @@ includeTargets << griffonScript("_GriffonProxy")
 
 DEFAULT_PLUGIN_DIST = "http://svn.codehaus.org/griffon/plugins"
 //DEFAULT_PLUGIN_DIST = new File("C:/svn/codehaus.org/griffon/plugins").toURI().toASCIIString()
-BINARY_PLUGIN_DIST = "http://plugins.griffon.org/dist"
-//BINARY_PLUGIN_DIST = "${DEFAULT_PLUGIN_DIST}/dist"
+//BINARY_PLUGIN_DIST = "http://plugins.griffon.org/dist"
+BINARY_PLUGIN_DIST = "${DEFAULT_PLUGIN_DIST}/dist"
 REMOTE_PLUGIN_LIST = "${DEFAULT_PLUGIN_DIST}/.plugin-meta/plugins-list.xml"
 
 // Properties
-pluginsListFile = new File("${pluginsHome}/plugins-list.xml")
+pluginsListFile = new File("${pluginsHome}/.plugin-meta/plugins-list.xml")
 pluginsList = null
 //indentingOutputFormat = new OutputFormat("XML", "UTF-8", true)
 globalInstall = false
@@ -262,10 +261,11 @@ target(updatePluginsListManually: "Updates the plugin list by manually reading e
         }
 
         // proceed binary distribution repository (http://plugins.griffon.org/dist/
-        def binaryPluginsList = new URL(BINARY_PLUGIN_DIST).text
-        binaryPluginsList.eachMatch(/<a href="griffon-(.+?).zip">/) {
-            buildBinaryPluginInfo(pluginsList, it[1])
-        }
+// no bin depot for griffon right now
+//        def binaryPluginsList = new URL(BINARY_PLUGIN_DIST).text
+//        binaryPluginsList.eachMatch(/<a href="griffon-(.+?).zip">/) {
+//            buildBinaryPluginInfo(pluginsList, it[1])
+//        }
         // update plugins list cache file
         writePluginsFile()
     } catch (Exception e) {
@@ -550,7 +550,7 @@ def writePluginsFile() {
     tFactory.setAttribute("indent-number", 4);
     Transformer transformer = tFactory.newTransformer();
     transformer.setOutputProperty(OutputKeys.INDENT, "yes");
-    Result result = new StreamResult(new OutputStreamWriter(new FileWriter(pluginsListFile),"UTF-8"));
+    Result result = new StreamResult(new OutputStreamWriter(new FileOutputStream(pluginsListFile),"UTF-8"));
     transformer.transform(new DOMSource(document), result);
 }
 
@@ -578,13 +578,14 @@ def buildBinaryPluginInfo(root, pluginName ){
             if (releaseNode) pluginNode.removeChild(releaseNode)
             return
         }
-        if (!releaseNode) {
-            releaseNode = builder.'release'(type: 'zip', version: release) {
-                title("This is a zip release, no info available for it")
-                file("${BINARY_PLUGIN_DIST}/griffon-${pluginName}.zip")
-            }
-            pluginNode.appendChild(releaseNode)
-        }
+// right now griffon doesn't have a binary depot
+//        if (!releaseNode) {
+//            releaseNode = builder.'release'(type: 'zip', version: release) {
+//                title("This is a zip release, no info available for it")
+//                file("${BINARY_PLUGIN_DIST}/griffon-${pluginName}.zip")
+//            }
+//            pluginNode.appendChild(releaseNode)
+//        }
     }
 }
 
