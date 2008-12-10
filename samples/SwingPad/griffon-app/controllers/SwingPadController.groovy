@@ -26,7 +26,7 @@ class SwingPadController {
    def view
    def builder
  
-   private prefs = Preferences.userNodeForPackage(MainController)
+   private prefs = Preferences.userNodeForPackage(SwingPadController)
    private File currentFileChooserDir = new File(prefs.get('currentFileChooserDir', '.'))
    private runThread = null
    private GroovyClassLoader groovyClassLoader
