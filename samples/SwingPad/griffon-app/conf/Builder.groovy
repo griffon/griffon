@@ -16,12 +16,3 @@ jx {
         view = '*'
     }
 }
-
-
-jx {
-    'groovy.swing.SwingXBuilder' {
-        view = '*'
-    }
-}
-
-root.'griffon.builder.jide.JideBuilder'.view = '*'
