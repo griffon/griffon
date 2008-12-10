@@ -166,4 +166,16 @@ actions {
       name: 'Interrupt',
       closure: controller.confirmRunInterrupt
    )
+
+   action( id: 'addClasspathJarAction',
+      name: 'Add Jar to ClassPath',
+      closure: controller.addClasspathJar,
+      mnemonic: 'J',
+   )
+
+   action( id: 'addClasspathDirAction',
+      name: 'Add Directory to ClassPath',
+      closure: controller.addClasspathDir,
+      mnemonic: 'D',
+   )
 }

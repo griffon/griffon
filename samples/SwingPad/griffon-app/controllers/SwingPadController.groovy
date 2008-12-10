@@ -30,6 +30,8 @@ class SwingPadController {
 
    private prefs = Preferences.userNodeForPackage(SwingPadController)
    private File currentFileChooserDir = new File(prefs.get('currentFileChooserDir', '.'))
+   private File currentClasspathJarDir = new File(prefs.get('currentClasspathJarDir', '.'))
+   private File currentClasspathDir = new File(prefs.get('currentClasspathDir', '.'))
    private runThread = null
    private GroovyClassLoader groovyClassLoader
    private static int scriptCounter = 0
@@ -187,6 +189,29 @@ class SwingPadController {
          model.currentTab = tabName
       }
    }
+
+   // the folowing classpath actions taken from groovy.ui.Console
+    def addClasspathJar = { evt = null ->
+        def fc = new JFileChooser(currentClasspathJarDir)
+        fc.fileSelectionMode = JFileChooser.FILES_ONLY
+        fc.acceptAllFileFilterUsed = true
+        if (fc.showDialog(app.appFrames[0], "Add") == JFileChooser.APPROVE_OPTION) {
+            currentClasspathJarDir = fc.currentDirectory
+            prefs.put('currentClasspathJarDir', currentClasspathJarDir.path)
+            groovyClassLoader.addURL(fc.selectedFile.toURL())
+        }
+    }
+
+    def addClasspathDir = { evt = null ->
+        def fc = new JFileChooser(currentClasspathDir)
+        fc.fileSelectionMode = JFileChooser.DIRECTORIES_ONLY
+        fc.acceptAllFileFilterUsed = true
+        if (fc.showDialog(app.appFrames[0], "Add") == JFileChooser.APPROVE_OPTION) {
+            currentClasspathDir = fc.currentDirectory
+            prefs.put('currentClasspathDir', currentClasspathDir.path)
+            groovyClassLoader.addURL(fc.selectedFile.toURL())
+        }
+    }
 
    private void finishNormal( component ) {
       doLater {

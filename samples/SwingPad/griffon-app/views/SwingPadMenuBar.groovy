@@ -45,12 +45,15 @@ menuBar( id: 'menuBar') {
    }
 
    menu(text: 'View', mnemonic: 'V') {
-      menuItem(largerFontAction)
-      menuItem(smallerFontAction)
+       menuItem(largerFontAction)
+       menuItem(smallerFontAction)
    }
 
    menu(text: 'Script', mnemonic: 'S') {
-      menuItem(runAction)
+       menuItem(runAction)
+       separator()
+       menuItem(addClasspathJarAction)
+       menuItem(addClasspathDirAction)
    }
 
    if( !isMacOSX ) {
