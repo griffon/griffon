@@ -18,10 +18,12 @@ import java.awt.Color
 import java.awt.Font
 import java.awt.Toolkit
 
-import java.awt.BorderLayout as BL
+import java.awt.FlowLayout
+import static java.awt.BorderLayout.*
 import javax.swing.BorderFactory as BF
 import javax.swing.event.CaretListener
 import javax.swing.event.DocumentListener
+import javax.swing.JTabbedPane
 import static javax.swing.JSplitPane.HORIZONTAL_SPLIT
 
 rowHeader = new ScrollPaneRuler(ScrollPaneRuler.VERTICAL)
@@ -29,13 +31,34 @@ columnHeader = new ScrollPaneRuler(ScrollPaneRuler.HORIZONTAL)
 
 splitPane(id: 'splitPane', resizeWeight: 0.5F,
       orientation: HORIZONTAL_SPLIT ) {
-   container( new ConsoleTextEditor(), id: 'editor', constraints: BL.CENTER,
-               border: BF.createTitledBorder(BF.createLineBorder(Color.BLACK), "Source"),
-               font: new Font( Font.MONOSPACED, Font.PLAIN, 14 ) ){
-      action(runAction)
+   panel {
+      borderLayout()
+      panel( constraints: SOUTH ) {
+         flowLayout( alignment: FlowLayout.LEFT )
+         button( "Source", id: "sourceTab", name: "sourceTab",
+                 actionPerformed: controller.switchTab )
+         button( "Errors", id: "errorsTab", name: "errorsTab",
+                 actionPerformed: controller.switchTab )
+      }
+      panel( id: "tabs", constraints: CENTER ) {
+         cardLayout()
+         container( new ConsoleTextEditor(), id: 'editor', constraints: "sourceTab",
+                     border: lineBorder(color:Color.BLACK, thickness:1),
+                     font: new Font( Font.MONOSPACED, Font.PLAIN, 14 ) ){
+            action(runAction)
+         }
+         scrollPane( constraints: "errorsTab",
+                     border: lineBorder(color:Color.BLACK, thickness:1) ) {
+            textArea( id: 'errors', border: emptyBorder(0),
+                     background: Color.WHITE, editable: false,
+                     font: new Font( Font.MONOSPACED, Font.PLAIN, 12 ),
+                     caretPosition: bind(reverse:true){ model.caretPosition },
+                     text: bind(reverse:true){ model.errors } )
+         }
+      }
    }
-   scrollPane( id: 'canvasScroller', constraints:BL.CENTER,
-               border: BF.createTitledBorder(emptyBorder(0), "View")/*,
+   scrollPane( id: 'canvasScroller', constraints: CENTER,
+               border: lineBorder(color:Color.BLACK, thickness:1),/*,
                rowHeaderView: rowHeader, columnHeaderView: columnHeader*/ ){
       panel( id: 'canvas', border: emptyBorder(0) )
    }

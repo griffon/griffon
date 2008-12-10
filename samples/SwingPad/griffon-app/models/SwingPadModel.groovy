@@ -21,4 +21,6 @@ class SwingPadModel {
    @Bindable File scriptFile
    @Bindable String status = ""
    @Bindable String errors = ""
+   @Bindable int caretPosition = 0
+   @Bindable String currentTab = "sourceTab"
 }

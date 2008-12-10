@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  */
 
+import java.awt.Color
 import java.awt.Font
 import javax.swing.JComponent
 import javax.swing.JFileChooser
@@ -20,12 +21,13 @@ import javax.swing.JOptionPane
 import java.awt.event.ActionEvent
 import java.util.prefs.Preferences
 import groovy.ui.text.FindReplaceUtility
+import org.codehaus.griffon.commons.GriffonUtil
 
 class SwingPadController {
    def model
    def view
    def builder
- 
+
    private prefs = Preferences.userNodeForPackage(SwingPadController)
    private File currentFileChooserDir = new File(prefs.get('currentFileChooserDir', '.'))
    private runThread = null
@@ -118,10 +120,20 @@ class SwingPadController {
       def currentFont = inputArea.font
       if( currentFont.size > 40 ) return
       inputArea.font = new Font( 'Monospaced', currentFont.style, currentFont.size + 2 )
+
+      inputArea = view.errors
+      currentFont = inputArea.font
+      if( currentFont.size > 40 ) return
+      inputArea.font = new Font( 'Monospaced', currentFont.style, currentFont.size + 2 )
    }
    def smallerFont = { evt = null ->
       def inputArea = view.editor.textEditor
       def currentFont = inputArea.font
+      if( currentFont.size < 5 ) return
+      inputArea.font = new Font( 'Monospaced', currentFont.style, currentFont.size - 2 )
+
+      inputArea = view.errors
+      currentFont = inputArea.font
       if( currentFont.size < 5 ) return
       inputArea.font = new Font( 'Monospaced', currentFont.style, currentFont.size - 2 )
    }
@@ -131,7 +143,13 @@ class SwingPadController {
          try {
             doLater {
                model.status = "Running Script ..."
-               model.errors = ""
+               if( model.errors != "" ) {
+                  view.errorsTab.foreground = Color.BLACK
+                  def currentFont = view.errorsTab.font
+                  view.errorsTab.font = new Font(currentFont.name, currentFont.style, currentFont.size - 2)
+                  model.errors = ""
+                  model.caretPosition = 0
+               }
                showDialog( "runWaitDialog" )
             }
             executeScript( model.content )
@@ -162,8 +180,16 @@ class SwingPadController {
       }
    }
 
+   def switchTab = { evt = null ->
+      def tabName = evt.source.name
+      if( tabName != model.currentTab ) {
+         view.tabs.layout.show(view.tabs, tabName)
+         model.currentTab = tabName
+      }
+   }
+
    private void finishNormal( component ) {
-      doLater { 
+      doLater {
          model.status = 'Execution complete.'
          view.canvas.removeAll()
          view.canvas.repaint()
@@ -174,12 +200,15 @@ class SwingPadController {
    private void finishWithException( Throwable t ) {
       model.status = 'Execution terminated with exception.'
       t.printStackTrace()
-      displayError( t.message )
-   }
-
-   private void displayError( text ) {
-      model.errors = text
-      //view.errors.caretPosition = 0
+      def baos = new ByteArrayOutputStream()
+      t.printStackTrace(new PrintStream(baos))
+      doLater {
+         view.errorsTab.foreground = Color.RED
+         def currentFont = view.errorsTab.font
+         view.errorsTab.font = new Font(currentFont.name, currentFont.style, currentFont.size + 2)
+         model.errors = baos.toString()
+         model.caretPosition = 0
+      }
    }
 
    private void showAlert(title, message) {
