@@ -48,9 +48,10 @@ menuBar( id: 'menuBar') {
        menuItem(largerFontAction)
        menuItem(smallerFontAction)
        separator()
-       checkBoxMenuItem(packComponentsAction)
+       checkBoxMenuItem(packComponentsAction, selected: true)
+       checkBoxMenuItem(showRulersAction, selected: true)
        separator()
-       checkBoxMenuItem(snapshotAction)
+       menuItem(snapshotAction)
    }
 
    menu(text: 'Script', mnemonic: 'S') {

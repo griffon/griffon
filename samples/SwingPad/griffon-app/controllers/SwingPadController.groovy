@@ -16,6 +16,7 @@
 import java.awt.Color
 import java.awt.Font
 import java.awt.Robot
+import java.awt.FlowLayout
 import java.awt.event.ActionEvent
 import javax.swing.JComponent
 import javax.swing.JFileChooser
@@ -157,6 +158,7 @@ class SwingPadController {
       if( currentFont.size > 40 ) return
       inputArea.font = new Font( 'Monospaced', currentFont.style, currentFont.size + 2 )
    }
+
    def smallerFont = { evt = null ->
       def inputArea = view.editor.textEditor
       def currentFont = inputArea.font
@@ -168,11 +170,22 @@ class SwingPadController {
       if( currentFont.size < 5 ) return
       inputArea.font = new Font( 'Monospaced', currentFont.style, currentFont.size - 2 )
    }
+
    def packComponents = { evt = null ->
-      def newLayout = evt?.source?.state ? builder.flowLayout() : builder.borderLayout()
+      def newLayout = evt?.source?.state ? builder.flowLayout(alignment:FlowLayout.LEFT, hgap: 0, vgap: 0) : builder.borderLayout()
       if( !newLayout.class.isAssignableFrom(view.canvas.layout.class) ) {
          view.canvas.layout = newLayout
          runScript(evt)
+      }
+   }
+
+   def showRulers = { evt = null ->
+      def rh = evt?.source?.state ? view.rowHeader : view.emptyRowHeader
+      def ch = evt?.source?.state ? view.columnHeader : view.emptyColumnHeader
+      if( view.scroller.rowHeader.view != rh ) {
+         view.scroller.rowHeaderView = rh
+         view.scroller.columnHeaderView = ch
+         view.scroller.repaint()
       }
    }
 
@@ -183,9 +196,6 @@ class SwingPadController {
             doLater {
                model.status = "Running Script ..."
                if( model.errors != "" ) {
-                  view.errorsTab.foreground = Color.BLACK
-                  def currentFont = view.errorsTab.font
-                  view.errorsTab.font = new Font(currentFont.name, currentFont.style, currentFont.size - 2)
                   model.errors = ""
                   model.caretPosition = 0
                }
@@ -216,14 +226,6 @@ class SwingPadController {
             "GraphicsPad", JOptionPane.YES_NO_OPTION)
       if( rc == JOptionPane.YES_OPTION && runThread ) {
           runThread.interrupt()
-      }
-   }
-
-   def switchTab = { evt = null ->
-      def tabName = evt.source.name
-      if( tabName != model.currentTab ) {
-         view.tabs.layout.show(view.tabs, tabName)
-         model.currentTab = tabName
       }
    }
 
@@ -267,9 +269,6 @@ class SwingPadController {
       doLater {
          view.canvas.removeAll()
          view.canvas.repaint()
-         view.errorsTab.foreground = Color.RED
-         def currentFont = view.errorsTab.font
-         view.errorsTab.font = new Font(currentFont.name, currentFont.style, currentFont.size + 2)
          model.errors = baos.toString()
          model.caretPosition = 0
       }
@@ -310,8 +309,7 @@ class SwingPadController {
       fc.acceptAllFileFilterUsed = true
       if( fc.showDialog(app.appFrames[0], name ) == JFileChooser.APPROVE_OPTION ) {
          currentFileChooserDir = fc.currentDirectory
-         Preferences.userNodeForPackage(MainController).put(
-            'currentFileChooserDir', currentFileChooserDir.path)
+         prefs.put('currentFileChooserDir', currentFileChooserDir.path)
          return fc.selectedFile
       }
       return null

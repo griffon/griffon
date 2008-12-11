@@ -156,6 +156,11 @@ actions {
       mnemonic: 'K',
       accelerator: shortcut('shift P')
    )
+   action(id: 'showRulersAction',
+      name: 'Rulers',
+      closure: controller.showRulers,
+      accelerator: shortcut('shift U')
+   )
 
    action(id: 'runAction',
       name: 'Run',
