@@ -60,7 +60,9 @@ splitPane(id: 'splitPane', resizeWeight: 0.5F,
    scrollPane( id: 'canvasScroller', constraints: CENTER,
                border: lineBorder(color:Color.BLACK, thickness:1),/*,
                rowHeaderView: rowHeader, columnHeaderView: columnHeader*/ ){
-      panel( id: 'canvas', border: emptyBorder(0) )
+      panel( id: 'canvas', border: emptyBorder(0) ) {
+         borderLayout()
+      }
    }
 }
 

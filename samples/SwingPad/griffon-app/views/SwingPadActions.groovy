@@ -26,7 +26,7 @@ actions {
       closure: controller.&newScript,
       mnemonic: 'N',
       accelerator: shortcut('N'),
-      smallIcon: imageIcon(resource:"icons/page.png", class:Console),
+      smallIcon: imageIcon(resource:"icons/page.png", class: Console),
       shortDescription: 'New Swing script'
    )
    action( id: 'openAction',
@@ -34,7 +34,7 @@ actions {
       closure: controller.open,
       mnemonic: 'O',
       accelerator: shortcut('O'),
-      smallIcon: imageIcon(resource:"icons/folder_page.png", class:Console),
+      smallIcon: imageIcon(resource:"icons/folder_page.png", class: Console),
       shortDescription: 'Open a Swing script'
    )
    action( id: 'exitAction',
@@ -56,7 +56,7 @@ actions {
       closure: controller.save,
       mnemonic: 'S',
       accelerator: shortcut('S'),
-      smallIcon: imageIcon(resource:"icons/disk.png", class:Console),
+      smallIcon: imageIcon(resource:"icons/disk.png", class: Console),
       shortDescription: 'Save Swing script'
    )
    action( id: 'saveAsAction',
@@ -69,14 +69,14 @@ actions {
       name: 'Undo',
       mnemonic: 'U',
       accelerator: shortcut('Z'),
-      smallIcon: imageIcon(resource:"icons/arrow_undo.png", class:Console),
+      smallIcon: imageIcon(resource:"icons/arrow_undo.png", class: Console),
       shortDescription: 'Undo'
    )
    action(id: 'redoAction',
       name: 'Redo',
       mnemonic: 'R',
       accelerator: shortcut('shift Y'),
-      smallIcon: imageIcon(resource:"icons/arrow_redo.png", class:Console),
+      smallIcon: imageIcon(resource:"icons/arrow_redo.png", class: Console),
       shortDescription: 'Redo'
    )
    action(id: 'findAction',
@@ -84,7 +84,7 @@ actions {
       closure: controller.find,
       mnemonic: 'F',
       accelerator: shortcut('F'),
-      smallIcon: imageIcon(resource:"icons/find.png", class:Console),
+      smallIcon: imageIcon(resource:"icons/find.png", class: Console),
       shortDescription: 'Find'
    )
    action(id: 'findNextAction',
@@ -104,7 +104,7 @@ actions {
       closure: controller.replace,
       mnemonic: 'E',
       accelerator: shortcut('H'),
-      smallIcon: imageIcon(resource:"icons/text_replace.png", class:Console),
+      smallIcon: imageIcon(resource:"icons/text_replace.png", class: Console),
       shortDescription: 'Replace'
    )
    action(id: 'cutAction',
@@ -112,7 +112,7 @@ actions {
       closure: controller.cut,
       mnemonic: 'T',
       accelerator: shortcut('X'),
-      smallIcon: imageIcon(resource:"icons/cut.png", class:Console),
+      smallIcon: imageIcon(resource:"icons/cut.png", class: Console),
       shortDescription: 'Cut'
    )
    action(id: 'copyAction',
@@ -120,7 +120,7 @@ actions {
       closure: controller.copy,
       mnemonic: 'C',
       accelerator: shortcut('C'),
-      smallIcon: imageIcon(resource:"icons/page_copy.png", class:Console),
+      smallIcon: imageIcon(resource:"icons/page_copy.png", class: Console),
       shortDescription: 'Copy'
    )
    action(id: 'pasteAction',
@@ -128,7 +128,7 @@ actions {
       closure: controller.paste,
       mnemonic: 'P',
       accelerator: shortcut('V'),
-      smallIcon: imageIcon(resource:"icons/page_paste.png", class:Console),
+      smallIcon: imageIcon(resource:"icons/page_paste.png", class: Console),
       shortDescription: 'Paste'
    )
    action(id: 'selectAllAction',
@@ -150,6 +150,12 @@ actions {
       mnemonic: 'S',
       accelerator: shortcut('shift S')
    )
+   action(id: 'packComponentsAction',
+      name: 'Pack',
+      closure: controller.packComponents,
+      mnemonic: 'K',
+      accelerator: shortcut('shift P')
+   )
 
    action(id: 'runAction',
       name: 'Run',
@@ -158,7 +164,7 @@ actions {
       mnemonic: 'R',
       keyStroke: shortcut('ENTER'),
       accelerator: shortcut('R'),
-      smallIcon: imageIcon(resource:"icons/script_go.png", class:Console),
+      smallIcon: imageIcon(resource:"icons/script_go.png", class: Console),
       shortDescription: 'Execute Groovy Script'
    )
 
@@ -177,5 +183,14 @@ actions {
       name: 'Add Directory to ClassPath',
       closure: controller.addClasspathDir,
       mnemonic: 'D',
+   )
+
+   action(id: 'snapshotAction',
+      name: 'Snapshot',
+      closure: controller.snapshot,
+      mnemonic: 'T',
+      accelerator: shortcut('T'),
+      smallIcon: imageIcon(resource:"icons/camera.png", class: SwingPadActions),
+      shortDescription: 'Take a snapshot'
    )
 }

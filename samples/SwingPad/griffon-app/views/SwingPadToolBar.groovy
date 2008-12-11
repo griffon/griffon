@@ -31,4 +31,6 @@ toolBar(id:'toolbar', rollover:true) {
    button(replaceAction, text:null)
    separator(orientation:SwingConstants.VERTICAL)
    button(runAction, text:null)
+   separator(orientation:SwingConstants.VERTICAL)
+   button(snapshotAction, text:null)
 }

@@ -47,6 +47,10 @@ menuBar( id: 'menuBar') {
    menu(text: 'View', mnemonic: 'V') {
        menuItem(largerFontAction)
        menuItem(smallerFontAction)
+       separator()
+       checkBoxMenuItem(packComponentsAction)
+       separator()
+       checkBoxMenuItem(snapshotAction)
    }
 
    menu(text: 'Script', mnemonic: 'S') {

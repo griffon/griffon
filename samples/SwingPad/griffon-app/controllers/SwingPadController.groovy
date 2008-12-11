@@ -15,10 +15,12 @@
 
 import java.awt.Color
 import java.awt.Font
+import java.awt.Robot
+import java.awt.event.ActionEvent
 import javax.swing.JComponent
 import javax.swing.JFileChooser
 import javax.swing.JOptionPane
-import java.awt.event.ActionEvent
+import javax.imageio.ImageIO
 import java.util.prefs.Preferences
 import groovy.ui.text.FindReplaceUtility
 import org.codehaus.griffon.commons.GriffonUtil
@@ -32,6 +34,7 @@ class SwingPadController {
    private File currentFileChooserDir = new File(prefs.get('currentFileChooserDir', '.'))
    private File currentClasspathJarDir = new File(prefs.get('currentClasspathJarDir', '.'))
    private File currentClasspathDir = new File(prefs.get('currentClasspathDir', '.'))
+   private File currentSnapshotDir = new File(prefs.get('currentSnapshotDir', '.'))
    private runThread = null
    private GroovyClassLoader groovyClassLoader
    private static int scriptCounter = 0
@@ -97,6 +100,32 @@ class SwingPadController {
       }
    }
 
+   def snapshot = { evt ->
+      def fc = new JFileChooser(currentSnapshotDir)
+      fc.fileSelectionMode = JFileChooser.FILES_ONLY
+      fc.acceptAllFileFilterUsed = true
+      if (fc.showDialog(app.appFrames[0], "Snapshot") == JFileChooser.APPROVE_OPTION) {
+         currentSnapshotDir = fc.currentDirectory
+         prefs.put('currentSnapshotDir', currentSnapshotDir.path)
+         def frameBounds = app.appFrames[0].bounds
+         def capture = new Robot().createScreenCapture(frameBounds)
+         def filename = fc.selectedFile.name
+         def dot = filename.lastIndexOf(".")
+         def ext = "png"
+         if( dot > 0 )  {
+            ext = filename[dot+1..-1] 
+         } else {
+            filename += ".$ext"
+         }
+         def target = new File(currentSnapshotDir,filename)
+         ImageIO.write( capture, ext, target )
+         def pane = builder.optionPane()
+         pane.setMessage("Successfully saved snapshot to\n\n${target.absolutePath}")
+         def dialog = pane.createDialog(app.appFrames[0], 'Snapshot')
+         dialog.show()
+      }
+   }
+
    private void invokeTextAction( evt, closure ) {
       if( evt.source ) closure(view.editor.textEditor)
    }
@@ -139,8 +168,16 @@ class SwingPadController {
       if( currentFont.size < 5 ) return
       inputArea.font = new Font( 'Monospaced', currentFont.style, currentFont.size - 2 )
    }
+   def packComponents = { evt = null ->
+      def newLayout = evt?.source?.state ? builder.flowLayout() : builder.borderLayout()
+      if( !newLayout.class.isAssignableFrom(view.canvas.layout.class) ) {
+         view.canvas.layout = newLayout
+         runScript(evt)
+      }
+   }
 
    def runScript = { evt = null ->
+      if( !model.content ) return
       runThread = Thread.start {
          try {
             doLater {
@@ -228,6 +265,8 @@ class SwingPadController {
       def baos = new ByteArrayOutputStream()
       t.printStackTrace(new PrintStream(baos))
       doLater {
+         view.canvas.removeAll()
+         view.canvas.repaint()
          view.errorsTab.foreground = Color.RED
          def currentFont = view.errorsTab.font
          view.errorsTab.font = new Font(currentFont.name, currentFont.style, currentFont.size + 2)
