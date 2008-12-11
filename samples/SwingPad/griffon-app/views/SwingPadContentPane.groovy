@@ -47,7 +47,7 @@ splitPane(id: 'splitPane', resizeWeight: 0.45F,
          scrollPane( border: emptyBorder(0) ) {
             textArea( id: 'errors', border: emptyBorder(0),
                      background: Color.WHITE, editable: false,
-                     font: new Font( Font.MONOSPACED, Font.PLAIN, 12 ),
+                     font: new Font( Font.MONOSPACED, Font.PLAIN, 10 ),
                      caretPosition: bind(reverse:true){ model.caretPosition },
                      text: bind(reverse:true){ model.errors } )
          }

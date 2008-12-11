@@ -24,7 +24,7 @@ import javax.swing.JOptionPane
 import javax.imageio.ImageIO
 import java.util.prefs.Preferences
 import groovy.ui.text.FindReplaceUtility
-import org.codehaus.griffon.commons.GriffonUtil
+import org.codehaus.groovy.runtime.StackTraceUtils
 
 class SwingPadController {
    def model
@@ -148,27 +148,13 @@ class SwingPadController {
    def replace = { evt = null -> FindReplaceUtility.showDialog(true) }
 
    def largerFont = { evt = null ->
-      def inputArea = view.editor.textEditor
-      def currentFont = inputArea.font
-      if( currentFont.size > 40 ) return
-      inputArea.font = new Font( 'Monospaced', currentFont.style, currentFont.size + 2 )
-
-      inputArea = view.errors
-      currentFont = inputArea.font
-      if( currentFont.size > 40 ) return
-      inputArea.font = new Font( 'Monospaced', currentFont.style, currentFont.size + 2 )
+      modifyFont(view.editor.textEditor, {it > 40}, +2)
+      modifyFont(view.errors, {it > 40}, +2)
    }
 
    def smallerFont = { evt = null ->
-      def inputArea = view.editor.textEditor
-      def currentFont = inputArea.font
-      if( currentFont.size < 5 ) return
-      inputArea.font = new Font( 'Monospaced', currentFont.style, currentFont.size - 2 )
-
-      inputArea = view.errors
-      currentFont = inputArea.font
-      if( currentFont.size < 5 ) return
-      inputArea.font = new Font( 'Monospaced', currentFont.style, currentFont.size - 2 )
+      modifyFont(view.editor.textEditor, {it < 5}, -2)
+      modifyFont(view.errors, {it < 5}, -2)
    }
 
    def packComponents = { evt = null ->
@@ -263,12 +249,14 @@ class SwingPadController {
 
    private void finishWithException( Throwable t ) {
       model.status = 'Execution terminated with exception.'
+      StackTraceUtils.deepSanitize(t)
       t.printStackTrace()
       def baos = new ByteArrayOutputStream()
       t.printStackTrace(new PrintStream(baos))
       doLater {
          view.canvas.removeAll()
          view.canvas.repaint()
+         view.tabs.selectedIndex = 1 // errorsTab
          model.errors = baos.toString()
          model.caretPosition = 0
       }
@@ -343,5 +331,11 @@ class SwingPadController {
 
    private getScriptName() {
       "SwingPad_script" + (scriptCounter++)
+   }
+
+   private modifyFont( target, sizeFilter, sizeMod ) {
+      def currentFont = target.font
+      if( sizeFilter(currentFont.size) ) return
+      target.font = new Font( 'Monospaced', currentFont.style, currentFont.size + sizeMod )
    }
 }
