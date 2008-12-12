@@ -26,7 +26,7 @@ import java.awt.RenderingHints;
  * Date: May 8, 2008
  * Time: 6:08:55 PM
  */
-class RoundedPanel extends JPanel {
+public class RoundedPanel extends JPanel {
 
     public RoundedPanel() {
         setOpaque(false);

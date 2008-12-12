@@ -20,7 +20,6 @@ import java.awt.event.ActionListener
 import java.beans.PropertyChangeListener
 import javax.swing.DefaultComboBoxModel
 import javax.swing.JScrollPane
-import javax.swing.ListCellRenderer
 import javax.swing.Timer
 
 tweetLineFont = new java.awt.Font("Ariel", 0, 12)
@@ -77,18 +76,13 @@ application(title:"Greet - A Groovy Twitter Client", size:[320,640], locationByP
         panel(gridwidth: REMAINDER,  weighty:1.0, size:[0,0]) // spacer
     }
 
-    panel(constraints:'running') {
+    panel(constraints:'running', id:'runningPanel') {
         gridBagLayout()
         users = comboBox(renderer: userCellRenderer, action: controller.userSelected,
             selectedItem:bind {model.focusedUser},
             gridwidth: REMAINDER, insets: [6, 6, 3, 6], fill: HORIZONTAL
         )
-        label('Search:', insets: [3, 6, 3, 3])
-        searchField = textField(columns: 20, action: controller.filterTweets,
-            insets: [3, 3, 3, 3], weightx: 1.0, fill: BOTH)
-        button(controller.filterTweets,
-            gridwidth: REMAINDER, insets: [3, 3, 3, 6], fill:HORIZONTAL)
-        tabbedPane(gridwidth: REMAINDER, weighty: 1.0, fill: BOTH) {
+        tabbedPane(gridwidth: REMAINDER, weighty: 1.0, fill: BOTH, preferredSize:[100, 100]) {
             scrollPane(title: 'Timeline') {
                 timelinePanel = panel(new ScrollablePanel(), border:emptyBorder(3))
             }
@@ -103,11 +97,15 @@ application(title:"Greet - A Groovy Twitter Client", size:[320,640], locationByP
             }
         }
         separator(fill: HORIZONTAL, gridwidth: REMAINDER)
-        tweetBox = textField(action: controller.tweetAction,
-            fill:BOTH, weightx:1.0, insets:[3,3,1,3], gridwidth:2)
-        tweetButton = button(controller.tweetAction,
-            enabled:bind {controller.tweetAction.enabled && tweetBox.text.length() in  1..140},
-            gridwidth:REMAINDER, insets:[3,3,1,3])
+        tweetBoxPane = scrollPane(fill: BOTH, weightx:1.0, insets:[3,3,1,3], gridwidth:REMAINDER,
+                verticalScrollBarPolicy: JScrollPane.VERTICAL_SCROLLBAR_NEVER
+        ) {
+            tweetBox = textArea(//action: controller.tweetAction,
+                rows: 0,
+                lineWrap:true, wrapStyleWord:true)
+        }
+        button(controller.filterTweets, text:null, icon:imageIcon('/arrow_refresh.png'),
+            gridwidth: 1, insets: [3, 3, 3, 6], fill:HORIZONTAL)
         progressBar(value:bind {Math.min(140, tweetBox.text.length())},
                 string: bind { int count = tweetBox.text.length();
                     ((count <= 140)
@@ -115,8 +113,11 @@ application(title:"Greet - A Groovy Twitter Client", size:[320,640], locationByP
                         : "${count - 140} characters too many")
                 },
                 minimum:0, maximum:140, stringPainted: true,
-                gridwidth:REMAINDER, fill:HORIZONTAL, insets:[1,3,1,3]
+                gridwidth:1, fill:BOTH, weightx:1.0, insets:[3,3,1,3]
         )
+        tweetButton = button(controller.tweetAction,
+            enabled:bind {controller.tweetAction.enabled && tweetBox.text.length() in  1..140},
+            gridwidth:1, insets:[3,3,1,3])
         separator(fill: HORIZONTAL, gridwidth: REMAINDER)
 
     }
@@ -181,6 +182,9 @@ model.addPropertyChangeListener("lastUpdate", {evt ->
         }
     }
 } as PropertyChangeListener)
+
+// this is to get the tweet box to grow when we reach the end of the line
+bean(tweetBoxPane, minimumSize: bind(source:tweetBox.document, sourceEvent:'undoableEditHappened', sourceValue:{doLater {runningPanel.revalidate()}; tweetBoxPane.preferredSize}))
 
 refreshTimer = new Timer(180000, controller.filterTweets)
 model.addPropertyChangeListener("focusedUser", {refreshTimer.start()} as PropertyChangeListener)

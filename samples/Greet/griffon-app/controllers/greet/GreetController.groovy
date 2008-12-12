@@ -77,7 +77,7 @@ class GreetController {
                         view.mainPanel.repaint(10)
                     }
                     model.friends = twitterService.getFriends(twitterService.authenticatedUser)
-                    model.statuses = model.friends.collect {it.status}
+                    model.statuses = model.friends.collect {twitterService.userStatuses[it.screen_name]}
                     selectUser(twitterService.authenticatedUser)
                 } else {
                     JOptionPane.showMessageDialog(view.mainPanel, "Login failed")
@@ -97,9 +97,9 @@ class GreetController {
         model.allowSelection = false
         doOutside {
             try {
-                def newVal = twitterService.getFriendsTimeline(model.focusedUser).findAll {it.text =~ view.searchField.text}
+                def newVal = twitterService.getFriendsTimeline(model.focusedUser)
                 edt {
-                    model.timeline = newVal
+                    model.timeline = mergeTweets(model.timeline, newVal)
                 }
             } catch (Exception e) {
                 e.printStackTrace()
@@ -117,14 +117,14 @@ class GreetController {
         model.allowSelection =false
         doOutside {
             try {
-                [statuses: { model.friends.collect {it.status}.findAll {it.text =~ view.searchField.text} },
-                 timeline: { twitterService.getFriendsTimeline(model.focusedUser).findAll {it.text =~ view.searchField.text} },
-                 replies : { twitterService.getReplies().findAll {it.text =~ view.searchField.text} },
-                 tweets : { twitterService.getTweets(model.focusedUser).findAll {it.text =~ view.searchField.text} },
+                [statuses: { model.friends.collect {twitterService.userStatuses[it.screen_name]} },
+                 timeline: { twitterService.getFriendsTimeline(model.focusedUser) },
+                 replies : { twitterService.getReplies() },
+                 tweets : { twitterService.getTweets(model.focusedUser) },
                 ].each {k, v ->
                     def newVal = v()
                     edt {
-                        model."$k" = newVal
+                        model."$k" = mergeTweets(model."$k", newVal)
                     }
                 }
             } catch (Exception e) {
@@ -136,6 +136,23 @@ class GreetController {
                 }
             }
         }
+    }
+
+    List mergeTweets(List oldList, List newValues) {
+        // add new tweets, keep old tweets that are in the cache
+        TreeSet ids = new TreeSet()
+        def results = []
+        newValues.each {
+            ids << it.id
+            results << it
+        }
+        oldList.each {
+            def id = it.id
+            if (!ids.contains(id) && twitterService.tweetCache.containsKey(id)) {
+                results << it
+            }
+        }
+        return results
     }
 
     def userSelected(evt) {
@@ -153,9 +170,9 @@ class GreetController {
         try {
             def newFriend = model.friends.find {it.screen_name == screen_name} ?: twitterService.getUser(screen_name)
             model.focusedUser = newFriend
-            model.tweets = twitterService.getTweets(model.focusedUser).findAll {it.text =~ view.searchField.text}
-            model.replies = twitterService.getReplies().findAll {it.text =~ view.searchField.text}
-            model.timeline = twitterService.getFriendsTimeline(model.focusedUser).findAll {it.text =~ view.searchField.text}
+            model.tweets = twitterService.getTweets(model.focusedUser)
+            model.replies = twitterService.getReplies()
+            model.timeline = twitterService.getFriendsTimeline(model.focusedUser)
         } finally {
             edt {
                 model.allowSelection = true

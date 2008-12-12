@@ -49,6 +49,16 @@ panel(new RoundedPanel(foreground: java.awt.Color.WHITE, opaque:true),
         hyperlinkUpdate:controller.&hyperlinkPressed,
         opaque: false, editable: false, font: tweetLineFont,
         gridwidth: REMAINDER, weightx: 1.0, fill: BOTH, insets: [3, 3, 3, 6])
-    label(TwitterService.timeAgo(tweet.created_at), font:tweetTimeFont,
-        anchor:EAST, gridwidth: REMAINDER, weightx: 1.0, insets: [0, 3, 3, 6])
+    hbox(fill:BOTH, gridwidth:REMAINDER) {
+        if (tweet.source != 'web') {
+            def bt = label("<html>via $tweet.source" as String, border:emptyBorder(0,6,3,3), font:tweetTimeFont)
+            bt.maximumSize = bt.preferredSize
+        }
+        if (tweet.in_reply_to_screen_name as String) {
+            def bt = label("<html>in reply to <a href='http://twitter.com/$tweet.in_reply_to_screen_name'>$tweet.in_reply_to_screen_name</a>" as String, border:emptyBorder(0,6,3,3), font:tweetTimeFont)
+            bt.maximumSize = bt.preferredSize
+        }
+        glue()
+        label(TwitterService.timeAgo(tweet.created_at), border:emptyBorder(0,3,3,6), font:tweetTimeFont)
+    }
 }

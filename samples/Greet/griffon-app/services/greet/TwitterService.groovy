@@ -24,6 +24,10 @@ import java.text.SimpleDateFormat
  */
 class TwitterService {
 
+    Map tweetCache = new CacheMap(500)
+    Map userCache = new CacheMap(200)
+    Map userStatuses = new CacheMap(200)
+
     String urlBase;
     @Bindable String status = "\u00a0"
     def authenticatedUser
@@ -32,6 +36,51 @@ class TwitterService {
 
     TwitterService(urlBase = "http://twitter.com") {
         this.urlBase = urlBase
+    }
+
+    def storeTweet(tweet, user=null) {
+        def mapTweet = [:]
+        tweet.children().each {
+            mapTweet[it.name()] = it as String
+        }
+        tweetCache[mapTweet.id] = mapTweet
+        if (user) {
+            mapTweet.user = user
+        } else {
+            mapTweet.user = storeUser(tweet.user)
+        }
+        def oldStatus = mapTweet.user.status ?: [id:'0']
+        if ((mapTweet.id as long) > (oldStatus.id as long)) {
+            userStatuses[mapTweet.user.screen_name] = mapTweet
+        } else {
+        }
+
+        return mapTweet
+    }
+
+    def storeUser(user) {
+        def mapUser = [:]
+        user.children().each {
+            mapUser[it.name()] = it as String
+        }
+        userCache[mapUser.screen_name] = mapUser
+        mapUser.status = null
+        if (user.status as String) {
+            storeTweet(user.status, mapUser)
+        } else if (userStatuses[mapUser.screen_name] == null) {
+            userStatuses[mapUser.screen_name] = [
+                created_at:'Thu Jan 01 00:00:00 +0000 1970',
+                id:'0',
+                text:'',
+                source:'web',
+                truncated:'false',
+                in_reply_to_status_id:'',
+                in_reply_to_user_id:'',
+                favorited:'false',
+                in_reply_to_screen_name:'',
+                user:mapUser]
+        }
+        return mapUser
     }
 
     def withStatus(status, c) {
@@ -84,7 +133,7 @@ class TwitterService {
             def page = 1
             def list = slurpAPIStream("$urlBase/statuses/friends/${user.screen_name}.xml")
             while (list.user.size()) {
-                list.user.collect(friends) {it}
+                list.user.collect(friends) {storeUser(it)}
                 page++
                 try {
                     list = slurpAPIStream("$urlBase/statuses/friends/${user.screen_name}.xml&page=$page")
@@ -112,7 +161,7 @@ class TwitterService {
             timeline =  slurpAPIStream(
                     //"$urlBase/statuses/friends_timeline/${user.screen_name}.xml"
                     "$urlBase/statuses/friends_timeline.xml"
-                ).status.collect{it}
+                ).status.collect {storeTweet(it)}
         }
         withStatus("Loading Timeline Images") {
             return timeline.each {
@@ -126,7 +175,7 @@ class TwitterService {
         withStatus("Loading Replies") {
             replies = slurpAPIStream(
                     "$urlBase/statuses/replies.xml"
-                ).status.collect{it}
+                ).status.collect {storeTweet(it)}
         }
         withStatus("Loading Replies Images") {
             return replies.each {
@@ -148,7 +197,7 @@ class TwitterService {
         withStatus("Loading Tweets") {
             tweets = slurpAPIStream(
                     "$urlBase/statuses/user_timeline/${friend.screen_name}.xml"
-                ).status.collect{it}
+                ).status.collect {storeTweet(it)}
         }
         withStatus("Loading Tweet Images") {
             return tweets.each {
@@ -160,13 +209,13 @@ class TwitterService {
     def getUser(String screen_name) {
         withStatus("Loading User $screen_name") {
             if (screen_name.contains('@')) {
-                return slurpAPIStream(
+                return storeUser(slurpAPIStream(
                        "$urlBase/users/show.xml?email=${screen_name}"
-                    )
+                    ))
             } else {
-                return slurpAPIStream(
+                return storeUser(slurpAPIStream(
                         "$urlBase/users/show/${screen_name}.xml"
-                    )
+                    ))
             }
         }
     }
@@ -197,6 +246,7 @@ class TwitterService {
     }
 
     static def timeAgo(Date d) {
+        if (d.getTime() == 0) return 'never'
         int secs = (System.currentTimeMillis() - d.getTime()) / 1000
         def dir = (secs < 0) ? "from now" : "ago"
         if (secs < 0) secs = -secs
