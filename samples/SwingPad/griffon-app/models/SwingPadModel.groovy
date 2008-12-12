@@ -23,4 +23,6 @@ class SwingPadModel {
    @Bindable String errors = ""
    @Bindable int caretPosition = 0
    @Bindable String currentTab = "sourceTab"
+
+   @Bindable Map suggestion = [:]
 }

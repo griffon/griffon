@@ -56,6 +56,7 @@ menuBar( id: 'menuBar') {
 
    menu(text: 'Script', mnemonic: 'S') {
        menuItem(runAction)
+       menuItem(suggestAction)
        separator()
        menuItem(addClasspathJarAction)
        menuItem(addClasspathDirAction)

@@ -172,6 +172,14 @@ actions {
       smallIcon: imageIcon(resource:"icons/script_go.png", class: Console),
       shortDescription: 'Execute Groovy Script'
    )
+   action(id: 'suggestAction',
+      name: 'Code Suggest',
+      enabled: bind {model.dirty},
+      closure: controller.suggestNodeName,
+      mnemonic: 'G',
+      accelerator: shortcut('G'),
+      keyStroke: shortcut('SPACE')
+   )
 
    action(id: 'interruptAction',
       name: 'Interrupt',

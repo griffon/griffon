@@ -39,6 +39,7 @@ class SwingPadController {
    private runThread = null
    private GroovyClassLoader groovyClassLoader
    private static int scriptCounter = 0
+   private Set factorySet = new TreeSet()
 
    void mvcGroupInit( Map args ) {
       groovyClassLoader = new GroovyClassLoader(this.class.classLoader)
@@ -238,6 +239,54 @@ class SwingPadController {
         }
     }
 
+   def suggestNodeName = { evt = null ->
+      if( !model.content ) return 
+
+      def editor = view.editor.textEditor
+      def caret = editor.caretPosition
+      if( !caret ) return
+
+      def document = editor.document
+      def target = ""
+      def ch = document.getText(--caret,1)
+      while( ch =~ /[a-zA-Z]/ ) {
+         target = ch + target
+         ch = document.getText(--caret,1)
+         if( caret == 0 ) {
+            ch = document.getText(caret,1)
+            if( ch =~ /[a-zA-Z]/ ) target = ch + target
+            break
+         }
+      }
+
+      if( !factorySet ) populateFactorySet()
+      def suggestions = factorySet.findAll{ it.startsWith(target) }
+      if( !suggestions ) return
+      if( suggestions.size() == 1 ) {
+         model.suggestion = [ 
+            start: caret,
+            end: caret + target.size(),
+            offset: target.size(),
+            text: suggestions.iterator().next()
+         ]
+      } else {
+      }
+      codeComplete(evt)
+   }
+
+   def codeComplete = { evt = nul ->
+      if( !model.suggestion ) return
+
+      def editor = view.editor.textEditor
+      def document = editor.document
+      def s = model.suggestion
+      def text = s.text.substring(s.offset)
+      document.insertString(s.end+1, text, null)
+
+      // clear it!
+      model.suggestion = [:]
+   }
+
    private void finishNormal( component ) {
       doLater {
          model.status = 'Execution complete.'
@@ -337,5 +386,21 @@ class SwingPadController {
       def currentFont = target.font
       if( sizeFilter(currentFont.size) ) return
       target.font = new Font( 'Monospaced', currentFont.style, currentFont.size + sizeMod )
+   }
+
+   private populateFactorySet() {
+      // TODO filter factories coming from SwingXBuilder that have jxclassicSwing: on their name
+      def ub = app.builders.Script
+      factorySet.clear()
+      ub.builderRegistration.each { ubr -> 
+         def builder = ubr.builder
+         def oldProxy = builder.proxyBuilder
+         try {
+            builder.proxyBuilder = builder
+            factorySet.addAll(ubr.builder.factories.keySet().sort().collect(){ (ubr.prefixString?:"")+it })
+         } finally {
+            builder.proxyBuilder = oldProxy
+         }
+      }
    }
 }
