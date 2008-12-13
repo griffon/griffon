@@ -21,6 +21,7 @@ import java.awt.event.ActionEvent
 import javax.swing.JComponent
 import javax.swing.JFileChooser
 import javax.swing.JOptionPane
+import javax.swing.SwingConstants
 import javax.imageio.ImageIO
 import java.util.prefs.Preferences
 import groovy.ui.text.FindReplaceUtility
@@ -216,7 +217,7 @@ class SwingPadController {
       }
    }
 
-   // the folowing classpath actions taken from groovy.ui.Console
+   // the folowing 4 actions taken from groovy.ui.Console
     def addClasspathJar = { evt = null ->
         def fc = new JFileChooser(currentClasspathJarDir)
         fc.fileSelectionMode = JFileChooser.FILES_ONLY
@@ -237,6 +238,12 @@ class SwingPadController {
             prefs.put('currentClasspathDir', currentClasspathDir.path)
             groovyClassLoader.addURL(fc.selectedFile.toURL())
         }
+    }
+
+    def showToolbar = { evt = null ->
+        def showToolbar = evt.source.selected
+        prefs.putBoolean('showToolbar', showToolbar)
+        view.toolbar.visible = showToolbar
     }
 
    def suggestNodeName = { evt = null ->
@@ -269,12 +276,27 @@ class SwingPadController {
             offset: target.size(),
             text: suggestions.iterator().next()
          ]
+         writeSuggestion()
       } else {
+         model.suggestion = [ 
+            start: caret,
+            end: caret + target.size(),
+            offset: target.size()
+         ]
+         model.suggestions.clear()
+         model.suggestions.addAll(suggestions)
+         view.popup.showPopup(SwingConstants.CENTER, app.appFrames[0])
+         view.suggestionList.selectedIndex = 0
       }
-      codeComplete(evt)
    }
 
-   def codeComplete = { evt = nul ->
+   def codeComplete = { evt ->
+      model.suggestion.text = model.suggestions[view.suggestionList.selectedIndex]
+      view.popup.hidePopup(true)
+      writeSuggestion()
+   }
+
+   private writeSuggestion() {
       if( !model.suggestion ) return
 
       def editor = view.editor.textEditor
@@ -402,5 +424,6 @@ class SwingPadController {
             builder.proxyBuilder = oldProxy
          }
       }
+      factorySet -= factorySet.grep{ it.startsWith("jxclassicSwing:") }
    }
 }

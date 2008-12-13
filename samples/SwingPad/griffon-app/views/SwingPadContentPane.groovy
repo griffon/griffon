@@ -23,8 +23,12 @@ import static java.awt.BorderLayout.*
 import javax.swing.BorderFactory as BF
 import javax.swing.event.CaretListener
 import javax.swing.event.DocumentListener
+import java.awt.event.KeyEvent
+import javax.swing.KeyStroke
 import javax.swing.JTabbedPane
+import javax.swing.ListSelectionModel
 import static javax.swing.JSplitPane.HORIZONTAL_SPLIT
+import ca.odell.glazedlists.swing.EventListModel
 
 rowHeader = new ScrollPaneRuler(ScrollPaneRuler.VERTICAL)
 columnHeader = new ScrollPaneRuler(ScrollPaneRuler.HORIZONTAL)
@@ -62,6 +66,21 @@ splitPane(id: 'splitPane', resizeWeight: 0.45F,
       }
    }
 }
+
+jidePopup( id: 'popup', movable: false, resizable: false,
+   popupMenuCanceled: { evt -> editor.textEditor.requestFocus() } ) {
+   panel {
+      borderLayout()
+      scrollPane() {
+         list( id: "suggestionList", 
+               selectionMode: ListSelectionModel.SINGLE_SELECTION,
+               model: new EventListModel(model.suggestions) )
+      }
+   }
+}
+popup.setDefaultFocusComponent(suggestionList)
+suggestionList.inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0), "complete")
+suggestionList.actionMap.put("complete", completeAction)
 
 def toolkit = Toolkit.getDefaultToolkit()
 def screen = toolkit.getScreenSize()

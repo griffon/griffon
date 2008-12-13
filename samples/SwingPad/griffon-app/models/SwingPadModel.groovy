@@ -14,6 +14,7 @@
  */
 
 import groovy.beans.Bindable
+import ca.odell.glazedlists.BasicEventList
 
 class SwingPadModel {
    @Bindable boolean dirty = false
@@ -25,4 +26,5 @@ class SwingPadModel {
    @Bindable String currentTab = "sourceTab"
 
    @Bindable Map suggestion = [:]
+   List suggestions = new BasicEventList()
 }

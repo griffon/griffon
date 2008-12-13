@@ -50,6 +50,7 @@ menuBar( id: 'menuBar') {
        separator()
        checkBoxMenuItem(packComponentsAction, selected: true)
        checkBoxMenuItem(showRulersAction, selected: true)
+       checkBoxMenuItem(showToolbarAction, selected: controller.showToolbar)
        separator()
        menuItem(snapshotAction)
    }

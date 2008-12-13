@@ -16,13 +16,13 @@
 import java.awt.BorderLayout as BL
 import java.awt.GridBagConstraints
 import javax.swing.SwingConstants
+import org.jdesktop.swingx.plaf.basic.BasicStatusBarUI
 
 build(SwingPadActions)
 
 application( title: "SwingPad", size: [800,600], locationByPlatform: true,
              iconImage: imageIcon("/groovy/ui/ConsoleIcon.png").image ) {
-menuBar( build(SwingPadMenuBar) )
-
+   menuBar( build(SwingPadMenuBar) )
    toolBar( build(SwingPadToolBar) )
    menuBar( build(SwingPadMenuBar) )
    widget( build(SwingPadContentPane) )
@@ -42,6 +42,7 @@ menuBar( build(SwingPadMenuBar) )
          constraints:gbc(insets: [1,3,1,3])
       )
    }
+   statusPanel.putClientProperty(BasicStatusBarUI.AUTO_ADD_SEPARATOR, false)
 }
 
 build(SwingPadStyles)

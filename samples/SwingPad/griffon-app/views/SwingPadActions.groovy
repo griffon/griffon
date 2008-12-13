@@ -161,6 +161,10 @@ actions {
       closure: controller.showRulers,
       accelerator: shortcut('shift U')
    )
+   action(id: 'showToolbarAction',
+      name: 'Show Toolbar',
+      closure: controller.showToolbar
+   )
 
    action(id: 'runAction',
       name: 'Run',
@@ -179,6 +183,9 @@ actions {
       mnemonic: 'G',
       accelerator: shortcut('G'),
       keyStroke: shortcut('SPACE')
+   )
+   action(id: 'completeAction',
+      closure: controller.codeComplete
    )
 
    action(id: 'interruptAction',
