@@ -256,21 +256,19 @@ class SwingPadController {
       def document = editor.document
       def target = ""
       def ch = document.getText(--caret,1)
+      def update = false
       while( ch =~ /[a-zA-Z]/ ) {
          target = ch + target
-         ch = document.getText(--caret,1)
-         if( caret == 0 ) {
-            ch = document.getText(caret,1)
-            if( ch =~ /[a-zA-Z]/ ) target = ch + target
-            break
-         }
+         if( caret ){ ch = document.getText(--caret,1); update = true }
+         else break
       }
+      if( update ) caret++
 
       if( !factorySet ) populateFactorySet()
       def suggestions = factorySet.findAll{ it.startsWith(target) }
       if( !suggestions ) return
       if( suggestions.size() == 1 ) {
-         model.suggestion = [ 
+         model.suggestion = [
             start: caret,
             end: caret + target.size(),
             offset: target.size(),
@@ -303,7 +301,8 @@ class SwingPadController {
       def document = editor.document
       def s = model.suggestion
       def text = s.text.substring(s.offset)
-      document.insertString(s.end+1, text, null)
+      document.insertString(s.start+s.offset, text, null)
+      editor.requestFocus()
 
       // clear it!
       model.suggestion = [:]
@@ -414,7 +413,7 @@ class SwingPadController {
       // TODO filter factories coming from SwingXBuilder that have jxclassicSwing: on their name
       def ub = app.builders.Script
       factorySet.clear()
-      ub.builderRegistration.each { ubr -> 
+      ub.builderRegistration.each { ubr ->
          def builder = ubr.builder
          def oldProxy = builder.proxyBuilder
          try {
