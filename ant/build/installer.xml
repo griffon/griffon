@@ -30,7 +30,7 @@
   <target name="prepare-installer-izpack">
       <property name="griffon.installer.izpack.dir" value="${griffon.target}/installer/izpack" />
       <taskdef name="izpack"
-               classpath="${basedir}/installer/izpack/lib/izpack-standalone-compiler-4.1.0.jar"
+               classpath="${basedir}/installer/izpack/lib/izpack-standalone-compiler-4.2.0.jar"
                classname="com.izforge.izpack.ant.IzPackTask"/>
 
       <antcall target="package"/>
@@ -45,7 +45,7 @@
           <replaceFilter token="@griffon.version@" value="${griffon.version}" />
       </replace>
   </target>
-  
+
   <target name="create-installer-izpack" depends="prepare-installer-izpack" >
       <property name="app.group" value="Griffon" />
       <property name="app.name" value="griffon" />
@@ -99,6 +99,11 @@
     </laf>
   </guiprefs>
 
+  <variables>
+    <variable name="DesktopShortcutCheckboxEnabled" value="true"/>
+    <variable name="ApplicationShortcutPath" value="ApplicationShortcuts"/>
+  </variables>
+
   <locale>
     <langpack iso3="eng"/>
     <langpack iso3="deu"/>
@@ -115,11 +120,10 @@
     <res id="HTMLLicencePanel.licence" src="resources/asl2.html" />
 
     <!-- FIXME: parse=yes results in a blank panel -->
-    <res id="HTMLInfoPanel.info"
-	src="resources/README-Griffon.html" parse="no" />
-
+    <res id="HTMLInfoPanel.info" src="resources/README-Griffon.html" parse="no" />
     <res id="TargetPanel.dir.unix" src="resources/target_unix.txt" parse="yes" />
     <res id="Win_NT_shortcutSpec.xml" src="resources/winShortcutSpec.xml" />
+    <res id="Unix_shortcutSpec.xml" src="resources/unixShortcutSpec.xml"/>
     <res id="shortcutSpec.xml" src="resources/emptyShortcutSpec.xml" />
     <res id="ProcessPanel.Spec.xml" src="resources/processSpec.xml" />
 <!--
@@ -134,15 +138,15 @@
     <panel classname="HelloPanel"/>
     <panel classname="HTMLInfoPanel"/>
     <panel classname="HTMLLicencePanel"/>
-    <panel classname="TargetPanel" /> 
+    <panel classname="TargetPanel" />
     <panel classname="PacksPanel"/>
     <panel classname="SummaryPanel"/>
     <panel classname="InstallPanel"/>
     <panel classname="ProcessPanel"/>
-    <panel classname="ShortcutPanel" /> 
+    <panel classname="ShortcutPanel" />
     <panel classname="FinishPanel"/>
   </panels>
-  
+
   <listeners>
     <listener installer="SummaryLoggerInstallerListener"/>
     <listener installer="RegistryInstallerListener"
@@ -156,17 +160,15 @@
       <description>Griffon binary files installation.</description>
 
       <fileset dir="binary/griffon-@{griffon.version}"
-      	targetdir="$INSTALL_PATH">
+         targetdir="$INSTALL_PATH">
       </fileset>
 
       <!--
-      <file src="resources/README-Griffon.html"
-	targetdir="$INSTALL_PATH" />
+      <file src="resources/README-Griffon.html" targetdir="$INSTALL_PATH" />
       <parsable targetfile="$INSTALL_PATH/README-Griffon.html" />
       -->
 
-      <file src="resources/pre-uninstall.bat"
-	targetdir="$INSTALL_PATH/Uninstaller" os="windows" />
+      <file src="resources/pre-uninstall.bat" targetdir="$INSTALL_PATH/Uninstaller" os="windows" />
       <parsable targetfile="$INSTALL_PATH/Uninstaller/pre-uninstall.bat" os="windows" />
       <executable targetfile="$INSTALL_PATH/Uninstaller/pre-uninstall.bat" os="windows" stage="uninstall" />
 
