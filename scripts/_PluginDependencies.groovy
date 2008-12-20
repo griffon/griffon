@@ -442,6 +442,18 @@ installPluginForName = { String fullPluginName ->
         // hasn't been installed by that point.
         binding.setVariable("${pluginName}PluginDir", new File(pluginInstallPath).absoluteFile)
 
+        def pluginJdkVersion = pluginXml.@jdk?.toString()
+        if (pluginJdkVersion) {
+            pluginJdkVersion = new BigDecimal(pluginJdkVersion)
+            def javaVersion = new BigDecimal(System.getProperty("java.version")[0..2])
+            if (pluginJdkVersion > javaVersion) {
+                Ant.delete(dir: "${pluginsDirPath}/${fullPluginName}", quiet: true, failOnError: false)
+                clean()
+
+                pluginInstallFail("Failed to install plug-in [${fullPluginName}]. Required Jdk version is ${pluginJdkVersion}, current one is ${javaVersion}", [name:pluginName])
+            }
+        }
+
         def dependencies = [:]
 
         for (dep in pluginXml.dependencies.plugin) {

@@ -91,6 +91,7 @@ target(packagePlugin:"Implementation target") {
         Ant.fail("Cannot instantiate plugin file")
     }
     pluginName = GCU.getScriptName(GCU.getLogicalName(pluginClass, "GriffonPlugin"))
+    event("PackagePluginStart", [pluginName,plugin])
     println "plugin - $pluginName"
     // Generate plugin.xml descriptor from info in *GriffonPlugin.groovy
     new File("${basedir}/plugin.xml").delete()
@@ -99,7 +100,8 @@ target(packagePlugin:"Implementation target") {
     def props = ['author','authorEmail','title','description','documentation']
 //    def resourceList = GriffonResourceLoaderHolder.resourceLoader.getResources()
 //    def local = plugin.properties['local'] ?: true
-    xml.plugin(name:"${pluginName}",version:"${plugin.version}"/*,local:"${(local ?: false)}"*/) {
+    def jdk = plugin.properties['jdk'] ?: "1.4"
+    xml.plugin(name:"${pluginName}",version:"${plugin.version}",jdk:"$jdk"/*,local:"${(local ?: false)}"*/) {
         props.each {
             if( plugin.properties[it] ) "${it}"(plugin.properties[it])
         }
@@ -118,4 +120,5 @@ target(packagePlugin:"Implementation target") {
     def includesList = pluginIncludes.join(",")
     def excludesList = pluginExcludes.join(",")
     Ant.zip(basedir:"${basedir}", destfile:pluginZip, includes:includesList, excludes:excludesList, filesonly:true)
+    event("PackagePluginEnd", [pluginName,plugin])
 }
