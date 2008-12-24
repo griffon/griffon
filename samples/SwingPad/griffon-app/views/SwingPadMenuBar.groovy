@@ -55,6 +55,15 @@ menuBar( id: 'menuBar') {
        menuItem(snapshotAction)
    }
 
+   menu(text: 'Builder', mnemonic: 'B') {
+       checkBoxMenuItem(flamingoAction,
+                        id: "flamingoMenu",
+                        selected: controller.toggleFlamingoBuilder )
+       checkBoxMenuItem(trayAction,
+                        id: "trayMenu",
+                        selected: controller.toggleTrayBuilder)
+   }
+
    menu(text: 'Script', mnemonic: 'S') {
        menuItem(runAction)
        menuItem(suggestAction)

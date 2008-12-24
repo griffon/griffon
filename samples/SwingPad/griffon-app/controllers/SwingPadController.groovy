@@ -211,7 +211,7 @@ class SwingPadController {
 
    def confirmRunInterrupt = { evt = null ->
       def rc = JOptionPane.showConfirmDialog( app.appFrames[0], "Attempt to interrupt script?",
-            "GraphicsPad", JOptionPane.YES_NO_OPTION)
+            "SwingPad", JOptionPane.YES_NO_OPTION)
       if( rc == JOptionPane.YES_OPTION && runThread ) {
           runThread.interrupt()
       }
@@ -256,13 +256,12 @@ class SwingPadController {
       def document = editor.document
       def target = ""
       def ch = document.getText(--caret,1)
-      def update = false
       while( ch =~ /[a-zA-Z]/ ) {
          target = ch + target
-         if( caret ){ ch = document.getText(--caret,1); update = true }
+         if( caret ) ch = document.getText(--caret,1)
          else break
       }
-      if( update ) caret++
+      if( target.size() != document.length ) caret++
 
       if( !factorySet ) populateFactorySet()
       def suggestions = factorySet.findAll{ it.startsWith(target) }
@@ -294,6 +293,14 @@ class SwingPadController {
       writeSuggestion()
    }
 
+   def toggleFlamingoBuilder = { evt = null ->
+      return toggleBuilder(evt, "flamingo", "griffon.builder.flamingo.FlamingoBuilder")
+   }
+
+   def toggleTrayBuilder = { evt = null ->
+      return toggleBuilder(evt, "tray", "griffon.builder.tray.TrayBuilder")
+   }
+
    private writeSuggestion() {
       if( !model.suggestion ) return
 
@@ -313,7 +320,11 @@ class SwingPadController {
          model.status = 'Execution complete.'
          view.canvas.removeAll()
          view.canvas.repaint()
-         view.canvas.add(component)
+         if( component instanceof JComponent ) {
+            view.canvas.add(component)
+         } else {
+            model.status = "The script did not return a JComponent!"
+         }
       }
    }
 
@@ -377,7 +388,7 @@ class SwingPadController {
       if( !model.scriptFile || !model.dirty ) return true
       switch( JOptionPane.showConfirmDialog( app.appFrames[0],
                  "Save changes to " + model.scriptFile.name + "?",
-                 "GraphicsPad", JOptionPane.YES_NO_CANCEL_OPTION)){
+                 "SwingPad", JOptionPane.YES_NO_CANCEL_OPTION)){
          case JOptionPane.YES_OPTION: return save(evt)
          case JOptionPane.NO_OPTION: return true
       }
@@ -390,9 +401,9 @@ class SwingPadController {
          def b = app.builders.Script
          def component = null
          b.edt{ component = b.build(script)}
-         if( !(component instanceof JComponent) ) {
-            throw new IllegalArgumentException("The script did not return a JComponent!")
-         }
+//          if( !(component instanceof JComponent) ) {
+//             throw new IllegalArgumentException("The script did not return a JComponent!")
+//          }
          doLater { finishNormal(component) }
       } catch( Throwable t ) {
          doLater { finishWithException(t) }
@@ -424,5 +435,47 @@ class SwingPadController {
          }
       }
       factorySet -= factorySet.grep{ it.startsWith("jxclassicSwing:") }
+   }
+
+   private toggleBuilder( evt, name, builder ) {
+      def cname = name[0].toUpperCase() + name[1..-1]
+      model.builders[name].enabled = evt.source.selected
+      if( model.builders[name].enabled ) {
+         app.builderConfig.root."$builder".view = "*"
+      } else {
+         app.builderConfig.root.remove(builder)
+      }
+
+      try {
+         // With no current way to unload an URL from the rootLoader
+         // we have to keep track if an URL has already been added to it
+         if( !model.builders[name].loaded ) {
+            def startDir = System.getProperty("griffon.start.dir")
+            if( startDir.startsWith('"') && startDir.endsWith('"') ) {
+               startDir = startDir[1..-2]
+            }
+            def jarDir = new File(startDir,name)
+            jarDir.eachFileMatch({it.endsWith(".jar")}) { jar ->
+//                groovyClassLoader.addURL(jar.toURI().toURL())
+               this.class.classLoader.addURL(jar.toURI().toURL())
+            }
+            model.builders[name].loaded = true
+         }
+         def binding = new Binding()
+         binding.setVariable("controller", this)
+         def script = """def (m, v, c) = controller.createMVCGroup("Script","Script",[:])
+         return v
+         """
+         app.builders.Script = new GroovyShell(groovyClassLoader,binding).evaluate(script)
+      } catch( ex ) {
+      ex.printStackTrace()
+         model.builders[name].enabled != model.builders[name].enabled
+         evt.source.selected = !evt.source.selected
+         showAlert( "Enable $cname".toString(),
+          "Couldn't enable $cname:\n\n$ex".toString())
+      } finally {
+         populateFactorySet()
+      }
+      return model.builders[name].enabled
    }
 }

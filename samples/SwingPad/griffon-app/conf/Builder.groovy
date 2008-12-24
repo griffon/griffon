@@ -15,4 +15,5 @@ jx {
 }
 
 root.'griffon.builder.jide.JideBuilder'.view = '*'
-root.'griffon.builder.flamingo.FlamingoBuilder'.view = '*'
+// root.'griffon.builder.flamingo.FlamingoBuilder'.view = '*'
+// root.'griffon.builder.tray.TrayBuilder'.view = '*'

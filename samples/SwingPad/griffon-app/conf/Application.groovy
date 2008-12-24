@@ -6,13 +6,6 @@ application {
     //frameClass = 'javax.swing.JFrame'
 }
 mvcGroups {
-    // MVC Group for "Script"
-    Script {
-        model = 'ScriptModel'
-        view = 'ScriptView'
-        controller = 'ScriptController'
-    }
-
     // MVC Group for "root"
     root {
         model = 'SwingPadModel'
@@ -20,4 +13,10 @@ mvcGroups {
         controller = 'SwingPadController'
     }
 
+    // MVC Group for "Script"
+    Script {
+        model = 'ScriptModel'
+        view = 'ScriptView'
+        controller = 'ScriptController'
+    }
 }

@@ -25,6 +25,11 @@ class SwingPadModel {
    @Bindable int caretPosition = 0
    @Bindable String currentTab = "sourceTab"
 
+   Map builders = [
+      flamingo: [ enabled: false, loaded: false],
+      tray: [ enabled: false, loaded: false]
+   ]
+
    @Bindable Map suggestion = [:]
    List suggestions = new BasicEventList()
 }

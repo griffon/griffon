@@ -213,4 +213,27 @@ actions {
       smallIcon: imageIcon(resource:"icons/camera.png", class: SwingPadActions),
       shortDescription: 'Take a snapshot'
    )
+
+   action(id: 'flamingoAction',
+      name: 'Flamingo',
+      mnemonic: 'F',
+      closure: controller.toggleFlamingoBuilder,
+      shortDescription: 'Enable FlamingoBuilder'
+   )
+
+   action(id: 'trayAction',
+      name: 'Tray',
+      mnemonic: 'F',
+      closure: controller.toggleTrayBuilder,
+      shortDescription: 'Enable TrayBuilder'
+   )
+}
+
+flamingoAction.enabled = isJdk16
+trayAction.enabled = isJdk16
+if( !flamingoAction.enabled ) {
+  flamingoAction.putValue("ShortDescription", "Requires Jre 1.6 or above")
+}
+if( !trayAction.enabled ) {
+  trayAction.putValue("ShortDescription", "Requires Jre 1.6 or above")
 }
