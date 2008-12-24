@@ -180,8 +180,8 @@ actions {
       name: 'Code Suggest',
       enabled: bind {model.dirty},
       closure: controller.suggestNodeName,
-      mnemonic: 'G',
-      accelerator: shortcut('G'),
+      //mnemonic: 'G',
+      accelerator: shortcut('SPACE'),
       keyStroke: shortcut('SPACE')
    )
    action(id: 'completeAction',
@@ -218,22 +218,28 @@ actions {
       name: 'Flamingo',
       mnemonic: 'F',
       closure: controller.toggleFlamingoBuilder,
-      shortDescription: 'Enable FlamingoBuilder'
+      enabled: isJdk16,
+      smallIcon: imageIcon(resource:"icons/plugin.png", class: SwingPadActions),
+      shortDescription: isJdk16 ? "Enable FlamingoBuilder" : "Requires Jre 1.6 or above"
    )
 
    action(id: 'trayAction',
       name: 'Tray',
-      mnemonic: 'F',
+      mnemonic: 'Y',
       closure: controller.toggleTrayBuilder,
-      shortDescription: 'Enable TrayBuilder'
+      enabled: isJdk16,
+      smallIcon: imageIcon(resource:"icons/plugin.png", class: SwingPadActions),
+      shortDescription: isJdk16 ? "Enable TrayBuilder" : "Requires Jre 1.6 or above"
    )
-}
 
-flamingoAction.enabled = isJdk16
-trayAction.enabled = isJdk16
-if( !flamingoAction.enabled ) {
-  flamingoAction.putValue("ShortDescription", "Requires Jre 1.6 or above")
-}
-if( !trayAction.enabled ) {
-  trayAction.putValue("ShortDescription", "Requires Jre 1.6 or above")
+   action(id: 'horizontalLayoutAction',
+      name: 'Toggle Layout -> Horizontal',
+      closure: controller.toggleLayout,
+      smallIcon: imageIcon(resource:"icons/shape_align_left.png", class: SwingPadActions)
+   )
+   action(id: 'verticalLayoutAction',
+      name: 'Toggle Layout -> Vertical',
+      closure: controller.toggleLayout,
+      smallIcon: imageIcon(resource:"icons/shape_align_bottom.png", class: SwingPadActions)
+   )
 }

@@ -22,6 +22,7 @@ import javax.swing.JComponent
 import javax.swing.JFileChooser
 import javax.swing.JOptionPane
 import javax.swing.SwingConstants
+import static javax.swing.JSplitPane.*
 import javax.imageio.ImageIO
 import java.util.prefs.Preferences
 import groovy.ui.text.FindReplaceUtility
@@ -299,6 +300,10 @@ class SwingPadController {
 
    def toggleTrayBuilder = { evt = null ->
       return toggleBuilder(evt, "tray", "griffon.builder.tray.TrayBuilder")
+   }
+
+   def toggleLayout = { evt = null ->
+      view.splitPane.orientation = VERTICAL_SPLIT
    }
 
    private writeSuggestion() {
