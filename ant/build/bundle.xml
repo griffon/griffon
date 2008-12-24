@@ -1,5 +1,6 @@
 <project name="griffon-bundle">
     <property name="targetDistDirectory" value="${griffon.dist}"/>
+    <!--<import file="maven.xml"/>-->
 
     <target name="-jar-app-files" description="Bundles all the template files for applications and plugins into a JAR files.">
         <!-- Clear the old JAR files out. -->
@@ -10,6 +11,8 @@
         <!-- Package up the files that are shared by both applications and plugins. -->
         <jar destfile="${griffon.target}/griffon-shared-files.jar">
             <fileset dir="${basedir}/src/griffon" includes="build.xml"/>
+            <fileset dir="${basedir}/src/griffon/templates/ide-support/eclipse"/>
+            <fileset dir="${basedir}/src/griffon/templates/ide-support/textmate" includes="project.tmproj"/>
             <!--<zipfileset dir="${basedir}/src/war" prefix="web-app">-->
                 <!--<include name="WEB-INF/applicationContext.xml"/>-->
                 <!--<include name="WEB-INF/applicationContext.xml"/>-->
@@ -22,11 +25,6 @@
             <!--</fileset>-->
         </jar>
 
-        <!-- Package up ide files separate for upgrade script. -->
-        <jar destfile="${griffon.target}/griffon-ide-files.jar">
-            <fileset dir="${basedir}/src/griffon/templates/ide-support/eclipse"/>
-            <fileset dir="${basedir}/src/griffon/templates/ide-support/textmate" includes="project.tmproj"/>
-        </jar>
         <!-- Package up the files that are exclusive to applications. -->
         <jar destfile="${griffon.target}/griffon-app-files.jar">
             <!--<zipfileset dir="${basedir}/src/war" prefix="web-app">-->
@@ -46,6 +44,7 @@
             <fileset dir="${basedir}/src/griffon/templates/plugins"/>
         </jar>
     </target>
+
     <target name="jar" depends="build,build-scripts,-jar-app-files" description="Build the entire source, run all tests and create the Griffon JAR file.">
 		<delete>
 			<fileset dir="${griffon.dist}" includes="*"/>
@@ -53,12 +52,108 @@
         <jar destfile="${griffon.dist}/griffon-cli-${griffon.version}.jar" manifest="${griffon.build.cli}/META-INF/MANIFEST.MF">
             <fileset dir="${griffon.build.cli}"/>
             <fileset dir="${griffon.build.rt}" includes="griffon/util/GriffonExceptionHandler.class"/>
+            <file file="${basedir}/build.properties"/>
         </jar>
         <jar destfile="${griffon.dist}/griffon-rt-${griffon.version}.jar" manifest="${griffon.build.rt}/META-INF/MANIFEST.MF">
               <fileset dir="${griffon.build.rt}"/>
         </jar>
+        <!--<jar destfile="${griffon.dist}/griffon-test-${griffon.version}.jar" manifest="${griffon.build}/META-INF/MANIFEST.MF">-->
+            <!--<fileset dir="${griffon.build}">-->
+                <!--<include name="META-INF/**" />-->
+                <!--<include name="griffon/test/**" />-->
+            <!--</fileset>-->
+        <!--</jar>-->
+        <!--<jar destfile="${griffon.dist}/griffon-spring-${griffon.version}.jar" manifest="${griffon.build}/META-INF/MANIFEST.MF">-->
+            <!--<fileset dir="${griffon.build}">-->
+                <!--<include name="META-INF/**" />-->
+                <!--<include name="griffon/spring/**" />-->
+                <!--<include name="**/groovy/griffon/commons/spring/**" />-->
+            <!--</fileset>-->
+        <!--</jar>-->
+        <!--<jar destfile="${griffon.dist}/griffon-bootstrap-${griffon.version}.jar" manifest="${griffon.build}/META-INF/MANIFEST.MF">-->
+            <!--<fileset dir="${griffon.build}">-->
+                <!--<include name="META-INF/**" />-->
+                <!--<include name="griffon/util/BuildSettings*"/>-->
+                <!--<include name="griffon/util/BuildSettingsHolder*"/>-->
+                <!--<include name="griffon/util/GriffonNameUtils*"/>-->
+                <!--<include name="**/groovy/griffon/cli/**/*" />-->
+            <!--</fileset>-->
+            <!--<file file="${basedir}/build.properties"/>-->
+        <!--</jar>-->
+        <!--<jar destfile="${griffon.dist}/griffon-core-${griffon.version}.jar" manifest="${griffon.build}/META-INF/MANIFEST.MF">-->
+            <!--<fileset dir="${griffon.build}">-->
+                <!--<include name="META-INF/**" />-->
+                <!--<include name="griffon/ui/**" />-->
+                <!--<include name="griffon/util/**" />-->
+                <!--<include name="**/groovy/griffon/beans/factory/**" />-->
+                <!--<include name="**/groovy/griffon/commons/**" />-->
+                <!--<include name="**/groovy/griffon/compiler/**" />-->
+                <!--<include name="**/groovy/griffon/orm/support/**" />-->
+                <!--<include name="**/groovy/griffon/exceptions/**" />-->
+                <!--<include name="**/groovy/griffon/support/**" />-->
+                <!--<include name="**/groovy/griffon/validation/**" />-->
+                <!--<include name="**/groovy/griffon/plugins/**" />-->
+                <!--<exclude name="griffon/util/BuildSettings*"/>-->
+                <!--<exclude name="griffon/util/BuildSettingsHolder*"/>-->
+                <!--<exclude name="griffon/util/GriffonNameUtils*"/>-->
+                <!--<exclude name="**/groovy/griffon/commons/spring/**" />-->
+                <!--<exclude name="**/groovy/griffon/plugins/orm/hibernate**" />-->
+                <!--<exclude name="**/groovy/griffon/plugins/web/**" />-->
+                <!--<exclude name="**/groovy/griffon/plugins/converters/**" />-->
+                <!--<exclude name="**/groovy/griffon/plugins/webflow/**" />-->
+                <!--<exclude name="**/groovy/griffon/plugins/scaffolding/**" />-->
+                <!--<exclude name="**/groovy/griffon/validation/Hibernate**" />-->
+            <!--</fileset>-->
+            <!--<file file="${basedir}/scripts/log4j.properties"/>-->
+        <!--</jar>-->
+        <!--<jar destfile="${griffon.dist}/griffon-scripts-${griffon.version}.jar" manifest="${griffon.build}/META-INF/MANIFEST.MF">-->
+            <!--<fileset dir="${griffon.target}/compiled-scripts"/>-->
+        <!--</jar>-->
+        <!--<jar destfile="${griffon.dist}/griffon-gorm-${griffon.version}.jar" manifest="${griffon.build}/META-INF/MANIFEST.MF">-->
+            <!--<fileset dir="${griffon.build}">-->
+                <!--<include name="META-INF/**" />-->
+                <!--<include name="griffon/orm/**" />-->
+                <!--<include name="**/groovy/griffon/orm/hibernate/**" />-->
+                <!--<include name="**/groovy/griffon/plugins/orm/hibernate/**" />-->
+                <!--<include name="**/groovy/griffon/validation/Hibernate**" />-->
+            <!--</fileset>-->
+        <!--</jar>-->
+        <!--<jar destfile="${griffon.dist}/griffon-web-${griffon.version}.jar" manifest="${griffon.build}/META-INF/MANIFEST.MF">-->
+            <!--<fileset dir="${griffon.build}">-->
+                <!--<include name="META-INF/**" />-->
+                <!--<include name="griffon/converters/**" />-->
+                <!--<include name="griffon/util/**" />-->
+                <!--<exclude name="griffon/util/Generate**" />-->
+                <!--<include name="**/groovy/griffon/web/**" />-->
+                <!--<include name="**/groovy/griffon/plugins/web/**" />-->
+                <!--<include name="**/groovy/griffon/plugins/converters/**" />-->
+
+                <!--<include name="**/groovy/griffon/webflow/executor/support/GriffonConventionsFlowExecutorArgumentHandler*" />-->
+            <!--</fileset>-->
+        <!--</jar>-->
+        <!--<jar destfile="${griffon.dist}/griffon-webflow-${griffon.version}.jar" manifest="${griffon.build}/META-INF/MANIFEST.MF">-->
+            <!--<fileset dir="${griffon.build}">-->
+                <!--<include name="META-INF/**" />-->
+                <!--<include name="**/groovy/griffon/webflow/**" />-->
+                <!--<include name="**/groovy/griffon/plugins/webflow/**" />-->
+            <!--</fileset>-->
+        <!--</jar>-->
+        <!--<jar destfile="${griffon.dist}/griffon-crud-${griffon.version}.jar" manifest="${griffon.build}/META-INF/MANIFEST.MF">-->
+            <!--<fileset dir="${griffon.build}">-->
+                <!--<include name="META-INF/**" />-->
+                <!--<include name="griffon/util/Generate**" />-->
+                <!--<include name="**/groovy/griffon/scaffolding/**" />-->
+                <!--<include name="**/groovy/griffon/plugins/scaffolding/**" />-->
+            <!--</fileset>-->
+        <!--</jar>-->
         <jar destfile="${griffon.dist}/griffon-resources-${griffon.version}.jar" manifest="${griffon.build.cli}/META-INF/MANIFEST.MF">
             <fileset dir="${griffon.target}" includes="*.jar"/>
+            <fileset dir="${basedir}">
+                <!--<include name="conf/webdefault.xml"/>-->
+                <include name="src/griffon/templates/artifacts/**"/>
+                <!--<include name="src/griffon/templates/scaffolding/**"/>-->
+                <!--<include name="src/war/WEB-INF/web*.template.xml"/>-->
+            </fileset>
         </jar>
     </target>
 
@@ -74,6 +169,7 @@
             <include name="conf/**/*"/>
             <include name="scripts/**/*"/>
             <include name="src/griffon/templates/scaffolding/**/*"/>
+            <!--<include name="src/war/WEB-INF/**/*"/>-->
         </patternset>
 
         <delete failonerror="true">
@@ -116,4 +212,65 @@
         </unzip>
     </target>
 
+
+    <!--<target name="-mavenPomDefinitions">-->
+        <!--<property name="pom.source.dir" value="${basedir}/maven"/>-->
+        <!--<property name="pom.target.dir" value="${griffon.target}/poms"/>-->
+
+        <!-- Clear any existing POMs out of the way first -->
+        <!--<delete dir="${pom.target.dir}"/>-->
+
+        <!-- Copy the template POMs over to a target directory, inserting the Griffon version -->
+        <!--<copy todir="${pom.target.dir}">-->
+            <!--<fileset dir="${pom.source.dir}" includes="*.pom.in"/>-->
+            <!--<filterset>-->
+                <!--<filter token="griffon.version" value="${griffon.version}"/>-->
+            <!--</filterset>-->
+            <!--<globmapper from="*.in" to="*"/>-->
+        <!--</copy>-->
+
+        <!--<maven.pom dir="${pom.target.dir}" id="griffon.pom"/>-->
+        <!--<maven.pom dir="${pom.target.dir}" id="griffon-bootstrap.pom"/>-->
+        <!--<maven.pom dir="${pom.target.dir}" id="griffon-core.pom"/>-->
+        <!--<maven.pom dir="${pom.target.dir}" id="griffon-crud.pom"/>-->
+        <!--<maven.pom dir="${pom.target.dir}" id="griffon-gorm.pom"/>-->
+        <!--<maven.pom dir="${pom.target.dir}" id="griffon-resources.pom"/>-->
+        <!--<maven.pom dir="${pom.target.dir}" id="griffon-scripts.pom"/>-->
+        <!--<maven.pom dir="${pom.target.dir}" id="griffon-spring.pom"/>-->
+        <!--<maven.pom dir="${pom.target.dir}" id="griffon-test.pom"/>-->
+        <!--<maven.pom dir="${pom.target.dir}" id="griffon-web.pom"/>-->
+        <!--<maven.pom dir="${pom.target.dir}" id="griffon-webflow.pom"/>-->
+    <!--</target>-->
+
+    <!--<target name="maven-install"-->
+            <!--depends="jar,-mavenInit"-->
+            <!--description="Installs the Griffon artifacts in the local Maven repository.">-->
+        <!--<mavenInstallRepo version="${griffon.version}" prefix="griffon"/>-->
+        <!--<mavenInstallRepo version="${griffon.version}" prefix="griffon-bootstrap"/>-->
+        <!--<mavenInstallRepo version="${griffon.version}" prefix="griffon-core"/>-->
+        <!--<mavenInstallRepo version="${griffon.version}" prefix="griffon-crud"/>-->
+        <!--<mavenInstallRepo version="${griffon.version}" prefix="griffon-gorm"/>-->
+        <!--<mavenInstallRepo version="${griffon.version}" prefix="griffon-resources"/>-->
+        <!--<mavenInstallRepo version="${griffon.version}" prefix="griffon-scripts"/>-->
+        <!--<mavenInstallRepo version="${griffon.version}" prefix="griffon-spring"/>-->
+        <!--<mavenInstallRepo version="${griffon.version}" prefix="griffon-test"/>-->
+        <!--<mavenInstallRepo version="${griffon.version}" prefix="griffon-web"/>-->
+        <!--<mavenInstallRepo version="${griffon.version}" prefix="griffon-webflow"/>-->
+    <!--</target>-->
+
+    <!--<target name="maven-deploy"-->
+            <!--depends="jar,-mavenDeployInit"-->
+            <!--description="Installs the Griffon artifacts in the appropriate remote Codehaus repository.">-->
+        <!--<mavenDeploy version="${griffon.version}" prefix="griffon"/>-->
+        <!--<mavenDeploy version="${griffon.version}" prefix="griffon-bootstrap"/>-->
+        <!--<mavenDeploy version="${griffon.version}" prefix="griffon-core"/>-->
+        <!--<mavenDeploy version="${griffon.version}" prefix="griffon-crud"/>-->
+        <!--<mavenDeploy version="${griffon.version}" prefix="griffon-gorm"/>-->
+        <!--<mavenDeploy version="${griffon.version}" prefix="griffon-resources"/>-->
+        <!--<mavenDeploy version="${griffon.version}" prefix="griffon-scripts"/>-->
+        <!--<mavenDeploy version="${griffon.version}" prefix="griffon-spring"/>-->
+        <!--<mavenDeploy version="${griffon.version}" prefix="griffon-test"/>-->
+        <!--<mavenDeploy version="${griffon.version}" prefix="griffon-web"/>-->
+        <!--<mavenDeploy version="${griffon.version}" prefix="griffon-webflow"/>-->
+    <!--</target>-->
 </project>

@@ -16,7 +16,9 @@
 package org.codehaus.griffon.plugins;
 
 //import griffon.spring.BeanBuilder;
-//import griffon.util.GriffonUtil;
+import org.codehaus.griffon.util.GriffonUtil;
+import org.codehaus.griffon.util.BuildSettingsHolder;
+import org.codehaus.griffon.util.BuildSettings;
 import groovy.lang.*;
 import groovy.util.slurpersupport.GPathResult;
 import org.apache.commons.lang.ArrayUtils;
@@ -27,7 +29,6 @@ import org.apache.commons.logging.LogFactory;
 import org.codehaus.griffon.commons.GriffonContext;
 import org.codehaus.griffon.commons.GriffonClassUtils;
 import org.codehaus.griffon.commons.GriffonResourceUtils;
-import org.codehaus.griffon.commons.GriffonUtil;
 //import org.codehaus.griffon.commons.spring.RuntimeSpringConfiguration;
 //import org.codehaus.griffon.compiler.GriffonClassLoader;
 //import org.codehaus.griffon.compiler.support.GriffonResourceLoader;
@@ -55,7 +56,7 @@ import java.util.*;
  * @since 0.4
  *
  */
-public class DefaultGriffonPlugin extends AbstractGriffonPlugin implements GriffonPlugin /*, ParentApplicationContextAware*/ {
+public class DefaultGriffonPlugin extends AbstractGriffonPlugin implements GriffonPlugin/*, ParentApplicationContextAware*/ {
 
     private static final String PLUGIN_CHANGE_EVENT_CTX = "ctx";
     private static final String PLUGIN_CHANGE_EVENT_APPLICATION = "application";
@@ -499,7 +500,7 @@ public class DefaultGriffonPlugin extends AbstractGriffonPlugin implements Griff
             if(LOG.isDebugEnabled())
                 LOG.debug("Checking modified for resource " + r);
 
-            long lastModified = r.getFile().lastModified(); // spring upgrade would fix it
+            long lastModified = r.lastModified();
 
             if( previousModifiedTime < lastModified ) {
                 return lastModified;
@@ -613,18 +614,13 @@ public class DefaultGriffonPlugin extends AbstractGriffonPlugin implements Griff
         // here we touch the classes directory if the file is abstract to force the Griffon server
         // to restart the web application
         try {
-            String classesDir = System.getProperty(GriffonContext.PROJECT_CLASSES_DIR);
-            File classesFile = null;
-            if(!StringUtils.isBlank(classesDir)) {
-                classesFile = new File(classesDir);
-            }
-            else {
-
+            BuildSettings settings = BuildSettingsHolder.getSettings();
+            File classesDir = settings != null ? settings.getClassesDir() : null;
+            if(classesDir == null) {
                 Resource r = this.applicationContext.getResource("/WEB-INF/classes");
-                classesFile = r.getFile();
-
+                classesDir = r.getFile();
             }
-            classesFile.setLastModified(System.currentTimeMillis());
+            classesDir.setLastModified(System.currentTimeMillis());
         } catch (IOException e) {
             LOG.error("Error retrieving /WEB-INF/classes directory: " + e.getMessage(),e);
         }

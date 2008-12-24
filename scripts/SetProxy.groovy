@@ -22,18 +22,15 @@
  * @since 0.5.5
  */
 
-defaultTarget("Sets HTTP proxy configuration for Griffon") {
-   depends(configureProxy)
-   setProxy()
-}
+includeTargets << griffonScript("_GriffonEvents")
+includeTargets << griffonScript("_GriffonProxy")
 
-includeTargets << griffonScript("Init" )
-
-target(setProxy:"Implementation target") {
-    Ant.mkdir( dir:"${userHome}/.griffon/scripts" )
+target(setProxy:"Sets HTTP proxy configuration for Griffon") {
+    depends(configureProxy)
+    ant.mkdir( dir:"${userHome}/.griffon/scripts" )
     def scriptFile = new File("${userHome}/.griffon/scripts/ProxyConfig.groovy")
-    Ant.input(addProperty:"proxy.use", message:"Do you wish to use HTTP proxy?",validargs:'y,n',defaultvalue:'y')
-    if( Ant.antProject.properties."proxy.use" == 'n' ) {
+    ant.input(addProperty:"proxy.use", message:"Do you wish to use HTTP proxy?",validargs:'y,n',defaultvalue:'y')
+    if( ant.antProject.properties."proxy.use" == 'n' ) {
         scriptFile.delete()
         event("StatusFinal", [ "Griffon is configured to not use HTTP proxy"])
     } else {
@@ -41,13 +38,15 @@ target(setProxy:"Implementation target") {
         def proxyPort = System.getProperty("http.proxyPort") ? System.getProperty("http.proxyPort") : '80'
         def proxyUser = System.getProperty("http.proxyUserName") ? System.getProperty("http.proxyUserName") : ''
         def proxyPassword = System.getProperty("http.proxyPassword") ? System.getProperty("http.proxyPassword") : ''
-        Ant.input(addProperty:"proxy.host", message:"Enter HTTP proxy host [${proxyHost}]: ",defaultvalue:proxyHost)
-        Ant.input(addProperty:"proxy.port", message:"Enter HTTP proxy port [${proxyPort}]: ",defaultvalue:proxyPort)
-        Ant.input(addProperty:"proxy.user", message:"Enter HTTP proxy username [${proxyUser}]: ",defaultvalue:proxyUser)
-        Ant.input(addProperty:"proxy.password", message:"Enter HTTP proxy password [${proxyPassword}]: ",defaultvalue:proxyPassword)
+        ant.input(addProperty:"proxy.host", message:"Enter HTTP proxy host [${proxyHost}]: ",defaultvalue:proxyHost)
+        ant.input(addProperty:"proxy.port", message:"Enter HTTP proxy port [${proxyPort}]: ",defaultvalue:proxyPort)
+        ant.input(addProperty:"proxy.user", message:"Enter HTTP proxy username [${proxyUser}]: ",defaultvalue:proxyUser)
+        ant.input(addProperty:"proxy.password", message:"Enter HTTP proxy password [${proxyPassword}]: ",defaultvalue:proxyPassword)
         scriptFile.delete()
         scriptFile << "// This file is generated automatically with 'griffon set-proxy' command\n"
-        scriptFile << "proxyConfig = [proxyHost:'${Ant.antProject.properties.'proxy.host'}',proxyPort:'${Ant.antProject.properties.'proxy.port'}',proxyUser:'${Ant.antProject.properties.'proxy.user'}',proxyPassword:'${Ant.antProject.properties.'proxy.password'}']"
+        scriptFile << "proxyConfig = [proxyHost:'${ant.antProject.properties.'proxy.host'}',proxyPort:'${ant.antProject.properties.'proxy.port'}',proxyUser:'${ant.antProject.properties.'proxy.user'}',proxyPassword:'${ant.antProject.properties.'proxy.password'}']"
         event("StatusFinal", [ "Griffon is configured to use HTTP proxy"])
     }
 }
+
+setDefaultTarget(setProxy)

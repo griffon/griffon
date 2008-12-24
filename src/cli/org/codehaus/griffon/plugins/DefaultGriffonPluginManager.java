@@ -26,7 +26,7 @@ import org.apache.commons.logging.LogFactory;
 import org.codehaus.groovy.control.CompilationFailedException;
 //import org.codehaus.griffon.commons.ConfigurationHolder;
 import org.codehaus.griffon.commons.GriffonContext;
-import org.codehaus.griffon.commons.GriffonUtil;
+import org.codehaus.griffon.util.GriffonUtil;
 //import org.codehaus.griffon.commons.spring.WebRuntimeSpringConfiguration;
 import org.codehaus.griffon.plugins.exceptions.PluginException;
 //import org.codehaus.griffon.support.ParentApplicationContextAware;
@@ -104,7 +104,7 @@ public class DefaultGriffonPluginManager extends AbstractGriffonPluginManager im
 
     private long configLastModified;
     private PluginFilter pluginFilter;
-    private static final String GRAILS_PLUGIN_SUFFIX = "GriffonPlugin";
+    private static final String GRIFFON_PLUGIN_SUFFIX = "GriffonPlugin";
 
     public DefaultGriffonPluginManager(String resourcePath, GriffonContext application) throws IOException {
           super(application);
@@ -350,7 +350,7 @@ public class DefaultGriffonPluginManager extends AbstractGriffonPluginManager im
   }
 
     private boolean isGriffonPlugin(Class pluginClass) {
-        return pluginClass != null && pluginClass.getName().endsWith(GRAILS_PLUGIN_SUFFIX);
+        return pluginClass != null && pluginClass.getName().endsWith(GRIFFON_PLUGIN_SUFFIX);
     }
 
     private void processDelayedEvictions() {

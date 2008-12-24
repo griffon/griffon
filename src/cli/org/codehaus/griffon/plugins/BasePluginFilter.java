@@ -49,7 +49,7 @@ public abstract class BasePluginFilter implements PluginFilter {
 	private final List derivedPlugins = new ArrayList();
 
 	/**
-	 * Holds a name to GrailsPlugin map (String, Plugin)
+	 * Holds a name to GriffonPlugin map (String, Plugin)
 	 */
 	protected Map nameMap;
 

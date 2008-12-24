@@ -23,23 +23,17 @@
 import org.codehaus.griffon.commons.ConfigurationHolder
 
 
-defaultTarget("Runs the applet from Java WebStart") {
-    depends(checkVersion)
-    runApp()
-}
-
 includeTargets << griffonScript("Package")
 includeTargets << griffonScript("_PackagePlugins" )
 
-
 target(tweakConfig:' tweaks for webstart') {
-    ConfigurationHolder.config.griffon.jars.sign = true
+    configTweaks << { config.griffon.jars.sign = true }
 }
-target(runApp: "Runs the action Applet") {
-    depends(createConfig, tweakConfig, packageApp)
+target(runApplet: "Runs the applet from Java WebStart") {
+    depends(checkVersion, tweakConfig, createConfig, packageApp)
 
     // calculate the needed jars
-    File jardir = new File(Ant.antProject.replaceProperties(config.griffon.jars.destDir))
+    File jardir = new File(ant.antProject.replaceProperties(config.griffon.jars.destDir))
     runtimeJars = []
     jardir.eachFileMatch(~/.*\.jar/) {f ->
         runtimeJars += f
@@ -60,3 +54,5 @@ target(runApp: "Runs the action Applet") {
     // wait for it.... wait for it...
     p.waitFor()
 }
+
+setDefaultTarget(runApplet)

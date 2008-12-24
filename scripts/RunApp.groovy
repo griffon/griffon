@@ -21,20 +21,14 @@
  */
 
 
-defaultTarget("Runs the application from the command line") {
-    depends(checkVersion, configureProxy)
-    runApp()
-}
-
 includeTargets << griffonScript("Package")
 includeTargets << griffonScript("_PackagePlugins" )
 
-
-target(runApp: "Does the actual command line execution") {
-    depends(packageApp)
+target(runApp: "Runs the application from the command line") {
+    depends(checkVersion, configureProxy, packageApp)
 
     // calculate the needed jars
-    File jardir = new File(Ant.antProject.replaceProperties(config.griffon.jars.destDir))
+    File jardir = new File(ant.antProject.replaceProperties(config.griffon.jars.destDir))
     runtimeJars = []
     jardir.eachFileMatch(~/.*\.jar/) {f ->
         runtimeJars += f
@@ -54,3 +48,5 @@ target(runApp: "Does the actual command line execution") {
     // wait for it.... wait for it...
     p.waitFor()
 }
+
+setDefaultTarget(runApp)

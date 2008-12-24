@@ -1,4 +1,4 @@
-/* Copyright 2004-2008 the original author or authors.
+/* Copyright 2004-2005 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -12,15 +12,36 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.codehaus.griffon.commons;
+package org.codehaus.griffon.util;
 
+import groovy.lang.Binding;
+import groovy.lang.GroovyShell;
+import groovy.lang.Writable;
+import groovy.util.slurpersupport.GPathResult;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+//import org.codehaus.griffon.commons.ApplicationAttributes;
+//import org.codehaus.griffon.commons.ApplicationHolder;
+//import org.codehaus.griffon.commons.DefaultGriffonContext;
+//import org.codehaus.griffon.commons.GriffonContext;
+//import org.codehaus.griffon.commons.spring.GriffonRuntimeConfigurator;
+//import org.codehaus.griffon.support.MockApplicationContext;
+//import org.codehaus.griffon.support.MockResourceLoader;
+//import org.springframework.context.ApplicationContext;
+//import org.springframework.context.ConfigurableApplicationContext;
+//import org.springframework.context.support.ClassPathXmlApplicationContext;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
+//import org.springframework.mock.web.MockServletContext;
+//import org.springframework.util.Assert;
+//import org.codehaus.griffon.util.BuildSettings;
+import org.codehaus.griffon.commons.GriffonContext;
+import org.codehaus.griffon.commons.GriffonContextHolder;
+import org.codehaus.groovy.runtime.StackTraceUtils;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.io.Writer;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -35,21 +56,22 @@ import java.util.jar.Manifest;
  * @author Graeme Rocher
  * @since 0.2
  *
- * @version $Revision: 6888 $
+ * @version $Revision: 7651 $
  * First Created: 02-Jun-2006
- * Last Updated: $Date: 2008-04-11 04:58:09 -0600 (Fri, 11 Apr 2008) $
+ * Last Updated: $Date: 2008-11-17 04:43:26 -0700 (Mon, 17 Nov 2008) $
  *
  */
 public class GriffonUtil {
 
-    private static final Log LOG  = LogFactory.getLog(GriffonUtil.class);
+	private static final Log LOG  = LogFactory.getLog(GriffonUtil.class);
     private static final Log STACK_LOG  = LogFactory.getLog("StackTrace");
-    private static final String GRIFFON_IMPLEMENTATION_TITLE = "Griffon";
+    private static final String GRIFFON_IMPLEMENTATION_TITLE = "griffon-rt";
     private static final String GRIFFON_VERSION;
     private static final String[] GRIFFON_PACKAGES = new String[] {
             "org.codehaus.griffon.",
             "org.codehaus.groovy.runtime.",
             "org.codehaus.groovy.reflection.",
+            "org.codehaus.groovy.ast.",
             "org.codehaus.gant.",
             "griffon.",
             "groovy.",
@@ -68,7 +90,8 @@ public class GriffonUtil {
         try {
             Resource[] manifests = resolver.getResources("classpath*:META-INF/MANIFEST.MF");
             Manifest griffonManifest = null;
-            for (Resource r : manifests) {
+            for (int i = 0; i < manifests.length; i++) {
+                Resource r = manifests[i];
                 Manifest mf = new Manifest(r.getInputStream());
                 String implTitle = mf.getMainAttributes().getValue(Attributes.Name.IMPLEMENTATION_TITLE);
                 if (!isBlank(implTitle) && implTitle.equals(GRIFFON_IMPLEMENTATION_TITLE)) {
@@ -87,6 +110,7 @@ public class GriffonUtil {
             }
         } catch (IOException e) {
             version = "Unknown";
+            StackTraceUtils.deepSanitize(e).printStackTrace();            
             LOG.error("Unable to read Griffon version from MANIFEST.MF. Are you sure it the griffon-core jar is on the classpath? " + e.getMessage(), e);
         }
 
@@ -97,31 +121,30 @@ public class GriffonUtil {
     private static final String DEVELOPMENT_ENVIRONMENT_SHORT_NAME = "dev";
     private static final String TEST_ENVIRONMENT_SHORT_NAME = "test";
 
-    private static Map<String, String> envNameMappings = new HashMap<String, String>();
-    static {
-        envNameMappings.put(DEVELOPMENT_ENVIRONMENT_SHORT_NAME, GriffonContext.ENV_DEVELOPMENT);
-        envNameMappings.put(PRODUCTION_ENV_SHORT_NAME, GriffonContext.ENV_PRODUCTION);
-        envNameMappings.put(TEST_ENVIRONMENT_SHORT_NAME, GriffonContext.ENV_TEST);
-    }
+    private static Map envNameMappings = new HashMap() {{
+        put(DEVELOPMENT_ENVIRONMENT_SHORT_NAME, BuildSettings.ENV_DEVELOPMENT);
+        put(PRODUCTION_ENV_SHORT_NAME, BuildSettings.ENV_PRODUCTION);
+        put(TEST_ENVIRONMENT_SHORT_NAME, BuildSettings.ENV_TEST);
+    }};
 
 
     /**
      * <p>Bootstraps a Griffon application from the current classpath. The method will look for an applicationContext.xml file in the classpath
-     * that must contain a bean of type GriffonApplication and id griffonApplication
+     * that must contain a bean of type GriffonContext and id GriffonContext
      *
-     * <p>The method will then bootstrap Griffon with the GriffonApplication and load all Griffon plug-ins found in the path
+     * <p>The method will then bootstrap Griffon with the GriffonContext and load all Griffon plug-ins found in the path
      *
      * @return The Griffon ApplicationContext instance
      */
 //    public static ApplicationContext bootstrapGriffonFromClassPath() {
-//        LOG.info("Loading Griffon environment");
-//        ApplicationContext parent = new ClassPathXmlApplicationContext("applicationContext.xml");
-//        DefaultGriffonContext application = (DefaultGriffonContext)parent.getBean("griffonApplication", DefaultGriffonContext.class);
+//		LOG.info("Loading Griffon environment");
+//		ApplicationContext parent = new ClassPathXmlApplicationContext("applicationContext.xml");
+//		DefaultGriffonContext application = (DefaultGriffonContext)parent.getBean("GriffonContext", DefaultGriffonContext.class);
 //
-//        return createGriffonApplicationContext(parent, application);
-//    }
+//        return createGriffonContextContext(parent, application);
+//	}
 
-//    private static ApplicationContext createGriffonApplicationContext(ApplicationContext parent, GriffonContext application) {
+//    private static ApplicationContext createGriffonContextContext(ApplicationContext parent, GriffonContext application) {
 //        GriffonRuntimeConfigurator config = new GriffonRuntimeConfigurator(application,parent);
 //        MockServletContext servletContext = new MockServletContext(new MockResourceLoader());
 //        ConfigurableApplicationContext appCtx = (ConfigurableApplicationContext)config.configure(servletContext);
@@ -131,27 +154,27 @@ public class GriffonUtil {
 //    }
 
     /**
-     * Bootstraps Griffon with the given GriffonApplication instance
+     * Bootstraps Griffon with the given GriffonContext instance
      *
-     * @param application The GriffonApplication instance
+     * @param application The GriffonContext instance
      * @return A Griffon ApplicationContext
      */
 //    public static ApplicationContext bootstrapGriffonFromApplication(GriffonContext application) {
 //        MockApplicationContext parent = new MockApplicationContext();
 //        parent.registerMockBean(GriffonContext.APPLICATION_ID, application);
 //
-//        return createGriffonApplicationContext(parent, application);
+//        return createGriffonContextContext(parent, application);
 //    }
 
-    /**
-     * Bootstraps Griffon from the given parent ApplicationContext which should contain a bean definition called "griffonApplication"
-     * of type GriffonApplication
-     */
-//    public static ApplicationContext bootstrapGriffonFromParentContext(ApplicationContext parent) {
-//        DefaultGriffonContext application = (DefaultGriffonContext)parent.getBean("griffonApplication", DefaultGriffonContext.class);
+	/**
+	 * Bootstraps Griffon from the given parent ApplicationContext which should contain a bean definition called "GriffonContext"
+	 * of type GriffonContext
+	 */
+//	public static ApplicationContext bootstrapGriffonFromParentContext(ApplicationContext parent) {
+//		DefaultGriffonContext application = (DefaultGriffonContext)parent.getBean("GriffonContext", DefaultGriffonContext.class);
 //
-//        return createGriffonApplicationContext(parent, application);
-//    }
+//        return createGriffonContextContext(parent, application);
+//	}
 
 
     /**
@@ -160,34 +183,29 @@ public class GriffonUtil {
      * @return The environment Griffon is executing under
      */
     public static String getEnvironment() {
-        GriffonContext app = null; //ApplicationHolder.getApplication();
+        GriffonContext app = GriffonContextHolder.getGriffonContext();
 
 
         String envName = null;
-        //noinspection ConstantConditions
         if(app!=null) {
             Map metadata = app.getMetadata();
             if(metadata!=null)
-                envName = (String)metadata.get(GriffonContext.ENVIRONMENT);
+                envName = (String)metadata.get(BuildSettings.ENVIRONMENT);
         }
         if(isBlank(envName))
-            envName = System.getProperty(GriffonContext.ENVIRONMENT);
+            envName = System.getProperty(BuildSettings.ENVIRONMENT);
 
         if(isBlank(envName)) {
-            return GriffonContext.ENV_DEVELOPMENT;
+            return BuildSettings.ENV_DEVELOPMENT;
         }
         else {
             if(envNameMappings.containsKey(envName)) {
-                return envNameMappings.get(envName);
+                return (String)envNameMappings.get(envName);
             }
             else {
                 return envName;
             }
         }
-    }
-
-    private static boolean isBlank(String value) {
-        return value == null || value.length() == 0;
     }
 
     /**
@@ -196,12 +214,16 @@ public class GriffonUtil {
      * @return True if it is the development environment
      */
     public static boolean isDevelopmentEnv() {
-        return GriffonContext.ENV_DEVELOPMENT.equals(GriffonUtil.getEnvironment());
+        return BuildSettings.ENV_DEVELOPMENT.equals(GriffonUtil.getEnvironment());
     }
 
 
     public static String getGriffonVersion() {
         return GRIFFON_VERSION;
+    }
+
+    public static boolean isBlank(String value) {
+        return value == null || value.trim().length() == 0;
     }
 
     /**
@@ -211,7 +233,7 @@ public class GriffonUtil {
      * @param methodOrPropName Name of deprecated property or method
      */
     public static void deprecated(Class clazz, String methodOrPropName ) {
-        deprecated(clazz, methodOrPropName, getGriffonVersion());
+    	deprecated(clazz, methodOrPropName, getGriffonVersion());
     }
 
     /**
@@ -221,11 +243,10 @@ public class GriffonUtil {
      * @param methodOrPropName Name of deprecated property or method
      * @param version Version of Griffon release in which property or method were deprecated
      */
-    @SuppressWarnings({"UnusedDeclaration"})
     public static void deprecated(Class clazz, String methodOrPropName, String version ) {
-        deprecated("Property or method [" + methodOrPropName + "] of class [" + clazz.getName() +
-                "] is deprecated in [" + getGriffonVersion() +
-                "] and will be removed in future releases");
+    	deprecated("Property or method [" + methodOrPropName + "] of class [" + clazz.getName() +
+    			"] is deprecated in [" + version +
+    			"] and will be removed in future releases");
     }
 
     /**
@@ -234,7 +255,7 @@ public class GriffonUtil {
      * @param message Message to display
      */
     public static void deprecated(String message) {
-        LOG.warn("[DEPRECATED] " + message);
+    	LOG.warn("[DEPRECATED] " + message);
     }
 
     /**
@@ -243,14 +264,14 @@ public class GriffonUtil {
      * @param message Message to display
      */
     public static void warn(String message) {
-        LOG.warn("[WARNING] " + message);
+    	LOG.warn("[WARNING] " + message);
     }
 
 
     /**
      * <p>Remove all apparently Griffon-internal trace entries from the exception instance<p>
      * <p>This modifies the original instance and returns it, it does not clone</p>
-     * @param t the throwable to sanitize
+     * @param t
      * @return The exception passed in, after cleaning the stack trace
      */
     public static Throwable sanitize(Throwable t) {
@@ -258,9 +279,10 @@ public class GriffonUtil {
         if (!Boolean.valueOf(System.getProperty("griffon.full.stacktrace"))) {
             StackTraceElement[] trace = t.getStackTrace();
             List<StackTraceElement> newTrace = new ArrayList<StackTraceElement>();
-            for (StackTraceElement stackTraceElement : trace) {
+            for (int i = 0; i < trace.length; i++) {
+                StackTraceElement stackTraceElement = trace[i];
                 if (isApplicationClass(stackTraceElement.getClassName())) {
-                    newTrace.add(stackTraceElement);
+                    newTrace.add( stackTraceElement);
                 }
             }
 
@@ -278,13 +300,14 @@ public class GriffonUtil {
     }
 
     public static void printSanitizedStackTrace(Throwable t, PrintWriter p) {
-        t = GriffonUtil.sanitize(t);
+        t = sanitize(t);
 
         StackTraceElement[] trace = t.getStackTrace();
-        for (StackTraceElement stackTraceElement : trace) {
-            p.println("at " + stackTraceElement.getClassName()
-                    + "(" + stackTraceElement.getMethodName()
-                    + ":" + stackTraceElement.getLineNumber() + ")");
+        for (int i = 0; i < trace.length; i++) {
+            StackTraceElement stackTraceElement = trace[i];
+            p.println(  "at "+stackTraceElement.getClassName()
+                        +"("+stackTraceElement.getMethodName()
+                        +":"+stackTraceElement.getLineNumber()+")");
         }
     }
 
@@ -293,7 +316,8 @@ public class GriffonUtil {
     }
 
     public static boolean isApplicationClass(String className) {
-        for (String griffonPackage : GRIFFON_PACKAGES) {
+        for (int i = 0; i < GRIFFON_PACKAGES.length; i++) {
+            String griffonPackage = GRIFFON_PACKAGES[i];
             if (className.startsWith(griffonPackage)) {
                 return false;
             }
@@ -321,20 +345,40 @@ public class GriffonUtil {
      * @return The root cause exception instance, with its stace trace modified to filter out griffon runtime classes
      */
     public static Throwable sanitizeRootCause(Throwable t) {
-        return GriffonUtil.sanitize(GriffonUtil.extractRootCause(t));
+        return sanitize(extractRootCause(t));
     }
 
     /**
      * <p>Sanitize the exception and ALL nested causes</p>
      * <p>This will MODIFY the stacktrace of the exception instance and all its causes irreversibly</p>
-     * @param t the throwable to sanitize
+     * @param t
      * @return The root cause exception instances, with stack trace modified to filter out griffon runtime classes
      */
     public static Throwable deepSanitize(Throwable t) {
         Throwable current = t;
         while (current.getCause() != null) {
-            current = GriffonUtil.sanitize(current.getCause());
+            current = sanitize(current.getCause());
         }
-        return GriffonUtil.sanitize(t);
+        return sanitize(t);
+    }
+
+    /**
+     * Writes out a GPathResult (i.e. the result of parsing XML using
+     * XmlSlurper) to the given writer.
+     * @param result The root node of the XML to write out.
+     * @param output Where to write the XML to.
+     * @throws java.io.IOException If the writing fails due to a closed stream
+     * or unwritable file.
+     */
+    public static void writeSlurperResult(GPathResult result, Writer output) throws IOException {
+        Binding b = new Binding();
+        b.setVariable("node", result);
+        // this code takes the XML parsed by XmlSlurper and writes it out using StreamingMarkupBuilder
+        // don't ask me how it works, refer to John Wilson ;-)
+        Writable w = (Writable)new GroovyShell(b).evaluate(
+                "new groovy.xml.StreamingMarkupBuilder().bind {" +
+                        " mkp.declareNamespace(\"\":  \"http://java.sun.com/xml/ns/j2ee\");" +
+                        " mkp.yield node}");
+        w.writeTo(output);
     }
 }

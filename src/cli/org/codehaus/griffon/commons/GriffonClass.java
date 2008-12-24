@@ -19,7 +19,7 @@ import groovy.lang.MetaClass;
 //import org.springframework.beans.BeanWrapper;
 
 /**
- * <p>This interface represents any class in a Grails application.
+ * <p>This interface represents any class in a Griffon application.
  *
  * @author Steven Devijver
  * @author Graeme Rocher
@@ -103,7 +103,7 @@ public interface GriffonClass {
     public String getPackageName();
 
     /**
-     * <p> Returns the actual clazz represented by the GrailsClass</p>
+     * <p> Returns the actual clazz represented by the GriffonClass</p>
      *
      * @return the class
      */
@@ -111,7 +111,7 @@ public interface GriffonClass {
 
     /**
      *
-     * @return The MetaClass for this Grails class
+     * @return The MetaClass for this Griffon class
      */
     public MetaClass getMetaClass();
 

@@ -34,7 +34,7 @@ target(configureProxy: "The implementation target") {
             def proxyUser = proxyConfig.proxyUser ? proxyConfig.proxyUser : ''
             def proxyPassword = proxyConfig.proxyPassword ? proxyConfig.proxyPassword : ''
             println "Configured HTTP proxy: ${proxyHost}:${proxyPort}${proxyConfig.proxyUser ? '(' + proxyUser + ')' : ''}"
-            // ... for Ant. We can remove this line with Ant 1.7.0 as it uses system properties.
+            // ... for ant. We can remove this line with ant 1.7.0 as it uses system properties.
             ant.setproxy(proxyhost: proxyHost, proxyport: proxyPort, proxyuser: proxyUser, proxypassword: proxyPassword)
 
             proxySettings += "-Dproxy.host=$proxyHost "

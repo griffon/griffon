@@ -1,5 +1,5 @@
 /*
- * Copyright 2004-2008 the original author or authors.
+ * Copyright 2004-2005 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,64 +15,12 @@
  */
 
 /**
- * Gant script that handles the installation of Griffon plugins
+ * Gant script that handles the removal of Griffon plugins from a project.
  *
  * @author Graeme Rocher
- * @author Peter Ledbrook
- * @author Danno Ferrin
  *
+ * @since 1.1
  */
+includeTargets << griffonScript("_GriffonPlugins")
 
-defaultTarget("Uninstalls a plug-in for a given name") {
-    uninstallPlugin()
-}
-
-includeTargets << griffonScript("Clean")
-
-globalInstall = false
-
-target(uninstallPlugin:"Uninstalls a plug-in for a given name") {
-    depends(checkVersion, parseArguments, clean)
-
-    if(argsMap['global']) {
-        globalInstall = true
-    }
-
-    def pluginArgs = argsMap['params']
-    if(pluginArgs) {
-
-        def pluginName = pluginArgs[0]
-        def pluginRelease = pluginArgs[1]
-
-        String pluginKey = "plugins.$pluginName"
-        metadata.remove(pluginKey)
-        metadataFile.withOutputStream { out ->
-            metadata.store out,'utf-8'
-        }
-
-
-        def pluginDir
-        if(pluginName && pluginRelease) {
-            pluginDir = new File("${pluginsDirPath}/$pluginName-$pluginRelease")
-        }
-        else {
-            pluginDir = getPluginDirForName(pluginName)?.file
-        }
-        if(pluginDir?.exists()) {
-
-            def uninstallScript = new File("${pluginDir}/scripts/_Uninstall.groovy")
-            runPluginScript(uninstallScript, pluginDir.name, "uninstall script")
-
-            Ant.delete(dir:pluginDir, failonerror:true)
-
-        }
-        else {
-            event("StatusError", ["No plug-in [$pluginName${pluginRelease ? '-' + pluginRelease : ''}] installed, cannot uninstall"])
-        }
-    }
-    else {
-        event("StatusError", ["You need to specify the plug-in name and (optional) version, e.g. \"griffon uninstall-plugin feeds 1.0\""])
-    }
-
-}
-
+setDefaultTarget("uninstallPlugin")

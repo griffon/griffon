@@ -1,47 +1,44 @@
-import org.codehaus.groovy.tools.shell.Groovysh
-import org.codehaus.groovy.tools.shell.IO
-
 /*
-* Copyright 2004-2008 the original author or authors.
-*
-* Licensed under the Apache License, Version 2.0 (the "License");
-* you may not use this file except in compliance with the License.
-* You may obtain a copy of the License at
-*
-*      http://www.apache.org/licenses/LICENSE-2.0
-*
-* Unless required by applicable law or agreed to in writing, software
-* distributed under the License is distributed on an "AS IS" BASIS,
-* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-* See the License for the specific language governing permissions and
-* limitations under the License.
-*/
+ * Copyright 2004-2008 the original author or authors.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 
 /**
  * Gant script that loads the Griffon interactive shell
- * 
+ *
  * @author Graeme Rocher
  *
  * @since 0.4
  */
 
-defaultTarget("Load the Griffon interactive shell") {
+//import org.codehaus.groovy.griffon.support.*
+import org.codehaus.groovy.tools.shell.*
+
+includeTargets << griffonScript("_GriffonBootstrap")
+
+target ('default': "Load the Griffon interactive shell") {
 	depends( configureProxy, packageApp )
-        jardir = Ant.antProject.replaceProperties(config.griffon.jars.destDir)
-        Ant.copy(todir:jardir) { fileset(dir:"${griffonHome}/lib/", includes:"jline-*.jar") }
-        classpath()
+    jardir = ant.antProject.replaceProperties(config.griffon.jars.destDir)
+    ant.copy(todir:jardir) { fileset(dir:"${griffonHome}/lib/", includes:"jline-*.jar") }
+    classpath()
 	shell()
 }
 
-//import org.codehaus.griffon.commons.GriffonClassUtils as GCU
-//import groovy.text.SimpleTemplateEngine   
-//import org.codehaus.griffon.support.*
-includeTargets << griffonScript("Bootstrap" )
-
 target(shell:"The shell implementation target") {
 
-    classLoader = new URLClassLoader([classesDir.toURL()] as URL[], rootLoader)
-    Thread.currentThread().setContextClassLoader(classLoader)    
+//    classLoader = new URLClassLoader([classesDir.toURI().toURL()] as URL[], rootLoader)
+//    Thread.currentThread().setContextClassLoader(classLoader)
     loadApp()
     configureApp()
     def b = new Binding()
@@ -68,6 +65,6 @@ target(shell:"The shell implementation target") {
 //        }
 //    }
 
-    sh = new Groovysh(classLoader,b, new IO(System.in, System.out, System.err))
-    sh.run([] as String[])
+    def shell = new Groovysh(classLoader,b, new IO(System.in, System.out, System.err))
+	shell.run([] as String[])
 }

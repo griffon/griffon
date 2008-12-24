@@ -1,23 +1,22 @@
 package org.codehaus.griffon.cli
 
-import org.codehaus.groovy.tools.LoaderConfiguration
-import org.codehaus.groovy.tools.RootLoader
-import org.codehaus.groovy.tools.LoaderConfiguration
-import org.codehaus.griffon.plugins.PluginManagerHolder
-import org.codehaus.griffon.commons.GriffonContext
-import org.codehaus.griffon.plugins.GriffonPluginUtils
-import org.codehaus.gant.GantBinding
 import gant.Gant
-import org.codehaus.griffon.commons.GriffonUtil
+import org.codehaus.griffon.util.BuildSettings
+import org.codehaus.griffon.util.BuildSettingsHolder
+import org.codehaus.gant.GantBinding
+import org.codehaus.griffon.cli.support.GriffonRootLoader
 import org.codehaus.griffon.commons.ConfigurationHolder
-
-//import org.codehaus.griffon.plugins.PluginManagerHolder
+import org.codehaus.griffon.plugins.GriffonPluginUtils
+import org.codehaus.griffon.plugins.PluginManagerHolder
 
 abstract class AbstractCliTests extends GroovyTestCase {
     String scriptName
 
     protected appBase = "test/cliTestApp"
 	protected ant = new AntBuilder()
+
+    private GantBinding binding
+    private ClassLoader savedContextLoader
 
     /**
      * Creates a new test case for the script whose name matches the
@@ -42,25 +41,22 @@ abstract class AbstractCliTests extends GroovyTestCase {
     }
 
     void setUp() {
-        def griffonDir = System.getProperty("user.home") + '/.griffon/projects'
-
-
-
         ExpandoMetaClass.enableGlobally()
         ant.delete(dir:appBase, failonerror:false)
-		System.setProperty("base.dir", appBase)
-		System.setProperty("griffon.cli.args", "testapp")
-		System.setProperty("griffon.cli.testing", "true")
-		System.setProperty("env.GRIFFON_HOME", new File("").absolutePath)
-	}
+        System.setProperty("base.dir", appBase)
+        System.setProperty("griffon.cli.args", "testapp")
+
+        savedContextLoader = Thread.currentThread().contextClassLoader
+    }
 
 	void tearDown() {
-        //Thread.currentThread().contextClassLoader = savedContextLoader
+        Thread.currentThread().contextClassLoader = savedContextLoader
 
         ant.delete(dir:appBase, failonerror:false)
 
         ExpandoMetaClass.disableGlobally()
 
+        BuildSettingsHolder.settings = null
         ConfigurationHolder.config = null
         PluginManagerHolder.pluginManager = null
         ant = null
@@ -71,7 +67,7 @@ abstract class AbstractCliTests extends GroovyTestCase {
         System.setProperty("griffon.cli.args", appName)
 
         // Create the application.
-	    gantRun("CreateApp")
+	    gantRun("CreateApp_")
 
 	    // Update the base directory to the application dir.
         def appDir = appBase + File.separator + appName
@@ -90,70 +86,65 @@ abstract class AbstractCliTests extends GroovyTestCase {
 
     protected void gantRun(String scriptName) {
         def workDir = "${appBase}/work"
-        //FIXME GriffonPluginUtils.clearCaches()
-        System.setProperty(GriffonContext.WORK_DIR, workDir)
-        System.setProperty(GriffonContext.PROJECT_WORK_DIR, "$workDir/projects")
-        System.setProperty(GriffonContext.PROJECT_CLASSES_DIR, "$workDir/projects/classes")
-        System.setProperty(GriffonContext.PROJECT_TEST_CLASSES_DIR, "$workDir/projects/test-classes")
-        System.setProperty(GriffonContext.PROJECT_RESOURCES_DIR, "$workDir/projects/resources")
-        System.setProperty(GriffonContext.PLUGINS_DIR, "")
-        System.setProperty(GriffonContext.GLOBAL_PLUGINS_DIR, "")
+        def projectDir = "${System.getProperty("base.dir")}/work"
+        GriffonPluginUtils.clearCaches()
         System.setProperty("griffon.script.profile","true")
 
-        LoaderConfiguration loaderConfig = new LoaderConfiguration()
-	    loaderConfig.setRequireMain(false);
-
-	    def libDir = new File('lib')
-	    assert libDir.exists()
-	    assert libDir.isDirectory()
-
-	    libDir.eachFileMatch(~/gant.*\.jar/) {jarFile ->
-	        loaderConfig.addFile(jarFile)
-	    }
+        // Configure the build settings directly rather than using
+        // system properties and the BuildSettings.groovy file. Note that
+        // the order here is important for things to work!
+        def settings = new BuildSettings(".")
+        settings.rootLoader = new GriffonRootLoader([] as URL[], getClass().classLoader)
+        settings.loadConfig()
+        settings.griffonWorkDir = new File(workDir)
+        settings.projectWorkDir = new File(projectDir)
+        settings.classesDir = new File("$projectDir/classes")
+        settings.resourcesDir = new File("$projectDir/resources")
+        settings.testClassesDir = new File("$projectDir/test-classes")
+        settings.projectPluginsDir = new File("$projectDir/plugins")
+        settings.globalPluginsDir = new File("$workDir/global-plugins")
 
         // Set up a binding for Gant and put some essential variables
         // in there.
-        String basedir = System.getProperty("base.dir")
-        File baseFile = new File(basedir)
-        ConfigObject preInitConfig = new ConfigObject()
-        def rootLoader = new RootLoader(loaderConfig)
+        binding = new GantBinding()
+        binding.with {
+            // Core properties.
+            griffonSettings = settings
+            basedir = settings.baseDir.path
+            baseFile = settings.baseDir
+            baseName = settings.baseDir.name
+            griffonHome = settings.griffonHome?.path
+            griffonVersion = settings.griffonVersion
+            userHome = settings.userHome
+            griffonEnv = settings.griffonEnv
+            defaultEnv = settings.defaultEnv
+            buildConfig = settings.config
+            rootLoader = settings.rootLoader
 
-        GantBinding binding = new GantBinding()
-        binding.setVariable("basedir", basedir)
-        binding.setVariable("baseFile", baseFile)
-        binding.setVariable("baseName", baseFile.name)
-        binding.setVariable("defaultEnv", true)
-        binding.setVariable("defaultTarget", { String description, Closure body ->
-            if (binding.variables['default'] == null) {
-                def c = binding.target
-                c(['default':description], body)
-            }
-        })
-        binding.setVariable("griffonEnv", "")
-        binding.setVariable("griffonHome", ".")
-        binding.setVariable("griffonVersion", GriffonUtil.griffonVersion)
-        binding.setVariable("griffonScript", { return new File("./scripts/${it}.groovy") })
-        binding.setVariable("griffonUnpack", { Map args -> ant.unjar(dest: args["dest"], src: "./target/${args["src"]}") {
-                patternset {
-                    exclude(name: "META-INF/**")
-                }
-            } })
-        binding.setVariable("preInitConfig", preInitConfig)
-        binding.setVariable("preInitProperties", preInitConfig.toProperties())
-        binding.setVariable("userHome", System.getProperty("user.home"))
-        binding.setVariable("rootLoader", rootLoader)
-        binding.setVariable("griffonWorkDir", System.getProperty(GriffonContext.WORK_DIR))
-        binding.setVariable("projectWorkDir", System.getProperty(GriffonContext.PROJECT_WORK_DIR))
-        binding.setVariable("classesDirPath", System.getProperty(GriffonContext.PROJECT_CLASSES_DIR))
-        binding.setVariable("resourcesDirPath", System.getProperty(GriffonContext.PROJECT_RESOURCES_DIR))
-        binding.setVariable("testDirPath", System.getProperty(GriffonContext.PROJECT_TEST_CLASSES_DIR))
-        binding.setVariable("pluginsDirPath", System.getProperty(GriffonContext.PLUGINS_DIR))
-        binding.setVariable("globalPluginsDirPath", System.getProperty(GriffonContext.GLOBAL_PLUGINS_DIR))
+            // Add the project paths too!
+            griffonWorkDir = settings.griffonWorkDir.path
+            projectWorkDir = settings.projectWorkDir.path
+            classesDirPath = settings.classesDir.path
+            testDirPath = settings.testClassesDir.path
+            resourcesDirPath = settings.resourcesDir.path
+            pluginsDirPath = settings.projectPluginsDir.path
+            globalPluginsDirPath = settings.globalPluginsDir.path
 
-        def gant = new Gant(
-                new File("./scripts/${scriptName}.groovy"),
-                binding,
-                rootLoader)
-	    gant.processTargets()
-	}
+            // Closure for specifying script dependencies.
+            griffonScript = { return new File("./scripts/${it}.groovy") }
+        }
+
+        BuildSettingsHolder.settings = settings
+
+        def classLoader = new URLClassLoader([ settings.classesDir.toURI().toURL() ] as URL[], settings.rootLoader)
+        Thread.currentThread().contextClassLoader = classLoader
+
+        def gant = new Gant(binding, classLoader)
+        gant.loadScript(new File("./scripts/${scriptName}.groovy"))
+        gant.processTargets()
+    }
+
+    protected GantBinding getBinding() {
+        return this.binding
+    }
 }

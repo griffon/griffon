@@ -1,5 +1,29 @@
+import org.codehaus.griffon.util.GriffonNameUtils
+import org.codehaus.griffon.util.GriffonUtil
+import groovy.xml.DOMBuilder
+import groovy.xml.dom.DOMCategory
+import java.util.regex.Matcher
+//import org.apache.xml.serialize.OutputFormat
+//import org.apache.xml.serialize.XMLSerializer
+import org.codehaus.groovy.control.CompilationUnit
+import org.codehaus.griffon.commons.DefaultGriffonContext
+import org.codehaus.griffon.plugins.DefaultGriffonPluginManager
+import org.codehaus.griffon.plugins.GriffonPluginUtils
+import org.codehaus.griffon.plugins.PluginManagerHolder
+import org.springframework.core.io.Resource
+
+import javax.xml.transform.OutputKeys
+import javax.xml.transform.TransformerFactory
+import javax.xml.transform.Transformer
+import javax.xml.transform.Result
+import javax.xml.transform.stream.StreamResult
+import javax.xml.transform.dom.DOMSource
+import java.util.zip.ZipFile
+import java.util.zip.ZipEntry
+import java.util.zip.ZipEntry
+
 /*
-* Copyright 2004-2009 the original author or authors.
+* Copyright 2004-2005 the original author or authors.
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
@@ -13,25 +37,6 @@
 * See the License for the specific language governing permissions and
 * limitations under the License.
 */
-import org.codehaus.griffon.commons.GriffonClassUtils as GCU
-
-import groovy.xml.DOMBuilder
-import groovy.xml.dom.DOMCategory
-import org.codehaus.groovy.control.CompilationUnit
-import org.codehaus.griffon.commons.DefaultGriffonContext
-import org.codehaus.griffon.plugins.DefaultGriffonPluginManager
-import org.codehaus.griffon.plugins.GriffonPluginUtils
-import org.codehaus.griffon.plugins.PluginManagerHolder
-import java.util.regex.Matcher
-import org.codehaus.griffon.commons.GriffonUtil
-import javax.xml.transform.OutputKeys
-import javax.xml.transform.TransformerFactory
-import javax.xml.transform.Transformer
-import javax.xml.transform.Result
-import javax.xml.transform.stream.StreamResult
-import javax.xml.transform.dom.DOMSource
-
-
 /**
  * Plugin stuff. If included, must be included after "_ClasspathAndEvents".
  *
@@ -40,30 +45,79 @@ import javax.xml.transform.dom.DOMSource
  * @since 1.1
  */
 
-includeTargets << griffonScript("_GriffonEvents")
+includeTargets << griffonScript("_GriffonClean")
 includeTargets << griffonScript("_GriffonProxy")
 
 DEFAULT_PLUGIN_DIST = "http://svn.codehaus.org/griffon/plugins"
-//DEFAULT_PLUGIN_DIST = new File("C:/svn/codehaus.org/griffon/plugins").toURI().toASCIIString()
-//BINARY_PLUGIN_DIST = "http://plugins.griffon.org/dist"
-BINARY_PLUGIN_DIST = "${DEFAULT_PLUGIN_DIST}/dist"
-REMOTE_PLUGIN_LIST = "${DEFAULT_PLUGIN_DIST}/.plugin-meta/plugins-list.xml"
+DEFAULT_PUBLISH_URL = "https://svn.codehaus.org/griffon/plugins"
 
 // Properties
-pluginsListFile = new File("${pluginsHome}/.plugin-meta/plugins-list.xml")
 pluginsList = null
 //indentingOutputFormat = new OutputFormat("XML", "UTF-8", true)
 globalInstall = false
 pluginsBase = "${griffonWorkDir}/plugins".toString().replaceAll('\\\\','/')
+pluginDiscoveryRepositories = griffonSettings?.config?.griffon?.plugin?.repos?.discovery ?: Collections.emptyMap()
+pluginDistributionRepositories = griffonSettings?.config?.griffon?.plugin?.repos?.distribution ?: Collections.emptyMap()
+installedPlugins = [] // a list of plugins that have been installed
 
 
+configureRepository =  { targetRepoURL, String alias = "default" ->
+  repositoryName = alias
+  pluginsList = null
+  pluginsListFile = new File(griffonSettings.griffonWorkDir, "plugins-list-${alias}.xml")
+
+  def namedPluginSVN = pluginDistributionRepositories.find { it.key == alias }?.value
+  if(namedPluginSVN) {
+    pluginSVN = namedPluginSVN
+  }
+  else {
+    pluginSVN = DEFAULT_PUBLISH_URL
+  }
+  pluginDistURL = targetRepoURL
+  pluginBinaryDistURL = "$targetRepoURL/dist"
+  remotePluginList = "$targetRepoURL/.plugin-meta/plugins-list.xml"
+}
+
+configureRepository(DEFAULT_PLUGIN_DIST)
+
+configureRepositoryForName = { String targetRepository, type="discovery" ->
+    // Works around a bug in Groovy 1.5.6's DOMCategory that means get on Object returns null. Change to "pluginDiscoveryRepositories.targetRepository" when upgrading
+    def targetRepoURL = pluginDiscoveryRepositories.find { it.key == targetRepository }?.value
+
+    if(targetRepoURL) {
+      configureRepository(targetRepoURL, targetRepository)
+    }
+    else {
+      println "No repository configured for name ${targetRepository}. Set the 'griffon.plugin.repos.${type}.${targetRepository}' variable to the location of the repository."
+      exit(1)
+    }
+}
+
+eachRepository =  { Closure callable ->
+
+    for(entry in pluginDiscoveryRepositories) {
+
+       configureRepositoryForName(entry.key)
+       updatePluginsList()
+       if(!callable(entry.key, entry.value)) {
+         break
+       }
+    }
+}
 // Targets
 target(resolveDependencies:"Resolve plug-in dependencies") {
-    def plugins = metadata.findAll { it.key.startsWith("plugins.")}
+    def plugins = metadata.findAll { it.key.startsWith("plugins.")}.collect {
+       [
+        name:it.key[8..-1],
+        version: it.value
+       ]
+    }
     boolean installedPlugins = false
+
+
     for(p in plugins) {
-        def name = p.key[8..-1]
-        def version = p.value
+        def name = p.name
+        def version = p.version
         def fullName = "$name-$version"
         def pluginLoc = getPluginDirForName(name)
         if(!pluginLoc?.exists()) {
@@ -75,9 +129,20 @@ target(resolveDependencies:"Resolve plug-in dependencies") {
         }
     }
     if(installedPlugins) {
-        classpathSet = false
-        classpath()
-        PluginManagerHolder.pluginManager = null
+        resetClasspathAndState()
+    }
+
+    def pluginDirs = GriffonPluginUtils.getPluginDirectories(pluginsHome)
+    def pluginsToUninstall = pluginDirs.findAll { Resource r -> !plugins.find { plugin -> r.filename == "$plugin.name-$plugin.version" }}
+
+    for(Resource pluginDir in pluginsToUninstall) {
+        if(confirmInput("Plugin [${pluginDir.filename}] is installed, but was not found in the application's metadata, do you want to uninstall?") == 'y') {
+            uninstallPluginForName(pluginDir.filename)
+        }
+        else {
+            def plugin = GriffonPluginUtils.getMetadataForPlugin(pluginDir.filename)
+            registerPluginWithMetadata(plugin.@name.text(), plugin.@version.text())
+        }
     }
 }
 target(loadPlugins:"Loads Griffon' plugins") {
@@ -139,8 +204,7 @@ target(loadPlugins:"Loads Griffon' plugins") {
             }
 	    }
         catch (Exception e) {
-            GriffonUtil.deepSanitize(e)
-            e.printStackTrace(System.out)
+            GriffonUtil.deepSanitize(e).printStackTrace()
             event("StatusFinal", [ "Error loading plugin manager: " + e.message ])
 			exit(1)
 	    }
@@ -155,7 +219,6 @@ target(loadPlugins:"Loads Griffon' plugins") {
 target(updatePluginsList:"Updates the plug-in list from the remote plugin-list.xml") {
     try {
         println "Reading remote plug-in list ..."
-        println pluginsListFile
         if(!pluginsListFile.exists())
             readRemotePluginList()
 
@@ -163,7 +226,7 @@ target(updatePluginsList:"Updates the plug-in list from the remote plugin-list.x
         def localRevision = pluginsList ? new Integer(pluginsList.getAttribute('revision')) : -1
         // extract plugins svn repository revision - used for determining cache up-to-date
         def remoteRevision = 0
-        new URL(REMOTE_PLUGIN_LIST).withReader { Reader reader ->
+        new URL(remotePluginList).withReader { Reader reader ->
             reader.readLine() // skip the first line as it will be the xml dec
             def line = reader.readLine()
             Matcher matcher = line =~ /<plugins revision="(\d+?)">/
@@ -180,21 +243,28 @@ target(updatePluginsList:"Updates the plug-in list from the remote plugin-list.x
         }
 
     } catch (Exception e) {
-        GriffonUtil.deepSanitize(e)
-        e.printStackTrace()
         println "Error reading remote plugin list [${e.message}], building locally..."
         updatePluginsListManually()
     }
 }
 
+
+def resetClasspathAndState() {
+    GriffonPluginUtils.clearCaches()
+    classpathSet = false
+    classpath()
+    PluginManagerHolder.pluginManager = null
+}
 def parsePluginList() {
     if(pluginsList == null) {
         profile("Reading local plugin list from $pluginsListFile") {
+            def document
             try {
                 document = DOMBuilder.parse(new FileReader(pluginsListFile))
             } catch (Exception e) {
                 println "Plugin list file corrupt, retrieving again.."
                 readRemotePluginList()
+                document = DOMBuilder.parse(new FileReader(pluginsListFile))
             }
             pluginsList = document.documentElement
         }
@@ -204,7 +274,7 @@ def parsePluginList() {
 def readRemotePluginList() {
     ant.delete(file:pluginsListFile, failonerror:false)
     ant.mkdir(dir:pluginsListFile.parentFile)
-    ant.get(src: REMOTE_PLUGIN_LIST, dest: pluginsListFile, verbose: "yes")
+    ant.get(src: remotePluginList, dest: pluginsListFile, verbose: "yes")
 }
 
 target(updatePluginsListManually: "Updates the plugin list by manually reading each URL, the slow way") {
@@ -234,7 +304,7 @@ target(updatePluginsListManually: "Updates the plugin list by manually reading e
         def localRevision = pluginsList ? new Integer(pluginsList.getAttribute('revision')) : -1
         // extract plugins svn repository revision - used for determining cache up-to-date
         def remoteRevision = 0
-        new URL(DEFAULT_PLUGIN_DIST).withReader { Reader reader ->
+        new URL(pluginDistURL).withReader { Reader reader ->
             def line = reader.readLine()
             line.eachMatch(/Revision (.*):/) {
                  remoteRevision = it[1].toInteger()
@@ -260,11 +330,15 @@ target(updatePluginsListManually: "Updates the plugin list by manually reading e
             }
         }
 
-        // proceed binary distribution repository (http://plugins.griffon.org/dist/
-// no bin depot for griffon right now
-//        def binaryPluginsList = new URL(BINARY_PLUGIN_DIST).text
-//        binaryPluginsList.eachMatch(/<a href="griffon-(.+?).zip">/) {
-//            buildBinaryPluginInfo(pluginsList, it[1])
+//        try {
+//          // proceed binary distribution repository (http://plugins.griffon.org/dist/
+//          def binaryPluginsList = new URL(pluginBinaryDistURL).text
+//          binaryPluginsList.eachMatch(/<a href="griffon-(.+?).zip">/) {
+//              buildBinaryPluginInfo(pluginsList, it[1])
+//          }
+//        }
+//        catch(Exception e) {
+//           // ignore, binary distributions are supported for backwards compatibility only, so this is ok
 //        }
         // update plugins list cache file
         writePluginsFile()
@@ -291,37 +365,41 @@ readAllPluginXmlMetadata = {->
 }
 
 getPluginXmlMetadata = {
-    GriffonPluginUtils.getPluginXmlMetadata(pluginsDirPath, resolveResources)
+    GriffonPluginUtils.getPluginXmlMetadata(pluginsHome, resolveResources)
 }
 /**
  * Obtains the directory for the given plugin name
  */
 getPluginDirForName = { String pluginName ->
-    GriffonPluginUtils.getPluginDirForName(pluginsDirPath, pluginName)
+    GriffonPluginUtils.getPluginDirForName(pluginsHome, pluginName)
+}
+/** Obtains all of the plugin directories */
+getPluginDirectories = {->
+    GriffonPluginUtils.getPluginDirectories(pluginsHome)
 }
 /**
  * Obtains an array of all plug-in source files as Spring Resource objects
  */
 getPluginSourceFiles = {
-    GriffonPluginUtils.getPluginSourceFiles(pluginsDirPath, resolveResources)
+    GriffonPluginUtils.getPluginSourceFiles(pluginsHome, resolveResources)
 }
 /**
  * Obtains an array of all the plug-in provides Gant scripts
  */
 getPluginScripts = {
-    GriffonPluginUtils.getPluginScripts(pluginsDirPath,resolveResources)
+    GriffonPluginUtils.getPluginScripts(pluginsHome,resolveResources)
 }
 /**
  * Gets a list of all scripts known to the application (excluding private scripts starting with _)
  */
 getAllScripts = {
-    GriffonPluginUtils.getAvailableScripts(griffonHome,pluginsDirPath, basedir, resolveResources)
+    GriffonPluginUtils.getAvailableScripts(griffonHome,pluginsHome, basedir, resolveResources)
 }
 /**
  * Obtains a list of all Griffon plug-in descriptor classes
  */
 getPluginDescriptors = {
-    GriffonPluginUtils.getPluginDescriptors(basedir,pluginsDirPath,resolveResources)
+    GriffonPluginUtils.getPluginDescriptors(basedir,pluginsHome,resolveResources)
 }
 /**
  * Gets the base plugin descriptor
@@ -336,7 +414,7 @@ runPluginScript = { File scriptFile, fullPluginName, msg ->
     if (scriptFile.exists()) {
         event("StatusUpdate", ["Executing ${fullPluginName} plugin $msg"])
         // instrumenting plugin scripts adding 'pluginBasedir' variable
-        def instrumentedInstallScript = "def pluginBasedir = '${pluginsDirPath}/${fullPluginName}'\n" + scriptFile.text
+        def instrumentedInstallScript = "def pluginBasedir = '${pluginsHome}/${fullPluginName}'\n".toString().replaceAll('\\\\','/') + scriptFile.text
         // we are using text form of script here to prevent Gant caching
         includeTargets << instrumentedInstallScript
     }
@@ -347,7 +425,7 @@ runPluginScript = { File scriptFile, fullPluginName, msg ->
 downloadRemotePlugin = { url, pluginsBase ->
     def slash = url.file.lastIndexOf('/')
     def fullPluginName = "${url.file[slash + 8..-5]}"
-    Ant.get(dest: "${pluginsBase}/griffon-${fullPluginName}.zip",
+    ant.get(dest: "${pluginsBase}/griffon-${fullPluginName}.zip",
             src: "${url}",
             verbose: true,
             usetimestamp: true)
@@ -355,22 +433,52 @@ downloadRemotePlugin = { url, pluginsBase ->
     return fullPluginName
 }
 
-/**
- * Event triggered on plugin installation failure
- */
-pluginInstallFail = {String msg, plugin ->
-    println "Plug-in ${plugin.name} failed to install: $msg"
-    event("PluginInstallFailed", [ "Plugin ${fullPluginName} failed to install"])
-    exit(1)
-}
 
 /**
  * Caches a local plugin into the plugins directory
  */
 cacheLocalPlugin = { pluginFile ->
     fullPluginName = "${pluginFile.name[8..-5]}"
-    Ant.copy(file: pluginFile, tofile: "${pluginsBase}/griffon-${fullPluginName}.zip")
-    Ant.copy(file: pluginFile, tofile: "${pluginsDirPath}/griffon-${fullPluginName}.zip")
+    String zipLocation = "${pluginsBase}/griffon-${fullPluginName}.zip"
+    ant.copy(file: pluginFile, tofile: zipLocation)
+    readMetadataFromZip(zipLocation, pluginFile)
+
+
+}
+
+private readMetadataFromZip(String zipLocation, pluginFile) {
+    def zipFile = new ZipFile(zipLocation)
+
+    ZipEntry entry = zipFile.entries().find {ZipEntry entry -> entry.name == 'plugin.xml'}
+
+    if (entry) {
+        pluginXml = new XmlSlurper().parse(zipFile.getInputStream(entry))
+        currentPluginName = pluginXml.'@name'.text()
+        currentPluginRelease = pluginXml.'@version'.text()
+        fullPluginName = "$currentPluginName-$currentPluginRelease"
+    }
+    else {
+        cleanupPluginInstallAndExit("Plug-in $pluginFile is not a valid Grails plugin. No plugin.xml descriptor found!")
+    }
+}
+
+/**
+ * Searches the downloaded plugin-list.xml files for each repository for a plugin that matches the given name
+ */
+findPlugin =  { pluginName ->
+  pluginName = pluginName?.toLowerCase()
+
+  if(pluginName) {
+    def plugin = pluginsList.'plugin'.find { it.'@name' == pluginName }
+
+    if(!plugin) {
+       eachRepository { name, url ->
+          plugin = pluginsList.'plugin'.find { it.'@name' == pluginName }
+          (!plugin)
+       }
+    }
+    return plugin
+  }
 }
 /**
  * Stores a plug-in from the plug-in central repo into the local plugin cache
@@ -381,39 +489,84 @@ cacheKnownPlugin = { String pluginName, String pluginRelease ->
     }
     def pluginDistName
     def plugin
-    use(DOMCategory) {
-        plugin = pluginsList.'plugin'.find { it.'@name'.toLowerCase() == pluginName.toLowerCase() }
+    def fullPluginName
+    try {
+      use(DOMCategory) {
+          plugin = findPlugin(pluginName)
 
-        if (plugin) {
-            pluginRelease = pluginRelease ? pluginRelease : plugin.'@latest-release'
-            if (pluginRelease) {
-                def release = plugin.'release'.find {rel -> rel.'@version' == pluginRelease }
-                if (release) {
-                    pluginDistName = release.'file'.text()
-                } else {
-                    event("StatusError", ["Release ${pluginRelease} was not found for this plugin. Type 'griffon plugin-info ${pluginName}'"])
-                    exit(1)
-                }
-            } else {
-                event("StatusError", ["Latest release information is not available for plugin '${pluginName}', specify concrete release to install"])
-                exit(1)
-            }
-        } else {
-            event("StatusError", ["Plugin '${pluginName}' was not found in repository. If it is not stored in a configured repository you will need to install it manually. Type 'griffon list-plugins' to find out what plugins are available."])
-            exit(1)
-        }
+          if (plugin) {
+              pluginRelease = pluginRelease ? pluginRelease : plugin.'@latest-release'
+              if (pluginRelease) {
+                  def release = plugin.'release'.find {rel -> rel.'@version' == pluginRelease }
+                  if (release) {
+                      pluginDistName = release.'file'.text()
+                  } else {
+                      cleanupPluginInstallAndExit("Release ${pluginRelease} was not found for this plugin. Type 'griffon plugin-info ${pluginName}'")
+                  }
+              } else {
+                  cleanupPluginInstallAndExit("Latest release information is not available for plugin '${pluginName}', specify concrete release to install")
+              }
+          } else {
+              cleanupPluginInstallAndExit("Plugin '${pluginName}' was not found in repository. If it is not stored in a configured repository you will need to install it manually. Type 'griffon list-plugins' to find out what plugins are available.")
+          }
 
-        def pluginCacheFileName = "${pluginsHome}/${plugin.'@name'}/griffon-${plugin.'@name'}-${pluginRelease}.zip"
-        if (!new File(pluginCacheFileName).exists() || pluginRelease.endsWith("SNAPSHOT")) {
-            Ant.mkdir(dir: "${pluginsHome}/${pluginName}")
-            Ant.get(dest: pluginCacheFileName,
-                    src: "${pluginDistName}",
-                    verbose: true)
-        }
-        def fullPluginName = "$pluginName-$pluginRelease"
 
-        Ant.copy(file:"${pluginsHome}/${pluginName}/griffon-${fullPluginName}.zip",tofile:"${pluginsDirPath}/griffon-${fullPluginName}.zip")
-        return fullPluginName
+          def pluginCacheFileName = "${pluginsBase}/griffon-${plugin.'@name'}-${pluginRelease}.zip"
+          if (!new File(pluginCacheFileName).exists() || pluginRelease.endsWith("SNAPSHOT")) {
+              ant.mkdir(dir:pluginsBase)
+              ant.get(dest: pluginCacheFileName,
+                      src: "${pluginDistName}",
+                      verbose: true)
+          }
+          fullPluginName = "$pluginName-$pluginRelease"
+
+          ant.copy(file:"${pluginsBase}/griffon-${fullPluginName}.zip",tofile:"${pluginsHome}/griffon-${fullPluginName}.zip")
+      }
+      return fullPluginName
+    }
+    finally {
+       configureRepository(DEFAULT_PLUGIN_DIST)
+    }
+}
+
+
+cleanupPluginInstallAndExit = { message ->
+  event("StatusError", [message])
+  for(pluginDir in installedPlugins) {
+    ant.delete(dir:pluginDir, failonerror:false)
+  }
+  exit(1)
+}
+
+/**
+ * Uninstalls a plugin for the given name and version
+ */
+uninstallPluginForName = { name, version=null ->
+
+    String pluginKey = "plugins.$name"
+    metadata.remove(pluginKey)
+    metadataFile.withOutputStream { out ->
+        metadata.store out,'utf-8'
+    }
+
+
+    def pluginDir
+    if(name && version) {
+        pluginDir = new File("${pluginsHome}/$name-$version")
+    }
+    else {
+        pluginDir = getPluginDirForName(name)?.file
+    }
+    if(pluginDir?.exists()) {
+
+        def uninstallScript = new File("${pluginDir}/scripts/_Uninstall.groovy")
+        runPluginScript(uninstallScript, pluginDir.name, "uninstall script")
+
+        ant.delete(dir:pluginDir, failonerror:true)
+        resetClasspathAndState()
+    }
+    else {
+        event("StatusError", ["No plug-in [$name${version ? '-' + version : ''}] installed, cannot uninstall"])
     }
 }
 /**
@@ -423,15 +576,16 @@ installPluginForName = { String fullPluginName ->
 
     if (fullPluginName) {
         event("InstallPluginStart", [fullPluginName])
-        def pluginInstallPath = "${globalInstall ? globalPluginsDirPath : pluginsDirPath}/${fullPluginName}"
-        Ant.delete(dir: pluginInstallPath, failonerror: false)
-        Ant.mkdir(dir: pluginInstallPath)
-        Ant.unzip(dest: pluginInstallPath, src: "${pluginsDirPath}/griffon-${fullPluginName}.zip")
+        def pluginInstallPath = "${globalInstall ? globalPluginsDirPath : pluginsHome}/${fullPluginName}"
+        installedPlugins << pluginInstallPath
+        ant.delete(dir: pluginInstallPath, failonerror: false)
+        ant.mkdir(dir: pluginInstallPath)
+        ant.unzip(dest: pluginInstallPath, src: "${pluginsBase}/griffon-${fullPluginName}.zip")
 
 
         def pluginXmlFile = new File("${pluginInstallPath}/plugin.xml")
         if (!pluginXmlFile.exists()) {
-            Ant.fail("Plug-in $fullPluginName is not a valid Griffon plug-in. No plugin.xml descriptor found!")
+            ant.fail("Plug-in $fullPluginName is not a valid Griffon plug-in. No plugin.xml descriptor found!")
         }
         def pluginXml = new XmlSlurper().parse(pluginXmlFile)
         def pluginName = pluginXml.@name.toString()
@@ -459,68 +613,83 @@ installPluginForName = { String fullPluginName ->
         for (dep in pluginXml.dependencies.plugin) {
             def depName = dep.@name.toString()
             String depVersion = dep.@version.toString()
-            dependencies[depName] = depVersion
-            def depPluginDir = getPluginDirForName(depName)?.file
-            if (!depPluginDir?.exists()) {
-                event("StatusUpdate", ["Plugin dependency [$depName] not found. Attempting to resolve..."])
-                // recursively install dependent plug-ins
-                def upperVersion =  GriffonPluginUtils.getUpperVersion(depVersion)
-                def release = cacheKnownPlugin(depName, upperVersion == '*' ? null : upperVersion)
+//            if(isCorePlugin(depName)) {
+//                def griffonVersion = GriffonUtil.getGriffonVersion()
+//                if(!GriffonPluginUtils.isValidVersion(depVersion, griffonVersion))
+//                    cleanupPluginInstallAndExit("Plug-in requires version [$depVersion] of Griffon core, but installed version is [${griffonVersion}]. Please upgrade your Griffon installation and try again.")
+//            }
+//            else {
+                dependencies[depName] = depVersion
+                def depPluginDir = getPluginDirForName(depName)?.file
+                if (!depPluginDir?.exists()) {
+                    event("StatusUpdate", ["Plugin dependency [$depName] not found. Attempting to resolve..."])
+                    // recursively install dependent plug-ins
+                    def upperVersion =  GriffonPluginUtils.getUpperVersion(depVersion)
+                    def release = cacheKnownPlugin(depName, upperVersion == '*' ? null : upperVersion)
 
-                Ant.copy(file:"${pluginsHome}/${depName}/griffon-${release}.zip",tofile:"${pluginsDirPath}/griffon-${release}.zip")
+                    ant.copy(file:"${pluginsBase}/griffon-${release}.zip",tofile:"${pluginsDirPath}/griffon-${release}.zip")
 
-                installPluginForName(release)
-                dependencies.remove(depName)
-            }
-            else {
-                def dependency = readPluginXmlMetadata(depName?.toString())
-                if (!GriffonPluginUtils.isValidVersion(dependency.@version.toString(), depVersion)) {
-                    pluginInstallFail("Plug-in requires version [$depVersion] of plug-in [$depName], but installed version is [${dependency.version}]. Please upgrade this plug-in and try again.", plugin)
-                }
-                else {
+                    installPluginForName(release)
                     dependencies.remove(depName)
                 }
+                else  {
+                    def dependency = readPluginXmlMetadata(depName?.toString())
+                    if (!GriffonPluginUtils.isValidVersion(dependency.@version.toString(), depVersion)) {
+                        cleanupPluginInstallAndExit("Plug-in requires version [$depVersion] of plug-in [$depName], but installed version is [${dependency.version}]. Please upgrade this plug-in and try again.")
+                    }
+                    else {
+                        dependencies.remove(depName)
+                    }
+                }
             }
-        }
+//        }
 
         if (dependencies) {
-            Ant.delete(dir: "${pluginsDirPath}/${fullPluginName}", quiet: true, failOnError: false)
+            ant.delete(dir: "${pluginsHome}/${fullPluginName}", quiet: true, failOnError: false)
             clean()
 
-            pluginInstallFail("Failed to install plug-in [${fullPluginName}]. Missing dependencies: ${dependencies.inspect()}", plugin)
+            cleanupPluginInstallAndExit("Failed to install plug-in [${fullPluginName}]. Missing dependencies: ${dependencies.inspect()}")
 
         }
         else {
-            def pluginJars = resolveResources("file:${pluginsDirPath}/${fullPluginName}/lib/*.jar")
+            def pluginJars = resolveResources("file:${pluginsHome}/${fullPluginName}/lib/*.jar")
             for(jar in pluginJars) {
                 rootLoader.addURL(jar.URL)
             }
             // proceed _Install.groovy plugin script if exists
-            def installScript = new File("${pluginsDirPath}/${fullPluginName}/scripts/_Install.groovy")
+            def installScript = new File("${pluginsHome}/${fullPluginName}/scripts/_Install.groovy")
             runPluginScript(installScript, fullPluginName, "post-install script")
 
-            File appPropsFile = new File("${basedir}/application.properties")
-
-            metadata['plugins.'+pluginName]=pluginVersion
-            appPropsFile.withOutputStream { out ->
-                metadata.store out, 'utf-8'
-            }
+            registerPluginWithMetadata(pluginName, pluginVersion)
 
 
-            def providedScripts = resolveResources("file:${pluginsDirPath}/${fullPluginName}/scripts/*.groovy").findAll { !it.filename.startsWith('_')}
+            def providedScripts = resolveResources("file:${pluginsHome}/${fullPluginName}/scripts/*.groovy").findAll { !it.filename.startsWith('_')}
             event("StatusFinal", ["Plugin ${fullPluginName} installed"])
             if (providedScripts) {
                 println "Plug-in provides the following new scripts:"
                 println "------------------------------------------"
                 providedScripts.file.each {file ->
-                    def scriptName = GCU.getScriptName(file.name)
+                    def scriptName = GriffonNameUtils.getScriptName(file.name)
                     println "griffon ${scriptName}"
                 }
+            }
+
+            File pluginEvents = new File("${pluginsDirPath}/${fullPluginName}/scripts/_Events.groovy")
+            if (pluginEvents.exists()) {
+                println "Found events script in plugin ${pluginName}"
+                loadEventScript(pluginEvents)
             }
 
             event("PluginInstalled", [fullPluginName])
         }
 
+    }
+}
+
+def registerPluginWithMetadata(String pluginName, pluginVersion) {
+    metadata['plugins.' + pluginName] = pluginVersion
+    metadataFile.withOutputStream {out ->
+        metadata.store out, 'utf-8'
     }
 }
 
@@ -555,9 +724,10 @@ def buildReleaseInfo(root, pluginName, releasePath, releaseTag ) {
 
 
 
-
 def writePluginsFile() {
     pluginsListFile.getParentFile().mkdirs()
+//    XMLSerializer serializer = new XMLSerializer(new FileWriter(pluginsListFile), indentingOutputFormat);
+//    serializer.serialize(document)
     TransformerFactory tFactory = TransformerFactory.newInstance();
     tFactory.setAttribute("indent-number", 4);
     Transformer transformer = tFactory.newTransformer();
@@ -576,7 +746,7 @@ def buildBinaryPluginInfo(root, pluginName ){
     // split plugin name in form of 'plugin-name-0.1' to name ('plugin-name') and version ('0.1')
     def matcher = (pluginName =~ /^([^\d]+)-(.++)/)
     // convert to new plugin naming convention (MyPlugin -> my-plugin)
-    def name = GCU.getScriptName(matcher[0][1])
+    def name = GriffonNameUtils.getScriptName(matcher[0][1])
     def release = matcher[0][2]
     use(DOMCategory) {
         def pluginNode = root.'plugin'.find {it.'@name' == name}
@@ -590,11 +760,10 @@ def buildBinaryPluginInfo(root, pluginName ){
             if (releaseNode) pluginNode.removeChild(releaseNode)
             return
         }
-// right now griffon doesn't have a binary depot
 //        if (!releaseNode) {
 //            releaseNode = builder.'release'(type: 'zip', version: release) {
 //                title("This is a zip release, no info available for it")
-//                file("${BINARY_PLUGIN_DIST}/griffon-${pluginName}.zip")
+//                file("${pluginBinaryDistURL}/griffon-${pluginName}.zip")
 //            }
 //            pluginNode.appendChild(releaseNode)
 //        }
@@ -613,7 +782,7 @@ def buildPluginInfo(root, pluginName) {
         def localRelease = pluginNode.'@latest-release'
         def latestRelease = null
         try {
-            new URL("${DEFAULT_PLUGIN_DIST}/griffon-${pluginName}/tags/LATEST_RELEASE/plugin.xml").withReader {Reader reader ->
+            new URL("${pluginDistURL}/griffon-${pluginName}/tags/LATEST_RELEASE/plugin.xml").withReader {Reader reader ->
                 def line = reader.readLine()
                 line.eachMatch (/.+?version='(.+?)'.+/) {
                     latestRelease = it[1]
@@ -629,10 +798,10 @@ def buildPluginInfo(root, pluginName) {
 
             // proceed tagged releases
             try {
-                def releaseTagsList = new URL("${DEFAULT_PLUGIN_DIST}/griffon-${pluginName}/tags/").text
+                def releaseTagsList = new URL("${pluginDistURL}/griffon-${pluginName}/tags/").text
                 releaseTagsList.eachMatch(/<li><a href="(.+?)">/) {
                     def releaseTag = it[1][0..-2]
-                    buildReleaseInfo(pluginNode, pluginName, "${DEFAULT_PLUGIN_DIST}/griffon-${pluginName}/tags", releaseTag)
+                    buildReleaseInfo(pluginNode, pluginName, "${pluginDistURL}/griffon-${pluginName}/tags", releaseTag)
                 }
             } catch (Exception e) {
                 // no plugin release info available
@@ -640,7 +809,7 @@ def buildPluginInfo(root, pluginName) {
 
             // proceed trunk release
             try {
-                buildReleaseInfo(pluginNode, pluginName, "${DEFAULT_PLUGIN_DIST}/griffon-${pluginName}", "trunk")
+                buildReleaseInfo(pluginNode, pluginName, "${pluginDistURL}/griffon-${pluginName}", "trunk")
             } catch (Exception e) {
                 // no plugin release info available
             }
@@ -650,13 +819,8 @@ def buildPluginInfo(root, pluginName) {
     }
 }
 
-// --------
-/**
- * Loads a plugin script - see installer-plugin for an example
- */
-pluginScript = { String pluginName, String scriptName ->
-    def parent = getPluginDirForName(pluginName)?.file?.toString()
-    def potentialScript = new File(parent+"/scripts",scriptName - ".groovy" + ".groovy")
-    return potentialScript.exists() ? potentialScript : rootLoader.loadClass(scriptName)
-}
-
+//// TODO: temporary until we refactor Griffon core into real plugins
+//CORE_PLUGINS = ['core', 'i18n','converters','mimeTypes', 'hibernate','controllers','webflow', 'dataSource', 'domainClass', 'filters']
+//boolean isCorePlugin(name) {
+//    CORE_PLUGINS.contains(name)
+//}

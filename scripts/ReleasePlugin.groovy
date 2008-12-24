@@ -1,25 +1,40 @@
+/*
+* Copyright 2004-2005 the original author or authors.
+*
+* Licensed under the Apache License, Version 2.0 (the "License");
+* you may not use this file except in compliance with the License.
+* You may obtain a copy of the License at
+*
+*      http://www.apache.org/licenses/LICENSE-2.0
+*
+* Unless required by applicable law or agreed to in writing, software
+* distributed under the License is distributed on an "AS IS" BASIS,
+* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+* See the License for the specific language governing permissions and
+* limitations under the License.
+*/
+
 import org.tmatesoft.svn.core.io.SVNRepositoryFactory
 import org.tmatesoft.svn.core.internal.io.dav.DAVRepositoryFactory
-import org.tmatesoft.svn.core.internal.io.fs.FSRepositoryFactory;
+import org.tmatesoft.svn.core.internal.io.fs.FSRepositoryFactory
 import org.tmatesoft.svn.core.io.*
 import org.tmatesoft.svn.core.*
 import org.tmatesoft.svn.core.auth.*
 import org.tmatesoft.svn.core.wc.*
-import org.tmatesoft.svn.core.io.diff.SVNDeltaGenerator;
 
-defaultTarget ("A target for plug-in developers that uploads and commits the current plug-in as the latest revision. The command will prompt for your SVN login details.") {
-    releasePlugin()
-}
+/**
+ * Gant script that handles releasing plugins to a plugin repository.
+ *
+ * @author Graeme Rocher
+ */
 
-includeTargets << griffonScript("PackagePlugin")
+includeTargets << griffonScript("_GriffonPluginDev")
 
-pluginSVN = "https://svn.codehaus.org/griffon/plugins"
 authManager = null
 commitMessage = null
 trunk = null
 latestRelease = null
 versionedRelease = null
-
 
 target(processAuth:"Prompts user for login details to create authentication manager") {
     if(!authManager) {
@@ -32,10 +47,13 @@ target(processAuth:"Prompts user for login details to create authentication mana
         authManager = SVNWCUtil.createDefaultAuthenticationManager( username , password )
     }
 }
-target(releasePlugin: "The implementation target") {
-    //depends(packagePlugin)
-    depends(parseArguments,packagePlugin, processAuth)
 
+target(releasePlugin: "A target for plug-in developers that uploads and commits the current plug-in as the latest revision. The command will prompt for your SVN login details.") {
+    depends(parseArguments, packagePlugin, processAuth)
+
+    if(argsMap.repository) {
+      configureRepositoryForName(argsMap.repository, "distribution")
+    }
     remoteLocation = "${pluginSVN}/griffon-${pluginName}"
     trunk = SVNURL.parseURIDecoded("${remoteLocation}/trunk")
     latestRelease = "${remoteLocation}/tags/LATEST_RELEASE"
@@ -52,28 +70,41 @@ target(releasePlugin: "The implementation target") {
         else {
             def statusClient = new SVNStatusClient((ISVNAuthenticationManager)authManager,null)
 
-            boolean imported = false
             try {
                 // get status of base directory, if this fails exception will be thrown
                 statusClient.doStatus(baseFile, true)
+                updateAndCommitLatest()
             }
             catch(SVNException ex) {
                 // error with status, not in repo, attempt import.
-                importToSVN()
-                commitNewGlobalPluginList()
-                imported = true
+                if (ex.message.contains("is not a working copy")) {
+                    // Now check whether the plugin is in the repository.
+                    // If not, we ask the user whether they want to import
+                    // it.
+                    SVNRepository repos = SVNRepositoryFactory.create(SVNURL.parseURIDecoded(pluginSVN))
+                    if (!repos.info("griffon-$pluginName", -1)) {
+                        importToSVN()
+                    }
+                    else {
+                       def result = confirmInput("""
+The current directory is not a working copy and your latest changes won't be committed. You need to checkout
+a working copy and make your changes there. Alternatively, do you want to proceed and create a release from what is in SVN now?
+                    """)
+                        if(result == 'n') exit(0)
+                    }
+                }
+                else {
+                    event('StatusFinal', ["Failed to stat working directory: ${ex.message}"])
+                    exit(1)
+                }
             }
-            if(!imported) {
-                updateAndCommitLatest()
-                tagPluginRelease()
-                commitNewGlobalPluginList()
-                event('StatusFinal', ["Plug-in release successfully published"])
-            }
+            tagPluginRelease()
+            commitNewGlobalPluginList()
+            event('StatusFinal', ["Plug-in release successfully published"])
         }
     }
     catch(Exception e) {
-        event('StatusFinal', ["Error occurred with release-plugin: ${e.message}"])
-        e.printStackTrace()
+        logErrorAndExit("Error occurred with release-plugin", e)
     }
 }
 
@@ -84,7 +115,7 @@ target(commitNewGlobalPluginList:"updates the plugins.xml descriptor stored in t
    println "Building plugin list for commit..."
    updatePluginsListManually()
 
-    def pluginMetaDir = new File("${pluginsHome}/.plugin-meta")
+    def pluginMetaDir = new File("${griffonSettings.griffonWorkDir}/${repositoryName}/.plugin-meta")
     def updateClient = new SVNUpdateClient((ISVNAuthenticationManager)authManager, null)
     def importClient = new SVNCommitClient((ISVNAuthenticationManager)authManager, null)
     String remotePluginMetadata = "${pluginSVN}/.plugin-meta"
@@ -99,12 +130,12 @@ target(commitNewGlobalPluginList:"updates the plugins.xml descriptor stored in t
            println "Plugin meta directory corrupt, checking out again"
            checkoutOrImportPluginMetadata(pluginMetaDir, remotePluginMetadata, updateClient, importClient)
        }
-       ant.copy(file:pluginsListFile, todir:pluginMetaDir, overwrite:true)
-
-       def commit = importClient.doCommit([pluginMetaDir] as File[],false,commitMessage,true,true)
-
-       println "Committed revision ${commit.newRevision} of plugins-list.xml."
    }
+   ant.copy(file:pluginsListFile, tofile:"$pluginMetaDir/plugins-list.xml", overwrite:true)
+
+   def commit = importClient.doCommit([pluginMetaDir] as File[],false,commitMessage,true,true)
+
+   println "Committed revision ${commit.newRevision} of plugins-list.xml."
 
 
 }
@@ -154,7 +185,7 @@ target(checkInPluginZip:"Checks in the plug-in zip if it has not been checked in
 }
 target(updateAndCommitLatest:"Commits the latest revision of the Plug-in") {
    def result = confirmInput("""
-This command will perform the following steps to release your plug-in into Griffon' SVN repository:
+This command will perform the following steps to release your plug-in to Griffon' SVN repository:
 * Update your sources to the HEAD revision
 * Commit any changes you've made to SVN
 * Tag the release
@@ -192,8 +223,8 @@ target(importToSVN:"Imports a plug-in project to Griffon' remote SVN repository"
     def result = confirmInput("""
 This plug-in project is not currently in the repository, this command will now:
 * Perform an SVN import into the repository
-* Tag the plug-in project as the LATEST_RELEASE
 * Checkout the imported version of the project from SVN to '${checkOutDir}'
+* Tag the plug-in project as the LATEST_RELEASE
 Are you sure you wish to proceed?
     """)
     if(result == 'n') exit(0)
@@ -211,10 +242,7 @@ Are you sure you wish to proceed?
     importClient.doImport(new File("${basedir}/unzipped"),svnURL,commitMessage,true)
     println "Plug-in project imported to SVN at location '${remoteLocation}/trunk'"
 
-    tagPluginRelease()
-
     ant.delete(dir:"${basedir}/unzipped")
-
 
     checkOutDir.parentFile.mkdirs()
 
@@ -230,13 +258,12 @@ Future changes should be made to the SVN controlled sources!"""])
 }
 
 target(tagPluginRelease:"Tags a plugin-in with the LATEST_RELEASE tag and version tag within the /tags area of SVN") {
+    println "Preparing to publish the release..."
 
     copyClient = new SVNCopyClient((ISVNAuthenticationManager)authManager, null)
     commitClient = new SVNCommitClient((ISVNAuthenticationManager)authManager, null)
 
     if(!commitMessage) askForMessage()
-
-    println "Tagging release. Please wait..."
 
     tags = SVNURL.parseURIDecoded("${remoteLocation}/tags")
     latest = SVNURL.parseURIDecoded(latestRelease)
@@ -260,19 +287,29 @@ target(tagPluginRelease:"Tags a plugin-in with the LATEST_RELEASE tag and versio
     def commit
 
     // First tag this release with the version number.
-    println "Tagging version release, please wait..."
-    def copySource = new SVNCopySource(SVNRevision.HEAD, SVNRevision.HEAD, trunk)
-    commit = copyClient.doCopy([copySource] as SVNCopySource[], release, false, false, true, commitMessage, new SVNProperties())
-    println "Copied trunk to ${versionedRelease} with revision ${commit.newRevision} on ${commit.date}"
+    try {
+      println "Tagging version release, please wait..."
+      def copySource = new SVNCopySource(SVNRevision.HEAD, SVNRevision.HEAD, trunk)
+      commit = copyClient.doCopy([copySource] as SVNCopySource[], release, false, false, true, commitMessage, new SVNProperties())
+      println "Copied trunk to ${versionedRelease} with revision ${commit.newRevision} on ${commit.date}"
 
-    // And now make it the latest release.
-    println "Tagging latest release, please wait..."
-    copySource = new SVNCopySource(SVNRevision.HEAD, SVNRevision.HEAD, release)
-    commit = copyClient.doCopy([copySource] as SVNCopySource[], latest, false, false, true, commitMessage, new SVNProperties())
-    println "Copied trunk to ${latestRelease} with revision ${commit.newRevision} on ${commit.date}"
+      // And now make it the latest release.
+      println "Tagging latest release, please wait..."
+      copySource = new SVNCopySource(SVNRevision.HEAD, SVNRevision.HEAD, release)
+      commit = copyClient.doCopy([copySource] as SVNCopySource[], latest, false, false, true, commitMessage, new SVNProperties())
+      println "Copied trunk to ${latestRelease} with revision ${commit.newRevision} on ${commit.date}"
+
+    }
+    catch (SVNException e) {
+      logErrorAndExit("Error tagging release", e)
+    }
+
+
 }
 
 target(askForMessage:"Asks for the users commit message") {
     ant.input(message:"Enter a SVN commit message:", addproperty:"commit.message")
     commitMessage = ant.antProject.properties."commit.message"
 }
+
+setDefaultTarget(releasePlugin)

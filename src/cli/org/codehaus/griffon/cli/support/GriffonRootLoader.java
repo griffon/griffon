@@ -1,5 +1,4 @@
-/*
- * Copyright 2004-2008 the original author or authors.
+/* Copyright 2004-2005 Graeme Rocher
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,12 +14,16 @@
  */
 package org.codehaus.griffon.cli.support;
 
-import org.codehaus.groovy.tools.LoaderConfiguration;
 import org.codehaus.groovy.tools.RootLoader;
 
 import java.net.URL;
 
 /**
+ * A custom Groovy RootLoader that works around issue
+ * <a href="http://jira.codehaus.org/browse/GROOVY-2303">GROOVY-2303</a>.
+ * The problem is with Jaxen, so if we manage to remove that dependency
+ * (or it stops packaging UserDataHandler) we can revert back to using
+ * plain old Groovy RootLoader.
  * @author Graeme Rocher
  * @since 1.0
  *        <p/>
@@ -31,8 +34,8 @@ public class GriffonRootLoader extends RootLoader {
         super(urls, parent);
     }
 
-    public GriffonRootLoader(LoaderConfiguration lc) {
-        super(lc);
+    public GriffonRootLoader() {
+        super(new URL[0],ClassLoader.getSystemClassLoader());
     }
 
     protected Class loadClass(String name, boolean resolve) throws ClassNotFoundException {

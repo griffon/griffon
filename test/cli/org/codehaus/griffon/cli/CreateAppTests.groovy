@@ -5,7 +5,7 @@ class CreateAppTests extends AbstractCliTests {
 
 	void testCreateApp() {
 
-	    gantRun("CreateApp")
+	    gantRun("CreateApp_")
 
 	    // test basic structure
 		assert new File("${appBase}/testapp").exists()

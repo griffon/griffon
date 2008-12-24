@@ -1,5 +1,5 @@
 /*
-* Copyright 2004-2008 the original author or authors.
+* Copyright 2004-2005 the original author or authors.
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
@@ -15,19 +15,38 @@
 */
 package org.codehaus.griffon.commons;
 
+import org.codehaus.griffon.util.BuildSettings;
+//import org.codehaus.griffon.util.GriffonNameUtils;
+//import org.codehaus.griffon.util.GriffonUtil;
+//import groovy.lang.GString;
 import groovy.lang.GroovyClassLoader;
 import groovy.lang.GroovyObjectSupport;
 import groovy.util.ConfigObject;
-import groovy.util.ConfigSlurper;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+//import org.codehaus.groovy.control.CompilationFailedException;
+//import org.codehaus.groovy.control.CompilerConfiguration;
+import org.codehaus.griffon.commons.cfg.ConfigurationHelper;
+//import org.codehaus.griffon.commons.spring.GriffonResourceHolder;
+//import org.codehaus.griffon.compiler.GriffonClassLoader;
+//import org.codehaus.griffon.compiler.injection.ClassInjector;
+//import org.codehaus.griffon.compiler.injection.DefaultGriffonDomainClassInjector;
+//import org.codehaus.griffon.compiler.injection.GriffonAwareClassLoader;
+//import org.codehaus.griffon.compiler.support.GriffonResourceLoader;
+import org.codehaus.griffon.exceptions.GriffonConfigurationException;
+import org.codehaus.groovy.runtime.StackTraceUtils;
+//import org.codehaus.groovy.runtime.DefaultGroovyMethods;
+import org.springframework.beans.BeansException;
+import org.springframework.beans.factory.BeanClassLoaderAware;
+import org.springframework.context.ApplicationContext;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
-import org.codehaus.groovy.runtime.StackTraceUtils;
+//import org.springframework.util.Assert;
 
-import java.util.*;
 import java.io.IOException;
+//import java.lang.reflect.Modifier;
+import java.util.*;
 //import java.util.regex.Matcher;
 //import java.util.regex.Pattern;
 
@@ -45,32 +64,32 @@ import java.io.IOException;
  * @author Steven Devijver
  * @author Graeme Rocher
  *
- * @ see org.codehaus.griffon.plugins.GriffonPluginManager
- * @ see org.codehaus.griffon.plugins.DefaultGriffonPluginManager
- * @ see org.codehaus.griffon.commons.ArtefactHandler
- * @ see org.codehaus.griffon.commons.ArtefactInfo
- * @ since 0.1
+ * @see org.codehaus.griffon.plugins.GriffonPluginManager
+ * @see org.codehaus.griffon.plugins.DefaultGriffonPluginManager
+ * @see org.codehaus.griffon.commons.ArtefactHandler
+ * @see org.codehaus.griffon.commons.ArtefactInfo
+ * @since 0.1
  *        <p/>
  *        Created: Jul 2, 2005
  */
 public class DefaultGriffonContext extends GroovyObjectSupport implements GriffonContext {//, BeanClassLoaderAware {
 
-    //private static final Pattern GETCLASSESPROP_PATTERN = Pattern.compile("(\\w+)(Classes)");
-    //private static final Pattern GETCLASSESMETH_PATTERN = Pattern.compile("(get)(\\w+)(Classes)");
-    //private static final Pattern ISCLASS_PATTERN = Pattern.compile("(is)(\\w+)(Class)");
-    //private static final Pattern GETCLASS_PATTERN = Pattern.compile("(get)(\\w+)Class");
-    private static final String PROJECT_META_FILE = "application.properties";
-    private static final String DATA_SOURCE_CLASS = "DataSource";
+//    private static final Pattern GETCLASSESPROP_PATTERN = Pattern.compile("(\\w+)(Classes)");
+//    private static final Pattern GETCLASSESMETH_PATTERN = Pattern.compile("(get)(\\w+)(Classes)");
+//    private static final Pattern ISCLASS_PATTERN = Pattern.compile("(is)(\\w+)(Class)");
+//    private static final Pattern GETCLASS_PATTERN = Pattern.compile("(get)(\\w+)Class");
+//    private static final String META_GRiFFON_WAR_DEPLOYED = "griffon.war.deployed";
 
     private GroovyClassLoader cl = null;
 
     private Class[] allClasses = new Class[0];
     private static Log log = LogFactory.getLog(DefaultGriffonContext.class);
-//    private ApplicationContext parentContext;
+    private ApplicationContext parentContext;
+    private ApplicationContext mainContext;
 
-    private Set<Class> loadedClasses = new HashSet<Class>();
+    private Set loadedClasses = new HashSet();
 //    private GriffonResourceLoader resourceLoader;
-    //private ArtefactHandler[] artefactHandlers;
+//    private ArtefactHandler[] artefactHandlers;
 //    private Map artefactHandlersByName = new HashMap();
 //    private Set allArtefactClasses = new HashSet();
 //    private Map artefactInfo = new HashMap();
@@ -80,23 +99,19 @@ public class DefaultGriffonContext extends GroovyObjectSupport implements Griffo
 //    private Resource[] resources;
     private boolean initialised = false;
 //    private ClassLoader beanClassLoader;
-    private static final String CONFIG_BINDING_USER_HOME = "userHome";
-    private static final String CONFIG_BINDING_GRIFFON_HOME = "griffonHome";
-    private static final String CONFIG_BINDING_APP_NAME = "appName";
-    private static final String CONFIG_BINDING_APP_VERSION = "appVersion";
-//    private static final String META_GRIFFON_WAR_DEPLOYED = "griffon.war.deployed";
 
     /**
      * Creates a new empty Griffon application
      */
     public DefaultGriffonContext() {
         this.cl = new GroovyClassLoader();
+        this.applicationMeta = loadMetadata();
     }
 
     /**
-     * Creates a new GriffonApplication instance using the given classes and GroovyClassLoader
+     * Creates a new GriffonContext instance using the given classes and GroovyClassLoader
      *
-     * @param classes     The classes that make up the GriffonApplication
+     * @param classes     The classes that make up the GriffonContext
      * @param classLoader The GroovyClassLoader to use
      */
     public DefaultGriffonContext(final Class[] classes, GroovyClassLoader classLoader) {
@@ -104,14 +119,17 @@ public class DefaultGriffonContext extends GroovyObjectSupport implements Griffo
             throw new IllegalArgumentException("Constructor argument 'classes' cannot be null");
         }
 
-        loadedClasses.addAll(Arrays.asList(classes));
+        for (int i = 0; i < classes.length; i++) {
+            Class aClass = classes[i];
+            loadedClasses.add(aClass);
+        }
         this.allClasses = classes;
         this.cl = classLoader;
         this.applicationMeta = loadMetadata();
     }
 
 
-    /* *
+    /**
      * Constructs a GriffonContext with the given set of groovy sources specified as Spring Resource instances
      *
      * @param resources An array or Groovy sources provides by Spring Resource instances
@@ -126,7 +144,7 @@ public class DefaultGriffonContext extends GroovyObjectSupport implements Griffo
 //        this.resourceLoader = resourceLoader;
 
 //        try {
-//            this.applicationMeta = loadMetadata();
+//        	this.applicationMeta = loadMetadata();
 //            loadGriffonApplicationFromResources(resourceLoader.getResources());
 //        } catch (IOException e) {
 //            throw new GriffonConfigurationException("I/O exception loading Griffon: " + e.getMessage(), e);
@@ -192,7 +210,7 @@ public class DefaultGriffonContext extends GroovyObjectSupport implements Griffo
 
     protected Map<Object, Object> loadMetadata() {
         final Properties meta = new Properties();
-        Resource r = new ClassPathResource(PROJECT_META_FILE);
+        Resource r = new ClassPathResource(PROJECT_META_FILE, getClassLoader());
         try {
             meta.load(r.getInputStream());
         }
@@ -200,8 +218,8 @@ public class DefaultGriffonContext extends GroovyObjectSupport implements Griffo
             StackTraceUtils.deepSanitize(e);
             log.warn("No application metadata file found at " + r);
         }
-        if (System.getProperty(GriffonContext.ENVIRONMENT) != null) {
-            meta.setProperty(GriffonContext.ENVIRONMENT, System.getProperty(GriffonContext.ENVIRONMENT));
+        if (System.getProperty(BuildSettings.ENVIRONMENT) != null) {
+        	meta.setProperty(BuildSettings.ENVIRONMENT, System.getProperty(BuildSettings.ENVIRONMENT));
         }
         return Collections.unmodifiableMap(meta);
     }
@@ -209,7 +227,7 @@ public class DefaultGriffonContext extends GroovyObjectSupport implements Griffo
     /**
      * Initialises the default set of ArtefactHandler instances
      *
-     * @ see org.codehaus.griffon.commons.ArtefactHandler
+     * @see org.codehaus.griffon.commons.ArtefactHandler
      */
 //    private void initArtefactHandlers() {
 //        registerArtefactHandler(new DomainClassArtefactHandler());
@@ -244,21 +262,14 @@ public class DefaultGriffonContext extends GroovyObjectSupport implements Griffo
 //        GroovyClassLoader cl;
 //        if (rootLoader != null) {
 //            // This is for when we are using run-app
-//
-//            // don't support class re-loading now
-//            //cl = new GriffonClassLoader(contextLoader, config, resourceLoader);
-//            cl = new GroovyClassLoader(contextLoader, config);
+//            cl = new GriffonClassLoader(contextLoader, config, resourceLoader);
 //        } else {
 //            // This is when we are in WAR
-//
-//            // don't use injection, rely on ASTTransforms
-//            //GriffonAwareClassLoader gcl = new GriffonAwareClassLoader(contextLoader, config);
-//            //if (resourceLoader != null)
-//            //    gcl.setResourceLoader(resourceLoader);
-//            //gcl.setClassInjectors(new ClassInjector[]{new DefaultGriffonDomainClassInjector()});
-//            //cl = gcl;
-//
-//            cl = new GroovyClassLoader(contextLoader, config);
+//            GriffonAwareClassLoader gcl = new GriffonAwareClassLoader(contextLoader, config);
+//            if (resourceLoader != null)
+//                gcl.setResourceLoader(resourceLoader);
+//            gcl.setClassInjectors(new ClassInjector[]{new DefaultGriffonDomainClassInjector()});
+//            cl = gcl;
 //        }
 //
 //
@@ -278,12 +289,12 @@ public class DefaultGriffonContext extends GroovyObjectSupport implements Griffo
 //    }
 
 //    private Class[] populateAllClasses() {
-//        this.allClasses = loadedClasses.toArray(new Class[loadedClasses.size()]);
+//        this.allClasses = (Class[]) loadedClasses.toArray(new Class[loadedClasses.size()]);
 //        return allClasses;
 //    }
 
     /**
-     * Configures the loaded classes within the GriffonApplication instance using the registered ArtefactHandler instances
+     * Configures the loaded classes within the GriffonContext instance using the registered ArtefactHandler instances
      *
      * @param classes The classes to configure
      */
@@ -357,29 +368,6 @@ public class DefaultGriffonContext extends GroovyObjectSupport implements Griffo
 //        populateAllClasses();
 //    }
 
-//    public GriffonControllerClass getScaffoldingController(GriffonDomainClass domainClass) {
-//        if (domainClass == null) {
-//            return null;
-//        }
-//
-//        ArtefactInfo info = getArtefactInfo(ControllerArtefactHandler.TYPE, true);
-//        GriffonClass[] controllerClasses = info.getGriffonClasses();
-//
-//        for (int i = 0; i < controllerClasses.length; i++) {
-//            GriffonControllerClass controllerClass = (GriffonControllerClass) controllerClasses[i];
-//            if (controllerClass.isScaffolding()) {
-//                Class scaffoldedClass = controllerClass.getScaffoldedClass();
-//                if (scaffoldedClass != null) {
-//                    if (domainClass.getClazz().getName().equals(scaffoldedClass.getName())) {
-//                        return controllerClass;
-//                    }
-//                } else if (domainClass.getName().equals(controllerClass.getName())) {
-//                    return controllerClass;
-//                }
-//            }
-//        }
-//        return null;
-//    }
 
 //    public GriffonResourceLoader getResourceLoader() {
 //        return resourceLoader;
@@ -392,42 +380,13 @@ public class DefaultGriffonContext extends GroovyObjectSupport implements Griffo
     public ConfigObject getConfig() {
         ConfigObject c = ConfigurationHolder.getConfig();
         if (c == null) {
-            ConfigSlurper configSlurper = new ConfigSlurper(GriffonUtil.getEnvironment());
-            Map binding = new HashMap();
-
-            // configure config slurper binding
-            binding.put(CONFIG_BINDING_USER_HOME, System.getProperty("user.home"));
-            binding.put(CONFIG_BINDING_GRIFFON_HOME, System.getProperty("griffon.home"));
-            binding.put(CONFIG_BINDING_APP_NAME, getMetadata().get("app.name"));
-            binding.put(CONFIG_BINDING_APP_VERSION, getMetadata().get("app.version"));
-
-            configSlurper.setBinding(binding);
-            try {
-                Class scriptClass = getClassLoader()
-                        .loadClass(CONFIG_CLASS);
-
-                c = configSlurper.parse(scriptClass);
-                ConfigurationHolder.setConfig(c);
-            } catch (ClassNotFoundException e) {
-                log.debug("Could not find config class [" + CONFIG_CLASS + "]. This is probably nothing to worry about, it is not required to have a config: " + e.getMessage());
-                // ignore, it is ok not to have a configuration file
-                c = new ConfigObject();
-            }
-
-
-            try {
-                Class dataSourceClass = getClassLoader()
-                        .loadClass(DATA_SOURCE_CLASS);
-                c.merge(configSlurper.parse(dataSourceClass));
-            } catch (ClassNotFoundException e) {
-                log.debug("Cound not find data source class [" + DATA_SOURCE_CLASS + "]. This may be what you are expecting, but will result in Griffon loading with an in-memory database");
-                // ignore
-            }
-            if (c == null) c = new ConfigObject();
-//            ConfigurationHelper.initConfig(c,null, getClassLoader());
-            ConfigurationHolder.setConfig(c);
+            c = ConfigurationHelper.loadConfigFromClasspath(this);
         }
         return c;
+    }
+
+    public Map getFlatConfig() {
+        return ConfigurationHolder.getFlatConfig();
     }
 
 
@@ -443,15 +402,23 @@ public class DefaultGriffonContext extends GroovyObjectSupport implements Griffo
 //    }
 
     /**
-     * Retrieves all classes loaded by the GriffonApplication
+     * Retrieves all classes loaded by the GriffonContext
      *
-     * @return All classes loaded by the GriffonApplication
+     * @return All classes loaded by the GriffonContext
      */
     public Class[] getAllClasses() {
         return this.allClasses;
     }
 
-    /* *
+//    public ApplicationContext getMainContext() {
+//        return this.mainContext;
+//    }
+//
+//    public void setMainContext(ApplicationContext context) {
+//        this.mainContext = context;
+//    }
+
+    /**
      * Sets the parent ApplicationContext for the GriffonContext
      *
      * @param applicationContext The ApplicationContext
@@ -461,7 +428,7 @@ public class DefaultGriffonContext extends GroovyObjectSupport implements Griffo
 //        this.parentContext = applicationContext;
 //    }
 
-    /* *
+    /**
      * Retrieves the parent ApplicationContext for this GriffonContext
      *
      * @return The parent ApplicationContext
@@ -471,7 +438,7 @@ public class DefaultGriffonContext extends GroovyObjectSupport implements Griffo
 //    }
 
     /**
-     * Retrieves a class from the GriffonApplication for the given name
+     * Retrieves a class from the GriffonContext for the given name
      *
      * @param className The class name
      * @return Either the java.lang.Class instance or null if it doesn't exist
@@ -480,7 +447,8 @@ public class DefaultGriffonContext extends GroovyObjectSupport implements Griffo
         if (StringUtils.isBlank(className)) {
             return null;
         }
-        for (Class c : allClasses) {
+        for (int i = 0; i < allClasses.length; i++) {
+            Class c = allClasses[i];
             if (c.getName().equals(className)) {
                 return c;
             }
@@ -488,7 +456,7 @@ public class DefaultGriffonContext extends GroovyObjectSupport implements Griffo
         return null;
     }
 
-    /* *
+    /**
      * Refreshes constraints defined by the DomainClassArtefactHandler
      *
      * @todo Move this out of GriffonContext
@@ -501,7 +469,7 @@ public class DefaultGriffonContext extends GroovyObjectSupport implements Griffo
 //        }
 //    }
 
-    /* *
+    /**
      * Refreshes this GriffonContext, rebuilding all of the artefact definitions as defined by the registered ArtefactHandler instances
      */
 //    public void refresh() {
@@ -515,7 +483,7 @@ public class DefaultGriffonContext extends GroovyObjectSupport implements Griffo
 //
 //        if (GriffonUtil.isDevelopmentEnv()) {
 //            try {
-//                loadGriffonApplicationFromResources(this.resources);
+//                loadGriffonContextFromResources(this.resources);
 //                initialise();
 //            } catch (IOException e) {
 //                throw new GriffonConfigurationException("I/O error rebuilding GriffonContext: " + e.getMessage(), e);
@@ -526,7 +494,7 @@ public class DefaultGriffonContext extends GroovyObjectSupport implements Griffo
 //
 //    }
 
-    /* *
+    /**
      * Retrieves the Spring Resource that was used to load the given Class
      *
      * @param theClazz The class
@@ -539,7 +507,7 @@ public class DefaultGriffonContext extends GroovyObjectSupport implements Griffo
 //        return this.resourceLoader.getResourceForClass(theClazz);
 //    }
 
-    /* *
+    /**
      * Returns true if the given class is an artefact identified by one of the registered ArtefactHandler instances.
      * Uses class name equality to handle class reloading
      *
@@ -557,13 +525,13 @@ public class DefaultGriffonContext extends GroovyObjectSupport implements Griffo
 //        return false;
 //    }
 
-    /* *
+    /**
      * Returns true if the specified class is of the given artefact type as defined by the ArtefactHandler
      *
      * @param artefactType The type of the artefact
      * @param theClazz     The class
      * @return True if it is of the specified artefactType
-     * @ see org.codehaus.griffon.commons.ArtefactHandler
+     * @see org.codehaus.griffon.commons.ArtefactHandler
      */
 //    public boolean isArtefactOfType(String artefactType, Class theClazz) {
 //        ArtefactHandler handler = (ArtefactHandler) artefactHandlersByName.get(artefactType);
@@ -573,19 +541,19 @@ public class DefaultGriffonContext extends GroovyObjectSupport implements Griffo
 //        return handler.isArtefact(theClazz);
 //    }
 
-    /* *
+    /**
      * Returns true if the specified class name is of the given artefact type as defined by the ArtefactHandler
      *
      * @param artefactType The type of the artefact
      * @param className    The class name
      * @return True if it is of the specified artefactType
-     * @ see org.codehaus.griffon.commons.ArtefactHandler
+     * @see org.codehaus.griffon.commons.ArtefactHandler
      */
 //    public boolean isArtefactOfType(String artefactType, String className) {
 //        return getArtefact(artefactType, className) != null;
 //    }
 
-    /* *
+    /**
      * Retrieves an artefact for the given type and nam
      *
      * @param artefactType The artefact type as defined by a registered ArtefactHandler
@@ -603,7 +571,7 @@ public class DefaultGriffonContext extends GroovyObjectSupport implements Griffo
 //        return info == null ? null : info.getGriffonClasses()[0];
 //    }
 
-    /* *
+    /**
      * Returns all of the GriffonClass instances for the given artefactType as defined by the ArtefactHandler
      *
      * @param artefactType The type of the artefact defined by the ArtefactHandler
@@ -620,14 +588,14 @@ public class DefaultGriffonContext extends GroovyObjectSupport implements Griffo
 //        return handler.getArtefactForFeature(featureID);
 //    }
 
-    /* *
+    /**
      * Adds an artefact of the given type for the given Class.
      *
      * @param artefactType  The type of the artefact as defined by a ArtefactHandler instance
      * @param artefactClass A Class instance that matches the type defined by the ArtefactHandler
      * @return The GriffonClass if successful or null if it couldn't be added
      * @throws GriffonConfigurationException If the specified Class is not the same as the type defined by the ArtefactHandler
-     * @ see org.codehaus.griffon.commons.ArtefactHandler
+     * @see org.codehaus.groovy.griffon.commons.ArtefactHandler
      */
 //    public GriffonClass addArtefact(String artefactType, Class artefactClass) {
 //        // @todo should we filter abstracts here?
@@ -657,7 +625,7 @@ public class DefaultGriffonContext extends GroovyObjectSupport implements Griffo
 //        }
 //    }
 
-    /* *
+    /**
      * Adds an artefact of the given type for the given GriffonClass.
      *
      * @param artefactType        The type of the artefact as defined by a ArtefactHandler instance
@@ -688,7 +656,7 @@ public class DefaultGriffonContext extends GroovyObjectSupport implements Griffo
 //        }
 //    }
 
-    /* *
+    /**
      * Registers a new ArtefactHandler that is responsible for identifying and managing an particular artefact type that is defined by
      * some convention
      *
@@ -702,7 +670,7 @@ public class DefaultGriffonContext extends GroovyObjectSupport implements Griffo
 //        return artefactHandlers;
 //    }
 
-    /* *
+    /**
      * <p>Re-initialize the artefacts of the specified type. This gives handlers a chance to update caches etc</p>
      *
      * @param artefactType The type of artefact to init
@@ -712,7 +680,7 @@ public class DefaultGriffonContext extends GroovyObjectSupport implements Griffo
 //        initializeArtefacts(handler);
 //    }
 
-    /* *
+    /**
      * <p>Re-initialize the artefacts of the specified type. This gives handlers a chance to update caches etc</p>
      *
      * @param handler The handler to register
@@ -728,7 +696,7 @@ public class DefaultGriffonContext extends GroovyObjectSupport implements Griffo
 //        }
 //    }
 
-    /* *
+    /**
      * <p>Get or create the cache of classes for the specified artefact type</p>
      *
      * @param artefactType The name of an artefact type
@@ -745,7 +713,7 @@ public class DefaultGriffonContext extends GroovyObjectSupport implements Griffo
 //        return cache;
 //    }
 
-    /* *
+    /**
      * <p>Get the cache of classes for the specified artefact type</p>
      *
      * @param artefactType The name of an artefact type
@@ -756,7 +724,7 @@ public class DefaultGriffonContext extends GroovyObjectSupport implements Griffo
 //    }
 
 
-    /* *
+    /**
      * <p>Overrides method invocation to return dynamic artefact methods</p>
      * <p>We will support getXXXXClasses() and isXXXXClass(class)</p>
      *
@@ -775,6 +743,7 @@ public class DefaultGriffonContext extends GroovyObjectSupport implements Griffo
 //        match.find();
 //        if (match.matches()) {
 //            if (argsv.length > 0) {
+//                if(argsv[0] instanceof GString) argsv[0] = argsv[0].toString();
 //                if ((argsv.length != 1) || !(argsv[0] instanceof String)) {
 //                    throw new IllegalArgumentException("Dynamic method get<Artefact>Class(artefactName) requires a " +
 //                            "single String parameter");
@@ -803,7 +772,7 @@ public class DefaultGriffonContext extends GroovyObjectSupport implements Griffo
 //                // find match
 //                match.find();
 //                if (match.matches()) {
-//                    String artefactName = GriffonClassUtils.getClassNameRepresentation(match.group(2));
+//                    String artefactName = GriffonNameUtils.getClassNameRepresentation(match.group(2));
 //                    if (artefactHandlersByName.containsKey(artefactName)) {
 //                        return getArtefacts(match.group(2));
 //                    } else {
@@ -817,7 +786,7 @@ public class DefaultGriffonContext extends GroovyObjectSupport implements Griffo
 //        }
 //    }
 
-    /* *
+    /**
      * <p>Override property access and hit on xxxxClasses to return class arrays of artefacts</p>
      *
      * @param propertyName The name of the property, if it ends in *Classes then match and invoke internal ArtefactHandler
@@ -829,7 +798,7 @@ public class DefaultGriffonContext extends GroovyObjectSupport implements Griffo
 //        // find match
 //        match.find();
 //        if (match.matches()) {
-//            String artefactName = GriffonClassUtils.getClassNameRepresentation(match.group(1));
+//            String artefactName = GriffonNameUtils.getClassNameRepresentation(match.group(1));
 //            if (artefactHandlersByName.containsKey(artefactName)) {
 //                return getArtefacts(artefactName);
 //            }
@@ -842,8 +811,8 @@ public class DefaultGriffonContext extends GroovyObjectSupport implements Griffo
         if (log.isDebugEnabled()) {
             log.debug("loaded classes: [" + loadedClasses + "]");
         }
-        //Class[] classes = populateAllClasses();
-        //configureLoadedClasses(classes);
+//        Class[] classes = populateAllClasses();
+//        configureLoadedClasses(classes);
         this.initialised = true;
     }
 
@@ -872,7 +841,7 @@ public class DefaultGriffonContext extends GroovyObjectSupport implements Griffo
 //    public boolean isWarDeployed() {
 //        Map metadata = getMetadata();
 //        if(metadata != null) {
-//            Object val = metadata.get(META_GRIFFON_WAR_DEPLOYED);
+//            Object val = metadata.get(META_Griffon_WAR_DEPLOYED);
 //            if(val != null && val.equals("true")) {
 //                return true;
 //            }

@@ -21,9 +21,7 @@
  *
  * @since 0.4
  */
-import org.codehaus.griffon.commons.GriffonClassUtils as GCU  
 
-GCL = new GroovyClassLoader()
 pluginResources = []
 
 target( packagePlugins : "Packages any Griffon plugins that are installed for this project") {
@@ -38,7 +36,7 @@ target( packagePlugins : "Packages any Griffon plugins that are installed for th
 			def pluginName = pluginBase.name
 			def pluginNameWithVersion = pluginBase.name
 
-	   		Ant.sequential {
+	   		ant.sequential {
 //				if(new File("${pluginBase}/griffon-app/conf/hibernate").exists()) {
 //		   			copy(todir:classesDirPath, failonerror:false) {
 //		   				fileset(dir:"${pluginBase}/griffon-app/conf/hibernate", includes:"**", excludes:"*.groovy")
@@ -50,7 +48,7 @@ target( packagePlugins : "Packages any Griffon plugins that are installed for th
 		   			}
 				}
 //	            if(new File("${pluginPath}/web-app").exists()) {
-//					Ant.mkdir(dir:"${basedir}/web-app/plugins/${pluginName}")
+//					ant.mkdir(dir:"${basedir}/web-app/plugins/${pluginName}")
 //					if(basePlugin != p) {
 //			  			copy(todir:"${basedir}/web-app/plugins/${pluginName}") {
 //			   				fileset(dir:"${pluginBase}/web-app", includes:"**", excludes:"**/WEB-INF/**, **/META-INF/**")

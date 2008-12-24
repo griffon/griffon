@@ -1,96 +1,87 @@
 /*
-* Copyright 2004-2008 the original author or authors.
-*
-* Licensed under the Apache License, Version 2.0 (the "License");
-* you may not use this file except in compliance with the License.
-* You may obtain a copy of the License at
-*
-*      http://www.apache.org/licenses/LICENSE-2.0
-*
-* Unless required by applicable law or agreed to in writing, software
-* distributed under the License is distributed on an "AS IS" BASIS,
-* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-* See the License for the specific language governing permissions and
-* limitations under the License.
-*/
+ * Copyright 2004-2005 the original author or authors.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 
- /**
+/**
  * Gant script that handles upgrading of a Griffon applications
  *
  * @author Graeme Rocher
  * @author Sergey Nebolsin
- * @author Danno Ferrin
  *
- * @since Griffon 0.1
+ * @since 0.4
  */
 
-/**
- * Upgrades that occur for each version:
- *
- * for 0.1
- *   - add in Config.groovy griffon.jars.pack=true and griffon.jars.sign=true
- *   - signingkey.params.sigfile is set to GRIFFON for ease of identifying signing file
- *   - startup MVC groups are now configurable in Application.groovy
- *     via application.startupGroups list
- *   - insure testing dirs are present for test-app: test/integration ant test/unit
- */
-
-import org.codehaus.griffon.commons.GriffonContext
 import org.codehaus.griffon.plugins.GriffonPluginUtils
+import org.codehaus.griffon.commons.GriffonContext
 
-defaultTarget("Upgrades a Griffon application from a previous version of Griffon") {
-    depends( upgrade )
-}
+includeTargets << griffonScript("_GriffonInit")
+includeTargets << griffonScript("_GriffonClean")
 
-includeTargets << griffonScript("CreateApp" )
-includeTargets << griffonScript("Clean" )
+target(upgrade: "main upgrade target") {
 
-target( upgrade: "main upgrade target") {
-
-    depends( createStructure )
+    depends(createStructure)
 
     boolean force = args?.indexOf('-force') > -1 ? true : false
 
     if (appGriffonVersion != griffonVersion) {
         def gv = appGriffonVersion == null ? "?Unknown?" : appGriffonVersion
-        event("StatusUpdate", [ "NOTE: Your application currently expects griffon version [$gv], "+
-            "this target will upgrade it to Griffon ${griffonVersion}"])
+        event("StatusUpdate", ["NOTE: Your application currently expects griffon version [$gv], " +
+                "this target will upgrade it to Griffon ${griffonVersion}"])
     }
 
-    if(!force) {
+    if (!force) {
         //TODO warn user about descructive changes
 
-//        Ant.input(message: """
+//        ant.input(message: """
 //        WARNING: Something bad might happen
-//                   """,
-//                validargs:"y,n",
-//                addproperty:"griffon.upgrade.warning")
+//				   """,
+//                validargs: "y,n",
+//                addproperty: "griffon.upgrade.warning")
 //
-//        def answer = Ant.antProject.properties."griffon.upgrade.warning"
+//        def answer = ant.antProject.properties."griffon.upgrade.warning"
 //
-//        if(answer == "n") exit(0)
+//        if (answer == "n") exit(0)
 //
 //        if ((griffonVersion.startsWith("1.0")) &&
-//            !(['utf-8', 'us-ascii'].contains(System.getProperty('file.encoding')?.toLowerCase()) )) {
-//                Ant.input(message: """
+//                !(['utf-8', 'us-ascii'].contains(System.getProperty('file.encoding')?.toLowerCase()))) {
+//            ant.input(message: """
 //        WARNING: Something else bad might happen
-//                       """,
-//                    validargs:"y,n",
+//	                   """,
+//                    validargs: "y,n",
 //                    addproperty:"griffon.another.warning")
-//            answer = Ant.antProject.properties."griffon.another.warning"
-//            if(answer == "n") exit(0)
+//            answer = ant.antProject.properties."griffon.another.warning"
+//            if (answer == "n") exit(0)
 //        }
     }
 
     clean()
 
-    Ant.sequential {
+    ant.sequential {
         // removed from grails: move test dir, also has source control chceks
 
-        delete(dir:"${basedir}/tmp", failonerror:false)
+        delete(dir: "${basedir}/tmp", failonerror: false)
 
-        // don't do this, first IDE Support files need to work
-        createIDESupportFiles()
+        // Unpack the shared files into a temporary directory, and then
+        // copy over the IDE files.
+        def tmpDir = new File("${basedir}/tmp-upgrade")
+        griffonUnpack(dest: tmpDir.path, src: "griffon-shared-files.jar")
+        copy(todir: "${basedir}") {
+            fileset(dir: tmpDir.path, includes: "*")
+        }
+        delete(dir: tmpDir.path)
+        launderIDESupportFiles()
 
         // remove from grails: a bunch of servlet stuff
         // remove from grails: adding new files in grails-app/conf
@@ -100,12 +91,11 @@ target( upgrade: "main upgrade target") {
         mkdir(dir: "${basedir}/test/unit")
 
         // remove from grails: URLMappings
-
         // if Config.groovy exists and it does not contain values added
         // since 0.0 then sensible defaultsare provided which keep previous
         // behavior even if it is not the default in the current version.
         def configFile = new File(baseFile, '/griffon-app/conf/Config.groovy')
-        if(configFile.exists()) {
+        if (configFile.exists()) {
             def configSlurper = new ConfigSlurper(System.getProperty(GriffonContext.ENVIRONMENT))
             def configObject = configSlurper.parse(configFile.toURI().toURL())
 
@@ -113,8 +103,8 @@ target( upgrade: "main upgrade target") {
             def signJars = configObject.griffon?.jars?.sign
             def signingKeyFile = configObject.signingkey?.params?.sigfile
 
-            if([packJars, signJars, signingKeyFile].contains([:])) {
-                event("StatusUpdate", [ "Adding properties to Config.groovy"])
+            if ([packJars, signJars, signingKeyFile].contains([:])) {
+                event("StatusUpdate", ["Adding properties to Config.groovy"])
                 configFile.withWriterAppend {
                     def indent = ''
                     it.writeLine '\n// The following properties have been added by the Upgrade process...'
@@ -122,9 +112,9 @@ target( upgrade: "main upgrade target") {
                         indent = '        '
                         it.writeLine "environments {\n    ${System.getProperty(GriffonContext.ENVIRONMENT)} {"
                     }
-                    if(packJars == [:]) it.writeLine "${indent}griffon.jars.pack=false // jars were not automatically packed in Griffon 0.0"
-                    if(signJars == [:]) it.writeLine "${indent}griffon.jars.sign=true // jars were automatically isgned in Griffon 0.0"
-                    if(signingKeyFile == [:]) it.writeLine "${indent}signingkey.params.sigfile='GRIFFON' // may safely be removed, but calling upgrade will restore it"
+                    if (packJars == [:]) it.writeLine "${indent}griffon.jars.pack=false // jars were not automatically packed in Griffon 0.0"
+                    if (signJars == [:]) it.writeLine "${indent}griffon.jars.sign=true // jars were automatically isgned in Griffon 0.0"
+                    if (signingKeyFile == [:]) it.writeLine "${indent}signingkey.params.sigfile='GRIFFON' // may safely be removed, but calling upgrade will restore it"
                     if (indent != '') {
                         it.writeLine('    }\n}')
                     }
@@ -136,14 +126,14 @@ target( upgrade: "main upgrade target") {
         // since 0.0 then sensible defaultsare provided which keep previous
         // behavior even if it is not the default in the current version.
         def applicationFile = new File(baseFile, '/griffon-app/conf/Application.groovy')
-        if(applicationFile.exists()) {
+        if (applicationFile.exists()) {
             def configSlurper = new ConfigSlurper(System.getProperty(GriffonContext.ENVIRONMENT))
             def configObject = configSlurper.parse(applicationFile.toURI().toURL())
 
             def startupGroups = configObject.application.startupGroups
 
-            if([startupGroups].contains([:])) {
-                event("StatusUpdate", [ "Adding properties to Application.groovy"])
+            if ([startupGroups].contains([:])) {
+                event("StatusUpdate", ["Adding properties to Application.groovy"])
                 applicationFile.withWriterAppend {
                     def indent = ''
                     it.writeLine '\n// The following properties have been added by the Upgrade process...'
@@ -151,7 +141,7 @@ target( upgrade: "main upgrade target") {
                         indent = '        '
                         it.writeLine "environments {\n    ${System.getProperty(GriffonContext.ENVIRONMENT)} {"
                     }
-                    if(startupGroups == [:]) it.writeLine "${indent}application.startupGroups=['root'] // default startup group from 0.0"
+                    if (startupGroups == [:]) it.writeLine "${indent}application.startupGroups=['root'] // default startup group from 0.0"
                     if (indent != '') {
                         it.writeLine('    }\n}')
                     }
@@ -159,19 +149,19 @@ target( upgrade: "main upgrade target") {
             }
         }
 
-        touch(file:"${basedir}/griffon-app/i18n/messages.properties")
+        touch(file: "${basedir}/griffon-app/i18n/messages.properties")
 
-        event("StatusUpdate", [ "Updating application.properties"])
-        propertyfile(file:"${basedir}/application.properties",
-            comment:"Do not edit app.griffon.* properties, they may change automatically. "+
-                "DO NOT put application configuration in here, it is not the right place!") {
-            entry(key:"app.name", value:"$griffonAppName")
-            entry(key:"app.griffon.version", value:"$griffonVersion")
+        event("StatusUpdate", ["Updating application.properties"])
+        propertyfile(file: "${basedir}/application.properties",
+                comment: "Do not edit app.griffon.* properties, they may change automatically. " +
+                        "DO NOT put application configuration in here, it is not the right place!") {
+            entry(key: "app.name", value: "$griffonAppName")
+            entry(key: "app.griffon.version", value: "$griffonVersion")
         }
     }
 
-    // proceed plugin-specific upgrade logic contained in 'scripts/_Upgrade.groovy' under plugin's root
-    def plugins = GriffonPluginUtils.getPluginDirectories(pluginsDirPath)
+// proceed plugin-specific upgrade logic contained in 'scripts/_Upgrade.groovy' under plugin's root
+    def plugins = GriffonPluginUtils.getPluginBaseDirectories(pluginsHome)
     if (plugins) {
         for (pluginDir in plugins) {
             def f = new File(pluginDir)
@@ -194,7 +184,11 @@ target( upgrade: "main upgrade target") {
     }
 
     //TODO create an upgrade README
-    //event("StatusUpdate", [ "Please make sure you view the README for important information about changes to your source code."])
+    //event("StatusUpdate", ["Please make sure you view the README for important information about changes to your source code."])
 
-    event("StatusFinal", [ "Project upgraded"])
+    event("StatusFinal", ["Project upgraded"])
+}
+
+target("default": "Upgrades a Griffon application from a previous version of Griffon") {
+    depends(upgrade)
 }

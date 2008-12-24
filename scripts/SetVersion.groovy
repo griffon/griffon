@@ -1,5 +1,5 @@
 /*
- * Copyright 2004-2008 the original author or authors.
+ * Copyright 2004-2005 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,29 +19,27 @@
  *
  * @author Marc Palmer
  * @author Sergey Nebolsin (nebolsin@gmail.com)
+ * @author Graeme Rocher
  *
  * @since 0.5
  */
 
-defaultTarget("Sets the current application version") {
-    setVersion()
-}
+includeTargets << griffonScript("_GriffonEvents")
 
-includeTargets << griffonScript("Init" )
-
-target ('setVersion': "Sets the current application version") {
+target (setVersion: "Sets the current application version") {
     if(args != null) {
-        Ant.property(name:"app.version.new", value: args)
+        ant.property(name:"app.version.new", value: args)
     } else {
-        Ant.property(file:"${basedir}/application.properties")
-        def oldVersion = Ant.antProject.properties.'app.version'
-        Ant.input(addProperty:"app.version.new", message:"Enter the new version",defaultvalue:oldVersion)
+        def oldVersion = metadata.'app.version'
+        ant.input(addProperty:"app.version.new", message:"Enter the new version",defaultvalue:oldVersion)
     }
 
-    def newVersion = Ant.antProject.properties.'app.version.new'
-    Ant.propertyfile(file:"${basedir}/application.properties") {
-        entry(key:"app.version", value: newVersion)
+    def newVersion = ant.antProject.properties.'app.version.new'
+    metadata.'app.version' = newVersion
+    metadataFile.withOutputStream {
+        metadata.store it, 'utf-8'
     }
-
     event("StatusFinal", [ "Application version updated to $newVersion"])
 }
+
+setDefaultTarget(setVersion)

@@ -22,16 +22,16 @@
  * @since 0.4
  */
 
-defaultTarget("Creates a new Griffon unit test. A unit test requires that you mock out access to dynamic methods, but executes a lot quicker") {
-    typeName =""
-    depends( checkVersion, createTestSuite )
+includeTargets << griffonScript("_GriffonInit")
+includeTargets << griffonScript("_GriffonCreateArtifacts")
+
+target (_createUnitTest: "Creates a new Griffon unit test. A unit test requires that you mock out access to dynamic methods, but executes a lot quicker") {
+	depends(checkVersion, parseArguments)
+
+    promptForName(type: "Unit test")
+
+    def name = argsMap["params"][0]
+    createUnitTest(name: name, suffix: "")
 }
 
-includeTargets << griffonScript("Init" )
-
-target (createTestSuite: "Implementation of create-test-suite") {
-    typeName <<= "Tests"
-    artifactName = "Tests"
-    artifactPath = "test/unit"
-    createArtifact()
-}
+setDefaultTarget(_createUnitTest)

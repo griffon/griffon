@@ -14,12 +14,13 @@
  */
 package org.codehaus.griffon.plugins
 
-import org.springframework.core.io.Resource
-import org.codehaus.griffon.commons.GriffonContext
+import org.codehaus.griffon.util.BuildSettingsHolder
 import org.apache.commons.lang.ArrayUtils
-import org.springframework.core.io.support.PathMatchingResourcePatternResolver
 import org.springframework.core.io.FileSystemResource
-import org.codehaus.groovy.runtime.metaclass.ConcurrentReaderHashMap
+import org.springframework.core.io.Resource
+import org.springframework.core.io.support.PathMatchingResourcePatternResolver
+import java.util.concurrent.ConcurrentHashMap
+import groovy.util.slurpersupport.GPathResult
 
 /**
  * Utility class containing methods that aid in loading and evaluating plug-ins
@@ -32,11 +33,11 @@ import org.codehaus.groovy.runtime.metaclass.ConcurrentReaderHashMap
 public class GriffonPluginUtils {
 
     static final String WILDCARD = "*";
-    static final GRAILS_HOME
+    public static final GRIFFON_HOME
     static {
         def ant = new AntBuilder()
         ant.property(environment: "env")
-        GRAILS_HOME = ant.antProject.properties."env.GRAILS_HOME"
+        GRIFFON_HOME = ant.antProject.properties."env.GRIFFON_HOME"
     }
 
 
@@ -124,10 +125,27 @@ public class GriffonPluginUtils {
 
 
     /**
-     * Gets a list of all the known plugin directories
+     * Gets a list of all the known plugin base directories (directories where plugins are installed to)
      */
-    static String[] getPluginDirectories(String pluginDirPath = System.getProperty(GriffonContext.PLUGINS_DIR)) {
-        [ pluginDirPath, System.getProperty(GriffonContext.GLOBAL_PLUGINS_DIR)] as String[]
+    static String[] getPluginBaseDirectories(String pluginDirPath = BuildSettingsHolder.settings?.projectPluginsDir?.path) {
+         [ pluginDirPath, BuildSettingsHolder.settings?.globalPluginsDir?.path ] as String[]
+    }
+
+    private static pluginDirectoryResources = null
+    static synchronized Resource[] getPluginDirectories(String pluginDirPath = BuildSettingsHolder.settings?.projectPluginsDir?.path) {
+        if(!pluginDirectoryResources) {
+            def dirList = []
+            def directoryNamePredicate = {
+                it.isDirectory() && (!it.name.startsWith(".") && it.name.indexOf('-')>-1)
+            }
+
+            for(pluginBase in getPluginBaseDirectories(pluginDirPath)) {
+                List pluginDirs = new File(pluginBase).listFiles().findAll(directoryNamePredicate).collect { new FileSystemResource(it) }
+                dirList.addAll( pluginDirs )
+            }
+            pluginDirectoryResources = dirList as Resource[]
+        }
+        return pluginDirectoryResources
     }
 
     private static allArtefactResources = null
@@ -173,8 +191,8 @@ public class GriffonPluginUtils {
      * A new array is then returned that contains any additiona plugin resources that were resolved by the expression passed
      * in the closure
      */
-    private static resolvePluginResourcesAndAdd(Resource[] originalResources, String pluginsDirPath = System.getProperty(GriffonContext.PLUGINS_DIR), Closure resolver) {
-        String[] pluginDirs = getPluginDirectories(pluginsDirPath)
+    private static resolvePluginResourcesAndAdd(Resource[] originalResources, String pluginsDirPath = BuildSettingsHolder.settings?.projectPluginsDir?.path, Closure resolver) {
+        String[] pluginDirs = getPluginBaseDirectories(pluginsDirPath)
         for (dir in pluginDirs) {
             def newResources = dir ? resolver(dir) : null
             if(newResources) {
@@ -309,15 +327,33 @@ public class GriffonPluginUtils {
     /**
      * Obtains the path to the globa plugins directory
      */
-    static String getGlobalPluginsPath() { System.getProperty(GriffonContext.GLOBAL_PLUGINS_DIR) }
+    static String getGlobalPluginsPath() { BuildSettingsHolder.settings?.globalPluginsDir?.path }
 
-    private static Map pluginToDirNameMap = new ConcurrentReaderHashMap()
+    private static Map pluginToDirNameMap = new ConcurrentHashMap()
 
     /**
      * Obtains a plugin directory for the given name
      */
     static Resource getPluginDirForName(String pluginName) {
-        getPluginDirForName(System.getProperty(GriffonContext.PLUGINS_DIR), pluginName)
+        getPluginDirForName(BuildSettingsHolder.settings?.projectPluginsDir?.path, pluginName)
+    }
+
+
+    private static Map pluginMetaDataMap = new ConcurrentHashMap()
+    /**
+     * Returns XML about the plugin
+     */
+    static getMetadataForPlugin(String pluginName) {
+        if(pluginMetaDataMap[pluginName]) return pluginMetaDataMap[pluginName]
+        Resource pluginDir = getPluginDirForName(BuildSettingsHolder.settings?.projectPluginsDir?.path, pluginName)
+        try {
+            GPathResult result = new XmlSlurper().parse(new File("$pluginDir.file.absolutePath/plugin.xml"))
+            pluginMetaDataMap[pluginName] = result
+            return result
+        }
+        catch (e) {
+            return null
+        }
     }
     /**
      * Obtains a plugin directory for the given name
@@ -327,9 +363,11 @@ public class GriffonPluginUtils {
         if(!pluginResource) {
 
             try {
-                def directoryNamePredicate = { it.isDirectory() && it.name.startsWith("$pluginName-")}
+                def directoryNamePredicate = {
+                    it.isDirectory() && (it.name == pluginName || it.name.startsWith("$pluginName-"))
+                }
 
-                String[] pluginDirs = getPluginDirectories(pluginsDirPath)
+                String[] pluginDirs = getPluginBaseDirectories(pluginsDirPath)
                 File pluginFile
                 for(pluginDir in pluginDirs) {
                     pluginFile = new File("${pluginDir}").listFiles().find(directoryNamePredicate)

@@ -1,5 +1,4 @@
-/*
- * Copyright 2004-2008 the original author or authors.
+/* Copyright 2004-2005 Graeme Rocher
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,13 +16,12 @@ package org.codehaus.griffon.cli.support;
 
 import org.codehaus.groovy.tools.LoaderConfiguration;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.net.URL;
+import java.util.Properties;
+import java.util.regex.Pattern;
 
 import griffon.util.GriffonExceptionHandler;
 
@@ -81,7 +79,19 @@ public class GriffonStarter {
 
         // copy arguments for main class
         String[] newArgs = new String[args.length-argsOffset];
-        System.arraycopy(args, argsOffset, newArgs, 0, newArgs.length);
+        for (int i=0; i<newArgs.length; i++) {
+            newArgs[i] = args[i+argsOffset];
+        }
+
+        String basedir = System.getProperty("base.dir");
+        if(basedir!=null) {
+
+            try {
+                System.setProperty("base.name", new File(basedir).getCanonicalFile().getName());
+            } catch (IOException e) {
+                // ignore
+            }
+        }
         // load configuration file
         if (conf!=null) {
             try {
@@ -91,11 +101,65 @@ public class GriffonStarter {
                 exit(e);
             }
         }
+
+        // obtain servlet version
+//        String servletVersion = "2.4";
+//        Pattern standardJarPattern = Pattern.compile(".+?standard-\\d\\.\\d\\.jar");
+//        Pattern jstlJarPattern = Pattern.compile(".+?jstl-\\d\\.\\d\\.jar");
+
+        Properties metadata = new Properties();
+        File metadataFile = new File("./application.properties");
+        if(metadataFile.exists()) {
+            FileInputStream inputStream = null;
+            try {
+                inputStream = new FileInputStream(metadataFile);
+                metadata.load(inputStream);
+//                Object version = metadata.get("app.servlet.version");
+//                if(version!=null) {
+//                    servletVersion = version.toString();
+//                }
+            } catch (IOException e) {
+                // ignore
+            }
+            finally {
+                try {
+                    if(inputStream!=null) inputStream.close();
+                } catch (IOException e) {
+                    // ignore
+                }
+            }
+        }
+
         // create loader and execute main class
-        GriffonRootLoader loader = new GriffonRootLoader(lc);
+        GriffonRootLoader loader = new GriffonRootLoader();
+        Thread.currentThread().setContextClassLoader(loader);
+
+//        final String standardJarName = "standard-" + servletVersion + ".jar";
+//        final String jstlJarName = "jstl-" + servletVersion + ".jar";
+
+        // configure class loader
+        URL[] urls = lc.getClassPathUrls();
+        for (int i = 0; i < urls.length; i++) {
+            URL url = urls[i];
+            final String path = url.getPath();
+//            if(standardJarPattern.matcher(path).find()) {
+//                if(path.endsWith(standardJarName)) {
+//                    loader.addURL(url);
+//                }
+//            }
+//            else if(jstlJarPattern.matcher(path).find()) {
+//                if(path.endsWith(jstlJarName)) {
+//                    loader.addURL(url);
+//                }
+//            }
+//            else {
+                loader.addURL(url);
+//            }
+        }
 
         String javaVersion = System.getProperty("java.version");
         String griffonHome = System.getProperty("griffon.home");
+
 
         if(javaVersion != null && griffonHome != null) {
             javaVersion = javaVersion.substring(0,3);
@@ -108,8 +172,9 @@ public class GriffonStarter {
                     vmLoaderConfig.setRequireMain(false);
                     vmLoaderConfig.configure(in);
                     URL[] vmSpecificClassPath = vmLoaderConfig.getClassPathUrls();
-                    for (URL url : vmSpecificClassPath) {
-                        loader.addURL(url);
+                    for (int i = 0; i < vmSpecificClassPath.length; i++) {
+                        loader.addURL(vmSpecificClassPath[i]);
+
                     }
                 } catch (IOException e) {
                     System.out.println("WARNING: I/O error reading VM specific classpath ["+vmConfig+"]: " + e.getMessage() );
@@ -160,72 +225,15 @@ public class GriffonStarter {
     // after migration from classworlds to the rootloader rename
     // the rootLoader method to main and remove this method as
     // well as the classworlds method
-   /* public static void main(String args[],ClassWorld classWorld ) {
-        classworlds(args,classWorld);
-    }*/
-
     public static void main(String args[]) {
         try {
             GriffonExceptionHandler.registerExceptionHandler();
             rootLoader(args);
         } catch (Throwable t) {
-            t.printStackTrace();
-        }
-    }
-
-    /*public static void classworlds(String oldArgs[],ClassWorld classWorld ) {
-        try {
-            // Creates a realm with *just* the system classloader
-            ClassRealm system = classWorld.newRealm("system");
-
-            // Get the groovy realm
-            ClassRealm groovy = classWorld.getRealm("groovy");
-
-            // import everything from the system realm, because imports
-            // are searched *first* in Classworlds
-            groovy.importFrom("system", "");
-
-            //add tools.jar to classpath
-            String tools = System.getProperty("tools.jar");
-            if (tools!=null) {
-                URL ref = (new File(tools)).toURI().toURL();
-                groovy.addConstituent(ref);
-            }
-
-            if (oldArgs.length==0) {
-                printUsage();
-                System.exit(1);
-            }
-
-            String program = oldArgs[0].toLowerCase();
-            String[] args = new String[oldArgs.length-1];
-            for (int i=0; i<args.length; i++) {
-                args[i] = oldArgs[i+1];
-            }
-
-            if (program.equals("groovyc")) {
-                org.codehaus.groovy.tools.FileSystemCompiler.main(args);
-            } else if (program.equals("groovy")) {
-                GroovyMain.main(args);
-            } else if (program.equals("console")) {
-                // work around needed, because the console is compiled after this files
-                Class c = Class.forName("groovy.ui.Console");
-                Method m= c.getMethod("main", new Class[]{String[].class});
-                m.invoke(null, new Object[]{args});
-            } else if (program.equals("groovysh")) {
-                InteractiveShell.main(args);
-            } else {
-                System.out.println("unknown program "+program);
-                printUsage();
-                System.exit(1);
-            }
-
-        } catch (Exception e) {
-            e.printStackTrace();
+            System.out.println("Error starting Griffon: " + t.getMessage());
+            t.printStackTrace(System.err);
             System.exit(1);
         }
-
-    }*/
-
+    }
 }
 
