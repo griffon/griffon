@@ -164,7 +164,7 @@ class SwingPadController {
       def newLayout = evt?.source?.state ? builder.flowLayout(alignment:FlowLayout.LEFT, hgap: 0, vgap: 0) : builder.borderLayout()
       if( !newLayout.class.isAssignableFrom(view.canvas.layout.class) ) {
          view.canvas.layout = newLayout
-         runScript(evt)
+         if( model.successfulScript ) runScript(evt)
       }
    }
 
@@ -199,6 +199,13 @@ class SwingPadController {
                runThread = null
             }
          }
+      }
+   }
+
+   def runSampleScript = { evt = null ->
+      if( model.currentSample ) {
+         view.editor.textEditor.text = model.samples[model.currentSample]
+         runScript(evt)
       }
    }
 
@@ -303,7 +310,9 @@ class SwingPadController {
    }
 
    def toggleLayout = { evt = null ->
-      view.splitPane.orientation = VERTICAL_SPLIT
+      model.horizontalLayout = !model.horizontalLayout
+      view.splitPane.orientation = model.horizontalLayout ? HORIZONTAL_SPLIT : VERTICAL_SPLIT
+      view.toggleLayoutAction.putValue("SmallIcon", model.horizontalLayout ? view.verticalLayoutIcon : view.horizontalLayoutIcon )
    }
 
    private writeSuggestion() {
@@ -321,6 +330,7 @@ class SwingPadController {
    }
 
    private void finishNormal( component ) {
+      model.successfulScript = true
       doLater {
          model.status = 'Execution complete.'
          view.canvas.removeAll()
@@ -334,6 +344,7 @@ class SwingPadController {
    }
 
    private void finishWithException( Throwable t ) {
+      model.successfulScript = false
       model.status = 'Execution terminated with exception.'
       StackTraceUtils.deepSanitize(t)
       t.printStackTrace()

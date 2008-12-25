@@ -18,6 +18,7 @@ import ca.odell.glazedlists.BasicEventList
 
 class SwingPadModel {
    @Bindable boolean dirty = false
+   @Bindable boolean successfulScript = false
    @Bindable String content = ""
    @Bindable File scriptFile
    @Bindable String status = ""
@@ -29,6 +30,11 @@ class SwingPadModel {
       flamingo: [ enabled: false, loaded: false],
       tray: [ enabled: false, loaded: false]
    ]
+
+   Map samples = [:]
+   @Bindable String currentSample
+
+   @Bindable boolean horizontalLayout = true
 
    @Bindable Map suggestion = [:]
    List suggestions = new BasicEventList()

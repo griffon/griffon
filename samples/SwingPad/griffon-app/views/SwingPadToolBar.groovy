@@ -32,10 +32,6 @@ toolBar(id:'toolbar', rollover:true) {
    separator(orientation:SwingConstants.VERTICAL)
    button(runAction, text:null)
    separator(orientation:SwingConstants.VERTICAL)
-   toggleButton(verticalLayoutAction, text:null, id: 'vlb')
-   toggleButton(horizontalLayoutAction, text:null, id: 'hlb' )
+   button(toggleLayoutAction, text:null)
    button(snapshotAction, text:null)
-
-   vlb.selected = true
-   hlb.selected = false
 }

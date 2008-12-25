@@ -153,17 +153,18 @@ actions {
    action(id: 'packComponentsAction',
       name: 'Pack',
       closure: controller.packComponents,
-      mnemonic: 'K',
-      accelerator: shortcut('shift P')
+      accelerator: shortcut('shift P'),
+      enabled: bind { !model.dirty || model.successfulScript }
    )
    action(id: 'showRulersAction',
       name: 'Rulers',
       closure: controller.showRulers,
-      accelerator: shortcut('shift U')
+      accelerator: shortcut('shift R')
    )
    action(id: 'showToolbarAction',
       name: 'Show Toolbar',
-      closure: controller.showToolbar
+      closure: controller.showToolbar,
+      accelerator: shortcut('shift T')
    )
 
    action(id: 'runAction',
@@ -197,12 +198,14 @@ actions {
       name: 'Add Jar to ClassPath',
       closure: controller.addClasspathJar,
       mnemonic: 'J',
+      smallIcon: imageIcon(resource:"icons/cup_add.png", class: SwingPadActions),
    )
 
    action( id: 'addClasspathDirAction',
       name: 'Add Directory to ClassPath',
       closure: controller.addClasspathDir,
       mnemonic: 'D',
+      smallIcon: imageIcon(resource:"icons/folder_add.png", class: SwingPadActions),
    )
 
    action(id: 'snapshotAction',
@@ -232,14 +235,13 @@ actions {
       shortDescription: isJdk16 ? "Enable TrayBuilder" : "Requires Jre 1.6 or above"
    )
 
-   action(id: 'horizontalLayoutAction',
-      name: 'Toggle Layout -> Horizontal',
+   imageIcon(id: "verticalLayoutIcon", resource:"icons/application_tile_vertical.png", class: SwingPadActions)
+   imageIcon(id: "horizontalLayoutIcon", resource:"icons/application_tile_horizontal.png", class: SwingPadActions)
+
+   action(id: 'toggleLayoutAction',
+      name: 'Toggle Layout',
       closure: controller.toggleLayout,
-      smallIcon: imageIcon(resource:"icons/shape_align_left.png", class: SwingPadActions)
-   )
-   action(id: 'verticalLayoutAction',
-      name: 'Toggle Layout -> Vertical',
-      closure: controller.toggleLayout,
-      smallIcon: imageIcon(resource:"icons/shape_align_bottom.png", class: SwingPadActions)
+      smallIcon: verticalLayoutIcon,
+      accelerator: shortcut('shift Y')
    )
 }

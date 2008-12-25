@@ -1,0 +1,71 @@
+import com.jidesoft.swing.ButtonStyle
+import java.awt.Color
+import java.beans.PropertyChangeListener
+import javax.swing.JTextField
+import javax.swing.JComponent
+import java.awt.Dimension
+
+def blackBorder = {
+  lineBorder(color: Color.BLACK, thickness: 1)
+}
+
+panel {
+  borderLayout()
+  bannerPanel(constraints: context.SOUTH,
+    title: "JideBuilder Example",
+    subtitle: "A brief example of JideBuilder in action",
+    titleIcon: imageIcon("images/jide_logo.jpg", class:SwingPadController),
+    border: blackBorder(),
+    subTitleColor: Color.WHITE,
+    background: new Color(0,0,0,1),
+    startColor: Color.WHITE,
+    endColor: Color.BLACK,
+    vertical: true
+  )
+
+  tabbedPane(constraints: context.CENTER,
+    border: blackBorder() ) {
+
+    panel(title: "Buttons") {
+      panel{
+        gridLayout( cols: 1, rows: 5 )
+        jideSplitButton( "Button + Menu",
+          customize: { m ->
+            m.removeAll()
+            (1..5).each{ m.add "Option $it" }
+          })
+        ["Toolbar", "Toolbox", "Flat","Hyperlink"].each { style ->
+          jideButton(style,
+            buttonStyle: ButtonStyle."${style.toUpperCase()}_STYLE")
+        }
+      }
+    }
+
+    panel(title: "Calculator") {
+      panel {
+        borderLayout()
+        textField( id: 'result', constraints: context.NORTH,
+          horizontalAlignment: JTextField.TRAILING)
+         calculator(id: 'calc', constraints: context.CENTER)
+         calc.registerKeyboardActions(result,JComponent.WHEN_FOCUSED)
+         calc.addPropertyChangeListener( "displayText", { evt ->
+           result.text = evt.newValue
+         } as PropertyChangeListener)
+       }
+    }
+
+    panel(title: "Spinners") {
+      panel {
+        gridLayout( cols: 1, rows: 2 )
+        dateSpinner(value: new java.util.Date())
+        pointSpinner(preferredSize: [100,24] as Dimension)
+      }
+    }
+
+    panel(title: "CheckBoxList") {
+      scrollPane(constraints: context.CENTER) {
+        checkBoxList(listData: (1..20).collect([]){"Option $it"} as Object[])
+      }
+    }
+  }
+}

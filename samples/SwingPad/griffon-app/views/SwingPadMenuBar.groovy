@@ -15,6 +15,21 @@
 
 import static griffon.util.GriffonApplicationUtils.*
 
+def makeSampleScriptAction = { id, name ->
+   actions {
+      action( id: "${id}Action",
+         name: name,
+         closure: { model.currentSample = id; controller.runSampleScript(it) },
+         smallIcon: imageIcon(resource:"icons/script_gear.png", class: SwingPadActions)
+      )
+   }
+   doOutside {
+      model.samples[id] = Thread.currentThread().contextClassLoader.
+                   getResourceAsStream("samples/${id}.txt").text
+   }
+   return this."${id}Action"
+}
+
 menuBar( id: 'menuBar') {
    menu(text: 'File', mnemonic: 'F') {
        menuItem(newAction)
@@ -52,6 +67,7 @@ menuBar( id: 'menuBar') {
        checkBoxMenuItem(showRulersAction, selected: true)
        checkBoxMenuItem(showToolbarAction, selected: controller.showToolbar)
        separator()
+       menuItem(toggleLayoutAction)
        menuItem(snapshotAction)
    }
 
@@ -70,6 +86,12 @@ menuBar( id: 'menuBar') {
        separator()
        menuItem(addClasspathJarAction)
        menuItem(addClasspathDirAction)
+       separator()
+       menu("Samples") {
+          [ jide1: "Jide - Example1" ].each { id, name ->
+             menuItem(makeSampleScriptAction(id,name))
+          }
+       }
    }
 
    if( !isMacOSX ) {

@@ -36,17 +36,17 @@ columnHeader = new ScrollPaneRuler(ScrollPaneRuler.HORIZONTAL)
 emptyRowHeader = label("")
 emptyColumnHeader = label("")
 
-splitPane(id: 'splitPane', resizeWeight: 0.45F,
+splitPane(id: 'splitPane', resizeWeight: 0.45f,
       orientation: HORIZONTAL_SPLIT ) {
    tabbedPane( id: "tabs", constraints: CENTER, border: lineBorder(color:Color.BLACK, thickness:1) ) {
-      panel( title: "Source", id: "sourceTab" ) {
+      panel( title: "Source ", id: "sourceTab", tabIcon: imageIcon(resource:"icons/script.png", class: SwingPadActions) ) {
          borderLayout()
          container( new ConsoleTextEditor(), id: 'editor', border: emptyBorder(0),
                      font: new Font( "Monospaced", Font.PLAIN, 14 ) ){
             action(runAction)
          }
       }
-      panel( title: "Errors", id: "errorsTab" ) {
+      panel( title: "Errors ", id: "errorsTab", tabIcon: imageIcon(resource:"icons/cancel.png", class: SwingPadActions)  ) {
          borderLayout()
          scrollPane( border: emptyBorder(0) ) {
             textArea( id: 'errors', border: emptyBorder(0),
@@ -68,7 +68,7 @@ splitPane(id: 'splitPane', resizeWeight: 0.45F,
 }
 
 jidePopup( id: 'popup', movable: false, resizable: false,
-   popupMenuCanceled: { evt -> editor.textEditor.requestFocus() } ) {
+   popupMenuWillBecomeInvisible: { evt -> doLater{editor.textEditor.requestFocus()} } ) {
    panel {
       borderLayout()
       scrollPane() {
@@ -102,6 +102,8 @@ actions {
    container(inputArea, font:new Font("Monospaced", Font.PLAIN, 12), border:emptyBorder(4)) {
       action(runAction)
    }
+//    bean( runAction, enabled: bind { inputArea.text?.size() > 0 } )
+//    bean( suggestAction, enabled: bind { inputArea.text?.size() > 0 } )
 }
 
 inputArea.addCaretListener({ evt ->
@@ -118,5 +120,6 @@ bean( model, dirty: bind { inputArea.text?.size() > 0 } )
 bean( undoAction, enabled: bind { editor.undoAction.enabled } )
 bean( redoAction, enabled: bind { editor.redoAction.enabled } )
 inputArea.document.addDocumentListener({ model.dirty = true } as DocumentListener)
+inputArea.document.addDocumentListener({ model.successfulScript = false } as DocumentListener)
 
 return splitPane
