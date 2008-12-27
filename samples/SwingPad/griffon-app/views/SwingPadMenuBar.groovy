@@ -78,17 +78,22 @@ menuBar( id: 'menuBar') {
        checkBoxMenuItem(trayAction,
                         id: "trayMenu",
                         selected: controller.toggleTrayBuilder)
+       flamingoMenu.selected = false
+       trayMenu.selected = false
    }
 
    menu(text: 'Script', mnemonic: 'S') {
        menuItem(runAction)
-       menuItem(suggestAction)
        separator()
        menuItem(addClasspathJarAction)
        menuItem(addClasspathDirAction)
        separator()
        menu("Samples") {
-          [ jide1: "Jide - Example1" ].each { id, name ->
+          [ jide1: "Jide - Flair",
+            jide2: "Jide - MeterProgressBar",
+            swingx1: "SwingX - Flair",
+            tray1: "Tray - Flair",
+            flamingo1: "Flamingo - FlexiSlider" ].each { id, name ->
              menuItem(makeSampleScriptAction(id,name))
           }
        }

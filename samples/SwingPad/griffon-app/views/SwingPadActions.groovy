@@ -38,10 +38,10 @@ actions {
       shortDescription: 'Open a Swing script'
    )
    action( id: 'exitAction',
-      name: isMacOSX ? 'Quit' : 'Exit',
+      name: 'Quit',
       closure: controller.exit,
-      mnemonic: isMacOSX ? 'Q' : 'X',
-      accelerator: shortcut(isMacOSX ? 'Q' : 'X'),
+      mnemonic: 'Q',
+      accelerator: shortcut('Q'),
    )
    action( id: 'aboutAction',
       name: 'About',

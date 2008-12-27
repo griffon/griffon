@@ -25,6 +25,7 @@ import javax.swing.event.CaretListener
 import javax.swing.event.DocumentListener
 import java.awt.event.KeyEvent
 import javax.swing.KeyStroke
+import javax.swing.JComponent
 import javax.swing.JTabbedPane
 import javax.swing.ListSelectionModel
 import static javax.swing.JSplitPane.HORIZONTAL_SPLIT
@@ -105,6 +106,9 @@ actions {
 //    bean( runAction, enabled: bind { inputArea.text?.size() > 0 } )
 //    bean( suggestAction, enabled: bind { inputArea.text?.size() > 0 } )
 }
+
+inputArea.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(suggestAction.getValue("KeyStroke"), "codeSuggest")
+inputArea.actionMap.put("codeSuggest", suggestAction)
 
 inputArea.addCaretListener({ evt ->
    def cursorPos = inputArea.caretPosition

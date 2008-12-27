@@ -1,0 +1,52 @@
+import static griffon.util.GriffonApplicationUtils.*
+import groovy.ui.Console
+import static java.awt.TrayIcon.MessageType.*
+
+actions {
+   action(id: 'cutAction',
+      name: 'Cut',
+      closure: { trayIcon.displayMessage("Cut","Cut some content",NONE)},
+      mnemonic: 'T',
+      accelerator: shortcut('X'),
+      smallIcon: imageIcon(resource:"icons/cut.png", class: Console),
+      shortDescription: 'Cut'
+   )
+   action(id: 'copyAction',
+      name: 'Copy',
+      closure: { trayIcon.displayMessage("Copy","Copy some content",INFO)},
+      mnemonic: 'C',
+      accelerator: shortcut('C'),
+      smallIcon: imageIcon(resource:"icons/page_copy.png", class: Console),
+      shortDescription: 'Copy'
+   )
+   action(id: 'pasteAction',
+      name: 'Paste',
+      closure: { trayIcon.displayMessage("Paste","Past some content",WARNING)},
+      mnemonic: 'P',
+      accelerator: shortcut('V'),
+      smallIcon: imageIcon(resource:"icons/page_paste.png", class: Console),
+      shortDescription: 'Paste'
+   )
+   action( id: 'exitAction',
+      name: isMacOSX ? 'Quit' : 'Exit',
+      closure: { trayIcon.displayMessage("Quit","No can do!",ERROR)},
+      mnemonic: isMacOSX ? 'Q' : 'X',
+      accelerator: shortcut(isMacOSX ? 'Q' : 'X'),
+   )
+}
+
+systemTray {
+  trayIcon(id: "trayIcon",
+    resource: "/groovy/ui/ConsoleIcon.png",
+    class: groovy.ui.Console,
+    toolTip: "Double click on me and I'll go away!",
+    actionPerformed: {systemTray.remove(trayIcon)}) {
+    popupMenu {
+       menuItem(cutAction)
+       menuItem(copyAction)
+       menuItem(pasteAction)
+       separator()
+       menuItem(exitAction)
+    }
+  }
+}

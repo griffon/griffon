@@ -27,6 +27,9 @@ class SwingPadModel {
    @Bindable String currentTab = "sourceTab"
 
    Map builders = [
+      jide: [ enabled: true, loaded: true],
+      swingx: [ enabled: true, loaded: true],
+      swing: [ enabled: true, loaded: true],
       flamingo: [ enabled: false, loaded: false],
       tray: [ enabled: false, loaded: false]
    ]

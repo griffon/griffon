@@ -1,8 +1,5 @@
 import com.jidesoft.swing.ButtonStyle
 import java.awt.Color
-import java.beans.PropertyChangeListener
-import javax.swing.JTextField
-import javax.swing.JComponent
 import java.awt.Dimension
 
 def blackBorder = {
@@ -44,13 +41,9 @@ panel {
     panel(title: "Calculator") {
       panel {
         borderLayout()
-        textField( id: 'result', constraints: context.NORTH,
-          horizontalAlignment: JTextField.TRAILING)
-         calculator(id: 'calc', constraints: context.CENTER)
-         calc.registerKeyboardActions(result,JComponent.WHEN_FOCUSED)
-         calc.addPropertyChangeListener( "displayText", { evt ->
-           result.text = evt.newValue
-         } as PropertyChangeListener)
+        textField( id: 'result', constraints: context.NORTH)
+         calculator(constraints: context.CENTER,
+           textComponent: result)
        }
     }
 

@@ -1,0 +1,44 @@
+import org.jvnet.flamingo.slider.FlexiRangeModel
+import java.awt.Dimension
+
+def adjustIconSize = {
+  def range = slider.model.value.range
+  int index = 0
+  for(; index < slider.model.rangeCount; index++ ) {
+    if( slider.model.getRange(index) == range ) break
+  }
+  def sizemod = 1 + index + slider.model.value.rangeFraction
+  svg.preferredSize = new Dimension(
+    svg.initialDim.width * sizemod as int,
+    svg.initialDim.height * sizemod as int
+  )
+  p.repaint()
+}
+
+panel {
+  gridLayout(cols:2,rows:1)
+  panel( id: 'p', constraints: context.CENTER) {
+    borderLayout()
+    button( icon: svgIcon("icons/edit-paste.svg", id:'svg', class: SwingPadController, initialDim: 16) )
+  }
+  flexiSlider( id: 'slider', constraints: context.EAST,
+    stateChanged: adjustIconSize ) {
+    range(name: "Tiles -> Details", discrete: true, weight: 0.0, startingValue: 0.0 )
+    range(name: "Details -> Small Icons", discrete: true, weight: 0.0 )
+    range(name: "Small Icons -> Medium Icons", discrete: false, weight: 2.0 )
+    range(name: "Medium -> Large Icons", discrete: false, weight: 1.0 )
+    range(name: "Large Icons -> Very Large Icons", discrete: false, weight: 2.0, )
+    controlPoint(text: "Tiles",
+      icon: imageIcon("icons/tiles.png", class: SwingPadController) )
+    controlPoint(text: "Details",
+      icon: imageIcon("icons/details.png", class: SwingPadController) )
+    controlPoint(text: "Small Icons",
+      icon: imageIcon("icons/small-icons.png", class: SwingPadController) )
+    controlPoint(text: "Medium Icons",
+      icon: imageIcon("icons/medium-icons.png", class: SwingPadController) )
+    controlPoint(text: "Large Icons",
+      icon: imageIcon("icons/large-icons.png", class: SwingPadController) )
+    controlPoint(text: "Very Large Icons",
+      icon: imageIcon("icons/very-large-icons.png", class: SwingPadController) )
+  }
+}

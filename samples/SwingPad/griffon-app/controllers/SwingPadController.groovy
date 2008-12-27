@@ -204,7 +204,14 @@ class SwingPadController {
 
    def runSampleScript = { evt = null ->
       if( model.currentSample ) {
+         def builder = model.currentSample[0..-2]
+         if( !model.builders[builder].enabled ) {
+            view."${builder}Menu".selected = true
+            def enabled = this."toggle${builder[0].toUpperCase()+builder[1..-1]}Builder"([source:view."${builder}Menu"])
+            if(!enabled) return
+         }
          view.editor.textEditor.text = model.samples[model.currentSample]
+         view.runAction.enabled = true
          runScript(evt)
       }
    }
@@ -484,7 +491,8 @@ class SwingPadController {
          """
          app.builders.Script = new GroovyShell(groovyClassLoader,binding).evaluate(script)
       } catch( ex ) {
-      ex.printStackTrace()
+         StackTraceUtils.deepSanitize(ex)
+         ex.printStackTrace()
          model.builders[name].enabled != model.builders[name].enabled
          evt.source.selected = !evt.source.selected
          showAlert( "Enable $cname".toString(),

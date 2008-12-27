@@ -1,0 +1,35 @@
+import com.jidesoft.swing.AnimatorListener
+import static com.jidesoft.swing.MeterProgressBar.*
+
+def start = {
+  anim.start()
+  b1.enabled = false
+  b2.enabled = true
+}
+
+def stop = {
+  anim.stop()
+  b1.enabled = true
+  b2.enabled = false
+}
+
+panel {
+  gridLayout(cols: 1, rows: 3)
+  panel {
+    gridLayout(cols: 2, rows:1)
+    button("Start", id: 'b1', actionPerformed: start)
+    button("Stop",  id: 'b2', actionPerformed: stop, enabled: false )
+  }
+  meterProgressBar(id :'m2', style: STYLE_PLAIN)
+  meterProgressBar(id :'m1', style: STYLE_GRADIENT)
+  
+  animator(id: 'anim', source: b1, delay: 30, totalSteps: 100)
+  anim.addAnimatorListener([
+    animationStarts: { source -> },
+    animationFrame: { source, totalSteps, frame -> m1.value = m2.value = frame },
+    animationEnds: { source ->
+      b1.enabled = true
+      b2.enabled = false
+    }
+  ] as AnimatorListener)
+}
