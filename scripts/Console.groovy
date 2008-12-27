@@ -69,7 +69,7 @@ createConsole = {
 //    b.ctx = appCtx
     b.app = griffonApp
 
-    def console = new groovy.ui.Console(griffonApp.classLoader, b)
+    def console = new groovy.ui.Console(griffonApp.class.classLoader, b)
 //    console.beforeExecution = {
 //        appCtx.getBeansOfType(PersistenceContextInterceptor).each { k,v ->
 //            v.init()
