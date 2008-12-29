@@ -31,7 +31,8 @@ class SwingPadModel {
       swingx: [ enabled: true, loaded: true],
       swing: [ enabled: true, loaded: true],
       flamingo: [ enabled: false, loaded: false],
-      tray: [ enabled: false, loaded: false]
+      tray: [ enabled: false, loaded: false],
+      macwidgets: [ enabled: false, loaded: false]
    ]
 
    Map samples = [:]

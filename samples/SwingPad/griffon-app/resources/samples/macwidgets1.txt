@@ -1,0 +1,174 @@
+import java.awt.Color
+import java.awt.Font
+
+def blackBorder = {
+  lineBorder(color: Color.BLACK, thickness: 1)
+}
+
+panel {
+  borderLayout()
+
+  tabbedPane(constraints: context.CENTER, border: blackBorder()) {
+    vbox(title: "MyTunes", preferredSize: [250,250]) {
+      sourceList {
+        sourceListCategory("Library") {
+           sourceListItem("Music",
+             resource: "icons/MBiTunesMusicPlaylist.png",
+             class: SwingPadController)
+           sourceListItem("Movies",
+             resource: "icons/MBiTunesMoviesPlaylist.png",
+             class: SwingPadController)
+           sourceListItem("Tv Shows",
+             resource: "icons/MBiTunesTVShowsPlaylist.png",
+             class: SwingPadController)
+           sourceListItem("Podcasts",
+             resource: "icons/MBiTunes7PodcastsPlaylist.png",
+             class: SwingPadController)
+        }
+        sourceListCategory("Store") {
+           sourceListItem("Purchased",
+             resource: "icons/MBiTunes7PurchasedPlaylist.png",
+             class: SwingPadController)
+        }
+        sourceListCategory("Playlists") {
+           sourceListItem("My playlist",
+             resource: "icons/MBiTunes7Playlist.png",
+             class: SwingPadController)
+           sourceListItem("My smart playlist",
+             resource: "icons/MBiTunes7SmartPlaylist.png",
+             class: SwingPadController)
+        }
+      }
+    }
+
+    vbox(title: "Mail", preferredSize: [250,250]) {
+      sourceList(focusable: false) {
+        sourceListCategory("Mailboxes") {
+           sourceListItem("Inbox",
+             resource: "icons/mailbox.png",
+             class: SwingPadController) {
+               sourceListItem("john.doe@mac.com",
+                 resource: "icons/mailbox.png",
+                 class: SwingPadController,
+                 counterValue: 3)
+               sourceListItem("john.doe@gmail.com",
+                 resource: "icons/mailbox.png",
+                 class: SwingPadController,
+                 counterValue: 15)
+               sourceListItem("Sent",
+                 resource: "icons/sent.png",
+                 class: SwingPadController)
+           }
+           sourceListItem("Trash",
+             resource: "icons/trashcan.png",
+             class: SwingPadController) {
+               sourceListItem("john.doe@mac.com",
+                 resource: "icons/trashcan.png",
+                 class: SwingPadController)
+               sourceListItem("john.doe@gmail.com",
+                 resource: "icons/trashcan.png",
+                 class: SwingPadController)
+           }
+        }
+        sourceListCategory("RSS") {
+           sourceListItem("Apple Hot News",
+             resource: "icons/rss.png",
+             class: SwingPadController)
+           sourceListItem("Exploding Pixels",
+             resource: "icons/rss.png",
+             class: SwingPadController)
+        }
+      }
+    }
+
+    panel(title: "HudWindow", preferredSize: [250,250]) {
+      button( "Launch HudWindow", actionPerformed: {
+        hudWindow(title: "MacWidgets", size: [300,250],
+          locationRelativeTo: null, visible: true, id: 'hw') {
+          vbox {
+            multilineLabel("""
+Lorem ipsum dolor sit amet, consectetur
+adipiscing elit. Donec in sem ullamcorper
+felis lobortis commodo. Cras sagittis
+interdum arcu. Suspendisse pretium, enim
+a pretium posuere, turpis mauris aliquam
+enim, at gravida est lorem vel dui. Sed
+diam est, bibendum sit amet, hendrerit at,
+pulvinar a, erat. Nullam vestibulum neque
+eu massa. In hac habitasse platea dictumst.
+            """, preferredSize: [280,180],
+            background: new Color(0,0,0,1))
+            button("Dismiss", actionPerformed: { hw.visible = false })
+          }
+        }
+      })
+    }
+
+    panel(title: "iTunesTable", preferredSize: [250,250]) {
+      data = [
+        [nick: "Mr.G", name: "Guillaume LaForge"],
+        [nick: "jez", name: "Jeremy Rainer"],
+        [nick: "blackdrag", name: "Jochen Theodoru"],
+        [nick: "mittie", name: "Dierk Koenig"],
+        [nick: "shemnon", name: "Danno Ferrin"]
+      ]
+      scrollPane(preferredSize: [248,238]) {
+        itunesTable {
+          tableModel(list:data) {
+            propertyColumn(
+              header: "Nickname",
+              propertyName: "nick",
+              editable: false
+            )
+            propertyColumn(
+              header: "Full Name",
+              propertyName: "name",
+              editable: false
+            )
+          }
+        }
+      }
+    }
+
+    vbox(title: "iAppScrollPane", preferredSize: [320,300]) {
+      iappScrollPane {
+        textArea( lineWrap: false, wrapStyleWord: false,
+          text: """Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Vivamus cursus, purus 
+suscipit sagittis volutpat, est ipsum ullamcorper est, ac varius sem metus
+et lacus. Phasellus fringilla. Phasellus commodo orci id metus. Curabitur
+eros. Sed nulla. Sed odio lorem, lobortis nec, sollicitudin in, hendrerit
+vitae, metus. Phasellus molestie. Ut fermentum est a neque. Curabitur nec
+dolor non dolor pretium condimentum. Praesent vestibulum, leo sed hendrerit
+tristique, risus leo sagittis quam, ut pellentesque purus metus a felis.
+Vivamus egestas, ligula vel bibendum elementum, sem ante tincidunt dui,
+eget suscipit nulla urna nec lorem. Pellentesque non dolor ac odio
+ultricies ultricies. Aliquam pellentesque tortor et ante. Sed accumsan mi
+in mi. Phasellus turpis arcu, interdum congue, pulvinar ac, egestas id,
+tellus.
+
+Sed faucibus lacinia nibh. Integer ut lorem eu velit lacinia ultricies.
+Phasellus vehicula tempor nibh. Duis gravida, sapien ut pellentesque
+sodales, leo purus venenatis quam, eu gravida lectus neque vitae felis. Ut
+odio. Duis consequat, ligula nec varius ultricies, ipsum diam consequat
+purus, non posuere diam ante at purus. Maecenas et libero. Donec sagittis
+nibh. Duis quis metus non purus ultrices tempus. Morbi consequat
+ullamcorper nunc. Aliquam orci lacus, sagittis sit amet, ultrices ut,
+feugiat eget, nunc. Morbi ante dui, bibendum vitae, convallis et, imperdiet
+id, pede.""")
+      }
+    }
+
+    panel(title: "EmphasizedLabel", background: Color.GRAY) {
+      vbox {
+        def font = new Font("SansSerif",Font.BOLD,24)
+        label("I'm regular", font: font)
+        emphasizedLabel("I'm emphasized!", font: font)
+        emphasizedLabel("I'm too as well!", font: font,
+          focusedColor: Color.BLACK,
+          unfocusedColor: Color.LIGHT_GRAY,
+          emphasisColor: Color.RED)
+      }
+    }
+    
+  }
+}

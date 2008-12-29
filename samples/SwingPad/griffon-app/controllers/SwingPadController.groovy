@@ -316,6 +316,10 @@ class SwingPadController {
       return toggleBuilder(evt, "tray", "griffon.builder.tray.TrayBuilder")
    }
 
+   def toggleMacwidgetsBuilder = { evt = null ->
+      return toggleBuilder(evt, "macwidgets", "griffon.builder.macwidgets.MacWidgetsBuilder")
+   }
+
    def toggleLayout = { evt = null ->
       model.horizontalLayout = !model.horizontalLayout
       view.splitPane.orientation = model.horizontalLayout ? HORIZONTAL_SPLIT : VERTICAL_SPLIT

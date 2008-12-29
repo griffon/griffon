@@ -78,8 +78,12 @@ menuBar( id: 'menuBar') {
        checkBoxMenuItem(trayAction,
                         id: "trayMenu",
                         selected: controller.toggleTrayBuilder)
+       checkBoxMenuItem(macwidgetsAction,
+                        id: "macwidgetsMenu",
+                        selected: controller.toggleMacwidgetsBuilder)
        flamingoMenu.selected = false
        trayMenu.selected = false
+       macwidgetsMenu.selected = false
    }
 
    menu(text: 'Script', mnemonic: 'S') {
@@ -93,7 +97,8 @@ menuBar( id: 'menuBar') {
             jide2: "Jide - MeterProgressBar",
             swingx1: "SwingX - Flair",
             tray1: "Tray - Flair",
-            flamingo1: "Flamingo - FlexiSlider" ].each { id, name ->
+            flamingo1: "Flamingo - FlexiSlider",
+            macwidgets1: "MacWidgets - Flair" ].each { id, name ->
              menuItem(makeSampleScriptAction(id,name))
           }
        }

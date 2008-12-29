@@ -15,4 +15,7 @@ eventCopyLibsEnd = { jardir ->
    ant.copy(todir: "${jardir}/tray") {
       fileset(dir: "${basedir}/lib/tray", includes:"*.jar")
    }
+   ant.copy(todir: "${jardir}/macwidgets") {
+      fileset(dir: "${basedir}/lib/macwidgets", includes:"*.jar")
+   }
 }

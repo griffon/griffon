@@ -235,6 +235,15 @@ actions {
       shortDescription: isJdk16 ? "Enable TrayBuilder" : "Requires Jre 1.6 or above"
    )
 
+   action(id: 'macwidgetsAction',
+      name: 'MacWidgets',
+      mnemonic: 'M',
+      closure: controller.toggleMacwidgetsBuilder,
+      enabled: isJdk16,
+      smallIcon: imageIcon(resource:"icons/plugin.png", class: SwingPadActions),
+      shortDescription: isJdk16 ? "Enable MacWidgetsBuilder" : "Requires Jre 1.6 or above"
+   )
+
    imageIcon(id: "verticalLayoutIcon", resource:"icons/application_tile_vertical.png", class: SwingPadActions)
    imageIcon(id: "horizontalLayoutIcon", resource:"icons/application_tile_horizontal.png", class: SwingPadActions)
 
