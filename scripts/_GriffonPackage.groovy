@@ -501,7 +501,7 @@ target(startLogging:"Bootstraps logging") {
 //                    src(path:"${basedir}/griffon-app/domain")
 //                    src(path:"${basedir}/griffon-app/utils")
 //                    src(path:"${basedir}/src/java")
-//                    javac(classpathref:classpathId, debug:"yes")
+//                    javac(classpathref:classpathId, debug:"yes", target: '1.5')
 //
 //                }
 //        ant = null

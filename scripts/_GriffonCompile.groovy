@@ -52,7 +52,7 @@ compilerPaths = { String classpathId, boolean compilingTests ->
 //    src(path:"${basedir}/src/groovy")
 //    src(path:"${basedir}/src/java")
     src(path:"${basedir}/src/main")
-    javac(classpathref:classpathId, debug:"yes")
+    javac(classpathref:classpathId, debug:"yes", target: '1.5')
 	if(compilingTests) {
         src(path:"${basedir}/test/unit")
         src(path:"${basedir}/test/integration")

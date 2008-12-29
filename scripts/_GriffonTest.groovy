@@ -152,7 +152,7 @@ target(compileTests: "Compiles the test cases") {
         ant.groovyc(destdir: destDir,
 //                projectName: griffonAppName,
                 classpathref: classpathId) {
-            javac(classpathref:classpathId, debug:"yes")
+            javac(classpathref:classpathId, debug:"yes", target: '1.5')
             src(path:"${basedir}/test/unit")
             src(path:"${basedir}/test/integration")
         }
