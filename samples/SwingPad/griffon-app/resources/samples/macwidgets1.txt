@@ -1,5 +1,7 @@
 import java.awt.Color
 import java.awt.Font
+import javax.swing.JOptionPane
+import static com.explodingpixels.macwidgets.MacIcons.*
 
 def blackBorder = {
   lineBorder(color: Color.BLACK, thickness: 1)
@@ -42,7 +44,25 @@ panel {
     }
 
     vbox(title: "Mail", preferredSize: [250,250]) {
+      label(id: 'status', text: "   ")
       sourceList(focusable: false) {
+        sourceListControlBar { 
+          controlBarButton(PLUS, actionPerformed: {
+            status.text = "Add something!"
+          })
+          controlBarButton(MINUS, actionPerformed: {
+             status.text = "Remove something!"
+          })
+          def clickMe = { status.text = it.source.text }
+          controlBarPopdownButton(GEAR, customizePopup: { popup->
+            popup.removeAll()
+            container(popup) {
+              menuItem("Item One", actionPerformed: clickMe)
+              menuItem("Item Two", actionPerformed: clickMe)
+              menuItem("Item Three", actionPerformed: clickMe)
+            }
+          })
+        }
         sourceListCategory("Mailboxes") {
            sourceListItem("Inbox",
              resource: "icons/mailbox.png",
@@ -169,6 +189,5 @@ id, pede.""")
           emphasisColor: Color.RED)
       }
     }
-    
   }
 }
