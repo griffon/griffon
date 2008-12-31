@@ -239,9 +239,8 @@ actions {
       name: 'MacWidgets',
       mnemonic: 'M',
       closure: controller.toggleMacwidgetsBuilder,
-      enabled: isJdk16,
       smallIcon: imageIcon(resource:"icons/plugin.png", class: SwingPadActions),
-      shortDescription: isJdk16 ? "Enable MacWidgetsBuilder" : "Requires Jre 1.6 or above"
+      shortDescription: "Enable MacWidgetsBuilder"
    )
 
    imageIcon(id: "verticalLayoutIcon", resource:"icons/application_tile_vertical.png", class: SwingPadActions)
