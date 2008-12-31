@@ -28,10 +28,10 @@ actions {
       shortDescription: 'Paste'
    )
    action( id: 'exitAction',
-      name: isMacOSX ? 'Quit' : 'Exit',
+      name: 'Quit'
       closure: { trayIcon.displayMessage("Quit","No can do!",ERROR)},
-      mnemonic: isMacOSX ? 'Q' : 'X',
-      accelerator: shortcut(isMacOSX ? 'Q' : 'X'),
+      mnemonic: 'Q'
+      accelerator: shortcut('Q'),
    )
 }
 

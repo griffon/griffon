@@ -27,12 +27,12 @@ class SwingPadModel {
    @Bindable String currentTab = "sourceTab"
 
    Map builders = [
-      jide: [ enabled: true, loaded: true],
-      swingx: [ enabled: true, loaded: true],
-      swing: [ enabled: true, loaded: true],
-      flamingo: [ enabled: false, loaded: false],
-      tray: [ enabled: false, loaded: false],
-      macwidgets: [ enabled: false, loaded: false]
+      swing:      [ enabled: true,  loaded: true,  type: "groovy.swing.SwingBuilder"],
+      swingx:     [ enabled: true,  loaded: true,  type: "groovy.swing.SwingXBuilder"],
+      jide:       [ enabled: true,  loaded: true,  type: "griffon.builder.jide.JideBuilder"],
+      flamingo:   [ enabled: false, loaded: false, type: "griffon.builder.flamingo.FlamingoBuilder"],
+      tray:       [ enabled: false, loaded: false, type: "griffon.builder.tray.TrayBuilder"],
+      macwidgets: [ enabled: false, loaded: false, type: "griffon.builder.macwidgets.MacWidgetsBuilder"]
    ]
 
    Map samples = [:]

@@ -180,6 +180,7 @@ class SwingPadController {
 
    def runScript = { evt = null ->
       if( !model.content ) return
+      view.tabs.selectedIndex = 0 // sourceTab
       runThread = Thread.start {
          try {
             doLater {
@@ -204,15 +205,28 @@ class SwingPadController {
 
    def runSampleScript = { evt = null ->
       if( model.currentSample ) {
-         def builder = model.currentSample[0..-2]
+         def builder = model.currentSample[0..-2].toLowerCase()
          if( !model.builders[builder].enabled ) {
+            model.status = "Enabling ${model.builders[builder].type} ..."
             view."${builder}Menu".selected = true
-            def enabled = this."toggle${builder[0].toUpperCase()+builder[1..-1]}Builder"([source:view."${builder}Menu"])
-            if(!enabled) return
+            doOutside {
+               if(toggleBuilder([source:view."${builder}Menu"], builder, model.builders[builder].type)) {
+                  doLater {
+                     model.status = "Loading Script ..."
+                     view.editor.textEditor.text = model.samples[model.currentSample]
+                     view.editor.textEditor.caretPosition = 0
+                     view.runAction.enabled = true
+                     runScript(evt)
+                  }
+               }
+            }
+         } else {
+            model.status = "Loading Script ..."
+            view.editor.textEditor.text = model.samples[model.currentSample]
+            view.editor.textEditor.caretPosition = 0
+            view.runAction.enabled = true
+            runScript(evt)
          }
-         view.editor.textEditor.text = model.samples[model.currentSample]
-         view.runAction.enabled = true
-         runScript(evt)
       }
    }
 
@@ -309,15 +323,21 @@ class SwingPadController {
    }
 
    def toggleFlamingoBuilder = { evt = null ->
-      return toggleBuilder(evt, "flamingo", "griffon.builder.flamingo.FlamingoBuilder")
+      doOutside {
+         toggleBuilder(evt, "flamingo", model.builders.flamingo.type)
+      }
    }
 
    def toggleTrayBuilder = { evt = null ->
-      return toggleBuilder(evt, "tray", "griffon.builder.tray.TrayBuilder")
+      doOutside {
+         toggleBuilder(evt, "tray", model.builders.tray.type)
+      }
    }
 
    def toggleMacwidgetsBuilder = { evt = null ->
-      return toggleBuilder(evt, "macwidgets", "griffon.builder.macwidgets.MacWidgetsBuilder")
+      doOutside {
+         toggleBuilder(evt, "macwidgets", model.builders.macwidgets.type)
+      }
    }
 
    def toggleLayout = { evt = null ->
