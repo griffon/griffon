@@ -419,6 +419,12 @@ runPluginScript = { File scriptFile, fullPluginName, msg ->
         includeTargets << instrumentedInstallScript
     }
 }
+// TODO review usage on installer-plugin
+pluginScript = { pluginName, scriptName ->
+   def pluginHome = getPluginDirForName(pluginName).file
+   def scriptFile = new File(pluginHome,"/scripts/${scriptName}.groovy")
+   return scriptFile.exists() ? scriptFile : null
+}
 /**
  * Downloads a remote plug-in zip into the plugins dir
  */

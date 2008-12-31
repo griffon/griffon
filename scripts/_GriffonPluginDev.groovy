@@ -91,7 +91,7 @@ target(packagePlugin:"Implementation target") {
     def xml = new MarkupBuilder(writer)
     def props = ['author','authorEmail','title','description','documentation']
     //def resourceList = GriffonResourceLoaderHolder.resourceLoader.getResources()
-    def jdk = plugin.properties['jdk'] ?: "1.4"
+    def jdk = plugin.properties['jdk'] ?: "1.5"
     xml.plugin(name:"${pluginName}",version:"${plugin.version}",jdk:"$jdk") {
               props.each {
             if( plugin.properties[it] ) "${it}"(plugin.properties[it])
