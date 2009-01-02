@@ -17,21 +17,21 @@
 //import griffon.util.GriffonWebUtil as GWU
 
 import java.lang.reflect.Modifier
-import junit.framework.AssertionFailedError
+//import junit.framework.AssertionFailedError
 import junit.framework.TestCase
 import junit.framework.TestResult
 import junit.framework.TestSuite
 import junit.framework.Test
 import org.apache.tools.ant.taskdefs.optional.junit.JUnitTest
-import org.codehaus.griffon.commons.GriffonContext
+//import org.codehaus.griffon.commons.GriffonContext
 import org.codehaus.griffon.util.GriffonUtil
 import org.codehaus.griffon.support.GriffonTestSuite
 //import org.codehaus.griffon.support.PersistenceContextInterceptor
 //import org.codehaus.griffon.web.servlet.GriffonApplicationAttributes
-import org.codehaus.griffon.util.GriffonNameUtils
-import org.springframework.transaction.support.TransactionCallback
-import org.springframework.transaction.support.TransactionTemplate
-import org.springframework.web.context.request.RequestContextHolder
+//import org.codehaus.griffon.util.GriffonNameUtils
+//import org.springframework.transaction.support.TransactionCallback
+//import org.springframework.transaction.support.TransactionTemplate
+//import org.springframework.web.context.request.RequestContextHolder
 /**
  * Gant script that runs the Griffon unit tests
  *
@@ -347,7 +347,7 @@ target(runIntegrationTests: "Runs Griffon' tests under the test/integration dire
         configureApp()
         // build views, models and controllers
         // TODO review!!
-//        def app = appCtx.getBean(GriffonApplication.APPLICATION_ID)
+//        def app = appCtx.getBean(GriffonContext.APPLICATION_ID)
 //        if (app.parentContext == null) {
 //            app.applicationContext = appCtx
 //        }
