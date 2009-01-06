@@ -23,7 +23,7 @@
 
 includeTargets << griffonScript("_GriffonSettings")
 
-target ('default': "Generates basic stats for a Griffon project") {
+target (stats: "Generates basic stats for a Griffon project") {
 
 	// maps file path to
 	def pathToInfo = [
@@ -92,3 +92,5 @@ target ('default': "Generates basic stats for a Griffon project") {
 
 
 }
+
+setDefaultTarget(stats)

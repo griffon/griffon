@@ -3,8 +3,8 @@
 
 // griffon.config.locations = [ "classpath:${appName}-config.properties",
 //                             "classpath:${appName}-config.groovy",
-//                             "file:${userHome}/.griffon/${appName}-config.properties",
-//                             "file:${userHome}/.griffon/${appName}-config.groovy"]
+//                             "file:${griffonSettings.griffonWorkDir}/${appName}-config.properties",
+//                             "file:${griffonSettings.griffonWorkDir}/${appName}-config.groovy"]
 
 // if(System.properties["${appName}.config.location"]) {
 //    griffon.config.locations << "file:" + System.properties["${appName}.config.location"]

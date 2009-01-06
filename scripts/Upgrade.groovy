@@ -29,7 +29,7 @@ import org.codehaus.griffon.commons.GriffonContext
 includeTargets << griffonScript("_GriffonInit")
 includeTargets << griffonScript("_GriffonClean")
 
-target(upgrade: "main upgrade target") {
+target(upgrade: "Upgrades a Griffon application from a previous version of Griffon") {
 
     depends(createStructure)
 
@@ -189,6 +189,4 @@ target(upgrade: "main upgrade target") {
     event("StatusFinal", ["Project upgraded"])
 }
 
-target("default": "Upgrades a Griffon application from a previous version of Griffon") {
-    depends(upgrade)
-}
+setDefaultTarget(upgrade)

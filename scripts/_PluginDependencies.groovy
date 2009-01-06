@@ -393,7 +393,7 @@ getPluginScripts = {
  * Gets a list of all scripts known to the application (excluding private scripts starting with _)
  */
 getAllScripts = {
-    GriffonPluginUtils.getAvailableScripts(griffonHome,pluginsHome, basedir, resolveResources)
+    GriffonPluginUtils.getAvailableScripts(griffonHome, pluginsHome, basedir, griffonSettings.griffonWorkDir.path, resolveResources)
 }
 /**
  * Obtains a list of all Griffon plug-in descriptor classes
@@ -607,7 +607,7 @@ installPluginForName = { String fullPluginName ->
             pluginJdkVersion = new BigDecimal(pluginJdkVersion)
             def javaVersion = new BigDecimal(System.getProperty("java.version")[0..2])
             if (pluginJdkVersion > javaVersion) {
-                Ant.delete(dir: "${pluginsDirPath}/${fullPluginName}", quiet: true, failOnError: false)
+                ant.delete(dir: "${pluginsDirPath}/${fullPluginName}", quiet: true, failOnError: false)
                 clean()
 
                 pluginInstallFail("Failed to install plug-in [${fullPluginName}]. Required Jdk version is ${pluginJdkVersion}, current one is ${javaVersion}", [name:pluginName])

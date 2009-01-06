@@ -508,7 +508,7 @@ public class GriffonScriptRunner {
             addCommandScripts(new File(settings.getGriffonHome(), "scripts"), scripts);
         }
         addCommandScripts(new File(settings.getBaseDir(), "scripts"), scripts);
-        addCommandScripts(new File(settings.getUserHome(), ".griffon/scripts"), scripts);
+        addCommandScripts(new File(settings.getGriffonWorkDir(), "scripts"), scripts);
 
         addPluginScripts(settings.getProjectPluginsDir(), scripts);
         addPluginScripts(settings.getGlobalPluginsDir(), scripts);

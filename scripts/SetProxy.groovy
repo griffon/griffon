@@ -27,8 +27,8 @@ includeTargets << griffonScript("_GriffonProxy")
 
 target(setProxy:"Sets HTTP proxy configuration for Griffon") {
     depends(configureProxy)
-    ant.mkdir( dir:"${userHome}/.griffon/scripts" )
-    def scriptFile = new File("${userHome}/.griffon/scripts/ProxyConfig.groovy")
+    ant.mkdir( dir:"${griffonSettings.griffonWorkDir}/scripts" )
+    def scriptFile = new File("${griffonSettings.griffonWorkDir}/scripts/ProxyConfig.groovy")
     ant.input(addProperty:"proxy.use", message:"Do you wish to use HTTP proxy?",validargs:'y,n',defaultvalue:'y')
     if( ant.antProject.properties."proxy.use" == 'n' ) {
         scriptFile.delete()

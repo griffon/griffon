@@ -24,7 +24,7 @@
 
 target(configureProxy: "The implementation target") {
     proxySettings = ""
-    def scriptFile = new File("${userHome}/.griffon/scripts/ProxyConfig.groovy")
+    def scriptFile = new File("${griffonSettings.griffonWorkDir}/scripts/ProxyConfig.groovy")
     if (scriptFile.exists()) {
         includeTargets << scriptFile.text
         if (proxyConfig.proxyHost) {

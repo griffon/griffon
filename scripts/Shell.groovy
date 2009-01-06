@@ -27,7 +27,7 @@ import org.codehaus.groovy.tools.shell.*
 
 includeTargets << griffonScript("_GriffonBootstrap")
 
-target ('default': "Load the Griffon interactive shell") {
+target (runShell: "Load the Griffon interactive shell") {
 	depends( configureProxy, packageApp )
     jardir = ant.antProject.replaceProperties(config.griffon.jars.destDir)
     ant.copy(todir:jardir) { fileset(dir:"${griffonHome}/lib/", includes:"jline-*.jar") }
@@ -68,3 +68,5 @@ target(shell:"The shell implementation target") {
     def shell = new Groovysh(classLoader,b, new IO(System.in, System.out, System.err))
 	shell.run([] as String[])
 }
+
+setDefaultTarget(runShell)

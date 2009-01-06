@@ -72,7 +72,7 @@ event = {String name, def args ->
 
 loadEventHooks = {
     // Look for user script
-    def f = findEventsScript(new File(userHome, ".griffon/scripts"))
+    def f = findEventsScript(new File("${griffonSettings.griffonWorkDir}/scripts"))
     if (f != null) {
         println "Found user events script"
         loadEventScript(f)

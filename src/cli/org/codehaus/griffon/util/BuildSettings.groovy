@@ -279,7 +279,7 @@ class BuildSettings {
                     userHome: userHome)
       
         // Find out whether the file exists, and if so parse it.
-        def settingsFile = new File("$userHome/.griffon/settings.groovy")
+        def settingsFile = new File("${griffonWorkDir}/settings.groovy")
         if (settingsFile.exists()) {
             Script script = gcl.parseClass(settingsFile).newInstance();
             config = slurper.parse(script)

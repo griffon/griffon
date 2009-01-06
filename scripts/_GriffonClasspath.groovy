@@ -60,7 +60,7 @@ getJarFiles = {->
         if (!matches) jarFiles.add(pluginJar)
     }
 
-    def userJars = resolveResources("file:${userHome}/.griffon/lib/*.jar")
+    def userJars = resolveResources("file:${griffonSettings.griffonWorkDir}/lib/*.jar")
     for (userJar in userJars) {
         jarFiles.add(userJar)
     }

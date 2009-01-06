@@ -210,6 +210,7 @@ public class GriffonPluginUtils {
     static synchronized Resource[] getAvailableScripts(String griffonHome,
                                           String pluginDirPath,
                                           String basedir,
+                                          String griffonWorkDir,
                                           Closure resourceResolver = DEFAULT_RESOURCE_RESOLVER) {
         if(!availableScripts) {
 
@@ -218,7 +219,7 @@ public class GriffonPluginUtils {
             resourceResolver("file:${griffonHome}/scripts/**.groovy").each { if (!it.file.name.startsWith('_')) scripts << it }
             resourceResolver("file:${basedir}/scripts/*.groovy").each { if (!it.file.name.startsWith('_')) scripts << it }
             getPluginScripts(pluginDirPath).each { if (!it.file.name.startsWith('_')) scripts << it }
-            resourceResolver("file:${userHome}/.griffon/scripts/*.groovy").each { if (!it.file.name.startsWith('_')) scripts << it }
+            resourceResolver("file:${griffonWorkDir}/scripts/*.groovy").each { if (!it.file.name.startsWith('_')) scripts << it }
             availableScripts = scripts as Resource[]
         }
         return availableScripts
