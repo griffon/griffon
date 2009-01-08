@@ -118,6 +118,7 @@ class GriffonApplicationHelper {
 
         def model = modelKlass.newInstance()
         def view = viewKlass.newInstance()
+        view.binding = builder
         def controller = controllerKlass.newInstance()
 
         app.models[mvcName] = model
