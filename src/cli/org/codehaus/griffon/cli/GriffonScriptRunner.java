@@ -299,7 +299,7 @@ public class GriffonScriptRunner {
 
             // Add the remaining JARs (from 'griffonHome', the app, and
             // the plugins) to the root loader.
-            URL[] urls = getClassLoaderUrls(settings, existingJars);
+            URL[] urls = getClassLoaderUrls(settings, existingJars, "UninstallPlugin".equals(scriptName));
             addUrlsToRootLoader(settings.getRootLoader(), urls);
 
             // The compiled classes of the application!
@@ -549,7 +549,7 @@ public class GriffonScriptRunner {
      * Creates a new root loader with the Griffon libraries and the
      * application's plugin libraries on the classpath.
      */
-    private static URL[] getClassLoaderUrls(BuildSettings settings, Set excludes) throws MalformedURLException {
+    private static URL[] getClassLoaderUrls(BuildSettings settings, Set excludes, boolean skipPluginLibs) throws MalformedURLException {
         List urls = new ArrayList();
 
         // First add the libraries from the Griffon installation directory,
@@ -564,8 +564,10 @@ public class GriffonScriptRunner {
         if (appLibDir.exists()) addLibs(appLibDir, urls, excludes);
 
         // Add the libraries of both project and global plugins.
-        addPluginLibs(settings.getProjectPluginsDir(), urls);
-        addPluginLibs(settings.getGlobalPluginsDir(), urls);
+        if (!skipPluginLibs) {
+            addPluginLibs(settings.getProjectPluginsDir(), urls);
+            addPluginLibs(settings.getGlobalPluginsDir(), urls);
+        }
         return (URL[]) urls.toArray(new URL[0]);
     }
 
