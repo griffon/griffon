@@ -25,7 +25,7 @@ includeTargets << griffonScript("Package")
 includeTargets << griffonScript("_PackagePlugins" )
 
 target(runApp: "Runs the application from the command line") {
-    depends(checkVersion, configureProxy, packageApp)
+    depends(checkVersion, configureProxy, parseArguments, packageApp)
 
     // calculate the needed jars
     File jardir = new File(ant.antProject.replaceProperties(config.griffon.jars.destDir))
@@ -40,6 +40,19 @@ target(runApp: "Runs the application from the command line") {
     }
 
     def javaOps = "-Dgriffon.start.dir=\""+jardir.absolutePath+"\""
+    if (argsMap.containsKey('debug')) {
+        def portNum = argsMap.debugPort?:'18290'  //default is 'Gr' in ASCII
+        def addr = argsMap.debugAddr?:'127.0.0.1'  //default is 'Gr' in ASCII
+        def debugSocket = ''
+        if (portNum =~ /\d+/) {
+            if (addr == '127.0.0.1') {
+                debugSocket = ",address=$portNum"
+            } else {
+                debugSocket = ",address=$addr:$portNum"
+            }
+        }
+        javaOps = "-Xrunjdwp:transport=dt_socket$debugSocket,suspend=n,server=y $javaOps"
+    }
     // start the processess
     Process p = "$javaVM -classpath ${runtimeJars.collect {f -> f.name}.join(File.pathSeparator)} $proxySettings $javaOps griffon.application.SingleFrameApplication".execute(null as String[], jardir)
 
