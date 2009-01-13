@@ -104,10 +104,11 @@ class GriffonApplicationHelper {
         // this also insures EMC metaclasses later
         klass.metaClass.app = app
         klass.metaClass.createMVCGroup = GriffonApplicationHelper.&createMVCGroup.curry(app)
+        klass.metaClass.destroyMVCGroup = GriffonApplicationHelper.&destroyMVCGroup.curry(app)
         return klass
     }
 
-    public static createMVCGroup(IGriffonApplication app, def mvcType, def mvcName = mvcType, Map bindArgs = [:]) {
+    public static createMVCGroup(IGriffonApplication app, String mvcType, String mvcName = mvcType, Map bindArgs = [:]) {
         Class modelKlass = createInstance(mvcType, "model", app)
         Class viewKlass = createInstance(mvcType, "view", app)
         Class controllerKlass = createInstance(mvcType, "controller", app)
@@ -149,6 +150,24 @@ class GriffonApplicationHelper {
         builder.edt({builder.build(view) })
 
         return [model, view, controller]
+    }
+
+    public static destroyMVCGroup(IGriffonApplication app, String mvcName) {
+        [app.models, app.views, app.controllers].each {
+            def part = it.remove(mvcName)
+            if ((part != null)  & !(part instanceof Script)) {
+                try {
+                    part.mvcGroupDestroy()
+                } catch (MissingMethodException mme) {
+                    if (mme.method != 'mvcGroupDestroy') {
+                        throw mme
+                    }
+                    // MME on mvcGroupDestroy means they didn't define
+                    // an init method.  This is not an error.
+                }
+            }
+        }
+        app.builders.remove(mvcName)?.dispose()
     }
 
     public static def createJFrameApplication(IGriffonApplication app) {
