@@ -63,7 +63,7 @@ target( createConfig: "Creates the configuration object") {
         try {
             applicationConfigClass = classLoader.loadClass("Application")
         } catch (ClassNotFoundException cnfe) {
-            println "WARNING: No Appliciton.groovy found for the application."
+            println "WARNING: No Application.groovy found for the application."
         }
         if (applicationConfigClass) {
             try {
