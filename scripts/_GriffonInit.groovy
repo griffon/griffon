@@ -75,7 +75,7 @@ eclipseClasspathGriffonJars = {args ->
     result = ''
     if (griffonHome) {
         (new File("${griffonHome}/dist")).eachFileMatch(~/^griffon-.*\.jar/) {file ->
-            result += "<classpathentry kind=\"var\" path=\"GrIFFON_HOME/dist/${file.name}\" />\n\n"
+            result += "<classpathentry kind=\"var\" path=\"GRIFFON_HOME/dist/${file.name}\" />\n\n"
         }
     }
     result
