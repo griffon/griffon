@@ -59,43 +59,63 @@ compilerPaths = { String classpathId, boolean compilingTests ->
 	}
 }
 
+compileSources = { classpathId, sources ->
+    try {
+        ant.groovyc(destdir:classesDirPath,
+                    classpathref:classpathId,
+                    encoding:"UTF-8", sources)
+    }
+    catch(Exception e) {
+        event("StatusFinal", ["Compilation error: ${e.message}"])
+        exit(1)
+    }
+}
+
 target(compile : "Implementation of compilation phase") {
+    ant.mkdir(dir:classesDirPath)
     event("CompileStart", ['source'])
     depends(resolveDependencies)
 
     profile("Compiling sources to location [$classesDirPath]") {
 
-        ant.mkdir(dir:classesDirPath)
-        try {
-            String classpathId = "griffon.compile.classpath"
-            ant.groovyc(destdir:classesDirPath,
-//                    projectName:baseName,
-                    classpathref:classpathId,
-                    encoding:"UTF-8",
-                    compilerPaths.curry(classpathId, false))
-        }
-        catch(Exception e) {
-            event("StatusFinal", ["Compilation error: ${e.message}"])
-            exit(1)
-        }
+        String classpathId = "griffon.compile.classpath"
+        compileSources(classpathId, compilerPaths.curry(classpathId, false))
+//         try {
+//             String classpathId = "griffon.compile.classpath"
+//             ant.groovyc(destdir:classesDirPath,
+// //                    projectName:baseName,
+//                     classpathref:classpathId,
+//                     encoding:"UTF-8",
+//                     compilerPaths.curry(classpathId, false))
+//         }
+//         catch(Exception e) {
+//             event("StatusFinal", ["Compilation error: ${e.message}"])
+//             exit(1)
+//         }
 
         // TODO review
         // compile *GriffonPlugin.groovy if it exists
-        try {
-           if( new File("${basedir}").list().grep{ it =~ /GriffonPlugin\.groovy/ } ){
-               String classpathId = "griffon.compile.classpath"
-               ant.groovyc(destdir:classesDirPath,
-//                    projectName:baseName,
-                       classpathref:classpathId,
-                       encoding:"UTF-8") {
-                  src(path:"${basedir}")
-                  include(name:'*GriffonPlugin.groovy')
-              }
-           }
-        }
-        catch(Exception e) {
-            event("StatusFinal", ["Compilation error: ${e.message}"])
-            exit(1)
+//         try {
+//            if( new File("${basedir}").list().grep{ it =~ /GriffonPlugin\.groovy/ } ){
+//                String classpathId = "griffon.compile.classpath"
+//                ant.groovyc(destdir:classesDirPath,
+// //                    projectName:baseName,
+//                        classpathref:classpathId,
+//                        encoding:"UTF-8") {
+//                   src(path:"${basedir}")
+//                   include(name:'*GriffonPlugin.groovy')
+//               }
+//            }
+//         }
+//         catch(Exception e) {
+//             event("StatusFinal", ["Compilation error: ${e.message}"])
+//             exit(1)
+//         }
+        if( new File("${basedir}").list().grep{ it =~ /GriffonPlugin\.groovy/ } ){
+            compileSources(classpathId) {
+                src(path:"${basedir}")
+                include(name:'*GriffonPlugin.groovy')
+            }
         }
 
         classLoader.addURL(classesDir.toURI().toURL())
