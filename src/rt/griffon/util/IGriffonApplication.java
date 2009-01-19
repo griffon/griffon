@@ -36,6 +36,10 @@ public interface IGriffonApplication {
     public ConfigObject getBuilderConfig();
     public void setBuilderConfig(ConfigObject builderConfig);
 
+    public Class getEventsClass();
+    public Object getEventsConfig();
+    public void setEventsConfig(Object eventsConfig);
+
     public Binding getBindings();
     public void setBindings(Binding bindings);
 

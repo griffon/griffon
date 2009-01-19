@@ -31,6 +31,11 @@ class GriffonApplicationHelper {
     static void prepare(IGriffonApplication app) {
         app.config = new ConfigSlurper().parse(app.configClass)
         app.builderConfig = new ConfigSlurper().parse(app.builderClass)
+        def eventsClass = app.eventsClass
+        if( eventsClass ) {
+            app.eventsConfig = eventsClass.newInstance()
+            app.addApplicationEventListener(app.eventsConfig)
+        }
         app.bindings.app = app
         app.initialize();
     }
@@ -95,7 +100,7 @@ class GriffonApplicationHelper {
         }
     }
 
-    private static Class createInstance(String mvcName, String className, IGriffonApplication app) {
+    private static Class loadMVCClass(String mvcName, String className, IGriffonApplication app) {
         ClassLoader classLoader = app.getClass().classLoader
 
         Class klass = classLoader.loadClass(app.config.mvcGroups[mvcName][className]);
@@ -105,22 +110,30 @@ class GriffonApplicationHelper {
         klass.metaClass.app = app
         klass.metaClass.createMVCGroup = GriffonApplicationHelper.&createMVCGroup.curry(app)
         klass.metaClass.destroyMVCGroup = GriffonApplicationHelper.&destroyMVCGroup.curry(app)
+        klass.metaClass.newInstance = GriffonApplicationHelper.&newInstance.curry(app)
         return klass
     }
 
+    public static Object newInstance(IGriffonApplication app, Class klass, String type) {
+        def instance = klass.newInstance()
+        app.event("NewInstance",[klass,type,instance])
+        return instance
+    }
+
     public static createMVCGroup(IGriffonApplication app, String mvcType, String mvcName = mvcType, Map bindArgs = [:]) {
-        Class modelKlass = createInstance(mvcType, "model", app)
-        Class viewKlass = createInstance(mvcType, "view", app)
-        Class controllerKlass = createInstance(mvcType, "controller", app)
+        Class modelKlass = loadMVCClass(mvcType, "model", app)
+        Class viewKlass = loadMVCClass(mvcType, "view", app)
+        Class controllerKlass = loadMVCClass(mvcType, "controller", app)
 
         UberBuilder builder = CompositeBuilderHelper.createBuilder(app,
             [model:modelKlass, view:viewKlass, controller:controllerKlass])
         bindArgs.each {k, v -> builder.setVariable k, v }
 
-        def model = modelKlass.newInstance()
-        def view = viewKlass.newInstance()
+        def model = newInstance(app,modelKlass,"Model")
+        def view = newInstance(app,viewKlass,"View")
         view.binding = builder
-        def controller = controllerKlass.newInstance()
+        def controller = newInstance(app,controllerKlass,"Controller")
+        app.addApplicationEventListener(controller)
 
         app.models[mvcName] = model
         app.views[mvcName] = view
@@ -148,11 +161,12 @@ class GriffonApplicationHelper {
         }
 
         builder.edt({builder.build(view) })
-
+        app.event("CreateMVCGroup",[mvcName, model, view, controller])
         return [model, view, controller]
     }
 
     public static destroyMVCGroup(IGriffonApplication app, String mvcName) {
+        app.removeApplicationListener(app.controllers.mvcName)
         [app.models, app.views, app.controllers].each {
             def part = it.remove(mvcName)
             if ((part != null)  & !(part instanceof Script)) {
@@ -168,6 +182,7 @@ class GriffonApplicationHelper {
             }
         }
         app.builders.remove(mvcName)?.dispose()
+        app.event("DestroyMVCGroup",[mvcName])
     }
 
     public static def createJFrameApplication(IGriffonApplication app) {

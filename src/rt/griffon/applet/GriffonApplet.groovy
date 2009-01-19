@@ -17,6 +17,7 @@ package griffon.applet
 
 import griffon.util.GriffonApplicationHelper
 import griffon.util.IGriffonApplication
+import griffon.util.EventRouter
 import javax.swing.JApplet
 
 /**
@@ -35,8 +36,10 @@ class GriffonApplet extends JApplet implements IGriffonApplication {
     Binding bindings = new Binding()
     ConfigObject config
     ConfigObject builderConfig
+    Object eventsConfig
 
     private boolean appletContainerDispensed = false
+    private EventRouter eventRouter = new EventRouter()
 
     public void init() {
         GriffonApplicationHelper.prepare(this)
@@ -65,6 +68,15 @@ class GriffonApplet extends JApplet implements IGriffonApplication {
         return getClass().classLoader.loadClass("Builder")
     }
 
+    public Class getEventsClass() {
+        try{
+           return getClass().classLoader.loadClass("Events")
+        } catch( ex ) {
+           // ignore - no global event handler will be used
+        }
+        return null
+    }
+
     public Object createApplicationContainer() {
         if (appletContainerDispensed) {
             return GriffonApplicationHelper.createJFrameApplication(this)
@@ -75,18 +87,37 @@ class GriffonApplet extends JApplet implements IGriffonApplication {
     }
 
     public void initialize() {
+        event("InitializeStart",[this])
         GriffonApplicationHelper.runScriptInsideEDT("Initialize", this)
+        event("InitializeEnd",[this])
     }
 
     public void ready() {
+        event("ReadyStart",[this])
         GriffonApplicationHelper.runScriptInsideEDT("Ready", this)
+        event("ReadyEnd",[this])
     }
 
     public void shutdown() {
+        event("ShutdownStart",[this])
         GriffonApplicationHelper.runScriptInsideEDT("Shutdown", this)
     }
 
     public void startup() {
+        event("StartupStart",[this])
         GriffonApplicationHelper.runScriptInsideEDT("Startup", this)
+        event("StartupEnd",[this])
+    }
+
+    public void event( String eventName, List params = [] ) {
+        eventRouter.publish(eventName, params)
+    }
+
+    public void addApplicationEventListener( listener ) {
+       eventRouter.addApplicationEventListener(listener)
+    }
+
+    public void removeApplicationEventListener( listener ) {
+       eventRouter.removeApplicationEventListener(listener)
     }
 }

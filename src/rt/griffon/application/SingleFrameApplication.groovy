@@ -17,6 +17,7 @@ package griffon.application
 
 import griffon.util.GriffonApplicationHelper
 import griffon.util.IGriffonApplication
+import griffon.util.EventRouter
 import java.awt.event.WindowEvent
 import griffon.util.GriffonExceptionHandler
 
@@ -34,13 +35,19 @@ class SingleFrameApplication implements IGriffonApplication {
     Binding bindings = new Binding()
     ConfigObject config
     ConfigObject builderConfig
+    Object eventsConfig
+    private EventRouter eventRouter = new EventRouter()
 
     public void bootstrap() {
+        event("BootstrapStart",[this])
         GriffonApplicationHelper.prepare(this);
+        event("BootstrapEnd",[this])
     }
 
     public void realize() {
+        event("RealizeStart",[this])
         GriffonApplicationHelper.startup(this)
+        event("RealizeEnd",[this])
     }
 
     public void show() {
@@ -52,11 +59,20 @@ class SingleFrameApplication implements IGriffonApplication {
     }
 
     public Class getConfigClass() {
-        return getClass().classLoader.loadClass("Application") 
+        return getClass().classLoader.loadClass("Application")
     }
 
     public Class getBuilderClass() {
         return getClass().classLoader.loadClass("Builder")
+    }
+
+    public Class getEventsClass() {
+        try{
+           return getClass().classLoader.loadClass("Events")
+        } catch( ex ) {
+           // ignore - no global event handler will be used
+        }
+        return null
     }
 
     public Object createApplicationContainer() {
@@ -71,20 +87,27 @@ class SingleFrameApplication implements IGriffonApplication {
     }
 
     public void initialize() {
+        event("InitializeStart",[this])
         GriffonApplicationHelper.runScriptInsideEDT("Initialize", this)
+        event("InitializeEnd",[this])
     }
 
     public void ready() {
+        event("ReadyStart",[this])
         GriffonApplicationHelper.runScriptInsideEDT("Ready", this)
+        event("ReadyEnd",[this])
     }
 
     public void shutdown() {
+        event("ShutdownStart",[this])
         GriffonApplicationHelper.runScriptInsideEDT("Shutdown", this)
         System.exit(0)
     }
 
     public void startup() {
+        event("StartupStart",[this])
         GriffonApplicationHelper.runScriptInsideEDT("Startup", this)
+        event("StartupEnd",[this])
     }
 
     public void handleWindowClosing(WindowEvent evt = null) {
@@ -101,6 +124,16 @@ class SingleFrameApplication implements IGriffonApplication {
         sfa.realize();
         sfa.show();
     }
+
+    public void event( String eventName, List params = [] ) {
+        eventRouter.publish(eventName, params)
+    }
+
+    public void addApplicationEventListener( listener ) {
+       eventRouter.addApplicationEventListener(listener)
+    }
+
+    public void removeApplicationEventListener( listener ) {
+       eventRouter.removeApplicationEventListener(listener)
+    }
 }
-
-
