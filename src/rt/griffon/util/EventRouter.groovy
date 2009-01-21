@@ -15,24 +15,33 @@
  */
 package griffon.util
 
+import javax.swing.SwingUtilities
+
 class EventRouter {
    private List listeners = []
    private Map scriptBindings = [:]
 
    public void publish( String eventName, List params = [] ) {
       if( !eventName ) return
-      def eventHandler = "on" + eventName[0].toUpperCase() + eventName[1..-1]
-      listeners.each { listener ->
-         try {
-            if( listener instanceof Script ) {
-               fireEventOnScript(listener, eventHandler, params)
-            } else {
-               fireEventOnClass(listener, eventHandler, params)
+      def publisher = {
+         def eventHandler = "on" + eventName[0].toUpperCase() + eventName[1..-1]
+         listeners.each { listener ->
+            try {
+               if( listener instanceof Script ) {
+                  fireEventOnScript(listener, eventHandler, params)
+               } else {
+                  fireEventOnClass(listener, eventHandler, params)
+               }
+            } catch( x ) {
+               // TODO log exception
+               println x
             }
-         } catch( x ) {
-            // TODO log exception
-            println x
          }
+      }
+      if( SwingUtilities.isEventDispatchThread() ) {
+         Thread.start { publisher() }
+      } else {
+         publisher()
       }
    }
 
