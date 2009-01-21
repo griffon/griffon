@@ -187,7 +187,7 @@ class BuildSettings {
         catch (IOException ex) {
             StackTraceUtils.deepSanitize(ex).printStackTrace()
             throw new IOException("Unable to find 'build.properties' - make " +
-                    "that sure the 'griffon-core-*.jar' file is on the classpath.")
+                    "that sure the 'griffon-cli-*.jar' file is on the classpath.")
         }
 
         // Set up the project paths, using an empty config for now. The
