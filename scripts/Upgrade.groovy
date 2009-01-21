@@ -113,8 +113,12 @@ target(upgrade: "Upgrades a Griffon application from a previous version of Griff
                         it.writeLine "environments {\n    ${System.getProperty(GriffonContext.ENVIRONMENT)} {"
                     }
                     if (packJars == [:]) it.writeLine "${indent}griffon.jars.pack=false // jars were not automatically packed in Griffon 0.0"
-                    if (signJars == [:]) it.writeLine "${indent}griffon.jars.sign=true // jars were automatically isgned in Griffon 0.0"
+                    if (signJars == [:]) it.writeLine "${indent}griffon.jars.sign=true // jars were automatically signed in Griffon 0.0"
                     if (signingKeyFile == [:]) it.writeLine "${indent}signingkey.params.sigfile='GRIFFON' // may safely be removed, but calling upgrade will restore it"
+                    it.writeLine "// you may now tweak memory parameters"
+                    it.writeLine "//${indent}griffon.memory.min=16m"
+                    it.writeLine "//${indent}griffon.memory.max=64m"
+                    it.writeLine "//${indent}griffon.memory.maxPermSize=64m"
                     if (indent != '') {
                         it.writeLine('    }\n}')
                     }
@@ -159,6 +163,15 @@ target(upgrade: "Upgrades a Griffon application from a previous version of Griff
             entry(key: "app.griffon.version", value: "$griffonVersion")
         }
     }
+    // insure all .jnlp files have a memory hook, unlessa already tweaked
+    fileset(dir:"${basedir}/griffon-app/conf/", includes:"**/*.jnlp").each {
+        println "--"
+        println it.toString()
+        ant.replace(file: it.toString()) {
+            replacefilter(token: '<j2se version="1.5+"/>', value: '<j2se version="1.5+" @memoryOptions@/>')
+        }
+    }
+
 
 // proceed plugin-specific upgrade logic contained in 'scripts/_Upgrade.groovy' under plugin's root
     def plugins = GriffonPluginUtils.getPluginBaseDirectories(pluginsHome)

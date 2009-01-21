@@ -68,6 +68,11 @@ environments {
 }
 
 griffon {
+    memory {
+        //max = '64m'
+        //min = '2m'
+        //maxPermSize = '64m'
+    }
     jars {
         sign = false
         pack = false

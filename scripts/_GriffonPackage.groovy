@@ -371,26 +371,38 @@ target(generateJNLP:"Generates the JNLP File") {
         fileset(dir:"${basedir}/griffon-app/conf/webstart")
     }
 
-    jnlpJars = ''
-    appletJars = ''
+    jnlpJars = []
+    appletJars = []
     // griffon-rt has to come first, it's got the launch classes
     new File(jardir).eachFileMatch(~/griffon-rt-.*.jar/) { f ->
-        jnlpJars += "        <jar href='$f.name'/>\n"
-        appletJars += "$f.name"
+        jnlpJars << "        <jar href='$f.name'/>"
+        appletJars << "$f.name"
     }
     new File(jardir).eachFileMatch(~/.*\.jar/) { f ->
         if (!(f.name =~ /griffon-rt-.*/)) {
-            jnlpJars += "        <jar href='$f.name'/>\n"
-            appletJars += ",$f.name"
+            jnlpJars << "        <jar href='$f.name'/>"
+            appletJars << "$f.name"
         }
+    }
+    memOptions = []
+    if (config.griffon.memory?.min) {
+        memOptions << "initial-heap-size='$config.griffon.memory.min'"
+    }
+    if (config.griffon.memory?.max) {
+        memOptions << "max-heap-size='$config.griffon.memory.max'"
+    }
+    if (config.griffon.memory?.maxPermSize) {
+        // may be fragile
+        memOptions << "java-vm-args='-XX:maxPermSize=$config.griffon.memory.maxPermSize'"
     }
 
     ant.replace(dir:jardir, includes:"*.jnlp,*.html") {
         replacefilter(token:"@griffonAppName@", value:"${griffonAppName}" )
         replacefilter(token:"@griffonAppVersion@", value:"${griffonAppVersion}" )
         replacefilter(token:"@griffonAppCodebase@", value:"${config.griffon.webstart.codebase}")
-        replacefilter(token:"@jnlpJars@", value:jnlpJars )
-        replacefilter(token:"@appletJars@", value:appletJars )
+        replacefilter(token:"@jnlpJars@", value:jnlpJars.join('\n') )
+        replacefilter(token:"@appletJars@", value:appletJars.join(' ') )
+        replacefilter(token:"@memoryOptions@", value:memOptions.join(' ') )
     }
 }
 
