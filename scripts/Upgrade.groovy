@@ -116,9 +116,9 @@ target(upgrade: "Upgrades a Griffon application from a previous version of Griff
                     if (signJars == [:]) it.writeLine "${indent}griffon.jars.sign=true // jars were automatically signed in Griffon 0.0"
                     if (signingKeyFile == [:]) it.writeLine "${indent}signingkey.params.sigfile='GRIFFON' // may safely be removed, but calling upgrade will restore it"
                     it.writeLine "// you may now tweak memory parameters"
-                    it.writeLine "//${indent}griffon.memory.min=16m"
-                    it.writeLine "//${indent}griffon.memory.max=64m"
-                    it.writeLine "//${indent}griffon.memory.maxPermSize=64m"
+                    it.writeLine "//${indent}griffon.memory.min='16m'"
+                    it.writeLine "//${indent}griffon.memory.max='64m'"
+                    it.writeLine "//${indent}griffon.memory.maxPermSize='64m'"
                     if (indent != '') {
                         it.writeLine('    }\n}')
                     }
