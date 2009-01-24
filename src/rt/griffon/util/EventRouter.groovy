@@ -18,9 +18,9 @@ package griffon.util
 import javax.swing.SwingUtilities
 
 class EventRouter {
-   private List listeners = []
+   private List listeners = Collections.synchronizedList([])
    private Map scriptBindings = [:]
-   private Map closureListeners = [:]
+   private Map closureListeners = Collections.synchronizedMap([:])
 
    public void publish( String eventName, List params = [] ) {
       if( !eventName ) return
@@ -35,8 +35,12 @@ class EventRouter {
                x.printStackTrace()
             }
          }
-         listeners.each{ dispatchEvent(it) }
-         closureListeners[eventName].each{ dispatchEvent(it) }
+         synchronized(listeners) {
+            listeners.each{ dispatchEvent(it) }
+         }
+         synchronized(closureListeners) {
+            closureListeners[eventName].each{ dispatchEvent(it) }
+         }
       }
       if( SwingUtilities.isEventDispatchThread() ) {
          Thread.start { publisher() }
@@ -104,13 +108,17 @@ class EventRouter {
     */
    public void addApplicationEventListener( listener ) {
       if( !listener || listener instanceof Closure ) return
-      if( listeners.find{ it == listener } ) return
-      listeners << listener
+      synchronized(listeners) {
+         if( listeners.find{ it == listener } ) return
+         listeners.add(listener)
+      }
    }
 
    public void removeApplicationEventListener( listener ) {
       if( !listener || listener instanceof Closure ) return
-      listeners -= listener
+      synchronized(listeners) {
+         listeners.remove(listener)
+      }
    }
 
    /**
@@ -121,15 +129,19 @@ class EventRouter {
    public void addApplicationEventListener( String eventName, Closure listener ) {
       if( !eventName || !listener ) return
       eventName = eventName[0].toUpperCase() + eventName[1..-1]
-      def list = closureListeners.get(eventName,[])
-      if( listeners.find{ it == listener } ) return
-      list << listener
+      synchronized(closureListeners) {
+         def list = closureListeners.get(eventName,[])
+         if( list.find{ it == listener } ) return
+         list.add(listener)
+      }
    }
 
    public void removeApplicationEventListener( String eventName, Closure listener ) {
       if( !eventName || !listener ) return
       eventName = eventName[0].toUpperCase() + eventName[1..-1]
-      def list = closureListeners[eventName]
-      if( list ) list.remove(listener)
+      synchronized(closureListeners) {
+         def list = closureListeners[eventName]
+         if( list ) list.remove(listener)
+      }
    }
 }
