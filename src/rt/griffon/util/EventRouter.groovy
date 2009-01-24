@@ -20,23 +20,23 @@ import javax.swing.SwingUtilities
 class EventRouter {
    private List listeners = []
    private Map scriptBindings = [:]
+   private Map closureListeners = [:]
 
    public void publish( String eventName, List params = [] ) {
       if( !eventName ) return
       def publisher = {
-         def eventHandler = "on" + eventName[0].toUpperCase() + eventName[1..-1]
-         listeners.each { listener ->
+         eventName = eventName[0].toUpperCase() + eventName[1..-1]
+         def eventHandler = "on" + eventName
+         def dispatchEvent = { listener ->
             try {
-               if( listener instanceof Script ) {
-                  fireEventOnScript(listener, eventHandler, params)
-               } else {
-                  fireEventOnClass(listener, eventHandler, params)
-               }
+               fireEvent(listener, eventHandler, params)
             } catch( x ) {
                // TODO log exception
-               println x
+               x.printStackTrace()
             }
          }
+         listeners.each{ dispatchEvent(it) }
+         closureListeners[eventName].each{ dispatchEvent(it) }
       }
       if( SwingUtilities.isEventDispatchThread() ) {
          Thread.start { publisher() }
@@ -45,7 +45,7 @@ class EventRouter {
       }
    }
 
-   private void fireEventOnScript( script, String eventHandler, List params ) {
+   private void fireEvent( Script script, String eventHandler, List params ) {
       def binding = scriptBindings[script]
       if( !binding ) {
          binding = new Binding()
@@ -63,21 +63,73 @@ class EventRouter {
       }
    }
 
-   private void fireEventOnClass( instance, String eventHandler, List params ) {
-      def mp = instance.metaClass.getMetaProperty(eventHandler)
-      if( mp ) {
-         mp.getProperty(instance)(*params)
+   private void fireEvent( Map map, String eventHandler, List params ) {
+      eventHandler = eventHandler[2..-1]
+      def handler = map[eventHandler]
+      if( handler && handler instanceof Closure ) {
+         handler(*params)
       }
    }
 
+   private void fireEvent( Closure closure, String eventHandler, List params ) {
+      closure(*params)
+   }
+
+   private void fireEvent( Object instance, String eventHandler, List params ) {
+      def mp = instance.metaClass.getMetaProperty(eventHandler)
+      if( mp && mp.getProperty(instance) ) {
+         mp.getProperty(instance)(*params)
+         return
+      }
+
+      def mm = instance.metaClass.getMetaMethod(eventHandler,params)
+      if( mm ) {
+         mm.invoke(instance,*params)
+      }
+   }
+
+   /**
+    * Adds an ApplicationEvent listener.<br/>
+    *
+    * A listener may be<ul>
+    * <li>a <tt>Script</tt></li>
+    * <li>a <tt>Bean</tt></li>
+    * <li>a <tt>Map</tt></li>
+    * </ul>
+    *
+    * With the exception of Maps, the naming convention for an eventHandler is
+    * "on" + eventName, Maps require handlers to be named as eventName only.<p>
+    * Some examples of eventHandler names are: onStartupStart, onMyCoolEvent.
+    * Event names must follow the camelCase naming convention.
+    */
    public void addApplicationEventListener( listener ) {
-      if( !listener ) return
+      if( !listener || listener instanceof Closure ) return
       if( listeners.find{ it == listener } ) return
       listeners << listener
    }
 
    public void removeApplicationEventListener( listener ) {
-      if( !listener ) return
+      if( !listener || listener instanceof Closure ) return
       listeners -= listener
+   }
+
+   /**
+    * Adds a Closure as an ApplicationEvent listener.<br/>
+    *
+    * Event names must follow the camelCase naming convention.
+    */
+   public void addApplicationEventListener( String eventName, Closure listener ) {
+      if( !eventName || !listener ) return
+      eventName = eventName[0].toUpperCase() + eventName[1..-1]
+      def list = closureListeners.get(eventName,[])
+      if( listeners.find{ it == listener } ) return
+      list << listener
+   }
+
+   public void removeApplicationEventListener( String eventName, Closure listener ) {
+      if( !eventName || !listener ) return
+      eventName = eventName[0].toUpperCase() + eventName[1..-1]
+      def list = closureListeners[eventName]
+      if( list ) list.remove(listener)
    }
 }
