@@ -29,6 +29,9 @@ import javax.swing.SwingUtilities
 class GriffonApplicationHelper {
 
     static void prepare(IGriffonApplication app) {
+        app.bindings.app = app
+        app.initialize();
+
         app.config = new ConfigSlurper().parse(app.configClass)
         app.builderConfig = new ConfigSlurper().parse(app.builderClass)
         def eventsClass = app.eventsClass
@@ -36,8 +39,6 @@ class GriffonApplicationHelper {
             app.eventsConfig = eventsClass.newInstance()
             app.addApplicationEventListener(app.eventsConfig)
         }
-        app.bindings.app = app
-        app.initialize();
     }
 
     static void startup(IGriffonApplication app) {
