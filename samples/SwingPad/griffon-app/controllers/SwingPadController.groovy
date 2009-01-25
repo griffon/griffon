@@ -501,7 +501,7 @@ class SwingPadController {
             if( startDir.startsWith('"') && startDir.endsWith('"') ) {
                startDir = startDir[1..-2]
             }
-            def jarDir = new File(startDir,name)
+            def jarDir = new File(startDir,"lib/$name")
             jarDir.eachFileMatch({it.endsWith(".jar")}) { jar ->
 //                groovyClassLoader.addURL(jar.toURI().toURL())
                this.class.classLoader.addURL(jar.toURI().toURL())
