@@ -29,5 +29,17 @@ class ApplicationBuilder extends FactoryBuilderSupport {
 
     public void registerVisuals() {
         registerFactory 'application', new ApplicationFactory()
+        addAttributeDelegate(ApplicationBuilder.&clientPropertyAttributeDelegate)
+    }
+
+    public static clientPropertyAttributeDelegate(def builder, def node, def attributes) {
+        def clientPropertyMap = attributes.remove("clientProperty")
+        clientPropertyMap.each { key, value ->
+           node.putClientProperty key, value
+        }
+        attributes.findAll { it.key =~ /clientProperty(\w)/ }.each { key, value ->
+           attributes.remove(key)
+           node.putClientProperty(key - "clientProperty", value)
+        }
     }
 }
