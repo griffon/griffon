@@ -15,6 +15,8 @@
  */
 package griffon.app
 
+import groovy.swing.factory.CollectionFactory
+
 /**
  * Created by IntelliJ IDEA.
  *@author Danno.Ferrin
@@ -30,6 +32,7 @@ class ApplicationBuilder extends FactoryBuilderSupport {
     public void registerVisuals() {
         registerFactory 'application', new ApplicationFactory()
         addAttributeDelegate(ApplicationBuilder.&clientPropertyAttributeDelegate)
+        registerFactory("noparent", new CollectionFactory())
     }
 
     public static clientPropertyAttributeDelegate(def builder, def node, def attributes) {
