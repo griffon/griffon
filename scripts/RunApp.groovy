@@ -62,6 +62,7 @@ target(runApp: "Runs the application from the command line") {
     if (config.griffon.memory?.maxPermSize) {
         javaOps << "-XX:maxPermSize=$config.griffon.memory.maxPermSize"
     }
+    javaOps << "-Dgriffon.start.dir=\""+jardir.parentFile.absolutePath+"\""
 
     // start the processess
     javaOps = javaOps.join(' ')
