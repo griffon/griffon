@@ -166,7 +166,7 @@ class GriffonApplicationHelper {
     }
 
     public static destroyMVCGroup(IGriffonApplication app, String mvcName) {
-        app.removeApplicationListener(app.controllers.mvcName)
+        app.removeApplicationEventListener(app.controllers[mvcName])
         [app.models, app.views, app.controllers].each {
             def part = it.remove(mvcName)
             if ((part != null)  & !(part instanceof Script)) {
