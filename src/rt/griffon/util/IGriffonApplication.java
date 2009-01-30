@@ -16,9 +16,11 @@
 package griffon.util;
 
 import groovy.lang.Binding;
+import groovy.lang.Closure;
 import groovy.util.ConfigObject;
 
 import java.util.Map;
+import java.util.List;
 
 /**
  * Created by IntelliJ IDEA.
@@ -54,4 +56,10 @@ public interface IGriffonApplication {
     public void startup();
     public void ready();
     public void shutdown();
+
+    public void addApplicationEventListener(Object listener );
+    public void addApplicationEventListener(String eventName, Closure listener);
+    public void event(String eventName);
+    public void event(String eventName, List params);
+
 }
