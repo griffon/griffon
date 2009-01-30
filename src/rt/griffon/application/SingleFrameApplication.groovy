@@ -39,15 +39,12 @@ class SingleFrameApplication implements IGriffonApplication {
     private EventRouter eventRouter = new EventRouter()
 
     public void bootstrap() {
-        event("BootstrapStart",[this])
         GriffonApplicationHelper.prepare(this);
         event("BootstrapEnd",[this])
     }
 
     public void realize() {
-        event("RealizeStart",[this])
         GriffonApplicationHelper.startup(this)
-        event("RealizeEnd",[this])
     }
 
     public void show() {
@@ -87,9 +84,7 @@ class SingleFrameApplication implements IGriffonApplication {
     }
 
     public void initialize() {
-        event("InitializeStart",[this])
         GriffonApplicationHelper.runScriptInsideEDT("Initialize", this)
-        event("InitializeEnd",[this])
     }
 
     public void ready() {

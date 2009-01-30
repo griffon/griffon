@@ -43,6 +43,7 @@ class GriffonApplet extends JApplet implements IGriffonApplication {
 
     public void init() {
         GriffonApplicationHelper.prepare(this)
+        event("BootstrapEnd",[this]) // to keep it in sync with app version
         GriffonApplicationHelper.startup(this)
     }
 
@@ -87,9 +88,7 @@ class GriffonApplet extends JApplet implements IGriffonApplication {
     }
 
     public void initialize() {
-        event("InitializeStart",[this])
         GriffonApplicationHelper.runScriptInsideEDT("Initialize", this)
-        event("InitializeEnd",[this])
     }
 
     public void ready() {
