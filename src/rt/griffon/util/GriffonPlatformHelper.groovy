@@ -18,56 +18,61 @@ class GriffonPlatformHelper {
 
     static macOSXHandler = null
 
-    static void tweakForMacOSX(IGriffonApplication app) {
-        // look and feel
-        // don't do, let user decide
-        //UIManager.setLookAndFeel('apple.laf.AquaLookAndFeel')
+    static void tweakForMacOSX(IGriffonApplication application) {
 
-        // use unified menu bar
-        System.setProperty("apple.laf.useScreenMenuBar", "true")
+        // do all this a the end of bootstrap
+        application.addApplicationEventListener("BootstrapEnd", {IGriffonApplication app -> 
 
-        // set menu bar title
-        System.setProperty("com.apple.mrj.application.apple.menu.about.name", app.getConfig().application?.title ?: 'Griffon')
-        // we may want to have a more specific option like application.shortTitle, that is used first
+            // look and feel
+            // don't do, let user decide
+            //UIManager.setLookAndFeel('apple.laf.AquaLookAndFeel')
 
-        // exit handler
-        if (!macOSXHandler) {
-            try {
-                Binding bindings = new Binding()
-                bindings.app = app
+            // use unified menu bar
+            System.setProperty("apple.laf.useScreenMenuBar", "true")
 
-                GroovyShell shell = new GroovyShell(GriffonPlatformHelper.getClass().getClassLoader(), bindings)
-                macOSXHandler = shell.evaluate("""
-                    package griffon.util
+            // set menu bar title
+            System.setProperty("com.apple.mrj.application.apple.menu.about.name", app.getConfig().application?.title ?: 'Griffon')
+            // we may want to have a more specific option like application.shortTitle, that is used first
 
-                    import com.apple.mrj.*
+            // exit handler
+            if (!macOSXHandler) {
+                try {
+                    Binding bindings = new Binding()
+                    bindings.app = app
 
-                    class GriffonMacOsSupport implements MRJQuitHandler, MRJAboutHandler {
-                        def app
-                    
-                        public GriffonMacOsSupport(def app) {
-                            this.app = app
+                    GroovyShell shell = new GroovyShell(GriffonPlatformHelper.getClass().getClassLoader(), bindings)
+                    macOSXHandler = shell.evaluate("""
+                        package griffon.util
+
+                        import com.apple.mrj.*
+
+                        class GriffonMacOsSupport implements MRJQuitHandler, MRJAboutHandler {
+                            def app
+
+                            public GriffonMacOsSupport(def app) {
+                                this.app = app
+                            }
+
+                            public void handleAbout() {
+                                return // FIXME we can do better
+                            }
+
+                            public void handleQuit() {
+                                app.shutdown()
+                            }
+
                         }
-                    
-                        public void handleAbout() {
-                            return // FIXME we can do better
-                        }
 
-                        public void handleQuit() {
-                            app.shutdown()
-                        }
+                        def handler = new GriffonMacOsSupport(app)
+                        MRJApplicationUtils.registerAboutHandler(handler)
+                        MRJApplicationUtils.registerQuitHandler(handler)
 
-                    }
-
-                    def handler = new GriffonMacOsSupport(app)
-                    MRJApplicationUtils.registerAboutHandler(handler)
-                    MRJApplicationUtils.registerQuitHandler(handler)
-
-                    return handler
-                """)
-            } catch (Throwable t) {
-                t.printStackTrace(System.out)
+                        return handler
+                    """)
+                } catch (Throwable t) {
+                    t.printStackTrace(System.out)
+                }
             }
-        }
+        })
     }
 }
