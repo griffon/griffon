@@ -59,6 +59,8 @@ public interface IGriffonApplication {
 
     public void addApplicationEventListener(Object listener );
     public void addApplicationEventListener(String eventName, Closure listener);
+    public void removeApplicationEventListener(Object listener );
+    public void removeApplicationEventListener(String eventName, Closure listener);
     public void event(String eventName);
     public void event(String eventName, List params);
 
