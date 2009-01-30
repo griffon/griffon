@@ -64,7 +64,7 @@ mvcGroups {
     applicationConfigFile.withWriter { it.write configText.replaceAll(/\s*mvcGroups\s*\{/, """
 mvcGroups {
     // MVC Group for "$args"
-    $name {
+    '$name' {
         model = '${fqn}Model'
         view = '${fqn}View'
         controller = '${fqn}Controller'

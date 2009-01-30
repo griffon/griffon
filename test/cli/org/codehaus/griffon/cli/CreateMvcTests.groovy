@@ -66,6 +66,6 @@ class CreateMvcTests extends AbstractCliTests {
         // check that mvc group has been added to Application.groovy
         def applicationConf = new File("${appDir}/griffon-app/conf/Application.groovy")
         assert applicationConf.exists()
-        assert applicationConf.text =~ "mvcGroups\\s*\\{\\s*(//[^\n]*\n\\s*)?$name\\s\\{\\s*model\\s*=\\s*'${fqn}Model'\\s*view\\s*=\\s*'${fqn}View'\\s*controller\\s*=\\s*'${fqn}Controller'\\s*\\}"
+        assert applicationConf.text =~ "mvcGroups\\s*\\{\\s*(//[^\n]*\n\\s*)?'$name'\\s*\\{\\s*model\\s*=\\s*'${fqn}Model'\\s*view\\s*=\\s*'${fqn}View'\\s*controller\\s*=\\s*'${fqn}Controller'\\s*\\}"
     }
 }
