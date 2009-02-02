@@ -372,18 +372,40 @@ target(generateJNLP:"Generates the JNLP File") {
     }
 
     jnlpJars = []
+	jnlpUrls = []
+	jnlpAppletUrls = []
+	jnlpExtensions = []
     appletJars = []
+	remoteJars = []
+	config.griffon.extensions?.jarUrls.each {
+		def filename = new File(it).getName()
+		remoteJars << filename
+	}
     // griffon-rt has to come first, it's got the launch classes
     new File(jardir).eachFileMatch(~/griffon-rt-.*.jar/) { f ->
         jnlpJars << "        <jar href='$f.name'/>"
         appletJars << "$f.name"
     }
+	config.griffon.extensions?.jarUrls.each {
+		appletJars << it
+	}
+	if (config.griffon.extensions?.jnlpUrls.size() > 0) {
+		jnlpAppletUrls << "<param name='jnlpNumExtensions' value='${config.griffon.extensions?.jnlpUrls.size()}'>"
+		count = 1
+		config.griffon.extensions?.jnlpUrls.each {
+			jnlpAppletUrls << "<param name='jnlpExtension"+count + "' value='$it'>"
+			jnlpExtensions << "<extension href='$it' />"
+			count++
+		}
+	}
     new File(jardir).eachFileMatch(~/.*\.jar/) { f ->
-        if (!(f.name =~ /griffon-rt-.*/)) {
+        if (!(f.name =~ /griffon-rt-.*/) && !remoteJars.contains(f.name)) {
             jnlpJars << "        <jar href='$f.name'/>"
             appletJars << "$f.name"
         }
     }
+	
+	
     memOptions = []
     if (config.griffon.memory?.min) {
         memOptions << "initial-heap-size='$config.griffon.memory.min'"
@@ -401,6 +423,9 @@ target(generateJNLP:"Generates the JNLP File") {
         replacefilter(token:"@griffonAppVersion@", value:"${griffonAppVersion}" )
         replacefilter(token:"@griffonAppCodebase@", value:"${config.griffon.webstart.codebase}")
         replacefilter(token:"@jnlpJars@", value:jnlpJars.join('\n') )
+		replacefilter(token:"@griffonJnlps@", value:jnlpUrls.join(' ') )
+		replacefilter(token:"@griffonJnlpAppletExtensions@", value:jnlpAppletUrls.join('\n') )
+		replacefilter(token:"@jnlpExtensions@", value:jnlpExtensions.join('\n'))
         replacefilter(token:"@appletJars@", value:appletJars.join(' ') )
         replacefilter(token:"@memoryOptions@", value:memOptions.join(' ') )
     }
