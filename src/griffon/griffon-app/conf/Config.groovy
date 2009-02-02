@@ -60,6 +60,10 @@ environments {
                 pack = true
                 destDir = "${basedir}/staging"
             }
+			extensions {
+				jarUrls = []
+				jnlpUrls = []
+			}
             webstart {
                 codebase = 'CHANGE ME'
             }
