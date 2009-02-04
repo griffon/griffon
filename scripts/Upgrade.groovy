@@ -101,9 +101,11 @@ target(upgrade: "Upgrades a Griffon application from a previous version of Griff
 
             def packJars = configObject.griffon?.jars?.pack
             def signJars = configObject.griffon?.jars?.sign
+            def extensionJars = configObject.griffon?.extensions?.jarUrls
+            def extensionJNLPs = configObject.griffon?.extensions?.jnlpUrls
             def signingKeyFile = configObject.signingkey?.params?.sigfile
 
-            if ([packJars, signJars, signingKeyFile].contains([:])) {
+            if ([packJars, signJars, extensionJars, extensionJNLPs, signingKeyFile].contains([:])) {
                 event("StatusUpdate", ["Adding properties to Config.groovy"])
                 configFile.withWriterAppend {
                     def indent = ''
@@ -114,6 +116,8 @@ target(upgrade: "Upgrades a Griffon application from a previous version of Griff
                     }
                     if (packJars == [:]) it.writeLine "${indent}griffon.jars.pack=false // jars were not automatically packed in Griffon 0.0"
                     if (signJars == [:]) it.writeLine "${indent}griffon.jars.sign=true // jars were automatically signed in Griffon 0.0"
+                    if (extensionJars == [:]) it.writeLine "${indent}griffon.extensions.jarUrls = [] // remote jars were not possible in Griffon 0.1"
+                    if (extensionJNLPs == [:]) it.writeLine "${indent}griffon.extensions.jnlpUrls = [] // remote jars were not possible in Griffon 0.1"
                     if (signingKeyFile == [:]) it.writeLine "${indent}signingkey.params.sigfile='GRIFFON' // may safely be removed, but calling upgrade will restore it"
                     it.writeLine "// you may now tweak memory parameters"
                     it.writeLine "//${indent}griffon.memory.min='16m'"
@@ -127,7 +131,7 @@ target(upgrade: "Upgrades a Griffon application from a previous version of Griff
         }
 
         // if Application.groovy exists and it does not contain values added
-        // since 0.0 then sensible defaultsare provided which keep previous
+        // since 0.0 then sensible defaults are provided which keep previous
         // behavior even if it is not the default in the current version.
         def applicationFile = new File(baseFile, '/griffon-app/conf/Application.groovy')
         if (applicationFile.exists()) {
@@ -158,11 +162,28 @@ target(upgrade: "Upgrades a Griffon application from a previous version of Griff
             entry(key: "app.griffon.version", value: "$griffonVersion")
         }
     }
-    // insure all .jnlp files have a memory hook, unlessa already tweaked
+    // ensure all .jnlp files have a memory hook, unlessa already tweaked
+    // ensure all .jnlp files support remote jnlps
     fileset(dir:"${basedir}/griffon-app/conf/", includes:"**/*.jnlp").each {
+        def fileText = it.getFile().getText()
         ant.replace(file: it.toString()) {
             replacefilter(token: '<j2se version="1.5+"/>', value: '<j2se version="1.5+" @memoryOptions@/>')
+            if (!fileText.contains('@jnlpExtensions@'))
+            	replacefilter(token: '</resources>', value: '@jnlpExtensions@ \n</resources>')
         }
+    }
+    
+    // ensure that applet code supports jnlp extensions and remote jars
+    fileset(dir:"${basedir}/griffon-app/conf/", includes:"**/*.html").each {
+    	def fileText = it.getFile().getText()
+   		if (!fileText.contains('@griffonJnlps@'))
+    		ant.replace(file: it.toString()) {
+    			replacefilter(token: '@griffonAppCodebase@/applet.jnlp', value:'@griffonAppCodebase@/applet.jnlp @griffonJnlps@')
+    	}
+    	if (!fileText.contains('@griffonJnlpAppletExtensions@'))
+    		ant.replace(file: it.toString()) {
+	    		replacefilter(token: '</APPLET>', value:'@griffonJnlpAppletExtensions@ \n </APPLET>')
+    		}
     }
 
 
