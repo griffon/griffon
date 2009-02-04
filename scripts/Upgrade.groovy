@@ -135,20 +135,15 @@ target(upgrade: "Upgrades a Griffon application from a previous version of Griff
             def configObject = configSlurper.parse(applicationFile.toURI().toURL())
 
             def startupGroups = configObject.application.startupGroups
+            def autoShutdown = configObject.application.autoShutdown
 
-            if ([startupGroups].contains([:])) {
+            if ([startupGroups, autoShutdown].contains([:])) {
                 event("StatusUpdate", ["Adding properties to Application.groovy"])
                 applicationFile.withWriterAppend {
                     def indent = ''
                     it.writeLine '\n// The following properties have been added by the Upgrade process...'
-                    if (!Boolean.valueOf(System.getProperty(GriffonContext.ENVIRONMENT_DEFAULT))) {
-                        indent = '        '
-                        it.writeLine "environments {\n    ${System.getProperty(GriffonContext.ENVIRONMENT)} {"
-                    }
                     if (startupGroups == [:]) it.writeLine "${indent}application.startupGroups=['root'] // default startup group from 0.0"
-                    if (indent != '') {
-                        it.writeLine('    }\n}')
-                    }
+                    if (autoShutdown == [:]) it.writeLine "${indent}application.autoShutdown=true // default autoShutdown from 0.0"
                 }
             }
         }
@@ -165,8 +160,6 @@ target(upgrade: "Upgrades a Griffon application from a previous version of Griff
     }
     // insure all .jnlp files have a memory hook, unlessa already tweaked
     fileset(dir:"${basedir}/griffon-app/conf/", includes:"**/*.jnlp").each {
-        println "--"
-        println it.toString()
         ant.replace(file: it.toString()) {
             replacefilter(token: '<j2se version="1.5+"/>', value: '<j2se version="1.5+" @memoryOptions@/>')
         }

@@ -107,7 +107,7 @@ class SingleFrameApplication implements IGriffonApplication {
 
     public void handleWindowClosing(WindowEvent evt = null) {
         appFrames.removeAll(appFrames.findAll {!it.visible})
-        if (appFrames.size() <= 1) {
+        if (config.application?.autoShutdown && appFrames.size() <= 1) {
             shutdown()
         }
     }

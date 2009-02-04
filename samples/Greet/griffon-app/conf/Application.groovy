@@ -1,10 +1,13 @@
 application {
     title="Greet"
     startupGroups=['Greet']
+
+    // Should Griffon exit when no Griffon created frames are showing?
+    autoShutdown = true
 }
 
-// MVC Group for "Greet"
 mvcGroups {
+    // MVC Group for "Greet"
     Greet {
         model = 'greet.GreetModel'
         view = 'greet.GreetView'
