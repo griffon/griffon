@@ -14,20 +14,20 @@ function generateInlineAppletTag(appletID, screenshotID) {
                       width:'320', height:'640'} ;
     var parameters = {fontSize:16,
                       java_arguments: "-Djnlp.packEnabled=true",
-                      jnlp_href:'@griffonAppCodebase@/applet.jnlp',
+                      jnlp_href:'@griffonAppCodebase@/greet-applet.jnlp',
                       draggable:'true',
                       image:'griffon.jpeg',
                       boxmessage:'Loading @griffonAppName@',
                       boxbgcolor:'#FFFFFF', boxfgcolor:'#000000',
                       codebase_lookup: 'false'} ;
-    
-    
+
+
     var appletTag = document.createElement("applet");
-    
+
     for (var attribute in attributes) {
         appletTag.setAttribute(attribute,attributes[attribute]);
     }
-    
+
     if (parameters != 'undefined' && parameters != null) {
         for (var parameter in parameters) {
             var param = document.createElement("PARAM");
@@ -36,8 +36,8 @@ function generateInlineAppletTag(appletID, screenshotID) {
             appletTag.appendChild(param);
         }
     }
-    
-    
+
+
     var bodyRef = document.getElementById(appletID);
     var screenshot = document.getElementById(screenshotID);
     bodyRef.removeChild(screenshot);
@@ -52,7 +52,7 @@ function generateInlineAppletTag(appletID, screenshotID) {
 
 <!--
 <APPLET CODEBASE='@griffonAppCodebase@'
-	CODE='griffon.applet.GriffonApplet.class'
+        CODE='griffon.applet.GriffonApplet.class'
         ARCHIVE='@appletJars@'
         WIDTH='320' HEIGHT='640'>
     <PARAM NAME='java_arguments' VALUE='-Djnlp.packEnabled=true">

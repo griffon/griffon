@@ -1,213 +1,123 @@
-/*
- * Copyright 2008 the original author or authors.
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-
 package greet
 
 import java.awt.Cursor
-import javax.swing.JOptionPane
-import javax.swing.event.HyperlinkEvent
-import java.awt.CardLayout
+import java.awt.event.ActionEvent
 import javax.swing.Action
+import javax.swing.Timer
+import javax.swing.event.HyperlinkEvent
+import javax.swing.UIManager
+import javax.swing.border.EmptyBorder
+import java.awt.Insets
 
-/**
- *@author Danno Ferrin
- */
 class GreetController {
-
-    TwitterService twitterService
+    // these will be injected by Griffon
     GreetModel model
     GreetView view
 
-    Action loginAction
-    Action filterTweets
-    Action userSelected
+    TimelinePaneModel friendsTimelineModel
+
+    def timelinePaneControllerQueue = []
+
+    TwitterService twitterService
+
+    Action refreshTweetsAction
     Action tweetAction
 
-    void mvcGroupInit(args) {
-        loginAction = action(
-            name: 'Login',
-            enabled: bind {model.allowSelection},
-            closure: this.&login
-        )
+    Timer refreshTimer
+    long nextTimelineUpdate
+    long nextRepliesUpdate
 
-        filterTweets = action(
-            name: 'Filter',
-            enabled: bind {model.allowSelection},
-            closure: this.&filterTweets
-        )
-
-        userSelected = action(
-            name: 'Select User',
-            enabled: bind {model.allowSelection},
-            closure: this.&userSelected
-        )
-
+    void mvcGroupInit(Map args) {
+        refreshTweetsAction = action(
+                name: 'Refresh',
+                enabled: bind {!model.refreshing},
+                closure: this.&refreshTweets
+            )
         tweetAction = action(
-            name: 'Update',
-            enabled: bind {model.allowTweet},
-            closure: this.&tweet
-        )
+                name: 'Tweet',
+                enabled: bind {!model.tweeting},
+                closure: this.&tweet
+            )
+
+        def (loginPaneModel, loginPaneView, loginPaneController) =
+            createMVCGroup('LoginPane', 'LoginPane', [:]);
+        view.loginPanel = loginPaneView.loginPanel
+
+        refreshTimer = new Timer(120000, refreshTweetsAction)
     }
 
-    void login(evt) {
-        model.allowSelection = false
-        def username = view.twitterNameField.text
-        def password = view.twitterPasswordField.password
-        def urlBase = view.twitterServiceComboBox.selectedItem
+    void refreshTweets(evt) {
+        edt { refreshTimer.stop() }
+
+
+        long time = System.currentTimeMillis()
+        boolean forceRefresh = !(evt.source instanceof Timer)
+
+        // friends timeline
+        if (forceRefresh
+            || (time > nextTimelineUpdate)
+        ) {
+            def lastID = friendsTimelineModel.tweets.collect { it as long }.max() ?: '0'
+            def newTweets = twitterService.getFriendsTimeline(lastID as String, lastID == '0' ? 100 : 200).collect {it.id}
+            def cachedIDs = twitterService.tweetCache.keySet()
+            newTweets.addAll(friendsTimelineModel.tweets.findAll { cachedIDs.contains(it) })
+            friendsTimelineModel.tweets = newTweets
+            nextTimelineUpdate = time + 120000 // 2 minutes
+        }
+
+        // replies
+        //DMs from/to
+        if (forceRefresh
+            || (time > nextRepliesUpdate)
+        ) {
+            twitterService.getReplies()
+            twitterService.getDirectMessages()
+            twitterService.getDirectMessagesSent()
+            nextRepliesUpdate = time + 360000 // 6 minutes
+        }
+
+
         doOutside {
             try {
-                twitterService.urlBase = urlBase
-                if (twitterService.login(username, password)) {
-                    edt {
-                        model.lastUpdate = System.currentTimeMillis()
-                        ((CardLayout)view.cardSwitcher).show(view.mainPanel, 'running')
-                        view.mainPanel.repaint(10)
-                    }
-                    model.friends = twitterService.getFriends(twitterService.authenticatedUser)
-                    model.statuses = model.friends.collect {twitterService.userStatuses[it.screen_name]}
-                    selectUser(twitterService.authenticatedUser)
-                } else {
-                    JOptionPane.showMessageDialog(view.mainPanel, "Login failed")
-                }
-            } catch (Exception e) {
-                e.printStackTrace()
+                timelinePaneControllerQueue.each { it.updateTimeline(evt) }
             } finally {
                 edt {
-                    model.allowSelection = true
-                    model.allowTweet = true
+                    model.refreshing = false
+                    refreshTimer.start()
                 }
             }
         }
     }
 
-    void updateTimeline(evt = null) {
-        model.allowSelection = false
+    void tweet(evt) {
+        model.tweeting = true
         doOutside {
+            def cleanup = { model.tweeting = false }
             try {
-                def newVal = twitterService.getFriendsTimeline(model.focusedUser)
-                edt {
-                    model.timeline = mergeTweets(model.timeline, newVal)
+                if (model.sendingDM) {
+                    twitterService.sendDM(model.targetUser, view.tweetBox.text)
+                } else  {
+                    twitterService.tweet(view.tweetBox.text, model.targetTweet)
                 }
-            } catch (Exception e) {
-                e.printStackTrace()
-            } finally {
-                edt {
-                    model.allowSelection = true
-                    model.lastUpdate = System.currentTimeMillis()
+                cleanup = {
+                    view.tweetBox.text = ""
+                    model.targetTweet = null
+                    model.targetUser = null
+                    model.sendingDM = false
+                    model.tweeting = false
                 }
-            }
-        }
-
-    }
-
-    void filterTweets(evt = null) {
-        model.allowSelection =false
-        doOutside {
-            try {
-                [statuses: { model.friends.collect {twitterService.userStatuses[it.screen_name]} },
-                 timeline: { twitterService.getFriendsTimeline(model.focusedUser) },
-                 replies : { twitterService.getReplies() },
-                 tweets : { twitterService.getTweets(model.focusedUser) },
-                ].each {k, v ->
-                    def newVal = v()
-                    edt {
-                        model."$k" = mergeTweets(model."$k", newVal)
-                    }
-                }
-            } catch (Exception e) {
-                e.printStackTrace()
-            } finally {
-                edt {
-                    model.allowSelection = true
-                    model.lastUpdate = System.currentTimeMillis()
-                }
-            }
-        }
-    }
-
-    List mergeTweets(List oldList, List newValues) {
-        // add new tweets, keep old tweets that are in the cache
-        TreeSet ids = new TreeSet()
-        def results = []
-        newValues.each {
-            ids << it.id
-            results << it
-        }
-        oldList.each {
-            def id = it.id
-            if (!ids.contains(id) && twitterService.tweetCache.containsKey(id)) {
-                results << it
-            }
-        }
-        return results
-    }
-
-    def userSelected(evt) {
-        doOutside {
-            selectUser(view.users.selectedItem)
-        }
-    }
-
-    def selectUser(user) {
-        selectUser(user.screen_name as String)
-    }
-
-    def selectUser(String screen_name) {
-        model.allowSelection = false
-        try {
-            def newFriend = model.friends.find {it.screen_name == screen_name} ?: twitterService.getUser(screen_name)
-            model.focusedUser = newFriend
-            model.tweets = twitterService.getTweets(model.focusedUser)
-            model.replies = twitterService.getReplies()
-            model.timeline = twitterService.getFriendsTimeline(model.focusedUser)
-        } finally {
-            edt {
-                model.allowSelection = true
-                model.lastUpdate = System.currentTimeMillis()
-            }
-        }
-    }
-
-    def tweet(evt = null) {
-        model.allowTweet = false
-        doOutside {
-            def cleanup = { model.allowTweet = true }
-            try {
-                twitterService.tweet(view.tweetBox.text)
-                // true story: it froze w/o the EDT call here
-                cleanup = {model.allowTweet = true; view.tweetBox.text = ""}
-                filterTweets()
+                edt { refreshTweets(evt) }
             } finally {
                 edt(cleanup)
             }
         }
     }
 
+
     def hyperlinkPressed(HyperlinkEvent evt) {
         switch (evt.getEventType()) {
             case HyperlinkEvent.EventType.ACTIVATED:
-                doOutside {
-                    def url = evt.URL
-                    if (url.toExternalForm() =~ 'http://twitter.com/\\w+') {
-                        selectUser(url.file.substring(1))
-                    } else {
-                        // TODO wire in the jnlp libs into the build
-                        ("javax.jnlp.ServiceManager" as Class).lookup('javax.jnlp.BasicService').showDocument(url)
-                    }
-                }
+                displayURL(evt.URL)
                 break;
             case HyperlinkEvent.EventType.ENTERED:
                 evt.getSource().setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
@@ -215,6 +125,107 @@ class GreetController {
             case HyperlinkEvent.EventType.EXITED:
                 evt.getSource().setCursor(null);
                 break;
+        }
+    }
+
+    def displayURL(URL url) {
+        doOutside {
+            if (url.toExternalForm() =~ 'http://twitter.com/\\w+') {
+                selectUser(url.file.substring(1))
+            } else {
+                // TODO wire in the jnlp libs into the build
+                ("javax.jnlp.ServiceManager" as Class).lookup('javax.jnlp.BasicService').showDocument(url)
+            }
+        }
+    }
+
+    def selectUser(String username) {
+        doOutside {
+            def mvcName = "UserPane_$username"
+            if (app.views[mvcName]) {
+                twitterService.getTweets(username)
+                edt {
+                    app.controllers[mvcName].updateTimeline(null)
+                    view.tweetsTabbedPane.selectedComponent = app.views[mvcName].userPane
+                }
+            } else {
+                twitterService.getUser(username)
+                twitterService.getTweets(username)
+                edt {
+                    def (userPaneModel, userPaneView, userPaneController) =
+                        createMVCGroup('UserPane', mvcName,
+                        [user:twitterService.userCache[username], closable:true]);
+
+                    view.tweetsTabbedPane.addTab("@$username", userPaneView.userPane)
+
+                    userPaneController.updateTimeline(null)
+                    doLater {
+                        view.tweetsTabbedPane.selectedComponent = app.views[mvcName].userPane
+                    }
+                }
+            }
+        }
+    }
+
+
+    def selectReplyToTweet(ActionEvent evt) {
+        String tweetID = evt.actionCommand
+        def tweet = twitterService.tweetCache[tweetID]
+        if ((tweet == null) || (model.targetTweet == tweetID)) {
+            model.targetTweet = null
+            model.targetUser = null
+        } else {
+            model.targetTweet = tweetID
+            model.targetUser = tweet.user.screen_name
+            view.tweetBox.text = "@$model.targetUser ${view.tweetBox.text.replaceAll("@$model.targetUser ", '')}"
+        }
+    }
+
+    def showUser(ActionEvent evt) {
+        selectUser(evt.actionCommand)
+    }
+
+    def showHyperlink(ActionEvent evt) {
+        displayURL(new URL((evt.actionCommand =~ 'http://[^"]+')[0] as String))
+    }
+
+    static Closure marginButtonTweaker = {builder, node, attrs ->
+        def insets = attrs.remove('contentMargin')
+        if (insets) {
+            node.margin = insets
+            def border = node.border
+            def borderInsets = border.getBorderInsets(node)
+
+            node.margin = new Insets(insets[0]*2 - borderInsets.top,
+                    insets[1]*2 - borderInsets.left,
+                    insets[2]*2 - borderInsets.bottom,
+                    insets[3]*2 - borderInsets.right )
+        }
+    }
+
+    static Closure borderButtonTweaker = {builder, node, attrs ->
+        def insets = attrs.remove('contentMargin')
+        if (insets) {
+            def borderInsets = node.border.getBorderInsets(node)
+            node.border = new EmptyBorder(*insets)
+        }
+    }
+
+    static Closure getButtonMarginDelegate() {
+        switch (UIManager.getLookAndFeel().getName()) {
+            case ~/.*[Nn]imbus/ :
+
+                return borderButtonTweaker
+            case ~/.*[Ww]indows/ :
+                try {
+                    return (('com.sun.java.swing.plaf.windows.XPStyle' as Class).getXP()
+                        ? borderButtonTweaker
+                        : marginButtonTweaker)
+                } catch (Throwable e) {
+                    return marginButtonTweaker
+                }
+            default:
+                return marginButtonTweaker
         }
     }
 }

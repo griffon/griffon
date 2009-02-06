@@ -15,17 +15,17 @@
  */
 package greet
 
+import java.awt.Cursor
+import static java.awt.GridBagConstraints.*
+import javax.swing.SwingConstants
+
 /**
  * Created by IntelliJ IDEA.
  * User: Danno.Ferrin
  * Date: May 6, 2008
  * Time: 3:28:45 PM
  */
-import static java.awt.GridBagConstraints.*
-import javax.swing.SwingConstants
-
 def tweetUser = tweet.user
-if (!(tweetUser as String)) tweetUser = tweet.parent()
 
 def tweetText = ("$tweet.text"
     // fis regex bug
@@ -38,27 +38,37 @@ def tweetText = ("$tweet.text"
 tweetText = "<a href='http://twitter.com/${tweetUser.screen_name}'><b>${tweetUser.screen_name}</b></a> $tweetText"
 
 panel(new RoundedPanel(foreground: java.awt.Color.WHITE, opaque:true),
-        name:tweet.id,
-        gridwidth:REMAINDER, fill:HORIZONTAL, weightx:1.0, insets:[3,3,3,3]) {
+        name:tweet.id) {
     gridBagLayout()
-    label(icon:imageIcon(new URL(tweetUser.profile_image_url as String)),
+    label(icon:new FixedSizeImageIcon(48, 48, new URL(tweetUser.profile_image_url as String)),
         verticalTextPosition:SwingConstants.BOTTOM,
         horizontalTextPosition:SwingConstants.CENTER,
         anchor: NORTH, insets: [6, 6, 6, 3])
     editorPane(contentType:'text/html', text:tweetText,
-        hyperlinkUpdate:controller.&hyperlinkPressed,
+        hyperlinkUpdate:app.controllers.Greet.&hyperlinkPressed,
         opaque: false, editable: false, font: tweetLineFont,
         gridwidth: REMAINDER, weightx: 1.0, fill: BOTH, insets: [3, 3, 3, 6])
     hbox(fill:BOTH, gridwidth:REMAINDER) {
+        hstrut(6)
+        button(replyAction, actionCommand:tweet.id, border:null,
+            icon:imageIcon(resource:"/sound_grey.png"), rolloverIcon:imageIcon(resource:"/sound_spearmint.png"), pressedIcon:imageIcon(resource:"/sound_white.png"),
+            contentAreaFilled:false, font:tweetTimeFont)
         if (tweet.source != 'web') {
-            def bt = label("<html>via $tweet.source" as String, border:emptyBorder(0,6,3,3), font:tweetTimeFont)
+            hstrut(3)
+            def bt = button(hyperlinkAction, actionCommand:tweet.source,
+                text:"<html>via $tweet.source" as String, border:null,
+                contentAreaFilled:false, font:tweetTimeFont, cursor:Cursor.getPredefinedCursor(Cursor.HAND_CURSOR))
             bt.maximumSize = bt.preferredSize
         }
-        if (tweet.in_reply_to_screen_name as String) {
-            def bt = label("<html>in reply to <a href='http://twitter.com/$tweet.in_reply_to_screen_name'>$tweet.in_reply_to_screen_name</a>" as String, border:emptyBorder(0,6,3,3), font:tweetTimeFont)
+        if (tweet.in_reply_to_screen_name) {
+            hstrut(3)
+            def bt = button(showTweetAction, actionCommand:tweet.in_reply_to_screen_name,
+                text:"<html>re: <a href='http://twitter.com/$tweet.in_reply_to_screen_name'>$tweet.in_reply_to_screen_name</a>" as String,
+                border:null, contentAreaFilled:false, font:tweetTimeFont,
+                cursor:Cursor.getPredefinedCursor(Cursor.HAND_CURSOR))
             bt.maximumSize = bt.preferredSize
         }
         glue()
-        label(TwitterService.timeAgo(tweet.created_at), border:emptyBorder(0,3,3,6), font:tweetTimeFont)
+        label(new TimeLabel(tweet.created_at), border:emptyBorder(0,3,3,6), font:tweetTimeFont)
     }
 }

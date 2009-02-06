@@ -44,11 +44,12 @@ environments {
     production {
         signingkey {
             params {
+                sigfile = 'GRIFFON'
                 keystore = '${base.dir}/griffon-app/conf/keys/productionKeystore'
                 alias = 'greetkey'
-                sigfile = "GRIFFON"
-                //storepass = 'BadStorePassword' // no value means we will prompt
-                //keypass   = 'BadKeyPassword' // no value means we will prompt
+                // NOTE: for production keys it is more secure to rely on key prompting
+                // no value means we will prompt //storepass = 'BadStorePassword'
+                // no value means we will prompt //keypass   = 'BadKeyPassword'
                 lazy = false // sign, regardless of existing signatures
             }
         }
@@ -57,11 +58,11 @@ environments {
             jars {
                 sign = true
                 pack = true
-                destDir = '${basedir}/../../bin-dist/greet'
+                destDir = "${basedir}/staging"
                 jarName = "${appName}.jar"
             }
             webstart {
-                codebase = "http://svn.codehaus.org/groovy/trunk/groovy/modules/griffon/bin-dist/greet/"
+                codebase = "http://dist.codehaus.org/griffon/samples/greet/"
                 jnlp = "greet.jnlp"
             }
         }
@@ -77,10 +78,11 @@ griffon {
     }
     webstart {
         codebase = "${new File(griffon.jars.destDir).toURI().toASCIIString()}"
-        jnlp = "greet.jnlp"
+        jnlp = 'greet.jnlp'
     }
     applet {
-        jnlp = "applet.jnlp"
-        html = "applet.html"
+        jnlp = 'greet-applet.jnlp'
+        html = 'applet.html'
     }
 }
+

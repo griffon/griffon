@@ -1,12 +1,15 @@
 root {
     'groovy.swing.SwingBuilder' {
-        controller = ['Threading','SupportNodes', 'Binding']
+        controller = ['Threading','Binding','SupportNodes']
+        view = '*'
     }
     'griffon.app.ApplicationBuilder' {
-        view = "*"
+        view = '*'
     }
 }
-jx {
-    'groovy.swing.SwingXBuilder' { }
-}
 
+features {
+    attributeDelegates = [
+        greet.GreetController.buttonMarginDelegate
+    ]
+}
