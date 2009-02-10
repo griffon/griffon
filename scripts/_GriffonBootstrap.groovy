@@ -86,7 +86,7 @@ target(loadApp:"Loads the Griffon application object") {
     File jardir = new File(ant.antProject.replaceProperties(config.griffon.jars.destDir))
     rootLoader.addURL(new File("${jardir}/${config.griffon.jars.jarName}").toURI().toURL())
 
-    griffonApp = rootLoader.loadClass("griffon.application.StandaloneApplication", false).newInstance()
+    griffonApp = rootLoader.loadClass("griffon.application.SingleFrameApplication", false).newInstance()
     griffonApp.bootstrap()
 
 	event("AppLoadEnd", ["Loading Griffon Application"])

@@ -171,11 +171,6 @@ target(upgrade: "Upgrades a Griffon application from a previous version of Griff
             if (!fileText.contains('@jnlpExtensions@')) {
             	replacefilter(token: '</resources>', value: '@jnlpExtensions@ \n</resources>')
             }
-            if (fileText.contains('griffon.application.SingleFrameApplication')) {
-                ant.replace(file: it.toString()) {
-                    replacefilter(token: 'griffon.application.SingleFrameApplication', value:'griffon.application.StandaloneApplication')
-                }
-            }
         }
     }
     
