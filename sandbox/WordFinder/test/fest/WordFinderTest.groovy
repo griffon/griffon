@@ -1,22 +1,22 @@
 import java.awt.Dimension
 import org.fest.swing.fixture.*
 import org.testng.annotations.*
-import griffon.application.SingleFrameApplication
+import griffon.application.StandaloneApplication
 import griffon.util.GriffonApplicationHelper
 
 class WordFinderTest {
-   private SingleFrameApplication app
+   private StandaloneApplication app
    private FrameFixture window
 
    static {
-      SingleFrameApplication.metaClass.shutdown = { ->
+      StandaloneApplication.metaClass.shutdown = { ->
          GriffonApplicationHelper.runScriptInsideEDT("Shutdown", delegate)
          delegate.appFrames[0].visible = false
       }
    }
 
    @BeforeMethod void init() {
-      app = new SingleFrameApplication()
+      app = new StandaloneApplication()
       app.bootstrap()
       app.realize()
       window = new FrameFixture( app.appFrames[0] )

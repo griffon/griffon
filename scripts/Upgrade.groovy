@@ -168,22 +168,30 @@ target(upgrade: "Upgrades a Griffon application from a previous version of Griff
         def fileText = it.getFile().getText()
         ant.replace(file: it.toString()) {
             replacefilter(token: '<j2se version="1.5+"/>', value: '<j2se version="1.5+" @memoryOptions@/>')
-            if (!fileText.contains('@jnlpExtensions@'))
+            if (!fileText.contains('@jnlpExtensions@')) {
             	replacefilter(token: '</resources>', value: '@jnlpExtensions@ \n</resources>')
+            }
+            if (fileText.contains('griffon.application.SingleFrameApplication')) {
+                ant.replace(file: it.toString()) {
+                    replacefilter(token: 'griffon.application.SingleFrameApplication', value:'griffon.application.StandaloneApplication')
+                }
+            }
         }
     }
     
     // ensure that applet code supports jnlp extensions and remote jars
     fileset(dir:"${basedir}/griffon-app/conf/", includes:"**/*.html").each {
     	def fileText = it.getFile().getText()
-   		if (!fileText.contains('@griffonJnlps@'))
+   	    if (!fileText.contains('@griffonJnlps@')) {
     		ant.replace(file: it.toString()) {
     			replacefilter(token: '@griffonAppCodebase@/applet.jnlp', value:'@griffonAppCodebase@/applet.jnlp @griffonJnlps@')
+            }
     	}
-    	if (!fileText.contains('@griffonJnlpAppletExtensions@'))
+    	if (!fileText.contains('@griffonJnlpAppletExtensions@')) {
     		ant.replace(file: it.toString()) {
 	    		replacefilter(token: '</APPLET>', value:'@griffonJnlpAppletExtensions@ \n </APPLET>')
     		}
+        }
     }
 
 
