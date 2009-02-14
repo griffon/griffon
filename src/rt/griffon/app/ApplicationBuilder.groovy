@@ -16,6 +16,8 @@
 package griffon.app
 
 import groovy.swing.factory.CollectionFactory
+import javax.swing.JComponent
+import javax.swing.KeyStroke
 
 /**
  * Created by IntelliJ IDEA.
@@ -24,6 +26,7 @@ import groovy.swing.factory.CollectionFactory
  * Time: 10:22:22 AM
  */
 class ApplicationBuilder extends FactoryBuilderSupport {
+    private static final Random random = new Random()
 
     public ApplicationBuilder(boolean init = true) {
         super(init)
@@ -33,6 +36,7 @@ class ApplicationBuilder extends FactoryBuilderSupport {
         registerFactory 'application', new ApplicationFactory()
         addAttributeDelegate(ApplicationBuilder.&clientPropertyAttributeDelegate)
         registerFactory("noparent", new CollectionFactory())
+        registerExplicitMethod("keyStrokeAction", this.&createKeyStrokeAction)
     }
 
     public static clientPropertyAttributeDelegate(def builder, def node, def attributes) {
@@ -44,5 +48,78 @@ class ApplicationBuilder extends FactoryBuilderSupport {
            attributes.remove(key)
            node.putClientProperty(key - "clientProperty", value)
         }
+    }
+
+    public static createKeyStrokeAction( Map attributes, JComponent component = null ) {
+        component = findTargetComponent(attributes, component)
+        if( !attributes.containsKey("keyStroke") ) {
+            throw new RuntimeException("You must define a value for keyStroke:")
+        }
+        if( !attributes.containsKey("action") ) {
+            throw new RuntimeException("You must define a value for action:")
+        }
+
+        def condition = attributes.remove("condition") ?: JComponent.WHEN_FOCUSED
+        if( condition instanceof String ) {
+            condition = condition.toUpperCase().replaceAll(" ","_")
+            if( !condition.startsWith("WHEN_") ) condition = "WHEN_"+condition
+        }
+        switch(condition) {
+            case JComponent.WHEN_FOCUSED:
+            case JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT:
+            case JComponent.WHEN_IN_FOCUSED_WINDOW:
+                // everything is fine, no further processing
+                break
+            case "WHEN_FOCUSED":
+                condition = JComponent.WHEN_FOCUSED
+                break
+            case "WHEN_ANCESTOR_OF_FOCUSED_COMPONENT":
+                condition = JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT
+                break
+            case "WHEN_IN_FOCUSED_WINDOW":
+                condition = JComponent.WHEN_IN_FOCUSED_WINDOW
+                break
+            default:
+                // let's be lenient and asign WHEN_FOCUSED by default
+                condition = JComponent.WHEN_FOCUSED
+        }
+        def actionKey = attributes.remove("actionKey")
+        if( !actionKey ) actionKey = "Action"+Math.abs(random.nextLong())
+
+        def keyStroke = attributes.remove("keyStroke")
+        // accept String, KeyStroke, List<String>, List<KeyStroke>
+        def action = attributes.remove("action")
+
+        if( keyStroke instanceof String ) keyStroke = [keyStroke]
+        keyStroke.each { ks ->
+            switch(ks) {
+                case KeyStroke:
+                    component.getInputMap(condition).put(ks, actionKey)
+                    component.actionMap.put(actionKey, action)
+                    break
+                case String:
+                    component.getInputMap(condition).put(shortcut(ks), actionKey)
+                    component.actionMap.put(actionKey, action)
+                    break
+                default:
+                    throw new RuntimeException("Can not apply ${ks} as a KeyStroke value.")
+            }
+        }
+    }
+
+    private static findTargetComponent( Map attributes, JComponent component ) {
+        if( component ) return component
+        if( attributes.containsKey("component") ) {
+            def c = attributes.remove("component")
+            if( !(c instanceof JComponent) ) {
+                throw new RuntimeException("The property component: is not of type JComponent.")
+            }
+            return c
+        }
+        def c = getCurrent()
+        if( c instanceof JComponent ) {
+            return c
+        }
+        throw new RuntimeException("You must define one of the following: a value of type JComponent, a component: attribute or nest this node inside another one that produces a JComponent.")
     }
 }
