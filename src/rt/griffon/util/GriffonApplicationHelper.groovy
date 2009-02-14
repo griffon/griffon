@@ -109,7 +109,9 @@ class GriffonApplicationHelper {
         // inject defaults into emc
         // this also insures EMC metaclasses later
         klass.metaClass.app = app
-        klass.metaClass.createMVCGroup = GriffonApplicationHelper.&createMVCGroup.curry(app)
+        klass.metaClass.createMVCGroup = {String mvcType, String mvcname = mvcType, Map bindArgs = [:] ->
+            GriffonApplicationHelper.createMVCGroup(app, mvcType, mvcname, bindArgs)
+        }
         klass.metaClass.destroyMVCGroup = GriffonApplicationHelper.&destroyMVCGroup.curry(app)
         klass.metaClass.newInstance = GriffonApplicationHelper.&newInstance.curry(app)
         return klass
