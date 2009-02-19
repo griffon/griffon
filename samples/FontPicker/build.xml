@@ -5,26 +5,26 @@
     </condition>
     <property name="griffon" value="griffon" />
 
-    <!-- ================================= 
+	<!-- ================================= 
           target: clean              
          ================================= -->
     <target name="clean" description="--> Cleans a Griffon application">
-        <exec executable="${griffon}" failonerror="true">
-            <arg value="clean"/>
-        </exec>
+		<exec executable="${griffon}" failonerror="true">
+			<arg value="clean"/>
+		</exec>                               
     </target>
 
     <!-- =================================
-          target: war              
+          target: package
          ================================= -->
-    <target name="war" description="--> Creates a WAR of a Griffon application">
+    <target name="package" description="--> Packages up Griffon artifacts">
         <exec executable="${griffon}" failonerror="true">
-            <arg value="war"/>
+            <arg value="package"/>
         </exec>
     </target>
 
     <!-- =================================
-          target: test              
+          target: test
          ================================= -->
     <target name="test" description="--> Run a Griffon applications unit tests">
         <exec executable="${griffon}" failonerror="true">
@@ -33,9 +33,12 @@
     </target>
 
     <!-- =================================
-          target: deploy              
+          target: dist
          ================================= -->
-    <target name="deploy" depends="war" description="--> The deploy target (initially empty)">
-        <!-- TODO -->
+    <target name="dist" description="--> Packages up Griffon artifacts in the Production Environment">
+        <exec executable="${griffon}" failonerror="true">
+            <arg value="prod"/>
+            <arg value="package"/>
+        </exec>
     </target>
 </project>

@@ -60,10 +60,6 @@ environments {
                 pack = true
                 destDir = "${basedir}/staging"
             }
-			extensions {
-				jarUrls = []
-				jnlpUrls = []
-			}
             webstart {
                 codebase = 'CHANGE ME'
             }
@@ -82,6 +78,10 @@ griffon {
         pack = false
         destDir = "${basedir}/staging"
         jarName = "${appName}.jar"
+    }
+    extensions {
+        jarUrls = []
+        jnlpUrls = []
     }
     webstart {
         codebase = "${new File(griffon.jars.destDir).toURI().toASCIIString()}"

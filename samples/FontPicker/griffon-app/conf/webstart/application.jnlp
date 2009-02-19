@@ -35,11 +35,12 @@
         <!--<j2ee-application-client-permissions/>-->
     </security>
     <resources>
-        <j2se version="1.5+"/>
+        <j2se version="1.5+" @memoryOptions@/>
         <!-- auto-added jars follow, griffon-rt, app, and groovy -->
 @jnlpJars@
         <!-- Add all extra jars below here, or the app may break -->
-    </resources>
+    @jnlpExtensions@ 
+</resources>
   <application-desc main-class="griffon.application.SingleFrameApplication">
       <!-- params are ignored when referenced from web page for 6u10 -->
     <!--<param name="key1" value="value1"/>-->

@@ -56,15 +56,15 @@ function generateInlineAppletTag(appletID, screenshotID) {
         ARCHIVE='@appletJars@'
         WIDTH='320' HEIGHT='640'>
     <PARAM NAME='java_arguments' VALUE='-Djnlp.packEnabled=true">
-    <PARAM NAME='jnlp_href' VALUE='@griffonAppCodebase@/applet.jnlp'>
-    <PARAM NAME='jnlp_href' VALUE='@griffonAppCodebase@/applet.jnlp'>
+    <PARAM NAME='jnlp_href' VALUE='@griffonAppCodebase@/applet.jnlp @griffonJnlps@'>
     <PARAM NAME='draggable' VALUE='true'>
     <PARAM NAME='image' VALUE='griffon.jpeg'>
     <PARAM NAME='boxmessage' VALUE='Loading @griffonAppName@'>
     <PARAM NAME='boxbgcolor' VALUE='#FFFFFF'>
     <PARAM NAME='boxfgcolor' VALUE='#000000'>
     <PARAM NAME='codebase_lookup' VALUE='false'>
-</APPLET>
+@griffonJnlpAppletExtensions@ 
+ </APPLET>
 -->
 </body>
 </html>

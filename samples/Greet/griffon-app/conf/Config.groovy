@@ -70,11 +70,20 @@ environments {
 }
 
 griffon {
+    memory {
+        max = '92m'
+        //min = '2m'
+        //maxPermSize = '64m'
+    }
     jars {
         sign = false
         pack = false
         destDir = "${basedir}/staging"
         jarName = "${appName}.jar"
+    }
+    extensions {
+        jarUrls = []
+        jnlpUrls = []
     }
     webstart {
         codebase = "${new File(griffon.jars.destDir).toURI().toASCIIString()}"
