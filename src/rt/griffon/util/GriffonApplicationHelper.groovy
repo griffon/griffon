@@ -20,9 +20,6 @@ import java.awt.Toolkit
 import javax.swing.JFrame
 import javax.swing.SwingUtilities
 
-import java.beans.PropertyChangeEvent
-import java.beans.PropertyChangeListener
-
 /**
  * Created by IntelliJ IDEA.
  *@author Danno.Ferrin
@@ -30,8 +27,6 @@ import java.beans.PropertyChangeListener
  * Time: 3:28:46 PM
  */
 class GriffonApplicationHelper {
-    private static Class[] TRIGGER_HANDLER_PARAMS = [PropertyChangeEvent] as Class[]
-
 
     static void prepare(IGriffonApplication app) {
         app.bindings.app = app
