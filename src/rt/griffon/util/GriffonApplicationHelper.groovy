@@ -22,8 +22,6 @@ import javax.swing.SwingUtilities
 
 import java.beans.PropertyChangeEvent
 import java.beans.PropertyChangeListener
-import griffon.beans.Trigger
-import org.codehaus.groovy.runtime.MethodClosure
 
 /**
  * Created by IntelliJ IDEA.
@@ -144,24 +142,6 @@ class GriffonApplicationHelper {
         view.binding = builder
         def controller = newInstance(app,controllerKlass,"Controller")
         app.addApplicationEventListener(controller)
-
-        // process any triggers set on model properties
-        model.getClass().declaredFields.each {field ->
-            def trigger = field.getAnnotation(Trigger)
-            if (!trigger) return
-            def handlerName = trigger.value()
-            def handler = null
-            def mp = controller.metaClass.getMetaProperty(handlerName)
-            if (mp) {
-                handler = mp.getProperty(controller)
-            } else {
-                def mm = controller.metaClass.getMetaMethod(handlerName,TRIGGER_HANDLER_PARAMS)
-                if (mm) handler = new MethodClosure(controller, handlerName)
-            }
-            if (handler) {
-                model.addPropertyChangeListener(field.name, handler as PropertyChangeListener)
-            }
-        }
 
         app.models[mvcName] = model
         app.views[mvcName] = view
