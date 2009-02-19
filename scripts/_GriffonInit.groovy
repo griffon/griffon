@@ -27,6 +27,7 @@ import org.codehaus.griffon.util.GriffonUtil
 import org.springframework.core.io.FileSystemResource
 import org.codehaus.griffon.util.GriffonNameUtils
 
+
 // add includes
 includeTargets << griffonScript("_GriffonArgParsing")
 includeTargets << griffonScript("_PluginDependencies")
