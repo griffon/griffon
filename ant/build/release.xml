@@ -9,11 +9,22 @@
         <mkdir dir="${dir.location}"/>
         <copy todir="${dir.destination}" failonerror="true" overwrite="true" verbose="false">
             <fileset dir="${dir.location}" excludes="**/CVS/**,${dir.excludes}"/>
+            <filterset>
+                <filter token="GRIFFON_VERSION" value="${griffon.version}"/>
+                <filter token="GROOVY_VERSION" value="${groovy.version}"/>
+            </filterset>
+        </copy>
+    </target>
+
+    <target name="copy-dir-bin">
+        <mkdir dir="${dir.location}"/>
+        <copy todir="${dir.destination}" failonerror="true" overwrite="true" verbose="false">
+            <fileset dir="${dir.location}" excludes="**/CVS/**,${dir.excludes}"/>
         </copy>
     </target>
 
     <target name="copy-common-release-content">
-        <antcall target="copy-dir">
+        <antcall target="copy-dir-bin">
             <param name="dir.excludes" value=""/>
             <param name="dir.location" value="lib"/>
             <param name="dir.destination" value="${release.dir}/lib"/>
@@ -23,12 +34,12 @@
             <param name="dir.location" value="bin"/>
             <param name="dir.destination" value="${release.dir}/bin"/>
         </antcall>
-        <antcall target="copy-dir">
+        <antcall target="copy-dir-bin">
             <param name="dir.excludes" value=""/>
             <param name="dir.location" value="ant"/>
             <param name="dir.destination" value="${release.dir}/ant"/>
         </antcall>
-        <antcall target="copy-dir">
+        <antcall target="copy-dir-bin">
             <param name="dir.excludes" value=""/>
             <param name="dir.location" value="media"/>
             <param name="dir.destination" value="${release.dir}/media"/>
@@ -107,15 +118,12 @@
                  but need to include/exclude files relative to this prefix dir or they don't
                  get found, obviously-->
             <tarfileset dir="${archive.dir}">
-                <exclude name="${griffon.release.base.dir.name}/bin/cygriffon"/>
                 <exclude name="${griffon.release.base.dir.name}/bin/griffon"/>
                 <exclude name="${griffon.release.base.dir.name}/bin/griffon-debug"/>
-                <exclude name="${griffon.release.base.dir.name}/bin/griffon-0.4"/>
                 <exclude name="${griffon.release.base.dir.name}/bin/startgriffon"/>
                 <exclude name="${griffon.release.base.dir.name}/ant/bin/ant"/>
             </tarfileset>
             <tarfileset dir="${archive.dir}" mode="755">
-                <include name="${griffon.release.base.dir.name}/bin/cygriffon"/>
                 <include name="${griffon.release.base.dir.name}/bin/griffon"/>
                 <include name="${griffon.release.base.dir.name}/bin/griffon-debug"/>
                 <include name="${griffon.release.base.dir.name}/ant/bin/ant"/>

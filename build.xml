@@ -43,5 +43,9 @@
             depends="clean,build, test, jar, javadoc, package"
             description="to be started by the CruiseControl build server"/>
 
+    <target name="cruise-bamboo"
+            depends="clean,build, test, jar, javadoc, package, create-installer-izpack, create-installer-deb"
+            description="to be started by the CruiseControl build server"/>
+
 
 </project>

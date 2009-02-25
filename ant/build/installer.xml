@@ -33,8 +33,6 @@
                classpath="${basedir}/installer/izpack/lib/izpack-standalone-compiler-4.2.0.jar"
                classname="com.izforge.izpack.ant.IzPackTask"/>
 
-      <antcall target="package"/>
-
       <mkdir dir="${griffon.installer.izpack.dir}" />
       <unzip src="${griffon.dist}/${griffon.dist.binary}.zip" dest="${griffon.installer.izpack.dir}/binary" />
       <unzip src="${griffon.dist}/${griffon.dist.source}.zip" dest="${griffon.installer.izpack.dir}/source" />
@@ -191,7 +189,6 @@
   </target>
 
   <target name="prepare-installer-rpm" depends="test-linux" >
-      <antcall target="package"/>
       <property name="griffon.installer.rpm.dir" value="${griffon.target}/installer/rpm" />
 
       <mkdir dir="${griffon.installer.rpm.dir}/BUILD" />
@@ -216,14 +213,14 @@
             file="${griffon.dist}/${griffon.dist.source}.zip" />
       <rpm specFile="griffon.spec"
            topDir="${griffon.installer.rpm.dir}"
-           cleanBuildDir="false"
+           cleanBuildDir="true"
            failOnError="true"/>
       <copy tofile="${griffon.dist}/griffon-${griffon.version.rpm}-1.noarch.rpm"
             file="${griffon.installer.rpm.dir}/RPMS/noarch/griffon-${griffon.version.rpm}-1.noarch.rpm" />
+      <delete dir="/var/tmp/griffon-${griffon.version.rpm}-*" failonerror="false"/>
   </target>
 
   <target name="prepare-installer-dmg" depends="test-osx" >
-      <antcall target="package"/>
       <property name="griffon.installer.dmg.dir" value="${griffon.target}/installer/dmg" />
       <mkdir dir="${griffon.installer.dmg.dir}" />
       <unzip src="${griffon.dist}/${griffon.dist.binary}.zip" dest="${griffon.installer.dmg.dir}" />
@@ -285,6 +282,11 @@
 
             <tarfileset dir="${griffon.installer.deb.dir}/build/griffon-${griffon.version}" prefix="usr/share/griffon" filemode="755"/>
         </deb>
+        <copy todir="${griffon.dist}">
+            <fileset dir="${griffon.installer.deb.dir}/dist">
+                <include name="*.deb"/>
+            </fileset>
+        </copy>
     </target>
 
 </project>
