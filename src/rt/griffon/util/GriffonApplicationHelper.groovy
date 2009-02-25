@@ -124,6 +124,11 @@ class GriffonApplicationHelper {
     }
 
     public static createMVCGroup(IGriffonApplication app, String mvcType, String mvcName = mvcType, Map bindArgs = [:]) {
+        // validate MVC type
+        if (!(app.config.mvcGroups[mvcName])) {
+            throw new RuntimeException("Unknown MVC type \"$mvcType\".  Known types are ${app.config.mvcGroups.keySet()}")
+        }
+
         Class modelKlass = loadMVCClass(mvcType, "model", app)
         Class viewKlass = loadMVCClass(mvcType, "view", app)
         Class controllerKlass = loadMVCClass(mvcType, "controller", app)
@@ -164,7 +169,7 @@ class GriffonApplicationHelper {
         }
 
         builder.edt({builder.build(view) })
-        app.event("CreateMVCGroup",[mvcName, model, view, controller])
+        app.event("CreateMVCGroup",[mvcName, model, view, controller, mvcType])
         return [model, view, controller]
     }
 
