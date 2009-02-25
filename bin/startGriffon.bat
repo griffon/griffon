@@ -106,7 +106,7 @@ set CMD_LINE_ARGS=%$
 
 :execute
 @rem Setup the command line
-set STARTER_CLASSPATH=%GRIFFON_HOME%\lib\groovy-all-1.6.0.jar;%GRIFFON_HOME%\dist\griffon-cli-0.1-SNAPSHOT.jar
+set STARTER_CLASSPATH=%GRIFFON_HOME%\lib\groovy-all-@GROOVY_VERSION@.jar;%GRIFFON_HOME%\dist\griffon-cli-@GRIFFON_VERSION@.jar
 
 if exist "%USERPROFILE%/.groovy/init.bat" call "%USERPROFILE%/.groovy/init.bat"
 
