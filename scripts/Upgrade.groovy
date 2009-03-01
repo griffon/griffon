@@ -174,21 +174,6 @@ target(upgrade: "Upgrades a Griffon application from a previous version of Griff
         }
     }
     
-    // ensure that applet code supports jnlp extensions and remote jars
-    fileset(dir:"${basedir}/griffon-app/conf/", includes:"**/*.html").each {
-    	def fileText = it.getFile().getText()
-   	    if (!fileText.contains('@griffonJnlps@')) {
-    		ant.replace(file: it.toString()) {
-    			replacefilter(token: '@griffonAppCodebase@/applet.jnlp', value:'@griffonAppCodebase@/applet.jnlp @griffonJnlps@')
-            }
-    	}
-    	if (!fileText.contains('@griffonJnlpAppletExtensions@')) {
-    		ant.replace(file: it.toString()) {
-	    		replacefilter(token: '</APPLET>', value:'@griffonJnlpAppletExtensions@ \n </APPLET>')
-    		}
-        }
-    }
-
 
 // proceed plugin-specific upgrade logic contained in 'scripts/_Upgrade.groovy' under plugin's root
     def plugins = GriffonPluginUtils.getPluginBaseDirectories(pluginsHome)

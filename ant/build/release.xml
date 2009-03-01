@@ -5,10 +5,10 @@
         <mkdir dir="${dir.location}"/>
     </target>
 
-    <target name="copy-dir">
+    <target name="copy-dir-filter">
         <mkdir dir="${dir.location}"/>
         <copy todir="${dir.destination}" failonerror="true" overwrite="true" verbose="false">
-            <fileset dir="${dir.location}" excludes="**/CVS/**,${dir.excludes}"/>
+            <fileset dir="${dir.location}" includes="${dir.includes}"/>
             <filterset>
                 <filter token="GRIFFON_VERSION" value="${griffon.version}"/>
                 <filter token="GROOVY_VERSION" value="${groovy.version}"/>
@@ -16,7 +16,7 @@
         </copy>
     </target>
 
-    <target name="copy-dir-bin">
+    <target name="copy-dir">
         <mkdir dir="${dir.location}"/>
         <copy todir="${dir.destination}" failonerror="true" overwrite="true" verbose="false">
             <fileset dir="${dir.location}" excludes="**/CVS/**,${dir.excludes}"/>
@@ -24,7 +24,7 @@
     </target>
 
     <target name="copy-common-release-content">
-        <antcall target="copy-dir-bin">
+        <antcall target="copy-dir">
             <param name="dir.excludes" value=""/>
             <param name="dir.location" value="lib"/>
             <param name="dir.destination" value="${release.dir}/lib"/>
@@ -34,12 +34,17 @@
             <param name="dir.location" value="bin"/>
             <param name="dir.destination" value="${release.dir}/bin"/>
         </antcall>
-        <antcall target="copy-dir-bin">
+        <antcall target="copy-dir-filter">
+            <param name="dir.includes" value="*riffon*"/>
+            <param name="dir.location" value="bin"/>
+            <param name="dir.destination" value="${release.dir}/bin"/>
+        </antcall>
+        <antcall target="copy-dir">
             <param name="dir.excludes" value=""/>
             <param name="dir.location" value="ant"/>
             <param name="dir.destination" value="${release.dir}/ant"/>
         </antcall>
-        <antcall target="copy-dir-bin">
+        <antcall target="copy-dir">
             <param name="dir.excludes" value=""/>
             <param name="dir.location" value="media"/>
             <param name="dir.destination" value="${release.dir}/media"/>
@@ -56,6 +61,11 @@
         </antcall>
         <antcall target="copy-dir">
             <param name="dir.excludes" value="*/griffon-app/conf/keys/**,*/target/**"/>
+            <param name="dir.location" value="samples"/>
+            <param name="dir.destination" value="${release.dir}/samples"/>
+        </antcall>
+        <antcall target="copy-dir-filter">
+            <param name="dir.includes" value="**/.classpath,**/application.properties"/>
             <param name="dir.location" value="samples"/>
             <param name="dir.destination" value="${release.dir}/samples"/>
         </antcall>

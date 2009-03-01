@@ -109,8 +109,8 @@ class GriffonApplicationHelper {
         // inject defaults into emc
         // this also insures EMC metaclasses later
         klass.metaClass.app = app
-        klass.metaClass.createMVCGroup = {String mvcType, String mvcname = mvcType, Map bindArgs = [:] ->
-            GriffonApplicationHelper.createMVCGroup(app, mvcType, mvcname, bindArgs)
+        klass.metaClass.createMVCGroup = {Object... args ->
+            GriffonApplicationHelper.createMVCGroup(app, *args)
         }
         klass.metaClass.destroyMVCGroup = GriffonApplicationHelper.&destroyMVCGroup.curry(app)
         klass.metaClass.newInstance = GriffonApplicationHelper.&newInstance.curry(app)
@@ -123,9 +123,20 @@ class GriffonApplicationHelper {
         return instance
     }
 
-    public static createMVCGroup(IGriffonApplication app, String mvcType, String mvcName = mvcType, Map bindArgs = [:]) {
-        // validate MVC type
-        if (!(app.config.mvcGroups[mvcName])) {
+    public static createMVCGroup(IGriffonApplication app, String mvcType) {
+        createMVCGroup(app, mvcType, mvcType, [:])
+    }
+
+    public static createMVCGroup(IGriffonApplication app, String mvcType, String mvcName) {
+        createMVCGroup(app, mvcType, mvcName, [:])
+    }
+
+    public static createMVCGroup(IGriffonApplication app, String mvcType, Map bindArgs) {
+        createMVCGroup(app, mvcType, mvcType, bindArgs)
+    }
+
+    public static createMVCGroup(IGriffonApplication app, String mvcType, String mvcName, Map bindArgs) {
+        if (!app.config.mvcGroups.containsKey(mvcType)) {
             throw new RuntimeException("Unknown MVC type \"$mvcType\".  Known types are ${app.config.mvcGroups.keySet()}")
         }
 
