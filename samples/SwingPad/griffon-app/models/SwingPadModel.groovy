@@ -32,7 +32,8 @@ class SwingPadModel {
       jide:       [ enabled: true,  loaded: true,  type: "griffon.builder.jide.JideBuilder"],
       flamingo:   [ enabled: false, loaded: false, type: "griffon.builder.flamingo.FlamingoBuilder"],
       tray:       [ enabled: false, loaded: false, type: "griffon.builder.tray.TrayBuilder"],
-      macwidgets: [ enabled: false, loaded: false, type: "griffon.builder.macwidgets.MacWidgetsBuilder"]
+      macwidgets: [ enabled: false, loaded: false, type: "griffon.builder.macwidgets.MacWidgetsBuilder"],
+      swingxtras: [ enabled: false, loaded: false, type: "griffon.builder.swingxtras.SwingxtrasBuilder"]
    ]
 
    Map samples = [:]

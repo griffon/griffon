@@ -9,13 +9,9 @@ eventPrepareIzpackInstallerEnd = { ->
 }
 
 eventCopyLibsEnd = { jardir ->
-   ant.copy(todir: "${jardir}/flamingo") {
-      fileset(dir: "${basedir}/lib/flamingo", includes:"*.jar")
-   }
-   ant.copy(todir: "${jardir}/tray") {
-      fileset(dir: "${basedir}/lib/tray", includes:"*.jar")
-   }
-   ant.copy(todir: "${jardir}/macwidgets") {
-      fileset(dir: "${basedir}/lib/macwidgets", includes:"*.jar")
+   ["flamingo","tray","macwidgets","swingxtras"].each { dir ->
+      ant.copy(todir: "${jardir}/${dir}") {
+         fileset(dir: "${basedir}/lib/${dir}", includes:"*.jar")
+      }
    }
 }

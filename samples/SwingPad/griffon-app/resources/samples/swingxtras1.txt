@@ -1,0 +1,122 @@
+import com.jidesoft.swing.ButtonStyle
+import java.awt.Color
+import java.awt.Dimension
+
+def blackBorder = {
+  lineBorder(color: Color.BLACK, thickness: 1)
+}
+
+class Person {
+  String name
+  String lastname
+}
+
+panel {
+  borderLayout()
+  jbannerPanel(constraints: context.SOUTH,
+    title: "SwingxtrasBuilder Example",
+    subtitle: "A brief example of SwingxtrasBuilder in action",
+    icon: imageIcon("/groovy/ui/ConsoleIcon.png", class: groovy.ui.Console),
+    border: blackBorder(),
+    preferredSize: [380,70]
+  )
+
+  tabbedPane(constraints: context.CENTER,
+    border: blackBorder() ) {
+
+    panel(title: "BalloonTip") {
+      panel {
+        vbox {
+          label("Move your mouse over the buttons")
+          button("Hides on mouse exit", id: "b2",
+            mouseEntered:{ bt2.visible = true },
+            mouseExited:{ bt2.visible = false })
+          button("Hides after 5s", id: "b1",
+            mouseEntered:{ bt1.visible = true })
+          button("Regular balloontip", id: "b3",
+            mouseEntered:{ bt3.visible = true })
+          button("Balloontip with Modern style", id: "b4",
+            mouseEntered:{ bt4.visible = true },
+            mouseExited:{ bt4.visible = false })
+            
+          balloonTip(b1, id: "bt1",
+            text: "I'll hide myself in 5s",
+            hideAfter: 5000,
+            useCloseButton: false)
+          balloonTip(b2, id: "bt2",
+            text: "Hover outside my anchor and I'll hide",
+            useCloseButton: false)
+          balloonTip(b3, id: "bt3",
+            text: "Click close and will never show up again",
+            useCloseButton: true)
+          balloonTip(b4, id: "bt4",
+            text: "Modern style applied",
+            useCloseButton: false) {
+              modernBalloonStyle(
+                topColor: Color.WHITE,
+                bottomColor: Color.RED,
+                arcWidth: 8,
+                arcHeight: 8
+              )
+            }
+        }
+      }
+    }
+
+    panel(title: "XSwingX") {
+      vbox {
+        searchField(prompt: "I'm a search field")
+        promptField(prompt: "Type in your name")
+        promptArea(prompt: "This is a promptArea", columns: 20, rows: 2)
+        textField(id: "tf")
+        promptSupport(tf, prompt: "Prompt added to regular textField")
+        passwordField(id: "pf")
+        promptSupport(pf, prompt: "Prompt added to passwordField")
+        textField(id: "tf2")
+        promptSupport(tf2, prompt:"Type in an URL")
+        noparent {
+          label(icon: imageIcon("icons/rss.png", class: SwingPadController),
+            id: "rssIcon")
+        }
+        buddySupport(tf2, position: "right",
+          buddy: rssIcon)
+      }
+    }
+
+    panel(title: "PropertySheet") {
+      panel {
+        bean(new Person(), id: "person",
+          name: "Joe",
+          lastname: "Cool")
+        propertySheetPanel(person,
+          excludes: ["metaClass"],
+          preferredSize: [320,300],
+          border: blackBorder()) {
+          property(name: "name",
+            shortDescription: "Person's name")
+          property(name: "lastname",
+            shortDescription: "Person's name")  
+        }
+      }
+    }
+    
+    panel(title: "TaskPane") {
+      jtaskPane(border: blackBorder(),preferredSize: [320,300]) {
+        jtaskPaneGroup(title: "Group 1", special: true) {
+          label("Action 1")
+          label("Action 2")
+        }
+        jtaskPaneGroup(title: "Group 2", expanded: false) {
+          label("Action 1")
+          label("Action 2")
+          label("Action 3")
+        }
+        jtaskPaneGroup(title: "Group 3") {
+          label("Action 1")
+          label("Action 2")
+          label("Action 3")
+        }
+      }
+    }
+  }
+}

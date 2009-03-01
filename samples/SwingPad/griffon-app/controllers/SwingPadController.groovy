@@ -117,7 +117,7 @@ class SwingPadController {
          def dot = filename.lastIndexOf(".")
          def ext = "png"
          if( dot > 0 )  {
-            ext = filename[dot+1..-1] 
+            ext = filename[dot+1..-1]
          } else {
             filename += ".$ext"
          }
@@ -142,8 +142,8 @@ class SwingPadController {
    // TODO yet unconnected!!
    def find = { evt = null -> FindReplaceUtility.showDialog() }
    def findNext = { evt = null -> FindReplaceUtility.FIND_ACTION.actionPerformed(evt) }
-   def findPrevious = { evt = null -> 
-      def reverseEvt = new ActionEvent( evt.source, evt.iD, 
+   def findPrevious = { evt = null ->
+      def reverseEvt = new ActionEvent( evt.source, evt.iD,
          evt.actionCommand, evt.when,
          ActionEvent.SHIFT_MASK) //reverse
       FindReplaceUtility.FIND_ACTION.actionPerformed(reverseEvt)
@@ -276,7 +276,7 @@ class SwingPadController {
     }
 
    def suggestNodeName = { evt = null ->
-      if( !model.content ) return 
+      if( !model.content ) return
 
       def editor = view.editor.textEditor
       def caret = editor.caretPosition
@@ -304,7 +304,7 @@ class SwingPadController {
          ]
          writeSuggestion()
       } else {
-         model.suggestion = [ 
+         model.suggestion = [
             start: caret,
             end: caret + target.size(),
             offset: target.size()
@@ -337,6 +337,12 @@ class SwingPadController {
    def toggleMacwidgetsBuilder = { evt = null ->
       doOutside {
          toggleBuilder(evt, "macwidgets", model.builders.macwidgets.type)
+      }
+   }
+
+   def toggleSwingxtrasBuilder = { evt = null ->
+      doOutside {
+         toggleBuilder(evt, "swingxtras", model.builders.swingxtras.type)
       }
    }
 

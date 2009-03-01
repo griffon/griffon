@@ -243,6 +243,14 @@ actions {
       shortDescription: "Enable MacWidgetsBuilder"
    )
 
+   action(id: 'swingxtrasAction',
+      name: 'Swingxtras',
+      mnemonic: 'X',
+      closure: controller.toggleSwingxtrasBuilder,
+      smallIcon: imageIcon(resource:"icons/plugin.png", class: SwingPadActions),
+      shortDescription: "Enable SwingxtrasBuilder"
+   )
+
    imageIcon(id: "verticalLayoutIcon", resource:"icons/application_tile_vertical.png", class: SwingPadActions)
    imageIcon(id: "horizontalLayoutIcon", resource:"icons/application_tile_horizontal.png", class: SwingPadActions)
 
