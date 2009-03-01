@@ -14,7 +14,9 @@
  */
 
 import groovy.beans.Bindable
+import ca.odell.glazedlists.EventList
 import ca.odell.glazedlists.BasicEventList
+import ca.odell.glazedlists.SortedList
 
 class SwingPadModel {
    @Bindable boolean dirty = false
@@ -43,4 +45,7 @@ class SwingPadModel {
 
    @Bindable Map suggestion = [:]
    List suggestions = new BasicEventList()
+
+   EventList nodes = new SortedList( new BasicEventList(),
+     {a, b -> a.title <=> b.title} as Comparator )
 }

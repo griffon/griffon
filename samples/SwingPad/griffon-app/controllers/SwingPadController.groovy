@@ -238,6 +238,15 @@ class SwingPadController {
       dialog.show()
    }
 
+   def showNodeList = { evt = null ->
+      if( !view.nodeListDialog.visible ) {
+         if( model.nodes.isEmpty() ){
+             populateFactorySet()
+         }
+         showDialog("nodeListDialog", false)
+      }
+   }
+
    def confirmRunInterrupt = { evt = null ->
       def rc = JOptionPane.showConfirmDialog( app.appFrames[0], "Attempt to interrupt script?",
             "SwingPad", JOptionPane.YES_NO_OPTION)
@@ -247,7 +256,7 @@ class SwingPadController {
    }
 
    // the folowing 4 actions taken from groovy.ui.Console
-    def addClasspathJar = { evt = null ->
+   def addClasspathJar = { evt = null ->
         def fc = new JFileChooser(currentClasspathJarDir)
         fc.fileSelectionMode = JFileChooser.FILES_ONLY
         fc.acceptAllFileFilterUsed = true
@@ -256,9 +265,9 @@ class SwingPadController {
             prefs.put('currentClasspathJarDir', currentClasspathJarDir.path)
             groovyClassLoader.addURL(fc.selectedFile.toURL())
         }
-    }
+   }
 
-    def addClasspathDir = { evt = null ->
+   def addClasspathDir = { evt = null ->
         def fc = new JFileChooser(currentClasspathDir)
         fc.fileSelectionMode = JFileChooser.DIRECTORIES_ONLY
         fc.acceptAllFileFilterUsed = true
@@ -267,13 +276,13 @@ class SwingPadController {
             prefs.put('currentClasspathDir', currentClasspathDir.path)
             groovyClassLoader.addURL(fc.selectedFile.toURL())
         }
-    }
+   }
 
-    def showToolbar = { evt = null ->
+   def showToolbar = { evt = null ->
         def showToolbar = evt.source.selected
         prefs.putBoolean('showToolbar', showToolbar)
         view.toolbar.visible = showToolbar
-    }
+   }
 
    def suggestNodeName = { evt = null ->
       if( !model.content ) return
@@ -474,20 +483,46 @@ class SwingPadController {
    }
 
    private populateFactorySet() {
-      // TODO filter factories coming from SwingXBuilder that have jxclassicSwing: on their name
       def ub = app.builders.Script
       factorySet.clear()
+      def groups = []
+
       ub.builderRegistration.each { ubr ->
          def builder = ubr.builder
          def oldProxy = builder.proxyBuilder
          try {
             builder.proxyBuilder = builder
             factorySet.addAll(ubr.builder.factories.keySet().sort().collect(){ (ubr.prefixString?:"")+it })
+            builder.getRegistrationGroups().each { group ->
+               def groupSet = builder.getRegistrationGroupItems(group)
+               if( group && groupSet ) {
+                  try{
+                     builder.getClass().getDeclaredMethod("register$group",[] as Class[])
+                     def builderName = builder.getClass().name
+                     builderName = builderName.substring(builderName.lastIndexOf('.')+1)
+                     groupSet.each { node ->
+                        groups << [
+                           builder: builderName,
+                           group: group,
+                           node: node
+                        ]
+                     }
+                  } catch( NoSuchMethodException nsme ) {
+                     // ignore
+                  }
+               }
+            }
          } finally {
             builder.proxyBuilder = oldProxy
          }
       }
       factorySet -= factorySet.grep{ it.startsWith("jxclassicSwing:") }
+
+      synchronized(model.nodes) {
+         model.nodes.clear()
+         Thread.sleep(200)
+         model.nodes.addAll(groups)
+      }
    }
 
    private toggleBuilder( evt, name, builder ) {
@@ -527,9 +562,9 @@ class SwingPadController {
          evt.source.selected = !evt.source.selected
          showAlert( "Enable $cname".toString(),
           "Couldn't enable $cname:\n\n$ex".toString())
-      } finally {
+      }/* finally {
          populateFactorySet()
-      }
+      }*/
       return model.builders[name].enabled
    }
 }

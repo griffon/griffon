@@ -43,6 +43,12 @@ actions {
       mnemonic: 'Q',
       accelerator: shortcut('Q'),
    )
+   action( id: 'nodesAction',
+      name: 'Node list',
+      closure: controller.showNodeList,
+      mnemonic: 'O',
+      accelerator: shortcut('shift O')
+   )
    action( id: 'aboutAction',
       name: 'About',
       closure: controller.about,

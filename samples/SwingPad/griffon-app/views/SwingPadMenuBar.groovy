@@ -113,6 +113,8 @@ menuBar( id: 'menuBar') {
        glue()
        menu(text: 'Help', mnemonic: 'H') {
            menuItem(aboutAction)
+           separator()
+           menuItem(nodesAction)
        }
    }
 }
