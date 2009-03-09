@@ -30,6 +30,13 @@ class GriffonApplicationHelper {
 
     static void prepare(IGriffonApplication app) {
         app.bindings.app = app
+
+        def startDir = System.getProperty("griffon.start.dir")
+        if( startDir && startDir.size() > 1 &&
+            startDir.startsWith('"') && startDir.endsWith('"') ) {
+            System.setProperty("griffon.start.dir", startDir[1..-2])
+        }
+
         app.initialize();
 
         app.config = new ConfigSlurper().parse(app.configClass)
