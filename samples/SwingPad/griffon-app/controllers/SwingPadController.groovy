@@ -1,5 +1,5 @@
 /*
- * Copyright 2007-2008 the original author or authors.
+ * Copyright 2007-2009 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -223,26 +223,23 @@ class SwingPadController {
    def runSampleScript = { evt = null ->
       if( model.currentSample ) {
          def builder = model.currentSample[0..-2].toLowerCase()
-         if( !model.builders[builder].enabled ) {
-            model.status = "Enabling ${model.builders[builder].type} ..."
-            view."${builder}Menu".selected = true
-            doOutside {
-               if(toggleBuilder([source:view."${builder}Menu"], builder, model.builders[builder].type)) {
-                  doLater {
-                     model.status = "Loading Script ..."
-                     view.editor.textEditor.text = model.samples[model.currentSample]
-                     view.editor.textEditor.caretPosition = 0
-                     view.runAction.enabled = true
-                     runScript(evt)
-                  }
-               }
-            }
-         } else {
+         def runIt = {
             model.status = "Loading Script ..."
             view.editor.textEditor.text = model.samples[model.currentSample]
             view.editor.textEditor.caretPosition = 0
             view.runAction.enabled = true
             runScript(evt)
+         }
+         if( !model.builders[builder].enabled ) {
+            model.status = "Enabling ${model.builders[builder].type} ..."
+            view."${builder}Menu".selected = true
+            doOutside {
+               if(toggleBuilder([source:view."${builder}Menu"], builder, model.builders[builder].type)) {
+                  doLater(runIt)
+               }
+            }
+         } else {
+            runIt()
          }
       }
    }
@@ -250,8 +247,15 @@ class SwingPadController {
    def about = { evt = null ->
       def pane = builder.optionPane()
        // work around GROOVY-1048
-      pane.setMessage('Welcome to SwingPad')
-      def dialog = pane.createDialog(app.appFrames[0], 'About SwingPad')
+      pane.setMessage("""Welcome to SwingPad.
+
+SwingPad is a scripting console for rendering Groovy SwingBuilder views,
+based on ideas pitched by Eitan Suez.
+
+Contains code from http://code.google.com/p/gturtle/, used with explicit 
+permission from Eitan.
+""".toString())
+      def dialog = pane.createDialog(app.appFrames[0], "About SwingPad")
       dialog.show()
    }
 
