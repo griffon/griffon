@@ -37,6 +37,11 @@ actions {
       smallIcon: imageIcon(resource:"icons/folder_page.png", class: Console),
       shortDescription: 'Open a Swing script'
    )
+   action( id: 'clearRecentScriptsAction',
+      name: 'Clear list',
+      closure: controller.clearRecentScripts,
+      shortDescription: "Clears this list"
+   )
    action( id: 'exitAction',
       name: 'Quit',
       closure: controller.exit,
@@ -47,7 +52,7 @@ actions {
       name: 'Node list',
       closure: controller.showNodeList,
       mnemonic: 'O',
-      accelerator: shortcut('shift O')
+      accelerator: shortcut('shift N')
    )
    action( id: 'aboutAction',
       name: 'About',
@@ -68,7 +73,8 @@ actions {
    action( id: 'saveAsAction',
       name: 'Save as...',
       enabled: bind {model.dirty},
-      closure: controller.saveAs
+      closure: controller.saveAs,
+      accelerator: shortcut('shift S')
    )
 
    action(id: 'undoAction',
@@ -175,7 +181,7 @@ actions {
 
    action(id: 'runAction',
       name: 'Run',
-      enabled: bind {model.dirty},
+      // enabled: bind {model.dirty},
       closure: controller.runScript,
       mnemonic: 'R',
       keyStroke: shortcut('ENTER'),

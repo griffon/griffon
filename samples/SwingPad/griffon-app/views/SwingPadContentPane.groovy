@@ -103,8 +103,8 @@ actions {
    container(inputArea, font:new Font("Monospaced", Font.PLAIN, 12), border:emptyBorder(4)) {
       action(runAction)
    }
-//    bean( runAction, enabled: bind { inputArea.text?.size() > 0 } )
-//    bean( suggestAction, enabled: bind { inputArea.text?.size() > 0 } )
+   bean( runAction, enabled: bind { inputArea.text?.size() > 0 } )
+   bean( suggestAction, enabled: bind { inputArea.text?.size() > 0 } )
 }
 
 inputArea.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(suggestAction.getValue("KeyStroke"), "codeSuggest")

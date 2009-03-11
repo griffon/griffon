@@ -45,6 +45,11 @@ class SwingPadController {
 
    void mvcGroupInit( Map args ) {
       groovyClassLoader = new GroovyClassLoader(this.class.classLoader)
+      def recentScriptsListSize = prefs.get("recentScripts.list.size","0") as int
+      (0..<recentScriptsListSize).each { i ->
+         def file = new File(prefs.get("recentScripts.${i}.file",""))
+         if( file.exists() ) model.addRecentScript(file,prefs)
+      }
    }
 
    def updateTitle = { ->
@@ -65,10 +70,16 @@ class SwingPadController {
    }
 
    def open = { evt = null ->
-      model.scriptFile = selectFilename()
-      if( !model.scriptFile ) return
+      def file = selectFilename()
+      if( !file ) return
+      openFile(file)
+   }
+
+   def openFile( File file ) {
       doOutside {
+         model.scriptFile = file
          def scriptText = model.scriptFile.readLines().join('\n')
+         model.addRecentScript(model.scriptFile,prefs)
          doLater {
             if( !scriptText ) return
             // need 2-way binding!
@@ -78,6 +89,11 @@ class SwingPadController {
             view.editor.textEditor.requestFocus()
          }
       }
+   }
+
+   def clearRecentScripts = { evt = null ->
+      model.recentScripts.clear()
+      prefs.put("recentScripts.list.size","0")
    }
 
    def save = { evt = null ->
@@ -91,6 +107,7 @@ class SwingPadController {
       model.scriptFile = selectFilename("Save")
       if( model.scriptFile ) {
          model.scriptFile.write(model.content)
+         model.addRecentScript(model.scriptFile,prefs)
          model.dirty = false
          return true
       }

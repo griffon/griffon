@@ -17,6 +17,7 @@ import groovy.beans.Bindable
 import ca.odell.glazedlists.EventList
 import ca.odell.glazedlists.BasicEventList
 import ca.odell.glazedlists.SortedList
+import java.util.prefs.Preferences
 
 class SwingPadModel {
    @Bindable boolean dirty = false
@@ -48,4 +49,22 @@ class SwingPadModel {
 
    EventList nodes = new SortedList( new BasicEventList(),
      {a, b -> a.title <=> b.title} as Comparator )
+
+   List recentScripts = new LinkedList()
+
+   public synchronized void addRecentScript( script, prefs ) {
+      def scriptCopy = recentScripts.find{ it.absolutePath == script.absolutePath }
+      if( scriptCopy ) {
+         recentScripts.remove(scriptCopy)
+      }
+      recentScripts.addFirst(script)
+      if( recentScripts.size() > 8 ) {
+         recentScripts.removeLast()
+      }
+
+      prefs.put("recentScripts.list.size",recentScripts.size().toString())
+      recentScripts.eachWithIndex { file, i ->
+         prefs.put("recentScripts.${i}.file",file.absolutePath)
+      }
+   }
 }

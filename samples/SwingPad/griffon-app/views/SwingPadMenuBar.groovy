@@ -14,6 +14,7 @@
  */
 
 import static griffon.util.GriffonApplicationUtils.*
+import javax.swing.event.PopupMenuListener
 
 def makeSampleScriptAction = { id, name ->
    actions {
@@ -30,10 +31,13 @@ def makeSampleScriptAction = { id, name ->
    return this."${id}Action"
 }
 
-menuBar( id: 'menuBar') {
+menuBar = menuBar {
    menu(text: 'File', mnemonic: 'F') {
        menuItem(newAction)
        menuItem(openAction)
+       menu("Open Recent...",
+         id: "openRecentMenu",
+         mnemonic: 'E')
        separator()
        menuItem(saveAction)
        menuItem(saveAsAction)
@@ -118,3 +122,24 @@ menuBar( id: 'menuBar') {
        }
    }
 }
+
+openRecentMenu.popupMenu.addPopupMenuListener([
+   popupMenuWillBecomeVisible: {
+     openRecentMenu.removeAll()
+     model.recentScripts.eachWithIndex { file, int i ->
+        openRecentMenu.add(action(
+           name: "${i+1}. ${file.name}".toString(),
+           mnemonic: 1+i,
+           closure: { controller.openFile(file) }
+        ))
+     }
+     if( model.recentScripts.size() ) {
+        openRecentMenu.add(separator())
+        openRecentMenu.add(clearRecentScriptsAction)
+     }
+   },
+   popupMenuWillBecomeInvisible: {/*empty*/},
+   popupMenuCanceled: {/*empty*/}
+] as PopupMenuListener)
+
+return menuBar
