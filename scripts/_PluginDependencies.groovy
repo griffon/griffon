@@ -217,6 +217,7 @@ target(loadPlugins:"Loads Griffon' plugins") {
 }
 
 target(updatePluginsList:"Updates the plug-in list from the remote plugin-list.xml") {
+    depends(configureProxy)
     try {
         println "Reading remote plug-in list ..."
         if(!pluginsListFile.exists())
