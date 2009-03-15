@@ -20,6 +20,7 @@
  * Time: 10:35:06 PM
  */
 
+import static griffon.util.GriffonApplicationUtils.isMacOSX
 
 includeTargets << griffonScript("Package")
 includeTargets << griffonScript("_PackagePlugins" )
@@ -63,6 +64,10 @@ target(runApp: "Runs the application from the command line") {
         javaOps << "-XX:maxPermSize=$config.griffon.memory.maxPermSize"
     }
     javaOps << "-Dgriffon.start.dir=\""+jardir.parentFile.absolutePath+"\""
+    if (isMacOSX) {
+        javaOps << "-Xdock:name=$griffonAppName"
+        javaOps << "-Xdock:icon=${jardir.absolutePath}/griffon-icon-48x48.png"
+    }
 
     // start the processess
     javaOps = javaOps.join(' ')
