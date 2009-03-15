@@ -216,7 +216,12 @@ class GriffonApplicationHelper {
         // try config specified first
         if (app.config.application?.frameClass) {
             try {
-                frame = getClass().getClassLoader().loadClass(app.config.application?.frameClass)
+                ClassLoader cl = getClass().getClassLoader();
+                if (cl) {
+                    frame = cl.loadClass(app.config.application.frameClass).newInstance()
+                } else {
+                    frame = Class.forName(app.config.application.frameClass).newInstance()
+                }
             } catch (Throwable t) {
                 // ignore
             }
