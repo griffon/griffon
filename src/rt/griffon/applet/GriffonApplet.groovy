@@ -27,11 +27,11 @@ import javax.swing.JApplet
  * Time: 12:47:33 PM
  */
 class GriffonApplet extends JApplet implements IGriffonApplication {
-
     Map models      = [:]
     Map views       = [:]
     Map controllers = [:]
     Map builders    = [:]
+    Map groups      = [:]
 
     Binding bindings = new Binding()
     ConfigObject config

@@ -19,6 +19,7 @@ import griffon.builder.UberBuilder
 import java.awt.Toolkit
 import javax.swing.JFrame
 import javax.swing.SwingUtilities
+import org.codehaus.groovy.runtime.InvokerHelper
 
 /**
  * Created by IntelliJ IDEA.
@@ -108,21 +109,6 @@ class GriffonApplicationHelper {
         }
     }
 
-    private static Class loadMVCClass(String mvcName, String className, IGriffonApplication app) {
-        ClassLoader classLoader = app.getClass().classLoader
-
-        Class klass = classLoader.loadClass(app.config.mvcGroups[mvcName][className]);
-
-        // inject defaults into emc
-        // this also insures EMC metaclasses later
-        klass.metaClass.app = app
-        klass.metaClass.createMVCGroup = {Object... args ->
-            GriffonApplicationHelper.createMVCGroup(app, *args)
-        }
-        klass.metaClass.destroyMVCGroup = GriffonApplicationHelper.&destroyMVCGroup.curry(app)
-        klass.metaClass.newInstance = GriffonApplicationHelper.&newInstance.curry(app)
-        return klass
-    }
 
     public static Object newInstance(IGriffonApplication app, Class klass, String type) {
         def instance = klass.newInstance()
@@ -147,48 +133,99 @@ class GriffonApplicationHelper {
             throw new RuntimeException("Unknown MVC type \"$mvcType\".  Known types are ${app.config.mvcGroups.keySet()}")
         }
 
-        Class modelKlass = loadMVCClass(mvcType, "model", app)
-        Class viewKlass = loadMVCClass(mvcType, "view", app)
-        Class controllerKlass = loadMVCClass(mvcType, "controller", app)
 
-        UberBuilder builder = CompositeBuilderHelper.createBuilder(app,
-            [model:modelKlass, view:viewKlass, controller:controllerKlass])
-        bindArgs.each {k, v -> builder.setVariable k, v }
+        // figure out what the classes are and prep the metaclass
+        def klassMap = [:]
+        ClassLoader classLoader = app.getClass().classLoader
+        app.config.mvcGroups[mvcType].each {k, v ->
+            Class klass = classLoader.loadClass(v);
 
-        def model = newInstance(app,modelKlass,"Model")
-        def view = newInstance(app,viewKlass,"View")
-        view.binding = builder
-        def controller = newInstance(app,controllerKlass,"Controller")
-        app.addApplicationEventListener(controller)
-
-        app.models[mvcName] = model
-        app.views[mvcName] = view
-        app.controllers[mvcName] = controller
-        app.builders[mvcName] = builder
-
-        [model, view, controller, builder].each {
-            // if the property doesn't exist, safeSet is a no-op
-            safeSet(it, "model",      model)
-            safeSet(it, "view",       view)
-            safeSet(it, "controller", controller)
-            safeSet(it, "builder",    builder)
+            // inject defaults into emc
+            // this also insures EMC metaclasses later
+            klass.metaClass.app = app
+            klass.metaClass.createMVCGroup = {Object... args ->
+                GriffonApplicationHelper.createMVCGroup(app, *args)
+            }
+            klass.metaClass.destroyMVCGroup = GriffonApplicationHelper.&destroyMVCGroup.curry(app)
+            klass.metaClass.newInstance = GriffonApplicationHelper.&newInstance.curry(app)
+            klassMap[k] = klass
         }
 
-        [model, view, controller].each {
-            try {
-                it.mvcGroupInit(bindArgs)
-            } catch (MissingMethodException mme) {
-                if (mme.method != 'mvcGroupInit') {
-                    throw mme
+        // create the builder
+        UberBuilder builder = CompositeBuilderHelper.createBuilder(app, klassMap)
+        bindArgs.each {k, v -> builder.setVariable k, v }
+
+        // instantiate the parts
+        def instanceMap = [:]
+        klassMap.each {k, v ->
+            if (bindArgs.containsKey(k)) {
+                // use provided value, even if null
+                instanceMap[k] = bindArgs[k]
+            } else {
+                // otherwise create a new value
+                def instance = newInstance(app, v, k)
+                instanceMap[k] = instance
+
+                // all scripts get the builder as their binding
+                if (instance instanceof Script) {
+                    instance.binding = builder;
                 }
-                // MME on mvcGroupInit means they didn't define
-                // an init method.  This is not an error.
+            }
+        }
+        instanceMap.builder = builder
+        
+        // special case --
+        // controller gets applicaiton listeners
+        // addApplicationListener method is null safe
+        app.addApplicationEventListener(instanceMap.controller)
+
+        // mutually set each other to the available fields
+        instanceMap.each {k, v ->
+            if (v instanceof Script)  {
+                v.binding.variables.putAll(instanceMap)
+            } else {
+                InvokerHelper.setProperties(v, instanceMap)
             }
         }
 
-        builder.edt({builder.build(view) })
-        app.event("CreateMVCGroup",[mvcName, model, view, controller, mvcType])
-        return [model, view, controller]
+        // store the refs in the app caches
+        app.models[mvcName] = instanceMap.model
+        app.views[mvcName] = instanceMap.view
+        app.controllers[mvcName] = instanceMap.controller
+        app.builders[mvcName] = instanceMap.builder
+        app.groups[mvcName] = instanceMap
+
+        // initialize the classes and call scripts
+        instanceMap.each {k, v ->
+            if (k != 'builder') {
+                try {
+                    v.mvcGroupInit(bindArgs)
+                } catch (MissingMethodException mme) {
+                    if (mme.method != 'mvcGroupInit') {
+                        throw mme
+                    }
+                    // MME on mvcGroupInit means they didn't define
+                    // an init method.  This is not an error.
+                }
+            }
+        }
+
+        // call the scripts
+        instanceMap.each {k, v ->
+            if (v instanceof Script) {
+                // special case: view gets execed in the EDT always
+                if (k == 'view') {
+                    builder.edt({builder.build(v) })
+                } else {
+                    // non-view gets built in the builder
+                    // they casn switch into the EDT as desired
+                    builder.build(v)
+                }
+            } 
+        }
+
+        app.event("CreateMVCGroup",[mvcName, instanceMap.model, instanceMap.view, instanceMap.controller, mvcType, instanceMap])
+        return new ArrayList(instanceMap.values())
     }
 
     public static destroyMVCGroup(IGriffonApplication app, String mvcName) {

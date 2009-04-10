@@ -30,6 +30,7 @@ class SingleFrameApplication implements IGriffonApplication {
     Map views       = [:]
     Map controllers = [:]
     Map builders    = [:]
+    Map groups      = [:]
     List appFrames  = []
 
     Binding bindings = new Binding()

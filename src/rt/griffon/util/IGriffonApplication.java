@@ -49,6 +49,7 @@ public interface IGriffonApplication {
     public Map<String, ?> getViews();
     public Map<String, ?> getControllers();
     public Map<String, ?> getBuilders();
+    public Map<String, Map<String, ?>> getGroups();
 
     public Object createApplicationContainer();
 
