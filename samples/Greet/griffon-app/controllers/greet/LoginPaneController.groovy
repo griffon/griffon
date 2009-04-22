@@ -8,20 +8,6 @@ class LoginPaneController {
 	LoginPaneModel model
     LoginPaneView view
 
-    Action loginAction
-
-    void mvcGroupInit(Map args) {
-        loginAction = action(
-                name: 'Login',
-                enabled: bind {!model.loggingIn},
-                closure: this.&login
-            )
-
-        Preferences prefs = Preferences.userNodeForPackage(this.getClass()) 
-        model.loginUser = prefs.get("user", "");
-        model.serviceURL = prefs.get("serviceURL", "http://twitter.com")
-    }
-
     void login(evt) {
         edt { model.loggingIn = true }
         def username = model.loginUser
@@ -45,7 +31,7 @@ class LoginPaneController {
 
                     twitterService.getReplies()
                     twitterService.getTweets(username)
-                    def (userPaneModel, userPaneView, userPaneController) =
+                    def (userPaneModel, userPaneController, userPaneView) =
                         createMVCGroup('UserPane', "UserPane_$username",
                         [user:twitterService.userCache[username], closable:false]);
                     tabbedPane.addTab("@$username", userPaneView.userPane)

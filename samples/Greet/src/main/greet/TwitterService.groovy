@@ -343,7 +343,7 @@ class TwitterService {
     def loadImage(image) {
         // no-op for now
 //        if (!imageMap[image]) {
-//            Thread.start {imageMap[image] = new FixedSizeImageIcon(48, 48, new URL(image))}
+//            Thread.start {imageMap[image] = new DelayedImageIcon(48, 48, new URL(image))}
 //        }
     }
 

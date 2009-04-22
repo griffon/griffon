@@ -133,6 +133,9 @@ class GriffonApplicationHelper {
             throw new RuntimeException("Unknown MVC type \"$mvcType\".  Known types are ${app.config.mvcGroups.keySet()}")
         }
 
+        def argsCopy = [app:app, mvcType:mvcType, mvcName:mvcName]
+        argsCopy.putAll(bindArgs)
+
 
         // figure out what the classes are and prep the metaclass
         def klassMap = [:]
@@ -153,18 +156,19 @@ class GriffonApplicationHelper {
 
         // create the builder
         UberBuilder builder = CompositeBuilderHelper.createBuilder(app, klassMap)
-        bindArgs.each {k, v -> builder.setVariable k, v }
+        argsCopy.each {k, v -> builder.setVariable k, v }
 
         // instantiate the parts
         def instanceMap = [:]
         klassMap.each {k, v ->
-            if (bindArgs.containsKey(k)) {
+            if (argsCopy.containsKey(k)) {
                 // use provided value, even if null
-                instanceMap[k] = bindArgs[k]
+                instanceMap[k] = argsCopy[k]
             } else {
                 // otherwise create a new value
                 def instance = newInstance(app, v, k)
                 instanceMap[k] = instance
+                argsCopy[k] = instance
 
                 // all scripts get the builder as their binding
                 if (instance instanceof Script) {
@@ -197,21 +201,6 @@ class GriffonApplicationHelper {
 
         // initialize the classes and call scripts
         instanceMap.each {k, v ->
-            if (k != 'builder') {
-                try {
-                    v.mvcGroupInit(bindArgs)
-                } catch (MissingMethodException mme) {
-                    if (mme.method != 'mvcGroupInit') {
-                        throw mme
-                    }
-                    // MME on mvcGroupInit means they didn't define
-                    // an init method.  This is not an error.
-                }
-            }
-        }
-
-        // call the scripts
-        instanceMap.each {k, v ->
             if (v instanceof Script) {
                 // special case: view gets execed in the EDT always
                 if (k == 'view') {
@@ -221,7 +210,17 @@ class GriffonApplicationHelper {
                     // they casn switch into the EDT as desired
                     builder.build(v)
                 }
-            } 
+            } else if (k != 'builder') {
+                try {
+                    v.mvcGroupInit(argsCopy)
+                } catch (MissingMethodException mme) {
+                    if (mme.method != 'mvcGroupInit') {
+                        throw mme
+                    }
+                    // MME on mvcGroupInit means they didn't define
+                    // an init method.  This is not an error.
+                }
+            }
         }
 
         app.event("CreateMVCGroup",[mvcName, instanceMap.model, instanceMap.view, instanceMap.controller, mvcType, instanceMap])
@@ -257,6 +256,7 @@ class GriffonApplicationHelper {
                 if (cl) {
                     frame = cl.loadClass(app.config.application.frameClass).newInstance()
                 } else {
+                    frame = Class.forName(app.config.application.frameClass).newInstance()
                     frame = Class.forName(app.config.application.frameClass).newInstance()
                 }
             } catch (Throwable t) {

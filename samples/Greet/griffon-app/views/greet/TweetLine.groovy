@@ -40,7 +40,7 @@ tweetText = "<a href='http://twitter.com/${tweetUser.screen_name}'><b>${tweetUse
 panel(new RoundedPanel(foreground: java.awt.Color.WHITE, opaque:true),
         name:tweet.id) {
     gridBagLayout()
-    label(icon:new FixedSizeImageIcon(48, 48, new URL(tweetUser.profile_image_url as String)),
+    label(icon:new DelayedImageIcon(48, 48, new URL(tweetUser.profile_image_url as String)),
         verticalTextPosition:SwingConstants.BOTTOM,
         horizontalTextPosition:SwingConstants.CENTER,
         anchor: NORTH, insets: [6, 6, 6, 3])

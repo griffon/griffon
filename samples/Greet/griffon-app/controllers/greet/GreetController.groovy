@@ -20,65 +20,49 @@ class GreetController {
 
     TwitterService twitterService
 
-    Action refreshTweetsAction
-    Action tweetAction
-
     Timer refreshTimer
     long nextTimelineUpdate
     long nextRepliesUpdate
 
     void mvcGroupInit(Map args) {
-        refreshTweetsAction = action(
-                name: 'Refresh',
-                enabled: bind {!model.refreshing},
-                closure: this.&refreshTweets
-            )
-        tweetAction = action(
-                name: 'Tweet',
-                enabled: bind {!model.tweeting},
-                closure: this.&tweet
-            )
-
         def (loginPaneModel, loginPaneView, loginPaneController) =
             createMVCGroup('LoginPane', 'LoginPane', [:]);
         view.loginPanel = loginPaneView.loginPanel
 
-        refreshTimer = new Timer(120000, refreshTweetsAction)
+        refreshTimer = new Timer(120000, args.actions.refreshTweetsAction)
     }
 
     void refreshTweets(evt) {
         edt { refreshTimer.stop() }
 
-
-        long time = System.currentTimeMillis()
-        boolean forceRefresh = !(evt.source instanceof Timer)
-
-        // friends timeline
-        if (forceRefresh
-            || (time > nextTimelineUpdate)
-        ) {
-            def lastID = friendsTimelineModel.tweets.collect { it as long }.max() ?: '0'
-            def newTweets = twitterService.getFriendsTimeline(lastID as String, lastID == '0' ? 100 : 200).collect {it.id}
-            def cachedIDs = twitterService.tweetCache.keySet()
-            newTweets.addAll(friendsTimelineModel.tweets.findAll { cachedIDs.contains(it) })
-            friendsTimelineModel.tweets = newTweets
-            nextTimelineUpdate = time + 120000 // 2 minutes
-        }
-
-        // replies
-        //DMs from/to
-        if (forceRefresh
-            || (time > nextRepliesUpdate)
-        ) {
-            twitterService.getReplies()
-            twitterService.getDirectMessages()
-            twitterService.getDirectMessagesSent()
-            nextRepliesUpdate = time + 360000 // 6 minutes
-        }
-
-
         doOutside {
             try {
+                long time = System.currentTimeMillis()
+                boolean forceRefresh = !(evt.source instanceof Timer)
+
+                // friends timeline
+                if (forceRefresh
+                    || (time > nextTimelineUpdate)
+                ) {
+                    def lastID = friendsTimelineModel.tweets.collect { it as long }.max() ?: '0'
+                    def newTweets = twitterService.getFriendsTimeline(lastID as String, lastID == '0' ? 100 : 200).collect {it.id}
+                    def cachedIDs = twitterService.tweetCache.keySet()
+                    newTweets.addAll(friendsTimelineModel.tweets.findAll { cachedIDs.contains(it) })
+                    friendsTimelineModel.tweets = newTweets
+                    nextTimelineUpdate = time + 120000 // 2 minutes
+                }
+
+                // replies
+                //DMs from/to
+                if (forceRefresh
+                    || (time > nextRepliesUpdate)
+                ) {
+                    twitterService.getReplies()
+                    twitterService.getDirectMessages()
+                    twitterService.getDirectMessagesSent()
+                    nextRepliesUpdate = time + 360000 // 6 minutes
+                }
+
                 timelinePaneControllerQueue.each { it.updateTimeline(evt) }
             } finally {
                 edt {
@@ -152,7 +136,7 @@ class GreetController {
                 twitterService.getUser(username)
                 twitterService.getTweets(username)
                 edt {
-                    def (userPaneModel, userPaneView, userPaneController) =
+                    def (userPaneModel, userPaneController, userPaneView) =
                         createMVCGroup('UserPane', mvcName,
                         [user:twitterService.userCache[username], closable:true]);
 

@@ -12,6 +12,7 @@ mvcGroups {
     // MVC Group for "LoginPane"
     LoginPane {
         model = 'greet.LoginPaneModel'
+        actions = 'greet.LoginPaneActions'
         view = 'greet.LoginPaneView'
         controller = 'greet.LoginPaneController'
     }
@@ -19,8 +20,8 @@ mvcGroups {
     // MVC Group for "UserPane"
     UserPane {
         model = 'greet.UserPaneModel'
-        view = 'greet.UserPaneView'
         controller = 'greet.UserPaneController'
+        view = 'greet.UserPaneView'
     }
 
     // MVC Group for "TimelinePane"
@@ -33,8 +34,9 @@ mvcGroups {
     // MVC Group for "Greet"
     Greet {
         model = 'greet.GreetModel'
-        view = 'greet.GreetView'
+        actions = 'greet.GreetActions'
         controller = 'greet.GreetController'
+        view = 'greet.GreetView'
     }
 
 }

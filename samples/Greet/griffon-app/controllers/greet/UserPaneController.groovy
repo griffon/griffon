@@ -30,16 +30,6 @@ class UserPaneController {
             tweets.sort( {a, b-> b.created_at <=> a.created_at}).collect { it.id }
         }
 
-        view.closable = args.closable
-        model.user = args.user
-        model.screenName = model.user.screen_name
-        model.following = twitterService.currentUserFollows(args.user.id)
-        model.follows = twitterService.follows(args.user.id, twitterService.authenticatedUser.id)
-
-        // fixme add after init?
-        model.addPropertyChangeListener("showTweets", this.&updateTimeline as PropertyChangeListener)
-        model.addPropertyChangeListener("showReplies", this.&updateTimeline as PropertyChangeListener)
-        model.addPropertyChangeListener("showDirectMessages", this.&updateTimeline as PropertyChangeListener)
         view.timelinePane = timelinePaneView.timeline
     }
 

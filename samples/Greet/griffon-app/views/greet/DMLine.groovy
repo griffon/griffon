@@ -42,7 +42,7 @@ dmText = "<a href='http://twitter.com/${dmUser.screen_name}'><b>${dmUser.screen_
 panel(new RoundedPanel(foreground: java.awt.Color.LIGHT_GRAY, opaque:true),
         name:dm.id) {
     gridBagLayout()
-    label(icon:new FixedSizeImageIcon(48, 48, new URL(dmUser.profile_image_url as String)),
+    label(icon:new DelayedImageIcon(48, 48, new URL(dmUser.profile_image_url as String)),
         verticalTextPosition:SwingConstants.BOTTOM,
         horizontalTextPosition:SwingConstants.CENTER,
         anchor: NORTH, insets: [6, 6, 6, 3])
