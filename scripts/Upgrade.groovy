@@ -162,20 +162,54 @@ target(upgrade: "Upgrades a Griffon application from a previous version of Griff
             entry(key: "app.griffon.version", value: "$griffonVersion")
         }
     }
+
+    // Unpack the shared files into a temporary directory, and then
+    // copy over the IDE files.
+    def tmpDir = new File("${basedir}/tmp-upgrade")
+    griffonUnpack(dest: tmpDir.path, src: "griffon-app-files.jar")
+    // copy new icons to griffon-app/conf/webstart
+    // copy new icons to griffon-app/resources
+    copy(todir: "${basedir}") {
+        fileset(dir: tmpDir.path, includes: "**/*.png")
+    }
+    delete(dir: tmpDir.path)
+
+    // ensure a href= is in the applicaiton
     // ensure all .jnlp files have a memory hook, unlessa already tweaked
     // ensure all .jnlp files support remote jnlps
+    // add splash to jnlps
+    // set icons for jnlps
     fileset(dir:"${basedir}/griffon-app/conf/", includes:"**/*.jnlp").each {
         def fileText = it.getFile().getText()
         ant.replace(file: it.toString()) {
+            if (!fileText.contains('href="@jnlpFileName@"')) {
+                replacefilter(token: 'codebase=', value: 'href="@jnlpFileName@" codebase=')
+            }
             replacefilter(token: '<j2se version="1.5+"/>', value: '<j2se version="1.5+" @memoryOptions@/>')
+            replacefilter(token: '<!--<icon href="http://example.com/icon.gif" kind="splash" width="" height=""/>-->',
+                          value: '<icon href="griffon.png" kind="splash" width="381" height="123"/>')
+            replacefilter(token: '<!--<icon href="http://example.com/icon.gif" kind="default" width="" height=""/>-->',
+                          value: '<icon href="griffon-icon-48x48.png" kind="default" width="48" height="48"/>')
+            replacefilter(token: '<!--<icon href="http://example.com/icon.gif" kind="shortcut" width="16" height="16"/>-->',
+                          value: '<icon href="griffon-icon-16x16.png" kind="shortcut" width="16" height="16"/>')
+            replacefilter(token: '<!--<icon href="http://example.com/icon.gif" kind="shortcut" width="32" height="32"/>-->',
+                          value: '<icon href="griffon-icon-32x32.png" kind="shortcut" width="32" height="32"/>')
             if (!fileText.contains('@jnlpExtensions@')) {
             	replacefilter(token: '</resources>', value: '@jnlpExtensions@ \n</resources>')
             }
         }
     }
-    
 
-// proceed plugin-specific upgrade logic contained in 'scripts/_Upgrade.groovy' under plugin's root
+    // update the icons in the html
+    fileset(dir:"${basedir}/griffon-app/conf/", includes:"**/*.html").each {
+        def fileText = it.getFile().getText()
+        ant.replace(file: it.toString()) {
+            replacefilter(token: "image:'griffon.jpeg'", value: "image:'griffon.png'")
+        }
+    }
+
+
+    // proceed plugin-specific upgrade logic contained in 'scripts/_Upgrade.groovy' under plugin's root
     def plugins = GriffonPluginUtils.getPluginBaseDirectories(pluginsHome)
     if (plugins) {
         for (pluginDir in plugins) {
