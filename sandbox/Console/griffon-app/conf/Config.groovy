@@ -84,3 +84,11 @@ griffon {
     }
 }
 
+
+// The following properties have been added by the Upgrade process...
+griffon.extensions.jarUrls = [] // remote jars were not possible in Griffon 0.1
+griffon.extensions.jnlpUrls = [] // remote jars were not possible in Griffon 0.1
+// you may now tweak memory parameters
+//griffon.memory.min='16m'
+//griffon.memory.max='64m'
+//griffon.memory.maxPermSize='64m'
