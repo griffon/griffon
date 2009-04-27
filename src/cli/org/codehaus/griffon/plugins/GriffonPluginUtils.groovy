@@ -170,9 +170,6 @@ public class GriffonPluginUtils {
     /**
      * Obtains a Resource array of the Plugin metadata XML files used to describe the plugins provided resources
      */
-    static Resource[] getPluginXmlMetadata(String pluginsDirPath) {
-        return getPluginXmlMetadata(pluginsDirPath, DEFAULT_RESOURCE_RESOLVER)
-    }
     static synchronized Resource[] getPluginXmlMetadata( String pluginsDirPath,
                                             Closure resourceResolver = DEFAULT_RESOURCE_RESOLVER) {
         if(!allPluginXmlMetadata) {
