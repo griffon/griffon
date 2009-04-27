@@ -7,6 +7,6 @@
   iconImages: [imageIcon('/griffon-icon-48x48.png').image,
                imageIcon('/griffon-icon-32x32.png').image,
                imageIcon('/griffon-icon-16x16.png').image]
-  ) {
+) {
     // add content here
     label('Content Goes Here') // deleteme

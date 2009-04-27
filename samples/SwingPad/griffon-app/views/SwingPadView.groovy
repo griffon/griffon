@@ -21,7 +21,10 @@ import org.jdesktop.swingx.plaf.basic.BasicStatusBarUI
 build(SwingPadActions)
 
 application( title: "SwingPad", size: [800,600], locationByPlatform: true,
-             iconImage: imageIcon("/groovy/ui/ConsoleIcon.png").image ) {
+             iconImage: imageIcon('/griffon-icon-16x16.png').image,
+             iconImages: [imageIcon('/griffon-icon-48x48.png').image,
+                          imageIcon('/griffon-icon-32x32.png').image,
+                          imageIcon('/griffon-icon-16x16.png').image]) {
    menuBar( build(SwingPadMenuBar) )
    toolBar( build(SwingPadToolBar) )
    menuBar( build(SwingPadMenuBar) )

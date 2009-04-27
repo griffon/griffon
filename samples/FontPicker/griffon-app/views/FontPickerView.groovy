@@ -14,7 +14,15 @@
  * limitations under the License.
  */
 import net.miginfocom.swing.MigLayout 
-application(title:'FontPicker', size:[850,480], locationByPlatform:true, layout:new MigLayout()) {
+application(title:'FontPicker',
+  size:[850,480],
+  //location:[50,50],
+  iconImage: imageIcon('/griffon-icon-16x16.png').image,
+  iconImages: [imageIcon('/griffon-icon-48x48.png').image,
+               imageIcon('/griffon-icon-32x32.png').image,
+               imageIcon('/griffon-icon-16x16.png').image],
+  layout:new MigLayout()
+) {
     scrollPane (constraints:'w 100%'){
         panel(id:'pane', layout:new MigLayout())
     }
