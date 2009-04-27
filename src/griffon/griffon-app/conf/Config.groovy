@@ -92,4 +92,3 @@ griffon {
         html = 'applet.html'
     }
 }
-

@@ -58,7 +58,7 @@ target(console:"The console implementation target") {
 //        // Start the monitor thread.
 //        monitorApp()
 //        //while(true) { sleep(Long.MAX_VALUE) }
-        while(Console.consoleControllers) { sleep(3500) }
+        while(console.consoleControllers) { sleep(3500) }
     } catch (Exception e) {
         event("StatusFinal", ["Error starting console: ${e.message}"])
     }

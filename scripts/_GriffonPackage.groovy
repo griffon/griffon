@@ -373,7 +373,6 @@ target(generateJNLP:"Generates the JNLP File") {
 
     jnlpJars = []
 	jnlpUrls = []
-	jnlpAppletUrls = []
 	jnlpExtensions = []
     appletJars = []
 	remoteJars = []
@@ -390,12 +389,8 @@ target(generateJNLP:"Generates the JNLP File") {
 		appletJars << it
 	}
 	if (config.griffon.extensions?.jnlpUrls.size() > 0) {
-		jnlpAppletUrls << "<param name='jnlpNumExtensions' value='${config.griffon.extensions?.jnlpUrls.size()}'>"
-		count = 1
 		config.griffon.extensions?.jnlpUrls.each {
-			jnlpAppletUrls << "<param name='jnlpExtension"+count + "' value='$it'>"
 			jnlpExtensions << "<extension href='$it' />"
-			count++
 		}
 	}
     new File(jardir).eachFileMatch(~/.*\.jar/) { f ->
