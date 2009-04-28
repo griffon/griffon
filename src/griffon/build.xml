@@ -5,13 +5,13 @@
     </condition>
     <property name="griffon" value="griffon" />
 
-	<!-- ================================= 
+    <!-- ================================= 
           target: clean              
          ================================= -->
     <target name="clean" description="--> Cleans a Griffon application">
-		<exec executable="${griffon}" failonerror="true">
-			<arg value="clean"/>
-		</exec>                               
+        <exec executable="${griffon}" failonerror="true">
+            <arg value="clean"/>
+        </exec>                               
     </target>
 
     <!-- =================================
@@ -20,6 +20,33 @@
     <target name="package" description="--> Packages up Griffon artifacts">
         <exec executable="${griffon}" failonerror="true">
             <arg value="package"/>
+        </exec>
+    </target>
+
+    <!-- =================================
+          target: run-app
+         ================================= -->
+    <target name="run-app" description="--> Run a Griffon application in standalone mode">
+        <exec executable="${griffon}" failonerror="true">
+            <arg value="run-app"/>
+        </exec>
+    </target>
+
+    <!-- =================================
+          target: run-webstart
+         ================================= -->
+    <target name="run-webstart" description="--> Run a Griffon application in webstart mode">
+        <exec executable="${griffon}" failonerror="true">
+            <arg value="run-webstart"/>
+        </exec>
+    </target>
+
+    <!-- =================================
+          target: run-applet
+         ================================= -->
+    <target name="run-applet" description="--> Run a Griffon application in applet mode">
+        <exec executable="${griffon}" failonerror="true">
+            <arg value="run-applet"/>
         </exec>
     </target>
 
