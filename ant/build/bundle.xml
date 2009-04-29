@@ -210,6 +210,7 @@
         <unzip src="${griffon.dist}/${griffon.dist.binary}.zip" dest="${env.GRIFFON_HOME}">
             <mapper type="regexp" from="griffon-${griffon.version}/(.*)" to="\1"/>
         </unzip>
+        <chmod dir="${env.GRIFFON_HOME}" excludes="*.bat" perm="ugo+x"/>
     </target>
 
 
