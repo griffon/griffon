@@ -40,7 +40,7 @@ target(runApp: "Runs the application from the command line") {
         javaVM = [System.properties['java.home'], 'bin', 'java'].join(File.separator)
     }
 
-    def javaOps = []
+    def javaOpts = []
     if (argsMap.containsKey('debug')) {
         def portNum = argsMap.debugPort?:'18290'  //default is 'Gr' in ASCII
         def addr = argsMap.debugAddr?:'127.0.0.1'  //default is 'Gr' in ASCII
@@ -52,26 +52,29 @@ target(runApp: "Runs the application from the command line") {
                 debugSocket = ",address=$addr:$portNum"
             }
         }
-        javaOps << "-Xrunjdwp:transport=dt_socket$debugSocket,suspend=n,server=y"
+        javaOpts << "-Xrunjdwp:transport=dt_socket$debugSocket,suspend=n,server=y"
     }
     if (config.griffon.memory?.min) {
-        javaOps << "-Xms$config.griffon.memory.min"
+        javaOpts << "-Xms$config.griffon.memory.min"
     }
     if (config.griffon.memory?.max) {
-        javaOps << "-Xmx$config.griffon.memory.max"
+        javaOpts << "-Xmx$config.griffon.memory.max"
     }
     if (config.griffon.memory?.maxPermSize) {
-        javaOps << "-XX:maxPermSize=$config.griffon.memory.maxPermSize"
+        javaOpts << "-XX:maxPermSize=$config.griffon.memory.maxPermSize"
     }
-    javaOps << "-Dgriffon.start.dir=\""+jardir.parentFile.absolutePath+"\""
+    javaOpts << "-Dgriffon.start.dir=\""+jardir.parentFile.absolutePath+"\""
     if (isMacOSX) {
-        javaOps << "-Xdock:name=$griffonAppName"
-        javaOps << "-Xdock:icon=${jardir.absolutePath}/griffon-icon-48x48.png"
+        javaOpts << "-Xdock:name=$griffonAppName"
+        javaOpts << "-Xdock:icon=${jardir.absolutePath}/griffon-icon-48x48.png"
+    }
+    if (config.griffon.app?.javaOpts) {
+      config.griffon.app?.javaOpts.each { javaOpts << it }
     }
 
     // start the processess
-    javaOps = javaOps.join(' ')
-    Process p = "$javaVM -classpath ${runtimeJars.collect {f -> f.name}.join(File.pathSeparator)} $proxySettings $javaOps griffon.application.SingleFrameApplication".execute(null as String[], jardir)
+    javaOpts = javaOpts.join(' ')
+    Process p = "$javaVM -classpath ${runtimeJars.collect {f -> f.name}.join(File.pathSeparator)} $proxySettings $javaOpts griffon.application.SingleFrameApplication".execute(null as String[], jardir)
 
     // pipe the output
     p.consumeProcessOutput(System.out, System.err)
