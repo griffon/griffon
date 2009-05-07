@@ -25,7 +25,7 @@ import java.text.SimpleDateFormat
  */
 class TwitterService {
 
-    static final DateFormat twitterFormat = new SimpleDateFormat("EEE MMM dd hh:mm:ss Z yyyy")
+    static final DateFormat twitterFormat = new SimpleDateFormat("EEE MMM dd HH:mm:ss Z yyyy")
 
     Map tweetCache = new CacheMap(500)
     Map dmCache = new CacheMap(50)
