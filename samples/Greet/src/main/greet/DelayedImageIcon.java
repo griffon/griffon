@@ -24,8 +24,6 @@ public class DelayedImageIcon implements Icon {
     Image image;
     int imageID;
 
-    
-
     public DelayedImageIcon(int h, int w, URL url) {
         this.w = w;
         this.h = h;
@@ -36,7 +34,7 @@ public class DelayedImageIcon implements Icon {
     public void paintIcon(final Component c, Graphics g, int x, int y) {
         int status;
         final int localImageID = imageID;
-        if (localImageID  > 0) {
+        if (localImageID > 0) {
             switch (status = tracker.statusID(localImageID, true)) {
                 case MediaTracker.ERRORED:
                 case MediaTracker.ABORTED:
@@ -80,8 +78,8 @@ public class DelayedImageIcon implements Icon {
             g.drawRect(x+1, y+1, w-2, h-2);
             g.setColor(oldC);
         } else {
-            g.drawImage(image, x, y, component);
-            }
+            g.drawImage(image, x, y, w, h, component);
+        }
 
     }
 
