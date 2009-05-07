@@ -16,8 +16,8 @@
 import net.miginfocom.swing.MigLayout 
 application(title:'FontPicker',
   size:[850,480],
-  //location:[50,50],
-  iconImage: imageIcon('/griffon-icon-16x16.png').image,
+  locationByPlatform:true,
+  iconImage: imageIcon('/griffon-icon-48x48.png').image,
   iconImages: [imageIcon('/griffon-icon-48x48.png').image,
                imageIcon('/griffon-icon-32x32.png').image,
                imageIcon('/griffon-icon-16x16.png').image],
