@@ -155,6 +155,11 @@ target( packageApp : "Implementation of package target") {
 	}
     ant.copy(todir:resourcesDir) {
         fileset(dir:"${basedir}/griffon-app/resources", includes:"**/*.*")
+        fileset(dir:"${basedir}/src/main") {
+            include(name:"**/*")
+            exclude(name:"**/*.java")
+            exclude(name:"**/*.groovy")
+        }
     }
     ant.copy(todir:classesDirPath) {
 		fileset(dir:"${basedir}", includes:metadataFile.name)
