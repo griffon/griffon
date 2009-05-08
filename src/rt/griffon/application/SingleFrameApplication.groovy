@@ -20,6 +20,7 @@ import griffon.util.IGriffonApplication
 import griffon.util.EventRouter
 import java.awt.event.WindowEvent
 import griffon.util.GriffonExceptionHandler
+import java.awt.EventQueue
 
 /**
  *@author Danno.Ferrin
@@ -50,7 +51,7 @@ class SingleFrameApplication implements IGriffonApplication {
 
     public void show() {
         if (appFrames.size() > 0) {
-            appFrames[0].show()
+            EventQueue.invokeAndWait { appFrames[0].show() }
         }
 
         GriffonApplicationHelper.callReady(this)
