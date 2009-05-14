@@ -64,8 +64,5 @@ greetFrame = application(title:"Greet - A Groovy Twitter Client",
 // this is to get the tweet box to grow when we reach the end of the line
 bean(tweetBoxPane, minimumSize: bind(source:tweetBox.document, sourceEvent:'undoableEditHappened', sourceValue:{doLater {mainPanel.revalidate()}; tweetBoxPane.preferredSize}))
 
-// can't yet think of a clever way to do this...
-InputMap inputMap = tweetBox.inputMap
-ActionMap actionMap = tweetBox.actionMap
-inputMap.put(KeyStroke.getKeyStroke("ENTER"), "tweet")
-actionMap.put("tweet", tweetAction)
+//could still be more clever
+keyStrokeAction(component:tweetBox, keyStroke:"ENTER", action: controller.tweetAction)
