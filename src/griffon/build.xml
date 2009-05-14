@@ -1,71 +1,97 @@
 <project name="@griffon.project.key@" default="test">
 
-    <condition property="griffon" value="griffon.bat">
-        <os family="windows"/>
-    </condition>
-    <property name="griffon" value="griffon" />
-
-    <!-- ================================= 
-          target: clean              
+    <!-- =================================
+          target: clean
          ================================= -->
     <target name="clean" description="--> Cleans a Griffon application">
-        <exec executable="${griffon}" failonerror="true">
+        <griffon>
             <arg value="clean"/>
-        </exec>                               
+        </griffon>
     </target>
 
     <!-- =================================
           target: package
          ================================= -->
     <target name="package" description="--> Packages up Griffon artifacts">
-        <exec executable="${griffon}" failonerror="true">
+        <griffon>
             <arg value="package"/>
-        </exec>
+        </griffon>
     </target>
 
     <!-- =================================
           target: run-app
          ================================= -->
     <target name="run-app" description="--> Run a Griffon application in standalone mode">
-        <exec executable="${griffon}" failonerror="true">
+        <griffon>
             <arg value="run-app"/>
-        </exec>
+        </griffon>
+    </target>
+
+    <!-- =================================
+          target: debug-app
+         ================================= -->
+    <target name="debug-app" description="--> Run a Griffon application in standalone mode with debugging turned on">
+        <griffon>
+            <arg value="run-app"/>
+            <arg value="-debug"/>
+        </griffon>
     </target>
 
     <!-- =================================
           target: run-webstart
          ================================= -->
     <target name="run-webstart" description="--> Run a Griffon application in webstart mode">
-        <exec executable="${griffon}" failonerror="true">
+        <griffon>
             <arg value="run-webstart"/>
-        </exec>
+        </griffon>
     </target>
 
     <!-- =================================
           target: run-applet
          ================================= -->
     <target name="run-applet" description="--> Run a Griffon application in applet mode">
-        <exec executable="${griffon}" failonerror="true">
+        <griffon>
             <arg value="run-applet"/>
-        </exec>
+        </griffon>
     </target>
 
     <!-- =================================
           target: test
          ================================= -->
     <target name="test" description="--> Run a Griffon applications unit tests">
-        <exec executable="${griffon}" failonerror="true">
+        <griffon>
             <arg value="test-app"/>
-        </exec>
+        </griffon>
     </target>
 
     <!-- =================================
           target: dist
          ================================= -->
     <target name="dist" description="--> Packages up Griffon artifacts in the Production Environment">
-        <exec executable="${griffon}" failonerror="true">
+        <griffon>
             <arg value="prod"/>
             <arg value="package"/>
-        </exec>
+        </griffon>
     </target>
+
+    <!-- set up the griffon macro -->
+    <property environment="env"/>
+    <property name="griffon.home" value="${env.GRIFFON_HOME}"/>
+    <property name="jdk.home" value="${env.JAVA_HOME}"/>
+    <condition property="griffon" value="griffon.bat">
+        <os family="windows"/>
+    </condition>
+    <property name="griffon" value="griffon" />
+    <macrodef name="griffon">
+        <element name="griffon-args" implicit="yes"/>
+        <sequential>
+            <exec executable="${griffon.home}/bin/${griffon}" failonerror="true">
+                <env key="JAVA_HOME" value="${jdk.home}"/>
+                <env key="GRIFFON_HOME" value="${griffon.home}"/>
+                <griffon-args/>
+            </exec>
+        </sequential>
+    </macrodef>
+    <!-- end set up the griffon macro -->
+
 </project>
