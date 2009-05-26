@@ -20,13 +20,11 @@ import java.awt.Toolkit
 
 import java.awt.FlowLayout
 import static java.awt.BorderLayout.*
-import javax.swing.BorderFactory as BF
 import javax.swing.event.CaretListener
 import javax.swing.event.DocumentListener
 import java.awt.event.KeyEvent
 import javax.swing.KeyStroke
 import javax.swing.JComponent
-import javax.swing.JTabbedPane
 import javax.swing.ListSelectionModel
 import static javax.swing.JSplitPane.HORIZONTAL_SPLIT
 import ca.odell.glazedlists.swing.EventListModel

@@ -82,7 +82,7 @@ if( isWindowsVista ) {
             'AA_TEXT_PROPERTY_KEY')
         addAttributeDelegate { builder, node, attributes ->
             if( node instanceof JComponent ) {
-                node.putClientProperty(key, new Boolean(true))
+                node.putClientProperty(key, true)
             }
         }
     }
@@ -102,7 +102,7 @@ if( isWindowsVista ) {
                 'AA_TEXT_PROPERTY_KEY')
         addAttributeDelegate { builder, node, attributes ->
             if (node instanceof JComponent) {
-                node.putClientProperty(key, new Boolean(true))
+                node.putClientProperty(key, true)
             }
         }
     }

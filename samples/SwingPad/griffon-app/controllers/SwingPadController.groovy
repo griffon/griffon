@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  */
 
-import java.awt.Color
 import java.awt.Font
 import java.awt.Robot
 import java.awt.FlowLayout

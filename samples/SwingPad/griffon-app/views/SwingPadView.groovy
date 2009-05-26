@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  */
 
-import java.awt.BorderLayout as BL
 import java.awt.GridBagConstraints
 import javax.swing.SwingConstants
 import org.jdesktop.swingx.plaf.basic.BasicStatusBarUI
