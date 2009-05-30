@@ -71,13 +71,20 @@ $varName = new $klassName()
 """
             }
 
+            if( fields ) {
+               writer << "noparent {\n"
+            }
             fields.each {field ->
-                writer << """// $field.type.name $field.name declared in $field.declaringClass.name
-bean($varName.$field.name, id:'$field.name')
+                writer << """    // $field.type.name $field.name declared in $field.declaringClass.name
+    bean($varName.$field.name, id:'$field.name')
 
 """
             }
-
+            if( fields ) {
+               writer << """}
+return $varName
+"""
+            }
         }
 
     } catch (ClassNotFoundException cnfe) {
