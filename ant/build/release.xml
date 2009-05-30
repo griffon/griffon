@@ -31,6 +31,11 @@
         </antcall>
         <antcall target="copy-dir">
             <param name="dir.excludes" value=""/>
+            <param name="dir.location" value="bash"/>
+            <param name="dir.destination" value="${release.dir}/bash"/>
+        </antcall>
+        <antcall target="copy-dir">
+            <param name="dir.excludes" value=""/>
             <param name="dir.location" value="bin"/>
             <param name="dir.destination" value="${release.dir}/bin"/>
         </antcall>

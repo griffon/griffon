@@ -30,7 +30,7 @@
   <target name="prepare-installer-izpack">
       <property name="griffon.installer.izpack.dir" value="${griffon.target}/installer/izpack" />
       <taskdef name="izpack"
-               classpath="${basedir}/installer/izpack/lib/izpack-standalone-compiler-4.2.0.jar"
+               classpath="${basedir}/installer/izpack/lib/izpack-standalone-compiler-4.3.0.jar"
                classname="com.izforge.izpack.ant.IzPackTask"/>
 
       <mkdir dir="${griffon.installer.izpack.dir}" />
@@ -114,7 +114,11 @@
   </locale>
 
   <resources>
-    <res id="Heading.image" src="resources/groovy.png" />
+    <res id="Heading.image" src="resources/griffon-logo.png" />
+    <res id="groovy.logo" src="resources/groovy-logo.png" />
+    <res id="grails.logo" src="resources/grails-logo.png" />
+    <res id="griffon.logo" src="resources/griffon-logo.png" />
+    <res id="griffon.splash" src="resources/griffon-splash.png" />
     <res id="HTMLLicencePanel.licence" src="resources/asl2.html" />
 
     <!-- FIXME: parse=yes results in a blank panel -->
@@ -245,21 +249,21 @@
   <taskdef resource="ant_deb_task.properties" classpathref="deb"/>
 
   <target name="prepare-deb-bin" >
-		 <mkdir dir="${griffon.installer.deb.dir}/build/bin"/>
-        <unzip src="${griffon.dist}/${griffon.dist.binary}.zip" 
+        <mkdir dir="${griffon.installer.deb.dir}/build/bin"/>
+        <unzip src="${griffon.dist}/${griffon.dist.binary}.zip"
              dest="${griffon.installer.deb.dir}/build" />
 
-		<mkdir dir="${griffon.installer.deb.dir}" />
-		<mkdir dir="${griffon.installer.deb.dir}/build/griffon" />
+        <mkdir dir="${griffon.installer.deb.dir}" />
+        <mkdir dir="${griffon.installer.deb.dir}/build/griffon" />
         <mkdir dir="${griffon.installer.deb.dir}/build/tmp"/>
         <copy todir="${griffon.installer.deb.dir}/build/tmp">
             <fileset dir="${griffon.installer.deb.dir}/build/bin">
                 <exclude name="*.bat"/>
             </fileset>
         </copy>
-        
+
     </target>
-    
+
     <target name="create-installer-deb" depends="prepare-installer-deb, prepare-deb-bin" description="build the deb file">
         <mkdir dir="${griffon.installer.deb.dir}/dist"/>
         <deb
@@ -275,7 +279,7 @@
             <description synopsis="Grails-like framework for desktop Java applications">
 
  Griffon is a Grails like application framework for developing desktop applications in Groovy
- .
+
  Home page: http://griffon.codehaus.org/
 
             </description>
