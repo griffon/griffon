@@ -16,6 +16,7 @@
 package griffon.util
 
 import javax.swing.SwingUtilities
+import org.codehaus.groovy.runtime.MetaClassHelper
 
 class EventRouter {
    private List listeners = Collections.synchronizedList([])
@@ -86,14 +87,15 @@ class EventRouter {
          return
       }
 
-      def mm = instance.metaClass.getMetaMethod(eventHandler,params)
+      Class[] argTypes = MetaClassHelper.convertToTypeArray(params as Object[])
+      def mm = instance.metaClass.pickMethod(eventHandler,argTypes)
       if( mm ) {
          mm.invoke(instance,*params)
       }
    }
 
    /**
-    * Adds an ApplicationEvent listener.<br/>
+    * Adds an Event listener.<br/>
     *
     * A listener may be<ul>
     * <li>a <tt>Script</tt></li>
@@ -106,7 +108,7 @@ class EventRouter {
     * Some examples of eventHandler names are: onStartupStart, onMyCoolEvent.
     * Event names must follow the camelCase naming convention.
     */
-   public void addApplicationEventListener( listener ) {
+   public void addEventListener( listener ) {
       if( !listener || listener instanceof Closure ) return
       synchronized(listeners) {
          if( listeners.find{ it == listener } ) return
@@ -114,7 +116,7 @@ class EventRouter {
       }
    }
 
-   public void removeApplicationEventListener( listener ) {
+   public void removeEventListener( listener ) {
       if( !listener || listener instanceof Closure ) return
       synchronized(listeners) {
          listeners.remove(listener)
@@ -122,11 +124,11 @@ class EventRouter {
    }
 
    /**
-    * Adds a Closure as an ApplicationEvent listener.<br/>
+    * Adds a Closure as an Event listener.<br/>
     *
     * Event names must follow the camelCase naming convention.
     */
-   public void addApplicationEventListener( String eventName, Closure listener ) {
+   public void addEventListener( String eventName, Closure listener ) {
       if( !eventName || !listener ) return
       eventName = eventName[0].toUpperCase() + eventName[1..-1]
       synchronized(closureListeners) {
@@ -136,7 +138,7 @@ class EventRouter {
       }
    }
 
-   public void removeApplicationEventListener( String eventName, Closure listener ) {
+   public void removeEventListener( String eventName, Closure listener ) {
       if( !eventName || !listener ) return
       eventName = eventName[0].toUpperCase() + eventName[1..-1]
       synchronized(closureListeners) {

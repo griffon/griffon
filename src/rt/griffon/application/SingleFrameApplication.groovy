@@ -127,18 +127,18 @@ class SingleFrameApplication implements IGriffonApplication {
     }
 
     public void addApplicationEventListener( listener ) {
-       eventRouter.addApplicationEventListener(listener)
+       eventRouter.addEventListener(listener)
     }
 
     public void removeApplicationEventListener( listener ) {
-       eventRouter.removeApplicationEventListener(listener)
+       eventRouter.removeEventListener(listener)
     }
 
     public void addApplicationEventListener( String eventName, Closure listener ) {
-       eventRouter.addApplicationEventListener(eventName,listener)
+       eventRouter.addEventListener(eventName,listener)
     }
 
     public void removeApplicationEventListener( String eventName, Closure listener ) {
-       eventRouter.removeApplicationEventListener(eventName,listener)
+       eventRouter.removeEventListener(eventName,listener)
     }
 }
