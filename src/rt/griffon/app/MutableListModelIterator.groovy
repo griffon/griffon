@@ -1,5 +1,5 @@
 /*
- * Copyright 2008 the original author or authors.
+ * Copyright 2009 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,20 +15,29 @@
  */
 package griffon.app
 
+import javax.swing.ListModel
+
 /**
- * Created by IntelliJ IDEA.
- *@author Danno.Ferrin
- * Date: Sep 4, 2008
- * Time: 10:22:22 AM
+ *
+ * @author Andres.Almiray
  */
-class ApplicationBuilder extends FactoryBuilderSupport {
-    public ApplicationBuilder(boolean init = true) {
-        super(init)
-        // enhance Swing classes
-        SwingMetaMethods.enhanceAll()
+class MutableListModelIterator implements Iterator {
+    private final ListModel delegate
+    private int index = 0
+
+    MutableListModelIterator(ListModel model) {
+        delegate = model
     }
 
-    public void registerVisuals() {
-        registerFactory 'application', new ApplicationFactory()
+    public boolean hasNext() {
+        index > -1 && index < delegate.getSize()
+    }
+
+    public Object next() {
+        delegate.getElementAt(index++)
+    }
+
+    public void remove() {
+        if(hasNext()) delegate.removeElementAt(index--)
     }
 }
