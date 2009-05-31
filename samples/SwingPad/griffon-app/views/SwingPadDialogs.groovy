@@ -19,7 +19,10 @@ import ca.odell.glazedlists.gui.*
 import ca.odell.glazedlists.swing.*
 
 dialog(title: 'Groovy executing', id: 'runWaitDialog', modal: true,
-       iconImage: imageIcon("/groovy/ui/ConsoleIcon.png").image) {
+       iconImage: imageIcon('/griffon-icon-48x48.png').image,
+       iconImages: [imageIcon('/griffon-icon-48x48.png').image,
+                    imageIcon('/griffon-icon-32x32.png').image,
+                    imageIcon('/griffon-icon-16x16.png').image]) {
    vbox(border: emptyBorder(6)) {
        label(text: "Groovy is now executing. Please wait.", alignmentX: 0.5f)
        vstrut()
@@ -52,7 +55,10 @@ def createTableModel() {
 }
 
 dialog(title: 'Node List', id: 'nodeListDialog', modal: false, size: [460,600],
-       iconImage: imageIcon("/groovy/ui/ConsoleIcon.png").image) {
+       iconImage: imageIcon('/griffon-icon-48x48.png').image,
+       iconImages: [imageIcon('/griffon-icon-48x48.png').image,
+                    imageIcon('/griffon-icon-32x32.png').image,
+                    imageIcon('/griffon-icon-16x16.png').image]) {
     borderLayout()
     panel(constraints: NORTH) {
        borderLayout()

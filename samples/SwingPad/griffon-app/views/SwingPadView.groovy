@@ -26,7 +26,6 @@ application( title: "SwingPad", size: [800,600], locationByPlatform: true,
                           imageIcon('/griffon-icon-16x16.png').image]) {
    menuBar( build(SwingPadMenuBar) )
    toolBar( build(SwingPadToolBar) )
-   menuBar( build(SwingPadMenuBar) )
    widget( build(SwingPadContentPane) )
    jxstatusBar(id: 'statusPanel') {
       gridBagLayout()

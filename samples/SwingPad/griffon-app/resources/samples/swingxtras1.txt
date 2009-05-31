@@ -16,9 +16,10 @@ panel {
   jbannerPanel(constraints: context.SOUTH,
     title: "SwingxtrasBuilder Example",
     subtitle: "A brief example of SwingxtrasBuilder in action",
-    icon: imageIcon("/groovy/ui/ConsoleIcon.png", class: groovy.ui.Console),
+    icon: imageIcon("/griffon-icon-48x48.png"),
     border: blackBorder(),
-    preferredSize: [380,70]
+    background: Color.WHITE,
+    preferredSize: [380,80]
   )
 
   tabbedPane(constraints: context.CENTER,
@@ -38,7 +39,7 @@ panel {
           button("Balloontip with Modern style", id: "b4",
             mouseEntered:{ bt4.visible = true },
             mouseExited:{ bt4.visible = false })
-            
+
           balloonTip(b1, id: "bt1",
             text: "I'll hide myself in 5s",
             hideAfter: 5000,
@@ -74,12 +75,18 @@ panel {
         promptSupport(pf, prompt: "Prompt added to passwordField")
         textField(id: "tf2")
         promptSupport(tf2, prompt:"Type in an URL")
+        textField(id: "tf3")
+        promptSupport(tf3, prompt:"Griffon")
         noparent {
           label(icon: imageIcon("icons/rss.png", class: SwingPadController),
             id: "rssIcon")
+          label(icon: imageIcon("/griffon-icon-16x16.png"),
+            id: "griffonIcon")
         }
         buddySupport(tf2, position: "right",
           buddy: rssIcon)
+        buddySupport(tf3, position: "left",
+          buddy: griffonIcon)
       }
     }
 
@@ -99,7 +106,7 @@ panel {
         }
       }
     }
-    
+
     panel(title: "TaskPane") {
       jtaskPane(border: blackBorder(),preferredSize: [320,300]) {
         jtaskPaneGroup(title: "Group 1", special: true) {
