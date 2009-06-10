@@ -183,12 +183,14 @@ class GriffonApplicationHelper {
         // addApplicationListener method is null safe
         app.addApplicationEventListener(instanceMap.controller)
 
-        // mutually set each other to the available fields
+        // mutually set each other to the available fields and inject args
         instanceMap.each {k, v ->
+            // loop on the instance map to get just the instances
             if (v instanceof Script)  {
-                v.binding.variables.putAll(instanceMap)
+                v.binding.variables.putAll(argsCopy)
             } else {
-                InvokerHelper.setProperties(v, instanceMap)
+                // set the args and instances
+                InvokerHelper.setProperties(v, argsCopy)
             }
         }
 
