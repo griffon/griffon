@@ -13,7 +13,6 @@ mvcGroups {
     FilePanel {
         model = 'FilePanelModel'
         view = 'FilePanelView'
-        controller = 'FilePanelController'
     }
 
     // MVC Group for "FileViewer"

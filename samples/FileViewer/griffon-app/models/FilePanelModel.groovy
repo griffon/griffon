@@ -1,7 +1,7 @@
 import groovy.beans.Bindable
 
-class FilePanelModel {
-   @Bindable File loadedFile
-   @Bindable long lastModified
-   @Bindable String fileText
+@Bindable class FilePanelModel {
+   File loadedFile
+   long lastModified
+   String fileText
 }
