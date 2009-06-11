@@ -49,13 +49,16 @@
 		<delete>
 			<fileset dir="${griffon.dist}" includes="*"/>
 		</delete>
+        <echo file="${griffon.dist}/build.properties">griffon.version=${griffon.version}
+groovy.version=${groovy.version}</echo>
         <jar destfile="${griffon.dist}/griffon-cli-${griffon.version}.jar" manifest="${griffon.build.cli}/META-INF/MANIFEST.MF">
             <fileset dir="${griffon.build.cli}"/>
             <fileset dir="${griffon.build.rt}" includes="griffon/util/GriffonExceptionHandler.class"/>
-            <file file="${basedir}/build.properties"/>
+            <file file="${griffon.dist}/build.properties"/>
         </jar>
         <jar destfile="${griffon.dist}/griffon-rt-${griffon.version}.jar" manifest="${griffon.build.rt}/META-INF/MANIFEST.MF">
-              <fileset dir="${griffon.build.rt}"/>
+            <fileset dir="${griffon.build.rt}"/>
+            <file file="${griffon.dist}/build.properties"/>
         </jar>
         <!--<jar destfile="${griffon.dist}/griffon-test-${griffon.version}.jar" manifest="${griffon.build}/META-INF/MANIFEST.MF">-->
             <!--<fileset dir="${griffon.build}">-->
@@ -164,7 +167,7 @@
         <patternset id="files.pkg.minimal">
             <include name="${griffon.dist}/*.jar"/>
             <include name="${griffon.lib}/*.jar"/>
-            <include name="build.properties"/>
+            <include name="${griffon.dist}/build.properties"/>
             <include name="bin/**/*"/>
             <include name="conf/**/*"/>
             <include name="scripts/**/*"/>
@@ -195,6 +198,7 @@
     <target name="package" depends="clean,test,jar,javadoc" description="Create the release archives for Griffon.">
     	<delete failonerror="true">
 		    <fileset dir="${griffon.dist}">
+                <include name="properties"/>
                 <include name="*.zip"/>
                 <include name="*.tar.gz"/>
 		    </fileset>
