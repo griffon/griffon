@@ -57,7 +57,7 @@ class SwingMetaMethods {
        if( !AbstractSyntheticMetaMethods.hasBeenEnhanced(klass) ) {
             AbstractSyntheticMetaMethods.enhance(klass,[
                 size: {-> delegate.getComponentCount() },
-                getAt: { int i -> deleate.getComponent(i) },
+                getAt: { int i -> delegate.getComponent(i) },
                 leftShift: { java.awt.Component c -> delegate.add(c) },
                 iterator: {-> delegate.getComponents().iterator() },
                 clear: {-> delegate.removeAll() }
