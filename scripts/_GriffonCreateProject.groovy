@@ -98,6 +98,7 @@ target ( appName : "Evaluates the application name") {
 		ant.input(message:"Application name not specified. Please enter:",
 				  addProperty:"griffon.app.name")
 		griffonAppName = ant.antProject.properties."griffon.app.name"
+        argsMap["params"] << griffonAppName
 	}
 	else {
 		griffonAppName = argsMap["params"].join(" ")
