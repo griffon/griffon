@@ -113,14 +113,14 @@ menuBar = menuBar {
        }
    }
 
-   if( !isMacOSX ) {
+   //if( !isMacOSX ) {
        glue()
        menu(text: 'Help', mnemonic: 'H') {
            menuItem(aboutAction)
            separator()
            menuItem(nodesAction)
        }
-   }
+   //}
 }
 
 openRecentMenu.popupMenu.addPopupMenuListener([

@@ -27,8 +27,10 @@ class SwingPadModel {
    @Bindable String errors = ""
    @Bindable int caretPosition = 0
    @Bindable String currentTab = "sourceTab"
+   @Bindable String stylesheet = ""
 
    Map builders = [
+      css:        [ enabled: true,  loaded: true,  type: "griffon.builder.css.CSSBuilder"],
       swing:      [ enabled: true,  loaded: true,  type: "groovy.swing.SwingBuilder"],
       swingx:     [ enabled: true,  loaded: true,  type: "groovy.swing.SwingXBuilder"],
       jide:       [ enabled: true,  loaded: true,  type: "griffon.builder.jide.JideBuilder"],

@@ -38,9 +38,16 @@ emptyColumnHeader = label("")
 splitPane(id: 'splitPane', resizeWeight: 0.45f,
       orientation: HORIZONTAL_SPLIT ) {
    tabbedPane( id: "tabs", constraints: CENTER, border: lineBorder(color:Color.BLACK, thickness:1) ) {
-      panel( title: "Source ", id: "sourceTab", tabIcon: imageIcon(resource:"icons/script.png", class: SwingPadActions) ) {
+      panel( title: "Source ", id: "sourceTab", tabIcon: imageIcon(resource:"icons/script_code.png", class: SwingPadActions) ) {
          borderLayout()
          container( new ConsoleTextEditor(), id: 'editor', border: emptyBorder(0),
+                     font: new Font( "Monospaced", Font.PLAIN, 14 ) ){
+            action(runAction)
+         }
+      }
+      panel( title: "Styles ", id: "styleTab", tabIcon: imageIcon(resource:"icons/script_palette.png", class: SwingPadActions) ) {
+         borderLayout()
+         container( new ConsoleTextEditor(), id: 'stylesheet', border: emptyBorder(0),
                      font: new Font( "Monospaced", Font.PLAIN, 14 ) ){
             action(runAction)
          }
@@ -71,7 +78,7 @@ jidePopup( id: 'popup', movable: false, resizable: false,
    panel {
       borderLayout()
       scrollPane() {
-         list( id: "suggestionList", 
+         list( id: "suggestionList",
                selectionMode: ListSelectionModel.SINGLE_SELECTION,
                model: new EventListModel(model.suggestions) )
       }
@@ -95,10 +102,11 @@ canvas.addMouseMotionListener( columnHeader )
 
 inputArea = editor.textEditor
 rootElement = inputArea.document.defaultRootElement
-// attach ctrl-enter to editor
-// need to wrap in actions to keep it from being added as a component
-actions {
-   container(inputArea, font:new Font("Monospaced", Font.PLAIN, 12), border:emptyBorder(4)) {
+noparent {
+   container(inputArea, font: new Font("Monospaced", Font.PLAIN, 12), border:emptyBorder(4)) {
+      action(runAction)
+   }
+   container(stylesheet.textEditor, font: new Font("Monospaced", Font.PLAIN, 12), border:emptyBorder(4)) {
       action(runAction)
    }
    bean( runAction, enabled: bind { inputArea.text?.size() > 0 } )
@@ -118,6 +126,7 @@ inputArea.addCaretListener({ evt ->
 
 bean( model, content: bind { inputArea.text } )
 bean( model, dirty: bind { inputArea.text?.size() > 0 } )
+bean( model, stylesheet: bind { stylesheet.textEditor.text } )
 
 bean( undoAction, enabled: bind { editor.undoAction.enabled } )
 bean( redoAction, enabled: bind { editor.redoAction.enabled } )

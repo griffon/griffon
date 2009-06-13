@@ -26,6 +26,7 @@ import javax.imageio.ImageIO
 import java.util.prefs.Preferences
 import groovy.ui.text.FindReplaceUtility
 import org.codehaus.groovy.runtime.StackTraceUtils
+import griffon.builder.css.CSSDecorator
 
 class SwingPadController {
    def model
@@ -196,7 +197,7 @@ class SwingPadController {
 
    def runScript = { evt = null ->
       if( !model.content ) return
-      view.tabs.selectedIndex = 0 // sourceTab
+      //view.tabs.selectedIndex = 0 // sourceTab
       runThread = Thread.start {
          try {
             doLater {
@@ -398,11 +399,19 @@ permission from Eitan.
    private void finishNormal( component ) {
       model.successfulScript = true
       doLater {
-         model.status = 'Execution complete.'
+         model.status = "Execution complete."
          view.canvas.removeAll()
          view.canvas.repaint()
          if( component instanceof JComponent ) {
             view.canvas.add(component)
+            // apply stylesheet of any
+            if( model.stylesheet ) {
+               try {
+                  CSSDecorator.applyStyle(model.stylesheet,view.canvas)
+               } catch( Exception e ) {
+                  displayErrorMessages(e)
+               }
+            }
          } else {
             model.status = "The script did not return a JComponent!"
          }
@@ -411,15 +420,21 @@ permission from Eitan.
 
    private void finishWithException( Throwable t ) {
       model.successfulScript = false
-      model.status = 'Execution terminated with exception.'
+      model.status = "Execution terminated with exception."
+      displayErrorMessages(t)
+      doLater {
+         view.canvas.removeAll()
+         view.canvas.repaint()
+      }
+   }
+
+   private void displayErrorMessages( Throwable t ) {
       StackTraceUtils.deepSanitize(t)
       t.printStackTrace()
       def baos = new ByteArrayOutputStream()
       t.printStackTrace(new PrintStream(baos))
       doLater {
-         view.canvas.removeAll()
-         view.canvas.repaint()
-         view.tabs.selectedIndex = 1 // errorsTab
+         view.tabs.selectedIndex = 2 // errorsTab
          model.errors = baos.toString()
          model.caretPosition = 0
       }
