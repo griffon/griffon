@@ -3,11 +3,11 @@ package greet
 import groovy.beans.Bindable
 import java.util.prefs.Preferences
 
-class LoginPaneModel {
-    @Bindable boolean loggingIn = true
-    @Bindable String loginUser
-    @Bindable String loginPassword
-    @Bindable String serviceURL
+@Bindable class LoginPaneModel {
+    boolean loggingIn = true
+    String loginUser
+    String loginPassword
+    String serviceURL
 
     void mvcGroupInit(Map args) {
         Preferences prefs = Preferences.userNodeForPackage(this.getClass())

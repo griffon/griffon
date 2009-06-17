@@ -65,4 +65,4 @@ greetFrame = application(title:"Greet - A Groovy Twitter Client",
 bean(tweetBoxPane, minimumSize: bind(source:tweetBox.document, sourceEvent:'undoableEditHappened', sourceValue:{doLater {mainPanel.revalidate()}; tweetBoxPane.preferredSize}))
 
 //could still be more clever
-keyStrokeAction(component:tweetBox, keyStroke:"ENTER", action: controller.tweetAction)
+keyStrokeAction(component:tweetBox, keyStroke:"ENTER", action: tweetAction)

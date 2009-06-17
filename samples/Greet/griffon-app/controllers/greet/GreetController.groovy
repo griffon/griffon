@@ -25,9 +25,8 @@ class GreetController {
     long nextRepliesUpdate
 
     void mvcGroupInit(Map args) {
-        def (loginPaneModel, loginPaneView, loginPaneController) =
-            createMVCGroup('LoginPane', 'LoginPane', [:]);
-        view.loginPanel = loginPaneView.loginPanel
+        def loginPane = buildMVCGroup('LoginPane');
+        view.loginPanel = loginPane.view.loginPanel
 
         refreshTimer = new Timer(120000, args.actions.refreshTweetsAction)
     }
@@ -136,13 +135,12 @@ class GreetController {
                 twitterService.getUser(username)
                 twitterService.getTweets(username)
                 edt {
-                    def (userPaneModel, userPaneController, userPaneView) =
-                        createMVCGroup('UserPane', mvcName,
-                        [user:twitterService.userCache[username], closable:true]);
+                    def userPane = buildMVCGroup('UserPane', mvcName,
+                        user:twitterService.userCache[username], closable:true);
 
-                    view.tweetsTabbedPane.addTab("@$username", userPaneView.userPane)
+                    view.tweetsTabbedPane.addTab("@$username", userPane.view.userPane)
 
-                    userPaneController.updateTimeline(null)
+                    userPane.controller.updateTimeline(null)
                     doLater {
                         view.tweetsTabbedPane.selectedComponent = app.views[mvcName].userPane
                     }

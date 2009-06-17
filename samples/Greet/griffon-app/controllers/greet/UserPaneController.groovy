@@ -13,11 +13,11 @@ class UserPaneController {
 
     void mvcGroupInit(Map args) {
         twitterService = app.controllers.Greet.twitterService
-        def timelinePaneModel, timelinePaneView
-        (timelinePaneModel, timelinePaneView, timelinePaneController) =
-            createMVCGroup('TimelinePane', "TimelinePane_user_$args.user.screen_name", [:]);
-        timelinePaneController.twitterService = twitterService
-        timelinePaneModel.tweetListGenerator = {TwitterService twitterService ->
+        def timelinePane = buildMVCGroup('TimelinePane', "TimelinePane_user_$args.user.screen_name");
+        timelinePaneController = timelinePane.controller
+
+        timelinePane.controller.twitterService = twitterService
+        timelinePane.model.tweetListGenerator = {TwitterService twitterService ->
             def thisScreenName = model.screenName
             def tweets = twitterService.tweetCache.values().findAll {
                 ((model.showTweets && (it.user.screen_name == thisScreenName))
@@ -30,7 +30,7 @@ class UserPaneController {
             tweets.sort( {a, b-> b.created_at <=> a.created_at}).collect { it.id }
         }
 
-        view.timelinePane = timelinePaneView.timeline
+        view.timelinePane = timelinePane.view.timeline
     }
 
     def updateTimeline(evt) {

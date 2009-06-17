@@ -129,6 +129,15 @@ class GriffonApplicationHelper {
     }
 
     public static createMVCGroup(IGriffonApplication app, String mvcType, String mvcName, Map bindArgs) {
+        Map results = buildMVCGroup(app, bindArgs, mvcType, mvcName)
+        return [results.model, results.view, results.controller]
+    }
+
+    public static Map buildMVCGroup(IGriffonApplication app, String mvcType, String mvcName = mvcType) {
+        buildMVCGroup(app, [:], mvcType, mvcName)
+    }
+
+    public static Map buildMVCGroup(IGriffonApplication app, Map bindArgs, String mvcType, String mvcName = mvcType) {
         if (!app.config.mvcGroups.containsKey(mvcType)) {
             throw new RuntimeException("Unknown MVC type \"$mvcType\".  Known types are ${app.config.mvcGroups.keySet()}")
         }
@@ -148,6 +157,9 @@ class GriffonApplicationHelper {
             klass.metaClass.app = app
             klass.metaClass.createMVCGroup = {Object... args ->
                 GriffonApplicationHelper.createMVCGroup(app, *args)
+            }
+            klass.metaClass.buildMVCGroup = {Object... args ->
+                GriffonApplicationHelper.buildMVCGroup(app, *args)
             }
             klass.metaClass.destroyMVCGroup = GriffonApplicationHelper.&destroyMVCGroup.curry(app)
             klass.metaClass.newInstance = GriffonApplicationHelper.&newInstance.curry(app)
@@ -226,7 +238,7 @@ class GriffonApplicationHelper {
         }
 
         app.event("CreateMVCGroup",[mvcName, instanceMap.model, instanceMap.view, instanceMap.controller, mvcType, instanceMap])
-        return new ArrayList(instanceMap.values())
+        return instanceMap
     }
 
     public static destroyMVCGroup(IGriffonApplication app, String mvcName) {

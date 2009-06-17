@@ -31,30 +31,28 @@ class LoginPaneController {
 
                     twitterService.getReplies()
                     twitterService.getTweets(username)
-                    def (userPaneModel, userPaneController, userPaneView) =
-                        createMVCGroup('UserPane', "UserPane_$username",
-                        [user:twitterService.userCache[username], closable:false]);
-                    tabbedPane.addTab("@$username", userPaneView.userPane)
+                    def userPane = buildMVCGroup('UserPane', "UserPane_$username",
+                        user:twitterService.userCache[username], closable:false);
+                    tabbedPane.addTab("@$username", userPane.view.userPane)
 
 
-                    def (timelinePaneModel, timelinePaneView, timelinePaneController) =
-                        createMVCGroup('TimelinePane', 'TimelinePane', [:]);
-                    timelinePaneModel.tweetListGenerator = {TwitterService service ->
-                        timelinePaneModel.tweets
+                    def timelinePane = buildMVCGroup('TimelinePane');
+                    timelinePane.model.tweetListGenerator = {TwitterService service ->
+                        timelinePane.model.tweets
                     }
-                    greetController.friendsTimelineModel = timelinePaneModel
+                    greetController.friendsTimelineModel = timelinePane.model
 
                     // insure our refresh is the first
-                    greetController.timelinePaneControllerQueue.remove(timelinePaneController)
-                    greetController.timelinePaneControllerQueue.add(0, timelinePaneController)
+                    greetController.timelinePaneControllerQueue.remove(timelinePane.controller)
+                    greetController.timelinePaneControllerQueue.add(0, timelinePane.controller)
 
-                    timelinePaneController.twitterService = twitterService
-                    tabbedPane.addTab("Timeline", timelinePaneView.timeline)
+                    timelinePane.controller.twitterService = twitterService
+                    tabbedPane.addTab("Timeline", timelinePane.view.timeline)
 
                     app.models.Greet.tweeting = false
                     greetController.refreshTweets(evt)
 
-                    tabbedPane.selectedComponent = timelinePaneView.timeline
+                    tabbedPane.selectedComponent = timelinePane.view.timeline
                     tabbedPane.removeTabAt(0)
                     app.views.Greet.tweetBox.requestFocusInWindow()
                 } else {
