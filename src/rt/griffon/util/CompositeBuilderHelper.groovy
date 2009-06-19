@@ -46,7 +46,7 @@ class CompositeBuilderHelper {
             String nodeName = node.key
             switch (nodeName) {
                 case "addons" :
-                    handleAddons(uberBuilder, node.value, app.addons)
+                    handleAddons(app, uberBuilder, node.value)
                     break
                 case "features":
                     handleFeatures(uberBuilder, node.value)
@@ -61,9 +61,9 @@ class CompositeBuilderHelper {
         return uberBuilder
     }
 
-    private static handleAddons( UberBuilder uberBuilder, addons, Map addonCache ) {
+    private static handleAddons(IGriffonApplication app, UberBuilder uberBuilder, addons) {
         addons.each {  addonName ->
-            def addon = fetchFromCache(addonName, addonCache)
+            def addon = fetchFromCache(addonName, app)
             DELEGATE_TYPES.each { delegateType ->
                 ignoreMissingPropertyException {
                     def delegates = addon."$delegateType"
@@ -83,10 +83,13 @@ class CompositeBuilderHelper {
         }
     }
 
-    private static fetchFromCache(String addonName, Map addonCache) {
+    private static fetchFromCache(String addonName, IGriffonApplication app) {
+        def addonCache = app.addons
         def addon = addonCache[addonName]
         if (addon == null) {
             addonCache[addonName] = addon = (addonName as Class).newInstance()
+            def mvcGroups = addon.metaClass.getMetaProperty("mvcGroups")
+            if (mvcGroups) addMVCGroups(app, addon.mvcGroups)
         }
         return addon
     }
@@ -97,6 +100,10 @@ class CompositeBuilderHelper {
         } catch (MissingPropertyException ignored) {
             // ignore
         }
+    }
+
+    public static addMVCGroups(IGriffonApplication app, Map<String, Map<String, String>> groups) {
+        groups.each {k, v -> app.addMvcGroup(k, v) }         
     }
 
     private static handleFeatures(UberBuilder uberBuilder, features) {

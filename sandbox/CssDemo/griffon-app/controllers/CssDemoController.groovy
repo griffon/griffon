@@ -4,4 +4,8 @@ class CssDemoController {
     def model
     def view
 
+    def doNothing = {
+        buildMVCGroup('NothingPanel')
+    }
+
 }

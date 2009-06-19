@@ -143,8 +143,8 @@ class GriffonApplicationHelper {
     }
 
     public static Map buildMVCGroup(IGriffonApplication app, Map bindArgs, String mvcType, String mvcName = mvcType) {
-        if (!app.config.mvcGroups.containsKey(mvcType)) {
-            throw new RuntimeException("Unknown MVC type \"$mvcType\".  Known types are ${app.config.mvcGroups.keySet()}")
+        if (!app.mvcGroups.containsKey(mvcType)) {
+            throw new RuntimeException("Unknown MVC type \"$mvcType\".  Known types are ${app.mvcGroups.keySet()}")
         }
 
         def argsCopy = [app:app, mvcType:mvcType, mvcName:mvcName]
