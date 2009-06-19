@@ -47,6 +47,11 @@ class GriffonApplicationHelper {
             app.eventsConfig = eventsClass.newInstance()
             app.addApplicationEventListener(app.eventsConfig)
         }
+
+        // copy mvc groups in config to app, casting to strings in a new map
+        app.config.mvcGroups.each {k, v->
+          app.addMvcGroup(k, v.inject([:]) {m, e->m[e.key as String] = e.value as String; m})
+        }
     }
 
     static void startup(IGriffonApplication app) {
@@ -68,7 +73,7 @@ class GriffonApplicationHelper {
         // wait for EDT to empty out.... somehow
         boolean empty = false
         while (true) {
-            SwingUtilities.invokeAndWait {empty = Toolkit.getDefaultToolkit().getSystemEventQueue().peekEvent() == null}
+            SwingUtilities.invokeAndWait {empty = Toolkit.defaultToolkit.systemEventQueue.peekEvent() == null}
             if (empty) break
             sleep(100)
         }
@@ -94,7 +99,7 @@ class GriffonApplicationHelper {
         try {
             script = GriffonApplicationHelper.classLoader.loadClass(scriptName).newInstance(app.bindings)
         } catch (ClassNotFoundException cnfe) {
-            if (cnfe.getMessage() == scriptName) {
+            if (cnfe.message == scriptName) {
                 // the script must not exist, do nothing
                 //LOGME - may be because of chained failures
                 return
@@ -149,7 +154,7 @@ class GriffonApplicationHelper {
         // figure out what the classes are and prep the metaclass
         def klassMap = [:]
         ClassLoader classLoader = app.getClass().classLoader
-        app.config.mvcGroups[mvcType].each {k, v ->
+        app.mvcGroups[mvcType].each {k, v ->
             Class klass = classLoader.loadClass(v);
 
             // inject defaults into emc
@@ -271,9 +276,8 @@ class GriffonApplicationHelper {
                     frame = cl.loadClass(app.config.application.frameClass).newInstance()
                 } else {
                     frame = Class.forName(app.config.application.frameClass).newInstance()
-                    frame = Class.forName(app.config.application.frameClass).newInstance()
                 }
-            } catch (Throwable t) {
+            } catch (Throwable ignored) {
                 // ignore
             }
         }
@@ -286,7 +290,7 @@ class GriffonApplicationHelper {
                 } else {
                     frame = Class.forName('org.jdesktop.swingx.JXFrame').newInstance()
                 }
-            } catch (Throwable t) {
+            } catch (Throwable ignored) {
                 // ignore
             }
             // this will work for sure

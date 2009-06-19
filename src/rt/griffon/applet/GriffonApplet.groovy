@@ -27,6 +27,10 @@ import javax.swing.JApplet
  * Time: 12:47:33 PM
  */
 class GriffonApplet extends JApplet implements IGriffonApplication {
+
+    Map<String, Map<String, String>> mvcGroups = [:]
+    Map<String, ?> addons = [:]
+
     Map models      = [:]
     Map views       = [:]
     Map controllers = [:]
@@ -72,7 +76,7 @@ class GriffonApplet extends JApplet implements IGriffonApplication {
     public Class getEventsClass() {
         try{
            return getClass().classLoader.loadClass("Events")
-        } catch( ex ) {
+        } catch( ignored ) {
            // ignore - no global event handler will be used
         }
         return null
@@ -126,5 +130,9 @@ class GriffonApplet extends JApplet implements IGriffonApplication {
 
     public void removeApplicationEventListener( String eventName, Closure listener ) {
        eventRouter.removeEventListener(eventName,listener)
+    }
+
+    public void addMvcGroup(String mvcType, Map<String, String> mvcPortions) {
+       mvcGroups[mvcType] = mvcPortions
     }
 }

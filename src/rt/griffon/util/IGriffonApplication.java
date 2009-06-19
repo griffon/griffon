@@ -45,6 +45,11 @@ public interface IGriffonApplication {
     public Binding getBindings();
     public void setBindings(Binding bindings);
 
+    public Map<String, Map<String, String>> getMvcGroups();
+    public void addMvcGroup(String mvcType, Map<String, String> mvcPortions);
+
+    public Map<String, ?> getAddons();
+
     public Map<String, ?> getModels();
     public Map<String, ?> getViews();
     public Map<String, ?> getControllers();

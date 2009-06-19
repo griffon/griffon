@@ -1,4 +1,4 @@
-addons = CssDemoBuilderAddon
+addons = ['CssDemoBuilderAddon']
 
 root {
     'groovy.swing.SwingBuilder' {

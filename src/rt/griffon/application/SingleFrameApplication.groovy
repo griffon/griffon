@@ -27,6 +27,9 @@ import java.awt.EventQueue
  */
 class SingleFrameApplication implements IGriffonApplication {
 
+    Map<String, Map<String, String>> mvcGroups = [:]
+    Map<String, ?> addons = [:]
+
     Map models      = [:]
     Map views       = [:]
     Map controllers = [:]
@@ -68,7 +71,7 @@ class SingleFrameApplication implements IGriffonApplication {
     public Class getEventsClass() {
         try{
            return getClass().classLoader.loadClass("Events")
-        } catch( ex ) {
+        } catch( ignored ) {
            // ignore - no global event handler will be used
         }
         return null
@@ -79,7 +82,7 @@ class SingleFrameApplication implements IGriffonApplication {
         try {
             appContainer.windowClosing = this.&handleWindowClosing
             appFrames += appContainer
-        } catch (Throwable t) {
+        } catch (Throwable ignored) {
             // if it doesn't have a window closing event, ignore it
         }
         return appContainer
@@ -140,5 +143,9 @@ class SingleFrameApplication implements IGriffonApplication {
 
     public void removeApplicationEventListener( String eventName, Closure listener ) {
        eventRouter.removeEventListener(eventName,listener)
+    }
+
+    public void addMvcGroup(String mvcType, Map<String, String> mvcPortions) {
+       mvcGroups[mvcType] = mvcPortions
     }
 }
