@@ -43,10 +43,12 @@ class GriffonApplicationHelper {
         app.config = new ConfigSlurper().parse(app.configClass)
         app.builderConfig = new ConfigSlurper().parse(app.builderClass)
         def eventsClass = app.eventsClass
-        if( eventsClass ) {
+        if (eventsClass) {
             app.eventsConfig = eventsClass.newInstance()
             app.addApplicationEventListener(app.eventsConfig)
         }
+
+        AddonHelper.handleAddonsAtStartup(app)
 
         // copy mvc groups in config to app, casting to strings in a new map
         app.config.mvcGroups.each {k, v->

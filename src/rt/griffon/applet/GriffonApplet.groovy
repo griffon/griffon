@@ -28,9 +28,10 @@ import javax.swing.JApplet
  */
 class GriffonApplet extends JApplet implements IGriffonApplication {
 
-    Map<String, Map<String, String>> mvcGroups = [:]
     Map<String, ?> addons = [:]
+    Map<String, String> addonPrefixes = [:]
 
+    Map<String, Map<String, String>> mvcGroups = [:]
     Map models      = [:]
     Map views       = [:]
     Map controllers = [:]
@@ -38,6 +39,7 @@ class GriffonApplet extends JApplet implements IGriffonApplication {
     Map groups      = [:]
 
     Binding bindings = new Binding()
+    Properties applicationProperties
     ConfigObject config
     ConfigObject builderConfig
     Object eventsConfig

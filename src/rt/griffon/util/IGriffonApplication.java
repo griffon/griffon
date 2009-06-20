@@ -21,6 +21,7 @@ import groovy.util.ConfigObject;
 
 import java.util.Map;
 import java.util.List;
+import java.util.Properties;
 
 /**
  * Created by IntelliJ IDEA.
@@ -29,6 +30,8 @@ import java.util.List;
  * Time: 3:21:38 PM
  */
 public interface IGriffonApplication {
+
+    public Properties getApplicationProperties();    
 
     public Class getConfigClass();
     public ConfigObject getConfig();
@@ -49,6 +52,7 @@ public interface IGriffonApplication {
     public void addMvcGroup(String mvcType, Map<String, String> mvcPortions);
 
     public Map<String, ?> getAddons();
+    public Map<String, String> getAddonPrefixes();
 
     public Map<String, ?> getModels();
     public Map<String, ?> getViews();

@@ -27,9 +27,10 @@ import java.awt.EventQueue
  */
 class SingleFrameApplication implements IGriffonApplication {
 
-    Map<String, Map<String, String>> mvcGroups = [:]
     Map<String, ?> addons = [:]
+    Map<String, String> addonPrefixes = [:]
 
+    Map<String, Map<String, String>> mvcGroups = [:]
     Map models      = [:]
     Map views       = [:]
     Map controllers = [:]
@@ -38,12 +39,16 @@ class SingleFrameApplication implements IGriffonApplication {
     List appFrames  = []
 
     Binding bindings = new Binding()
+    Properties applicationProperties
     ConfigObject config
     ConfigObject builderConfig
     Object eventsConfig
+
     private EventRouter eventRouter = new EventRouter()
 
     public void bootstrap() {
+        applicationProperties = new Properties()
+        applicationProperties.load(getClass().getResourceAsStream('/application.properties')) 
         GriffonApplicationHelper.prepare(this);
         event("BootstrapEnd",[this])
     }

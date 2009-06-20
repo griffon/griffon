@@ -31,22 +31,17 @@ import javax.swing.*
  */
 class CompositeBuilderHelper {
 
-    public static final DELEGATE_TYPES = Collections.unmodifiableList([
-            "attributeDelegates",
-            "preInstantiateDelegates",
-            "postInstantiateDelegates",
-            "postNodeCompletionDelegates"
-    ])
-
     public static FactoryBuilderSupport createBuilder(IGriffonApplication app, Map targets) {
         UberBuilder uberBuilder = new UberBuilder()
         uberBuilder.setProperty('app', app)
+
+        AddonHelper.handleAddonsForBuilders(app, uberBuilder)
 
         for (node in app.builderConfig) {
             String nodeName = node.key
             switch (nodeName) {
                 case "addons" :
-                    handleAddons(app, uberBuilder, node.value)
+                    handleAddonsAtStartup(app, uberBuilder, node.value)
                     break
                 case "features":
                     handleFeatures(uberBuilder, node.value)
@@ -59,51 +54,6 @@ class CompositeBuilderHelper {
             }
         }
         return uberBuilder
-    }
-
-    private static handleAddons(IGriffonApplication app, UberBuilder uberBuilder, addons) {
-        addons.each {  addonName ->
-            def addon = fetchFromCache(addonName, app)
-            DELEGATE_TYPES.each { delegateType ->
-                ignoreMissingPropertyException {
-                    def delegates = addon."$delegateType"
-                    delegateType = delegateType[0].toUpperCase() + delegateType[1..-2]
-                    delegates.each { delegateValue ->
-                        uberBuilder."add$delegateType"(delegateValue)
-                    }
-                }
-            }
-            ignoreMissingPropertyException {
-                if( addon.factories ) addFactories(uberBuilder, addon.factories)
-            }
-            def methods = addon.metaClass.getMetaProperty("methods")
-            if( methods ) addMethods(uberBuilder, addon.methods)
-            def properties = addon.metaClass.getMetaProperty("props")
-            if( properties ) addMethods(uberBuilder, addon.props)
-        }
-    }
-
-    private static fetchFromCache(String addonName, IGriffonApplication app) {
-        def addonCache = app.addons
-        def addon = addonCache[addonName]
-        if (addon == null) {
-            addonCache[addonName] = addon = (addonName as Class).newInstance()
-            def mvcGroups = addon.metaClass.getMetaProperty("mvcGroups")
-            if (mvcGroups) addMVCGroups(app, addon.mvcGroups)
-        }
-        return addon
-    }
-
-    private static ignoreMissingPropertyException(Closure closure) {
-        try {
-            closure()
-        } catch (MissingPropertyException ignored) {
-            // ignore
-        }
-    }
-
-    public static addMVCGroups(IGriffonApplication app, Map<String, Map<String, String>> groups) {
-        groups.each {k, v -> app.addMvcGroup(k, v) }         
     }
 
     private static handleFeatures(UberBuilder uberBuilder, features) {
