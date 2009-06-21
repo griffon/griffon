@@ -30,6 +30,8 @@ target(runApp: "Runs the application from the command line") {
 
     // calculate the needed jars
     File jardir = new File(ant.antProject.replaceProperties(config.griffon.jars.destDir))
+    // launch event after jardir has been defined
+    event("RunAppStart",[])
     runtimeJars = []
     jardir.eachFileMatch(~/.*\.jar/) {f ->
         runtimeJars += f
@@ -81,6 +83,7 @@ target(runApp: "Runs the application from the command line") {
 
     // wait for it.... wait for it...
     p.waitFor()
+    event("RunAppEnd",[])
 }
 
 setDefaultTarget(runApp)

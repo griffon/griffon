@@ -34,6 +34,8 @@ target(runApplet: "Runs the applet from Java WebStart") {
 
     // calculate the needed jars
     File jardir = new File(ant.antProject.replaceProperties(config.griffon.jars.destDir))
+    // launch event after jardir has been defined
+    event("RunAppletStart",[])
     runtimeJars = []
     jardir.eachFileMatch(~/.*\.jar/) {f ->
         runtimeJars += f
@@ -53,6 +55,7 @@ target(runApplet: "Runs the applet from Java WebStart") {
 
     // wait for it.... wait for it...
     p.waitFor()
+    event("RunAppletEnd",[])
 }
 
 setDefaultTarget(runApplet)

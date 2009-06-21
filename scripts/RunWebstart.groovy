@@ -24,6 +24,8 @@ target(runWebstart: "Does the actual command line execution") {
 
     // calculate the needed jars
     File jardir = new File(ant.antProject.replaceProperties(config.griffon.jars.destDir))
+    // launch event after jardir has been defined
+    event("RunWebstartStart",[])
     runtimeJars = []
     jardir.eachFileMatch(~/.*\.jar/) {f ->
         runtimeJars += f
@@ -43,6 +45,7 @@ target(runWebstart: "Does the actual command line execution") {
 
     // wait for it.... wait for it...
     p.waitFor()
+    event("RunWebstartEnd",[])
 }
 
 setDefaultTarget(runWebstart)
