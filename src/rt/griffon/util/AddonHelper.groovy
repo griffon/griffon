@@ -84,11 +84,10 @@ public class AddonHelper {
             def factories = addonMetaClass.getMetaProperty('factories')
             if (factories) addFactories(builder, addon.factories, addonName, prefix)
 
-            // methods and properties TBD
-            //def methods = addon.metaClass.getMetaProperty("methods")
-            //if( methods ) addMethods(uberBuilder, addon.methods)
-            //def properties = addon.metaClass.getMetaProperty("props")
-            //if( properties ) addMethods(uberBuilder, addon.props)
+            def methods = addon.metaClass.getMetaProperty("methods")
+            if( methods ) addMethods(builder, addon.factories, addonName, prefix)
+            def properties = addon.metaClass.getMetaProperty("props")
+            if( properties ) addProperties(builder, addon.factories, addonName, prefix)
 
             def addonBuilderPostInit = addonMetaClass.respondsTo('addonBuilderPostInit')
             if (addonBuilderPostInit) postInits << addon
@@ -116,9 +115,21 @@ public class AddonHelper {
     }
 
 
-    static addFactories(UberBuilder builder, Map<String, Class> factories, String addonName, String prefix) {
-        factories.each {name, klass ->
-            builder.registerFactory(name, addonName, klass)
+    static addFactories(UberBuilder builder, Map<String, Factory> factories, String addonName, String prefix) {
+        factories.each {String name, Factory factory ->
+            builder.registerFactory(name, addonName, factory)
+        }
+    }
+
+    static addMethods(UberBuilder builder, Map<String, Closure> methods, String addonName, String prefix) {
+        methods.each {String name, Closure closure ->
+            builder.registerExplicitMethod(name, addonName, closure)
+        }
+    }
+
+    static addProperties(UberBuilder builder, Map<String, List<Closure>> methods, String addonName, String prefix) {
+        methods.each {String name, Map<String, Closure> closures ->
+            builder.registerExplicitProperty(name, addonName, closures.get, closures.set)
         }
     }
 
