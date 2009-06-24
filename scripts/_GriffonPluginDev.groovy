@@ -78,7 +78,7 @@ target(packagePlugin:"Implementation target") {
     }
     catch(Throwable t) {
         event("StatusError", [ t.message])
-        GriffonUtil.deepSanitize(t)
+//        GriffonUtil.deepSanitize(t)
         t.printStackTrace(System.out)
         ant.fail("Cannot instantiate plugin file")
     }

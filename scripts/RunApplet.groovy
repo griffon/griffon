@@ -21,6 +21,7 @@
  */
 
 import org.codehaus.griffon.commons.ConfigurationHolder
+import org.codehaus.griffon.util.BuildSettings
 
 
 includeTargets << griffonScript("Package")
@@ -45,10 +46,14 @@ target(runApplet: "Runs the applet from Java WebStart") {
     if (!binding.variables.webstartVM) {
         webstartVM = [System.properties['java.home'], 'bin', 'javaws'].join(File.separator)
     }
+    def javaOpts = []
+    def env = System.getProperty(BuildSettings.ENVIRONMENT)
+    javaOpts << "-D${BuildSettings.ENVIRONMENT}=${env}"
+    javaOpts = "-J"+javaOpts.join("-J ")
 
     // TODO set proxy settings
     // start the processess
-    Process p = "$webstartVM ${config.griffon.applet.jnlp}".execute(null as String[], jardir)
+    Process p = "$webstartVM $javaOpts ${config.griffon.applet.jnlp}".execute(null as String[], jardir)
 
     // pipe the output
     p.consumeProcessOutput(System.out, System.err)
