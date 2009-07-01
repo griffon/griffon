@@ -45,7 +45,7 @@ target(runApp: "Runs the application from the command line") {
 
     def javaOpts = []
     def env = System.getProperty(BuildSettings.ENVIRONMENT)
-    javaOpts << "-D${BuildSettings.ENVIRONMENT}=${env}
+    javaOpts << "-D${BuildSettings.ENVIRONMENT}=${env}"
     if (argsMap.containsKey('debug')) {
         def portNum = argsMap.debugPort?:'18290'  //default is 'Gr' in ASCII
         def addr = argsMap.debugAddr?:'127.0.0.1'  //default is 'Gr' in ASCII
