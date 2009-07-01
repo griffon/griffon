@@ -35,7 +35,7 @@ public class AddonHelper {
             app.addonPrefixes[addonName] = addonDef[0]
 
             def addonMetaClass = addon.metaClass
-            addonMetaClass.newInstance = GriffonApplicationHelper.&newInstance.curry(app)
+            addonMetaClass.createInstance = GriffonApplicationHelper.&newInstance.curry(app)
 
             try {
                 addon.addonInit(app)
