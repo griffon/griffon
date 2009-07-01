@@ -35,6 +35,7 @@ public class AddonHelper {
             app.addonPrefixes[addonName] = addonDef[0]
 
             def addonMetaClass = addon.metaClass
+            addonMetaClass.newInstance = GriffonApplicationHelper.&newInstance.curry(app)
 
             try {
                 addon.addonInit(app)
@@ -116,18 +117,21 @@ public class AddonHelper {
 
 
     static addFactories(UberBuilder builder, Map<String, Factory> factories, String addonName, String prefix) {
+        builder.registrationGroup.get(addonName, new TreeSet<String>())
         factories.each {String name, Factory factory ->
             builder.registerFactory(name, addonName, factory)
         }
     }
 
     static addMethods(UberBuilder builder, Map<String, Closure> methods, String addonName, String prefix) {
+        builder.registrationGroup.get(addonName, new TreeSet<String>())
         methods.each {String name, Closure closure ->
             builder.registerExplicitMethod(name, addonName, closure)
         }
     }
 
     static addProperties(UberBuilder builder, Map<String, List<Closure>> methods, String addonName, String prefix) {
+        builder.registrationGroup.get(addonName, new TreeSet<String>())
         methods.each {String name, Map<String, Closure> closures ->
             builder.registerExplicitProperty(name, addonName, closures.get, closures.set)
         }
