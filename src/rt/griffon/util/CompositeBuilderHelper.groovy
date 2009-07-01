@@ -94,9 +94,9 @@ class CompositeBuilderHelper {
                     //FIXME handle add-all
                     continue
                 }
-                def factories = localBuilder.localFactories
-                def methods = localBuilder.localExplicitMethods
-                def properties = localBuilder.localExplicitProperties
+                def factories = localBuilder.getLocalFactories()
+                def methods = localBuilder.getLocalExplicitMethods()
+                def properties = localBuilder.getLocalExplicitProperties()
                 def groupItems = localBuilder.getRegistrationGroupItems(groupName)
                 if (!groupItems) {
                     continue
