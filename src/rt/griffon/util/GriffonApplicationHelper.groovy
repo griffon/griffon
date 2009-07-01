@@ -196,6 +196,7 @@ class GriffonApplicationHelper {
             }
         }
         instanceMap.builder = builder
+        argsCopy.builder = builder
         
         // special case --
         // controller gets applicaiton listeners
