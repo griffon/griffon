@@ -121,7 +121,7 @@ inputArea.addCaretListener({ evt ->
    def rowNum = rootElement.getElementIndex(cursorPos) + 1
    def rowElement = rootElement.getElement(rowNum - 1)
    def colNum = cursorPos - rowElement.startOffset + 1
-   controller.builder.rowNumAndColNum.setText("$rowNum:$colNum")
+   /*controller.builder.*/rowNumAndColNum.setText("$rowNum:$colNum")
 } as CaretListener)
 
 bean( model, content: bind { inputArea.text } )
