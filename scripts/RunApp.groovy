@@ -71,7 +71,7 @@ target(runApp: "Runs the application from the command line") {
     javaOpts << "-Dgriffon.start.dir=\""+jardir.parentFile.absolutePath+"\""
     if (isMacOSX) {
         javaOpts << "-Xdock:name=$griffonAppName"
-        javaOpts << "-Xdock:icon=${jardir.absolutePath}/griffon-icon-48x48.png"
+        javaOpts << "-Xdock:icon=${griffonHome}/bin/griffon.icns"
     }
     if (config.griffon.app?.javaOpts) {
       config.griffon.app?.javaOpts.each { javaOpts << it }

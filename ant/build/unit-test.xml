@@ -145,6 +145,7 @@
             <attribute name="printsummary" default="true"/>
             <sequential>
                 <junit fork="@{fork}" maxmemory="@{maxmemory}" forkmode="@{forkmode}" printsummary="@{printsummary}">
+                    <sysproperty key="apple.awt.UIElement" value="true"/>
                     <junit-elements/>
                 </junit>
             </sequential>
