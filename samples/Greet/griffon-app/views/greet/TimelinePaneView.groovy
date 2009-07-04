@@ -2,6 +2,7 @@ package greet
 
 import java.awt.GridBagConstraints
 import javax.swing.JComponent
+import javax.swing.KeyStroke
 
 greetController = app.controllers.Greet
 
@@ -15,6 +16,11 @@ timeline = scrollPane {
 }
 timeline.verticalScrollBar.model.stateChanged = controller.scrollListener
 timelinePanel.componentResized = controller.repositionView
+
+keyStrokeAction(timeline, condition:"WHEN_IN_FOCUSED_WINDOW", action: controller.scrollUp, keyStroke:KeyStroke.getKeyStroke("UP"))
+keyStrokeAction(timeline, condition:"WHEN_IN_FOCUSED_WINDOW", action: controller.scrollDown, keyStroke:KeyStroke.getKeyStroke("DOWN"))
+keyStrokeAction(timelinePanel, condition:"WHEN_IN_FOCUSED_WINDOW", action: controller.scrollPageUp, keyStroke:KeyStroke.getKeyStroke("PAGE_UP"))
+keyStrokeAction(timelinePanel, condition:"WHEN_IN_FOCUSED_WINDOW", action: controller.scrollPageDown, keyStroke:KeyStroke.getKeyStroke("PAGE_DOWN"))
 
 tweetLinePanels = [:]
 

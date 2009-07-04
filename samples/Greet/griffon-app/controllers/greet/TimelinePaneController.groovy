@@ -5,6 +5,8 @@ import java.awt.event.ComponentEvent
 import javax.swing.JComponent
 import javax.swing.JViewport
 import javax.swing.event.ChangeEvent
+import javax.swing.Action
+import javax.swing.JScrollPane
 
 class TimelinePaneController {
     // these will be injected by Griffon
@@ -64,5 +66,37 @@ class TimelinePaneController {
             model.referenceTweetPanel = null
             model.referenceOffset = 0
         }
+    }
+
+    Action scrollUp = action {
+        println "Up"
+        JViewport viewport = view.timeline.viewport
+        Point p = new Point(viewport.viewPosition)
+        p.@y -= view.timeline.verticalScrollBar.unitIncrement
+        viewport.viewPosition = p
+    }
+
+    Action scrollDown = action {
+        println "down"
+        JViewport viewport = view.timeline.viewport
+        Point p = new Point(viewport.viewPosition)
+        p.@y += view.timeline.verticalScrollBar.unitIncrement
+        viewport.viewPosition = p
+    }
+
+    Action scrollPageUp = action {
+        println "page up"
+        JViewport viewport = view.timeline.viewport
+        Point p = new Point(viewport.viewPosition)
+        p.@y -= view.timeline.verticalScrollBar.blockIncrement
+        viewport.viewPosition = p
+    }
+
+    Action scrollPageDown = action {
+        println "page down"
+        JViewport viewport = view.timeline.viewport
+        Point p = new Point(viewport.viewPosition)
+        p.@y += view.timeline.verticalScrollBar.blockIncrement
+        viewport.viewPosition = p
     }
 }
