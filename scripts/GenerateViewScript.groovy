@@ -34,7 +34,7 @@ target(genViewScript: "Generates a view script from an existing class") {
     try {
         GroovyClassLoader gcl = new GroovyClassLoader(rootLoader, compConfig)
         Class klass = gcl.loadClass(klassName)
-        while (klass != null && !(klass['package']?.name ==~ "java(x)?\\..*")) {
+        while (klass != null && !(klass.getPackage()?.name ==~ "java(x)?\\..*")) {
             klass.declaredFields.collect(fields) {it}
             klass = klass.superclass
         }
