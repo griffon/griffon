@@ -29,13 +29,14 @@ public class AddonHelper {
         }
 
         addonDefs.each {String addonName, List addonDef ->
-            def addon = (addonDef[1] as Class).newInstance()
+            def addonClass = addonDef[1] as Class
+            def addon = addonClass.newInstance()
 
             app.addons[addonName] = addon
             app.addonPrefixes[addonName] = addonDef[0]
 
             def addonMetaClass = addon.metaClass
-            addonMetaClass.createInstance = GriffonApplicationHelper.&newInstance.curry(app)
+            addonMetaClass.newInstance = GriffonApplicationHelper.&newInstance.curry(app)
 
             try {
                 addon.addonInit(app)
@@ -83,12 +84,12 @@ public class AddonHelper {
             }
 
             def factories = addonMetaClass.getMetaProperty('factories')
-            if (factories) addFactories(builder, addon.factories, addonName, prefix)
+            if (factories) addFactories(builder, factories.getProperty(addon), addonName, prefix)
 
             def methods = addon.metaClass.getMetaProperty("methods")
-            if( methods ) addMethods(builder, addon.factories, addonName, prefix)
-            def properties = addon.metaClass.getMetaProperty("props")
-            if( properties ) addProperties(builder, addon.factories, addonName, prefix)
+            if( methods ) addMethods(builder, methods.getProperty(addon), addonName, prefix)
+            def props = addon.metaClass.getMetaProperty("props")
+            if( props ) addProperties(builder, props.getProperty(addon), addonName, prefix)
 
             def addonBuilderPostInit = addonMetaClass.respondsTo('addonBuilderPostInit')
             if (addonBuilderPostInit) postInits << addon
