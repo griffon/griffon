@@ -57,7 +57,6 @@ public class DelayedImageIcon implements Icon {
                         c.repaint(100);
                     } catch (InterruptedException ignore) { }
                 }}).start();
-
             }
         } else {
             status = image == null ? MediaTracker.ERRORED : MediaTracker.COMPLETE;

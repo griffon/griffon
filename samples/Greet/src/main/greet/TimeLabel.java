@@ -21,6 +21,7 @@ public class TimeLabel extends JLabel {
 
     public TimeLabel(String twitterTime) {
         setText("unknown");
+        setOpaque(false);
         long time = 0;
         try {
             time = twitterFormat.parse(twitterTime).getTime();

@@ -69,6 +69,7 @@ panel(new RoundedPanel(foreground: java.awt.Color.WHITE, opaque:true),
             bt.maximumSize = bt.preferredSize
         }
         glue()
-        label(new TimeLabel(tweet.created_at), border:emptyBorder(0,3,3,6), font:tweetTimeFont)
+        label(new TimeLabel(tweet.created_at), border:emptyBorder(0,3,3,0), font:tweetTimeFont)
+        hstrut(6)
     }
 }
