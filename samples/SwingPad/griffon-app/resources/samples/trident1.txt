@@ -1,0 +1,16 @@
+import java.awt.Color
+import java.awt.Font
+
+panel {
+  flowLayout()
+  button("Sample", id: "button",
+         foreground: Color.BLUE,
+         mouseEntered: {timeline.play()},
+         mouseExited:  {timeline.playReverse()}) {
+     timeline(button, id: "timeline", duration: 2500) {
+       interpolatedProperty("foreground", from: Color.BLUE, to: Color.RED)
+     }
+  }
+
+  button.font = button.font.deriveFont(Font.BOLD,64f)
+}

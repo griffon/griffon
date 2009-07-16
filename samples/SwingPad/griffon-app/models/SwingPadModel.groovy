@@ -34,6 +34,7 @@ class SwingPadModel {
       swing:      [ enabled: true,  loaded: true,  type: "groovy.swing.SwingBuilder"],
       swingx:     [ enabled: true,  loaded: true,  type: "groovy.swing.SwingXBuilder"],
       jide:       [ enabled: true,  loaded: true,  type: "griffon.builder.jide.JideBuilder"],
+      trident:    [ enabled: true,  loaded: true,  type: "griffon.builder.trident.TridentBuilder"],
       flamingo:   [ enabled: false, loaded: false, type: "griffon.builder.flamingo.FlamingoBuilder"],
       tray:       [ enabled: false, loaded: false, type: "griffon.builder.tray.TrayBuilder"],
       macwidgets: [ enabled: false, loaded: false, type: "griffon.builder.macwidgets.MacWidgetsBuilder"],

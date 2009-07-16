@@ -107,7 +107,9 @@ menuBar = menuBar {
             tray1: "Tray - Flair",
             flamingo1: "Flamingo - FlexiSlider",
             macwidgets1: "MacWidgets - Flair",
-            swingxtras1: "Swingxtras - Flair"].each { id, name ->
+            swingxtras1: "Swingxtras - Flair",
+            trident1: "Trident - ButtonFG",
+            trident2: "Trident - Snake"].each { id, name ->
              menuItem(makeSampleScriptAction(id,name))
           }
        }

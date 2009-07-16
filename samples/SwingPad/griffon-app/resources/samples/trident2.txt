@@ -1,0 +1,83 @@
+import java.awt.Color
+import java.awt.Graphics
+import javax.swing.JComponent
+
+class Canvas extends JComponent {
+  Closure draw
+
+  public void paintComponent(Graphics g) {
+    if(draw) draw(this, g)
+  }
+}
+
+class SnakeRectangle {
+  Color background
+  private final rolloverTimeline
+  private boolean rollover = false
+
+  SnakeRectangle( builder ) {
+    background = Color.BLACK
+    rolloverTimeline = builder.timeline(this, duration: 2500) {
+      interpolatedProperty("background", from: Color.YELLOW, to: Color.BLACK)
+    }
+  }
+
+  void setRollover(boolean rollover) {
+    if(this.rollover == rollover) return
+    this.rollover = rollover
+    if(rollover) rolloverTimeline.replay()
+  }
+}
+
+int cols = 20
+int rows = 10
+int dim = 20
+SnakeRectangle[][] grid = new SnakeRectangle[cols][rows]
+(0..<cols).each { i ->
+  (0..<rows).each { j ->
+    grid[i][j] = new SnakeRectangle(delegate)
+  }
+}
+
+draw = { p, g ->
+  g.color = Color.black
+  g.fillRect(0, 0, p.width, p.height)
+
+  (0..<cols).each { i ->
+    (0..<rows).each { j ->
+      Color backgr = grid[i][j].background
+      if(Color.BLACK != backgr) {
+        g.color = backgr
+        g.fillRect(i * (dim + 1), j * (dim + 1), dim, dim)
+      }
+    }
+  }
+
+  g.dispose()
+}
+
+int rowOld = -1
+int colOld = -1
+mouseHandler = { e ->
+  int column = e.x / (dim + 1)
+  int row = e.y / (dim + 1)
+  if(column >= cols || row >= rows) return
+
+  if ((column != colOld) || (row != rowOld)) {
+    if ((colOld >= 0) && (rowOld >= 0))
+      grid[colOld][rowOld].rollover = false
+    grid[column][row].rollover = true
+  }
+  colOld = column
+  rowOld = row
+}
+
+def size = [cols*(dim+1), rows*(dim+1)]
+snakePanel = widget(new Canvas(), draw: draw,
+  mouseMoved: mouseHandler,
+  preferredSize: size,
+  maximumSize: size,
+  minimumSize: size)
+swingRepaintTimeline(snakePanel, loop: true)
+
+snakePanel
