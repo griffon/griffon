@@ -35,7 +35,7 @@ class CompositeBuilderHelper {
         UberBuilder uberBuilder = new UberBuilder()
         uberBuilder.setProperty('app', app)
 
-        AddonHelper.handleAddonsForBuilders(app, uberBuilder)
+        AddonHelper.handleAddonsForBuilders(app, uberBuilder, targets)
 
         for (node in app.builderConfig) {
             String nodeName = node.key
@@ -81,6 +81,9 @@ class CompositeBuilderHelper {
 
     private static handleLocalBuilder(UberBuilder uberBuilder, Map targets, String prefixName, builderClassName) {
         Class builderClass = Class.forName(builderClassName.key) //FIXME get correct classloader
+        if (!FactoryBuilderSupport.isAssignableFrom(builderClass)) {
+            return;
+        }
         FactoryBuilderSupport localBuilder = uberBuilder.uberInit(prefixName, builderClass)
         for (partialTarget in builderClassName.value) {
             if (partialTarget == 'view') {
@@ -89,29 +92,26 @@ class CompositeBuilderHelper {
             }
             MetaClass mc = targets[partialTarget.key]?.getMetaClass()
             if (!mc) continue
-            for (groupName in partialTarget.value) {
-                if (groupName == "*") {
+            for (String injectionName in partialTarget.value) {
+                if (injectionName == "*") {
                     //FIXME handle add-all
                     continue
                 }
                 def factories = localBuilder.getLocalFactories()
                 def methods = localBuilder.getLocalExplicitMethods()
-                def properties = localBuilder.getLocalExplicitProperties()
-                def groupItems = localBuilder.getRegistrationGroupItems(groupName)
-                if (!groupItems) {
-                    continue
-                }
-                for (itemName in groupItems) {
-                    def resolvedName = "${prefixName}${itemName}"
-                    if (methods.containsKey(itemName)) {
-                        mc."$resolvedName" = methods[itemName]
-                    } else if (properties.containsKey(itemName)) {
-                        Closure[] accessors = properties[itemName];
+                def props = localBuilder.getLocalExplicitProperties()
+
+                Closure processInjection = {String injectedName ->
+                    def resolvedName = "${prefixName}${injectedName}"
+                    if (methods.containsKey(injectedName)) {
+                        mc."$resolvedName" = methods[injectedName]
+                    } else if (props.containsKey(injectedName)) {
+                        Closure[] accessors = props[injectedName]
                         String beanName
-                        if (itemName.length() > 1) {
-                            beanName = itemName[0].toUpperCase() + itemName.substring(1)
+                        if (injectedName.length() > 1) {
+                            beanName = injectedName[0].toUpperCase() + injectedName.substring(1)
                         } else {
-                            beanName = itemName[0].toUpperCase()
+                            beanName = injectedName[0].toUpperCase()
                         }
                         if (accessors[0]) {
                             mc."get$beanName" = accessors[0]
@@ -119,9 +119,16 @@ class CompositeBuilderHelper {
                         if (accessors[1]) {
                             mc."set$beanName" = accessors[1]
                         }
-                    } else if (factories.containsKey(itemName)) {
+                    } else if (factories.containsKey(injectedName)) {
                         mc."${resolvedName}" = {Object ... args -> uberBuilder."$resolvedName"(* args)}
                     }
+                }
+
+                def groupItems = localBuilder.getRegistrationGroupItems(injectionName)
+                if (groupItems) {
+                    groupItems.each processInjection
+                } else {
+                    processInjection(injectionName)
                 }
             }
         }

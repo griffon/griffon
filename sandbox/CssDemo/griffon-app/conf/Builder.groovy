@@ -6,4 +6,7 @@ root {
     'griffon.app.ApplicationBuilder' {
         view = "*"
     }
+    'CssDemoBuilderAddon' {
+        controller = ['nothingMethod', 'nothingProp', 'nothingWidget']
+    }
 }

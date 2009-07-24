@@ -18,37 +18,22 @@ public class AddonHelper {
     ])
 
     static handleAddonsAtStartup(IGriffonApplication app) {
-        Map addonDefs = new TreeMap();
-        app.applicationProperties.each {String  addonDef, String addonClass ->
-            def parts = addonDef.split(/\./, 3)
-            if ('addon' != parts[0]) return
-
-            String prefix = parts.length < 3 ? '' : parts[1]
-            String addonName = parts.length < 3 ? parts[1] : parts[2]
-            addonDefs[addonName] = [prefix, addonClass]
-        }
-
-        addonDefs.each {String addonName, List addonDef ->
-            def addonClass = addonDef[1] as Class
-            def addon = addonClass.newInstance()
-
-            app.addons[addonName] = addon
-            app.addonPrefixes[addonName] = addonDef[0]
-
-            def addonMetaClass = addon.metaClass
-            addonMetaClass.newInstance = GriffonApplicationHelper.&newInstance.curry(app)
-
-            try {
-                addon.addonInit(app)
-            } catch (MissingMethodException mme) {
-                if (mme.method != 'addonInit') throw mme
+        for (node in app.builderConfig) {
+            String nodeName = node.key
+            switch (nodeName) {
+                case "addons" :
+                case "features":
+                    // reserved words, not addon prefixes
+                    break
+                default:
+                    if (nodeName == "root") nodeName = ""
+                    node.value.each {addon ->
+                        Class addonClass = Class.forName(addon.key) //FIXME get correct classloader
+                        if (!FactoryBuilderSupport.isAssignableFrom(addonClass)) {
+                            AddonHelper.handleAddon(app, addonClass, nodeName, addon.key)
+                        }
+                    }
             }
-
-            def mvcGroups = addonMetaClass.getMetaProperty("mvcGroups")
-            if (mvcGroups) addMVCGroups(app, addon.mvcGroups)
-
-            def events = addonMetaClass.respondsTo('events')
-            if (events) addEvents(app, addon.events)
         }
 
         app.addons.each {name, addon ->
@@ -61,38 +46,45 @@ public class AddonHelper {
     }
 
 
+    static def handleAddon(IGriffonApplication app, Class addonClass, String prefix, String addonName) {
+        def addon = addonClass.newInstance()
 
-    static handleAddonsForBuilders(IGriffonApplication app, UberBuilder builder) {
-        app.addonPrefixes.each {String addonName, String prefix ->
-            def addon = app.addons[addonName]
-            def addonMetaClass = addon.metaClass
+        app.addons[addonName] = addon
+        app.addonPrefixes[addonName] = prefix
 
-            try {
-                addon.addonBuilderInit(app, builder)
-            } catch (MissingMethodException mme) {
-                if (mme.method != 'addonBuilderInit') throw mme
-            }
+        def addonMetaClass = addon.metaClass
+        addonMetaClass.newInstance = GriffonApplicationHelper.&newInstance.curry(app)
 
-            DELEGATE_TYPES.each { String delegateType ->
-                ignoreMissingPropertyException {
-                    List<Closure> delegates = addon."$delegateType"
-                    delegateType = delegateType[0].toUpperCase() + delegateType[1..-2]
-                    delegates.each { Closure delegateValue ->
-                        builder."add$delegateType"(delegateValue)
+        try {
+            addon.addonInit(app)
+        } catch (MissingMethodException mme) {
+            if (mme.method != 'addonInit') throw mme
+        }
+
+        def mvcGroups = addonMetaClass.getMetaProperty("mvcGroups")
+        if (mvcGroups) addMVCGroups(app, addon.mvcGroups)
+
+        def events = addonMetaClass.respondsTo('events')
+        if (events) addEvents(app, addon.events)
+    }
+
+    static handleAddonsForBuilders(IGriffonApplication app, UberBuilder builder, Map targets) {
+        for (node in app.builderConfig) {
+            String nodeName = node.key
+            switch (nodeName) {
+                case "addons" :
+                case "features":
+                    // reserved words, not addon prefixes
+                    break
+                default:
+                    if (nodeName == "root") nodeName = ""
+                    node.value.each {addon ->
+                        Class addonClass = Class.forName(addon.key) //FIXME get correct classloader
+                        if (!FactoryBuilderSupport.isAssignableFrom(addonClass)) {
+                            AddonHelper.handleAddonForBuilder(app, builder, targets, addon, nodeName)
+                        }
                     }
-                }
             }
-
-            def factories = addonMetaClass.getMetaProperty('factories')
-            if (factories) addFactories(builder, factories.getProperty(addon), addonName, prefix)
-
-            def methods = addon.metaClass.getMetaProperty("methods")
-            if( methods ) addMethods(builder, methods.getProperty(addon), addonName, prefix)
-            def props = addon.metaClass.getMetaProperty("props")
-            if( props ) addProperties(builder, props.getProperty(addon), addonName, prefix)
-
-            def addonBuilderPostInit = addonMetaClass.respondsTo('addonBuilderPostInit')
-            if (addonBuilderPostInit) postInits << addon
         }
 
         app.addons.each {name, addon ->
@@ -102,6 +94,81 @@ public class AddonHelper {
                 if (mme.method != 'addonBuilderPostInit') throw mme
             }
         }
+    }
+
+    static handleAddonForBuilder(IGriffonApplication app, UberBuilder builder, Map targets, def addonNode, String prefix) {
+        def addonName = addonNode.key
+        def addon = app.addons[addonName]
+        def addonMetaClass = addon.metaClass
+
+        try {
+            addon.addonBuilderInit(app, builder)
+        } catch (MissingMethodException mme) {
+            if (mme.method != 'addonBuilderInit') throw mme
+        }
+
+        DELEGATE_TYPES.each { String delegateType ->
+            ignoreMissingPropertyException {
+                List<Closure> delegates = addon."$delegateType"
+                delegateType = delegateType[0].toUpperCase() + delegateType[1..-2]
+                delegates.each { Closure delegateValue ->
+                    builder."add$delegateType"(delegateValue)
+                }
+            }
+        }
+
+        MetaProperty factoriesMP = addonMetaClass.getMetaProperty('factories')
+        Map factories = [:]
+        if (factoriesMP) {
+            factories = factoriesMP.getProperty(addon)
+            addFactories(builder, factories, addonName, prefix)
+        }
+
+        MetaProperty methodsMP = addonMetaClass.getMetaProperty('methods')
+        Map methods = [:]
+        if (methodsMP) {
+            methods = methodsMP.getProperty(addon)
+            addMethods(builder, methods, addonName, prefix)
+        }
+
+        MetaProperty propsMP = addonMetaClass.getMetaProperty('props')
+        Map props = [:]
+        if (propsMP) {
+            props = propsMP.getProperty(addon)
+            addProperties(builder, props, addonName, prefix)
+        }
+
+        for (partialTarget in addonNode.value) {
+            if (partialTarget.key == 'view') {
+                // this needs special handling, skip it for now
+                continue
+            }
+            MetaClass mc = targets[partialTarget.key]?.getMetaClass()
+            if (!mc) continue
+            for (String itemName in partialTarget.value) {
+                def resolvedName = "${prefix}${itemName}"
+                if (methods.containsKey(itemName)) {
+                    mc."$resolvedName" = methods[itemName]
+                } else if (props.containsKey(itemName)) {
+                    Map accessors = props[itemName];
+                    String beanName
+                    if (itemName.length() > 1) {
+                        beanName = itemName[0].toUpperCase() + itemName.substring(1)
+                    } else {
+                        beanName = itemName[0].toUpperCase()
+                    }
+                    if (accessors.containsKey('get')) {
+                        mc."get$beanName" = accessors['get']
+                    }
+                    if (accessors.containsKey('set')) {
+                        mc."set$beanName" = accessors['set']
+                    }
+                } else if (factories.containsKey(itemName)) {
+                    mc."${resolvedName}" = {Object ... args -> builder."$resolvedName"(* args)}
+                }
+            }
+        }
+
     }
 
     private static ignoreMissingPropertyException(Closure closure) {

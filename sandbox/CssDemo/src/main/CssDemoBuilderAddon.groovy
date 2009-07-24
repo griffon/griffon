@@ -1,4 +1,6 @@
 import com.u2d.css4swing.style.ComponentStyle
+import groovy.swing.factory.BeanFactory
+import javax.swing.JLabel
 
 class CssDemoBuilderAddon {
 
@@ -18,6 +20,17 @@ class CssDemoBuilderAddon {
         ]
     ]
 
+    def methods = [
+        nothingMethod: { println "nothing Method" }
+    ]
+
+    def props = [
+        nothingProp: [ get:{"Nothing in this Property!"} ]
+    ]
+
+    def factories = [
+        nothingWidget : new BeanFactory(JLabel)
+    ]
 
     def addonInit(app) {
         println "init the $app!"

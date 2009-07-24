@@ -6,6 +6,11 @@ class CssDemoController {
 
     def doNothing = {
         buildMVCGroup('NothingPanel')
+        doOutside {
+            nothingMethod()
+            println nothingProp
+            edt { println nothingWidget() }
+        }
     }
 
 }
