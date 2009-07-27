@@ -31,6 +31,7 @@ class SwingPadModel {
 
    Map builders = [
       css:        [ enabled: true,  loaded: true,  type: "griffon.builder.css.CSSBuilder"],
+      gfx:        [ enabled: true,  loaded: true,  type: "griffon.builder.gfx.GfxBuilder"],
       swing:      [ enabled: true,  loaded: true,  type: "groovy.swing.SwingBuilder"],
       swingx:     [ enabled: true,  loaded: true,  type: "groovy.swing.SwingXBuilder"],
       jide:       [ enabled: true,  loaded: true,  type: "griffon.builder.jide.JideBuilder"],

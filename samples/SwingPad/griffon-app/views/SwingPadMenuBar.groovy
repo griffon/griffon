@@ -109,7 +109,8 @@ menuBar = menuBar {
             macwidgets1: "MacWidgets - Flair",
             swingxtras1: "Swingxtras - Flair",
             trident1: "Trident - ButtonFG",
-            trident2: "Trident - Snake"].each { id, name ->
+            trident2: "Trident - Snake",
+            gfx1: "Gfx - Sphere"].each { id, name ->
              menuItem(makeSampleScriptAction(id,name))
           }
        }
