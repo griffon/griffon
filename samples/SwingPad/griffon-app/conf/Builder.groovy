@@ -19,5 +19,4 @@ root.'griffon.builder.css.CSSBuilder'.view = '*'
 // root.'griffon.builder.flamingo.FlamingoBuilder'.view = '*'
 // root.'griffon.builder.tray.TrayBuilder'.view = '*'
 root.'griffon.builder.trident.TridentBuilder'.view = '*'
-
 root.'griffon.builder.gfx.GfxBuilder'.view = '*'

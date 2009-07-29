@@ -1,0 +1,41 @@
+import groovy.beans.Bindable
+import org.pushingpixels.trident.Timeline.TimelineState
+
+@Bindable
+class Model {
+  float s = 0.5f
+  float ra = 0.0f
+}
+model = new Model()
+
+anim = timeline(model, duration: 4000, loop: 'reverse') {
+  interpolatedProperty(property: "s", from: 0.5f, to: 2.0f)
+  interpolatedProperty(property: "ra", from: 0f, to: 360f)
+}
+mouseHandler = {
+  anim.state == TimelineState.SUSPENDED? anim.resume() : anim.suspend()
+}
+
+cx = 100
+cy = 100
+radius = 25
+
+panel {
+  borderLayout()
+  canvas = canvas(preferredSize: [200,200], constraints: context.CENTER) {
+    group {
+      antialias true
+      background(color: color("white"))
+      group(sx: bind{model.s}, sy: bind{model.s}, ra: bind{model.ra},
+        mouseClicked: mouseHandler) {
+        rect(x: cx-radius, y: cy-radius, w: radius*2, h: radius*2, f: color('blue'))
+        circle(cx: cx-radius, cy: cy-radius, r: radius/2, f: color('red'))
+        circle(cx: cx-radius, cy: cy+radius, r: radius/2, f: color('green'))
+        circle(cx: cx+radius, cy: cy-radius, r: radius/2, f: color('yellow'))
+        circle(cx: cx+radius, cy: cy+radius, r: radius/2, f: color('violet'))
+      }
+    }
+  }
+  label("Click shape to pause/resume", constraints: context.SOUTH)
+  swingRepaintTimeline(canvas, loop: true)
+}

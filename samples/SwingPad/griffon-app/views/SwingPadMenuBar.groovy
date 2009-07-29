@@ -110,7 +110,8 @@ menuBar = menuBar {
             swingxtras1: "Swingxtras - Flair",
             trident1: "Trident - ButtonFG",
             trident2: "Trident - Snake",
-            gfx1: "Gfx - Sphere"].each { id, name ->
+            gfx1: "Gfx - Sphere",
+            gfx2: "Gfx - Animation"].each { id, name ->
              menuItem(makeSampleScriptAction(id,name))
           }
        }
