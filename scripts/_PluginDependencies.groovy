@@ -426,6 +426,17 @@ pluginScript = { pluginName, scriptName ->
    def scriptFile = new File(pluginHome,"/scripts/${scriptName}.groovy")
    return scriptFile.exists() ? scriptFile : null
 }
+
+// this is one is better than the previous as it will only include
+// the script if the plugin is available. Works on application
+// and plugin project
+includePluginScript = { pluginName, scriptName ->
+   def pluginHome = getPluginDirForName(pluginName)?.file
+   if(!pluginHome) return
+   def scriptFile = new File(pluginHome,"/scripts/${scriptName}.groovy")
+   if(scriptFile.exists()) inclueTargets << scriptFile
+}
+
 /**
  * Downloads a remote plug-in zip into the plugins dir
  */
