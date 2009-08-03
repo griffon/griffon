@@ -68,6 +68,9 @@ environments {
 }
 
 griffon {
+    app {
+        javaOpts = ['-Dapple.awt.UIElement=true']
+    }
     memory {
         //max = '64m'
         //min = '2m'

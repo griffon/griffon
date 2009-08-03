@@ -6,7 +6,7 @@ degreeFormatter = {"$it\u00b0${model.celsius?'C':'F'}"}
 
 def weatherIcons = [:]
 
-hw = hudWindow(locationByPlatform:true) {
+hw = hudWindow(locationByPlatform:true, alwaysOnTop:true) {
     vbox {
         hbox {
             hglue()
@@ -24,7 +24,7 @@ hw = hudWindow(locationByPlatform:true) {
             }
             hstrut(6)
             currentTemp = label(
-                icon:bind { weatherIcons.get(model.state, 
+                icon:bind { weatherIcons.get(model.state,
                         imageIcon(new URL("http://icons.weatherunderground.com/graphics/conds/2005/${model.state}.gif")))},
                 text: bind {degreeFormatter(model.current)}, font:new Font("Arial", Font.BOLD, 42),
                 foreground:Color.WHITE)
