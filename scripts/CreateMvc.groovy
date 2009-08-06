@@ -53,15 +53,41 @@ target (createMVC : "Creates a new MVC Triad") {
 
     createIntegrationTest(name: name, suffix: "")
 
-    def applicationConfigFile = new File("${basedir}/griffon-app/conf/Application.groovy")
-    def configText = applicationConfigFile.text
-    if (!(configText =~ /\s*mvcGroups\s*\{/)) {
-        configText += """
+
+    if (isPluginProject) {
+        // create mvcGroup in a plugin
+        def pluginFile = isPluginProject
+        def pluginText = pluginFile.text
+
+        if (!(pluginText =~ /\s*def\s*mvcGroups\s*=\s*\[/)) {
+            pluginText = pluginText.replaceAll(/\}\s*\z/, """
+    def mvcGroups = [
+    ]
+}
+""")
+        }
+        pluginFile.withWriter { it.write pluginText.replaceAll(/\s*def\s*mvcGroups\s*=\s*\[/, """
+    def mvcGroups = [
+        // MVC Group for "$args"
+        '$name' : [
+            model : '${fqn}Model'
+            view : '${fqn}View'
+            controller : '${fqn}Controller'
+        ]
+    """) }
+
+
+    } else {
+        // create mvcGroup in an application
+        def applicationConfigFile = new File("${basedir}/griffon-app/conf/Application.groovy")
+        def configText = applicationConfigFile.text
+        if (!(configText =~ /\s*mvcGroups\s*\{/)) {
+            configText += """
 mvcGroups {
 }
 """
-    }
-    applicationConfigFile.withWriter { it.write configText.replaceAll(/\s*mvcGroups\s*\{/, """
+        }
+        applicationConfigFile.withWriter { it.write configText.replaceAll(/\s*mvcGroups\s*\{/, """
 mvcGroups {
     // MVC Group for "$args"
     '$name' {
@@ -70,6 +96,7 @@ mvcGroups {
         controller = '${fqn}Controller'
     }
 """) }
+    }
 }
 
 setDefaultTarget(createMVC)
