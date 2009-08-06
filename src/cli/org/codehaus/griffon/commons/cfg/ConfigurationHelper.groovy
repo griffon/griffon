@@ -36,7 +36,7 @@ class ConfigurationHelper {
     private static final LOG = LogFactory.getLog(ConfigurationHelper)
 
     private static final String CONFIG_BINDING_USER_HOME = "userHome";
-    private static final String CONFIG_BINDING_Griffon_HOME = "griffonHome";
+    private static final String CONFIG_BINDING_GRIFFON_HOME = "griffonHome";
     private static final String CONFIG_BINDING_APP_NAME = "appName";
     private static final String CONFIG_BINDING_APP_VERSION = "appVersion";
 
@@ -47,7 +47,7 @@ class ConfigurationHelper {
 
         // configure config slurper binding
         binding.put(CONFIG_BINDING_USER_HOME, System.getProperty("user.home"));
-        binding.put(CONFIG_BINDING_Griffon_HOME, System.getProperty("griffon.home"));
+        binding.put(CONFIG_BINDING_GRIFFON_HOME, System.getProperty("griffon.home"));
 
         if (application) {
             binding.put(CONFIG_BINDING_APP_NAME, application.getMetadata().get("app.name"))
