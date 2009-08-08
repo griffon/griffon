@@ -25,13 +25,23 @@
 includeTargets << griffonScript("_GriffonClean")
 includeTargets << griffonScript("_GriffonTest")
 
-target(_testApp: "Run a Griffon applications unit tests") {
+target(default: "Run a Griffon applications unit tests") {
     depends(checkVersion, configureProxy, parseArguments, cleanTestReports)
-    testApp(unitOnly: argsMap["unit"],
-            integrationOnly: argsMap["integration"],
-            xmlOnly: argsMap["xml"],
-            reRunTests: argsMap["rerun"],
-            noReports: argsMap["no-reports"])
+ 
+    if (argsMap["unit"]) phasesToRun << "unit"
+    if (argsMap["integration"]) phasesToRun << "integration"
+//     if (argsMap["functional"]) phasesToRun << "functional"
+    if (argsMap["other"]) phasesToRun << "other"
+    if (argsMap["params"]) testNames = argsMap["params"]
+    if (argsMap["xml"]) {
+        reportFormats = [ "xml" ]
+        createTestReports = false
+    }
+    else {
+        createTestReports = !argsMap["no-reports"]
+    }
+ 
+    reRunTests = argsMap["rerun"]
+ 
+    allTests()
 }
-
-setDefaultTarget(_testApp)
