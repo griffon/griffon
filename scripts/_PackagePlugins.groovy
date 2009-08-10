@@ -14,52 +14,129 @@
  * limitations under the License.
  */
 
+import org.codehaus.griffon.plugins.GriffonPluginUtils
+import org.codehaus.griffon.plugins.PluginInfo
+
 /**
  * Gant script that handles the packaging of Griffon plug-ins
- *
+ * 
  * @author Graeme Rocher
  *
  * @since 0.4
  */
 
-pluginResources = []
+packageFiles = { String from ->
+    def targetPath = griffonSettings.resourcesDir.path
+    def dir = new File(from, "griffon-app/conf")
+    if (dir.exists()) {
+       ant.copy(todir:targetPath, failonerror:false) {
+            fileset(dir:dir.path) {
+                exclude(name:"**/*.groovy")
+                exclude(name:"**/log4j*")
+//                 exclude(name:"hibernate/**/*")
+//                 exclude(name:"spring/**/*")
+            }
+        }
+    }
+
+//     dir = new File(dir, "hibernate")
+//     if (dir.exists()) {
+//        ant.copy(todir:targetPath, failonerror:false) {
+//           fileset(dir:dir.path, includes:"**/*")
+//         }
+//     }
+
+    dir = new File(from, "src/main")
+    if (dir.exists()) {
+       ant.copy(todir:targetPath, failonerror:false) {
+            fileset(dir:dir.path) {
+                exclude(name:"**/*.groovy")
+                exclude(name:"**/*.java")
+            }
+        }
+    }
+}
 
 target( packagePlugins : "Packages any Griffon plugins that are installed for this project") {
-	depends( classpath )
-	try {
+   depends( classpath )
+    def pluginInfos = GriffonPluginUtils.getPluginInfos(pluginsHome)
+    for(PluginInfo info in pluginInfos) {
+        try {
+            def pluginBase = info.pluginDir.file
+            packageFiles(pluginBase.path)
+        }
+        catch(Exception e) {
+            e.printStackTrace(System.out)
+            println "Error packaging plugin [${info.name}] : ${e.message}"
+        }
 
-		pluginResources = getPluginDescriptors()
-        basePlugin = getBasePluginDescriptor()
-           for(p in pluginResources) {
-	   		def pluginBase = p.file.parentFile.canonicalFile
-	     	def pluginPath = pluginBase.absolutePath
-			def pluginName = pluginBase.name
-			def pluginNameWithVersion = pluginBase.name
-
-	   		ant.sequential {
-//				if(new File("${pluginBase}/griffon-app/conf/hibernate").exists()) {
-//		   			copy(todir:classesDirPath, failonerror:false) {
-//		   				fileset(dir:"${pluginBase}/griffon-app/conf/hibernate", includes:"**", excludes:"*.groovy")
-//		   			}
-//				}
-				if(new File("${pluginBase}/griffon-app/conf").exists()) {
-		   			copy(todir:classesDirPath, failonerror:false) {
-		   				fileset(dir:"${pluginBase}/griffon-app/conf", includes:"*", excludes:"*.groovy")
-		   			}
-				}
-//	            if(new File("${pluginPath}/web-app").exists()) {
-//					ant.mkdir(dir:"${basedir}/web-app/plugins/${pluginName}")
-//					if(basePlugin != p) {
-//			  			copy(todir:"${basedir}/web-app/plugins/${pluginName}") {
-//			   				fileset(dir:"${pluginBase}/web-app", includes:"**", excludes:"**/WEB-INF/**, **/META-INF/**")
-//			   			}
-//					}
-//				}
-	   		}
-	   	}
-	}
-	catch(Exception e) {
-        logError("Error packaging plugins", e)
-	}
+    }
 }
+
+// packagePluginsForWar = { targetDir ->
+//     def pluginInfos = GriffonPluginUtils.getPluginInfos(pluginsHome)
+//     for(PluginInfo info in pluginInfos) {
+//         try {
+// 
+//             def pluginBase = info.pluginDir.file
+//             def pluginPath = pluginBase.absolutePath
+//             def pluginName = "${info.name}-${info.version}"
+// 
+//             packageFiles(pluginBase.path)
+//             if(new File("${pluginPath}/web-app").exists()) {
+//                 ant.mkdir(dir:"${targetDir}/plugins/${pluginName}")
+//                 ant.copy(todir:"${targetDir}/plugins/${pluginName}") {
+//                     fileset(dir:"${pluginBase}/web-app", includes:"**", excludes:"**/WEB-INF/**, **/META-INF/**")
+//                 }
+//             }
+//         }
+//         catch(Exception e) {
+//             e.printStackTrace(System.out)
+//             println "Error packaging plugin [${info.name}] : ${e.message}"
+//         }
+// 
+//     }
+// }
+
+
+// pluginResources = []
+
+// target( packagePlugins : "Packages any Griffon plugins that are installed for this project") {
+// 	depends( classpath )
+// 	try {
+// 
+// 		pluginResources = getPluginDescriptors()
+//         basePlugin = getBasePluginDescriptor()
+//            for(p in pluginResources) {
+// 	   		def pluginBase = p.file.parentFile.canonicalFile
+// 	     	def pluginPath = pluginBase.absolutePath
+// 			def pluginName = pluginBase.name
+// 			def pluginNameWithVersion = pluginBase.name
+// 
+// 	   		ant.sequential {
+// //				if(new File("${pluginBase}/griffon-app/conf/hibernate").exists()) {
+// //		   			copy(todir:classesDirPath, failonerror:false) {
+// //		   				fileset(dir:"${pluginBase}/griffon-app/conf/hibernate", includes:"**", excludes:"*.groovy")
+// //		   			}
+// //				}
+// 				if(new File("${pluginBase}/griffon-app/conf").exists()) {
+// 		   			copy(todir:classesDirPath, failonerror:false) {
+// 		   				fileset(dir:"${pluginBase}/griffon-app/conf", includes:"*", excludes:"*.groovy")
+// 		   			}
+// 				}
+// //	            if(new File("${pluginPath}/web-app").exists()) {
+// //					ant.mkdir(dir:"${basedir}/web-app/plugins/${pluginName}")
+// //					if(basePlugin != p) {
+// //			  			copy(todir:"${basedir}/web-app/plugins/${pluginName}") {
+// //			   				fileset(dir:"${pluginBase}/web-app", includes:"**", excludes:"**/WEB-INF/**, **/META-INF/**")
+// //			   			}
+// //					}
+// //				}
+// 	   		}
+// 	   	}
+// 	}
+// 	catch(Exception e) {
+//         logError("Error packaging plugins", e)
+// 	}
+// }
 
