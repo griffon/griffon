@@ -61,7 +61,7 @@ pluginExcludes = [
 ]
 
 target(packagePlugin:"Implementation target") {
-    depends (checkVersion, /*packageApp,*/ docs) //FIXME package-plugin
+    depends (checkVersion, packageApp, docs) 
 
     def pluginFile
     new File("${basedir}").eachFile {
