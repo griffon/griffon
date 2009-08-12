@@ -94,6 +94,7 @@ griffonApp = null
 griffonContext = null
 griffonTmp = "${griffonSettings.griffonWorkDir}/tmp"
 isPluginProject = griffonSettings.baseDir.listFiles().find { it.name.endsWith("GriffonPlugin.groovy") }
+isAddonPlugin = griffonSettings.baseDir.listFiles().find { it.name.endsWith("GriffonAddon.groovy") }
 
 shouldPackageTemplates = false
 config = new ConfigObject()

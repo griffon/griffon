@@ -54,19 +54,19 @@ target (createMVC : "Creates a new MVC Triad") {
     createIntegrationTest(name: name, suffix: "")
 
 
-    if (isPluginProject) {
+    if (isAddonPlugin) {
         // create mvcGroup in a plugin
-        def pluginFile = isPluginProject
-        def pluginText = pluginFile.text
+        def addonFile = isAddonPlugin
+        def addonText = addonFile.text
 
-        if (!(pluginText =~ /\s*def\s*mvcGroups\s*=\s*\[/)) {
-            pluginText = pluginText.replaceAll(/\}\s*\z/, """
+        if (!(addonText =~ /\s*def\s*mvcGroups\s*=\s*\[/)) {
+            addonText = addonText.replaceAll(/\}\s*\z/, """
     def mvcGroups = [
     ]
 }
 """)
         }
-        pluginFile.withWriter { it.write pluginText.replaceAll(/\s*def\s*mvcGroups\s*=\s*\[/, """
+        addonFile.withWriter { it.write addonText.replaceAll(/\s*def\s*mvcGroups\s*=\s*\[/, """
     def mvcGroups = [
         // MVC Group for "$args"
         '$name' : [
