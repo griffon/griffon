@@ -15,10 +15,9 @@
  */
 
 /**
- * Gant script that creates a new Griffon Model-View-Controller triads
+ * Gant script that creates a new Griffon Addon inside of a Plugin Project
  *
  * @author Danno Ferrin
- * @author Graeme Rocher
  *
  */
 
@@ -27,6 +26,14 @@ import org.codehaus.griffon.commons.GriffonClassUtils as GCU
 includeTargets << griffonScript("Init")
 includeTargets << griffonScript("CreateIntegrationTest")
 
+/**
+ * Stuff this addon does:
+ * * Creates a <name>GriffonAddon.groovy file form templates
+ * * tweaks griffon-app/conf/Config.groovy to have griffon.jars.destDir set (dont' cahnge)
+ * * tweaks griffon-app/conf/Config.groovy to have griffon.jars.jarName set (dont' cahnge)
+ * * Adds copy libs events for the destDir
+ * * Adds install hooks to wire in addon to griffon-app/conf/Builder.groovy
+ */
 target (createMVC : "Creates a new Addon for a plugin") {
     depends(checkVersion, parseArguments)
     promptForName(type: "Addon")
@@ -42,8 +49,20 @@ target (createMVC : "Creates a new Addon for a plugin") {
     fqn += 'GriffonAddon'
     name = "${GCU.getClassNameRepresentation(name)}GriffonAddon"
 
-    //TODO change config.griffon.jars.destDir to lib/<foo>Addon-<Ver>.jar
+    def pluginConfigFile = new File('griffon-app/conf/Config.groovy')
+    if (!pluginConfigFile.exists()) {
+        pluginConfigFile.text = "griffon {}\n"
+    }
+    ConfigSlurper slurper = new ConfigSlurper()
+    def pluginConfig = slurper.parse(pluginConfigFile.toURL())
 
+    if (!pluginConfig.griffon?.jars?.destDir) {
+        pluginConfigFile << "\ngriffon.jars.destDir='lib'\n"
+    }
+    if (!pluginConfig.griffon?.jars?.jarName) {
+        pluginConfigFile << "\ngriffon.jars.jarName='${name}.jar'\n"
+    }
+    
     def eventsFile = new File("scripts/_Events.groovy")
     if (!eventsFile.exists()) {
         eventsFile.text = "\n"
@@ -55,8 +74,10 @@ target (createMVC : "Creates a new Addon for a plugin") {
 def $libTempVar = binding.variables.containsKey('eventCopyLibsEnd') ? eventCopyLibsEnd : {jardir->}
 eventCopyLibsEnd = { jardir ->
     $libTempVar(jardir)
-    ant.fileset(dir:"\${getPluginDirForName('macwidgets-builder').file}/lib/", includes:"*.jar").each {
-        griffonCopyDist(it.toString(), jardir)
+    if (!isPluginProject) {
+        ant.fileset(dir:"\${getPluginDirForName('$griffonAppName').file}/lib/", includes:"*.jar").each {
+            griffonCopyDist(it.toString(), jardir)
+        }
     }
 }
 
@@ -67,13 +88,14 @@ eventCopyLibsEnd = { jardir ->
     String installText = installFile.text
     def slurperVar = generateTempVar(installText, 'configSlurper')
     def flagVar = generateTempVar(installText, 'addonIsSet')
+    def configVar = generateTempVar(installText, 'slurpedBuilder')
 
     installFile << """
 // check to see if we already have a $name
 ConfigSlurper $slurperVar = new ConfigSlurper()
-o = ${slurperVar}.parse(new File("\${basedir}/griffon-app/conf/Builder.groovy").toURL())
+def $configVar = ${slurperVar}.parse(new File("\$basedir/griffon-app/conf/Builder.groovy").toURL())
 boolean $flagVar
-o.each() { prefix, v ->
+${configVar}.each() { prefix, v ->
     v.each { builder, views ->
         $flagVar = $flagVar || '$fqn' == builder
     }
@@ -81,7 +103,7 @@ o.each() { prefix, v ->
 
 if (!$flagVar) {
     println 'Adding $name to Builders.groovy'
-    new File("\${basedir}/griffon-app/conf/Builder.groovy").append('''
+    new File("\$basedir/griffon-app/conf/Builder.groovy").append('''
 root.'$fqn' { }
 ''')
 }"""
@@ -97,3 +119,7 @@ def generateTempVar(String textToSearch, String prefix = "tmp", String suffix = 
 }
 
 setDefaultTarget(createMVC)
+
+
+//TODO only copy addon jar into /lib/  (not griffon-rt or groovy)
+//TODO don't add plugin to jar, or keys or webstart dirs, or application.properties

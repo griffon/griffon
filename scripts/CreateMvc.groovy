@@ -70,8 +70,8 @@ target (createMVC : "Creates a new MVC Triad") {
     def mvcGroups = [
         // MVC Group for "$args"
         '$name' : [
-            model : '${fqn}Model'
-            view : '${fqn}View'
+            model : '${fqn}Model',
+            view : '${fqn}View',
             controller : '${fqn}Controller'
         ]
     """) }
