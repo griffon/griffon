@@ -120,6 +120,3 @@ def generateTempVar(String textToSearch, String prefix = "tmp", String suffix = 
 
 setDefaultTarget(createMVC)
 
-
-//TODO only copy addon jar into /lib/  (not griffon-rt or groovy)
-//TODO don't add plugin to jar, or keys or webstart dirs, or application.properties
