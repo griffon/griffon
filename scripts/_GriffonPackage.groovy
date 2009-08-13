@@ -114,9 +114,6 @@ target( packageApp : "Implementation of package target") {
         createConfig()
     }
 
-    // check to makse sure we are creating a dest jar
-    if (!(config?.griffon?.jars?.destDir)) return;
-
     // flag if <application>.jar is up to date
     jardir = ant.antProject.replaceProperties(config.griffon.jars.destDir)
     ant.uptodate(property:'appJarUpToDate', targetfile:"${jardir}/${config.griffon.jars.jarName}") {

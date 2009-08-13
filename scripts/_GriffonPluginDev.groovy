@@ -29,6 +29,7 @@ import org.codehaus.griffon.util.GriffonNameUtils
  */
 
 includeTargets << griffonScript("_GriffonPackage")
+includeTargets << griffonScript("PackageAddon")
 includeTargets << griffonScript("_GriffonDocs")
 
 pluginIncludes = [
@@ -61,7 +62,7 @@ pluginExcludes = [
 ]
 
 target(packagePlugin:"Implementation target") {
-    depends (checkVersion, packageApp, docs) 
+    depends (checkVersion, packageAddon, docs)
 
     def pluginFile
     new File("${basedir}").eachFile {

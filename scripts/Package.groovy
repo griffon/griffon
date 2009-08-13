@@ -17,7 +17,6 @@
 /**
  * Gant script that packages a Griffon application (note: does not create WAR)
  *
- * @deprecated This isn't much use as a Griffon command on its own.
  * @author Graeme Rocher
  *
  * @since 0.4

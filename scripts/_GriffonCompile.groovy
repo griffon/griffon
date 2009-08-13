@@ -118,6 +118,13 @@ target(compile : "Implementation of compilation phase") {
             }
         }
 
+        if( new File("${basedir}").list().grep{ it =~ /GriffonAddon\.groovy/ } ){
+            compileSources(classpathId) {
+                src(path:"${basedir}")
+                include(name:'*GriffonAddon.groovy')
+            }
+        }
+
         classLoader.addURL(classesDir.toURI().toURL())
 
         event("CompileEnd", ['source'])
