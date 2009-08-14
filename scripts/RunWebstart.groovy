@@ -16,8 +16,10 @@ target(tweakConfig:' tweaks for webstart') {
     configTweaks << { config.griffon.jars.sign = true }
 }
 target(runWebstart: "Does the actual command line execution") {
-    depends(checkVersion, tweakConfig, createConfig, packageApp)
+    depends(checkVersion, tweakConfig, createConfig)
 
+    makeJNLP = true
+    packageApp()
     if ((config.griffon.jars.sign != [:]) && !config.griffon.jars.sign) {
         event("StatusFinal", ["Cannot run WebStart application because Webstart requires code signing.\n  in Config.groovy griffon.jars.sign = false"])
         exit(1)
