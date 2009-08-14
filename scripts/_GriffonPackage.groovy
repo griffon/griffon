@@ -38,7 +38,7 @@ includeTargets << griffonScript("_PackagePlugins")
 configTweaks = []
 
 target( createConfig: "Creates the configuration object") {
-   if(configFile.exists()) {
+   if(!ConfigurationHolder.config && configFile.exists()) {
        def configClass
        try {
            configClass = classLoader.loadClass("Config")
@@ -184,7 +184,10 @@ target( packageApp : "Implementation of package target") {
     checkKey()
     copyLibs()
     jarFiles()
-    generateJNLP()
+
+    griffonApplicationClass = config.griffon.application.mainClass ?: defaultGriffonApplicationClass
+    if(makeJNLP) generateJNLP()
+
     event("PackagingEnd",[])
 }
 
@@ -418,9 +421,13 @@ target(generateJNLP:"Generates the JNLP File") {
         memOptions << "java-vm-args='-XX:maxPermSize=$config.griffon.memory.maxPermSize'"
     }
 
+    griffonAppletClass = config.griffon.applet.mainClass ?: defaultGriffonAppletClass
+
     fileset(dir:jardir, includes:"*.jnlp,*.html").each {
         String fileName = it.toString()
         ant.replace(file: fileName) {
+            replacefilter(token:"@griffonAppletClass@", value: griffonAppletClass)
+            replacefilter(token:"@griffonApplicationClass@", value: griffonApplicationClass)
             replacefilter(token:"@griffonAppName@", value:"${griffonAppName}" )
             replacefilter(token:"@griffonAppVersion@", value:"${griffonAppVersion}" )
             replacefilter(token:"@griffonAppCodebase@", value:"${config.griffon.webstart.codebase}")

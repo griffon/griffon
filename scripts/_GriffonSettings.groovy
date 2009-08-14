@@ -108,6 +108,10 @@ applicationFile = new File("${basedir}/griffon-app/conf/Application.groovy")
 // structure.
 artefactPattern = /\S+?\/griffon-app\/\S+?\/(\S+?)\.groovy/
 
+defaultGriffonApplicationClass = "griffon.application.SingleFrameApplication"
+defaultGriffonAppletClass = "griffon.applet.GriffonApplet"
+makeJNLP = false
+
 // Set up the Griffon environment for this script.
 if (!System.getProperty("griffon.env.set")) {
     if (griffonSettings.defaultEnv && getBinding().variables.containsKey("scriptEnv")) {

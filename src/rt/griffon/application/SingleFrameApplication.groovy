@@ -1,5 +1,5 @@
 /*
- * Copyright 2008 the original author or authors.
+ * Copyright 2008-2009 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -10,46 +10,35 @@
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
+ * See the License for the specific language govnerning permissions and
  * limitations under the License.
  */
 package griffon.application
 
 import griffon.util.GriffonApplicationHelper
 import griffon.util.IGriffonApplication
-import griffon.util.EventRouter
-import java.awt.event.WindowEvent
+import griffon.util.BaseGriffonApplication
 import griffon.util.GriffonExceptionHandler
+import java.awt.event.WindowEvent
 import java.awt.EventQueue
 
 /**
- *@author Danno.Ferrin
+ * @author Danno.Ferrin
+ * @author Andres.Almiray
  */
-class SingleFrameApplication implements IGriffonApplication {
+class SingleFrameApplication /*implements IGriffonApplication*/ {
+    @Delegate private final BaseGriffonApplication _base
 
-    Map<String, ?> addons = [:]
-    Map<String, String> addonPrefixes = [:]
-
-    Map<String, Map<String, String>> mvcGroups = [:]
-    Map models      = [:]
-    Map views       = [:]
-    Map controllers = [:]
-    Map builders    = [:]
-    Map groups      = [:]
     List appFrames  = []
 
-    Binding bindings = new Binding()
-    Properties applicationProperties
-    ConfigObject config
-    ConfigObject builderConfig
-    Object eventsConfig
-
-    private EventRouter eventRouter = new EventRouter()
+    SingleFrameApplication() {
+       _base = new BaseGriffonApplication(this)
+    }
 
     public void bootstrap() {
         applicationProperties = new Properties()
-        applicationProperties.load(getClass().getResourceAsStream('/application.properties')) 
-        GriffonApplicationHelper.prepare(this);
+        applicationProperties.load(getClass().getResourceAsStream('/application.properties'))
+        GriffonApplicationHelper.prepare(this)
         event("BootstrapEnd",[this])
     }
 
@@ -65,21 +54,16 @@ class SingleFrameApplication implements IGriffonApplication {
         GriffonApplicationHelper.callReady(this)
     }
 
-    public Class getConfigClass() {
-        return getClass().classLoader.loadClass("Application")
+    public void shutdown() {
+        _base.shutdown()
+        System.exit(0)
     }
 
-    public Class getBuilderClass() {
-        return getClass().classLoader.loadClass("Builder")
-    }
-
-    public Class getEventsClass() {
-        try{
-           return getClass().classLoader.loadClass("Events")
-        } catch( ignored ) {
-           // ignore - no global event handler will be used
+    public void handleWindowClosing(WindowEvent evt = null) {
+        appFrames.removeAll(appFrames.findAll {!it.visible})
+        if (config.application?.autoShutdown && appFrames.size() <= 1) {
+            shutdown()
         }
-        return null
     }
 
     public Object createApplicationContainer() {
@@ -93,64 +77,11 @@ class SingleFrameApplication implements IGriffonApplication {
         return appContainer
     }
 
-    public void initialize() {
-        GriffonApplicationHelper.runScriptInsideEDT("Initialize", this)
-    }
-
-    public void ready() {
-        event("ReadyStart",[this])
-        GriffonApplicationHelper.runScriptInsideEDT("Ready", this)
-        event("ReadyEnd",[this])
-    }
-
-    public void shutdown() {
-        event("ShutdownStart",[this])
-        GriffonApplicationHelper.runScriptInsideEDT("Shutdown", this)
-        System.exit(0)
-    }
-
-    public void startup() {
-        event("StartupStart",[this])
-        GriffonApplicationHelper.runScriptInsideEDT("Startup", this)
-        event("StartupEnd",[this])
-    }
-
-    public void handleWindowClosing(WindowEvent evt = null) {
-        appFrames.removeAll(appFrames.findAll {!it.visible})
-        if (config.application?.autoShutdown && appFrames.size() <= 1) {
-            shutdown()
-        }
-    }
-
     public static void main(String[] args) {
         GriffonExceptionHandler.registerExceptionHandler()
-        SingleFrameApplication sfa = new SingleFrameApplication();
-        sfa.bootstrap();
-        sfa.realize();
-        sfa.show();
-    }
-
-    public void event( String eventName, List params = [] ) {
-        eventRouter.publish(eventName, params)
-    }
-
-    public void addApplicationEventListener( listener ) {
-       eventRouter.addEventListener(listener)
-    }
-
-    public void removeApplicationEventListener( listener ) {
-       eventRouter.removeEventListener(listener)
-    }
-
-    public void addApplicationEventListener( String eventName, Closure listener ) {
-       eventRouter.addEventListener(eventName,listener)
-    }
-
-    public void removeApplicationEventListener( String eventName, Closure listener ) {
-       eventRouter.removeEventListener(eventName,listener)
-    }
-
-    public void addMvcGroup(String mvcType, Map<String, String> mvcPortions) {
-       mvcGroups[mvcType] = mvcPortions
+        SingleFrameApplication sfa = new SingleFrameApplication()
+        sfa.bootstrap()
+        sfa.realize()
+        sfa.show()
     }
 }

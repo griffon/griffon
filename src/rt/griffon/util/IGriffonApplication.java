@@ -31,7 +31,7 @@ import java.util.Properties;
  */
 public interface IGriffonApplication {
 
-    public Properties getApplicationProperties();    
+    public Properties getApplicationProperties();
 
     public Class getConfigClass();
     public ConfigObject getConfig();
