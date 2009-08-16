@@ -69,6 +69,22 @@ eclipseClasspathLibs = {
     result
 }
 
+intellijClasspathLibs = {
+    def builder = new StringBuilder()
+    if (griffonHome) {
+        (new File("${griffonHome}/lib")).eachFileMatch(~/.*\.jar/) {file ->
+            if (!file.name.startsWith("gant-")) {
+                builder << "<root url=\"jar://${griffonHome}/lib/${file.name}!/\" />\n\n"
+            }
+        }
+        (new File("${griffonHome}/dist")).eachFileMatch(~/^griffon-.*\.jar/) {file ->
+            builder << "<root url=\"jar://${griffonHome}/dist/${file.name}!/\" />\n\n"
+        }
+    }
+
+    return builder.toString()
+}
+
 // Generates Eclipse .classpath entries for the Griffon distribution
 // JARs. This only works if $Griffon_HOME is set.
 eclipseClasspathGriffonJars = {args ->
@@ -143,8 +159,13 @@ target( launderIDESupportFiles: "Updates the IDE support files (Eclipse, TextMat
     ant.move(file: "${basedir}/.launch", tofile: "${basedir}/${griffonAppName}.launch", overwrite: true)
     ant.move(file: "${basedir}/project.tmproj", tofile: "${basedir}/${griffonAppName}.tmproj", overwrite: true)
 
+    ant.move(file: "${basedir}/ideaGriffonProject.iml", tofile: "${basedir}/${griffonAppName}.iml", overwrite: true)
+    ant.move(file: "${basedir}/ideaGriffonProject.ipr", tofile: "${basedir}/${griffonAppName}.ipr", overwrite: true)
+    ant.move(file: "${basedir}/ideaGriffonProject.iws", tofile: "${basedir}/${griffonAppName}.iws", overwrite: true)
+
     def appKey = griffonAppName.replaceAll( /\s/, '.' ).toLowerCase()
     ant.replace(dir:"${basedir}", includes:"*.*") {
+        replacefilter(token: "@griffon.intellij.libs@", value: intellijClasspathLibs())
         replacefilter(token: "@griffon.eclipse.libs@", value: eclipseClasspathLibs())
         replacefilter(token: "@griffon.eclipse.jar@", value: eclipseClasspathGriffonJars())
         replacefilter(token: "@griffon.version@", value: griffonVersion)
