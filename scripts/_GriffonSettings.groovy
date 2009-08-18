@@ -108,7 +108,7 @@ applicationFile = new File("${basedir}/griffon-app/conf/Application.groovy")
 // structure.
 artefactPattern = /\S+?\/griffon-app\/\S+?\/(\S+?)\.groovy/
 
-defaultGriffonApplicationClass = "griffon.application.SingleFrameApplication"
+defaultGriffonApplicationClass = "griffon.application.SwingApplication"
 defaultGriffonAppletClass = "griffon.applet.GriffonApplet"
 makeJNLP = false
 

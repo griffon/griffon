@@ -57,6 +57,8 @@ target( createConfig: "Creates the configuration object") {
                exit(1)
            }
        }
+       griffonAppletClass = config.griffon.applet.mainClass ?: defaultGriffonAppletClass
+       griffonApplicationClass = config.griffon.application.mainClass ?: defaultGriffonApplicationClass
    }
     if (applicationFile.exists()) {
         def applicationConfigClass
@@ -185,7 +187,6 @@ target( packageApp : "Implementation of package target") {
     copyLibs()
     jarFiles()
 
-    griffonApplicationClass = config.griffon.application.mainClass ?: defaultGriffonApplicationClass
     if(makeJNLP) generateJNLP()
 
     event("PackagingEnd",[])
@@ -220,6 +221,7 @@ target(checkKey: "Check to see if the keystore exists")  {
 }
 
 target(jarFiles: "Jar up the package files") {
+    if(argsMap['jar']) return
     boolean upToDate = ant.antProject.properties.appJarUpToDate
     ant.mkdir(dir:jardir)
 
@@ -420,8 +422,6 @@ target(generateJNLP:"Generates the JNLP File") {
         // may be fragile
         memOptions << "java-vm-args='-XX:maxPermSize=$config.griffon.memory.maxPermSize'"
     }
-
-    griffonAppletClass = config.griffon.applet.mainClass ?: defaultGriffonAppletClass
 
     fileset(dir:jardir, includes:"*.jnlp,*.html").each {
         String fileName = it.toString()
