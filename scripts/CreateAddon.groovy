@@ -22,6 +22,7 @@
  */
 
 import org.codehaus.griffon.commons.GriffonClassUtils as GCU
+import org.codehaus.griffon.util.GriffonNameUtils
 
 includeTargets << griffonScript("Init")
 includeTargets << griffonScript("CreateIntegrationTest")
@@ -75,7 +76,7 @@ def $libTempVar = binding.variables.containsKey('eventCopyLibsEnd') ? eventCopyL
 eventCopyLibsEnd = { jardir ->
     $libTempVar(jardir)
     if (!isPluginProject) {
-        ant.fileset(dir:"\${getPluginDirForName('$griffonAppName').file}/lib/", includes:"*.jar").each {
+        ant.fileset(dir:"\${getPluginDirForName('${GriffonNameUtils.getScriptName(griffonAppName)}').file}/lib/", includes:"*.jar").each {
             griffonCopyDist(it.toString(), jardir)
         }
     }
@@ -90,6 +91,7 @@ eventCopyLibsEnd = { jardir ->
     def flagVar = generateTempVar(installText, 'addonIsSet')
     def configVar = generateTempVar(installText, 'slurpedBuilder')
 
+    //TODO we should slurp the config, tweak it in place, and re-write instead of append
     installFile << """
 // check to see if we already have a $name
 ConfigSlurper $slurperVar = new ConfigSlurper()
@@ -104,7 +106,7 @@ ${configVar}.each() { prefix, v ->
 if (!$flagVar) {
     println 'Adding $name to Builders.groovy'
     new File("\$basedir/griffon-app/conf/Builder.groovy").append('''
-root.'$fqn' { }
+root.'$fqn'.addon=true
 ''')
 }"""
 
