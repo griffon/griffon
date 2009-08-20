@@ -92,8 +92,8 @@ mvcGroups {
     // MVC Group for "$args"
     '$name' {
         model = '${fqn}Model'
-        view = '${fqn}View'
         controller = '${fqn}Controller'
+        view = '${fqn}View'
     }
 """) }
     }
