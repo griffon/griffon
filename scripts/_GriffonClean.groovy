@@ -47,8 +47,8 @@ target ( cleanCompiledSources: "Cleans compiled Java and Groovy sources" ) {
     if(configFile.exists()) {
         config = configSlurper.parse(configFile.toURL())
         config.setConfigFile(configFile.toURL())
+        ant.delete(dir:ant.antProject.replaceProperties(config.griffon.jars.destDir), includes:'**/*.*')
     }
-    ant.delete(dir:ant.antProject.replaceProperties(config.griffon.jars.destDir), includes:'**/*.*')
 
 }
 
