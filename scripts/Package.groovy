@@ -33,20 +33,6 @@ target(_package: "Packages a Griffon application.") {
      distDir = "${basedir}/dist"
      ant.mkdir(dir: distDir)
 
-     if(griffonSettings.defaultEnv) {
-         // rebuild configSlurper with prod environment
-         // if none has been specified manually
-         griffonEnv = BuildSettings.ENV_PRODUCTION
-         griffonSettings.griffonEnv = griffonEnv
-         System.setProperty(BuildSettings.ENVIRONMENT, griffonEnv)
-         configSlurper = new ConfigSlurper(griffonEnv)
-         configSlurper.setBinding(griffonHome: griffonHome,
-                                 appName: griffonAppName,
-                                  appVersion: griffonAppVersion,
-                                  userHome: userHome,
-                                  basedir: basedir)
-     }
-
      if(!argsMap.params) {
           package_zip()
           package_jar()

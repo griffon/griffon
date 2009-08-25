@@ -55,6 +55,7 @@ public class GriffonScriptRunner {
         ENV_ARGS.put("test", BuildSettings.ENV_TEST);
         DEFAULT_ENVS.put("Console", BuildSettings.ENV_TEST);
         DEFAULT_ENVS.put("Shell", BuildSettings.ENV_TEST);
+        DEFAULT_ENVS.put("Package", BuildSettings.ENV_PRODUCTION);
         DEFAULT_ENVS.put("TestApp", BuildSettings.ENV_TEST);
         DEFAULT_ENVS.put("RunWebtest", BuildSettings.ENV_TEST);
         ExpandoMetaClass.enableGlobally();
