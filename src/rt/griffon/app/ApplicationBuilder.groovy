@@ -24,8 +24,6 @@ package griffon.app
 class ApplicationBuilder extends FactoryBuilderSupport {
     public ApplicationBuilder(boolean init = true) {
         super(init)
-        // enhance Swing classes
-        SwingMetaMethods.enhanceAll()
     }
 
     public void registerVisuals() {
