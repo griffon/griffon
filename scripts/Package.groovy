@@ -187,8 +187,11 @@ target(_copyLaunchScripts: "") {
 }
 
 _copySharedFiles = { targetDistDir ->
-    ant.copy(todir: targetDistDir) {
-        fileset(dir: "${basedir}/griffon-app/conf/dist/shared")
+    def sharedFiles = new File("${basedir}/griffon-app/conf/dist/shared")
+    if(sharedFiles.exists()) {
+        ant.copy(todir: targetDistDir) {
+            fileset(dir: sharedFiles)
+        }
     }
 }
 
@@ -202,7 +205,7 @@ _copyPackageFiles = { targetDistDir ->
     }
 }
 
-zipDist = { targetDistDir, usePackageType = true ->
+_zipDist = { targetDistDir, usePackageType = true ->
     def packageType = targetDistDir[(targetDistDir.lastIndexOf("/")+1)..-1]
     def suffix = !usePackageType ? "": "-${packageType}"
     def zipFileName = "${targetDistDir}/${griffonAppName}-${griffonAppVersion}${suffix}.zip"
