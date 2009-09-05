@@ -298,6 +298,12 @@ griffonCopyDist =  { jarname, targetDir, boolean force = false ->
 
     ant.copy(file:srcFile, toFile:targetFile, overwrite:force)
 
+    maybePackAndSign(srcFile, targetFile, force)
+}
+
+maybePackAndSign = {srcFile, targetFile = srcFile, boolean force = false ->
+
+
     // we may already be copied, but not packed or signed
     // first see if the config calls for packing or signing
     // (do this funny dance because unset == true)
@@ -334,6 +340,7 @@ griffonCopyDist =  { jarname, targetDir, boolean force = false ->
     // repack so we can sign pack200
     if (doJarPacking) {
         ant.exec(executable:'pack200') {
+            arg(value:'-J-Xmx256m')
             for (option in packOptions) {
                 arg(value:option)
             }

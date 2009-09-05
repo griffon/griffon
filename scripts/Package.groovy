@@ -74,13 +74,13 @@ target(package_jar: "Creates a single jar distribution and zips it.") {
     targetDistDir = "${distDir}/jar"
     ant.delete(dir: targetDistDir, quiet: true, failOnError: false)
     ant.mkdir(dir: targetDistDir)
-    destFileName = argsMap.name ?: config.griffon.jars.jarName
-    if(!destFileName.endsWith(".jar")) destFileName += ".jar"
-    destFileName = new File(destFileName)
-    if(!destFileName.isAbsolute()) destFileName = new File("${targetDistDir}/${destFileName}")
+    String destFileName = argsMap.name ?: config.griffon.jars.jarName
+    if(!destFileName.endsWith(".jar")) destFile += ".jar"
+    File destFile = new File(destFileName)
+    if(!destFile.isAbsolute()) destFile = new File("${targetDistDir}/${destFile}")
 
     def libjars = ant.fileset(dir: jardir, includes: "*.jar", excludes: config.griffon.jars.jarName)
-    ant.jar(destfile: destFileName) {
+    ant.jar(destfile: destFile, duplicate:'preserve') {
         manifest {
             attribute(name: "Main-Class", value: griffonApplicationClass)
         }
@@ -95,6 +95,8 @@ target(package_jar: "Creates a single jar distribution and zips it.") {
                       excludes: "META-INF/*.MF,META-INF/*.SF,META-INF/*.RSA,META-INF/*.DSA")
         }
     }
+
+    maybePackAndSign(destFile)
     _copySharedFiles(targetDistDir)
     _copyPackageFiles(targetDistDir)
     _zipDist(targetDistDir)
