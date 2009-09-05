@@ -365,6 +365,7 @@ maybePackAndSign = {srcFile, targetFile = srcFile, boolean force = false ->
     if (doJarPacking) {
         // do the for-real packing
         ant.exec(executable:'pack200') {
+            arg(value:'-J-Xmx256m')
             for (option in packOptions) {
                 arg(value:option)
             }
