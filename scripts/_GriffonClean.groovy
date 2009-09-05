@@ -31,7 +31,7 @@ target ( cleanAll: "Cleans a Griffon project" ) {
 
 target ( clean: "Implementation of clean" ) {
     event("CleanStart", [])
-    depends(classpath, cleanCompiledSources/*, cleanWarFile*/)
+    depends(classpath, cleanCompiledSources, cleanPackaging)
     event("CleanEnd", [])
 }
 
@@ -62,6 +62,12 @@ target ( cleanTestReports: "Cleans the test reports" ) {
         }
     }
 }
+
+target ( cleanPackaging : "Cleans the distribtion directory" ) {
+    ant.delete(dir:"${basedir}/dist")
+    ant.delete(dir:"${basedir}/staging")
+}
+
 
 //target ( cleanWarFile: "Cleans the deployable .war file" ) {
 //    if (config.griffon.war.destFile) {
