@@ -434,7 +434,7 @@ includePluginScript = { pluginName, scriptName ->
    def pluginHome = getPluginDirForName(pluginName)?.file
    if(!pluginHome) return
    def scriptFile = new File(pluginHome,"/scripts/${scriptName}.groovy")
-   if(scriptFile.exists()) inclueTargets << scriptFile
+   if(scriptFile.exists()) includeTargets << scriptFile
 }
 
 /**
