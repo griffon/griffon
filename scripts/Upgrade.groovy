@@ -36,7 +36,7 @@ target(upgrade: "Upgrades a Griffon application from a previous version of Griff
     boolean force = args?.indexOf('-force') > -1 ? true : false
 
     if (appGriffonVersion != griffonVersion) {
-        def gv = appGriffonVersion == null ? "?Unknown?" : appGriffonVersion
+        def gv = appGriffonVersion ?: "?Unknown?"
         event("StatusUpdate", ["NOTE: Your application currently expects griffon version [$gv], " +
                 "this target will upgrade it to Griffon ${griffonVersion}"])
     }
@@ -143,13 +143,30 @@ target(upgrade: "Upgrades a Griffon application from a previous version of Griff
 
             if ([startupGroups, autoShutdown].contains([:])) {
                 event("StatusUpdate", ["Adding properties to Application.groovy"])
-                applicationFile.withWriterAppend {
-                    def indent = ''
-                    it.writeLine '\n// The following properties have been added by the Upgrade process...'
-                    if (startupGroups == [:]) it.writeLine "${indent}application.startupGroups=['root'] // default startup group from 0.0"
-                    if (autoShutdown == [:]) it.writeLine "${indent}application.autoShutdown=true // default autoShutdown from 0.0"
+                if (startupGroups == [:]) {
+                    configObject.application.startupGroups = ['root']
+                }
+
+                if (startupGroups == [:]) {
+                    configObject.application.autoShutdown=true
                 }
             }
+
+            // update MVCGroups if we are pre 0.2
+            if (appGriffonVersion =~ /0\.[01].*/) {
+                event("StatusUpdate", ["Re-ordering MVCGroups"])
+
+                configObject.mvcGroups.each {group, ConfigObject portions ->
+                    if (portions.keySet().contains('view')) {
+                        portions.view = portions.remove('view')
+                    }
+
+                }
+
+            }
+
+            configObject.writeTo(new FileWriter(new File(baseFile, '/griffon-app/conf/Application.groovy')))
+
         }
 
         touch(file: "${basedir}/griffon-app/i18n/messages.properties")
