@@ -199,7 +199,7 @@ class GriffonApplicationHelper {
         argsCopy.builder = builder
         
         // special case --
-        // controller gets applicaiton listeners
+        // controller gets application listeners
         // addApplicationListener method is null safe
         app.addApplicationEventListener(instanceMap.controller)
 

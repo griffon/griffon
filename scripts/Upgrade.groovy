@@ -191,8 +191,8 @@ target(upgrade: "Upgrades a Griffon application from a previous version of Griff
     }
     delete(dir: tmpDir.path)
 
-    // ensure a href= is in the applicaiton
-    // ensure all .jnlp files have a memory hook, unlessa already tweaked
+    // ensure a href= is in the application
+    // ensure all .jnlp files have a memory hook, unless already tweaked
     // ensure all .jnlp files support remote jnlps
     // add splash to jnlps
     // set icons for jnlps
