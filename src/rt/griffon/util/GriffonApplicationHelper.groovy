@@ -265,7 +265,13 @@ class GriffonApplicationHelper {
                 }
             }
         }
+        // remove the refs from the app caches
+        app.models.remove(mvcName)
+        app.views.remove(mvcName)
+        app.controllers.remove(mvcName)
         app.builders.remove(mvcName)?.dispose()
+        app.groups.remove(mvcName)
+
         app.event("DestroyMVCGroup",[mvcName])
     }
 
