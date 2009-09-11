@@ -119,7 +119,12 @@ target(compile : "Implementation of compilation phase") {
         }
 
         if( new File("${basedir}").list().grep{ it =~ /GriffonAddon\.groovy/ } ){
-            compileSources(classpathId) {
+            ant.path(id:'addonPath') {
+                compileClasspath.delegate = delegate
+                compileClasspath.call()
+                pathElement(location:classesDirPath)
+            }
+            compileSources('addonPath') {
                 src(path:"${basedir}")
                 include(name:'*GriffonAddon.groovy')
             }
