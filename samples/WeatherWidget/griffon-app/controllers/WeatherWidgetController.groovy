@@ -55,7 +55,7 @@ class WeatherWidgetController {
 
     def showPreferences = {
         if (app.views.PrefsPanel == null) {
-            createMVCGroup('PrefsPanel')
+            createMVCGroup('PrefsPanel', parent:view.hw.JDialog)
         }
     }
 }
