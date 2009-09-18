@@ -176,6 +176,14 @@ class UberBuilder extends FactoryBuilderSupport {
         }
         super.setProperty(property, newValue)
     }
+
+    public void dispose() {
+        builderRegistration.each {UberBuilderRegistration ubr ->
+            ubr.builder.dispose()
+        }
+        super.dispose()
+    }
+
 }
 
 class UberBuilderRegistration {
