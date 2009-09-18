@@ -135,6 +135,14 @@ class GriffonApplicationHelper {
         createMVCGroup(app, mvcType, mvcType, bindArgs)
     }
 
+    public static createMVCGroup(IGriffonApplication app, Map bindArgs, String mvcType, String mvcName) {
+        createMVCGroup(app, mvcType, mvcName, bindArgs)
+    }
+
+    public static createMVCGroup(IGriffonApplication app, Map bindArgs, String mvcType) {
+        createMVCGroup(app, mvcType, mvcType, bindArgs)
+    }
+
     public static createMVCGroup(IGriffonApplication app, String mvcType, String mvcName, Map bindArgs) {
         Map results = buildMVCGroup(app, bindArgs, mvcType, mvcName)
         return [results.model, results.view, results.controller]
@@ -261,15 +269,17 @@ class GriffonApplicationHelper {
                         throw mme
                     }
                     // MME on mvcGroupDestroy means they didn't define
-                    // an init method.  This is not an error.
+                    // a destroy method.  This is not an error.
                 }
             }
         }
+        app.builders[mvcName]?.dispose()
+
         // remove the refs from the app caches
         app.models.remove(mvcName)
         app.views.remove(mvcName)
         app.controllers.remove(mvcName)
-        app.builders.remove(mvcName)?.dispose()
+        app.builders.remove(mvcName)
         app.groups.remove(mvcName)
 
         app.event("DestroyMVCGroup",[mvcName])
