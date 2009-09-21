@@ -35,7 +35,7 @@ includeTargets << griffonScript("CreateIntegrationTest")
  * * Adds copy libs events for the destDir
  * * Adds install hooks to wire in addon to griffon-app/conf/Builder.groovy
  */
-target (createMVC : "Creates a new Addon for a plugin") {
+target (createAddon : "Creates a new Addon for a plugin") {
     depends(checkVersion, parseArguments)
     promptForName(type: "Addon")
     def (pkg, name) = extractArtifactName(argsMap["params"][0])
@@ -58,7 +58,7 @@ target (createMVC : "Creates a new Addon for a plugin") {
     def pluginConfig = slurper.parse(pluginConfigFile.toURL())
 
     if (!pluginConfig.griffon?.jars?.destDir) {
-        pluginConfigFile << "\ngriffon.jars.destDir='lib'\n"
+        pluginConfigFile << "\ngriffon.jars.destDir='dist/addon'\n"
     }
     if (!pluginConfig.griffon?.jars?.jarName) {
         pluginConfigFile << "\ngriffon.jars.jarName='${name}.jar'\n"

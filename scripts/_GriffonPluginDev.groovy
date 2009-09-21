@@ -116,8 +116,23 @@ target(packagePlugin:"Implementation target") {
     // Package plugin's zip distribution
     pluginZip = "${basedir}/griffon-${pluginName}-${plugin.version}.zip"
     ant.delete(file:pluginZip)
-    def includesList = pluginIncludes.join(",")
-    def excludesList = pluginExcludes.join(",")
-    ant.zip(basedir:"${basedir}", destfile:pluginZip, includes:includesList, excludes:excludesList, filesonly:true)
+
+    ant.zip(destfile:pluginZip, filesonly:true) {
+        fileset(dir:"${basedir}") {
+            pluginIncludes.each {
+                include(name:it)
+            }
+            pluginExcludes.each {
+                exclude(name:it)
+            }
+        }
+
+        if (isAddonPlugin)  {
+            zipfileset(dir:ant.antProject.replaceProperties(config.griffon.jars.destDir),
+                       includes: config.griffon.jars.jarName,
+                       fullpath: "lib/${config.griffon.jars.jarName}")
+        }
+    }
+
     event("PackagePluginEnd", [pluginName,plugin])
 }
