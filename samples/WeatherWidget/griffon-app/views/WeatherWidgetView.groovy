@@ -43,9 +43,10 @@ hw = hudWindow(locationByPlatform:true, alwaysOnTop:true) {
 
         vstrut(6)
         hbox {
-          label("Data from Weather Undergroud", font:new Font("Arial", Font.BOLD, 8), foreground:Color.WHITE)
+          label("Data from Weather Underground", font:new Font("Arial", Font.BOLD, 10), foreground:Color.WHITE)
           hglue()
-          hudButton("i", font:new Font("Arial", Font.BOLD, 8), actionPerformed: controller.showPreferences)
+          button('\u24d8', font:new Font("Dialog", Font.BOLD, 14), foreground:Color.WHITE, contentAreaFilled:false, borderPainted:false,
+              actionPerformed: controller.showPreferences)
         }
     }
 
