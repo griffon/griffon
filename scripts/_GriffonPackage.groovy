@@ -187,8 +187,6 @@ target( packageApp : "Implementation of package target") {
     copyLibs()
     jarFiles()
 
-    if(makeJNLP) generateJNLP()
-
     event("PackagingEnd",[])
 }
 

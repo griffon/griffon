@@ -44,11 +44,6 @@ target ( cleanCompiledSources: "Cleans compiled Java and Groovy sources" ) {
     ant.delete(dir:resourcesDirPath)
     ant.delete(dir:testDirPath)
 
-    if(configFile.exists()) {
-        config = configSlurper.parse(configFile.toURL())
-        config.setConfigFile(configFile.toURL())
-        ant.delete(dir:ant.antProject.replaceProperties(config.griffon.jars.destDir), includes:'**/*.*')
-    }
 
 }
 
@@ -63,9 +58,18 @@ target ( cleanTestReports: "Cleans the test reports" ) {
     }
 }
 
-target ( cleanPackaging : "Cleans the distribtion directory" ) {
-    ant.delete(dir:"${basedir}/dist")
-    ant.delete(dir:"${basedir}/staging")
+target ( cleanPackaging : "Cleans the distribtion directories" ) {
+    if(configFile.exists()) {
+        def config = configSlurper.parse(configFile.toURL())
+        config.setConfigFile(configFile.toURL())
+
+        def distDir =  config.griffon.dist.dir ?: "${basedir}/dist"
+        def destDir =  config.griffon.jars.destDir
+
+        ant.delete(dir:ant.antProject.replaceProperties(distDir))
+        ant.delete(dir:ant.antProject.replaceProperties(destDir))
+        //todo per package directories?
+    }
 }
 
 
