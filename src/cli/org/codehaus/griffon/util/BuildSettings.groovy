@@ -98,6 +98,11 @@ class BuildSettings {
     public static String ENV_TEST  = "test"
 
     /**
+     * The name of the system property for {@link #projectTargetDir}.
+     */
+    public static final String PROJECT_TARGET_DIR = "griffon.project.target.dir"
+
+    /**
      * The base directory for the build, which is normally the root
      * directory of the current project. If a command is run outside
      * of a project, then this will be the current working directory
@@ -130,6 +135,9 @@ class BuildSettings {
 
     /** The location of the project working directory for project-specific temporary files. */
     File projectWorkDir
+
+    /** The location of the project target directory where reports, artifacts and so on are output. */
+    File projectTargetDir
 
     /** The location to which Griffon compiles a project's classes. */
     File classesDir
@@ -306,12 +314,13 @@ class BuildSettings {
         def props = config.toProperties()
         griffonWorkDir = new File(getPropertyValue(WORK_DIR, props, "${userHome}/.griffon/${griffonVersion}"))
         projectWorkDir = new File(getPropertyValue(PROJECT_WORK_DIR, props, "$griffonWorkDir/projects/${baseDir.name}"))
+        projectTargetDir = new File(getPropertyValue(PROJECT_TARGET_DIR, props, "$baseDir/target"))
         classesDir = new File(getPropertyValue(PROJECT_CLASSES_DIR, props, "$projectWorkDir/classes"))
         testClassesDir = new File(getPropertyValue(PROJECT_TEST_CLASSES_DIR, props, "$projectWorkDir/test-classes"))
         resourcesDir = new File(getPropertyValue(PROJECT_RESOURCES_DIR, props, "$projectWorkDir/resources"))
         projectPluginsDir = new File(getPropertyValue(PLUGINS_DIR, props, "$projectWorkDir/plugins"))
         globalPluginsDir = new File(getPropertyValue(GLOBAL_PLUGINS_DIR, props, "$griffonWorkDir/global-plugins"))
-        testReportsDir = new File(getPropertyValue(PROJECT_TEST_REPORTS_DIR, props, "${baseDir}/test/reports"))
+        testReportsDir = new File(getPropertyValue(PROJECT_TEST_REPORTS_DIR, props, "${projectTargetDir}/test-reports"))
     }
 
     private getPropertyValue(String propertyName, Properties props, String defaultValue) {

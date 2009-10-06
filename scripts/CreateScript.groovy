@@ -22,15 +22,34 @@
  * @since 0.4
  */
 
+import org.codehaus.griffon.util.GriffonNameUtils
+
 includeTargets << griffonScript("_GriffonInit")
 includeTargets << griffonScript("_GriffonCreateArtifacts")
 
-target (createScript : "Creates a Griffon Gant Script") {
+target (default : "Creates a Griffon Gant Script") {
     depends(checkVersion, parseArguments)
 
     def type = "Script"
     promptForName(type: type)
-	createArtifact(name: argsMap["params"][0], suffix: "", type: type, path: "scripts")
-}
+    def (pkg, name) = extractArtifactName(argsMap["params"][0])
 
-setDefaultTarget(createScript)
+    createArtifact(
+        name: name,
+        suffix: "",
+        type: type,
+        path: "scripts")
+    createArtifact(
+        name: name,
+        suffix: "Tests",
+        type: "ScriptTests",
+        path: "test/cli")
+
+    className = GriffonNameUtils.getClassNameRepresentation(name)
+    artifactFile = "${basedir}/test/cli/${className}Tests.groovy"
+
+    ant.replace(file: artifactFile) {
+        replacefilter(token: "@script.name@", value: name )
+        replacefilter(token: "${className}Tests", value: className )
+    }
+}

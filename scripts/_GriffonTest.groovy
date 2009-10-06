@@ -37,7 +37,7 @@ includeTargets << griffonScript("_GriffonBootstrap")
 unitTests = [ "unit" ]
 integrationTests = [ "integration" ]
 // functionalTests = []
-otherTests = []
+otherTests = ["cli"]
  
 // The phases that we will run on this execution. Override this in your
 // own scripts to control the phases and their order.
@@ -214,6 +214,9 @@ runTests = { String type ->
         // Set the context class loader to the one used to load the tests.
         Thread.currentThread().contextClassLoader = testHelper.currentClassLoader
  
+        // WARNING: hack to identify if an app has not been realized yet
+        // assumes an app will have 1 view script at least
+        if (type == "integration" && !griffonApp.views) griffonApp.realize()
         event("TestSuiteStart", [type])
         int testCases = testSuite.countTestCases()
         println "-------------------------------------------------------"
