@@ -216,7 +216,7 @@ runTests = { String type ->
  
         // WARNING: hack to identify if an app has not been realized yet
         // assumes an app will have 1 view script at least
-        if (type == "integration" && !griffonApp.views) griffonApp.realize()
+        // if (type == "integration" && !griffonApp.views) griffonApp.realize()
         event("TestSuiteStart", [type])
         int testCases = testSuite.countTestCases()
         println "-------------------------------------------------------"
@@ -270,6 +270,7 @@ unitTestsPreparation = {
 integrationTestsPreparation = {
     packageTests()
     bootstrap()
+    griffonApp.realize()
  
     // Get the Griffon application instance created by the bootstrap
     // process.
