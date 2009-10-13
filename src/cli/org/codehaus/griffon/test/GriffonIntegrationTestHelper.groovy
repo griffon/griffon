@@ -1,29 +1,26 @@
-package org.codehaus.groovy.griffon.test
+package org.codehaus.griffon.test
 
 import junit.framework.TestSuite
-// import org.codehaus.groovy.griffon.commons.spring.GriffonWebApplicationContext
-import org.codehaus.groovy.griffon.test.GriffonTestSuite
-import org.codehaus.groovy.griffon.test.DefaultGriffonTestHelper
-import org.springframework.context.ApplicationContext
 import org.codehaus.griffon.util.BuildSettings
+import griffon.util.IGriffonApplication
 
 class GriffonIntegrationTestHelper extends DefaultGriffonTestHelper {
-    ApplicationContext applicationContext
+    IGriffonApplication app
 
     GriffonIntegrationTestHelper(
             BuildSettings settings,
             ClassLoader parentLoader,
             Closure resourceResolver,
-            ApplicationContext appContext) {
+            IGriffonApplication app) {
         super(settings, parentLoader, resourceResolver)
-        this.applicationContext = appContext
+        this.app = app
     }
 
     TestSuite createTestSuite() {
-        new GriffonTestSuite(this.applicationContext, this.testSuffix)
+        new GriffonTestSuite(this.app, this.testSuffix)
     }
 
     TestSuite createTestSuite(Class clazz) {
-        new GriffonTestSuite(this.applicationContext, clazz, this.testSuffix)
+        new GriffonTestSuite(this.app, clazz, this.testSuffix)
     }
 }

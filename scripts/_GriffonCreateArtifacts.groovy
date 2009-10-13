@@ -99,7 +99,7 @@ target(createArtifact: "Creates a specific Griffon artifact") { Map args = [:] -
 }
 
 target (createIntegrationTest: "Creates an integration test for an artifact") { Map args = [:] ->
-	createArtifact(name: args["name"], suffix: "${args['suffix']}Tests", type: "Tests", path: "test/integration")
+	createArtifact(name: args["name"], suffix: "${args['suffix']}Tests", type: "IntegrationTests", path: "test/integration")
 }
 
 target (createUnitTest: "Creates a unit test for an artifact") { Map args = [:] ->

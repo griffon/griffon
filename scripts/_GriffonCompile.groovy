@@ -24,7 +24,7 @@
 
 includeTargets << griffonScript("_GriffonInit")
 
-ant.taskdef (name: 'groovyc', classname : 'org.codehaus.groovy.ant.Groovyc' /*classname : 'org.codehaus.groovy.griffon.compiler.GriffonCompiler'*/)
+ant.taskdef (name: 'groovyc', classname : 'org.codehaus.groovy.ant.Groovyc' /*classname : 'org.codehaus.griffon.compiler.GriffonCompiler'*/)
 ant.path(id: "griffon.compile.classpath", compileClasspath)
 
 compilerPaths = { String classpathId, boolean compilingTests ->

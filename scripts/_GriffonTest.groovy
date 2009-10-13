@@ -14,12 +14,12 @@
 * limitations under the License.
 */
  
-// import org.codehaus.groovy.griffon.commons.GriffonApplication
-import org.codehaus.groovy.griffon.test.DefaultGriffonTestHelper
-import org.codehaus.groovy.griffon.test.DefaultGriffonTestRunner
-import org.codehaus.groovy.griffon.test.GriffonIntegrationTestHelper
-// import org.codehaus.groovy.griffon.support.PersistenceContextInterceptor
-// import org.codehaus.groovy.griffon.web.context.GriffonConfigUtils
+// import org.codehaus.griffon.commons.GriffonApplication
+import org.codehaus.griffon.test.DefaultGriffonTestHelper
+import org.codehaus.griffon.test.DefaultGriffonTestRunner
+import org.codehaus.griffon.test.GriffonIntegrationTestHelper
+// import org.codehaus.griffon.support.PersistenceContextInterceptor
+// import org.codehaus.griffon.web.context.GriffonConfigUtils
 // import org.springframework.mock.web.MockServletContext
  
 /**
@@ -100,7 +100,7 @@ target(allTests: "Runs the project's tests.") {
     event("TestPhasesStart", [phasesToRun])
  
     // This runs the tests and generates the formatted result files.
-    String testRunnerClassName = System.getProperty("griffon.test.runner") ?: "org.codehaus.groovy.griffon.test.DefaultGriffonTestRunner";
+    String testRunnerClassName = System.getProperty("griffon.test.runner") ?: "org.codehaus.griffon.test.DefaultGriffonTestRunner";
     testRunner = null
     if (testRunnerClassName) {
         try {
@@ -287,7 +287,7 @@ integrationTestsPreparation = {
 //     GriffonConfigUtils.executeGriffonBootstraps(app, appCtx, servletContext );
  
     // We use a specialist test helper for integration tests.
-    return new GriffonIntegrationTestHelper(griffonSettings, griffonApp.class.classLoader, resolveResources, /*appCtx*/ null)
+    return new GriffonIntegrationTestHelper(griffonSettings, griffonApp.class.classLoader, resolveResources, griffonApp)
 }
  
 /**

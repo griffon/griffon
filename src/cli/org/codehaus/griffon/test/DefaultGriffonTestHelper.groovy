@@ -1,4 +1,4 @@
-package org.codehaus.groovy.griffon.test
+package org.codehaus.griffon.test
 
 import junit.framework.TestSuite
 import junit.framework.Test

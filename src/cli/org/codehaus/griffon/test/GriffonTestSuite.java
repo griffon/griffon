@@ -13,21 +13,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.codehaus.groovy.griffon.test;
+package org.codehaus.griffon.test;
 
 // import griffon.util.GriffonNameUtils;
 // import griffon.util.GriffonWebUtil;
+import griffon.util.IGriffonApplication;
 import junit.framework.Test;
-import junit.framework.TestCase;
 import junit.framework.TestResult;
 import junit.framework.TestSuite;
-import org.codehaus.griffon.commons.GriffonClassUtils;
 // import org.codehaus.groovy.griffon.commons.spring.GriffonWebApplicationContext;
 // import org.codehaus.groovy.griffon.web.servlet.GriffonApplicationAttributes;
 // import org.codehaus.groovy.griffon.web.servlet.mvc.GriffonWebRequest;
 // import org.codehaus.groovy.griffon.web.context.ServletContextHolder;
-import org.springframework.beans.factory.config.AutowireCapableBeanFactory;
-import org.springframework.context.ApplicationContextAware;
+import org.codehaus.groovy.runtime.InvokerHelper;
 import org.springframework.context.ApplicationContext;
 // import org.springframework.transaction.PlatformTransactionManager;
 // import org.springframework.transaction.TransactionStatus;
@@ -35,8 +33,6 @@ import org.springframework.context.ApplicationContext;
 // import org.springframework.transaction.support.TransactionTemplate;
 // import org.springframework.web.context.request.RequestContextHolder;
 
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 /**
  * IoC class to inject properties of Griffon test case classes.
@@ -51,34 +47,38 @@ import java.util.regex.Pattern;
  * Created: Aug 28, 2005
  */
 public class GriffonTestSuite extends TestSuite {
-    private static final String TRANSACTIONAL = "transactional";
+//    private static final String TRANSACTIONAL = "transactional";
 
-    private Pattern controllerTestPattern;
-    private ApplicationContext applicationContext;
+//    private Pattern controllerTestPattern;
+//    private ApplicationContext applicationContext;
+    private IGriffonApplication app;
 
-    public GriffonTestSuite(ApplicationContext applicationContext, String testSuffix) {
+    public GriffonTestSuite(IGriffonApplication app, String testSuffix) {
         super();
-        init(applicationContext, testSuffix);
+        init(app, testSuffix);
     }
 
-    public GriffonTestSuite(ApplicationContext applicationContext, Class clazz, String testSuffix) {
+    public GriffonTestSuite(IGriffonApplication app, Class clazz, String testSuffix) {
 		super(clazz);
-        init(applicationContext, testSuffix);
+        init(app, testSuffix);
     }
 
 	public void runTest(final Test test, final TestResult result) {
         // Auto-wire the test
-        if (test instanceof TestCase && applicationContext != null) {
-			applicationContext.getAutowireCapableBeanFactory().autowireBeanProperties(
-                    test,
-                    AutowireCapableBeanFactory.AUTOWIRE_BY_NAME,
-                    false);
-		}
+//        if (test instanceof TestCase && applicationContext != null) {
+//			applicationContext.getAutowireCapableBeanFactory().autowireBeanProperties(
+//                    test,
+//                    AutowireCapableBeanFactory.AUTOWIRE_BY_NAME,
+//                    false);
+//		}
 
         // If the test is ApplicationContextAware, wire the context in now.
-        if (test instanceof ApplicationContextAware && applicationContext != null) {
-            ((ApplicationContextAware) test).setApplicationContext(applicationContext);
-        }
+//        if (test instanceof ApplicationContextAware && applicationContext != null) {
+//            ((ApplicationContextAware) test).setApplicationContext(applicationContext);
+//        }
+        try {
+            InvokerHelper.setProperty(test, "app", app);
+        } catch (RuntimeException ignore) { }
 
 
 //         try {
@@ -118,9 +118,9 @@ public class GriffonTestSuite extends TestSuite {
 //         return !(val instanceof Boolean) || (Boolean) val;
 //     }
     
-    private void init(ApplicationContext applicationContext, String testSuffix) {
- 		this.applicationContext = applicationContext;
-        this.controllerTestPattern = Pattern.compile("^(\\w+)Controller" + testSuffix + "$");
+    private void init(IGriffonApplication app, String testSuffix) {
+ 		this.app = app;
+//        this.controllerTestPattern = Pattern.compile("^(\\w+)Controller" + testSuffix + "$");
     }
 
     /**

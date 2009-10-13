@@ -556,7 +556,7 @@ target(startLogging:"Bootstraps logging") {
 //    try {
 //        def ant = new AntBuilder()
 //        def classpathId = "griffon.compile.classpath"
-//        ant.taskdef (name: 'groovyc', classname : 'org.codehaus.groovy.griffon.compiler.GriffonCompiler')
+//        ant.taskdef (name: 'groovyc', classname : 'org.codehaus.griffon.compiler.GriffonCompiler')
 //        ant.path(id:classpathId,compileClasspath)
 //
 //        ant.groovyc(destdir:classesDirPath,
