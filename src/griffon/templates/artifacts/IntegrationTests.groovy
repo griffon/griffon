@@ -1,6 +1,6 @@
-import griffon.util.IGriffonApplication
+@artifact.package@import griffon.util.IGriffonApplication
 
-@artifact.package@class @artifact.name@ extends GroovyTestCase {
+class @artifact.name@ extends GroovyTestCase {
 
     IGriffonApplication app
 
