@@ -61,8 +61,8 @@ pluginExcludes = [
 	"**/CVS/**"
 ]
 
-target(packagePlugin:"Implementation target") {
-    depends (checkVersion, packageAddon, docs)
+target(pluginConfig:"setup the plugin config"){
+depends(checkVersion, createStructure, packagePlugins, docs)
 
     def pluginFile
     new File("${basedir}").eachFile {
@@ -84,6 +84,11 @@ target(packagePlugin:"Implementation target") {
         ant.fail("Cannot instantiate plugin file")
     }
     pluginName = GriffonNameUtils.getScriptName(GriffonNameUtils.getLogicalName(pluginClass, "GriffonPlugin"))
+}
+
+target(packagePlugin:"Implementation target") {
+    depends (checkVersion, pluginConfig, packageAddon, docs)
+
     event("PackagePluginStart", [pluginName,plugin])
     
     // Generate plugin.xml descriptor from info in *GriffonPlugin.groovy
@@ -128,9 +133,8 @@ target(packagePlugin:"Implementation target") {
         }
 
         if (isAddonPlugin)  {
-            zipfileset(dir:ant.antProject.replaceProperties(config.griffon.jars.destDir),
-                       includes: config.griffon.jars.jarName,
-                       fullpath: "lib/${config.griffon.jars.jarName}")
+            zipfileset(dir:addonJarDir, includes: addonJarName,
+                       fullpath: "lib/$addonJarName")
         }
     }
 

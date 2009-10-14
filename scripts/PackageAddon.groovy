@@ -23,7 +23,7 @@
 includeTargets << griffonScript("_GriffonPackage")
 
 target (packageAddon: "Packages a Griffon addon. Note: to pasckakage a plugin use 'griffon package-plugin'") {
-    depends(checkVersion, createStructure, packagePlugins)
+    depends(checkVersion, createStructure, packagePlugins, pluginConfig)
 
     if (!isAddonPlugin) return;
 
@@ -41,11 +41,13 @@ target (packageAddon: "Packages a Griffon addon. Note: to pasckakage a plugin us
     }
 
 
-    String jardir = ant.antProject.replaceProperties(config.griffon.jars.destDir)
-    ant.mkdir(dir:jardir)
+    addonJarDir = ant.antProject.replaceProperties(config.griffon.jars.destDir)
+    ant.mkdir(dir:addonJarDir)
 
-    String destFileName = "$jardir/${config.griffon.jars.jarName}"
-    ant.jar(destfile:destFileName) {
+    addonJarName = ( config.griffon?.jars?.jarName
+        ? "${config.griffon.jars.jarName}"
+        : "griffon-${pluginName}-addon-${plugin.version}.jar" )
+    ant.jar(destfile:"$addonJarDir/$addonJarName") {
         fileset(dir:classesDirPath) {
             exclude(name:'Config*.class')
             exclude(name:'*GriffonPlugin*.class')
