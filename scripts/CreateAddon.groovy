@@ -61,7 +61,7 @@ target (createAddon : "Creates a new Addon for a plugin") {
         pluginConfigFile << "\ngriffon.jars.destDir='dist/addon'\n"
     }
     if (!pluginConfig.griffon?.jars?.jarName) {
-        pluginConfigFile << "\ngriffon.jars.jarName='${name}.jar'\n"
+        pluginConfigFile << "\n//griffon.jars.jarName='${name}.jar'\n"
     }
     
     def eventsFile = new File("scripts/_Events.groovy")
