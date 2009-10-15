@@ -26,7 +26,7 @@
 //import org.springframework.core.io.FileSystemResourceLoader
 //import org.springframework.mock.web.MockServletContext
 //import org.springframework.web.context.WebApplicationContext
-//import org.codehaus.groovy.griffon.support.CommandLineResourceLoader
+//import org.codehaus.griffon.support.CommandLineResourceLoader
 
 import org.codehaus.griffon.plugins.*
 import org.codehaus.griffon.commons.DefaultGriffonContext
@@ -50,13 +50,13 @@ target(loadApp:"Loads the Griffon application object") {
 //	profile("Loading parent ApplicationContext") {
 //		def builder = parentContext ? new WebBeanBuilder(parentContext) :  new WebBeanBuilder()
 //		beanDefinitions = builder.beans {
-//			resourceHolder(org.codehaus.groovy.griffon.commons.spring.GriffonResourceHolder) {
+//			resourceHolder(org.codehaus.griffon.commons.spring.GriffonResourceHolder) {
 //				resources = GriffonPluginUtils.getArtefactResources(basedir, resolveResources)
 //			}
-//			griffonResourceLoader(org.codehaus.groovy.griffon.commons.GriffonResourceLoaderFactoryBean) {
+//			griffonResourceLoader(org.codehaus.griffon.commons.GriffonResourceLoaderFactoryBean) {
 //				griffonResourceHolder = resourceHolder
 //			}
-//			griffonApplication(org.codehaus.groovy.griffon.commons.DefaultGriffonApplication, ref("griffonResourceLoader"))
+//			griffonApplication(org.codehaus.griffon.commons.DefaultGriffonApplication, ref("griffonResourceLoader"))
 //			pluginMetaManager(DefaultPluginMetaManager) {
 //                griffonApplication = ref('griffonApplication')
 //            }

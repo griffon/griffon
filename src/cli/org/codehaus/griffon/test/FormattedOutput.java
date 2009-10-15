@@ -1,4 +1,4 @@
-package org.codehaus.groovy.griffon.test;
+package org.codehaus.griffon.test;
 
 import org.apache.tools.ant.taskdefs.optional.junit.JUnitResultFormatter;
 import org.apache.tools.ant.taskdefs.optional.junit.JUnitTest;

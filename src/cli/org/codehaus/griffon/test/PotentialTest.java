@@ -1,4 +1,4 @@
-package org.codehaus.groovy.griffon.test;
+package org.codehaus.griffon.test;
 
 public class PotentialTest {
     private String classPattern;
@@ -53,6 +53,7 @@ public class PotentialTest {
 
     boolean containsMethodName(String testPattern) {
         // Probably we should check for method names starting with "test"
-        return Character.isLowerCase(testPattern.charAt(testPattern.lastIndexOf('.') + 1));
+        // return Character.isLowerCase(testPattern.charAt(testPattern.lastIndexOf('.') + 1));
+        return testPattern.substring(testPattern.lastIndexOf('.')+1).startsWith("test");
     }
 }

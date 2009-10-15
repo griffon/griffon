@@ -14,12 +14,12 @@
 * limitations under the License.
 */
  
-// import org.codehaus.groovy.griffon.commons.GriffonApplication
-import org.codehaus.groovy.griffon.test.DefaultGriffonTestHelper
-import org.codehaus.groovy.griffon.test.DefaultGriffonTestRunner
-import org.codehaus.groovy.griffon.test.GriffonIntegrationTestHelper
-// import org.codehaus.groovy.griffon.support.PersistenceContextInterceptor
-// import org.codehaus.groovy.griffon.web.context.GriffonConfigUtils
+// import org.codehaus.griffon.commons.GriffonApplication
+import org.codehaus.griffon.test.DefaultGriffonTestHelper
+import org.codehaus.griffon.test.DefaultGriffonTestRunner
+import org.codehaus.griffon.test.GriffonIntegrationTestHelper
+// import org.codehaus.griffon.support.PersistenceContextInterceptor
+// import org.codehaus.griffon.web.context.GriffonConfigUtils
 // import org.springframework.mock.web.MockServletContext
  
 /**
@@ -37,7 +37,7 @@ includeTargets << griffonScript("_GriffonBootstrap")
 unitTests = [ "unit" ]
 integrationTests = [ "integration" ]
 // functionalTests = []
-otherTests = []
+otherTests = ["cli"]
  
 // The phases that we will run on this execution. Override this in your
 // own scripts to control the phases and their order.
@@ -100,7 +100,7 @@ target(allTests: "Runs the project's tests.") {
     event("TestPhasesStart", [phasesToRun])
  
     // This runs the tests and generates the formatted result files.
-    String testRunnerClassName = System.getProperty("griffon.test.runner") ?: "org.codehaus.groovy.griffon.test.DefaultGriffonTestRunner";
+    String testRunnerClassName = System.getProperty("griffon.test.runner") ?: "org.codehaus.griffon.test.DefaultGriffonTestRunner";
     testRunner = null
     if (testRunnerClassName) {
         try {
@@ -214,6 +214,9 @@ runTests = { String type ->
         // Set the context class loader to the one used to load the tests.
         Thread.currentThread().contextClassLoader = testHelper.currentClassLoader
  
+        // WARNING: hack to identify if an app has not been realized yet
+        // assumes an app will have 1 view script at least
+        // if (type == "integration" && !griffonApp.views) griffonApp.realize()
         event("TestSuiteStart", [type])
         int testCases = testSuite.countTestCases()
         println "-------------------------------------------------------"
@@ -267,6 +270,7 @@ unitTestsPreparation = {
 integrationTestsPreparation = {
     packageTests()
     bootstrap()
+    griffonApp.realize()
  
     // Get the Griffon application instance created by the bootstrap
     // process.
@@ -283,7 +287,7 @@ integrationTestsPreparation = {
 //     GriffonConfigUtils.executeGriffonBootstraps(app, appCtx, servletContext );
  
     // We use a specialist test helper for integration tests.
-    return new GriffonIntegrationTestHelper(griffonSettings, griffonApp.class.classLoader, resolveResources, /*appCtx*/ null)
+    return new GriffonIntegrationTestHelper(griffonSettings, griffonApp.class.classLoader, resolveResources, griffonApp)
 }
  
 /**

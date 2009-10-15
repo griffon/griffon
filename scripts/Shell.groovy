@@ -22,7 +22,7 @@
  * @since 0.4
  */
 
-//import org.codehaus.groovy.griffon.support.*
+//import org.codehaus.griffon.support.*
 import org.codehaus.groovy.tools.shell.*
 
 includeTargets << griffonScript("_GriffonBootstrap")

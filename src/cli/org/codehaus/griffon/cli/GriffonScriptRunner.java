@@ -468,6 +468,7 @@ public class GriffonScriptRunner {
         // Add the project paths too!
         binding.setVariable("griffonWorkDir", settings.getGriffonWorkDir().getPath());
         binding.setVariable("projectWorkDir", settings.getProjectWorkDir().getPath());
+        binding.setVariable("projectTargetDir", settings.getProjectTargetDir());
         binding.setVariable("classesDirPath", settings.getClassesDir().getPath());
         binding.setVariable("testDirPath", settings.getTestClassesDir().getPath());
         binding.setVariable("resourcesDirPath", settings.getResourcesDir().getPath());

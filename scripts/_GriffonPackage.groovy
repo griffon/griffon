@@ -187,8 +187,6 @@ target( packageApp : "Implementation of package target") {
     copyLibs()
     jarFiles()
 
-    if(makeJNLP) generateJNLP()
-
     event("PackagingEnd",[])
 }
 
@@ -332,15 +330,30 @@ maybePackAndSign = {srcFile, targetFile = srcFile, boolean force = false ->
     //TODO strip old signatures?
 
     def packOptions = [
-        '-S-1', // bug fix, signing large (1MB+) files will validate
         '-mlatest', // smaller files, set modification time on the files to latest
         '-Htrue', // smaller files, always use DEFLATE hint
         '-O', // smaller files, reorder files if it makes things smaller
     ]
+
+
+    // sign once so packing ordering will be the same
+    // not these sigs will become invalid
+    if (doJarSigning) {
+        // sign jar
+        Map signJarParams = [:]
+        for (key in ['alias', 'storepass', 'keystore', 'storetype', 'keypass', 'sigfile', 'verbose', 'internalsf', 'sectionsonly', 'lazy', 'maxmemory', 'preservelastmodified', 'tsaurl', 'tsacert']) {
+            if (config.signingkey.params."$key") {
+                signJarParams[key] = config.signingkey.params[key]
+            }
+        }
+
+	    signJarParams.jar = targetFile.path
+        ant.signjar(signJarParams)
+    }
+
     // repack so we can sign pack200
     if (doJarPacking) {
         ant.exec(executable:'pack200') {
-            arg(value:'-J-Xmx256m')
             for (option in packOptions) {
                 arg(value:option)
             }
@@ -365,7 +378,6 @@ maybePackAndSign = {srcFile, targetFile = srcFile, boolean force = false ->
     if (doJarPacking) {
         // do the for-real packing
         ant.exec(executable:'pack200') {
-            arg(value:'-J-Xmx256m')
             for (option in packOptions) {
                 arg(value:option)
             }
@@ -544,7 +556,7 @@ target(startLogging:"Bootstraps logging") {
 //    try {
 //        def ant = new AntBuilder()
 //        def classpathId = "griffon.compile.classpath"
-//        ant.taskdef (name: 'groovyc', classname : 'org.codehaus.groovy.griffon.compiler.GriffonCompiler')
+//        ant.taskdef (name: 'groovyc', classname : 'org.codehaus.griffon.compiler.GriffonCompiler')
 //        ant.path(id:classpathId,compileClasspath)
 //
 //        ant.groovyc(destdir:classesDirPath,

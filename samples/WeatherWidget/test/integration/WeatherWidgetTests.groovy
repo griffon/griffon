@@ -1,6 +1,10 @@
+import griffon.util.IGriffonApplication
+
 class WeatherWidgetTests extends GroovyTestCase {
 
-    void testSomething() {
+    IGriffonApplication app;
 
+    void testModelIsNotBlank() {
+        assert app.models.WeatherWidget.locationName != ''
     }
 }

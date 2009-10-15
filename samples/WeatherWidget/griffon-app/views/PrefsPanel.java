@@ -1,6 +1,12 @@
-public class PrefsPanel extends javax.swing.JFrame  {
+public class PrefsPanel extends javax.swing.JDialog  {
 
-    public PrefsPanel() {
+    public PrefsPanel(java.awt.Frame parent, boolean modal) {
+        super(parent, modal);
+        initComponents();
+    }
+
+    public PrefsPanel(java.awt.Dialog parent, boolean modal) {
+        super(parent, modal);
         initComponents();
     }
 
@@ -18,6 +24,7 @@ public class PrefsPanel extends javax.swing.JFrame  {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Weather Demo Preferences");
+        setLocationByPlatform(true);
         setResizable(false);
 
         labelLocation.setText("Location:");

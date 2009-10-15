@@ -24,7 +24,7 @@
 
 includeTargets << griffonScript("_GriffonInit")
 
-ant.taskdef (name: 'groovyc', classname : 'org.codehaus.groovy.ant.Groovyc' /*classname : 'org.codehaus.groovy.griffon.compiler.GriffonCompiler'*/)
+ant.taskdef (name: 'groovyc', classname : 'org.codehaus.groovy.ant.Groovyc' /*classname : 'org.codehaus.griffon.compiler.GriffonCompiler'*/)
 ant.path(id: "griffon.compile.classpath", compileClasspath)
 
 compilerPaths = { String classpathId, boolean compilingTests ->
@@ -119,7 +119,12 @@ target(compile : "Implementation of compilation phase") {
         }
 
         if( new File("${basedir}").list().grep{ it =~ /GriffonAddon\.groovy/ } ){
-            compileSources(classpathId) {
+            ant.path(id:'addonPath') {
+                compileClasspath.delegate = delegate
+                compileClasspath.call()
+                pathElement(location:classesDirPath)
+            }
+            compileSources('addonPath') {
                 src(path:"${basedir}")
                 include(name:'*GriffonAddon.groovy')
             }
