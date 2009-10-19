@@ -443,7 +443,11 @@ target(generateJNLP:"Generates the JNLP File") {
         memOptions << "java-vm-args='-XX:maxPermSize=$config.griffon.memory.maxPermSize'"
     }
 
-    fileset(dir:jardir, includes:"*.jnlp,*.html").each {
+    doPackageTextReplacement(jardir, "*.jnlp,*.html")
+}
+
+doPackageTextReplacement = {dir, fileFilters ->
+    ant.fileset(dir:dir, includes:fileFilters).each {
         String fileName = it.toString()
         ant.replace(file: fileName) {
             replacefilter(token:"@griffonAppletClass@", value: griffonAppletClass)
@@ -459,7 +463,6 @@ target(generateJNLP:"Generates the JNLP File") {
         }
     }
 }
-
 
 //
 //target(configureServerContextPath: "Configuring server context path") {
