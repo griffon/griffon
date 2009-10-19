@@ -48,7 +48,7 @@ environments {
             params {
                 sigfile = 'GRIFFON'
                 keystore = 'CHANGE ME'
-                alias = 'CHAMGE ME'
+                alias = 'CHANGE ME'
                 // NOTE: for production keys it is more secure to rely on key prompting
                 // no value means we will prompt //storepass = 'BadStorePassword'
                 // no value means we will prompt //keypass   = 'BadKeyPassword'
