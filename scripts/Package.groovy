@@ -134,6 +134,9 @@ target(package_applet: "Creates an applet distribution and zips it.") {
         fileset(dir: config.griffon.jars.destDir, excludes: config.griffon.webstart.jnlp )
     }
     _copySharedFiles(targetDistDir)
+
+    doPackageTextReplacement(targetDistDir, "*.jnlp,*.html")
+
     if (!config.griffon.dist.applet.nozip) _zipDist(targetDistDir)
 
     event("PackageEnd",["applet"])
@@ -151,6 +154,9 @@ target(package_webstart: "Creates a webstart distribution and zips it.") {
         fileset(dir: config.griffon.jars.destDir, excludes: "${config.griffon.applet.jnlp}, ${config.griffon.applet.html}" )
     }
     _copySharedFiles(targetDistDir)
+
+    doPackageTextReplacement(targetDistDir, "*.jnlp,*.html")
+
     if (!config.griffon.dist.webstart.nozip) _zipDist(targetDistDir)
 
     event("PackageEnd",["webstart"])
