@@ -503,7 +503,7 @@ public class DefaultGriffonPluginManager extends AbstractGriffonPluginManager im
   private Class loadPluginClass(GroovyClassLoader gcl, Resource r) {
       Class pluginClass;
       try {
-          pluginClass = gcl.parseClass(r.getInputStream());
+          pluginClass = gcl.parseClass(r.getFile());
       } catch (CompilationFailedException e) {
           throw new PluginException("Error compiling plugin ["+r.getFilename()+"] " + e.getMessage(), e);
       } catch (IOException e) {
