@@ -27,7 +27,11 @@ import org.codehaus.griffon.commons.GriffonClassUtils as GCU
 includeTargets << griffonScript("Init")
 includeTargets << griffonScript("CreateIntegrationTest")
 
-target (createMVC : "Creates a new MVC Triad") {
+target('default': "Creates a new MVC Group") {
+    createMVC()
+}
+
+target (createMVC : "Creates a new MVC Group") {
     depends(checkVersion, parseArguments)
     promptForName(type: "MVC Group")
     def (pkg, name) = extractArtifactName(argsMap["params"][0])
@@ -99,4 +103,3 @@ mvcGroups {
     }
 }
 
-setDefaultTarget(createMVC)

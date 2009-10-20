@@ -24,4 +24,7 @@
 
 includeTargets << griffonScript("_GriffonClean")
 
-setDefaultTarget("cleanAll")
+target ('default': "Cleans a Griffon project" ) {
+    cleanAll()
+}
+

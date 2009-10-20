@@ -30,6 +30,7 @@ includeTargets << griffonScript("Package")
 
 
 griffonAppName = ""
+projectType = "app"
 
 target(createApp: "Creates a Griffon application for the given name")  {
     depends(parseArguments, appName)
@@ -63,6 +64,7 @@ target(createApp: "Creates a Griffon application for the given name")  {
 target(createPlugin: "The implementation target")  {
     depends(parseArguments, appName)
     metadataFile = new File("${basedir}/application.properties")
+    projectType = "plugin"
     initProject(type: "plugin")
 
     // Rename the plugin descriptor.
@@ -82,14 +84,11 @@ target(createPlugin: "The implementation target")  {
     event("StatusFinal", [ "Created plugin ${pluginName}" ])
 }
 
-target(initProject: "Initialise an application or plugin project") { Map args = [:] ->
+target(initProject: "Initialise an application or plugin project") {
     depends(createStructure, updateAppProperties)
 
-    // Project type.
-    def type = args["type"] ?: "app"
-
     griffonUnpack(dest: basedir, src: "griffon-shared-files.jar")
-    griffonUnpack(dest: basedir, src: "griffon-$type-files.jar")
+    griffonUnpack(dest: basedir, src: "griffon-$projectType-files.jar")
     launderIDESupportFiles()
 }
 

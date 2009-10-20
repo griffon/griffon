@@ -48,7 +48,7 @@ target(processAuth:"Prompts user for login details to create authentication mana
     }
 }
 
-target(releasePlugin: "A target for plug-in developers that uploads and commits the current plug-in as the latest revision. The command will prompt for your SVN login details.") {
+target('default': "A target for plug-in developers that uploads and commits the current plug-in as the latest revision. The command will prompt for your SVN login details.") {
     depends(parseArguments, packagePlugin, processAuth)
 
     if(argsMap.repository) {
@@ -312,4 +312,3 @@ target(askForMessage:"Asks for the users commit message") {
     commitMessage = ant.antProject.properties."commit.message"
 }
 
-setDefaultTarget(releasePlugin)

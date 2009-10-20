@@ -23,7 +23,7 @@ import org.codehaus.griffon.util.GriffonNameUtils
  * @author Peter Ledbrook
  */
 
-target(createArtifact: "Creates a specific Griffon artifact") { Map args = [:] ->
+createArtifact = { Map args = [:] ->
     def suffix = args["suffix"]
     def type = args["type"]
     def artifactPath = args["path"]
@@ -98,15 +98,15 @@ target(createArtifact: "Creates a specific Griffon artifact") { Map args = [:] -
     event("CreatedArtefact", [ type, className])
 }
 
-target (createIntegrationTest: "Creates an integration test for an artifact") { Map args = [:] ->
+createIntegrationTest = { Map args = [:] ->
 	createArtifact(name: args["name"], suffix: "${args['suffix']}Tests", type: "IntegrationTests", path: "test/integration")
 }
 
-target (createUnitTest: "Creates a unit test for an artifact") { Map args = [:] ->
+createUnitTest = { Map args = [:] ->
 	createArtifact(name: args["name"], suffix: "${args['suffix']}Tests", type: "Tests", path: "test/unit")
 }
 
-target(promptForName: "Prompts the user for the name of the Artifact if it isn't specified as an argument") { Map args = [:] ->
+promptForName = { Map args = [:] ->
     if (!argsMap["params"]) {
         ant.input(addProperty: "artifact.name", message: "${args["type"]} name not specified. Please enter:")
         argsMap["params"] << ant.antProject.properties."artifact.name"

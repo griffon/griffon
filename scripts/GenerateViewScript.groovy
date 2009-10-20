@@ -22,7 +22,7 @@ includeTargets << griffonScript("_GriffonCreateArtifacts")
 includeTargets << griffonScript("_GriffonCompile")
 
 
-target(genViewScript: "Generates a view script from an existing class") {
+target('default': "Generates a view script from an existing class") {
     depends(checkVersion, parseArguments, classpath, compile)
 
     promptForName(type: "Class to Proxy View for:")
@@ -93,4 +93,3 @@ return $varName
     }
 }
 
-setDefaultTarget(genViewScript)

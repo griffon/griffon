@@ -35,7 +35,7 @@ target (runShell: "Load the Griffon interactive shell") {
 	shell()
 }
 
-target(shell:"The shell implementation target") {
+target('default':"The shell implementation target") {
 
 //    classLoader = new URLClassLoader([classesDir.toURI().toURL()] as URL[], rootLoader)
 //    Thread.currentThread().setContextClassLoader(classLoader)
@@ -69,4 +69,3 @@ target(shell:"The shell implementation target") {
 	shell.run([] as String[])
 }
 
-setDefaultTarget(runShell)

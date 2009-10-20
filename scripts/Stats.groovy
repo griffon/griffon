@@ -23,7 +23,7 @@
 
 includeTargets << griffonScript("_GriffonSettings")
 
-target (stats: "Generates basic stats for a Griffon project") {
+target ('default': "Generates basic stats for a Griffon project") {
     def EMPTY = /^\s*$/
     def SLASH_SLASH = /^\s*\/\/.*/
     def SLASH_STAR_STAR_SLASH = /^(.*)\/\*(.*)\*\/(.*)$/
@@ -115,4 +115,3 @@ target (stats: "Generates basic stats for a Griffon project") {
     println "    +----------------------+-------+-------+\n"
 }
 
-setDefaultTarget(stats)

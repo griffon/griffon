@@ -25,7 +25,7 @@
 includeTargets << griffonScript("_GriffonEvents")
 includeTargets << griffonScript("_GriffonProxy")
 
-target(setProxy:"Sets HTTP proxy configuration for Griffon") {
+target('default':"Sets HTTP proxy configuration for Griffon") {
     depends(configureProxy)
     ant.mkdir( dir:"${griffonSettings.griffonWorkDir}/scripts" )
     def scriptFile = new File("${griffonSettings.griffonWorkDir}/scripts/ProxyConfig.groovy")
@@ -49,4 +49,3 @@ target(setProxy:"Sets HTTP proxy configuration for Griffon") {
     }
 }
 
-setDefaultTarget(setProxy)

@@ -25,7 +25,7 @@
 includeTargets << griffonScript("_GriffonInit")
 includeTargets << griffonScript("_GriffonCreateArtifacts")
 
-target (_createUnitTest: "Creates a new Griffon unit test. A unit test requires that you mock out access to dynamic methods, but executes a lot quicker") {
+target ('default': "Creates a new Griffon unit test. A unit test requires that you mock out access to dynamic methods, but executes a lot quicker") {
 	depends(checkVersion, parseArguments)
 
     promptForName(type: "Unit test")
@@ -33,5 +33,3 @@ target (_createUnitTest: "Creates a new Griffon unit test. A unit test requires 
     def name = argsMap["params"][0]
     createUnitTest(name: name, suffix: "")
 }
-
-setDefaultTarget(_createUnitTest)

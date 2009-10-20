@@ -35,7 +35,7 @@ includeTargets << griffonScript("CreateIntegrationTest")
  * * Adds copy libs events for the destDir
  * * Adds install hooks to wire in addon to griffon-app/conf/Builder.groovy
  */
-target (createAddon : "Creates a new Addon for a plugin") {
+target ('default' : "Creates a new Addon for a plugin") {
     depends(checkVersion, parseArguments)
     promptForName(type: "Addon")
     def (pkg, name) = extractArtifactName(argsMap["params"][0])
@@ -119,6 +119,3 @@ def generateTempVar(String textToSearch, String prefix = "tmp", String suffix = 
     return "$prefix$i$suffix"
 
 }
-
-setDefaultTarget(createMVC)
-
