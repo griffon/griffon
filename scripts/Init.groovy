@@ -26,6 +26,6 @@
 
 includeTargets << griffonScript("_GriffonInit")
 
-target('default': "main init target") {
+target('default': "legacy init target") {
     init()
 }
