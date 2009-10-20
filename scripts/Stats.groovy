@@ -17,11 +17,12 @@
 /**
  * Gant script which generates stats for a Griffon project.
  *
- * @author Glen Smith
- *
+ * @author Glen.Smith
+ * @author Andres.Almiray
  */
 
 includeTargets << griffonScript("_GriffonSettings")
+includeTargets << griffonScript("Init")
 
 target ('default': "Generates basic stats for a Griffon project") {
     def EMPTY = /^\s*$/
@@ -47,8 +48,9 @@ target ('default': "Generates basic stats for a Griffon project") {
         } 
         loc
     }
-
-    // TODO - find a way to make paths pluggable, i.e. wizards, clojure, etc.
+   
+    // TODO -- map multi-line clojure comments
+    // TODO -- move stats handlers to plugins: clojure, javafx, scala, wizard
 
     // maps file path to
     def pathToInfo = [
@@ -56,24 +58,26 @@ target ('default': "Generates basic stats for a Griffon project") {
         [name: "Views",               path: "views",            filetype: [".groovy"]],
         [name: "Controllers",         path: "controllers",      filetype: [".groovy"]],
         [name: "Lifecycle",           path: "lifecycle",        filetype: [".groovy"]],
-        [name: "Services",            path: "services",         filetype: [".groovy"]],
-        [name: "Wizards",             path: "wizards",          filetype: [".groovy"]],
         [name: "Groovy/Java Sources", path: "src.main",         filetype: [".groovy",".java"]],
-        [name: "Common Sources",      path: "src.commons",      filetype: [".groovy",".java"]],
-        [name: "Clojure Sources",     path: "src.clojure",      filetype: [".clj"], locmatcher: {file ->
-            def loc = 0
-            file.eachLine { line ->
-                if(line ==~ EMPTY || line ==~ /^\s*\;.*/) return
-                loc++
-            }
-            loc
-        }],
-        [name: "JavaFX Sources",      path: "src.javafx",       filetype: [".fx"]],
-        [name: "Scala Sources",       path: "src.scala",        filetype: [".scala"]],
+//        [name: "Services",            path: "services",         filetype: [".groovy"]],
+//        [name: "Wizards",             path: "wizards",          filetype: [".groovy"]],
+//        [name: "Common Sources",      path: "src.commons",      filetype: [".groovy",".java"]],
+//        [name: "Clojure Sources",     path: "src.clojure",      filetype: [".clj"], locmatcher: {file ->
+//            def loc = 0
+//            file.eachLine { line ->
+//                if(line ==~ EMPTY || line ==~ /^\s*\;.*/) return
+//                loc++
+//            }
+//            loc
+//        }],
+//        [name: "JavaFX Sources",      path: "src.javafx",       filetype: [".fx"]],
+//        [name: "Scala Sources",       path: "src.scala",        filetype: [".scala"]],
         [name: "Unit Tests",          path: "test.unit",        filetype: [".groovy"]],
         [name: "Integration Tests",   path: "test.integration", filetype: [".groovy"]],
         [name: "Scripts",             path: "scripts",          filetype: [".groovy"]],
     ]
+
+    event("StatsStart", [pathToInfo])
 
     new File(basedir).eachFileRecurse { file ->
         def match = pathToInfo.find { info ->
