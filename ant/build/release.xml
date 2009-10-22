@@ -54,15 +54,11 @@
             <param name="dir.destination" value="${release.dir}/bash"/>
         </antcall>
         <antcall target="copy-dir-filter">
-            <param name="dir.includes" value="*riffon*"/>
+            <param name="dir.includes" value=""/>
             <param name="dir.location" value="bin"/>
             <param name="dir.destination" value="${release.dir}/bin"/>
         </antcall>
-        <antcall target="copy-dir">
-            <param name="dir.excludes" value=""/>
-            <param name="dir.location" value="bin"/>
-            <param name="dir.destination" value="${release.dir}/bin"/>
-        </antcall>
+        <copy  file="bin/griffon.icns" todir="${release.dir}/bin"/>
         <antcall target="copy-dir">
             <param name="dir.excludes" value=""/>
             <param name="dir.location" value="ant"/>
