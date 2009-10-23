@@ -27,7 +27,7 @@ includeTargets << griffonScript("Package")
 includeTargets << griffonScript("_PackagePlugins" )
 
 target('default': "Runs the application from the command line") {
-    depends(checkVersion, configureProxy, parseArguments, packageApp)
+    depends(checkVersion, configureProxy, parseArguments, prepackage)
 
     // calculate the needed jars
     File jardir = new File(ant.antProject.replaceProperties(config.griffon.jars.destDir))

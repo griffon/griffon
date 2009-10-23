@@ -31,10 +31,8 @@ target(tweakConfig:' tweaks for webstart') {
     configTweaks << { config.griffon.jars.sign = true }
 }
 target('default': "Runs the applet from Java WebStart") {
-    depends(checkVersion, tweakConfig, createConfig)
+    depends(checkVersion, tweakConfig, createConfig, package_applet)
 
-    makeJNLP = true
-    packageApp()
     // calculate the needed jars
     File jardir = new File(ant.antProject.replaceProperties(config.griffon.jars.destDir))
     // launch event after jardir has been defined
