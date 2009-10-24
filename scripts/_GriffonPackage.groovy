@@ -336,19 +336,16 @@ maybePackAndSign = {srcFile, targetFile = srcFile, boolean force = false ->
     ]
 
 
-    // sign once so packing ordering will be the same
-    // not these sigs will become invalid
+    def signJarParams = [:]
+    // prep sign jar params
     if (doJarSigning) {
         // sign jar
-        Map signJarParams = [:]
         for (key in ['alias', 'storepass', 'keystore', 'storetype', 'keypass', 'sigfile', 'verbose', 'internalsf', 'sectionsonly', 'lazy', 'maxmemory', 'preservelastmodified', 'tsaurl', 'tsacert']) {
             if (config.signingkey.params."$key") {
                 signJarParams[key] = config.signingkey.params[key]
             }
         }
-
-	    signJarParams.jar = targetFile.path
-        ant.signjar(signJarParams)
+        signJarParams.jar = targetFile.path
     }
 
     // repack so we can sign pack200
@@ -362,21 +359,30 @@ maybePackAndSign = {srcFile, targetFile = srcFile, boolean force = false ->
         }
     }
 
-    if (doJarSigning) {
-        // sign jar
-        Map signJarParams = [:]
-        for (key in ['alias', 'storepass', 'keystore', 'storetype', 'keypass', 'sigfile', 'verbose', 'internalsf', 'sectionsonly', 'lazy', 'maxmemory', 'preservelastmodified', 'tsaurl', 'tsacert']) {
-            if (config.signingkey.params."$key") {
-                signJarParams[key] = config.signingkey.params[key]
-            }
-        }
-
-	    signJarParams.jar = targetFile.path
+    // sign before packing to create accurage space
+    if (doJarSigning && doJarPacking) {
         ant.signjar(signJarParams)
     }
 
+    
+    // repack so we can sign pack200
     if (doJarPacking) {
-        // do the for-real packing
+        ant.exec(executable:'pack200') {
+            for (option in packOptions) {
+                arg(value:option)
+            }
+            arg(value:'--repack')
+            arg(value:targetFile)
+        }
+    }
+
+    // sign jar for real
+    if (doJarSigning) {
+        ant.signjar(signJarParams)
+    }
+
+    // pack jar for real
+    if (doJarPacking) {
         ant.exec(executable:'pack200') {
             for (option in packOptions) {
                 arg(value:option)
