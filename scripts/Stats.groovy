@@ -1,5 +1,5 @@
 /*
- * Copyright 2004-2005 the original author or authors.
+ * Copyright 2004-2009 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+import groovy.xml.MarkupBuilder
 
 /**
  * Gant script which generates stats for a Griffon project.
@@ -24,7 +25,8 @@
 includeTargets << griffonScript("_GriffonSettings")
 includeTargets << griffonScript("Init")
 
-target (stats: "Generates basic stats for a Griffon project") {
+target(default: "Generates basic stats for a Griffon project") {
+    depends(parseArguments) 
     def EMPTY = /^\s*$/
     def SLASH_SLASH = /^\s*\/\/.*/
     def SLASH_STAR_STAR_SLASH = /^(.*)\/\*(.*)\*\/(.*)$/
@@ -81,9 +83,8 @@ target (stats: "Generates basic stats for a Griffon project") {
 
     new File(basedir).eachFileRecurse { file ->
         def match = pathToInfo.find { info ->
-            file.path =~ info.path &&
-            info.filetype.any{ s -> file.path.endsWith(s) }
-            //file.path.endsWith(info.filetype)
+            def fixedPath = file.path - basedir //fix problem when project inside dir "jobs" (eg. hudson stores projects under jobs-directory)
+            fixedPath =~ info.path && info.filetype.any{s -> file.path.endsWith(s)}
         }
         if (match && file.isFile() ) {
             match.filecount = match.filecount ? match.filecount+1 : 1
@@ -96,27 +97,90 @@ target (stats: "Generates basic stats for a Griffon project") {
     def totalFiles = 0
     def totalLOC = 0
 
-    println '''
+    pathToInfo.each { info ->
+        if (info.filecount) {
+            totalFiles += info.filecount
+            totalLOC += info.loc
+        }
+    }
+
+    output(pathToInfo, totalFiles.toString(), totalLOC.toString(), new PrintWriter(System.out))
+    if(argsMap.xml)  xmlOutput(pathToInfo, totalFiles.toString(), totalLOC.toString())
+    if(argsMap.html) htmlOutput(pathToInfo, totalFiles.toString(), totalLOC.toString())
+    if(argsMap.txt)  output(pathToInfo, totalFiles.toString(), totalLOC.toString(), new PrintWriter(getOutputFile("txt")))
+}
+
+private getOutputFile(String suffix) {
+    def outputDir = config.griffon.testing.reports.destDir ?: "${basedir}/target"
+    new File(outputDir).mkdirs()
+    return new File(outputDir, "stats." + suffix)
+}
+
+private output(infos, totalFiles, totalLOC, out) {
+    out.println '''
     +----------------------+-------+-------+
     | Name                 | Files |  LOC  |
     +----------------------+-------+-------+'''
 
-    pathToInfo.each { info ->
-
+    infos.each { info ->
         if (info.filecount) {
-            println "    | " +
+            out.println "    | " +
                 info.name.padRight(20," ") + " | " +
                 info.filecount.toString().padLeft(5, " ") + " | " +
                 info.loc.toString().padLeft(5," ") + " | "
-            totalFiles += info.filecount
-            totalLOC += info.loc
         }
-
     }
 
-    println "    +----------------------+-------+-------+"
-    println "    | Totals               | " + totalFiles.toString().padLeft(5, " ") + " | " + totalLOC.toString().padLeft(5, " ") + " | "
-    println "    +----------------------+-------+-------+\n"
+    out.println "    +----------------------+-------+-------+"
+    out.println "    | Totals               | " + totalFiles.padLeft(5, " ") + " | " + totalLOC.padLeft(5, " ") + " | "
+    out.println "    +----------------------+-------+-------+\n"
+    out.flush()
 }
 
-setDefaultTarget(stats)
+private xmlOutput(infos, totalFiles, totalLOC) {
+    new MarkupBuilder(new FileWriter(getOutputFile("xml"))).stats {
+        infos.each { info ->
+            if (info.filecount) {
+                category {
+                    name(info.name)
+                    fileCount(info.filecount.toString())
+                    loc(info.loc.toString())
+                }
+            }
+        }
+        category {
+            name("Total")
+            fileCount(totalFiles)
+            loc(totalLOC)
+        }
+    }
+}
+
+private htmlOutput(infos, totalFiles, totalLOC) {
+    int i = 0
+    new MarkupBuilder(new FileWriter(getOutputFile("html"))).html {
+        table(border: 1) {
+            tr {
+                th("Name")
+                th("Files")
+                th("LOC")
+            }
+            infos.each { info ->
+                if (info.filecount) {
+                    tr(style: (i++) % 2 ? 'background-color:lightblue' : 'background-color:FFF') {
+                        td(info.name)
+                        td(info.filecount.toString())
+                        td(info.loc.toString())
+                    }
+                }
+            }
+            tr(style: "background-color:lightgreen") {
+                b {
+                    td("Total")
+                    td(totalFiles)
+                    td(totalLOC)
+                }
+            }
+        }
+    }
+}
