@@ -51,6 +51,7 @@
 			<fileset dir="${griffon.dist}" includes="*"/>
 		</delete>
         <echo file="${griffon.dist}/build.properties">griffon.version=${griffon.version}
+griffon.version.full=${griffon.version.full}
 groovy.version=${groovy.version}</echo>
         <jar destfile="${griffon.dist}/griffon-cli-${griffon.version}.jar" manifest="${griffon.build.cli}/META-INF/MANIFEST.MF">
             <fileset dir="${griffon.build.cli}"/>
