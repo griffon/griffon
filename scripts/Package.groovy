@@ -26,7 +26,7 @@ import org.codehaus.griffon.util.BuildSettings
 
 includeTargets << griffonScript("_GriffonPackage")
 
-target(_package: "Packages a Griffon application.") {
+target('default': "Packages a Griffon application.") {
      depends(checkVersion, parseArguments)
 
      if(!argsMap.params) {
@@ -230,5 +230,3 @@ _zipDist = { targetDistDir, usePackageType = true ->
     ant.delete(dir: zipFileName, quiet: true, failOnError: false)
     ant.zip(basedir: targetDistDir, destfile: zipFileName)
 }
-
-setDefaultTarget(_package)

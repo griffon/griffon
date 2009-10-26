@@ -26,7 +26,7 @@
 
 includeTargets << griffonScript("_GriffonEvents")
 
-target (setVersion: "Sets the current application version") {
+target ('default': "Sets the current application version") {
     if(args != null) {
         ant.property(name:"app.version.new", value: args)
     } else {
@@ -42,4 +42,3 @@ target (setVersion: "Sets the current application version") {
     event("StatusFinal", [ "Application version updated to $newVersion"])
 }
 
-setDefaultTarget(setVersion)

@@ -22,7 +22,7 @@
  */
 includeTargets << griffonScript("_GriffonPackage")
 
-target (packageAddon: "Packages a Griffon addon. Note: to pasckakage a plugin use 'griffon package-plugin'") {
+target ('default': "Packages a Griffon addon. Note: to pasckakage a plugin use 'griffon package-plugin'") {
     depends(checkVersion, createStructure, packagePlugins, pluginConfig)
 
     if (!isAddonPlugin) return;
@@ -57,5 +57,3 @@ target (packageAddon: "Packages a Griffon addon. Note: to pasckakage a plugin us
 
     //TODO copy it to lib with version #
 }
-
-setDefaultTarget(packageAddon)

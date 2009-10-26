@@ -26,7 +26,7 @@ import org.codehaus.griffon.support.*
 
 includeTargets << griffonScript("_GriffonBootstrap")
 
-target(console:"The console implementation target") {
+target('default':"The console implementation target") {
     depends( checkVersion, configureProxy, packageApp, classpath)
 
 //    classLoader = new URLClassLoader([classesDir.toURI().toURL()] as URL[], rootLoader)
@@ -84,5 +84,3 @@ createConsole = {
 
     return console
 }
-
-setDefaultTarget(console)

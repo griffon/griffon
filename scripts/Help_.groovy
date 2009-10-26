@@ -33,13 +33,17 @@ class HelpEvaluatingCategory {
 	static target(Object obj, Map args, Closure callable) {
         def entry = args.entrySet().iterator().next()
         helpText[(entry.key)] = entry.value
+
+        if (entry.key == "default") {
+            defaultTask = "default"
+        }
 	}
 	static getDefaultDescription(Object obj) {
 		return helpText[defaultTask]
 	}
 
     static setDefaultTarget(Object obj, val) {
-         defaultTask = val
+        defaultTask = val
     }
 
 }
@@ -57,7 +61,7 @@ boolean shouldGenerateHelp(File script) {
 }
 
 
-target ( help : "Prints out the help for each script") {
+target ( 'default' : "Prints out the help for each script") {
 	ant.mkdir(dir:griffonTmp)
 	def scripts = getAllScripts().collect { it.file }
 
@@ -152,5 +156,3 @@ target( showHelp: "Show help for a particular command") {
 	}
 
 }
-
-setDefaultTarget(help)

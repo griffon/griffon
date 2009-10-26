@@ -15,7 +15,7 @@ includeTargets << griffonScript("_PackagePlugins" )
 target(tweakConfig:' tweaks for webstart') {
     configTweaks << { config.griffon.jars.sign = true }
 }
-target(runWebstart: "Does the actual command line execution") {
+target('default': "Does the actual command line execution") {
     depends(checkVersion, tweakConfig, createConfig)
 
     makeJNLP = true
@@ -55,4 +55,3 @@ target(runWebstart: "Does the actual command line execution") {
     event("RunWebstartEnd",[])
 }
 
-setDefaultTarget(runWebstart)

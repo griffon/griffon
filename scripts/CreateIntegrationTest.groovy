@@ -25,7 +25,7 @@
 includeTargets << griffonScript("_GriffonInit")
 includeTargets << griffonScript("_GriffonCreateArtifacts")
 
-target (_createIntegrationTest: "Creates a new Griffon integration test which loads the whole Griffon environment when run") {
+target ('default': "Creates a new Griffon integration test which loads the whole Griffon environment when run") {
 	depends(checkVersion, parseArguments)
 
     promptForName(type: "Integration test")
@@ -33,5 +33,3 @@ target (_createIntegrationTest: "Creates a new Griffon integration test which lo
     def name = argsMap["params"][0]
     createIntegrationTest(name: name, suffix: "")
 }
-
-setDefaultTarget(_createIntegrationTest)

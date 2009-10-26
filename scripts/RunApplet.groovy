@@ -30,7 +30,7 @@ includeTargets << griffonScript("_PackagePlugins" )
 target(tweakConfig:' tweaks for webstart') {
     configTweaks << { config.griffon.jars.sign = true }
 }
-target(runApplet: "Runs the applet from Java WebStart") {
+target('default': "Runs the applet from Java WebStart") {
     depends(checkVersion, tweakConfig, createConfig)
 
     makeJNLP = true
@@ -65,4 +65,3 @@ target(runApplet: "Runs the applet from Java WebStart") {
     event("RunAppletEnd",[])
 }
 
-setDefaultTarget(runApplet)

@@ -26,7 +26,7 @@ import org.codehaus.griffon.util.BuildSettings
 includeTargets << griffonScript("Package")
 includeTargets << griffonScript("_PackagePlugins" )
 
-target(runApp: "Runs the application from the command line") {
+target('default': "Runs the application from the command line") {
     depends(checkVersion, configureProxy, parseArguments, packageApp)
 
     // calculate the needed jars
@@ -88,5 +88,3 @@ target(runApp: "Runs the application from the command line") {
     p.waitFor()
     event("RunAppEnd",[])
 }
-
-setDefaultTarget(runApp)
