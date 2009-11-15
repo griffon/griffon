@@ -184,10 +184,14 @@ public class AddonHelper {
     }
 
 
-    static addFactories(UberBuilder builder, Map<String, Factory> factories, String addonName, String prefix) {
+    static addFactories(UberBuilder builder, Map factories, String addonName, String prefix) {
         builder.registrationGroup.get(addonName, new TreeSet<String>())
-        factories.each {String name, Factory factory ->
-            builder.registerFactory(name, addonName, factory)
+        factories.each {String name, factoryOrBean ->
+            if(factoryOrBean instanceof Factory) {
+                builder.registerFactory(name, addonName, factoryOrBean)
+            } else {
+                builder.registerBeanFactory(name, addonName, factoryOrBean)
+            }
         }
     }
 
