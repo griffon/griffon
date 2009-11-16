@@ -112,7 +112,7 @@ target(packagePlugin:"Implementation target") {
         dependencies {
             if(plugin.metaClass.hasProperty(plugin,'dependsOn')) {
                 for(d in plugin.dependsOn) {
-                    plugin(name:d.key, version:d.value)
+                    xml.plugin(name:d.key, version:d.value)
                 }
             }
         }

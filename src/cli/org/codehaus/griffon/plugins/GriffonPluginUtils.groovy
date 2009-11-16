@@ -290,7 +290,6 @@ public class GriffonPluginUtils {
                                           String griffonWorkDir,
                                           Closure resourceResolver = DEFAULT_RESOURCE_RESOLVER) {
         if(!availableScripts) {
-
             def scripts = []
             def userHome = System.getProperty("user.home")
             resourceResolver("file:${griffonHome}/scripts/**.groovy").each { if (!it.file.name.startsWith('_')) scripts << it }
@@ -310,7 +309,7 @@ public class GriffonPluginUtils {
         if(!pluginScripts) {
             pluginScripts = new Resource[0]
             pluginScripts = resolvePluginResourcesAndAdd(pluginScripts, pluginDirPath) { pluginDir ->
-                resourceResolver("file:${pluginDir}/*/scripts/*.groovy")
+                resourceResolver("file:${pluginDir}/scripts/*.groovy")
             }
         }
         return pluginScripts
@@ -356,7 +355,7 @@ public class GriffonPluginUtils {
         if(!jarFiles) {
             jarFiles = new Resource[0]
             jarFiles = resolvePluginResourcesAndAdd(jarFiles, pluginsDirPath) { pluginDir ->
-                resourceResolver("file:${pluginDir}/*/lib/*.jar")
+                resourceResolver("file:${pluginDir}/lib/*.jar")
             }
         }
         return jarFiles
@@ -440,9 +439,8 @@ public class GriffonPluginUtils {
         if(!pluginLibs) {
             pluginLibs = new Resource[0]
             pluginLibs = resolvePluginResourcesAndAdd(pluginLibs, pluginsDirPath) { pluginDir ->
-                resourceResolver("file:${pluginDir}/*/lib")
+                resourceResolver("file:${pluginDir}/lib")
             }
-
         }
         return pluginLibs
     }

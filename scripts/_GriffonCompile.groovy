@@ -14,6 +14,8 @@
  * limitations under the License.
  */
 
+import org.codehaus.griffon.util.GriffonNameUtils
+
 /**
  * Gant script that compiles Groovy and Java files in the src tree
  *
@@ -23,16 +25,17 @@
  */
 
 includeTargets << griffonScript("_GriffonInit")
+includeTargets << griffonScript("_PluginDependencies")
 
 ant.taskdef (name: 'groovyc', classname : 'org.codehaus.groovy.ant.Groovyc' /*classname : 'org.codehaus.griffon.compiler.GriffonCompiler'*/)
 ant.path(id: "griffon.compile.classpath", compileClasspath)
 
 compilerPaths = { String classpathId, boolean compilingTests ->
 
-	def excludedPaths = ["resources", "i18n", "conf"] // conf gets special handling
-	def pluginResources = getPluginSourceFiles()
+    def excludedPaths = ["resources", "i18n", "conf"] // conf gets special handling
+    def pluginResources = getPluginSourceFiles()
 
-	for(dir in new File("${basedir}/griffon-app").listFiles()) {
+    for(dir in new File("${basedir}/griffon-app").listFiles()) {
         if(!excludedPaths.contains(dir.name) && dir.isDirectory())
             src(path:"${dir}")
     }
@@ -41,7 +44,7 @@ compilerPaths = { String classpathId, boolean compilingTests ->
     // This stops resources.groovy becoming "spring.resources"
 //    src(path: "${basedir}/griffon-app/conf/spring")
 
-	excludedPaths.remove("conf")
+    excludedPaths.remove("conf")
     for(dir in pluginResources.file) {
         if(!excludedPaths.contains(dir.name) && dir.isDirectory()) {
             src(path:"${dir}")
@@ -53,10 +56,10 @@ compilerPaths = { String classpathId, boolean compilingTests ->
 //    src(path:"${basedir}/src/java")
     src(path:"${basedir}/src/main")
     javac(classpathref:classpathId, debug:"yes", target: '1.5')
-	if(compilingTests) {
+    if(compilingTests) {
         src(path:"${basedir}/test/unit")
         src(path:"${basedir}/test/integration")
-	}
+    }
 }
 
 compileSources = { classpathId, sources ->
@@ -79,44 +82,18 @@ target(compile : "Implementation of compilation phase") {
     profile("Compiling sources to location [$classesDirPath]") {
 
         String classpathId = "griffon.compile.classpath"
-        compileSources(classpathId, compilerPaths.curry(classpathId, false))
-//         try {
-//             String classpathId = "griffon.compile.classpath"
-//             ant.groovyc(destdir:classesDirPath,
-// //                    projectName:baseName,
-//                     classpathref:classpathId,
-//                     encoding:"UTF-8",
-//                     compilerPaths.curry(classpathId, false))
-//         }
-//         catch(Exception e) {
-//             event("StatusFinal", ["Compilation error: ${e.message}"])
-//             exit(1)
-//         }
 
-        // TODO review
-        // compile *GriffonPlugin.groovy if it exists
-//         try {
-//            if( new File("${basedir}").list().grep{ it =~ /GriffonPlugin\.groovy/ } ){
-//                String classpathId = "griffon.compile.classpath"
-//                ant.groovyc(destdir:classesDirPath,
-// //                    projectName:baseName,
-//                        classpathref:classpathId,
-//                        encoding:"UTF-8") {
-//                   src(path:"${basedir}")
-//                   include(name:'*GriffonPlugin.groovy')
-//               }
-//            }
-//         }
-//         catch(Exception e) {
-//             event("StatusFinal", ["Compilation error: ${e.message}"])
-//             exit(1)
-//         }
-        if( new File("${basedir}").list().grep{ it =~ /GriffonPlugin\.groovy/ } ){
+        if(isPluginProject) {
+            def pluginFile = new File("${basedir}").list().find{ it =~ /GriffonPlugin\.groovy/ }
             compileSources(classpathId) {
                 src(path:"${basedir}")
                 include(name:'*GriffonPlugin.groovy')
             }
+            classLoader.addURL(classesDir.toURI().toURL())
+            resolvePluginClasspathDependencies(loadPluginClass(pluginFile))
         }
+
+        compileSources(classpathId, compilerPaths.curry(classpathId, false))
 
         if( new File("${basedir}").list().grep{ it =~ /GriffonAddon\.groovy/ } ){
             ant.path(id:'addonPath') {
@@ -134,5 +111,4 @@ target(compile : "Implementation of compilation phase") {
 
         event("CompileEnd", ['source'])
     }
-
 }

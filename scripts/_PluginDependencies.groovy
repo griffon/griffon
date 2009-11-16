@@ -60,6 +60,30 @@ pluginDiscoveryRepositories = griffonSettings?.config?.griffon?.plugin?.repos?.d
 pluginDistributionRepositories = griffonSettings?.config?.griffon?.plugin?.repos?.distribution ?: Collections.emptyMap()
 installedPlugins = [] // a list of plugins that have been installed
 
+loadPluginClass = { String pluginFile ->
+    try {
+        pluginClass = classLoader.loadClass(pluginFile[0..-8])
+        return pluginClass.newInstance()
+    }
+    catch(Throwable t) {
+        event("StatusError", [t.message])
+        t.printStackTrace(System.out)
+        ant.fail("Cannot instantiate plugin file")
+    }
+}
+
+resolvePluginClasspathDependencies = { plugin ->
+    def plugins = [] 
+    if(plugin.metaClass.hasProperty(plugin,'dependsOn')) {
+        for(dep in plugin.dependsOn) {
+            plugins << [name: dep.key, version: dep.value.toString()]
+        }
+    }
+    _resolveDependencies(plugins) { pluginName, pluginVersion, pluginDir ->
+        def pluginFile = new File(pluginDir).list().find{ it =~ /GriffonPlugin\.groovy/ }
+        resolvePluginClasspathDependencies(loadPluginClass(pluginFile))
+    }
+}
 
 configureRepository =  { targetRepoURL, String alias = "default" ->
   repositoryName = alias
@@ -112,8 +136,11 @@ target(resolveDependencies:"Resolve plug-in dependencies") {
         version: it.value
        ]
     }
-    boolean installedPlugins = false
+    _resolveDependencies(plugins)
+}
 
+_resolveDependencies = { List plugins, callback = null ->
+    boolean installedPlugins = false
 
     for(p in plugins) {
         def name = p.name
@@ -122,9 +149,9 @@ target(resolveDependencies:"Resolve plug-in dependencies") {
         def pluginLoc = getPluginDirForName(name)
         if(!pluginLoc?.exists()) {
             println "Plugin [${fullName}] not installed, resolving.."
-
             cacheKnownPlugin(name, version)
             installPluginForName(fullName)
+            if(callback) callback(name, version, pluginLoc)
             installedPlugins = true
         }
     }
@@ -135,6 +162,7 @@ target(resolveDependencies:"Resolve plug-in dependencies") {
     def pluginDirs = GriffonPluginUtils.getPluginDirectories(pluginsHome)
     def pluginsToUninstall = pluginDirs.findAll { Resource r -> !plugins.find { plugin -> r.filename == "$plugin.name-$plugin.version" }}
 
+    if(isPluginProject) return
     for(Resource pluginDir in pluginsToUninstall) {
         if(confirmInput("Plugin [${pluginDir.filename}] is installed, but was not found in the application's metadata, do you want to uninstall?") == 'y') {
             uninstallPluginForName(pluginDir.filename)
@@ -147,30 +175,30 @@ target(resolveDependencies:"Resolve plug-in dependencies") {
 }
 target(loadPlugins:"Loads Griffon' plugins") {
     if(!PluginManagerHolder.pluginManager) { // plugin manager already loaded?
-		compConfig.setTargetDirectory(classesDir)
-	    def unit = new CompilationUnit ( compConfig , null , new GroovyClassLoader(classLoader) )
-		def pluginFiles = getPluginDescriptors()
+        compConfig.setTargetDirectory(classesDir)
+        def unit = new CompilationUnit ( compConfig , null , new GroovyClassLoader(classLoader) )
+        def pluginFiles = getPluginDescriptors()
 
         for(plugin in pluginFiles) {
             def pluginFile = plugin.file
             def className = pluginFile.name - '.groovy'
-	        def classFile = new File("${classesDirPath}/${className}.class")
+            def classFile = new File("${classesDirPath}/${className}.class")
 
             if(pluginFile.lastModified() > classFile.lastModified())
-	              unit.addSource ( pluginFile )
-		}
+                  unit.addSource ( pluginFile )
+        }
 
         try {
             profile("compiling plugins") {
-	    		unit.compile ()
-			}
-			def application
+                unit.compile ()
+            }
+            def application
             def pluginClasses = []
             profile("construct plugin manager with ${pluginFiles.inspect()}") {
-				for(plugin in pluginFiles) {
-				   def className = plugin.file.name - '.groovy'
-	               pluginClasses << classLoader.loadClass(className)
-				}
+                for(plugin in pluginFiles) {
+                   def className = plugin.file.name - '.groovy'
+                   pluginClasses << classLoader.loadClass(className)
+                }
 
                 profile("creating plugin manager with classes ${pluginClasses}") {
                     if(griffonContext == null) {
@@ -180,10 +208,10 @@ target(loadPlugins:"Loads Griffon' plugins") {
 
                     PluginManagerHolder.setPluginManager(pluginManager)
                 }
-	        }
-	        profile("loading plugins") {
-				event("PluginLoadStart", [pluginManager])
-	            pluginManager.loadPlugins()
+            }
+            profile("loading plugins") {
+                event("PluginLoadStart", [pluginManager])
+                pluginManager.loadPlugins()
 
 
                 def loadedPlugins = pluginManager.allPlugins?.findAll { pluginClasses.contains(it.instance.getClass()) }*.name
@@ -202,12 +230,12 @@ target(loadPlugins:"Loads Griffon' plugins") {
                 griffonContext.initialise()
                 event("PluginLoadEnd", [pluginManager])
             }
-	    }
+        }
         catch (Exception e) {
             GriffonUtil.deepSanitize(e).printStackTrace()
             event("StatusFinal", [ "Error loading plugin manager: " + e.message ])
-			exit(1)
-	    }
+            exit(1)
+        }
     }
     else {
         // Add the plugin manager to the binding so that it can be accessed
@@ -674,33 +702,34 @@ installPluginForName = { String fullPluginName ->
             for(jar in pluginJars) {
                 rootLoader.addURL(jar.URL)
             }
-            // proceed _Install.groovy plugin script if exists
-            def installScript = new File("${pluginsHome}/${fullPluginName}/scripts/_Install.groovy")
-            runPluginScript(installScript, fullPluginName, "post-install script")
-
-            registerPluginWithMetadata(pluginName, pluginVersion)
-
-
-            def providedScripts = resolveResources("file:${pluginsHome}/${fullPluginName}/scripts/*.groovy").findAll { !it.filename.startsWith('_')}
-            event("StatusFinal", ["Plugin ${fullPluginName} installed"])
-            if (providedScripts) {
-                println "Plug-in provides the following new scripts:"
-                println "------------------------------------------"
-                providedScripts.file.each {file ->
-                    def scriptName = GriffonNameUtils.getScriptName(file.name)
-                    println "griffon ${scriptName}"
+            
+            if(!isPluginProject) {
+                // proceed _Install.groovy plugin script if exists
+                def installScript = new File("${pluginsHome}/${fullPluginName}/scripts/_Install.groovy")
+                runPluginScript(installScript, fullPluginName, "post-install script")
+    
+                registerPluginWithMetadata(pluginName, pluginVersion)
+    
+                event("StatusFinal", ["Plugin ${fullPluginName} installed"])
+                def providedScripts = resolveResources("file:${pluginsHome}/${fullPluginName}/scripts/*.groovy").findAll { !it.filename.startsWith('_')}
+                if (providedScripts) {
+                    println "Plug-in provides the following new scripts:"
+                    println "------------------------------------------"
+                    providedScripts.file.each {file ->
+                        def scriptName = GriffonNameUtils.getScriptName(file.name)
+                        println "griffon ${scriptName}"
+                    }
                 }
-            }
-
-            File pluginEvents = new File("${pluginsDirPath}/${fullPluginName}/scripts/_Events.groovy")
-            if (pluginEvents.exists()) {
-                println "Found events script in plugin ${pluginName}"
-                loadEventScript(pluginEvents)
+    
+                File pluginEvents = new File("${pluginsDirPath}/${fullPluginName}/scripts/_Events.groovy")
+                if (pluginEvents.exists()) {
+                    println "Found events script in plugin ${pluginName}"
+                    loadEventScript(pluginEvents)
+                }
             }
 
             event("PluginInstalled", [fullPluginName])
         }
-
     }
 }
 

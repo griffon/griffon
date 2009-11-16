@@ -27,50 +27,47 @@ import org.codehaus.griffon.util.GriffonNameUtils
 includeTargets << griffonScript("Init")
 
 class HelpEvaluatingCategory {
-
     static defaultTask = ""
     static helpText = [:]
-	static target(Object obj, Map args, Closure callable) {
+    static target(Object obj, Map args, Closure callable) {
         def entry = args.entrySet().iterator().next()
         helpText[(entry.key)] = entry.value
 
         if (entry.key == "default") {
             defaultTask = "default"
         }
-	}
-	static getDefaultDescription(Object obj) {
-		return helpText[defaultTask]
-	}
+    }
+    static getDefaultDescription(Object obj) {
+        return helpText[defaultTask]
+    }
 
     static setDefaultTarget(Object obj, val) {
         defaultTask = val
     }
-
 }
 
 File getHelpFile(File script) {
     File helpDir = new File(griffonTmp, "help")
     if (!helpDir.exists()) helpDir.mkdir()
     String scriptname = script.getName()
-	return new File(helpDir, scriptname.substring(0, scriptname.lastIndexOf('.')) + ".txt")
+    return new File(helpDir, scriptname.substring(0, scriptname.lastIndexOf('.')) + ".txt")
 }
 
 boolean shouldGenerateHelp(File script) {
-	File file = getHelpFile(script)
+    File file = getHelpFile(script)
     return (!file.exists() || file.lastModified() < script.lastModified() )
 }
 
+target ('default' : "Prints out the help for each script") {
+    ant.mkdir(dir:griffonTmp)
+    def scripts = getAllScripts().collect { it.file }
 
-target ( 'default' : "Prints out the help for each script") {
-	ant.mkdir(dir:griffonTmp)
-	def scripts = getAllScripts().collect { it.file }
-
-	def helpText = ""
+    def helpText = ""
 
 
-	if(args) {
-		def fileName = GriffonNameUtils.getNameFromScript(args)
-		def file = scripts.find {
+    if(args) {
+        def fileName = GriffonNameUtils.getNameFromScript(args)
+        def file = scripts.find {
             def scriptFileName = it.name[0..-8]
             if(scriptFileName.endsWith("_")) scriptFileName = scriptFileName[0..-2]
             scriptFileName == fileName
@@ -111,9 +108,9 @@ target ( 'default' : "Prints out the help for each script") {
             println "No script found for name: $args"
         }
 
-	}
-	else {
-			println """
+    }
+    else {
+            println """
 Usage (optionals marked with *):
 griffon [environment]* [target] [arguments]*
 
@@ -123,36 +120,35 @@ griffon create-app books
 
 Available Targets (type griffon help 'target-name' for more info):"""
 
-	    scripts.unique { it.name }. sort{ it.name }.each { file ->
-			def scriptName = GriffonNameUtils.getScriptName(file.name)
-			println "griffon ${scriptName}"
-		}
-	}
+        scripts.unique { it.name }. sort{ it.name }.each { file ->
+            def scriptName = GriffonNameUtils.getScriptName(file.name)
+            println "griffon ${scriptName}"
+        }
+    }
 }
 
-target( showHelp: "Show help for a particular command") {
-	def gcl = new GroovyClassLoader()
-	use(HelpEvaluatingCategory.class) {
-		if (shouldGenerateHelp(file)) {
-			try {
-				def script = gcl.parseClass(file).newInstance()
-				script.binding = binding
-				script.run()
+target(showHelp: "Show help for a particular command") {
+    def gcl = new GroovyClassLoader()
+    use(HelpEvaluatingCategory.class) {
+        if (shouldGenerateHelp(file)) {
+            try {
+                def script = gcl.parseClass(file).newInstance()
+                script.binding = binding
+                script.run()
 
-				def scriptName = GriffonNameUtils.getScriptName(file.name)
+                def scriptName = GriffonNameUtils.getScriptName(file.name)
 
-				helpText = "griffon ${scriptName} -- ${getDefaultDescription()}"
-				getHelpFile(file).write(helpText)
-			}
-			catch(Throwable t) {
-				println "Error creating help for ${file}: ${t.message}"
+                helpText = "griffon ${scriptName} -- ${getDefaultDescription()}"
+                getHelpFile(file).write(helpText)
+            }
+            catch(Throwable t) {
+                println "Error creating help for ${file}: ${t.message}"
                 GriffonUtil.deepSanitize(t)
-				t.printStackTrace(System.out)
-			}
-		} else {
-			helpText = getHelpFile(file).text
-		}
-		println helpText
-	}
-
+                t.printStackTrace(System.out)
+            }
+        } else {
+            helpText = getHelpFile(file).text
+        }
+        println helpText
+    }
 }
