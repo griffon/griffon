@@ -38,6 +38,7 @@ class GriffonApplicationHelper {
             System.setProperty("griffon.start.dir", startDir[1..-2])
         }
 
+        app.metaClass.newInstance = GriffonApplicationHelper.&newInstance.curry(app)
         app.initialize();
 
         app.config = new ConfigSlurper().parse(app.configClass)
@@ -158,6 +159,7 @@ class GriffonApplicationHelper {
         }
 
         def argsCopy = [app:app, mvcType:mvcType, mvcName:mvcName]
+        argsCopy.putAll(app.bindings.variables)
         argsCopy.putAll(bindArgs)
 
 
