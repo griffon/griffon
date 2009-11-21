@@ -1,0 +1,35 @@
+h1. package
+
+h2. Purpose
+
+Lorem ipsum
+
+h2. Examples
+
+As an include:
+
+{code}
+includeTargets << griffonScript("Package")
+{code}
+
+As a command:
+
+{code:java}
+griffon package
+{code}
+
+h2. Description
+
+Usage: 
+{code:java}
+griffon package
+{code}
+
+
+Once this is in place there are a number of useful commands that can be re-used:
+
+* @loadPlugins@ - Loads all of the Griffon plug-ins and creates the GriffonPluginManager instance
+* @packageApp@ - Calls all of the above 3 targets in the appropriate order
+
+Typically @packageApp@ is the most useful as it performs all the necessary packaging steps
+

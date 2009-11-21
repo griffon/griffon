@@ -1,0 +1,32 @@
+h1. Command Line Usage
+
+Griffon incorporates the powerful build system {link:Gant|http://gant.codehaus.org}, which is a Groovy wrapper around [Apache Ant|http://ant.apache.org].          [bootstrap|commandLine]
+
+The basic usage scenario is:
+
+{code:java}
+griffon [environment]* [command name]
+{code}
+
+Griffon will search for Gant scripts that match the given name in the following locations:
+
+* USER_HOME/.griffon/scripts
+* PROJECT_HOME/scripts
+* PROJECT_HOME/plugins/*/scripts
+* GRIFFON_HOME/scripts
+
+If Griffon discovers multiple commands matching the name entered it will offer you a choice as to which one to execute.
+
+To specify an alternative environment to execute a particular command within you can specify an optional environment parameter either with one of the built in environments:
+
+{code:java}
+griffon dev run-app
+griffon prod run-app
+{code}
+
+Or using an argument
+
+{code:java}
+griffon -Dgriffon.env=uat run-app{code}
+
+Refer to the user guide section on [The Command Line|guide:commandLine] for more information.

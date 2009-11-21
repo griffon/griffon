@@ -44,10 +44,11 @@
 
     <target name="copy-common-release-content">
         <antcall target="copy-dir">
-            <param name="dir.excludes" value=""/>
+            <param name="dir.excludes" value="docs"/>
             <param name="dir.location" value="lib"/>
             <param name="dir.destination" value="${release.dir}/lib"/>
         </antcall>
+        <delete dir="${release.dir}/lib/test" failonerror="false" quiet="true"/>
         <antcall target="copy-dir">
             <param name="dir.excludes" value=""/>
             <param name="dir.location" value="bash"/>
@@ -93,6 +94,11 @@
             <param name="dir.excludes" value=""/>
             <param name="dir.location" value="doc"/>
             <param name="dir.destination" value="${release.dir}/doc"/>
+        </antcall>
+        <antcall target="copy-dir">
+            <param name="dir.excludes" value=""/>
+            <param name="dir.location" value="target/guide"/>
+            <param name="dir.destination" value="${release.dir}/guide"/>
         </antcall>
         <copy todir="${release.dir}">
             <fileset dir=".">
@@ -165,6 +171,7 @@
         <property name="griffon.release" value="${release.name}"/>
         <property name="griffon.release.base.dir.name" value="griffon-${griffon.version}"/>
         <property name="griffon.release.dir" location="tmp/${griffon.release.base.dir.name}"/>
+        <antcall target="create-guide"/>
         <antcall target="create-tmp-release-dir">
             <param name="dir.location" value="${griffon.release.dir}"/>
         </antcall>

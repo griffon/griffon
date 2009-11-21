@@ -2,6 +2,28 @@
     <property name="targetDistDirectory" value="${griffon.dist}"/>
     <import file="maven.xml"/>
 
+    <target name="create-guide" description="Builds the Griffon Guide">
+        <taskdef name="docs"
+                 classname="grails.doc.ant.DocPublisherTask">
+            <classpath>
+                <fileset dir="${basedir}/lib/docs" includes="*.jar"/>
+                <path refid="classpath"/>
+            </classpath>
+        </taskdef>
+        <mkdir dir="target/guide" />
+        <mkdir dir="${griffon.dist}" />
+        <copy todir="target/guide">
+            <fileset dir="${basedir}/src/doc/" includes="*.properties" />
+        </copy>
+        <replace dir="target/guide">
+            <replaceFilter token="@griffon.version@" value="${griffon.version}" />
+        </replace>
+        <docs src="${basedir}/src/doc"
+              dest="target/guide"
+              properties="target/guide/guide.properties" />
+        <zip basedir="target/guide" destfile="${griffon.dist}/griffon-guide-${griffon.version}.zip" />
+    </target>
+
     <target name="-jar-app-files" description="Bundles all the template files for applications and plugins into a JAR files.">
         <!-- Clear the old JAR files out. -->
         <delete>

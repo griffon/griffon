@@ -1,0 +1,48 @@
+h1. test-app
+
+h2. Purpose
+
+Runs all Griffon unit and integration tests and outputs reports. The command will return appropriate response codes for embedding with continuous integration servers.
+
+h2. Examples
+
+{code:java}
+griffon test-app
+griffon test-app Foo
+griffon test-app Foo Bar
+{code}
+
+h2. Description
+
+Usage: 
+{code:java}
+griffon [environment]* test-app [names]*
+{code}
+
+Fired Events:
+
+* @StatusFinal@ - When the test cycle completes
+
+Executes the Griffon unit and integration tests located in the @test/unit@ and @test/integration@ directories. By default all tests are executed, but you can specify the names of the tests (without the "Tests" suffix) as argument to the command:
+
+{code:java}
+griffon test-app Foo
+griffon test-app Foo Bar
+{code}
+
+You can also choose to only run the unit or integration tests:
+
+{code:java}
+griffon test-app -unit
+griffon test-app -integration
+{code}
+
+The first example will execute a test called @FooTests.groovy@ whilst the second will execute @FooTests.groovy@ and @BarTests.groovy@ if they exist.
+
+If you only wish to re-run failed tests use the -rerun flag
+
+{code:java}
+griffon test-app -rerun
+{code}
+
+

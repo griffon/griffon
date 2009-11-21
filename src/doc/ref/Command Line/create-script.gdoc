@@ -1,0 +1,47 @@
+h1. create-script 
+
+h2. Purpose
+
+The @create-script@ command will create a new Griffon executable script that can be run with the @griffon@ command from a terminal window.
+
+
+h2. Examples
+
+The command:
+
+{code:java}
+griffon create-script execute-report
+{code}
+
+Creates a script called @scripts/ExecuteReport.groovy@ such as:
+
+{code:java}
+target('default': "The description of the script goes here!") {
+    doStuff()
+}
+target(doStuff: "The implementation task") {
+   // logic here   
+}
+{code}
+
+The command can then be run with:
+
+{code:java}
+griffon execute-report	
+{code}
+
+h2. Description
+
+The command will translate lower case command names, separated by hyphens into a valid Groovy class name with camel case. For example @create-mvc@ would become a script called @scripts/CreateMvc.groovy@. 
+
+The script generated is a "Gant":http://gant.codehaus.org script which can use Gant's capabilities to depend on other scripts from Griffon core. Refer to the section on [Command Line Scripting|guide:commandLine] in the user guide.
+
+Usage: 
+
+{code:java}
+griffon create-script [name]
+{code}
+
+Fired Events: 
+
+* @CreatedFile@ - When the script has been created

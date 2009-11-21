@@ -21,6 +21,11 @@
       <pathelement path="${griffon.build.rt}"/>
     </path>
 
+    <path id="test.classpath">
+        <path refid="classpath"/>
+        <fileset dir="${basedir}/lib/test" includes="*.jar"/>
+    </path>
+
     <target name="clean" description="Clean the build directory.">
     <echo>JAVA HOME IS ${env.JAVA_HOME}</echo>
         <delete dir="${griffon.dist}"/>

@@ -63,7 +63,7 @@
             <!--<src path="${griffon.test.src.scaffolding}" />-->
             <!--<src path="test/groovy" />-->
             <javac debug="on" deprecation="on" encoding="UTF-8"/>
-            <classpath refid="classpath" />
+            <classpath refid="test.classpath" />
 			<classpath location="${griffon.test.build}" />
             <classpath location="${griffon.build.cli}" />
             <classpath location="${griffon.build.rt}" />
@@ -172,7 +172,7 @@
                 <!-- must be first in cp!    -->
                 <!--<pathelement location="cruise/coverage/lib/cobertura.jar" />-->
                 <!-- only needed for coverage -->
-                <path refid="classpath" />
+                <path refid="test.classpath" />
 
                 <pathelement  location="${griffon.build.cli}" />
                 <pathelement location="${griffon.build.rt}" />
