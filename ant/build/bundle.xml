@@ -21,6 +21,9 @@
         <docs src="${basedir}/src/doc"
               dest="target/guide"
               properties="target/guide/guide.properties" />
+        <copy todir="target/guide/img">
+            <fileset dir="${basedir}/src/doc/img" />
+        </copy>
         <zip basedir="target/guide" destfile="${griffon.dist}/griffon-guide-${griffon.version}.zip" />
     </target>
 

@@ -1,0 +1,53 @@
+If all the other projects in your team or company are built using a standard build tool such as Ant or Maven, you become the black sheep of the family when you use the Griffon command line to build your application. Fortunately, you can easily integrate the Griffon build system into the main build tools in use today (well, the ones in use in Java projects at least).
+
+h3. Ant Integration
+
+When you create a Griffon application via the [create-app|commandLine] command, Griffon automatically creates an "Apache Ant":http://ant.apache.org/ @build.xml@ file for you containing the following targets:
+
+* @clean@ - Cleans the Griffon application
+* @debug-app@ - Runs the application in debug mide
+* @test@ - Runs the unit tests
+* @run-app@ - Equivalent to "griffon run-app"
+* @run-applet@ - Equivalent to "griffon run-applet"
+* @run-webstart@ - Equivalent to "griffon run-webstart"
+* @dist@ - Packages the application for production
+
+Each of these can be run by Ant, for example:
+
+{code:java}
+ant clean
+{code}
+
+The build file is all geared up to use "Apache Ivy":http://ant.apache.org/ivy/ for dependency management, which means that it will automatically download all the requisite Griffon JAR files and other dependencies on demand. You don't even have to install Griffon locally to use it! That makes it particularly useful for continuous integration systems such as "CruiseControl":http://cruisecontrol.sourceforge.net/ or "Hudson":https://hudson.dev.java.net/.
+
+It uses the Griffon [Ant task|api:griffon.ant.GriffonTask] to hook into the existing Griffon build system. The task allows you to run any Griffon script that's available, not just the ones used by the generated build file. To use the task, you must first declare it:
+{code}
+<taskdef name="griffonTask"
+         classname="griffon.ant.GriffonTask"
+         classpathref="griffon.classpath"/>
+{code}
+
+This raises the question: what should be in "griffon.classpath"? The task itself is in the "griffon-bootstrap" JAR artifact, so that needs to be on the classpath at least. You should also include the "groovy-all" JAR. With the task defined, you just need to use it! The following table shows you what attributes are available:
+{table}
+ Attribute | Description | Required
+ home | The location of the Griffon installation directory to use for the build. | Yes, unless classpath is specified.
+ classpathref | Classpath to load Griffon from. Must include the "griffon-bootstrap" artifact and should include "griffon-scripts". | Yes, unless @home@ is set or you use a @classpath@ element.
+ script | The name of the Griffon script to run, e.g. "TestApp". | Yes.
+ args | The arguments to pass to the script, e.g. "-unit -xml". | No. Defaults to "".
+ environment | The Griffon environment to run the script in. | No. Defaults to the script default.
+ includeRuntimeClasspath | Advanced setting: adds the application's runtime classpath to the build classpath if true. | No. Defaults to true.
+{table}
+
+The task also supports the following nested elements, all of which are standard Ant path structures:
+
+* @classpath@ - The build classpath (used to load Gant and the Griffon scripts).
+* @compileClasspath@ - Classpath used to compile the application's classes.
+* @runtimeClasspath@ - Classpath used to run the application and package the WAR. Typically includes everything in @compileClasspath.
+* @testClasspath@ - Classpath used to compile and run the tests. Typically includes everything in @runtimeClasspath@.
+
+How you populate these paths is up to you. If you are using the @home@ attribute and put your own dependencies in the @lib@ directory, then you don't even need to use any of them. For an example of their use, take a look at the generated Ant build file for new apps.
+
+h3. Maven Integration
+
+TBD
+
