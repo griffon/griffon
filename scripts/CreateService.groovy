@@ -1,12 +1,12 @@
 /*
  * Copyright 2004-2005 the original author or authors.
- *
+ * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- *
+ * 
  *      http://www.apache.org/licenses/LICENSE-2.0
- *
+ * 
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -15,41 +15,25 @@
  */
 
 /**
- * Gant script that creates a Griffon Gant script
- *
+ * Gant script that creates a Griffon service class
+ * 
  * @author Graeme Rocher
  *
  * @since 0.4
  */
 
-import org.codehaus.griffon.util.GriffonNameUtils
-
 includeTargets << griffonScript("_GriffonInit")
 includeTargets << griffonScript("_GriffonCreateArtifacts")
 
-target (default : "Creates a Griffon Gant Script") {
+target('default': "Creates a new service class") {
     depends(checkVersion, parseArguments)
 
-    def type = "Script"
+    ant.mkdir(dir:"${basedir}/griffon-app/services")
+
+    def type = "Service"
     promptForName(type: type)
-    def (pkg, name) = extractArtifactName(argsMap["params"][0])
 
-    createArtifact(
-        name: name,
-        suffix: "",
-        type: type,
-        path: "scripts")
-    createArtifact(
-        name: name,
-        suffix: "Tests",
-        type: "ScriptTests",
-        path: "test/cli")
-
-    className = GriffonNameUtils.getClassNameRepresentation(name)
-    artifactFile = "${basedir}/test/cli/${className}Tests.groovy"
-
-    ant.replace(file: artifactFile) {
-        replacefilter(token: "@script.name@", value: name )
-        replacefilter(token: "${className}Tests", value: className )
-    }
+    def name = argsMap["params"][0]
+	createArtifact(name: name, suffix: type, type: type, path: "griffon-app/services")
+	createUnitTest(name: name, suffix: type)
 }

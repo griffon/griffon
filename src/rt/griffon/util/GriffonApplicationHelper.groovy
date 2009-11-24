@@ -21,6 +21,12 @@ import javax.swing.JFrame
 import javax.swing.SwingUtilities
 import org.codehaus.groovy.runtime.InvokerHelper
 
+import griffon.core.ArtefactManager
+import griffon.core.ModelArtefactHandler
+import griffon.core.ViewArtefactHandler
+import griffon.core.ControllerArtefactHandler
+import griffon.core.ServiceArtefactHandler
+
 /**
  * Created by IntelliJ IDEA.
  *@author Danno.Ferrin
@@ -47,6 +53,16 @@ class GriffonApplicationHelper {
         if (eventsClass) {
             app.eventsConfig = eventsClass.newInstance()
             app.addApplicationEventListener(app.eventsConfig)
+        }
+        
+        app.metaClass.artefactManager = ArtefactManager.instance
+        ArtefactManager.instance.app = app
+        ArtefactManager.instance.with {
+            registerArtefactHandler(new ModelArtefactHandler())
+            registerArtefactHandler(new ViewArtefactHandler())
+            registerArtefactHandler(new ControllerArtefactHandler())
+            registerArtefactHandler(new ServiceArtefactHandler())
+            loadArtefactMetadata()
         }
 
         AddonHelper.handleAddonsAtStartup(app)
@@ -162,12 +178,12 @@ class GriffonApplicationHelper {
         argsCopy.putAll(app.bindings.variables)
         argsCopy.putAll(bindArgs)
 
-
         // figure out what the classes are and prep the metaclass
         def klassMap = [:]
         ClassLoader classLoader = app.getClass().classLoader
         app.mvcGroups[mvcType].each {k, v ->
-            Class klass = classLoader.loadClass(v);
+            Class klass = ArtefactManager.instance.getArtefactInfo(v)?.klass
+            if(!klass) klass = classLoader.loadClass(v);
 
             // inject defaults into emc
             // this also insures EMC metaclasses later

@@ -42,7 +42,9 @@ compilerPaths = { String classpathId, boolean compilingTests ->
     // Handle conf/ separately to exclude subdirs/package misunderstandings
     src(path: "${basedir}/griffon-app/conf")
     // This stops resources.groovy becoming "spring.resources"
-//    src(path: "${basedir}/griffon-app/conf/spring")
+//    if( new File("${basedir}/griffon-app/conf/spring").exists()) {
+//        src(path: "${basedir}/griffon-app/conf/spring")
+//    }
 
     excludedPaths.remove("conf")
     for(dir in pluginResources.file) {

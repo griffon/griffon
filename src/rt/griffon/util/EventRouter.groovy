@@ -18,6 +18,9 @@ package griffon.util
 import javax.swing.SwingUtilities
 import org.codehaus.groovy.runtime.MetaClassHelper
 
+/**
+ * @author Andres Almiray (aalmiray)
+ */
 class EventRouter {
    private List listeners = Collections.synchronizedList([])
    private Map scriptBindings = [:]
