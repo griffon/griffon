@@ -1,0 +1,14 @@
+As as mentioned previously, a plugin is merely a regular Griffon application with a contained plug-in descriptors. However when installed, the structure of a plugin differs slightly. For example, take a look at this plugin directory structure:
+
+{code:java}
++ griffon-app
+     + controllers
+     + models
+     + views
+     etc.
+ + lib
+ + src
+     + main
+{code}
+
+Essentially when a plugin is installed into a project, the contents of the @griffon-app@ directory will go into a directory such as @plugins/example-1.0/griffon-app@. They *will not* be copied into the main source tree. A plugin never interferes with a project's primary source tree.

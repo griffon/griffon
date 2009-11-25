@@ -1,0 +1,32 @@
+Before moving onto looking at providing runtime configuration based on conventions you first need to understand how to evaluated those conventions from a plug-in. Essentially every addod provided by a plugin has access to an @app@ variable during its initialisation. This variable is an instance of the [IGriffonApplication|api:griffon.util.GriffonApplication] interface. From it you can access an @artefactManager@ property of type [ArtefactManager|api:griffon.core.ArtefactManager].
+
+The @ArtefactManager@ class provides methods to evaluate the conventions within the project and internally stores references to all classes within a GriffonApplication using the [ArtefactInfo|api:griffon.core.ArtefactInfo] class.
+
+A ArtefactInfo represents a physical Griffon resources such as a controller or a service. For example to get all @ArtefactInfo@ instances you can do:
+
+{code:java}
+app.artefactManager.allArtefacts.each { println it.name }
+{code}
+
+There are a few "magic" properties that the @ArtefactManager@ instance possesses that allow you to narrow the type of artefact you are interested in. For example if you only want to controllers you can do:
+
+{code:java}
+app.artefactManager.controllerArtefacts.each { println it.name }
+{code}
+
+The dynamic method conventions are as follows:
+
+* @*Artefacts@ - Retrieves all the artefacts for a particular artefact type. Example @app.artefactManager.controllerArtefacts@.
+* @get*Artefact@ - Retrieves a named artefact for a particular artefact type. Example @app.artefactManager.getControllerArtefact("ExampleController")@
+* @is*Artefact@ - Returns true if the given class is of the given artefact type. Example @app.artefactManager.isControllerArtefact(ExampleController)@
+* @*Classes@ - Retrieves all the classes for a particular artefact type. Example @app.artefactManager.controllerClasses@.
+* @is*Class@ - Returns true if the given class is of the given artefact type. Example @app.artefactManager.isControllerClass(ExampleController)@
+
+The @ArtefactInfo@ interface itself provides a number of useful methods that allow you to further evaluate and work with the conventions. These include:
+
+* @newInstance@ - Creates a new instance of this class.
+* @getName@ -  Returns the logical name of the class in the application without the trailing convention part if applicable
+* @getSimpleName@ - Returns the name of the class as a property name
+* @geKlass@ - Returns the artefact class
+
+For a full reference refer to the [javadoc API|api:griffon.core.ArtefactInfo].

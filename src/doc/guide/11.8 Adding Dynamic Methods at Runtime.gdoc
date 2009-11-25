@@ -1,0 +1,38 @@
+h4. The Basics
+
+Griffon addons allow you to register dynamic methods with any Griffon managed or other class at runtime. New methods can be added within a @addonPostInit@ method of an addon, as it will have access to the @app@ instance.
+
+For Griffon managed classes like controllers, models and so forth you can add methods, constructors etc. using the "ExpandoMetaClass":http://groovy.codehaus.org/ExpandoMetaClass mechanism by accessing each controller's [MetaClass|api:http://groovy.codehaus.org/api/groovy/lang/MetaObjectProtocol.html]:
+
+{code:java}
+class ExampleAddon {
+  def addonPostInit(app) {
+        app.artefactManager.controllerClasses.each { controllerClass ->
+             controllerClass.metaClass.myNewMethod = {-> println "hello world" }
+        }
+  }
+}
+{code}
+
+In this case we use the @app.artefactManager@ object to get a reference to all of the controller classes' MetaClass instances and then add a new method called @myNewMethod@ to each controller.
+Alternatively, if you know before hand the class you wish the add a method to you can simple reference that classes @metaClass@ property:
+
+{code:java}
+class ExampleAddon {
+  def addonPostInit(app) {
+      String.metaClass.swapCase = {->
+           def sb = new StringBuffer()
+           delegate.each {
+               sb << (Character.isUpperCase(it as char) ? 
+                      Character.toLowerCase(it as char) : 
+                      Character.toUpperCase(it as char))
+           }
+           sb.toString()
+      }
+
+      assert "UpAndDown" == "uPaNDdOWN".swapCase()
+}
+{code}
+
+In this example we add a new method @swapCase@ to @java.lang.String@ directly by accessing its @metaClass@.
+

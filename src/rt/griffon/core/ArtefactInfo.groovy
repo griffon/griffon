@@ -43,6 +43,10 @@ final class ArtefactInfo {
         }
     }
 
+    String getName() {
+        klass.name
+    }
+
     String toString() {
         "${type}[$simpleName => ${klass.name}]"
     }

@@ -1,0 +1,39 @@
+h4. Distributing Plugins in Griffon Plugins Repository
+
+The preferred way of plugin distributing is to publish it under Griffon Plugins Repository. This will make your plugin visible to the [list-plugins|commandLine] command:
+
+{code:java}
+griffon list-plugins
+{code}
+
+Which lists all plugins in the Griffon Plugin repository and also the [plugin-info|commandLine] command:
+
+{code:java}
+griffon plugin-info [plugin-name]
+{code}
+
+Which outputs more information based on the meta info entered into the plug-in descriptor. 
+
+{note}
+If you have created a Griffon plug-in and want it to be hosted in the central repository take a look at the wiki page [http://griffon.codehaus.org/Creating+Plugins], which details how to go about releasing your plugin in the repository.
+{note}
+
+When you have access to the Griffon Plug-in repository to release your plugin you simply have to execute the [release-plugin|commandLine] command:
+
+{code:java}
+griffon release-plugin
+{code}
+
+This will automatically commit changes to SVN, do some tagging and make your changes available via the [list-plugins|commandLine] command.
+
+h4. Configuring Additional Repositories
+
+TBD
+
+h4. Secured Plugin Repositories
+
+TBD
+
+h4. Configuring Repository Search Order
+
+TBD

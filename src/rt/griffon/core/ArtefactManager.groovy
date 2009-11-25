@@ -89,7 +89,128 @@ class ArtefactManager {
      * Returns all available artefacts of a particular type.<p>
      * Never returns null
      */
-    synchronized ArtefactInfo[] getArtefactsOfType(String type) {
+    ArtefactInfo[] getArtefactsOfType(String type) {
         artefacts[type] ?: new ArtefactInfo[0]
+    }
+
+    /**
+     * Returns all available classes of a particular type.<p>
+     * Never returns null
+     */
+    Class[] getClassesOfType(String type) {
+        if(artefacts.containsKey(type)) {
+            return artefacts[type].toList().klass
+        }
+        return new Class[0]
+    }
+
+    ArtefactInfo[] getAllArtefacts() {
+        List all = []
+        artefacts.each { all.addAll(it.value.toList()) }
+        return all as ArtefactInfo[]
+    }
+
+    Class[] getAllClasses() {
+        List all = []
+        artefacts.each { all.addAll(it.value.toList().klass) }
+        return all as Class[]
+    }
+
+    def methodMissing(String methodName, args) {
+        def artefactType = methodName =~ /^get(\w+)Artefacts$/
+        if(artefactType) {
+            artefactType = normalize(artefactType)
+        
+            if(!args && artefacts.containsKey(artefactType)) {
+                ArtefactManager.metaClass."$methodName" = this.&getArtefactsOfType.curry(artefactType)
+                return getArtefactsOfType(artefactType)
+            }
+            throw new MissingMethodException(methodName, ArtefactManager, args)
+        }
+
+        artefactType = methodName =~ /^get(\w+)Artefact$/
+        if(artefactType) {
+            artefactType = normalize(artefactType)
+        
+            if(args?.size() == 1 && artefacts.containsKey(artefactType)) {
+                ArtefactManager.metaClass."$methodName" = this.&getArtefactOfType.curry(artefactType)
+                return getArtefactOfType(artefactType, args[0])
+            }
+            throw new MissingMethodException(methodName, ArtefactManager, args)
+        }
+
+        artefactType = methodName =~ /^is(\w+)Artefact$/
+        if(artefactType) {
+            artefactType = normalize(artefactType)
+        
+            if(args?.size() == 1 && artefacts.containsKey(artefactType)) {
+                ArtefactManager.metaClass."$methodName" = this.&isClassOfType.curry(artefactType)
+                return isClassOfType(artefactType, args[0])
+            }
+            throw new MissingMethodException(methodName, ArtefactManager, args)
+        }
+
+        artefactType = methodName =~ /^get(\w+)Classes$/
+        if(artefactType) {
+            artefactType = normalize(artefactType)
+
+            if(!args && artefacts.containsKey(artefactType)) {
+                ArtefactManager.metaClass."$methodName" = this.&getClassesOfType.curry(artefactType)
+                return getClassesOfType(artefactType)
+            }
+            throw new MissingMethodException(methodName, ArtefactManager, args)
+        }
+
+        artefactType = methodName =~ /^is(\w+)Class$/
+        if(artefactType) {
+            artefactType = normalize(artefactType)
+
+            if(args?.size() == 1 && artefacts.containsKey(artefactType)) {
+                ArtefactManager.metaClass."$methodName" = this.&isClassOfType.curry(artefactType)
+                return isClassOfType(artefactType, args[0])
+            }
+            throw new MissingMethodException(methodName, ArtefactManager, args)
+        }
+
+        throw new MissingMethodException(methodName, ArtefactManager, args)
+    }
+
+    def propertyMissing(String propertyName) {
+        def artefactType = propertyName =~ /^(\w+)Artefacts$/
+        if(artefactType) {
+            artefactType = artefactType[0][1]
+            if(artefacts.containsKey(artefactType)) {
+                ArtefactManager.metaClass."$propertyName" = getArtefactsOfType(artefactType)
+                return getArtefactsOfType(artefactType)
+            }
+            throw new MissingPropertyException(propertyName, (new ArtefactInfo[0]).class)
+        }
+
+        artefactType = propertyName =~ /^(\w+)Classes$/
+        if(artefactType) {
+            artefactType = artefactType[0][1]
+            if(artefacts.containsKey(artefactType)) {
+                ArtefactManager.metaClass."$propertyName" = getClassesOfType(artefactType)
+                return getClassesOfType(artefactType)
+            }
+            throw new MissingPropertyException(propertyName, (new Class[0]).class)
+        }
+    }
+
+    private synchronized ArtefactInfo getArtefactOfType(String type, Class klass) {
+        artefactHandlers[type]?.artefacts.find { it.klass == klass }
+    }
+
+    private synchronized ArtefactInfo getArtefactOfType(String type, String className) {
+        artefactHandlers[type]?.artefacts.find { it.klass.simpleName == className }
+    }
+
+    private synchronized boolean isClassOfType(String type, Class klass) {
+        getArtefactOfType(type, klass) ? true : false
+    }
+
+    private String normalize(input) {
+        input = input[0][1]
+        input[0].toLowerCase() + input[1..-1]
     }
 }

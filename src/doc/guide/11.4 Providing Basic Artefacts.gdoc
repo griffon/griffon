@@ -1,0 +1,31 @@
+h4. Adding a new Script
+
+A plugin can add a new script simply by providing the relevant Gant script within the scripts directory of the plugin:
+
+{code:java}
++ MyPlugin.groovy
+   + scripts     <-- additional scripts here
+   + griffon-app
+        + controllers
+        + models
+        + etc.
+    + lib
+{code}
+
+h4. Adding a new Controller, Model, View or Service
+
+A plugin can add a new MVC Group, service or whatever by simply creating the relevant file within the @griffon-app@ tree. However you'll need to create an [Addon|guide:11.6 Addons] in order to package them properly.
+
+{code:java}
++ ExamplePlugin.groovy
+   + scripts
+   + griffon-app
+        + controllers  <-- additional controllers here
+        + services <-- additional services here
+        + etc.  <-- additional XXX here
+    + lib
+{code}
+
+
+
+
