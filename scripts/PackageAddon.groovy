@@ -45,7 +45,7 @@ target ('packageAddon': "Packages a Griffon addon. Note: to packakage a plugin u
     }
 
 
-    addonJarDir = ant.antProject.replaceProperties(config.griffon.jars.destDir)
+    addonJarDir = ant.antProject.replaceProperties(config.griffon.jars.destDir ?: 'dist/addon')
     ant.mkdir(dir:addonJarDir)
 
     addonJarName = ( config.griffon?.jars?.jarName
