@@ -17,40 +17,40 @@
 package griffon.core;
 
 /**
- * Base interface for classes that work with artefacts.
+ * Base interface for classes that work with artifacts.
  *
  * @author Andres Almiray (aalmiray)
  */
-public interface ArtefactHandler {
+public interface ArtifactHandler {
 
     /**
-     * Get the tye of artefact this handler processes.
+     * Get the tye of artifact this handler processes.
      * The type is normally used as suffix too.
      */
     String getType();
 
     /**
-     * Returns true if the target Class is a class artefact
+     * Returns true if the target Class is a class artifact
      * handled by this object.
      */
-    boolean isArtefact(Class klass);
+    boolean isArtifact(Class klass);
 
     /**
      * Initializes the handler with a collection of all available
-     * artefacts this handler can process.<p>
+     * artifacts this handler can process.<p>
      * This is a good time to pre-emptively instantiate beans or
-     * perform additional checks on artefacts.
+     * perform additional checks on artifacts.
      */
-    void initialize(ArtefactInfo[] artefacts);
+    void initialize(ArtifactInfo[] artifacts);
 
     /**
-     * Returns an array of all artefacts handled by this object.
+     * Returns an array of all artifacts handled by this object.
      */
-    ArtefactInfo[] getArtefacts();
+    ArtifactInfo[] getArtifacts();
 
     /**
-     * Finds an artefact by name.
-     * The name usually matches artefact.simpleName
+     * Finds an artifact by name.
+     * The name usually matches artifact.simpleName
      */
-    ArtefactInfo findArtefact(String name);
+    ArtifactInfo findArtifact(String name);
 }

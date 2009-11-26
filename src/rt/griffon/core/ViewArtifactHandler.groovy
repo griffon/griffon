@@ -19,8 +19,8 @@ package griffon.core
 /**
  * @author Andres Almiray (aalmiray)
  */
-class ViewArtefactHandler extends ArtefactHandlerAdapter {
-    ViewArtefactHandler() {
+class ViewArtifactHandler extends ArtifactHandlerAdapter {
+    ViewArtifactHandler() {
         super("view")
     }
 }

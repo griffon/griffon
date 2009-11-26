@@ -19,8 +19,8 @@ package griffon.core
 /**
  * @author Andres Almiray (aalmiray)
  */
-class ControllerArtefactHandler extends ArtefactHandlerAdapter {
-    ControllerArtefactHandler() {
+class ControllerArtifactHandler extends ArtifactHandlerAdapter {
+    ControllerArtifactHandler() {
         super("controller")
     }
 }

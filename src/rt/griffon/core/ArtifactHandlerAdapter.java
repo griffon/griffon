@@ -19,16 +19,16 @@ package griffon.core;
 import griffon.util.IGriffonApplication;
 
 /**
- * Base implementation of the ArtefactHandler interface.
+ * Base implementation of the ArtifactHandler interface.
  *
  * @author Andres Almiray (aalmiray)
  */
-public abstract class ArtefactHandlerAdapter implements ArtefactHandler {
+public abstract class ArtifactHandlerAdapter implements ArtifactHandler {
     private final String type;
-    private ArtefactInfo[] artefactInfos = new ArtefactInfo[0];
+    private ArtifactInfo[] artifactInfos = new ArtifactInfo[0];
     private IGriffonApplication app;
 
-    public ArtefactHandlerAdapter(String type) {
+    public ArtifactHandlerAdapter(String type) {
         this.type = type;
     }
 
@@ -37,27 +37,27 @@ public abstract class ArtefactHandlerAdapter implements ArtefactHandler {
     }
 
     /**
-     * Returns true if the target Class is a class artefact
+     * Returns true if the target Class is a class artifact
      * handled by this object.<p>
      * This implementation performs an equality check on class.name
      */
-    public boolean isArtefact(Class klass) {
-        for(ArtefactInfo artefactInfo: artefactInfos) {
-            if(artefactInfo.getKlass().getName().equals(klass.getName())) return true;
+    public boolean isArtifact(Class klass) {
+        for(ArtifactInfo artifactInfo: artifactInfos) {
+            if(artifactInfo.getKlass().getName().equals(klass.getName())) return true;
         }
         return false;
     }
 
-    public void initialize(ArtefactInfo[] artefacts) {
-        artefactInfos = new ArtefactInfo[artefacts.length];
-        System.arraycopy(artefacts, 0, artefactInfos, 0, artefacts.length);
+    public void initialize(ArtifactInfo[] artifacts) {
+        artifactInfos = new ArtifactInfo[artifacts.length];
+        System.arraycopy(artifacts, 0, artifactInfos, 0, artifacts.length);
     }
 
-    public ArtefactInfo[] getArtefacts() {
-        return artefactInfos;
+    public ArtifactInfo[] getArtifacts() {
+        return artifactInfos;
     }
 
-    public ArtefactInfo findArtefact(String name) {
+    public ArtifactInfo findArtifact(String name) {
         String simpleName = null;
         if(name.length() == 1) {
             simpleName = name.toLowerCase();
@@ -65,8 +65,8 @@ public abstract class ArtefactHandlerAdapter implements ArtefactHandler {
             simpleName = name.substring(0, 1).toLowerCase() + name.substring(1);
         }
         simpleName += type.substring(0, 1).toUpperCase() + type.substring(1);
-        for(ArtefactInfo artefactInfo : artefactInfos) {
-            if(artefactInfo.getSimpleName().equals(simpleName)) return artefactInfo;
+        for(ArtifactInfo artifactInfo : artifactInfos) {
+            if(artifactInfo.getSimpleName().equals(simpleName)) return artifactInfo;
         }
         return null;
     }

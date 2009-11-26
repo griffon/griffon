@@ -7,14 +7,14 @@ For Griffon managed classes like controllers, models and so forth you can add me
 {code:java}
 class ExampleAddon {
   def addonPostInit(app) {
-        app.artefactManager.controllerClasses.each { controllerClass ->
+        app.artifactManager.controllerClasses.each { controllerClass ->
              controllerClass.metaClass.myNewMethod = {-> println "hello world" }
         }
   }
 }
 {code}
 
-In this case we use the @app.artefactManager@ object to get a reference to all of the controller classes' MetaClass instances and then add a new method called @myNewMethod@ to each controller.
+In this case we use the @app.artifactManager@ object to get a reference to all of the controller classes' MetaClass instances and then add a new method called @myNewMethod@ to each controller.
 Alternatively, if you know before hand the class you wish the add a method to you can simple reference that classes @metaClass@ property:
 
 {code:java}

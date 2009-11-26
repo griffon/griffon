@@ -19,20 +19,20 @@ package griffon.core
 /**
  * @author Andres Almiray (aalmiray)
  */
-class ServiceArtefactHandler extends ArtefactHandlerAdapter {
+class ServiceArtifactHandler extends ArtifactHandlerAdapter {
     private final Map SERVICES = [:]
 
-    ServiceArtefactHandler() {
+    ServiceArtifactHandler() {
         super("service")
     }
 
-    void initialize(ArtefactInfo[] artefacts) {
-        super.initialize(artefacts)
+    void initialize(ArtifactInfo[] artifacts) {
+        super.initialize(artifacts)
         if(app.config?.griffon?.basic_injection?.disable) return
         app.addApplicationEventListener(this)
-        artefacts.each { artefact ->
-            SERVICES[artefact.simpleName] = artefact.newInstance()
-            SERVICES[artefact.simpleName].metaClass.app = app
+        artifacts.each { artifact ->
+            SERVICES[artifact.simpleName] = artifact.newInstance()
+            SERVICES[artifact.simpleName].metaClass.app = app
         }
     }
 

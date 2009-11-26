@@ -19,8 +19,8 @@ package griffon.core
 /**
  * @author Andres Almiray (aalmiray)
  */
-class ModelArtefactHandler extends ArtefactHandlerAdapter {
-    ModelArtefactHandler() {
+class ModelArtifactHandler extends ArtifactHandlerAdapter {
+    ModelArtifactHandler() {
         super("model")
     }
 }

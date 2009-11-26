@@ -131,7 +131,7 @@ target( packageApp : "Implementation of package target") {
     resourcesDir = "${resourcesDirPath}/griffon-app/resources"
     ant.mkdir(dir:resourcesDir)
 
-    collectArtefactMetadata()
+    collectArtifactMetadata()
 
 //    def files = ant.fileScanner {
 //        fileset(dir:"${basedir}/griffon-app/views", includes:"**/*.jsp")
@@ -192,35 +192,35 @@ target( packageApp : "Implementation of package target") {
     event("PackagingEnd",[])
 }
 
-collectArtefactMetadata = {
-    def artefactPaths = [
+collectArtifactMetadata = {
+    def artifactPaths = [
         [type: "model",      path: "models",      suffix: "Model"],
         [type: "view",       path: "views",       suffix: "View"],
         [type: "controller", path: "controllers", suffix: "Controller"],
         [type: "service",    path: "services",    suffix: "Service"]
     ]
 
-    event("CollectArtefacts", [artefactPaths])
+    event("CollectArtifacts", [artifactPaths])
 
-    def artefacts = [:]
+    def artifacts = [:]
     new File("${basedir}/griffon-app").eachFileRecurse { file ->
-        artefactPaths.find { entry ->
+        artifactPaths.find { entry ->
             def fixedPath = file.path - "${basedir}/griffon-app" //fix problem when project inside dir "jobs" (eg. hudson stores projects under jobs-directory)
             if(fixedPath =~ entry.path && file.isFile()) {
                 def klass = fixedPath.substring(2 + entry.path.size()).replace(File.separator,".")
                 klass = klass.substring(0, klass.lastIndexOf("."))
                 if(entry.suffix) {
-                    if(klass.endsWith(entry.suffix)) artefacts.get(entry.type, []) << klass
+                    if(klass.endsWith(entry.suffix)) artifacts.get(entry.type, []) << klass
                 } else {
-                    artefacts.get(entry.type, []) << klass
+                    artifacts.get(entry.type, []) << klass
                 }
             }
         }
     }
 
-    def artefactMetadataFile = new File("${resourcesDirPath}/griffon-app/resources/artefacts.properties")
-    artefactMetadataFile.withPrintWriter { writer ->
-        artefacts.each { type, list ->
+    def artifactMetadataFile = new File("${resourcesDirPath}/griffon-app/resources/artifacts.properties")
+    artifactMetadataFile.withPrintWriter { writer ->
+        artifacts.each { type, list ->
            writer.println("$type = '${list.join(',')}'")
         }
     }

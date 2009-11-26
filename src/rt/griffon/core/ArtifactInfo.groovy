@@ -19,18 +19,18 @@ package griffon.core
 import griffon.util.IGriffonApplication
 
 /**
- * Describes and artefact and its basic information.
+ * Describes and artifact and its basic information.
  *
  * @author Andres Almiray (aalmiray)
  */
 // @Immutable
-final class ArtefactInfo {
+final class ArtifactInfo {
     final IGriffonApplication app
     final Class klass
     final String type
     final String simpleName
 
-    ArtefactInfo(IGriffonApplication app, Class klass, String type) {
+    ArtifactInfo(IGriffonApplication app, Class klass, String type) {
         this.app = app
         this.klass = klass
         this.type = type
@@ -52,7 +52,7 @@ final class ArtefactInfo {
     }
 
     /**
-     * Creates a new instance of this artefact's klass.<p>
+     * Creates a new instance of this artifact's klass.<p>
      * Will trigger a "NewInstance" application event.
      */
     def newInstance() {

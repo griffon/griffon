@@ -21,11 +21,11 @@ import javax.swing.JFrame
 import javax.swing.SwingUtilities
 import org.codehaus.groovy.runtime.InvokerHelper
 
-import griffon.core.ArtefactManager
-import griffon.core.ModelArtefactHandler
-import griffon.core.ViewArtefactHandler
-import griffon.core.ControllerArtefactHandler
-import griffon.core.ServiceArtefactHandler
+import griffon.core.ArtifactManager
+import griffon.core.ModelArtifactHandler
+import griffon.core.ViewArtifactHandler
+import griffon.core.ControllerArtifactHandler
+import griffon.core.ServiceArtifactHandler
 
 /**
  * Created by IntelliJ IDEA.
@@ -55,14 +55,14 @@ class GriffonApplicationHelper {
             app.addApplicationEventListener(app.eventsConfig)
         }
         
-        app.metaClass.artefactManager = ArtefactManager.instance
-        ArtefactManager.instance.app = app
-        ArtefactManager.instance.with {
-            registerArtefactHandler(new ModelArtefactHandler())
-            registerArtefactHandler(new ViewArtefactHandler())
-            registerArtefactHandler(new ControllerArtefactHandler())
-            registerArtefactHandler(new ServiceArtefactHandler())
-            loadArtefactMetadata()
+        app.metaClass.artifactManager = ArtifactManager.instance
+        ArtifactManager.instance.app = app
+        ArtifactManager.instance.with {
+            registerArtifactHandler(new ModelArtifactHandler())
+            registerArtifactHandler(new ViewArtifactHandler())
+            registerArtifactHandler(new ControllerArtifactHandler())
+            registerArtifactHandler(new ServiceArtifactHandler())
+            loadArtifactMetadata()
         }
 
         AddonHelper.handleAddonsAtStartup(app)
@@ -182,7 +182,7 @@ class GriffonApplicationHelper {
         def klassMap = [:]
         ClassLoader classLoader = app.getClass().classLoader
         app.mvcGroups[mvcType].each {k, v ->
-            Class klass = ArtefactManager.instance.getArtefactInfo(v)?.klass
+            Class klass = ArtifactManager.instance.getArtifactInfo(v)?.klass
             if(!klass) klass = classLoader.loadClass(v);
 
             // inject defaults into emc
