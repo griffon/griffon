@@ -12,12 +12,12 @@
     //}
 
     // called many times, after creating a builder
-    //def addonInit(app) {
+    //def addonBuilderInit(app) {
     //}
 
     // called many times, after creating a builder and after
     // all addons have been inited
-    //def addonPostInit(app) {
+    //def addonBuilderPostInit(app) {
     //}
 
 
@@ -36,8 +36,8 @@
     // adds properties to all builders
     //def props = [
     //    propertyName: [
-    //        get: { /* optional getter closuer},
-    //        set: {val-> /* optional setter closuer},
+    //        get: { /* optional getter closure */ },
+    //        set: {val-> /* optional setter closure */ },
     //  ]
     //]
 
@@ -46,7 +46,30 @@
     //    factory : /*instance that extends Factory*/
     //]
 
+    // adds application event handlers
+    //def events = [
+    //    "StartupStart": {app -> /* event hadler code */ }
+    //]
 
-    //TODO enumerate FactoryBuilderSupporte delegate closures
+    // handle synthetic node properties or
+    // intercept existing ones
+    //def attributeDelegates = [
+    //    {builder, node, attributes -> /*handler code*/ }
+    //]
 
+    // called before a node is instantiated
+    //def preInstantiateDelegates = [
+    //    {builder, attributes, value -> /*handler code*/ }
+    //]
+
+    // called after the node was instantiated
+    //def postInstantiateDelegates = [
+    //    {builder, attributes, node -> /*handler code*/ }
+    //]
+
+    // called after the node has been fully
+    // processed, including child content
+    //def postNodeCompletionDelegates = [
+    //    {builder, parent, node -> /*handler code*/ }
+    //]
 }

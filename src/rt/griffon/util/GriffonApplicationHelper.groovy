@@ -134,7 +134,7 @@ class GriffonApplicationHelper {
     }
 
 
-    public static Object newInstance(IGriffonApplication app, Class klass, String type) {
+    public static Object newInstance(IGriffonApplication app, Class klass, String type = "") {
         def instance = klass.newInstance()
         app.event("NewInstance",[klass,type,instance])
         return instance
@@ -195,7 +195,9 @@ class GriffonApplicationHelper {
                 GriffonApplicationHelper.buildMVCGroup(app, *args)
             }
             klass.metaClass.destroyMVCGroup = GriffonApplicationHelper.&destroyMVCGroup.curry(app)
-            klass.metaClass.newInstance = GriffonApplicationHelper.&newInstance.curry(app)
+            klass.metaClass.newInstance = {Object... args ->
+                GriffonApplicationHelper.newInstance(app, *args)
+            }
             klassMap[k] = klass
         }
 
