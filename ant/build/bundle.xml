@@ -13,17 +13,15 @@
         <mkdir dir="target/guide" />
         <mkdir dir="${griffon.dist}" />
         <copy todir="target/guide">
-            <fileset dir="${basedir}/src/doc/" includes="*.properties" />
+            <fileset dir="${basedir}/src/guide" includes="*.properties" />
         </copy>
         <replace dir="target/guide">
             <replaceFilter token="@griffon.version@" value="${griffon.version}" />
         </replace>
-        <docs src="${basedir}/src/doc"
+        <docs src="${basedir}/src/guide/sources"
               dest="target/guide"
+              imagesdir="${basedir}/src/guide/resources/img"
               properties="target/guide/guide.properties" />
-        <copy todir="target/guide/img">
-            <fileset dir="${basedir}/src/doc/img" />
-        </copy>
         <zip basedir="target/guide" destfile="${griffon.dist}/griffon-guide-${griffon.version}.zip" />
     </target>
 
