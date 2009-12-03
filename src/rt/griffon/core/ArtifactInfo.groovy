@@ -17,6 +17,7 @@
 package griffon.core
 
 import griffon.util.IGriffonApplication
+import java.beans.Introspector
 
 /**
  * Describes and artifact and its basic information.
@@ -29,6 +30,7 @@ final class ArtifactInfo {
     final Class klass
     final String type
     final String simpleName
+    final List<String> declaredProperties
 
     ArtifactInfo(IGriffonApplication app, Class klass, String type) {
         this.app = app
@@ -41,6 +43,8 @@ final class ArtifactInfo {
         } else {
             simpleName = sn[0].toLowerCase() + sn[1..-1]
         }
+
+        declaredProperties = Introspector.getBeanInfo(klass).propertyDescriptors.name - ["class", "metaClass"]
     }
 
     String getName() {
@@ -57,5 +61,20 @@ final class ArtifactInfo {
      */
     def newInstance() {
         app.newInstance(klass, type)
+    }
+
+    /**
+     * Returns a list of all dynamic properties found in the artifact's class
+     */
+    public List<String> getDynamicProperties() {
+        klass.metaClass.properties.name - declaredProperties - ["class", "metaClass"]
+    }
+
+    /**
+     * Returns a list of all properties found in the artifact's class excluding
+     * 'class' and 'metaClass'.
+     */
+    public List<String> getAllProperties() {
+        klass.metaClass.properties.name - ["class", "metaClass"]
     }
 }
