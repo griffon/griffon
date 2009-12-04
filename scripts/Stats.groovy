@@ -81,7 +81,9 @@ target(default: "Generates basic stats for a Griffon project") {
 
     event("StatsStart", [pathToInfo])
 
-    new File(basedir).eachFileRecurse { file ->
+    def searchPath = new File(basedir)
+    def cp = searchPath.canonicalPath
+    searchPath.eachFileRecurse { file ->
         def match = pathToInfo.find { info ->
             def fixedPath = file.path - basedir //fix problem when project inside dir "jobs" (eg. hudson stores projects under jobs-directory)
             fixedPath =~ info.path && info.filetype.any{s -> file.path.endsWith(s)}

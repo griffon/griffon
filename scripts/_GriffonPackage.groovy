@@ -203,7 +203,9 @@ collectArtifactMetadata = {
     event("CollectArtifacts", [artifactPaths])
 
     def artifacts = [:]
-    new File("${basedir}/griffon-app").eachFileRecurse { file ->
+    def searchPath = new File("${basedir}/griffon-app")
+    def cp = searchPath.canonicalPath
+    searchPath.eachFileRecurse { file ->
         artifactPaths.find { entry ->
             def fixedPath = file.path - "${basedir}/griffon-app" //fix problem when project inside dir "jobs" (eg. hudson stores projects under jobs-directory)
             if(fixedPath =~ entry.path && file.isFile()) {
