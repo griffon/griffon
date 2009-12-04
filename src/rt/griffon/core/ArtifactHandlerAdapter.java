@@ -58,13 +58,20 @@ public abstract class ArtifactHandlerAdapter implements ArtifactHandler {
     }
 
     public ArtifactInfo findArtifact(String name) {
+        return findArtifact(name, true);
+    }
+
+    public ArtifactInfo findArtifact(String name, boolean appendSuffix) {
         String simpleName = null;
         if(name.length() == 1) {
             simpleName = name.toLowerCase();
         } else {
             simpleName = name.substring(0, 1).toLowerCase() + name.substring(1);
         }
-        simpleName += type.substring(0, 1).toUpperCase() + type.substring(1);
+        if(appendSuffix && type != null) {
+            String t = type.substring(0, 1).toUpperCase() + type.substring(1);
+            if(!simpleName.endsWith(t)) simpleName += t;
+        }
         for(ArtifactInfo artifactInfo : artifactInfos) {
             if(artifactInfo.getSimpleName().equals(simpleName)) return artifactInfo;
         }

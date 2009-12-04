@@ -30,24 +30,22 @@ class ServiceArtifactHandler extends ArtifactHandlerAdapter {
         super.initialize(artifacts)
         if(app.config?.griffon?.basic_injection?.disable) return
         app.addApplicationEventListener(this)
-        artifacts.each { artifact ->
-            SERVICES[artifact.simpleName] = artifact.newInstance()
-            SERVICES[artifact.simpleName].metaClass.app = app
-        }
     }
 
-    def onNewInstance = { c, t, i ->
+    def onNewInstance = { klass, t, instance ->
         if(type == t || app.config?.griffon?.basic_injection?.disable) return
-        SERVICES.each { serviceName, service ->
-            ignoreMissingProperty { i[serviceName] = service }
-        }
-    }
-
-    private void ignoreMissingProperty(Closure closure) {
-        try {
-            closure()
-        } catch(MissingPropertyException mpe) {
-            // ignore
+        klass.metaClass.properties.name.each { propertyName ->
+            if(SERVICES[propertyName]) {
+                instance[propertyName] = SERVICES[propertyName]
+            } else {
+                def artifact = findArtifact(propertyName, false)
+                if(artifact) {
+                    def service = artifact.newInstance()
+                    service.metaClass.app = app
+                    SERVICES[propertyName] = service
+                    instance[propertyName] = service
+                }
+            }
         }
     }
 }
