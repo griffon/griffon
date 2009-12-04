@@ -204,10 +204,9 @@ collectArtifactMetadata = {
 
     def artifacts = [:]
     def searchPath = new File("${basedir}/griffon-app")
-    def cp = searchPath.canonicalPath
     searchPath.eachFileRecurse { file ->
         artifactPaths.find { entry ->
-            def fixedPath = file.path - "${basedir}/griffon-app" //fix problem when project inside dir "jobs" (eg. hudson stores projects under jobs-directory)
+            def fixedPath = file.path - searchPath.canonicalPath //fix problem when project inside dir "jobs" (eg. hudson stores projects under jobs-directory)
             if(fixedPath =~ entry.path && file.isFile()) {
                 def klass = fixedPath.substring(2 + entry.path.size()).replace(File.separator,".")
                 klass = klass.substring(0, klass.lastIndexOf("."))

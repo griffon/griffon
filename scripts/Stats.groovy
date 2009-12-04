@@ -61,19 +61,8 @@ target(default: "Generates basic stats for a Griffon project") {
         [name: "Controllers",         path: "controllers",      filetype: [".groovy"]],
         [name: "Lifecycle",           path: "lifecycle",        filetype: [".groovy"]],
         [name: "Groovy/Java Sources", path: "src.main",         filetype: [".groovy",".java"]],
-//        [name: "Services",            path: "services",         filetype: [".groovy"]],
 //        [name: "Wizards",             path: "wizards",          filetype: [".groovy"]],
-//        [name: "Common Sources",      path: "src.commons",      filetype: [".groovy",".java"]],
-//        [name: "Clojure Sources",     path: "src.clojure",      filetype: [".clj"], locmatcher: {file ->
-//            def loc = 0
-//            file.eachLine { line ->
-//                if(line ==~ EMPTY || line ==~ /^\s*\;.*/) return
-//                loc++
-//            }
-//            loc
-//        }],
 //        [name: "JavaFX Sources",      path: "src.javafx",       filetype: [".fx"]],
-//        [name: "Scala Sources",       path: "src.scala",        filetype: [".scala"]],
         [name: "Unit Tests",          path: "test.unit",        filetype: [".groovy"]],
         [name: "Integration Tests",   path: "test.integration", filetype: [".groovy"]],
         [name: "Scripts",             path: "scripts",          filetype: [".groovy"]],
@@ -82,10 +71,9 @@ target(default: "Generates basic stats for a Griffon project") {
     event("StatsStart", [pathToInfo])
 
     def searchPath = new File(basedir)
-    def cp = searchPath.canonicalPath
     searchPath.eachFileRecurse { file ->
         def match = pathToInfo.find { info ->
-            def fixedPath = file.path - basedir //fix problem when project inside dir "jobs" (eg. hudson stores projects under jobs-directory)
+            def fixedPath = file.path - searchPath.canonicalPath //fix problem when project inside dir "jobs" (eg. hudson stores projects under jobs-directory)
             fixedPath =~ info.path && info.filetype.any{s -> file.path.endsWith(s)}
         }
         if (match && file.isFile() ) {
