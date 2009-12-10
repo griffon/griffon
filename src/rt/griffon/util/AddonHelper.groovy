@@ -34,6 +34,8 @@ public class AddonHelper {
     ])
 
     static handleAddonsAtStartup(IGriffonApplication app) {
+        app.event("LoadAddonsStart", [app])
+
         for (node in app.builderConfig) {
             String nodeName = node.key
             switch (nodeName) {
@@ -58,7 +60,10 @@ public class AddonHelper {
             } catch (MissingMethodException mme) {
                 if (mme.method != 'addonPostInit') throw mme
             }
+            app.event("LoadAddonEnd", [name, addon, app])
         }
+
+        app.event("LoadAddonsEnd", [app, app.addons])
     }
 
 
@@ -70,6 +75,8 @@ public class AddonHelper {
 
         def addonMetaClass = addon.metaClass
         addonMetaClass.newInstance = GriffonApplicationHelper.&newInstance.curry(app)
+
+        app.event("LoadAddonStart", [addonName, addon, app])
 
         try {
             addon.addonInit(app)
