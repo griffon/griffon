@@ -81,6 +81,11 @@ class BaseGriffonApplication implements IGriffonApplication {
 
     public void shutdown() {
         event("ShutdownStart",[appDelegate])
+        List mvcNames = []
+        mvcNames.addAll(groups.keySet())
+        mvcNames.each { 
+            GriffonApplicationHelper.destroyMVCGroup(appDelegate, it)
+        }
         GriffonApplicationHelper.runScriptInsideEDT("Shutdown", appDelegate)
     }
 
