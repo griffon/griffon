@@ -27,10 +27,6 @@ target('default': "Does the actual command line execution") {
     File jardir = new File(ant.antProject.replaceProperties(config.griffon.jars.destDir))
     // launch event after jardir has been defined
     event("RunWebstartStart",[])
-    runtimeJars = []
-    jardir.eachFileMatch(~/.*\.jar/) {f ->
-        runtimeJars += f
-    }
 
     // setup the vm
     if (!binding.variables.webstartVM) {

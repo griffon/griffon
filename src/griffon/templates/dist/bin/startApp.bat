@@ -170,6 +170,13 @@ set LIBDIR="%DIRNAME%..\lib"
 set CLASSPATH=
 for %%i in (%LIBDIR%\*.jar) do set CLASSPATH=!CLASSPATH!;%%i
 
+set NATIVE_LIBRARY_PATH=""
+set NATIVE_LIBDIR="%DIRNAME%..\lib\windows"
+if not exist "%NATIVE_LIBDIR%" goto no_native
+for %%i in (%NATIVE_LIBDIR%\*.jar) do set CLASSPATH=!CLASSPATH!;%%i
+set NATIVE_LIBRARY_PATH="%PATH%;%DIRNAME%..\lib\windows\native"
+
+:no_native
 @rem Setting a classpath using the -cp or -classpath option means not to use
 @rem the global classpath. Groovy behaves then the same as the java
 @rem interpreter
@@ -184,8 +191,8 @@ set CP=%CLASSPATH%;%CP%
 :after_cp
 
 set JAVA_OPTS="@app.java.opts@"
-if "%JAVA_OPTS%" == "" set JAVA_OPTS="-Xmx128m"
-set JAVA_OPTS=%JAVA_OPTS% -Dprogram.name="%PROGNAME%" -Dgriffon.start.dir=%DIRNAME%..\
+if "x" == "x%JAVA_OPTS%" set JAVA_OPTS="-Xmx128m"
+set JAVA_OPTS=%JAVA_OPTS% -Dprogram.name="%PROGNAME%" -Dgriffon.start.dir=%DIRNAME%..\ -Djava.library.path=%NATIVE_LIBRARY_PATH%
 
 @rem Execute App
 "%JAVA_EXE%" %JAVA_OPTS% -classpath %CP% @app.main.class@ %CMD_LINE_ARGS%

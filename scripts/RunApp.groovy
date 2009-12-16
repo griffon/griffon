@@ -20,6 +20,7 @@
  * Time: 10:35:06 PM
  */
 
+import static griffon.util.GriffonApplicationUtils.isLinux
 import static griffon.util.GriffonApplicationUtils.isMacOSX
 import org.codehaus.griffon.util.BuildSettings
 
@@ -32,10 +33,22 @@ target('default': "Runs the application from the command line") {
     // calculate the needed jars
     File jardir = new File(ant.antProject.replaceProperties(config.griffon.jars.destDir))
     // launch event after jardir has been defined
+
     event("RunAppStart",[])
     runtimeJars = []
+
+    copyPlatformJars(basedir + File.separator + 'lib', jardir.absolutePath)
+    copyNativeLibs(basedir + File.separator + 'lib', jardir.absolutePath)
+
+    // list all jars
     jardir.eachFileMatch(~/.*\.jar/) {f ->
         runtimeJars += f
+    }
+    def platformDir = new File(jardir.absolutePath, platform)
+    if(platformDir.exists()) {
+        platformDir.eachFileMatch(~/.*\.jar/) {f ->
+            runtimeJars += f
+        }
     }
 
     // setup the vm
@@ -75,6 +88,13 @@ target('default': "Runs the application from the command line") {
     }
     if (config.griffon.app?.javaOpts) {
       config.griffon.app?.javaOpts.each { javaOpts << it }
+    }
+
+    File nativeLibDir = new File(platformDir.absolutePath, 'native')
+    if(nativeLibDir.exists()) {
+        String libraryPath = System.getProperty('java.library.path')
+        libraryPath = libraryPath + File.pathSeparator + nativeLibDir.absolutePath
+        javaOpts << "-Djava.library.path=$libraryPath".toString()
     }
 
     // start the processess

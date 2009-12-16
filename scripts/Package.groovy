@@ -68,15 +68,16 @@ target(prepackage: "packaging steps all standard packaging options do") {
 }
 
 target(package_zip: "Creates a binary distribution and zips it.") {
-    depends(prepackage)
-
     event("PackageStart",["zip"])
+
+    depends(prepackage)
 
     targetDistDir = config.griffon.dist.zip.dir ?: "${distDir}/zip"
     ant.delete(dir: targetDistDir, quiet: true, failOnError: false)
     ant.mkdir(dir: targetDistDir)
     _copyLaunchScripts()
     _copyAppLibs()
+    _copyNativeFiles()
     _copySharedFiles(targetDistDir)
     _copyPackageFiles(targetDistDir)
     _zipDist(targetDistDir, false)
@@ -85,36 +86,54 @@ target(package_zip: "Creates a binary distribution and zips it.") {
 }
 
 target(package_jar: "Creates a single jar distribution and zips it.") {
-    depends(prepackage)
-
     event("PackageStart",["jar"])
+ 
+    depends(prepackage)
 
     targetDistDir = config.griffon.dist.jar.dir ?: "${distDir}/jar"
     ant.delete(dir: targetDistDir, quiet: true, failOnError: false)
     ant.mkdir(dir: targetDistDir)
+
     String destFileName = argsMap.name ?: config.griffon.jars.jarName
     if(!destFileName.endsWith(".jar")) destFile += ".jar"
     File destFile = new File(destFileName)
     if(!destFile.isAbsolute()) destFile = new File("${targetDistDir}/${destFile}")
-
     def libjars = ant.fileset(dir: jardir, includes: "*.jar", excludes: config.griffon.jars.jarName)
-    ant.jar(destfile: destFile, duplicate:'preserve') {
-        manifest {
-            attribute(name: "Main-Class", value: griffonApplicationClass)
-        }
-        fileset(dir: classesDirPath) {
-            exclude(name: "Config*.class")
-        }
-        fileset(dir: i18nDir)
-        fileset(dir: resourcesDir)
 
-        libjars.each {
-            zipfileset(src: it.toString(),
-                      excludes: "META-INF/*.MF,META-INF/*.SF,META-INF/*.RSA,META-INF/*.DSA")
+    def createJarFile = { jarfile, jars, extra = {} ->
+        ant.jar(destfile: jarfile, duplicate:'preserve') {
+            manifest {
+                attribute(name: "Main-Class", value: griffonApplicationClass)
+            }
+            fileset(dir: classesDirPath) {
+                exclude(name: "Config*.class")
+            }
+            fileset(dir: i18nDir)
+            fileset(dir: resourcesDir)
+    
+            jars.each {
+                zipfileset(src: it.toString(),
+                          excludes: "META-INF/*.MF,META-INF/*.SF,META-INF/*.RSA,META-INF/*.DSA")
+            }
+            extra()
+        }
+        maybePackAndSign(jarfile)
+    }
+
+    createJarFile(destFile, libjars)
+
+    doForAllPlatforms { platformDir, platformOs ->
+        def destfile = new File(destFile.absolutePath - '.jar' + "-${platformOs}.jar") 
+        createJarFile(destfile, libjars) {
+            platformDir.eachFileMatch(~/.*\.jar/) {f ->
+                zipfileset(src: f.toString(),
+                          excludes: "META-INF/*.MF,META-INF/*.SF,META-INF/*.RSA,META-INF/*.DSA")
+            }
+            File nativeLibDir = new File(platformDir.absolutePath + File.separator + 'native')
+            if(nativeLibDir.exists()) fileset(dir: nativeLibDir)
         }
     }
 
-    maybePackAndSign(destFile)
     _copySharedFiles(targetDistDir)
     _copyPackageFiles(targetDistDir)
     if (!config.griffon.dist.jar.nozip)  _zipDist(targetDistDir)
@@ -123,9 +142,9 @@ target(package_jar: "Creates a single jar distribution and zips it.") {
 }
 
 target(package_applet: "Creates an applet distribution and zips it.") {
-    depends(prepackage, generateJNLP)
-
     event("PackageStart",["applet"])
+
+    depends(prepackage, generateJNLP)
 
     targetDistDir = config.griffon.dist.applet.dir ?: "${distDir}/applet"
     ant.delete(dir: targetDistDir, quiet: true, failOnError: false)
@@ -143,9 +162,9 @@ target(package_applet: "Creates an applet distribution and zips it.") {
 }
 
 target(package_webstart: "Creates a webstart distribution and zips it.") {
-    depends(prepackage, generateJNLP)
-
     event("PackageStart",["webstart"])
+
+    depends(prepackage, generateJNLP)
 
     targetDistDir = config.griffon.dist.webstart.dir ?: "${distDir}/webstart"
     ant.delete(dir: targetDistDir, quiet: true, failOnError: false)
@@ -164,9 +183,14 @@ target(package_webstart: "Creates a webstart distribution and zips it.") {
 
 target(_copyAppLibs: "") {
     ant.mkdir(dir: "${targetDistDir}/lib")
-    ant.copy( todir: "${targetDistDir}/lib" ) {
-        fileset( dir: config.griffon.jars.destDir, includes: "**/*.jar" )
+    ant.copy(todir: "${targetDistDir}/lib") {
+        fileset(dir: config.griffon.jars.destDir, includes: "**/*.jar")
     }
+}
+
+target(_copyNativeFiles: "") {
+    ant.mkdir(dir: "${targetDistDir}/lib")
+    copyNativeLibs(config.griffon.jars.destDir, "${targetDistDir}/lib".toString())
 }
 
 target(_copyLaunchScripts: "") {

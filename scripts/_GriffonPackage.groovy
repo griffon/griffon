@@ -31,9 +31,14 @@ import org.codehaus.griffon.plugins.logging.Log4jConfig
  * @since 0.4
  */
 
+
+import org.codehaus.griffon.util.BuildSettings
+import static griffon.util.GriffonApplicationUtils.isLinux
+import static griffon.util.GriffonApplicationUtils.isSolaris
+import static griffon.util.GriffonApplicationUtils.isMacOSX
+
 includeTargets << griffonScript("_GriffonCompile")
 includeTargets << griffonScript("_PackagePlugins")
-
 
 configTweaks = []
 
@@ -82,14 +87,14 @@ target( createConfig: "Creates the configuration object") {
     }
 //   def dataSourceFile = new File("${basedir}/griffon-app/conf/DataSource.groovy")
 //   if(dataSourceFile.exists()) {
-//		try {
-//		   def dataSourceConfig = configSlurper.parse(classLoader.loadClass("DataSource"))
-//		   config.merge(dataSourceConfig)
-//		   ConfigurationHolder.setConfig(config)
-//		}
-//		catch(ClassNotFoundException e) {
-//			println "WARNING: DataSource.groovy not found, assuming dataSource bean is configured by Spring..."
-//		}
+//        try {
+//           def dataSourceConfig = configSlurper.parse(classLoader.loadClass("DataSource"))
+//           config.merge(dataSourceConfig)
+//           ConfigurationHolder.setConfig(config)
+//        }
+//        catch(ClassNotFoundException e) {
+//            println "WARNING: DataSource.groovy not found, assuming dataSource bean is configured by Spring..."
+//        }
 //        catch(Exception e) {
 //            logError("Error loading DataSource.groovy",e)
 //            exit(1)
@@ -101,17 +106,17 @@ target( createConfig: "Creates the configuration object") {
 }
 
 target( packageApp : "Implementation of package target") {
-	depends(createStructure, packagePlugins)
+    depends(createStructure, packagePlugins)
 
-	try {
+    try {
         profile("compile") {
             compile()
         }
-	}
-	catch(Exception e) {
+    }
+    catch(Exception e) {
         logError("Compilation error",e)
-		exit(1)
-	}
+        exit(1)
+    }
     profile("creating config") {
         createConfig()
     }
@@ -122,6 +127,11 @@ target( packageApp : "Implementation of package target") {
         srcfiles(dir:"${basedir}/griffon-app/", includes:"**/*")
         srcfiles(dir:"$classesDirPath", includes:"**/*")
     }
+
+    platform = 'windows'
+    if(isSolaris) platform = 'solaris'
+    else if(isLinux) platform = 'linux'
+    else if(isMacOSX) platform = 'macosx'
 
 //    configureServerContextPath()
 
@@ -144,19 +154,19 @@ target( packageApp : "Implementation of package target") {
 //        }
 //    }
 
-	if(config.griffon.enable.native2ascii) {
-		profile("converting native message bundles to ascii") {
-			ant.native2ascii(src:"${basedir}/griffon-app/i18n",
-							 dest:i18nDir,
-							 includes:"*.properties",
-							 encoding:"UTF-8")
-		}
-	}
-	else {
-	    ant.copy(todir:i18nDir) {
-			fileset(dir:"${basedir}/griffon-app/i18n", includes:"*.properties")
-		}
-	}
+    if(config.griffon.enable.native2ascii) {
+        profile("converting native message bundles to ascii") {
+            ant.native2ascii(src:"${basedir}/griffon-app/i18n",
+                             dest:i18nDir,
+                             includes:"*.properties",
+                             encoding:"UTF-8")
+        }
+    }
+    else {
+        ant.copy(todir:i18nDir) {
+            fileset(dir:"${basedir}/griffon-app/i18n", includes:"*.properties")
+        }
+    }
     ant.copy(todir:resourcesDir) {
         fileset(dir:"${basedir}/griffon-app/resources", includes:"**/*.*")
         fileset(dir:"${basedir}/src/main") {
@@ -166,18 +176,18 @@ target( packageApp : "Implementation of package target") {
         }
     }
     ant.copy(todir:classesDirPath) {
-		fileset(dir:"${basedir}", includes:metadataFile.name)
-	}
-	ant.copy(todir:resourcesDirPath, failonerror:false) {
-		fileset(dir:"${basedir}/griffon-app/conf", includes:"**", excludes:"*.groovy, log4j*, webstart"/*hibernate, spring"*/)
-//		fileset(dir:"${basedir}/griffon-app/conf/hibernate", includes:"**/**")
-//		fileset(dir:"${basedir}/src/java") {
+        fileset(dir:"${basedir}", includes:metadataFile.name)
+    }
+    ant.copy(todir:resourcesDirPath, failonerror:false) {
+        fileset(dir:"${basedir}/griffon-app/conf", includes:"**", excludes:"*.groovy, log4j*, webstart"/*hibernate, spring"*/)
+//        fileset(dir:"${basedir}/griffon-app/conf/hibernate", includes:"**/**")
+//        fileset(dir:"${basedir}/src/java") {
         fileset(dir:"${basedir}/src/main") {
-			include(name:"**/**")
-			exclude(name:"**/*.java")
+            include(name:"**/**")
+            exclude(name:"**/*.java")
             exclude(name:"**/*.groovy")
-		}
-	}
+        }
+    }
 
 
     startLogging()
@@ -287,6 +297,8 @@ target(copyLibs: "Copy Library Files") {
     fileset(dir:"${basedir}/lib/", includes:"*.jar").each {
         griffonCopyDist(it.toString(), jardir)
     }
+
+    copyPlatformJars("${basedir}/lib", jardir)
     
 //FIXME    ant.copy(todir:jardir) { fileset(dir:"${basedir}/lib/", includes:"*.dll") }
 //FIXME    ant.copy(todir:jardir) { fileset(dir:"${basedir}/lib/", includes:"*.so") }
@@ -445,35 +457,55 @@ target(generateJNLP:"Generates the JNLP File") {
     }
 
     jnlpJars = []
-	jnlpUrls = []
-	jnlpExtensions = []
+    jnlpUrls = []
+    jnlpExtensions = []
+    jnlpResources = []
     appletJars = []
-	remoteJars = []
-	config.griffon.extensions?.jarUrls.each {
-		def filename = new File(it).getName()
-		remoteJars << filename
-	}
+    remoteJars = []
+    config.griffon.extensions?.jarUrls.each {
+        def filename = new File(it).getName()
+        remoteJars << filename
+    }
     // griffon-rt has to come first, it's got the launch classes
     new File(jardir).eachFileMatch(~/griffon-rt-.*.jar/) { f ->
         jnlpJars << "        <jar href='$f.name'/>"
         appletJars << "$f.name"
     }
-	config.griffon.extensions?.jarUrls.each {
-		appletJars << it
-	}
-	if (config.griffon.extensions?.jnlpUrls.size() > 0) {
-		config.griffon.extensions?.jnlpUrls.each {
-			jnlpExtensions << "<extension href='$it' />"
-		}
-	}
+    config.griffon.extensions?.jarUrls.each {
+        appletJars << it
+    }
+    if (config.griffon.extensions?.jnlpUrls.size() > 0) {
+        config.griffon.extensions?.jnlpUrls.each {
+            jnlpExtensions << "<extension href='$it' />"
+        }
+    }
     new File(jardir).eachFileMatch(~/.*\.jar/) { f ->
         if (!(f.name =~ /griffon-rt-.*/) && !remoteJars.contains(f.name)) {
             jnlpJars << "        <jar href='$f.name'/>"
             appletJars << "$f.name"
         }
     }
-	
-	
+    if (config.griffon.extensions?.resources?.size() > 0) {
+        config.griffon.extensions?.resources.each { entry ->
+            jnlpResources << "<resources"
+            if(entry.os) jnlpResources << " os='${entry.os}'" 
+            if(entry.arch) jnlpResources << " arch='${entry.arch}'" 
+            jnlpResources << ">"
+            for(j in entry.jars) jnlpResources << "    <jar href='$j' />"
+            for(l in entry.nativelibs) jnlpResources << "    <nativelib href='$l' />"
+            jnlpResources << "</resources>"
+        }
+    }
+    doForAllPlatforms { platformDir, platformOs ->
+        if(platformDir.list()) {
+            jnlpResources << "<resources os='${platformOs}'>"
+            platformDir.eachFileMatch(~/.*\.jar/) { f ->
+                jnlpResources << "    <jar href='${platformOs}/${f.name}' />"
+            }
+            jnlpResources << "</resources>"
+        }
+    }
+
     memOptions = []
     if (config.griffon.memory?.min) {
         memOptions << "initial-heap-size='$config.griffon.memory.min'"
@@ -501,6 +533,7 @@ doPackageTextReplacement = {dir, fileFilters ->
             replacefilter(token:"@jnlpFileName@", value: new File(fileName).name )
             replacefilter(token:"@jnlpJars@", value:jnlpJars.join('\n') )
             replacefilter(token:"@jnlpExtensions@", value:jnlpExtensions.join('\n'))
+            replacefilter(token:"@jnlpResources@", value:jnlpResources.join('\n'))
             replacefilter(token:"@appletJars@", value:appletJars.join(',') )
             replacefilter(token:"@memoryOptions@", value:memOptions.join(' ') )
         }
@@ -510,10 +543,10 @@ doPackageTextReplacement = {dir, fileFilters ->
 //
 //target(configureServerContextPath: "Configuring server context path") {
 //    // Get the application context path by looking for a property named 'app.context' in the following order of precedence:
-//    //	System properties
-//    //	application.properties
-//    //	config
-//    //	default to griffonAppName if not specified
+//    //    System properties
+//    //    application.properties
+//    //    config
+//    //    default to griffonAppName if not specified
 //
 //    serverContextPath = System.getProperty("app.context")
 //    serverContextPath = serverContextPath ?: metadata.'app.context'
@@ -540,19 +573,19 @@ target(startLogging:"Bootstraps logging") {
 }
 
 //target( generateWebXml : "Generates the web.xml file") {
-//	depends(classpath)
+//    depends(classpath)
 //
-//	if(config.griffon.config.base.webXml) {
-//		def customWebXml =resolveResources(config.griffon.config.base.webXml)
-//		if(customWebXml)
-//			webXml = customWebXml[0]
-//		else {
-//			event("StatusError", [ "Custom web.xml defined in config [${config.griffon.config.base.webXml}] could not be found." ])
-//			exit(1)
-//		}
-//	}
-//	else {
-//	    webXml = new FileSystemResource("${basedir}/src/templates/war/web.xml")
+//    if(config.griffon.config.base.webXml) {
+//        def customWebXml =resolveResources(config.griffon.config.base.webXml)
+//        if(customWebXml)
+//            webXml = customWebXml[0]
+//        else {
+//            event("StatusError", [ "Custom web.xml defined in config [${config.griffon.config.base.webXml}] could not be found." ])
+//            exit(1)
+//        }
+//    }
+//    else {
+//        webXml = new FileSystemResource("${basedir}/src/templates/war/web.xml")
 //        def tmpWebXml = "${projectWorkDir}/web.xml.tmp"
 //        if(!webXml.exists()) {
 //            copyGriffonResource(tmpWebXml, griffonResource("src/war/WEB-INF/web${servletVersion}.template.xml"))
@@ -563,16 +596,16 @@ target(startLogging:"Bootstraps logging") {
 //        webXml = new FileSystemResource(tmpWebXml)
 //        ant.replace(file:tmpWebXml, token:"@griffon.project.key@", value:"${griffonAppName}-${griffonEnv}-${griffonAppVersion}")
 //    }
-//	def sw = new StringWriter()
+//    def sw = new StringWriter()
 //
 //    try {
 //        profile("generating web.xml from $webXml") {
-//			event("WebXmlStart", [webXml.filename])
+//            event("WebXmlStart", [webXml.filename])
 //            pluginManager.doWebDescriptor(webXml, sw)
 //            webXmlFile.withWriter {
 //                it << sw.toString()
 //            }
-//			event("WebXmlEnd", [webXml.filename])
+//            event("WebXmlEnd", [webXml.filename])
 //        }
 //    }
 //    catch(Exception e) {
@@ -583,15 +616,15 @@ target(startLogging:"Bootstraps logging") {
 //}
 
 //target(packageTemplates: "Packages templates into the app") {
-//	ant.mkdir(dir:scaffoldDir)
-//	if(new File("${basedir}/src/templates/scaffolding").exists()) {
-//		ant.copy(todir:scaffoldDir, overwrite:true) {
-//			fileset(dir:"${basedir}/src/templates/scaffolding", includes:"**")
-//		}
-//	}
-//	else {
+//    ant.mkdir(dir:scaffoldDir)
+//    if(new File("${basedir}/src/templates/scaffolding").exists()) {
+//        ant.copy(todir:scaffoldDir, overwrite:true) {
+//            fileset(dir:"${basedir}/src/templates/scaffolding", includes:"**")
+//        }
+//    }
+//    else {
 //        copyGriffonResources(scaffoldDir, "src/griffon/templates/scaffolding/*")
-//	}
+//    }
 //}
 //
 //
@@ -641,3 +674,76 @@ target(startLogging:"Bootstraps logging") {
 //
 //    return lastModified
 //}
+
+PLATFORMS = [
+    windows: [
+        nativelib: '.dll',
+        webstartName: 'Windows',
+        archs: ['x86', 'amd64', 'x86_64']],
+    linux: [
+        nativelib: '.so',
+        webstartName: 'Linux',
+        archs: ['i386', 'x86', 'amd64', 'x86_64']],
+    macosx: [
+        nativelib: '.jnilib',
+        webstartName: 'Mac OS X',
+        archs: ['i386', 'ppc', 'x86_64']],
+    solaris: [
+        nativelib: '.so',
+        webstartName: 'SunOS',
+        archs: ['x86', 'amd64', 'x86_64', 'sparc', 'sparcv9']]
+]
+
+copyPlatformJars = { srcdir, destdir ->
+    def env = System.getProperty(BuildSettings.ENVIRONMENT)
+    if(env == BuildSettings.ENV_DEVELOPMENT) {
+        _copyPlatformJars(srcdir.toString(), destdir.toString(), platform)
+    } else {
+        PLATFORMS.each { entry ->
+            _copyPlatformJars(srcdir.toString(), destdir.toString(), entry.key)
+        }
+    }
+}
+
+_copyPlatformJars = { srcdir, destdir, os ->
+    File src = new File(srcdir + File.separator + os)
+    File dest = new File(destdir + File.separator + os)
+    if(src.exists()) {
+        ant.mkdir(dir: dest)
+        src.eachFileMatch(~/.*\.jar/) { jarfile ->
+            griffonCopyDist(jarfile.toString(), dest.toString())
+        }
+    }
+}
+
+copyNativeLibs = { srcdir, destdir ->
+    def env = System.getProperty(BuildSettings.ENVIRONMENT)
+    if(env == BuildSettings.ENV_DEVELOPMENT) {
+        _copyNativeLibs(srcdir.toString(), destdir.toString(), platform)
+    } else {
+        PLATFORMS.each { entry ->
+            _copyNativeLibs(srcdir.toString(), destdir.toString(), entry.key)
+        }
+    }
+}
+
+_copyNativeLibs = { srcdir, destdir, os ->
+    File src = new File([srcdir, os, 'native'].join(File.separator))
+    File dest = new File([destdir, os, 'native'].join(File.separator))
+    if(src.exists()) {
+        ant.mkdir(dir: dest)
+        src.eachFileMatch(~/.*${PLATFORMS[os].nativelib}/) { srcFile ->
+            File targetFile = new File(dest.absolutePath + File.separator + srcFile.name)
+            ant.copy(file: srcFile, toFile: targetFile, overwrite: true)
+        }
+    }
+}
+
+doForAllPlatforms = { callback ->
+    PLATFORMS.each { platformKey, platformValue ->
+        def platformDir = new File(jardir, platformKey)
+        if(callback && platformDir.exists()) {
+            callback(platformDir, platformKey)
+        }
+    }
+}

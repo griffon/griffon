@@ -82,6 +82,16 @@ griffon {
     extensions {
         jarUrls = []
         jnlpUrls = []
+        resources = [ 
+            /*
+            [
+                os: 'Windows', // 'Linux, 'Mac OS X', 'SunOS'
+                // arch: 'i386',
+                jars: [],
+                nativelibs: []
+            ]
+            */
+        ]
     }
     webstart {
         codebase = "${new File(griffon.jars.destDir).toURI().toASCIIString()}"

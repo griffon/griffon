@@ -29,15 +29,18 @@ lateInit ( ) {
 earlyInit
 
 # OS specific support (must be 'true' or 'false').
+platform='linux'
 cygwin=false
 msys=false
 darwin=false
 case "`uname`" in
   CYGWIN* )
     cygwin=true
+    platform='windows'
     ;; 
   Darwin* )
     darwin=true
+    platform='macosx'
     ;;
   MINGW* )
     msys=true
@@ -81,6 +84,21 @@ CLASSPATH=""
 for jar in `ls "$LIBDIR"`; do
     CLASSPATH="${CLASSPATH}:${LIBDIR}/${jar}"
 done
+PLATFORM_LIBDIR="${DIRNAME}/../lib/${platform}"
+if $cygwin; then
+    NATIVE_LIBRARY_PATH="$PATH"
+elif $darwin; then
+    NATIVE_LIBRARY_PATH="$DYLD_LIBRARY_PATH"
+else
+    NATIVE_LIBRARY_PATH="$LD_LIBRARY_PATH"
+fi
+if [ -e PLATFORM_LIBDIR ]; then
+    for jar in `ls "$PLATFORM_LIBDIR"`; do
+        CLASSPATH="${CLASSPATH}:${PLATFORM_LIBDIR}/${jar}"
+    done
+    NATIVE_LIBRARY_PATH="$NATIVE_LIBRARY_PATH:${PLATFORM_LIBDIR}/native"
+fi
+
 
 # Create the final classpath. Setting a classpath using the -cp or -classpath option means not to use the
 # global classpath. Groovy behaves then the same as the java interpreter
@@ -189,6 +207,7 @@ startApp ( ) {
          -Dgriffon.start.dir="$STARTDIR" \
          -classpath "$CLASSPATH" \
          -Dprogram.name="$GROOVY_APP_NAME" \
+         -Djava.library.path="$NATIVE_LIBRARY_PATH" \
          $MAIN_CLASS
 }
 
