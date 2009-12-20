@@ -1,5 +1,7 @@
 package griffon.util
 
+import griffon.core.GriffonApplication
+
 /**
  * Created by IntelliJ IDEA.
  * User: Danno.Ferrin
@@ -10,7 +12,7 @@ package griffon.util
 
 class GriffonPlatformHelper {
 
-    static void tweakForNativePlatform(IGriffonApplication app) {
+    static void tweakForNativePlatform(GriffonApplication app) {
         if (GriffonApplicationUtils.isMacOSX) {
             tweakForMacOSX(app)
         }
@@ -18,10 +20,10 @@ class GriffonPlatformHelper {
 
     static macOSXHandler = null
 
-    static void tweakForMacOSX(IGriffonApplication application) {
+    static void tweakForMacOSX(GriffonApplication application) {
 
         // do all this a the end of bootstrap
-        application.addApplicationEventListener("BootstrapEnd", {IGriffonApplication app -> 
+        application.addApplicationEventListener("BootstrapEnd", {GriffonApplication app -> 
 
             // look and feel
             // don't do, let user decide

@@ -15,50 +15,11 @@
  */
 package griffon.applet
 
-import griffon.util.GriffonApplicationHelper
-import griffon.util.IGriffonApplication
-import griffon.util.BaseGriffonApplication
-import javax.swing.JApplet
-
 /**
  * @author Danno.Ferrin
  * @author Andres.Almiray
+ * 
+ * @deprecated use SwingApplet instead
  */
-class GriffonApplet extends JApplet /*implements IGriffonApplication*/ {
-    private boolean appletContainerDispensed = false
-
-    @Delegate private final BaseGriffonApplication _base
-
-    GriffonApplet() {
-       _base = new BaseGriffonApplication(this)
-    }
-
-    public void init() {
-        GriffonApplicationHelper.prepare(this)
-        event("BootstrapEnd",[this]) // to keep it in sync with app version
-        GriffonApplicationHelper.startup(this)
-    }
-
-    public void start() {
-        //GriffonApplicationHelper.callReady()
-        // skip the EDT sillyness, just call ready
-        ready()
-    }
-
-    public void stop() {
-        GriffonApplicationHelper.runScriptInsideEDT("Stop", this)
-    }
-
-    public void destroy() {
-        shutdown()
-    }
-
-    public Object createApplicationContainer() {
-        if (appletContainerDispensed) {
-            return GriffonApplicationHelper.createJFrameApplication(this)
-        } else {
-            appletContainerDispensed = true
-            return this;
-        }
-    }
+class GriffonApplet extends SwingApplet {
 }

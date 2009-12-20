@@ -21,6 +21,9 @@
  *
  * @since 1.1
  */
+// No point doing this stuff more than once.
+if (getBinding().variables.containsKey("_args_parsing_called")) return
+_args_parsing_called = true
 
 includeTargets << griffonScript("_GriffonEvents")
 

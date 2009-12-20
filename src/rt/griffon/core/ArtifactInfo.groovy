@@ -16,7 +16,6 @@
 
 package griffon.core
 
-import griffon.util.IGriffonApplication
 import java.beans.Introspector
 
 /**
@@ -26,13 +25,13 @@ import java.beans.Introspector
  */
 // @Immutable
 final class ArtifactInfo {
-    final IGriffonApplication app
+    final GriffonApplication app
     final Class klass
     final String type
     final String simpleName
     final List<String> declaredProperties
 
-    ArtifactInfo(IGriffonApplication app, Class klass, String type) {
+    ArtifactInfo(GriffonApplication app, Class klass, String type) {
         this.app = app
         this.klass = klass
         this.type = type

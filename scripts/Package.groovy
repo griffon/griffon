@@ -77,7 +77,9 @@ target(package_zip: "Creates a binary distribution and zips it.") {
     ant.mkdir(dir: targetDistDir)
     _copyLaunchScripts()
     _copyAppLibs()
+// XXX -- NATIVE
     _copyNativeFiles()
+// XXX -- NATIVE
     _copySharedFiles(targetDistDir)
     _copyPackageFiles(targetDistDir)
     _zipDist(targetDistDir, false)
@@ -122,6 +124,7 @@ target(package_jar: "Creates a single jar distribution and zips it.") {
 
     createJarFile(destFile, libjars)
 
+// XXX -- NATIVE
     doForAllPlatforms { platformDir, platformOs ->
         def destfile = new File(destFile.absolutePath - '.jar' + "-${platformOs}.jar") 
         createJarFile(destfile, libjars) {
@@ -133,6 +136,7 @@ target(package_jar: "Creates a single jar distribution and zips it.") {
             if(nativeLibDir.exists()) fileset(dir: nativeLibDir)
         }
     }
+// XXX -- NATIVE
 
     _copySharedFiles(targetDistDir)
     _copyPackageFiles(targetDistDir)

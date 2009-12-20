@@ -65,7 +65,16 @@ getJarFiles = {->
         jarFiles.add(userJar)
     }
 
-	jarFiles.addAll(getExtraDependencies())
+// XXX -- NATIVE
+    resolveResources("file:${basedir}/lib/${platform}/*.jar").each { platformJar ->
+        jarFiles << platformJar
+    }
+    resolveResources("file:${pluginsHome}/*/lib/${platform}/*.jar").each { platformPluginJar ->
+        jarFiles << platformPluginJar
+    }
+// XXX -- NATIVE
+
+    jarFiles.addAll(getExtraDependencies())
 
     jarFiles
 }
@@ -113,6 +122,15 @@ commonClasspath = {
     for (pluginLib in getPluginLibDirs()) {
         fileset(dir: pluginLib.file.absolutePath)
     }
+
+// XXX -- NATIVE
+    resolveResources("file:${basedir}/lib/${platform}").each { platformLib ->
+        if(platformLib.file.exists()) fileset(dir: platformLib.file.absolutePath)
+    }
+    resolveResources("file:${pluginsHome}/*/lib/${platform}").each { platformPluginLib ->
+        if(platformPluginLib.file.exists()) fileset(dir: platformPluginLib.file.absolutePath)
+    }
+// XXX -- NATIVE
 }
 
 compileClasspath = {
@@ -146,48 +164,23 @@ runtimeClasspath = {
     pathelement(location: "${classesDir.absolutePath}")
 }
 
-// I don't think this is needed anymore, but keeping around just in
-// case the paths specified are actually important!
-//
-//griffonClasspath = {pluginLibs, griffonDir ->
-//    pathelement(location: "${classesDir.absolutePath}")
-//    pathelement(location: "${basedir}/test/unit")
-//    pathelement(location: "${basedir}/test/integration")
-//    pathelement(location: "${basedir}")
-//    pathelement(location: "${basedir}/web-app")
-//    pathelement(location: "${basedir}/web-app/WEB-INF")
-//    pathelement(location: "${basedir}/web-app/WEB-INF/classes")
-//
-//    if (new File("${basedir}/web-app/WEB-INF/lib").exists()) {
-//        fileset(dir: "${basedir}/web-app/WEB-INF/lib")
-//    }
-//    for (d in griffonDir) {
-//        pathelement(location: "${d.file.absolutePath}")
-//    }
-//
-//	if(preInitConfig.griffon.compiler.dependencies) {
-//		def callable = preInitConfig.griffon.compiler.dependencies
-//		callable.delegate = delegate
-//		callable.resolveStrategy = Closure.DELEGATE_FIRST
-//		callable()
-//	}
-//    else {
-//        defaultCompilerDependencies(delegate)
-//    }
-//}
-
 void setClasspath() {
     // Make sure the following code is only executed once.
     if (classpathSet) return
 
     ant.path(id: "griffon.compile.classpath", compileClasspath)
+    ant.path(id: "griffon.test.classpath", testClasspath)
     ant.path(id: "griffon.runtime.classpath", runtimeClasspath)
+
+    if(argsMap.verbose) {
+        println "[GRIFFON] Classpath entries"
+        ant.project.getReference("griffon.compile.classpath").list().each{println("  $it")}
+    }
 
     def griffonDir = resolveResources("file:${basedir}/griffon-app/*")
     StringBuffer cpath = new StringBuffer("")
 
     def jarFiles = getJarFiles()
-
 
     for (dir in griffonDir) {
         cpath << dir.file.absolutePath << File.pathSeparator
@@ -196,9 +189,9 @@ void setClasspath() {
         //rootLoader?.addURL(dir.URL)
     }
     cpath << classesDirPath << File.pathSeparator
-    cpath << "${basedir}/web-app/WEB-INF"
     for (jar in jarFiles) {
         cpath << jar.file.absolutePath << File.pathSeparator
+        rootLoader?.addURL(jar.file.toURI().toURL())
     }
 
 
@@ -207,7 +200,7 @@ void setClasspath() {
     compConfig.sourceEncoding = "UTF-8"
 
 //    rootLoader?.addURL(new File("${basedir}/griffon-app/conf/hibernate").toURI().toURL())
-    rootLoader?.addURL(new File("${basedir}/src/java").toURI().toURL())
+//    rootLoader?.addURL(new File("${basedir}/src/java").toURI().toURL())
 
     // The resources directory must be created before it is added to
     // the root loader, otherwise it is quietly ignored. In other words,

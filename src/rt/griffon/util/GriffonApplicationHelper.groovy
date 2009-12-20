@@ -16,9 +16,8 @@
 package griffon.util
 
 import griffon.builder.UberBuilder
-import java.awt.Toolkit
+import griffon.core.GriffonApplication
 import javax.swing.JFrame
-import javax.swing.SwingUtilities
 import org.codehaus.groovy.runtime.InvokerHelper
 
 import griffon.core.ArtifactManager
@@ -35,7 +34,7 @@ import griffon.core.ServiceArtifactHandler
  */
 class GriffonApplicationHelper {
 
-    static void prepare(IGriffonApplication app) {
+    static void prepare(GriffonApplication app) {
         app.bindings.app = app
 
         def startDir = System.getProperty("griffon.start.dir")
@@ -73,7 +72,7 @@ class GriffonApplicationHelper {
         }
     }
 
-    static void startup(IGriffonApplication app) {
+    static void startup(GriffonApplication app) {
         // init the builders
         // this is where a composite gets made and composites are added
         // for now we punt and make a SwingBuilder
@@ -84,22 +83,6 @@ class GriffonApplicationHelper {
 
         app.startup();
     }
-
-    /**
-     * Calls the ready lifecycle mehtod after the EDT calms down
-     */
-    public static void callReady(IGriffonApplication app) {
-        // wait for EDT to empty out.... somehow
-        boolean empty = false
-        while (true) {
-            SwingUtilities.invokeAndWait {empty = Toolkit.defaultToolkit.systemEventQueue.peekEvent() == null}
-            if (empty) break
-            sleep(100)
-        }
-
-        app.ready();
-    }
-
 
     static void safeSet(reciever, property, value) {
         try {
@@ -113,7 +96,14 @@ class GriffonApplicationHelper {
     }
 
 
-    public static void runScriptInsideEDT(String scriptName, IGriffonApplication app) {
+    /**
+     * @deprecated user runScriptInsideUIThread instead
+     */ 
+    public static void runScriptInsideEDT(String scriptName, GriffonApplication app) {
+        runScriptInsideUIThread(scriptName, app)
+    }
+
+    public static void runScriptInsideUIThread(String scriptName, GriffonApplication app) {
         def script
         try {
             script = GriffonApplicationHelper.classLoader.loadClass(scriptName).newInstance(app.bindings)
@@ -126,50 +116,46 @@ class GriffonApplicationHelper {
                 throw cnfe;
             }
         }
-        if (SwingUtilities.isEventDispatchThread()) {
-            script.run()
-        } else {
-            SwingUtilities.invokeAndWait script.&run
-        }
+        UIThreadHelper.instance.executeSync(script)
     }
 
 
-    public static Object newInstance(IGriffonApplication app, Class klass, String type = "") {
+    public static Object newInstance(GriffonApplication app, Class klass, String type = "") {
         def instance = klass.newInstance()
         app.event("NewInstance",[klass,type,instance])
         return instance
     }
 
-    public static createMVCGroup(IGriffonApplication app, String mvcType) {
+    public static createMVCGroup(GriffonApplication app, String mvcType) {
         createMVCGroup(app, mvcType, mvcType, [:])
     }
 
-    public static createMVCGroup(IGriffonApplication app, String mvcType, String mvcName) {
+    public static createMVCGroup(GriffonApplication app, String mvcType, String mvcName) {
         createMVCGroup(app, mvcType, mvcName, [:])
     }
 
-    public static createMVCGroup(IGriffonApplication app, String mvcType, Map bindArgs) {
+    public static createMVCGroup(GriffonApplication app, String mvcType, Map bindArgs) {
         createMVCGroup(app, mvcType, mvcType, bindArgs)
     }
 
-    public static createMVCGroup(IGriffonApplication app, Map bindArgs, String mvcType, String mvcName) {
+    public static createMVCGroup(GriffonApplication app, Map bindArgs, String mvcType, String mvcName) {
         createMVCGroup(app, mvcType, mvcName, bindArgs)
     }
 
-    public static createMVCGroup(IGriffonApplication app, Map bindArgs, String mvcType) {
+    public static createMVCGroup(GriffonApplication app, Map bindArgs, String mvcType) {
         createMVCGroup(app, mvcType, mvcType, bindArgs)
     }
 
-    public static createMVCGroup(IGriffonApplication app, String mvcType, String mvcName, Map bindArgs) {
+    public static createMVCGroup(GriffonApplication app, String mvcType, String mvcName, Map bindArgs) {
         Map results = buildMVCGroup(app, bindArgs, mvcType, mvcName)
         return [results.model, results.view, results.controller]
     }
 
-    public static Map buildMVCGroup(IGriffonApplication app, String mvcType, String mvcName = mvcType) {
+    public static Map buildMVCGroup(GriffonApplication app, String mvcType, String mvcName = mvcType) {
         buildMVCGroup(app, [:], mvcType, mvcName)
     }
 
-    public static Map buildMVCGroup(IGriffonApplication app, Map bindArgs, String mvcType, String mvcName = mvcType) {
+    public static Map buildMVCGroup(GriffonApplication app, Map bindArgs, String mvcType, String mvcName = mvcType) {
         if (!app.mvcGroups.containsKey(mvcType)) {
             throw new RuntimeException("Unknown MVC type \"$mvcType\".  Known types are ${app.mvcGroups.keySet()}")
         }
@@ -252,12 +238,13 @@ class GriffonApplicationHelper {
         // initialize the classes and call scripts
         instanceMap.each {k, v ->
             if (v instanceof Script) {
-                // special case: view gets execed in the EDT always
+                // special case: view gets executed in the UI thread always
                 if (k == 'view') {
-                    builder.edt({builder.build(v) })
+//                    builder.edt({builder.build(v)})
+                    UIThreadHelper.instance.executeSync { builder.build(v) }
                 } else {
                     // non-view gets built in the builder
-                    // they casn switch into the EDT as desired
+                    // they can switch into the UI thread as desired
                     builder.build(v)
                 }
             } else if (k != 'builder') {
@@ -277,7 +264,7 @@ class GriffonApplicationHelper {
         return instanceMap
     }
 
-    public static destroyMVCGroup(IGriffonApplication app, String mvcName) {
+    public static destroyMVCGroup(GriffonApplication app, String mvcName) {
         app.removeApplicationEventListener(app.controllers[mvcName])
         [app.models, app.views, app.controllers].each {
             def part = it.remove(mvcName)
@@ -305,7 +292,7 @@ class GriffonApplicationHelper {
         app.event("DestroyMVCGroup",[mvcName])
     }
 
-    public static def createJFrameApplication(IGriffonApplication app) {
+    public static def createJFrameApplication(GriffonApplication app) {
         Object frame = null
         // try config specified first
         if (app.config.application?.frameClass) {

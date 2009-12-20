@@ -16,8 +16,6 @@
 
 package griffon.core
 
-import griffon.util.IGriffonApplication
-
 /**
  * Helper class capable of dealing with artifacts and their handlers.
  *
@@ -25,7 +23,7 @@ import griffon.util.IGriffonApplication
  */
 @Singleton
 class ArtifactManager {
-    IGriffonApplication app
+    GriffonApplication app
     private final Map artifacts = [:]
     private final Map artifactHandlers = [:]
 

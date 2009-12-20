@@ -30,7 +30,7 @@ import java.lang.annotation.Target;
  * event publishing one. The class will have tha ability to send
  * arbitratry events to any listeners that mya have been registered
  * with it. This events are similar to the ones published by
- * IGriffonApplication.
+ * GriffonApplication.
  *
  * //TODO discuss generated fields and methods
  *

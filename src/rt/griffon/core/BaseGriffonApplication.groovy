@@ -13,13 +13,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package griffon.util
+
+package griffon.core
+
+import griffon.util.GriffonApplicationHelper
+import griffon.util.EventRouter
 
 /**
  * @author Danno.Ferrin
  * @author Andres.Almiray
  */
-class BaseGriffonApplication implements IGriffonApplication {
+class BaseGriffonApplication implements GriffonApplication {
     Map<String, ?> addons = [:]
     Map<String, String> addonPrefixes = [:]
 
@@ -37,14 +41,14 @@ class BaseGriffonApplication implements IGriffonApplication {
     Object eventsConfig
 
     private final EventRouter eventRouter = new EventRouter()
-    final IGriffonApplication appDelegate
+    final GriffonApplication appDelegate
 
-    BaseGriffonApplication(IGriffonApplication appDelegate) {
+    BaseGriffonApplication(GriffonApplication appDelegate) {
         this.appDelegate = appDelegate
     }
 
     // define getter/setter otherwise it will be treated as a read-only property
-    // because only the getter was defined in IGriffonApplication
+    // because only the getter was defined in GriffonApplication
     public Properties getApplicationProperties() {
         return applicationProperties
     }
@@ -70,12 +74,12 @@ class BaseGriffonApplication implements IGriffonApplication {
     }
 
     public void initialize() {
-        GriffonApplicationHelper.runScriptInsideEDT("Initialize", appDelegate)
+        GriffonApplicationHelper.runScriptInsideUIThread("Initialize", appDelegate)
     }
 
     public void ready() {
         event("ReadyStart",[appDelegate])
-        GriffonApplicationHelper.runScriptInsideEDT("Ready", appDelegate)
+        GriffonApplicationHelper.runScriptInsideUIThread("Ready", appDelegate)
         event("ReadyEnd",[appDelegate])
     }
 
@@ -86,12 +90,12 @@ class BaseGriffonApplication implements IGriffonApplication {
         mvcNames.each { 
             GriffonApplicationHelper.destroyMVCGroup(appDelegate, it)
         }
-        GriffonApplicationHelper.runScriptInsideEDT("Shutdown", appDelegate)
+        GriffonApplicationHelper.runScriptInsideUIThread("Shutdown", appDelegate)
     }
 
     public void startup() {
         event("StartupStart",[appDelegate])
-        GriffonApplicationHelper.runScriptInsideEDT("Startup", appDelegate)
+        GriffonApplicationHelper.runScriptInsideUIThread("Startup", appDelegate)
         event("StartupEnd",[appDelegate])
     }
 

@@ -15,7 +15,6 @@
  */
 package griffon.util
 
-import javax.swing.SwingUtilities
 import org.codehaus.groovy.runtime.MetaClassHelper
 
 /**
@@ -46,11 +45,7 @@ class EventRouter {
             closureListeners[eventName].each{ dispatchEvent(it) }
          }
       }
-      if( SwingUtilities.isEventDispatchThread() ) {
-         Thread.start { publisher() }
-      } else {
-         publisher()
-      }
+      UIThreadHelper.instance.executeOutside(publisher)
    }
 
    private void fireEvent( Script script, String eventHandler, List params ) {

@@ -37,19 +37,21 @@ target('default': "Runs the application from the command line") {
     event("RunAppStart",[])
     runtimeJars = []
 
-    copyPlatformJars(basedir + File.separator + 'lib', jardir.absolutePath)
-    copyNativeLibs(basedir + File.separator + 'lib', jardir.absolutePath)
-
     // list all jars
     jardir.eachFileMatch(~/.*\.jar/) {f ->
         runtimeJars += f
     }
+
+// XXX -- NATIVE
+    copyPlatformJars(basedir + File.separator + 'lib', jardir.absolutePath)
+    copyNativeLibs(basedir + File.separator + 'lib', jardir.absolutePath)
     def platformDir = new File(jardir.absolutePath, platform)
     if(platformDir.exists()) {
         platformDir.eachFileMatch(~/.*\.jar/) {f ->
             runtimeJars += f
         }
     }
+// XXX -- NATIVE
 
     // setup the vm
     if (!binding.variables.javaVM) {
@@ -90,16 +92,22 @@ target('default': "Runs the application from the command line") {
       config.griffon.app?.javaOpts.each { javaOpts << it }
     }
 
+// XXX -- NATIVE
     File nativeLibDir = new File(platformDir.absolutePath, 'native')
     if(nativeLibDir.exists()) {
         String libraryPath = System.getProperty('java.library.path')
         libraryPath = libraryPath + File.pathSeparator + nativeLibDir.absolutePath
         javaOpts << "-Djava.library.path=$libraryPath".toString()
     }
+// XXX -- NATIVE
+
+    def runtimeClasspath = runtimeJars.collect { f ->
+        f.absolutePath - jardir.absolutePath - File.separator
+    }.join(File.pathSeparator)
 
     // start the processess
     javaOpts = javaOpts.join(' ')
-    Process p = "$javaVM -classpath ${runtimeJars.collect {f -> f.name}.join(File.pathSeparator)} $proxySettings $javaOpts $griffonApplicationClass".execute(null as String[], jardir)
+    Process p = "$javaVM -classpath $runtimeClasspath $proxySettings $javaOpts $griffonApplicationClass".execute(null as String[], jardir)
 
     // pipe the output
     p.consumeProcessOutput(System.out, System.err)

@@ -17,7 +17,7 @@ package org.codehaus.griffon.test;
 
 // import griffon.util.GriffonNameUtils;
 // import griffon.util.GriffonWebUtil;
-import griffon.util.IGriffonApplication;
+import griffon.core.GriffonApplication;
 import junit.framework.Test;
 import junit.framework.TestResult;
 import junit.framework.TestSuite;
@@ -51,14 +51,14 @@ public class GriffonTestSuite extends TestSuite {
 
 //    private Pattern controllerTestPattern;
 //    private ApplicationContext applicationContext;
-    private IGriffonApplication app;
+    private GriffonApplication app;
 
-    public GriffonTestSuite(IGriffonApplication app, String testSuffix) {
+    public GriffonTestSuite(GriffonApplication app, String testSuffix) {
         super();
         init(app, testSuffix);
     }
 
-    public GriffonTestSuite(IGriffonApplication app, Class clazz, String testSuffix) {
+    public GriffonTestSuite(GriffonApplication app, Class clazz, String testSuffix) {
 		super(clazz);
         init(app, testSuffix);
     }
@@ -118,7 +118,7 @@ public class GriffonTestSuite extends TestSuite {
 //         return !(val instanceof Boolean) || (Boolean) val;
 //     }
     
-    private void init(IGriffonApplication app, String testSuffix) {
+    private void init(GriffonApplication app, String testSuffix) {
  		this.app = app;
 //        this.controllerTestPattern = Pattern.compile("^(\\w+)Controller" + testSuffix + "$");
     }

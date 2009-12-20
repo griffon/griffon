@@ -16,8 +16,6 @@
 
 package griffon.core;
 
-import griffon.util.IGriffonApplication;
-
 /**
  * Base implementation of the ArtifactHandler interface.
  *
@@ -26,7 +24,7 @@ import griffon.util.IGriffonApplication;
 public abstract class ArtifactHandlerAdapter implements ArtifactHandler {
     private final String type;
     private ArtifactInfo[] artifactInfos = new ArtifactInfo[0];
-    private IGriffonApplication app;
+    private GriffonApplication app;
 
     public ArtifactHandlerAdapter(String type) {
         this.type = type;
@@ -78,11 +76,11 @@ public abstract class ArtifactHandlerAdapter implements ArtifactHandler {
         return null;
     }
 
-    public void setApp(IGriffonApplication app) {
+    public void setApp(GriffonApplication app) {
         this.app = app;
     }
 
-    public IGriffonApplication getApp() {
+    public GriffonApplication getApp() {
         return app;
     }
 }

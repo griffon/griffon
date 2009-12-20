@@ -16,6 +16,7 @@
 package griffon.util
 
 import griffon.builder.UberBuilder
+import griffon.core.GriffonApplication
 
 /**
  * Created by IntelliJ IDEA.
@@ -25,7 +26,7 @@ import griffon.builder.UberBuilder
  */
 class CompositeBuilderHelper {
 
-    public static FactoryBuilderSupport createBuilder(IGriffonApplication app, Map targets) {
+    public static FactoryBuilderSupport createBuilder(GriffonApplication app, Map targets) {
         UberBuilder uberBuilder = new UberBuilder()
         uberBuilder.setProperty('app', app)
 

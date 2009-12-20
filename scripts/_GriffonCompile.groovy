@@ -25,6 +25,7 @@ import org.codehaus.griffon.util.GriffonNameUtils
  */
 
 includeTargets << griffonScript("_GriffonInit")
+includeTargets << griffonScript("_GriffonArgParsing")
 includeTargets << griffonScript("_PluginDependencies")
 
 ant.taskdef (name: 'groovyc', classname : 'org.codehaus.groovy.ant.Groovyc' /*classname : 'org.codehaus.griffon.compiler.GriffonCompiler'*/)
@@ -41,21 +42,15 @@ compilerPaths = { String classpathId, boolean compilingTests ->
     }
     // Handle conf/ separately to exclude subdirs/package misunderstandings
     src(path: "${basedir}/griffon-app/conf")
-    // This stops resources.groovy becoming "spring.resources"
-//    if( new File("${basedir}/griffon-app/conf/spring").exists()) {
-//        src(path: "${basedir}/griffon-app/conf/spring")
-//    }
 
     excludedPaths.remove("conf")
     for(dir in pluginResources.file) {
         if(!excludedPaths.contains(dir.name) && dir.isDirectory()) {
             src(path:"${dir}")
         }
-     }
+    }
 
 
-//    src(path:"${basedir}/src/groovy")
-//    src(path:"${basedir}/src/java")
     src(path:"${basedir}/src/main")
     javac(classpathref:classpathId, debug:"yes", target: '1.5')
     if(compilingTests) {
@@ -79,7 +74,7 @@ compileSources = { classpathId, sources ->
 target(compile : "Implementation of compilation phase") {
     ant.mkdir(dir:classesDirPath)
     event("CompileStart", ['source'])
-    depends(resolveDependencies)
+    depends(parseArguments, resolveDependencies)
 
     profile("Compiling sources to location [$classesDirPath]") {
 

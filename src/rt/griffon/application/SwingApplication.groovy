@@ -15,24 +15,27 @@
  */
 package griffon.application
 
+import griffon.core.BaseGriffonApplication
 import griffon.util.GriffonApplicationHelper
-import griffon.util.IGriffonApplication
-import griffon.util.BaseGriffonApplication
 import griffon.util.GriffonExceptionHandler
+import griffon.util.UIThreadHelper
+import griffon.util.SwingUIThreadHandler
 import java.awt.event.WindowEvent
 import java.awt.EventQueue
+import java.awt.Toolkit
 
 /**
  * @author Danno.Ferrin
  * @author Andres.Almiray
  */
-class SwingApplication {
+class SwingApplication implements StandaloneGriffonApplication {
     @Delegate private final BaseGriffonApplication _base
 
     List appFrames  = []
 
     SwingApplication() {
-       _base = new BaseGriffonApplication(this)
+        _base = new BaseGriffonApplication(this)
+        UIThreadHelper.instance.setUIThreadHandler(new SwingUIThreadHandler())
     }
 
     public void bootstrap() {
@@ -51,7 +54,7 @@ class SwingApplication {
             EventQueue.invokeAndWait { appFrames[0].show() }
         }
 
-        GriffonApplicationHelper.callReady(this)
+        callReady()
     }
 
     public void shutdown() {
@@ -77,11 +80,26 @@ class SwingApplication {
         return appContainer
     }
 
+    /**
+     * Calls the ready lifecycle mhetod after the UI thread calms down
+     */
+    private void callReady() {
+        // wait for EDT to empty out.... somehow
+        boolean empty = false
+        while (true) {
+            UIThreadHelper.instance.executeSync {empty = Toolkit.defaultToolkit.systemEventQueue.peekEvent() == null}
+            if (empty) break
+            sleep(100)
+        }
+
+        ready();
+    }
+
     public static void main(String[] args) {
         GriffonExceptionHandler.registerExceptionHandler()
-        SwingApplication sfa = new SwingApplication()
-        sfa.bootstrap()
-        sfa.realize()
-        sfa.show()
+        SwingApplication sa = new SwingApplication()
+        sa.bootstrap()
+        sa.realize()
+        sa.show()
     }
 }

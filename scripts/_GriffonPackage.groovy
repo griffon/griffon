@@ -33,9 +33,6 @@ import org.codehaus.griffon.plugins.logging.Log4jConfig
 
 
 import org.codehaus.griffon.util.BuildSettings
-import static griffon.util.GriffonApplicationUtils.isLinux
-import static griffon.util.GriffonApplicationUtils.isSolaris
-import static griffon.util.GriffonApplicationUtils.isMacOSX
 
 includeTargets << griffonScript("_GriffonCompile")
 includeTargets << griffonScript("_PackagePlugins")
@@ -127,11 +124,6 @@ target( packageApp : "Implementation of package target") {
         srcfiles(dir:"${basedir}/griffon-app/", includes:"**/*")
         srcfiles(dir:"$classesDirPath", includes:"**/*")
     }
-
-    platform = 'windows'
-    if(isSolaris) platform = 'solaris'
-    else if(isLinux) platform = 'linux'
-    else if(isMacOSX) platform = 'macosx'
 
 //    configureServerContextPath()
 
@@ -675,25 +667,6 @@ target(startLogging:"Bootstraps logging") {
 //    return lastModified
 //}
 
-PLATFORMS = [
-    windows: [
-        nativelib: '.dll',
-        webstartName: 'Windows',
-        archs: ['x86', 'amd64', 'x86_64']],
-    linux: [
-        nativelib: '.so',
-        webstartName: 'Linux',
-        archs: ['i386', 'x86', 'amd64', 'x86_64']],
-    macosx: [
-        nativelib: '.jnilib',
-        webstartName: 'Mac OS X',
-        archs: ['i386', 'ppc', 'x86_64']],
-    solaris: [
-        nativelib: '.so',
-        webstartName: 'SunOS',
-        archs: ['x86', 'amd64', 'x86_64', 'sparc', 'sparcv9']]
-]
-
 copyPlatformJars = { srcdir, destdir ->
     def env = System.getProperty(BuildSettings.ENVIRONMENT)
     if(env == BuildSettings.ENV_DEVELOPMENT) {
@@ -735,15 +708,6 @@ _copyNativeLibs = { srcdir, destdir, os ->
         src.eachFileMatch(~/.*${PLATFORMS[os].nativelib}/) { srcFile ->
             File targetFile = new File(dest.absolutePath + File.separator + srcFile.name)
             ant.copy(file: srcFile, toFile: targetFile, overwrite: true)
-        }
-    }
-}
-
-doForAllPlatforms = { callback ->
-    PLATFORMS.each { platformKey, platformValue ->
-        def platformDir = new File(jardir, platformKey)
-        if(callback && platformDir.exists()) {
-            callback(platformDir, platformKey)
         }
     }
 }

@@ -17,6 +17,7 @@
 package griffon.util
 
 import griffon.builder.UberBuilder;
+import griffon.core.GriffonApplication;
 
 /**
  * Created by IntelliJ IDEA.
@@ -33,7 +34,7 @@ public class AddonHelper {
             "postNodeCompletionDelegates"
     ])
 
-    static handleAddonsAtStartup(IGriffonApplication app) {
+    static handleAddonsAtStartup(GriffonApplication app) {
         app.event("LoadAddonsStart", [app])
 
         for (node in app.builderConfig) {
@@ -67,7 +68,7 @@ public class AddonHelper {
     }
 
 
-    static def handleAddon(IGriffonApplication app, Class addonClass, String prefix, String addonName) {
+    static def handleAddon(GriffonApplication app, Class addonClass, String prefix, String addonName) {
         def addon = addonClass.newInstance()
 
         app.addons[addonName] = addon
@@ -91,7 +92,7 @@ public class AddonHelper {
         if (events) addEvents(app, addon.events)
     }
 
-    static handleAddonsForBuilders(IGriffonApplication app, UberBuilder builder, Map targets) {
+    static handleAddonsForBuilders(GriffonApplication app, UberBuilder builder, Map targets) {
         for (node in app.builderConfig) {
             String nodeName = node.key
             switch (nodeName) {
@@ -119,7 +120,7 @@ public class AddonHelper {
         }
     }
 
-    static handleAddonForBuilder(IGriffonApplication app, UberBuilder builder, Map targets, def addonNode, String prefix) {
+    static handleAddonForBuilder(GriffonApplication app, UberBuilder builder, Map targets, def addonNode, String prefix) {
         def addonName = addonNode.key
         def addon = app.addons[addonName]
         def addonMetaClass = addon.metaClass
@@ -202,7 +203,7 @@ public class AddonHelper {
         }
     }
 
-    static addMVCGroups(IGriffonApplication app, Map<String, Map<String, String>> groups) {
+    static addMVCGroups(GriffonApplication app, Map<String, Map<String, String>> groups) {
         groups.each {k, v -> app.addMvcGroup(k, v) }
     }
 
@@ -232,7 +233,7 @@ public class AddonHelper {
         }
     }
 
-    static addEvents(IGriffonApplication app, Map<String, Closure> events) {
+    static addEvents(GriffonApplication app, Map<String, Closure> events) {
         events.each {String name, Closure event ->
             app.addApplicationEventListener(name, event)
         }

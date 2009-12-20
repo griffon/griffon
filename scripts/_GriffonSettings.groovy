@@ -23,6 +23,12 @@ import org.springframework.core.io.Resource
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver
 import org.springframework.util.FileCopyUtils
 
+// XXX -- NATIVE
+import static griffon.util.GriffonApplicationUtils.isLinux
+import static griffon.util.GriffonApplicationUtils.isSolaris
+import static griffon.util.GriffonApplicationUtils.isMacOSX
+// XXX -- NATIVE
+
 /**
  * Gant script containing build variables.
  *
@@ -109,7 +115,7 @@ applicationFile = new File("${basedir}/griffon-app/conf/Application.groovy")
 artefactPattern = /\S+?\/griffon-app\/\S+?\/(\S+?)\.groovy/
 
 defaultGriffonApplicationClass = "griffon.application.SwingApplication"
-defaultGriffonAppletClass = "griffon.applet.GriffonApplet"
+defaultGriffonAppletClass = "griffon.applet.SwingApplet"
 makeJNLP = false
 
 // Set up the Griffon environment for this script.
@@ -243,3 +249,40 @@ def getPropertyValue(String propName, defaultValue) {
     // default.
     return value != null ? value : defaultValue
 }
+
+// XXX -- NATIVE
+
+platform = 'windows'
+if(isSolaris) platform = 'solaris'
+else if(isLinux) platform = 'linux'
+else if(isMacOSX) platform = 'macosx'
+
+PLATFORMS = [
+    windows: [
+        nativelib: '.dll',
+        webstartName: 'Windows',
+        archs: ['x86', 'amd64', 'x86_64']],
+    linux: [
+        nativelib: '.so',
+        webstartName: 'Linux',
+        archs: ['i386', 'x86', 'amd64', 'x86_64']],
+    macosx: [
+        nativelib: '.jnilib',
+        webstartName: 'Mac OS X',
+        archs: ['i386', 'ppc', 'x86_64']],
+    solaris: [
+        nativelib: '.so',
+        webstartName: 'SunOS',
+        archs: ['x86', 'amd64', 'x86_64', 'sparc', 'sparcv9']]
+]
+
+doForAllPlatforms = { callback ->
+    PLATFORMS.each { platformKey, platformValue ->
+        def platformDir = new File(jardir, platformKey)
+        if(callback && platformDir.exists()) {
+            callback(platformDir, platformKey)
+        }
+    }
+}
+
+// XXX -- NATIVE
