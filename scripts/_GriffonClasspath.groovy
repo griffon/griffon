@@ -172,10 +172,10 @@ void setClasspath() {
     ant.path(id: "griffon.test.classpath", testClasspath)
     ant.path(id: "griffon.runtime.classpath", runtimeClasspath)
 
-    if(argsMap.verbose) {
-        println "[GRIFFON] Classpath entries"
-        ant.project.getReference("griffon.compile.classpath").list().each{println("  $it")}
-    }
+//    if(argsMap.verbose) {
+//        println "[GRIFFON] Classpath entries"
+//        ant.project.getReference("griffon.compile.classpath").list().each{println("  $it")}
+//    }
 
     def griffonDir = resolveResources("file:${basedir}/griffon-app/*")
     StringBuffer cpath = new StringBuffer("")
