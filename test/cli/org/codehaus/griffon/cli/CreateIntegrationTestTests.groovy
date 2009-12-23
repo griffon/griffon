@@ -36,6 +36,6 @@ class CreateIntegrationTestTests extends AbstractCliTests {
         // Check that the integration test has been created.
         def testFile = new File("${appDir}/test/integration/${pkgPath}${className}Tests.groovy")
         assert testFile.exists()
-        assert testFile.text =~ "^${pkg ? 'package ' + pkg : ''}\\s*import griffon.util.IGriffonApplication\\s*class ${className}Tests extends GroovyTestCase \\{"
+        assert testFile.text =~ "^${pkg ? 'package ' + pkg : ''}\\s*import griffon.core.GriffonApplication\\s*class ${className}Tests extends GroovyTestCase \\{"
     }
 }

@@ -2,16 +2,16 @@ package org.codehaus.griffon.test
 
 import junit.framework.TestSuite
 import org.codehaus.griffon.util.BuildSettings
-import griffon.util.IGriffonApplication
+import griffon.core.GriffonApplication
 
 class GriffonIntegrationTestHelper extends DefaultGriffonTestHelper {
-    IGriffonApplication app
+    GriffonApplication app
 
     GriffonIntegrationTestHelper(
             BuildSettings settings,
             ClassLoader parentLoader,
             Closure resourceResolver,
-            IGriffonApplication app) {
+            GriffonApplication app) {
         super(settings, parentLoader, resourceResolver)
         this.app = app
     }
