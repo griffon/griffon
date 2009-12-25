@@ -31,6 +31,10 @@ import java.util.Properties;
  */
 public interface GriffonApplication {
 
+    /**
+     * @deprecated use Metadata.getCurrent() instead
+     */
+    @Deprecated
     public Properties getApplicationProperties();
 
     public Class getConfigClass();

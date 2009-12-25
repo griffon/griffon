@@ -34,6 +34,7 @@ class SwingApplet extends JApplet {
     SwingApplet() {
         _base = new BaseGriffonApplication(this)
         UIThreadHelper.instance.setUIThreadHandler(new SwingUIThreadHandler())
+        loadApplicationProperties()
     }
 
     public void init() {

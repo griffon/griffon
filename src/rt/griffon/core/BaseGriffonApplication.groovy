@@ -18,6 +18,7 @@ package griffon.core
 
 import griffon.util.GriffonApplicationHelper
 import griffon.util.EventRouter
+import griffon.util.Metadata
 
 /**
  * @author Danno.Ferrin
@@ -49,11 +50,21 @@ class BaseGriffonApplication implements GriffonApplication {
 
     // define getter/setter otherwise it will be treated as a read-only property
     // because only the getter was defined in GriffonApplication
+    /**
+     * @deprecated use Metadata.getCurrent() instead
+     */
     public Properties getApplicationProperties() {
         return applicationProperties
     }
+    /**
+     * @deprecated use loadApplicationProperties() instead
+     */
+    @Deprecated
     public void setApplicationProperties(Properties applicationProperties) {
         this.applicationProperties = applicationProperties
+    }
+    public void loadApplicationProperties() {
+        this.applicationProperties = Metadata.getCurrent()
     }
 
     public Class getConfigClass() {

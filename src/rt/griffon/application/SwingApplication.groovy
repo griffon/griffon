@@ -36,11 +36,12 @@ class SwingApplication implements StandaloneGriffonApplication {
     SwingApplication() {
         _base = new BaseGriffonApplication(this)
         UIThreadHelper.instance.setUIThreadHandler(new SwingUIThreadHandler())
+        loadApplicationProperties()
     }
 
     public void bootstrap() {
-        applicationProperties = new Properties()
-        applicationProperties.load(getClass().getResourceAsStream('/application.properties'))
+        // applicationProperties = new Properties()
+        // applicationProperties.load(getClass().getResourceAsStream('/application.properties'))
         GriffonApplicationHelper.prepare(this)
         event("BootstrapEnd",[this])
     }
