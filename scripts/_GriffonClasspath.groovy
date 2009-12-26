@@ -120,7 +120,7 @@ commonClasspath = {
     }
 
     for (pluginLib in getPluginLibDirs()) {
-        fileset(dir: pluginLib.file.absolutePath)
+        if(pluginLib.file.exists()) fileset(dir: pluginLib.file.absolutePath)
     }
 
 // XXX -- NATIVE

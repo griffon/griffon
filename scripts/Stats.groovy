@@ -27,16 +27,17 @@ includeTargets << griffonScript("Init")
 
 target(default: "Generates basic stats for a Griffon project") {
     depends(parseArguments) 
-    def EMPTY = /^\s*$/
-    def SLASH_SLASH = /^\s*\/\/.*/
-    def SLASH_STAR_STAR_SLASH = /^(.*)\/\*(.*)\*\/(.*)$/
-
+   
+    EMPTY = /^\s*$/
+    SLASH_SLASH = /^\s*\/\/.*/
+    SLASH_STAR_STAR_SLASH = /^(.*)\/\*(.*)\*\/(.*)$/
+    
     // TODO - handle slash_star comments inside strings
-    def DEFAULT_LOC_MATCHER = { file ->
-        loc = 0
-        comment = 0
+    DEFAULT_LOC_MATCHER = { file ->
+        def loc = 0
+        def comment = 0
         file.eachLine { line ->
-            if(line ==~ EMPTY) return
+            if(!line.trim().length() || line ==~ EMPTY) return
             else if(line ==~ SLASH_SLASH) return
             else {
                 def m = line =~ SLASH_STAR_STAR_SLASH
@@ -44,15 +45,15 @@ target(default: "Generates basic stats for a Griffon project") {
                 int open = line.indexOf("/*")
                 int close = line.indexOf("*/")
                 if(open != -1 && (close-open) <= 1) comment++
-                else if(close != -1 && comment) comment--
+                else if(close != -1 && comment) {
+                    comment--
+                    if(!comment) return
+                }
             }
             if(!comment) loc++
         } 
         loc
     }
-   
-    // TODO -- map multi-line clojure comments
-    // TODO -- move stats handlers to plugins: clojure, javafx, scala, wizard
 
     // maps file path to
     def pathToInfo = [
@@ -61,8 +62,6 @@ target(default: "Generates basic stats for a Griffon project") {
         [name: "Controllers",         path: "controllers",      filetype: [".groovy"]],
         [name: "Lifecycle",           path: "lifecycle",        filetype: [".groovy"]],
         [name: "Groovy/Java Sources", path: "src.main",         filetype: [".groovy",".java"]],
-//        [name: "Wizards",             path: "wizards",          filetype: [".groovy"]],
-//        [name: "JavaFX Sources",      path: "src.javafx",       filetype: [".fx"]],
         [name: "Unit Tests",          path: "test.unit",        filetype: [".groovy"]],
         [name: "Integration Tests",   path: "test.integration", filetype: [".groovy"]],
         [name: "Scripts",             path: "scripts",          filetype: [".groovy"]],
