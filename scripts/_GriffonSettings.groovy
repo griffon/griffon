@@ -117,6 +117,7 @@ artefactPattern = /\S+?\/griffon-app\/\S+?\/(\S+?)\.groovy/
 defaultGriffonApplicationClass = "griffon.application.SwingApplication"
 defaultGriffonAppletClass = "griffon.applet.SwingApplet"
 makeJNLP = false
+_skipSigning = false // GRIFFON-118
 
 // Set up the Griffon environment for this script.
 if (!System.getProperty("griffon.env.set")) {

@@ -90,7 +90,10 @@ target(package_zip: "Creates a binary distribution and zips it.") {
 target(package_jar: "Creates a single jar distribution and zips it.") {
     event("PackageStart",["jar"])
  
+    // GRIFFON-118
+    _skipSigning = true
     depends(prepackage)
+    _skipSigning = false
 
     targetDistDir = config.griffon.dist.jar.dir ?: "${distDir}/jar"
     ant.delete(dir: targetDistDir, quiet: true, failOnError: false)
