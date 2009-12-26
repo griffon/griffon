@@ -86,7 +86,7 @@ depends(checkVersion, createStructure, packagePlugins, docs)
     pluginName = GriffonNameUtils.getScriptName(GriffonNameUtils.getLogicalName(pluginClass, "GriffonPlugin"))
 }
 
-target(packagePlugin:"Implementation target") {
+target(packagePlugin:"Packages a Griffon plugin") {
     depends (checkVersion, pluginConfig, packageAddon, docs)
 
     event("PackagePluginStart", [pluginName,plugin])

@@ -35,7 +35,7 @@ target (runShell: "Load the Griffon interactive shell") {
 	shell()
 }
 
-target('default':"The shell implementation target") {
+target(default:"Runs an embedded application in a Groovy Shell") {
 
 //    classLoader = new URLClassLoader([classesDir.toURI().toURL()] as URL[], rootLoader)
 //    Thread.currentThread().setContextClassLoader(classLoader)
@@ -68,4 +68,3 @@ target('default':"The shell implementation target") {
     def shell = new Groovysh(classLoader,b, new IO(System.in, System.out, System.err))
 	shell.run([] as String[])
 }
-

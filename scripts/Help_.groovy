@@ -107,7 +107,6 @@ target ('default' : "Prints out the help for each script") {
         else {
             println "No script found for name: $args"
         }
-
     }
     else {
             println """

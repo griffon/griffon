@@ -26,7 +26,7 @@ import org.codehaus.griffon.support.*
 
 includeTargets << griffonScript("_GriffonBootstrap")
 
-target('default':"The console implementation target") {
+target(default: "Runs an embedded application in a Groovy console") {
     depends( checkVersion, configureProxy, packageApp, classpath)
 
 //    classLoader = new URLClassLoader([classesDir.toURI().toURL()] as URL[], rootLoader)

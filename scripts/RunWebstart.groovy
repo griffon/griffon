@@ -15,7 +15,7 @@ includeTargets << griffonScript("_PackagePlugins" )
 target(tweakConfig:' tweaks for webstart') {
     configTweaks << { config.griffon.jars.sign = true }
 }
-target('default': "Does the actual command line execution") {
+target('default': "Runs the application with Java Webstart") {
     depends(checkVersion, tweakConfig, createConfig, package_webstart)
 
     if ((config.griffon.jars.sign != [:]) && !config.griffon.jars.sign) {

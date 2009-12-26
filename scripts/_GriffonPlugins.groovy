@@ -112,7 +112,7 @@ target(uninstallPlugin:"Uninstalls a plug-in for a given name") {
 
 }
 
-target(listPlugins: "Implementation target") {
+target(listPlugins: "List all available plugins in the default Griffon repository") {
     depends(parseArguments)
 
     if(argsMap.repository) {
@@ -330,7 +330,7 @@ For further info visit http://griffon.codehaus.org/Plugins
 '''
 }
 
-target(pluginInfo:"Implementation target") {
+target(pluginInfo:"Displays information on a Griffon plugin") {
     depends(parseArguments)
 
     if( argsMap.params ) {

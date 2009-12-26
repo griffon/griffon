@@ -71,7 +71,7 @@ compileSources = { classpathId, sources ->
     }
 }
 
-target(compile : "Implementation of compilation phase") {
+target(compile : "Compiles application sources") {
     ant.mkdir(dir:classesDirPath)
     event("CompileStart", ['source'])
     depends(parseArguments, resolveDependencies)
