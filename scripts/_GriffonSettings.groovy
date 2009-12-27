@@ -118,6 +118,8 @@ defaultGriffonApplicationClass = "griffon.application.SwingApplication"
 defaultGriffonAppletClass = "griffon.applet.SwingApplet"
 makeJNLP = false
 _skipSigning = false // GRIFFON-118
+defaultAppletWidth = 240 // GRIFFON-127
+defaultAppletHeight = 320 // GRIFFON-127
 
 // Set up the Griffon environment for this script.
 if (!System.getProperty("griffon.env.set")) {

@@ -12,7 +12,7 @@
                       codebase:'@griffonAppCodebase@',
                       code:'@griffonAppletClass@',
                       archive:'@appletJars@',
-                      width:'240', height:'320'} ;
+                      width:'@applet.width@', height:'@applet.height@'} ;
     var parameters = {fontSize:16,
                       java_arguments: "-Djnlp.packEnabled=true",
                       jnlp_href:'@griffonAppCodebase@/applet.jnlp',
@@ -20,7 +20,7 @@
                       image:'griffon.png',
                       boxmessage:'Loading @griffonAppName@',
                       boxbgcolor:'#FFFFFF', boxfgcolor:'#000000',
-                      codebase_lookup: 'false'} ;
+                      codebase_lookup: 'false'@applet.script.params@} ;
     var version = '1.5.0' ;
     deployJava.runApplet(attributes, parameters, version);
 </script>
@@ -28,7 +28,7 @@
 <APPLET CODEBASE='@griffonAppCodebase@'
         CODE='@griffonAppletClass@'
         ARCHIVE='@appletJars@'
-        WIDTH='240' HEIGHT='320'>
+        WIDTH='@applet.width@' HEIGHT='@applet.height@'>
     <PARAM NAME="java_arguments" VALUE="-Djnlp.packEnabled=true">
     <PARAM NAME='jnlp_href' VALUE='@griffonAppCodebase@/applet.jnlp'>
     <PARAM NAME='dragggable' VALUE='true'>
@@ -37,6 +37,7 @@
     <PARAM NAME='boxbgcolor' VALUE='#FFFFFF'>
     <PARAM NAME='boxfgcolor' VALUE='#000000'>
     <PARAM NAME='codebase_lookup' VALUE='false'>
+@applet.tag.params@
 </APPLET>
 -->
 </body>

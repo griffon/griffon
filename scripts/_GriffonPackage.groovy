@@ -453,8 +453,11 @@ target(generateJNLP:"Generates the JNLP File") {
     jnlpUrls = []
     jnlpExtensions = []
     jnlpResources = []
+    jnlpProperties = []
     appletJars = []
     remoteJars = []
+    appletTagParams = []
+    appletScriptParams = []
     config.griffon.extensions?.jarUrls.each {
         def filename = new File(it).getName()
         remoteJars << filename
@@ -478,17 +481,33 @@ target(generateJNLP:"Generates the JNLP File") {
             appletJars << "$f.name"
         }
     }
-    if (config.griffon.extensions?.resources?.size() > 0) {
-        config.griffon.extensions?.resources.each { entry ->
-            jnlpResources << "<resources"
-            if(entry.os) jnlpResources << " os='${entry.os}'" 
-            if(entry.arch) jnlpResources << " arch='${entry.arch}'" 
-            jnlpResources << ">"
-            for(j in entry.jars) jnlpResources << "    <jar href='$j' />"
-            for(l in entry.nativelibs) jnlpResources << "    <nativelib href='$l' />"
-            jnlpResources << "</resources>"
+    config.griffon.extensions?.resources?.each { osKey, values ->
+        jnlpResources << "<resources os='${PLATFORMS[osKey].webstartName}'>" // TODO resolve arch
+        for(j in values?.jars) jnlpResources << "    <jar href='$j' />"
+        for(l in values?.nativelibs) jnlpResources << "    <nativelib href='$l' />"
+        for(p in values?.props) jnlpResources << "    <property name='${p.key}' value='${p.value}' />"
+        if(values.j2se) {
+            jnlpResources << "    <j2se "
+            values.j2se.each { k, v -> jnlpResources << "        $k='$v'" }
+            jnlpResources << "    />"
+        }
+        jnlpResources << "</resources>"
+    }
+    config.griffon?.extensions?.props?.each { propName, propValue ->
+        jnlpProperties << "    <property name='$propName' value='$propValue' />"
+    }
+    if(config.griffon?.extensions?.j2se) {
+        jnlpProperties << "    <j2se "
+        config.griffon.extensions.j2se.each { k, v -> jnlpProperties << "        $k='$v'" }
+        jnlpProperties << "    />"
+    }
+    if (config.griffon.applet?.params?.size() > 0) {
+        config.griffon.applet.params.each { paramKey, paramValue ->
+            appletTagParams << "    <PARAM NAME='$paramKey' VALUE='$paramValue'/>"
+            appletScriptParams << ", ${paramKey}: '$paramValue'"
         }
     }
+
     doForAllPlatforms { platformDir, platformOs ->
         if(platformDir.list()) {
             jnlpResources << "<resources os='${platformOs}'>"
@@ -526,9 +545,14 @@ doPackageTextReplacement = {dir, fileFilters ->
             replacefilter(token:"@jnlpFileName@", value: new File(fileName).name )
             replacefilter(token:"@jnlpJars@", value:jnlpJars.join('\n') )
             replacefilter(token:"@jnlpExtensions@", value:jnlpExtensions.join('\n'))
+            replacefilter(token:"@jnlpProperties@", value:jnlpProperties.join('\n'))
             replacefilter(token:"@jnlpResources@", value:jnlpResources.join('\n'))
             replacefilter(token:"@appletJars@", value:appletJars.join(',') )
             replacefilter(token:"@memoryOptions@", value:memOptions.join(' ') )
+            replacefilter(token:"@applet.width@", value: argsMap.appletWidth ?: defaultAppletWidth )
+            replacefilter(token:"@applet.height@", value: argsMap.appletHeight ?: defaultAppletHeight )
+            replacefilter(token:"@applet.tag.params@", value: appletTagParams.join('\n') )
+            replacefilter(token:"@applet.script.params@", value: appletScriptParams.join(' ') )
         }
     }
 }
