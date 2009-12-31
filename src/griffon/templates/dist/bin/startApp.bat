@@ -170,7 +170,7 @@ set LIBDIR="%DIRNAME%..\lib"
 set CLASSPATH=
 for %%i in (%LIBDIR%\*.jar) do set CLASSPATH=!CLASSPATH!;%%i
 
-set NATIVE_LIBRARY_PATH=""
+set NATIVE_LIBRARY_PATH="%PATH%"
 set NATIVE_LIBDIR="%DIRNAME%..\lib\windows"
 if not exist "%NATIVE_LIBDIR%" goto no_native
 for %%i in (%NATIVE_LIBDIR%\*.jar) do set CLASSPATH=!CLASSPATH!;%%i
@@ -190,12 +190,12 @@ if "x" == "x%CLASSPATH%" goto after_cp
 set CP=%CLASSPATH%;%CP%
 :after_cp
 
-set JAVA_OPTS="@app.java.opts@"
-if "x" == "x%JAVA_OPTS%" set JAVA_OPTS="-Xmx128m"
-set JAVA_OPTS=%JAVA_OPTS% -Dprogram.name="%PROGNAME%" -Dgriffon.start.dir=%DIRNAME%..\ -Djava.library.path=%NATIVE_LIBRARY_PATH%
+set JAVA_OPTS=@app.java.opts@
+if x == x%JAVA_OPTS% set JAVA_OPTS=-Xmx128m
+set JAVA_OPTS=%JAVA_OPTS% -Dprogram.name=%GRIFFON_APP_NAME% -Dgriffon.start.dir=%DIRNAME%..\ -Djava.library.path=%NATIVE_LIBRARY_PATH%
 
 @rem Execute App
-"%JAVA_EXE%" %JAVA_OPTS% -classpath %CP% @app.main.class@ %CMD_LINE_ARGS%
+"%JAVA_EXE%" %JAVA_OPTS% -classpath "%CP%" @app.main.class@ %CMD_LINE_ARGS%
 
 :end
 @rem End local scope for the variables with windows NT shell
