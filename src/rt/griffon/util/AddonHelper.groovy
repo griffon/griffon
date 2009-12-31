@@ -88,7 +88,7 @@ public class AddonHelper {
         def mvcGroups = addonMetaClass.getMetaProperty("mvcGroups")
         if (mvcGroups) addMVCGroups(app, addon.mvcGroups)
 
-        def events = addonMetaClass.respondsTo('events')
+        def events = addonMetaClass.getMetaProperty('events')
         if (events) addEvents(app, addon.events)
     }
 

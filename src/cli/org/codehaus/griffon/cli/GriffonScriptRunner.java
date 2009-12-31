@@ -369,6 +369,15 @@ public class GriffonScriptRunner {
 
                     // Setup the script to call.
                     Gant gant = new Gant(binding, classLoader);
+                    /* Gant 1.9.x
+                    gant.processArgs(new String[]{
+                        "-c", // use cache
+                        "-C", // cache file
+                        new File(settings.getGriffonWorkDir(), "scriptCache").getAbsolutePath(),
+                        "-f", // build file
+                        scriptFile.getAbsolutePath()
+                    });
+                    */
                     gant.setUseCache(true);
                     gant.setCacheDirectory(new File(settings.getGriffonWorkDir(), "scriptCache"));
                     gant.loadScript(scriptFile);
