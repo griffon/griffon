@@ -37,15 +37,20 @@ target('default': "Packages a Griffon application.") {
      } else {
         // TODO make sure additional package_* targets are
         // available before the following loop
+        def internal = ['zip', 'jar', 'applet', 'webstart']
         argsMap.params.each { type ->
            try {
-               depends("package_"+type)
-           } catch(MissingPropertyException x) {
-               ant.echo(message: "Don't know how to handle package type '${type}'")
+               if(type in internal) {
+                   depends("package_"+type)
+               } else {
+                   event("MakePackage",[type])
+               }
+           } catch(Exception x) {
+               ant.echo(message: "Could not handle package type '${type}'")
                ant.echo(message: x.message)
            }
         }
-     }
+    }
 }
 
 
