@@ -60,6 +60,7 @@ target(default: "Generates basic stats for a Griffon project") {
         [name: "Models",              path: "models",           filetype: [".groovy"]],
         [name: "Views",               path: "views",            filetype: [".groovy"]],
         [name: "Controllers",         path: "controllers",      filetype: [".groovy"]],
+        [name: "Services",            path: "services",         filetype: [".groovy"]],
         [name: "Lifecycle",           path: "lifecycle",        filetype: [".groovy"]],
         [name: "Groovy/Java Sources", path: "src.main",         filetype: [".groovy",".java"]],
         [name: "Unit Tests",          path: "test.unit",        filetype: [".groovy"]],
