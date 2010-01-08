@@ -1,5 +1,5 @@
 /*
- * Copyright 2009 the original author or authors.
+ * Copyright 2009-2010 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,6 +15,13 @@
  */
 package griffon.util
 
+import java.util.concurrent.Callable
+import java.util.concurrent.Future
+import java.util.concurrent.Executors
+import java.util.concurrent.ExecutorService
+import java.util.logging.Level
+import java.util.logging.Logger
+
 /**
  * Helper class that can execute code inside the UI thread.
  *
@@ -25,13 +32,14 @@ class UIThreadHelper {
     // Shouldn't need to synchronize access to this field as setting its value
     // should be done at boot time
     private UIThreadHandler uiThreadHandler
+    private final ExecutorService DEFAULT_EXECUTOR_SERVICE = Executors.newFixedThreadPool(2)
+    private static final Logger LOG = Logger.getLogger(UIThreadHelper.class.name)
 
     public void setUIThreadHandler(UIThreadHandler threadHandler) {
         if(!this.uiThreadHandler) {
             this.uiThreadHandler = threadHandler
         } else {
-            // TODO emmit a warning: UIThread is already set, you can't change it
-            // TODO use app logger
+            LOG.log(Level.WARNING, "UIThreadHandler is already set, you can't change it!")
         }
     }
 
@@ -94,5 +102,36 @@ class UIThreadHelper {
      */
     void executeOutside(Script script) {
         getUIThreadHandler().executeOutside(script.&run)
+    }
+
+    /**
+     * Executes a code block as a Future on an ExecutorService.
+     */
+    Future executeFuture(ExecutorService executorService = DEFAULT_EXECUTOR_SERVICE, Closure closure) {
+        return executorService.submit(new CallableClosure(closure))
+    }
+
+    /**
+     * Executes a code block as a Future on an ExecutorService.
+     */
+    Future executeFuture(ExecutorService executorService = DEFAULT_EXECUTOR_SERVICE, Callable callable) {
+        return executorService.submit(callable)
+    }
+}
+
+/**
+ * Helper class that executes a Closure as Callable.
+ *
+ * @author Andres Almiray
+ */
+private class CallableClosure implements Callable {
+    private final Closure closure
+
+    CallableClosure(Closure closure) {
+        this.closure = closure
+    }
+
+    public Object call() {
+        return closure()
     }
 }

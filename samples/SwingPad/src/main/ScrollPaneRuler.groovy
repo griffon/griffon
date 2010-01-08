@@ -1,5 +1,5 @@
 /*
- * Copyright 2007-2008 the original author or authors.
+ * Copyright 2007-2010 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,7 +21,7 @@ import javax.swing.BorderFactory as BF
 /**
  * Creates a Ruler to be used as a row or column view on a ScrollPane
  * Referenced from http://forum.java.sun.com/thread.jspa?threadID=5205520&messageID=9821974
- * @author Andres Almiray <aalmiray@users.sourceforge.net>
+ * @author Andres Almiray
  */
 class ScrollPaneRuler extends JComponent implements MouseListener, MouseMotionListener {
    private static final int SIZE = 20

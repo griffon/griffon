@@ -1,5 +1,5 @@
 /*
- * Copyright 2007-2009 the original author or authors.
+ * Copyright 2007-2010 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,6 +18,9 @@ import ca.odell.glazedlists.EventList
 import ca.odell.glazedlists.BasicEventList
 import ca.odell.glazedlists.SortedList
 
+/**
+ * @author Andres Almiray
+ */
 class SwingPadModel {
    @Bindable boolean dirty = false
    @Bindable boolean successfulScript = false

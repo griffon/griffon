@@ -1,5 +1,5 @@
 /*
-* Copyright 2004-2005 the original author or authors.
+* Copyright 2004-2010 the original author or authors.
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
@@ -14,6 +14,7 @@
 * limitations under the License.
 */
 
+import griffon.util.Metadata
 import org.codehaus.griffon.util.BuildSettings
 import org.codehaus.griffon.util.GriffonNameUtils
 import org.codehaus.griffon.plugins.GriffonPluginUtils
@@ -61,26 +62,12 @@ serverHost = getPropertyValue("server.host", null)
 pluginsHome = griffonSettings.projectPluginsDir.path
 
 // Load the application metadata (application.properties)
-griffonAppName = null
-griffonAppVersion = null
-appGriffonVersion = null
-//servletVersion = getPropertyValue("servlet.version", "2.4")
-metadata = new Properties()
 metadataFile = new File("${basedir}/application.properties")
+metadata = metadataFile.exists() ? Metadata.getInstance(metadataFile) : Metadata.current
 
-// Get App's metadata if there is any.
-if (metadataFile.exists()) {
-    // We know we have an app
-    metadataFile.withInputStream { input ->
-        metadata.load input
-    }
-
-    def props = metadata
-    griffonAppName = props.'app.name'
-    griffonAppVersion = props.'app.version'
-    appGriffonVersion = props.'app.griffon.version'
-    //servletVersion = props.'app.servlet.version' ? props.'app.servlet.version' : servletVersion
-}
+griffonAppName = metadata.getApplicationName()
+griffonAppVersion = metadata.getApplicationVersion()
+appGriffonVersion = metadata.getGriffonVersion()
 
 // If no app name property (upgraded/new/edited project) default to basedir.
 if (!griffonAppName) {
@@ -289,3 +276,62 @@ doForAllPlatforms = { callback ->
 }
 
 // XXX -- NATIVE
+
+printFramed = { message, c = '*', padded = false ->
+    def pieces = message.split('\n').collect { it.replace('\t',' ') }
+    def length = pieces*.size().max() + 4
+    def frame = c * length
+    def result = pieces.collect {
+        def blank = ' ' * (length - 4 - it.size())
+        "${c} ${it}${blank} ${c}\n"
+    }.join()
+    result = "${frame}\n${result}${frame}\n"
+    if (padded) result = "\n${result}\n"
+    print result
+}
+
+confirmInput = { String message ->
+    def propName = "confirm.message" + System.currentTimeMillis()
+    ant.input(message: message, addproperty: propName, validargs: "y,n")
+    ant.antProject.properties[propName].toLowerCase() == 'y'
+}
+
+askAndDo = { message, yesCallback = null, noCallback = null ->
+    confirmInput(message) ? yesCallback?.call() : noCallback?.call()
+}
+
+askAndDoNoNag = { message, yesCallback = null, noCallback = null ->
+    parseArguments()
+
+    nonagYes = 'y'.equalsIgnoreCase(argsMap.nonag) ?: false
+    nonagNo = 'n'.equalsIgnoreCase(argsMap.nonag) ?: false
+
+    if(nonagNo) return
+    boolean proceed = nonagYes
+    if(!proceed) {
+        proceed = confirmInput(message)
+    }
+    proceed ? yesCallback?.call() : noCallback?.call()
+}
+
+/**
+ * Modifies the application's metadata, as stored in the "application.properties"
+ * file. If it doesn't exist, the file is created.
+ */
+updateMetadata = { Map entries ->
+    if (!metadataFile.exists()) {
+        ant.propertyfile(
+                file: metadataFile,
+                comment: "Do not edit app.griffon.* properties, they may change automatically. " +
+                        "DO NOT put application configuration in here, it is not the right place!")
+        metadata = Metadata.getInstance(metadataFile)
+    }
+
+    // Convert GStrings to Strings.
+    def stringifiedEntries = [:]
+    entries.each { key, value -> stringifiedEntries[key.toString()] = value.toString() }
+
+    metadata.putAll(stringifiedEntries)
+    metadata.persist()
+}
+

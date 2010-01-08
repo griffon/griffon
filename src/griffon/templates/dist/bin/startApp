@@ -92,7 +92,7 @@ elif $darwin; then
 else
     NATIVE_LIBRARY_PATH="$LD_LIBRARY_PATH"
 fi
-if [ -e PLATFORM_LIBDIR ]; then
+if [ -d "$PWD/$PLATFORM_LIBDIR" ]; then
     for jar in `ls "$PLATFORM_LIBDIR"`; do
         CLASSPATH="${CLASSPATH}:${PLATFORM_LIBDIR}/${jar}"
     done

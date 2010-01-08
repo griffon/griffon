@@ -1,3 +1,19 @@
+/*
+* Copyright 2004-2010 the original author or authors.
+*
+* Licensed under the Apache License, Version 2.0 (the "License");
+* you may not use this file except in compliance with the License.
+* You may obtain a copy of the License at
+*
+*      http://www.apache.org/licenses/LICENSE-2.0
+*
+* Unless required by applicable law or agreed to in writing, software
+* distributed under the License is distributed on an "AS IS" BASIS,
+* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+* See the License for the specific language governing permissions and
+* limitations under the License.
+*/
+
 import org.codehaus.griffon.util.GriffonNameUtils
 import org.codehaus.griffon.util.GriffonUtil
 import groovy.xml.DOMBuilder
@@ -22,21 +38,6 @@ import java.util.zip.ZipFile
 import java.util.zip.ZipEntry
 import java.util.zip.ZipEntry
 
-/*
-* Copyright 2004-2005 the original author or authors.
-*
-* Licensed under the Apache License, Version 2.0 (the "License");
-* you may not use this file except in compliance with the License.
-* You may obtain a copy of the License at
-*
-*      http://www.apache.org/licenses/LICENSE-2.0
-*
-* Unless required by applicable law or agreed to in writing, software
-* distributed under the License is distributed on an "AS IS" BASIS,
-* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-* See the License for the specific language governing permissions and
-* limitations under the License.
-*/
 /**
  * Plugin stuff. If included, must be included after "_ClasspathAndEvents".
  *
@@ -173,6 +174,7 @@ _resolveDependencies = { List plugins, callback = null ->
         }
     }
 }
+
 target(loadPlugins:"Loads Griffon' plugins") {
     if(!PluginManagerHolder.pluginManager) { // plugin manager already loaded?
         compConfig.setTargetDirectory(classesDir)
@@ -488,8 +490,6 @@ cacheLocalPlugin = { pluginFile ->
     String zipLocation = "${pluginsBase}/griffon-${fullPluginName}.zip"
     ant.copy(file: pluginFile, tofile: zipLocation)
     readMetadataFromZip(zipLocation, pluginFile)
-
-
 }
 
 private readMetadataFromZip(String zipLocation, pluginFile) {
@@ -650,7 +650,59 @@ installPluginForName = { String fullPluginName ->
                 ant.delete(dir: "${pluginsDirPath}/${fullPluginName}", quiet: true, failOnError: false)
                 clean()
 
-                pluginInstallFail("Failed to install plug-in [${fullPluginName}]. Required Jdk version is ${pluginJdkVersion}, current one is ${javaVersion}", [name:pluginName])
+                cleanupPluginInstallAndExit("Failed to install plug-in [${fullPluginName}]. Required Jdk version is ${pluginJdkVersion}, current one is ${javaVersion}")
+            }
+        }
+
+        def supportedPlatforms = pluginXml.platforms?.text()
+        if (supportedPlatforms) {
+            if (!(platform in supportedPlatforms.split(','))) {
+                ant.delete(dir: "${pluginsDirPath}/${fullPluginName}", quiet: true, failOnError: false)
+                clean()
+
+                cleanupPluginInstallAndExit("Failed to install plug-in [${fullPluginName}]. Required platforms are [${supportedPlatforms}], current one is ${platform}")
+            }
+        }
+
+        def supportedToolkits = pluginXml.toolkits?.text()
+        if (supportedToolkits) {
+            supportedToolkits = supportedToolkits.split(',').toList()
+            def installedToolkits = metadata.'app.toolkits'
+            if(!installedToolkits) installedToolkits = 'swing'
+            installedToolkits = installedToolkits.split(',').toList()
+            def unsupportedToolkits = installedToolkits - supportedToolkits
+            if(unsupportedToolkits) {
+                def pluginsToUninstall = [:]
+                metadata.propertyNames().grep{ it.startsWith('plugins.') }.each { p ->
+                    String pluginVersion1 = metadata[p]
+                    String pluginName1 = p - 'plugins.'
+                    def supportedToolkitsByPlugin = readPluginXmlMetadata(pluginName1).toolkits?.text()
+                    // skip if property is not set
+                    if(!supportedToolkitsByPlugin) return
+                    supportedToolkitsByPlugin = supportedToolkitsByPlugin.split(',').toList()
+                    if(supportedToolkitsByPlugin.intersect(supportedToolkits)) return 
+                    if(supportedToolkitsByPlugin.intersect(unsupportedToolkits)) {
+                        pluginsToUninstall[pluginName1] = pluginVersion1
+                    }
+                }
+                if(pluginsToUninstall) {
+                    def uninstallPluginsMessage = """${griffonAppName} has ${installedToolkits} as supported UI toolkits.
+The plugin [${fullPluginName}] requires any of the following toolkits: ${supportedToolkits}
+Installing this plugin will uninstall all plugins that require ${unsupportedToolkits}.
+Plugins to be uninstalled:
+"""
+                    pluginsToUninstall.each { n, v -> uninstallPluginsMessage += "    ${n}-${v}\n" }
+
+                    askAndDo("""${uninstallPluginsMessage}
+Do you wish to proceed?\n""", {
+                        pluginsToUninstall.each { n, v ->
+                            uninstallPluginForName(n)
+                            event("PluginUninstalled", ["The plugin ${n}-${v} has been uninstalled from the current application"])
+                        }
+                    },{
+                        cleanupPluginInstallAndExit("Installation of [${fullPluginName}] was canceled.")
+                    })
+                }
             }
         }
 

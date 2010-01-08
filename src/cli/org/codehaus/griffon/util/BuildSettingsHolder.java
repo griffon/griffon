@@ -1,5 +1,5 @@
 /*
-* Copyright 2008 the original author or authors.
+* Copyright 2008-2010 the original author or authors.
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
@@ -18,6 +18,8 @@ package org.codehaus.griffon.util;
 /**
  * Static singleton holder for the BuildSettings instance. Should only
  * be initialised once (in {@link org.codehaus.griffon.cli.GriffonScriptRunner}.
+ *
+ * @author Danno Ferrin
  */
 public final class BuildSettingsHolder {
     private static BuildSettings settings;

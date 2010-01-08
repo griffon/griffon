@@ -1,5 +1,5 @@
 /*
- * Copyright 2007-2008 the original author or authors.
+ * Copyright 2007-2010 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,16 +14,15 @@
  * limitations under the License.
  */
 
-/*
- * Created by IntelliJ IDEA.
- *@author Danno.Ferrin
- * Date: Nov 7, 2007
- * Time: 2:50:58 PM
- */
 package griffon.builder
 
 import org.codehaus.groovy.runtime.InvokerHelper
 
+/**
+ * @author Danno.Ferrin
+ * Date: Nov 7, 2007
+ * Time: 2:50:58 PM
+ */
 class UberBuilder extends FactoryBuilderSupport {
 
     protected final Map builderLookup = new LinkedHashMap()

@@ -1,5 +1,5 @@
 /*
-* Copyright 2004-2005 the original author or authors.
+* Copyright 2004-2010 the original author or authors.
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
@@ -97,14 +97,13 @@ target(uninstallPlugin:"Uninstalls a plug-in for a given name") {
 
     def pluginArgs = argsMap['params']
     if(pluginArgs) {
-
         def pluginName = pluginArgs[0]
         def pluginRelease = pluginArgs[1]
 
-
         uninstallPluginForName(pluginName, pluginRelease)
+        pluginRelease = pluginRelease? '-'+pluginRelease : ''
 
-        event("PluginUninstalled", ["The plugin ${pluginName}-${pluginRelease} has been uninstalled from the current application"])
+        event("PluginUninstalled", ["The plugin ${pluginName}${pluginRelease} has been uninstalled from the current application"])
     }
     else {
         event("StatusError", ["You need to specify the plug-in name and (optional) version, e.g. \"griffon uninstall-plugin feeds 1.0\""])
@@ -268,6 +267,20 @@ def displayPluginInfo = { pluginName, version ->
                     }
                     if( release.'description'.text() ) {
                         println "${release.'description'.text()}"
+                        println '--------------------------------------------------------------------------'
+                    }
+                    if( release.'toolkits'.text() ) {
+                        println "This plugin works with: ${release.'toolkits'.text()}"
+                        println '--------------------------------------------------------------------------'
+                    } else {
+                        println "This plugin works with all toolkits."
+                        println '--------------------------------------------------------------------------'
+                    }
+                    if( release.'platforms'.text() ) {
+                        println "This plugin works in: ${release.'platforms'.text()}"
+                        println '--------------------------------------------------------------------------'
+                    } else {
+                        println "This plugin works in all platforms."
                         println '--------------------------------------------------------------------------'
                     }
                 } else {

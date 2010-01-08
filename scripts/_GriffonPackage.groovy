@@ -1,5 +1,5 @@
 /*
-* Copyright 2004-2005 the original author or authors.
+* Copyright 2004-2010 the original author or authors.
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
@@ -40,6 +40,7 @@ includeTargets << griffonScript("_PackagePlugins")
 configTweaks = []
 
 target( createConfig: "Creates the configuration object") {
+   event("CreateConfigStart",[])
    if(!ConfigurationHolder.config && configFile.exists()) {
        def configClass
        try {
@@ -59,8 +60,6 @@ target( createConfig: "Creates the configuration object") {
                exit(1)
            }
        }
-       griffonAppletClass = config.griffon.applet.mainClass ?: defaultGriffonAppletClass
-       griffonApplicationClass = config.griffon.application.mainClass ?: defaultGriffonApplicationClass
    }
     if (applicationFile.exists()) {
         def applicationConfigClass
@@ -100,6 +99,7 @@ target( createConfig: "Creates the configuration object") {
 //   ConfigurationHelper.initConfig(config, null, classLoader)
 
     configTweaks.each {tweak -> tweak() }
+   event("CreateConfigEnd",[])
 }
 
 target( packageApp : "Implementation of package target") {

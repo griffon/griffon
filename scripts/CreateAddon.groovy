@@ -1,5 +1,5 @@
 /*
- * Copyright 2004-2008 the original author or authors.
+ * Copyright 2004-2010 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,6 +18,7 @@
  * Gant script that creates a new Griffon Addon inside of a Plugin Project
  *
  * @author Danno Ferrin
+ * @author Andres Almiray
  *
  */
 
@@ -34,6 +35,7 @@ includeTargets << griffonScript("CreateIntegrationTest")
  * * tweaks griffon-app/conf/Config.groovy to have griffon.jars.jarName set (dont' cahnge)
  * * Adds copy libs events for the destDir
  * * Adds install hooks to wire in addon to griffon-app/conf/Builder.groovy
+ * * Adds uninstall hooks to remove the addon from griffon-app/conf/Builder.groovy
  */
 target ('default' : "Creates a new Addon for a plugin") {
     depends(checkVersion, parseArguments)
@@ -85,7 +87,7 @@ eventCopyLibsEnd = { jardir ->
 """
 
     def installFile = new File("scripts/_Install.groovy")
-    // all plugins shoudl have an install, no need to insure
+    // all plugins should have an install, no need to insure
     String installText = installFile.text
     def slurperVar = generateTempVar(installText, 'configSlurper')
     def flagVar = generateTempVar(installText, 'addonIsSet')
@@ -104,11 +106,38 @@ ${configVar}.each() { prefix, v ->
 }
 
 if (!$flagVar) {
-    println 'Adding $name to Builders.groovy'
+    println 'Adding $name to Builder.groovy'
     new File("\$basedir/griffon-app/conf/Builder.groovy").append('''
 root.'$fqn'.addon=true
 ''')
 }"""
+
+    def uninstallFile = new File("scripts/_Uninstall.groovy")
+    // all plugins should have an install, no need to insure
+    String uninstallText = uninstallFile.text
+    slurperVar = generateTempVar(uninstallText, 'configSlurper')
+    flagVar = generateTempVar(uninstallText, 'addonIsSet')
+    configVar = generateTempVar(uninstallText, 'slurpedBuilder')
+    def configFile = generateTempVar(uninstallText, 'builderConfigFile')
+
+    //TODO we should slurp the config, tweak it in place, and re-write instead of append
+    uninstallFile << """
+// check to see if we already have a $name
+ConfigSlurper $slurperVar = new ConfigSlurper()
+def $configVar = ${slurperVar}.parse(new File("\$basedir/griffon-app/conf/Builder.groovy").toURL())
+boolean $flagVar
+${configVar}.each() { prefix, v ->
+    v.each { builder, views ->
+        $flagVar = $flagVar || '$fqn' == builder
+    }
+}
+
+if ($flagVar) {
+    println 'Removing $name from Builder.groovy'
+    def $configFile = new File("\${basedir}/griffon-app/conf/Builder.groovy")
+    ${configFile}.text = ${configFile}.text - "root.'$fqn'.addon=true\\n"
+}
+"""
 
 
 }

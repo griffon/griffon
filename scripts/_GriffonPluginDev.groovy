@@ -1,6 +1,5 @@
-
 /*
- * Copyright 2004-2005 the original author or authors.
+ * Copyright 2004-2010 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -33,32 +32,32 @@ includeTargets << griffonScript("PackageAddon")
 includeTargets << griffonScript("_GriffonDocs")
 
 pluginIncludes = [
-	metadataFile.name,
-	"*GriffonPlugin.groovy",
+    metadataFile.name,
+    "*GriffonPlugin.groovy",
     "plugin.xml",
-	"griffon-app/**",
-	"lib/**",
+    "griffon-app/**",
+    "lib/**",
     "scripts/**",
-//	"web-app/**",
-	"src/**",
-//	"docs/api/**",
-//	"docs/gapi/**"
+//    "web-app/**",
+    "src/**",
+//    "docs/api/**",
+//    "docs/gapi/**"
 ]
 
 pluginExcludes = [
-//	"web-app/WEB-INF/**",
-//	"web-app/plugins/**",
+//    "web-app/WEB-INF/**",
+//    "web-app/plugins/**",
 //   "griffon-app/conf/spring/resources.groovy",
-//	"griffon-app/conf/*DataSource.groovy",
+//    "griffon-app/conf/*DataSource.groovy",
     "griffon-app/conf/Application.groovy",
 //    "griffon-app/conf/BootStrap.groovy",
 //    "griffon-app/conf/BuildSettings.groovy",
     "griffon-app/conf/Builder.groovy",
     "griffon-app/conf/Config.groovy",
 //    "griffon-app/conf/UrlMappings.groovy",
-	"**/.svn/**",
-	"test/**",
-	"**/CVS/**"
+    "**/.svn/**",
+    "test/**",
+    "**/CVS/**"
 ]
 
 target(pluginConfig:"setup the plugin config"){
@@ -99,8 +98,11 @@ target(packagePlugin:"Packages a Griffon plugin") {
     //def resourceList = GriffonResourceLoaderHolder.resourceLoader.getResources()
     def jdk = plugin.properties['jdk'] ?: "1.5"
     xml.plugin(name:"${pluginName}",version:"${plugin.version}",jdk:"$jdk") {
-              props.each {
+        props.each {
             if( plugin.properties[it] ) "${it}"(plugin.properties[it])
+        }
+        ['toolkits', 'platforms'].each {
+            if( plugin.properties[it] ) "${it}"(plugin.properties[it].join(','))
         }
 //        resources {
 //            for(r in resourceList) {
