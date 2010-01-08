@@ -40,8 +40,8 @@ includeTargets << griffonScript("_PackagePlugins")
 configTweaks = []
 
 target( createConfig: "Creates the configuration object") {
-   event("CreateConfigStart",[])
-   if(!ConfigurationHolder.config && configFile.exists()) {
+    event("CreateConfigStart",[])
+    if(!ConfigurationHolder.config && configFile.exists()) {
        def configClass
        try {
            configClass = classLoader.loadClass("Config")
@@ -60,7 +60,7 @@ target( createConfig: "Creates the configuration object") {
                exit(1)
            }
        }
-   }
+    }
     if (applicationFile.exists()) {
         def applicationConfigClass
         try {
@@ -81,25 +81,8 @@ target( createConfig: "Creates the configuration object") {
             }
         }
     }
-//   def dataSourceFile = new File("${basedir}/griffon-app/conf/DataSource.groovy")
-//   if(dataSourceFile.exists()) {
-//        try {
-//           def dataSourceConfig = configSlurper.parse(classLoader.loadClass("DataSource"))
-//           config.merge(dataSourceConfig)
-//           ConfigurationHolder.setConfig(config)
-//        }
-//        catch(ClassNotFoundException e) {
-//            println "WARNING: DataSource.groovy not found, assuming dataSource bean is configured by Spring..."
-//        }
-//        catch(Exception e) {
-//            logError("Error loading DataSource.groovy",e)
-//            exit(1)
-//        }
-//   }
-//   ConfigurationHelper.initConfig(config, null, classLoader)
-
     configTweaks.each {tweak -> tweak() }
-   event("CreateConfigEnd",[])
+    event("CreateConfigEnd",[])
 }
 
 target( packageApp : "Implementation of package target") {
@@ -125,8 +108,6 @@ target( packageApp : "Implementation of package target") {
         srcfiles(dir:"$classesDirPath", includes:"**/*")
     }
 
-//    configureServerContextPath()
-
     i18nDir = "${resourcesDirPath}/griffon-app/i18n"
     ant.mkdir(dir:i18nDir)
 
@@ -134,17 +115,6 @@ target( packageApp : "Implementation of package target") {
     ant.mkdir(dir:resourcesDir)
 
     collectArtifactMetadata()
-
-//    def files = ant.fileScanner {
-//        fileset(dir:"${basedir}/griffon-app/views", includes:"**/*.jsp")
-//    }
-//
-//    if(files.iterator().hasNext()) {
-//        ant.mkdir(dir:"${basedir}/web-app/WEB-INF/griffon-app/views")
-//        ant.copy(todir:"${basedir}/web-app/WEB-INF/griffon-app/views") {
-//            fileset(dir:"${basedir}/griffon-app/views", includes:"**/*.jsp")
-//        }
-//    }
 
     if(config.griffon.enable.native2ascii) {
         profile("converting native message bundles to ascii") {
@@ -173,7 +143,6 @@ target( packageApp : "Implementation of package target") {
     ant.copy(todir:resourcesDirPath, failonerror:false) {
         fileset(dir:"${basedir}/griffon-app/conf", includes:"**", excludes:"*.groovy, log4j*, webstart"/*hibernate, spring"*/)
 //        fileset(dir:"${basedir}/griffon-app/conf/hibernate", includes:"**/**")
-//        fileset(dir:"${basedir}/src/java") {
         fileset(dir:"${basedir}/src/main") {
             include(name:"**/**")
             exclude(name:"**/*.java")
@@ -185,7 +154,6 @@ target( packageApp : "Implementation of package target") {
     startLogging()
 
     loadPlugins()
-    //generateWebXml()
 
     checkKey()
     copyLibs()
@@ -205,17 +173,21 @@ collectArtifactMetadata = {
     event("CollectArtifacts", [artifactPaths])
 
     def artifacts = [:]
-    def searchPath = new File("${basedir}/griffon-app")
-    searchPath.eachFileRecurse { file ->
-        artifactPaths.find { entry ->
-            def fixedPath = file.path - searchPath.canonicalPath //fix problem when project inside dir "jobs" (eg. hudson stores projects under jobs-directory)
-            if(fixedPath =~ entry.path && file.isFile()) {
-                def klass = fixedPath.substring(2 + entry.path.size()).replace(File.separator,".")
-                klass = klass.substring(0, klass.lastIndexOf("."))
-                if(entry.suffix) {
-                    if(klass.endsWith(entry.suffix)) artifacts.get(entry.type, []) << klass
-                } else {
-                    artifacts.get(entry.type, []) << klass
+    def pluginDirectories = getPluginDirectories().file
+    ([new File(basedir)] + pluginDirectories).each { searchPath ->
+        if(!searchPath) return
+        searchPath = new File(searchPath.absolutePath, 'griffon-app')
+        searchPath.eachFileRecurse { file ->
+            artifactPaths.find { entry ->
+                def fixedPath = file.path - searchPath.canonicalPath //fix problem when project inside dir "jobs" (eg. hudson stores projects under jobs-directory)
+                if(fixedPath =~ entry.path && file.isFile()) {
+                    def klass = fixedPath.substring(2 + entry.path.size()).replace(File.separator,".")
+                    klass = klass.substring(0, klass.lastIndexOf("."))
+                    if(entry.suffix) {
+                        if(klass.endsWith(entry.suffix)) artifacts.get(entry.type, []) << klass
+                    } else {
+                        artifacts.get(entry.type, []) << klass
+                    }
                 }
             }
         }
