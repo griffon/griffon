@@ -1,5 +1,11 @@
 # -*- mode:sh -*-
 
+##############################################################################
+##                                                                          ##
+##  Griffon JVM Bootstrap for UN*X                                           ##
+##                                                                          ##
+##############################################################################
+
 PROGNAME=`basename "$0"`
 
 #DIRNAME=`dirname "$0"`
@@ -47,11 +53,6 @@ case "`uname`" in
     ;;
 esac
 
-#if [ "$1" = "-cp" -o "$1" = "-classpath" ] ; then
-#    CP=$2
-#    shift 2
-#fi
-
 # Attempt to set JAVA_HOME if it's not already set.
 if [ -z "$JAVA_HOME" ] ; then
     if $darwin ; then 
@@ -76,7 +77,12 @@ fi
 if $cygwin ; then
     [ -n "$JAVACMD" ] && JAVACMD=`cygpath --unix "$JAVACMD"`
     [ -n "$JAVA_HOME" ] && JAVA_HOME=`cygpath --unix "$JAVA_HOME"`
-    #[ -n "$CP" ] && CP=`cygpath --path --unix "$CP"`
+fi
+
+#  For MSYS, ensure paths are in appropriate format.
+if $msys
+then
+    [ -n "$JAVA_HOME" ] && JAVA_HOME=`( cd "$JAVA_HOME" ; pwd )`
 fi
 
 LIBDIR="${DIRNAME}/../lib"
@@ -99,16 +105,6 @@ if [ -d "$PWD/$PLATFORM_LIBDIR" ]; then
     NATIVE_LIBRARY_PATH="$NATIVE_LIBRARY_PATH:${PLATFORM_LIBDIR}/native"
 fi
 
-
-# Create the final classpath. Setting a classpath using the -cp or -classpath option means not to use the
-# global classpath. Groovy behaves then the same as the java interpreter
-#if [ -n "$CP" ] ; then
-#    CP="$CP":.
-#elif [ -n "$CLASSPATH" ] ; then
-#    CP="$CLASSPATH":.
-#else
-#    CP=.
-#fi
 
 # Determine the Java command to use to start the JVM.
 if [ -z "$JAVACMD" ] ; then
@@ -156,8 +152,6 @@ fi
 # For Cygwin, switch paths to Windows format before running java
 if $cygwin ; then
     JAVA_HOME=`cygpath --mixed "$JAVA_HOME"`
-    #CP=`cygpath --path --mixed "$CP"`    
-    TOOLS_JAR=`cygpath --mixed "$TOOLS_JAR"`
     CLASSPATH=`cygpath --path --mixed "$CLASSPATH"`
 
     # We build the pattern for arguments to be converted via cygpath
