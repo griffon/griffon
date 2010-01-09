@@ -177,6 +177,7 @@ collectArtifactMetadata = {
     ([new File(basedir)] + pluginDirectories).each { searchPath ->
         if(!searchPath) return
         searchPath = new File(searchPath.absolutePath, 'griffon-app')
+        if(!searchPath.exists()) return
         searchPath.eachFileRecurse { file ->
             artifactPaths.find { entry ->
                 def fixedPath = file.path - searchPath.canonicalPath //fix problem when project inside dir "jobs" (eg. hudson stores projects under jobs-directory)

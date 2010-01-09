@@ -100,15 +100,17 @@ target(uninstallPlugin:"Uninstalls a plug-in for a given name") {
         def pluginName = pluginArgs[0]
         def pluginRelease = pluginArgs[1]
 
+        def plugindir = getPluginDirForName(pluginName)?.file
         uninstallPluginForName(pluginName, pluginRelease)
         pluginRelease = pluginRelease? '-'+pluginRelease : ''
+        def fullPluginName = plugindir?.exists() ? plugindir.name : pluginName+pluginRelease
 
-        event("PluginUninstalled", ["The plugin ${pluginName}${pluginRelease} has been uninstalled from the current application"])
+        event("PluginUninstalled", [fullPluginName])
+        event("StatusFinal", ["The plugin $fullPluginName has been uninstalled from the current application."])
     }
     else {
         event("StatusError", ["You need to specify the plug-in name and (optional) version, e.g. \"griffon uninstall-plugin feeds 1.0\""])
     }
-
 }
 
 target(listPlugins: "List all available plugins in the default Griffon repository") {

@@ -697,7 +697,8 @@ Plugins to be uninstalled:
 Do you wish to proceed?\n""", {
                         pluginsToUninstall.each { n, v ->
                             uninstallPluginForName(n)
-                            event("PluginUninstalled", ["The plugin ${n}-${v} has been uninstalled from the current application"])
+                            event("PluginUninstalled", ["${n}-${v}"])
+                            event("StatusUpdate", ["The plugin ${n}-${v} has been uninstalled from the current application."])
                         }
                     },{
                         cleanupPluginInstallAndExit("Installation of [${fullPluginName}] was canceled.")
