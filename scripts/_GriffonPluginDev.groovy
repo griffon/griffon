@@ -38,23 +38,16 @@ pluginIncludes = [
     "griffon-app/**",
     "lib/**",
     "scripts/**",
-//    "web-app/**",
     "src/**",
 //    "docs/api/**",
 //    "docs/gapi/**"
 ]
 
 pluginExcludes = [
-//    "web-app/WEB-INF/**",
-//    "web-app/plugins/**",
-//   "griffon-app/conf/spring/resources.groovy",
-//    "griffon-app/conf/*DataSource.groovy",
     "griffon-app/conf/Application.groovy",
-//    "griffon-app/conf/BootStrap.groovy",
-//    "griffon-app/conf/BuildSettings.groovy",
+    "griffon-app/conf/BuildConfig.groovy",
     "griffon-app/conf/Builder.groovy",
     "griffon-app/conf/Config.groovy",
-//    "griffon-app/conf/UrlMappings.groovy",
     "**/.svn/**",
     "test/**",
     "**/CVS/**"
@@ -90,27 +83,30 @@ target(packagePlugin:"Packages a Griffon plugin") {
 
     event("PackagePluginStart", [pluginName,plugin])
     
-    // Generate plugin.xml descriptor from info in *GriffonPlugin.groovy
-    new File("${basedir}/plugin.xml").delete()
-    def writer = new IndentPrinter( new PrintWriter( new FileWriter("${basedir}/plugin.xml")))
+    // Remove the existing 'plugin.xml' if there is one.
+    def pluginXml = new File(basedir, "plugin.xml")
+    pluginXml.delete()
+
+    // Use MarkupBuilder with indenting to generate the file.
+    def writer = new IndentPrinter(new PrintWriter(new FileWriter(pluginXml)))
     def xml = new MarkupBuilder(writer)
+
+    // Write the content!
     def props = ['author','authorEmail','title','description','documentation']
-    //def resourceList = GriffonResourceLoaderHolder.resourceLoader.getResources()
     def jdk = plugin.properties['jdk'] ?: "1.5"
-    xml.plugin(name:"${pluginName}",version:"${plugin.version}",jdk:"$jdk") {
+
+    pluginGriffonVersion = "${griffonVersion} > *"
+    if(plugin.metaClass.hasProperty(plugin, "griffonVersion")) {
+        pluginGriffonVersion = plugin.griffonVersion
+    }
+
+    xml.plugin(name:"${pluginName}", version:"${plugin.version}", griffonVersion: pluginGriffonVersion, jdk:"${jdk}") {
         props.each {
-            if( plugin.properties[it] ) "${it}"(plugin.properties[it])
+            if(plugin.properties[it]) "${it}"(plugin.properties[it])
         }
         ['toolkits', 'platforms'].each {
-            if( plugin.properties[it] ) "${it}"(plugin.properties[it].join(','))
+            if(plugin.properties[it]) "${it}"(plugin.properties[it].join(','))
         }
-//        resources {
-//            for(r in resourceList) {
-//                 def matcher = r.URL.toString() =~ artefactPattern
-//                 def name = matcher[0][1].replaceAll('/', /\./)
-//                 resource(name)
-//            }
-//        }
         dependencies {
             if(plugin.metaClass.hasProperty(plugin,'dependsOn')) {
                 for(d in plugin.dependsOn) {
