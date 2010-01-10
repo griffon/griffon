@@ -79,6 +79,7 @@ target(createPlugin: "The implementation target")  {
         include(name: "*GriffonPlugin.groovy")
         include(name: "scripts/*")
         replacefilter(token: "@plugin.name@", value: pluginName)
+        replacefilter(token: "@griffon.version@", value: griffonVersion)
     }
 
     event("StatusFinal", [ "Created plugin ${pluginName}" ])
