@@ -63,11 +63,18 @@ installedPlugins = [] // a list of plugins that have been installed
 
 loadPluginClass = { String pluginFile ->
     try {
-        pluginClass = classLoader.loadClass(pluginFile[0..-8])
-        return pluginClass.newInstance()
+        // Rather than compiling the descriptor via Ant, we just load
+        // the Groovy file into a GroovyClassLoader. We add the classes
+        // directory to the class loader in case it didn't exist before
+        // the associated plugin's sources were compiled.
+        def gcl = new GroovyClassLoader(classLoader)
+        gcl.addURL(griffonSettings.classesDir.toURI().toURL())
+
+        def pluginClassName = pluginFile.endsWith('.groovy') ? pluginFile[0..-8] : pluginFile
+        return gcl.loadClass(pluginClassName).newInstance()
     }
-    catch(Throwable t) {
-        event("StatusError", [t.message])
+    catch (Throwable t) {
+        event("StatusError", [ t.message])
         t.printStackTrace(System.out)
         ant.fail("Cannot instantiate plugin file")
     }
@@ -81,7 +88,8 @@ resolvePluginClasspathDependencies = { plugin ->
         }
     }
     _resolveDependencies(plugins) { pluginName, pluginVersion, pluginDir ->
-        def pluginFile = new File(pluginDir).list().find{ it =~ /GriffonPlugin\.groovy/ }
+        def pluginFile = pluginDir.list().find{ it =~ /GriffonPlugin\.groovy/ }
+        classLoader.addURL(pluginDir.toURI().toURL())
         resolvePluginClasspathDependencies(loadPluginClass(pluginFile))
     }
 }
@@ -152,7 +160,7 @@ _resolveDependencies = { List plugins, callback = null ->
             println "Plugin [${fullName}] not installed, resolving.."
             cacheKnownPlugin(name, version)
             installPluginForName(fullName)
-            if(callback) callback(name, version, pluginLoc)
+            if(callback) callback(name, version, getPluginDirForName(name).file)
             installedPlugins = true
         }
     }
