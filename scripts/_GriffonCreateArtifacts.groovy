@@ -27,6 +27,7 @@ createArtifact = { Map args = [:] ->
     def suffix = args["suffix"]
     def type = args["type"]
     def artifactPath = args["path"]
+    def fileType = args["fileType"] ?: '.groovy'
 
     ant.mkdir(dir: "${basedir}/${artifactPath}")
 
@@ -56,25 +57,25 @@ createArtifact = { Map args = [:] ->
     // representations.
     className = GriffonNameUtils.getClassNameRepresentation(name)
     propertyName = GriffonNameUtils.getPropertyNameRepresentation(name)
-    artifactFile = "${basedir}/${artifactPath}/${pkgPath}${className}${suffix}.groovy"
+    artifactFile = "${basedir}/${artifactPath}/${pkgPath}${className}${suffix}${fileType}"
 
 
     if (new File(artifactFile).exists()) {
-        ant.input(addProperty: "${name}.${suffix}.overwrite", message: "${type} ${className}${suffix}.groovy already exists. Overwrite? [y/n]")
+        ant.input(addProperty: "${name}.${suffix}.overwrite", message: "${type} ${className}${suffix}${fileType} already exists. Overwrite? [y/n]")
         if (ant.antProject.properties."${name}.${suffix}.overwrite" == "n")
             return
     }
 
     // first check for presence of template in application
-    templateFile = new FileSystemResource("${basedir}/src/templates/artifacts/${type}.groovy")
+    templateFile = new FileSystemResource("${basedir}/src/templates/artifacts/${type}${fileType}")
     if (!templateFile.exists()) {
         // now check for template provided by plugins
-        def pluginTemplateFiles = resolveResources("file:${pluginsHome}/*/src/templates/artifacts/${type}.groovy")
+        def pluginTemplateFiles = resolveResources("file:${pluginsHome}/*/src/templates/artifacts/${type}${fileType}")
         if (pluginTemplateFiles) {
             templateFile = pluginTemplateFiles[0]
         } else {
             // template not found in application, use default template
-            templateFile = griffonResource("src/griffon/templates/artifacts/${type}.groovy")
+            templateFile = griffonResource("src/griffon/templates/artifacts/${type}${fileType}")
         }
     }
 
