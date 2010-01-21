@@ -16,6 +16,12 @@
 package griffon.util
 
 import griffon.builder.UberBuilder
+import groovy.swing.factory.ComponentFactory
+import groovy.swing.factory.LayoutFactory
+import groovy.swing.factory.ScrollPaneFactory
+import groovy.swing.factory.TableFactory
+import java.awt.LayoutManager
+import javax.swing.*
 import griffon.core.GriffonApplication
 
 /**
@@ -34,10 +40,44 @@ class CompositeBuilderHelper {
 
         for (node in app.builderConfig) {
             String nodeName = node.key
-            if (nodeName == "root") nodeName = ""
-            node.value.each { builder -> handleLocalBuilder(uberBuilder, targets, nodeName, builder) }
+            switch (nodeName) {
+                case "addons" :
+                    handleAddonsAtStartup(app, uberBuilder, node.value)
+                    break
+                case "features":
+                    handleFeatures(uberBuilder, node.value)
+                    break
+                default:
+                    if (nodeName == "root") nodeName = ""
+                    node.value.each {builder ->
+                        handleLocalBuilder(uberBuilder, targets, nodeName, builder)
+                    }
+            }
         }
         return uberBuilder
+    }
+
+    private static handleFeatures(UberBuilder uberBuilder, features) {
+        for (feature in features) {
+            switch (feature.key) {
+                case ~/.*Delegates/:
+                    def delegateType = feature.key - "s"
+                    delegateType = delegateType[0].toUpperCase() + delegateType[1..-1]
+                    feature.value.each {delegateValue ->
+                        uberBuilder."add$delegateType"(delegateValue)
+                    }
+                    break
+                case "factories":
+                    addFactories(uberBuilder, feature.value)
+                    break
+                case "methods":
+                    addMethods(uberBuilder, feature.value)
+                    break
+                case "properties":
+                    addProperties(uberBuilder, feature.value)
+                    break
+            }
+        }
     }
 
     private static handleLocalBuilder(UberBuilder uberBuilder, Map targets, String prefixName, builderClassName) {
@@ -91,6 +131,63 @@ class CompositeBuilderHelper {
                 } else {
                     processInjection(injectionName)
                 }
+            }
+        }
+    }
+
+    private static addFactories(UberBuilder uberBuilder, groupedFactories) {
+        // is it too naive to just call registerFactory/registerBeanFactory here ?
+        // TODO handle catch-all groupName "*" ?
+        groupedFactories.each {groupName, factories ->
+            uberBuilder.registrationGroups.get(groupName, new TreeSet<String>())
+            factories.each {name, factory ->
+                if (Factory.class.isAssignableFrom(factory.getClass())) {
+                    uberBuilder.registerFactory(name, groupName, factory)
+                } else {
+                    registerBeanFactory(uberBuilder, name, groupName, factory)
+                }
+            }
+        }
+    }
+
+    // FIXME copied from SwingBuilder
+    // FIXME refactor for specific UI toolkit handler
+    private static registerBeanFactory(UberBuilder uberBuilder, String nodeName, String groupName, Class klass) {
+        // poke at the type to see if we need special handling
+        if (LayoutManager.isAssignableFrom(klass)) {
+            uberBuilder.registerFactory(nodeName, groupName, new LayoutFactory(klass))
+        } else if (JScrollPane.isAssignableFrom(klass)) {
+            uberBuilder.registerFactory(nodeName, groupName, new ScrollPaneFactory(klass))
+        } else if (JTable.isAssignableFrom(klass)) {
+            uberBuilder.registerFactory(nodeName, groupName, new TableFactory(klass))
+        } else if (JComponent.isAssignableFrom(klass)
+                || JApplet.isAssignableFrom(klass)
+                || JDialog.isAssignableFrom(klass)
+                || JFrame.isAssignableFrom(klass)
+                || JWindow.isAssignableFrom(klass)
+        ) {
+            uberBuilder.registerFactory(nodeName, groupName, new ComponentFactory(klass))
+        } else {
+            uberBuilder.registerBeanFactory(nodeName, groupName, klass)
+        }
+    }
+
+    private static addMethods(UberBuilder uberBuilder, groupedMethods) {
+        // TODO handle catch-all groupName "*" ?
+        groupedMethods.each {groupName, methods ->
+            uberBuilder.registrationGroups.get(groupName, new TreeSet<String>())
+            methods.each {name, method ->
+                uberBuilder.registerExplicitMethod(name, groupName, method)
+            }
+        }
+    }
+
+    private static addProperties(UberBuilder uberBuilder, groupedProperties) {
+        // TODO handle catch-all groupName "*" ?
+        groupedProperties.each {groupName, properties ->
+            uberBuilder.registrationGroups.get(groupName, new TreeSet<String>())
+            properties.each {name, propertyTuple ->
+                uberBuilder.registerExplicitProperty(name, groupName, propertyTuple.get, propertyTuple.set)
             }
         }
     }
