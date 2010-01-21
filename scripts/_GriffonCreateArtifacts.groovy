@@ -28,6 +28,7 @@ createArtifact = { Map args = [:] ->
     def type = args["type"]
     def artifactPath = args["path"]
     def fileType = args["fileType"] ?: '.groovy'
+    def lineTerminator = args["lineTerminator"] ?: ''
 
     ant.mkdir(dir: "${basedir}/${artifactPath}")
 
@@ -89,7 +90,7 @@ createArtifact = { Map args = [:] ->
         replacefilter(token: "@griffon.project.key@", value: griffonAppName.replaceAll( /\s/, '.' ).toLowerCase())
     }
     if (pkg) {
-        ant.replace(file: artifactFile, token: "@artifact.package@", value: "package ${pkg}\n\n")
+        ant.replace(file: artifactFile, token: "@artifact.package@", value: "package ${pkg}${lineTerminator}\n\n")
     }
     else {
         ant.replace(file: artifactFile, token: "@artifact.package@", value: "")
