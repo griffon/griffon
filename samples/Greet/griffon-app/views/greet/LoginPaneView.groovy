@@ -42,11 +42,11 @@ loginPanel = scrollPane(border: null) {
 
         label("Service:",
                 anchor: EAST, insets: [3, 3, 3, 3])
-        twitterServiceComboBox = comboBox(items: ["http://twitter.com", "http://identi.ca/api"], editable: true,
+        microblogServiceComboBox = comboBox(items: ["http://twitter.com", "http://identi.ca/api"], editable: true,
             selectedItem: bind(target: model, 'serviceURL', value: model.serviceURL),
             enabled: bind {twitterNameField.enabled},
             gridwidth: REMAINDER, fill: HORIZONTAL, weightx: 1.0, insets: [3, 3, 3, 3])
-        twitterServiceComboBox.editor.editorComponent.action = loginAction
+        microblogServiceComboBox.editor.editorComponent.action = loginAction
 
         panel()
         button(loginAction,

@@ -33,12 +33,12 @@ class UserPaneModel {
     @Bindable boolean showDirectMessages
 
     void mvcGroupInit(Map args) {
-        TwitterService twitterService = app.controllers.Greet.twitterService
+        MicroblogService microblogService = app.controllers.Greet.microblogService
 
         user = args.user
         screenName = user.screen_name
-        following = twitterService.currentUserFollows(args.user.id)
-        follows = twitterService.follows(args.user.id, twitterService.authenticatedUser.id)
+        following = microblogService.currentUserFollows(args.user.id)
+        follows = microblogService.follows(args.user.id, microblogService.authenticatedUser.id)
 
         addPropertyChangeListener("showTweets", args.controller.&updateTimeline as PropertyChangeListener)
         addPropertyChangeListener("showReplies", args.controller.&updateTimeline as PropertyChangeListener)

@@ -32,7 +32,7 @@ class TimelinePaneController {
     TimelinePaneModel model
     TimelinePaneView view
 
-    TwitterService twitterService
+    MicroblogService microblogService
 
     void mvcGroupInit(Map args) {
         app.controllers.Greet.timelinePaneControllerQueue.add(this)
@@ -41,7 +41,7 @@ class TimelinePaneController {
     public void updateTimeline(evt) {
         model.updatingTimeline = true
         try {
-            model.tweets = model.tweetListGenerator(twitterService)
+            model.tweets = model.tweetListGenerator(microblogService)
             edt {
                 view.updateTweets()
                 doLater() {
