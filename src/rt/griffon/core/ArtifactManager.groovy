@@ -27,6 +27,9 @@ class ArtifactManager {
     private final Map artifacts = [:]
     private final Map artifactHandlers = [:]
 
+    private static final ArtifactInfo[] EMPTY_ARTIFACT_INFO_ARRAY = new ArtifactInfo[0]
+    private static final Class[] EMPTY_CLASS_ARRAY = new Class[0]
+
     /**
      * Registers an ArtifactHandler by type.<p>
      * Will call initialize() on the handler.
@@ -88,7 +91,7 @@ class ArtifactManager {
      * Never returns null
      */
     ArtifactInfo[] getArtifactsOfType(String type) {
-        artifacts[type] ?: new ArtifactInfo[0]
+        artifacts[type] ?: EMPTY_ARTIFACT_INFO_ARRAY
     }
 
     /**
@@ -99,7 +102,7 @@ class ArtifactManager {
         if(artifacts.containsKey(type)) {
             return artifacts[type].toList().klass
         }
-        return new Class[0]
+        return EMPTY_CLASS_ARRAY
     }
 
     ArtifactInfo[] getAllArtifacts() {
@@ -123,7 +126,7 @@ class ArtifactManager {
                 ArtifactManager.metaClass."$methodName" = this.&getArtifactsOfType.curry(artifactType)
                 return getArtifactsOfType(artifactType)
             }
-            throw new MissingMethodException(methodName, ArtifactManager, args)
+            return EMPTY_ARTIFACT_INFO_ARRAY
         }
 
         artifactType = methodName =~ /^get(\w+)Artifact$/
@@ -134,7 +137,7 @@ class ArtifactManager {
                 ArtifactManager.metaClass."$methodName" = this.&getArtifactOfType.curry(artifactType)
                 return getArtifactOfType(artifactType, args[0])
             }
-            throw new MissingMethodException(methodName, ArtifactManager, args)
+            return EMPTY_ARTIFACT_INFO_ARRAY
         }
 
         artifactType = methodName =~ /^is(\w+)Artifact$/
@@ -145,7 +148,7 @@ class ArtifactManager {
                 ArtifactManager.metaClass."$methodName" = this.&isClassOfType.curry(artifactType)
                 return isClassOfType(artifactType, args[0])
             }
-            throw new MissingMethodException(methodName, ArtifactManager, args)
+            return EMPTY_CLASS_ARRAY
         }
 
         artifactType = methodName =~ /^get(\w+)Classes$/
@@ -156,7 +159,7 @@ class ArtifactManager {
                 ArtifactManager.metaClass."$methodName" = this.&getClassesOfType.curry(artifactType)
                 return getClassesOfType(artifactType)
             }
-            throw new MissingMethodException(methodName, ArtifactManager, args)
+            return EMPTY_CLASS_ARRAY
         }
 
         artifactType = methodName =~ /^is(\w+)Class$/
@@ -167,7 +170,7 @@ class ArtifactManager {
                 ArtifactManager.metaClass."$methodName" = this.&isClassOfType.curry(artifactType)
                 return isClassOfType(artifactType, args[0])
             }
-            throw new MissingMethodException(methodName, ArtifactManager, args)
+            return false
         }
 
         throw new MissingMethodException(methodName, ArtifactManager, args)
@@ -181,7 +184,7 @@ class ArtifactManager {
                 ArtifactManager.metaClass."$propertyName" = getArtifactsOfType(artifactType)
                 return getArtifactsOfType(artifactType)
             }
-            throw new MissingPropertyException(propertyName, (new ArtifactInfo[0]).class)
+            return EMPTY_ARTIFACT_INFO_ARRAY
         }
 
         artifactType = propertyName =~ /^(\w+)Classes$/
@@ -191,8 +194,9 @@ class ArtifactManager {
                 ArtifactManager.metaClass."$propertyName" = getClassesOfType(artifactType)
                 return getClassesOfType(artifactType)
             }
-            throw new MissingPropertyException(propertyName, (new Class[0]).class)
+            return EMPTY_CLASS_ARRAY
         }
+        throw new MissingPropertyException(propertyName, Object)
     }
 
     private synchronized ArtifactInfo getArtifactOfType(String type, Class klass) {
