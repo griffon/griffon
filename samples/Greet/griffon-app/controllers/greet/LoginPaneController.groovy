@@ -36,9 +36,9 @@ class LoginPaneController {
             try {
                 GreetController greetController = app.controllers.Greet
 
-                TwitterService twitterService = greetController.twitterService
-                twitterService.urlBase = urlBase
-                if (twitterService.login(username, password as char[])) {
+                MicroblogService microblogService = greetController.microblogService
+                microblogService.urlBase = urlBase
+                if (microblogService.login(username, password as char[])) {
                 	app.models.Greet.primaryUser = username
 
                     Preferences prefs = Preferences.userNodeForPackage(this.getClass())
@@ -48,15 +48,15 @@ class LoginPaneController {
 
                     def tabbedPane = app.views.Greet.tweetsTabbedPane
 
-                    twitterService.getReplies()
-                    twitterService.getTweets(username)
+                    microblogService.getReplies()
+                    microblogService.getTweets(username)
                     def userPane = buildMVCGroup('UserPane', "UserPane_$username",
-                        user:twitterService.userCache[username], closable:false);
+                        user:microblogService.userCache[username], closable:false);
                     tabbedPane.addTab("@$username", userPane.view.userPane)
 
 
                     def timelinePane = buildMVCGroup('TimelinePane');
-                    timelinePane.model.tweetListGenerator = {TwitterService service ->
+                    timelinePane.model.tweetListGenerator = {MicroblogService service ->
                         timelinePane.model.tweets
                     }
                     greetController.friendsTimelineModel = timelinePane.model
@@ -65,7 +65,6 @@ class LoginPaneController {
                     greetController.timelinePaneControllerQueue.remove(timelinePane.controller)
                     greetController.timelinePaneControllerQueue.add(0, timelinePane.controller)
 
-                    timelinePane.controller.twitterService = twitterService
                     tabbedPane.addTab("Timeline", timelinePane.view.timeline)
 
                     app.models.Greet.tweeting = false

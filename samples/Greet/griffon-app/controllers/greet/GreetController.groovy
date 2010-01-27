@@ -37,7 +37,7 @@ class GreetController {
 
     def timelinePaneControllerQueue = []
 
-    TwitterService twitterService
+    MicroblogService microblogService
 
     Timer refreshTimer
     long nextTimelineUpdate
@@ -63,8 +63,8 @@ class GreetController {
                     || (time > nextTimelineUpdate)
                 ) {
                     def lastID = friendsTimelineModel.tweets.collect { it as long }.max() ?: '0'
-                    def newTweets = twitterService.getFriendsTimeline(lastID as String, lastID == '0' ? 100 : 200).collect {it.id}
-                    def cachedIDs = twitterService.tweetCache.keySet()
+                    def newTweets = microblogService.getFriendsTimeline(lastID as String, lastID == '0' ? 100 : 200).collect {it.id}
+                    def cachedIDs = microblogService.tweetCache.keySet()
                     newTweets.addAll(friendsTimelineModel.tweets.findAll { cachedIDs.contains(it) })
                     friendsTimelineModel.tweets = newTweets
                     nextTimelineUpdate = time + 120000 // 2 minutes
@@ -75,9 +75,9 @@ class GreetController {
                 if (forceRefresh
                     || (time > nextRepliesUpdate)
                 ) {
-                    twitterService.getReplies()
-                    twitterService.getDirectMessages()
-                    twitterService.getDirectMessagesSent()
+                    microblogService.getReplies()
+                    microblogService.getDirectMessages()
+                    microblogService.getDirectMessagesSent()
                     nextRepliesUpdate = time + 360000 // 6 minutes
                 }
 
@@ -97,9 +97,9 @@ class GreetController {
             def cleanup = { model.tweeting = false }
             try {
                 if (model.sendingDM) {
-                    twitterService.sendDM(model.targetUser, view.tweetBox.text)
+                    microblogService.sendDM(model.targetUser, view.tweetBox.text)
                 } else  {
-                    twitterService.tweet(view.tweetBox.text, model.targetTweet)
+                    microblogService.tweet(view.tweetBox.text, model.targetTweet)
                 }
                 cleanup = {
                     view.tweetBox.text = ""
@@ -145,17 +145,17 @@ class GreetController {
         doOutside {
             def mvcName = "UserPane_$username"
             if (app.views[mvcName]) {
-                twitterService.getTweets(username)
+                microblogService.getTweets(username)
                 edt {
                     app.controllers[mvcName].updateTimeline(null)
                     view.tweetsTabbedPane.selectedComponent = app.views[mvcName].userPane
                 }
             } else {
-                twitterService.getUser(username)
-                twitterService.getTweets(username)
+                microblogService.getUser(username)
+                microblogService.getTweets(username)
                 edt {
                     def userPane = buildMVCGroup('UserPane', mvcName,
-                        user:twitterService.userCache[username], closable:true);
+                        user:microblogService.userCache[username], closable:true);
 
                     view.tweetsTabbedPane.addTab("@$username", userPane.view.userPane)
 
@@ -171,7 +171,7 @@ class GreetController {
 
     def selectReplyToTweet(ActionEvent evt) {
         String tweetID = evt.actionCommand
-        def tweet = twitterService.tweetCache[tweetID]
+        def tweet = microblogService.tweetCache[tweetID]
         if ((tweet == null) || (model.targetTweet == tweetID)) {
             model.targetTweet = null
             model.targetUser = null

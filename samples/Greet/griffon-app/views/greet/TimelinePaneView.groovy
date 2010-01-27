@@ -54,8 +54,8 @@ tweetLineGBC = gbc(gridwidth:GridBagConstraints.REMAINDER, fill:GridBagConstrain
 def updateTweets() {
     edt {
         Map<String, JComponent> keptTweetPanels = [:]
-        def tweetCache = tweet = greetController.twitterService.tweetCache
-        def dmCache = greetController.twitterService.dmCache
+        def tweetCache = tweet = greetController.microblogService.tweetCache
+        def dmCache = greetController.microblogService.dmCache
         model.tweets.each {tweetID ->
             def tweetLine = tweetLinePanels[tweetID]
             if (tweetLine) {

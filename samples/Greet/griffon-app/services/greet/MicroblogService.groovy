@@ -23,7 +23,7 @@ import java.text.SimpleDateFormat
 /**
  * @author Danno Ferrin
  */
-class TwitterService {
+class MicroblogService {
 
     static final DateFormat twitterFormat = new SimpleDateFormat("EEE MMM dd HH:mm:ss Z yyyy", Locale.ENGLISH)
 
@@ -31,14 +31,10 @@ class TwitterService {
     Map dmCache = new CacheMap(50)
     Map userCache = new CacheMap(200)
 
-    String urlBase;
+    String urlBase = "http://twitter.com"
     @Bindable String status = ""
     Map authenticatedUser
     XmlSlurper slurper = new XmlSlurper()
-
-    TwitterService(String urlBase = "http://twitter.com") {
-        this.urlBase = urlBase
-    }
 
     Map storeTweet(GPathResult tweet, Map user=null) {
         def mapTweet = [:]

@@ -79,7 +79,15 @@ greetFrame = application(title:"Greet - A Groovy Twitter Client",
 }
 
 // this is to get the tweet box to grow when we reach the end of the line
-bean(tweetBoxPane, minimumSize: bind(source:tweetBox.document, sourceEvent:'undoableEditHappened', sourceValue:{doLater {mainPanel.revalidate()}; tweetBoxPane.preferredSize}))
+tweetBox.document.undoableEditHappened = {
+    doLater {
+        mainPanel.revalidate()
+        tweetBoxPane.minimumSize = tweetBoxPane.preferredSize
+    }
+}
 
 //could still be more clever
 keyStrokeAction(component:tweetBox, keyStroke:KeyStroke.getKeyStroke("ENTER"), action: tweetAction)
+
+bind(source:controller.microblogService, sourceProperty:'status',
+     target:model, targetProperty:'statusLine')

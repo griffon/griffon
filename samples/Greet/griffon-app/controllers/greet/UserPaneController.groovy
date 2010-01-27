@@ -28,21 +28,19 @@ class UserPaneController {
 
     TimelinePaneController timelinePaneController
 
-    TwitterService twitterService
+    MicroblogService microblogService
 
     void mvcGroupInit(Map args) {
-        twitterService = app.controllers.Greet.twitterService
         def timelinePane = buildMVCGroup('TimelinePane', "TimelinePane_user_$args.user.screen_name");
         timelinePaneController = timelinePane.controller
 
-        timelinePane.controller.twitterService = twitterService
-        timelinePane.model.tweetListGenerator = {TwitterService twitterService ->
+        timelinePane.model.tweetListGenerator = {MicroblogService microblogService ->
             def thisScreenName = model.screenName
-            def tweets = twitterService.tweetCache.values().findAll {
+            def tweets = microblogService.tweetCache.values().findAll {
                 ((model.showTweets && (it.user.screen_name == thisScreenName))
                 || (model.showReplies && (it.in_reply_to_screen_name == thisScreenName)))
             }
-            tweets.addAll (twitterService.dmCache.values().findAll {
+            tweets.addAll (microblogService.dmCache.values().findAll {
                 model.showDirectMessages && ((it.sender_screen_name == thisScreenName)
                 || (it.recipient_screen_name == thisScreenName))
             })
@@ -67,10 +65,10 @@ class UserPaneController {
         String userID = model.user.id
         doOutside {
             try {
-                twitterService.follow(userID)
+                microblogService.follow(userID)
             } finally {
                 edt {
-                    model.following = twitterService.currentUserFollows(userID)
+                    model.following = microblogService.currentUserFollows(userID)
                     model.busy = false
                 }
             }
@@ -82,10 +80,10 @@ class UserPaneController {
       String userID = model.user.id
       doOutside {
           try {
-              twitterService.unfollow(userID)
+              microblogService.unfollow(userID)
           } finally {
               edt {
-                  model.following = twitterService.currentUserFollows(userID)
+                  model.following = microblogService.currentUserFollows(userID)
                   model.busy = false
               }
           }
