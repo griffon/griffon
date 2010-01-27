@@ -21,7 +21,6 @@
  *
  * @since 0.4
  */
-import static griffon.util.GriffonApplicationUtils.isMacOSX
 import org.codehaus.griffon.util.BuildSettings
 
 includeTargets << griffonScript("_GriffonPackage")
@@ -219,11 +218,10 @@ target(_copyLaunchScripts: "") {
     if (config.griffon.memory?.maxPermSize) {
         javaOpts << "-XX:maxPermSize=$config.griffon.memory.maxPermSize"
     }
-    if (isMacOSX) {
-        javaOpts << "-Xdock:name=$griffonAppName"
-// TODO setup griffon.icns relative to app dir
-//         javaOpts << "-Xdock:icon=${griffonHome}/bin/griffon.icns"
-    }
+//    if (isMacOSX) {
+//        javaOpts << "-Xdock:name=$griffonAppName"
+//        javaOpts << "-Xdock:icon=${griffonHome}/bin/griffon.icns"
+//    }
     if (config.griffon.app?.javaOpts) {
       config.griffon.app?.javaOpts.each { javaOpts << it }
     }

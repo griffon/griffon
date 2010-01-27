@@ -143,10 +143,12 @@ if [ "$cygwin" = "false" -a "$darwin" = "false" ] ; then
 fi
 
 JAVA_OPTS="@app.java.opts@"
-# For Darwin, add GROOVY_APP_NAME to the JAVA_OPTS as -Xdock:name
+# For Darwin, add GRIFFON_APP_NAME to the JAVA_OPTS as -Xdock:name
 if $darwin; then
-    JAVA_OPTS="$JAVA_OPTS -Xdock:name=$GROOVY_APP_NAME"
-#    JAVA_OPTS="$JAVA_OPTS -Xdock:icon=$LIBDIR/@app.name@-@app.version@.jar!/griffon-icon-48x48.png"
+    JAVA_OPTS="$JAVA_OPTS -Xdock:name=$GRIFFON_APP_NAME"
+    if [ -z "${DIRNAME}/../griffon.icns" ] ; then
+        JAVA_OPTS="$JAVA_OPTS -Xdock:icon=${DIRNAME}/../griffon.icns"
+    fi
 fi
 
 # For Cygwin, switch paths to Windows format before running java
