@@ -36,15 +36,9 @@ target ( clean: "Implementation of clean" ) {
 }
 
 target ( cleanCompiledSources: "Cleans compiled Java and Groovy sources" ) {
-    //def webInf = "${basedir}/web-app/WEB-INF"
-    //ant.delete(dir:"${webInf}/classes")
-    //ant.delete(file:webXmlFile.absolutePath, failonerror:false)
-    //ant.delete(dir:"${webInf}/lib")
     ant.delete(dir:classesDirPath)
     ant.delete(dir:resourcesDirPath)
     ant.delete(dir:testDirPath)
-
-
 }
 
 target ( cleanTestReports: "Cleans the test reports" ) {
@@ -70,21 +64,7 @@ target ( cleanPackaging : "Cleans the distribtion directories" ) {
         ant.delete(dir:ant.antProject.replaceProperties(destDir))
         //todo per package directories?
     }
+    if(isPluginProject) {
+        ant.delete(dir: "${basedir}/docs")
+    }
 }
-
-
-//target ( cleanWarFile: "Cleans the deployable .war file" ) {
-//    if (config.griffon.war.destFile) {
-//        warName = config.griffon.war.destFile
-//    }
-//    else {
-//        def fileName = griffonAppName
-//        def version = metadata.'app.version'
-//        if (version) {
-//            fileName += "-$version"
-//        }
-//        warName = "${basedir}/${fileName}.war"
-//    }
-//
-//    ant.delete(file:warName, failonerror:false)
-//}
