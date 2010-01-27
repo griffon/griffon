@@ -41,7 +41,7 @@ import org.codehaus.griffon.commons.GriffonContextHolder
  * @author Graeme Rocher
  */
 
-includeTargets << griffonScript("_GriffonPackage")
+includeTargets << griffonScript("Package")
 
 parentContext = null // default parent context is null
 
@@ -152,7 +152,7 @@ target(monitorApp:"Monitors an application for changes using the PluginManager a
 }
 
 target(bootstrap: "Loads and configures a Griffon instance") {
-    //packageApp()
+    prepackage()
     loadApp()
     configureApp()
 }
