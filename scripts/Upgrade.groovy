@@ -160,9 +160,17 @@ target('default': "Upgrades a Griffon application from a previous version of Gri
                     if (portions.keySet().contains('view')) {
                         portions.view = portions.remove('view')
                     }
-
                 }
+            }
 
+            // GRIFFON-147 make sure group names that contain hyphens are correctly scaped
+            def groupsToFix = []
+            configObject.mvcGroups.each { k, v ->
+                if(k.contains('-')) groupsToFix << k
+            }
+            groupsToFix.each { k ->
+               def v = configObject.mvcGroups.remove(k)
+               configObject.mvcGroups.put("'$k'".toString(), v)
             }
 
             configObject.writeTo(new FileWriter(new File(baseFile, '/griffon-app/conf/Application.groovy')))
