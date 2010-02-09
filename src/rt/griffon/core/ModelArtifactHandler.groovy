@@ -20,7 +20,10 @@ package griffon.core
  * @author Andres Almiray
  */
 class ModelArtifactHandler extends ArtifactHandlerAdapter {
+    public static final String TYPE = "model"
+    public static final String TRAILING = "Model"
+
     ModelArtifactHandler() {
-        super("model")
+        super(TYPE)
     }
 }

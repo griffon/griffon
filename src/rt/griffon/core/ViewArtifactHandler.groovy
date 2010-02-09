@@ -20,7 +20,10 @@ package griffon.core
  * @author Andres Almiray
  */
 class ViewArtifactHandler extends ArtifactHandlerAdapter {
+    public static final String TYPE = "view"
+    public static final String TRAILING = "View"
+
     ViewArtifactHandler() {
-        super("view")
+        super(TYPE)
     }
 }

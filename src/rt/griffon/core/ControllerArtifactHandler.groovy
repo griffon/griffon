@@ -20,7 +20,10 @@ package griffon.core
  * @author Andres Almiray
  */
 class ControllerArtifactHandler extends ArtifactHandlerAdapter {
+    public static final String TYPE = "controller"
+    public static final String TRAILING = "Controller"
+
     ControllerArtifactHandler() {
-        super("controller")
+        super(TYPE)
     }
 }

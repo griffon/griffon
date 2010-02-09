@@ -20,10 +20,13 @@ package griffon.core
  * @author Andres Almiray
  */
 class ServiceArtifactHandler extends ArtifactHandlerAdapter {
+    public static final String TYPE = "service"
+    public static final String TRAILING = "Service"
+
     private final Map SERVICES = [:]
 
     ServiceArtifactHandler() {
-        super("service")
+        super(TYPE)
     }
 
     void initialize(ArtifactInfo[] artifacts) {

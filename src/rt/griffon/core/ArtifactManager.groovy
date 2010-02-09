@@ -65,13 +65,27 @@ class ArtifactManager {
     }
 
     /**
+     * Retrieves an artifact metadata by class
+     */
+    synchronized ArtifactInfo getArtifactInfo(Class clazz) {
+        if(!clazz) return null
+        for(handler in artifactHandlers.values()) {
+            ArtifactInfo result = handler.artifacts.find{ it.klass.name == clazz.name }
+            if(result) return result
+        }
+        return null
+    }
+
+    /**
      * Retrieves an artifact metadata by class name
      */
     synchronized ArtifactInfo getArtifactInfo(String className) {
         if(!className) return null
         for(handler in artifactHandlers.values()) {
-            String suffix = handler.type[0].toUpperCase() + handler.type[1..-1]
-            if(className.endsWith(suffix)) return handler.artifacts.find{ it.klass.name == className }
+            // String suffix = handler.type[0].toUpperCase() + handler.type[1..-1]
+            // if(className.endsWith(suffix)) return handler.artifacts.find{ it.klass.name == className }
+            ArtifactInfo result = handler.artifacts.find{ it.klass.name == className }
+            if(result) return result
         }
         return null
     }
@@ -200,7 +214,7 @@ class ArtifactManager {
     }
 
     private synchronized ArtifactInfo getArtifactOfType(String type, Class klass) {
-        artifactHandlers[type]?.artifacts.find { it.klass == klass }
+        artifactHandlers[type]?.artifacts.find { it.klass.name == klass.name }
     }
 
     private synchronized ArtifactInfo getArtifactOfType(String type, String className) {

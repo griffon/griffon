@@ -50,6 +50,10 @@ final class ArtifactInfo {
         klass.name
     }
 
+    Class getClazz() {
+        this.klass
+    }
+
     String toString() {
         "${type}[$simpleName => ${klass.name}]"
     }
