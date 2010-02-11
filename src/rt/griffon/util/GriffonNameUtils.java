@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.codehaus.griffon.util;
+package griffon.util;
 
 import java.util.Locale;
 import java.util.List;
@@ -25,9 +25,6 @@ import java.util.Iterator;
  * for example from class names -> property names and vice-versa. The
  * key aspect of this class is that it has no dependencies outside the
  * JDK! 
- * 
- * @author Danno Ferrin
- * @deprecated use {@link griffon.util.GriffonNameUtils} instead
  */
 public class GriffonNameUtils {
     /**
@@ -51,14 +48,14 @@ public class GriffonNameUtils {
      * @param name The name to convert
      * @return The property name representation
      */
-	public static String getClassNameRepresentation(String name) {
+    public static String getClassNameRepresentation(String name) {
         String className;
 
-        StringBuffer buf = new StringBuffer();
+        StringBuilder buf = new StringBuilder();
         if(name != null && name.length() > 0) {
             String[] tokens = name.split("[^\\w\\d]");
-            for (int i = 0; i < tokens.length; i++) {
-                String token = tokens[i].trim();
+            for (String token1 : tokens) {
+                String token = token1.trim();
                 buf.append(token.substring(0, 1).toUpperCase(Locale.ENGLISH))
                         .append(token.substring(1));
             }
@@ -66,23 +63,26 @@ public class GriffonNameUtils {
         className = buf.toString();
 
         return className;
-	}
+    }
 
     /**
-     * Converts foo-bar into FooBar
+     * Converts foo-bar into FooBar. Empty and null strings are returned
+     * as-is. 
      *
      * @param name The lower case hyphen separated name
-     * @return The class name equivalent
+     * @return The class name equivalent.
      */
     private static String getClassNameForLowerCaseHyphenSeparatedName(String name) {
+        // Handle null and empty strings.
+        if (name == null || name.length() == 0) return name;
+
         if(name.indexOf('-') > -1) {
-            StringBuffer buf = new StringBuffer();
+            StringBuilder buf = new StringBuilder();
             String[] tokens = name.split("-");
-            for (int i = 0; i < tokens.length; i++) {
-                String token = tokens[i];
-                if(token == null || token.length() == 0) continue;
-                buf.append(token.substring(0,1).toUpperCase())
-                   .append(token.substring(1));
+            for (String token : tokens) {
+                if (token == null || token.length() == 0) continue;
+                buf.append(token.substring(0, 1).toUpperCase())
+                        .append(token.substring(1));
             }
             return buf.toString();
         }
@@ -92,7 +92,7 @@ public class GriffonNameUtils {
     }
 
     /**
-	 * Retrieves the logical class name of a Griffon artifact given the Griffon class
+     * Retrieves the logical class name of a Griffon artifact given the Griffon class
      * and a specified trailing name
      *
      * @param clazz The class
@@ -104,7 +104,7 @@ public class GriffonNameUtils {
     }
 
     /**
-     * Retrieves the logical name of the classs without the trailing name
+     * Retrieves the logical name of the class without the trailing name
      * @param name The name of the class
      * @param trailingName The trailing name
      * @return The logical name
@@ -129,7 +129,7 @@ public class GriffonNameUtils {
      * @return The property name version
      */
     public static String getPropertyName(String name) {
-    	return getPropertyNameRepresentation(name);
+        return getPropertyNameRepresentation(name);
     }
 
     /**
@@ -138,7 +138,7 @@ public class GriffonNameUtils {
      * @return The property name version
      */
     public static String getPropertyName(Class clazz) {
-    	return getPropertyNameRepresentation(clazz);
+        return getPropertyNameRepresentation(clazz);
     }
 
     /**
@@ -222,7 +222,8 @@ public class GriffonNameUtils {
      * @return The script name representation
      */
     public static String getScriptName(Class clazz) {
-    	return getScriptName(clazz.getName());
+        if (clazz == null) return null;
+        else return getScriptName(clazz.getName());
     }
 
     /**
@@ -233,11 +234,13 @@ public class GriffonNameUtils {
      * @return The script name representation.
      */
     public static String getScriptName(String name) {
-		if(name.endsWith(".groovy")) {
-			name = name.substring(0, name.length()-7);
-		}
-    	String naturalName = getNaturalName(getShortName(name));
-    	return naturalName.replaceAll("\\s", "-").toLowerCase();
+        if (name == null) return null;
+
+        if(name.endsWith(".groovy")) {
+            name = name.substring(0, name.length()-7);
+        }
+        String naturalName = getNaturalName(getShortName(name));
+        return naturalName.replaceAll("\\s", "-").toLowerCase();
     }
 
     /**
@@ -250,6 +253,28 @@ public class GriffonNameUtils {
     public static String getNameFromScript(String scriptName) {
 
         return getClassNameForLowerCaseHyphenSeparatedName(scriptName);
+    }
+
+    /**
+     * Returns the name of a plugin given the name of the *GriffonPlugin.groovy
+     * descriptor file. For example, "DbUtilsGriffonPlugin.groovy" gives
+     * "db-utils".
+     * @param descriptorName The simple name of the plugin descriptor.
+     * @return The plugin name for the descriptor, or <code>null</code>
+     * if <i>descriptorName</i> is <code>null</code>, or an empty string
+     * if <i>descriptorName</i> is an empty string.
+     * @throws IllegalArgumentException if the given descriptor name is
+     * not valid, i.e. if it doesn't end with "GriffonPlugin.groovy".
+     */
+    public static String getPluginName(String descriptorName) {
+        if (descriptorName == null || descriptorName.length() == 0) return descriptorName;
+
+        if (!descriptorName.endsWith("GriffonPlugin.groovy")) {
+            throw new IllegalArgumentException("Plugin descriptor name is not valid: " + descriptorName);
+        }
+
+        int pos = descriptorName.indexOf("GriffonPlugin.groovy");
+        return getScriptName(descriptorName.substring(0, pos));
     }
 
     /**
@@ -283,7 +308,7 @@ public class GriffonNameUtils {
                 words.set(i, w + c);
             }
             else if(Character.isUpperCase(c)) {
-                if((i == 0 && w.length() == 0) || Character.isUpperCase(w.charAt(w.length() - 1)) ) 	{
+                if((i == 0 && w.length() == 0) || Character.isUpperCase(w.charAt(w.length() - 1)) )     {
                     words.set(i, w + c);
                 }
                 else {
@@ -293,7 +318,7 @@ public class GriffonNameUtils {
 
         }
 
-        StringBuffer buf = new StringBuffer();
+        StringBuilder buf = new StringBuilder();
 
         for (Iterator j = words.iterator(); j.hasNext();) {
             String word = (String) j.next();

@@ -19,7 +19,7 @@ package org.codehaus.griffon.cli;
 import gant.Gant;
 import org.codehaus.griffon.util.BuildSettings;
 import org.codehaus.griffon.util.BuildSettingsHolder;
-import org.codehaus.griffon.util.GriffonNameUtils;
+import griffon.util.GriffonNameUtils;
 import groovy.lang.Binding;
 import groovy.lang.Closure;
 import groovy.lang.ExpandoMetaClass;
