@@ -63,8 +63,13 @@ class BaseGriffonApplication implements GriffonApplication {
     public void setApplicationProperties(Properties applicationProperties) {
         this.applicationProperties = applicationProperties
     }
+
     public void loadApplicationProperties() {
         this.applicationProperties = Metadata.getCurrent()
+    }
+
+    public Metadata getMetadata() {
+        return Metadata.current 
     }
 
     public Class getConfigClass() {

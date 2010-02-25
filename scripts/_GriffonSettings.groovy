@@ -54,11 +54,11 @@ else {
 // over those defined in BuildSettings, which in turn take precedence
 // over the defaults.
 buildProps = buildConfig.toProperties()
-enableJndi = getPropertyValue("enable.jndi", false).toBoolean()
+// enableJndi = getPropertyValue("enable.jndi", false).toBoolean()
 enableProfile = getPropertyValue("griffon.script.profile", false).toBoolean()
-serverPort = getPropertyValue("server.port", 8080).toInteger()
-serverPortHttps = getPropertyValue("server.port.https", 8443).toInteger()
-serverHost = getPropertyValue("server.host", null)
+// serverPort = getPropertyValue("server.port", 8080).toInteger()
+// serverPortHttps = getPropertyValue("server.port.https", 8443).toInteger()
+// serverHost = getPropertyValue("server.host", null)
 pluginsHome = griffonSettings.projectPluginsDir.path
 
 // Load the application metadata (application.properties)

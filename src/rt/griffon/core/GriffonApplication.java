@@ -18,6 +18,7 @@ package griffon.core;
 import groovy.lang.Binding;
 import groovy.lang.Closure;
 import groovy.util.ConfigObject;
+import griffon.util.Metadata;
 
 import java.util.Map;
 import java.util.List;
@@ -29,13 +30,14 @@ import java.util.Properties;
  * Date: May 21, 2008
  * Time: 3:21:38 PM
  */
-public interface GriffonApplication {
+public interface GriffonApplication extends griffon.util.IGriffonApplication {
 
     /**
      * @deprecated use Metadata.getCurrent() instead
      */
     @Deprecated
     public Properties getApplicationProperties();
+    public Metadata getMetadata();
 
     public Class getConfigClass();
     public ConfigObject getConfig();

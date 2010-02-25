@@ -25,5 +25,5 @@ import griffon.core.GriffonApplication;
  * @deprecated use griffon.core.GriffonApplication instead
  */
 @Deprecated
-public interface IGriffonApplication extends GriffonApplication {
+public interface IGriffonApplication {
 }
