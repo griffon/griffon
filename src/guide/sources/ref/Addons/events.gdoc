@@ -1,0 +1,23 @@
+h1. events
+
+h2. Purpose
+
+Provide application event handlers.
+
+h2. Examples
+
+bc.
+class SampleGriffonAddon {
+    def events = [
+        NewInstance: { klass, type, instance ->
+            if(type != "controller") return
+            instance.metaClass.doit = { evt = null ->
+                // action code goes here
+            }
+        }
+    ]
+}
+
+h2. Description
+
+The @events@ property is responsible for providing additional application event handlers. Each event handler is defined by a key (matches the name of the event) and a value (a closure matching the events arguments).

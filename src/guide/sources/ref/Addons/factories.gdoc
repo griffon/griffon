@@ -1,0 +1,18 @@
+h1. factories
+
+h2. Purpose
+
+Provide additional node factories.
+
+h2. Examples
+
+bc.
+class SampleGriffonAddon {
+    def factories = [
+        customComponent: new MyCustomComponentFactory()
+    ]
+}
+
+h2. Description
+
+The @factories@ property is responsible for adding new node factories to builders. Each node factory is defined by a key (matching the node name) and a Factory instance. However if the value is not a factory but a Class it will then be wrapped with a simple BeanFactory.

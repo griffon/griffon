@@ -1,0 +1,18 @@
+h1. addonBuilderInit(app, builder) 
+
+h2. Purpose
+
+Perform customizations before builder contributions are made.
+
+h2. Examples
+
+bc.
+class SampleGriffonAddon {
+    def addonBuilderInit(app, builder) {
+        // init code goes here
+    }
+}
+
+h2. Description
+
+This method is called before any contributions to the Compositebuilder are made. For example you may choose to tweak factories depending on the current environment, application configuration or other available addons. 

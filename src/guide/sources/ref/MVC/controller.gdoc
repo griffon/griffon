@@ -1,0 +1,24 @@
+h1. controller
+
+h2. Purpose
+
+Property that points to the controller associated with this MVC group.
+
+h2. Examples
+
+{code:java}
+application(title: 'Sample', pack:true, locationByPlatform:true,
+  iconImage: imageIcon('/griffon-icon-48x48.png').image,
+  iconImages: [imageIcon('/griffon-icon-48x48.png').image,
+               imageIcon('/griffon-icon-32x32.png').image,
+               imageIcon('/griffon-icon-16x16.png').image]) {
+   gridLayout(cols: 1, rows, 3)
+   textField(text: bind(target: model, targetProperty: 'input'))
+   textField(text: bind{ model.output}, editable: false)
+   button('Copy text', actionPerformed: controller.copyText)
+}
+{code}
+
+h2. Description
+
+[Controllers|guide:controllers] are tasked to handle application logic. It makes sense for [Views|guide:views] to be able to get a reference to an action defined on a controller and apply it where needed. On the previous example the button's actionperFormed property is tied to a controller action.

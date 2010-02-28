@@ -27,13 +27,24 @@ import griffon.core.ControllerArtifactHandler
 import griffon.core.ServiceArtifactHandler
 
 /**
- * Created by IntelliJ IDEA.
- *@author Danno.Ferrin
- * Date: May 17, 2008
- * Time: 3:28:46 PM
+ * Utility class for boostrapping an application and handling of MVC groups.</p>
+ * @author Danno Ferrin
+ * @author Andres Almiray
  */
 class GriffonApplicationHelper {
 
+    /**
+     * Setups an application.<p>
+     * This method performs the following tasks<ul>
+     * <li>Sets "griffon.start.dir" as system property.</li>
+     * <li>Calls the Initialize life cycle script.</li>
+     * <li>Reads runtime and builder configuration.</li>
+     * <li>Setups basic artifact handlers.</li>
+     * <li>Initializes available addons.</li>
+     * </ul>
+     *
+     * @param app the current Griffon application
+     */
     static void prepare(GriffonApplication app) {
         app.bindings.app = app
 
@@ -72,6 +83,11 @@ class GriffonApplicationHelper {
         }
     }
 
+    /**
+     * Performs the startup sequence, mainly instantiates all starting MVC groups.<p>
+     *
+     * @param app the current Griffon application
+     */
     static void startup(GriffonApplication app) {
         // init the builders
         // this is where a composite gets made and composites are added
@@ -84,6 +100,13 @@ class GriffonApplicationHelper {
         app.startup();
     }
 
+    /**
+     * Sets a property value ignoring any MissingPropertyExceptions.<p>
+     *
+     * @param receiver the objet where the property will be set
+     * @param property the name of the property to set
+     * @param value the value to set on the property
+     */
     static void safeSet(reciever, property, value) {
         try {
             reciever."$property" = value
@@ -95,14 +118,20 @@ class GriffonApplicationHelper {
         }
     }
 
-
     /**
-     * @deprecated user runScriptInsideUIThread instead
+     * Executes a script inside the Event Dispatch Thread.<p>
+     *
+     * @deprecated use runScriptInsideUIThread instead
      */ 
     public static void runScriptInsideEDT(String scriptName, GriffonApplication app) {
         runScriptInsideUIThread(scriptName, app)
     }
 
+    /**
+     * Executes a script inside the UI Thread.<p>
+     * On Swing this would be the Event Dispatch Thread.
+     *
+     */
     public static void runScriptInsideUIThread(String scriptName, GriffonApplication app) {
         def script
         try {
@@ -119,7 +148,20 @@ class GriffonApplicationHelper {
         UIThreadHelper.instance.executeSync(script)
     }
 
-
+    /**
+     * Creates a new instance of the specified class.<p>
+     * Publishes a <strong>NewInstance</strong> event with the following arguments<ul>
+     * <li>klass - the target Class</li>
+     * <li>type - the type of the instance (i.e, 'controller','service')</li>
+     * <li>instance - the newly created instance</li>
+     * </ul>
+     *
+     * @param app the current GriffonApplication
+     * @param klass the target Class from which the instance will be created
+     * @param type optional type parameter, used when publishing a 'NewInstance' event
+     *
+     * @return a newly created instance of type klass
+     */
     public static Object newInstance(GriffonApplication app, Class klass, String type = "") {
         def instance = klass.newInstance()
         app.event("NewInstance",[klass,type,instance])
@@ -264,6 +306,17 @@ class GriffonApplicationHelper {
         return instanceMap
     }
 
+    /**
+     * Cleanups and removes an MVC group from the application.<p>
+     * Calls <strong>mvcGroupDestroy()</strong> on model, view and controller
+     * if the method is defined.<p>
+     * Publishes a <strong>DestroyMVCGroup</strong> event with the following arguments<ul>
+     * <li>mvcName - the name of the group</li>
+     * </ul>
+     *
+     * @param app the current Griffon application
+     * @param mvcName name of the group to destroy
+     */
     public static destroyMVCGroup(GriffonApplication app, String mvcName) {
         app.removeApplicationEventListener(app.controllers[mvcName])
         [app.models, app.views, app.controllers].each {
@@ -329,6 +382,4 @@ class GriffonApplicationHelper {
         }
         return frame
     }
-
-
 }

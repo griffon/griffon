@@ -1,8 +1,8 @@
-rtifact moving onto looking at providing runtime configuration based on conventions you first need to understand how to evaluated those conventions from a plug-in. Essentially every addod provided by a plugin has access to an @app@ variable during its initialisation. This variable is an instance of the [IGriffonApplication|api:griffon.util.GriffonApplication] interface. From it you can access an @artifactManager@ property of type [ArtifactManager|api:griffon.core.ArtifactManager].
+Before moving onto looking at providing runtime configuration based on conventions you first need to understand how to evaluated those conventions from a plug-in. Essentially every addod provided by a plugin has access to an @app@ variable during its initialisation. This variable is an instance of the [GriffonApplication|api:griffon.core.GriffonApplication] interface. From it you can access an @artifactManager@ property of type [ArtifactManager|api:griffon.core.ArtifactManager].
 
 The @ArtifactManager@ class provides methods to evaluate the conventions within the project and internally stores references to all classes within a GriffonApplication using the [ArtifactInfo|api:griffon.core.ArtifactInfo] class.
 
-A ArtifactInfo represents a physical Griffon resources such as a controller or a service. For example to get all @ArtifactInfo@ instances you can do:
+An ArtifactInfo represents a physical Griffon resources such as a controller or a service. For example to get all @ArtifactInfo@ instances you can do:
 
 {code:java}
 app.artifactManager.allArtifacts.each { println it.name }
@@ -14,7 +14,7 @@ There are a few "magic" properties that the @ArtifactManager@ instance possesses
 app.artifactManager.controllerArtifacts.each { println it.name }
 {code}
 
-The dynamic method conventions are as follows:
+Dnamic method conventions are as follows:
 
 * @*Artifacts@ - Retrieves all the artifacts for a particular artifact type. Example @app.artifactManager.controllerArtifacts@.
 * @get*Artifact@ - Retrieves a named artifact for a particular artifact type. Example @app.artifactManager.getControllerArtifact("ExampleController")@
@@ -27,6 +27,7 @@ The @ArtifactInfo@ interface itself provides a number of useful methods that all
 * @newInstance@ - Creates a new instance of this class.
 * @getName@ -  Returns the logical name of the class in the application without the trailing convention part if applicable
 * @getSimpleName@ - Returns the name of the class as a property name
-* @geKlass@ - Returns the artifact class
+* @getKlass@ - Returns the artifact class
+* @getClazz@ - Returns the artifact class
 
 For a full reference refer to the [javadoc API|api:griffon.core.ArtifactInfo].

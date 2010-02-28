@@ -2,17 +2,36 @@ h1. create-mvc
 
 h2. Purpose
 
-Lorem ipsum
+The @create-mvc@ command will create a new MVC triad and configure it at @Application.groovy@. It will also create a test case for its controller.
 
 h2. Examples
 
 bc.
-griffon create-mvc
+griffon create-mvc Foo
 
 h2. Description
 
-Usage: 
-{code:java}
-griffon create-mvc
-{code}
+MVC groups are the basis for Griffon's MVC implementation. Refer to the [MVC Pattern Overview|guide:mvcpattern] to know more about MVC groups and their features.Calling @griffon create-mvc foo@ results in the following files being created
 
+bc.
+griffon-app/controllers/FooController.groovy
+griffon-app/models/FooModel.groovy
+griffon-app/views/FooView.groovy
+test/integration/FooTests.groovy
+
+@Application.groovy@ will be updated with a new group definition
+
+bc.
+mvcGroups {
+    // MVC Group for "foo"
+    'foo' {
+        model = 'FooModel'
+        controller = 'FooController'
+        view = 'FooView'
+    }
+    ...
+}
+
+Usage:
+bc.
+griffon create-mvc [name]

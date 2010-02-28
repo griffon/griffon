@@ -1,0 +1,88 @@
+The "create-app" target created a Griffon MVC Triad for you in the models, views, and controllers directory named after the application. Hence you already have a model class DemoConsoleModel in the models directory.
+
+The application model for this application is simple: the script to be evaluated and the results of the evaluation.
+
+{code}
+import groovy.beans.Bindable
+
+class DemoConsoleModel {
+
+    String scriptSource
+    @Bindable def scriptResult
+    @Bindable boolean enabled = true
+
+}
+{code}
+
+The controller is also trivial: throw the contents of the script from the model at a groovy shell.
+
+{code}
+import java.awt.event.ActionEvent
+
+class DemoConsoleController {
+    GroovyShell shell = new GroovyShell()
+
+    // these will be injected by Griffon
+    def model
+    def view
+
+    def executeScript = { ActionEvent evt = null ->
+        model.enabled = false
+        doOutside {
+            def result
+            try {
+                result = shell.evaluate(model.scriptSource)
+            } finally {
+                edt {
+                    model.enabled = true
+                    model.scriptResult = result
+                }
+            }
+        }
+    }
+}
+{code}
+
+The Griffon framework will inject references to the other portions of the MVC triad if fields named model, view, and controller are present in the model or controller. This allows us to access the view widgets and the model data if needed
+
+The executeScript method will be used in the view for the button action. Hence the ActionEvent parameter, and the default value so it can be called without an action event.
+
+Finally, the Griffon framework can be configured to inject portions of the builders it uses. By default, the Threading classes are injected into the controller, allowing the use of the edt, doOutside and doLater methods from the SwingBuilder.
+
+Also, the threading may look a bit obsessive. But good thread management is essential to a well functioning Swing application.
+
+The view classes contain the visual components for your application.
+
+{code}
+application(title:'DemoConsole', pack:true, locationByPlatform:true) {
+    panel(border:emptyBorder(6)) {
+        borderLayout()
+
+        scrollPane(constraints:CENTER) {
+            textArea(text:bind(target:model, targetProperty:'scriptSource'),
+                enabled: bind {model.enabled},
+                columns:40, rows:10)
+        }
+
+        hbox(constraints:SOUTH) {
+            button("Execute", actionPerformed:controller.&executeScript,
+                enabled: bind {model.enabled})
+            hstrut(5)
+            label("Result:")
+            hstrut(5)
+            label(text:bind {model.scriptResult})
+        }
+    }
+}
+{code}
+
+The view script is a fairly straightforward SwingBuilder script. Griffon will execute these groovy scripts in context of it's UberBuilder (a composite of the SwingBuilder and whatever else is thrown in).
+
+Now to get the application running. You can do this by calling the [run-app|commandLine] command:
+
+bc.
+griffon run-app
+
+This command should compile all sources and package the application, you'll see a similar result as depicted by the followjng screenshot after a few seconds
+
+However standalone mode is not the only way to run your application, try the following command to run in webstart mode: [run-webstart|commandLine]. Conversely [run-applet|commandLine] will run your application in applet mode. The best of all is that you did not have to touch a single line of configuration in order to to switch modes!

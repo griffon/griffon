@@ -24,12 +24,12 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * Annotates a class.
+ * Annotates a class.<p>
  *
  * When annotating a class it indicates that it will become an
  * event publishing one. The class will have tha ability to send
- * arbitratry events to any listeners that mya have been registered
- * with it. This events are similar to the ones published by
+ * arbitratry events to any listeners that may have been registered
+ * with it. These events are similar to the ones published by
  * GriffonApplication.
  *
  * //TODO discuss generated fields and methods

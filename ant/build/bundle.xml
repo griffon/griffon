@@ -2,7 +2,7 @@
     <property name="targetDistDirectory" value="${griffon.dist}"/>
     <import file="maven.xml"/>
 
-    <target name="create-guide" description="Builds the Griffon Guide">
+    <target name="create-guide" depends="javadoc" description="Builds the Griffon Guide">
         <taskdef name="docs"
                  classname="grails.doc.ant.DocPublisherTask">
             <classpath>
@@ -18,6 +18,9 @@
         <replace dir="target/guide">
             <replaceFilter token="@griffon.version@" value="${griffon.version}" />
         </replace>
+        <copy todir="target/guide">
+            <fileset dir="${griffon.target}/docs"/>
+        </copy>
         <docs src="${basedir}/src/guide/sources"
               dest="target/guide"
               imagesdir="${basedir}/src/guide/resources/img"

@@ -1,0 +1,115 @@
+h4. Per Environment Configuration
+ 
+Griffon supports the concept of per environment configuration. The @Config.groovy@ file within the @griffon-app/conf@ directory can take advantage of per environment configuration using the syntax provided by "ConfigSlurper":http://groovy.codehaus.org/ConfigSlurper . As an example consider the following default packaging definitions provided by Griffon:
+ 
+{code:java}
+environments {
+    development {
+        signingkey {
+            params {
+                sigfile = 'GRIFFON'
+                keystore = "${basedir}/griffon-app/conf/keys/devKeystore"
+                alias = 'development'
+                storepass = 'BadStorePassword'
+                keypass   = 'BadKeyPassword'
+                lazy      = true // only sign when unsigned
+            }
+        }
+
+    }
+    test {
+        griffon {
+            jars {
+                sign = false
+                pack = false
+            }
+        }
+    }
+    production {
+        signingkey {
+            params {
+                sigfile = 'GRIFFON'
+                keystore = 'CHANGE ME'
+                alias = 'CHANGE ME'
+                lazy = false // sign, regardless of existing signatures
+            }
+        }
+
+        griffon {
+            jars {
+                sign = true
+                pack = true
+                destDir = "${basedir}/staging"
+            }
+            webstart {
+                codebase = 'CHANGE ME'
+            }
+        }
+    }
+}
+
+griffon {
+    jars {
+        sign = false
+        pack = false
+        destDir = "${basedir}/staging"
+        jarName = "${appName}.jar"
+    }
+}
+{code}
+ 
+Notice how the common configuration is provided at the bottom level (it actually can be placed before the @environments@ block too), the @environments@ block specifies per environment settings for the @jars@ property.
+ 
+h4. Packaging and Running for Different Environments
+ 
+Griffon' [command line|guide:commandLine] has built in capabilities to execute any command within the context of a specific environment. The format is:
+ 
+{code:java}
+griffon [environment] [command name]
+{code}
+ 
+In addition, there are 3 preset environments known to Griffon: @dev@, @prod@, and @test@ for @development@, @production@ and @test@. For example to package an application for the @development@ (avoiding jar signing by default) environment you could do:
+ 
+{code:java}
+griffon dev package 
+{code}
+ 
+If you have other environments that you need to target you can pass a @griffon.env@ variable to any command:
+ 
+{code:java}
+griffon -Dgriffon.env=UAT run-app
+{code}
+ 
+h4. Programmatic Environment Detection
+ 
+Within your code, such as in a Gant script or a bootstrap class you can detect the environment using the [Environment|api:griffon.util.Environment] class:
+ 
+{code:java}
+import griffon.util.Environment
+ 
+...
+ 
+switch(Environment.current) {
+    case Environment.DEVELOPMENT:
+        configureForDevelopment()
+        break
+    case Environment.PRODUCTION:
+        configureForProduction()
+    break
+}
+{code}
+ 
+h4. Generic Per Environment Execution
+ 
+You can use the @griffon.util.Environment@ class to execute your own environment specific logic:
+ 
+{code}
+Environment.executeForCurrentEnvironment {
+    production {
+        // do something in production
+    }
+    development {
+        // do something only in development
+    }
+}
+{code}

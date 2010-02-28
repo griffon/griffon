@@ -1,0 +1,20 @@
+h1. postInstantiateDelegates
+
+h2. Purpose
+
+Update node attributes _after_ the node has been instantiated.
+
+h2. Examples
+
+bc.
+class SampleGriffonAddon {
+    def postInstantiateDelegates = [
+        {builder, attributes, node -> 
+            node.initialize()
+        }
+    ]
+}
+
+h2. Description
+
+PostInstantiate delegates are builder strategies that lets you update node attributes right after a node has been instantiated buf before said attributes are set on the node. You may also want to perform shared initialization across several nodes.

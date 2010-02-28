@@ -1,0 +1,21 @@
+h1. props
+
+h2. Purpose
+
+Provide additional custom properties.
+
+h2. Examples
+
+bc.
+class SampleGriffonAddon {
+    def props = [
+        priority: [
+            get: { /\* return some value \*/ },
+            set: { v -> /\* store value \*/ }
+        ]
+    ]
+}
+
+h2. Description
+
+The @props@ property is responsible for adding new properties to builders. Each property is defined as a pair of closures that function as setter and getter.

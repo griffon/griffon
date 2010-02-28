@@ -1,0 +1,20 @@
+h1. preInstantiateDelegates
+
+h2. Purpose
+
+Update node attributes before node is built.
+
+h2. Examples
+
+bc.
+class SampleGriffonAddon {
+    def preInstantiateDelegates = [
+        {builder, attributes, value -> 
+            attributes.colour = attributes.remove('color')
+        }
+    ]
+}
+
+h2. Description
+
+PreInstantiate delegates are builder strategies that lets you inspect and modify node attributes before a node is built. They're the perfect spot for applying type conversions on attributes that are shared across nodes.

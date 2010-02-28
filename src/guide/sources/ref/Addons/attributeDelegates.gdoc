@@ -1,0 +1,22 @@
+h1. attributeDelegates
+
+h2. Purpose
+
+Provide attributeDelegates to builders.
+
+h2. Examples
+
+bc.
+class SampleGriffonAddon {
+    def attributeDelegates = [
+        {builder, node, attributes -> 
+           if(attributes.remove('important')) {
+               node.foreground = java.awt.Color.RED
+           }
+        }
+    ]
+}
+
+h2. Description
+
+Attribute delegates are builder strategies for fine tuning attributes before they are set on any node. Essentially you'll be able to add, remove, modify attributes for all nodes registered to a builder. You can intercept _synthetic_ properties in this way, as the previous exmaple shows with 'important'.

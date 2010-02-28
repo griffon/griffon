@@ -18,14 +18,36 @@ package griffon.util
 import org.codehaus.groovy.runtime.MetaClassHelper
 
 /**
- * @author Andres Almiray (aalmiray)
+ * An event handling helper.<p>
+ * Listeners may be of type<ul>
+ * <li>a <tt>Script</tt></li>
+ * <li>a <tt>Map</tt></li>
+ * <li>a <tt>Closure</tt></li>
+ * <li>a <tt>Object</tt> (a Java bean)</li>
+ * </ul>
+ *
+ * With the exception of Maps and Closures, the naming convention for an eventHandler is
+ * "on" + eventName, Maps and Closures require handlers to be named as eventName only.<p>
+ * Some examples of eventHandler names are: onStartupStart, onMyCoolEvent.
+ * Event names must follow the camelCase naming convention.<p>
+ *
+ * @author Andres Almiray
  */
 class EventRouter {
    private List listeners = Collections.synchronizedList([])
    private Map scriptBindings = [:]
    private Map closureListeners = Collections.synchronizedMap([:])
 
-   public void publish( String eventName, List params = [] ) {
+   /**
+    * Publishes an event with optional arguments.</p>
+    * Event listeners are guaranteed to be notified
+    * outside of the UI thread always.
+    *
+    * @param eventName the name of the event
+    * @param params the event's argumnents
+    *
+    */
+   public void publish(String eventName, List params = []) {
       if( !eventName ) return
       def publisher = {
          eventName = eventName[0].toUpperCase() + eventName[1..-1]
@@ -93,20 +115,22 @@ class EventRouter {
    }
 
    /**
-    * Adds an Event listener.<br/>
+    * Adds an event listener.<p>
     *
-    * A listener may be<ul>
+    * A listener may be a<ul>
     * <li>a <tt>Script</tt></li>
-    * <li>a <tt>Bean</tt></li>
     * <li>a <tt>Map</tt></li>
+    * <li>a <tt>Object</tt> (a Java bean)</li>
     * </ul>
     *
     * With the exception of Maps, the naming convention for an eventHandler is
     * "on" + eventName, Maps require handlers to be named as eventName only.<p>
     * Some examples of eventHandler names are: onStartupStart, onMyCoolEvent.
-    * Event names must follow the camelCase naming convention.
+    * Event names must follow the camelCase naming convention.<p>
+    *
+    * @param listener and event listener of type Script, Map or Object
     */
-   public void addEventListener( listener ) {
+   public void addEventListener(listener) {
       if( !listener || listener instanceof Closure ) return
       synchronized(listeners) {
          if( listeners.find{ it == listener } ) return
@@ -114,7 +138,23 @@ class EventRouter {
       }
    }
 
-   public void removeEventListener( listener ) {
+   /**
+    * Removes an event listener.<p>
+    *
+    * A listener may be a<ul>
+    * <li>a <tt>Script</tt></li>
+    * <li>a <tt>Map</tt></li>
+    * <li>a <tt>Object</tt> (a Java bean)</li>
+    * </ul>
+    *
+    * With the exception of Maps, the naming convention for an eventHandler is
+    * "on" + eventName, Maps require handlers to be named as eventName only.<p>
+    * Some examples of eventHandler names are: onStartupStart, onMyCoolEvent.
+    * Event names must follow the camelCase naming convention.<p>
+    *
+    * @param listener and event listener of type Script, Map or Object
+    */
+   public void removeEventListener(listener) {
       if( !listener || listener instanceof Closure ) return
       synchronized(listeners) {
          listeners.remove(listener)
@@ -122,11 +162,13 @@ class EventRouter {
    }
 
    /**
-    * Adds a Closure as an Event listener.<br/>
-    *
+    * Adds a Closure as an event listener.<p>
     * Event names must follow the camelCase naming convention.
+    *
+    * @param eventName the name of the event
+    * @param listener the event listener
     */
-   public void addEventListener( String eventName, Closure listener ) {
+   public void addEventListener(String eventName, Closure listener) {
       if( !eventName || !listener ) return
       eventName = eventName[0].toUpperCase() + eventName[1..-1]
       synchronized(closureListeners) {
@@ -136,7 +178,14 @@ class EventRouter {
       }
    }
 
-   public void removeEventListener( String eventName, Closure listener ) {
+   /**
+    * Removes a Closure as an event listener.<p>
+    * Event names must follow the camelCase naming convention.
+    *
+    * @param eventName the name of the event
+    * @param listener the event listener
+    */
+   public void removeEventListener(String eventName, Closure listener) {
       if( !eventName || !listener ) return
       eventName = eventName[0].toUpperCase() + eventName[1..-1]
       synchronized(closureListeners) {

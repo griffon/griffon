@@ -1,0 +1,40 @@
+h1. mvcGroupInit(Map args) 
+
+h2. Purpose
+
+Initialization hook for MVC members.
+
+h2. Examples
+
+{code:java}
+class SampleController {
+    def someProperty
+    def mvcGroupInit(Map args) {
+        someProperty = args.random 
+    }
+}
+{code}
+
+h2. Description
+
+This method serves as an initialization hook for any MVC member that is not a Script nor a CompositeBuilder instance. It will be called right after an instance has been created. The args parameter holds any additional data that pas passed to either @createMVCGroup()@ or @buildeMVCGroup()@; you can use it to share MVC instances cmember for example, like it's done in the following snippet
+
+{code:java}
+class SampleController {
+    def model
+    def mvcGroupInit(Map args) {
+        assert model instanceof SampleModel
+        createMMVCGroup('Other', [model, model, foo: 'FOO'])
+    }
+}
+//
+class OtherController {
+    def model
+    def mvcGroupInit(Map args) {
+        assert model instanceof SampleModel
+        assert args.foo == 'FOO'
+    }
+}
+{code}
+
+

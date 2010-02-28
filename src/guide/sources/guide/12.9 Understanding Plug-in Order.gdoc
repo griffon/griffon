@@ -3,9 +3,9 @@ h4. Controlling Plug-in Dependencies
 Plug-ins often depend on the presence of other plugins and can also adapt depending on the presence of others. To cover this, a plugin can define a @dependsOn@ property. For example, take a look at this snippet from the Griffon Clojure plugin:
 
 {code:java}
-class HibernateGriffonPlugin {
-	def version = 0.3
-	def dependsOn = ["lang-bridge": "0.2.1"]
+class ClojureGriffonPlugin {
+   def version = 0.3
+   def dependsOn = ["lang-bridge": "0.2.1"]
 
 }
 {code}
@@ -30,6 +30,6 @@ When the wildcard * character is used it denotes "any" version. The expression s
 * 1.0.3-SNAPSHOT
 * 1.1-BETA2
 
-h4. Controlling Load Order 
+h4. Controlling Addon Load Order
 
 Using @dependsOn@ establishes a "hard" dependency. Any addons provided by the dependencies will be loaded and configured first.

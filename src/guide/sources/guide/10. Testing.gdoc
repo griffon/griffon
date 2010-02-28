@@ -1,0 +1,113 @@
+Automated testing is seen as a key part of Griffon, implemented using [Groovy Tests|http://groovy.codehaus.org/Testing+Guide]. Hence, Griffon provides many ways to making testing easier from low level unit testing to high level functional tests. This section details the different capabilities that Griffon offers in terms of testing.
+
+The first thing to be aware of is that all of the @create-*@ commands actually end up creating @integration@ tests automatically for you. For example say you run the [create-mvc|commandLine] command as follows:
+
+{code:java}
+griffon create-mvc simple
+{code}
+
+Not only will Griffon create a controller at @griffon-app/controllers/SimpleController.groovy@ plus other MVC members (Model and View), but also an integration test at @test/integration/SimpleControllerTests.groovy@. What Griffon won't do however is populate the logic inside the test! That is left up to you.
+
+h4. Running Tests
+
+Test are run with the [test-app|commandLine] command:
+
+{code:java}
+griffon test-app
+{code}
+
+The above command will produce output such as:
+
+{code:java}
+-------------------------------------------------------
+Running Unit Tests...
+Running test FooTests...FAILURE
+Unit Tests Completed in 464ms ...
+-------------------------------------------------------
+
+Tests failed: 0 errors, 1 failures
+{code}
+
+Whilst reports will have been written out the @target/test-reports@ directory.
+
+{note}
+You can force a clean before running tests by passing @-clean@ to the @test-app@ command.
+{note}
+
+h5. Targeting Tests
+
+You can selectively target the test(s) to be run in different ways. To run all tests for a controller named @SimpleController@ you would run:
+
+{code}
+griffon test-app SimpleController
+{code}
+
+This will run any tests for the class named @SimpleController@. Wildcards can be used...
+
+{code}
+griffon test-app *Controller
+{code}
+
+This will test all classes ending in @Controller@. Package names can optionally be specified...
+
+{code}
+griffon test-app some.org.*Controller
+{code}
+
+or to run all tests in a package...
+
+{code}
+griffon test-app some.org.*
+{code}
+
+or to run all tests in a package including subpackages...
+
+{code}
+griffon test-app some.org.**
+{code}
+
+You can also target particular test methods...
+
+{code}
+griffon test-app SimpleController.testLogin
+{code}
+
+This will run the @testLogin@ test in the @SimpleController@ tests. You can specify as many patterns in combination as you like...
+
+{code}
+griffon test-app some.org.* SimpleController.testLogin BookController
+{code}
+
+h5. Targeting Test Types and/or Phases
+
+In addition to targeting certain tests, you can also target test _types_ and/or _phases_ by using the @phase:type@ syntax.
+
+{note}
+Griffon organises tests by phase and by type. A test phase relates to the state of the Griffon application during the tests, and the type relates to the testing mechanism.
+
+Griffon comes with support for 3 test phases (@unit@, @integration@, and @other@) and JUnit test types for the @unit@ and @integration@ phases. These test types have the same name as the phase.
+
+Testing plugins may provide new test phases or new test types for existing phases. Refer to the plugin documentation.
+{note}
+
+To execute the JUnit @integration@ tests you can run:
+
+{code}
+griffon test-app integration:integration
+{code}
+
+Both @phase@ and @type@ are optional. Their absence acts as a wildcard. The following command will run all test types in the @unit@ phase:
+
+{code}
+griffon test-app unit:
+{code}
+
+h5. Targeting Tests in Types and/or Phases
+
+Test and type/phase targetting can be applied at the same time:
+
+{code}
+griffon test-app integration: unit: some.org.**
+{code}
+
+This would run all tests in the @integration@ and @unit@ phases that are in the page @some.org@ or a subpackage of.

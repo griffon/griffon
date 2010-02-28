@@ -27,6 +27,8 @@ You can also provide additional information about your plugin using several spec
 * @title@ - short one sentence description of your plugin
 * @version@ - The version of your problem. Valid versions are for example "0.1", "0.2-SNAPSHOT", "0.1.4" etc.
 * @griffonVersion@ - The version of version range of Griffon that the plugin supports. eg. "1.1 > *"
+* @toolkits@ - a list of supported toolkits \[swing, javafx, swt, pivot, gtk\]
+* @platform@ - a list of supported platforms \[linux, windows, macosx, solaris\]
 * @author@ - plug-in author's name
 * @authorEmail@ - plug-in author's contact e-mail
 * @description@ - full multi-line description of plug-in's features
@@ -35,11 +37,11 @@ You can also provide additional information about your plugin using several spec
 Here is an example from "FEST Griffon plugin":http://griffon.codehaus.org/Fest+plugin:
 
 {code:java}
-class QuartzGriffonPlugin {
 class FestGriffonPlugin {
     def version = '0.3'
-    def canBeGlobal = true
+    def griffonVersion = '0.3 > *'
     def dependsOn = [:]
+    def toolkits = ['swing']
 
     def author = "Andres Almiray"
     def authorEmail = "aalmiray@users.sourceforge.net"

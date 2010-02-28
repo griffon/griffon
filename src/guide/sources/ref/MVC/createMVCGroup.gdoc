@@ -1,0 +1,26 @@
+h1. createMVCGroup(*) 
+
+h2. Purpose
+
+Create a new MVC group instance.
+
+h2. Examples
+
+{code:java}
+class SampleController {
+    def action = { evt = null ->
+        def (m, v, c) = createMVCGroup('Other') 
+    }
+}
+{code}
+
+h2. Description
+
+This method lets you create new instances of an MVC group. It always returns 3 elements: Model, View, and Controller in that order. There are several ways to invoke this method dependening on your needs
+
+* @createMVCGroup(String groupName)@ - creates a new group identified by <groupName> with default settings.
+* @createMVCGroup(String groupName, groupId)@ - creates a new group identified by <groupName> with default settings and an specific <groupId>. You can reference the whole group later by acessing @app.groups.<groupId>@.
+* @createMVCGroup(String groupName, Map params)@ - creates a new group identified by <groupName> with additional params. The @params@ argument will be fed as the @args@ value of @mvcGroupInit()@.
+* @createMVCGroup(String groupName, String groupId, Map params)@ - a combination of all previous definitions.
+
+This method is a restricted version of the more general @buildMVCGroup()@.

@@ -25,18 +25,24 @@ import java.util.List;
 import java.util.Properties;
 
 /**
- * Created by IntelliJ IDEA.
- *@author Danno.Ferrin
- * Date: May 21, 2008
- * Time: 3:21:38 PM
+ * Defines the basic contract of a Griffon application.<p>
+ *
+ * @author Danno Ferrin
+ * @author Andres Almiray
  */
 public interface GriffonApplication extends griffon.util.IGriffonApplication {
 
     /**
+     * Gets the application's configuration set on 'aaplication.properties'.<p>
+     *
      * @deprecated use Metadata.getCurrent() instead
      */
     @Deprecated
     public Properties getApplicationProperties();
+
+    /**
+     * Gets the application's configuration set on 'aaplication.properties'.<p>
+     */
     public Metadata getMetadata();
 
     public Class getConfigClass();
@@ -57,26 +63,103 @@ public interface GriffonApplication extends griffon.util.IGriffonApplication {
     public Map<String, Map<String, String>> getMvcGroups();
     public void addMvcGroup(String mvcType, Map<String, String> mvcPortions);
 
+    /**
+     * Returns all currently available addon instances, keyed by addon name.<p>
+     */
     public Map<String, ?> getAddons();
     public Map<String, String> getAddonPrefixes();
 
+    /**
+     * Returns all currently available model instances, keyed by group name.<p>
+     */
     public Map<String, ?> getModels();
+
+    /**
+     * Returns all currently available view instances, keyed by group name.<p>
+     */
     public Map<String, ?> getViews();
+
+    /**
+     * Returns all currently available controller instances, keyed by group name.<p>
+     */
     public Map<String, ?> getControllers();
+
+    /**
+     * Returns all currently available builder instances, keyed by group name.<p>
+     */
     public Map<String, ?> getBuilders();
+
+    /**
+     * Returns all currently available groups, keyed by group name.<p>
+     */
     public Map<String, Map<String, ?>> getGroups();
 
     public Object createApplicationContainer();
 
+    /**
+     * Executes the 'Initilaize' life cycle phase.
+     */
     public void initialize();
+
+    /**
+     * Executes the 'Startup' life cycle phase.
+     */
     public void startup();
+
+    /**
+     * Executes the 'Ready' life cycle phase.
+     */
     public void ready();
+
+    /**
+     * Executes the 'Shutdown' life cycle phase.
+     */
     public void shutdown();
 
+    /**
+     * Adds an application event listener.<p>
+     * Accepted types are: Script, Map and Object.
+     *
+     * @param listener an application event listener
+     */
     public void addApplicationEventListener(Object listener );
+
+    /**
+     * Adds a closure as an application event listener.<p>
+     *
+     * @param eventName the name of the event
+     * @param listener an application event listener
+     */
     public void addApplicationEventListener(String eventName, Closure listener);
+
+    /**
+     * Removes an application event listener.<p>
+     * Accepted types are: Script, Map and Object.
+     *
+     * @param listener an application event listener
+     */
     public void removeApplicationEventListener(Object listener );
+
+    /**
+     * Removes a closure as an application event listener.<p>
+     *
+     * @param eventName the name of the event
+     * @param listener an application event listener
+     */
     public void removeApplicationEventListener(String eventName, Closure listener);
+
+    /**
+     * Publishes an applicaiton event.<p>
+     *
+     * @param eventName the name of the event
+     */
     public void event(String eventName);
+
+    /**
+     * Publishes an applicaiton event.<p>
+     *
+     * @param eventName the name of the event
+     * @param params event arguments sent to listeners
+     */
     public void event(String eventName, List params);
 }
