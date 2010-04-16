@@ -450,7 +450,12 @@ target(generateJNLP:"Generates the JNLP File") {
     }
     new File(jardir).eachFileMatch(~/.*\.jar/) { f ->
         if (!(f.name =~ /griffon-rt-.*/) && !remoteJars.contains(f.name)) {
-            jnlpJars << "        <jar href='$f.name'/>"
+            if(config.griffon.jars.jarName == f.name){
+                jnlpJars << "        <jar href='$f.name' main='true' />"
+            }else{
+                jnlpJars << "        <jar href='$f.name'/>"
+            }
+
             appletJars << "$f.name"
         }
     }
