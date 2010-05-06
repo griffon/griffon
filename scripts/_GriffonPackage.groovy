@@ -19,6 +19,7 @@ import java.util.zip.ZipFile
 import org.apache.log4j.LogManager
 import org.codehaus.griffon.commons.*
 import org.codehaus.griffon.plugins.logging.Log4jConfig
+import griffon.util.RunMode
 //import org.codehaus.griffon.commons.cfg.ConfigurationHelper
 //import org.springframework.core.io.FileSystemResource
 
@@ -236,6 +237,11 @@ target(jarFiles: "Jar up the package files") {
     ant.mkdir(dir:jardir)
 
     String destFileName = "$jardir/${config.griffon.jars.jarName}"
+    if(RunMode.current == RunMode.STANDALONE) {
+        ant.delete(file: destFileName, quiet: true, failonerror: false)
+        return
+    }
+
     if (!upToDate) {
         ant.jar(destfile:destFileName) {
             fileset(dir:classesDirPath) {

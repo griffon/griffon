@@ -333,7 +333,12 @@ class GriffonApplicationHelper {
                 }
             }
         }
-        app.builders[mvcName]?.dispose()
+
+        try {
+            app.builders[mvcName]?.dispose()
+        } catch(MissingMethodException mme) {
+            // TODO find out why this call breaks applet mode on shutdown
+        }
 
         // remove the refs from the app caches
         app.models.remove(mvcName)

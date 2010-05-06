@@ -23,6 +23,7 @@
 
 import org.codehaus.griffon.commons.ConfigurationHolder
 import org.codehaus.griffon.util.BuildSettings
+import griffon.util.RunMode
 
 
 includeTargets << griffonScript("Package")
@@ -51,7 +52,8 @@ target('default': "Runs the application with Java Webstart") {
     def javaOpts = []
     def env = System.getProperty(BuildSettings.ENVIRONMENT)
     javaOpts << "-D${BuildSettings.ENVIRONMENT}=${env}"
-    javaOpts = "-J"+javaOpts.join("-J ")
+    javaOpts << "-D${RunMode.KEY}=${RunMode.WEBSTART}"
+    javaOpts = "-J"+javaOpts.join(" -J")
 
     // TODO set proxy settings
     // start the processess

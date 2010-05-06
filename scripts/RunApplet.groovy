@@ -22,7 +22,7 @@
 
 import org.codehaus.griffon.commons.ConfigurationHolder
 import org.codehaus.griffon.util.BuildSettings
-
+import griffon.util.RunMode
 
 includeTargets << griffonScript("Package")
 includeTargets << griffonScript("_PackagePlugins" )
@@ -45,7 +45,8 @@ target('default': "Runs the applet from Java WebStart") {
     def javaOpts = []
     def env = System.getProperty(BuildSettings.ENVIRONMENT)
     javaOpts << "-D${BuildSettings.ENVIRONMENT}=${env}"
-    javaOpts = "-J"+javaOpts.join("-J ")
+    javaOpts << "-D${RunMode.KEY}=${RunMode.APPLET}"
+    javaOpts = "-J"+javaOpts.join(" -J")
 
     // TODO set proxy settings
     // start the processess

@@ -23,6 +23,7 @@
 import static griffon.util.GriffonApplicationUtils.isLinux
 import static griffon.util.GriffonApplicationUtils.isMacOSX
 import org.codehaus.griffon.util.BuildSettings
+import griffon.util.RunMode
 
 includeTargets << griffonScript("Package")
 includeTargets << griffonScript("_PackagePlugins" )
@@ -61,6 +62,7 @@ target('default': "Runs the application from the command line") {
     def javaOpts = []
     def env = System.getProperty(BuildSettings.ENVIRONMENT)
     javaOpts << "-D${BuildSettings.ENVIRONMENT}=${env}"
+    javaOpts << "-D${RunMode.KEY}=${RunMode.current}"
     if (argsMap.containsKey('debug')) {
         def portNum = argsMap.debugPort?:'18290'  //default is 'Gr' in ASCII
         def addr = argsMap.debugAddr?:'127.0.0.1'  //default is 'Gr' in ASCII
@@ -89,7 +91,7 @@ target('default': "Runs the application from the command line") {
         javaOpts << "-Xdock:icon=${griffonHome}/bin/griffon.icns"
     }
     if (config.griffon.app?.javaOpts) {
-      config.griffon.app?.javaOpts.each { javaOpts << it }
+        config.griffon.app?.javaOpts.each { javaOpts << it }
     }
 
 // XXX -- NATIVE
@@ -105,9 +107,11 @@ target('default': "Runs the application from the command line") {
         f.absolutePath - jardir.absolutePath - File.separator
     }.join(File.pathSeparator)
 
+    runtimeClasspath = [classesDir, i18nDir, resourcesDir, runtimeClasspath].join(File.pathSeparator)
+
     // start the processess
     javaOpts = javaOpts.join(' ')
-    Process p = "$javaVM -classpath $runtimeClasspath $proxySettings $javaOpts $griffonApplicationClass".execute(null as String[], jardir)
+    Process p = "$javaVM $proxySettings $javaOpts -classpath $runtimeClasspath $griffonApplicationClass".execute(null as String[], jardir)
 
     // pipe the output
     p.consumeProcessOutput(System.out, System.err)
