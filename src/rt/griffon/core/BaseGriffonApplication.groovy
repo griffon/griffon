@@ -42,6 +42,7 @@ class BaseGriffonApplication implements GriffonApplication {
     Object eventsConfig
 
     private final EventRouter eventRouter = new EventRouter()
+    private final List<ShutdownHandler> shutdownHandlers = []
     final GriffonApplication appDelegate
 
     BaseGriffonApplication(GriffonApplication appDelegate) {
@@ -53,34 +54,34 @@ class BaseGriffonApplication implements GriffonApplication {
     /**
      * @deprecated use Metadata.getCurrent() instead
      */
-    public Properties getApplicationProperties() {
+    Properties getApplicationProperties() {
         return applicationProperties
     }
     /**
      * @deprecated use loadApplicationProperties() instead
      */
     @Deprecated
-    public void setApplicationProperties(Properties applicationProperties) {
+    void setApplicationProperties(Properties applicationProperties) {
         this.applicationProperties = applicationProperties
     }
 
-    public void loadApplicationProperties() {
+    void loadApplicationProperties() {
         this.applicationProperties = Metadata.getCurrent()
     }
 
-    public Metadata getMetadata() {
+    Metadata getMetadata() {
         return Metadata.current 
     }
 
-    public Class getConfigClass() {
+    Class getConfigClass() {
         return getClass().classLoader.loadClass("Application")
     }
 
-    public Class getBuilderClass() {
+    Class getBuilderClass() {
         return getClass().classLoader.loadClass("Builder")
     }
 
-    public Class getEventsClass() {
+    Class getEventsClass() {
         try{
            return getClass().classLoader.loadClass("Events")
         } catch( ignored ) {
@@ -89,18 +90,33 @@ class BaseGriffonApplication implements GriffonApplication {
         return null
     }
 
-    public void initialize() {
+    void initialize() {
         GriffonApplicationHelper.runScriptInsideUIThread("Initialize", appDelegate)
     }
 
-    public void ready() {
+    void ready() {
         event("ReadyStart",[appDelegate])
         GriffonApplicationHelper.runScriptInsideUIThread("Ready", appDelegate)
         event("ReadyEnd",[appDelegate])
     }
 
-    public void shutdown() {
+    boolean canShutdown() {
+        event("ShutdownRequested",[appDelegate])
+        for(handler in shutdownHandlers) {
+            if(!handler.canShutdown(appDelegate)) {
+                event("ShutdownAborted",[appDelegate])
+                return false
+            }
+        }
+        return true
+    }
+
+    void shutdown() {
         event("ShutdownStart",[appDelegate])
+        for(handler in shutdownHandlers) {
+            handler.onShutdown(appDelegate)
+        }
+
         List mvcNames = []
         mvcNames.addAll(groups.keySet())
         mvcNames.each { 
@@ -109,37 +125,45 @@ class BaseGriffonApplication implements GriffonApplication {
         GriffonApplicationHelper.runScriptInsideUIThread("Shutdown", appDelegate)
     }
 
-    public void startup() {
+    void startup() {
         event("StartupStart",[appDelegate])
         GriffonApplicationHelper.runScriptInsideUIThread("Startup", appDelegate)
         event("StartupEnd",[appDelegate])
     }
 
-    public void event( String eventName, List params = [] ) {
+    void event( String eventName, List params = [] ) {
         eventRouter.publish(eventName, params)
     }
 
-    public void addApplicationEventListener( listener ) {
+    void addApplicationEventListener( listener ) {
        eventRouter.addEventListener(listener)
     }
 
-    public void removeApplicationEventListener( listener ) {
+    void removeApplicationEventListener( listener ) {
        eventRouter.removeEventListener(listener)
     }
 
-    public void addApplicationEventListener( String eventName, Closure listener ) {
+    void addApplicationEventListener( String eventName, Closure listener ) {
        eventRouter.addEventListener(eventName,listener)
     }
 
-    public void removeApplicationEventListener( String eventName, Closure listener ) {
+    void removeApplicationEventListener( String eventName, Closure listener ) {
        eventRouter.removeEventListener(eventName,listener)
     }
 
-    public void addMvcGroup(String mvcType, Map<String, String> mvcPortions) {
+    void addMvcGroup(String mvcType, Map<String, String> mvcPortions) {
        mvcGroups[mvcType] = mvcPortions
     }
 
-    public Object createApplicationContainer() {
+    Object createApplicationContainer() {
         null
     }
+
+    void addShutdownHandler(ShutdownHandler handler) {
+        if(handler && !shutdownHandlers.contains(handler)) shutdownHandlers << handler
+    }    
+
+    void removeShutdownHandler(ShutdownHandler handler) {
+        if(handler) shutdownHandlers.remove(handler)
+    }    
 }

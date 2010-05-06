@@ -23,6 +23,7 @@ import griffon.util.SwingUIThreadHandler
 import java.awt.event.WindowEvent
 import java.awt.EventQueue
 import java.awt.Toolkit
+import javax.swing.WindowConstants
 
 /**
  * @author Danno.Ferrin
@@ -40,8 +41,6 @@ class SwingApplication implements StandaloneGriffonApplication {
     }
 
     public void bootstrap() {
-        // applicationProperties = new Properties()
-        // applicationProperties.load(getClass().getResourceAsStream('/application.properties'))
         GriffonApplicationHelper.prepare(this)
         event("BootstrapEnd",[this])
     }
@@ -64,15 +63,18 @@ class SwingApplication implements StandaloneGriffonApplication {
     }
 
     public void handleWindowClosing(WindowEvent evt = null) {
-        appFrames.removeAll(appFrames.findAll {!it.visible})
-        if (config.application?.autoShutdown && appFrames.size() <= 1) {
+        boolean proceed = canShutdown()
+        if(config.application?.autoShutdown && proceed && appFrames.findAll{!it.visible}.size() <= 1) {
             shutdown()
+        } else {
+            evt?.source?.visible = true
         }
     }
 
     public Object createApplicationContainer() {
         def appContainer = GriffonApplicationHelper.createJFrameApplication(this)
         try {
+            appContainer.defaultCloseOperation = WindowConstants.DO_NOTHING_ON_CLOSE
             appContainer.windowClosing = this.&handleWindowClosing
             appFrames += appContainer
         } catch (Throwable ignored) {
