@@ -30,6 +30,7 @@ target('default': "Packages a Griffon application.") {
      depends(checkVersion, parseArguments)
 
      if(!argsMap.params) {
+          System.setProperty(RunMode.KEY, RunMode.CUSTOM.name)
           depends(package_zip,
                   package_jar,
                   package_applet,
@@ -41,7 +42,7 @@ target('default': "Packages a Griffon application.") {
         argsMap.params.each { type ->
            try {
                if(type in internal) {
-                   System.setProperty(RunMode.KEY, RunMode.STANDLONE.name)
+                   System.setProperty(RunMode.KEY, RunMode.CUSTOM.name)
                    depends("package_"+type)
                } else {
                    event("MakePackage",[type])
@@ -231,9 +232,9 @@ target(_copyLaunchScripts: "") {
     }
     javaOpts = javaOpts ? javaOpts.join(' ') : ""
 
-    ant.mkdir(dir: "${targetDistDir}/bin")
-    ant.copy(todir: "${targetDistDir}/bin") {
-        fileset(dir: "${griffonSettings.griffonHome}/src/griffon/templates/dist/bin")
+    ant.mkdir(dir: "${targetDistDir}")
+    ant.copy(todir: "${targetDistDir}") {
+        fileset(dir: "${griffonSettings.griffonHome}/src/griffon/templates/dist")
     }
     ant.replace( dir: "${targetDistDir}/bin" ) {
         replacefilter(token: "@app.name@", value: griffonAppName)
