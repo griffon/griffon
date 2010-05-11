@@ -93,8 +93,7 @@ target(compile : "Compiles application sources") {
 
         if( new File("${basedir}").list().grep{ it =~ /GriffonAddon\.groovy/ } ){
             ant.path(id:'addonPath') {
-                compileClasspath.delegate = delegate
-                compileClasspath.call()
+                path(refid: "griffon.compile.classpath")
                 pathElement(location:classesDirPath)
             }
             compileSources('addonPath') {
