@@ -1,4 +1,4 @@
-Before moving onto looking at providing runtime configuration based on conventions you first need to understand how to evaluated those conventions from a plug-in. Essentially every addod provided by a plugin has access to an @app@ variable during its initialisation. This variable is an instance of the [GriffonApplication|api:griffon.core.GriffonApplication] interface. From it you can access an @artifactManager@ property of type [ArtifactManager|api:griffon.core.ArtifactManager].
+Before moving onto looking at providing runtime configuration based on conventions you first need to understand how to evaluated those conventions from a plug-in. Essentially every addod provided by a plugin has access to an @app@ variable during its initialization. This variable is an instance of the [GriffonApplication|api:griffon.core.GriffonApplication] interface. From it you can access an @artifactManager@ property of type [ArtifactManager|api:griffon.core.ArtifactManager].
 
 The @ArtifactManager@ class provides methods to evaluate the conventions within the project and internally stores references to all classes within a GriffonApplication using the [ArtifactInfo|api:griffon.core.ArtifactInfo] class.
 
@@ -14,7 +14,7 @@ There are a few "magic" properties that the @ArtifactManager@ instance possesses
 app.artifactManager.controllerArtifacts.each { println it.name }
 {code}
 
-Dnamic method conventions are as follows:
+Dynamic method conventions are as follows:
 
 * @*Artifacts@ - Retrieves all the artifacts for a particular artifact type. Example @app.artifactManager.controllerArtifacts@.
 * @get*Artifact@ - Retrieves a named artifact for a particular artifact type. Example @app.artifactManager.getControllerArtifact("ExampleController")@

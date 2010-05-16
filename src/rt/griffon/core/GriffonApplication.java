@@ -155,14 +155,14 @@ public interface GriffonApplication extends griffon.util.IGriffonApplication {
     void removeApplicationEventListener(String eventName, Closure listener);
 
     /**
-     * Publishes an applicaiton event.<p>
+     * Publishes an application event.<p>
      *
      * @param eventName the name of the event
      */
     void event(String eventName);
 
     /**
-     * Publishes an applicaiton event.<p>
+     * Publishes an application event.<p>
      *
      * @param eventName the name of the event
      * @param params event arguments sent to listeners

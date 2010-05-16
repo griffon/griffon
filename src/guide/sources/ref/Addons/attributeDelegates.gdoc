@@ -8,13 +8,13 @@ h2. Examples
 
 bc.
 class SampleGriffonAddon {
-    def attributeDelegates = [
+    def attributeDelegates = \[
         {builder, node, attributes -> 
            if(attributes.remove('important')) {
                node.foreground = java.awt.Color.RED
            }
         }
-    ]
+    \]
 }
 
 h2. Description

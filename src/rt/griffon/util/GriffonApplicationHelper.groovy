@@ -55,10 +55,11 @@ class GriffonApplicationHelper {
         }
 
         app.metaClass.newInstance = GriffonApplicationHelper.&newInstance.curry(app)
-        app.initialize();
-
         app.config = new ConfigSlurper().parse(app.configClass)
         app.builderConfig = new ConfigSlurper().parse(app.builderClass)
+
+        app.initialize();
+
         def eventsClass = app.eventsClass
         if (eventsClass) {
             app.eventsConfig = eventsClass.newInstance()

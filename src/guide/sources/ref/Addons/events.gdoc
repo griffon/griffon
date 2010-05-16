@@ -8,14 +8,14 @@ h2. Examples
 
 bc.
 class SampleGriffonAddon {
-    def events = [
+    def events = \[
         NewInstance: { klass, type, instance ->
             if(type != "controller") return
             instance.metaClass.doit = { evt = null ->
                 // action code goes here
             }
         }
-    ]
+    \]
 }
 
 h2. Description

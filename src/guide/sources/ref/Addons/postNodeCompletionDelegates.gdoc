@@ -8,11 +8,11 @@ h2. Examples
 
 bc.
 class SampleGriffonAddon {
-    def postNodeCompletionDelegates = [
+    def postNodeCompletionDelegates = \[
         {builder, parent, node -> 
             if(builder.context.lazyInit) node.initialize()
         }
-    ]
+    \]
 }
 
 h2. Description

@@ -17,7 +17,7 @@ package griffon.core;
 
 
 /**
- * A ShutdownHanlder may prevent the applicaiton from exiting.
+ * A ShutdownHanlder may prevent the application from exiting.
  *
  * @author Andres Almiray
  * @since 0.3.1

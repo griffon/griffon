@@ -1,0 +1,59 @@
+Any artifact or class that abides to the following conventions can be registered as an application listener, those conventions are:
+
+    * it is a Script, class, Map or closure.
+    * in the case of scripts or classes, they must define an event handler whose name matches *on<EventName>#, this handler can be a method or a closure property.
+    * in the case of a Map, each key maps to <EventName>, the value must be a closure.
+    * scripts, classes and maps can be registered/unregistered by calling @addApplicationListener@/ @removeApplicationListener@ on the app instance.
+    * closure event handlers must be registered with an overloaded version of @addApplicationListener@/@removeApplicationListener@ that takes *<EventName>* as the first parameter, and the closure itself as the second parameter.
+
+There is a general, per application, script that can provide event handlers, if you want to take advantage of this feature you must define a script named @Events.groovy@ inside @griffon-app/conf@. Lastly each controller is automatically registered as an application event listener.
+
+These are some examples of event handlers:
+
+- Display a message right before default MVC groups are instantiated
+@File: griffon-app/conf/Events.groovy@
+{code}
+onBootstrapEnd = { app ->
+  println """Application configuration has finished loading.
+MVC Groups will be initialized now."""
+}
+{code}
+- Print the name of the application plus a short message when the application is about to shut down.
+@File: griffon-app/controller/MyController.groovy@
+{code}
+class MyController {
+  def onShutdownStart = { app ->
+    println "${app.config.application.title} is shutting down"
+  }
+}
+{code}
+- Print a message every time the event "Foo" is published
+@File: griffon-app/controller/MyController.groovy@
+{code}
+class MyController {
+  def mvcGroupInit(Map args) {
+    app.addApplicationListener([
+      "Foo": {-> println "got foo!" }
+    ])
+  }
+
+  def fooAction = { evt = null ->
+    // do something
+    app.event("Foo")
+  }
+}
+{code}
+- An alternative to the previous example using a closure event handler
+@File: griffon-app/controller/MyController.groovy@
+{code}
+class MyController {
+  def mvcGroupInit(Map args) {
+    app.addApplicationListener("Foo"){-> println "got foo!" }
+  }
+
+  def fooAction = { evt = null ->
+    // do something
+    app.event("Foo")
+  }
+}
+{code}

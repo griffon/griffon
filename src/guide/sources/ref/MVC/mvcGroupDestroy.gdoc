@@ -1,0 +1,19 @@
+h1. mvcGroupDestroy() 
+
+h2. Purpose
+
+Destruction hook for MVC members.
+
+h2. Examples
+
+{code:java}
+class SampleController {
+    def mvcGroupDestroy() {
+        // perform cleanup 
+    }
+}
+{code}
+
+h2. Description
+
+This method serves as a destruction hook for any MVC member that is not a Script nor a CompositeBuilder instance. It will be called when the instance is about to be removed from the application's cache during the destroy sequence of an MVC group

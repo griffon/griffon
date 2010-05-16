@@ -7,7 +7,7 @@ Gant allows you to pull in all targets (except "default") from another Gant scri
 includeTargets << new File("/path/to/my/script.groovy")
 includeTargets << gant.tools.Ivy
 {code}
-Don't worry too much about the syntax using a class, it's quite specialised. If you're interested, look into the Gant documentation.
+Don't worry too much about the syntax using a class, it's quite specialized. If you're interested, look into the Gant documentation.
 
 h3. Core Griffon targets
 
@@ -58,6 +58,6 @@ Here are a few general guidelines on writing scripts:
 * Split scripts into a "command" script and an internal one.
 * Put the bulk of the implementation in the internal script.
 * Put argument parsing into the "command" script.
-* To pass arguments to a target, create some script variables and initialise them before calling the target.
+* To pass arguments to a target, create some script variables and initialize them before calling the target.
 * Avoid name clashes by using closures assigned to script variables instead of targets. You can then pass arguments direct to the closures.
 
