@@ -1,1 +1,12 @@
-lorem ipsum
+Access to the application's metadata file (*application.properties*) is available through the usage of @griffon.util.Metadata@ singleton. Here's a snippet of code that shows how to setup a welcome message that displays the application's name and version, along with its Griffon version 
+
+{code}
+import griffon.util.Metadata
+
+def meta = Metadata.current
+application(title: "Some app", package: true) {
+    gridLayout cols: 1, rows: 2
+    label "Hello, I'm ${meta['app.name']}-${meta['app.version']}"
+    label "Built with Griffon ${meta['app.griffon.version']}"
+}
+{code}

@@ -1,1 +1,8 @@
-lorem ipsum
+Applications have the option to let particular artifacts to abort the shutdown sequence and/or perform a task while the shutdown sequence is in process. Artifacts that desire to be part of the shutdown sequence should implement the @griffon.core.ShutdownHandler@ interface and register themselves with the application instance.
+
+The contract of a @ShutdownHandler@ is very simple
+
+* @boolean canShutdown(GriffonApplication app)@ - return *@false@* to abort the shutdown sequence.
+* @void onShutdown(GriffonApplication app)@ - called if the shutdown sequence was not aborted.
+
+There are no default ShutdownHandlers registered with an application.

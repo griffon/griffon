@@ -6,11 +6,9 @@ The application model for this application is simple: the script to be evaluated
 import groovy.beans.Bindable
 
 class DemoConsoleModel {
-
     String scriptSource
     @Bindable def scriptResult
     @Bindable boolean enabled = true
-
 }
 {code}
 
@@ -26,7 +24,7 @@ class DemoConsoleController {
     def model
     def view
 
-    def executeScript = { ActionEvent evt = null ->
+    def executeScript = { evt = null ->
         model.enabled = false
         doOutside {
             def result
@@ -54,7 +52,12 @@ Also, the threading may look a bit obsessive. But good thread management is esse
 The view classes contain the visual components for your application.
 
 {code}
-application(title:'DemoConsole', pack:true, locationByPlatform:true) {
+application(title:'DemoConsole', pack:true,
+  locationByPlatform:true,
+  iconImage: imageIcon('/griffon-icon-48x48.png').image,
+  iconImages: [imageIcon('/griffon-icon-48x48.png').image,
+               imageIcon('/griffon-icon-32x32.png').image,
+               imageIcon('/griffon-icon-16x16.png').image]) {
     panel(border:emptyBorder(6)) {
         borderLayout()
 
@@ -84,5 +87,7 @@ bc.
 griffon run-app
 
 This command should compile all sources and package the application, you'll see a similar result as depicted by the following screenshot after a few seconds
+
+!democonsole.png!
 
 However standalone mode is not the only way to run your application, try the following command to run in webstart mode: [run-webstart|commandLine]. Conversely [run-applet|commandLine] will run your application in applet mode. The best of all is that you did not have to touch a single line of configuration in order to to switch modes!
