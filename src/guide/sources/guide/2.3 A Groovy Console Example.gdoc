@@ -62,13 +62,13 @@ application(title:'DemoConsole', pack:true,
         borderLayout()
 
         scrollPane(constraints:CENTER) {
-            textArea(text:bind(target:model, targetProperty:'scriptSource'),
+            textArea(text:bind('scriptSource', target:model),
                 enabled: bind {model.enabled},
                 columns:40, rows:10)
         }
 
         hbox(constraints:SOUTH) {
-            button("Execute", actionPerformed:controller.&executeScript,
+            button("Execute", actionPerformed: controller.executeScript,
                 enabled: bind {model.enabled})
             hstrut(5)
             label("Result:")
