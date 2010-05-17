@@ -1,10 +1,6 @@
-
 <project name="griffon-build" default="package">
-
     <property file="build.properties"/>
     <property environment="env" />
-
-
 
     <path id="classpath">
         <fileset dir="${griffon.lib}">
@@ -16,7 +12,6 @@
         <fileset dir="${env.JAVA_HOME}/lib">
             <include name="tools.jar"/>
         </fileset>
-        <!--<pathelement location="${griffon.src.war}/WEB-INF"/> -->
       <pathelement path="${griffon.build.cli}"/>
       <pathelement path="${griffon.build.rt}"/>
     </path>
@@ -30,7 +25,9 @@
     <echo>JAVA HOME IS ${env.JAVA_HOME}</echo>
         <delete dir="${griffon.dist}"/>
         <delete dir="${griffon.target}"/>
+        <!--
         <delete dir="${griffon.doc}"/>
+        -->
     </target>
 
     <import file="ant/build/resolve.xml"   />
@@ -51,6 +48,5 @@
     <target name="cruise-bamboo"
             depends="clean,build, test, jar, javadoc, package, create-installer-izpack, create-installer-deb"
             description="to be started by the CruiseControl build server"/>
-
 
 </project>

@@ -20,5 +20,13 @@
             <link packages="org.junit.,junit.framework." href="http://junit.sourceforge.net/junit3.8.1/javadoc/"/>
             <link packages="groovy.,org.codehaus.groovy." href="http://groovy.codehaus.org/api/"/>
         </groovydoc>
+
+        <jar destfile="${griffon.target}/griffon-rt-${griffon.version}-javadoc.jar">
+            <fileset dir="${griffon.target}/docs/api"/>
+        </jar>
+
+        <jar destfile="${griffon.target}/griffon-rt-${griffon.version}-sources.jar">
+            <fileset dir="${basedir}/src/rt" excludes="*.html"/>
+        </jar>
      </target>
 </project>
