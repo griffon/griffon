@@ -159,6 +159,7 @@ target( packageApp : "Implementation of package target") {
     checkKey()
     copyLibs()
     jarFiles()
+    copyNativeLibs("${basedir}/lib", jardir.toString())
 
     event("PackagingEnd",[])
 }
@@ -494,9 +495,16 @@ target(generateJNLP:"Generates the JNLP File") {
 
     doForAllPlatforms { platformDir, platformOs ->
         if(platformDir.list()) {
-            jnlpResources << "<resources os='${platformOs}'>"
+            jnlpResources << "<resources os='${PLATFORMS[platformOs].webstartName}'>"
             platformDir.eachFileMatch(~/.*\.jar/) { f ->
                 jnlpResources << "    <jar href='${platformOs}/${f.name}' />"
+            }
+            def nativeLibDir = new File(platformDir.absolutePath, 'native')
+            if(nativeLibDir.exists() && nativeLibDir.list()) {
+                nativeLibDir.eachFile { f ->
+                    if(!f.toString().endsWith(PLATFORMS[platformOs].nativelib)) return
+                    jnlpResources << "    <nativelib href='${platformOs}/native/${f.name}' />"
+                }
             }
             jnlpResources << "</resources>"
         }
@@ -714,7 +722,8 @@ _copyNativeLibs = { srcdir, destdir, os ->
     File dest = new File([destdir, os, 'native'].join(File.separator))
     if(src.exists()) {
         ant.mkdir(dir: dest)
-        src.eachFileMatch(~/.*${PLATFORMS[os].nativelib}/) { srcFile ->
+        src.eachFile { srcFile ->
+            if(!srcFile.toString().endsWith(PLATFORMS[os].nativelib)) return
             File targetFile = new File(dest.absolutePath + File.separator + srcFile.name)
             ant.copy(file: srcFile, toFile: targetFile, overwrite: true)
         }
