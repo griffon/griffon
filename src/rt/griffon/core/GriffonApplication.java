@@ -31,90 +31,96 @@ import java.util.Properties;
  * @author Andres Almiray
  */
 public interface GriffonApplication extends griffon.util.IGriffonApplication {
-
     /**
      * Gets the application's configuration set on 'aaplication.properties'.<p>
      *
      * @deprecated use Metadata.getCurrent() instead
      */
     @Deprecated
-    public Properties getApplicationProperties();
+    Properties getApplicationProperties();
 
     /**
      * Gets the application's configuration set on 'aaplication.properties'.<p>
      */
-    public Metadata getMetadata();
+    Metadata getMetadata();
 
-    public Class getConfigClass();
-    public ConfigObject getConfig();
-    public void setConfig(ConfigObject config);
+    Class getConfigClass();
+    ConfigObject getConfig();
+    void setConfig(ConfigObject config);
 
-    public Class getBuilderClass();
-    public ConfigObject getBuilderConfig();
-    public void setBuilderConfig(ConfigObject builderConfig);
+    Class getBuilderClass();
+    ConfigObject getBuilderConfig();
+    void setBuilderConfig(ConfigObject builderConfig);
 
-    public Class getEventsClass();
-    public Object getEventsConfig();
-    public void setEventsConfig(Object eventsConfig);
+    Class getEventsClass();
+    Object getEventsConfig();
+    void setEventsConfig(Object eventsConfig);
 
-    public Binding getBindings();
-    public void setBindings(Binding bindings);
+    Binding getBindings();
+    void setBindings(Binding bindings);
 
-    public Map<String, Map<String, String>> getMvcGroups();
-    public void addMvcGroup(String mvcType, Map<String, String> mvcPortions);
+    Map<String, Map<String, String>> getMvcGroups();
+    void addMvcGroup(String mvcType, Map<String, String> mvcPortions);
 
     /**
      * Returns all currently available addon instances, keyed by addon name.<p>
      */
-    public Map<String, ?> getAddons();
-    public Map<String, String> getAddonPrefixes();
+    Map<String, ?> getAddons();
+    Map<String, String> getAddonPrefixes();
 
     /**
      * Returns all currently available model instances, keyed by group name.<p>
      */
-    public Map<String, ?> getModels();
+    Map<String, ?> getModels();
 
     /**
      * Returns all currently available view instances, keyed by group name.<p>
      */
-    public Map<String, ?> getViews();
+    Map<String, ?> getViews();
 
     /**
      * Returns all currently available controller instances, keyed by group name.<p>
      */
-    public Map<String, ?> getControllers();
+    Map<String, ?> getControllers();
 
     /**
      * Returns all currently available builder instances, keyed by group name.<p>
      */
-    public Map<String, ?> getBuilders();
+    Map<String, ?> getBuilders();
 
     /**
      * Returns all currently available groups, keyed by group name.<p>
      */
-    public Map<String, Map<String, ?>> getGroups();
+    Map<String, Map<String, ?>> getGroups();
 
-    public Object createApplicationContainer();
+    Object createApplicationContainer();
 
     /**
      * Executes the 'Initilaize' life cycle phase.
      */
-    public void initialize();
+    void initialize();
 
     /**
      * Executes the 'Startup' life cycle phase.
      */
-    public void startup();
+    void startup();
 
     /**
      * Executes the 'Ready' life cycle phase.
      */
-    public void ready();
+    void ready();
 
     /**
      * Executes the 'Shutdown' life cycle phase.
+     *
+     * @return true if the shutdown sequence can proceed, false otherwise
      */
-    public void shutdown();
+    void shutdown();
+
+    /**
+     *
+     */
+    boolean canShutdown();
 
     /**
      * Adds an application event listener.<p>
@@ -122,7 +128,7 @@ public interface GriffonApplication extends griffon.util.IGriffonApplication {
      *
      * @param listener an application event listener
      */
-    public void addApplicationEventListener(Object listener );
+    void addApplicationEventListener(Object listener );
 
     /**
      * Adds a closure as an application event listener.<p>
@@ -130,7 +136,7 @@ public interface GriffonApplication extends griffon.util.IGriffonApplication {
      * @param eventName the name of the event
      * @param listener an application event listener
      */
-    public void addApplicationEventListener(String eventName, Closure listener);
+    void addApplicationEventListener(String eventName, Closure listener);
 
     /**
      * Removes an application event listener.<p>
@@ -138,7 +144,7 @@ public interface GriffonApplication extends griffon.util.IGriffonApplication {
      *
      * @param listener an application event listener
      */
-    public void removeApplicationEventListener(Object listener );
+    void removeApplicationEventListener(Object listener );
 
     /**
      * Removes a closure as an application event listener.<p>
@@ -146,20 +152,36 @@ public interface GriffonApplication extends griffon.util.IGriffonApplication {
      * @param eventName the name of the event
      * @param listener an application event listener
      */
-    public void removeApplicationEventListener(String eventName, Closure listener);
+    void removeApplicationEventListener(String eventName, Closure listener);
 
     /**
-     * Publishes an applicaiton event.<p>
+     * Publishes an application event.<p>
      *
      * @param eventName the name of the event
      */
-    public void event(String eventName);
+    void event(String eventName);
 
     /**
-     * Publishes an applicaiton event.<p>
+     * Publishes an application event.<p>
      *
      * @param eventName the name of the event
      * @param params event arguments sent to listeners
      */
-    public void event(String eventName, List params);
+    void event(String eventName, List params);
+
+    /**
+     * Registers a ShutdownHandler on this application
+     *
+     * @param handler the shutdown handler to be registered; null and/or
+     *                duplicated values should be ignored
+     */
+    void addShutdownHandler(ShutdownHandler handler);    
+
+    /**
+     * Removes a ShutdownHandler from this application
+     *
+     * @param handler the shutdown handler to be removed; null and/or
+     *                duplicated values should be ignored
+     */
+    void removeShutdownHandler(ShutdownHandler handler);    
 }

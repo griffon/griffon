@@ -1,0 +1,54 @@
+== Installation from Download ==
+
+- Prerequisites
+
+In order to start using Griffon you need to have the following:
+* An installation of Java SDK 1.5 or higher and have set your JAVA_HOME 
+  variable to the SDK install location. Java 1.6 is strongly recommended.
+
+- Steps
+
+* Download [from http://griffon.codehaus.org/Download] the latest Griffon
+  release.
+* Extract the archive into an appropriate location; typically C:\griffon on
+  Windows or ~/griffon on Unix.
+* Create a GRIFFON_HOME environment variable that points to the path where you
+  extracted the archive (eg C:\griffon on Windows or ~/griffon on Unix).
+* If you have not set the JAVA_HOME environment variable yet, create JAVA_HOME
+  environment variable that points to the path where you have installed Java.
+* Append a reference to the "bin" directory within the Griffon directory to
+  your PATH variable (eg %GRIFFON_HOME%\bin on Windows or $GRIFFON_HOME/bin on
+  Unix). Note that, for Windows, both PATH and GRIFFON_HOME must be defined at
+  the same environment variable level (eg. 'System variables') rather than
+  across environment variable levels (eg. PATH under 'System variables' and 
+  GRIFFON_HOME under 'User variables').
+* Type "griffon" at the command line, if a help message is displayed you are
+  ready to start using Griffon [http://griffon.codehaus.org/Quick+Start]
+* If you get an error message, try to chmod +x the griffon script inside the
+  bin directory.
+
+== Installation from Git ==
+
+- Prerequisites
+
+In order to start using Griffon from Git you need to have the following:
+* An installation of Java 1.5 or higher and have set your JAVA_HOME variable
+  to the install location.
+* A working installation of Apache Ant [http://ant.apache.org] 1.7 or higher
+  and have set your ANT_HOME variable to the install location.
+* JUnit (to run the build tests - put junit.jar in your ANT_HOME/lib directory)
+* An installation of Git [http://git-scm.com/].
+
+- Steps
+
+* Checkout Griffon from the Git repository 
+  [http://xircles.codehaus.org/projects/griffon/repo]
+** Run this command: git clone git://git.codehaus.org/griffon-git.git
+* Set the GRIFFON_HOME environment variable to some location that is not below
+  the checkout location.
+* Add the $GRIFFON_HOM/bin directory to your PATH environment variable.
+* Add the $GRIFFON_HOME/ant/bin directory to your PATH environment variable.
+* You may need to give the scripts in $GRIFFON_HOME/ant/bin execute permissions
+* Go to the $GRIFFON_HOME directory and type "ant install" to build Griffon and
+  install it in your $GRIFFON_HOME directory.
+* That's it! Start developing with Griffon!

@@ -46,6 +46,7 @@ includeTargets << griffonScript("Package")
 parentContext = null // default parent context is null
 
 target(loadApp:"Loads the Griffon application object") {
+    depends(prepackage)
 	event("AppLoadStart", ["Loading Griffon Application"])
 //	profile("Loading parent ApplicationContext") {
 //		def builder = parentContext ? new WebBeanBuilder(parentContext) :  new WebBeanBuilder()

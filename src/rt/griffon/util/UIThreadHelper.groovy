@@ -35,7 +35,17 @@ class UIThreadHelper {
     private final ExecutorService DEFAULT_EXECUTOR_SERVICE = Executors.newFixedThreadPool(2)
     private static final Logger LOG = Logger.getLogger(UIThreadHelper.class.name)
 
-    public void setUIThreadHandler(UIThreadHandler threadHandler) {
+    static enhance(MetaClass metaClass) {
+	    metaClass.execSync = UIThreadHelper.instance.&executeSync
+        metaClass.execAsync = UIThreadHelper.instance.&executeAsync
+        metaClass.execOutside = UIThreadHelper.instance.&executeOutside
+        metaClass.isUIThread = UIThreadHelper.instance.&isUIThread
+        metaClass.execFuture = { Object... args -> 
+	        UIThreadHelper.instance.executeFuture(*args)
+	    }
+    }
+
+    void setUIThreadHandler(UIThreadHandler threadHandler) {
         if(!this.uiThreadHandler) {
             this.uiThreadHandler = threadHandler
         } else {
@@ -43,7 +53,7 @@ class UIThreadHelper {
         }
     }
 
-    public UIThreadHandler getUIThreadHandler() {
+    UIThreadHandler getUIThreadHandler() {
         if(!this.uiThreadHandler) {
             try {
                 // attempt loading of default UIThreadHandler -> Swing

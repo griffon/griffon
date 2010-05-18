@@ -1,0 +1,18 @@
+A Griffon application can run in several environments, default ones being DEVELOPMENT, TEST and PRODUCTION. An application can inspect its current running environment by means of the @griifon.util.Environment@ enum.
+
+The following example enhances the previous one by displaying the current running environment
+
+{code}
+import griffon.util.Metadata
+import griffon.util.Environment
+
+def meta = Metadata.current
+application(title: "Some app", package: true) {
+    gridLayout cols: 1, rows: 3
+    label "Hello, I'm ${meta['app.name']}-${meta['app.version']}"
+    label "Built with Griffon ${meta['app.griffon.version']}"
+    label "Current environment is ${Environment.current}"
+}
+{code}
+
+

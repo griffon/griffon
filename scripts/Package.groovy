@@ -22,6 +22,7 @@
  * @since 0.4
  */
 import org.codehaus.griffon.util.BuildSettings
+import griffon.util.RunMode
 
 includeTargets << griffonScript("_GriffonPackage")
 
@@ -29,6 +30,7 @@ target('default': "Packages a Griffon application.") {
      depends(checkVersion, parseArguments)
 
      if(!argsMap.params) {
+          System.setProperty(RunMode.KEY, RunMode.CUSTOM.name)
           depends(package_zip,
                   package_jar,
                   package_applet,
@@ -40,6 +42,7 @@ target('default': "Packages a Griffon application.") {
         argsMap.params.each { type ->
            try {
                if(type in internal) {
+                   System.setProperty(RunMode.KEY, RunMode.CUSTOM.name)
                    depends("package_"+type)
                } else {
                    event("MakePackage",[type])
@@ -156,6 +159,7 @@ target(package_jar: "Creates a single jar distribution and zips it.") {
 }
 
 target(package_applet: "Creates an applet distribution and zips it.") {
+    System.setProperty(RunMode.KEY, RunMode.APPLET.name)
     event("PackageStart",["applet"])
 
     depends(prepackage, generateJNLP)
@@ -176,6 +180,7 @@ target(package_applet: "Creates an applet distribution and zips it.") {
 }
 
 target(package_webstart: "Creates a webstart distribution and zips it.") {
+    System.setProperty(RunMode.KEY, RunMode.WEBSTART.name)
     event("PackageStart",["webstart"])
 
     depends(prepackage, generateJNLP)
@@ -227,9 +232,9 @@ target(_copyLaunchScripts: "") {
     }
     javaOpts = javaOpts ? javaOpts.join(' ') : ""
 
-    ant.mkdir(dir: "${targetDistDir}/bin")
-    ant.copy(todir: "${targetDistDir}/bin") {
-        fileset(dir: "${griffonSettings.griffonHome}/src/griffon/templates/dist/bin")
+    ant.mkdir(dir: "${targetDistDir}")
+    ant.copy(todir: "${targetDistDir}") {
+        fileset(dir: "${griffonSettings.griffonHome}/src/griffon/templates/dist")
     }
     ant.replace( dir: "${targetDistDir}/bin" ) {
         replacefilter(token: "@app.name@", value: griffonAppName)

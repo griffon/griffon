@@ -55,10 +55,12 @@ class GriffonApplicationHelper {
         }
 
         app.metaClass.newInstance = GriffonApplicationHelper.&newInstance.curry(app)
-        app.initialize();
-
+        UIThreadHelper.enhance(app.metaClass)
         app.config = new ConfigSlurper().parse(app.configClass)
         app.builderConfig = new ConfigSlurper().parse(app.builderClass)
+
+        app.initialize();
+
         def eventsClass = app.eventsClass
         if (eventsClass) {
             app.eventsConfig = eventsClass.newInstance()
@@ -226,6 +228,7 @@ class GriffonApplicationHelper {
             klass.metaClass.newInstance = {Object... args ->
                 GriffonApplicationHelper.newInstance(app, *args)
             }
+            UIThreadHelper.enhance(klass.metaClass)
             klassMap[k] = klass
         }
 
@@ -333,7 +336,12 @@ class GriffonApplicationHelper {
                 }
             }
         }
-        app.builders[mvcName]?.dispose()
+
+        try {
+            app.builders[mvcName]?.dispose()
+        } catch(MissingMethodException mme) {
+            // TODO find out why this call breaks applet mode on shutdown
+        }
 
         // remove the refs from the app caches
         app.models.remove(mvcName)

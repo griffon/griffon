@@ -72,9 +72,8 @@ class GriffonPlatformHelper {
                             }
 
                             public void handleQuit() {
-                                app.shutdown()
+                                if(app.canShutdown()) app.shutdown()
                             }
-
                         }
 
                         def handler = new GriffonMacOsSupport(app)

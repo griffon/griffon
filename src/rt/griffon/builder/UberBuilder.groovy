@@ -131,8 +131,6 @@ class UberBuilder extends FactoryBuilderSupport {
         return super.resolveExplicitMethod(methodName, args);
     }
 
-
-
     protected void setClosureDelegate( Closure closure, Object node ) {
         closure.setDelegate( currentBuilder );
     }
@@ -178,11 +176,17 @@ class UberBuilder extends FactoryBuilderSupport {
 
     public void dispose() {
         builderRegistration.each {UberBuilderRegistration ubr ->
-            ubr.builder.dispose()
+            try {
+                ubr.builder.dispose()
+            } catch(UnsupportedOperationException uoe) {
+                // Sometimes an UOE may appear due to a TriggerBinding
+                // see http://jira.codehaus.org/browse/GRIFFON-165
+                // however there is little that can be done so we
+                // ignore the exception for the time being
+            }
         }
         super.dispose()
     }
-
 }
 
 class UberBuilderRegistration {
@@ -424,6 +428,4 @@ class UberInterceptorMetaClass extends DelegatingMetaClass {
             super.getProperty(o, s, o1)
         }
     }
-
-
 }

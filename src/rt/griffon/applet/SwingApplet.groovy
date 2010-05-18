@@ -54,7 +54,7 @@ class SwingApplet extends JApplet {
     }
 
     public void destroy() {
-        shutdown()
+        if(canShutdown()) shutdown()
     }
 
     public Object createApplicationContainer() {

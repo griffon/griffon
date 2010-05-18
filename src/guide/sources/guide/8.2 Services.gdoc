@@ -1,0 +1,39 @@
+Services are responsible for the application logic that does not belong to a single controller. They are meant to be treated as singletons, injected to MVC members by following a naming convention. Services are optional artifacts, and as such there is no default folder created for them when a new application is created.
+
+Services must be located inside the @griffon-app/services@ directory with a @Service@ suffix. The [create-service|commandLine] command performs this job for you; also adding a unit test for the given service.
+
+Let's say you need to create a Math service, the command to invoke would be
+
+{code}
+griffon create-service math
+{code}
+
+This results in the following files being created
+* @griffon-app/services/MathService.groovy@ - the service class.
+* @test/unit/MathServiceTests.groovy@ - service unit test.
+
+A trivial implementation of an addition operation performed by the MathService would look like the following snippet
+
+{code}
+class MathService {
+    def addition(a, b) { a + b }
+}
+{code}
+
+Using this service from a Controller is a straight forward task. As mentioned earlier services will be injected by name, which means you only need to define a property whose name matches the uncapitalized service name, for example
+
+{code}
+class MyController {
+    def mathService
+    
+    def action = {
+        model.result = mathServive.addition model.a, model.b
+    }
+}
+{code}
+
+The type of the service class is optional as basic injection is done by name alone.
+
+{note}
+Service injection is trivial, it does not provide a full blown DI, in other words further service dependencies will not be resolved. You will need a richer DI solution in order to achieve this, fortunately there is a [Spring plugin|http://griffon.codehaus.org/Spring+Plugin] that does this and more.
+{note}

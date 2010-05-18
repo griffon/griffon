@@ -146,7 +146,9 @@ JAVA_OPTS="@app.java.opts@"
 # For Darwin, add GRIFFON_APP_NAME to the JAVA_OPTS as -Xdock:name
 if $darwin; then
     JAVA_OPTS="$JAVA_OPTS -Xdock:name=$GRIFFON_APP_NAME"
-    if [ -z "${DIRNAME}/../griffon.icns" ] ; then
+    if [ -e "${DIRNAME}/../${GRIFFON_APP_NAME}.icns" ] ; then
+        JAVA_OPTS="$JAVA_OPTS -Xdock:icon=${DIRNAME}/../${GRIFFON_APP_NAME}.icns"
+    elif [ -e "${DIRNAME}/../griffon.icns" ] ; then
         JAVA_OPTS="$JAVA_OPTS -Xdock:icon=${DIRNAME}/../griffon.icns"
     fi
 fi

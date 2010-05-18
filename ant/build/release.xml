@@ -59,17 +59,19 @@
             <param name="dir.location" value="bin"/>
             <param name="dir.destination" value="${release.dir}/bin"/>
         </antcall>
-        <copy  file="bin/griffon.icns" todir="${release.dir}/bin"/>
+        <copy file="bin/griffon.icns" todir="${release.dir}/bin"/>
         <antcall target="copy-dir">
             <param name="dir.excludes" value=""/>
             <param name="dir.location" value="ant"/>
             <param name="dir.destination" value="${release.dir}/ant"/>
         </antcall>
+        <!--
         <antcall target="copy-dir">
             <param name="dir.excludes" value=""/>
             <param name="dir.location" value="media"/>
             <param name="dir.destination" value="${release.dir}/media"/>
         </antcall>
+        -->
         <antcall target="copy-dir">
             <param name="dir.excludes" value=""/>
             <param name="dir.location" value="scripts"/>
@@ -95,6 +97,10 @@
             <param name="dir.location" value="doc"/>
             <param name="dir.destination" value="${release.dir}/doc"/>
         </antcall>
+        <copy file="${griffon.target}/griffon-rt-${griffon.version}-sources.jar"
+              todir="${release.dir}/doc"/>
+        <copy file="${griffon.target}/griffon-rt-${griffon.version}-javadoc.jar"
+              todir="${release.dir}/doc"/>
         <antcall target="copy-dir">
             <param name="dir.excludes" value=""/>
             <param name="dir.location" value="target/guide"/>

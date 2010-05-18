@@ -1,0 +1,21 @@
+Similarly to synchronous calls, asynchronous calls inside the UIThread are made by invoking the @execAsync{}@ method. This method is equivalent to calling @doLater{}@ in Swing.
+
+Example:
+
+{code}
+class MyController {
+    def model
+
+    def action = {
+        // will be invoked inside the UI Thread by default
+        def value = model.value
+        Thread.start {
+            // do some calculations
+            execAsync {
+                // back inside the UI Thread
+                model.result = ...
+            }
+        }
+    }
+}
+{code}

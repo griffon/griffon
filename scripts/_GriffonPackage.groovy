@@ -19,6 +19,7 @@ import java.util.zip.ZipFile
 import org.apache.log4j.LogManager
 import org.codehaus.griffon.commons.*
 import org.codehaus.griffon.plugins.logging.Log4jConfig
+import griffon.util.RunMode
 //import org.codehaus.griffon.commons.cfg.ConfigurationHelper
 //import org.springframework.core.io.FileSystemResource
 
@@ -158,6 +159,7 @@ target( packageApp : "Implementation of package target") {
     checkKey()
     copyLibs()
     jarFiles()
+    copyNativeLibs("${basedir}/lib", jardir.toString())
 
     event("PackagingEnd",[])
 }
@@ -236,6 +238,11 @@ target(jarFiles: "Jar up the package files") {
     ant.mkdir(dir:jardir)
 
     String destFileName = "$jardir/${config.griffon.jars.jarName}"
+    if(RunMode.current == RunMode.STANDALONE) {
+        ant.delete(file: destFileName, quiet: true, failonerror: false)
+        return
+    }
+
     if (!upToDate) {
         ant.jar(destfile:destFileName) {
             fileset(dir:classesDirPath) {
@@ -450,7 +457,12 @@ target(generateJNLP:"Generates the JNLP File") {
     }
     new File(jardir).eachFileMatch(~/.*\.jar/) { f ->
         if (!(f.name =~ /griffon-rt-.*/) && !remoteJars.contains(f.name)) {
-            jnlpJars << "        <jar href='$f.name'/>"
+            if(config.griffon.jars.jarName == f.name){
+                jnlpJars << "        <jar href='$f.name' main='true' />"
+            }else{
+                jnlpJars << "        <jar href='$f.name'/>"
+            }
+
             appletJars << "$f.name"
         }
     }
@@ -483,9 +495,16 @@ target(generateJNLP:"Generates the JNLP File") {
 
     doForAllPlatforms { platformDir, platformOs ->
         if(platformDir.list()) {
-            jnlpResources << "<resources os='${platformOs}'>"
+            jnlpResources << "<resources os='${PLATFORMS[platformOs].webstartName}'>"
             platformDir.eachFileMatch(~/.*\.jar/) { f ->
                 jnlpResources << "    <jar href='${platformOs}/${f.name}' />"
+            }
+            def nativeLibDir = new File(platformDir.absolutePath, 'native')
+            if(nativeLibDir.exists() && nativeLibDir.list()) {
+                nativeLibDir.eachFile { f ->
+                    if(!f.toString().endsWith(PLATFORMS[platformOs].nativelib)) return
+                    jnlpResources << "    <nativelib href='${platformOs}/native/${f.name}' />"
+                }
             }
             jnlpResources << "</resources>"
         }
@@ -703,7 +722,8 @@ _copyNativeLibs = { srcdir, destdir, os ->
     File dest = new File([destdir, os, 'native'].join(File.separator))
     if(src.exists()) {
         ant.mkdir(dir: dest)
-        src.eachFileMatch(~/.*${PLATFORMS[os].nativelib}/) { srcFile ->
+        src.eachFile { srcFile ->
+            if(!srcFile.toString().endsWith(PLATFORMS[os].nativelib)) return
             File targetFile = new File(dest.absolutePath + File.separator + srcFile.name)
             ant.copy(file: srcFile, toFile: targetFile, overwrite: true)
         }
