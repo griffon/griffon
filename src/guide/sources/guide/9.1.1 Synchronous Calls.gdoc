@@ -1,0 +1,21 @@
+Synchronous calls inside the EDT can be achieved by calling the @edt{}@ method. This method is smarter than plain @SwingUtilities.invokeAndWait@ as it won't throw an exception if called inside the EDT, on the contrary, it will simply call the block of code it was given.
+
+Example:
+
+{code}
+class MyController {
+    def model
+
+    def action = {
+        // will be invoked inside the EDT by default
+        def value = model.value
+        Thread.start {
+            // do some calculations
+            edt {
+                // back inside the EDT
+                model.result = ...
+            }
+        }
+    }
+}
+{code}

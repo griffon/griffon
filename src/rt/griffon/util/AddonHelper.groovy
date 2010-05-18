@@ -77,6 +77,7 @@ public class AddonHelper {
         def addonMetaClass = addon.metaClass
         addonMetaClass.app = app
         addonMetaClass.newInstance = GriffonApplicationHelper.&newInstance.curry(app)
+        UIThreadHelper.enhance(addonMetaClass)
 
         app.event("LoadAddonStart", [addonName, addon, app])
 

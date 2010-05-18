@@ -1,0 +1,21 @@
+Synchronous calls inside the UIThread are made by invoking the @execSync{}@ method. This method is equivalent to calling @edt{}@ in Swing.
+
+Example:
+
+{code}
+class MyController {
+    def model
+
+    def action = {
+        // will be invoked inside the UI thread by default
+        def value = model.value
+        Thread.start {
+            // do some calculations
+            execSync {
+                // back inside the UI thread
+                model.result = ...
+            }
+        }
+    }
+}
+{code}

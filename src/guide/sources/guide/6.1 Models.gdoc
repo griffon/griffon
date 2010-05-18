@@ -1,0 +1,5 @@
+Models are very simple in nature. Their responsibility is to hold data that can be used by both Controller and View to communicate with each other. In other words, Models are *not* equivalent to domain classes.
+
+Models can be observable by means of the *[\@Bindable|http://groovy.codehaus.org/Bindable+and+Vetoable+transformation]* AST Transformation. This actually simplifies setting up bindings so that changes in the UI can automatically be sent to model properties and vice versa.
+
+\@Bindable will inject a @java.beans.PropertyChangeSupport@ field and all methods required to make the model an observable class. It will also make sure that a @PropertyChangeEvent@ is fired for each observable property whenever said property changes value.

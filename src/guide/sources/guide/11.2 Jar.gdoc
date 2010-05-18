@@ -1,0 +1,12 @@
+This is the simplest packaging mode available. It will package the application in a single jar file, by unpacking all dependencies and packing them once more in a sole file, so place close attention to potential duplicate entries, especially those found inside META-INF.
+
+{code}
+griffon package jar
+{code}
+
+Arguments:
+* @name@ - override the name of the generated jar file.
+
+Configuration Options:
+* @griffon.jars.jarName@ - name of the application's main jar file.
+* @griffon.dist.jar.nozip@ - skip zipping the distribution if set to true.

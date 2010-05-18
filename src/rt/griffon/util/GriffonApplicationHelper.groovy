@@ -55,6 +55,7 @@ class GriffonApplicationHelper {
         }
 
         app.metaClass.newInstance = GriffonApplicationHelper.&newInstance.curry(app)
+        UIThreadHelper.enhance(app.metaClass)
         app.config = new ConfigSlurper().parse(app.configClass)
         app.builderConfig = new ConfigSlurper().parse(app.builderClass)
 
@@ -227,6 +228,7 @@ class GriffonApplicationHelper {
             klass.metaClass.newInstance = {Object... args ->
                 GriffonApplicationHelper.newInstance(app, *args)
             }
+            UIThreadHelper.enhance(klass.metaClass)
             klassMap[k] = klass
         }
 

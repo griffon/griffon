@@ -1,0 +1,21 @@
+Asynchronous calls inside the EDT can be made by calling the @doLater{}@ method. This method simply posts a new event to the underlying EventQueue using @SwingUtilities.invokeLater@, meaning you spare a few characters and a class import.
+
+Example:
+
+{code}
+class MyController {
+    def model
+
+    def action = {
+        // will be invoked inside the EDT by default
+        def value = model.value
+        Thread.start {
+            // do some calculations
+            doLater {
+                // back inside the EDT
+                model.result = ...
+            }
+        }
+    }
+}
+{code}

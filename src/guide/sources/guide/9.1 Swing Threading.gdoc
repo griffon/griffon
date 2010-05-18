@@ -1,0 +1,5 @@
+The Swing toolkit has a single golden rule: *all long computations must be performed outside of the Event Dispatch Thread* (or EDT for short). This rule also states that *all interaction with UI components must be done inside the EDT, including building a component and reading/writing component properties*.
+
+Often times this rule can be broken easily as there is no compile time check for it. The Swing toolkit offers a helper class @SwingUtilities@ that exposes a pair of method that let you run code inside the EDt, however there is no helper method for running code outside of the EDT
+
+SwingBuilder provides a few methods that let you build multi-threaded applications the easy way. These methods are available in Views and Controllers.

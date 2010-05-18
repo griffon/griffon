@@ -1,0 +1,21 @@
+The previous two examples showed a simple way to execute code outside of the EDT, simply put they spawn a new Thread. The problem with this approach is that creating new threads is an expensive operation, also you shouldn't need to create a new thread if the code is already being executed outside of the EDT.
+
+The @doOutside{}@ method takes these concerns into account, spawning a new thread if and only if the code is currently being executed inside the EDT. A rewrite of the previous example would be thus
+
+{code}
+class MyController {
+    def model
+
+    def action = {
+        // will be invoked inside the EDT by default
+        def value = model.value
+        doOutside {
+            // do some calculations
+            doLater {
+                // back inside the EDT
+                model.result = ...
+            }
+        }
+    }
+}
+{code}
