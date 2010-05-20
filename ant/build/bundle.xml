@@ -65,6 +65,7 @@ groovy.version=${groovy.version}</echo>
             <fileset dir="${griffon.build.cli}"/>
             <fileset dir="${griffon.build.rt}" includes="griffon/util/GriffonExceptionHandler.class"/>
             <file file="${griffon.dist}/build.properties"/>
+            <fileset dir="${griffon.src.cli}" includes="**/*.gdsl"/>
         </jar>
         <jar destfile="${griffon.dist}/griffon-rt-${griffon.version}.jar" manifest="${griffon.build.rt}/META-INF/MANIFEST.MF">
             <fileset dir="${griffon.build.rt}"/>
