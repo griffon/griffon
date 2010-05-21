@@ -35,7 +35,7 @@ target(parseArguments: "Parse the arguments passed on the command line") {
     if (argsMap.size() > 1 || argsMap["params"] || !args) return
 
     args?.tokenize().each {token ->
-        def nameValueSwitch = token =~ "--?(.*)=(.*)"
+        def nameValueSwitch = token =~ "--?(.*?)=(.*)"
         if (nameValueSwitch.matches()) { // this token is a name/value pair (ex: --foo=bar or -z=qux)
             argsMap[nameValueSwitch[0][1]] = nameValueSwitch[0][2]
         }
