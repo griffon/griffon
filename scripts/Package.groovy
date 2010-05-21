@@ -222,10 +222,6 @@ target(_copyLaunchScripts: "") {
     if (config.griffon.memory?.maxPermSize) {
         javaOpts << "-XX:maxPermSize=$config.griffon.memory.maxPermSize"
     }
-//    if (isMacOSX) {
-//        javaOpts << "-Xdock:name=$griffonAppName"
-//        javaOpts << "-Xdock:icon=${griffonHome}/bin/griffon.icns"
-//    }
     if (config.griffon.app?.javaOpts) {
       config.griffon.app?.javaOpts.each { javaOpts << it }
     }

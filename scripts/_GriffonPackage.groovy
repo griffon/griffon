@@ -1,18 +1,18 @@
 /*
-* Copyright 2004-2010 the original author or authors.
-*
-* Licensed under the Apache License, Version 2.0 (the "License");
-* you may not use this file except in compliance with the License.
-* You may obtain a copy of the License at
-*
-*      http://www.apache.org/licenses/LICENSE-2.0
-*
-* Unless required by applicable law or agreed to in writing, software
-* distributed under the License is distributed on an "AS IS" BASIS,
-* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-* See the License for the specific language governing permissions and
-* limitations under the License.
-*/
+ * Copyright 2004-2010 the original author or authors.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 
 import java.util.zip.ZipEntry
 import java.util.zip.ZipFile
@@ -20,6 +20,7 @@ import org.apache.log4j.LogManager
 import org.codehaus.griffon.commons.*
 import org.codehaus.griffon.plugins.logging.Log4jConfig
 import griffon.util.RunMode
+import org.codehaus.griffon.util.BuildSettings
 import static griffon.util.GriffonApplicationUtils.osArch
 
 /**
@@ -31,17 +32,15 @@ import static griffon.util.GriffonApplicationUtils.osArch
  * @since 0.4
  */
 
-
-import org.codehaus.griffon.util.BuildSettings
-
 includeTargets << griffonScript("_GriffonCompile")
 includeTargets << griffonScript("_PackagePlugins")
 
 configTweaks = []
 
-target( createConfig: "Creates the configuration object") {
+target(createConfig: "Creates the configuration object") {
+    depends(compile)
     event("CreateConfigStart",[])
-    if(!ConfigurationHolder.config && configFile.exists()) {
+    if(configFile.exists()) {
        def configClass
        try {
            configClass = classLoader.loadClass("Config")
@@ -52,8 +51,6 @@ target( createConfig: "Creates the configuration object") {
            try {
                config = configSlurper.parse(configClass)
                config.setConfigFile(configFile.toURI().toURL())
-
-               ConfigurationHolder.setConfig(config)
            }
            catch(Exception e) {
                logError("Failed to compile configuration file",e)
@@ -72,8 +69,6 @@ target( createConfig: "Creates the configuration object") {
             try {
                 applicationConfig = configSlurper.parse(applicationConfigClass)
                 applicationConfig.setConfigFile(applicationFile.toURI().toURL())
-
-                //ConfigurationHolder.setConfig(config)
             }
             catch(Exception e) {
                 logError("Failed to compile Application configuration file", e)
@@ -85,7 +80,7 @@ target( createConfig: "Creates the configuration object") {
     event("CreateConfigEnd",[])
 }
 
-target( packageApp : "Implementation of package target") {
+target(packageApp : "Implementation of package target") {
     depends(createStructure, packagePlugins)
 
     try {
@@ -108,10 +103,10 @@ target( packageApp : "Implementation of package target") {
         srcfiles(dir:"$classesDirPath", includes:"**/*")
     }
 
-    i18nDir = "${resourcesDirPath}/griffon-app/i18n"
+    i18nDir = new File("${resourcesDirPath}/griffon-app/i18n")
     ant.mkdir(dir:i18nDir)
 
-    resourcesDir = "${resourcesDirPath}/griffon-app/resources"
+    resourcesDir = new File("${resourcesDirPath}/griffon-app/resources")
     ant.mkdir(dir:resourcesDir)
 
     collectArtifactMetadata()
@@ -141,8 +136,7 @@ target( packageApp : "Implementation of package target") {
         fileset(dir:"${basedir}", includes:metadataFile.name)
     }
     ant.copy(todir:resourcesDirPath, failonerror:false) {
-        fileset(dir:"${basedir}/griffon-app/conf", includes:"**", excludes:"*.groovy, log4j*, webstart"/*hibernate, spring"*/)
-//        fileset(dir:"${basedir}/griffon-app/conf/hibernate", includes:"**/**")
+        fileset(dir:"${basedir}/griffon-app/conf", includes:"**", excludes:"*.groovy, log4j*, webstart")
         fileset(dir:"${basedir}/src/main") {
             include(name:"**/**")
             exclude(name:"**/*.java")
@@ -274,9 +268,6 @@ target(copyLibs: "Copy Library Files") {
 
     copyPlatformJars("${basedir}/lib", jardir)
     
-//FIXME    ant.copy(todir:jardir) { fileset(dir:"${basedir}/lib/", includes:"*.dll") }
-//FIXME    ant.copy(todir:jardir) { fileset(dir:"${basedir}/lib/", includes:"*.so") }
-
     event("CopyLibsEnd", [jardir])
 }
 
@@ -553,25 +544,6 @@ doPackageTextReplacement = {dir, fileFilters ->
     }
 }
 
-//
-//target(configureServerContextPath: "Configuring server context path") {
-//    // Get the application context path by looking for a property named 'app.context' in the following order of precedence:
-//    //    System properties
-//    //    application.properties
-//    //    config
-//    //    default to griffonAppName if not specified
-//
-//    serverContextPath = System.getProperty("app.context")
-//    serverContextPath = serverContextPath ?: metadata.'app.context'
-//    serverContextPath = serverContextPath ?: config.griffon.app.context
-//    serverContextPath = serverContextPath ?: griffonAppName
-//
-//    if(!serverContextPath.startsWith('/')) {
-//        serverContextPath = "/${serverContextPath}"
-//    }
-//}
-//
-
 target(startLogging:"Bootstraps logging") {
     LogManager.resetConfiguration()
     if(config.log4j instanceof Closure) {
@@ -585,112 +557,9 @@ target(startLogging:"Bootstraps logging") {
     }
 }
 
-//target( generateWebXml : "Generates the web.xml file") {
-//    depends(classpath)
-//
-//    if(config.griffon.config.base.webXml) {
-//        def customWebXml =resolveResources(config.griffon.config.base.webXml)
-//        if(customWebXml)
-//            webXml = customWebXml[0]
-//        else {
-//            event("StatusError", [ "Custom web.xml defined in config [${config.griffon.config.base.webXml}] could not be found." ])
-//            exit(1)
-//        }
-//    }
-//    else {
-//        webXml = new FileSystemResource("${basedir}/src/templates/war/web.xml")
-//        def tmpWebXml = "${projectWorkDir}/web.xml.tmp"
-//        if(!webXml.exists()) {
-//            copyGriffonResource(tmpWebXml, griffonResource("src/war/WEB-INF/web${servletVersion}.template.xml"))
-//        }
-//        else {
-//            ant.copy(file:webXml.file, tofile:tmpWebXml, overwrite:true)
-//        }
-//        webXml = new FileSystemResource(tmpWebXml)
-//        ant.replace(file:tmpWebXml, token:"@griffon.project.key@", value:"${griffonAppName}-${griffonEnv}-${griffonAppVersion}")
-//    }
-//    def sw = new StringWriter()
-//
-//    try {
-//        profile("generating web.xml from $webXml") {
-//            event("WebXmlStart", [webXml.filename])
-//            pluginManager.doWebDescriptor(webXml, sw)
-//            webXmlFile.withWriter {
-//                it << sw.toString()
-//            }
-//            event("WebXmlEnd", [webXml.filename])
-//        }
-//    }
-//    catch(Exception e) {
-//        logError("Error generating web.xml file",e)
-//        exit(1)
-//    }
-//
-//}
-
-//target(packageTemplates: "Packages templates into the app") {
-//    ant.mkdir(dir:scaffoldDir)
-//    if(new File("${basedir}/src/templates/scaffolding").exists()) {
-//        ant.copy(todir:scaffoldDir, overwrite:true) {
-//            fileset(dir:"${basedir}/src/templates/scaffolding", includes:"**")
-//        }
-//    }
-//    else {
-//        copyGriffonResources(scaffoldDir, "src/griffon/templates/scaffolding/*")
-//    }
-//}
-//
-//
-//// Checks whether the project's sources have changed since the last
-//// compilation, and then performs a recompilation if this is the case.
-//// Returns the updated 'lastModified' value.
-//recompileCheck = { lastModified, callback ->
-//    try {
-//        def ant = new AntBuilder()
-//        def classpathId = "griffon.compile.classpath"
-//        ant.taskdef (name: 'groovyc', classname : 'org.codehaus.griffon.compiler.GriffonCompiler')
-//        ant.path(id:classpathId,compileClasspath)
-//
-//        ant.groovyc(destdir:classesDirPath,
-//                    classpathref:classpathId,
-//                    encoding:"UTF-8",
-//                    projectName:baseName) {
-//                    src(path:"${basedir}/src/groovy")
-//                    src(path:"${basedir}/griffon-app/domain")
-//                    src(path:"${basedir}/griffon-app/utils")
-//                    src(path:"${basedir}/src/java")
-//                    javac(classpathref:classpathId, debug:"yes", target: '1.5')
-//
-//                }
-//        ant = null
-//    }
-//    catch(Exception e) {
-//        compilationError = true
-//        logError("Error automatically restarting container",e)
-//    }
-//
-//    def tmp = classesDir.lastModified()
-//    if(lastModified < tmp) {
-//
-//        // run another compile JIT
-//        try {
-//            callback()
-//        }
-//        catch(Exception e) {
-//            logError("Error automatically restarting container",e)
-//        }
-//
-//        finally {
-//           lastModified = classesDir.lastModified()
-//        }
-//    }
-//
-//    return lastModified
-//}
-
 copyPlatformJars = { srcdir, destdir ->
     def env = System.getProperty(BuildSettings.ENVIRONMENT)
-    if(env == BuildSettings.ENV_DEVELOPMENT) {
+    if(env == BuildSettings.ENV_DEVELOPMENT || env == BuildSettings.ENV_TEST) {
         _copyPlatformJars(srcdir.toString(), destdir.toString(), platform)
     } else {
         PLATFORMS.each { entry ->
@@ -712,7 +581,7 @@ _copyPlatformJars = { srcdir, destdir, os ->
 
 copyNativeLibs = { srcdir, destdir ->
     def env = System.getProperty(BuildSettings.ENVIRONMENT)
-    if(env == BuildSettings.ENV_DEVELOPMENT) {
+    if(env == BuildSettings.ENV_DEVELOPMENT || env == BuildSettings.ENV_TEST) {
         _copyNativeLibs(srcdir.toString(), destdir.toString(), platform)
     } else {
         PLATFORMS.each { entry ->
@@ -728,8 +597,7 @@ _copyNativeLibs = { srcdir, destdir, os ->
         ant.mkdir(dir: dest)
         src.eachFile { srcFile ->
             if(srcFile.toString().endsWith(PLATFORMS[os].nativelib) || srcFile.toString().endsWith('.jar')) {
-                File targetFile = new File(dest.absolutePath + File.separator + srcFile.name)
-                ant.copy(file: srcFile, toFile: targetFile, overwrite: true)
+                griffonCopyDist(srcFile.toString(), dest.absolutePath)
             }
         }
     }

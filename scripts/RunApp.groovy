@@ -13,19 +13,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 /**
  * Created by IntelliJ IDEA.
- *@author Danno.Ferrin
+ * @author Danno.Ferrin
  * Date: Aug 5, 2008
  * Time: 10:35:06 PM
  */
 
-import static griffon.util.GriffonApplicationUtils.isLinux
 import static griffon.util.GriffonApplicationUtils.isMacOSX
-import org.codehaus.griffon.util.BuildSettings
-import griffon.util.RunMode
 
 includeTargets << griffonScript("Package")
+includeTargets << griffonScript("_GriffonBootstrap")
 includeTargets << griffonScript("_PackagePlugins" )
 
 target('default': "Runs the application from the command line") {
@@ -36,33 +35,14 @@ target('default': "Runs the application from the command line") {
     // launch event after jardir has been defined
 
     event("RunAppStart",[])
-    runtimeJars = []
-
-    // list all jars
-    jardir.eachFileMatch(~/.*\.jar/) {f ->
-        runtimeJars += f
-    }
-
-// XXX -- NATIVE
-//    copyPlatformJars(basedir + File.separator + 'lib', jardir.absolutePath)
-//    copyNativeLibs(basedir + File.separator + 'lib', jardir.absolutePath)
-    def platformDir = new File(jardir.absolutePath, platform)
-    if(platformDir.exists()) {
-        platformDir.eachFileMatch(~/.*\.jar/) {f ->
-            runtimeJars += f
-        }
-    }
-// XXX -- NATIVE
+    runtimeJars = setupRuntimeJars()
 
     // setup the vm
     if (!binding.variables.javaVM) {
         javaVM = [System.properties['java.home'], 'bin', 'java'].join(File.separator)
     }
 
-    def javaOpts = []
-    def env = System.getProperty(BuildSettings.ENVIRONMENT)
-    javaOpts << "-D${BuildSettings.ENVIRONMENT}=${env}"
-    javaOpts << "-D${RunMode.KEY}=${RunMode.current}"
+    def javaOpts = setupJavaOpts(true)
     if (argsMap.containsKey('debug')) {
         def portNum = argsMap.debugPort?:'18290'  //default is 'Gr' in ASCII
         def addr = argsMap.debugAddr?:'127.0.0.1'
@@ -85,26 +65,10 @@ target('default': "Runs the application from the command line") {
     if (config.griffon.memory?.maxPermSize) {
         javaOpts << "-XX:maxPermSize=$config.griffon.memory.maxPermSize"
     }
-    javaOpts << "-Dgriffon.start.dir=\""+jardir.parentFile.absolutePath+"\""
     if (isMacOSX) {
         javaOpts << "-Xdock:name=$griffonAppName"
         javaOpts << "-Xdock:icon=${griffonHome}/bin/griffon.icns"
     }
-    if (config.griffon.app?.javaOpts) {
-        config.griffon.app?.javaOpts.each { javaOpts << it }
-    }
-    if (argsMap.javaOpts) {
-        javaOpts << argsMap.javaOpts
-    }
-
-// XXX -- NATIVE
-    File nativeLibDir = new File(platformDir.absolutePath, 'native')
-    if(nativeLibDir.exists()) {
-        String libraryPath = System.getProperty('java.library.path')
-        libraryPath = libraryPath + File.pathSeparator + nativeLibDir.absolutePath
-        javaOpts << "-Djava.library.path=$libraryPath".toString()
-    }
-// XXX -- NATIVE
 
     def runtimeClasspath = runtimeJars.collect { f ->
         f.absolutePath - jardir.absolutePath - File.separator

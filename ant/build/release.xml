@@ -4,7 +4,6 @@
         <include name="${griffon.release.base.dir.name}/bin/griffon"/>
         <include name="${griffon.release.base.dir.name}/bin/griffon-debug"/>
         <include name="${griffon.release.base.dir.name}/ant/bin/ant"/>
-        <include name="${griffon.release.base.dir.name}/bin/griffon-0.4"/>
         <include name="${griffon.release.base.dir.name}/bin/startGriffon"/>
     </patternset>
 
@@ -59,19 +58,11 @@
             <param name="dir.location" value="bin"/>
             <param name="dir.destination" value="${release.dir}/bin"/>
         </antcall>
-        <copy file="bin/griffon.icns" todir="${release.dir}/bin"/>
         <antcall target="copy-dir">
             <param name="dir.excludes" value=""/>
             <param name="dir.location" value="ant"/>
             <param name="dir.destination" value="${release.dir}/ant"/>
         </antcall>
-        <!--
-        <antcall target="copy-dir">
-            <param name="dir.excludes" value=""/>
-            <param name="dir.location" value="media"/>
-            <param name="dir.destination" value="${release.dir}/media"/>
-        </antcall>
-        -->
         <antcall target="copy-dir">
             <param name="dir.excludes" value=""/>
             <param name="dir.location" value="scripts"/>
@@ -116,6 +107,7 @@
                 <include name="build.properties"/>
             </fileset>
         </copy>
+        <copy file="bin/griffon.icns" todir="${release.dir}/bin"/>
     </target>
 
     <target name="copy-exclusive-binary-release-content">

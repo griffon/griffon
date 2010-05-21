@@ -1,18 +1,18 @@
 /*
-* Copyright 2004-2010 the original author or authors.
-*
-* Licensed under the Apache License, Version 2.0 (the "License");
-* you may not use this file except in compliance with the License.
-* You may obtain a copy of the License at
-*
-*      http://www.apache.org/licenses/LICENSE-2.0
-*
-* Unless required by applicable law or agreed to in writing, software
-* distributed under the License is distributed on an "AS IS" BASIS,
-* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-* See the License for the specific language governing permissions and
-* limitations under the License.
-*/
+ * Copyright 2004-2010 the original author or authors.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 
 import griffon.util.Metadata
 import org.codehaus.griffon.util.BuildSettings
@@ -55,11 +55,7 @@ else {
 // over those defined in BuildSettings, which in turn take precedence
 // over the defaults.
 buildProps = buildConfig.toProperties()
-// enableJndi = getPropertyValue("enable.jndi", false).toBoolean()
 enableProfile = getPropertyValue("griffon.script.profile", false).toBoolean()
-// serverPort = getPropertyValue("server.port", 8080).toInteger()
-// serverPortHttps = getPropertyValue("server.port.https", 8443).toInteger()
-// serverHost = getPropertyValue("server.host", null)
 pluginsHome = griffonSettings.projectPluginsDir.path
 
 // Load the application metadata (application.properties)
@@ -92,10 +88,8 @@ isAddonPlugin = griffonSettings.baseDir.listFiles().find { it.name.endsWith("Gri
 
 shouldPackageTemplates = false
 config = new ConfigObject()
-//scaffoldDir = "${basedir}/web-app/WEB-INF/templates/scaffolding"
 configFile = new File("${basedir}/griffon-app/conf/Config.groovy")
 applicationFile = new File("${basedir}/griffon-app/conf/Application.groovy")
-//webXmlFile = new File("${resourcesDirPath}/web.xml")
 
 // Pattern that matches artefacts in the 'griffon-app' directory.
 // Note that the capturing group matches any package directory

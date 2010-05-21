@@ -22,49 +22,26 @@
  * @since 0.4
  */
 
-//import org.codehaus.griffon.support.*
 import org.codehaus.groovy.tools.shell.*
 
 includeTargets << griffonScript("_GriffonBootstrap")
 
-target (runShell: "Load the Griffon interactive shell") {
-	depends( configureProxy, packageApp )
+target(default: "Runs an embedded application in a Groovy Shell") {
+    depends(checkVersion, configureProxy, classpath, createConfig)
+
     jardir = ant.antProject.replaceProperties(config.griffon.jars.destDir)
-    ant.copy(todir:jardir) { fileset(dir:"${griffonHome}/lib/", includes:"jline-*.jar") }
-    classpath()
-	shell()
+    ant.copy(todir:jardir) { fileset(dir:"${griffonHome}/lib/", includes: "jline-*.jar") }
+
+    bootstrap()
+    shell()
 }
 
-target(default:"Runs an embedded application in a Groovy Shell") {
-
-//    classLoader = new URLClassLoader([classesDir.toURI().toURL()] as URL[], rootLoader)
-//    Thread.currentThread().setContextClassLoader(classLoader)
+target(shell: "Load the Griffon interactive shell") {
     loadApp()
     configureApp()
     def b = new Binding()
-//    b.ctx = appCtx
-//    b.griffonApplication = griffonApp
+    b.app = griffonApp
 
-//    def original = Groovysh.metaClass.getMetaMethod("execute", [String] as Object[])
-//    Groovysh.metaClass.execute = { String line ->
-//        try {
-//            def listeners = appCtx.getBeansOfType(PersistenceContextInterceptor)
-//            listeners.each { k,v ->
-//                v.init()
-//            }
-//
-//            original.invoke(delegate, line)
-//            listeners.each { k,v ->
-//                v.flush()
-//            }
-//        }
-//    finally {
-//            listeners.each { k,v ->
-//                v.destroy()
-//            }
-//        }
-//    }
-
-    def shell = new Groovysh(classLoader,b, new IO(System.in, System.out, System.err))
-	shell.run([] as String[])
+    def shell = new Groovysh(classLoader, b, new IO(System.in, System.out, System.err))
+    shell.run([] as String[])
 }

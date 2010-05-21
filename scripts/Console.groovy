@@ -27,37 +27,11 @@ import org.codehaus.griffon.support.*
 includeTargets << griffonScript("_GriffonBootstrap")
 
 target(default: "Runs an embedded application in a Groovy console") {
-    depends( checkVersion, configureProxy, packageApp, classpath)
-
-//    classLoader = new URLClassLoader([classesDir.toURI().toURL()] as URL[], rootLoader)
-//    Thread.currentThread().setContextClassLoader(classLoader)
-	loadApp()
-	configureApp()
+    depends(checkVersion, configureProxy, classpath, bootstrap)
 
     try {
         def console = createConsole()
         console.run()
-
-//        // On each monitor check, determine whether the console window
-//        // is still open. If not, we set the monitor flag so that its
-//        // thread ends and the script completes.
-//        monitorCheckCallback = {
-//            if (!console.frame.visible) keepMonitoring = false
-//        }
-//
-//        // If the app is recompiled, we close the console and start it
-//        // up again with the new classes.
-//        monitorRecompileCallback = {
-//            println "Exiting console"
-//            console.exit()
-//            createConsole()
-//            println "Restarting console"
-//            console.run()
-//        }
-//
-//        // Start the monitor thread.
-//        monitorApp()
-//        //while(true) { sleep(Long.MAX_VALUE) }
         while(console.consoleControllers) { sleep(3500) }
     } catch (Exception e) {
         event("StatusFinal", ["Error starting console: ${e.message}"])
@@ -66,21 +40,9 @@ target(default: "Runs an embedded application in a Groovy console") {
 
 createConsole = {
     def b = new Binding()
-//    b.ctx = appCtx
     b.app = griffonApp
 
     def console = new groovy.ui.Console(griffonApp.class.classLoader, b)
-//    console.beforeExecution = {
-//        appCtx.getBeansOfType(PersistenceContextInterceptor).each { k,v ->
-//            v.init()
-//        }
-//    }
-//    console.afterExecution = {
-//        appCtx.getBeansOfType(PersistenceContextInterceptor).each { k,v ->
-//            v.flush()
-//            v.destroy()
-//        }
-//    }
 
     return console
 }

@@ -16,17 +16,13 @@
 
 /**
  * Created by IntelliJ IDEA.
- *@author Danno.Ferrin
+ * @author Danno.Ferrin
  * Date: Aug 5, 2008
  * Time: 10:35:06 PM
  */
 
-import org.codehaus.griffon.commons.ConfigurationHolder
-import org.codehaus.griffon.util.BuildSettings
-import griffon.util.RunMode
-
-
 includeTargets << griffonScript("Package")
+includeTargets << griffonScript("_GriffonBootstrap" )
 includeTargets << griffonScript("_PackagePlugins" )
 
 target(tweakConfig:' tweaks for webstart') {
@@ -49,10 +45,7 @@ target('default': "Runs the application with Java Webstart") {
     if (!binding.variables.webstartVM) {
         webstartVM = [System.properties['java.home'], 'bin', 'javaws'].join(File.separator)
     }
-    def javaOpts = []
-    def env = System.getProperty(BuildSettings.ENVIRONMENT)
-    javaOpts << "-D${BuildSettings.ENVIRONMENT}=${env}"
-    javaOpts << "-D${RunMode.KEY}=${RunMode.WEBSTART}"
+    def javaOpts = setupJavaOpts()
     javaOpts = "-J"+javaOpts.join(" -J")
 
     // TODO set proxy settings
