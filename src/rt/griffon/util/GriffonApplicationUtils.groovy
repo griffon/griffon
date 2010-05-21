@@ -16,7 +16,7 @@
 package griffon.util
 
 /**
- *@author Danno.Ferrin
+ * @author Andres Almiray
  */
 class GriffonApplicationUtils {
    private GriffonApplicationUtils(){ }
@@ -40,16 +40,18 @@ class GriffonApplicationUtils {
    static final String osName
    static final String osVersion
    static final String javaVersion
+   static final String is64Bit
 
    static final boolean isJdk14
    static final boolean isJdk15
    static final boolean isJdk16
+   static final boolean isJdk17
 
    static {
-      osArch = System.getProperty("os.arch")
-      osName = System.getProperty("os.name")
+      osArch = System.getProperty('os.arch')
+      osName = System.getProperty('os.name')
       
-      switch( osName ) {
+      switch(osName) {
          case ~/Windows.*/:
             isWindows = true
             isWindows95 = osName =~ /95/ 
@@ -72,12 +74,15 @@ class GriffonApplicationUtils {
             isMacOSX = true
       }
 
-      osVersion = System.getProperty("os.version")
-      javaVersion = System.getProperty("java.version")
-      switch( new BigDecimal(javaVersion[0..2]) ) {
+      osVersion = System.getProperty('os.version')
+      javaVersion = System.getProperty('java.version')
+      switch(new BigDecimal(javaVersion[0..2])) {
+         case {it >= 1.7} : isJdk17 = true
          case {it >= 1.6} : isJdk16 = true
          case {it >= 1.5} : isJdk15 = true
          case {it >= 1.4} : isJdk14 = true
       }
+
+      is64Bit = osArch.contains('64')
    }
 }

@@ -44,8 +44,8 @@ target('default': "Runs the application from the command line") {
     }
 
 // XXX -- NATIVE
-    copyPlatformJars(basedir + File.separator + 'lib', jardir.absolutePath)
-    copyNativeLibs(basedir + File.separator + 'lib', jardir.absolutePath)
+//    copyPlatformJars(basedir + File.separator + 'lib', jardir.absolutePath)
+//    copyNativeLibs(basedir + File.separator + 'lib', jardir.absolutePath)
     def platformDir = new File(jardir.absolutePath, platform)
     if(platformDir.exists()) {
         platformDir.eachFileMatch(~/.*\.jar/) {f ->
@@ -65,7 +65,7 @@ target('default': "Runs the application from the command line") {
     javaOpts << "-D${RunMode.KEY}=${RunMode.current}"
     if (argsMap.containsKey('debug')) {
         def portNum = argsMap.debugPort?:'18290'  //default is 'Gr' in ASCII
-        def addr = argsMap.debugAddr?:'127.0.0.1'  //default is 'Gr' in ASCII
+        def addr = argsMap.debugAddr?:'127.0.0.1'
         def debugSocket = ''
         if (portNum =~ /\d+/) {
             if (addr == '127.0.0.1') {
@@ -93,6 +93,9 @@ target('default': "Runs the application from the command line") {
     if (config.griffon.app?.javaOpts) {
         config.griffon.app?.javaOpts.each { javaOpts << it }
     }
+    if (argsMap.javaOpts) {
+        javaOpts << argsMap.javaOpts
+    }
 
 // XXX -- NATIVE
     File nativeLibDir = new File(platformDir.absolutePath, 'native')
@@ -111,12 +114,21 @@ target('default': "Runs the application from the command line") {
 
     // start the processess
     javaOpts = javaOpts.join(' ')
-    Process p = "$javaVM $proxySettings $javaOpts -classpath $runtimeClasspath $griffonApplicationClass".execute(null as String[], jardir)
 
-    // pipe the output
-    p.consumeProcessOutput(System.out, System.err)
-
-    // wait for it.... wait for it...
-    p.waitFor()
-    event("RunAppEnd",[])
+    try {
+        Process p = "$javaVM $proxySettings $javaOpts -classpath $runtimeClasspath $griffonApplicationClass".execute(null as String[], jardir)
+    
+        // pipe the output
+        p.consumeProcessOutput(System.out, System.err)
+    
+        // wait for it.... wait for it...
+        p.waitFor()
+        event("RunAppEnd",[])
+    } finally {
+// XXX -- NATIVE
+        if(platformDir.exists()) {
+            ant.delete(dir: platformDir)
+        }
+// XXX -- NATIVE
+    }
 }

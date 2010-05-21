@@ -1,0 +1,41 @@
+/*
+ * Copyright 2010 the original author or authors.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+import org.codehaus.griffon.gdsl.GdslUtils
+
+/**
+ * @author Andres Almiray
+ */
+
+contributor(context(ctype: 'java.lang.Object')) {
+    if(!GdslUtils.isGriffonArtifactNotResource(classType)) return
+    method name: 'buildMVCGroup', type: 'java.util.List', params: [mvcType: 'java.lang.String']
+    method name: 'buildMVCGroup', type: 'java.util.List', params: [mvcType: 'java.lang.String', mvcName: 'java.lang.String']
+    method name: 'buildMVCGroup', type: 'java.util.List', params: [mvcType: 'java.lang.String', mvcName: 'java.lang.String', bindArgs: 'java.util.Map']
+    method name: 'buildMVCGroup', type: 'java.util.List', params: [mvcType: 'java.lang.String', bindArgs: 'java.util.Map']
+    method name: 'createMVCGroup', type: 'java.util.List', params: [mvcType: 'java.lang.String']
+    method name: 'createMVCGroup', type: 'java.util.List', params: [mvcType: 'java.lang.String', mvcName: 'java.lang.String']
+    method name: 'createMVCGroup', type: 'java.util.List', params: [mvcType: 'java.lang.String', mvcName: 'java.lang.String', bindArgs: 'java.util.Map']
+    method name: 'createMVCGroup', type: 'java.util.List', params: [mvcType: 'java.lang.String', bindArgs: 'java.util.Map']
+    method name: 'destroyMVCGroup', type: 'void', params: [mvcName: 'java.lang.String']
+    method name: 'newInstance', type: 'java.lang.Object', params: [klass: 'java.lang.Class']
+    method name: 'newInstance', type: 'java.lang.Object', params: [klass: 'java.lang.Class', type: 'java.lang.String']
+}
+
+contributor(context(ctype: 'griffon.core.GriffonApplication')) {
+    method name: 'newInstance', type: 'java.lang.Object', params: [klass: 'java.lang.Class']
+    method name: 'newInstance', type: 'java.lang.Object', params: [klass: 'java.lang.Class', type: 'java.lang.String']
+}

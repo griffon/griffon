@@ -28,6 +28,7 @@ import org.springframework.util.FileCopyUtils
 import static griffon.util.GriffonApplicationUtils.isLinux
 import static griffon.util.GriffonApplicationUtils.isSolaris
 import static griffon.util.GriffonApplicationUtils.isMacOSX
+import static griffon.util.GriffonApplicationUtils.is64Bit
 // XXX -- NATIVE
 
 /**
@@ -246,24 +247,41 @@ platform = 'windows'
 if(isSolaris) platform = 'solaris'
 else if(isLinux) platform = 'linux'
 else if(isMacOSX) platform = 'macosx'
+if(is64Bit) platform += '64'
 
 PLATFORMS = [
     windows: [
         nativelib: '.dll',
         webstartName: 'Windows',
-        archs: ['x86', 'amd64', 'x86_64']],
+        archs: ['x86']],
     linux: [
         nativelib: '.so',
         webstartName: 'Linux',
-        archs: ['i386', 'x86', 'amd64', 'x86_64']],
+        archs: ['i386', 'x86']],
     macosx: [
         nativelib: '.jnilib',
         webstartName: 'Mac OS X',
-        archs: ['i386', 'ppc', 'x86_64']],
+        archs: ['i386', 'ppc']],
     solaris: [
         nativelib: '.so',
         webstartName: 'SunOS',
-        archs: ['x86', 'amd64', 'x86_64', 'sparc', 'sparcv9']]
+        archs: ['x86', 'sparc', 'sparcv9']],
+    windows64: [
+        nativelib: '.dll',
+        webstartName: 'Windows',
+        archs: ['amd64', 'x86_64']],
+    linux64: [
+        nativelib: '.so',
+        webstartName: 'Linux',
+        archs: ['amd64', 'x86_64']],
+    macosx64: [
+        nativelib: '.jnilib',
+        webstartName: 'Mac OS X',
+        archs: ['x86_64']],
+    solaris64: [
+        nativelib: '.so',
+        webstartName: 'SunOS',
+        archs: ['amd64', 'x86_64']]
 ]
 
 doForAllPlatforms = { callback ->

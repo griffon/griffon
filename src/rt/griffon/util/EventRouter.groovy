@@ -54,7 +54,7 @@ class EventRouter {
          def eventHandler = "on" + eventName
          def dispatchEvent = { listener ->
             try {
-               fireEvent(listener, eventHandler, params)
+               fireEvent(listener, eventHandler, params ?: [])
             } catch( x ) {
                // TODO log exception
                x.printStackTrace()

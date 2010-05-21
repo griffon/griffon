@@ -147,6 +147,13 @@ class GriffonApplicationHelper {
                 throw cnfe;
             }
         }
+        
+        script.isUIThread = UIThreadHelper.instance.&isUIThread
+        script.execAsync = UIThreadHelper.instance.&executeAsync
+        script.execSync = UIThreadHelper.instance.&executeSync
+        script.execOutside = UIThreadHelper.instance.&executeOutside
+        script.execFuture = {Object... args -> UIThreadHelper.instance.executeFuture(*args) }
+
         UIThreadHelper.instance.executeSync(script)
     }
 

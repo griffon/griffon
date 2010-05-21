@@ -101,7 +101,7 @@ public class EventPublisherASTTransformation implements ASTTransformation, Opcod
      * void addEventListener(String,Closure),
      * void removeEventListener(Object),
      * void removeEventListener(String,Closure), and
-     * void publishEvent(String, Object).  If any are defined all
+     * void publishEvent(String, List = []).  If any are defined all
      * must be defined or a compilation error results.
      *
      * @param declaringClass the class to search
@@ -149,7 +149,7 @@ public class EventPublisherASTTransformation implements ASTTransformation, Opcod
      * <code>public void addEventListener(String, Closure)</code>
      * <code>public void removeEventListener(Object)</code>
      * <code>public void removeEventListener(String, Closure)</code>
-     * <code>public void publishEvent(String,List)</code>
+     * <code>public void publishEvent(String,List = [])</code>
      *
      * @param declaringClass the class to which we add the support field and methods
      */
@@ -237,6 +237,7 @@ public class EventPublisherASTTransformation implements ASTTransformation, Opcod
                                         new ArgumentListExpression(
                                                 new Expression[]{new VariableExpression("name"), new VariableExpression("listener")})))));
 
+/*
         // add method:
         // void publishEvent(String name) {
         //     this$eventRouter.publishEvent(name, [])
@@ -256,9 +257,10 @@ public class EventPublisherASTTransformation implements ASTTransformation, Opcod
                                                 new Expression[]{
                                                         new VariableExpression("name"),
                                                         new ListExpression()})))));
+*/
 
         // add method:
-        // void publishEvent(String name, List args = []) {
+        // void publishEvent(String name, List args) {
         //     this$eventRouter.publishEvent(name, args)
         //  }
         Parameter args = new Parameter(ClassHelper.LIST_TYPE, "args");

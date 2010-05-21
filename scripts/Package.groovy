@@ -41,8 +41,8 @@ target('default': "Packages a Griffon application.") {
         def internal = ['zip', 'jar', 'applet', 'webstart']
         argsMap.params.each { type ->
            try {
+               System.setProperty(RunMode.KEY, RunMode.CUSTOM.name)
                if(type in internal) {
-                   System.setProperty(RunMode.KEY, RunMode.CUSTOM.name)
                    depends("package_"+type)
                } else {
                    event("MakePackage",[type])
@@ -54,7 +54,6 @@ target('default': "Packages a Griffon application.") {
         }
     }
 }
-
 
 target(prepackage: "packaging steps all standard packaging options do") {
     event("PrepackageStart", [])

@@ -20,8 +20,7 @@ import org.apache.log4j.LogManager
 import org.codehaus.griffon.commons.*
 import org.codehaus.griffon.plugins.logging.Log4jConfig
 import griffon.util.RunMode
-//import org.codehaus.griffon.commons.cfg.ConfigurationHelper
-//import org.springframework.core.io.FileSystemResource
+import static griffon.util.GriffonApplicationUtils.osArch
 
 /**
  * Gant script that packages a Griffon application (note: does not create WAR)
@@ -151,7 +150,6 @@ target( packageApp : "Implementation of package target") {
         }
     }
 
-
     startLogging()
 
     loadPlugins()
@@ -159,7 +157,11 @@ target( packageApp : "Implementation of package target") {
     checkKey()
     copyLibs()
     jarFiles()
-    copyNativeLibs("${basedir}/lib", jardir.toString())
+
+// XXX -- NATIVE 
+    copyPlatformJars(basedir + File.separator + 'lib', new File(jardir).absolutePath) 
+    copyNativeLibs(basedir + File.separator + 'lib', new File(jardir).absolutePath) 
+// XXX -- NATIVE 
 
     event("PackagingEnd",[])
 }
@@ -322,7 +324,7 @@ griffonCopyDist =  { jarname, targetDir, boolean force = false ->
 
 maybePackAndSign = {srcFile, targetFile = srcFile, boolean force = false ->
     // GRIFFON-118 required for avoiding signing jars twice when using jar package target
-    if(_skipSigning) return
+    if(_skipSigning && !force) return
 
     // we may already be copied, but not packed or signed
     // first see if the config calls for packing or signing
@@ -493,22 +495,24 @@ target(generateJNLP:"Generates the JNLP File") {
         }
     }
 
+// XXX -- NATIVE
     doForAllPlatforms { platformDir, platformOs ->
         if(platformDir.list()) {
-            jnlpResources << "<resources os='${PLATFORMS[platformOs].webstartName}'>"
+            jnlpResources << "<resources os='${PLATFORMS[platformOs].webstartName}' arch='${osArch}'>"
             platformDir.eachFileMatch(~/.*\.jar/) { f ->
                 jnlpResources << "    <jar href='${platformOs}/${f.name}' />"
             }
             def nativeLibDir = new File(platformDir.absolutePath, 'native')
             if(nativeLibDir.exists() && nativeLibDir.list()) {
-                nativeLibDir.eachFile { f ->
-                    if(!f.toString().endsWith(PLATFORMS[platformOs].nativelib)) return
+                nativeLibDir.eachFileMatch(~/.*\.jar/) { f ->
                     jnlpResources << "    <nativelib href='${platformOs}/native/${f.name}' />"
+                    maybePackAndSign(f, f, true)
                 }
             }
             jnlpResources << "</resources>"
         }
     }
+// XXX -- NATIVE
 
     memOptions = []
     if (config.griffon.memory?.min) {
@@ -723,9 +727,10 @@ _copyNativeLibs = { srcdir, destdir, os ->
     if(src.exists()) {
         ant.mkdir(dir: dest)
         src.eachFile { srcFile ->
-            if(!srcFile.toString().endsWith(PLATFORMS[os].nativelib)) return
-            File targetFile = new File(dest.absolutePath + File.separator + srcFile.name)
-            ant.copy(file: srcFile, toFile: targetFile, overwrite: true)
+            if(srcFile.toString().endsWith(PLATFORMS[os].nativelib) || srcFile.toString().endsWith('.jar')) {
+                File targetFile = new File(dest.absolutePath + File.separator + srcFile.name)
+                ant.copy(file: srcFile, toFile: targetFile, overwrite: true)
+            }
         }
     }
 }
