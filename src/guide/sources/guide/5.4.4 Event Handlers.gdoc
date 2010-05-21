@@ -1,7 +1,7 @@
 Any artifact or class that abides to the following conventions can be registered as an application listener, those conventions are:
 
     * it is a Script, class, Map or closure.
-    * in the case of scripts or classes, they must define an event handler whose name matches *on<EventName>#, this handler can be a method or a closure property.
+    * in the case of scripts or classes, they must define an event handler whose name matches *on<EventName>*, this handler can be a method or a closure property.
     * in the case of a Map, each key maps to <EventName>, the value must be a closure.
     * scripts, classes and maps can be registered/unregistered by calling @addApplicationListener@/ @removeApplicationListener@ on the app instance.
     * closure event handlers must be registered with an overloaded version of @addApplicationListener@/@removeApplicationListener@ that takes *<EventName>* as the first parameter, and the closure itself as the second parameter.

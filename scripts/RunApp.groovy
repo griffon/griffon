@@ -77,11 +77,13 @@ target('default': "Runs the application from the command line") {
     runtimeClasspath = [classesDir, i18nDir, resourcesDir, runtimeClasspath].join(File.pathSeparator)
 
     // start the processess
-    javaOpts = javaOpts.join(' ')
-
     try {
-        Process p = "$javaVM $proxySettings $javaOpts -classpath $runtimeClasspath $griffonApplicationClass".execute(null as String[], jardir)
-    
+        def cmd = [javaVM]
+        // let's make sure no empty/null String is added
+        javaOpts.each { s -> if(s) cmd << s }
+        [proxySettings, '-classpath', runtimeClasspath, griffonApplicationClass].each { s -> if(s) cmd << s }
+        Process p = Runtime.runtime.exec(cmd as String[], new String[0], jardir)
+
         // pipe the output
         p.consumeProcessOutput(System.out, System.err)
     
