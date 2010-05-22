@@ -25,8 +25,8 @@
 includeTargets << griffonScript("_GriffonEvents")
 
 target ( cleanAll: "Cleans a Griffon project" ) {
-	clean()
-	cleanTestReports()
+    clean()
+    cleanTestReports()
 }
 
 target ( clean: "Implementation of clean" ) {
@@ -39,6 +39,7 @@ target ( cleanCompiledSources: "Cleans compiled Java and Groovy sources" ) {
     ant.delete(dir:classesDirPath)
     ant.delete(dir:resourcesDirPath)
     ant.delete(dir:testDirPath)
+    ant.delete(dir:projectTargetDir)
 }
 
 target ( cleanTestReports: "Cleans the test reports" ) {

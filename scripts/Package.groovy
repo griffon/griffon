@@ -21,8 +21,13 @@
  *
  * @since 0.4
  */
+
 import org.codehaus.griffon.util.BuildSettings
 import griffon.util.RunMode
+
+// No point doing this stuff more than once.
+if (getBinding().variables.containsKey("_package_called")) return
+_package_called = true
 
 includeTargets << griffonScript("_GriffonPackage")
 
@@ -76,12 +81,11 @@ target(prepackage: "packaging steps all standard packaging options do") {
     event("PrepackageEnd", [])
 }
 
-target(package_zip: "Creates a binary distribution and zips it.") {
-    event("PackageStart",["zip"])
+target(create_binary_package: "Creates a binary distribution") {
+    event("CreateBinaryPackageStart",[])
 
     depends(prepackage)
 
-    targetDistDir = config.griffon.dist.zip.dir ?: "${distDir}/zip"
     ant.delete(dir: targetDistDir, quiet: true, failOnError: false)
     ant.mkdir(dir: targetDistDir)
     _copyLaunchScripts()
@@ -91,6 +95,15 @@ target(package_zip: "Creates a binary distribution and zips it.") {
 // XXX -- NATIVE
     _copySharedFiles(targetDistDir)
     _copyPackageFiles(targetDistDir)
+
+    event("CreateBinaryPackageEnd",[])
+}
+
+target(package_zip: "Creates a binary distribution and zips it.") {
+    event("PackageStart",["zip"])
+
+    targetDistDir = config.griffon.dist.zip.dir ?: "${distDir}/zip"
+    depends(create_binary_package)
     _zipDist(targetDistDir, false)
 
     event("PackageEnd",["zip"])
