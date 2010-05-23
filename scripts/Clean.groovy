@@ -22,6 +22,10 @@
  * @since 0.4
  */
 
+// No point doing this stuff more than once.
+if (getBinding().variables.containsKey("_clean_called")) return
+_clean_called = true
+
 includeTargets << griffonScript("_GriffonClean")
 
 target ('default': "Cleans a Griffon project" ) {

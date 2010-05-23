@@ -24,6 +24,10 @@ import org.codehaus.griffon.util.GriffonNameUtils
  * @since 0.4
  */
 
+// No point doing this stuff more than once.
+if (getBinding().variables.containsKey("_griffon_compile_called")) return
+_griffon_compile_called = true
+
 includeTargets << griffonScript("_GriffonInit")
 includeTargets << griffonScript("_GriffonArgParsing")
 includeTargets << griffonScript("_PluginDependencies")

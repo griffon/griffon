@@ -22,6 +22,11 @@
 * @since 0.4
 */
 
+// No point doing this stuff more than once.
+if (getBinding().variables.containsKey("_griffon_init_called")) return
+_griffon_init_called = true
+
+
 import org.codehaus.griffon.util.GriffonUtil
 import org.springframework.core.io.FileSystemResource
 import org.codehaus.griffon.util.GriffonNameUtils

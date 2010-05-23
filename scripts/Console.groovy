@@ -22,6 +22,10 @@
  * @since 0.4
  */
 
+// No point doing this stuff more than once.
+if (getBinding().variables.containsKey("_console_called")) return
+_console_called = true
+
 import org.codehaus.griffon.support.*
 
 includeTargets << griffonScript("_GriffonBootstrap")

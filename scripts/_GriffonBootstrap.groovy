@@ -23,6 +23,10 @@ import griffon.util.RunMode
  * @author Graeme Rocher
  */
 
+// No point doing this stuff more than once.
+if (getBinding().variables.containsKey("_bootstrap_called")) return
+_bootstrap_called = true
+
 includeTargets << griffonScript('Package')
 
 target(bootstrap: 'Loads and configures a Griffon instance') {

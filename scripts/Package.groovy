@@ -1,18 +1,18 @@
 /*
-* Copyright 2004-2010 the original author or authors.
-*
-* Licensed under the Apache License, Version 2.0 (the "License");
-* you may not use this file except in compliance with the License.
-* You may obtain a copy of the License at
-*
-*      http://www.apache.org/licenses/LICENSE-2.0
-*
-* Unless required by applicable law or agreed to in writing, software
-* distributed under the License is distributed on an "AS IS" BASIS,
-* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-* See the License for the specific language governing permissions and
-* limitations under the License.
-*/
+ * Copyright 2004-2010 the original author or authors.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 
 /**
  * Gant script that packages a Griffon application (note: does not create WAR)
@@ -41,8 +41,6 @@ target('default': "Packages a Griffon application.") {
                   package_applet,
                   package_webstart)
      } else {
-        // TODO make sure additional package_* targets are
-        // available before the following loop
         def internal = ['zip', 'jar', 'applet', 'webstart']
         argsMap.params.each { type ->
            try {
@@ -81,6 +79,9 @@ target(prepackage: "packaging steps all standard packaging options do") {
     event("PrepackageEnd", [])
 }
 
+/*
+ * make sure targetDistDir is set before calling this target
+ */
 target(create_binary_package: "Creates a binary distribution") {
     event("CreateBinaryPackageStart",[])
 

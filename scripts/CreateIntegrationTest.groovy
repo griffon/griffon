@@ -22,6 +22,10 @@
  * @since 0.4
  */
 
+// No point doing this stuff more than once.
+if (getBinding().variables.containsKey("_integrationtest_called")) return
+_integrationtest_called = true
+
 includeTargets << griffonScript("_GriffonInit")
 includeTargets << griffonScript("_GriffonCreateArtifacts")
 

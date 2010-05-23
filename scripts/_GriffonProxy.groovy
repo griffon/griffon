@@ -22,6 +22,11 @@
  * @since 1.1
  */
 
+// No point doing this stuff more than once.
+if (getBinding().variables.containsKey("_griffon_proxy_called")) return
+_griffon_proxy_called = true
+
+
 target(configureProxy: "The implementation target") {
     proxySettings = ""
     def scriptFile = new File("${griffonSettings.griffonWorkDir}/scripts/ProxyConfig.groovy")

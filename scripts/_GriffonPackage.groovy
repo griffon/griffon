@@ -33,8 +33,8 @@ import static griffon.util.GriffonApplicationUtils.osArch
  */
 
 // No point doing this stuff more than once.
-if (getBinding().variables.containsKey("__package_called")) return
-__package_called = true
+if (getBinding().variables.containsKey("_griffon_package_called")) return
+_griffon_package_called = true
 
 includeTargets << griffonScript("_GriffonCompile")
 includeTargets << griffonScript("_PackagePlugins")

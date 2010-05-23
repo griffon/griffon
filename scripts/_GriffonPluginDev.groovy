@@ -14,8 +14,11 @@
  * limitations under the License.
  */
 
+// No point doing this stuff more than once.
+if (getBinding().variables.containsKey("_griffon_plugin_dev_called")) return
+_griffon_plugin_dev_called = true
+
 import groovy.xml.MarkupBuilder
-//import org.codehaus.griffon.compiler.support.GriffonResourceLoaderHolder
 import org.codehaus.griffon.util.GriffonNameUtils
 
 /**
