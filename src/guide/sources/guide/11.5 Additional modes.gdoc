@@ -2,5 +2,23 @@ If any of the afore mentioned packaging modes does not suite your needs you may 
 
 * @izpack@ - universal installer using [Izpack|http://izpack.org].
 * @dmg@ - for MacOSX.
-* @rpm@ - for RPM based Linux distributions.
+* @rpm@ - for rpm based Linux distributions.
+* @deb@ - for .deb based Linux distributions.
 * @jsmooth@ - for Windows.
+
+You may call any of these modes as you would with the standard ones when the installer plugin is available, in other words
+
+{code}
+griffon package izpack
+{code}
+
+Many of these modes support additional configuration before generating the final package. It is a good idea to follow a two-step process
+
+{code}
+griffon prepare-izpack
+// edit target/installer/izpack/resources/installer.xml
+// and/or add more files to that directory
+griffon create-izpack
+{code}
+
+Each additional packaging mode triggers 4 events with their type as the single event parameter: @PreparePackageStart@, @PreparePackageEnd@, @CreatePackageStart@ and @CreatePackageEnd@.
