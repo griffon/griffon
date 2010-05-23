@@ -17,11 +17,6 @@
 import org.codehaus.griffon.plugins.GriffonPluginUtils
 import org.codehaus.griffon.util.GriffonUtil
 
-// No point doing this stuff more than once.
-if (getBinding().variables.containsKey("_griffon_events_called")) return
-_griffon_events_called = true
-
-
 /**
  * Gant script containing the Griffon build event system.
  *

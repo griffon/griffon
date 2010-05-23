@@ -22,10 +22,6 @@
  * @since 0.4
  */
 
-// No point doing this stuff more than once.
-if (getBinding().variables.containsKey("_createservice_called")) return
-_createservice_called = true
-
 includeTargets << griffonScript("_GriffonInit")
 includeTargets << griffonScript("_GriffonCreateArtifacts")
 

@@ -18,11 +18,6 @@
  * @author Danno Ferrin
  */
 
-// No point doing this stuff more than once.
-if (getBinding().variables.containsKey("_createviewscript_called")) return
-_createviewscript_called = true
-
-
 import java.awt.Component
 import java.beans.Introspector
 

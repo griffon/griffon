@@ -22,10 +22,6 @@
  * @since 0.4
  */
 
-// No point doing this stuff more than once.
-if (getBinding().variables.containsKey("_createscript_called")) return
-_createscript_called = true
-
 import org.codehaus.griffon.util.GriffonNameUtils
 
 includeTargets << griffonScript("_GriffonInit")

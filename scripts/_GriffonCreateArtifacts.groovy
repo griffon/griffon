@@ -23,10 +23,6 @@ import org.codehaus.griffon.util.GriffonNameUtils
  * @author Peter Ledbrook
  */
 
-// No point doing this stuff more than once.
-if (getBinding().variables.containsKey("_griffon_create_artifact_called")) return
-_griffon_create_artifact_called = true
-
 createArtifact = { Map args = [:] ->
     def suffix = args["suffix"]
     def type = args["type"]

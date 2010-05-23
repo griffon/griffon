@@ -34,6 +34,10 @@ includeTargets << griffonScript("_GriffonPackage")
 target('default': "Packages a Griffon application.") {
      depends(checkVersion, parseArguments)
 
+     // create general dist dir
+     distDir = config.griffon.dist.dir ?: "${basedir}/dist"
+     ant.mkdir(dir: distDir)
+
      if(!argsMap.params) {
           System.setProperty(RunMode.KEY, RunMode.CUSTOM.name)
           depends(package_zip,
@@ -68,10 +72,6 @@ target(prepackage: "packaging steps all standard packaging options do") {
 
     packageApp()
 
-    // create general dist dir
-    distDir = config.griffon.dist.dir ?: "${basedir}/dist"
-    ant.mkdir(dir: distDir)
-
     // make codebase relative
     if(config.griffon.webstart.codebase == "CHANGE ME") config.griffon.webstart.codebase = "file:./"
     if(argsMap.codebase) config.griffon.webstart.codebase = argsMap.codebase
@@ -85,10 +85,11 @@ target(prepackage: "packaging steps all standard packaging options do") {
 target(create_binary_package: "Creates a binary distribution") {
     event("CreateBinaryPackageStart",[])
 
-    depends(prepackage)
-
     ant.delete(dir: targetDistDir, quiet: true, failOnError: false)
     ant.mkdir(dir: targetDistDir)
+
+    depends(prepackage)
+
     _copyLaunchScripts()
     _copyAppLibs()
 // XXX -- NATIVE
