@@ -65,7 +65,7 @@ target('default': "Packages a Griffon application.") {
 }
 
 target(prepackage: "packaging steps all standard packaging options do") {
-    event("PrepackageStart", [packageType])
+    event("PrepackageStart", [])
 
     createConfig()
 
@@ -78,7 +78,7 @@ target(prepackage: "packaging steps all standard packaging options do") {
     if(config.griffon.webstart.codebase == "CHANGE ME") config.griffon.webstart.codebase = "file:./"
     if(argsMap.codebase) config.griffon.webstart.codebase = argsMap.codebase
 
-    event("PrepackageEnd", [packageType])
+    event("PrepackageEnd", [])
 }
 
 /*
