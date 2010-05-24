@@ -262,21 +262,28 @@ target(_copyLaunchScripts: "") {
     ant.move( file: "${targetDistDir}/bin/app.run.bat", tofile: "${targetDistDir}/bin/${griffonAppName}.bat" )
 }
 
-_copySharedFiles = { targetDistDir ->
-    def sharedFiles = new File("${basedir}/griffon-app/conf/dist/shared")
-    if(sharedFiles.exists()) {
+_copyFiles = { srcdir, path ->
+    def files = new File(srcdir in File ? srcdir.absolutePath : srcdir, path)
+    if(files.exists()) {
         ant.copy(todir: targetDistDir) {
-            fileset(dir: sharedFiles)
+            fileset(dir: files)
         }
     }
 }
 
+_copySharedFiles = { targetDistDir ->
+    def sharedFilesPath = 'griffon-app/conf/dist/shared'
+    _copyFiles(basedir, sharedFilesPath)
+    doWithPlugins { pluginName, pluginVersion, pluginDir ->
+        _copyFiles(pluginDir, sharedFilesPath)
+    }
+}
+
 _copyPackageFiles = { targetDistDir ->
-    def additionalFiles = new File("${basedir}/griffon-app/conf/dist/${packageType}")
-    if(additionalFiles.exists()) {
-        ant.copy(todir: targetDistDir) {
-            fileset(dir: additionalFiles)
-        }
+    def packageFilesPath = 'griffon-app/conf/dist/' + packageType
+    _copyFiles(basedir, packageFilesPath)
+    doWithPlugins { pluginName, pluginVersion, pluginDir ->
+        _copyFiles(pluginDir, packageFilesPath)
     }
 }
 

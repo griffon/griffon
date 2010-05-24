@@ -139,13 +139,35 @@ eachRepository =  { Closure callable ->
 }
 // Targets
 target(resolveDependencies:"Resolve plug-in dependencies") {
+    doWithPlugins()
+}
+
+doWithPlugins = { callback = null ->
     def plugins = metadata.findAll { it.key.startsWith("plugins.")}.collect {
        [
         name:it.key[8..-1],
         version: it.value
        ]
     }
+
     _resolveDependencies(plugins)
+
+    if(!callback) return
+
+    // read again as the list might have been updated
+    plugins = metadata.findAll { it.key.startsWith("plugins.")}.collect {
+       [
+        name:it.key[8..-1],
+        version: it.value
+       ]
+    }
+
+    for(p in plugins) {
+        def name = p.name
+        def version = p.version
+        def fullName = "$name-$version"
+        callback(name, version, getPluginDirForName(name).file)
+    }
 }
 
 _resolveDependencies = { List plugins, callback = null ->
