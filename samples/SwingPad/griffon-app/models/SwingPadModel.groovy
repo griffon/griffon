@@ -42,7 +42,15 @@ class SwingPadModel {
       flamingo:   [ enabled: false, loaded: false, type: "griffon.builder.flamingo.FlamingoBuilder"],
       tray:       [ enabled: false, loaded: false, type: "griffon.builder.tray.TrayBuilder"],
       macwidgets: [ enabled: false, loaded: false, type: "griffon.builder.macwidgets.MacWidgetsBuilder"],
-      swingxtras: [ enabled: false, loaded: false, type: "griffon.builder.swingxtras.SwingxtrasBuilder"]
+      swingxtras: [ enabled: false, loaded: false, type: "griffon.builder.swingxtras.SwingxtrasBuilder"],
+
+      coverflow:      [ enabled: true,  loaded: true,  type: "dummy"],
+      flyingsaucer:   [ enabled: true,  loaded: true,  type: "dummy"],
+      glazedlists:    [ enabled: true,  loaded: true,  type: "dummy"],
+      jbusycomponent: [ enabled: true,  loaded: true,  type: "dummy"],
+      jtreemap:       [ enabled: true,  loaded: true,  type: "dummy"],
+      jung:           [ enabled: true,  loaded: true,  type: "dummy"],
+      transitions:    [ enabled: true,  loaded: true,  type: "dummy"],
    ]
 
    Map samples = [:]

@@ -115,7 +115,8 @@ menuBar = menuBar {
             trident1: "Trident - ButtonFG",
             trident2: "Trident - Snake",
             gfx1: "Gfx - Sphere",
-            gfx2: "Gfx - Animation"].each { id, name ->
+            gfx2: "Gfx - Animation",
+            coverflow1: "Coverflow"].each { id, name ->
              menuItem(makeSampleScriptAction(id,name))
           }
        }

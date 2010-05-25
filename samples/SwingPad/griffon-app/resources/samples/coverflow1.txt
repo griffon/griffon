@@ -1,0 +1,24 @@
+def cantons = Application.class.getResource('/images/blasons/cantons.txt').text.split(',')
+
+panel(preferredSize: [700, 300]) {
+  borderLayout()
+  panel(constraints: CENTER) {
+    stackLayout()
+    gradientPanel(constraints: BOTTOM)
+    imageFlow(id: "flow", constraints: TOP) {
+      cantons.each { canton ->
+        canton = canton.trim()
+        def png = "Blason-CH-Canton-${canton}.PNG"
+        imageFlowItem(resource: "/images/blasons/$png", label: canton)
+      }
+    }
+  }
+  panel(constraints: WEST) {
+    borderLayout()
+    button("<",  actionPerformed: { flow.previous() })
+  }
+  panel(constraints: EAST) {
+    borderLayout()
+    button(">",  actionPerformed: { flow.next() })
+  }
+}

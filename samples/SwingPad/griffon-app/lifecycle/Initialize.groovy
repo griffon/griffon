@@ -20,6 +20,7 @@
 
 import groovy.swing.SwingBuilder
 import griffon.util.GriffonPlatformHelper
+import static griffon.util.GriffonApplicationUtils.isMacOSX
 
 GriffonPlatformHelper.tweakForNativePlatform(app)
-SwingBuilder.lookAndFeel('mac', 'nimbus', 'gtk', ['metal', [boldFonts: false]])
+SwingBuilder.lookAndFeel(isMacOSX ? 'system' : 'nimbus', 'gtk', ['metal', [boldFonts: false]])
