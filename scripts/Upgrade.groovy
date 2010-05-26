@@ -104,6 +104,7 @@ target('default': "Upgrades a Griffon application from a previous version of Gri
             def extensionJars = configObject.griffon?.extensions?.jarUrls
             def extensionJNLPs = configObject.griffon?.extensions?.jnlpUrls
             def signingKeyFile = configObject.signingkey?.params?.sigfile
+            def signingKeyStore = configObject.signingkey?.params?.keystore
 
             if ([packJars, signJars, extensionJars, extensionJNLPs, signingKeyFile].contains([:])) {
                 event("StatusUpdate", ["Adding properties to Config.groovy"])
@@ -118,7 +119,17 @@ target('default': "Upgrades a Griffon application from a previous version of Gri
                     if (signJars == [:]) it.writeLine "${indent}griffon.jars.sign=true // jars were automatically signed in Griffon 0.0"
                     if (extensionJars == [:]) it.writeLine "${indent}griffon.extensions.jarUrls = [] // remote jars were not possible in Griffon 0.1"
                     if (extensionJNLPs == [:]) it.writeLine "${indent}griffon.extensions.jnlpUrls = [] // remote jars were not possible in Griffon 0.1"
-                    if (signingKeyFile == [:]) it.writeLine "${indent}signingkey.params.sigfile='GRIFFON' // may safely be removed, but calling upgrade will restore it"
+                    if (signingKeyFile == [:] || signingKeyStore == [:])  {
+                        it.writeLine "// may safely be removed, but calling upgrade will restore it"
+                        it.writeLine "${indent}def env = griffon.util.Environment.current.name"
+                        it.writeLine "${indent}signingkey.params.sigfile='GRIFFON' + env"
+                        it.writeLine "${indent}signingkey.params.keystore = \"\${basedir}/griffon-app/conf/keys/\${env}Keystore\""
+                        it.writeLine "${indent}signingkey.params.alias = env"
+                        it.writeLine "${indent}signingkey.params.storepass = 'BadStorePassword'"
+                        it.writeLine "${indent}signingkey.params.keyPass = 'BadKeyPassword'"
+                        it.writeLine "${indent}signingkey.params.lazy = true // only sign when unsigned"
+                    }
+
                     it.writeLine "// you may now tweak memory parameters"
                     it.writeLine "//${indent}griffon.memory.min='16m'"
                     it.writeLine "//${indent}griffon.memory.max='64m'"

@@ -32,7 +32,6 @@ import griffon.core.ServiceArtifactHandler
  * @author Andres Almiray
  */
 class GriffonApplicationHelper {
-
     /**
      * Setups an application.<p>
      * This method performs the following tasks<ul>
@@ -56,8 +55,9 @@ class GriffonApplicationHelper {
 
         app.metaClass.newInstance = GriffonApplicationHelper.&newInstance.curry(app)
         UIThreadHelper.enhance(app.metaClass)
-        app.config = new ConfigSlurper().parse(app.configClass)
-        app.builderConfig = new ConfigSlurper().parse(app.builderClass)
+        ConfigSlurper configSlurper = new ConfigSlurper(Environment.current.name)
+        app.config = configSlurper.parse(app.configClass)
+        app.builderConfig = configSlurper.parse(app.builderClass)
 
         app.initialize();
 
