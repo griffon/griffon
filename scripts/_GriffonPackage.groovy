@@ -247,6 +247,7 @@ target(jarFiles: "Jar up the package files") {
         ant.jar(destfile:destFileName) {
             fileset(dir:classesDirPath) {
                 exclude(name:'Config*.class')
+                exclude(name:'*GriffonPlugin.class')
             }
             fileset(dir:i18nDir)
             fileset(dir:resourcesDir)
