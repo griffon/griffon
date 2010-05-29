@@ -42,6 +42,8 @@ pluginIncludes = [
     "lib/**",
     "scripts/**",
     "src/**",
+    "LICENSE*",
+    "README*",
 //    "docs/api/**",
 //    "docs/gapi/**"
 ]
