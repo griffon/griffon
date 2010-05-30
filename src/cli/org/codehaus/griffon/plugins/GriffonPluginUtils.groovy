@@ -62,10 +62,31 @@ public class GriffonPluginUtils {
             tokens = tokens.sort(vc)
 
             if(tokens[1] == pluginVersion) return true
-
         }
-        else if(pluginVersion.equals(trimTag(requiredVersion))) return true;
-        return false;
+        else if(pluginVersion.equals(trimTag(requiredVersion))) return true
+        return false
+    }
+
+    /**
+     * Compare two plugin versions
+     *
+     * @param pluginVersion The plugin version
+     * @param requiredVersion The required version
+     * @return 0 if equal; &lt; 0 if pluginVersion is smaller; &gt; 0 if pluginVersion is greater
+     */
+    static int compareVersions(String pluginVersion, String requiredVersion) {
+        def vc = new VersionComparator()
+        pluginVersion = trimTag(pluginVersion);
+
+       if(requiredVersion.indexOf('>')>-1) {
+            def tokens = requiredVersion.split(">")*.trim()
+            tokens = tokens.collect { trimTag(it) }
+            tokens << pluginVersion
+            tokens = tokens.sort(vc)
+
+            return pluginVersion.compareTo(tokens[1])
+        }
+        return pluginVersion.compareTo(requiredVersion)
     }
 
     /**

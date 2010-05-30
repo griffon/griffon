@@ -245,7 +245,6 @@ target(loadPlugins:"Loads Griffon' plugins") {
                 event("PluginLoadStart", [pluginManager])
                 pluginManager.loadPlugins()
 
-
                 def loadedPlugins = pluginManager.allPlugins?.findAll { pluginClasses.contains(it.instance.getClass()) }*.name
                 if(loadedPlugins)
                     event("StatusUpdate", ["Loading with installed plug-ins: ${loadedPlugins}"])
@@ -541,7 +540,7 @@ private readMetadataFromZip(String zipLocation, pluginFile) {
 /**
  * Searches the downloaded plugin-list.xml files for each repository for a plugin that matches the given name
  */
-findPlugin =  { pluginName ->
+findPlugin = { pluginName ->
   pluginName = pluginName?.toLowerCase()
 
   if(pluginName) {
@@ -649,7 +648,6 @@ uninstallPluginForName = { name, version=null ->
  * Installs a plug-in for the given name and optional version
  */
 installPluginForName = { String fullPluginName ->
-try{
     if (fullPluginName) {
         event("InstallPluginStart", [fullPluginName])
         def pluginInstallPath = "${globalInstall ? globalPluginsDirPath : pluginsHome}/${fullPluginName}"
@@ -746,25 +744,35 @@ Do you wish to proceed?\n""", {
 
         def dependencies = [:]
 
+        def internalInstallPlugin = { _pluginName, _pluginVersion ->
+            event("StatusUpdate", ["Plugin dependency [$_pluginName] not found. Attempting to resolve..."])
+            // recursively install dependent plug-ins
+            def upperVersion =  GriffonPluginUtils.getUpperVersion(_pluginVersion)
+            def release = cacheKnownPlugin(_pluginName, _pluginVersion == '*' ? null : _pluginVersion)
+
+            ant.copy(file: "${pluginsBase}/griffon-${release}.zip", tofile: "${pluginsDirPath}/griffon-${release}.zip")
+
+            installPluginForName(release)
+            dependencies.remove(_pluginName)
+        }
+
         for (dep in pluginXml.dependencies.plugin) {
             def depName = dep.@name.toString()
             String depVersion = dep.@version.toString()
             dependencies[depName] = depVersion
+
             def depPluginDir = getPluginDirForName(depName)?.file
             if (!depPluginDir?.exists()) {
-                event("StatusUpdate", ["Plugin dependency [$depName] not found. Attempting to resolve..."])
-                // recursively install dependent plug-ins
-                def upperVersion =  GriffonPluginUtils.getUpperVersion(depVersion)
-                def release = cacheKnownPlugin(depName, upperVersion == '*' ? null : upperVersion)
-
-                ant.copy(file:"${pluginsBase}/griffon-${release}.zip",tofile:"${pluginsDirPath}/griffon-${release}.zip")
-
-                installPluginForName(release)
-                dependencies.remove(depName)
+                internalInstallPlugin(depName, depVersion)
             } else  {
                 def dependency = readPluginXmlMetadata(depName?.toString())
-                if (!GriffonPluginUtils.isValidVersion(dependency.@version.toString(), depVersion)) {
-                    cleanupPluginInstallAndExit("Plug-in requires version [$depVersion] of plug-in [$depName], but installed version is [${dependency.version}]. Please upgrade this plug-in and try again.")
+                def installedVersion = dependency.@version.toString()
+                int versionStatus = GriffonPluginUtils.compareVersions(installedVersion, depVersion)
+                if(versionStatus < 0) {
+                    // installed version is older
+                    // install new version
+                    uninstallPluginForName(depName, installedVersion)
+                    internalInstallPlugin(depName, depVersion)
                 } else {
                     dependencies.remove(depName)
                 }
@@ -812,7 +820,6 @@ Do you wish to proceed?\n""", {
             event("PluginInstalled", [fullPluginName])
         }
     }
-}catch(x){x.printStackTrace()}
 }
 
 def registerPluginWithMetadata(String pluginName, pluginVersion) {
