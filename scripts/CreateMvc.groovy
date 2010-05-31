@@ -33,6 +33,13 @@ target('default': "Creates a new MVC Group") {
 
 target (createMVC : "Creates a new MVC Group") {
     depends(checkVersion, parseArguments)
+
+    if(isPluginProject && !isAddonPlugin) {
+        println """You must create an Addon descriptor first.
+Type in griffon create-addon then execute this command again."""
+        System.exit(1)        
+    }
+
     promptForName(type: "MVC Group")
     def (pkg, name) = extractArtifactName(argsMap["params"][0])
     def fqn = "${pkg?pkg:''}${pkg?'.':''}${GCU.getClassNameRepresentation(name)}"
