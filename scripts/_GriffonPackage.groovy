@@ -238,7 +238,8 @@ target(jarFiles: "Jar up the package files") {
     ant.mkdir(dir:jardir)
 
     String destFileName = "$jardir/${config.griffon.jars.jarName}"
-    if(RunMode.current == RunMode.STANDALONE) {
+    metainfDirPath = new File("${basedir}/griffon-app/conf/metainf")
+    if(!metainfDirPath.list() && RunMode.current == RunMode.STANDALONE) {
         ant.delete(file: destFileName, quiet: true, failonerror: false)
         return
     }
@@ -251,6 +252,9 @@ target(jarFiles: "Jar up the package files") {
             }
             fileset(dir:i18nDir)
             fileset(dir:resourcesDir)
+            if(metainfDirPath.list()) {
+                metainf(dir: metainfDirPath)
+            }
         }
     }
     griffonCopyDist(destFileName, jardir, !upToDate)

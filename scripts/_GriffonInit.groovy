@@ -113,6 +113,7 @@ target(createStructure: "Creates the application directory structure") {
         mkdir(dir: "${basedir}/griffon-app/conf/dist/shared")
         mkdir(dir: "${basedir}/griffon-app/conf/dist/webstart")
         mkdir(dir: "${basedir}/griffon-app/conf/dist/zip")
+        mkdir(dir: "${basedir}/griffon-app/conf/metainf")
         mkdir(dir: "${basedir}/griffon-app/controllers")
         mkdir(dir: "${basedir}/griffon-app/i18n")
         mkdir(dir: "${basedir}/griffon-app/lifecycle")

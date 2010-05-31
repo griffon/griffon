@@ -53,6 +53,7 @@ target ('packageAddon': "Packages a Griffon addon. Note: to package a plugin use
     addonJarDir = ant.antProject.replaceProperties(config.griffon.jars.destDir ?: 'dist/addon')
     ant.mkdir(dir:addonJarDir)
 
+    File metainfDirPath = new File("${basedir}/griffon-app/conf/metainf")
     addonJarName = ( config.griffon?.jars?.jarName
         ? "${config.griffon.jars.jarName}"
         : "griffon-${pluginName}-addon-${plugin.version}.jar" )
@@ -60,6 +61,9 @@ target ('packageAddon': "Packages a Griffon addon. Note: to package a plugin use
         fileset(dir:classesDirPath) {
             exclude(name:'Config*.class')
             exclude(name:'*GriffonPlugin*.class')
+        }
+        if(metainfDirPath.list()) {
+            metainf(dir: metainfDirPath)
         }
     }
 
