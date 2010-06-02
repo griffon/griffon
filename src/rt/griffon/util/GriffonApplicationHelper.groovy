@@ -53,13 +53,21 @@ class GriffonApplicationHelper {
             System.setProperty("griffon.start.dir", startDir[1..-2])
         }
 
-        app.metaClass.newInstance = GriffonApplicationHelper.&newInstance.curry(app)
-        UIThreadHelper.enhance(app.metaClass)
+        MetaClass appMetaClass = app.metaClass
+        appMetaClass.newInstance = GriffonApplicationHelper.&newInstance.curry(app)
+        appMetaClass.createMVCGroup = GriffonApplicationHelper.&newInstance.curry(app)
+        appMetaClass.createMVCGroup = {Object... args ->
+            GriffonApplicationHelper.createMVCGroup(app, *args)
+        }
+        appMetaClass.buildMVCGroup = {Object... args ->
+            GriffonApplicationHelper.buildMVCGroup(app, *args)
+        }
+        appMetaClass.destroyMVCGroup = GriffonApplicationHelper.&destroyMVCGroup.curry(app)
+        UIThreadHelper.enhance(appMetaClass)
+
         ConfigSlurper configSlurper = new ConfigSlurper(Environment.current.name)
         app.config = configSlurper.parse(app.configClass)
         app.builderConfig = configSlurper.parse(app.builderClass)
-
-        app.initialize();
 
         def eventsClass = app.eventsClass
         if (eventsClass) {
@@ -67,6 +75,8 @@ class GriffonApplicationHelper {
             app.addApplicationEventListener(app.eventsConfig)
         }
         
+        app.initialize()
+
         app.metaClass.artifactManager = ArtifactManager.instance
         ArtifactManager.instance.app = app
         ArtifactManager.instance.with {
