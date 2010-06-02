@@ -28,6 +28,10 @@ includeTargets << griffonScript("_GriffonBootstrap")
 includeTargets << griffonScript("_PackagePlugins" )
 
 target('default': "Runs the application from the command line") {
+    runApp()
+}
+
+target('runApp': "Runs the application from the command line") {
     depends(checkVersion, configureProxy, parseArguments, prepackage)
 
     // calculate the needed jars

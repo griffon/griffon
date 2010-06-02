@@ -446,7 +446,7 @@ public class GriffonScriptRunner {
                     scriptFileName = scriptFileName.substring(0, scriptFileName.length()-1);
                 }
 
-                if (scriptFileName.equals(scriptName)) potentialScripts.add(scriptPath);
+                if (ScriptNameResolver.resolvesTo(scriptName, scriptFileName)) potentialScripts.add(scriptPath);
             }
 
             if (!potentialScripts.isEmpty()) {
