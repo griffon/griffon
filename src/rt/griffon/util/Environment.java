@@ -17,10 +17,12 @@
 package griffon.util;
 
 import groovy.lang.Closure;
+import groovy.lang.GroovyObjectSupport;
 import groovy.lang.MissingMethodException;
 
 import java.util.HashMap;
 import java.util.Locale;
+import java.util.Map;
 
 
 /**
@@ -32,7 +34,19 @@ import java.util.Locale;
  *        Created: Dec 12, 2008
  */
 public enum Environment {
-    DEVELOPMENT, PRODUCTION, TEST, CUSTOM;
+
+    /** The development environment */
+    DEVELOPMENT,
+
+    /** The production environment */
+    PRODUCTION,
+
+    /** The test environment */
+    TEST,
+
+    /** A custom environment */
+    CUSTOM;
+
     /**
      * Constant used to resolve the environment via System.getProperty(Environment.KEY)
      */
@@ -46,7 +60,7 @@ public enum Environment {
     private static final String DEVELOPMENT_ENVIRONMENT_SHORT_NAME = "dev";
 
     private static final String TEST_ENVIRONMENT_SHORT_NAME = "test";
-    private static HashMap<String, String> envNameMappings = new HashMap<String, String>() {{
+    private static Map<String, String> envNameMappings = new HashMap<String, String>() {{
         put(DEVELOPMENT_ENVIRONMENT_SHORT_NAME, Environment.DEVELOPMENT.getName());
         put(PRODUCTION_ENV_SHORT_NAME, Environment.PRODUCTION.getName());
         put(TEST_ENVIRONMENT_SHORT_NAME, Environment.TEST.getName());
@@ -61,43 +75,43 @@ public enum Environment {
     public static Environment getCurrent() {
         String envName = System.getProperty(Environment.KEY);
         Metadata metadata = Metadata.getCurrent();
-        if(metadata!=null && isBlank(envName)) {
+        if (metadata!=null && isBlank(envName)) {
             envName = metadata.getEnvironment();
         }
 
-        if(isBlank(envName)) {
+        if (isBlank(envName)) {
             return DEVELOPMENT;
         }
-        else {
-            Environment env = getEnvironment(envName);
-            if(env == null) {
-                try {
-                    env = Environment.valueOf(envName.toUpperCase());
-                }
-                catch (IllegalArgumentException e) {
-                    // ignore
-                }
+
+        Environment env = getEnvironment(envName);
+        if (env == null) {
+            try {
+                env = Environment.valueOf(envName.toUpperCase());
             }
-            if(env == null) {
-                env = Environment.CUSTOM;
-                env.setName(envName);
+            catch (IllegalArgumentException e) {
+                // ignore
             }
-            return env;
         }
+        if (env == null) {
+            env = Environment.CUSTOM;
+            env.setName(envName);
+        }
+        return env;
     }
 
     /**
      * @see #getCurrent()
+     * @return the current environment
      */
     public static Environment getCurrentEnvironment() {
-        return getCurrent();        
+        return getCurrent();
     }
 
     /**
      * @return Return true if the environment has been set as a System property
      */
     public static boolean isSystemSet() {
-        return System.getProperty(KEY) !=null;
+        return System.getProperty(KEY) != null;
     }
 
     /**
@@ -107,7 +121,7 @@ public enum Environment {
      */
     public static Environment getEnvironment(String shortName) {
         final String envName = envNameMappings.get(shortName);
-        if(envName !=null) {
+        if (envName != null) {
             return Environment.valueOf(envName.toUpperCase());
         }
         return null;
@@ -150,12 +164,12 @@ public enum Environment {
      * @return The environment specific block or null if non exists
      */
     public static Closure getEnvironmentSpecificBlock(Environment env, Closure closure) {
-        if(closure != null) {
-            final EnvironmentBlockEvaluator evaluator = evaluateEnvironmentSpecificBlock(env, closure);
-            return evaluator.getCallable();
-
+        if (closure == null) {
+            return null;
         }
-        return null;
+
+        final EnvironmentBlockEvaluator evaluator = evaluateEnvironmentSpecificBlock(env, closure);
+        return evaluator.getCallable();
     }
 
     /**
@@ -176,7 +190,6 @@ public enum Environment {
     public static Object executeForCurrentEnvironment(Closure closure) {
         final Environment env = getCurrent();
         return executeForEnvironment(env, closure);
-
     }
 
     /**
@@ -196,23 +209,22 @@ public enum Environment {
      * @return The result of the closure execution
      */
     public static Object executeForEnvironment(Environment env, Closure closure) {
-        if(closure != null) {
-            final EnvironmentBlockEvaluator evaluator = evaluateEnvironmentSpecificBlock(env, closure);
-            return evaluator.execute();
-
+        if (closure == null) {
+            return null;
         }
-        return null;
+
+        final EnvironmentBlockEvaluator evaluator = evaluateEnvironmentSpecificBlock(env, closure);
+        return evaluator.execute();
     }
 
     private static EnvironmentBlockEvaluator evaluateEnvironmentSpecificBlock(Environment environment, Closure closure) {
         final EnvironmentBlockEvaluator evaluator = new EnvironmentBlockEvaluator(environment);
         closure.setDelegate(evaluator);
-        closure.setResolveStrategy(Closure.DELEGATE_FIRST);
         closure.call();
         return evaluator;
     }
 
-    private static class EnvironmentBlockEvaluator {
+    private static class EnvironmentBlockEvaluator extends GroovyObjectSupport {
         private Environment current;
         private Closure callable;
 
@@ -221,50 +233,49 @@ public enum Environment {
         }
 
         Object execute() {
-            if(callable!=null) {
-                return callable.call();
-            }
-            return null;
+            return callable == null ? null : callable.call();
         }
 
         private EnvironmentBlockEvaluator(Environment e) {
             this.current = e;
         }
 
-        void environments(Closure callable) {
-            if(callable!=null) {
-                callable.setDelegate(this);
-                callable.setResolveStrategy(Closure.DELEGATE_FIRST);
-                callable.call();
+        @SuppressWarnings("unused")
+        public void environments(Closure c) {
+            if (c != null) {
+                c.setDelegate(this);
+                c.call();
             }
         }
-        void production(Closure callable) {
-            if(current == Environment.PRODUCTION) {
-                 this.callable = callable;
+        @SuppressWarnings("unused")
+        public void production(Closure c) {
+            if (current == Environment.PRODUCTION) {
+                this.callable = c;
             }
         }
-        void development(Closure callable) {
-            if(current == Environment.DEVELOPMENT) {
-                 this.callable = callable;
+        @SuppressWarnings("unused")
+        public void development(Closure c) {
+            if (current == Environment.DEVELOPMENT) {
+                this.callable = c;
             }
         }
-        void test(Closure callable) {
-            if(current == Environment.TEST) {
-                 this.callable = callable;
+        @SuppressWarnings("unused")
+        public void test(Closure c) {
+            if (current == Environment.TEST) {
+                this.callable = c;
             }
         }
 
-        Object methodMissing(String name, Object[] args) {
-            if(args != null && args.length > 0 && (args[0] instanceof Closure)) {
-                if(current == Environment.CUSTOM && current.getName().equals(name)) {
-                    this.callable = (Closure) args[0];
+        @SuppressWarnings("unused")
+        public Object methodMissing(String name, Object args) {
+            Object[] argsArray = (Object[])args;
+            if (args != null && argsArray.length > 0 && (argsArray[0] instanceof Closure)) {
+                if (current == Environment.CUSTOM && current.getName().equals(name)) {
+                    this.callable = (Closure) argsArray[0];
                 }
                 return null;
             }
-            else {
-                throw new MissingMethodException(name, Environment.class, args);
-            }
-
+            throw new MissingMethodException(name, Environment.class, argsArray);
         }
     }
 

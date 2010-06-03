@@ -44,6 +44,7 @@ target ( cleanCompiledSources: "Cleans compiled Java and Groovy sources" ) {
     ant.delete(dir:classesDirPath)
     ant.delete(dir:resourcesDirPath)
     ant.delete(dir:testDirPath)
+    ant.delete(dir:testResourcesDirPath)
     ant.delete(dir:projectTargetDir)
 }
 

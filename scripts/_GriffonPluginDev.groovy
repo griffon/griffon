@@ -42,6 +42,8 @@ pluginIncludes = [
     "lib/**",
     "scripts/**",
     "src/**",
+    "LICENSE*",
+    "README*",
 //    "docs/api/**",
 //    "docs/gapi/**"
 ]
@@ -95,7 +97,7 @@ target(packagePlugin:"Packages a Griffon plugin") {
     def xml = new MarkupBuilder(writer)
 
     // Write the content!
-    def props = ['author','authorEmail','title','description','documentation']
+    def props = ['author','authorEmail','title','documentation']
     def jdk = plugin.properties['jdk'] ?: "1.5"
 
     pluginGriffonVersion = "${griffonVersion} > *"
@@ -103,13 +105,15 @@ target(packagePlugin:"Packages a Griffon plugin") {
         pluginGriffonVersion = plugin.griffonVersion
     }
 
-    xml.plugin(name:"${pluginName}", version:"${plugin.version}", griffonVersion: pluginGriffonVersion, jdk:"${jdk}") {
+    xml.'plugin'(name:"${pluginName}", version:"${plugin.version}", griffonVersion: pluginGriffonVersion, jdk:"${jdk}") {
         props.each {
-            if(plugin.properties[it]) "${it}"(plugin.properties[it])
+            if(plugin.properties[it]) "${it}"(plugin.properties[it].toString().trim())
         }
         ['toolkits', 'platforms'].each {
             if(plugin.properties[it]) "${it}"(plugin.properties[it].join(','))
         }
+        if(plugin.description) synopsis(plugin.description.trim())
+        license(plugin.properties['license'] ?: '<UNKNOWN>')
         dependencies {
             if(plugin.metaClass.hasProperty(plugin,'dependsOn')) {
                 for(d in plugin.dependsOn) {
@@ -131,11 +135,23 @@ target(packagePlugin:"Packages a Griffon plugin") {
             pluginExcludes.each {
                 exclude(name:it)
             }
+            // special case for shared test sources & resources
+            ['test/shared/*', 'test/resources/*'].each {
+                include(name:it)
+            }
         }
 
         if (isAddonPlugin)  {
             zipfileset(dir:addonJarDir, includes: addonJarName,
                        fullpath: "lib/$addonJarName")
+        }
+    }
+    // special case for shared test sources & resources
+    ant.zip(destfile: pluginZip, filesonly: true, update: true) {
+        fileset(dir:"${basedir}") {
+            ['test/shared/**', 'test/resources/**'].each { f ->
+                include(name: f)
+            }
         }
     }
 

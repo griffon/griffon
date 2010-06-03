@@ -107,13 +107,30 @@ target(packageApp : "Implementation of package target") {
         srcfiles(dir:"$classesDirPath", includes:"**/*")
     }
 
+    packageResources()
+
+    startLogging()
+    loadPlugins()
+    checkKey()
+    copyLibs()
+    jarFiles()
+
+// XXX -- NATIVE 
+    copyPlatformJars(basedir + File.separator + 'lib', new File(jardir).absolutePath) 
+    copyNativeLibs(basedir + File.separator + 'lib', new File(jardir).absolutePath) 
+// XXX -- NATIVE 
+
+    event("PackagingEnd",[])
+}
+
+target(packageResources : "Presp app/plugin resources for packaging") {
     i18nDir = new File("${resourcesDirPath}/griffon-app/i18n")
     ant.mkdir(dir:i18nDir)
 
     resourcesDir = new File("${resourcesDirPath}/griffon-app/resources")
     ant.mkdir(dir:resourcesDir)
 
-    collectArtifactMetadata()
+    if(!isPluginProject && !isAddonPlugin) collectArtifactMetadata()
 
     if(config.griffon.enable.native2ascii) {
         profile("converting native message bundles to ascii") {
@@ -147,21 +164,6 @@ target(packageApp : "Implementation of package target") {
             exclude(name:"**/*.groovy")
         }
     }
-
-    startLogging()
-
-    loadPlugins()
-
-    checkKey()
-    copyLibs()
-    jarFiles()
-
-// XXX -- NATIVE 
-    copyPlatformJars(basedir + File.separator + 'lib', new File(jardir).absolutePath) 
-    copyNativeLibs(basedir + File.separator + 'lib', new File(jardir).absolutePath) 
-// XXX -- NATIVE 
-
-    event("PackagingEnd",[])
 }
 
 collectArtifactMetadata = {
@@ -238,7 +240,8 @@ target(jarFiles: "Jar up the package files") {
     ant.mkdir(dir:jardir)
 
     String destFileName = "$jardir/${config.griffon.jars.jarName}"
-    if(RunMode.current == RunMode.STANDALONE) {
+    metainfDirPath = new File("${basedir}/griffon-app/conf/metainf")
+    if(!metainfDirPath.list() && RunMode.current == RunMode.STANDALONE) {
         ant.delete(file: destFileName, quiet: true, failonerror: false)
         return
     }
@@ -247,9 +250,13 @@ target(jarFiles: "Jar up the package files") {
         ant.jar(destfile:destFileName) {
             fileset(dir:classesDirPath) {
                 exclude(name:'Config*.class')
+                exclude(name:'*GriffonPlugin.class')
             }
             fileset(dir:i18nDir)
             fileset(dir:resourcesDir)
+            if(metainfDirPath.list()) {
+                metainf(dir: metainfDirPath)
+            }
         }
     }
     griffonCopyDist(destFileName, jardir, !upToDate)

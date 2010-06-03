@@ -36,13 +36,13 @@ class UIThreadHelper {
     private static final Logger LOG = Logger.getLogger(UIThreadHelper.class.name)
 
     static enhance(MetaClass metaClass) {
-	    metaClass.execSync = UIThreadHelper.instance.&executeSync
+        metaClass.execSync = UIThreadHelper.instance.&executeSync
         metaClass.execAsync = UIThreadHelper.instance.&executeAsync
         metaClass.execOutside = UIThreadHelper.instance.&executeOutside
         metaClass.isUIThread = UIThreadHelper.instance.&isUIThread
         metaClass.execFuture = { Object... args -> 
-	        UIThreadHelper.instance.executeFuture(*args)
-	    }
+            UIThreadHelper.instance.executeFuture(*args)
+        }
     }
 
     void setUIThreadHandler(UIThreadHandler threadHandler) {

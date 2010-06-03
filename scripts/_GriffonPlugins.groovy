@@ -82,9 +82,8 @@ target(installPlugin:"Installs a plug-in for the given URL or name and version")
             installPluginForName(fullPluginName)
         }
         else {
-            event("StatusError", [ ERROR_MESSAGE])
+            event("StatusError", [ERROR_MESSAGE])
         }
-
     }
     catch(Exception e) {
         logError("Error installing plugin: ${e.message}", e)
@@ -261,38 +260,46 @@ def displayPluginInfo = { pluginName, version ->
                     println '--------------------------------------------------------------------------'
                     if( release.'author'.text() ) {
                         println "Author: ${release.'author'.text()}"
-                        println '--------------------------------------------------------------------------'
+                        //println '--------------------------------------------------------------------------'
                     }
                     if( release.'authorEmail'.text() ) {
                         println "Author's e-mail: ${release.'authorEmail'.text()}"
-                        println '--------------------------------------------------------------------------'
+                        //println '--------------------------------------------------------------------------'
+                    }
+                    if( release.'license'.text() ) {
+                        println "License: ${release.'license'.text()}"
+                        //println '--------------------------------------------------------------------------'
+                    } else {
+                        println "License: <UNKNOWN>"
+                        //println '--------------------------------------------------------------------------'
                     }
                     if( release.'documentation'.text() ) {
                         println "Find more info here: ${release.'documentation'.text()}"
-                        println '--------------------------------------------------------------------------'
+                        //println '--------------------------------------------------------------------------'
                     }
-                    if( release.'description'.text() ) {
-                        println "${release.'description'.text()}"
+                    if( release.'synopsis'.text() ) {
+                        println "${release.'synopsis'.text()}"
                         println '--------------------------------------------------------------------------'
                     }
                     if( release.'toolkits'.text() ) {
                         println "This plugin works with: ${release.'toolkits'.text()}"
-                        println '--------------------------------------------------------------------------'
+                        //println '--------------------------------------------------------------------------'
                     } else {
                         println "This plugin works with all toolkits."
-                        println '--------------------------------------------------------------------------'
+                        //println '--------------------------------------------------------------------------'
                     }
                     if( release.'platforms'.text() ) {
                         println "This plugin works in: ${release.'platforms'.text()}"
-                        println '--------------------------------------------------------------------------'
+                        //println '--------------------------------------------------------------------------'
                     } else {
                         println "This plugin works in all platforms."
-                        println '--------------------------------------------------------------------------'
+                        //println '--------------------------------------------------------------------------'
                     }
                 } else {
                     println "<release ${releaseVersion} not found for this plugin>"
-                    println '--------------------------------------------------------------------------'
+                    //println '--------------------------------------------------------------------------'
                 }
+                println '--------------------------------------------------------------------------'
            }
 
             def releases = ""

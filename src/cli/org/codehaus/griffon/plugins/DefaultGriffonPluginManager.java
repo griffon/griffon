@@ -473,7 +473,7 @@ public class DefaultGriffonPluginManager extends AbstractGriffonPluginManager im
           for (int i = 0; i < dependencies.length; i++) {
               String name = dependencies[i];
               String version = plugin.getDependentVersion(name);
-              if(!hasGriffonPlugin(name, version)) {
+              if(!hasGriffonPluginWithCompatibleVersion(name, version)) {
                   return false;
               }
           }
@@ -578,8 +578,15 @@ public class DefaultGriffonPluginManager extends AbstractGriffonPluginManager im
   private boolean hasGriffonPlugin(String name, String version) {
       return getGriffonPlugin(name, version) != null;
   }
-
-
+ 
+  private boolean hasGriffonPluginWithCompatibleVersion(String name, String version) {
+	  if(hasGriffonPlugin(name)) {
+	      GriffonPlugin plugin = getGriffonPlugin(name);
+	      int result = GriffonPluginUtils.compareVersions(plugin.getVersion(), version);
+	      return result >= 0;
+	  }
+	  return false;
+  }
 
   public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
       this.applicationContext = applicationContext;

@@ -17,4 +17,4 @@ import griffon.util.GriffonPlatformHelper
 import static griffon.util.GriffonApplicationUtils.*
 
 GriffonPlatformHelper.tweakForNativePlatform(app)
-SwingBuilder.lookAndFeel((isMacOSX ? 'nimbus' : 'nimbus'), 'gtk', ['metal', [boldFonts: false]])
+SwingBuilder.lookAndFeel((isMacOSX ? 'system' : 'nimbus'), 'gtk', ['metal', [boldFonts: false]])

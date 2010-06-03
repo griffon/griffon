@@ -106,3 +106,17 @@ griffon {
         html = 'applet.html'
     }
 }
+
+// required for custom environments
+signingkey {
+    params {
+        def env = griffon.util.Environment.current.name
+        sigfile = 'GRIFFON-' + env
+        keystore = "${basedir}/griffon-app/conf/keys/${env}Keystore"
+        alias = env
+        storepass = 'BadStorePassword'
+        keypass   = 'BadKeyPassword'
+        lazy      = true // only sign when unsigned
+    }
+}
+

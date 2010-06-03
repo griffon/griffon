@@ -31,8 +31,7 @@ includeTargets << griffonScript("_PluginDependencies")
 ant.taskdef (name: 'groovyc', classname : 'org.codehaus.groovy.ant.Groovyc' /*classname : 'org.codehaus.griffon.compiler.GriffonCompiler'*/)
 ant.path(id: "griffon.compile.classpath", compileClasspath)
 
-compilerPaths = { String classpathId, boolean compilingTests ->
-
+compilerPaths = { String classpathId ->
     def excludedPaths = ["resources", "i18n", "conf"] // conf gets special handling
     def pluginResources = getPluginSourceFiles()
 
@@ -52,16 +51,12 @@ compilerPaths = { String classpathId, boolean compilingTests ->
 
     src(path:"${basedir}/src/main")
     javac(classpathref:classpathId, debug:"yes", target: '1.5')
-    if(compilingTests) {
-        src(path:"${basedir}/test/unit")
-        src(path:"${basedir}/test/integration")
-    }
 }
 
-compileSources = { classpathId, sources ->
+compileSources = { destinationDir, classpathId, sources ->
     try {
-        ant.groovyc(destdir:classesDirPath,
-                    classpathref:classpathId,
+        ant.groovyc(destdir: destinationDir,
+                    classpathref: classpathId,
                     encoding:"UTF-8", sources)
     }
     catch(Exception e) {
@@ -71,17 +66,18 @@ compileSources = { classpathId, sources ->
 }
 
 target(compile : "Compiles application sources") {
-    ant.mkdir(dir:classesDirPath)
+    ant.mkdir(dir: classesDirPath)
     event("CompileStart", ['source'])
     depends(parseArguments, resolveDependencies)
 
     profile("Compiling sources to location [$classesDirPath]") {
-
         String classpathId = "griffon.compile.classpath"
+
+        compileSrc = compileSources.curry(classesDirPath)
 
         if(isPluginProject) {
             def pluginFile = new File("${basedir}").list().find{ it =~ /GriffonPlugin\.groovy/ }
-            compileSources(classpathId) {
+            compileSrc(classpathId) {
                 src(path:"${basedir}")
                 include(name:'*GriffonPlugin.groovy')
             }
@@ -89,21 +85,65 @@ target(compile : "Compiles application sources") {
             resolvePluginClasspathDependencies(loadPluginClass(pluginFile))
         }
 
-        compileSources(classpathId, compilerPaths.curry(classpathId, false))
+        compileSrc(classpathId, compilerPaths.curry(classpathId))
 
         if( new File("${basedir}").list().grep{ it =~ /GriffonAddon\.groovy/ } ){
             ant.path(id:'addonPath') {
                 path(refid: "griffon.compile.classpath")
-                pathElement(location:classesDirPath)
+                pathElement(location: classesDirPath)
             }
-            compileSources('addonPath') {
+            compileSrc('addonPath') {
                 src(path:"${basedir}")
                 include(name:'*GriffonAddon.groovy')
             }
         }
 
         classLoader.addURL(classesDir.toURI().toURL())
-
-        event("CompileEnd", ['source'])
     }
+
+    compileSharedTests()
+
+    event("CompileEnd", ['source'])
+}
+
+target(compileSharedTests : "Compiles shared test sources") {
+    for(pluginDir in getPluginDirectories().file) {
+        compileSharedTestSrc(pluginDir)
+    }
+    compileSharedTestSrc(basedir)
+    def metainfDirPath = new File("${basedir}/griffon-app/conf/metainf")
+    if(metainfDirPath.list()) {
+        def metaResourcesDir = new File("${testResourcesDirPath}/META-INF")
+        ant.copy(todir: metaResourcesDir) {
+            fileset(dir: metainfDirPath)
+        }
+    }
+}
+
+compileSharedTestSrc = { rootDir ->
+    def testShared = new File("${rootDir}/test/shared")
+    if(testShared.exists() && testShared.list()) {
+        def testSharedDirPath = new File(griffonSettings.testClassesDir, 'shared')
+        ant.mkdir(dir: testSharedDirPath)
+        ant.mkdir(dir: testResourcesDirPath)
+        profile("Compiling shared test sources to location [$testSharedDirPath]") {
+            ant.path(id:'testSharedPath') {
+                path(refid: "griffon.compile.classpath")
+                pathElement(location: classesDirPath)
+                pathElement(location: testSharedDirPath)
+            }
+            compileSources(testSharedDirPath, 'testSharedPath') {
+                src(path: testShared)
+                javac(classpathref: 'testSharedPath', debug:"yes", target: '1.5')
+            }
+            classLoader.addURL(testSharedDirPath.toURI().toURL())
+        }
+    } 
+    def testResources = new File("${basedir}/test/resources")
+    if(testResources.list()) {
+        ant.copy(todir: testResourcesDirPath) {
+            fileset(dir: testResources)
+        }
+    }
+    classLoader.addURL(griffonSettings.testResourcesDir.toURI().toURL())
 }
