@@ -31,8 +31,7 @@ import griffon.core.GriffonApplication
  * Time: 5:58:16 PM
  */
 class CompositeBuilderHelper {
-
-    public static FactoryBuilderSupport createBuilder(GriffonApplication app, Map targets) {
+    static FactoryBuilderSupport createBuilder(GriffonApplication app, Map targets) {
         UberBuilder uberBuilder = new UberBuilder()
         uberBuilder.setProperty('app', app)
 
@@ -57,7 +56,7 @@ class CompositeBuilderHelper {
         return uberBuilder
     }
 
-    private static handleFeatures(UberBuilder uberBuilder, features) {
+    static handleFeatures(UberBuilder uberBuilder, features) {
         for (feature in features) {
             switch (feature.key) {
                 case ~/.*Delegates/:
@@ -80,7 +79,7 @@ class CompositeBuilderHelper {
         }
     }
 
-    private static handleLocalBuilder(UberBuilder uberBuilder, Map targets, String prefixName, builderClassName) {
+    static handleLocalBuilder(UberBuilder uberBuilder, Map targets, String prefixName, builderClassName) {
         Class builderClass = Class.forName(builderClassName.key) //FIXME get correct classloader
         if (!FactoryBuilderSupport.isAssignableFrom(builderClass)) {
             return;
