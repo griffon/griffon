@@ -14,6 +14,8 @@
  * limitations under the License.
  */
 
+package org.codehaus.griffon.gdsl
+
 /**
  * @author Andres Almiray
  */

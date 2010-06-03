@@ -116,7 +116,7 @@ groovy.version=${groovy.version}</echo>
         </tar>
     </target>
 
-    <target name="package" depends="clean,test,jar,javadoc" description="Create the release archives for Griffon.">
+    <target name="package" depends="clean,test,jar" description="Create the release archives for Griffon.">
         <delete failonerror="true">
             <fileset dir="${griffon.dist}">
                 <include name="properties"/>
@@ -129,7 +129,7 @@ groovy.version=${groovy.version}</echo>
         <antcall target="create-source-release"/>
     </target>
 
-    <target name="install" depends="clean,test,jar,javadoc" description="Installs the package into GRIFFON_HOME">
+    <target name="install" depends="clean,test,jar" description="Installs the package into GRIFFON_HOME">
         <delete dir="tmp" failonerror="true"/>
         <antcall target="create-binary-release"/>
         <unzip src="${griffon.dist}/${griffon.dist.binary}.zip" dest="${env.GRIFFON_HOME}">

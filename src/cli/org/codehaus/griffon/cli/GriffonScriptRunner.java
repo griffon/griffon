@@ -594,6 +594,7 @@ public class GriffonScriptRunner {
         binding.setVariable("classesDirPath", settings.getClassesDir().getPath());
         binding.setVariable("testDirPath", settings.getTestClassesDir().getPath());
         binding.setVariable("resourcesDirPath", settings.getResourcesDir().getPath());
+        binding.setVariable("testResourcesDirPath", settings.getTestResourcesDir().getPath());
         binding.setVariable("pluginsDirPath", settings.getProjectPluginsDir().getPath());
         binding.setVariable("globalPluginsDirPath", settings.getGlobalPluginsDir().getPath());
 

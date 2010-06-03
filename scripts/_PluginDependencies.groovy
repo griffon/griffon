@@ -790,7 +790,9 @@ Do you wish to proceed?\n""", {
             for(jar in pluginJars) {
                 rootLoader.addURL(jar.URL)
             }
-
+            
+            def license = pluginXml.license?.text() ?: '<UNKNOWN>'
+            println "Plug-in license is: $license"
             
             if(!isPluginProject) {
                 // proceed _Install.groovy plugin script if exists
@@ -838,7 +840,7 @@ def buildReleaseInfo(root, pluginName, releasePath, releaseTag ) {
         else root.removeChild(releaseNode)
     }
     try {
-        def properties = ['title', 'author', 'authorEmail', 'description', 'documentation']
+        def properties = ['title', 'author', 'authorEmail', 'synopsis', 'documentation', 'license', 'toolkits', 'platforms']
         def releaseDescriptor = parseRemoteXML("${releasePath}/${releaseTag}/plugin.xml").documentElement
         def version = releaseDescriptor.'@version'
         if (releaseTag == 'trunk' && !(version.endsWith('SNAPSHOT'))) return

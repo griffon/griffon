@@ -70,8 +70,6 @@ reRunTests = false
 // Where the report files are created.
 testReportsDir = griffonSettings.testReportsDir
  
-// Set up an Ant path for the tests.
-ant.path(id: "griffon.test.classpath", testClasspath)
  
 createTestReports = true
 compilationFailures = []
@@ -80,9 +78,20 @@ testHelper = null
 testsFailed = false
  
 target(allTests: "Runs the project's tests.") {
+    // If no phases are explicitly configured, run them all.
+    if (!phasesToRun) phasesToRun = [ "unit", "integration", /*"functional",*/ "other" ]
+    if(isPluginProject) phasesToRun.remove('integration')
+    if(!phasesToRun) {
+        println "No test phases were defined. Aborting"
+        System.exit(1)
+    }
+    
     depends(compile, packagePlugins)
     packageFiles(basedir)
  
+    // Set up an Ant path for the tests.
+    ant.path(id: "griffon.test.classpath", testClasspath)
+
     ant.mkdir(dir: testReportsDir)
     ant.mkdir(dir: "${testReportsDir}/html")
     ant.mkdir(dir: "${testReportsDir}/plain")
@@ -99,9 +108,6 @@ target(allTests: "Runs the project's tests.") {
     // test names with the failed ones.
     if (reRunTests) testNames = getFailedTests()
  
-    // If no phases are explicitly configured, run them all.
-    if (!phasesToRun) phasesToRun = [ "unit", "integration", /*"functional",*/ "other" ]
-    
     event("TestPhasesStart", [phasesToRun])
  
     // This runs the tests and generates the formatted result files.
@@ -163,6 +169,13 @@ target(allTests: "Runs the project's tests.") {
  * For example, "unit", "jsunit", "webtest", etc.
  */
 processTests = { String type ->
+    def testSrcDir = new File("${basedir}/test/${type}")
+
+    if(!testSrcDir.list()) {
+        println "No tests found for type '$type'. SKIPPING"
+        return
+    }
+
     println "Running tests of type '$type'"
     
     // First compile the test classes.

@@ -151,6 +151,8 @@ testClasspath = {
     }
 
     pathelement(location: "${classesDir.absolutePath}")
+    pathelement(location: "${griffonSettings.testClassesDir}/shared")
+    pathelement(location: "${griffonSettings.testResourcesDir}")
 }
 
 runtimeClasspath = {

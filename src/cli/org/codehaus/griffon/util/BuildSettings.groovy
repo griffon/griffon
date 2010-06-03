@@ -64,6 +64,11 @@ class BuildSettings {
     public static final String PROJECT_TEST_CLASSES_DIR = "griffon.project.test.class.dir"
 
     /**
+     * The name of the system property for {@link #testResourcesDir}.
+     */
+    public static final String PROJECT_TEST_RESOURCES_DIR = "griffon.project.test.resource.dir"
+
+    /**
      * The name of the system property for {@link #testReportsDir}.
      */
     public static final String PROJECT_TEST_REPORTS_DIR = "griffon.project.test.reports.dir"
@@ -146,6 +151,9 @@ class BuildSettings {
 
     /** The location to which Griffon compiles a project's test classes. */
     File testClassesDir
+
+    /** The location to which Griffon writes a project's test resources. */
+    File testResourcesDir
 
     /** The location where Griffon keeps temporary copies of a project's resources. */
     File resourcesDir
@@ -319,6 +327,7 @@ class BuildSettings {
         projectTargetDir = new File(getPropertyValue(PROJECT_TARGET_DIR, props, "$baseDir/target"))
         classesDir = new File(getPropertyValue(PROJECT_CLASSES_DIR, props, "$projectWorkDir/classes"))
         testClassesDir = new File(getPropertyValue(PROJECT_TEST_CLASSES_DIR, props, "$projectWorkDir/test-classes"))
+        testResourcesDir = new File(getPropertyValue(PROJECT_TEST_RESOURCES_DIR, props, "$projectWorkDir/test-resources"))
         resourcesDir = new File(getPropertyValue(PROJECT_RESOURCES_DIR, props, "$projectWorkDir/resources"))
         projectPluginsDir = new File(getPropertyValue(PLUGINS_DIR, props, "$projectWorkDir/plugins"))
         globalPluginsDir = new File(getPropertyValue(GLOBAL_PLUGINS_DIR, props, "$griffonWorkDir/global-plugins"))
