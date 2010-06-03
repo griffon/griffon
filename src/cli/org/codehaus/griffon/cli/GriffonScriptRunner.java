@@ -437,6 +437,7 @@ public class GriffonScriptRunner {
             binding = new GantBinding();
             List<File> list = getAvailableScripts(settings);
 
+            boolean exactMatchFound = false;
             potentialScripts = new ArrayList<File>();
             for (Iterator iter = list.iterator(); iter.hasNext();) {
                 File scriptPath = (File) iter.next();
@@ -445,8 +446,14 @@ public class GriffonScriptRunner {
                     scriptsAllowedOutsideOfProject.add(scriptPath);
                     scriptFileName = scriptFileName.substring(0, scriptFileName.length()-1);
                 }
-
-                if (ScriptNameResolver.resolvesTo(scriptName, scriptFileName)) potentialScripts.add(scriptPath);
+ 
+                if (scriptFileName.equals(scriptName)) {
+                    potentialScripts.add(scriptPath);
+                    exactMatchFound = true;
+                    continue;
+                }
+                
+                if (!exactMatchFound && ScriptNameResolver.resolvesTo(scriptName, scriptFileName)) potentialScripts.add(scriptPath);
             }
 
             if (!potentialScripts.isEmpty()) {
