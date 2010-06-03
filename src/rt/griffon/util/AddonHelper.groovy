@@ -172,6 +172,22 @@ public class AddonHelper {
             MetaClass mc = targets[partialTarget.key]?.getMetaClass()
             if (!mc) continue
             for (String itemName in partialTarget.value) {
+                if (itemName == '*') {
+                    addMethods(mc, methods, prefix)
+                    addFactories(mc, factories, prefix, builder)
+                    addProps(mc, props, prefix)
+                    continue
+                } else if (itemName == '*:methods') {
+                    addMethods(mc, methods, prefix)
+                    continue
+                } else if (itemName == '*:factories') {
+                    addFactories(mc, factories, prefix, builder)
+                    continue
+                } else if (itemName == '*:props') {
+                    addProps(mc, props, prefix)
+                    continue
+                }
+
                 def resolvedName = "${prefix}${itemName}"
                 if (methods.containsKey(itemName)) {
                     mc."$resolvedName" = methods[itemName]
@@ -194,7 +210,30 @@ public class AddonHelper {
                 }
             }
         }
+    }
 
+    private static addMethods(MetaClass mc, Map methods, String prefix) {
+        methods.each { mk, mv -> mc."${prefix}${mk}" = mv }
+    }
+ 
+    private static addFactories(MetaClass mc, Map factories, String prefix, UberBuilder builder) {
+        factories.each { fk, fv -> 
+            def resolvedName = "${prefix}${fk}"
+            mc."$resolvedName" = {Object... args -> builder."$resolvedName"(*args) }
+        }
+    }
+
+    private static addProps(MetaClass mc, Map props, String prefix) {
+        props.each = { pk, accessors ->
+            String beanName
+            if (pk.length() > 1) {
+                beanName = pk[0].toUpperCase() + pk.substring(1)
+            } else {
+                beanName = pk[0].toUpperCase()
+            }
+            if (accessors.containsKey('get')) mc."get$beanName" = accessors['get']
+            if (accessors.containsKey('set')) mc."set$beanName" = accessors['set']
+        }
     }
 
     private static ignoreMissingPropertyException(Closure closure) {

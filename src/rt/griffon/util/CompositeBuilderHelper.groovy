@@ -93,10 +93,6 @@ class CompositeBuilderHelper {
             MetaClass mc = targets[partialTarget.key]?.getMetaClass()
             if (!mc) continue
             for (String injectionName in partialTarget.value) {
-                if (injectionName == "*") {
-                    //FIXME handle add-all
-                    continue
-                }
                 def factories = localBuilder.getLocalFactories()
                 def methods = localBuilder.getLocalExplicitMethods()
                 def props = localBuilder.getLocalExplicitProperties()
@@ -122,6 +118,13 @@ class CompositeBuilderHelper {
                     } else if (factories.containsKey(injectedName)) {
                         mc."${resolvedName}" = {Object ... args -> uberBuilder."$resolvedName"(* args)}
                     }
+                }
+
+                if (injectionName == "*") {
+                    for(group in localBuilder.getRegistrationGroups()) {
+                        localBuilder.getRegistrationGroupItems(group).each processInjection
+                    }
+                    continue
                 }
 
                 def groupItems = localBuilder.getRegistrationGroupItems(injectionName)
