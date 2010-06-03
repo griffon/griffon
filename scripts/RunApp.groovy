@@ -28,6 +28,10 @@ includeTargets << griffonScript("_GriffonBootstrap")
 includeTargets << griffonScript("_PackagePlugins" )
 
 target('default': "Runs the application from the command line") {
+    runApp()
+}
+
+target('runApp': "Runs the application from the command line") {
     depends(checkVersion, configureProxy, parseArguments, prepackage)
 
     // calculate the needed jars
@@ -74,7 +78,7 @@ target('default': "Runs the application from the command line") {
         f.absolutePath - jardir.absolutePath - File.separator
     }.join(File.pathSeparator)
 
-    runtimeClasspath = [classesDir, i18nDir, resourcesDir, runtimeClasspath].join(File.pathSeparator)
+    runtimeClasspath = [i18nDir, resourcesDir, runtimeClasspath, classesDir].join(File.pathSeparator)
 
     // start the processess
     try {

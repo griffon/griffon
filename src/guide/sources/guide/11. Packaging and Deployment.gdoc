@@ -4,6 +4,8 @@ To package an application use the [package|commandLine] command. All modes will 
 
 It is possible to specify files that can be shared across packaging modes, like a README or a LICENSE file. Make sure to place them under @griffon-app/conf/dist/shared@.
 
+Files that should be packed inside the application's jar META-INF directory must be placed in @griffon-app/conf/metainf@. This setting works for addons too.
+
 Packaging an application will be executed in the *production* environment by default. You may specify a different environment as you would with other command. This setting impacts directly how webstart and applet modes are executed, as they will sign and pack all jars by default when in production mode. Please review and update your configuration if you desire a different behavior.
 
 Each packaging target triggers a @PackageStart@ and @PackageEnd@ events, with their type as the single event parameter.

@@ -107,6 +107,7 @@ target(package_zip: "Creates a binary distribution and zips it.") {
     packageType = 'zip'
     event("PackageStart",[packageType])
 
+    distDir = config.griffon.dist.dir ?: "${basedir}/dist"
     targetDistDir = config.griffon.dist.zip.dir ?: "${distDir}/zip"
     depends(create_binary_package)
     _zipDist(targetDistDir, false)
@@ -183,6 +184,7 @@ target(package_applet: "Creates an applet distribution and zips it.") {
 
     depends(prepackage, generateJNLP)
 
+    distDir = config.griffon.dist.dir ?: "${basedir}/dist"
     targetDistDir = config.griffon.dist.applet.dir ?: "${distDir}/applet"
     ant.delete(dir: targetDistDir, quiet: true, failOnError: false)
     ant.mkdir(dir: targetDistDir)
@@ -205,6 +207,7 @@ target(package_webstart: "Creates a webstart distribution and zips it.") {
 
     depends(prepackage, generateJNLP)
 
+    distDir = config.griffon.dist.dir ?: "${basedir}/dist"
     targetDistDir = config.griffon.dist.webstart.dir ?: "${distDir}/webstart"
     ant.delete(dir: targetDistDir, quiet: true, failOnError: false)
     ant.mkdir(dir: targetDistDir)

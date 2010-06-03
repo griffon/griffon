@@ -38,8 +38,8 @@ links = [
 target(docs: "Produces documentation for a Griffon project") {
     depends(compile, parseArguments)
     if(!argsMap.nodoc) {
-        javadoc()
-        groovydoc()
+//        javadoc()
+//        groovydoc()
     }
 }
 

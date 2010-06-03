@@ -82,9 +82,8 @@ target(installPlugin:"Installs a plug-in for the given URL or name and version")
             installPluginForName(fullPluginName)
         }
         else {
-            event("StatusError", [ ERROR_MESSAGE])
+            event("StatusError", [ERROR_MESSAGE])
         }
-
     }
     catch(Exception e) {
         logError("Error installing plugin: ${e.message}", e)
