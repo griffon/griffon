@@ -31,54 +31,75 @@ javadocDir = "${basedir}/docs/api"
 groovydocDir = "${basedir}/docs/gapi"
 docEncoding = "UTF-8"
 docSourceLevel = "1.5"
-links = [
-            'http://java.sun.com/j2se/1.5.0/docs/api/'
-        ]
+
+ant.taskdef(name: "groovydoc", classname: "org.codehaus.groovy.ant.Groovydoc")
 
 target(docs: "Produces documentation for a Griffon project") {
     depends(compile, parseArguments)
+
+
     if(!argsMap.nodoc) {
-//        javadoc()
-//        groovydoc()
+        invokeGroovydoc(
+            destdir: javadocDir,
+            windowtitle: "${griffonAppName} ${griffonAppVersion}",
+            doctitle: "${griffonAppName} ${griffonAppVersion}",
+            sourcepath: "src/main, griffon-app/controllers, griffon-app/models, griffon-app/services"
+        )
     }
 }
 
-target(setupDoc:"Sets up the doc directories") {
-    ant.mkdir(dir:"${basedir}/docs")
-    ant.mkdir(dir:groovydocDir)
-    ant.mkdir(dir:javadocDir)
+
+invokeGroovydoc = { Map args ->
+    ant.mkdir(dir: args.destdir)
+
+    Map groovydocProps = [
+        use: 'true',
+        'private': 'true',
+        packagenames: '**.*'
+    ]
+
+    def links = [
+        [packages: "java.,org.xml.,javax.,org.xml.",        href: "http://java.sun.com/j2se/1.5.0/docs/api"],
+        [packages: "org.apache.ant.,org.apache.tools.ant.", href: "http://www.dpml.net/api/ant/1.7.0"],
+        [packages: "org.junit.,junit.framework.",           href: "http://junit.sourceforge.net/junit3.8.1/javadoc/"],
+        [packages: "groovy.,org.codehaus.groovy.",          href: "http://groovy.codehaus.org/api/"],
+        [packages: 'griffon.,org.codehaus.griffon.',        href: 'http://dist.codehaus.org/griffon/guide/api/']
+    ]
+    def additionalLinks = args.remove('links') ?: []
+    def sources = args.remove('sourcepath') ?: ["${basedir}/src/main"]
+    def groovydocSourcePaths = ant.path {
+        sources.each { pathElement(location: it) }
+    }
+
+    ant.groovydoc([*:groovydocProps, *:args, sourcepath: groovydocSourcePaths]) {
+        links.each { l -> link(packages: l.packages, href: l.href) }
+        additionalLinks.each { l -> link(packages: l.packages, href: l.href) }
+    }
 }
 
-target(groovydoc:"Produces groovydoc documentation") {
-    ant.taskdef(name:"groovydoc", classname:"org.codehaus.groovy.ant.Groovydoc")
-    event("DocStart", ['groovydoc'])
-    ant.groovydoc(destdir:groovydocDir, sourcepath:".", use:"true", windowtitle:griffonAppName,'private':"true")
-    event("DocEnd", ['groovydoc'])
-}
+invokeJavadoc = { Map args ->
+    Map javadocProps = [
+        access: "protected",
+        encoding: docEncoding,
+        classpathref: "griffon.compile.classpath",
+        use: "yes",
+        windowtitle: griffonAppName,
+        docencoding: docEncoding,
+        charset: docEncoding,
+        source: docSourceLevel,
+        useexternalfile: "yes",
+        breakiterator: "true",
+        linksource: "yes",
+        maxmemory: "128m"
+    ]
 
-target(javadoc:"Produces javadoc documentation") {
-   depends(setupDoc)
-    event("DocStart", ['javadoc'])
-   if(new File("${basedir}/src/java").listFiles().find{ !it.name.startsWith(".")}) {
-	   ant.javadoc( access:"protected",
-	                destdir:javadocDir,
-	                encoding:docEncoding,
-	                classpathref:"griffon.compile.classpath",
-	                use:"yes",
-	                windowtitle:griffonAppName,
-	                docencoding:docEncoding,
-	                charset:docEncoding,
-	                source:docSourceLevel,
-	                useexternalfile:"yes",
-	                breakiterator:"true",
-	                linksource:"yes",
-	                maxmemory:"128m") {
-	       fileset(dir:"${basedir}/src/java")
-	       for(i in links) {
-	           link(href:i)
-	       }
-	   }
-   }
-    event("DocEnd", ['javadoc'])
+    def additionalLinks = args.remove('links') ?: []
+    def sources = args.remove('sources') ?: ["${basedir}/src/main"]
 
+    ant.mkdir(dir: args.destdir)
+    ant.javadoc([*:javadocProps, *:args]) {
+        sources.each { srcdir -> fileset(dir: srcdir) }
+        links.each { l -> link(href: l) }
+        additionalLinks.each { l -> link(href: l) }
+    }
 }

@@ -1,12 +1,21 @@
 class @plugin.name@GriffonPlugin {
-    def version = 0.1
+    // the plugin version
+    def version = "0.1"
+    // the version or versions of Griffon the plugin is designed for
     def griffonVersion = '@griffon.version@ > *' 
+    // the other plugins this plugin depends on
     def dependsOn = [:]
+    // resources that are included in plugin packaging
+    def pluginIncludes = []
+    // the plugin license
     def license = '<UNKNOWN>'
-    // optional. Valid values are: swing, javafx, swt, pivot, gtk
-    // def toolkits = ['swing']
-    // optional. Valid values are linux, windows, macosx, solaris
-    // def platforms = []
+    // Toolkit compatibility. No value means compatible with all
+    // Valid values are: swing, javafx, swt, pivot, gtk
+    def toolkits = []
+    // Platform compatibility. No value means compatible with all
+    // Valid values are:
+    // linux, linux64, windows, windows64, macosx, macosx64, solaris
+    def platforms = []
 
     // TODO Fill in these fields
     def author = 'Your name'

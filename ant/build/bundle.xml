@@ -10,17 +10,19 @@
                 <path refid="classpath"/>
             </classpath>
         </taskdef>
-        <mkdir dir="target/guide" />
+
         <mkdir dir="${griffon.dist}" />
+        <mkdir dir="target/guide" />
+        <mkdir dir="target/guide/api" />
+        <copy todir="target/guide/api">
+            <fileset dir="${griffon.javadoc}"/>
+        </copy>
         <copy todir="target/guide">
             <fileset dir="${basedir}/src/guide" includes="*.properties" />
         </copy>
         <replace dir="target/guide">
             <replaceFilter token="@griffon.version@" value="${griffon.version}" />
         </replace>
-        <copy todir="target/guide">
-            <fileset dir="${griffon.target}/docs"/>
-        </copy>
         <docs src="${basedir}/src/guide/sources"
               dest="target/guide"
               imagesdir="${basedir}/src/guide/resources/img"

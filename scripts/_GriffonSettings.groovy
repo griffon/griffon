@@ -16,7 +16,7 @@
 
 import griffon.util.Metadata
 import griffon.util.BuildSettings
-import griffon.util.GriffonNameUtils
+import griffon.util.GriffonUtil
 import org.codehaus.griffon.plugins.GriffonPluginUtils
 import org.springframework.core.io.ClassPathResource
 import org.springframework.core.io.FileSystemResource
@@ -74,7 +74,7 @@ if (!griffonAppName) {
 if(griffonAppName.indexOf('/') >-1)
     appClassName = griffonAppName[griffonAppName.lastIndexOf('/')..-1]
 else
-    appClassName = GriffonNameUtils.getClassNameRepresentation(griffonAppName)
+    appClassName = GriffonUtil.getClassNameRepresentation(griffonAppName)
 
 
 // Other useful properties.

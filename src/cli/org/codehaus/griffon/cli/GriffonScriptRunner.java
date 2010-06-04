@@ -795,7 +795,7 @@ public class GriffonScriptRunner {
     private static void sanitizeStacktrace(Throwable t) {
         try {
             ClassLoader loader = Thread.currentThread().getContextClassLoader();
-            Class clazz = loader.loadClass("org.codehaus.griffon.util.GriffonUtil");
+            Class clazz = loader.loadClass("griffon.util.GriffonUtil");
             Method method = clazz.getMethod("deepSanitize", new Class[] {Throwable.class});
             method.invoke(null, new Object[] {t});
         }

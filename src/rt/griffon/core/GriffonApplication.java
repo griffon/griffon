@@ -105,12 +105,13 @@ public interface GriffonApplication {
     /**
      * Executes the 'Shutdown' life cycle phase.
      *
-     * @return true if the shutdown sequence can proceed, false otherwise
      */
     void shutdown();
 
     /**
+     * Queries any available ShutdownHandlers.
      *
+     * @return true if the shutdown sequence can proceed, false otherwise
      */
     boolean canShutdown();
 

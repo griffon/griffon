@@ -22,7 +22,7 @@
  * @since 0.4
  */
 
-import griffon.util.GriffonNameUtils
+import griffon.util.GriffonUtil
 
 includeTargets << griffonScript("_GriffonInit")
 includeTargets << griffonScript("_GriffonCreateArtifacts")
@@ -45,7 +45,7 @@ target (default : "Creates a Griffon Gant Script") {
         type: "ScriptTests",
         path: "test/cli")
 
-    className = GriffonNameUtils.getClassNameRepresentation(name)
+    className = GriffonUtil.getClassNameRepresentation(name)
     artifactFile = "${basedir}/test/cli/${className}Tests.groovy"
 
     ant.replace(file: artifactFile) {

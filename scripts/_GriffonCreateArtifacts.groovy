@@ -15,7 +15,7 @@
  */
 
 import org.springframework.core.io.FileSystemResource
-import griffon.util.GriffonNameUtils
+import griffon.util.GriffonUtil
 
 /**
  * Gant script for creating Griffon artifacts of all sorts.
@@ -56,8 +56,8 @@ createArtifact = { Map args = [:] ->
 
     // Convert the given name into class name and property name
     // representations.
-    className = GriffonNameUtils.getClassNameRepresentation(name)
-    propertyName = GriffonNameUtils.getPropertyNameRepresentation(name)
+    className = GriffonUtil.getClassNameRepresentation(name)
+    propertyName = GriffonUtil.getPropertyNameRepresentation(name)
     artifactFile = "${basedir}/${artifactPath}/${pkgPath}${className}${suffix}${fileType}"
 
 

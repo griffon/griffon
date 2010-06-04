@@ -38,14 +38,12 @@ pluginIncludes = [
     metadataFile.name,
     "*GriffonPlugin.groovy",
     "plugin.xml",
-    "griffon-app/**",
+    "griffon-app/conf/**",
     "lib/**",
     "scripts/**",
-    "src/**",
+//    "src/**",
     "LICENSE*",
-    "README*",
-//    "docs/api/**",
-//    "docs/gapi/**"
+    "README*"
 ]
 
 pluginExcludes = [
@@ -53,13 +51,14 @@ pluginExcludes = [
     "griffon-app/conf/BuildConfig.groovy",
     "griffon-app/conf/Builder.groovy",
     "griffon-app/conf/Config.groovy",
+    "griffon-app/conf/metainf/**",
     "**/.svn/**",
     "test/**",
     "**/CVS/**"
 ]
 
 target(pluginConfig:"setup the plugin config"){
-depends(checkVersion, createStructure, packagePlugins, docs)
+    depends(checkVersion, createStructure, compile, packagePlugins)
 
     def pluginFile
     new File("${basedir}").eachFile {
@@ -83,9 +82,56 @@ depends(checkVersion, createStructure, packagePlugins, docs)
     pluginName = GriffonUtil.getScriptName(GriffonUtil.getLogicalName(pluginClass, "GriffonPlugin"))
 }
 
-target(packagePlugin:"Packages a Griffon plugin") {
-    depends (checkVersion, pluginConfig, packageAddon, docs)
+target(pluginDocs: "Generates and packages plugin documentation") {
+    depends(checkVersion, parseArguments, pluginConfig, packageAddon)
 
+    pluginDocDir = "${projectTargetDir}/docs"
+    ant.mkdir(dir: pluginDocDir)
+
+    // copy 'raw' docs if they exists
+    ant.copy(todir: pluginDocDir, failonerror: false) {
+        fileset(dir: "${basedir}/src/doc")
+    }
+
+    // package sources
+    def srcMainDir = new File("${basedir}/src/main")
+    def testSharedDir = new File("${basedir}/test/shared")
+    def testSharedDirPath = new File(griffonSettings.testClassesDir, 'shared')
+
+    if(srcMainDir.list() || testSharedDir.list()) {
+        def jarFileName = "${pluginDocDir}/griffon-${pluginName}-${plugin.version}-sources.jar"
+
+        ant.uptodate(property: 'pluginSourceJarUpToDate', targetfile: jarFileName) {
+            srcfiles(dir: srcMainDir, includes: "**/*")
+            srcfiles(dir: testSharedDir, includes: "**/*")
+            srcfiles(dir: classesDirPath, includes: "**/*")
+            srcfiles(dir: testSharedDirPath, includes: "**/*")
+        }
+        boolean uptodate = ant.antProject.properties.pluginSourceJarUpToDate
+        if(!uptodate) {
+            ant.jar(destfile: jarFileName) {
+                if(srcMainDir.list()) fileset(dir: srcMainDir, includes: '**/*.groovy, **/*.java')
+                if(testSharedDir.list()) fileset(dir: testSharedDir, includes: '**/*.groovy, **/*.java')
+            }
+        }
+
+        if(!argsMap.nodoc) {
+            def javadocDir = "${projectTargetDir}/docs/api"
+            invokeGroovydoc(destdir: javadocDir,
+                sourcepath: [srcMainDir, testSharedDir],
+                windowtitle: "${pluginName} ${plugin.version}",
+                doctitle: "${pluginName} ${plugin.version}")
+            jarFileName = "${pluginDocDir}/griffon-${pluginName}-${plugin.version}-javadoc.jar"
+            ant.jar(destfile: jarFileName) {
+                fileset(dir: javadocDir)
+            }
+            ant.delete(dir: javadocDir, quiet: true)
+        }
+    }
+}
+
+target(packagePlugin:"Packages a Griffon plugin") {
+    depends (pluginDocs)
     event("PackagePluginStart", [pluginName,plugin])
     
     // Remove the existing 'plugin.xml' if there is one.
@@ -135,21 +181,25 @@ target(packagePlugin:"Packages a Griffon plugin") {
             pluginExcludes.each {
                 exclude(name:it)
             }
-            // special case for shared test sources & resources
-            ['test/shared/*', 'test/resources/*'].each {
-                include(name:it)
-            }
         }
+
+        zipfileset(dir: "${projectTargetDir}/docs", includes: "*.jar", prefix: "dist")
+        zipfileset(dir: "${projectTargetDir}/docs", excludes: "*.jar", prefix: "docs")
 
         if (isAddonPlugin)  {
             zipfileset(dir:addonJarDir, includes: addonJarName,
                        fullpath: "lib/$addonJarName")
         }
     }
-    // special case for shared test sources & resources
+
     ant.zip(destfile: pluginZip, filesonly: true, update: true) {
         fileset(dir:"${basedir}") {
             ['test/shared/**', 'test/resources/**'].each { f ->
+                include(name: f)
+            }
+        }
+        if(plugin.metaClass.hasProperty(plugin, 'pluginIncludes')) {
+            plugin.pluginIncludes.each { f ->
                 include(name: f)
             }
         }
