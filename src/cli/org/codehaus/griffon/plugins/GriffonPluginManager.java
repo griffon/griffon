@@ -16,12 +16,10 @@
 package org.codehaus.griffon.plugins;
 
 import org.codehaus.griffon.commons.GriffonContext;
-//import org.codehaus.griffon.commons.spring.RuntimeSpringConfiguration;
 import org.codehaus.griffon.plugins.exceptions.PluginException;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 import org.springframework.core.io.Resource;
-//import org.springframework.web.context.ServletContextAware;
 
 import java.io.File;
 import java.io.Writer;
@@ -50,7 +48,7 @@ import java.util.Map;
  * class ClassEditorGriffonPlugin {
  *      def version = 1.1
  *      def doWithSpring = { application ->
- *      	classEditor(org.springframework.beans.propertyeditors.ClassEditor, application.classLoader)
+ *          classEditor(org.springframework.beans.propertyeditors.ClassEditor, application.classLoader)
  *      }
  * }
  * </pre>
@@ -64,7 +62,7 @@ import java.util.Map;
  */
 public interface GriffonPluginManager extends ApplicationContextAware /*, ServletContextAware*/ {
 
-	String BEAN_NAME = "pluginManager";
+    String BEAN_NAME = "pluginManager";
 
     /**
      * Returns an array of all the loaded plug-ins
@@ -78,65 +76,43 @@ public interface GriffonPluginManager extends ApplicationContextAware /*, Servle
     GriffonPlugin[] getFailedLoadPlugins();
 
     /**
-	 * Performs the initial load of plug-ins throwing an exception if any dependencies
-	 * don't resolve
-	 *
-	 * @throws PluginException Thrown when an error occurs loading the plugins
-	 */
-	public abstract void loadPlugins() throws PluginException;
+     * Performs the initial load of plug-ins throwing an exception if any dependencies
+     * don't resolve
+     *
+     * @throws PluginException Thrown when an error occurs loading the plugins
+     */
+    public abstract void loadPlugins() throws PluginException;
 
-//	/**
-//	 * Executes the runtime configuration phase of plug-ins
-//	 *
-//	 * @param springConfig The RuntimeSpringConfiguration instance
-//	 */
-//	public abstract void doRuntimeConfiguration(
-//			RuntimeSpringConfiguration springConfig);
+//    /**
+//     * Executes the runtime configuration phase of plug-ins
+//     *
+//     * @param springConfig The RuntimeSpringConfiguration instance
+//     */
+//    public abstract void doRuntimeConfiguration(
+//            RuntimeSpringConfiguration springConfig);
 
-	/**
-	 * Performs post initialization configuration for each plug-in, passing
-	 * the built application context
-	 *
-	 * @param applicationContext The ApplicationContext instance
-	 */
-	public abstract void doPostProcessing(ApplicationContext applicationContext);
+    /**
+     * Performs post initialization configuration for each plug-in, passing
+     * the built application context
+     *
+     * @param applicationContext The ApplicationContext instance
+     */
+    public abstract void doPostProcessing(ApplicationContext applicationContext);
 
-	/**
-	 * Takes the specified web descriptor reference and configures it with all the plugins outputting
-	 * the result to the target Writer instance
-	 *
-	 * @param descriptor The Resource of the descriptor
-	 * @param target The Writer to write the result to
-	 */
-	public abstract void doWebDescriptor(Resource descriptor, Writer target);
+    /**
+     * Retrieves a name Griffon plugin instance
+     *
+     * @param name The name of the plugin
+     * @return The GriffonPlugin instance or null if it doesn't exist
+     */
+    public abstract GriffonPlugin getGriffonPlugin(String name);
 
-	/**
-	 * @see #doWebDescriptor(Resource, Writer)
-	 *
-	 * @param descriptor The File of the descriptor
-	 * @param target The target to write the changes to
-	 */
-	public abstract void doWebDescriptor(File descriptor, Writer target);
-
-	/**
-	 * This is called on all plugins so that they can add new methods/properties/constructors etc.
-	 *
-	 */
-	public abstract void doDynamicMethods();
-	/**
-	 * Retrieves a name Griffon plugin instance
-	 *
-	 * @param name The name of the plugin
-	 * @return The GriffonPlugin instance or null if it doesn't exist
-	 */
-	public abstract GriffonPlugin getGriffonPlugin(String name);
-
-	/**
-	 *
-	 * @param name The name of the plugin
-	 * @return True if the the manager has a loaded plugin with the given name
-	 */
-	public boolean hasGriffonPlugin(String name);
+    /**
+     *
+     * @param name The name of the plugin
+     * @return True if the the manager has a loaded plugin with the given name
+     */
+    public boolean hasGriffonPlugin(String name);
 
     /**
      * Retrieves a plug-in that failed to load, or null if it doesn't exist
@@ -149,38 +125,24 @@ public interface GriffonPluginManager extends ApplicationContextAware /*, Servle
 
 
     /**
-	 * Retrieves a plug-in for its name and version
-	 *
-	 * @param name The name of the plugin
-	 * @param version The version of the plugin
-	 * @return The GriffonPlugin instance or null if it doesn't exist
-	 */
-	public abstract GriffonPlugin getGriffonPlugin(String name, Object version);
+     * Retrieves a plug-in for its name and version
+     *
+     * @param name The name of the plugin
+     * @param version The version of the plugin
+     * @return The GriffonPlugin instance or null if it doesn't exist
+     */
+    public abstract GriffonPlugin getGriffonPlugin(String name, Object version);
 
-//	/**
-//	 * Executes the runtime configuration for a specific plugin AND all its dependencies
-//	 *
-//	 * @param pluginName The name of he plugin
-//	 * @param springConfig The runtime spring config instance
-//	 */
-//	public abstract void doRuntimeConfiguration(String pluginName, RuntimeSpringConfiguration springConfig);
+    /**
+     * Sets the GriffonContext used be this plugin manager
+     * @param application The GriffonContext instance
+     */
+    public abstract void setApplication(GriffonContext application);
 
-//	/**
-//	 * Checks all the plugins to see whether they have any changes
-//	 *
-//	 */
-//	public abstract void checkForChanges();
-
-	/**
-	 * Sets the GriffonContext used be this plugin manager
-	 * @param application The GriffonContext instance
-	 */
-	public abstract void setApplication(GriffonContext application);
-
-	/**
-	 * @return the initialised
-	 */
-	public boolean isInitialised();
+    /**
+     * @return the initialised
+     */
+    public boolean isInitialised();
 
     /**
      * Refreshes the specified plugin. A refresh will force to plugin to "touch" each of its watched resources
@@ -205,22 +167,6 @@ public interface GriffonPluginManager extends ApplicationContextAware /*, Servle
      * @param event The event
      */
     public void informObservers(String pluginName, Map event);
-
-//    /**
-//     * Called prior to the initialisation of the GriffonContext object to allow registration of additional ArtefactHandler objects
-//     *
-//     * @see org.codehaus.griffon.commons.ArtefactHandler
-//     *
-//     */
-//    public void doArtefactConfiguration();
-//
-//    /**
-//     * Registers pre-compiled artefacts with the GriffonContext instance, only overriding if the application doesn't already provide an artefact of the same
-//     * name
-//     *
-//     * @param application The GriffonContext object
-//     */
-//    void registerProvidedArtefacts(GriffonContext application);
 
     /**
      * Shuts down the PluginManager

@@ -28,30 +28,30 @@ import org.springframework.util.StringUtils;
  */
 public class PluginFilterRetriever {
 
-	public PluginFilter getPluginFilter(Properties properties) {
+    public PluginFilter getPluginFilter(Properties properties) {
 
-		Assert.notNull(properties);
+        Assert.notNull(properties);
 
-		String includes = properties.getProperty("plugin.includes");
-		String excludes = properties.getProperty("plugin.excludes");
+        String includes = properties.getProperty("plugin.includes");
+        String excludes = properties.getProperty("plugin.excludes");
 
-		return getPluginFilter(includes, excludes);
-	}
+        return getPluginFilter(includes, excludes);
+    }
 
-	PluginFilter getPluginFilter(String includes, String excludes) {
-		PluginFilter pluginFilter = null;
+    PluginFilter getPluginFilter(String includes, String excludes) {
+        PluginFilter pluginFilter = null;
 
-		if (includes != null) {
-			String[] includesArray = StringUtils
-					.commaDelimitedListToStringArray(includes);
-			pluginFilter = new IncludingPluginFilter(includesArray);
-		} else if (excludes != null) {
-			String[] excludesArray = StringUtils
-					.commaDelimitedListToStringArray(excludes);
-			pluginFilter = new ExcludingPluginFilter(excludesArray);
-		} else {
-			pluginFilter = new IdentityPluginFilter();
-		}
-		return pluginFilter;
-	}
+        if (includes != null) {
+            String[] includesArray = StringUtils
+                    .commaDelimitedListToStringArray(includes);
+            pluginFilter = new IncludingPluginFilter(includesArray);
+        } else if (excludes != null) {
+            String[] excludesArray = StringUtils
+                    .commaDelimitedListToStringArray(excludes);
+            pluginFilter = new ExcludingPluginFilter(excludesArray);
+        } else {
+            pluginFilter = new IdentityPluginFilter();
+        }
+        return pluginFilter;
+    }
 }

@@ -15,7 +15,7 @@
  */
 
 import org.codehaus.griffon.plugins.GriffonPluginUtils
-import org.codehaus.griffon.util.GriffonUtil
+import griffon.util.GriffonUtil
 
 /**
  * Gant script containing the Griffon build event system.

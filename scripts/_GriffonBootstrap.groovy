@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import org.codehaus.griffon.util.BuildSettings
+import griffon.util.BuildSettings
 import griffon.util.RunMode
 
 /**

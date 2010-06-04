@@ -17,7 +17,7 @@
 package org.codehaus.griffon.test
 
 import junit.framework.TestSuite
-import org.codehaus.griffon.util.BuildSettings
+import griffon.util.BuildSettings
 import griffon.core.GriffonApplication
 
 /**

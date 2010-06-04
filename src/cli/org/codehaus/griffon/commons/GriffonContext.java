@@ -130,7 +130,7 @@ public interface GriffonContext { // extends ApplicationContextAware {
      *
      * @deprecated Use {@link org.codehaus.griffon.util.BuildSettings#ENV_PRODUCTION} instead.
      */
-	String ENV_PRODUCTION = "production";
+    String ENV_PRODUCTION = "production";
 
     /**
      * Constant for the test environment.
@@ -168,17 +168,17 @@ public interface GriffonContext { // extends ApplicationContextAware {
     GroovyClassLoader getClassLoader();
 
 
-	/**
-	 * Retrieves all java.lang.Class instances loaded by the Griffon class loader
-	 * @return An array of classes
-	 */
-	Class[] getAllClasses();
+    /**
+     * Retrieves all java.lang.Class instances loaded by the Griffon class loader
+     * @return An array of classes
+     */
+    Class[] getAllClasses();
 
-	/**
-	 * Retrieves all java.lang.Class instances considered Artefacts loaded by the Griffon class loader
-	 * @return An array of classes
-	 */
-//	Class[] getAllArtefacts();
+    /**
+     * Retrieves all java.lang.Class instances considered Artefacts loaded by the Griffon class loader
+     * @return An array of classes
+     */
+//    Class[] getAllArtefacts();
 
     /**
      * Returns the Spring context for this application. Note that this
@@ -193,20 +193,20 @@ public interface GriffonContext { // extends ApplicationContextAware {
      */
 //    void setMainContext(ApplicationContext context);
 
-	/**
-	 * Returns the Spring application context that contains this
+    /**
+     * Returns the Spring application context that contains this
      * application instance. It is the parent of the context returned
      * by {@link #getMainContext()}.
-	 */
-//	ApplicationContext getParentContext();
+     */
+//    ApplicationContext getParentContext();
 
-	/**
-	 * Retrieves a class for the given name within the GriffonApplication or returns null
-	 *
-	 * @param className The name of the class
-	 * @return The class or null
-	 */
-	Class getClassForName(String className);
+    /**
+     * Retrieves a class for the given name within the GriffonApplication or returns null
+     *
+     * @param className The name of the class
+     * @return The class or null
+     */
+    Class getClassForName(String className);
 
 
     /**

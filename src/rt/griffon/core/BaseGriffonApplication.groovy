@@ -16,7 +16,7 @@
 
 package griffon.core
 
-import griffon.util.GriffonApplicationHelper
+import griffon.util.internal.GriffonApplicationHelper
 import griffon.util.EventRouter
 import griffon.util.Metadata
 
@@ -36,7 +36,6 @@ class BaseGriffonApplication implements GriffonApplication {
     Map groups      = [:]
 
     Binding bindings = new Binding()
-    Properties applicationProperties
     ConfigObject config
     ConfigObject builderConfig
     Object eventsConfig
@@ -47,26 +46,6 @@ class BaseGriffonApplication implements GriffonApplication {
 
     BaseGriffonApplication(GriffonApplication appDelegate) {
         this.appDelegate = appDelegate
-    }
-
-    // define getter/setter otherwise it will be treated as a read-only property
-    // because only the getter was defined in GriffonApplication
-    /**
-     * @deprecated use Metadata.getCurrent() instead
-     */
-    Properties getApplicationProperties() {
-        return applicationProperties
-    }
-    /**
-     * @deprecated use loadApplicationProperties() instead
-     */
-    @Deprecated
-    void setApplicationProperties(Properties applicationProperties) {
-        this.applicationProperties = applicationProperties
-    }
-
-    void loadApplicationProperties() {
-        this.applicationProperties = Metadata.getCurrent()
     }
 
     Metadata getMetadata() {

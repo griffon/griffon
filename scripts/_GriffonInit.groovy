@@ -27,9 +27,8 @@ if (getBinding().variables.containsKey("_griffon_init_called")) return
 _griffon_init_called = true
 
 
-import org.codehaus.griffon.util.GriffonUtil
+import griffon.util.GriffonUtil
 import org.springframework.core.io.FileSystemResource
-import org.codehaus.griffon.util.GriffonNameUtils
 
 // add includes
 includeTargets << griffonScript("_GriffonArgParsing")

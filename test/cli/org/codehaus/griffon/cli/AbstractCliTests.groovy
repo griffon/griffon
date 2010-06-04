@@ -1,8 +1,8 @@
 package org.codehaus.griffon.cli
 
 import gant.Gant
-import org.codehaus.griffon.util.BuildSettings
-import org.codehaus.griffon.util.BuildSettingsHolder
+import griffon.util.BuildSettings
+import griffon.util.BuildSettingsHolder
 import org.codehaus.gant.GantBinding
 import org.codehaus.griffon.cli.support.GriffonRootLoader
 import org.codehaus.griffon.commons.ConfigurationHolder

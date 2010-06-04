@@ -30,15 +30,7 @@ import java.util.Properties;
  * @author Danno Ferrin
  * @author Andres Almiray
  */
-public interface GriffonApplication extends griffon.util.IGriffonApplication {
-    /**
-     * Gets the application's configuration set on 'aaplication.properties'.<p>
-     *
-     * @deprecated use Metadata.getCurrent() instead
-     */
-    @Deprecated
-    Properties getApplicationProperties();
-
+public interface GriffonApplication {
     /**
      * Gets the application's configuration set on 'aaplication.properties'.<p>
      */

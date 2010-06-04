@@ -17,11 +17,9 @@ package org.codehaus.griffon.plugins;
 
 import groovy.lang.GroovyObjectSupport;
 import groovy.util.slurpersupport.GPathResult;
-//import org.codehaus.griffon.commons.AbstractGriffonClass;
 import org.codehaus.griffon.commons.GriffonContext;
 import org.codehaus.griffon.commons.GriffonClassUtils;
 import org.codehaus.griffon.commons.AbstractGriffonClass;
-//import org.codehaus.griffon.commons.spring.RuntimeSpringConfiguration;
 import org.springframework.beans.BeansException;
 import org.springframework.context.ApplicationContext;
 
@@ -36,105 +34,103 @@ import java.util.Map;
  */
 public abstract class AbstractGriffonPlugin extends GroovyObjectSupport implements GriffonPlugin {
 
-	/* (non-Javadoc)
-	 * @see org.codehaus.groovy.griffon.plugins.GriffonPlugin#refresh()
-	 */
-	public void refresh() {
-		// do nothing
-	}
+    /* (non-Javadoc)
+     * @see org.codehaus.groovy.griffon.plugins.GriffonPlugin#refresh()
+     */
+    public void refresh() {
+        // do nothing
+    }
 
-	protected GriffonContext application;
-	protected String version = "1.0";
-	protected Map dependencies = new HashMap();
-	protected String[] dependencyNames = new String[0];
-	protected Class pluginClass;
-	protected ApplicationContext applicationContext;
-	protected GriffonPluginManager manager;
-	protected String[] evictionList = new String[0];
+    protected GriffonContext application;
+    protected String version = "1.0";
+    protected Map dependencies = new HashMap();
+    protected String[] dependencyNames = new String[0];
+    protected Class pluginClass;
+    protected ApplicationContext applicationContext;
+    protected GriffonPluginManager manager;
+    protected String[] evictionList = new String[0];
 
-	/**
-	 * Wrapper Griffon class for plugins
-	 *
-	 * @author Graeme Rocher
-	 *
-	 */
-	class GriffonPluginClass extends AbstractGriffonClass {
-		public GriffonPluginClass(Class clazz) {
-			super(clazz, TRAILING_NAME);
-		}
+    /**
+     * Wrapper Griffon class for plugins
+     *
+     * @author Graeme Rocher
+     *
+     */
+    class GriffonPluginClass extends AbstractGriffonClass {
+        public GriffonPluginClass(Class clazz) {
+            super(clazz, TRAILING_NAME);
+        }
 
-	}
+    }
 
-	public AbstractGriffonPlugin(Class pluginClass, GriffonContext application) {
-		if(pluginClass == null) {
-			throw new IllegalArgumentException("Argument [pluginClass] cannot be null");
-		}
-		if(!pluginClass.getName().endsWith(TRAILING_NAME)) {
-			throw new IllegalArgumentException("Argument [pluginClass] with value ["+pluginClass+"] is not a Griffon plugin (class name must end with 'GriffonPlugin')");
-		}
-		this.application = application;
-		this.pluginClass = pluginClass;
-	}
+    public AbstractGriffonPlugin(Class pluginClass, GriffonContext application) {
+        if(pluginClass == null) {
+            throw new IllegalArgumentException("Argument [pluginClass] cannot be null");
+        }
+        if(!pluginClass.getName().endsWith(TRAILING_NAME)) {
+            throw new IllegalArgumentException("Argument [pluginClass] with value ["+pluginClass+"] is not a Griffon plugin (class name must end with 'GriffonPlugin')");
+        }
+        this.application = application;
+        this.pluginClass = pluginClass;
+    }
 
-	public abstract void doWithApplicationContext(ApplicationContext applicationContext);
+    public abstract void doWithApplicationContext(ApplicationContext applicationContext);
 
 
-//	public abstract void doWithRuntimeConfiguration(RuntimeSpringConfiguration springConfig);
+//    public abstract void doWithRuntimeConfiguration(RuntimeSpringConfiguration springConfig);
 
-//	public abstract void doArtefactConfiguration();
+//    public abstract void doArtefactConfiguration();
 
-//	public boolean checkForChanges() {
-//	    return false;
-//	}
+//    public boolean checkForChanges() {
+//        return false;
+//    }
 
-	public void doWithWebDescriptor(GPathResult webXml) {
-		// do nothing
-	}
-	public String[] getDependencyNames() {
-		return this.dependencyNames;
-	}
+    public void doWithWebDescriptor(GPathResult webXml) {
+        // do nothing
+    }
+    public String[] getDependencyNames() {
+        return this.dependencyNames;
+    }
 
-	public String getDependentVersion(String name) {
-		return null;
-	}
+    public String getDependentVersion(String name) {
+        return null;
+    }
 
-	public String getName() {
-		return pluginClass.getName();
-	}
+    public String getName() {
+        return pluginClass.getName();
+    }
 
-	public String getVersion() {
-		return this.version;
-	}
+    public String getVersion() {
+        return this.version;
+    }
 
     public String getPluginPath() {
         return PLUGINS_PATH + '/' + GriffonClassUtils.getScriptName(getName()) + '-' + getVersion();
     }
 
     public GriffonPluginManager getManager() {
-		return this.manager;
-	}
+        return this.manager;
+    }
 
-	public String[] getLoadAfterNames() {
-		return new String[0];
-	}
-	public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
-		this.applicationContext = applicationContext;
-	}
-	/* (non-Javadoc)
-	 * @see org.codehaus.groovy.griffon.plugins.GriffonPlugin#setManager(org.codehaus.groovy.griffon.plugins.GriffonPluginManager)
-	 */
-	public void setManager(GriffonPluginManager manager) {
-		this.manager = manager;
-	}
-	/* (non-Javadoc)
-	 * @see org.codehaus.groovy.griffon.plugins.GriffonPlugin#setApplication(org.codehaus.groovy.griffon.commons.GriffonContext)
-	 */
-	public void setApplication(GriffonContext application) {
-		this.application = application;
-	}
-	public String[] getEvictionNames() {
-		return this.evictionList;
-	}
-
-
+    public String[] getLoadAfterNames() {
+        return new String[0];
+    }
+    public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
+        this.applicationContext = applicationContext;
+    }
+    /* (non-Javadoc)
+     * @see org.codehaus.groovy.griffon.plugins.GriffonPlugin#setManager(org.codehaus.groovy.griffon.plugins.GriffonPluginManager)
+     */
+    public void setManager(GriffonPluginManager manager) {
+        this.manager = manager;
+    }
+    /* (non-Javadoc)
+     * @see org.codehaus.groovy.griffon.plugins.GriffonPlugin#setApplication(org.codehaus.groovy.griffon.commons.GriffonContext)
+     */
+    public void setApplication(GriffonContext application) {
+        this.application = application;
+    }
+    public String[] getEvictionNames() {
+        return this.evictionList;
+    }
 }

@@ -15,26 +15,19 @@
  */
 package org.codehaus.griffon.plugins;
 
-//import griffon.spring.BeanBuilder;
-import org.codehaus.griffon.util.GriffonUtil;
-import org.codehaus.griffon.util.BuildSettingsHolder;
-import org.codehaus.griffon.util.BuildSettings;
+import griffon.util.GriffonUtil;
+import griffon.util.BuildSettingsHolder;
+import griffon.util.BuildSettings;
 import groovy.lang.*;
 import groovy.util.slurpersupport.GPathResult;
 import org.apache.commons.lang.ArrayUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-//import org.codehaus.griffon.commons.ArtefactHandler;
 import org.codehaus.griffon.commons.GriffonContext;
 import org.codehaus.griffon.commons.GriffonClassUtils;
 import org.codehaus.griffon.commons.GriffonResourceUtils;
-//import org.codehaus.griffon.commons.spring.RuntimeSpringConfiguration;
-//import org.codehaus.griffon.compiler.GriffonClassLoader;
-//import org.codehaus.griffon.compiler.support.GriffonResourceLoader;
-//import org.codehaus.griffon.compiler.support.GriffonResourceLoaderHolder;
 import org.codehaus.griffon.plugins.exceptions.PluginException;
-//import org.codehaus.griffon.support.ParentApplicationContextAware;
 import org.springframework.beans.BeanWrapper;
 import org.springframework.beans.BeanWrapperImpl;
 import org.springframework.context.ApplicationContext;
@@ -215,12 +208,12 @@ public class DefaultGriffonPlugin extends AbstractGriffonPlugin implements Griff
 
             }
             catch (IllegalArgumentException e) {
-            	if(GriffonUtil.isDevelopmentEnv())
-            		LOG.debug("Cannot load plug-in resource watch list from ["+ ArrayUtils.toString(resourcesReferences) +"]. This means that the plugin "+this+", will not be able to auto-reload changes effectively. Try runnng griffon upgrade.: " + e.getMessage());
+                if(GriffonUtil.isDevelopmentEnv())
+                    LOG.debug("Cannot load plug-in resource watch list from ["+ ArrayUtils.toString(resourcesReferences) +"]. This means that the plugin "+this+", will not be able to auto-reload changes effectively. Try runnng griffon upgrade.: " + e.getMessage());
             }
             catch (IOException e) {
-            	if(GriffonUtil.isDevelopmentEnv())
-            		LOG.debug("Cannot load plug-in resource watch list from ["+ ArrayUtils.toString(resourcesReferences) +"]. This means that the plugin "+this+", will not be able to auto-reload changes effectively. Try runnng griffon upgrade.: " + e.getMessage());
+                if(GriffonUtil.isDevelopmentEnv())
+                    LOG.debug("Cannot load plug-in resource watch list from ["+ ArrayUtils.toString(resourcesReferences) +"]. This means that the plugin "+this+", will not be able to auto-reload changes effectively. Try runnng griffon upgrade.: " + e.getMessage());
             }
             if(LOG.isDebugEnabled()) {
                 LOG.debug("Plugin "+this+" found ["+watchedResources.length+"] to watch");
@@ -761,38 +754,4 @@ public class DefaultGriffonPlugin extends AbstractGriffonPlugin implements Griff
         onChangeListener.setDelegate(this);
         onChangeListener.call(new Object[]{event});
     }
-
-//	public void doArtefactConfiguration() {
-//		if(this.pluginBean.isReadableProperty(ARTEFACTS)) {
-//			List l = (List)this.plugin.getProperty(ARTEFACTS);
-//			for (Iterator iter = l.iterator(); iter.hasNext();) {
-//				Object artefact = iter.next();
-//				if(artefact instanceof Class) {
-//					Class artefactClass = (Class)artefact;
-//					if(ArtefactHandler.class.isAssignableFrom(artefactClass)) {
-//						try {
-//							this.application.registerArtefactHandler((ArtefactHandler)artefactClass.newInstance());
-//						} catch (InstantiationException e) {
-//				            LOG.error("Cannot instantiate an Artefact Handler:" + e.getMessage(),e);
-//						} catch (IllegalAccessException e) {
-//				            LOG.error("The constructor of the Artefact Handler is not accessible:" + e.getMessage(),e);
-//						}
-//					} else {
-//			            LOG.error("This class is not an ArtefactHandler:" + artefactClass.getName());
-//					}
-//				} else {
-//					if(artefact instanceof ArtefactHandler) {
-//						this.application.registerArtefactHandler((ArtefactHandler)artefact);
-//					} else {
-//						LOG.error("This object is not an ArtefactHandler:" + artefact + "[" + artefact.getClass().getName()+"]");
-//					}
-//				}
-//			}
-//		}
-//	}
-//
-//    public Class[] getProvidedArtefacts() {
-//        return this.providedArtefacts;
-//    }
-
 }

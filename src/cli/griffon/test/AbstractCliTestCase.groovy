@@ -16,7 +16,7 @@
 
 package griffon.test
  
-import org.codehaus.griffon.util.BuildSettingsHolder
+import griffon.util.BuildSettingsHolder
 import java.util.concurrent.TimeUnit
 import java.util.concurrent.locks.*
  

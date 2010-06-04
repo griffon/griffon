@@ -13,10 +13,10 @@
  * See the License for the specific language govnerning permissions and
  * limitations under the License.
  */
-package griffon.application
+package griffon.swing
 
 import griffon.core.BaseGriffonApplication
-import griffon.util.GriffonApplicationHelper
+import griffon.util.internal.GriffonApplicationHelper
 import griffon.util.GriffonExceptionHandler
 import griffon.util.UIThreadHelper
 import griffon.util.SwingUIThreadHandler
@@ -29,7 +29,7 @@ import javax.swing.WindowConstants
  * @author Danno.Ferrin
  * @author Andres.Almiray
  */
-class SwingApplication implements StandaloneGriffonApplication {
+class SwingApplication implements griffon.application.StandaloneGriffonApplication {
     @Delegate private final BaseGriffonApplication _base
 
     List appFrames  = []
@@ -37,19 +37,18 @@ class SwingApplication implements StandaloneGriffonApplication {
     SwingApplication() {
         _base = new BaseGriffonApplication(this)
         UIThreadHelper.instance.setUIThreadHandler(new SwingUIThreadHandler())
-        loadApplicationProperties()
     }
 
-    public void bootstrap() {
+    void bootstrap() {
         GriffonApplicationHelper.prepare(this)
         event("BootstrapEnd",[this])
     }
 
-    public void realize() {
+    void realize() {
         GriffonApplicationHelper.startup(this)
     }
 
-    public void show() {
+    void show() {
         if (appFrames.size() > 0) {
             EventQueue.invokeAndWait { appFrames[0].show() }
         }
@@ -57,12 +56,12 @@ class SwingApplication implements StandaloneGriffonApplication {
         callReady()
     }
 
-    public void shutdown() {
+    void shutdown() {
         _base.shutdown()
         System.exit(0)
     }
 
-    public void handleWindowClosing(WindowEvent evt = null) {
+    void handleWindowClosing(WindowEvent evt = null) {
         boolean proceed = canShutdown()
         if(config.application?.autoShutdown && proceed && appFrames.findAll{!it.visible}.size() <= 1) {
             shutdown()
@@ -71,8 +70,8 @@ class SwingApplication implements StandaloneGriffonApplication {
         }
     }
 
-    public Object createApplicationContainer() {
-        def appContainer = GriffonApplicationHelper.createJFrameApplication(this)
+    Object createApplicationContainer() {
+        def appContainer = SwingUtils.createApplicationFrame(this)
         try {
             appContainer.defaultCloseOperation = WindowConstants.DO_NOTHING_ON_CLOSE
             appContainer.windowClosing = this.&handleWindowClosing
@@ -95,7 +94,7 @@ class SwingApplication implements StandaloneGriffonApplication {
             sleep(100)
         }
 
-        ready();
+        ready()
     }
 
     public static void main(String[] args) {

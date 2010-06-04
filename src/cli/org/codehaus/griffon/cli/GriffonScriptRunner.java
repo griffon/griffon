@@ -17,10 +17,10 @@
 package org.codehaus.griffon.cli;
 
 import gant.Gant;
-import org.codehaus.griffon.util.BuildSettings;
-import org.codehaus.griffon.util.BuildSettingsHolder;
+import griffon.util.BuildSettings;
+import griffon.util.BuildSettingsHolder;
 import griffon.util.Environment;
-import griffon.util.GriffonNameUtils;
+import griffon.util.GriffonUtil;
 import groovy.lang.Binding;
 import groovy.lang.Closure;
 import groovy.lang.ExpandoMetaClass;
@@ -161,7 +161,7 @@ public class GriffonScriptRunner {
         if (paramName.charAt(0) == '-') {
             paramName = paramName.substring(1);
         }
-        info.name = GriffonNameUtils.getNameFromScript(paramName);
+        info.name = GriffonUtil.getNameFromScript(paramName);
 
         if (currentParamIndex < splitArgs.length) {
             // if we have additional params provided - store it in system property
@@ -479,7 +479,7 @@ public class GriffonScriptRunner {
                     out.println("The following commands are supported outside of a project:");
                     Collections.sort(scriptsAllowedOutsideOfProject);
                     for (File file : scriptsAllowedOutsideOfProject) {
-                        out.println("\t" + GriffonNameUtils.getScriptName(file.getName()));
+                        out.println("\t" + GriffonUtil.getScriptName(file.getName()));
                     }
                     out.println("Run 'griffon help' for a complete list of available scripts.");
                     return -1;
@@ -619,7 +619,7 @@ public class GriffonScriptRunner {
                 desc = (File) descriptors.get(i);
                 Matcher matcher = pluginDescriptorPattern.matcher(desc.getName());
                 matcher.find();
-                String pluginName = GriffonNameUtils.getPropertyName(matcher.group(1));
+                String pluginName = GriffonUtil.getPropertyName(matcher.group(1));
 
                 // Add the plugin path to the binding.
                 binding.setVariable(pluginName + "PluginDir", desc.getParentFile());

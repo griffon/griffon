@@ -15,7 +15,7 @@
  */
 
 import org.springframework.core.io.FileSystemResource
-import org.codehaus.griffon.util.GriffonNameUtils
+import griffon.util.GriffonNameUtils
 
 /**
  * Gant script for creating Griffon artifacts of all sorts.

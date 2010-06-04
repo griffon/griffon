@@ -19,7 +19,7 @@ package org.codehaus.griffon.commons.cfg;
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver
 import org.springframework.core.io.ResourceLoader
 import org.apache.commons.logging.*
-import org.codehaus.griffon.util.GriffonUtil
+import griffon.util.GriffonUtil
 import org.codehaus.griffon.commons.ConfigurationHolder
 import org.codehaus.griffon.commons.GriffonContext
 

@@ -14,8 +14,6 @@
  * limitations under the License.
  */
 
-import org.codehaus.griffon.util.GriffonNameUtils
-
 /**
  * Gant script that compiles Groovy and Java files in the src tree
  *

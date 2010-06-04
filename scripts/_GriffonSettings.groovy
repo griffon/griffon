@@ -15,8 +15,8 @@
  */
 
 import griffon.util.Metadata
-import org.codehaus.griffon.util.BuildSettings
-import org.codehaus.griffon.util.GriffonNameUtils
+import griffon.util.BuildSettings
+import griffon.util.GriffonNameUtils
 import org.codehaus.griffon.plugins.GriffonPluginUtils
 import org.springframework.core.io.ClassPathResource
 import org.springframework.core.io.FileSystemResource
@@ -96,8 +96,8 @@ applicationFile = new File("${basedir}/griffon-app/conf/Application.groovy")
 // structure.
 artefactPattern = /\S+?\/griffon-app\/\S+?\/(\S+?)\.groovy/
 
-defaultGriffonApplicationClass = "griffon.application.SwingApplication"
-defaultGriffonAppletClass = "griffon.applet.SwingApplet"
+defaultGriffonApplicationClass = "griffon.swing.SwingApplication"
+defaultGriffonAppletClass = "griffon.swing.SwingApplet"
 makeJNLP = false
 _skipSigning = false // GRIFFON-118
 defaultAppletWidth = 240 // GRIFFON-127

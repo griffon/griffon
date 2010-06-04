@@ -15,23 +15,12 @@
  */
 package org.codehaus.griffon.test;
 
-// import griffon.util.GriffonNameUtils;
-// import griffon.util.GriffonWebUtil;
 import griffon.core.GriffonApplication;
 import junit.framework.Test;
 import junit.framework.TestResult;
 import junit.framework.TestSuite;
-// import org.codehaus.groovy.griffon.commons.spring.GriffonWebApplicationContext;
-// import org.codehaus.groovy.griffon.web.servlet.GriffonApplicationAttributes;
-// import org.codehaus.groovy.griffon.web.servlet.mvc.GriffonWebRequest;
-// import org.codehaus.groovy.griffon.web.context.ServletContextHolder;
 import org.codehaus.groovy.runtime.InvokerHelper;
 import org.springframework.context.ApplicationContext;
-// import org.springframework.transaction.PlatformTransactionManager;
-// import org.springframework.transaction.TransactionStatus;
-// import org.springframework.transaction.support.TransactionCallback;
-// import org.springframework.transaction.support.TransactionTemplate;
-// import org.springframework.web.context.request.RequestContextHolder;
 
 
 /**

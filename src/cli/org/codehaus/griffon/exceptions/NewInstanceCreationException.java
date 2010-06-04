@@ -23,20 +23,20 @@ package org.codehaus.griffon.exceptions;
  */
 public class NewInstanceCreationException extends GriffonException {
 
-	public NewInstanceCreationException() {
-		super();
-	}
+    public NewInstanceCreationException() {
+        super();
+    }
 
-	public NewInstanceCreationException(String arg0) {
-		super(arg0);
-	}
+    public NewInstanceCreationException(String arg0) {
+        super(arg0);
+    }
 
-	public NewInstanceCreationException(String arg0, Throwable arg1) {
-		super(arg0, arg1);
-	}
+    public NewInstanceCreationException(String arg0, Throwable arg1) {
+        super(arg0, arg1);
+    }
 
-	public NewInstanceCreationException(Throwable arg0) {
-		super(arg0);
-	}
+    public NewInstanceCreationException(Throwable arg0) {
+        super(arg0);
+    }
 
 }

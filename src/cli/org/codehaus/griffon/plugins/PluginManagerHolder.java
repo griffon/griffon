@@ -24,33 +24,33 @@ package org.codehaus.griffon.plugins;
  */
 public abstract class PluginManagerHolder {
 
-	private static final ThreadLocal pluginManagerHolder = new InheritableThreadLocal();
-	
-	/**
-	 * Bind the given GriffonPluginManager instance to the current Thread
-	 * @param pluginManager The GriffonPluginManager to expose
-	 */
-	public static void setPluginManager(GriffonPluginManager pluginManager) {
-		pluginManagerHolder.set(pluginManager);
-	}
-	
-	/**
-	 * Retrieves the GriffonPluginManager bound to the current Thread
-	 * @return The GriffonPluginManager or null
-	 */
-	public static GriffonPluginManager getPluginManager() {
-		return (GriffonPluginManager)pluginManagerHolder.get();
-	}
-	
-	/**
-	 * Retrieves the bound GriffonPluginManager that resides in the current Thread
-	 * @return The GriffonPluginManager
-	 * @throws IllegalStateException When there is no bound GriffonPluginManager
-	 */
-	public static GriffonPluginManager currentPluginManager() {
-		GriffonPluginManager current = getPluginManager();
-		if(current == null)
-			throw new IllegalStateException("No thread-bound PluginManager");
-		return current;
-	}
+    private static final ThreadLocal pluginManagerHolder = new InheritableThreadLocal();
+    
+    /**
+     * Bind the given GriffonPluginManager instance to the current Thread
+     * @param pluginManager The GriffonPluginManager to expose
+     */
+    public static void setPluginManager(GriffonPluginManager pluginManager) {
+        pluginManagerHolder.set(pluginManager);
+    }
+    
+    /**
+     * Retrieves the GriffonPluginManager bound to the current Thread
+     * @return The GriffonPluginManager or null
+     */
+    public static GriffonPluginManager getPluginManager() {
+        return (GriffonPluginManager)pluginManagerHolder.get();
+    }
+    
+    /**
+     * Retrieves the bound GriffonPluginManager that resides in the current Thread
+     * @return The GriffonPluginManager
+     * @throws IllegalStateException When there is no bound GriffonPluginManager
+     */
+    public static GriffonPluginManager currentPluginManager() {
+        GriffonPluginManager current = getPluginManager();
+        if(current == null)
+            throw new IllegalStateException("No thread-bound PluginManager");
+        return current;
+    }
 }

@@ -13,7 +13,7 @@
 * See the License for the specific language governing permissions and
 * limitations under the License.
 */
-package org.codehaus.griffon.util;
+package griffon.util;
 
 /**
  * Static singleton holder for the BuildSettings instance. Should only

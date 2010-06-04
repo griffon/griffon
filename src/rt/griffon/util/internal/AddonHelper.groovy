@@ -14,10 +14,11 @@
  * limitations under the License.
  */
 
-package griffon.util
+package griffon.util.internal
 
-import griffon.builder.UberBuilder;
-import griffon.core.GriffonApplication;
+import griffon.builder.UberBuilder
+import griffon.core.GriffonApplication
+import griffon.util.UIThreadHelper
 
 /**
  * Created by IntelliJ IDEA.
@@ -66,7 +67,6 @@ public class AddonHelper {
 
         app.event("LoadAddonsEnd", [app, app.addons])
     }
-
 
     static def handleAddon(GriffonApplication app, Class addonClass, String prefix, String addonName) {
         def addon = addonClass.newInstance()

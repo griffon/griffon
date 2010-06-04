@@ -15,7 +15,7 @@
  */
 package org.codehaus.griffon.plugins
 
-import org.codehaus.griffon.util.BuildSettingsHolder
+import griffon.util.BuildSettingsHolder
 import org.apache.commons.lang.ArrayUtils
 import org.springframework.core.io.FileSystemResource
 import org.springframework.core.io.Resource

@@ -29,19 +29,19 @@ import groovy.lang.MetaClass;
  */
 public interface GriffonClass {
 
-	/**
-	 * <p>Gets the initial value of the given property on the class</p>
-	 * @param name The name of the property
-	 * @return The initial value
-	 */
-	public Object getPropertyValue(String name);
+    /**
+     * <p>Gets the initial value of the given property on the class</p>
+     * @param name The name of the property
+     * @return The initial value
+     */
+    public Object getPropertyValue(String name);
 
-	/**
-	 * <p>Returns true if the class has the specified property</p>
-	 * @param name The name of the property
-	 * @return True if it does
-	 */
-	public boolean hasProperty(String name);
+    /**
+     * <p>Returns true if the class has the specified property</p>
+     * @param name The name of the property
+     * @return True if it does
+     */
+    public boolean hasProperty(String name);
 
     /**
      * <p>Creates a new instance of this class.</p>

@@ -40,6 +40,6 @@ import java.lang.annotation.Target;
  */
 @Retention(RetentionPolicy.SOURCE)
 @Target({ElementType.FIELD, ElementType.TYPE})
-@GroovyASTTransformationClass("griffon.util.EventPublisherASTTransformation")
+@GroovyASTTransformationClass("griffon.util.internal.EventPublisherASTTransformation")
 public @interface EventPublisher {
 }

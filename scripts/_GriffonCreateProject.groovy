@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import org.codehaus.griffon.util.GriffonNameUtils
+import griffon.util.GriffonUtil
 
 /**
  * Gant script that handles the creation of Griffon applications
@@ -68,7 +68,7 @@ target(createPlugin: "The implementation target")  {
     initProject(type: "plugin")
 
     // Rename the plugin descriptor.
-    pluginName = GriffonNameUtils.getNameFromScript(griffonAppName)
+    pluginName = GriffonUtil.getNameFromScript(griffonAppName)
     ant.move(
             file: "${basedir}/GriffonPlugin.groovy",
             tofile: "${basedir}/${pluginName}GriffonPlugin.groovy",
@@ -117,5 +117,5 @@ target ( appName : "Evaluates the application name") {
         griffonAppVersion = argsMap["appVersion"]
     }
 
-    appClassName = GriffonNameUtils.getClassNameRepresentation(griffonAppName)
+    appClassName = GriffonUtil.getClassNameRepresentation(griffonAppName)
 }

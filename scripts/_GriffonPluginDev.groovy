@@ -19,7 +19,7 @@ if (getBinding().variables.containsKey("_griffon_plugin_dev_called")) return
 _griffon_plugin_dev_called = true
 
 import groovy.xml.MarkupBuilder
-import org.codehaus.griffon.util.GriffonNameUtils
+import griffon.util.GriffonUtil
 
 /**
  * Gant script that deals with those tasks required for plugin developers
@@ -80,7 +80,7 @@ depends(checkVersion, createStructure, packagePlugins, docs)
         t.printStackTrace(System.out)
         ant.fail("Cannot instantiate plugin file")
     }
-    pluginName = GriffonNameUtils.getScriptName(GriffonNameUtils.getLogicalName(pluginClass, "GriffonPlugin"))
+    pluginName = GriffonUtil.getScriptName(GriffonUtil.getLogicalName(pluginClass, "GriffonPlugin"))
 }
 
 target(packagePlugin:"Packages a Griffon plugin") {

@@ -19,9 +19,7 @@ package org.codehaus.griffon.test
 import junit.framework.TestSuite
 import junit.framework.Test
 import org.springframework.core.io.Resource
-// import org.codehaus.groovy.griffon.test.GriffonTestHelper
-// import org.codehaus.groovy.griffon.test.PotentialTest
-import org.codehaus.griffon.util.BuildSettings
+import griffon.util.BuildSettings
 import java.lang.reflect.Modifier
 import junit.framework.TestCase
 

@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.codehaus.griffon.util;
+package griffon.util;
 
 import groovy.lang.Binding;
 import groovy.lang.GroovyShell;
@@ -21,21 +21,8 @@ import groovy.lang.Writable;
 import groovy.util.slurpersupport.GPathResult;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-//import org.codehaus.griffon.commons.ApplicationAttributes;
-//import org.codehaus.griffon.commons.ApplicationHolder;
-//import org.codehaus.griffon.commons.DefaultGriffonContext;
-//import org.codehaus.griffon.commons.GriffonContext;
-//import org.codehaus.griffon.commons.spring.GriffonRuntimeConfigurator;
-//import org.codehaus.griffon.support.MockApplicationContext;
-//import org.codehaus.griffon.support.MockResourceLoader;
-//import org.springframework.context.ApplicationContext;
-//import org.springframework.context.ConfigurableApplicationContext;
-//import org.springframework.context.support.ClassPathXmlApplicationContext;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
-//import org.springframework.mock.web.MockServletContext;
-//import org.springframework.util.Assert;
-//import org.codehaus.griffon.util.BuildSettings;
 import org.codehaus.griffon.commons.GriffonContext;
 import org.codehaus.griffon.commons.GriffonContextHolder;
 import org.codehaus.groovy.runtime.StackTraceUtils;
@@ -56,13 +43,8 @@ import java.util.jar.Manifest;
  *
  * @author Graeme Rocher
  * @since 0.2
- *
- * @version $Revision: 7651 $
- * First Created: 02-Jun-2006
- * Last Updated: $Date: 2008-11-17 04:43:26 -0700 (Mon, 17 Nov 2008) $
- *
  */
-public class GriffonUtil {
+public class GriffonUtil extends GriffonNameUtils {
 
 	private static final Log LOG  = LogFactory.getLog(GriffonUtil.class);
     private static final Log STACK_LOG  = LogFactory.getLog("StackTrace");
@@ -76,13 +58,8 @@ public class GriffonUtil {
             "org.codehaus.gant.",
             "griffon.",
             "groovy.",
-            "org.mortbay.",
             "sun.",
-            "java.lang.reflect.",
-            "org.springframework.",
-            "com.opensymphony.",
-            "org.hibernate.",
-            "javax.servlet."
+            "java.lang.reflect."
     };
 
     static {
@@ -118,95 +95,13 @@ public class GriffonUtil {
         GRIFFON_VERSION = version;
     }
 
-    private static final String PRODUCTION_ENV_SHORT_NAME = "prod";
-    private static final String DEVELOPMENT_ENVIRONMENT_SHORT_NAME = "dev";
-    private static final String TEST_ENVIRONMENT_SHORT_NAME = "test";
-
-    private static Map envNameMappings = new HashMap() {{
-        put(DEVELOPMENT_ENVIRONMENT_SHORT_NAME, BuildSettings.ENV_DEVELOPMENT);
-        put(PRODUCTION_ENV_SHORT_NAME, BuildSettings.ENV_PRODUCTION);
-        put(TEST_ENVIRONMENT_SHORT_NAME, BuildSettings.ENV_TEST);
-    }};
-
-
-    /**
-     * <p>Bootstraps a Griffon application from the current classpath. The method will look for an applicationContext.xml file in the classpath
-     * that must contain a bean of type GriffonContext and id GriffonContext
-     *
-     * <p>The method will then bootstrap Griffon with the GriffonContext and load all Griffon plug-ins found in the path
-     *
-     * @return The Griffon ApplicationContext instance
-     */
-//    public static ApplicationContext bootstrapGriffonFromClassPath() {
-//		LOG.info("Loading Griffon environment");
-//		ApplicationContext parent = new ClassPathXmlApplicationContext("applicationContext.xml");
-//		DefaultGriffonContext application = (DefaultGriffonContext)parent.getBean("GriffonContext", DefaultGriffonContext.class);
-//
-//        return createGriffonContextContext(parent, application);
-//	}
-
-//    private static ApplicationContext createGriffonContextContext(ApplicationContext parent, GriffonContext application) {
-//        GriffonRuntimeConfigurator config = new GriffonRuntimeConfigurator(application,parent);
-//        MockServletContext servletContext = new MockServletContext(new MockResourceLoader());
-//        ConfigurableApplicationContext appCtx = (ConfigurableApplicationContext)config.configure(servletContext);
-//        servletContext.setAttribute( ApplicationAttributes.APPLICATION_CONTEXT, appCtx);
-//        Assert.notNull(appCtx);
-//        return appCtx;
-//    }
-
-    /**
-     * Bootstraps Griffon with the given GriffonContext instance
-     *
-     * @param application The GriffonContext instance
-     * @return A Griffon ApplicationContext
-     */
-//    public static ApplicationContext bootstrapGriffonFromApplication(GriffonContext application) {
-//        MockApplicationContext parent = new MockApplicationContext();
-//        parent.registerMockBean(GriffonContext.APPLICATION_ID, application);
-//
-//        return createGriffonContextContext(parent, application);
-//    }
-
-	/**
-	 * Bootstraps Griffon from the given parent ApplicationContext which should contain a bean definition called "GriffonContext"
-	 * of type GriffonContext
-	 */
-//	public static ApplicationContext bootstrapGriffonFromParentContext(ApplicationContext parent) {
-//		DefaultGriffonContext application = (DefaultGriffonContext)parent.getBean("GriffonContext", DefaultGriffonContext.class);
-//
-//        return createGriffonContextContext(parent, application);
-//	}
-
-
     /**
      * Retrieves the current execution environment
      *
      * @return The environment Griffon is executing under
      */
     public static String getEnvironment() {
-        GriffonContext app = GriffonContextHolder.getGriffonContext();
-
-
-        String envName = null;
-        if(app!=null) {
-            Map metadata = app.getMetadata();
-            if(metadata!=null)
-                envName = (String)metadata.get(BuildSettings.ENVIRONMENT);
-        }
-        if(isBlank(envName))
-            envName = System.getProperty(BuildSettings.ENVIRONMENT);
-
-        if(isBlank(envName)) {
-            return BuildSettings.ENV_DEVELOPMENT;
-        }
-        else {
-            if(envNameMappings.containsKey(envName)) {
-                return (String)envNameMappings.get(envName);
-            }
-            else {
-                return envName;
-            }
-        }
+        return Environment.getCurrent().getName();
     }
 
     /**
@@ -215,9 +110,8 @@ public class GriffonUtil {
      * @return True if it is the development environment
      */
     public static boolean isDevelopmentEnv() {
-        return BuildSettings.ENV_DEVELOPMENT.equals(GriffonUtil.getEnvironment());
+        return Environment.getCurrent() == Environment.DEVELOPMENT;
     }
-
 
     public static String getGriffonVersion() {
         return GRIFFON_VERSION;
@@ -381,5 +275,64 @@ public class GriffonUtil {
                         " mkp.declareNamespace(\"\":  \"http://java.sun.com/xml/ns/j2ee\");" +
                         " mkp.yield node}");
         w.writeTo(output);
+    }
+
+    /**
+     * Retrieves the script name representation of the supplied class. For example
+     * MyFunkyGriffonScript would be my-funky-griffon-script
+     *
+     * @param clazz The class to convert
+     * @return The script name representation
+     */
+    public static String getScriptName(Class clazz) {
+    	return getScriptName(clazz.getName());
+    }
+
+    /**
+     * Retrieves the script name representation of the given class name.
+     * For example MyFunkyGriffonScript would be my-funky-griffon-script.
+     *
+     * @param name The class name to convert.
+     * @return The script name representation.
+     */
+    public static String getScriptName(String name) {
+		if(name.endsWith(".groovy")) {
+			name = name.substring(0, name.length()-7);
+		}
+    	String naturalName = getNaturalName(getShortName(name));
+    	return naturalName.replaceAll("\\s", "-").toLowerCase();
+    }
+
+    /**
+     * Calculates the class name from a script name in the form
+     * my-funk-griffon-script
+     *
+     * @param scriptName The script name
+     * @return A class name
+     */
+    public static String getNameFromScript(String scriptName) {
+        return getClassNameForLowerCaseHyphenSeparatedName(scriptName);
+    }
+
+    /**
+     * Returns the name of a plugin given the name of the *GriffonPlugin.groovy
+     * descriptor file. For example, "DbUtilsGriffonPlugin.groovy" gives
+     * "db-utils".
+     * @param descriptorName The simple name of the plugin descriptor.
+     * @return The plugin name for the descriptor, or <code>null</code>
+     * if <i>descriptorName</i> is <code>null</code>, or an empty string
+     * if <i>descriptorName</i> is an empty string.
+     * @throws IllegalArgumentException if the given descriptor name is
+     * not valid, i.e. if it doesn't end with "GriffonPlugin.groovy".
+     */
+    public static String getPluginName(String descriptorName) {
+        if (descriptorName == null || descriptorName.length() == 0) return descriptorName;
+
+        if (!descriptorName.endsWith("GriffonPlugin.groovy")) {
+            throw new IllegalArgumentException("Plugin descriptor name is not valid: " + descriptorName);
+        }
+
+        int pos = descriptorName.indexOf("GriffonPlugin.groovy");
+        return getScriptName(descriptorName.substring(0, pos));
     }
 }

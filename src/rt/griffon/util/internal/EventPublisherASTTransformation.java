@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package griffon.util;
+package griffon.util.internal;
 
 import org.codehaus.groovy.ast.*;
 import org.codehaus.groovy.ast.expr.*;
@@ -38,6 +38,8 @@ import java.util.Collection;
 import java.util.Map;
 import groovy.lang.Closure;
 import groovy.lang.Script;
+import griffon.util.EventRouter;
+import griffon.util.EventPublisher;
 
 /**
  * Handles generation of code for the {@code @EventPublisher} annotation.
@@ -92,7 +94,6 @@ public class EventPublisherASTTransformation implements ASTTransformation, Opcod
         if (needsEventRouter(classNode, source)) {
             addEventRouter(classNode);
         }
-
     }
 
     /**
@@ -237,30 +238,8 @@ public class EventPublisherASTTransformation implements ASTTransformation, Opcod
                                         new ArgumentListExpression(
                                                 new Expression[]{new VariableExpression("name"), new VariableExpression("listener")})))));
 
-/*
         // add method:
-        // void publishEvent(String name) {
-        //     this$eventRouter.publishEvent(name, [])
-        //  }
-        declaringClass.addMethod(
-                new MethodNode(
-                        "publishEvent",
-                        ACC_PUBLIC | ACC_SYNTHETIC,
-                        ClassHelper.VOID_TYPE,
-                        new Parameter[]{new Parameter(ClassHelper.STRING_TYPE, "name")},
-                        ClassNode.EMPTY_ARRAY,
-                        new ExpressionStatement(
-                                new MethodCallExpression(
-                                        new FieldExpression(erField),
-                                        "publish",
-                                        new ArgumentListExpression(
-                                                new Expression[]{
-                                                        new VariableExpression("name"),
-                                                        new ListExpression()})))));
-*/
-
-        // add method:
-        // void publishEvent(String name, List args) {
+        // void publishEvent(String name, List args = []) {
         //     this$eventRouter.publishEvent(name, args)
         //  }
         Parameter args = new Parameter(ClassHelper.LIST_TYPE, "args");

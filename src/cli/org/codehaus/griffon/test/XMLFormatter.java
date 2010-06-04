@@ -16,7 +16,7 @@
 
 package org.codehaus.griffon.test;
 
-import org.codehaus.griffon.util.GriffonUtil;
+import griffon.util.GriffonUtil;
 import junit.framework.Test;
 import org.apache.tools.ant.taskdefs.optional.junit.XMLJUnitResultFormatter;
 

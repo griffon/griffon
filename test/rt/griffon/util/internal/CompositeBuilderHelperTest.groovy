@@ -1,4 +1,5 @@
-package griffon.util
+package griffon.util.internal
+
 import griffon.builder.UberBuilder
 
 class CompositeBuilderHelperTest extends GroovyTestCase {
@@ -20,7 +21,7 @@ class CompositeBuilderHelperTest extends GroovyTestCase {
         
         ConfigObject builderConfig = new ConfigSlurper().parse('''
             root {
-                'griffon.util.SampleBuilder' {
+                'griffon.util.internal.SampleBuilder' {
                     bean1 = ['foo']
                 }
             }
@@ -44,7 +45,7 @@ class CompositeBuilderHelperTest extends GroovyTestCase {
         
         ConfigObject builderConfig = new ConfigSlurper().parse('''
             root {
-                'griffon.util.SampleBuilder' {
+                'griffon.util.internal.SampleBuilder' {
                     bean2 = ['Collections']
                 }
             }
@@ -70,7 +71,7 @@ class CompositeBuilderHelperTest extends GroovyTestCase {
         
         ConfigObject builderConfig = new ConfigSlurper().parse('''
             root {
-                'griffon.util.SampleBuilder' {
+                'griffon.util.internal.SampleBuilder' {
                     bean3 = '*'
                 }
             }

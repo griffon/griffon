@@ -13,11 +13,11 @@ class CreateMvcTests extends AbstractCliTests {
         tryMvc('project-item')
     }
 
-	void testCreatesDirectories() {
+    void testCreatesDirectories() {
         appDir = createTestApp()
 
-		System.setProperty("griffon.cli.args", "Book")
-		gantRun("CreateMvc")
+        System.setProperty("griffon.cli.args", "Book")
+        gantRun("CreateMvc")
 
         def bookModelFile = "${appDir}/griffon-app/models/BookModel.groovy"
         assertTrue "${bookModelFile} does not exist", new File(bookModelFile).exists()
@@ -25,7 +25,7 @@ class CreateMvcTests extends AbstractCliTests {
         assertTrue "${bookViewFile} does not exist", new File(bookViewFile).exists()
         def bookControllerFile = "${appDir}/griffon-app/controllers/BookController.groovy"
         assertTrue "${bookControllerFile} does not exist", new File(bookControllerFile).exists()
-	}
+    }
 
     void tryMvc(String name) {
         // Run the create controller script with a single argument.

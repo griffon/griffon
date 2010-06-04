@@ -24,11 +24,11 @@ import java.util.List;
  */
 public class IdentityPluginFilter implements PluginFilter {
 
-	/**
-	 * Simply returns original list reference
-	 */
-	public List filterPluginList(List original)
-	{
-		return original;
-	}
+    /**
+     * Simply returns original list reference
+     */
+    public List filterPluginList(List original)
+    {
+        return original;
+    }
 }

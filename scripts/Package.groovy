@@ -22,7 +22,7 @@
  * @since 0.4
  */
 
-import org.codehaus.griffon.util.BuildSettings
+import griffon.util.BuildSettings
 import griffon.util.RunMode
 
 // No point doing this stuff more than once.

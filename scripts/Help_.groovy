@@ -22,7 +22,7 @@
  * @since 0.4
  */
 
-import org.codehaus.griffon.util.GriffonNameUtils
+import griffon.util.GriffonUtil
 
 includeTargets << griffonScript("Init")
 
@@ -66,7 +66,7 @@ target ('default' : "Prints out the help for each script") {
 
 
     if(args) {
-        def fileName = GriffonNameUtils.getNameFromScript(args)
+        def fileName = GriffonUtil.getNameFromScript(args)
         def file = scripts.find {
             def scriptFileName = it.name[0..-8]
             if(scriptFileName.endsWith("_")) scriptFileName = scriptFileName[0..-2]
@@ -86,7 +86,7 @@ target ('default' : "Prints out the help for each script") {
                         script.binding = binding
                         script.run()
 
-                        def scriptName = GriffonNameUtils.getScriptName(file.name)
+                        def scriptName = GriffonUtil.getScriptName(file.name)
 
                         helpText = "griffon ${scriptName} -- ${getDefaultDescription()}"
                         File helpFile = getHelpFile(file)
@@ -120,7 +120,7 @@ griffon create-app books
 Available Targets (type griffon help 'target-name' for more info):"""
 
         scripts.unique { it.name }. sort{ it.name }.each { file ->
-            def scriptName = GriffonNameUtils.getScriptName(file.name)
+            def scriptName = GriffonUtil.getScriptName(file.name)
             println "griffon ${scriptName}"
         }
     }
@@ -135,7 +135,7 @@ target(showHelp: "Show help for a particular command") {
                 script.binding = binding
                 script.run()
 
-                def scriptName = GriffonNameUtils.getScriptName(file.name)
+                def scriptName = GriffonUtil.getScriptName(file.name)
 
                 helpText = "griffon ${scriptName} -- ${getDefaultDescription()}"
                 getHelpFile(file).write(helpText)

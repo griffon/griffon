@@ -23,7 +23,6 @@ import java.lang.reflect.Modifier
 
 import org.apache.commons.lang.StringUtils
 import org.springframework.beans.*;
-//import org.springframework.util.Assert;
 
 /**
  * @author Graeme Rocher

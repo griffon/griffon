@@ -13,18 +13,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package griffon.util
+package griffon.util.internal
 
 import griffon.builder.UberBuilder
 import griffon.core.GriffonApplication
-import javax.swing.JFrame
-import org.codehaus.groovy.runtime.InvokerHelper
-
 import griffon.core.ArtifactManager
 import griffon.core.ModelArtifactHandler
 import griffon.core.ViewArtifactHandler
 import griffon.core.ControllerArtifactHandler
 import griffon.core.ServiceArtifactHandler
+import griffon.util.Environment
+import griffon.util.UIThreadHelper
+import org.codehaus.groovy.runtime.InvokerHelper
 
 /**
  * Utility class for boostrapping an application and handling of MVC groups.</p>
@@ -91,7 +91,7 @@ class GriffonApplicationHelper {
 
         // copy mvc groups in config to app, casting to strings in a new map
         app.config.mvcGroups.each {k, v->
-          app.addMvcGroup(k, v.inject([:]) {m, e->m[e.key as String] = e.value as String; m})
+            app.addMvcGroup(k, v.inject([:]) {m, e->m[e.key as String] = e.value as String; m})
         }
     }
 
@@ -128,15 +128,6 @@ class GriffonApplicationHelper {
             }
             /* else ignore*/
         }
-    }
-
-    /**
-     * Executes a script inside the Event Dispatch Thread.<p>
-     *
-     * @deprecated use runScriptInsideUIThread instead
-     */ 
-    public static void runScriptInsideEDT(String scriptName, GriffonApplication app) {
-        runScriptInsideUIThread(scriptName, app)
     }
 
     /**
@@ -368,43 +359,5 @@ class GriffonApplicationHelper {
         app.groups.remove(mvcName)
 
         app.event("DestroyMVCGroup",[mvcName])
-    }
-
-    public static def createJFrameApplication(GriffonApplication app) {
-        Object frame = null
-        // try config specified first
-        if (app.config.application?.frameClass) {
-            try {
-                ClassLoader cl = getClass().getClassLoader();
-                if (cl) {
-                    frame = cl.loadClass(app.config.application.frameClass).newInstance()
-                } else {
-                    frame = Class.forName(app.config.application.frameClass).newInstance()
-                }
-            } catch (Throwable ignored) {
-                // ignore
-            }
-        }
-        if (frame == null) {
-            // JXFrame, it's nice.  Try it!
-            try {
-                ClassLoader cl = getClass().getClassLoader();
-                if (cl) {
-                    frame = cl.loadClass('org.jdesktop.swingx.JXFrame').newInstance()
-                } else {
-                    frame = Class.forName('org.jdesktop.swingx.JXFrame').newInstance()
-                }
-            } catch (Throwable ignored) {
-                // ignore
-            }
-            // this will work for sure
-            if (frame == null) {
-                frame = new JFrame()
-            }
-
-            // do some standard tweaking
-            frame.defaultCloseOperation = JFrame.DISPOSE_ON_CLOSE
-        }
-        return frame
     }
 }

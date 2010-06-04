@@ -22,7 +22,7 @@
  * @since 0.4
  */
 
-import org.codehaus.griffon.util.GriffonNameUtils
+import griffon.util.GriffonNameUtils
 
 includeTargets << griffonScript("_GriffonInit")
 includeTargets << griffonScript("_GriffonCreateArtifacts")

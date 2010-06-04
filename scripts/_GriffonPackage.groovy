@@ -20,7 +20,7 @@ import org.apache.log4j.LogManager
 import org.codehaus.griffon.commons.*
 import org.codehaus.griffon.plugins.logging.Log4jConfig
 import griffon.util.RunMode
-import org.codehaus.griffon.util.BuildSettings
+import griffon.util.BuildSettings
 import static griffon.util.GriffonApplicationUtils.osArch
 
 /**

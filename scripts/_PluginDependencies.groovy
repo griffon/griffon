@@ -14,8 +14,7 @@
  * limitations under the License.
  */
 
-import org.codehaus.griffon.util.GriffonNameUtils
-import org.codehaus.griffon.util.GriffonUtil
+import griffon.util.GriffonUtil
 import groovy.xml.DOMBuilder
 import groovy.xml.dom.DOMCategory
 import java.util.regex.Matcher
@@ -807,7 +806,7 @@ Do you wish to proceed?\n""", {
                     println "Plug-in provides the following new scripts:"
                     println "------------------------------------------"
                     providedScripts.file.each {file ->
-                        def scriptName = GriffonNameUtils.getScriptName(file.name)
+                        def scriptName = GriffonUtil.getScriptName(file.name)
                         println "griffon ${scriptName}"
                     }
                 }
@@ -884,7 +883,7 @@ def buildBinaryPluginInfo(root, pluginName ){
     // split plugin name in form of 'plugin-name-0.1' to name ('plugin-name') and version ('0.1')
     def matcher = (pluginName =~ /^([^\d]+)-(.++)/)
     // convert to new plugin naming convention (MyPlugin -> my-plugin)
-    def name = GriffonNameUtils.getScriptName(matcher[0][1])
+    def name = GriffonUtil.getScriptName(matcher[0][1])
     def release = matcher[0][2]
     use(DOMCategory) {
         def pluginNode = root.'plugin'.find {it.'@name' == name}

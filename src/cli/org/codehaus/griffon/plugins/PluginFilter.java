@@ -25,10 +25,10 @@ import java.util.List;
  */
 public interface PluginFilter {
 
-	/**
-	 * Returns a filtered list of plugins
-	 * @param original the original supplied set of <code>GriffonPlugin</code> instances
-	 * @return a sublist of these items
-	 */
-	List filterPluginList(List original);
+    /**
+     * Returns a filtered list of plugins
+     * @param original the original supplied set of <code>GriffonPlugin</code> instances
+     * @return a sublist of these items
+     */
+    List filterPluginList(List original);
 }

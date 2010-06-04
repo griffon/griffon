@@ -72,7 +72,7 @@ public class GriffonNameUtils {
      * @param name The lower case hyphen separated name
      * @return The class name equivalent.
      */
-    private static String getClassNameForLowerCaseHyphenSeparatedName(String name) {
+    public static String getClassNameForLowerCaseHyphenSeparatedName(String name) {
         // Handle null and empty strings.
         if (name == null || name.length() == 0) return name;
 
@@ -212,69 +212,6 @@ public class GriffonNameUtils {
             className = className.substring( i + 1, className.length() );
         }
         return className;
-    }
-
-    /**
-     * Retrieves the script name representation of the supplied class. For example
-     * MyFunkyGriffonScript would be my-funky-griffon-script
-     *
-     * @param clazz The class to convert
-     * @return The script name representation
-     */
-    public static String getScriptName(Class clazz) {
-        if (clazz == null) return null;
-        else return getScriptName(clazz.getName());
-    }
-
-    /**
-     * Retrieves the script name representation of the given class name.
-     * For example MyFunkyGriffonScript would be my-funky-griffon-script.
-     *
-     * @param name The class name to convert.
-     * @return The script name representation.
-     */
-    public static String getScriptName(String name) {
-        if (name == null) return null;
-
-        if(name.endsWith(".groovy")) {
-            name = name.substring(0, name.length()-7);
-        }
-        String naturalName = getNaturalName(getShortName(name));
-        return naturalName.replaceAll("\\s", "-").toLowerCase();
-    }
-
-    /**
-     * Calculates the class name from a script name in the form
-     * my-funk-griffon-script
-     *
-     * @param scriptName The script name
-     * @return A class name
-     */
-    public static String getNameFromScript(String scriptName) {
-
-        return getClassNameForLowerCaseHyphenSeparatedName(scriptName);
-    }
-
-    /**
-     * Returns the name of a plugin given the name of the *GriffonPlugin.groovy
-     * descriptor file. For example, "DbUtilsGriffonPlugin.groovy" gives
-     * "db-utils".
-     * @param descriptorName The simple name of the plugin descriptor.
-     * @return The plugin name for the descriptor, or <code>null</code>
-     * if <i>descriptorName</i> is <code>null</code>, or an empty string
-     * if <i>descriptorName</i> is an empty string.
-     * @throws IllegalArgumentException if the given descriptor name is
-     * not valid, i.e. if it doesn't end with "GriffonPlugin.groovy".
-     */
-    public static String getPluginName(String descriptorName) {
-        if (descriptorName == null || descriptorName.length() == 0) return descriptorName;
-
-        if (!descriptorName.endsWith("GriffonPlugin.groovy")) {
-            throw new IllegalArgumentException("Plugin descriptor name is not valid: " + descriptorName);
-        }
-
-        int pos = descriptorName.indexOf("GriffonPlugin.groovy");
-        return getScriptName(descriptorName.substring(0, pos));
     }
 
     /**

@@ -27,27 +27,27 @@ import java.util.Set;
  * @author Phil Zoio
  */
 public class IncludingPluginFilter extends BasePluginFilter {
-	
-	public IncludingPluginFilter(Set included) {
-		super(included);
-	}
+    
+    public IncludingPluginFilter(Set included) {
+        super(included);
+    }
 
-	public IncludingPluginFilter(String[] included) {
-		super(included);
-	}
+    public IncludingPluginFilter(String[] included) {
+        super(included);
+    }
 
-	protected List getPluginList(List original, List pluginList) {
-		List newList = new ArrayList();
-		newList.addAll(pluginList);
-		return newList;
-	}
+    protected List getPluginList(List original, List pluginList) {
+        List newList = new ArrayList();
+        newList.addAll(pluginList);
+        return newList;
+    }
 
-	protected void addPluginDependencies(List additionalList, GriffonPlugin plugin) {
-		String[] dependencyNames = plugin.getDependencyNames();
-		for (int j = 0; j < dependencyNames.length; j++) {
-			String name = dependencyNames[j];
-			GriffonPlugin p = getNamedPlugin(name);
-			registerDependency(additionalList, p);
-		}
-	}
+    protected void addPluginDependencies(List additionalList, GriffonPlugin plugin) {
+        String[] dependencyNames = plugin.getDependencyNames();
+        for (int j = 0; j < dependencyNames.length; j++) {
+            String name = dependencyNames[j];
+            GriffonPlugin p = getNamedPlugin(name);
+            registerDependency(additionalList, p);
+        }
+    }
 }

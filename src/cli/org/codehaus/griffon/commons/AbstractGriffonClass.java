@@ -41,10 +41,7 @@ import java.util.Map;
  *  Created: Jul 2, 2005
  */
 public abstract class AbstractGriffonClass implements GriffonClass {
-
-
-
-	private Class clazz = null;
+    private Class clazz = null;
     private String fullName = null;
     private String name = null;
     private String packageName = null;
@@ -74,7 +71,7 @@ public abstract class AbstractGriffonClass implements GriffonClass {
         this.name = GriffonClassUtils.getLogicalName(clazz, trailingName);
     }
 
-	public String getShortName() {
+    public String getShortName() {
         return this.shortName;
     }
 
@@ -205,10 +202,10 @@ public abstract class AbstractGriffonClass implements GriffonClass {
             Object inst = ref.getWrappedInstance();
             if (inst instanceof GroovyObject)
             {
-            	final Map properties = DefaultGroovyMethods.getProperties(inst);
-            	if(properties.containsKey(name)) {
-            		value = properties.get(name);
-            	}
+                final Map properties = DefaultGroovyMethods.getProperties(inst);
+                if(properties.containsKey(name)) {
+                    value = properties.get(name);
+                }
             }
         }
 
@@ -223,27 +220,27 @@ public abstract class AbstractGriffonClass implements GriffonClass {
     }
 
     /* (non-Javadoc)
-	 * @see org.codehaus.groovy.griffon.commons.GriffonClass#getPropertyValue(java.lang.String)
-	 */
-	public Object getPropertyValue(String name) {
-		return getPropertyOrStaticPropertyOrFieldValue(name, Object.class);
-	}
+     * @see org.codehaus.groovy.griffon.commons.GriffonClass#getPropertyValue(java.lang.String)
+     */
+    public Object getPropertyValue(String name) {
+        return getPropertyOrStaticPropertyOrFieldValue(name, Object.class);
+    }
 
 
 
     /* (non-Javadoc)
-	 * @see org.codehaus.groovy.griffon.commons.GriffonClass#hasProperty(java.lang.String)
-	 */
-	public boolean hasProperty(String name) {
-		return getReference().isReadableProperty(name);
-	}
+     * @see org.codehaus.groovy.griffon.commons.GriffonClass#hasProperty(java.lang.String)
+     */
+    public boolean hasProperty(String name) {
+        return getReference().isReadableProperty(name);
+    }
 
-	/**
-	 * @return the metaClass
-	 */
-	public MetaClass getMetaClass() {
-		return GriffonClassUtils.getExpandoMetaClass(clazz);
-	}
+    /**
+     * @return the metaClass
+     */
+    public MetaClass getMetaClass() {
+        return GriffonClassUtils.getExpandoMetaClass(clazz);
+    }
 
     public String toString() {
         return "Artefact > " + getName();

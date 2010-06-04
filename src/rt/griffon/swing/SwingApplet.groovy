@@ -13,11 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package griffon.applet
+package griffon.swing
 
 import griffon.core.GriffonApplication
 import griffon.core.BaseGriffonApplication
-import griffon.util.GriffonApplicationHelper
+import griffon.util.internal.GriffonApplicationHelper
 import griffon.util.UIThreadHelper
 import griffon.util.SwingUIThreadHandler
 import javax.swing.JApplet
@@ -34,32 +34,31 @@ class SwingApplet extends JApplet {
     SwingApplet() {
         _base = new BaseGriffonApplication(this)
         UIThreadHelper.instance.setUIThreadHandler(new SwingUIThreadHandler())
-        loadApplicationProperties()
     }
 
-    public void init() {
+    void init() {
         GriffonApplicationHelper.prepare(this)
         event("BootstrapEnd",[this]) // to keep it in sync with app version
         GriffonApplicationHelper.startup(this)
     }
 
-    public void start() {
+    void start() {
         ready()
     }
 
-    public void stop() {
+    void stop() {
         event("StopStart",[this])
         GriffonApplicationHelper.runScriptInsideUIThread("Stop", this)
         event("StopEnd",[this])
     }
 
-    public void destroy() {
+    void destroy() {
         if(canShutdown()) shutdown()
     }
 
-    public Object createApplicationContainer() {
+    Object createApplicationContainer() {
         if (appletContainerDispensed) {
-            return GriffonApplicationHelper.createJFrameApplication(this)
+            return SwingUtils.createApplicationFrame(this)
         } else {
             appletContainerDispensed = true
             return this;

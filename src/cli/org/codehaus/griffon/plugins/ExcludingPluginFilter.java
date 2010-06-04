@@ -30,54 +30,54 @@ import java.util.Set;
  */
 public class ExcludingPluginFilter extends BasePluginFilter {
 
-	public ExcludingPluginFilter(Set excluded) {
-		super(excluded);
-	}
+    public ExcludingPluginFilter(Set excluded) {
+        super(excluded);
+    }
 
-	public ExcludingPluginFilter(String[] excluded) {
-		super(excluded);
-	}
+    public ExcludingPluginFilter(String[] excluded) {
+        super(excluded);
+    }
 
-	protected List getPluginList(List original, List pluginList) {
+    protected List getPluginList(List original, List pluginList) {
 
-		// go through and remove ones that don't apply
-		List newList = new ArrayList(original);
-		for (Iterator iter = newList.iterator(); iter.hasNext();) {
-			GriffonPlugin element = (GriffonPlugin) iter.next();
+        // go through and remove ones that don't apply
+        List newList = new ArrayList(original);
+        for (Iterator iter = newList.iterator(); iter.hasNext();) {
+            GriffonPlugin element = (GriffonPlugin) iter.next();
 
-			// remove the excluded dependencies
-			if (pluginList.contains(element)) {
-				iter.remove();
-			}
-		}
+            // remove the excluded dependencies
+            if (pluginList.contains(element)) {
+                iter.remove();
+            }
+        }
 
-		return newList;
-	}
+        return newList;
+    }
 
-	protected void addPluginDependencies(List additionalList,
-			GriffonPlugin plugin) {
-		// find the plugins which depend on the one we've excluded
+    protected void addPluginDependencies(List additionalList,
+            GriffonPlugin plugin) {
+        // find the plugins which depend on the one we've excluded
 
-		String pluginName = plugin.getName();
+        String pluginName = plugin.getName();
 
-		Collection values = getAllPlugins();
-		Iterator others = values.iterator();
-		while (others.hasNext()) {
-			GriffonPlugin p = (GriffonPlugin) others.next();
+        Collection values = getAllPlugins();
+        Iterator others = values.iterator();
+        while (others.hasNext()) {
+            GriffonPlugin p = (GriffonPlugin) others.next();
 
-			String pName = p.getName();
+            String pName = p.getName();
 
-			// ignore the current plugin
-			if (pluginName.equals(pName)) {
-				continue;
-			}
+            // ignore the current plugin
+            if (pluginName.equals(pName)) {
+                continue;
+            }
 
-			boolean depends = isDependentOn(p, pluginName);
+            boolean depends = isDependentOn(p, pluginName);
 
-			if (depends) {
-				registerDependency(additionalList, p);
-			}
-		}
-	}
+            if (depends) {
+                registerDependency(additionalList, p);
+            }
+        }
+    }
 
 }
