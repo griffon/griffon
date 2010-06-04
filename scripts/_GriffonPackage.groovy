@@ -333,7 +333,7 @@ griffonCopyDist =  { jarname, targetDir, boolean force = false ->
 
 maybePackAndSign = {srcFile, targetFile = srcFile, boolean force = false ->
     // GRIFFON-118 required for avoiding signing jars twice when using jar package target
-    if(_skipSigning && !force) return
+    if(_skipSigning/* && !force*/) return
 
     // we may already be copied, but not packed or signed
     // first see if the config calls for packing or signing
