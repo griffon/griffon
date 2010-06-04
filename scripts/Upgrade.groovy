@@ -125,8 +125,8 @@ target('default': "Upgrades a Griffon application from a previous version of Gri
                         it.writeLine "${indent}signingkey.params.sigfile='GRIFFON' + env"
                         it.writeLine "${indent}signingkey.params.keystore = \"\${basedir}/griffon-app/conf/keys/\${env}Keystore\""
                         it.writeLine "${indent}signingkey.params.alias = env"
-                        it.writeLine "${indent}signingkey.params.storepass = 'BadStorePassword'"
-                        it.writeLine "${indent}signingkey.params.keyPass = 'BadKeyPassword'"
+                        it.writeLine "${indent}// signingkey.params.storepass = 'BadStorePassword'"
+                        it.writeLine "${indent}// signingkey.params.keyPass = 'BadKeyPassword'"
                         it.writeLine "${indent}signingkey.params.lazy = true // only sign when unsigned"
                     }
 

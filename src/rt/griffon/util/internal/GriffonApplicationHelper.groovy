@@ -22,6 +22,7 @@ import griffon.core.ModelArtifactHandler
 import griffon.core.ViewArtifactHandler
 import griffon.core.ControllerArtifactHandler
 import griffon.core.ServiceArtifactHandler
+import griffon.util.Metadata
 import griffon.util.Environment
 import griffon.util.UIThreadHelper
 import org.codehaus.groovy.runtime.InvokerHelper
@@ -47,11 +48,8 @@ class GriffonApplicationHelper {
     static void prepare(GriffonApplication app) {
         app.bindings.app = app
 
-        def startDir = System.getProperty("griffon.start.dir")
-        if( startDir && startDir.size() > 1 &&
-            startDir.startsWith('"') && startDir.endsWith('"') ) {
-            System.setProperty("griffon.start.dir", startDir[1..-2])
-        }
+        Metadata.current.getGriffonStartDir()
+        Metadata.current.getGriffonWorkingDir()
 
         MetaClass appMetaClass = app.metaClass
         appMetaClass.newInstance = GriffonApplicationHelper.&newInstance.curry(app)

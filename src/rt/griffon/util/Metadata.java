@@ -16,9 +16,12 @@
 package griffon.util;
 
 import java.io.*;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.lang.ref.Reference;
 import java.lang.ref.SoftReference;
 import java.util.*;
+import org.codehaus.groovy.runtime.InvokerHelper;
 
 /**
  * Represents the application Metadata and loading mechanics
@@ -34,6 +37,8 @@ public class Metadata extends Properties {
     public static final String APPLICATION_VERSION = "app.version";
     public static final String APPLICATION_NAME = "app.name";
     public static final String APPLICATION_GRIFFON_VERSION = "app.griffon.version";
+    public static final String GRIFFON_START_DIR = "griffon.start.dir";
+    public static final String GRIFFON_WORKING_DIR = "griffon.working.dir";
     
     private static Reference<Metadata> metadata = new SoftReference<Metadata>(new Metadata());
 
@@ -75,9 +80,9 @@ public class Metadata extends Properties {
                 // current environment == 'dev'.
                 // must read environment directly from System.properties to avoid a
                 // circular problem
-                if(Environment.getEnvironment(System.getProperty(Environment.KEY)) == Environment.DEVELOPMENT) {
-                    input = new FileInputStream(FILE);
-                }
+                // if(Environment.getEnvironment(System.getProperty(Environment.KEY)) == Environment.DEVELOPMENT) {
+                //     input = new FileInputStream(FILE);
+                // }
                 if(input == null) {
                     input = Thread.currentThread().getContextClassLoader().getResourceAsStream(FILE);
                 }
@@ -105,7 +110,7 @@ public class Metadata extends Properties {
         return m;
     }
 
-    /***
+    /**
      * Loads a Metadata instance from a Reader
      * @param inputStream The InputStream
      * @return a Metadata instance
@@ -197,10 +202,80 @@ public class Metadata extends Properties {
     }
 
     /**
+     * Returns the application's starting directory.<p>
+     * The value comes from the System property 'griffon.start.dir'
+     * if set. Result may be null.
+     *
+     * @return The application start directory path
+     */
+    public String getGriffonStartDir() {
+        String griffonStartDir = (String) get(GRIFFON_START_DIR);
+        if(griffonStartDir == null) {
+            griffonStartDir = System.getProperty(GRIFFON_START_DIR);
+            if(griffonStartDir != null && griffonStartDir.length() > 1 &&
+                griffonStartDir.startsWith("\"") && griffonStartDir.endsWith("\"")) {
+                // normalize without quotes
+                griffonStartDir = griffonStartDir.substring(1, griffonStartDir.length() - 1);
+                System.setProperty(GRIFFON_START_DIR, griffonStartDir);
+            }
+            if(griffonStartDir != null) {
+                put(GRIFFON_START_DIR, griffonStartDir);
+            }
+        }
+        return griffonStartDir;
+    }
+
+    /**
+     * Returns ia non-null value for the application's starting directory.<p>
+     * the path to new File(".") if that path is writable, returns
+     * the value of 'user.dir' otherwise.
+     *
+     * @return The application start directory path
+     */
+    public String getGriffonStartDirSafe() {
+        String griffonStartDir = getGriffonStartDir();
+        if(griffonStartDir == null) {
+            File path = new File(".");
+            if(path.canWrite()) {
+                return path.getAbsolutePath();
+            }
+            return System.getProperty("user.dir");
+        }
+        return griffonStartDir;
+    }
+
+    /**
+     * @return The application working directory
+     */
+    public File getGriffonWorkingDir() {
+        String griffonWorkingDir = (String) get(GRIFFON_WORKING_DIR);
+        if(griffonWorkingDir == null) {
+            String griffonStartDir = getGriffonStartDirSafe();
+            File workDir = new File(griffonStartDir);
+            if(workDir.canWrite()) {
+                put(GRIFFON_WORKING_DIR, griffonStartDir);
+                return workDir;
+            } else {
+                try {
+                    File temp = File.createTempFile("griffon", ".tmp");
+                    temp.deleteOnExit();
+                    workDir = new File(temp.getParent(), getApplicationName());
+                    put(GRIFFON_WORKING_DIR, workDir.getAbsolutePath());
+                    return workDir;
+                } catch(IOException ioe) {
+                    // ignore ??
+                    // should not happen
+                }
+            }
+        }
+        
+        return new File(griffonWorkingDir);
+    }
+
+    /**
      * Saves the current state of the Metadata object
      */
     public void persist() {
-
         if (propertiesHaveNotChanged())
             return;    
 
@@ -230,7 +305,6 @@ public class Metadata extends Properties {
      */    
     public boolean propertiesHaveNotChanged(){
         Metadata transientMetadata = getCurrent();
-        
         
         Metadata allStringValuesMetadata = new Metadata();
         Map<Object,Object> transientMap = (Map<Object,Object>)transientMetadata;

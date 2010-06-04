@@ -330,20 +330,24 @@ askAndDoNoNag = { message, yesCallback = null, noCallback = null ->
  * Modifies the application's metadata, as stored in the "application.properties"
  * file. If it doesn't exist, the file is created.
  */
-updateMetadata = { Map entries ->
-    if (!metadataFile.exists()) {
+updateMetadata = { Map entries, file = null ->
+    if(!file) file = metadataFile
+    if (!file.exists()) {
         ant.propertyfile(
-                file: metadataFile,
+                file: file,
                 comment: "Do not edit app.griffon.* properties, they may change automatically. " +
                         "DO NOT put application configuration in here, it is not the right place!")
-        metadata = Metadata.getInstance(metadataFile)
     }
+    def meta = Metadata.getInstance(file)
 
     // Convert GStrings to Strings.
     def stringifiedEntries = [:]
     entries.each { key, value -> stringifiedEntries[key.toString()] = value.toString() }
 
-    metadata.putAll(stringifiedEntries)
-    metadata.persist()
-}
+    meta.putAll(stringifiedEntries)
+    meta.persist()
 
+    if(file.absolutePath == metadataFile.absolutePath) {
+        metadata.reload()
+    }
+}

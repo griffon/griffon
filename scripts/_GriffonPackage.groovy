@@ -19,6 +19,8 @@ import java.util.zip.ZipFile
 import org.apache.log4j.LogManager
 import org.codehaus.griffon.commons.*
 import org.codehaus.griffon.plugins.logging.Log4jConfig
+import griffon.util.Environment
+import griffon.util.Metadata
 import griffon.util.RunMode
 import griffon.util.BuildSettings
 import static griffon.util.GriffonApplicationUtils.osArch
@@ -156,6 +158,11 @@ target(packageResources : "Presp app/plugin resources for packaging") {
     ant.copy(todir:classesDirPath) {
         fileset(dir:"${basedir}", includes:metadataFile.name)
     }
+
+    // GRIFFON-189 add environment info to metadata
+    def metaFile = new File(classesDirPath, metadataFile.name)
+    updateMetadata(metaFile, (Environment.KEY): Environment.current.name)
+
     ant.copy(todir:resourcesDirPath, failonerror:false) {
         fileset(dir:"${basedir}/griffon-app/conf", includes:"**", excludes:"*.groovy, log4j*, webstart")
         fileset(dir:"${basedir}/src/main") {
