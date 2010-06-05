@@ -106,7 +106,10 @@ target(compile : "Compiles application sources") {
 
 target(compileSharedTests : "Compiles shared test sources") {
     for(pluginDir in getPluginDirectories().file) {
-        compileSharedTestSrc(pluginDir)
+        def pluginDistDir = new File(pluginDir, 'dist')
+        ant.fileset(dir: pluginDistDir, includes: '*-test.jar').each { jar ->
+            classLoader.addURL(jar.file.toURI().toURL())
+        }
     }
     compileSharedTestSrc(basedir)
     def metainfDirPath = new File("${basedir}/griffon-app/conf/metainf")

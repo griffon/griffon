@@ -99,7 +99,7 @@ target(pluginDocs: "Generates and packages plugin documentation") {
     def testSharedDirPath = new File(griffonSettings.testClassesDir, 'shared')
 
     if(srcMainDir.list() || testSharedDir.list()) {
-        def jarFileName = "${pluginDocDir}/griffon-${pluginName}-${plugin.version}-sources.jar"
+        def jarFileName = "${projectTargetDir}/griffon-${pluginName}-${plugin.version}-sources.jar"
 
         ant.uptodate(property: 'pluginSourceJarUpToDate', targetfile: jarFileName) {
             srcfiles(dir: srcMainDir, includes: "**/*")
@@ -121,7 +121,7 @@ target(pluginDocs: "Generates and packages plugin documentation") {
                 sourcepath: [srcMainDir, testSharedDir],
                 windowtitle: "${pluginName} ${plugin.version}",
                 doctitle: "${pluginName} ${plugin.version}")
-            jarFileName = "${pluginDocDir}/griffon-${pluginName}-${plugin.version}-javadoc.jar"
+            jarFileName = "${projectTargetDir}/griffon-${pluginName}-${plugin.version}-javadoc.jar"
             ant.jar(destfile: jarFileName) {
                 fileset(dir: javadocDir)
             }
@@ -173,6 +173,35 @@ target(packagePlugin:"Packages a Griffon plugin") {
     pluginZip = "${basedir}/griffon-${pluginName}-${plugin.version}.zip"
     ant.delete(file:pluginZip)
 
+    def testSharedDir = new File("${basedir}/test/shared")
+    def testSharedDirPath = new File(griffonSettings.testClassesDir, 'shared')
+    def testResourcesDir = new File("${basedir}/test/resources")
+    def testResourcesDirPath = griffonSettings.testResourcesDir
+    boolean hasTestShared = testSharedDir.list()
+    boolean hasTestResources = testResourcesDir.list()
+
+    if(hasTestShared || hasTestResources) {
+        def jarFileName = "${projectTargetDir}/griffon-${pluginName}-${plugin.version}-test.jar"
+
+        ant.uptodate(property: 'pluginTestJarUpToDate', targetfile: jarFileName) {
+            if(hasTestShared) {
+                srcfiles(dir: testSharedDir, includes: "**/*")
+                srcfiles(dir: testSharedDirPath, includes: "**/*")
+            }
+            if(hasTestResources) {
+                srcfiles(dir: testResourcesDir, includes: "**/*")
+                srcfiles(dir: testResourcesDirPath, includes: "**/*")
+            }
+        }
+        boolean uptodate = ant.antProject.properties.pluginTestJarUpToDate
+        if(!uptodate) {
+            ant.jar(destfile: jarFileName) {
+                if(hasTestShared) fileset(dir: testSharedDir, includes: '**/*.groovy, **/*.java')
+                if(hasTestResources) fileset(dir: testResourcesDir)
+            }
+        }
+    }
+
     ant.zip(destfile:pluginZip, filesonly:true) {
         fileset(dir:"${basedir}") {
             pluginIncludes.each {
@@ -183,8 +212,8 @@ target(packagePlugin:"Packages a Griffon plugin") {
             }
         }
 
-        zipfileset(dir: "${projectTargetDir}/docs", includes: "*.jar", prefix: "dist")
-        zipfileset(dir: "${projectTargetDir}/docs", excludes: "*.jar", prefix: "docs")
+        zipfileset(dir: "${projectTargetDir}", includes: "*.jar", prefix: "dist")
+        zipfileset(dir: "${projectTargetDir}/docs", prefix: "docs")
 
         if (isAddonPlugin)  {
             zipfileset(dir:addonJarDir, includes: addonJarName,
@@ -192,15 +221,15 @@ target(packagePlugin:"Packages a Griffon plugin") {
         }
     }
 
-    ant.zip(destfile: pluginZip, filesonly: true, update: true) {
-        fileset(dir:"${basedir}") {
-            ['test/shared/**', 'test/resources/**'].each { f ->
-                include(name: f)
-            }
-        }
-        if(plugin.metaClass.hasProperty(plugin, 'pluginIncludes')) {
-            plugin.pluginIncludes.each { f ->
-                include(name: f)
+    if(plugin.metaClass.hasProperty(plugin, 'pluginIncludes')) {
+        def additionalIncludes = plugin.pluginIncludes
+        if(additionalIncludes) {
+            ant.zip(destfile: pluginZip, filesonly: true, update: true) {
+                zipfileset(dir: basedir) {
+                    additionalIncludes.each { f ->
+                        include(name: f)
+                    }
+                }
             }
         }
     }

@@ -51,6 +51,13 @@ getPluginJarFiles = {
     GriffonPluginUtils.getPluginJarFiles(pluginsHome, resolveResources)
 }
 
+/**
+ * Obtains an array of all plug-in test JAR files as Spring Resource objects
+ */
+getPluginTestFiles = {
+    GriffonPluginUtils.getPluginTestFiles(pluginsHome, resolveResources)
+}
+
 getJarFiles = {->
     def jarFiles = resolveResources("file:${basedir}/lib/*.jar").toList()
     def pluginJars = getPluginJarFiles()
@@ -153,6 +160,10 @@ testClasspath = {
     pathelement(location: "${classesDir.absolutePath}")
     pathelement(location: "${griffonSettings.testClassesDir}/shared")
     pathelement(location: "${griffonSettings.testResourcesDir}")
+
+    for (pluginTestJar in getPluginTestFiles()) {
+        if(pluginTestJar.file.exists()) file(file: pluginTestJar.file.absolutePath)
+    }
 }
 
 runtimeClasspath = {

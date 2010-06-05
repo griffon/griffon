@@ -382,6 +382,20 @@ public class GriffonPluginUtils {
         return jarFiles
     }
 
+    private static Resource[] testFiles= null
+    /**
+     * Obtains an array of all plug-in provided test JAR files
+     */
+    static synchronized Resource[] getPluginTestFiles(String pluginsDirPath,Closure resourceResolver = DEFAULT_RESOURCE_RESOLVER) {
+        if(!testFiles) {
+            testFiles = new Resource[0]
+            testFiles = resolvePluginResourcesAndAdd(testFiles, pluginsDirPath) { pluginDir ->
+                resourceResolver("file:${pluginDir}/dist/*-test.jar")
+            }
+        }
+        return testFiles
+    }
+
     private static Resource[] pluginDescriptors = null
 
 

@@ -103,7 +103,7 @@ target(allTests: "Runs the project's tests.") {
         if(!currentClasspathURLs.contains(url))
             rootLoader.addURL url
     }
- 
+
     // If we are to run the tests that failed, replace the list of
     // test names with the failed ones.
     if (reRunTests) testNames = getFailedTests()
