@@ -87,38 +87,15 @@ getJarFiles = {->
 }
 
 getExtraDependencies = {
-	def jarFiles =[]
-	if(buildConfig?.griffon?.compiler?.dependencies) {
+    def jarFiles =[]
+    if(buildConfig?.griffon?.compiler?.dependencies) {
         def extraDeps = ant.fileScanner(buildConfig.griffon.compiler.dependencies)
-		for(jar in extraDeps) {
+        for(jar in extraDeps) {
             jarFiles << new FileSystemResource(jar)
-		}
-	}
-	jarFiles
+        }
+    }
+    jarFiles
 }
-
-populateRootLoader = {rootLoader, jarFiles ->
-	for(jar in getExtraDependencies()) {
-    	rootLoader?.addURL(jar.URL)
-	}
-//    rootLoader?.addURL(new File("${basedir}/web-app/WEB-INF").toURI().toURL())
-}
-
-// Only used by "griffonClasspath" closure.
-//defaultCompilerDependencies = { antBuilder ->
-//    if (antBuilder) {
-//        delegate = antBuilder
-//        resolveStrategy = Closure.DELEGATE_FIRST
-//    }
-//
-//    griffonSettings.compileDependencies?.each { file ->
-//        file(file: file.absolutePath)
-//    }
-//
-//    if (new File("${basedir}/lib").exists()) {
-//        fileset(dir: "${basedir}/lib")
-//    }
-//}
 
 commonClasspath = {
     def griffonDir = resolveResources("file:${basedir}/griffon-app/*")
@@ -153,18 +130,17 @@ testClasspath = {
     commonClasspath.delegate = delegate
     commonClasspath.call()
 
+    pathelement(location: "${classesDir.absolutePath}")
+    pathelement(location: "${griffonSettings.testClassesDir}/shared")
+    pathelement(location: "${griffonSettings.testResourcesDir}")
+
     griffonSettings.testDependencies?.each { File f ->
         file(file: f.absolutePath)
     }
 
-    pathelement(location: "${classesDir.absolutePath}")
-    pathelement(location: "${griffonSettings.testClassesDir}/shared")
-
     for (pluginTestJar in getPluginTestFiles()) {
         if(pluginTestJar.file.exists()) file(file: pluginTestJar.file.absolutePath)
     }
-
-    pathelement(location: "${griffonSettings.testResourcesDir}")
 }
 
 runtimeClasspath = {
@@ -186,11 +162,6 @@ void setClasspath() {
     ant.path(id: "griffon.test.classpath", testClasspath)
     ant.path(id: "griffon.runtime.classpath", runtimeClasspath)
 
-//    if(argsMap.verbose) {
-//        println "[GRIFFON] Classpath entries"
-//        ant.project.getReference("griffon.compile.classpath").list().each{println("  $it")}
-//    }
-
     def griffonDir = resolveResources("file:${basedir}/griffon-app/*")
     StringBuffer cpath = new StringBuffer("")
 
@@ -205,26 +176,39 @@ void setClasspath() {
     cpath << classesDirPath << File.pathSeparator
     for (jar in jarFiles) {
         cpath << jar.file.absolutePath << File.pathSeparator
-        rootLoader?.addURL(jar.file.toURI().toURL())
+        addUrlIfNotPresent rootLoader, jar.file
     }
-
 
     compConfig = new CompilerConfiguration()
     compConfig.setClasspath(cpath.toString());
     compConfig.sourceEncoding = "UTF-8"
 
-//    rootLoader?.addURL(new File("${basedir}/griffon-app/conf/hibernate").toURI().toURL())
-//    rootLoader?.addURL(new File("${basedir}/src/java").toURI().toURL())
-
-    // The resources directory must be created before it is added to
-    // the root loader, otherwise it is quietly ignored. In other words,
-    // if the directory is created after its path has been added to the
-    // root loader, it will not be included in the classpath.
-    def resourcesDir = new File(resourcesDirPath)
-    if (!resourcesDir.exists()) {
-        resourcesDir.mkdirs()
-    }
-    rootLoader?.addURL(resourcesDir.toURI().toURL())
+    addUrlIfNotPresent rootLoader, resourcesDirPath
+    addUrlIfNotPresent rootLoader, testResourcesDirPath
 
     classpathSet = true
+}
+
+addUrlIfNotPresent = { to, what ->
+    if(!to || !what) return
+    def urls = to.URLs.toList()
+    switch(what.class) {
+         case URL:
+             if(!urls.contains(what)) {
+                 to.addURL(what)
+             }
+             return
+         case String: what = new File(what); break
+         case GString: what = new File(what.toString()); break
+         case File: break; // ok
+         default:
+             println "Don't know how to deal with $what as it is not an URL nor a File"
+             System.exit(1)
+    }
+
+    if(what.directory && !what.exists()) what.mkdirs()
+    def url = what.toURI().toURL()
+    if(!urls.contains(url)) {
+        to.addURL(url)
+    }
 }

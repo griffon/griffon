@@ -18,9 +18,6 @@
 import org.codehaus.griffon.test.DefaultGriffonTestHelper
 import org.codehaus.griffon.test.DefaultGriffonTestRunner
 import org.codehaus.griffon.test.GriffonIntegrationTestHelper
-// import org.codehaus.griffon.support.PersistenceContextInterceptor
-// import org.codehaus.griffon.web.context.GriffonConfigUtils
-// import org.springframework.mock.web.MockServletContext
  
 /**
  * Gant script that runs the Griffon unit tests
@@ -90,18 +87,16 @@ target(allTests: "Runs the project's tests.") {
     packageFiles(basedir)
  
     // Set up an Ant path for the tests.
-    ant.path(id: "griffon.test.classpath", testClasspath)
+    // ant.path(id: "griffon.test.classpath", testClasspath)
 
     ant.mkdir(dir: testReportsDir)
     ant.mkdir(dir: "${testReportsDir}/html")
     ant.mkdir(dir: "${testReportsDir}/plain")
  
     // add test dependencies to classpath
-    def currentClasspathURLs = rootLoader.URLs.toList()
+    // def currentClasspathURLs = rootLoader.URLs.toList()
     griffonSettings.testDependencies.each { file ->
-        def url = file.toURL()
-        if(!currentClasspathURLs.contains(url))
-            rootLoader.addURL url
+        addUrlIfNotPresent rootLoader, file
     }
 
     // If we are to run the tests that failed, replace the list of
@@ -201,21 +196,21 @@ compileTests = { String type ->
  
     def destDir = new File(griffonSettings.testClassesDir, type)
     ant.mkdir(dir: destDir.path)
-    try {
-        def classpathId = "griffon.test.classpath"
-        ant.groovyc(destdir: destDir,
-//                 projectName: griffonAppName,
-                encoding:"UTF-8",
-                classpathref: classpathId) {
-            javac(classpathref:classpathId, debug:"yes")
-            src(path:"${basedir}/test/${type}")
-        }
-    }
-    catch (Exception e) {
-        event("StatusFinal", ["Compilation Error: ${e.message}"])
-        return 1
+
+    compileSources(destDir, 'griffon.test.classpath') {
+        src(path: "${basedir}/test/${type}")
+        javac(classpathref: 'griffon.test.classpath', debug:"yes", target: '1.5')
     }
  
+    if(argsMap.verboseCompile) {
+        println('-'*80)
+        println "[GRIFFON] classLoader urls"
+        classLoader.URLs.each{println("  $it")}
+        println "[GRIFFON] rootLoader urls"
+        rootLoader.URLs.each{println("  $it")}
+        println('-'*80)
+    }
+
     event("TestCompileEnd", [type])
 }
  

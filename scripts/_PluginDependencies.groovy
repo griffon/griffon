@@ -45,6 +45,7 @@ import java.util.zip.ZipEntry
  * @since 1.1
  */
 
+includeTargets << griffonScript("_GriffonClasspath")
 includeTargets << griffonScript("_GriffonClean")
 includeTargets << griffonScript("_GriffonProxy")
 
@@ -67,7 +68,7 @@ loadPluginClass = { String pluginFile ->
         // directory to the class loader in case it didn't exist before
         // the associated plugin's sources were compiled.
         def gcl = new GroovyClassLoader(classLoader)
-        gcl.addURL(griffonSettings.classesDir.toURI().toURL())
+        addUrlIfNotPresent gcl, classesDir
 
         def pluginClassName = pluginFile.endsWith('.groovy') ? pluginFile[0..-8] : pluginFile
         return gcl.loadClass(pluginClassName).newInstance()
@@ -88,7 +89,7 @@ resolvePluginClasspathDependencies = { plugin ->
     }
     _resolveDependencies(plugins) { pluginName, pluginVersion, pluginDir ->
         def pluginFile = pluginDir.list().find{ it =~ /GriffonPlugin\.groovy/ }
-        classLoader.addURL(pluginDir.toURI().toURL())
+        addUrlIfNotPresent classLoader, pluginDir
         resolvePluginClasspathDependencies(loadPluginClass(pluginFile))
     }
 }
@@ -402,7 +403,7 @@ target(updatePluginsListManually: "Updates the plugin list by manually reading e
         // update plugins list cache file
         writePluginsFile()
     } catch (Exception e) {
-        event("StatusError", ["Unable to list plug-ins, please check you have a valid internet connection: ${e.message}" ])
+        event("StatusError", ["Unable to list plug-ins, please check you have a valid internet connection: $e" ])
     }
 }
 
@@ -787,7 +788,7 @@ Do you wish to proceed?\n""", {
         else {
             def pluginJars = resolveResources("file:${pluginsHome}/${fullPluginName}/lib/*.jar")
             for(jar in pluginJars) {
-                rootLoader.addURL(jar.URL)
+                addUrlIfNotPresent rootLoader, jar.URL
             }
             
             def license = pluginXml.license?.text() ?: '<UNKNOWN>'

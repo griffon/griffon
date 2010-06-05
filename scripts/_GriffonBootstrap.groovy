@@ -39,10 +39,10 @@ target(loadApp:'Loads the Griffon application object') {
     event('AppLoadStart', ['Loading Griffon Application'])
 
     [classesDir, i18nDir, resourcesDir].each { d ->
-        rootLoader.addURL(d.toURI().toURL())
+        addUrlIfNotPresent rootLoader, d
     }
     setupRuntimeJars().each { j ->
-        rootLoader.addURL(j.toURI().toURL())
+        addUrlIfNotPresent rootLoader, j
     }
     setupJavaOpts().each { op ->
         def nameValueSwitch = op =~ "-D(.*?)=(.*)"

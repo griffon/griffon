@@ -98,8 +98,8 @@ target(pluginDocs: "Generates and packages plugin documentation") {
     def testSharedDir = new File("${basedir}/test/shared")
     def testSharedDirPath = new File(griffonSettings.testClassesDir, 'shared')
 
-    boolean hasSrcMain = srcMainDir.exists() ? ant.fileset(dir: srcMainDir, includes: '**/*.groovy, **/*.java').size() : false
-    boolean hasTestShared = testSharedDir.exists() ? ant.fileset(dir: testSharedDir, includes: '**/*.groovy, **/*.java').size() : false
+    boolean hasSrcMain = srcMainDir.exists() ? ant.fileset(dir: srcMainDir, includes: '**/*.groovy, **/*.java').size() > 0 : false
+    boolean hasTestShared = testSharedDir.exists() ? ant.fileset(dir: testSharedDir, includes: '**/*.groovy, **/*.java').size() > 0 : false
 
     if(hasSrcMain || hasTestShared) {
         def jarFileName = "${projectTargetDir}/griffon-${pluginName}-${plugin.version}-sources.jar"
@@ -181,8 +181,8 @@ target(packagePlugin:"Packages a Griffon plugin") {
     def testResourcesDir = new File("${basedir}/test/resources")
     def testResourcesDirPath = griffonSettings.testResourcesDir
 
-    boolean hasTestShared = testSharedDir.exists() ? ant.fileset(dir: testSharedDir, includes: '**/*.groovy, **/*.java').size() : false
-    boolean hasTestResources = testResourcesDir.exists() ? ant.fileset(dir: testResourcesDir, excludes: '**/*.svn/**, **/CVS/**, **/.git/**').size() : false
+    boolean hasTestShared = testSharedDir.exists() ? ant.fileset(dir: testSharedDir, includes: '**/*.groovy, **/*.java').size() > 0 : false
+    boolean hasTestResources = testResourcesDir.exists() ? ant.fileset(dir: testResourcesDir, excludes: '**/*.svn/**, **/CVS/**').size() > 0 : false
 
     if(hasTestShared || hasTestResources) {
         def jarFileName = "${projectTargetDir}/griffon-${pluginName}-${plugin.version}-test.jar"
