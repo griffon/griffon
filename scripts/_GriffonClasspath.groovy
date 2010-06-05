@@ -159,11 +159,12 @@ testClasspath = {
 
     pathelement(location: "${classesDir.absolutePath}")
     pathelement(location: "${griffonSettings.testClassesDir}/shared")
-    pathelement(location: "${griffonSettings.testResourcesDir}")
 
     for (pluginTestJar in getPluginTestFiles()) {
         if(pluginTestJar.file.exists()) file(file: pluginTestJar.file.absolutePath)
     }
+
+    pathelement(location: "${griffonSettings.testResourcesDir}")
 }
 
 runtimeClasspath = {

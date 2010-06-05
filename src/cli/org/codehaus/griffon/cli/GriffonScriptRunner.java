@@ -19,20 +19,39 @@ package org.codehaus.griffon.cli;
 import gant.Gant;
 import griffon.util.BuildSettings;
 import griffon.util.BuildSettingsHolder;
+import griffon.util.CosineSimilarity;
 import griffon.util.Environment;
 import griffon.util.GriffonUtil;
 import groovy.lang.Binding;
 import groovy.lang.Closure;
 import groovy.lang.ExpandoMetaClass;
+import groovy.util.AntBuilder;
 
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileFilter;
+import java.io.FilenameFilter;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.PrintStream;
 import java.lang.reflect.Method;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLClassLoader;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import org.apache.tools.ant.Project;
 import org.codehaus.gant.GantBinding;
 import org.codehaus.groovy.runtime.DefaultGroovyMethods;
 import griffon.util.GriffonExceptionHandler;
@@ -112,8 +131,8 @@ public class GriffonScriptRunner {
         System.out.println("Base Directory: " + build.getBaseDir().getPath());
 
         try {
-            GriffonScriptRunner runner = new GriffonScriptRunner(build);
-            int exitCode = runner.executeCommand(script.name, script.args, script.env);
+            int exitCode = new GriffonScriptRunner(build).executeCommand(
+                    script.name, script.args, script.env);
             System.exit(exitCode);
         }
         catch (ScriptNotFoundException ex) {
@@ -124,8 +143,7 @@ public class GriffonScriptRunner {
             System.out.println(msg);
             sanitizeStacktrace(t);
             t.printStackTrace(System.out);
-            System.out.println(msg);
-            System.exit(1);
+            exitWithError(msg);
         }
     }
 
@@ -232,17 +250,6 @@ public class GriffonScriptRunner {
             settings.setRootLoader((URLClassLoader) GriffonScriptRunner.class.getClassLoader());
         }
 
-        // Get the default environment if one hasn't been set.
-        boolean useDefaultEnv = env == null;
-        if (useDefaultEnv) {
-            env = DEFAULT_ENVS.get(scriptName);
-            env = env != null ? env : Environment.DEVELOPMENT.getName();
-        }
-
-        System.setProperty("base.dir", settings.getBaseDir().getPath());
-        System.setProperty(Environment.KEY, env);
-        System.setProperty(Environment.DEFAULT, "true");
-
         if (args != null) {
             // Check whether we are running in non-interactive mode
             // by looking for a "non-interactive" argument.
@@ -264,67 +271,51 @@ public class GriffonScriptRunner {
             System.setProperty("griffon.cli.args", "");
         }
 
-
         // Load the BuildSettings file for this project if it exists. Note
         // that this does not load any environment-specific settings.
         settings.loadConfig();
-
-        // Add some extra binding variables that are now available.
-        settings.setGriffonEnv(env);
-        settings.setDefaultEnv(useDefaultEnv);
-
         BuildSettingsHolder.setSettings(settings);
-
 
         // Either run the script or enter interactive mode.
         if (scriptName.equalsIgnoreCase("interactive")) {
-	        // Can't operate interactively in non-interactive mode!
+            // Can't operate interactively in non-interactive mode!
             if (!isInteractive) {
                 out.println("You cannot use '--non-interactive' with interactive mode.");
                 return 1;
             }
 
+            setRunningEnvironment(scriptName, env);
             // This never exits unless an exception is thrown or
             // the process is interrupted via a signal.
             runInteractive();
             return 0;
         }
         else {
-            return callPluginOrGriffonScript(scriptName);
+            return callPluginOrGriffonScript(scriptName, env);
         }
+    }
+
+    private void setRunningEnvironment(String scriptName, String env) {
+        // Get the default environment if one hasn't been set.
+        boolean useDefaultEnv = env == null;
+        if (useDefaultEnv) {
+            env = DEFAULT_ENVS.get(scriptName);
+            env = env != null ? env : Environment.DEVELOPMENT.getName();
+        }
+
+        System.setProperty("base.dir", settings.getBaseDir().getPath());
+        System.setProperty(Environment.KEY, env);
+        System.setProperty(Environment.DEFAULT, "true");
+
+        // Add some extra binding variables that are now available.
+        settings.setGriffonEnv(env);
+        settings.setDefaultEnv(useDefaultEnv);
     }
 
     /**
      * Runs Griffon in interactive mode.
      */
     private void runInteractive() {
-	/*
-        String message = "Interactive mode ready, type your command name in to continue (hit ENTER to run the last command):\n";
-        //disable exiting
-//        System.metaClass.static.exit = {int code ->}
-        System.setProperty("griffon.interactive.mode", "true");
-        int messageNumber = 0;
-        ScriptAndArgs script = new ScriptAndArgs();
-        while (true) {
-            out.println("--------------------------------------------------------");
-            String enteredName = userInput(message);
-
-            if (enteredName != null && enteredName.trim().length() > 0) {
-                script = processArgumentsAndReturnScriptName(enteredName);
-            }
-
-            if (script.name == null) {
-                out.println("You must enter a command.\n");
-                continue;
-            }
-
-            long now = System.currentTimeMillis();
-            callPluginOrGriffonScript(script.name);
-            long end = System.currentTimeMillis();
-            out.println("--------------------------------------------------------");
-            out.println("Command [" + script.name + " completed in " + (end - now) + "ms");
-        }
-      */
         String message = "Interactive mode ready. Enter a Griffon command or type \"exit\" to quit interactive mode (hit ENTER to run the last command):\n";
 
         // Disable exiting
@@ -332,6 +323,7 @@ public class GriffonScriptRunner {
         System.setProperty("griffon.interactive.mode", "true");
 
         ScriptAndArgs script = new ScriptAndArgs();
+        String env = null;
         while (true) {
             // Clear unhelpful system properties.
             System.clearProperty("griffon.env.set");
@@ -352,6 +344,7 @@ public class GriffonScriptRunner {
                     System.setProperty("griffon.cli.args", "");
                 }
 
+                /*
                 // Make sure we run the command with the correct environment.
                 if (script.env != null) {
                     settings.setGriffonEnv(script.env);
@@ -366,6 +359,8 @@ public class GriffonScriptRunner {
                     settings.setGriffonEnv(defaultEnv);
                     settings.setDefaultEnv(true);
                 }
+                */
+                env = script.env != null ? script.env : Environment.DEVELOPMENT.getName();
             }
 
             if (script.name == null) {
@@ -378,7 +373,7 @@ public class GriffonScriptRunner {
 
             long now = System.currentTimeMillis();
             try {
-                callPluginOrGriffonScript(script.name);
+                callPluginOrGriffonScript(script.name, env);
             }
             catch (ScriptNotFoundException ex) {
                 out.println("No script found for " + script.name);
@@ -401,7 +396,9 @@ public class GriffonScriptRunner {
     private final Map<String, CachedScript> scriptCache = new HashMap<String, CachedScript>();
     private final List<File> scriptsAllowedOutsideOfProject = new ArrayList<File>();
 
-    private int callPluginOrGriffonScript(String scriptName) {
+    private int callPluginOrGriffonScript(String scriptName, String env) {
+        // The directory where scripts are cached.
+        File scriptCacheDir = new File(settings.getProjectWorkDir(), "scriptCache");
         // The class loader we will use to run Gant. It's the root
         // loader plus all the application's compiled classes.
         URLClassLoader classLoader;
@@ -427,20 +424,45 @@ public class GriffonScriptRunner {
         }
 
         List<File> potentialScripts;
+        List<File> allScripts = getAvailableScripts(settings);
         GantBinding binding;
         if (scriptCache.get(scriptName) != null) {
-            CachedScript cachedScript = (CachedScript) scriptCache.get(scriptName);
+            CachedScript cachedScript = scriptCache.get(scriptName);
             potentialScripts = cachedScript.potentialScripts;
             binding = cachedScript.binding;
         }
         else {
             binding = new GantBinding();
-            List<File> list = getAvailableScripts(settings);
 
+            // Gant does not initialise the default input stream for
+            // the Ant project, so we manually do it here.
+            AntBuilder antBuilder = (AntBuilder) binding.getVariable("ant");
+            Project p = antBuilder.getAntProject();
+            try {
+                p.setDefaultInputStream(System.in);
+            }
+            catch (NoSuchMethodError nsme) {
+                // will only happen due to a bug in JRockit
+                // note - the only approach that works is to loop through the public methods
+                for (Method m : p.getClass().getMethods()) {
+                    if ("setDefaultInputStream".equals(m.getName()) && m.getParameterTypes().length == 1 &&
+                            InputStream.class.equals(m.getParameterTypes()[0])) {
+                        try {
+                            m.invoke(p, System.in);
+                            break;
+                        }
+                        catch (Exception e) {
+                            // shouldn't happen, but let it bubble up to the catch(Throwable)
+                            throw new RuntimeException(e);
+                        }
+                    }
+                }
+            }
+
+            // Now find what scripts match the one requested by the user.
             boolean exactMatchFound = false;
             potentialScripts = new ArrayList<File>();
-            for (Iterator iter = list.iterator(); iter.hasNext();) {
-                File scriptPath = (File) iter.next();
+            for (File scriptPath : allScripts) {
                 String scriptFileName = scriptPath.getName().substring(0,scriptPath.getName().length()-7); // trim .groovy extension
                 if(scriptFileName.endsWith("_")) {
                     scriptsAllowedOutsideOfProject.add(scriptPath);
@@ -464,8 +486,12 @@ public class GriffonScriptRunner {
             }
         }
 
-        // Prep the binding with important variables.
-        initBinding(binding);
+        final Closure doNothingClosure = new Closure(this) {
+            private static final long serialVersionUID = 1L;
+            @Override public Object call(Object arguments) { return null; }
+            @Override public Object call() { return null; }
+            @Override public Object call(Object[] args) { return null; }
+        };
 
         // First try to load the script from its file. If there is no
         // file, then attempt to load it as a pre-compiled script. If
@@ -473,7 +499,7 @@ public class GriffonScriptRunner {
         if (potentialScripts.size() > 0) {
             potentialScripts = (List) DefaultGroovyMethods.unique(potentialScripts);
             if (potentialScripts.size() == 1) {
-                final File scriptFile = (File) potentialScripts.get(0);
+                final File scriptFile = potentialScripts.get(0);
                 if(!isGriffonProject() && !isExternalScript(scriptFile)) {
                     out.println(settings.getBaseDir().getPath() + " does not appear to be part of a Griffon application.");
                     out.println("The following commands are supported outside of a project:");
@@ -484,73 +510,152 @@ public class GriffonScriptRunner {
                     out.println("Run 'griffon help' for a complete list of available scripts.");
                     return -1;
                 }
-                else {
-                    out.println("Running script " + scriptFile.getAbsolutePath());
+                out.println("Running script " + scriptFile.getAbsolutePath());
+                // We can now safely set the default environment
+                String scriptFileName = getScriptNameFromFile(scriptFile);
+                setRunningEnvironment(scriptFileName, env);
+                binding.setVariable("scriptName", scriptFileName);
 
-                    // Setup the script to call.
-                    Gant gant = new Gant(binding, classLoader);
-                    /* Gant 1.9.x
-                    gant.processArgs(new String[]{
-                        "-c", // use cache
-                        "-C", // cache file
-                        new File(settings.getGriffonWorkDir(), "scriptCache").getAbsolutePath(),
-                        "-f", // build file
-                        scriptFile.getAbsolutePath()
-                    });
-                    */
-                    gant.setUseCache(true);
-                    gant.setCacheDirectory(new File(settings.getGriffonWorkDir(), "scriptCache"));
-                    gant.loadScript(scriptFile);
-
-                    // Invoke the default target.
-                    return gant.processTargets().intValue();
-                }
+                // Setup the script to call.
+                Gant gant = new Gant(initBinding(binding), classLoader);
+                gant.setUseCache(true);
+                gant.setCacheDirectory(scriptCacheDir);
+                gant.loadScript(scriptFile);
+                return executeWithGantInstance(gant, doNothingClosure);
             }
-            else {
-                out.println("Multiple options please select:");
-                String[] validArgs = new String[potentialScripts.size()];
-                for (int i = 0; i < validArgs.length; i++) {
-                    out.println("[" + (i + 1) + "] " + potentialScripts.get(i));
-                    validArgs[i] = String.valueOf(i + 1);
-                }
 
-                String enteredValue = userInput("Enter #", validArgs);
-                if (enteredValue == null) return 1;
-
-                int number = Integer.valueOf(enteredValue);
-
-                out.println("Running script "+ ((File) potentialScripts.get(number - 1)).getAbsolutePath());
-
-                // Set up the script to call.
-                Gant gant = new Gant(binding, classLoader);
-                gant.loadScript((File) potentialScripts.get(number - 1));
-
-                // Invoke the default target.
-                return gant.processTargets().intValue();
-            }
-        }
-        else {
-            try {
-                out.println("Running pre-compiled script");
-
-                // Get Gant to load the class by name using our class loader.
-                Gant gant = new Gant(binding, classLoader);
-                try {
-                    gant.loadScriptClass(scriptName+"_");
-                    // try externalized script first
-                }
-                catch (Exception e) {
-                    gant.loadScriptClass(scriptName);
-                }
-
-                return gant.processTargets().intValue();
-            }
-            catch (Exception ex) {
-                out.println("Unable to load script '" + scriptName + "' (error: " + ex.getMessage() + ")");
-                out.println("Run 'griffon help' for a complete list of available scripts.");
+            // If there are multiple scripts to choose from and we
+            // are in non-interactive mode, then exit with an error
+            // code. Otherwise the code will enter an infinite loop.
+            if (!isInteractive) {
+                out.println("More than one script with the given name is available - " +
+                            "cannot continue in non-interactive mode.");
                 return 1;
             }
+
+            out.println("Multiple options please select:");
+            String[] validArgs = new String[potentialScripts.size()];
+            for (int i = 0; i < validArgs.length; i++) {
+                out.println("[" + (i + 1) + "] " + potentialScripts.get(i));
+                validArgs[i] = String.valueOf(i + 1);
+            }
+
+            String enteredValue = helper.userInput("Enter #", validArgs);
+            if (enteredValue == null) return 1;
+
+            int number = Integer.parseInt(enteredValue);
+            File scriptFile = (File) potentialScripts.get(number - 1);
+            out.println("Running script "+ scriptFile.getAbsolutePath());
+            // We can now safely set the default environment
+            String scriptFileName = getScriptNameFromFile(scriptFile);
+            setRunningEnvironment(scriptFileName, env);
+            binding.setVariable("scriptName", scriptFileName);
+
+            // Set up the script to call.
+            Gant gant = new Gant(initBinding(binding), classLoader);
+
+            gant.loadScript(scriptFileName);
+
+            // Invoke the default target.
+            return executeWithGantInstance(gant, doNothingClosure);
         }
+
+        out.println("Running pre-compiled script");
+
+        // Get Gant to load the class by name using our class loader.
+        Gant gant = new Gant(binding, classLoader);
+
+        try {
+            loadScriptClass(gant, scriptName);
+        }
+        catch (ScriptNotFoundException e) {
+            String fixedName = fixScriptName(scriptName, allScripts);
+            if (fixedName == null) {
+                throw e;
+            }
+
+            loadScriptClass(gant, fixedName);
+        }
+
+        return executeWithGantInstance(gant, doNothingClosure);
+    }
+
+    private void loadScriptClass(Gant gant, String scriptName) {
+        try {
+            // try externalized script first
+            gant.loadScriptClass(scriptName + "_");
+        }
+        catch (Exception e) {
+            try {
+                gant.loadScriptClass(scriptName);
+            }
+            catch (Exception ex) {
+                if (ex instanceof ClassNotFoundException &&
+                        ex.getMessage() != null &&
+                        ex.getMessage().contains(scriptName)) {
+                    throw new ScriptNotFoundException(scriptName);
+                }
+            }
+        }
+    }
+
+    private String fixScriptName(String scriptName, List<File> allScripts) {
+        try {
+            Set<String> names = new HashSet<String>();
+            for (File script : allScripts) {
+                names.add(script.getName().substring(0, script.getName().length() - 7));
+            }
+            List<String> mostSimilar = CosineSimilarity.mostSimilar(scriptName, names);
+            if (mostSimilar.isEmpty()) {
+                return null;
+            }
+            List<String> topMatches = mostSimilar.subList(0, Math.min(5, mostSimilar.size()));
+            return askUserForBestMatch(scriptName, topMatches);
+        }
+        catch (Exception e) {
+            return null;
+        }
+    }
+
+    private String askUserForBestMatch(String scriptName, List<String> topMatches) throws IOException {
+        System.out.println("Script '" + scriptName + "' not found, did you mean:");
+        int i = 0;
+        for (String s : topMatches) {
+            System.out.println("   " + ++i + ") " + s);
+        }
+
+        int attempts = 0;
+        while (true) {
+            System.out.print("Please make a selection or enter Q to quit: ");
+            BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+            String selection = br.readLine().trim();
+            if ("Q".equalsIgnoreCase(selection)) {
+                System.exit(0);
+            }
+
+            try {
+                int number = Integer.parseInt(selection);
+                if (number > 0 && number <= topMatches.size()) {
+                    return topMatches.get(number - 1);
+                }
+            }
+            catch (NumberFormatException ignored) {
+                // ignored
+            }
+
+            attempts++;
+            if (attempts > 4) {
+                exitWithError("TODO");
+            }
+        }
+    }
+
+    private int executeWithGantInstance(Gant gant, final Closure doNothingClosure) {
+        gant.prepareTargets();
+        gant.setAllPerTargetPostHooks(doNothingClosure);
+        gant.setAllPerTargetPreHooks(doNothingClosure);
+        // Invoke the default target.
+        return gant.executeTargets().intValue();
     }
 
     private boolean isGriffonProject() {
@@ -559,6 +664,14 @@ public class GriffonScriptRunner {
 
     private boolean isExternalScript(File scriptFile) {
         return scriptsAllowedOutsideOfProject.contains(scriptFile);
+    }
+
+    private String getScriptNameFromFile(File scriptPath) {
+        String scriptFileName = scriptPath.getName().substring(0,scriptPath.getName().length()-7); // trim .groovy extension
+        if(scriptFileName.endsWith("_")) {
+            scriptFileName = scriptFileName.substring(0, scriptFileName.length()-1);
+        }
+        return scriptFileName;
     }
 
     /**
@@ -575,7 +688,7 @@ public class GriffonScriptRunner {
      * will load the "Init" script from $Griffon_HOME/scripts if it
      * exists there; otherwise it will load the Init class.
      */
-    private void initBinding(Binding binding) {
+    private GantBinding initBinding(GantBinding binding) {
         Closure c = settings.getGriffonScriptClosure();
         c.setDelegate(binding);
         binding.setVariable("griffonScript", c);
@@ -628,6 +741,8 @@ public class GriffonScriptRunner {
         catch (Exception e) {
             // No plugins found.
         }
+
+        return binding;
     }
 
     /**

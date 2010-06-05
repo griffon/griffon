@@ -125,7 +125,9 @@ target(compileSharedTests : "Compiles shared test sources") {
 
 compileSharedTestSrc = { rootDir ->
     def testShared = new File("${rootDir}/test/shared")
-    if(testShared.exists() && testShared.list()) {
+    boolean hasTestShared = testShared.exists() ? ant.fileset(dir: testShared, includes: '**/*.groovy, **/*.java').size() : false
+
+    if(hasTestShared) {
         def testSharedDirPath = new File(griffonSettings.testClassesDir, 'shared')
         ant.mkdir(dir: testSharedDirPath)
         ant.mkdir(dir: testResourcesDirPath)

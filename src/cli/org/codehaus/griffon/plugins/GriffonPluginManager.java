@@ -17,8 +17,6 @@ package org.codehaus.griffon.plugins;
 
 import org.codehaus.griffon.commons.GriffonContext;
 import org.codehaus.griffon.plugins.exceptions.PluginException;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.ApplicationContextAware;
 import org.springframework.core.io.Resource;
 
 import java.io.File;
@@ -60,7 +58,7 @@ import java.util.Map;
  * @since 0.4
  *
  */
-public interface GriffonPluginManager extends ApplicationContextAware /*, ServletContextAware*/ {
+public interface GriffonPluginManager {
 
     String BEAN_NAME = "pluginManager";
 
@@ -82,22 +80,6 @@ public interface GriffonPluginManager extends ApplicationContextAware /*, Servle
      * @throws PluginException Thrown when an error occurs loading the plugins
      */
     public abstract void loadPlugins() throws PluginException;
-
-//    /**
-//     * Executes the runtime configuration phase of plug-ins
-//     *
-//     * @param springConfig The RuntimeSpringConfiguration instance
-//     */
-//    public abstract void doRuntimeConfiguration(
-//            RuntimeSpringConfiguration springConfig);
-
-    /**
-     * Performs post initialization configuration for each plug-in, passing
-     * the built application context
-     *
-     * @param applicationContext The ApplicationContext instance
-     */
-    public abstract void doPostProcessing(ApplicationContext applicationContext);
 
     /**
      * Retrieves a name Griffon plugin instance
@@ -122,8 +104,6 @@ public interface GriffonPluginManager extends ApplicationContextAware /*, Servle
      */
     public GriffonPlugin getFailedPlugin(String name);
 
-
-
     /**
      * Retrieves a plug-in for its name and version
      *
@@ -143,30 +123,6 @@ public interface GriffonPluginManager extends ApplicationContextAware /*, Servle
      * @return the initialised
      */
     public boolean isInitialised();
-
-    /**
-     * Refreshes the specified plugin. A refresh will force to plugin to "touch" each of its watched resources
-     * and fire modified events for each
-     *
-     * @param name The name of the plugin to refresh
-     */
-    public void refreshPlugin(String name);
-
-    /**
-     * Retrieves a collection of plugins that are observing the specified plugin
-     *
-     * @param plugin The plugin to retrieve observers for
-     * @return A collection of observers
-     */
-    public Collection getPluginObservers(GriffonPlugin plugin);
-
-    /**
-     * inform the specified plugins observers of the event specified by the passsed Map instance
-     *
-     * @param pluginName The name of the plugin
-     * @param event The event
-     */
-    public void informObservers(String pluginName, Map event);
 
     /**
      * Shuts down the PluginManager

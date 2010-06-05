@@ -21,7 +21,6 @@ import org.codehaus.griffon.commons.GriffonContext;
 import org.codehaus.griffon.commons.GriffonClassUtils;
 import org.codehaus.griffon.plugins.exceptions.PluginException;
 import org.springframework.beans.BeansException;
-import org.springframework.context.ApplicationContext;
 import org.springframework.core.io.Resource;
 
 import java.util.*;
@@ -41,7 +40,6 @@ public abstract class AbstractGriffonPluginManager implements GriffonPluginManag
     protected Map plugins = new HashMap();
     protected Class[] pluginClasses = new Class[0];
     protected boolean initialised = false;
-    protected ApplicationContext applicationContext;
     protected Map failedPlugins = new HashMap();
 
 
@@ -78,17 +76,6 @@ public abstract class AbstractGriffonPluginManager implements GriffonPluginManag
         return (GriffonPlugin)this.failedPlugins.get(name);
     }
 
-    /**
-     * Base implementation that will simply go through each plugin and call doWithApplicationContext
-     * on each
-     */
-    public void doPostProcessing(ApplicationContext applicationContext) {
-        checkInitialised();
-        for (Iterator i = pluginList.iterator(); i.hasNext();) {
-            GriffonPlugin plugin = (GriffonPlugin) i.next();
-            plugin.doWithApplicationContext(applicationContext);
-        }
-    }
     public Resource[] getPluginResources() {
         return this.pluginResources;
     }
@@ -109,13 +96,6 @@ public abstract class AbstractGriffonPluginManager implements GriffonPluginManag
         if(name.indexOf('-') > -1) name = GriffonClassUtils.getPropertyNameForLowerCaseHyphenSeparatedName(name);
         return this.plugins.containsKey(name);
     }
-    public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
-        this.applicationContext = applicationContext;
-        for (Iterator i = pluginList.iterator(); i.hasNext();) {
-            GriffonPlugin plugin = (GriffonPlugin) i.next();
-            plugin.setApplicationContext(applicationContext);
-        }
-    }
     public void setApplication(GriffonContext application) {
         if(application == null) throw new IllegalArgumentException("Argument [application] cannot be null");
         this.application = application;
@@ -131,9 +111,5 @@ public abstract class AbstractGriffonPluginManager implements GriffonPluginManag
 
     public void shutdown() {
         checkInitialised();
-        for (Iterator i = pluginList.iterator(); i.hasNext();) {
-            GriffonPlugin plugin = (GriffonPlugin) i.next();
-            plugin.notifyOfEvent(GriffonPlugin.EVENT_ON_SHUTDOWN, plugin);
-        }
     }
 }

@@ -89,12 +89,6 @@ class BuildSettings {
     public static String ENV_DEVELOPMENT = "development"
 
     /**
-     * Constant for the application data source, primarly for backward compatability for those applications
-     * that use ApplicationDataSource.groovy
-     */
-    public static String ENV_APPLICATION = "application"
-
-    /**
      * Constant for the production environment
      */
     public static String ENV_PRODUCTION = "production"
@@ -231,7 +225,6 @@ class BuildSettings {
                     return classLoader.loadClass(name)
                 }
             }
-
         }
 
         // If 'griffonHome' is set, add the JAR file dependencies.
