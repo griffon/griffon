@@ -151,7 +151,7 @@ For further info visit http://griffon.codehaus.org/Plugins
 private printInstalledPlugins() {
   println '''
 Plug-ins you currently have installed are listed below:
--------------------------------------------------------------
+-----------------------------------------------------------------------
 '''
 
   def installedPlugins = []
@@ -172,7 +172,7 @@ Plug-ins you currently have installed are listed below:
 private printRemotePluginList(name) {
   println """
 Plug-ins available in the $name repository are listed below:
--------------------------------------------------------------
+-----------------------------------------------------------------------
 """
   def plugins = []
   use(DOMCategory) {
@@ -211,7 +211,7 @@ Plug-ins available in the $name repository are listed below:
 }
 
 formatPluginForPrint = { pluginName, pluginVersion, pluginTitle ->
-    "${pluginName.padRight(20, " ")}${pluginVersion.padRight(16, " ")} --  ${pluginTitle}"
+    "${pluginName.padRight(30, " ")}${pluginVersion.padRight(16, " ")} --  ${pluginTitle}"
 }
 
 

@@ -107,8 +107,10 @@ target(compile : "Compiles application sources") {
 target(compileSharedTests : "Compiles shared test sources") {
     for(pluginDir in getPluginDirectories().file) {
         def pluginDistDir = new File(pluginDir, 'dist')
-        ant.fileset(dir: pluginDistDir, includes: '*-test.jar').each { jar ->
-            classLoader.addURL(jar.file.toURI().toURL())
+        if(pluginDistDir.exists()) {
+            ant.fileset(dir: pluginDistDir, includes: '*-test.jar').each { jar ->
+                classLoader.addURL(jar.file.toURI().toURL())
+            }
         }
     }
     compileSharedTestSrc(basedir)
