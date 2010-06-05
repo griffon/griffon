@@ -25,10 +25,12 @@ All plugins must have this class in the root of their directory structure to be 
 You can also provide additional information about your plugin using several special properties:
 
 * @title@ - short one sentence description of your plugin
-* @version@ - The version of your problem. Valid versions are for example "0.1", "0.2-SNAPSHOT", "0.1.4" etc.
+* @version@ - the version of your plugin. Valid versions are for example "0.1", "0.2-SNAPSHOT", "0.1.4" etc.
 * @griffonVersion@ - The version of version range of Griffon that the plugin supports. eg. "1.1 > *"
+* @license@ - the plugin's license name in one sentence
+* @pluginIncludes@ - additional resources that should be included in the plugin zip
 * @toolkits@ - a list of supported toolkits \[swing, javafx, swt, pivot, gtk\]
-* @platform@ - a list of supported platforms \[linux, windows, macosx, solaris\]
+* @platform@ - a list of supported platforms \[linux, linux64, windows, windows64, macosx, macosx64, solaris, solaris64\]
 * @author@ - plug-in author's name
 * @authorEmail@ - plug-in author's contact e-mail
 * @description@ - full multi-line description of plug-in's features
@@ -41,16 +43,17 @@ class FestGriffonPlugin {
     def version = '0.3'
     def griffonVersion = '0.3 > *'
     def dependsOn = [:]
+    def license = 'Apache Software License 2.0'
     def toolkits = ['swing']
 
-    def author = "Andres Almiray"
-    def authorEmail = "aalmiray@users.sourceforge.net"
-    def title = "Enables application testing with FEST"
-    def description = '''\
+    def author = 'Andres Almiray'
+    def authorEmail = 'aalmiray@users.sourceforge.net'
+    def title = 'Enables application testing with FEST'
+    def description = '''
 Enables application testing with FEST (http://easytesting.org)
 '''
 
-    def documentation = "http://griffon.codehaus.org/Fest+Plugin"
+    def documentation = 'http://griffon.codehaus.org/Fest+Plugin'
 }
 
 {code}
