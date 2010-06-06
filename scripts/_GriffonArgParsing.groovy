@@ -17,15 +17,11 @@
 /**
  * Gant script containing the Griffon build event system.
  *
- * @author Peter Ledbrook
- *
- * @since 1.1
+ * @author Peter Ledbrook (Grails 1.1)
  */
 // No point doing this stuff more than once.
 if (getBinding().variables.containsKey("_args_parsing_called")) return
 _args_parsing_called = true
-
-includeTargets << griffonScript("_GriffonEvents")
 
 argsMap = [params: []]
 
@@ -49,5 +45,4 @@ target(parseArguments: "Parse the arguments passed on the command line") {
             }
         }
     }
-    event("ArgumentsParsed", ["Done parsing arguments: $argsMap"])
 }

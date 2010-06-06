@@ -24,7 +24,6 @@
 if (getBinding().variables.containsKey("_package_addon_called")) return
 _package_addon_called = true
 
-
 includeTargets << griffonScript("_GriffonPackage")
 
 target ('default': "Packages a Griffon addon. Note: to package a plugin use 'griffon package-plugin'") {
@@ -32,7 +31,8 @@ target ('default': "Packages a Griffon addon. Note: to package a plugin use 'gri
 }
 
 target ('packageAddon': "Packages a Griffon addon. Note: to package a plugin use 'griffon package-plugin'") {
-    depends(checkVersion, createStructure, packagePlugins, pluginConfig)
+    // depends(checkVersion, createStructure, packagePlugins, pluginConfig)
+    depends(checkVersion, createStructure, pluginConfig)
 
     if (!isAddonPlugin) return;
 
@@ -40,15 +40,13 @@ target ('packageAddon': "Packages a Griffon addon. Note: to package a plugin use
         profile("compile") {
             compile()
         }
-    }
-    catch(Exception e) {
+    } catch(Exception e) {
         logError("Compilation error",e)
         exit(1)
     }
     profile("creating config") {
         createConfig()
     }
-
 
     addonJarDir = ant.antProject.replaceProperties(config.griffon.jars.destDir ?: 'dist/addon')
     ant.mkdir(dir:addonJarDir)

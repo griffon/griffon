@@ -17,7 +17,6 @@
 import griffon.util.Metadata
 import griffon.util.BuildSettings
 import griffon.util.GriffonUtil
-import org.codehaus.griffon.plugins.GriffonPluginUtils
 import org.springframework.core.io.ClassPathResource
 import org.springframework.core.io.FileSystemResource
 import org.springframework.core.io.Resource
@@ -34,9 +33,7 @@ import static griffon.util.GriffonApplicationUtils.is64Bit
 /**
  * Gant script containing build variables.
  *
- * @author Peter Ledbrook
- *
- * @since 1.1
+ * @author Peter Ledbrook (Grails 1.1)
  */
 
 // No point doing this stuff more than once.

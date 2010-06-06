@@ -17,9 +17,7 @@
 /**
  * Gant script that runs the Griffon unit tests
  *
- * @author Graeme Rocher
- *
- * @since 0.4
+ * @author Graeme Rocher (Grails 0.4)
  */
 
 includeTargets << griffonScript("_GriffonClean")

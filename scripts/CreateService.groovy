@@ -17,9 +17,7 @@
 /**
  * Gant script that creates a Griffon service class
  * 
- * @author Graeme Rocher
- *
- * @since 0.4
+ * @author Graeme Rocher (Grails 0.4)
  */
 
 includeTargets << griffonScript("_GriffonInit")
@@ -34,6 +32,6 @@ target('default': "Creates a new service class") {
     promptForName(type: type)
 
     def name = argsMap["params"][0]
-	createArtifact(name: name, suffix: type, type: type, path: "griffon-app/services")
-	createUnitTest(name: name, suffix: type)
+    createArtifact(name: name, suffix: type, type: type, path: "griffon-app/services")
+    createUnitTest(name: name, suffix: type)
 }

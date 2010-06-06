@@ -14,7 +14,6 @@
  * limitations under the License.
  */
  
-// import org.codehaus.griffon.commons.GriffonApplication
 import org.codehaus.griffon.test.DefaultGriffonTestHelper
 import org.codehaus.griffon.test.DefaultGriffonTestRunner
 import org.codehaus.griffon.test.GriffonIntegrationTestHelper
@@ -22,9 +21,7 @@ import org.codehaus.griffon.test.GriffonIntegrationTestHelper
 /**
  * Gant script that runs the Griffon unit tests
  *
- * @author Graeme Rocher
- *
- * @since 0.4
+ * @author Graeme Rocher (Grails 0.4)
  */
 
 // No point doing this stuff more than once.
@@ -83,7 +80,8 @@ target(allTests: "Runs the project's tests.") {
         System.exit(1)
     }
     
-    depends(compile, packagePlugins)
+    // depends(compile, packagePlugins)
+    depends(compile)
     packageFiles(basedir)
  
     // Set up an Ant path for the tests.

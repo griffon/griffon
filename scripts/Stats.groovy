@@ -18,8 +18,8 @@ import groovy.xml.MarkupBuilder
 /**
  * Gant script which generates stats for a Griffon project.
  *
- * @author Glen.Smith
- * @author Andres.Almiray
+ * @author Glen Smith
+ * @author Andres Almiray
  */
 
 includeTargets << griffonScript("_GriffonSettings")

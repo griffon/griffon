@@ -15,10 +15,7 @@
  */
 
 /**
- * @author Graeme Rocher
- * @since 1.0
- *
- * Created: Sep 20, 2007
+ * @author Graeme Rocher (Grails 1.0)
  */
 
 // No point doing this stuff more than once.
@@ -47,7 +44,6 @@ target(docs: "Produces documentation for a Griffon project") {
         )
     }
 }
-
 
 invokeGroovydoc = { Map args ->
     ant.mkdir(dir: args.destdir)

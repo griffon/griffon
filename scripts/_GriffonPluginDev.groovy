@@ -25,9 +25,7 @@ import griffon.util.GriffonUtil
  * Gant script that deals with those tasks required for plugin developers
  * (as opposed to plugin users).
  *
- * @author Graeme Rocher
- *
- * @since 0.4
+ * @author Graeme Rocher (Grails 0.4)
  */
 
 includeTargets << griffonScript("_GriffonPackage")
@@ -58,7 +56,8 @@ pluginExcludes = [
 ]
 
 target(pluginConfig:"setup the plugin config"){
-    depends(checkVersion, createStructure, compile, packagePlugins)
+    // depends(checkVersion, createStructure, compile, packagePlugins)
+    depends(checkVersion, createStructure, compile)
 
     def pluginFile
     new File("${basedir}").eachFile {

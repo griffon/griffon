@@ -17,9 +17,7 @@
 /**
  * Gant script that creates a Griffon Gant script
  *
- * @author Graeme Rocher
- *
- * @since 0.4
+ * @author Graeme Rocher (Grails 0.4)
  */
 
 import griffon.util.GriffonUtil

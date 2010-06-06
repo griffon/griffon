@@ -17,9 +17,7 @@
 /**
  * Gant script for setting HTTP proxy-settings.
  *
- * @author Sergey Nebolsin
- *
- * @since 0.5.5
+ * @author Sergey Nebolsin (Grails 0.5.5)
  */
 
 includeTargets << griffonScript("_GriffonEvents")

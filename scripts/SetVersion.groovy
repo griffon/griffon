@@ -17,11 +17,9 @@
 /**
  * Gant script that manages the application version
  *
- * @author Marc Palmer
- * @author Sergey Nebolsin (nebolsin@gmail.com)
- * @author Graeme Rocher
- *
- * @since 0.5
+ * @author Marc Palmer (Grails 0.5)
+ * @author Sergey Nebolsin (nebolsin@gmail.com) (Grails 0.5)
+ * @author Graeme Rocher (Grails 0.5)
  */
 
 includeTargets << griffonScript("_GriffonEvents")

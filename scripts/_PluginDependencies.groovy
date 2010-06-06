@@ -38,9 +38,7 @@ import java.util.zip.ZipEntry
 /**
  * Plugin stuff. If included, must be included after "_ClasspathAndEvents".
  *
- * @author Graeme Rocher
- *
- * @since 1.1
+ * @author Graeme Rocher (Grails 1.1)
  */
 
 includeTargets << griffonScript("_GriffonClasspath")

@@ -20,9 +20,7 @@ import org.codehaus.griffon.plugins.GriffonPluginUtils
 /**
  * Gant script containing the Griffon classpath setup.
  *
- * @author Peter Ledbrook
- *
- * @since 1.1
+ * @author Peter Ledbrook (Grails 1.1)
  */
 
 // No point doing this stuff more than once.

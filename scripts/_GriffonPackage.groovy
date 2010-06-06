@@ -28,10 +28,9 @@ import static griffon.util.GriffonApplicationUtils.osArch
 /**
  * Gant script that packages a Griffon application (note: does not create WAR)
  *
- * @author Graeme Rocher
+ * @author Graeme Rocher (Grails 0.4)
  * @author Danno Ferrin
- *
- * @since 0.4
+ * @author Andres Almiray
  */
 
 // No point doing this stuff more than once.
@@ -87,7 +86,8 @@ target(createConfig: "Creates the configuration object") {
 }
 
 target(packageApp : "Implementation of package target") {
-    depends(createStructure, packagePlugins)
+    // depends(createStructure, packagePlugins)
+    depends(createStructure)
 
     try {
         profile("compile") {

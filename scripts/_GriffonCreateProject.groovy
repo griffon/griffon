@@ -19,9 +19,7 @@ import griffon.util.GriffonUtil
 /**
  * Gant script that handles the creation of Griffon applications
  *
- * @author Graeme Rocher
- *
- * @since 0.4
+ * @author Graeme Rocher (Grails 0.4)
  */
 
 includeTargets << griffonScript("_GriffonInit")

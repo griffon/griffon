@@ -17,10 +17,8 @@
 /**
  * Gant script that handles upgrading of a Griffon applications
  *
- * @author Graeme Rocher
- * @author Sergey Nebolsin
- *
- * @since 0.4
+ * @author Graeme Rocher (Grails 0.4)
+ * @author Sergey Nebolsin (Grails 0.4)
  */
 
 import org.codehaus.griffon.plugins.GriffonPluginUtils
@@ -33,7 +31,7 @@ target('default': "Upgrades a Griffon application from a previous version of Gri
 
     depends(createStructure)
 
-    boolean force = args?.indexOf('-force') > -1 ? true : false
+    boolean force = args?.indexOf('-force') > -1
 
     if (appGriffonVersion != griffonVersion) {
         def gv = appGriffonVersion ?: "?Unknown?"

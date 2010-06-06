@@ -17,9 +17,7 @@
 /**
  * Gant script that creates a new Griffon integration test
  * 
- * @author Graeme Rocher
- *
- * @since 0.4
+ * @author Graeme Rocher (Grails 0.4)
  */
 
 includeTargets << griffonScript("_GriffonInit")

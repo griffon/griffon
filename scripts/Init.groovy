@@ -18,10 +18,8 @@
  * Gant script that handles general initialization of a Griffon applications
  *
  * @deprecated Use "create-app --inplace" or "upgrade".
- * @author Graeme Rocher
- * @author Peter Ledbrook
- *
- * @since 0.4
+ * @author Graeme Rocher (Grails 0.4)
+ * @author Peter Ledbrook (Grails 0.4)
  */
 
 includeTargets << griffonScript("_GriffonInit")

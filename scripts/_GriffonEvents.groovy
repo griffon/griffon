@@ -20,9 +20,7 @@ import griffon.util.GriffonUtil
 /**
  * Gant script containing the Griffon build event system.
  *
- * @author Peter Ledbrook
- *
- * @since 1.1
+ * @author Peter Ledbrook (Grails 1.1)
  */
 
 // No point doing this stuff more than once.

@@ -17,12 +17,9 @@
 /**
  * Gant script that packages a Griffon application (note: does not create WAR)
  *
- * @author Graeme Rocher
- *
- * @since 0.4
+ * @author Graeme Rocher (Grails 0.4)
  */
 
-import griffon.util.BuildSettings
 import griffon.util.RunMode
 
 // No point doing this stuff more than once.

@@ -17,9 +17,7 @@
 /**
  * Gant script that loads the Griffon console
  *
- * @author Graeme Rocher
- *
- * @since 0.4
+ * @author Graeme Rocher (Grails 0.4)
  */
 
 // No point doing this stuff more than once.

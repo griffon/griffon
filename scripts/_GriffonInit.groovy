@@ -17,9 +17,7 @@
 /**
 * Gant script that handles general initialization of a Griffon applications
 *
-* @author Graeme Rocher
-*
-* @since 0.4
+* @author Graeme Rocher (Grails 0.4)
 */
 
 // No point doing this stuff more than once.
@@ -28,7 +26,6 @@ _griffon_init_called = true
 
 
 import griffon.util.GriffonUtil
-import org.springframework.core.io.FileSystemResource
 
 // add includes
 includeTargets << griffonScript("_GriffonArgParsing")
