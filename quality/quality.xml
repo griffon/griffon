@@ -1,0 +1,90 @@
+<project name="griffon-quality">
+    <target name="findbugs" depends="build">
+        <property name="findbugs.home" value="${basedir}/quality/findbugs" />
+        <property name="findbugs.outputFile" value="${griffon.target}/quality/findbugs/findbugs.html" />
+        <mkdir dir="${griffon.target}/quality/findbugs"/>
+
+        <path id="findbugs.classpath">
+            <fileset dir="${findbugs.home}/lib" includes="*.jar" />
+        </path>
+        <taskdef name="findbugs"
+                 classname="edu.umd.cs.findbugs.anttask.FindBugsTask"
+                 classpathref="findbugs.classpath"/>
+
+        <delete file="${findbugs.outputFile}" quiet="true" failOnError="false" />
+        <findbugs home="${findbugs.home}"
+                  output="html"
+                  outputFile="${findbugs.outputFile}"
+                  jvmargs="-Xms512m -Xmx512m"
+                  reportLevel="medium">
+            <auxClasspath>
+                <fileset dir="${basedir}/lib" includes="**/*.jar" />
+            </auxClasspath>
+           <sourcePath path="${griffon.src.cli}" />
+            <sourcePath path="${griffon.src.rt}" />
+            <class location="${griffon.build.cli}" />
+            <class location="${griffon.build.rt}" />
+        </findbugs>
+    </target>
+
+    <target name="codenarc" depends="build">
+        <property name="codenarc.home" value="${basedir}/quality/codenarc" />
+        <property name="codenarc.outputFile" value="${griffon.target}/quality/codenarc/codenarc.html" />
+        <mkdir dir="${griffon.target}/quality/codenarc"/>
+
+        <path id="codenarc.classpath">
+            <fileset dir="${codenarc.home}" includes="*.jar" />
+            <path refid="classpath" />
+        </path>
+        <taskdef name="codenarc"
+                 classname="org.codenarc.ant.CodeNarcTask"
+                 classpathref="codenarc.classpath"/>
+
+        <delete file="${codenarc.outputFile}" quiet="true" failOnError="false" />
+        <codenarc ruleSetFiles="rulesets/basic.xml,rulesets/exceptions.xml,rulesets/imports.xml,rulesets/unused.xml"
+                  maxPriority1Violations="1000"
+                  maxPriority2Violations="1000"
+                  maxPriority3Violations="1000">
+            <report type="html">
+                <option name="outputFile" value="${codenarc.outputFile}" />
+                 <option name="title" value="Griffon ${griffon.version}" />
+            </report>
+            <fileset dir="${griffon.src.cli}" includes="**/*.groovy"/>
+            <fileset dir="${griffon.src.rt}" includes="**/*.groovy"/>
+        </codenarc>
+    </target>
+
+    <target name="pmd" depends="build">
+        <property name="pmd.home" value="${basedir}/quality/pmd" />
+        <property name="pmd.outputFile" value="${griffon.target}/quality/pmd/pmd.html" />
+        <mkdir dir="${griffon.target}/quality/pmd"/>
+
+        <path id="pmd.classpath">
+            <fileset dir="${pmd.home}" includes="*.jar" />
+            <path refid="classpath" />
+        </path>
+        <taskdef name="pmd"
+                 classname="net.sourceforge.pmd.ant.PMDTask"
+                 classpathref="pmd.classpath"/>
+
+        <delete file="${pmd.outputFile}" quiet="true" failOnError="false" />
+        <pmd shortFilenames="true">
+            <ruleset>basic</ruleset>
+            <ruleset>design</ruleset>
+            <ruleset>strings</ruleset>
+            <ruleset>codesize</ruleset>
+            <ruleset>strictexception</ruleset>
+            <ruleset>unusedcode</ruleset>
+            <!--ruleset>optimizations</ruleset-->
+            <formatter type="html"
+                       toFile="${pmd.outputFile}"
+                       linkPrefix="http://pmd.sourceforge.net/xref/"/>
+            <fileset dir="${griffon.src.cli}" >
+                <include name="**/*.java"/>
+            </fileset>
+            <fileset dir="${griffon.src.rt}" >
+                <include name="**/*.java"/>
+            </fileset>
+        </pmd>
+    </target>
+</project>

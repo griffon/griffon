@@ -72,7 +72,7 @@ class ApplicationFactory extends AbstractFactory {
         }
         
         def window = application
-        if (!application instanceof Window) {
+        if (!(application instanceof Window)) {
             window = SwingUtilities.getWindowAncestor(application)
         } else {
             builder.context.pack = attributes.remove('pack')

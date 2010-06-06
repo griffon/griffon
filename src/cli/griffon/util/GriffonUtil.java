@@ -45,8 +45,9 @@ import java.util.jar.Manifest;
  * @since 0.2
  */
 public class GriffonUtil extends GriffonNameUtils {
+    private GriffonUtil() {}
 
-	private static final Log LOG  = LogFactory.getLog(GriffonUtil.class);
+    private static final Log LOG  = LogFactory.getLog(GriffonUtil.class);
     private static final Log STACK_LOG  = LogFactory.getLog("StackTrace");
     private static final String GRIFFON_IMPLEMENTATION_TITLE = "griffon-rt";
     private static final String GRIFFON_VERSION;
@@ -128,7 +129,7 @@ public class GriffonUtil extends GriffonNameUtils {
      * @param methodOrPropName Name of deprecated property or method
      */
     public static void deprecated(Class clazz, String methodOrPropName ) {
-    	deprecated(clazz, methodOrPropName, getGriffonVersion());
+        deprecated(clazz, methodOrPropName, getGriffonVersion());
     }
 
     /**
@@ -139,9 +140,9 @@ public class GriffonUtil extends GriffonNameUtils {
      * @param version Version of Griffon release in which property or method were deprecated
      */
     public static void deprecated(Class clazz, String methodOrPropName, String version ) {
-    	deprecated("Property or method [" + methodOrPropName + "] of class [" + clazz.getName() +
-    			"] is deprecated in [" + version +
-    			"] and will be removed in future releases");
+        deprecated("Property or method [" + methodOrPropName + "] of class [" + clazz.getName() +
+                "] is deprecated in [" + version +
+                "] and will be removed in future releases");
     }
 
     /**
@@ -150,7 +151,7 @@ public class GriffonUtil extends GriffonNameUtils {
      * @param message Message to display
      */
     public static void deprecated(String message) {
-    	LOG.warn("[DEPRECATED] " + message);
+        LOG.warn("[DEPRECATED] " + message);
     }
 
     /**
@@ -159,7 +160,7 @@ public class GriffonUtil extends GriffonNameUtils {
      * @param message Message to display
      */
     public static void warn(String message) {
-    	LOG.warn("[WARNING] " + message);
+        LOG.warn("[WARNING] " + message);
     }
 
 
@@ -285,7 +286,7 @@ public class GriffonUtil extends GriffonNameUtils {
      * @return The script name representation
      */
     public static String getScriptName(Class clazz) {
-    	return getScriptName(clazz.getName());
+        return getScriptName(clazz.getName());
     }
 
     /**
@@ -296,11 +297,11 @@ public class GriffonUtil extends GriffonNameUtils {
      * @return The script name representation.
      */
     public static String getScriptName(String name) {
-		if(name.endsWith(".groovy")) {
-			name = name.substring(0, name.length()-7);
-		}
-    	String naturalName = getNaturalName(getShortName(name));
-    	return naturalName.replaceAll("\\s", "-").toLowerCase();
+        if(name.endsWith(".groovy")) {
+            name = name.substring(0, name.length()-7);
+        }
+        String naturalName = getNaturalName(getShortName(name));
+        return naturalName.replaceAll("\\s", "-").toLowerCase();
     }
 
     /**

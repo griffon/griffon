@@ -5,7 +5,7 @@ package org.codehaus.griffon.cli;
  * can't find.
  */
 public class ScriptNotFoundException extends RuntimeException {
-    private String scriptName;
+    private final String scriptName;
 
     public ScriptNotFoundException(String scriptName) {
         super();

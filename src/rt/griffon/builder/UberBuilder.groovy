@@ -41,7 +41,7 @@ class UberBuilder extends FactoryBuilderSupport {
 
     public final uberInit(Object prefix, Map builders) {
         if (prefix) {
-            throw new RuntimeException("Prefixed maps not supported")
+            throw new IllegalArgumentException("Prefixed maps not supported")
         } else {
             return builders.collect {k, v -> uberInit(k, v)}
         }
@@ -49,7 +49,7 @@ class UberBuilder extends FactoryBuilderSupport {
 
     public final uberInit(Object prefix, Object[] builders) {
         if (prefix) {
-            throw new RuntimeException("Prefixed maps not supported")
+            throw new IllegalArgumentException("Prefixed maps not supported")
         } else {
             return builders.collect {v -> uberInit(prefix, v)}
         }
@@ -62,7 +62,7 @@ class UberBuilder extends FactoryBuilderSupport {
             // if we get more than one, we have more than this base case, so look it up
             return uberInit(prefix, builder)
         } else {
-            throw new RuntimeException("Cannot uberinit indirectly via key '$builderKey'")
+            throw new IllegalArgumentException("Cannot uberinit indirectly via key '$builderKey'")
         }
     }
 
@@ -72,7 +72,7 @@ class UberBuilder extends FactoryBuilderSupport {
         } else if (FactoryBuilderSupport.isAssignableFrom(klass)) {
             return uberInit(prefix, klass.newInstance())
         } else {
-            throw new RuntimeException("Cannot uberinit indirectly from class'${klass.name}'")
+            throw new IllegalArgumentException("Cannot uberinit indirectly from class'${klass.name}'")
         }
     }
 

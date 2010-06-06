@@ -37,8 +37,6 @@ class SwingUtils {
 	 * @param window a Window object
 	 */
     static void centerOnScreen(Window window) {
-	    Point origin = window.location
-        Dimension size = window.getSize()
         Point center = GraphicsEnvironment.localGraphicsEnvironment.centerPoint
         Dimension screen = Toolkit.defaultToolkit.screenSize
 
