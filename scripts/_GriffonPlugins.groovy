@@ -59,18 +59,16 @@ target(installPlugin:"Installs a plug-in for the given URL or name and version")
                 globalInstall = true
             }
 
-            ant.mkdir(dir:pluginsBase)
+            ant.mkdir(dir: pluginsBase)
 
             def pluginFile = new File(pluginArgs[0])
 
             if(pluginArgs[0].startsWith("http://")) {
                 def url = new URL(pluginArgs[0])
                 fullPluginName = downloadRemotePlugin(url, pluginsBase)
-            }
-            else if( pluginFile.exists() && pluginFile.name.startsWith("griffon-") && pluginFile.name.endsWith(".zip" )) {
-                cacheLocalPlugin(pluginFile)
-            }
-            else {
+            } else if(pluginFile.exists() && pluginFile.name.startsWith("griffon-") && pluginFile.name.endsWith(".zip" )) {
+                fullPluginName = cacheLocalPlugin(pluginFile)
+            } else {
                 // The first argument is the plugin name, the second
                 // (if provided) is the plugin version.
                 fullPluginName = cacheKnownPlugin(pluginArgs[0], pluginArgs[1])
@@ -80,8 +78,7 @@ target(installPlugin:"Installs a plug-in for the given URL or name and version")
             println "Installing plug-in $fullPluginName"
 
             installPluginForName(fullPluginName)
-        }
-        else {
+        } else {
             event("StatusError", [ERROR_MESSAGE])
         }
     }

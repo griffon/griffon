@@ -18,8 +18,6 @@ import griffon.util.GriffonUtil
 import groovy.xml.DOMBuilder
 import groovy.xml.dom.DOMCategory
 import java.util.regex.Matcher
-//import org.apache.xml.serialize.OutputFormat
-//import org.apache.xml.serialize.XMLSerializer
 import org.codehaus.groovy.control.CompilationUnit
 import org.codehaus.griffon.commons.DefaultGriffonContext
 import org.codehaus.griffon.plugins.DefaultGriffonPluginManager
@@ -197,8 +195,7 @@ _resolveDependencies = { List plugins, callback = null ->
     for(Resource pluginDir in pluginsToUninstall) {
         if(confirmInput("Plugin [${pluginDir.filename}] is installed, but was not found in the application's metadata, do you want to uninstall?") == 'y') {
             uninstallPluginForName(pluginDir.filename)
-        }
-        else {
+        } else {
             def plugin = GriffonPluginUtils.getMetadataForPlugin(pluginDir.filename)
             registerPluginWithMetadata(plugin.@name.text(), plugin.@version.text())
         }
@@ -518,7 +515,7 @@ cacheLocalPlugin = { pluginFile ->
     fullPluginName = "${pluginFile.name[8..-5]}"
     String zipLocation = "${pluginsBase}/griffon-${fullPluginName}.zip"
     ant.copy(file: pluginFile, tofile: zipLocation)
-    readMetadataFromZip(zipLocation, pluginFile)
+    return readMetadataFromZip(zipLocation, pluginFile)
 }
 
 private readMetadataFromZip(String zipLocation, pluginFile) {
@@ -531,6 +528,7 @@ private readMetadataFromZip(String zipLocation, pluginFile) {
         currentPluginName = pluginXml.'@name'.text()
         currentPluginRelease = pluginXml.'@version'.text()
         fullPluginName = "$currentPluginName-$currentPluginRelease"
+        return fullPluginName
     }
     else {
         cleanupPluginInstallAndExit("Plug-in $pluginFile is not a valid Griffon plugin. No plugin.xml descriptor found!")
@@ -540,7 +538,7 @@ private readMetadataFromZip(String zipLocation, pluginFile) {
 /**
  * Searches the downloaded plugin-list.xml files for each repository for a plugin that matches the given name
  */
-findPlugin = { pluginName ->
+findPluginInPluginList = { pluginName ->
   pluginName = pluginName?.toLowerCase()
 
   if(pluginName) {
@@ -567,7 +565,7 @@ cacheKnownPlugin = { String pluginName, String pluginRelease ->
     def fullPluginName
     try {
       use(DOMCategory) {
-          plugin = findPlugin(pluginName)
+          plugin = findPluginInPluginList(pluginName)
 
           if (plugin) {
               pluginRelease = pluginRelease ? pluginRelease : plugin.'@latest-release'
@@ -585,7 +583,6 @@ cacheKnownPlugin = { String pluginName, String pluginRelease ->
               cleanupPluginInstallAndExit("Plugin '${pluginName}' was not found in repository. If it is not stored in a configured repository you will need to install it manually. Type 'griffon list-plugins' to find out what plugins are available.")
           }
 
-
           def pluginCacheFileName = "${pluginsBase}/griffon-${plugin.'@name'}-${pluginRelease}.zip"
           if (!new File(pluginCacheFileName).exists() || pluginRelease.endsWith("SNAPSHOT")) {
               ant.mkdir(dir:pluginsBase)
@@ -595,7 +592,8 @@ cacheKnownPlugin = { String pluginName, String pluginRelease ->
           }
           fullPluginName = "$pluginName-$pluginRelease"
 
-          ant.copy(file:"${pluginsBase}/griffon-${fullPluginName}.zip",tofile:"${pluginsHome}/griffon-${fullPluginName}.zip")
+          ant.copy(file:"${pluginsBase}/griffon-${fullPluginName}.zip",
+                 tofile:"${pluginsHome}/griffon-${fullPluginName}.zip")
       }
       return fullPluginName
     }
@@ -628,8 +626,7 @@ uninstallPluginForName = { name, version=null ->
     def pluginDir
     if(name && version) {
         pluginDir = new File("${pluginsHome}/$name-$version")
-    }
-    else {
+    } else {
         pluginDir = getPluginDirForName(name)?.file
     }
     if(pluginDir?.exists()) {
@@ -639,188 +636,205 @@ uninstallPluginForName = { name, version=null ->
 
         ant.delete(dir:pluginDir, failonerror:true)
         resetClasspathAndState()
-    }
-    else {
+    } else {
         event("StatusError", ["No plug-in [$name${version ? '-' + version : ''}] installed, cannot uninstall"])
     }
 }
+
 /**
  * Installs a plug-in for the given name and optional version
  */
 installPluginForName = { String fullPluginName ->
-    if (fullPluginName) {
-        event("InstallPluginStart", [fullPluginName])
-        def pluginInstallPath = "${globalInstall ? globalPluginsDirPath : pluginsHome}/${fullPluginName}"
-        installedPlugins << pluginInstallPath
-        ant.delete(dir: pluginInstallPath, failonerror: false)
-        ant.mkdir(dir: pluginInstallPath)
-        ant.unzip(dest: pluginInstallPath, src: "${pluginsBase}/griffon-${fullPluginName}.zip")
+    if (!fullPluginName) return
 
-        def pluginXmlFile = new File("${pluginInstallPath}/plugin.xml")
-        if (!pluginXmlFile.exists()) {
-            ant.fail("Plug-in $fullPluginName is not a valid Griffon plug-in. No plugin.xml descriptor found!")
+    event("InstallPluginStart", [fullPluginName])
+
+    def pluginInstallPath = "${globalInstall ? globalPluginsDirPath : pluginsHome}/${fullPluginName}"
+    installedPlugins << pluginInstallPath
+    ant.delete(dir: pluginInstallPath, failonerror: false)
+    ant.mkdir(dir: pluginInstallPath)
+    ant.unzip(dest: pluginInstallPath, src: "${pluginsBase}/griffon-${fullPluginName}.zip")
+
+    def pluginXmlFile = new File("${pluginInstallPath}/plugin.xml")
+    if (!pluginXmlFile.exists()) {
+        ant.fail("Plug-in $fullPluginName is not a valid Griffon plug-in. No plugin.xml descriptor found!")
+    }
+    def pluginXml = new XmlSlurper().parse(pluginXmlFile)
+    def pluginName = pluginXml.@name.toString()
+    def pluginVersion = pluginXml.@version.toString()
+
+    def pluginGriffonVersion = pluginXml.@griffonVersion.toString()
+    if(pluginGriffonVersion) {
+        if(!GriffonPluginUtils.isValidVersion(griffonVersion, pluginGriffonVersion)) {
+            cleanupPluginInstallAndExit("Plugin $fullPluginName requires version [${pluginGriffonVersion}] of Griffon which your current Griffon installation does not meet. Please try install a different version of the plugin or Griffon.")
         }
-        def pluginXml = new XmlSlurper().parse(pluginXmlFile)
-        def pluginName = pluginXml.@name.toString()
-        def pluginVersion = pluginXml.@version.toString()
+    }
 
-        def pluginGriffonVersion = pluginXml.@griffonVersion.toString()
-        if(pluginGriffonVersion) {
-            if(!GriffonPluginUtils.isValidVersion(griffonVersion, pluginGriffonVersion)) {
-                cleanupPluginInstallAndExit("Plugin $fullPluginName requires version [${pluginGriffonVersion}] of Griffon which your current Griffon installation does not meet. Please try install a different version of the plugin or Griffon.")
-            }
+    // Add the plugin's directory to the binding so that any event
+    // handlers in the plugin have access to it. Normally, this
+    // variable is added in GriffonScriptRunner, but this plugin
+    // hasn't been installed by that point.
+    binding.setVariable("${pluginName}PluginDir", new File(pluginInstallPath).absoluteFile)
+
+    def pluginJdkVersion = pluginXml.@jdk?.toString()
+    if (pluginJdkVersion) {
+        pluginJdkVersion = new BigDecimal(pluginJdkVersion)
+        def javaVersion = new BigDecimal(System.getProperty("java.version")[0..2])
+        if (pluginJdkVersion > javaVersion) {
+            ant.delete(dir: "${pluginsDirPath}/${fullPluginName}", quiet: true, failOnError: false)
+            clean()
+
+            cleanupPluginInstallAndExit("Failed to install plug-in [${fullPluginName}]. Required Jdk version is ${pluginJdkVersion}, current one is ${javaVersion}")
         }
+    }
 
-        // Add the plugin's directory to the binding so that any event
-        // handlers in the plugin have access to it. Normally, this
-        // variable is added in GriffonScriptRunner, but this plugin
-        // hasn't been installed by that point.
-        binding.setVariable("${pluginName}PluginDir", new File(pluginInstallPath).absoluteFile)
+    def supportedPlatforms = pluginXml.platforms?.text()
+    if (supportedPlatforms) {
+        if (!(platform in supportedPlatforms.split(','))) {
+            ant.delete(dir: "${pluginsDirPath}/${fullPluginName}", quiet: true, failOnError: false)
+            clean()
 
-        def pluginJdkVersion = pluginXml.@jdk?.toString()
-        if (pluginJdkVersion) {
-            pluginJdkVersion = new BigDecimal(pluginJdkVersion)
-            def javaVersion = new BigDecimal(System.getProperty("java.version")[0..2])
-            if (pluginJdkVersion > javaVersion) {
-                ant.delete(dir: "${pluginsDirPath}/${fullPluginName}", quiet: true, failOnError: false)
-                clean()
-
-                cleanupPluginInstallAndExit("Failed to install plug-in [${fullPluginName}]. Required Jdk version is ${pluginJdkVersion}, current one is ${javaVersion}")
-            }
+            cleanupPluginInstallAndExit("Failed to install plug-in [${fullPluginName}]. Required platforms are [${supportedPlatforms}], current one is ${platform}")
         }
+    }
 
-        def supportedPlatforms = pluginXml.platforms?.text()
-        if (supportedPlatforms) {
-            if (!(platform in supportedPlatforms.split(','))) {
-                ant.delete(dir: "${pluginsDirPath}/${fullPluginName}", quiet: true, failOnError: false)
-                clean()
-
-                cleanupPluginInstallAndExit("Failed to install plug-in [${fullPluginName}]. Required platforms are [${supportedPlatforms}], current one is ${platform}")
-            }
-        }
-
-        def supportedToolkits = pluginXml.toolkits?.text()
-        if (supportedToolkits) {
-            supportedToolkits = supportedToolkits.split(',').toList()
-            def installedToolkits = metadata.'app.toolkits'
-            if(!installedToolkits) installedToolkits = 'swing'
-            installedToolkits = installedToolkits.split(',').toList()
-            def unsupportedToolkits = installedToolkits - supportedToolkits
-            if(unsupportedToolkits) {
-                def pluginsToUninstall = [:]
-                metadata.propertyNames().grep{ it.startsWith('plugins.') }.each { p ->
-                    String pluginVersion1 = metadata[p]
-                    String pluginName1 = p - 'plugins.'
-                    def supportedToolkitsByPlugin = readPluginXmlMetadata(pluginName1).toolkits?.text()
-                    // skip if property is not set
-                    if(!supportedToolkitsByPlugin) return
-                    supportedToolkitsByPlugin = supportedToolkitsByPlugin.split(',').toList()
-                    if(supportedToolkitsByPlugin.intersect(supportedToolkits)) return 
-                    if(supportedToolkitsByPlugin.intersect(unsupportedToolkits)) {
-                        pluginsToUninstall[pluginName1] = pluginVersion1
-                    }
+    def supportedToolkits = pluginXml.toolkits?.text()
+    if (supportedToolkits) {
+        supportedToolkits = supportedToolkits.split(',').toList()
+        def installedToolkits = metadata.'app.toolkits'
+        if(!installedToolkits) installedToolkits = 'swing'
+        installedToolkits = installedToolkits.split(',').toList()
+        def unsupportedToolkits = installedToolkits - supportedToolkits
+        if(unsupportedToolkits) {
+            def pluginsToUninstall = [:]
+            metadata.propertyNames().grep{ it.startsWith('plugins.') }.each { p ->
+                String pluginVersion1 = metadata[p]
+                String pluginName1 = p - 'plugins.'
+                def supportedToolkitsByPlugin = readPluginXmlMetadata(pluginName1).toolkits?.text()
+                // skip if property is not set
+                if(!supportedToolkitsByPlugin) return
+                supportedToolkitsByPlugin = supportedToolkitsByPlugin.split(',').toList()
+                if(supportedToolkitsByPlugin.intersect(supportedToolkits)) return 
+                if(supportedToolkitsByPlugin.intersect(unsupportedToolkits)) {
+                    pluginsToUninstall[pluginName1] = pluginVersion1
                 }
-                if(pluginsToUninstall) {
-                    def uninstallPluginsMessage = """${griffonAppName} has ${installedToolkits} as supported UI toolkits.
+            }
+            if(pluginsToUninstall) {
+                def uninstallPluginsMessage = """${griffonAppName} has ${installedToolkits} as supported UI toolkits.
 The plugin [${fullPluginName}] requires any of the following toolkits: ${supportedToolkits}
 Installing this plugin will uninstall all plugins that require ${unsupportedToolkits}.
 Plugins to be uninstalled:
 """
-                    pluginsToUninstall.each { n, v -> uninstallPluginsMessage += "    ${n}-${v}\n" }
+                pluginsToUninstall.each { n, v -> uninstallPluginsMessage += "    ${n}-${v}\n" }
 
-                    askAndDo("""${uninstallPluginsMessage}
+                askAndDo("""${uninstallPluginsMessage}
 Do you wish to proceed?\n""", {
-                        pluginsToUninstall.each { n, v ->
-                            uninstallPluginForName(n)
-                            event("PluginUninstalled", ["${n}-${v}"])
-                            event("StatusUpdate", ["The plugin ${n}-${v} has been uninstalled from the current application."])
-                        }
-                    },{
-                        cleanupPluginInstallAndExit("Installation of [${fullPluginName}] was canceled.")
-                    })
-                }
-            }
-        }
-
-        def dependencies = [:]
-
-        def internalInstallPlugin = { _pluginName, _pluginVersion ->
-            event("StatusUpdate", ["Plugin dependency [$_pluginName] not found. Attempting to resolve..."])
-            // recursively install dependent plug-ins
-            def upperVersion =  GriffonPluginUtils.getUpperVersion(_pluginVersion)
-            def release = cacheKnownPlugin(_pluginName, _pluginVersion == '*' ? null : _pluginVersion)
-
-            ant.copy(file: "${pluginsBase}/griffon-${release}.zip", tofile: "${pluginsDirPath}/griffon-${release}.zip")
-
-            installPluginForName(release)
-            dependencies.remove(_pluginName)
-        }
-
-        for (dep in pluginXml.dependencies.plugin) {
-            def depName = dep.@name.toString()
-            String depVersion = dep.@version.toString()
-            dependencies[depName] = depVersion
-
-            def depPluginDir = getPluginDirForName(depName)?.file
-            if (!depPluginDir?.exists()) {
-                internalInstallPlugin(depName, depVersion)
-            } else  {
-                def dependency = readPluginXmlMetadata(depName?.toString())
-                def installedVersion = dependency.@version.toString()
-                int versionStatus = GriffonPluginUtils.compareVersions(installedVersion, depVersion)
-                if(versionStatus < 0) {
-                    // installed version is older
-                    // install new version
-                    uninstallPluginForName(depName, installedVersion)
-                    internalInstallPlugin(depName, depVersion)
-                } else {
-                    dependencies.remove(depName)
-                }
-            }
-        }
-
-        if (dependencies) {
-            ant.delete(dir: "${pluginsHome}/${fullPluginName}", quiet: true, failOnError: false)
-            clean()
-
-            cleanupPluginInstallAndExit("Failed to install plug-in [${fullPluginName}]. Missing dependencies: ${dependencies.inspect()}")
-        }
-        else {
-            def pluginJars = resolveResources("file:${pluginsHome}/${fullPluginName}/lib/*.jar")
-            for(jar in pluginJars) {
-                addUrlIfNotPresent rootLoader, jar.URL
-            }
-            
-            def license = pluginXml.license?.text() ?: '<UNKNOWN>'
-            println "Plug-in license is: $license"
-            
-            if(!isPluginProject) {
-                // proceed _Install.groovy plugin script if exists
-                def installScript = new File("${pluginsHome}/${fullPluginName}/scripts/_Install.groovy")
-                runPluginScript(installScript, fullPluginName, "post-install script")
-    
-                registerPluginWithMetadata(pluginName, pluginVersion)
-    
-                event("StatusFinal", ["Plugin ${fullPluginName} installed"])
-                def providedScripts = resolveResources("file:${pluginsHome}/${fullPluginName}/scripts/*.groovy").findAll { !it.filename.startsWith('_')}
-                if (providedScripts) {
-                    println "Plug-in provides the following new scripts:"
-                    println "------------------------------------------"
-                    providedScripts.file.each {file ->
-                        def scriptName = GriffonUtil.getScriptName(file.name)
-                        println "griffon ${scriptName}"
+                    pluginsToUninstall.each { n, v ->
+                        uninstallPluginForName(n)
+                        event("PluginUninstalled", ["${n}-${v}"])
+                        event("StatusUpdate", ["The plugin ${n}-${v} has been uninstalled from the current application."])
                     }
-                }
+                },{
+                    cleanupPluginInstallAndExit("Installation of [${fullPluginName}] was canceled.")
+                })
+            }
+        }
+    }
+
+    def dependencies = [:]
+
+    def internalInstallPlugin = { _pluginName, _pluginVersion ->
+        event("StatusUpdate", ["Plugin dependency [$_pluginName] not found. Attempting to resolve..."])
+        // recursively install dependent plug-ins
+        def upperVersion =  GriffonPluginUtils.getUpperVersion(_pluginVersion)
+        def release = cacheKnownPlugin(_pluginName, _pluginVersion == '*' ? null : _pluginVersion)
+
+        ant.copy(file: "${pluginsBase}/griffon-${release}.zip", tofile: "${pluginsDirPath}/griffon-${release}.zip")
+
+        installPluginForName(release)
+        dependencies.remove(_pluginName)
+    }
+
+    for (dep in pluginXml.dependencies.plugin) {
+        def depName = dep.@name.toString()
+        String depVersion = dep.@version.toString()
+        dependencies[depName] = depVersion
+
+        def depPluginDir = getPluginDirForName(depName)?.file
+        if (!depPluginDir?.exists()) {
+            internalInstallPlugin(depName, depVersion)
+        } else  {
+            def dependency = readPluginXmlMetadata(depName?.toString())
+            def installedVersion = dependency.@version.toString()
+            int versionStatus = GriffonPluginUtils.compareVersions(installedVersion, depVersion)
+            if(versionStatus < 0) {
+                // installed version is older
+                // install new version
+                uninstallPluginForName(depName, installedVersion)
+                internalInstallPlugin(depName, depVersion)
+            } else {
+                dependencies.remove(depName)
+            }
+        }
+    }
+
+    if (dependencies) {
+        ant.delete(dir: "${pluginsHome}/${fullPluginName}", quiet: true, failOnError: false)
+        clean()
+
+        cleanupPluginInstallAndExit("Failed to install plug-in [${fullPluginName}]. Missing dependencies: ${dependencies.inspect()}")
+    } else {
+        // we can uninstall other copies at this point
+        resolveResources("file:${pluginsHome}/${pluginName}-*").each { dir ->
+            def (m, cn, cv) = (dir.file.name =~ /([a-z][\-a-z]*)-([0-9\.]+[\-[A-Z]]*)/)[0]
+            if(cn == pluginName && cv != pluginVersion) {
+                ant.delete(dir: dir.file)
+                // uninstallPluginForName cn, cv
+            }
+        }
+        resolveResources("file:${pluginsHome}/griffon-${pluginName}-*.zip").each { file ->
+            def fname = file.file.name[8..-5]
+            def (m, cn, cv) = (fname =~ /([a-z][\-a-z]*)-([0-9\.]+[\-[A-Z]]*)/)[0]
+            if(cn == pluginName && cv != pluginVersion) {
+                ant.delete(file: file.file)
+                // uninstallPluginForName cn, cv
+            }
+        }
     
-                File pluginEvents = new File("${pluginsDirPath}/${fullPluginName}/scripts/_Events.groovy")
-                if (pluginEvents.exists()) {
-                    println "Found events script in plugin ${pluginName}"
-                    loadEventScript(pluginEvents)
+        def pluginJars = resolveResources("file:${pluginsHome}/${fullPluginName}/lib/*.jar")
+        for(jar in pluginJars) {
+            addUrlIfNotPresent rootLoader, jar.URL
+        }
+
+        def license = pluginXml.license?.text() ?: '<UNKNOWN>'
+        println "Plug-in license is: $license"
+
+        if(!isPluginProject) {
+            // proceed _Install.groovy plugin script if exists
+            def installScript = new File("${pluginsHome}/${fullPluginName}/scripts/_Install.groovy")
+            runPluginScript(installScript, fullPluginName, "post-install script")
+
+            registerPluginWithMetadata(pluginName, pluginVersion)
+
+            event("StatusFinal", ["Plugin ${fullPluginName} installed"])
+            def providedScripts = resolveResources("file:${pluginsHome}/${fullPluginName}/scripts/*.groovy").findAll { !it.filename.startsWith('_')}
+            if (providedScripts) {
+                println "Plug-in provides the following new scripts:"
+                println "------------------------------------------"
+                providedScripts.file.each {file ->
+                    def scriptName = GriffonUtil.getScriptName(file.name)
+                    println "griffon ${scriptName}"
                 }
             }
 
-            event("PluginInstalled", [fullPluginName])
+            File pluginEvents = new File("${pluginsDirPath}/${fullPluginName}/scripts/_Events.groovy")
+            if (pluginEvents.exists()) {
+                println "Found events script in plugin ${pluginName}"
+                loadEventScript(pluginEvents)
+            }
         }
+
+        event("PluginInstalled", [fullPluginName])
     }
 }
 
