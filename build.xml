@@ -6,9 +6,6 @@
         <fileset dir="${griffon.lib}">
             <include name="*.jar"/>
         </fileset>
-        <!--<fileset dir="${griffon.lib}/endorsed">-->
-            <!--<include name="*.jar"/>-->
-        <!--</fileset>-->
         <fileset dir="${env.JAVA_HOME}/lib">
             <include name="tools.jar"/>
         </fileset>
@@ -25,22 +22,16 @@
     <echo>JAVA HOME IS ${env.JAVA_HOME}</echo>
         <delete dir="${griffon.dist}"/>
         <delete dir="${griffon.target}"/>
-        <!--
-        <delete dir="${griffon.doc}"/>
-        -->
     </target>
 
-    <import file="ant/build/resolve.xml"   />
-    <import file="ant/build/compile.xml"   />
+    <import file="ant/build/resolve.xml" />
+    <import file="ant/build/compile.xml" />
     <import file="ant/build/unit-test.xml" />
-    <import file="ant/build/bundle.xml"    />
-    <import file="ant/build/javadoc.xml"   />
-    <import file="ant/build/osx.xml"   />
-    <!--<import file="ant/build/checkstyle.xml"   />-->
-    <import file="ant/build/release.xml"   />
-    <import file="ant/build/eclipse.xml"   />
-    <import file="ant/build/installer.xml"   />
-    <import file="quality/quality.xml"   />
+    <import file="ant/build/bundle.xml"  />
+    <import file="ant/build/javadoc.xml" />
+    <import file="ant/build/release.xml" />
+    <import file="ant/build/installer.xml" />
+    <import file="quality/quality.xml" />
 
     <target name="cruise"
             depends="clean,build, test, jar, javadoc, package"

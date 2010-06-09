@@ -19,24 +19,38 @@ import griffon.core.BaseGriffonApplication
 import griffon.util.internal.GriffonApplicationHelper
 import griffon.util.GriffonExceptionHandler
 import griffon.util.UIThreadHelper
-import griffon.util.SwingUIThreadHandler
-import java.awt.event.WindowEvent
+import java.awt.event.WindowListener
 import java.awt.EventQueue
 import java.awt.Toolkit
-import javax.swing.WindowConstants
+import java.awt.Window
 
 /**
- * @author Danno.Ferrin
- * @author Andres.Almiray
+ * @author Danno Ferrin
+ * @author Andres Almiray
  */
 class SwingApplication implements griffon.application.StandaloneGriffonApplication {
     @Delegate private final BaseGriffonApplication _base
-
-    List appFrames  = []
+    final WindowManager windowManager
+    WindowDisplayHandler windowDisplayHandler
+    private final WindowDisplayHandler defaultWindowDisplayHandler = new DefaultWindowDisplayHandler()
 
     SwingApplication() {
-        _base = new BaseGriffonApplication(this)
         UIThreadHelper.instance.setUIThreadHandler(new SwingUIThreadHandler())
+        _base = new BaseGriffonApplication(this)
+        windowManager = new WindowManager(this)
+        addShutdownHandler(windowManager)
+
+        addApplicationEventListener('WindowHidden', { window ->
+            if(isShutdownInProcess()) return
+            List windows = windowManager.windows.findAll{ it.visible }
+            if(windows.size() <= 1 && config.application.autoShutdown) {
+                if(!shutdown()) windowManager.show(window)
+            }
+        })
+    }
+
+    final WindowDisplayHandler resolveWindowDisplayHandler() {
+        windowDisplayHandler ?: defaultWindowDisplayHandler
     }
 
     void bootstrap() {
@@ -49,37 +63,27 @@ class SwingApplication implements griffon.application.StandaloneGriffonApplicati
     }
 
     void show() {
-        if (appFrames.size() > 0) {
-            EventQueue.invokeAndWait { appFrames[0].show() }
-        }
+        List <Window> windows = windowManager.windows
+        if(windows.size() > 0) windowManager.show(windows[0])
 
         callReady()
     }
 
-    void shutdown() {
-        _base.shutdown()
+    boolean shutdown() {
+        if(_base.shutdown()) {
+            exit()
+        }
+        false
+    }
+
+    void exit() {
         System.exit(0)
     }
 
-    void handleWindowClosing(WindowEvent evt = null) {
-        boolean proceed = canShutdown()
-        if(config.application?.autoShutdown && proceed && appFrames.findAll{!it.visible}.size() <= 1) {
-            shutdown()
-        } else {
-            evt?.source?.visible = true
-        }
-    }
-
     Object createApplicationContainer() {
-        def appContainer = SwingUtils.createApplicationFrame(this)
-        try {
-            appContainer.defaultCloseOperation = WindowConstants.DO_NOTHING_ON_CLOSE
-            appContainer.windowClosing = this.&handleWindowClosing
-            appFrames += appContainer
-        } catch (Throwable ignored) {
-            // if it doesn't have a window closing event, ignore it
-        }
-        return appContainer
+        Window window = SwingUtils.createApplicationFrame(this)
+        windowManager.attach(window)
+        return window
     }
 
     /**

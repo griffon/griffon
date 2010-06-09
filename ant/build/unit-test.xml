@@ -1,14 +1,17 @@
 <project name="griffon-unit-test">
 
   <condition property="_skipTests_">
-    <istrue value="${skipTests}"/>
+      <or>
+          <istrue value="${skipTests}"/>
+          <istrue value="${fast}"/>
+      </or>
   </condition>
 
     <target name="test" depends="run-test, test-report" unless="_skipTests_" description="Compile and Run the unit tests plainly">
         <fail if="griffon.test.failure">The tests failed. Have a look at ${griffon.test.reports}</fail>
     </target>
 
-    <target name="build-test" depends="build,build-scripts">
+    <target name="build-test" unless="_skipTests_" depends="build,build-scripts">
         <groovyc destdir="${griffon.test.build}" fork="true" >
             <src path="${griffon.test.src.cli}" />
             <src path="${griffon.test.src.rt}" />
@@ -25,7 +28,7 @@
         </copy>
     </target>
 
-    <target name="junit-macro" depends="junit-macro-vfb,junit-macro-novfb"/>
+    <target name="junit-macro" unless="_skipTests_" depends="junit-macro-vfb,junit-macro-novfb"/>
 
     <target name="junit-macro-vfb" if="junit.xvfb">
         <macrodef name="grifjunit">
@@ -96,13 +99,13 @@
         </and>
     </condition>
 
-    <target name="-setup-tests">
+    <target name="-setup-tests" unless="_skipTests_">
         <property name="xvfb-run.bin" value="xvfb-run"/>
         <delete dir="${griffon.test.reports}" />
         <mkdir dir="${griffon.test.reports}" />
     </target>
 
-    <target name="run-test" depends="build-test, -jar-app-files, -setup-tests, -testone, -testall" />
+    <target name="run-test" unless="_skipTests_" depends="build-test, -jar-app-files, -setup-tests, -testone, -testall" />
 
     <target name="-testone" if="_testOne_" depends="junit-macro">
         <echo>Test being run ${test} from ${griffon.test.build}</echo>
@@ -157,7 +160,7 @@
         </grifjunit>
     </target>
 
-    <target name="test-report" depends="run-test" description="Runs unit tests and generates HTML report">
+    <target name="test-report" depends="run-test" unless="_skipTests_" description="Runs unit tests and generates HTML report">
         <mkdir dir="${griffon.test.html.reports}" />
         <junitreport todir="${griffon.test.html.reports}">
             <fileset dir="${griffon.test.reports}">

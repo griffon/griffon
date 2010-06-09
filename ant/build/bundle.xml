@@ -2,7 +2,7 @@
     <property name="targetDistDirectory" value="${griffon.dist}"/>
     <import file="maven.xml"/>
 
-    <target name="create-guide" depends="javadoc" description="Builds the Griffon Guide">
+    <target name="create-guide" depends="javadoc" unless="fast" description="Builds the Griffon Guide">
         <taskdef name="docs"
                  classname="grails.doc.ant.DocPublisherTask">
             <classpath>

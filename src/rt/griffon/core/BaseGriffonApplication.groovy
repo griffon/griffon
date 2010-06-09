@@ -43,6 +43,8 @@ class BaseGriffonApplication implements GriffonApplication {
     private final EventRouter eventRouter = new EventRouter()
     private final List<ShutdownHandler> shutdownHandlers = []
     final GriffonApplication appDelegate
+    private boolean shutdownInProcess = false
+    private final Object shutdownLock = new Object()
 
     BaseGriffonApplication(GriffonApplication appDelegate) {
         this.appDelegate = appDelegate
@@ -90,18 +92,45 @@ class BaseGriffonApplication implements GriffonApplication {
         return true
     }
 
-    void shutdown() {
+    boolean shutdown() {
+        if(!canShutdown()) return false
+
+        // signal that shutdown is in process
+        // avoids reentrant calls to shutdown()
+        // once permission to quit has been granted
+        signalShutdownInProcess()
+
+        // stage 1 - alert all app event handlers
         event("ShutdownStart",[appDelegate])
+
+        // stage 2 - alert all shutdown handlers
         for(handler in shutdownHandlers) {
             handler.onShutdown(appDelegate)
         }
 
+        // stage 3 - destroy all mvc groups
         List mvcNames = []
         mvcNames.addAll(groups.keySet())
         mvcNames.each { 
             GriffonApplicationHelper.destroyMVCGroup(appDelegate, it)
         }
+
+        // stage 4 - call shutdown script
         GriffonApplicationHelper.runScriptInsideUIThread("Shutdown", appDelegate)
+ 
+        true
+    }
+
+    private void signalShutdownInProcess() {
+        synchronized(shutdownLock) {
+            shutdownInProcess = true
+        }
+    }
+
+    boolean isShutdownInProcess() {
+        synchronized(shutdownLock) {
+            return shutdownInProcess
+        }
     }
 
     void startup() {

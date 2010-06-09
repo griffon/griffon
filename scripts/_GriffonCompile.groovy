@@ -120,7 +120,7 @@ target(compileSharedTests : "Compiles shared test sources") {
     }
     compileSharedTestSrc(basedir)
     def metainfDir = new File("${basedir}/griffon-app/conf/metainf")
-    boolean hasMetainf = ant.fileset(dir: metainfDir, excludes: '**/*.svn/**, **/CVS/**').size() != 0
+    boolean hasMetainf = metainfDir.exists() ? ant.fileset(dir: metainfDir, excludes: '**/*.svn/**, **/CVS/**').size() > 0 : false
     if(hasMetainf) {
         def metaResourcesDir = new File("${testResourcesDirPath}/META-INF")
         ant.copy(todir: metaResourcesDir) {

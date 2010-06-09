@@ -1,5 +1,5 @@
 <project name="griffon-javadoc">
-    <target name="javadoc">
+    <target name="javadoc" unless="fast">
         <delete dir="${griffon.javadoc}"/>
         <mkdir dir="${griffon.javadoc}"/>
         <taskdef name="groovydoc"

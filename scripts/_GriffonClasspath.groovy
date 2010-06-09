@@ -182,7 +182,7 @@ void setClasspath() {
     compConfig.sourceEncoding = "UTF-8"
 
     addUrlIfNotPresent rootLoader, resourcesDirPath
-    addUrlIfNotPresent rootLoader, testResourcesDirPath
+    addUrlIfNotPresent rootLoader, griffonSettings.testResourcesDir
 
     classpathSet = true
 }
@@ -209,4 +209,9 @@ addUrlIfNotPresent = { to, what ->
     if(!urls.contains(url)) {
         to.addURL(url)
     }
+}
+
+dirNotEmpty = { Map args ->
+    if(!args.dir.exists()) retunr false
+    return ant.fileset(args).size() > 0
 }

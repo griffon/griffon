@@ -3,17 +3,15 @@
     <taskdef name="groovyc"  classname="org.codehaus.groovy.ant.Groovyc" classpathref="classpath" />
 
     <target name="build-init">
-		<mkdir dir="${griffon.build}"/>
+        <mkdir dir="${griffon.build}"/>
         <mkdir dir="${griffon.build.rt}"/>
         <mkdir dir="${griffon.build.cli}"/>
-		<mkdir dir="${griffon.test.build}"/>
-		<mkdir dir="${griffon.test.reports}"/>
-		<mkdir dir="${griffon.dist}"/>
-        <!--<mkdir dir="${griffon.stubs}" />-->
+        <mkdir dir="${griffon.test.build}"/>
+        <mkdir dir="${griffon.test.reports}"/>
+        <mkdir dir="${griffon.dist}"/>
     </target>
 
-	<target name="build" depends="build-init" description="compile Java and Groovy sources" >
-
+    <target name="build" depends="build-init" description="compile Java and Groovy sources" >
         <copy todir="${griffon.build.rt}">
             <fileset dir="${griffon.src.rt}" includes="**/*.properties" />
         </copy>
@@ -49,7 +47,6 @@
             <javac deprecation="on" debug="yes" source="1.5" target="1.5" />
         </groovyc>
 
-
         <mkdir dir="${griffon.build.cli}/META-INF"  />
         <manifest file="${griffon.build.cli}/META-INF/MANIFEST.MF">
           <attribute name="Built-By" value="${user.name}"/>
@@ -57,8 +54,6 @@
           <attribute name="Implementation-Version" value="${griffon.version}"/>
           <attribute name="Implementation-Vendor" value="griffon.codehaus.org"/>
         </manifest>
-
-        <antcall target="build:java5" />
     </target>
 
     <target name="build-scripts" depends="build">
@@ -82,15 +77,4 @@
             </or>
         </condition>
     </target>
-
-    <target name="build:java5" depends="build:checkj5" if="is.java.5">
-        <!--build java 5 sources-->
-        <!--<javac srcdir="${griffon.src.tiger}" destdir="${griffon.build}" debug="on" deprecation="on" optimize="off">-->
-   		    <!--<classpath>-->
-		      <!--<pathelement path="${griffon.build}"/>-->
-   		    <!--</classpath>  -->
-   			<!--<classpath refid="classpath"/>    	-->
-		<!--</javac>-->
-    </target>
-
 </project>

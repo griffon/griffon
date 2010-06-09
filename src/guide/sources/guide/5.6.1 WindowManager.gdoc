@@ -1,0 +1,38 @@
+The @[WindowManager|api:griffon.swing.WindowManager]@ class is responsible for keeping track of all the windows managed by the application. It also controls how these windows are displayed (via a pair of methods: show, hide). WindowManager relies on an instance of @[WindowDisplayHandlerg|api:griffon.swing.WindowDisplayHandler]@ to actually show or hide a window. The default implementation simple shows and hide windows directly, however you can change this behavior by setting a different implementation of @WindowDisplayHandler@ on the application instance.
+
+The following example shows how you can animate windows using a dropIn effect for show() and a dropOut effect for hide(). This code assumes you have installed the [Effects|http://griffon.codehaus.org/Effects+Plugin] plugin.
+
+In @src/main/Dropper.groovy@
+{code}
+import java.awt.Window
+import griffon.swing.SwingUtils
+import griffon.swing.WindowDisplayHandler
+import griffon.core.GriffonApplication
+import griffon.effects.Effects
+
+class Dropper implements WindowDisplayHandler {
+    void show(Window window, GriffonApplication app) {
+        SwingUtils.centerOnScreen(window)
+        app.execOutside {
+            Effects.dropIn(window, wait: true)
+        }
+    }
+
+    void hide(Window window, GriffonApplication app) {
+        app.execOutside {
+            Effects.dropOut(window, wait: true)
+        }
+    }
+}
+{code}
+
+Notice that the effects are executed outside of the UI thread because we need to wait for them to finish before continuing, otherwise we'll hog the UI thread.
+
+The second step to get this example to work is to inform the application it should use Dropper to display/hide windows. This a task that can be easily achieved by adding an application event handler, for example in @griffon-app/conf/Events.gorovy@
+
+{code}
+// No windows have been created before this step
+onBootstrapEnd = { app ->
+    app.windowDisplayHandler = new Dropper()
+}
+{code}

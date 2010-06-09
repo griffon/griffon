@@ -19,8 +19,8 @@ import griffon.core.GriffonApplication
 import griffon.core.BaseGriffonApplication
 import griffon.util.internal.GriffonApplicationHelper
 import griffon.util.UIThreadHelper
-import griffon.util.SwingUIThreadHandler
 import javax.swing.JApplet
+import java.awt.Window
 
 /**
  * @author Danno.Ferrin
@@ -30,10 +30,18 @@ class SwingApplet extends JApplet {
     private boolean appletContainerDispensed = false
 
     @Delegate private final BaseGriffonApplication _base
+    final WindowManager windowManager
+    WindowDisplayHandler windowDisplayHandler
+    private final WindowDisplayHandler defaultWindowDisplayHandler = new DefaultWindowDisplayHandler()
 
     SwingApplet() {
-        _base = new BaseGriffonApplication(this)
         UIThreadHelper.instance.setUIThreadHandler(new SwingUIThreadHandler())
+        _base = new BaseGriffonApplication(this)
+        windowManager = new WindowManager(this)
+    }
+
+    final WindowDisplayHandler resolveWindowDisplayHandler() {
+        windowDisplayHandler ?: defaultWindowDisplayHandler
     }
 
     void init() {
@@ -53,12 +61,14 @@ class SwingApplet extends JApplet {
     }
 
     void destroy() {
-        if(canShutdown()) shutdown()
+        shutdown()
     }
 
     Object createApplicationContainer() {
         if (appletContainerDispensed) {
-            return SwingUtils.createApplicationFrame(this)
+            Window window = SwingUtils.createApplicationFrame(this)
+            windowManager.attach(window)
+            return window
         } else {
             appletContainerDispensed = true
             return this;
