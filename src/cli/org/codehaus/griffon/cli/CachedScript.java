@@ -18,15 +18,15 @@ package org.codehaus.griffon.cli;
 
 import org.codehaus.gant.GantBinding;
 
+import java.io.File;
 import java.util.List;
 
 /**
  * A class that represents a script that has been cached with a specific binding
  *
- * @since 1.1
- * @author Peter Ledbrook
+ * @author Peter Ledbrook (Grails 1.1)
  */
 class CachedScript {
     GantBinding binding;
-    List potentialScripts;
+    List<File> potentialScripts;
 }

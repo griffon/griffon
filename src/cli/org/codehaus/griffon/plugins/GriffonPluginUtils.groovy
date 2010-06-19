@@ -1,5 +1,5 @@
 /* 
- * Copyright 2004-2010 Graeme Rocher
+ * Copyright 2004-2010 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,22 +16,17 @@
 package org.codehaus.griffon.plugins
 
 import griffon.util.BuildSettingsHolder
-import org.apache.commons.lang.ArrayUtils
-import org.springframework.core.io.FileSystemResource
-import org.springframework.core.io.Resource
-import org.springframework.core.io.support.PathMatchingResourcePatternResolver
-import java.util.concurrent.ConcurrentHashMap
+import griffon.util.PluginBuildSettings
 import groovy.util.slurpersupport.GPathResult
+import org.codehaus.griffon.plugins.metadata.GriffonPlugin
+import org.springframework.core.io.Resource
 
 /**
  * Utility class containing methods that aid in loading and evaluating plug-ins
  *
- * @author Graeme Rocher
- * @since 1.0
- *        <p/>
- *        Created: Nov 29, 2007
+ * @author Graeme Rocher (Grails 1.0)
  */
-public class GriffonPluginUtils {
+class GriffonPluginUtils {
     static final String WILDCARD = "*";
     public static final GRIFFON_HOME
     static {
@@ -45,11 +40,25 @@ public class GriffonPluginUtils {
     }
 
     /**
+     * Get the name of the a plugin for a particular class.
+     */
+    static String getPluginName(Class clazz) {
+        clazz?.getAnnotation(GriffonPlugin)?.name()
+    }
+
+    /**
+     * Get the version of the a plugin for a particular class.
+     */
+    static String getPluginVersion(Class clazz) {
+        clazz?.getAnnotation(GriffonPlugin)?.version()
+    }
+
+    /**
      * Check if the required version is a valid for the given plugin version
      *
      * @param pluginVersion The plugin version
      * @param requiredVersion The required version
-     * @return True if it is valid
+     * @return true if it is valid
      */
     static boolean isValidVersion(String pluginVersion, String requiredVersion) {
         def vc = new VersionComparator()
@@ -125,30 +134,33 @@ public class GriffonPluginUtils {
         pluginVersion
     }
 
-    private static final PathMatchingResourcePatternResolver RESOLVER = new PathMatchingResourcePatternResolver()
-
     /**
-     * A default resolve used if none is specified to the resource resolving methods in this class
+     * Returns a new PluginBuildSettings instance
      */
-    static final DEFAULT_RESOURCE_RESOLVER = { pattern ->
-        try {
-                return RESOLVER.getResources(pattern)
-            }
-            catch(Throwable e) {
-                 return []  as Resource[]
-            }
+    static PluginBuildSettings newPluginBuildSettings() {
+        new PluginBuildSettings(BuildSettingsHolder.settings, PluginManagerHolder.getPluginManager())
+    }
 
+    private static INSTANCE = null
+    /**
+     * Returns a cached PluginBuildSettings instance.
+     */
+    static synchronized PluginBuildSettings getPluginBuildSettings() {
+        if (!INSTANCE) {
+            INSTANCE = newPluginBuildSettings()
+        }
+        return INSTANCE
+    }
+
+    static synchronized setPluginBuildSettings(PluginBuildSettings settings) {
+        INSTANCE = settings
     }
 
     /**
      * Returns an array of PluginInfo objects
      */
-    static PluginInfo[] getPluginInfos(String pluginDirPath = BuildSettingsHolder.settings?.projectPluginsDir?.path) {
-        def pluginInfos = []
-        for(dir in getPluginDirectories(pluginDirPath)) {
-            pluginInfos << new PluginInfo(dir)
-        }
-        return pluginInfos as PluginInfo[]
+    static GriffonPluginInfo[] getPluginInfos(String pluginDirPath = BuildSettingsHolder.settings?.projectPluginsDir?.path) {
+        return getPluginBuildSettings().getPluginInfos()
     }
 
     /**
@@ -157,437 +169,196 @@ public class GriffonPluginUtils {
      * @see griffon.util.Environment
      * @see griffon.util.BuildScope
      */
-    static PluginInfo[] getSupportedPluginInfos(String pluginDirPath = BuildSettingsHolder.settings?.projectPluginsDir?.path) {
-        GriffonPluginManager pluginManager = PluginManagerHolder.getPluginManager()
-        def pluginInfos = GriffonPluginUtils.getPluginInfos(pluginDirPath).findAll {PluginInfo info ->
-            GriffonPlugin plugin = pluginManager.getGriffonPlugin(info.getName())
-            return plugin?.supportsCurrentScopeAndEnvironment()
+    static GriffonPluginInfo[] getSupportedPluginInfos(String pluginDirPath = BuildSettingsHolder.settings?.projectPluginsDir?.path) {
+        final PluginBuildSettings settings = getPluginBuildSettings()
+        if (!settings.pluginManager) {
+            settings.pluginManager = PluginManagerHolder.currentPluginManager()
         }
-        return pluginInfos as PluginInfo[]
+        return settings.getSupportedPluginInfos()
     }
 
     /**
-     * Gets a list of all the known plugin base directories (directories where plugins are installed to)
+     * All the known plugin base directories (directories where plugins are installed to).
      */
     static List<String> getPluginBaseDirectories(String pluginDirPath) {
-         [ pluginDirPath, BuildSettingsHolder.settings?.globalPluginsDir?.path ]
+        getPluginBuildSettings().getPluginBaseDirectories()
     }
 
     /**
-     * Gets a list of all the known plugin base directories (directories where plugins are installed to)
+     * All the known plugin base directories (directories where plugins are installed to).
      */
     static List<String> getPluginBaseDirectories() {
-         [ BuildSettingsHolder.settings?.projectPluginsDir?.path, BuildSettingsHolder.settings?.globalPluginsDir?.path ]
+        getPluginBuildSettings().getPluginBaseDirectories()
     }
-
-    private static Resource[] pluginDirectoryResources = null
 
     static Resource[] getPluginDirectories() {
-        return getPluginDirectories(BuildSettingsHolder.settings?.projectPluginsDir?.path)
+        getPluginBuildSettings().getPluginDirectories()
     }
 
-    static synchronized Resource[] getPluginDirectories(String pluginDirPath) {
-        if(!pluginDirectoryResources) {            
-            def dirList = getImplicitPluginDirectories(pluginDirPath)
-
-            // Also add any explicit plugin locations specified by the
-            // BuildConfig setting "griffon.plugin.location.<name>"
-            def pluginLocations = BuildSettingsHolder.settings?.config?.griffon.plugin.location
-            if (pluginLocations) {
-                dirList.addAll(pluginLocations.collect { key, value -> new FileSystemResource(value) })
-            }
-
-            pluginDirectoryResources = dirList as Resource[]
-        }
-        return pluginDirectoryResources
+    static Resource[] getPluginDirectories(String pluginDirPath) {
+        getPluginBuildSettings().getPluginDirectories()
     }
 
     /**
-     * Returns a list of all plugin directories in both the given path
-     * and the global "plugins" directory together.
+     * All plugin directories in both the given path and the global "plugins" directory together.
      */
-    static synchronized List<Resource> getImplicitPluginDirectories(String pluginDirPath = BuildSettingsHolder.settings?.projectPluginsDir?.path) {
-        def dirList = []
-        def directoryNamePredicate = {
-            it.isDirectory() && (!it.name.startsWith(".") && it.name.indexOf('-')>-1)
-        }
-
-        for(pluginBase in getPluginBaseDirectories(pluginDirPath)) {
-            List pluginDirs = new File(pluginBase).listFiles().findAll(directoryNamePredicate).collect { new FileSystemResource(it) }
-            dirList.addAll( pluginDirs )
-        }
-
-        return dirList
+    static List<Resource> getImplicitPluginDirectories(String pluginDirPath = BuildSettingsHolder.settings?.projectPluginsDir?.path) {
+        getPluginBuildSettings().getImplicitPluginDirectories()
     }
 
     static boolean isGlobalPluginLocation(Resource pluginDir) {
-        def globalPluginsDir = BuildSettingsHolder.settings?.globalPluginsDir
-        def containingDir = pluginDir?.file?.parentFile
-        if(globalPluginsDir && containingDir) {
-            return globalPluginsDir.equals(containingDir)                        
-        }
-        return false
-    }
-
-    private static allArtefactResources = null
-    /**
-     * Obtains a reference to all artefact resources (all Groovy files contained within the griffon-app directory of plugins or applications)
-     */
-//     static synchronized Resource[] getArtefactResources(String basedir, Closure resourceResolver = DEFAULT_RESOURCE_RESOLVER) {
-//         if(!allArtefactResources) {
-//             basedir = new File(basedir).getCanonicalFile().getAbsolutePath()
-//             def resources = resourceResolver("file:${basedir}/griffon-app/**/**.groovy")
-// 
-//             resources = resolvePluginResourcesAndAdd(resources) { pluginDir ->
-//                 resourceResolver("file:${pluginDir}/*/griffon-app/**/**.groovy")
-//             }
-// 
-//             allArtefactResources = resources
-//         }
-//         return allArtefactResources
-//     }
-    static synchronized Resource[] getArtefactResources(String basedir, Closure resourceResolver = DEFAULT_RESOURCE_RESOLVER) {
-        if(!allArtefactResources) {
-            def resources = getArtefactResourcesForOne(new File(basedir).canonicalFile.absolutePath, resourceResolver)
-
-            resources = resolvePluginResourcesAndAdd(resources) { String pluginDir ->
-                getArtefactResourcesForOne(pluginDir, resourceResolver)
-            }
-
-            allArtefactResources = resources
-        }
-        return allArtefactResources
+        getPluginBuildSettings().isGlobalPluginLocation(pluginDir)
     }
 
     /**
-     * Returns an array of all artefacts in the given application or
-     * plugin directory as Spring resources.
+     * All artefact resources (all Groovy files contained within the griffon-app directory of plugins or applications).
      */
-    static Resource[] getArtefactResourcesForOne(String projectDir, Closure resourceResolver = DEFAULT_RESOURCE_RESOLVER) {
-        return resourceResolver("file:${projectDir}/griffon-app/**/*.groovy")
-    }
-
-    private static allPluginXmlMetadata = null
-    /**
-     * Obtains a Resource array of the Plugin metadata XML files used to describe the plugins provided resources
-     */
-    static synchronized Resource[] getPluginXmlMetadata( String pluginsDirPath,
-                                            Closure resourceResolver = DEFAULT_RESOURCE_RESOLVER) {
-        if(!allPluginXmlMetadata) {
-            allPluginXmlMetadata = new Resource[0]
-            allPluginXmlMetadata = resolvePluginResourcesAndAdd(allPluginXmlMetadata, pluginsDirPath) { pluginDir ->
-                resourceResolver("file:${pluginDir}/*/plugin.xml")
-            }
-        }
-        return allPluginXmlMetadata
+    static Resource[] getArtefactResources(String basedir) {
+        getPluginBuildSettings().getArtefactResources()
     }
 
     /**
-     * Takes a Resource[] and optional pluginsDirPath and goes through each plugin directory. It will then used the provided
-     * resolving resolving closures to attempt to resolve a new set of resources to add to the original passed array.
-     *
-     * A new array is then returned that contains any additiona plugin resources that were resolved by the expression passed
-     * in the closure
+     * All artefacts in the given application or plugin directory as Spring resources.
      */
-    private static resolvePluginResourcesAndAdd(Resource[] originalResources, String pluginsDirPath = BuildSettingsHolder.settings?.projectPluginsDir?.path, Closure resolver) {
-        Resource[] pluginDirs = getPluginDirectories(pluginsDirPath)
-        for (dir in pluginDirs) {
-            def newResources = dir ? resolver(dir.file.absolutePath) : null
-            if (newResources) {
-                originalResources = ArrayUtils.addAll(originalResources, newResources)
-            }
-        }
-        return originalResources
+    static Resource[] getArtefactResourcesForOne(String projectDir) {
+        getPluginBuildSettings().getArtefactResourcesForOne(projectDir)
     }
-
-    private static availableScripts = null
 
     /**
-     * Obtains an array of all Gant scripts that are availabe for execution in a Griffon application
+     * The Plugin metadata XML files used to describe the plugins provided resources.
      */
-    static synchronized Resource[] getAvailableScripts(String griffonHome,
-                                          String pluginDirPath,
-                                          String basedir,
-                                          String griffonWorkDir,
-                                          Closure resourceResolver = DEFAULT_RESOURCE_RESOLVER) {
-        if(!availableScripts) {
-            def scripts = []
-            def userHome = System.getProperty("user.home")
-            resourceResolver("file:${griffonHome}/scripts/**.groovy").each { if (!it.file.name.startsWith('_')) scripts << it }
-            resourceResolver("file:${basedir}/scripts/*.groovy").each { if (!it.file.name.startsWith('_')) scripts << it }
-            getPluginScripts(pluginDirPath).each { if (!it.file.name.startsWith('_')) scripts << it }
-            resourceResolver("file:${griffonWorkDir}/scripts/*.groovy").each { if (!it.file.name.startsWith('_')) scripts << it }
-            availableScripts = scripts as Resource[]
-        }
-        return availableScripts
+    static Resource[] getPluginXmlMetadata(String pluginsDirPath) {
+        getPluginBuildSettings().getPluginXmlMetadata()
     }
-
-    private static pluginScripts = null
-    /**
-     * Obtains an array of plug-in provided Gant scripts available to a Griffon application
-     */
-    static synchronized Resource[] getPluginScripts(String pluginDirPath,Closure resourceResolver = DEFAULT_RESOURCE_RESOLVER) {
-        if(!pluginScripts) {
-            pluginScripts = new Resource[0]
-            pluginScripts = resolvePluginResourcesAndAdd(pluginScripts, pluginDirPath) { pluginDir ->
-                resourceResolver("file:${pluginDir}/scripts/*.groovy")
-            }
-        }
-        return pluginScripts
-    }
-
-    private static pluginResourceBundles = null;
 
     /**
-     * Obtains an array of all plugin provided resource bundles
+     * All Gant scripts that are availabe for execution in a Griffon application.
      */
-    static synchronized Resource[] getPluginResourceBundles(String pluginDirPath,Closure resourceResolver = DEFAULT_RESOURCE_RESOLVER) {
-        if(!pluginResourceBundles) {
-            pluginResourceBundles = new Resource[0]
-            pluginResourceBundles = resolvePluginResourcesAndAdd(pluginResourceBundles,pluginDirPath) { pluginDir ->
-                resourceResolver("file:${pluginDir}/griffon-app/i18n/*.properties")
-            }
-
-        }
-        return pluginResourceBundles
+    static Resource[] getAvailableScripts(String griffonHome, String pluginDirPath, String basedir) {
+        getPluginBuildSettings().getAvailableScripts()
     }
-
-    private static Resource[] sourceFiles = null
-    /**
-     * Obtains an array of all plug-in provided source files (Java and Groovy)
-     */
-    static synchronized Resource[] getPluginSourceFiles(String pluginsDirPath,Closure resourceResolver = DEFAULT_RESOURCE_RESOLVER) {
-        if(!sourceFiles) {
-            sourceFiles = new Resource[0]
-            sourceFiles = resolvePluginResourcesAndAdd(sourceFiles, pluginsDirPath) { pluginDir ->
-                Resource[] pluginSourceFiles = resourceResolver("file:${pluginDir}/*/griffon-app/*")
-                pluginSourceFiles = ArrayUtils.addAll(pluginSourceFiles,resourceResolver("file:${pluginDir}/*/src/main"))
-                return pluginSourceFiles
-            }
-        }
-        return sourceFiles
-    }
-
-    private static Resource[] jarFiles= null
-    /**
-     * Obtains an array of all plug-in provided JAR files
-     */
-    static synchronized Resource[] getPluginJarFiles(String pluginsDirPath,Closure resourceResolver = DEFAULT_RESOURCE_RESOLVER) {
-        if(!jarFiles) {
-            jarFiles = new Resource[0]
-            jarFiles = resolvePluginResourcesAndAdd(jarFiles, pluginsDirPath) { pluginDir ->
-                resourceResolver("file:${pluginDir}/lib/*.jar")
-            }
-        }
-        return jarFiles
-    }
-
-    private static Resource[] testFiles= null
-    /**
-     * Obtains an array of all plug-in provided test JAR files
-     */
-    static synchronized Resource[] getPluginTestFiles(String pluginsDirPath,Closure resourceResolver = DEFAULT_RESOURCE_RESOLVER) {
-        if(!testFiles) {
-            testFiles = new Resource[0]
-            testFiles = resolvePluginResourcesAndAdd(testFiles, pluginsDirPath) { pluginDir ->
-                resourceResolver("file:${pluginDir}/dist/*-test.jar")
-            }
-        }
-        return testFiles
-    }
-
-    private static Resource[] pluginDescriptors = null
-
 
     /**
-     * Obtains an array of all plug-in descriptors (the root classes that end with *GriffonPlugin.groovy)
+     * Plug-in provided Gant scripts available to a Griffon application.
      */
-    static synchronized Resource[] getPluginDescriptors(String basedir,
-                                                        String pluginsDirPath,
-                                                        Closure resourceResolver = DEFAULT_RESOURCE_RESOLVER) {
-//         if(!pluginDescriptors) {
-// 
-//             Resource basePlugin
-//             basePlugin = getBasePluginDescriptor(basedir)
-// 
-// 
-//             pluginDescriptors = basePlugin ? [basePlugin] as Resource[] : [] as Resource[]
-// 
-//             pluginDescriptors = resolvePluginResourcesAndAdd(pluginDescriptors, pluginsDirPath) { pluginDir ->
-//                 resourceResolver("file:${pluginDir}/*/*GriffonPlugin.groovy")
-//             }
-// 
-//         }
-//         return pluginDescriptors
-        if(!pluginDescriptors) {
-            def pluginDirs = getPluginDirectories(pluginsDirPath) as List
-            pluginDirs << new FileSystemResource(basedir)
-
-            def descriptors = []
-            pluginDirs.each {
-                descriptors += resourceResolver("file:${it.file}/*GriffonPlugin.groovy") as List
-            }
-            pluginDescriptors = descriptors as Resource[]
-        }
-        return pluginDescriptors
+    static Resource[] getPluginScripts(String pluginDirPath) {
+        getPluginBuildSettings().getPluginScripts()
     }
 
-    private static Resource basePluginDescriptor = null
-    static synchronized Resource getBasePluginDescriptor(String basedir) {
-//         if(!basePluginDescriptor) {
-//             File baseFile = new File(basedir).getCanonicalFile()
-//             File basePluginFile = baseFile.listFiles().find { it.name.endsWith("GriffonPlugin.groovy")}
-// 
-//             if (basePluginFile?.exists()) {
-//                 basePluginDescriptor = new FileSystemResource(basePluginFile)
-//             }
-//         }
-//         return basePluginDescriptor
-       if(!basePluginDescriptor) {
-            basePluginDescriptor = getDescriptorForPlugin(new FileSystemResource(basedir))
-        }
-        return basePluginDescriptor
+    /**
+     * All plugin provided resource bundles.
+     */
+    static Resource[] getPluginResourceBundles(String pluginDirPath) {
+        getPluginBuildSettings().getPluginResourceBundles()
+    }
+
+    /**
+     * All plug-in provided source files (Java and Groovy).
+     */
+    static Resource[] getPluginSourceFiles(String pluginsDirPath) {
+        getPluginBuildSettings().getPluginSourceFiles()
+    }
+
+    /**
+     * All plug-in provided JAR files.
+     */
+    static Resource[] getPluginJarFiles(String pluginsDirPath) {
+        getPluginBuildSettings().getPluginJarFiles()
+    }
+
+    /**
+     * All plug-in provided Test JAR files.
+     */
+    static Resource[] getPluginTestFiles(String pluginsDirPath) {
+        getPluginBuildSettings().getPluginTestFiles()
+    }
+
+    /**
+     * All plug-in descriptors (the root classes that end with *GriffonPlugin.groovy).
+     */
+    static Resource[] getPluginDescriptors(String basedir, String pluginsDirPath) {
+        getPluginBuildSettings().getPluginDescriptors()
+    }
+
+    static Resource getBasePluginDescriptor(String basedir) {
+        getPluginBuildSettings().getBasePluginDescriptor(basedir)
     }
 
     /**
      * Returns the descriptor location for the given plugin directory. The descriptor is the Groovy
-     * file that ends with *GriffonPlugin.groovy
+     * file that ends with *GriffonPlugin.groovy.
      */
-    public static Resource getDescriptorForPlugin(Resource pluginDir) {
-        FileSystemResource descriptor = null
-        File baseFile = pluginDir.getFile().getCanonicalFile()
-        File basePluginFile = baseFile.listFiles().find { it.name.endsWith("GriffonPlugin.groovy")}
-
-        if (basePluginFile?.exists()) {
-            descriptor = new FileSystemResource(basePluginFile)
-        }
-        return descriptor
-    }
-
-    private static Resource[] pluginLibs = null
-
-    /**
-     * Obtains an array of all plug-in lib directories
-     */
-    static synchronized Resource[] getPluginLibDirectories(String pluginsDirPath,
-                                                            Closure resourceResolver = DEFAULT_RESOURCE_RESOLVER) {
-        if(!pluginLibs) {
-            pluginLibs = new Resource[0]
-            pluginLibs = resolvePluginResourcesAndAdd(pluginLibs, pluginsDirPath) { pluginDir ->
-                resourceResolver("file:${pluginDir}/lib")
-            }
-        }
-        return pluginLibs
+    static Resource getDescriptorForPlugin(Resource pluginDir) {
+        getPluginBuildSettings().getDescriptorForPlugin(pluginDir)
     }
 
     /**
-     * Obtains the path to the globa plugins directory
+     * All plug-in lib directories.
      */
-    static String getGlobalPluginsPath() { BuildSettingsHolder.settings?.globalPluginsDir?.path }
-
-    private static Map pluginToDirNameMap = new ConcurrentHashMap()
+    static Resource[] getPluginLibDirectories(String pluginsDirPath) {
+        getPluginBuildSettings().getPluginLibDirectories()
+    }
 
     /**
-     * Obtains a plugin directory for the given name
+     * All plugin i18n directories.
+     */
+    static Resource[] getPluginI18nDirectories(String pluginsDirPath = BuildSettingsHolder.settings?.projectPluginsDir?.path) {
+        getPluginBuildSettings().getPluginI18nDirectories()
+    }
+
+    /**
+     * The path to the global plugins directory.
+     */
+    static String getGlobalPluginsPath() {
+        getPluginBuildSettings().getGlobalPluginsPath()
+    }
+
+    /**
+     * Obtains a plugin directory for the given name.
      */
     static Resource getPluginDirForName(String pluginName) {
-        getPluginDirForName(BuildSettingsHolder.settings?.projectPluginsDir?.path, pluginName)
+        getPluginBuildSettings().getPluginDirForName(pluginName)
     }
 
-
-    private static Map pluginMetaDataMap = new ConcurrentHashMap()
     /**
-     * Returns XML about the plugin 
+     * Returns XML about the plugin.
      */
     static GPathResult getMetadataForPlugin(String pluginName) {
-        if(pluginMetaDataMap[pluginName]) return pluginMetaDataMap[pluginName]
-        Resource pluginDir = getPluginDirForName(BuildSettingsHolder.settings?.projectPluginsDir?.path, pluginName)
-        GPathResult result = getMetadataForPlugin(pluginDir)
-        pluginMetaDataMap[pluginName] = result
-        return result
+        getPluginBuildSettings().getMetadataForPlugin(pluginName)
     }
 
     /**
-     * Returns XML metadata for the plugin
+     * Returns XML metadata for the plugin.
      */
     static GPathResult getMetadataForPlugin(Resource pluginDir) {
-        try {
-            GPathResult result = new XmlSlurper().parse(new File("$pluginDir.file.absolutePath/plugin.xml"))
-            return result
-        }
-        catch (e) {
-            return null;
-        }
+        getPluginBuildSettings().getMetadataForPlugin(pluginDir)
     }
-    
+
     /**
-     * Obtains a plugin directory for the given name
+     * Obtains a plugin directory for the given name.
      */
     static Resource getPluginDirForName(String pluginsDirPath, String pluginName) {
-        Resource pluginResource = pluginToDirNameMap[pluginName]
-        if(!pluginResource) {
-
-            try {
-                def directoryNamePredicate = {
-                    it.isDirectory() && (it.name == pluginName || it.name.startsWith("$pluginName-"))
-                }
-
-                List<String> pluginDirs = getPluginBaseDirectories(pluginsDirPath)
-                File pluginFile
-                for(pluginDir in pluginDirs) {
-                    pluginFile = new File("${pluginDir}").listFiles().find(directoryNamePredicate)
-                    if(pluginFile) break
-                }
-
-                // If the plugin can't be found in one of the standard
-                // locations, check whether it's an in-place plugin.
-                def pluginLocations = BuildSettingsHolder.settings?.config?.griffon?.plugin?.location
-                if (!pluginFile && pluginLocations) {
-                    def pluginLoc = pluginLocations.find { key, value -> pluginName == key }
-                    // maybe the plugin name includes a version suffix so attempt startsWith
-                    if(!pluginLoc) {
-                       pluginLoc = pluginLocations.find { key, value -> pluginName.startsWith(key)  } 
-                    }
-                    if (pluginLoc) pluginFile = new File(pluginLoc.value)
-                }
-
-                pluginResource =  pluginFile ? new FileSystemResource(pluginFile) : null
-                if(pluginResource) {
-                    pluginToDirNameMap[pluginName] = pluginResource
-                }
-            } catch (IOException e) {
-                // ignore
-                return null
-            }
-        }
-        return pluginResource
+        getPluginBuildSettings().getPluginDirForName(pluginName)
     }
 
     /**
      * Clears cached resolved resources
      */
     static synchronized clearCaches() {
-        pluginToDirNameMap.clear()
-        pluginDirectoryResources = null
-        pluginDescriptors = null
-        pluginLibs = null
-        pluginScripts = null
-        basePluginDescriptor = null
-        jarFiles = null
-        sourceFiles = null
-        allArtefactResources = null
-        availableScripts = null
+        getPluginBuildSettings().clearCache()
+        INSTANCE = null
     }
-
-
-
 }
 
-class VersionComparator implements Comparator{
-    int compare( o1, o2 ) {
-        def result = 0
-        if(o1 == '*') result = 1
-        else if(o2 == '*') result = -1
+class VersionComparator implements Comparator {
+    int compare(o1, o2) {
+        int result = 0
+        if (o1 == '*') {
+            result = 1
+        }
+        else if (o2 == '*') {
+            result = -1
+        }
         else {
             def nums1
             try {
@@ -595,7 +366,7 @@ class VersionComparator implements Comparator{
                 tokens = tokens.findAll { it.trim() ==~ /\d+/ }
                 nums1 = tokens*.toInteger()
             }
-            catch (NumberFormatException  e) {
+            catch (NumberFormatException e) {
                 throw new InvalidVersionException("Cannot compare versions, left side [$o1] is invalid: ${e.message}")
             }
             def nums2
@@ -604,13 +375,15 @@ class VersionComparator implements Comparator{
                 tokens = tokens.findAll { it.trim() ==~ /\d+/ }
                 nums2 = tokens*.toInteger()
             }
-            catch (java.lang.NumberFormatException e) {
+            catch (NumberFormatException e) {
                 throw new InvalidVersionException("Cannot compare versions, right side [$o2] is invalid: ${e.message}")
             }
-            for(i in 0..<nums1.size()) {
-                if(nums2.size() > i) {
+            for (i in 0..<nums1.size()) {
+                if (nums2.size() > i) {
                     result = nums1[i].compareTo(nums2[i])
-                    if(result != 0)break
+                    if (result != 0) {
+                        break
+                    }
                 }
             }
         }

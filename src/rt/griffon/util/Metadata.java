@@ -15,13 +15,20 @@
  */
 package griffon.util;
 
-import java.io.*;
-import java.net.URI;
-import java.net.URISyntaxException;
+import java.io.Closeable;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.lang.ref.Reference;
 import java.lang.ref.SoftReference;
-import java.util.*;
-import org.codehaus.groovy.runtime.InvokerHelper;
+import java.util.Collections;
+import java.util.Enumeration;
+import java.util.LinkedHashMap;
+import java.util.Map;
+import java.util.Properties;
+import java.util.Vector;
 
 /**
  * Represents the application Metadata and loading mechanics
@@ -50,7 +57,6 @@ public class Metadata extends Properties {
     }
 
     private Metadata(File f) {
-        super();
         this.metadataFile = f;
     }
 
@@ -97,12 +103,7 @@ public class Metadata extends Properties {
                 throw new RuntimeException("Cannot load application metadata:" + e.getMessage(), e);
             }
             finally {
-                try {
-                    if(input!=null) input.close();
-                }
-                catch (IOException e) {
-                    // ignore
-                }
+                closeQuietly(input);
                 m.initialized = true;
             }
         }
@@ -149,12 +150,7 @@ public class Metadata extends Properties {
                 throw new RuntimeException("Cannot load application metadata:" + e.getMessage(), e);
             }
             finally {
-                try {
-                    if(input!=null) input.close();
-                }
-                catch (IOException e) {
-                    // ignore
-                }
+                closeQuietly(input);
             }
         }
         return m;
@@ -191,7 +187,7 @@ public class Metadata extends Properties {
      * @return The environment the application expects to run in
      */
     public String getEnvironment() {
-        return (String) get(Environment.KEY);        
+        return (String) get(Environment.KEY);
     }
 
     /**
@@ -199,6 +195,23 @@ public class Metadata extends Properties {
      */
     public String getApplicationName() {
         return (String) get(APPLICATION_NAME);
+    }
+
+    /**
+     * Obtains a map (name->version) of installed plugins specified in the project metadata
+     * @return A map of installed plugins
+     */
+    public Map<String, String> getInstalledPlugins() {
+        Map<String, String> newMap = new LinkedHashMap<String, String>();
+
+        for (Map.Entry<Object, Object> entry : entrySet()) {
+            String key = entry.getKey().toString();
+            Object val = entry.getValue();
+            if (key.startsWith("plugins.") && val != null) {
+                newMap.put(key.substring(8), val.toString());
+            }
+        }
+        return newMap;
     }
 
     /**
@@ -290,12 +303,7 @@ public class Metadata extends Properties {
                 throw new RuntimeException("Error persisting metadata to file ["+metadataFile+"]: " + e.getMessage(),e );
             }
             finally {
-                try {
-                    if(out != null) out.close();
-                }
-                catch (IOException e) {
-                    // ignore
-                }
+                closeQuietly(out);
             }
         }
     }
@@ -334,6 +342,17 @@ public class Metadata extends Properties {
         return keyList.elements();
     }
     
+    private static void closeQuietly(Closeable c) {
+        if (c != null) {
+            try {
+                c.close();
+            }
+            catch (Exception ignored) {
+                // ignored
+            }
+        }
+    }
+
     static class FinalReference<T> extends SoftReference<T> {
         private T ref;
         public FinalReference(T t) {

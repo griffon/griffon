@@ -1,5 +1,5 @@
 /*
- * Copyright 2004-2010 Graeme Rocher
+ * Copyright 2004-2010 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,9 +18,7 @@ package org.codehaus.griffon.plugins;
 /**
  * Manages a thread bound plugin manager instance
  * 
- * @author Graeme Rocher
- * @since 0.4
- *
+ * @author Graeme Rocher (Grails 0.4)
  */
 public abstract class PluginManagerHolder {
 

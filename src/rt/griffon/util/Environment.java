@@ -24,17 +24,12 @@ import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 
-
 /**
  * An enum that represents the current environment
  *
- * @author Graeme Rocher
- * @since 1.1
- *        <p/>
- *        Created: Dec 12, 2008
+ * @author Graeme Rocher (Grails 1.1)
  */
 public enum Environment {
-
     /** The development environment */
     DEVELOPMENT,
 
@@ -50,7 +45,7 @@ public enum Environment {
     /**
      * Constant used to resolve the environment via System.getProperty(Environment.KEY)
      */
-    public static String KEY = "griffon.env";
+    public static final String KEY = "griffon.env";
 
     /**
      * Constants that indicates whether this GriffonApplication is running in the default environment

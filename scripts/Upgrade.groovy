@@ -67,8 +67,6 @@ target('default': "Upgrades a Griffon application from a previous version of Gri
     clean()
 
     ant.sequential {
-        // removed from grails: move test dir, also has source control chceks
-
         delete(dir: "${basedir}/tmp", failonerror: false)
 
         // Unpack the shared files into a temporary directory, and then
@@ -81,14 +79,10 @@ target('default': "Upgrades a Griffon application from a previous version of Gri
         delete(dir: tmpDir.path)
         launderIDESupportFiles()
 
-        // remove from grails: a bunch of servlet stuff
-        // remove from grails: adding new files in grails-app/conf
-
         mkdir(dir: "${basedir}/test")
         mkdir(dir: "${basedir}/test/integration")
         mkdir(dir: "${basedir}/test/unit")
 
-        // remove from grails: URLMappings
         // if Config.groovy exists and it does not contain values added
         // since 0.0 then sensible defaultsare provided which keep previous
         // behavior even if it is not the default in the current version.

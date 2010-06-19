@@ -16,32 +16,29 @@
 package org.codehaus.griffon.commons;
 
 import groovy.lang.MetaClass;
-//import org.springframework.beans.BeanWrapper;
+
+import org.springframework.beans.BeanWrapper;
 
 /**
  * <p>This interface represents any class in a Griffon application.
  *
- * @author Steven Devijver
- * @author Graeme Rocher
- * @since 0.1
- *
- * Created: Jul 2, 2005
+ * @author Steven Devijver (Grails 0.1)
+ * @author Graeme Rocher (Grails 0.1)
  */
 public interface GriffonClass {
-
     /**
      * <p>Gets the initial value of the given property on the class</p>
      * @param name The name of the property
      * @return The initial value
      */
-    public Object getPropertyValue(String name);
+    Object getPropertyValue(String name);
 
     /**
      * <p>Returns true if the class has the specified property</p>
      * @param name The name of the property
      * @return True if it does
      */
-    public boolean hasProperty(String name);
+    boolean hasProperty(String name);
 
     /**
      * <p>Creates a new instance of this class.</p>
@@ -49,7 +46,7 @@ public interface GriffonClass {
      * <p>This method can be used as factory method in the Spring application context.</p>
      * @return a new instance of this class
      */
-    public Object newInstance();
+    Object newInstance();
 
     /**
      * <p>Returns the logical name of the class in the application without the trailing convention part if applicable
@@ -57,7 +54,7 @@ public interface GriffonClass {
      *
      * @return the logical name
      */
-    public String getName();
+    String getName();
 
 
     /**
@@ -65,21 +62,21 @@ public interface GriffonClass {
      *
      * @return The short name
      */
-    public String getShortName();
+    String getShortName();
     /**
      * <p>Returns the full name of the class in the application with the the trailing convention part and with
      * the package name.</p>
      *
      * @return the full name
      */
-    public String getFullName();
+    String getFullName();
 
     /**
      * <p>Returns the name of the class as a property name</p>
      *
      * @return The property name representation
      */
-    public String getPropertyName();
+    String getPropertyName();
 
 
     /**
@@ -87,35 +84,46 @@ public interface GriffonClass {
      *
      * @return The logical property name
      */
-    public String getLogicalPropertyName();
+    String getLogicalPropertyName();
 
     /**
      * <p>Returns the name of the property in natural terms (eg. 'lastName' becomes 'Last Name')
      * @return The natural property name</p>
      */
-    public String getNaturalName();
+    String getNaturalName();
 
     /**
      * <p>Returns the package name of the class.</p>
      *
      * @return the package name
      */
-    public String getPackageName();
+    String getPackageName();
 
     /**
      * <p> Returns the actual clazz represented by the GriffonClass</p>
      *
      * @return the class
      */
-    public Class getClazz();
+    @SuppressWarnings("unchecked")
+    Class getClazz();
 
     /**
      *
      * @return The MetaClass for this Griffon class
      */
-    public MetaClass getMetaClass();
+    MetaClass getMetaClass();
 
-//    BeanWrapper getReference();
+    /**
+     * @deprecated
+     * @return BeanWrapper for reference instance, deprecated
+     */
+    @Deprecated
+    BeanWrapper getReference();
+
+    /**
+     * @return Sample (reference) instance for this Griffon class
+     */
+    Object getReferenceInstance();
 
     /**
      * Obtains a property value for the given name and type
@@ -124,5 +132,5 @@ public interface GriffonClass {
      *
      * @return  The property value
      */
-    Object getPropertyValue(String name, Class type);
+    <T> T getPropertyValue(String name, Class<T> type);
 }

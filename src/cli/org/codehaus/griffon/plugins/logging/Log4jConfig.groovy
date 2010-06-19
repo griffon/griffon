@@ -26,7 +26,6 @@ import org.apache.log4j.HTMLLayout
 import org.apache.log4j.SimpleLayout
 import org.apache.log4j.jdbc.JDBCAppender
 import org.apache.log4j.varia.NullAppender
-import org.apache.log4j.net.SMTPAppender
 import griffon.util.GriffonUtil
 import org.apache.log4j.helpers.LogLog
 

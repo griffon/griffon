@@ -16,6 +16,7 @@
 package org.codehaus.griffon.commons;
 
 import griffon.util.BuildSettings;
+import griffon.util.Environment;
 import groovy.lang.GroovyClassLoader;
 import groovy.lang.GroovyObjectSupport;
 import groovy.util.ConfigObject;
@@ -44,17 +45,11 @@ import java.util.*;
  * <p/>
  * New ArtefactHandler instances can be registered with the GriffonApplication thus allowing application extensibility.
  *
- * @author Marc Palmer
- * @author Steven Devijver
- * @author Graeme Rocher
- *
- * @see org.codehaus.griffon.plugins.GriffonPluginManager
- * @see org.codehaus.griffon.plugins.DefaultGriffonPluginManager
- * @since 0.1
- *        <p/>
- *        Created: Jul 2, 2005
+ * @author Marc Palmer (Grails 0.1)
+ * @author Steven Devijver (Grails 0.1)
+ * @author Graeme Rocher (Grails 0.1)
  */
-public class DefaultGriffonContext extends GroovyObjectSupport implements GriffonContext {//, BeanClassLoaderAware {
+public class DefaultGriffonContext extends GroovyObjectSupport implements GriffonContext {
     private GroovyClassLoader cl = null;
     private Class[] allClasses = new Class[0];
     private static Log log = LogFactory.getLog(DefaultGriffonContext.class);
@@ -103,8 +98,8 @@ public class DefaultGriffonContext extends GroovyObjectSupport implements Griffo
             StackTraceUtils.deepSanitize(e);
             log.warn("No application metadata file found at " + r);
         }
-        if (System.getProperty(BuildSettings.ENVIRONMENT) != null) {
-            meta.setProperty(BuildSettings.ENVIRONMENT, System.getProperty(BuildSettings.ENVIRONMENT));
+        if (System.getProperty(Environment.KEY) != null) {
+            meta.setProperty(Environment.KEY, System.getProperty(Environment.KEY));
         }
         return Collections.unmodifiableMap(meta);
     }

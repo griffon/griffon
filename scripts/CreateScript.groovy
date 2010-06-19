@@ -30,6 +30,7 @@ target (default : "Creates a Griffon Gant Script") {
 
     def type = "Script"
     promptForName(type: type)
+    argsMap.skipPackagePrompt = true
     def (pkg, name) = extractArtifactName(argsMap["params"][0])
 
     createArtifact(

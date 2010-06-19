@@ -855,7 +855,7 @@ public class GriffonClassUtils {
             return prop;
         }
         else {
-            return Character.toLowerCase(prop.charAt(0)) + prop.substring(1);
+            return prop.charAt(0).toLowerCase().toString() + prop.substring(1);
         }
     }
 

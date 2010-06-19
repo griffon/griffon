@@ -19,15 +19,12 @@ import groovy.lang.Binding;
 import groovy.lang.GroovyShell;
 import groovy.lang.Writable;
 import groovy.util.slurpersupport.GPathResult;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-import org.springframework.core.io.Resource;
-import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 import org.codehaus.griffon.commons.GriffonContext;
 import org.codehaus.griffon.commons.GriffonContextHolder;
 import org.codehaus.groovy.runtime.StackTraceUtils;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.PrintWriter;
 import java.io.Writer;
 import java.util.ArrayList;
@@ -36,6 +33,13 @@ import java.util.List;
 import java.util.Map;
 import java.util.jar.Attributes;
 import java.util.jar.Manifest;
+
+import org.apache.commons.io.IOUtils;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
+import org.springframework.util.Assert;
 
 /**
  *
@@ -64,33 +68,44 @@ public class GriffonUtil extends GriffonNameUtils {
     };
 
     static {
-        PathMatchingResourcePatternResolver resolver = new PathMatchingResourcePatternResolver();
-        String version = null;
-        try {
-            Resource[] manifests = resolver.getResources("classpath*:META-INF/MANIFEST.MF");
-            Manifest griffonManifest = null;
-            for (int i = 0; i < manifests.length; i++) {
-                Resource r = manifests[i];
-                Manifest mf = new Manifest(r.getInputStream());
-                String implTitle = mf.getMainAttributes().getValue(Attributes.Name.IMPLEMENTATION_TITLE);
-                if (!isBlank(implTitle) && implTitle.equals(GRIFFON_IMPLEMENTATION_TITLE)) {
-                    griffonManifest = mf;
-                    break;
+        Package p = GriffonUtil.class.getPackage();
+        String version = p != null ? p.getImplementationVersion() : null;
+        if (version==null || isBlank(version)) {
+            PathMatchingResourcePatternResolver resolver = new PathMatchingResourcePatternResolver();
+            try {
+                Resource[] manifests = resolver.getResources("classpath*:META-INF/MANIFEST.MF");
+                Manifest griffonManifest = null;
+                for (int i = 0; i < manifests.length; i++) {
+                    Resource r = manifests[i];
+                    InputStream inputStream = null;
+                    Manifest mf = null;
+                    try {
+                        inputStream = r.getInputStream();
+                        mf = new Manifest(inputStream);
+                    }
+                    finally {
+                        IOUtils.closeQuietly(inputStream);
+                    }
+                    String implTitle = mf.getMainAttributes().getValue(Attributes.Name.IMPLEMENTATION_TITLE);
+                    if (!isBlank(implTitle) && implTitle.equals(GRIFFON_IMPLEMENTATION_TITLE))   {
+                        griffonManifest = mf;
+                        break;
+                    }
+                }
+
+                if (griffonManifest != null) {
+                    version = griffonManifest.getMainAttributes().getValue(Attributes.Name.IMPLEMENTATION_VERSION);
+                }
+
+                if (isBlank(version)) {
+                    LOG.error("Unable to read Griffon version from MANIFEST.MF. Are you sure the griffon-core jar is on the classpath? ");
+                    version = "Unknown";
                 }
             }
-
-            if(griffonManifest != null) {
-                version = griffonManifest.getMainAttributes().getValue(Attributes.Name.IMPLEMENTATION_VERSION);
-            }
-
-            if(isBlank(version)) {
-                LOG.error("Unable to read Griffon version from MANIFEST.MF. Are you sure the griffon-core jar is on the classpath? " );
+            catch (Exception e) {
                 version = "Unknown";
+                LOG.error("Unable to read Griffon version from MANIFEST.MF. Are you sure it the griffon-core jar is on the classpath? " + e.getMessage(), e);
             }
-        } catch (IOException e) {
-            version = "Unknown";
-            StackTraceUtils.deepSanitize(e).printStackTrace();            
-            LOG.error("Unable to read Griffon version from MANIFEST.MF. Are you sure it the griffon-core jar is on the classpath? " + e.getMessage(), e);
         }
 
         GRIFFON_VERSION = version;
@@ -118,10 +133,6 @@ public class GriffonUtil extends GriffonNameUtils {
         return GRIFFON_VERSION;
     }
 
-    public static boolean isBlank(String value) {
-        return value == null || value.trim().length() == 0;
-    }
-
     /**
      * Logs warning message about deprecation of specified property or method of some class.
      *
@@ -139,7 +150,7 @@ public class GriffonUtil extends GriffonNameUtils {
      * @param methodOrPropName Name of deprecated property or method
      * @param version Version of Griffon release in which property or method were deprecated
      */
-    public static void deprecated(Class clazz, String methodOrPropName, String version ) {
+    public static void deprecated(Class<?> clazz, String methodOrPropName, String version ) {
         deprecated("Property or method [" + methodOrPropName + "] of class [" + clazz.getName() +
                 "] is deprecated in [" + version +
                 "] and will be removed in future releases");
@@ -172,7 +183,7 @@ public class GriffonUtil extends GriffonNameUtils {
      */
     public static Throwable sanitize(Throwable t) {
         // Note that this getProperty access may well be synced...
-        if (!Boolean.valueOf(System.getProperty("griffon.full.stacktrace"))) {
+        if (!Boolean.valueOf(System.getProperty("griffon.full.stacktrace")).booleanValue()) {
             StackTraceElement[] trace = t.getStackTrace();
             List<StackTraceElement> newTrace = new ArrayList<StackTraceElement>();
             for (int i = 0; i < trace.length; i++) {
@@ -286,6 +297,7 @@ public class GriffonUtil extends GriffonNameUtils {
      * @return The script name representation
      */
     public static String getScriptName(Class clazz) {
+        if(clazz == null) return null;
         return getScriptName(clazz.getName());
     }
 
@@ -297,6 +309,7 @@ public class GriffonUtil extends GriffonNameUtils {
      * @return The script name representation.
      */
     public static String getScriptName(String name) {
+        if(name == null) return null;
         if(name.endsWith(".groovy")) {
             name = name.substring(0, name.length()-7);
         }

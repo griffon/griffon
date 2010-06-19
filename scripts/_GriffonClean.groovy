@@ -33,13 +33,12 @@ target ( cleanAll: "Cleans a Griffon project" ) {
 }
 
 target ( clean: "Implementation of clean" ) {
-    event("CleanStart", [])
     depends(classpath, cleanCompiledSources, cleanPackaging)
-    event("CleanEnd", [])
 }
 
 target ( cleanCompiledSources: "Cleans compiled Java and Groovy sources" ) {
     ant.delete(dir:classesDirPath)
+    ant.delete(dir:pluginClassesDirPath, failonerror:false)
     ant.delete(dir:resourcesDirPath)
     ant.delete(dir:testDirPath)
     ant.delete(dir:testResourcesDirPath)
@@ -58,12 +57,12 @@ target ( cleanTestReports: "Cleans the test reports" ) {
 }
 
 target ( cleanPackaging : "Cleans the distribtion directories" ) {
-    if(configFile.exists()) {
-        def config = configSlurper.parse(configFile.toURL())
-        config.setConfigFile(configFile.toURL())
+    if(buildConfigFile.exists()) {
+        def cfg = configSlurper.parse(buildConfigFile.toURL())
+        cfg.setConfigFile(buildConfigFile.toURL())
 
-        def distDir =  config.griffon.dist.dir ?: "${basedir}/dist"
-        def destDir =  config.griffon.jars.destDir
+        def distDir =  cfg.griffon.dist.dir ?: "${basedir}/dist"
+        def destDir =  cfg.griffon.jars.destDir
 
         ant.delete(dir:ant.antProject.replaceProperties(distDir))
         ant.delete(dir:ant.antProject.replaceProperties(destDir))

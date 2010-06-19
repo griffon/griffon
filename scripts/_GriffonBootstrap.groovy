@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 
-import griffon.util.BuildSettings
 import griffon.util.RunMode
+import griffon.util.Environment
 
 /**
  * Gant script that bootstraps a Griffon application
@@ -31,14 +31,13 @@ includeTargets << griffonScript('Package')
 
 target(bootstrap: 'Loads and configures a Griffon instance') {
     loadApp()
-    configureApp()
 }
 
 target(loadApp:'Loads the Griffon application object') {
     depends(prepackage)
     event('AppLoadStart', ['Loading Griffon Application'])
 
-    [classesDir, i18nDir, resourcesDir].each { d ->
+    [classesDir, pluginClassesDir, i18nDir, resourcesDir].each { d ->
         addUrlIfNotPresent rootLoader, d
     }
     setupRuntimeJars().each { j ->
@@ -53,19 +52,13 @@ target(loadApp:'Loads the Griffon application object') {
 
     griffonApp = rootLoader.loadClass(griffonApplicationClass, false).newInstance()
     griffonApp.bootstrap()
-
     event('AppLoadEnd', ['Loading Griffon Application'])
-}
-
-target(configureApp:'Configures the Griffon application') {
-    event('ConfigureAppStart', [griffonApp])
-    event('ConfigureAppEnd', [griffonApp])
 }
 
 setupRuntimeJars = {
     def runtimeJars = []
 
-    File jardir = new File(ant.antProject.replaceProperties(config.griffon.jars.destDir))
+    File jardir = new File(ant.antProject.replaceProperties(buildConfig.griffon.jars.destDir))
     // list all jars
     jardir.eachFileMatch(~/.*\.jar/) {f ->
         runtimeJars += f
@@ -86,13 +79,13 @@ setupRuntimeJars = {
 setupJavaOpts = { includeNative = true ->
     def javaOpts = []
 
-    File jardir = new File(ant.antProject.replaceProperties(config.griffon.jars.destDir))
-    def env = System.getProperty(BuildSettings.ENVIRONMENT)
-    javaOpts << "-D${BuildSettings.ENVIRONMENT}=${env}"
+    File jardir = new File(ant.antProject.replaceProperties(buildConfig.griffon.jars.destDir))
+    def env = System.getProperty(Environment.KEY)
+    javaOpts << "-D${Environment.KEY}=${env}"
     javaOpts << "-D${RunMode.KEY}=${RunMode.current}"
 
-    if (config.griffon.app?.javaOpts) {
-        config.griffon.app?.javaOpts.each { javaOpts << it }
+    if (buildConfig.griffon.app?.javaOpts) {
+        buildConfig.griffon.app?.javaOpts.each { javaOpts << it }
     }
     if (argsMap.javaOpts) {
         javaOpts << argsMap.javaOpts

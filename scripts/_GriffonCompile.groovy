@@ -19,17 +19,15 @@
  *
  * @author Graeme Rocher (Grails 0.4)
  */
-
 includeTargets << griffonScript("_GriffonInit")
 includeTargets << griffonScript("_GriffonArgParsing")
 includeTargets << griffonScript("_PluginDependencies")
 
-ant.taskdef (name: 'groovyc', classname : 'org.codehaus.groovy.ant.Groovyc' /*classname : 'org.codehaus.griffon.compiler.GriffonCompiler'*/)
+ant.taskdef (name: 'groovyc', classname : 'org.codehaus.groovy.ant.Groovyc')
 ant.path(id: "griffon.compile.classpath", compileClasspath)
 
 compilerPaths = { String classpathId ->
     def excludedPaths = ["resources", "i18n", "conf"] // conf gets special handling
-    def pluginResources = getPluginSourceFiles()
 
     for(dir in new File("${basedir}/griffon-app").listFiles()) {
         if(!excludedPaths.contains(dir.name) && dir.isDirectory())
@@ -38,15 +36,15 @@ compilerPaths = { String classpathId ->
     // Handle conf/ separately to exclude subdirs/package misunderstandings
     src(path: "${basedir}/griffon-app/conf")
 
-    excludedPaths.remove("conf")
-    for(dir in pluginResources.file) {
-        if(!excludedPaths.contains(dir.name) && dir.isDirectory()) {
-            src(path:"${dir}")
-        }
-    }
+    src(path:"${griffonSettings.sourceDir}/main")
+    javac(classpathref:classpathId, encoding:"UTF-8", debug:"yes")
+}
 
-    src(path:"${basedir}/src/main")
-    javac(classpathref:classpathId, debug:"yes", target: '1.5')
+target(setCompilerSettings: "Updates the compile build settings based on args") {
+    depends(parseArguments)
+    if (argsMap.containsKey('verboseCompile')) {
+        griffonSettings.verboseCompile = argsMap.verboseCompile as boolean
+    }
 }
 
 compileSources = { destinationDir, classpathId, sources ->
@@ -71,17 +69,24 @@ compileSources = { destinationDir, classpathId, sources ->
     }
 }
 
-target(compile : "Compiles application sources") {
-    ant.mkdir(dir: classesDirPath)
-    event("CompileStart", ['source'])
-    depends(parseArguments, resolveDependencies)
+target(compile : "Implementation of compilation phase") {
+    depends(compilePlugins)
+
+    def classesDirPath = new File(griffonSettings.classesDir.path)
+    ant.mkdir(dir:classesDirPath)
 
     profile("Compiling sources to location [$classesDirPath]") {
         String classpathId = "griffon.compile.classpath"
 
         compileSrc = compileSources.curry(classesDirPath)
 
-        if(isPluginProject) {
+        compileSrc(classpathId, compilerPaths.curry(classpathId))
+        addUrlIfNotPresent classLoader, griffonSettings.pluginClassesDir
+
+        // If this is a plugin project, the descriptor is not included
+        // in the compiler's source path. So, we manually compile it
+        // now.
+        if (isPluginProject) {
             def pluginFile = new File("${basedir}").list().find{ it =~ /GriffonPlugin\.groovy/ }
             compileSrc(classpathId) {
                 src(path:"${basedir}")
@@ -89,8 +94,6 @@ target(compile : "Compiles application sources") {
             }
             resolvePluginClasspathDependencies(loadPluginClass(pluginFile))
         }
-
-        compileSrc(classpathId, compilerPaths.curry(classpathId))
 
         if(new File("${basedir}").list().grep{ it =~ /GriffonAddon\.groovy/ }){
             ant.path(id:'addon.classpath') {
@@ -105,8 +108,40 @@ target(compile : "Compiles application sources") {
     }
 
     compileSharedTests()
+}
 
-    event("CompileEnd", ['source'])
+target(compilePlugins: "Compiles source files of all referenced plugins.") {
+    depends(setCompilerSettings, resolveDependencies)
+
+    def classesDirPath = pluginClassesDirPath
+    ant.mkdir(dir: classesDirPath)
+
+    profile("Compiling sources to location [$classesDirPath]") {
+        // First compile the plugins so that we can exclude any
+        // classes that might conflict with the project's.
+        def classpathId = "griffon.compile.classpath"
+        def pluginResources = pluginSettings.pluginSourceFiles
+        def excludedPaths = ["i18n"] // conf gets special handling
+        pluginResources = pluginResources.findAll {
+            !excludedPaths.contains(it.file.name) && it.file.isDirectory()
+        }
+
+        if (pluginResources) {
+            // Only perform the compilation if there are some plugins
+            // installed or otherwise referenced.
+            compileSrc(destdir:classesDirPath) {
+                for(dir in pluginResources.file) {
+                    src(path:"${dir}")
+                }
+                exclude(name: "**/BuildConfig.groovy")
+                exclude(name: "**/Config.groovy")
+                javac(classpathref:classpathId, encoding:"UTF-8", debug:"yes")
+            }
+            for(dir in pluginResources.file) {
+                compileSharedTestSrc(dir)
+            }
+        }
+    }
 }
 
 target(compileSharedTests : "Compiles shared test sources") {

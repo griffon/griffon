@@ -15,12 +15,14 @@
  */
 package org.codehaus.griffon.plugins;
 
+import griffon.util.GriffonUtil;
 import groovy.lang.GroovyObjectSupport;
 import groovy.util.slurpersupport.GPathResult;
 import org.codehaus.griffon.commons.GriffonContext;
 import org.codehaus.griffon.commons.GriffonClassUtils;
 import org.codehaus.griffon.commons.AbstractGriffonClass;
 import org.springframework.beans.BeansException;
+import org.springframework.util.Assert;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -29,10 +31,10 @@ import java.util.Map;
  * Abstract implementation that provides some default behaviours
  *
  * @author Graeme Rocher
- *
  */
 public abstract class AbstractGriffonPlugin extends GroovyObjectSupport implements GriffonPlugin {
     protected GriffonContext application;
+    protected boolean isBase = false;
     protected String version = "1.0";
     protected Map dependencies = new HashMap();
     protected String[] dependencyNames = new String[0];
@@ -53,16 +55,40 @@ public abstract class AbstractGriffonPlugin extends GroovyObjectSupport implemen
     }
 
     public AbstractGriffonPlugin(Class pluginClass, GriffonContext application) {
-        if(pluginClass == null) {
-            throw new IllegalArgumentException("Argument [pluginClass] cannot be null");
-        }
-        if(!pluginClass.getName().endsWith(TRAILING_NAME)) {
-            throw new IllegalArgumentException("Argument [pluginClass] with value ["+pluginClass+"] is not a Griffon plugin (class name must end with 'GriffonPlugin')");
-        }
+        Assert.notNull(pluginClass, "Argument [pluginClass] cannot be null");
+        Assert.isTrue(pluginClass.getName().endsWith(TRAILING_NAME),
+                "Argument [pluginClass] with value ["+pluginClass+"] is not a Griffon plugin (class name must end with 'GriffonPlugin')");
         this.application = application;
         this.pluginClass = pluginClass;
     }
 
+    public String getFileSystemName() {
+        return getFileSystemShortName()+'-'+getVersion();
+    }
+
+    public String getFileSystemShortName() {
+        return GriffonUtil.getScriptName(getName());
+    }
+
+    public Class getPluginClass() {
+        return pluginClass;
+    }
+
+    public boolean isBasePlugin() {
+        return isBase;
+    }
+
+    public void setBasePlugin(boolean isBase) {
+        this.isBase = isBase;
+    }
+
+    public boolean checkForChanges() {
+        return false;
+    }
+
+    public void doWithWebDescriptor(GPathResult webXml) {
+        // do nothing
+    }
     public String[] getDependencyNames() {
         return this.dependencyNames;
     }
@@ -92,5 +118,32 @@ public abstract class AbstractGriffonPlugin extends GroovyObjectSupport implemen
     }
     public void setApplication(GriffonContext application) {
         this.application = application;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof AbstractGriffonPlugin)) return false;
+
+        AbstractGriffonPlugin that = (AbstractGriffonPlugin) o;
+
+        if (!pluginClass.equals(that.pluginClass)) return false;
+        if (!version.equals(that.version)) return false;
+
+        return true;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = version.hashCode();
+        result = 31 * result + pluginClass.hashCode();
+        return result;
+    }
+
+    public int compareTo(Object o) {
+        AbstractGriffonPlugin that = (AbstractGriffonPlugin) o;
+        if(this.equals(that)) return 0;
+
+        return getName().compareTo(that.getName());
     }
 }

@@ -1,4 +1,5 @@
-/* Copyright 2006-2010 Graeme Rocher
+/* 
+ * Copyright 2006-2010 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,12 +23,7 @@ import java.util.Map;
 /**
  * A class that holds a reference to the griffon.config.ConfigObject instance
  *
- * @author Graeme Rocher
- * @since 0.6
- *
- *        <p/>
- *        Created: Jun 21, 2007
- *        Time: 3:52:04 PM
+ * @author Graeme Rocher (Grails 0.6)
  */
 public class ConfigurationHolder {
 

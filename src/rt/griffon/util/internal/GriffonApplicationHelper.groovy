@@ -65,6 +65,12 @@ class GriffonApplicationHelper {
 
         ConfigSlurper configSlurper = new ConfigSlurper(Environment.current.name)
         app.config = configSlurper.parse(app.configClass)
+        try {
+            def config = app.classLoader.loadClass('Config')
+            app.config.merge(config)
+        } catch(x) {
+            // ignore
+        }
         app.builderConfig = configSlurper.parse(app.builderClass)
 
         def eventsClass = app.eventsClass

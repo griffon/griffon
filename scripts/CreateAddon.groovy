@@ -31,8 +31,8 @@ includeTargets << griffonScript("CreateIntegrationTest")
 /**
  * Stuff this addon does:
  * * Creates a <name>GriffonAddon.groovy file form templates
- * * tweaks griffon-app/conf/Config.groovy to have griffon.jars.destDir set (dont' cahnge)
- * * tweaks griffon-app/conf/Config.groovy to have griffon.jars.jarName set (dont' cahnge)
+ * * tweaks griffon-app/conf/BuildConfig.groovy to have griffon.jars.destDir set (dont' cahnge)
+ * * tweaks griffon-app/conf/BuildConfig.groovy to have griffon.jars.jarName set (dont' cahnge)
  * * Adds copy libs events for the destDir
  * * Adds install hooks to wire in addon to griffon-app/conf/Builder.groovy
  * * Adds uninstall hooks to remove the addon from griffon-app/conf/Builder.groovy
@@ -40,6 +40,7 @@ includeTargets << griffonScript("CreateIntegrationTest")
 target ('default' : "Creates a new Addon for a plugin") {
     depends(checkVersion, parseArguments)
     promptForName(type: "Addon")
+    argsMap.skipPackagePrompt = true
     def (pkg, name) = extractArtifactName(argsMap["params"][0])
 //    if (pkg) logErrorAndExit("Addons cannot have package names currently", new RuntimeException())
     def fqn = "${pkg?pkg:''}${pkg?'.':''}${GCU.getClassNameRepresentation(name)}"
@@ -52,7 +53,7 @@ target ('default' : "Creates a new Addon for a plugin") {
     fqn += 'GriffonAddon'
     name = "${GCU.getClassNameRepresentation(name)}GriffonAddon"
 
-    def pluginConfigFile = new File('griffon-app/conf/Config.groovy')
+    def pluginConfigFile = new File('griffon-app/conf/BuildConfig.groovy')
     if (!pluginConfigFile.exists()) {
         pluginConfigFile.text = "griffon {}\n"
     }
@@ -60,7 +61,7 @@ target ('default' : "Creates a new Addon for a plugin") {
     def pluginConfig = slurper.parse(pluginConfigFile.toURL())
 
     if (!pluginConfig.griffon?.jars?.destDir) {
-        pluginConfigFile << "\ngriffon.jars.destDir='dist/addon'\n"
+        pluginConfigFile << "\ngriffon.jars.destDir=\'target/addon\'\n"
     }
     if (!pluginConfig.griffon?.jars?.jarName) {
         pluginConfigFile << "\n//griffon.jars.jarName='${name}.jar'\n"

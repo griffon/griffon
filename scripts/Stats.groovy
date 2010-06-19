@@ -101,7 +101,7 @@ target(default: "Generates basic stats for a Griffon project") {
 }
 
 private getOutputFile(String suffix) {
-    def outputDir = config.griffon.testing.reports.destDir ?: "${basedir}/target"
+    def outputDir = buildConfig.griffon.testing.reports.destDir ?: "${basedir}/target"
     new File(outputDir).mkdirs()
     return new File(outputDir, "stats." + suffix)
 }

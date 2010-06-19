@@ -20,7 +20,7 @@ package griffon.util
  * Based on code from http://www.nearinfinity.com/blogs/seth_schroeder/groovy_cosine_similarity_in_griffon.html
  *
  * @author Burt Beckwith (Grails 1.3.x)
- * @since 0.3.2
+ * @since 0.9
  */
 class CosineSimilarity {
     /**

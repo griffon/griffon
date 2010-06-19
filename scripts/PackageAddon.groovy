@@ -48,17 +48,18 @@ target ('packageAddon': "Packages a Griffon addon. Note: to package a plugin use
         createConfig()
     }
 
-    addonJarDir = ant.antProject.replaceProperties(config.griffon.jars.destDir ?: 'dist/addon')
+    addonJarDir = ant.antProject.replaceProperties(buildConfig.griffon.jars.destDir ?: "target/addon")
     ant.mkdir(dir:addonJarDir)
     packageResources()
 
     File metainfDirPath = new File("${basedir}/griffon-app/conf/metainf")
-    addonJarName = ( config.griffon?.jars?.jarName
-        ? "${config.griffon.jars.jarName}"
+    addonJarName = ( buildConfig.griffon?.jars?.jarName
+        ? "${buildConfig.griffon.jars.jarName}"
         : "griffon-${pluginName}-addon-${plugin.version}.jar" )
     ant.jar(destfile:"$addonJarDir/$addonJarName") {
         fileset(dir:classesDirPath) {
             exclude(name:'Config*.class')
+            exclude(name:'BuildConfig*.class')
             exclude(name:'*GriffonPlugin*.class')
         }
         fileset(dir:i18nDir)

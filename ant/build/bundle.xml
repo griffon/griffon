@@ -4,12 +4,8 @@
 
     <target name="create-guide" depends="javadoc" unless="fast" description="Builds the Griffon Guide">
         <taskdef name="docs"
-                 classname="grails.doc.ant.DocPublisherTask">
-            <classpath>
-                <fileset dir="${basedir}/lib/docs" includes="*.jar"/>
-                <path refid="classpath"/>
-            </classpath>
-        </taskdef>
+                 classname="grails.doc.ant.DocPublisherTask"
+                 classpathref="classpath" />
 
         <mkdir dir="${griffon.dist}" />
         <mkdir dir="target/guide" />
@@ -35,6 +31,12 @@
         <delete>
             <fileset dir="${griffon.target}" includes="griffon-*-files.jar"/>
         </delete>
+
+        <!-- Files to integrate Griffon with IDEs and build systems. -->
+        <jar destfile="${griffon.target}/griffon-integration-files.jar">
+            <fileset dir="${basedir}/src/griffon/templates/ide-support"/>
+            <fileset dir="${basedir}/src/griffon/ant"/>
+        </jar>
 
         <!-- Package up the files that are shared by both applications and plugins. -->
         <jar destfile="${griffon.target}/griffon-shared-files.jar">

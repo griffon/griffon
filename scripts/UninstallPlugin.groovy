@@ -21,4 +21,6 @@
  */
 includeTargets << griffonScript("_GriffonPlugins")
 
+includePluginJarsOnClasspath=false
+
 setDefaultTarget("uninstallPlugin")

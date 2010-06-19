@@ -55,7 +55,6 @@ Enables application testing with FEST (http://easytesting.org)
 
     def documentation = 'http://griffon.codehaus.org/Fest+Plugin'
 }
-
 {code}
 
 h4. Installing & Distributing Plugins
@@ -79,3 +78,29 @@ If the plugin is hosted on a remote HTTP server you can also do:
 {code:java}
 griffon install-plugin http://myserver.com/plugins/griffon-example-0.1.zip
 {code}
+
+h4. Distributing Plugins in Griffon Plugins Repository
+
+The preferred way to distribute a plugin is to publish it under the Griffon Plugins Repository. This will make your plugin available via the 'griffon list-plugins' command and make the plugin's info available via 'griffon plugin-info <plugin_name>'.
+
+Before you can start releasing plugins to the main repository, you first need an account.
+\\1.) [Sign up at xircles.codehaus.org|http://xircles.codehaus.org/signup] 
+\\2.) If you have not already done so, then register to become a [member of the Griffon Plugins project|http://xircles.codehaus.org/projects/griffon/members] - you should see an "Apply to join as a developer" link at the bottom of the left navigation bar. 
+\\3.) E-mail the [developer mailing list|mailto:dev@griffon.codehaus.org] to summarize what you would like to contribute and ask for your request to be processed. Include your xircles user name in the request, so your account can be approved. 
+
+Once you have a Xircles account and become a member of the Griffon Plugins project, have your codehaus SVN login credentials available and run:
+
+{code}
+griffon release-plugin
+{code}
+
+This will automatically commit changes to SVN, do some tagging and make your changes available via the griffon list-plugins command.
+
+{note}
+If you are updating an existing plugin you need to be using a SVN working copy. which you can get by doing 
+{code}
+svn checkout https://svn.codehaus.org/griffon/plugins/griffon-[pluginname]/trunk
+{code}
+You will need to manually add or remove files with something like 'svn add ...' once all that is ready then you are ready for the release-plugin command
+{note}
+

@@ -30,8 +30,8 @@ class CreateAppTests extends AbstractCliTests {
         assert new File("${appBase}/testapp/griffon-app/conf/Builder.groovy").exists()
         assert new File("${appBase}/testapp/griffon-app/conf/Config.groovy").exists()
         assert new File("${appBase}/testapp/griffon-app/i18n/messages.properties").exists()
-        assert new File("${appBase}/testapp/griffon-app/models/TestappModel.groovy").exists()
-        assert new File("${appBase}/testapp/griffon-app/views/TestappView.groovy").exists()
-        assert new File("${appBase}/testapp/griffon-app/controllers/TestappController.groovy").exists()
+        assert new File("${appBase}/testapp/griffon-app/models/testapp/TestappModel.groovy").exists()
+        assert new File("${appBase}/testapp/griffon-app/views/testapp/TestappView.groovy").exists()
+        assert new File("${appBase}/testapp/griffon-app/controllers/testapp/TestappController.groovy").exists()
     }
 }

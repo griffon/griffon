@@ -20,43 +20,23 @@
 * @author Graeme Rocher (Grails 0.4)
 */
 
+import groovy.grape.Grape
+import griffon.util.Metadata
+
 // No point doing this stuff more than once.
-if (getBinding().variables.containsKey("_griffon_init_called")) return
-_griffon_init_called = true
+if (getBinding().variables.containsKey("_init_called")) return
+_init_called = true
 
-
-import griffon.util.GriffonUtil
+Grape.enableAutoDownload = true
 
 // add includes
 includeTargets << griffonScript("_GriffonArgParsing")
 includeTargets << griffonScript("_PluginDependencies")
 
 
-extractArtifactName = {args ->
-    def name = args
-    def pkg = null
-    def pos = args.lastIndexOf('.')
-    if (pos != -1) {
-        pkg = name[0..<pos]
-        name = name[(pos + 1)..-1]
-    }
-    return [pkg, name]
-}
-
-exit = {
-    event("Exiting", [it])
-    // Prevent system.exit during unit/integration testing
-    if (System.getProperty("griffon.cli.testing")) {
-        throw new RuntimeException("Gant script exited")
-    } else {
-        System.exit(it)
-    }
-}
-
-
 // Generates Eclipse .classpath entries for all the Griffon dependencies,
 // i.e. a string containing a "<classpath entry ..>" element for each
-// of Griffon' library JARs. This only works if $Griffon_HOME is set.
+// of Griffon' library JARs. This only works if $GRIFFON_HOME is set.
 eclipseClasspathLibs = {
     def result = ''
     if (griffonHome) {
@@ -69,33 +49,6 @@ eclipseClasspathLibs = {
     result
 }
 
-intellijClasspathLibs = {
-    def builder = new StringBuilder()
-    if (griffonHome) {
-        (new File("${griffonHome}/lib")).eachFileMatch(~/.*\.jar/) {file ->
-            if (!file.name.startsWith("gant-")) {
-                builder << "<root url=\"jar://${griffonHome}/lib/${file.name}!/\" />\n\n"
-            }
-        }
-        (new File("${griffonHome}/dist")).eachFileMatch(~/^griffon-.*\.jar/) {file ->
-            builder << "<root url=\"jar://${griffonHome}/dist/${file.name}!/\" />\n\n"
-        }
-    }
-
-    return builder.toString()
-}
-
-// Generates Eclipse .classpath entries for the Griffon distribution
-// JARs. This only works if $Griffon_HOME is set.
-eclipseClasspathGriffonJars = {args ->
-    result = ''
-    if (griffonHome) {
-        (new File("${griffonHome}/dist")).eachFileMatch(~/^griffon-.*\.jar/) {file ->
-            result += "<classpathentry kind=\"var\" path=\"GRIFFON_HOME/dist/${file.name}\" />\n\n"
-        }
-    }
-    result
-}
 
 target(createStructure: "Creates the application directory structure") {
     ant.sequential {
@@ -143,38 +96,19 @@ target(checkVersion: "Stops build if app expects different Griffon version") {
 
 
 target(updateAppProperties: "Updates default application.properties") {
-    ant.propertyfile(file: metadataFile,
-            comment: "Do not edit app.griffon.* properties, they may change automatically. " +
-                    "DO NOT put application configuration in here, it is not the right place!") {
-        entry(key: "app.name", value: "$griffonAppName")
-        entry(key: "app.griffon.version", value: "$griffonVersion")
-        if (griffonAppVersion) {
-            entry(key: "app.version", value: "$griffonAppVersion")
-        }
+    def entries = [ "app.name": "$griffonAppName", "app.griffon.version": "$griffonVersion" ]
+    if (griffonAppVersion) {
+        entries["app.version"] = "$griffonAppVersion"
     }
+    updateMetadata(entries)
+
     // Make sure if this is a new project that we update the var to include version
     appGriffonVersion = griffonVersion
 }
 
 target( launderIDESupportFiles: "Updates the IDE support files (Eclipse, TextMate etc.), changing file names and replacing tokens in files where appropriate.") {
-    event("updateIDESupportFilesStart", [])
-    ant.move(file: "${basedir}/.launch", tofile: "${basedir}/${griffonAppName}.launch", overwrite: true)
-    ant.move(file: "${basedir}/project.tmproj", tofile: "${basedir}/${griffonAppName}.tmproj", overwrite: true)
+    // do nothing. deprecated target
 
-    ant.move(file: "${basedir}/ideaGriffonProject.iml", tofile: "${basedir}/${griffonAppName}.iml", overwrite: true)
-    ant.move(file: "${basedir}/ideaGriffonProject.ipr", tofile: "${basedir}/${griffonAppName}.ipr", overwrite: true)
-    ant.move(file: "${basedir}/ideaGriffonProject.iws", tofile: "${basedir}/${griffonAppName}.iws", overwrite: true)
-
-    def appKey = griffonAppName.replaceAll( /\s/, '.' ).toLowerCase()
-    ant.replace(dir:"${basedir}", includes:"*.*") {
-        replacefilter(token: "@griffon.intellij.libs@", value: intellijClasspathLibs())
-        replacefilter(token: "@griffon.eclipse.libs@", value: eclipseClasspathLibs())
-        replacefilter(token: "@griffon.eclipse.jar@", value: eclipseClasspathGriffonJars())
-        replacefilter(token: "@griffon.version@", value: griffonVersion)
-        replacefilter(token: "@griffon.project.name@", value: griffonAppName)
-        replacefilter(token: "@griffon.project.key@", value: appKey)
-    }
-    event("updateIDESupportFilesEnd", [])
 }
 
 target(init: "main init target") {
@@ -182,7 +116,6 @@ target(init: "main init target") {
 
     griffonUnpack(dest: basedir, src: "griffon-shared-files.jar")
     griffonUnpack(dest: basedir, src: "griffon-app-files.jar")
-    launderIDESupportFiles()
 
     classpath()
 
@@ -190,19 +123,5 @@ target(init: "main init target") {
     touch(file: "${basedir}/griffon-app/i18n/messages.properties")
 
 	// Set the default version number for the application
-    ant.propertyfile(file:"${basedir}/application.properties") {
-        entry(key:"app.version", value: griffonAppVersion ?: "0.1")
-//        entry(key:"app.servlet.version", value:servletVersion)
-    }
-}
-
-logError = { String message, Throwable t ->
-    GriffonUtil.deepSanitize(t)
-    t.printStackTrace()
-    event("StatusError", ["$message: ${t.message}"])
-}
-
-logErrorAndExit = { String message, Throwable t ->
-    logError(message, t)
-    exit(1)
+    updateMetadata("app.version": griffonAppVersion ?: "0.1")
 }

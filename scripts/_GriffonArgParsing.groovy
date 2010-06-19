@@ -23,6 +23,8 @@
 if (getBinding().variables.containsKey("_args_parsing_called")) return
 _args_parsing_called = true
 
+// includeTargets << griffonScript("_GriffonEvents")
+
 argsMap = [params: []]
 
 target(parseArguments: "Parse the arguments passed on the command line") {
@@ -44,5 +46,10 @@ target(parseArguments: "Parse the arguments passed on the command line") {
                 argsMap["params"] << token
             }
         }
+    }
+
+    if(argsMap.containsKey('non-interactive')) {
+        println "Setting non-interactive mode"
+        isInteractive = !(argsMap.'non-interactive')
     }
 }

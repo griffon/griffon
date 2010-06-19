@@ -77,6 +77,11 @@
         </antcall>
         <antcall target="copy-dir">
             <param name="dir.excludes" value=""/>
+            <param name="dir.location" value="media"/>
+            <param name="dir.destination" value="${release.dir}/media"/>
+        </antcall>
+        <antcall target="copy-dir">
+            <param name="dir.excludes" value=""/>
             <param name="dir.location" value="conf"/>
             <param name="dir.destination" value="${release.dir}/conf"/>
         </antcall>

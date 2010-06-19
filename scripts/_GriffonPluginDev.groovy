@@ -18,8 +18,12 @@
 if (getBinding().variables.containsKey("_griffon_plugin_dev_called")) return
 _griffon_plugin_dev_called = true
 
-import groovy.xml.MarkupBuilder
-import griffon.util.GriffonUtil
+import griffon.util.PluginBuildSettings
+
+import org.codehaus.griffon.plugins.GriffonPluginUtils
+import org.codehaus.griffon.plugins.PluginManagerHolder
+import org.codehaus.griffon.resolve.IvyDependencyManager
+import org.apache.ivy.core.report.ArtifactDownloadReport
 
 /**
  * Gant script that deals with those tasks required for plugin developers
@@ -36,27 +40,17 @@ pluginIncludes = [
     metadataFile.name,
     "*GriffonPlugin.groovy",
     "plugin.xml",
+    "dependencies.groovy",
     "griffon-app/conf/**",
     "lib/**",
     "scripts/**",
-//    "src/**",
     "LICENSE*",
     "README*"
 ]
 
-pluginExcludes = [
-    "griffon-app/conf/Application.groovy",
-    "griffon-app/conf/BuildConfig.groovy",
-    "griffon-app/conf/Builder.groovy",
-    "griffon-app/conf/Config.groovy",
-    "griffon-app/conf/metainf/**",
-    "**/.svn/**",
-    "test/**",
-    "**/CVS/**"
-]
+pluginExcludes = PluginBuildSettings.EXCLUDED_RESOURCES
 
 target(pluginConfig:"setup the plugin config"){
-    // depends(checkVersion, createStructure, compile, packagePlugins)
     depends(checkVersion, createStructure, compile)
 
     def pluginFile
@@ -67,29 +61,19 @@ target(pluginConfig:"setup the plugin config"){
     }
 
     if(!pluginFile) ant.fail("Plugin file not found for plugin project")
-
-    try {
-        pluginClass = classLoader.loadClass(pluginFile.name[0..-8])
-        plugin = pluginClass.newInstance()
-    }
-    catch(Throwable t) {
-        event("StatusError", [ t.message])
-//        GriffonUtil.deepSanitize(t)
-        t.printStackTrace(System.out)
-        ant.fail("Cannot instantiate plugin file")
-    }
-    pluginName = GriffonUtil.getScriptName(GriffonUtil.getLogicalName(pluginClass, "GriffonPlugin"))
+    plugin = generatePluginXml(pluginFile)
+    generateDependencyDescriptor()
 }
 
 target(pluginDocs: "Generates and packages plugin documentation") {
-    depends(checkVersion, parseArguments, pluginConfig, packageAddon)
+    depends(pluginConfig, packageAddon)
 
     pluginDocDir = "${projectTargetDir}/docs"
     ant.mkdir(dir: pluginDocDir)
 
     // copy 'raw' docs if they exists
     ant.copy(todir: pluginDocDir, failonerror: false) {
-        fileset(dir: "${basedir}/src/doc")
+        fileset(dir: "${basedir}/src/docs/misc")
     }
 
     // package sources
@@ -99,28 +83,56 @@ target(pluginDocs: "Generates and packages plugin documentation") {
 
     boolean hasSrcMain = srcMainDir.exists() ? ant.fileset(dir: srcMainDir, includes: '**/*.groovy, **/*.java').size() > 0 : false
     boolean hasTestShared = testSharedDir.exists() ? ant.fileset(dir: testSharedDir, includes: '**/*.groovy, **/*.java').size() > 0 : false
+    List sources = []
+    List excludedPaths = ['resources', 'i18n', 'conf']
+    for(dir in new File("${basedir}/griffon-app").listFiles()) {
+        if(!excludedPaths.contains(dir.name) && dir.isDirectory() &&
+           ant.fileset(dir: dir, includes: '**/*.groovy, **/*.java').size() > 0) {
+           sources << dir.absolutePath
+        }
+    }
+    buildConfig.griffon?.plugin?.pack?.additional?.sources?.each { source ->
+        File dir = new File("${basedir}/${source}")
+        if(dir.isDirectory() && ant.fileset(dir: dir, excludes: '**/CVS/**, **/.svn/**').size() > 0) {
+            sources << dir.absolutePath
+        }
+    }
 
-    if(hasSrcMain || hasTestShared) {
+    if(isAddonPlugin || hasSrcMain || hasTestShared || sources) {
         def jarFileName = "${projectTargetDir}/griffon-${pluginName}-${plugin.version}-sources.jar"
 
         ant.uptodate(property: 'pluginSourceJarUpToDate', targetfile: jarFileName) {
-            srcfiles(dir: srcMainDir, includes: "**/*")
-            srcfiles(dir: testSharedDir, includes: "**/*")
+            sources.each { d ->
+                srcfiles(dir: d, excludes: "**/CVS/**, **/.svn/**")
+            }
+            srcfiles(dir: basedir, includes: "*GriffonAddon.groovy")
+            if(hasSrcMain) srcfiles(dir: srcMainDir, includes: "**/*")
+            if(hasTestShared) srcfiles(dir: testSharedDir, includes: "**/*")
             srcfiles(dir: classesDirPath, includes: "**/*")
-            srcfiles(dir: testSharedDirPath, includes: "**/*")
+            if(hasTestShared) srcfiles(dir: testSharedDirPath, includes: "**/*")
         }
         boolean uptodate = ant.antProject.properties.pluginSourceJarUpToDate
         if(!uptodate) {
             ant.jar(destfile: jarFileName) {
+                sources.each { d -> fileset(dir: d, excludes: '**/CVS/**, **/.svn/**') }
+                fileset(dir: basedir, includes: '*GriffonAddon.groovy')
                 if(hasSrcMain) fileset(dir: srcMainDir, includes: '**/*.groovy, **/*.java')
                 if(hasTestShared) fileset(dir: testSharedDir, includes: '**/*.groovy, **/*.java')
             }
         }
 
-        if(!argsMap.nodoc) {
+        List groovydocSources = []
+        sources.each { source ->
+            File dir = new File(source)
+            if(ant.fileset(dir: dir, includes: '**/*.groovy, **/*.java').size() > 0) {
+                groovydocSources << dir
+            }
+        }
+
+        if(!argsMap.nodoc && (hasSrcMain || hasTestShared || groovydocSources)) {
             def javadocDir = "${projectTargetDir}/docs/api"
             invokeGroovydoc(destdir: javadocDir,
-                sourcepath: [srcMainDir, testSharedDir],
+                sourcepath: [srcMainDir, testSharedDir] + groovydocSources,
                 windowtitle: "${pluginName} ${plugin.version}",
                 doctitle: "${pluginName} ${plugin.version}")
             jarFileName = "${projectTargetDir}/griffon-${pluginName}-${plugin.version}-javadoc.jar"
@@ -132,45 +144,23 @@ target(pluginDocs: "Generates and packages plugin documentation") {
     }
 }
 
+private generateDependencyDescriptor() {
+    ant.delete(dir:"$projectWorkDir/plugin-info", failonerror:false)
+    if(griffonSettings.dependencyManager.hasApplicationDependencies()) {
+        ant.mkdir(dir:"$projectWorkDir/plugin-info")
+        ant.copy(file:"$basedir/griffon-app/conf/BuildConfig.groovy", tofile:"$projectWorkDir/plugin-info/dependencies.groovy", failonerror:false)
+    }
+}
+
+private def loadBasePlugin() {
+    PluginManagerHolder.pluginManager?.allPlugins?.find { it.basePlugin }
+}
+
 target(packagePlugin:"Packages a Griffon plugin") {
     depends (pluginDocs)
+
     event("PackagePluginStart", [pluginName,plugin])
     
-    // Remove the existing 'plugin.xml' if there is one.
-    def pluginXml = new File(basedir, "plugin.xml")
-    pluginXml.delete()
-
-    // Use MarkupBuilder with indenting to generate the file.
-    def writer = new IndentPrinter(new PrintWriter(new FileWriter(pluginXml)))
-    def xml = new MarkupBuilder(writer)
-
-    // Write the content!
-    def props = ['author','authorEmail','title','documentation']
-    def jdk = plugin.properties['jdk'] ?: "1.5"
-
-    pluginGriffonVersion = "${griffonVersion} > *"
-    if(plugin.metaClass.hasProperty(plugin, "griffonVersion")) {
-        pluginGriffonVersion = plugin.griffonVersion
-    }
-
-    xml.'plugin'(name:"${pluginName}", version:"${plugin.version}", griffonVersion: pluginGriffonVersion, jdk:"${jdk}") {
-        props.each {
-            if(plugin.properties[it]) "${it}"(plugin.properties[it].toString().trim())
-        }
-        ['toolkits', 'platforms'].each {
-            if(plugin.properties[it]) "${it}"(plugin.properties[it].join(','))
-        }
-        if(plugin.description) synopsis(plugin.description.trim())
-        license(plugin.properties['license'] ?: '<UNKNOWN>')
-        dependencies {
-            if(plugin.metaClass.hasProperty(plugin,'dependsOn')) {
-                for(d in plugin.dependsOn) {
-                    xml.plugin(name:d.key, version:d.value)
-                }
-            }
-        }
-    }
-
     // Package plugin's zip distribution
     pluginZip = "${basedir}/griffon-${pluginName}-${plugin.version}.zip"
     ant.delete(file:pluginZip)
@@ -205,6 +195,44 @@ target(packagePlugin:"Packages a Griffon plugin") {
         }
     }
 
+    // def plugin = loadBasePlugin()
+    // if(plugin?.pluginExcludes) {
+    //     pluginExcludes.addAll(plugin?.pluginExcludes)
+    // }
+
+    def includesList = pluginIncludes.join(",")
+    def excludesList = pluginExcludes.join(",")
+    def libsDir = new File("${projectWorkDir}/tmp-libs")
+    ant.delete(dir:libsDir, failonerror:false)
+    def lowerVersion = GriffonPluginUtils.getLowerVersion(pluginGriffonVersion)
+
+    boolean supportsAtLeastVersion
+    try {
+        supportsAtLeastVersion = GriffonPluginUtils.supportsAtLeastVersion(lowerVersion, "0.9")
+    } catch (e) {
+        println "Error: Plugin specified an invalid version range: ${pluginGriffonVersion}"
+        exit 1 
+    }
+    if(!supportsAtLeastVersion) {
+        IvyDependencyManager dependencyManager = griffonSettings.dependencyManager
+        def deps = dependencyManager.resolveExportedDependencies()
+        if(dependencyManager.resolveErrors) {
+            println "Error: There was an error resolving plugin JAR dependencies"
+            exit 1
+        }
+
+        if(deps) {
+            ant.mkdir(dir:"${libsDir}/lib")
+            ant.copy(todir:"${libsDir}/lib") {
+                for(ArtifactDownloadReport dep in deps) {
+                    def file = dep.localFile
+                    fileset(dir:file.parentFile, includes:file.name)
+                }
+            }
+        }
+    }
+
+    def dependencyInfoDir = new File("$projectWorkDir/plugin-info")
     ant.zip(destfile:pluginZip, filesonly:true) {
         fileset(dir:"${basedir}") {
             pluginIncludes.each {
@@ -213,6 +241,11 @@ target(packagePlugin:"Packages a Griffon plugin") {
             pluginExcludes.each {
                 exclude(name:it)
             }
+        }
+        if(dependencyInfoDir.exists())
+            fileset(dir:dependencyInfoDir)
+        if(libsDir.exists()) {
+            fileset(dir:libsDir)
         }
 
         zipfileset(dir: "${projectTargetDir}", includes: "*.jar", prefix: "dist")
@@ -237,5 +270,5 @@ target(packagePlugin:"Packages a Griffon plugin") {
         }
     }
 
-    event("PackagePluginEnd", [pluginName,plugin])
+    event("PackagePluginEnd", [pluginName, plugin])
 }

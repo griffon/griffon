@@ -1,5 +1,5 @@
 /* 
- * Copyright 2004-2010 Graeme Rocher
+ * Copyright 2004-2010 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -25,10 +25,7 @@ import java.net.URL;
  * The problem is with Jaxen, so if we manage to remove that dependency
  * (or it stops packaging UserDataHandler) we can revert back to using
  * plain old Groovy RootLoader.
- * @author Graeme Rocher
- * @since 1.0
- *        <p/>
- *        Created: Nov 29, 2007
+ * @author Graeme Rocher (Grails 1.0)
  */
 public class GriffonRootLoader extends RootLoader {
     public GriffonRootLoader(URL[] urls, ClassLoader parent) {

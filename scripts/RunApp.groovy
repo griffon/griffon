@@ -32,13 +32,17 @@ target('default': "Runs the application from the command line") {
 }
 
 target('runApp': "Runs the application from the command line") {
+    if(isPluginProject) {
+        println "Cannot run application: project is a plugin!"
+        exit(1)
+    }
     depends(checkVersion, configureProxy, parseArguments, prepackage)
 
     // calculate the needed jars
-    File jardir = new File(ant.antProject.replaceProperties(config.griffon.jars.destDir))
+    File jardir = new File(ant.antProject.replaceProperties(buildConfig.griffon.jars.destDir))
     // launch event after jardir has been defined
+    event('RunAppTweak', [])
 
-    event("RunAppStart",[])
     runtimeJars = setupRuntimeJars()
 
     // setup the vm
@@ -60,14 +64,14 @@ target('runApp': "Runs the application from the command line") {
         }
         javaOpts << "-Xrunjdwp:transport=dt_socket$debugSocket,suspend=n,server=y"
     }
-    if (config.griffon.memory?.min) {
-        javaOpts << "-Xms$config.griffon.memory.min"
+    if (buildConfig.griffon.memory?.min) {
+        javaOpts << "-Xms$buildConfig.griffon.memory.min"
     }
-    if (config.griffon.memory?.max) {
-        javaOpts << "-Xmx$config.griffon.memory.max"
+    if (buildConfig.griffon.memory?.max) {
+        javaOpts << "-Xmx$buildConfig.griffon.memory.max"
     }
-    if (config.griffon.memory?.maxPermSize) {
-        javaOpts << "-XX:maxPermSize=$config.griffon.memory.maxPermSize"
+    if (buildConfig.griffon.memory?.maxPermSize) {
+        javaOpts << "-XX:maxPermSize=$buildConfig.griffon.memory.maxPermSize"
     }
     if (isMacOSX) {
         javaOpts << "-Xdock:name=$griffonAppName"
@@ -78,7 +82,7 @@ target('runApp': "Runs the application from the command line") {
         f.absolutePath - jardir.absolutePath - File.separator
     }.join(File.pathSeparator)
 
-    runtimeClasspath = [i18nDir, resourcesDir, runtimeClasspath, classesDir].join(File.pathSeparator)
+    runtimeClasspath = [i18nDir, resourcesDir, runtimeClasspath, classesDir, pluginClassesDir].join(File.pathSeparator)
 
     // start the processess
     try {
@@ -93,7 +97,6 @@ target('runApp': "Runs the application from the command line") {
     
         // wait for it.... wait for it...
         p.waitFor()
-        event("RunAppEnd",[])
     } finally {
 // XXX -- NATIVE
         if(platformDir.exists()) {

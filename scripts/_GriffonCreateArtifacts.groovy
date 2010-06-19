@@ -23,6 +23,10 @@ import griffon.util.GriffonUtil
  * @author Peter Ledbrook
  */
 
+includeTargets << griffonScript("_GriffonPackage")
+
+rootPackage = null
+
 createArtifact = { Map args = [:] ->
     def suffix = args["suffix"]
     def type = args["type"]
@@ -33,38 +37,28 @@ createArtifact = { Map args = [:] ->
     ant.mkdir(dir: "${basedir}/${artifactPath}")
 
     // Extract the package name if one is given.
-    def name = args["name"]
-    def pkg = null
-    def pos = name.lastIndexOf('.')
-    if (pos != -1) {
-        pkg = name[0..<pos]
-        name = name[(pos + 1)..-1]
-    }
+    def (artifactPkg, artifactName) = extractArtifactName(args.name)
 
     // Convert the package into a file path.
-    def pkgPath = ''
-    if (pkg) {
-        pkgPath = pkg.replace('.' as char, '/' as char)
+    def pkgPath = artifactPkg.replace('.' as char, '/' as char)
 
-        // Make sure that the package path exists! Otherwise we won't
-        // be able to create a file there.
-        ant.mkdir(dir: "${basedir}/${artifactPath}/${pkgPath}")
+    // Make sure that the package path exists! Otherwise we won't
+    // be able to create a file there.
+    ant.mkdir(dir: "${basedir}/${artifactPath}/${pkgPath}")
 
-        // Future use of 'pkgPath' requires a trailing slash.
-        pkgPath += '/'
-    }
+    // Future use of 'pkgPath' requires a trailing slash.
+    pkgPath += '/'
 
     // Convert the given name into class name and property name
     // representations.
-    className = GriffonUtil.getClassNameRepresentation(name)
-    propertyName = GriffonUtil.getPropertyNameRepresentation(name)
+    className = GriffonUtil.getClassNameRepresentation(artifactName)
+    propertyName = GriffonUtil.getPropertyNameRepresentation(artifactName)
     artifactFile = "${basedir}/${artifactPath}/${pkgPath}${className}${suffix}${fileType}"
 
-
     if (new File(artifactFile).exists()) {
-        ant.input(addProperty: "${name}.${suffix}.overwrite", message: "${type} ${className}${suffix}${fileType} already exists. Overwrite? [y/n]")
-        if (ant.antProject.properties."${name}.${suffix}.overwrite" == "n")
+        if(!confirmInput("${type} ${className}${suffix}${fileType} already exists. Overwrite? [y/n]","${artifactName}.${suffix}.overwrite")) {
             return
+        }
     }
 
     // first check for presence of template in application
@@ -81,7 +75,6 @@ createArtifact = { Map args = [:] ->
     }
 
     copyGriffonResource(artifactFile, templateFile)
-//    ant.copy(file: templateFile, tofile: artifactFile, overwrite: true)
     ant.replace(file: artifactFile) {
         replacefilter(token: "@artifact.name@", value: "${className}${suffix}" )
         replacefilter(token: "@griffon.app.class.name@", value:appClassName )
@@ -89,23 +82,35 @@ createArtifact = { Map args = [:] ->
         replacefilter(token: "@griffon.project.name@", value: griffonAppName)
         replacefilter(token: "@griffon.project.key@", value: griffonAppName.replaceAll( /\s/, '.' ).toLowerCase())
     }
-    if (pkg) {
-        ant.replace(file: artifactFile, token: "@artifact.package@", value: "package ${pkg}${lineTerminator}\n\n")
-    }
-    else {
+    if (artifactPkg) {
+        ant.replace(file: artifactFile, token: "@artifact.package@", value: "package ${artifactPkg}${lineTerminator}\n\n")
+    } else {
         ant.replace(file: artifactFile, token: "@artifact.package@", value: "")
     }
 
+    if (args["superClass"]) {
+        ant.replace(file: artifactFile, token: "@artifact.superclass@", value: args["superClass"])
+    }
+
     event("CreatedFile", [artifactFile])
-    event("CreatedArtefact", [ type, className])
+    event("CreatedArtefact", [type, className])
+}
+
+createRootPackage = {
+    if(rootPackage == null) {
+        rootPackage = (buildConfig.griffon.project.groupId ?: griffonAppName).replace('-','.').toLowerCase()    
+    }
+    return rootPackage
 }
 
 createIntegrationTest = { Map args = [:] ->
-	createArtifact(name: args["name"], suffix: "${args['suffix']}Tests", type: "IntegrationTests", path: "test/integration")
+    def superClass = args["superClass"] ?: "GriffonUnitTestCase"
+    createArtifact(name: args["name"], suffix: "${args['suffix']}Tests", type: "Tests", path: "test/integration", superClass: superClass)
 }
 
 createUnitTest = { Map args = [:] ->
-	createArtifact(name: args["name"], suffix: "${args['suffix']}Tests", type: "Tests", path: "test/unit")
+    def superClass = args["superClass"] ?: "GriffonUnitTestCase"
+    createArtifact(name: args["name"], suffix: "${args['suffix']}Tests", type: "Tests", path: "test/unit", superClass: superClass)
 }
 
 promptForName = { Map args = [:] ->
@@ -113,4 +118,21 @@ promptForName = { Map args = [:] ->
         ant.input(addProperty: "artifact.name", message: "${args["type"]} name not specified. Please enter:")
         argsMap["params"] << ant.antProject.properties."artifact.name"
     }
+}
+
+extractArtifactName = { name ->
+    def artifactName = name
+    def artifactPkg = null
+    def pos = artifactName.lastIndexOf('.')
+    if (pos != -1) {
+        artifactPkg = artifactName[0..<pos]
+        artifactName = artifactName[(pos + 1)..-1]
+        if(artifactPkg.startsWith("~")) {
+            artifactPkg = artifactPkg.replace("~", createRootPackage())
+        }
+    } else {
+        artifactPkg = argsMap.skipPackagePrompt ? '' : createRootPackage()
+    }
+
+    return [artifactPkg, artifactName]
 }
