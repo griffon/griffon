@@ -20,15 +20,36 @@ import org.junit.runner.Runner
 import org.junit.runners.model.RunnerBuilder
 
 import org.codehaus.griffon.test.GriffonTestTargetPattern
+import org.codehaus.griffon.test.support.GriffonTestMode
+import griffon.core.GriffonApplication
 
 class GriffonTestCaseRunnerBuilder extends RunnerBuilder {
+    final mode
+    final app
     final testTargetPatterns
 
     GriffonTestCaseRunnerBuilder(GriffonTestTargetPattern[] testTargetPatterns) {
+        this(null, null, testTargetPatterns)
+    }
+
+    GriffonTestCaseRunnerBuilder(GriffonTestMode mode, GriffonApplication app, GriffonTestTargetPattern[] testTargetPatterns) {
+        this.mode = mode
+        this.app = app
         this.testTargetPatterns = testTargetPatterns
+        validateMode()
+    }
+
+    protected validateMode() {
+        if (mode && app == null) {
+            throw new IllegalStateException("mode $mode requires an application")
+        }
     }
 
     Runner runnerForClass(Class testClass) {
-        new GriffonTestCaseRunner(testClass, *testTargetPatterns)
+        if (mode) {
+            new GriffonTestCaseRunner(testClass, mode, app, *testTargetPatterns)
+        } else {
+            new GriffonTestCaseRunner(testClass, *testTargetPatterns)
+        }
     }
 }

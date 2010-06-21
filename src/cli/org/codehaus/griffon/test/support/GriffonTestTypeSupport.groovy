@@ -1,5 +1,5 @@
 /*
- * Copyright 2009-2010 the original author or authors.
+ * Copyright 2009 the original author or authors.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,7 +23,7 @@ import org.codehaus.griffon.test.event.GriffonTestEventPublisher
 import org.codehaus.griffon.test.io.SystemOutAndErrSwapper
 
 import org.springframework.core.io.Resource
-import org.springframework.context.ApplicationContext
+import griffon.core.GriffonApplication
 
 /**
  * Provides a convenient base for {@link GriffonTestType} implementations.
@@ -238,14 +238,16 @@ abstract class GriffonTestTypeSupport implements GriffonTestType {
     }
 
     /**
-     * Will return the application context if it is present, but will throw an IllegalStateException
+     * Will return the application if it is present, but will throw an IllegalStateException
      * if it is not. This should only be called when Griffon is bootstrapped up (i.e. not for unit tests)
      */
-    protected ApplicationContext getApplicationContext() {
-        if (buildBinding.variables.containsKey("appCtx")) {
-            buildBinding.getProperty("appCtx")
+    protected GriffonApplication getApplication() {
+        if (buildBinding.variables.containsKey("app")) {
+            buildBinding.getProperty("app")
+        } else if (buildBinding.variables.containsKey("griffonApp")) {
+            buildBinding.getProperty("griffonApp")
         } else {
-            throw new IllegalStateException("ApplicationContext requested, but is not present in the build binding")
+            throw new IllegalStateException("Application requested, but is not present in the build binding")
         }
     }
 }

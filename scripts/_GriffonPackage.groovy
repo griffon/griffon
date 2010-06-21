@@ -165,7 +165,7 @@ collectArtifactMetadata = {
     event("CollectArtifacts", [artifactPaths])
 
     def artifacts = [:]
-    def pluginDirectories = getPluginDirectories().file
+    def pluginDirectories = pluginSettings.pluginDirectories.file
     ([new File(basedir)] + pluginDirectories).each { searchPath ->
         if(!searchPath) return
         searchPath = new File(searchPath.absolutePath, 'griffon-app')

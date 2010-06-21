@@ -16,6 +16,7 @@
 
 import griffon.util.RunMode
 import griffon.util.Environment
+import org.codehaus.griffon.commons.ApplicationHolder
 
 /**
  * Gant script that bootstraps a Griffon application
@@ -52,6 +53,7 @@ target(loadApp:'Loads the Griffon application object') {
 
     griffonApp = rootLoader.loadClass(griffonApplicationClass, false).newInstance()
     griffonApp.bootstrap()
+    ApplicationHolder.application = griffonApp
     event('AppLoadEnd', ['Loading Griffon Application'])
 }
 

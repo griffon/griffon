@@ -483,11 +483,11 @@ public class IvyDependencyManagerTests extends GroovyTestCase{
         def griffonVersion = getCurrentGriffonVersion()
         manager.parseDependencies(IvyDependencyManager.getDefaultDependencies(griffonVersion))
 
-        assertEquals 3, manager.listDependencies('runtime').size()
-        assertEquals 5, manager.listDependencies('test').size()
-        assertEquals 24, manager.listDependencies('build').size()
+        assertEquals 4, manager.listDependencies('runtime').size()
+        assertEquals 6, manager.listDependencies('test').size()
+        assertEquals 26, manager.listDependencies('build').size()
         assertEquals 0, manager.listDependencies('provided').size()
-        assertEquals 28, manager.listDependencies('docs').size()
+        assertEquals 30, manager.listDependencies('docs').size()
 
         // This should be a functional test since it relies on the Griffon
         // JAR files being built. It also runs Ivy, which isn't ideal

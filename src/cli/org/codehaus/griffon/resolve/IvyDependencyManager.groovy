@@ -246,7 +246,9 @@ public class IvyDependencyManager extends AbstractIvyDependencyManager implement
                        "org.springframework:org.springframework.context:3.0.3.RELEASE",
                        "org.springframework:org.springframework.context.support:3.0.3.RELEASE",
                        "org.springframework:org.springframework.expression:3.0.3.RELEASE",
-                       "org.springframework:org.springframework.instrument:3.0.3.RELEASE"
+                       "org.springframework:org.springframework.instrument:3.0.3.RELEASE",
+                       "org.slf4j:slf4j-api:1.5.8",
+                       "org.slf4j:slf4j-log4j12:1.5.8"
                        
                 docs   "org.xhtmlrenderer:core-renderer:R8",
                        "com.lowagie:itext:2.0.8",
@@ -258,13 +260,24 @@ public class IvyDependencyManager extends AbstractIvyDependencyManager implement
                     excludes 'jline'
                 }
 
-                compile "org.codehaus.griffon:griffon-cli:$griffonVersion",
-                        "org.codehaus.griffon:griffon-rt:$griffonVersion"
+                compile("org.codehaus.griffon:griffon-cli:$griffonVersion",
+                        "org.codehaus.griffon:griffon-rt:$griffonVersion",
+                        "org.slf4j:slf4j-api:1.5.8") {
+                    transitive = false
+                }
 
                 // dependencies needed for running tests
                 test "junit:junit:4.8.1",
                      "org.codehaus.griffon:griffon-cli:$griffonVersion",
                      "org.springframework:org.springframework.test:3.0.3.RELEASE"
+
+                // logging
+                // runtime( "log4j:log4j:1.2.15",
+                //          "org.slf4j:jcl-over-slf4j:1.5.8",
+                //          "org.slf4j:jul-to-slf4j:1.5.8",
+                //          "org.slf4j:slf4j-log4j12:1.5.8" ) {
+                //     excludes 'mail', 'jms', 'jmxtools', 'jmxri'
+                // }
             }
       }
     }

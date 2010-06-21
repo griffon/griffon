@@ -38,7 +38,7 @@ import griffon.build.GriffonBuildListener;
 /**
  * @author Graeme Rocher (Grails 1.1)
  */
-public class GriffonBuildEventListener implements BuildListener{
+public class GriffonBuildEventListener implements BuildListener {
     private static final Pattern EVENT_NAME_PATTERN = Pattern.compile("event([A-Z]\\w*)");
     private GroovyClassLoader classLoader;
     private Binding binding;
@@ -76,7 +76,7 @@ public class GriffonBuildEventListener implements BuildListener{
             loadEventsScript(findEventsScript(new File(buildSettings.getBaseDir(), "scripts")));
 
             PluginBuildSettings pluginSettings = (PluginBuildSettings) binding.getVariable("pluginSettings");
-            for (Resource pluginBase : pluginSettings.getPluginDirectories()) {
+            for (Resource pluginBase : pluginSettings.getSortedPluginDirectories()) {
                 try {
                     loadEventsScript(findEventsScript(new File(pluginBase.getFile(), "scripts")));
                 }
@@ -217,10 +217,10 @@ public class GriffonBuildEventListener implements BuildListener{
         Class listenerClass;
         try {
             listenerClass = classLoader.loadClass(listenerClassName);
+            addGriffonBuildListener(listenerClass);
         } catch (ClassNotFoundException e) {
-            throw new RuntimeException("Could not load griffon build listener class", e);
+            System.err.println("Could not load griffon build listener class. " + e);
         }
-        addGriffonBuildListener(listenerClass);
     }
     
     protected void addGriffonBuildListener(Class listenerClass) {
@@ -230,10 +230,10 @@ public class GriffonBuildEventListener implements BuildListener{
         GriffonBuildListener listener;
         try {
             listener = (GriffonBuildListener)listenerClass.newInstance();
+            addGriffonBuildListener(listener);
         } catch (Exception e) {
-            throw new RuntimeException("Could not instantiate " + listenerClass.getName(), e);
+            System.err.println("Could not instantiate " + listenerClass.getName()+". " + e);
         }
-        addGriffonBuildListener(listener);
     }
 
     public void addGriffonBuildListener(GriffonBuildListener listener) {

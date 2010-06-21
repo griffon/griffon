@@ -58,7 +58,7 @@ boolean shouldGenerateHelp(File script) {
 
 target ('default' : "Prints out the help for each script") {
     ant.mkdir(dir:griffonTmp)
-    def scripts = getAllScripts().collect { it.file }
+    def scripts = pluginSettings.availableScripts.collect { it.file }
 
     def helpText = ""
 

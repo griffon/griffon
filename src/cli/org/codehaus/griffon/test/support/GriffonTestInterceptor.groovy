@@ -16,16 +16,27 @@
 
 package org.codehaus.griffon.test.support
 
+import griffon.core.GriffonApplication
+
 class GriffonTestInterceptor {
+
     private test
+    private mode
+    private app
     private testClassSuffixes
 
-    GriffonTestInterceptor(Object test, String[] testClassSuffixes) {
+    private transactionInterceptor
+    private requestEnvironmentInterceptor
+
+    GriffonTestInterceptor(Object test, GriffonTestMode mode, GriffonApplication app, String[] testClassSuffixes) {
         this.test = test
+        this.mode = mode
+        this.app = app
         this.testClassSuffixes = testClassSuffixes
     }
 
     void init() {
+        autowireIfNecessary()
     }
 
     void destroy() {
@@ -40,7 +51,22 @@ class GriffonTestInterceptor {
         }
     }
 
+    protected autowireIfNecessary() {
+        if (mode.autowire) createAutowirer().autowire(test)
+    }
+
+    protected destroyTransactionIfNecessary() {
+        if (transactionInterceptor) {
+            transactionInterceptor.destroy()
+            transactionInterceptor = null
+        }
+    }
+
     protected getControllerName() {
         ControllerNameExtractor.extractControllerNameFromTestClassName(test.class.name, testClassSuffixes)
+    }
+
+    protected createAutowirer() {
+        new GriffonTestAutowirer(app)
     }
 }

@@ -23,6 +23,7 @@ import griffon.util.CosineSimilarity;
 import griffon.util.Environment;
 import griffon.util.GriffonUtil;
 import griffon.util.PlatformUtils;
+import griffon.util.PluginBuildSettings;
 import groovy.lang.Binding;
 import groovy.lang.Closure;
 import groovy.lang.ExpandoMetaClass;
@@ -681,7 +682,13 @@ public class GriffonScriptRunner {
         Closure c = settings.getGriffonScriptClosure();
         c.setDelegate(binding);
         binding.setVariable("griffonScript", c);
+        c = settings.getIncludePluginScriptClosure();
+        c.setDelegate(binding);
+        binding.setVariable("includePluginScript", c);
         binding.setVariable("griffonSettings", settings);
+        PluginBuildSettings pluginBuildSettings = new PluginBuildSettings(settings);
+        binding.setVariable("pluginSettings", pluginBuildSettings);
+        pluginBuildSettings.initBinding(binding);
 
         // Add other binding variables, such as Griffon version and environment.
         final File basedir = settings.getBaseDir();

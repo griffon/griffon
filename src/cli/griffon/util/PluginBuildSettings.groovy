@@ -31,6 +31,8 @@ import org.springframework.core.io.FileSystemResource
 import org.springframework.core.io.Resource
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver
 
+import org.codehaus.gant.GantBinding
+
 /**
  * Uses the project BuildSettings object to discover information about the installed plugin
  * such as the jar files they provide, the plugin descriptors and so on.
@@ -354,6 +356,83 @@ class PluginBuildSettings {
     }
 
     /**
+     * Loads a plugin descriptor using a GroovyClassLoader to void compiling
+     * the codebase.
+     */
+    def loadPlugin(Resource pluginDescriptor) {
+        loadPlugin(pluginDescriptor.file)
+    }
+
+    /**
+     * Loads a plugin descriptor using a GroovyClassLoader to void compiling
+     * the codebase.
+     */
+    def loadPlugin(File pluginFile) {
+        def gcl = new GroovyClassLoader()
+        return gcl.parseClass(pluginFile).newInstance()
+    }
+
+    /**
+     * Obtains a list of plugin directories for the application sorted by
+     * their dependency on other plugins
+     */
+    Resource[] getSortedPluginDirectories() {
+        def sortedPluginDirectoryResources = cache['sortedPluginDirectoryResources']
+        if (!sortedPluginDirectoryResources) {
+            Resource[] pluginDirs = getPluginDirectories()    
+            Map nodeps = [:]
+            Map withdeps = [:]
+            List sorted = []
+            pluginDirs.each { r ->
+                def info = getPluginInfo(r.file.absolutePath)
+                def plug = loadPlugin(getPluginDescriptor(r))
+                MetaClass mc = plug.metaClass
+                if(mc.hasProperty(plug, 'dependsOn')) {
+                    if(plug.dependsOn) {
+                        withdeps[info.name] = [deps: plug.dependsOn, dir: r]
+                    } else {
+                        nodeps[info.name] = r
+                        sorted << [name: info.name, dir: r]
+                    }
+                } else {
+                    nodeps[info.name] = r
+                    sorted << [name: info.name, dir: r]
+                }
+            }
+    
+            def resolveDeps
+            resolveDeps = { name, values ->
+                if(sorted.find{ it.name == name }) return
+                values.deps.each { n, v ->
+                    if(withdeps[n]) resolveDeps(n, withdeps[n])
+                }
+                def index = -1
+                values.deps.each { n, v ->
+                   index = Math.max(index, sorted.indexOf(sorted.find{it.name == n}))  
+                }
+                sorted = insert(sorted, [name: name, dir: values.dir], index + 1)
+            }
+
+            withdeps.each(resolveDeps)
+            sortedPluginDirectoryResources = sorted.collect([]){ it.dir } as Resource[]
+            cache['sortedPluginDirectoryResources'] = sortedPluginDirectoryResources
+        }
+        return sortedPluginDirectoryResources
+    }
+
+    private static List insert(List list, obj, int index) {
+        int size = list.size()
+        if(index >= size) {
+            list[index] = obj
+            return list
+        } else {
+            def head = list[0..<index]
+            def tail = list[index..-1]
+            return head + [obj] + tail 
+        }
+    }
+
+    /**
      * Returns only the PluginInfo objects that support the current Environment and BuildScope.
      *
      * @see griffon.util.Environment
@@ -562,6 +641,13 @@ class PluginBuildSettings {
             descriptor = new FileSystemResource(basePluginFile)
         }
         return descriptor
+    }
+
+    void initBinding(GantBinding binding) {
+        final PluginBuildSettings self = this
+        binding.setVariable('getPluginDirForName') { String pluginName ->
+            self.getPluginDirForName(pluginName)
+        }
     }
 
     private Resource[] resolveResources(String key, boolean processExcludes, Closure c) {

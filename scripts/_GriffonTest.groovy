@@ -1,22 +1,24 @@
 /*
-* Copyright 2004-2005 the original author or authors.
-*
-* Licensed under the Apache License, Version 2.0 (the "License");
-* you may not use this file except in compliance with the License.
-* You may obtain a copy of the License at
-*
-*      http://www.apache.org/licenses/LICENSE-2.0
-*
-* Unless required by applicable law or agreed to in writing, software
-* distributed under the License is distributed on an "AS IS" BASIS,
-* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-* See the License for the specific language governing permissions and
-* limitations under the License.
-*/
+ * Copyright 2004-2005 the original author or authors.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 
 import griffon.util.GriffonUtil
+import griffon.core.GriffonApplication
 
 import org.codehaus.griffon.test.junit4.JUnit4GriffonTestType
+import org.codehaus.griffon.test.support.GriffonTestMode
 import org.codehaus.griffon.test.report.junit.JUnitReportProcessor
 
 import org.codehaus.griffon.test.GriffonTestType
@@ -122,7 +124,14 @@ target(allTests: "Runs the project's tests.") {
             convertedPhases[phaseName] = types.collect { rawType ->
                 if (rawType instanceof CharSequence) {
                     def rawTypeString = rawType.toString()
-                    new JUnit4GriffonTestType(rawTypeString, rawTypeString)
+                    if (phaseName in ['integration']) {
+                        def mode = new GriffonTestMode(
+                            autowire: true
+                        )
+                        new JUnit4GriffonTestType(rawTypeString, rawTypeString, mode)
+                    } else {
+                        new JUnit4GriffonTestType(rawTypeString, rawTypeString)
+                    }
                 } else {
                     rawType
                 }
@@ -148,7 +157,7 @@ target(allTests: "Runs the project's tests.") {
             }
         }
     }
-    
+
     try {
         // Process the tests in each phase that is configured to run.
         filteredPhases.each { phase, types ->
@@ -223,8 +232,8 @@ compileTests = { GriffonTestType type, File source, File dest ->
     ant.mkdir(dir: destDir.path)
 
     compileSources(destDir, 'griffon.test.classpath') {
-        src(path: "${basedir}/test/${type.name}")
-        javac(classpathref: 'griffon.test.classpath', debug:"yes", target: '1.5')
+        src(path: source)
+        javac(classpathref: 'griffon.test.classpath', debug:"yes")
     }
  
     if(argsMap.verboseCompile) {
@@ -245,6 +254,7 @@ runTests = { GriffonTestType type, File compiledClassesDir ->
     if (testCount) {
         try {
             event("TestSuiteStart", [type.name])
+
             println ""
             println "-------------------------------------------------------"
             println "Running ${testCount} $type.name test${testCount > 1 ? 's' : ''}..."

@@ -145,7 +145,7 @@ target(compilePlugins: "Compiles source files of all referenced plugins.") {
 }
 
 target(compileSharedTests : "Compiles shared test sources") {
-    for(pluginDir in getPluginDirectories().file) {
+    for(pluginDir in pluginSettings.pluginDirectories.file) {
         def pluginDistDir = new File(pluginDir, 'dist')
         if(pluginDistDir.exists()) {
             ant.fileset(dir: pluginDistDir, includes: '*-test.jar').each { jar ->

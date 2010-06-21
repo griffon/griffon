@@ -27,25 +27,24 @@ _griffon_clean_called = true
 
 includeTargets << griffonScript("_GriffonEvents")
 
-target ( cleanAll: "Cleans a Griffon project" ) {
+target(cleanAll: "Cleans a Griffon project") {
     clean()
     cleanTestReports()
 }
 
-target ( clean: "Implementation of clean" ) {
+target(clean: "Implementation of clean") {
     depends(classpath, cleanCompiledSources, cleanPackaging)
 }
 
-target ( cleanCompiledSources: "Cleans compiled Java and Groovy sources" ) {
+target(cleanCompiledSources: "Cleans compiled Java and Groovy sources") {
     ant.delete(dir:classesDirPath)
     ant.delete(dir:pluginClassesDirPath, failonerror:false)
     ant.delete(dir:resourcesDirPath)
     ant.delete(dir:testDirPath)
     ant.delete(dir:testResourcesDirPath)
-    ant.delete(dir:projectTargetDir)
 }
 
-target ( cleanTestReports: "Cleans the test reports" ) {
+target(cleanTestReports: "Cleans the test reports") {
     // Delete all reports *except* TEST-TestSuites.xml which we need
     // for the "--rerun" option to work.
     ant.delete(failonerror:false, includeemptydirs: true) {
@@ -56,7 +55,7 @@ target ( cleanTestReports: "Cleans the test reports" ) {
     }
 }
 
-target ( cleanPackaging : "Cleans the distribtion directories" ) {
+target(cleanPackaging : "Cleans the distribtion directories") {
     if(buildConfigFile.exists()) {
         def cfg = configSlurper.parse(buildConfigFile.toURL())
         cfg.setConfigFile(buildConfigFile.toURL())
@@ -65,10 +64,8 @@ target ( cleanPackaging : "Cleans the distribtion directories" ) {
         def destDir =  cfg.griffon.jars.destDir
 
         ant.delete(dir:ant.antProject.replaceProperties(distDir))
-        ant.delete(dir:ant.antProject.replaceProperties(destDir))
+        if(destDir) ant.delete(dir:ant.antProject.replaceProperties(destDir))
         //todo per package directories?
     }
-    if(isPluginProject) {
-        ant.delete(dir: "${basedir}/docs")
-    }
+    ant.delete(dir:projectTargetDir)
 }

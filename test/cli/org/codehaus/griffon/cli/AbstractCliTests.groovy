@@ -3,6 +3,7 @@ package org.codehaus.griffon.cli
 import gant.Gant
 import griffon.util.BuildSettings
 import griffon.util.BuildSettingsHolder
+import griffon.util.PluginBuildSettings
 import org.codehaus.gant.GantBinding
 import org.codehaus.griffon.cli.support.GriffonRootLoader
 import org.codehaus.griffon.commons.ConfigurationHolder
@@ -112,6 +113,7 @@ abstract class AbstractCliTests extends GroovyTestCase {
         binding.with {
             // Core properties.
             griffonSettings = settings
+            pluginSettings = new PluginBuildSettings(settings)
             basedir = settings.baseDir.path
             baseFile = settings.baseDir
             baseName = settings.baseDir.name

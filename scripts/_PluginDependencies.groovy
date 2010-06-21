@@ -405,59 +405,12 @@ readAllPluginXmlMetadata = {->
 }
 
 /**
- * @deprecated Use "pluginSettings.pluginXmlMetadata" instead.
- */
-getPluginXmlMetadata = {
-    pluginSettings.pluginXmlMetadata
-}
-/**
  * Obtains the directory for the given plugin name
  */
 getPluginDirForName = { String pluginName ->
     pluginSettings.getPluginDirForName(pluginName)
 }
-/**
- * Obtains all of the plugin directories
- * @deprecated Use "pluginSettings.pluginDirectories".
- */
-getPluginDirectories = {->
-    pluginSettings.pluginDirectories
-}
-/**
- * Obtains an array of all plugin source files as Spring Resource objects
- * @deprecated Use "pluginSettings.pluginSourceFiles".
- */
-getPluginSourceFiles = {
-    pluginSettings.pluginSourceFiles
-}
-/**
- * Obtains an array of all the plugin provides Gant scripts
- * @deprecated Use "pluginSettings.pluginScripts".
- */
-getPluginScripts = {
-    pluginSettings.pluginScripts
-}
-/**
- * Gets a list of all scripts known to the application (excluding private scripts starting with _)
- * @deprecated Use "pluginSettings.availableScripts".
- */
-getAllScripts = {
-    pluginSettings.availableScripts
-}
-/**
- * Obtains a list of all Griffon plugin descriptor classes
- * @deprecated Use "pluginSettings.pluginDescriptors".
- */
-getPluginDescriptors = {
-    pluginSettings.pluginDescriptors
-}
-/**
- * Gets the base plugin descriptor
- * @deprecated Use "pluginSettings.basePluginDescriptor".
- */
-getBasePluginDescriptor = {
-    pluginSettings.basePluginDescriptor
-}
+
 /**
  * Runs a script contained within a plugin
  */
@@ -476,22 +429,15 @@ readMetadataFromZip = { String zipLocation, pluginFile=zipLocation ->
     installEngine.readMetadataFromZip(zipLocation)
 }
 
-// TODO review usage on installer-plugin
-pluginScript = { pluginName, scriptName ->
-   def pluginHome = getPluginDirForName(pluginName).file
-   def scriptFile = new File(pluginHome,"/scripts/${scriptName}.groovy")
-   return scriptFile.exists() ? scriptFile : null
-}
-
 // this is one is better than the previous as it will only include
 // the script if the plugin is available. Works on application
 // and plugin project
-includePluginScript = { pluginName, scriptName ->
-   def pluginHome = getPluginDirForName(pluginName)?.file
-   if(!pluginHome) return
-   def scriptFile = new File(pluginHome,"/scripts/${scriptName}.groovy")
-   if(scriptFile.exists()) includeTargets << scriptFile
-}
+// includePluginScript = { pluginName, scriptName ->
+//    def pluginHome = getPluginDirForName(pluginName)?.file
+//    if(!pluginHome) return
+//    def scriptFile = new File(pluginHome,"/scripts/${scriptName}.groovy")
+//    if(scriptFile.exists()) includeTargets << scriptFile
+// }
 
 /**
  * Uninstalls a plugin for the given name and version

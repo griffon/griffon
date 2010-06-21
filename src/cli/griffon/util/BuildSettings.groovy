@@ -220,6 +220,9 @@ class BuildSettings {
     /** Implementation of the "griffonScript()" method used in Griffon scripts. */
     Closure griffonScriptClosure
 
+    /** Implementation of the "includePluginScript()" method used in Griffon scripts. */
+    Closure includePluginScriptClosure
+
     /**
      * A Set of plugin names that represent the default set of plugins installed when creating Griffon applications
      */
@@ -442,6 +445,13 @@ class BuildSettings {
                     return classLoader.loadClass(name)
                 }
             }
+        }
+
+        includePluginScriptClosure = {String pluginName, String scriptName ->
+            def pluginHome = pluginSettings.getPluginDirForName(pluginName)?.file
+            if(!pluginHome) return
+            def scriptFile = new File(pluginHome,"/scripts/${scriptName}.groovy")
+            if(scriptFile.exists()) includeTargets << scriptFile
         }
     }
 

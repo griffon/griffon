@@ -74,7 +74,7 @@ pluginsHome = griffonSettings.projectPluginsDir.path
 
 // Used to find out about plugins used by this app. The plugin manager
 // is configured later when its created (see _PluginDependencies).
-pluginSettings = new PluginBuildSettings(griffonSettings)
+// pluginSettings = new PluginBuildSettings(griffonSettings)
 
 // While some code still relies on GriffonPluginUtils, make sure it
 // uses the same PluginBuildSettings instance as the scripts.

@@ -44,6 +44,7 @@ pluginIncludes = [
     "griffon-app/conf/**",
     "lib/**",
     "scripts/**",
+    "src/templates/**",
     "LICENSE*",
     "README*"
 ]
@@ -189,7 +190,7 @@ target(packagePlugin:"Packages a Griffon plugin") {
         boolean uptodate = ant.antProject.properties.pluginTestJarUpToDate
         if(!uptodate) {
             ant.jar(destfile: jarFileName) {
-                if(hasTestShared) fileset(dir: testSharedDir, includes: '**/*.groovy, **/*.java')
+                if(hasTestShared) fileset(dir: testSharedDirPath, includes: '**/*.class')
                 if(hasTestResources) fileset(dir: testResourcesDir)
             }
         }

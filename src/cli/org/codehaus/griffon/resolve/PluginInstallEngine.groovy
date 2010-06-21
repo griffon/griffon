@@ -436,22 +436,22 @@ You cannot upgrade a plugin that is configured via BuildConfig.groovy, remove th
             if(manager.isExcludedFromPlugin(pluginName, depDirName)) {
                 dependencies.remove(depName)
             } else {
-                def depPluginDir = pluginSettings.getPluginDirForName(depDirName)?.file
+                def depPluginDir = pluginSettings.getPluginDirForName(depName)?.file
                 if (!depPluginDir?.exists()) {
                     eventHandler("StatusUpdate", "Plugin dependency [$depName] not found. Attempting to resolve...")
                     // recursively install dependent plugins
                     def upperVersion = GriffonPluginUtils.getUpperVersion(depVersion)
                     def installVersion = upperVersion
                     if (installVersion == '*') {
-                        installVersion = settings.defaultPluginSet.contains(depDirName) ? GriffonUtil.getGriffonVersion() : null
+                        installVersion = settings.defaultPluginSet.contains(depName) ? GriffonUtil.getGriffonVersion() : null
                     }
 
                     // recurse
-                    installPlugin(depDirName, installVersion)
+                    installPlugin(depName, installVersion)
 
                     dependencies.remove(depName)
                 } else {
-                    def dependency = readPluginXmlMetadata(depDirName)
+                    def dependency = readPluginXmlMetadata(depName)
                     def dependencyVersion = dependency.@version.toString()
                     if (!GriffonPluginUtils.isValidVersion(dependencyVersion, depVersion)) {
                         errorHandler("Plugin requires version [$depVersion] of plugin [$depName], but installed version is [${dependencyVersion}]. Please upgrade this plugin and try again.")
