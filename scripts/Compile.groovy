@@ -17,9 +17,7 @@
 /**
  * Gant script that compiles Groovy and Java files in the src tree
  *
- * @author Graeme Rocher
- *
- * @since 0.4
+ * @author Graeme Rocher (Grails 0.4)
  */
 
 includeTargets << griffonScript("_GriffonCompile")

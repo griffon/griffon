@@ -57,7 +57,7 @@ class UIThreadHelper {
         if(!this.uiThreadHandler) {
             try {
                 // attempt loading of default UIThreadHandler -> Swing
-                setUIThreadHandler(getClass().classLoader.loadClass("griffon.util.SwingUIThreadHandler").newInstance())
+                setUIThreadHandler(getClass().classLoader.loadClass("griffon.swing.SwingUIThreadHandler").newInstance())
             } catch(ClassNotFoundException e) {
                 throw new IllegalStateException("Can't locate a suitable UIThreadHandler. Did you forget to register one?")
             }

@@ -17,12 +17,10 @@
 /**
  * Gant script that creates a Griffon Gant script
  *
- * @author Graeme Rocher
- *
- * @since 0.4
+ * @author Graeme Rocher (Grails 0.4)
  */
 
-import org.codehaus.griffon.util.GriffonNameUtils
+import griffon.util.GriffonUtil
 
 includeTargets << griffonScript("_GriffonInit")
 includeTargets << griffonScript("_GriffonCreateArtifacts")
@@ -32,6 +30,7 @@ target (default : "Creates a Griffon Gant Script") {
 
     def type = "Script"
     promptForName(type: type)
+    argsMap.skipPackagePrompt = true
     def (pkg, name) = extractArtifactName(argsMap["params"][0])
 
     createArtifact(
@@ -45,7 +44,7 @@ target (default : "Creates a Griffon Gant Script") {
         type: "ScriptTests",
         path: "test/cli")
 
-    className = GriffonNameUtils.getClassNameRepresentation(name)
+    className = GriffonUtil.getClassNameRepresentation(name)
     artifactFile = "${basedir}/test/cli/${className}Tests.groovy"
 
     ant.replace(file: artifactFile) {

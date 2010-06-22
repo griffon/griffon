@@ -1,5 +1,5 @@
 /* 
- * Copyright 2004-2010 Graeme Rocher
+ * Copyright 2004-2010 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,7 +17,10 @@ package org.codehaus.griffon.cli.support;
 
 import org.codehaus.groovy.tools.LoaderConfiguration;
 
-import java.io.*;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.net.URL;
@@ -27,10 +30,7 @@ import java.util.regex.Pattern;
 import griffon.util.GriffonExceptionHandler;
 
 /**
- * @author Graeme Rocher
- * @since 1.0
- *        <p/>
- *        Created: Nov 29, 2007
+ * @author Graeme Rocher (Grails 1.0)
  */
 public class GriffonStarter {
     static void printUsage() {
@@ -38,9 +38,45 @@ public class GriffonStarter {
         System.exit(1);
     }
 
-
     public static void rootLoader(String args[]) {
         String conf = System.getProperty("groovy.starter.conf",null);
+/*
+        final String separator = System.getProperty("file.separator");
+
+        // Set some default values for various system properties if
+        // they don't already have values.
+*/
+        String javaVersion = System.getProperty("java.version");
+        String griffonHome = System.getProperty("griffon.home");
+/*
+        if (System.getProperty("base.dir") == null) System.setProperty("base.dir", ".");
+        if (System.getProperty("program.name") == null) System.setProperty("program.name", "griffon");
+        if (System.getProperty("groovy.starter.conf") == null) {
+            System.setProperty(
+                    "groovy.starter.conf",
+                    griffonHome + separator + "conf" + separator + "groovy-starter.conf");
+        }
+
+        // Initialise the Griffon version if it's not set already.
+        if (System.getProperty("griffon.version") == null) {
+            Properties griffonProps = new Properties();
+            FileInputStream is = null;
+            try {
+                // Load Griffon' "build.properties" file.
+                is = new FileInputStream(griffonHome + separator + "build.properties");
+                griffonProps.load(is);
+
+                // Extract the Griffon version and store as a system
+                // property so that it can be referenced from the
+                // starter configuration file.
+                System.setProperty("griffon.version", griffonProps.getProperty("griffon.version"));
+            }
+            catch (IOException ex) { System.out.println("Failed to load Griffon file: " + ex.getMessage()); System.exit(1); }
+            finally { if (is != null) try { is.close(); } catch (IOException ex2) {} }
+        }
+
+        String conf = System.getProperty("groovy.starter.conf", null);
+*/
         LoaderConfiguration lc = new LoaderConfiguration();
 
         // evaluate parameters
@@ -73,20 +109,17 @@ public class GriffonStarter {
             }
         }
 
-        // we need to know the class we want to start
-        if (lc.getMainClass()==null && conf==null) {
-            exit("no configuration file or main class specified");
+        // We need to know the class we want to start
+        if (lc.getMainClass()==null) {
+            lc.setMainClass("org.codehaus.griffon.cli.GriffonScriptRunner");
         }
 
         // copy arguments for main class
         String[] newArgs = new String[args.length-argsOffset];
-        for (int i=0; i<newArgs.length; i++) {
-            newArgs[i] = args[i+argsOffset];
-        }
+        System.arraycopy(args, argsOffset, newArgs, 0, newArgs.length);
 
         String basedir = System.getProperty("base.dir");
         if(basedir!=null) {
-
             try {
                 System.setProperty("base.name", new File(basedir).getCanonicalFile().getName());
             } catch (IOException e) {
@@ -103,11 +136,6 @@ public class GriffonStarter {
             }
         }
 
-        // obtain servlet version
-//        String servletVersion = "2.4";
-//        Pattern standardJarPattern = Pattern.compile(".+?standard-\\d\\.\\d\\.jar");
-//        Pattern jstlJarPattern = Pattern.compile(".+?jstl-\\d\\.\\d\\.jar");
-
         Properties metadata = new Properties();
         File metadataFile = new File("./application.properties");
         if(metadataFile.exists()) {
@@ -115,10 +143,6 @@ public class GriffonStarter {
             try {
                 inputStream = new FileInputStream(metadataFile);
                 metadata.load(inputStream);
-//                Object version = metadata.get("app.servlet.version");
-//                if(version!=null) {
-//                    servletVersion = version.toString();
-//                }
             } catch (IOException e) {
                 // ignore
             }
@@ -135,32 +159,11 @@ public class GriffonStarter {
         GriffonRootLoader loader = new GriffonRootLoader();
         Thread.currentThread().setContextClassLoader(loader);
 
-//        final String standardJarName = "standard-" + servletVersion + ".jar";
-//        final String jstlJarName = "jstl-" + servletVersion + ".jar";
-
         // configure class loader
         URL[] urls = lc.getClassPathUrls();
-        for (int i = 0; i < urls.length; i++) {
-            URL url = urls[i];
-            final String path = url.getPath();
-//            if(standardJarPattern.matcher(path).find()) {
-//                if(path.endsWith(standardJarName)) {
-//                    loader.addURL(url);
-//                }
-//            }
-//            else if(jstlJarPattern.matcher(path).find()) {
-//                if(path.endsWith(jstlJarName)) {
-//                    loader.addURL(url);
-//                }
-//            }
-//            else {
-                loader.addURL(url);
-//            }
+        for (URL url : urls) {
+            loader.addURL(url);
         }
-
-        String javaVersion = System.getProperty("java.version");
-        String griffonHome = System.getProperty("griffon.home");
-
 
         if(javaVersion != null && griffonHome != null) {
             javaVersion = javaVersion.substring(0,3);
@@ -188,7 +191,6 @@ public class GriffonStarter {
                     }
                 }
             }
-
         }
 
         Method m=null;

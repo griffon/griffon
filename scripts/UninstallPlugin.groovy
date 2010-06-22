@@ -17,10 +17,10 @@
 /**
  * Gant script that handles the removal of Griffon plugins from a project.
  *
- * @author Graeme Rocher
- *
- * @since 1.1
+ * @author Graeme Rocher (Grails 1.1)
  */
 includeTargets << griffonScript("_GriffonPlugins")
+
+includePluginJarsOnClasspath=false
 
 setDefaultTarget("uninstallPlugin")

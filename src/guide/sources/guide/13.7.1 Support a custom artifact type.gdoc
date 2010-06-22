@@ -1,0 +1,84 @@
+Out-of-box Griffon supports 4 different types of artifacts: Model, View, Controller (MVC) plus Service, these are the major building blocks of Griffon. Just like it's cousin Grails, in Griffon plugins and addons can also introduce new artifact types, however the process is fairly different from what Grails employs. The following example is taken from the 0.3 release of the GValidation Plugin. A new custom artifact type was been introduced in this release - Constraint. The next steps were executed in order to support this artifact.
+
+h4. Step 1 - Handle your artifact
+
+To support a new artifact type you have to tell the Griffon core about the artifact type first. You can achieve this by implementing your own [ArtifactHandler|api:griffon.core.ArtifactHandler], for most of the common cases extending from [ArtifactHandlerAdapter|api:griffon.core.ArtifactHandlerAdapter] will be enough otherwise you can implement the interface manually. Here is what it looks like for the Constraint artifact type:
+
+{code}
+class ConstraintArtifactHandler extends ArtifactHandlerAdapter {
+    public static final String TYPE = "constraint"
+    public static final String TRAILING = "Constraint"
+ 
+    ConstraintArtifactHandler() {
+        super(TYPE)
+    }
+}
+{code}
+
+h4. Step 2 - Register your artifact
+
+As shown above, if you have experience working with Grails artefact support, you will notice the handler implementation is almost identical in Griffon, however things starting to differ from this point forward. Now you have the handler implemented, next thing is to register it with Griffon core. This is best achieved during initialization phase in your addon. Open the @<PluginName>GriffonAddon.groovy@ file add the following callback if its not already there:
+
+{code}
+def addonInit = {app ->
+    // ....
+    app.artifactManager.registerArtifactHandler(new ConstraintArtifactHandler())
+    // ....
+}
+{code}
+
+h4. Step 3 - Find your artifacts
+
+Now we have the new artifact type registered, next step is to tell Griffon where to find the artifacts. Ever wonder how Griffon knows to look under griffon-app/models for model classes? This is what we are going to do in this step. This is also where Griffon custom artifact support truly differs from Grails. Instead of handling it at run-time, Griffon chooses to handle this at build time, so to achieve this you need to tap into the Griffon event model. Open the @_Events.groovy@ script and implement the following event listener:
+
+{code}
+eventCollectArtifacts = { artifactsInfo ->
+    if(!artifactsInfo.find{ it.type == 'constraint' }) {
+        artifactsInfo << [type: 'constraint', path: 'constraints', suffix: 'Constraint']    
+    }
+} 
+{code}
+
+This event listener will tell Griffon to look for anything under griffon-app/constraints folder with suffix 'Constraint' and register them as constraint artifacts.
+
+h4. Step 4 - Measure your artifacts
+
+Now we pretty much have the basic bolts and nuts in place, its time to make our newly found artifact type to be more integrated with Griffon as any other first class artifact types do. One of the nice feature of Griffon is the stats command, it gives you an instant overview of how big your app is in terms of how many files and Line of Code per type including artifacts. Won't it be nice to have it also display the metrics about our own custom artifacts? fortunately its actually pretty easy to achieve in Griffon, similar to the previous step we will add another listener to the _Events script.
+
+{code}
+eventStatsStart = { pathToInfo ->
+    if(!pathToInfo.find{ it.path == 'constraints'} ) {
+        pathToInfo << [name: 'Constraints', path: 'constraints', filetype:['.groovy','.java']]    
+    }
+} 
+{code}
+
+h4. Step 5 - Automate your artifacts
+
+One of big selling point of the next generation Rails-like RIA framework is the ability to create any artifact simply by using one of the built-in command, for example grails create-controller or griffon [create-mvc|commandLine]. To make our new artifact type a true first-class citizen of Griffon, of course we need all the bells and whistles. To add a new command to Griffon, you need to create a new Groovy script @CreateConstraint.groovy@ under scripts folder:
+
+{code}
+target('default': "Creates a new constraint") {
+    depends(checkVersion, parseArguments)
+    promptForName(type: "Constraint")
+ 
+    def name = argsMap["params"][0]
+    createArtifact(name: name, suffix: "Constraint", type: "Constraint", path: "griffon-app/constraints")
+    createUnitTest(name: name, suffix: "Constraint")
+}
+{code}
+
+Like other convention-over-configuration framework, Griffon relies heavily on simple naming conventions, so in the script make sure you naming everything consistent to avoid unnecessary complexity. This script will create artifact for the type of Constraint and related unit test case, as you can see it will be a simple matter to create integration test case if need be.
+
+Now with the command in place, you can finally provide the template for the new artifact being created. Again naming convention is being used to determine where to find template file, for our example the template file should be placed under @src/templates/artifacts@ and named @Constraint.groovy@
+
+{code}
+@artifact.package@class @artifact.name@ {
+ 
+    def validate(propertyValue, bean, parameter) {
+        // insert your custom constraint logic
+    }
+}
+{code}
+
+Original source: [http://nzhu.blogspot.com/2010/06/how-to-support-custom-artifact-type-in.html|http://nzhu.blogspot.com/2010/06/how-to-support-custom-artifact-type-in.html] by Nick Zhu

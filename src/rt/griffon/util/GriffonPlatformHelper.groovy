@@ -72,7 +72,7 @@ class GriffonPlatformHelper {
                             }
 
                             public void handleQuit() {
-                                if(app.canShutdown()) app.shutdown()
+                                app.shutdown()
                             }
                         }
 

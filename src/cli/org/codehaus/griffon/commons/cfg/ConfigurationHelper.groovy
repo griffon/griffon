@@ -1,5 +1,5 @@
 /* 
- * Copyright 2006-2010 Graeme Rocher
+ * Copyright 2006-2010 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,17 +19,14 @@ package org.codehaus.griffon.commons.cfg;
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver
 import org.springframework.core.io.ResourceLoader
 import org.apache.commons.logging.*
-import org.codehaus.griffon.util.GriffonUtil
+import griffon.util.GriffonUtil
 import org.codehaus.griffon.commons.ConfigurationHolder
 import org.codehaus.griffon.commons.GriffonContext
 
 /**
 * Helper methods for initialising config object
 
-* @author Graeme Rocher
-* @since 1.0
-*
-* Created: Oct 9, 2007
+* @author Graeme Rocher (Grails 1.0)
 */
 class ConfigurationHelper {
 

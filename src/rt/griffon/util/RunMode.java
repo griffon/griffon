@@ -34,7 +34,7 @@ public enum RunMode {
     /**
      * Constant used to resolve the runMode via System.getProperty(RunMode.KEY)
      */
-    public static String KEY = "griffon.runmode";
+    public static final String KEY = "griffon.runmode";
 
     /**
      * Constants that indicates whether this GriffonApplication is running in the default running mode

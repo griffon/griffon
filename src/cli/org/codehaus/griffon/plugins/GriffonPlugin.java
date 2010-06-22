@@ -15,15 +15,17 @@
  */
 package org.codehaus.griffon.plugins;
 
+import griffon.util.BuildScope;
+import griffon.util.Environment;
 import groovy.lang.GroovyObject;
 import groovy.util.slurpersupport.GPathResult;
 import org.codehaus.griffon.commons.GriffonContext;
-//import org.codehaus.griffon.commons.spring.RuntimeSpringConfiguration;
 import org.springframework.beans.factory.support.BeanDefinitionRegistry;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.ApplicationContextAware;
+import org.springframework.core.type.filter.TypeFilter;
 
+import java.util.List;
 import java.util.Map;
+import java.util.Collection;
 
 /**
  * <p>Plugin interface that adds Spring {@link org.springframework.beans.factory.config.BeanDefinition}s
@@ -35,141 +37,98 @@ import java.util.Map;
  * <p>It's up to implementation classes to determine where <code>GriffonPlugin</code> instances are loaded
  * from.</p>
  *
- * @author Steven Devijver
- * @author Graeme Rocher
- *
- * @since 0.2
- * @see BeanDefinitionRegistry
+ * @author Steven Devijver (Grails 0.2)
+ * @author Graeme Rocher (Grails 0.2)
  */
-public interface GriffonPlugin extends ApplicationContextAware {
+public interface GriffonPlugin extends Comparable, GriffonPluginInfo {
+    /**
+     * The scopes to which this plugin applies
+     */
+    String SCOPES = "scopes";
 
-    int EVENT_ON_CHANGE = 0;
-    int EVENT_ON_CONFIG_CHANGE = 1;
-    int EVENT_ON_SHUTDOWN = 2;
-
-    String DO_WITH_DYNAMIC_METHODS = "doWithDynamicMethods";
+    /**
+     * The environments to which this plugin applies
+     */
+    String ENVIRONMENTS = "environments";
 
     /**
      * The prefix used in plug-ins paths
      */
     String PLUGINS_PATH = "/plugins";
-    /**
-	 * Defines the name of the property that specifies resources which this plugin monitors for changes
-	 * in the format a Ant-style path
-	 */
-    String WATCHED_RESOURCES = "watchedResources";
-    /**
-     * Defines the name of the property that specifies a List or plugins that this plugin evicts
-     * Eviction occurs when the PluginManager loads
-     */
-    String EVICT = "evict";
 
     /**
-     * The status of the plugin
+     * Defines the name of the property that specifies the plugin version
      */
-    String STATUS = "status";
+    String VERSION = "version";
 
     /**
-     * When a plugin is "enabled" it will be loaded as usual
+     * Defines the name of the property that specifies which plugins this plugin depends on
      */
-    String STATUS_ENABLED = "enabled";
-    /**
-     * When a plugin is "disabled" it will not be loaded
-     */
-    String STATUS_DISABLED = "disabled";
-    /**
-     * Defines the name of the property that defines a list of plugin names that this plugin influences.
-     * A influenced plugin will be refreshed (@see refresh()) when a watched resource changes
-     */
-	String INFLUENCES = "influences";
-    /**
-	 * Defines the name of the property that defines the closure that will be invoked
-	 * when a watched resource changes
-	 */
-	String ON_CHANGE = "onChange";
-    /**
-     * Defines the name of the property that holds a closure to be invoked when shutdown is called
-     */
-    String ON_SHUTDOWN = "onShutdown";
-    /**
-	 * Defines the name of the property that defines the closure that will be invoked
-	 * when a the Griffon configuration object changes
-	 */
-	String ON_CONFIG_CHANGE = "onConfigChange";
-    /**
-	 * Defines the name of the property that defines the closure that will be invoked
-	 * when the web.xml is being generated
-	 */
-	String DO_WITH_WEB_DESCRIPTOR = "doWithWebDescriptor";
-    /**
-	 * Defines the convention that appears within plugin class names
-	 */
-	String TRAILING_NAME = "GriffonPlugin";
-    /**
-	 * Defines the name of the property that specifies the plugin version
-	 */
-	String VERSION = "version";
-    /**
-	 * Defines the name of the property that defines the closure that will be invoked during runtime spring configuration
-	 */
-	String DO_WITH_SPRING = "doWithSpring";
-    /**
-	 * Defines the name of the property that defines a closure that will be invoked after intialisation
-	 * and when the application context has been built
-	 */
-	String DO_WITH_APPLICATION_CONTEXT = "doWithApplicationContext";
+    String DEPENDS_ON = "dependsOn";
 
     /**
-	 * Defines the name of the property that specifies which plugins this plugin depends on
-	 */
-	String DEPENDS_ON = "dependsOn";
-    /**
-	 * Define the list of ArtefactHandlers supporting by the plugin
-	 */
-	String ARTEFACTS = "artefacts";
-    /**
-     * The name of the property that provides a list of shipped, but overridable artefactssw
+     * The field that represents the list of resources to exclude from plugin packaging
      */
-    String PROVIDED_ARTEFACTS = "providedArtefacts";
+    String PLUGIN_EXCLUDES = "pluginExcludes";
 
     /**
-     * <p>This method is called to allow the plugin to add {@link org.springframework.beans.factory.config.BeanDefinition}s
-     * to the {@link org.springframework.beans.factory.support.BeanDefinitionRegistry}.</p>
+     * The field that represents the list of resources to include in plugin packaging
+     */
+    String PLUGIN_INCLUDES = "pluginIncludes";
+
+    /**
+     * The field that reperesents the list of type filters a plugin provides
+     */
+    String TYPE_FILTERS = "typeFilters";
+
+    /**
+     * Makes the plugin excluded for a particular BuildScope
+     * @param buildScope The BuildScope
+     */
+    void addExclude(BuildScope buildScope);
+
+    /**
+     * Makes the plugin excluded for a particular Environment
+     * @param env The Environment
+     */
+    void addExclude(Environment env);
+
+    /**
+     * Return whether this plugin supports the given PluginScope
      *
-     * @param applicationContext The Spring ApplicationContext instance
+     * @param buildScope The PluginScope
+     * @return True if it does
      */
-    void doWithApplicationContext(ApplicationContext applicationContext);
-
-
-//    /**
-//     * Executes the plugin code that performs runtime configuration as defined in the doWithSpring closure
-//     *
-//     * @param springConfig The RuntimeSpringConfiguration instance
-//     */
-//    void doWithRuntimeConfiguration(RuntimeSpringConfiguration springConfig);
+    boolean supportsScope(BuildScope buildScope);
 
     /**
-     * Handles processing of web.xml. The method is passed a GPathResult which is parsed by
-     * groovy.util.XmlSlurper. A plug-in can then manipulate the in-memory XML however it chooses
-     * Once all plug-ins have been processed the web.xml is then written to disk based on its in-memory form
-     *
-     * @param webXml The GPathResult representing web.xml
+     * Returns whether this plugin supports the given environment name
+     * @param environment The environment name
+     * @return True if it does
      */
-    void doWithWebDescriptor(GPathResult webXml);
+    boolean supportsEnvironment(Environment environment);
+
+    /**
+     * @return True if the current plugin supports the current BuildScope and Environment
+     */
+    boolean supportsCurrentScopeAndEnvironment();
 
     /**
      *
      * @return The name of the plug-in
      */
-	String getName();
+    String getName();
 
+    /**
+     * Write some documentation to the DocumentationContext
+     */
+    void doc(String text);
 
-	/**
-	 *
-	 * @return The version of the plug-in
-	 */
-	String getVersion();
-
+    /**
+     *
+     * @return The version of the plug-in
+     */
+    String getVersion();
 
     /**
      * Returns the path of the plug-in
@@ -178,58 +137,25 @@ public interface GriffonPlugin extends ApplicationContextAware {
      */
     String getPluginPath();
 
+    /**
+     *
+     * @return The names of the plugins this plugin is dependant on
+     */
+    String[] getDependencyNames();
 
     /**
-	 *
-	 * @return The names of the plugins this plugin is dependant on
-	 */
-	String[] getDependencyNames();
-
-	/**
-	 *
-	 * @return The names of the plugins this plugin should evict onload
-	 */
-	String[] getEvictionNames();
-
-	/**
-	 * Retrieves the names of plugins that this plugin should be loaded after. This differs
-	 * from dependencies in that if that plugin doesn't exist this plugin will still be loaded.
-	 * It is a way of enforcing plugins are loaded before, but not necessarily needed
-	 *
-	 * @return The names of the plugins that this plugin should be loaded after
-	 */
-	String[] getLoadAfterNames();
-
-
-	/**
-	 * The version of the specified dependency
-	 *
-	 * @param name the name of the dependency
-	 * @return The version
-	 */
-	String getDependentVersion(String name);
-
-
-	/**
-	 * When called this method checks for any changes to the plug-ins watched resources
-	 * and reloads appropriately
+     * The version of the specified dependency
      *
-     * @return Returns true when the plug-in itself changes in some way, as oppose to plug-in resources
-	 *
-	 */
-//	boolean checkForChanges();
+     * @param name the name of the dependency
+     * @return The version
+     */
+    String getDependentVersion(String name);
 
-	/**
-	 * Refreshes this Griffon plugin reloading any watched resources as necessary
-	 *
-	 */
-	void refresh();
-
-	/**
-	 * Retrieves the plugin manager if known, otherwise returns null
-	 * @return The PluginManager or null
-	 */
-	GriffonPluginManager getManager();
+    /**
+     * Retrieves the plugin manager if known, otherwise returns null
+     * @return The PluginManager or null
+     */
+    GriffonPluginManager getManager();
 
     /**
      * Retrieves the wrapped plugin instance for this plugin
@@ -238,65 +164,59 @@ public interface GriffonPlugin extends ApplicationContextAware {
     GroovyObject getInstance();
 
     /**
-	 * Sets the plugin manager for this plugin
-	 *
-	 * @param manager A GriffonPluginManager instance
-	 */
-	void setManager(GriffonPluginManager manager);
-
-
-	void setApplication(GriffonContext application);
-
-
-	/**
-	 * Calls a "doWithDynamicMethods" closure that allows a plugin to register dynamic methods at runtime
-	 * @param applicationContext The Spring ApplicationContext instance
-	 *
-	 */
-	void doWithDynamicMethods(ApplicationContext applicationContext);
-
-    /**
-     * @return Whether the plugin is enabled or not
-     */
-    boolean isEnabled();
-
-    /**
-     * Retrieve the plugin names that this plugin is observing for changes
+     * Sets the plugin manager for this plugin
      *
-     * @return The names of the observed plugins
+     * @param manager A GriffonPluginManager instance
      */
-    String[] getObservedPluginNames();
+    void setManager(GriffonPluginManager manager);
+
+
+    void setApplication(GriffonContext application);
 
     /**
-     * Notifies this plugin of the specified Event calling the onChange listener
-     *
-     * @param event The event to listen for
+     * Returns the name of the plugin as represented in the file system including the version. For example TagLibGriffonPlugin would result in "tag-lib-0.1"
+     * @return The file system representation of the plugin name
      */
-    void notifyOfEvent(Map event);
+    String getFileSystemName();
 
     /**
-     * Notifies the plugin of a specific event for the given event id, which is one of ON_CHANGE, ON_CONFIG_CHANGE
-     *
-     * @param eventKind The event kind
-     * @param source The source of the event
-     * @return a Map that represents the event
+     * Returns the name of the plugin as represented on the file system without the version. For example TagLibGriffonPlugin would result in "tag-lib"
+     * @return The file system name
      */
-    Map notifyOfEvent(int eventKind, Object source);
+    String getFileSystemShortName();
 
-//    /**
-//     * Called prior to the initialisation of the GriffonContext instance to allow the registration
-//     * of additonal ArtefactHandlers
-//     *
-//     * @see org.codehaus.griffon.commons.ArtefactHandler
-//     *
-//     */
-//    void doArtefactConfiguration();
-//
-//    /**
-//     * Retrieves an array of provided Artefacts that are pre-compiled additions to the GriffonContext object
-//     * but are overridable by the end-user
-//     *
-//     * @return A list of provided artefacts
-//     */
-//    Class[] getProvidedArtefacts();
+    /**
+     * Returns the underlying class that represents this plugin
+     * @return The plugin class
+     */
+    Class getPluginClass();
+
+    /**
+     * A list of resources that the plugin should exclude from the packaged distribution
+     * @return a List of resources
+     */
+    List<String> getPluginExcludes();
+
+    /**
+     * Returns whether this plugin is loaded from the current plugin. In other words when you execute griffon run-app from a plugin project
+     * the plugin project's *GriffonPlugin.groovy file represents the base plugin and this method will return true for this plugin
+     *
+     * @return True if it is the base plugin
+     */
+    boolean isBasePlugin();
+
+    /**
+     * Sets whether this plugin is the base plugin
+     *
+     * @param isBase True if is
+     * @see #isBasePlugin()
+     */
+    void setBasePlugin(boolean isBase);
+
+    /**
+     * Plugin can provide a list of Spring TypeFilters so that annotated components can
+     * be scanned into the ApplicationContext
+     * @return A collection of TypeFilter instance
+     */
+    Collection<? extends TypeFilter> getTypeFilters();
 }

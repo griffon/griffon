@@ -41,6 +41,13 @@
         </copy>
     </target>
 
+    <target name="copy-source-and-javadoc-jars" unless="fast">
+        <copy file="${griffon.target}/griffon-rt-${griffon.version}-sources.jar"
+              todir="${release.dir}/doc"/>
+        <copy file="${griffon.target}/griffon-rt-${griffon.version}-javadoc.jar"
+              todir="${release.dir}/doc"/>
+    </target>
+
     <target name="copy-common-release-content">
         <antcall target="copy-dir">
             <param name="dir.excludes" value="docs"/>
@@ -70,6 +77,11 @@
         </antcall>
         <antcall target="copy-dir">
             <param name="dir.excludes" value=""/>
+            <param name="dir.location" value="media"/>
+            <param name="dir.destination" value="${release.dir}/media"/>
+        </antcall>
+        <antcall target="copy-dir">
+            <param name="dir.excludes" value=""/>
             <param name="dir.location" value="conf"/>
             <param name="dir.destination" value="${release.dir}/conf"/>
         </antcall>
@@ -88,15 +100,12 @@
             <param name="dir.location" value="doc"/>
             <param name="dir.destination" value="${release.dir}/doc"/>
         </antcall>
-        <copy file="${griffon.target}/griffon-rt-${griffon.version}-sources.jar"
-              todir="${release.dir}/doc"/>
-        <copy file="${griffon.target}/griffon-rt-${griffon.version}-javadoc.jar"
-              todir="${release.dir}/doc"/>
         <antcall target="copy-dir">
             <param name="dir.excludes" value=""/>
             <param name="dir.location" value="target/guide"/>
             <param name="dir.destination" value="${release.dir}/guide"/>
         </antcall>
+        <antcall target="copy-source-and-javadoc-jars" />
         <copy todir="${release.dir}">
             <fileset dir=".">
                 <include name="LICENSE"/>

@@ -17,18 +17,9 @@
 /**
  * Gant script that cleans a Griffon project
  *
- * @author Graeme Rocher
- *
- * @since 0.4
+ * @author Graeme Rocher (Grails 0.4)
  */
-
-// No point doing this stuff more than once.
-if (getBinding().variables.containsKey("_clean_called")) return
-_clean_called = true
 
 includeTargets << griffonScript("_GriffonClean")
 
-target ('default': "Cleans a Griffon project" ) {
-    cleanAll()
-}
-
+setDefaultTarget("cleanAll")

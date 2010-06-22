@@ -15,7 +15,6 @@
  */
 package griffon.core;
 
-
 /**
  * A ShutdownHanlder may prevent the application from exiting.
  *
@@ -23,19 +22,19 @@ package griffon.core;
  * @since 0.3.1
  */
 public interface ShutdownHandler {
-     /**
-      * Asks this handler if the application's shutdown sequence can proceed or not.<p>
-      * Return <tt>false</tt> if the shutdown sequence must be aborted.
-      *
-      * @param application the current running application
-      * @return true if the shutdown sequence can proceed, false otherwise
-      */
-     boolean canShutdown(GriffonApplication application);    
+    /**
+     * Asks this handler if the application's shutdown sequence can proceed or not.<p>
+     * Return <tt>false</tt> if the shutdown sequence must be aborted.
+     *
+     * @param application the current running application
+     * @return true if the shutdown sequence can proceed, false otherwise
+     */
+    boolean canShutdown(GriffonApplication application);    
 
-     /**
-      * Called when the shutdown sequence continues
-      *
-      * @param application the current running application
-      */
-     void onShutdown(GriffonApplication application);    
+    /**
+     * Called when the shutdown sequence continues
+     *
+     * @param application the current running application
+     */
+    void onShutdown(GriffonApplication application);    
 }

@@ -17,10 +17,8 @@
 /**
  * Gant script that handles the creation of Griffon plugins
  *
- * @author Graeme Rocher
- * @author Sergey Nebolsin
- *
- * @since 0.4
+ * @author Graeme Rocher (Grails 0.4)
+ * @author Sergey Nebolsin (Grails 0.4)
  */
 
 includeTargets << griffonScript("_GriffonCreateProject")

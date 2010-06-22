@@ -15,140 +15,166 @@
  */
 package org.codehaus.griffon.commons;
 
+import griffon.util.GriffonUtil;
 import groovy.lang.GroovyObject;
 import groovy.lang.GroovySystem;
 import groovy.lang.MetaClass;
+import groovy.lang.MetaProperty;
+
+import java.beans.PropertyDescriptor;
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Modifier;
+
 import org.apache.commons.lang.ClassUtils;
 import org.apache.commons.lang.StringUtils;
 import org.codehaus.griffon.exceptions.NewInstanceCreationException;
-import org.codehaus.groovy.runtime.DefaultGroovyMethods;
 import org.springframework.beans.BeanWrapper;
 import org.springframework.beans.BeanWrapperImpl;
-
-import java.lang.reflect.Constructor;
-import java.lang.reflect.InvocationTargetException;
-import java.util.Map;
+import org.springframework.util.Assert;
 
 /**
  * Abstract base class for Griffon types that provides common functionality for
- * evaluating conventions within classes
+ * evaluating conventions within classes.
  *
- * @author Steven Devijver
- * @author Graeme Rocher
- *
- * @since 0.1
- *
- *  Created: Jul 2, 2005
+ * @author Steven Devijver (Grails 0.1)
+ * @author Graeme Rocher (Grails 0.1)
  */
 public abstract class AbstractGriffonClass implements GriffonClass {
-
-
-
-	private Class clazz = null;
-    private String fullName = null;
-    private String name = null;
-    private String packageName = null;
-    private BeanWrapper reference = null;
-    private String naturalName;
-    private String shortName;
-    private MetaClass metaClass;
-
-
+    private final Class<?> clazz;
+    private BeanWrapper reference;
+    private final String fullName;
+    private final String name;
+    private final String packageName;
+    private final String naturalName;
+    private final String shortName;
+    private final String propertyName;
+    private final String logicalPropertyName;
+    private final ClassPropertyFetcher classPropertyFetcher;
 
     /**
-     * <p>Contructor to be used by all child classes to create a
-     * new instance and get the name right.
+     * Used by all child classes to create a new instance and get the name right.
      *
      * @param clazz the Griffon class
      * @param trailingName the trailing part of the name for this class type
      */
-    public AbstractGriffonClass(Class clazz, String trailingName) {
-        super();
-        setClazz(clazz);
+    public AbstractGriffonClass(Class<?> clazz, String trailingName) {
+        Assert.notNull(clazz, "Clazz parameter should not be null");
 
-        this.reference = new BeanWrapperImpl(newInstance());
-        this.fullName = clazz.getName();
-        this.packageName = ClassUtils.getPackageName(clazz);
-        this.naturalName = GriffonClassUtils.getNaturalName(clazz.getName());
-        this.shortName = getShortClassname(clazz);
-        this.name = GriffonClassUtils.getLogicalName(clazz, trailingName);
-    }
-
-	public String getShortName() {
-        return this.shortName;
-    }
-
-    private void setClazz(Class clazz) {
-        if (clazz == null) {
-            throw new IllegalArgumentException("Clazz parameter should not be null");
-        }
         this.clazz = clazz;
+        fullName = clazz.getName();
+        packageName = ClassUtils.getPackageName(clazz);
+        naturalName = GriffonUtil.getNaturalName(clazz.getName());
+        shortName = ClassUtils.getShortClassName(clazz);
+        name = GriffonUtil.getLogicalName(clazz, trailingName);
+        propertyName = GriffonUtil.getPropertyNameRepresentation(shortName);
+        if (StringUtils.isBlank(name)) {
+            logicalPropertyName = propertyName;
+        }
+        else {
+            logicalPropertyName = GriffonUtil.getPropertyNameRepresentation(name);
+        }
+        classPropertyFetcher = ClassPropertyFetcher.forClass(clazz);
     }
 
-    public Class getClazz() {
-        return this.clazz;
+    public String getShortName() {
+        return shortName;
+    }
+
+    public Class<?> getClazz() {
+        return clazz;
     }
 
     public Object newInstance() {
         try {
-            Constructor defaultConstructor = getClazz().getDeclaredConstructor(new Class[]{});
-            if(!defaultConstructor.isAccessible()) defaultConstructor.setAccessible(true);
+            Constructor<?> defaultConstructor = getClazz().getDeclaredConstructor(new Class[]{});
+            if (!defaultConstructor.isAccessible()) {
+                defaultConstructor.setAccessible(true);
+            }
             return defaultConstructor.newInstance(new Object[]{});
-        } catch (Exception e) {
+        }
+        catch (Exception e) {
             Throwable targetException = null;
             if (e instanceof InvocationTargetException) {
                 targetException = ((InvocationTargetException)e).getTargetException();
-            } else {
+            }
+            else {
                 targetException = e;
             }
-            throw new NewInstanceCreationException("Could not create a new instance of class [" + getClazz().getName() + "]!", targetException);
+            throw new NewInstanceCreationException("Could not create a new instance of class [" +
+                    getClazz().getName() + "]!", targetException);
         }
     }
 
     public String getName() {
-        return this.name;
+        return name;
     }
 
     public String getNaturalName() {
-        return this.naturalName;
+        return naturalName;
     }
 
     public String getFullName() {
-        return this.fullName;
+        return fullName;
     }
 
     public String getPropertyName() {
-        return GriffonClassUtils.getPropertyNameRepresentation(getShortName());
+        return propertyName;
     }
 
     public String getLogicalPropertyName() {
-
-        final String logicalName = getName();
-        if(StringUtils.isBlank(logicalName)) {
-            return GriffonClassUtils.getPropertyNameRepresentation(getShortName());
-        }
-        return GriffonClassUtils.getPropertyNameRepresentation(logicalName);
+        return logicalPropertyName;
     }
 
     public String getPackageName() {
-        return this.packageName;
+        return packageName;
     }
 
-    private static String getShortClassname(Class clazz) {
-        return ClassUtils.getShortClassName(clazz);
+    public Object getReferenceInstance() {
+        Object obj = classPropertyFetcher.getReference();
+        if (obj instanceof GroovyObject) {
+            ((GroovyObject)obj).setMetaClass(getMetaClass());
+        }
+        return obj;
+    }
+
+    public PropertyDescriptor[] getPropertyDescriptors() {
+        return classPropertyFetcher.getPropertyDescriptors();
+    }
+
+    public Class<?> getPropertyType(String typeName) {
+        return classPropertyFetcher.getPropertyType(typeName);
+    }
+
+    public boolean isReadableProperty(String propName) {
+        return classPropertyFetcher.isReadableProperty(propName);
+    }
+
+    public boolean hasMetaMethod(String methodName) {
+        return hasMetaMethod(methodName, null);
+    }
+
+    public boolean hasMetaMethod(String methodName, Object[] args) {
+        return (getMetaClass().getMetaMethod(methodName, args) != null);
+    }
+
+    public boolean hasMetaProperty(String propName) {
+        return (getMetaClass().getMetaProperty(propName) != null);
     }
 
     /**
-     * <p>The reference instance is used to get configured property values.
+     * Used to get configured property values.
      *
      * @return BeanWrapper instance that holds reference
+     * @deprecated
      */
+    @Deprecated
     public BeanWrapper getReference() {
-        Object obj = this.reference.getWrappedInstance();
-        if(obj instanceof GroovyObject) {
-            ((GroovyObject)obj).setMetaClass(GroovySystem.getMetaClassRegistry().getMetaClass(getClazz()));
+        GriffonUtil.deprecated(AbstractGriffonClass.class, "getReference");
+        if (reference == null) {
+            reference = new BeanWrapperImpl(newInstance());
         }
-        return this.reference;
+        return reference;
     }
 
     /**
@@ -157,94 +183,101 @@ public abstract class AbstractGriffonClass implements GriffonClass {
      * and static fields/properties. We will therefore match, in this order:
      * </p>
      * <ol>
-     * <li>Standard public bean property (with getter or just public field, using normal introspection)
-     * <li>Public static property with getter method
      * <li>Public static field
+     * <li>Public static property with getter method
+     * <li>Standard public bean property (with getter or just public field, using normal introspection)
      * </ol>
-     *
      *
      * @return property value or null if no property or static field was found
      */
-    protected Object getPropertyOrStaticPropertyOrFieldValue(String name, Class type) {
-        BeanWrapper ref = getReference();
-        Object value = null;
-        if (ref.isReadableProperty(name)) {
-            value = ref.getPropertyValue(name);
+    protected Object getPropertyOrStaticPropertyOrFieldValue(@SuppressWarnings("hiding") String name, Class<?> type) {
+        Object value = classPropertyFetcher.getPropertyValue(name);
+        return returnOnlyIfInstanceOf(value, type);
+    }
+
+    /**
+     * Get the value of the named static property.
+     *
+     * @param propName
+     * @param type
+     * @return The property value or null
+     */
+    public <T> T getStaticPropertyValue(String propName, Class<T> type) {
+        T value = classPropertyFetcher.getStaticPropertyValue(propName, type);
+        if (value == null) {
+            return getGroovyProperty(propName, type, true);
         }
-        else if (GriffonClassUtils.isPublicField(ref.getWrappedInstance(), name))
-        {
-            value = GriffonClassUtils.getFieldValue(ref.getWrappedInstance(), name);
-        }
-        else
-        {
-            value = GriffonClassUtils.getStaticPropertyValue(clazz, name);
-        }
-        if ((value != null) && GriffonClassUtils.isGroovyAssignableFrom( type, value.getClass())) {
-            return value;
-        }
-        return null;
+        return value;
     }
 
     /**
      * Get the value of the named property, with support for static properties in both Java and Groovy classes
      * (which as of Groovy JSR 1.0 RC 01 only have getters in the metaClass)
-     * @param name
+     * @param propName
      * @param type
      * @return The property value or null
      */
-    public Object getPropertyValue(String name, Class type) {
-
-        // Handle standard java beans normal or static properties
-        BeanWrapper ref = getReference();
-        Object value = null;
-        if (ref.isReadableProperty(name)) {
-            value = ref.getPropertyValue(name);
-        }
-        else{
+    public <T> T getPropertyValue(String propName, Class<T> type) {
+        T value = classPropertyFetcher.getPropertyValue(propName, type);
+        if (value == null) {
             // Groovy workaround
-            Object inst = ref.getWrappedInstance();
-            if (inst instanceof GroovyObject)
-            {
-            	final Map properties = DefaultGroovyMethods.getProperties(inst);
-            	if(properties.containsKey(name)) {
-            		value = properties.get(name);
-            	}
+            return getGroovyProperty(propName, type, false);
+        }
+        return returnOnlyIfInstanceOf(value, type);
+    }
+
+    private <T> T  getGroovyProperty(String propName, Class<T> type, boolean onlyStatic) {
+        Object value = null;
+        if (GroovyObject.class.isAssignableFrom(getClazz())) {
+            MetaProperty metaProperty = getMetaClass().getMetaProperty(propName);
+            if (metaProperty != null) {
+                int modifiers = metaProperty.getModifiers();
+                if (Modifier.isStatic(modifiers)) {
+                    value = metaProperty.getProperty(clazz);
+                }
+                else if (!onlyStatic){
+                    value = metaProperty.getProperty(getReferenceInstance());
+                }
             }
         }
+        return returnOnlyIfInstanceOf(value, type);
+    }
 
-        if(value != null && (type.isAssignableFrom(value.getClass())
-            || GriffonClassUtils.isMatchBetweenPrimativeAndWrapperTypes(type, value.getClass()))) {
-            return value;
+    public Object getPropertyValueObject(String propertyNAme) {
+        return getPropertyValue(propertyNAme, Object.class);
+    }
+
+    @SuppressWarnings("unchecked")
+    private <T> T returnOnlyIfInstanceOf(Object value, Class<T> type) {
+        if ((value != null) && (type==Object.class || GriffonClassUtils.isGroovyAssignableFrom(type, value.getClass()))) {
+            return (T)value;
         }
-        else
-        {
-            return null;
-        }
+
+        return null;
     }
 
     /* (non-Javadoc)
-	 * @see org.codehaus.groovy.griffon.commons.GriffonClass#getPropertyValue(java.lang.String)
-	 */
-	public Object getPropertyValue(String name) {
-		return getPropertyOrStaticPropertyOrFieldValue(name, Object.class);
-	}
-
-
+     * @see org.codehaus.griffon.commons.GriffonClass#getPropertyValue(java.lang.String)
+     */
+    public Object getPropertyValue(String propName) {
+        return getPropertyOrStaticPropertyOrFieldValue(propName, Object.class);
+    }
 
     /* (non-Javadoc)
-	 * @see org.codehaus.groovy.griffon.commons.GriffonClass#hasProperty(java.lang.String)
-	 */
-	public boolean hasProperty(String name) {
-		return getReference().isReadableProperty(name);
-	}
+     * @see org.codehaus.griffon.commons.GriffonClass#hasProperty(java.lang.String)
+     */
+    public boolean hasProperty(String propName) {
+        return classPropertyFetcher.isReadableProperty(propName);
+    }
 
-	/**
-	 * @return the metaClass
-	 */
-	public MetaClass getMetaClass() {
-		return GriffonClassUtils.getExpandoMetaClass(clazz);
-	}
+    /**
+     * @return the metaClass
+     */
+    public MetaClass getMetaClass() {
+        return GroovySystem.getMetaClassRegistry().getMetaClass(clazz);
+    }
 
+    @Override
     public String toString() {
         return "Artefact > " + getName();
     }

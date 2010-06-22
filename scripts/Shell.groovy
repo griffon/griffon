@@ -17,9 +17,7 @@
 /**
  * Gant script that loads the Griffon interactive shell
  *
- * @author Graeme Rocher
- *
- * @since 0.4
+ * @author Graeme Rocher (Grails 0.4)
  */
 
 import org.codehaus.groovy.tools.shell.*
@@ -29,18 +27,20 @@ includeTargets << griffonScript("_GriffonBootstrap")
 target(default: "Runs an embedded application in a Groovy Shell") {
     depends(checkVersion, configureProxy, classpath, createConfig)
 
-    jardir = ant.antProject.replaceProperties(config.griffon.jars.destDir)
+    jardir = ant.antProject.replaceProperties(buildConfig.griffon.jars.destDir)
     ant.copy(todir:jardir) { fileset(dir:"${griffonHome}/lib/", includes: "jline-*.jar") }
 
-    bootstrap()
     shell()
 }
 
 target(shell: "Load the Griffon interactive shell") {
-    loadApp()
-    configureApp()
+    if(!isPluginProject) {
+        bootstrap()
+        loadApp()
+    }
+
     def b = new Binding()
-    b.app = griffonApp
+    if(!isPluginProject) b.app = griffonApp
 
     def shell = new Groovysh(classLoader, b, new IO(System.in, System.out, System.err))
     shell.run([] as String[])

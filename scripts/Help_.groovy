@@ -17,12 +17,10 @@
 /**
  * Gant script that evaluates all installed scripts to create help output
  *
- * @author Graeme Rocher
- *
- * @since 0.4
+ * @author Graeme Rocher (Grails 0.4)
  */
 
-import org.codehaus.griffon.util.GriffonNameUtils
+import griffon.util.GriffonUtil
 
 includeTargets << griffonScript("Init")
 
@@ -60,13 +58,13 @@ boolean shouldGenerateHelp(File script) {
 
 target ('default' : "Prints out the help for each script") {
     ant.mkdir(dir:griffonTmp)
-    def scripts = getAllScripts().collect { it.file }
+    def scripts = pluginSettings.availableScripts.collect { it.file }
 
     def helpText = ""
 
 
     if(args) {
-        def fileName = GriffonNameUtils.getNameFromScript(args)
+        def fileName = GriffonUtil.getNameFromScript(args)
         def file = scripts.find {
             def scriptFileName = it.name[0..-8]
             if(scriptFileName.endsWith("_")) scriptFileName = scriptFileName[0..-2]
@@ -86,7 +84,7 @@ target ('default' : "Prints out the help for each script") {
                         script.binding = binding
                         script.run()
 
-                        def scriptName = GriffonNameUtils.getScriptName(file.name)
+                        def scriptName = GriffonUtil.getScriptName(file.name)
 
                         helpText = "griffon ${scriptName} -- ${getDefaultDescription()}"
                         File helpFile = getHelpFile(file)
@@ -120,7 +118,7 @@ griffon create-app books
 Available Targets (type griffon help 'target-name' for more info):"""
 
         scripts.unique { it.name }. sort{ it.name }.each { file ->
-            def scriptName = GriffonNameUtils.getScriptName(file.name)
+            def scriptName = GriffonUtil.getScriptName(file.name)
             println "griffon ${scriptName}"
         }
     }
@@ -135,7 +133,7 @@ target(showHelp: "Show help for a particular command") {
                 script.binding = binding
                 script.run()
 
-                def scriptName = GriffonNameUtils.getScriptName(file.name)
+                def scriptName = GriffonUtil.getScriptName(file.name)
 
                 helpText = "griffon ${scriptName} -- ${getDefaultDescription()}"
                 getHelpFile(file).write(helpText)

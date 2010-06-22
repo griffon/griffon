@@ -17,10 +17,8 @@
 /**
  * Gant script that handles upgrading of a Griffon applications
  *
- * @author Graeme Rocher
- * @author Sergey Nebolsin
- *
- * @since 0.4
+ * @author Graeme Rocher (Grails 0.4)
+ * @author Sergey Nebolsin (Grails 0.4)
  */
 
 import org.codehaus.griffon.plugins.GriffonPluginUtils
@@ -33,7 +31,7 @@ target('default': "Upgrades a Griffon application from a previous version of Gri
 
     depends(createStructure)
 
-    boolean force = args?.indexOf('-force') > -1 ? true : false
+    boolean force = args?.indexOf('-force') > -1
 
     if (appGriffonVersion != griffonVersion) {
         def gv = appGriffonVersion ?: "?Unknown?"
@@ -69,8 +67,6 @@ target('default': "Upgrades a Griffon application from a previous version of Gri
     clean()
 
     ant.sequential {
-        // removed from grails: move test dir, also has source control chceks
-
         delete(dir: "${basedir}/tmp", failonerror: false)
 
         // Unpack the shared files into a temporary directory, and then
@@ -83,14 +79,10 @@ target('default': "Upgrades a Griffon application from a previous version of Gri
         delete(dir: tmpDir.path)
         launderIDESupportFiles()
 
-        // remove from grails: a bunch of servlet stuff
-        // remove from grails: adding new files in grails-app/conf
-
         mkdir(dir: "${basedir}/test")
         mkdir(dir: "${basedir}/test/integration")
         mkdir(dir: "${basedir}/test/unit")
 
-        // remove from grails: URLMappings
         // if Config.groovy exists and it does not contain values added
         // since 0.0 then sensible defaultsare provided which keep previous
         // behavior even if it is not the default in the current version.
@@ -125,8 +117,8 @@ target('default': "Upgrades a Griffon application from a previous version of Gri
                         it.writeLine "${indent}signingkey.params.sigfile='GRIFFON' + env"
                         it.writeLine "${indent}signingkey.params.keystore = \"\${basedir}/griffon-app/conf/keys/\${env}Keystore\""
                         it.writeLine "${indent}signingkey.params.alias = env"
-                        it.writeLine "${indent}signingkey.params.storepass = 'BadStorePassword'"
-                        it.writeLine "${indent}signingkey.params.keyPass = 'BadKeyPassword'"
+                        it.writeLine "${indent}// signingkey.params.storepass = 'BadStorePassword'"
+                        it.writeLine "${indent}// signingkey.params.keyPass = 'BadKeyPassword'"
                         it.writeLine "${indent}signingkey.params.lazy = true // only sign when unsigned"
                     }
 

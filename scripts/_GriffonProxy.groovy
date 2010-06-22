@@ -17,38 +17,36 @@
 /**
  * Contains a target for configuring an HTTP proxy.
  *
- * @author Peter Ledbrook
- *
- * @since 1.1
+ * @author Peter Ledbrook (Grails 1.1)
  */
-
-// No point doing this stuff more than once.
-if (getBinding().variables.containsKey("_griffon_proxy_called")) return
-_griffon_proxy_called = true
-
 
 target(configureProxy: "The implementation target") {
     proxySettings = ""
-    def scriptFile = new File("${griffonSettings.griffonWorkDir}/scripts/ProxyConfig.groovy")
-    if (scriptFile.exists()) {
-        includeTargets << scriptFile.text
-        if (proxyConfig.proxyHost) {
-            // Let's configure proxy...
-            def proxyHost = proxyConfig.proxyHost
-            def proxyPort = proxyConfig.proxyPort ? proxyConfig.proxyPort : '80'
-            def proxyUser = proxyConfig.proxyUser ? proxyConfig.proxyUser : ''
-            def proxyPassword = proxyConfig.proxyPassword ? proxyConfig.proxyPassword : ''
-            println "Configured HTTP proxy: ${proxyHost}:${proxyPort}${proxyConfig.proxyUser ? '(' + proxyUser + ')' : ''}"
-            // ... for ant. We can remove this line with ant 1.7.0 as it uses system properties.
-            ant.setproxy(proxyhost: proxyHost, proxyport: proxyPort, proxyuser: proxyUser, proxypassword: proxyPassword)
-
-            proxySettings += "-Dproxy.host=$proxyHost "
-            proxySettings += "-Dproxy.port=$proxyPort "
-            proxySettings += "-Dproxy.user=$proxyUser "
-            proxySettings += "-Dproxy.password=$proxyPassword "
-
-            // ... for all other code
-            System.properties.putAll(["http.proxyHost": proxyHost, "http.proxyPort": proxyPort, "http.proxyUserName": proxyUser, "http.proxyPassword": proxyPassword])
-        }
+    def scriptFile = new File("${userHome}/.griffon/scripts/ProxyConfig.groovy")
+    if (!scriptFile.exists()) {
+        return
     }
+
+    includeTargets << scriptFile.text
+
+    if (!proxyConfig.proxyHost) {
+        return
+    }
+
+    // Let's configure proxy...
+    def proxyHost = proxyConfig.proxyHost
+    def proxyPort = proxyConfig.proxyPort ? proxyConfig.proxyPort : '80'
+    def proxyUser = proxyConfig.proxyUser ? proxyConfig.proxyUser : ''
+    def proxyPassword = proxyConfig.proxyPassword ? proxyConfig.proxyPassword : ''
+    println "Configured HTTP proxy: ${proxyHost}:${proxyPort}${proxyConfig.proxyUser ? '(' + proxyUser + ')' : ''}"
+    // ... for ant. We can remove this line with ant 1.7.0 as it uses system properties.
+    ant.setproxy(proxyhost: proxyHost, proxyport: proxyPort, proxyuser: proxyUser, proxypassword: proxyPassword)
+    // ... for all other code
+    System.properties.putAll(["http.proxyHost": proxyHost, "http.proxyPort": proxyPort,
+                              "http.proxyUserName": proxyUser, "http.proxyPassword": proxyPassword])
+
+    proxySettings += "-Dproxy.host=$proxyHost "
+    proxySettings += "-Dproxy.port=$proxyPort "
+    proxySettings += "-Dproxy.user=$proxyUser "
+    proxySettings += "-Dproxy.password=$proxyPassword "
 }

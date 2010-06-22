@@ -1,5 +1,5 @@
 /* 
- * Copyright 2004-2010 Graeme Rocher
+ * Copyright 2004-2010 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,6 +16,7 @@
 
 package org.codehaus.griffon.plugins
 
+import griffon.util.PluginBuildSettings
 import org.springframework.core.io.Resource
 import groovy.util.slurpersupport.GPathResult
 
@@ -23,35 +24,56 @@ import groovy.util.slurpersupport.GPathResult
  * A class used mainly by the build system that encapsulates access to information
  * about the underlying plugin by delegating to the methods in GriffonPluginUtils
  * 
- * @author Graeme Rocher
- * @since 1.1
+ * @author Graeme Rocher (Grials 1.1)
  */
-
-public class PluginInfo {
-
+public class PluginInfo extends GroovyObjectSupport implements GriffonPluginInfo {
     Resource pluginDir
+    PluginBuildSettings pluginBuildSettings
     def metadata
+    String name
+    String version
 
-    public PluginInfo(Resource pluginDir) {
+    public PluginInfo(Resource pluginXml, PluginBuildSettings pluginBuildSettings) {
         super();
-        if(pluginDir)
-        this.pluginDir = pluginDir
-        this.metadata = GriffonPluginUtils.getMetadataForPlugin(pluginDir)
+        if(pluginXml) {
+            try {
+                this.pluginDir = pluginXml.createRelative(".");
+            }catch(e) {
+                // ignore
+            }            
+        }
+            
+        this.metadata = parseMetadata(pluginXml)
+        this.pluginBuildSettings = pluginBuildSettings
     }
 
+    GPathResult parseMetadata(Resource pluginXml) {
+        InputStream input 
+        try {
+            input = pluginXml.getInputStream()
+            return new XmlSlurper().parse(input)
+        }
+        finally { input?.close() }
+    }
 
     /**
      * Returns the plugin's version
      */
     String getVersion() {
-       return metadata.@version.text()
+        if(!version) {
+            version = metadata.@version.text()
+        }
+        return version
     }
 
     /**
      * Returns the plugin's name
      */
     String getName() {
-        return metadata.@name.text()
+        if(!name) {
+            name = metadata.@name.text()
+        }
+        return name
     }
 
     /**
@@ -68,4 +90,20 @@ public class PluginInfo {
         GriffonPluginUtils.getDescriptorForPlugin(pluginDir)
     }
 
+    String getFullName() {
+        "${getName()}-${getVersion()}"
+    }
+    
+    Map getProperties() {
+        return [name:getName(), version:getVersion()];
+    }
+    
+    def getProperty(String name) {
+        try {
+            return super.getProperty(name)
+        }
+        catch(MissingPropertyException mpe) {
+            return metadata[name].text()
+        }
+    }
 }

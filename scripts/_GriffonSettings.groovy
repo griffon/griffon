@@ -14,9 +14,13 @@
  * limitations under the License.
  */
 
+import griffon.util.BuildScope
+import griffon.util.Environment
+import griffon.util.GriffonUtil
 import griffon.util.Metadata
-import org.codehaus.griffon.util.BuildSettings
-import org.codehaus.griffon.util.GriffonNameUtils
+import griffon.util.PluginBuildSettings
+import griffon.util.PlatformUtils
+import org.codehaus.griffon.cli.ScriptExitException
 import org.codehaus.griffon.plugins.GriffonPluginUtils
 import org.springframework.core.io.ClassPathResource
 import org.springframework.core.io.FileSystemResource
@@ -24,19 +28,10 @@ import org.springframework.core.io.Resource
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver
 import org.springframework.util.FileCopyUtils
 
-// XXX -- NATIVE
-import static griffon.util.GriffonApplicationUtils.isLinux
-import static griffon.util.GriffonApplicationUtils.isSolaris
-import static griffon.util.GriffonApplicationUtils.isMacOSX
-import static griffon.util.GriffonApplicationUtils.is64Bit
-// XXX -- NATIVE
-
 /**
  * Gant script containing build variables.
  *
- * @author Peter Ledbrook
- *
- * @since 1.1
+ * @author Peter Ledbrook (Grails 1.1)
  */
 
 // No point doing this stuff more than once.
@@ -51,12 +46,39 @@ else {
     ant.property(resource: "build.properties")
 }
 
+/**
+ * Resolves the value for a given property name. It first looks for a
+ * system property, then in the BuildSettings configuration, and finally
+ * uses the given default value if other options are exhausted.
+ */
+getPropertyValue = { String propName, defaultValue ->
+    // First check whether we have a system property with the given name.
+    def value = System.getProperty(propName)
+    if (value != null) return value
+
+    // Now try the BuildSettings settings.
+    value = buildProps[propName]
+
+    // Return the BuildSettings value if there is one, otherwise use the
+    // default.
+    return value != null ? value : defaultValue
+}
+
 // Set up various build settings. System properties take precedence
 // over those defined in BuildSettings, which in turn take precedence
 // over the defaults.
+isInteractive = true
 buildProps = buildConfig.toProperties()
 enableProfile = getPropertyValue("griffon.script.profile", false).toBoolean()
 pluginsHome = griffonSettings.projectPluginsDir.path
+
+// Used to find out about plugins used by this app. The plugin manager
+// is configured later when its created (see _PluginDependencies).
+// pluginSettings = new PluginBuildSettings(griffonSettings)
+
+// While some code still relies on GriffonPluginUtils, make sure it
+// uses the same PluginBuildSettings instance as the scripts.
+GriffonPluginUtils.pluginBuildSettings = pluginSettings
 
 // Load the application metadata (application.properties)
 metadataFile = new File("${basedir}/application.properties")
@@ -74,30 +96,25 @@ if (!griffonAppName) {
 if(griffonAppName.indexOf('/') >-1)
     appClassName = griffonAppName[griffonAppName.lastIndexOf('/')..-1]
 else
-    appClassName = GriffonNameUtils.getClassNameRepresentation(griffonAppName)
-
+    appClassName = GriffonUtil.getClassNameRepresentation(griffonAppName)
 
 // Other useful properties.
 args = System.getProperty("griffon.cli.args")
 classesDir = griffonSettings.classesDir
 griffonApp = null
 griffonContext = null
-griffonTmp = "${griffonSettings.griffonWorkDir}/tmp"
-isPluginProject = griffonSettings.baseDir.listFiles().find { it.name.endsWith("GriffonPlugin.groovy") }
-isAddonPlugin = griffonSettings.baseDir.listFiles().find { it.name.endsWith("GriffonAddon.groovy") }
+isPluginProject = griffonSettings.isPluginProject()
+isAddonPlugin = griffonSettings.isAddonPlugin()
 
 shouldPackageTemplates = false
-config = new ConfigObject()
-configFile = new File("${basedir}/griffon-app/conf/Config.groovy")
-applicationFile = new File("${basedir}/griffon-app/conf/Application.groovy")
 
 // Pattern that matches artefacts in the 'griffon-app' directory.
 // Note that the capturing group matches any package directory
 // structure.
 artefactPattern = /\S+?\/griffon-app\/\S+?\/(\S+?)\.groovy/
 
-defaultGriffonApplicationClass = "griffon.application.SwingApplication"
-defaultGriffonAppletClass = "griffon.applet.SwingApplet"
+defaultGriffonApplicationClass = "griffon.swing.SwingApplication"
+defaultGriffonAppletClass = "griffon.swing.SwingApplet"
 makeJNLP = false
 _skipSigning = false // GRIFFON-118
 defaultAppletWidth = 240 // GRIFFON-127
@@ -108,11 +125,19 @@ if (!System.getProperty("griffon.env.set")) {
     if (griffonSettings.defaultEnv && getBinding().variables.containsKey("scriptEnv")) {
         griffonEnv = scriptEnv
         griffonSettings.griffonEnv = griffonEnv
-        System.setProperty(BuildSettings.ENVIRONMENT, griffonEnv)
-        System.setProperty(BuildSettings.ENVIRONMENT_DEFAULT, "")
+        System.setProperty(Environment.KEY, griffonEnv)
+        System.setProperty(Environment.DEFAULT, "")
     }
     println "Environment set to ${griffonEnv}"
     System.setProperty("griffon.env.set", "true")
+}
+if(getBinding().variables.containsKey("scriptScope")) {
+    buildScope = (scriptScope instanceof BuildScope) ? scriptScope : BuildScope.valueOf(scriptScope.toString().toUpperCase());
+    buildScope.enable()
+}
+else {
+    buildScope = BuildScope.ALL
+    buildScope.enable()
 }
 
 // Prepare a configuration file parser based on the current environment.
@@ -121,8 +146,17 @@ configSlurper.setBinding(griffonHome:griffonHome,
                          appName:griffonAppName,
                          appVersion:griffonAppVersion,
                          userHome:userHome,
-                         basedir:basedir/*,
-                         servletVersion:servletVersion*/)
+                         basedir:basedir)
+
+applicationConfig = new ConfigObject()
+applicationConfigFile = new File(basedir, 'griffon-app/conf/Application.groovy')
+if(applicationConfigFile.exists()) applicationConfig = configSlurper.parse(applicationConfigFile.text)
+builderConfig = new ConfigObject()
+builderConfigFile = new File(basedir, 'griffon-app/conf/Builder.groovy')
+if(builderConfigFile.exists()) builderConfig = configSlurper.parse(builderConfigFile.text)
+config = new ConfigObject()
+configFile = new File(basedir, 'griffon-app/conf/Config.groovy')
+if(configFile.exists()) config = configSlurper.parse(configFile.text)
 
 // Ant path based on the class loader for the scripts. This basically
 // includes all the Griffon JARs, the plugin libraries, and any JARs
@@ -151,24 +185,25 @@ griffonResource = {String path ->
     if (griffonSettings.griffonHome) {
         return new FileSystemResource("${griffonSettings.griffonHome}/$path")
     }
-    else {
-        return new ClassPathResource(path)
-    }
+    return new ClassPathResource(path)
 }
 
 // Closure that copies a Spring resource to the file system.
-copyGriffonResource = { String targetFile, Resource resource ->
-    FileCopyUtils.copy(resource.inputStream, new FileOutputStream(targetFile))
+copyGriffonResource = { targetFile, Resource resource, boolean overwrite = true ->
+    def file = new File(targetFile.toString())
+    if (overwrite || !file.exists()) {
+        FileCopyUtils.copy(resource.inputStream, new FileOutputStream(file))
+    }
 }
 
 // Copies a set of resources to a given directory. The set is specified
 // by an Ant-style path-matching pattern.
-copyGriffonResources = { String destDir, String pattern ->
-    new File(destDir).mkdirs()
+copyGriffonResources = { destDir, pattern, boolean overwrite = true ->
+    new File(destDir.toString()).mkdirs()
     Resource[] resources = resolveResources("classpath:${pattern}")
     resources.each { Resource res ->
         if (res.readable) {
-            copyGriffonResource("${destDir}/${res.filename}", res)
+            copyGriffonResource("${destDir}/${res.filename}", res, overwrite)
         }
     }
 }
@@ -181,19 +216,22 @@ griffonUnpack = {Map args ->
 
     // Can't unjar a file from within a JAR, so we copy it to
     // the destination directory first.
-    ant.copy(todir: dir) {
-        javaresource(name: src)
-    }
+    try {
+        ant.copy(todir: dir) {
+            javaresource(name: src)
+        }
 
-    // Now unjar it, excluding the META-INF directory.
-    ant.unjar(dest: dir, src: "${dir}/${src}", overwrite: overwriteOption) {
-        patternset {
-            exclude(name: "META-INF/**")
+        // Now unjar it, excluding the META-INF directory.
+        ant.unjar(dest: dir, src: "${dir}/${src}", overwrite: overwriteOption) {
+            patternset {
+                exclude(name: "META-INF/**")
+            }
         }
     }
-
-    // Don't need the JAR file any more, so remove it.
-    ant.delete(file: "${dir}/${src}")
+    finally {
+        // Don't need the JAR file any more, so remove it.
+        ant.delete(file: "${dir}/${src}", failonerror:false)
+    }
 }
 
 /**
@@ -218,76 +256,16 @@ profile = {String name, Closure callable ->
 }
 
 /**
- * Resolves the value for a given property name. It first looks for a
- * system property, then in the BuildSettings configuration, and finally
- * uses the given default value if other options are exhausted.
+ * Exits the build immediately with a given exit code.
  */
-def getPropertyValue(String propName, defaultValue) {
-    // First check whether we have a system property with the given name.
-    def value = System.getProperty(propName)
-    if (value != null) return value
-
-    // Now try the BuildSettings settings.
-    value = buildProps[propName]
-
-    // Return the BuildSettings value if there is one, otherwise use the
-    // default.
-    return value != null ? value : defaultValue
-}
-
-// XXX -- NATIVE
-
-platform = 'windows'
-if(isSolaris) platform = 'solaris'
-else if(isLinux) platform = 'linux'
-else if(isMacOSX) platform = 'macosx'
-if(is64Bit) platform += '64'
-
-PLATFORMS = [
-    windows: [
-        nativelib: '.dll',
-        webstartName: 'Windows',
-        archs: ['x86']],
-    linux: [
-        nativelib: '.so',
-        webstartName: 'Linux',
-        archs: ['i386', 'x86']],
-    macosx: [
-        nativelib: '.jnilib',
-        webstartName: 'Mac OS X',
-        archs: ['i386', 'ppc']],
-    solaris: [
-        nativelib: '.so',
-        webstartName: 'SunOS',
-        archs: ['x86', 'sparc', 'sparcv9']],
-    windows64: [
-        nativelib: '.dll',
-        webstartName: 'Windows',
-        archs: ['amd64', 'x86_64']],
-    linux64: [
-        nativelib: '.so',
-        webstartName: 'Linux',
-        archs: ['amd64', 'x86_64']],
-    macosx64: [
-        nativelib: '.jnilib',
-        webstartName: 'Mac OS X',
-        archs: ['x86_64']],
-    solaris64: [
-        nativelib: '.so',
-        webstartName: 'SunOS',
-        archs: ['amd64', 'x86_64']]
-]
-
-doForAllPlatforms = { callback ->
-    PLATFORMS.each { platformKey, platformValue ->
-        def platformDir = new File(jardir, platformKey)
-        if(callback && platformDir.exists()) {
-            callback(platformDir, platformKey)
-        }
+exit = {
+    event("Exiting", [it])
+    // Prevent system.exit during unit/integration testing
+    if (System.getProperty("griffon.cli.testing") || System.getProperty("griffon.disable.exit")) {
+        throw new ScriptExitException(it)
     }
+    System.exit(it)
 }
-
-// XXX -- NATIVE
 
 printFramed = { message, c = '*', padded = false ->
     def pieces = message.split('\n').collect { it.replace('\t',' ') }
@@ -302,10 +280,14 @@ printFramed = { message, c = '*', padded = false ->
     print result
 }
 
-confirmInput = { String message ->
-    def propName = "confirm.message" + System.currentTimeMillis()
-    ant.input(message: message, addproperty: propName, validargs: "y,n")
-    ant.antProject.properties[propName].toLowerCase() == 'y'
+confirmInput = { String message, String code = ""->
+    if(!isInteractive) {
+        println("Cannot ask for input when --non-interactive flag is passed. You need to check the value of the 'isInteractive' variable before asking for input")
+        exit(1)
+    }
+    code = code ? code : "confirm.message" + System.currentTimeMillis()
+    ant.input(message: message, addproperty: code, validargs: "y,n")
+    ant.antProject.properties[code].toLowerCase() == 'y'
 }
 
 askAndDo = { message, yesCallback = null, noCallback = null ->
@@ -330,20 +312,44 @@ askAndDoNoNag = { message, yesCallback = null, noCallback = null ->
  * Modifies the application's metadata, as stored in the "application.properties"
  * file. If it doesn't exist, the file is created.
  */
-updateMetadata = { Map entries ->
-    if (!metadataFile.exists()) {
+updateMetadata = { Map entries, file = null ->
+    if(!file) file = metadataFile
+    if (!file.exists()) {
         ant.propertyfile(
-                file: metadataFile,
+                file: file,
                 comment: "Do not edit app.griffon.* properties, they may change automatically. " +
                         "DO NOT put application configuration in here, it is not the right place!")
-        metadata = Metadata.getInstance(metadataFile)
     }
+    def meta = Metadata.getInstance(file)
 
     // Convert GStrings to Strings.
     def stringifiedEntries = [:]
     entries.each { key, value -> stringifiedEntries[key.toString()] = value.toString() }
 
-    metadata.putAll(stringifiedEntries)
-    metadata.persist()
+    meta.putAll(stringifiedEntries)
+    meta.persist()
+
+    if(file.absolutePath == metadataFile.absolutePath) {
+        metadata.reload()
+    }
 }
 
+doForAllPlatforms = { callback ->
+    PlatformUtils.PLATFORMS.each { platformKey, platformValue ->
+        def platformDir = new File(jardir, platformKey)
+        if(callback && platformDir.exists()) {
+            callback(platformDir, platformKey)
+        }
+    }
+}
+
+logError = { String message, Throwable t ->
+    GriffonUtil.deepSanitize(t)
+    t.printStackTrace()
+    event("StatusError", ["$message: ${t.message}"])
+}
+
+logErrorAndExit = { String message, Throwable t ->
+    logError(message, t)
+    exit(1)
+}

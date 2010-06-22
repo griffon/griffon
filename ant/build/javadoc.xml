@@ -1,20 +1,19 @@
 <project name="griffon-javadoc">
-    <target name="javadoc">
+    <target name="javadoc" unless="fast">
         <delete dir="${griffon.javadoc}"/>
         <mkdir dir="${griffon.javadoc}"/>
-
         <taskdef name="groovydoc"
                  classname="org.codehaus.groovy.ant.Groovydoc"
                  classpathref="classpath"/>
 
-        <groovydoc destdir="${griffon.target}/docs/api"
+        <groovydoc destdir="${griffon.javadoc}"
                    sourcepath="${griffon.src.rt}"
                    packagenames="**.*"
                    use="true"
                    windowtitle="Griffon ${griffon.version}"
                    doctitle="Griffon ${griffon.version}"
                    header="Griffon ${griffon.version}"
-                   private="false">
+                   private="true">
             <link packages="java.,org.xml.,javax.,org.xml." href="http://java.sun.com/j2se/1.5.0/docs/api"/>
             <link packages="org.apache.ant.,org.apache.tools.ant." href="http://www.dpml.net/api/ant/1.7.0"/>
             <link packages="org.junit.,junit.framework." href="http://junit.sourceforge.net/junit3.8.1/javadoc/"/>
@@ -22,7 +21,7 @@
         </groovydoc>
 
         <jar destfile="${griffon.target}/griffon-rt-${griffon.version}-javadoc.jar">
-            <fileset dir="${griffon.target}/docs/api"/>
+            <fileset dir="${griffon.javadoc}"/>
         </jar>
 
         <jar destfile="${griffon.target}/griffon-rt-${griffon.version}-sources.jar">

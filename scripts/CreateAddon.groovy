@@ -23,7 +23,7 @@
  */
 
 import org.codehaus.griffon.commons.GriffonClassUtils as GCU
-import org.codehaus.griffon.util.GriffonNameUtils
+import griffon.util.GriffonUtil
 
 includeTargets << griffonScript("Init")
 includeTargets << griffonScript("CreateIntegrationTest")
@@ -31,8 +31,8 @@ includeTargets << griffonScript("CreateIntegrationTest")
 /**
  * Stuff this addon does:
  * * Creates a <name>GriffonAddon.groovy file form templates
- * * tweaks griffon-app/conf/Config.groovy to have griffon.jars.destDir set (dont' cahnge)
- * * tweaks griffon-app/conf/Config.groovy to have griffon.jars.jarName set (dont' cahnge)
+ * * tweaks griffon-app/conf/BuildConfig.groovy to have griffon.jars.destDir set (dont' cahnge)
+ * * tweaks griffon-app/conf/BuildConfig.groovy to have griffon.jars.jarName set (dont' cahnge)
  * * Adds copy libs events for the destDir
  * * Adds install hooks to wire in addon to griffon-app/conf/Builder.groovy
  * * Adds uninstall hooks to remove the addon from griffon-app/conf/Builder.groovy
@@ -40,6 +40,7 @@ includeTargets << griffonScript("CreateIntegrationTest")
 target ('default' : "Creates a new Addon for a plugin") {
     depends(checkVersion, parseArguments)
     promptForName(type: "Addon")
+    argsMap.skipPackagePrompt = true
     def (pkg, name) = extractArtifactName(argsMap["params"][0])
 //    if (pkg) logErrorAndExit("Addons cannot have package names currently", new RuntimeException())
     def fqn = "${pkg?pkg:''}${pkg?'.':''}${GCU.getClassNameRepresentation(name)}"
@@ -52,7 +53,7 @@ target ('default' : "Creates a new Addon for a plugin") {
     fqn += 'GriffonAddon'
     name = "${GCU.getClassNameRepresentation(name)}GriffonAddon"
 
-    def pluginConfigFile = new File('griffon-app/conf/Config.groovy')
+    def pluginConfigFile = new File('griffon-app/conf/BuildConfig.groovy')
     if (!pluginConfigFile.exists()) {
         pluginConfigFile.text = "griffon {}\n"
     }
@@ -60,7 +61,7 @@ target ('default' : "Creates a new Addon for a plugin") {
     def pluginConfig = slurper.parse(pluginConfigFile.toURL())
 
     if (!pluginConfig.griffon?.jars?.destDir) {
-        pluginConfigFile << "\ngriffon.jars.destDir='dist/addon'\n"
+        pluginConfigFile << "\ngriffon.jars.destDir=\'target/addon\'\n"
     }
     if (!pluginConfig.griffon?.jars?.jarName) {
         pluginConfigFile << "\n//griffon.jars.jarName='${name}.jar'\n"
@@ -78,7 +79,7 @@ def $libTempVar = binding.variables.containsKey('eventCopyLibsEnd') ? eventCopyL
 eventCopyLibsEnd = { jardir ->
     $libTempVar(jardir)
     if (!isPluginProject) {
-        ant.fileset(dir:"\${getPluginDirForName('${GriffonNameUtils.getScriptName(griffonAppName)}').file}/lib/", includes:"*.jar").each {
+        ant.fileset(dir:"\${getPluginDirForName('${GriffonUtil.getScriptName(griffonAppName)}').file}/lib/", includes:"*.jar").each {
             griffonCopyDist(it.toString(), jardir)
         }
     }
@@ -89,17 +90,13 @@ eventCopyLibsEnd = { jardir ->
     def installFile = new File("scripts/_Install.groovy")
     // all plugins should have an install, no need to insure
     String installText = installFile.text
-    def slurperVar = generateTempVar(installText, 'configSlurper')
     def flagVar = generateTempVar(installText, 'addonIsSet')
-    def configVar = generateTempVar(installText, 'slurpedBuilder')
 
     //TODO we should slurp the config, tweak it in place, and re-write instead of append
     installFile << """
 // check to see if we already have a $name
-ConfigSlurper $slurperVar = new ConfigSlurper()
-def $configVar = ${slurperVar}.parse(new File("\$basedir/griffon-app/conf/Builder.groovy").toURL())
 boolean $flagVar
-${configVar}.each() { prefix, v ->
+builderConfig.each() { prefix, v ->
     v.each { builder, views ->
         $flagVar = $flagVar || '$fqn' == builder
     }
@@ -107,7 +104,7 @@ ${configVar}.each() { prefix, v ->
 
 if (!$flagVar) {
     println 'Adding $name to Builder.groovy'
-    new File("\$basedir/griffon-app/conf/Builder.groovy").append('''
+    builderConfigFile.append('''
 root.'$fqn'.addon=true
 ''')
 }"""
@@ -115,18 +112,13 @@ root.'$fqn'.addon=true
     def uninstallFile = new File("scripts/_Uninstall.groovy")
     // all plugins should have an install, no need to insure
     String uninstallText = uninstallFile.text
-    slurperVar = generateTempVar(uninstallText, 'configSlurper')
     flagVar = generateTempVar(uninstallText, 'addonIsSet')
-    configVar = generateTempVar(uninstallText, 'slurpedBuilder')
-    def configFile = generateTempVar(uninstallText, 'builderConfigFile')
 
     //TODO we should slurp the config, tweak it in place, and re-write instead of append
     uninstallFile << """
 // check to see if we already have a $name
-ConfigSlurper $slurperVar = new ConfigSlurper()
-def $configVar = ${slurperVar}.parse(new File("\$basedir/griffon-app/conf/Builder.groovy").toURL())
 boolean $flagVar
-${configVar}.each() { prefix, v ->
+builderConfig.each() { prefix, v ->
     v.each { builder, views ->
         $flagVar = $flagVar || '$fqn' == builder
     }
@@ -134,8 +126,7 @@ ${configVar}.each() { prefix, v ->
 
 if ($flagVar) {
     println 'Removing $name from Builder.groovy'
-    def $configFile = new File("\${basedir}/griffon-app/conf/Builder.groovy")
-    ${configFile}.text = ${configFile}.text - "root.'$fqn'.addon=true\\n"
+    builderConfigFile.text = builderConfigFile.text - "root.'$fqn'.addon=true\\n"
 }
 """
 
@@ -146,5 +137,4 @@ def generateTempVar(String textToSearch, String prefix = "tmp", String suffix = 
     int i = 1;
     while (textToSearch =~ "\\W$prefix$i$suffix\\W") i++
     return "$prefix$i$suffix"
-
 }

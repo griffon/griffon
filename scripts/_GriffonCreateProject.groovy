@@ -14,20 +14,20 @@
  * limitations under the License.
  */
 
-import org.codehaus.griffon.util.GriffonNameUtils
+import griffon.util.GriffonUtil
+import griffon.util.Metadata
 
 /**
  * Gant script that handles the creation of Griffon applications
  *
- * @author Graeme Rocher
- *
- * @since 0.4
+ * @author Graeme Rocher (Griffon 0.4)
  */
 
+includeTargets << griffonScript("_GriffonPlugins")
 includeTargets << griffonScript("_GriffonInit")
 includeTargets << griffonScript("CreateMvc" )
 includeTargets << griffonScript("Package")
-
+includeTargets << griffonScript("IntegrateWith")
 
 griffonAppName = ""
 projectType = "app"
@@ -49,26 +49,41 @@ target(createApp: "Creates a Griffon application for the given name")  {
     // Create a message bundle to get the user started.
     ant.touch(file: "${basedir}/griffon-app/i18n/messages.properties")
 
+    argsMap["params"][0] = griffonAppName
     createMVC()
 
-	// Set the default version number for the application
-    ant.propertyfile(file:metadataFile.absolutePath) {
-        entry(key:"app.version", value: griffonAppVersion ?: "0.1")
-//        entry(key:"app.servlet.version", value:servletVersion)
-    }
+    // Set the default version number for the application
+    updateMetadata("app.version": griffonAppVersion ?: "0.1")
 
     event("StatusFinal", ["Created Griffon Application at $basedir"])
 }
 
+def resetBaseDirectory(String basedir) {
+    // Update the build settings and reload the build configuration.
+    griffonSettings.baseDir = new File(basedir)
+    griffonSettings.loadConfig()
+
+    // Reload the application metadata.
+    metadataFile = new File("$basedir/${Metadata.FILE}")
+    metadata = Metadata.getInstance(metadataFile)
+
+    // Reset the plugin stuff.
+    pluginSettings.clearCache()
+    pluginsHome = griffonSettings.projectPluginsDir.path
+}
 
 target(createPlugin: "The implementation target")  {
     depends(parseArguments, appName)
     metadataFile = new File("${basedir}/application.properties")
     projectType = "plugin"
-    initProject(type: "plugin")
+    initProject()
 
     // Rename the plugin descriptor.
-    pluginName = GriffonNameUtils.getNameFromScript(griffonAppName)
+    pluginName = GriffonUtil.getNameFromScript(griffonAppName)
+    if(!(pluginName ==~ /[a-zA-Z-]+/)) {
+        println "Error: Specified plugin name [$griffonAppName] is invalid. Plugin names can only contain word characters separated by hyphens."
+        exit 1
+    }
     ant.move(
             file: "${basedir}/GriffonPlugin.groovy",
             tofile: "${basedir}/${pluginName}GriffonPlugin.groovy",
@@ -79,6 +94,8 @@ target(createPlugin: "The implementation target")  {
         include(name: "*GriffonPlugin.groovy")
         include(name: "scripts/*")
         replacefilter(token: "@plugin.name@", value: pluginName)
+        replacefilter(token: "@plugin.short.name@", value: GriffonUtil.getScriptName(pluginName))
+        replacefilter(token: "@plugin.version@", value: griffonAppVersion ?: "0.1")
         replacefilter(token: "@griffon.version@", value: griffonVersion)
     }
 
@@ -90,32 +107,38 @@ target(initProject: "Initialise an application or plugin project") {
 
     griffonUnpack(dest: basedir, src: "griffon-shared-files.jar")
     griffonUnpack(dest: basedir, src: "griffon-$projectType-files.jar")
-    launderIDESupportFiles()
-}
+    integrateEclipse()
+    integrateAnt()
+    integrateTextmate()
+    integrateIntellij()
 
-target ( appName : "Evaluates the application name") {
-    if(!argsMap["params"]) {
-		ant.input(message:"Application name not specified. Please enter:",
-				  addProperty:"griffon.app.name")
-		griffonAppName = ant.antProject.properties."griffon.app.name"
-        argsMap["params"] << griffonAppName
-	}
-	else {
-		griffonAppName = argsMap["params"].join(" ")
-	}
-
-    if (argsMap["inplace"]) {
-        if (!args) {
-            println "WARNING!"
+    // make sure Griffon central repo is prepped for default plugin set installation
+    griffonSettings.dependencyManager.parseDependencies {
+        repositories {
+            griffonCentral()
         }
     }
+}
+
+target(appName : "Evaluates the application name") {
+    if(!argsMap["params"]) {
+        String type = scriptName.toLowerCase().indexOf('plugin') > -1 ? 'Plugin' : 'Application'
+        ant.input(message:"$type name not specified. Please enter:",
+                  addProperty:"griffon.app.name")
+        griffonAppName = ant.antProject.properties."griffon.app.name"
+    }
     else {
+        griffonAppName = argsMap["params"].join(" ")
+    }
+
+    if (!argsMap["inplace"]) {
         basedir = "${basedir}/${griffonAppName}"
+        resetBaseDirectory(basedir)
     }
 
     if (argsMap["appVersion"]) {
         griffonAppVersion = argsMap["appVersion"]
     }
 
-    appClassName = GriffonNameUtils.getClassNameRepresentation(griffonAppName)
+    appClassName = GriffonUtil.getClassNameRepresentation(griffonAppName)
 }

@@ -17,9 +17,7 @@
 /**
  * Gant script that cleans a Griffon project
  *
- * @author Graeme Rocher
- *
- * @since 0.4
+ * @author Graeme Rocher (Grails 0.4)
  */
 
 // No point doing this stuff more than once.
@@ -29,26 +27,24 @@ _griffon_clean_called = true
 
 includeTargets << griffonScript("_GriffonEvents")
 
-target ( cleanAll: "Cleans a Griffon project" ) {
+target(cleanAll: "Cleans a Griffon project") {
     clean()
     cleanTestReports()
 }
 
-target ( clean: "Implementation of clean" ) {
-    event("CleanStart", [])
+target(clean: "Implementation of clean") {
     depends(classpath, cleanCompiledSources, cleanPackaging)
-    event("CleanEnd", [])
 }
 
-target ( cleanCompiledSources: "Cleans compiled Java and Groovy sources" ) {
+target(cleanCompiledSources: "Cleans compiled Java and Groovy sources") {
     ant.delete(dir:classesDirPath)
+    ant.delete(dir:pluginClassesDirPath, failonerror:false)
     ant.delete(dir:resourcesDirPath)
     ant.delete(dir:testDirPath)
     ant.delete(dir:testResourcesDirPath)
-    ant.delete(dir:projectTargetDir)
 }
 
-target ( cleanTestReports: "Cleans the test reports" ) {
+target(cleanTestReports: "Cleans the test reports") {
     // Delete all reports *except* TEST-TestSuites.xml which we need
     // for the "--rerun" option to work.
     ant.delete(failonerror:false, includeemptydirs: true) {
@@ -59,19 +55,17 @@ target ( cleanTestReports: "Cleans the test reports" ) {
     }
 }
 
-target ( cleanPackaging : "Cleans the distribtion directories" ) {
-    if(configFile.exists()) {
-        def config = configSlurper.parse(configFile.toURL())
-        config.setConfigFile(configFile.toURL())
+target(cleanPackaging : "Cleans the distribtion directories") {
+    if(buildConfigFile.exists()) {
+        def cfg = configSlurper.parse(buildConfigFile.toURL())
+        cfg.setConfigFile(buildConfigFile.toURL())
 
-        def distDir =  config.griffon.dist.dir ?: "${basedir}/dist"
-        def destDir =  config.griffon.jars.destDir
+        def distDir =  cfg.griffon.dist.dir ?: "${basedir}/dist"
+        def destDir =  cfg.griffon.jars.destDir
 
         ant.delete(dir:ant.antProject.replaceProperties(distDir))
-        ant.delete(dir:ant.antProject.replaceProperties(destDir))
+        if(destDir) ant.delete(dir:ant.antProject.replaceProperties(destDir))
         //todo per package directories?
     }
-    if(isPluginProject) {
-        ant.delete(dir: "${basedir}/docs")
-    }
+    ant.delete(dir:projectTargetDir)
 }

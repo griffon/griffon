@@ -1,0 +1,100 @@
+You can deploy a Griffon project or plugin to a Maven repository using the [maven-publisher|http://griffon.org/plugin/maven-publisher] plugin. 
+
+The plugin provides the ability to publish Griffon projects and plugins to local and remote Maven repositories. There are two key additional targets added by the plugin:
+
+* *maven-install* - Installs a Griffon project or plugin into your local Maven cache
+* *maven-deploy* - Deploys a Griffon project or plugin to a remote Maven repository
+
+By default this plugin will automatically generate a valid @pom.xml@ for you unless a @pom.xml@ is already present in the root of the project, in which case this @pom.xml@ file will be used.
+
+h4. maven-install
+
+The @maven-install@ command will install the Griffon project or plugin artifact into your local Maven cache:
+
+{code}
+griffon maven-install
+{code}
+
+In the case of plugins, the plugin zip file will be installed, whilst for application the application WAR file will be installed.
+
+h4. maven-deploy
+
+The @maven-deploy@ command will deploy a Griffon project or plugin into a remote Maven repository:
+
+{code}
+griffon maven-deploy
+{code}
+
+It is assumed that you have specified the necessary @<distributionManagement>@ configuration within a @pom.xml@ or that you specify the @id@ of the remote repository to deploy to:
+
+{code}
+griffon maven-deploy --repository=myRepo
+{code}
+
+The @repository@ argument specifies the 'id' for the repository. You need to configure the details of the repository specified by this 'id' within your @griffon-app/conf/BuildConfig.groovy@ file or in your @USER_HOMER/.griffon/settings.groovy@ file:
+
+{code}
+griffon.project.dependency.distribution = {
+     localRepository = "/path/to/my/local"
+     remoteRepository(id:"myRepo", url:"http://myserver/path/to/repo")
+}
+{code}
+
+The syntax for configuring remote repositories matches the syntax from the [remoteRepository|http://maven.apache.org/ant-tasks/reference.html#remoteRepository] element in the Ant Maven tasks. For example the following XML:
+
+{code}
+<remoteRepository id="myRepo" url="scp://localhost/www/repository">
+    <authentication username="..." privateKey="${user.home}/.ssh/id_dsa"/>
+</remoteRepository>
+{code}
+
+Can be expressed as:
+
+{code}
+remoteRepository(id:"myRepo", url:"scp://localhost/www/repository") {
+    authentication username:"...", privateKey:"${userHome}/.ssh/id_dsa"
+}
+{code}
+
+By default the plugin will try to detect the protocol to use from the URL of the repository (ie "http" from "http://.." etc.), however if you need to explicitly specify a different protocol you can do:
+
+{code}
+griffon maven-deploy --repository=myRepo --protocol=webdav
+{code}
+
+The available protocols are:
+
+* http
+* scp
+* scpexe
+* ftp
+* webdav
+
+h4. Groups, Artifacts and Versions
+
+Maven defines the notion of a 'groupId', 'artifactId' and a 'version'. This plugin pulls this information from the Griffon project conventions or plugin descriptor.
+
+h5. Projects
+
+For applications this plugin will use the Griffon application name and version provided by Griffon when generating the @pom.xml@ file. To change the version you can run the @set-version@ command:
+
+{code}
+griffon set-version 0.2
+{code}
+
+The Maven @groupId@ will be the same as the project name, unless you specify a different one in Config.groovy:
+
+{code}
+griffon.project.groupId="com.mycompany" 
+{code}
+
+h5. Plugins
+
+With a Griffon plugin the @groupId@ and @version@ are taken from the following properties in the *GriffonPlugin.groovy descriptor:
+
+{code}
+String groupId = 'myOrg'
+String version = '0.1'
+{code}
+
+The 'artifactId' is taken from the plugin name. For example if you have a plugin called @FeedsGriffonPlugin@ the @artifactId@ will be "feeds". If your plugin does not specify a @groupId@ then this defaults to "org.codehaus.griffon.plugins".

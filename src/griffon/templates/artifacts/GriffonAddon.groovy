@@ -1,6 +1,4 @@
 @artifact.package@class @artifact.name@ {
-
-
     // lifecycle methods
 
     // called once, after the addon is created

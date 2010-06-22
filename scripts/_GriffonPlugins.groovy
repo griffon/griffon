@@ -16,13 +16,15 @@
 
 import groovy.xml.dom.DOMCategory
 
+import org.codehaus.griffon.plugins.GriffonPluginInfo
+import org.codehaus.griffon.resolve.PluginResolveEngine
+import griffon.util.BuildSettings
+
 /**
  * Gant script that handles the installation of Griffon plugins
  *
- * @author Graeme Rocher
- * @author Sergey Nebolsin
- *
- * @since 0.4
+ * @author Graeme Rocher (Grails 0.4)
+ * @author Sergey Nebolsin (Grails 0.4)
  */
 
 // No point doing this stuff more than once.
@@ -31,14 +33,16 @@ _griffon_plugins_called = true
 
 includeTargets << griffonScript("_GriffonClean")
 includeTargets << griffonScript("_GriffonPackage")
+includeTargets << griffonScript("_PluginDependencies")
+includeTargets << griffonScript("ReleasePlugin")
 
 ERROR_MESSAGE = """
 You need to specify either the direct URL of the plugin or the name and version
-of a distributed Griffon plugin found at ${pluginSVN}
+of a distributed Griffon plugin found at http://griffon.codehaus.org/plugins
 For example:
 'griffon install-plugin swingx-builder 0.1'
 or
-'griffon install-plugin ${pluginBinaryDistURL}/griffon-swingx-builder-0.1.zip"""
+'griffon install-plugin http://svn.codehaus.org/griffon/plugins/griffon-swingx-builder/trunk/griffon-swingx-builder-0.1.zip"""
 
 globalInstall = false
 
@@ -59,31 +63,27 @@ target(installPlugin:"Installs a plug-in for the given URL or name and version")
                 globalInstall = true
             }
 
-            ant.mkdir(dir:pluginsBase)
+            ant.mkdir(dir: pluginsBase)
 
             def pluginFile = new File(pluginArgs[0])
-
-            if(pluginArgs[0].startsWith("http://")) {
+            def urlPattern = ~"^[a-zA-Z][a-zA-Z0-9\\-\\.\\+]*://"
+            if(pluginArgs[0] =~ urlPattern) {
                 def url = new URL(pluginArgs[0])
-                fullPluginName = downloadRemotePlugin(url, pluginsBase)
+                doInstallPluginFromURL(url)
             }
             else if( pluginFile.exists() && pluginFile.name.startsWith("griffon-") && pluginFile.name.endsWith(".zip" )) {
-                cacheLocalPlugin(pluginFile)
+                doInstallPluginZip(pluginFile)
             }
             else {
                 // The first argument is the plugin name, the second
                 // (if provided) is the plugin version.
-                fullPluginName = cacheKnownPlugin(pluginArgs[0], pluginArgs[1])
+                doInstallPlugin(pluginArgs[0], pluginArgs[1])
             }
-
-            classpath()
-            println "Installing plug-in $fullPluginName"
-
-            installPluginForName(fullPluginName)
         }
         else {
-            event("StatusError", [ERROR_MESSAGE])
+            event("StatusError", [ ERROR_MESSAGE])
         }
+
     }
     catch(Exception e) {
         logError("Error installing plugin: ${e.message}", e)
@@ -103,25 +103,22 @@ target(uninstallPlugin:"Uninstalls a plug-in for a given name") {
         def pluginName = pluginArgs[0]
         def pluginRelease = pluginArgs[1]
 
-        def plugindir = getPluginDirForName(pluginName)?.file
-        uninstallPluginForName(pluginName, pluginRelease)
-        pluginRelease = pluginRelease? '-'+pluginRelease : ''
-        def fullPluginName = plugindir?.exists() ? plugindir.name : pluginName+pluginRelease
 
-        event("PluginUninstalled", [fullPluginName])
-        event("StatusFinal", ["The plugin $fullPluginName has been uninstalled from the current application."])
+        uninstallPluginForName(pluginName, pluginRelease)
+
+        event("PluginUninstalled", ["The plugin ${pluginName}-${pluginRelease} has been uninstalled from the current application"])
     }
     else {
         event("StatusError", ["You need to specify the plug-in name and (optional) version, e.g. \"griffon uninstall-plugin feeds 1.0\""])
     }
 }
 
-target(listPlugins: "List all available plugins in the default Griffon repository") {
-    depends(parseArguments)
+target(listPlugins: "Implementation target") {
+    depends(parseArguments,configureProxy)    
 
     if(argsMap.repository) {
        configureRepositoryForName(argsMap.repository)
-       updatePluginsList()
+       // updatePluginsList()
        printRemotePluginList(argsMap.repository)
        printInstalledPlugins()
     }
@@ -129,8 +126,6 @@ target(listPlugins: "List all available plugins in the default Griffon repositor
       printInstalledPlugins()
     }
     else {
-      updatePluginsList()
-      printRemotePluginList("Griffon.codehaus.org")
       eachRepository { name, url ->
          printRemotePluginList(name)
          return true
@@ -151,13 +146,13 @@ For further info visit http://griffon.codehaus.org/Plugins
 private printInstalledPlugins() {
   println '''
 Plug-ins you currently have installed are listed below:
--------------------------------------------------------------
+-----------------------------------------------------------------------
 '''
 
   def installedPlugins = []
-  def pluginXmls = readAllPluginXmlMetadata()
-  for (p in pluginXmls) {
-    installedPlugins << formatPluginForPrint(p.@name.text(), p.@version.text(), p.title.text())
+  def pluginInfos = pluginSettings.getPluginInfos()
+  for (GriffonPluginInfo info in pluginInfos) {
+    installedPlugins << formatPluginForPrint(info.name, info.version, info.title)
   }
 
   if (installedPlugins) {
@@ -172,11 +167,11 @@ Plug-ins you currently have installed are listed below:
 private printRemotePluginList(name) {
   println """
 Plug-ins available in the $name repository are listed below:
--------------------------------------------------------------
+-----------------------------------------------------------------------
 """
   def plugins = []
   use(DOMCategory) {
-    pluginsList.'plugin'.each {plugin ->
+    pluginsList?.'plugin'.each {plugin ->
       def version
       def pluginLine = plugin.'@name'
       def versionLine = "<no releases>"
@@ -204,14 +199,14 @@ Plug-ins available in the $name repository are listed below:
   if (plugins) {
     plugins.sort()
     plugins.each {println it}
-  }
-  else {
+    println ""
+  } else {
     println "No plugins found in repository: ${pluginSVN}"
   }
 }
 
 formatPluginForPrint = { pluginName, pluginVersion, pluginTitle ->
-    "${pluginName.padRight(20, " ")}${pluginVersion.padRight(16, " ")} --  ${pluginTitle}"
+    "${pluginName.toString().padRight(30, " ")}${pluginVersion.toString().padRight(16, " ")} --  ${pluginTitle}"
 }
 
 
@@ -224,123 +219,76 @@ Information about Griffon plugin
 }
 
 def displayPluginInfo = { pluginName, version ->
-    use(DOMCategory) {
-        def plugin = findPlugin(pluginName)
-        if( plugin == null ) {
-            event("StatusError", ["Plugin with name '${pluginName}' was not found in the configured repositories"])
-            System.exit(1)
-        } else {
-            def line = "Name: ${pluginName}"
-            def releaseVersion = null
-            if( !version ) {
-                releaseVersion = plugin.'@latest-release'
-                def naturalVersion = releaseVersion
-                if( ! releaseVersion ) {
-                    plugin.'release'.each {
-                        if( !releaseVersion || (!"${it.'@version'}".endsWith("SNAPSHOT") && "${it.'@version'}" > releaseVersion )) releaseVersion = "${it.'@version'}"
-                    }
-                    if( releaseVersion ) naturalVersion = "${releaseVersion} (?)"
-                    else naturalVersion = '<no info available>'
-                }
-                line += "\t| Latest release: ${naturalVersion}"
+    BuildSettings settings = griffonSettings
+    def pluginResolveEngine = new PluginResolveEngine(settings.dependencyManager, settings)
+    pluginXml = pluginResolveEngine.resolvePluginMetadata(pluginName, version)
+    if(!pluginXml) {
+        event("StatusError", ["Plugin with name '${pluginName}' was not found in the configured repositories"])
+        exit 1
+    }
+
+    def plugin = pluginXml
+    if( plugin == null ) {
+        event("StatusError", ["Plugin with name '${pluginName}' was not found in the configured repositories"])
+        exit 1
+    } else {
+        def line = "Name: ${pluginName}"
+        line += "\t| Latest release: ${plugin.@version}"
+        println line
+        println '--------------------------------------------------------------------------'
+        def release = pluginXml
+        if( release ) {
+            if( release.'title'.text() ) {
+                println "${release.'title'.text()}"
             } else {
-                releaseVersion = version
-                line += "\t| Release: ${releaseVersion}"
+                println "No info about this plugin available"
             }
-            println line
             println '--------------------------------------------------------------------------'
-            if( releaseVersion ) {
-                def release = plugin.'release'.find{ rel -> rel.'@version' == releaseVersion }
-                if( release ) {
-                    if( release.'title'.text() ) {
-                        println "${release.'title'.text()}"
-                    } else {
-                        println "No info about this plugin available"
-                    }
-                    println '--------------------------------------------------------------------------'
-                    if( release.'author'.text() ) {
-                        println "Author: ${release.'author'.text()}"
-                        //println '--------------------------------------------------------------------------'
-                    }
-                    if( release.'authorEmail'.text() ) {
-                        println "Author's e-mail: ${release.'authorEmail'.text()}"
-                        //println '--------------------------------------------------------------------------'
-                    }
-                    if( release.'license'.text() ) {
-                        println "License: ${release.'license'.text()}"
-                        //println '--------------------------------------------------------------------------'
-                    } else {
-                        println "License: <UNKNOWN>"
-                        //println '--------------------------------------------------------------------------'
-                    }
-                    if( release.'documentation'.text() ) {
-                        println "Find more info here: ${release.'documentation'.text()}"
-                        //println '--------------------------------------------------------------------------'
-                    }
-                    if( release.'synopsis'.text() ) {
-                        println "${release.'synopsis'.text()}"
-                        println '--------------------------------------------------------------------------'
-                    }
-                    if( release.'toolkits'.text() ) {
-                        println "This plugin works with: ${release.'toolkits'.text()}"
-                        //println '--------------------------------------------------------------------------'
-                    } else {
-                        println "This plugin works with all toolkits."
-                        //println '--------------------------------------------------------------------------'
-                    }
-                    if( release.'platforms'.text() ) {
-                        println "This plugin works in: ${release.'platforms'.text()}"
-                        //println '--------------------------------------------------------------------------'
-                    } else {
-                        println "This plugin works in all platforms."
-                        //println '--------------------------------------------------------------------------'
-                    }
-                } else {
-                    println "<release ${releaseVersion} not found for this plugin>"
-                    //println '--------------------------------------------------------------------------'
-                }
-                println '--------------------------------------------------------------------------'
-           }
-
-            def releases = ""
-            plugin.'release'.findAll{ it.'@type' == 'svn'}.each {
-                releases += " ${it.'@version'}"
+            if( release.'author'.text() ) {
+                println "Author: ${release.'author'.text()}"
+                // println '--------------------------------------------------------------------------'
             }
-            def zipReleases = ""
-            plugin.'release'.findAll{ it.'@type' == 'zip'}.each {
-                zipReleases += " ${it.'@version'}"
+            if( release.'authorEmail'.text() ) {
+                println "Author's e-mail: ${release.'authorEmail'.text()}"
+                // println '--------------------------------------------------------------------------'
             }
-            if( releases ) {
-                println "Available full releases: ${releases}"
+            if( release.'license'.text() ) {
+                println "License: ${release.'license'.text()}"
+                //println '--------------------------------------------------------------------------'
             } else {
-                println "Available full releases: <no full releases available for this plugin now>"
+                println "License: <UNKNOWN>"
+                //println '--------------------------------------------------------------------------'
             }
-            if( zipReleases ) {
-                println "Available zip releases:  ${zipReleases}"
+            if( release.'documentation'.text() ) {
+                println "Find more info here: ${release.'documentation'.text()}"
+                // println '--------------------------------------------------------------------------'
             }
+            if( release.'description'.text() ) {
+                println "${release.'description'.text()}"
+                println '--------------------------------------------------------------------------'
+            }
+            if( release.'toolkits'.text() ) {
+                println "This plugin works with: ${release.'toolkits'.text()}"
+                //println '--------------------------------------------------------------------------'
+            } else {
+                println "This plugin works with all toolkits."
+                //println '--------------------------------------------------------------------------'
+            }
+            if( release.'platforms'.text() ) {
+                println "This plugin works in: ${release.'platforms'.text()}"
+                //println '--------------------------------------------------------------------------'
+            } else {
+                println "This plugin works in all platforms."
+                //println '--------------------------------------------------------------------------'
+            }
+        } else {
+            println "<release ${releaseVersion} not found for this plugin>"
+            println '--------------------------------------------------------------------------'
         }
     }
 }
 
-def displayFullPluginInfo = { pluginName ->
-    use(DOMCategory) {
-        pluginsList.'plugin'.each { plugin ->
-            def pluginLine = plugin.'@name'
-            def version = "unknown"
-            def title = "No description available"
-            if( plugin.'@latest-release' ) {
-                version = plugin.'@latest-release'
-                def release = plugin.'release'.find{ rel -> rel.'@version' == plugin.'@latest-release' }
-                if( release?.'title' ) {
-                    title = release?.'title'.text()
-                }
-            }
-            pluginLine += "${spacesFormatter[pluginLine.length()..-1]}<${version}>"
-            pluginLine += "\t--\t${title}"
-            plugins << pluginLine
-        }
-    }
-}
+
 
 def displayFooter = {
     println '''
@@ -360,10 +308,10 @@ target(pluginInfo:"Displays information on a Griffon plugin") {
     depends(parseArguments)
 
     if( argsMap.params ) {
-        depends(updatePluginsList)
         displayHeader()
         def pluginName = argsMap.params[0]
         def version = argsMap.params.size() > 1 ? argsMap.params[1] : null
+
         displayPluginInfo( pluginName, version )
         displayFooter()
     } else {

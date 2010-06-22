@@ -16,9 +16,11 @@
 
 package griffon.core
 
-import griffon.util.GriffonApplicationHelper
+import griffon.util.internal.GriffonApplicationHelper
 import griffon.util.EventRouter
 import griffon.util.Metadata
+
+import groovy.beans.Bindable
 
 /**
  * @author Danno.Ferrin
@@ -36,37 +38,21 @@ class BaseGriffonApplication implements GriffonApplication {
     Map groups      = [:]
 
     Binding bindings = new Binding()
-    Properties applicationProperties
     ConfigObject config
     ConfigObject builderConfig
     Object eventsConfig
 
+    @Bindable Locale locale = Locale.getDefault()
+    protected ApplicationPhase phase = ApplicationPhase.INITIALIZE
+
     private final EventRouter eventRouter = new EventRouter()
     private final List<ShutdownHandler> shutdownHandlers = []
     final GriffonApplication appDelegate
+    private boolean shutdownInProcess = false
+    private final Object shutdownLock = new Object()
 
     BaseGriffonApplication(GriffonApplication appDelegate) {
         this.appDelegate = appDelegate
-    }
-
-    // define getter/setter otherwise it will be treated as a read-only property
-    // because only the getter was defined in GriffonApplication
-    /**
-     * @deprecated use Metadata.getCurrent() instead
-     */
-    Properties getApplicationProperties() {
-        return applicationProperties
-    }
-    /**
-     * @deprecated use loadApplicationProperties() instead
-     */
-    @Deprecated
-    void setApplicationProperties(Properties applicationProperties) {
-        this.applicationProperties = applicationProperties
-    }
-
-    void loadApplicationProperties() {
-        this.applicationProperties = Metadata.getCurrent()
     }
 
     Metadata getMetadata() {
@@ -91,13 +77,19 @@ class BaseGriffonApplication implements GriffonApplication {
     }
 
     void initialize() {
-        GriffonApplicationHelper.runScriptInsideUIThread("Initialize", appDelegate)
+        if(phase == ApplicationPhase.INITIALIZE) {
+            GriffonApplicationHelper.prepare(appDelegate)
+        }
     }
 
     void ready() {
+        if(phase != ApplicationPhase.STARTUP) return
+
+        phase = ApplicationPhase.READY
         event("ReadyStart",[appDelegate])
         GriffonApplicationHelper.runScriptInsideUIThread("Ready", appDelegate)
         event("ReadyEnd",[appDelegate])
+        phase = ApplicationPhase.MAIN
     }
 
     boolean canShutdown() {
@@ -111,23 +103,59 @@ class BaseGriffonApplication implements GriffonApplication {
         return true
     }
 
-    void shutdown() {
+    boolean shutdown() {
+        if(!canShutdown()) return false
+
+        // signal that shutdown is in process
+        // avoids reentrant calls to shutdown()
+        // once permission to quit has been granted
+        signalShutdownInProcess()
+        phase = ApplicationPhase.SHUTDOWN
+
+        // stage 1 - alert all app event handlers
         event("ShutdownStart",[appDelegate])
+
+        // stage 2 - alert all shutdown handlers
         for(handler in shutdownHandlers) {
             handler.onShutdown(appDelegate)
         }
 
+        // stage 3 - destroy all mvc groups
         List mvcNames = []
         mvcNames.addAll(groups.keySet())
         mvcNames.each { 
             GriffonApplicationHelper.destroyMVCGroup(appDelegate, it)
         }
+
+        // stage 4 - call shutdown script
         GriffonApplicationHelper.runScriptInsideUIThread("Shutdown", appDelegate)
+ 
+        true
+    }
+
+    private void signalShutdownInProcess() {
+        synchronized(shutdownLock) {
+            shutdownInProcess = true
+        }
+    }
+
+    boolean isShutdownInProcess() {
+        synchronized(shutdownLock) {
+            return shutdownInProcess
+        }
     }
 
     void startup() {
+        if(phase != ApplicationPhase.INITIALIZE) return
+
+        phase = phase.STARTUP
         event("StartupStart",[appDelegate])
+
+        config.application.startupGroups.each {group ->
+            GriffonApplicationHelper.createMVCGroup(appDelegate, group)
+        }
         GriffonApplicationHelper.runScriptInsideUIThread("Startup", appDelegate)
+
         event("StartupEnd",[appDelegate])
     }
 
@@ -161,9 +189,13 @@ class BaseGriffonApplication implements GriffonApplication {
 
     void addShutdownHandler(ShutdownHandler handler) {
         if(handler && !shutdownHandlers.contains(handler)) shutdownHandlers << handler
-    }    
+    }
 
     void removeShutdownHandler(ShutdownHandler handler) {
         if(handler) shutdownHandlers.remove(handler)
-    }    
+    }
+
+    ApplicationPhase getPhase() {
+        phase
+    }
 }

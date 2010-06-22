@@ -22,6 +22,7 @@ import griffon.util.Metadata;
 
 import java.util.Map;
 import java.util.List;
+import java.util.Locale;
 import java.util.Properties;
 
 /**
@@ -30,15 +31,7 @@ import java.util.Properties;
  * @author Danno Ferrin
  * @author Andres Almiray
  */
-public interface GriffonApplication extends griffon.util.IGriffonApplication {
-    /**
-     * Gets the application's configuration set on 'aaplication.properties'.<p>
-     *
-     * @deprecated use Metadata.getCurrent() instead
-     */
-    @Deprecated
-    Properties getApplicationProperties();
-
+public interface GriffonApplication {
     /**
      * Gets the application's configuration set on 'aaplication.properties'.<p>
      */
@@ -113,12 +106,14 @@ public interface GriffonApplication extends griffon.util.IGriffonApplication {
     /**
      * Executes the 'Shutdown' life cycle phase.
      *
-     * @return true if the shutdown sequence can proceed, false otherwise
+     * @return false if the shutdown sequence was aborted
      */
-    void shutdown();
+    boolean shutdown();
 
     /**
+     * Queries any available ShutdownHandlers.
      *
+     * @return true if the shutdown sequence can proceed, false otherwise
      */
     boolean canShutdown();
 
@@ -184,4 +179,10 @@ public interface GriffonApplication extends griffon.util.IGriffonApplication {
      *                duplicated values should be ignored
      */
     void removeShutdownHandler(ShutdownHandler handler);    
+
+    Locale getLocale();
+
+    void setLocale(Locale locale);
+
+    ApplicationPhase getPhase();
 }

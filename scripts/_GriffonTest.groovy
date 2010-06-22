@@ -1,11 +1,11 @@
 /*
- * Copyright 2004-2010 the original author or authors.
+ * Copyright 2004-2005 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- * http://www.apache.org/licenses/LICENSE-2.0
+ *      http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -13,181 +13,210 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
- 
-// import org.codehaus.griffon.commons.GriffonApplication
-import org.codehaus.griffon.test.DefaultGriffonTestHelper
-import org.codehaus.griffon.test.DefaultGriffonTestRunner
-import org.codehaus.griffon.test.GriffonIntegrationTestHelper
-// import org.codehaus.griffon.support.PersistenceContextInterceptor
-// import org.codehaus.griffon.web.context.GriffonConfigUtils
-// import org.springframework.mock.web.MockServletContext
- 
+
+import griffon.util.GriffonUtil
+import griffon.core.GriffonApplication
+
+import org.codehaus.griffon.test.junit4.JUnit4GriffonTestType
+import org.codehaus.griffon.test.support.GriffonTestMode
+import org.codehaus.griffon.test.report.junit.JUnitReportProcessor
+
+import org.codehaus.griffon.test.GriffonTestType
+import org.codehaus.griffon.test.GriffonTestTargetPattern
+import org.codehaus.griffon.test.event.GriffonTestEventPublisher
+import org.codehaus.griffon.test.event.GriffonTestEventConsoleReporter
+
 /**
  * Gant script that runs the Griffon unit tests
  *
- * @author Graeme Rocher
- *
- * @since 0.4
+ * @author Graeme Rocher (Grails 0.4)
  */
 
-// No point doing this stuff more than once.
-if (getBinding().variables.containsKey("_griffon_test_called")) return
-_griffon_test_called = true
-
- 
 includeTargets << griffonScript("_GriffonBootstrap")
-// includeTargets << griffonScript("_GriffonRun")
- 
+includeTargets << griffonScript("_GriffonSettings")
+includeTargets << griffonScript("_GriffonClean")
+
+// Miscellaneous 'switches' that affect test operation
+testOptions = [:]
+
 // The four test phases that we can run.
 unitTests = [ "unit" ]
 integrationTests = [ "integration" ]
-// functionalTests = []
-otherTests = ["cli"]
- 
-// The phases that we will run on this execution. Override this in your
-// own scripts to control the phases and their order.
-phasesToRun = []
- 
+otherTests = [ "cli" ]
+
+// The potential phases for execution, modify this by responding to the TestPhasesStart event
+phasesToRun = ["unit", "integration", "other"]
+
+TEST_PHASE_WILDCARD = ' _ALL_PHASES_ '
+TEST_TYPE_WILDCARD = ' _ALL_TYPES_ '
+targetPhasesAndTypes = [:]
+
+// Passed to the test runners to facilitate event publishing
+testEventPublisher = new GriffonTestEventPublisher(event)
+
+// Add a listener to write test status updates to the console
+eventListener.addGriffonBuildListener(new GriffonTestEventConsoleReporter(System.out))
+
+// Add a listener to generate our JUnit reports.
+eventListener.addGriffonBuildListener(new JUnitReportProcessor())
+
 // A list of test names. These can be of any of this forms:
 //
-// org.example.*
-// org.example.**.*
-// MyService
-// MyService.testSomeMethod
-// org.example.other.MyService.testSomeMethod
+//   org.example.*
+//   org.example.**.*
+//   MyService
+//   MyService.testSomeMethod
+//   org.example.other.MyService.testSomeMethod
 //
 // The default pattern runs all tests.
 testNames = buildConfig.griffon.testing.patterns ?: ['**.*']
- 
+testTargetPatterns = null // created in allTests()
+
 // Controls which result formats are generated. By default both XML
 // and plain text files are created. You can override this in your
 // own scripts.
 reportFormats = [ "xml", "plain" ]
- 
+
 // If true, only run the tests that failed before.
 reRunTests = false
- 
+
 // Where the report files are created.
 testReportsDir = griffonSettings.testReportsDir
- 
- 
+// Where the test source can be found
+testSourceDir = griffonSettings.testSourceDir
+
+// Set up an Ant path for the tests.
+ant.path(id: "griffon.test.classpath", testClasspath)
+
 createTestReports = true
-compilationFailures = []
- 
-testHelper = null
+
 testsFailed = false
- 
+
 target(allTests: "Runs the project's tests.") {
-    // If no phases are explicitly configured, run them all.
-    if (!phasesToRun) phasesToRun = [ "unit", "integration", /*"functional",*/ "other" ]
+    def dependencies = [compile, packagePlugins]
+    if (testOptions.clean) dependencies = [clean] + dependencies
+    depends(*dependencies)
+    
+    packageFiles(basedir)
+
+    ant.mkdir(dir: testReportsDir)
+    ant.mkdir(dir: "${testReportsDir}/html")
+    ant.mkdir(dir: "${testReportsDir}/plain")
+
+    // If we are to run the tests that failed, replace the list of
+    // test names with the failed ones.
+    if (reRunTests) testNames = getFailedTests()
+    
+    testTargetPatterns = testNames.collect { new GriffonTestTargetPattern(it) } as GriffonTestTargetPattern[]
     if(isPluginProject) phasesToRun.remove('integration')
     if(!phasesToRun) {
         println "No test phases were defined. Aborting"
         System.exit(1)
     }
     
-    depends(compile, packagePlugins)
-    packageFiles(basedir)
- 
-    // Set up an Ant path for the tests.
-    ant.path(id: "griffon.test.classpath", testClasspath)
-
-    ant.mkdir(dir: testReportsDir)
-    ant.mkdir(dir: "${testReportsDir}/html")
-    ant.mkdir(dir: "${testReportsDir}/plain")
- 
-    // add test dependencies to classpath
-    def currentClasspathURLs = rootLoader.URLs.toList()
-    griffonSettings.testDependencies.each { file ->
-        def url = file.toURL()
-        if(!currentClasspathURLs.contains(url))
-            rootLoader.addURL url
-    }
- 
-    // If we are to run the tests that failed, replace the list of
-    // test names with the failed ones.
-    if (reRunTests) testNames = getFailedTests()
- 
     event("TestPhasesStart", [phasesToRun])
- 
-    // This runs the tests and generates the formatted result files.
-    String testRunnerClassName = System.getProperty("griffon.test.runner") ?: "org.codehaus.griffon.test.DefaultGriffonTestRunner";
-    testRunner = null
-    if (testRunnerClassName) {
-        try {
-            testRunner = Class.forName(testRunnerClassName).getConstructor(File, List).newInstance(testReportsDir, reportFormats)
+    
+    // Handle pre 0.9 style testing configuration
+    def convertedPhases = [:]
+    phasesToRun.each { phaseName ->
+        def types = binding."${phaseName}Tests"
+        if (types) {
+            convertedPhases[phaseName] = types.collect { rawType ->
+                if (rawType instanceof CharSequence) {
+                    def rawTypeString = rawType.toString()
+                    if (phaseName in ['integration']) {
+                        def mode = new GriffonTestMode(
+                            autowire: true
+                        )
+                        new JUnit4GriffonTestType(rawTypeString, rawTypeString, mode)
+                    } else {
+                        new JUnit4GriffonTestType(rawTypeString, rawTypeString)
+                    }
+                } else {
+                    rawType
+                }
+            }
         }
-        catch (Throwable e) {
-            println "Cannot load test runner class '${testRunnerClassName}'. Reason: ${e.message}"
-            testRunner = new DefaultGriffonTestRunner(testReportsDir, reportFormats)
+    }
+
+    // Using targetPhasesAndTypes, filter down convertedPhases into filteredPhases
+    filteredPhases = null
+    if (targetPhasesAndTypes.size() == 0) {
+        filteredPhases = convertedPhases // no type or phase targeting was applied
+    } else {
+        filteredPhases = [:]
+        convertedPhases.each { phaseName, types ->
+            if (targetPhasesAndTypes.containsKey(phaseName) || targetPhasesAndTypes.containsKey(TEST_PHASE_WILDCARD)) {
+                def targetTypesForPhase = (targetPhasesAndTypes[phaseName] ?: []) + (targetPhasesAndTypes[TEST_PHASE_WILDCARD] ?: [])
+                types.each { type ->
+                    if (type.name in targetTypesForPhase || TEST_TYPE_WILDCARD in targetTypesForPhase) {
+                        if (!filteredPhases.containsKey(phaseName)) filteredPhases[phaseName] = []
+                        filteredPhases[phaseName] << type
+                    }
+                }
+            }
         }
     }
- 
-    // Process the tests in each phase that is configured to run.
-    phasesToRun.each { String phase ->
-        // Skip this phase if there are no test types registered for it.
-        def testTypes = this."${phase}Tests"
-        if (!testTypes) return
- 
-        // Add a blank line before the start of this phase so that it
-        // is easier to distinguish
-        println()
- 
-        event("StatusUpdate", ["Starting $phase tests"])
-        event("TestPhaseStart", [phase])
- 
-        // Do whatever preparation is needed to run the tests in this
-        // phase. The method/closure should return a test helper.
-        testHelper = this."${phase}TestsPreparation"()
- 
-        // Now run all the tests registered for this phase.
-        testTypes.each(processTests)
- 
-        // Perform any clean up required.
-        this."${phase}TestsCleanUp"()
- 
-        event("TestPhaseEnd", [phase])
+
+    try {
+        // Process the tests in each phase that is configured to run.
+        filteredPhases.each { phase, types ->
+            currentTestPhaseName = phase
+            
+            // Add a blank line before the start of this phase so that it
+            // is easier to distinguish
+            println()
+
+            event("StatusUpdate", ["Starting $phase test phase"])
+            event("TestPhaseStart", [phase])
+
+            "${phase}TestPhasePreparation"()
+
+            // Now run all the tests registered for this phase.
+            types.each(processTests)
+
+            // Perform any clean up required.
+            this."${phase}TestPhaseCleanUp"()
+
+            event("TestPhaseEnd", [phase])
+            currentTestPhaseName = null
+        }
+    } finally {
+        String msg = testsFailed ? "\nTests FAILED" : "\nTests PASSED"
+        if (createTestReports) {
+            event("TestProduceReports", [])
+            msg += " - view reports in ${testReportsDir}"
+        }
+        event("StatusFinal", [msg])
+        event("TestPhasesEnd", [])
     }
- 
-    String msg = testsFailed ? "\nTests FAILED" : "\nTests PASSED"
-    if (createTestReports) {
-        produceReports()
-        msg += " - view reports in ${testReportsDir}."
-    }
- 
-    event("StatusFinal", [msg])
- 
-    event("TestPhasesEnd", [])
- 
-    return testsFailed ? 1 : 0
+
+    testsFailed ? 1 : 0
 }
- 
+
 /**
  * Compiles and runs all the tests of the given type and then generates
  * the reports for them.
  * @param type The type of the tests to compile (not the test phase!)
  * For example, "unit", "jsunit", "webtest", etc.
  */
-processTests = { String type ->
-    def testSrcDir = new File("${basedir}/test/${type}")
-
-    if(!testSrcDir.list()) {
-        println "No tests found for type '$type'. SKIPPING"
-        return
-    }
-
-    println "Running tests of type '$type'"
+processTests = { GriffonTestType type ->
+    currentTestTypeName = type.name
     
-    // First compile the test classes.
-    compileTests(type)
- 
-    // Run them.
-    runTests(type)
- 
-    // Process the results.
-    createReports(type)
+    def relativePathToSource = type.relativeSourcePath
+    def dest = null
+    if (relativePathToSource) {
+        def source = new File("${testSourceDir}", relativePathToSource)
+        if (!source.exists()) return // no source, no point continuing
+
+        dest = new File(griffonSettings.testClassesDir, relativePathToSource)
+        compileTests(type, source, dest)
+    }
+    
+    runTests(type, dest)
+    currentTestTypeName = null
 }
- 
+
 /**
  * Compiles all the test classes for a particular type of test, for
  * example "unit" or "webtest". Assumes that the source files are in
@@ -196,211 +225,113 @@ processTests = { String type ->
  * @param type The type of the tests to compile (not the test phase!)
  * For example, "unit", "jsunit", "webtest", etc.
  */
-compileTests = { String type ->
+compileTests = { GriffonTestType type, File source, File dest ->
     event("TestCompileStart", [type])
- 
-    def destDir = new File(griffonSettings.testClassesDir, type)
+
+    def destDir = new File(griffonSettings.testClassesDir.absolutePath, type.name)
     ant.mkdir(dir: destDir.path)
-    try {
-        def classpathId = "griffon.test.classpath"
-        ant.groovyc(destdir: destDir,
-//                 projectName: griffonAppName,
-                encoding:"UTF-8",
-                classpathref: classpathId) {
-            javac(classpathref:classpathId, debug:"yes")
-            src(path:"${basedir}/test/${type}")
-        }
-    }
-    catch (Exception e) {
-        event("StatusFinal", ["Compilation Error: ${e.message}"])
-        return 1
+
+    compileSources(destDir, 'griffon.test.classpath') {
+        src(path: source)
+        javac(classpathref: 'griffon.test.classpath', debug:"yes")
     }
  
+    if(argsMap.verboseCompile) {
+        println('-'*80)
+        println "[GRIFFON] classLoader urls"
+        classLoader.URLs.each{println("  $it")}
+        println "[GRIFFON] rootLoader urls"
+        rootLoader.URLs.each{println("  $it")}
+        println('-'*80)
+    }
+
     event("TestCompileEnd", [type])
 }
- 
-runTests = { String type ->
-    def prevContextClassLoader = Thread.currentThread().contextClassLoader
-    try {
-        // Get all the test files to run for this test type.
-        def testSuite = testHelper.createTests(testNames, type)
-        if (testSuite.testCount() == 0) {
-            event("StatusUpdate", ["No tests found in test/$type to execute"])
-            return
+
+runTests = { GriffonTestType type, File compiledClassesDir ->
+    def testCount = type.prepare(testTargetPatterns, compiledClassesDir, binding)
+    
+    if (testCount) {
+        try {
+            event("TestSuiteStart", [type.name])
+
+            println ""
+            println "-------------------------------------------------------"
+            println "Running ${testCount} $type.name test${testCount > 1 ? 's' : ''}..."
+
+            def start = new Date()
+            def result = type.run(testEventPublisher)
+            def end = new Date()
+            
+            event("StatusUpdate", ["Tests Completed in ${end.time - start.time}ms"])
+
+            if (result.failCount > 0) testsFailed = true
+            
+            println "-------------------------------------------------------"
+            println "Tests passed: ${result.passCount}"
+            println "Tests failed: ${result.failCount}"
+            println "-------------------------------------------------------"
+            event("TestSuiteEnd", [type.name])
+        } catch (Exception e) {
+            event("StatusFinal", ["Error running $type.name tests: ${e.toString()}"])
+            GriffonUtil.deepSanitize(e)
+            e.printStackTrace()
+            testsFailed = true
+        } finally {
+            type.cleanup()
         }
- 
-        // Set the context class loader to the one used to load the tests.
-        Thread.currentThread().contextClassLoader = testHelper.currentClassLoader
- 
-        // WARNING: hack to identify if an app has not been realized yet
-        // assumes an app will have 1 view script at least
-        // if (type == "integration" && !griffonApp.views) griffonApp.realize()
-        event("TestSuiteStart", [type])
-        int testCases = testSuite.countTestCases()
-        println "-------------------------------------------------------"
-        println "Running ${testCases} $type test${testCases > 1 ? 's' : ''}..."
- 
-        def start = new Date()
-        def result = testRunner.runTests(testSuite)
-        def end = new Date()
- 
-        event("TestSuiteEnd", [type, testSuite])
-        event("StatusUpdate", ["Tests Completed in ${end.time - start.time}ms"])
- 
-        def failedTestCount = result.errorCount() + result.failureCount()
-        println "-------------------------------------------------------"
-        println "Tests passed: ${result.runCount() - failedTestCount}"
-        println "Tests failed: ${failedTestCount}"
-        println "-------------------------------------------------------"
- 
-        // If any of the tests fail, we register the whole test run as
-        // a failure.
-        if (failedTestCount > 0) testsFailed = true
- 
-        return result
-    }
-    catch (Exception e) {
-        event("StatusFinal", ["Error running $type tests: ${e.toString()}"])
-        e.printStackTrace()
-        testsFailed = true
-        return null
-    }
-    finally {
-        Thread.currentThread().contextClassLoader = prevContextClassLoader
     }
 }
- 
-createReports = { String type ->
-    // Reports are not currently done on a per-type basis.
-}
- 
+unitTestPhasePreparation = {}
+unitTestPhaseCleanUp = {}
+
 /**
- * Prepare for the unit tests. Simply sets up the default test helper.
+ * Initialises a persistence context and bootstraps the application.
  */
-unitTestsPreparation = {
-    return new DefaultGriffonTestHelper(griffonSettings, classLoader, resolveResources)
-}
- 
-/**
- * Prepare for the integration tests. Packages the tests and then
- * bootstraps the application.
- */
-integrationTestsPreparation = {
+integrationTestPhasePreparation = {
     packageTests()
     bootstrap()
-    griffonApp.realize()
- 
-    // Get the Griffon application instance created by the bootstrap
-    // process.
-//     def app = appCtx.getBean(GriffonApplication.APPLICATION_ID)
-//     if (app.parentContext == null) {
-//         app.applicationContext = appCtx
-//     }
- 
-//     def beanNames = appCtx.getBeanNamesForType(PersistenceContextInterceptor)
-//     if (beanNames.size() > 0) appCtx.getBean(beanNames[0]).init()
- 
-//     MockServletContext servletContext = new org.springframework.mock.web.MockServletContext()
-//     GriffonConfigUtils.configureServletContextAttributes(servletContext, app, pluginManager, appCtx)
-//     GriffonConfigUtils.executeGriffonBootstraps(app, appCtx, servletContext );
- 
-    // We use a specialist test helper for integration tests.
-    return new GriffonIntegrationTestHelper(griffonSettings, griffonApp.class.classLoader, resolveResources, griffonApp)
 }
- 
+
 /**
- * Prepare for the functional tests. Starts up the test server.
+ * Shuts down the bootstrapped Griffon application.
  */
-// functionalTestsPreparation = {
-//     packageApp()
-//     runApp()
-//     return new DefaultGriffonTestHelper(griffonSettings, classLoader, resolveResources)
-// }
- 
-/**
- * Prepare for the unit tests. Intentionally does nothing because unit
- * tests require no special preparation.
- */
-otherTestsPreparation = {
-    return new DefaultGriffonTestHelper(griffonSettings, classLoader, resolveResources)
+integrationTestPhaseCleanUp = {
+
 }
- 
-/**
- * Clean up after the unit tests. Nothing to do.
- */
-unitTestsCleanUp = {
-}
- 
-/**
- * Clean up after the integration tests. Shuts down the bootstrapped
- * Griffon application.
- */
-integrationTestsCleanUp = {
-    // Kill any context interceptor we might have.
-//     def beanNames = appCtx.getBeanNamesForType(PersistenceContextInterceptor)
-//     if (beanNames.size() > 0) appCtx.getBean(beanNames[0]).destroy()
- 
-//     shutdownApp()
-}
- 
-/**
- * Clean up after the functional tests. Shuts down the test server.
- */
-// functionalTestsCleanUp = {
-//     stopServer()
-// }
- 
-/**
- * Clean up after the "other" tests. Nothing to do.
- */
-otherTestsCleanUp = {
-}
- 
-resolveTestFiles = { Closure filter ->
-    def testFiles = resolveTestResources {"file:${basedir}/test/unit/${it}.groovy"}
-    testFiles.addAll(resolveTestResources {"file:${basedir}/test/unit/${it}.java"})
-}
- 
+
+otherTestPhasePreparation = {}
+otherTestPhaseCleanUp = {}
+
 target(packageTests: "Puts some useful things on the classpath for integration tests.") {
     ant.copy(todir: new File(griffonSettings.testClassesDir, "integration").path) {
         fileset(dir: "${basedir}", includes: metadataFile.name)
     }
     ant.copy(todir: griffonSettings.testClassesDir.path, failonerror: false) {
-        fileset(dir: "${basedir}/griffon-app/conf", includes: "**", excludes: "*.groovy, log4j*, hibernate, spring")
-//         fileset(dir: "${basedir}/griffon-app/conf/hibernate", includes: "**/**")
-        fileset(dir: "${basedir}/src/main") {
+        fileset(dir: "${basedir}/griffon-app/conf", includes: "**", excludes: "*.groovy, log4j*, metainf, dist")
+        fileset(dir: "${griffonSettings.sourceDir}/main") {
+            include(name: "**/**")
+            exclude(name: "**/*.java")
+        }
+        fileset(dir: "${testSourceDir}/unit") {
             include(name: "**/**")
             exclude(name: "**/*.java")
             exclude(name: "**/*.groovy")
         }
-        fileset(dir: "${basedir}/test/unit") {
-            include(name: "**/**")
-            exclude(name: "**/*.java")
-            exclude(name: "**/*.groovy")
-        }
-        fileset(dir: "${basedir}/test/integration") {
+        fileset(dir: "${testSourceDir}/integration") {
             include(name: "**/**")
             exclude(name: "**/*.java")
             exclude(name: "**/*.groovy")
         }
     }
 }
- 
-target(produceReports: "Outputs aggregated xml and html reports") {
-    ant.junitreport(todir: "${testReportsDir}") {
-        fileset(dir: testReportsDir) {
-            include(name: "TEST-*.xml")
-        }
-        report(format: "frames", todir: "${testReportsDir}/html")
-    }
-}
- 
+
 def getFailedTests() {
     File file = new File("${testReportsDir}/TESTS-TestSuites.xml")
     if (file.exists()) {
         def xmlParser = new XmlParser().parse(file)
         def failedTests = xmlParser.testsuite.findAll { it.'@failures' =~ /.*[1-9].*/ || it.'@errors' =~ /.*[1-9].*/}
- 
+
         return failedTests.collect {
             String testName = it.'@name'
             testName = testName.replace('Tests', '')

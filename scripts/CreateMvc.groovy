@@ -41,7 +41,7 @@ Type in griffon create-addon then execute this command again."""
     }
 
     promptForName(type: "MVC Group")
-    def (pkg, name) = extractArtifactName(argsMap["params"][0])
+    def (pkg, name) = extractArtifactName(argsMap['params'][0])
     def fqn = "${pkg?pkg:''}${pkg?'.':''}${GCU.getClassNameRepresentation(name)}"
 
     createArtifact(
@@ -63,7 +63,6 @@ Type in griffon create-addon then execute this command again."""
         path: "griffon-app/controllers")
 
     createIntegrationTest(name: name, suffix: "")
-
 
     if (isAddonPlugin) {
         // create mvcGroup in a plugin
@@ -100,7 +99,7 @@ mvcGroups {
         }
         applicationConfigFile.withWriter { it.write configText.replaceAll(/\s*mvcGroups\s*\{/, """
 mvcGroups {
-    // MVC Group for "$args"
+    // MVC Group for "$name"
     '$name' {
         model = '${fqn}Model'
         controller = '${fqn}Controller'
@@ -109,4 +108,3 @@ mvcGroups {
 """) }
     }
 }
-

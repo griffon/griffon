@@ -17,9 +17,7 @@
 /**
  * Gant script that handles the packaging of a Griffon plugin into a distribution zipfile
  *
- * @author Graeme Rocher
- *
- * @since 0.4
+ * @author Graeme Rocher (Grails 0.4)
  */
 
 includeTargets << griffonScript("_GriffonPluginDev")

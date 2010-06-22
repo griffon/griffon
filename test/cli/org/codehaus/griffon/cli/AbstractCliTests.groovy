@@ -1,8 +1,9 @@
 package org.codehaus.griffon.cli
 
 import gant.Gant
-import org.codehaus.griffon.util.BuildSettings
-import org.codehaus.griffon.util.BuildSettingsHolder
+import griffon.util.BuildSettings
+import griffon.util.BuildSettingsHolder
+import griffon.util.PluginBuildSettings
 import org.codehaus.gant.GantBinding
 import org.codehaus.griffon.cli.support.GriffonRootLoader
 import org.codehaus.griffon.commons.ConfigurationHolder
@@ -13,7 +14,7 @@ abstract class AbstractCliTests extends GroovyTestCase {
     String scriptName
 
     protected appBase = "test/cliTestApp"
-	protected ant = new AntBuilder()
+    protected ant = new AntBuilder()
 
     private GantBinding binding
     private ClassLoader savedContextLoader
@@ -49,7 +50,7 @@ abstract class AbstractCliTests extends GroovyTestCase {
         savedContextLoader = Thread.currentThread().contextClassLoader
     }
 
-	void tearDown() {
+    void tearDown() {
         Thread.currentThread().contextClassLoader = savedContextLoader
 
         ant.delete(dir:appBase, failonerror:false)
@@ -60,27 +61,27 @@ abstract class AbstractCliTests extends GroovyTestCase {
         ConfigurationHolder.config = null
         PluginManagerHolder.pluginManager = null
         ant = null
-	}
+    }
 
-	protected String createTestApp(appName = "testapp") {
+    protected String createTestApp(appName = "testapp") {
         // Pass the name of the test project to the create-app script.
         System.setProperty("griffon.cli.args", appName)
 
         // Create the application.
-	    gantRun("CreateApp_")
+        gantRun("CreateApp_")
 
-	    // Update the base directory to the application dir.
+        // Update the base directory to the application dir.
         def appDir = appBase + File.separator + appName
         System.setProperty("base.dir", appDir)
 
-		// Finally, clear the CLI arguments.
+        // Finally, clear the CLI arguments.
         System.setProperty("griffon.cli.args", "")
 
         // Return the path to the new app.
         return appDir
     }
 
-	protected void gantRun() {
+    protected void gantRun() {
         gantRun(this.scriptName)
     }
 
@@ -99,8 +100,10 @@ abstract class AbstractCliTests extends GroovyTestCase {
         settings.griffonWorkDir = new File(workDir)
         settings.projectWorkDir = new File(projectDir)
         settings.classesDir = new File("$projectDir/classes")
+        settings.pluginClassesDir = new File("$projectDir/plugin-classes")
         settings.resourcesDir = new File("$projectDir/resources")
         settings.testClassesDir = new File("$projectDir/test-classes")
+        settings.testResourcesDir = new File("$projectDir/test-resources")
         settings.projectPluginsDir = new File("$projectDir/plugins")
         settings.globalPluginsDir = new File("$workDir/global-plugins")
 
@@ -110,6 +113,7 @@ abstract class AbstractCliTests extends GroovyTestCase {
         binding.with {
             // Core properties.
             griffonSettings = settings
+            pluginSettings = new PluginBuildSettings(settings)
             basedir = settings.baseDir.path
             baseFile = settings.baseDir
             baseName = settings.baseDir.name
@@ -125,10 +129,16 @@ abstract class AbstractCliTests extends GroovyTestCase {
             griffonWorkDir = settings.griffonWorkDir.path
             projectWorkDir = settings.projectWorkDir.path
             classesDirPath = settings.classesDir.path
+            pluginClassesDirPath = settings.pluginClassesDir.path
             testDirPath = settings.testClassesDir.path
             resourcesDirPath = settings.resourcesDir.path
+            testResourcesDirPath = settings.testResourcesDir.path
             pluginsDirPath = settings.projectPluginsDir.path
             globalPluginsDirPath = settings.globalPluginsDir.path
+
+            classesDir = settings.classesDir
+            pluginClassesDir = settings.pluginClassesDir
+            testResourcesDir = settings.testResourcesDir
 
             // Closure for specifying script dependencies.
             griffonScript = { return new File("./scripts/${it}.groovy") }

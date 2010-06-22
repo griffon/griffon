@@ -16,7 +16,7 @@
 
 package griffon.test
  
-import org.codehaus.griffon.util.BuildSettingsHolder
+import griffon.util.BuildSettingsHolder
 import java.util.concurrent.TimeUnit
 import java.util.concurrent.locks.*
  
@@ -30,12 +30,11 @@ import java.util.concurrent.locks.*
 * <li><tt>griffon.cli.work.dir</tt> - location of the test case's working directory</li>
 * </ul>
 *
-* @author Peter.Ledbrook
+* @author Peter Ledbrook (Grails 1.1)
 */
 abstract class AbstractCliTestCase extends GroovyTestCase {
     private final Lock lock = new ReentrantLock()
     private final Condition condition = lock.newCondition()
-    private final Condition waiting = lock.newCondition()
  
     private String commandOutput
     private String griffonHome = System.getProperty("griffon.home") ?: BuildSettingsHolder.settings?.griffonHome?.absolutePath
@@ -46,7 +45,6 @@ abstract class AbstractCliTestCase extends GroovyTestCase {
     private boolean streamsProcessed
  
     File outputDir = new File(BuildSettingsHolder.settings?.projectTargetDir ?: new File("target"), "cli-output")
-    // File outputDir = new File(new File("target"), "cli-output")
     long timeout = 2 * 60 * 1000 // min * sec/min * ms/sec
  
     /**
@@ -134,7 +132,6 @@ abstract class AbstractCliTestCase extends GroovyTestCase {
      */
     int waitForProcess() {
         // Interrupt the main thread if we hit the timeout.
-        final monitor = "monitor"
         final mainThread = Thread.currentThread()
         final timeout = this.timeout
         final timeoutThread = Thread.startDaemon {

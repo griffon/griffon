@@ -1,0 +1,25 @@
+h1. interactive
+
+h2. Purpose
+
+The @interactive@ command starts the Griffon CLI in interactive mode.
+
+h2. Example
+
+{code}
+griffon interactive     
+{code}
+
+h2. Description
+
+Usage:
+{code}
+griffon [environment]* interactive
+{code}                
+
+Starts the Griffon CLI (script runner) in interactive mode. Interactive mode behaves the same as running Griffon commands from the command line, but keeps the JVM running in between scripts. A simple command shell allows running and re-running griffon commands.
+
+By keeping the JVM running, interactive mode avoids the (costly) JVM startup time for running successive Griffon commands. It also allows the JVM JIT compiler to optimize Griffon scripts, so repeated commands will execute more quickly after the initial run. This significantly speeds up repeated runs of unit tests for example.
+
+See also @shell@ and @console@ commands for ways to interact with a running griffon app.
+
