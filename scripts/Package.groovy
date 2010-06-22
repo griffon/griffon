@@ -37,7 +37,6 @@ target('default': "Packages a Griffon application.") {
      packageType = ''
 
      if(!argsMap.params) {
-          System.setProperty(RunMode.KEY, RunMode.CUSTOM.name)
           package_zip()
           package_jar()
           package_applet()
@@ -101,6 +100,7 @@ target(create_binary_package: "Creates a binary distribution") {
 }
 
 target(package_zip: "Creates a binary distribution and zips it.") {
+    System.setProperty(RunMode.KEY, RunMode.CUSTOM.name)
     packageType = 'zip'
     event("PackageStart",[packageType])
 
@@ -113,6 +113,7 @@ target(package_zip: "Creates a binary distribution and zips it.") {
 }
 
 target(package_jar: "Creates a single jar distribution and zips it.") {
+    System.setProperty(RunMode.KEY, RunMode.CUSTOM.name)
     packageType = 'jar'
     event("PackageStart",[packageType])
  
