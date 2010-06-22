@@ -90,17 +90,13 @@ eventCopyLibsEnd = { jardir ->
     def installFile = new File("scripts/_Install.groovy")
     // all plugins should have an install, no need to insure
     String installText = installFile.text
-    def slurperVar = generateTempVar(installText, 'configSlurper')
     def flagVar = generateTempVar(installText, 'addonIsSet')
-    def configVar = generateTempVar(installText, 'slurpedBuilder')
 
     //TODO we should slurp the config, tweak it in place, and re-write instead of append
     installFile << """
 // check to see if we already have a $name
-ConfigSlurper $slurperVar = new ConfigSlurper()
-def $configVar = ${slurperVar}.parse(new File("\$basedir/griffon-app/conf/Builder.groovy").toURL())
 boolean $flagVar
-${configVar}.each() { prefix, v ->
+builderConfig.each() { prefix, v ->
     v.each { builder, views ->
         $flagVar = $flagVar || '$fqn' == builder
     }
@@ -108,7 +104,7 @@ ${configVar}.each() { prefix, v ->
 
 if (!$flagVar) {
     println 'Adding $name to Builder.groovy'
-    new File("\$basedir/griffon-app/conf/Builder.groovy").append('''
+    builderConfigFile.append('''
 root.'$fqn'.addon=true
 ''')
 }"""
@@ -116,18 +112,13 @@ root.'$fqn'.addon=true
     def uninstallFile = new File("scripts/_Uninstall.groovy")
     // all plugins should have an install, no need to insure
     String uninstallText = uninstallFile.text
-    slurperVar = generateTempVar(uninstallText, 'configSlurper')
     flagVar = generateTempVar(uninstallText, 'addonIsSet')
-    configVar = generateTempVar(uninstallText, 'slurpedBuilder')
-    def configFile = generateTempVar(uninstallText, 'builderConfigFile')
 
     //TODO we should slurp the config, tweak it in place, and re-write instead of append
     uninstallFile << """
 // check to see if we already have a $name
-ConfigSlurper $slurperVar = new ConfigSlurper()
-def $configVar = ${slurperVar}.parse(new File("\$basedir/griffon-app/conf/Builder.groovy").toURL())
 boolean $flagVar
-${configVar}.each() { prefix, v ->
+builderConfig.each() { prefix, v ->
     v.each { builder, views ->
         $flagVar = $flagVar || '$fqn' == builder
     }
@@ -135,8 +126,7 @@ ${configVar}.each() { prefix, v ->
 
 if ($flagVar) {
     println 'Removing $name from Builder.groovy'
-    def $configFile = new File("\${basedir}/griffon-app/conf/Builder.groovy")
-    ${configFile}.text = ${configFile}.text - "root.'$fqn'.addon=true\\n"
+    builderConfigFile.text = builderConfigFile.text - "root.'$fqn'.addon=true\\n"
 }
 """
 
@@ -147,5 +137,4 @@ def generateTempVar(String textToSearch, String prefix = "tmp", String suffix = 
     int i = 1;
     while (textToSearch =~ "\\W$prefix$i$suffix\\W") i++
     return "$prefix$i$suffix"
-
 }

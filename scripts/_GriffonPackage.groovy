@@ -16,9 +16,7 @@
 
 import java.util.zip.ZipEntry
 import java.util.zip.ZipFile
-import org.apache.log4j.LogManager
 import org.codehaus.griffon.commons.*
-import org.codehaus.griffon.plugins.logging.Log4jConfig
 import griffon.util.Environment
 import griffon.util.Metadata
 import griffon.util.RunMode
@@ -92,7 +90,6 @@ target(packageApp : "Implementation of package target") {
 
     packageResources()
 
-    startLogging()
     loadPlugins()
     checkKey()
     _copyLibs()
@@ -266,6 +263,10 @@ _copyLibs = {
     }
 
     copyPlatformJars("${basedir}/lib", jardir)
+
+    griffonSettings.runtimeDependencies?.each { File f ->
+        griffonCopyDist(f.absolutePath, jardir)
+    }
     
     event("CopyLibsEnd", [jardir])
 }
@@ -541,19 +542,6 @@ doPackageTextReplacement = {dir, fileFilters ->
             replacefilter(token:"@applet.tag.params@", value: appletTagParams.join('\n') )
             replacefilter(token:"@applet.script.params@", value: appletScriptParams.join(' ') )
         }
-    }
-}
-
-target(startLogging:"Bootstraps logging") {
-    LogManager.resetConfiguration()
-    if(config.log4j instanceof Closure) {
-        profile("configuring log4j") {
-            new Log4jConfig().configure(config.log4j)
-        }
-    }
-    else {
-        // setup default logging
-        new Log4jConfig().configure()
     }
 }
 

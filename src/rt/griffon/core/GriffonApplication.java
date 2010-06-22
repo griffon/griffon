@@ -22,6 +22,7 @@ import griffon.util.Metadata;
 
 import java.util.Map;
 import java.util.List;
+import java.util.Locale;
 import java.util.Properties;
 
 /**
@@ -178,4 +179,10 @@ public interface GriffonApplication {
      *                duplicated values should be ignored
      */
     void removeShutdownHandler(ShutdownHandler handler);    
+
+    Locale getLocale();
+
+    void setLocale(Locale locale);
+
+    ApplicationPhase getPhase();
 }

@@ -79,7 +79,7 @@ target(pluginDocs: "Generates and packages plugin documentation") {
 
     // package sources
     def srcMainDir = new File("${basedir}/src/main")
-    def testSharedDir = new File("${basedir}/test/shared")
+    def testSharedDir = new File("${basedir}/src/test")
     def testSharedDirPath = new File(griffonSettings.testClassesDir, 'shared')
 
     boolean hasSrcMain = srcMainDir.exists() ? ant.fileset(dir: srcMainDir, includes: '**/*.groovy, **/*.java').size() > 0 : false
@@ -166,7 +166,7 @@ target(packagePlugin:"Packages a Griffon plugin") {
     pluginZip = "${basedir}/griffon-${pluginName}-${plugin.version}.zip"
     ant.delete(file:pluginZip)
 
-    def testSharedDir = new File("${basedir}/test/shared")
+    def testSharedDir = new File("${basedir}/src/test")
     def testSharedDirPath = new File(griffonSettings.testClassesDir, 'shared')
     def testResourcesDir = new File("${basedir}/test/resources")
     def testResourcesDirPath = griffonSettings.testResourcesDir

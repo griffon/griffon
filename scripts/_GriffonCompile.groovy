@@ -69,7 +69,7 @@ compileSources = { destinationDir, classpathId, sources ->
     }
 }
 
-target(compile : "Implementation of compilation phase") {
+target(compile: "Implementation of compilation phase") {
     depends(compilePlugins)
 
     def classesDirPath = new File(griffonSettings.classesDir.path)
@@ -129,7 +129,7 @@ target(compilePlugins: "Compiles source files of all referenced plugins.") {
         if (pluginResources) {
             // Only perform the compilation if there are some plugins
             // installed or otherwise referenced.
-            compileSrc(destdir:classesDirPath) {
+            compileSources(classesDirPath, classpathId) {
                 for(dir in pluginResources.file) {
                     src(path:"${dir}")
                 }
@@ -166,7 +166,7 @@ target(compileSharedTests : "Compiles shared test sources") {
 }
 
 compileSharedTestSrc = { rootDir ->
-    def testShared = new File("${rootDir}/test/shared")
+    def testShared = new File("${rootDir}/src/test")
     boolean hasTestShared = testShared.exists() ? ant.fileset(dir: testShared, includes: '**/*.groovy, **/*.java').size() > 0 : false
 
     if(hasTestShared) {

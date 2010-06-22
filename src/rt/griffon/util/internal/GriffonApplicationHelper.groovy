@@ -79,7 +79,7 @@ class GriffonApplicationHelper {
             app.addApplicationEventListener(app.eventsConfig)
         }
         
-        app.initialize()
+        runScriptInsideUIThread('Initialize', app)
 
         app.metaClass.artifactManager = ArtifactManager.instance
         ArtifactManager.instance.app = app
@@ -97,23 +97,8 @@ class GriffonApplicationHelper {
         app.config.mvcGroups.each {k, v->
             app.addMvcGroup(k, v.inject([:]) {m, e->m[e.key as String] = e.value as String; m})
         }
-    }
 
-    /**
-     * Performs the startup sequence, mainly instantiates all starting MVC groups.<p>
-     *
-     * @param app the current Griffon application
-     */
-    static void startup(GriffonApplication app) {
-        // init the builders
-        // this is where a composite gets made and composites are added
-        // for now we punt and make a SwingBuilder
-
-        app.config.application.startupGroups.each {group ->
-            createMVCGroup(app, group) 
-        }
-
-        app.startup();
+        app.event('BootstrapEnd', [app])
     }
 
     /**

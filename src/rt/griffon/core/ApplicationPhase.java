@@ -1,5 +1,5 @@
 /*
- * Copyright 2004-2005 the original author or authors.
+ * Copyright 2010 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,17 +13,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+package griffon.core;
 
 /**
- * @author Graeme Rocher (Grails 1.2.3)
+ * Defines the application life-cycle phases.<p>
+ *
+ * @author Andres Almiray
  */
-
-target(default: "Clears a proxy configuration") {
-    def settingsFile = griffonSettings.proxySettingsFile
-    config = griffonSettings.proxySettings
-    config.remove('currentProxy')
-
-    settingsFile.withWriter { w -> config.writeTo(w) }
-
-    println "Cleared proxy settings."
+public enum ApplicationPhase {
+    INITIALIZE,
+    STARTUP,
+    READY,
+    MAIN,
+    SHUTDOWN
 }

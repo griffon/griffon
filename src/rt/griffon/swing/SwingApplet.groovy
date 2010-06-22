@@ -45,9 +45,8 @@ class SwingApplet extends JApplet {
     }
 
     void init() {
-        GriffonApplicationHelper.prepare(this)
-        event("BootstrapEnd",[this]) // to keep it in sync with app version
-        GriffonApplicationHelper.startup(this)
+        initialize()
+        startup()
     }
 
     void start() {
