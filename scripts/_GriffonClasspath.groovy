@@ -214,6 +214,7 @@ void setClasspath() {
         cpath << jar.file.absolutePath << File.pathSeparator
         addUrlIfNotPresent rootLoader, jar.file
     }
+    cpath << testResourcesDirPath << File.pathSeparator
 
     // We need to set up this configuration so that we can compile the
     // plugin descriptors, which lurk in the root of the plugin's project
@@ -222,6 +223,8 @@ void setClasspath() {
     compConfig.setClasspath(cpath.toString());
     compConfig.sourceEncoding = "UTF-8"
 
+    ant.mkdir(dir: resourcesDirPath)
+    ant.mkdir(dir: griffonSettings.testResourcesDir)
     addUrlIfNotPresent rootLoader, resourcesDirPath
     addUrlIfNotPresent rootLoader, griffonSettings.testResourcesDir
 

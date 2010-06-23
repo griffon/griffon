@@ -232,8 +232,8 @@ compileTests = { GriffonTestType type, File source, File dest ->
     ant.mkdir(dir: destDir.path)
 
     compileSources(destDir, 'griffon.test.classpath') {
-        src(path: source)
         javac(classpathref: 'griffon.test.classpath', debug:"yes")
+        src(path: source)
     }
  
     if(argsMap.verboseCompile) {
