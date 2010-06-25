@@ -55,12 +55,15 @@ class ArtifactManager {
      * registered already.
      */
     synchronized void loadArtifactMetadata() {
-        def config = new ConfigSlurper().parse(app.class.getResource("/artifacts.properties"))
-        config.each { type, classes -> 
-            artifacts[type] = classes.split(",").collect([]){
-                new ArtifactInfo(app, getClass().classLoader.loadClass(it), type)
-            } as ArtifactInfo[]
-            artifactHandlers[type]?.initialize(artifacts[type])
+        URL url = app.class.getResource("/artifacts.properties")
+        if(url) {
+            def config = new ConfigSlurper().parse(url)
+            config.each { type, classes -> 
+                artifacts[type] = classes.split(",").collect([]){
+                    new ArtifactInfo(app, getClass().classLoader.loadClass(it), type)
+                } as ArtifactInfo[]
+                artifactHandlers[type]?.initialize(artifacts[type])
+            }
         }
     }
 

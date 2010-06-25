@@ -192,6 +192,11 @@ void setClasspath() {
     // Make sure the following code is only executed once.
     if (classpathSet) return
 
+    ant.mkdir(dir: "${classesDir.absolutePath}")
+    ant.mkdir(dir: "${pluginClassesDir.absolutePath}")
+    ant.mkdir(dir: "${griffonSettings.testClassesDir}/shared")
+    ant.mkdir(dir: "${griffonSettings.testResourcesDir}")
+
     ant.path(id: "griffon.compile.classpath", compileClasspath)
     ant.path(id: "griffon.test.classpath", testClasspath)
     ant.path(id: "griffon.runtime.classpath", runtimeClasspath)
@@ -214,6 +219,7 @@ void setClasspath() {
         cpath << jar.file.absolutePath << File.pathSeparator
         addUrlIfNotPresent rootLoader, jar.file
     }
+    cpath << testResourcesDirPath << File.pathSeparator
 
     // We need to set up this configuration so that we can compile the
     // plugin descriptors, which lurk in the root of the plugin's project
@@ -222,6 +228,8 @@ void setClasspath() {
     compConfig.setClasspath(cpath.toString());
     compConfig.sourceEncoding = "UTF-8"
 
+    ant.mkdir(dir: resourcesDirPath)
+    ant.mkdir(dir: griffonSettings.testResourcesDir)
     addUrlIfNotPresent rootLoader, resourcesDirPath
     addUrlIfNotPresent rootLoader, griffonSettings.testResourcesDir
 

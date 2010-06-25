@@ -64,6 +64,9 @@ compileSources = { destinationDir, classpathId, sources ->
         addUrlIfNotPresent classLoader, destinationDir
     }
     catch(Exception e) {
+        if(argsMap.verboseCompile) {
+            e.printStackTrace()
+        }
         event("StatusFinal", ["Compilation error: ${e.message}"])
         exit(1)
     }

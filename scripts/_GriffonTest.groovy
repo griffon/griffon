@@ -108,7 +108,7 @@ target(allTests: "Runs the project's tests.") {
     if (reRunTests) testNames = getFailedTests()
     
     testTargetPatterns = testNames.collect { new GriffonTestTargetPattern(it) } as GriffonTestTargetPattern[]
-    if(isPluginProject) phasesToRun.remove('integration')
+    if(isPluginProject && !isAddonPlugin) phasesToRun.remove('integration')
     if(!phasesToRun) {
         println "No test phases were defined. Aborting"
         System.exit(1)
@@ -232,8 +232,8 @@ compileTests = { GriffonTestType type, File source, File dest ->
     ant.mkdir(dir: destDir.path)
 
     compileSources(destDir, 'griffon.test.classpath') {
-        src(path: source)
         javac(classpathref: 'griffon.test.classpath', debug:"yes")
+        src(path: source)
     }
  
     if(argsMap.verboseCompile) {

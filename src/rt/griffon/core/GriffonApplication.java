@@ -37,6 +37,7 @@ public interface GriffonApplication {
      */
     Metadata getMetadata();
 
+    Class getAppConfigClass();
     Class getConfigClass();
     ConfigObject getConfig();
     void setConfig(ConfigObject config);

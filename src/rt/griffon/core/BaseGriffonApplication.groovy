@@ -59,8 +59,17 @@ class BaseGriffonApplication implements GriffonApplication {
         return Metadata.current 
     }
 
-    Class getConfigClass() {
+    Class getAppConfigClass() {
         return getClass().classLoader.loadClass("Application")
+    }
+
+    Class getConfigClass() {
+        try{
+           return getClass().classLoader.loadClass("Config")
+        } catch( ignored ) {
+           // ignore - no additional config available
+        }
+        return null
     }
 
     Class getBuilderClass() {
