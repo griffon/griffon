@@ -31,7 +31,7 @@ import java.io.StringWriter;
  */
 public class GriffonUtilTests extends TestCase {
     public void testGriffonVersion() {
-        assertEquals("0.9", GriffonUtil.getGriffonVersion());
+        assertEquals("0.9-SNAPSHOT", GriffonUtil.getGriffonVersion());
     }
 
     protected void tearDown() throws Exception {
