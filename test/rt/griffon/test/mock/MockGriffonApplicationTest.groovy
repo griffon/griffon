@@ -11,6 +11,7 @@ class MockGriffonApplicationTest extends GroovyTestCase {
 
     void testCanInitialize() {
         GriffonApplication app = new MockGriffonApplication()
+        app.uiThreadHandler = new MockUIThreadHandler()
         app.bindings.mocked = 0
         app.initialize()
         assert app.bindings.mocked == 0
@@ -30,6 +31,7 @@ class MockGriffonApplicationTest extends GroovyTestCase {
 
     void testCanStartup() {
         GriffonApplication app = new MockGriffonApplication()
+        app.uiThreadHandler = new MockUIThreadHandler()
         app.initialize()
         app.startup()
         assert app.phase == ApplicationPhase.STARTUP
