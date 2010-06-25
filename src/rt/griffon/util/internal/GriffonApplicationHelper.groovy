@@ -64,9 +64,9 @@ class GriffonApplicationHelper {
         UIThreadHelper.enhance(appMetaClass)
 
         ConfigSlurper configSlurper = new ConfigSlurper(Environment.current.name)
-        app.config = configSlurper.parse(app.configClass)
+        app.config = configSlurper.parse(app.appConfigClass)
         try {
-            def config = app.classLoader.loadClass('Config')
+            def config = configSlurper.parse(app.configClass)
             app.config.merge(config)
         } catch(x) {
             // ignore
@@ -134,7 +134,7 @@ class GriffonApplicationHelper {
                 //LOGME - may be because of chained failures
                 return
             } else {
-                throw cnfe;
+                throw cnfe
             }
         }
         
@@ -163,7 +163,7 @@ class GriffonApplicationHelper {
      */
     public static Object newInstance(GriffonApplication app, Class klass, String type = "") {
         def instance = klass.newInstance()
-        app.event("NewInstance",[klass,type,instance])
+        app.event('NewInstance',[klass,type,instance])
         return instance
     }
 
@@ -210,7 +210,7 @@ class GriffonApplicationHelper {
         ClassLoader classLoader = app.getClass().classLoader
         app.mvcGroups[mvcType].each {k, v ->
             Class klass = ArtifactManager.instance.getArtifactInfo(v)?.klass
-            if(!klass) klass = classLoader.loadClass(v);
+            if(!klass) klass = classLoader.loadClass(v)
 
             // inject defaults into emc
             // this also insures EMC metaclasses later
@@ -247,7 +247,7 @@ class GriffonApplicationHelper {
 
                 // all scripts get the builder as their binding
                 if (instance instanceof Script) {
-                    instance.binding = builder;
+                    instance.binding = builder
                 }
             }
         }
@@ -282,7 +282,6 @@ class GriffonApplicationHelper {
             if (v instanceof Script) {
                 // special case: view gets executed in the UI thread always
                 if (k == 'view') {
-//                    builder.edt({builder.build(v)})
                     UIThreadHelper.instance.executeSync { builder.build(v) }
                 } else {
                     // non-view gets built in the builder

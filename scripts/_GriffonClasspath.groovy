@@ -192,6 +192,11 @@ void setClasspath() {
     // Make sure the following code is only executed once.
     if (classpathSet) return
 
+    ant.mkdir(dir: "${classesDir.absolutePath}")
+    ant.mkdir(dir: "${pluginClassesDir.absolutePath}")
+    ant.mkdir(dir: "${griffonSettings.testClassesDir}/shared")
+    ant.mkdir(dir: "${griffonSettings.testResourcesDir}")
+
     ant.path(id: "griffon.compile.classpath", compileClasspath)
     ant.path(id: "griffon.test.classpath", testClasspath)
     ant.path(id: "griffon.runtime.classpath", runtimeClasspath)

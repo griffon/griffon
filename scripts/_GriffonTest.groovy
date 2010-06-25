@@ -108,7 +108,7 @@ target(allTests: "Runs the project's tests.") {
     if (reRunTests) testNames = getFailedTests()
     
     testTargetPatterns = testNames.collect { new GriffonTestTargetPattern(it) } as GriffonTestTargetPattern[]
-    if(isPluginProject) phasesToRun.remove('integration')
+    if(isPluginProject && !isAddonPlugin) phasesToRun.remove('integration')
     if(!phasesToRun) {
         println "No test phases were defined. Aborting"
         System.exit(1)

@@ -113,8 +113,8 @@ shouldPackageTemplates = false
 // structure.
 artefactPattern = /\S+?\/griffon-app\/\S+?\/(\S+?)\.groovy/
 
-defaultGriffonApplicationClass = "griffon.swing.SwingApplication"
-defaultGriffonAppletClass = "griffon.swing.SwingApplet"
+defaultGriffonApplicationClass = isAddonPlugin ? 'griffon.test.mock.MockGriffonApplication' : 'griffon.swing.SwingApplication'
+defaultGriffonAppletClass = 'griffon.swing.SwingApplet'
 makeJNLP = false
 _skipSigning = false // GRIFFON-118
 defaultAppletWidth = 240 // GRIFFON-127
