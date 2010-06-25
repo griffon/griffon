@@ -7,6 +7,8 @@ class EventPublisherTest extends GroovyTestCase {
         GroovyShell shell = new GroovyShell()
         shell.evaluate("""
             import griffon.util.EventPublisher
+            import griffon.util.UIThreadHelper
+            import griffon.test.mock.MockUIThreadHandler
 
             @EventPublisher
             class Publisher {
@@ -25,6 +27,8 @@ class EventPublisherTest extends GroovyTestCase {
                void onArg(String arg) { value = "arg = "+arg }
                void onEmpty() { value = "empty" }
             }
+
+            UIThreadHelper.instance.setUIThreadHandler(new MockUIThreadHandler())
 
             p = new Publisher()
             c = new Consumer()
