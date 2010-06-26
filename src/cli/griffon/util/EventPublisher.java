@@ -34,12 +34,12 @@ import java.lang.annotation.Target;
  *
  * //TODO discuss generated fields and methods
  *
- * @see griffon.util.internal.EventPublisherASTTransformation
+ * @see org.codehaus.griffon.ast.EventPublisherASTTransformation
  *
- * @author Andres Almiray (aalmiray)
+ * @author Andres Almiray
  */
 @Retention(RetentionPolicy.SOURCE)
 @Target({ElementType.FIELD, ElementType.TYPE})
-@GroovyASTTransformationClass("griffon.util.internal.EventPublisherASTTransformation")
+@GroovyASTTransformationClass("org.codehaus.griffon.ast.EventPublisherASTTransformation")
 public @interface EventPublisher {
 }

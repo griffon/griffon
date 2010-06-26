@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package griffon.util.internal;
+package org.codehaus.griffon.ast;
 
 import org.codehaus.groovy.ast.*;
 import org.codehaus.groovy.ast.expr.*;
