@@ -32,15 +32,17 @@
         <echo>JAVA HOME IS ${env.JAVA_HOME}</echo>
         <delete dir="${griffon.dist}"/>
         <delete dir="${griffon.target}"/>
+<!--
         <antcall target="wrapper-clean" />
+-->
     </target>
 
     <target name="cruise"
-            depends="clean,build, test, jar, javadoc, package"
+            depends="clean, build, test, jar, javadoc, package"
             description="to be started by the CruiseControl build server"/>
 
     <target name="cruise-bamboo"
-            depends="clean,build, test, jar, javadoc, package, create-installer-izpack, create-installer-deb"
+            depends="clean, build, test, jar, javadoc, package, create-installer-izpack, create-installer-deb"
             description="to be started by the CruiseControl build server"/>
 
 </project>
