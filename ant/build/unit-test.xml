@@ -39,30 +39,32 @@
             <attribute name="printsummary" default="true"/>
             <sequential>
                 <property name="xvfb.display" value="89"/>
-<!--
                 <tempfile property="xauth.file" deleteonexit="true" prefix="xauth"/>
                 <echo file="${xauth.file}">localhost
 </echo>
                 <parallel>
+                  <sequential>
+                    <exec executable="pkill">
+                      <arg line="-9 Xvfb"/>
+                    </exec>
+                    <sleep seconds="2"/> <!-- sleep so Xvfb is really dead -->
+                  </sequential>
                   <exec executable="Xvfb">
                     <arg value=":${xvfb.display}"/>
                     <arg value="-auth"/>
                     <arg value="${xauth.file}"/>
                   </exec>
                   <sequential>
-                    <sleep seconds="1"/> <!- sleep so Xvfb can start ->
--->
+                    <sleep seconds="1"/> <!-- sleep so Xvfb can start -->
                     <junit fork="@{fork}" maxmemory="@{maxmemory}" forkmode="@{forkmode}" printsummary="@{printsummary}">
                       <env key="DISPLAY" value=":${xvfb.display}"/>
                       <junit-elements/>
                     </junit>
-<!--
                     <exec executable="pkill">
                       <arg line="-9 Xvfb"/>
                     </exec>
                   </sequential>
                 </parallel>
--->
             </sequential>
         </macrodef>
     </target>
