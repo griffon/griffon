@@ -39,6 +39,7 @@
             <attribute name="printsummary" default="true"/>
             <sequential>
                 <property name="xvfb.display" value="89"/>
+<!--
                 <tempfile property="xauth.file" deleteonexit="true" prefix="xauth"/>
                 <echo file="${xauth.file}">localhost
 </echo>
@@ -50,15 +51,18 @@
                   </exec>
                   <sequential>
                     <sleep seconds="1"/> <!-- sleep so Xvfb can start -->
+-->
                     <junit fork="@{fork}" maxmemory="@{maxmemory}" forkmode="@{forkmode}" printsummary="@{printsummary}">
                       <env key="DISPLAY" value=":${xvfb.display}"/>
                       <junit-elements/>
                     </junit>
+<!--
                     <exec executable="pkill">
                       <arg line="-9 Xvfb"/>
                     </exec>
                   </sequential>
                 </parallel>
+-->
             </sequential>
         </macrodef>
     </target>
