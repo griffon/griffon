@@ -18,12 +18,6 @@
         <fileset dir="${basedir}/lib/test" includes="*.jar"/>
     </path>
 
-    <target name="clean" description="Clean the build directory.">
-    <echo>JAVA HOME IS ${env.JAVA_HOME}</echo>
-        <delete dir="${griffon.dist}"/>
-        <delete dir="${griffon.target}"/>
-    </target>
-
     <import file="ant/build/resolve.xml" />
     <import file="ant/build/compile.xml" />
     <import file="ant/build/unit-test.xml" />
@@ -32,6 +26,14 @@
     <import file="ant/build/release.xml" />
     <import file="ant/build/installer.xml" />
     <import file="quality/quality.xml" />
+    <import file="ant/build/wrapper.xml" />
+
+    <target name="clean" description="Clean the build directory.">
+        <echo>JAVA HOME IS ${env.JAVA_HOME}</echo>
+        <delete dir="${griffon.dist}"/>
+        <delete dir="${griffon.target}"/>
+        <antcall target="wrapper-clean" />
+    </target>
 
     <target name="cruise"
             depends="clean,build, test, jar, javadoc, package"

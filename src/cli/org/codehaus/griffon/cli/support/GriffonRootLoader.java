@@ -32,8 +32,16 @@ public class GriffonRootLoader extends RootLoader {
         super(urls, parent);
     }
 
+    public GriffonRootLoader(URL[] urls) {
+        super(urls, ClassLoader.getSystemClassLoader());
+    }
+
+    public GriffonRootLoader(ClassLoader parent) {
+        super(new URL[0], parent);
+    }
+
     public GriffonRootLoader() {
-        super(new URL[0],ClassLoader.getSystemClassLoader());
+        super(new URL[0], ClassLoader.getSystemClassLoader());
     }
 
     protected Class loadClass(String name, boolean resolve) throws ClassNotFoundException {

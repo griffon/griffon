@@ -156,7 +156,7 @@ public class GriffonStarter {
         }
 
         // create loader and execute main class
-        GriffonRootLoader loader = new GriffonRootLoader();
+        GriffonRootLoader loader = new GriffonRootLoader(GriffonStarter.class.getClassLoader());
         Thread.currentThread().setContextClassLoader(loader);
 
         // configure class loader

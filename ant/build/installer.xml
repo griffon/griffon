@@ -269,7 +269,7 @@
         <deb
             todir="${griffon.installer.deb.dir}/dist"
             package="griffon"
-            section="devel"
+            section="contrib/devel"
             depends="groovy"
             postinst="${basedir}/installer/deb/postinst"
             prerm="${basedir}/installer/deb/prerm"
@@ -277,11 +277,9 @@
             <version upstream="${griffon.version}"/>
             <maintainer name="Griffon Team" email="dev@griffon.codehaus.org"/>
             <description synopsis="Grails-like framework for desktop Java applications">
-
  Griffon is a Grails inspired application framework for developing desktop applications in Groovy
 
  Home page: http://griffon.codehaus.org/
-
             </description>
 
             <tarfileset dir="${griffon.installer.deb.dir}/build/griffon-${griffon.version}" prefix="usr/share/griffon" filemode="755"/>
