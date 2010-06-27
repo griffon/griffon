@@ -45,6 +45,9 @@
         <copy todir="${griffon.wrapper.dist}">
             <fileset dir="${griffon.wrapper.basedir}/src/bin" />
         </copy>
+        <chmod perm="ugo+x">
+            <fileset dir="${griffon.wrapper.dist}" includes="griffonw"/>
+        </chmod>
         <mkdir dir="${griffon.wrapper.dist}/wrapper" />
         <copy todir="${griffon.wrapper.dist}/wrapper">
             <fileset dir="${griffon.wrapper.basedir}/src/wrapper" />
