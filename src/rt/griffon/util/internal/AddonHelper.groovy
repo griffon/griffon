@@ -21,13 +21,12 @@ import griffon.core.GriffonApplication
 import griffon.util.UIThreadHelper
 
 /**
- * Created by IntelliJ IDEA.
- * User: dannoferrin
- * Date: Jun 19, 2009
- * Time: 8:02:46 PM
+ * Helper class for dealing with addon initialization.
+ *
+ * @author Danno Ferrin
+ * @author Andres Almiray
  */
 public class AddonHelper {
-
     public static final DELEGATE_TYPES = Collections.unmodifiableList([
             "attributeDelegates",
             "preInstantiateDelegates",
@@ -247,7 +246,6 @@ public class AddonHelper {
     static addMVCGroups(GriffonApplication app, Map<String, Map<String, String>> groups) {
         groups.each {k, v -> app.addMvcGroup(k, v) }
     }
-
 
     static addFactories(UberBuilder builder, Map factories, String addonName, String prefix) {
         builder.registrationGroup.get(addonName, new TreeSet<String>())

@@ -25,8 +25,11 @@ import java.beans.Introspector
  */
 // @Immutable
 final class ArtifactInfo {
+    /** The currently running application */
     final GriffonApplication app
+    /** The artifact's class */
     final Class klass
+    /** Artifact type (i.e, 'model', 'controller', etc) */
     final String type
     final String simpleName
     final List<String> declaredProperties

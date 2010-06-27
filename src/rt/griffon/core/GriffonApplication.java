@@ -37,23 +37,50 @@ public interface GriffonApplication {
      */
     Metadata getMetadata();
 
+    /**
+     * Gets the script class that holds the MVC configuration (i.e. {@code Application.groovy})
+     */
     Class getAppConfigClass();
+    /**
+     * Gets the script class that holds additional configuration (i.e. {@code Config.groovy})
+     */
     Class getConfigClass();
+    /**
+     * Returns the merged runtime configuration from {@code appConfig} and {@code config}
+     */
     ConfigObject getConfig();
     void setConfig(ConfigObject config);
 
+    /**
+     * Gets the script class that holds builder configuration (i.e. {@code Builder.groovy})
+     */
     Class getBuilderClass();
+    /**
+     * Returns the runtime configuration required for instantiating a {@CompositeBuilder}
+     */
     ConfigObject getBuilderConfig();
     void setBuilderConfig(ConfigObject builderConfig);
 
+    /**
+     * Gets the script class that holds global event handler configuration (i.e. {@code Events.groovy})
+     */
     Class getEventsClass();
+    /**
+     * Returns the runtime configuration for global event handlers.
+     */
     Object getEventsConfig();
     void setEventsConfig(Object eventsConfig);
 
     Binding getBindings();
     void setBindings(Binding bindings);
 
+    /**
+     * Return's the set of available MVC groups.
+     */
     Map<String, Map<String, String>> getMvcGroups();
+    /**
+     * Register an MVC group for instantiation.<p>
+     */
     void addMvcGroup(String mvcType, Map<String, String> mvcPortions);
 
     /**
@@ -181,9 +208,19 @@ public interface GriffonApplication {
      */
     void removeShutdownHandler(ShutdownHandler handler);    
 
+    /**
+     * Gets the application locale.
+     */    
     Locale getLocale();
 
+    /**
+     * Sets the application locale.<p>
+     * This is a bound property.
+     */
     void setLocale(Locale locale);
 
+    /**
+     * Returns the current phase.
+     */
     ApplicationPhase getPhase();
 }

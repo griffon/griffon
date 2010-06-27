@@ -18,6 +18,8 @@ package griffon.util;
 import org.codehaus.groovy.runtime.StackTraceUtils;
 
 /**
+ * Catches and sanitizes all uncaught exceptions.
+ *
  * @author Danno Ferrin
  */
 public class GriffonExceptionHandler implements Thread.UncaughtExceptionHandler {

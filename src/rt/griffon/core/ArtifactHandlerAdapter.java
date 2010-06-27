@@ -19,7 +19,7 @@ package griffon.core;
 /**
  * Base implementation of the ArtifactHandler interface.
  *
- * @author Andres Almiray (aalmiray)
+ * @author Andres Almiray
  */
 public abstract class ArtifactHandlerAdapter implements ArtifactHandler {
     private final String type;

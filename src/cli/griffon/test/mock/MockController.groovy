@@ -17,6 +17,8 @@
 package griffon.test.mock
 
 /**
+ * Empty implementation of a controller
+ *
  * @author Andres Almiray
  */
 class MockController {

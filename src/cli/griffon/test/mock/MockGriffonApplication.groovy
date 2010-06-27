@@ -21,15 +21,22 @@ import griffon.util.UIThreadHelper
 import griffon.util.UIThreadHandler
 
 /**
+ * Customizable implementation og {@code GriffonApplication} useful for testing.<p>
+ * You can override the values of all config classes before {@code initialize()} is called.
+ *
  * @author Andres Almiray
  */
 class MockGriffonApplication {
     @Delegate private final BaseGriffonApplication _base
     Closure applicationContainerGenerator
 
+    /** Defaults to {@code griffon.test.mock.MockApplication} */
     Class appConfigClass = MockApplication
+    /** Defaults to {@code griffon.test.mock.MockConfig} */
     Class configClass = MockConfig
+    /** Defaults to {@code griffon.test.mock.MockBuilderConfig} */
     Class builderClass = MockBuilderConfig
+    /** Defaults to {@code griffon.test.mock.MockEvents} */
     Class eventsClass = MockEvents
     UIThreadHandler uiThreadHandler
 
@@ -37,6 +44,9 @@ class MockGriffonApplication {
         _base = new BaseGriffonApplication(this)
     }
 
+    /**
+     * Returns the value form the execution of {@code applicationContainerGenerator} or an empty map
+     */
     Object createApplicationContainer() {
         applicationContainerGenerator?.call() ?: [:]
     }

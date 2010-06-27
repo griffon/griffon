@@ -19,6 +19,8 @@ package griffon.test.mock
 import groovy.beans.Bindable
 
 /**
+ * Trivial implementation of a model class with an observable proeprty
+ *
  * @author Andres Almiray
  */
 class MockModel {

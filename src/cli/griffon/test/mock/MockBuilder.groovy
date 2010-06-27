@@ -17,6 +17,8 @@
 package griffon.test.mock
 
 /**
+ * Trivial mplementation of FactoryBuilderSupport that register a single node: mock.
+ * 
  * @author Andres Almiray
  */
 public class MockBuilder extends FactoryBuilderSupport {
@@ -24,6 +26,9 @@ public class MockBuilder extends FactoryBuilderSupport {
       super(init)
    }
 
+   /**
+    * Registers a 'mock' node that returns a Map
+    */
    def registerMock() {
       registerFactory('mock', new MockNodeFactory())
    }

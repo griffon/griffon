@@ -17,6 +17,8 @@
 package griffon.core
 
 /**
+ * Handler for 'Model' artifacts.
+ *
  * @author Andres Almiray
  */
 class ModelArtifactHandler extends ArtifactHandlerAdapter {

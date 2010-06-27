@@ -14,12 +14,15 @@
  */
 package griffon.test
 
+import griffon.util.UIThreadHelper
 import org.codehaus.griffon.commons.ConfigurationHolder
 
 /**
  * Support class for writing unit tests in Griffon. It mainly provides
  * access to various mocking options, while making sure that the meta-
  * class magic does not leak outside of a single test.
+ * It also provides access to the threading facilities exposed by
+ * {@code UIThreadHelper}.
  */
 class GriffonUnitTestCase extends GroovyTestCase {
     Map savedMetaClasses
@@ -77,5 +80,18 @@ class GriffonUnitTestCase extends GroovyTestCase {
 
     protected void mockConfig(String config) {
         ConfigurationHolder.config = new ConfigSlurper().parse(config)
+    }
+
+    /** Executes code synchronously inside the UI thread */
+    def execSync = UIThreadHelper.instance.&executeSync
+    /** Executes code asynchronously inside the UI thread */
+    def execAsync = UIThreadHelper.instance.&executeAsync
+    /** Executes code outside the UI thread */
+    def execOutside = UIThreadHelper.instance.&executeOutside
+    /** True if the current thread is the UI thread */
+    def isUIThread = UIThreadHelper.instance.&isUIThread
+    /** Schedules a block of code as a Future */
+    def execFuture = { Object... args ->
+        UIThreadHelper.instance.executeFuture(*args)
     }
 }

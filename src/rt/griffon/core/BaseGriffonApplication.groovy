@@ -23,8 +23,22 @@ import griffon.util.Metadata
 import groovy.beans.Bindable
 
 /**
- * @author Danno.Ferrin
- * @author Andres.Almiray
+ * Implements the basics for a skeleton GriffonApplication.<p>
+ * It is recommended to use this class a starting point for any
+ * custom GriffonApplication implementations, in conjuction with
+ * Groovy's {@code @Delegate} AST transformation, as shown next:
+ *
+ * <pre>
+ * class CustomGriffonApplication {
+ *     {@code @Delegate} private final BaseGriffonApplication _base
+ *     CustomGriffonApplication() {
+ *         _base = new BaseGriffonApplication(this)
+ *     }
+ *     ...
+ * }
+ * </pre>
+ * @author Danno Ferrin
+ * @author Andres Almiray
  */
 class BaseGriffonApplication implements GriffonApplication {
     Map<String, ?> addons = [:]
@@ -60,12 +74,12 @@ class BaseGriffonApplication implements GriffonApplication {
     }
 
     Class getAppConfigClass() {
-        return getClass().classLoader.loadClass("Application")
+        return getClass().classLoader.loadClass('Application')
     }
 
     Class getConfigClass() {
         try{
-           return getClass().classLoader.loadClass("Config")
+           return getClass().classLoader.loadClass('Config')
         } catch( ignored ) {
            // ignore - no additional config available
         }
@@ -73,12 +87,12 @@ class BaseGriffonApplication implements GriffonApplication {
     }
 
     Class getBuilderClass() {
-        return getClass().classLoader.loadClass("Builder")
+        return getClass().classLoader.loadClass('Builder')
     }
 
     Class getEventsClass() {
         try{
-           return getClass().classLoader.loadClass("Events")
+           return getClass().classLoader.loadClass('Events')
         } catch( ignored ) {
            // ignore - no global event handler will be used
         }
@@ -95,17 +109,17 @@ class BaseGriffonApplication implements GriffonApplication {
         if(phase != ApplicationPhase.STARTUP) return
 
         phase = ApplicationPhase.READY
-        event("ReadyStart",[appDelegate])
-        GriffonApplicationHelper.runScriptInsideUIThread("Ready", appDelegate)
-        event("ReadyEnd",[appDelegate])
+        event('ReadyStart',[appDelegate])
+        GriffonApplicationHelper.runScriptInsideUIThread('Ready', appDelegate)
+        event('ReadyEnd',[appDelegate])
         phase = ApplicationPhase.MAIN
     }
 
     boolean canShutdown() {
-        event("ShutdownRequested",[appDelegate])
+        event('ShutdownRequested',[appDelegate])
         for(handler in shutdownHandlers) {
             if(!handler.canShutdown(appDelegate)) {
-                event("ShutdownAborted",[appDelegate])
+                event('ShutdownAborted',[appDelegate])
                 return false
             }
         }
@@ -122,7 +136,7 @@ class BaseGriffonApplication implements GriffonApplication {
         phase = ApplicationPhase.SHUTDOWN
 
         // stage 1 - alert all app event handlers
-        event("ShutdownStart",[appDelegate])
+        event('ShutdownStart',[appDelegate])
 
         // stage 2 - alert all shutdown handlers
         for(handler in shutdownHandlers) {
@@ -137,7 +151,7 @@ class BaseGriffonApplication implements GriffonApplication {
         }
 
         // stage 4 - call shutdown script
-        GriffonApplicationHelper.runScriptInsideUIThread("Shutdown", appDelegate)
+        GriffonApplicationHelper.runScriptInsideUIThread('Shutdown', appDelegate)
  
         true
     }
@@ -158,14 +172,14 @@ class BaseGriffonApplication implements GriffonApplication {
         if(phase != ApplicationPhase.INITIALIZE) return
 
         phase = phase.STARTUP
-        event("StartupStart",[appDelegate])
+        event('StartupStart',[appDelegate])
 
         config.application.startupGroups.each {group ->
             GriffonApplicationHelper.createMVCGroup(appDelegate, group)
         }
-        GriffonApplicationHelper.runScriptInsideUIThread("Startup", appDelegate)
+        GriffonApplicationHelper.runScriptInsideUIThread('Startup', appDelegate)
 
-        event("StartupEnd",[appDelegate])
+        event('StartupEnd',[appDelegate])
     }
 
     void event( String eventName, List params = [] ) {

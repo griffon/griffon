@@ -23,6 +23,8 @@ import java.awt.Toolkit
 import java.awt.Window
 
 /**
+ * Basic implementation of {@code GriffonApplication} that runs in standalone/webstart mode.
+ *
  * @author Danno Ferrin
  * @author Andres Almiray
  */

@@ -2,7 +2,7 @@ As of Griffon 0.9 you can declaratively specify dependencies on plugins rather t
 
 {code}
 plugins {
-    runtime ':hibernate:1.2.1'
+    runtime ':artifacts:0.2'
 }
 {code}
 
@@ -10,7 +10,7 @@ If you don't specify a group id the default plugin group id of @org.griffon.plug
 
 {code}
 plugins {
-    runtime ':hibernate:latest.integration'
+    runtime ':artifacts:latest.integration'
 }
 {code}
 
@@ -20,7 +20,7 @@ The "latest.integration" version label will also include resolving snapshot vers
 
 {code}
 plugins {
-    runtime ':hibernate:latest.release'
+    runtime ':artifacts:latest.release'
 }
 {code}
 
@@ -32,7 +32,7 @@ And of course if you are using a Maven repository with an alternative group id y
 
 {code}
 plugins {
-    runtime 'mycompany:hibernate:latest.integration'
+    runtime 'mycompany:artifacts:latest.integration'
 }
 {code}
 

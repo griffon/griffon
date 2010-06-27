@@ -1,1 +1,29 @@
-TBD
+Integration tests differ from unit tests in that you have full access to the Griffon application within the test. The following is an integration test created using the default template
+
+{code}
+import griffon.core.GriffonApplication
+import griffon.test.*
+
+class SomeControllerTests extends GriffonUnitTestCase {
+    GriffonApplication app
+
+    protected void setUp() {
+        super.setUp()
+    }
+
+    protected void tearDown() {
+        super.tearDown()
+    }
+
+    void testSomething() {
+    }
+}
+{code}
+
+As with unit tests, you have access to all mocking facilities exposed by [GriffonUnitTestCase|api:griffon.test.GriffonUnitTestCase] within this test, but you also have access to a full running Griffon application. By default this application is boostrapped to the [INITIALIZE|api:griffon.core.ApplicationPhase] phase. It's up to you to instruct the application to move to another phase dependending on what you want to test (refer to @startup()@, @rready()@, @realize()@ and @show()@ on [GriffonApplication|api:griffon.core.GriffonApplication]).
+
+The type of application to be run depends on the type of project and/or a configuration flag as explained next:
+* if a configuration flag @griffon.application.mainClass@ exists then its value will be used (asumes the value is a literal full qualified class).
+* if the project is an addon then it will use @griffon.test.mock.MockApplication@
+* finally it will fall back to @griffon.swing.Swingapplication@
+

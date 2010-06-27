@@ -105,7 +105,7 @@ createRootPackage = {
 
 createIntegrationTest = { Map args = [:] ->
     def superClass = args["superClass"] ?: "GriffonUnitTestCase"
-    createArtifact(name: args["name"], suffix: "${args['suffix']}Tests", type: "Tests", path: "test/integration", superClass: superClass)
+    createArtifact(name: args["name"], suffix: "${args['suffix']}Tests", type: "IntegrationTests", path: "test/integration", superClass: superClass)
 }
 
 createUnitTest = { Map args = [:] ->
