@@ -50,7 +50,7 @@
                     <arg value="${xauth.file}"/>
                   </exec>
                   <sequential>
-                    <sleep seconds="1"/> <!-- sleep so Xvfb can start -->
+                    <sleep seconds="1"/> <!- sleep so Xvfb can start ->
 -->
                     <junit fork="@{fork}" maxmemory="@{maxmemory}" forkmode="@{forkmode}" printsummary="@{printsummary}">
                       <env key="DISPLAY" value=":${xvfb.display}"/>
