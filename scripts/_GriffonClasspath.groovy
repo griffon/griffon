@@ -192,10 +192,12 @@ void setClasspath() {
     // Make sure the following code is only executed once.
     if (classpathSet) return
 
-    ant.mkdir(dir: "${classesDir.absolutePath}")
-    ant.mkdir(dir: "${pluginClassesDir.absolutePath}")
-    ant.mkdir(dir: "${griffonSettings.testClassesDir}/shared")
-    ant.mkdir(dir: "${griffonSettings.testResourcesDir}")
+    if(isApplicationProject || isPluginProject) {
+        ant.mkdir(dir: "${classesDir.absolutePath}")
+        ant.mkdir(dir: "${pluginClassesDir.absolutePath}")
+        ant.mkdir(dir: "${griffonSettings.testClassesDir}/shared")
+        ant.mkdir(dir: "${griffonSettings.testResourcesDir}")
+    }
 
     ant.path(id: "griffon.compile.classpath", compileClasspath)
     ant.path(id: "griffon.test.classpath", testClasspath)
@@ -228,10 +230,12 @@ void setClasspath() {
     compConfig.setClasspath(cpath.toString());
     compConfig.sourceEncoding = "UTF-8"
 
-    ant.mkdir(dir: resourcesDirPath)
-    ant.mkdir(dir: griffonSettings.testResourcesDir)
-    addUrlIfNotPresent rootLoader, resourcesDirPath
-    addUrlIfNotPresent rootLoader, griffonSettings.testResourcesDir
+    if(isApplicationProject || isPluginProject) {
+        ant.mkdir(dir: resourcesDirPath)
+        ant.mkdir(dir: griffonSettings.testResourcesDir)
+        addUrlIfNotPresent rootLoader, resourcesDirPath
+        addUrlIfNotPresent rootLoader, griffonSettings.testResourcesDir
+    }
 
     classpathSet = true
 }

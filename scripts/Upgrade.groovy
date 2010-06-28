@@ -28,7 +28,6 @@ includeTargets << griffonScript("_GriffonInit")
 includeTargets << griffonScript("_GriffonClean")
 
 target('default': "Upgrades a Griffon application from a previous version of Griffon") {
-
     depends(createStructure)
 
     boolean force = args?.indexOf('-force') > -1
@@ -77,11 +76,6 @@ target('default': "Upgrades a Griffon application from a previous version of Gri
             fileset(dir: tmpDir.path, includes: "*")
         }
         delete(dir: tmpDir.path)
-        launderIDESupportFiles()
-
-        mkdir(dir: "${basedir}/test")
-        mkdir(dir: "${basedir}/test/integration")
-        mkdir(dir: "${basedir}/test/unit")
 
         // if Config.groovy exists and it does not contain values added
         // since 0.0 then sensible defaultsare provided which keep previous
@@ -177,7 +171,6 @@ target('default': "Upgrades a Griffon application from a previous version of Gri
             }
 
             configObject.writeTo(new FileWriter(new File(baseFile, '/griffon-app/conf/Application.groovy')))
-
         }
 
         touch(file: "${basedir}/griffon-app/i18n/messages.properties")
@@ -236,7 +229,6 @@ target('default': "Upgrades a Griffon application from a previous version of Gri
         }
     }
 
-
     // proceed plugin-specific upgrade logic contained in 'scripts/_Upgrade.groovy' under plugin's root
     def plugins = GriffonPluginUtils.getPluginBaseDirectories(pluginsHome)
     if (plugins) {
@@ -257,7 +249,6 @@ target('default': "Upgrades a Griffon application from a previous version of Gri
                 }
             }
         }
-
     }
 
     //TODO create an upgrade README
