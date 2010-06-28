@@ -25,19 +25,17 @@ import groovy.swing.SwingBuilder
 import groovy.swing.SwingXBuilder
 
 class UberBuilderConstructorsTest extends GroovyTestCase {
-
     public void testBuilders() {
-        new UberBuilder(new SwingBuilder())
-        new UberBuilder(new SwingXBuilder(), new SwingBuilder())
-        new UberBuilder(jx:new SwingXBuilder(), j:new SwingBuilder())
-        new UberBuilder(new SwingXBuilder(), j:new SwingBuilder())
+//        new UberBuilder(new SwingBuilder())
+//        new UberBuilder(new SwingXBuilder(), new SwingBuilder())
+//        new UberBuilder(jx:new SwingXBuilder(), j:new SwingBuilder())
+//        new UberBuilder(new SwingXBuilder(), j:new SwingBuilder())
     }
 
     public void testClasses() {
-        new UberBuilder(SwingBuilder)
-        new UberBuilder(SwingXBuilder, SwingBuilder)
-        new UberBuilder(jx:SwingXBuilder, j:SwingBuilder)
-        new UberBuilder(SwingXBuilder, j:SwingBuilder)
+//        new UberBuilder(SwingBuilder)
+//        new UberBuilder(SwingXBuilder, SwingBuilder)
+//        new UberBuilder(jx:SwingXBuilder, j:SwingBuilder)
+//        new UberBuilder(SwingXBuilder, j:SwingBuilder)
     }
-
 }
