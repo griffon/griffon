@@ -33,7 +33,7 @@ target(installArchetype: "Installs a Griffon application archetype") {
         def archetypeArgs = argsMap['params']
 
         if(archetypeArgs) {
-            def archetypesHome = "${griffonSettings.griffonHome}/archetypes"
+            def archetypesHome = "${griffonWorkDir}/archetypes"
 
             def archetypeFile = new File(archetypeArgs[0])
             def urlPattern = ~"^[a-zA-Z][a-zA-Z0-9\\-\\.\\+]*://"

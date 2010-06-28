@@ -31,7 +31,7 @@ target(uninstallArchetype: "Uninstalls a Griffon application archetype") {
             exit(1)
         }
 
-        def archetypesHome = "${griffonSettings.griffonHome}/archetypes"
+        def archetypesHome = "${griffonWorkDir}/archetypes"
         def archetypeDir = new File("${archetypesHome}/${archetypeName}")
         if(archetypeDir.exists()) {
             ant.delete(dir: archetypeDir, quiet: true, failOnError: false)

@@ -74,11 +74,15 @@ createArtifact = { Map args = [:] ->
             templateFile = pluginTemplateFiles[0]
         }
         if (!templateFile.exists()) {
-            templateFile = griffonResource("archetypes/${archetype}/templates/artifacts/${type}${fileType}")
+            // now check for template provided by an archetype
+            templateFile = new FileSystemResource("${griffonWorkDir}/archetypes/${archetype}/templates/artifacts/${type}${fileType}")
             if (!templateFile.exists()) {
-                println "Archetype '${archetype}' not found. Using 'default'."
-                // template not found in archetypes, use default template
-                templateFile = griffonResource("archetypes/default/templates/artifacts/${type}${fileType}")
+                // now check for template provided by a provided archetype
+                templateFile = griffonResource("archetypes/${archetype}/templates/artifacts/${type}${fileType}")
+                if (!templateFile.exists()) {
+                    // template not found in archetypes, use default template
+                    templateFile = griffonResource("archetypes/default/templates/artifacts/${type}${fileType}")
+                }
             }
         }
     }
@@ -157,10 +161,15 @@ loadArchetypeFor = { type = 'application' ->
     resolveArchetype()
 
     def gcl = new GroovyClassLoader(classLoader)
-    def archetypeFile = griffonResource("archetypes/${archetype}/${type}.groovy")
+    def archetypeFile = new FileSystemResource("${griffonWorkDir}/archetypes/${archetype}/${type}.groovy")
+    if(!archetypeFile.exists()) {
+        archetypeFile = griffonResource("archetypes/${archetype}/${type}.groovy")
+    }
+
     try {
         includeTargets << gcl.parseClass(archetypeFile.file) 
     } catch(Exception e) {
+        logError("An error ocurred while parsing archetype ${archetype}. Using 'default' archetype instead.", e)
         archetype = 'default'
         archetypeFile = griffonResource("archetypes/default/${type}.groovy")
         includeTargets << gcl.parseClass(archetypeFile.file) 
