@@ -134,15 +134,15 @@ class BaseGriffonApplication implements GriffonApplication {
         // once permission to quit has been granted
         signalShutdownInProcess()
         phase = ApplicationPhase.SHUTDOWN
-
+   
         // stage 1 - alert all app event handlers
         event('ShutdownStart',[appDelegate])
-
+  
         // stage 2 - alert all shutdown handlers
         for(handler in shutdownHandlers) {
             handler.onShutdown(appDelegate)
         }
-
+ 
         // stage 3 - destroy all mvc groups
         List mvcNames = []
         mvcNames.addAll(groups.keySet())

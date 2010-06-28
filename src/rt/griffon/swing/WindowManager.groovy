@@ -128,6 +128,12 @@ final class WindowManager implements ShutdownHandler {
     private class WindowHelper extends WindowAdapter {
         void windowClosing(WindowEvent event) {
             hide(event.window)
+
+            if(app.isShutdownInProcess()) return
+            List windows = windows.findAll{ it.visible }
+            if(windows.size() <= 1 && app.config.application.autoShutdown) {
+                if(!app.shutdown()) show(window)
+            }
         }
     }
 

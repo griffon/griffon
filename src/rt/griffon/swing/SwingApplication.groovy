@@ -40,13 +40,13 @@ class SwingApplication implements griffon.application.StandaloneGriffonApplicati
         windowManager = new WindowManager(this)
         addShutdownHandler(windowManager)
 
-        addApplicationEventListener('WindowHidden', { window ->
-            if(isShutdownInProcess()) return
-            List windows = windowManager.windows.findAll{ it.visible }
-            if(windows.size() <= 1 && config.application.autoShutdown) {
-                if(!shutdown()) windowManager.show(window)
-            }
-        })
+//        addApplicationEventListener('WindowHidden', { window ->
+//            if(isShutdownInProcess()) return
+//            List windows = windowManager.windows.findAll{ it.visible }
+//            if(windows.size() <= 1 && config.application.autoShutdown) {
+//                if(!shutdown()) windowManager.show(window)
+//            }
+//        })
     }
 
     final WindowDisplayHandler resolveWindowDisplayHandler() {
