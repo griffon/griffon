@@ -23,8 +23,10 @@ import javax.swing.JApplet
 import java.awt.Window
 
 /**
- * @author Danno.Ferrin
- * @author Andres.Almiray
+ * Simple implementation of {@code GriffonApplication} that runs in applet mode
+ *
+ * @author Danno Ferrin
+ * @author Andres Almiray
  */
 class SwingApplet extends JApplet {
     private boolean appletContainerDispensed = false
@@ -54,9 +56,9 @@ class SwingApplet extends JApplet {
     }
 
     void stop() {
-        event("StopStart",[this])
-        GriffonApplicationHelper.runScriptInsideUIThread("Stop", this)
-        event("StopEnd",[this])
+        event('StopStart',[this])
+        GriffonApplicationHelper.runScriptInsideUIThread('Stop', this)
+        event('StopEnd',[this])
     }
 
     void destroy() {

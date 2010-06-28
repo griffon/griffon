@@ -291,6 +291,6 @@ _copyPackageFiles = { targetDistDir ->
 _zipDist = { targetDistDir, usePackageType = true ->
     def suffix = !usePackageType ? "": "-${packageType}"
     def zipFileName = "${targetDistDir}/${griffonAppName}-${griffonAppVersion}${suffix}.zip"
-    ant.delete(dir: zipFileName, quiet: true, failOnError: false)
+    ant.delete(file: zipFileName, quiet: true, failOnError: false)
     ant.zip(basedir: targetDistDir, destfile: zipFileName)
 }

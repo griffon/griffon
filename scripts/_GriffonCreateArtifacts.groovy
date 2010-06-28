@@ -16,6 +16,7 @@
 
 import org.springframework.core.io.FileSystemResource
 import griffon.util.GriffonUtil
+import griffon.util.Metadata
 
 /**
  * Gant script for creating Griffon artifacts of all sorts.
@@ -24,6 +25,7 @@ import griffon.util.GriffonUtil
  */
 
 includeTargets << griffonScript("_GriffonPackage")
+includeTargets << griffonScript("_GriffonArgParsing")
 
 rootPackage = null
 
@@ -61,6 +63,8 @@ createArtifact = { Map args = [:] ->
         }
     }
 
+    resolveArchetype()
+
     // first check for presence of template in application
     templateFile = new FileSystemResource("${basedir}/src/templates/artifacts/${type}${fileType}")
     if (!templateFile.exists()) {
@@ -68,9 +72,18 @@ createArtifact = { Map args = [:] ->
         def pluginTemplateFiles = resolveResources("file:${pluginsHome}/*/src/templates/artifacts/${type}${fileType}")
         if (pluginTemplateFiles) {
             templateFile = pluginTemplateFiles[0]
-        } else {
-            // template not found in application, use default template
-            templateFile = griffonResource("src/griffon/templates/artifacts/${type}${fileType}")
+        }
+        if (!templateFile.exists()) {
+            // now check for template provided by an archetype
+            templateFile = new FileSystemResource("${griffonWorkDir}/archetypes/${archetype}/templates/artifacts/${type}${fileType}")
+            if (!templateFile.exists()) {
+                // now check for template provided by a provided archetype
+                templateFile = griffonResource("archetypes/${archetype}/templates/artifacts/${type}${fileType}")
+                if (!templateFile.exists()) {
+                    // template not found in archetypes, use default template
+                    templateFile = griffonResource("archetypes/default/templates/artifacts/${type}${fileType}")
+                }
+            }
         }
     }
 
@@ -105,7 +118,7 @@ createRootPackage = {
 
 createIntegrationTest = { Map args = [:] ->
     def superClass = args["superClass"] ?: "GriffonUnitTestCase"
-    createArtifact(name: args["name"], suffix: "${args['suffix']}Tests", type: "Tests", path: "test/integration", superClass: superClass)
+    createArtifact(name: args["name"], suffix: "${args['suffix']}Tests", type: "IntegrationTests", path: "test/integration", superClass: superClass)
 }
 
 createUnitTest = { Map args = [:] ->
@@ -135,4 +148,30 @@ extractArtifactName = { name ->
     }
 
     return [artifactPkg, artifactName]
+}
+
+target(resolveArchetype: '') {
+    def md = metadataFile.exists() ? Metadata.getInstance(metadataFile) : null
+    archetype = md?.'app.archetype'
+    archetype = archetype ?: argsMap.archetype
+    archetype = archetype ?: 'default'
+}
+
+loadArchetypeFor = { type = 'application' ->
+    resolveArchetype()
+
+    def gcl = new GroovyClassLoader(classLoader)
+    def archetypeFile = new FileSystemResource("${griffonWorkDir}/archetypes/${archetype}/${type}.groovy")
+    if(!archetypeFile.exists()) {
+        archetypeFile = griffonResource("archetypes/${archetype}/${type}.groovy")
+    }
+
+    try {
+        includeTargets << gcl.parseClass(archetypeFile.file) 
+    } catch(Exception e) {
+        logError("An error ocurred while parsing archetype ${archetype}. Using 'default' archetype instead.", e)
+        archetype = 'default'
+        archetypeFile = griffonResource("archetypes/default/${type}.groovy")
+        includeTargets << gcl.parseClass(archetypeFile.file) 
+    }
 }

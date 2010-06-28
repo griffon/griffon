@@ -1,1 +1,21 @@
-TBD
+Unit testing are tests at the "unit" level. In other words you are testing individual methods or blocks of code without considering for surrounding infrastructure. The following is an unit test created using the default template
+
+{code}
+import griffon.test.*
+
+class SomeUnitTests extends GriffonUnitTestCase {
+    protected void setUp() {
+        super.setUp()
+    }
+
+    protected void tearDown() {
+        super.tearDown()
+    }
+
+    void testSomething() {
+
+    }
+}
+{code}
+
+You have access to all mocking facilities exposed by [GriffonUnitTestCase|api:griffon.test.GriffonUnitTestCase] within this test.

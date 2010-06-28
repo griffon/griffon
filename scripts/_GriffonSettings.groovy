@@ -103,6 +103,7 @@ args = System.getProperty("griffon.cli.args")
 classesDir = griffonSettings.classesDir
 griffonApp = null
 griffonContext = null
+isApplicationProject = metadataFile.exists()
 isPluginProject = griffonSettings.isPluginProject()
 isAddonPlugin = griffonSettings.isAddonPlugin()
 

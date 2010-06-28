@@ -17,6 +17,8 @@
 package griffon.core
 
 /**
+ * Handler for 'Controller' artifacts.
+ *
  * @author Andres Almiray
  */
 class ControllerArtifactHandler extends ArtifactHandlerAdapter {

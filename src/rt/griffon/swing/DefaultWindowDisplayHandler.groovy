@@ -19,6 +19,8 @@ import java.awt.Window
 import griffon.core.GriffonApplication
 
 /**
+ * Default implementation of {@code WindowDisplayManage} that simply makes the window visible on show() and disposes it on hide().
+ *
  * @author Andres Almiray
  */
 class DefaultWindowDisplayHandler implements WindowDisplayHandler {

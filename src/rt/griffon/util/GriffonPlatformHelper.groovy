@@ -19,15 +19,11 @@ package griffon.util
 import griffon.core.GriffonApplication
 
 /**
- * Created by IntelliJ IDEA.
- * User: Danno.Ferrin
- * Date: Aug 31, 2008
- * Time: 6:47:22 PM
- * To change this template use File | Settings | File Templates.
+ * Tweaks an application for an specific platform.
+ *
+ * @author Danno Ferrin
  */
-
 class GriffonPlatformHelper {
-
     static void tweakForNativePlatform(GriffonApplication app) {
         if (GriffonApplicationUtils.isMacOSX) {
             tweakForMacOSX(app)

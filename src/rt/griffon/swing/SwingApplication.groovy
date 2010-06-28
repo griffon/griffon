@@ -23,6 +23,8 @@ import java.awt.Toolkit
 import java.awt.Window
 
 /**
+ * Basic implementation of {@code GriffonApplication} that runs in standalone/webstart mode.
+ *
  * @author Danno Ferrin
  * @author Andres Almiray
  */
@@ -38,13 +40,13 @@ class SwingApplication implements griffon.application.StandaloneGriffonApplicati
         windowManager = new WindowManager(this)
         addShutdownHandler(windowManager)
 
-        addApplicationEventListener('WindowHidden', { window ->
-            if(isShutdownInProcess()) return
-            List windows = windowManager.windows.findAll{ it.visible }
-            if(windows.size() <= 1 && config.application.autoShutdown) {
-                if(!shutdown()) windowManager.show(window)
-            }
-        })
+//        addApplicationEventListener('WindowHidden', { window ->
+//            if(isShutdownInProcess()) return
+//            List windows = windowManager.windows.findAll{ it.visible }
+//            if(windows.size() <= 1 && config.application.autoShutdown) {
+//                if(!shutdown()) windowManager.show(window)
+//            }
+//        })
     }
 
     final WindowDisplayHandler resolveWindowDisplayHandler() {

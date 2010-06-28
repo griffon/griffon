@@ -29,6 +29,7 @@ import org.codehaus.griffon.plugins.PluginManagerHolder
 import org.codehaus.griffon.resolve.IvyDependencyManager
 import org.springframework.core.io.Resource
 import griffon.util.PluginBuildSettings
+import griffon.util.Metadata
 import org.codehaus.griffon.resolve.GriffonRepoResolver
 import org.codehaus.griffon.resolve.PluginInstallEngine
 import org.codehaus.griffon.plugins.GriffonPluginManager
@@ -55,7 +56,7 @@ pluginsBase = "${griffonWorkDir}/plugins".toString().replaceAll('\\\\','/')
 target(resolveDependencies:"Resolve plugin dependencies") {
     depends(parseArguments, initInplacePlugins)
 
-    def installEngine = createPluginInstallEngine()
+    def installEngine = createPluginInstallEngine(metadata)
     installEngine.resolvePluginDependencies()
 }
 
@@ -425,7 +426,7 @@ runPluginScript = { File scriptFile, fullPluginName, msg ->
 }
 
 readMetadataFromZip = { String zipLocation, pluginFile=zipLocation ->
-    def installEngine = createPluginInstallEngine()
+    def installEngine = createPluginInstallEngine(metadata)
     installEngine.readMetadataFromZip(zipLocation)
 }
 
@@ -443,7 +444,7 @@ readMetadataFromZip = { String zipLocation, pluginFile=zipLocation ->
  * Uninstalls a plugin for the given name and version
  */
 uninstallPluginForName = { name, version=null ->
-    def pluginInstallEngine = createPluginInstallEngine()
+    def pluginInstallEngine = createPluginInstallEngine(metadata)
     pluginInstallEngine.uninstallPlugin name, version
 
 }
@@ -451,15 +452,15 @@ uninstallPluginForName = { name, version=null ->
  * Installs a plugin for the given name and optional version
  */
 installPluginForName = { String name, String version = null, boolean globalInstall = false ->
-    PluginInstallEngine pluginInstallEngine = createPluginInstallEngine()
+    PluginInstallEngine pluginInstallEngine = createPluginInstallEngine(metadata)
     if (name) {
         event("InstallPluginStart", ["$name-$version"])
         pluginInstallEngine.installPlugin(name, version, globalInstall)       
     }
 }
 
-private PluginInstallEngine createPluginInstallEngine() {
-    def pluginInstallEngine = new PluginInstallEngine(griffonSettings, pluginSettings, metadata, ant)
+private PluginInstallEngine createPluginInstallEngine(Metadata md) {
+    def pluginInstallEngine = new PluginInstallEngine(griffonSettings, pluginSettings, md, ant)
     pluginInstallEngine.eventHandler = { eventName, msg -> event(eventName, [msg]) }
     pluginInstallEngine.errorHandler = { msg ->
         event("StatusError", [msg])
@@ -495,23 +496,23 @@ protected GriffonPluginManager resetClasspath() {
 
 
 
-doInstallPluginFromURL = { URL url ->
+doInstallPluginFromURL = { URL url, Metadata md = metadata ->
     withPluginInstall {
-        def installEngine = createPluginInstallEngine()
+        def installEngine = createPluginInstallEngine(md)
         installEngine.installPlugin url, globalInstall
     }
 }
 
-doInstallPluginZip = { File file ->
+doInstallPluginZip = { File file, Metadata md = metadata ->
     withPluginInstall {
-        def installEngine = createPluginInstallEngine()
+        def installEngine = createPluginInstallEngine(md)
         installEngine.installPlugin file, globalInstall, true
     }
 }
 
-doInstallPlugin = { pluginName, pluginVersion = null ->
+doInstallPlugin = { pluginName, pluginVersion = null, Metadata md = metadata ->
     withPluginInstall {
-        def installEngine = createPluginInstallEngine()
+        def installEngine = createPluginInstallEngine(md)
         installEngine.installPlugin pluginName, pluginVersion, globalInstall
     }
 }

@@ -17,6 +17,8 @@
 package griffon.core
 
 /**
+ * Handler for 'Service' artifacts.
+ *
  * @author Andres Almiray
  */
 class ServiceArtifactHandler extends ArtifactHandlerAdapter {
@@ -35,6 +37,11 @@ class ServiceArtifactHandler extends ArtifactHandlerAdapter {
         app.addApplicationEventListener(this)
     }
 
+    /**
+     * Application event listener.<p>
+     * Lazily injects services instances if {@code app.config.griffon.basic_injection.disable}
+     * is not set to true
+     */
     def onNewInstance = { klass, t, instance ->
         if(type == t || app.config?.griffon?.basic_injection?.disable) return
         klass.metaClass.properties.name.each { propertyName ->

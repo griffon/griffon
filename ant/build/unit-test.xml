@@ -43,6 +43,12 @@
                 <echo file="${xauth.file}">localhost
 </echo>
                 <parallel>
+                  <sequential>
+                    <exec executable="pkill">
+                      <arg line="-9 Xvfb"/>
+                    </exec>
+                    <sleep seconds="2"/> <!-- sleep so Xvfb is really dead -->
+                  </sequential>
                   <exec executable="Xvfb">
                     <arg value=":${xvfb.display}"/>
                     <arg value="-auth"/>
@@ -108,7 +114,7 @@
     <target name="run-test" unless="_skipTests_" depends="build-test, -jar-app-files, -setup-tests, -testone, -testall" />
 
     <target name="-testone" if="_testOne_" depends="junit-macro">
-        <echo>Test being run ${test} from ${griffon.test.build}</echo>
+        <echo>Test being run ${testCase} from ${griffon.test.build}</echo>
         <grifjunit fork="true" maxmemory="512m" forkmode="once" printsummary="true">
             <sysproperty key="griffon.cli.testing" value="true"/>
             <jvmarg value="-server" />

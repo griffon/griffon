@@ -1,0 +1,62 @@
+<project name="griffon-wrapper" default="wrapper-package">
+    <property file="${basedir}/src/wrapper/build-wrapper.properties"/>
+    <property environment="env" />
+
+    <path id="wrapper.classpath">
+        <fileset dir="${griffon.wrapper.lib}">
+            <include name="*.jar"/>
+        </fileset>
+    </path>
+
+    <target name="wrapper-clean" description="Clean the build directory.">
+    <echo>JAVA HOME IS ${env.JAVA_HOME}</echo>
+        <delete dir="${griffon.wrapper.dist}"/>
+        <delete dir="${griffon.wrapper.target}"/>
+    </target>
+
+    <target name="wrapper-compile" description="Compile Java sources">
+        <mkdir dir="${griffon.wrapper.build}" />
+        <javac destdir="${griffon.wrapper.build}"
+               includeantruntime="false"
+               classpathref="wrapper.classpath">
+            <src location="${griffon.wrapper.src}" />
+        </javac>
+    </target>
+
+    <target name="wrapper-package" description="Creates the wrapper jar" depends="wrapper-compile">
+        <property name="griffon.wrapper.package" value ="${griffon.wrapper.target}/package" />
+        <mkdir dir="${griffon.wrapper.package}" />
+        <unjar dest="${griffon.wrapper.package}"
+               src="${griffon.wrapper.lib}/gradle-wrapper.jar">
+            <patternset>
+                <exclude name="META-INF/**" />
+            </patternset>
+        </unjar>
+
+        <copy todir="${griffon.wrapper.package}">
+            <fileset dir="${griffon.wrapper.build}"/>
+        </copy>
+
+        <jar destfile="${griffon.wrapper.dist.jar}">
+            <fileset dir="${griffon.wrapper.package}"/>
+        </jar>
+
+        <mkdir dir="${griffon.wrapper.dist}" />
+        <copy todir="${griffon.wrapper.dist}">
+            <fileset dir="${griffon.wrapper.basedir}/src/bin" />
+        </copy>
+        <chmod perm="ugo+x">
+            <fileset dir="${griffon.wrapper.dist}" includes="griffonw"/>
+        </chmod>
+        <mkdir dir="${griffon.wrapper.dist}/wrapper" />
+        <copy todir="${griffon.wrapper.dist}/wrapper">
+            <fileset dir="${griffon.wrapper.basedir}/src/wrapper" />
+        </copy>
+        <replace dir="${griffon.wrapper.dist}/wrapper">
+            <replaceFilter token="@griffon.version@" value="${griffon.version}" />
+        </replace>
+
+        <copy todir="${griffon.wrapper.dist}/wrapper"
+              file="${griffon.wrapper.dist.jar}" />
+    </target>
+</project>

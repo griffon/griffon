@@ -50,6 +50,11 @@
 
     <target name="copy-common-release-content">
         <antcall target="copy-dir">
+            <param name="dir.excludes" value=""/>
+            <param name="dir.location" value="archetypes"/>
+            <param name="dir.destination" value="${release.dir}/archetypes"/>
+        </antcall>
+        <antcall target="copy-dir">
             <param name="dir.excludes" value="docs"/>
             <param name="dir.location" value="lib"/>
             <param name="dir.destination" value="${release.dir}/lib"/>
@@ -209,6 +214,7 @@
     </target>
 
     <target name="create-source-release">
+        <antcall target="wrapper-clean" />
         <antcall target="create-release-package">
             <param name="release.name" value="${griffon.dist.source}"/>
             <param name="extra.target" value="copy-exclusive-source-release-content"/>

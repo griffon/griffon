@@ -25,7 +25,13 @@ import griffon.core.GriffonApplication
 import griffon.core.ShutdownHandler
 
 /**
- * @author Andres.Almiray
+ * Controls a set of windows that belong to the application.<p>
+ * Windows that are controlled by a WindowManager can be shown/hidden
+ * using a custom strategy ({@code WindowDisplayHandler})
+ *
+ * @see griffon.swing.WindowDisplayManager
+ *
+ * @author Andres Almiray
  */
 final class WindowManager implements ShutdownHandler {
     private final GriffonApplication app
@@ -34,25 +40,27 @@ final class WindowManager implements ShutdownHandler {
     private final List<Window> windows = new CopyOnWriteArrayList<Window>()
 
     /**
-     *
-     * @param app
+     * Creates a new WindowManager tied to an specific application.
+     * @param app an application
      */
     WindowManager(GriffonApplication app) {
         this.app = app
     }
 
     /**
+     * Returns the list of windows managed by this manager.
      *
-     *
-     * @return a List of currenntly managed windows
+     * @return a List of currently managed windows
      */
     List<Window> getWindows() {
         Collections.unmodifiableList(windows)
     }
 
     /**
+     * Registers a window on this manager if an only if the window is not null
+     * and it's not registered already.
      *
-     * @param window
+     * @param window the window to be added to the list of managed windows
      */
     void attach(Window window) {
          if(!window || (window in windows)) return
@@ -62,8 +70,10 @@ final class WindowManager implements ShutdownHandler {
     }
 
     /**
+     * Removes the window from the list of manages windows if and only if it
+     * is registered with this manager.
      *
-     * @param window
+     * @param window the window to be removed
      */
     void detach(Window window) {
         if(window in windows) {
@@ -74,8 +84,10 @@ final class WindowManager implements ShutdownHandler {
     }
 
     /**
+     * Shows the window.<p>
+     * This method is executed <b>SYNCHRONOUSLY</b> in the UI thread.
      *
-     * @param window
+     * @param window the window to show
      */
     void show(Window window) {
         app.execSync {
@@ -84,8 +96,10 @@ final class WindowManager implements ShutdownHandler {
     }
 
     /**
+     * Hides the window.<p>
+     * This method is executed <b>SYNCHRONOUSLY</b> in the UI thread.
      *
-     * @param window
+     * @param window the window to hide
      */
     void hide(Window window) {
         app.execSync {
@@ -97,6 +111,9 @@ final class WindowManager implements ShutdownHandler {
         true
     }
 
+    /**
+     * Hides all visible windows
+     */
     void onShutdown(GriffonApplication app) {
         windows.findAll{it.visible}.each { window ->
             hide(window)
@@ -104,22 +121,38 @@ final class WindowManager implements ShutdownHandler {
     }
 
     /**
-     * @author Andres.Almiray
+     * WindowAdapter that invokes hide() when the window is about to be closed.
+     *
+     * @author Andres Almiray
      */
     private class WindowHelper extends WindowAdapter {
         void windowClosing(WindowEvent event) {
             hide(event.window)
+
+            if(app.isShutdownInProcess()) return
+            List windows = windows.findAll{ it.visible }
+            if(windows.size() <= 1 && app.config.application.autoShutdown) {
+                if(!app.shutdown()) show(window)
+            }
         }
     }
 
     /**
-     * @author Andres.Almiray
+     * ComponentAdapter that triggers application events when a window is shown/hidden.
+     *
+     * @author Andres Almiray
      */
     private class ComponentHelper extends ComponentAdapter {
+        /**
+         * Triggers a <tt>WindowShown</tt> event with the window as sole argument
+         */
         void componentShown(ComponentEvent event) {
             app.event('WindowShown', [event.source])
         }
 
+        /**
+         * Triggers a <tt>WindowHidden</tt> event with the window as sole argument
+         */
         void componentHidden(ComponentEvent event) {
             app.event('WindowHidden', [event.source])
         }

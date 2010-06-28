@@ -19,6 +19,7 @@ import groovy.xml.dom.DOMCategory
 import org.codehaus.griffon.plugins.GriffonPluginInfo
 import org.codehaus.griffon.resolve.PluginResolveEngine
 import griffon.util.BuildSettings
+import griffon.util.Metadata
 
 /**
  * Gant script that handles the installation of Griffon plugins
@@ -70,22 +71,50 @@ target(installPlugin:"Installs a plug-in for the given URL or name and version")
             if(pluginArgs[0] =~ urlPattern) {
                 def url = new URL(pluginArgs[0])
                 doInstallPluginFromURL(url)
-            }
-            else if( pluginFile.exists() && pluginFile.name.startsWith("griffon-") && pluginFile.name.endsWith(".zip" )) {
+            } else if( pluginFile.exists() && pluginFile.name.startsWith("griffon-") && pluginFile.name.endsWith(".zip" )) {
                 doInstallPluginZip(pluginFile)
-            }
-            else {
+            } else {
                 // The first argument is the plugin name, the second
                 // (if provided) is the plugin version.
                 doInstallPlugin(pluginArgs[0], pluginArgs[1])
             }
+        } else {
+            event("StatusError", [ERROR_MESSAGE])
         }
-        else {
-            event("StatusError", [ ERROR_MESSAGE])
-        }
-
     }
     catch(Exception e) {
+        logError("Error installing plugin: ${e.message}", e)
+        exit(1)
+    }
+}
+
+installPluginExternal = { Metadata md, pluginName, pluginVersion = null ->
+    parseArguments()
+    configureProxy()
+    try {
+        if(pluginName) {
+            if(argsMap['global']) {
+                globalInstall = true
+            }
+
+            ant.mkdir(dir: pluginsBase)
+
+            def pluginFile = new File(pluginName)
+            def urlPattern = ~"^[a-zA-Z][a-zA-Z0-9\\-\\.\\+]*://"
+            if(pluginName =~ urlPattern) {
+                def url = new URL(pluginName)
+                doInstallPluginFromURL(url, md)
+            } else if( pluginFile.exists() && pluginFile.name.startsWith("griffon-") && pluginFile.name.endsWith(".zip" )) {
+                doInstallPluginZip(pluginFile, md)
+            } else {
+                // The first argument is the plugin name, the second
+                // (if provided) is the plugin version.
+                doInstallPlugin(pluginName, pluginVersion, md)
+            }
+        } else {
+            event("StatusError", [ERROR_MESSAGE])
+        }
+    } catch(Exception e) {
         logError("Error installing plugin: ${e.message}", e)
         exit(1)
     }

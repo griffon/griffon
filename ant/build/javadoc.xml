@@ -6,8 +6,17 @@
                  classname="org.codehaus.groovy.ant.Groovydoc"
                  classpathref="classpath"/>
 
+        <property name="src.javadoc" value="${griffon.target}/src-javadoc" />
+        <mkdir dir="${src.javadoc}" />
+        <copy todir="${src.javadoc}">
+            <fileset dir="${griffon.src.cli}" includes="griffon/test/**/*" />
+            <fileset dir="${griffon.src.cli}" includes="griffon/beans/**" />
+            <fileset dir="${griffon.src.cli}" includes="griffon/util/EventPublisher*, **/*.html" />
+            <fileset dir="${griffon.src.rt}" includes="**/*" />
+        </copy>
+
         <groovydoc destdir="${griffon.javadoc}"
-                   sourcepath="${griffon.src.rt}"
+                   sourcepath="${src.javadoc}"
                    packagenames="**.*"
                    use="true"
                    windowtitle="Griffon ${griffon.version}"

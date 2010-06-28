@@ -16,6 +16,8 @@
 package griffon.util
 
 /**
+ * Defines useful constants for determining running enviroment and platform.
+ *
  * @author Andres Almiray
  */
 class GriffonApplicationUtils {
@@ -30,6 +32,7 @@ class GriffonApplicationUtils {
    static final boolean isWindowsXP
    static final boolean isWindowsVista
 
+   /** True if running Linux, Solaris or MacOSX */
    static final boolean isUnix
    static final boolean isLinux
    static final boolean isSolaris
@@ -71,6 +74,7 @@ class GriffonApplicationUtils {
             isSolaris = true
             break
          case ~/Mac OS.*/:
+            isUnix = true
             isMacOSX = true
       }
 

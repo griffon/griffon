@@ -34,6 +34,18 @@ projectType = "app"
 
 target(createApp: "Creates a Griffon application for the given name")  {
     depends(parseArguments, appName)
+
+    loadArchetypeFor 'application'
+    createApplicationProject()
+
+    // Set the default version number for the application
+    updateMetadata("app.version": griffonAppVersion ?: "0.1",
+                   "app.archetype": archetype)
+
+    event("StatusFinal", ["Created Griffon Application at $basedir"])
+}
+
+createProjectWithDefaults = {
     metadataFile = new File("${basedir}/application.properties")
     initProject()
     ant.replace(dir:"${basedir}/griffon-app/conf", includes:"**/*.*") {
@@ -43,19 +55,13 @@ target(createApp: "Creates a Griffon application for the given name")  {
         replacefilter(token: "@griffon.project.key@", value: griffonAppName.replaceAll( /\s/, '.' ).toLowerCase())
     }
 
-    // Create a message bundle to get the user started.
-    touch(file: metadataFile)
+    ant.touch(file: metadataFile)
 
     // Create a message bundle to get the user started.
     ant.touch(file: "${basedir}/griffon-app/i18n/messages.properties")
 
     argsMap["params"][0] = griffonAppName
     createMVC()
-
-    // Set the default version number for the application
-    updateMetadata("app.version": griffonAppVersion ?: "0.1")
-
-    event("StatusFinal", ["Created Griffon Application at $basedir"])
 }
 
 def resetBaseDirectory(String basedir) {
@@ -107,10 +113,10 @@ target(initProject: "Initialise an application or plugin project") {
 
     griffonUnpack(dest: basedir, src: "griffon-shared-files.jar")
     griffonUnpack(dest: basedir, src: "griffon-$projectType-files.jar")
-    integrateEclipse()
-    integrateAnt()
-    integrateTextmate()
-    integrateIntellij()
+    // integrateEclipse()
+    // integrateAnt()
+    // integrateTextmate()
+    // integrateIntellij()
 
     // make sure Griffon central repo is prepped for default plugin set installation
     griffonSettings.dependencyManager.parseDependencies {

@@ -1,0 +1,57 @@
+/*
+ * Copyright 2010 the original author or authors.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+/**
+ * @author Andres Almiray
+ */
+
+includeTargets << griffonScript("Init")
+includeTargets << griffonScript("CreateIntegrationTest")
+
+target(createArchetype: "Creates a new Griffon application archetype") {
+    depends(parseArguments)
+    promptForName(type: "Application Archetype")
+    def (pkg, name) = extractArtifactName(argsMap["params"][0])
+
+    ant.mkdir(dir: name)
+    ant.mkdir(dir: "$name/template/artifacts")
+    new File("$name/application.groovy").append('''
+includeTargets << griffonScript("_GriffonPlugins")
+includeTargets << griffonScript("_GriffonInit")
+includeTargets << griffonScript("CreateMvc" )
+
+target(createApplicationProject: 'Creates a new application project') {
+    metadataFile = new File("${basedir}/application.properties")
+    initProject()
+    ant.replace(dir:"${basedir}/griffon-app/conf", includes:"**/*.*") {
+        replacefilter(token: "@griffon.app.class.name@", value:appClassName )
+        replacefilter(token: "@griffon.version@", value: griffonVersion)
+        replacefilter(token: "@griffon.project.name@", value: griffonAppName)
+        replacefilter(token: "@griffon.project.key@", value: griffonAppName.replaceAll( /\\s/, '.' ).toLowerCase())
+    }
+
+    touch(file: metadataFile)
+
+    // Create a message bundle to get the user started.
+    ant.touch(file: "${basedir}/griffon-app/i18n/messages.properties")
+
+    argsMap["params"][0] = griffonAppName
+    createMVC()
+}
+setDefaultTarget(createApplicationProject)
+''')
+}
+setDefaultTarget(createArchetype)

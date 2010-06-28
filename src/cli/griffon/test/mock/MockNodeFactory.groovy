@@ -17,6 +17,8 @@
 package griffon.test.mock
 
 /**
+ * Trivial implementation of a node factory. Always returns an empty map
+ *
  * @author Andres Almiray
  */
 class MockNodeFactory extends AbstractFactory {

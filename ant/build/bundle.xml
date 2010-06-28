@@ -38,12 +38,16 @@
             <fileset dir="${basedir}/src/griffon/ant"/>
         </jar>
 
+        <antcall target="wrapper-package"/>
         <!-- Package up the files that are shared by both applications and plugins. -->
         <jar destfile="${griffon.target}/griffon-shared-files.jar">
+            <fileset dir="${griffon.wrapper.target}/dist" />
+<!--
             <fileset dir="${basedir}/src/griffon" includes="build.xml"/>
             <fileset dir="${basedir}/src/griffon/templates/ide-support/eclipse"/>
             <fileset dir="${basedir}/src/griffon/templates/ide-support/intellij"/>
             <fileset dir="${basedir}/src/griffon/templates/ide-support/textmate" includes="project.tmproj"/>
+-->
         </jar>
 
         <!-- Package up the files that are exclusive to applications. -->
@@ -143,7 +147,7 @@ groovy.version=${groovy.version}</echo>
     </target>
 
     <target name="-mavenPomDefinitions">
-        <property name="pom.source.dir" value="${basedir}/maven"/>
+        <property name="pom.source.dir" value="${basedir}/maven/poms"/>
         <property name="pom.target.dir" value="${griffon.target}/poms"/>
 
         <!-- Clear any existing POMs out of the way first -->

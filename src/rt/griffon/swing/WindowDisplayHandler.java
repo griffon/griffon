@@ -1,5 +1,5 @@
 /*
- * Copyright 2008-2010 the original author or authors.
+ * Copyright 2010 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,20 +19,24 @@ import java.awt.Window;
 import griffon.core.GriffonApplication;
 
 /**
+ * Controls how windows are shown and hidden at runtime.
+ *
  * @author Andres Almiray
  */
 public interface WindowDisplayHandler {
     /**
+     * Callback for displaying a window.
      *
-     * @param window
-     * @param application
+     * @param window the window to be displayed
+     * @param application the current application
      */
     void show(Window window, GriffonApplication application);
 
     /**
+     * Callback for hiding a window.
      *
-     * @param window
-     * @param application
+     * @param window the window to hide
+     * @param application the current application
      */
     void hide(Window window, GriffonApplication application);
 }

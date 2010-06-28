@@ -49,7 +49,6 @@ eclipseClasspathLibs = {
     result
 }
 
-
 target(createStructure: "Creates the application directory structure") {
     ant.sequential {
         mkdir(dir: "${basedir}/griffon-app")
@@ -106,11 +105,6 @@ target(updateAppProperties: "Updates default application.properties") {
     appGriffonVersion = griffonVersion
 }
 
-target( launderIDESupportFiles: "Updates the IDE support files (Eclipse, TextMate etc.), changing file names and replacing tokens in files where appropriate.") {
-    // do nothing. deprecated target
-
-}
-
 target(init: "main init target") {
     depends(createStructure, updateAppProperties)
 
@@ -122,6 +116,6 @@ target(init: "main init target") {
     // Create a message bundle to get the user started.
     touch(file: "${basedir}/griffon-app/i18n/messages.properties")
 
-	// Set the default version number for the application
+    // Set the default version number for the application
     updateMetadata("app.version": griffonAppVersion ?: "0.1")
 }

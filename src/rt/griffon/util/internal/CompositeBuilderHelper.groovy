@@ -25,10 +25,9 @@ import javax.swing.*
 import griffon.core.GriffonApplication
 
 /**
- * Created by IntelliJ IDEA.
+ * Helper class that initialzes a CompositeBuilder with the builder configuration read from the application.
+ *
  * @author Danno.Ferrin
- * Date: Jul 29, 2008
- * Time: 5:58:16 PM
  */
 class CompositeBuilderHelper {
     static FactoryBuilderSupport createBuilder(GriffonApplication app, Map targets) {

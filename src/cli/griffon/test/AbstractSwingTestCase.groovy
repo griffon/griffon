@@ -21,6 +21,8 @@ import java.lang.reflect.Constructor
 import java.lang.reflect.InvocationTargetException
 
 /**
+ * Base classe for Swing relatedt test.
+ *
  * @author Danno Ferrin
  * @author Andres Almiray
  */
@@ -72,10 +74,15 @@ public class AbstractSwingTestCase extends GroovyTestCase {
         }
     }
 
+    /** Executes code synchronously inside the UI thread */
     def execSync = UIThreadHelper.instance.&executeSync
+    /** Executes code asynchronously inside the UI thread */
     def execAsync = UIThreadHelper.instance.&executeAsync
+    /** Executes code outside the UI thread */
     def execOutside = UIThreadHelper.instance.&executeOutside
+    /** True if the current thread is the UI thread */
     def isUIThread = UIThreadHelper.instance.&isUIThread
+    /** Schedules a block of code as a Future */
     def execFuture = { Object... args ->
         UIThreadHelper.instance.executeFuture(*args)
     }
