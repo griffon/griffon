@@ -28,6 +28,8 @@ target(createArchetype: "Creates a new Griffon application archetype") {
 
     ant.mkdir(dir: name)
     ant.mkdir(dir: "$name/template/artifacts")
+    // ant.mkdir(dir: "$name/scripts")
+
     new File("$name/application.groovy").append('''
 includeTargets << griffonScript("_GriffonPlugins")
 includeTargets << griffonScript("_GriffonInit")

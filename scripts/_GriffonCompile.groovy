@@ -14,6 +14,8 @@
  * limitations under the License.
  */
 
+import org.codehaus.groovy.runtime.StackTraceUtils
+
 /**
  * Gant script that compiles Groovy and Java files in the src tree
  *
@@ -31,10 +33,10 @@ compilerPaths = { String classpathId ->
 
     for(dir in new File("${basedir}/griffon-app").listFiles()) {
         if(!excludedPaths.contains(dir.name) && dir.isDirectory())
-            src(path:"${dir}")
+            src(path: "$dir")
     }
     // Handle conf/ separately to exclude subdirs/package misunderstandings
-    src(path: "${basedir}/griffon-app/conf")
+    // src(path: "${basedir}/griffon-app/conf")
 
     src(path:"${griffonSettings.sourceDir}/main")
     javac(classpathref:classpathId, encoding:"UTF-8", debug:"yes")
@@ -65,7 +67,8 @@ compileSources = { destinationDir, classpathId, sources ->
     }
     catch(Exception e) {
         if(argsMap.verboseCompile) {
-            e.printStackTrace()
+            StackTraceUtils.deepSanitize(e)
+            e.printStackTrace(System.err)
         }
         event("StatusFinal", ["Compilation error: ${e.message}"])
         exit(1)
@@ -84,6 +87,10 @@ target(compile: "Implementation of compilation phase") {
         compileSrc = compileSources.curry(classesDirPath)
 
         compileSrc(classpathId, compilerPaths.curry(classpathId))
+        compileSrc(classpathId) {
+            src(path: "${basedir}/griffon-app/conf")
+            include(name: "*.groovy")
+        }
         addUrlIfNotPresent classLoader, griffonSettings.pluginClassesDir
 
         // If this is a plugin project, the descriptor is not included
@@ -92,7 +99,7 @@ target(compile: "Implementation of compilation phase") {
         if (isPluginProject) {
             def pluginFile = new File("${basedir}").list().find{ it =~ /GriffonPlugin\.groovy/ }
             compileSrc(classpathId) {
-                src(path:"${basedir}")
+                src(path: "$basedir")
                 include(name:'*GriffonPlugin.groovy')
             }
             resolvePluginClasspathDependencies(loadPluginClass(pluginFile))
@@ -104,7 +111,7 @@ target(compile: "Implementation of compilation phase") {
                 pathElement(location: classesDirPath)
             }
             compileSrc('addon.classpath') {
-                src(path:"${basedir}")
+                src(path: "$basedir")
                 include(name:'*GriffonAddon.groovy')
             }
         }
@@ -134,7 +141,7 @@ target(compilePlugins: "Compiles source files of all referenced plugins.") {
             // installed or otherwise referenced.
             compileSources(classesDirPath, classpathId) {
                 for(dir in pluginResources.file) {
-                    src(path:"${dir}")
+                    src(path: "$dir")
                 }
                 exclude(name: "**/BuildConfig.groovy")
                 exclude(name: "**/Config.groovy")

@@ -771,6 +771,22 @@ public class GriffonScriptRunner {
         }
         addCommandScripts(new File(settings.getBaseDir(), "scripts"), scripts);
         addCommandScripts(new File(settings.getUserHome(), ".griffon/scripts"), scripts);
+        //File[] archetypes = new File(settings.getGriffonHome(), "archetypes").listFiles(new FileFilter() {
+        //    public boolean accept(File file) {
+        //        return file.isDirectory();
+        //    }
+        //});
+        //for(File file: archetypes) {
+        //    addCommandScripts(new File(file, "scripts"), scripts);
+        //}
+        //archetypes = new File(settings.getGriffonWorkDir(), "archetypes").listFiles(new FileFilter() {
+        //    public boolean accept(File file) {
+        //        return file.isDirectory();
+        //    }
+        //});
+        //for(File file: archetypes) {
+        //    addCommandScripts(new File(file, "scripts"), scripts);
+        //}
 
         for (File dir : listKnownPluginDirs(settings)) {
             addPluginScripts(dir, scripts);

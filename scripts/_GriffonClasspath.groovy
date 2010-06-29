@@ -107,6 +107,7 @@ commonClasspath = {
     for (d in griffonDir) {
         pathelement(location: "${d.file.absolutePath}")
     }
+    // pathelement(location: "${griffonSettings.sourceDir}/main")
 
     def pluginLibDirs = pluginSettings.pluginLibDirectories.findAll { it.exists() }
     for (pluginLib in pluginLibDirs) {
@@ -134,6 +135,7 @@ compileClasspath = {
                 pathelement(location: f.absolutePath)
         }
     }
+    pathelement(location: "${classesDir.absolutePath}")
     pathelement(location: "${pluginClassesDir.absolutePath}")
 }
 
@@ -173,7 +175,7 @@ runtimeClasspath = {
         }
     }
 
-    pathelement(location: "${pluginClassesDir.absolutePath}")    
+    pathelement(location: "${pluginClassesDir.absolutePath}")
     pathelement(location: "${classesDir.absolutePath}")
 }
 
@@ -193,10 +195,10 @@ void setClasspath() {
     if (classpathSet) return
 
     if(isApplicationProject || isPluginProject) {
-        ant.mkdir(dir: "${classesDir.absolutePath}")
-        ant.mkdir(dir: "${pluginClassesDir.absolutePath}")
-        ant.mkdir(dir: "${griffonSettings.testClassesDir}/shared")
-        ant.mkdir(dir: "${griffonSettings.testResourcesDir}")
+        if(!(new File(classesDir.absolutePath).exists())) ant.mkdir(dir: classesDir.absolutePath)
+        if(!(new File(pluginClassesDir.absolutePath).exists())) ant.mkdir(dir: pluginClassesDir.absolutePath)
+        if(!(new File("${griffonSettings.testClassesDir}/shared").exists())) ant.mkdir(dir: "${griffonSettings.testClassesDir}/shared")
+        if(!(griffonSettings.testResourcesDir.exists())) ant.mkdir(dir: griffonSettings.testResourcesDir)
     }
 
     ant.path(id: "griffon.compile.classpath", compileClasspath)
@@ -231,8 +233,8 @@ void setClasspath() {
     compConfig.sourceEncoding = "UTF-8"
 
     if(isApplicationProject || isPluginProject) {
-        ant.mkdir(dir: resourcesDirPath)
-        ant.mkdir(dir: griffonSettings.testResourcesDir)
+        // if(!resourcesDir.exists()) ant.mkdir(dir: resourcesDirPath)
+        // if(!griffonSettings.testResourcesDir.exists()) ant.mkdir(dir: griffonSettings.testResourcesDir)
         addUrlIfNotPresent rootLoader, resourcesDirPath
         addUrlIfNotPresent rootLoader, griffonSettings.testResourcesDir
     }
