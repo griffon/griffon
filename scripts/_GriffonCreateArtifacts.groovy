@@ -21,7 +21,7 @@ import griffon.util.Metadata
 /**
  * Gant script for creating Griffon artifacts of all sorts.
  *
- * @author Peter Ledbrook
+ * @author Peter Ledbrook (Grails 1.1)
  */
 
 includeTargets << griffonScript("_GriffonPackage")
@@ -38,8 +38,9 @@ createArtifact = { Map args = [:] ->
 
     ant.mkdir(dir: "${basedir}/${artifactPath}")
 
+    def name = purgeRedundantArtifactSuffix(args.name, suffix)
     // Extract the package name if one is given.
-    def (artifactPkg, artifactName) = extractArtifactName(args.name)
+    def (artifactPkg, artifactName) = extractArtifactName(name)
 
     // Convert the package into a file path.
     def pkgPath = artifactPkg.replace('.' as char, '/' as char)
@@ -131,6 +132,26 @@ promptForName = { Map args = [:] ->
         ant.input(addProperty: "artifact.name", message: "${args["type"]} name not specified. Please enter:")
         argsMap["params"] << ant.antProject.properties."artifact.name"
     }
+}
+
+purgeRedundantArtifactSuffix = { name, suffix ->
+    if(!suffix) return name
+    def newName = name
+    if(name && name =~ /.+$suffix$/) {
+        newName = name.replaceAll(/$suffix$/, '')
+    }
+
+    if(name == newName) {
+        for(int i = name.length() - 1; i >= 0; i--) {
+            def str = name[i..-1]
+            if(suffix.startsWith(str)) {
+                newName -= str
+                break
+            }
+        }
+    }
+
+    return newName
 }
 
 extractArtifactName = { name ->
