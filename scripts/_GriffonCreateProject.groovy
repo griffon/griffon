@@ -61,7 +61,6 @@ createProjectWithDefaults = {
     ant.touch(file: "${basedir}/griffon-app/i18n/messages.properties")
 
     argsMap["params"][0] = griffonAppName
-    createMVC()
 }
 
 def resetBaseDirectory(String basedir) {

@@ -10,7 +10,7 @@ h2. Examples
 class SampleController {
     private longRunningCode() {
         if(isUIThread()) {
-            throw new RuntimeException('Must be called inside the UI Thread')
+            throw new RuntimeException('Must NOT be called inside the UI Thread')
         }
     }
 }
