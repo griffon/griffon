@@ -42,10 +42,11 @@ import java.beans.PropertyChangeEvent;
 /**
  * Handles generation of code for the {@code @Listener} annotation.
  * <p/>
- * Generally, it adds (if needed) a EventRouter field and
- * the needed add/removeEventListener methods to support the
- * listeners.
- * <p/>
+ * Any closures found as the annotation's value will be either transformed
+ * into inner classes that implement PropertyChangeListener (when the value
+ * is a closue defined in place) or be casted as a proxy of PropertyChangeListener
+ * (when the value is a property reference found on the same class).<p>
+ * List of closures are also supported.
  *
  * @author Andres Almiray
  */

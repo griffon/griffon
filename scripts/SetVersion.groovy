@@ -25,18 +25,21 @@
 includeTargets << griffonScript("_GriffonEvents")
 
 target ('default': "Sets the current application version") {
-    if(args != null) {
+    if (isPluginProject) {
+        println "The set-version command cannot update the version of a plugin project. Change the value of the 'version' property in ${pluginSettings.basePluginDescriptor.filename} instead." 
+        exit(1)
+    }
+
+    if (args != null) {
         ant.property(name:"app.version.new", value: args)
     } else {
         def oldVersion = metadata.'app.version'
-        ant.input(addProperty:"app.version.new", message:"Enter the new version",defaultvalue:oldVersion)
+        ant.input(addProperty:"app.version.new", message:"Enter the new version", defaultvalue:oldVersion)
     }
 
     def newVersion = ant.antProject.properties.'app.version.new'
     metadata.'app.version' = newVersion
-    metadataFile.withOutputStream {
-        metadata.store it, 'utf-8'
-    }
+    metadata.persist()
     event("StatusFinal", [ "Application version updated to $newVersion"])
 }
 
