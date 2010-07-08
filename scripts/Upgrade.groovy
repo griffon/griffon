@@ -28,9 +28,9 @@ includeTargets << griffonScript("_GriffonInit")
 includeTargets << griffonScript("_GriffonClean")
 
 target('default': "Upgrades a Griffon application from a previous version of Griffon") {
-    depends(createStructure)
+    depends(parseArguments)
 
-    boolean force = args?.indexOf('-force') > -1
+    boolean force = argsMap.force || !isInteractive ?: false
 
     if (appGriffonVersion != griffonVersion) {
         def gv = appGriffonVersion ?: "?Unknown?"
@@ -39,34 +39,23 @@ target('default': "Upgrades a Griffon application from a previous version of Gri
     }
 
     if (!force) {
-        //TODO warn user about descructive changes
+        ant.input(message: """
+        WARNING: This target will upgrade an older Griffon application to ${griffonVersion}.
+        Are you sure you want to continue?
+                   """,
+                    validargs: "y,n",
+                    addproperty: "griffon.upgrade.warning")
 
-//        ant.input(message: """
-//        WARNING: Something bad might happen
-//				   """,
-//                validargs: "y,n",
-//                addproperty: "griffon.upgrade.warning")
-//
-//        def answer = ant.antProject.properties."griffon.upgrade.warning"
-//
-//        if (answer == "n") exit(0)
-//
-//        if ((griffonVersion.startsWith("1.0")) &&
-//                !(['utf-8', 'us-ascii'].contains(System.getProperty('file.encoding')?.toLowerCase()))) {
-//            ant.input(message: """
-//        WARNING: Something else bad might happen
-//	                   """,
-//                    validargs: "y,n",
-//                    addproperty:"griffon.another.warning")
-//            answer = ant.antProject.properties."griffon.another.warning"
-//            if (answer == "n") exit(0)
-//        }
+        def answer = ant.antProject.properties."griffon.upgrade.warning"
+        if (answer == "n") exit(0)
     }
 
     clean()
 
     ant.sequential {
         delete(dir: "${basedir}/tmp", failonerror: false)
+ 
+        createStructure()
 
         // Unpack the shared files into a temporary directory, and then
         // copy over the IDE files.
@@ -256,4 +245,3 @@ target('default': "Upgrades a Griffon application from a previous version of Gri
 
     event("StatusFinal", ["Project upgraded"])
 }
-

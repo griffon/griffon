@@ -28,28 +28,24 @@ target(createArchetype: "Creates a new Griffon application archetype") {
 
     ant.mkdir(dir: name)
     ant.mkdir(dir: "$name/template/artifacts")
+    // ant.mkdir(dir: "$name/scripts")
+
     new File("$name/application.groovy").append('''
+import griffon.util.Metadata
+
 includeTargets << griffonScript("_GriffonPlugins")
 includeTargets << griffonScript("_GriffonInit")
 includeTargets << griffonScript("CreateMvc" )
 
 target(createApplicationProject: 'Creates a new application project') {
-    metadataFile = new File("${basedir}/application.properties")
-    initProject()
-    ant.replace(dir:"${basedir}/griffon-app/conf", includes:"**/*.*") {
-        replacefilter(token: "@griffon.app.class.name@", value:appClassName )
-        replacefilter(token: "@griffon.version@", value: griffonVersion)
-        replacefilter(token: "@griffon.project.name@", value: griffonAppName)
-        replacefilter(token: "@griffon.project.key@", value: griffonAppName.replaceAll( /\\s/, '.' ).toLowerCase())
-    }
-
-    touch(file: metadataFile)
-
-    // Create a message bundle to get the user started.
-    ant.touch(file: "${basedir}/griffon-app/i18n/messages.properties")
-
-    argsMap["params"][0] = griffonAppName
+    createProjectWithDefaults()
     createMVC()
+
+    // to install plugins do the following
+    // Metadata md = Metadata.getInstance("${basedir}/application.properties")
+    // installPluginExternal md, pluginName, pluginVersion
+    //
+    // pluginVersion is optional
 }
 setDefaultTarget(createApplicationProject)
 ''')

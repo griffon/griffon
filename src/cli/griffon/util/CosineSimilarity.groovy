@@ -17,7 +17,7 @@ package griffon.util
 
 /**
  * Uses cosine similarity to find matches from a candidate set for a specified input.
- * Based on code from http://www.nearinfinity.com/blogs/seth_schroeder/groovy_cosine_similarity_in_griffon.html
+ * Based on code from http://www.nearinfinity.com/blogs/seth_schroeder/groovy_cosine_similarity_in_grails.html
  *
  * @author Burt Beckwith (Grails 1.3.x)
  * @since 0.9

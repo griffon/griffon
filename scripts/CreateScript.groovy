@@ -25,8 +25,8 @@ import griffon.util.GriffonUtil
 includeTargets << griffonScript("_GriffonInit")
 includeTargets << griffonScript("_GriffonCreateArtifacts")
 
-target (default : "Creates a Griffon Gant Script") {
-    depends(checkVersion, parseArguments)
+target(default : "Creates a Griffon Gant Script") {
+    depends(parseArguments)
 
     def type = "Script"
     promptForName(type: type)
@@ -38,17 +38,20 @@ target (default : "Creates a Griffon Gant Script") {
         suffix: "",
         type: type,
         path: "scripts")
-    createArtifact(
-        name: name,
-        suffix: "Tests",
-        type: "ScriptTests",
-        path: "test/cli")
 
-    className = GriffonUtil.getClassNameRepresentation(name)
-    artifactFile = "${basedir}/test/cli/${className}Tests.groovy"
-
-    ant.replace(file: artifactFile) {
-        replacefilter(token: "@script.name@", value: name )
-        replacefilter(token: "${className}Tests", value: className )
+    if(isApplicationProject || isPluginProject) {
+        createArtifact(
+            name: name,
+            suffix: "Tests",
+            type: "ScriptTests",
+            path: "test/cli")
+    
+        className = GriffonUtil.getClassNameRepresentation(name)
+        artifactFile = "${basedir}/test/cli/${className}Tests.groovy"
+    
+        ant.replace(file: artifactFile) {
+            replacefilter(token: "@script.name@", value: name )
+            replacefilter(token: "${className}Tests", value: className )
+        }
     }
 }

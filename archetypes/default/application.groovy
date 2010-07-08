@@ -24,5 +24,6 @@ includeTargets << griffonScript("CreateMvc" )
 
 target(createApplicationProject: "") {
     createProjectWithDefaults()
+    createMVC()
 }
 setDefaultTarget(createApplicationProject)

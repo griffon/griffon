@@ -61,7 +61,6 @@ createProjectWithDefaults = {
     ant.touch(file: "${basedir}/griffon-app/i18n/messages.properties")
 
     argsMap["params"][0] = griffonAppName
-    createMVC()
 }
 
 def resetBaseDirectory(String basedir) {
@@ -86,7 +85,7 @@ target(createPlugin: "The implementation target")  {
 
     // Rename the plugin descriptor.
     pluginName = GriffonUtil.getNameFromScript(griffonAppName)
-    if(!(pluginName ==~ /[a-zA-Z-]+/)) {
+    if(!(pluginName ==~ /[a-zA-Z][a-zA-Z0-9-]*/)) {
         println "Error: Specified plugin name [$griffonAppName] is invalid. Plugin names can only contain word characters separated by hyphens."
         exit 1
     }

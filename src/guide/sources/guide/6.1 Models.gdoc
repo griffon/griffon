@@ -21,3 +21,47 @@ The following is a list of all methods added by \@Vetoable
 * @VetoableChangeListener\[\] getVetoableChangeListeners()@
 * @VetoableChangeListener\[\] getVetoableChangeListeners(String propertyName)@
 * @void fireVetoableChange(String propertyName, Object oldValue, Object newValue)@
+
+Another annotation, \@Listener, helps you register @PropertyChangeListeners@ without so much effort. The following code
+
+{code}
+import griffon.beans.Listener
+import groovy.beans.Bindable
+
+@Listener(snoopAll)
+class MyModel {
+    @Bindable String name
+
+    @Bindable
+    @Listener({controller.someAction(it)})
+    String lastname
+
+    def snoopAll = { evt -> ... }
+}
+{code}
+
+is equivalent to this one
+
+{code}
+import groovy.beans.Bindable
+import java.beans.PropertyChangeListener
+
+class MyModel {
+    @Bindable String name
+    @Bindable String lastname
+
+    def snoopAll = { evt -> ... }
+
+    MyModel() {
+        addPropertyChangeListener(snoopAll as PropertyChangeListener)
+        addPropertyChangeListener('lastname', {
+            controller.someAction(it) 
+        } as PropertyChangeListener)
+    }
+}
+{code}
+
+\@Listener accepts the following values
+* in-place definition of a closure
+* reference of a closure property defined in the same class
+* a List of any of the previous two

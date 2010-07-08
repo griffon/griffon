@@ -19,6 +19,8 @@ import java.awt.Window
 import java.awt.Dimension
 import java.awt.Point
 import java.awt.Toolkit
+import java.awt.Component
+import java.awt.Container
 import java.awt.GraphicsEnvironment
 import javax.swing.JFrame
 import javax.swing.WindowConstants
@@ -136,5 +138,29 @@ class SwingUtils {
             Class awtUtilities = Class.forName('com.sun.awt.AWTUtilities')
             awtUtilities.setWindowOpacity(window, opacity)
         }
+    }
+
+    /**
+     * Searches a component by name in a particular component hierarrchy.<p>
+     * A component must have a value for its <tt>name</tt> property if it's
+     * to be found with this method.<br/>
+     * This method performs a depth-first search.
+     *
+     * @param name the value of the component's <tt>name</tt> property
+     * @param root the root of the component hierarchy from where searching
+     *             searching should start
+     * @return the component reference if found, null otherwise
+     */
+    static Component findComponentByName(String name, Container root) {
+	if(root?.name == name) return root
+        Component component = null
+        for(comp in root.components) {
+            Component found = findComponentByName(name, comp)
+            if(found) {
+                component = found
+                break
+            }
+        }
+        return component
     }
 }

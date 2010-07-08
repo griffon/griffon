@@ -136,30 +136,30 @@ target(uninstallPlugin:"Uninstalls a plug-in for a given name") {
         uninstallPluginForName(pluginName, pluginRelease)
 
         event("PluginUninstalled", ["The plugin ${pluginName}-${pluginRelease} has been uninstalled from the current application"])
-    }
-    else {
+    } else {
         event("StatusError", ["You need to specify the plug-in name and (optional) version, e.g. \"griffon uninstall-plugin feeds 1.0\""])
     }
 }
 
 target(listPlugins: "Implementation target") {
-    depends(parseArguments,configureProxy)    
+    depends(parseArguments, configureProxy)
 
-    if(argsMap.repository) {
-       configureRepositoryForName(argsMap.repository)
-       // updatePluginsList()
-       printRemotePluginList(argsMap.repository)
-       printInstalledPlugins()
-    }
-    else if(argsMap.installed) {
-      printInstalledPlugins()
-    }
-    else {
-      eachRepository { name, url ->
-         printRemotePluginList(name)
-         return true
-      }
-      printInstalledPlugins()
+    def repository = argsMap.repository
+    if (repository) {
+        eachRepository { name, url ->
+            if(name == repository) {
+                printRemotePluginList(repository)
+                printInstalledPlugins()
+            }
+        }
+    } else if (argsMap.installed) {
+        printInstalledPlugins()
+    } else {
+        eachRepository { name, url ->
+            printRemotePluginList(name)
+            return true
+        }
+        printInstalledPlugins()
     }
 
 
@@ -187,57 +187,55 @@ Plug-ins you currently have installed are listed below:
   if (installedPlugins) {
     installedPlugins.sort()
     installedPlugins.each { println it }
-  }
-  else {
+  } else {
     println "You do not have any plugins installed."
   }
 }
 
 private printRemotePluginList(name) {
-  println """
+    println """
 Plug-ins available in the $name repository are listed below:
 -----------------------------------------------------------------------
 """
-  def plugins = []
-  use(DOMCategory) {
-    pluginsList?.'plugin'.each {plugin ->
-      def version
-      def pluginLine = plugin.'@name'
-      def versionLine = "<no releases>"
-      def title = "No description available"
-      if (plugin.'@latest-release') {
-        version = plugin.'@latest-release'
-        versionLine = "<${version}>"
-      }
-      else if (plugin.'release'.size() > 0) {
-        // determine latest release by comparing version names in lexicografic order
-        version = plugin.'release'[0].'@version'
-        plugin.'release'.each {
-          if (!"${it.'@version'}".endsWith("SNAPSHOT") && "${it.'@version'}" > version) version = "${it.'@version'}"
+    def plugins = []
+    use(DOMCategory) {
+        pluginsList?.'plugin'.each {plugin ->
+            def version
+            def pluginLine = plugin.'@name'
+            def versionLine = "<no releases>"
+            def title = "No description available"
+            if (plugin.'@latest-release') {
+                version = plugin.'@latest-release'
+                versionLine = "<${version}>"
+            } else if (plugin.'release'.size() > 0) {
+                // determine latest release by comparing version names in lexicografic order
+                version = plugin.'release'[0].'@version'
+                plugin.'release'.each {
+                    if (!"${it.'@version'}".endsWith("SNAPSHOT") && "${it.'@version'}" > version) version = "${it.'@version'}"
+                }
+                versionLine = "<${version} (?)>\t"
+            }
+            def release = plugin.'release'.find {rel -> rel.'@version' == version}
+            if (release?.'title') {
+                title = release?.'title'.text()
+            }
+            plugins << formatPluginForPrint(pluginLine, versionLine, title)
         }
-        versionLine = "<${version} (?)>\t"
-      }
-      def release = plugin.'release'.find {rel -> rel.'@version' == version}
-      if (release?.'title') {
-        title = release?.'title'.text()
-      }
-      plugins << formatPluginForPrint(pluginLine, versionLine, title)
     }
-  }
-  // Sort plugin descriptions
-  if (plugins) {
-    plugins.sort()
-    plugins.each {println it}
-    println ""
-  } else {
-    println "No plugins found in repository: ${pluginSVN}"
-  }
+
+    // Sort plugin descriptions
+    if (plugins) {
+        plugins.sort()
+        plugins.each {println it}
+        println ""
+    } else {
+        println "No plugins found in repository: ${name}. This may be because the repository is behind an HTTP proxy."
+    }
 }
 
 formatPluginForPrint = { pluginName, pluginVersion, pluginTitle ->
     "${pluginName.toString().padRight(30, " ")}${pluginVersion.toString().padRight(16, " ")} --  ${pluginTitle}"
 }
-
 
 def displayHeader = {
     println '''
@@ -257,67 +255,65 @@ def displayPluginInfo = { pluginName, version ->
     }
 
     def plugin = pluginXml
-    if( plugin == null ) {
+    if(plugin == null) {
         event("StatusError", ["Plugin with name '${pluginName}' was not found in the configured repositories"])
         exit 1
-    } else {
-        def line = "Name: ${pluginName}"
-        line += "\t| Latest release: ${plugin.@version}"
-        println line
-        println '--------------------------------------------------------------------------'
-        def release = pluginXml
-        if( release ) {
-            if( release.'title'.text() ) {
-                println "${release.'title'.text()}"
-            } else {
-                println "No info about this plugin available"
-            }
-            println '--------------------------------------------------------------------------'
-            if( release.'author'.text() ) {
-                println "Author: ${release.'author'.text()}"
-                // println '--------------------------------------------------------------------------'
-            }
-            if( release.'authorEmail'.text() ) {
-                println "Author's e-mail: ${release.'authorEmail'.text()}"
-                // println '--------------------------------------------------------------------------'
-            }
-            if( release.'license'.text() ) {
-                println "License: ${release.'license'.text()}"
-                //println '--------------------------------------------------------------------------'
-            } else {
-                println "License: <UNKNOWN>"
-                //println '--------------------------------------------------------------------------'
-            }
-            if( release.'documentation'.text() ) {
-                println "Find more info here: ${release.'documentation'.text()}"
-                // println '--------------------------------------------------------------------------'
-            }
-            if( release.'description'.text() ) {
-                println "${release.'description'.text()}"
-                println '--------------------------------------------------------------------------'
-            }
-            if( release.'toolkits'.text() ) {
-                println "This plugin works with: ${release.'toolkits'.text()}"
-                //println '--------------------------------------------------------------------------'
-            } else {
-                println "This plugin works with all toolkits."
-                //println '--------------------------------------------------------------------------'
-            }
-            if( release.'platforms'.text() ) {
-                println "This plugin works in: ${release.'platforms'.text()}"
-                //println '--------------------------------------------------------------------------'
-            } else {
-                println "This plugin works in all platforms."
-                //println '--------------------------------------------------------------------------'
-            }
+    }
+
+    def line = "Name: ${pluginName}"
+    line += "\t| Latest release: ${plugin.@version}"
+    println line
+    println '--------------------------------------------------------------------------'
+    def release = pluginXml
+    if( release ) {
+        if( release.'title'.text() ) {
+            println "${release.'title'.text()}"
         } else {
-            println "<release ${releaseVersion} not found for this plugin>"
+            println "No info about this plugin available"
+        }
+        println '--------------------------------------------------------------------------'
+        if( release.'author'.text() ) {
+            println "Author: ${release.'author'.text()}"
+            // println '--------------------------------------------------------------------------'
+        }
+        if( release.'authorEmail'.text() ) {
+            println "Author's e-mail: ${release.'authorEmail'.text()}"
+            // println '--------------------------------------------------------------------------'
+        }
+        if( release.'license'.text() ) {
+            println "License: ${release.'license'.text()}"
+            //println '--------------------------------------------------------------------------'
+        } else {
+            println "License: <UNKNOWN>"
+            //println '--------------------------------------------------------------------------'
+        }
+        if( release.'documentation'.text() ) {
+            println "Find more info here: ${release.'documentation'.text()}"
+            // println '--------------------------------------------------------------------------'
+        }
+        if( release.'description'.text() ) {
+            println "${release.'description'.text()}"
             println '--------------------------------------------------------------------------'
         }
+        if( release.'toolkits'.text() ) {
+            println "This plugin works with: ${release.'toolkits'.text()}"
+            //println '--------------------------------------------------------------------------'
+        } else {
+            println "This plugin works with all toolkits."
+            //println '--------------------------------------------------------------------------'
+        }
+        if( release.'platforms'.text() ) {
+            println "This plugin works in: ${release.'platforms'.text()}"
+            //println '--------------------------------------------------------------------------'
+        } else {
+            println "This plugin works in all platforms."
+            //println '--------------------------------------------------------------------------'
+        }
+    } else {
+        println "<release ${releaseVersion} not found for this plugin>"
+        println '--------------------------------------------------------------------------'
     }
 }
-
-
 
 def displayFooter = {
     println '''
