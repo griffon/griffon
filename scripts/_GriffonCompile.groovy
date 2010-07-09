@@ -38,7 +38,8 @@ compilerPaths = { String classpathId ->
     // Handle conf/ separately to exclude subdirs/package misunderstandings
     // src(path: "${basedir}/griffon-app/conf")
 
-    src(path:"${griffonSettings.sourceDir}/main")
+    def srcMain = new File("${griffonSettings.sourceDir}/main")
+    if(srcMain.exists()) src(path: srcMain)
     javac(classpathref:classpathId, encoding:"UTF-8", debug:"yes")
 }
 
