@@ -184,6 +184,68 @@ target('default': "Upgrades a Griffon application from a previous version of Gri
     }
     delete(dir: tmpDir.path)
 
+    // Create BuildConfig.groovy if it does not exist
+    def bcf = new File(baseFile, '/griffon-app/conf/BuildConfig.groovy')
+    def cf = new File(baseFile, '/griffon-app/conf/Config.groovy')
+    if(!bcf.exists()) {
+        bcf.text = cf.text
+        bcf.append("""griffon.project.dependency.resolution = {
+    // inherit Griffon' default dependencies
+    inherits("global") {
+    }
+    log "warn" // log level of Ivy resolver, either 'error', 'warn', 'info', 'debug' or 'verbose'
+    repositories {
+        griffonPlugins()
+        griffonHome()
+        griffonCentral()
+
+        // uncomment the below to enable remote dependency resolution
+        // from public Maven repositories
+        //mavenLocal()
+        //mavenCentral()
+        //mavenRepo "http://snapshots.repository.codehaus.org"
+        //mavenRepo "http://repository.codehaus.org"
+        //mavenRepo "http://download.java.net/maven/2/"
+        //mavenRepo "http://repository.jboss.com/maven2/"
+    }
+    dependencies {
+        // specify dependencies here under either 'build', 'compile', 'runtime', 'test' or 'provided' scopes eg.
+
+        // runtime 'mysql:mysql-connector-java:5.1.5'
+    }
+}
+
+griffon {
+    doc {
+        logo = '<a href="http://griffon.codehaus.org" target="_blank"><img alt="The Griffon Framework" src="../img/griffon.png" border="0"/></a>'
+        sponsorLogo = "<br/>"
+        footer = "<br/><br/>Made with Griffon ($griffonVersion)"
+    }
+}
+""")
+        cf.text = '''// log4j configuration
+log4j {
+    appender.stdout = 'org.apache.log4j.ConsoleAppender'
+    appender.'stdout.layout'='org.apache.log4j.PatternLayout'
+    appender.'stdout.layout.ConversionPattern'='[%r] %c{2} %m%n'
+    appender.errors = 'org.apache.log4j.FileAppender'
+    appender.'errors.layout'='org.apache.log4j.PatternLayout'
+    appender.'errors.layout.ConversionPattern'='[%r] %c{2} %m%n'
+    appender.'errors.File'='stacktrace.log'
+    rootLogger='error,stdout'
+    logger {
+        griffon='error'
+        StackTrace='error,errors'
+        org {
+            codehaus.griffon.commons='info' // core / classloading
+        }
+    }
+    additivity.StackTrace=false
+}
+'''
+
+    }
+
     // ensure a href= is in the application
     // ensure all .jnlp files have a memory hook, unless already tweaked
     // ensure all .jnlp files support remote jnlps
