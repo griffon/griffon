@@ -79,12 +79,14 @@ def $libTempVar = binding.variables.containsKey('eventCopyLibsEnd') ? eventCopyL
 eventCopyLibsEnd = { jardir ->
     $libTempVar(jardir)
     if (!isPluginProject) {
-        ant.fileset(dir:"\${getPluginDirForName('${GriffonUtil.getScriptName(griffonAppName)}').file}/lib/", includes:"*.jar").each {
-            griffonCopyDist(it.toString(), jardir)
+        def pluginDir = getPluginDirForName('${GriffonUtil.getScriptName(griffonAppName)}')
+        if(pluginDir?.file?.exists()) {
+            ant.fileset(dir: "\${pluginDir.file}/lib/", includes: '*.jar').each {
+                griffonCopyDist(it.toString(), jardir)
+            }
         }
     }
 }
-
 """
 
     def installFile = new File("scripts/_Install.groovy")
