@@ -16,17 +16,13 @@
     </pack>
     <pack name="Griffon binary">
         <value name="GRIFFON_HOME"
-               keypath="Environment"
-               root="HKCU"
+               keypath="SYSTEM\CurrentControlSet\Control\Session Manager\Environment"
+               root="HKLM"
                string="$INSTALL_PATH"/>
-        <value name="PATH"
-               keypath="Environment"
-               root="HKCU"
-               string="$OLD_KEY_VALUE;&quot;$INSTALL_PATH\bin&quot;"/>
         <value name="PATH"
                keypath="SYSTEM\CurrentControlSet\Control\Session Manager\Environment"
                root="HKLM"
-               string="$OLD_KEY_VALUE;&quot;$INSTALL_PATH\bin&quot;"/>
+               string="$OLD_KEY_VALUE;&quot;%GRIFFON_HOME%\bin&quot;"/>
     </pack>
 </registry>
 

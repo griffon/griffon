@@ -30,7 +30,7 @@
   <target name="prepare-installer-izpack">
       <property name="griffon.installer.izpack.dir" value="${griffon.target}/installer/izpack" />
       <taskdef name="izpack"
-               classpath="${basedir}/installer/izpack/lib/izpack-standalone-compiler-4.3.0.jar"
+               classpath="${basedir}/installer/izpack/lib/izpack-standalone-compiler-4.3.3.jar"
                classname="com.izforge.izpack.ant.IzPackTask"/>
 
       <mkdir dir="${griffon.installer.izpack.dir}" />
@@ -159,7 +159,7 @@
 
   <packs>
     <pack name="Griffon binary" required="yes">
-      <description>Griffon binary files installation.</description>
+      <description>Griffon binary installation.</description>
 
       <fileset dir="binary/griffon-@{griffon.version}"
          targetdir="$INSTALL_PATH">
