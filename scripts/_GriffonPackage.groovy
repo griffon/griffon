@@ -559,6 +559,7 @@ copyPlatformJars = { srcdir, destdir ->
 _copyPlatformJars = { srcdir, destdir, os ->
     File src = new File(srcdir + File.separator + os)
     File dest = new File(destdir + File.separator + os)
+    dest.mkdirs()
     if(src.exists()) {
         ant.mkdir(dir: dest)
         src.eachFileMatch(~/.*\.jar/) { jarfile ->
@@ -581,6 +582,7 @@ copyNativeLibs = { srcdir, destdir ->
 _copyNativeLibs = { srcdir, destdir, os ->
     File src = new File([srcdir, os, 'native'].join(File.separator))
     File dest = new File([destdir, os, 'native'].join(File.separator))
+    dest.mkdirs()
     if(src.exists()) {
         ant.mkdir(dir: dest)
         src.eachFile { srcFile ->
