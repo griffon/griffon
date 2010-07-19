@@ -1,0 +1,9 @@
+Provided by: *Griffon*
+
+This node defines a top level container depending on the current [running mode|api:griffon.util.RunMode]. It it's @STANDALONE@ or @WEBSTART@ it will create a Window subclass according to the following rules:
+
+* class name defined in @app.config.application.frameClass@
+* @JXFrame@ if SwingX is available
+* @JFrame@ if all others fail
+
+There's a slight change for the @APPLET@ run mode, the container returned for the first invocation of the @application@ node will be the applet itself, for all others the previous rules apply.
