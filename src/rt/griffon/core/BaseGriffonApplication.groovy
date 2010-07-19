@@ -16,9 +16,9 @@
 
 package griffon.core
 
-import griffon.util.internal.GriffonApplicationHelper
 import griffon.util.EventRouter
 import griffon.util.Metadata
+import org.codehaus.griffon.runtime.util.GriffonApplicationHelper
 
 import groovy.beans.Bindable
 

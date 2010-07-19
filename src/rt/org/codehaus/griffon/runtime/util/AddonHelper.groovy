@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package griffon.util.internal
+package org.codehaus.griffon.runtime.util
 
 import griffon.builder.UberBuilder
 import griffon.core.GriffonApplication
