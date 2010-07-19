@@ -17,10 +17,10 @@ package griffon.swing
 
 import griffon.core.GriffonApplication
 import griffon.core.BaseGriffonApplication
-import griffon.util.internal.GriffonApplicationHelper
 import griffon.util.UIThreadHelper
 import javax.swing.JApplet
 import java.awt.Window
+import org.codehaus.griffon.runtime.util.GriffonApplicationHelper
 
 /**
  * Simple implementation of {@code GriffonApplication} that runs in applet mode

@@ -47,7 +47,8 @@ target('runApp': "Runs the application from the command line") {
 
     // setup the vm
     if (!binding.variables.javaVM) {
-        javaVM = [System.properties['java.home'], 'bin', 'java'].join(File.separator)
+        def javaHome = ant.antProject.properties."environment.JAVA_HOME"
+        javaVM = [javaHome, 'bin', 'java'].join(File.separator)
     }
 
     def javaOpts = setupJavaOpts(true)
@@ -77,6 +78,19 @@ target('runApp': "Runs the application from the command line") {
         javaOpts << "-Xdock:name=$griffonAppName"
         javaOpts << "-Xdock:icon=${griffonHome}/bin/griffon.icns"
     }
+    if (config.griffon.app?.javaOpts) {
+        buildConfig.griffon.app?.javaOpts.each { javaOpts << it }
+    }
+
+// XXX -- NATIVE
+    platformDir = new File(jardir.absolutePath, platform)
+    File nativeLibDir = new File(platformDir.absolutePath, 'native')
+    if(nativeLibDir.exists()) {
+        String libraryPath = System.getProperty('java.library.path')
+        libraryPath = libraryPath + File.pathSeparator + nativeLibDir.absolutePath
+        javaOpts << "-Djava.library.path=$libraryPath".toString()
+    }
+// XXX -- NATIVE
 
     def runtimeClasspath = runtimeJars.collect { f ->
         f.absolutePath - jardir.absolutePath - File.separator
@@ -90,7 +104,7 @@ target('runApp': "Runs the application from the command line") {
         // let's make sure no empty/null String is added
         javaOpts.each { s -> if(s) cmd << s }
         [proxySettings, '-classpath', runtimeClasspath, griffonApplicationClass].each { s -> if(s) cmd << s }
-        Process p = Runtime.runtime.exec(cmd as String[], new String[0], jardir)
+        Process p = Runtime.runtime.exec(cmd as String[], null, jardir)
 
         // pipe the output
         p.consumeProcessOutput(System.out, System.err)

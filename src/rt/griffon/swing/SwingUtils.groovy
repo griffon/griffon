@@ -110,7 +110,23 @@ class SwingUtils {
     }
 
     /**
-     * Returns the windoe's current opacity value.
+     * Finds out if translucency is supported by the current platform.
+     *
+     * @return true if Translucency.TRANSLUCENT is supported, false otherwise
+     */
+    static boolean isTranslucencySupported() {
+        if(isJdk17) {
+            return true
+        } else if(isJdk16) {
+            Class awtUtilities = Class.forName('com.sun.awt.AWTUtilities')
+            Class translucency = Class.forName('com.sun.awt.AWTUtilities$Translucency')
+            return awtUtilities.isTranslucencySupported(translucency.TRANSLUCENT)
+        }
+        return false
+    }
+
+    /**
+     * Returns the window's current opacity value.
      *
      * @param window the window on which the opacity will be queried
      * @return the window's opacity value

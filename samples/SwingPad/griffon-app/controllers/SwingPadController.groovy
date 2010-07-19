@@ -128,10 +128,10 @@ class SwingPadController {
       def fc = new JFileChooser(currentSnapshotDir)
       fc.fileSelectionMode = JFileChooser.FILES_ONLY
       fc.acceptAllFileFilterUsed = true
-      if (fc.showDialog(app.appFrames[0], "Snapshot") == JFileChooser.APPROVE_OPTION) {
+      if (fc.showDialog(app.windowManager.windows[0], "Snapshot") == JFileChooser.APPROVE_OPTION) {
          currentSnapshotDir = fc.currentDirectory
          prefs.put('currentSnapshotDir', currentSnapshotDir.path)
-         def frameBounds = app.appFrames[0].bounds
+         def frameBounds = app.windowManager.windows[0].bounds
          def capture = new Robot().createScreenCapture(frameBounds)
          def filename = fc.selectedFile.name
          def dot = filename.lastIndexOf(".")
@@ -145,7 +145,7 @@ class SwingPadController {
          ImageIO.write( capture, ext, target )
          def pane = builder.optionPane()
          pane.setMessage("Successfully saved snapshot to\n\n${target.absolutePath}")
-         def dialog = pane.createDialog(app.appFrames[0], 'Snapshot')
+         def dialog = pane.createDialog(app.windowManager.windows[0], 'Snapshot')
          dialog.show()
       }
    }
@@ -258,7 +258,7 @@ based on ideas pitched by Eitan Suez.
 Contains code from http://code.google.com/p/gturtle/, used with explicit 
 permission from Eitan.
 """.toString())
-      def dialog = pane.createDialog(app.appFrames[0], "About SwingPad")
+      def dialog = pane.createDialog(app.windowManager.windows[0], "About SwingPad")
       dialog.show()
    }
 
@@ -272,7 +272,7 @@ permission from Eitan.
    }
 
    def confirmRunInterrupt = { evt = null ->
-      def rc = JOptionPane.showConfirmDialog( app.appFrames[0], "Attempt to interrupt script?",
+      def rc = JOptionPane.showConfirmDialog( app.windowManager.windows[0], "Attempt to interrupt script?",
             "SwingPad", JOptionPane.YES_NO_OPTION)
       if( rc == JOptionPane.YES_OPTION && runThread ) {
           runThread.interrupt()
@@ -284,7 +284,7 @@ permission from Eitan.
         def fc = new JFileChooser(currentClasspathJarDir)
         fc.fileSelectionMode = JFileChooser.FILES_ONLY
         fc.acceptAllFileFilterUsed = true
-        if (fc.showDialog(app.appFrames[0], "Add") == JFileChooser.APPROVE_OPTION) {
+        if (fc.showDialog(app.windowManager.windows[0], "Add") == JFileChooser.APPROVE_OPTION) {
             currentClasspathJarDir = fc.currentDirectory
             prefs.put('currentClasspathJarDir', currentClasspathJarDir.path)
             groovyClassLoader.addURL(fc.selectedFile.toURL())
@@ -295,7 +295,7 @@ permission from Eitan.
         def fc = new JFileChooser(currentClasspathDir)
         fc.fileSelectionMode = JFileChooser.DIRECTORIES_ONLY
         fc.acceptAllFileFilterUsed = true
-        if (fc.showDialog(app.appFrames[0], "Add") == JFileChooser.APPROVE_OPTION) {
+        if (fc.showDialog(app.windowManager.windows[0], "Add") == JFileChooser.APPROVE_OPTION) {
             currentClasspathDir = fc.currentDirectory
             prefs.put('currentClasspathDir', currentClasspathDir.path)
             groovyClassLoader.addURL(fc.selectedFile.toURL())
@@ -344,7 +344,7 @@ permission from Eitan.
          ]
          model.suggestions.clear()
          model.suggestions.addAll(suggestions)
-         view.popup.showPopup(SwingConstants.CENTER, app.appFrames[0])
+         view.popup.showPopup(SwingConstants.CENTER, app.windowManager.windows[0])
          view.suggestionList.selectedIndex = 0
       }
    }
@@ -445,14 +445,14 @@ permission from Eitan.
 
    private void showAlert(title, message) {
       doLater {
-         JOptionPane.showMessageDialog(app.appFrames[0], message,
+         JOptionPane.showMessageDialog(app.windowManager.windows[0], message,
                title, JOptionPane.WARNING_MESSAGE)
       }
    }
 
    private void showMessage(title, message) {
       doLater {
-         JOptionPane.showMessageDialog(app.appFrames[0], message,
+         JOptionPane.showMessageDialog(app.windowManager.windows[0], message,
                title, JOptionPane.INFORMATION_MESSAGE)
       }
    }
@@ -460,8 +460,8 @@ permission from Eitan.
    private void showDialog( dialogName, pack = true ) {
       def dialog = view."$dialogName"
       if( pack ) dialog.pack()
-      int x = app.appFrames[0].x + (app.appFrames[0].width - dialog.width) / 2
-      int y = app.appFrames[0].y + (app.appFrames[0].height - dialog.height) / 2
+      int x = app.windowManager.windows[0].x + (app.windowManager.windows[0].width - dialog.width) / 2
+      int y = app.windowManager.windows[0].y + (app.windowManager.windows[0].height - dialog.height) / 2
       dialog.setLocation(x, y)
       dialog.show()
    }
@@ -476,7 +476,7 @@ permission from Eitan.
       def fc = new JFileChooser(currentFileChooserDir)
       fc.fileSelectionMode = JFileChooser.FILES_ONLY
       fc.acceptAllFileFilterUsed = true
-      if( fc.showDialog(app.appFrames[0], name ) == JFileChooser.APPROVE_OPTION ) {
+      if( fc.showDialog(app.windowManager.windows[0], name ) == JFileChooser.APPROVE_OPTION ) {
          currentFileChooserDir = fc.currentDirectory
          prefs.put('currentFileChooserDir', currentFileChooserDir.path)
          return fc.selectedFile
@@ -486,7 +486,7 @@ permission from Eitan.
 
    private boolean askToSaveFile(evt) {
       if( !model.scriptFile || !model.dirty ) return true
-      switch( JOptionPane.showConfirmDialog( app.appFrames[0],
+      switch( JOptionPane.showConfirmDialog( app.windowManager.windows[0],
                  "Save changes to " + model.scriptFile.name + "?",
                  "SwingPad", JOptionPane.YES_NO_CANCEL_OPTION)){
          case JOptionPane.YES_OPTION: return save(evt)

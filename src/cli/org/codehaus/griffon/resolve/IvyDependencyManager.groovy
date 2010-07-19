@@ -260,11 +260,7 @@ public class IvyDependencyManager extends AbstractIvyDependencyManager implement
                     excludes 'jline'
                 }
 
-                compile("org.codehaus.griffon:griffon-cli:$griffonVersion",
-                        "org.codehaus.griffon:griffon-rt:$griffonVersion",
-                        "org.slf4j:slf4j-api:1.5.8") {
-                    transitive = false
-                }
+                compile "org.codehaus.griffon:griffon-rt:$griffonVersion"
 
                 // dependencies needed for running tests
                 test "junit:junit:4.8.1",
