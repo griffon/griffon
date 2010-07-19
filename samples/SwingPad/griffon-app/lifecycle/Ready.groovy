@@ -52,6 +52,6 @@ def dtListener =  [
     },
 ] as DropTargetListener
 
-[app.appFrames[0], v.editor.textEditor].each {
+[app.windowManager.windows[0], v.editor.textEditor].each {
     new DropTarget(it, DnDConstants.ACTION_COPY, dtListener)
 }
