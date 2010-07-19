@@ -160,7 +160,7 @@ private def loadBasePlugin() {
 target(packagePlugin:"Packages a Griffon plugin") {
     depends (pluginDocs)
 
-    event("PackagePluginStart", [pluginName,plugin])
+    event("PackagePluginStart", [pluginName])
     
     // Package plugin's zip distribution
     pluginZip = "${basedir}/griffon-${pluginName}-${plugin.version}.zip"
@@ -271,5 +271,5 @@ target(packagePlugin:"Packages a Griffon plugin") {
         }
     }
 
-    event("PackagePluginEnd", [pluginName, plugin])
+    event("PackagePluginEnd", [pluginName])
 }
