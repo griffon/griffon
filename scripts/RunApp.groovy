@@ -76,7 +76,7 @@ target('runApp': "Runs the application from the command line") {
     }
     if (isMacOSX) {
         javaOpts << "-Xdock:name=$griffonAppName"
-        javaOpts << "-Xdock:icon=${griffonHome}/bin/griffon.icns"
+        javaOpts << "-Xdock:icon=${griffonHome}/media/griffon.icns"
     }
     if (config.griffon.app?.javaOpts) {
         buildConfig.griffon.app?.javaOpts.each { javaOpts << it }
