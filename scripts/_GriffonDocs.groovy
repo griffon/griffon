@@ -20,7 +20,8 @@ import org.codehaus.griffon.resolve.IvyDependencyManager;
 
 import griffon.util.GriffonUtil
 import grails.doc.DocPublisher
-import grails.doc.PdfBuilder
+import grails.doc.DocEngine
+import org.codehaus.griffon.documentation.PdfBuilder
 
 /**
  * @author Graeme Rocher (Grails 1.0)
@@ -235,6 +236,7 @@ ${m.arguments?.collect { '* @'+GriffonUtil.getPropertyName(it)+'@\n' }}
         // if this is a plugin obtain additional metadata from the plugin
         readPluginMetadataForDocs(publisher)
         readDocProperties(publisher)
+        configureAliases()
 
         publisher.publish()
 
@@ -281,6 +283,11 @@ def readDocProperties(DocPublisher publisher) {
     ['copyright', 'license', 'authors', 'footer', 'images',
      'css', 'style', 'encoding', 'logo', 'sponsorLogo'].each { readIfSet publisher, it }
 }
+
+def configureAliases() {
+    DocEngine.ALIAS.putAll(config.griffon.doc.alias)
+}
+
 
 private readIfSet(DocPublisher publisher,String prop) {
     if (buildConfig.griffon.doc."$prop") {
