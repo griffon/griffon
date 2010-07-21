@@ -2,28 +2,44 @@
     <property name="targetDistDirectory" value="${griffon.dist}"/>
     <import file="maven.xml"/>
 
-    <target name="create-guide" depends="javadoc" unless="fast" description="Builds the Griffon Guide">
+    <target name="create-guide" depends="build, javadoc" unless="fast" description="Builds the Griffon Guide">
         <taskdef name="docs"
                  classname="grails.doc.ant.DocPublisherTask"
                  classpathref="classpath" />
 
         <mkdir dir="${griffon.dist}" />
-        <mkdir dir="target/guide" />
-        <mkdir dir="target/guide/api" />
-        <copy todir="target/guide/api">
+        <mkdir dir="target/manual" />
+        <mkdir dir="target/manual/api" />
+        <copy todir="target/manual/api">
             <fileset dir="${griffon.javadoc}"/>
         </copy>
-        <copy todir="target/guide">
+        <copy todir="target/manual">
             <fileset dir="${basedir}/src/guide" includes="*.properties" />
         </copy>
-        <replace dir="target/guide">
+        <replace dir="target/manual">
             <replaceFilter token="@griffon.version@" value="${griffon.version}" />
         </replace>
         <docs src="${basedir}/src/guide/sources"
-              dest="target/guide"
+              dest="target/manual"
               imagesdir="${basedir}/src/guide/resources/img"
-              properties="target/guide/guide.properties" />
-        <zip basedir="target/guide" destfile="${griffon.dist}/griffon-guide-${griffon.version}.zip" />
+              properties="target/manual/guide.properties" />
+
+        <script language="javascript">
+            <classpath>
+                <path refid="classpath"/>
+                <pathelement location="${griffon.build.cli}"/>
+            </classpath>
+        <![CDATA[
+            importClass(java.io.File);
+            importPackage(Packages.org.codehaus.griffon.documentation);
+            outputdir = project.getProperty("griffon.target");
+            griffonHome = project.getProperty("basedir");
+            PdfBuilder.build(new File(outputdir).getCanonicalPath(), griffonHome);
+        ]]></script>
+
+        <move file="${basedir}/target/manual/guide/single.pdf"
+            tofile="${basedir}/target/manual/griffon-${griffon.version}-manual.pdf" />
+        <zip basedir="target/manual" destfile="${griffon.dist}/griffon-guide-${griffon.version}.zip" />
     </target>
 
     <target name="-jar-app-files" description="Bundles all the template files for applications and plugins into a JAR files.">

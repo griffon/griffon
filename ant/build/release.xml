@@ -107,7 +107,7 @@
         </antcall>
         <antcall target="copy-dir">
             <param name="dir.excludes" value=""/>
-            <param name="dir.location" value="target/guide"/>
+            <param name="dir.location" value="target/manual"/>
             <param name="dir.destination" value="${release.dir}/guide"/>
         </antcall>
         <antcall target="copy-source-and-javadoc-jars" />
@@ -121,7 +121,6 @@
                 <include name="build.properties"/>
             </fileset>
         </copy>
-        <copy file="bin/griffon.icns" todir="${release.dir}/bin"/>
     </target>
 
     <target name="copy-exclusive-binary-release-content">

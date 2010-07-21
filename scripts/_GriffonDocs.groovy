@@ -20,7 +20,8 @@ import org.codehaus.griffon.resolve.IvyDependencyManager;
 
 import griffon.util.GriffonUtil
 import grails.doc.DocPublisher
-import grails.doc.PdfBuilder
+import grails.doc.DocEngine
+import org.codehaus.griffon.documentation.PdfBuilder
 
 /**
  * @author Graeme Rocher (Grails 1.0)
@@ -180,6 +181,9 @@ target(refdocs:"Generates Griffon style reference documentation") {
     if (docsDisabled()) return
 
     def srcDocs = new File("${basedir}/src/docs")
+    def srcDocsGuide = new File("${basedir}/src/docs/guide")
+    def srcDocsRef = new File("${basedir}/src/docs/ref")
+    def srcDocsImg = new File("${basedir}/src/docs/img")
 
     def context = DocumentationContext.getInstance()
     if (context?.hasMetadata()) {
@@ -216,11 +220,13 @@ ${m.arguments?.collect { '* @'+GriffonUtil.getPropertyName(it)+'@\n' }}
         }
     }
 
-    if (srcDocs.exists()) {
+    if (srcDocsGuide.exists() || srcDocsRef.exists()) {
         File refDocsDir = new File("${griffonSettings.docsOutputDir}/manual")
         ant.mkdir(dir:"${refDocsDir}/img")
-        ant.copy(todir:"${refDocsDir}/img") {
-            fileset(dir:"${basedir}/src/docs/img", includes: "*.png")
+        if(srcDocsImg.exists()) {
+            ant.copy(todir:"${refDocsDir}/img") {
+                fileset(dir: srcDocsImg, includes: "*.png")
+            }
         }
         def publisher = new DocPublisher(srcDocs, refDocsDir)
         publisher.ant = ant
@@ -235,6 +241,7 @@ ${m.arguments?.collect { '* @'+GriffonUtil.getPropertyName(it)+'@\n' }}
         // if this is a plugin obtain additional metadata from the plugin
         readPluginMetadataForDocs(publisher)
         readDocProperties(publisher)
+        configureAliases()
 
         publisher.publish()
 
@@ -281,6 +288,11 @@ def readDocProperties(DocPublisher publisher) {
     ['copyright', 'license', 'authors', 'footer', 'images',
      'css', 'style', 'encoding', 'logo', 'sponsorLogo'].each { readIfSet publisher, it }
 }
+
+def configureAliases() {
+    DocEngine.ALIAS.putAll(config.griffon.doc.alias)
+}
+
 
 private readIfSet(DocPublisher publisher,String prop) {
     if (buildConfig.griffon.doc."$prop") {
