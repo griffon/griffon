@@ -181,6 +181,9 @@ target(refdocs:"Generates Griffon style reference documentation") {
     if (docsDisabled()) return
 
     def srcDocs = new File("${basedir}/src/docs")
+    def srcDocsGuide = new File("${basedir}/src/docs/guide")
+    def srcDocsRef = new File("${basedir}/src/docs/ref")
+    def srcDocsImg = new File("${basedir}/src/docs/img")
 
     def context = DocumentationContext.getInstance()
     if (context?.hasMetadata()) {
@@ -217,11 +220,13 @@ ${m.arguments?.collect { '* @'+GriffonUtil.getPropertyName(it)+'@\n' }}
         }
     }
 
-    if (srcDocs.exists()) {
+    if (srcDocsGuide.exists() || srcDocsRef.exists()) {
         File refDocsDir = new File("${griffonSettings.docsOutputDir}/manual")
         ant.mkdir(dir:"${refDocsDir}/img")
-        ant.copy(todir:"${refDocsDir}/img") {
-            fileset(dir:"${basedir}/src/docs/img", includes: "*.png")
+        if(srcDocsImg.exists()) {
+            ant.copy(todir:"${refDocsDir}/img") {
+                fileset(dir: srcDocsImg, includes: "*.png")
+            }
         }
         def publisher = new DocPublisher(srcDocs, refDocsDir)
         publisher.ant = ant
