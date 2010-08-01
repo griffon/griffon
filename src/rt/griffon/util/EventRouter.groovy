@@ -60,12 +60,18 @@ class EventRouter {
                x.printStackTrace()
             }
          }
+
+         // defensive copying to avoid CME during event dispatching
+         // GRIFFON-224
+         List listenersCopy = []
          synchronized(listeners) {
-            listeners.each{ dispatchEvent(it) }
+	        listenersCopy.addAll(listeners)
          }
          synchronized(closureListeners) {
-            closureListeners[eventName].each{ dispatchEvent(it) }
+            closureListeners[eventName].each{ listenersCopy << it }
          }
+
+         listenersCopy.each{ dispatchEvent(it) }
       }
       UIThreadHelper.instance.executeOutside(publisher)
    }
