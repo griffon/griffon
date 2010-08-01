@@ -110,7 +110,7 @@ target(packageResources : "Presp app/plugin resources for packaging") {
     resourcesDir = new File("${resourcesDirPath}/griffon-app/resources")
     ant.mkdir(dir:resourcesDir)
 
-    if(!isPluginProject && !isAddonPlugin) collectArtifactMetadata()
+    if(!isPluginProject || isAddonPlugin) collectArtifactMetadata()
 
     if(buildConfig.griffon.enable.native2ascii) {
         profile("converting native message bundles to ascii") {
@@ -164,28 +164,30 @@ collectArtifactMetadata = {
     def artifacts = [:]
     // def pluginDirectories = pluginSettings.pluginDirectories.file
     // ([new File(basedir)] + pluginDirectories).each { searchPath ->
-        searchPath = new File(basedir, 'griffon-app')
-        searchPath.eachFileRecurse { file ->
-            artifactPaths.find { entry ->
-                def fixedPath = file.path - searchPath.canonicalPath //fix problem when project inside dir "jobs" (eg. hudson stores projects under jobs-directory)
-                if(fixedPath =~ entry.path && file.isFile()) {
-                    def klass = fixedPath.substring(2 + entry.path.size()).replace(File.separator,".")
-                    klass = klass.substring(0, klass.lastIndexOf("."))
-                    if(entry.suffix) {
-                        if(klass.endsWith(entry.suffix)) artifacts.get(entry.type, []) << klass
-                    } else {
-                        artifacts.get(entry.type, []) << klass
-                    }
+    searchPath = new File(basedir, 'griffon-app')
+    searchPath.eachFileRecurse { file ->
+        artifactPaths.find { entry ->
+            def fixedPath = file.path - searchPath.canonicalPath //fix problem when project inside dir "jobs" (eg. hudson stores projects under jobs-directory)
+            if(fixedPath =~ entry.path && file.isFile()) {
+                def klass = fixedPath.substring(2 + entry.path.size()).replace(File.separator,".")
+                klass = klass.substring(0, klass.lastIndexOf("."))
+                if(entry.suffix) {
+                    if(klass.endsWith(entry.suffix)) artifacts.get(entry.type, []) << klass
+                } else {
+                    artifacts.get(entry.type, []) << klass
                 }
             }
         }
+    }
 
-    File artifactMetadataDir = new File("${resourcesDirPath}/griffon-app/resources/META-INF")
-    artifactMetadataDir.mkdirs()
-    File artifactMetadataFile = new File(artifactMetadataDir, '/griffon-artifacts.properties')
-    artifactMetadataFile.withPrintWriter { writer ->
-        artifacts.each { type, list ->
-           writer.println("$type = '${list.join(',')}'")
+    if(artifacts) {
+        File artifactMetadataDir = new File("${resourcesDirPath}/griffon-app/resources/META-INF")
+        artifactMetadataDir.mkdirs()
+        File artifactMetadataFile = new File(artifactMetadataDir, '/griffon-artifacts.properties')
+        artifactMetadataFile.withPrintWriter { writer ->
+            artifacts.each { type, list ->
+               writer.println("$type = '${list.join(',')}'")
+            }
         }
     }
 }
