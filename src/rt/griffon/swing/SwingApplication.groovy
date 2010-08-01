@@ -27,6 +27,7 @@ import java.awt.Window
  *
  * @author Danno Ferrin
  * @author Andres Almiray
+ * @since 0.1
  */
 class SwingApplication implements griffon.application.StandaloneGriffonApplication {
     @Delegate private final BaseGriffonApplication _base

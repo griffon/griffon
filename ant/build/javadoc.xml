@@ -12,7 +12,8 @@
             <fileset dir="${griffon.src.cli}" includes="griffon/test/**/*" />
             <fileset dir="${griffon.src.cli}" includes="griffon/beans/**" />
             <fileset dir="${griffon.src.cli}" includes="griffon/util/EventPublisher*, **/*.html" />
-            <fileset dir="${griffon.src.rt}" excludes="rog/codehaus/griffon/**/*" />
+            <fileset dir="${griffon.src.rt}" />
+            <!--fileset dir="${griffon.src.rt}" excludes="org/codehaus/griffon/**/*" /-->
         </copy>
 
         <groovydoc destdir="${griffon.javadoc}"

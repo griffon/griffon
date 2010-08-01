@@ -27,13 +27,16 @@ import java.util.logging.Logger
  *
  * @author Andres Almiray
  */
-@Singleton
 class UIThreadHelper {
     // Shouldn't need to synchronize access to this field as setting its value
     // should be done at boot time
     private UIThreadHandler uiThreadHandler
     private final ExecutorService DEFAULT_EXECUTOR_SERVICE = Executors.newFixedThreadPool(2)
     private static final Logger LOG = Logger.getLogger(UIThreadHelper.class.name)
+
+    private static final UIThreadHelper INSTANCE = new UIThreadHelper()
+
+    static UIThreadHelper getInstance() { INSTANCE }
 
     static enhance(MetaClass metaClass) {
         metaClass.execSync = UIThreadHelper.instance.&executeSync

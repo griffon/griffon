@@ -30,7 +30,7 @@ import griffon.core.GriffonApplication
  * @author Danno.Ferrin
  */
 class CompositeBuilderHelper {
-    static FactoryBuilderSupport createBuilder(GriffonApplication app, Map targets) {
+    static FactoryBuilderSupport createBuilder(GriffonApplication app, Map<String, MetaClass> targets) {
         UberBuilder uberBuilder = new UberBuilder()
         uberBuilder.setProperty('app', app)
 
@@ -78,7 +78,7 @@ class CompositeBuilderHelper {
         }
     }
 
-    static handleLocalBuilder(UberBuilder uberBuilder, Map targets, String prefixName, builderClassName) {
+    static handleLocalBuilder(UberBuilder uberBuilder, Map<String, MetaClass> targets, String prefixName, builderClassName) {
         Class builderClass = Class.forName(builderClassName.key) //FIXME get correct classloader
         if (!FactoryBuilderSupport.isAssignableFrom(builderClass)) {
             return;
@@ -89,7 +89,7 @@ class CompositeBuilderHelper {
                 // this needs special handling, skip it for now
                 continue
             }
-            MetaClass mc = targets[partialTarget.key]?.getMetaClass()
+            MetaClass mc = targets[partialTarget.key]
             if (!mc) continue
             for (String injectionName in partialTarget.value) {
                 def factories = localBuilder.getLocalFactories()

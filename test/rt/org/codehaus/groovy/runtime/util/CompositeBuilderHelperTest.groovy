@@ -27,7 +27,7 @@ class CompositeBuilderHelperTest extends GroovyTestCase {
             }
         ''')
 
-        Map targets = [bean1: bean1]
+        Map<String, MetaClass> targets = [bean1: bean1.metaClass]
         invokeCompositeBuilderHelper(targets, builderConfig)
 
         mc = bean1.metaClass
@@ -51,7 +51,7 @@ class CompositeBuilderHelperTest extends GroovyTestCase {
             }
         ''')
 
-        Map targets = [bean2: bean2]
+        Map<String, MetaClass> targets = [bean2: bean2.metaClass]
         invokeCompositeBuilderHelper(targets, builderConfig)
 
         mc = bean2.metaClass
@@ -77,7 +77,7 @@ class CompositeBuilderHelperTest extends GroovyTestCase {
             }
         ''')
 
-        Map targets = [bean3: bean3]
+        Map<String, MetaClass> targets = [bean3: bean3.metaClass]
         invokeCompositeBuilderHelper(targets, builderConfig)
 
         mc = bean3.metaClass
@@ -89,7 +89,7 @@ class CompositeBuilderHelperTest extends GroovyTestCase {
         assert ['list', 'value'] == bean3.list('value')
     }
 
-    private invokeCompositeBuilderHelper(Map targets, builderConfig) {
+    private invokeCompositeBuilderHelper(Map<String, MetaClass> targets, builderConfig) {
         UberBuilder uberBuilder = new UberBuilder()
 
         for(node in builderConfig) {

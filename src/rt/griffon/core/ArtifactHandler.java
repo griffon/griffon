@@ -17,23 +17,35 @@
 package griffon.core;
 
 /**
- * Base interface for classes that work with artifacts.
+ * <p>The ArtefactHandler interface's purpose is to allow the analysis of conventions within a Griffon application.
+ * An artifact is represented by the GriffonClass interface and this interface provides methods that allow artefacts to
+ * be identified, created and initialized.
  *
  * @author Andres Almiray
  */
 public interface ArtifactHandler {
-
     /**
      * Get the tye of artifact this handler processes.
-     * The type is normally used as suffix too.
      */
     String getType();
+
+    /**
+     * Get the trailing suffix that identifies the artifact.<p>
+	 * May be empty but non-null.
+	 */
+    String getTrailing();
 
     /**
      * Returns true if the target Class is a class artifact
      * handled by this object.
      */
-    boolean isArtifact(Class klass);
+    boolean isArtifact(Class clazz);
+
+    /**
+     * Returns true if the target GriffonClass is a class artifact
+     * handled by this object.
+     */
+    boolean isArtifact(GriffonClass clazz);
 
     /**
      * Initializes the handler with a collection of all available
@@ -44,13 +56,42 @@ public interface ArtifactHandler {
     void initialize(ArtifactInfo[] artifacts);
 
     /**
-     * Returns an array of all artifacts handled by this object.
+     * Returns the set of all artifact classes this handler manages.
      */
-    ArtifactInfo[] getArtifacts();
+    GriffonClass[] getClasses();
 
     /**
-     * Finds an artifact by name.
-     * The name usually matches artifact.simpleName
+     * Finds an artifact by its property name.<p>
+	 * Examples: findClassfor("fooService") returns an artifact class
+	 * that can handle FooService.<p>
+	 * 
+	 * Should {@code propertyName} contain any dots then the portion
+	 * after te last dor will be considered only.
      */
-    ArtifactInfo findArtifact(String name);
+    GriffonClass findClassFor(String propertyName);
+
+    /**
+     * Finds an artifact if the target {@code clazz} is handled by this
+     * ArtifactHandler.<p>
+	 *
+	 * @param clazz a class object, i.e, BookController
+	 * @return a GriffonClass that can handle the target class or null
+	 * if the clazz is not handled by this ArtifactHandler.
+     */
+    GriffonClass getClassFor(Class clazz);
+
+    /**
+     * Finds an artifact by class name if it represents a class that 
+     * is handled by this ArtifactHandler.<p>
+	 *
+	 * @param fqnClassName a full qualified class name, i.e, "book.BookController"
+	 * @return a GriffonClass that can handle the target class or null
+	 * if the clazz is not handled by this ArtifactHandler.
+     */
+    GriffonClass getClassFor(String fqnClassName);
+
+    /**
+     * Reference to the current {@code GriffonApplication}
+     */
+    GriffonApplication getApp();
 }

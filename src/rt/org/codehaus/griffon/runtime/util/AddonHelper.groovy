@@ -93,7 +93,7 @@ public class AddonHelper {
         if (events) addEvents(app, addon.events)
     }
 
-    static handleAddonsForBuilders(GriffonApplication app, UberBuilder builder, Map targets) {
+    static handleAddonsForBuilders(GriffonApplication app, UberBuilder builder, Map<String, MetaClass> targets) {
         for (node in app.builderConfig) {
             String nodeName = node.key
             switch (nodeName) {
@@ -121,7 +121,7 @@ public class AddonHelper {
         }
     }
 
-    static handleAddonForBuilder(GriffonApplication app, UberBuilder builder, Map targets, def addonNode, String prefix) {
+    static handleAddonForBuilder(GriffonApplication app, UberBuilder builder, Map<String, MetaClass> targets, def addonNode, String prefix) {
         def addonName = addonNode.key
         def addon = app.addons[addonName]
         def addonMetaClass = addon.metaClass
@@ -168,7 +168,7 @@ public class AddonHelper {
                 // this needs special handling, skip it for now
                 continue
             }
-            MetaClass mc = targets[partialTarget.key]?.getMetaClass()
+            MetaClass mc = targets[partialTarget.key]
             if (!mc) continue
             for (String itemName in partialTarget.value) {
                 if (itemName == '*') {

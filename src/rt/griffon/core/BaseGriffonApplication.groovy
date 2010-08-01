@@ -182,7 +182,11 @@ class BaseGriffonApplication implements GriffonApplication {
         event('StartupEnd',[appDelegate])
     }
 
-    void event( String eventName, List params = [] ) {
+    void event(String eventName) {
+        eventRouter.publish(eventName, [])
+    }
+
+    void event(String eventName, List params) {
         eventRouter.publish(eventName, params)
     }
 

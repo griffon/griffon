@@ -27,7 +27,7 @@ class ArtifactManager {
     private final Map artifacts = [:]
     private final Map artifactHandlers = [:]
 
-    private static final ArtifactInfo[] EMPTY_ARTIFACT_INFO_ARRAY = new ArtifactInfo[0]
+    private static final GriffonClass[] EMPTY_GRIFFON_CLASS_ARRAY = new GriffonClass[0]
     private static final Class[] EMPTY_CLASS_ARRAY = new Class[0]
 
     /**
@@ -36,7 +36,6 @@ class ArtifactManager {
      */
     synchronized void registerArtifactHandler(ArtifactHandler handler) {
         if(!handler) return
-        handler.app = app
         artifactHandlers[handler.type] = handler
         if(artifacts[handler.type]) handler.initialize(artifacts[handler.type])
     }
@@ -55,120 +54,80 @@ class ArtifactManager {
      * registered already.
      */
     synchronized void loadArtifactMetadata() {
-        URL url = app.class.getResource("/artifacts.properties")
-        if(url) {
+        Enumeration urls = app.class.classLoader.getResources('META-INF/griffon-artifacts.properties')
+        Map<String, List<ArtifactInfo>> _artifacts = [:]
+        urls.each { url ->
             def config = new ConfigSlurper().parse(url)
             config.each { type, classes -> 
-                artifacts[type] = classes.split(",").collect([]){
-                    new ArtifactInfo(app, getClass().classLoader.loadClass(it), type)
-                } as ArtifactInfo[]
-                artifactHandlers[type]?.initialize(artifacts[type])
+	            List<ArtifactInfo> artifactList = _artifacts.get(type, [])
+                classes.split(',').collect(artifactList) {
+                    new ArtifactInfo(getClass().classLoader.loadClass(it), type)
+                }
             }
         }
+
+        _artifacts.each { type, list ->
+	        artifacts[type] = (list as ArtifactInfo[])
+            artifactHandlers[type]?.initialize(artifacts[type])
+	    }
     }
 
     /**
-     * Retrieves an artifact metadata by class
+     * Finds an artifact by name and type.<p>
+     * Example: findGriffonClass("Book", "controller") will return an
+     * artifact class that describes BookController.
      */
-    synchronized ArtifactInfo getArtifactInfo(Class clazz) {
-        if(!clazz) return null
+    synchronized GriffonClass findGriffonClass(String name, String type) {
+        if(!name || !type) return null
+        return artifactHandlers[type]?.findClassFor(name)
+    }
+
+    /**
+     * Finds an artifact by name.<p>
+     * Example: findGriffonClass("BookController") will return an
+     * artifact class that describes BookController.
+     */
+    synchronized GriffonClass findGriffonClass(String fqnClassName) {
+        if(!fqnClassName) return null
         for(handler in artifactHandlers.values()) {
-            ArtifactInfo result = handler.artifacts.find{ it.klass.name == clazz.name }
-            if(result) return result
+            GriffonClass griffonClass = handler.getClassFor(fqnClassName)
+            if(griffonClass) return griffonClass
         }
         return null
     }
 
     /**
-     * Retrieves an artifact metadata by class name
-     */
-    synchronized ArtifactInfo getArtifactInfo(String className) {
-        if(!className) return null
-        for(handler in artifactHandlers.values()) {
-            // String suffix = handler.type[0].toUpperCase() + handler.type[1..-1]
-            // if(className.endsWith(suffix)) return handler.artifacts.find{ it.klass.name == className }
-            ArtifactInfo result = handler.artifacts.find{ it.klass.name == className }
-            if(result) return result
-        }
-        return null
-    }
-
-    /**
-     * Find and artifact by name and type.<p>
-     * Example: getArtifactInfo("Book", "controller") will return an
-     * artifact that describes BookController.
-     */
-    synchronized ArtifactInfo getArtifactInfo(String artifactName, String type) {
-        if(!artifactName || !type) return null
-        return artifactHandlers[type]?.findArtifact(artifactName)
-    }
-
-    /**
-     * Returns all available artifacts of a particular type.<p>
-     * Never returns null
-     */
-    ArtifactInfo[] getArtifactsOfType(String type) {
-        artifacts[type] ?: EMPTY_ARTIFACT_INFO_ARRAY
-    }
-
-    /**
-     * Returns all available classes of a particular type.<p>
-     * Never returns null
-     */
-    Class[] getClassesOfType(String type) {
+     * Finds all artifacts of an specific type.<p>
+	 * Example: getClassesOfType("controller") will return all
+	 * artifact classes that describe controllers.
+	 */
+    synchronized GriffonClass[] getClassesOfType(String type) {
         if(artifacts.containsKey(type)) {
-            return artifacts[type].toList().klass
+            return artifactHandlers[type].classes
         }
-        return EMPTY_CLASS_ARRAY
+        return EMPTY_GRIFFON_CLASS_ARRAY
     }
 
-    ArtifactInfo[] getAllArtifacts() {
+    /**
+     * Finds all artifact classes.<p>
+	 */
+    synchronized GriffonClass[] getAllClasses() {
         List all = []
-        artifacts.each { all.addAll(it.value.toList()) }
-        return all as ArtifactInfo[]
+        artifactHandlers.each { all.addAll(it.getClasses().toList()) }
+        return all as GriffonClass[]
     }
 
-    Class[] getAllClasses() {
-        List all = []
-        artifacts.each { all.addAll(it.value.toList().klass) }
-        return all as Class[]
-    }
-
+    /**
+     * Adds dynamic handlers for querying artifact classes.<p>
+	 * The following patterns are recognized<ul>
+	 * <li>getXXXClasses</li>
+	 * <li>isXXXClass</li>
+	 * </ul>
+	 * where {@code XXX} stands for the name of an artifact, like
+	 * "Controller" or "Service".
+	 */
     def methodMissing(String methodName, args) {
-        def artifactType = methodName =~ /^get(\w+)Artifacts$/
-        if(artifactType) {
-            artifactType = normalize(artifactType)
-        
-            if(!args && artifacts.containsKey(artifactType)) {
-                ArtifactManager.metaClass."$methodName" = this.&getArtifactsOfType.curry(artifactType)
-                return getArtifactsOfType(artifactType)
-            }
-            return EMPTY_ARTIFACT_INFO_ARRAY
-        }
-
-        artifactType = methodName =~ /^get(\w+)Artifact$/
-        if(artifactType) {
-            artifactType = normalize(artifactType)
-        
-            if(args?.size() == 1 && artifacts.containsKey(artifactType)) {
-                ArtifactManager.metaClass."$methodName" = this.&getArtifactOfType.curry(artifactType)
-                return getArtifactOfType(artifactType, args[0])
-            }
-            return EMPTY_ARTIFACT_INFO_ARRAY
-        }
-
-        artifactType = methodName =~ /^is(\w+)Artifact$/
-        if(artifactType) {
-            artifactType = normalize(artifactType)
-        
-            if(args?.size() == 1 && artifacts.containsKey(artifactType)) {
-                ArtifactManager.metaClass."$methodName" = this.&isClassOfType.curry(artifactType)
-                return isClassOfType(artifactType, args[0])
-            }
-            return EMPTY_CLASS_ARRAY
-        }
-
-        artifactType = methodName =~ /^get(\w+)Classes$/
+        def artifactType = methodName =~ /^get(\w+)Classes$/
         if(artifactType) {
             artifactType = normalize(artifactType)
 
@@ -176,7 +135,7 @@ class ArtifactManager {
                 ArtifactManager.metaClass."$methodName" = this.&getClassesOfType.curry(artifactType)
                 return getClassesOfType(artifactType)
             }
-            return EMPTY_CLASS_ARRAY
+            return EMPTY_GRIFFON_CLASS_ARRAY
         }
 
         artifactType = methodName =~ /^is(\w+)Class$/
@@ -193,39 +152,34 @@ class ArtifactManager {
         throw new MissingMethodException(methodName, ArtifactManager, args)
     }
 
+    /**
+     * Adds dynamic handlers for querying artifact classes.<p>
+	 * The following patterns are recognized<ul>
+	 * <li>xXXClasses</li>
+	 * </ul>
+	 * where {@code xXX} stands for the name of an artifact, like
+	 * "controller" or "service".
+	 */
     def propertyMissing(String propertyName) {
-        def artifactType = propertyName =~ /^(\w+)Artifacts$/
-        if(artifactType) {
-            artifactType = artifactType[0][1]
-            if(artifacts.containsKey(artifactType)) {
-                ArtifactManager.metaClass."$propertyName" = getArtifactsOfType(artifactType)
-                return getArtifactsOfType(artifactType)
-            }
-            return EMPTY_ARTIFACT_INFO_ARRAY
-        }
-
-        artifactType = propertyName =~ /^(\w+)Classes$/
+        def artifactType = propertyName =~ /^(\w+)Classes$/
         if(artifactType) {
             artifactType = artifactType[0][1]
             if(artifacts.containsKey(artifactType)) {
                 ArtifactManager.metaClass."$propertyName" = getClassesOfType(artifactType)
                 return getClassesOfType(artifactType)
             }
-            return EMPTY_CLASS_ARRAY
+            return EMPTY_GRIFFON_CLASS_ARRAY
         }
+
         throw new MissingPropertyException(propertyName, Object)
     }
 
-    private synchronized ArtifactInfo getArtifactOfType(String type, Class klass) {
-        artifactHandlers[type]?.artifacts.find { it.klass.name == klass.name }
+    private synchronized ArtifactInfo getArtifactOfType(String type, Class clazz) {
+        artifactHandlers[type]?.artifacts.find { it.clazz.name == clazz.name }
     }
 
-    private synchronized ArtifactInfo getArtifactOfType(String type, String className) {
-        artifactHandlers[type]?.artifacts.find { it.klass.simpleName == className }
-    }
-
-    private synchronized boolean isClassOfType(String type, Class klass) {
-        getArtifactOfType(type, klass) ? true : false
+    private synchronized boolean isClassOfType(String type, Class clazz) {
+        getArtifactOfType(type, clazz) ? true : false
     }
 
     private String normalize(input) {

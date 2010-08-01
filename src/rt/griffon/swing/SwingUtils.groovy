@@ -33,6 +33,7 @@ import static griffon.util.GriffonApplicationUtils.isJdk17
  * Additional utilities for Swing based applications.
  *
  * @author Andres Almiray
+ * @since 0.3.1
  */
 class SwingUtils {
     /**

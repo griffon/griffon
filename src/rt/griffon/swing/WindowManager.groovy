@@ -32,6 +32,7 @@ import griffon.core.ShutdownHandler
  * @see griffon.swing.WindowDisplayManager
  *
  * @author Andres Almiray
+ * @since 0.3.1
  */
 final class WindowManager implements ShutdownHandler {
     private final GriffonApplication app

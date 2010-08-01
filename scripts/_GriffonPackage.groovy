@@ -162,11 +162,9 @@ collectArtifactMetadata = {
     event("CollectArtifacts", [artifactPaths])
 
     def artifacts = [:]
-    def pluginDirectories = pluginSettings.pluginDirectories.file
-    ([new File(basedir)] + pluginDirectories).each { searchPath ->
-        if(!searchPath) return
-        searchPath = new File(searchPath.absolutePath, 'griffon-app')
-        if(!searchPath.exists()) return
+    // def pluginDirectories = pluginSettings.pluginDirectories.file
+    // ([new File(basedir)] + pluginDirectories).each { searchPath ->
+        searchPath = new File(basedir, 'griffon-app')
         searchPath.eachFileRecurse { file ->
             artifactPaths.find { entry ->
                 def fixedPath = file.path - searchPath.canonicalPath //fix problem when project inside dir "jobs" (eg. hudson stores projects under jobs-directory)
@@ -181,9 +179,10 @@ collectArtifactMetadata = {
                 }
             }
         }
-    }
 
-    def artifactMetadataFile = new File("${resourcesDirPath}/griffon-app/resources/artifacts.properties")
+    File artifactMetadataDir = new File("${resourcesDirPath}/griffon-app/resources/META-INF")
+    artifactMetadataDir.mkdirs()
+    File artifactMetadataFile = new File(artifactMetadataDir, '/griffon-artifacts.properties')
     artifactMetadataFile.withPrintWriter { writer ->
         artifacts.each { type, list ->
            writer.println("$type = '${list.join(',')}'")

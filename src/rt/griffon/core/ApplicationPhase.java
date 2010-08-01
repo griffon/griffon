@@ -19,6 +19,7 @@ package griffon.core;
  * Defines the application life-cycle phases.<p>
  *
  * @author Andres Almiray
+ * @since 0.9
  */
 public enum ApplicationPhase {
     /** 1st phase. All applications start with this one */

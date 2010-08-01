@@ -22,6 +22,7 @@ import griffon.core.GriffonApplication
  * Default implementation of {@code WindowDisplayManage} that simply makes the window visible on show() and disposes it on hide().
  *
  * @author Andres Almiray
+ * @since 0.3.1
  */
 class DefaultWindowDisplayHandler implements WindowDisplayHandler {
     void show(Window window, GriffonApplication application) {

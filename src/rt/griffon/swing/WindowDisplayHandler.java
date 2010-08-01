@@ -22,6 +22,7 @@ import griffon.core.GriffonApplication;
  * Controls how windows are shown and hidden at runtime.
  *
  * @author Andres Almiray
+ * @since 0.3.1
  */
 public interface WindowDisplayHandler {
     /**
