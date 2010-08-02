@@ -225,11 +225,11 @@ public class IvyDependencyManager extends AbstractIvyDependencyManager implement
                 // dependencies needed by the Griffon build system
                  build "org.codehaus.gpars:gpars:0.9",
                        "org.tmatesoft.svnkit:svnkit:1.3.1",
-                       "org.apache.ant:ant:1.8.0",
-                       "org.apache.ant:ant-launcher:1.8.0",
-                       "org.apache.ant:ant-junit:1.8.0",
-                       "org.apache.ant:ant-nodeps:1.8.0",
-                       "org.apache.ant:ant-trax:1.8.0",
+                       "org.apache.ant:ant:1.8.1",
+                       "org.apache.ant:ant-launcher:1.8.1",
+                       "org.apache.ant:ant-junit:1.8.1",
+                       "org.apache.ant:ant-nodeps:1.8.1",
+                       // "org.apache.ant:ant-trax:1.8.1",
                        "jline:jline:0.9.94",
                        "org.fusesource.jansi:jansi:1.2.1",
                        "commons-io:commons-io:1.4",
@@ -256,7 +256,7 @@ public class IvyDependencyManager extends AbstractIvyDependencyManager implement
                        "org.grails:grails-docs:1.3.2"
 
                 // dependencies needed for compilation
-                compile("org.codehaus.groovy:groovy-all:1.7.3") {
+                compile("org.codehaus.groovy:groovy-all:1.7.4") {
                     excludes 'jline'
                 }
 

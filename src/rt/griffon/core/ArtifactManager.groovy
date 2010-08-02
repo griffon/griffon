@@ -16,6 +16,8 @@
 
 package griffon.core
 
+import org.codehaus.griffon.runtime.util.GriffonApplicationHelper
+
 /**
  * Helper class capable of dealing with artifacts and their handlers.
  *
@@ -61,7 +63,7 @@ class ArtifactManager {
             config.each { type, classes -> 
 	            List<ArtifactInfo> artifactList = _artifacts.get(type, [])
                 classes.split(',').collect(artifactList) {
-                    new ArtifactInfo(getClass().classLoader.loadClass(it), type)
+                    new ArtifactInfo(GriffonApplicationHelper.loadClass(app, it), type)
                 }
             }
         }
@@ -80,6 +82,30 @@ class ArtifactManager {
     synchronized GriffonClass findGriffonClass(String name, String type) {
         if(!name || !type) return null
         return artifactHandlers[type]?.findClassFor(name)
+    }
+
+    /**
+     * Finds an artifact by class and type.<p>
+     * Example: findGriffonClass(BookController, "controller") will return an
+     * artifact class that describes BookController.
+     */
+    synchronized GriffonClass findGriffonClass(Class clazz, String type) {
+        if(!clazz || !type) return null
+        return artifactHandlers[type]?.getClassFor(clazz)
+    }
+
+    /**
+     * Finds an artifact by name.<p>
+     * Example: findGriffonClass(BookController) will return an
+     * artifact class that describes BookController.
+     */
+    synchronized GriffonClass findGriffonClass(Class clazz) {
+        if(!clazz) return null
+        for(handler in artifactHandlers.values()) {
+            GriffonClass griffonClass = handler.getClassFor(clazz)
+            if(griffonClass) return griffonClass
+        }
+        return null
     }
 
     /**

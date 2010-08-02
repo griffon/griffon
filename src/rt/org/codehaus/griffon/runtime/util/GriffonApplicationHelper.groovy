@@ -128,7 +128,7 @@ class GriffonApplicationHelper {
     static void runScriptInsideUIThread(String scriptName, GriffonApplication app) {
         def script
         try {
-            script = GriffonApplicationHelper.classLoader.loadClass(scriptName).newInstance(app.bindings)
+            script = loadClass(app, scriptName).newInstance(app.bindings)
         } catch (ClassNotFoundException cnfe) {
             if (cnfe.message == scriptName) {
                 // the script must not exist, do nothing
@@ -213,7 +213,7 @@ class GriffonApplicationHelper {
         ClassLoader classLoader = app.getClass().classLoader
         app.mvcGroups[mvcType].each {k, v ->
 	        GriffonClass griffonClass = ArtifactManager.instance.findGriffonClass(v)
-	        Class klass = griffonClass?.clazz ?: classLoader.loadClass(v)
+	        Class klass = griffonClass?.clazz ?: loadClass(app, v)
             MetaClass metaClass = griffonClass?.getMetaClass() ?: klass.getMetaClass()
 
             enhance(app, metaClass)
@@ -357,5 +357,19 @@ class GriffonApplicationHelper {
         app.groups.remove(mvcName)
 
         app.event("DestroyMVCGroup",[mvcName])
+    }
+
+    static Class loadClass(GriffonApplication app, String className) throws ClassNotFoundException {
+	    ClassNotFoundException cnfe = null
+
+	    for(cl in [app.class.classLoader, GriffonApplicationHelper.class.classLoader, Thread.currentThread().contextClassLoader]) {
+		    try {
+			    return cl.loadClass(className)
+		    } catch(ClassNotFoundException e) {
+			    cnfe = e
+		    }
+		}
+
+		if(cnfe) throw cnfe
     }
 }

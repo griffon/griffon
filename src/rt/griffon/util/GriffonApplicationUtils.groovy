@@ -43,7 +43,7 @@ class GriffonApplicationUtils {
    static final String osName
    static final String osVersion
    static final String javaVersion
-   static final String is64Bit
+   static final boolean is64Bit
 
    static final boolean isJdk14
    static final boolean isJdk15

@@ -22,6 +22,10 @@ import griffon.core.GriffonClass;
 import griffon.core.GriffonApplication;
 import griffon.util.GriffonNameUtils;
 
+import java.util.Map;
+import java.util.TreeMap;
+import java.util.Collections;
+
 /**
  * Base implementation of the ArtifactHandler interface.
  *
@@ -37,6 +41,7 @@ public abstract class ArtifactHandlerAdapter implements ArtifactHandler {
     private static final Class[] GRIFFON_CLASS_CTOR_ARGS = new Class[]{GriffonApplication.class, ArtifactInfo.class};
     private ArtifactInfo[] artifacts = new ArtifactInfo[0];
     private GriffonClass[] classes = new GriffonClass[0];
+    private Map<String, GriffonClass> classesByName = new TreeMap<String, GriffonClass>();
 
     public ArtifactHandlerAdapter(GriffonApplication app, String type, String trailing) {
 	    this.app = app;
@@ -57,11 +62,17 @@ public abstract class ArtifactHandlerAdapter implements ArtifactHandler {
         System.arraycopy(artifacts, 0, this.artifacts, 0, artifacts.length);
         classes = new GriffonClass[artifacts.length];
         for(int i = 0; i < artifacts.length; i++) {
-	        classes[i] = newGriffonClassInstance(artifacts[i].getClazz());
+	        Class clazz = artifacts[i].getClazz();
+	        classes[i] = newGriffonClassInstance(clazz);
+	        classesByName.put(clazz.getName(), classes[i]);
         }
     }
 
     protected abstract GriffonClass newGriffonClassInstance(Class clazz);
+
+    public Map<String, GriffonClass> getClassesByName() {
+	    return Collections.<String, GriffonClass>unmodifiableMap(classesByName);
+    }
 
     /**
      * Returns true if the target Class is a class artifact
@@ -69,10 +80,8 @@ public abstract class ArtifactHandlerAdapter implements ArtifactHandler {
      * This implementation performs an equality check on class.name
      */
     public boolean isArtifact(Class clazz) {
-        for(ArtifactInfo artifact: artifacts) {
-            if(artifact.getClazz().getName().equals(clazz.getName())) return true;
-        }
-        return false;
+        if(clazz == null) return false;
+        return classesByName.get(clazz.getName()) != null;
     }
 
     public boolean isArtifact(GriffonClass clazz) {
@@ -93,10 +102,7 @@ public abstract class ArtifactHandlerAdapter implements ArtifactHandler {
 
     public GriffonClass getClassFor(String fqnClassName) {
 	    if(GriffonNameUtils.isBlank(fqnClassName)) return null;
-        for(GriffonClass griffonClass: classes) {
-            if(griffonClass.getClazz().getName().equals(fqnClassName)) return griffonClass;
-        }
-        return null;
+        return classesByName.get(fqnClassName);
     }
 
     public GriffonClass findClassFor(String propertyName) {	
@@ -119,7 +125,7 @@ public abstract class ArtifactHandlerAdapter implements ArtifactHandler {
 	        simpleName += trailing;
         }
 
-        for(GriffonClass griffonClass: classes) {
+        for(GriffonClass griffonClass: classes) {	
             if(griffonClass.getClazz().getSimpleName().equals(simpleName)) return griffonClass;
         }
 

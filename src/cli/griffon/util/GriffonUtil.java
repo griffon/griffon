@@ -56,12 +56,12 @@ public class GriffonUtil extends GriffonNameUtils {
     private static final String GRIFFON_IMPLEMENTATION_TITLE = "griffon-rt";
     private static final String GRIFFON_VERSION;
     private static final String[] GRIFFON_PACKAGES = new String[] {
-            "org.codehaus.griffon.",
+            // "org.codehaus.griffon.",
             "org.codehaus.groovy.runtime.",
             "org.codehaus.groovy.reflection.",
             "org.codehaus.groovy.ast.",
             "org.codehaus.gant.",
-            "griffon.",
+            // "griffon.",
             "groovy.",
             "sun.",
             "java.lang.reflect."

@@ -142,11 +142,11 @@ purgeRedundantArtifactSuffix = { name, suffix ->
     }
 
     if(name == newName) {
-        def pos = newName.lastIndexOf('.')
-        if(pos > -1) newName = newName[pos+1..-1]
+        // def pos = newName.lastIndexOf('.')
+        // if(pos > -1) newName = newName[pos+1..-1]
         for(int i = name.length() - 1; i >= 0; i--) {
             def str = name[i..-1]
-            if(suffix.startsWith(str) && (newName - str)) {
+            if(suffix.startsWith(str)/* && (newName - str)*/) {
                 newName -= str
                 break
             }
