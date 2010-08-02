@@ -78,19 +78,6 @@ target('runApp': "Runs the application from the command line") {
         javaOpts << "-Xdock:name=$griffonAppName"
         javaOpts << "-Xdock:icon=${griffonHome}/media/griffon.icns"
     }
-    if (config.griffon.app?.javaOpts) {
-        buildConfig.griffon.app?.javaOpts.each { javaOpts << it }
-    }
-
-// XXX -- NATIVE
-    platformDir = new File(jardir.absolutePath, platform)
-    File nativeLibDir = new File(platformDir.absolutePath, 'native')
-    if(nativeLibDir.exists()) {
-        String libraryPath = System.getProperty('java.library.path')
-        libraryPath = libraryPath + File.pathSeparator + nativeLibDir.absolutePath
-        javaOpts << "-Djava.library.path=$libraryPath".toString()
-    }
-// XXX -- NATIVE
 
     def runtimeClasspath = runtimeJars.collect { f ->
         f.absolutePath - jardir.absolutePath - File.separator

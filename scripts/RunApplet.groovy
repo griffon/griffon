@@ -57,4 +57,3 @@ target('default': "Runs the applet from Java WebStart") {
     // wait for it.... wait for it...
     p.waitFor()
 }
-

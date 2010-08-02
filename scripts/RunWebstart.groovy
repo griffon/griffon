@@ -49,7 +49,8 @@ target('default': "Runs the application with Java Webstart") {
     if (!binding.variables.webstartVM) {
         webstartVM = [System.properties['java.home'], 'bin', 'javaws'].join(File.separator)
     }
-    def javaOpts = setupJavaOpts()
+
+    def javaOpts = setupJavaOpts(false)
     javaOpts = "-J"+javaOpts.join(" -J")
 
     // TODO set proxy settings

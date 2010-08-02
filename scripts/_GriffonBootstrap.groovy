@@ -85,6 +85,7 @@ setupJavaOpts = { includeNative = true ->
     def env = System.getProperty(Environment.KEY)
     javaOpts << "-D${Environment.KEY}=${env}"
     javaOpts << "-D${RunMode.KEY}=${RunMode.current}"
+    javaOpts << "-Dgriffon.start.dir=\""+jardir.parentFile.absolutePath+"\""
 
     if (buildConfig.griffon.app?.javaOpts) {
         buildConfig.griffon.app?.javaOpts.each { javaOpts << it }
@@ -93,12 +94,10 @@ setupJavaOpts = { includeNative = true ->
         javaOpts << argsMap.javaOpts
     }
 
-    javaOpts << "-Dgriffon.start.dir=\""+jardir.parentFile.absolutePath+"\""
-
 // XXX -- NATIVE
     platformDir = new File(jardir.absolutePath, platform)
     File nativeLibDir = new File(platformDir.absolutePath, 'native')
-    if(nativeLibDir.exists()) {
+    if(includeNative && nativeLibDir.exists()) {
         String libraryPath = System.getProperty('java.library.path')
         libraryPath = libraryPath + File.pathSeparator + nativeLibDir.absolutePath
         javaOpts << "-Djava.library.path=$libraryPath".toString()
