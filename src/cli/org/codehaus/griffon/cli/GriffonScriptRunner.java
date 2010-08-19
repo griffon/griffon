@@ -297,7 +297,7 @@ public class GriffonScriptRunner {
 
     private void setRunningEnvironment(String scriptName, String env) {
         // Get the default environment if one hasn't been set.
-        boolean useDefaultEnv = env == null;
+        boolean useDefaultEnv = env == null || Environment.DEVELOPMENT.getName().equals(env);
         if (useDefaultEnv) {
             env = DEFAULT_ENVS.get(scriptName);
             env = env != null ? env : Environment.DEVELOPMENT.getName();
@@ -556,17 +556,18 @@ public class GriffonScriptRunner {
         }
         catch (ScriptNotFoundException e) {
             if(isInteractive) {
-                String fixedName = fixScriptName(scriptName, allScripts);
-                if (fixedName == null) {
+                scriptName = fixScriptName(scriptName, allScripts);
+                if (scriptName == null) {
                     throw e;
                 }
 
-                loadScriptClass(gant, fixedName);
+                loadScriptClass(gant, scriptName);
             } else {
                 throw e;
             }
         }
 
+        setRunningEnvironment(scriptName, env);
         return executeWithGantInstance(gant, doNothingClosure);
     }
 
