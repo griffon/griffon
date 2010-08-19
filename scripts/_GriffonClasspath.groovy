@@ -30,11 +30,13 @@ if (getBinding().variables.containsKey("_griffon_classpath_called")) return
 _griffon_classpath_called = true
 
 includeTargets << griffonScript("_GriffonSettings")
+includeTargets << griffonScript("_GriffonArgParsing")
 
 classpathSet = false
 includePluginJarsOnClasspath = true
 
 target(name:'classpath', description: "Sets the Griffon classpath", prehook:null, posthook:null) {
+    depends(parseArguments)
     setClasspath()
 }
 
@@ -115,87 +117,114 @@ getExtraDependencies = {
 commonClasspath = {
     def griffonDir = resolveResources("file:${basedir}/griffon-app/*")
     for (d in griffonDir) {
+        if(argsMap.verbose) println "  ${d.file.absolutePath}"
         pathelement(location: "${d.file.absolutePath}")
     }
-    // pathelement(location: "${griffonSettings.sourceDir}/main")
+
+    pathelement(location: "${classesDir.absolutePath}")
+    pathelement(location: "${pluginClassesDir.absolutePath}")
+    if(argsMap.verbose) {
+        println "  ${classesDir.absolutePath}"
+        println "  ${pluginClassesDir.absolutePath}"
+    }
 
     def pluginLibDirs = pluginSettings.pluginLibDirectories.findAll { it.exists() }
     for (pluginLib in pluginLibDirs) {
+        if(argsMap.verbose) println "  ${pluginLib.file.absolutePath}"
         fileset(dir: pluginLib.file.absolutePath)
     }
 
 // XXX -- NATIVE
     resolveResources("file:${basedir}/lib/${platform}").each { platformLib ->
-        if(platformLib.file.exists()) fileset(dir: platformLib.file.absolutePath)
+        if(platformLib.file.exists()) {
+            if(argsMap.verbose) println "  ${platformLib.file.absolutePath}"
+            fileset(dir: platformLib.file.absolutePath)
+        }
     }
     resolveResources("file:${pluginsHome}/*/lib/${platform}").each { platformPluginLib ->
-        if(platformPluginLib.file.exists()) fileset(dir: platformPluginLib.file.absolutePath)
+        if(platformPluginLib.file.exists()) {
+            if(argsMap.verbose) println "  ${platformPluginLib.file.absolutePath}"
+            fileset(dir: platformPluginLib.file.absolutePath)
+        }
     }
 
     if(is64Bit) {
         resolveResources("file:${basedir}/lib/${platform[0..-3]}").each { platformLib ->
-            if(platformLib.file.exists()) fileset(dir: platformLib.file.absolutePath)
+            if(platformLib.file.exists()) {
+                if(argsMap.verbose) println "  ${platformLib.file.absolutePath}"
+                fileset(dir: platformLib.file.absolutePath)
+            }
         }
         resolveResources("file:${pluginsHome}/*/lib/${platform[0..-3]}").each { platformPluginLib ->
-            if(platformPluginLib.file.exists()) fileset(dir: platformPluginLib.file.absolutePath)
+            if(platformPluginLib.file.exists()) {
+                if(argsMap.verbose) println "  ${platformPluginLib.file.absolutePath}"
+                fileset(dir: platformPluginLib.file.absolutePath)
+            }
         }
     }
 // XXX -- NATIVE
 }
 
 compileClasspath = {
+    if(argsMap.verbose) println "=== Compile Classpath ==="
     commonClasspath.delegate = delegate
     commonClasspath.call()
 
     def dependencies = griffonSettings.compileDependencies
     if(dependencies) {
         for(File f in dependencies) {
-            if(f)
+            if(f) {
+                if(argsMap.verbose) println "  ${f.absolutePath}"
                 pathelement(location: f.absolutePath)
+            }
         }
     }
-    pathelement(location: "${classesDir.absolutePath}")
-    pathelement(location: "${pluginClassesDir.absolutePath}")
 }
 
 testClasspath = {
+    if(argsMap.verbose) println "=== Test Classpath ==="
     commonClasspath.delegate = delegate
     commonClasspath.call()
 
     def dependencies = griffonSettings.testDependencies
     if(dependencies) {
-
         for(File f in dependencies) {
             if(f) {
+                if(argsMap.verbose) println "  ${f.absolutePath}"
                 pathelement(location: f.absolutePath)
             }
         }
     }
 
-    pathelement(location: "${classesDir.absolutePath}")
-    pathelement(location: "${pluginClassesDir.absolutePath}")
     pathelement(location: "${griffonSettings.testClassesDir}/shared")
     pathelement(location: "${griffonSettings.testResourcesDir}")
+    if(argsMap.verbose) {
+        println "  ${griffonSettings.testClassesDir}/shared"
+        println "  ${griffonSettings.testResourcesDir}"
+    }
 
     for (pluginTestJar in getPluginTestFiles()) {
-        if(pluginTestJar.file.exists()) file(file: pluginTestJar.file.absolutePath)
+        if(pluginTestJar.file.exists()) {
+            if(argsMap.verbose) println "  ${pluginTestJar.file.absolutePath}"
+            file(file: pluginTestJar.file.absolutePath)
+        }
     }
 }
 
 runtimeClasspath = {
+    if(argsMap.verbose) println "=== Runtime Classpath ==="
     commonClasspath.delegate = delegate
     commonClasspath.call()
 
     def dependencies = griffonSettings.runtimeDependencies
     if(dependencies) {        
         for(File f in dependencies) {
-            if(f)
+            if(f) {
+                if(argsMap.verbose) println "  ${f.absolutePath}"
                 pathelement(location: f.absolutePath)
+            }
         }
     }
-
-    pathelement(location: "${pluginClassesDir.absolutePath}")
-    pathelement(location: "${classesDir.absolutePath}")
 }
 
 /**

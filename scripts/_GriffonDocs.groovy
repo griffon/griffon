@@ -20,7 +20,6 @@ import org.codehaus.griffon.resolve.IvyDependencyManager;
 
 import griffon.util.GriffonUtil
 import grails.doc.DocPublisher
-import grails.doc.DocEngine
 import org.codehaus.griffon.documentation.PdfBuilder
 
 /**
@@ -48,6 +47,9 @@ links = [
 
 docsDisabled = { argsMap.nodoc == true }
 pdfEnabled = { argsMap.pdf == true }
+
+createdManual = false
+createdPdf = false
 
 ant.taskdef(name: "groovydoc", classname: "org.codehaus.groovy.ant.Groovydoc")
 
@@ -103,7 +105,7 @@ And provide a detailed description
 }
 
 target(docsInternal:"Actual documentation task") {
-    depends(compile, /*javadoc,*/ groovydoc, refdocs, pdf)
+    depends(compile, /*javadoc,*/ groovydoc, refdocs, pdf, createIndex)
 }
 
 target(setupDoc:"Sets up the doc directories") {
@@ -245,6 +247,8 @@ ${m.arguments?.collect { '* @'+GriffonUtil.getPropertyName(it)+'@\n' }}
 
         publisher.publish()
 
+        createdManual = true
+
         println "Built user manual at ${refDocsDir}/index.html"
     }
 }
@@ -263,10 +267,47 @@ target(pdf: "Produces PDF documentation") {
    event("DocStart", ['pdf'])
 
    PdfBuilder.build(griffonSettings.docsOutputDir.canonicalPath, griffonHome)
+
+   createdPdf = true
+
    println "Built user manual PDF at ${refDocsDir}/guide/single.pdf"
 
    event("DocEnd", ['pdf'])
 }
+
+target(createIndex: "Produces an index.html page in the root directory") {
+   if (docsDisabled()) {
+       return
+   }
+
+   new File("${griffonSettings.docsOutputDir}/index.html").withWriter { writer ->
+               writer.write """\
+<html>
+
+       <head>
+               <title>$griffonAppName Documentation</title>
+       </head>
+    
+       <body>
+               <a href="api/index.html">API docs</a><br />
+"""
+
+               if (createdManual) {
+                       writer.write '\t\t<a href="manual/index.html">Manual (Frames)</a><br />\n'
+                       writer.write '\t\t<a href="manual/guide/single.html">Manual (Single)</a><br />\n'
+               }
+
+               if (createdPdf) {
+                       writer.write '\t\t<a href="manual/guide/single.pdf">Manual (PDF)</a><br />\n'
+               }
+
+               writer.write """\
+       </body>
+</html>
+"""
+   }
+}
+
 
 def readPluginMetadataForDocs(DocPublisher publisher) {
     def basePlugin = loadBasePlugin()
@@ -290,7 +331,13 @@ def readDocProperties(DocPublisher publisher) {
 }
 
 def configureAliases() {
-    DocEngine.ALIAS.putAll(config.griffon.doc.alias)
+    // See http://jira.codehaus.org/browse/GRAILS-6484 for why this is soft loaded
+    def docEngineClassName = "grails.doc.DocEngine"
+    def docEngineClass = classLoader.loadClass(docEngineClassName)
+    if (!docEngineClass) {
+        throw new IllegalStateException("Failed to load $docEngineClassName to configure documentation aliases")
+    }
+    docEngineClass.ALIAS.putAll(config.griffon.doc.alias)
 }
 
 

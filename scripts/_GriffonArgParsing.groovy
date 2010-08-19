@@ -27,7 +27,7 @@ _args_parsing_called = true
 
 argsMap = [params: []]
 
-target(parseArguments: "Parse the arguments passed on the command line") {
+target(name: 'parseArguments', description: "Parse the arguments passed on the command line", prehook: null, posthook: null) {
     // Only ever parse the arguments once. We also don't bother parsing
     // the arguments if the "args" string is empty.
     if (argsMap.size() > 1 || argsMap["params"] || !args) return

@@ -16,7 +16,7 @@
 
 import griffon.util.RunMode
 import griffon.util.Environment
-import org.codehaus.griffon.commons.ApplicationHolder
+import griffon.util.ApplicationHolder
 import static griffon.util.GriffonApplicationUtils.is64Bit
 
 /**
@@ -115,6 +115,10 @@ setupJavaOpts = { includeNative = true ->
         if(is64Bit && nativeLibDir2.exists()) {
             libraryPath = libraryPath + File.pathSeparator + nativeLibDir2.absolutePath
         }
+        if(argsMap.verbose) {
+            println "=== Java library path ===\n  $libraryPath"
+        } 
+        System.setProperty('java.library.path', libraryPath)
         javaOpts << "-Djava.library.path=$libraryPath".toString()
     }
 // XXX -- NATIVE

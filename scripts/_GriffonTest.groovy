@@ -159,6 +159,20 @@ target(allTests: "Runs the project's tests.") {
     }
 
     try {
+        griffonSettings.testDependencies.each {
+            addUrlIfNotPresent rootLoader, it
+            addUrlIfNotPresent classLoader, it
+        }
+        griffonSettings.runtimeDependencies.each {
+            addUrlIfNotPresent rootLoader, it
+            addUrlIfNotPresent classLoader, it
+        }
+
+        if(argsMap.verbose) {
+            println "=== RootLoader urls === "
+            rootLoader.URLs.each{println("  $it")}
+        }
+
         // Process the tests in each phase that is configured to run.
         filteredPhases.each { phase, types ->
             currentTestPhaseName = phase

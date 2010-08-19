@@ -33,7 +33,7 @@ public class ApplicationHolder {
      * Returns the current running application.
      * @return a reference to the current running application
      */
-    public static GriffonApplication getApplication() {
+    public static synchronized GriffonApplication getApplication() {
         return applicationInstance;
     }
 
@@ -42,7 +42,7 @@ public class ApplicationHolder {
      *
      * @param application an application instance
      */
-    public static void setApplication(GriffonApplication application) {
+    public static synchronized void setApplication(GriffonApplication application) {
         applicationInstance = application;
     }
 }
