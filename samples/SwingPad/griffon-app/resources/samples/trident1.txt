@@ -4,11 +4,10 @@ import java.awt.Font
 panel {
   flowLayout()
   button("Sample", id: "button",
-         foreground: Color.BLUE,
-         mouseEntered: {timeline.play()},
-         mouseExited:  {timeline.playReverse()}) {
-     timeline(button, id: "timeline", duration: 2500) {
+         foreground: Color.BLUE) {
+     timeline(button, duration: 2500) {
        interpolatedProperty("foreground", from: Color.BLUE, to: Color.RED)
+       mouseTrigger(autoReverse: true, event: 'enter')
      }
   }
 

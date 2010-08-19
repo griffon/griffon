@@ -19,6 +19,6 @@
  */
 class ScriptController {
     void mvcGroupInit(Map args) {
-        app.controllers.root.populateFactorySet()
+        // app.controllers.root.populateFactorySet()
     }
 }

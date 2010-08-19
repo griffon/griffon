@@ -44,7 +44,7 @@ public abstract class ArtifactHandlerAdapter implements ArtifactHandler {
     private Map<String, GriffonClass> classesByName = new TreeMap<String, GriffonClass>();
 
     public ArtifactHandlerAdapter(GriffonApplication app, String type, String trailing) {
-	    this.app = app;
+        this.app = app;
         this.type = type;
         this.trailing = trailing == null ? "" : trailing;
     }
@@ -62,16 +62,16 @@ public abstract class ArtifactHandlerAdapter implements ArtifactHandler {
         System.arraycopy(artifacts, 0, this.artifacts, 0, artifacts.length);
         classes = new GriffonClass[artifacts.length];
         for(int i = 0; i < artifacts.length; i++) {
-	        Class clazz = artifacts[i].getClazz();
-	        classes[i] = newGriffonClassInstance(clazz);
-	        classesByName.put(clazz.getName(), classes[i]);
+            Class clazz = artifacts[i].getClazz();
+            classes[i] = newGriffonClassInstance(clazz);
+            classesByName.put(clazz.getName(), classes[i]);
         }
     }
 
     protected abstract GriffonClass newGriffonClassInstance(Class clazz);
 
     public Map<String, GriffonClass> getClassesByName() {
-	    return Collections.<String, GriffonClass>unmodifiableMap(classesByName);
+        return Collections.<String, GriffonClass>unmodifiableMap(classesByName);
     }
 
     /**
@@ -96,23 +96,23 @@ public abstract class ArtifactHandlerAdapter implements ArtifactHandler {
     }
 
     public GriffonClass getClassFor(Class clazz) {
-	    if(clazz == null) return null;
+        if(clazz == null) return null;
         return getClassFor(clazz.getName());
     }
 
     public GriffonClass getClassFor(String fqnClassName) {
-	    if(GriffonNameUtils.isBlank(fqnClassName)) return null;
+        if(GriffonNameUtils.isBlank(fqnClassName)) return null;
         return classesByName.get(fqnClassName);
     }
 
-    public GriffonClass findClassFor(String propertyName) {	
-	    if(GriffonNameUtils.isBlank(propertyName)) return null;
-	
+    public GriffonClass findClassFor(String propertyName) {    
+        if(GriffonNameUtils.isBlank(propertyName)) return null;
+    
         String simpleName = propertyName;
 
         int lastDot = propertyName.lastIndexOf(".");
         if(lastDot > -1) {
-	        simpleName = simpleName.substring(lastDot + 1);
+            simpleName = simpleName.substring(lastDot + 1);
         }
 
         if(simpleName.length() == 1) {
@@ -122,10 +122,10 @@ public abstract class ArtifactHandlerAdapter implements ArtifactHandler {
         }
 
         if(!simpleName.endsWith(trailing)) {
-	        simpleName += trailing;
+            simpleName += trailing;
         }
 
-        for(GriffonClass griffonClass: classes) {	
+        for(GriffonClass griffonClass: classes) {    
             if(griffonClass.getClazz().getSimpleName().equals(simpleName)) return griffonClass;
         }
 

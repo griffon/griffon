@@ -40,51 +40,51 @@ emptyRowHeader = label("")
 emptyColumnHeader = label("")
 
 splitPane(id: 'splitPane', resizeWeight: 0.45f,
-      orientation: HORIZONTAL_SPLIT ) {
-   tabbedPane( id: "tabs", constraints: CENTER, border: lineBorder(color:Color.BLACK, thickness:1) ) {
-      panel( title: "Source ", id: "sourceTab", tabIcon: imageIcon(resource:"icons/script_code.png", class: SwingPadActions) ) {
+      orientation: HORIZONTAL_SPLIT) {
+   tabbedPane(id: "tabs", constraints: CENTER, border: lineBorder(color:Color.BLACK, thickness:1)) {
+      panel(title: "Source ", id: "sourceTab", tabIcon: imageIcon(resource:"icons/script_code.png", class: SwingPadActions)) {
          borderLayout()
-         container( new ConsoleTextEditor(), id: 'editor', border: emptyBorder(0),
-                     font: new Font( "Monospaced", Font.PLAIN, 14 ) ){
+         container(new ConsoleTextEditor(), id: 'editor', border: emptyBorder(0),
+                     font: new Font("Monospaced", Font.PLAIN, 14)){
             action(runAction)
          }
       }
-      panel( title: "Styles ", id: "styleTab", tabIcon: imageIcon(resource:"icons/script_palette.png", class: SwingPadActions) ) {
+      panel(title: "Styles ", id: "styleTab", tabIcon: imageIcon(resource:"icons/script_palette.png", class: SwingPadActions)) {
          borderLayout()
-         container( new ConsoleTextEditor(), id: 'stylesheet', border: emptyBorder(0),
-                     font: new Font( "Monospaced", Font.PLAIN, 14 ) ){
+         container(new ConsoleTextEditor(), id: 'stylesheet', border: emptyBorder(0),
+                     font: new Font("Monospaced", Font.PLAIN, 14)){
             action(runAction)
          }
       }
-      panel( title: "Errors ", id: "errorsTab", tabIcon: imageIcon(resource:"icons/cancel.png", class: SwingPadActions)  ) {
+      panel(title: "Errors ", id: "errorsTab", tabIcon: imageIcon(resource:"icons/cancel.png", class: SwingPadActions) ) {
          borderLayout()
-         scrollPane( border: emptyBorder(0) ) {
-            textArea( id: 'errors', border: emptyBorder(0),
+         scrollPane(border: emptyBorder(0)) {
+            textArea(id: 'errors', border: emptyBorder(0),
                      background: Color.WHITE, editable: false,
-                     font: new Font( "Monospaced", Font.PLAIN, 10 ),
+                     font: new Font("Monospaced", Font.PLAIN, 10),
                      caretPosition: bind(reverse:true){ model.caretPosition },
-                     text: bind(reverse:true){ model.errors } )
+                     text: bind(reverse:true){ model.errors })
          }
       }
    }
-   scrollPane( id: "scroller", constraints: CENTER,
+   scrollPane(id: "scroller", constraints: CENTER,
                border: lineBorder(color:Color.BLACK, thickness:1),
-               rowHeaderView: rowHeader, columnHeaderView: columnHeader ){
-      panel( id: 'canvas', border: emptyBorder(0) ) {
+               rowHeaderView: rowHeader, columnHeaderView: columnHeader){
+      panel(id: 'canvas', border: emptyBorder(0)) {
          //borderLayout()
-         flowLayout( alignment: FlowLayout.LEFT, hgap: 0, vgap: 0 )
+         flowLayout(alignment: FlowLayout.LEFT, hgap: 0, vgap: 0)
       }
    }
 }
 
-jidePopup( id: 'popup', movable: false, resizable: false,
-   popupMenuWillBecomeInvisible: { evt -> doLater{editor.textEditor.requestFocus()} } ) {
+jidePopup(id: 'popup', movable: false, resizable: false,
+   popupMenuWillBecomeInvisible: { evt -> doLater{editor.textEditor.requestFocus()} }) {
    panel {
       borderLayout()
       scrollPane() {
-         list( id: "suggestionList",
+         list(id: "suggestionList",
                selectionMode: ListSelectionModel.SINGLE_SELECTION,
-               model: new EventListModel(model.suggestions) )
+               model: new EventListModel(model.suggestions))
       }
    }
 }
@@ -99,10 +99,10 @@ rowHeader.preferredSize = [20,screen.width as int]
 columnHeader.opaque = true
 columnHeader.preferredSize = [screen.height as int,20]
 
-canvas.addMouseListener( rowHeader )
-canvas.addMouseMotionListener( rowHeader )
-canvas.addMouseListener( columnHeader )
-canvas.addMouseMotionListener( columnHeader )
+canvas.addMouseListener(rowHeader)
+canvas.addMouseMotionListener(rowHeader)
+canvas.addMouseListener(columnHeader)
+canvas.addMouseMotionListener(columnHeader)
 
 inputArea = editor.textEditor
 rootElement = inputArea.document.defaultRootElement
@@ -113,8 +113,8 @@ noparent {
    container(stylesheet.textEditor, font: new Font("Monospaced", Font.PLAIN, 12), border:emptyBorder(4)) {
       action(runAction)
    }
-   bean( runAction, enabled: bind { inputArea.text?.size() > 0 } )
-   bean( suggestAction, enabled: bind { inputArea.text?.size() > 0 } )
+   bean(runAction, enabled: bind { inputArea.text?.size() > 0 })
+   bean(suggestAction, enabled: bind { inputArea.text?.size() > 0 })
 }
 
 inputArea.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(suggestAction.getValue("KeyStroke"), "codeSuggest")
@@ -128,12 +128,12 @@ inputArea.addCaretListener({ evt ->
    /*controller.builder.*/rowNumAndColNum.setText("$rowNum:$colNum")
 } as CaretListener)
 
-bean( model, content: bind { inputArea.text } )
-bean( model, dirty: bind { inputArea.text?.size() > 0 } )
-bean( model, stylesheet: bind { stylesheet.textEditor.text } )
+bean(model, content: bind { inputArea.text })
+bean(model, dirty: bind { inputArea.text?.size() > 0 })
+bean(model, stylesheet: bind { stylesheet.textEditor.text })
 
-bean( undoAction, enabled: bind { editor.undoAction.enabled } )
-bean( redoAction, enabled: bind { editor.redoAction.enabled } )
+bean(undoAction, enabled: bind { editor.undoAction.enabled })
+bean(redoAction, enabled: bind { editor.redoAction.enabled })
 inputArea.document.addDocumentListener({ model.dirty = true } as DocumentListener)
 inputArea.document.addDocumentListener({ model.successfulScript = false } as DocumentListener)
 

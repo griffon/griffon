@@ -23,14 +23,14 @@ import org.jdesktop.swingx.plaf.basic.BasicStatusBarUI
 
 build(SwingPadActions)
 
-application( title: "SwingPad", size: [800,600], locationByPlatform: true,
+application(title: "SwingPad", size: [800,600], locationByPlatform: true,
              iconImage: imageIcon('/griffon-icon-48x48.png').image,
              iconImages: [imageIcon('/griffon-icon-48x48.png').image,
                           imageIcon('/griffon-icon-32x32.png').image,
                           imageIcon('/griffon-icon-16x16.png').image]) {
-   menuBar( build(SwingPadMenuBar) )
-   toolBar( build(SwingPadToolBar) )
-   widget( build(SwingPadContentPane) )
+   menuBar(build(SwingPadMenuBar))
+   toolBar(build(SwingPadToolBar))
+   widget(build(SwingPadContentPane))
    jxstatusBar(id: 'statusPanel') {
       gridBagLayout()
       separator(constraints:gbc(gridwidth:GridBagConstraints.REMAINDER, fill:GridBagConstraints.HORIZONTAL))

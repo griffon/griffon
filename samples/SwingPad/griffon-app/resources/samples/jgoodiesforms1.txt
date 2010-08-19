@@ -1,0 +1,27 @@
+import java.awt.Color
+
+panel(border: lineBorder(color: Color.BLACK, thickness: 1)) {
+  form("right:max(40dlu;pref), 3dlu, 80dlu, 7dlu, right:max(40dlu;pref), 3dlu, 80dlu") {
+     setDefaultDialogBorder()
+
+     appendSeparator("Flange")
+
+     append("Identifier", textField())
+     nextLine()
+
+     append("PTI [kW]",   textField())
+     append("Power [kW]", textField())
+     append("s [mm]",     textField())
+     nextLine()
+
+     appendSeparator("Diameters")
+
+     append("da [mm]",    textField())
+     append("di [mm]",    textField())
+     append("da2 [mm]",   textField())
+     append("di2 [mm]",   textField())
+     append("R [mm]",     textField())
+     append("D [mm]",     textField())
+  }
+}
+

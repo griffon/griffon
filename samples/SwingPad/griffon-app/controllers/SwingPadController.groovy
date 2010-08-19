@@ -46,25 +46,25 @@ class SwingPadController {
    private static int scriptCounter = 0
    private Set factorySet = new TreeSet()
 
-   void mvcGroupInit( Map args ) {
+   void mvcGroupInit(Map args) {
       groovyClassLoader = new GroovyClassLoader(this.class.classLoader)
       def recentScriptsListSize = prefs.get("recentScripts.list.size","0") as int
       (0..<recentScriptsListSize).each { i ->
          def file = new File(prefs.get("recentScripts.${i}.file",""))
-         if( file.exists() ) model.addRecentScript(file,prefs)
+         if(file.exists()) model.addRecentScript(file,prefs)
       }
    }
 
    def updateTitle = { ->
       // TODO handle undo!
-      if( model.scriptFile ) {
+      if(model.scriptFile) {
          return model.scriptFile.name + (model.dirty ? " *" : "") + " - SwingPad"
       }
       return "SwingPad"
    }
 
    def newScript = { evt = null ->
-      if( askToSaveFile(evt) ) {
+      if(askToSaveFile(evt)) {
          model.scriptFile = null
          model.dirty = false
          view.editor.textEditor.text = ''
@@ -74,17 +74,17 @@ class SwingPadController {
 
    def open = { evt = null ->
       def file = selectFilename()
-      if( !file ) return
+      if(!file) return
       openFile(file)
    }
 
-   def openFile( File file ) {
+   def openFile(File file) {
       doOutside {
          model.scriptFile = file
          def scriptText = model.scriptFile.readLines().join('\n')
          model.addRecentScript(model.scriptFile,prefs)
          doLater {
-            if( !scriptText ) return
+            if(!scriptText) return
             // need 2-way binding!
             view.editor.textEditor.text = scriptText
             model.dirty = false
@@ -100,7 +100,7 @@ class SwingPadController {
    }
 
    def save = { evt = null ->
-      if( !model.scriptFile ) return saveAs(evt)
+      if(!model.scriptFile) return saveAs(evt)
       model.scriptFile.write(model.content)
       model.dirty = false
       return true
@@ -108,7 +108,7 @@ class SwingPadController {
 
    def saveAs = { evt = null ->
       model.scriptFile = selectFilename("Save")
-      if( model.scriptFile ) {
+      if(model.scriptFile) {
          model.scriptFile.write(model.content)
          model.addRecentScript(model.scriptFile,prefs)
          model.dirty = false
@@ -118,7 +118,7 @@ class SwingPadController {
    }
 
    def exit = { evt = null ->
-      if( askToSaveFile() ) {
+      if(askToSaveFile()) {
          FindReplaceUtility.dispose()
          app.shutdown()
       }
@@ -136,13 +136,13 @@ class SwingPadController {
          def filename = fc.selectedFile.name
          def dot = filename.lastIndexOf(".")
          def ext = "png"
-         if( dot > 0 )  {
+         if(dot > 0)  {
             ext = filename[dot+1..-1]
          } else {
             filename += ".$ext"
          }
          def target = new File(currentSnapshotDir,filename)
-         ImageIO.write( capture, ext, target )
+         ImageIO.write(capture, ext, target)
          def pane = builder.optionPane()
          pane.setMessage("Successfully saved snapshot to\n\n${target.absolutePath}")
          def dialog = pane.createDialog(app.windowManager.windows[0], 'Snapshot')
@@ -150,8 +150,8 @@ class SwingPadController {
       }
    }
 
-   private void invokeTextAction( evt, closure ) {
-      if( evt.source ) closure(view.editor.textEditor)
+   private void invokeTextAction(evt, closure) {
+      if(evt.source) closure(view.editor.textEditor)
    }
 
    def cut = { evt = null -> invokeTextAction(evt, { source -> source.cut() }) }
@@ -163,7 +163,7 @@ class SwingPadController {
    def find = { evt = null -> FindReplaceUtility.showDialog() }
    def findNext = { evt = null -> FindReplaceUtility.FIND_ACTION.actionPerformed(evt) }
    def findPrevious = { evt = null ->
-      def reverseEvt = new ActionEvent( evt.source, evt.iD,
+      def reverseEvt = new ActionEvent(evt.source, evt.iD,
          evt.actionCommand, evt.when,
          ActionEvent.SHIFT_MASK) //reverse
       FindReplaceUtility.FIND_ACTION.actionPerformed(reverseEvt)
@@ -182,16 +182,16 @@ class SwingPadController {
 
    def packComponents = { evt = null ->
       def newLayout = evt?.source?.state ? builder.flowLayout(alignment:FlowLayout.LEFT, hgap: 0, vgap: 0) : builder.borderLayout()
-      if( !newLayout.class.isAssignableFrom(view.canvas.layout.class) ) {
+      if(!newLayout.class.isAssignableFrom(view.canvas.layout.class)) {
          view.canvas.layout = newLayout
-         if( model.successfulScript ) runScript(evt)
+         if(model.successfulScript) runScript(evt)
       }
    }
 
    def showRulers = { evt = null ->
       def rh = evt?.source?.state ? view.rowHeader : view.emptyRowHeader
       def ch = evt?.source?.state ? view.columnHeader : view.emptyColumnHeader
-      if( view.scroller.rowHeader.view != rh ) {
+      if(view.scroller.rowHeader.view != rh) {
          view.scroller.rowHeaderView = rh
          view.scroller.columnHeaderView = ch
          view.scroller.repaint()
@@ -199,24 +199,24 @@ class SwingPadController {
    }
 
    def runScript = { evt = null ->
-      if( !model.content ) return
+      if(!model.content) return
       //view.tabs.selectedIndex = 0 // sourceTab
       runThread = Thread.start {
          try {
             doLater {
                model.status = "Running Script ..."
-               if( model.errors != "" ) {
+               if(model.errors != "") {
                   model.errors = ""
                   model.caretPosition = 0
                }
-               showDialog( "runWaitDialog" )
+               showDialog("runWaitDialog")
             }
-            executeScript( model.content )
-         } catch( Throwable t ) {
+            executeScript(model.content)
+         } catch(Throwable t) {
             doLater { finishWithException(t) }
          } finally {
             doLater {
-               hideDialog( "runWaitDialog" )
+               hideDialog("runWaitDialog")
                runThread = null
             }
          }
@@ -224,47 +224,34 @@ class SwingPadController {
    }
 
    def runSampleScript = { evt = null ->
-      if( model.currentSample ) {
-         def builder = model.currentSample[0..-2].toLowerCase()
-         def runIt = {
-            model.status = "Loading Script ..."
-            view.editor.textEditor.text = model.samples[model.currentSample]
-            view.editor.textEditor.caretPosition = 0
-            view.runAction.enabled = true
-            runScript(evt)
-         }
-         if( !model.builders[builder].enabled ) {
-            model.status = "Enabling ${model.builders[builder].type} ..."
-            view."${builder}Menu".selected = true
-            doOutside {
-               if(toggleBuilder([source:view."${builder}Menu"], builder, model.builders[builder].type)) {
-                  doLater(runIt)
-               }
-            }
-         } else {
-            runIt()
-         }
+      if(model.currentSample) {
+         model.status = "Loading Script ..."
+         view.editor.textEditor.text = model.samples[model.currentSample]
+         view.editor.textEditor.caretPosition = 0
+         view.runAction.enabled = true
+         runScript(evt)
       }
    }
 
    def about = { evt = null ->
       def pane = builder.optionPane()
        // work around GROOVY-1048
-      pane.setMessage("""Welcome to SwingPad.
+      pane.setMessage('''
+          Welcome to SwingPad.
 
-SwingPad is a scripting console for rendering Groovy SwingBuilder views,
-based on ideas pitched by Eitan Suez.
+          SwingPad is a scripting console for rendering Groovy SwingBuilder views,
+          based on ideas pitched by Eitan Suez.
 
-Contains code from http://code.google.com/p/gturtle/, used with explicit 
-permission from Eitan.
-""".toString())
-      def dialog = pane.createDialog(app.windowManager.windows[0], "About SwingPad")
+          Contains code from http://code.google.com/p/gturtle/, used with explicit 
+          permission from Eitan.
+          '''.stripIndent(10).toString())
+      def dialog = pane.createDialog(app.windowManager.windows[0], 'About SwingPad')
       dialog.show()
    }
 
    def showNodeList = { evt = null ->
-      if( !view.nodeListDialog.visible ) {
-         if( model.nodes.isEmpty() ){
+      if(!view.nodeListDialog.visible) {
+         if(model.nodes.isEmpty()){
              populateFactorySet()
          }
          showDialog("nodeListDialog", false)
@@ -272,9 +259,9 @@ permission from Eitan.
    }
 
    def confirmRunInterrupt = { evt = null ->
-      def rc = JOptionPane.showConfirmDialog( app.windowManager.windows[0], "Attempt to interrupt script?",
+      def rc = JOptionPane.showConfirmDialog(app.windowManager.windows[0], "Attempt to interrupt script?",
             "SwingPad", JOptionPane.YES_NO_OPTION)
-      if( rc == JOptionPane.YES_OPTION && runThread ) {
+      if(rc == JOptionPane.YES_OPTION && runThread) {
           runThread.interrupt()
       }
    }
@@ -309,26 +296,26 @@ permission from Eitan.
    }
 
    def suggestNodeName = { evt = null ->
-      if( !model.content ) return
+      if(!model.content) return
 
       def editor = view.editor.textEditor
       def caret = editor.caretPosition
-      if( !caret ) return
+      if(!caret) return
 
       def document = editor.document
       def target = ""
       def ch = document.getText(--caret,1)
-      while( ch =~ /[a-zA-Z]/ ) {
+      while(ch =~ /[a-zA-Z]/) {
          target = ch + target
-         if( caret ) ch = document.getText(--caret,1)
+         if(caret) ch = document.getText(--caret,1)
          else break
       }
-      if( target.size() != document.length ) caret++
+      if(target.size() != document.length) caret++
 
-      if( !factorySet ) populateFactorySet()
+      if(!factorySet) populateFactorySet()
       def suggestions = factorySet.findAll{ it.startsWith(target) }
-      if( !suggestions ) return
-      if( suggestions.size() == 1 ) {
+      if(!suggestions) return
+      if(suggestions.size() == 1) {
          model.suggestion = [
             start: caret,
             end: caret + target.size(),
@@ -355,38 +342,14 @@ permission from Eitan.
       writeSuggestion()
    }
 
-   def toggleFlamingoBuilder = { evt = null ->
-      doOutside {
-         toggleBuilder(evt, "flamingo", model.builders.flamingo.type)
-      }
-   }
-
-   def toggleTrayBuilder = { evt = null ->
-      doOutside {
-         toggleBuilder(evt, "tray", model.builders.tray.type)
-      }
-   }
-
-   def toggleMacwidgetsBuilder = { evt = null ->
-      doOutside {
-         toggleBuilder(evt, "macwidgets", model.builders.macwidgets.type)
-      }
-   }
-
-   def toggleSwingxtrasBuilder = { evt = null ->
-      doOutside {
-         toggleBuilder(evt, "swingxtras", model.builders.swingxtras.type)
-      }
-   }
-
    def toggleLayout = { evt = null ->
       model.horizontalLayout = !model.horizontalLayout
       view.splitPane.orientation = model.horizontalLayout ? HORIZONTAL_SPLIT : VERTICAL_SPLIT
-      view.toggleLayoutAction.putValue("SmallIcon", model.horizontalLayout ? view.verticalLayoutIcon : view.horizontalLayoutIcon )
+      view.toggleLayoutAction.putValue("SmallIcon", model.horizontalLayout ? view.verticalLayoutIcon : view.horizontalLayoutIcon)
    }
 
    private writeSuggestion() {
-      if( !model.suggestion ) return
+      if(!model.suggestion) return
 
       def editor = view.editor.textEditor
       def document = editor.document
@@ -399,19 +362,19 @@ permission from Eitan.
       model.suggestion = [:]
    }
 
-   private void finishNormal( component ) {
+   private void finishNormal(component) {
       model.successfulScript = true
       doLater {
          model.status = "Execution complete."
          view.canvas.removeAll()
          view.canvas.repaint()
-         if( component instanceof JComponent ) {
+         if(component instanceof JComponent) {
             view.canvas.add(component)
             // apply stylesheet of any
-            if( model.stylesheet ) {
+            if(model.stylesheet) {
                try {
                   CSSDecorator.applyStyle(model.stylesheet,view.canvas)
-               } catch( Exception e ) {
+               } catch(Exception e) {
                   displayErrorMessages(e)
                }
             }
@@ -421,7 +384,7 @@ permission from Eitan.
       }
    }
 
-   private void finishWithException( Throwable t ) {
+   private void finishWithException(Throwable t) {
       model.successfulScript = false
       model.status = "Execution terminated with exception."
       displayErrorMessages(t)
@@ -431,7 +394,7 @@ permission from Eitan.
       }
    }
 
-   private void displayErrorMessages( Throwable t ) {
+   private void displayErrorMessages(Throwable t) {
       StackTraceUtils.deepSanitize(t)
       t.printStackTrace()
       def baos = new ByteArrayOutputStream()
@@ -457,26 +420,26 @@ permission from Eitan.
       }
    }
 
-   private void showDialog( dialogName, pack = true ) {
+   private void showDialog(dialogName, pack = true) {
       def dialog = view."$dialogName"
-      if( pack ) dialog.pack()
+      if(pack) dialog.pack()
       int x = app.windowManager.windows[0].x + (app.windowManager.windows[0].width - dialog.width) / 2
       int y = app.windowManager.windows[0].y + (app.windowManager.windows[0].height - dialog.height) / 2
       dialog.setLocation(x, y)
       dialog.show()
    }
 
-   private void hideDialog( dialogName ) {
+   private void hideDialog(dialogName) {
       def dialog = view."$dialogName"
       dialog.hide()
    }
 
-   private selectFilename( name = "Open" ) {
+   private selectFilename(name = "Open") {
       // should use builder.fileChooser() ?
       def fc = new JFileChooser(currentFileChooserDir)
       fc.fileSelectionMode = JFileChooser.FILES_ONLY
       fc.acceptAllFileFilterUsed = true
-      if( fc.showDialog(app.windowManager.windows[0], name ) == JFileChooser.APPROVE_OPTION ) {
+      if(fc.showDialog(app.windowManager.windows[0], name) == JFileChooser.APPROVE_OPTION) {
          currentFileChooserDir = fc.currentDirectory
          prefs.put('currentFileChooserDir', currentFileChooserDir.path)
          return fc.selectedFile
@@ -485,8 +448,8 @@ permission from Eitan.
    }
 
    private boolean askToSaveFile(evt) {
-      if( !model.scriptFile || !model.dirty ) return true
-      switch( JOptionPane.showConfirmDialog( app.windowManager.windows[0],
+      if(!model.scriptFile || !model.dirty) return true
+      switch(JOptionPane.showConfirmDialog(app.windowManager.windows[0],
                  "Save changes to " + model.scriptFile.name + "?",
                  "SwingPad", JOptionPane.YES_NO_CANCEL_OPTION)){
          case JOptionPane.YES_OPTION: return save(evt)
@@ -495,17 +458,17 @@ permission from Eitan.
       return false
    }
 
-   private void executeScript( codeSource ) {
+   private void executeScript(codeSource) {
       try {
          def script = groovyClassLoader.parseClass(codeSource,getScriptName()).newInstance()
          def b = app.builders.Script
          def component = null
          b.edt{ component = b.build(script)}
-//          if( !(component instanceof JComponent) ) {
+//          if(!(component instanceof JComponent)) {
 //             throw new IllegalArgumentException("The script did not return a JComponent!")
 //          }
          doLater { finishNormal(component) }
-      } catch( Throwable t ) {
+      } catch(Throwable t) {
          doLater { finishWithException(t) }
       }
    }
@@ -514,10 +477,10 @@ permission from Eitan.
       "SwingPad_script" + (scriptCounter++)
    }
 
-   private modifyFont( target, sizeFilter, sizeMod ) {
+   private modifyFont(target, sizeFilter, sizeMod) {
       def currentFont = target.font
-      if( sizeFilter(currentFont.size) ) return
-      target.font = new Font( 'Monospaced', currentFont.style, currentFont.size + sizeMod )
+      if(sizeFilter(currentFont.size)) return
+      target.font = new Font('Monospaced', currentFont.style, currentFont.size + sizeMod)
    }
 
    private populateFactorySet() {
@@ -533,7 +496,7 @@ permission from Eitan.
             factorySet.addAll(ubr.builder.factories.keySet().sort().collect(){ (ubr.prefixString?:"")+it })
             builder.getRegistrationGroups().each { group ->
                def groupSet = builder.getRegistrationGroupItems(group)
-               if( group && groupSet ) {
+               if(group && groupSet) {
                   try{
                      builder.getClass().getDeclaredMethod("register$group",[] as Class[])
                      def builderName = builder.getClass().name
@@ -545,7 +508,7 @@ permission from Eitan.
                            node: node
                         ]
                      }
-                  } catch( NoSuchMethodException nsme ) {
+                  } catch(NoSuchMethodException nsme) {
                      // ignore
                   }
                }
@@ -556,53 +519,26 @@ permission from Eitan.
       }
       factorySet -= factorySet.grep{ it.startsWith("jxclassicSwing:") }
 
+      app.addons.each { addonName, addon ->
+	     try {
+	        addon.factories.each { node, factory ->
+		       addonName -= 'GriffonAddon'
+		       groups << [
+                  builder: addonName,
+                  group: 'Addon',
+                  node: node
+               ]
+               factorySet << node
+		    }
+		 } catch(MissingPropertyException mpe) {
+			// ignore
+		 }
+	  }
+
       synchronized(model.nodes) {
          model.nodes.clear()
          Thread.sleep(200)
          model.nodes.addAll(groups)
       }
-   }
-
-   private toggleBuilder( evt, name, builder ) {
-      def cname = name[0].toUpperCase() + name[1..-1]
-      model.builders[name].enabled = evt.source.selected
-      if( model.builders[name].enabled ) {
-         app.builderConfig.root."$builder".view = "*"
-      } else {
-         app.builderConfig.root.remove(builder)
-      }
-
-      try {
-         // With no current way to unload an URL from the rootLoader
-         // we have to keep track if an URL has already been added to it
-         if( !model.builders[name].loaded ) {
-            def startDir = System.getProperty("griffon.start.dir")
-            if( startDir.startsWith('"') && startDir.endsWith('"') ) {
-               startDir = startDir[1..-2]
-            }
-            def jarDir = new File(startDir,"lib/$name")
-            jarDir.eachFileMatch({it.endsWith(".jar")}) { jar ->
-//                groovyClassLoader.addURL(jar.toURI().toURL())
-               this.class.classLoader.addURL(jar.toURI().toURL())
-            }
-            model.builders[name].loaded = true
-         }
-         def binding = new Binding()
-         binding.setVariable("controller", this)
-         def script = """def (m, v, c) = controller.createMVCGroup("Script","Script",[:])
-         return v
-         """
-         app.builders.Script = new GroovyShell(groovyClassLoader,binding).evaluate(script)
-      } catch( ex ) {
-         StackTraceUtils.deepSanitize(ex)
-         ex.printStackTrace()
-         model.builders[name].enabled != model.builders[name].enabled
-         evt.source.selected = !evt.source.selected
-         showAlert( "Enable $cname".toString(),
-          "Couldn't enable $cname:\n\n$ex".toString())
-      }/* finally {
-         populateFactorySet()
-      }*/
-      return model.builders[name].enabled
    }
 }

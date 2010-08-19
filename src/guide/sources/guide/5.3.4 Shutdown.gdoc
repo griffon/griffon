@@ -1,1 +1,5 @@
 Called when the application is about to close. Any artifact can invoke the shutdown sequence by calling @shutdown()@ on the *[app|MVC]* instance.
+
+{note}
+The @Shutdown@ script will be called before any @ShutdownHandler@ or event handler insterested in the @ShutdownStart@ event.
+{note}

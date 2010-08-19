@@ -32,6 +32,7 @@ class SwingPadModel {
    @Bindable String currentTab = "sourceTab"
    @Bindable String stylesheet = ""
 
+/*
    Map builders = [
       css:        [ enabled: true,  loaded: true,  type: "griffon.builder.css.CSSBuilder"],
       gfx:        [ enabled: true,  loaded: true,  type: "griffon.builder.gfx.GfxBuilder"],
@@ -52,6 +53,7 @@ class SwingPadModel {
       jung:           [ enabled: true,  loaded: true,  type: "dummy"],
       transitions:    [ enabled: true,  loaded: true,  type: "dummy"],
    ]
+*/
 
    Map samples = [:]
    @Bindable String currentSample

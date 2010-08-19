@@ -1,0 +1,12 @@
+import java.awt.Color
+
+panel(border: lineBorder(color: Color.BLACK, thickness: 1)) {
+  designGridLayout {
+    row().grid(label('Row 1')).add(button('Button'), button('Button'))
+    row().grid(label('Row 2')).add(button('Button'), button('Button'), button('Button'))
+    row().grid(label('Row 3')).add(button('Button'), 2).add(button('Button'))
+    row().grid(label('Row 4')).add(button('Button'), button('Button'), button('Button')).empty()
+    emptyRow()
+    row().right().add(button('Cancel'), button('OK'))
+  }
+}

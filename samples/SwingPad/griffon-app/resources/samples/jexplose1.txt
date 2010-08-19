@@ -1,0 +1,19 @@
+import org.jdesktop.swingx.jexplose.JExplose
+
+panel{
+  borderLayout()
+  button('Explode!', constraints: NORTH, actionPerformed: {
+    explose(desktop)
+  })
+  desktopPane(id: 'desktop', constraints: CENTER, preferredSize: [430, 330]) {
+    (1..10).each { i ->
+      internalFrame(title: "Frame $i",
+                    iconifiable: true, maximizable: true, resizable: true,
+                    size: [150, 150], location: [20*i, 20*i], visible: true) {
+        borderLayout()
+        label "Frame $i", constraints: CENTER
+      }
+    }
+  }
+  JExplose.instance.background = getClass().getResource('/griffon.png')
+}

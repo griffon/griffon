@@ -21,8 +21,8 @@ import static griffon.util.GriffonApplicationUtils.*
 import javax.swing.event.PopupMenuListener
 
 def makeSampleScriptAction = { id, name ->
-   actions {
-      action( id: "${id}Action",
+   noparent {
+      action(id: "${id}Action",
          name: name,
          closure: { model.currentSample = id; controller.runSampleScript(it) },
          smallIcon: imageIcon(resource:"icons/script_gear.png", class: SwingPadActions)
@@ -79,57 +79,60 @@ menuBar = menuBar {
        menuItem(snapshotAction)
    }
 
-   menu(text: 'Builder', mnemonic: 'B') {
-       checkBoxMenuItem(flamingoAction,
-                        id: "flamingoMenu",
-                        selected: controller.toggleFlamingoBuilder )
-       checkBoxMenuItem(trayAction,
-                        id: "trayMenu",
-                        selected: controller.toggleTrayBuilder)
-       checkBoxMenuItem(macwidgetsAction,
-                        id: "macwidgetsMenu",
-                        selected: controller.toggleMacwidgetsBuilder)
-       checkBoxMenuItem(swingxtrasAction,
-                        id: "swingxtrasMenu",
-                        selected: controller.toggleSwingxtrasBuilder)
-       flamingoMenu.selected = false
-       trayMenu.selected = false
-       macwidgetsMenu.selected = false
-       swingxtrasMenu.selected = false
-   }
-
    menu(text: 'Script', mnemonic: 'S') {
        menuItem(runAction)
        separator()
        menuItem(addClasspathJarAction)
        menuItem(addClasspathDirAction)
        separator()
-       menu("Samples") {
-          [ jide1: "Jide - Flair",
-            jide2: "Jide - MeterProgressBar",
-            swingx1: "SwingX - Flair",
-            tray1: "Tray - Flair",
-            flamingo1: "Flamingo - FlexiSlider",
-            macwidgets1: "MacWidgets - Flair",
-            swingxtras1: "Swingxtras - Flair",
-            trident1: "Trident - ButtonFG",
-            trident2: "Trident - Snake",
-            gfx1: "Gfx - Sphere",
-            gfx2: "Gfx - Animation",
-            coverflow1: "Coverflow"].each { id, name ->
-             menuItem(makeSampleScriptAction(id,name))
-          }
+       menuItem(nodesAction)
+       separator()
+       menu('Samples') {
+	      menu('Builders') {
+		     [jide1: "Jide - Flair",
+              jide2: "Jide - MeterProgressBar",
+              swingx1: "SwingX - Flair",
+              tray1: "Tray - Flair",
+              macwidgets1: "MacWidgets - Flair",
+              swingxtras1: "Swingxtras - Flair"].each { id, name ->
+                menuItem(makeSampleScriptAction(id,name))
+             }
+	      }
+	      menu('Layouts') {
+		     [desinggridlayout1: "DesignGridLayout",
+		      jgoodiesforms1: "FormLayout",
+		      miglayout1: "MigLayout",
+		      riverlayout1: "RiverLayout",
+		      zonelayout1: "ZoneLayout"].each { id, name ->
+                menuItem(makeSampleScriptAction(id,name))
+             }
+	      }
+	      menu('Custom') {
+		     [coverflow1: "Coverflow"].each { id, name ->
+                menuItem(makeSampleScriptAction(id,name))
+             }
+	      }
+	      menu('Effects') {
+		     [trident1: "Trident - ButtonFG",
+              // trident2: "Trident - Snake",
+              gfx1: "Gfx - Sphere",
+              jexplose1: "JExplose",
+              transitions1: "Transitions - Picker",
+              /*gfx2: "Gfx - Animation"*/].each { id, name ->
+                menuItem(makeSampleScriptAction(id,name))
+             }
+	      }
        }
    }
 
-   //if( !isMacOSX ) {
+   if(!isMacOSX) {
        glue()
        menu(text: 'Help', mnemonic: 'H') {
            menuItem(aboutAction)
-           separator()
-           menuItem(nodesAction)
+           // separator()
+           // menuItem(nodesAction)
        }
-   //}
+   }
 }
 
 openRecentMenu.popupMenu.addPopupMenuListener([

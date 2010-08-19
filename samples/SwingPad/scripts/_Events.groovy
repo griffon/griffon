@@ -27,11 +27,3 @@ eventPrepareIzpackInstallerEnd = { ->
         replacefilter(token: "@app.version@", value: griffonAppVersion)
     }
 }
-
-eventCopyLibsEnd = { jardir ->
-   ["flamingo","tray","macwidgets","swingxtras"].each { dir ->
-      ant.copy(todir: "${jardir}/${dir}") {
-         fileset(dir: "${basedir}/lib/${dir}", includes:"*.jar")
-      }
-   }
-}

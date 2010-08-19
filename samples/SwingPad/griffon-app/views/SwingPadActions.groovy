@@ -198,8 +198,8 @@ actions {
       enabled: bind {model.dirty},
       closure: controller.suggestNodeName,
       //mnemonic: 'G',
-      accelerator: shortcut('SPACE'),
-      keyStroke: shortcut('SPACE')
+      accelerator: isMacOSX? shortcut('shift SPACE') : shortcut('SPACE'),
+      keyStroke: isMacOSX? shortcut('shift SPACE') : shortcut('SPACE')
    )
    action(id: 'completeAction',
       closure: controller.codeComplete
@@ -231,40 +231,6 @@ actions {
       accelerator: shortcut('T'),
       smallIcon: imageIcon(resource:"icons/camera.png", class: SwingPadActions),
       shortDescription: 'Take a snapshot'
-   )
-
-   action(id: 'flamingoAction',
-      name: 'Flamingo',
-      mnemonic: 'F',
-      closure: controller.toggleFlamingoBuilder,
-      enabled: isJdk16,
-      smallIcon: imageIcon(resource:"icons/plugin.png", class: SwingPadActions),
-      shortDescription: isJdk16 ? "Enable FlamingoBuilder" : "Requires Jre 1.6 or above"
-   )
-
-   action(id: 'trayAction',
-      name: 'Tray',
-      mnemonic: 'Y',
-      closure: controller.toggleTrayBuilder,
-      enabled: isJdk16,
-      smallIcon: imageIcon(resource:"icons/plugin.png", class: SwingPadActions),
-      shortDescription: isJdk16 ? "Enable TrayBuilder" : "Requires Jre 1.6 or above"
-   )
-
-   action(id: 'macwidgetsAction',
-      name: 'MacWidgets',
-      mnemonic: 'M',
-      closure: controller.toggleMacwidgetsBuilder,
-      smallIcon: imageIcon(resource:"icons/plugin.png", class: SwingPadActions),
-      shortDescription: "Enable MacWidgetsBuilder"
-   )
-
-   action(id: 'swingxtrasAction',
-      name: 'Swingxtras',
-      mnemonic: 'X',
-      closure: controller.toggleSwingxtrasBuilder,
-      smallIcon: imageIcon(resource:"icons/plugin.png", class: SwingPadActions),
-      shortDescription: "Enable SwingxtrasBuilder"
    )
 
    imageIcon(id: "verticalLayoutIcon", resource:"icons/application_tile_vertical.png", class: SwingPadActions)

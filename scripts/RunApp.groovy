@@ -91,6 +91,7 @@ target('runApp': "Runs the application from the command line") {
         // let's make sure no empty/null String is added
         javaOpts.each { s -> if(s) cmd << s }
         [proxySettings, '-classpath', runtimeClasspath, griffonApplicationClass].each { s -> if(s) cmd << s }
+println(cmd.join(' '))
         Process p = Runtime.runtime.exec(cmd as String[], null, jardir)
 
         // pipe the output

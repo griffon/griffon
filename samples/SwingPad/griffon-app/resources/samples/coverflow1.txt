@@ -1,24 +1,40 @@
-def cantons = Application.class.getResource('/images/blasons/cantons.txt').text.split(',')
+import org.springframework.core.io.support.PathMatchingResourcePatternResolver
 
-panel(preferredSize: [700, 300]) {
+// Watch out! reading resources inside the UI thread!!
+ClassLoader classLoader = getClass().classLoader
+String path = 'classpath*:/images/everaldo/*.png'
+List icons = new PathMatchingResourcePatternResolver(classLoader)
+                      .getResources(path).collect([]) { r ->
+  def (m, icon) = (r.getURL().path =~ /.*\/([a-zA-Z0-9_\-]+)\.png/)[0]
+  icon
+}
+
+panel(preferredSize: [800, 300]) {
   borderLayout()
   panel(constraints: CENTER) {
     stackLayout()
     gradientPanel(constraints: BOTTOM)
     imageFlow(id: "flow", constraints: TOP) {
-      cantons.each { canton ->
-        canton = canton.trim()
-        def png = "Blason-CH-Canton-${canton}.PNG"
-        imageFlowItem(resource: "/images/blasons/$png", label: canton)
+      icons.each { icon ->
+        imageFlowItem(resource: "/images/everaldo/${icon}.png",
+                      label: icon[0].toUpperCase() + icon[1..-1])
       }
     }
+    // change selection after children have been set
+    noparent{ flow.selectedIndex = 0 }
   }
   panel(constraints: WEST) {
-    borderLayout()
-    button("<",  actionPerformed: { flow.previous() })
+    gridLayout(cols: 1, rows: 2)
+    button(crystalIcon(category: 'actions', size: 32, icon: '1leftarrow'),
+           actionPerformed: {flow.previous()})
+    button(crystalIcon(category: 'actions', size: 32, icon: '2leftarrow'),
+           actionPerformed: {flow.selectedIndex = 0 })
   }
   panel(constraints: EAST) {
-    borderLayout()
-    button(">",  actionPerformed: { flow.next() })
+    gridLayout(cols: 1, rows: 2)
+    button(crystalIcon(category: 'actions', size: 32, icon: '1rightarrow'),
+           actionPerformed: {flow.next()})
+    button(crystalIcon(category: 'actions', size: 32, icon: '2rightarrow'),
+           actionPerformed: {flow.selectedIndex = (icons.size() - 1) })
   }
 }
