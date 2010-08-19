@@ -18,6 +18,7 @@ package griffon.core
 
 import griffon.util.EventRouter
 import griffon.util.Metadata
+import griffon.util.ApplicationHolder
 import org.codehaus.griffon.runtime.util.GriffonApplicationHelper
 
 import groovy.beans.Bindable
@@ -67,6 +68,7 @@ class BaseGriffonApplication implements GriffonApplication {
 
     BaseGriffonApplication(GriffonApplication appDelegate) {
         this.appDelegate = appDelegate
+        ApplicationHolder.application = appDelegate
     }
 
     Metadata getMetadata() {
