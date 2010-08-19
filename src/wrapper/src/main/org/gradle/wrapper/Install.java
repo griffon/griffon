@@ -139,6 +139,7 @@ public class Install {
                     new BufferedOutputStream(new FileOutputStream(new File(dest, entry.getName()))));
         }
         zipFile.close();
+        zip.delete();
     }
 
     public void copyInputStream(InputStream in, OutputStream out) throws IOException {
