@@ -17,6 +17,7 @@
 import griffon.util.RunMode
 import griffon.util.Environment
 import org.codehaus.griffon.commons.ApplicationHolder
+import static griffon.util.GriffonApplicationUtils.is64Bit
 
 /**
  * Gant script that bootstraps a Griffon application
@@ -73,6 +74,13 @@ setupRuntimeJars = {
             runtimeJars += f
         }
     }
+    
+    platformDir2 = new File(jardir.absolutePath, platform[0..-3])
+    if(is64Bit && platformDir2.exists()) {
+        platformDir2.eachFileMatch(~/.*\.jar/) {f ->
+            runtimeJars += f
+        }
+    }
 // XXX -- NATIVE
 
     return runtimeJars
@@ -97,9 +105,16 @@ setupJavaOpts = { includeNative = true ->
 // XXX -- NATIVE
     platformDir = new File(jardir.absolutePath, platform)
     File nativeLibDir = new File(platformDir.absolutePath, 'native')
-    if(includeNative && nativeLibDir.exists()) {
+    platformDir2 = new File(jardir.absolutePath, platform[0..-3])
+    File nativeLibDir2 = new File(platformDir2.absolutePath, 'native')
+    if(includeNative) {
         String libraryPath = System.getProperty('java.library.path')
-        libraryPath = libraryPath + File.pathSeparator + nativeLibDir.absolutePath
+        if(nativeLibDir.exists()) {
+            libraryPath = libraryPath + File.pathSeparator + nativeLibDir.absolutePath
+        }
+        if(is64Bit && nativeLibDir2.exists()) {
+            libraryPath = libraryPath + File.pathSeparator + nativeLibDir2.absolutePath
+        }
         javaOpts << "-Djava.library.path=$libraryPath".toString()
     }
 // XXX -- NATIVE

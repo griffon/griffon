@@ -22,6 +22,7 @@ import griffon.util.Metadata
 import griffon.util.RunMode
 import griffon.util.PlatformUtils
 import static griffon.util.GriffonApplicationUtils.osArch
+import static griffon.util.GriffonApplicationUtils.is64Bit
 
 /**
  * Gant script that packages a Griffon application (note: does not create WAR)
@@ -42,26 +43,6 @@ configTweaks = []
 
 target(createConfig: "Creates the configuration object") {
     depends(compile)
-/*
-    if(buildConfigFile.exists()) {
-       def buildConfigClass
-       try {
-           buildConfigClass = classLoader.loadClass("BuildConfig")
-       } catch (ClassNotFoundException cnfe) {
-           println "WARNING: No config found for the application."
-       }
-       if(buildConfigClass) {
-           try {
-               buildConfig = configSlurper.parse(buildConfigClass)
-               buildConfig.setConfigFile(buildConfigFile.toURI().toURL())
-           }
-           catch(Exception e) {
-               logError("Failed to compile configuration file",e)
-               exit(1)
-           }
-       }
-    }
-*/
     configTweaks.each {tweak -> tweak() }
 }
 
@@ -94,11 +75,6 @@ target(packageApp : "Implementation of package target") {
     checkKey()
     _copyLibs()
     jarFiles()
-
-// XXX -- NATIVE 
-    copyPlatformJars(basedir + File.separator + 'lib', new File(jardir).absolutePath) 
-    copyNativeLibs(basedir + File.separator + 'lib', new File(jardir).absolutePath) 
-// XXX -- NATIVE 
 
     event("PackagingEnd",[])
 }
@@ -263,7 +239,14 @@ _copyLibs = {
         griffonCopyDist(it.toString(), jardir)
     }
 
-    copyPlatformJars("${basedir}/lib", jardir)
+// XXX -- NATIVE 
+    copyPlatformJars("${basedir}/lib", new File(jardir).absolutePath) 
+    copyNativeLibs("${basedir}/lib", new File(jardir).absolutePath) 
+    doWithPlugins { pluginName, pluginVersion, pluginDir ->
+        copyPlatformJars("${pluginDir}/lib", new File(jardir).absolutePath) 
+        copyNativeLibs("${pluginDir}/lib", new File(jardir).absolutePath) 
+    }
+// XXX -- NATIVE 
 
     griffonSettings.runtimeDependencies?.each { File f ->
         griffonCopyDist(f.absolutePath, jardir)
@@ -316,6 +299,7 @@ griffonCopyDist = { jarname, targetDir, boolean force = false ->
 }
 
 maybePackAndSign = {srcFile, targetFile = srcFile, boolean force = false ->
+    if(!srcFile.name.endsWith('.jar')) return
     // GRIFFON-118 required for avoiding signing jars twice when using jar package target
     if(_skipSigning/* && !force*/) return
 
@@ -549,7 +533,10 @@ doPackageTextReplacement = {dir, fileFilters ->
 copyPlatformJars = { srcdir, destdir ->
     def env = Environment.current
     if(env == Environment.DEVELOPMENT || env == Environment.TEST) {
-        _copyPlatformJars(srcdir.toString(), destdir.toString(), platform)
+        String plf = platform
+        File platformDir = new File(srcdir.toString() + File.separator + platform)
+        if(!platformDir.exists() && is64Bit) plf -= '64'
+        _copyPlatformJars(srcdir.toString(), destdir.toString(), plf)
     } else {
         doForAllPlatforms { key, value ->
             _copyPlatformJars(srcdir.toString(), destdir.toString(), key)
@@ -572,7 +559,10 @@ _copyPlatformJars = { srcdir, destdir, os ->
 copyNativeLibs = { srcdir, destdir ->
     def env = Environment.current
     if(env == Environment.DEVELOPMENT || env == Environment.TEST) {
-        _copyNativeLibs(srcdir.toString(), destdir.toString(), platform)
+        String plf = platform
+        File platformDir = new File(srcdir.toString() + File.separator + platform)
+        if(!platformDir.exists() && is64Bit) plf -= '64'
+        _copyNativeLibs(srcdir.toString(), destdir.toString(), plf)
     } else {
         doForAllPlatforms { key, value ->
             _copyNativeLibs(srcdir.toString(), destdir.toString(), key)

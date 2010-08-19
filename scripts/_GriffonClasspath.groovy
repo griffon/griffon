@@ -17,6 +17,7 @@
 import griffon.util.PlatformUtils
 import org.codehaus.groovy.control.CompilerConfiguration
 import org.springframework.core.io.FileSystemResource
+import static griffon.util.GriffonApplicationUtils.is64Bit
 
 /**
  * Gant script containing the Griffon classpath setup.
@@ -78,11 +79,20 @@ getJarFiles = {->
     }
 
 // XXX -- NATIVE
-    resolveResources("file:${basedir}/lib/${PlatformUtils.platform}/*.jar").each { platformJar ->
+    resolveResources("file:${basedir}/lib/${platform}/*.jar").each { platformJar ->
         jarFiles << platformJar
     }
-    resolveResources("file:${pluginsHome}/*/lib/${PlatformUtils.platform}/*.jar").each { platformPluginJar ->
+    resolveResources("file:${pluginsHome}/*/lib/${platform}/*.jar").each { platformPluginJar ->
         jarFiles << platformPluginJar
+    }
+
+    if(is64Bit) {
+        resolveResources("file:${basedir}/lib/${platform[0..-3]}/*.jar").each { platformJar ->
+            jarFiles << platformJar
+        }
+        resolveResources("file:${pluginsHome}/*/lib/${platform[0..-3]}/*.jar").each { platformPluginJar ->
+            jarFiles << platformPluginJar
+        }
     }
 // XXX -- NATIVE
 
@@ -115,11 +125,20 @@ commonClasspath = {
     }
 
 // XXX -- NATIVE
-    resolveResources("file:${basedir}/lib/${PlatformUtils.platform}").each { platformLib ->
+    resolveResources("file:${basedir}/lib/${platform}").each { platformLib ->
         if(platformLib.file.exists()) fileset(dir: platformLib.file.absolutePath)
     }
-    resolveResources("file:${pluginsHome}/*/lib/${PlatformUtils.platform}").each { platformPluginLib ->
+    resolveResources("file:${pluginsHome}/*/lib/${platform}").each { platformPluginLib ->
         if(platformPluginLib.file.exists()) fileset(dir: platformPluginLib.file.absolutePath)
+    }
+
+    if(is64Bit) {
+        resolveResources("file:${basedir}/lib/${platform[0..-3]}").each { platformLib ->
+            if(platformLib.file.exists()) fileset(dir: platformLib.file.absolutePath)
+        }
+        resolveResources("file:${pluginsHome}/*/lib/${platform[0..-3]}").each { platformPluginLib ->
+            if(platformPluginLib.file.exists()) fileset(dir: platformPluginLib.file.absolutePath)
+        }
     }
 // XXX -- NATIVE
 }
