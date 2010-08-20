@@ -29,7 +29,7 @@ target(default:"Adds a proxy configuration") {
 
     if (argsMap.host && argsMap.port) {
         def settingsFile = griffonSettings.proxySettingsFile
-        config = griffonSettings.proxySettings
+        def config = griffonSettings.proxySettings
 
         config[argsMap.params[0]] = ['http.proxyHost':argsMap.host,
                                      'http.proxyPort':argsMap.port,

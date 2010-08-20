@@ -20,7 +20,7 @@
 
 target(default: "Clears a proxy configuration") {
     def settingsFile = griffonSettings.proxySettingsFile
-    config = griffonSettings.proxySettings
+    def config = griffonSettings.proxySettings
     config.remove('currentProxy')
 
     settingsFile.withWriter { w -> config.writeTo(w) }

@@ -28,7 +28,7 @@ target(default: "Removes a proxy configuration") {
     }
 
     def settingsFile = griffonSettings.proxySettingsFile
-    config = griffonSettings.proxySettings
+    def config = griffonSettings.proxySettings
     def name = argsMap.params[0]
     config.remove(name)
 
