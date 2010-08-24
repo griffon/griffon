@@ -36,6 +36,17 @@ target('default': "Upgrades a Griffon application from a previous version of Gri
         def gv = appGriffonVersion ?: "?Unknown?"
         event("StatusUpdate", ["NOTE: Your application currently expects griffon version [$gv], " +
                 "this target will upgrade it to Griffon ${griffonVersion}"])
+    } else {
+        ant.input(message: """
+        WARNING: Your application appears to be configured for Griffon ${griffonVersion} already.
+        Are you sure you want to continue?
+                   """,
+                    validargs: "y,n",
+                    addproperty: "griffon.overwrite.warning")
+
+        def answer = ant.antProject.properties."griffon.overwrite.warning"
+        if (answer == "n") exit(0)
+        force = true
     }
 
     if (!force) {

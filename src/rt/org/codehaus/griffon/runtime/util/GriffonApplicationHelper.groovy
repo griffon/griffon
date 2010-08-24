@@ -212,8 +212,8 @@ class GriffonApplicationHelper {
         Map<String, GriffonClass> griffonClassMap = [:]
         ClassLoader classLoader = app.getClass().classLoader
         app.mvcGroups[mvcType].each {k, v ->
-	        GriffonClass griffonClass = ArtifactManager.instance.findGriffonClass(v)
-	        Class klass = griffonClass?.clazz ?: loadClass(app, v)
+            GriffonClass griffonClass = ArtifactManager.instance.findGriffonClass(v)
+            Class klass = griffonClass?.clazz ?: loadClass(app, v)
             MetaClass metaClass = griffonClass?.getMetaClass() ?: klass.getMetaClass()
 
             enhance(app, metaClass)
@@ -360,16 +360,16 @@ class GriffonApplicationHelper {
     }
 
     static Class loadClass(GriffonApplication app, String className) throws ClassNotFoundException {
-	    ClassNotFoundException cnfe = null
+        ClassNotFoundException cnfe = null
 
-	    for(cl in [app.class.classLoader, GriffonApplicationHelper.class.classLoader, Thread.currentThread().contextClassLoader]) {
-		    try {
-			    return cl.loadClass(className)
-		    } catch(ClassNotFoundException e) {
-			    cnfe = e
-		    }
-		}
+        for(cl in [app.class.classLoader, GriffonApplicationHelper.class.classLoader, Thread.currentThread().contextClassLoader]) {
+            try {
+                return cl.loadClass(className)
+            } catch(ClassNotFoundException e) {
+                cnfe = e
+            }
+        }
 
-		if(cnfe) throw cnfe
+        if(cnfe) throw cnfe
     }
 }

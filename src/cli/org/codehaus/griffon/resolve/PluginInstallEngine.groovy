@@ -453,7 +453,7 @@ You cannot upgrade a plugin that is configured via BuildConfig.groovy, remove th
                 } else {
                     def dependency = readPluginXmlMetadata(depName)
                     def dependencyVersion = dependency.@version.toString()
-                    if (!GriffonPluginUtils.isValidVersion(dependencyVersion, depVersion)) {
+                    if (GriffonPluginUtils.compareVersions(dependencyVersion, depVersion) < 0) {
                         errorHandler("Plugin requires version [$depVersion] of plugin [$depName], but installed version is [${dependencyVersion}]. Please upgrade this plugin and try again.")
                     } else {
                         dependencies.remove(depName)
@@ -472,7 +472,7 @@ You cannot upgrade a plugin that is configured via BuildConfig.groovy, remove th
     private assertGriffonVersionValid(String pluginName, String griffonVersion) {
         if (griffonVersion) {
             if (!GriffonPluginUtils.isValidVersion(GriffonUtil.griffonVersion, griffonVersion)) {
-                errorHandler("Plugin $pluginName requires version [${griffonVersion}] of Griffon which your current Griffon installation does not meet. Please try install a different version of the plugin or Griffon.")
+                errorHandler("Plugin $pluginName requires version [${griffonVersion}] of Griffon which your current Griffon installation does not meet (current version is ${GriffonUtil.griffonVersion}). Please try install a different version of the plugin or Griffon.")
             }
         }
     }
