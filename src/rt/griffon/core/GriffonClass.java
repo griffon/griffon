@@ -16,6 +16,9 @@
 package griffon.core;
 
 import groovy.lang.MetaClass;
+import java.util.Arrays;
+import java.util.Set;
+import java.util.TreeSet;
 
 /**
  * <p>This interface represents any class in a Griffon application that is related to an artifact.</p>
@@ -24,7 +27,10 @@ import groovy.lang.MetaClass;
  * @author Graeme Rocher (Grails 0.1)
  * @author Andres Almiray
  */
-public interface GriffonClass {
+public interface GriffonClass {	
+    Set<String> STANDARD_PROPERTIES = new TreeSet<String>(
+        Arrays.asList("class", "metaClass", "app", "UIThread", "griffonClass"));
+	
     /**
      * <p>Gets the initial value of the given property on the class</p>
      * @param name The name of the property

@@ -18,12 +18,14 @@ package org.codehaus.griffon.ast;
 import griffon.util.GriffonUtil;
 
 import java.util.List;
+import java.util.ArrayList;
 import java.lang.reflect.Modifier;
 
 import org.apache.commons.lang.StringUtils;
 import org.codehaus.groovy.ast.*;
 import org.codehaus.groovy.ast.expr.*;
 import org.codehaus.groovy.ast.stmt.*;
+import org.codehaus.groovy.runtime.MetaClassHelper;
 
 /**
  * Helper methods for working with Groovy AST trees.
@@ -39,15 +41,15 @@ public class GriffonASTUtils {
      * @return True if the property exists in the ClassNode
      */
     public static boolean hasProperty(ClassNode classNode, String propertyName) {
-        if (classNode == null || StringUtils.isBlank(propertyName)) {
+        if(classNode == null || StringUtils.isBlank(propertyName)) {
             return false;
         }
 
         final MethodNode method = classNode.getMethod(GriffonUtil.getGetterName(propertyName), new Parameter[0]);
-        if (method != null) return true;
+        if(method != null) return true;
 
-        for (PropertyNode pn : classNode.getProperties()) {
-            if (pn.getName().equals(propertyName) && !pn.isPrivate()) {
+        for(PropertyNode pn : classNode.getProperties()) {
+            if(pn.getName().equals(propertyName) && !pn.isPrivate()) {
                 return true;
             }
         }
@@ -56,13 +58,13 @@ public class GriffonASTUtils {
     }
 
     public static boolean hasOrInheritsProperty(ClassNode classNode, String propertyName) {
-        if (hasProperty(classNode, propertyName)) {
+        if(hasProperty(classNode, propertyName)) {
             return true;
         }
 
         ClassNode parent = classNode.getSuperClass();
         while (parent != null && !getFullName(parent).equals("java.lang.Object")) {
-            if (hasProperty(parent, propertyName)) {
+            if(hasProperty(parent, propertyName)) {
                 return true;
             }
             parent = parent.getSuperClass();
@@ -85,13 +87,13 @@ public class GriffonASTUtils {
 
     @SuppressWarnings("unchecked")
     public static boolean implementsOrInheritsZeroArgMethod(ClassNode classNode, String methodName, List ignoreClasses) {
-        if (implementsZeroArgMethod(classNode, methodName)) {
+        if(implementsZeroArgMethod(classNode, methodName)) {
             return true;
         }
 
         ClassNode parent = classNode.getSuperClass();
         while (parent != null && !getFullName(parent).equals("java.lang.Object")) {
-            if (!ignoreClasses.contains(parent) && implementsZeroArgMethod(parent, methodName)) {
+            if(!ignoreClasses.contains(parent) && implementsZeroArgMethod(parent, methodName)) {
                 return true;
             }
             parent = parent.getSuperClass();
@@ -121,7 +123,7 @@ public class GriffonASTUtils {
     public static boolean isEnum(ClassNode classNode) {
         ClassNode parent = classNode.getSuperClass();
         while (parent != null) {
-            if (parent.getName().equals("java.lang.Enum")) return true;
+            if(parent.getName().equals("java.lang.Enum")) return true;
             parent = parent.getSuperClass();
         }
         return false;
@@ -148,10 +150,10 @@ public class GriffonASTUtils {
      * @return true if the two arrays are of the same size and have the same contents
      */
     public static boolean parametersEqual(Parameter[] a, Parameter[] b) {
-        if (a.length == b.length) {
+        if(a.length == b.length) {
             boolean answer = true;
-            for (int i = 0; i < a.length; i++) {
-                if (!a[i].getType().equals(b[i].getType())) {
+            for(int i = 0; i < a.length; i++) {
+                if(!a[i].getType().equals(b[i].getType())) {
                     answer = false;
                     break;
                 }
@@ -168,7 +170,7 @@ public class GriffonASTUtils {
     public static void injectProperty(ClassNode classNode, String propertyName, Class propertyClass, Object value) {
         final boolean hasProperty = hasOrInheritsProperty(classNode, propertyName);
 
-        if (!hasProperty) {
+        if(!hasProperty) {
             // inject into furthest relative
             ClassNode parent = getFurthestParent(classNode);
             Expression initialExpression = null;
@@ -180,12 +182,44 @@ public class GriffonASTUtils {
     public static void injectConstant(ClassNode classNode, String propertyName, Class propertyClass, Object value) {
         final boolean hasProperty = hasOrInheritsProperty(classNode, propertyName);
 
-        if (!hasProperty) {
+        if(!hasProperty) {
             // inject into furthest relative
             ClassNode parent = getFurthestParent(classNode);
             Expression initialExpression = new ConstantExpression(value);
-            parent.addProperty(propertyName, Modifier.PUBLIC | Modifier.FINAL, new ClassNode(propertyClass), initialExpression, null, null)
-;
+            parent.addProperty(propertyName, Modifier.PUBLIC | Modifier.FINAL, new ClassNode(propertyClass), initialExpression, null, null);
         }
+    }
+
+    public static void addReadOnlyProperty(ClassNode classNode, String propertyName, ClassNode propertyClass, Object value) {
+        final boolean hasProperty = hasOrInheritsProperty(classNode, propertyName);
+
+        if(!hasProperty) {
+            int visibility = Modifier.PRIVATE | Modifier.FINAL;
+            Expression initialValue = value != null && !(value instanceof Expression) ? initialValue = new ConstantExpression(value) : (Expression) value;
+            classNode.addField(propertyName, visibility, propertyClass, initialValue);
+            addMethod(classNode, new MethodNode(
+                "get" + MetaClassHelper.capitalize(propertyName),
+                Modifier.PUBLIC,
+                propertyClass,
+                Parameter.EMPTY_ARRAY,
+                ClassNode.EMPTY_ARRAY,
+                new ReturnStatement(
+                    new ExpressionStatement(
+                        new FieldExpression(classNode.getField(propertyName))))));
+        }
+    }
+
+    public static Statement returnExpr(Expression expr) {
+	    return new ReturnStatement(new ExpressionStatement(expr));
+    }
+
+    public static ArgumentListExpression vars(String... names) {
+	    List<Expression> vars = new ArrayList<Expression>();
+	    for(String name : names) { vars.add(var(name)); }
+	    return new ArgumentListExpression(vars);
+    }
+
+    public static VariableExpression var(String name) {
+	    return new VariableExpression(name);
     }
 }

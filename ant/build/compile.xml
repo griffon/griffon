@@ -48,6 +48,9 @@
         </groovyc>
 
         <mkdir dir="${griffon.build.cli}/META-INF"  />
+        <copy todir="${griffon.build.cli}/META-INF">
+            <fileset dir="${griffon.src.cli}/META-INF"/>
+        </copy>
         <manifest file="${griffon.build.cli}/META-INF/MANIFEST.MF">
           <attribute name="Built-By" value="${user.name}"/>
           <attribute name="Implementation-Title" value="griffon-cli"/>

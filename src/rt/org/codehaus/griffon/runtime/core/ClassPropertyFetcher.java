@@ -226,7 +226,7 @@ public class ClassPropertyFetcher {
                 return fetcher.get(callback);
             }
             catch (Exception e) {
-	            // ignore ?
+                // ignore ?
                 // log.warn("Error fetching property's " + name + " value from class " + clazz.getName(), e);
             }
         }

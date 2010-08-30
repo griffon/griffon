@@ -32,7 +32,7 @@ import java.util.WeakHashMap;
  * <p> Utility reflection methods focussed on methods in general rather than properties in particular. </p>
  *
  * <p><b>Copied from commons-beanutils, removed dependencies to commons-logging</b></p>
- *	
+ *    
  * <h3>Known Limitations</h3>
  * <h4>Accessing Public Methods In A Default Access Superclass</h4>
  * <p>There is an issue when invoking public methods contained in a default access superclass.

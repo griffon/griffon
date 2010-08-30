@@ -22,7 +22,7 @@ includeTargets << griffonScript("_GriffonPlugins")
 includeTargets << griffonScript("_GriffonInit")
 includeTargets << griffonScript("CreateMvc" )
 
-target(createApplicationProject: "") {
+target(name: 'createApplicationProject', description: '', prehook: null, posthook: null) {
     createProjectWithDefaults()
     createMVC()
 }

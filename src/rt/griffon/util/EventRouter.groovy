@@ -65,7 +65,7 @@ class EventRouter {
          // GRIFFON-224
          List listenersCopy = []
          synchronized(listeners) {
-	        listenersCopy.addAll(listeners)
+            listenersCopy.addAll(listeners)
          }
          synchronized(closureListeners) {
             closureListeners[eventName].each{ listenersCopy << it }

@@ -34,7 +34,7 @@ createArtifact = { Map args = [:] ->
     def type = args["type"]
     def artifactPath = args["path"]
     def fileType = args["fileType"] ?: '.groovy'
-    def lineTerminator = args["lineTerminator"] ?: ''
+    def lineTerminator = args["lineTerminator"] ?: (fileType != '.groovy'? ';' : '')
 
     ant.mkdir(dir: "${basedir}/${artifactPath}")
 
@@ -91,7 +91,9 @@ createArtifact = { Map args = [:] ->
     copyGriffonResource(artifactFile, templateFile)
     ant.replace(file: artifactFile) {
         replacefilter(token: "@artifact.name@", value: "${className}${suffix}" )
-        replacefilter(token: "@griffon.app.class.name@", value:appClassName )
+        replacefilter(token: "@artifact.name.plain@", value: className )
+        replacefilter(token: "@artifact.suffix@", value: suffix )
+        replacefilter(token: "@griffon.app.class.name@", value: appClassName )
         replacefilter(token: "@griffon.version@", value: griffonVersion)
         replacefilter(token: "@griffon.project.name@", value: griffonAppName)
         replacefilter(token: "@griffon.project.key@", value: griffonAppName.replaceAll( /\s/, '.' ).toLowerCase())

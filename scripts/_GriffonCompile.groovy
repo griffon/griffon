@@ -26,6 +26,7 @@ includeTargets << griffonScript("_GriffonArgParsing")
 includeTargets << griffonScript("_PluginDependencies")
 
 ant.taskdef (name: 'groovyc', classname : 'org.codehaus.groovy.ant.Groovyc')
+ant.taskdef (name: 'griffonc', classname : 'org.codehaus.griffon.compiler.GriffonCompiler')
 ant.path(id: "griffon.compile.classpath", compileClasspath)
 
 compilerPaths = { String classpathId ->
@@ -51,7 +52,7 @@ target(setCompilerSettings: "Updates the compile build settings based on args") 
 }
 
 compileSources = { destinationDir, classpathId, sources ->
-    if(argsMap.verboseCompile) {
+    if(argsMap.compileTrace) {
         println('-'*80)
         println "[GRIFFON] compiling to ${destinationDir}"
         println "[GRIFFON] '${classpathId}' entries"
@@ -61,7 +62,10 @@ compileSources = { destinationDir, classpathId, sources ->
 
     try {
         if(destinationDir instanceof String) destinationDir = new File(destinationDir)
-        ant.groovyc(destdir: destinationDir,
+        ant.griffonc(destdir: destinationDir,
+                    projectName: griffonAppName,
+                    basedir: griffonSettings.baseDir.path,
+                    verbose: (argsMap.verboseCompiler? true : false),
                     classpathref: classpathId,
                     encoding:"UTF-8", sources)
         addUrlIfNotPresent classLoader, destinationDir

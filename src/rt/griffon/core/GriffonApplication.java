@@ -25,6 +25,10 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Properties;
 
+import java.util.concurrent.Callable;
+import java.util.concurrent.Future;
+import java.util.concurrent.ExecutorService;
+
 /**
  * Defines the basic contract of a Griffon application.<p>
  *
@@ -223,4 +227,75 @@ public interface GriffonApplication {
      * Returns the current phase.
      */
     ApplicationPhase getPhase();
+
+    // ----------------------------
+
+    ArtifactManager getArtifactManager();
+
+    /**
+     * True if the current thread is the UI thread.
+     */
+    boolean isUIThread();
+
+    /**
+     * Executes a code block asynchronously on the UI thread.
+     */
+    void execAsync(Runnable runnable);
+
+    /**
+     * Executes a code block synchronously on the UI thread.
+     */
+    void execSync(Runnable runnable);
+
+    /**
+     * Executes a code block outside of the UI thread.
+     */
+    void execOutside(Runnable runnable);
+
+    /**
+     * Executes a code block as a Future on an ExecutorService.
+     */
+    Future execFuture(ExecutorService executorService, Closure closure);
+
+    /**
+     * Executes a code block as a Future on a default ExecutorService.
+     */
+    Future execFuture(Closure closure);
+
+    /**
+     * Executes a code block as a Future on an ExecutorService.
+     */
+    Future execFuture(ExecutorService executorService, Callable callable);
+
+    /**
+     * Executes a code block as a Future on a default ExecutorService.
+     */
+    Future execFuture(Callable callable);
+
+    /**
+     * Creates a new instance of the specified class and type.
+     */
+    Object newInstance(Class clazz, String type);
+
+    Map<String, ?> buildMVCGroup(String mvcType);
+
+    Map<String, ?> buildMVCGroup(String mvcType, String mvcName);
+
+    Map<String, ?> buildMVCGroup(Map<String, ?> args, String mvcType);
+
+    Map<String, ?> buildMVCGroup(Map<String, ?> args, String mvcType, String mvcName);
+
+    List<?> createMVCGroup(String mvcType);
+
+    List<?> createMVCGroup(Map<String, ?> args, String mvcType);
+
+    List<?> createMVCGroup(String mvcType, Map<String, ?> args);
+
+    List<?> createMVCGroup(String mvcType, String mvcName);
+
+    List<?> createMVCGroup(Map<String, ?> args, String mvcType, String mvcName);
+
+    List<?> createMVCGroup(String mvcType, String mvcName, Map<String, ?> args);
+
+    void destroyMVCGroup(String mvcName);
 }

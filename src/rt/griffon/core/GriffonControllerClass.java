@@ -23,9 +23,9 @@ package griffon.core;
  * @since 0.9.1
  */
 public interface GriffonControllerClass extends GriffonClass {
-	/** "controller" */
-	String TYPE = "controller";
-	/** "Controller" */
+    /** "controller" */
+    String TYPE = "controller";
+    /** "Controller" */
     String TRAILING = "Controller";
 
     /**

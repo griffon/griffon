@@ -28,7 +28,6 @@ target(createArchetype: "Creates a new Griffon application archetype") {
 
     ant.mkdir(dir: name)
     ant.mkdir(dir: "$name/template/artifacts")
-    // ant.mkdir(dir: "$name/scripts")
 
     new File("$name/application.groovy").append('''
 import griffon.util.Metadata
@@ -37,7 +36,9 @@ includeTargets << griffonScript("_GriffonPlugins")
 includeTargets << griffonScript("_GriffonInit")
 includeTargets << griffonScript("CreateMvc" )
 
-target(createApplicationProject: 'Creates a new application project') {
+target(name: 'createApplicationProjecti,
+       description: 'Creates a new application project',
+       prehook: null, posthook: null) {
     createProjectWithDefaults()
     createMVC()
 

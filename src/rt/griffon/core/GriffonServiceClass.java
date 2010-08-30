@@ -23,9 +23,9 @@ package griffon.core;
  * @since 0.9.1
  */
 public interface GriffonServiceClass extends GriffonClass {
-	/** "service" */
-	String TYPE = "service";
-	/** "Service" */
+    /** "service" */
+    String TYPE = "service";
+    /** "Service" */
     String TRAILING = "Service";
 
     /**

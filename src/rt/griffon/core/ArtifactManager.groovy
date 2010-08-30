@@ -26,8 +26,9 @@ import org.codehaus.griffon.runtime.util.GriffonApplicationHelper
 @Singleton
 class ArtifactManager {
     GriffonApplication app
-    private final Map artifacts = [:]
-    private final Map artifactHandlers = [:]
+
+    private final Map<String, ArtifactInfo[]> artifacts = [:]
+    private final Map<String, ArtifactHandler> artifactHandlers = [:]
 
     private static final GriffonClass[] EMPTY_GRIFFON_CLASS_ARRAY = new GriffonClass[0]
     private static final Class[] EMPTY_CLASS_ARRAY = new Class[0]
@@ -61,7 +62,7 @@ class ArtifactManager {
         urls.each { url ->
             def config = new ConfigSlurper().parse(url)
             config.each { type, classes -> 
-	            List<ArtifactInfo> artifactList = _artifacts.get(type, [])
+                List<ArtifactInfo> artifactList = _artifacts.get(type, [])
                 classes.split(',').collect(artifactList) {
                     new ArtifactInfo(GriffonApplicationHelper.loadClass(app, it), type)
                 }
@@ -69,9 +70,9 @@ class ArtifactManager {
         }
 
         _artifacts.each { type, list ->
-	        artifacts[type] = (list as ArtifactInfo[])
+            artifacts[type] = (list as ArtifactInfo[])
             artifactHandlers[type]?.initialize(artifacts[type])
-	    }
+        }
     }
 
     /**
@@ -124,9 +125,9 @@ class ArtifactManager {
 
     /**
      * Finds all artifacts of an specific type.<p>
-	 * Example: getClassesOfType("controller") will return all
-	 * artifact classes that describe controllers.
-	 */
+     * Example: getClassesOfType("controller") will return all
+     * artifact classes that describe controllers.
+     */
     synchronized GriffonClass[] getClassesOfType(String type) {
         if(artifacts.containsKey(type)) {
             return artifactHandlers[type].classes
@@ -136,22 +137,22 @@ class ArtifactManager {
 
     /**
      * Finds all artifact classes.<p>
-	 */
+     */
     synchronized GriffonClass[] getAllClasses() {
         List all = []
-        artifactHandlers.each { all.addAll(it.getClasses().toList()) }
+        artifactHandlers.each { k, h -> all.addAll(h.getClasses().toList()) }
         return all as GriffonClass[]
     }
 
     /**
      * Adds dynamic handlers for querying artifact classes.<p>
-	 * The following patterns are recognized<ul>
-	 * <li>getXXXClasses</li>
-	 * <li>isXXXClass</li>
-	 * </ul>
-	 * where {@code XXX} stands for the name of an artifact, like
-	 * "Controller" or "Service".
-	 */
+     * The following patterns are recognized<ul>
+     * <li>getXXXClasses</li>
+     * <li>isXXXClass</li>
+     * </ul>
+     * where {@code XXX} stands for the name of an artifact, like
+     * "Controller" or "Service".
+     */
     def methodMissing(String methodName, args) {
         def artifactType = methodName =~ /^get(\w+)Classes$/
         if(artifactType) {
@@ -180,12 +181,12 @@ class ArtifactManager {
 
     /**
      * Adds dynamic handlers for querying artifact classes.<p>
-	 * The following patterns are recognized<ul>
-	 * <li>xXXClasses</li>
-	 * </ul>
-	 * where {@code xXX} stands for the name of an artifact, like
-	 * "controller" or "service".
-	 */
+     * The following patterns are recognized<ul>
+     * <li>xXXClasses</li>
+     * </ul>
+     * where {@code xXX} stands for the name of an artifact, like
+     * "controller" or "service".
+     */
     def propertyMissing(String propertyName) {
         def artifactType = propertyName =~ /^(\w+)Classes$/
         if(artifactType) {

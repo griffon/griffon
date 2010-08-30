@@ -19,6 +19,8 @@ import griffon.builder.UberBuilder
 import griffon.core.GriffonClass
 import griffon.core.GriffonApplication
 import griffon.core.ArtifactManager
+import griffon.core.GriffonArtifact
+import griffon.core.GriffonMvcArtifact
 import org.codehaus.griffon.runtime.core.ModelArtifactHandler
 import org.codehaus.griffon.runtime.core.ViewArtifactHandler
 import org.codehaus.griffon.runtime.core.ControllerArtifactHandler
@@ -26,10 +28,12 @@ import org.codehaus.griffon.runtime.core.ServiceArtifactHandler
 import griffon.util.Metadata
 import griffon.util.Environment
 import griffon.util.UIThreadHelper
+import griffon.util.GriffonClassUtils
 import org.codehaus.groovy.runtime.InvokerHelper
 
 /**
  * Utility class for boostrapping an application and handling of MVC groups.</p>
+ *
  * @author Danno Ferrin
  * @author Andres Almiray
  */
@@ -52,18 +56,6 @@ class GriffonApplicationHelper {
         Metadata.current.getGriffonStartDir()
         Metadata.current.getGriffonWorkingDir()
 
-        MetaClass appMetaClass = app.metaClass
-        appMetaClass.newInstance = GriffonApplicationHelper.&newInstance.curry(app)
-        appMetaClass.createMVCGroup = GriffonApplicationHelper.&newInstance.curry(app)
-        appMetaClass.createMVCGroup = {Object... args ->
-            GriffonApplicationHelper.createMVCGroup(app, *args)
-        }
-        appMetaClass.buildMVCGroup = {Object... args ->
-            GriffonApplicationHelper.buildMVCGroup(app, *args)
-        }
-        appMetaClass.destroyMVCGroup = GriffonApplicationHelper.&destroyMVCGroup.curry(app)
-        UIThreadHelper.enhance(appMetaClass)
-
         ConfigSlurper configSlurper = new ConfigSlurper(Environment.current.name)
         app.config = configSlurper.parse(app.appConfigClass)
         try {
@@ -82,7 +74,7 @@ class GriffonApplicationHelper {
         
         runScriptInsideUIThread('Initialize', app)
 
-        app.metaClass.artifactManager = ArtifactManager.instance
+        app.artifactManager = ArtifactManager.instance
         ArtifactManager.instance.app = app
         ArtifactManager.instance.with {
             registerArtifactHandler(new ModelArtifactHandler(app))
@@ -216,8 +208,6 @@ class GriffonApplicationHelper {
             Class klass = griffonClass?.clazz ?: loadClass(app, v)
             MetaClass metaClass = griffonClass?.getMetaClass() ?: klass.getMetaClass()
 
-            enhance(app, metaClass)
-
             metaClassMap[k] = metaClass
             klassMap[k] = klass
             griffonClassMap[k] = griffonClass
@@ -237,6 +227,7 @@ class GriffonApplicationHelper {
                 // otherwise create a new value
                 GriffonClass griffonClass = griffonClassMap[k]
                 def instance = griffonClass?.newInstance() ?: newInstance(app, v, k)
+                if(!griffonClass) enhance(app, v, metaClassMap[k], instance)
                 instanceMap[k] = instance
                 argsCopy[k] = instance
 
@@ -300,19 +291,32 @@ class GriffonApplicationHelper {
         return instanceMap
     }
 
-    static enhance(GriffonApplication app, MetaClass metaClass) {
-        metaClass.app = app
-        metaClass.createMVCGroup = {Object... args ->
-            GriffonApplicationHelper.createMVCGroup(app, *args)
+    static enhance(GriffonApplication app, Class klass, MetaClass metaClass, Object instance) {
+        if(metaClass.hasProperty(instance, 'app')) {
+            instance.app = app
+        } else {
+            metaClass.app = app
         }
-        metaClass.buildMVCGroup = {Object... args ->
-            GriffonApplicationHelper.buildMVCGroup(app, *args)
+
+        if(!GriffonMvcArtifact.class.isAssignableFrom(klass)) {
+            metaClass.createMVCGroup = {Object... args ->
+                GriffonApplicationHelper.createMVCGroup(app, *args)
+            }
+            metaClass.buildMVCGroup = {Object... args ->
+                GriffonApplicationHelper.buildMVCGroup(app, *args)
+            }
+            metaClass.destroyMVCGroup = GriffonApplicationHelper.&destroyMVCGroup.curry(app)
         }
-        metaClass.destroyMVCGroup = GriffonApplicationHelper.&destroyMVCGroup.curry(app)
-        metaClass.newInstance = {Object... args ->
-            GriffonApplicationHelper.newInstance(app, *args)
+
+        if(!GriffonArtifact.class.isAssignableFrom(klass)) {
+            metaClass.newInstance = {Object... args ->
+                GriffonApplicationHelper.newInstance(app, *args)
+            }
+            metaClass.getGriffonClass = { c ->
+                ArtifactManager.instance.findGriffonClass(c)
+            }.curry(klass)
+            UIThreadHelper.enhance(metaClass)
         }
-        UIThreadHelper.enhance(metaClass)
     }
 
     /**

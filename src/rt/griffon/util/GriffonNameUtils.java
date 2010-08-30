@@ -22,13 +22,38 @@ import java.util.Locale;
 
 /**
  * Contains utility methods for converting between different name types,
- * for example from class names -> property names and vice-versa. The
+ * for example from class names -&gt; property names and vice-versa. The
  * key aspect of this class is that it has no dependencies outside the
  * JDK! 
  */
 public class GriffonNameUtils {
-
     private static final String PROPERTY_SET_PREFIX = "set";
+
+    /**
+     * Capitalizes a String (makes the first char uppercase) taking care
+     * of blank strings and single character strings.
+     *
+     * @param str The String to be capitalized
+     * @return Capitalized version of the target string if it is not blank
+     */
+    public static String capitalize(String str) {
+        if(isBlank(str)) return str;
+        if(str.length() == 1) return str.toUpperCase();
+        return str.substring(0,1).toUpperCase(Locale.ENGLISH) + str.substring(1);
+    }
+
+    /**
+     * Uncapitalizes a String (makes the first char lowercase) taking care
+     * of blank strings and single character strings.
+     *
+     * @param str The String to be uncapitalized
+     * @return Uncapitalized version of the target string if it is not blank
+     */
+    public static String uncapitalize(String str) {
+        if(isBlank(str)) return str;
+        if(str.length() == 1) return String.valueOf(Character.toLowerCase(str.charAt(0)));
+        return Character.toLowerCase(str.charAt(0)) + str.substring(1);
+    }
     
     /**
      * Retrieves the name of a setter for the specified property name
@@ -36,7 +61,7 @@ public class GriffonNameUtils {
      * @return The setter equivalent
      */
     public static String getSetterName(String propertyName) {
-        return PROPERTY_SET_PREFIX+propertyName.substring(0,1).toUpperCase()+ propertyName.substring(1);
+        return PROPERTY_SET_PREFIX+capitalize(propertyName);
     }
     
     /**
@@ -45,8 +70,7 @@ public class GriffonNameUtils {
      * @return The name for the getter method for this property, if it were to exist, i.e. getConstraints
      */
     public static String getGetterName(String propertyName) {
-        return "get" + Character.toUpperCase(propertyName.charAt(0))
-            + propertyName.substring(1);
+        return "get" + capitalize(propertyName);
     }
     
     /**
@@ -61,7 +85,7 @@ public class GriffonNameUtils {
             throw new IllegalArgumentException("Argument [logicalName] cannot be null or blank");
         }
 
-        String className = logicalName.substring(0,1).toUpperCase() + logicalName.substring(1);
+        String className = capitalize(logicalName);
         if (trailingName != null) {
             className = className + trailingName;
         }
@@ -75,14 +99,12 @@ public class GriffonNameUtils {
      * @return The property name representation
      */
     public static String getClassNameRepresentation(String name) {
-
         StringBuilder buf = new StringBuilder();
         if(name != null && name.length() > 0) {
             String[] tokens = name.split("[^\\w\\d]");
             for (String token1 : tokens) {
                 String token = token1.trim();
-                buf.append(token.substring(0, 1).toUpperCase(Locale.ENGLISH))
-                        .append(token.substring(1));
+                buf.append(capitalize(token));
             }
         }
 
@@ -105,13 +127,12 @@ public class GriffonNameUtils {
             String[] tokens = name.split("-");
             for (String token : tokens) {
                 if (token == null || token.length() == 0) continue;
-                buf.append(token.substring(0, 1).toUpperCase())
-                        .append(token.substring(1));
+                buf.append(capitalize(token));
             }
             return buf.toString();
         }
 
-        return name.substring(0,1).toUpperCase() + name.substring(1);
+        return capitalize(name);
     }
 
     /**

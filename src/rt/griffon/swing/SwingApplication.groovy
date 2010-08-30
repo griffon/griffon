@@ -29,7 +29,7 @@ import java.awt.Window
  * @author Andres Almiray
  * @since 0.1
  */
-class SwingApplication implements griffon.application.StandaloneGriffonApplication {
+class SwingApplication implements SwingGriffonApplication, griffon.application.StandaloneGriffonApplication {
     @Delegate private final BaseGriffonApplication _base
     final WindowManager windowManager
     WindowDisplayHandler windowDisplayHandler
@@ -40,14 +40,6 @@ class SwingApplication implements griffon.application.StandaloneGriffonApplicati
         _base = new BaseGriffonApplication(this)
         windowManager = new WindowManager(this)
         addShutdownHandler(windowManager)
-
-//        addApplicationEventListener('WindowHidden', { window ->
-//            if(isShutdownInProcess()) return
-//            List windows = windowManager.windows.findAll{ it.visible }
-//            if(windows.size() <= 1 && config.application.autoShutdown) {
-//                if(!shutdown()) windowManager.show(window)
-//            }
-//        })
     }
 
     final WindowDisplayHandler resolveWindowDisplayHandler() {

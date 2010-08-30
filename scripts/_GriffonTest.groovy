@@ -253,7 +253,7 @@ compileTests = { GriffonTestType type, File source, File dest ->
     addUrlIfNotPresent rootLoader, destDir
     addUrlIfNotPresent classLoader, destDir
  
-    if(argsMap.verboseCompile) {
+    if(argsMap.compileTrace) {
         println('-'*80)
         println "[GRIFFON] classLoader urls"
         classLoader.URLs.each{println("  $it")}

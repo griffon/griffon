@@ -23,8 +23,8 @@ package griffon.core;
  * @since 0.9.1
  */
 public interface GriffonViewClass extends GriffonClass {
-	/** "view" */
-	String TYPE = "view";
-	/** "View" */
+    /** "view" */
+    String TYPE = "view";
+    /** "View" */
     String TRAILING = "View";
 }

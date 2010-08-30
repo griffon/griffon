@@ -169,7 +169,7 @@ class SwingUtils {
      * @return the component reference if found, null otherwise
      */
     static Component findComponentByName(String name, Container root) {
-	if(root?.name == name) return root
+    if(root?.name == name) return root
         Component component = null
         for(comp in root.components) {
             Component found = findComponentByName(name, comp)

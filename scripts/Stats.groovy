@@ -55,16 +55,21 @@ target(default: "Generates basic stats for a Griffon project") {
         loc
     }
 
+    LOC_MATCHERS_PER_TYPE = [
+        '.groovy': DEFAULT_LOC_MATCHER,
+        '.java': DEFAULT_LOC_MATCHER
+    ]
+
     // maps file path to
     def pathToInfo = [
-        [name: "Models",              path: "models",           filetype: [".groovy"]],
-        [name: "Views",               path: "views",            filetype: [".groovy"]],
-        [name: "Controllers",         path: "controllers",      filetype: [".groovy"]],
-        [name: "Services",            path: "services",         filetype: [".groovy"]],
+        [name: "Models",              path: "models",           filetype: [".groovy",".java"]],
+        [name: "Views",               path: "views",            filetype: [".groovy",".java"]],
+        [name: "Controllers",         path: "controllers",      filetype: [".groovy",".java"]],
+        [name: "Services",            path: "services",         filetype: [".groovy",".java"]],
         [name: "Lifecycle",           path: "lifecycle",        filetype: [".groovy"]],
         [name: "Groovy/Java Sources", path: "src.main",         filetype: [".groovy",".java"]],
-        [name: "Unit Tests",          path: "test.unit",        filetype: [".groovy"]],
-        [name: "Integration Tests",   path: "test.integration", filetype: [".groovy"]],
+        [name: "Unit Tests",          path: "test.unit",        filetype: [".groovy",".java"]],
+        [name: "Integration Tests",   path: "test.integration", filetype: [".groovy",".java"]],
         [name: "Scripts",             path: "scripts",          filetype: [".groovy"]],
     ]
 
@@ -79,7 +84,8 @@ target(default: "Generates basic stats for a Griffon project") {
         if (match && file.isFile() ) {
             match.filecount = match.filecount ? match.filecount+1 : 1
             // strip whitespace
-            loc = match.locmatcher ? match.locmatcher(file) : DEFAULT_LOC_MATCHER(file)
+            def ext = file.path.substring(file.path.lastIndexOf('.'))
+            loc = match.locmatcher ? match.locmatcher(file) : (LOC_MATCHERS_PER_TYPE[ext]? LOC_MATCHERS_PER_TYPE[ext](file) : DEFAULT_LOC_MATCHER(file))
             match.loc = match.loc ? match.loc + loc : loc
         }
     }

@@ -39,7 +39,7 @@ import java.lang.annotation.Target;
  * @author Andres Almiray
  */
 @Retention(RetentionPolicy.SOURCE)
-@Target({ElementType.FIELD, ElementType.TYPE})
+@Target(ElementType.TYPE)
 @GroovyASTTransformationClass("org.codehaus.griffon.ast.EventPublisherASTTransformation")
 public @interface EventPublisher {
 }

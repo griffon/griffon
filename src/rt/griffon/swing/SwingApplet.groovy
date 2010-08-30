@@ -29,7 +29,7 @@ import org.codehaus.griffon.runtime.util.GriffonApplicationHelper
  * @author Andres Almiray
  * @since 0.1
  */
-class SwingApplet extends JApplet {
+class SwingApplet extends JApplet implements SwingGriffonApplication {
     private boolean appletContainerDispensed = false
 
     @Delegate private final BaseGriffonApplication _base

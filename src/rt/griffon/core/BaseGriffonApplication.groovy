@@ -19,7 +19,12 @@ package griffon.core
 import griffon.util.EventRouter
 import griffon.util.Metadata
 import griffon.util.ApplicationHolder
+import griffon.util.UIThreadHelper
 import org.codehaus.griffon.runtime.util.GriffonApplicationHelper
+
+import java.util.concurrent.Callable
+import java.util.concurrent.Future
+import java.util.concurrent.ExecutorService
 
 import groovy.beans.Bindable
 
@@ -56,6 +61,7 @@ class BaseGriffonApplication implements GriffonApplication {
     ConfigObject config
     ConfigObject builderConfig
     Object eventsConfig
+    ArtifactManager artifactManager
 
     @Bindable Locale locale = Locale.getDefault()
     protected ApplicationPhase phase = ApplicationPhase.INITIALIZE
@@ -226,5 +232,87 @@ class BaseGriffonApplication implements GriffonApplication {
 
     ApplicationPhase getPhase() {
         phase
+    }
+
+    // -----------------------
+
+    boolean isUIThread() {
+        UIThreadHelper.instance.isUIThread()
+    }
+
+    void execAsync(Runnable runnable) {
+        UIThreadHelper.instance.executeAsync(runnable)
+    }
+
+    void execSync(Runnable runnable) {
+        UIThreadHelper.instance.executeSync(runnable)
+    }
+
+    void execOutside(Runnable runnable) {
+        UIThreadHelper.instance.executeOutside(runnable)
+    }
+
+    Future execFuture(ExecutorService executorService, Closure closure) {
+        UIThreadHelper.instance.executeFuture(executorService, closure)
+    }
+
+    Future execFuture(Closure closure) {
+        UIThreadHelper.instance.executeFuture(closure)
+    }
+
+    Future execFuture(ExecutorService executorService, Callable callable) {
+        UIThreadHelper.instance.executeFuture(executorService, callable)
+    }
+
+    Future execFuture(Callable callable) {
+        UIThreadHelper.instance.executeFuture(callable)
+    }
+
+    Object newInstance(Class clazz, String type) {
+        GriffonApplicationHelper.newInstance(appDelegate, clazz, type)
+    }
+
+    Map<String, ?> buildMVCGroup(String mvcType) {
+        GriffonApplicationHelper.buildMVCGroup(appDelegate, [:], mvcType, mvcType)
+    }
+
+    Map<String, ?> buildMVCGroup(String mvcType, String mvcName) {
+        GriffonApplicationHelper.buildMVCGroup(appDelegate, [:], mvcType, mvcName)
+    }
+
+    Map<String, ?> buildMVCGroup(Map<String, ?> args, String mvcType) {
+        GriffonApplicationHelper.buildMVCGroup(appDelegate, args, mvcType, mvcType)
+    }
+
+    Map<String, ?> buildMVCGroup(Map<String, ?> args, String mvcType, String mvcName) {
+        GriffonApplicationHelper.buildMVCGroup(appDelegate, args, mvcType, mvcName)
+    }
+
+    List<?> createMVCGroup(String mvcType) {
+        GriffonApplicationHelper.createMVCGroup(appDelegate, mvcType)
+    }
+
+    List<?> createMVCGroup(Map<String, ?> args, String mvcType) {
+        GriffonApplicationHelper.createMVCGroup(appDelegate, args, mvcType)
+    }
+
+    List<?> createMVCGroup(String mvcType, Map<String, ?> args) {
+        GriffonApplicationHelper.createMVCGroup(appDelegate, args, mvcType)
+    }
+
+    List<?> createMVCGroup(String mvcType, String mvcName) {
+        GriffonApplicationHelper.createMVCGroup(appDelegate, mvcType, mvcName)
+    }
+
+    List<?> createMVCGroup(Map<String, ?> args, String mvcType, String mvcName) {
+        GriffonApplicationHelper.createMVCGroup(appDelegate, args, mvcType, mvcName)
+    }
+
+    List<?> createMVCGroup(String mvcType, String mvcName, Map<String, ?> args) {
+        GriffonApplicationHelper.createMVCGroup(appDelegate, args, mvcType, mvcName)
+    }
+
+    void destroyMVCGroup(String mvcName) {
+        GriffonApplicationHelper.destroyMVCGroup(appDelegate, mvcName)
     }
 }

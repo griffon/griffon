@@ -112,11 +112,11 @@ public abstract class AbstractGriffonClass implements GriffonClass {
         try {
             Object instance = GriffonApplicationHelper.newInstance(app, clazz, type);
             MetaClass metaClass = getMetaClass();
-            GriffonApplicationHelper.enhance(app, metaClass);
+            GriffonApplicationHelper.enhance(app, clazz, metaClass, instance);
             if (instance instanceof GroovyObject) {
                ((GroovyObject)instance).setMetaClass(metaClass);
             } else {
-	            GroovySystem.getMetaClassRegistry().setMetaClass(clazz, metaClass);
+                GroovySystem.getMetaClassRegistry().setMetaClass(clazz, metaClass);
             }
             return instance;
         } catch (Exception e) {
@@ -187,14 +187,14 @@ public abstract class AbstractGriffonClass implements GriffonClass {
     }
 
     public MetaProperty[] getMetaProperties() {
-	    List<MetaProperty> properties = new ArrayList<MetaProperty>();
-	    for(MetaProperty property : getMetaClass().getProperties()) {
-	        if(!"class".equals(property.getName()) && !"metaClass".equals(property.getName())) {
-		        properties.add(property);
-       	    }
-	    }
-	    
-	    return properties.toArray(new MetaProperty[properties.size()]);
+        List<MetaProperty> properties = new ArrayList<MetaProperty>();
+        for(MetaProperty property : getMetaClass().getProperties()) {
+            if(!"class".equals(property.getName()) && !"metaClass".equals(property.getName())) {
+                properties.add(property);
+               }
+        }
+        
+        return properties.toArray(new MetaProperty[properties.size()]);
     }
     
     /**
@@ -283,21 +283,21 @@ public abstract class AbstractGriffonClass implements GriffonClass {
 
     /**
      * Finds out if the property was defined with a Closure as value.<p>
-	 */
+     */
     public boolean isClosureMetaProperty(MetaProperty property) {
-		Object value = property.getProperty(getReferenceInstance());
-		
-		if(value != null) return Closure.class.isAssignableFrom(value.getClass());
-		
+        Object value = property.getProperty(getReferenceInstance());
+        
+        if(value != null) return Closure.class.isAssignableFrom(value.getClass());
+        
         if(property instanceof MetaBeanProperty) {
-	        // Instances of MetaBeanProperty store the closure in a descendant
-	        // of ClosureInvokingMethod so we only need to check the type of
-	        // the getter
-	        MetaMethod getter = ((MetaBeanProperty)property).getGetter();
-	        return getter instanceof ClosureInvokingMethod;
+            // Instances of MetaBeanProperty store the closure in a descendant
+            // of ClosureInvokingMethod so we only need to check the type of
+            // the getter
+            MetaMethod getter = ((MetaBeanProperty)property).getGetter();
+            return getter instanceof ClosureInvokingMethod;
         }
 
-	    return false;
+        return false;
     }
 
     public boolean hasProperty(String propName) {
@@ -310,9 +310,9 @@ public abstract class AbstractGriffonClass implements GriffonClass {
     public MetaClass getMetaClass() {
         MetaClass metaClass = GroovySystem.getMetaClassRegistry().getMetaClass(clazz);
         if(!(metaClass instanceof ExpandoMetaClass)) {
-	        metaClass = new ExpandoMetaClass(clazz, true, true);
-	        metaClass.initialize();
-	        GroovySystem.getMetaClassRegistry().setMetaClass(clazz, metaClass);
+            metaClass = new ExpandoMetaClass(clazz, true, true);
+            metaClass.initialize();
+            GroovySystem.getMetaClassRegistry().setMetaClass(clazz, metaClass);
         }
         return metaClass;
     }
@@ -322,69 +322,61 @@ public abstract class AbstractGriffonClass implements GriffonClass {
     }
 
     public void resetCaches() {
-	    eventsCache.clear();
+        eventsCache.clear();
     }
 
     public boolean equals(Object obj) {
-	    if(obj == null) return false;
-	    if(!obj.getClass().getName().equals(getClass().getName())) return false;
-	
-	    GriffonClass gc = (GriffonClass) obj;
-	    return clazz.getName().equals(gc.getClazz().getName());
+        if(obj == null) return false;
+        if(!obj.getClass().getName().equals(getClass().getName())) return false;
+    
+        GriffonClass gc = (GriffonClass) obj;
+        return clazz.getName().equals(gc.getClazz().getName());
     }
 
     public int hashCode() {
-	    return clazz.hashCode() + type.hashCode();
+        return clazz.hashCode() + type.hashCode();
     }
 
     public void updateMetaClass(Closure updater) {
-	    if(updater == null) return;
-	    updater.setDelegate(getMetaClass());
-	    updater.setResolveStrategy(Closure.DELEGATE_FIRST);
-	    updater.run();
-	    resetCaches();
+        if(updater == null) return;
+        updater.setDelegate(getMetaClass());
+        updater.setResolveStrategy(Closure.DELEGATE_FIRST);
+        updater.run();
+        resetCaches();
     }
 
     // Any artifact can become an Event listener
     public String[] getEventNames() {
-	    if(eventsCache.isEmpty()) {
-	        for(PropertyDescriptor pd : getPropertyDescriptors()) {
-		         String propertyName = pd.getName();
-		         if(!eventsCache.contains(propertyName) &&
-		            GriffonClassUtils.isEventHandler(propertyName) &&
-		            getPropertyValue(propertyName, Closure.class) != null) {
-			          eventsCache.add(propertyName.substring(2));
-		         }
-	        }
-		    for(MetaProperty p : getMetaProperties()) {
-		         String propertyName = p.getName();
-		         if(GriffonClassUtils.isGetter(p, true)) {
-			         propertyName = GriffonClassUtils.uncapitalize(propertyName.substring(3));
-		         }
-		         if(!eventsCache.contains(propertyName) &&
-		            GriffonClassUtils.isEventHandler(propertyName) &&
-		            isClosureMetaProperty(p)) {
-			          eventsCache.add(propertyName.substring(2));
-		         }
-	        }/*
-	        for(Method method : clazz.getMethods()) {
-		         String methodName = method.getName();
-		         if(!eventsCache.contains(methodName) &&
-		            GriffonClassUtils.isPlainMethod(method) &&
-		            GriffonClassUtils.isEventHandler(methodName)) {
-			          eventsCache.add(methodName.substring(2));
-		         }
-	        }*/
-	        for(MetaMethod method : getMetaClass().getMethods()) {
-		         String methodName = method.getName();
-		         if(!eventsCache.contains(methodName) &&
-		            GriffonClassUtils.isPlainMethod(method) &&
-		            GriffonClassUtils.isEventHandler(methodName)) {
-			          eventsCache.add(methodName.substring(2));
-		         }
-	        }
-	    }
-	
-	    return (String[]) eventsCache.toArray(new String[eventsCache.size()]);
+        if(eventsCache.isEmpty()) {
+            for(PropertyDescriptor pd : getPropertyDescriptors()) {
+                 String propertyName = pd.getName();
+                 if(!eventsCache.contains(propertyName) &&
+                    GriffonClassUtils.isEventHandler(propertyName) &&
+                    getPropertyValue(propertyName, Closure.class) != null) {
+                      eventsCache.add(propertyName.substring(2));
+                 }
+            }
+            for(MetaProperty p : getMetaProperties()) {
+                 String propertyName = p.getName();
+                 if(GriffonClassUtils.isGetter(p, true)) {
+                     propertyName = GriffonClassUtils.uncapitalize(propertyName.substring(3));
+                 }
+                 if(!eventsCache.contains(propertyName) &&
+                    GriffonClassUtils.isEventHandler(propertyName) &&
+                    isClosureMetaProperty(p)) {
+                      eventsCache.add(propertyName.substring(2));
+                 }
+            }
+            for(MetaMethod method : getMetaClass().getMethods()) {
+                 String methodName = method.getName();
+                 if(!eventsCache.contains(methodName) &&
+                    GriffonClassUtils.isPlainMethod(method) &&
+                    GriffonClassUtils.isEventHandler(methodName)) {
+                      eventsCache.add(methodName.substring(2));
+                 }
+            }
+        }
+    
+        return (String[]) eventsCache.toArray(new String[eventsCache.size()]);
     }
 }

@@ -28,8 +28,8 @@ public class ArtifactInfo {
     private final String type;
 
     public ArtifactInfo(Class clazz, String type) {
-	    this.clazz = clazz;
-	    this.type = type;
+        this.clazz = clazz;
+        this.type = type;
     }
 
     public Class getClazz() {
@@ -37,10 +37,10 @@ public class ArtifactInfo {
     }
 
     public String getType() {
-	    return type;
+        return type;
     }
 
     public String toString() {
-	    return type + "[" + clazz.getName() + "]";
+        return type + "[" + clazz.getName() + "]";
     }
 }

@@ -41,49 +41,43 @@ public class DefaultGriffonControllerClass extends DefaultGriffonClass implement
     }
 
     public void resetCaches() {
-	    super.resetCaches();
-	    actionsCache.clear();
+        super.resetCaches();
+        actionsCache.clear();
     }
 
     public String[] getActionNames() {
-	    if(actionsCache.isEmpty()) {
-	        for(PropertyDescriptor pd : getPropertyDescriptors()) {
-		         String propertyName = pd.getName();
-		         if(!actionsCache.contains(propertyName) &&
-		            !GriffonClassUtils.isEventHandler(propertyName) &&
-		            getPropertyValue(propertyName, Closure.class) != null) {
-			          actionsCache.add(propertyName);
-		         }
-	        }
-	        for(MetaProperty p : getMetaProperties()) {
-		         String propertyName = p.getName();
-		         if(GriffonClassUtils.isGetter(p, true)) {
-			         propertyName = GriffonClassUtils.uncapitalize(propertyName.substring(3));
-		         }
-		         if(!actionsCache.contains(propertyName) &&
-		            !GriffonClassUtils.isEventHandler(propertyName) &&
-		            isClosureMetaProperty(p)) {
-			          actionsCache.add(propertyName);
-		         }
-	        }/*
-	        for(Method method : getClazz().getMethods()) {
-		         String methodName = method.getName();
-		         if(!actionsCache.contains(methodName) &&
-		            GriffonClassUtils.isPlainMethod(method) &&
-		            !GriffonClassUtils.isEventHandler(methodName)) {
-			          actionsCache.add(methodName);
-		         }
-	        }*/
-	        for(MetaMethod method : getMetaClass().getMethods()) {
-		         String methodName = method.getName();
-		         if(!actionsCache.contains(methodName) &&
-		            GriffonClassUtils.isPlainMethod(method) &&
-		            !GriffonClassUtils.isEventHandler(methodName)) {
-			          actionsCache.add(methodName);
-		         }
-	        }
-	    }
-	
-	    return (String[]) actionsCache.toArray(new String[actionsCache.size()]);
+        if(actionsCache.isEmpty()) {
+            for(PropertyDescriptor pd : getPropertyDescriptors()) {
+                 String propertyName = pd.getName();
+                 if(!STANDARD_PROPERTIES.contains(propertyName) &&
+                    !actionsCache.contains(propertyName) &&
+                    !GriffonClassUtils.isEventHandler(propertyName) &&
+                    getPropertyValue(propertyName, Closure.class) != null) {
+                      actionsCache.add(propertyName);
+                 }
+            }
+            for(MetaProperty p : getMetaProperties()) {
+                 String propertyName = p.getName();
+                 if(GriffonClassUtils.isGetter(p, true)) {
+                     propertyName = GriffonClassUtils.uncapitalize(propertyName.substring(3));
+                 }
+                 if(!STANDARD_PROPERTIES.contains(propertyName) &&
+                    !actionsCache.contains(propertyName) &&
+                    !GriffonClassUtils.isEventHandler(propertyName) &&
+                    isClosureMetaProperty(p)) {
+                      actionsCache.add(propertyName);
+                 }
+            }
+            for(MetaMethod method : getMetaClass().getMethods()) {
+                 String methodName = method.getName();
+                 if(!actionsCache.contains(methodName) &&
+                    GriffonClassUtils.isPlainMethod(method) &&
+                    !GriffonClassUtils.isEventHandler(methodName)) {
+                      actionsCache.add(methodName);
+                 }
+            }
+        }
+    
+        return (String[]) actionsCache.toArray(new String[actionsCache.size()]);
     }
 }

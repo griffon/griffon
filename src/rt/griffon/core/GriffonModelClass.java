@@ -23,9 +23,9 @@ package griffon.core;
  * @since 0.9.1
  */
 public interface GriffonModelClass extends GriffonClass {
-	/** "model" */
-	String TYPE = "model";
-	/** "Model" */
+    /** "model" */
+    String TYPE = "model";
+    /** "Model" */
     String TRAILING = "Model";
 
     /**

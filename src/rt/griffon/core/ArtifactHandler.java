@@ -31,8 +31,8 @@ public interface ArtifactHandler {
 
     /**
      * Get the trailing suffix that identifies the artifact.<p>
-	 * May be empty but non-null.
-	 */
+     * May be empty but non-null.
+     */
     String getTrailing();
 
     /**
@@ -62,31 +62,31 @@ public interface ArtifactHandler {
 
     /**
      * Finds an artifact by its property name.<p>
-	 * Examples: findClassfor("fooService") returns an artifact class
-	 * that can handle FooService.<p>
-	 * 
-	 * Should {@code propertyName} contain any dots then the portion
-	 * after te last dor will be considered only.
+     * Examples: findClassfor("fooService") returns an artifact class
+     * that can handle FooService.<p>
+     * 
+     * Should {@code propertyName} contain any dots then the portion
+     * after te last dor will be considered only.
      */
     GriffonClass findClassFor(String propertyName);
 
     /**
      * Finds an artifact if the target {@code clazz} is handled by this
      * ArtifactHandler.<p>
-	 *
-	 * @param clazz a class object, i.e, BookController
-	 * @return a GriffonClass that can handle the target class or null
-	 * if the clazz is not handled by this ArtifactHandler.
+     *
+     * @param clazz a class object, i.e, BookController
+     * @return a GriffonClass that can handle the target class or null
+     * if the clazz is not handled by this ArtifactHandler.
      */
     GriffonClass getClassFor(Class clazz);
 
     /**
      * Finds an artifact by class name if it represents a class that 
      * is handled by this ArtifactHandler.<p>
-	 *
-	 * @param fqnClassName a full qualified class name, i.e, "book.BookController"
-	 * @return a GriffonClass that can handle the target class or null
-	 * if the clazz is not handled by this ArtifactHandler.
+     *
+     * @param fqnClassName a full qualified class name, i.e, "book.BookController"
+     * @return a GriffonClass that can handle the target class or null
+     * if the clazz is not handled by this ArtifactHandler.
      */
     GriffonClass getClassFor(String fqnClassName);
 

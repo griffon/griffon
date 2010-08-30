@@ -144,12 +144,6 @@ compileInplacePlugin = { File pluginDir ->
             // installed or otherwise referenced.
             try {
                 compileSources(classesDirPath, classpathId) {
-                // ant.groovyc(
-                //     destdir: classesDirPath,
-                //         classpathref: classpathId,
-                //         encoding:"UTF-8",
-                //         verbose: griffonSettings.verboseCompile,
-                //         listfiles: griffonSettings.verboseCompile) {
                     for(File dir in pluginResources.file) {
                         if (dir.exists() && dir.isDirectory()) {
                             src(path: dir.absolutePath)
