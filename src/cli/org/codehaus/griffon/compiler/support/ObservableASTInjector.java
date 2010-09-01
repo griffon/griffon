@@ -20,6 +20,10 @@ import org.codehaus.groovy.ast.*;
 import org.codehaus.groovy.ast.expr.*;
 import org.codehaus.groovy.ast.stmt.*;
 
+import groovy.beans.BindableASTTransformation;
+import groovy.beans.VetoableASTTransformation;
+import griffon.core.Observable;
+
 import java.beans.PropertyChangeSupport;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeEvent;
@@ -33,7 +37,19 @@ import static org.codehaus.griffon.ast.GriffonASTUtils.*;
  * @since 0.9.1
  */
 public class ObservableASTInjector implements ASTInjector {
+    private static final ClassNode OBSERVABLE_CLASS = ClassHelper.makeWithoutCaching(Observable.class);
+
     public void inject(ClassNode classNode, String artifactType) {
+        if(!classNode.implementsInterface(OBSERVABLE_CLASS)){
+            classNode.addInterface(OBSERVABLE_CLASS);
+        }
+
+        if(isBindableOrVetoable(classNode)) return;
+
+        for(FieldNode fieldNode : classNode.getFields()) {
+            if(isBindableOrVetoable(fieldNode)) return;
+        }
+    
         ClassNode pcsClassNode = ClassHelper.make(PropertyChangeSupport.class);
         ClassNode pclClassNode = ClassHelper.make(PropertyChangeListener.class);
         ClassNode pceClassNode = ClassHelper.make(PropertyChangeEvent.class);
@@ -195,4 +211,12 @@ public class ObservableASTInjector implements ASTInjector {
                                                 new ArgumentListExpression(
                                                 new Expression[]{new VariableExpression("name")}))))));
     }
+
+    private static boolean isBindableOrVetoable(AnnotatedNode node) {
+        if(VetoableASTTransformation.hasVetoableAnnotation(node) ||
+           BindableASTTransformation.hasBindableAnnotation(node)) {
+            return true;
+        }
+        return false;
+    } 
 }

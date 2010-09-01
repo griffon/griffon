@@ -43,17 +43,27 @@ public class GriffonViewASTTransformation extends GriffonArtifactASTTransformati
     private static final String ARTIFACT_PATH = "views";
     private static final ClassNode GRIFFON_VIEW_CLASS = ClassHelper.makeWithoutCaching(GriffonView.class);
     private static final ClassNode ABSTRACT_GRIFFON_VIEW_CLASS = ClassHelper.makeWithoutCaching(AbstractGriffonView.class);    
+
+    protected boolean allowsScriptAsArtifact() {
+        return true;
+    }
     
     protected void transform(ClassNode classNode, SourceUnit source, String artifactPath) {
         if(!ARTIFACT_PATH.equals(artifactPath)) return;
-        if(ClassHelper.OBJECT_TYPE.equals(classNode.getSuperClass())) {
+        if(classNode.isDerivedFrom(ClassHelper.SCRIPT_TYPE)) {
+            inject(classNode);
+        }else if(ClassHelper.OBJECT_TYPE.equals(classNode.getSuperClass())) {
             classNode.setSuperClass(ABSTRACT_GRIFFON_VIEW_CLASS);
         } else if(!classNode.implementsInterface(GRIFFON_VIEW_CLASS)){
-            // 1. add interface
-            classNode.addInterface(GRIFFON_VIEW_CLASS);
-            // 2. add methods
-            ASTInjector injector = new GriffonViewASTInjector();
-            injector.inject(classNode, GriffonViewClass.TYPE);
+            inject(classNode);
         }
+    }
+
+    private void inject(ClassNode classNode) {
+        // 1. add interface
+        classNode.addInterface(GRIFFON_VIEW_CLASS);
+        // 2. add methods
+        ASTInjector injector = new GriffonViewASTInjector();
+        injector.inject(classNode, GriffonViewClass.TYPE);
     }
 }

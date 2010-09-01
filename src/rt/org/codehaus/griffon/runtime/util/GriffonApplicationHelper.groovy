@@ -88,7 +88,7 @@ class GriffonApplicationHelper {
 
         // copy mvc groups in config to app, casting to strings in a new map
         app.config.mvcGroups.each {k, v->
-            app.addMvcGroup(k, v.inject([:]) {m, e->m[e.key as String] = e.value as String; m})
+            app.addMvcGroup(k, v.inject([:]) {m, e -> m[e.key as String] = e.value as String; m})
         }
 
         app.event('BootstrapEnd', [app])
@@ -312,7 +312,7 @@ class GriffonApplicationHelper {
             metaClass.newInstance = {Object... args ->
                 GriffonApplicationHelper.newInstance(app, *args)
             }
-            metaClass.getGriffonClass = { c ->
+            metaClass.getGriffonClass = {c ->
                 ArtifactManager.instance.findGriffonClass(c)
             }.curry(klass)
             UIThreadHelper.enhance(metaClass)

@@ -23,8 +23,6 @@ import org.codehaus.groovy.control.CompilePhase;
 import org.codehaus.groovy.control.SourceUnit;
 import org.codehaus.groovy.transform.GroovyASTTransformation;
 
-import java.lang.reflect.Modifier;
-
 import griffon.core.GriffonModel;
 import griffon.core.GriffonModelClass;
 import org.codehaus.griffon.runtime.core.AbstractGriffonModel;
