@@ -28,6 +28,7 @@ includeTargets << griffonScript("_GriffonPackage")
 includeTargets << griffonScript("_GriffonArgParsing")
 
 rootPackage = null
+replaceNonag = false
 
 createArtifact = { Map args = [:] ->
     def suffix = args["suffix"]
@@ -57,35 +58,38 @@ createArtifact = { Map args = [:] ->
     className = GriffonUtil.getClassNameRepresentation(artifactName)
     propertyName = GriffonUtil.getPropertyNameRepresentation(artifactName)
     artifactFile = "${basedir}/${artifactPath}/${pkgPath}${className}${suffix}${fileType}"
-
-    if (new File(artifactFile).exists()) {
-        if(!confirmInput("${type} ${className}${suffix}${fileType} already exists. Overwrite? [y/n]","${artifactName}.${suffix}.overwrite")) {
-            return
-        }
-    }
+    defaultArtifactFile = "${basedir}/${artifactPath}/${pkgPath}${className}${suffix}.groovy"
 
     resolveArchetype()
+    templateFile = resolveTemplate(type, artifactPath, fileType)
+    if(!templateFile?.exists() && fileType != '.groovy') {
+	    templateFile = resolveTemplate(type, artifactPath,'.groovy')
+        lineTerminator = ''
+    }
 
-    // first check for presence of template in application
-    templateFile = new FileSystemResource("${basedir}/src/templates/artifacts/${type}${fileType}")
-    if (!templateFile.exists()) {
-        // now check for template provided by plugins
-        def pluginTemplateFiles = resolveResources("file:${pluginsHome}/*/src/templates/artifacts/${type}${fileType}")
-        if (pluginTemplateFiles) {
-            templateFile = pluginTemplateFiles[0]
-        }
-        if (!templateFile.exists()) {
-            // now check for template provided by an archetype
-            templateFile = new FileSystemResource("${griffonWorkDir}/archetypes/${archetype}/templates/artifacts/${type}${fileType}")
-            if (!templateFile.exists()) {
-                // now check for template provided by a provided archetype
-                templateFile = griffonResource("archetypes/${archetype}/templates/artifacts/${type}${fileType}")
-                if (!templateFile.exists()) {
-                    // template not found in archetypes, use default template
-                    templateFile = griffonResource("archetypes/default/templates/artifacts/${type}${fileType}")
-                }
+    if(!templateFile?.exists()) {
+	    event('StatusFinal', ["Could not locate a suitable template for $artifactFile"])
+	    exit(1)
+    }
+
+    def similarFiles = resolveResources("file:${basedir}/${artifactPath}/${pkgPath}${className}${suffix}.*")
+    if(similarFiles) {
+	    def fileSuffix = similarFiles[0].file.name.substring(similarFiles[0].file.name.lastIndexOf('.'))
+	    if(fileSuffix == fileType) {
+            if(!replaceNonag && !confirmInput("${type} ${className}${suffix}${fileType} already exists. Overwrite? [y/n]","${artifactName}.${suffix}.overwrite")) {
+                return
+            }		
+	    } else {
+            if(!replaceNonag && !confirmInput("${type} ${className}${suffix} already exists with type ${fileSuffix}. Rename? [y/n]","${artifactName}.${suffix}.rename")) {
+                return
             }
-        }
+            // WATCH OUT!! can cause problems with VCS systems
+            ant.mkdir(dir: "${basedir}/renamed")
+            ant.move(tofile: "${basedir}/renamed/${className}${suffix}${fileSuffix}", file: similarFiles[0].file)		
+	    }
+    } else if(replaceNonag) {
+	    event('StatusFinal', ["${basedir}/${artifactPath}/${pkgPath}${className}${suffix} cannot be replaced because it does not exist."])
+	    exit(1)	
     }
 
     copyGriffonResource(artifactFile, templateFile)
@@ -110,6 +114,31 @@ createArtifact = { Map args = [:] ->
 
     event("CreatedFile", [artifactFile])
     event("CreatedArtefact", [type, className])
+}
+
+resolveTemplate = { type, artifactPath, fileSuffix ->
+	// first check for presence of template in application
+    def templateFile = new FileSystemResource("${basedir}/src/templates/artifacts/${type}${fileSuffix}")
+    if (!templateFile.exists()) {
+        // now check for template provided by plugins
+        def pluginTemplateFiles = resolveResources("file:${pluginsHome}/*/src/templates/artifacts/${type}${fileSuffix}")
+        if (pluginTemplateFiles) {
+            templateFile = pluginTemplateFiles[0]
+        }
+        if (!templateFile.exists()) {
+            // now check for template provided by an archetype
+            templateFile = new FileSystemResource("${griffonWorkDir}/archetypes/${archetype}/templates/artifacts/${type}${fileSuffix}")
+            if (!templateFile.exists()) {
+                // now check for template provided by a provided archetype
+                templateFile = griffonResource("archetypes/${archetype}/templates/artifacts/${type}${fileSuffix}")
+                if (!templateFile.exists()) {
+                    // template not found in archetypes, use default template
+                    templateFile = griffonResource("archetypes/default/templates/artifacts/${type}${fileSuffix}")
+                }
+            }
+        }
+    }
+    templateFile
 }
 
 createRootPackage = {

@@ -1,0 +1,35 @@
+h1. replace-artifact 
+
+h2. Purpose
+
+The @replace-artifact@ command will overwrite or rename ithe artifact wth the given base name.
+
+h2. Examples
+
+{code:java}
+griffon replace-artifact book -type=Service -fileType=java
+{code}
+
+h2. Description         
+
+Either overwrites an existing artifact that matches the specified criteria or renames it with a different file type and applies the matching template.
+
+{note}
+This command does not prompt you to confirm if the operation should proceed or not. Renamed files are placed under @$basedir/renamed@.
+{note}
+
+Usage: 
+
+{code:java}
+griffon replace-artifact [name] [-type=type] [-fileType=fileType]
+{code}
+
+Arguments
+* @name@ - The name of the artifact, i.e, book
+* @type@ - The type of the artifact, i.e, Service
+* @fileType@ - The file type of the artifact, i.e, groovy|java|etc
+
+Fired Events: 
+
+* @CreatedFile@ - When the artifact has been replaced
+
