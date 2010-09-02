@@ -18,10 +18,20 @@ package griffon.core;
 import groovy.util.FactoryBuilderSupport;
 
 /**
+ * Identifies a View artifact.
+ *
  * @author Andres Almiray
  *
  * @since 0.9.1
  */
 public interface GriffonView extends GriffonMvcArtifact {
+    /**
+     * Sets the corresponding builder instance on this view.<p>
+     * Views will normally use a builder in order to create their UI elements
+     * however they can opt out and build the UI by other means.
+     *
+     * @param builder the builder instance that belongs to the same MVC group
+     * as this View.
+     */
     void setBuilder(FactoryBuilderSupport builder);
 }

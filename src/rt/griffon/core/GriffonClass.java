@@ -22,6 +22,8 @@ import java.util.TreeSet;
 
 /**
  * <p>This interface represents any class in a Griffon application that is related to an artifact.</p>
+ * While {@code GriffonArtifact} points to the real artifact instance, this class points to the meta
+ * information that can be obtained from such artifact.
  * 
  * @author Steven Devijver (Grails 0.1)
  * @author Graeme Rocher (Grails 0.1)

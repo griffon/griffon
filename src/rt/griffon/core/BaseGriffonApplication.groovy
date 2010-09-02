@@ -25,6 +25,7 @@ import org.codehaus.griffon.runtime.util.GriffonApplicationHelper
 import java.util.concurrent.Callable
 import java.util.concurrent.Future
 import java.util.concurrent.ExecutorService
+import java.util.concurrent.CountDownLatch
 
 import groovy.beans.Bindable
 
@@ -69,7 +70,6 @@ class BaseGriffonApplication implements GriffonApplication {
     private final EventRouter eventRouter = new EventRouter()
     private final List<ShutdownHandler> shutdownHandlers = []
     final GriffonApplication appDelegate
-    private boolean shutdownInProcess = false
     private final Object shutdownLock = new Object()
 
     BaseGriffonApplication(GriffonApplication appDelegate) {
@@ -88,7 +88,7 @@ class BaseGriffonApplication implements GriffonApplication {
     Class getConfigClass() {
         try{
            return getClass().classLoader.loadClass('Config')
-        } catch( ignored ) {
+        } catch(ignored) {
            // ignore - no additional config available
         }
         return null
@@ -101,7 +101,7 @@ class BaseGriffonApplication implements GriffonApplication {
     Class getEventsClass() {
         try{
            return getClass().classLoader.loadClass('Events')
-        } catch( ignored ) {
+        } catch(ignored) {
            // ignore - no global event handler will be used
         }
         return null
@@ -135,16 +135,23 @@ class BaseGriffonApplication implements GriffonApplication {
     }
 
     boolean shutdown() {
+        // avoids reentrant calls to shutdown()
+        // once permission to quit has been granted
+        if(phase == ApplicationPhase.SHUTDOWN) return
+
         if(!canShutdown()) return false
 
         // signal that shutdown is in process
-        // avoids reentrant calls to shutdown()
-        // once permission to quit has been granted
-        signalShutdownInProcess()
         phase = ApplicationPhase.SHUTDOWN
    
         // stage 1 - alert all app event handlers
+        // wait for all handlers to complete before proceeding
+        // with stage #2 if and only if the current thread is
+        // the ui thread
+        CountDownLatch latch = isUIThread() ? new CountDownLatch(1) : null
+        addApplicationEventListener('ShutdownStart') {latch?.countDown()}
         event('ShutdownStart',[appDelegate])
+        latch?.await()
   
         // stage 2 - alert all shutdown handlers
         for(handler in shutdownHandlers) {
@@ -154,26 +161,12 @@ class BaseGriffonApplication implements GriffonApplication {
         // stage 3 - destroy all mvc groups
         List mvcNames = []
         mvcNames.addAll(groups.keySet())
-        mvcNames.each { 
-            GriffonApplicationHelper.destroyMVCGroup(appDelegate, it)
-        }
+        mvcNames.each { destroyMVCGroup(it) }
 
         // stage 4 - call shutdown script
         GriffonApplicationHelper.runScriptInsideUIThread('Shutdown', appDelegate)
  
         true
-    }
-
-    private void signalShutdownInProcess() {
-        synchronized(shutdownLock) {
-            shutdownInProcess = true
-        }
-    }
-
-    boolean isShutdownInProcess() {
-        synchronized(shutdownLock) {
-            return shutdownInProcess
-        }
     }
 
     void startup() {
@@ -182,9 +175,7 @@ class BaseGriffonApplication implements GriffonApplication {
         phase = phase.STARTUP
         event('StartupStart',[appDelegate])
 
-        config.application.startupGroups.each {group ->
-            GriffonApplicationHelper.createMVCGroup(appDelegate, group)
-        }
+        config.application.startupGroups.each {group -> createMVCGroup(group) }
         GriffonApplicationHelper.runScriptInsideUIThread('Startup', appDelegate)
 
         event('StartupEnd',[appDelegate])
@@ -198,19 +189,19 @@ class BaseGriffonApplication implements GriffonApplication {
         eventRouter.publish(eventName, params)
     }
 
-    void addApplicationEventListener( listener ) {
+    void addApplicationEventListener(listener) {
        eventRouter.addEventListener(listener)
     }
 
-    void removeApplicationEventListener( listener ) {
+    void removeApplicationEventListener(listener) {
        eventRouter.removeEventListener(listener)
     }
 
-    void addApplicationEventListener( String eventName, Closure listener ) {
+    void addApplicationEventListener(String eventName, Closure listener) {
        eventRouter.addEventListener(eventName,listener)
     }
 
-    void removeApplicationEventListener( String eventName, Closure listener ) {
+    void removeApplicationEventListener(String eventName, Closure listener) {
        eventRouter.removeEventListener(eventName,listener)
     }
 

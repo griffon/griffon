@@ -16,6 +16,8 @@
 package griffon.core;
 
 /**
+ * Identifies a Service artifact.
+ *
  * @author Andres Almiray
  *
  * @since 0.9.1

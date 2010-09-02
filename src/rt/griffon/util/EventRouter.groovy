@@ -48,14 +48,14 @@ class EventRouter {
     *
     */
    public void publish(String eventName, List params = []) {
-      if( !eventName ) return
+      if(!eventName) return
       def publisher = {
          eventName = eventName[0].toUpperCase() + eventName[1..-1]
          def eventHandler = "on" + eventName
          def dispatchEvent = { listener ->
             try {
                fireEvent(listener, eventHandler, params ?: [])
-            } catch( x ) {
+            } catch(x) {
                // TODO log exception
                x.printStackTrace()
             }
@@ -76,46 +76,46 @@ class EventRouter {
       UIThreadHelper.instance.executeOutside(publisher)
    }
 
-   private void fireEvent( Script script, String eventHandler, List params ) {
+   private void fireEvent(Script script, String eventHandler, List params) {
       def binding = scriptBindings[script]
-      if( !binding ) {
+      if(!binding) {
          binding = new Binding()
          script.binding = binding
          script.run()
          scriptBindings[script] = binding
       }
 
-      for( variable in script.binding.variables ) {
+      for(variable in script.binding.variables) {
          def m = variable.key =~ /$eventHandler/
-         if( m.matches() ) {
+         if(m.matches()) {
             variable.value(*params)
             return
          }
       }
    }
 
-   private void fireEvent( Map map, String eventHandler, List params ) {
+   private void fireEvent(Map map, String eventHandler, List params) {
       eventHandler = eventHandler[2..-1]
       def handler = map[eventHandler]
-      if( handler && handler instanceof Closure ) {
+      if(handler && handler instanceof Closure) {
          handler(*params)
       }
    }
 
-   private void fireEvent( Closure closure, String eventHandler, List params ) {
+   private void fireEvent(Closure closure, String eventHandler, List params) {
       closure(*params)
    }
 
-   private void fireEvent( Object instance, String eventHandler, List params ) {
+   private void fireEvent(Object instance, String eventHandler, List params) {
       def mp = instance.metaClass.getMetaProperty(eventHandler)
-      if( mp && mp.getProperty(instance) ) {
+      if(mp && mp.getProperty(instance)) {
          mp.getProperty(instance)(*params)
          return
       }
 
       Class[] argTypes = MetaClassHelper.convertToTypeArray(params as Object[])
       def mm = instance.metaClass.pickMethod(eventHandler,argTypes)
-      if( mm ) {
+      if(mm) {
          mm.invoke(instance,*params)
       }
    }
@@ -137,9 +137,9 @@ class EventRouter {
     * @param listener and event listener of type Script, Map or Object
     */
    public void addEventListener(listener) {
-      if( !listener || listener instanceof Closure ) return
+      if(!listener || listener instanceof Closure) return
       synchronized(listeners) {
-         if( listeners.find{ it == listener } ) return
+         if(listeners.find{ it == listener }) return
          listeners.add(listener)
       }
    }
@@ -161,7 +161,7 @@ class EventRouter {
     * @param listener and event listener of type Script, Map or Object
     */
    public void removeEventListener(listener) {
-      if( !listener || listener instanceof Closure ) return
+      if(!listener || listener instanceof Closure) return
       synchronized(listeners) {
          listeners.remove(listener)
       }
@@ -175,11 +175,11 @@ class EventRouter {
     * @param listener the event listener
     */
    public void addEventListener(String eventName, Closure listener) {
-      if( !eventName || !listener ) return
+      if(!eventName || !listener) return
       eventName = eventName[0].toUpperCase() + eventName[1..-1]
       synchronized(closureListeners) {
          def list = closureListeners.get(eventName,[])
-         if( list.find{ it == listener } ) return
+         if(list.find{ it == listener }) return
          list.add(listener)
       }
    }
@@ -192,11 +192,11 @@ class EventRouter {
     * @param listener the event listener
     */
    public void removeEventListener(String eventName, Closure listener) {
-      if( !eventName || !listener ) return
+      if(!eventName || !listener) return
       eventName = eventName[0].toUpperCase() + eventName[1..-1]
       synchronized(closureListeners) {
          def list = closureListeners[eventName]
-         if( list ) list.remove(listener)
+         if(list) list.remove(listener)
       }
    }
 }

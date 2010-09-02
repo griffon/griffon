@@ -16,6 +16,9 @@
 package griffon.core;
 
 /**
+ * Identifies a Model artifact.<p>
+ * Models should always be {@code Observable}.
+ *
  * @author Andres Almiray
  *
  * @since 0.9.1

@@ -21,7 +21,13 @@ import java.util.concurrent.Future;
 import java.util.concurrent.ExecutorService;
 
 /**
- *
+ * Identifies an object as a Griffon artifact.<p>
+ * Griffon artifacts are usually placed under the special "griffon-app" directory
+ * that every application has. They are aslo grouped together in in a subdirectory that
+ * clearly identifies their nature. For example "griffon-app/controllers" contains all
+ * Controller artifacts.<p>
+ * Implementing this interface for a custom artifact definition is highly recommended
+ * but not enforced.
  *
  * @author Andres Almiray
  *

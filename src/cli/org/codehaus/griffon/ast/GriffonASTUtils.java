@@ -172,10 +172,10 @@ public class GriffonASTUtils {
 
         if(!hasProperty) {
             // inject into furthest relative
-            ClassNode parent = getFurthestParent(classNode);
+            // ClassNode parent = getFurthestParent(classNode);
             Expression initialExpression = null;
             if(value != null) initialExpression = new ConstantExpression(value);
-            parent.addProperty(propertyName, Modifier.PUBLIC, new ClassNode(propertyClass), initialExpression, null, null);
+            classNode.addProperty(propertyName, Modifier.PUBLIC, new ClassNode(propertyClass), initialExpression, null, null);
         }
     }
 
@@ -184,9 +184,9 @@ public class GriffonASTUtils {
 
         if(!hasProperty) {
             // inject into furthest relative
-            ClassNode parent = getFurthestParent(classNode);
+            // ClassNode parent = getFurthestParent(classNode);
             Expression initialExpression = new ConstantExpression(value);
-            parent.addProperty(propertyName, Modifier.PUBLIC | Modifier.FINAL, new ClassNode(propertyClass), initialExpression, null, null);
+            classNode.addProperty(propertyName, Modifier.PUBLIC | Modifier.FINAL, new ClassNode(propertyClass), initialExpression, null, null);
         }
     }
 

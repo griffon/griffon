@@ -16,8 +16,8 @@
 package griffon.app
 
 /**
- * @author Danno.Ferrin
- * @author Andres.Almiray
+ * @author Danno Ferrin
+ * @author Andres Almiray
  */
 class AbstractSyntheticMetaMethods {
     private static final String ENHANCED = "_ENHANCED_METACLASS_"

@@ -233,7 +233,7 @@ public class ResolveVisitor extends ClassCodeExpressionTransformer {
     private void resolveOrFail(ClassNode type, String msg, ASTNode node) {
         if (resolve(type)) return;
         if (resolveToInner(type)) return;
-        addError("unable to resolve class " + type.getName() + " " + msg, node);
+        // addError("unable to resolve class " + type.getName() + " " + msg, node);
     }
 
     private void resolveOrFail(ClassNode type, ASTNode node, boolean prefereImports) {
@@ -505,7 +505,7 @@ public class ResolveVisitor extends ClassCodeExpressionTransformer {
                     }
                 }
             }
-
+/*
             for (int i = 0, size = DEFAULT_IMPORTS.length; i < size; i++) {
                 String packagePrefix = DEFAULT_IMPORTS[i];
                 String name = type.getName();
@@ -521,7 +521,6 @@ public class ResolveVisitor extends ClassCodeExpressionTransformer {
                     return true;
                 }
             }  
-
             String name = type.getName();
             if (name.equals("BigInteger")) {
                 type.setRedirect(ClassHelper.BigInteger_TYPE);
@@ -530,6 +529,7 @@ public class ResolveVisitor extends ClassCodeExpressionTransformer {
                 type.setRedirect(ClassHelper.BigDecimal_TYPE);
                 return true;
             }
+*/
         }
         return false;
     }
@@ -1280,7 +1280,7 @@ public class ResolveVisitor extends ClassCodeExpressionTransformer {
                     continue;
                 }
                 currImportNode = null;
-                addError("unable to resolve class " + type.getName(), type);
+                // addError("unable to resolve class " + type.getName(), type);
             }
             for (ImportNode importNode : module.getStaticStarImports().values()) {
                 ClassNode type = importNode.getType();
@@ -1294,17 +1294,17 @@ public class ResolveVisitor extends ClassCodeExpressionTransformer {
                     if (resolve(type, false, false, true)) continue;
                     type.setName(oldTypeName);
                 }
-                addError("unable to resolve class " + type.getName(), type);
+                // addError("unable to resolve class " + type.getName(), type);
             }
             for (ImportNode importNode : module.getStaticImports().values()) {
                 ClassNode type = importNode.getType();
                 if (resolve(type, true, true, true)) continue;
-                addError("unable to resolve class " + type.getName(), type);
+                // addError("unable to resolve class " + type.getName(), type);
             }
             for (ImportNode importNode : module.getStaticStarImports().values()) {
                 ClassNode type = importNode.getType();
                 if (resolve(type, true, true, true)) continue;
-                addError("unable to resolve class " + type.getName(), type);
+                // addError("unable to resolve class " + type.getName(), type);
             }
             module.setImportsResolved(true);
         }
