@@ -63,6 +63,8 @@ target('default': "Upgrades a Griffon application from a previous version of Gri
 
     clean()
 
+    boolean isPost09 = GriffonPluginUtils.compareVersions(appGriffonVersion, '0.9') >= 0
+
     ant.sequential {
         delete(dir: "${basedir}/tmp", failonerror: false)
  
@@ -81,7 +83,7 @@ target('default': "Upgrades a Griffon application from a previous version of Gri
         // since 0.0 then sensible defaultsare provided which keep previous
         // behavior even if it is not the default in the current version.
         def configFile = new File(baseFile, '/griffon-app/conf/Config.groovy')
-        if (configFile.exists()) {
+        if (!isPost09 && configFile.exists()) {
             def configSlurper = new ConfigSlurper(System.getProperty(GriffonContext.ENVIRONMENT))
             def configObject = configSlurper.parse(configFile.toURI().toURL())
 
@@ -131,7 +133,7 @@ target('default': "Upgrades a Griffon application from a previous version of Gri
         // since 0.0 then sensible defaults are provided which keep previous
         // behavior even if it is not the default in the current version.
         def applicationFile = new File(baseFile, '/griffon-app/conf/Application.groovy')
-        if (applicationFile.exists()) {
+        if (!isPost09 && applicationFile.exists()) {
             def configSlurper = new ConfigSlurper(System.getProperty(GriffonContext.ENVIRONMENT))
             def configObject = configSlurper.parse(applicationFile.toURI().toURL())
 
@@ -310,6 +312,21 @@ log4j {
                     includeTargets << instrumentedUpgradeScript
                 }
             }
+        }
+    }
+
+    def wrapperConfig = new File(baseFile, '/wrapper/griffon-wrapper.properties')
+    if(isPost09 && wrapperConfig.exists()) {
+        def wrapperProps = new Properties()
+        wrapperConfig.eachLine {l ->
+            if(l.startsWith('#')) return
+            List kv = l.tokenize('=')
+            kv[1] = kv[1].replace('\\','')
+            wrapperProps.put(kv[0], kv[1])
+        }
+        wrapperProps.put('distributionVersion', griffonVersion)
+        wrapperConfig.withOutputStream {o ->
+            wrapperProps.store(o, "Griffon $griffonVersion upgrade")
         }
     }
 
