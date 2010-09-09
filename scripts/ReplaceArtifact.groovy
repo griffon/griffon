@@ -47,13 +47,10 @@ target('default': "Replaces an artifact file using another template") {
         ant.input(addProperty: "artifact.fileType", message: "Artifact file type not specified. Please enter:")
         argsMap.fileType = GriffonNameUtils.uncapitalize(ant.antProject.properties."artifact.fileType")
     }
-    def fileType =  argsMap.fileType ?: 'groovy'
-    if(!fileType.startsWith('.')) fileType = '.'+fileType
 
     replaceNonag = true
     createArtifact(name: name,
         suffix: type,
         type: type,
-        fileType: fileType,
         path: "griffon-app/${path}")
 }

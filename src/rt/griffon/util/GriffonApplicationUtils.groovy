@@ -15,6 +15,8 @@
  */
 package griffon.util
 
+import griffon.core.GriffonArtifact
+
 /**
  * Defines useful constants for determining running enviroment and platform.
  *
@@ -88,5 +90,16 @@ class GriffonApplicationUtils {
       }
 
       is64Bit = osArch.contains('64')
+   }
+
+   static MetaClass metaClassOf(obj) {
+      if(obj == null) return null
+      switch(obj.getClass()) {
+         case GriffonArtifact:
+             return obj.getGriffonClass().getMetaClass()
+         case GroovyObject:
+             return obj.getMetaClass()
+      }
+      return GroovySystem.getMetaClassRegistry().getMetaClass(obj.getClass())
    }
 }

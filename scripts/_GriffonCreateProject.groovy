@@ -39,8 +39,12 @@ target(createApp: "Creates a Griffon application for the given name")  {
     createApplicationProject()
 
     // Set the default version number for the application
-    updateMetadata("app.version": griffonAppVersion ?: "0.1",
-                   "app.archetype": archetype)
+    updateMetadata("app.version": griffonAppVersion ?: "0.1")
+    def cfg = new File("${basedir}/griffon-app/conf/BuildConfig.groovy")
+    cfg.append("""
+app.archetype = '$archetype'
+app.fileType = '$fileType'
+""")
 
     event("StatusFinal", ["Created Griffon Application at $basedir"])
 }

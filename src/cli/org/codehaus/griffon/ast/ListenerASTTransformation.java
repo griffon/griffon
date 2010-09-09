@@ -45,7 +45,7 @@ import java.beans.PropertyChangeEvent;
  * Any closures found as the annotation's value will be either transformed
  * into inner classes that implement PropertyChangeListener (when the value
  * is a closue defined in place) or be casted as a proxy of PropertyChangeListener
- * (when the value is a property reference found on the same class).<p>
+ * (when the value is a property reference found in the same class).<p>
  * List of closures are also supported.
  *
  * @author Andres Almiray

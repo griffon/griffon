@@ -34,6 +34,9 @@ public class GriffonCompilerContext {
     public static String projectName;
 
     public static Pattern isArtifactPattern;
+    public static Pattern isAddonPattern;
+    public static Pattern isTestPattern;
+    public static Pattern[] scriptPatterns;
     public static Pattern[] excludedArtifacts;
     public static Pattern groovyArtifactPattern;
 
@@ -46,7 +49,12 @@ public class GriffonCompilerContext {
         for(String dir : ARTIFACT_EXCLUDES) {
             excludedArtifacts[i++] = Pattern.compile("^" + basedir + File.separator + "griffon-app" + File.separator + dir + File.separator + ".*$");        
         }
-        groovyArtifactPattern = Pattern.compile("^" + basedir + File.separator + "griffon-app" + File.separator + "([a-z]+)" + File.separator + ".*.groovy$");        
+        groovyArtifactPattern = Pattern.compile("^" + basedir + File.separator + "griffon-app" + File.separator + "([a-z]+)" + File.separator + ".*.groovy$");
+        isAddonPattern = Pattern.compile("^" + basedir + File.separator + ".*GriffonAddon.groovy$");
+        scriptPatterns = new Pattern[2];
+        scriptPatterns[0] = Pattern.compile("^" + basedir + File.separator + "griffon-app" + File.separator + "conf" + File.separator + ".*.groovy$");
+        scriptPatterns[1] = Pattern.compile("^" + basedir + File.separator + "scripts" + File.separator + ".*.groovy$");
+        isTestPattern = Pattern.compile("^" + basedir + File.separator + "test" + File.separator + ".*.groovy$");
     }
 
     public static boolean isGriffonArtifact(SourceUnit source) {
@@ -56,6 +64,25 @@ public class GriffonCompilerContext {
              if(p.matcher(source.getName()).matches()) return false;
          }
          return isArtifactPattern.matcher(source.getName()).matches();  
+    }
+
+    public static boolean isGriffonAddon(SourceUnit source) {
+         if(projectName == null) return false;
+         return isAddonPattern.matcher(source.getName()).matches();
+    }
+
+    public static boolean isGriffonScript(SourceUnit source) {
+         if(projectName == null) return false;
+
+         for(Pattern p : scriptPatterns) {
+             if(p.matcher(source.getName()).matches()) return true;
+         }
+         return false;
+    }
+
+    public static boolean isTestSource(SourceUnit source) {
+         if(projectName == null) return false;
+         return isTestPattern.matcher(source.getName()).matches();
     }
 
     /**

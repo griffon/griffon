@@ -21,7 +21,7 @@ import java.util.Set;
 import java.util.TreeSet;
 
 /**
- * <p>This interface represents any class in a Griffon application that is related to an artifact.</p>
+ * Represents any class in a Griffon application that is related to an artifact.</p>
  * While {@code GriffonArtifact} points to the real artifact instance, this class points to the meta
  * information that can be obtained from such artifact.
  * 
@@ -34,29 +34,31 @@ public interface GriffonClass {
         Arrays.asList("class", "metaClass", "app", "UIThread", "griffonClass"));
 	
     /**
-     * <p>Gets the initial value of the given property on the class</p>
+     * Gets the initial value of the given property on the class.</p>
+     *
      * @param name The name of the property
      * @return The initial value
      */
     Object getPropertyValue(String name);
     
     /**
-     * <p>Returns true if the class has the specified property</p>
+     * Returns true if the class has the specified property.</p>
+     *
      * @param name The name of the property
      * @return True if it does
      */
     boolean hasProperty(String name);
 
     /**
-     * <p>Creates a new instance of this class.</p>
+     * Creates a new instance of this class.</p>
      *
-     * <p>This method can be used as factory method in the Spring application context.</p>
+     * This method can be used as factory method in the Spring application context.</p>
      * @return a new instance of this class
      */
     Object newInstance();
 
     /**
-     * <p>Returns the logical name of the class in the application without the trailing convention part if applicable
+     * Returns the logical name of the class in the application without the trailing convention part if applicable
      * and without the package name.</p>
      *
      * @return the logical name
@@ -64,14 +66,14 @@ public interface GriffonClass {
     String getName();
 
     /**
-     * <p>Returns the short name of the class without package prefix</p>
+     * Returns the short name of the class without package prefix</p>
      *
      * @return The short name
      */
     String getShortName();
 
     /**
-     * <p>Returns the full name of the class in the application with the the trailing convention part and with
+     * Returns the full name of the class in the application with the the trailing convention part and with
      * the package name.</p>
      *
      * @return the full name
@@ -79,55 +81,57 @@ public interface GriffonClass {
     String getFullName();
 
     /**
-     * <p>Returns the name of the class as a property name</p>
+     * Returns the name of the class as a property name</p>
      *
      * @return The property name representation
      */
     String getPropertyName();
 
     /**
-     * <p>Returns the logical name of the class as a property name</p>
+     * Returns the logical name of the class as a property name</p>
      *
      * @return The logical property name
      */
     String getLogicalPropertyName();
 
     /**
-     * <p>Returns the name of the property in natural terms (eg. 'lastName' becomes 'Last Name')
-     * @return The natural property name</p>
+     * Returns the name of the property in natural terms (eg. 'lastName' becomes 'Last Name').<p>
+	 *
+     * @return The natural property name
      */
     String getNaturalName();
 
     /**
-     * <p>Returns the package name of the class.</p>
+     * Returns the package name of the class.</p>
      *
      * @return the package name
      */
     String getPackageName();
 
     /**
-     * <p> Returns the actual clazz represented by the GriffonClass</p>
+     * Returns the actual clazz represented by the GriffonClass</p>
      *
      * @return the class
      */
     Class getClazz();
     
     /**
-     * <p> Returns the artifact type represented by the GriffonClass</p>
+     * Returns the artifact type represented by the GriffonClass</p>
      *
      * @return the artifact type, i.e. "controller".
      */
     String getArtifactType();
 
     /**
-     * <p> Returns reference to the current application</p>
+     * Returns reference to the current application</p>
      *
      * @return the app
      */
     GriffonApplication getApp();
 
     /**
-     * 
+     * Gets the {@code MetaClass} of this GriffonClass.
+     *
      * @return The MetaClass for this Griffon class
      */
     MetaClass getMetaClass();
@@ -138,7 +142,8 @@ public interface GriffonClass {
     Object getReferenceInstance();
 
     /**
-     * Obtains a property value for the given name and type
+     * Obtains a property value for the given name and type.
+     *
      * @param name The name
      * @param type The type
      *

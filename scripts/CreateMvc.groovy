@@ -44,26 +44,20 @@ Type in griffon create-addon then execute this command again."""
     def (pkg, name) = extractArtifactName(argsMap['params'][0])
     def fqn = "${pkg?pkg:''}${pkg?'.':''}${GCU.getClassNameRepresentation(name)}"
 
-    def fileType =  argsMap.fileType ?: 'groovy'
-    if(!fileType.startsWith('.')) fileType = '.'+fileType
-
     createArtifact(
         name: fqn,
-        fileType: fileType,
         suffix: "Model",
         type: "Model",
         path: "griffon-app/models")
 
     createArtifact(
         name: fqn,
-        fileType: fileType,
         suffix: "View",
         type: "View",
         path: "griffon-app/views")
 
     createArtifact(
         name: fqn,
-        fileType: fileType,
         suffix: "Controller",
         type: "Controller",
         path: "griffon-app/controllers")

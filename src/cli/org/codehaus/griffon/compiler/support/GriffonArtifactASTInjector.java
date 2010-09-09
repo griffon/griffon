@@ -55,6 +55,22 @@ public class GriffonArtifactASTInjector implements ASTInjector {
         // GriffonApplication getApp()
         // void setApp(GriffonApplication app)
         classNode.addProperty(APP, ACC_PUBLIC, GRIFFON_APPLICATION_CLASS, null, null, null);
+
+        // MetaClass getMetaClass()
+        classNode.addMethod(new MethodNode(
+            "getMetaClass",
+            ACC_PUBLIC,
+            ClassHelper.METACLASS_TYPE,
+            Parameter.EMPTY_ARRAY,
+            ClassNode.EMPTY_ARRAY,
+            returnExpr(new MethodCallExpression(
+                new MethodCallExpression(
+                    VariableExpression.THIS_EXPRESSION,
+                    "getGriffonClass",
+                     ArgumentListExpression.EMPTY_ARGUMENTS),
+                "getMetaClass",
+                ArgumentListExpression.EMPTY_ARGUMENTS))
+        ));
         
         // GriffonClass getGriffonClass()
         classNode.addMethod(new MethodNode(

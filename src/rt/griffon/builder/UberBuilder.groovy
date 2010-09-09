@@ -16,7 +16,9 @@
 
 package griffon.builder
 
+import griffon.core.GriffonView
 import org.codehaus.groovy.runtime.InvokerHelper
+import org.codehaus.griffon.runtime.util.ExtendedExpandoMetaClass
 
 /**
  * @author Danno.Ferrin
@@ -82,19 +84,19 @@ class UberBuilder extends FactoryBuilderSupport {
         fbs.variables.clear()
         for (Closure delegate in fbs.attributeDelegates) {
             delegate.delegate = fbs
-            proxyBuilder.@attributeDelegates.add( delegate );
+            proxyBuilder.@attributeDelegates.add(delegate)
         }
         for (Closure delegate in fbs.preInstantiateDelegates) {
             delegate.delegate = fbs
-            proxyBuilder.@preInstantiateDelegates.add( delegate );
+            proxyBuilder.@preInstantiateDelegates.add(delegate)
         }
         for (Closure delegate in fbs.postInstantiateDelegates) {
             delegate.delegate = fbs
-            proxyBuilder.@postInstantiateDelegates.add( delegate );
+            proxyBuilder.@postInstantiateDelegates.add(delegate)
         }
         for (Closure delegate in fbs.postNodeCompletionDelegates) {
             delegate.delegate = fbs
-            proxyBuilder.@postNodeCompletionDelegates.add( delegate );
+            proxyBuilder.@postNodeCompletionDelegates.add(delegate)
         }
 
         fbs.setProxyBuilder(this)
@@ -110,15 +112,15 @@ class UberBuilder extends FactoryBuilderSupport {
             Factory factory = ubr.nominateFactory(name)
             if (factory) {
                 if (ubr.builder) {
-                    getProxyBuilder().getContext().put( CHILD_BUILDER, ubr.builder)
+                    getProxyBuilder().getContext().put(CHILD_BUILDER, ubr.builder)
                 } else {
-                    getProxyBuilder().getContext().put( CHILD_BUILDER, proxyBuilder)
+                    getProxyBuilder().getContext().put(CHILD_BUILDER, proxyBuilder)
                 }
 
                 return factory
             }
         }
-        return super.resolveFactory(name, attributes, value);
+        return super.resolveFactory(name, attributes, value)
     }
 
     protected Closure resolveExplicitMethod(String methodName, Object args) {
@@ -128,19 +130,28 @@ class UberBuilder extends FactoryBuilderSupport {
                 return explcitMethod
             }
         }
-        return super.resolveExplicitMethod(methodName, args);
+        return super.resolveExplicitMethod(methodName, args)
     }
 
-    protected void setClosureDelegate( Closure closure, Object node ) {
-        closure.setDelegate( currentBuilder );
+    protected void setClosureDelegate(Closure closure, Object node) {
+        closure.setDelegate(currentBuilder)
     }
 
     public Object build(Script script) {
         synchronized (script) {
-            MetaClass scriptMetaClass = script.getMetaClass();
-            script.setMetaClass(new UberInterceptorMetaClass(scriptMetaClass, this));
-            script.setBinding(this);
-            return script.run();
+            MetaClass scriptMetaClass = script.getMetaClass()
+            if(script instanceof GriffonView) {
+                 UberBuilderInterceptor interceptor = new UberBuilderInterceptor(this)
+                 ExtendedExpandoMetaClass mc = script.getGriffonClass().getMetaClass()
+                 mc.methodMissingHandler = interceptor.&callInvokeMethod
+                 mc.staticMethodMissingHandler = interceptor.&callInvokeMethod
+                 mc.getPropertyMissingHandler = interceptor.&callGetProperty
+                 mc.setPropertyMissingHandler = interceptor.&callSetProperty
+            } else {
+                script.setMetaClass(new UberInterceptorMetaClass(scriptMetaClass, new UberBuilderInterceptor(this)))
+            }
+            script.setBinding(this)
+            return script.run()
         }
     }
 
@@ -150,9 +161,9 @@ class UberBuilder extends FactoryBuilderSupport {
             if (accessors) {
                 if (accessors[0] == null) {
                     // write only property
-                    throw new MissingPropertyException(property + " is declared as write only");
+                    throw new MissingPropertyException(property + " is declared as write only")
                 } else {
-                    return accessors[0].call();
+                    return accessors[0].call()
                 }
             }
         }
@@ -165,9 +176,9 @@ class UberBuilder extends FactoryBuilderSupport {
             if (accessors) {
                 if (accessors[1] == null) {
                     // read only property
-                    throw new MissingPropertyException(property + " is declared as read only");
+                    throw new MissingPropertyException(property + " is declared as read only")
                 } else {
-                    accessors[1].call(newValue);
+                    accessors[1].call(newValue)
                 }
             }
         }
@@ -278,153 +289,140 @@ class UberBuilderRegistration {
     }
 }
 
+class UberBuilderInterceptor {
+    final UberBuilder uberBuilder
+    
+    UberBuilderInterceptor(UberBuilder uberBuilder) {
+        this.uberBuilder = uberBuilder
+    }
+
+    Object callInvokeMethod(Object instance, String methodName, Object[] arguments) {
+        // attempt method resolution
+        for (UberBuilderRegistration reg in uberBuilder.builderRegistration) {
+            try {
+                def builder = reg.builder
+                if (!builder.getMetaClass().respondsTo(builder, methodName).isEmpty()) {
+                    return InvokerHelper.invokeMethod(builder, methodName, arguments)
+                }
+            } catch (MissingMethodException mme) {
+                if (mme.method != methodName) {
+                    throw mme
+                }
+                // drop the exception, there will be many
+            }
+        }
+
+        return uberBuilder.invokeMethod(methodName, arguments)
+    }
+
+    Object callGetProperty(String propertyName) {
+        uberBuilder.getProperty(propertyName)
+    }
+
+    void callSetProperty(String propertyName, Object value) {
+        uberBuilder.setProperty(propertyName, value)
+    }
+}
+
 class UberInterceptorMetaClass extends DelegatingMetaClass {
+    UberBuilderInterceptor interceptor
 
-    UberBuilder factory;
-
-    public UberInterceptorMetaClass(MetaClass delegate, UberBuilder factory) {
-        super(delegate);
-        this.factory = factory;
+    public UberInterceptorMetaClass(MetaClass delegate, UberBuilderInterceptor interceptor) {
+        super(delegate)
+        this.interceptor = interceptor
     }
 
     public Object invokeMethod(Object object, String methodName, Object arguments) {
         try {
-            return delegate.invokeMethod(object, methodName, arguments);
+            return delegate.invokeMethod(object, methodName, arguments)
         } catch (MissingMethodException mme) {
             if (mme.method != methodName) {
                 throw mme
             }
-            // attempt method resolution
-            for (UberBuilderRegistration reg in factory.builderRegistration) {
-                try {
-                    def builder = reg.builder
-                    if (!builder.getMetaClass().respondsTo(builder, methodName).isEmpty()) {
-                        return InvokerHelper.invokeMethod(builder, methodName, arguments);
-                    }
-                } catch (MissingMethodException mme2) {
-                    if (mme2.method != methodName) {
-                        throw mme2
-                    }
-                    // drop the exception, there will be many
-                }
-            }
-            // dispatch to factories if it is not a literal method
+
             try {
-                return factory.invokeMethod(methodName, arguments);
+                return interceptor.callInvokeMethod(methodName, arguments)
             } catch (MissingMethodException mme2) {
                 if (mme2.method != methodName) {
                     throw mme2
                 }
-                //LOGME mme2.printStackTrace(System.out);
                 // chain secondary exception
-                Throwable root = mme;
+                Throwable root = mme
                 while (root.getCause() != null) {
-                    root = root.getCause();
+                    root = root.getCause()
                 }
-                root.initCause(mme2);
+                root.initCause(mme2)
                 // throw original
-                throw mme;
+                throw mme
             }
         }
     }
 
     public Object invokeStaticMethod(Object object, String methodName, Object[] arguments) {
         try {
-            return delegate.invokeMethod(object, methodName, arguments);
+            return delegate.invokeMethod(object, methodName, arguments)
         } catch (MissingMethodException mme) {
             if (mme.method != methodName) {
                 throw mme
             }
 
-            // attempt method resolution
-            for (UberBuilderRegistration reg in factory.builderRegistration) {
-                try {
-                    def builder = reg.builder
-                    if (!builder.getMetaClass().respondsTo(builder, methodName).isEmpty()) {
-                        return InvokerHelper.invokeMethod(builder, methodName, arguments);
-                    }
-                } catch (MissingMethodException mme2) {
-                    if (mme2.method != methodName) {
-                        throw mme2
-                    }
-
-                    // drop the exception, there will be many
-                }
-            }
-            // dispatch to factories if it is not a literal method
             try {
-                return factory.invokeMethod(methodName, arguments);
+                return interceptor.callInvokeMethod(methodName, arguments)
             } catch (MissingMethodException mme2) {
                 if (mme2.method != methodName) {
-                    throw mme
+                    throw mme2
                 }
-
                 // chain secondary exception
-                Throwable root = mme;
+                Throwable root = mme
                 while (root.getCause() != null) {
-                    root = root.getCause();
+                    root = root.getCause()
                 }
-                root.initCause(mme2);
+                root.initCause(mme2)
                 // throw original
-                throw mme;
+                throw mme
             }
         }
     }
 
     public Object invokeMethod(Object object, String methodName, Object[] arguments) {
         try {
-            return delegate.invokeMethod(object, methodName, arguments);
+            return delegate.invokeMethod(object, methodName, arguments)
         } catch (MissingMethodException mme) {
             if (mme.method != methodName) {
                 throw mme
             }
-            // attempt method resolution
-            for (UberBuilderRegistration reg in factory.builderRegistration) {
-                try {
-                    def builder = reg.builder
-                    if (!builder.getMetaClass().respondsTo(builder, methodName).isEmpty()) {
-                        return InvokerHelper.invokeMethod(builder, methodName, arguments);
-                    }
-                } catch (MissingMethodException mme2) {
-                    if (mme2.method != methodName) {
-                        throw mme2
-                    }
-                    // drop the exception, there will be many
-                }
-            }
-            // dispatch to factories if it is not a literal method
+
             try {
-                return factory.invokeMethod(methodName, arguments);
+                return interceptor.callInvokeMethod(methodName, arguments)
             } catch (MissingMethodException mme2) {
                 if (mme2.method != methodName) {
                     throw mme2
                 }
                 // chain secondary exception
-                Throwable root = mme;
+                Throwable root = mme
                 while (root.getCause() != null) {
-                    root = root.getCause();
+                    root = root.getCause()
                 }
-                root.initCause(mme2);
+                root.initCause(mme2)
                 // throw original
-                throw mme;
+                throw mme
             }
         }
     }
 
     public Object getProperty(Object o, String s) {
         try {
-            return factory.getProperty(s)
+            return interceptor.callGetProperty(s)
         } catch (MissingPropertyException mpe) {
-            //LOGME mpe.printStackTrace(System.out);
             return super.getProperty(o, s)
         }
     }
 
     public void setProperty(Object o, String s, Object o1) {
         try {
-            factory.setProperty(s, o1)
+            interceptor.callSetProperty(s, o1)
         } catch (MissingPropertyException mpe) {
-            mpe.printStackTrace(System.out);
+            // mpe.printStackTrace(System.out)
             super.getProperty(o, s, o1)
         }
     }

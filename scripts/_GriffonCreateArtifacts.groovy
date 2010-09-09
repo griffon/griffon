@@ -31,10 +31,13 @@ rootPackage = null
 replaceNonag = false
 
 createArtifact = { Map args = [:] ->
+    resolveArchetype()
+    resolveFileType()
+
     def suffix = args["suffix"]
     def type = args["type"]
     def artifactPath = args["path"]
-    def fileType = args["fileType"] ?: '.groovy'
+    // def fileType = args["fileType"] ?: '.groovy'
     def lineTerminator = args["lineTerminator"] ?: (fileType != '.groovy'? ';' : '')
 
     ant.mkdir(dir: "${basedir}/${artifactPath}")
@@ -60,36 +63,35 @@ createArtifact = { Map args = [:] ->
     artifactFile = "${basedir}/${artifactPath}/${pkgPath}${className}${suffix}${fileType}"
     defaultArtifactFile = "${basedir}/${artifactPath}/${pkgPath}${className}${suffix}.groovy"
 
-    resolveArchetype()
     templateFile = resolveTemplate(type, artifactPath, fileType)
     if(!templateFile?.exists() && fileType != '.groovy') {
-	    templateFile = resolveTemplate(type, artifactPath,'.groovy')
+        templateFile = resolveTemplate(type, artifactPath,'.groovy')
         lineTerminator = ''
     }
 
     if(!templateFile?.exists()) {
-	    event('StatusFinal', ["Could not locate a suitable template for $artifactFile"])
-	    exit(1)
+        event('StatusFinal', ["Could not locate a suitable template for $artifactFile"])
+        exit(1)
     }
 
     def similarFiles = resolveResources("file:${basedir}/${artifactPath}/${pkgPath}${className}${suffix}.*")
     if(similarFiles) {
-	    def fileSuffix = similarFiles[0].file.name.substring(similarFiles[0].file.name.lastIndexOf('.'))
-	    if(fileSuffix == fileType) {
+        def fileSuffix = similarFiles[0].file.name.substring(similarFiles[0].file.name.lastIndexOf('.'))
+        if(fileSuffix == fileType) {
             if(!replaceNonag && !confirmInput("${type} ${className}${suffix}${fileType} already exists. Overwrite? [y/n]","${artifactName}.${suffix}.overwrite")) {
                 return
-            }		
-	    } else {
+            }        
+        } else {
             if(!replaceNonag && !confirmInput("${type} ${className}${suffix} already exists with type ${fileSuffix}. Rename? [y/n]","${artifactName}.${suffix}.rename")) {
                 return
             }
             // WATCH OUT!! can cause problems with VCS systems
             ant.mkdir(dir: "${basedir}/renamed")
-            ant.move(tofile: "${basedir}/renamed/${className}${suffix}${fileSuffix}", file: similarFiles[0].file)		
-	    }
+            ant.move(tofile: "${basedir}/renamed/${className}${suffix}${fileSuffix}", file: similarFiles[0].file)        
+        }
     } else if(replaceNonag) {
-	    event('StatusFinal', ["${basedir}/${artifactPath}/${pkgPath}${className}${suffix} cannot be replaced because it does not exist."])
-	    exit(1)	
+        event('StatusFinal', ["${basedir}/${artifactPath}/${pkgPath}${className}${suffix} cannot be replaced because it does not exist."])
+        exit(1)    
     }
 
     copyGriffonResource(artifactFile, templateFile)
@@ -117,7 +119,7 @@ createArtifact = { Map args = [:] ->
 }
 
 resolveTemplate = { type, artifactPath, fileSuffix ->
-	// first check for presence of template in application
+    // first check for presence of template in application
     def templateFile = new FileSystemResource("${basedir}/src/templates/artifacts/${type}${fileSuffix}")
     if (!templateFile.exists()) {
         // now check for template provided by plugins
@@ -205,10 +207,17 @@ extractArtifactName = { name ->
 }
 
 target(resolveArchetype: '') {
-    def md = metadataFile.exists() ? Metadata.getInstance(metadataFile) : null
-    archetype = md?.'app.archetype'
+    archetype = buildConfig.app.archetype
+    if(!archetype && archetype instanceof ConfigObject) archetype = null
     archetype = archetype ?: argsMap.archetype
     archetype = archetype ?: 'default'
+}
+
+target(resolveFileType: '') {
+    def cfileType = buildConfig.app.fileType
+    if(!cfileType && cfileType instanceof ConfigObject) cfileType = null
+    fileType = argsMap.fileType ?: (cfileType ?: 'groovy')
+    if(!fileType.startsWith('.')) fileType = '.'+fileType
 }
 
 loadArchetypeFor = { type = 'application' ->

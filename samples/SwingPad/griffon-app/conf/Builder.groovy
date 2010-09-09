@@ -37,7 +37,6 @@ root.'OxbowGriffonAddon'.addon=true
 root.'OxbowGriffonAddon'.controller=['ask','choice','error','inform','showException','radioChoice','warn']
 root.'TransitionsGriffonAddon'.addon=true
 root.'ZonelayoutGriffonAddon'.addon=true
-root.'ChartsGriffonAddon'.addon=true
 root.'TrayBuilderGriffonAddon'.addon=true
 root.'griffon.builder.macwidgets.MacWidgetsBuilder'.view = '*'
 root.'JGoodiesFormsGriffonAddon'.addon=true

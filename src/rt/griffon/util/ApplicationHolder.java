@@ -21,7 +21,7 @@ import griffon.core.GriffonApplication;
  * Utility class that holds a reference to the current application.<p>
  * Usage of this class with Griffon artifacts/addons instances is highly discouraged
  * as those instances should have an <tt>app</tt> property of their own. This class
- * is provided as convenience for non Griffon artifacts.
+ * is provided as a convenience for non Griffon artifacts.
  *
  * @author Andres Almiray
  * @since 0.9.1

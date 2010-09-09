@@ -1,5 +1,4 @@
-@artifact.package@import java.awt.Image;
-import java.awt.Toolkit;
+@artifact.package@import java.awt.*;
 import javax.swing.*;
 import java.util.Map;
 
@@ -20,7 +19,7 @@ public class @artifact.name@ extends AbstractGriffonView {
     }
 
     public void mvcGroupInit(Map<String, ?> args) {
-        getApp().execSync(new Runnable() {
+        execSync(new Runnable() {
             public void run() {
                 JFrame view = new JFrame("@griffon.project.name@");
                 view.setIconImage(getImage("/griffon-icon-48x48.png"));
@@ -40,8 +39,8 @@ public class @artifact.name@ extends AbstractGriffonView {
 
     // build the UI
     private JComponent init() {
-        JPanel panel = new JPanel();
-        panel.add(new JLabel("Content Goes Here"));
+        JPanel panel = new JPanel(new BorderLayout());
+        panel.add(new JLabel("Content Goes Here"), BorderLayout.CENTER);
         return panel;
     }
 

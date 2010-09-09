@@ -28,6 +28,7 @@ import java.lang.reflect.Modifier;
 import griffon.core.GriffonView;
 import griffon.core.GriffonViewClass;
 import org.codehaus.griffon.runtime.core.AbstractGriffonView;
+import org.codehaus.griffon.runtime.core.AbstractGriffonViewScript;
 import org.codehaus.griffon.compiler.GriffonCompilerContext;
 
 /**
@@ -42,7 +43,8 @@ import org.codehaus.griffon.compiler.GriffonCompilerContext;
 public class GriffonViewASTTransformation extends GriffonArtifactASTTransformation {
     private static final String ARTIFACT_PATH = "views";
     private static final ClassNode GRIFFON_VIEW_CLASS = ClassHelper.makeWithoutCaching(GriffonView.class);
-    private static final ClassNode ABSTRACT_GRIFFON_VIEW_CLASS = ClassHelper.makeWithoutCaching(AbstractGriffonView.class);    
+    private static final ClassNode ABSTRACT_GRIFFON_VIEW_CLASS = ClassHelper.makeWithoutCaching(AbstractGriffonView.class);
+    private static final ClassNode ABSTRACT_GRIFFON_VIEW_SCRIPT_CLASS = ClassHelper.makeWithoutCaching(AbstractGriffonViewScript.class);
 
     protected boolean allowsScriptAsArtifact() {
         return true;
@@ -51,7 +53,7 @@ public class GriffonViewASTTransformation extends GriffonArtifactASTTransformati
     protected void transform(ClassNode classNode, SourceUnit source, String artifactPath) {
         if(!ARTIFACT_PATH.equals(artifactPath)) return;
         if(classNode.isDerivedFrom(ClassHelper.SCRIPT_TYPE)) {
-            inject(classNode);
+            classNode.setSuperClass(ABSTRACT_GRIFFON_VIEW_SCRIPT_CLASS);
         }else if(ClassHelper.OBJECT_TYPE.equals(classNode.getSuperClass())) {
             classNode.setSuperClass(ABSTRACT_GRIFFON_VIEW_CLASS);
         } else if(!classNode.implementsInterface(GRIFFON_VIEW_CLASS)){

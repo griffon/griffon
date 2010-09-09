@@ -33,13 +33,9 @@ target('default': "Creates a new service class") {
 
     def name = argsMap["params"][0]
 
-    def fileType =  argsMap.fileType ?: 'groovy'
-    if(!fileType.startsWith('.')) fileType = '.'+fileType
-
     createArtifact(name: name,
         suffix: type,
         type: type,
-        fileType: fileType,
         path: "griffon-app/services")
     createUnitTest(name: name, suffix: type)
 }

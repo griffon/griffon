@@ -23,15 +23,23 @@ import org.codehaus.griffon.runtime.util.GriffonApplicationHelper
  *
  * @author Andres Almiray
  */
-@Singleton
 class ArtifactManager {
     GriffonApplication app
 
     private final Map<String, ArtifactInfo[]> artifacts = [:]
     private final Map<String, ArtifactHandler> artifactHandlers = [:]
 
+    private static final ArtifactManager INSTANCE
     private static final GriffonClass[] EMPTY_GRIFFON_CLASS_ARRAY = new GriffonClass[0]
     private static final Class[] EMPTY_CLASS_ARRAY = new Class[0]
+
+    static {
+        INSTANCE = new ArtifactManager()
+    }
+
+    static ArtifactManager getInstance() {
+        INSTANCE
+    }
 
     /**
      * Registers an ArtifactHandler by type.<p>

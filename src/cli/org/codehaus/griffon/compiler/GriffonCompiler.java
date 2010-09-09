@@ -103,7 +103,10 @@ public class GriffonCompiler extends Groovyc {
 
     private void processGriffonSource(SourceUnit source, GeneratorContext context,
                              ClassNode classNode) throws CompilationFailedException {
-        if(GriffonCompilerContext.isGriffonArtifact(source)) {
+        if(GriffonCompilerContext.isGriffonArtifact(source) ||
+           GriffonCompilerContext.isGriffonAddon(source) ||
+           GriffonCompilerContext.isGriffonScript(source) ||
+           GriffonCompilerContext.isTestSource(source)) {
             Map<ClassNode, String[]> imports = resolveVisitor.getAdditionalImports();
             Matcher matcher = GriffonCompilerContext.groovyArtifactPattern.matcher(source.getName());
             if(matcher.matches()) {

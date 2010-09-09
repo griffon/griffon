@@ -112,7 +112,7 @@ public abstract class AbstractGriffonClass implements GriffonClass {
         try {
             Object instance = GriffonApplicationHelper.newInstance(app, clazz, type);
             MetaClass metaClass = getMetaClass();
-            GriffonApplicationHelper.enhance(app, clazz, metaClass, instance);
+            // GriffonApplicationHelper.enhance(app, clazz, metaClass, instance);
             if (instance instanceof GroovyObject) {
                ((GroovyObject)instance).setMetaClass(metaClass);
             } else {

@@ -154,8 +154,13 @@ class GriffonApplicationHelper {
      *
      * @return a newly created instance of type klass
      */
-    static Object newInstance(GriffonApplication app, Class klass, String type = "") {
+    static Object newInstance(GriffonApplication app, Class klass, String type = '') {
         def instance = klass.newInstance()
+
+        GriffonClass griffonClass = ArtifactManager.instance.findGriffonClass(klass)
+        MetaClass mc = griffonClass?.getMetaClass() ?: klass.getMetaClass()
+        enhance(app, klass, mc, instance)
+
         app.event('NewInstance',[klass,type,instance])
         return instance
     }
@@ -227,7 +232,6 @@ class GriffonApplicationHelper {
                 // otherwise create a new value
                 GriffonClass griffonClass = griffonClassMap[k]
                 def instance = griffonClass?.newInstance() ?: newInstance(app, v, k)
-                if(!griffonClass) enhance(app, v, metaClassMap[k], instance)
                 instanceMap[k] = instance
                 argsCopy[k] = instance
 
@@ -287,15 +291,21 @@ class GriffonApplicationHelper {
             }
         }
 
-        app.event("CreateMVCGroup",[mvcName, instanceMap.model, instanceMap.view, instanceMap.controller, mvcType, instanceMap])
+        // deprecate this one
+        app.event('CreateMVCGroup',[mvcName, instanceMap.model, instanceMap.view, instanceMap.controller, mvcType, instanceMap])
+        app.event('CreateMVCGroup',[mvcType, mvcName, instanceMap])
         return instanceMap
     }
 
     static enhance(GriffonApplication app, Class klass, MetaClass metaClass, Object instance) {
-        if(metaClass.hasProperty(instance, 'app')) {
-            instance.app = app
-        } else {
-            metaClass.app = app
+        try {
+            instance.setApp(app)
+        } catch(MissingMethodException mme) {
+            try {
+                instance.app = app
+            } catch(MissingPropertyException mpe) {
+                metaClass.app = app
+            }
         }
 
         if(!GriffonMvcArtifact.class.isAssignableFrom(klass)) {

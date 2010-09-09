@@ -22,6 +22,7 @@ import griffon.core.GriffonClass;
 import griffon.core.ArtifactManager;
 import griffon.util.UIThreadHelper;
 
+import groovy.lang.MetaClass;
 import groovy.lang.Closure;
 import java.util.concurrent.Callable;
 import java.util.concurrent.Future;
@@ -51,8 +52,12 @@ public abstract class AbstractGriffonArtifact implements GriffonArtifact {
         return GriffonApplicationHelper.newInstance(app, clazz, type);
     }
 
+    public MetaClass getMetaClass() {
+        return getGriffonClass().getMetaClass();
+    }
+
     public GriffonClass getGriffonClass() {
-        return app.getArtifactManager().findGriffonClass(getClass());
+        return ArtifactManager.getInstance().findGriffonClass(getClass());
     }
 
     public boolean isUIThread() {

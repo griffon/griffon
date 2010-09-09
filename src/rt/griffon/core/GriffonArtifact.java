@@ -16,6 +16,7 @@
 package griffon.core;
 
 import groovy.lang.Closure;
+import groovy.lang.MetaClass;
 import java.util.concurrent.Callable;
 import java.util.concurrent.Future;
 import java.util.concurrent.ExecutorService;
@@ -43,6 +44,14 @@ public interface GriffonArtifact {
      * Creates a new instance of the specified class and type.
      */
     Object newInstance(Class clazz, String type);
+
+    /**
+     * Gets the {@code MetaClass} of this artifact.<p>
+     * It should delegate to its GriffonClass to get the real MetaClass.
+     *
+     * @return The MetaClass for this Griffon class
+     */
+    MetaClass getMetaClass();
 
     /**
      * Returns the <tt>GriffonClass</tt> associated with this artifact.
