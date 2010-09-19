@@ -52,9 +52,11 @@ public class GriffonViewASTTransformation extends GriffonArtifactASTTransformati
     
     protected void transform(ClassNode classNode, SourceUnit source, String artifactPath) {
         if(!ARTIFACT_PATH.equals(artifactPath)) return;
+        if(!classNode.getName().endsWith(GriffonViewClass.TRAILING)) return;
+
         if(classNode.isDerivedFrom(ClassHelper.SCRIPT_TYPE)) {
             classNode.setSuperClass(ABSTRACT_GRIFFON_VIEW_SCRIPT_CLASS);
-        }else if(ClassHelper.OBJECT_TYPE.equals(classNode.getSuperClass())) {
+        } else if(ClassHelper.OBJECT_TYPE.equals(classNode.getSuperClass())) {
             classNode.setSuperClass(ABSTRACT_GRIFFON_VIEW_CLASS);
         } else if(!classNode.implementsInterface(GRIFFON_VIEW_CLASS)){
             inject(classNode);

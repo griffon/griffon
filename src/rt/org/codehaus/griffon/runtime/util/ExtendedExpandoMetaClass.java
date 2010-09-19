@@ -79,6 +79,14 @@ public class ExtendedExpandoMetaClass extends ExpandoMetaClass {
         this.setPropertyMissingHandler = setPropertyMissingHandler;
     }
 
+    public Object invokeMethod(Object instance, String methodName, Object[] arguments) {
+        try {
+            return super.invokeMethod(instance, methodName, arguments);
+        } catch(MissingMethodException e) {
+            return invokeMissingMethod(instance, methodName, arguments);
+        }
+    }
+
     public Object invokeMissingMethod(Object instance, String methodName, Object[] arguments) {
         if(methodMissingHandler != null) {
             return methodMissingHandler.call(new Object[]{methodName, arguments});

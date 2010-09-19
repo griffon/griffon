@@ -140,16 +140,20 @@ class UberBuilder extends FactoryBuilderSupport {
     public Object build(Script script) {
         synchronized (script) {
             MetaClass scriptMetaClass = script.getMetaClass()
+/*
+            script.setMetaClass(new UberInterceptorMetaClass(scriptMetaClass, new UberBuilderInterceptor(this)))
+*/
             if(script instanceof GriffonView) {
                  UberBuilderInterceptor interceptor = new UberBuilderInterceptor(this)
                  ExtendedExpandoMetaClass mc = script.getGriffonClass().getMetaClass()
-                 mc.methodMissingHandler = interceptor.&callInvokeMethod
-                 mc.staticMethodMissingHandler = interceptor.&callInvokeMethod
-                 mc.getPropertyMissingHandler = interceptor.&callGetProperty
-                 mc.setPropertyMissingHandler = interceptor.&callSetProperty
+                 mc.setMethodMissingHandler(interceptor.&callInvokeMethod)
+                 mc.setSstaticMethodMissingHandler(interceptor.&callInvokeMethod)
+                 mc.setGetPropertyMissingHandler(interceptor.&callGetProperty)
+                 mc.setSetPropertyMissingHandler(interceptor.&callSetProperty)
             } else {
                 script.setMetaClass(new UberInterceptorMetaClass(scriptMetaClass, new UberBuilderInterceptor(this)))
             }
+
             script.setBinding(this)
             return script.run()
         }
@@ -296,12 +300,12 @@ class UberBuilderInterceptor {
         this.uberBuilder = uberBuilder
     }
 
-    Object callInvokeMethod(Object instance, String methodName, Object[] arguments) {
+    Object callInvokeMethod(String methodName, Object[] arguments) {
         // attempt method resolution
         for (UberBuilderRegistration reg in uberBuilder.builderRegistration) {
             try {
                 def builder = reg.builder
-                if (!builder.getMetaClass().respondsTo(builder, methodName).isEmpty()) {
+                if (builder.getMetaClass().respondsTo(builder, methodName)) {
                     return InvokerHelper.invokeMethod(builder, methodName, arguments)
                 }
             } catch (MissingMethodException mme) {
