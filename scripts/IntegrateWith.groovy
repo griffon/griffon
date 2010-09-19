@@ -75,6 +75,7 @@ target(integrateEclipse:"Integrates Eclipse STS with Griffon") {
     ant.copy(todir:basedir) {
         fileset(dir:"${integrationFiles}/eclipse")
     }
+    ant.move(file: "${basedir}/.launch", tofile: "${basedir}/${griffonAppName}.launch", overwrite: true)
 
     replaceTokens()
     println "Created Eclipse project files."
