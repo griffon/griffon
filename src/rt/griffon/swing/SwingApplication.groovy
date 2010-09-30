@@ -34,8 +34,13 @@ class SwingApplication implements SwingGriffonApplication, griffon.application.S
     final WindowManager windowManager
     WindowDisplayHandler windowDisplayHandler
     private final WindowDisplayHandler defaultWindowDisplayHandler = new DefaultWindowDisplayHandler()
+    final String[] startupArgs
+    private static final String[] EMPTY_ARGS = new String[0]
 
-    SwingApplication() {
+    SwingApplication(String[] args = EMPTY_ARGS) {
+        startupArgs = new String[args.length]
+        System.arraycopy(args, 0, startupArgs, 0, args.length)
+
         UIThreadHelper.instance.setUIThreadHandler(new SwingUIThreadHandler())
         _base = new BaseGriffonApplication(this)
         windowManager = new WindowManager(this)
@@ -95,7 +100,7 @@ class SwingApplication implements SwingGriffonApplication, griffon.application.S
 
     public static void main(String[] args) {
         GriffonExceptionHandler.registerExceptionHandler()
-        SwingApplication sa = new SwingApplication()
+        SwingApplication sa = new SwingApplication(args)
         sa.bootstrap()
         sa.realize()
         sa.show()
