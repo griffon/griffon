@@ -256,7 +256,7 @@ public class IvyDependencyManager extends AbstractIvyDependencyManager implement
                        "org.grails:grails-docs:1.3.2"
 
                 // dependencies needed for compilation
-                compile("org.codehaus.groovy:groovy-all:1.7.5-SNAPSHOT") {
+                compile("org.codehaus.groovy:groovy-all:1.7.5") {
                     excludes 'jline'
                 }
 
