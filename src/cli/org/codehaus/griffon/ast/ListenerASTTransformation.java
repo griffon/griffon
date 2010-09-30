@@ -55,9 +55,7 @@ public class ListenerASTTransformation implements ASTTransformation, Opcodes {
     protected static ClassNode LISTENER = new ClassNode(Listener.class);
     protected static ClassNode PROPERTY_CHANGE_LISTENER = ClassHelper.makeWithoutCaching(PropertyChangeListener.class);
     protected static ClassNode PROPERTY_CHANGE_EVENT = ClassHelper.makeWithoutCaching(PropertyChangeEvent.class);
-    protected static ClassNode DGM = ClassHelper.makeWithoutCaching(DefaultGroovyMethods.class);
     private static final String EMPTY_STRING = "";
-    private static final Map<String, Integer> LISTENER_COUNT = new LinkedHashMap<String, Integer>();
 
     /**
      * Convenience method to see if an annotated node is {@code @Listener}.
@@ -136,12 +134,10 @@ public class ListenerASTTransformation implements ASTTransformation, Opcodes {
     } 
 
     private void addPropertyChangeListener(ClassNode classNode, String propertyName, ClosureExpression closure) {
-        InnerClassNode innerClass = makePropertyChangeListenerClass(classNode, closure);
-        classNode.getModule().addClass(innerClass);
-        
         ArgumentListExpression args = new ArgumentListExpression();
         if(propertyName != null) args.addExpression(new ConstantExpression(propertyName));
-        args.addExpression(new ConstructorCallExpression(innerClass, ArgumentListExpression.EMPTY_ARGUMENTS));
+        args.addExpression(CastExpression.asExpression(PROPERTY_CHANGE_LISTENER, closure));
+
         addListenerStatement(classNode, args);
     }
     
@@ -151,56 +147,6 @@ public class ListenerASTTransformation implements ASTTransformation, Opcodes {
         args.addExpression(CastExpression.asExpression(PROPERTY_CHANGE_LISTENER, variable));
 
         addListenerStatement(classNode, args);
-    }
-
-    private InnerClassNode makePropertyChangeListenerClass(ClassNode classNode, ClosureExpression closure) {
-        String className = calculateListenerClassName(classNode);
-
-        InnerClassNode listenerClass = new InnerClassNode(
-            classNode,
-            className,
-            Modifier.PRIVATE | Modifier.STATIC,
-            ClassHelper.OBJECT_TYPE,
-            new ClassNode[]{PROPERTY_CHANGE_LISTENER},
-            MixinNode.EMPTY_ARRAY
-        );
-
-        String fieldName = "listener_closure";
-        listenerClass.addField(new FieldNode(
-            fieldName,
-            Modifier.PRIVATE | Modifier.FINAL,
-            ClassHelper.CLOSURE_TYPE,
-            listenerClass,
-            closure
-        ));
-
-        listenerClass.addMethod(new MethodNode(
-            "propertyChange",
-            Modifier.PUBLIC,
-            ClassHelper.VOID_TYPE,
-            new Parameter[]{new Parameter(PROPERTY_CHANGE_EVENT, "event")},
-            ClassNode.EMPTY_ARRAY,
-            new ExpressionStatement(
-                new MethodCallExpression(
-                    VariableExpression.THIS_EXPRESSION,
-                    fieldName,
-                    new ArgumentListExpression(
-                        new Expression[]{new VariableExpression("event")})
-                )
-            )
-        ));
-
-        return listenerClass;
-    }
-
-    private static String calculateListenerClassName(ClassNode classNode) {
-        Integer count = LISTENER_COUNT.get(classNode.getName());
-        if(count == null) {
-            count = -1;
-        }
-        count++;
-        LISTENER_COUNT.put(classNode.getName(), count);
-        return classNode.getName() + "$PropertyChangeListener_" + count; 
     }
 
     private void addListenerStatement(ClassNode classNode, ArgumentListExpression args) {
