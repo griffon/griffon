@@ -133,7 +133,9 @@ public class GriffonCompiler extends Groovyc {
                Properties props = new Properties();
                props.load(url.openStream());
 
-               for(String type : props.stringPropertyNames()) {
+               Enumeration<?> types = props.propertyNames();
+               while(types.hasMoreElements()) {
+                   String type = (String) types.nextElement();
                    String[] existingImports = IMPORTS_PER_ARTIFACT_TYPE.get(type);
                    String[] incomingImports = ((String)props.get(type)).split(",");
 
