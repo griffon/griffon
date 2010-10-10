@@ -163,20 +163,8 @@ compileInplacePlugin = { File pluginDir ->
 }
 
 doWithPlugins = { callback = null ->
-/*
-    def plugins = metadata.findAll { it.key.startsWith("plugins.")}.collect {
-       [
-        name:it.key[8..-1],
-        version: it.value
-       ]
-    }
-
-    _resolveDependencies(plugins)
-*/
-
     if(!callback) return
 
-    // read again as the list might have been updated
     def plugins = metadata.findAll { it.key.startsWith("plugins.")}.collect {
        [
         name:it.key[8..-1],
@@ -188,7 +176,16 @@ doWithPlugins = { callback = null ->
         def name = p.name
         def version = p.version
         def fullName = "$name-$version"
-        callback(name, version, getPluginDirForName(name).file)
+        def pluginDir = getPluginDirForName(name)
+        if(!pluginDir) installPluginForName(name)
+    }
+
+    // read again as the list might have been updated
+    metadata.findAll { it.key.startsWith("plugins.")}.collect {
+        name = it.key[8..-1]
+        version = it.value
+        def pluginDir = getPluginDirForName(name)
+        callback(name, version, pluginDir.file)
     }
 }
 
