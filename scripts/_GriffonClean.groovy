@@ -33,7 +33,7 @@ target(cleanAll: "Cleans a Griffon project") {
 }
 
 target(clean: "Implementation of clean") {
-    depends(classpath, cleanCompiledSources, cleanPackaging)
+    depends(parseArguments, classpath, cleanCompiledSources, cleanPackaging)
 }
 
 target(cleanCompiledSources: "Cleans compiled Java and Groovy sources") {
@@ -65,7 +65,26 @@ target(cleanPackaging : "Cleans the distribtion directories") {
 
         ant.delete(dir:ant.antProject.replaceProperties(distDir))
         if(destDir) ant.delete(dir:ant.antProject.replaceProperties(destDir))
-        //todo per package directories?
     }
+
+    def cleanPackage = { type ->
+        try {
+            event('CleanPackage',[type])
+        } catch(Exception x) {
+            ant.echo(message: "Could not handle package type '${type}'")
+            ant.echo(message: x.message)
+        }
+    }
+
+    def keys = argsMap.keySet()
+    for(key in keys) {
+        if(key == 'params') continue
+        cleanPackage(key)
+    }
+
+    argsMap.params?.each { type ->
+        cleanPackage(type)
+    }
+
     ant.delete(dir:projectTargetDir)
 }
