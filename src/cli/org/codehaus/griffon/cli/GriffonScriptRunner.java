@@ -297,7 +297,7 @@ public class GriffonScriptRunner {
 
     private void setRunningEnvironment(String scriptName, String env) {
         // Get the default environment if one hasn't been set.
-        boolean useDefaultEnv = env == null || Environment.DEVELOPMENT.getName().equals(env);
+        boolean useDefaultEnv = env == null;
         if (useDefaultEnv) {
             env = DEFAULT_ENVS.get(scriptName);
             env = env != null ? env : Environment.DEVELOPMENT.getName();
@@ -310,6 +310,7 @@ public class GriffonScriptRunner {
         // Add some extra binding variables that are now available.
         settings.setGriffonEnv(env);
         settings.setDefaultEnv(useDefaultEnv);
+        settings.loadConfig();
     }
 
     /**
@@ -328,6 +329,7 @@ public class GriffonScriptRunner {
             // Clear unhelpful system properties.
             System.clearProperty("griffon.env.set");
             System.clearProperty(Environment.KEY);
+            env = null;
 
             out.println("--------------------------------------------------------");
             String enteredName = helper.userInput(message);
@@ -568,6 +570,7 @@ public class GriffonScriptRunner {
         }
 
         setRunningEnvironment(scriptName, env);
+        binding.setVariable("scriptEnv", System.getProperty(Environment.KEY));
         return executeWithGantInstance(gant, doNothingClosure);
     }
 
