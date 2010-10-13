@@ -58,6 +58,7 @@ createArtifact = { Map args = [:] ->
 
     // Convert the given name into class name and property name
     // representations.
+    packageName = artifactPkg
     className = GriffonUtil.getClassNameRepresentation(artifactName)
     propertyName = GriffonUtil.getPropertyNameRepresentation(artifactName)
     artifactFile = "${basedir}/${artifactPath}/${pkgPath}${className}${suffix}${fileType}"

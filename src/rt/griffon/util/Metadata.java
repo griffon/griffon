@@ -227,7 +227,13 @@ public class Metadata extends Properties {
             griffonStartDir = System.getProperty(GRIFFON_START_DIR);
             if(griffonStartDir != null && griffonStartDir.length() > 1 &&
                 griffonStartDir.startsWith("\"") && griffonStartDir.endsWith("\"")) {
-                // normalize without quotes
+                // normalize without double quotes
+                griffonStartDir = griffonStartDir.substring(1, griffonStartDir.length() - 1);
+                System.setProperty(GRIFFON_START_DIR, griffonStartDir);
+            }
+            if(griffonStartDir != null && griffonStartDir.length() > 1 &&
+                griffonStartDir.startsWith("'") && griffonStartDir.endsWith("'")) {
+                // normalize without single quotes
                 griffonStartDir = griffonStartDir.substring(1, griffonStartDir.length() - 1);
                 System.setProperty(GRIFFON_START_DIR, griffonStartDir);
             }
