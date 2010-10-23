@@ -67,7 +67,7 @@ createProjectWithDefaults = {
     argsMap["params"][0] = griffonAppName
 }
 
-def resetBaseDirectory(String basedir) {
+resetBaseDirectory = { String basedir ->
     // Update the build settings and reload the build configuration.
     griffonSettings.baseDir = new File(basedir)
     griffonSettings.loadConfig()
@@ -75,6 +75,17 @@ def resetBaseDirectory(String basedir) {
     // Reload the application metadata.
     metadataFile = new File("$basedir/${Metadata.FILE}")
     metadata = Metadata.getInstance(metadataFile)
+
+    applicationConfig = new ConfigObject()
+    applicationConfigFile = new File(basedir, 'griffon-app/conf/Application.groovy')
+    if(applicationConfigFile.exists()) applicationConfig = configSlurper.parse(applicationConfigFile.text)
+    builderConfig = new ConfigObject()
+    builderConfigFile = new File(basedir, 'griffon-app/conf/Builder.groovy')
+    if(builderConfigFile.exists()) builderConfig = configSlurper.parse(builderConfigFile.text)
+    config = new ConfigObject()
+    configFile = new File(basedir, 'griffon-app/conf/Config.groovy')
+    if(configFile.exists()) config = configSlurper.parse(configFile.text)
+
 
     // Reset the plugin stuff.
     pluginSettings.clearCache()
