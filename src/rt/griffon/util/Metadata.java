@@ -21,6 +21,7 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.URL;
 import java.lang.ref.Reference;
 import java.lang.ref.SoftReference;
 import java.util.Collections;
@@ -29,6 +30,8 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Properties;
 import java.util.Vector;
+import java.util.regex.Pattern;
+import java.util.regex.Matcher;
 
 /**
  * Represents the application Metadata and loading mechanics
@@ -46,7 +49,8 @@ public class Metadata extends Properties {
     public static final String APPLICATION_GRIFFON_VERSION = "app.griffon.version";
     public static final String GRIFFON_START_DIR = "griffon.start.dir";
     public static final String GRIFFON_WORKING_DIR = "griffon.working.dir";
-    
+
+    private static final Pattern SKIP_PATTERN = Pattern.compile("^.*\\/griffon-.*.jar!\\/application.properties$");
     private static Reference<Metadata> metadata = new SoftReference<Metadata>(new Metadata());
 
     private boolean initialized;
@@ -89,12 +93,12 @@ public class Metadata extends Properties {
                 // if(Environment.getEnvironment(System.getProperty(Environment.KEY)) == Environment.DEVELOPMENT) {
                 //     input = new FileInputStream(FILE);
                 // }
-                if(input == null) {
-                    input = Thread.currentThread().getContextClassLoader().getResourceAsStream(FILE);
-                }
-                if(input == null) {
-                    input = Metadata.class.getClassLoader().getResourceAsStream(FILE);
-                }
+
+                // GRIFFON-255 there may be multiple versions of "application.properties" in the classpath
+                // due to addon packaging. Avoid any URLS that look like plugin dirs or addon jars
+                input = fetchApplicationProperties(Thread.currentThread().getContextClassLoader());
+                if(input == null) input = fetchApplicationProperties(Metadata.class.getClassLoader());
+
                 if(input != null) {
                     m.load(input);
                 }
@@ -370,5 +374,27 @@ public class Metadata extends Properties {
         public T get() {
             return ref;
         }
+    }
+
+    private static InputStream fetchApplicationProperties(ClassLoader classLoader) {
+        Enumeration<URL> urls = null;
+
+        try {
+            urls = classLoader.getResources(FILE);
+        } catch(IOException ioe) {
+            throw new RuntimeException(ioe);
+        }
+
+        while(urls.hasMoreElements()) {
+           try {
+               URL url = urls.nextElement();
+               if(SKIP_PATTERN.matcher(url.toString()).matches()) continue;
+               return url.openStream();
+           } catch(IOException ioe) {
+               // skip
+           }
+        }
+
+        return null;
     }
 }

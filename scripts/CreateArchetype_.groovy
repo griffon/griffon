@@ -36,14 +36,14 @@ includeTargets << griffonScript("_GriffonPlugins")
 includeTargets << griffonScript("_GriffonInit")
 includeTargets << griffonScript("CreateMvc" )
 
-target(name: 'createApplicationProjecti,
+target(name: 'createApplicationProject',
        description: 'Creates a new application project',
        prehook: null, posthook: null) {
     createProjectWithDefaults()
     createMVC()
 
     // to install plugins do the following
-    // Metadata md = Metadata.getInstance("${basedir}/application.properties")
+    // Metadata md = Metadata.getInstance(new File("${basedir}/application.properties"))
     // installPluginExternal md, pluginName, pluginVersion
     //
     // pluginVersion is optional

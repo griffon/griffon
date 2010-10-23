@@ -18,18 +18,17 @@ package griffon.test.mock
 import griffon.core.GriffonApplication
 import griffon.core.BaseGriffonApplication
 import griffon.util.UIThreadHelper
-import griffon.util.UIThreadHandler
+import griffon.swing.SwingApplication
+import java.util.concurrent.CountDownLatch
 
 /**
- * Customizable implementation og {@code GriffonApplication} useful for testing.<p>
+ * Customizable implementation og {@code SwingApplication} useful for testing.<p>
  * You can override the values of all config classes before {@code initialize()} is called.
  *
  * @author Andres Almiray
+ * @since 0.9.1
  */
-class MockGriffonApplication {
-    @Delegate private final BaseGriffonApplication _base
-    Closure applicationContainerGenerator
-
+class MockSwingGriffonApplication extends SwingApplication {
     /** Defaults to {@code griffon.test.mock.MockApplication} */
     Class appConfigClass = MockApplication
     /** Defaults to {@code griffon.test.mock.MockConfig} */
@@ -38,21 +37,11 @@ class MockGriffonApplication {
     Class builderClass = MockBuilderConfig
     /** Defaults to {@code griffon.test.mock.MockEvents} */
     Class eventsClass = MockEvents
-    UIThreadHandler uiThreadHandler
 
-    MockGriffonApplication() {
-        _base = new BaseGriffonApplication(this)
-    }
+    private static final String[] EMPTY_ARGS = new String[0]
 
-    /**
-     * Returns the value form the execution of {@code applicationContainerGenerator} or an empty map
-     */
-    Object createApplicationContainer() {
-        applicationContainerGenerator?.call() ?: [:]
-    }
-
-    void setUiThreadHanlder(UIThreadHandler uiThreadHandler) {
-        UIThreadHelper.instance.setUIThreadHandler(uiThreadHandler)
+    MockSwingGriffonApplication(String[] args = EMPTY_ARGS) {
+        super(args)
     }
 
     Class getAppConfigClass() {
@@ -71,15 +60,14 @@ class MockGriffonApplication {
         this.@eventsClass
     }
 
-    void bootstrap() {
-        // empty
-    }
- 
+    void bootstrap() {}
     void realize() {
-        // empty
-    }
- 
-    void show() {
-        // empty
+        CountDownLatch latch = new CountDownLatch(1)
+        execOutside {
+            super.bootstrap()
+            latch.countDown()
+        }
+        latch.await()
+        super.realize()
     }
 }

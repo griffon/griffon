@@ -31,7 +31,6 @@ target ('default': "Packages a Griffon addon. Note: to package a plugin use 'gri
 }
 
 target ('packageAddon': "Packages a Griffon addon. Note: to package a plugin use 'griffon package-plugin'") {
-    // depends(checkVersion, createStructure, packagePlugins, pluginConfig)
     depends(checkVersion, createStructure, pluginConfig)
 
     if (!isAddonPlugin) return;
@@ -61,6 +60,7 @@ target ('packageAddon': "Packages a Griffon addon. Note: to package a plugin use
             exclude(name:'Config*.class')
             exclude(name:'BuildConfig*.class')
             exclude(name:'*GriffonPlugin*.class')
+            exclude(name:'application.properties')
         }
         fileset(dir:i18nDir)
         fileset(dir:resourcesDir)
@@ -69,7 +69,4 @@ target ('packageAddon': "Packages a Griffon addon. Note: to package a plugin use
             metainf(dir: metainfDirPath)
         }
     }
-
-
-    //TODO copy it to lib with version #
 }

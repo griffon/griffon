@@ -144,7 +144,6 @@ class PluginInstallEngine {
             (name, version) = readMetadataFromZip(pluginZip.absolutePath)
             installPluginZipInternal(name, version, pluginZip, globalInstall)
         } catch (e) {
-e.printStackTrace()
             errorHandler "Error installing plugin: ${e.message}"
         }
     }
@@ -209,6 +208,7 @@ e.printStackTrace()
             ant.delete(dir: pluginInstallPath, failonerror: false)
             ant.mkdir(dir: pluginInstallPath)
             ant.unzip(dest: pluginInstallPath, src: pluginZip)
+            ant.delete(file: "${pluginInstallPath}/application.properties", quiet: true, failonerror: false)
             eventHandler "StatusUpdate", "Installed plugin ${fullPluginName} to location ${pluginInstallPath}."
         } else {
             errorHandler "Cannot install plugin. Plugin install would override inline plugin configuration which is not allowed."

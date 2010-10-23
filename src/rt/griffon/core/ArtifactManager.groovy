@@ -104,7 +104,17 @@ class ArtifactManager {
     }
 
     /**
-     * Finds an artifact by name.<p>
+     * Finds an artifact by class.<p>
+     * Example: findGriffonClass(aBookControllerInstance) will return an
+     * artifact class that describes BookController.
+     */
+    synchronized GriffonClass findGriffonClass(Object obj) {
+        if(obj == null) return null
+        return findGriffonClass(obj.getClass())
+    }
+
+    /**
+     * Finds an artifact by class.<p>
      * Example: findGriffonClass(BookController) will return an
      * artifact class that describes BookController.
      */

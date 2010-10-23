@@ -37,7 +37,6 @@ includeTargets << griffonScript("PackageAddon")
 includeTargets << griffonScript("_GriffonDocs")
 
 pluginIncludes = [
-    metadataFile.name,
     "*GriffonPlugin.groovy",
     "plugin.xml",
     "dependencies.groovy",
