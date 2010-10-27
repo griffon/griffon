@@ -52,6 +52,7 @@ public class GriffonCompilerContext {
                 char c = regex.charAt(i++);
                 if(c == '\\') b.append("\\\\"); else b.append(c);
             }
+            regex = b.toString();
         }
 
         return Pattern.compile(regex);
