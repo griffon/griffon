@@ -41,20 +41,35 @@ public class GriffonCompilerContext {
     public static Pattern groovyArtifactPattern;
 
     private static final String[] ARTIFACT_EXCLUDES = { "conf", "i18n", "resources" };
+    private static final boolean isWindows = System.getProperty("os.name").matches("Windows.*");
+
+    private static Pattern normalizePattern(String regex) {
+        if(isWindows) {
+            StringBuilder b = new StringBuilder();
+            int size = regex.length();
+            int i = 0;
+            while(i < size) {
+                char c = regex.charAt(i);
+                if(c == '\\') b.append("\\\\"); else b.append(c);
+            }
+        }
+
+        return Pattern.compile(regex);
+    }
 
     public static void setup() {
-        isArtifactPattern = Pattern.compile("^" + basedir + File.separator + "griffon-app" + File.separator + ".*$");
+        isArtifactPattern = normalizePattern("^" + basedir + File.separator + "griffon-app" + File.separator + ".*$");
         excludedArtifacts = new Pattern[ARTIFACT_EXCLUDES.length];
         int i = 0;
         for(String dir : ARTIFACT_EXCLUDES) {
-            excludedArtifacts[i++] = Pattern.compile("^" + basedir + File.separator + "griffon-app" + File.separator + dir + File.separator + ".*$");        
+            excludedArtifacts[i++] = normalizePattern("^" + basedir + File.separator + "griffon-app" + File.separator + dir + File.separator + ".*$");        
         }
-        groovyArtifactPattern = Pattern.compile("^" + basedir + File.separator + "griffon-app" + File.separator + "([a-z]+)" + File.separator + ".*.groovy$");
-        isAddonPattern = Pattern.compile("^" + basedir + File.separator + ".*GriffonAddon.groovy$");
+        groovyArtifactPattern = normalizePattern("^" + basedir + File.separator + "griffon-app" + File.separator + "([a-z]+)" + File.separator + ".*.groovy$");
+        isAddonPattern = normalizePattern("^" + basedir + File.separator + ".*GriffonAddon.groovy$");
         scriptPatterns = new Pattern[2];
-        scriptPatterns[0] = Pattern.compile("^" + basedir + File.separator + "griffon-app" + File.separator + "conf" + File.separator + ".*.groovy$");
-        scriptPatterns[1] = Pattern.compile("^" + basedir + File.separator + "scripts" + File.separator + ".*.groovy$");
-        isTestPattern = Pattern.compile("^" + basedir + File.separator + "test" + File.separator + ".*.groovy$");
+        scriptPatterns[0] = normalizePattern("^" + basedir + File.separator + "griffon-app" + File.separator + "conf" + File.separator + ".*.groovy$");
+        scriptPatterns[1] = normalizePattern("^" + basedir + File.separator + "scripts" + File.separator + ".*.groovy$");
+        isTestPattern = normalizePattern("^" + basedir + File.separator + "test" + File.separator + ".*.groovy$");
     }
 
     public static boolean isGriffonArtifact(SourceUnit source) {
