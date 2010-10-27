@@ -24,6 +24,7 @@ import griffon.util.UIThreadHelper;
 
 import groovy.lang.MetaClass;
 import groovy.lang.Closure;
+import groovy.lang.GroovyObjectSupport;
 import java.util.concurrent.Callable;
 import java.util.concurrent.Future;
 import java.util.concurrent.ExecutorService;
@@ -37,7 +38,7 @@ import org.codehaus.griffon.runtime.util.GriffonApplicationHelper;
  *
  * @since 0.9.1
  */
-public abstract class AbstractGriffonArtifact implements GriffonArtifact {
+public abstract class AbstractGriffonArtifact extends GroovyObjectSupport implements GriffonArtifact {
     private GriffonApplication app;
 
     public GriffonApplication getApp() {
@@ -53,7 +54,8 @@ public abstract class AbstractGriffonArtifact implements GriffonArtifact {
     }
 
     public MetaClass getMetaClass() {
-        return getGriffonClass().getMetaClass();
+        GriffonClass griffonClass = getGriffonClass();
+        return (griffonClass != null)? getGriffonClass().getMetaClass() : super.getMetaClass();
     }
 
     public GriffonClass getGriffonClass() {
