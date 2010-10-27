@@ -127,11 +127,14 @@ class GriffonPluginUtils {
         }
     }
 
-    private static trimTag(pluginVersion) {
+    private static trimTag(String pluginVersion) {
         def i = pluginVersion.indexOf('-')
-        if(i>-1)
+        if (i >- 1) {
             pluginVersion = pluginVersion[0..i-1]
-        pluginVersion
+        }
+        def tokens = pluginVersion.split(/\./)
+
+        return tokens.findAll { it ==~ /\d+/ || it =='*'}.join(".")
     }
 
     /**
@@ -141,12 +144,12 @@ class GriffonPluginUtils {
         new PluginBuildSettings(BuildSettingsHolder.settings, PluginManagerHolder.getPluginManager())
     }
 
-    private static INSTANCE = null
+    private static INSTANCE
     /**
      * Returns a cached PluginBuildSettings instance.
      */
     static synchronized PluginBuildSettings getPluginBuildSettings() {
-        if (!INSTANCE) {
+        if (INSTANCE == null) {
             INSTANCE = newPluginBuildSettings()
         }
         return INSTANCE
@@ -378,12 +381,22 @@ class VersionComparator implements Comparator {
             catch (NumberFormatException e) {
                 throw new InvalidVersionException("Cannot compare versions, right side [$o2] is invalid: ${e.message}")
             }
+            boolean bigRight = nums2.size() > nums1.size()
+            boolean bigLeft = nums1.size() > nums2.size()
             for (i in 0..<nums1.size()) {
                 if (nums2.size() > i) {
                     result = nums1[i].compareTo(nums2[i])
                     if (result != 0) {
                         break
                     }
+                    if(i == (nums1.size()-1) && bigRight) {
+                       if(nums2[i+1] != 0)
+                           result = -1; break
+                    }
+                }
+                else if(bigLeft){
+                   if(nums1[i] != 0)
+                        result = 1; break
                 }
             }
         }

@@ -65,9 +65,7 @@ import org.apache.ivy.plugins.resolver.RepositoryResolver
  *
  * @author Graeme Rocher (Grails 1.2)
  */
-public class IvyDependencyManager extends AbstractIvyDependencyManager implements DependencyResolver, DependencyDefinitionParser{
-
-
+class IvyDependencyManager extends AbstractIvyDependencyManager implements DependencyResolver, DependencyDefinitionParser{
 
     private hasApplicationDependencies = false
     ResolveEngine resolveEngine
@@ -84,11 +82,9 @@ public class IvyDependencyManager extends AbstractIvyDependencyManager implement
     Collection moduleExcludes = new ConcurrentLinkedQueue()
     TransferListener transferListener
 
-
     boolean readPom = false
     boolean inheritsAll = false
     boolean resolveErrors = false
-
 
     /**
      * Creates a new IvyDependencyManager instance
@@ -120,7 +116,7 @@ public class IvyDependencyManager extends AbstractIvyDependencyManager implement
      * @param resolver The resolver to be used
      */
     void setChainResolver(ChainResolver resolver) {
-        this.chainResolver = resolver;
+        this.chainResolver = resolver
         resolveEngine.dictatorResolver = chainResolver
     }
 
@@ -132,7 +128,7 @@ public class IvyDependencyManager extends AbstractIvyDependencyManager implement
      */
     void setLogger(MessageLogger logger) {
         Message.setDefaultLogger logger
-        this.logger = logger;
+        this.logger = logger
     }
     
     MessageLogger getLogger() { this.logger }
@@ -157,15 +153,13 @@ public class IvyDependencyManager extends AbstractIvyDependencyManager implement
      */
     boolean hasApplicationDependencies() { this.hasApplicationDependencies }
 
-
     /**
      * Serializes the parsed dependencies using the given builder.
      *
      * @param builder A builder such as groovy.xml.MarkupBuilder
      */
     void serialize(builder, boolean createRoot = true) {
-
-        if(createRoot) {
+        if (createRoot) {
             builder.dependencies {
                 serializeResolvers(builder)
                 serializeDependencies(builder)
@@ -352,10 +346,12 @@ public class IvyDependencyManager extends AbstractIvyDependencyManager implement
             this.currentDependencyDescriptor = null
         }
         if (dependencyDescriptor.getModuleConfigurations().length == 0){
-              def mappings = configurationMappings[scope]
-              mappings?.each {
-                  dependencyDescriptor.addDependencyConfiguration scope, it
-              }
+            def mappings = configurationMappings[scope]
+            if(mappings) {
+                for(m in mappings) {
+                    dependencyDescriptor.addDependencyConfiguration scope, m
+                }
+            }
         }
         if(!dependencyDescriptor.inherited) {
             hasApplicationDependencies = true
@@ -387,8 +383,7 @@ public class IvyDependencyManager extends AbstractIvyDependencyManager implement
         resolveEngine.getDependencies(moduleDescriptor, options, new ResolveReport(moduleDescriptor))
     }
 
-
-    public ResolveReport resolveDependencies(Configuration conf) {
+    ResolveReport resolveDependencies(Configuration conf) {
         resolveDependencies(conf.name)
     }
     
@@ -403,14 +398,13 @@ public class IvyDependencyManager extends AbstractIvyDependencyManager implement
             if(conf)
                 options.confs = [conf] as String[]
 
-
             ResolveReport resolve = resolveEngine.resolve(moduleDescriptor, options)
             resolveErrors = resolve.hasError()
             return resolve
-        } else {
-            // return an empty resolve report
-            return new ResolveReport(moduleDescriptor)
         }
+
+        // return an empty resolve report
+        return new ResolveReport(moduleDescriptor)
     }
     
     /**
@@ -420,8 +414,8 @@ public class IvyDependencyManager extends AbstractIvyDependencyManager implement
      * @return The ResolveReport
      * @throws IllegalStateException If no RootLoader exists
      */
-    public ResolveReport loadDependencies(String conf = '') {
-        
+    ResolveReport loadDependencies(String conf = '') {
+
         URLClassLoader rootLoader = getClass().classLoader.rootLoader
         if(rootLoader) {
             def urls = rootLoader.URLs.toList()
@@ -440,7 +434,7 @@ public class IvyDependencyManager extends AbstractIvyDependencyManager implement
     /**
      * Resolves only application dependencies and returns a list of the resolves JAR files
      */
-    public List<ArtifactDownloadReport> resolveApplicationDependencies(String conf = '') {
+    List<ArtifactDownloadReport> resolveApplicationDependencies(String conf = '') {
         ResolveReport report = resolveDependencies(conf)
 
         def descriptors = getApplicationDependencyDescriptors(conf)
@@ -453,7 +447,8 @@ public class IvyDependencyManager extends AbstractIvyDependencyManager implement
     /**
      * Resolves only plugin dependencies that should be exported to the application
      */
-    public List<ArtifactDownloadReport> resolveExportedDependencies(String conf='') {
+    List<ArtifactDownloadReport> resolveExportedDependencies(String conf='') {
+
         def descriptors = getExportedDependencyDescriptors(conf)
         resolveApplicationDependencies(conf)?.findAll { ArtifactDownloadReport downloadReport ->
             def mrid = downloadReport.artifact.moduleRevisionId
@@ -465,14 +460,14 @@ public class IvyDependencyManager extends AbstractIvyDependencyManager implement
      * Performs a resolve of all dependencies, potentially going out to the internet to download jars
      * if they are not found locally
      */
-    public ResolveReport resolveDependencies() {
+    ResolveReport resolveDependencies() {
         resolveDependencies('')
     }
 
     /**
      * Performs a resolve of declared plugin dependencies (zip files containing plugin distributions)
      */
-    public ResolveReport resolvePluginDependencies(String conf = '', Map args = [:]) {
+    ResolveReport resolvePluginDependencies(String conf = '', Map args = [:]) {
         resolveErrors = false
         if(usedConfigurations.contains(conf) || conf == '') {
 
@@ -481,9 +476,9 @@ public class IvyDependencyManager extends AbstractIvyDependencyManager implement
             if(args.validate==null) args.validate = false
 
             def options = new ResolveOptions(args)
-            if(conf)
+            if (conf) {
                 options.confs = [conf] as String[]
-
+            }
 
             def md = createModuleDescriptor()
             for(dd in pluginDependencyDescriptors) {
@@ -505,19 +500,19 @@ public class IvyDependencyManager extends AbstractIvyDependencyManager implement
                             dr.addArtifactReport(adr)
                             cr.addDependency(node, dr)
                             report.addReport(conf, cr)
-                        }                        
+                        }
                     }
                 }
                 return report
-            } else {
-                ResolveReport resolve = resolveEngine.resolve(md, options)
-                resolveErrors = resolve.hasError()
-                return resolve
             }
-        } else {
-            // return an empty resolve report
-            return new ResolveReport(createModuleDescriptor())
+
+            ResolveReport resolve = resolveEngine.resolve(md, options)
+            resolveErrors = resolve.hasError()
+            return resolve
         }
+
+        // return an empty resolve report
+        return new ResolveReport(createModuleDescriptor())
     }
     
      /**
@@ -595,7 +590,6 @@ public class IvyDependencyManager extends AbstractIvyDependencyManager implement
         def pom = new File("${buildSettings.baseDir.path}/pom.xml")
         if (pom.exists()) {
             def reader = new PomReader(pom.toURL(), new FileResource(new FileRepository(), pom))
-
             dependencies = reader.getDependencies()
         }
         return dependencies
@@ -608,8 +602,10 @@ public class IvyDependencyManager extends AbstractIvyDependencyManager implement
      * @param definition the Ivy DSL definition
      */
     void parseDependencies(String pluginName,Closure definition) {
-        if(definition) {
-            if(moduleDescriptor == null) throw new IllegalStateException("Call parseDependencies(Closure) first to parse the application dependencies")
+        if (definition) {
+            if (moduleDescriptor == null) {
+                throw new IllegalStateException("Call parseDependencies(Closure) first to parse the application dependencies")
+            }
 
             def evaluator = new IvyDomainSpecificLanguageEvaluator(this)
             evaluator.currentPluginBeingConfigured = pluginName
@@ -810,11 +806,6 @@ class IvyDomainSpecificLanguageEvaluator {
                addToChainResolver(pluginResolver)
            }
         }
-/*
-        if(isResolverNotAlreadyDefined('griffonPlugins')) {
-            griffonRepo("http://svn.codehaus.org/griffon/plugins", "griffonPlugins")
-        }
-*/
     }
 
     void griffonHome() {
@@ -918,7 +909,6 @@ class IvyDomainSpecificLanguageEvaluator {
             urlResolver.setCheckmodified(true)
             addToChainResolver(urlResolver)
         }
-
     }
 
     void griffonCentral() {
@@ -935,7 +925,6 @@ class IvyDomainSpecificLanguageEvaluator {
             mavenResolver.settings = ivySettings
             mavenResolver.changingPattern = ".*SNAPSHOT"
             addToChainResolver(mavenResolver)
-
         }
     }
 

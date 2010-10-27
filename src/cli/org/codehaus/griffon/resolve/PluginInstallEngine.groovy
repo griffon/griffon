@@ -192,14 +192,13 @@ class PluginInstallEngine {
 
         assertNoExistingInlinePlugin(name)
 
-        if(!overwrite) {
-            def abort = checkExistingPluginInstall(name, version)
-            if(abort)  {
-                registerPluginWithMetadata(name, version)
-                return
-            }
+        def abort = checkExistingPluginInstall(name, version)
+
+        if (abort && !overwrite) {
+            registerPluginWithMetadata(name, version)
+            return
         }
-        
+
         eventHandler "StatusUpdate", "Installing zip ${pluginZip}..."
 
         installedPlugins << pluginInstallPath
@@ -334,9 +333,9 @@ class PluginInstallEngine {
                 def name = pluginXml.'@name'.text()
                 def release = pluginXml.'@version'.text()
                 return [name, release, pluginXml]
-            } else {
-                errorHandler("Plugin $zipLocation is not a valid Griffon plugin. No plugin.xml descriptor found!")
             }
+
+            errorHandler("Plugin $zipLocation is not a valid Griffon plugin. No plugin.xml descriptor found!")
         }
         catch (e) {
             errorHandler("Error reading plugin zip [$zipLocation]. The plugin zip file may be corrupt.")
@@ -369,7 +368,7 @@ class PluginInstallEngine {
             } else if (!isInteractive || commandLineHelper.confirmInput("You currently already have a version of the plugin installed [$pluginDir.name]. Do you want to upgrade this version?")) {
                 ant.delete(dir: currentInstall.file)
             } else {
-                errorHandler("Plugin $name-$version install aborted");
+                errorHandler("StatusUpdate", "Plugin $name-$version install aborted")
                 return true
             }
         }

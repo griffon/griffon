@@ -15,6 +15,7 @@
  */
 package griffon.util
 
+import griffon.util.Metadata
 import groovyx.gpars.Asynchronizer
 
 import java.util.regex.Pattern
@@ -26,6 +27,7 @@ import org.apache.ivy.util.Message
 
 import org.codehaus.griffon.resolve.IvyDependencyManager
 import org.codehaus.groovy.runtime.StackTraceUtils
+import java.util.concurrent.ConcurrentHashMap
 
 /**
  * <p>Represents the project paths and other build settings
@@ -38,7 +40,7 @@ import org.codehaus.groovy.runtime.StackTraceUtils
  * but not others. If you set one of them explicitly, set all of them
  * to ensure consistent behaviour.</p>
  */
-class BuildSettings {
+class BuildSettings extends AbstractBuildSettings {
     static final Pattern JAR_PATTERN = ~/^\S+\.jar$/
 
     /**
@@ -456,7 +458,10 @@ class BuildSettings {
     }
 
     private def loadBuildPropertiesFromClasspath(Properties buildProps) {
-        InputStream stream = getClass().classLoader.getResourceAsStream("build.properties")
+        InputStream stream = getClass().classLoader.getResourceAsStream("build.properties") // griffon.build.properties
+        if(stream == null) {
+            stream = getClass().classLoader.getResourceAsStream("build.properties")
+        }
         if (stream) {
             buildProps.load(stream)
         }
@@ -658,6 +663,7 @@ class BuildSettings {
         if (config.griffon.default.plugin.set instanceof List) {
             defaultPluginSet = config.griffon.default.plugin.set
         }
+        flatConfig = config.flatten()
         configureDependencyManager(config)
     }
 
@@ -759,27 +765,16 @@ class BuildSettings {
         def handlePluginDirectory = pluginDependencyHandler()
 
         Asynchronizer.doParallel(5) {
-            Closure predicate = { it.directory && !it.hidden }
-
-            def pluginDirs = []
-            if (projectPluginsDir.exists()) {
-                pluginDirs.addAll(projectPluginsDir.listFiles().findAllParallel(predicate))
-            }
-
-            if (globalPluginsDir.exists()) {
-                pluginDirs.addAll(globalPluginsDir.listFiles().findAllParallel(predicate))
-            }
-
-            def pluginLocations = config?.griffon?.plugin?.location
-            pluginLocations?.values().eachParallel {location ->
-                pluginDirs << new File(location).canonicalFile
-            }
-
+            def pluginDirs = getPluginDirectories()
             pluginDirs.eachParallel(handlePluginDirectory)
         }
     }
 
     Closure pluginDependencyHandler() {
+        return pluginDependencyHandler(dependencyManager)
+    }
+
+    Closure pluginDependencyHandler(IvyDependencyManager dependencyManager) {
         def pluginSlurper = createConfigSlurper()
 
         def handlePluginDirectory = {File dir ->
@@ -805,6 +800,17 @@ class BuildSettings {
                     def pluginDependencyConfig = pluginConfig.griffon.project.dependency.resolution
                     if (pluginDependencyConfig instanceof Closure) {
                         dependencyManager.parseDependencies(pluginName, pluginDependencyConfig)
+                    }
+
+                    def inlinePlugins = getInlinePluginsFromConfiguration(pluginConfig, dir)
+                    if(inlinePlugins) {
+
+                        for(File inlinePlugin in inlinePlugins) {
+                            addPluginDirectory inlinePlugin, true
+                            // recurse
+                            def handleInlinePlugin = pluginDependencyHandler()
+                            handleInlinePlugin(inlinePlugin)
+                        }
                     }
                 }
                 catch (e) {
@@ -845,6 +851,7 @@ class BuildSettings {
         // null, a default value. This ensures that we don't override
         // settings provided by, for example, the Maven plugin.
         def props = config.toProperties()
+        Metadata metadata = Metadata.current
         if (!griffonWorkDirSet) {
             griffonWorkDir = new File(getPropertyValue(WORK_DIR, props, "${userHome}/.griffon/${griffonVersion}"))
         }
@@ -882,11 +889,11 @@ class BuildSettings {
         }
 
         if (!projectPluginsDirSet) {
-            projectPluginsDir = new File(getPropertyValue(PLUGINS_DIR, props, "$projectWorkDir/plugins"))
+            this.@projectPluginsDir = new File(getPropertyValue(PLUGINS_DIR, props, "$projectWorkDir/plugins"))
         }
 
         if (!globalPluginsDirSet) {
-            globalPluginsDir = new File(getPropertyValue(GLOBAL_PLUGINS_DIR, props, "$griffonWorkDir/global-plugins"))
+            this.@globalPluginsDir = new File(getPropertyValue(GLOBAL_PLUGINS_DIR, props, "$griffonWorkDir/global-plugins"))
         }
 
         if (!testReportsDirSet) {

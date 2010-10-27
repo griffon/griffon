@@ -85,6 +85,9 @@ testReportsDir = griffonSettings.testReportsDir
 // Where the test source can be found
 testSourceDir = griffonSettings.testSourceDir
 
+// The 'styledir' argument to the 'junitreport' ant task (null == default provided by Ant)
+junitReportStyleDir = new File(griffonSettings.grailsHome, "lib")
+
 // Set up an Ant path for the tests.
 ant.path(id: "griffon.test.classpath", testClasspath)
 
@@ -345,20 +348,20 @@ target(packageTests: "Puts some useful things on the classpath for integration t
 
 def getFailedTests() {
     File file = new File("${testReportsDir}/TESTS-TestSuites.xml")
-    if (file.exists()) {
-        def xmlParser = new XmlParser().parse(file)
-        def failedTests = xmlParser.testsuite.findAll { it.'@failures' =~ /.*[1-9].*/ || it.'@errors' =~ /.*[1-9].*/}
-
-        return failedTests.collect {
-            String testName = it.'@name'
-            testName = testName.replace('Tests', '')
-            def pkg = it.'@package'
-            if (pkg) {
-                testName = pkg + '.' + testName
-            }
-            return testName
-        }
-    } else {
+    if (!file.exists()) {
         return []
+    }
+
+    def xmlParser = new XmlParser().parse(file)
+    def failedTests = xmlParser.testsuite.findAll { it.'@failures' =~ /.*[1-9].*/ || it.'@errors' =~ /.*[1-9].*/}
+
+    return failedTests.collect {
+        String testName = it.'@name'
+        testName = testName.replace('Tests', '')
+        def pkg = it.'@package'
+        if (pkg) {
+            testName = pkg + '.' + testName
+        }
+        return testName
     }
 }
