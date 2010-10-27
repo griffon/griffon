@@ -49,7 +49,7 @@ public class GriffonCompilerContext {
             int size = regex.length();
             int i = 0;
             while(i < size) {
-                char c = regex.charAt(i);
+                char c = regex.charAt(i++);
                 if(c == '\\') b.append("\\\\"); else b.append(c);
             }
         }
