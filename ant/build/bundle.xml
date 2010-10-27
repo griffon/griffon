@@ -8,20 +8,25 @@
                  classpathref="classpath" />
 
         <mkdir dir="${griffon.dist}" />
+        <mkdir dir="target/manual-src" />
+        <copy todir="target/manual-src">
+            <fileset dir="${basedir}/src/guide" />
+        </copy>
+        <replace dir="target/manual-src">
+            <replaceFilter token="@griffon.version@" value="${griffon.version}" />
+        </replace>
+
         <mkdir dir="target/manual" />
         <mkdir dir="target/manual/api" />
         <copy todir="target/manual/api">
             <fileset dir="${griffon.javadoc}"/>
         </copy>
         <copy todir="target/manual">
-            <fileset dir="${basedir}/src/guide" includes="*.properties" />
+            <fileset dir="target/manual-src" includes="*.properties" />
         </copy>
-        <replace dir="target/manual">
-            <replaceFilter token="@griffon.version@" value="${griffon.version}" />
-        </replace>
-        <docs src="${basedir}/src/guide/sources"
+        <docs src="target/manual-src/sources"
               dest="target/manual"
-              imagesdir="${basedir}/src/guide/resources/img"
+              imagesdir="target/manual-src/resources/img"
               properties="target/manual/guide.properties" />
 
 <!--
