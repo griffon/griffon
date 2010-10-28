@@ -132,6 +132,11 @@ class GriffonPluginUtils {
         if (i >- 1) {
             pluginVersion = pluginVersion[0..i-1]
         }
+
+        def copy = pluginVersion.reverse()
+        for(c in copy) {
+            if(c =~ /[a-zA-Z]/) pluginVersion = pluginVersion[0..-2]
+        }
         def tokens = pluginVersion.split(/\./)
 
         return tokens.findAll { it ==~ /\d+/ || it =='*'}.join(".")
