@@ -206,7 +206,8 @@ startApp ( ) {
          -classpath "$CLASSPATH" \
          -Dprogram.name="$GRIFFON_APP_NAME" \
          -Djava.library.path="$NATIVE_LIBRARY_PATH" \
-         $MAIN_CLASS
+         $MAIN_CLASS \
+         "$@"
 }
 
 MAIN_CLASS=@app.main.class@

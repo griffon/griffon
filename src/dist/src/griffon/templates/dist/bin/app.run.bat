@@ -10,7 +10,7 @@ if "%DIRNAME%" == "" set DIRNAME=.\
 
 set GRIFFON_APP_NAME="@app.name@"
 
-"%DIRNAME%\startApp.bat" "%DIRNAME%"
+"%DIRNAME%\startApp.bat" "%DIRNAME%" %*
 
 @rem End local scope for the variables with windows NT shell
 if "%OS%"=="Windows_NT" endlocal
