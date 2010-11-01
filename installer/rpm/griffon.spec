@@ -6,7 +6,7 @@ Provides:       griffon
 BuildRoot:      %{_tmppath}/%{name}-%{version}-build
 Group:          Development/Frameworks/Griffon
 Summary:        Griffon is an agile development framework for Java Swing applications
-Source:         http://dist.groovy.codehaus.org/distributions/griffon/griffon-src-@griffon.version@.zip
+Source:         http://dist.groovy.codehaus.org/griffon/griffon/lastest/griffon-@griffon.version@-src.zip
 BuildArch:      noarch
 BuildRequires:  unzip
 Packager: 	The Griffon team <dev@griffon.codehaus.org>

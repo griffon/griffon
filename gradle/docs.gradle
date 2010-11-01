@@ -1,0 +1,112 @@
+import org.apache.tools.ant.filters.ReplaceTokens
+
+buildscript {
+    dependencies {
+        lib = "$projectDir/lib" as File
+        classpath files(fileTree(dir: lib, includes: ['grails-doc*.jar', 'radeox*.jar', 'itext*.jar', 'core-renderer*.jar']))
+    }
+}
+
+task copyDocs(type: Copy) {
+    destinationDir = "${buildDir}/javadoc-src" as File
+
+    from('src/main/cli') {
+        include 'griffon/test/**/*'
+        include 'griffon/beans/**/*'
+        include 'griffon/util/EventPublisher*'
+        include '**/*.html'
+    }
+    from 'src/main/rt'
+}
+
+task buildDocs(type: Groovydoc) {
+    dependsOn { copyDocs }
+
+    source = files("$buildDir/javadoc-src")
+    destinationDir = "$buildDir/manual/api" as File
+    docTitle = "Griffon $version"
+    header = "Griffon $version"
+    windowTitle = "Griffon $version"
+    groovyClassPath = sourceSets.rt.classes + sourceSets.cli.classes + configurations.compile
+    includePrivate = true
+    use = true
+
+    link('http://java.sun.com/j2se/1.5.0/docs/api', 'java.,org.xml.,javax.,org.xml.')
+    link('http://www.dpml.net/api/ant/1.7.0', 'org.apache.ant.,org.apache.tools.ant.')
+    link('http://junit.sourceforge.net/junit3.8.1/javadoc/', 'org.junit.,junit.framework.')
+    link('http://groovy.codehaus.org/api/', 'groovy.,org.codehaus.groovy.')
+}
+
+task jarApi(type: Jar) {
+    dependsOn { buildDocs }
+
+    archiveName = "griffon-rt-${version}-javadoc.jar"
+    destinationDir = "$buildDir/assemble/jars" as File
+    from "$buildDir/manual/api"
+}
+
+task jarSource(type: Jar) {
+    dependsOn { copyDocs }
+
+    archiveName = "griffon-rt-${version}-sources.jar"
+    destinationDir = "$buildDir/assemble/jars" as File
+    from "$buildDir/javadoc-src"
+    exclude '**/*.html'
+}
+
+task jarDocs(dependsOn: [jarApi, jarSource]) {}
+
+task prepareGuide(type: Copy) {
+    destinationDir = "$buildDir/manual-src" as File
+    from('src/guide') {
+        filter(ReplaceTokens, tokens: ['griffon.version': version])
+    }
+}
+
+task buildGuide(type: Copy) {
+    dependsOn { [buildDocs, prepareGuide] }
+
+    def manualSrc = "$buildDir/manual-src" as File
+    destinationDir = "$buildDir/manual" as File
+    from(manualSrc) {
+        include '*.properties'
+    }
+
+    doLast {
+        ant.taskdef(name: 'gdocs',
+                   classname: 'grails.doc.ant.DocPublisherTask',
+                   classpath: configurations.compile.asPath)
+        ant.gdocs(src: "$manualSrc/src",
+                  dest: destinationDir,
+                  imagesdir: "$manualSrc/resources/img",
+                  properties: "$destinationDir/guide.properties")
+    }
+}
+
+task pdfGuide(type: Copy) {
+    dependsOn { buildGuide }
+
+    doFirst {
+        grails.doc.PdfBuilder.build(
+            basedir: buildDir.canonicalPath,
+            home: project.file('.'),
+            tool: 'griffon'
+        )
+    }
+        
+    destinationDir = "$buildDir/manual" as File
+    from "$destinationDir/guide/"
+    into destinationDir
+    include '*.pdf'
+    rename 'single.pdf', "griffon-guide-${version}.pdf"
+
+    doLast {
+        delete "$destinationDir/guide/single.pdf"
+    }
+}
+
+task zipGuide(type: Zip) {
+    dependsOn { [pdfGuide, jarDocs] }
+    archiveName = "griffon-guide-${version}.zip"
+    from "$buildDir/manual"
+}
