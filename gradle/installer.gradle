@@ -173,7 +173,7 @@ task(izpack) << {
 
 tasks.izpack.dependsOn prepareIzpack
 
-task rpm(dependsOn: [distBinary, zipSource]) << {
+task rpm(dependsOn: [zipBinary]) << {
     def rpmDir = "$buildDir/assemble/rpm" as File
 
     description = "Creates an RPM package from the binary distribution."
@@ -195,20 +195,20 @@ task rpm(dependsOn: [distBinary, zipSource]) << {
 
     copy {
         from("$buildDir/distributions/binary")
-        into "$rpmDir/BUILD"
+        into "$rpmDir/griffon-$version"
     }
-    copy {
-        from("$buildDir/distributions")
-        into "$rpmDir/SOURCES"
-        include '*-src.zip'
-    }
+
+    ant.zip(
+        destfile: "$rpmDir/SOURCES/griffon-${version}-bin.zip",
+        basedir: rpmDir,
+        includes: "griffon-${version}/**/*")
 
     ant.rpm(specFile: 'griffon.spec',
             topDir: rpmDir,
-            cleanBuildDir: true,
+            cleanBuildDir: false,
             failOnError: true)
     copy {
-        from "$rmpDir/RPMS/noarch/"
+        from "$rpmDir/RPMS/noarch/"
         into "$buildDir/distributions"
         include '*.rpm'
     }
