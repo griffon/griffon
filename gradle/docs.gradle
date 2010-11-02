@@ -40,7 +40,7 @@ task buildDocs(type: Groovydoc) {
 task jarApi(type: Jar) {
     dependsOn { buildDocs }
 
-    archiveName = "griffon-rt-${version}-javadoc.jar"
+    classifier = 'javadoc'
     destinationDir = "$buildDir/assemble/jars" as File
     from "$buildDir/manual/api"
 }
@@ -48,7 +48,7 @@ task jarApi(type: Jar) {
 task jarSource(type: Jar) {
     dependsOn { copyDocs }
 
-    archiveName = "griffon-rt-${version}-sources.jar"
+    classifier = 'sources'
     destinationDir = "$buildDir/assemble/jars" as File
     from "$buildDir/javadoc-src"
     exclude '**/*.html'
@@ -107,6 +107,6 @@ task pdfGuide(type: Copy) {
 
 task zipGuide(type: Zip) {
     dependsOn { [pdfGuide, jarDocs] }
-    archiveName = "griffon-guide-${version}.zip"
+    appendix = 'guide'
     from "$buildDir/manual"
 }

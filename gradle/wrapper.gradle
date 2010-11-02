@@ -1,7 +1,5 @@
 import org.apache.tools.ant.filters.ReplaceTokens
 
-jar.enabled = false
-
 task assembleWrapper(type: Copy) {
     description = "Merges compiled Wrapper classes with original classes"
     ant.unjar(dest: "$buildDir/assemble/wrapper", src: "$projectDir/lib/wrapper/gradle-wrapper.jar") {

@@ -3,14 +3,16 @@ apply plugin: 'groovy'
 sourceCompatibility = '1.5'
 targetCompatibility = '1.5'
 archivesBaseName = 'griffon'
+group = 'org.codehaus.griffon'
 
 // we'll build jars our own way
 jar.enabled = false
 
 configurations {
     compile.transitive = true
-    rt {}
-    wrapper {}
+    rt
+    resources
+    // wrapper
     cli { extendsFrom rt, compile }
     scripts { extendsFrom cli }
 }
@@ -32,7 +34,7 @@ sourceSets {
         java.srcDirs = []
         groovy.srcDirs = ['src/main/cli']
         classesDir = "$buildDir/classes/cli" as File
-        resources.srcDirs = ['src/resources/cli']
+        // resources.srcDirs = ['src/resources/cli']
     }
     scripts {
         compileClasspath = sourceSets.rt.classes + sourceSets.cli.classes + configurations.compile
@@ -58,13 +60,6 @@ task allClasses(dependsOn: [rtClasses, cliClasses, scriptsClasses]) {
     description = "Compiles all rt, cli and script classes."
 }
 
-compileCliGroovy.doFirst {
-    // delete this dir otherwise global AST xforms will be
-    // picked up by the compiler but the classes may not
-    // be available yet!!
-    ant.delete(dir: "$buildDir/classes/cli/META-INF")
-}
-
 cliClasses.doLast {
     def buildProps = new File("$buildDir/classes/cli/build.properties")
     buildProps.text = """        griffon.version=$version
@@ -86,6 +81,7 @@ apply {
     from 'gradle/assemble.gradle'
     from 'gradle/docs.gradle'
     from 'gradle/installer.gradle'
+//    from 'gradle/maven.gradle'
 }
 
 task fullDist(dependsOn: [zipGuide, zipBinary, zipSource, tarBinary, tarSource, izpack, deb]) {
@@ -95,7 +91,7 @@ task bambooStage1(dependsOn: [clean, test]) {
     description = "Makes a full test run and assembles all packages."
 }
 
-task bambooStage2(dependsOn: [bambooStage1, fullDist]) {
+task bambooStage2(dependsOn: [bambooStage1, fullDist, rpm]) {
     description = "Makes a full test run and assembles all packages."
 }
 

@@ -15,6 +15,7 @@ tasks.withType(Jar).allObjects {jar ->
 }
 
 task jarRt(type: Jar) {
+    mavenArtifact = true
     appendix = 'rt'
     manifest = project.manifest {
         from sharedManifest
@@ -24,7 +25,12 @@ task jarRt(type: Jar) {
 }
 
 task jarCli(type: Jar) {
+    mavenArtifact = true
     appendix = 'cli'
+    metaInf {
+        from 'src/resources/cli/META-INF'
+        include '**/*'
+    }
     manifest = project.manifest {
         from sharedManifest
         attributes 'Implementation-Title': 'griffon-cli'
@@ -33,6 +39,7 @@ task jarCli(type: Jar) {
 }
 
 task jarScripts(type: Jar) {
+    mavenArtifact = true
     appendix = 'scripts'
     manifest = project.manifest {
         from sharedManifest
@@ -77,6 +84,7 @@ resourceFilesJars = tasks.withType(Jar).matching({ jar -> jar.appFileJar } as Sp
 
 task jarResources(type: Jar) {
     dependsOn { resourceFilesJars.all }
+    mavenArtifact = true
     appendix = 'resources'
     from "$buildDir/assemble/jars"
     include '*-files.jar'
@@ -137,14 +145,14 @@ task distSource(type: Copy) {
 task zipBinary(type: Zip) {
     description = "Zips the binary distribution."
     dependsOn { distBinary }
-    archiveName = "griffon-${version}-bin.zip"
+    classifier = 'bin'
     from "$buildDir/distributions/binary"
 }
 
 task zipSource(type: Zip) {
     description = "Zips the source distribution."
     dependsOn { distSource }
-    archiveName = "griffon-${version}-src.zip"
+    classifier = 'src'
     from "$buildDir/distributions/source"
 }
 
@@ -152,7 +160,7 @@ task tarBinary(type: Tar) {
     description = "Tars the binary distribution."
     dependsOn { distBinary }
     compression = Compression.GZIP
-    archiveName = "griffon-${version}-bin.tar.gz"
+    classifier = 'bin'
     from "$buildDir/distributions/binary"
 }
 
@@ -160,7 +168,7 @@ task tarSource(type: Tar) {
     description = "Tars the source distribution."
     dependsOn { distSource }
     compression = Compression.GZIP
-    archiveName = "griffon-${version}-src.tar.gz"
+    classifier = 'src'
     from "$buildDir/distributions/source"
 }
 
