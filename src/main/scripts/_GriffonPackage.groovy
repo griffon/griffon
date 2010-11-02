@@ -534,7 +534,8 @@ copyPlatformJars = { srcdir, destdir ->
     def env = Environment.current
     if(env == Environment.DEVELOPMENT || env == Environment.TEST) {
         String plf = platform
-        File platformDir = new File(srcdir.toString() + File.separator + platform)
+        File platformDir = new File(srcdir.toString() + File.separator + plf)
+        _copyPlatformJars(srcdir.toString(), destdir.toString(), plf)
         if(!platformDir.exists() && is64Bit) plf -= '64'
         _copyPlatformJars(srcdir.toString(), destdir.toString(), plf)
     } else {
@@ -560,7 +561,8 @@ copyNativeLibs = { srcdir, destdir ->
     def env = Environment.current
     if(env == Environment.DEVELOPMENT || env == Environment.TEST) {
         String plf = platform
-        File platformDir = new File(srcdir.toString() + File.separator + platform)
+        File platformDir = new File(srcdir.toString() + File.separator + plf)
+        _copyNativeLibs(srcdir.toString(), destdir.toString(), plf)
         if(!platformDir.exists() && is64Bit) plf -= '64'
         _copyNativeLibs(srcdir.toString(), destdir.toString(), plf)
     } else {

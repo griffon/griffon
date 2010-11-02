@@ -45,6 +45,7 @@ target('default': "Packages a Griffon application.") {
         def internal = ['zip', 'jar', 'applet', 'webstart']
         argsMap.params.each { type ->
            packageType = type
+	       debug("Making package $type")
            try {
                System.setProperty(RunMode.KEY, RunMode.CUSTOM.name)
                if(type in internal) {

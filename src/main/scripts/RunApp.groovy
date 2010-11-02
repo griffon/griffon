@@ -79,19 +79,22 @@ target('runApp': "Runs the application from the command line") {
         javaOpts << "-Xdock:icon=${griffonHome}/media/griffon.icns"
     }
 
+    debug("Running JVM options:")
+    javaOpts.each{ debug("  $it") }
+
     def runtimeClasspath = runtimeJars.collect { f ->
         f.absolutePath - jardir.absolutePath - File.separator
     }.join(File.pathSeparator)
 
     runtimeClasspath = [i18nDir, resourcesDir, runtimeClasspath, classesDir, pluginClassesDir].join(File.pathSeparator)
 
-    // start the processess
+    // start the process
     try {
         def cmd = [javaVM]
         // let's make sure no empty/null String is added
         javaOpts.each { s -> if(s) cmd << s }
         [proxySettings, '-classpath', runtimeClasspath, griffonApplicationClass].each { s -> if(s) cmd << s }
-        args?tokenize().?.each { s -> if(s) cmd << s }
+        args?.tokenize().each { s -> if(s) cmd << s }
         Process p = Runtime.runtime.exec(cmd as String[], null, jardir)
 
         // pipe the output

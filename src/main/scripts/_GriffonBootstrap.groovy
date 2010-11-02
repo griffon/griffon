@@ -63,22 +63,28 @@ setupRuntimeJars = {
 
     File jardir = new File(ant.antProject.replaceProperties(buildConfig.griffon.jars.destDir))
     // list all jars
+    debug("Runtime libraries:")
     jardir.eachFileMatch(~/.*\.jar/) {f ->
         runtimeJars += f
+        debug("  $f.name")
     }
 
 // XXX -- NATIVE
     platformDir = new File(jardir.absolutePath, platform)
     if(platformDir.exists()) {
+	    debug("Platform specific jars ($platform):")
         platformDir.eachFileMatch(~/.*\.jar/) {f ->
             runtimeJars += f
+            debug("  $f.name")
         }
     }
     
     platformDir2 = new File(jardir.absolutePath, platform[0..-3])
     if(is64Bit && platformDir2.exists()) {
+	    debug("Platform specific jars (${platform[0..-3]}):")
         platformDir2.eachFileMatch(~/.*\.jar/) {f ->
             runtimeJars += f
+            debug("  $f.name")
         }
     }
 // XXX -- NATIVE
@@ -115,11 +121,8 @@ setupJavaOpts = { includeNative = true ->
         if(is64Bit && nativeLibDir2.exists()) {
             libraryPath = libraryPath + File.pathSeparator + nativeLibDir2.absolutePath
         }
-        if(argsMap.verbose) {
-            println "=== Java library path ===\n  $libraryPath"
-        } 
         System.setProperty('java.library.path', libraryPath)
-        javaOpts << "-Djava.library.path='$libraryPath'".toString()
+        javaOpts << "-Djava.library.path=$libraryPath".toString()
     }
 // XXX -- NATIVE
 
