@@ -18,14 +18,13 @@ package org.codehaus.griffon.runtime.core;
 import griffon.core.GriffonApplication;
 import griffon.core.GriffonModelClass;
 import griffon.util.GriffonClassUtils;
-import java.beans.PropertyDescriptor;
 
 import groovy.lang.Closure;
 import groovy.lang.MetaProperty;
 
 import java.util.Arrays;
 import java.util.Set;
-import java.util.TreeSet;
+import java.util.LinkedHashSet;
 
 /**
  * @author Andres Almiray
@@ -33,8 +32,8 @@ import java.util.TreeSet;
  * @since 0.9.1
  */
 public class DefaultGriffonModelClass extends DefaultGriffonClass implements GriffonModelClass {
-    protected final Set<String> propertiesCache = new TreeSet<String>();
-    private static final Set<String> BINDABLE_PROPERTIES = new TreeSet<String>(
+    protected final Set<String> propertiesCache = new LinkedHashSet<String>();
+    private static final Set<String> BINDABLE_PROPERTIES = new LinkedHashSet<String>(
         Arrays.asList("propertyChangeListeners", "vetoableChangeListeners"));
 
     public DefaultGriffonModelClass(GriffonApplication app, Class<?> clazz) {
@@ -48,8 +47,7 @@ public class DefaultGriffonModelClass extends DefaultGriffonClass implements Gri
 
     public String[] getPropertyNames() {
         if(propertiesCache.isEmpty()) {
-            for(PropertyDescriptor pd : getPropertyDescriptors()) {
-                 String propertyName = pd.getName();
+            for(String propertyName : getPropertiesWithFields()) {
                  if(!propertiesCache.contains(propertyName) &&
                     !GriffonClassUtils.isEventHandler(propertyName) &&
                     getPropertyValue(propertyName, Closure.class) == null &&

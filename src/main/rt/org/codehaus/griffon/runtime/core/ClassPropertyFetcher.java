@@ -26,7 +26,7 @@ import java.lang.reflect.Modifier;
 import java.lang.reflect.AccessibleObject;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -44,10 +44,11 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 public class ClassPropertyFetcher {
     private final Class<?> clazz;
-    final Map<String, PropertyFetcher> staticFetchers = new HashMap<String, PropertyFetcher>();
-    final Map<String, PropertyFetcher> instanceFetchers = new HashMap<String, PropertyFetcher>();
+    final Map<String, PropertyFetcher> staticFetchers = new LinkedHashMap<String, PropertyFetcher>();
+    final Map<String, PropertyFetcher> instanceFetchers = new LinkedHashMap<String, PropertyFetcher>();
     private final ReferenceInstanceCallback callback;
     private PropertyDescriptor[] propertyDescriptors;
+    private String[] propertiesWithFields;
 
     private static Map<Class<?>, ClassPropertyFetcher> cachedClassPropertyFetchers = new ConcurrentHashMap<Class<?>, ClassPropertyFetcher>();
 
@@ -100,6 +101,10 @@ public class ClassPropertyFetcher {
     public boolean isReadableProperty(String name) {
         return staticFetchers.containsKey(name)
                 || instanceFetchers.containsKey(name);
+    }
+
+    public String[] getPropertiesWithFields() {
+        return propertiesWithFields;
     }
 
     private void init() {
@@ -198,6 +203,23 @@ public class ClassPropertyFetcher {
                 }
             }
         }
+
+        final List<String> properties = new ArrayList<String>();
+        for (Class<?> c : allClasses) {
+            final List<String> props = new ArrayList<String>();
+            for(PropertyDescriptor p : GriffonClassUtils.getPropertyDescriptors(clazz)) {
+                props.add(p.getName());
+            }
+            for (Field field : c.getDeclaredFields()) {
+                if(field.isSynthetic()) continue;
+                final int modifiers = field.getModifiers();
+                if (Modifier.isPublic(modifiers) || Modifier.isStatic(modifiers)) continue;
+                final String fieldName = field.getName();
+                if ("class".equals(fieldName) || "metaClass".equals(fieldName)) continue;
+                if (fieldName.indexOf('$') == -1 && props.contains(fieldName)) properties.add(fieldName);
+            }
+        }
+        propertiesWithFields = properties.toArray(new String[properties.size()]);
     }
 
     private List<Class<?>> resolveAllClasses(Class<?> c) {

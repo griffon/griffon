@@ -18,14 +18,13 @@ package org.codehaus.griffon.runtime.core;
 import griffon.core.GriffonApplication;
 import griffon.core.GriffonServiceClass;
 import griffon.util.GriffonClassUtils;
-import java.beans.PropertyDescriptor;
 
 import groovy.lang.Closure;
 import groovy.lang.MetaProperty;
 import groovy.lang.MetaMethod;
 
 import java.util.Set;
-import java.util.TreeSet;
+import java.util.LinkedHashSet;
 import java.lang.reflect.Method;
 
 /**
@@ -34,7 +33,7 @@ import java.lang.reflect.Method;
  * @since 0.9.1
  */
 public class DefaultGriffonServiceClass extends DefaultGriffonClass implements GriffonServiceClass {
-    protected final Set<String> serviceCache = new TreeSet<String>();
+    protected final Set<String> serviceCache = new LinkedHashSet<String>();
 
     public DefaultGriffonServiceClass(GriffonApplication app, Class<?> clazz) {
         super(app, clazz, TYPE, TRAILING);
@@ -47,8 +46,7 @@ public class DefaultGriffonServiceClass extends DefaultGriffonClass implements G
 
     public String[] getServiceNames() {
         if(serviceCache.isEmpty()) {
-            for(PropertyDescriptor pd : getPropertyDescriptors()) {
-                 String propertyName = pd.getName();
+            for(String propertyName : getPropertiesWithFields()) {
                  if(!STANDARD_PROPERTIES.contains(propertyName) &&
                     !serviceCache.contains(propertyName) &&
                     !GriffonClassUtils.isEventHandler(propertyName) &&

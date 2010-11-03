@@ -165,6 +165,17 @@ public abstract class AbstractGriffonClass implements GriffonClass {
     public PropertyDescriptor[] getPropertyDescriptors() {
         return classPropertyFetcher.getPropertyDescriptors();
     }
+
+    /**
+     * Returns an array of property names that are backed by a filed with a matching
+     * name.<p>
+     * Fields must be private and non-static. Names will be returned in the order
+     * they are declared in the class, starting from the deepest class in the
+     * class hierarchy up to the topmost superclass != null
+     */
+    public String[] getPropertiesWithFields() {
+        return classPropertyFetcher.getPropertiesWithFields();
+    }
     
     public Class<?> getPropertyType(String name) {
         return classPropertyFetcher.getPropertyType(name);
@@ -348,8 +359,7 @@ public abstract class AbstractGriffonClass implements GriffonClass {
     // Any artifact can become an Event listener
     public String[] getEventNames() {
         if(eventsCache.isEmpty()) {
-            for(PropertyDescriptor pd : getPropertyDescriptors()) {
-                 String propertyName = pd.getName();
+            for(String propertyName : getPropertiesWithFields()) {
                  if(!eventsCache.contains(propertyName) &&
                     GriffonClassUtils.isEventHandler(propertyName) &&
                     getPropertyValue(propertyName, Closure.class) != null) {
