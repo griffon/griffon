@@ -422,8 +422,9 @@ target(generateJNLP:"Generates the JNLP File") {
         remoteJars << filename
     }
     // griffon-rt has to come first, it's got the launch classes
+    def appJarIsMain = buildConfig.griffon.jars.application.main == true
     new File(jardir).eachFileMatch(~/griffon-rt-.*.jar/) { f ->
-        jnlpJars << "        <jar href='$f.name'/>"
+        jnlpJars << "        <jar href='$f.name' main='${!appJarIsMain}'/>"
         appletJars << "$f.name"
     }
     buildConfig.griffon.extensions?.jarUrls.each {
@@ -437,8 +438,8 @@ target(generateJNLP:"Generates the JNLP File") {
     new File(jardir).eachFileMatch(~/.*\.jar/) { f ->
         if (!(f.name =~ /griffon-rt-.*/) && !remoteJars.contains(f.name)) {
             if(buildConfig.griffon.jars.jarName == f.name){
-                jnlpJars << "        <jar href='$f.name' main='true' />"
-            }else{
+                jnlpJars << "        <jar href='$f.name' main='${appJarIsMain}' />"
+            } else {
                 jnlpJars << "        <jar href='$f.name'/>"
             }
 
