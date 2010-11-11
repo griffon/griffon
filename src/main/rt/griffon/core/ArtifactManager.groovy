@@ -16,6 +16,8 @@
 
 package griffon.core
 
+import org.slf4j.Logger
+import org.slf4j.LoggerFactory
 import org.codehaus.griffon.runtime.util.GriffonApplicationHelper
 
 /**
@@ -32,6 +34,7 @@ class ArtifactManager {
     private static final ArtifactManager INSTANCE
     private static final GriffonClass[] EMPTY_GRIFFON_CLASS_ARRAY = new GriffonClass[0]
     private static final Class[] EMPTY_CLASS_ARRAY = new Class[0]
+    private static final Logger log = LoggerFactory.getLogger(ArtifactManager)
 
     static {
         INSTANCE = new ArtifactManager()
@@ -47,6 +50,7 @@ class ArtifactManager {
      */
     synchronized void registerArtifactHandler(ArtifactHandler handler) {
         if(!handler) return
+        log.info("Registering artifact handler for type '${handler.type}': $handler")
         artifactHandlers[handler.type] = handler
         if(artifacts[handler.type]) handler.initialize(artifacts[handler.type])
     }
@@ -56,6 +60,7 @@ class ArtifactManager {
      */
     synchronized void unregisterArtifactHandler(ArtifactHandler handler) {
         if(!handler) return
+        log.info("Removing artifact handler for type '${handler.type}': $handler")
         artifactHandlers.remove(handler.type)
     }
 
@@ -69,7 +74,9 @@ class ArtifactManager {
         Map<String, List<ArtifactInfo>> _artifacts = [:]
         urls.each { url ->
             def config = new ConfigSlurper().parse(url)
+            log.debug("Loading artifact definitions from $url")
             config.each { type, classes -> 
+                log.debug("Artifacts of type '${type}' = ${classes.split(',').size()}")
                 List<ArtifactInfo> artifactList = _artifacts.get(type, [])
                 classes.split(',').collect(artifactList) {
                     new ArtifactInfo(GriffonApplicationHelper.loadClass(app, it), type)

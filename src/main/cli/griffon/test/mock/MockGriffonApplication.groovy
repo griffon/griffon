@@ -40,8 +40,8 @@ class MockGriffonApplication {
     Class eventsClass = MockEvents
     UIThreadHandler uiThreadHandler
 
-    MockGriffonApplication() {
-        _base = new BaseGriffonApplication(this)
+    MockGriffonApplication(String[] args = BaseGriffonApplication.EMPTY_ARGS) {
+        _base = new BaseGriffonApplication(this, args)
     }
 
     /**

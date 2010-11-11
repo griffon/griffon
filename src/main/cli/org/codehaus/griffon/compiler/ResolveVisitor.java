@@ -89,9 +89,9 @@ public class ResolveVisitor extends ClassCodeExpressionTransformer {
         String prefix;
         String className;
         public ConstructedClassWithPackage(String pkg, String name) {
-            super(pkg+name, Opcodes.ACC_PUBLIC,ClassHelper.OBJECT_TYPE);
+            super(normalize(pkg)+name, Opcodes.ACC_PUBLIC,ClassHelper.OBJECT_TYPE);
             isPrimaryNode = false;
-            this.prefix = pkg;
+            this.prefix = normalize(pkg);
             this.className = name;
         }
         public String getName() {
@@ -108,6 +108,11 @@ public class ResolveVisitor extends ClassCodeExpressionTransformer {
             } else {
                 throw new GroovyBugError("ConstructedClassWithPackage#setName should not be called");
             }
+        }
+        
+        private static String normalize(String pkg) {
+            if(pkg != null && pkg.trim().length() > 0 && !pkg.endsWith(".")) pkg += ".";
+            return pkg;
         }
     }
 

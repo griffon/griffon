@@ -17,9 +17,9 @@ class DefaultGriffonServiceClassTests extends AbstractGriffonClassTestCase {
 
     void testGetServices() {
         assert ['service1', 'service2'] == serviceClass.serviceNames
-        serviceClass.metaClass.service3 = {}
+        serviceClass.metaClass.service5 = {}
         serviceClass.resetCaches()
-        assert ['service1', 'service2', 'service3'] == serviceClass.serviceNames
+        assert ['service1', 'service2', 'service5'] == serviceClass.serviceNames
     }
 
     void testGetEventNames() {

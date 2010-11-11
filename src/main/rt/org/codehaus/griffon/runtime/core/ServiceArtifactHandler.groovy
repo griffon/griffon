@@ -21,6 +21,9 @@ import griffon.core.GriffonClass
 import griffon.core.GriffonServiceClass
 import griffon.core.ArtifactInfo
 
+import org.slf4j.Logger
+import org.slf4j.LoggerFactory
+
 /**
  * Handler for 'Service' artifacts.
  *
@@ -29,6 +32,7 @@ import griffon.core.ArtifactInfo
  * @since 0.9.1
  */
 class ServiceArtifactHandler extends ArtifactHandlerAdapter {
+    private static final Logger log = LoggerFactory.getLogger(ServiceArtifactHandler)
     private final Map SERVICES = [:]
     
     ServiceArtifactHandler(GriffonApplication app) {
@@ -53,16 +57,19 @@ class ServiceArtifactHandler extends ArtifactHandlerAdapter {
     def onNewInstance = { klass, t, instance ->
         if(type == t || app.config?.griffon?.basic_injection?.disable) return
         instance.metaClass.properties.name.each { propertyName ->
-            if(SERVICES[propertyName]) {
-                instance[propertyName] = SERVICES[propertyName]
-            } else {
+            def serviceInstance = SERVICES[propertyName]
+            if(!serviceInstance) {
                 GriffonClass griffonClass = findClassFor(propertyName)
                 if(griffonClass) {
-                    def service = griffonClass.newInstance()
-                    service.metaClass.app = app
-                    SERVICES[propertyName] = service
-                    instance[propertyName] = service
+                    serviceInstance = griffonClass.newInstance()
+                    serviceInstance.metaClass.app = app
+                    SERVICES[propertyName] = serviceInstance
                 }
+            }
+            
+            if(serviceInstance) {
+                log.debug("Injecting service $serviceInstance on $instance using property '$propertyName'")
+                instance[propertyName] = serviceInstance
             }
         }
     }

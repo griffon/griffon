@@ -29,6 +29,8 @@ import java.util.concurrent.Callable;
 import java.util.concurrent.Future;
 import java.util.concurrent.ExecutorService;
 
+import org.slf4j.Logger;
+
 /**
  * Defines the basic contract of a Griffon application.<p>
  *
@@ -195,6 +197,21 @@ public interface GriffonApplication {
      * @param params event arguments sent to listeners
      */
     void event(String eventName, List params);
+
+    /**
+     * Publishes an application event asynchronously off the UI thread.<p>
+     *
+     * @param eventName the name of the event
+     */
+    void eventAsync(String eventName);
+
+    /**
+     * Publishes an application event asynchronously off the UI thread.<p>
+     *
+     * @param eventName the name of the event
+     * @param params event arguments sent to listeners
+     */
+    void eventAsync(String eventName, List params);
 
     /**
      * Registers a ShutdownHandler on this application
@@ -698,4 +715,20 @@ public interface GriffonApplication {
      * @param mvcName the name of the group to destroy and dispose.
      */
     void destroyMVCGroup(String mvcName);
+
+    /**
+     * Returns the arguments set on the command line (if any).<p>
+     *
+     * @since 0.9.2
+     * @return an array of command line arguments. Never returns null.
+     */
+    String[] getStartupArgs();
+
+    /**
+     * Returns a Logger instance suitable for this application.
+     *
+     * @since 0.9.2
+     * @return a Logger instance.
+     */
+    Logger getLog();
 }

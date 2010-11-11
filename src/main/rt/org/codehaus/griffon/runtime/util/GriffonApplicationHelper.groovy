@@ -31,6 +31,11 @@ import griffon.util.UIThreadHelper
 import griffon.util.GriffonClassUtils
 import org.codehaus.groovy.runtime.InvokerHelper
 
+import org.codehaus.griffon.runtime.logging.Log4jConfig
+import org.slf4j.Logger
+import org.slf4j.LoggerFactory
+import org.apache.log4j.LogManager
+
 /**
  * Utility class for boostrapping an application and handling of MVC groups.</p>
  *
@@ -38,6 +43,8 @@ import org.codehaus.groovy.runtime.InvokerHelper
  * @author Andres Almiray
  */
 class GriffonApplicationHelper {
+    private static final Logger log = LoggerFactory.getLogger(GriffonApplicationHelper)
+    
     /**
      * Setups an application.<p>
      * This method performs the following tasks<ul>
@@ -71,7 +78,14 @@ class GriffonApplicationHelper {
             app.eventsConfig = eventsClass.newInstance()
             app.addApplicationEventListener(app.eventsConfig)
         }
-        
+
+        def log4jConfig = app.config.log4j
+        if (log4jConfig instanceof Closure) {
+            app.event('Log4jConfigStart', [log4jConfig])
+            LogManager.resetConfiguration()
+            new Log4jConfig().configure(log4jConfig)
+        }
+
         runScriptInsideUIThread('Initialize', app)
 
         app.artifactManager = ArtifactManager.instance
@@ -88,6 +102,7 @@ class GriffonApplicationHelper {
 
         // copy mvc groups in config to app, casting to strings in a new map
         app.config.mvcGroups.each {k, v->
+            log.debug("Adding MVC group $k")
             app.addMvcGroup(k, v.inject([:]) {m, e -> m[e.key as String] = e.value as String; m})
         }
 
@@ -137,6 +152,7 @@ class GriffonApplicationHelper {
         script.execOutside = UIThreadHelper.instance.&executeOutside
         script.execFuture = {Object... args -> UIThreadHelper.instance.executeFuture(*args) }
 
+        log.info("Running script '$scriptName'")
         UIThreadHelper.instance.executeSync(script)
     }
 
@@ -155,6 +171,7 @@ class GriffonApplicationHelper {
      * @return a newly created instance of type klass
      */
     static Object newInstance(GriffonApplication app, Class klass, String type = '') {
+        log.debug("Instantiating ${klass.name} with type '${type}'")
         def instance = klass.newInstance()
 
         GriffonClass griffonClass = ArtifactManager.instance.findGriffonClass(klass)
@@ -199,6 +216,7 @@ class GriffonApplicationHelper {
             throw new IllegalArgumentException("Unknown MVC type \"$mvcType\".  Known types are ${app.mvcGroups.keySet()}")
         }
 
+        log.info("Building MVC group '${mvcType}' with name '${mvcName}'")
         def argsCopy = [app:app, mvcType:mvcType, mvcName:mvcName]
         argsCopy.putAll(app.bindings.variables)
         argsCopy.putAll(bindArgs)
@@ -245,7 +263,7 @@ class GriffonApplicationHelper {
         argsCopy.builder = builder
         
         // special case --
-        // controller gets application listeners
+        // controller are added as application listeners
         // addApplicationListener method is null safe
         app.addApplicationEventListener(instanceMap.controller)
 
@@ -268,6 +286,7 @@ class GriffonApplicationHelper {
         app.groups[mvcName] = instanceMap
 
         // initialize the classes and call scripts
+        log.debug("Initializing each MVC member of group '${mvcName}'")
         instanceMap.each {k, v ->
             if (v instanceof Script) {
                 // special case: view gets executed in the UI thread always
@@ -292,7 +311,7 @@ class GriffonApplicationHelper {
         }
 
         // deprecate this one
-        app.event('CreateMVCGroup',[mvcName, instanceMap.model, instanceMap.view, instanceMap.controller, mvcType, instanceMap])
+        // app.event('CreateMVCGroup',[mvcName, instanceMap.model, instanceMap.view, instanceMap.controller, mvcType, instanceMap])
         app.event('CreateMVCGroup',[mvcType, mvcName, instanceMap])
         return instanceMap
     }
@@ -341,6 +360,7 @@ class GriffonApplicationHelper {
      * @param mvcName name of the group to destroy
      */
     static destroyMVCGroup(GriffonApplication app, String mvcName) {
+        log.info("Destoying MVC group identified by '$mvcName'")
         app.removeApplicationEventListener(app.controllers[mvcName])
         [app.models, app.views, app.controllers].each {
             def part = it.remove(mvcName)

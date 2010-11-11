@@ -54,6 +54,14 @@ public class DefaultGriffonServiceClass extends DefaultGriffonClass implements G
                       serviceCache.add(propertyName);
                  }
             }
+            for(Method method : getClazz().getMethods()) {
+                 String methodName = method.getName();
+                 if(!serviceCache.contains(methodName) &&
+                    GriffonClassUtils.isPlainMethod(method) &&
+                    !GriffonClassUtils.isEventHandler(methodName)) {
+                      serviceCache.add(methodName);
+                 }
+            }
             for(MetaProperty p : getMetaProperties()) {
                  String propertyName = p.getName();
                  if(GriffonClassUtils.isGetter(p, true)) {

@@ -28,6 +28,7 @@ sourceSets {
         java.srcDirs = []
         groovy.srcDirs = ['src/main/rt']
         classesDir = "$buildDir/classes/rt" as File
+        resources.srcDirs = ['src/resources/rt']
     }
     cli {
         compileClasspath = sourceSets.rt.classes + configurations.compile

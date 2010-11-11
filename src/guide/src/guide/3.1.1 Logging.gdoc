@@ -1,0 +1,156 @@
+h4. Logging Basics
+
+Griffon uses its common configuration mechanism to configure the underlying "Log4j":http://logging.apache.org/log4j/1.2/index.html log system. To configure logging you must modify the file @Config.groovy@ located in the @griffon-app/conf@ directory. 
+
+This single @Config.groovy@ file allows you to specify separate logging configurations for @development@, @test@, and @production@ [environments|guide:environments]. Griffon processes the @Config.groovy@ and configures Log4j appropriately.
+
+Since 0.9.2 Griffon provides a Log4j DSL, that you can use to configure Log4j an example of which can be seen below:
+
+{code:java}
+log4j = {
+    error  'org.codehaus.griffon',  //  internals
+
+    warn   'griffon.util',
+           'griffon.core'
+}
+{code}
+
+Essentially, each method translates into a log level and you can pass the names of the packages you want to log at that level as arguments to the method. 
+
+Some useful loggers include:
+
+* @org.codehaus.griffon@ - Core internal information such as MVC group instantiation, etc.
+* @griffon.core@ - SCore information such as artifact handling, etc.
+
+h4. The Root Logger
+
+The Root logger is the logger that all other loggers inherit from. You can configure the Root logger using the root method:
+
+{code:java}
+root {
+    error()
+    additivity = true
+}
+{code}
+
+The above example configures the root logger to log messages at the error level and above to the default standard out appender. You can also configure the root logger to log to one or more named appenders:
+
+{code:java}
+appenders {
+	file name:'file', file:'/var/logs/mylog.log'
+}
+root {
+    debug 'stdout', 'file'
+    additivity = true
+}
+{code}
+
+Here the root logger will log to two appenders - the default 'stdout' appender and a 'file' appender.
+
+You can also configure the root logger from the argument passed into the Log4J closure:
+{code:java}
+log4j = { root ->
+    root.level = org.apache.log4j.Level.DEBUG
+    ...
+}
+{code}
+The closure argument "root" is an instance of  @org.apache.log4j.Logger@ , so refer to the API documentation for Log4J to find out what properties and methods are available to you.
+
+h4. Custom Appenders
+
+Using the Log4j you can define custom appenders. The following appenders are available by default:
+
+* @console@ - An appender that logs to standard out
+* @file@ - An appender that logs to a file
+* @rollingFile@ - An appender that logs to rolling set of files
+
+For example to configure a rolling file appender you can do:
+
+{code:java}
+log4j = {
+	appenders {
+		rollingFile name:"myAppender", maxFileSize:1024, file:"/tmp/logs/myApp.log"
+	}
+}
+{code}
+
+Each argument passed to the appender maps to a property of underlying [Appender|http://logging.apache.org/log4j/1.2/apidocs/org/apache/log4j/Appender.html] class. The example above sets the @name@, @maxFileSize@ and @file@ properties of the [RollingFileAppender|http://logging.apache.org/log4j/1.2/apidocs/org/apache/log4j/RollingFileAppender.html] class.
+
+If you prefer to simply create the appender programmatically yourself, or you have your own appender implementation then you can simply call the @appender@ method and appender instance:
+
+
+{code:java}
+import org.apache.log4j.*
+
+log4j = {
+	appenders {
+		appender new RollingFileAppender(name:"myAppender", maxFileSize:1024, file:"/tmp/logs/myApp.log")
+	}
+}
+{code}
+
+You can then log to a particular appender by passing the name as a key to one of the log level methods from the previous section:
+
+{code:java}
+error myAppender:"org.codehaus.griffon"
+{code}
+
+
+h4. Custom Layouts
+
+By default the Log4j DSL assumes that you want to use a [PatternLayout|http://logging.apache.org/log4j/1.2/apidocs/org/apache/log4j/PatternLayout.html]. However, there are other layouts available including:
+
+* @xml@ - Create an XML log file	
+* @html@ - Creates an HTML log file
+* @simple@ - A simple textual log
+* @pattern@ - A Pattern layout
+
+You can specify custom patterns to an appender using the @layout@ setting:
+
+{code:java}
+log4j = {
+	appenders {
+        console name:'customAppender', layout:pattern(conversionPattern: '%c{2} %m%n')
+    }
+}
+{code}
+
+This also works for the built-in appender "stdout", which logs to the console:
+{code:java}
+log4j = {
+    appenders {
+        console name:'stdout', layout:pattern(conversionPattern: '%c{2} %m%n')
+    }
+}
+{code}
+
+h4. Logging by Convention
+
+All application artifacts have a dynamically added @log@ property. This includes [controllers|guide:controllers], [services|guide:services] and so on. Below is an example of its usage:
+
+{code:java}
+def foo = "bar"
+log.debug "The value of foo is $foo"
+{code}
+
+Logs are named using the convention @griffon.app.<artifactType>.ClassName@. Below is an example of how to configure logs for different Griffon artifacts:
+
+{code:java}
+log4j = {
+	// Set level for all application artifacts
+	info "griffon.app"
+	// Set for a specific controller
+	debug "griffon.app.controller.YourController"
+	// Set for all services
+	info "griffon.app.service"
+	
+}
+{code}
+
+The artifacts names are dictated by convention, some of the common ones are listed below:
+
+* @model@ - For model classes
+* @controller@ - For controllers
+* @controller@ - For views
+* @service@ - For service classes
+* @addon@ - For addons and their helper classes

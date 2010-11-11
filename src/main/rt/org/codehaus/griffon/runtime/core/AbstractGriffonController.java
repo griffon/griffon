@@ -17,6 +17,7 @@
 package org.codehaus.griffon.runtime.core;
 
 import griffon.core.GriffonController;
+import griffon.core.GriffonControllerClass;
 
 /**
  * Base implementation of the GriffonController interface.
@@ -26,4 +27,7 @@ import griffon.core.GriffonController;
  * @since 0.9.1
  */
 public abstract class AbstractGriffonController extends AbstractGriffonMvcArtifact implements GriffonController {
+    protected String getArtifactType() {
+        return GriffonControllerClass.TYPE;
+    }
 }

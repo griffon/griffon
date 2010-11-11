@@ -20,6 +20,7 @@ import griffon.core.GriffonApplication;
 import griffon.core.GriffonArtifact;
 import griffon.core.GriffonClass;
 import griffon.core.GriffonView;
+import griffon.core.GriffonViewClass;
 import griffon.core.ArtifactManager;
 import griffon.util.UIThreadHelper;
 
@@ -39,6 +40,9 @@ import java.util.Collections;
 import org.codehaus.griffon.runtime.util.GriffonApplicationHelper;
 import org.codehaus.griffon.runtime.util.ExtendedExpandoMetaClass;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 /**
  * Base implementation of the GriffonView interface for Script based views
  *
@@ -49,6 +53,11 @@ import org.codehaus.griffon.runtime.util.ExtendedExpandoMetaClass;
 public abstract class AbstractGriffonViewScript extends Script implements GriffonView {
     private GriffonApplication app;
     private FactoryBuilderSupport builder;
+    private final Logger log;
+    
+    public AbstractGriffonViewScript() {
+        log = LoggerFactory.getLogger("griffon.app."+ GriffonViewClass.TYPE +"."+ getClass().getName());
+    }
 
     public GriffonApplication getApp() {
         return app;
@@ -160,5 +169,9 @@ public abstract class AbstractGriffonViewScript extends Script implements Griffo
 
     public void setBuilder(FactoryBuilderSupport builder) {
         this.builder = builder;
+    }
+    
+    public Logger getLog() {
+        return log;
     }
 }

@@ -147,7 +147,7 @@ class UberBuilder extends FactoryBuilderSupport {
                  UberBuilderInterceptor interceptor = new UberBuilderInterceptor(this)
                  ExtendedExpandoMetaClass mc = script.getGriffonClass().getMetaClass()
                  mc.setMethodMissingHandler(interceptor.&callInvokeMethod)
-                 mc.setSstaticMethodMissingHandler(interceptor.&callInvokeMethod)
+                 mc.setStaticMethodMissingHandler(interceptor.&callInvokeMethod)
                  mc.setGetPropertyMissingHandler(interceptor.&callGetProperty)
                  mc.setSetPropertyMissingHandler(interceptor.&callSetProperty)
             } else {

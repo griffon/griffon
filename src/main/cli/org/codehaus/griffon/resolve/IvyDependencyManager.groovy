@@ -200,6 +200,10 @@ class IvyDependencyManager extends AbstractIvyDependencyManager implements Depen
      * Obtains the default dependency definitions for the given Griffon version
      */
     static Closure getDefaultDependencies(String griffonVersion) {
+        String antVersion = '1.8.1'
+        String slf4jVersion = '1.6.1'
+        String springVersion = '3.0.3.RELEASE'
+
         return {
             // log level of Ivy resolver, either 'error', 'warn', 'info', 'debug' or 'verbose'
             log "warn"
@@ -219,10 +223,10 @@ class IvyDependencyManager extends AbstractIvyDependencyManager implements Depen
                 // dependencies needed by the Griffon build system
                  build "org.codehaus.gpars:gpars:0.9",
                        "org.tmatesoft.svnkit:svnkit:1.3.1",
-                       "org.apache.ant:ant:1.8.1",
-                       "org.apache.ant:ant-launcher:1.8.1",
-                       "org.apache.ant:ant-junit:1.8.1",
-                       "org.apache.ant:ant-nodeps:1.8.1",
+                       "org.apache.ant:ant:$antVersion",
+                       "org.apache.ant:ant-launcher:$antVersion",
+                       "org.apache.ant:ant-junit:$antVersion",
+                       "org.apache.ant:ant-nodeps:$antVersion",
                        // "org.apache.ant:ant-trax:1.8.1",
                        "jline:jline:0.9.94",
                        "org.fusesource.jansi:jansi:1.2.1",
@@ -231,18 +235,18 @@ class IvyDependencyManager extends AbstractIvyDependencyManager implements Depen
                        "org.codehaus.griffon:griffon-cli:$griffonVersion",
                        "org.codehaus.griffon:griffon-scripts:$griffonVersion",
                        "org.codehaus.griffon:griffon-rt:$griffonVersion",
-                       "org.springframework:org.springframework.test:3.0.3.RELEASE",
-                       "org.springframework:org.springframework.core:3.0.3.RELEASE",
-                       "org.springframework:org.springframework.aop:3.0.3.RELEASE",
-                       "org.springframework:org.springframework.aspects:3.0.3.RELEASE",
-                       "org.springframework:org.springframework.asm:3.0.3.RELEASE",
-                       "org.springframework:org.springframework.beans:3.0.3.RELEASE",
-                       "org.springframework:org.springframework.context:3.0.3.RELEASE",
-                       "org.springframework:org.springframework.context.support:3.0.3.RELEASE",
-                       "org.springframework:org.springframework.expression:3.0.3.RELEASE",
-                       "org.springframework:org.springframework.instrument:3.0.3.RELEASE",
-                       "org.slf4j:slf4j-api:1.5.8",
-                       "org.slf4j:slf4j-log4j12:1.5.8"
+                       "org.springframework:org.springframework.test:$springVersion",
+                       "org.springframework:org.springframework.core:$springVersion",
+                       "org.springframework:org.springframework.aop:$springVersion",
+                       "org.springframework:org.springframework.aspects:$springVersion",
+                       "org.springframework:org.springframework.asm:$springVersion",
+                       "org.springframework:org.springframework.beans:$springVersion",
+                       "org.springframework:org.springframework.context:$springVersion",
+                       "org.springframework:org.springframework.context.support:$springVersion",
+                       "org.springframework:org.springframework.expression:$springVersion",
+                       "org.springframework:org.springframework.instrument:$springVersion",
+                       "org.slf4j:slf4j-api:$slf4jVersion",
+                       "org.slf4j:slf4j-log4j12:$slf4jVersion"
                        
                 docs   "org.xhtmlrenderer:core-renderer:R8",
                        "com.lowagie:itext:2.0.8",
@@ -259,15 +263,16 @@ class IvyDependencyManager extends AbstractIvyDependencyManager implements Depen
                 // dependencies needed for running tests
                 test "junit:junit:4.8.1",
                      "org.codehaus.griffon:griffon-cli:$griffonVersion",
-                     "org.springframework:org.springframework.test:3.0.3.RELEASE"
+                     "org.springframework:org.springframework.test:$springVersion"
 
                 // logging
-                // runtime( "log4j:log4j:1.2.15",
-                //          "org.slf4j:jcl-over-slf4j:1.5.8",
-                //          "org.slf4j:jul-to-slf4j:1.5.8",
-                //          "org.slf4j:slf4j-log4j12:1.5.8" ) {
-                //     excludes 'mail', 'jms', 'jmxtools', 'jmxri'
-                // }
+                runtime( "log4j:log4j:1.2.16",
+                         "org.slf4j:slf4j-log4j12:$slf4jVersion",
+                         "org.slf4j:slf4j-api:$slf4jVersion",
+                         "org.slf4j:jcl-over-slf4j:$slf4jVersion",
+                         "org.slf4j:jul-to-slf4j:$slf4jVersion") {
+                    excludes 'mail', 'jms', 'jmxtools', 'jmxri'
+                }
             }
       }
     }

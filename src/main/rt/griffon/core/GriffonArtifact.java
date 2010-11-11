@@ -20,6 +20,7 @@ import groovy.lang.MetaClass;
 import java.util.concurrent.Callable;
 import java.util.concurrent.Future;
 import java.util.concurrent.ExecutorService;
+import org.slf4j.Logger;
 
 /**
  * Identifies an object as a Griffon artifact.<p>
@@ -97,4 +98,17 @@ public interface GriffonArtifact {
      * Executes a code block as a Future on a default ExecutorService.
      */
     Future execFuture(Callable callable);
+    
+    /**
+     * Returns a Logger instance suitable for this Artifact.<p>
+     * The Logger is configured with the following prefix 'griffon.app.&lt;type&gt;'
+     * where &lt;type&gt; stands for the artifact's type.<p>
+     * Example: the Logger for class com.acme.SampleController will be configured for
+     * 'griffon.app.controller.com.acme.SampleController'.
+     *
+     * @return a Logger instance associated with this artifact.
+     *
+     * @since 0.9.2
+     */
+    Logger getLog();
 }

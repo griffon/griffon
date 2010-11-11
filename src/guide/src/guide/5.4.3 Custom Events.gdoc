@@ -9,4 +9,4 @@ class MyController {
 }
 {code}
 
-There are two versions of the @event()@ method. The first takes just the name of the event to be published; the second accepts an additional argument which should be a List of parameters to be sent to every event handler.
+There are two versions of the @event()@ method. The first takes just the name of the event to be published; the second accepts an additional argument which should be a List of parameters to be sent to every event handler. Event handlers notified by this method are guaranteed to process the event in the same thread that published it. If you want the event to be handled outside of the UI thread then use the @eventAsync()@ variants.

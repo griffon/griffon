@@ -34,15 +34,10 @@ class SwingApplication implements SwingGriffonApplication, griffon.application.S
     final WindowManager windowManager
     WindowDisplayHandler windowDisplayHandler
     private final WindowDisplayHandler defaultWindowDisplayHandler = new DefaultWindowDisplayHandler()
-    final String[] startupArgs
-    private static final String[] EMPTY_ARGS = new String[0]
 
-    SwingApplication(String[] args = EMPTY_ARGS) {
-        startupArgs = new String[args.length]
-        System.arraycopy(args, 0, startupArgs, 0, args.length)
-
+    SwingApplication(String[] args = BaseGriffonApplication.EMPTY_ARGS) {
         UIThreadHelper.instance.setUIThreadHandler(new SwingUIThreadHandler())
-        _base = new BaseGriffonApplication(this)
+        _base = new BaseGriffonApplication(this, args)
         windowManager = new WindowManager(this)
         addShutdownHandler(windowManager)
     }

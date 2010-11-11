@@ -31,6 +31,9 @@ import java.util.concurrent.Callable;
 import java.util.concurrent.Future;
 import java.util.concurrent.ExecutorService;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import static org.codehaus.griffon.ast.GriffonASTUtils.*;
 
 /**
@@ -49,6 +52,8 @@ public class GriffonArtifactASTInjector implements ASTInjector {
     private static final ClassNode EXECUTOR_SERVICE_CLASS = ClassHelper.makeWithoutCaching(ExecutorService.class);
     private static final ClassNode UITH_CLASS = ClassHelper.makeWithoutCaching(UIThreadHelper.class);
     private static final ClassNode RUNNABLE_CLASS = ClassHelper.makeWithoutCaching(Runnable.class);
+    private static final ClassNode LOGGER_CLASS = ClassHelper.makeWithoutCaching(Logger.class);
+    private static final ClassNode LOGGER_FACTORY_CLASS = ClassHelper.makeWithoutCaching(LoggerFactory.class);
     public static final String APP = "app";
     
     public void inject(ClassNode classNode, String artifactType) {
@@ -63,13 +68,13 @@ public class GriffonArtifactASTInjector implements ASTInjector {
             ClassHelper.METACLASS_TYPE,
             Parameter.EMPTY_ARRAY,
             ClassNode.EMPTY_ARRAY,
-            returnExpr(new MethodCallExpression(
+            returns(new MethodCallExpression(
                 new MethodCallExpression(
-                    VariableExpression.THIS_EXPRESSION,
+                    THIS,
                     "getGriffonClass",
-                     ArgumentListExpression.EMPTY_ARGUMENTS),
+                     NO_ARGS),
                 "getMetaClass",
-                ArgumentListExpression.EMPTY_ARGUMENTS))
+                NO_ARGS))
         ));
         
         // GriffonClass getGriffonClass()
@@ -79,11 +84,11 @@ public class GriffonArtifactASTInjector implements ASTInjector {
             GRIFFON_CLASS_CLASS,
             Parameter.EMPTY_ARRAY,
             ClassNode.EMPTY_ARRAY,
-            returnExpr(new MethodCallExpression(
+            returns(new MethodCallExpression(
                 new StaticMethodCallExpression(
                     ARTIFACT_MANAGER_CLASS,
                     "getInstance",
-                     ArgumentListExpression.EMPTY_ARGUMENTS),
+                     NO_ARGS),
                 "findGriffonClass",
                 new ArgumentListExpression(new ClassExpression(classNode))))
         ));
@@ -97,7 +102,7 @@ public class GriffonArtifactASTInjector implements ASTInjector {
                 new Parameter(ClassHelper.CLASS_Type, "clazz"),
                 new Parameter(ClassHelper.STRING_TYPE, "type")},
             ClassNode.EMPTY_ARRAY,
-            returnExpr(new StaticMethodCallExpression(
+            returns(new StaticMethodCallExpression(
                 GAH_CLASS,
                 "newInstance",
                 vars(APP, "clazz", "type")))
@@ -110,10 +115,10 @@ public class GriffonArtifactASTInjector implements ASTInjector {
             ClassHelper.boolean_TYPE,
             Parameter.EMPTY_ARRAY,
             ClassNode.EMPTY_ARRAY,
-            returnExpr(new MethodCallExpression(
+            returns(new MethodCallExpression(
                 uiThreadHelperInstance(),
                 "isUIThread",
-                ArgumentListExpression.EMPTY_ARGUMENTS))
+                NO_ARGS))
         ));
 
         // void execAsync(Runnable)
@@ -162,7 +167,7 @@ public class GriffonArtifactASTInjector implements ASTInjector {
             FUTURE_CLASS,
             new Parameter[]{new Parameter(ClassHelper.CLOSURE_TYPE, "closure")},
             ClassNode.EMPTY_ARRAY,
-            returnExpr(new MethodCallExpression(
+            returns(new MethodCallExpression(
                 uiThreadHelperInstance(),
                 "execFuture",
                 vars("closure")))
@@ -177,7 +182,7 @@ public class GriffonArtifactASTInjector implements ASTInjector {
                 new Parameter(EXECUTOR_SERVICE_CLASS, "executorService"),
                 new Parameter(ClassHelper.CLOSURE_TYPE, "closure")},
             ClassNode.EMPTY_ARRAY,
-            returnExpr(new MethodCallExpression(
+            returns(new MethodCallExpression(
                 uiThreadHelperInstance(),
                 "execFuture",
                 vars("executorService", "closure")))
@@ -190,7 +195,7 @@ public class GriffonArtifactASTInjector implements ASTInjector {
             FUTURE_CLASS,
             new Parameter[]{new Parameter(CALLABLE_CLASS, "callable")},
             ClassNode.EMPTY_ARRAY,
-            returnExpr(new MethodCallExpression(
+            returns(new MethodCallExpression(
                 uiThreadHelperInstance(),
                 "execFuture",
                 vars("callable")))
@@ -205,10 +210,31 @@ public class GriffonArtifactASTInjector implements ASTInjector {
                 new Parameter(EXECUTOR_SERVICE_CLASS, "executorService"),
                 new Parameter(CALLABLE_CLASS, "callable")},
             ClassNode.EMPTY_ARRAY,
-            returnExpr(new MethodCallExpression(
+            returns(new MethodCallExpression(
                 uiThreadHelperInstance(),
                 "execFuture",
                 vars("executorService", "callable")))
+        ));
+        
+        String loggerCategory = "griffon.app." + artifactType +"."+ classNode.getName();
+        FieldNode loggerField = classNode.addField(
+            "this$logger",
+            ACC_FINAL | ACC_PRIVATE | ACC_SYNTHETIC,
+            LOGGER_CLASS,
+            new StaticMethodCallExpression(
+                LOGGER_FACTORY_CLASS,
+                "getLogger",
+                 new ArgumentListExpression(new ConstantExpression(loggerCategory)))
+        );
+        
+        // Logger getLog()
+        classNode.addMethod(new MethodNode(
+            "getLog",
+            ACC_PUBLIC,
+            LOGGER_CLASS,
+            Parameter.EMPTY_ARRAY,
+            ClassNode.EMPTY_ARRAY,
+            returns(new FieldExpression(loggerField))
         ));
     }
 
@@ -216,6 +242,6 @@ public class GriffonArtifactASTInjector implements ASTInjector {
         return new StaticMethodCallExpression(
                    UITH_CLASS,
                    "getInstance",
-                   ArgumentListExpression.EMPTY_ARGUMENTS);
+                   NO_ARGS);
     }
 }

@@ -1,0 +1,39 @@
+Since Griffon 0.9.1 default imports per artifacts are supported. All Groovy based artifacts will resolve classes from the @griffon.core@ and @griffon.util@ packages automatically, there is no longer a need to define imports on those classes unless you require an static import or define an alias. An example of this feature would be as follows.
+
+{code}
+class MyController {
+    void mvcGroupInit(Map args) {
+        println Metadata.current.'app.name'
+    }
+}
+{code}
+
+The @Metadata@ class is defined in package @griffon.util@.
+There are additional imports per artifact type, here's the list of default definitions
+* Model
+** groovy.beans -> \@Bindable, \@Vetoable
+** griffon.beans -> \@Listener
+** java.beans -> useful for all PropertyChange* classes
+* View (when using Swing)
+** java.awt
+** java.awt.event
+** javax.swing
+** javax.swing.event
+** javax.swing.table
+** javax.swing.text
+** javax.swing.tree
+
+The list of imports per artifacts can be tweaked or changed completely at will. You only need to specify a file named @META-INF/griffon-default-imports.properties@ with the following format
+
+{code}
+<artifact_type> = <comma_separated_package_list>
+{code}
+
+These are the contents of the default file
+
+{code}
+views = javax.swing., javax.swing.event., javax.swing.table., javax.swing.text., javax.swing.tree., java.awt., java.awt.event.
+models = griffon.beans., groovy.beans., java.beans.
+{code}
+
+Imports are cumulative, this means you a package can't be removed from the default list provided by Griffon.

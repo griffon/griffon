@@ -17,6 +17,7 @@
 package org.codehaus.griffon.runtime.core;
 
 import griffon.core.GriffonService;
+import griffon.core.GriffonServiceClass;
 
 /**
  * Base implementation of the GriffonService interface.
@@ -26,4 +27,7 @@ import griffon.core.GriffonService;
  * @since 0.9.1
  */
 public abstract class AbstractGriffonService extends AbstractGriffonArtifact implements GriffonService {
+    protected String getArtifactType() {
+        return GriffonServiceClass.TYPE;
+    }
 }

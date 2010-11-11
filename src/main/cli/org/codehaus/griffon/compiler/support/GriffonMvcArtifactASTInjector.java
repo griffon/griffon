@@ -64,7 +64,7 @@ public class GriffonMvcArtifactASTInjector extends GriffonArtifactASTInjector {
             ClassHelper.MAP_TYPE,
             new Parameter[]{new Parameter(ClassHelper.STRING_TYPE, "mvcType")},
             ClassNode.EMPTY_ARRAY,
-            returnExpr(new StaticMethodCallExpression(
+            returns(new StaticMethodCallExpression(
                 GAH_CLASS,
                 "buildMVCGroup",
                 new ArgumentListExpression(new Expression[]{
@@ -81,7 +81,7 @@ public class GriffonMvcArtifactASTInjector extends GriffonArtifactASTInjector {
                 new Parameter(ClassHelper.STRING_TYPE, "mvcType"),
                 new Parameter(ClassHelper.STRING_TYPE, "mvcName")},
             ClassNode.EMPTY_ARRAY,
-            returnExpr(new StaticMethodCallExpression(
+            returns(new StaticMethodCallExpression(
                 GAH_CLASS,
                 "buildMVCGroup",
                 new ArgumentListExpression(new Expression[]{
@@ -98,7 +98,7 @@ public class GriffonMvcArtifactASTInjector extends GriffonArtifactASTInjector {
                 new Parameter(ClassHelper.MAP_TYPE, "args"),
                 new Parameter(ClassHelper.STRING_TYPE, "mvcType")},
             ClassNode.EMPTY_ARRAY,
-            returnExpr(new StaticMethodCallExpression(
+            returns(new StaticMethodCallExpression(
                 GAH_CLASS,
                 "buildMVCGroup",
                 new ArgumentListExpression(new Expression[]{
@@ -116,7 +116,7 @@ public class GriffonMvcArtifactASTInjector extends GriffonArtifactASTInjector {
                 new Parameter(ClassHelper.STRING_TYPE, "mvcType"),
                 new Parameter(ClassHelper.STRING_TYPE, "mvcName")},
             ClassNode.EMPTY_ARRAY,
-            returnExpr(new StaticMethodCallExpression(
+            returns(new StaticMethodCallExpression(
                 GAH_CLASS,
                 "buildMVCGroup",
                 new ArgumentListExpression(new Expression[]{
@@ -131,7 +131,7 @@ public class GriffonMvcArtifactASTInjector extends GriffonArtifactASTInjector {
             ClassHelper.LIST_TYPE,
             new Parameter[]{new Parameter(ClassHelper.STRING_TYPE, "mvcType")},
             ClassNode.EMPTY_ARRAY,
-            returnExpr(new StaticMethodCallExpression(
+            returns(new StaticMethodCallExpression(
                 GAH_CLASS,
                 "createMVCGroup",
                 new ArgumentListExpression(new Expression[]{
@@ -148,7 +148,7 @@ public class GriffonMvcArtifactASTInjector extends GriffonArtifactASTInjector {
                 new Parameter(ClassHelper.STRING_TYPE, "mvcType"),
                 new Parameter(ClassHelper.STRING_TYPE, "mvcName")},
             ClassNode.EMPTY_ARRAY,
-            returnExpr(new StaticMethodCallExpression(
+            returns(new StaticMethodCallExpression(
                 GAH_CLASS,
                 "createMVCGroup",
                 new ArgumentListExpression(new Expression[]{
@@ -165,7 +165,7 @@ public class GriffonMvcArtifactASTInjector extends GriffonArtifactASTInjector {
                 new Parameter(ClassHelper.MAP_TYPE, "args"),
                 new Parameter(ClassHelper.STRING_TYPE, "mvcType")},
             ClassNode.EMPTY_ARRAY,
-            returnExpr(new StaticMethodCallExpression(
+            returns(new StaticMethodCallExpression(
                 GAH_CLASS,
                 "createMVCGroup",
                 new ArgumentListExpression(new Expression[]{
@@ -182,7 +182,7 @@ public class GriffonMvcArtifactASTInjector extends GriffonArtifactASTInjector {
                 new Parameter(ClassHelper.STRING_TYPE, "mvcType"),
                 new Parameter(ClassHelper.MAP_TYPE, "args")},
             ClassNode.EMPTY_ARRAY,
-            returnExpr(new StaticMethodCallExpression(
+            returns(new StaticMethodCallExpression(
                 GAH_CLASS,
                 "createMVCGroup",
                 new ArgumentListExpression(new Expression[]{
@@ -200,7 +200,7 @@ public class GriffonMvcArtifactASTInjector extends GriffonArtifactASTInjector {
                 new Parameter(ClassHelper.STRING_TYPE, "mvcType"),
                 new Parameter(ClassHelper.STRING_TYPE, "mvcName")},
             ClassNode.EMPTY_ARRAY,
-            returnExpr(new StaticMethodCallExpression(
+            returns(new StaticMethodCallExpression(
                 GAH_CLASS,
                 "createMVCGroup",
                 new ArgumentListExpression(new Expression[]{
@@ -218,7 +218,7 @@ public class GriffonMvcArtifactASTInjector extends GriffonArtifactASTInjector {
                 new Parameter(ClassHelper.STRING_TYPE, "mvcName"),
                 new Parameter(ClassHelper.MAP_TYPE, "args")},
             ClassNode.EMPTY_ARRAY,
-            returnExpr(new StaticMethodCallExpression(
+            returns(new StaticMethodCallExpression(
                 GAH_CLASS,
                 "createMVCGroup",
                 new ArgumentListExpression(new Expression[]{

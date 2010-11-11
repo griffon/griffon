@@ -16,6 +16,8 @@
 package griffon.util
 
 import org.codehaus.groovy.runtime.MetaClassHelper
+import org.slf4j.Logger
+import org.slf4j.LoggerFactory
 
 /**
  * An event handling helper.<p>
@@ -37,6 +39,21 @@ class EventRouter {
    private List listeners = Collections.synchronizedList([])
    private Map scriptBindings = [:]
    private Map closureListeners = Collections.synchronizedMap([:])
+   private static final Logger log = LoggerFactory.getLogger(EventRouter)
+
+   /**
+    * Publishes an event with optional arguments.</p>
+    * Event listeners will be notified in the same thread
+    * that orifinated the event.
+    *
+    * @param eventName the name of the event
+    * @param params the event's argumnents
+    *
+    */
+   public void publish(String eventName, List params = []) {
+       if(!eventName) return
+       buildPublisher(eventName, params)('synchronously')  
+   }
 
    /**
     * Publishes an event with optional arguments.</p>
@@ -47,9 +64,14 @@ class EventRouter {
     * @param params the event's argumnents
     *
     */
-   public void publish(String eventName, List params = []) {
-      if(!eventName) return
-      def publisher = {
+   public void publishAsync(String eventName, List params = []) {
+       if(!eventName) return
+       UIThreadHelper.instance.executeOutside(buildPublisher(eventName, params).curry('asynchronously'))  
+   }
+   
+   private Closure buildPublisher(String eventName, List params) {
+      return { mode ->
+         log.trace("Triggering event '$eventName' $mode")
          eventName = eventName[0].toUpperCase() + eventName[1..-1]
          def eventHandler = "on" + eventName
          def dispatchEvent = { listener ->
@@ -73,7 +95,6 @@ class EventRouter {
 
          listenersCopy.each{ dispatchEvent(it) }
       }
-      UIThreadHelper.instance.executeOutside(publisher)
    }
 
    private void fireEvent(Script script, String eventHandler, List params) {

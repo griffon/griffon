@@ -28,6 +28,8 @@ import java.util.concurrent.ExecutorService
 import java.util.concurrent.CountDownLatch
 
 import groovy.beans.Bindable
+import org.slf4j.Logger
+import org.slf4j.LoggerFactory
 
 /**
  * Implements the basics for a skeleton GriffonApplication.<p>
@@ -65,16 +67,24 @@ class BaseGriffonApplication implements GriffonApplication {
     ArtifactManager artifactManager
 
     @Bindable Locale locale = Locale.getDefault()
+    static final String[] EMPTY_ARGS = new String[0]
     protected ApplicationPhase phase = ApplicationPhase.INITIALIZE
 
     private final EventRouter eventRouter = new EventRouter()
     private final List<ShutdownHandler> shutdownHandlers = []
     final GriffonApplication appDelegate
+    final String[] startupArgs
     private final Object shutdownLock = new Object()
+    final Logger log
 
-    BaseGriffonApplication(GriffonApplication appDelegate) {
+    BaseGriffonApplication(GriffonApplication appDelegate, String[] args = EMPTY_ARGS) {
+        startupArgs = new String[args.length]
+        System.arraycopy(args, 0, startupArgs, 0, args.length)
+
         this.appDelegate = appDelegate
         ApplicationHolder.application = appDelegate
+
+        log = LoggerFactory.getLogger(appDelegate.class)
     }
 
     Metadata getMetadata() {
@@ -128,6 +138,7 @@ class BaseGriffonApplication implements GriffonApplication {
         for(handler in shutdownHandlers) {
             if(!handler.canShutdown(appDelegate)) {
                 event('ShutdownAborted',[appDelegate])
+                log.debug("Shutdown aborted by $handler")
                 return false
             }
         }
@@ -140,6 +151,7 @@ class BaseGriffonApplication implements GriffonApplication {
         if(phase == ApplicationPhase.SHUTDOWN) return
 
         if(!canShutdown()) return false
+        log.info('Shutdown is in process')
 
         // signal that shutdown is in process
         phase = ApplicationPhase.SHUTDOWN
@@ -148,12 +160,14 @@ class BaseGriffonApplication implements GriffonApplication {
         // wait for all handlers to complete before proceeding
         // with stage #2 if and only if the current thread is
         // the ui thread
+        log.debug('Shutdown stage 1: notify all event listeners')
         CountDownLatch latch = isUIThread() ? new CountDownLatch(1) : null
         addApplicationEventListener('ShutdownStart') {latch?.countDown()}
         event('ShutdownStart',[appDelegate])
         latch?.await()
   
         // stage 2 - alert all shutdown handlers
+        log.debug('Shutdown stage 2: notify all shutdown handlers')
         for(handler in shutdownHandlers) {
             handler.onShutdown(appDelegate)
         }
@@ -161,11 +175,13 @@ class BaseGriffonApplication implements GriffonApplication {
         // stage 3 - destroy all mvc groups
         List mvcNames = []
         mvcNames.addAll(groups.keySet())
+        log.debug('Shutdown stage 3: destroy all MVC groups')
         mvcNames.each { destroyMVCGroup(it) }
 
         // stage 4 - call shutdown script
+        log.debug('Shutdown stage 4: execute Shutdown script')
         GriffonApplicationHelper.runScriptInsideUIThread('Shutdown', appDelegate)
- 
+
         true
     }
 
@@ -174,7 +190,8 @@ class BaseGriffonApplication implements GriffonApplication {
 
         phase = phase.STARTUP
         event('StartupStart',[appDelegate])
-
+    
+        log.info("Initializing all startup groups: ${config.application.startupGroups}")
         config.application.startupGroups.each {group -> createMVCGroup(group) }
         GriffonApplicationHelper.runScriptInsideUIThread('Startup', appDelegate)
 
@@ -187,6 +204,14 @@ class BaseGriffonApplication implements GriffonApplication {
 
     void event(String eventName, List params) {
         eventRouter.publish(eventName, params)
+    }
+    
+    void eventAsync(String eventName) {
+        eventRouter.publishAsync(eventName, [])
+    }
+
+    void eventAsync(String eventName, List params) {
+        eventRouter.publishAsync(eventName, params)
     }
 
     void addApplicationEventListener(listener) {

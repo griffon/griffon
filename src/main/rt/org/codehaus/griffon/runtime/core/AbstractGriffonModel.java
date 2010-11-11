@@ -17,6 +17,7 @@
 package org.codehaus.griffon.runtime.core;
 
 import griffon.core.GriffonModel;
+import griffon.core.GriffonModelClass;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
@@ -30,6 +31,10 @@ import java.beans.PropertyChangeSupport;
  */
 public abstract class AbstractGriffonModel extends AbstractGriffonMvcArtifact implements GriffonModel {
     protected PropertyChangeSupport pcs;
+    
+    protected String getArtifactType() {
+        return GriffonModelClass.TYPE;
+    }
 
     public AbstractGriffonModel() {
         pcs = new PropertyChangeSupport(this);

@@ -54,6 +54,14 @@ public class DefaultGriffonControllerClass extends DefaultGriffonClass implement
                       actionsCache.add(propertyName);
                  }
             }
+            for(Method method : getClazz().getMethods()) {
+                 String methodName = method.getName();
+                 if(!actionsCache.contains(methodName) &&
+                    GriffonClassUtils.isPlainMethod(method) &&
+                    !GriffonClassUtils.isEventHandler(methodName)) {
+                      actionsCache.add(methodName);
+                 }
+            }
             for(MetaProperty p : getMetaProperties()) {
                  String propertyName = p.getName();
                  if(GriffonClassUtils.isGetter(p, true)) {

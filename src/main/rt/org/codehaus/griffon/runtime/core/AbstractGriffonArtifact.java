@@ -31,6 +31,9 @@ import java.util.concurrent.ExecutorService;
 
 import org.codehaus.griffon.runtime.util.GriffonApplicationHelper;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 /**
  * Base implementation of the GriffonArtifact interface.
  *
@@ -40,6 +43,13 @@ import org.codehaus.griffon.runtime.util.GriffonApplicationHelper;
  */
 public abstract class AbstractGriffonArtifact extends GroovyObjectSupport implements GriffonArtifact {
     private GriffonApplication app;
+    private final Logger log;
+    
+    public AbstractGriffonArtifact() {
+        log = LoggerFactory.getLogger("griffon.app."+ getArtifactType() +"."+getClass().getName());
+    }
+    
+    protected abstract String getArtifactType();
 
     public GriffonApplication getApp() {
         return app;
@@ -92,5 +102,9 @@ public abstract class AbstractGriffonArtifact extends GroovyObjectSupport implem
 
     public Future execFuture(Callable callable) {
         return UIThreadHelper.getInstance().executeFuture(callable);
+    }
+    
+    public Logger getLog() {
+        return log;
     }
 }

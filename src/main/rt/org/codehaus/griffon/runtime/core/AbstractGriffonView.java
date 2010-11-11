@@ -17,6 +17,7 @@
 package org.codehaus.griffon.runtime.core;
 
 import griffon.core.GriffonView;
+import griffon.core.GriffonViewClass;
 import groovy.util.FactoryBuilderSupport;
 
 /**
@@ -28,6 +29,10 @@ import groovy.util.FactoryBuilderSupport;
  */
 public abstract class AbstractGriffonView extends AbstractGriffonMvcArtifact implements GriffonView {
     private FactoryBuilderSupport builder;
+    
+    protected String getArtifactType() {
+        return GriffonViewClass.TYPE;
+    }
 
     public FactoryBuilderSupport getBuilder() {
         return builder;

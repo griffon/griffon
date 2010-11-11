@@ -19,6 +19,8 @@ package org.codehaus.griffon.runtime.util
 import griffon.builder.UberBuilder
 import griffon.core.GriffonApplication
 import griffon.util.UIThreadHelper
+import org.slf4j.Logger
+import org.slf4j.LoggerFactory
 
 /**
  * Helper class for dealing with addon initialization.
@@ -27,6 +29,8 @@ import griffon.util.UIThreadHelper
  * @author Andres Almiray
  */
 public class AddonHelper {
+    private static final Logger log = LoggerFactory.getLogger(AddonHelper)
+    
     public static final DELEGATE_TYPES = Collections.unmodifiableList([
             "attributeDelegates",
             "preInstantiateDelegates",
@@ -35,6 +39,7 @@ public class AddonHelper {
     ])
 
     static handleAddonsAtStartup(GriffonApplication app) {
+        log.info("Loading addons [START]")
         app.event("LoadAddonsStart", [app])
 
         for (node in app.builderConfig) {
@@ -62,9 +67,11 @@ public class AddonHelper {
                 if (mme.method != 'addonPostInit') throw mme
             }
             app.event("LoadAddonEnd", [name, addon, app])
+            log.info("Loaded addon $name")
         }
 
         app.event("LoadAddonsEnd", [app, app.addons])
+        log.info("Loading addons [END]")
     }
 
     static def handleAddon(GriffonApplication app, Class addonClass, String prefix, String addonName) {
@@ -78,6 +85,7 @@ public class AddonHelper {
         addonMetaClass.newInstance = GriffonApplicationHelper.&newInstance.curry(app)
         UIThreadHelper.enhance(addonMetaClass)
 
+        log.info("Loading addon $addonName with class ${addon.class.name}")
         app.event("LoadAddonStart", [addonName, addon, app])
 
         try {
@@ -86,7 +94,7 @@ public class AddonHelper {
             if (mme.method != 'addonInit') throw mme
         }
 
-        def mvcGroups = addonMetaClass.getMetaProperty("mvcGroups")
+        def mvcGroups = addonMetaClass.getMetaProperty('mvcGroups')
         if (mvcGroups) addMVCGroups(app, addon.mvcGroups)
 
         def events = addonMetaClass.getMetaProperty('events')

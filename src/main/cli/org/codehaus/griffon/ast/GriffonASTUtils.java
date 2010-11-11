@@ -25,6 +25,7 @@ import org.apache.commons.lang.StringUtils;
 import org.codehaus.groovy.ast.*;
 import org.codehaus.groovy.ast.expr.*;
 import org.codehaus.groovy.ast.stmt.*;
+import org.codehaus.groovy.syntax.*;
 import org.codehaus.groovy.runtime.MetaClassHelper;
 
 /**
@@ -209,7 +210,23 @@ public class GriffonASTUtils {
         }
     }
 
+    public static final Expression THIS = VariableExpression.THIS_EXPRESSION;
+    public static final Expression SUPER = VariableExpression.SUPER_EXPRESSION;
+    public static final ArgumentListExpression NO_ARGS = ArgumentListExpression.EMPTY_ARGUMENTS;
+    public static final Token ASSIGN = Token.newSymbol(Types.ASSIGN, -1, -1);
+    public static final Token EQ = Token.newSymbol(Types.COMPARE_EQUAL, -1, -1);
+    public static final Token NE = Token.newSymbol(Types.COMPARE_NOT_EQUAL, -1, -1);
+    public static final Token AND = Token.newSymbol(Types.LOGICAL_AND, -1, -1);
+    public static final Token OR = Token.newSymbol(Types.LOGICAL_OR, -1, -1);
+    public static final Token CMP = Token.newSymbol(Types.COMPARE_TO, -1, -1);
+    public static final Token INSTANCEOF = Token.newSymbol(Types.KEYWORD_INSTANCEOF, -1, -1);
+
+    @Deprecated
     public static Statement returnExpr(Expression expr) {
+	    return returns(expr);
+    }
+    
+    public static Statement returns(Expression expr) {
 	    return new ReturnStatement(new ExpressionStatement(expr));
     }
 
@@ -221,5 +238,99 @@ public class GriffonASTUtils {
 
     public static VariableExpression var(String name) {
 	    return new VariableExpression(name);
+    }
+    
+    public static VariableExpression var(String name, ClassNode type) {
+	    return new VariableExpression(name, type);
+    }
+    
+    public static Parameter param(ClassNode type, String name) {
+        return new Parameter(type, name);
+    }
+    
+    public static Parameter[] params(Parameter... params) {
+        return params != null ? params : Parameter.EMPTY_ARRAY;
+    }
+    
+    public static NotExpression not(Expression expr) {
+        return new NotExpression(expr);
+    }
+    
+    public static ConstantExpression constx(Object val) {
+        return new ConstantExpression(val);
+    }
+    
+    public static ClassExpression classx(ClassNode clazz) {
+        return new ClassExpression(clazz);
+    }
+    
+    public static ClassExpression classx(Class clazz) {
+        return classx(ClassHelper.makeWithoutCaching(clazz));
+    }
+    
+    public static BlockStatement block(Statement... stms) {
+        BlockStatement block = new BlockStatement();
+        for(Statement stm : stms) block.addStatement(stm);
+        return block;
+    }
+    
+    public static Statement ifs(Expression cond, Expression trueExpr) {
+        return new IfStatement(
+                cond instanceof BooleanExpression? (BooleanExpression) cond : new BooleanExpression(cond),
+                new ReturnStatement(trueExpr),
+                new EmptyStatement()
+        );
+    }
+
+    public static Statement ifs(Expression cond, Expression trueExpr, Expression falseExpr) {
+        return new IfStatement(
+                cond instanceof BooleanExpression? (BooleanExpression) cond : new BooleanExpression(cond),
+                new ReturnStatement(trueExpr),
+                new ReturnStatement(falseExpr)
+        );
+    }
+
+    public static Statement decls(Expression lhv, Expression rhv) {
+        return new ExpressionStatement(new DeclarationExpression(lhv, ASSIGN, rhv));
+    }
+
+    public static Statement assigns(Expression expression, Expression value) {
+        return new ExpressionStatement(assign(expression, value));
+    }
+
+    public static BinaryExpression assign(Expression lhv, Expression rhv) {
+        return new BinaryExpression(lhv, ASSIGN, rhv);
+    }
+    
+    public static BinaryExpression eq(Expression lhv, Expression rhv) {
+        return new BinaryExpression(lhv, EQ, rhv);
+    }
+
+    public static BinaryExpression ne(Expression lhv, Expression rhv) {
+        return new BinaryExpression(lhv, NE, rhv);
+    }
+    
+    public static BinaryExpression and(Expression lhv, Expression rhv) {
+        return new BinaryExpression(lhv, AND, rhv);
+    }
+    
+    public static BinaryExpression or(Expression lhv, Expression rhv) {
+        return new BinaryExpression(lhv, OR, rhv);
+    }    
+    
+    public static BinaryExpression cmp(Expression lhv, Expression rhv) {
+        return new BinaryExpression(lhv, CMP, rhv);
+    }
+ 
+    public static BinaryExpression iof(Expression lhv, Expression rhv) {
+        return new BinaryExpression(lhv, INSTANCEOF, rhv);
+    }
+    
+    public static Expression prop(Expression owner, String property) {
+        return new PropertyExpression(owner, property);
+    }
+    
+    public static Expression prop(Expression owner, Expression property) {
+        return new PropertyExpression(owner, property);
     }
 }
