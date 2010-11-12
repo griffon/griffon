@@ -355,8 +355,12 @@ logErrorAndExit = { String message, Throwable t ->
     exit(1)
 }
 
+isDebugEnabled = {
+    System.getProperty('griffon.cli.verbose') ? true : false
+}
+
 debug = { msg ->
-    if(System.getProperty('griffon.cli.verbose')) {
+    if(isDebugEnabled()) {
         Date now = new Date()
         println "[$now.dateString $now.timeString] $msg"
     }
