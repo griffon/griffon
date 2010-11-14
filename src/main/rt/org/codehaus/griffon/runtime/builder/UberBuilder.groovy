@@ -14,11 +14,15 @@
  * limitations under the License.
  */
 
-package griffon.builder
+package org.codehaus.griffon.runtime.builder
 
 import griffon.core.GriffonView
 import org.codehaus.groovy.runtime.InvokerHelper
-import org.codehaus.griffon.runtime.util.ExtendedExpandoMetaClass
+import org.codehaus.griffon.runtime.metaclass.ExtendedExpandoMetaClass
+import org.codehaus.griffon.runtime.metaclass.MethodInterceptor
+
+import org.slf4j.Logger
+import org.slf4j.LoggerFactory
 
 /**
  * @author Danno.Ferrin
@@ -26,7 +30,7 @@ import org.codehaus.griffon.runtime.util.ExtendedExpandoMetaClass
  * Time: 2:50:58 PM
  */
 class UberBuilder extends FactoryBuilderSupport {
-
+    private static final Logger log = LoggerFactory.getLogger(UberBuilder)
     protected final Map builderLookup = new LinkedHashMap()
     protected final List<UberBuilderRegistration> builderRegistration = new LinkedList<UberBuilderRegistration>()
 
@@ -139,10 +143,12 @@ class UberBuilder extends FactoryBuilderSupport {
 
     public Object build(Script script) {
         synchronized (script) {
-            MetaClass scriptMetaClass = script.getMetaClass()
-/*
+/*            MetaClass scriptMetaClass = script.getMetaClass()
+
             script.setMetaClass(new UberInterceptorMetaClass(scriptMetaClass, new UberBuilderInterceptor(this)))
-*/
+
+            log.debug("Script $script is of type GriffonView: ${script instanceof GriffonView}")
+            log.debug("Script $script has MetaClass $scriptMetaClass")
             if(script instanceof GriffonView) {
                  UberBuilderInterceptor interceptor = new UberBuilderInterceptor(this)
                  ExtendedExpandoMetaClass mc = script.getGriffonClass().getMetaClass()
@@ -153,10 +159,26 @@ class UberBuilder extends FactoryBuilderSupport {
             } else {
                 script.setMetaClass(new UberInterceptorMetaClass(scriptMetaClass, new UberBuilderInterceptor(this)))
             }
-
+*/
             script.setBinding(this)
             return script.run()
         }
+    }
+    
+    static MetaClass adjustMetaClass(UberBuilder builder, GriffonView view) {
+        ExtendedExpandoMetaClass mc = view.getGriffonClass().getMetaClass()
+        if(mc.adjusted) return mc
+        log.debug("Adjusting MetaClass for view $view")
+        mc.setMethodInterceptor(new UberBuilderInterceptor(builder))
+        mc      
+    }
+    
+    static MetaClass adjustMetaClass(UberBuilder builder, Script script) {
+        log.debug("Adjusting MetaClass for script $script")
+        MetaClass scriptMetaClass = script.getMetaClass()
+        MetaClass newMetaClass = new UberInterceptorMetaClass(scriptMetaClass, new UberBuilderInterceptor(builder))
+        script.setMetaClass(newMetaClass)
+        newMetaClass
     }
 
     public Object getProperty(String property) {
@@ -293,7 +315,7 @@ class UberBuilderRegistration {
     }
 }
 
-class UberBuilderInterceptor {
+class UberBuilderInterceptor implements MethodInterceptor {
     final UberBuilder uberBuilder
     
     UberBuilderInterceptor(UberBuilder uberBuilder) {

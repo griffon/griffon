@@ -1,6 +1,6 @@
 package org.codehaus.griffon.runtime.util
 
-import griffon.builder.UberBuilder
+import org.codehaus.griffon.runtime.builder.UberBuilder
 
 class CompositeBuilderHelperTest extends GroovyTestCase {
     void testSanityCheckOnSampleBuilder() {

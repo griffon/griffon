@@ -38,7 +38,7 @@ import java.util.List;
 import java.util.Collections;
 
 import org.codehaus.griffon.runtime.util.GriffonApplicationHelper;
-import org.codehaus.griffon.runtime.util.ExtendedExpandoMetaClass;
+import org.codehaus.griffon.runtime.metaclass.ExtendedExpandoMetaClass;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

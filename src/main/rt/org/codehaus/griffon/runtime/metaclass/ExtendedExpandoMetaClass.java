@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.codehaus.griffon.runtime.util;
+package org.codehaus.griffon.runtime.metaclass;
 
 import groovy.lang.Closure;
 import groovy.lang.MetaClass;
@@ -23,9 +23,16 @@ import groovy.lang.ExpandoMetaClass;
 import groovy.lang.MissingMethodException;
 import groovy.lang.MissingPropertyException;
 
+import org.codehaus.groovy.runtime.MethodClosure;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 /**
  *
  * @author Andres Almiray
+ *
+ * @since 0.9.1
  */
 public class ExtendedExpandoMetaClass extends ExpandoMetaClass {
     public static MetaClass metaClassFor(Class clazz) {
@@ -38,49 +45,54 @@ public class ExtendedExpandoMetaClass extends ExpandoMetaClass {
         return metaClass;
     }
     
-    private Closure methodMissingHandler;
-    private Closure getPropertyMissingHandler;
-    private Closure setPropertyMissingHandler;
+    private MethodInterceptor methodInterceptor;
+    private final Logger log;
     private static final Class[] METHOD_MISSING_ARGS = new Class[]{String.class, Object[].class};
 
     public ExtendedExpandoMetaClass(Class theClass) {
         super(theClass);
+        log = createLogger(theClass);
     }
 
     public ExtendedExpandoMetaClass(Class theClass, MetaMethod[] add) {
         super(theClass, add);
+        log = createLogger(theClass);
     }
 
     public ExtendedExpandoMetaClass(Class theClass, boolean register) {
         super(theClass, register);
+        log = createLogger(theClass);
     }
 
     public ExtendedExpandoMetaClass(Class theClass, boolean register, MetaMethod[] add) {
         super(theClass, register, add);
+        log = createLogger(theClass);
     }
 
     public ExtendedExpandoMetaClass(Class theClass, boolean register, boolean allowChangesAfterInit) {
         super(theClass, register, allowChangesAfterInit);
+        log = createLogger(theClass);
     }
-
-    public void setMethodMissingHandler(Closure methodMissingHandler) {
-        this.methodMissingHandler = methodMissingHandler;
+    
+    private static Logger createLogger(Class theClass) {
+        return LoggerFactory.getLogger(ExtendedExpandoMetaClass.class.getName()+"["+ theClass.getName() +"]");
     }
-
-    public void setStaticMethodMissingHandler(Closure staticMethodMissingHandler) {
-        registerStaticMethod(METHOD_MISSING, staticMethodMissingHandler, METHOD_MISSING_ARGS);
+    
+    public boolean isAdjusted() {
+        return methodInterceptor != null;
     }
-
-    public void setGetPropertyMissingHandler(Closure getPropertyMissingHandler) {
-        this.getPropertyMissingHandler = getPropertyMissingHandler;
-    }
-
-    public void setSetPropertyMissingHandler(Closure setPropertyMissingHandler) {
-        this.setPropertyMissingHandler = setPropertyMissingHandler;
+    
+    public void setMethodInterceptor(MethodInterceptor methodInterceptor) {
+        if(methodInterceptor != null) {
+        log.debug("Setting methodInterceptor "+methodInterceptor);
+            this.methodInterceptor = methodInterceptor;
+            registerStaticMethod(METHOD_MISSING, new MethodClosure(methodInterceptor, "callInvokeMethod"), METHOD_MISSING_ARGS);
+        }
     }
 
     public Object invokeMethod(Object instance, String methodName, Object[] arguments) {
         try {
+            log.debug("Invoking method "+methodName+"()");
             return super.invokeMethod(instance, methodName, arguments);
         } catch(MissingMethodException e) {
             return invokeMissingMethod(instance, methodName, arguments);
@@ -88,9 +100,11 @@ public class ExtendedExpandoMetaClass extends ExpandoMetaClass {
     }
 
     public Object invokeMissingMethod(Object instance, String methodName, Object[] arguments) {
-        if(methodMissingHandler != null) {
-            return methodMissingHandler.call(new Object[]{methodName, arguments});
+        if(methodInterceptor != null) {
+            log.debug("Invoking method "+methodName+"() via methodInterceptor");
+            return methodInterceptor.callInvokeMethod(methodName, arguments);
         }
+        log.debug("Invoking method "+methodName+"() via super.invokeMissingMethod()");
         return super.invokeMissingMethod(instance, methodName, arguments);
     }
 
@@ -100,18 +114,22 @@ public class ExtendedExpandoMetaClass extends ExpandoMetaClass {
 
     // get
     private Object handleMissingProperty(Object instance, String propertyName) {
-        if(getPropertyMissingHandler != null) {
-            return getPropertyMissingHandler.call(new Object[]{propertyName});
+        if(methodInterceptor != null) {
+            log.debug("Getting property "+propertyName+" via methodInterceptor");
+            return methodInterceptor.callGetProperty(propertyName);
         }
+        log.debug("Getting property "+propertyName+" via super.invokeMissingProperty");
         return super.invokeMissingProperty(instance, propertyName, null, true);
     }
 
     // set
     private Object handleMissingProperty(Object instance, String propertyName, Object value) {
-        if(setPropertyMissingHandler != null) {
-            setPropertyMissingHandler.call(new Object[]{propertyName, value});
+        if(methodInterceptor != null) {
+            log.debug("Setting property "+propertyName+" via methodInterceptor");
+            methodInterceptor.callSetProperty(propertyName, value);
             return null;
         }
+        log.debug("Setting property "+propertyName+" via super.invokeMissingProperty");
         return super.invokeMissingProperty(instance, propertyName, value, false);
     }
 }

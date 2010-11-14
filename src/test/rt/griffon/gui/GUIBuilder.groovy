@@ -22,7 +22,7 @@
  */
 package griffon.gui
 
-import griffon.builder.UberBuilder
+import org.codehaus.griffon.runtime.builder.UberBuilder
 import groovy.swing.SwingBuilder
 import groovy.swing.SwingXBuilder
 import org.codehaus.groovy.reflection.ReflectionUtils

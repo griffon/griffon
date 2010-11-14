@@ -15,7 +15,7 @@
  */
 package org.codehaus.griffon.runtime.util
 
-import griffon.builder.UberBuilder
+import org.codehaus.griffon.runtime.builder.UberBuilder
 import groovy.swing.factory.ComponentFactory
 import groovy.swing.factory.LayoutFactory
 import groovy.swing.factory.ScrollPaneFactory
@@ -24,16 +24,23 @@ import java.awt.LayoutManager
 import javax.swing.*
 import griffon.core.GriffonApplication
 
+import org.slf4j.Logger
+import org.slf4j.LoggerFactory
+
 /**
  * Helper class that initialzes a CompositeBuilder with the builder configuration read from the application.
  *
- * @author Danno.Ferrin
+ * @author Danno Ferrin
+ * @author Andres Almiray
  */
 class CompositeBuilderHelper {
-    static FactoryBuilderSupport createBuilder(GriffonApplication app, Map<String, MetaClass> targets) {
-        UberBuilder uberBuilder = new UberBuilder()
+    private static final Logger log = LoggerFactory.getLogger(CompositeBuilderHelper)
+    private static final String GRIFFON_BUILDER_ENHANCED = '__GRIFFON_BUILDER_ENHANCED__'
+
+    static FactoryBuilderSupport configureBuilder(GriffonApplication app, UberBuilder uberBuilder, Map<String, MetaClass> targets) {
         uberBuilder.setProperty('app', app)
 
+        log.debug('Configuring builders with addon contributions')
         AddonHelper.handleAddonsForBuilders(app, uberBuilder, targets)
 
         for (node in app.builderConfig) {
@@ -52,10 +59,12 @@ class CompositeBuilderHelper {
                     }
             }
         }
+
         return uberBuilder
     }
 
     static handleFeatures(UberBuilder uberBuilder, features) {
+        if(features) log.debug("Applying 'features' config node to builders")
         for (feature in features) {
             switch (feature.key) {
                 case ~/.*Delegates/:
@@ -83,6 +92,7 @@ class CompositeBuilderHelper {
         if (!FactoryBuilderSupport.isAssignableFrom(builderClass)) {
             return;
         }
+        log.debug("Initializing builder ${builderClass.name}")
         FactoryBuilderSupport localBuilder = uberBuilder.uberInit(prefixName, builderClass)
         for (partialTarget in builderClassName.value) {
             if (partialTarget == 'view') {
@@ -90,7 +100,14 @@ class CompositeBuilderHelper {
                 continue
             }
             MetaClass mc = targets[partialTarget.key]
-            if (!mc) continue
+            if(!mc) continue
+            try {
+                if(mc[GRIFFON_BUILDER_ENHANCED]) continue
+            } catch(mpe) {
+                mc[GRIFFON_BUILDER_ENHANCED] = true
+            }
+
+            log.debug("Setting up MetaClass $mc for ${partialTarget.key}")
             for (String injectionName in partialTarget.value) {
                 def factories = localBuilder.getLocalFactories()
                 def methods = localBuilder.getLocalExplicitMethods()

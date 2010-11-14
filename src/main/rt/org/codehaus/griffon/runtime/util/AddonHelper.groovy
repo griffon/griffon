@@ -16,7 +16,7 @@
 
 package org.codehaus.griffon.runtime.util
 
-import griffon.builder.UberBuilder
+import org.codehaus.griffon.runtime.builder.UberBuilder
 import griffon.core.GriffonApplication
 import griffon.util.UIThreadHelper
 import org.slf4j.Logger

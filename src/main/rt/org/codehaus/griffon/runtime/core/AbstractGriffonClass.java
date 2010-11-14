@@ -41,6 +41,9 @@ import java.util.Set;
 import java.util.TreeSet;
 import java.lang.reflect.Method;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import org.codehaus.griffon.runtime.util.GriffonApplicationHelper;
 
 /**
@@ -67,6 +70,7 @@ public abstract class AbstractGriffonClass implements GriffonClass {
     private final ClassPropertyFetcher classPropertyFetcher;
     
     protected final Set<String> eventsCache = new TreeSet<String>();
+    protected final Logger log;
 
     /**
      * <p>Contructor to be used by all child classes to create a
@@ -79,6 +83,7 @@ public abstract class AbstractGriffonClass implements GriffonClass {
         this.clazz = clazz;
         this.type = type;
         fullName = clazz.getName();
+        log = LoggerFactory.getLogger(getClass().getSimpleName() +"["+ fullName +"]");
         packageName = GriffonClassUtils.getPackageName(clazz);
         naturalName = GriffonNameUtils.getNaturalName(clazz.getName());
         shortName = GriffonClassUtils.getShortClassName(clazz);        
@@ -114,8 +119,10 @@ public abstract class AbstractGriffonClass implements GriffonClass {
             MetaClass metaClass = getMetaClass();
             // GriffonApplicationHelper.enhance(app, clazz, metaClass, instance);
             if (instance instanceof GroovyObject) {
-               ((GroovyObject)instance).setMetaClass(metaClass);
+                log.debug("Setting MetaClass "+metaClass+" on GroovyObject "+instance);
+                ((GroovyObject)instance).setMetaClass(metaClass);
             } else {
+                log.debug("Setting MetaClass "+metaClass+" on non-GroovyObject "+instance);
                 GroovySystem.getMetaClassRegistry().setMetaClass(clazz, metaClass);
             }
             return instance;
@@ -157,7 +164,11 @@ public abstract class AbstractGriffonClass implements GriffonClass {
     public Object getReferenceInstance() {
         Object obj = classPropertyFetcher.getReference();
         if (obj instanceof GroovyObject) {
-           ((GroovyObject)obj).setMetaClass(getMetaClass());
+            log.debug("Setting MetaClass "+getMetaClass()+" on GroovyObject "+obj);
+            ((GroovyObject)obj).setMetaClass(getMetaClass());
+        } else {
+            log.debug("Setting MetaClass "+getMetaClass()+" on non-GroovyObject "+obj);
+            GroovySystem.getMetaClassRegistry().setMetaClass(clazz, getMetaClass());
         }
         return obj;
     }
@@ -202,7 +213,7 @@ public abstract class AbstractGriffonClass implements GriffonClass {
         for(MetaProperty property : getMetaClass().getProperties()) {
             if(!"class".equals(property.getName()) && !"metaClass".equals(property.getName())) {
                 properties.add(property);
-               }
+            }
         }
         
         return properties.toArray(new MetaProperty[properties.size()]);
@@ -322,6 +333,7 @@ public abstract class AbstractGriffonClass implements GriffonClass {
         MetaClass metaClass = GroovySystem.getMetaClassRegistry().getMetaClass(clazz);
         if(!(metaClass instanceof ExpandoMetaClass)) {
             metaClass = new ExpandoMetaClass(clazz, true, true);
+            log.debug("Upgrading MetaClass to "+metaClass);
             metaClass.initialize();
             GroovySystem.getMetaClassRegistry().setMetaClass(clazz, metaClass);
         }
@@ -337,6 +349,7 @@ public abstract class AbstractGriffonClass implements GriffonClass {
     }
 
     public boolean equals(Object obj) {
+        if(this == obj) return true;
         if(obj == null) return false;
         if(!obj.getClass().getName().equals(getClass().getName())) return false;
     
