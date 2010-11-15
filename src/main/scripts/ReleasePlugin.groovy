@@ -177,7 +177,7 @@ private ISVNAuthenticationManager getAuthenticationManager(String repoKey, Strin
     }
     //If no provided info, the user have to be prompt
     ant.input(message:"Please enter your SVN username:", addproperty:usr)
-    ant.input(message:"Please enter your SVN password:", addproperty:psw)
+    ant.input(message:"Please enter your SVN password:", addproperty:psw) { handler(type: 'secure') }
     def username = ant.antProject.getProperty(usr)
     def password = ant.antProject.getProperty(psw)
     authManager = SVNWCUtil.createDefaultAuthenticationManager( username , password )
@@ -267,7 +267,7 @@ target(processAuth:"Prompts user for login details to create authentication mana
             }
             
             if (!password) {
-                ant.input(message:"Please enter your SVN password:", addproperty:psw)
+                ant.input(message:"Please enter your SVN password:", addproperty:psw) { handler(type: 'secure') }
                 password = ant.antProject.getProperty(psw)
             }
                         
@@ -1038,7 +1038,7 @@ withSVNRepo = { url, closure ->
         event "StatusUpdate", ["Default authentication failed please enter credentials."]
         // prompt for login information..
         ant.input(message:"Please enter your SVN username:", addproperty:"user.svn.username")
-        ant.input(message:"Please enter your SVN password:", addproperty:"user.svn.password")
+        ant.input(message:"Please enter your SVN password:", addproperty:"user.svn.password") { handler(type: 'secure') }
         def username = ant.antProject.properties."user.svn.username"
         def password = ant.antProject.properties."user.svn.password"
         authMgr = SVNWCUtil.createDefaultAuthenticationManager( username , password )
