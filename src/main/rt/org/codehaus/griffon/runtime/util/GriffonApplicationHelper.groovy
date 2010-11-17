@@ -45,6 +45,23 @@ import org.apache.log4j.LogManager
  */
 class GriffonApplicationHelper {
     private static final Logger log = LoggerFactory.getLogger(GriffonApplicationHelper)
+
+    /**
+     * Creates, register and assings an ExpandoMetaClass for a target class.<p>
+     * The newly created metaClass will accept changes after initialization.
+     *
+     * @param clazz the target class
+     * @return an ExpandoMetaClass
+     */
+    static MetaClass expandoMetaClassFor(Class clazz) {
+        MetaClass metaClass = GroovySystem.getMetaClassRegistry().getMetaClass(clazz)
+        if(!(metaClass instanceof ExpandoMetaClass)) {
+            metaClass = new ExpandoMetaClass(clazz, true, true)
+            metaClass.initialize()
+            GroovySystem.getMetaClassRegistry().setMetaClass(clazz, metaClass)
+        }
+        return metaClass
+    }
     
     /**
      * Setups an application.<p>
@@ -176,9 +193,7 @@ class GriffonApplicationHelper {
         def instance = klass.newInstance()
 
         GriffonClass griffonClass = ArtifactManager.instance.findGriffonClass(klass)
-        log.debug("GriffonClass for $klass.name is ${griffonClass}")
         MetaClass mc = griffonClass?.getMetaClass() ?: klass.getMetaClass()
-        log.debug("MetaClass for $klass.name is $mc")
         enhance(app, klass, mc, instance)
 
         app.event('NewInstance',[klass,type,instance])
@@ -231,11 +246,8 @@ class GriffonApplicationHelper {
         ClassLoader classLoader = app.getClass().classLoader
         app.mvcGroups[mvcType].each {k, v ->
             GriffonClass griffonClass = ArtifactManager.instance.findGriffonClass(v)
-            log.debug("GriffonClass for $v is ${griffonClass}")
             Class klass = griffonClass?.clazz ?: loadClass(app, v)
-            log.debug("Class for $v is ${klass.name}")
             MetaClass metaClass = griffonClass?.getMetaClass() ?: klass.getMetaClass()
-            log.debug("MetaClass for $v is ${metaClass}")
 
             metaClassMap[k] = metaClass
             klassMap[k] = klass
@@ -243,7 +255,7 @@ class GriffonApplicationHelper {
         }
 
         // create the builder
-        UberBuilder builder = new UberBuilder()
+        UberBuilder builder = CompositeBuilderHelper.createBuilder(app, metaClassMap)
         argsCopy.each {k, v -> builder.setVariable k, v }
 
         // instantiate the parts
@@ -259,20 +271,12 @@ class GriffonApplicationHelper {
                 instanceMap[k] = instance
                 argsCopy[k] = instance
 
-                boolean alreadyAdjusted = false
-                if(instance instanceof GriffonView) {
-                    metaClassMap[k] = UberBuilder.adjustMetaClass(builder, instance)
-                    alreadyAdjusted = true
-                }
-
                 // all scripts get the builder as their binding
                 if (instance instanceof Script) {
-                    if(!alreadyAdjusted) metaClassMap[k] = UberBuilder.adjustMetaClass(builder, instance)
                     instance.binding = builder
                 }
             }
         }
-        CompositeBuilderHelper.configureBuilder(app, builder, metaClassMap)
         instanceMap.builder = builder
         argsCopy.builder = builder
         
@@ -341,7 +345,7 @@ class GriffonApplicationHelper {
             }
         }
 
-        if(!GriffonMvcArtifact.class.isAssignableFrom(klass)) {
+        if(!GriffonMvcArtifact.isAssignableFrom(klass)) {
             metaClass.createMVCGroup = {Object... args ->
                 GriffonApplicationHelper.createMVCGroup(app, *args)
             }
@@ -351,7 +355,7 @@ class GriffonApplicationHelper {
             metaClass.destroyMVCGroup = GriffonApplicationHelper.&destroyMVCGroup.curry(app)
         }
 
-        if(!GriffonArtifact.class.isAssignableFrom(klass)) {
+        if(!GriffonArtifact.isAssignableFrom(klass)) {
             metaClass.newInstance = {Object... args ->
                 GriffonApplicationHelper.newInstance(app, *args)
             }

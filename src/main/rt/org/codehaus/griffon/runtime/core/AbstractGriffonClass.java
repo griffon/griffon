@@ -340,6 +340,10 @@ public abstract class AbstractGriffonClass implements GriffonClass {
         return metaClass;
     }
 
+    public void setMetaClass(MetaClass metaClass) {
+        GroovySystem.getMetaClassRegistry().setMetaClass(clazz, metaClass);
+    }
+
     public String toString() {
         return "Artifact[" + type + "] > " + getName();
     }

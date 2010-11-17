@@ -102,10 +102,22 @@ task distBinary(type: Copy) {
     from('src/main/scripts') {
         into 'scripts'
     }
+/*
     from(project.file('lib')) {
         into 'lib'
         include '*.jar'
     }
+*/
+    from(configurations.rt) {
+        into 'lib'
+    }
+    from(configurations.cli) {
+        into 'lib'
+    }
+    from(configurations.scripts) {
+        into 'lib'
+    }
+
     from(project.file('.')) {
         include 'LICENSE'
         include 'INSTALL'

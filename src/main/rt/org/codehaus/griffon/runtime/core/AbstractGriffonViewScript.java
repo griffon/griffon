@@ -25,8 +25,10 @@ import griffon.core.ArtifactManager;
 import griffon.util.UIThreadHelper;
 
 import groovy.lang.MetaClass;
+import groovy.lang.ExpandoMetaClass;
 import groovy.lang.Closure;
 import groovy.lang.Script;
+import groovy.lang.GroovySystem;
 import groovy.util.FactoryBuilderSupport;
 
 import java.util.concurrent.Callable;
@@ -38,7 +40,7 @@ import java.util.List;
 import java.util.Collections;
 
 import org.codehaus.griffon.runtime.util.GriffonApplicationHelper;
-import org.codehaus.griffon.runtime.metaclass.ExtendedExpandoMetaClass;
+import org.codehaus.griffon.runtime.builder.UberInterceptorMetaClass;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -54,6 +56,7 @@ public abstract class AbstractGriffonViewScript extends Script implements Griffo
     private GriffonApplication app;
     private FactoryBuilderSupport builder;
     private final Logger log;
+    private MetaClass _metaClass;
     
     public AbstractGriffonViewScript() {
         log = LoggerFactory.getLogger("griffon.app."+ GriffonViewClass.TYPE +"."+ getClass().getName());
@@ -72,7 +75,22 @@ public abstract class AbstractGriffonViewScript extends Script implements Griffo
     }
 
     public MetaClass getMetaClass() {
-        return ExtendedExpandoMetaClass.metaClassFor(getClass());
+        if(_metaClass == null) {
+            Class clazz = getClass();
+            _metaClass = GroovySystem.getMetaClassRegistry().getMetaClass(clazz);
+            if(!(_metaClass instanceof ExpandoMetaClass) || !(_metaClass instanceof UberInterceptorMetaClass)) {
+                _metaClass = new ExpandoMetaClass(clazz, true, true);
+                log.debug("Upgrading MetaClass to "+_metaClass);   
+                _metaClass.initialize();
+                GroovySystem.getMetaClassRegistry().setMetaClass(clazz, _metaClass);
+            }
+        }
+        return _metaClass;
+    }
+ 
+    public void setMetaClass(MetaClass metaClass) {
+        _metaClass = metaClass;
+        GroovySystem.getMetaClassRegistry().setMetaClass(getClass(), metaClass);
     }
 
     public GriffonClass getGriffonClass() {

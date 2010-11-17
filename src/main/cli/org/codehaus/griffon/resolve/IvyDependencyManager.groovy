@@ -229,7 +229,7 @@ class IvyDependencyManager extends AbstractIvyDependencyManager implements Depen
                        "org.apache.ant:ant-nodeps:$antVersion",
                        // "org.apache.ant:ant-trax:1.8.1",
                        "jline:jline:0.9.94",
-                       "org.fusesource.jansi:jansi:1.2.1",
+                       "org.fusesource.jansi:jansi:1.4",
                        "commons-io:commons-io:1.4",
                        "commons-lang:commons-lang:2.5",
                        "org.codehaus.griffon:griffon-cli:$griffonVersion",
@@ -248,7 +248,7 @@ class IvyDependencyManager extends AbstractIvyDependencyManager implements Depen
                        "org.slf4j:slf4j-api:$slf4jVersion",
                        "org.slf4j:slf4j-log4j12:$slf4jVersion"
                        
-                docs   "org.xhtmlrenderer:core-renderer:R8",
+                docs   "org.xhtmlrenderer:core-renderer:R8pre2",
                        "com.lowagie:itext:2.0.8",
                        "radeox:radeox:1.0-b2",
                        "org.grails:grails-docs:1.3.5"

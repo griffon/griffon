@@ -9,36 +9,79 @@ group = 'org.codehaus.griffon'
 jar.enabled = false
 
 configurations {
-    compile.transitive = true
     rt
-    resources
-    // wrapper
-    cli { extendsFrom rt, compile }
+    cli { extendsFrom rt }
     scripts { extendsFrom cli }
+    resources
+    rt.transitive = false
+    cli.transitive = false
+    scripts.transitive = false
+}
+
+repositories {
+    mavenCentral()
+    mavenRepo name: 'SpringSource', urls: 'http://repository.springsource.com/maven/bundles/release'
 }
 
 dependencies {
     lib = "$projectDir/lib" as File
-    groovy files(fileTree(dir: lib, includes: ['groovy-all-1.7.*.jar']))
-    compile files(fileTree(dir: lib, includes: ['*.jar'], excludes: ['groovy-all-1.7.*.jar']), "${System.getenv('JAVA_HOME')}/lib/tools.jar")
+    groovy "org.codehaus.groovy:groovy-all:$groovyVersion"
+    rt  "org.codehaus.groovy:groovy-all:$groovyVersion",
+        "log4j:log4j:1.2.16",
+        "org.slf4j:slf4j-log4j12:$slf4jVersion",
+        "org.slf4j:slf4j-api:$slf4jVersion",
+        "org.slf4j:jcl-over-slf4j:$slf4jVersion",
+        "org.slf4j:jul-to-slf4j:$slf4jVersion"
+    cli "org.codehaus.gpars:gpars:0.9",
+        "org.coconut.forkjoin:jsr166y:070108",
+        "junit:junit:4.8.1",
+        "asm:asm:3.2",
+        "org.tmatesoft.svnkit:svnkit:1.3.1",
+        "org.apache.ant:ant:$antVersion",
+        "org.apache.ant:ant-antlr:$antVersion",
+        "org.apache.ant:ant-launcher:$antVersion",
+        "org.apache.ant:ant-junit:$antVersion",
+        "org.apache.ant:ant-nodeps:$antVersion",
+        "jline:jline:0.9.94",
+        "org.fusesource.jansi:jansi:1.4",
+        "commons-cli:commons-cli:1.2",
+        "commons-io:commons-io:1.4",
+        "commons-lang:commons-lang:2.5",
+        "org.springframework:org.springframework.core:$springVersion",
+        "org.springframework:org.springframework.aop:$springVersion",
+        "org.springframework:org.springframework.aspects:$springVersion",
+        "org.springframework:org.springframework.asm:$springVersion",
+        "org.springframework:org.springframework.beans:$springVersion",
+        "org.springframework:org.springframework.context:$springVersion",
+        "org.springframework:org.springframework.context.support:$springVersion",
+        "org.springframework:org.springframework.expression:$springVersion",
+        "org.springframework:org.springframework.instrument:$springVersion",
+        "org.xhtmlrenderer:core-renderer:R8pre2",
+        "com.lowagie:itext:2.0.8",
+        "radeox:radeox:1.0-b2",
+        "org.grails:grails-docs:1.3.5",
+        "org.apache.ivy:ivy:2.2.0",
+        "org.codehaus.gant:gant_groovy1.7:1.9.3"
+
+    scripts "org.springframework:org.springframework.test:$springVersion"
 }
 
 sourceSets {
     rt {
+        compileClasspath = configurations.rt
         java.srcDirs = []
         groovy.srcDirs = ['src/main/rt']
         classesDir = "$buildDir/classes/rt" as File
         resources.srcDirs = ['src/resources/rt']
     }
     cli {
-        compileClasspath = sourceSets.rt.classes + configurations.compile
+        compileClasspath = sourceSets.rt.classes + configurations.cli
         java.srcDirs = []
         groovy.srcDirs = ['src/main/cli']
         classesDir = "$buildDir/classes/cli" as File
-        // resources.srcDirs = ['src/resources/cli']
     }
     scripts {
-        compileClasspath = sourceSets.rt.classes + sourceSets.cli.classes + configurations.compile
+        compileClasspath = sourceSets.rt.classes + sourceSets.cli.classes + configurations.scripts
         java.srcDirs = []
         groovy.srcDirs = ['src/main/scripts']
         classesDir = "$buildDir/classes/scripts" as File
@@ -50,8 +93,8 @@ sourceSets {
     }
     test {
         swingxFiles = files(fileTree(dir: file('lib/test'), includes: ['*.jar']))
-        compileClasspath = sourceSets.rt.classes + sourceSets.cli.classes + configurations.compile + swingxFiles
-        runtimeClasspath = classes + sourceSets.rt.classes + sourceSets.cli.classes + configurations.compile + swingxFiles
+        compileClasspath = sourceSets.rt.classes + sourceSets.cli.classes + configurations.cli + swingxFiles
+        runtimeClasspath = classes + sourceSets.rt.classes + sourceSets.cli.classes + configurations.cli + swingxFiles
         java.srcDirs = []
         groovy.srcDirs = ['src/test/rt', 'src/test/cli']
     }
@@ -82,7 +125,7 @@ apply {
     from 'gradle/assemble.gradle'
     from 'gradle/docs.gradle'
     from 'gradle/installer.gradle'
-//    from 'gradle/maven.gradle'
+    from 'gradle/maven.gradle'
 }
 
 task fullDist(dependsOn: [zipGuide, zipBinary, zipSource, tarBinary, tarSource, izpack, deb]) {
@@ -97,18 +140,6 @@ task bambooStage2(dependsOn: [bambooStage1, fullDist, rpm]) {
 }
 
 task wrapper(type: Wrapper) {
-    gradleVersion = '0.9-rc-2'
+    gradleVersion = '0.9-rc-3'
     jarPath = 'gradle/wrapper'
 }
-
-/*
-apply plugin: 'maven'
-
-uploadArchives {
-    repositories.mavenDeployer {
-        repository(url: file('repo'))
-        addFilter('*') { a, f ->
-        }
-    }
-}
-*/

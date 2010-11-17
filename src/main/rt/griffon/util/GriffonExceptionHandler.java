@@ -23,13 +23,20 @@ import org.codehaus.groovy.runtime.StackTraceUtils;
  * @author Danno Ferrin
  */
 public class GriffonExceptionHandler implements Thread.UncaughtExceptionHandler {
+    public static final String GRIFFON_FULL_STACKTRACE = "griffon.full.stacktrace";
+    private final boolean fullStacktrace;
+
+    public GriffonExceptionHandler() {
+        fullStacktrace = Boolean.getBoolean(GRIFFON_FULL_STACKTRACE);
+    }
+
     public void uncaughtException(Thread t, Throwable e) {
         handle(e);
     }
 
     public void handle(Throwable throwable) {
         try {
-            StackTraceUtils.deepSanitize(throwable);
+            if(!fullStacktrace) StackTraceUtils.deepSanitize(throwable);
             throwable.printStackTrace(System.err);
         } catch (Throwable t) {
             // don't let the exception get thrown out, will cause infinite looping!

@@ -16,10 +16,8 @@
 
 package org.codehaus.griffon.runtime.builder
 
-import griffon.core.GriffonView
+import griffon.core.GriffonArtifact
 import org.codehaus.groovy.runtime.InvokerHelper
-import org.codehaus.griffon.runtime.metaclass.ExtendedExpandoMetaClass
-import org.codehaus.griffon.runtime.metaclass.MethodInterceptor
 
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
@@ -143,42 +141,22 @@ class UberBuilder extends FactoryBuilderSupport {
 
     public Object build(Script script) {
         synchronized (script) {
-/*            MetaClass scriptMetaClass = script.getMetaClass()
-
-            script.setMetaClass(new UberInterceptorMetaClass(scriptMetaClass, new UberBuilderInterceptor(this)))
-
-            log.debug("Script $script is of type GriffonView: ${script instanceof GriffonView}")
-            log.debug("Script $script has MetaClass $scriptMetaClass")
-            if(script instanceof GriffonView) {
-                 UberBuilderInterceptor interceptor = new UberBuilderInterceptor(this)
-                 ExtendedExpandoMetaClass mc = script.getGriffonClass().getMetaClass()
-                 mc.setMethodMissingHandler(interceptor.&callInvokeMethod)
-                 mc.setStaticMethodMissingHandler(interceptor.&callInvokeMethod)
-                 mc.setGetPropertyMissingHandler(interceptor.&callGetProperty)
-                 mc.setSetPropertyMissingHandler(interceptor.&callSetProperty)
-            } else {
-                script.setMetaClass(new UberInterceptorMetaClass(scriptMetaClass, new UberBuilderInterceptor(this)))
+            try{
+                MetaClass scriptMetaClass = script.getMetaClass()
+                boolean isArtifact = script instanceof GriffonArtifact
+                if(isArtifact) scriptMetaClass = script.getGriffonClass().getMetaClass()
+                if(!(scriptMetaClass instanceof UberInterceptorMetaClass)) {
+                    MetaClass uberMetaClass = new UberInterceptorMetaClass(scriptMetaClass, this)
+                    script.setMetaClass(uberMetaClass)
+                    if(isArtifact) script.getGriffonClass().setMetaClass(uberMetaClass)
+                }
+                script.setBinding(this)
+                return script.run()
+            } catch(x){
+                log.error("An error occurred while building $script", x)
+                throw x
             }
-*/
-            script.setBinding(this)
-            return script.run()
         }
-    }
-    
-    static MetaClass adjustMetaClass(UberBuilder builder, GriffonView view) {
-        ExtendedExpandoMetaClass mc = view.getGriffonClass().getMetaClass()
-        if(mc.adjusted) return mc
-        log.debug("Adjusting MetaClass for view $view")
-        mc.setMethodInterceptor(new UberBuilderInterceptor(builder))
-        mc      
-    }
-    
-    static MetaClass adjustMetaClass(UberBuilder builder, Script script) {
-        log.debug("Adjusting MetaClass for script $script")
-        MetaClass scriptMetaClass = script.getMetaClass()
-        MetaClass newMetaClass = new UberInterceptorMetaClass(scriptMetaClass, new UberBuilderInterceptor(builder))
-        script.setMetaClass(newMetaClass)
-        newMetaClass
     }
 
     public Object getProperty(String property) {
@@ -223,233 +201,5 @@ class UberBuilder extends FactoryBuilderSupport {
             }
         }
         super.dispose()
-    }
-}
-
-class UberBuilderRegistration {
-
-    Factory factory
-    FactoryBuilderSupport builder
-    String prefixString
-
-    public UberBuilderRegistration(String prefixString, FactoryBuilderSupport builder) {
-        this.@prefixString = prefixString
-        this.@builder = builder
-    }
-
-    public UberBuilderRegistration(String prefixString, Factory factory) {
-        this.@prefixString = prefixString
-        this.@factory = factory
-    }
-
-    Factory nominateFactory(String name) {
-        if (builder) {
-            // need to turn off proxy to get at class durring lookup
-            def oldProxy = builder.proxyBuilder
-            try {
-                builder.proxyBuilder = builder
-                String localName = name
-                if (prefixString && name.startsWith(prefixString)) {
-                    localName = name.substring(prefixString.length())
-                }
-                localName = builder.getName(localName)
-                if (builder.factories.containsKey(localName)) {
-                    return builder.factories[localName]
-                }
-            } finally {
-                builder.proxyBuilder = oldProxy
-            }
-        }
-        if (factory) {
-            if (name == prefixString) {
-                return factory
-            }
-        }
-        return null
-    }
-
-    Closure nominateExplicitMethod(String name) {
-        if (builder) {
-            // need to turn off proxy to get at class durring lookup
-            def oldProxy = builder.proxyBuilder
-            try {
-                builder.proxyBuilder = builder
-                String localName = name
-                if (prefixString && name.startsWith(prefixString)) {
-                    localName = name.substring(prefixString.length())
-                }
-                localName = builder.getName(localName)
-                if (builder.getLocalExplicitMethods().containsKey(localName)) {
-                    return builder.getLocalExplicitMethods()[localName]
-                }
-            } finally {
-                builder.proxyBuilder = oldProxy
-            }
-        }
-        return null
-    }
-
-    Closure[] nominateExplicitProperty(String name) {
-        if (builder) {
-            // need to turn off proxy to get at class durring lookup
-            def oldProxy = builder.proxyBuilder
-            try {
-                builder.proxyBuilder = builder
-                String localName = name
-                if (prefixString && name.startsWith(prefixString)) {
-                    localName = name.substring(prefixString.length())
-                }
-                localName = builder.getName(localName)
-                if (builder.explicitProperties.containsKey(localName)) {
-                    return builder.explicitProperties[localName]
-                }
-            } finally {
-                builder.proxyBuilder = oldProxy
-            }
-        }
-        return null
-    }
-
-    public String toString() {
-        return "UberBuilderRegistration{ factory '$factory' builder '$builder' prefix '$prefixString'"
-    }
-}
-
-class UberBuilderInterceptor implements MethodInterceptor {
-    final UberBuilder uberBuilder
-    
-    UberBuilderInterceptor(UberBuilder uberBuilder) {
-        this.uberBuilder = uberBuilder
-    }
-
-    Object callInvokeMethod(String methodName, Object[] arguments) {
-        // attempt method resolution
-        for (UberBuilderRegistration reg in uberBuilder.builderRegistration) {
-            try {
-                def builder = reg.builder
-                if (builder.getMetaClass().respondsTo(builder, methodName)) {
-                    return InvokerHelper.invokeMethod(builder, methodName, arguments)
-                }
-            } catch (MissingMethodException mme) {
-                if (mme.method != methodName) {
-                    throw mme
-                }
-                // drop the exception, there will be many
-            }
-        }
-
-        return uberBuilder.invokeMethod(methodName, arguments)
-    }
-
-    Object callGetProperty(String propertyName) {
-        uberBuilder.getProperty(propertyName)
-    }
-
-    void callSetProperty(String propertyName, Object value) {
-        uberBuilder.setProperty(propertyName, value)
-    }
-}
-
-class UberInterceptorMetaClass extends DelegatingMetaClass {
-    UberBuilderInterceptor interceptor
-
-    public UberInterceptorMetaClass(MetaClass delegate, UberBuilderInterceptor interceptor) {
-        super(delegate)
-        this.interceptor = interceptor
-    }
-
-    public Object invokeMethod(Object object, String methodName, Object arguments) {
-        try {
-            return delegate.invokeMethod(object, methodName, arguments)
-        } catch (MissingMethodException mme) {
-            if (mme.method != methodName) {
-                throw mme
-            }
-
-            try {
-                return interceptor.callInvokeMethod(methodName, arguments)
-            } catch (MissingMethodException mme2) {
-                if (mme2.method != methodName) {
-                    throw mme2
-                }
-                // chain secondary exception
-                Throwable root = mme
-                while (root.getCause() != null) {
-                    root = root.getCause()
-                }
-                root.initCause(mme2)
-                // throw original
-                throw mme
-            }
-        }
-    }
-
-    public Object invokeStaticMethod(Object object, String methodName, Object[] arguments) {
-        try {
-            return delegate.invokeMethod(object, methodName, arguments)
-        } catch (MissingMethodException mme) {
-            if (mme.method != methodName) {
-                throw mme
-            }
-
-            try {
-                return interceptor.callInvokeMethod(methodName, arguments)
-            } catch (MissingMethodException mme2) {
-                if (mme2.method != methodName) {
-                    throw mme2
-                }
-                // chain secondary exception
-                Throwable root = mme
-                while (root.getCause() != null) {
-                    root = root.getCause()
-                }
-                root.initCause(mme2)
-                // throw original
-                throw mme
-            }
-        }
-    }
-
-    public Object invokeMethod(Object object, String methodName, Object[] arguments) {
-        try {
-            return delegate.invokeMethod(object, methodName, arguments)
-        } catch (MissingMethodException mme) {
-            if (mme.method != methodName) {
-                throw mme
-            }
-
-            try {
-                return interceptor.callInvokeMethod(methodName, arguments)
-            } catch (MissingMethodException mme2) {
-                if (mme2.method != methodName) {
-                    throw mme2
-                }
-                // chain secondary exception
-                Throwable root = mme
-                while (root.getCause() != null) {
-                    root = root.getCause()
-                }
-                root.initCause(mme2)
-                // throw original
-                throw mme
-            }
-        }
-    }
-
-    public Object getProperty(Object o, String s) {
-        try {
-            return interceptor.callGetProperty(s)
-        } catch (MissingPropertyException mpe) {
-            return super.getProperty(o, s)
-        }
-    }
-
-    public void setProperty(Object o, String s, Object o1) {
-        try {
-            interceptor.callSetProperty(s, o1)
-        } catch (MissingPropertyException mpe) {
-            // mpe.printStackTrace(System.out)
-            super.getProperty(o, s, o1)
-        }
     }
 }

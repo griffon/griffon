@@ -213,7 +213,7 @@ public class ClassPropertyFetcher {
             for (Field field : c.getDeclaredFields()) {
                 if(field.isSynthetic()) continue;
                 final int modifiers = field.getModifiers();
-                if (Modifier.isPublic(modifiers) || Modifier.isStatic(modifiers)) continue;
+                if (!Modifier.isPrivate(modifiers) || Modifier.isStatic(modifiers)) continue;
                 final String fieldName = field.getName();
                 if ("class".equals(fieldName) || "metaClass".equals(fieldName)) continue;
                 if (fieldName.indexOf('$') == -1 && props.contains(fieldName)) properties.add(fieldName);

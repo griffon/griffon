@@ -35,9 +35,9 @@ import org.slf4j.LoggerFactory
  */
 class CompositeBuilderHelper {
     private static final Logger log = LoggerFactory.getLogger(CompositeBuilderHelper)
-    private static final String GRIFFON_BUILDER_ENHANCED = '__GRIFFON_BUILDER_ENHANCED__'
 
-    static FactoryBuilderSupport configureBuilder(GriffonApplication app, UberBuilder uberBuilder, Map<String, MetaClass> targets) {
+    static FactoryBuilderSupport createBuilder(GriffonApplication app, Map<String, MetaClass> targets) {
+        UberBuilder uberBuilder = new UberBuilder()
         uberBuilder.setProperty('app', app)
 
         log.debug('Configuring builders with addon contributions')
@@ -95,27 +95,24 @@ class CompositeBuilderHelper {
         log.debug("Initializing builder ${builderClass.name}")
         FactoryBuilderSupport localBuilder = uberBuilder.uberInit(prefixName, builderClass)
         for (partialTarget in builderClassName.value) {
-            if (partialTarget == 'view') {
+            if (partialTarget.key == 'view') {
                 // this needs special handling, skip it for now
                 continue
             }
+
             MetaClass mc = targets[partialTarget.key]
             if(!mc) continue
-            try {
-                if(mc[GRIFFON_BUILDER_ENHANCED]) continue
-            } catch(mpe) {
-                mc[GRIFFON_BUILDER_ENHANCED] = true
-            }
 
-            log.debug("Setting up MetaClass $mc for ${partialTarget.key}")
+            log.debug("Injecting builder contributions to $partialTarget.key using ${partialTarget.value}")
             for (String injectionName in partialTarget.value) {
                 def factories = localBuilder.getLocalFactories()
                 def methods = localBuilder.getLocalExplicitMethods()
                 def props = localBuilder.getLocalExplicitProperties()
 
-                Closure processInjection = {String injectedName ->
+                Closure processInjection = {String injectedName ->                
                     def resolvedName = "${prefixName}${injectedName}"
                     if (methods.containsKey(injectedName)) {
+                        log.trace("Injected method ${resolvedName}() on $partialTarget.key")
                         mc."$resolvedName" = methods[injectedName]
                     } else if (props.containsKey(injectedName)) {
                         Closure[] accessors = props[injectedName]
@@ -126,12 +123,15 @@ class CompositeBuilderHelper {
                             beanName = injectedName[0].toUpperCase()
                         }
                         if (accessors[0]) {
+                            log.trace("Injected getter for ${beanName} on $partialTarget.key")
                             mc."get$beanName" = accessors[0]
                         }
                         if (accessors[1]) {
+                            log.trace("Injected setter for ${beanName} on $partialTarget.key")
                             mc."set$beanName" = accessors[1]
                         }
                     } else if (factories.containsKey(injectedName)) {
+                        log.trace("Injected factory ${resolvedName} on $partialTarget.key")
                         mc."${resolvedName}" = {Object ... args -> uberBuilder."$resolvedName"(* args)}
                     }
                 }

@@ -1,80 +1,117 @@
-import groovy.xml.NamespaceBuilder
-import org.apache.tools.ant.filters.ReplaceTokens
+apply plugin: 'maven'
 
-/*
-buildscript {
+artifacts {
+    archives jarRt
+    archives jarCli
+    archives jarScripts
+    archives jarResources
+}
+
+collectDependencies = { type ->
+    configurations."${type}".allDependencies.grep(ExternalModuleDependency).collect([]) { dependency ->
+        org.apache.maven.model.Dependency mavenDependency = new org.apache.maven.model.Dependency()
+        mavenDependency.groupId = dependency.group
+        mavenDependency.artifactId = dependency.name
+        mavenDependency.version = dependency.version
+        if(dependency.group == 'org.springframework') {
+            mavenDependency.addExclusion(new org.apache.maven.model.Exclusion(
+                groupId: 'commons-logging',
+                artifactId: 'commons-logging'
+            ))
+        } else if(dependency.name == 'gpars') {
+            mavenDependency.addExclusion(new org.apache.maven.model.Exclusion(
+                groupId: 'org.jboss.netty',
+                artifactId: 'netty'
+            ))
+        } else if(dependency.name == 'groovy-all' ||
+                  dependency.name == 'gant_groovy1.7' ||
+                  dependency.name == 'log4j' ||
+                  dependency.name.contains('slf4j')) {
+            mavenDependency.addExclusion(new org.apache.maven.model.Exclusion(
+                groupId: '*',
+                artifactId: '*'
+            ))
+        }
+        mavenDependency
+    }
+}
+
+artifactData = new ConfigSlurper().parse(file('src/artifacts.groovy').toURI().toURL())
+artifactData.resources.dependencies = []
+artifactData.rt.dependencies = collectDependencies('rt')
+
+artifactData.cli.dependencies = [
+    new org.apache.maven.model.Dependency(
+        groupId: group,
+        artifactId: 'griffon-rt',
+        version: version
+    )
+] + collectDependencies('cli')
+depsToRemove = artifactData.rt.dependencies.inject([]) { l, d ->
+    if(artifactData.cli.dependencies.find{ it.artifactId == d.artifactId }) {
+        l << d.artifactId
+    }
+    l
+}
+depsToRemove.each { id -> artifactData.cli.dependencies.remove(artifactData.cli.dependencies.find{ it.artifactId == id }) }
+
+artifactData.scripts.dependencies = [
+    new org.apache.maven.model.Dependency(
+        groupId: group,
+        artifactId: 'griffon-cli',
+        version: version,
+    )
+]
+
+installer = install.repositories.mavenInstaller
+def deployer = null
+uploadArchives {
     repositories {
-        mavenCentral()
-    }
-    dependencies {
-        classpath "org.apache.maven.wagon:wagon-webdav:1.0-beta-2",
-                  "org.apache.maven:maven-ant-tasks:2.1.0"
-    }
-}
-*/
-
-configurations {
-    deployerJars
-}
-repositories {
-    mavenCentral()
-}
-dependencies {
-    deployerJars "org.apache.maven.wagon:wagon-webdav:1.0-beta-2",
-                 "org.apache.maven:maven-ant-tasks:2.1.0"
-}
-
-task generatePoms(type: Copy) {
-    pomsDir = "$buildDir/poms"
-    from('src/poms') {
-        include '*.pom.in'
-        filter(ReplaceTokens, tokens: ['griffon.version': version])
-        rename '(.*)\\.in', '$1'
-    }
-    into pomsDir
-}
-
-mavenArtifacts = tasks.withType(Jar).matching({task -> task.mavenArtifact } as Spec)
-
-task mavenInstall(dependsOn: [generatePoms, mavenArtifacts.all]) << {
-    ant.taskdef(resource: 'org/apache/maven/artifact/ant/antlib.xml',
-                uri: 'antlib:org.apache.maven.artifact.ant',
-                classpath: configurations.deployerJars.asPath)
-    def artifact = NamespaceBuilder.newInstance(ant, 'antlib:org.apache.maven.artifact.ant')
-
-    mavenArtifacts.each {jar ->
-        artifact.install(file: jar.archivePath) {
-            pom(file: "$generatePoms.pomsDir/$jar.baseName${jar.appendix ? '-' + jar.appendix : ""}.pom")
+        deployer = mavenDeployer {
+            repository(url: "file://${System.getProperty('user.home')}/.m2/repository/")
         }
     }
-    
-/*
-    // install the griffon parent POM
-    artifact.install(file: "${libs.destinationDir}/griffon-${version}.jar") {
-        pom(file: "$generatePoms.pomsDir/griffon.pom")
-    }
-*/
 }
 
-/*
-task mavenDeploy(dependsOn: [generatePoms, tasks.withType(Jar).all]) << {
-    def antBuilderClasspath = services.get(org.gradle.api.internal.ClassPathRegistry).getClassPathFiles('ANT') +
-    services.get(org.gradle.api.internal.ClassPathRegistry).getClassPathFiles('LOCAL_GROOVY') + 
-    configurations.deployerJars.files
-    def isolatedAnt = services.get(org.gradle.api.internal.project.IsolatedAntBuilder)
-    
-    tasks.withType(Jar).matching({task -> task.mavenArtifact } as Spec).each {jar ->
-        isolatedAnt.execute(antBuilderClasspath) {
-            'antlib:org.apache.maven.artifact.ant:deploy'(file: jar.archivePath) {
-                pom(file: "$generatePoms.pomsDir/$jar.baseName${jar.appendix ? '-' + jar.appendix : ""}.pom")
+[installer, deployer].each { repo ->
+    configure(repo) {
+        ['rt', 'cli', 'scripts', 'resources'].each { type ->
+            addFilter(type) {artifact, file ->
+                artifact.name == 'griffon-'+type
+            }
+
+            pom(type).project {
+                name(artifactData[type].name)
+                description(artifactData[type].description)
+                url('http://griffon.codehaus.org')
+                licenses {
+                    license {
+                        name 'The Apache Software License, Version 2.0'
+                        url 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+                        distribution 'repo'
+                    }
+                }
+                repositories {
+                    repository {
+                        id('codehaus-release')
+                        name('Codehaus')
+                        url('http://repository.codehaus.org')
+                    }
+                    repository {
+                        id('java.net')
+                        name('Java.net')
+                        url('http://download.java.net/maven/2')
+                    }
+                    repository {
+                        id('spring-release')
+                        name('SpringSource')
+                        url('http://repository.springsource.com/maven/bundles/release')
+                    }
+                }
+            }
+            pom(type).whenConfigured { pom ->
+                pom.dependencies = artifactData[type].dependencies
             }
         }
     }
-    // deploy the griffon parent POM
-    isolatedAnt.execute(antBuilderClasspath) {
-    'antlib:org.apache.maven.artifact.ant:deploy'(file: "${libs.destinationDir}/griffon-${version}.jar") {
-        pom(file:"$generatePoms.pomsDir/griffon.pom")
-     }
-   }
 }
-*/

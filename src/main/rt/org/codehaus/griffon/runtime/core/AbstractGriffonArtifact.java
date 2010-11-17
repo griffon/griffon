@@ -65,7 +65,7 @@ public abstract class AbstractGriffonArtifact extends GroovyObjectSupport implem
 
     public MetaClass getMetaClass() {
         GriffonClass griffonClass = getGriffonClass();
-        return (griffonClass != null)? getGriffonClass().getMetaClass() : super.getMetaClass();
+        return (griffonClass != null)? getGriffonClass().getMetaClass() : GriffonApplicationHelper.expandoMetaClassFor(getClass());
     }
 
     public GriffonClass getGriffonClass() {

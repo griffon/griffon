@@ -180,26 +180,33 @@ public class AddonHelper {
             if (!mc) continue
             for (String itemName in partialTarget.value) {
                 if (itemName == '*') {
+                    if(methods) log.trace("Injecting all methods on $partialTarget.key")
                     addMethods(mc, methods, prefix)
+                    if(factories) log.trace("Injecting all factories on $partialTarget.key")
                     addFactories(mc, factories, prefix, builder)
+                    if(props) log.trace("Injecting all properties on $partialTarget.key")
                     addProps(mc, props, prefix)
                     continue
                 } else if (itemName == '*:methods') {
+                    if(methods) log.trace("Injecting all methods on $partialTarget.key")
                     addMethods(mc, methods, prefix)
                     continue
                 } else if (itemName == '*:factories') {
+                    if(factories) log.trace("Injecting all factories on $partialTarget.key")
                     addFactories(mc, factories, prefix, builder)
                     continue
                 } else if (itemName == '*:props') {
+                    if(props) log.trace("Injecting all properties on $partialTarget.key")
                     addProps(mc, props, prefix)
                     continue
                 }
 
                 def resolvedName = "${prefix}${itemName}"
                 if (methods.containsKey(itemName)) {
+                    log.trace("Injected method ${resolvedName}() on $partialTarget.key")
                     mc."$resolvedName" = methods[itemName]
                 } else if (props.containsKey(itemName)) {
-                    Map accessors = props[itemName];
+                    Map accessors = props[itemName]
                     String beanName
                     if (itemName.length() > 1) {
                         beanName = itemName[0].toUpperCase() + itemName.substring(1)
@@ -207,12 +214,15 @@ public class AddonHelper {
                         beanName = itemName[0].toUpperCase()
                     }
                     if (accessors.containsKey('get')) {
+                        log.trace("Injected getter for ${beanName} on $partialTarget.key")
                         mc."get$beanName" = accessors['get']
                     }
                     if (accessors.containsKey('set')) {
+                        log.trace("Injected setter for ${beanName} on $partialTarget.key")
                         mc."set$beanName" = accessors['set']
                     }
                 } else if (factories.containsKey(itemName)) {
+                    log.trace("Injected factory ${resolvedName} on $partialTarget.key")
                     mc."${resolvedName}" = {Object ... args -> builder."$resolvedName"(* args)}
                 }
             }
@@ -273,9 +283,9 @@ public class AddonHelper {
         }
     }
 
-    static addProperties(UberBuilder builder, Map<String, List<Closure>> methods, String addonName, String prefix) {
+    static addProperties(UberBuilder builder, Map<String, List<Closure>> props, String addonName, String prefix) {     
         builder.registrationGroup.get(addonName, new TreeSet<String>())
-        methods.each {String name, Map<String, Closure> closures ->
+        props.each {String name, Map<String, Closure> closures ->
             builder.registerExplicitProperty(name, addonName, closures.get, closures.set)
         }
     }
