@@ -1,0 +1,149 @@
+import org.apache.tools.ant.filters.ReplaceTokens
+
+task prepareIzpack(type: Copy) {
+    dependsOn { [distBinary, distSource] }
+
+    destinationDir = "$buildDir/assemble/izpack" as File
+    from('installer/izpack/resources') {
+        into 'resources'
+        filter(ReplaceTokens, tokens: ['griffon.version': version])
+    }
+    from("$buildDir/distributions/binary") {
+        into 'binary'
+    }
+    from("$buildDir/distributions/source") {
+        into 'source'
+    }
+}
+
+task izpack(dependsOn: [prepareIzpack]) {
+    description = "Creates an IzPack based installer for both binary and source distributions."
+    inputs.dir("$buildDir/assemble/izpack" as File)
+    outputs.files "$buildDir/distributions/griffon-${version}-installer.jar"
+
+    doLast {
+        ant.taskdef(name: 'izpack',
+                    classpath: fileTree(dir: file('installer/izpack/lib'), includes: ['*.jar']).asPath,
+                    classname: 'com.izforge.izpack.ant.IzPackTask')
+    
+        ant.property(name: 'app.group',   value: 'Griffon')
+        ant.property(name: 'app.name',    value: 'griffon')
+        ant.property(name: 'app.title',   value: 'Griffon')
+        ant.property(name: 'app.version', value: version)
+        ant.property(name: 'app.subpath', value: "Griffon-$version")
+    
+        ant.izpack(basedir: "$buildDir/assemble/izpack",
+                   output: "$buildDir/distributions/griffon-${version}-installer.jar",
+                   compression: 'deflate',
+                   compressionlevel: '9') {
+            config(file('installer/izpack/installer.xml').text)
+        }
+    }
+}
+
+task rpm(dependsOn: [zipBinary]) {
+    description = "Creates an RPM package from the binary distribution."
+    inputs.dir("$buildDir/assemble/rpm" as File)
+    outputs.files "$buildDir/distributions/griffon-${version.replace('-','_')}-1.noarch.rpm"
+
+    doLast {
+        def rpmDir = "$buildDir/assemble/rpm" as File
+    
+        mkdir("${rpmDir}/BUILD")
+        mkdir("${rpmDir}/SOURCES")
+        mkdir("${rpmDir}/SPECS")
+        mkdir("${rpmDir}/SRPMS")
+        mkdir("${rpmDir}/RPMS/noarch")
+    
+        copy {
+            from 'installer/rpm'
+            into "$rpmDir/SPECS"
+            include '*.spec'
+            filter(ReplaceTokens, tokens: ['griffon.version': version, 'griffon.version.rpm': version.replace('-','_')])
+        }
+    
+        copy {
+            from("$buildDir/distributions/binary")
+            into "$rpmDir/griffon-$version"
+        }
+    
+        ant.zip(
+            destfile: "$rpmDir/SOURCES/griffon-${version}-bin.zip",
+            basedir: rpmDir,
+            includes: "griffon-${version}/**/*")
+    
+        ant.rpm(specFile: 'griffon.spec',
+                topDir: rpmDir,
+                cleanBuildDir: false,
+                failOnError: true)
+        copy {
+            from "$rpmDir/RPMS/noarch/"
+            into "$buildDir/distributions"
+            include '*.rpm'
+        }
+    }
+}
+
+task dmg(dependsOn: [distBinary]) {
+    description = "Creates a DMG package from the binary distribution."
+    inputs.dir "$buildDir/distributions/binary"
+    outputs.files "$buildDir/distributions/griffon-${version}-bin.dmg"
+
+    def destinationDir = "$buildDir/distributions" as File
+    def dmgDir = "$buildDir/assemble/dmg" as File
+
+    doLast {
+        copy {
+            from("$buildDir/distributions/binary")
+            into "$dmgDir/griffon-${version}"
+        }
+        copy {
+            from('installer/dmg')
+            into dmgDir
+            filter(ReplaceTokens, tokens: ['griffon.version': version])
+        }
+    
+        ant.exec(executable: 'hdiutil') {
+            arg(line: "create -srcfolder $dmgDir $buildDir/distributions//griffon-${version}-bin.dmg")
+        }
+    }
+}
+
+task deb(dependsOn: [distBinary]) {
+    description = "Creates a Debian package from the binary distribution."
+    inputs.dir "$buildDir/distributions/binary"
+    outputs.file "$buildDir/distributions/griffon-${version}-1_all.deb"
+
+    doLast {
+        def destinationDir = "$buildDir/assemble/deb" as File
+        def debDir = project.file('installer/deb')
+    
+        ant.taskdef(resource: 'ant_deb_task.properties',
+                    classpath: fileTree(dir: debDir, includes: ['*.jar']).asPath)
+    
+        mkdir("$destinationDir/bin")
+        mkdir("$destinationDir/griffon")
+        copy {
+            from "$buildDir/distributions/binary"
+            into destinationDir
+            exclude '**/*.bat'
+        }
+    
+        ant.deb(todir: "$buildDir/distributions",
+                'package': 'griffon',
+                section: 'contrib/devel',
+                depends: 'groovy',
+                postinst: "$debDir/postinst",
+                prerm: "$debDir/prerm") {
+            version(upstream: version)
+            maintainer(name: 'Griffon Team',
+                       email: 'dev@griffon.codehaus.org')
+            description(synopsis: 'Grails-like framework for desktop Java applications', '''
+Griffon is a Grails inspired application framework for developing desktop applications in Groovy
+Home page: http://griffon.codehaus.org/
+''')
+            tarfileset(dir: destinationDir, prefix: 'usr/share/griffon')
+            tarfileset(dir: "$destinationDir/bin", prefix: 'usr/share/griffon', filemode: '755')
+        }
+    }
+}

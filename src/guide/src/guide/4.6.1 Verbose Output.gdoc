@@ -1,0 +1,37 @@
+[Scripts|guide:scripts] have the choice of printing to the console whenever they need to communicate something to the developer. They would normally use a standard @println@ sentence. Sometimes it's useful to know what a script is doing with further detail but it makes no sense to see that information every single time. A conditioned output is required.
+
+All scripts inherit a @debug()@ closure that will print its argument to stdout if an only if the following flag is enabled: @griffon.clie.verbose@. As an example, the following script has two print outs
+
+{code}
+includeTargets << griffonScript("Init")
+target(main: "The description of the script goes here!") {
+    println 'Hello world!'
+    debug 'Hello World (debug)'
+}
+setDefaultTarget(main)
+{code}
+
+Running the script without the flag will print out 'Hello World!' all the time but never the second one
+
+{code}
+$ griffon hello
+Welcome to Griffon @griffon.version@ - http://griffon.codehaus.org/
+Licensed under Apache Standard License 2.0
+Griffon home is set to: /usr/local/griffon
+...
+Environment set to development
+Hello world!
+{code}
+
+The second message will only appear if you specify the verbose flag
+
+{code}
+$ griffon -Dgriffon.cli.verbose=true hello
+Welcome to Griffon @griffon.version@ - http://griffon.codehaus.org/
+Licensed under Apache Standard License 2.0
+Griffon home is set to: /usr/local/griffon
+...
+Environment set to development
+Hello world!
+[11/11/10 4:43:04 PM] Hello World (debug)
+{code}

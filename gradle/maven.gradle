@@ -1,0 +1,117 @@
+apply plugin: 'maven'
+
+artifacts {
+    archives jarRt
+    archives jarCli
+    archives jarScripts
+    archives jarResources
+}
+
+collectDependencies = { type ->
+    configurations."${type}".allDependencies.grep(ExternalModuleDependency).collect([]) { dependency ->
+        org.apache.maven.model.Dependency mavenDependency = new org.apache.maven.model.Dependency()
+        mavenDependency.groupId = dependency.group
+        mavenDependency.artifactId = dependency.name
+        mavenDependency.version = dependency.version
+        if(dependency.group == 'org.springframework') {
+            mavenDependency.addExclusion(new org.apache.maven.model.Exclusion(
+                groupId: 'commons-logging',
+                artifactId: 'commons-logging'
+            ))
+        } else if(dependency.name == 'gpars') {
+            mavenDependency.addExclusion(new org.apache.maven.model.Exclusion(
+                groupId: 'org.jboss.netty',
+                artifactId: 'netty'
+            ))
+        } else if(dependency.name == 'groovy-all' ||
+                  dependency.name == 'gant_groovy1.7' ||
+                  dependency.name == 'log4j' ||
+                  dependency.name.contains('slf4j')) {
+            mavenDependency.addExclusion(new org.apache.maven.model.Exclusion(
+                groupId: '*',
+                artifactId: '*'
+            ))
+        }
+        mavenDependency
+    }
+}
+
+artifactData = new ConfigSlurper().parse(file('src/artifacts.groovy').toURI().toURL())
+artifactData.resources.dependencies = []
+artifactData.rt.dependencies = collectDependencies('rt')
+
+artifactData.cli.dependencies = [
+    new org.apache.maven.model.Dependency(
+        groupId: group,
+        artifactId: 'griffon-rt',
+        version: version
+    )
+] + collectDependencies('cli')
+depsToRemove = artifactData.rt.dependencies.inject([]) { l, d ->
+    if(artifactData.cli.dependencies.find{ it.artifactId == d.artifactId }) {
+        l << d.artifactId
+    }
+    l
+}
+depsToRemove.each { id -> artifactData.cli.dependencies.remove(artifactData.cli.dependencies.find{ it.artifactId == id }) }
+
+artifactData.scripts.dependencies = [
+    new org.apache.maven.model.Dependency(
+        groupId: group,
+        artifactId: 'griffon-cli',
+        version: version,
+    )
+]
+
+installer = install.repositories.mavenInstaller
+def deployer = null
+uploadArchives {
+    repositories {
+        deployer = mavenDeployer {
+            repository(url: "file://${System.getProperty('user.home')}/.m2/repository/")
+        }
+    }
+}
+
+[installer, deployer].each { repo ->
+    configure(repo) {
+        ['rt', 'cli', 'scripts', 'resources'].each { type ->
+            addFilter(type) {artifact, file ->
+                artifact.name == 'griffon-'+type
+            }
+
+            pom(type).project {
+                name(artifactData[type].name)
+                description(artifactData[type].description)
+                url('http://griffon.codehaus.org')
+                licenses {
+                    license {
+                        name 'The Apache Software License, Version 2.0'
+                        url 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+                        distribution 'repo'
+                    }
+                }
+                repositories {
+                    repository {
+                        id('codehaus-release')
+                        name('Codehaus')
+                        url('http://repository.codehaus.org')
+                    }
+                    repository {
+                        id('java.net')
+                        name('Java.net')
+                        url('http://download.java.net/maven/2')
+                    }
+                    repository {
+                        id('spring-release')
+                        name('SpringSource')
+                        url('http://repository.springsource.com/maven/bundles/release')
+                    }
+                }
+            }
+            pom(type).whenConfigured { pom ->
+                pom.dependencies = artifactData[type].dependencies
+            }
+        }
+    }
+}

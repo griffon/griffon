@@ -34,9 +34,8 @@ In order to start using Griffon you need to have the following:
 In order to start using Griffon from Git you need to have the following:
 * An installation of Java 1.5 or higher and have set your JAVA_HOME variable
   to the install location.
-* A working installation of Apache Ant [http://ant.apache.org] 1.7 or higher
-  and have set your ANT_HOME variable to the install location.
-* JUnit (to run the build tests - put junit.jar in your ANT_HOME/lib directory)
+* A working installation of Gradle [http://gradle.org] 0.9-rc-2 or higher
+  and have set your GRADLE_HOME variable to the install location.
 * An installation of Git [http://git-scm.com/].
 
 - Steps
@@ -47,8 +46,13 @@ In order to start using Griffon from Git you need to have the following:
 * Set the GRIFFON_HOME environment variable to some location that is not below
   the checkout location.
 * Add the $GRIFFON_HOM/bin directory to your PATH environment variable.
-* Add the $GRIFFON_HOME/ant/bin directory to your PATH environment variable.
-* You may need to give the scripts in $GRIFFON_HOME/ant/bin execute permissions
-* Go to the $GRIFFON_HOME directory and type "ant install" to build Griffon and
-  install it in your $GRIFFON_HOME directory.
+* Add the $GRADLE_HOME/bin directory to your PATH environment variable.
+* Go to the distribution directory and type "gradle installBinary" to build
+  Griffon and install it in your $GRIFFON_HOME directory.
 * That's it! Start developing with Griffon!
+
+* As an alternative to downloading and setting up Gradle, you can use the
+  provided 'gradlew' script to build Griffon without having Gradle installed.
+  Just make sure to setup $GRIFFON_HOME and then execute the following command
+
+      gradle installBinary

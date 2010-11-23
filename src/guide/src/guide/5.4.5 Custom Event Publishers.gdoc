@@ -1,0 +1,46 @@
+As the name implies application events are sent system wide. However there is an option to create localized event publishers. Griffon provides a \@EventPublisher AST transformation that you can apply to any class that wishes to be an event publisher.
+
+This AST transformation will inject the following methods to the annotated classes:
+* addEventListener(Object)
+* addEventListener(String,Closure)
+* removeEventListener(Object)
+* removeEventListener(String,Closure)
+* publishEvent(String)
+* publishEvent(String,List)
+* publishEventAsync(String)
+* publishEventAsync(String,List)
+
+Event listeners registered with these classes should follow the same rules as application event handlers (they can be Scripts, classes, maps or closures, and so on).
+
+The following example shows a trivial usage of this feature
+
+{code}
+import griffon.util.EventPublisher
+
+@EventPublisher
+class Publisher {
+   void doit(String name) {
+      publishEvent("arg",[name])
+   }
+
+   void doit() {
+      publishEvent("empty")
+   }
+}
+
+class Consumer {
+   String value
+
+   void onArg(String arg) { value = "arg = "+arg }
+   void onEmpty() { value = "empty" }
+}
+
+p = new Publisher()
+c = new Consumer()
+p.addEventListener(c)
+assert !c.value
+p.doit()
+assert c.value == "empty"
+p.doit("Groovy")
+assert c.value == "arg = Groovy"
+{code}

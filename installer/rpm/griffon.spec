@@ -1,3 +1,36 @@
+%define is_mandrake %(test -e /etc/mandrake-release && echo 1 || echo 0)
+%define is_suse %(test -e /etc/SuSE-release && echo 1 || echo 0)
+%define is_fedora %(test -e /etc/fedora-release && echo 1 || echo 0)
+
+%define dist redhat
+%define disttag rh
+
+%if %is_mandrake
+%define dist mandrake
+%define disttag mdk
+%endif
+%if %is_suse
+%define dist suse
+%define disttag suse
+%define kde_path /opt/kde3
+%endif
+%if %is_fedora
+%define dist fedora
+%define disttag rhfc
+%endif
+
+%define _bindir         %kde_path/bin
+%define _datadir        %kde_path/share
+%define _iconsdir       %_datadir/icons
+%define _docdir         %_datadir/doc
+%define _localedir      %_datadir/locale
+%define qt_path         /usr/lib/qt3
+
+%define distver %(release="`rpm -q --queryformat='%{VERSION}' %{dist}-release 2> /dev/null | tr . : | sed s/://g`" ; if test $? != 0 ; then release="" ; fi ; echo "$release")
+%define distlibsuffix %(%_bindir/kde-config --libsuffix 2>/dev/null)
+%define _lib lib%distlibsuffix
+%define packer %(finger -lp `echo "$USER"` | head -n 1 | cut -d: -f 3)
+
 Name:           griffon
 Version:        @griffon.version.rpm@
 Release:        1
@@ -6,9 +39,8 @@ Provides:       griffon
 BuildRoot:      %{_tmppath}/%{name}-%{version}-build
 Group:          Development/Frameworks/Griffon
 Summary:        Griffon is an agile development framework for Java Swing applications
-Source:         http://dist.groovy.codehaus.org/distributions/griffon/griffon-src-@griffon.version@.zip
+Source:         griffon-@griffon.version@-bin.zip
 BuildArch:      noarch
-BuildRequires:  unzip
 Packager: 	The Griffon team <dev@griffon.codehaus.org>
 
 %description
@@ -19,24 +51,24 @@ Griffon is a Grails like application framework for developing desktop applicatio
 rm bin/*.bat
 
 %build
+echo "nothing to compile"
 
 %install
-
-install -d $RPM_BUILD_ROOT/usr/local/share/griffon/bin
-install -p bin/* $RPM_BUILD_ROOT/usr/local/share/griffon/bin
-install -d $RPM_BUILD_ROOT/usr/local/share/griffon/conf
-install -p conf/* $RPM_BUILD_ROOT/usr/local/share/griffon/conf
-install -d $RPM_BUILD_ROOT/usr/local/share/griffon/dist
-install -p dist/* $RPM_BUILD_ROOT/usr/local/share/griffon/dist
-install -d $RPM_BUILD_ROOT/usr/local/share/griffon/lib
-install -p lib/* $RPM_BUILD_ROOT/usr/local/share/griffon/lib
-install -d $RPM_BUILD_ROOT/usr/local/share/griffon/scripts
-install -p scripts/* $RPM_BUILD_ROOT/usr/local/share/griffon/scripts
-
-install -d $RPM_BUILD_ROOT/usr/local/share/griffon/ant
-cp -r ant $RPM_BUILD_ROOT/usr/local/share/griffon/ant
-install -d $RPM_BUILD_ROOT/usr/local/share/griffon/samples
-cp -r samples $RPM_BUILD_ROOT/usr/local/share/griffon/samples
+install -d $RPM_BUILD_ROOT/usr/local/share/griffon/
+for entry in `ls .`
+do
+    if (test -d ${entry}) then
+        if (${entry} -ne archetypes guide samples src) then
+            install -d $RPM_BUILD_ROOT/usr/local/share/griffon/$entry
+            install -p ${entry}/* $RPM_BUILD_ROOT/usr/local/share/griffon/$entry/
+        else
+            cp -r ${entry} $RPM_BUILD_ROOT/usr/local/share/griffon/$entry
+        fi
+    fi
+    if (test -f ${entry}) then
+        install -p ${entry} $RPM_BUILD_ROOT/usr/local/share/griffon/$entry
+    fi
+done
 
 install -d $RPM_BUILD_ROOT/etc/profile.d
 echo "export GRIFFON_HOME=/usr/local/share/griffon" >$RPM_BUILD_ROOT/etc/profile.d/griffon.sh

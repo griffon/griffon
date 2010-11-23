@@ -1,0 +1,53 @@
+<project name="groovyedit" default="test">
+
+    <condition property="griffon" value="griffon.bat">
+        <os family="windows"/>
+    </condition>
+    <property name="griffon" value="griffon" />
+
+	<!-- ================================= 
+          target: clean              
+         ================================= -->
+    <target name="clean" description="--> Cleans a Griffon application">
+		<exec executable="${griffon}" failonerror="true">
+			<arg value="clean"/>
+		</exec>                               
+    </target>
+
+    <!-- =================================
+          target: package
+         ================================= -->
+    <target name="package" description="--> Packages up Griffon artifacts">
+        <exec executable="${griffon}" failonerror="true">
+            <arg value="package"/>
+        </exec>
+    </target>
+
+    <!-- =================================
+          target: run-app
+         ================================= -->
+    <target name="run-app" description="--> Run a Griffon application in standalone mode">
+        <exec executable="${griffon}" failonerror="true">
+            <arg value="run-app"/>
+        </exec>
+    </target>
+
+    <!-- =================================
+          target: test
+         ================================= -->
+    <target name="test" description="--> Run a Griffon applications unit tests">
+        <exec executable="${griffon}" failonerror="true">
+            <arg value="test-app"/>
+        </exec>
+    </target>
+
+    <!-- =================================
+          target: dist
+         ================================= -->
+    <target name="dist" description="--> Packages up Griffon artifacts in the Production Environment">
+        <exec executable="${griffon}" failonerror="true">
+            <arg value="prod"/>
+            <arg value="package"/>
+        </exec>
+    </target>
+</project>

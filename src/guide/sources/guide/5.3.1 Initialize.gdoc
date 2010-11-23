@@ -1,9 +1,0 @@
-The initialization phase is the first to be called by the application's life cycle. The application instance has just been created and its configuration has been read. No other artifact has been created at this point, which means that [event publishing|guide:applicationEvents] and the @ArtifactManager@ are not yet available.
-
-This phase is typically used to tweak the application for the current platform, including its Look and Feel.
-
-[Addons|guide:addons] will be initialized during this phase
-
-{note}
-The @Initialize@ script will be called right after the configuration has been read but before addons are initialized. You *wont* have access to addon contributions.
-{note}
