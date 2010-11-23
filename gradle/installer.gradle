@@ -97,6 +97,11 @@ task dmg(dependsOn: [distBinary]) {
             from("$buildDir/distributions/binary")
             into "$dmgDir/griffon-${version}"
         }
+        copy {
+            from('installer/dmg')
+            into dmgDir
+            filter(ReplaceTokens, tokens: ['griffon.version': version])
+        }
     
         ant.exec(executable: 'hdiutil') {
             arg(line: "create -srcfolder $dmgDir $buildDir/distributions//griffon-${version}-bin.dmg")
