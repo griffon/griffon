@@ -115,17 +115,7 @@ public abstract class AbstractGriffonClass implements GriffonClass {
 
     public Object newInstance() {
         try {
-            Object instance = GriffonApplicationHelper.newInstance(app, clazz, type);
-            MetaClass metaClass = getMetaClass();
-            // GriffonApplicationHelper.enhance(app, clazz, metaClass, instance);
-            if (instance instanceof GroovyObject) {
-                log.debug("Setting MetaClass "+metaClass+" on GroovyObject "+instance);
-                ((GroovyObject)instance).setMetaClass(metaClass);
-            } else {
-                log.debug("Setting MetaClass "+metaClass+" on non-GroovyObject "+instance);
-                GroovySystem.getMetaClassRegistry().setMetaClass(clazz, metaClass);
-            }
-            return instance;
+            return GriffonApplicationHelper.newInstance(app, clazz, type);
         } catch (Exception e) {
             Throwable targetException = null;
             if (e instanceof InvocationTargetException) {
@@ -133,7 +123,7 @@ public abstract class AbstractGriffonClass implements GriffonClass {
             } else {
                 targetException = e;
             }
-            throw new NewInstanceCreationException("Could not create a new instance of class [" + getClazz().getName() + "]!", targetException);
+            throw new NewInstanceCreationException("Could not create a new instance of class [" + clazz.getName() + "]!", targetException);
         }
     }
 
@@ -330,14 +320,7 @@ public abstract class AbstractGriffonClass implements GriffonClass {
      * @return the metaClass
      */
     public MetaClass getMetaClass() {
-        MetaClass metaClass = GroovySystem.getMetaClassRegistry().getMetaClass(clazz);
-        if(!(metaClass instanceof ExpandoMetaClass)) {
-            metaClass = new ExpandoMetaClass(clazz, true, true);
-            log.debug("Upgrading MetaClass to "+metaClass);
-            metaClass.initialize();
-            GroovySystem.getMetaClassRegistry().setMetaClass(clazz, metaClass);
-        }
-        return metaClass;
+        return GriffonApplicationHelper.expandoMetaClassFor(clazz);
     }
 
     public void setMetaClass(MetaClass metaClass) {

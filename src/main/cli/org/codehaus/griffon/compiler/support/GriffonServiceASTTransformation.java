@@ -45,7 +45,8 @@ public class GriffonServiceASTTransformation extends GriffonArtifactASTTransform
     private static final ClassNode ABSTRACT_GRIFFON_SERVICE_CLASS = ClassHelper.makeWithoutCaching(AbstractGriffonService.class);    
     
     protected void transform(ClassNode classNode, SourceUnit source, String artifactPath) {
-        if(!ARTIFACT_PATH.equals(artifactPath)) return;
+        if(!ARTIFACT_PATH.equals(artifactPath) || !classNode.getName().endsWith(GriffonServiceClass.TRAILING)) return;
+
         if(ClassHelper.OBJECT_TYPE.equals(classNode.getSuperClass())) {
             classNode.setSuperClass(ABSTRACT_GRIFFON_SERVICE_CLASS);
         } else if(!classNode.implementsInterface(GRIFFON_SERVICE_CLASS)){

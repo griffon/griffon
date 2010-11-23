@@ -54,13 +54,13 @@ class GriffonApplicationHelper {
      * @return an ExpandoMetaClass
      */
     static MetaClass expandoMetaClassFor(Class clazz) {
-        MetaClass metaClass = GroovySystem.getMetaClassRegistry().getMetaClass(clazz)
-        if(!(metaClass instanceof ExpandoMetaClass)) {
-            metaClass = new ExpandoMetaClass(clazz, true, true)
-            metaClass.initialize()
-            GroovySystem.getMetaClassRegistry().setMetaClass(clazz, metaClass)
+        MetaClass mc = GroovySystem.getMetaClassRegistry().getMetaClass(clazz)
+        if(!(mc instanceof ExpandoMetaClass)) {
+            mc = new ExpandoMetaClass(clazz, true, true)
+            mc.initialize()
+            GroovySystem.getMetaClassRegistry().setMetaClass(clazz, mc)
         }
-        return metaClass
+        return mc
     }
     
     /**
@@ -193,7 +193,7 @@ class GriffonApplicationHelper {
         def instance = klass.newInstance()
 
         GriffonClass griffonClass = ArtifactManager.instance.findGriffonClass(klass)
-        MetaClass mc = griffonClass?.getMetaClass() ?: klass.getMetaClass()
+        MetaClass mc = griffonClass?.getMetaClass() ?: expandoMetaClassFor(klass)
         enhance(app, klass, mc, instance)
 
         app.event('NewInstance',[klass,type,instance])
@@ -267,7 +267,13 @@ class GriffonApplicationHelper {
             } else {
                 // otherwise create a new value
                 GriffonClass griffonClass = griffonClassMap[k]
-                def instance = griffonClass?.newInstance() ?: newInstance(app, v, k)
+                // def instance = griffonClass?.newInstance() ?: newInstance(app, v, k)
+                def instance = null
+                if(griffonClass) {
+                    instance = griffonClass.newInstance()
+                } else {
+                    instance = newInstance(app, v, k)
+                }
                 instanceMap[k] = instance
                 argsCopy[k] = instance
 
@@ -281,7 +287,7 @@ class GriffonApplicationHelper {
         argsCopy.builder = builder
         
         // special case --
-        // controller are added as application listeners
+        // controllers are added as application listeners
         // addApplicationListener method is null safe
         app.addApplicationEventListener(instanceMap.controller)
 
@@ -359,9 +365,9 @@ class GriffonApplicationHelper {
             metaClass.newInstance = {Object... args ->
                 GriffonApplicationHelper.newInstance(app, *args)
             }
-            metaClass.getGriffonClass = {c ->
-                ArtifactManager.instance.findGriffonClass(c)
-            }.curry(klass)
+            // metaClass.getGriffonClass = {c ->
+            //     ArtifactManager.instance.findGriffonClass(c)
+            // }.curry(klass)
             UIThreadHelper.enhance(metaClass)
         }
     }

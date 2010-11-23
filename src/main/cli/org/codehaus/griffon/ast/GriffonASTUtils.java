@@ -236,6 +236,12 @@ public class GriffonASTUtils {
 	    return new ArgumentListExpression(vars);
     }
 
+    public static ArgumentListExpression args(Expression... expressions) {
+	    List<Expression> args = new ArrayList<Expression>();
+	    for(Expression expression : expressions) { args.add(expression); }
+	    return new ArgumentListExpression(args);
+    }
+
     public static VariableExpression var(String name) {
 	    return new VariableExpression(name);
     }
@@ -289,6 +295,38 @@ public class GriffonASTUtils {
                 new ReturnStatement(falseExpr)
         );
     }
+    
+    public static Statement ifs_no_return(Expression cond, Expression trueExpr) {
+        return new IfStatement(
+                cond instanceof BooleanExpression? (BooleanExpression) cond : new BooleanExpression(cond),
+                new ExpressionStatement(trueExpr),
+                new EmptyStatement()
+        );
+    }
+
+    public static Statement ifs_no_return(Expression cond, Expression trueExpr, Expression falseExpr) {
+        return new IfStatement(
+                cond instanceof BooleanExpression? (BooleanExpression) cond : new BooleanExpression(cond),
+                new ExpressionStatement(trueExpr),
+                new ExpressionStatement(falseExpr)
+        );
+    }
+
+    public static Statement ifs_no_return(Expression cond, Statement trueStmnt) {
+        return new IfStatement(
+                cond instanceof BooleanExpression? (BooleanExpression) cond : new BooleanExpression(cond),
+                trueStmnt,
+                new EmptyStatement()
+        );
+    }
+
+    public static Statement ifs_no_return(Expression cond, Statement trueStmnt, Statement falseStmnt) {
+        return new IfStatement(
+                cond instanceof BooleanExpression? (BooleanExpression) cond : new BooleanExpression(cond),
+                trueStmnt,
+                falseStmnt
+        );
+    }
 
     public static Statement decls(Expression lhv, Expression rhv) {
         return new ExpressionStatement(new DeclarationExpression(lhv, ASSIGN, rhv));
@@ -326,11 +364,35 @@ public class GriffonASTUtils {
         return new BinaryExpression(lhv, INSTANCEOF, rhv);
     }
     
+    public static BinaryExpression iof(Expression lhv, ClassNode rhv) {
+        return new BinaryExpression(lhv, INSTANCEOF, new ClassExpression(rhv));
+    }
+    
     public static Expression prop(Expression owner, String property) {
         return new PropertyExpression(owner, property);
     }
     
     public static Expression prop(Expression owner, Expression property) {
         return new PropertyExpression(owner, property);
+    }
+    
+    public static MethodCallExpression call(Expression receiver, String methodName, ArgumentListExpression args) {
+        return new MethodCallExpression(receiver, methodName, args);
+    }
+    
+    public static StaticMethodCallExpression call(ClassNode receiver, String methodName, ArgumentListExpression args) {
+        return new StaticMethodCallExpression(receiver, methodName, args);
+    }
+    
+    public static ExpressionStatement stmnt(Expression expression) {
+        return new ExpressionStatement(expression);
+    }
+    
+    public static FieldExpression field(FieldNode fieldNode) {
+        return new FieldExpression(fieldNode);
+    }
+    
+    public static FieldExpression field(ClassNode owner, String fieldName) {
+        return new FieldExpression(owner.getField(fieldName));
     }
 }

@@ -43,7 +43,8 @@ public class GriffonModelASTTransformation extends GriffonArtifactASTTransformat
     private static final ClassNode ABSTRACT_GRIFFON_MODEL_CLASS = ClassHelper.makeWithoutCaching(AbstractGriffonModel.class);    
     
     protected void transform(ClassNode classNode, SourceUnit source, String artifactPath) {
-        if(!ARTIFACT_PATH.equals(artifactPath)) return;
+        if(!ARTIFACT_PATH.equals(artifactPath) || !classNode.getName().endsWith(GriffonModelClass.TRAILING)) return;
+
         if(ClassHelper.OBJECT_TYPE.equals(classNode.getSuperClass())) {
             classNode.setSuperClass(ABSTRACT_GRIFFON_MODEL_CLASS);
         } else if(!classNode.implementsInterface(GRIFFON_MODEL_CLASS)){

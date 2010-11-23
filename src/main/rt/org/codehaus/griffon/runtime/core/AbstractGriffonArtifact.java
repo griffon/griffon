@@ -24,6 +24,7 @@ import griffon.util.UIThreadHelper;
 
 import groovy.lang.MetaClass;
 import groovy.lang.Closure;
+import groovy.lang.GroovySystem;
 import groovy.lang.GroovyObjectSupport;
 import java.util.concurrent.Callable;
 import java.util.concurrent.Future;
@@ -45,6 +46,11 @@ public abstract class AbstractGriffonArtifact extends GroovyObjectSupport implem
     private GriffonApplication app;
     private final Logger log;
     
+    public static MetaClass metaClassOf(GriffonArtifact artifact) {
+        if(artifact == null) return null;
+        return GriffonApplicationHelper.expandoMetaClassFor(artifact.getClass());
+    }
+    
     public AbstractGriffonArtifact() {
         log = LoggerFactory.getLogger("griffon.app."+ getArtifactType() +"."+getClass().getName());
     }
@@ -64,8 +70,11 @@ public abstract class AbstractGriffonArtifact extends GroovyObjectSupport implem
     }
 
     public MetaClass getMetaClass() {
-        GriffonClass griffonClass = getGriffonClass();
-        return (griffonClass != null)? getGriffonClass().getMetaClass() : GriffonApplicationHelper.expandoMetaClassFor(getClass());
+        return metaClassOf(this);
+    }
+    
+    public void setMetaClass(MetaClass metaClass) {
+        GroovySystem.getMetaClassRegistry().setMetaClass(getClass(), metaClass);
     }
 
     public GriffonClass getGriffonClass() {

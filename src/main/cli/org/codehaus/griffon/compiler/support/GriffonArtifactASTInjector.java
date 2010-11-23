@@ -16,6 +16,8 @@
 
 package org.codehaus.griffon.compiler.support;
 
+import groovy.lang.GroovySystem;
+import groovy.lang.ExpandoMetaClass;
 import org.codehaus.groovy.ast.*;
 import org.codehaus.groovy.ast.expr.*;
 import org.codehaus.groovy.ast.stmt.*;
@@ -25,6 +27,7 @@ import griffon.core.GriffonClass;
 import griffon.core.ArtifactManager;
 import griffon.util.UIThreadHelper;
 import org.codehaus.griffon.runtime.util.GriffonApplicationHelper;
+import org.codehaus.griffon.runtime.core.AbstractGriffonArtifact;
 
 import java.util.*;
 import java.util.concurrent.Callable;
@@ -54,12 +57,21 @@ public class GriffonArtifactASTInjector implements ASTInjector {
     private static final ClassNode RUNNABLE_CLASS = ClassHelper.makeWithoutCaching(Runnable.class);
     private static final ClassNode LOGGER_CLASS = ClassHelper.makeWithoutCaching(Logger.class);
     private static final ClassNode LOGGER_FACTORY_CLASS = ClassHelper.makeWithoutCaching(LoggerFactory.class);
+    private static final ClassNode GROOVY_SYSTEM_CLASS = ClassHelper.makeWithoutCaching(GroovySystem.class);
+    private static final ClassNode ABSTRACT_GRIFFON_ARTIFACT_CLASS = ClassHelper.makeWithoutCaching(AbstractGriffonArtifact.class);
+    private static final ClassNode EXPANDO_METACLASS_CLASS = ClassHelper.makeWithoutCaching(ExpandoMetaClass.class);
     public static final String APP = "app";
     
     public void inject(ClassNode classNode, String artifactType) {
         // GriffonApplication getApp()
         // void setApp(GriffonApplication app)
         classNode.addProperty(APP, ACC_PUBLIC, GRIFFON_APPLICATION_CLASS, null, null, null);
+
+        FieldNode _metaClass = classNode.addField(
+            "_metaClass",
+            ACC_PRIVATE | ACC_SYNTHETIC,
+            ClassHelper.METACLASS_TYPE,
+            ConstantExpression.NULL);
 
         // MetaClass getMetaClass()
         classNode.addMethod(new MethodNode(
@@ -68,13 +80,45 @@ public class GriffonArtifactASTInjector implements ASTInjector {
             ClassHelper.METACLASS_TYPE,
             Parameter.EMPTY_ARRAY,
             ClassNode.EMPTY_ARRAY,
-            returns(new MethodCallExpression(
-                new MethodCallExpression(
-                    THIS,
-                    "getGriffonClass",
-                     NO_ARGS),
-                "getMetaClass",
-                NO_ARGS))
+            
+            /*
+            if(_metaClass != null) return _metaClass
+            MetaClass mc = null
+            if(this instanceof GroovyObject)  mc = super.getMetaClass()
+            if(mc instanceof ExpandoMetaClass) _metaClass = mc
+            else _metaClass = AbstractGriffonArtifact.metaClassOf(this)
+            return _metaClass
+            */
+            block(             
+                ifs(
+                    ne(field(_metaClass), ConstantExpression.NULL),
+                    field(_metaClass)
+                ),
+                decls(var("mc", ClassHelper.METACLASS_TYPE), ConstantExpression.NULL),
+                ifs_no_return(
+                    iof(THIS, EXPANDO_METACLASS_CLASS),
+                    assigns(field(_metaClass), var("mc")),
+                    assigns(field(_metaClass), call(ABSTRACT_GRIFFON_ARTIFACT_CLASS, "metaClassOf", args(THIS)))
+                ),
+                returns(field(_metaClass))
+            )
+        ));
+        
+        // void setMetaClass(MetaClass mc)
+        classNode.addMethod(new MethodNode(
+            "setMetaClass",
+            ACC_PUBLIC,
+            ClassHelper.VOID_TYPE,
+            params(param(ClassHelper.METACLASS_TYPE, "mc")),
+            ClassNode.EMPTY_ARRAY,
+            block(
+                assigns(field(_metaClass), var("mc")),
+                stmnt(call(
+                    call(GROOVY_SYSTEM_CLASS, "getMetaClassRegistry", NO_ARGS),
+                    "setMetaClass",
+                    args(call(THIS, "getClass()", NO_ARGS), var("mc"))
+                ))
+            )
         ));
         
         // GriffonClass getGriffonClass()
@@ -84,13 +128,13 @@ public class GriffonArtifactASTInjector implements ASTInjector {
             GRIFFON_CLASS_CLASS,
             Parameter.EMPTY_ARRAY,
             ClassNode.EMPTY_ARRAY,
-            returns(new MethodCallExpression(
-                new StaticMethodCallExpression(
+            returns(call(
+                call(
                     ARTIFACT_MANAGER_CLASS,
                     "getInstance",
                      NO_ARGS),
                 "findGriffonClass",
-                new ArgumentListExpression(new ClassExpression(classNode))))
+                args(classx(classNode))))
         ));
     
         // Object newInstance()
@@ -98,11 +142,11 @@ public class GriffonArtifactASTInjector implements ASTInjector {
             "newInstance",
             ACC_PUBLIC,
             ClassHelper.OBJECT_TYPE,
-            new Parameter[]{
-                new Parameter(ClassHelper.CLASS_Type, "clazz"),
-                new Parameter(ClassHelper.STRING_TYPE, "type")},
+            params(
+                param(ClassHelper.CLASS_Type, "clazz"),
+                param(ClassHelper.STRING_TYPE, "type")),
             ClassNode.EMPTY_ARRAY,
-            returns(new StaticMethodCallExpression(
+            returns(call(
                 GAH_CLASS,
                 "newInstance",
                 vars(APP, "clazz", "type")))
@@ -115,7 +159,7 @@ public class GriffonArtifactASTInjector implements ASTInjector {
             ClassHelper.boolean_TYPE,
             Parameter.EMPTY_ARRAY,
             ClassNode.EMPTY_ARRAY,
-            returns(new MethodCallExpression(
+            returns(call(
                 uiThreadHelperInstance(),
                 "isUIThread",
                 NO_ARGS))
@@ -126,11 +170,11 @@ public class GriffonArtifactASTInjector implements ASTInjector {
             "execAsync",
             ACC_PUBLIC,
             ClassHelper.VOID_TYPE,
-            new Parameter[]{new Parameter(RUNNABLE_CLASS, "runnable")},
+            params(param(RUNNABLE_CLASS, "runnable")),
             ClassNode.EMPTY_ARRAY,
-            new ExpressionStatement(new MethodCallExpression(
+            stmnt(call(
                 uiThreadHelperInstance(),
-                "execAsync",
+                "executeAsync",
                 vars("runnable")))
         ));
     
@@ -139,11 +183,11 @@ public class GriffonArtifactASTInjector implements ASTInjector {
             "execSync",
             ACC_PUBLIC,
             ClassHelper.VOID_TYPE,
-            new Parameter[]{new Parameter(RUNNABLE_CLASS, "runnable")},
+            params(param(RUNNABLE_CLASS, "runnable")),
             ClassNode.EMPTY_ARRAY,
-            new ExpressionStatement(new MethodCallExpression(
+            stmnt(call(
                 uiThreadHelperInstance(),
-                "execSync",
+                "executeSync",
                 vars("runnable")))
         ));
     
@@ -152,11 +196,11 @@ public class GriffonArtifactASTInjector implements ASTInjector {
             "execOutside",
             ACC_PUBLIC,
             ClassHelper.VOID_TYPE,
-            new Parameter[]{new Parameter(RUNNABLE_CLASS, "runnable")},
+            params(param(RUNNABLE_CLASS, "runnable")),
             ClassNode.EMPTY_ARRAY,
-            new ExpressionStatement(new MethodCallExpression(
+            stmnt(call(
                 uiThreadHelperInstance(),
-                "execOutside",
+                "executeOutside",
                 vars("runnable")))
         ));
     
@@ -165,11 +209,11 @@ public class GriffonArtifactASTInjector implements ASTInjector {
             "execFuture",
             ACC_PUBLIC,
             FUTURE_CLASS,
-            new Parameter[]{new Parameter(ClassHelper.CLOSURE_TYPE, "closure")},
+            params(param(ClassHelper.CLOSURE_TYPE, "closure")),
             ClassNode.EMPTY_ARRAY,
-            returns(new MethodCallExpression(
+            returns(call(
                 uiThreadHelperInstance(),
-                "execFuture",
+                "executeFuture",
                 vars("closure")))
         ));
     
@@ -178,13 +222,13 @@ public class GriffonArtifactASTInjector implements ASTInjector {
             "execFuture",
             ACC_PUBLIC,
             FUTURE_CLASS,
-            new Parameter[]{
-                new Parameter(EXECUTOR_SERVICE_CLASS, "executorService"),
-                new Parameter(ClassHelper.CLOSURE_TYPE, "closure")},
+            params(
+                param(EXECUTOR_SERVICE_CLASS, "executorService"),
+                param(ClassHelper.CLOSURE_TYPE, "closure")),
             ClassNode.EMPTY_ARRAY,
-            returns(new MethodCallExpression(
+            returns(call(
                 uiThreadHelperInstance(),
-                "execFuture",
+                "executeFuture",
                 vars("executorService", "closure")))
         ));
     
@@ -193,11 +237,11 @@ public class GriffonArtifactASTInjector implements ASTInjector {
             "execFuture",
             ACC_PUBLIC,
             FUTURE_CLASS,
-            new Parameter[]{new Parameter(CALLABLE_CLASS, "callable")},
+            params(param(CALLABLE_CLASS, "callable")),
             ClassNode.EMPTY_ARRAY,
-            returns(new MethodCallExpression(
+            returns(call(
                 uiThreadHelperInstance(),
-                "execFuture",
+                "executeFuture",
                 vars("callable")))
         ));
     
@@ -206,13 +250,13 @@ public class GriffonArtifactASTInjector implements ASTInjector {
             "execFuture",
             ACC_PUBLIC,
             FUTURE_CLASS,
-            new Parameter[]{
-                new Parameter(EXECUTOR_SERVICE_CLASS, "executorService"),
-                new Parameter(CALLABLE_CLASS, "callable")},
+            params(
+                param(EXECUTOR_SERVICE_CLASS, "executorService"),
+                param(CALLABLE_CLASS, "callable")),
             ClassNode.EMPTY_ARRAY,
-            returns(new MethodCallExpression(
+            returns(call(
                 uiThreadHelperInstance(),
-                "execFuture",
+                "executeFuture",
                 vars("executorService", "callable")))
         ));
         
@@ -221,10 +265,10 @@ public class GriffonArtifactASTInjector implements ASTInjector {
             "this$logger",
             ACC_FINAL | ACC_PRIVATE | ACC_SYNTHETIC,
             LOGGER_CLASS,
-            new StaticMethodCallExpression(
+            call(
                 LOGGER_FACTORY_CLASS,
                 "getLogger",
-                 new ArgumentListExpression(new ConstantExpression(loggerCategory)))
+                args(constx(loggerCategory)))
         );
         
         // Logger getLog()
@@ -234,7 +278,7 @@ public class GriffonArtifactASTInjector implements ASTInjector {
             LOGGER_CLASS,
             Parameter.EMPTY_ARRAY,
             ClassNode.EMPTY_ARRAY,
-            returns(new FieldExpression(loggerField))
+            returns(field(loggerField))
         ));
     }
 
