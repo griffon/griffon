@@ -131,6 +131,7 @@ apply {
 task fullDist(dependsOn: [zipGuide, zipBinary, zipSource, tarBinary, tarSource, izpack, deb]) {
     description = "Assembles all packages."
 }
+
 task bambooStage1(dependsOn: [clean, test]) {
     description = "Makes a full test run and assembles all packages."
 }

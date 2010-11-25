@@ -7,6 +7,15 @@ artifacts {
     archives jarResources
 }
 
+configurations {
+    deployerJars
+}
+
+dependencies {
+    deployerJars 'org.apache.maven.wagon:wagon-webdav:1.0-beta-2',
+                 'org.apache.maven:maven-ant-tasks:2.1.0'
+}
+
 collectDependencies = { type ->
     configurations."${type}".allDependencies.grep(ExternalModuleDependency).collect([]) { dependency ->
         org.apache.maven.model.Dependency mavenDependency = new org.apache.maven.model.Dependency()
@@ -65,10 +74,20 @@ artifactData.scripts.dependencies = [
 
 installer = install.repositories.mavenInstaller
 def deployer = null
+
 uploadArchives {
     repositories {
         deployer = mavenDeployer {
-            repository(url: "file://${System.getProperty('user.home')}/.m2/repository/")
+            name = 'codehausDeployer'
+            configuration = configurations.deployerJars
+            uploadDescriptor = true
+            repository(url: codehausReleaseUrl) {
+                authentication(userName: codehausUsername, password: codehausPassword)
+            }
+            snapshotRepository(url: codehausSnapshotUrl) {
+                uniqueVersion = false
+                authentication(userName: codehausUsername, password: codehausPassword)
+            }
         }
     }
 }
@@ -90,7 +109,20 @@ uploadArchives {
                         url 'http://www.apache.org/licenses/LICENSE-2.0.txt'
                         distribution 'repo'
                     }
-                }
+                }/*
+                distributionManagement {
+                    repository {
+                        id('codehaus.org')
+                        name('Griffon Central Repository')
+                        url('dav:https://dav.codehaus.org/repository/griffon/')
+                    }
+                    snapshotRepository {
+                        uniqueVersion('false')
+                        id('codehaus.org')
+                        name('Griffon Central Development Repository')
+                        url('dav:https://dav.codehaus.org/snapshots.repository/griffon/')
+                    }
+                }*/
                 repositories {
                     repository {
                         id('codehaus-release')
