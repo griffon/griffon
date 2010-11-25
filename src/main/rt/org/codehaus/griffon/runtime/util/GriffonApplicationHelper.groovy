@@ -20,7 +20,6 @@ import griffon.core.GriffonApplication
 import griffon.core.ArtifactManager
 import griffon.core.GriffonArtifact
 import griffon.core.GriffonMvcArtifact
-import griffon.core.GriffonView
 import org.codehaus.griffon.runtime.builder.UberBuilder
 import org.codehaus.griffon.runtime.core.ModelArtifactHandler
 import org.codehaus.griffon.runtime.core.ViewArtifactHandler
@@ -29,7 +28,6 @@ import org.codehaus.griffon.runtime.core.ServiceArtifactHandler
 import griffon.util.Metadata
 import griffon.util.Environment
 import griffon.util.UIThreadHelper
-import griffon.util.GriffonClassUtils
 import org.codehaus.groovy.runtime.InvokerHelper
 
 import org.codehaus.griffon.runtime.logging.Log4jConfig

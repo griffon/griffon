@@ -14,7 +14,6 @@
  * limitations under the License.
  */
 
-import griffon.util.BuildSettings
 import griffon.util.GriffonUtil
 
 import groovy.xml.MarkupBuilder
@@ -28,7 +27,6 @@ import org.codehaus.griffon.plugins.DefaultGriffonPluginManager
 import org.codehaus.griffon.plugins.PluginManagerHolder
 import org.codehaus.griffon.resolve.IvyDependencyManager
 import org.springframework.core.io.Resource
-import griffon.util.PluginBuildSettings
 import griffon.util.Metadata
 import org.codehaus.griffon.resolve.GriffonRepoResolver
 import org.codehaus.griffon.resolve.PluginInstallEngine

@@ -15,7 +15,6 @@
  */
 package griffon.util
 
-import griffon.util.Metadata
 import groovyx.gpars.Asynchronizer
 
 import java.util.regex.Pattern
@@ -27,7 +26,6 @@ import org.apache.ivy.util.Message
 
 import org.codehaus.griffon.resolve.IvyDependencyManager
 import org.codehaus.groovy.runtime.StackTraceUtils
-import java.util.concurrent.ConcurrentHashMap
 
 /**
  * <p>Represents the project paths and other build settings

@@ -31,7 +31,6 @@ import org.apache.log4j.PatternLayout
 import org.apache.log4j.RollingFileAppender
 import org.apache.log4j.SimpleLayout
 import org.apache.log4j.helpers.LogLog
-import org.apache.log4j.net.SMTPAppender
 import org.apache.log4j.varia.NullAppender
 import org.apache.log4j.xml.XMLLayout
 

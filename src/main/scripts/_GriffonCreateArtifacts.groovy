@@ -16,7 +16,6 @@
 
 import org.springframework.core.io.FileSystemResource
 import griffon.util.GriffonUtil
-import griffon.util.Metadata
 
 /**
  * Gant script for creating Griffon artifacts of all sorts.

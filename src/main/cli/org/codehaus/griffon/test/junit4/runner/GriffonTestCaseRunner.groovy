@@ -21,7 +21,6 @@ import org.codehaus.griffon.test.junit4.JUnit4GriffonTestType
 import org.junit.runners.BlockJUnit4ClassRunner
 import org.junit.runners.model.FrameworkMethod
 import org.junit.runners.model.Statement
-import org.junit.runner.notification.RunNotifier
 import org.junit.internal.runners.statements.RunAfters
 import org.junit.internal.runners.statements.RunBefores
 import org.junit.internal.runners.statements.Fail
@@ -31,7 +30,6 @@ import org.springframework.util.ReflectionUtils
 
 import org.codehaus.griffon.test.GriffonTestTargetPattern
 import org.codehaus.griffon.test.support.GriffonTestMode
-import org.codehaus.griffon.test.support.GriffonTestInterceptor
 
 import java.lang.reflect.InvocationTargetException
 
