@@ -42,7 +42,7 @@ eclipseClasspathLibs = {
     if (griffonHome) {
         (new File("${griffonHome}/lib")).eachFileMatch(~/.*\.jar/) {file ->
             if (!file.name.startsWith("gant-")) {
-                result += "<classpathentry kind=\"var\" path=\"GRIFFON_HOME/lib/${file.name}\" />\n\n"
+                result += "    <classpathentry kind=\"var\" path=\"GRIFFON_HOME/lib/${file.name}\" />\n"
             }
         }
     }

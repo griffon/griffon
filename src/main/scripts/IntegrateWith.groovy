@@ -98,7 +98,7 @@ target(integrateIntellij:"Integrates Intellij with Griffon") {
 target(replaceTokens:"Replaces any tokens in the files") {
     def appKey = griffonAppName.replaceAll( /\s/, '.' ).toLowerCase()
     ant.replace(dir:"${basedir}", includes:"*.*") {
-        replacefilter(token:"@griffon.intellij.libs@", value: intellijClasspathLibs())
+        replacefilter(token: "@griffon.intellij.libs@", value: intellijClasspathLibs())
         replacefilter(token: "@griffon.libs@", value: eclipseClasspathLibs())
         replacefilter(token: "@griffon.jar@", value: eclipseClasspathGriffonJars())
         replacefilter(token: "@griffon.version@", value: griffonVersion)
@@ -131,12 +131,12 @@ intellijClasspathLibs = {
 }
 
 // Generates Eclipse .classpath entries for the Griffon distribution
-// JARs. This only works if $GRAILS_HOME is set.
+// JARs. This only works if $GRIFFON_HOME is set.
 eclipseClasspathGriffonJars = {args ->
     result = ''
     if (griffonHome) {
         (new File("${griffonHome}/dist")).eachFileMatch(~/^griffon-.*\.jar/) {file ->
-            result += "<classpathentry kind=\"var\" path=\"GRAILS_HOME/dist/${file.name}\" />\n\n"
+            result += "    <classpathentry kind=\"var\" path=\"GRIFFON_HOME/dist/${file.name}\" />\n"
         }
     }
     result
