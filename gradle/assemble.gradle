@@ -159,6 +159,7 @@ task zipBinary(type: Zip) {
     dependsOn { distBinary }
     classifier = 'bin'
     from "$buildDir/distributions/binary"
+    fileMode = 755
 }
 
 task zipSource(type: Zip) {
@@ -174,6 +175,7 @@ task tarBinary(type: Tar) {
     compression = Compression.GZIP
     classifier = 'bin'
     from "$buildDir/distributions/binary"
+    fileMode = 755
 }
 
 task tarSource(type: Tar) {
@@ -184,17 +186,26 @@ task tarSource(type: Tar) {
     from "$buildDir/distributions/source"
 }
 
-task installBinary(type: Copy, dependsOn: distBinary) {
-    description = 'Installs the binary distribution at $GRIFFON_HOME.'
-    def griffonHome = System.getProperty('griffon.home') ?: System.env['GRIFFON_HOME']
-    assert griffonHome : 'You must define a value for $GRIFFON_HOME first!'
+task griffonHome
+griffonHome.dir = null
 
-    println "===> \$GRIFFON_HOME is set to $griffonHome"
-    destinationDir = griffonHome as File
+task checkGriffonHome << {
+    griffonHome.dir = System.getProperty('griffon.home') ?: System.env['GRIFFON_HOME']
+    assert griffonHome.dir : 'You must define a value for $GRIFFON_HOME first!'
+    println "===> \$GRIFFON_HOME is set to $griffonHome.dir"
+}
+
+task installBinary(type: Copy, dependsOn: [checkGriffonHome, distBinary]) {
+    description = 'Installs the binary distribution at $GRIFFON_HOME.'
+    destinationDir = '/dev/null' as File
 
     from "$buildDir/distributions/binary"
 
+    doFirst {
+        destinationDir = griffonHome.dir as File
+    }
+
     doLast {
-        ant.chmod(dir: "$griffonHome/bin", excludes: '*.bat', perm: 'ugo+x')
+        ant.chmod(dir: "${griffonHome.dir}/bin", excludes: '*.bat', perm: 'ugo+x')
     }
 }
