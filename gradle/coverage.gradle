@@ -1,0 +1,63 @@
+cobSerFile = "${project.buildDir}/cobertura.ser"
+rtOriginal = "${sourceSets.rt.classesDir}"
+rtCopy = "${rtOriginal}-copy"
+cliOriginal = "${sourceSets.cli.classesDir}"
+cliCopy = "${cliOriginal}-copy"
+
+configurations {
+    cobertura
+}
+
+dependencies {
+    cobertura 'net.sourceforge.cobertura:cobertura:1.9.3',
+              'junit:junit:4.8.1'
+}
+
+test.doFirst  {
+    if(project.hasProperty('withCobertura')) {
+        ant {
+            // delete data file for cobertura, otherwise coverage would be added
+            delete(file: cobSerFile, failonerror:false)
+            // delete copy of original classes
+            delete(dir: rtCopy, failonerror:false)
+            delete(dir: cliCopy, failonerror:false)
+            // import cobertura task, so it is available in the script
+            taskdef(resource:'tasks.properties', classpath: configurations.cobertura.asPath)
+            // create copy (backup) of original class files
+            copy(todir: rtCopy) {
+                fileset(dir: rtOriginal)
+            }
+            copy(todir: cliCopy) {
+                fileset(dir: cliOriginal)
+            }
+            // instrument the relevant classes in-place
+            'cobertura-instrument'(datafile: cobSerFile) {
+                fileset(dir: rtOriginal, includes: '**/*.class')
+                fileset(dir: cliOriginal, includes: '**/*.class')
+            }
+        }
+    }
+}
+
+test {
+    systemProperties = ['net.sourceforge.cobertura.datafile': cobSerFile]
+    classpath += configurations.cobertura
+}
+
+test.doLast {
+    if(project.hasProperty('withCobertura') && new File(rtCopy).exists() && new File(cliCopy).exists()) {
+        // replace instrumented classes with backup copy again
+        ant {
+            delete(file: rtOriginal)
+            move(file: rtCopy, tofile: rtOriginal)
+            delete(file: cliOriginal)
+            move(file: cliCopy, tofile: cliOriginal)
+        }
+        // create cobertura reports
+        ant.'cobertura-report'(destdir:"${project.buildDirName}/reports/coverage",
+             format: 'html', datafile: cobSerFile) {
+            fileset(dir: 'src/main/rt')
+            fileset(dir: 'src/main/cli')
+        }
+    }
+}

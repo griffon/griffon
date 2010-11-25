@@ -127,6 +127,7 @@ apply {
     from 'gradle/docs.gradle'
     from 'gradle/installer.gradle'
     from 'gradle/maven.gradle'
+    from 'gradle/coverage.gradle'
 }
 
 task fullDist(dependsOn: [zipGuide, zipBinary, zipSource, tarBinary, tarSource, izpack, deb]) {
