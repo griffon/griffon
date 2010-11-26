@@ -39,7 +39,7 @@ import org.slf4j.Logger;
  */
 public interface GriffonApplication {
     /**
-     * Gets the application's configuration set on 'aaplication.properties'.<p>
+     * Gets the application's configuration set on 'application.properties'.<p>
      */
     Metadata getMetadata();
 
@@ -247,6 +247,11 @@ public interface GriffonApplication {
 
     // ----------------------------
 
+    /**
+     * Returns the application's ArtifactManager instance.
+     *
+     * @return the application's ArtifactManager
+     */
     ArtifactManager getArtifactManager();
 
     /**
