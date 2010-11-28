@@ -138,7 +138,13 @@ class BaseGriffonApplication implements GriffonApplication {
         for(handler in shutdownHandlers) {
             if(!handler.canShutdown(appDelegate)) {
                 event('ShutdownAborted',[appDelegate])
-                log.debug("Shutdown aborted by $handler")
+                if(log.isDebugEnabled()) {
+                  try {
+                    log.debug("Shutdown aborted by $handler")
+                  }catch(e) {
+                    log.debug("Shutdown aborted by an handler")
+                  }
+                }
                 return false
             }
         }
