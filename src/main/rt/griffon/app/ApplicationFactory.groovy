@@ -18,7 +18,6 @@ package griffon.app
 import java.awt.Component
 import java.awt.Window
 import javax.swing.*
-import griffon.swing.SwingApplication
 import org.codehaus.groovy.runtime.InvokerHelper
 
 /**
@@ -81,10 +80,6 @@ class ApplicationFactory extends AbstractFactory {
             builder.addDisposalClosure(application.&dispose)
         }
         builder.containingWindows.add(window)
-
-        if(attributes.containsKey('hideBeforeHandler') && builder.app instanceof SwingApplication) {
-          builder.app.windowManager.hideBeforeHandler = attributes.remove('hideBeforeHandler')
-        }
 
         builder.context[DELEGATE_PROPERTY_DEFAULT_BUTTON] = attributes.remove("defaultButtonProperty") ?: DEFAULT_DELEGATE_PROPERTY_DEFAULT_BUTTON
         builder.context.defaultButtonDelegate =

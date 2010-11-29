@@ -44,8 +44,6 @@ public final class WindowManager implements ShutdownHandler {
     private final ComponentHelper componentHelper = new ComponentHelper();
     private final List<Window> windows = new CopyOnWriteArrayList<Window>();
 
-    private boolean hideBeforeHandler = false;
-
     /**
      * Creates a new WindowManager tied to an specific application.
      * @param app an application
@@ -132,30 +130,14 @@ public final class WindowManager implements ShutdownHandler {
     }
 
     /**
-     * Should the window be hidden before all ShutdownHandlers will be called ?
-     * @return current value
-     */
-    public boolean isHideBeforeHandler() {
-        return hideBeforeHandler;
-    }
-
-    /**
-     * Set if the window should be hidden before all ShutdownHandler will be called.
-     * @param hideBeforeHandler new value
-     */
-    public void setHideBeforeHandler(boolean hideBeforeHandler) {
-        this.hideBeforeHandler = hideBeforeHandler;
-    }
-
-    /**
-     * WindowAdapter that optionally invokes hide() when the window is about to be closed.
+     * WindowAdapter that invokes hide() when the window is about to be closed.
      *
      * @author Andres Almiray
      */
     private class WindowHelper extends WindowAdapter {
         public void windowClosing(WindowEvent event) {
-            if(isHideBeforeHandler()) hide(event.getWindow());
-            
+            hide(event.getWindow());
+
             if(app.getPhase() == ApplicationPhase.SHUTDOWN) return;
             int visibleWindows = 0;
             for(Window window : windows) {
