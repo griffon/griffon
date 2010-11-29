@@ -75,6 +75,10 @@ artifactData.scripts.dependencies = [
 installer = install.repositories.mavenInstaller
 def deployer = null
 
+// GRIFFON-291 these properties should be optional
+if(!project.hasProperty('codehausUsername')) codehausUsername = ''
+if(!project.hasProperty('codehausPassword')) codehausPassword = ''
+
 uploadArchives {
     repositories {
         deployer = mavenDeployer {
