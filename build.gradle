@@ -1,5 +1,4 @@
 apply plugin: 'groovy'
-apply plugin: 'code-quality'
 
 sourceCompatibility = '1.5'
 targetCompatibility = '1.5'
@@ -121,6 +120,8 @@ configure([compileJava, compileTestJava]) {
     options.debug = true
 }
 
+checkstyleConfigDir = file("config/checkstyle").absolutePath
+
 apply {
     from 'gradle/wrapper.gradle'
     from 'gradle/assemble.gradle'
@@ -128,6 +129,7 @@ apply {
     from 'gradle/installer.gradle'
     from 'gradle/maven.gradle'
     from 'gradle/coverage.gradle'
+	from 'gradle/codeQuality.gradle'
 }
 
 task fullDist(dependsOn: [zipGuide, zipBinary, zipSource, tarBinary, tarSource, izpack, deb]) {
