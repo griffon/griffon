@@ -18,13 +18,10 @@ package org.codehaus.griffon.plugins;
 import griffon.util.BuildScope;
 import griffon.util.Environment;
 import groovy.lang.GroovyObject;
-import groovy.util.slurpersupport.GPathResult;
 import org.codehaus.griffon.commons.GriffonContext;
-import org.springframework.beans.factory.support.BeanDefinitionRegistry;
 import org.springframework.core.type.filter.TypeFilter;
 
 import java.util.List;
-import java.util.Map;
 import java.util.Collection;
 
 /**

@@ -21,19 +21,11 @@ import org.codehaus.groovy.ast.expr.*;
 import org.codehaus.groovy.ast.stmt.*;
 import org.codehaus.groovy.control.CompilePhase;
 import org.codehaus.groovy.control.SourceUnit;
-import org.codehaus.groovy.control.messages.SimpleMessage;
-import org.codehaus.groovy.control.messages.SyntaxErrorMessage;
-import org.codehaus.groovy.runtime.MetaClassHelper;
-import org.codehaus.groovy.syntax.SyntaxException;
-import org.codehaus.groovy.syntax.Token;
-import org.codehaus.groovy.syntax.Types;
 import org.codehaus.groovy.transform.ASTTransformation;
 import org.codehaus.groovy.transform.GroovyASTTransformation;
-import org.codehaus.groovy.runtime.DefaultGroovyMethods;
 import org.objectweb.asm.Opcodes;
 
 import java.util.*;
-import java.lang.reflect.Modifier;
 import griffon.beans.Listener;
 
 import java.beans.PropertyChangeListener;

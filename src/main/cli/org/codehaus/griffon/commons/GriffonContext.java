@@ -17,9 +17,6 @@ package org.codehaus.griffon.commons;
 
 import groovy.lang.GroovyClassLoader;
 import groovy.util.ConfigObject;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.ApplicationContextAware;
-import org.springframework.core.io.Resource;
 
 import java.util.Map;
 

@@ -30,39 +30,39 @@ import griffon.core.GriffonApplication;
  * @see griffon.swing.WindowDisplayHandler
  */
 public interface SwingGriffonApplication extends GriffonApplication {
-	/**
-	 * Returns the {@code WindowManager} associated with this application.<p>
-	 * Every {@code GriffonSwingApplication} must have a non-null instance.
-	 *
-	 * @return the current WindowManager instance.
-	 */
+    /**
+     * Returns the {@code WindowManager} associated with this application.<p>
+     * Every {@code GriffonSwingApplication} must have a non-null instance.
+     *
+     * @return the current WindowManager instance.
+     */
     WindowManager getWindowManager();
 
     /**
      * Returns the {@code WindowDisplayHandler} defined for this application.<p>
-	 * An application implementation may opt for ignoring this property, in which case
-	 * a {@code DefaultWindowDisplayHandler} should be used.
-	 *
-	 * @return the current WindowDisplayHandler instance, may return null.
-	 */
+     * An application implementation may opt for ignoring this property, in which case
+     * a {@code DefaultWindowDisplayHandler} should be used.
+     *
+     * @return the current WindowDisplayHandler instance, may return null.
+     */
     WindowDisplayHandler getWindowDisplayHandler();
 
     /**
      * Sets the {@code WindowDisplayHandler} to be used in conjuction with {@code WindowManager}
      * to handle window showing/hiding.<p>
-	 * If set to null the application should revert to using an instance of
-	 * {@code DefaultWindowDisplayHandler}.
-	 *
-	 * @param windowDisplayHandler the instance to use, may be null.
-	 */
+     * If set to null the application should revert to using an instance of
+     * {@code DefaultWindowDisplayHandler}.
+     *
+     * @param windowDisplayHandler the instance to use, may be null.
+     */
     void setWindowDisplayHandler(WindowDisplayHandler windowDisplayHandler);
 
     /**
      * Resolves the {@code WindowDisplayHandler} to be used with {@code WindowManager}.<p>
-	 * Should <b>NEVER</b> return null. If no custom {@code WindowDisplayHandler} has been defined
-	 * for this application then this method should return an instance of {@code DefaulWindowDisplayHandler}.
-	 *
-	 * @return a non-null WindowDisplayHandler instance.
-	 */
+     * Should <b>NEVER</b> return null. If no custom {@code WindowDisplayHandler} has been defined
+     * for this application then this method should return an instance of {@code DefaulWindowDisplayHandler}.
+     *
+     * @return a non-null WindowDisplayHandler instance.
+     */
     WindowDisplayHandler resolveWindowDisplayHandler();
 }

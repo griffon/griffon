@@ -25,7 +25,6 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.net.URL;
 import java.util.Properties;
-import java.util.regex.Pattern;
 
 import griffon.util.GriffonExceptionHandler;
 

@@ -16,23 +16,11 @@
 package org.codehaus.griffon.plugins;
 
 import griffon.util.BuildScope;
-import griffon.util.BuildSettings;
-import griffon.util.BuildSettingsHolder;
 import griffon.util.Environment;
-import griffon.util.GriffonUtil;
-import griffon.util.Metadata;
-import groovy.lang.Binding;
 import groovy.lang.Closure;
-import groovy.lang.GroovyClassLoader;
 import groovy.lang.GroovyObject;
-import groovy.util.slurpersupport.GPathResult;
 
-import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
-import java.lang.reflect.Modifier;
-import java.net.URL;
-import java.net.URLConnection;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -42,12 +30,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import org.apache.commons.lang.ArrayUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.codehaus.griffon.commons.GriffonContext;
 import org.codehaus.griffon.commons.GriffonClassUtils;
-import org.codehaus.griffon.commons.GriffonResourceUtils;
 import org.codehaus.griffon.plugins.exceptions.PluginException;
 import org.codehaus.griffon.documentation.DocumentationContext;
 import org.codehaus.groovy.runtime.DefaultGroovyMethods;

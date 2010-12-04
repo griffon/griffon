@@ -16,9 +16,6 @@
 
 package griffon.util;
 
-import groovy.lang.Closure;
-import groovy.lang.MissingMethodException;
-
 import java.util.HashMap;
 import java.util.Locale;
 
