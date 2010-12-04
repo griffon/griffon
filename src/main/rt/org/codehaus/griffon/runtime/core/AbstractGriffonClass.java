@@ -23,7 +23,6 @@ import griffon.exceptions.NewInstanceCreationException;
 import groovy.lang.Closure;
 import groovy.lang.GroovyObject;
 import groovy.lang.GroovySystem;
-import groovy.lang.ExpandoMetaClass;
 import groovy.lang.MetaClass;
 import groovy.lang.MetaMethod;
 import groovy.lang.MetaProperty;
@@ -31,7 +30,6 @@ import groovy.lang.MetaBeanProperty;
 import groovy.lang.ClosureInvokingMethod;
 
 import java.beans.PropertyDescriptor;
-import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Modifier;
 

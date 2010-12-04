@@ -1,7 +1,7 @@
 /*
  * Copyright 2010 the original author or authors.
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
+ * Licensed under the Apache License, Version 2.0 (the "License")
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
@@ -14,14 +14,13 @@
  * limitations under the License.
  */
 
-import griffon.gdsl.GdslUtils
+package griffon.gdsl
 
 /**
  * @author Andres Almiray
  */
 
-contributor(context(ctype: 'java.lang.Object')) {
-    if(!GdslUtils.isGriffonArtifactNotResource(classType)) return
+contributor(context(ctype: 'griffon.core.GriffonMVCArtifact')) {
     method name: 'buildMVCGroup', type: 'java.util.List', params: [mvcType: 'java.lang.String']
     method name: 'buildMVCGroup', type: 'java.util.List', params: [mvcType: 'java.lang.String', mvcName: 'java.lang.String']
     method name: 'buildMVCGroup', type: 'java.util.List', params: [mvcType: 'java.lang.String', mvcName: 'java.lang.String', bindArgs: 'java.util.Map']
@@ -38,4 +37,35 @@ contributor(context(ctype: 'java.lang.Object')) {
 contributor(context(ctype: 'griffon.core.GriffonApplication')) {
     method name: 'newInstance', type: 'java.lang.Object', params: [klass: 'java.lang.Class']
     method name: 'newInstance', type: 'java.lang.Object', params: [klass: 'java.lang.Class', type: 'java.lang.String']
+}
+
+class Constants {
+    static final String[] artifacts = ['Model', 'View', 'Controller', 'Service']
+
+    private static String[] createNames(String prefix, String suffix) {
+        List res = []
+        for (artifact in artifacts) {
+            res << prefix + artifact + suffix
+        }
+    
+        return res.toArray(new String[res.size()])
+    }
+  
+    static final String[] names_getXxxClasses = createNames('get', 'Classes')
+    // static final String[] names_getXxxClass = createNames('get', 'Class')
+    static final String[] names_isXxxClass = createNames('is', 'Class')
+}
+
+contributor(context(ctype: 'griffon.core.ArtifactManager')) {
+    for (name in Constants.names_getXxxClasses) {
+        method name: name, type: 'griffon.core.GriffonClass[]'
+    }
+  
+    // for (name in Constants.names_getXxxClass) {
+    //     method name: name, params: [name: 'CharSequence'], type: 'griffon.core.GriffonClass'
+    // }
+  
+    for (name in Constants.names_isXxxClass) {
+        method name: name, params: [aClass: 'Class'], type: 'boolean'
+    }
 }

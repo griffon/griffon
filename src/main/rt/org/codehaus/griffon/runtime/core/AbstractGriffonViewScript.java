@@ -17,7 +17,6 @@
 package org.codehaus.griffon.runtime.core;
 
 import griffon.core.GriffonApplication;
-import griffon.core.GriffonArtifact;
 import griffon.core.GriffonClass;
 import griffon.core.GriffonView;
 import griffon.core.GriffonViewClass;

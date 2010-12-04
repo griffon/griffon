@@ -17,14 +17,9 @@ package org.codehaus.griffon.plugins;
 
 import org.codehaus.griffon.commons.GriffonContext;
 import org.codehaus.griffon.plugins.exceptions.PluginException;
-import org.springframework.core.io.Resource;
 import org.springframework.core.type.filter.TypeFilter;
 
-import java.io.File;
-import java.io.Writer;
-import java.util.Collection;
 import java.util.List;
-import java.util.Map;
 
 /**
  *

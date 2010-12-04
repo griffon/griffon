@@ -16,8 +16,6 @@
 package griffon.test.mock
 
 import griffon.core.GriffonApplication
-import griffon.core.BaseGriffonApplication
-import griffon.util.UIThreadHelper
 import griffon.swing.SwingApplication
 import java.util.concurrent.CountDownLatch
 

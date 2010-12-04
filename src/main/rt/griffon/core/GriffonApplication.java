@@ -23,7 +23,6 @@ import griffon.util.Metadata;
 import java.util.Map;
 import java.util.List;
 import java.util.Locale;
-import java.util.Properties;
 
 import java.util.concurrent.Callable;
 import java.util.concurrent.Future;
@@ -39,7 +38,7 @@ import org.slf4j.Logger;
  */
 public interface GriffonApplication {
     /**
-     * Gets the application's configuration set on 'aaplication.properties'.<p>
+     * Gets the application's configuration set on 'application.properties'.<p>
      */
     Metadata getMetadata();
 
@@ -247,6 +246,11 @@ public interface GriffonApplication {
 
     // ----------------------------
 
+    /**
+     * Returns the application's ArtifactManager instance.
+     *
+     * @return the application's ArtifactManager
+     */
     ArtifactManager getArtifactManager();
 
     /**

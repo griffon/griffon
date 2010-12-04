@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import griffon.gdsl.GdslUtils
+package griffon.gdsl
 
 /**
  * @author Kasper Fock
@@ -23,8 +23,6 @@ import griffon.gdsl.GdslUtils
  */
 
 contributor(context(scope: scriptScope())) {
-  if(!GdslUtils.isGriffonArtifactNotResource(classType)) return
-  
   method name: 'action', type: 'javax.swing.Action'
   method name: 'actions', type: 'java.util.List', params: [closure: 'groovy.lang.Closure']
   method name: 'map', type: 'java.util.Map'

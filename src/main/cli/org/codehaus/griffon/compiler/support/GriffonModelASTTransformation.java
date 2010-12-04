@@ -26,7 +26,6 @@ import org.codehaus.groovy.transform.GroovyASTTransformation;
 import griffon.core.GriffonModel;
 import griffon.core.GriffonModelClass;
 import org.codehaus.griffon.runtime.core.AbstractGriffonModel;
-import org.codehaus.griffon.compiler.GriffonCompilerContext;
 
 /**
  * Handles generation of code for Griffon models.

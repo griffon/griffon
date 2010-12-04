@@ -15,7 +15,6 @@
  */
 
 import griffon.util.GriffonUtil
-import griffon.core.GriffonApplication
 
 import org.codehaus.griffon.test.junit4.JUnit4GriffonTestType
 import org.codehaus.griffon.test.support.GriffonTestMode

@@ -24,7 +24,6 @@ import griffon.util.Environment;
 import griffon.util.GriffonUtil;
 import griffon.util.PlatformUtils;
 import griffon.util.PluginBuildSettings;
-import groovy.lang.Binding;
 import groovy.lang.Closure;
 import groovy.lang.ExpandoMetaClass;
 import groovy.util.AntBuilder;

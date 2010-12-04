@@ -27,7 +27,7 @@ import java.beans.PropertyChangeListener;
  * @since 0.9.1
  */
 public interface Observable {
-	/**
+    /**
      * Adds the given PropertyChangeListener to the listener list.<p>
      * The listener is registered for all bound properties of this class.
      *
@@ -37,7 +37,7 @@ public interface Observable {
      */
     void addPropertyChangeListener(PropertyChangeListener listener);
 
-	/**
+    /**
      * Removes the given PropertyChangeListener from the listener list.<p>
      * The listener is registered an specific property of this class.
      *
@@ -72,10 +72,10 @@ public interface Observable {
 
     /**
      * Returns an array of all the listeners that were added with addPropertyChangeListener().<p>
-	 *
-	 * @return all of the {@code PropertyChangeListeners} added or an empty array if no 
-	 * listeners have been added.
-	 */
+     *
+     * @return all of the {@code PropertyChangeListeners} added or an empty array if no 
+     * listeners have been added.
+     */
     PropertyChangeListener[] getPropertyChangeListeners();
 
     /**

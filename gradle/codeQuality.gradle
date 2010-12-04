@@ -1,0 +1,8 @@
+apply plugin: 'code-quality'
+
+def configDir = new File(buildscript.sourceFile.parentFile.parentFile, 'config')
+
+checkstyleConfigDir = "$configDir/checkstyle"
+checkstyleConfigFileName = new File(checkstyleConfigDir, "checkstyle.xml")
+checkstyleProperties.checkstyleConfigDir = checkstyleConfigDir
+codeNarcConfigFileName = "$configDir/codenarc/codenarc.xml"

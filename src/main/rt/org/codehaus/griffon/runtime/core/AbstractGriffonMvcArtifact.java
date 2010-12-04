@@ -16,7 +16,6 @@
 
 package org.codehaus.griffon.runtime.core;
 
-import griffon.core.GriffonApplication;
 import griffon.core.GriffonMvcArtifact;
 
 import java.util.Map;

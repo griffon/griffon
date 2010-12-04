@@ -17,14 +17,10 @@
 package org.codehaus.griffon.plugins;
 
 import griffon.util.BuildScope;
-import groovy.lang.ExpandoMetaClass;
 import org.codehaus.griffon.commons.GriffonContext;
 import org.codehaus.griffon.commons.GriffonClassUtils;
-import org.codehaus.griffon.plugins.exceptions.PluginException;
-import org.springframework.beans.BeansException;
 import org.springframework.core.io.Resource;
 import org.springframework.core.type.filter.TypeFilter;
-import org.springframework.util.StringUtils;
 
 import java.util.*;
 

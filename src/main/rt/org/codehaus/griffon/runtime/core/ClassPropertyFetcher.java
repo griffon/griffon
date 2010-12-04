@@ -15,7 +15,6 @@
  */ 
 package org.codehaus.griffon.runtime.core;
 
-import griffon.util.GriffonNameUtils;
 import griffon.util.GriffonClassUtils;
 
 import java.beans.PropertyDescriptor;

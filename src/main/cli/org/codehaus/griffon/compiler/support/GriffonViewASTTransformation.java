@@ -23,13 +23,10 @@ import org.codehaus.groovy.control.CompilePhase;
 import org.codehaus.groovy.control.SourceUnit;
 import org.codehaus.groovy.transform.GroovyASTTransformation;
 
-import java.lang.reflect.Modifier;
-
 import griffon.core.GriffonView;
 import griffon.core.GriffonViewClass;
 import org.codehaus.griffon.runtime.core.AbstractGriffonView;
 import org.codehaus.griffon.runtime.core.AbstractGriffonViewScript;
-import org.codehaus.griffon.compiler.GriffonCompilerContext;
 
 /**
  * Handles generation of code for Griffon views.
