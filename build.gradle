@@ -16,11 +16,15 @@ configurations {
     rt.transitive = false
     cli.transitive = false
     scripts.transitive = false
+    swingxFiles
+	wrapper
 }
 
 repositories {
     mavenCentral()
     mavenRepo name: 'SpringSource', urls: 'http://repository.springsource.com/maven/bundles/release'
+    flatDir(dirs: file('lib/test'))
+    flatDir(dirs: file('lib/wrapper'))
 }
 
 dependencies {
@@ -64,6 +68,12 @@ dependencies {
         "org.codehaus.gant:gant_groovy1.7:1.9.3"
 
     scripts "org.springframework:org.springframework.test:$springVersion"
+
+    swingxFiles ":swing-worker",
+				":swingx:0.9.3",
+				":swingxbuilder:0.1.6-SNAPSHOT"
+
+	wrapper ":gradle-wrapper"
 }
 
 sourceSets {
@@ -87,14 +97,13 @@ sourceSets {
         classesDir = "$buildDir/classes/scripts" as File
     }
     wrapper {
-        compileClasspath = files(fileTree(dir: "$lib/wrapper" as File, includes: ['*.jar']))
+        compileClasspath = configurations.wrapper
         java.srcDirs = ['src/wrapper/java']
         classesDir = "$buildDir/classes/wrapper" as File
     }
     test {
-        swingxFiles = files(fileTree(dir: file('lib/test'), includes: ['*.jar']))
-        compileClasspath = sourceSets.rt.classes + sourceSets.cli.classes + configurations.cli + swingxFiles
-        runtimeClasspath = classes + sourceSets.rt.classes + sourceSets.cli.classes + configurations.cli + swingxFiles
+        compileClasspath = sourceSets.rt.classes + sourceSets.cli.classes + configurations.cli + configurations.swingxFiles
+        runtimeClasspath = classes + sourceSets.rt.classes + sourceSets.cli.classes + configurations.cli + configurations.swingxFiles
         java.srcDirs = []
         groovy.srcDirs = ['src/test/rt', 'src/test/cli']
     }
@@ -120,8 +129,6 @@ configure([compileJava, compileTestJava]) {
     options.debug = true
 }
 
-checkstyleConfigDir = file("config/checkstyle").absolutePath
-
 apply {
     from 'gradle/wrapper.gradle'
     from 'gradle/assemble.gradle'
@@ -129,7 +136,7 @@ apply {
     from 'gradle/installer.gradle'
     from 'gradle/maven.gradle'
     from 'gradle/coverage.gradle'
-	from 'gradle/codeQuality.gradle'
+    from 'gradle/codeQuality.gradle'
 }
 
 task fullDist(dependsOn: [zipGuide, zipBinary, zipSource, tarBinary, tarSource, izpack, deb]) {
