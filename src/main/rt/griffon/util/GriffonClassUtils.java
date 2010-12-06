@@ -1382,7 +1382,7 @@ public final class GriffonClassUtils {
      * @throws IllegalArgumentException if expression is <code>false</code>
      */
     public static void isTrue(boolean expression, String message) {
-        if (expression == false) {
+        if (expression) {
             throw new IllegalArgumentException(message);
         }
     }

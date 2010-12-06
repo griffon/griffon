@@ -21,7 +21,6 @@ import groovy.util.slurpersupport.GPathResult;
 import org.codehaus.griffon.commons.GriffonContext;
 import org.codehaus.griffon.commons.GriffonClassUtils;
 import org.codehaus.griffon.commons.AbstractGriffonClass;
-import org.springframework.beans.BeansException;
 import org.springframework.util.Assert;
 
 import java.util.HashMap;

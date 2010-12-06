@@ -23,12 +23,9 @@ import org.codehaus.groovy.control.CompilePhase;
 import org.codehaus.groovy.control.SourceUnit;
 import org.codehaus.groovy.transform.GroovyASTTransformation;
 
-import java.lang.reflect.Modifier;
-
 import griffon.core.GriffonController;
 import griffon.core.GriffonControllerClass;
 import org.codehaus.griffon.runtime.core.AbstractGriffonController;
-import org.codehaus.griffon.compiler.GriffonCompilerContext;
 
 /**
  * Handles generation of code for Griffon controllers.

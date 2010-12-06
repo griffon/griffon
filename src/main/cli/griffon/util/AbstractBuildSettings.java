@@ -219,18 +219,21 @@ abstract public class AbstractBuildSettings {
         List<String> dirs = (List<String>) cache.get(KEY_PLUGIN_BASE_DIRECTORIES);
         if (dirs == null) {
             dirs = new ArrayList<String>();
-            if (projectPluginsDir != null) try {
-                dirs.add(projectPluginsDir.getCanonicalPath());
+            if (projectPluginsDir != null) {
+                try {
+                    dirs.add(projectPluginsDir.getCanonicalPath());
+                }
+                catch (IOException e) {
+                    System.err.println("Cannot read project plugins directory ["+projectPluginsDir+"] due to I/O error: " + e.getMessage());
+                }
             }
-            catch (IOException e) {
-                System.err.println("Cannot read project plugins directory ["+projectPluginsDir+"] due to I/O error: " + e.getMessage());
-            }
-
-            if (globalPluginsDir != null) try {
-                dirs.add(globalPluginsDir.getCanonicalPath());
-            }
-            catch (IOException e) {
-                System.err.println("Cannot read global plugins directory ["+globalPluginsDir+"] due to I/O error: " + e.getMessage());
+            if (globalPluginsDir != null) {
+                try {
+                    dirs.add(globalPluginsDir.getCanonicalPath());
+                }
+                catch (IOException e) {
+                    System.err.println("Cannot read global plugins directory ["+globalPluginsDir+"] due to I/O error: " + e.getMessage());
+                }
             }
             cache.put(KEY_PLUGIN_BASE_DIRECTORIES, dirs);
         }
@@ -242,7 +245,9 @@ abstract public class AbstractBuildSettings {
      */
     @SuppressWarnings("unchecked")
     public boolean isInlinePluginLocation(File pluginLocation) {
-        if (pluginLocation == null) return false;
+        if (pluginLocation == null) {
+            return false;
+        }
         getPluginDirectories(); // initialize the cache
         ConcurrentLinkedQueue<File> locations = (ConcurrentLinkedQueue<File>) cache.get(KEY_INLINE_PLUGIN_LOCATIONS);
         return locations != null && locations.contains(pluginLocation);

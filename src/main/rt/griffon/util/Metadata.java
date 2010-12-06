@@ -31,7 +31,6 @@ import java.util.Map;
 import java.util.Properties;
 import java.util.Vector;
 import java.util.regex.Pattern;
-import java.util.regex.Matcher;
 
 /**
  * Represents the application Metadata and loading mechanics

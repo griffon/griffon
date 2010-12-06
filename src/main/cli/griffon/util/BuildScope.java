@@ -64,10 +64,14 @@ public enum BuildScope {
      */
     public static boolean isValid(String... scopeNames) {
         BuildScope currentScope = getCurrent();
-        if (currentScope.equals(ALL)) return true;
+        if (currentScope.equals(ALL)) {
+            return true;
+        }
         for (String scopeName : scopeNames) {
             BuildScope specifiedScope = BuildScope.valueOf(scopeName.toUpperCase());
-            if (currentScope == specifiedScope) return true;
+            if (currentScope == specifiedScope) {
+                return true;
+            }
         }
         return false;
     }

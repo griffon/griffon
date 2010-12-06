@@ -15,7 +15,6 @@
 */
 package org.codehaus.griffon.commons;
 
-import griffon.util.BuildSettings;
 import griffon.util.Environment;
 import groovy.lang.GroovyClassLoader;
 import groovy.lang.GroovyObjectSupport;
@@ -24,10 +23,7 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.codehaus.griffon.commons.cfg.ConfigurationHelper;
-import org.codehaus.griffon.exceptions.GriffonConfigurationException;
 import org.codehaus.groovy.runtime.StackTraceUtils;
-import org.springframework.beans.BeansException;
-import org.springframework.beans.factory.BeanClassLoaderAware;
 import org.springframework.context.ApplicationContext;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
@@ -50,7 +46,7 @@ import java.util.*;
  * @author Graeme Rocher (Grails 0.1)
  */
 public class DefaultGriffonContext extends GroovyObjectSupport implements GriffonContext {
-    private GroovyClassLoader cl = null;
+    private GroovyClassLoader cl;
     private Class[] allClasses = new Class[0];
     private static Log log = LogFactory.getLog(DefaultGriffonContext.class);
     private ApplicationContext parentContext;
@@ -58,7 +54,7 @@ public class DefaultGriffonContext extends GroovyObjectSupport implements Griffo
 
     private Set loadedClasses = new HashSet();
     private Map<Object, Object> applicationMeta;
-    private boolean initialised = false;
+    private boolean initialised;
 
     /**
      * Creates a new empty Griffon application

@@ -80,7 +80,9 @@ public class GriffonTask extends Task {
     @Override
     public void execute() throws BuildException {
         // The "script" must be specified.
-        if (script == null) throw new BuildException("'script' must be provided.");
+        if (script == null) {
+            throw new BuildException("'script' must be provided.");
+        }
 
         // Check that one, and only one, of Griffon home and classpath are set.
         if (home == null && classpath == null) {
@@ -169,8 +171,9 @@ public class GriffonTask extends Task {
     }
 
     private List<URL> pathsToUrls(Path path) {
-        if (path == null) return Collections.emptyList();
-
+        if (path == null) {
+            return Collections.emptyList();
+        }
         List<URL> urls = new ArrayList<URL>(path.size());
         for (String filePath : path.list()) {
             try { urls.add(new File(filePath).toURI().toURL()); }

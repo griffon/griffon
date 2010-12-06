@@ -27,15 +27,10 @@ import java.util.Properties;
 import java.util.regex.Matcher;
 
 import org.codehaus.groovy.ant.Groovyc;
-import org.codehaus.groovy.GroovyBugError;
 import org.codehaus.groovy.ast.*;
 import org.codehaus.groovy.ast.expr.*;
 import org.codehaus.groovy.classgen.*;
 import org.codehaus.groovy.control.*;
-import org.codehaus.groovy.control.messages.ExceptionMessage;
-import org.codehaus.groovy.control.messages.Message;
-import org.codehaus.groovy.control.messages.SimpleMessage;
-import org.codehaus.groovy.syntax.SyntaxException;
 
 /**
  * @author Andres Almiray
@@ -43,8 +38,8 @@ import org.codehaus.groovy.syntax.SyntaxException;
  * @since 0.9.1
  */
 public class GriffonCompiler extends Groovyc {
-	private static final String DISABLE_AUTO_IMPORTS = "griffon.disable.auto.imports";
-	
+    private static final String DISABLE_AUTO_IMPORTS = "griffon.disable.auto.imports";
+    
     protected org.codehaus.griffon.compiler.ResolveVisitor resolveVisitor;
 
     private static final Map<String, String[]> IMPORTS_PER_ARTIFACT_TYPE = new LinkedHashMap<String, String[]>();
@@ -73,16 +68,16 @@ public class GriffonCompiler extends Groovyc {
         CompilationUnit compilationUnit = super.makeCompileUnit();
         
         if(!Boolean.getBoolean(DISABLE_AUTO_IMPORTS)) {
-	        compilationUnit.addPhaseOperation(new CompilationUnit.PrimaryClassNodeOperation() {
-	            public void call(SourceUnit source, GeneratorContext context,
-	                             ClassNode classNode) throws CompilationFailedException {
-	                processGriffonSource(source, context, classNode);
-	            }
-	        }, Phases.CONVERSION);
+            compilationUnit.addPhaseOperation(new CompilationUnit.PrimaryClassNodeOperation() {
+                public void call(SourceUnit source, GeneratorContext context,
+                                 ClassNode classNode) throws CompilationFailedException {
+                    processGriffonSource(source, context, classNode);
+                }
+            }, Phases.CONVERSION);
         
-	        // WATCH OUT!! We add our own ResolveVisitor before Groovy's
-	        resolveVisitor = new org.codehaus.griffon.compiler.ResolveVisitor(compilationUnit);
-	        compilationUnit.addPhaseOperation(resolve, Phases.CONVERSION);
+            // WATCH OUT!! We add our own ResolveVisitor before Groovy's
+            resolveVisitor = new org.codehaus.griffon.compiler.ResolveVisitor(compilationUnit);
+            compilationUnit.addPhaseOperation(resolve, Phases.CONVERSION);
         }
 
         return compilationUnit;

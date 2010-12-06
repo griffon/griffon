@@ -15,62 +15,27 @@
  */
 package org.codehaus.griffon.plugins;
 
-import griffon.util.Environment;
-import griffon.util.GriffonUtil;
-import griffon.util.Metadata;
-import groovy.lang.Binding;
 import groovy.lang.GroovyClassLoader;
-import groovy.lang.GroovyRuntimeException;
-import groovy.lang.GroovyShell;
-import groovy.lang.GroovySystem;
-import groovy.lang.MetaClassRegistry;
-import groovy.lang.Writable;
-import groovy.util.ConfigObject;
-import groovy.util.ConfigSlurper;
-import groovy.util.XmlSlurper;
-import groovy.util.slurpersupport.GPathResult;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.StringReader;
-import java.io.Writer;
-import java.lang.reflect.Modifier;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.net.URI;
 import java.net.URL;
-import java.net.URLConnection;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
-import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
-import javax.xml.parsers.ParserConfigurationException;
 
 import org.apache.commons.lang.ArrayUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.codehaus.groovy.control.CompilationFailedException;
 import org.codehaus.griffon.commons.GriffonContext;
-import griffon.util.GriffonUtil;
 import org.codehaus.griffon.plugins.exceptions.PluginException;
-import org.springframework.beans.BeansException;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
-import org.springframework.util.Assert;
-import org.xml.sax.EntityResolver;
-import org.xml.sax.InputSource;
-import org.xml.sax.SAXException;
-import org.xml.sax.InputSource;
 
 /**
  * @author Graeme Rocher (Grails 0.4)
