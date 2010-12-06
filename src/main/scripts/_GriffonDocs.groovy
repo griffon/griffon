@@ -337,7 +337,7 @@ def configureAliases() {
     if (!docEngineClass) {
         throw new IllegalStateException("Failed to load $docEngineClassName to configure documentation aliases")
     }
-    docEngineClass.ALIAS.putAll(config.griffon.doc.alias)
+    docEngineClass.ALIAS.putAll(buildConfig.griffon.doc.alias)
 }
 
 

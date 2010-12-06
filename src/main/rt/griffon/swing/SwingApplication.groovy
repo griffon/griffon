@@ -33,7 +33,7 @@ class SwingApplication implements SwingGriffonApplication, griffon.application.S
     @Delegate private final BaseGriffonApplication _base
     final WindowManager windowManager
     WindowDisplayHandler windowDisplayHandler
-    private final WindowDisplayHandler defaultWindowDisplayHandler = new DefaultWindowDisplayHandler()
+    private final WindowDisplayHandler defaultWindowDisplayHandler = new ConfigurableWindowDisplayHandler()
 
     SwingApplication(String[] args = BaseGriffonApplication.EMPTY_ARGS) {
         UIThreadHelper.instance.setUIThreadHandler(new SwingUIThreadHandler())
