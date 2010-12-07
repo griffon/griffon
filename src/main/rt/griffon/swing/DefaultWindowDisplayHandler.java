@@ -27,10 +27,10 @@ import griffon.core.GriffonApplication;
  */
 public class DefaultWindowDisplayHandler implements WindowDisplayHandler {
     public void show(Window window, GriffonApplication application) {
-        window.setVisible(true);
+        if(window != null) window.setVisible(true);
     }
 
     public void hide(Window window, GriffonApplication application) {
-        window.dispose();
+        if(window != null) window.dispose();
     }
 }

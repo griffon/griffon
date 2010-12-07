@@ -86,3 +86,21 @@ swing {
     }
 }
 {code}
+
+h4. Starting Window
+
+Previous to Griffon 0.9.2 the first window to be displayed during the Ready phase was determined by a simple algorithm: picking the first available window from the managed windows list. With 0.9.2 however, it's now possible to configure this behavior by means of the WindowManager DSL. Simply specify a value for @swing.windowManager.startingWindow@, like this
+
+{code}
+swing {
+    windowManager {
+        startingWindow = 'primary'
+    }
+}
+{code}
+
+This configuration flag accepts two types of values:
+    * a String that defines the name of the Window. You must make sure the Window has a matching name property.
+    * a Number that defines the index of the Window in the list of managed windows.
+
+If no match is found then the default behavior will be executed.

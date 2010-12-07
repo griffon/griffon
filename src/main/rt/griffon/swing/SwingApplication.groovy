@@ -55,8 +55,7 @@ class SwingApplication implements SwingGriffonApplication, griffon.application.S
     }
 
     void show() {
-        List <Window> windows = windowManager.windows
-        if(windows.size() > 0) windowManager.show(windows[0])
+        windowManager.show(windowManager.startingWindow)
 
         callReady()
     }
