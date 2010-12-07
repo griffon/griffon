@@ -203,7 +203,7 @@ target(jarFiles: "Jar up the package files") {
 
     String destFileName = "$jardir/${buildConfig.griffon.jars.jarName}"
     metainfDirPath = new File("${basedir}/griffon-app/conf/metainf")
-    if(!metainfDirPath.list() && RunMode.current == RunMode.STANDALONE) {
+    if(Environment.current == Environment.DEVELOPMENT && !metainfDirPath.list() && RunMode.current == RunMode.STANDALONE) {
         ant.delete(file: destFileName, quiet: true, failonerror: false)
         return
     }
