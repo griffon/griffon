@@ -314,14 +314,16 @@ maybePackAndSign = {srcFile, targetFile = srcFile, boolean force = false ->
     // (do this funny dance because unset == true)
     boolean configSaysJarPacking = buildConfig.griffon.jars.pack
     boolean configSaysJarSigning = buildConfig.griffon.jars.sign
+    boolean configSaysUnsignJar = !buildConfig.griffon.signingkey.params.lazy
 
     boolean doJarSigning = configSaysJarSigning
     boolean doJarPacking = configSaysJarPacking
 
     // if we should sign, check if the jar is already signed
     // don't sign if it appears signed and we're not forced
+    boolean jarIsSigned = isJarSigned(srcFile, targetFile)
     if (doJarSigning && !force) {
-        doJarSigning = !isJarSigned(srcFile, targetFile)
+        doJarSigning = !jarIsSigned
     }
 
     // if we should pack, check for forcing or a newer .pack.gz file
@@ -356,6 +358,20 @@ maybePackAndSign = {srcFile, targetFile = srcFile, boolean force = false ->
             }
         }
         signJarParams.jar = targetFile.path
+
+        // GRIFFON-294 remove signatures from jar
+        if(jarIsSigned && configSaysUnsignJar) {
+            def unpackDir = new File(griffonTmp, srcFile.name[0..-5])
+            ant.delete(dir: unpackDir, quiet: true, failonerror: false)
+            ant.unjar(src: targetFile, dest: unpackDir)
+            ant.delete(quiet: true, failonerror: false) {
+                fileset(dir: "${unpackDir}/META-INF", includes: '*.DSA')
+                fileset(dir: "${unpackDir}/META-INF", includes: '*.RSA')
+                fileset(dir: "${unpackDir}/META-INF", includes: '*.SF')
+            }
+            ant.jar(basedir: unpackDir, destfile: targetFile)
+            ant.delete(dir: unpackDir, quiet: true, failonerror: false)
+        }
     }
 
     // repack so we can sign pack200
@@ -373,8 +389,7 @@ maybePackAndSign = {srcFile, targetFile = srcFile, boolean force = false ->
     if (doJarSigning && doJarPacking) {
         ant.signjar(signJarParams)
     }
-
-    
+  
     // repack so we can sign pack200
     if (doJarPacking) {
         ant.exec(executable:'pack200') {
