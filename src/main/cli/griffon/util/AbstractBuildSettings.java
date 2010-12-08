@@ -46,6 +46,7 @@ abstract public class AbstractBuildSettings {
     protected Map<String, Object> cache = new ConcurrentHashMap<String, Object>();
     /** The settings stored in the project's BuildConfig.groovy file if there is one. */
     protected ConfigObject config = new ConfigObject();
+    
     /** The location where project-specific plugins are installed to. */
     protected File projectPluginsDir;
 

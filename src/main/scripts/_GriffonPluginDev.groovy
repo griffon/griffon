@@ -242,8 +242,9 @@ target(packagePlugin:"Packages a Griffon plugin") {
                 exclude(name:it)
             }
         }
-        if(dependencyInfoDir.exists())
+        if(dependencyInfoDir.exists()) {
             fileset(dir:dependencyInfoDir)
+        }
         if(libsDir.exists()) {
             fileset(dir:libsDir)
         }
@@ -253,7 +254,7 @@ target(packagePlugin:"Packages a Griffon plugin") {
 
         if (isAddonPlugin)  {
             zipfileset(dir:addonJarDir, includes: addonJarName,
-                       fullpath: "lib/$addonJarName")
+                       fullpath: "addon/$addonJarName")
         }
     }
 

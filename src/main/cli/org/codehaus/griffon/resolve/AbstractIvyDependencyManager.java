@@ -54,7 +54,7 @@ abstract public class AbstractIvyDependencyManager {
 
     public static Configuration RUNTIME_CONFIGURATION = new Configuration("runtime",
                                                                 Configuration.Visibility.PUBLIC,
-                                                                "Runtime time dependencies",
+                                                                "Runtime dependencies",
                                                                 new String[]{"compile"},
                                                                 true, null);
 

@@ -35,6 +35,7 @@ import org.apache.ivy.util.Message
 import griffon.util.BuildSettings
 import griffon.util.GriffonUtil
 import griffon.util.Metadata
+import griffon.util.PlatformUtils
 import org.apache.ivy.core.module.descriptor.ExcludeRule
 import org.apache.ivy.plugins.parser.m2.PomReader
 import org.apache.ivy.plugins.repository.file.FileResource
@@ -65,8 +66,7 @@ import org.apache.ivy.plugins.resolver.RepositoryResolver
  *
  * @author Graeme Rocher (Grails 1.2)
  */
-class IvyDependencyManager extends AbstractIvyDependencyManager implements DependencyResolver, DependencyDefinitionParser{
-
+class IvyDependencyManager extends AbstractIvyDependencyManager implements DependencyResolver, DependencyDefinitionParser {
     private hasApplicationDependencies = false
     ResolveEngine resolveEngine
     BuildSettings buildSettings
@@ -120,11 +120,10 @@ class IvyDependencyManager extends AbstractIvyDependencyManager implements Depen
         resolveEngine.dictatorResolver = chainResolver
     }
 
-
-     /**
-      * Sets the default message logger used by Ivy
-      *
-      * @param logger
+    /**
+     * Sets the default message logger used by Ivy
+     *
+     * @param logger
      */
     void setLogger(MessageLogger logger) {
         Message.setDefaultLogger logger
@@ -132,7 +131,6 @@ class IvyDependencyManager extends AbstractIvyDependencyManager implements Depen
     }
     
     MessageLogger getLogger() { this.logger }
-
 
      /**
       * @return The current chain resolver 
@@ -274,7 +272,7 @@ class IvyDependencyManager extends AbstractIvyDependencyManager implements Depen
                     excludes 'mail', 'jms', 'jmxtools', 'jmxri'
                 }
             }
-      }
+        }
     }
 
     /**
@@ -326,7 +324,7 @@ class IvyDependencyManager extends AbstractIvyDependencyManager implements Depen
                      dd.exclude(ex)
                  }                 
             }
-             addDependencyDescriptor dd
+            addDependencyDescriptor dd
         }
     }
 
@@ -373,7 +371,6 @@ class IvyDependencyManager extends AbstractIvyDependencyManager implements Depen
         }
     }
 
-
     Set<ModuleRevisionId> getModuleRevisionIds(String org) { orgToDepMap[org] }
 
     /**
@@ -400,8 +397,7 @@ class IvyDependencyManager extends AbstractIvyDependencyManager implements Depen
         resolveErrors = false
         if(usedConfigurations.contains(conf) || conf == '') {
             def options = new ResolveOptions(checkIfChanged:false, outputReport:true, validate:false)
-            if(conf)
-                options.confs = [conf] as String[]
+            if(conf) options.confs = [conf] as String[]
 
             ResolveReport resolve = resolveEngine.resolve(moduleDescriptor, options)
             resolveErrors = resolve.hasError()
@@ -420,20 +416,17 @@ class IvyDependencyManager extends AbstractIvyDependencyManager implements Depen
      * @throws IllegalStateException If no RootLoader exists
      */
     ResolveReport loadDependencies(String conf = '') {
-
         URLClassLoader rootLoader = getClass().classLoader.rootLoader
         if(rootLoader) {
             def urls = rootLoader.URLs.toList()
             ResolveReport report = resolveDependencies(conf)
             for(ArtifactDownloadReport downloadReport in report.allArtifactsReports) {
                 def url = downloadReport.localFile.toURL()
-                if(!urls.contains(url))
-                    rootLoader.addURL(url)
+                if(!urls.contains(url)) rootLoader.addURL(url)
             }
         } else {
             throw new IllegalStateException("No root loader found. Could not load dependencies. Note this method cannot be called when running in a WAR.")
         }
-        
     }
 
     /**
@@ -453,7 +446,6 @@ class IvyDependencyManager extends AbstractIvyDependencyManager implements Depen
      * Resolves only plugin dependencies that should be exported to the application
      */
     List<ArtifactDownloadReport> resolveExportedDependencies(String conf='') {
-
         def descriptors = getExportedDependencyDescriptors(conf)
         resolveApplicationDependencies(conf)?.findAll { ArtifactDownloadReport downloadReport ->
             def mrid = downloadReport.artifact.moduleRevisionId
@@ -579,7 +571,7 @@ class IvyDependencyManager extends AbstractIvyDependencyManager implements Depen
                         def scope = "runtime"
                         def mrid = ModuleRevisionId.newInstance("org.codehaus.griffon.plugins", name, entry.value)
                         def dd = new EnhancedDefaultDependencyDescriptor(mrid, true, true, scope)
-                        def artifact = new DefaultDependencyArtifactDescriptor(dd, name, "zip", "zip", null, null )
+                        def artifact = new DefaultDependencyArtifactDescriptor(dd, name, "zip", "zip", null, null)
                         dd.addDependencyArtifact(scope, artifact)
                         metadataRegisteredPluginNames << name
                         configureDependencyDescriptor(dd, scope, null, true)
@@ -622,6 +614,37 @@ class IvyDependencyManager extends AbstractIvyDependencyManager implements Depen
 
     boolean getBooleanValue(dependency, String name) {
         return dependency.containsKey(name) ? Boolean.valueOf(dependency[name]) : true
+    }
+
+    void flatDirResolver(Map args) {
+        def name = args.name?.toString()
+        if(name && args.dirs) {
+            def fileSystemResolver = new FileSystemResolver()
+            fileSystemResolver.local = true
+            fileSystemResolver.name = name
+
+            def dirs = args.dirs instanceof Collection ? args.dirs : [args.dirs]
+
+            repositoryData << ['type':'flatDir', name:name, dirs:dirs.join(',')]
+            dirs.each { dir ->
+               def path = new File(dir?.toString()).absolutePath
+               fileSystemResolver.addIvyPattern( "${path}/[module]-[revision](-[classifier]).xml")
+               fileSystemResolver.addArtifactPattern "${path}/[module]-[revision](-[classifier]).[ext]"
+            }
+            fileSystemResolver.settings = ivySettings
+
+            addToChainResolver(fileSystemResolver)
+        }
+    }
+
+    void addToChainResolver(org.apache.ivy.plugins.resolver.DependencyResolver resolver) {
+        if(transferListener !=null && (resolver instanceof RepositoryResolver)) {
+            ((RepositoryResolver)resolver).repository.addTransferListener transferListener
+        }
+        // Fix for GRAILS-5805
+        synchronized(chainResolver.resolvers) {
+          chainResolver.add resolver
+        }
     }
 }
 
@@ -773,34 +796,7 @@ class IvyDomainSpecificLanguageEvaluator {
     }
 
     void flatDir(Map args) {
-        def name = args.name?.toString()
-        if(name && args.dirs) {
-            def fileSystemResolver = new FileSystemResolver()
-            fileSystemResolver.local = true
-            fileSystemResolver.name = name
-
-            def dirs = args.dirs instanceof Collection ? args.dirs : [args.dirs]
-
-            repositoryData << ['type':'flatDir', name:name, dirs:dirs.join(',')]
-            dirs.each { dir ->
-               def path = new File(dir?.toString()).absolutePath
-               fileSystemResolver.addIvyPattern( "${path}/[module]-[revision](-[classifier]).xml")                
-               fileSystemResolver.addArtifactPattern "${path}/[module]-[revision](-[classifier]).[ext]"
-            }
-            fileSystemResolver.settings = ivySettings
-
-            addToChainResolver(fileSystemResolver)
-        }
-    }
-
-    private addToChainResolver(org.apache.ivy.plugins.resolver.DependencyResolver resolver) {
-        if(transferListener !=null && (resolver instanceof RepositoryResolver)) {
-            ((RepositoryResolver)resolver).repository.addTransferListener transferListener
-        }
-        // Fix for GRAILS-5805
-        synchronized(chainResolver.resolvers) {
-          chainResolver.add resolver          
-        }
+        flatDirResolver(args)
     }
 
     void griffonPlugins() {
@@ -968,7 +964,6 @@ class IvyDomainSpecificLanguageEvaluator {
             }
 
             if(dependencies) {
-
                 parseDependenciesInternal(dependencies, name, callable)
             }            
         }

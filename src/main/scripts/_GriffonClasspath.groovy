@@ -30,13 +30,11 @@ if (getBinding().variables.containsKey("_griffon_classpath_called")) return
 _griffon_classpath_called = true
 
 includeTargets << griffonScript("_GriffonSettings")
-includeTargets << griffonScript("_GriffonArgParsing")
 
 classpathSet = false
 includePluginJarsOnClasspath = true
 
 target(name:'classpath', description: "Sets the Griffon classpath", prehook:null, posthook:null) {
-    depends(parseArguments)
     setClasspath()
 }
 
@@ -117,33 +115,31 @@ getExtraDependencies = {
 commonClasspath = {
     def griffonDir = resolveResources("file:${basedir}/griffon-app/*")
     for (d in griffonDir) {
-        if(argsMap.verbose) println "  ${d.file.absolutePath}"
+        debug "  ${d.file.absolutePath}"
         pathelement(location: "${d.file.absolutePath}")
     }
 
     pathelement(location: "${classesDir.absolutePath}")
     pathelement(location: "${pluginClassesDir.absolutePath}")
-    if(argsMap.verbose) {
-        println "  ${classesDir.absolutePath}"
-        println "  ${pluginClassesDir.absolutePath}"
-    }
+    debug "  ${classesDir.absolutePath}"
+    debug "  ${pluginClassesDir.absolutePath}"
 
     def pluginLibDirs = pluginSettings.pluginLibDirectories.findAll { it.exists() }
     for (pluginLib in pluginLibDirs) {
-        if(argsMap.verbose) println "  ${pluginLib.file.absolutePath}"
+        debug "  ${pluginLib.file.absolutePath}"
         fileset(dir: pluginLib.file.absolutePath)
     }
 
 // XXX -- NATIVE
     resolveResources("file:${basedir}/lib/${PlatformUtils.platform}").each { platformLib ->
         if(platformLib.file.exists()) {
-            if(argsMap.verbose) println "  ${platformLib.file.absolutePath}"
+            debug "  ${platformLib.file.absolutePath}"
             fileset(dir: platformLib.file.absolutePath)
         }
     }
     resolveResources("file:${pluginsHome}/*/lib/${PlatformUtils.platform}").each { platformPluginLib ->
         if(platformPluginLib.file.exists()) {
-            if(argsMap.verbose) println "  ${platformPluginLib.file.absolutePath}"
+            debug "  ${platformPluginLib.file.absolutePath}"
             fileset(dir: platformPluginLib.file.absolutePath)
         }
     }
@@ -151,13 +147,13 @@ commonClasspath = {
     if(is64Bit) {
         resolveResources("file:${basedir}/lib/${PlatformUtils.platform[0..-3]}").each { platformLib ->
             if(platformLib.file.exists()) {
-                if(argsMap.verbose) println "  ${platformLib.file.absolutePath}"
+                debug "  ${platformLib.file.absolutePath}"
                 fileset(dir: platformLib.file.absolutePath)
             }
         }
         resolveResources("file:${pluginsHome}/*/lib/${PlatformUtils.platform[0..-3]}").each { platformPluginLib ->
             if(platformPluginLib.file.exists()) {
-                if(argsMap.verbose) println "  ${platformPluginLib.file.absolutePath}"
+                debug "  ${platformPluginLib.file.absolutePath}"
                 fileset(dir: platformPluginLib.file.absolutePath)
             }
         }
@@ -166,7 +162,7 @@ commonClasspath = {
 }
 
 compileClasspath = {
-    if(argsMap.verbose) println "=== Compile Classpath ==="
+    debug "=== Compile Classpath ==="
     commonClasspath.delegate = delegate
     commonClasspath.call()
 
@@ -174,7 +170,7 @@ compileClasspath = {
     if(dependencies) {
         for(File f in dependencies) {
             if(f) {
-                if(argsMap.verbose) println "  ${f.absolutePath}"
+                debug "  ${f.absolutePath}"
                 pathelement(location: f.absolutePath)
             }
         }
@@ -182,7 +178,7 @@ compileClasspath = {
 }
 
 testClasspath = {
-    if(argsMap.verbose) println "=== Test Classpath ==="
+    debug "=== Test Classpath ==="
     commonClasspath.delegate = delegate
     commonClasspath.call()
 
@@ -190,7 +186,7 @@ testClasspath = {
     if(dependencies) {
         for(File f in dependencies) {
             if(f) {
-                if(argsMap.verbose) println "  ${f.absolutePath}"
+                debug "  ${f.absolutePath}"
                 pathelement(location: f.absolutePath)
             }
         }
@@ -198,21 +194,19 @@ testClasspath = {
 
     pathelement(location: "${griffonSettings.testClassesDir}/shared")
     pathelement(location: "${griffonSettings.testResourcesDir}")
-    if(argsMap.verbose) {
-        println "  ${griffonSettings.testClassesDir}/shared"
-        println "  ${griffonSettings.testResourcesDir}"
-    }
+    debug "  ${griffonSettings.testClassesDir}/shared"
+    debug "  ${griffonSettings.testResourcesDir}"
 
     for (pluginTestJar in getPluginTestFiles()) {
         if(pluginTestJar.file.exists()) {
-            if(argsMap.verbose) println "  ${pluginTestJar.file.absolutePath}"
+            debug "  ${pluginTestJar.file.absolutePath}"
             file(file: pluginTestJar.file.absolutePath)
         }
     }
 }
 
 runtimeClasspath = {
-    if(argsMap.verbose) println "=== Runtime Classpath ==="
+    debug "=== Runtime Classpath ==="
     commonClasspath.delegate = delegate
     commonClasspath.call()
 
@@ -220,7 +214,7 @@ runtimeClasspath = {
     if(dependencies) {        
         for(File f in dependencies) {
             if(f) {
-                if(argsMap.verbose) println "  ${f.absolutePath}"
+                debug "  ${f.absolutePath}"
                 pathelement(location: f.absolutePath)
             }
         }

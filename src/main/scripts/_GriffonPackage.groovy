@@ -230,6 +230,7 @@ _copyLibs = {
 
     List libs = []
 
+/*
     ant.fileset(dir:"${griffonHome}/dist", includes:"griffon-rt-*.jar").each {
         griffonCopyDist(it.toString(), jardir)
         libs << it.name
@@ -243,6 +244,7 @@ _copyLibs = {
         griffonCopyDist(it.toString(), jardir)
         libs << it.name
     }
+*/
 
 // XXX -- NATIVE 
     copyPlatformJars("${basedir}/lib", new File(jardir).absolutePath) 
@@ -254,7 +256,6 @@ _copyLibs = {
 // XXX -- NATIVE 
 
     griffonSettings.runtimeDependencies?.each { File f ->
-        if(libs.contains(f.name)) return
         griffonCopyDist(f.absolutePath, jardir)
     }
     

@@ -81,6 +81,7 @@ public class GriffonScriptRunner {
 
     private static final Pattern scriptFilePattern = Pattern.compile("^[^_]\\w+\\.groovy$");
     private static final Pattern pluginDescriptorPattern = Pattern.compile("^(\\S+)GriffonPlugin.groovy$");
+    private static final Pattern pluginVersionPattern = Pattern.compile("^[\\S]+-([0-9][\\S]*)$");
 
     /**
      * Evaluate the arguments to get the name of the script to execute, which environment
@@ -670,13 +671,13 @@ public class GriffonScriptRunner {
     /**
      * Prep the binding. We add the location of Griffon_HOME under
      * the variable name "griffonHome". We also add a closure that
-     * should be used with "includeTargets <<" - it takes a string
+     * should be used with "includeTargets &&lt;&lt;" - it takes a string
      * and returns either a file containing the named Griffon script
      * or the script class.
      *
      * So, this:
      *
-     *   includeTargets << griffonScript("Init")
+     *   includeTargets &&lt;&lt; griffonScript("Init")
      *
      * will load the "Init" script from $Griffon_HOME/scripts if it
      * exists there; otherwise it will load the Init class.
@@ -755,6 +756,10 @@ public class GriffonScriptRunner {
 
                 // Add the plugin path to the binding.
                 binding.setVariable(pluginName + "PluginDir", file.getParentFile());
+
+                matcher = pluginVersionPattern.matcher(file.getParentFile().getName());
+                matcher.find();
+                binding.setVariable(pluginName + "PluginVersion", matcher.group(1));
             }
         }
         catch (Exception e) {
@@ -928,6 +933,14 @@ public class GriffonScriptRunner {
 
         // otherwise just add them
         File libDir = new File(pluginDir, "lib");
+        if (libDir.exists()) {
+            final IvyDependencyManager dependencyManager = settings.getDependencyManager();
+            String pluginName = getPluginName(pluginDir);
+            Collection<?> excludes = dependencyManager.getPluginExcludes(pluginName);
+            addLibs(libDir, urls, excludes != null ? excludes : Collections.emptyList());
+        }
+
+        libDir = new File(pluginDir, "addon");
         if (libDir.exists()) {
             final IvyDependencyManager dependencyManager = settings.getDependencyManager();
             String pluginName = getPluginName(pluginDir);

@@ -58,3 +58,4 @@ event = {String name, def args ->
 
 // Give scripts a chance to modify classpath
 event('SetClasspath', [classLoader])
+griffonSettings.resetDependencies()

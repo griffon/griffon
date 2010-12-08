@@ -365,3 +365,10 @@ debug = { msg ->
         println "[$now.dateString $now.timeString] $msg"
     }
 }
+
+compilingPlugin = { pluginName ->
+    getPluginDirForName(pluginName)?.file?.canonicalPath == basedir
+}
+
+includeTargets << griffonScript("_GriffonArgParsing")
+includeTargets << griffonScript("_GriffonEvents")

@@ -170,9 +170,9 @@ target(allTests: "Runs the project's tests.") {
             addUrlIfNotPresent classLoader, it
         }
 
-        if(argsMap.verbose) {
-            println "=== RootLoader urls === "
-            rootLoader.URLs.each{println("  $it")}
+        isDebugEnabled() {
+            debug "=== RootLoader urls === "
+            rootLoader.URLs.each{debug("  $it")}
         }
 
         // Process the tests in each phase that is configured to run.

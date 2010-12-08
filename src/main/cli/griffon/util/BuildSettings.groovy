@@ -186,12 +186,6 @@ class BuildSettings extends AbstractBuildSettings {
     /** The location of the plain source. */
     File sourceDir
 
-    /** The location where project-specific plugins are installed to. */
-    File projectPluginsDir
-
-    /** The location where global plugins are installed to. */
-    File globalPluginsDir
-
     /** The location of the test reports. */
     File testReportsDir
 
@@ -245,6 +239,39 @@ class BuildSettings extends AbstractBuildSettings {
      */
     boolean verboseCompile = false
 
+    public void resetDependencies() {
+        resetCompileDependencies()
+        resetRuntimeDependencies()
+        resetTestDependencies()
+        resetProvidedDependencies()
+        resetBuildDependencies()
+    }
+
+    public void resetCompileDependencies() {
+        compileDependencies.clear()
+        compileDependencies.addAll(defaultCompileDependenciesClosure())
+    }
+
+    public void resetRuntimeDependencies() {
+        runtimeDependencies.clear()
+        runtimeDependencies.addAll(defaultRuntimeDependenciesClosure())
+    }
+
+    public void resetTestDependencies() {
+        testDependencies.clear()
+        testDependencies.addAll(defaultTestDependenciesClosure())
+    }
+
+    public void resetProvidedDependencies() {
+        providedDependencies.clear()
+        providedDependencies.addAll(providedDependenciesClosure())
+    }
+
+    public void resetBuildDependencies() {
+        buildDependencies.clear()
+        buildDependencies.addAll(buildDependenciesClosure())
+    }
+
     private List<File> compileDependencies = []
     private boolean defaultCompileDepsAdded = false
 
@@ -265,14 +292,16 @@ class BuildSettings extends AbstractBuildSettings {
     }
 
     /** List containing the default (resolved via the dependencyManager) compile-time dependencies of the app as File instances. */
-    @Lazy List<File> defaultCompileDependencies = {
+    private defaultCompileDependenciesClosure = {
         def jarFiles = dependencyManager
                             .resolveDependencies(IvyDependencyManager.COMPILE_CONFIGURATION)
                             .allArtifactsReports
                             .localFile + applicationJars
         Message.debug("Resolved jars for [compile]: ${{->jarFiles.join('\n')}}")
         return jarFiles
-    }()
+    }
+    /** List containing the default (resolved via the dependencyManager) compile-time dependencies of the app as File instances. */
+    @Lazy List<File> defaultCompileDependencies = defaultCompileDependenciesClosure()
 
     private List<File> testDependencies = []
     private boolean defaultTestDepsAdded = false
@@ -293,15 +322,16 @@ class BuildSettings extends AbstractBuildSettings {
         testDependencies = deps
     }
 
-    /** List containing the default test-time dependencies of the app as File instances. */
-    @Lazy List<File> defaultTestDependencies = {
+    private defaultTestDependenciesClosure = {
         def jarFiles = dependencyManager
                             .resolveDependencies(IvyDependencyManager.TEST_CONFIGURATION)
                             .allArtifactsReports
                             .localFile + applicationJars
         Message.debug("Resolved jars for [test]: ${{->jarFiles.join('\n')}}")
         return jarFiles
-    }()
+    }
+    /** List containing the default test-time dependencies of the app as File instances. */
+    @Lazy List<File> defaultTestDependencies = defaultTestDependenciesClosure()
 
     private List<File> runtimeDependencies = []
     private boolean defaultRuntimeDepsAdded = false
@@ -322,18 +352,18 @@ class BuildSettings extends AbstractBuildSettings {
         runtimeDependencies = deps
     }
 
-    /** List containing the default runtime-time dependencies of the app as File instances. */
-    @Lazy List<File> defaultRuntimeDependencies = {
+    private defaultRuntimeDependenciesClosure = {
         def jarFiles = dependencyManager
                    .resolveDependencies(IvyDependencyManager.RUNTIME_CONFIGURATION)
                    .allArtifactsReports
                    .localFile + applicationJars
         Message.debug("Resolved jars for [runtime]: ${{->jarFiles.join('\n')}}")
         return jarFiles
-    }()
+    }
+    /** List containing the default runtime-time dependencies of the app as File instances. */
+    @Lazy List<File> defaultRuntimeDependencies = defaultRuntimeDependenciesClosure()
 
-    /** List containing the dependencies needed at development time, but provided by the container at runtime **/
-    @Lazy List<File> providedDependencies = {
+    private providedDependenciesClosure = {
         if (dependenciesExternallyConfigured) {
             return []
         }
@@ -344,12 +374,11 @@ class BuildSettings extends AbstractBuildSettings {
 
         Message.debug("Resolved jars for [provided]: ${{->jarFiles.join('\n')}}")
         return jarFiles
-    }()
+    }
+    /** List containing the dependencies needed at development time, but provided by the container at runtime **/
+    @Lazy List<File> providedDependencies = providedDependenciesClosure()
 
-    /**
-     * List containing the dependencies required for the build system only
-     */
-    @Lazy List<File> buildDependencies = {
+    private buildDependenciesClosure = {
         if (dependenciesExternallyConfigured) {
             return []
         }
@@ -360,7 +389,9 @@ class BuildSettings extends AbstractBuildSettings {
 
         Message.debug("Resolved jars for [build]: ${{->jarFiles.join('\n')}}")
         return jarFiles
-    }()
+    }
+    /** List containing the dependencies required for the build system only */
+    @Lazy List<File> buildDependencies = buildDependenciesClosure()
 
     /**
      * Manages dependencies and dependency resolution in a Griffon application
@@ -387,8 +418,6 @@ class BuildSettings extends AbstractBuildSettings {
     private boolean resourcesDirSet
     private boolean testResourcesDirSet
     private boolean sourceDirSet
-    private boolean projectPluginsDirSet
-    private boolean globalPluginsDirSet
     private boolean testReportsDirSet
     private boolean docsOutputDirSet
     private boolean testSourceDirSet
@@ -564,20 +593,6 @@ class BuildSettings extends AbstractBuildSettings {
         sourceDirSet = true
     }
 
-    File getProjectPluginsDir() { projectPluginsDir }
-
-    void setProjectPluginsDir(File dir) {
-        projectPluginsDir = dir
-        projectPluginsDirSet = true
-    }
-
-    File getGlobalPluginsDir() { globalPluginsDir }
-
-    void setGlobalPluginsDir(File dir) {
-        globalPluginsDir = dir
-        globalPluginsDirSet = true
-    }
-
     File getTestReportsDir() { testReportsDir }
 
     void setTestReportsDir(File dir) {
@@ -742,7 +757,7 @@ class BuildSettings extends AbstractBuildSettings {
         }
         else {
             // Even if the dependencies are handled externally, we still
-            // to handle plugin dependencies.
+            // need to handle plugin dependencies.
             config.griffon.global.dependency.resolution = {
                 repositories {
                     griffonPlugins()
@@ -775,11 +790,11 @@ class BuildSettings extends AbstractBuildSettings {
     Closure pluginDependencyHandler(IvyDependencyManager dependencyManager) {
         def pluginSlurper = createConfigSlurper()
 
-        def handlePluginDirectory = {File dir ->
+        return { File dir ->
             def pluginName = dir.name
             def matcher = pluginName =~ /(\S+?)-(\d\S+)/
             pluginName = matcher ? matcher[0][1] : pluginName
-            // Try BuildConfig.groovy first, which should work
+            // Try BuildConfig.groovy first, which should
             // work for in-place plugins.
             def path = dir.absolutePath
             def pluginDependencyDescriptor = new File("${path}/griffon-app/conf/BuildConfig.groovy")
@@ -802,7 +817,6 @@ class BuildSettings extends AbstractBuildSettings {
 
                     def inlinePlugins = getInlinePluginsFromConfiguration(pluginConfig, dir)
                     if(inlinePlugins) {
-
                         for(File inlinePlugin in inlinePlugins) {
                             addPluginDirectory inlinePlugin, true
                             // recurse
@@ -817,7 +831,6 @@ class BuildSettings extends AbstractBuildSettings {
 
             }
         }
-        return handlePluginDirectory
     }
 
     ConfigSlurper createConfigSlurper() {
@@ -887,11 +900,11 @@ class BuildSettings extends AbstractBuildSettings {
         }
 
         if (!projectPluginsDirSet) {
-            this.@projectPluginsDir = new File(getPropertyValue(PLUGINS_DIR, props, "$projectWorkDir/plugins"))
+            projectPluginsDir = new File(getPropertyValue(PLUGINS_DIR, props, "$projectWorkDir/plugins"))
         }
 
         if (!globalPluginsDirSet) {
-            this.@globalPluginsDir = new File(getPropertyValue(GLOBAL_PLUGINS_DIR, props, "$griffonWorkDir/global-plugins"))
+            globalPluginsDir = new File(getPropertyValue(GLOBAL_PLUGINS_DIR, props, "$griffonWorkDir/global-plugins"))
         }
 
         if (!testReportsDirSet) {
@@ -908,7 +921,7 @@ class BuildSettings extends AbstractBuildSettings {
 
         if (!verboseCompileSet) {
             verboseCompile = getPropertyValue(VERBOSE_COMPILE, props, '').toBoolean()
-        }
+        }  
     }
 
     protected void parseGriffonBuildListeners() {
