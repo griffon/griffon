@@ -109,6 +109,17 @@ class IvyDependencyManager extends AbstractIvyDependencyManager implements Depen
         this.applicationVersion = applicationVersion
         this.buildSettings = settings
         this.metadata = metadata
+
+        // addPlatformSpecificResolvers(applicationName)
+    }
+
+    void addPlatformSpecificResolvers(String applicationName) {
+        PlatformUtils.doForAllPlatforms { platformKey, platformValue ->
+            addFlatDirResolver(
+                name: "${applicationName}-${platformKey}",
+                dirs: "lib/${platformKey}"
+            )
+        }
     }
 
     /**
@@ -208,14 +219,6 @@ class IvyDependencyManager extends AbstractIvyDependencyManager implements Depen
             repositories {
                 griffonPlugins()
                 griffonHome()
-                // uncomment the below to enable remote dependency resolution
-                // from public Maven repositories
-                //mavenCentral()
-                //mavenLocal()
-                //mavenRepo "http://snapshots.repository.codehaus.org"
-                //mavenRepo "http://repository.codehaus.org"
-                //mavenRepo "http://download.java.net/maven/2/"
-                //mavenRepo "http://repository.jboss.com/maven2/
             }
             dependencies {
                 // dependencies needed by the Griffon build system
@@ -225,7 +228,6 @@ class IvyDependencyManager extends AbstractIvyDependencyManager implements Depen
                        "org.apache.ant:ant-launcher:$antVersion",
                        "org.apache.ant:ant-junit:$antVersion",
                        "org.apache.ant:ant-nodeps:$antVersion",
-                       // "org.apache.ant:ant-trax:1.8.1",
                        "jline:jline:0.9.94",
                        "org.fusesource.jansi:jansi:1.4",
                        "commons-io:commons-io:1.4",
@@ -323,6 +325,30 @@ class IvyDependencyManager extends AbstractIvyDependencyManager implements Depen
                  for(ex in excludes) {
                      dd.exclude(ex)
                  }                 
+            }
+            addDependencyDescriptor dd
+        }
+    }
+
+    /**
+     * For usages such as addApplicationDependency(group:"junit", name:"junit", version:"4.8.1")
+     *
+     * This method is designed to be used by the internal framework and plugins and not be end users.
+     * The idea is that applications can provide platform specific dependencies at buldtime 
+     */
+    void addApplicationDependency(Map args) {
+        if(args?.group && args?.name && args?.version) {
+             def transitive = getBooleanValue(args, 'transitive')
+             def scope = args.conf ?: 'runtime'
+             def mrid = ModuleRevisionId.newInstance(args.group, args.name, args.version)
+             def dd = new EnhancedDefaultDependencyDescriptor(mrid, true, transitive, scope)
+             dd.exported = true
+             dd.inherited = false
+             configureDependencyDescriptor(dd, scope)
+             if(args.excludes) {
+                 for(ex in excludes) {
+                     dd.exclude(ex)
+                 }
             }
             addDependencyDescriptor dd
         }
@@ -643,7 +669,7 @@ class IvyDependencyManager extends AbstractIvyDependencyManager implements Depen
         }
         // Fix for GRAILS-5805
         synchronized(chainResolver.resolvers) {
-          chainResolver.add resolver
+            chainResolver.add resolver
         }
     }
 }

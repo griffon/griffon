@@ -73,4 +73,13 @@ class PlatformUtils {
         }
         platform
     }
+
+    static doForAllPlatforms(Closure callback) {
+        PLATFORMS.each { platformKey, platformValue -> callback(platformKey, platformValue) }
+    }
+
+    static doForCurrentPlatform(Closure callback) {
+        def plf = platform
+        callback(plf, PLATFORMS[plf])
+    }
 }
