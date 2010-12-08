@@ -61,7 +61,6 @@ class ApplicationFactory extends AbstractFactory {
         if (swingXPresent) {
             builder.context[DELEGATE_PROPERTY_CANCEL_BUTTON] = attributes.remove("cancelButtonProperty") ?: DEFAULT_DELEGATE_PROPERTY_CANCEL_BUTTON
 
-
             builder.context.cancelButtonDelegate =
                 builder.addAttributeDelegate {myBuilder, node, myAttributes ->
                     if (myAttributes.cancelButton && (node instanceof JButton)) {
@@ -72,7 +71,7 @@ class ApplicationFactory extends AbstractFactory {
         }
         
         def window = application
-        if (!(application instanceof Window)) {
+        if (!(application instanceof JApplet) && !(application instanceof Window)) {
             window = SwingUtilities.getWindowAncestor(application)
         } else {
             builder.context.pack = attributes.remove('pack')

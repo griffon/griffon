@@ -35,12 +35,13 @@ class SwingApplet extends JApplet implements SwingGriffonApplication {
     @Delegate private final BaseGriffonApplication _base
     final WindowManager windowManager
     WindowDisplayHandler windowDisplayHandler
-    private final WindowDisplayHandler defaultWindowDisplayHandler = new DefaultWindowDisplayHandler()
+    private final WindowDisplayHandler defaultWindowDisplayHandler = new ConfigurableWindowDisplayHandler()
 
     SwingApplet() {
         UIThreadHelper.instance.setUIThreadHandler(new SwingUIThreadHandler())
         _base = new BaseGriffonApplication(this)
         windowManager = new WindowManager(this)
+        addShutdownHandler(windowManager)
     }
 
     final WindowDisplayHandler resolveWindowDisplayHandler() {
@@ -73,7 +74,7 @@ class SwingApplet extends JApplet implements SwingGriffonApplication {
             return window
         } else {
             appletContainerDispensed = true
-            return this;
+            return this
         }
     }
 }

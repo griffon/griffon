@@ -76,7 +76,7 @@ class SwingUtils {
         // try config specified first
         if (app.config.application?.frameClass) {
             try {
-                ClassLoader cl = getClass().getClassLoader();
+                ClassLoader cl = getClass().getClassLoader()
                 if (cl) {
                     frame = cl.loadClass(app.config.application.frameClass).newInstance()
                 } else {
@@ -89,7 +89,7 @@ class SwingUtils {
         if (frame == null) {
             // JXFrame, it's nice.  Try it!
             try {
-                ClassLoader cl = getClass().getClassLoader();
+                ClassLoader cl = getClass().getClassLoader()
                 if (cl) {
                     frame = cl.loadClass('org.jdesktop.swingx.JXFrame').newInstance()
                 } else {
