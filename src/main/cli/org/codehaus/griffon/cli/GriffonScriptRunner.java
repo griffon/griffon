@@ -466,7 +466,7 @@ public class GriffonScriptRunner {
                 if (!exactMatchFound && ScriptNameResolver.resolvesTo(scriptName, scriptFileName)) potentialScripts.add(scriptPath);
             }
 
-            if (!potentialScripts.isEmpty()) {
+            if (!potentialScripts.isEmpty() && !exactMatchFound) {
                 CachedScript cachedScript = new CachedScript();
                 cachedScript.binding = binding;
                 cachedScript.potentialScripts = potentialScripts;
@@ -799,6 +799,8 @@ public class GriffonScriptRunner {
         for (File dir : listKnownPluginDirs(settings)) {
             addPluginScripts(dir, scripts);
         }
+
+        Collections.sort(scripts);
 
         return scripts;
     }
