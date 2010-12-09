@@ -14,8 +14,12 @@
  * limitations under the License.
  */
 
-package griffon.core
+package org.codehaus.griffon.runtime.core
 
+import griffon.core.GriffonApplication
+import griffon.core.ArtifactManager
+import griffon.core.ApplicationPhase
+import griffon.core.ShutdownHandler
 import griffon.util.EventRouter
 import griffon.util.Metadata
 import griffon.util.ApplicationHolder
@@ -28,6 +32,7 @@ import java.util.concurrent.ExecutorService
 import java.util.concurrent.CountDownLatch
 
 import groovy.beans.Bindable
+
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 

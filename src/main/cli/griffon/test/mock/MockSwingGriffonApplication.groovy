@@ -18,6 +18,7 @@ package griffon.test.mock
 import griffon.core.GriffonApplication
 import griffon.swing.SwingApplication
 import java.util.concurrent.CountDownLatch
+import org.codehaus.griffon.runtime.core.BaseGriffonApplication
 
 /**
  * Customizable implementation og {@code SwingApplication} useful for testing.<p>
@@ -36,9 +37,7 @@ class MockSwingGriffonApplication extends SwingApplication {
     /** Defaults to {@code griffon.test.mock.MockEvents} */
     Class eventsClass = MockEvents
 
-    private static final String[] EMPTY_ARGS = new String[0]
-
-    MockSwingGriffonApplication(String[] args = EMPTY_ARGS) {
+    MockSwingGriffonApplication(String[] args = BaseGriffonApplication.EMPTY_ARGS) {
         super(args)
     }
 
@@ -59,6 +58,7 @@ class MockSwingGriffonApplication extends SwingApplication {
     }
 
     void bootstrap() {}
+    
     void realize() {
         CountDownLatch latch = new CountDownLatch(1)
         execOutside {

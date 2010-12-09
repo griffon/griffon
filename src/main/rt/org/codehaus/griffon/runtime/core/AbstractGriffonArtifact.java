@@ -19,7 +19,6 @@ package org.codehaus.griffon.runtime.core;
 import griffon.core.GriffonApplication;
 import griffon.core.GriffonArtifact;
 import griffon.core.GriffonClass;
-import griffon.core.ArtifactManager;
 import griffon.util.UIThreadHelper;
 
 import groovy.lang.MetaClass;
@@ -78,7 +77,7 @@ public abstract class AbstractGriffonArtifact extends GroovyObjectSupport implem
     }
 
     public GriffonClass getGriffonClass() {
-        return ArtifactManager.getInstance().findGriffonClass(getClass());
+        return app.getArtifactManager().findGriffonClass(getClass());
     }
 
     public boolean isUIThread() {

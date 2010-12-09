@@ -776,11 +776,10 @@ class BuildSettings extends AbstractBuildSettings {
 
         // All projects need the plugins to be resolved.
         def handlePluginDirectory = pluginDependencyHandler()
-
-        Asynchronizer.doParallel(5) {
-            def pluginDirs = getPluginDirectories()
-            pluginDirs.eachParallel(handlePluginDirectory)
-        }
+        def pluginDirs = getPluginDirectories()
+		for(dir in pluginDirs) {
+			handlePluginDirectory(dir)
+		}
     }
 
     Closure pluginDependencyHandler() {
@@ -900,11 +899,11 @@ class BuildSettings extends AbstractBuildSettings {
         }
 
         if (!projectPluginsDirSet) {
-            projectPluginsDir = new File(getPropertyValue(PLUGINS_DIR, props, "$projectWorkDir/plugins"))
+            this.@projectPluginsDir = new File(getPropertyValue(PLUGINS_DIR, props, "$projectWorkDir/plugins"))
         }
 
         if (!globalPluginsDirSet) {
-            globalPluginsDir = new File(getPropertyValue(GLOBAL_PLUGINS_DIR, props, "$griffonWorkDir/global-plugins"))
+            this.@globalPluginsDir = new File(getPropertyValue(GLOBAL_PLUGINS_DIR, props, "$griffonWorkDir/global-plugins"))
         }
 
         if (!testReportsDirSet) {

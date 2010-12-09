@@ -29,7 +29,6 @@ import griffon.core.ApplicationPhase;
 import griffon.core.ShutdownHandler;
 import griffon.util.GriffonNameUtils;
 import groovy.util.ConfigObject;
-import groovy.lang.MissingPropertyException;
 
 /**
  * Controls a set of windows that belong to the application.<p>

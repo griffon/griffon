@@ -16,10 +16,10 @@
 package griffon.swing
 
 import griffon.core.GriffonApplication
-import griffon.core.BaseGriffonApplication
 import griffon.util.UIThreadHelper
 import javax.swing.JApplet
 import java.awt.Window
+import org.codehaus.griffon.runtime.core.BaseGriffonApplication
 import org.codehaus.griffon.runtime.util.GriffonApplicationHelper
 
 /**
@@ -32,14 +32,14 @@ import org.codehaus.griffon.runtime.util.GriffonApplicationHelper
 class SwingApplet extends JApplet implements SwingGriffonApplication {
     private boolean appletContainerDispensed = false
 
-    @Delegate private final BaseGriffonApplication _base
+    @Delegate private final BaseGriffonApplication baseApp
     final WindowManager windowManager
     WindowDisplayHandler windowDisplayHandler
     private final WindowDisplayHandler defaultWindowDisplayHandler = new ConfigurableWindowDisplayHandler()
 
     SwingApplet() {
         UIThreadHelper.instance.setUIThreadHandler(new SwingUIThreadHandler())
-        _base = new BaseGriffonApplication(this)
+        baseApp = new BaseGriffonApplication(this)
         windowManager = new WindowManager(this)
         addShutdownHandler(windowManager)
     }

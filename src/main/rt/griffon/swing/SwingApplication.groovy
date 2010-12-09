@@ -15,12 +15,12 @@
  */
 package griffon.swing
 
-import griffon.core.BaseGriffonApplication
 import griffon.util.GriffonExceptionHandler
 import griffon.util.UIThreadHelper
 import java.awt.EventQueue
 import java.awt.Toolkit
 import java.awt.Window
+import org.codehaus.griffon.runtime.core.BaseGriffonApplication
 
 /**
  * Basic implementation of {@code GriffonApplication} that runs in standalone/webstart mode.
@@ -30,14 +30,14 @@ import java.awt.Window
  * @since 0.1
  */
 class SwingApplication implements SwingGriffonApplication, griffon.application.StandaloneGriffonApplication {
-    @Delegate private final BaseGriffonApplication _base
+    @Delegate private final BaseGriffonApplication baseApp
     final WindowManager windowManager
     WindowDisplayHandler windowDisplayHandler
     private final WindowDisplayHandler defaultWindowDisplayHandler = new ConfigurableWindowDisplayHandler()
 
     SwingApplication(String[] args = BaseGriffonApplication.EMPTY_ARGS) {
         UIThreadHelper.instance.setUIThreadHandler(new SwingUIThreadHandler())
-        _base = new BaseGriffonApplication(this, args)
+        baseApp = new BaseGriffonApplication(this, args)
         windowManager = new WindowManager(this)
         addShutdownHandler(windowManager)
     }
@@ -61,7 +61,7 @@ class SwingApplication implements SwingGriffonApplication, griffon.application.S
     }
 
     boolean shutdown() {
-        if(_base.shutdown()) {
+        if(baseApp.shutdown()) {
             exit()
         }
         false

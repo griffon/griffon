@@ -24,7 +24,6 @@ import org.codehaus.groovy.ast.stmt.*;
 
 import griffon.core.GriffonApplication;
 import griffon.core.GriffonClass;
-import griffon.core.ArtifactManager;
 import griffon.util.UIThreadHelper;
 import org.codehaus.griffon.runtime.util.GriffonApplicationHelper;
 import org.codehaus.griffon.runtime.core.AbstractGriffonArtifact;
@@ -47,7 +46,6 @@ import static org.codehaus.griffon.ast.GriffonASTUtils.*;
  */
 public class GriffonArtifactASTInjector implements ASTInjector {
     private static final ClassNode GRIFFON_APPLICATION_CLASS = ClassHelper.makeWithoutCaching(GriffonApplication.class);
-    private static final ClassNode ARTIFACT_MANAGER_CLASS = ClassHelper.makeWithoutCaching(ArtifactManager.class);
     private static final ClassNode GRIFFON_CLASS_CLASS = ClassHelper.makeWithoutCaching(GriffonClass.class);
     private static final ClassNode GAH_CLASS = ClassHelper.makeWithoutCaching(GriffonApplicationHelper.class);
     private static final ClassNode CALLABLE_CLASS = ClassHelper.makeWithoutCaching(Callable.class);
@@ -116,7 +114,7 @@ public class GriffonArtifactASTInjector implements ASTInjector {
                 stmnt(call(
                     call(GROOVY_SYSTEM_CLASS, "getMetaClassRegistry", NO_ARGS),
                     "setMetaClass",
-                    args(call(THIS, "getClass()", NO_ARGS), var("mc"))
+                    args(call(THIS, "getClass", NO_ARGS), var("mc"))
                 ))
             )
         ));
@@ -130,9 +128,9 @@ public class GriffonArtifactASTInjector implements ASTInjector {
             ClassNode.EMPTY_ARRAY,
             returns(call(
                 call(
-                    ARTIFACT_MANAGER_CLASS,
-                    "getInstance",
-                     NO_ARGS),
+                    call(THIS, "getApp", NO_ARGS),
+                    "getArtifactManager",
+                    NO_ARGS),
                 "findGriffonClass",
                 args(classx(classNode))))
         ));

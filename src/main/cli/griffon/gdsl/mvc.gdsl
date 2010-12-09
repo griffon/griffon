@@ -52,7 +52,6 @@ class Constants {
     }
   
     static final String[] names_getXxxClasses = createNames('get', 'Classes')
-    // static final String[] names_getXxxClass = createNames('get', 'Class')
     static final String[] names_isXxxClass = createNames('is', 'Class')
 }
 
@@ -60,10 +59,6 @@ contributor(context(ctype: 'griffon.core.ArtifactManager')) {
     for (name in Constants.names_getXxxClasses) {
         method name: name, type: 'griffon.core.GriffonClass[]'
     }
-  
-    // for (name in Constants.names_getXxxClass) {
-    //     method name: name, params: [name: 'CharSequence'], type: 'griffon.core.GriffonClass'
-    // }
   
     for (name in Constants.names_isXxxClass) {
         method name: name, params: [aClass: 'Class'], type: 'boolean'

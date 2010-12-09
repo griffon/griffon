@@ -21,6 +21,7 @@ import griffon.core.ArtifactManager
 import griffon.core.GriffonArtifact
 import griffon.core.GriffonMvcArtifact
 import org.codehaus.griffon.runtime.builder.UberBuilder
+import org.codehaus.griffon.runtime.core.DefaultArtifactManager
 import org.codehaus.griffon.runtime.core.ModelArtifactHandler
 import org.codehaus.griffon.runtime.core.ViewArtifactHandler
 import org.codehaus.griffon.runtime.core.ControllerArtifactHandler
@@ -104,9 +105,10 @@ class GriffonApplicationHelper {
 
         runScriptInsideUIThread('Initialize', app)
 
-        app.artifactManager = ArtifactManager.instance
-        ArtifactManager.instance.app = app
-        ArtifactManager.instance.with {
+        if(!app.artifactManager) { 
+            app.artifactManager = new DefaultArtifactManager(app)
+        }
+        app.artifactManager.with {
             registerArtifactHandler(new ModelArtifactHandler(app))
             registerArtifactHandler(new ViewArtifactHandler(app))
             registerArtifactHandler(new ControllerArtifactHandler(app))
@@ -190,7 +192,7 @@ class GriffonApplicationHelper {
         log.debug("Instantiating ${klass.name} with type '${type}'")
         def instance = klass.newInstance()
 
-        GriffonClass griffonClass = ArtifactManager.instance.findGriffonClass(klass)
+        GriffonClass griffonClass = app.artifactManager.findGriffonClass(klass)
         MetaClass mc = griffonClass?.getMetaClass() ?: expandoMetaClassFor(klass)
         enhance(app, klass, mc, instance)
 
@@ -243,7 +245,7 @@ class GriffonApplicationHelper {
         Map<String, GriffonClass> griffonClassMap = [:]
         ClassLoader classLoader = app.getClass().classLoader
         app.mvcGroups[mvcType].each {k, v ->
-            GriffonClass griffonClass = ArtifactManager.instance.findGriffonClass(v)
+            GriffonClass griffonClass = app.artifactManager.findGriffonClass(v)
             Class klass = griffonClass?.clazz ?: loadClass(app, v)
             MetaClass metaClass = griffonClass?.getMetaClass() ?: klass.getMetaClass()
 
@@ -364,7 +366,7 @@ class GriffonApplicationHelper {
                 GriffonApplicationHelper.newInstance(app, *args)
             }
             // metaClass.getGriffonClass = {c ->
-            //     ArtifactManager.instance.findGriffonClass(c)
+            //     app.artifactManager.findGriffonClass(c)
             // }.curry(klass)
             UIThreadHelper.enhance(metaClass)
         }

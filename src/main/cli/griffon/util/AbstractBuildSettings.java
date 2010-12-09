@@ -30,11 +30,11 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
 /**
- * Methods optimized to Java for the BuildSettings class
+ * Methods optimized to Java for the BuildSettings class.
  *
  * @since 0.9.1
  */
-abstract public class AbstractBuildSettings {
+public abstract class AbstractBuildSettings {
 
     private static final String KEY_PLUGIN_DIRECTORY_RESOURCES = "pluginDirectoryResources";
     private static final String KEY_INLINE_PLUGIN_LOCATIONS = "inlinePluginLocations";
@@ -46,7 +46,6 @@ abstract public class AbstractBuildSettings {
     protected Map<String, Object> cache = new ConcurrentHashMap<String, Object>();
     /** The settings stored in the project's BuildConfig.groovy file if there is one. */
     protected ConfigObject config = new ConfigObject();
-    
     /** The location where project-specific plugins are installed to. */
     protected File projectPluginsDir;
 
@@ -139,7 +138,7 @@ abstract public class AbstractBuildSettings {
      * @see getInlinePluginsFromConfiguration(Map, File)
      */
     @SuppressWarnings({ "rawtypes" })
-    protected Collection<File> getInlinePluginsFromConfiguration(Map config) {
+    protected Collection<File> getInlinePluginsFromConfiguration(@SuppressWarnings("hiding") Map config) {
         return getInlinePluginsFromConfiguration(config, getBaseDir());
     }
     
@@ -220,21 +219,18 @@ abstract public class AbstractBuildSettings {
         List<String> dirs = (List<String>) cache.get(KEY_PLUGIN_BASE_DIRECTORIES);
         if (dirs == null) {
             dirs = new ArrayList<String>();
-            if (projectPluginsDir != null) {
-                try {
-                    dirs.add(projectPluginsDir.getCanonicalPath());
-                }
-                catch (IOException e) {
-                    System.err.println("Cannot read project plugins directory ["+projectPluginsDir+"] due to I/O error: " + e.getMessage());
-                }
+            if (projectPluginsDir != null) try {
+                dirs.add(projectPluginsDir.getCanonicalPath());
             }
-            if (globalPluginsDir != null) {
-                try {
-                    dirs.add(globalPluginsDir.getCanonicalPath());
-                }
-                catch (IOException e) {
-                    System.err.println("Cannot read global plugins directory ["+globalPluginsDir+"] due to I/O error: " + e.getMessage());
-                }
+            catch (IOException e) {
+                System.err.println("Cannot read project plugins directory ["+projectPluginsDir+"] due to I/O error: " + e.getMessage());
+            }
+
+            if (globalPluginsDir != null) try {
+                dirs.add(globalPluginsDir.getCanonicalPath());
+            }
+            catch (IOException e) {
+                System.err.println("Cannot read global plugins directory ["+globalPluginsDir+"] due to I/O error: " + e.getMessage());
             }
             cache.put(KEY_PLUGIN_BASE_DIRECTORIES, dirs);
         }
@@ -246,9 +242,7 @@ abstract public class AbstractBuildSettings {
      */
     @SuppressWarnings("unchecked")
     public boolean isInlinePluginLocation(File pluginLocation) {
-        if (pluginLocation == null) {
-            return false;
-        }
+        if (pluginLocation == null) return false;
         getPluginDirectories(); // initialize the cache
         ConcurrentLinkedQueue<File> locations = (ConcurrentLinkedQueue<File>) cache.get(KEY_INLINE_PLUGIN_LOCATIONS);
         return locations != null && locations.contains(pluginLocation);
