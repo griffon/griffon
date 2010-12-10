@@ -186,7 +186,7 @@ class PluginInstallEngine {
     }
 
     private String getPluginVersion(path) {
-        (path =~ /^[\S]+-([0-9][\S]*)$/)[0][1]
+        (path =~ /^[\w][\w\.]*-([0-9][\w\.]*)$/)[0][1]
     }
 
     protected void installPluginZipInternal(String name, String version, File pluginZip, boolean globalInstall = false, boolean overwrite = false) {
@@ -290,7 +290,7 @@ class PluginInstallEngine {
         // variable is added in GriffonScriptRunner, but this plugin
         // hasn't been installed by that point.
         pluginDirVariableStore["${GriffonUtil.getPropertyNameForLowerCaseHyphenSeparatedName(pluginName)}PluginDir"] = new File(pluginInstallPath).absoluteFile
-        pluginDirVariableStore["${GriffonUtil.getPropertyNameForLowerCaseHyphenSeparatedName(pluginName)}PluginVersion"] = getPluginVersion(pluginInstallPath)
+        pluginDirVariableStore["${GriffonUtil.getPropertyNameForLowerCaseHyphenSeparatedName(pluginName)}PluginVersion"] = getPluginVersion(new File(pluginInstallPath).name)
 
         def dependencies = processPluginDependencies(pluginName,pluginXml)
 
