@@ -81,7 +81,7 @@ public class GriffonScriptRunner {
 
     private static final Pattern scriptFilePattern = Pattern.compile("^[^_]\\w+\\.groovy$");
     private static final Pattern pluginDescriptorPattern = Pattern.compile("^(\\S+)GriffonPlugin.groovy$");
-    private static final Pattern pluginVersionPattern = Pattern.compile("^[\\w][\\w\\.]*-([0-9][\\w\\.]*)$");
+    private static final Pattern pluginVersionPattern = Pattern.compile("^[\\w][\\w\\.-]*-([0-9][\\w\\.]*)$");
 
     /**
      * Evaluate the arguments to get the name of the script to execute, which environment
