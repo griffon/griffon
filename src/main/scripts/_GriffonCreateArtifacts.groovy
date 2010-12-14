@@ -36,7 +36,7 @@ createArtifact = { Map args = [:] ->
     def suffix = args["suffix"]
     def type = args["type"]
     def artifactPath = args["path"]
-    // def fileType = args["fileType"] ?: '.groovy'
+    if(args['fileType']) fileType = args['fileType']
     def lineTerminator = args["lineTerminator"] ?: (fileType != '.groovy'? ';' : '')
 
     ant.mkdir(dir: "${basedir}/${artifactPath}")
