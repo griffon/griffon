@@ -384,7 +384,7 @@ class GriffonApplicationHelper {
      * @param mvcName name of the group to destroy
      */
     static destroyMVCGroup(GriffonApplication app, String mvcName) {
-        log.info("Destoying MVC group identified by '$mvcName'")
+        log.info("Destroying MVC group identified by '$mvcName'")
         app.removeApplicationEventListener(app.controllers[mvcName])
         [app.models, app.views, app.controllers].each {
             def part = it.remove(mvcName)

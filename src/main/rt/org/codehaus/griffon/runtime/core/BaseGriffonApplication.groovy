@@ -73,7 +73,8 @@ class BaseGriffonApplication implements GriffonApplication {
 
     @Bindable Locale locale = Locale.getDefault()
     static final String[] EMPTY_ARGS = new String[0]
-    protected ApplicationPhase phase = ApplicationPhase.INITIALIZE
+    protected final Object lock = new Object() 
+    private ApplicationPhase phase = ApplicationPhase.INITIALIZE
 
     private final EventRouter eventRouter = new EventRouter()
     private final List<ShutdownHandler> shutdownHandlers = []
@@ -258,7 +259,15 @@ class BaseGriffonApplication implements GriffonApplication {
     }
 
     ApplicationPhase getPhase() {
-        phase
+        synchronized(lock) {
+            this.@phase
+        }
+    }
+    
+    protected void setPhase(ApplicationPhase phase) {
+        synchronized(lock) {
+            this.@phase = phase
+        }
     }
 
     // -----------------------

@@ -52,11 +52,14 @@ class ApplicationFactory extends AbstractFactory {
 
     public Object newInstance(FactoryBuilderSupport builder, Object name, Object value, Map attributes) {
         def application = builder.app.createApplicationContainer()
+        def window = getContainingWindow(application)
 
-        if ((application instanceof JApplet) && swingXPresent) {
-            // bake in some JXFrame stuff if present
-            application.rootPane = getClass().getClassLoader().loadClass('org.jdesktop.swingx.JXRootPane').newInstance()
+        if (application instanceof JApplet && swingXPresent) {
+           // bake in some JXFrame stuff if present
+           application.rootPane = getClass().getClassLoader().loadClass('org.jdesktop.swingx.JXRootPane').newInstance()
         }
+
+        if(!window) return application
 
         if (swingXPresent) {
             builder.context[DELEGATE_PROPERTY_CANCEL_BUTTON] = attributes.remove("cancelButtonProperty") ?: DEFAULT_DELEGATE_PROPERTY_CANCEL_BUTTON
@@ -70,14 +73,9 @@ class ApplicationFactory extends AbstractFactory {
                 }
         }
         
-        def window = application
-        if (!(application instanceof JApplet) && !(application instanceof Window)) {
-            window = SwingUtilities.getWindowAncestor(application)
-        } else {
-            builder.context.pack = attributes.remove('pack')
-            builder.context.show = attributes.remove('show')
-            builder.addDisposalClosure(application.&dispose)
-        }
+        builder.context.pack = attributes.remove('pack')
+        builder.context.show = attributes.remove('show')
+        builder.addDisposalClosure(application.&dispose)
         builder.containingWindows.add(window)
 
         builder.context[DELEGATE_PROPERTY_DEFAULT_BUTTON] = attributes.remove("defaultButtonProperty") ?: DEFAULT_DELEGATE_PROPERTY_DEFAULT_BUTTON
@@ -132,27 +130,35 @@ class ApplicationFactory extends AbstractFactory {
 
 
     public void onNodeCompleted(FactoryBuilderSupport builder, Object parent, Object node) {
+        def window = getContainingWindow(node)
         builder.removeAttributeDelegate(builder.context.cancelButtonDelegate)
-        if (node instanceof Window) {
+        if (window instanceof Window) {
             def containingWindows = builder.containingWindows
-            if (!containingWindows.empty && containingWindows.last == node) {
-                containingWindows.removeLast();
+            if (!containingWindows.empty && containingWindows.last == window) {
+                containingWindows.removeLast()
             }
-        }
 
-        // can't pack or show an applet...
-        if (node instanceof Window) {
+            // can't pack or show an applet...
+
             if (builder.context.pack) {
-                node.pack()
+                window.pack()
             }
             if (builder.context.show) {
-                node.visible = true
+                window.visible = true
             }  
         }
 
         builder.removeAttributeDelegate(builder.context.defaultButtonDelegate)
     }
 
+    private getContainingWindow(node) {
+        if(node instanceof JApplet || node instanceof Window) {
+            return node
+        } else if(node instanceof Component) {
+            return SwingUtilities.getWindowAncestor(node)
+        }
+        return null
+    }
 
     public void setChild(FactoryBuilderSupport builder, Object parent, Object child) {
         if (!(child instanceof Component) || (child instanceof Window)) {
