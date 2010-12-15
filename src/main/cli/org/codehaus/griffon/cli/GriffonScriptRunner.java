@@ -752,7 +752,7 @@ public class GriffonScriptRunner {
             for (File file : descriptors) {
                 Matcher matcher = pluginDescriptorPattern.matcher(file.getName());
                 matcher.find();
-                String pluginName = GriffonUtil.getPropertyName(matcher.group(1));
+                String pluginName = GriffonUtil.getPropertyNameForLowerCaseHyphenSeparatedName(matcher.group(1));
 
                 // Add the plugin path to the binding.
                 binding.setVariable(pluginName + "PluginDir", file.getParentFile());

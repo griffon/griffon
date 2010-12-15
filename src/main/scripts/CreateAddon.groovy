@@ -75,17 +75,18 @@ target ('default' : "Creates a new Addon for a plugin") {
     def eventsText = eventsFile.text
     def classpathTempVar = generateTempVar(eventsText, "eventClosure")
     def pluginName = GriffonUtil.getScriptName(griffonAppName)
+    def pluginName2 = GriffonUtil.getPropertyNameForLowerCaseHyphenSeparatedName(griffonAppName)
     eventsFile << """
 def $classpathTempVar = binding.variables.containsKey('eventSetClasspath') ? eventSetClasspath : {cl->}
 eventSetClasspath = { cl ->
     $classpathTempVar(cl)
     if(compilingPlugin('$pluginName')) return
-    griffonSettings.dependencyManager.flatDirResolver name: 'griffon-${pluginName}-plugin', dirs: "\${${pluginName}PluginDir}/addon"
+    griffonSettings.dependencyManager.flatDirResolver name: 'griffon-${pluginName}-plugin', dirs: "\${${pluginName2}PluginDir}/addon"
     griffonSettings.dependencyManager.addPluginDependency('$pluginName', [
         conf: 'compile',
         name: 'griffon-${pluginName}-addon',
         group: 'org.codehaus.griffon.plugins',
-        version: ${pluginName}PluginVersion
+        version: ${pluginName2}PluginVersion
     ])
 }
 """
