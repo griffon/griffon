@@ -238,7 +238,7 @@ class PluginInstallEngine {
 
         def supportedPlatforms = pluginXml.platforms?.text()
         if (supportedPlatforms) {
-            if (!(PlatformUtils.platform in supportedPlatforms.split(','))) {
+            if (!(PlatformUtils.isCompatible(supportedPlatforms.split(',')))) {
                 cleanupPluginInstallAndExit(pluginInstallPath, "Failed to install plug-in [${fullPluginName}]. Required platforms are [${supportedPlatforms}], current one is ${PlatformUtils.platform}")
             }
         }
