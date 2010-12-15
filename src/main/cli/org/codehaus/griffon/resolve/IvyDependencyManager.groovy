@@ -211,7 +211,7 @@ class IvyDependencyManager extends AbstractIvyDependencyManager implements Depen
     static Closure getDefaultDependencies(String griffonVersion) {
         String antVersion = '1.8.1'
         String slf4jVersion = '1.6.1'
-        String springVersion = '3.0.3.RELEASE'
+        String springVersion = '3.0.5.RELEASE'
 
         return {
             // log level of Ivy resolver, either 'error', 'warn', 'info', 'debug' or 'verbose'
@@ -251,7 +251,7 @@ class IvyDependencyManager extends AbstractIvyDependencyManager implements Depen
                 docs   "org.xhtmlrenderer:core-renderer:R8pre2",
                        "com.lowagie:itext:2.0.8",
                        "radeox:radeox:1.0-b2",
-                       "org.grails:grails-docs:1.3.5"
+                       "org.grails:grails-docs:1.3.6"
 
                 // dependencies needed for compilation
                 compile("org.codehaus.groovy:groovy-all:1.7.5") {
