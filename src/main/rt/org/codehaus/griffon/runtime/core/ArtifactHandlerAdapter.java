@@ -38,7 +38,6 @@ public abstract class ArtifactHandlerAdapter implements ArtifactHandler {
     private final String trailing;
     private final GriffonApplication app;
 
-    private static final Class[] GRIFFON_CLASS_CTOR_ARGS = new Class[]{GriffonApplication.class, ArtifactInfo.class};
     private ArtifactInfo[] artifacts = new ArtifactInfo[0];
     private GriffonClass[] classes = new GriffonClass[0];
     private Map<String, GriffonClass> classesByName = new TreeMap<String, GriffonClass>();
@@ -93,6 +92,10 @@ public abstract class ArtifactHandlerAdapter implements ArtifactHandler {
 
     public GriffonClass[] getClasses() {
         return classes;
+    }
+
+    public ArtifactInfo[] getArtifacts() {
+        return artifacts;
     }
 
     public GriffonClass getClassFor(Class clazz) {
