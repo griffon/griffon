@@ -6,7 +6,7 @@ Any artifact or class that abides to the following conventions can be registered
     * scripts, classes and maps can be registered/unregistered by calling @addApplicationListener@/ @removeApplicationListener@ on the app instance.
     * closure event handlers must be registered with an overloaded version of @addApplicationListener@/@removeApplicationListener@ that takes *<EventName>* as the first parameter, and the closure itself as the second parameter.
 
-There is a general, per application, script that can provide event handlers, if you want to take advantage of this feature you must define a script named @Events.groovy@ inside @griffon-app/conf@. Lastly each controller is automatically registered as an application event listener.
+There is a general, per application, script that can provide event handlers. If you want to take advantage of this feature you must define a script named @Events.groovy@ inside @griffon-app/conf@. Lastly each controller is automatically registered as an application event listener.
 
 These are some examples of event handlers:
 

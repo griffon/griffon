@@ -12,7 +12,7 @@ Publishing an event can be done synchronously on the current thread or asynchron
 app.event('MyEventName', ['arg0', 'arg1'])
 {code}
 
-Whereas the following snippet guarantees that all event handlers that are interested in and event of type @MyEventName@ will be called outside of the UI thread
+Whereas the following snippet guarantees that all event handlers that are interested in an event of type @MyEventName@ will be called outside of the UI thread
 
 {code}
 app.eventAsync('MyEventName', ['arg0', 'arg1'])
