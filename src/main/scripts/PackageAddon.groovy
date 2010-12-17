@@ -69,4 +69,11 @@ target ('packageAddon': "Packages a Griffon addon. Note: to package a plugin use
             metainf(dir: metainfDirPath)
         }
     }
+
+    cliJarName = "griffon-${pluginName}-cli-${plugin.version}.jar"
+    if(cliClassesDir.exists()) {
+        ant.jar(destfile: "$addonJarDir/$cliJarName") {
+            fileset(dir: cliClassesDir)
+        }
+    }
 }

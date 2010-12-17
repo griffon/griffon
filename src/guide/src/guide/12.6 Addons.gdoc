@@ -41,3 +41,21 @@ root.'CustomGriffonAddon'.model='*'
 {code}
 
 The special groups are: '\*', '\*:factories', '\*:methods', '\*:props'
+
+Should you encounter a problem with duplicate node names you can change the default prefix (@root@) of the addon to something more suitable to your needs. All nodes contributed by the addon will now be accessible using that prefix. Here's an example
+
+{code}
+nx.'CustomGriffonAddon'.addon=true
+{code}
+
+Assuming @CustomGriffonAddon@ is defined as follows
+
+{code}
+class CustomGriffonAddon {
+    def factories = [
+        button: com.acme.CustomButton
+    ]
+}
+{code}
+
+Then instances of @CustomButtom@ can be obtained by using @nxbutton@, whereas regular instances of @JButton@ will be accessible with @button@.

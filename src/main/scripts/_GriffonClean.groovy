@@ -42,6 +42,7 @@ target(cleanCompiledSources: "Cleans compiled Java and Groovy sources") {
     ant.delete(dir:resourcesDirPath)
     ant.delete(dir:testDirPath)
     ant.delete(dir:testResourcesDirPath)
+    ant.delete(dir:cliClassesDirPath)
 }
 
 target(cleanTestReports: "Cleans the test reports") {
