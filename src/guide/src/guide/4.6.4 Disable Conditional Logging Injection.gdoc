@@ -1,0 +1,7 @@
+Griffon 0.9.1 added a log property to all artifacts, and enabled logging on addons. Groovy 1.8 adds a new set of AST transformations, \@Log being one of them. It's job is to transform an unguarded logging statement into a guarded one. Starting with 0.9.2, Griffon can do the same without the need of annotating artifacts or addons with \@Log.
+
+If this feature proves to be a disadvantage then disable it with the following command flag
+
+{code}
+griffon -Dgriffon.disable.logging.injection=true compile
+{code}

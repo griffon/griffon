@@ -42,9 +42,9 @@ class DefaultArtifactManager extends AbstractArtifactManager {
 
         urls.each { url ->
             def config = new ConfigSlurper().parse(url)
-            log.debug("Loading artifact definitions from $url")
+            if(log.debugEnabled) log.debug("Loading artifact definitions from $url")
             config.each { type, classes -> 
-                log.debug("Artifacts of type '${type}' = ${classes.split(',').size()}")
+                if(log.debugEnabled) log.debug("Artifacts of type '${type}' = ${classes.split(',').size()}")
                 classes.split(',').collect(artifacts.get(type, [])) {
                     new ArtifactInfo(GriffonApplicationHelper.loadClass(app, it), type)
                 }

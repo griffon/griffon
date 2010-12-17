@@ -68,7 +68,7 @@ class ServiceArtifactHandler extends ArtifactHandlerAdapter {
             }
             
             if(serviceInstance) {
-                log.debug("Injecting service $serviceInstance on $instance using property '$propertyName'")
+                if(log.debugEnabled) log.debug("Injecting service $serviceInstance on $instance using property '$propertyName'")
                 instance[propertyName] = serviceInstance
             }
         }

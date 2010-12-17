@@ -203,7 +203,7 @@ class BaseGriffonApplication implements GriffonApplication {
         phase = phase.STARTUP
         event('StartupStart',[appDelegate])
     
-        log.info("Initializing all startup groups: ${config.application.startupGroups}")
+        if(log.infoEnabled) log.info("Initializing all startup groups: ${config.application.startupGroups}")
         config.application.startupGroups.each {group -> createMVCGroup(group) }
         GriffonApplicationHelper.runScriptInsideUIThread('Startup', appDelegate)
 

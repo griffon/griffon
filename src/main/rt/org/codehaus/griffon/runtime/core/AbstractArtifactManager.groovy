@@ -59,7 +59,7 @@ abstract class AbstractArtifactManager implements ArtifactManager {
 
     void registerArtifactHandler(ArtifactHandler handler) {
         if(!handler) return
-        log.info("Registering artifact handler for type '${handler.type}': $handler")
+        if(log.infoEnabled) log.info("Registering artifact handler for type '${handler.type}': $handler")
         synchronized(LOCK) {
             ARTIFACT_HANDLERS[handler.type] = handler
             if(ARTIFACTS[handler.type]) handler.initialize(ARTIFACTS[handler.type])
@@ -68,7 +68,7 @@ abstract class AbstractArtifactManager implements ArtifactManager {
 
     void unregisterArtifactHandler(ArtifactHandler handler) {
         if(!handler) return
-        log.info("Removing artifact handler for type '${handler.type}': $handler")
+        if(log.infoEnabled) log.info("Removing artifact handler for type '${handler.type}': $handler")
         synchronized(LOCK) {
             ARTIFACT_HANDLERS.remove(handler.type)
         }
