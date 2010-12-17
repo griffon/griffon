@@ -15,16 +15,10 @@
  */
 package org.codehaus.griffon.compiler;
 
-import org.codehaus.groovy.GroovyBugError;
 import org.codehaus.groovy.ast.*;
 import org.codehaus.groovy.ast.expr.*;
 import org.codehaus.groovy.classgen.*;
 import org.codehaus.groovy.control.*;
-import org.codehaus.groovy.control.messages.SyntaxErrorMessage;
-import org.codehaus.groovy.syntax.SyntaxException;
-
-import java.lang.reflect.Method;
-import java.util.Arrays;
 
 /**
  * Injects conditional logging on Griffon artifacts.<p>
@@ -96,42 +90,6 @@ public class LoggingInjectionOperation extends CompilationUnit.PrimaryClassNodeO
 
         };
         transformer.visitClass(classNode);
-    }
-
-    private LoggingStrategy createLoggingStrategy(AnnotationNode logAnnotation) {
-        String annotationName = logAnnotation.getClassNode().getName();
-
-        Class annotationClass;
-        try {
-            annotationClass = Class.forName(annotationName);
-        } catch (Throwable e) {
-            throw new RuntimeException("Could not resolve class named " + annotationName);
-        }
-
-        Method annotationMethod;
-        try {
-            annotationMethod = annotationClass.getDeclaredMethod("loggingStrategy", (Class[])null);
-        } catch (Throwable e) {
-            throw new RuntimeException("Could not find method named loggingStrategy on class named " + annotationName);
-        }
-
-        Object defaultValue;
-        try {
-            defaultValue = annotationMethod.getDefaultValue();
-        } catch (Throwable e) {
-            throw new RuntimeException("Could not find default value of method named loggingStrategy on class named " + annotationName);
-        }
-
-        if (!LoggingStrategy.class.isAssignableFrom((Class)defaultValue)) {
-            throw new RuntimeException("Default loggingStrategy value on class named " + annotationName + " is not a LoggingStrategy");
-        }
-
-        try {
-            Class<? extends LoggingStrategy> strategyClass = (Class<? extends LoggingStrategy>) defaultValue;
-            return strategyClass.newInstance();
-        } catch (Exception e) {
-            return null;
-        }
     }
 
     /**
