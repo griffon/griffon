@@ -196,6 +196,10 @@ testClasspath = {
     pathelement(location: "${griffonSettings.testResourcesDir}")
     debug "  ${griffonSettings.testClassesDir}/shared"
     debug "  ${griffonSettings.testResourcesDir}"
+    if(hasCliSources) {
+        pathelement(location: cliClassesDirPath)
+        debug "  $cliClassesDirPath"
+    }
 
     for (pluginTestJar in getPluginTestFiles()) {
         if(pluginTestJar.file.exists()) {

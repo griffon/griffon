@@ -71,7 +71,7 @@ target ('packageAddon': "Packages a Griffon addon. Note: to package a plugin use
     }
 
     cliJarName = "griffon-${pluginName}-cli-${plugin.version}.jar"
-    if(cliClassesDir.exists()) {
+    if(cliSourceDir.exists()) {
         ant.jar(destfile: "$addonJarDir/$cliJarName") {
             fileset(dir: cliClassesDir)
         }

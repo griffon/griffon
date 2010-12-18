@@ -374,6 +374,10 @@ cliSourceDir = new File("${basedir}/src/cli")
 cliSourceDirPath = cliSourceDir.absolutePath
 cliClassesDir = new File("${griffonSettings.projectWorkDir}/cli-classes")
 cliClassesDirPath = cliClassesDir.absolutePath
+hasCliSources = cliSourceDir.exists()
+if(hasCliSources) {
+    ant.mkdir(dir: cliClassesDirPath)
+}
 
 includeTargets << griffonScript("_GriffonArgParsing")
 includeTargets << griffonScript("_GriffonEvents")
