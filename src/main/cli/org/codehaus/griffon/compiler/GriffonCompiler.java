@@ -24,7 +24,6 @@ import java.util.List;
 import java.util.LinkedHashMap;
 import java.util.Enumeration;
 import java.util.Properties;
-import java.util.regex.Matcher;
 
 import org.codehaus.groovy.ant.Groovyc;
 import org.codehaus.groovy.ast.*;
@@ -40,6 +39,7 @@ import org.codehaus.groovy.control.*;
 public class GriffonCompiler extends Groovyc {
     private static final String DISABLE_AUTO_IMPORTS = "griffon.disable.auto.imports";
     private static final String DISABLE_LOGGING_INJECTION = "griffon.disable.logging.injection";
+    private static final String DISABLE_THREADING_INJECTION = "griffon.disable.threading.injection";
     
     protected org.codehaus.griffon.compiler.ResolveVisitor resolveVisitor;
 
@@ -85,6 +85,10 @@ public class GriffonCompiler extends Groovyc {
             compilationUnit.addPhaseOperation(new LoggingInjectionOperation(), Phases.CANONICALIZATION);
         }
 
+        if(!Boolean.getBoolean(DISABLE_THREADING_INJECTION)) {
+            compilationUnit.addPhaseOperation(new ThreadingInjectionOperation(), Phases.CANONICALIZATION);
+        }
+
         return compilationUnit;
     }
 
@@ -108,9 +112,9 @@ public class GriffonCompiler extends Groovyc {
            GriffonCompilerContext.isGriffonScript(source) ||
            GriffonCompilerContext.isTestSource(source)) {
             Map<ClassNode, String[]> imports = resolveVisitor.getAdditionalImports();
-            Matcher matcher = GriffonCompilerContext.groovyArtifactPattern.matcher(source.getName());
-            if(matcher.matches()) {
-                imports.put(classNode, GriffonCompilerContext.merge(DEFAULT_IMPORTS, IMPORTS_PER_ARTIFACT_TYPE.get(matcher.group(1))));
+            String artifactPath = GriffonCompilerContext.getArtifactPath(source.getName());
+            if(artifactPath != null) {
+                imports.put(classNode, GriffonCompilerContext.merge(DEFAULT_IMPORTS, IMPORTS_PER_ARTIFACT_TYPE.get(artifactPath)));
             } else {
                 imports.put(classNode, DEFAULT_IMPORTS);
             }
