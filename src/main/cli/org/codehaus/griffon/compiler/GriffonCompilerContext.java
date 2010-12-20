@@ -24,9 +24,12 @@ import java.util.ArrayList;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import griffon.util.BuildSettings;
 import griffon.util.BuildSettingsHolder;
 import groovy.util.ConfigObject;
 import org.codehaus.groovy.control.SourceUnit;
+import org.codehaus.groovy.runtime.typehandling.DefaultTypeTransformation;
+
 
 /**
  * @author Andres Almiray
@@ -34,6 +37,11 @@ import org.codehaus.groovy.control.SourceUnit;
  * @since 0.9.1
  */
 public class GriffonCompilerContext {
+    public static final String DISABLE_AST_INJECTION = "griffon.disable.ast.injection";
+    public static final String DISABLE_AUTO_IMPORTS = "griffon.disable.auto.imports";
+    public static final String DISABLE_LOGGING_INJECTION = "griffon.disable.logging.injection";
+    public static final String DISABLE_THREADING_INJECTION = "griffon.disable.threading.injection";
+
     public static boolean verbose;
     public static String basedir;
     public static String projectName;
@@ -152,10 +160,18 @@ public class GriffonCompilerContext {
     }
 
     public static ConfigObject getBuildSettings() {
-        return BuildSettingsHolder.getSettings().getConfig();
+        BuildSettings settings = BuildSettingsHolder.getSettings();
+        return settings != null ? settings.getConfig() : new ConfigObject();
     }
 
     public static Map getFlattenedBuildSettings() {
         return getBuildSettings().flatten(new LinkedHashMap());
+    }
+
+    public static boolean getConfigOption(String key) {
+        if(System.getProperty(key) != null) return Boolean.getBoolean(key);
+        Object value = getFlattenedBuildSettings().get(key);
+        if(value != null) return DefaultTypeTransformation.castToBoolean(value);
+        return false;
     }
 }

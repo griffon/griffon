@@ -37,10 +37,6 @@ import org.codehaus.groovy.control.*;
  * @since 0.9.1
  */
 public class GriffonCompiler extends Groovyc {
-    private static final String DISABLE_AUTO_IMPORTS = "griffon.disable.auto.imports";
-    private static final String DISABLE_LOGGING_INJECTION = "griffon.disable.logging.injection";
-    private static final String DISABLE_THREADING_INJECTION = "griffon.disable.threading.injection";
-    
     protected org.codehaus.griffon.compiler.ResolveVisitor resolveVisitor;
 
     private static final Map<String, String[]> IMPORTS_PER_ARTIFACT_TYPE = new LinkedHashMap<String, String[]>();
@@ -68,7 +64,7 @@ public class GriffonCompiler extends Groovyc {
     protected CompilationUnit makeCompileUnit() {
         CompilationUnit compilationUnit = super.makeCompileUnit();
         
-        if(!Boolean.getBoolean(DISABLE_AUTO_IMPORTS)) {
+        if(!GriffonCompilerContext.getConfigOption(GriffonCompilerContext.DISABLE_AUTO_IMPORTS)) {
             compilationUnit.addPhaseOperation(new CompilationUnit.PrimaryClassNodeOperation() {
                 public void call(SourceUnit source, GeneratorContext context,
                                  ClassNode classNode) throws CompilationFailedException {
@@ -79,14 +75,24 @@ public class GriffonCompiler extends Groovyc {
             // WATCH OUT!! We add our own ResolveVisitor before Groovy's
             resolveVisitor = new org.codehaus.griffon.compiler.ResolveVisitor(compilationUnit);
             compilationUnit.addPhaseOperation(resolve, Phases.CONVERSION);
+        } else {
+            log("Default imports feature disabled.");
         }
 
-        if(!Boolean.getBoolean(DISABLE_LOGGING_INJECTION)) {
+        if(!GriffonCompilerContext.getConfigOption(GriffonCompilerContext.DISABLE_LOGGING_INJECTION)) {
             compilationUnit.addPhaseOperation(new LoggingInjectionOperation(), Phases.CANONICALIZATION);
+        } else {
+            log("Conditional logging feature disabled.");
         }
 
-        if(!Boolean.getBoolean(DISABLE_THREADING_INJECTION)) {
+        if(!GriffonCompilerContext.getConfigOption(GriffonCompilerContext.DISABLE_THREADING_INJECTION)) {
             compilationUnit.addPhaseOperation(new ThreadingInjectionOperation(), Phases.CANONICALIZATION);
+        } else {
+            log("Threading injection feature disabled.");
+        }
+
+        if(GriffonCompilerContext.getConfigOption(GriffonCompilerContext.DISABLE_AST_INJECTION)) {
+            log("Artifact AST injection feature disabled.");
         }
 
         return compilationUnit;

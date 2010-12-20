@@ -32,10 +32,8 @@ import org.codehaus.griffon.compiler.GriffonCompilerContext;
  * @since 0.9.1
  */
 public abstract class GriffonArtifactASTTransformation implements ASTTransformation, Opcodes {
-    private static final String DISABLE_AST_INJECTION = "griffon.disable.ast.injection";
-    
     public void visit(ASTNode[] nodes, SourceUnit source) {
-        if(Boolean.getBoolean(DISABLE_AST_INJECTION) || !GriffonCompilerContext.isGriffonArtifact(source)) return;
+        if(GriffonCompilerContext.getConfigOption(GriffonCompilerContext.DISABLE_AST_INJECTION) || !GriffonCompilerContext.isGriffonArtifact(source)) return;
         ModuleNode moduleNode = (ModuleNode) nodes[0];
         ClassNode classNode = moduleNode.getClasses().get(0);
         if(classNode.isDerivedFrom(ClassHelper.SCRIPT_TYPE) && !allowsScriptAsArtifact()) return;
