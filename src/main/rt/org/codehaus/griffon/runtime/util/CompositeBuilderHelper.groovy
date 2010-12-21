@@ -92,7 +92,7 @@ class CompositeBuilderHelper {
         if (!FactoryBuilderSupport.isAssignableFrom(builderClass)) {
             return;
         }
-        log.debug("Initializing builder ${builderClass.name}")
+        if(log.debugEnabled) log.debug("Initializing builder ${builderClass.name}")
         FactoryBuilderSupport localBuilder = uberBuilder.uberInit(prefixName, builderClass)
         for (partialTarget in builderClassName.value) {
             if (partialTarget.key == 'view') {
@@ -103,7 +103,7 @@ class CompositeBuilderHelper {
             MetaClass mc = targets[partialTarget.key]
             if(!mc) continue
 
-            log.debug("Injecting builder contributions to $partialTarget.key using ${partialTarget.value}")
+            if(log.debugEnabled) log.debug("Injecting builder contributions to $partialTarget.key using ${partialTarget.value}")
             for (String injectionName in partialTarget.value) {
                 def factories = localBuilder.getLocalFactories()
                 def methods = localBuilder.getLocalExplicitMethods()
@@ -112,7 +112,7 @@ class CompositeBuilderHelper {
                 Closure processInjection = {String injectedName ->                
                     def resolvedName = "${prefixName}${injectedName}"
                     if (methods.containsKey(injectedName)) {
-                        log.trace("Injected method ${resolvedName}() on $partialTarget.key")
+                        if(log.traceEnabled) log.trace("Injected method ${resolvedName}() on $partialTarget.key")
                         mc."$resolvedName" = methods[injectedName]
                     } else if (props.containsKey(injectedName)) {
                         Closure[] accessors = props[injectedName]
@@ -123,15 +123,15 @@ class CompositeBuilderHelper {
                             beanName = injectedName[0].toUpperCase()
                         }
                         if (accessors[0]) {
-                            log.trace("Injected getter for ${beanName} on $partialTarget.key")
+                            if(log.traceEnabled) log.trace("Injected getter for ${beanName} on $partialTarget.key")
                             mc."get$beanName" = accessors[0]
                         }
                         if (accessors[1]) {
-                            log.trace("Injected setter for ${beanName} on $partialTarget.key")
+                            if(log.traceEnabled) log.trace("Injected setter for ${beanName} on $partialTarget.key")
                             mc."set$beanName" = accessors[1]
                         }
                     } else if (factories.containsKey(injectedName)) {
-                        log.trace("Injected factory ${resolvedName} on $partialTarget.key")
+                        if(log.traceEnabled) log.trace("Injected factory ${resolvedName} on $partialTarget.key")
                         mc."${resolvedName}" = {Object ... args -> uberBuilder."$resolvedName"(* args)}
                     }
                 }

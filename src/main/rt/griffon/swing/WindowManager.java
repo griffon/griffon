@@ -27,6 +27,8 @@ import java.util.concurrent.CopyOnWriteArrayList;
 import griffon.core.GriffonApplication;
 import griffon.core.ApplicationPhase;
 import griffon.core.ShutdownHandler;
+import griffon.util.GriffonNameUtils;
+import groovy.util.ConfigObject;
 
 /**
  * Controls a set of windows that belong to the application.<p>
@@ -48,10 +50,68 @@ public final class WindowManager implements ShutdownHandler {
 
     /**
      * Creates a new WindowManager tied to an specific application.
+     *
      * @param app an application
      */
     public WindowManager(SwingGriffonApplication app) {
         this.app = app;
+    }
+
+    /**
+     * Finds a Window by name.
+     *
+     * @param name the value of the name: property
+     * @return a Window if a match is found, null otherwise.
+     */
+    public Window findWindow(String name) {
+        if(!GriffonNameUtils.isBlank(name)) {
+            for(Window window : windows) {
+                if(name.equals(window.getName())) return window;
+            }
+        }
+        return null;
+    }
+
+    /**
+     * Convenience method to get a managed Window by index.<p>
+     * Follows the Groovy conventions for overriding the [] operator.
+     *
+     * @param index the index of the Window to be retrieved
+     * @return the Window found at the specified index
+     * @throws IndexArrayOutOfBoundsException if the index is invalid (below 0 or greater than the size
+     *         of the managed windows list)
+     */
+    public Window getAt(int index) {
+        return windows.get(index);
+    }
+
+    /**
+     * Finds the Window that should be displayed during the Ready phase of an application.<p>
+     * The WindowManager expects a configuration flag <code>swing.windowManager.startingWindow</code>. If it's not 
+     * present in order to determine which Window will be displayed during the Ready phase. If no configuration
+     * found then the WindowManmager will pick the first Window found in the list of managed windows.<p>
+     * The configuration flag accepts two value types:<ul>
+     * <li>a String that defines the name of the Window. You must make sure the Window has a matching name property.</li>
+     * <li>a Number that defines the index of the Window in the list of managed windows.</li>
+     * </ul>
+     *
+     * @return a Window that matches the given criteria or null if no match is found. 
+     */
+    public Window getStartingWindow() {
+        Object value = fetchConfigProperty(fetchConfigProperty(app.getConfig(), "swing"), "windowManager").getProperty("startingWindow");
+        if(value instanceof ConfigObject) {
+            if(windows.size() > 0) return windows.get(0);
+        } else if(value instanceof String) {
+            return findWindow((String) value);
+        } else if(value instanceof Number) {
+            int index = ((Number)value).intValue();
+            if(index >= 0 && index < windows.size()) return windows.get(index);
+        }
+        return null;
+    }
+
+    private static ConfigObject fetchConfigProperty(ConfigObject parent, String property) {
+        return (ConfigObject) parent.getProperty(property);
     }
 
     /**
@@ -83,6 +143,7 @@ public final class WindowManager implements ShutdownHandler {
      * @param window the window to be removed
      */
     public void detach(Window window) {
+        if(window == null) return;
         if(windows.contains(window)) {
             window.removeWindowListener(windowHelper);
             window.removeComponentListener(componentHelper);
@@ -97,6 +158,7 @@ public final class WindowManager implements ShutdownHandler {
      * @param window the window to show
      */
     public void show(final Window window) {
+        if(window == null) return;
         app.execSync(new Runnable() {
             public void run() {
                 app.resolveWindowDisplayHandler().show(window, app);
@@ -111,6 +173,7 @@ public final class WindowManager implements ShutdownHandler {
      * @param window the window to hide
      */
     public void hide(final Window window) {
+        if(window == null) return;
         app.execSync(new Runnable() {
             public void run() {
                 app.resolveWindowDisplayHandler().hide(window, app);

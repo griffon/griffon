@@ -15,12 +15,7 @@
  */
 package griffon.swing
 
-import griffon.core.BaseGriffonApplication
-import griffon.util.GriffonExceptionHandler
-import griffon.util.UIThreadHelper
-import java.awt.EventQueue
-import java.awt.Toolkit
-import java.awt.Window
+import org.codehaus.griffon.runtime.core.BaseGriffonApplication
 
 /**
  * Basic implementation of {@code GriffonApplication} that runs in standalone/webstart mode.
@@ -29,75 +24,12 @@ import java.awt.Window
  * @author Andres Almiray
  * @since 0.1
  */
-class SwingApplication implements SwingGriffonApplication, griffon.application.StandaloneGriffonApplication {
-    @Delegate private final BaseGriffonApplication _base
-    final WindowManager windowManager
-    WindowDisplayHandler windowDisplayHandler
-    private final WindowDisplayHandler defaultWindowDisplayHandler = new DefaultWindowDisplayHandler()
-
+class SwingApplication extends AbstractSwingGriffonApplication {
     SwingApplication(String[] args = BaseGriffonApplication.EMPTY_ARGS) {
-        UIThreadHelper.instance.setUIThreadHandler(new SwingUIThreadHandler())
-        _base = new BaseGriffonApplication(this, args)
-        windowManager = new WindowManager(this)
-        addShutdownHandler(windowManager)
-    }
-
-    final WindowDisplayHandler resolveWindowDisplayHandler() {
-        windowDisplayHandler ?: defaultWindowDisplayHandler
-    }
-
-    void bootstrap() {
-        initialize()
-    }
-
-    void realize() {
-        startup()
-    }
-
-    void show() {
-        List <Window> windows = windowManager.windows
-        if(windows.size() > 0) windowManager.show(windows[0])
-
-        callReady()
-    }
-
-    boolean shutdown() {
-        if(_base.shutdown()) {
-            exit()
-        }
-        false
-    }
-
-    void exit() {
-        System.exit(0)
-    }
-
-    Object createApplicationContainer() {
-        Window window = SwingUtils.createApplicationFrame(this)
-        windowManager.attach(window)
-        return window
-    }
-
-    /**
-     * Calls the ready lifecycle mhetod after the UI thread calms down
-     */
-    private void callReady() {
-        // wait for EDT to empty out.... somehow
-        boolean empty = false
-        while (true) {
-            UIThreadHelper.instance.executeSync {empty = Toolkit.defaultToolkit.systemEventQueue.peekEvent() == null}
-            if (empty) break
-            sleep(100)
-        }
-
-        ready()
+        super(args)
     }
 
     public static void main(String[] args) {
-        GriffonExceptionHandler.registerExceptionHandler()
-        SwingApplication sa = new SwingApplication(args)
-        sa.bootstrap()
-        sa.realize()
-        sa.show()
+        AbstractSwingGriffonApplication.run(SwingApplication, args)
     }
 }

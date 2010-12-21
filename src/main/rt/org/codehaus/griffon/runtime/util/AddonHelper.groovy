@@ -67,7 +67,7 @@ public class AddonHelper {
                 if (mme.method != 'addonPostInit') throw mme
             }
             app.event("LoadAddonEnd", [name, addon, app])
-            log.info("Loaded addon $name")
+            if(log.infoEnabled) log.info("Loaded addon $name")
         }
 
         app.event("LoadAddonsEnd", [app, app.addons])
@@ -85,7 +85,7 @@ public class AddonHelper {
         addonMetaClass.newInstance = GriffonApplicationHelper.&newInstance.curry(app)
         UIThreadHelper.enhance(addonMetaClass)
 
-        log.info("Loading addon $addonName with class ${addon.class.name}")
+        if(log.infoEnabled) log.info("Loading addon $addonName with class ${addon.class.name}")
         app.event("LoadAddonStart", [addonName, addon, app])
 
         try {
@@ -180,30 +180,30 @@ public class AddonHelper {
             if (!mc) continue
             for (String itemName in partialTarget.value) {
                 if (itemName == '*') {
-                    if(methods) log.trace("Injecting all methods on $partialTarget.key")
+                    if(methods && log.traceEnabled) log.trace("Injecting all methods on $partialTarget.key")
                     addMethods(mc, methods, prefix)
-                    if(factories) log.trace("Injecting all factories on $partialTarget.key")
+                    if(factories && log.traceEnabled) log.trace("Injecting all factories on $partialTarget.key")
                     addFactories(mc, factories, prefix, builder)
-                    if(props) log.trace("Injecting all properties on $partialTarget.key")
+                    if(props && log.traceEnabled) log.trace("Injecting all properties on $partialTarget.key")
                     addProps(mc, props, prefix)
                     continue
                 } else if (itemName == '*:methods') {
-                    if(methods) log.trace("Injecting all methods on $partialTarget.key")
+                    if(methods && log.traceEnabled) log.trace("Injecting all methods on $partialTarget.key")
                     addMethods(mc, methods, prefix)
                     continue
                 } else if (itemName == '*:factories') {
-                    if(factories) log.trace("Injecting all factories on $partialTarget.key")
+                    if(factories && log.traceEnabled) log.trace("Injecting all factories on $partialTarget.key")
                     addFactories(mc, factories, prefix, builder)
                     continue
                 } else if (itemName == '*:props') {
-                    if(props) log.trace("Injecting all properties on $partialTarget.key")
+                    if(props && log.traceEnabled) log.trace("Injecting all properties on $partialTarget.key")
                     addProps(mc, props, prefix)
                     continue
                 }
 
                 def resolvedName = "${prefix}${itemName}"
                 if (methods.containsKey(itemName)) {
-                    log.trace("Injected method ${resolvedName}() on $partialTarget.key")
+                    if(log.traceEnabled) log.trace("Injected method ${resolvedName}() on $partialTarget.key")
                     mc."$resolvedName" = methods[itemName]
                 } else if (props.containsKey(itemName)) {
                     Map accessors = props[itemName]
@@ -214,15 +214,15 @@ public class AddonHelper {
                         beanName = itemName[0].toUpperCase()
                     }
                     if (accessors.containsKey('get')) {
-                        log.trace("Injected getter for ${beanName} on $partialTarget.key")
+                        if(log.traceEnabled) log.trace("Injected getter for ${beanName} on $partialTarget.key")
                         mc."get$beanName" = accessors['get']
                     }
                     if (accessors.containsKey('set')) {
-                        log.trace("Injected setter for ${beanName} on $partialTarget.key")
+                        if(log.traceEnabled) log.trace("Injected setter for ${beanName} on $partialTarget.key")
                         mc."set$beanName" = accessors['set']
                     }
                 } else if (factories.containsKey(itemName)) {
-                    log.trace("Injected factory ${resolvedName} on $partialTarget.key")
+                    if(log.traceEnabled) log.trace("Injected factory ${resolvedName} on $partialTarget.key")
                     mc."${resolvedName}" = {Object ... args -> builder."$resolvedName"(* args)}
                 }
             }

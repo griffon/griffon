@@ -20,7 +20,6 @@ import griffon.core.GriffonApplication;
 import griffon.core.GriffonClass;
 import griffon.core.GriffonView;
 import griffon.core.GriffonViewClass;
-import griffon.core.ArtifactManager;
 import griffon.util.UIThreadHelper;
 
 import groovy.lang.MetaClass;
@@ -93,7 +92,7 @@ public abstract class AbstractGriffonViewScript extends Script implements Griffo
     }
 
     public GriffonClass getGriffonClass() {
-        return ArtifactManager.getInstance().findGriffonClass(getClass());
+        return app.getArtifactManager().findGriffonClass(getClass());
     }
 
     public boolean isUIThread() {

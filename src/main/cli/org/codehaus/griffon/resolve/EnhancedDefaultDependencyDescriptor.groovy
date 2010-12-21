@@ -41,7 +41,7 @@ public class EnhancedDefaultDependencyDescriptor extends DefaultDependencyDescri
      */
     String plugin
     /**
-     * Whether the dependency is inherted from a plugin or framework and not an application dependency
+     * Whether the dependency is inherited from a plugin or framework and not an application dependency
      */
     boolean inherited
 

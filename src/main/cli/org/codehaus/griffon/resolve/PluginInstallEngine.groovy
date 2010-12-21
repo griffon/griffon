@@ -185,6 +185,10 @@ class PluginInstallEngine {
         installPlugin(file, globalInstall, true)
     }
 
+    private String getPluginVersion(path) {
+        (path =~ /^[\w][\w\.-]*-([0-9][\w\.]*)$/)[0][1]
+    }
+
     protected void installPluginZipInternal(String name, String version, File pluginZip, boolean globalInstall = false, boolean overwrite = false) {
 
         def fullPluginName = "$name-$version"
@@ -234,7 +238,7 @@ class PluginInstallEngine {
 
         def supportedPlatforms = pluginXml.platforms?.text()
         if (supportedPlatforms) {
-            if (!(PlatformUtils.platform in supportedPlatforms.split(','))) {
+            if (!(PlatformUtils.isCompatible(supportedPlatforms.split(',')))) {
                 cleanupPluginInstallAndExit(pluginInstallPath, "Failed to install plug-in [${fullPluginName}]. Required platforms are [${supportedPlatforms}], current one is ${PlatformUtils.platform}")
             }
         }
@@ -286,6 +290,7 @@ class PluginInstallEngine {
         // variable is added in GriffonScriptRunner, but this plugin
         // hasn't been installed by that point.
         pluginDirVariableStore["${GriffonUtil.getPropertyNameForLowerCaseHyphenSeparatedName(pluginName)}PluginDir"] = new File(pluginInstallPath).absoluteFile
+        pluginDirVariableStore["${GriffonUtil.getPropertyNameForLowerCaseHyphenSeparatedName(pluginName)}PluginVersion"] = getPluginVersion(new File(pluginInstallPath).name)
 
         def dependencies = processPluginDependencies(pluginName,pluginXml)
 

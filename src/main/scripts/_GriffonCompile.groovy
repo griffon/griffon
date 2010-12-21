@@ -108,6 +108,25 @@ target(compile: "Implementation of compilation phase") {
                 include(name:'*GriffonPlugin.groovy')
             }
             resolvePluginClasspathDependencies(loadPluginClass(pluginFile))
+
+            if(cliSourceDir.exists()) {
+                ant.mkdir(dir: cliClassesDir)
+                ant.path(id:'plugin.cli.compile.classpath') {
+                    path(refid: 'griffon.compile.classpath')
+                    pathElement(location: classesDirPath)
+                }
+                compileSources(cliClassesDir, 'plugin.cli.compile.classpath') {
+                    src(path: cliSourceDir)
+                    javac(classpathref: 'plugin.cli.compile.classpath', debug: 'yes')
+                }
+                ant.copy(todir: cliClassesDir) {
+                    fileset(dir: "${basedir}/src/cli") {
+                        exclude(name: '**/*.java')
+                        exclude(name: '**/*.groovy')
+                        exclude(name: '**/.svn')
+                    }
+                }
+            }
         }
 
         if(new File("${basedir}").list().grep{ it =~ /GriffonAddon\.groovy/ }){

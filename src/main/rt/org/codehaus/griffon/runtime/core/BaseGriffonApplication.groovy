@@ -14,8 +14,12 @@
  * limitations under the License.
  */
 
-package griffon.core
+package org.codehaus.griffon.runtime.core
 
+import griffon.core.GriffonApplication
+import griffon.core.ArtifactManager
+import griffon.core.ApplicationPhase
+import griffon.core.ShutdownHandler
 import griffon.util.EventRouter
 import griffon.util.Metadata
 import griffon.util.ApplicationHolder
@@ -28,6 +32,7 @@ import java.util.concurrent.ExecutorService
 import java.util.concurrent.CountDownLatch
 
 import groovy.beans.Bindable
+
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 
@@ -68,7 +73,8 @@ class BaseGriffonApplication implements GriffonApplication {
 
     @Bindable Locale locale = Locale.getDefault()
     static final String[] EMPTY_ARGS = new String[0]
-    protected ApplicationPhase phase = ApplicationPhase.INITIALIZE
+    protected final Object lock = new Object() 
+    private ApplicationPhase phase = ApplicationPhase.INITIALIZE
 
     private final EventRouter eventRouter = new EventRouter()
     private final List<ShutdownHandler> shutdownHandlers = []
@@ -197,7 +203,7 @@ class BaseGriffonApplication implements GriffonApplication {
         phase = phase.STARTUP
         event('StartupStart',[appDelegate])
     
-        log.info("Initializing all startup groups: ${config.application.startupGroups}")
+        if(log.infoEnabled) log.info("Initializing all startup groups: ${config.application.startupGroups}")
         config.application.startupGroups.each {group -> createMVCGroup(group) }
         GriffonApplicationHelper.runScriptInsideUIThread('Startup', appDelegate)
 
@@ -253,7 +259,15 @@ class BaseGriffonApplication implements GriffonApplication {
     }
 
     ApplicationPhase getPhase() {
-        phase
+        synchronized(lock) {
+            this.@phase
+        }
+    }
+    
+    protected void setPhase(ApplicationPhase phase) {
+        synchronized(lock) {
+            this.@phase = phase
+        }
     }
 
     // -----------------------

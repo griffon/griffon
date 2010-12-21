@@ -63,7 +63,7 @@ class PlatformUtils {
             archs: ['amd64', 'x86_64']]
     ]
 
-    static getPlatform() {
+    static String getPlatform() {
         if(!platform) {
             platform = 'windows'
             if(isSolaris) platform = 'solaris'
@@ -72,5 +72,18 @@ class PlatformUtils {
             if(is64Bit) platform += '64'
         }
         platform
+    }
+
+    static void doForAllPlatforms(Closure callback) {
+        PLATFORMS.each { platformKey, platformValue -> callback(platformKey, platformValue) }
+    }
+
+    static isCompatible(platforms) {
+        platforms.any{ it == platform || (is64Bit && it == (platform[0..-3])) }
+    }
+
+    static doForCurrentPlatform(Closure callback) {
+        def plf = platform
+        callback(plf, PLATFORMS[plf])
     }
 }

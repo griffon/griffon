@@ -152,7 +152,7 @@ class UberBuilder extends FactoryBuilderSupport {
                 script.setBinding(this)
                 return script.run()
             } catch(x){
-                log.error("An error occurred while building $script", x)
+                if(log.errorEnabled) log.error("An error occurred while building $script", x)
                 throw x
             }
         }

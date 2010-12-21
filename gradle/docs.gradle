@@ -1,20 +1,16 @@
 import org.apache.tools.ant.filters.ReplaceTokens
 
 buildscript {
-    configurations {
-        classpath.transitive = false
-    }
-
     repositories {
         mavenCentral()
         mavenRepo name: 'SpringSource', urls: 'http://repository.springsource.com/maven/bundles/release'
     }
 
     dependencies {
-        classpath "org.grails:grails-docs:1.3.5",
-                  "org.xhtmlrenderer:core-renderer:R8pre2",
-                  "com.lowagie:itext:2.0.8",
-                  "radeox:radeox:1.0-b2"
+        classpath("org.grails:grails-docs:1.3.5") { transitive = false }
+        classpath("org.xhtmlrenderer:core-renderer:R8pre2") { transitive = false }
+        classpath("com.lowagie:itext:2.0.8") { transitive = false }
+        classpath("radeox:radeox:1.0-b2") { transitive = false }
     }
 }
 
@@ -97,11 +93,14 @@ task buildGuide(type: Copy) {
 task pdfGuide(type: Copy) {
     dependsOn { buildGuide }
 
+    inputs.dir("$buildDir/manual" as File)
+    outputs.files "$buildDir/manual/griffon-guide-${version}.pdf"
+
     doFirst {
         try {
             grails.doc.PdfBuilder.build(
-                basedir: buildDir.canonicalPath,
-                home: project.file('.'),
+                basedir: buildDir.absolutePath,
+                home: project.file('.').absolutePath,
                 tool: 'griffon'
             )
         } catch(x) {

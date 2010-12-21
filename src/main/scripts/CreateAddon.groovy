@@ -31,8 +31,8 @@ includeTargets << griffonScript("CreateIntegrationTest")
 /**
  * Stuff this addon does:
  * * Creates a <name>GriffonAddon.groovy file form templates
- * * tweaks griffon-app/conf/BuildConfig.groovy to have griffon.jars.destDir set (dont' cahnge)
- * * tweaks griffon-app/conf/BuildConfig.groovy to have griffon.jars.jarName set (dont' cahnge)
+ * * tweaks griffon-app/conf/BuildConfig.groovy to have griffon.jars.destDir set (dont' change)
+ * * tweaks griffon-app/conf/BuildConfig.groovy to have griffon.jars.jarName set (dont' change)
  * * Adds copy libs events for the destDir
  * * Adds install hooks to wire in addon to griffon-app/conf/Builder.groovy
  * * Adds uninstall hooks to remove the addon from griffon-app/conf/Builder.groovy
@@ -73,19 +73,21 @@ target ('default' : "Creates a new Addon for a plugin") {
     }
 
     def eventsText = eventsFile.text
-    def libTempVar = generateTempVar(eventsText, "eventClosure")
+    def classpathTempVar = generateTempVar(eventsText, "eventClosure")
+    def pluginName = GriffonUtil.getScriptName(griffonAppName)
+    def pluginName2 = GriffonUtil.getPropertyNameForLowerCaseHyphenSeparatedName(griffonAppName)
     eventsFile << """
-def $libTempVar = binding.variables.containsKey('eventCopyLibsEnd') ? eventCopyLibsEnd : {jardir->}
-eventCopyLibsEnd = { jardir ->
-    $libTempVar(jardir)
-    if (!isPluginProject) {
-        def pluginDir = getPluginDirForName('${GriffonUtil.getScriptName(griffonAppName)}')
-        if(pluginDir?.file?.exists()) {
-            ant.fileset(dir: "\${pluginDir.file}/lib/", includes: '*.jar').each {
-                griffonCopyDist(it.toString(), jardir)
-            }
-        }
-    }
+def $classpathTempVar = binding.variables.containsKey('eventSetClasspath') ? eventSetClasspath : {cl->}
+eventSetClasspath = { cl ->
+    $classpathTempVar(cl)
+    if(compilingPlugin('$pluginName')) return
+    griffonSettings.dependencyManager.flatDirResolver name: 'griffon-${pluginName}-plugin', dirs: "\${${pluginName2}PluginDir}/addon"
+    griffonSettings.dependencyManager.addPluginDependency('$pluginName', [
+        conf: 'compile',
+        name: 'griffon-${pluginName}-addon',
+        group: 'org.codehaus.griffon.plugins',
+        version: ${pluginName2}PluginVersion
+    ])
 }
 """
 

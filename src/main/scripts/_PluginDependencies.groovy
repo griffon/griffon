@@ -483,8 +483,6 @@ protected GriffonPluginManager resetClasspath() {
     PluginManagerHolder.pluginManager = null
 }
 
-
-
 doInstallPluginFromURL = { URL url, Metadata md = metadata ->
     withPluginInstall {
         def installEngine = createPluginInstallEngine(md)

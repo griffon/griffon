@@ -13,6 +13,7 @@ abstract class AbstractGriffonClassTestCase extends GriffonUnitTestCase {
 
     void setUp() {
         app = new MockGriffonApplication()
+        app.artifactManager = new DefaultArtifactManager()
     }
 
     void testRespondsToMvcMethods() {

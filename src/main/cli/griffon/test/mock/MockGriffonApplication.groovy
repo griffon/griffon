@@ -16,9 +16,9 @@
 package griffon.test.mock
 
 import griffon.core.GriffonApplication
-import griffon.core.BaseGriffonApplication
 import griffon.util.UIThreadHelper
 import griffon.util.UIThreadHandler
+import org.codehaus.griffon.runtime.core.BaseGriffonApplication
 
 /**
  * Customizable implementation og {@code GriffonApplication} useful for testing.<p>
@@ -27,7 +27,7 @@ import griffon.util.UIThreadHandler
  * @author Andres Almiray
  */
 class MockGriffonApplication {
-    @Delegate private final BaseGriffonApplication _base
+    @Delegate private final BaseGriffonApplication baseApp
     Closure applicationContainerGenerator
 
     /** Defaults to {@code griffon.test.mock.MockApplication} */
@@ -41,7 +41,7 @@ class MockGriffonApplication {
     UIThreadHandler uiThreadHandler
 
     MockGriffonApplication(String[] args = BaseGriffonApplication.EMPTY_ARGS) {
-        _base = new BaseGriffonApplication(this, args)
+        baseApp = new BaseGriffonApplication(this, args)
     }
 
     /**
@@ -51,7 +51,7 @@ class MockGriffonApplication {
         applicationContainerGenerator?.call() ?: [:]
     }
 
-    void setUiThreadHanlder(UIThreadHandler uiThreadHandler) {
+    void setUiThreadHandler(UIThreadHandler uiThreadHandler) {
         UIThreadHelper.instance.setUIThreadHandler(uiThreadHandler)
     }
 

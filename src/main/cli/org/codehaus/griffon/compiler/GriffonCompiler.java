@@ -39,6 +39,7 @@ import org.codehaus.groovy.control.*;
  */
 public class GriffonCompiler extends Groovyc {
     private static final String DISABLE_AUTO_IMPORTS = "griffon.disable.auto.imports";
+    private static final String DISABLE_LOGGING_INJECTION = "griffon.disable.logging.injection";
     
     protected org.codehaus.griffon.compiler.ResolveVisitor resolveVisitor;
 
@@ -78,6 +79,10 @@ public class GriffonCompiler extends Groovyc {
             // WATCH OUT!! We add our own ResolveVisitor before Groovy's
             resolveVisitor = new org.codehaus.griffon.compiler.ResolveVisitor(compilationUnit);
             compilationUnit.addPhaseOperation(resolve, Phases.CONVERSION);
+        }
+
+        if(!Boolean.getBoolean(DISABLE_LOGGING_INJECTION)) {
+            compilationUnit.addPhaseOperation(new LoggingInjectionOperation(), Phases.CANONICALIZATION);
         }
 
         return compilationUnit;

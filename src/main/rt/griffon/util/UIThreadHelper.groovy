@@ -19,8 +19,8 @@ import java.util.concurrent.Callable
 import java.util.concurrent.Future
 import java.util.concurrent.Executors
 import java.util.concurrent.ExecutorService
-import java.util.logging.Level
-import java.util.logging.Logger
+import org.slf4j.Logger
+import org.slf4j.LoggerFactory
 
 /**
  * Helper class that can execute code inside the UI thread.
@@ -32,7 +32,7 @@ class UIThreadHelper {
     // should be done at boot time
     private UIThreadHandler uiThreadHandler
     private final ExecutorService DEFAULT_EXECUTOR_SERVICE = Executors.newFixedThreadPool(2)
-    private static final Logger LOG = Logger.getLogger(UIThreadHelper.class.name)
+    private static final Logger log = LoggerFactory.getLogger(UIThreadHelper)
 
     private static final UIThreadHelper INSTANCE = new UIThreadHelper()
 
@@ -52,7 +52,7 @@ class UIThreadHelper {
         if(!this.uiThreadHandler) {
             this.uiThreadHandler = threadHandler
         } else {
-            LOG.log(Level.WARNING, "UIThreadHandler is already set, you can't change it!")
+            if(log.warnEnabled) log.warn("UIThreadHandler is already set, you can't change it!")
         }
     }
 

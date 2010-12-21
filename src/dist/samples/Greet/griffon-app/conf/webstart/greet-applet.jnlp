@@ -36,17 +36,20 @@
         <!--<j2ee-application-client-permissions/>-->
     </security>
     <resources>
+        <property name="griffon.runmode" value="applet"/>
         <property name="jnlp.packEnabled" value="true"/>
         <j2se version="1.5+" @memoryOptions@/>
         <!-- auto-added jars follow, griffon-rt, app, and groovy -->
 @jnlpJars@
         <!-- Add all extra jars below here, or the app may break -->
-    @jnlpExtensions@ 
-</resources>
+@jnlpExtensions@
+@jnlpProperties@
+    </resources>
+@jnlpResources@
   <applet-desc
       documentbase="@griffonAppCodebase@"
       name="@griffonAppName@Applet"
-      main-class="griffon.applet.GriffonApplet"
+      main-class="@griffonAppletClass@"
       width="320"
       height="640">
       <!-- params are ignored when referenced from web page for 6u10 -->

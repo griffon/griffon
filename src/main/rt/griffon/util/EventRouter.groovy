@@ -71,7 +71,7 @@ class EventRouter {
    
    private Closure buildPublisher(String eventName, List params) {
       return { mode ->
-         log.trace("Triggering event '$eventName' $mode")
+         if(log.traceEnabled) log.trace("Triggering event '$eventName' $mode")
          eventName = eventName[0].toUpperCase() + eventName[1..-1]
          def eventHandler = "on" + eventName
          def dispatchEvent = { listener ->

@@ -1,6 +1,42 @@
 The @[WindowManager|api:griffon.swing.WindowManager]@ class is responsible for keeping track of all the windows managed by the application. It also controls how these windows are displayed (via a pair of methods: show, hide). WindowManager relies on an instance of @[WindowDisplayHandler|api:griffon.swing.WindowDisplayHandler]@ to actually show or hide a window. The default implementation simple shows and hide windows directly, however you can change this behavior by setting a different implementation of @WindowDisplayHandler@ on the application instance.
 
-The following example shows how you can animate windows using a dropIn effect for show() and a dropOut effect for hide(). This code assumes you have installed the [Effects|http://griffon.codehaus.org/Effects+Plugin] plugin.
+h4. WindowManager DSL
+
+Starting with Griffon 0.9.2 there's a new DSL for configuring show/hide behavior per window. This configuration can be set in @griffon-app/conf/Config.groovy@, and here is how it looks
+
+{code}
+swing {
+    windowManager {
+        myWindowName = [
+            show: {window, app -> ... },
+            hide: {window, app -> ... }
+        ]
+        myOtherWindowName = [
+            show: {window, app -> ... }
+        ]
+    }     
+}
+{code}
+
+The name of each entry must match the value of the Window's name: property. Each entry may have the following options
+* *show* - used to show the window to the screen. It must be a closure that takes two parameters: the window to display and the current application.
+* *hide* - used to hide the window from the screen. It must be a closure that takes two parameters: the window to hide and the current application.
+* *handler* - a custom @WindowDisplayHandler@.
+
+The first two options have priority over the third one. If one is missing then the WindowManager will invoke the default behavior. There is one last option that can be used to override the default behavior provided to all windows
+
+{code}
+swing {
+    windowManager {
+        defaultHandler = new MyCustomWindowDisplayHandler()
+    }     
+}
+{code}
+
+
+h4. Custom WindowDisplayHandlers
+
+The following example shows how you can animate all managed windows using a dropIn effect for show() and a dropOut effect for hide(). This code assumes you have installed the [Effects|http://griffon.codehaus.org/Effects+Plugin] plugin.
 
 In @src/main/Dropper.groovy@
 {code}
@@ -36,3 +72,35 @@ onBootstrapEnd = { app ->
     app.windowDisplayHandler = new Dropper()
 }
 {code}
+
+{note}
+Custom @WindowDisplayHandler@ implementations set in this manner will be called for all managed windows. You'll loose the ability of using the WindowManager DSL.
+{note}
+
+Alternatively, you could specify an instance of @Dropper@ as the default handler by changing the @WindowManager@'s configuration to
+
+{code}
+swing {
+    windowManager {
+        defaultHandler = new Dropper()
+    }
+}
+{code}
+
+h4. Starting Window
+
+Previous to Griffon 0.9.2 the first window to be displayed during the Ready phase was determined by a simple algorithm: picking the first available window from the managed windows list. With 0.9.2 however, it's now possible to configure this behavior by means of the WindowManager DSL. Simply specify a value for @swing.windowManager.startingWindow@, like this
+
+{code}
+swing {
+    windowManager {
+        startingWindow = 'primary'
+    }
+}
+{code}
+
+This configuration flag accepts two types of values:
+    * a String that defines the name of the Window. You must make sure the Window has a matching name property.
+    * a Number that defines the index of the Window in the list of managed windows.
+
+If no match is found then the default behavior will be executed.

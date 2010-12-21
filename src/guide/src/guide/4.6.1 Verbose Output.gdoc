@@ -1,6 +1,6 @@
-[Scripts|guide:scripts] have the choice of printing to the console whenever they need to communicate something to the developer. They would normally use a standard @println@ sentence. Sometimes it's useful to know what a script is doing with further detail but it makes no sense to see that information every single time. A conditioned output is required.
+[Scripts|guide:scripts] have the choice of printing to the console whenever they need to communicate something to the developer. They would normally use a standard @println@ sentence. Sometimes it's useful to know what a script is doing with further detail but it makes no sense to see that information every single time. A conditional output is required.
 
-All scripts inherit a @debug()@ closure that will print its argument to stdout if an only if the following flag is enabled: @griffon.clie.verbose@. As an example, the following script has two print outs
+All scripts inherit a @debug()@ closure that will print its argument to stdout if an only if the following flag is enabled: @griffon.cli.verbose@. As an example, the following script has two print outs
 
 {code}
 includeTargets << griffonScript("Init")
