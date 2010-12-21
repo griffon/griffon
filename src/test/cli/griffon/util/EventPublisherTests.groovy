@@ -2,7 +2,7 @@ package griffon.util
 
 import org.codehaus.groovy.control.CompilationFailedException
 
-class EventPublisherTest extends GroovyTestCase {
+class EventPublisherTests extends GroovyTestCase {
     void testHappyPath() {
         GroovyShell shell = new GroovyShell()
         shell.evaluate("""
