@@ -3,67 +3,42 @@
 <html>
 <head>
   <title></title>
+</head>
+<body>
 
+<script src="http://java.com/js/deployJava.js"></script>
 <script>
-// from http://weblogs.java.net/blog/joshy/archive/2008/08/a_better_applet_1.html
-function generateInlineAppletTag(appletID, screenshotID) {
-    var attributes = {
+    var attributes = {id: '@griffonAppName@',
                       codebase:'@griffonAppCodebase@',
-                      code:'griffon.applet.GriffonApplet.class',
+                      code:'@griffonAppletClass@',
                       archive:'@appletJars@',
-                      width:'320', height:'640'} ;
+                      width:'@applet.width@', height:'@applet.height@'} ;
     var parameters = {fontSize:16,
                       java_arguments: "-Djnlp.packEnabled=true",
-                      jnlp_href:'@griffonAppCodebase@/greet-applet.jnlp',
+                      jnlp_href:'@griffonAppCodebase@/applet.jnlp',
                       draggable:'true',
                       image:'griffon.png',
                       boxmessage:'Loading @griffonAppName@',
                       boxbgcolor:'#FFFFFF', boxfgcolor:'#000000',
-                      codebase_lookup: 'false'} ;
-
-
-    var appletTag = document.createElement("applet");
-
-    for (var attribute in attributes) {
-        appletTag.setAttribute(attribute,attributes[attribute]);
-    }
-
-    if (parameters != 'undefined' && parameters != null) {
-        for (var parameter in parameters) {
-            var param = document.createElement("PARAM");
-            param.setAttribute("name",parameter);
-            param.setAttribute("value",parameters[parameter]);
-            appletTag.appendChild(param);
-        }
-    }
-
-
-    var bodyRef = document.getElementById(appletID);
-    var screenshot = document.getElementById(screenshotID);
-    bodyRef.removeChild(screenshot);
-    bodyRef.appendChild(appletTag);
-}
+                      codebase_lookup: 'false'@applet.script.params@} ;
+    var version = '1.5.0' ;
+    deployJava.runApplet(attributes, parameters, version);
 </script>
-</head>
-<body>
-<div id="appletDiv">
-<a id="screenshot1" href="javascript:generateInlineAppletTag('appletDiv','screenshot1');"><img src="greetfake.jpg" border="0"/></a>
-</div>
-
 <!--
 <APPLET CODEBASE='@griffonAppCodebase@'
-        CODE='griffon.applet.GriffonApplet.class'
+        CODE='@griffonAppletClass@'
         ARCHIVE='@appletJars@'
-        WIDTH='320' HEIGHT='640'>
-    <PARAM NAME='java_arguments' VALUE='-Djnlp.packEnabled=true">
+        WIDTH='@applet.width@' HEIGHT='@applet.height@'>
+    <PARAM NAME="java_arguments" VALUE="-Djnlp.packEnabled=true">
     <PARAM NAME='jnlp_href' VALUE='@griffonAppCodebase@/applet.jnlp'>
-    <PARAM NAME='draggable' VALUE='true'>
+    <PARAM NAME='dragggable' VALUE='true'>
     <PARAM NAME='image' VALUE='griffon.png'>
     <PARAM NAME='boxmessage' VALUE='Loading @griffonAppName@'>
     <PARAM NAME='boxbgcolor' VALUE='#FFFFFF'>
     <PARAM NAME='boxfgcolor' VALUE='#000000'>
     <PARAM NAME='codebase_lookup' VALUE='false'>
- </APPLET>
+@applet.tag.params@
+</APPLET>
 -->
 </body>
 </html>
