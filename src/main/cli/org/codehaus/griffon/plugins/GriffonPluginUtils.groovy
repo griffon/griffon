@@ -28,7 +28,7 @@ import org.springframework.core.io.Resource
  */
 class GriffonPluginUtils {
     static final String WILDCARD = "*";
-    public static final GRIFFON_HOME
+    static final GRIFFON_HOME
     static {
         try {
             GRIFFON_HOME = System.getenv("GRIFFON_HOME")
@@ -149,19 +149,19 @@ class GriffonPluginUtils {
         new PluginBuildSettings(BuildSettingsHolder.settings, PluginManagerHolder.getPluginManager())
     }
 
-    private static INSTANCE
+    private static instance
     /**
      * Returns a cached PluginBuildSettings instance.
      */
     static synchronized PluginBuildSettings getPluginBuildSettings() {
-        if (INSTANCE == null) {
-            INSTANCE = newPluginBuildSettings()
+        if (instance == null) {
+            instance = newPluginBuildSettings()
         }
-        return INSTANCE
+        return instance
     }
 
     static synchronized setPluginBuildSettings(PluginBuildSettings settings) {
-        INSTANCE = settings
+        instance = settings
     }
 
     /**
@@ -354,7 +354,7 @@ class GriffonPluginUtils {
      */
     static synchronized clearCaches() {
         getPluginBuildSettings().clearCache()
-        INSTANCE = null
+        instance = null
     }
 }
 

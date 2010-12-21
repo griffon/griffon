@@ -30,7 +30,7 @@ import org.codehaus.griffon.runtime.util.GriffonApplicationHelper
  * @since 0.9.2
  */
 class DefaultArtifactManager extends AbstractArtifactManager {
-    private static final Logger log = LoggerFactory.getLogger(DefaultArtifactManager)
+    private static final Logger LOG = LoggerFactory.getLogger(DefaultArtifactManager)
 
     DefaultArtifactManager(GriffonApplication app) {
         super(app)
@@ -42,9 +42,9 @@ class DefaultArtifactManager extends AbstractArtifactManager {
 
         urls.each { url ->
             def config = new ConfigSlurper().parse(url)
-            if(log.debugEnabled) log.debug("Loading artifact definitions from $url")
+            if(LOG.debugEnabled) LOG.debug("Loading artifact definitions from $url")
             config.each { type, classes -> 
-                if(log.debugEnabled) log.debug("Artifacts of type '${type}' = ${classes.split(',').size()}")
+                if(LOG.debugEnabled) LOG.debug("Artifacts of type '${type}' = ${classes.split(',').size()}")
                 classes.split(',').collect(artifacts.get(type, [])) {
                     new ArtifactInfo(GriffonApplicationHelper.loadClass(app, it), type)
                 }

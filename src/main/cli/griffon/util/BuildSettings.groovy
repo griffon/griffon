@@ -15,8 +15,6 @@
  */
 package griffon.util
 
-import groovyx.gpars.Asynchronizer
-
 import java.util.regex.Pattern
 
 import org.apache.ivy.plugins.repository.TransferListener

@@ -113,7 +113,11 @@ public abstract class AbstractGriffonClass implements GriffonClass {
 
     public Object newInstance() {
         try {
-            return GriffonApplicationHelper.newInstance(app, clazz, type);
+            Object instance = GriffonApplicationHelper.newInstance(app, clazz, type);
+            if(instance instanceof AbstractGriffonArtifact) {
+                ((AbstractGriffonArtifact) instance).setApp(app);
+            }
+            return instance;
         } catch (Exception e) {
             Throwable targetException = null;
             if (e instanceof InvocationTargetException) {

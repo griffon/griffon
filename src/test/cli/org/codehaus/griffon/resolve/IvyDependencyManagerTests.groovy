@@ -6,8 +6,8 @@ import org.apache.ivy.util.Message
 import org.apache.ivy.util.MessageLogger
 import org.apache.ivy.util.DefaultMessageLogger
 import griffon.util.BuildSettings
-import griffon.util.BuildSettingsHolder
-import griffon.util.GriffonUtil
+// import griffon.util.BuildSettingsHolder
+// import griffon.util.GriffonUtil
 import groovy.xml.MarkupBuilder
 import org.apache.ivy.plugins.parser.m2.PomDependencyMgt
 import org.apache.ivy.core.resolve.IvyNode

@@ -34,13 +34,13 @@ import org.slf4j.LoggerFactory
  * @author Andres Almiray
  */
 class CompositeBuilderHelper {
-    private static final Logger log = LoggerFactory.getLogger(CompositeBuilderHelper)
+    private static final Logger LOG = LoggerFactory.getLogger(CompositeBuilderHelper)
 
     static FactoryBuilderSupport createBuilder(GriffonApplication app, Map<String, MetaClass> targets) {
         UberBuilder uberBuilder = new UberBuilder()
         uberBuilder.setProperty('app', app)
 
-        log.debug('Configuring builders with addon contributions')
+        LOG.debug('Configuring builders with addon contributions')
         AddonHelper.handleAddonsForBuilders(app, uberBuilder, targets)
 
         for (node in app.builderConfig) {
@@ -64,7 +64,7 @@ class CompositeBuilderHelper {
     }
 
     static handleFeatures(UberBuilder uberBuilder, features) {
-        if(features) log.debug("Applying 'features' config node to builders")
+        if(features) LOG.debug("Applying 'features' config node to builders")
         for (feature in features) {
             switch (feature.key) {
                 case ~/.*Delegates/:
@@ -92,7 +92,7 @@ class CompositeBuilderHelper {
         if (!FactoryBuilderSupport.isAssignableFrom(builderClass)) {
             return;
         }
-        if(log.debugEnabled) log.debug("Initializing builder ${builderClass.name}")
+        if(LOG.debugEnabled) LOG.debug("Initializing builder ${builderClass.name}")
         FactoryBuilderSupport localBuilder = uberBuilder.uberInit(prefixName, builderClass)
         for (partialTarget in builderClassName.value) {
             if (partialTarget.key == 'view') {
@@ -103,7 +103,7 @@ class CompositeBuilderHelper {
             MetaClass mc = targets[partialTarget.key]
             if(!mc) continue
 
-            if(log.debugEnabled) log.debug("Injecting builder contributions to $partialTarget.key using ${partialTarget.value}")
+            if(LOG.debugEnabled) LOG.debug("Injecting builder contributions to $partialTarget.key using ${partialTarget.value}")
             for (String injectionName in partialTarget.value) {
                 def factories = localBuilder.getLocalFactories()
                 def methods = localBuilder.getLocalExplicitMethods()
@@ -112,7 +112,7 @@ class CompositeBuilderHelper {
                 Closure processInjection = {String injectedName ->                
                     def resolvedName = "${prefixName}${injectedName}"
                     if (methods.containsKey(injectedName)) {
-                        if(log.traceEnabled) log.trace("Injected method ${resolvedName}() on $partialTarget.key")
+                        if(LOG.traceEnabled) LOG.trace("Injected method ${resolvedName}() on $partialTarget.key")
                         mc."$resolvedName" = methods[injectedName]
                     } else if (props.containsKey(injectedName)) {
                         Closure[] accessors = props[injectedName]
@@ -123,15 +123,15 @@ class CompositeBuilderHelper {
                             beanName = injectedName[0].toUpperCase()
                         }
                         if (accessors[0]) {
-                            if(log.traceEnabled) log.trace("Injected getter for ${beanName} on $partialTarget.key")
+                            if(LOG.traceEnabled) LOG.trace("Injected getter for ${beanName} on $partialTarget.key")
                             mc."get$beanName" = accessors[0]
                         }
                         if (accessors[1]) {
-                            if(log.traceEnabled) log.trace("Injected setter for ${beanName} on $partialTarget.key")
+                            if(LOG.traceEnabled) LOG.trace("Injected setter for ${beanName} on $partialTarget.key")
                             mc."set$beanName" = accessors[1]
                         }
                     } else if (factories.containsKey(injectedName)) {
-                        if(log.traceEnabled) log.trace("Injected factory ${resolvedName} on $partialTarget.key")
+                        if(LOG.traceEnabled) LOG.trace("Injected factory ${resolvedName} on $partialTarget.key")
                         mc."${resolvedName}" = {Object ... args -> uberBuilder."$resolvedName"(* args)}
                     }
                 }

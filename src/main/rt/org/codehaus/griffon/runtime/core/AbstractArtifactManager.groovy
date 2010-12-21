@@ -34,23 +34,31 @@ import griffon.core.ArtifactInfo
 abstract class AbstractArtifactManager implements ArtifactManager {
     final GriffonApplication app
 
-    protected final Map<String, ArtifactInfo[]> ARTIFACTS = [:]
-    protected final Map<String, ArtifactHandler> ARTIFACT_HANDLERS = [:]
-    protected final Object LOCK = new Object()
+    private final Map<String, ArtifactInfo[]> artifacts = [:]
+    private final Map<String, ArtifactHandler> artifactHandlers = [:]
+    private final Object lock = new Object()
 
-    private static final Logger log = LoggerFactory.getLogger(AbstractArtifactManager)
+    private static final Logger LOG = LoggerFactory.getLogger(AbstractArtifactManager)
 
     AbstractArtifactManager(GriffonApplication app) {
         this.app = app
     } 
 
-    final void loadArtifactMetadata() {
-        Map<String, List<ArtifactInfo>> artifacts = doLoadArtifactMetadata()
+    protected Map<String, ArtifactInfo[]> getArtifacts() {
+        artifacts
+    }
 
-        synchronized(LOCK) {
-            artifacts.each { type, list ->
-                ARTIFACTS[type] = (list as ArtifactInfo[])
-                ARTIFACT_HANDLERS[type]?.initialize(ARTIFACTS[type])
+    protected Map<String, ArtifactHandler> getArtifactHandlers() {
+        artifactHandlers
+    }
+
+    final void loadArtifactMetadata() {
+        Map<String, List<ArtifactInfo>> loadedArtifacts = doLoadArtifactMetadata()
+
+        synchronized(lock) {
+            loadedArtifacts.each { type, list ->
+                artifacts[type] = (list as ArtifactInfo[])
+                artifactHandlers[type]?.initialize(artifacts[type])
             }
         }
     }
@@ -59,46 +67,46 @@ abstract class AbstractArtifactManager implements ArtifactManager {
 
     void registerArtifactHandler(ArtifactHandler handler) {
         if(!handler) return
-        if(log.infoEnabled) log.info("Registering artifact handler for type '${handler.type}': $handler")
-        synchronized(LOCK) {
-            ARTIFACT_HANDLERS[handler.type] = handler
-            if(ARTIFACTS[handler.type]) handler.initialize(ARTIFACTS[handler.type])
+        if(LOG.infoEnabled) LOG.info("Registering artifact handler for type '${handler.type}': $handler")
+        synchronized(lock) {
+            artifactHandlers[handler.type] = handler
+            if(artifacts[handler.type]) handler.initialize(artifacts[handler.type])
         }
     }
 
     void unregisterArtifactHandler(ArtifactHandler handler) {
         if(!handler) return
-        if(log.infoEnabled) log.info("Removing artifact handler for type '${handler.type}': $handler")
-        synchronized(LOCK) {
-            ARTIFACT_HANDLERS.remove(handler.type)
+        if(LOG.infoEnabled) LOG.info("Removing artifact handler for type '${handler.type}': $handler")
+        synchronized(lock) {
+            artifactHandlers.remove(handler.type)
         }
     }
 
     GriffonClass findGriffonClass(String name, String type) {
         if(!name || !type) return null
-        synchronized(LOCK) {
-            return ARTIFACT_HANDLERS[type]?.findClassFor(name)
+        synchronized(lock) {
+            return artifactHandlers[type]?.findClassFor(name)
         }
     }
 
     GriffonClass findGriffonClass(Class clazz, String type) {
         if(!clazz || !type) return null
-        synchronized(LOCK) {
-            return ARTIFACT_HANDLERS[type]?.getClassFor(clazz)
+        synchronized(lock) {
+            return artifactHandlers[type]?.getClassFor(clazz)
         }
     }
 
     GriffonClass findGriffonClass(Object obj) {
         if(obj == null) return null
-        synchronized(LOCK) {
+        synchronized(lock) {
             return findGriffonClass(obj.getClass())
         }
     }
 
     GriffonClass findGriffonClass(Class clazz) {
         if(!clazz) return null
-        synchronized(LOCK) {
-            for(handler in ARTIFACT_HANDLERS.values()) {
+        synchronized(lock) {
+            for(handler in artifactHandlers.values()) {
                 GriffonClass griffonClass = handler.getClassFor(clazz)
                 if(griffonClass) return griffonClass
             }
@@ -108,8 +116,8 @@ abstract class AbstractArtifactManager implements ArtifactManager {
 
     GriffonClass findGriffonClass(String fqnClassName) {
         if(!fqnClassName) return null
-        synchronized(LOCK) {
-            for(handler in ARTIFACT_HANDLERS.values()) {
+        synchronized(lock) {
+            for(handler in artifactHandlers.values()) {
                 GriffonClass griffonClass = handler.getClassFor(fqnClassName)
                 if(griffonClass) return griffonClass
             }
@@ -118,9 +126,9 @@ abstract class AbstractArtifactManager implements ArtifactManager {
     }
 
     List<GriffonClass> getClassesOfType(String type) {
-        synchronized(LOCK) {
-            if(ARTIFACTS.containsKey(type)) {
-                return ARTIFACT_HANDLERS[type].classes.toList()
+        synchronized(lock) {
+            if(artifacts.containsKey(type)) {
+                return artifactHandlers[type].classes.toList()
             }
         }
         return EMPTY_GRIFFON_CLASS_LIST
@@ -128,8 +136,8 @@ abstract class AbstractArtifactManager implements ArtifactManager {
 
     List<GriffonClass> getAllClasses() {
         List<GriffonClass> all = []
-        synchronized(LOCK) {
-            ARTIFACT_HANDLERS.each { k, h -> all.addAll(h.getClasses().toList()) }
+        synchronized(lock) {
+            artifactHandlers.each { k, h -> all.addAll(h.getClasses().toList()) }
         }
         return Collections.unmodifiableList(all)
     }
@@ -148,7 +156,7 @@ abstract class AbstractArtifactManager implements ArtifactManager {
         if(artifactType) {
             artifactType = normalize(artifactType)
 
-            if(!args && ARTIFACTS.containsKey(artifactType)) {
+            if(!args && artifacts.containsKey(artifactType)) {
                 ArtifactManager.metaClass."$methodName" = this.&getClassesOfType.curry(artifactType)
                 return getClassesOfType(artifactType)
             }
@@ -159,7 +167,7 @@ abstract class AbstractArtifactManager implements ArtifactManager {
         if(artifactType) {
             artifactType = normalize(artifactType)
 
-            if(args?.size() == 1 && ARTIFACTS.containsKey(artifactType)) {
+            if(args?.size() == 1 && artifacts.containsKey(artifactType)) {
                 ArtifactManager.metaClass."$methodName" = this.&isClassOfType.curry(artifactType)
                 return isClassOfType(artifactType, args[0])
             }
@@ -181,7 +189,7 @@ abstract class AbstractArtifactManager implements ArtifactManager {
         def artifactType = propertyName =~ /^(\w+)Classes$/
         if(artifactType) {
             artifactType = artifactType[0][1]
-            if(ARTIFACTS.containsKey(artifactType)) {
+            if(artifacts.containsKey(artifactType)) {
                 ArtifactManager.metaClass."$propertyName" = getClassesOfType(artifactType)
                 return getClassesOfType(artifactType)
             }
@@ -192,8 +200,8 @@ abstract class AbstractArtifactManager implements ArtifactManager {
     }
 
     protected ArtifactInfo getArtifactOfType(String type, Class clazz) {
-        synchronized(LOCK) {
-            ARTIFACT_HANDLERS[type]?.ARTIFACTS.find { it.clazz.name == clazz.name }
+        synchronized(lock) {
+            artifactHandlers[type]?.artifacts.find { it.clazz.name == clazz.name }
         }
     }
 

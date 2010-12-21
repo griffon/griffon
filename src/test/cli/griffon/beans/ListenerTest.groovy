@@ -1,7 +1,5 @@
 package griffon.beans
 
-import org.codehaus.groovy.control.CompilationFailedException
-
 class ListenerTest extends GroovyTestCase {
     void testSimpleValues() {
         GroovyShell shell = new GroovyShell()

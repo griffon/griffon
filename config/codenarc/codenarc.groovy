@@ -14,11 +14,22 @@
  * limitations under the License.
  */
 
-apply plugin: 'code-quality'
-
-def configDir = new File(buildscript.sourceFile.parentFile.parentFile, 'config')
-
-checkstyleConfigDir = "$configDir/checkstyle"
-checkstyleConfigFileName = new File(checkstyleConfigDir, "checkstyle.xml")
-checkstyleProperties.checkstyleConfigDir = checkstyleConfigDir
-codeNarcConfigFileName = "$configDir/codenarc/codenarc.groovy"
+ruleset {    
+    ruleset('rulesets/imports.xml')
+    ruleset('rulesets/naming.xml') {
+        exclude 'PropertyName'
+        'ClassName' {
+            regex = '^[A-Z][a-zA-Z0-9]*$'
+        }
+        'FieldName' {
+            finalRegex = '^_?[a-z][a-zA-Z0-9]*$'
+            staticFinalRegex = '^[A-Z][A-Z_0-9]*$'
+        }
+        'MethodName' {
+            regex = '^[a-z][a-zA-Z0-9_]*$'
+        }
+        'VariableName' {
+            finalRegex = '^_?[a-z][a-zA-Z0-9]*$'
+        }
+    }
+}

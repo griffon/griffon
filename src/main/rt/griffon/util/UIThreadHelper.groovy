@@ -31,8 +31,8 @@ class UIThreadHelper {
     // Shouldn't need to synchronize access to this field as setting its value
     // should be done at boot time
     private UIThreadHandler uiThreadHandler
-    private final ExecutorService DEFAULT_EXECUTOR_SERVICE = Executors.newFixedThreadPool(2)
-    private static final Logger log = LoggerFactory.getLogger(UIThreadHelper)
+    private static final ExecutorService DEFAULT_EXECUTOR_SERVICE = Executors.newFixedThreadPool(2)
+    private static final Logger LOG = LoggerFactory.getLogger(UIThreadHelper)
 
     private static final UIThreadHelper INSTANCE = new UIThreadHelper()
 
@@ -52,7 +52,7 @@ class UIThreadHelper {
         if(!this.uiThreadHandler) {
             this.uiThreadHandler = threadHandler
         } else {
-            if(log.warnEnabled) log.warn("UIThreadHandler is already set, you can't change it!")
+            if(LOG.warnEnabled) LOG.warn("UIThreadHandler is already set, you can't change it!")
         }
     }
 

@@ -23,14 +23,11 @@ import org.codehaus.groovy.control.*;
 import org.codehaus.groovy.runtime.typehandling.DefaultTypeTransformation;
 
 import java.util.Map;
-import java.util.List;
-import java.util.ArrayList;
 import java.lang.reflect.Modifier;
 
 import griffon.core.GriffonControllerClass;
 import griffon.util.GriffonClassUtils;
 import griffon.util.GriffonClassUtils.MethodDescriptor;
-import griffon.util.BuildSettingsHolder;
 import static org.codehaus.griffon.ast.GriffonASTUtils.THIS;
 
 /**

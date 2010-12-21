@@ -20,6 +20,7 @@ import griffon.core.GriffonApplication;
 import griffon.core.GriffonArtifact;
 import griffon.core.GriffonClass;
 import griffon.util.UIThreadHelper;
+import griffon.util.ApplicationHolder;
 
 import groovy.lang.MetaClass;
 import groovy.lang.Closure;
@@ -77,6 +78,7 @@ public abstract class AbstractGriffonArtifact extends GroovyObjectSupport implem
     }
 
     public GriffonClass getGriffonClass() {
+        if(app == null) app = ApplicationHolder.getApplication();
         return app.getArtifactManager().findGriffonClass(getClass());
     }
 

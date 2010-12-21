@@ -39,7 +39,7 @@ class EventRouter {
    private List listeners = Collections.synchronizedList([])
    private Map scriptBindings = [:]
    private Map closureListeners = Collections.synchronizedMap([:])
-   private static final Logger log = LoggerFactory.getLogger(EventRouter)
+   private static final Logger LOG = LoggerFactory.getLogger(EventRouter)
 
    /**
     * Publishes an event with optional arguments.</p>
@@ -71,15 +71,14 @@ class EventRouter {
    
    private Closure buildPublisher(String eventName, List params) {
       return { mode ->
-         if(log.traceEnabled) log.trace("Triggering event '$eventName' $mode")
+         if(LOG.traceEnabled) LOG.trace("Triggering event '$eventName' $mode")
          eventName = eventName[0].toUpperCase() + eventName[1..-1]
          def eventHandler = "on" + eventName
          def dispatchEvent = { listener ->
             try {
                fireEvent(listener, eventHandler, params ?: [])
             } catch(x) {
-               // TODO log exception
-               x.printStackTrace()
+               if(LOG.errorEnabled) LOG.error("Ecountered an error while dispatching event $eventName", x)
             }
          }
 

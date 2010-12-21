@@ -29,7 +29,7 @@ import org.slf4j.LoggerFactory
  * @author Andres Almiray
  */
 public class AddonHelper {
-    private static final Logger log = LoggerFactory.getLogger(AddonHelper)
+    private static final Logger LOG = LoggerFactory.getLogger(AddonHelper)
     
     public static final DELEGATE_TYPES = Collections.unmodifiableList([
             "attributeDelegates",
@@ -38,8 +38,8 @@ public class AddonHelper {
             "postNodeCompletionDelegates"
     ])
 
-    static handleAddonsAtStartup(GriffonApplication app) {
-        log.info("Loading addons [START]")
+    static void handleAddonsAtStartup(GriffonApplication app) {
+        LOG.info("Loading addons [START]")
         app.event("LoadAddonsStart", [app])
 
         for (node in app.builderConfig) {
@@ -67,14 +67,14 @@ public class AddonHelper {
                 if (mme.method != 'addonPostInit') throw mme
             }
             app.event("LoadAddonEnd", [name, addon, app])
-            if(log.infoEnabled) log.info("Loaded addon $name")
+            if(LOG.infoEnabled) LOG.info("Loaded addon $name")
         }
 
         app.event("LoadAddonsEnd", [app, app.addons])
-        log.info("Loading addons [END]")
+        LOG.info("Loading addons [END]")
     }
 
-    static def handleAddon(GriffonApplication app, Class addonClass, String prefix, String addonName) {
+    static void handleAddon(GriffonApplication app, Class addonClass, String prefix, String addonName) {
         def addon = addonClass.newInstance()
 
         app.addons[addonName] = addon
@@ -85,7 +85,7 @@ public class AddonHelper {
         addonMetaClass.newInstance = GriffonApplicationHelper.&newInstance.curry(app)
         UIThreadHelper.enhance(addonMetaClass)
 
-        if(log.infoEnabled) log.info("Loading addon $addonName with class ${addon.class.name}")
+        if(LOG.infoEnabled) LOG.info("Loading addon $addonName with class ${addon.class.name}")
         app.event("LoadAddonStart", [addonName, addon, app])
 
         try {
@@ -101,7 +101,7 @@ public class AddonHelper {
         if (events) addEvents(app, addon.events)
     }
 
-    static handleAddonsForBuilders(GriffonApplication app, UberBuilder builder, Map<String, MetaClass> targets) {
+    static void handleAddonsForBuilders(GriffonApplication app, UberBuilder builder, Map<String, MetaClass> targets) {
         for (node in app.builderConfig) {
             String nodeName = node.key
             switch (nodeName) {
@@ -129,7 +129,7 @@ public class AddonHelper {
         }
     }
 
-    static handleAddonForBuilder(GriffonApplication app, UberBuilder builder, Map<String, MetaClass> targets, def addonNode, String prefix) {
+    static void handleAddonForBuilder(GriffonApplication app, UberBuilder builder, Map<String, MetaClass> targets, def addonNode, String prefix) {
         def addonName = addonNode.key
         def addon = app.addons[addonName]
         def addonMetaClass = addon.metaClass
@@ -180,30 +180,30 @@ public class AddonHelper {
             if (!mc) continue
             for (String itemName in partialTarget.value) {
                 if (itemName == '*') {
-                    if(methods && log.traceEnabled) log.trace("Injecting all methods on $partialTarget.key")
+                    if(methods && LOG.traceEnabled) LOG.trace("Injecting all methods on $partialTarget.key")
                     addMethods(mc, methods, prefix)
-                    if(factories && log.traceEnabled) log.trace("Injecting all factories on $partialTarget.key")
+                    if(factories && LOG.traceEnabled) LOG.trace("Injecting all factories on $partialTarget.key")
                     addFactories(mc, factories, prefix, builder)
-                    if(props && log.traceEnabled) log.trace("Injecting all properties on $partialTarget.key")
+                    if(props && LOG.traceEnabled) LOG.trace("Injecting all properties on $partialTarget.key")
                     addProps(mc, props, prefix)
                     continue
                 } else if (itemName == '*:methods') {
-                    if(methods && log.traceEnabled) log.trace("Injecting all methods on $partialTarget.key")
+                    if(methods && LOG.traceEnabled) LOG.trace("Injecting all methods on $partialTarget.key")
                     addMethods(mc, methods, prefix)
                     continue
                 } else if (itemName == '*:factories') {
-                    if(factories && log.traceEnabled) log.trace("Injecting all factories on $partialTarget.key")
+                    if(factories && LOG.traceEnabled) LOG.trace("Injecting all factories on $partialTarget.key")
                     addFactories(mc, factories, prefix, builder)
                     continue
                 } else if (itemName == '*:props') {
-                    if(props && log.traceEnabled) log.trace("Injecting all properties on $partialTarget.key")
+                    if(props && LOG.traceEnabled) LOG.trace("Injecting all properties on $partialTarget.key")
                     addProps(mc, props, prefix)
                     continue
                 }
 
                 def resolvedName = "${prefix}${itemName}"
                 if (methods.containsKey(itemName)) {
-                    if(log.traceEnabled) log.trace("Injected method ${resolvedName}() on $partialTarget.key")
+                    if(LOG.traceEnabled) LOG.trace("Injected method ${resolvedName}() on $partialTarget.key")
                     mc."$resolvedName" = methods[itemName]
                 } else if (props.containsKey(itemName)) {
                     Map accessors = props[itemName]
@@ -214,33 +214,33 @@ public class AddonHelper {
                         beanName = itemName[0].toUpperCase()
                     }
                     if (accessors.containsKey('get')) {
-                        if(log.traceEnabled) log.trace("Injected getter for ${beanName} on $partialTarget.key")
+                        if(LOG.traceEnabled) LOG.trace("Injected getter for ${beanName} on $partialTarget.key")
                         mc."get$beanName" = accessors['get']
                     }
                     if (accessors.containsKey('set')) {
-                        if(log.traceEnabled) log.trace("Injected setter for ${beanName} on $partialTarget.key")
+                        if(LOG.traceEnabled) LOG.trace("Injected setter for ${beanName} on $partialTarget.key")
                         mc."set$beanName" = accessors['set']
                     }
                 } else if (factories.containsKey(itemName)) {
-                    if(log.traceEnabled) log.trace("Injected factory ${resolvedName} on $partialTarget.key")
+                    if(LOG.traceEnabled) LOG.trace("Injected factory ${resolvedName} on $partialTarget.key")
                     mc."${resolvedName}" = {Object ... args -> builder."$resolvedName"(* args)}
                 }
             }
         }
     }
 
-    private static addMethods(MetaClass mc, Map methods, String prefix) {
+    private static void addMethods(MetaClass mc, Map methods, String prefix) {
         methods.each { mk, mv -> mc."${prefix}${mk}" = mv }
     }
  
-    private static addFactories(MetaClass mc, Map factories, String prefix, UberBuilder builder) {
+    private static void addFactories(MetaClass mc, Map factories, String prefix, UberBuilder builder) {
         factories.each { fk, fv -> 
             def resolvedName = "${prefix}${fk}"
             mc."$resolvedName" = {Object... args -> builder."$resolvedName"(*args) }
         }
     }
 
-    private static addProps(MetaClass mc, Map props, String prefix) {
+    private static void addProps(MetaClass mc, Map props, String prefix) {
         props.each = { pk, accessors ->
             String beanName
             if (pk.length() > 1) {
@@ -261,11 +261,11 @@ public class AddonHelper {
         }
     }
 
-    static addMVCGroups(GriffonApplication app, Map<String, Map<String, String>> groups) {
+    static void addMVCGroups(GriffonApplication app, Map<String, Map<String, String>> groups) {
         groups.each {k, v -> app.addMvcGroup(k, v) }
     }
 
-    static addFactories(UberBuilder builder, Map factories, String addonName, String prefix) {
+    static void addFactories(UberBuilder builder, Map factories, String addonName, String prefix) {
         builder.registrationGroup.get(addonName, new TreeSet<String>())
         factories.each {String name, factoryOrBean ->
             if(factoryOrBean instanceof Factory) {
@@ -276,21 +276,21 @@ public class AddonHelper {
         }
     }
 
-    static addMethods(UberBuilder builder, Map<String, Closure> methods, String addonName, String prefix) {
+    static void addMethods(UberBuilder builder, Map<String, Closure> methods, String addonName, String prefix) {
         builder.registrationGroup.get(addonName, new TreeSet<String>())
         methods.each {String name, Closure closure ->
             builder.registerExplicitMethod(name, addonName, closure)
         }
     }
 
-    static addProperties(UberBuilder builder, Map<String, List<Closure>> props, String addonName, String prefix) {     
+    static void addProperties(UberBuilder builder, Map<String, List<Closure>> props, String addonName, String prefix) {
         builder.registrationGroup.get(addonName, new TreeSet<String>())
         props.each {String name, Map<String, Closure> closures ->
             builder.registerExplicitProperty(name, addonName, closures.get, closures.set)
         }
     }
 
-    static addEvents(GriffonApplication app, Map<String, Closure> events) {
+    static void addEvents(GriffonApplication app, Map<String, Closure> events) {
         events.each {String name, Closure event ->
             app.addApplicationEventListener(name, event)
         }

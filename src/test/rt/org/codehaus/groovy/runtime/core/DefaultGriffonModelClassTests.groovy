@@ -31,7 +31,7 @@ class DefaultGriffonModelClassTests extends AbstractGriffonClassTestCase {
     }
 }
 
-class SampleModel {
+class SampleModel extends AbstractGriffonModel {
     @Bindable String property1
     def property2 = {}
     private String property3
