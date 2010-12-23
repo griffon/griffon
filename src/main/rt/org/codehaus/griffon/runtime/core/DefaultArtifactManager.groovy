@@ -19,12 +19,13 @@ package org.codehaus.griffon.runtime.core
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 
+import java.lang.reflect.Modifier
 import griffon.core.GriffonApplication
 import griffon.core.ArtifactInfo
 import org.codehaus.griffon.runtime.util.GriffonApplicationHelper
 
 /**
- * 
+ * Default implementation of {@code ArtifactManager}.
  *
  * @author Andres Almiray
  * @since 0.9.2
@@ -45,8 +46,11 @@ class DefaultArtifactManager extends AbstractArtifactManager {
             if(LOG.debugEnabled) LOG.debug("Loading artifact definitions from $url")
             config.each { type, classes -> 
                 if(LOG.debugEnabled) LOG.debug("Artifacts of type '${type}' = ${classes.split(',').size()}")
-                classes.split(',').collect(artifacts.get(type, [])) {
-                    new ArtifactInfo(GriffonApplicationHelper.loadClass(app, it), type)
+                List list = artifacts.get(type, [])
+                for(className in classes.split(',')) {
+                    Class clazz = GriffonApplicationHelper.loadClass(app, className)
+                    if(Modifier.isAbstract(clazz.modifiers)) continue
+                    list << new ArtifactInfo(clazz, type)
                 }
             }
         }
