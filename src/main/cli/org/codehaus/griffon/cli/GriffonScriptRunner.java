@@ -134,8 +134,7 @@ public class GriffonScriptRunner {
         System.out.println("Base Directory: " + build.getBaseDir().getPath());
 
         try {
-            int exitCode = new GriffonScriptRunner(build).executeCommand(
-                    script.name, script.args, script.env);
+            int exitCode = new GriffonScriptRunner(build).executeCommand(script);
             System.exit(exitCode);
         }
         catch (ScriptNotFoundException ex) {
@@ -241,21 +240,32 @@ public class GriffonScriptRunner {
         this.helper = new CommandLineHelper(out);
     }
 
-    public int executeCommand(String scriptName, String args) {
-        return executeCommand(scriptName, args, null);
+    public int executeCommand(String name, String args) {
+        ScriptAndArgs script = new ScriptAndArgs();
+        script.name = name;
+        script.args = args;
+        return executeCommand(script);
     }
 
-    public int executeCommand(String scriptName, String args, String env) {
+    public int executeCommand(String name, String args, String env) {
+        ScriptAndArgs script = new ScriptAndArgs();
+        script.name = name;
+        script.args = args;
+        script.env = env;
+        return executeCommand(script);
+    }
+
+    private int executeCommand(ScriptAndArgs script) {
         // Populate the root loader with all libraries that this app
         // depends on. If a root loader doesn't exist yet, create it now.
         if (settings.getRootLoader() == null) {
             settings.setRootLoader((URLClassLoader) GriffonScriptRunner.class.getClassLoader());
         }
 
-        if (args != null) {
+        if (script.args != null) {
             // Check whether we are running in non-interactive mode
             // by looking for a "non-interactive" argument.
-            String[] argArray = args.split("\\s+");
+            String[] argArray = script.args.split("\\s+");
             Pattern pattern = Pattern.compile("^(?:-)?-non-interactive$");
             for (String arg : argArray) {
                 if (pattern.matcher(arg).matches()) {
@@ -264,7 +274,7 @@ public class GriffonScriptRunner {
                 }
             }
 
-            System.setProperty("griffon.cli.args", args.replace(' ', '\n'));
+            System.setProperty("griffon.cli.args", script.args.replace(' ', '\n'));
         }
         else {
             // If GriffonScriptRunner is executed more than once in a
@@ -279,20 +289,20 @@ public class GriffonScriptRunner {
         BuildSettingsHolder.setSettings(settings);
 
         // Either run the script or enter interactive mode.
-        if (scriptName.equalsIgnoreCase("interactive")) {
+        if (script.name.equalsIgnoreCase("interactive")) {
             // Can't operate interactively in non-interactive mode!
             if (!isInteractive) {
                 out.println("You cannot use '--non-interactive' with interactive mode.");
                 return 1;
             }
 
-            setRunningEnvironment(scriptName, env);
+            setRunningEnvironment(script.name, script.env);
             // This never exits unless an exception is thrown or
             // the process is interrupted via a signal.
             runInteractive();
             return 0;
         }
-        return callPluginOrGriffonScript(scriptName, env);
+        return callPluginOrGriffonScript(script);
     }
 
     private void setRunningEnvironment(String scriptName, String env) {
@@ -359,7 +369,8 @@ public class GriffonScriptRunner {
 
             long now = System.currentTimeMillis();
             try {
-                callPluginOrGriffonScript(script.name, env);
+                script.env = env;
+                callPluginOrGriffonScript(script);
             }
             catch (ScriptNotFoundException ex) {
                 out.println("No script found for " + script.name);
@@ -382,7 +393,7 @@ public class GriffonScriptRunner {
     private final Map<String, CachedScript> scriptCache = new HashMap<String, CachedScript>();
     private final List<File> scriptsAllowedOutsideOfProject = new ArrayList<File>();
 
-    private int callPluginOrGriffonScript(String scriptName, String env) {
+    private int callPluginOrGriffonScript(ScriptAndArgs script) {
         // The directory where scripts are cached.
         File scriptCacheDir = new File(settings.getProjectWorkDir(), "scriptCache");
         // The class loader we will use to run Gant. It's the root
@@ -397,7 +408,7 @@ public class GriffonScriptRunner {
 
             // Add the remaining JARs (from 'griffonHome', the app, and
             // the plugins) to the root loader.
-            boolean skipPlugins = "UninstallPlugin".equals(scriptName) || "InstallPlugin".equals(scriptName);
+            boolean skipPlugins = "UninstallPlugin".equals(script.name) || "InstallPlugin".equals(script.name);
 
             URL[] urls = getClassLoaderUrls(settings, scriptCacheDir, existingJars, skipPlugins);
             addUrlsToRootLoader(settings.getRootLoader(), urls);
@@ -414,8 +425,8 @@ public class GriffonScriptRunner {
         List<File> potentialScripts;
         List<File> allScripts = getAvailableScripts(settings);
         GantBinding binding;
-        if (scriptCache.get(scriptName) != null) {
-            CachedScript cachedScript = scriptCache.get(scriptName);
+        if (scriptCache.get(script.name) != null) {
+            CachedScript cachedScript = scriptCache.get(script.name);
             potentialScripts = cachedScript.potentialScripts;
             binding = cachedScript.binding;
         }
@@ -457,13 +468,13 @@ public class GriffonScriptRunner {
                     scriptFileName = scriptFileName.substring(0, scriptFileName.length()-1);
                 }
  
-                if (scriptFileName.equals(scriptName)) {
+                if (scriptFileName.equals(script.name)) {
                     potentialScripts.add(scriptPath);
                     exactMatchFound = true;
                     continue;
                 }
                 
-                if (!exactMatchFound && ScriptNameResolver.resolvesTo(scriptName, scriptFileName)) potentialScripts.add(scriptPath);
+                if (!exactMatchFound && ScriptNameResolver.resolvesTo(script.name, scriptFileName)) potentialScripts.add(scriptPath);
             }
 
             if (!potentialScripts.isEmpty() && !exactMatchFound) {
@@ -501,8 +512,9 @@ public class GriffonScriptRunner {
                 out.println("Running script " + scriptFile.getAbsolutePath());
                 // We can now safely set the default environment
                 String scriptFileName = getScriptNameFromFile(scriptFile);
-                setRunningEnvironment(scriptFileName, env);
+                setRunningEnvironment(scriptFileName, script.env);
                 binding.setVariable("scriptName", scriptFileName);
+                script.name = scriptFileName;
 
                 // Setup the script to call.
                 Gant gant = new Gant(initBinding(binding), classLoader);
@@ -536,8 +548,9 @@ public class GriffonScriptRunner {
             out.println("Running script "+ scriptFile.getAbsolutePath());
             // We can now safely set the default environment
             String scriptFileName = getScriptNameFromFile(scriptFile);
-            setRunningEnvironment(scriptFileName, env);
+            setRunningEnvironment(scriptFileName, script.env);
             binding.setVariable("scriptName", scriptFileName);
+            script.name = scriptFileName;
 
             // Set up the script to call.
             Gant gant = new Gant(initBinding(binding), classLoader);
@@ -554,22 +567,22 @@ public class GriffonScriptRunner {
         Gant gant = new Gant(initBinding(binding), classLoader);
 
         try {
-            loadScriptClass(gant, scriptName);
+            loadScriptClass(gant, script.name);
         }
         catch (ScriptNotFoundException e) {
             if(isInteractive) {
-                scriptName = fixScriptName(scriptName, allScripts);
-                if (scriptName == null) {
+                script.name = fixScriptName(script.name, allScripts);
+                if (script.name == null) {
                     throw e;
                 }
 
-                loadScriptClass(gant, scriptName);
+                loadScriptClass(gant, script.name);
             } else {
                 throw e;
             }
         }
 
-        setRunningEnvironment(scriptName, env);
+        setRunningEnvironment(script.name, script.env);
         binding.setVariable("scriptEnv", System.getProperty(Environment.KEY));
         return executeWithGantInstance(gant, doNothingClosure);
     }
