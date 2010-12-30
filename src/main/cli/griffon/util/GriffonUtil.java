@@ -291,10 +291,7 @@ public class GriffonUtil extends GriffonNameUtils {
      * @return The script name representation
      */
     public static String getScriptName(Class clazz) {
-        if(clazz == null) {
-            return null;
-        }
-        return getScriptName(clazz.getName());
+        return getHyphenatedName(clazz);
     }
 
     /**
@@ -305,14 +302,7 @@ public class GriffonUtil extends GriffonNameUtils {
      * @return The script name representation.
      */
     public static String getScriptName(String name) {
-        if(name == null) {
-            return null;
-        }
-        if(name.endsWith(".groovy")) {
-            name = name.substring(0, name.length()-7);
-        }
-        String naturalName = getNaturalName(getShortName(name));
-        return naturalName.replaceAll("\\s", "-").toLowerCase();
+        return getHyphenatedName(name);
     }
 
     /**

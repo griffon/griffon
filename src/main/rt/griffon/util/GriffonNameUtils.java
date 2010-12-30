@@ -153,7 +153,7 @@ public class GriffonNameUtils {
      * @param trailingName The trailing name
      * @return The logical name
      */
-    public static String getLogicalName(String name, String trailingName ) {
+    public static String getLogicalName(String name, String trailingName) {
         if(!isBlank(trailingName)) {
             String shortName = getShortName(name);
             if(shortName.indexOf( trailingName ) > - 1) {
@@ -328,5 +328,37 @@ public class GriffonNameUtils {
      */
     public static boolean isBlank(String str) {
         return str == null || str.trim().length() == 0;
+    }
+
+    /**
+     * Retrieves the hyphenated name representation of the supplied class. For example
+     * MyFunkyGriffonThingy would be my-funky-griffon-thingy.
+     *
+     * @param clazz The class to convert
+     * @return The hyphenated name representation
+     */
+    public static String getHyphenatedName(Class clazz) {
+        if(clazz == null) {
+            return null;
+        }
+        return getHyphenatedName(clazz.getName());
+    }
+
+    /**
+     * Retrieves the hyphenated name representation of the given class name.
+     * For example MyFunkyGriffonThingy would be my-funky-griffon-thingy.
+     *
+     * @param name The class name to convert.
+     * @return The hyphenated name representation.
+     */
+    public static String getHyphenatedName(String name) {
+        if(name == null) {
+            return null;
+        }
+        if(name.endsWith(".groovy")) {
+            name = name.substring(0, name.length()-7);
+        }
+        String naturalName = getNaturalName(getShortName(name));
+        return naturalName.replaceAll("\\s", "-").toLowerCase();
     }
 }

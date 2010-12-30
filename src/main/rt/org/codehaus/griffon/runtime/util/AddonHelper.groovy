@@ -16,9 +16,17 @@
 
 package org.codehaus.griffon.runtime.util
 
-import org.codehaus.griffon.runtime.builder.UberBuilder
 import griffon.core.GriffonApplication
+import griffon.core.GriffonAddon
+import griffon.core.GriffonAddonDescriptor
 import griffon.util.UIThreadHelper
+import griffon.util.GriffonNameUtils
+import griffon.util.Metadata
+
+import org.codehaus.griffon.runtime.builder.UberBuilder
+import org.codehaus.griffon.runtime.core.DefaultGriffonAddon
+import org.codehaus.griffon.runtime.core.DefaultGriffonAddonDescriptor
+
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 
@@ -60,7 +68,7 @@ public class AddonHelper {
             }
         }
 
-        app.addons.each {name, addon ->
+        app.addonManager.addons.each {name, addon ->
             try {
                 addon.addonPostInit(app)
             } catch (MissingMethodException mme) {
@@ -70,17 +78,20 @@ public class AddonHelper {
             if(LOG.infoEnabled) LOG.info("Loaded addon $name")
         }
 
-        app.event("LoadAddonsEnd", [app, app.addons])
+        app.event("LoadAddonsEnd", [app, app.addonManager.addons])
         LOG.info("Loading addons [END]")
     }
 
     static void handleAddon(GriffonApplication app, Class addonClass, String prefix, String addonName) {
-        def addon = addonClass.newInstance()
+        def obj = addonClass.newInstance()
+        String pluginName = GriffonNameUtils.getHyphenatedName(addonName - 'GriffonAddon')
+        String addonVersion = Metadata.current['plugins.' + pluginName]
+        GriffonAddon addon = new DefaultGriffonAddon(app, obj)
+        GriffonAddonDescriptor addonDescriptor = new DefaultGriffonAddonDescriptor(prefix, addonName, pluginName, addonVersion, addon)
 
-        app.addons[addonName] = addon
-        app.addonPrefixes[addonName] = prefix
+        app.addonManager.registerAddon(addonDescriptor)
 
-        def addonMetaClass = addon.metaClass
+        def addonMetaClass = obj.metaClass
         addonMetaClass.app = app
         addonMetaClass.newInstance = GriffonApplicationHelper.&newInstance.curry(app)
         UIThreadHelper.enhance(addonMetaClass)
@@ -88,17 +99,9 @@ public class AddonHelper {
         if(LOG.infoEnabled) LOG.info("Loading addon $addonName with class ${addon.class.name}")
         app.event("LoadAddonStart", [addonName, addon, app])
 
-        try {
-            addon.addonInit(app)
-        } catch (MissingMethodException mme) {
-            if (mme.method != 'addonInit') throw mme
-        }
-
-        def mvcGroups = addonMetaClass.getMetaProperty('mvcGroups')
-        if (mvcGroups) addMVCGroups(app, addon.mvcGroups)
-
-        def events = addonMetaClass.getMetaProperty('events')
-        if (events) addEvents(app, addon.events)
+        addon.addonInit(app)
+        addMVCGroups(app, addon.mvcGroups)
+        addEvents(app, addon.events)
     }
 
     static void handleAddonsForBuilders(GriffonApplication app, UberBuilder builder, Map<String, MetaClass> targets) {
@@ -120,7 +123,7 @@ public class AddonHelper {
             }
         }
 
-        app.addons.each {name, addon ->
+        app.addonManager.addons.each {name, addon ->
             try {
                 addon.addonBuilderPostInit(app, builder)
             } catch (MissingMethodException mme) {
@@ -131,45 +134,26 @@ public class AddonHelper {
 
     static void handleAddonForBuilder(GriffonApplication app, UberBuilder builder, Map<String, MetaClass> targets, def addonNode, String prefix) {
         def addonName = addonNode.key
-        def addon = app.addons[addonName]
-        def addonMetaClass = addon.metaClass
+        GriffonAddon addon = app.addonManager.addons[addonName]
 
-        try {
-            addon.addonBuilderInit(app, builder)
-        } catch (MissingMethodException mme) {
-            if (mme.method != 'addonBuilderInit') throw mme
-        }
+        addon.addonBuilderInit(app, builder)
 
         DELEGATE_TYPES.each { String delegateType ->
-            ignoreMissingPropertyException {
-                List<Closure> delegates = addon."$delegateType"
-                delegateType = delegateType[0].toUpperCase() + delegateType[1..-2]
-                delegates.each { Closure delegateValue ->
-                    builder."add$delegateType"(delegateValue)
-                }
+            List<Closure> delegates = addon."$delegateType"
+            delegateType = delegateType[0].toUpperCase() + delegateType[1..-2]
+            delegates.each { Closure delegateValue ->
+                builder."add$delegateType"(delegateValue)
             }
         }
 
-        MetaProperty factoriesMP = addonMetaClass.getMetaProperty('factories')
-        Map factories = [:]
-        if (factoriesMP) {
-            factories = factoriesMP.getProperty(addon)
-            addFactories(builder, factories, addonName, prefix)
-        }
+        Map factories = addon.factories
+        addFactories(builder, factories, addonName, prefix)
 
-        MetaProperty methodsMP = addonMetaClass.getMetaProperty('methods')
-        Map methods = [:]
-        if (methodsMP) {
-            methods = methodsMP.getProperty(addon)
-            addMethods(builder, methods, addonName, prefix)
-        }
+        Map methods = addon.methods
+        addMethods(builder, methods, addonName, prefix)
 
-        MetaProperty propsMP = addonMetaClass.getMetaProperty('props')
-        Map props = [:]
-        if (propsMP) {
-            props = propsMP.getProperty(addon)
-            addProperties(builder, props, addonName, prefix)
-        }
+        Map props = addon.props
+        addProperties(builder, props, addonName, prefix)
 
         for (partialTarget in addonNode.value) {
             if (partialTarget.key == 'view') {

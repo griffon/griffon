@@ -90,9 +90,23 @@ public interface GriffonApplication {
 
     /**
      * Returns all currently available addon instances, keyed by addon name.<p>
+     * @deprecated use getAddonManager().getAddons()
      */
+    @Deprecated
     Map<String, ?> getAddons();
+
+    /**
+     * @deprecated without replacement. Use the AddonManager to query for addons
+     */
+    @Deprecated
     Map<String, String> getAddonPrefixes();
+
+    /**
+     * Returns the application's AddonManager instance.
+     *
+     * @return the application's AddonManager
+     */
+    AddonManager getAddonManager();
 
     /**
      * Returns all currently available model instances, keyed by group name.<p>

@@ -46,9 +46,6 @@ class CompositeBuilderHelper {
         for (node in app.builderConfig) {
             String nodeName = node.key
             switch (nodeName) {
-                case "addons" :
-                    handleAddonsAtStartup(app, uberBuilder, node.value)
-                    break
                 case "features":
                     handleFeatures(uberBuilder, node.value)
                     break

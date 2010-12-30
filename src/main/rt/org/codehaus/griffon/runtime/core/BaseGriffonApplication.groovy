@@ -17,6 +17,7 @@
 package org.codehaus.griffon.runtime.core
 
 import griffon.core.GriffonApplication
+import griffon.core.AddonManager
 import griffon.core.ArtifactManager
 import griffon.core.ApplicationPhase
 import griffon.core.ShutdownHandler
@@ -55,7 +56,6 @@ import org.slf4j.LoggerFactory
  * @author Andres Almiray
  */
 class BaseGriffonApplication implements GriffonApplication {
-    Map<String, ?> addons = [:]
     Map<String, String> addonPrefixes = [:]
 
     Map<String, Map<String, String>> mvcGroups = [:]
@@ -69,6 +69,7 @@ class BaseGriffonApplication implements GriffonApplication {
     ConfigObject config
     ConfigObject builderConfig
     Object eventsConfig
+    AddonManager addonManager
     ArtifactManager artifactManager
 
     @Bindable Locale locale = Locale.getDefault()
@@ -91,6 +92,10 @@ class BaseGriffonApplication implements GriffonApplication {
         ApplicationHolder.application = appDelegate
 
         log = LoggerFactory.getLogger(appDelegate.class)
+    }
+
+    Map<String, ?> getAddons() {
+        return addonManager?.addons ?: [:]
     }
 
     Metadata getMetadata() {

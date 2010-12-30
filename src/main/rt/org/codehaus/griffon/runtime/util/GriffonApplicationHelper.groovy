@@ -21,6 +21,7 @@ import griffon.core.ArtifactManager
 import griffon.core.GriffonArtifact
 import griffon.core.GriffonMvcArtifact
 import org.codehaus.griffon.runtime.builder.UberBuilder
+import org.codehaus.griffon.runtime.core.DefaultAddonManager
 import org.codehaus.griffon.runtime.core.DefaultArtifactManager
 import org.codehaus.griffon.runtime.core.ModelArtifactHandler
 import org.codehaus.griffon.runtime.core.ViewArtifactHandler
@@ -116,7 +117,10 @@ class GriffonApplicationHelper {
             loadArtifactMetadata()
         }
 
-        AddonHelper.handleAddonsAtStartup(app)
+        if(!app.addonManager) {
+            app.addonManager = new DefaultAddonManager(app)
+        }
+        app.addonManager.initialize()
 
         // copy mvc groups in config to app, casting to strings in a new map
         app.config.mvcGroups.each {k, v->
