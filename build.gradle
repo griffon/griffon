@@ -1,3 +1,19 @@
+/*
+ * Copyright 2010-2011 the original author or authors.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 apply plugin: 'groovy'
 
 sourceCompatibility = '1.5'
@@ -89,6 +105,7 @@ sourceSets {
         java.srcDirs = []
         groovy.srcDirs = ['src/main/cli']
         classesDir = "$buildDir/classes/cli" as File
+        resources.srcDirs = ['src/resources/cli']
     }
     scripts {
         compileClasspath = sourceSets.rt.classes + sourceSets.cli.classes + configurations.scripts
@@ -103,7 +120,7 @@ sourceSets {
     }
     test {
         compileClasspath = sourceSets.rt.classes + sourceSets.cli.classes + configurations.cli + configurations.swingxFiles
-        runtimeClasspath = classes + sourceSets.rt.classes + sourceSets.cli.classes + configurations.cli + configurations.swingxFiles
+        runtimeClasspath = classes + sourceSets.rt.classes + sourceSets.cli.classes + configurations.cli + configurations.swingxFiles + files(fileTree("$buildDir/libs/griffon-resources-${version}.jar"))
         java.srcDirs = []
         groovy.srcDirs = ['src/test/rt', 'src/test/cli']
     }
@@ -139,6 +156,8 @@ apply {
     from 'gradle/codeQuality.gradle'
 }
 
+test.dependsOn jarResources
+
 task fullDist(dependsOn: [zipGuide, zipBinary, zipSource, tarBinary, tarSource, izpack, deb]) {
     description = "Assembles all packages."
 }
@@ -152,6 +171,6 @@ task bambooStage2(dependsOn: [bambooStage1, fullDist, rpm]) {
 }
 
 task wrapper(type: Wrapper) {
-    gradleVersion = '0.9-rc-3'
-    jarPath = 'gradle/wrapper'
+    gradleVersion = '0.9.1'
+    jarFile = 'gradle/wrapper/gradle-wrapper.jar'
 }

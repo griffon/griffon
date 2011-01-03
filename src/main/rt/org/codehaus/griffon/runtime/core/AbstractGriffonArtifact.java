@@ -1,5 +1,5 @@
 /*
- * Copyright 2010 the original author or authors.
+ * Copyright 2010-2011 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,6 +20,7 @@ import griffon.core.GriffonApplication;
 import griffon.core.GriffonArtifact;
 import griffon.core.GriffonClass;
 import griffon.util.UIThreadHelper;
+import griffon.util.ApplicationHolder;
 
 import groovy.lang.MetaClass;
 import groovy.lang.Closure;
@@ -77,6 +78,7 @@ public abstract class AbstractGriffonArtifact extends GroovyObjectSupport implem
     }
 
     public GriffonClass getGriffonClass() {
+        if(app == null) app = ApplicationHolder.getApplication();
         return app.getArtifactManager().findGriffonClass(getClass());
     }
 

@@ -13,7 +13,7 @@ import org.codehaus.griffon.plugins.PluginManagerHolder
 abstract class AbstractCliTests extends GroovyTestCase {
     String scriptName
 
-    protected appBase = "test/cliTestApp"
+    protected appBase = "build/classes/test/test-apps"
     protected ant = new AntBuilder()
 
     private GantBinding binding
@@ -34,14 +34,14 @@ abstract class AbstractCliTests extends GroovyTestCase {
             name = name[0..-6]
         }
 
-        this.scriptName = name
+        scriptName = name
     }
 
     AbstractCliTests(String scriptName) {
         this.scriptName = scriptName
     }
 
-    void setUp() {
+    protected void setUp() {
         ExpandoMetaClass.enableGlobally()
         ant.delete(dir:appBase, failonerror:false)
         System.setProperty("base.dir", appBase)
@@ -50,7 +50,7 @@ abstract class AbstractCliTests extends GroovyTestCase {
         savedContextLoader = Thread.currentThread().contextClassLoader
     }
 
-    void tearDown() {
+    protected void tearDown() {
         Thread.currentThread().contextClassLoader = savedContextLoader
 
         ant.delete(dir:appBase, failonerror:false)
@@ -82,7 +82,7 @@ abstract class AbstractCliTests extends GroovyTestCase {
     }
 
     protected void gantRun() {
-        gantRun(this.scriptName)
+        gantRun(scriptName)
     }
 
     protected void gantRun(String scriptName) {
@@ -107,8 +107,7 @@ abstract class AbstractCliTests extends GroovyTestCase {
         settings.projectPluginsDir = new File("$projectDir/plugins")
         settings.globalPluginsDir = new File("$workDir/global-plugins")
 
-        // Set up a binding for Gant and put some essential variables
-        // in there.
+        // Set up a binding for Gant and put some essential variables in there.
         binding = new GantBinding()
         binding.with {
             // Core properties.
@@ -141,7 +140,7 @@ abstract class AbstractCliTests extends GroovyTestCase {
             testResourcesDir = settings.testResourcesDir
 
             // Closure for specifying script dependencies.
-            griffonScript = { return new File("./src/main/scripts/${it}.groovy") }
+            griffonScript = { new File("./src/main/scripts/${it}.groovy") }
         }
 
         BuildSettingsHolder.settings = settings
@@ -154,7 +153,5 @@ abstract class AbstractCliTests extends GroovyTestCase {
         gant.processTargets()
     }
 
-    protected GantBinding getBinding() {
-        return this.binding
-    }
+    protected GantBinding getBinding() { binding }
 }

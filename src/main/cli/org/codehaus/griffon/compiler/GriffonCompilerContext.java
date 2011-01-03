@@ -1,5 +1,5 @@
 /*
- * Copyright 2010 the original author or authors.
+ * Copyright 2010-2011 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,11 +17,19 @@
 package org.codehaus.griffon.compiler;
 
 import java.io.File;
+import java.util.Map;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.ArrayList;
+import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import griffon.util.BuildSettings;
+import griffon.util.BuildSettingsHolder;
+import groovy.util.ConfigObject;
 import org.codehaus.groovy.control.SourceUnit;
+import org.codehaus.groovy.runtime.typehandling.DefaultTypeTransformation;
+
 
 /**
  * @author Andres Almiray
@@ -29,6 +37,11 @@ import org.codehaus.groovy.control.SourceUnit;
  * @since 0.9.1
  */
 public class GriffonCompilerContext {
+    public static final String DISABLE_AST_INJECTION = "griffon.disable.ast.injection";
+    public static final String DISABLE_AUTO_IMPORTS = "griffon.disable.auto.imports";
+    public static final String DISABLE_LOGGING_INJECTION = "griffon.disable.logging.injection";
+    public static final String DISABLE_THREADING_INJECTION = "griffon.disable.threading.injection";
+
     public static boolean verbose;
     public static String basedir;
     public static String projectName;
@@ -38,7 +51,7 @@ public class GriffonCompilerContext {
     public static Pattern isTestPattern;
     public static Pattern[] scriptPatterns;
     public static Pattern[] excludedArtifacts;
-    public static Pattern groovyArtifactPattern;
+    public static Pattern griffonArtifactPattern;
 
     private static final String[] ARTIFACT_EXCLUDES = { "conf", "i18n", "resources" };
     private static final boolean isWindows = System.getProperty("os.name").matches("Windows.*");
@@ -65,7 +78,7 @@ public class GriffonCompilerContext {
         for(String dir : ARTIFACT_EXCLUDES) {
             excludedArtifacts[i++] = normalizePattern("^" + basedir + File.separator + "griffon-app" + File.separator + dir + File.separator + ".*$");        
         }
-        groovyArtifactPattern = normalizePattern("^" + basedir + File.separator + "griffon-app" + File.separator + "([a-z]+)" + File.separator + ".*.groovy$");
+        griffonArtifactPattern = normalizePattern("^" + basedir + File.separator + "griffon-app" + File.separator + "([a-z]+)" + File.separator + ".*.groovy$");
         isAddonPattern = normalizePattern("^" + basedir + File.separator + ".*GriffonAddon.groovy$");
         scriptPatterns = new Pattern[2];
         scriptPatterns[0] = normalizePattern("^" + basedir + File.separator + "griffon-app" + File.separator + "conf" + File.separator + ".*.groovy$");
@@ -74,35 +87,65 @@ public class GriffonCompilerContext {
     }
 
     public static boolean isGriffonArtifact(SourceUnit source) {
+        if(source == null) return false;
+        return isGriffonArtifact(source.getName());
+    }
+
+    public static boolean isGriffonArtifact(String path) {
          if(projectName == null) return false;
     
          for(Pattern p : excludedArtifacts) {
-             if(p.matcher(source.getName()).matches()) return false;
+             if(p.matcher(path).matches()) return false;
          }
-         return isArtifactPattern.matcher(source.getName()).matches();  
+         return isArtifactPattern.matcher(path).matches();  
     }
 
     public static boolean isGriffonAddon(SourceUnit source) {
+        if(source == null) return false;
+        return isGriffonAddon(source.getName());
+    }
+    
+    public static boolean isGriffonAddon(String path) {
          if(projectName == null) return false;
-         return isAddonPattern.matcher(source.getName()).matches();
+         return isAddonPattern.matcher(path).matches();
     }
 
     public static boolean isGriffonScript(SourceUnit source) {
+        if(source == null) return false;
+        return isGriffonScript(source.getName());
+    }
+
+    public static boolean isGriffonScript(String path) {
          if(projectName == null) return false;
 
          for(Pattern p : scriptPatterns) {
-             if(p.matcher(source.getName()).matches()) return true;
+             if(p.matcher(path).matches()) return true;
          }
          return false;
     }
 
     public static boolean isTestSource(SourceUnit source) {
+        if(source == null) return false;
+        return isTestSource(source.getName());
+    }
+
+    public static boolean isTestSource(String path) {
          if(projectName == null) return false;
-         return isTestPattern.matcher(source.getName()).matches();
+         return isTestPattern.matcher(path).matches();
+    }
+
+    public static String getArtifactPath(SourceUnit source) {
+        if(source == null) return null;
+        return getArtifactPath(source.getName());
+    }
+
+    public static String getArtifactPath(String path) {
+        Matcher matcher = griffonArtifactPattern.matcher(path);
+        return matcher.matches() ? matcher.group(1) : null;
     }
 
     /**
-     * Merges two String arays.<p>
+     * Merges two String arrays.<p>
      * Never returns null
      */
     public static String[] merge(String[] a, String[] b) {
@@ -114,5 +157,21 @@ public class GriffonCompilerContext {
         for(String s : b) { s = s.trim(); if(!c.contains(s)) c.add(s); }
 
         return c.toArray(new String[c.size()]);    
+    }
+
+    public static ConfigObject getBuildSettings() {
+        BuildSettings settings = BuildSettingsHolder.getSettings();
+        return settings != null ? settings.getConfig() : new ConfigObject();
+    }
+
+    public static Map getFlattenedBuildSettings() {
+        return getBuildSettings().flatten(new LinkedHashMap());
+    }
+
+    public static boolean getConfigOption(String key) {
+        if(System.getProperty(key) != null) return Boolean.getBoolean(key);
+        Object value = getFlattenedBuildSettings().get(key);
+        if(value != null) return DefaultTypeTransformation.castToBoolean(value);
+        return false;
     }
 }

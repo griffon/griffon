@@ -519,7 +519,7 @@ class SwingPadController {
       }
       factorySet -= factorySet.grep{ it.startsWith("jxclassicSwing:") }
 
-      app.addons.each { addonName, addon ->
+      app.addonManager.addons.each { addonName, addon ->
 	     try {
 	        addon.factories.each { node, factory ->
 		       addonName -= 'GriffonAddon'

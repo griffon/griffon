@@ -1,5 +1,5 @@
 /*
- * Copyright 2004-2010 the original author or authors.
+ * Copyright 2004-2011 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -180,7 +180,7 @@ resolveResources = {String pattern ->
     }
 }
 
-// Closure that returns a Spring Resource - either from $Griffon_HOME
+// Closure that returns a Spring Resource - either from $GRIFFON_HOME
 // if that is set, or from the classpath.
 griffonResource = {String path ->
     if (griffonSettings.griffonHome) {
@@ -356,7 +356,9 @@ logErrorAndExit = { String message, Throwable t ->
 }
 
 isDebugEnabled = {
-    System.getProperty('griffon.cli.verbose') ? true : false
+    if(System.getProperty('griffon.cli.verbose') != null) return Boolean.parseBoolean('griffon.cli.verbose')
+    def value = buildConfig?.flatten()['griffon.cli.verbose']
+    value != null? value as boolean : false
 }
 
 debug = { msg ->

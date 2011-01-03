@@ -1,5 +1,5 @@
 /*
- * Copyright 2010 the original author or authors.
+ * Copyright 2010-2011 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,7 +24,6 @@ import java.util.List;
 import java.util.LinkedHashMap;
 import java.util.Enumeration;
 import java.util.Properties;
-import java.util.regex.Matcher;
 
 import org.codehaus.groovy.ant.Groovyc;
 import org.codehaus.groovy.ast.*;
@@ -38,9 +37,6 @@ import org.codehaus.groovy.control.*;
  * @since 0.9.1
  */
 public class GriffonCompiler extends Groovyc {
-    private static final String DISABLE_AUTO_IMPORTS = "griffon.disable.auto.imports";
-    private static final String DISABLE_LOGGING_INJECTION = "griffon.disable.logging.injection";
-    
     protected org.codehaus.griffon.compiler.ResolveVisitor resolveVisitor;
 
     private static final Map<String, String[]> IMPORTS_PER_ARTIFACT_TYPE = new LinkedHashMap<String, String[]>();
@@ -68,7 +64,7 @@ public class GriffonCompiler extends Groovyc {
     protected CompilationUnit makeCompileUnit() {
         CompilationUnit compilationUnit = super.makeCompileUnit();
         
-        if(!Boolean.getBoolean(DISABLE_AUTO_IMPORTS)) {
+        if(!GriffonCompilerContext.getConfigOption(GriffonCompilerContext.DISABLE_AUTO_IMPORTS)) {
             compilationUnit.addPhaseOperation(new CompilationUnit.PrimaryClassNodeOperation() {
                 public void call(SourceUnit source, GeneratorContext context,
                                  ClassNode classNode) throws CompilationFailedException {
@@ -79,10 +75,24 @@ public class GriffonCompiler extends Groovyc {
             // WATCH OUT!! We add our own ResolveVisitor before Groovy's
             resolveVisitor = new org.codehaus.griffon.compiler.ResolveVisitor(compilationUnit);
             compilationUnit.addPhaseOperation(resolve, Phases.CONVERSION);
+        } else {
+            log("Default imports feature disabled.");
         }
 
-        if(!Boolean.getBoolean(DISABLE_LOGGING_INJECTION)) {
+        if(!GriffonCompilerContext.getConfigOption(GriffonCompilerContext.DISABLE_LOGGING_INJECTION)) {
             compilationUnit.addPhaseOperation(new LoggingInjectionOperation(), Phases.CANONICALIZATION);
+        } else {
+            log("Conditional logging feature disabled.");
+        }
+
+        if(!GriffonCompilerContext.getConfigOption(GriffonCompilerContext.DISABLE_THREADING_INJECTION)) {
+            compilationUnit.addPhaseOperation(new ThreadingInjectionOperation(), Phases.CANONICALIZATION);
+        } else {
+            log("Threading injection feature disabled.");
+        }
+
+        if(GriffonCompilerContext.getConfigOption(GriffonCompilerContext.DISABLE_AST_INJECTION)) {
+            log("Artifact AST injection feature disabled.");
         }
 
         return compilationUnit;
@@ -108,9 +118,9 @@ public class GriffonCompiler extends Groovyc {
            GriffonCompilerContext.isGriffonScript(source) ||
            GriffonCompilerContext.isTestSource(source)) {
             Map<ClassNode, String[]> imports = resolveVisitor.getAdditionalImports();
-            Matcher matcher = GriffonCompilerContext.groovyArtifactPattern.matcher(source.getName());
-            if(matcher.matches()) {
-                imports.put(classNode, GriffonCompilerContext.merge(DEFAULT_IMPORTS, IMPORTS_PER_ARTIFACT_TYPE.get(matcher.group(1))));
+            String artifactPath = GriffonCompilerContext.getArtifactPath(source.getName());
+            if(artifactPath != null) {
+                imports.put(classNode, GriffonCompilerContext.merge(DEFAULT_IMPORTS, IMPORTS_PER_ARTIFACT_TYPE.get(artifactPath)));
             } else {
                 imports.put(classNode, DEFAULT_IMPORTS);
             }

@@ -1,5 +1,5 @@
 /*
- * Copyright 2007-2010 the original author or authors.
+ * Copyright 2007-2011 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -27,7 +27,7 @@ import org.slf4j.LoggerFactory
  * Time: 2:50:58 PM
  */
 class UberBuilder extends FactoryBuilderSupport {
-    private static final Logger log = LoggerFactory.getLogger(UberBuilder)
+    private static final Logger LOG = LoggerFactory.getLogger(UberBuilder)
     protected final Map builderLookup = new LinkedHashMap()
     protected final List<UberBuilderRegistration> builderRegistration = new LinkedList<UberBuilderRegistration>()
 
@@ -152,7 +152,7 @@ class UberBuilder extends FactoryBuilderSupport {
                 script.setBinding(this)
                 return script.run()
             } catch(x){
-                if(log.errorEnabled) log.error("An error occurred while building $script", x)
+                if(LOG.errorEnabled) LOG.error("An error occurred while building $script", x)
                 throw x
             }
         }

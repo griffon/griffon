@@ -5,6 +5,7 @@ import griffon.core.GriffonApplication
 import griffon.test.GriffonUnitTestCase
 import griffon.test.mock.MockGriffonApplication
 
+import griffon.util.ApplicationHolder
 import java.util.concurrent.Callable
 import java.util.concurrent.ExecutorService
 
@@ -13,7 +14,8 @@ abstract class AbstractGriffonClassTestCase extends GriffonUnitTestCase {
 
     void setUp() {
         app = new MockGriffonApplication()
-        app.artifactManager = new DefaultArtifactManager()
+        ApplicationHolder.application = app
+        app.artifactManager = new DefaultArtifactManager(app)
     }
 
     void testRespondsToMvcMethods() {
@@ -24,11 +26,13 @@ abstract class AbstractGriffonClassTestCase extends GriffonUnitTestCase {
          assert metaClass.respondsTo(subject, 'newInstance', [Class, String] as Class[])
          assert metaClass.respondsTo(subject, 'buildMVCGroup', [String] as Class[])
          assert metaClass.respondsTo(subject, 'buildMVCGroup', [String, String] as Class[])
-         assert metaClass.respondsTo(subject, 'buildMVCGroup', [String, Map] as Class[])
-         assert metaClass.respondsTo(subject, 'buildMVCGroup', [String, String, Map] as Class[])
+         assert metaClass.respondsTo(subject, 'buildMVCGroup', [Map, String] as Class[])
+         assert metaClass.respondsTo(subject, 'buildMVCGroup', [Map, String, String] as Class[])
          assert metaClass.respondsTo(subject, 'createMVCGroup', [String] as Class[])
          assert metaClass.respondsTo(subject, 'createMVCGroup', [String, String] as Class[])
          assert metaClass.respondsTo(subject, 'createMVCGroup', [String, Map] as Class[])
+         assert metaClass.respondsTo(subject, 'createMVCGroup', [Map, String] as Class[])
+         assert metaClass.respondsTo(subject, 'createMVCGroup', [Map, String, String] as Class[])
          assert metaClass.respondsTo(subject, 'createMVCGroup', [String, String, Map] as Class[])
          assert metaClass.respondsTo(subject, 'destroyMVCGroup', [String] as Class[])
          assert metaClass.respondsTo(subject, 'isUIThread', new Class[0])

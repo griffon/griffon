@@ -30,7 +30,7 @@ class DefaultGriffonServiceClassTests extends AbstractGriffonClassTestCase {
     }
 }
 
-class SampleService {
+class SampleService extends AbstractGriffonService {
     def service1 = { }
     void service2() {}
     private service3 = { }

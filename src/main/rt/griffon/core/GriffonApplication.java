@@ -1,5 +1,5 @@
 /*
- * Copyright 2009-2010 the original author or authors.
+ * Copyright 2009-2011 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -90,9 +90,23 @@ public interface GriffonApplication {
 
     /**
      * Returns all currently available addon instances, keyed by addon name.<p>
+     * @deprecated use getAddonManager().getAddons()
      */
+    @Deprecated
     Map<String, ?> getAddons();
+
+    /**
+     * @deprecated without replacement. Use the AddonManager to query for addons
+     */
+    @Deprecated
     Map<String, String> getAddonPrefixes();
+
+    /**
+     * Returns the application's AddonManager instance.
+     *
+     * @return the application's AddonManager
+     */
+    AddonManager getAddonManager();
 
     /**
      * Returns all currently available model instances, keyed by group name.<p>

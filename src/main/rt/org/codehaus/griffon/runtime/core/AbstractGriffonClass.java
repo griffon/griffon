@@ -1,5 +1,5 @@
 /*
- * Copyright 2004-2010 the original author or authors.
+ * Copyright 2004-2011 the original author or authors.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -113,7 +113,11 @@ public abstract class AbstractGriffonClass implements GriffonClass {
 
     public Object newInstance() {
         try {
-            return GriffonApplicationHelper.newInstance(app, clazz, type);
+            Object instance = GriffonApplicationHelper.newInstance(app, clazz, type);
+            if(instance instanceof AbstractGriffonArtifact) {
+                ((AbstractGriffonArtifact) instance).setApp(app);
+            }
+            return instance;
         } catch (Exception e) {
             Throwable targetException = null;
             if (e instanceof InvocationTargetException) {

@@ -191,12 +191,9 @@ log4j = {
 
 The following appenders are available by default:
 
-{table}
- *Name* | *Class* | *Description*
- console | [ConsoleAppender|http://logging.apache.org/log4j/1.2/apidocs/org/apache/log4j/ConsoleAppender.html] | Logs to the console.
- file | [FileAppender|http://logging.apache.org/log4j/1.2/apidocs/org/apache/log4j/FileAppender.html] | Logs to a single file.
- rollingFile | [RollingFileAppender|http://logging.apache.org/log4j/1.2/apidocs/org/apache/log4j/RollingFileAppender.html] | Logs to rolling files, for example a new file each day.
-{table}
+ * console ([ConsoleAppender|http://logging.apache.org/log4j/1.2/apidocs/org/apache/log4j/ConsoleAppender.html]) - Logs to the console.
+ * file ([FileAppender|http://logging.apache.org/log4j/1.2/apidocs/org/apache/log4j/FileAppender.html]) - Logs to a single file.
+ * rollingFile ([RollingFileAppender|http://logging.apache.org/log4j/1.2/apidocs/org/apache/log4j/RollingFileAppender.html]) - Logs to rolling files, for example a new file each day.
 
 Each named argument passed to an appender maps to a property of the underlying [Appender|http://logging.apache.org/log4j/1.2/apidocs/org/apache/log4j/Appender.html] implementation. So the previous example sets the @name@, @maxFileSize@ and @file@ properties of the @RollingFileAppender@ instance.
 

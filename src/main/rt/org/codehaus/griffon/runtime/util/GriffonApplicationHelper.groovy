@@ -1,5 +1,5 @@
 /*
- * Copyright 2008-2010 the original author or authors.
+ * Copyright 2008-2011 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,6 +21,7 @@ import griffon.core.ArtifactManager
 import griffon.core.GriffonArtifact
 import griffon.core.GriffonMvcArtifact
 import org.codehaus.griffon.runtime.builder.UberBuilder
+import org.codehaus.griffon.runtime.core.DefaultAddonManager
 import org.codehaus.griffon.runtime.core.DefaultArtifactManager
 import org.codehaus.griffon.runtime.core.ModelArtifactHandler
 import org.codehaus.griffon.runtime.core.ViewArtifactHandler
@@ -43,7 +44,7 @@ import org.apache.log4j.LogManager
  * @author Andres Almiray
  */
 class GriffonApplicationHelper {
-    private static final Logger log = LoggerFactory.getLogger(GriffonApplicationHelper)
+    private static final Logger LOG = LoggerFactory.getLogger(GriffonApplicationHelper)
 
     /**
      * Creates, register and assings an ExpandoMetaClass for a target class.<p>
@@ -116,11 +117,14 @@ class GriffonApplicationHelper {
             loadArtifactMetadata()
         }
 
-        AddonHelper.handleAddonsAtStartup(app)
+        if(!app.addonManager) {
+            app.addonManager = new DefaultAddonManager(app)
+        }
+        app.addonManager.initialize()
 
         // copy mvc groups in config to app, casting to strings in a new map
         app.config.mvcGroups.each {k, v->
-            if(log.debugEnabled) log.debug("Adding MVC group $k")
+            if(LOG.debugEnabled) LOG.debug("Adding MVC group $k")
             app.addMvcGroup(k, v.inject([:]) {m, e -> m[e.key as String] = e.value as String; m})
         }
 
@@ -170,7 +174,7 @@ class GriffonApplicationHelper {
         script.execOutside = UIThreadHelper.instance.&executeOutside
         script.execFuture = {Object... args -> UIThreadHelper.instance.executeFuture(*args) }
 
-        if(log.infoEnabled) log.info("Running script '$scriptName'")
+        if(LOG.infoEnabled) LOG.info("Running script '$scriptName'")
         UIThreadHelper.instance.executeSync(script)
     }
 
@@ -189,7 +193,7 @@ class GriffonApplicationHelper {
      * @return a newly created instance of type klass
      */
     static Object newInstance(GriffonApplication app, Class klass, String type = '') {
-        if(log.debugEnabled) log.debug("Instantiating ${klass.name} with type '${type}'")
+        if(LOG.debugEnabled) LOG.debug("Instantiating ${klass.name} with type '${type}'")
         def instance = klass.newInstance()
 
         GriffonClass griffonClass = app.artifactManager.findGriffonClass(klass)
@@ -234,7 +238,7 @@ class GriffonApplicationHelper {
             throw new IllegalArgumentException("Unknown MVC type \"$mvcType\".  Known types are ${app.mvcGroups.keySet()}")
         }
 
-        if(log.infoEnabled) log.info("Building MVC group '${mvcType}' with name '${mvcName}'")
+        if(LOG.infoEnabled) LOG.info("Building MVC group '${mvcType}' with name '${mvcName}'")
         def argsCopy = [app:app, mvcType:mvcType, mvcName:mvcName]
         argsCopy.putAll(app.bindings.variables)
         argsCopy.putAll(bindArgs)
@@ -310,7 +314,7 @@ class GriffonApplicationHelper {
         app.groups[mvcName] = instanceMap
 
         // initialize the classes and call scripts
-        if(log.debugEnabled) log.debug("Initializing each MVC member of group '${mvcName}'")
+        if(LOG.debugEnabled) LOG.debug("Initializing each MVC member of group '${mvcName}'")
         instanceMap.each {k, v ->
             if (v instanceof Script) {
                 // special case: view gets executed in the UI thread always
@@ -384,7 +388,7 @@ class GriffonApplicationHelper {
      * @param mvcName name of the group to destroy
      */
     static destroyMVCGroup(GriffonApplication app, String mvcName) {
-        if(log.infoEnabled) log.info("Destroying MVC group identified by '$mvcName'")
+        if(LOG.infoEnabled) LOG.info("Destroying MVC group identified by '$mvcName'")
         app.removeApplicationEventListener(app.controllers[mvcName])
         [app.models, app.views, app.controllers].each {
             def part = it.remove(mvcName)

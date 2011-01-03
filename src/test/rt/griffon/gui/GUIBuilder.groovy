@@ -29,15 +29,14 @@ import org.codehaus.groovy.reflection.ReflectionUtils
 
 //import groovy.swing.j2d.GraphicsBuilder
 class GUIBuilder extends UberBuilder {
-
-    protected static final Set<String> builderPackages = new HashSet<String>();
+    protected static final Set<String> BUILDER_PACKAGES = new HashSet<String>();
     static {
         // TODO also either dynamically add pacakges of builders or match builders themselves as excludes 
-        builderPackages.add("org.codehaus.groovy.runtime.metaclass");
-        builderPackages.add("griffon.builder");
-        builderPackages.add("groovy.util");
-        builderPackages.add("groovy.swing");
-        builderPackages.add("griffon.gui");
+        BUILDER_PACKAGES.add("org.codehaus.groovy.runtime.metaclass");
+        BUILDER_PACKAGES.add("griffon.builder");
+        BUILDER_PACKAGES.add("groovy.util");
+        BUILDER_PACKAGES.add("groovy.swing");
+        BUILDER_PACKAGES.add("griffon.gui");
     }
 
     public GUIBuilder() {
@@ -63,7 +62,7 @@ class GUIBuilder extends UberBuilder {
         registerExplicitProperty(
             'resources',
             {->
-                Class callingClass = ReflectionUtils.getCallingClass(0, builderPackages)
+                Class callingClass = ReflectionUtils.getCallingClass(0, BUILDER_PACKAGES)
                 ResourceBundle.getBundle(
                     callingClass.name.split('\\$')[0].replace('.', '/'),
                     Locale.getDefault(),

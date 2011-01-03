@@ -1,7 +1,5 @@
 package org.codehaus.griffon.documentation
 
-import groovy.xml.StreamingMarkupBuilder
-
 /**
  * @author Graeme Rocher
  * @since 1.2

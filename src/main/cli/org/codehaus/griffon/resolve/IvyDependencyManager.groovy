@@ -1,5 +1,5 @@
 /* 
- * Copyright 2004-2010 the original author or authors.
+ * Copyright 2004-2011 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -254,7 +254,7 @@ class IvyDependencyManager extends AbstractIvyDependencyManager implements Depen
                        "org.grails:grails-docs:1.3.6"
 
                 // dependencies needed for compilation
-                compile("org.codehaus.groovy:groovy-all:1.7.5") {
+                compile("org.codehaus.groovy:groovy-all:1.7.6") {
                     excludes 'jline'
                 }
 

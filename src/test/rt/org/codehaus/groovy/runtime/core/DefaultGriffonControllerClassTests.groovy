@@ -30,7 +30,7 @@ class DefaultGriffonControllerClassTests extends AbstractGriffonClassTestCase {
     }
 }
 
-class SampleController {
+class SampleController extends AbstractGriffonController {
     def model
     def view
 

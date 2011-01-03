@@ -1,5 +1,5 @@
 /* 
- * Copyright 2004-2010 the original author or authors.
+ * Copyright 2004-2011 the original author or authors.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -80,13 +80,19 @@ public final class GriffonClassUtils {
                  BASIC_METHODS.add(md);
              }
         }
+        for(Method method : GroovyObjectSupport.class.getMethods()) {
+             MethodDescriptor md = MethodDescriptor.forMethod(method);
+             if(!BASIC_METHODS.contains(md)) {
+                 BASIC_METHODS.add(md);
+             }
+        }
         for(Method method : Object.class.getMethods()) {
              MethodDescriptor md = MethodDescriptor.forMethod(method);
              if(!BASIC_METHODS.contains(md)) {
                  BASIC_METHODS.add(md);
              }
         }
-       
+
         MVC_METHODS.add(new MethodDescriptor("mvcGroupInit", new Class[]{Map.class}));
         MVC_METHODS.add(new MethodDescriptor("mvcGroupDestroy"));
         MVC_METHODS.add(new MethodDescriptor("newInstance", new Class[]{Class.class, String.class}));
@@ -128,6 +134,7 @@ public final class GriffonClassUtils {
         MVC_METHODS.add(new MethodDescriptor("execFuture", new Class[]{Object[].class}));
 
         MVC_METHODS.add(new MethodDescriptor("getApp"));
+        MVC_METHODS.add(new MethodDescriptor("getLog"));
         MVC_METHODS.add(new MethodDescriptor("getArtifactManager"));
         MVC_METHODS.add(new MethodDescriptor("getGriffonClass"));
         MVC_METHODS.add(new MethodDescriptor("setBuilder", new Class[]{FactoryBuilderSupport.class}));
@@ -154,6 +161,46 @@ public final class GriffonClassUtils {
     }
 
     /**
+     * Finds out if the given Method represents an event handler
+     * by matching its name against the following pattern:
+     * "^on[A-Z][\\w]*$"<p>
+     *
+     * @param method a Method reference
+     * @return true if the method name matches the given event handler
+     * pattern, false otherwise.
+     */
+    public static boolean isEventHandler(Method method) {
+        return isEventHandler(MethodDescriptor.forMethod(method));
+    }
+
+    /**
+     * Finds out if the given Method represents an event handler
+     * by matching its name against the following pattern:
+     * "^on[A-Z][\\w]*$"<p>
+     *
+     * @param method a MetaMethod reference
+     * @return true if the method name matches the given event handler
+     * pattern, false otherwise.
+     */
+    public static boolean isEventHandler(MetaMethod method) {
+        return isEventHandler(MethodDescriptor.forMethod(method));
+    }
+
+    /**
+     * Finds out if the given Method represents an event handler
+     * by matching its name against the following pattern:
+     * "^on[A-Z][\\w]*$"<p>
+     *
+     * @param method a MethodDescriptor reference
+     * @return true if the method name matches the given event handler
+     * pattern, false otherwise.
+     */
+    public static boolean isEventHandler(MethodDescriptor method) {
+        if(method == null || method.getModifiers() - Modifier.PUBLIC != 0) return false;
+        return EVENT_HANDLER_PATTERN.matcher(method.getName()).matches();
+    }
+
+    /**
      * Finds out if the given {@code Method} belongs either to the 
      * {@code Object} class or the {@code GroovyObject} class.<p>
      *
@@ -162,9 +209,7 @@ public final class GriffonClassUtils {
      * {@code GroovyObject}, false otherwise.
      */
     public static boolean isBasicMethod(Method method) {
-        if(method == null || !isInstanceMethod(method)) return false;
-        MethodDescriptor md = MethodDescriptor.forMethod(method);
-        return BASIC_METHODS.contains(md);
+        return isBasicMethod(MethodDescriptor.forMethod(method));
     }
 
     /**
@@ -176,9 +221,20 @@ public final class GriffonClassUtils {
      * {@code GroovyObject}, false otherwise.
      */
     public static boolean isBasicMethod(MetaMethod method) {
+        return isBasicMethod(MethodDescriptor.forMethod(method));
+    }
+
+    /**
+     * Finds out if the given {@code MethodDescriptor} belongs either to the 
+     * {@code Object} class or the {@code GroovyObject} class.<p>
+     *
+     * @param method a MethodDescriptor reference
+     * @return true if the method belongs to {@code Object} or 
+     * {@code GroovyObject}, false otherwise.
+     */
+    public static boolean isBasicMethod(MethodDescriptor method) {
         if(method == null || !isInstanceMethod(method)) return false;
-        MethodDescriptor md = MethodDescriptor.forMethod(method);
-        return BASIC_METHODS.contains(md);
+        return BASIC_METHODS.contains(method);
     }
 
     /**
@@ -191,6 +247,32 @@ public final class GriffonClassUtils {
      * @return true if the method matches the given criteria, false otherwise.
      */
     public static boolean isGroovyInjectedMethod(Method method) {
+        return isGroovyInjectedMethod(MethodDescriptor.forMethod(method));
+    }
+
+    /**
+     * Finds out if the given {@code MetaMethod} was injected by the Groovy
+     * compiler.<p>
+     * Performs a basic checks againts the method's name, returning true
+     * if the name starts with either "super$" or "this$".
+     *
+     * @param method a MetaMethod reference
+     * @return true if the method matches the given criteria, false otherwise.
+     */
+    public static boolean isGroovyInjectedMethod(MetaMethod method) {
+        return isGroovyInjectedMethod(MethodDescriptor.forMethod(method));
+    }
+
+    /**
+     * Finds out if the given {@code MethodDescriptor} was injected by the Groovy
+     * compiler.<p>
+     * Performs a basic checks againts the method's name, returning true
+     * if the name starts with either "super$" or "this$".
+     *
+     * @param method a MethodDescriptor reference
+     * @return true if the method matches the given criteria, false otherwise.
+     */
+    public static boolean isGroovyInjectedMethod(MethodDescriptor method) {
         if(method == null || !isInstanceMethod(method)) return false;
         return method.getName().startsWith("super$") || 
                method.getName().startsWith("this$");
@@ -212,9 +294,7 @@ public final class GriffonClassUtils {
      * @return true if the method is a getter, false otherwise.
      */
     public static boolean isGetterMethod(Method method) {
-        if(method == null || !isInstanceMethod(method)) return false;
-        return GETTER_PATTERN_1.matcher(method.getName()).matches() ||
-               GETTER_PATTERN_2.matcher(method.getName()).matches();
+        return isGetterMethod(MethodDescriptor.forMethod(method));
     }
 
     /**
@@ -233,6 +313,25 @@ public final class GriffonClassUtils {
      * @return true if the method is a getter, false otherwise.
      */
     public static boolean isGetterMethod(MetaMethod method) {
+        return isGetterMethod(MethodDescriptor.forMethod(method));
+    }
+
+    /**
+     * Finds out if the given {@code MetaMethod} is a getter method.
+     *
+     * <pre>
+     * // assuming getMethod() returns an appropriate MethodDescriptor reference
+     * isGetterMethod(getMethod("getFoo"))       = true
+     * isGetterMethod(getMethod("getfoo") )      = false
+     * isGetterMethod(getMethod("mvcGroupInit")) = false
+     * isGetterMethod(getMethod("isFoo"))        = true
+     * isGetterMethod(getMethod("island"))       = true
+     * </pre>
+     *
+     * @param method a MethodDescriptor reference
+     * @return true if the method is a getter, false otherwise.
+     */
+    public static boolean isGetterMethod(MethodDescriptor method) {
         if(method == null || !isInstanceMethod(method)) return false;
         return GETTER_PATTERN_1.matcher(method.getName()).matches() ||
                GETTER_PATTERN_2.matcher(method.getName()).matches();
@@ -243,8 +342,8 @@ public final class GriffonClassUtils {
      *
      * <pre>
      * // assuming getMethod() returns an appropriate Method reference
-     * isGetterMethod("getMethod(setFoo"))       = true
-     * isGetterMethod("getMethod(setfoo"))       = false
+     * isGetterMethod(getMethod("setFoo"))       = true
+     * isGetterMethod(getMethod("setfoo"))       = false
      * isGetterMethod(getMethod("mvcGroupInit")) = false
      * </pre>
      *
@@ -252,8 +351,7 @@ public final class GriffonClassUtils {
      * @return true if the method is a setter, false otherwise.
      */
     public static boolean isSetterMethod(Method method) {
-        if(method == null || !isInstanceMethod(method)) return false;
-        return SETTER_PATTERN.matcher(method.getName()).matches();
+        return isSetterMethod(MethodDescriptor.forMethod(method));
     }
 
     /**
@@ -261,8 +359,8 @@ public final class GriffonClassUtils {
      *
      * <pre>
      * // assuming getMethod() returns an appropriate MetaMethod reference
-     * isGetterMethod("getMethod(setFoo"))       = true
-     * isGetterMethod("getMethod(setfoo"))       = false
+     * isGetterMethod(getMethod("setFoo"))       = true
+     * isGetterMethod(getMethod("setfoo"))       = false
      * isGetterMethod(getMethod("mvcGroupInit")) = false
      * </pre>
      *
@@ -270,6 +368,23 @@ public final class GriffonClassUtils {
      * @return true if the method is a setter, false otherwise.
      */
     public static boolean isSetterMethod(MetaMethod method) {
+        return isSetterMethod(MethodDescriptor.forMethod(method));
+    }
+
+    /**
+     * Finds out if the given {@code MethodDescriptor} is a setter method.
+     *
+     * <pre>
+     * // assuming getMethod() returns an appropriate MethodDescriptor reference
+     * isGetterMethod(getMethod("setFoo"))       = true
+     * isGetterMethod(getMethod("setfoo"))       = false
+     * isGetterMethod(getMethod("mvcGroupInit")) = false
+     * </pre>
+     *
+     * @param method a MethodDescriptor reference
+     * @return true if the method is a setter, false otherwise.
+     */
+    public static boolean isSetterMethod(MethodDescriptor method) {
         if(method == null || !isInstanceMethod(method)) return false;
         return SETTER_PATTERN.matcher(method.getName()).matches();
     }
@@ -289,8 +404,7 @@ public final class GriffonClassUtils {
      * @return true if the method is an MVC method, false otherwise.
      */
     public static boolean isMvcMethod(Method method) {
-        if(method == null || !isInstanceMethod(method)) return false;
-        return MVC_METHODS.contains(MethodDescriptor.forMethod(method));
+        return isMvcMethod(MethodDescriptor.forMethod(method));
     }
 
     /**
@@ -308,8 +422,26 @@ public final class GriffonClassUtils {
      * @return true if the method is an MVC method, false otherwise.
      */
     public static boolean isMvcMethod(MetaMethod method) {
+        return isMvcMethod(MethodDescriptor.forMethod(method));
+    }
+
+    /**
+     * Finds out if the given {@code MethodDescriptor} belongs to the set of
+     * predefined MVC methods by convention.
+     *
+     * <pre>
+     * // assuming getMethod() returns an appropriate MethodDescriptor reference
+     * isMvcMethod(getMethod("mvcGroupInit"))    = true
+     * isMvcMethod(getMethod("mvcGroupDestroy")) = true
+     * isMvcMethod(getMethod("foo"))             = false
+     * </pre>
+     *
+     * @param method a Method reference
+     * @return true if the method is an MVC method, false otherwise.
+     */
+    public static boolean isMvcMethod(MethodDescriptor method) {
         if(method == null || !isInstanceMethod(method)) return false;
-        return MVC_METHODS.contains(MethodDescriptor.forMethod(method));
+        return MVC_METHODS.contains(method);
     }
 
     /**
@@ -320,10 +452,7 @@ public final class GriffonClassUtils {
      * @return true if the method is an instance method, false otherwise.
      */
     public static boolean isInstanceMethod(Method method) {
-        if(method == null) return false;
-        int modifiers = method.getModifiers();
-        return Modifier.isPublic(modifiers) &&
-              !Modifier.isStatic(modifiers);
+        return isInstanceMethod(MethodDescriptor.forMethod(method));
     }
 
     /**
@@ -334,6 +463,17 @@ public final class GriffonClassUtils {
      * @return true if the method is an instance method, false otherwise.
      */
     public static boolean isInstanceMethod(MetaMethod method) {
+        return isInstanceMethod(MethodDescriptor.forMethod(method));
+    }
+
+    /**
+     * Finds out if the given {@code MethodDescriptor} is an instance method, i.e,
+     * it is public and non-static.
+     *
+     * @param method a MethodDescriptor reference
+     * @return true if the method is an instance method, false otherwise.
+     */
+    public static boolean isInstanceMethod(MethodDescriptor method) {
         if(method == null) return false;
         int modifiers = method.getModifiers();
         return Modifier.isPublic(modifiers) &&
@@ -342,6 +482,7 @@ public final class GriffonClassUtils {
 
     /**
      * Finds out if the given {@code Method} matches the following criteria:<ul>
+     * <li>isInstanceMethod(method)</li>
      * <li>! isBasicMethod(method)</li>
      * <li>! isGroovyInjectedMethod(method)</li>
      * <li>! isGetterMethod(method)</li>
@@ -353,16 +494,14 @@ public final class GriffonClassUtils {
      * @return true if the method matches the given criteria, false otherwise.
      */
     public static boolean isPlainMethod(Method method) {
-        return !isBasicMethod(method) &&
-               !isGroovyInjectedMethod(method) &&
-               !isGetterMethod(method) &&
-               !isSetterMethod(method) &&
-               !isMvcMethod(method);
+        return isPlainMethod(MethodDescriptor.forMethod(method));
     }
 
     /**
      * Finds out if the given {@code MetaMethod} matches the following criteria:<ul>
+     * <li>isInstanceMethod(method)</li>
      * <li>! isBasicMethod(method)</li>
+     * <li>! isGroovyInjectedMethod(method)</li>
      * <li>! isGetterMethod(method)</li>
      * <li>! isSetterMethod(method)</li>
      * <li>! isMvcMethod(method)</li>
@@ -372,7 +511,26 @@ public final class GriffonClassUtils {
      * @return true if the method matches the given criteria, false otherwise.
      */
     public static boolean isPlainMethod(MetaMethod method) {
-        return !isBasicMethod(method) &&
+        return isPlainMethod(MethodDescriptor.forMethod(method));
+    }
+
+    /**
+     * Finds out if the given {@code MethodDescriptor} matches the following criteria:<ul>
+     * <li>isInstanceMethod(method)</li>
+     * <li>! isBasicMethod(method)</li>
+     * <li>! isGroovyInjectedMethod(method)</li>
+     * <li>! isGetterMethod(method)</li>
+     * <li>! isSetterMethod(method)</li>
+     * <li>! isMvcMethod(method)</li>
+     * </ul>
+     *
+     * @param method a MethodDescriptor reference
+     * @return true if the method matches the given criteria, false otherwise.
+     */
+    public static boolean isPlainMethod(MethodDescriptor method) {
+        return isInstanceMethod(method) &&
+               !isBasicMethod(method) &&
+               !isGroovyInjectedMethod(method) &&
                !isGetterMethod(method) &&
                !isSetterMethod(method) &&
                !isMvcMethod(method);
@@ -1575,36 +1733,59 @@ public final class GriffonClassUtils {
         return className.substring(0, i);
     }
 
-
-    private static class MethodDescriptor implements Comparable {
+    public static class MethodDescriptor implements Comparable {
         private final String methodName;
         private final Class[] paramTypes;
         private final int hashCode;
+        private final int modifiers;
 
         private static final Class[] EMPTY_CLASS_PARAMETERS = new Class[0];
 
         public static MethodDescriptor forMethod(Method method) {
-             return new MethodDescriptor(method.getName(), method.getParameterTypes());
+            if(method == null) return null;
+            return new MethodDescriptor(method.getName(), method.getParameterTypes(), method.getModifiers());
         }
 
         public static MethodDescriptor forMethod(MetaMethod method) {
-             CachedClass[] types = method.getParameterTypes();
-             Class[] parameterTypes = new Class[types.length];
-             for(int i = 0; i < types.length; i++) {
-                 parameterTypes[i] = types[i].getTheClass();
-             }
-             return new MethodDescriptor(method.getName(), parameterTypes);
+            if(method == null) return null;
+            CachedClass[] types = method.getParameterTypes();
+            Class[] parameterTypes = new Class[types.length];
+            for(int i = 0; i < types.length; i++) {
+                parameterTypes[i] = types[i].getTheClass();
+            }
+            return new MethodDescriptor(method.getName(), parameterTypes, method.getModifiers());
         }
 
         public MethodDescriptor(String methodName) {
-            this(methodName, EMPTY_CLASS_PARAMETERS);
+            this(methodName, EMPTY_CLASS_PARAMETERS, Modifier.PUBLIC);
+        }
+
+        public MethodDescriptor(String methodName, int modifiers) {
+            this(methodName, EMPTY_CLASS_PARAMETERS, modifiers);
         }
 
         public MethodDescriptor(String methodName, Class[] paramTypes) {
+            this(methodName, paramTypes, Modifier.PUBLIC);
+        }
+
+        public MethodDescriptor(String methodName, Class[] paramTypes, int modifiers) {
             this.methodName = methodName;
             this.paramTypes = paramTypes == null ? EMPTY_CLASS_PARAMETERS : paramTypes;
+            this.modifiers = modifiers;
 
-            this.hashCode = methodName.length();
+            this.hashCode = methodName.length() + modifiers;
+        }
+
+        public String getName() {
+            return methodName;
+        }
+
+        public Class[] getParameterTypes() {
+            return paramTypes;
+        }
+
+        public int getModifiers() {
+            return modifiers;
         }
 
         public boolean equals(Object obj) {
@@ -1614,6 +1795,7 @@ public final class GriffonClassUtils {
             MethodDescriptor md = (MethodDescriptor)obj;
 
             return methodName.equals(md.methodName) &&
+                modifiers == md.modifiers &&
                 java.util.Arrays.equals(paramTypes, md.paramTypes);
         }
 
@@ -1623,6 +1805,7 @@ public final class GriffonClassUtils {
 
         public String toString() {
             StringBuilder b = new StringBuilder();
+            b.append(Modifier.toString(modifiers)).append(" ");
             b.append(methodName).append("(");
             for(int i = 0; i < paramTypes.length; i++) {
                 if(i != 0) b.append(", ");
@@ -1639,6 +1822,8 @@ public final class GriffonClassUtils {
             MethodDescriptor md = (MethodDescriptor)obj;
 
             int c = methodName.compareTo(md.methodName);
+            if(c != 0) return c;
+            c = modifiers - md.modifiers;
             if(c != 0) return c;
             c = paramTypes.length - md.paramTypes.length;
             if(c != 0) return c;

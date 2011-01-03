@@ -1,5 +1,5 @@
 /* 
- * Copyright 2004-2010 the original author or authors.
+ * Copyright 2004-2011 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -291,10 +291,7 @@ public class GriffonUtil extends GriffonNameUtils {
      * @return The script name representation
      */
     public static String getScriptName(Class clazz) {
-        if(clazz == null) {
-            return null;
-        }
-        return getScriptName(clazz.getName());
+        return getHyphenatedName(clazz);
     }
 
     /**
@@ -305,14 +302,7 @@ public class GriffonUtil extends GriffonNameUtils {
      * @return The script name representation.
      */
     public static String getScriptName(String name) {
-        if(name == null) {
-            return null;
-        }
-        if(name.endsWith(".groovy")) {
-            name = name.substring(0, name.length()-7);
-        }
-        String naturalName = getNaturalName(getShortName(name));
-        return naturalName.replaceAll("\\s", "-").toLowerCase();
+        return getHyphenatedName(name);
     }
 
     /**

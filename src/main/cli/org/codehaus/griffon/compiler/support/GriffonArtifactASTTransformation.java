@@ -1,5 +1,5 @@
 /*
- * Copyright 2010 the original author or authors.
+ * Copyright 2010-2011 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,8 +21,6 @@ import org.codehaus.groovy.control.SourceUnit;
 import org.codehaus.groovy.transform.ASTTransformation;
 import org.objectweb.asm.Opcodes;
 
-import java.util.regex.Matcher;
-
 import org.codehaus.griffon.compiler.GriffonCompilerContext;
 
 /**
@@ -34,14 +32,12 @@ import org.codehaus.griffon.compiler.GriffonCompilerContext;
  * @since 0.9.1
  */
 public abstract class GriffonArtifactASTTransformation implements ASTTransformation, Opcodes {
-    private static final String DISABLE_AST_INJECTION = "griffon.disable.ast.injection";
-    
     public void visit(ASTNode[] nodes, SourceUnit source) {
-        if(Boolean.getBoolean(DISABLE_AST_INJECTION) || !GriffonCompilerContext.isGriffonArtifact(source)) return;
+        if(GriffonCompilerContext.getConfigOption(GriffonCompilerContext.DISABLE_AST_INJECTION) || !GriffonCompilerContext.isGriffonArtifact(source)) return;
         ModuleNode moduleNode = (ModuleNode) nodes[0];
         ClassNode classNode = moduleNode.getClasses().get(0);
         if(classNode.isDerivedFrom(ClassHelper.SCRIPT_TYPE) && !allowsScriptAsArtifact()) return;
-        transform(classNode, source, getArtifactPath(source));
+        transform(classNode, source, GriffonCompilerContext.getArtifactPath(source));
     }
 
     protected boolean allowsScriptAsArtifact() {
@@ -49,11 +45,6 @@ public abstract class GriffonArtifactASTTransformation implements ASTTransformat
     }
 
     protected abstract void transform(ClassNode classNode, SourceUnit source, String artifactPath);
-
-    public static String getArtifactPath(SourceUnit source) {
-        Matcher matcher = GriffonCompilerContext.groovyArtifactPattern.matcher(source.getName());
-        return matcher.matches() ? matcher.group(1) : null;
-    }
 
     public static boolean isOrImplements(ClassNode fieldType, ClassNode interfaceType) {
         return fieldType.equals(interfaceType) || fieldType.implementsInterface(interfaceType);

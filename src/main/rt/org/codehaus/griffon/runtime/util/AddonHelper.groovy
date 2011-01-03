@@ -1,5 +1,5 @@
 /*
- * Copyright 2009-2010 the original author or authors.
+ * Copyright 2009-2011 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,9 +16,17 @@
 
 package org.codehaus.griffon.runtime.util
 
-import org.codehaus.griffon.runtime.builder.UberBuilder
 import griffon.core.GriffonApplication
+import griffon.core.GriffonAddon
+import griffon.core.GriffonAddonDescriptor
 import griffon.util.UIThreadHelper
+import griffon.util.GriffonNameUtils
+import griffon.util.Metadata
+
+import org.codehaus.griffon.runtime.builder.UberBuilder
+import org.codehaus.griffon.runtime.core.DefaultGriffonAddon
+import org.codehaus.griffon.runtime.core.DefaultGriffonAddonDescriptor
+
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 
@@ -29,7 +37,7 @@ import org.slf4j.LoggerFactory
  * @author Andres Almiray
  */
 public class AddonHelper {
-    private static final Logger log = LoggerFactory.getLogger(AddonHelper)
+    private static final Logger LOG = LoggerFactory.getLogger(AddonHelper)
     
     public static final DELEGATE_TYPES = Collections.unmodifiableList([
             "attributeDelegates",
@@ -38,8 +46,8 @@ public class AddonHelper {
             "postNodeCompletionDelegates"
     ])
 
-    static handleAddonsAtStartup(GriffonApplication app) {
-        log.info("Loading addons [START]")
+    static void handleAddonsAtStartup(GriffonApplication app) {
+        LOG.info("Loading addons [START]")
         app.event("LoadAddonsStart", [app])
 
         for (node in app.builderConfig) {
@@ -60,48 +68,46 @@ public class AddonHelper {
             }
         }
 
-        app.addons.each {name, addon ->
+        app.addonManager.addons.each {name, addon ->
             try {
                 addon.addonPostInit(app)
             } catch (MissingMethodException mme) {
                 if (mme.method != 'addonPostInit') throw mme
             }
             app.event("LoadAddonEnd", [name, addon, app])
-            if(log.infoEnabled) log.info("Loaded addon $name")
+            if(LOG.infoEnabled) LOG.info("Loaded addon $name")
         }
 
-        app.event("LoadAddonsEnd", [app, app.addons])
-        log.info("Loading addons [END]")
+        app.event("LoadAddonsEnd", [app, app.addonManager.addons])
+        LOG.info("Loading addons [END]")
     }
 
-    static def handleAddon(GriffonApplication app, Class addonClass, String prefix, String addonName) {
-        def addon = addonClass.newInstance()
+    static void handleAddon(GriffonApplication app, Class addonClass, String prefix, String addonName) {
+        GriffonAddonDescriptor addonDescriptor = app.addonManager.findAddonDescriptor(addonName)
+        if(addonDescriptor) return
 
-        app.addons[addonName] = addon
-        app.addonPrefixes[addonName] = prefix
+        def obj = addonClass.newInstance()
+        String pluginName = GriffonNameUtils.getHyphenatedName(addonName - 'GriffonAddon')
+        String addonVersion = Metadata.current['plugins.' + pluginName]
+        GriffonAddon addon = new DefaultGriffonAddon(app, obj)
+        addonDescriptor = new DefaultGriffonAddonDescriptor(prefix, addonName, pluginName, addonVersion, addon)
 
-        def addonMetaClass = addon.metaClass
+        app.addonManager.registerAddon(addonDescriptor)
+
+        def addonMetaClass = obj.metaClass
         addonMetaClass.app = app
         addonMetaClass.newInstance = GriffonApplicationHelper.&newInstance.curry(app)
         UIThreadHelper.enhance(addonMetaClass)
 
-        if(log.infoEnabled) log.info("Loading addon $addonName with class ${addon.class.name}")
+        if(LOG.infoEnabled) LOG.info("Loading addon $addonName with class ${addon.class.name}")
         app.event("LoadAddonStart", [addonName, addon, app])
 
-        try {
-            addon.addonInit(app)
-        } catch (MissingMethodException mme) {
-            if (mme.method != 'addonInit') throw mme
-        }
-
-        def mvcGroups = addonMetaClass.getMetaProperty('mvcGroups')
-        if (mvcGroups) addMVCGroups(app, addon.mvcGroups)
-
-        def events = addonMetaClass.getMetaProperty('events')
-        if (events) addEvents(app, addon.events)
+        addon.addonInit(app)
+        addMVCGroups(app, addon.mvcGroups)
+        addEvents(app, addon.events)
     }
 
-    static handleAddonsForBuilders(GriffonApplication app, UberBuilder builder, Map<String, MetaClass> targets) {
+    static void handleAddonsForBuilders(GriffonApplication app, UberBuilder builder, Map<String, MetaClass> targets) {
         for (node in app.builderConfig) {
             String nodeName = node.key
             switch (nodeName) {
@@ -120,7 +126,7 @@ public class AddonHelper {
             }
         }
 
-        app.addons.each {name, addon ->
+        app.addonManager.addons.each {name, addon ->
             try {
                 addon.addonBuilderPostInit(app, builder)
             } catch (MissingMethodException mme) {
@@ -129,47 +135,28 @@ public class AddonHelper {
         }
     }
 
-    static handleAddonForBuilder(GriffonApplication app, UberBuilder builder, Map<String, MetaClass> targets, def addonNode, String prefix) {
+    static void handleAddonForBuilder(GriffonApplication app, UberBuilder builder, Map<String, MetaClass> targets, def addonNode, String prefix) {
         def addonName = addonNode.key
-        def addon = app.addons[addonName]
-        def addonMetaClass = addon.metaClass
+        GriffonAddon addon = app.addonManager.addons[addonName]
 
-        try {
-            addon.addonBuilderInit(app, builder)
-        } catch (MissingMethodException mme) {
-            if (mme.method != 'addonBuilderInit') throw mme
-        }
+        addon.addonBuilderInit(app, builder)
 
         DELEGATE_TYPES.each { String delegateType ->
-            ignoreMissingPropertyException {
-                List<Closure> delegates = addon."$delegateType"
-                delegateType = delegateType[0].toUpperCase() + delegateType[1..-2]
-                delegates.each { Closure delegateValue ->
-                    builder."add$delegateType"(delegateValue)
-                }
+            List<Closure> delegates = addon."$delegateType"
+            delegateType = delegateType[0].toUpperCase() + delegateType[1..-2]
+            delegates.each { Closure delegateValue ->
+                builder."add$delegateType"(delegateValue)
             }
         }
 
-        MetaProperty factoriesMP = addonMetaClass.getMetaProperty('factories')
-        Map factories = [:]
-        if (factoriesMP) {
-            factories = factoriesMP.getProperty(addon)
-            addFactories(builder, factories, addonName, prefix)
-        }
+        Map factories = addon.factories
+        addFactories(builder, factories, addonName, prefix)
 
-        MetaProperty methodsMP = addonMetaClass.getMetaProperty('methods')
-        Map methods = [:]
-        if (methodsMP) {
-            methods = methodsMP.getProperty(addon)
-            addMethods(builder, methods, addonName, prefix)
-        }
+        Map methods = addon.methods
+        addMethods(builder, methods, addonName, prefix)
 
-        MetaProperty propsMP = addonMetaClass.getMetaProperty('props')
-        Map props = [:]
-        if (propsMP) {
-            props = propsMP.getProperty(addon)
-            addProperties(builder, props, addonName, prefix)
-        }
+        Map props = addon.props
+        addProperties(builder, props, addonName, prefix)
 
         for (partialTarget in addonNode.value) {
             if (partialTarget.key == 'view') {
@@ -180,30 +167,30 @@ public class AddonHelper {
             if (!mc) continue
             for (String itemName in partialTarget.value) {
                 if (itemName == '*') {
-                    if(methods && log.traceEnabled) log.trace("Injecting all methods on $partialTarget.key")
+                    if(methods && LOG.traceEnabled) LOG.trace("Injecting all methods on $partialTarget.key")
                     addMethods(mc, methods, prefix)
-                    if(factories && log.traceEnabled) log.trace("Injecting all factories on $partialTarget.key")
+                    if(factories && LOG.traceEnabled) LOG.trace("Injecting all factories on $partialTarget.key")
                     addFactories(mc, factories, prefix, builder)
-                    if(props && log.traceEnabled) log.trace("Injecting all properties on $partialTarget.key")
+                    if(props && LOG.traceEnabled) LOG.trace("Injecting all properties on $partialTarget.key")
                     addProps(mc, props, prefix)
                     continue
                 } else if (itemName == '*:methods') {
-                    if(methods && log.traceEnabled) log.trace("Injecting all methods on $partialTarget.key")
+                    if(methods && LOG.traceEnabled) LOG.trace("Injecting all methods on $partialTarget.key")
                     addMethods(mc, methods, prefix)
                     continue
                 } else if (itemName == '*:factories') {
-                    if(factories && log.traceEnabled) log.trace("Injecting all factories on $partialTarget.key")
+                    if(factories && LOG.traceEnabled) LOG.trace("Injecting all factories on $partialTarget.key")
                     addFactories(mc, factories, prefix, builder)
                     continue
                 } else if (itemName == '*:props') {
-                    if(props && log.traceEnabled) log.trace("Injecting all properties on $partialTarget.key")
+                    if(props && LOG.traceEnabled) LOG.trace("Injecting all properties on $partialTarget.key")
                     addProps(mc, props, prefix)
                     continue
                 }
 
                 def resolvedName = "${prefix}${itemName}"
                 if (methods.containsKey(itemName)) {
-                    if(log.traceEnabled) log.trace("Injected method ${resolvedName}() on $partialTarget.key")
+                    if(LOG.traceEnabled) LOG.trace("Injected method ${resolvedName}() on $partialTarget.key")
                     mc."$resolvedName" = methods[itemName]
                 } else if (props.containsKey(itemName)) {
                     Map accessors = props[itemName]
@@ -214,33 +201,33 @@ public class AddonHelper {
                         beanName = itemName[0].toUpperCase()
                     }
                     if (accessors.containsKey('get')) {
-                        if(log.traceEnabled) log.trace("Injected getter for ${beanName} on $partialTarget.key")
+                        if(LOG.traceEnabled) LOG.trace("Injected getter for ${beanName} on $partialTarget.key")
                         mc."get$beanName" = accessors['get']
                     }
                     if (accessors.containsKey('set')) {
-                        if(log.traceEnabled) log.trace("Injected setter for ${beanName} on $partialTarget.key")
+                        if(LOG.traceEnabled) LOG.trace("Injected setter for ${beanName} on $partialTarget.key")
                         mc."set$beanName" = accessors['set']
                     }
                 } else if (factories.containsKey(itemName)) {
-                    if(log.traceEnabled) log.trace("Injected factory ${resolvedName} on $partialTarget.key")
+                    if(LOG.traceEnabled) LOG.trace("Injected factory ${resolvedName} on $partialTarget.key")
                     mc."${resolvedName}" = {Object ... args -> builder."$resolvedName"(* args)}
                 }
             }
         }
     }
 
-    private static addMethods(MetaClass mc, Map methods, String prefix) {
+    private static void addMethods(MetaClass mc, Map methods, String prefix) {
         methods.each { mk, mv -> mc."${prefix}${mk}" = mv }
     }
  
-    private static addFactories(MetaClass mc, Map factories, String prefix, UberBuilder builder) {
+    private static void addFactories(MetaClass mc, Map factories, String prefix, UberBuilder builder) {
         factories.each { fk, fv -> 
             def resolvedName = "${prefix}${fk}"
             mc."$resolvedName" = {Object... args -> builder."$resolvedName"(*args) }
         }
     }
 
-    private static addProps(MetaClass mc, Map props, String prefix) {
+    private static void addProps(MetaClass mc, Map props, String prefix) {
         props.each = { pk, accessors ->
             String beanName
             if (pk.length() > 1) {
@@ -261,11 +248,11 @@ public class AddonHelper {
         }
     }
 
-    static addMVCGroups(GriffonApplication app, Map<String, Map<String, String>> groups) {
+    static void addMVCGroups(GriffonApplication app, Map<String, Map<String, String>> groups) {
         groups.each {k, v -> app.addMvcGroup(k, v) }
     }
 
-    static addFactories(UberBuilder builder, Map factories, String addonName, String prefix) {
+    static void addFactories(UberBuilder builder, Map factories, String addonName, String prefix) {
         builder.registrationGroup.get(addonName, new TreeSet<String>())
         factories.each {String name, factoryOrBean ->
             if(factoryOrBean instanceof Factory) {
@@ -276,21 +263,21 @@ public class AddonHelper {
         }
     }
 
-    static addMethods(UberBuilder builder, Map<String, Closure> methods, String addonName, String prefix) {
+    static void addMethods(UberBuilder builder, Map<String, Closure> methods, String addonName, String prefix) {
         builder.registrationGroup.get(addonName, new TreeSet<String>())
         methods.each {String name, Closure closure ->
             builder.registerExplicitMethod(name, addonName, closure)
         }
     }
 
-    static addProperties(UberBuilder builder, Map<String, List<Closure>> props, String addonName, String prefix) {     
+    static void addProperties(UberBuilder builder, Map<String, List<Closure>> props, String addonName, String prefix) {
         builder.registrationGroup.get(addonName, new TreeSet<String>())
         props.each {String name, Map<String, Closure> closures ->
             builder.registerExplicitProperty(name, addonName, closures.get, closures.set)
         }
     }
 
-    static addEvents(GriffonApplication app, Map<String, Closure> events) {
+    static void addEvents(GriffonApplication app, Map<String, Closure> events) {
         events.each {String name, Closure event ->
             app.addApplicationEventListener(name, event)
         }

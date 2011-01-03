@@ -1,5 +1,5 @@
 /*
- * Copyright 2009-2010 the original author or authors.
+ * Copyright 2009-2011 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -32,8 +32,8 @@ import org.slf4j.LoggerFactory
  * @since 0.9.1
  */
 class ServiceArtifactHandler extends ArtifactHandlerAdapter {
-    private static final Logger log = LoggerFactory.getLogger(ServiceArtifactHandler)
-    private final Map SERVICES = [:]
+    private static final Logger LOG = LoggerFactory.getLogger(ServiceArtifactHandler)
+    private final Map<String, ?> serviceInstances = [:]
     
     ServiceArtifactHandler(GriffonApplication app) {
         super(app, GriffonServiceClass.TYPE, GriffonServiceClass.TRAILING)
@@ -57,18 +57,18 @@ class ServiceArtifactHandler extends ArtifactHandlerAdapter {
     def onNewInstance = { klass, t, instance ->
         if(type == t || app.config?.griffon?.basic_injection?.disable) return
         instance.metaClass.properties.name.each { propertyName ->
-            def serviceInstance = SERVICES[propertyName]
+            def serviceInstance = serviceInstances[propertyName]
             if(!serviceInstance) {
                 GriffonClass griffonClass = findClassFor(propertyName)
                 if(griffonClass) {
                     serviceInstance = griffonClass.newInstance()
                     serviceInstance.metaClass.app = app
-                    SERVICES[propertyName] = serviceInstance
+                    serviceInstances[propertyName] = serviceInstance
                 }
             }
             
             if(serviceInstance) {
-                if(log.debugEnabled) log.debug("Injecting service $serviceInstance on $instance using property '$propertyName'")
+                if(LOG.debugEnabled) LOG.debug("Injecting service $serviceInstance on $instance using property '$propertyName'")
                 instance[propertyName] = serviceInstance
             }
         }

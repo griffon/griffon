@@ -1,5 +1,5 @@
 /*
- * Copyright 2004-2010 the original author or authors.
+ * Copyright 2004-2011 the original author or authors.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -31,7 +31,7 @@ import java.util.TreeSet;
  */
 public interface GriffonClass {	
     Set<String> STANDARD_PROPERTIES = new TreeSet<String>(
-        Arrays.asList("class", "metaClass", "app", "UIThread", "griffonClass", "log"));
+        Arrays.asList("class", "metaClass", "app", "UIThread", "griffonClass", "log", "artifactType"));
 	
     /**
      * Gets the initial value of the given property on the class.</p>

@@ -1,5 +1,5 @@
 /*
- * Copyright 2004-2010 the original author or authors.
+ * Copyright 2004-2011 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -775,10 +775,10 @@ target(updatePluginsListManually: "Updates the plugin list by manually reading e
                         // Plugins list cache is expired, need to update
                         event("StatusUpdate", ["Plugins list cache has expired. Updating, please wait"])
                         pluginsList.setAttribute('revision', remoteRevision as String)
+                        final String prefix = 'griffon-'
                         repo.getDir('', -1,null,(Collection)null).each() { entry ->
-                            final String PREFIX = "griffon-"
-                            if (entry.name.startsWith(PREFIX)) {
-                                def pluginName = entry.name.substring(PREFIX.length())
+                            if (entry.name.startsWith(prefix)) {
+                                def pluginName = entry.name.substring(prefix.length())
                                 buildPluginInfo(pluginsList, pluginName)
                             }
                         }
