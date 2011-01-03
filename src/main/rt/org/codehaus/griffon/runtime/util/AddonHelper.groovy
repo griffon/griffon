@@ -83,11 +83,14 @@ public class AddonHelper {
     }
 
     static void handleAddon(GriffonApplication app, Class addonClass, String prefix, String addonName) {
+        GriffonAddonDescriptor addonDescriptor = app.addonManager.findAddonDescriptor(addonName)
+        if(addonDescriptor) return
+
         def obj = addonClass.newInstance()
         String pluginName = GriffonNameUtils.getHyphenatedName(addonName - 'GriffonAddon')
         String addonVersion = Metadata.current['plugins.' + pluginName]
         GriffonAddon addon = new DefaultGriffonAddon(app, obj)
-        GriffonAddonDescriptor addonDescriptor = new DefaultGriffonAddonDescriptor(prefix, addonName, pluginName, addonVersion, addon)
+        addonDescriptor = new DefaultGriffonAddonDescriptor(prefix, addonName, pluginName, addonVersion, addon)
 
         app.addonManager.registerAddon(addonDescriptor)
 

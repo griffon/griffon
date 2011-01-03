@@ -145,7 +145,7 @@ public class GriffonCompilerContext {
     }
 
     /**
-     * Merges two String arays.<p>
+     * Merges two String arrays.<p>
      * Never returns null
      */
     public static String[] merge(String[] a, String[] b) {
