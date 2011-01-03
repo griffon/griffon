@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+import org.springframework.core.io.ClassPathResource
 import org.springframework.core.io.FileSystemResource
 import griffon.util.GriffonUtil
 
@@ -135,7 +136,7 @@ resolveTemplate = { type, artifactPath, fileSuffix ->
                 templateFile = griffonResource("archetypes/${archetype}/templates/artifacts/${type}${fileSuffix}")
                 if (!templateFile.exists()) {
                     // template not found in archetypes, use default template
-                    templateFile = griffonResource("archetypes/default/templates/artifacts/${type}${fileSuffix}")
+                    templateFile = new ClassPathResource("archetypes/default/templates/artifacts/${type}${fileSuffix}")
                 }
             }
         }
@@ -234,7 +235,7 @@ loadArchetypeFor = { type = 'application' ->
     } catch(Exception e) {
         logError("An error ocurred while parsing archetype ${archetype}. Using 'default' archetype instead.", e)
         archetype = 'default'
-        archetypeFile = griffonResource("archetypes/default/${type}.groovy")
-        includeTargets << gcl.parseClass(archetypeFile.file) 
+        archetypeFile = new ClassPathResource("archetypes/default/${type}.groovy")
+        includeTargets << gcl.parseClass(archetypeFile.getURL().text) 
     }
 }

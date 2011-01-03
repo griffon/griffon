@@ -180,7 +180,7 @@ resolveResources = {String pattern ->
     }
 }
 
-// Closure that returns a Spring Resource - either from $Griffon_HOME
+// Closure that returns a Spring Resource - either from $GRIFFON_HOME
 // if that is set, or from the classpath.
 griffonResource = {String path ->
     if (griffonSettings.griffonHome) {

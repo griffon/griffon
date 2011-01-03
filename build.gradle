@@ -105,6 +105,7 @@ sourceSets {
         java.srcDirs = []
         groovy.srcDirs = ['src/main/cli']
         classesDir = "$buildDir/classes/cli" as File
+        resources.srcDirs = ['src/resources/cli']
     }
     scripts {
         compileClasspath = sourceSets.rt.classes + sourceSets.cli.classes + configurations.scripts
@@ -119,7 +120,7 @@ sourceSets {
     }
     test {
         compileClasspath = sourceSets.rt.classes + sourceSets.cli.classes + configurations.cli + configurations.swingxFiles
-        runtimeClasspath = classes + sourceSets.rt.classes + sourceSets.cli.classes + configurations.cli + configurations.swingxFiles
+        runtimeClasspath = classes + sourceSets.rt.classes + sourceSets.cli.classes + configurations.cli + configurations.swingxFiles + files(fileTree("$buildDir/libs/griffon-resources-${version}.jar"))
         java.srcDirs = []
         groovy.srcDirs = ['src/test/rt', 'src/test/cli']
     }
@@ -154,6 +155,8 @@ apply {
     from 'gradle/coverage.gradle'
     from 'gradle/codeQuality.gradle'
 }
+
+test.dependsOn jarResources
 
 task fullDist(dependsOn: [zipGuide, zipBinary, zipSource, tarBinary, tarSource, izpack, deb]) {
     description = "Assembles all packages."

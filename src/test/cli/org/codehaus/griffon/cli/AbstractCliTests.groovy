@@ -13,7 +13,7 @@ import org.codehaus.griffon.plugins.PluginManagerHolder
 abstract class AbstractCliTests extends GroovyTestCase {
     String scriptName
 
-    protected appBase = "test/cliTestApp"
+    protected appBase = "build/classes/test/test-apps"
     protected ant = new AntBuilder()
 
     private GantBinding binding

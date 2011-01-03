@@ -44,7 +44,7 @@ task jarCli(type: Jar) {
     mavenArtifact = true
     appendix = 'cli'
     metaInf {
-        from 'src/resources/cli/META-INF'
+        from 'src/metainf/cli/META-INF'
         include '**/*'
     }
     manifest = project.manifest {
