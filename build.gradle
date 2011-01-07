@@ -34,6 +34,8 @@ configurations {
     scripts.transitive = false
     swingxFiles
 	wrapper
+    intTestCompile { extendsFrom testCompile }
+    intTestRuntime { extendsFrom intTestCompile, testRuntime }
 }
 
 repositories {
@@ -120,9 +122,15 @@ sourceSets {
     }
     test {
         compileClasspath = sourceSets.rt.classes + sourceSets.cli.classes + configurations.cli + configurations.swingxFiles
-        runtimeClasspath = classes + sourceSets.rt.classes + sourceSets.cli.classes + configurations.cli + configurations.swingxFiles + files(fileTree("$buildDir/libs/griffon-resources-${version}.jar"))
+        runtimeClasspath = classes + sourceSets.rt.classes + sourceSets.cli.classes + configurations.cli + configurations.swingxFiles
         java.srcDirs = []
         groovy.srcDirs = ['src/test/rt', 'src/test/cli']
+    }
+    intTest {
+        compileClasspath = sourceSets.rt.classes + sourceSets.cli.classes + sourceSets.scripts.classes + configurations.cli + configurations.scripts
+        runtimeClasspath = classes + sourceSets.rt.classes + sourceSets.cli.classes + sourceSets.scripts.classes + configurations.cli + configurations.scripts + files(fileTree("$buildDir/libs/griffon-resources-${version}.jar"))
+        java.srcDirs = []
+        groovy.srcDirs = ['src/test/integration']
     }
 }
 
@@ -156,7 +164,16 @@ apply {
     from 'gradle/codeQuality.gradle'
 }
 
-test.dependsOn jarResources
+task intTest(type: Test) {
+    dependsOn jarResources
+    testClassesDir = sourceSets.intTest.classesDir
+    classpath = sourceSets.intTest.runtimeClasspath
+    testSrcDirs = sourceSets.intTest.groovy.srcDirs as List
+}
+
+task allTests(dependsOn: [test, intTest]) {
+    description = "Runs all unit and integration tests."
+}
 
 task fullDist(dependsOn: [zipGuide, zipBinary, zipSource, tarBinary, tarSource, izpack, deb]) {
     description = "Assembles all packages."
