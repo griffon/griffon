@@ -37,6 +37,9 @@ class ServiceArtifactHandler extends ArtifactHandlerAdapter {
     
     ServiceArtifactHandler(GriffonApplication app) {
         super(app, GriffonServiceClass.TYPE, GriffonServiceClass.TRAILING)
+        app.metaClass.getServices = {->
+            Collections.unmodifiableMap(serviceInstances)
+        }
     }
 
     protected GriffonClass newGriffonClassInstance(Class clazz) {
@@ -63,6 +66,7 @@ class ServiceArtifactHandler extends ArtifactHandlerAdapter {
                 if(griffonClass) {
                     serviceInstance = griffonClass.newInstance()
                     serviceInstance.metaClass.app = app
+                    app.addApplicationEventListener(serviceInstance)
                     serviceInstances[propertyName] = serviceInstance
                 }
             }
