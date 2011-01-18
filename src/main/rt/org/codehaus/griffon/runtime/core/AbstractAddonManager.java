@@ -89,7 +89,9 @@ public abstract class AbstractAddonManager implements AddonManager {
     public final void registerAddon(GriffonAddonDescriptor addonDescriptor) {
         synchronized(lock) {
             if(!initialized) {
+                 LOG.debug("Registering addon descriptor "+addonDescriptor);
                  doRegisterAddon(addonDescriptor);
+                 addons.put(addonDescriptor.getName(), addonDescriptor.getAddon());
             }
         }    
     }
@@ -98,9 +100,6 @@ public abstract class AbstractAddonManager implements AddonManager {
         synchronized(lock) {
             if(!initialized) {
                  doInitialize();
-                 for(Map.Entry<String, GriffonAddonDescriptor> entry : addonDescriptors.entrySet()) {
-                     addons.put(entry.getKey(), entry.getValue().getAddon());
-                 }
                  initialized = true;
             }
         }
