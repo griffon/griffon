@@ -169,8 +169,13 @@ task zipBinary(type: Zip) {
     description = "Zips the binary distribution."
     dependsOn { distBinary }
     classifier = 'bin'
-    from "$buildDir/distributions/binary"
-    fileMode = 755
+    from("$buildDir/distributions/binary") {
+        exclude 'bin'
+    }
+    from("$buildDir/distributions/binary/bin") {
+        into 'bin'
+        fileMode = 0755
+    }
 }
 
 task zipSource(type: Zip) {
@@ -185,8 +190,13 @@ task tarBinary(type: Tar) {
     dependsOn { distBinary }
     compression = Compression.GZIP
     classifier = 'bin'
-    from "$buildDir/distributions/binary"
-    fileMode = 755
+    from("$buildDir/distributions/binary") {
+        exclude 'bin'
+    }
+    from("$buildDir/distributions/binary/bin") {
+        into 'bin'
+        fileMode = 0755
+    }
 }
 
 task tarSource(type: Tar) {
