@@ -17,7 +17,6 @@ package org.codehaus.griffon.runtime.logging
 
 import griffon.util.Metadata
 import griffon.util.Environment
-import griffon.util.Environment
 
 import org.codehaus.groovy.runtime.InvokerHelper
 
