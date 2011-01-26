@@ -27,6 +27,9 @@ import griffon.core.GriffonService;
 import griffon.core.GriffonServiceClass;
 import org.codehaus.griffon.runtime.core.AbstractGriffonService;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 /**
  * Handles generation of code for Griffon services.
  * <p/>
@@ -37,6 +40,7 @@ import org.codehaus.griffon.runtime.core.AbstractGriffonService;
  */
 @GroovyASTTransformation(phase=CompilePhase.CANONICALIZATION)
 public class GriffonServiceASTTransformation extends GriffonArtifactASTTransformation {
+    private static final Logger LOG = LoggerFactory.getLogger(GriffonServiceASTTransformation.class);
     private static final String ARTIFACT_PATH = "services";
     private static final ClassNode GRIFFON_SERVICE_CLASS = ClassHelper.makeWithoutCaching(GriffonService.class);
     private static final ClassNode ABSTRACT_GRIFFON_SERVICE_CLASS = ClassHelper.makeWithoutCaching(AbstractGriffonService.class);    
@@ -45,8 +49,10 @@ public class GriffonServiceASTTransformation extends GriffonArtifactASTTransform
         if(!ARTIFACT_PATH.equals(artifactPath) || !classNode.getName().endsWith(GriffonServiceClass.TRAILING)) return;
 
         if(ClassHelper.OBJECT_TYPE.equals(classNode.getSuperClass())) {
+            if(LOG.isDebugEnabled()) LOG.debug("Setting "+ABSTRACT_GRIFFON_SERVICE_CLASS.getName()+" as the superclass of "+classNode.getName());
             classNode.setSuperClass(ABSTRACT_GRIFFON_SERVICE_CLASS);
         } else if(!classNode.implementsInterface(GRIFFON_SERVICE_CLASS)){
+            if(LOG.isDebugEnabled()) LOG.debug("Injecting "+GRIFFON_SERVICE_CLASS.getName()+" behavior to "+ classNode.getName());
             // 1. add interface
             classNode.addInterface(GRIFFON_SERVICE_CLASS);
             // 2. add methods

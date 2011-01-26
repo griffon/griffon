@@ -30,10 +30,15 @@ import griffon.util.GriffonClassUtils;
 import griffon.util.GriffonClassUtils.MethodDescriptor;
 import static org.codehaus.griffon.ast.GriffonASTUtils.THIS;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 /**
  * @author Andres Almiray
  */
 public class ThreadingInjectionOperation extends CompilationUnit.PrimaryClassNodeOperation {
+    private static final Logger LOG = LoggerFactory.getLogger(ThreadingInjectionOperation.class);
+
     private static final String ARTIFACT_PATH = "controllers";
     private static final String COMPILER_THREADING_KEY = "compiler.threading";
 
@@ -71,7 +76,11 @@ public class ThreadingInjectionOperation extends CompilationUnit.PrimaryClassNod
 
     private static void wrapStatements(ClassNode declaringClass, MethodNode method) {
         if(skipInjection(declaringClass.getName() +"."+ method.getName())) return;
-        method.setCode(wrapStatements((BlockStatement) method.getCode()));
+        Statement code = method.getCode();
+        if(code instanceof BlockStatement) {
+            method.setCode(wrapStatements((BlockStatement) code));
+            if(LOG.isDebugEnabled()) LOG.debug("modified "+declaringClass.getName()+"."+method.getName());
+        }
     }
 
     private static void wrapStatements(ClassNode declaringClass, PropertyNode property) {
@@ -81,6 +90,7 @@ public class ThreadingInjectionOperation extends CompilationUnit.PrimaryClassNod
                                            wrapStatements((BlockStatement) closure.getCode()));
         newClosure.setVariableScope(closure.getVariableScope());
         property.getField().setInitialValueExpression(newClosure);
+        if(LOG.isDebugEnabled()) LOG.debug("Modified "+declaringClass.getName()+"."+property.getName()+"() - code will be executed off the UI thread.");
     }
 
     private static boolean skipInjection(String actionName) {

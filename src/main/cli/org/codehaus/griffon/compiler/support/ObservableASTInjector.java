@@ -30,6 +30,9 @@ import java.beans.PropertyChangeEvent;
 
 import static org.codehaus.griffon.ast.GriffonASTUtils.*;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 /**
  *
  * @author Andres Almiray 
@@ -37,6 +40,7 @@ import static org.codehaus.griffon.ast.GriffonASTUtils.*;
  * @since 0.9.1
  */
 public class ObservableASTInjector implements ASTInjector {
+    private static final Logger LOG = LoggerFactory.getLogger(ObservableASTInjector.class);
     private static final ClassNode OBSERVABLE_CLASS = ClassHelper.makeWithoutCaching(Observable.class);
 
     public void inject(ClassNode classNode, String artifactType) {
@@ -49,6 +53,8 @@ public class ObservableASTInjector implements ASTInjector {
         for(FieldNode fieldNode : classNode.getFields()) {
             if(isBindableOrVetoable(fieldNode)) return;
         }
+
+        if(LOG.isDebugEnabled()) LOG.debug("Injecting "+OBSERVABLE_CLASS.getName()+" behavior to "+ classNode.getName());
     
         ClassNode pcsClassNode = ClassHelper.make(PropertyChangeSupport.class);
         ClassNode pclClassNode = ClassHelper.make(PropertyChangeListener.class);

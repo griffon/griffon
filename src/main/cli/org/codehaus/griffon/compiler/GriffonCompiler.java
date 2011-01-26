@@ -21,6 +21,7 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.Map;
 import java.util.List;
+import java.util.Arrays;
 import java.util.LinkedHashMap;
 import java.util.Enumeration;
 import java.util.Properties;
@@ -31,6 +32,9 @@ import org.codehaus.groovy.ast.expr.*;
 import org.codehaus.groovy.classgen.*;
 import org.codehaus.groovy.control.*;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 /**
  * @author Andres Almiray
  *
@@ -39,6 +43,7 @@ import org.codehaus.groovy.control.*;
 public class GriffonCompiler extends Groovyc {
     protected org.codehaus.griffon.compiler.ResolveVisitor resolveVisitor;
 
+    private static final Logger LOG = LoggerFactory.getLogger(GriffonCompiler.class);
     private static final Map<String, String[]> IMPORTS_PER_ARTIFACT_TYPE = new LinkedHashMap<String, String[]>();
     private static final String[] DEFAULT_IMPORTS = {"griffon.core.", "griffon.util."};
 
@@ -56,8 +61,8 @@ public class GriffonCompiler extends Groovyc {
     }
 
     protected void compile() {
-        collectDefaultImportsPerArtifact();
         GriffonCompilerContext.setup();
+        collectDefaultImportsPerArtifact();
         super.compile();
     }
 
@@ -99,7 +104,19 @@ public class GriffonCompiler extends Groovyc {
     }
 
     private final CompilationUnit.SourceUnitOperation resolve = new CompilationUnit.SourceUnitOperation() {
+        private boolean called = false;
+
         public void call(SourceUnit source) throws CompilationFailedException {
+            if(!called) {
+                if(LOG.isDebugEnabled()) {
+                    LOG.debug("Default imports for all artifacts: "+Arrays.toString(DEFAULT_IMPORTS));
+                    for(Map.Entry<String, String[]> imports : IMPORTS_PER_ARTIFACT_TYPE.entrySet()) {
+                        LOG.debug("Default imports per "+imports.getKey()+": "+ Arrays.toString(imports.getValue()));
+                    }
+                }
+                called = true;
+            }
+
             List<ClassNode> classes = source.getAST().getClasses();
             for (ClassNode node : classes) {
                 // TODO: watch out for changes on Groovy core regarding inner class handling
