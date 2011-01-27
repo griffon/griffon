@@ -33,7 +33,6 @@ import java.lang.reflect.Modifier;
 
 import java.util.Arrays;
 import griffon.util.Threading;
-import griffon.util.ThreadingPolicy;
 import griffon.util.UIThreadHelper;
 import griffon.util.GriffonClassUtils;
 import griffon.util.GriffonClassUtils.MethodDescriptor;
@@ -55,7 +54,7 @@ public class ThreadingASTTransformation implements ASTTransformation, Opcodes {
     private static final Logger LOG = LoggerFactory.getLogger(ThreadingASTTransformation.class);
 
     private static ClassNode MY_TYPE = new ClassNode(Threading.class);
-    private static ClassNode THREADING_POLICY_CLASS = ClassHelper.makeWithoutCaching(ThreadingPolicy.class);
+    private static ClassNode THREADING_POLICY_CLASS = ClassHelper.makeWithoutCaching(Threading.Policy.class);
     private static ClassNode UITHREAD_HELPER_CLASS = ClassHelper.makeWithoutCaching(UIThreadHelper.class);
     private static final String COMPILER_THREADING_KEY = "compiler.threading";
 
@@ -88,8 +87,8 @@ public class ThreadingASTTransformation implements ASTTransformation, Opcodes {
         AnnotationNode annotation = (AnnotationNode) nodes[0];
         AnnotatedNode node = (AnnotatedNode) nodes[1];
 
-        ThreadingPolicy threadingPolicy = getThreadingPolicy(annotation);
-        if(threadingPolicy == ThreadingPolicy.SKIP) return;
+        Threading.Policy threadingPolicy = getThreadingPolicy(annotation);
+        if(threadingPolicy == Threading.Policy.SKIP) return;
 
         String threadingMethod = "executeOutside";
         switch(threadingPolicy) {
@@ -113,17 +112,17 @@ public class ThreadingASTTransformation implements ASTTransformation, Opcodes {
         }
     }
 
-    public static ThreadingPolicy getThreadingPolicy(AnnotationNode annotation) {
+    public static Threading.Policy getThreadingPolicy(AnnotationNode annotation) {
         PropertyExpression value = (PropertyExpression) annotation.getMember("value");
-        if(value == null) return ThreadingPolicy.OUTSIDE_UITHREAD;
-        return ThreadingPolicy.valueOf(value.getPropertyAsString());
+        if(value == null) return Threading.Policy.OUTSIDE_UITHREAD;
+        return Threading.Policy.valueOf(value.getPropertyAsString());
     }
     
     public static String getThreadingMethod(AnnotatedNode node) {
         for (AnnotationNode annotation : node.getAnnotations()) {
             if (MY_TYPE.equals(annotation.getClassNode())) {
-                ThreadingPolicy threadingPolicy = getThreadingPolicy(annotation);
-                if(threadingPolicy == ThreadingPolicy.SKIP) return null;
+                Threading.Policy threadingPolicy = getThreadingPolicy(annotation);
+                if(threadingPolicy == Threading.Policy.SKIP) return null;
                 return getThreadingMethod(threadingPolicy);
             }
         }
@@ -131,7 +130,7 @@ public class ThreadingASTTransformation implements ASTTransformation, Opcodes {
         return null;
     }
 
-    public static String getThreadingMethod(ThreadingPolicy threadingPolicy) {
+    public static String getThreadingMethod(Threading.Policy threadingPolicy) {
         String threadingMethod = null;
         switch(threadingPolicy) {
             case SKIP:

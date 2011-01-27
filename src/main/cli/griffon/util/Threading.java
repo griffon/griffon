@@ -34,7 +34,7 @@ import java.lang.annotation.Target;
  *  <li>its value must be a closure (including curried method pointers) if it's a property</li>
  * </ul>
  *
- * This annotation takes {@code griffon.util.ThreadingPolicy} as value, with {@code ThreadingPolicy.OUTSIDE_UITHREAD} being
+ * This annotation takes {@code griffon.util.Threading.Policy} as value, with {@code Threading.Policy.OUTSIDE_UITHREAD} being
  * the default value.
  *
  * @see griffon.util.ThreadingPolicy
@@ -47,5 +47,31 @@ import java.lang.annotation.Target;
 @Target({ElementType.METHOD, ElementType.FIELD})
 @GroovyASTTransformationClass("org.codehaus.griffon.ast.ThreadingASTTransformation")
 public @interface Threading {
-    ThreadingPolicy value() default ThreadingPolicy.OUTSIDE_UITHREAD;
+    Policy value() default Policy.OUTSIDE_UITHREAD;
+
+    /**
+     * Indicates the type of threading management for a method or property.</p>
+     * The following values apply
+     * <ul>
+     *  <li>{@code SKIP} - no threading management will be performed.</li>
+     *  <li>{@code OUTSIDE_UITHREAD} - code should be invoked outside of the UI thread.</li>
+     *  <li>{@code INSIDE_UITHREAD_SYNC} - code should be invoked inside the UI thread using a synchronous call.</li>
+     *  <li>{@code INSIDE_UITHREAD_ASYNC} - code should be invoked inside the UI thread using an asynchronous call.</li>
+     * </ul>
+     *
+     * @see griffon.util.Threading
+     *
+     * @author Andres Almiray
+     * @since 0.9.2
+     */
+    public enum Policy {
+        /** Skip threading injection */
+        SKIP,
+        /** Inject execOutside wrapper */
+        OUTSIDE_UITHREAD,
+        /** Inject execSync wrapper */
+        INSIDE_UITHREAD_SYNC,
+        /** Inject execAsync wrapper */
+        INSIDE_UITHREAD_ASYNC;
+    }
 }

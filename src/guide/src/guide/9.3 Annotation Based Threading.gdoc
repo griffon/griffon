@@ -4,7 +4,7 @@ Starting with Griffon 0.9.2 there's also the possibility to define an specific t
 This feature is only available for Groovy code at the moment as it relies on the AST Transformation framework.
 {note}
 
-You must annotate a method or property with @[\@griffon.util.Threading|api:griffon.util.Threading]@ and define a value of type @[griffon.util.ThreadingPolicy|api:griffon.util.ThreadingPolicy]@ (though the annotation uses @ThreadingPolicy.OUTSIDE_UITHREAD@ by default). Annotated methods and properties must conform to these rules
+You must annotate a method or property with @[\@griffon.util.Threading|api:griffon.util.Threading]@ and define a value of type @[griffon.util.Threading.Policy|api:griffon.util.Threading.Policy]@ (though the annotation uses @Threading.Policy.OUTSIDE_UITHREAD@ by default). Annotated methods and properties must conform to these rules
  * must be public.
  * name does not match an event handler.
  * must pass @GriffonClassUtils.isPlainMethod()@ if it's a method.
@@ -16,7 +16,6 @@ Here's a trivial example
 package sample
 
 import griffon.util.Threading
-import griffon.util.ThreadingPolicy
 
 class Sample {
     @Threading
@@ -24,7 +23,7 @@ class Sample {
         // executed outside of the UI thread
     }
 
-    @Threading(ThreadingPolicy.INSIDE_UITHREAD_SYNC)
+    @Threading(Threading.Policy.INSIDE_UITHREAD_SYNC)
     def moreStuff() {
         // executed synchronously inside the UI thread
     }
@@ -37,7 +36,7 @@ It is worth noting that a @\@Threading@ annotation applied to a Controller's act
 package sample
 
 class SampleController {
-    @Threading(ThreadingPolicy.INSIDE_UITHREAD_ASYNC)
+    @Threading(Threading.Policy.INSIDE_UITHREAD_ASYNC)
     def popupDialog = {
         // build and show the dialog
     }
