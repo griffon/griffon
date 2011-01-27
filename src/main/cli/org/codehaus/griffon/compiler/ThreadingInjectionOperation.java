@@ -20,27 +20,16 @@ import org.codehaus.groovy.ast.expr.*;
 import org.codehaus.groovy.ast.stmt.*;
 import org.codehaus.groovy.classgen.*;
 import org.codehaus.groovy.control.*;
-import org.codehaus.groovy.runtime.typehandling.DefaultTypeTransformation;
-
-import java.util.Map;
-import java.lang.reflect.Modifier;
 
 import griffon.core.GriffonControllerClass;
-import griffon.util.GriffonClassUtils;
-import griffon.util.GriffonClassUtils.MethodDescriptor;
-import static org.codehaus.griffon.ast.GriffonASTUtils.THIS;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import static org.codehaus.griffon.ast.ThreadingASTTransformation.*;
 
 /**
  * @author Andres Almiray
+ * @since 0.9.2
  */
 public class ThreadingInjectionOperation extends CompilationUnit.PrimaryClassNodeOperation {
-    private static final Logger LOG = LoggerFactory.getLogger(ThreadingInjectionOperation.class);
-
     private static final String ARTIFACT_PATH = "controllers";
-    private static final String COMPILER_THREADING_KEY = "compiler.threading";
 
     public void call(final SourceUnit source, final GeneratorContext context, final ClassNode classNode) throws CompilationFailedException {
         if(!GriffonCompilerContext.isGriffonArtifact(source)) return;
@@ -48,74 +37,19 @@ public class ThreadingInjectionOperation extends CompilationUnit.PrimaryClassNod
         if(!ARTIFACT_PATH.equals(artifactPath) || !classNode.getName().endsWith(GriffonControllerClass.TRAILING)) return;
 
         for(MethodNode method : classNode.getMethods()) {
-            MethodDescriptor md = methodDescriptorFor(method);
-            if(GriffonClassUtils.isPlainMethod(md) &&
-               !GriffonClassUtils.isEventHandler(md)) {
-                wrapStatements(classNode, method);
-            }
+            if(hasThreadingAnnotation(method)) continue;
+            handleMethodForInjection(classNode, method);
         }
-        
+
         for(PropertyNode property : classNode.getProperties()) {
-            if(property.getModifiers() - Modifier.PUBLIC == 0 &&
-               !GriffonClassUtils.isEventHandler(property.getName()) &&
-               property.getInitialExpression() instanceof ClosureExpression) {
-                wrapStatements(classNode, property);
+            FieldNode field = property.getField();
+            if(!hasThreadingAnnotation(field)) {
+                handlePropertyForInjection(classNode, property);
+            } else {
+                String threadingMethod = getThreadingMethod(field);
+                if(threadingMethod == null) continue;
+                handlePropertyForInjection(classNode, property, threadingMethod);
             }
         }
-    }
-
-    private static MethodDescriptor methodDescriptorFor(MethodNode method) {
-        if(method == null) return null;
-        Parameter[] types = method.getParameters();
-        Class[] parameterTypes = new Class[types.length];
-        for(int i = 0; i < types.length; i++) {
-            parameterTypes[i] = types[i].getType().getTypeClass();
-        }
-        return new MethodDescriptor(method.getName(), parameterTypes, method.getModifiers());
-    }
-
-    private static void wrapStatements(ClassNode declaringClass, MethodNode method) {
-        if(skipInjection(declaringClass.getName() +"."+ method.getName())) return;
-        Statement code = method.getCode();
-        if(code instanceof BlockStatement) {
-            method.setCode(wrapStatements((BlockStatement) code));
-            if(LOG.isDebugEnabled()) LOG.debug("modified "+declaringClass.getName()+"."+method.getName());
-        }
-    }
-
-    private static void wrapStatements(ClassNode declaringClass, PropertyNode property) {
-        if(skipInjection(declaringClass.getName() +"."+ property.getName())) return;
-        ClosureExpression closure = (ClosureExpression) property.getInitialExpression();
-        ClosureExpression newClosure = new ClosureExpression(closure.getParameters(), 
-                                           wrapStatements((BlockStatement) closure.getCode()));
-        newClosure.setVariableScope(closure.getVariableScope());
-        property.getField().setInitialValueExpression(newClosure);
-        if(LOG.isDebugEnabled()) LOG.debug("Modified "+declaringClass.getName()+"."+property.getName()+"() - code will be executed off the UI thread.");
-    }
-
-    private static boolean skipInjection(String actionName) {
-        Map settings = GriffonCompilerContext.getFlattenedBuildSettings();
-
-        String keyName = COMPILER_THREADING_KEY + "." + actionName;
-        while(!COMPILER_THREADING_KEY.equals(keyName)) {
-            Object value = settings.get(keyName);
-            keyName = keyName.substring(0, keyName.lastIndexOf("."));
-            if(value != null && !DefaultTypeTransformation.castToBoolean(value)) return true;
-        }
-
-        return false;
-    }
-
-    private static Statement wrapStatements(BlockStatement code) {
-        BlockStatement newCode = new BlockStatement();
-        newCode.setVariableScope(code.getVariableScope());
-        ClosureExpression closure = new ClosureExpression(Parameter.EMPTY_ARRAY, code);
-        closure.setVariableScope(code.getVariableScope());
-        newCode.addStatement(
-            new ExpressionStatement(
-                new MethodCallExpression(THIS, "execOutside", new ArgumentListExpression(closure))
-            )
-        );
-        return newCode;
     }
 }

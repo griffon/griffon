@@ -1,4 +1,4 @@
-Making sure a block of code is executed uotside the UIThread is made by invoking the @execOutside{}@ method. This method is equivalent to calling @doOutside{}@ in Swing.
+Making sure a block of code is executed outside the UIThread is made by invoking the @execOutside{}@ method. This method is equivalent to calling @doOutside{}@ in Swing.
 
 Example:
 
@@ -6,14 +6,27 @@ Example:
 class MyController {
     def model
 
-    def action = {
-        // will be invoked inside the UI Thread by default
+    def action1 = {
+        // will be invoked inside the UI Thread by default (pre 0.9.2)
         def value = model.value
         execOutside {
             // do some calculations
             execAsync {
                 // back inside the UI Thread
                 model.result = ...
+            }
+        }
+    }
+
+    def action2 = {
+        // will be invoked outside of the UI Thread by default (post 0.9.2)
+        def value = model.value
+        // do some calculations
+        execAsync {
+            // back inside the UI Thread
+            model.result = ...
+            execOutside {
+                // do more calculations
             }
         }
     }

@@ -170,7 +170,7 @@ public class GriffonCompiler extends Groovyc {
                    IMPORTS_PER_ARTIFACT_TYPE.put(type, GriffonCompilerContext.merge(existingImports, incomingImports));
                }
            } catch(Exception e) {
-               System.err.println("Could not process default imports from "+url+" => "+e);
+               if(LOG.isDebugEnabled()) LOG.debug("Could not process default imports from "+url+" => "+e);
            }
         }
     }
