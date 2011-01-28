@@ -15,8 +15,6 @@
  */
 package org.codehaus.griffon.cli.support;
 
-import org.codehaus.groovy.tools.LoaderConfiguration;
-
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -27,27 +25,28 @@ import java.net.URL;
 import java.util.Properties;
 
 import griffon.util.GriffonExceptionHandler;
+import org.codehaus.groovy.tools.LoaderConfiguration;
+import org.codehaus.groovy.tools.RootLoader;
 
 /**
  * @author Graeme Rocher (Grails 1.0)
  */
 public class GriffonStarter {
+    private static final String GRIFFON_ROOT_CLASSLOADER = "griffon.root.classloader";
+    private static final String LOADER_FILE = ".loader";
+
     static void printUsage() {
         System.out.println("possible programs are 'groovyc','groovy','console', and 'groovysh'");
         System.exit(1);
     }
 
     public static void rootLoader(String args[]) {
-        String conf = System.getProperty("groovy.starter.conf",null);
-/*
         final String separator = System.getProperty("file.separator");
 
         // Set some default values for various system properties if
         // they don't already have values.
-*/
         String javaVersion = System.getProperty("java.version");
         String griffonHome = System.getProperty("griffon.home");
-/*
         if (System.getProperty("base.dir") == null) System.setProperty("base.dir", ".");
         if (System.getProperty("program.name") == null) System.setProperty("program.name", "griffon");
         if (System.getProperty("groovy.starter.conf") == null) {
@@ -56,60 +55,58 @@ public class GriffonStarter {
                     griffonHome + separator + "conf" + separator + "groovy-starter.conf");
         }
 
-        // Initialise the Griffon version if it's not set already.
-        if (System.getProperty("griffon.version") == null) {
-            Properties griffonProps = new Properties();
-            FileInputStream is = null;
-            try {
-                // Load Griffon' "build.properties" file.
-                is = new FileInputStream(griffonHome + separator + "build.properties");
-                griffonProps.load(is);
-
-                // Extract the Griffon version and store as a system
-                // property so that it can be referenced from the
-                // starter configuration file.
-                System.setProperty("griffon.version", griffonProps.getProperty("griffon.version"));
-            }
-            catch (IOException ex) { System.out.println("Failed to load Griffon file: " + ex.getMessage()); System.exit(1); }
-            finally { if (is != null) try { is.close(); } catch (IOException ex2) {} }
-        }
+//        // Initialise the Griffon version if it's not set already.
+//        if (System.getProperty("griffon.version") == null) {
+//            Properties griffonProps = new Properties();
+//            InputStream is = null;
+//            try {
+//                // Load Griffon' "build.properties" file.
+//                is = GriffonStarter.class.getClassLoader().getResourceAsStream(griffonHome + separator + "build.properties");
+//                griffonProps.load(is);
+//
+//                // Extract the Griffon version and store as a system
+//                // property so that it can be referenced from the
+//                // starter configuration file.
+//                System.setProperty("griffon.version", griffonProps.getProperty("griffon.version"));
+//            } catch (IOException ex) { System.out.println("Failed to load Griffon file: " + ex.getMessage()); System.exit(1); }
+//            finally { if (is != null) try { is.close(); } catch (IOException ex2) {/*ignored*/} }
+//        }
 
         String conf = System.getProperty("groovy.starter.conf", null);
-*/
         LoaderConfiguration lc = new LoaderConfiguration();
 
         // evaluate parameters
         boolean hadMain=false, hadConf=false, hadCP=false;
         int argsOffset = 0;
-        while (args.length-argsOffset>0 && !(hadMain && hadConf && hadCP)) {
+        while (args.length - argsOffset > 0 && !(hadMain && hadConf && hadCP)) {
             if (args[argsOffset].equals("--classpath")) {
                 if (hadCP) break;
-                if (args.length==argsOffset+1) {
+                if (args.length == argsOffset + 1) {
                     exit("classpath parameter needs argument");
                 }
-                lc.addClassPath(args[argsOffset+1]);
-                argsOffset+=2;
+                lc.addClassPath(args[argsOffset + 1]);
+                argsOffset += 2;
             } else if (args[argsOffset].equals("--main")) {
                 if (hadMain) break;
-                if (args.length==argsOffset+1) {
+                if (args.length == argsOffset + 1) {
                     exit("main parameter needs argument");
                 }
-                lc.setMainClass(args[argsOffset+1]);
-                argsOffset+=2;
+                lc.setMainClass(args[argsOffset + 1]);
+                argsOffset += 2;
             } else if (args[argsOffset].equals("--conf")) {
                 if (hadConf) break;
-                if (args.length==argsOffset+1) {
+                if (args.length == argsOffset + 1) {
                     exit("conf parameter needs argument");
                 }
-                conf=args[argsOffset+1];
-                argsOffset+=2;
+                conf = args[argsOffset + 1];
+                argsOffset += 2;
             } else {
                 break;
             }
         }
 
         // We need to know the class we want to start
-        if (lc.getMainClass()==null) {
+        if (lc.getMainClass() == null) {
             lc.setMainClass("org.codehaus.griffon.cli.GriffonScriptRunner");
         }
 
@@ -118,7 +115,7 @@ public class GriffonStarter {
         System.arraycopy(args, argsOffset, newArgs, 0, newArgs.length);
 
         String basedir = System.getProperty("base.dir");
-        if(basedir!=null) {
+        if (basedir != null) {
             try {
                 System.setProperty("base.name", new File(basedir).getCanonicalFile().getName());
             } catch (IOException e) {
@@ -126,7 +123,7 @@ public class GriffonStarter {
             }
         }
         // load configuration file
-        if (conf!=null) {
+        if (conf != null) {
             try {
                 lc.configure(new FileInputStream(conf));
             } catch (Exception e) {
@@ -135,39 +132,56 @@ public class GriffonStarter {
             }
         }
 
-        Properties metadata = new Properties();
-        File metadataFile = new File("./application.properties");
-        if(metadataFile.exists()) {
-            FileInputStream inputStream = null;
+        // create loader and execute main class
+        RootLoader loader = null;
+        File loaderFile = new File(LOADER_FILE);
+        String loaderClassName = null;
+        if (loaderFile.exists()) {
+            Properties loaderProps = new Properties();
+            FileInputStream input = null;
             try {
-                inputStream = new FileInputStream(metadataFile);
-                metadata.load(inputStream);
-            } catch (IOException e) {
-                // ignore
+                input = new FileInputStream(loaderFile);
+                loaderProps.load(input);
+                loaderClassName = loaderProps.getProperty(GRIFFON_ROOT_CLASSLOADER);
+            } catch (Exception e) {
+                e.printStackTrace();
+                System.out.println("ERROR: There was an error loading a Griffon custom classloader using the properties file ["+loaderFile.getAbsolutePath()+"]: " + e.getClass().getName() + ":" + e.getMessage());
             }
             finally {
                 try {
-                    if(inputStream!=null) inputStream.close();
+                    if (input != null) input.close();
                 } catch (IOException e) {
                     // ignore
                 }
             }
         }
+        if (loaderClassName == null) {
+            loaderClassName = System.getProperty(GRIFFON_ROOT_CLASSLOADER);
+        }
+        if (loaderClassName != null) {
+            try {
+                Class<?> loaderClass = GriffonStarter.class.getClassLoader().loadClass(loaderClassName);
+                loader = (RootLoader) loaderClass.newInstance();
+            } catch (Exception e) {
+                e.printStackTrace();
+                System.out.println("ERROR: There was an error loading a Griffon custom classloader using the properties file ["+loaderFile.getAbsolutePath()+"]: " + e.getClass().getName() + ":" + e.getMessage());
+            }
+        }
 
-        // create loader and execute main class
-        GriffonRootLoader loader = new GriffonRootLoader(GriffonStarter.class.getClassLoader());
+        if (loader == null) {
+            loader = new GriffonRootLoader();
+        }
+
         Thread.currentThread().setContextClassLoader(loader);
-
         // configure class loader
-        URL[] urls = lc.getClassPathUrls();
-        for (URL url : urls) {
+        for (URL url : lc.getClassPathUrls()) {
             loader.addURL(url);
         }
 
-        if(javaVersion != null && griffonHome != null) {
+        if (javaVersion != null && griffonHome != null) {
             javaVersion = javaVersion.substring(0,3);
             File vmConfig = new File(griffonHome +"/conf/groovy-starter-java-"+javaVersion+".conf");
-            if(vmConfig.exists()) {
+            if (vmConfig.exists()) {
                 InputStream in = null;
                 try {
                     in = new FileInputStream(vmConfig);
@@ -175,16 +189,15 @@ public class GriffonStarter {
                     vmLoaderConfig.setRequireMain(false);
                     vmLoaderConfig.configure(in);
                     URL[] vmSpecificClassPath = vmLoaderConfig.getClassPathUrls();
-                    for (int i = 0; i < vmSpecificClassPath.length; i++) {
-                        loader.addURL(vmSpecificClassPath[i]);
-
+                    for (URL aVmSpecificClassPath : vmSpecificClassPath) {
+                        loader.addURL(aVmSpecificClassPath);
                     }
                 } catch (IOException e) {
                     System.out.println("WARNING: I/O error reading VM specific classpath ["+vmConfig+"]: " + e.getMessage() );
                 }
                 finally {
                     try {
-                        if(in != null) in.close();
+                        if (in != null) in.close();
                     } catch (IOException e) {
                         // ignore
                     }
@@ -192,9 +205,9 @@ public class GriffonStarter {
             }
         }
 
-        Method m=null;
+        Method m = null;
         try {
-            Class c = loader.loadClass(lc.getMainClass());
+            Class<?> c = loader.loadClass(lc.getMainClass());
             m = c.getMethod("main", new Class[]{String[].class});
         } catch (ClassNotFoundException e1) {
             exit(e1);
@@ -238,4 +251,3 @@ public class GriffonStarter {
         }
     }
 }
-

@@ -170,7 +170,7 @@ target(allTests: "Runs the project's tests.") {
             addUrlIfNotPresent classLoader, it
         }
 
-        isDebugEnabled() {
+        if(isDebugEnabled()) {
             debug "=== RootLoader urls === "
             rootLoader.URLs.each{debug("  $it")}
         }
