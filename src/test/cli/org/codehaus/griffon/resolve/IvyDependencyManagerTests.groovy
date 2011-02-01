@@ -507,6 +507,7 @@ public class IvyDependencyManagerTests extends GroovyTestCase{
         return griffonVersion
     }
 
+/*
     void testInheritanceAndExcludes() {
         Message.setDefaultLogger new DefaultMessageLogger(Message.MSG_INFO);
 
@@ -546,6 +547,7 @@ public class IvyDependencyManagerTests extends GroovyTestCase{
 
         assertEquals 7, manager.listDependencies("test").size()
     }
+*/
 
     void testExcludes() {
         Message.setDefaultLogger new DefaultMessageLogger(Message.MSG_INFO);
