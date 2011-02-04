@@ -235,7 +235,6 @@ class IvyDependencyManager extends AbstractIvyDependencyManager implements Depen
                       "org.codehaus.griffon:griffon-cli:$griffonVersion",
                       "org.codehaus.griffon:griffon-scripts:$griffonVersion",
                       "org.codehaus.griffon:griffon-rt:$griffonVersion",
-                      "org.springframework:org.springframework.test:$springVersion",
                       "org.springframework:org.springframework.core:$springVersion",
                       "org.springframework:org.springframework.aop:$springVersion",
                       "org.springframework:org.springframework.aspects:$springVersion",
