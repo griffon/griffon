@@ -81,7 +81,9 @@ task rpm(dependsOn: [distBinary]) {
         copy {
             from("$buildDir/distributions/binary")
             into "$rpmDir/griffon-$version"
+            exclude '**/*.bat'
         }
+        ant.chmod(dir: "$rpmDir/griffon-${version}/bin", excludes: '*.bat', perm: 'ugo+x')
     
         ant.zip(
             destfile: "$rpmDir/SOURCES/griffon-${version}-bin.zip",
