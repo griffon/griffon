@@ -1,4 +1,4 @@
-A key aspect that you must always keep in mind is proper [threading|guide:threading]. Often times controller actions will be bound in response to an event driven by the UI. Those actions will usually be invoked in the same thread that trigered the event, which would be the UI thread. When that happens you must make sure that the executed code is short and that it quickly returns control to the UI thread. Failure to do so may result in unresponsive applications.
+A key aspect that you must always keep in mind is proper [threading|guide:threading]. Often times controller actions will be bound in response to an event driven by the UI. Those actions will usually be invoked in the same thread that triggered the event, which would be the UI thread. When that happens you must make sure that the executed code is short and that it quickly returns control to the UI thread. Failure to do so may result in unresponsive applications.
 
 The following example is the typical use case that must be avoided
 
@@ -20,7 +20,7 @@ class BadController {
 }
 {code}
 
-There are two problems here. First the database connection is established inside the UI thread (which takes precious miliseconds or even longer), then a table (which could be arbitrarily large) is queried and each result sent to a List belonging to the model. Assuming that the list is bound to a Table Model then the UI will be updated constantly by each added row; which happens to be done all insidew the UI thread. The application will certainly behave slow and sluggish, and to top it off the user won't be able to click on another button or select a menu item until this actions has been processed entirely.
+There are two problems here. First the database connection is established inside the UI thread (which takes precious milliseconds or even longer), then a table (which could be arbitrarily large) is queried and each result sent to a List belonging to the model. Assuming that the list is bound to a Table Model then the UI will be updated constantly by each added row; which happens to be done all inside the UI thread. The application will certainly behave slow and sluggish, and to top it off the user won't be able to click on another button or select a menu item until this actions has been processed entirely.
 
 [Chapter 9|guide:threading] will discuss with further detail the options that you have at your disposal to make use of proper threading constructs. Here's a quick fix for the previous controller
 {code}
@@ -51,7 +51,7 @@ class GoodController {
 }
 {code}
 
-However starting with Griffon 0.9.2 you're no longer required to surround the action code with @execOutside@ as the compiler will do it for you. This feature breaks backward compatibility with previous released so it's possible to disable it altogether. Please refer to section [4.6.5 Disable Threading Injection|guide:disableThreading]. This feature can be partially enabled/disabled too. You can specify with absolute precision which actions should have this feature enabled or disabled, by adding the following settings to @griffon-app/conf/BuildConfig.groovy@
+However starting with Griffon 0.9.2 you're no longer required to surround the action code with @execOutside@ as the compiler will do it for you. This feature breaks backward compatibility with previous releases so it's possible to disable it altogether. Please refer to section [4.6.5 Disable Threading Injection|guide:disableThreading]. This feature can be partially enabled/disabled too. You can specify with absolute precision which actions should have this feature enabled or disabled, by adding the following settings to @griffon-app/conf/BuildConfig.groovy@
 
 {code}
 compiler {
@@ -68,10 +68,10 @@ compiler {
 }
 {code} 
 
-The compiler will evuluate these settings as follows:
+The compiler will evaluate these settings as follows:
 * the action identified by @sample.SampleController.action1@ will not have automatic threading injected into its code, while @sample.SampleController.action2@ (and any other found in the same controller) will have it.
 * all actions belonging to @sample.FooController@ will not have automatic threading injected.
-* all actions beloging to all controllers in the @bar@ package will not have threading injected.
+* all actions belonging to all controllers in the @bar@ package will not have threading injected.
 
 {note}
 Automatic threading injection only works for Groovy based controllers. You must add appropriate threading code to controller actions that are written in languages other than Groovy.

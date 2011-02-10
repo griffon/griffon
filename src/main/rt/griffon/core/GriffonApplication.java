@@ -170,7 +170,7 @@ public interface GriffonApplication {
      *
      * @param listener an application event listener
      */
-    void addApplicationEventListener(Object listener );
+    void addApplicationEventListener(Object listener);
 
     /**
      * Adds a closure as an application event listener.<p>

@@ -952,6 +952,8 @@ public class GriffonScriptRunner {
             final IvyDependencyManager dependencyManager = settings.getDependencyManager();
             String pluginName = getPluginName(pluginDir);
             Collection<?> excludes = dependencyManager.getPluginExcludes(pluginName);
+            // TODO filter out platform directories
+            // TODO add native directories
             addLibs(libDir, urls, excludes != null ? excludes : Collections.emptyList());
         }
 
@@ -1062,10 +1064,19 @@ public class GriffonScriptRunner {
      * @param urls The URLs to add to the root loader's classpath.
      */
     private static void addUrlsToRootLoader(URLClassLoader loader, URL[] urls) {
+        URL[] existingUrls = loader.getURLs();
         try {
             Class loaderClass = loader.getClass();
             Method method = loaderClass.getMethod("addURL", URL.class);
-            for (URL url : urls) {
+            top: for (URL url : urls) {
+                String path = url.getPath();
+                if(path.endsWith(".jar")) {
+                    path = path.substring(path.lastIndexOf("/"));
+                    for(URL xurl : existingUrls) {
+                        String xpath = xurl.getPath();
+                        if(xpath.endsWith(path)) continue top;
+                    }
+                }
                 method.invoke(loader, url);
             }
         }

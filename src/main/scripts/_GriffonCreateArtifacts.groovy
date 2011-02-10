@@ -230,10 +230,16 @@ loadArchetypeFor = { type = 'application' ->
         archetypeFile = griffonResource("archetypes/${archetype}/${type}.groovy")
     }
 
-    try {
-        includeTargets << gcl.parseClass(archetypeFile.file) 
-    } catch(Exception e) {
-        logError("An error ocurred while parsing archetype ${archetype}. Using 'default' archetype instead.", e)
+    if(archetypeFile.exists()) {
+        try {
+            includeTargets << gcl.parseClass(archetypeFile.file) 
+        } catch(Exception e) {
+            logError("An error ocurred while parsing archetype ${archetype}. Using 'default' archetype instead.", e)
+            archetype = 'default'
+            archetypeFile = new ClassPathResource("archetypes/default/${type}.groovy")
+            includeTargets << gcl.parseClass(archetypeFile.getURL().text) 
+        }
+    } else {
         archetype = 'default'
         archetypeFile = new ClassPathResource("archetypes/default/${type}.groovy")
         includeTargets << gcl.parseClass(archetypeFile.getURL().text) 

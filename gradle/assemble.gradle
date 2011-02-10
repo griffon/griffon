@@ -162,6 +162,9 @@ task distSource(type: Copy) {
         exclude '.gradle*'
         exclude 'clover.license'
         exclude 'cobertura.ser'
+        exclude '**/*.ipr'
+        exclude '**/*.iws'
+        exclude '**/*.iml'
     }
 }
 
@@ -169,14 +172,21 @@ task zipBinary(type: Zip) {
     description = "Zips the binary distribution."
     dependsOn { distBinary }
     classifier = 'bin'
-    from "$buildDir/distributions/binary"
-    fileMode = 755
+    into "griffon-$version"
+    from("$buildDir/distributions/binary") {
+        exclude 'bin'
+    }
+    from("$buildDir/distributions/binary/bin") {
+        into 'bin'
+        fileMode = 0755
+    }
 }
 
 task zipSource(type: Zip) {
     description = "Zips the source distribution."
     dependsOn { distSource }
     classifier = 'src'
+    into "griffon-$version"
     from "$buildDir/distributions/source"
 }
 
@@ -185,8 +195,14 @@ task tarBinary(type: Tar) {
     dependsOn { distBinary }
     compression = Compression.GZIP
     classifier = 'bin'
-    from "$buildDir/distributions/binary"
-    fileMode = 755
+    into "griffon-$version"
+    from("$buildDir/distributions/binary") {
+        exclude 'bin'
+    }
+    from("$buildDir/distributions/binary/bin") {
+        into 'bin'
+        fileMode = 0755
+    }
 }
 
 task tarSource(type: Tar) {
@@ -194,6 +210,7 @@ task tarSource(type: Tar) {
     dependsOn { distSource }
     compression = Compression.GZIP
     classifier = 'src'
+    into "griffon-$version"
     from "$buildDir/distributions/source"
 }
 

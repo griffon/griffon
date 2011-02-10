@@ -20,6 +20,9 @@ import org.codehaus.groovy.ast.expr.*;
 import org.codehaus.groovy.classgen.*;
 import org.codehaus.groovy.control.*;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 /**
  * Injects conditional logging on Griffon artifacts.<p>
  * Based on the work done for LogASTTransformation and Slf4jLoggingStrategy by: Guillaume Laforge,
@@ -29,6 +32,7 @@ import org.codehaus.groovy.control.*;
  * @author Andres Almiray
  */
 public class LoggingInjectionOperation extends CompilationUnit.PrimaryClassNodeOperation {
+    private static final Logger LOG = LoggerFactory.getLogger(LoggingInjectionOperation.class);
     private static final String LOG_VARIABLE_NAME = "log";
 
     public void call(final SourceUnit source, final GeneratorContext context, final ClassNode classNode) throws CompilationFailedException {
@@ -67,7 +71,7 @@ public class LoggingInjectionOperation extends CompilationUnit.PrimaryClassNodeO
                 if (usesSimpleMethodArgumentsOnly(mce)) return exp;
 
                 if (!loggingStrategy.isLoggingMethod(methodName)) return exp;
-                return loggingStrategy.wrapLoggingMethodCall(variableExpression, methodName, exp); 
+                return loggingStrategy.wrapLoggingMethodCall(variableExpression, methodName, exp, source); 
             }
 
             private boolean usesSimpleMethodArgumentsOnly(MethodCallExpression mce) {
@@ -99,7 +103,7 @@ public class LoggingInjectionOperation extends CompilationUnit.PrimaryClassNodeO
      */
     public interface LoggingStrategy {
         boolean isLoggingMethod(String methodName);
-        Expression wrapLoggingMethodCall(Expression logVariable, String methodName, Expression originalExpression);
+        Expression wrapLoggingMethodCall(Expression logVariable, String methodName, Expression originalExpression, SourceUnit source);
     }
     
     private static class Slf4jLoggingStrategy implements LoggingStrategy {
@@ -107,7 +111,12 @@ public class LoggingInjectionOperation extends CompilationUnit.PrimaryClassNodeO
             return methodName.matches("error|warn|info|debug|trace");
         }
 
-        public Expression wrapLoggingMethodCall(Expression logVariable, String methodName, Expression originalExpression) {
+        public Expression wrapLoggingMethodCall(Expression logVariable, String methodName, Expression originalExpression, final SourceUnit source) {
+            if(LOG.isDebugEnabled()) {
+                LOG.debug("Wrapping logging expression found at ["+originalExpression.getLineNumber()+","+originalExpression.getColumnNumber()+
+                          "] in "+source.getName());
+            }
+
             MethodCallExpression condition = new MethodCallExpression(
                     logVariable,
                     "is" + methodName.substring(0, 1).toUpperCase() + methodName.substring(1, methodName.length()) + "Enabled",
