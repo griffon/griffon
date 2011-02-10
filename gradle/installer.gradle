@@ -48,6 +48,7 @@ task izpack(dependsOn: [prepareIzpack]) {
         ant.property(name: 'app.version', value: version)
         ant.property(name: 'app.subpath', value: "Griffon-$version")
     
+        ant.chmod(dir: "$buildDir/assemble/izpack/binary/bin", excludes: '*.bat', perm: 'ugo+x')
         ant.izpack(basedir: "$buildDir/assemble/izpack",
                    output: "$buildDir/distributions/griffon-${version}-installer.jar",
                    compression: 'deflate',
@@ -81,7 +82,6 @@ task rpm(dependsOn: [distBinary]) {
         copy {
             from("$buildDir/distributions/binary")
             into "$rpmDir/griffon-$version"
-            exclude '**/*.bat'
         }
         ant.chmod(dir: "$rpmDir/griffon-${version}/bin", excludes: '*.bat', perm: 'ugo+x')
     
