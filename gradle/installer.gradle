@@ -139,24 +139,28 @@ task deb(dependsOn: [distBinary]) {
     outputs.file "$buildDir/distributions/griffon-${version}-1_all.deb"
 
     doLast {
-        def destinationDir = "$buildDir/assemble/deb" as File
-        def debDir = project.file('installer/deb')
+        File debSrcDir = project.file('installer/deb')
+        File debDir = "$buildDir/assemble/deb" as File
+        File destinationDir = new File(debDir.absolutePath, 'dist')
     
         ant.taskdef(resource: 'ant_deb_task.properties',
-                    classpath: fileTree(dir: debDir, includes: ['*.jar']).asPath)
+                    classpath: fileTree(dir: debSrcDir, includes: ['*.jar']).asPath)
     
-        mkdir("$destinationDir/bin")
-        mkdir("$destinationDir/griffon")
+        copy {
+            from debSrcDir
+            into debDir
+            filter(ReplaceTokens, tokens: ['griffon.version': version])
+        }
         copy {
             from "$buildDir/distributions/binary"
             into destinationDir
             exclude '**/*.bat'
         }
+        ant.chmod(dir: "${destinationDir}/bin", perm: 'ugo+x')
     
         ant.deb(todir: "$buildDir/distributions",
                 'package': 'griffon',
                 section: 'contrib/devel',
-                depends: 'groovy',
                 postinst: "$debDir/postinst",
                 prerm: "$debDir/prerm") {
             version(upstream: version)
@@ -166,8 +170,8 @@ task deb(dependsOn: [distBinary]) {
 Griffon is a Grails inspired application framework for developing desktop applications in Groovy
 Home page: http://griffon.codehaus.org/
 ''')
-            tarfileset(dir: destinationDir, prefix: 'usr/share/griffon')
-            tarfileset(dir: "$destinationDir/bin", prefix: 'usr/share/griffon', filemode: '755')
+            tarfileset(dir: destinationDir, prefix: "./usr/share/griffon-${version}")
+            tarfileset(dir: "$destinationDir/bin", prefix: "./usr/share/griffon-${version}/bin", filemode: '755')
         }
     }
 }
