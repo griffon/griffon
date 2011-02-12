@@ -111,51 +111,6 @@ distJars = tasks.withType(Jar).matching({ jar -> !jar.appFileJar } as Spec)
 task distBinary(type: Copy) {
     dependsOn { distJars.all + [pdfGuide]}
 
-    destinationDir = "$buildDir/distributions/binary" as File
-    from('src/dist') {
-        filter(ReplaceTokens, tokens: ['griffon.version': version, 'groovy.version': groovyVersion])
-    }
-    from('src/main/scripts') {
-        into 'scripts'
-    }
-    from(configurations.rt) {
-        into 'lib'
-    }
-    from(configurations.cli) {
-        into 'lib'
-    }
-    from(configurations.scripts) {
-        into 'lib'
-    }
-    from('.') {
-        include 'LICENSE'
-        include 'INSTALL'
-        include 'README'
-    }
-    from("$buildDir/libs") {
-        into 'dist'
-        include '*.jar'
-    }
-    from('src/griffon') {
-        into 'src/griffon'
-    }
-    from("$buildDir/manual") {
-        into 'guide'
-    }
-    from("$buildDir/assemble/jars") {
-        into 'doc'
-        include '*-sources.jar'
-        include '*-javadoc.jar'
-    }
-
-    doLast {
-        ant.chmod(dir: "$buildDir/distributions/binary/bin", excludes: '*.bat', perm: 'ugo+x')
-    }
-}
-
-task distBinary2(type: Copy) {
-    dependsOn { distJars.all + [pdfGuide]}
-
     destinationDir = "$buildDir/distributions/binary2" as File
     from('src/dist') {
         filter(ReplaceTokens, tokens: ['griffon.version': version, 'groovy.version': groovyVersion])
