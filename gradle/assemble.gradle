@@ -111,7 +111,7 @@ distJars = tasks.withType(Jar).matching({ jar -> !jar.appFileJar } as Spec)
 task distBinary(type: Copy) {
     dependsOn { distJars.all + [pdfGuide]}
 
-    destinationDir = "$buildDir/distributions/binary2" as File
+    destinationDir = "$buildDir/distributions/binary" as File
     from('src/dist') {
         filter(ReplaceTokens, tokens: ['griffon.version': version, 'groovy.version': groovyVersion])
     }
