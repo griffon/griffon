@@ -17,7 +17,7 @@
 import org.apache.tools.ant.filters.ReplaceTokens
 
 task prepareIzpack(type: Copy) {
-    dependsOn { [distBinary, distSource] }
+    dependsOn { [distBinary] }
 
     destinationDir = "$buildDir/assemble/izpack" as File
     from('installer/izpack/resources') {
@@ -27,8 +27,8 @@ task prepareIzpack(type: Copy) {
     from("$buildDir/distributions/binary") {
         into 'binary'
     }
-    from("$buildDir/distributions/source") {
-        into 'source'
+    into('source'){
+        with distSourceSpec
     }
 }
 
