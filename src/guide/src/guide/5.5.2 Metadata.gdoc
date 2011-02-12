@@ -1,4 +1,4 @@
-Access to the application's metadata file (*application.properties*) is available through the usage of @griffon.util.Metadata@ singleton. Here's a snippet of code that shows how to setup a welcome message that displays the application's name and version, along with its Griffon version 
+Access to the application's metadata file (*application.properties*) is available by querying the @griffon.util.Metadata@ singleton. Here's a snippet of code that shows how to setup a welcome message that displays the application's name and version, along with its Griffon version 
 
 {code}
 import griffon.util.Metadata
@@ -16,4 +16,4 @@ There are also a few helpful methods on this class
 * @getApplicationVersion()@ - same result as @meta['app.version']@
 * @getGriffonVersion()@ - same result as @meta['griffon.version']@
 * @getGriffonStartDir()@ - returns the value of @'griffon.start.dir'@ from the System properties
-* @getGriffonWorkingDir()@ - returns a File thatt points to @'griffon.start.dir'@ if the value is set and the file is writable, otherwise returns a File pointing to the current location if it is writable; if that fails then attempts to return a File pointing to @'user.dir'@; if all fail it will return the location to a temporal file, typically @'/tmp/${griffonAppName}'@.
+* @getGriffonWorkingDir()@ - returns a File that points to @'griffon.start.dir'@ if the value is set and the file is writable, otherwise returns a File pointing to the current location if it is writable; if that fails then attempts to return a File pointing to @'user.dir'@; if all fail it will return the location to a temporal file, typically @'/tmp/${griffonAppName}'@.

@@ -48,6 +48,7 @@ task izpack(dependsOn: [prepareIzpack]) {
         ant.property(name: 'app.version', value: version)
         ant.property(name: 'app.subpath', value: "Griffon-$version")
     
+        ant.chmod(dir: "$buildDir/assemble/izpack/binary/bin", excludes: '*.bat', perm: 'ugo+x')
         ant.izpack(basedir: "$buildDir/assemble/izpack",
                    output: "$buildDir/distributions/griffon-${version}-installer.jar",
                    compression: 'deflate',
@@ -57,7 +58,7 @@ task izpack(dependsOn: [prepareIzpack]) {
     }
 }
 
-task rpm(dependsOn: [zipBinary]) {
+task rpm(dependsOn: [distBinary]) {
     description = "Creates an RPM package from the binary distribution."
     inputs.dir("$buildDir/assemble/rpm" as File)
     outputs.files "$buildDir/distributions/griffon-${version.replace('-','_')}-1.noarch.rpm"
@@ -82,6 +83,7 @@ task rpm(dependsOn: [zipBinary]) {
             from("$buildDir/distributions/binary")
             into "$rpmDir/griffon-$version"
         }
+        ant.chmod(dir: "$rpmDir/griffon-${version}/bin", excludes: '*.bat', perm: 'ugo+x')
     
         ant.zip(
             destfile: "$rpmDir/SOURCES/griffon-${version}-bin.zip",
@@ -113,14 +115,22 @@ task dmg(dependsOn: [distBinary]) {
             from("$buildDir/distributions/binary")
             into "$dmgDir/griffon-${version}"
         }
+        ant.chmod(dir: "$dmgDir/griffon-${version}/bin", excludes: '*.bat', perm: 'ugo+x')
+
         copy {
-            from('installer/dmg')
+            from('installer/dmg/resources')
             into dmgDir
             filter(ReplaceTokens, tokens: ['griffon.version': version])
         }
-    
-        ant.exec(executable: 'hdiutil') {
-            arg(line: "create -srcfolder $dmgDir $buildDir/distributions//griffon-${version}-bin.dmg")
+
+        def assemblerDir = project.file('installer/dmg/assembler')
+        def output = "$buildDir/distributions/griffon-${version}-bin.dmg"
+        ant.exec(executable: "$assemblerDir/create-dmg") {
+            arg(line: "--window-size 380 260 "+
+                      "--background ${assemblerDir}/background.png "+
+                      "--icon-size 128 "+
+                      "--volname \"Griffon $version\" "+
+                      "$output $dmgDir")
         }
     }
 }
@@ -131,24 +141,28 @@ task deb(dependsOn: [distBinary]) {
     outputs.file "$buildDir/distributions/griffon-${version}-1_all.deb"
 
     doLast {
-        def destinationDir = "$buildDir/assemble/deb" as File
-        def debDir = project.file('installer/deb')
+        File debSrcDir = project.file('installer/deb')
+        File debDir = "$buildDir/assemble/deb" as File
+        File destinationDir = new File(debDir.absolutePath, 'dist')
     
         ant.taskdef(resource: 'ant_deb_task.properties',
-                    classpath: fileTree(dir: debDir, includes: ['*.jar']).asPath)
+                    classpath: fileTree(dir: debSrcDir, includes: ['*.jar']).asPath)
     
-        mkdir("$destinationDir/bin")
-        mkdir("$destinationDir/griffon")
+        copy {
+            from debSrcDir
+            into debDir
+            filter(ReplaceTokens, tokens: ['griffon.version': version])
+        }
         copy {
             from "$buildDir/distributions/binary"
             into destinationDir
             exclude '**/*.bat'
         }
+        ant.chmod(dir: "${destinationDir}/bin", perm: 'ugo+x')
     
         ant.deb(todir: "$buildDir/distributions",
                 'package': 'griffon',
                 section: 'contrib/devel',
-                depends: 'groovy',
                 postinst: "$debDir/postinst",
                 prerm: "$debDir/prerm") {
             version(upstream: version)
@@ -158,8 +172,8 @@ task deb(dependsOn: [distBinary]) {
 Griffon is a Grails inspired application framework for developing desktop applications in Groovy
 Home page: http://griffon.codehaus.org/
 ''')
-            tarfileset(dir: destinationDir, prefix: 'usr/share/griffon')
-            tarfileset(dir: "$destinationDir/bin", prefix: 'usr/share/griffon', filemode: '755')
+            tarfileset(dir: destinationDir, prefix: "./usr/share/griffon-${version}")
+            tarfileset(dir: "$destinationDir/bin", prefix: "./usr/share/griffon-${version}/bin", filemode: '755')
         }
     }
 }

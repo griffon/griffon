@@ -24,17 +24,56 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * Annotates a class.<p>
+ * <p>Annotates a class.</p>
+ * <p>This transformation provides a convenient way to register PropertyChangeListeners
+ * on an observable bean by leveraging Groovy's closures and the Groovy cast operator.</p>
+ *
+ * <p>The following code exemplifies what must be written by hand in order to register a pair
+ * of PropertyChangeListeners. One of them is a catch-all handler while the second is property specific.
+ * <pre>
+ * import groovy.beans.Bindable
+ * import java.beans.PropertyChangeListener
+ *
+ * class MyModel {
+ *     &#064;Bindable String name
+ *     &#064;Bindable String lastname
+ *
+ *     def snoopAll = { evt -> ... }
+ *
+ *     MyModel() {
+ *         addPropertyChangeListener(snoopAll as PropertyChangeListener)
+ *         addPropertyChangeListener('lastname', {
+ *             controller.someAction(it)
+ *         } as PropertyChangeListener)
+ *     }
+ * }
+ * </pre>
+ *
+ * <p>Applying &#064;Listener to the previous snippet results in the following code</p>
+ * <pre>
+ * import griffon.beans.Listener
+ * import groovy.beans.Bindable
+ *
+ * &#064;Listener(snoopAll)
+ * class MyModel {
+ *     &#064;Bindable String name
+ *
+ *     &#064;Bindable
+ *     &#064;Listener({controller.someAction(it)})
+ *     String lastname
+ *
+ *     def snoopAll = { evt -> ... }
+ * }
+ * </pre>
  *
  * Any closures found as the annotation's value will be either transformed
  * into inner classes that implement PropertyChangeListener (when the value
- * is a closue defined in place) or be casted as a proxy of PropertyChangeListener
+ * is a closure defined in place) or be casted as a proxy of PropertyChangeListener
  * (when the value is a property reference found in the same class).<p>
  * List of closures are also supported.
  *
- * @see org.codehaus.griffon.ast.ListenerASTTransformation
- *
  * @author Andres Almiray
+ * @see org.codehaus.griffon.ast.ListenerASTTransformation
  */
 @Retention(RetentionPolicy.SOURCE)
 @Target({ElementType.FIELD, ElementType.TYPE})

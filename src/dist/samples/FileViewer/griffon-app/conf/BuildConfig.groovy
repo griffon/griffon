@@ -133,3 +133,5 @@ griffon {
         footer = "<br/><br/>Made with Griffon (@griffon.version@)"
     }
 }
+
+griffon.disable.threading.injection = true

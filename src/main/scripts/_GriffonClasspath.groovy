@@ -64,7 +64,6 @@ getPluginTestFiles = {
 getJarFiles = {->
     def jarFiles = resolveResources("file:${basedir}/lib/*.jar").toList()
     if(includePluginJarsOnClasspath) {
-
         def pluginJars = pluginSettings.pluginJarFiles
 
         for (pluginJar in pluginJars) {
@@ -131,30 +130,54 @@ commonClasspath = {
     }
 
 // XXX -- NATIVE
-    resolveResources("file:${basedir}/lib/${PlatformUtils.platform}").each { platformLib ->
+    resolveResources("file:${basedir}/lib/${PlatformUtils.platform}/*.jar").each { platformLib ->
         if(platformLib.file.exists()) {
             debug "  ${platformLib.file.absolutePath}"
             fileset(dir: platformLib.file.absolutePath)
         }
     }
-    resolveResources("file:${pluginsHome}/*/lib/${PlatformUtils.platform}").each { platformPluginLib ->
+    resolveResources("file:${pluginsHome}/*/lib/${PlatformUtils.platform}/*.jar").each { platformPluginLib ->
         if(platformPluginLib.file.exists()) {
             debug "  ${platformPluginLib.file.absolutePath}"
             fileset(dir: platformPluginLib.file.absolutePath)
         }
     }
+    def platformLibDir = new File("${basedir}/lib/${PlatformUtils.platform}/native")
+    if(platformLibDir.exists()) {
+        debug "  ${platformLibDir.absolutePath}"
+        fileset(dir: platformLibDir.absolutePath)
+    }
+    for (pluginLibDir in pluginLibDirs) {
+        platformLibDir = new File("${pluginLibDir}/lib/${PlatformUtils.platform}/native")
+        if(platformLibDir.exists()) {
+            debug "  ${platformLibDir.absolutePath}"
+            fileset(dir: platformLibDir.absolutePath)
+        }
+    }
 
     if(is64Bit) {
-        resolveResources("file:${basedir}/lib/${PlatformUtils.platform[0..-3]}").each { platformLib ->
+        resolveResources("file:${basedir}/lib/${PlatformUtils.platform[0..-3]}/*.jar").each { platformLib ->
             if(platformLib.file.exists()) {
                 debug "  ${platformLib.file.absolutePath}"
                 fileset(dir: platformLib.file.absolutePath)
             }
         }
-        resolveResources("file:${pluginsHome}/*/lib/${PlatformUtils.platform[0..-3]}").each { platformPluginLib ->
+        resolveResources("file:${pluginsHome}/*/lib/${PlatformUtils.platform[0..-3]}/*.jar").each { platformPluginLib ->
             if(platformPluginLib.file.exists()) {
                 debug "  ${platformPluginLib.file.absolutePath}"
                 fileset(dir: platformPluginLib.file.absolutePath)
+            }
+        }
+        platformLibDir = new File("${basedir}/lib/${PlatformUtils.platform[0..-3]}/native")
+        if(platformLibDir.exists()) {
+            debug "  ${platformLibDir.absolutePath}"
+            fileset(dir: platformLibDir.absolutePath)
+        }
+        for (pluginLibDir in pluginLibDirs) {
+            platformLibDir = new File("${pluginLibDir}/lib/${PlatformUtils.platform[0..-3]}/native")
+            if(platformLibDir.exists()) {
+                debug "  ${platformLibDir.absolutePath}"
+                fileset(dir: platformLibDir.absolutePath)
             }
         }
     }
@@ -292,11 +315,7 @@ addUrlIfNotPresent = { to, what ->
     if(!to || !what) return
     def urls = to.URLs.toList()
     switch(what.class) {
-         case URL:
-             if(!urls.contains(what)) {
-                 to.addURL(what)
-             }
-             return
+         case URL: what = new File(what.toURI()); break
          case String: what = new File(what); break
          case GString: what = new File(what.toString()); break
          case File: break; // ok
@@ -307,7 +326,7 @@ addUrlIfNotPresent = { to, what ->
 
     if(what.directory && !what.exists()) what.mkdirs()
     def url = what.toURI().toURL()
-    if(!urls.contains(url)) {
+    if(!urls.contains(url) && (what.directory || !urls.find{it.path.endsWith(what.name)})) {
         to.addURL(url)
     }
 }

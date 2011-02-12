@@ -6,8 +6,8 @@ Example:
 class MyController {
     def model
 
-    def action = {
-        // will be invoked inside the UI Thread by default
+    def action1 = {
+        // will be invoked inside the UI Thread by default (pre 0.9.2)
         def value = model.value
         Thread.start {
             // do some calculations
@@ -15,6 +15,16 @@ class MyController {
                 // back inside the UI Thread
                 model.result = ...
             }
+        }
+    }
+
+    def action2 = {
+        // will be invoked outside of the UI Thread by default (post 0.9.2)
+        def value = model.value
+        // do some calculations
+        execAsync {
+            // back inside the UI Thread
+            model.result = ...
         }
     }
 }

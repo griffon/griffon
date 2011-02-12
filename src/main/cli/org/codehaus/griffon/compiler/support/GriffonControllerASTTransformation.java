@@ -27,6 +27,9 @@ import griffon.core.GriffonController;
 import griffon.core.GriffonControllerClass;
 import org.codehaus.griffon.runtime.core.AbstractGriffonController;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 /**
  * Handles generation of code for Griffon controllers.
  * <p/>
@@ -37,6 +40,7 @@ import org.codehaus.griffon.runtime.core.AbstractGriffonController;
  */
 @GroovyASTTransformation(phase=CompilePhase.CANONICALIZATION)
 public class GriffonControllerASTTransformation extends GriffonArtifactASTTransformation {
+    private static final Logger LOG = LoggerFactory.getLogger(GriffonControllerASTTransformation.class);
     private static final String ARTIFACT_PATH = "controllers";
     private static final ClassNode GRIFFON_CONTROLLER_CLASS = ClassHelper.makeWithoutCaching(GriffonController.class);
     private static final ClassNode ABSTRACT_GRIFFON_CONTROLLER_CLASS = ClassHelper.makeWithoutCaching(AbstractGriffonController.class);    
@@ -45,8 +49,10 @@ public class GriffonControllerASTTransformation extends GriffonArtifactASTTransf
         if(!ARTIFACT_PATH.equals(artifactPath) || !classNode.getName().endsWith(GriffonControllerClass.TRAILING)) return;
 
         if(ClassHelper.OBJECT_TYPE.equals(classNode.getSuperClass())) {
+            if(LOG.isDebugEnabled()) LOG.debug("Setting "+ABSTRACT_GRIFFON_CONTROLLER_CLASS.getName()+" as the superclass of "+classNode.getName());
             classNode.setSuperClass(ABSTRACT_GRIFFON_CONTROLLER_CLASS);
-        } else if(!classNode.implementsInterface(GRIFFON_CONTROLLER_CLASS)){
+        } else if(!classNode.implementsInterface(GRIFFON_CONTROLLER_CLASS)) {
+            if(LOG.isDebugEnabled()) LOG.debug("Injecting "+GRIFFON_CONTROLLER_CLASS.getName()+" behavior to "+ classNode.getName());
             // 1. add interface
             classNode.addInterface(GRIFFON_CONTROLLER_CLASS);
             // 2. add methods

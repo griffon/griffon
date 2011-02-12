@@ -27,6 +27,9 @@ import griffon.core.GriffonModel;
 import griffon.core.GriffonModelClass;
 import org.codehaus.griffon.runtime.core.AbstractGriffonModel;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 /**
  * Handles generation of code for Griffon models.
  * <p/>
@@ -37,6 +40,7 @@ import org.codehaus.griffon.runtime.core.AbstractGriffonModel;
  */
 @GroovyASTTransformation(phase=CompilePhase.CANONICALIZATION)
 public class GriffonModelASTTransformation extends GriffonArtifactASTTransformation {
+    private static final Logger LOG = LoggerFactory.getLogger(GriffonControllerASTTransformation.class);
     private static final String ARTIFACT_PATH = "models";
     private static final ClassNode GRIFFON_MODEL_CLASS = ClassHelper.makeWithoutCaching(GriffonModel.class);
     private static final ClassNode ABSTRACT_GRIFFON_MODEL_CLASS = ClassHelper.makeWithoutCaching(AbstractGriffonModel.class);    
@@ -45,8 +49,10 @@ public class GriffonModelASTTransformation extends GriffonArtifactASTTransformat
         if(!ARTIFACT_PATH.equals(artifactPath) || !classNode.getName().endsWith(GriffonModelClass.TRAILING)) return;
 
         if(ClassHelper.OBJECT_TYPE.equals(classNode.getSuperClass())) {
+            if(LOG.isDebugEnabled()) LOG.debug("Setting "+ABSTRACT_GRIFFON_MODEL_CLASS.getName()+" as the superclass of "+classNode.getName());
             classNode.setSuperClass(ABSTRACT_GRIFFON_MODEL_CLASS);
         } else if(!classNode.implementsInterface(GRIFFON_MODEL_CLASS)){
+            if(LOG.isDebugEnabled()) LOG.debug("Injecting "+GRIFFON_MODEL_CLASS.getName()+" behavior to "+ classNode.getName());
             // 1. add interface
             classNode.addInterface(GRIFFON_MODEL_CLASS);
             // 2. add methods
