@@ -153,6 +153,47 @@ task distBinary(type: Copy) {
     }
 }
 
+task distBinary2(type: Copy) {
+    dependsOn { distJars.all + [pdfGuide]}
+
+    destinationDir = "$buildDir/distributions/binary2" as File
+    from('src/dist') {
+        filter(ReplaceTokens, tokens: ['griffon.version': version, 'groovy.version': groovyVersion])
+    }
+    from('src/main/scripts') {
+        into 'scripts'
+    }
+	into('lib'){
+		from configurations.rt
+		from configurations.scripts
+		from configurations.cli
+	}
+    from('.') {
+        include 'LICENSE'
+        include 'INSTALL'
+        include 'README'
+    }
+    from("$buildDir/libs") {
+        into 'dist'
+        include '*.jar'
+    }
+    from('src/griffon') {
+        into 'src/griffon'
+    }
+    from("$buildDir/manual") {
+        into 'guide'
+    }
+    from("$buildDir/assemble/jars") {
+        into 'doc'
+        include '*-sources.jar'
+        include '*-javadoc.jar'
+    }
+
+    doLast {
+        ant.chmod(dir: "$buildDir/distributions/binary/bin", excludes: '*.bat', perm: 'ugo+x')
+    }
+}
+
 distSourceSpec = copySpec{
     from('.') {
         exclude 'build'
@@ -164,7 +205,7 @@ distSourceSpec = copySpec{
         exclude '**/*.ipr'
         exclude '**/*.iws'
         exclude '**/*.iml'
-    }	
+    }   
 }
 
 task zipBinary(type: Zip) {
@@ -182,9 +223,9 @@ task zipBinary(type: Zip) {
 }
 
 task zipSource(type: Zip){
-	description = "Zips the source distribution."
-	with distSourceSpec
-	classifier = 'src'
+    description = "Zips the source distribution."
+    with distSourceSpec
+    classifier = 'src'
     into "griffon-$version"
 }
 
@@ -204,9 +245,9 @@ task tarBinary(type: Tar) {
 }
 
 task tarSource(type: Tar) {
-	description = "Tars the source distribution."
-	with distSourceSpec
-	classifier = 'src'
+    description = "Tars the source distribution."
+    with distSourceSpec
+    classifier = 'src'
     into "griffon-$version"  
     compression = Compression.GZIP
 }
