@@ -458,7 +458,12 @@ You cannot upgrade a plugin that is configured via BuildConfig.groovy, remove th
                     def dependency = readPluginXmlMetadata(depName)
                     def dependencyVersion = dependency.@version.toString()
                     if (GriffonPluginUtils.compareVersions(dependencyVersion, depVersion) < 0) {
-                        errorHandler("Plugin requires version [$depVersion] of plugin [$depName], but installed version is [${dependencyVersion}]. Please upgrade this plugin and try again.")
+                        if(System.getProperty('griffon.plugin.force.updates') == 'true') {
+                            installPlugin(depName, depVersion)
+                            dependencies.remove(depName)
+                        } else {
+                            errorHandler("Plugin requires version [$depVersion] of plugin [$depName], but installed version is [${dependencyVersion}]. Please upgrade this plugin and try again.")
+                        }
                     } else {
                         dependencies.remove(depName)
                     }

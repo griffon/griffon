@@ -14,8 +14,10 @@
  * limitations under the License.
  */
 import groovy.xml.dom.DOMCategory
+import griffon.util.Metadata
 
 includeTargets << griffonScript("_GriffonInit")
+includeTargets << griffonScript("_GriffonPlugins")
 includeTargets << griffonScript("_PluginDependencies")
 
 def getAvailablePluginVersions = {
@@ -54,10 +56,11 @@ def getInstalledPluginVersions = {
 }
 
 target('default': "Checks installed plugin versions against latest releases on repositories") {
-    depends(resolveDependencies)
+    depends(parseArguments, resolveDependencies)
 
     def availablePluginVersions = getAvailablePluginVersions()
     def installedPluginVersions = getInstalledPluginVersions()
+    def outdatedPlugins = [:]
 
     boolean headerDisplayed = false
     if (installedPluginVersions) {
@@ -72,10 +75,31 @@ Plugins with available updates are listed below:
                     headerDisplayed = true
                 }
                 println "${name.padRight(30, " ")}${version.padRight(16, " ")}  ${availableVersion}"
+                outdatedPlugins[name.toString()] = availableVersion.toString()
             }
         }
         if (!headerDisplayed) {
             println "\nAll plugins are up to date."
+        }
+        if(argsMap.install && outdatedPlugins) {
+            println ''
+            if(confirmInput("Proceed with plugin upgrades?", "plugin.upgrade")) {
+                wasInteractive = isInteractive
+                isInteractive = false
+                try {
+                    System.setProperty('griffon.plugin.force.updates', 'true')
+                    outdatedPlugins.each { pluginName, pluginVersion ->
+                        // skip if pluginName-pluginVersion has been installed already because
+                        // it is a dependency of another plugin that was upgraded in  a previous
+                        // iteration
+                        if(Metadata.current['plugins.'+pluginName] == pluginVersion) return
+                        installPluginForName(pluginName)
+                    }
+                } finally {
+                    isInteractive = wasInteractive
+                    System.setProperty('griffon.plugin.force.updates', 'false')
+                }
+            }
         }
     } else {
         println "\nYou do not have any plugins installed."
