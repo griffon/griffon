@@ -139,7 +139,10 @@ task allClasses(dependsOn: [rtClasses, cliClasses, scriptsClasses]) {
 cliClasses.doLast {
     def buildProps = new File("$buildDir/classes/cli/build.properties")
     buildProps.text = """        griffon.version=$version
-        groovy.version=$groovyVersion""".stripIndent(8)
+        groovy.version=$groovyVersion
+        ant.version=$antVersion
+        slf4j.version=$slf4jVersion
+        spring.version=$springVersion""".stripIndent(8)
 }
 
 configure([compileGroovy, compileTestGroovy]) {
