@@ -144,7 +144,11 @@ class BuildSettings extends AbstractBuildSettings {
     File griffonHome
 
     /** The version of Griffon being used for the current script. */
-    String griffonVersion
+    final String griffonVersion
+    final String groovyVersion
+    final String antVersion
+    final String slf4jVersion
+    final String springVersion
 
     /** The environment for the current script. */
     String griffonEnv
@@ -445,6 +449,10 @@ class BuildSettings extends AbstractBuildSettings {
         try {
             loadBuildPropertiesFromClasspath(buildProps)
             griffonVersion = buildProps.'griffon.version'
+            groovyVersion = buildProps.'groovy.version'
+            antVersion = buildProps.'ant.version'
+            slf4jVersion = buildProps.'slf4j.version'
+            springVersion = buildProps.'spring.version'
         }
         catch (IOException ex) {
             StackTraceUtils.deepSanitize(ex).printStackTrace()

@@ -209,9 +209,9 @@ class IvyDependencyManager extends AbstractIvyDependencyManager implements Depen
      * Obtains the default dependency definitions for the given Griffon version
      */
     static Closure getDefaultDependencies(String griffonVersion) {
-        String antVersion = '1.8.1'
-        String slf4jVersion = '1.6.1'
-        String springVersion = '3.0.5.RELEASE'
+        // String antVersion = '1.8.1'
+        // String slf4jVersion = '1.6.1'
+        // String springVersion = '3.0.5.RELEASE'
 
         return {
             // log level of Ivy resolver, either 'error', 'warn', 'info', 'debug' or 'verbose'
@@ -224,10 +224,10 @@ class IvyDependencyManager extends AbstractIvyDependencyManager implements Depen
                 // dependencies needed by the Griffon build system
                 build "org.codehaus.gpars:gpars:0.9",
                       "org.tmatesoft.svnkit:svnkit:1.3.1",
-                      "org.apache.ant:ant:$antVersion",
-                      "org.apache.ant:ant-launcher:$antVersion",
-                      "org.apache.ant:ant-junit:$antVersion",
-                      "org.apache.ant:ant-nodeps:$antVersion",
+                      "org.apache.ant:ant:$buildSettings.antVersion",
+                      "org.apache.ant:ant-launcher:$buildSettings.antVersion",
+                      "org.apache.ant:ant-junit:$buildSettings.antVersion",
+                      "org.apache.ant:ant-nodeps:$buildSettings.antVersion",
                       "jline:jline:0.9.94",
                       "org.fusesource.jansi:jansi:1.4",
                       "commons-io:commons-io:1.4",
@@ -235,23 +235,26 @@ class IvyDependencyManager extends AbstractIvyDependencyManager implements Depen
                       "org.codehaus.griffon:griffon-cli:$griffonVersion",
                       "org.codehaus.griffon:griffon-scripts:$griffonVersion",
                       "org.codehaus.griffon:griffon-rt:$griffonVersion",
-                      "org.springframework:org.springframework.core:$springVersion",
-                      "org.springframework:org.springframework.aop:$springVersion",
-                      "org.springframework:org.springframework.aspects:$springVersion",
-                      "org.springframework:org.springframework.asm:$springVersion",
-                      "org.springframework:org.springframework.beans:$springVersion",
-                      "org.springframework:org.springframework.context:$springVersion",
-                      "org.springframework:org.springframework.context.support:$springVersion",
-                      "org.springframework:org.springframework.expression:$springVersion",
-                      "org.springframework:org.springframework.instrument:$springVersion"
+                      "org.springframework:org.springframework.core:$buildSettings.springVersion",
+                      "org.springframework:org.springframework.aop:$buildSettings.springVersion",
+                      "org.springframework:org.springframework.aspects:$buildSettings.springVersion",
+                      "org.springframework:org.springframework.asm:$buildSettings.springVersion",
+                      "org.springframework:org.springframework.beans:$buildSettings.springVersion",
+                      "org.springframework:org.springframework.context:$buildSettings.springVersion",
+                      "org.springframework:org.springframework.context.support:$buildSettings.springVersion",
+                      "org.springframework:org.springframework.expression:$buildSettings.springVersion",
+                      "org.springframework:org.springframework.instrument:$buildSettings.springVersion"
                 build("log4j:log4j:1.2.16",
-                      "org.slf4j:slf4j-log4j12:$slf4jVersion",
-                      "org.slf4j:slf4j-api:$slf4jVersion",
-                      "org.slf4j:jcl-over-slf4j:$slf4jVersion",
-                      "org.slf4j:jul-to-slf4j:$slf4jVersion") {
+                      "org.slf4j:slf4j-log4j12:$buildSettings.slf4jVersion",
+                      "org.slf4j:slf4j-api:$buildSettings.slf4jVersion",
+                      "org.slf4j:jcl-over-slf4j:$buildSettings.slf4jVersion",
+                      "org.slf4j:jul-to-slf4j:$buildSettings.slf4jVersion") {
                     excludes 'mail', 'jms', 'jmxtools', 'jmxri'
                 }
-                       
+                build("org.codehaus.groovy:groovy-all:$buildSettings.groovyVersion") {
+                    transitive = false
+                }
+                      
                 docs("org.xhtmlrenderer:core-renderer:R8pre2",
                      "com.lowagie:itext:2.0.8",
                      "radeox:radeox:1.0-b2",
@@ -260,12 +263,11 @@ class IvyDependencyManager extends AbstractIvyDependencyManager implements Depen
                 }
 
                 // dependencies needed for compilation
-                compile("org.codehaus.groovy:groovy-all:1.7.6") {
-                    excludes 'jline'
+                compile("org.codehaus.groovy:groovy-all:$buildSettings.groovyVersion") {
+                    transitive = false
                 }
-
                 compile "org.codehaus.griffon:griffon-rt:$griffonVersion",
-                        "org.slf4j:slf4j-api:$slf4jVersion"
+                        "org.slf4j:slf4j-api:$buildSettings.slf4jVersion"
 
                 // dependencies needed for running tests
                 test "junit:junit:4.8.1",
@@ -273,10 +275,9 @@ class IvyDependencyManager extends AbstractIvyDependencyManager implements Depen
 
                 // logging
                 runtime("log4j:log4j:1.2.16",
-                        "org.slf4j:slf4j-log4j12:$slf4jVersion",
-                        "org.slf4j:slf4j-api:$slf4jVersion",
-                        "org.slf4j:jcl-over-slf4j:$slf4jVersion",
-                        "org.slf4j:jul-to-slf4j:$slf4jVersion") {
+                        "org.slf4j:slf4j-log4j12:$buildSettings.slf4jVersion",
+                        "org.slf4j:jcl-over-slf4j:$buildSettings.slf4jVersion",
+                        "org.slf4j:jul-to-slf4j:$buildSettings.slf4jVersion") {
                     excludes 'mail', 'jms', 'jmxtools', 'jmxri'
                 }
             }
