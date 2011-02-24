@@ -75,11 +75,9 @@ class EventRouter {
          eventName = eventName[0].toUpperCase() + eventName[1..-1]
          def eventHandler = "on" + eventName
          def dispatchEvent = { listener ->
-            try {
-               fireEvent(listener, eventHandler, params ?: [])
-            } catch(x) {
-               if(LOG.errorEnabled) LOG.error("Ecountered an error while dispatching event $eventName", x)
-            }
+             // any exceptions that might get thrown should be caught
+             // by GriffonExceptionHandler
+             fireEvent(listener, eventHandler, params ?: [])
          }
 
          // defensive copying to avoid CME during event dispatching

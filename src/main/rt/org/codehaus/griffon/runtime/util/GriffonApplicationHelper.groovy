@@ -30,6 +30,7 @@ import org.codehaus.griffon.runtime.core.ServiceArtifactHandler
 import griffon.util.Metadata
 import griffon.util.Environment
 import griffon.util.UIThreadHelper
+import griffon.util.GriffonExceptionHandler
 import org.codehaus.groovy.runtime.InvokerHelper
 
 import org.codehaus.griffon.runtime.logging.Log4jConfig
@@ -89,6 +90,8 @@ class GriffonApplicationHelper {
         } catch(x) {
             // ignore
         }
+        GriffonExceptionHandler.configure(app.config.flatten([:]))
+
         app.builderConfig = configSlurper.parse(app.builderClass)
 
         def eventsClass = app.eventsClass

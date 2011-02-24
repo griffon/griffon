@@ -24,7 +24,6 @@ import java.lang.reflect.Method;
 import java.net.URL;
 import java.util.Properties;
 
-import griffon.util.GriffonExceptionHandler;
 import org.codehaus.groovy.tools.LoaderConfiguration;
 import org.codehaus.groovy.tools.RootLoader;
 
@@ -242,7 +241,6 @@ public class GriffonStarter {
     // well as the classworlds method
     public static void main(String args[]) {
         try {
-            GriffonExceptionHandler.registerExceptionHandler();
             rootLoader(args);
         } catch (Throwable t) {
             System.out.println("Error starting Griffon: " + t.getMessage());
