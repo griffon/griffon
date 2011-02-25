@@ -24,6 +24,8 @@ import griffon.util.GriffonUtil
  * @author Peter Ledbrook (Grails 1.1)
  */
 
+import griffon.util.GriffonNameUtils
+
 includeTargets << griffonScript("_GriffonPackage")
 includeTargets << griffonScript("_GriffonArgParsing")
 
@@ -34,11 +36,14 @@ createArtifact = { Map args = [:] ->
     resolveArchetype()
     resolveFileType()
 
-    def suffix = args["suffix"]
-    def type = args["type"]
-    def artifactPath = args["path"]
+    def suffix = args['suffix']
+    def type = args['type']
+    def artifactPath = args['path']
     if(args['fileType']) fileType = args['fileType']
     def lineTerminator = args["lineTerminator"] ?: (fileType != '.groovy'? ';' : '')
+    
+    def typeProperty = GriffonNameUtils.uncapitalize(type)
+    type = argsMap[typeProperty] && templateExists(argsMap[typeProperty], fileType) ? argsMap[typeProperty] : type
 
     ant.mkdir(dir: "${basedir}/${artifactPath}")
 
@@ -64,9 +69,9 @@ createArtifact = { Map args = [:] ->
     artifactFile = "${basedir}/${artifactPath}/${pkgPath}${className}${suffix}${fileType}"
     defaultArtifactFile = "${basedir}/${artifactPath}/${pkgPath}${className}${suffix}.groovy"
 
-    templateFile = resolveTemplate(type, artifactPath, fileType)
+    templateFile = resolveTemplate(type, fileType)
     if(!templateFile?.exists() && fileType != '.groovy') {
-        templateFile = resolveTemplate(type, artifactPath,'.groovy')
+        templateFile = resolveTemplate(type, '.groovy')
         lineTerminator = ''
     }
 
@@ -119,7 +124,15 @@ createArtifact = { Map args = [:] ->
     event("CreatedArtefact", [type, className])
 }
 
-resolveTemplate = { type, artifactPath, fileSuffix ->
+templateExists = { type, fileType ->
+    def templateFile = resolveTemplate(type, fileType)
+    if(!templateFile?.exists() && fileType != '.groovy') {
+        templateFile = resolveTemplate(type, '.groovy')
+    }
+    templateFile.exists()
+}
+
+resolveTemplate = { type, fileSuffix ->
     // first check for presence of template in application
     def templateFile = new FileSystemResource("${basedir}/src/templates/artifacts/${type}${fileSuffix}")
     if (!templateFile.exists()) {

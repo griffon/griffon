@@ -27,7 +27,7 @@ target(createArchetype: "Creates a new Griffon application archetype") {
     def (pkg, name) = extractArtifactName(argsMap["params"][0])
 
     ant.mkdir(dir: name)
-    ant.mkdir(dir: "$name/template/artifacts")
+    ant.mkdir(dir: "$name/templates/artifacts")
 
     new File("$name/application.groovy").append('''
 import griffon.util.Metadata
