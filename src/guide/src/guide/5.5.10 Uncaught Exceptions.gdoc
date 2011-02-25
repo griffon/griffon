@@ -1,0 +1,64 @@
+There are times when an exception catches you off guard. The JVM provides a mechanism for handling these kind of exceptions: [Thread.UncaughtExceptionHandler|http://download.oracle.com/javase/6/docs/api/java/lang/Thread.UncaughtExceptionHandler.html]. You can register an instance that implements this interface with a Thread or ThreadGroup, however it's very likely that exceptions thrown inside the EDT will not be caught by such instance. Furthermore, it might be the case that other components would like to be notified when an uncaught exception is thrown. This is precisely what [GriffonExceptionHandler|api:griffon.util.GriffonExceptionHandler] does.
+
+Stack traces will be sanitized by default, in other words, you won't see a long list containing Groovy internals. However you can bypass the filtering process and instruct Griffon to leave the stack traces untouched by specifying the following flag either in the command line with @-D@ switch or in @Config.groovy@
+
+{code}
+griffon.full.stacktrace = true
+{code}
+
+Exceptions will be automatically logged using the @error@ level. Should you choose to disable logging but still have some output when an exception occurs then configure the following flag 
+ 
+{code}
+griffon.exception.output = true
+{code}
+
+Any exception caught by GriffonExceptionHandler will trigger a pair of events. The event names match the following convention
+ * Uncaught<exception.class.simpleName>
+ * UncaughtExceptionThrown
+
+The exception is sent as the sole argument of these events. As an example, assume that a service throws an @IllegalArgumentException@ during the invocation of a service method. This method was called from within a Controller which defines a handler for this exception, like this
+
+{code}
+class SampleService {
+    void work() {
+        throw new IllegalArgumentException('boom!')
+    }
+}
+
+class SampleController {
+    def sampleService
+
+    def someAction = {
+        sampleService.work()
+    }
+
+    def onUncaughtIllegalArgumentException = { iae ->
+        // process exception
+    }
+}
+{code}
+
+As mentioned before, the name of an event handler matches the type of the exception it will handle, polymorphism is not supported. In other words, you wont be able to handle an @IllegalArgumentException@ if you declare a handler for @RuntimeException@. You can however, rely on the second event triggered by this mechanism. Be aware that every single exception will trigger 2 events each time it is caught. It is best to use a synchronization approach to keep track of the last exception caught, like so
+
+{code}
+import groovy.transform.Synchronized
+
+class SampleController {
+    private lastCaughtException
+
+    @Synchronized
+    void onUncaughtRuntimeException(RuntimeException e) {
+        lastCaughtException = e
+        // handle runtime exception only
+    }
+
+    @Synchronized
+    void onUncaughtExceptionThrown(e) {
+        if(lastCaughtException == e) return
+        lastCaughtException = e
+        // handle any other exception types
+    }
+}
+{code}
+
+As a final remark, any exceptions that might occur during the handling of the events wont trigger @GriffonExceptionHandler@ again, they will simply be logged and discarded instead.
