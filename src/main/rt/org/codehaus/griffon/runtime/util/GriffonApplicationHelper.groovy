@@ -64,7 +64,25 @@ class GriffonApplicationHelper {
         }
         return mc
     }
-    
+
+    private static ConfigObject loadConfig(ConfigSlurper configSlurper, Class configClass, String configFileName) {
+        ConfigObject config = new ConfigObject()
+        try {
+            if(configClass != null) {
+                config.merge(configSlurper.parse(configClass))
+            }
+            InputStream is = Thread.currentThread().contextClassLoader.getResourceAsStream(configFileName + '.properties')
+            if(is != null) {
+                Properties p = new Properties()
+                p.load(is)
+                config.merge(configSlurper.parse(p))
+            }
+        } catch(x) {
+            LogLog.warn("Cannot read configuration [class: $configClass?.name, file: $configFileName]", x)
+        }
+        config
+    }
+
     /**
      * Setups an application.<p>
      * This method performs the following tasks<ul>
@@ -84,16 +102,11 @@ class GriffonApplicationHelper {
         Metadata.current.getGriffonWorkingDir()
 
         ConfigSlurper configSlurper = new ConfigSlurper(Environment.current.name)
-        app.config = configSlurper.parse(app.appConfigClass)
-        try {
-            def config = configSlurper.parse(app.configClass)
-            app.config.merge(config)
-        } catch(x) {
-            LogLog.warn("Cannot read application configuration from ${app.configClass}", x)
-        }
+        app.config = loadConfig(configSlurper, app.appConfigClass, GriffonApplication.Configuration.APPLICATION.name)
+        app.config.merge(loadConfig(configSlurper, app.configClass, GriffonApplication.Configuration.CONFIG.name))
         GriffonExceptionHandler.configure(app.config.flatten([:]))
 
-        app.builderConfig = configSlurper.parse(app.builderClass)
+        app.builderConfig = loadConfig(configSlurper, app.builderClass, GriffonApplication.Configuration.BUILDER.name)
 
         def eventsClass = app.eventsClass
         if (eventsClass) {
@@ -103,12 +116,12 @@ class GriffonApplicationHelper {
 
         def log4jConfig = app.config.log4j
         if (log4jConfig instanceof Closure) {
-            app.event('Log4jConfigStart', [log4jConfig])
+            app.event(GriffonApplication.Event.LOG4J_CONFIG_START.name, [log4jConfig])
             LogManager.resetConfiguration()
             new Log4jConfig().configure(log4jConfig)
         }
 
-        runScriptInsideUIThread('Initialize', app)
+        runScriptInsideUIThread(GriffonApplication.Lifecycle.INITIALIZE.name, app)
 
         if(!app.artifactManager) { 
             app.artifactManager = new DefaultArtifactManager(app)
@@ -132,7 +145,7 @@ class GriffonApplicationHelper {
             app.addMvcGroup(k, v.inject([:]) {m, e -> m[e.key as String] = e.value as String; m})
         }
 
-        app.event('BootstrapEnd', [app])
+        app.event(GriffonApplication.Event.BOOTSTRAP_END.name, [app])
     }
 
     /**
@@ -204,7 +217,7 @@ class GriffonApplicationHelper {
         MetaClass mc = griffonClass?.getMetaClass() ?: expandoMetaClassFor(klass)
         enhance(app, klass, mc, instance)
 
-        app.event('NewInstance',[klass,type,instance])
+        app.event(GriffonApplication.Event.NEW_INSTANCE.name, [klass, type, instance])
         return instance
     }
 
@@ -341,9 +354,7 @@ class GriffonApplicationHelper {
             }
         }
 
-        // deprecate this one
-        // app.event('CreateMVCGroup',[mvcName, instanceMap.model, instanceMap.view, instanceMap.controller, mvcType, instanceMap])
-        app.event('CreateMVCGroup',[mvcType, mvcName, instanceMap])
+        app.event(GriffonApplication.Event.CREATE_MVC_GROUP.name, [mvcType, mvcName, instanceMap])
         return instanceMap
     }
 
@@ -422,7 +433,7 @@ class GriffonApplicationHelper {
         app.builders.remove(mvcName)
         app.groups.remove(mvcName)
 
-        app.event("DestroyMVCGroup",[mvcName])
+        app.event(GriffonApplication.Event.DESTROY_MVC_GROUP.name, [mvcName])
     }
 
     static Class loadClass(GriffonApplication app, String className) throws ClassNotFoundException {

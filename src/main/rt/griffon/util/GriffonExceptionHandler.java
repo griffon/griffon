@@ -53,7 +53,7 @@ public class GriffonExceptionHandler implements Thread.UncaughtExceptionHandler 
             if(app != null) {
                 LOG.error("Uncaught Exception", throwable);
                 app.event("Uncaught" + GriffonNameUtils.getShortName(throwable.getClass()), Arrays.asList(throwable));
-                app.event("UncaughtExceptionThrown", Arrays.asList(throwable));
+                app.event(GriffonApplication.Event.UNCAUGHT_EXCEPTION_THROWN.getName(), Arrays.asList(throwable));
             }
          } catch (Throwable t) {
             sanitize(t);

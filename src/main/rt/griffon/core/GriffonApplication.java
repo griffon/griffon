@@ -19,6 +19,7 @@ import groovy.lang.Binding;
 import groovy.lang.Closure;
 import groovy.util.ConfigObject;
 import griffon.util.Metadata;
+import griffon.util.GriffonNameUtils;
 
 import java.util.Map;
 import java.util.List;
@@ -37,6 +38,95 @@ import org.slf4j.Logger;
  * @author Andres Almiray
  */
 public interface GriffonApplication {
+    /**
+     * Defines the names of the configuration scripts.
+     *
+     * @author Andres Almiray
+     * @since 0.9.2
+     */
+    public enum Configuration {
+        APPLICATION, CONFIG, BUILDER, EVENTS;
+
+        /** Display friendly name */
+        private String name;
+
+        /**
+         * Returns the capitalized String representation of this Configuration object.
+         *
+         * @return a capitalized String
+         */
+        public String getName() {
+            if(name == null) {
+                return GriffonNameUtils.capitalize(this.toString().toLowerCase(Locale.getDefault()));
+            }
+            return name;
+        }
+    }
+
+    /**
+     * Defines the names of the lifecycle scripts.
+     *
+     * @author Andres Almiray
+     * @since 0.9.2
+     */
+    public enum Lifecycle {
+        INITIALIZE, STARTUP, READY, SHUTDOWN, STOP;
+
+        /** Display friendly name */
+        private String name;
+
+        /**
+         * Returns the capitalized String representation of this Lifecycle object.
+         *
+         * @return a capitalized String
+         */
+        public String getName() {
+            if(name == null) {
+                return GriffonNameUtils.capitalize(this.toString().toLowerCase(Locale.getDefault()));
+            }
+            return name;
+        }
+    }
+
+    /**
+     * Defines all the events triggered by the application.
+     *
+     * @author Andres Almiray
+     * @since 0.9.2
+     */
+    public enum Event {
+        LOG4J_CONFIG_START("Log4jConfigStart"), UNCAUGHT_EXCEPTION_THROWN,
+        LOAD_ADDONS_START, LOAD_ADDONS_END, LOAD_ADDON_START, LOAD_ADDON_END,
+        BOOTSTRAP_END,
+        STARTUP_START, STARTUP_END,
+        READY_START, READY_END,
+        SHUTDOWN_REQUESTED, SHUTDOWN_ABORTED, SHUTDOWN_START,
+        NEW_INSTANCE,
+        CREATE_MVC_GROUP("CreateMVCGroup"), DESTROY_MVC_GROUP("DestroyMVCGroup"),
+        WINDOW_SHOWN, WINDOW_HIDDEN;
+
+        /** Display friendly name */
+        private String name;
+
+        Event() {
+            String name = name().toLowerCase().replaceAll("_","-");
+            this.name = GriffonNameUtils.getClassNameForLowerCaseHyphenSeparatedName(name);
+        }
+
+        Event(String name) {
+            this.name = name;
+        }
+
+        /**
+         * Returns the capitalized String representation of this Events object.
+         *
+         * @return a capitalized String
+         */
+        public String getName() {
+            return this.name;
+        }
+    }
+
     /**
      * Gets the application's configuration set on 'application.properties'.<p>
      */

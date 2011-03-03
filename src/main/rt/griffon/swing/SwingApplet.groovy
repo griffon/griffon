@@ -58,9 +58,9 @@ class SwingApplet extends JApplet implements SwingGriffonApplication {
     }
 
     void stop() {
-        event('StopStart',[this])
-        GriffonApplicationHelper.runScriptInsideUIThread('Stop', this)
-        event('StopEnd',[this])
+        event(GriffonApplication.Event.STOP_START.name, [this])
+        GriffonApplicationHelper.runScriptInsideUIThread(GriffonApplication.Lifecycle.STOP.name, this)
+        event(GriffonApplication.Event.STOP_END.name, [this])
     }
 
     void destroy() {

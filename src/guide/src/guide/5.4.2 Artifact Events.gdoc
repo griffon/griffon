@@ -5,3 +5,8 @@ The following events will be triggered by the application when dealing with arti
 * @LoadAddonsEnd\[app, addons\]@ - after all [addons|guide:addons] have been initialized. @addons@ is a Map of <name, instance> pairs.
 * @LoadAddonStart\[name, addon, app\]@ - before an addon is initialized.
 * @LoadAddonEnd\[name, addon, app\]@ - after an addon has been initialized.
+
+These events will be triggered when dealing with MVC groups
+
+* @CreateMVCGroup\[type, name, instanceMap\]@ - when a new MVC group is created. @instanceMap@ contains all MVC members keyed by type.
+* @DestroyMVCGroup\[\name]@ - when an MVC group is destroyed.

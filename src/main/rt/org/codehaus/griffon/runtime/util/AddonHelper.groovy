@@ -48,7 +48,7 @@ public class AddonHelper {
 
     static void handleAddonsAtStartup(GriffonApplication app) {
         LOG.info("Loading addons [START]")
-        app.event("LoadAddonsStart", [app])
+        app.event(GriffonApplication.Event.LOAD_ADDONS_START.name, [app])
 
         for (node in app.builderConfig) {
             String nodeName = node.key
@@ -74,11 +74,11 @@ public class AddonHelper {
             } catch (MissingMethodException mme) {
                 if (mme.method != 'addonPostInit') throw mme
             }
-            app.event("LoadAddonEnd", [name, addon, app])
+            app.event(GriffonApplication.Event.LOAD_ADDON_END.name, [name, addon, app])
             if(LOG.infoEnabled) LOG.info("Loaded addon $name")
         }
 
-        app.event("LoadAddonsEnd", [app, app.addonManager.addons])
+        app.event(GriffonApplication.Event.LOAD_ADDONS_END.name, [app, app.addonManager.addons])
         LOG.info("Loading addons [END]")
     }
 
@@ -100,7 +100,7 @@ public class AddonHelper {
         UIThreadHelper.enhance(addonMetaClass)
 
         if(LOG.infoEnabled) LOG.info("Loading addon $addonName with class ${addon.class.name}")
-        app.event("LoadAddonStart", [addonName, addon, app])
+        app.event(GriffonApplication.Event.LOAD_ADDON_START.name, [addonName, addon, app])
 
         addon.addonInit(app)
         addMVCGroups(app, addon.mvcGroups)
