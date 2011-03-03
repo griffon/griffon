@@ -441,20 +441,7 @@ You cannot upgrade a plugin that is configured via BuildConfig.groovy, remove th
                 dependencies.remove(depName)
             } else {
                 def depPluginDir = pluginSettings.getPluginDirForName(depName)?.file
-                if (!depPluginDir?.exists()) {
-                    eventHandler("StatusUpdate", "Plugin dependency [$depName] not found. Attempting to resolve...")
-                    // recursively install dependent plugins
-                    def upperVersion = GriffonPluginUtils.getUpperVersion(depVersion)
-                    def installVersion = upperVersion
-                    if (installVersion == '*') {
-                        installVersion = settings.defaultPluginSet.contains(depName) ? GriffonUtil.getGriffonVersion() : null
-                    }
-
-                    // recurse
-                    installPlugin(depName, installVersion)
-
-                    dependencies.remove(depName)
-                } else {
+                if (depPluginDir?.exists()) {
                     def dependency = readPluginXmlMetadata(depName)
                     def dependencyVersion = dependency.@version.toString()
                     if (GriffonPluginUtils.compareVersions(dependencyVersion, depVersion) < 0) {
@@ -467,6 +454,19 @@ You cannot upgrade a plugin that is configured via BuildConfig.groovy, remove th
                     } else {
                         dependencies.remove(depName)
                     }
+                } else {
+                    eventHandler("StatusUpdate", "Plugin dependency [$depName] not found. Attempting to resolve...")
+                    // recursively install dependent plugins
+                    def upperVersion = GriffonPluginUtils.getUpperVersion(depVersion)
+                    def installVersion = upperVersion
+                    if (installVersion == '*') {
+                        installVersion = settings.defaultPluginSet.contains(depName) ? GriffonUtil.getGriffonVersion() : null
+                    }
+
+                    // recurse
+                    installPlugin(depName, installVersion)
+
+                    dependencies.remove(depName)
                 }
             }
         }

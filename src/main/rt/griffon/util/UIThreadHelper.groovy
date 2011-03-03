@@ -49,10 +49,10 @@ class UIThreadHelper {
     }
 
     void setUIThreadHandler(UIThreadHandler threadHandler) {
-        if(!this.uiThreadHandler) {
-            this.uiThreadHandler = threadHandler
-        } else {
+        if(this.uiThreadHandler) {
             if(LOG.warnEnabled) LOG.warn("UIThreadHandler is already set, you can't change it!")
+        } else {
+            this.uiThreadHandler = threadHandler
         }
     }
 

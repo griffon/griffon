@@ -16,6 +16,9 @@
 
 ruleset {    
     ruleset('rulesets/imports.xml')
+    ruleset('rulesets/basic.xml') {
+        exclude 'EmptyCatchBlock'
+    }
     ruleset('rulesets/naming.xml') {
         exclude 'PropertyName'
         'ClassName' {
@@ -32,4 +35,13 @@ ruleset {
             finalRegex = '^_?[a-z][a-zA-Z0-9]*$'
         }
     }
+    // ruleset('rulesets/unused.xml')
+    ruleset('rulesets/exceptions.xml') {
+        exclude 'CatchException'
+        exclude 'CatchThrowable'
+    }
+    ruleset('rulesets/generic.xml') {
+        exclude 'StatelessClass'
+    }
+    ruleset('rulesets/concurrency.xml')
 }

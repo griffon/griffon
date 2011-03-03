@@ -154,7 +154,7 @@ class CompositeBuilderHelper {
         // is it too naive to just call registerFactory/registerBeanFactory here ?
         // TODO handle catch-all groupName "*" ?
         groupedFactories.each {groupName, factories ->
-            uberBuilder.registrationGroups.get(groupName, new TreeSet<String>())
+            uberBuilder.registrationGroups.get(groupName, [] as TreeSet)
             factories.each {name, factory ->
                 if (Factory.class.isAssignableFrom(factory.getClass())) {
                     uberBuilder.registerFactory(name, groupName, factory)
@@ -190,7 +190,7 @@ class CompositeBuilderHelper {
     private static addMethods(UberBuilder uberBuilder, groupedMethods) {
         // TODO handle catch-all groupName "*" ?
         groupedMethods.each {groupName, methods ->
-            uberBuilder.registrationGroups.get(groupName, new TreeSet<String>())
+            uberBuilder.registrationGroups.get(groupName, [] as TreeSet)
             methods.each {name, method ->
                 uberBuilder.registerExplicitMethod(name, groupName, method)
             }
@@ -200,7 +200,7 @@ class CompositeBuilderHelper {
     private static addProperties(UberBuilder uberBuilder, groupedProperties) {
         // TODO handle catch-all groupName "*" ?
         groupedProperties.each {groupName, properties ->
-            uberBuilder.registrationGroups.get(groupName, new TreeSet<String>())
+            uberBuilder.registrationGroups.get(groupName, [] as TreeSet)
             properties.each {name, propertyTuple ->
                 uberBuilder.registerExplicitProperty(name, groupName, propertyTuple.get, propertyTuple.set)
             }

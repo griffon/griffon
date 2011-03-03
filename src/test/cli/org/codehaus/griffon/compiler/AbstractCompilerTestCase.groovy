@@ -17,7 +17,7 @@ abstract class AbstractCompilerTestCase extends GroovyTestCase {
    protected void compile() {
        try {
            doCompile()
-       } catch(RuntimeException x) {
+       } catch(x) {
            throw x.cause ?: x
        }
    }

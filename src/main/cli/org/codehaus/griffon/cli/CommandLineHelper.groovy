@@ -89,10 +89,9 @@ public class CommandLineHelper {
                 out.println()
                 out.println("Invalid option '" + line + "' - must be one of: [" + responsesString + "]")
                 out.println()
-            }
-            catch (IOException ex) {
+            } catch (IOException ex) {
                 ex.printStackTrace()
-                return null
+                break
             }
         }
 

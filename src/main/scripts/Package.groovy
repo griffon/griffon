@@ -29,35 +29,35 @@ _package_called = true
 includeTargets << griffonScript("_GriffonPackage")
 
 target('default': "Packages a Griffon application.") {
-     depends(checkVersion, parseArguments, createConfig)
+    depends(checkVersion, parseArguments, createConfig)
 
-     // create general dist dir
-     distDir = buildConfig.griffon.dist.dir ?: "${basedir}/dist"
-     ant.mkdir(dir: distDir)
-     packageType = ''
+    // create general dist dir
+    distDir = buildConfig.griffon.dist.dir ?: "${basedir}/dist"
+    ant.mkdir(dir: distDir)
+    packageType = ''
 
-     if(!argsMap.params) {
-          package_zip()
-          package_jar()
-          package_applet()
-          package_webstart()
-     } else {
+    if(argsMap.params) {
         def internal = ['zip', 'jar', 'applet', 'webstart']
         argsMap.params.each { type ->
-           packageType = type
-	       debug("Making package $type")
-           try {
-               System.setProperty(RunMode.KEY, RunMode.CUSTOM.name)
-               if(type in internal) {
-                   depends("package_"+type)
-               } else {
-                   event("MakePackage",[type])
-               }
-           } catch(Exception x) {
-               ant.echo(message: "Could not handle package type '${type}'")
-               ant.echo(message: x.message)
-           }
+            packageType = type
+	        debug("Making package $type")
+            try {
+                System.setProperty(RunMode.KEY, RunMode.CUSTOM.name)
+                if(type in internal) {
+                    depends("package_"+type)
+                } else {
+                    event("MakePackage",[type])
+                }
+            } catch(Exception x) {
+                ant.echo(message: "Could not handle package type '${type}'")
+                ant.echo(message: x.message)
+            }
         }
+    } else {
+        package_zip()
+        package_jar()
+        package_applet()
+        package_webstart()
     }
 }
 
@@ -260,8 +260,9 @@ target(_copyLaunchScripts: "") {
         replacefilter(token: "@app.java.opts@", value: javaOpts)
         replacefilter(token: "@app.main.class@", value: griffonApplicationClass)
     }
-    ant.move( file: "${targetDistDir}/bin/app.run",     tofile: "${targetDistDir}/bin/${griffonAppName}" )
-    ant.move( file: "${targetDistDir}/bin/app.run.bat", tofile: "${targetDistDir}/bin/${griffonAppName}.bat" )
+    ant.move(file: "${targetDistDir}/bin/app.run",     tofile: "${targetDistDir}/bin/${griffonAppName}")
+    ant.move(file: "${targetDistDir}/bin/app.run.bat", tofile: "${targetDistDir}/bin/${griffonAppName}.bat")
+    ant.chmod(dir: "${targetDistDir}/bin", excludes: '*.bat', perm: 'ugo+x')
 }
 
 _copyFiles = { srcdir, path ->

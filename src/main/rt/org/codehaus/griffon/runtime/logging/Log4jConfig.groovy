@@ -57,11 +57,10 @@ class Log4jConfig {
             }
             def appender = APPENDERS[name].newInstance()
             InvokerHelper.setProperties appender, constructorArgs
-            if (!appender.name) {
-                LogLog.error "Appender of type $name doesn't define a name attribute, and hence is ignored."
-            }
-            else {
+            if (appender.name) {
                 appenders[appender.name] = appender
+            } else {
+                LogLog.error "Appender of type $name doesn't define a name attribute, and hence is ignored."
             }
             appender.activateOptions()
             return appenders[name]

@@ -146,17 +146,19 @@ class BaseGriffonApplication implements GriffonApplication {
 
     boolean canShutdown() {
         event('ShutdownRequested',[appDelegate])
-        for(handler in shutdownHandlers) {
-            if(!handler.canShutdown(appDelegate)) {
-                event('ShutdownAborted',[appDelegate])
-                if(log.isDebugEnabled()) {
-                    try {
-                        log.debug("Shutdown aborted by $handler")
-                    }catch(UnsupportedOperationException uoe) {
-                        log.debug('Shutdown aborted by a handler')
+        synchronized(shutdownLock) {
+            for(handler in shutdownHandlers) {
+                if(!handler.canShutdown(appDelegate)) {
+                    event('ShutdownAborted',[appDelegate])
+                    if(log.isDebugEnabled()) {
+                        try {
+                            log.debug("Shutdown aborted by $handler")
+                        }catch(UnsupportedOperationException uoe) {
+                            log.debug('Shutdown aborted by a handler')
+                        }
                     }
+                    return false
                 }
-                return false
             }
         }
         return true
@@ -165,7 +167,7 @@ class BaseGriffonApplication implements GriffonApplication {
     boolean shutdown() {
         // avoids reentrant calls to shutdown()
         // once permission to quit has been granted
-        if(phase == ApplicationPhase.SHUTDOWN) return
+        if(phase == ApplicationPhase.SHUTDOWN) return false
 
         if(!canShutdown()) return false
         log.info('Shutdown is in process')
@@ -185,8 +187,10 @@ class BaseGriffonApplication implements GriffonApplication {
   
         // stage 2 - alert all shutdown handlers
         log.debug('Shutdown stage 2: notify all shutdown handlers')
-        for(handler in shutdownHandlers) {
-            handler.onShutdown(appDelegate)
+        synchronized(shutdownLock) {
+            for(handler in shutdownHandlers) {
+                handler.onShutdown(appDelegate)
+            }
         }
  
         // stage 3 - destroy all mvc groups

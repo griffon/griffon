@@ -27,6 +27,7 @@ import org.springframework.core.io.Resource
  * @author Graeme Rocher (Grails 1.0)
  */
 class GriffonPluginUtils {
+    private static final LOCK = new Object()
     static final String WILDCARD = "*";
     static final GRIFFON_HOME
     static {
@@ -72,7 +73,7 @@ class GriffonPluginUtils {
 
             if(tokens[1] == pluginVersion) return true
         }
-        else if(pluginVersion.equals(trimTag(requiredVersion))) return true
+        else if(pluginVersion == trimTag(requiredVersion)) return true
         return false
     }
 
@@ -93,9 +94,9 @@ class GriffonPluginUtils {
             tokens << pluginVersion
             tokens = tokens.sort(vc)
 
-            return pluginVersion.compareTo(tokens[1])
+            return pluginVersion <=> tokens[1]
         }
-        return pluginVersion.compareTo(requiredVersion)
+        return pluginVersion <=> requiredVersion
     }
 
     /**
@@ -153,15 +154,19 @@ class GriffonPluginUtils {
     /**
      * Returns a cached PluginBuildSettings instance.
      */
-    static synchronized PluginBuildSettings getPluginBuildSettings() {
-        if (instance == null) {
-            instance = newPluginBuildSettings()
+    static PluginBuildSettings getPluginBuildSettings() {
+        synchronized(LOCK) {
+            if (instance == null) {
+                instance = newPluginBuildSettings()
+            }
+            return instance
         }
-        return instance
     }
 
-    static synchronized setPluginBuildSettings(PluginBuildSettings settings) {
-        instance = settings
+    static setPluginBuildSettings(PluginBuildSettings settings) {
+        synchronized(LOCK) {
+           instance = settings
+        }
     }
 
     /**
@@ -352,9 +357,11 @@ class GriffonPluginUtils {
     /**
      * Clears cached resolved resources
      */
-    static synchronized clearCaches() {
-        getPluginBuildSettings().clearCache()
-        instance = null
+    static void clearCaches() {
+        synchronized(LOCK) {
+            getPluginBuildSettings().clearCache()
+            instance = null
+        }
     }
 }
 
@@ -390,7 +397,7 @@ class VersionComparator implements Comparator {
             boolean bigLeft = nums1.size() > nums2.size()
             for (i in 0..<nums1.size()) {
                 if (nums2.size() > i) {
-                    result = nums1[i].compareTo(nums2[i])
+                    result = nums1[i] <=> nums2[i]
                     if (result != 0) {
                         break
                     }
@@ -409,4 +416,5 @@ class VersionComparator implements Comparator {
     }
 
     boolean equals(obj) { false }
+    int hashCode() { super.hashCode() }
 }

@@ -351,10 +351,11 @@ target(releasePlugin: "The implementation target") {
 The current directory is not a working copy and your latest changes won't be committed.
 You need to checkout a working copy and make your changes there.
 Alternatively, would you like to publish a zip-only (no sources) release?""")
-                        if(!result) exit(0)
-                        else {
+                        if(result){
                             publishZipOnlyRelease()
                             return
+                        } else {
+                            exit(0)
                         }
                     }
                 } else {
@@ -486,10 +487,7 @@ private withPluginListUpdate(Closure updateLogic) {
     def addClient = new SVNWCClient((ISVNAuthenticationManager)authManager, null)
 
     String remotePluginMetadata = "${pluginSVN}/.plugin-meta"
-    if(!pluginMetaDir.exists()) {
-        println "Checking out locally to '${pluginMetaDir}'."
-        checkoutOrImportPluginMetadata(pluginMetaDir, remotePluginMetadata, updateClient, importClient)
-    } else {
+    if(pluginMetaDir.exists()) {
         try {
             updateClient.doUpdate(pluginMetaDir, SVNRevision.HEAD, true)
             commitNewestPluginList(pluginMetaDir, importClient)
@@ -497,9 +495,12 @@ private withPluginListUpdate(Closure updateLogic) {
             println "Plugin meta directory corrupt, checking out again"
             checkoutOrImportPluginMetadata(pluginMetaDir, remotePluginMetadata, updateClient, importClient)
         }
+    } else {
+        println "Checking out locally to '${pluginMetaDir}'."
+        checkoutOrImportPluginMetadata(pluginMetaDir, remotePluginMetadata, updateClient, importClient)
     }
-
 }
+
 private checkoutOrImportPluginMetadata (File pluginMetaDir, String remotePluginMetadata, SVNUpdateClient updateClient, SVNCommitClient importClient) {
     def svnURL = SVNURL.parseURIDecoded (remotePluginMetadata)
     try {
@@ -742,16 +743,16 @@ target(updatePluginsListManually: "Updates the plugin list by manually reading e
     try {
         def recreateCache = false
         document = null
-        if (!pluginsListFile.exists()) {
-            println "Plugins list cache doesn't exist creating.."
-            recreateCache = true
-        } else {
+        if (luginsListFile.exists()) {
             try {
                 document = DOMBuilder.parse(new FileReader(pluginsListFile))
             } catch (Exception e) {
                 recreateCache = true
                 println "Plugins list cache is corrupt [${e.message}]. Re-creating.."
             }
+        } else {
+            println "Plugins list cache doesn't exist creating.."
+            recreateCache = true
         }
         if (recreateCache) {
             document = DOMBuilder.newInstance().createDocument()
@@ -988,7 +989,7 @@ fetchPluginListFile = { url ->
             def ver = repo.getFile(file , (long)-1L, props , baos)
             def mimeType = props.getSVNPropertyValue(SVNProperty.MIME_TYPE)
             if (!SVNProperty.isTextMimeType(mimeType)) {
-                throw new Exception("Must be a text file..")
+                throw new IllegalArgumentException("Must be a text file..")
             }
             def bytes = baos.toByteArray()
             def str = new String(bytes, 'utf-8')
@@ -1010,9 +1011,9 @@ def fetchRemote(url, closure) {
         // determine if the file exists
         SVNNodeKind nodeKind = repo.checkPath(file , -1)
         if (nodeKind == SVNNodeKind.NONE) {
-            throw new Exception("The file does not exist.: " + url)
+            throw new IllegalArgumentException("The file does not exist.: " + url)
         } else if (nodeKind != SVNNodeKind.FILE) {
-            throw new Exception("Error not a file..: " + url)
+            throw new IllegalArgumentException("Error not a file..: " + url)
         }
         // present w/ file etc for repo extraction
         closure.call(repo, file)

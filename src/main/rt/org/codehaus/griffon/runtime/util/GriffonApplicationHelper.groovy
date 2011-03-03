@@ -37,6 +37,7 @@ import org.codehaus.griffon.runtime.logging.Log4jConfig
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import org.apache.log4j.LogManager
+import org.apache.log4j.helpers.LogLog
 
 /**
  * Utility class for boostrapping an application and handling of MVC groups.</p>
@@ -88,7 +89,7 @@ class GriffonApplicationHelper {
             def config = configSlurper.parse(app.configClass)
             app.config.merge(config)
         } catch(x) {
-            // ignore
+            LogLog.warn("Cannot read application configuration from ${app.configClass}", x)
         }
         GriffonExceptionHandler.configure(app.config.flatten([:]))
 
@@ -250,7 +251,6 @@ class GriffonApplicationHelper {
         Map<String, MetaClass> metaClassMap = [:]
         Map<String, Class> klassMap = [:]
         Map<String, GriffonClass> griffonClassMap = [:]
-        ClassLoader classLoader = app.getClass().classLoader
         app.mvcGroups[mvcType].each {k, v ->
             GriffonClass griffonClass = app.artifactManager.findGriffonClass(v)
             Class klass = griffonClass?.clazz ?: loadClass(app, v)
@@ -412,6 +412,7 @@ class GriffonApplicationHelper {
             app.builders[mvcName]?.dispose()
         } catch(MissingMethodException mme) {
             // TODO find out why this call breaks applet mode on shutdown
+            if(LOG.errorEnabled) LOG.error("Application encountered an error while destroying group '$mvcName'", mme)
         }
 
         // remove the refs from the app caches

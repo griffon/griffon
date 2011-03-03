@@ -20,6 +20,8 @@ package org.codehaus.griffon.runtime.builder
  * @author Andres Almiray
  */
 class UberBuilderRegistration {
+    private static final Closure[] EMPTY_CLOSURE_ARRAY = new Closure[0]
+
     Factory factory
     FactoryBuilderSupport builder
     String prefixString
@@ -99,7 +101,7 @@ class UberBuilderRegistration {
                 builder.proxyBuilder = oldProxy
             }
         }
-        return null
+        return EMPTY_CLOSURE_ARRAY
     }
 
     String toString() {

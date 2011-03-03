@@ -35,14 +35,13 @@ import org.springframework.util.FileCopyUtils
  */
 
 // No point doing this stuff more than once.
-if (getBinding().variables.containsKey("_settings_called")) return
+if (getBinding().variables.containsKey("_settings_called")) return true
 _settings_called = true
 
 // Read build properties for Griffon into ant properties.
 if (griffonSettings.griffonHome) {
     ant.property(file: "${griffonHome}/build.properties")
-}
-else {
+} else {
     ant.property(resource: "build.properties")
 }
 

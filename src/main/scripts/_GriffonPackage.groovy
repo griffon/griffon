@@ -228,24 +228,6 @@ _copyLibs = {
     // jardir = ant.antProject.replaceProperties(buildConfig.griffon.jars.destDir)
     event("CopyLibsStart", [jardir])
 
-    List libs = []
-
-/*
-    ant.fileset(dir:"${griffonHome}/dist", includes:"griffon-rt-*.jar").each {
-        griffonCopyDist(it.toString(), jardir)
-        libs << it.name
-    }
-    ant.fileset(dir:"${griffonHome}/lib", includes:"groovy-all-*.jar").each {
-        griffonCopyDist(it.toString(), jardir)
-        libs << it.name
-    }
-
-    ant.fileset(dir:"${basedir}/lib/", includes:"*.jar").each {
-        griffonCopyDist(it.toString(), jardir)
-        libs << it.name
-    }
-*/
-
 // XXX -- NATIVE 
     copyPlatformJars("${basedir}/lib", new File(jardir).absolutePath) 
     copyNativeLibs("${basedir}/lib", new File(jardir).absolutePath) 
@@ -297,7 +279,7 @@ griffonCopyDist = { jarname, targetDir, boolean force = false ->
     File targetFile = new File(targetDir + File.separator + srcFile.getName())
 
     // first do a copy
-    long originalLastMod = targetFile.lastModified()
+    // long originalLastMod = targetFile.lastModified()
     force = force || !(buildConfig.signingkey?.params?.lazy)
 
     ant.copy(file:srcFile, toFile:targetFile, overwrite:force)

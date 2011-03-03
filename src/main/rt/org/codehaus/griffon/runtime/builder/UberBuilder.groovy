@@ -29,7 +29,7 @@ import org.slf4j.LoggerFactory
 class UberBuilder extends FactoryBuilderSupport {
     private static final Logger LOG = LoggerFactory.getLogger(UberBuilder)
     protected final Map builderLookup = new LinkedHashMap()
-    protected final List<UberBuilderRegistration> builderRegistration = new LinkedList<UberBuilderRegistration>()
+    protected final List<UberBuilderRegistration> builderRegistration = [] as LinkedList
 
     public UberBuilder() {
         loadBuilderLookups()
