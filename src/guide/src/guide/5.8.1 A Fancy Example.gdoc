@@ -64,7 +64,7 @@ This archetype overrides the default templates for Model, View and Controller th
 h3. #3 Create the artifact templates
 According to the conventions laid out in the archetype descriptor there must exist a file under @templates/artifacts@ that matches each one of the specified artifact types, in other words we need the following files
 
-*MainModel*
+*MainModel.groovy*
 {code}
 \@artifact.package\@import groovy.beans.Bindable
 import griffon.util.GriffonNameUtils
@@ -78,7 +78,7 @@ class \@artifact.name\@ {
 }
 {code}
 
-*MainController*
+*MainController.groovy*
 {code}
 \@artifact.package\@class \@artifact.name\@ {
     def model
@@ -130,7 +130,7 @@ class \@artifact.name\@ {
 }
 {code}
 
-*MainView*
+*MainView.groovy*
 {code}
 \@artifact.package\@build(\@artifact.name.plain\@Actions)
 application(title: GriffonNameUtils.capitalize(app.config.application.title),
@@ -147,7 +147,7 @@ application(title: GriffonNameUtils.capitalize(app.config.application.title),
 }
 {code}
 
-*MainActions*
+*MainActions.groovy*
 {code}
 \@artifact.package\@import groovy.ui.Console
 
@@ -222,7 +222,7 @@ actions {
 }
 {code}
 
-*MainMenuBar*
+*MainMenuBar.groovy*
 {code}
 \@artifact.package\@import static griffon.util.GriffonApplicationUtils.*
 
@@ -254,12 +254,12 @@ menuBar = menuBar {
 }
 {code}
 
-*MainContent*
+*MainContent.groovy*
 {code}
 \@artifact.package\@label('Main content')
 {code}
 
-*MainStatusBar*
+*MainStatusBar.groovy*
 {code}
 \@artifact.package\@label(id: 'status', text: bind { model.status })
 {code}
