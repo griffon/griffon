@@ -236,6 +236,14 @@ class BaseGriffonApplication implements GriffonApplication {
     void event(String eventName, List params) {
         eventRouter.publish(eventName, params)
     }
+
+    void eventOutside(String eventName) {
+        eventRouter.publishOutside(eventName, [])
+    }
+
+    void eventOutside(String eventName, List params) {
+        eventRouter.publishOutside(eventName, params)
+    }
     
     void eventAsync(String eventName) {
         eventRouter.publishAsync(eventName, [])

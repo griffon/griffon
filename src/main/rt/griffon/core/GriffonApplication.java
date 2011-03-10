@@ -306,10 +306,25 @@ public interface GriffonApplication {
      *
      * @param eventName the name of the event
      */
-    void eventAsync(String eventName);
+    void eventOutside(String eventName);
 
     /**
      * Publishes an application event asynchronously off the UI thread.<p>
+     *
+     * @param eventName the name of the event
+     * @param params event arguments sent to listeners
+     */
+    void eventOutside(String eventName, List params);
+
+    /**
+     * Publishes an application event asynchronously off the publisher's thread.<p>
+     *
+     * @param eventName the name of the event
+     */
+    void eventAsync(String eventName);
+
+    /**
+     * Publishes an application event asynchronously off the publisher's thread.<p>
      *
      * @param eventName the name of the event
      * @param params event arguments sent to listeners

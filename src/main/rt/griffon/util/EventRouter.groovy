@@ -50,7 +50,7 @@ class EventRouter {
     * @param params the event's argumnents
     *
     */
-   public void publish(String eventName, List params = []) {
+   void publish(String eventName, List params = []) {
        if(!eventName) return
        buildPublisher(eventName, params)('synchronously')  
    }
@@ -64,9 +64,23 @@ class EventRouter {
     * @param params the event's argumnents
     *
     */
-   public void publishAsync(String eventName, List params = []) {
+   void publishOutside(String eventName, List params = []) {
        if(!eventName) return
-       UIThreadHelper.instance.executeOutside(buildPublisher(eventName, params).curry('asynchronously'))  
+       UIThreadHelper.instance.executeOutside(buildPublisher(eventName, params).curry('outside'))
+   }
+
+   /**
+    * Publishes an event with optional arguments.</p>
+    * Event listeners are guaranteed to be notified
+    * in a different thread than the publisher's, always.
+    *
+    * @param eventName the name of the event
+    * @param params the event's argumnents
+    *
+    */
+   void publishAsync(String eventName, List params = []) {
+       if(!eventName) return
+       UIThreadHelper.instance.executeFuture(buildPublisher(eventName, params).curry('asynchronously'))
    }
    
    private Closure buildPublisher(String eventName, List params) {
@@ -154,7 +168,7 @@ class EventRouter {
     *
     * @param listener and event listener of type Script, Map or Object
     */
-   public void addEventListener(listener) {
+   void addEventListener(listener) {
       if(!listener || listener instanceof Closure) return
       synchronized(listeners) {
          if(listeners.find{ it == listener }) return
@@ -178,7 +192,7 @@ class EventRouter {
     *
     * @param listener and event listener of type Script, Map or Object
     */
-   public void removeEventListener(listener) {
+   void removeEventListener(listener) {
       if(!listener || listener instanceof Closure) return
       synchronized(listeners) {
          listeners.remove(listener)
@@ -192,7 +206,7 @@ class EventRouter {
     * @param eventName the name of the event
     * @param listener the event listener
     */
-   public void addEventListener(String eventName, Closure listener) {
+   void addEventListener(String eventName, Closure listener) {
       if(!eventName || !listener) return
       eventName = eventName[0].toUpperCase() + eventName[1..-1]
       synchronized(closureListeners) {
@@ -209,7 +223,7 @@ class EventRouter {
     * @param eventName the name of the event
     * @param listener the event listener
     */
-   public void removeEventListener(String eventName, Closure listener) {
+   void removeEventListener(String eventName, Closure listener) {
       if(!eventName || !listener) return
       eventName = eventName[0].toUpperCase() + eventName[1..-1]
       synchronized(closureListeners) {
