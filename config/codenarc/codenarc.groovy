@@ -44,4 +44,55 @@ ruleset {
         exclude 'StatelessClass'
     }
     ruleset('rulesets/concurrency.xml')
+
+    ruleset('rulesets/logging.xml') {
+        exclude 'Println'       //TODO: Fix the code and enable rule
+        exclude 'PrintStackTrace'    //TODO: Fix the code and enable rule
+        exclude 'SystemErrPrint'    //TODO: Fix the code and enable rule
+    }
+
+    ruleset('rulesets/braces.xml') {
+       exclude 'IfStatementBraces'    // TODO: analyze usage and verify correct code 
+        exclude 'WhileStatementBraces'    //TODO: analyze usage and verify correct code 
+        exclude 'ElseBlockBraces'    //TODO: analyze usage and verify correct code 
+        exclude 'ForStatementBraces'    //TODO: analyze usage and verify correct code 
+    }
+
+    ruleset('rulesets/size.xml') {
+        exclude 'AbcComplexity'    //TODO: Fix the code and enable rule
+        exclude 'MethodCount'    //TODO: Fix the code and enable rule
+        exclude 'MethodSize'    //TODO: Fix the code and enable rule
+        exclude 'CyclomaticComplexity'    //TODO: Fix the code and enable rule
+        exclude 'NestedBlockDepth'    //TODO: Fix the code and enable rule
+    }
+
+    ruleset('rulesets/junit.xml') {
+        exclude 'JUnitStyleAssertions'       //TODO: Fix the code and enable rule
+        exclude 'JUnitSetUpCallsSuper'       //TODO: Fix the code and enable rule
+        exclude 'JUnitTearDownCallsSuper'       //TODO: Fix the code and enable rule
+        exclude 'UseAssertTrueInsteadOfAssertEquals' //TODO: Fix the code and enable rule
+        exclude 'JUnitPublicNonTestMethod' //TODO: Fix the code and enable rule
+    }
+
+    ruleset('rulesets/concurrency.xml') {
+        exclude 'SynchronizedMethod'         //TODO: Fix the code and enable rule
+    }
+
+    ruleset('rulesets/unnecessary.xml') {
+        exclude 'UnnecessaryConstructor'
+        exclude 'UnnecessaryReturnKeyword'   //TODO: Fix the code and enable rule
+    }
+
+    ruleset('rulesets/dry.xml') {
+        exclude 'DuplicateStringLiteral' // TODO: analyze usage and verify correct code
+        exclude 'DuplicateNumberLiteral'    //TODO: Fix the code and enable rule
+    }
+
+    ruleset('rulesets/design.xml')
+
+    ruleset('rulesets/unused.xml') {
+        exclude 'UnusedPrivateField'    //TODO: Fix the code and enable rule
+        exclude 'UnusedPrivateMethod'   //TODO: Fix the code and enable rule
+        exclude 'UnusedVariable'        //TODO: Fix the code and enable rule
+    }
 }

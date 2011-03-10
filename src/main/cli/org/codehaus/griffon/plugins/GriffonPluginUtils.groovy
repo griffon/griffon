@@ -416,5 +416,5 @@ class VersionComparator implements Comparator {
     }
 
     boolean equals(obj) { false }
-    int hashCode() { super.hashCode() }
+    int hashCode() { System.identityHashCode(this) }
 }
