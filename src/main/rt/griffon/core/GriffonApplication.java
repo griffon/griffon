@@ -97,7 +97,7 @@ public interface GriffonApplication {
     public enum Event {
         LOG4J_CONFIG_START("Log4jConfigStart"), UNCAUGHT_EXCEPTION_THROWN,
         LOAD_ADDONS_START, LOAD_ADDONS_END, LOAD_ADDON_START, LOAD_ADDON_END,
-        BOOTSTRAP_END,
+        BOOTSTRAP_START, BOOTSTRAP_END,
         STARTUP_START, STARTUP_END,
         READY_START, READY_END,
         SHUTDOWN_REQUESTED, SHUTDOWN_ABORTED, SHUTDOWN_START,
@@ -118,7 +118,7 @@ public interface GriffonApplication {
         }
 
         /**
-         * Returns the capitalized String representation of this Events object.
+         * Returns the capitalized String representation of this Event object.
          *
          * @return a capitalized String
          */

@@ -121,6 +121,8 @@ class GriffonApplicationHelper {
             new Log4jConfig().configure(log4jConfig)
         }
 
+        app.event(GriffonApplication.Event.BOOTSTRAP_START.name, [app])
+
         runScriptInsideUIThread(GriffonApplication.Lifecycle.INITIALIZE.name, app)
 
         if(!app.artifactManager) { 

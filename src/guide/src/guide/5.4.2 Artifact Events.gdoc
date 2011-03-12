@@ -1,10 +1,10 @@
 The following events will be triggered by the application when dealing with artifacts
 
 * @NewInstance\[klass, type, instance\]@ - when a new artifact is created.
-* @LoadAddonsStart\[app\]@ - before any [addons|guide:addons] are initialized.
-* @LoadAddonsEnd\[app, addons\]@ - after all [addons|guide:addons] have been initialized. @addons@ is a Map of <name, instance> pairs.
-* @LoadAddonStart\[name, addon, app\]@ - before an addon is initialized.
-* @LoadAddonEnd\[name, addon, app\]@ - after an addon has been initialized.
+* @LoadAddonsStart\[app\]@ - before any [addons|guide:addons] are initialized, during the [Initialize|guide:phase_initialize] phase.
+* @LoadAddonsEnd\[app, addons\]@ - after all [addons|guide:addons] have been initialized, during the [Initialize|guide:phase_initialize] phase. @addons@ is a Map of <name, instance> pairs.
+* @LoadAddonStart\[name, addon, app\]@ - before an addon is initialized, during the [Initialize|guide:phase_initialize] phase.
+* @LoadAddonEnd\[name, addon, app\]@ - after an addon has been initialized, during the [Initialize|guide:phase_initialize] phase.
 
 These events will be triggered when dealing with MVC groups
 
