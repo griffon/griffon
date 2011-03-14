@@ -1,0 +1,64 @@
+Yet another option to externalize a View is a custom XML format that closely ressembles the code that you can find in a Groovy View script. Why XML you ask? Well because it is a ver popular format choice still, some developers prefer writing declarative programming with it. This option is recommended to be paired with Java views, just because if you're writing a Groovy View it makes more sense to use Groovy to write the whole instead. Follow these steps to get it done.
+
+h4. #1 Change the Java View class
+A typical Java View class will extend from [AbstractGriffonView|api:org.codehaus.griffon.runtime.core.AbstractGriffonView]. This super class defines a method named @buildViewFromXml()@ that takes a Map as its sole argument. This map should contain all variables that the builder may require to wire the View, such as 'app', 'controller' and 'model' for example.
+
+{code}
+package sample;
+
+import java.util.Map;
+
+import org.codehaus.griffon.runtime.core.AbstractGriffonView;
+
+public class SampleView extends AbstractGriffonView {
+    private SampleController controller;
+    private SampleModel model;
+
+    public void setController(SampleController controller) {
+        this.controller = controller;
+    }
+
+    public void setModel(SampleModel model) {
+        this.model = model;
+    }
+
+    public void mvcGroupInit(Map<String, ?> args) {
+        buildViewFromXml(args);
+    }
+}
+{code}
+
+h4. #2 Define the XML view
+The @buildViewFromXml()@ method expects an XML file whose name matches the name of the class from where it's called, in this case it should be @SampleViw.xml@. Make sure to place the following contents in @griffon-app/resources/sample/SampleView.xml@
+
+{code}
+<application title="app.config.application.title"
+             pack="true">
+    <actions>
+        <action id="'clickAction'"
+                name="'Click'"
+                closure="{controller.click(it)}"/>
+    </actions>
+
+    <gridLayout cols="1" rows="3"/>
+    <textField id="'input'" columns="20"
+        text="bind('value', target: model)"/>
+    <textField id="'output'" columns="20"
+        text="bind{model.value}" editable="false"/>
+    <button action="clickAction"/>
+</application>
+{code}
+
+Notice that every string literal value must be escaped with additional quotes otherwise the builder will have trouble setting the appropriate values. When the time comes for the builder to parse the view it will translate the XML to a Groovy scritpt then interpret it. This is the generated Groovy script that matches the previous XML definition
+
+{code}
+application(title: app.config.application.title, pack: true) {
+  actions {
+    action(id: 'clickAction', name: 'Click', closure: {controller.click(it)})
+  }
+  gridLayout(cols: 1, rows: 3)
+  textField(id: 'input', text: bind('value', target: model), columns: 20)
+  textField(id: 'output', text: bind{model.value}, columns: 20, editable: false)
+  button(action: clickAction)
+}
+{code}

@@ -1,0 +1,61 @@
+[NetBeans|http://netbeans.org] comes with a visual designer named Matisse which is quite popular among a good number of developers. Matisse views are usually defined by a Java class. Most of the times all UI widgets are exposed as fields on the Java class. Based with this information Griffon can generate a View script that is backed by this particular Java class. Follow these steps to reuse a Matisse view.
+
+h4. #1 Place the Matisse View in your application
+If you have access to the View's source code then please it somewhere in the application's source tree. A matching package to the traget MVC group in @src/main@ is what is preferred. However, if the View is distributed in byte code form the make sure to place the jar that contains the View inside the application's @lib@ directory. Alternatively you can use the Dependency DSL if the jar is available from a jar file repository (such as Maven or Ivy). Lastly, make sure that you have added the jar that contains @GroupLayout@, Matisse's work horse. this is easily accomplished by adding the following confuration in @griffon-app/conf/BuildConfig.groovy@
+
+{code}
+griffon.project.dependency.resolution = {
+    repositories {
+        // enable this option in an existing 'repositories' block
+        mavenCentral()
+    }
+    dependencies {
+        // add this to an existing 'dependencies' block
+        compile 'org.swinglabs:swing-layout:1.0.3'
+    }
+}
+{code}
+
+h4. #2 Convert the View into a Script
+Griffon includes a script commmand target that can read a Matisse View and generate a Groovy View Script from it: @[generate-view-script|commandLine]@. Execute the command by specifying the name of the Java class that defines the Matisse View, like this
+
+{code}
+griffon generate-view-script sample.LoginDialog
+{code}
+
+This command should generate the file @griffon-app/views/sample/LoginDialogView.groovy@ with the following contents
+
+{code}
+// create instance of view object
+widget(new LoginDialog(), id:'loginDialog')
+
+noparent {
+    // javax.swing.JTextField usernameField declared in LoginDialog
+    bean(loginDialog.usernameField, id:'usernameField')
+    // javax.swing.JPasswordField passwordField declared in LoginDialog
+    bean(loginDialog.passwordField, id:'passwordField')
+    // javax.swing.JButton okButton declared in LoginDialog
+    bean(loginDialog.okButton, id:'okButton')
+    // javax.swing.JButton cancelButton declared in LoginDialog
+    bean(loginDialog.cancelButton, id:'cancelButton')
+}
+return loginDialog
+{code}
+
+h4. #3 Tweak the generated View
+From here on you can update the generated View as you see fit, for example by adding bindings to each field and actions to the buttons
+
+{code}
+widget(new LoginDialog(mainFrame, true), id:'loginDialog')
+noparent {
+    bean(loginDialog.usernameField, id:'usernameField',
+         text: bind(target: model, 'username'))
+    bean(loginDialog.passwordField, id:'passwordField',
+         text: bind(target: model, 'password'))
+    bean(loginDialog.okButton, id:'okButton',
+         actionPerformed: controller.loginOk)
+    bean(loginDialog.cancelButton, id:'cancelButton',
+         actionPerformed: controller.loginCancel)
+}
+return loginDialog
+{code}
