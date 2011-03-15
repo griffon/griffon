@@ -131,20 +131,3 @@ class UIThreadHelper {
         return executorService.submit(callable)
     }
 }
-
-/**
- * Helper class that executes a Closure as Callable.
- *
- * @author Andres Almiray
- */
-private class CallableClosure implements Callable {
-    private final Closure closure
-
-    CallableClosure(Closure closure) {
-        this.closure = closure
-    }
-
-    public Object call() {
-        return closure()
-    }
-}
