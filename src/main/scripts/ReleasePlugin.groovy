@@ -743,7 +743,7 @@ target(updatePluginsListManually: "Updates the plugin list by manually reading e
     try {
         def recreateCache = false
         document = null
-        if (luginsListFile.exists()) {
+        if (pluginsListFile.exists()) {
             try {
                 document = DOMBuilder.parse(new FileReader(pluginsListFile))
             } catch (Exception e) {

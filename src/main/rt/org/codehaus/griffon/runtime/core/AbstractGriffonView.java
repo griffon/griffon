@@ -27,7 +27,7 @@ import griffon.core.GriffonView;
 import griffon.core.GriffonViewClass;
 import griffon.util.Xml2Groovy;
 
-import static griffon.util.GriffonNameUtils.isBlank;;
+import static griffon.util.GriffonNameUtils.isBlank;
 
 /**
  * Base implementation of the GriffonView interface.
