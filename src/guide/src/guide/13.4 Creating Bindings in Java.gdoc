@@ -37,7 +37,7 @@ public class SampleView extends AbstractGriffonView {
         BindUtils.binding()
                  .withSource(builder.getVariable("input"))
                  .withSourceProperty("text")
-                 .withTarget(builder.getVariable("model"))
+                 .withTarget(model))
                  .withTargetProperty("value")
                  .make(builder);
 
@@ -47,7 +47,7 @@ public class SampleView extends AbstractGriffonView {
          *      target: input, targetProperty: 'text')
          */
         BindUtils.binding()
-                 .withSource(builder.getVariable("model"))
+                 .withSource(model)
                  .withSourceProperty("value")
                  .withTarget(builder.getVariable("output"))
                  .withTargetProperty("text")
@@ -57,9 +57,9 @@ public class SampleView extends AbstractGriffonView {
 {code}
 
 The following rules apply:
-* both @source@ and @target@ values must be specified. An @IllegalArgumentException@ will be throw if that's not the case.
-* both @source@ and @target@ instances must be observable. This does not imply that both implement the [Observable|api:griffon.core.Observable] per se, as Swing components do not.
-* either @sourceProperty@ or @targetProperty@ can be omitted but not both. The missing value will be taken from the other.
+* both @source@ and @target@ values must be specified. An @IllegalArgumentException@ will be thrown if that's not the case.
+* both @source@ and @target@ instances must be observable. This does not imply that both must implement [Observable|api:griffon.core.Observable] per se, as Swing components do not.
+* either @sourceProperty@ or @targetProperty@ can be omitted but not both. The missing value will be taken from the other property.
 * the @builder@ instance must be able to resolve the @bind()@ node. This is typically the case for the default builder supplied to Views (because Swingbuilder is included).
 
 Bindings created in this way also support the following attributes: @mutual@, @converter@ and @validator@. The next snippet improves on the previous example by setting a converter and a validator, only numeric values will be accepted.
@@ -104,7 +104,7 @@ public class SampleView extends AbstractGriffonView {
         BindUtils.binding()
                  .withSource(builder.getVariable("input"))
                  .withSourceProperty("text")
-                 .withTarget(builder.getVariable("model"))
+                 .withTarget(model)
                  .withTargetProperty("value")
                  .withConverter(new CallableWithArgs<String>() {
                       public String call() {
@@ -132,7 +132,7 @@ public class SampleView extends AbstractGriffonView {
          *      target: input, targetProperty: 'text')
          */
         BindUtils.binding()
-                 .withSource(builder.getVariable("model"))
+                 .withSource(model)
                  .withSourceProperty("value")
                  .withTarget(builder.getVariable("output"))
                  .withTargetProperty("text")
