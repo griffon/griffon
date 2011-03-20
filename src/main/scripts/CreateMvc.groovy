@@ -46,27 +46,39 @@ Type in griffon create-addon then execute this command again."""
     mvcClassName = GCU.getClassNameRepresentation(name)
     mvcFullQualifiedClassName = "${pkg?pkg:''}${pkg?'.':''}$mvcClassName"
 
-    createArtifact(
-        name: mvcFullQualifiedClassName,
-        suffix: "Model",
-        type: "Model",
-        path: "griffon-app/models")
+    String modelTemplate      = 'Model'
+    String viewTemplate       = 'View'
+    String controllerTemplate = 'Controller'
+    if(argsMap.group) {
+        modelTemplate      = argsMap.group + modelTemplate
+        viewTemplate       = argsMap.group + viewTemplate
+        controllerTemplate = argsMap.group + controllerTemplate
+    }
 
     createArtifact(
         name: mvcFullQualifiedClassName,
-        suffix: "View",
-        type: "View",
-        path: "griffon-app/views")
+        suffix: 'Model',
+        type: 'Model',
+        template: modelTemplate,
+        path: 'griffon-app/models')
 
     createArtifact(
         name: mvcFullQualifiedClassName,
-        suffix: "Controller",
-        type: "Controller",
-        path: "griffon-app/controllers")
+        suffix: 'View',
+        type: 'View',
+        template: viewTemplate,
+        path: 'griffon-app/views')
+
+    createArtifact(
+        name: mvcFullQualifiedClassName,
+        suffix: 'Controller',
+        type: 'Controller',
+        template: controllerTemplate,
+        path: 'griffon-app/controllers')
 
     createIntegrationTest(
         name: mvcFullQualifiedClassName,
-        suffix: "")
+        suffix: '')
 
     if (isAddonPlugin) {
         // create mvcGroup in a plugin
