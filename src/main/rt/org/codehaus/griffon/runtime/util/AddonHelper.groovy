@@ -48,7 +48,7 @@ public class AddonHelper {
 
     static void handleAddonsAtStartup(GriffonApplication app) {
         LOG.info("Loading addons [START]")
-        app.event("LoadAddonsStart", [app])
+        app.event(GriffonApplication.Event.LOAD_ADDONS_START.name, [app])
 
         for (node in app.builderConfig) {
             String nodeName = node.key
@@ -74,11 +74,11 @@ public class AddonHelper {
             } catch (MissingMethodException mme) {
                 if (mme.method != 'addonPostInit') throw mme
             }
-            app.event("LoadAddonEnd", [name, addon, app])
+            app.event(GriffonApplication.Event.LOAD_ADDON_END.name, [name, addon, app])
             if(LOG.infoEnabled) LOG.info("Loaded addon $name")
         }
 
-        app.event("LoadAddonsEnd", [app, app.addonManager.addons])
+        app.event(GriffonApplication.Event.LOAD_ADDONS_END.name, [app, app.addonManager.addons])
         LOG.info("Loading addons [END]")
     }
 
@@ -100,7 +100,7 @@ public class AddonHelper {
         UIThreadHelper.enhance(addonMetaClass)
 
         if(LOG.infoEnabled) LOG.info("Loading addon $addonName with class ${addon.class.name}")
-        app.event("LoadAddonStart", [addonName, addon, app])
+        app.event(GriffonApplication.Event.LOAD_ADDON_START.name, [addonName, addon, app])
 
         addon.addonInit(app)
         addMVCGroups(app, addon.mvcGroups)
@@ -240,20 +240,12 @@ public class AddonHelper {
         }
     }
 
-    private static ignoreMissingPropertyException(Closure closure) {
-        try {
-            closure()
-        } catch (MissingPropertyException ignored) {
-            // ignore
-        }
-    }
-
     static void addMVCGroups(GriffonApplication app, Map<String, Map<String, String>> groups) {
         groups.each {k, v -> app.addMvcGroup(k, v) }
     }
 
     static void addFactories(UberBuilder builder, Map factories, String addonName, String prefix) {
-        builder.registrationGroup.get(addonName, new TreeSet<String>())
+        builder.registrationGroup.get(addonName, [] as TreeSet)
         factories.each {String name, factoryOrBean ->
             if(factoryOrBean instanceof Factory) {
                 builder.registerFactory(name, addonName, factoryOrBean)
@@ -264,14 +256,14 @@ public class AddonHelper {
     }
 
     static void addMethods(UberBuilder builder, Map<String, Closure> methods, String addonName, String prefix) {
-        builder.registrationGroup.get(addonName, new TreeSet<String>())
+        builder.registrationGroup.get(addonName, [] as TreeSet)
         methods.each {String name, Closure closure ->
             builder.registerExplicitMethod(name, addonName, closure)
         }
     }
 
     static void addProperties(UberBuilder builder, Map<String, List<Closure>> props, String addonName, String prefix) {
-        builder.registrationGroup.get(addonName, new TreeSet<String>())
+        builder.registrationGroup.get(addonName, [] as TreeSet)
         props.each {String name, Map<String, Closure> closures ->
             builder.registerExplicitProperty(name, addonName, closures.get, closures.set)
         }

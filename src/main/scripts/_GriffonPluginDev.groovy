@@ -152,9 +152,9 @@ private generateDependencyDescriptor() {
     }
 }
 
-private def loadBasePlugin() {
-    PluginManagerHolder.pluginManager?.allPlugins?.find { it.basePlugin }
-}
+// private def loadBasePlugin() {
+//     PluginManagerHolder.pluginManager?.allPlugins?.find { it.basePlugin }
+// }
 
 target(packagePlugin:"Packages a Griffon plugin") {
     depends (pluginDocs)
@@ -200,8 +200,8 @@ target(packagePlugin:"Packages a Griffon plugin") {
     //     pluginExcludes.addAll(plugin?.pluginExcludes)
     // }
 
-    def includesList = pluginIncludes.join(",")
-    def excludesList = pluginExcludes.join(",")
+    // def includesList = pluginIncludes.join(",")
+    // def excludesList = pluginExcludes.join(",")
     def libsDir = new File("${projectWorkDir}/tmp-libs")
     ant.delete(dir:libsDir, failonerror:false)
     def lowerVersion = GriffonPluginUtils.getLowerVersion(pluginGriffonVersion)

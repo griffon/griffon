@@ -1,0 +1,111 @@
+Since version 0.9.1 Griffon supports writing artifacts in JVM languages other than Groovy. The first of such languages is Java and it's supported in core by default. Additional languague support will be provided by plugins.
+
+h4. Creating a Non-Groovy Artifact
+
+Many of the @create-*@ scripts that come bundled with Griffon support an additional parameter that can be used to specify the language or filetype of the artifact. Non-Groovy artifacts must extend a particular class in order to receive all the benefits of a typical artifact. The default artifact templates can handle both Groovy and Java types. The following command will create an application that uses Java as the default language for the the initial MVC group
+
+{code}
+griffon create-app simple -fileType=java
+{code}
+
+The fileType switch indicates that the templates must pick a Java based template first. If no suitable template is found then a Groovy based template will be used. The setting of this flag is saved in the application's build configuration, this way you don't need to specific the fileType switch again if your intention is to create another artifact of the same type. Of course you can specify the flag at any time with a different value. It's worth mentioning that the default Groovy based template will be used if a suitable template for the specified fileType cannot be found.
+
+Peeking into each member of the @simple@ MVC group we find the following code. First the Model
+
+{code}
+package simple;
+
+import org.codehaus.griffon.runtime.core.AbstractGriffonModel;
+
+public class SimpleModel extends AbstractGriffonModel {
+    // an observable property
+    // private String input;
+
+    // public String getInput() {
+    //    return input;
+    // }
+
+    // public void setInput(String input) {
+    //    firePropertyChange("input", this.input, this.input = input);
+    // }
+}
+{code}
+
+Next is the Controller
+
+{code}
+package simple;
+
+import java.awt.event.ActionEvent;
+import org.codehaus.griffon.runtime.core.AbstractGriffonController;
+
+public class SimpleController extends AbstractGriffonController {
+    private SimpleModel model;
+
+    public void setModel(SimpleModel model) {
+        this.model = model;
+    }
+
+    /*
+    public void action(ActionEvent e) {
+    }
+    */
+}
+{code}
+
+And finally the View
+
+{code}
+package simple;
+
+import java.awt.*;
+import javax.swing.*;
+import java.util.Map;
+
+import griffon.swing.SwingGriffonApplication;
+import griffon.swing.WindowManager;
+import org.codehaus.griffon.runtime.core.AbstractGriffonView;
+
+public class SimpleView extends AbstractGriffonView {
+    private SimpleController controller;
+    private SimpleModel model;
+
+    public void setController(SimpleController controller) {
+        this.controller = controller;
+    }
+
+    public void setModel(SimpleModel model) {
+        this.model = model;
+    }
+
+    public void mvcGroupInit(Map<String, ?> args) {
+        execSync(new Runnable() {
+            public void run() {
+                JFrame view = new JFrame("simple");
+                view.setIconImage(getImage("/griffon-icon-48x48.png"));
+                // uncomment the following lines if targeting +JDK6
+                // view.setIconImages(java.util.Arrays.asList(
+                //     getImage("/griffon-icon-48x48.png"),
+                //     getImage("/griffon-icon-32x32.png"),
+                //     getImage("/griffon-icon-16x16.png")
+                // ));
+                view.setLocationByPlatform(true);
+                view.getContentPane().add(init());
+                view.pack();
+                ((SwingGriffonApplication) getApp()).getWindowManager().attach(view);
+            }
+        });
+    }
+
+    // build the UI
+    private JComponent init() {
+        JPanel panel = new JPanel(new BorderLayout());
+        panel.add(new JLabel("Content Goes Here"), BorderLayout.CENTER);
+        return panel;
+    }
+
+    private Image getImage(String path) {
+        return Toolkit.getDefaultToolkit().getImage(SimpleView.class.getResource(path));
+    }
+}
+{code}

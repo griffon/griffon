@@ -92,6 +92,7 @@ public class EventPublisherASTTransformation implements ASTTransformation, Opcod
      * void removeEventListener(Object),
      * void removeEventListener(String,Closure), and
      * void publishEvent(String, List = []).  If any are defined all
+     * void publishEventOutside(String, List = []).  If any are defined all
      * void publishEventAsync(String, List = []).  If any are defined all
      * must be defined or a compilation error results.
      *
@@ -111,6 +112,8 @@ public class EventPublisherASTTransformation implements ASTTransformation, Opcod
                 foundRemove = foundRemove || method.getName().equals("removeEventListener") && method.getParameters().length == 2;
                 foundPublish = foundPublish || method.getName().equals("publishEvent") && method.getParameters().length == 1;
                 foundPublish = foundPublish || method.getName().equals("publishEvent") && method.getParameters().length == 2;
+                foundPublish = foundPublish || method.getName().equals("publishEventOutside") && method.getParameters().length == 1;
+                foundPublish = foundPublish || method.getName().equals("publishEventOutside") && method.getParameters().length == 2;
                 foundPublish = foundPublish || method.getName().equals("publishEventAsync") && method.getParameters().length == 1;
                 foundPublish = foundPublish || method.getName().equals("publishEventAsync") && method.getParameters().length == 2;
                 if (foundAdd && foundRemove && foundPublish) {
@@ -143,6 +146,7 @@ public class EventPublisherASTTransformation implements ASTTransformation, Opcod
      * <code>public void removeEventListener(Object)</code>
      * <code>public void removeEventListener(String, Closure)</code>
      * <code>public void publishEvent(String,List = [])</code>
+     * <code>public void publishEventOutside(String,List = [])</code>
      * <code>public void publishEventAsync(String,List = [])</code>
      *
      * @param declaringClass the class to which we add the support field and methods
@@ -248,6 +252,26 @@ public class EventPublisherASTTransformation implements ASTTransformation, Opcod
                                 new MethodCallExpression(
                                         new FieldExpression(erField),
                                         "publish",
+                                        new ArgumentListExpression(
+                                                new Expression[]{
+                                                        new VariableExpression("name"),
+                                                        new VariableExpression("args")})))));
+
+        // add method:
+        // void publishEventOutside(String name, List args = []) {
+        //     this$eventRouter.publishEventOutside(name, args)
+        //  }
+        declaringClass.addMethod(
+                new MethodNode(
+                        "publishEventOutside",
+                        ACC_PUBLIC | ACC_SYNTHETIC,
+                        ClassHelper.VOID_TYPE,
+                        new Parameter[]{new Parameter(ClassHelper.STRING_TYPE, "name"), args},
+                        ClassNode.EMPTY_ARRAY,
+                        new ExpressionStatement(
+                                new MethodCallExpression(
+                                        new FieldExpression(erField),
+                                        "publishOutside",
                                         new ArgumentListExpression(
                                                 new Expression[]{
                                                         new VariableExpression("name"),

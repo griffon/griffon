@@ -1,0 +1,21 @@
+All Griffon artifacts share common behavior. This behavior is captured by an interface named [griffon.core.GriffonArtifact|api:griffon.core.GriffonArtifact]. Additional interfaces with more explicit behavior exist per each artifact type. The following is a list of the basic types and their corresponding interface
+
+ * Model -> [griffon.core.GriffonModel|api:griffon.core.GriffonModel]
+ * View -> [griffon.core.GriffonView|api:griffon.core.GriffonView]
+ * Controller -> [griffon.core.GriffonController|api:griffon.core.GriffonController]
+ * Service -> [griffon.core.GriffonService|api:griffon.core.GriffonService]
+
+Starting with Griffon 0.9.1 the compiler will make sure that each artifact implements its corresponding interface via AST injection. This feature can be very useful when accessing artifacts from languages other than Groovy (see section [13.1 Dealing with Non-Groovy Artifacts|guide:nonGroovyArtifacts] to learn more about this kind of artifacts).
+
+{note}
+AST injection is always enabled unless you disable it as explained in section [4.6.2 Disable AST Injection|guide:4.6.2 Disable AST Injection].
+{note}
+
+Additionally to each artifact type you will find a companion *GriffonClass* that is specialized for each type. These specialized classes can be used to discover metadata about a particular artifact. The following is a list of the companion GriffonClass for each of the basic artifacts found in core
+
+ * Model -> [griffon.core.GriffonModelClass|api:griffon.core.GriffonModelClass]
+ * View -> [griffon.core.GriffonViewClass|api:griffon.core.GriffonViewClass]
+ * Controller -> [griffon.core.GriffonControllerClass|api:griffon.core.GriffonControllerClass]
+ * Service -> [griffon.core.GriffonServiceClass|api:griffon.core.GriffonServiceClass]
+
+Be aware that additional artifacts provided by plugins (such as Charts and Wizards) may provide their own interface and companion GriffonClasse. These too will be available when querying the @ArtifactManager@.

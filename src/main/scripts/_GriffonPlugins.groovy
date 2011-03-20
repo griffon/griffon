@@ -29,7 +29,7 @@ import griffon.util.Metadata
  */
 
 // No point doing this stuff more than once.
-if (getBinding().variables.containsKey("_griffon_plugins_called")) return
+if (getBinding().variables.containsKey("_griffon_plugins_called")) return true
 _griffon_plugins_called = true
 
 includeTargets << griffonScript("_GriffonClean")

@@ -75,7 +75,7 @@ public class GriffonTestSuite extends TestSuite {
     }
 
     public List getCleaningOrder() {
-        return (cleaningOrder != null) ? cleaningOrder : new ArrayList()
+        return (cleaningOrder != null) ? cleaningOrder : [] 
     }
 
 //    public boolean isTransactional() {

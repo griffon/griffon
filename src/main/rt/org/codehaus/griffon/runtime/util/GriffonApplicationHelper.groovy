@@ -30,12 +30,14 @@ import org.codehaus.griffon.runtime.core.ServiceArtifactHandler
 import griffon.util.Metadata
 import griffon.util.Environment
 import griffon.util.UIThreadHelper
+import griffon.util.GriffonExceptionHandler
 import org.codehaus.groovy.runtime.InvokerHelper
 
 import org.codehaus.griffon.runtime.logging.Log4jConfig
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import org.apache.log4j.LogManager
+import org.apache.log4j.helpers.LogLog
 
 /**
  * Utility class for boostrapping an application and handling of MVC groups.</p>
@@ -62,7 +64,25 @@ class GriffonApplicationHelper {
         }
         return mc
     }
-    
+
+    private static ConfigObject loadConfig(ConfigSlurper configSlurper, Class configClass, String configFileName) {
+        ConfigObject config = new ConfigObject()
+        try {
+            if(configClass != null) {
+                config.merge(configSlurper.parse(configClass))
+            }
+            InputStream is = Thread.currentThread().contextClassLoader.getResourceAsStream(configFileName + '.properties')
+            if(is != null) {
+                Properties p = new Properties()
+                p.load(is)
+                config.merge(configSlurper.parse(p))
+            }
+        } catch(x) {
+            LogLog.warn("Cannot read configuration [class: $configClass?.name, file: $configFileName]", x)
+        }
+        config
+    }
+
     /**
      * Setups an application.<p>
      * This method performs the following tasks<ul>
@@ -82,14 +102,11 @@ class GriffonApplicationHelper {
         Metadata.current.getGriffonWorkingDir()
 
         ConfigSlurper configSlurper = new ConfigSlurper(Environment.current.name)
-        app.config = configSlurper.parse(app.appConfigClass)
-        try {
-            def config = configSlurper.parse(app.configClass)
-            app.config.merge(config)
-        } catch(x) {
-            // ignore
-        }
-        app.builderConfig = configSlurper.parse(app.builderClass)
+        app.config = loadConfig(configSlurper, app.appConfigClass, GriffonApplication.Configuration.APPLICATION.name)
+        app.config.merge(loadConfig(configSlurper, app.configClass, GriffonApplication.Configuration.CONFIG.name))
+        GriffonExceptionHandler.configure(app.config.flatten([:]))
+
+        app.builderConfig = loadConfig(configSlurper, app.builderClass, GriffonApplication.Configuration.BUILDER.name)
 
         def eventsClass = app.eventsClass
         if (eventsClass) {
@@ -99,12 +116,14 @@ class GriffonApplicationHelper {
 
         def log4jConfig = app.config.log4j
         if (log4jConfig instanceof Closure) {
-            app.event('Log4jConfigStart', [log4jConfig])
+            app.event(GriffonApplication.Event.LOG4J_CONFIG_START.name, [log4jConfig])
             LogManager.resetConfiguration()
             new Log4jConfig().configure(log4jConfig)
         }
 
-        runScriptInsideUIThread('Initialize', app)
+        app.event(GriffonApplication.Event.BOOTSTRAP_START.name, [app])
+
+        runScriptInsideUIThread(GriffonApplication.Lifecycle.INITIALIZE.name, app)
 
         if(!app.artifactManager) { 
             app.artifactManager = new DefaultArtifactManager(app)
@@ -128,7 +147,7 @@ class GriffonApplicationHelper {
             app.addMvcGroup(k, v.inject([:]) {m, e -> m[e.key as String] = e.value as String; m})
         }
 
-        app.event('BootstrapEnd', [app])
+        app.event(GriffonApplication.Event.BOOTSTRAP_END.name, [app])
     }
 
     /**
@@ -200,7 +219,7 @@ class GriffonApplicationHelper {
         MetaClass mc = griffonClass?.getMetaClass() ?: expandoMetaClassFor(klass)
         enhance(app, klass, mc, instance)
 
-        app.event('NewInstance',[klass,type,instance])
+        app.event(GriffonApplication.Event.NEW_INSTANCE.name, [klass, type, instance])
         return instance
     }
 
@@ -247,7 +266,6 @@ class GriffonApplicationHelper {
         Map<String, MetaClass> metaClassMap = [:]
         Map<String, Class> klassMap = [:]
         Map<String, GriffonClass> griffonClassMap = [:]
-        ClassLoader classLoader = app.getClass().classLoader
         app.mvcGroups[mvcType].each {k, v ->
             GriffonClass griffonClass = app.artifactManager.findGriffonClass(v)
             Class klass = griffonClass?.clazz ?: loadClass(app, v)
@@ -338,9 +356,7 @@ class GriffonApplicationHelper {
             }
         }
 
-        // deprecate this one
-        // app.event('CreateMVCGroup',[mvcName, instanceMap.model, instanceMap.view, instanceMap.controller, mvcType, instanceMap])
-        app.event('CreateMVCGroup',[mvcType, mvcName, instanceMap])
+        app.event(GriffonApplication.Event.CREATE_MVC_GROUP.name, [mvcType, mvcName, instanceMap])
         return instanceMap
     }
 
@@ -409,6 +425,7 @@ class GriffonApplicationHelper {
             app.builders[mvcName]?.dispose()
         } catch(MissingMethodException mme) {
             // TODO find out why this call breaks applet mode on shutdown
+            if(LOG.errorEnabled) LOG.error("Application encountered an error while destroying group '$mvcName'", mme)
         }
 
         // remove the refs from the app caches
@@ -418,7 +435,7 @@ class GriffonApplicationHelper {
         app.builders.remove(mvcName)
         app.groups.remove(mvcName)
 
-        app.event("DestroyMVCGroup",[mvcName])
+        app.event(GriffonApplication.Event.DESTROY_MVC_GROUP.name, [mvcName])
     }
 
     static Class loadClass(GriffonApplication app, String className) throws ClassNotFoundException {

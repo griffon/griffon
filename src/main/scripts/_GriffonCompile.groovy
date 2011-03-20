@@ -94,7 +94,13 @@ target(compile: "Implementation of compilation phase") {
         compileSrc(classpathId, compilerPaths.curry(classpathId))
         compileSrc(classpathId) {
             src(path: "${basedir}/griffon-app/conf")
-            include(name: "*.groovy")
+            include(name: '*.groovy')
+        }
+        ant.copy(todir: classesDirPath) {
+            fileset(dir: "${basedir}/griffon-app/conf") {
+                include(name: '*.properties')
+                include(name: '*.xml')
+            }
         }
         addUrlIfNotPresent classLoader, griffonSettings.pluginClassesDir
 

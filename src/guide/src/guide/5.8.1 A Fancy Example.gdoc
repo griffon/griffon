@@ -1,0 +1,299 @@
+This section demonstrates how an archetype can be created and put to good use for building applications.
+
+h3. #1 Create the archetype
+The first step is to create the archetype project and its descriptor, which can be done by executing the following command
+
+{code}
+griffon create-archetype fancy
+cd fancy
+{code}
+
+h3. #2 Tweak the archetype descriptor
+Locate the archetype descriptor (@application.groovy@) and open it in your favorite editor, paste the following snippet
+
+{code}
+import griffon.util.Metadata
+
+includeTargets << griffonScript("_GriffonPlugins")
+includeTargets << griffonScript("_GriffonInit")
+includeTargets << griffonScript("CreateMvc" )
+
+target(name: 'createApplicationProject',
+       description: 'Creates a new application project',
+       prehook: null, posthook: null) {
+    createProjectWithDefaults()
+
+    argsMap.view = 'MainView'
+    argsMap.controller = 'MainController'
+    argsMap.model = 'MainModel'
+    createMVC()
+
+    createArtifact(
+        name: mvcFullQualifiedClassName,
+        suffix: 'Actions',
+        type: 'MainActions',
+        path: 'griffon-app/views')
+
+    createArtifact(
+        name: mvcFullQualifiedClassName,
+        suffix: 'MenuBar',
+        type: 'MainMenuBar',
+        path: 'griffon-app/views')
+
+    createArtifact(
+        name: mvcFullQualifiedClassName,
+        suffix: 'StatusBar',
+        type: 'MainStatusBar',
+        path: 'griffon-app/views')
+
+    createArtifact(
+        name: mvcFullQualifiedClassName,
+        suffix: 'Content',
+        type: 'MainContent',
+        path: 'griffon-app/views')
+
+    Metadata md = Metadata.getInstance(new File("${basedir}/application.properties"))
+    installPluginExternal md, 'miglayout'
+}
+
+setDefaultTarget(createApplicationProject)
+{code}
+
+This archetype overrides the default templates for Model, View and Controller that will be used for the initial MVC group. It also creates 4 additional files inside @griffon-app/views@. Finally it installs the latest version of the [MigLayout|http://griffon.codehaus.org/Miglayout+Plugin] plugin.
+
+h3. #3 Create the artifact templates
+According to the conventions laid out in the archetype descriptor there must exist a file under @templates/artifacts@ that matches each one of the specified artifact types, in other words we need the following files
+
+*MainModel.groovy*
+{code}
+\@artifact.package\@import groovy.beans.Bindable
+import griffon.util.GriffonNameUtils
+
+class \@artifact.name\@ {
+    @Bindable String status
+
+    void mvcGroupInit(Map args) {
+        status = "Welcome to ${GriffonNameUtils.capitalize(app.config.application.title)}"
+    }
+}
+{code}
+
+*MainController.groovy*
+{code}
+\@artifact.package\@class \@artifact.name\@ {
+    def model
+    def view
+
+    // void mvcGroupInit(Map args) {
+    //    // this method is called after model and view are injected
+    // }
+
+    // void mvcGroupDestroy() {
+    //    // this method is called when the group is destroyed
+    // }
+
+    def newAction = { evt = null ->
+        model.status = 'New action'
+    }
+
+    def openAction = { evt = null ->
+        model.status = 'Open action'
+    }
+
+    def saveAction = { evt = null ->
+        model.status = 'Save action'
+    }
+
+    def saveAsAction = { evt = null ->
+        model.status = 'Save As action'
+    }
+
+    def aboutAction = { evt = null ->
+        model.status = 'About action'
+    }
+
+    def quitAction = { evt = null ->
+        model.status = 'Quit action'
+    }
+
+    def cutAction = { evt = null ->
+        model.status = 'Cut action'
+    }
+
+    def copyAction = { evt = null ->
+        model.status = 'Copy action'
+    }
+
+    def pasteAction = { evt = null ->
+        model.status = 'Paste action'
+    }
+}
+{code}
+
+*MainView.groovy*
+{code}
+\@artifact.package\@build(\@artifact.name.plain\@Actions)
+application(title: GriffonNameUtils.capitalize(app.config.application.title),
+    pack: true,
+    locationByPlatform:true,
+    iconImage: imageIcon('/griffon-icon-48x48.png').image,
+    iconImages: [imageIcon('/griffon-icon-48x48.png').image,
+               imageIcon('/griffon-icon-32x32.png').image,
+               imageIcon('/griffon-icon-16x16.png').image]) {
+   menuBar(build(\@artifact.name.plain\@MenuBar))
+   migLayout(layoutConstraints: 'fill')
+   widget(build(\@artifact.name.plain\@Content), constraints: 'center, grow')
+   widget(build(\@artifact.name.plain\@StatusBar), constraints: 'south, grow')
+}
+{code}
+
+*MainActions.groovy*
+{code}
+\@artifact.package\@import groovy.ui.Console
+
+actions {
+   action( id: 'newAction',
+      name: 'New',
+      closure: controller.newAction,
+      mnemonic: 'N',
+      accelerator: shortcut('N'),
+      smallIcon: imageIcon(resource:"icons/page.png", class: Console),
+      shortDescription: 'New'
+   )
+   action( id: 'openAction',
+      name: 'Open...',
+      closure: controller.openAction,
+      mnemonic: 'O',
+      accelerator: shortcut('O'),
+      smallIcon: imageIcon(resource:"icons/folder_page.png", class: Console),
+      shortDescription: 'Open'
+   )
+   action( id: 'quitAction',
+      name: 'Quit',
+      closure: controller.quitAction,
+      mnemonic: 'Q',
+      accelerator: shortcut('Q'),
+   )
+   action( id: 'aboutAction',
+      name: 'About',
+      closure: controller.aboutAction,
+      mnemonic: 'B',
+      accelerator: shortcut('B')
+   )
+
+   action( id: 'saveAction',
+      name: 'Save',
+      closure: controller.saveAction,
+      mnemonic: 'S',
+      accelerator: shortcut('S'),
+      smallIcon: imageIcon(resource:"icons/disk.png", class: Console),
+      shortDescription: 'Save'
+   )
+   action( id: 'saveAsAction',
+      name: 'Save as...',
+      closure: controller.saveAsAction,
+      accelerator: shortcut('shift S')
+   )
+
+   action(id: 'cutAction',
+      name: 'Cut',
+      closure: controller.cutAction,
+      mnemonic: 'T',
+      accelerator: shortcut('X'),
+      smallIcon: imageIcon(resource:"icons/cut.png", class: Console),
+      shortDescription: 'Cut'
+   )
+   action(id: 'copyAction',
+      name: 'Copy',
+      closure: controller.copyAction,
+      mnemonic: 'C',
+      accelerator: shortcut('C'),
+      smallIcon: imageIcon(resource:"icons/page_copy.png", class: Console),
+      shortDescription: 'Copy'
+   )
+   action(id: 'pasteAction',
+      name: 'Paste',
+      closure: controller.pasteAction,
+      mnemonic: 'P',
+      accelerator: shortcut('V'),
+      smallIcon: imageIcon(resource:"icons/page_paste.png", class: Console),
+      shortDescription: 'Paste'
+   )
+}
+{code}
+
+*MainMenuBar.groovy*
+{code}
+\@artifact.package\@import static griffon.util.GriffonApplicationUtils.*
+
+menuBar = menuBar {
+   menu(text: 'File', mnemonic: 'F') {
+       menuItem(newAction)
+       menuItem(openAction)
+       separator()
+       menuItem(saveAction)
+       menuItem(saveAsAction)
+       if( !isMacOSX ) {
+           separator()
+           menuItem(quitAction)
+       }
+   }
+
+   menu(text: 'Edit', mnemonic: 'E') {
+       menuItem(cutAction)
+       menuItem(copyAction)
+       menuItem(pasteAction)
+   }
+
+   if(!isMacOSX) {
+       glue()
+       menu(text: 'Help', mnemonic: 'H') {
+           menuItem(aboutAction)
+       }
+   }
+}
+{code}
+
+*MainContent.groovy*
+{code}
+\@artifact.package\@label('Main content')
+{code}
+
+*MainStatusBar.groovy*
+{code}
+\@artifact.package\@label(id: 'status', text: bind { model.status })
+{code}
+
+h3. #4 Package and install the archetype
+This step is easily done with a pair of command invocations
+
+{code}
+griffon package-archetype
+griffon install-archetype fancy-griffon-archetype.zip
+{code}
+
+h3. #5 Use the archetype
+Now that the archetype has been installed all that is left is put it to good use, like this
+
+{code}
+griffon create-app sample -archetype=fancy
+{code}
+
+This command should generate the following files in the application directory
+
+* griffon-app
+** controllers
+*** sample
+**** @SampleController@
+** models
+*** sample
+**** @sampleModel@
+** views
+*** sample
+**** @SampleActions@
+**** @SampleContent@
+**** @SampleMenuBar@
+**** @SampleStatusBar@
+**** @SampleView@
+
+If you inspect the @application.properties@ file you'll notice that the miglayout plugin has been installed too.

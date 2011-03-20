@@ -244,14 +244,14 @@ public final class WindowManager implements ShutdownHandler {
          * Triggers a <tt>WindowShown</tt> event with the window as sole argument
          */
         public void componentShown(ComponentEvent event) {
-            app.event("WindowShown", Arrays.asList(event.getSource()));
+            app.event(GriffonApplication.Event.WINDOW_SHOWN.getName(), Arrays.asList(event.getSource()));
         }
 
         /**
          * Triggers a <tt>WindowHidden</tt> event with the window as sole argument
          */
         public void componentHidden(ComponentEvent event) {
-            app.event("WindowHidden", Arrays.asList(event.getSource()));
+            app.event(GriffonApplication.Event.WINDOW_HIDDEN.getName(), Arrays.asList(event.getSource()));
         }
     }
 }

@@ -287,7 +287,6 @@ log4j {
 
     // update the icons in the html
     fileset(dir:"${basedir}/griffon-app/conf/", includes:"**/*.html").each {
-        def fileText = it.getFile().getText()
         ant.replace(file: it.toString()) {
             replacefilter(token: "image:'griffon.jpeg'", value: "image:'griffon.png'")
         }

@@ -16,9 +16,18 @@
 
 package org.codehaus.griffon.runtime.core;
 
+import java.util.Map;
+import java.io.InputStream;
+
+import groovy.lang.Script;
+import groovy.lang.GroovyShell;
+import groovy.util.FactoryBuilderSupport;
+
 import griffon.core.GriffonView;
 import griffon.core.GriffonViewClass;
-import groovy.util.FactoryBuilderSupport;
+import griffon.util.Xml2Groovy;
+
+import static griffon.util.GriffonNameUtils.isBlank;
 
 /**
  * Base implementation of the GriffonView interface.
@@ -40,5 +49,120 @@ public abstract class AbstractGriffonView extends AbstractGriffonMvcArtifact imp
 
     public void setBuilder(FactoryBuilderSupport builder) {
         this.builder = builder;
+    }
+
+    /**
+     * Transforms an XML file into a Groovy script and evaluates it using a builder.</p>
+     * <p>The file name matches the name of this class plus '.xml'. It must be found somewhere
+     * in the classpath.</p>
+     * <p>Every XML attribute that represents a string literal must be single quoted explicitly
+     * otherwise the build will not be able to parse it. The following XML contents</p>
+     * <pre><xmp>
+     * <application title="app.config.application.title"
+     *              pack="true">
+     *     <actions>
+     *         <action id="'clickAction'"
+     *                 name="'Click'"
+     *                 closure="{controller.click(it)}"/>
+     *     </actions>
+     *     <gridLayout cols="1" rows="3"/>
+     *     <textField id="'input'" columns="20"
+     *         text="bind('value', target: model)"/>
+     *     <textField id="'output'" columns="20"
+     *         text="bind{model.value}" editable="false"/>
+     *     <button action="clickAction"/>
+     * </application>
+     * </xmp></pre>
+     *
+     * <p>are translated to</p>
+     * <pre>
+     * application(title: app.config.application.title, pack: true) {
+     *   actions {
+     *     action(id: 'clickAction', name: 'Click', closure: {controller.click(it)})
+     *   }
+     *   gridLayout(cols: 1, rows: 3)
+     *   textField(id: 'input', text: bind('value', target: model), columns: 20)
+     *   textField(id: 'output', text: bind{target.model}, columns: 20, editable: false)
+     *   button(action: clickAction)
+     * }
+     * </pre>
+     *
+     * @param args a Map containing all relevant values that the build might need to build the
+     *             View; this typically includes 'app', 'controller' and 'model'.
+     *
+     * @since 0.9.2
+     */
+    public void buildViewFromXml(Map<String, ?> args) {
+        buildViewFromXml(args, getClass().getName().replace('.','/') + ".xml");
+    }
+
+    /**
+     * Transforms an XML file into a Groovy script and evaluates it using a builder.</p>
+     * <p>Every XML attribute that represents a string literal must be single quoted explicitly
+     * otherwise the build will not be able to parse it. The following XML contents</p>
+     * <pre><xmp>
+     * <application title="app.config.application.title"
+     *              pack="true">
+     *     <actions>
+     *         <action id="'clickAction'"
+     *                 name="'Click'"
+     *                 closure="{controller.click(it)}"/>
+     *     </actions>
+     *     <gridLayout cols="1" rows="3"/>
+     *     <textField id="'input'" columns="20"
+     *         text="bind('value', target: model)"/>
+     *     <textField id="'output'" columns="20"
+     *         text="bind{model.value}" editable="false"/>
+     *     <button action="clickAction"/>
+     * </application>
+     * </xmp></pre>
+     *
+     * <p>are translated to</p>
+     * <pre>
+     * application(title: app.config.application.title, pack: true) {
+     *   actions {
+     *     action(id: 'clickAction', name: 'Click', closure: {controller.click(it)})
+     *   }
+     *   gridLayout(cols: 1, rows: 3)
+     *   textField(id: 'input', text: bind('value', target: model), columns: 20)
+     *   textField(id: 'output', text: bind{target.model}, columns: 20, editable: false)
+     *   button(action: clickAction)
+     * }
+     * </pre>
+     *
+     * @param args a Map containing all relevant values that the build might need to build the
+     *             View; this typically includes 'app', 'controller' and 'model'.
+     * @param fileName the name of an XML file
+     *
+     * @since 0.9.2
+     */
+    public void buildViewFromXml(Map<String, ?> args, String fileName) {
+        if(isBlank(fileName)) {
+            throw new IllegalArgumentException("Invalid file name for externalized view.");
+        }
+   
+        InputStream is = getClass().getClassLoader().getResourceAsStream(fileName);
+        if(is == null) {
+            throw new IllegalArgumentException("Could not read file "+ fileName);
+        }
+
+        String groovyScript = new Xml2Groovy().parse(is);
+        if(isBlank(groovyScript)) {
+            throw new IllegalArgumentException("File "+ fileName +" is empty.");
+        } else if(getLog().isTraceEnabled()) {
+            getLog().trace("View script for "+ fileName +"\n"+ groovyScript);
+        }
+
+        final Script script = new GroovyShell().parse(groovyScript);
+        script.setBinding(getBuilder());
+        for(Map.Entry<String, ?> arg : args.entrySet()) {
+            script.getBinding().setVariable(arg.getKey(), arg.getValue());
+        }
+
+        getApp().execSync(new Runnable() {
+            public void run() {
+                getBuilder().build(script);
+            }
+        });
     }
 }

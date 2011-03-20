@@ -754,20 +754,19 @@ class BuildSettings extends AbstractBuildSettings {
             }
         } as TransferListener
 
-        if (!dependenciesExternallyConfigured) {
-            config.griffon.global.dependency.resolution = IvyDependencyManager.getDefaultDependencies(griffonVersion)
-            def credentials = config.griffon.project.ivy.authentication
-            if (credentials instanceof Closure) {
-                dependencyManager.parseDependencies credentials
-            }
-        }
-        else {
+        if (dependenciesExternallyConfigured) {
             // Even if the dependencies are handled externally, we still
             // need to handle plugin dependencies.
             config.griffon.global.dependency.resolution = {
                 repositories {
                     griffonPlugins()
                 }
+            }
+        } else {
+            config.griffon.global.dependency.resolution = IvyDependencyManager.getDefaultDependencies(griffonVersion)
+            def credentials = config.griffon.project.ivy.authentication
+            if (credentials instanceof Closure) {
+                dependencyManager.parseDependencies credentials
             }
         }
 
@@ -867,7 +866,8 @@ class BuildSettings extends AbstractBuildSettings {
         // null, a default value. This ensures that we don't override
         // settings provided by, for example, the Maven plugin.
         def props = config.toProperties()
-        Metadata metadata = Metadata.current
+        // read metadata file
+        Metadata.current
         if (!griffonWorkDirSet) {
             griffonWorkDir = new File(getPropertyValue(WORK_DIR, props, "${userHome}/.griffon/${griffonVersion}"))
         }

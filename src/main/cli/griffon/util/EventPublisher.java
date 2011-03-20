@@ -46,10 +46,14 @@ import java.lang.annotation.Target;
  * &nbsp;&nbsp;&nbsp;&nbsp;publishes and event in the current thread</li>
  * <li><code>public void publishEvent(java.lang.String, java.util.List)</code><br/>
  * &nbsp;&nbsp;&nbsp;&nbsp;publishes and event in the current thread</li>
+ * <li><code>public void publishEventOutside(java.lang.String)</code><br/>
+ * &nbsp;&nbsp;&nbsp;&nbsp;publishes and event outside of the UI thread</li>
+ * <li><code>public void publishEventOutside(java.lang.String, java.util.List)</code><br/>
+ * &nbsp;&nbsp;&nbsp;&nbsp;publishes and event outside of the UI thread</li>
  * <li><code>public void publishEventAsync(java.lang.String)</code><br/>
- * &nbsp;&nbsp;&nbsp;&nbsp;publishes and event outside of the UI thread</li>
+ * &nbsp;&nbsp;&nbsp;&nbsp;publishes and event outside of the publisher's thread</li>
  * <li><code>public void publishEventAsync(java.lang.String, java.util.List)</code><br/>
- * &nbsp;&nbsp;&nbsp;&nbsp;publishes and event outside of the UI thread</li>
+ * &nbsp;&nbsp;&nbsp;&nbsp;publishes and event outside of the publisher's thread</li>
  * <p/>
  * </ul>
  *

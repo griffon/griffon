@@ -41,27 +41,32 @@ Type in griffon create-addon then execute this command again."""
 
     promptForName(type: "MVC Group")
     def (pkg, name) = extractArtifactName(argsMap['params'][0])
-    def fqn = "${pkg?pkg:''}${pkg?'.':''}${GCU.getClassNameRepresentation(name)}"
+
+    mvcPackageName = pkg ? pkg : ''
+    mvcClassName = GCU.getClassNameRepresentation(name)
+    mvcFullQualifiedClassName = "${pkg?pkg:''}${pkg?'.':''}$mvcClassName"
 
     createArtifact(
-        name: fqn,
+        name: mvcFullQualifiedClassName,
         suffix: "Model",
         type: "Model",
         path: "griffon-app/models")
 
     createArtifact(
-        name: fqn,
+        name: mvcFullQualifiedClassName,
         suffix: "View",
         type: "View",
         path: "griffon-app/views")
 
     createArtifact(
-        name: fqn,
+        name: mvcFullQualifiedClassName,
         suffix: "Controller",
         type: "Controller",
         path: "griffon-app/controllers")
 
-    createIntegrationTest(name: name, suffix: "")
+    createIntegrationTest(
+        name: mvcFullQualifiedClassName,
+        suffix: "")
 
     if (isAddonPlugin) {
         // create mvcGroup in a plugin
@@ -79,9 +84,9 @@ Type in griffon create-addon then execute this command again."""
     def mvcGroups = [
         // MVC Group for "$args"
         '$name' : [
-            model : '${fqn}Model',
-            view : '${fqn}View',
-            controller : '${fqn}Controller'
+            model : '${mvcFullQualifiedClassName}Model',
+            view : '${mvcFullQualifiedClassName}View',
+            controller : '${mvcFullQualifiedClassName}Controller'
         ]
     """) }
 
@@ -100,9 +105,9 @@ mvcGroups {
 mvcGroups {
     // MVC Group for "$name"
     '$name' {
-        model = '${fqn}Model'
-        controller = '${fqn}Controller'
-        view = '${fqn}View'
+        model = '${mvcFullQualifiedClassName}Model'
+        controller = '${mvcFullQualifiedClassName}Controller'
+        view = '${mvcFullQualifiedClassName}View'
     }
 """) }
     }

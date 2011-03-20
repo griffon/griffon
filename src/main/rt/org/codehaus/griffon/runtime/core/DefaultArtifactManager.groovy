@@ -50,7 +50,8 @@ class DefaultArtifactManager extends AbstractArtifactManager {
                 for(className in classes.split(',')) {
                     Class clazz = GriffonApplicationHelper.loadClass(app, className)
                     if(Modifier.isAbstract(clazz.modifiers)) continue
-                    list << new ArtifactInfo(clazz, type)
+                    ArtifactInfo info = new ArtifactInfo(clazz, type)
+                    if(!list.contains(info)) list << info
                 }
             }
         }

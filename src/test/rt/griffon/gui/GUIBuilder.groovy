@@ -29,7 +29,7 @@ import org.codehaus.groovy.reflection.ReflectionUtils
 
 //import groovy.swing.j2d.GraphicsBuilder
 class GUIBuilder extends UberBuilder {
-    protected static final Set<String> BUILDER_PACKAGES = new HashSet<String>();
+    protected static final Set<String> BUILDER_PACKAGES = [] as HashSet
     static {
         // TODO also either dynamically add pacakges of builders or match builders themselves as excludes 
         BUILDER_PACKAGES.add("org.codehaus.groovy.runtime.metaclass");

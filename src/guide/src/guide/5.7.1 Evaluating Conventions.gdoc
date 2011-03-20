@@ -1,8 +1,12 @@
-Before moving onto looking at providing runtime configuration based on conventions you first need to understand how to evaluated those conventions from a plug-in. Essentially every addon provided by a plugin has access to an @app@ variable during its initialization. This variable is an instance of the [GriffonApplication|api:griffon.core.GriffonApplication] interface. From it you can access an @artifactManager@ property of type [ArtifactManager|api:griffon.core.ArtifactManager].
+Every Griffon application exposes all information about its artifacts and addons via a pair of helper classes
+ * @AddonManager@ - used for all installed addons
+ * @ArtifactManager@ - used for all remaining artifacts
 
-The @ArtifactManager@ class provides methods to evaluate the conventions within the project and internally stores references to all classes within a GriffonApplication using subclasses of [GriffonClass|api:griffon.core.GriffonClass] class.
+h4. ArtifactManager
 
-A GriffonClass represents a physical Griffon resources such as a controller or a service. For example to get all @GriffonClass@ instances you can do:
+The @[ArtifactManager|api:griffon.core.ArtifactManager]@ class provides methods to evaluate the conventions within the project and internally stores references to all classes within a GriffonApplication using subclasses of [GriffonClass|api:griffon.core.GriffonClass] class.
+
+A @GriffonClass@ represents a physical Griffon resources such as a controller or a service. For example to get all @GriffonClass@ instances you can call:
 
 {code:java}
 app.artifactManager.allClasses.each { println it.name }
@@ -29,3 +33,9 @@ The @GriffonClass@ interface itself provides a number of useful methods that all
 * @getTrailing@ - Returns the suffix (if any) of the artifact, i.e "Controller"
 
 For a full reference refer to the [javadoc API|api:griffon.core.GriffonClass].
+
+h4. AddonManager
+
+The @[AddonManager|api:griffon.core.AddonManager]@ class is responsible for holding references to all addons (which are of type [griffon.core.GriffonAddon|api:griffon.core.GriffonAddon]), as well as providing metainformation on each addon via an [addon descriptor|api:griffon.core.GriffonAddonDescriptor]. The latter can be used to know at runtime the name and version of a particular addon, useful for building a dynamic About dialog for example.
+
+All addons have the same behavior which is explained in detail in section [12.6 Addons|guide:addons].

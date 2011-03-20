@@ -173,7 +173,7 @@ doWithPlugins = { callback = null ->
     for(p in plugins) {
         def name = p.name
         def version = p.version
-        def fullName = "$name-$version"
+        // def fullName = "$name-$version"
         def pluginDir = getPluginDirForName(name)
         if(!pluginDir) installPluginForName(name)
     }
@@ -232,7 +232,7 @@ generatePluginXml = { File descriptor, boolean compilePlugin = true ->
     def props = ['author','authorEmail','title','description','documentation','license']
     def resourceList = pluginSettings.getArtefactResourcesForOne(descriptor.parentFile.absolutePath)
 
-    def rcComparator = [ compare: {a, b -> a.URI.compareTo(b.URI) } ] as Comparator
+    def rcComparator = [ compare: {a, b -> a.URI <=> b.URI } ] as Comparator
     Arrays.sort(resourceList, rcComparator)
 
     pluginGriffonVersion = "${GriffonUtil.griffonVersion} > *"
@@ -306,7 +306,11 @@ generatePluginXml = { File descriptor, boolean compilePlugin = true ->
 }
 
 target(loadPlugins:"Loads Griffon' plugins") {
-    if(!PluginManagerHolder.pluginManager) { // plugin manager already loaded?
+    if(PluginManagerHolder.pluginManager) { // plugin manager already loaded?
+        // Add the plugin manager to the binding so that it can be accessed
+        // from any target.
+        pluginManager = PluginManagerHolder.pluginManager
+    } else {
         compConfig.setTargetDirectory(classesDir)
         def unit = new CompilationUnit ( compConfig , null , new GroovyClassLoader(classLoader) )
         def pluginFiles = pluginSettings.pluginDescriptors
@@ -324,7 +328,6 @@ target(loadPlugins:"Loads Griffon' plugins") {
             profile("compiling plugins") {
                 unit.compile ()
             }
-            def application
             def pluginClasses = []
             profile("construct plugin manager with ${pluginFiles.inspect()}") {
                 for(plugin in pluginFiles) {
@@ -365,17 +368,11 @@ target(loadPlugins:"Loads Griffon' plugins") {
                 griffonContext.initialise()
                 event("PluginLoadEnd", [pluginManager])
             }
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             GriffonUtil.deepSanitize(e).printStackTrace()
             event("StatusFinal", [ "Error loading plugin manager: " + e.message ])
             exit(1)
         }
-    }
-    else {
-        // Add the plugin manager to the binding so that it can be accessed
-        // from any target.
-        pluginManager = PluginManagerHolder.pluginManager
     }
 }
 

@@ -49,10 +49,10 @@ class UIThreadHelper {
     }
 
     void setUIThreadHandler(UIThreadHandler threadHandler) {
-        if(!this.uiThreadHandler) {
-            this.uiThreadHandler = threadHandler
-        } else {
+        if(this.uiThreadHandler) {
             if(LOG.warnEnabled) LOG.warn("UIThreadHandler is already set, you can't change it!")
+        } else {
+            this.uiThreadHandler = threadHandler
         }
     }
 
@@ -129,22 +129,5 @@ class UIThreadHelper {
      */
     Future executeFuture(ExecutorService executorService = DEFAULT_EXECUTOR_SERVICE, Callable callable) {
         return executorService.submit(callable)
-    }
-}
-
-/**
- * Helper class that executes a Closure as Callable.
- *
- * @author Andres Almiray
- */
-private class CallableClosure implements Callable {
-    private final Closure closure
-
-    CallableClosure(Closure closure) {
-        this.closure = closure
-    }
-
-    public Object call() {
-        return closure()
     }
 }

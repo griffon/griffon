@@ -13,15 +13,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.codehaus.griffon.commons
+package org.codehaus.griffon.commons;
 
-import java.beans.PropertyDescriptor
-import java.lang.reflect.Field
-import java.lang.reflect.Method
-import java.lang.reflect.Modifier
+import java.beans.PropertyDescriptor;
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
 
-
-import org.apache.commons.lang.StringUtils
+import java.util.*;
+import groovy.lang.*;
+import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.*;
 
 /**
@@ -552,22 +553,16 @@ public class GriffonClassUtils {
     public static boolean isStaticProperty( Class clazz, String propertyName)
     {
         Method getter = BeanUtils.findDeclaredMethod(clazz, getGetterName(propertyName), null);
-        if (getter != null)
-        {
+        if (getter != null) {
             return isPublicStatic(getter);
-        }
-        else
-        {
-            try
-            {
+        } else {
+            try {
                 Field f = clazz.getDeclaredField(propertyName);
-                if (f != null)
-                {
+                if (f != null) {
                     return isPublicStatic(f);
                 }
-            }
-            catch (NoSuchFieldException e)
-            {
+            } catch (NoSuchFieldException e) {
+                return false;
             }
         }
 
@@ -601,8 +596,7 @@ public class GriffonClassUtils {
      * @param propertyName
      * @return The name for the getter method for this property, if it were to exist, i.e. getConstraints
      */
-    public static String getGetterName(String propertyName)
-    {
+    public static String getGetterName(String propertyName) {
         return "get" + Character.toUpperCase(propertyName.charAt(0))
             + propertyName.substring(1);
     }
@@ -614,28 +608,22 @@ public class GriffonClassUtils {
      * @param name The property name
      * @return The value if there is one, or null if unset OR there is no such property
      */
-    public static Object getStaticPropertyValue(Class clazz, String name)
-    {
+    public static Object getStaticPropertyValue(Class clazz, String name) {
+        Object value = null;
         Method getter = BeanUtils.findDeclaredMethod(clazz, getGetterName(name), null);
-        try
-        {
-            if (getter != null)
-            {
-                return getter.invoke(null, null);
-            }
-            else
-            {
+        try {
+            if (getter != null) {
+                value = getter.invoke(null, new Object[0]);
+            } else {
                 Field f = clazz.getDeclaredField(name);
-                if (f != null)
-                {
-                    return f.get(null);
+                if (f != null) {
+                    value = f.get(null);
                 }
             }
+        } catch (Exception e) {
+            value = null;
         }
-        catch (Exception e)
-        {
-        }
-        return null;
+        return value;
     }
 
     /**
@@ -781,11 +769,10 @@ public class GriffonClassUtils {
      * @return The logical name
      */
     public static String getLogicalName(String name, String trailingName ) {
-        if(trailingName) {
-            String shortName = getShortName(name);
-            if(shortName.indexOf( trailingName ) > - 1) {
-                return shortName.substring(0, shortName.length() - trailingName.length());
-            }
+        if(StringUtils.isBlank(trailingName)) return name;
+        String shortName = getShortName(name);
+        if(shortName.indexOf(trailingName ) > - 1) {
+            return shortName.substring(0, shortName.length() - trailingName.length());
         }
         return name;
     }
@@ -793,8 +780,6 @@ public class GriffonClassUtils {
     public static String getLogicalPropertyName(String className, String trailingName) {
         return getLogicalName(getPropertyName(className), trailingName);
     }
-
-
 
     /**
      * Retrieves the name of a setter for the specified property name
@@ -813,7 +798,7 @@ public class GriffonClassUtils {
      * @return True if it is a javabean property method
      */
     public static boolean isGetter(String name, Class[] args) {
-        if((!name) || (args == null))return false;
+        if((StringUtils.isBlank(name)) || (args == null))return false;
         if(args.length != 0)return false;
 
         if(name.startsWith("get")) {
@@ -834,7 +819,7 @@ public class GriffonClassUtils {
      * @return The property name equivalent
      */
     public static String getPropertyForGetter(String getterName) {
-        if(!getterName) return null;
+        if(StringUtils.isBlank(getterName)) return null;
 
         if(getterName.startsWith("get")) {
             String prop = getterName.substring(3);
@@ -855,10 +840,9 @@ public class GriffonClassUtils {
             return prop;
         }
         else {
-            return prop.charAt(0).toLowerCase().toString() + prop.substring(1);
+            return String.valueOf(prop.charAt(0)).toLowerCase() + prop.substring(1);
         }
     }
-
 
     /**
      * Returns a property name equivalent for the given setter name or null if it is not a getter
@@ -867,7 +851,7 @@ public class GriffonClassUtils {
      * @return The property name equivalent
      */
     public static String getPropertyForSetter(String setterName) {
-        if(!setterName) return null;
+        if(StringUtils.isBlank(setterName)) return null;
 
         if(setterName.startsWith("set")) {
             String prop = setterName.substring(3);
@@ -877,7 +861,7 @@ public class GriffonClassUtils {
     }
 
     public static boolean isSetter(String name, Class[] args) {
-        if((!name) || (args == null)) return false;
+        if(StringUtils.isBlank(name) || args == null) return false;
 
         if(name.startsWith("set")) {
             if(args.length != 1) return false;
@@ -970,7 +954,7 @@ public class GriffonClassUtils {
      * @return The class name
      */
     public static String getClassName(String logicalName, String trailingName) {
-        if(!logicalName) throw new IllegalArgumentException("Argument [logicalName] cannot be null or blank");
+        if(StringUtils.isBlank(logicalName)) throw new IllegalArgumentException("Argument [logicalName] cannot be null or blank");
 
         String className = logicalName.substring(0,1).toUpperCase() + logicalName.substring(1);
         if(trailingName != null) className = className + trailingName;

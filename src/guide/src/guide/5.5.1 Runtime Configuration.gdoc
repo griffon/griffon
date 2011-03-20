@@ -1,3 +1,12 @@
-The application's runtime configuration is available through the *config* property of the application instance. This is a @ConfigObject@ whose contents come from merging @Application.groovy@ and @Config.groovy@.
+The application's runtime configuration is available through the @config@ property of the application instance. This is a @ConfigObject@ whose contents are obtained by merging @Application.groovy@ and @Config.groovy@. Builder configuration is available through the @builderConfig@ property and reflects the contents of @Builder.groovy@.
 
-Builder configuration is available through the @builderConfig@ property.
+However starting with Griffon 0.9.2 there's an alternative for defining the application's configuration. You can now use properties files instead of Groovy scripts. If both properties files and Groovy scripts are available in the classpath then the settings of the scripts will be overriden by those set in the properties file. Each properties file must match the name of the configuration script. The following table shows the conventions
+
+{table}
+Script File | Properties File
+Application.groovy | Application.properties
+Config.groovy | Config.properties
+Builder.groovy | Builder.properties
+{table}
+
+An application can change the name of the configuration script but it *can not* change the name of the configuration properties file.

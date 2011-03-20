@@ -1,0 +1,90 @@
+The [Artifact API|guide:artifactApi] can be a very powerful ally. Not only it's useful for adding new methods (explained in section [5.7.2 Adding Dynamic Methods at Runtime|guide:5.7.2 Adding Dynamic Methods at Runtime]) but also comes in handy to finding out what application specific attributes an artifact has, for example Controller actions or Model properties. The following screenshot shows a simple application that presents a form based View.
+
+!artifact-api-simple-frame.png!
+
+When the user clicks the @Submit@ button a dialog appears
+
+!artifact-api-simple-dialog.png!
+
+Believe it or not both the View and the Controller know nothing about the specific property names found in the Model. Let's have a look at the Model first
+
+{code}
+package simple
+
+@Bindable
+class SimpleModel {
+    String firstName
+    String lastName
+    String address
+}
+{code}
+
+There are 3 observable properties defined in the Model. Note the usage of [default imports|guide:5.5.8 Default Imports] to avoid an extra line for importing [groovy.beans.Bindable|api:groovy.beans.Bindable]. Now, the Controller on the other hand defines two actions
+
+{code}
+package simple
+
+import griffon.util.GriffonNameUtils as GNU
+
+class SimpleController {
+    def model
+
+    def clear = {
+        model.griffonClass.propertyNames.each { name ->
+            model[name] = ''
+        }
+    }
+
+    @Threading(Threading.Policy.SKIP)
+    def submit = {
+        javax.swing.JOptionPane.showMessageDialog(
+            app.windowManager.windows.find{it.focused},
+            model.griffonClass.propertyNames.collect([]) { name ->
+                "${GNU.getNaturalName(name)} = ${model[name]}"
+            }.join('\n')
+        )
+    }
+}
+{code}
+
+The @clear()@ action is responsible for reseting the values of each Model property. It does so by iterating over the names of the properties found in the Model. The @submit()@ action constructs a list fo model property names and their corresponding values, then presents it in a dialog. Notice that the Controller never refers to a Model property directly by its name, i.e, the Controller doesn't really know that the Model has a @firstName@ property. Finally the View
+
+{code}
+package simple
+
+import griffon.util.GriffonNameUtils as GNU
+
+application(title: 'Simple',
+  pack: true,
+  locationByPlatform:true,
+  iconImage: imageIcon('/griffon-icon-48x48.png').image,
+  iconImages: [imageIcon('/griffon-icon-48x48.png').image,
+               imageIcon('/griffon-icon-32x32.png').image,
+               imageIcon('/griffon-icon-16x16.png').image]) {
+    borderLayout()
+    panel(constraints: CENTER,
+          border: titledBorder(title: 'Person')) {
+        migLayout()
+        model.griffonClass.propertyNames.each { name ->
+            label(GNU.getNaturalName(name), constraints: 'left')
+            textField(columns: 20, constraints: 'growx, wrap',
+                text: bind(name, target: model, mutual: true))
+        }
+    }
+    panel(constraints: EAST,
+          border: titledBorder(title: 'Actions')) {
+        migLayout()
+        controller.griffonClass.actionNames.each { name ->
+            button(GNU.getNaturalName(name),
+                actionPerformed: controller."$name",
+                constraints: 'growx, wrap')
+        }
+    }
+}
+{code}
+
+The View also iterates over the Model's property names in order to construct the form. It follows a similar approach to dynamically discover the actions that the Controller exposes.
+
+{note}
+You must install the [MigLayout Plugin|http://griffon.codehaus.org/MigLayout+Plugin] before running this application.
+{note}

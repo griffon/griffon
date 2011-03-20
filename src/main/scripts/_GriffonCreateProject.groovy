@@ -141,14 +141,13 @@ target(initProject: "Initialise an application or plugin project") {
 }
 
 target(appName : "Evaluates the application name") {
-    if(!argsMap["params"]) {
+    if(argsMap["params"]) {
+        griffonAppName = argsMap["params"].join(" ")
+    } else {
         String type = scriptName.toLowerCase().indexOf('plugin') > -1 ? 'Plugin' : 'Application'
         ant.input(message:"$type name not specified. Please enter:",
                   addProperty:"griffon.app.name")
         griffonAppName = ant.antProject.properties."griffon.app.name"
-    }
-    else {
-        griffonAppName = argsMap["params"].join(" ")
     }
 
     if (!argsMap["inplace"]) {

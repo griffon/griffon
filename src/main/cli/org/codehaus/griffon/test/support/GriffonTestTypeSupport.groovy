@@ -233,7 +233,7 @@ abstract class GriffonTestTypeSupport implements GriffonTestType {
         try {
             getTestClassLoader().loadClass(className)
         } catch (ClassNotFoundException e) {
-            throw new RuntimeException("Could not load class in test type '$name'", e)
+            throw new IllegalArgumentException("Could not load class in test type '$name'", e)
         }
     }
 

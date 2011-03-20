@@ -228,10 +228,10 @@ class PluginBuildSettings {
     GPathResult getMetadataForPlugin(Resource pluginDir) {
         try {
             return new XmlSlurper().parse(new File("$pluginDir.file.absolutePath/plugin.xml"))
+        } catch (e) {
+            // ignore
         }
-        catch (e) {
-            return null
-        }
+        null
     }
 
     /**
@@ -607,7 +607,7 @@ class PluginBuildSettings {
                 }
             }
             catch (IOException ignore) {
-                return null
+                pluginResource = null
             }
         }
         return pluginResource

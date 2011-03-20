@@ -19,7 +19,7 @@ class BuildSettingsTests extends GroovyTestCase {
         version = props.getProperty("griffon.version")
         defaultWorkPath = new File(System.getProperty("user.home") + "/.griffon/" + version)
 
-        savedSystemProps = new HashMap()
+        savedSystemProps = [:] 
     }
 
     void tearDown() {

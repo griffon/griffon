@@ -6,7 +6,11 @@ Any artifact or class that abides to the following conventions can be registered
     * scripts, classes and maps can be registered/unregistered by calling @addApplicationListener@/ @removeApplicationListener@ on the app instance.
     * closure event handlers must be registered with an overloaded version of @addApplicationListener@/@removeApplicationListener@ that takes *<EventName>* as the first parameter, and the closure itself as the second parameter.
 
-There is a general, per application, script that can provide event handlers. If you want to take advantage of this feature you must define a script named @Events.groovy@ inside @griffon-app/conf@. Lastly each controller is automatically registered as an application event listener.
+There is a general, per application, script that can provide event handlers. If you want to take advantage of this feature you must define a script named @Events.groovy@ inside @griffon-app/conf@. Lastly both Controller and Service instances are automatically registered as application event listeners. This is the only way to declare event listeners for @Log4jConfigStart@ and @BootstrapStart@ events.
+
+{note}
+You can also write a class named @Events.java@ in @src/main@ as an alternative to @griffon-app/conf/Events.groovy@, but not both!
+{note}
 
 These are some examples of event handlers:
 
@@ -16,6 +20,17 @@ These are some examples of event handlers:
 onBootstrapEnd = { app ->
   println """Application configuration has finished loading.
 MVC Groups will be initialized now."""
+}
+{code}
+- Quit the application when an uncaught exception is thrown
+@File: src/main/Events.java@
+{code}
+import griffon.util.ApplicationHolder;
+
+public class Events {
+    public void onUncaughtExceptionThrown(Exception e) {
+        ApplicationHolder.getApplication().shutdown();
+    }
 }
 {code}
 - Print the name of the application plus a short message when the application is about to shut down.

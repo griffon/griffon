@@ -17,6 +17,7 @@
 import griffon.util.RunMode
 import griffon.util.Environment
 import griffon.util.ApplicationHolder
+import static griffon.util.GriffonExceptionHandler.*
 import static griffon.util.GriffonApplicationUtils.is64Bit
 
 /**
@@ -100,6 +101,12 @@ setupJavaOpts = { includeNative = true ->
     javaOpts << "-D${Environment.KEY}=${env}"
     javaOpts << "-D${RunMode.KEY}=${RunMode.current}"
     javaOpts << "-Dgriffon.start.dir='"+jardir.parentFile.absolutePath+"'"
+    if(System.getProperty(GRIFFON_FULL_STACKTRACE)) {
+       javaOpts << "-D${GRIFFON_FULL_STACKTRACE}=${Boolean.getBoolean(GRIFFON_FULL_STACKTRACE)}"
+    }
+    if(System.getProperty(GRIFFON_EXCEPTION_OUTPUT)) {
+       javaOpts << "-D${GRIFFON_EXCEPTION_OUTPUT}=${Boolean.getBoolean(GRIFFON_EXCEPTION_OUTPUT)}"
+    }
 
     if (buildConfig.griffon.app?.javaOpts) {
         buildConfig.griffon.app?.javaOpts.each { javaOpts << it }

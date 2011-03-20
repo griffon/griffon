@@ -1030,14 +1030,13 @@ class IvyDomainSpecificLanguageEvaluator {
 
                             def dependencyDescriptor = new EnhancedDefaultDependencyDescriptor(mrid, false, getBooleanValue(args, 'transitive'), scope)
 
-                            if(!pluginMode) {
+                            if(pluginMode) {
+                                def artifact = new DefaultDependencyArtifactDescriptor(dependencyDescriptor, name, "zip", "zip", null, null )
+                                dependencyDescriptor.addDependencyArtifact(scope, artifact)
+                            } else {
                                 def artifact = new DefaultDependencyArtifactDescriptor(dependencyDescriptor, name, "jar", "jar", null, null )
                                 dependencyDescriptor.addDependencyArtifact(scope, artifact)                                
                                 addDependency mrid
-                            }
-                            else {
-                                def artifact = new DefaultDependencyArtifactDescriptor(dependencyDescriptor, name, "zip", "zip", null, null )
-                                dependencyDescriptor.addDependencyArtifact(scope, artifact)
                             }
                             dependencyDescriptor.exported = getBooleanValue(args, 'export')
                             dependencyDescriptor.inherited = inherited || inheritsAll || currentPluginBeingConfigured
@@ -1072,11 +1071,7 @@ class IvyDomainSpecificLanguageEvaluator {
 
 
                            def dependencyDescriptor = new EnhancedDefaultDependencyDescriptor(mrid, false, getBooleanValue(dependency, 'transitive'), scope)
-                           if(!pluginMode) {
-                               addDependency mrid
-                           }
-                           else {
-
+                           if(pluginMode) {
                                def artifact
                                if(dependency.classifier == 'plugin')
                                     artifact = new DefaultDependencyArtifactDescriptor(dependencyDescriptor, name, "xml", "xml", null, null )
@@ -1084,8 +1079,9 @@ class IvyDomainSpecificLanguageEvaluator {
                                     artifact = new DefaultDependencyArtifactDescriptor(dependencyDescriptor, name, "zip", "zip", null, null )
 
                                dependencyDescriptor.addDependencyArtifact(scope, artifact)
-                           }                                                                
-
+                           } else {
+                               addDependency mrid
+                           }
 
                            dependencyDescriptor.exported = getBooleanValue(dependency, 'export')
                            dependencyDescriptor.inherited = inherited || inheritsAll

@@ -23,6 +23,8 @@
 if (getBinding().variables.containsKey("_args_parsing_called")) return
 _args_parsing_called = true
 
+includeTargets << griffonScript("_GriffonSettings")
+
 argsMap = [params: []]
 
 target(name: 'parseArguments', description: "Parse the arguments passed on the command line", prehook: null, posthook: null) {

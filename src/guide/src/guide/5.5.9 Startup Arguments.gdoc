@@ -1,0 +1,15 @@
+Command line arguments can be passed to the application and be accessed by calling @getStartupArgs()@ on the application instance. This will return a copy of the args (if any) defined at the command line.
+
+Here's a typical example of this feature in development mode
+
+{code}
+griffon run-app arg0 arg1 argn
+{code}
+
+Here's another example demonstrating that the feature can be used once the application has been packaged, in this case as a single jar
+
+{code}
+griffon dev package jar
+java -jar dist/jars/app.jar arg0 arg1 argn
+{code}
+

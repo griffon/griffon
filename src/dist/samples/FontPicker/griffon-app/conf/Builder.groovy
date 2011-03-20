@@ -7,10 +7,5 @@ root {
         view = "*"
     }
 }
-/*
-jx {
-    'groovy.swing.SwingXBuilder' {
-        view = "*"
-    }
-}
-*/
+
+root.'MiglayoutGriffonAddon'.addon=true

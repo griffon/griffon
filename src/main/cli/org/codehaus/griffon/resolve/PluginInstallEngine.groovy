@@ -441,7 +441,20 @@ You cannot upgrade a plugin that is configured via BuildConfig.groovy, remove th
                 dependencies.remove(depName)
             } else {
                 def depPluginDir = pluginSettings.getPluginDirForName(depName)?.file
-                if (!depPluginDir?.exists()) {
+                if (depPluginDir?.exists()) {
+                    def dependency = readPluginXmlMetadata(depName)
+                    def dependencyVersion = dependency.@version.toString()
+                    if (GriffonPluginUtils.compareVersions(dependencyVersion, depVersion) < 0) {
+                        if(System.getProperty('griffon.plugin.force.updates') == 'true') {
+                            installPlugin(depName, depVersion)
+                            dependencies.remove(depName)
+                        } else {
+                            errorHandler("Plugin requires version [$depVersion] of plugin [$depName], but installed version is [${dependencyVersion}]. Please upgrade this plugin and try again.")
+                        }
+                    } else {
+                        dependencies.remove(depName)
+                    }
+                } else {
                     eventHandler("StatusUpdate", "Plugin dependency [$depName] not found. Attempting to resolve...")
                     // recursively install dependent plugins
                     def upperVersion = GriffonPluginUtils.getUpperVersion(depVersion)
@@ -454,14 +467,6 @@ You cannot upgrade a plugin that is configured via BuildConfig.groovy, remove th
                     installPlugin(depName, installVersion)
 
                     dependencies.remove(depName)
-                } else {
-                    def dependency = readPluginXmlMetadata(depName)
-                    def dependencyVersion = dependency.@version.toString()
-                    if (GriffonPluginUtils.compareVersions(dependencyVersion, depVersion) < 0) {
-                        errorHandler("Plugin requires version [$depVersion] of plugin [$depName], but installed version is [${dependencyVersion}]. Please upgrade this plugin and try again.")
-                    } else {
-                        dependencies.remove(depName)
-                    }
                 }
             }
         }

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.codehaus.griffon.commons.cfg;
+package org.codehaus.griffon.commons.cfg
 
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver
 import org.springframework.core.io.ResourceLoader
@@ -32,44 +32,44 @@ class ConfigurationHelper {
 
     private static final LOG = LogFactory.getLog(ConfigurationHelper)
 
-    private static final String CONFIG_BINDING_USER_HOME = "userHome";
-    private static final String CONFIG_BINDING_GRIFFON_HOME = "griffonHome";
-    private static final String CONFIG_BINDING_APP_NAME = "appName";
-    private static final String CONFIG_BINDING_APP_VERSION = "appVersion";
+    private static final String CONFIG_BINDING_USER_HOME = "userHome"
+    private static final String CONFIG_BINDING_GRIFFON_HOME = "griffonHome"
+    private static final String CONFIG_BINDING_APP_NAME = "appName"
+    private static final String CONFIG_BINDING_APP_VERSION = "appVersion"
 
     static ConfigObject loadConfigFromClasspath(GriffonContext application=null) {
 
         ConfigSlurper configSlurper = new ConfigSlurper(GriffonUtil.getEnvironment())
-        Map binding = new HashMap();
+        Map binding = []
 
         // configure config slurper binding
-        binding.put(CONFIG_BINDING_USER_HOME, System.getProperty("user.home"));
-        binding.put(CONFIG_BINDING_GRIFFON_HOME, System.getProperty("griffon.home"));
+        binding.put(CONFIG_BINDING_USER_HOME, System.getProperty("user.home"))
+        binding.put(CONFIG_BINDING_GRIFFON_HOME, System.getProperty("griffon.home"))
 
         if (application) {
             binding.put(CONFIG_BINDING_APP_NAME, application.getMetadata().get("app.name"))
             binding.put(CONFIG_BINDING_APP_VERSION, application.getMetadata().get("app.version"))
-        };
+        }
 
 
-        configSlurper.setBinding(binding);
-        ConfigObject co;
+        configSlurper.setBinding(binding)
+        ConfigObject co
         ClassLoader classLoader = application != null ? application.getClassLoader() : ConfigurationHelper.getClassLoader()
         try {
             try {
-                Class scriptClass = classLoader.loadClass(GriffonContext.CONFIG_CLASS);
+                Class scriptClass = classLoader.loadClass(GriffonContext.CONFIG_CLASS)
 
-                co = configSlurper.parse(scriptClass);
+                co = configSlurper.parse(scriptClass)
             } catch (ClassNotFoundException e) {
-                LOG.debug("Could not find config class [" + GriffonContext.CONFIG_CLASS + "]. This is probably nothing to worry about, it is not required to have a config: " + e.getMessage());
+                LOG.debug("Could not find config class [" + GriffonContext.CONFIG_CLASS + "]. This is probably nothing to worry about, it is not required to have a config: " + e.getMessage())
                 // ignore, it is ok not to have a configuration file
-                co = new ConfigObject();
+                co = new ConfigObject()
             }
             try {
-                Class dataSourceClass = classLoader.loadClass(GriffonContext.DATA_SOURCE_CLASS);
-                co.merge(configSlurper.parse(dataSourceClass));
+                Class dataSourceClass = classLoader.loadClass(GriffonContext.DATA_SOURCE_CLASS)
+                co.merge(configSlurper.parse(dataSourceClass))
             } catch (ClassNotFoundException e) {
-                LOG.debug("Cound not find data source class [" + GriffonContext.DATA_SOURCE_CLASS + "]. This may be what you are expecting, but will result in Griffon loading with an in-memory database");
+                LOG.debug("Cound not find data source class [" + GriffonContext.DATA_SOURCE_CLASS + "]. This may be what you are expecting, but will result in Griffon loading with an in-memory database")
                 // ignore
             }
         }
@@ -80,7 +80,7 @@ class ConfigurationHelper {
         }
 
 
-        if (co == null) co = new ConfigObject();
+        if (co == null) co = new ConfigObject()
 
         ConfigurationHolder.setConfig(co)
         initConfig(co, null, classLoader)
