@@ -20,7 +20,7 @@ public abstract class AbstractView extends AbstractGriffonView {
         this.model = model;
     }
 
-    public void mvcGroupInit(Map<String, ?> args) {
+    public void mvcGroupInit(Map<String, Object> args) {
         execSync(new Runnable() {
             public void run() {
                 JFrame view = new JFrame("sample");
