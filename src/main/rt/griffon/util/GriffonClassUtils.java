@@ -109,6 +109,10 @@ public final class GriffonClassUtils {
         MVC_METHODS.add(new MethodDescriptor("createMVCGroup", new Class[]{String.class, String.class, Map.class}));
         MVC_METHODS.add(new MethodDescriptor("createMVCGroup", new Class[]{Map.class, String.class, String.class}));
         MVC_METHODS.add(new MethodDescriptor("destroyMVCGroup", new Class[]{String.class}));
+        MVC_METHODS.add(new MethodDescriptor("withMVCGroup", new Class[]{String.class, Closure.class}));
+        MVC_METHODS.add(new MethodDescriptor("withMVCGroup", new Class[]{String.class, Map.class, Closure.class}));
+        MVC_METHODS.add(new MethodDescriptor("withMVCGroup", new Class[]{String.class, String.class, Closure.class}));
+        MVC_METHODS.add(new MethodDescriptor("withMVCGroup", new Class[]{String.class, String.class, Map.class, Closure.class}));
         MVC_METHODS.add(new MethodDescriptor("isUIThread"));
         MVC_METHODS.add(new MethodDescriptor("execAsync", new Class[]{Runnable.class}));
         MVC_METHODS.add(new MethodDescriptor("execAsync", new Class[]{Script.class}));
@@ -131,6 +135,7 @@ public final class GriffonClassUtils {
         MVC_METHODS.add(new MethodDescriptor("newInstance", new Class[]{Object[].class}));
         MVC_METHODS.add(new MethodDescriptor("buildMVCGroup", new Class[]{Object[].class}));
         MVC_METHODS.add(new MethodDescriptor("createMVCGroup", new Class[]{Object[].class}));
+        MVC_METHODS.add(new MethodDescriptor("withMVCGroup", new Class[]{Object[].class}));
         MVC_METHODS.add(new MethodDescriptor("execFuture", new Class[]{Object[].class}));
 
         MVC_METHODS.add(new MethodDescriptor("getApp"));

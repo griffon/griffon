@@ -248,6 +248,30 @@ class GriffonApplicationHelper {
         return [results.model, results.view, results.controller]
     }
 
+    static void withMVCGroup(GriffonApplication app, String mvcType, Closure handler) {
+        withMVCGroup(app, mvcType, mvcType, [:], handler)
+    }
+
+    static void withMVCGroup(GriffonApplication app, String mvcType, String mvcName, Closure handler) {
+        withMVCGroup(app, mvcType, mvcName, [:], handler)
+    }
+
+    static void withMVCGroup(GriffonApplication app, String mvcType, Map bindArgs, Closure handler) {
+        withMVCGroup(app, mvcType, mvcType, bindArgs, handler)
+    }
+
+    static void withMVCGroup(GriffonApplication app, String mvcType, String mvcName, Map bindArgs, Closure handler) {
+        try {
+            handler(*createMVCGroup(app, mvcType, mvcName, bindArgs))
+        } finally {
+            try {
+                destroyMVCGroup(mvcName)
+            } catch(Exception x) {
+                if(app.log.warnEnabled) app.log.warn("Could not destroy group [$mvcName] of type $mvcType.", x)
+            }
+        }
+    }
+
     static Map buildMVCGroup(GriffonApplication app, String mvcType, String mvcName = mvcType) {
         buildMVCGroup(app, [:], mvcType, mvcName)
     }
@@ -379,6 +403,9 @@ class GriffonApplicationHelper {
                 GriffonApplicationHelper.buildMVCGroup(app, *args)
             }
             metaClass.destroyMVCGroup = GriffonApplicationHelper.&destroyMVCGroup.curry(app)
+            metaClass.withMVCGroup = {Object... args ->
+                GriffonApplicationHelper.withMVCGroup(app, *args)
+            }
         }
 
         if(!GriffonArtifact.isAssignableFrom(klass)) {

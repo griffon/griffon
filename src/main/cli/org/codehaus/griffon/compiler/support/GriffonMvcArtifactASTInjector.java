@@ -235,6 +235,77 @@ public class GriffonMvcArtifactASTInjector extends GriffonArtifactASTInjector {
             ClassNode.EMPTY_ARRAY,
             new EmptyStatement()
         ));
+
+        // void withMVCGroup(String mvcType, Closure handler)
+        classNode.addMethod(new MethodNode(
+            "withMVCGroup",
+            ACC_PUBLIC,
+            ClassHelper.VOID_TYPE,
+            new Parameter[]{new Parameter(ClassHelper.STRING_TYPE, "mvcType"),
+                new Parameter(ClassHelper.CLOSURE_TYPE, "handler")},
+            ClassNode.EMPTY_ARRAY,
+            stmnt(new StaticMethodCallExpression(
+                GAH_CLASS,
+                "withMVCGroup",
+                new ArgumentListExpression(new Expression[]{
+                    vars(APP), var("mvcType"), var("mvcType"), emptyMap(), var("handler")
+                })))
+        ));
+    
+        // void withMVCGroup(String mvcType, String mvcName, Closure handler)
+        classNode.addMethod(new MethodNode(
+            "withMVCGroup",
+            ACC_PUBLIC,
+            ClassHelper.VOID_TYPE,
+            new Parameter[]{
+                new Parameter(ClassHelper.STRING_TYPE, "mvcType"),
+                new Parameter(ClassHelper.STRING_TYPE, "mvcName"),
+                new Parameter(ClassHelper.CLOSURE_TYPE, "handler")},
+            ClassNode.EMPTY_ARRAY,
+            stmnt(new StaticMethodCallExpression(
+                GAH_CLASS,
+                "withMVCGroup",
+                new ArgumentListExpression(new Expression[]{
+                    var(APP), var("mvcType"), var("mvcName"), emptyMap(), var("handler")
+                })))
+        ));
+
+        // void withMVCGroup(String mvcType, Map args, Closure handler)
+        classNode.addMethod(new MethodNode(
+            "withMVCGroup",
+            ACC_PUBLIC,
+            ClassHelper.VOID_TYPE,
+            new Parameter[]{
+                new Parameter(ClassHelper.STRING_TYPE, "mvcType"),
+                new Parameter(ClassHelper.MAP_TYPE, "args"),
+                new Parameter(ClassHelper.CLOSURE_TYPE, "handler")},
+            ClassNode.EMPTY_ARRAY,
+            stmnt(new StaticMethodCallExpression(
+                GAH_CLASS,
+                "withMVCGroup",
+                new ArgumentListExpression(new Expression[]{
+                    var(APP), var("mvcType"), var("mvcType"), vars("args"), var("handler")
+                })))
+        ));
+
+        // void withMVCGroup(String mvcType, String mvcName, Map args, Closure handler)
+        classNode.addMethod(new MethodNode(
+            "withMVCGroup",
+            ACC_PUBLIC,
+            ClassHelper.VOID_TYPE,
+            new Parameter[]{
+                new Parameter(ClassHelper.STRING_TYPE, "mvcType"),
+                new Parameter(ClassHelper.STRING_TYPE, "mvcName"),
+                new Parameter(ClassHelper.MAP_TYPE, "args"),
+                new Parameter(ClassHelper.CLOSURE_TYPE, "handler")},
+            ClassNode.EMPTY_ARRAY,
+            stmnt(new StaticMethodCallExpression(
+                GAH_CLASS,
+                "withMVCGroup",
+                new ArgumentListExpression(new Expression[]{
+                    var(APP), var("mvcType"), var("mvcName"), vars("args"), var("handler")
+                })))
+        ));
     }
 
     private static Expression emptyMap() {

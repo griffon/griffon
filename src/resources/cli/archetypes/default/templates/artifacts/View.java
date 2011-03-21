@@ -18,7 +18,8 @@ public class @artifact.name@ extends AbstractGriffonView {
         this.model = model;
     }
 
-    public void mvcGroupInit(Map<String, ?> args) {
+    @Override
+    public void mvcGroupInit(Map<String, Object> args) {
         execSync(new Runnable() {
             public void run() {
                 JFrame view = new JFrame("@griffon.project.name@");

@@ -343,11 +343,11 @@ class BaseGriffonApplication implements GriffonApplication {
         GriffonApplicationHelper.buildMVCGroup(appDelegate, [:], mvcType, mvcName)
     }
 
-    Map<String, ?> buildMVCGroup(Map<String, ?> args, String mvcType) {
+    Map<String, ?> buildMVCGroup(Map<String, Object> args, String mvcType) {
         GriffonApplicationHelper.buildMVCGroup(appDelegate, args, mvcType, mvcType)
     }
 
-    Map<String, ?> buildMVCGroup(Map<String, ?> args, String mvcType, String mvcName) {
+    Map<String, ?> buildMVCGroup(Map<String, Object> args, String mvcType, String mvcName) {
         GriffonApplicationHelper.buildMVCGroup(appDelegate, args, mvcType, mvcName)
     }
 
@@ -355,11 +355,11 @@ class BaseGriffonApplication implements GriffonApplication {
         GriffonApplicationHelper.createMVCGroup(appDelegate, mvcType)
     }
 
-    List<?> createMVCGroup(Map<String, ?> args, String mvcType) {
+    List<?> createMVCGroup(Map<String, Object> args, String mvcType) {
         GriffonApplicationHelper.createMVCGroup(appDelegate, args, mvcType)
     }
 
-    List<?> createMVCGroup(String mvcType, Map<String, ?> args) {
+    List<?> createMVCGroup(String mvcType, Map<String, Object> args) {
         GriffonApplicationHelper.createMVCGroup(appDelegate, args, mvcType)
     }
 
@@ -367,15 +367,39 @@ class BaseGriffonApplication implements GriffonApplication {
         GriffonApplicationHelper.createMVCGroup(appDelegate, mvcType, mvcName)
     }
 
-    List<?> createMVCGroup(Map<String, ?> args, String mvcType, String mvcName) {
+    List<?> createMVCGroup(Map<String, Object> args, String mvcType, String mvcName) {
         GriffonApplicationHelper.createMVCGroup(appDelegate, args, mvcType, mvcName)
     }
 
-    List<?> createMVCGroup(String mvcType, String mvcName, Map<String, ?> args) {
+    List<?> createMVCGroup(String mvcType, String mvcName, Map<String, Object> args) {
         GriffonApplicationHelper.createMVCGroup(appDelegate, args, mvcType, mvcName)
     }
 
     void destroyMVCGroup(String mvcName) {
         GriffonApplicationHelper.destroyMVCGroup(appDelegate, mvcName)
+    }
+
+    void withMVCGroup(String mvcType, Closure handler) {
+        withMVCGroup(mvcType, mvcType, [:], handler)
+    }
+
+    void withMVCGroup(String mvcType, String mvcName, Closure handler) {
+        withMVCGroup(mvcType, mvcName, [:], handler)
+    }
+
+    void withMVCGroup(String mvcType, Map<String, Object> args, Closure handler) {
+        withMVCGroup(mvcType, mvcType, args, handler)
+    }
+
+    void withMVCGroup(String mvcType, String mvcName, Map<String, Object> args, Closure handler) {
+        try {
+            handler(*createMVCGroup(mvcType, mvcName, args))
+        } finally {
+            try {
+                destroyMVCGroup(mvcName)
+            } catch(Exception x) {
+                if(log.warnEnabled) log.warn("Could not destroy group [$mvcName] of type $mvcType.", x)
+            }
+        }
     }
 }

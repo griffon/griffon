@@ -22,6 +22,8 @@ import java.util.Map;
 import java.util.List;
 import java.util.Collections;
 
+import groovy.lang.Closure;
+
 import org.codehaus.griffon.runtime.util.GriffonApplicationHelper;
 
 /**
@@ -32,7 +34,7 @@ import org.codehaus.griffon.runtime.util.GriffonApplicationHelper;
  * @since 0.9.1
  */
 public abstract class AbstractGriffonMvcArtifact extends AbstractGriffonArtifact implements GriffonMvcArtifact {
-    public void mvcGroupInit(Map<String, ?> args) {
+    public void mvcGroupInit(Map<String, Object> args) {
         // empty
     }
 
@@ -48,11 +50,11 @@ public abstract class AbstractGriffonMvcArtifact extends AbstractGriffonArtifact
         return GriffonApplicationHelper.buildMVCGroup(getApp(), Collections.emptyMap(), mvcType, mvcName);
     }
 
-    public Map<String, ?> buildMVCGroup(Map<String, ?> args, String mvcType) {
+    public Map<String, ?> buildMVCGroup(Map<String, Object> args, String mvcType) {
         return GriffonApplicationHelper.buildMVCGroup(getApp(), args, mvcType, mvcType);
     }
 
-    public Map<String, ?> buildMVCGroup(Map<String, ?> args, String mvcType, String mvcName) {
+    public Map<String, ?> buildMVCGroup(Map<String, Object> args, String mvcType, String mvcName) {
         return GriffonApplicationHelper.buildMVCGroup(getApp(), args, mvcType, mvcName);
     }
 
@@ -60,11 +62,11 @@ public abstract class AbstractGriffonMvcArtifact extends AbstractGriffonArtifact
         return (List<?>) GriffonApplicationHelper.createMVCGroup(getApp(), mvcType);
     }
 
-    public List<?> createMVCGroup(Map<String, ?> args, String mvcType) {
+    public List<?> createMVCGroup(Map<String, Object> args, String mvcType) {
         return (List<?>) GriffonApplicationHelper.createMVCGroup(getApp(), args, mvcType);
     }
 
-    public List<?> createMVCGroup(String mvcType, Map<String, ?> args) {
+    public List<?> createMVCGroup(String mvcType, Map<String, Object> args) {
         return (List<?>) GriffonApplicationHelper.createMVCGroup(getApp(), args, mvcType);
     }
 
@@ -72,15 +74,40 @@ public abstract class AbstractGriffonMvcArtifact extends AbstractGriffonArtifact
         return (List<?>) GriffonApplicationHelper.createMVCGroup(getApp(), mvcType, mvcName);
     }
 
-    public List<?> createMVCGroup(Map<String, ?> args, String mvcType, String mvcName) {
+    public List<?> createMVCGroup(Map<String, Object> args, String mvcType, String mvcName) {
         return (List<?>) GriffonApplicationHelper.createMVCGroup(getApp(), args, mvcType, mvcName);
     }
 
-    public List<?> createMVCGroup(String mvcType, String mvcName, Map<String, ?> args) {
+    public List<?> createMVCGroup(String mvcType, String mvcName, Map<String, Object> args) {
         return (List<?>) GriffonApplicationHelper.createMVCGroup(getApp(), args, mvcType, mvcName);
     }
 
     public void destroyMVCGroup(String mvcName) {
         GriffonApplicationHelper.destroyMVCGroup(getApp(), mvcName);
+    }
+
+    public void withMVCGroup(String mvcType, Closure handler) {
+        withMVCGroup(mvcType, mvcType, Collections.<String, Object>emptyMap(), handler);
+    }
+
+    public void withMVCGroup(String mvcType, String mvcName, Closure handler) {
+        withMVCGroup(mvcType, mvcName, Collections.<String, Object>emptyMap(), handler);
+    }
+
+    public void withMVCGroup(String mvcType, Map<String, Object> args, Closure handler) {
+        withMVCGroup(mvcType, mvcType, args, handler);
+    }
+
+    public void withMVCGroup(String mvcType, String mvcName, Map<String, Object> args, Closure handler) {
+        try {
+            List<?> group = createMVCGroup(mvcType, mvcName, args);
+            handler.call(group.toArray(new Object[3]));
+        } finally {
+            try {
+                destroyMVCGroup(mvcName);
+            } catch(Exception x) {
+                if(getLog().isWarnEnabled()) getLog().warn("Could not destroy group ["+mvcName+"] of type "+mvcType, x);
+            }
+        }
     }
 }
