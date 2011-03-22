@@ -24,6 +24,7 @@ import java.util.Collections;
 
 import groovy.lang.Closure;
 
+import griffon.util.GriffonExceptionHandler;
 import org.codehaus.griffon.runtime.util.GriffonApplicationHelper;
 
 /**
@@ -106,7 +107,7 @@ public abstract class AbstractGriffonMvcArtifact extends AbstractGriffonArtifact
             try {
                 destroyMVCGroup(mvcName);
             } catch(Exception x) {
-                if(getLog().isWarnEnabled()) getLog().warn("Could not destroy group ["+mvcName+"] of type "+mvcType, x);
+                if(getLog().isWarnEnabled()) getLog().warn("Could not destroy group ["+mvcName+"] of type "+mvcType, GriffonExceptionHandler.sanitize(x));
             }
         }
     }

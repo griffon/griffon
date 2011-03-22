@@ -25,6 +25,7 @@ import griffon.util.EventRouter
 import griffon.util.Metadata
 import griffon.util.ApplicationHolder
 import griffon.util.UIThreadHelper
+import griffon.util.GriffonExceptionHandler
 import org.codehaus.griffon.runtime.util.GriffonApplicationHelper
 
 import java.util.concurrent.Callable
@@ -398,7 +399,7 @@ class BaseGriffonApplication implements GriffonApplication {
             try {
                 destroyMVCGroup(mvcName)
             } catch(Exception x) {
-                if(log.warnEnabled) log.warn("Could not destroy group [$mvcName] of type $mvcType.", x)
+                if(log.warnEnabled) log.warn("Could not destroy group [$mvcName] of type $mvcType.", GriffonExceptionHandler.sanitize(x))
             }
         }
     }

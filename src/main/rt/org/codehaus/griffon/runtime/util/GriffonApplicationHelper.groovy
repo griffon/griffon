@@ -78,7 +78,7 @@ class GriffonApplicationHelper {
                 config.merge(configSlurper.parse(p))
             }
         } catch(x) {
-            LogLog.warn("Cannot read configuration [class: $configClass?.name, file: $configFileName]", x)
+            LogLog.warn("Cannot read configuration [class: $configClass?.name, file: $configFileName]", GriffonExceptionHandler.sanitize(x))
         }
         config
     }
@@ -265,9 +265,9 @@ class GriffonApplicationHelper {
             handler(*createMVCGroup(app, mvcType, mvcName, bindArgs))
         } finally {
             try {
-                destroyMVCGroup(mvcName)
+                destroyMVCGroup(app, mvcName)
             } catch(Exception x) {
-                if(app.log.warnEnabled) app.log.warn("Could not destroy group [$mvcName] of type $mvcType.", x)
+                if(app.log.warnEnabled) app.log.warn("Could not destroy group [$mvcName] of type $mvcType.", GriffonExceptionHandler.sanitize(x))
             }
         }
     }
@@ -431,6 +431,7 @@ class GriffonApplicationHelper {
      * @param mvcName name of the group to destroy
      */
     static destroyMVCGroup(GriffonApplication app, String mvcName) {
+        if(!app.groups[mvcName]) return
         if(LOG.infoEnabled) LOG.info("Destroying MVC group identified by '$mvcName'")
         app.removeApplicationEventListener(app.controllers[mvcName])
         [app.models, app.views, app.controllers].each {
@@ -452,13 +453,10 @@ class GriffonApplicationHelper {
             app.builders[mvcName]?.dispose()
         } catch(MissingMethodException mme) {
             // TODO find out why this call breaks applet mode on shutdown
-            if(LOG.errorEnabled) LOG.error("Application encountered an error while destroying group '$mvcName'", mme)
+            if(LOG.errorEnabled) LOG.error("Application encountered an error while destroying group '$mvcName'", GriffonExceptionHandler.sanitize(mme))
         }
 
         // remove the refs from the app caches
-        app.models.remove(mvcName)
-        app.views.remove(mvcName)
-        app.controllers.remove(mvcName)
         app.builders.remove(mvcName)
         app.groups.remove(mvcName)
 

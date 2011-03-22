@@ -21,6 +21,7 @@ import griffon.core.GriffonClass;
 import griffon.core.GriffonView;
 import griffon.core.GriffonViewClass;
 import griffon.util.UIThreadHelper;
+import griffon.util.GriffonExceptionHandler;
 
 import groovy.lang.MetaClass;
 import groovy.lang.ExpandoMetaClass;
@@ -211,7 +212,7 @@ public abstract class AbstractGriffonViewScript extends Script implements Griffo
             try {
                 destroyMVCGroup(mvcName);
             } catch(Exception x) {
-                if(getLog().isWarnEnabled()) getLog().warn("Could not destroy group ["+mvcName+"] of type "+mvcType, x);
+                if(getLog().isWarnEnabled()) getLog().warn("Could not destroy group ["+mvcName+"] of type "+mvcType, GriffonExceptionHandler.sanitize(x));
             }
         }
     }

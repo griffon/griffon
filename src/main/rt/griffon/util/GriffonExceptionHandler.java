@@ -62,7 +62,7 @@ public class GriffonExceptionHandler implements Thread.UncaughtExceptionHandler 
         }
     }
 
-    private void sanitize(Throwable throwable) {
+    public static void sanitize(Throwable throwable) {
         try {
             if(!Boolean.getBoolean(GRIFFON_FULL_STACKTRACE)) StackTraceUtils.deepSanitize(throwable);
         } catch (Throwable t) {
