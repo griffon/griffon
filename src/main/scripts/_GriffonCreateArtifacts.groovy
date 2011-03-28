@@ -189,12 +189,12 @@ purgeRedundantArtifactSuffix = { name, suffix ->
         newName = name.replaceAll(/$suffix$/, '')
     }
 
+    // Also remove variations that start with the same sequence of letters
+    // as the suffix UNLESS that would remove the entire artifact name.
     if(name == newName) {
-        // def pos = newName.lastIndexOf('.')
-        // if(pos > -1) newName = newName[pos+1..-1]
         for(int i = name.length() - 1; i >= 0; i--) {
             def str = name[i..-1]
-            if(suffix.startsWith(str)/* && (newName - str)*/) {
+            if(suffix.startsWith(str) && !(newName - str).endsWith(".")) {
                 newName -= str
                 break
             }
