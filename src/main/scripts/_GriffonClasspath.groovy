@@ -130,39 +130,13 @@ commonClasspath = {
     }
 
 // XXX -- NATIVE
-    resolveResources("file:${basedir}/lib/${PlatformUtils.platform}/*.jar").each { platformLib ->
-        if(platformLib.file.exists()) {
-            debug "  ${platformLib.file.absolutePath}"
-            fileset(dir: platformLib.file.absolutePath)
-        }
-    }
-    resolveResources("file:${pluginsHome}/*/lib/${PlatformUtils.platform}/*.jar").each { platformPluginLib ->
-        if(platformPluginLib.file.exists()) {
-            debug "  ${platformPluginLib.file.absolutePath}"
-            fileset(dir: platformPluginLib.file.absolutePath)
-        }
-    }
-    def platformLibDir = new File("${basedir}/lib/${PlatformUtils.platform}/native")
-    if(platformLibDir.exists()) {
-        debug "  ${platformLibDir.absolutePath}"
-        fileset(dir: platformLibDir.absolutePath)
-    }
-    for (pluginLibDir in pluginLibDirs) {
-        platformLibDir = new File("${pluginLibDir}/lib/${PlatformUtils.platform}/native")
-        if(platformLibDir.exists()) {
-            debug "  ${platformLibDir.absolutePath}"
-            fileset(dir: platformLibDir.absolutePath)
-        }
-    }
-
     if(is64Bit) {
-        resolveResources("file:${basedir}/lib/${PlatformUtils.platform[0..-3]}/*.jar").each { platformLib ->
-            if(platformLib.file.exists()) {
-                debug "  ${platformLib.file.absolutePath}"
-                fileset(dir: platformLib.file.absolutePath)
-            }
+        platformDir = new File("${basedir}/lib/${PlatformUtils.platform[0..-3]}")
+        if(platformDir.exists()) {
+            debug "  ${platformDir.absolutePath}"
+            fileset(dir: platformDir.absolutePath)
         }
-        resolveResources("file:${pluginsHome}/*/lib/${PlatformUtils.platform[0..-3]}/*.jar").each { platformPluginLib ->
+        resolveResources("file:${pluginsHome}/*/lib/${PlatformUtils.platform[0..-3]}").each { platformPluginLib ->
             if(platformPluginLib.file.exists()) {
                 debug "  ${platformPluginLib.file.absolutePath}"
                 fileset(dir: platformPluginLib.file.absolutePath)
@@ -179,6 +153,30 @@ commonClasspath = {
                 debug "  ${platformLibDir.absolutePath}"
                 fileset(dir: platformLibDir.absolutePath)
             }
+        }
+    }
+
+    platformDir = new File("${basedir}/lib/${PlatformUtils.platform}")
+    if(platformDir.exists()) {
+        debug "  ${platformDir.absolutePath}"
+        fileset(dir: platformDir.absolutePath)
+    }
+    resolveResources("file:${pluginsHome}/*/lib/${PlatformUtils.platform}").each { platformPluginLib ->
+        if(platformPluginLib.file.exists()) {
+            debug "  ${platformPluginLib.file.absolutePath}"
+            fileset(dir: platformPluginLib.file.absolutePath)
+        }
+    }
+    def platformLibDir = new File("${basedir}/lib/${PlatformUtils.platform}/native")
+    if(platformLibDir.exists()) {
+        debug "  ${platformLibDir.absolutePath}"
+        fileset(dir: platformLibDir.absolutePath)
+    }
+    for (pluginLibDir in pluginLibDirs) {
+        platformLibDir = new File("${pluginLibDir}/lib/${PlatformUtils.platform}/native")
+        if(platformLibDir.exists()) {
+            debug "  ${platformLibDir.absolutePath}"
+            fileset(dir: platformLibDir.absolutePath)
         }
     }
 // XXX -- NATIVE
