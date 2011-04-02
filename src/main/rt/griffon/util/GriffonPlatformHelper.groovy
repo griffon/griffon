@@ -48,7 +48,9 @@ class GriffonPlatformHelper {
                 try {
                     Binding bindings = new Binding()
                     bindings.app = app
+                    bindings.skipAbout = app.config.osx.noabout ?: false
                     bindings.skipPrefs = app.config.osx.noprefs ?: false
+                    bindings.skipQuit = app.config.osx.noquit ?: false
 
                     GroovyShell shell = new GroovyShell(GriffonPlatformHelper.class.classLoader, bindings)
                     macOSXHandler = shell.evaluate('''
@@ -59,9 +61,11 @@ class GriffonPlatformHelper {
 
                         class GriffonMacOsSupport implements MRJAboutHandler, MRJQuitHandler, MRJPrefsHandler {
                             final GriffonApplication app
+                            final boolean noquit
 
-                            GriffonMacOsSupport(GriffonApplication app) {
+                            GriffonMacOsSupport(GriffonApplication app, boolean noquit) {
                                 this.app = app
+                                this.noquit = noquit
                             }
 
                             public void handleAbout() {
@@ -73,14 +77,14 @@ class GriffonPlatformHelper {
                             }
 
                             public void handleQuit() throws IllegalStateException {
-                                app.event('OSXQuit', [app])
+                                noquit? app.event('OSXQuit', [app]) : app.shutdown()
                             }
                         }
 
-                        def handler = new GriffonMacOsSupport(app)
-                        MRJApplicationUtils.registerAboutHandler(handler)
-                        MRJApplicationUtils.registerQuitHandler(handler)
+                        def handler = new GriffonMacOsSupport(app, skipQuit)
+                        if(!skipAbout) MRJApplicationUtils.registerAboutHandler(handler)
                         if(!skipPrefs) MRJApplicationUtils.registerPrefsHandler(handler)
+                        MRJApplicationUtils.registerQuitHandler(handler)
 
                         return handler
                     ''')
