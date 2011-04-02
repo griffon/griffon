@@ -36,16 +36,11 @@ class GriffonPlatformHelper {
 
         // do all this a the end of bootstrap
         application.addApplicationEventListener("BootstrapEnd", {GriffonApplication app -> 
-
-            // look and feel
-            // don't do, let user decide
-            //UIManager.setLookAndFeel('apple.laf.AquaLookAndFeel')
-
             // use unified menu bar
             System.setProperty("apple.laf.useScreenMenuBar", "true")
 
             // set menu bar title
-            System.setProperty("com.apple.mrj.application.apple.menu.about.name", app.getConfig().application?.title ?: 'Griffon')
+            System.setProperty("com.apple.mrj.application.apple.menu.about.name", GriffonNameUtils.capitalize(app.config.application?.title ?: 'Griffon'))
             // we may want to have a more specific option like application.shortTitle, that is used first
 
             // exit handler
@@ -53,30 +48,42 @@ class GriffonPlatformHelper {
                 try {
                     Binding bindings = new Binding()
                     bindings.app = app
+                    bindings.skipPrefs = app.config.osx.noprefs ?: false
 
-                    GroovyShell shell = new GroovyShell(GriffonPlatformHelper.getClass().getClassLoader(), bindings)
-                    macOSXHandler = shell.evaluate("""
+                    GroovyShell shell = new GroovyShell(GriffonPlatformHelper.class.classLoader, bindings)
+                    macOSXHandler = shell.evaluate('''
                         package griffon.util
 
+                        import griffon.core.GriffonApplication
                         import com.apple.mrj.*
 
-                        class GriffonMacOsSupport implements MRJQuitHandler {
-                            def app
+                        class GriffonMacOsSupport implements MRJAboutHandler, MRJQuitHandler, MRJPrefsHandler {
+                            final GriffonApplication app
 
-                            public GriffonMacOsSupport(def app) {
+                            GriffonMacOsSupport(GriffonApplication app) {
                                 this.app = app
                             }
 
-                            public void handleQuit() {
-                                app.shutdown()
+                            public void handleAbout() {
+                                app.event('OSXAbout', [app])
+                            }
+
+                            public void handlePrefs() throws IllegalStateException {
+                                app.event('OSXPrefs', [app])
+                            }
+
+                            public void handleQuit() throws IllegalStateException {
+                                app.event('OSXQuit', [app])
                             }
                         }
 
                         def handler = new GriffonMacOsSupport(app)
+                        MRJApplicationUtils.registerAboutHandler(handler)
                         MRJApplicationUtils.registerQuitHandler(handler)
+                        if(!skipPrefs) MRJApplicationUtils.registerPrefsHandler(handler)
 
                         return handler
-                    """)
+                    ''')
                 } catch (Throwable t) {
                     t.printStackTrace(System.out)
                 }

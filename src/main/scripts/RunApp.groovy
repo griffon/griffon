@@ -95,6 +95,7 @@ target('runApp': "Runs the application from the command line") {
         javaOpts.each { s -> if(s) cmd << s }
         [proxySettings, '-classpath', runtimeClasspath, griffonApplicationClass].each { s -> if(s) cmd << s }
         args?.tokenize().each { s -> if(s) cmd << s }
+        debug("Executing ${cmd.join(' ')}")
         Process p = Runtime.runtime.exec(cmd as String[], null, jardir)
 
         // pipe the output
