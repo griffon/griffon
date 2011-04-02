@@ -132,19 +132,13 @@ target(package_jar: "Creates a single jar distribution and zips it.") {
     if(!destFileName.endsWith(".jar")) destFile += ".jar"
     File destFile = new File(destFileName)
     if(!destFile.isAbsolute()) destFile = new File("${targetDistDir}/${destFile}")
-    def libjars = ant.fileset(dir: jardir, includes: "*.jar", excludes: buildConfig.griffon.jars.jarName)
+    def libjars = ant.fileset(dir: jardir, includes: '*.jar')
 
     def createJarFile = { jarfile, jars, extra = {} ->
         ant.jar(destfile: jarfile, duplicate:'preserve') {
             manifest {
                 attribute(name: "Main-Class", value: griffonApplicationClass)
             }
-            fileset(dir: classesDirPath) {
-                exclude(name: "BuildConfig*.class")
-            }
-            fileset(dir: i18nDir)
-            fileset(dir: resourcesDir)
-    
             jars.each {
                 zipfileset(src: it.toString(),
                           excludes: "META-INF/*.MF,META-INF/*.SF,META-INF/*.RSA,META-INF/*.DSA")
