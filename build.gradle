@@ -136,14 +136,31 @@ task allClasses(dependsOn: [rtClasses, cliClasses, scriptsClasses]) {
     description = "Compiles all rt, cli and script classes."
 }
 
-cliClasses.doLast {
-    def buildProps = new File("$buildDir/classes/cli/build.properties")
-    buildProps.text = """        griffon.version=$version
-        groovy.version=$groovyVersion
-        ant.version=$antVersion
-        slf4j.version=$slf4jVersion
-        spring.version=$springVersion""".stripIndent(8)
+task createBuildProperties {
+    inputs.file new File("$buildDir/tmp/build.properties")
+    outputs.file new File("$buildDir/classes/cli/build.properties")
+
+    doLast {
+        new File("$buildDir/classes/cli/").mkdirs()
+
+        File tmpDir = new File("$buildDir/tmp/")
+        tmpDir.mkdirs()
+
+        def buildProps = new File("$tmpDir/build.properties")
+        buildProps.text = """            griffon.version=$version
+            groovy.version=$groovyVersion
+            ant.version=$antVersion
+            slf4j.version=$slf4jVersion
+            spring.version=$springVersion""".stripIndent(12)
+        copy {
+            from tmpDir
+            into "$buildDir/classes/cli/"
+            include '*.properties'
+        }
+    }
 }
+
+cliClasses.dependsOn createBuildProperties
 
 configure([compileGroovy, compileTestGroovy]) {
     groovyOptions.fork(memoryInitialSize: '128M', memoryMaximumSize: '1G')
