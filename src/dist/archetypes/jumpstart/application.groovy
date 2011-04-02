@@ -20,11 +20,7 @@
 
 import griffon.util.Metadata
 import griffon.util.GriffonNameUtils
-import org.springframework.core.io.ClassPathResource
-import org.springframework.core.io.FileSystemResource
 import org.springframework.core.io.Resource
-import org.springframework.core.io.support.PathMatchingResourcePatternResolver
-import org.springframework.util.FileCopyUtils
 
 includeTargets << griffonScript("_GriffonPlugins")
 includeTargets << griffonScript("_GriffonInit")
@@ -35,9 +31,9 @@ target(name: 'createApplicationProject',
        prehook: null, posthook: null) {
     createProjectWithDefaults()
 
+    argsMap.model = 'MainModel'
     argsMap.view = 'MainView'
     argsMap.controller = 'MainController'
-    argsMap.model = 'MainModel'
     createMVC()
 
     createArtifact(

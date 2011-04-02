@@ -20,6 +20,7 @@ import org.codehaus.griffon.plugins.GriffonPluginInfo
 import org.codehaus.griffon.resolve.PluginResolveEngine
 import griffon.util.BuildSettings
 import griffon.util.Metadata
+import griffon.util.PlatformUtils
 
 /**
  * Gant script that handles the installation of Griffon plugins
@@ -200,6 +201,13 @@ Plug-ins available in the $name repository are listed below:
     def plugins = []
     use(DOMCategory) {
         pluginsList?.'plugin'.each {plugin ->
+            def supportedPlatforms = plugin.platforms?.text()
+            if (supportedPlatforms) {
+                if (!(PlatformUtils.isCompatible(supportedPlatforms.split(',')))) {
+                    return
+                }
+            }
+
             def version
             def pluginLine = plugin.'@name'
             def versionLine = "<no releases>"
