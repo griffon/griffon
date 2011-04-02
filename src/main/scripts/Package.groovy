@@ -21,6 +21,7 @@
  */
 
 import griffon.util.RunMode
+import griffon.util.GriffonNameUtils
 
 // No point doing this stuff more than once.
 if (getBinding().variables.containsKey("_package_called")) return
@@ -257,7 +258,7 @@ target(_copyLaunchScripts: "") {
         fileset(dir: "${griffonSettings.griffonHome}/src/griffon/templates/dist")
     }
     ant.replace( dir: "${targetDistDir}/bin" ) {
-        replacefilter(token: "@app.name@", value: griffonAppName)
+        replacefilter(token: "@app.name@", value: GriffonNameUtils.capitalize(griffonAppName))
         replacefilter(token: "@app.version@", value: griffonAppVersion)
         replacefilter(token: "@app.java.opts@", value: javaOpts)
         replacefilter(token: "@app.main.class@", value: griffonApplicationClass)

@@ -25,9 +25,9 @@ bc.
 mvcGroups {
     // MVC Group for "foo"
     'foo' {
-        model = 'FooModel'
-        controller = 'FooController'
-        view = 'FooView'
+        model      = 'foo.FooModel'
+        view       = 'foo.FooView'
+        controller = 'foo.FooController'
     }
     ...
 }
@@ -44,3 +44,9 @@ Arguments
 * @group@ - The name of the common template prefix for Model, View and Controller. Can be overriden by individual members
 * @integrationTests@ - The name of the integration test template, defaults to 'IntegrationTests'
 * @fileType@ - The file type of each artifact, i.e, groovy|java|etc
+* @skipModel@ - Skips generating a model member if set to true
+* @skipView@ - Skips generating a view member if set to true
+* @skipController@ - Skips generating a controller member if set to true
+* @withModel@ - Sets the model member to the specified full qualified class name
+* @withView@ - Sets the view member to the specified full qualified class name
+* @withController@ - Sets the controller member to the specified full qualified class name

@@ -22,6 +22,7 @@
  */
 
 import static griffon.util.GriffonApplicationUtils.isMacOSX
+import griffon.util.GriffonNameUtils
 
 includeTargets << griffonScript("Package")
 includeTargets << griffonScript("_GriffonBootstrap")
@@ -75,7 +76,7 @@ target('runApp': "Runs the application from the command line") {
         javaOpts << "-XX:maxPermSize=$buildConfig.griffon.memory.maxPermSize"
     }
     if (isMacOSX) {
-        javaOpts << "-Xdock:name=$griffonAppName"
+        javaOpts << "-Xdock:name=${GriffonNameUtils.capitalize(griffonAppName)}"
         javaOpts << "-Xdock:icon=${griffonHome}/media/griffon.icns"
     }
 
