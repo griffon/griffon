@@ -41,7 +41,7 @@ class EventRouter {
     private Map scriptBindings = [:]
     private Map closureListeners = Collections.synchronizedMap([:])
     private static final Logger LOG = LoggerFactory.getLogger(EventRouter)
-    private final LinkedBlockingQueue deferredEvents = new LinkedBlockingQueue()
+    private final Queue deferredEvents = new LinkedBlockingQueue()
 
     private static final Object LOCK = new Object()
     private static int count = 1
