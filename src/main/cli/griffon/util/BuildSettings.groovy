@@ -25,6 +25,9 @@ import org.apache.ivy.util.Message
 import org.codehaus.griffon.resolve.IvyDependencyManager
 import org.codehaus.groovy.runtime.StackTraceUtils
 
+import org.slf4j.Logger
+import org.slf4j.LoggerFactory
+
 /**
  * <p>Represents the project paths and other build settings
  * that the user can change when running the Griffon commands. Defaults
@@ -37,6 +40,8 @@ import org.codehaus.groovy.runtime.StackTraceUtils
  * to ensure consistent behaviour.</p>
  */
 class BuildSettings extends AbstractBuildSettings {
+    private static final Logger LOG = LoggerFactory.getLogger(BuildSettings)
+
     static final Pattern JAR_PATTERN = ~/^\S+\.jar$/
 
     /**
@@ -300,6 +305,7 @@ class BuildSettings extends AbstractBuildSettings {
                             .allArtifactsReports
                             .localFile + applicationJars
         Message.debug("Resolved jars for [compile]: ${{->jarFiles.join('\n')}}")
+        if(LOG.debugEnabled) LOG.debug("Resolved jars for [compile]: ${{->jarFiles.join('\n')}}")
         return jarFiles
     }
     /** List containing the default (resolved via the dependencyManager) compile-time dependencies of the app as File instances. */
@@ -330,6 +336,7 @@ class BuildSettings extends AbstractBuildSettings {
                             .allArtifactsReports
                             .localFile + applicationJars
         Message.debug("Resolved jars for [test]: ${{->jarFiles.join('\n')}}")
+        if(LOG.debugEnabled) LOG.debug("Resolved jars for [test]: ${{->jarFiles.join('\n')}}")
         return jarFiles
     }
     /** List containing the default test-time dependencies of the app as File instances. */
@@ -360,6 +367,7 @@ class BuildSettings extends AbstractBuildSettings {
                    .allArtifactsReports
                    .localFile + applicationJars
         Message.debug("Resolved jars for [runtime]: ${{->jarFiles.join('\n')}}")
+        if(LOG.debugEnabled) LOG.debug("Resolved jars for [runtime]: ${{->jarFiles.join('\n')}}")
         return jarFiles
     }
     /** List containing the default runtime-time dependencies of the app as File instances. */
@@ -373,8 +381,8 @@ class BuildSettings extends AbstractBuildSettings {
                        .resolveDependencies(IvyDependencyManager.PROVIDED_CONFIGURATION)
                        .allArtifactsReports
                        .localFile
-
         Message.debug("Resolved jars for [provided]: ${{->jarFiles.join('\n')}}")
+        if(LOG.debugEnabled) LOG.debug("Resolved jars for [provided]: ${{->jarFiles.join('\n')}}")
         return jarFiles
     }
     /** List containing the dependencies needed at development time, but provided by the container at runtime **/
@@ -388,8 +396,8 @@ class BuildSettings extends AbstractBuildSettings {
                            .resolveDependencies(IvyDependencyManager.BUILD_CONFIGURATION)
                            .allArtifactsReports
                            .localFile + applicationJars
-
         Message.debug("Resolved jars for [build]: ${{->jarFiles.join('\n')}}")
+        if(LOG.debugEnabled) LOG.debug("Resolved jars for [build]: ${{->jarFiles.join('\n')}}")
         return jarFiles
     }
     /** List containing the dependencies required for the build system only */
