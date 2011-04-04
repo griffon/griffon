@@ -15,14 +15,12 @@
  */
 package griffon.util;
 
-import java.util.concurrent.Callable;
-
 /**
- * A Callable that can have arguments.
+ * A Runnable that can have arguments.
  *
  * @author Andres Almiray
  */
-public abstract class CallableWithArgs<V> implements Callable<V> {
+public abstract class RunnableWithArgs implements Runnable {
     private static final Object[] NO_ARGS = new Object[0];
     private final Object LOCK = new Object();
     private Object[] args = NO_ARGS;
@@ -41,14 +39,14 @@ public abstract class CallableWithArgs<V> implements Callable<V> {
         return args;
     }
 
-    public final V call() {
+    public final void run() {
         Object[] copy = null;
         synchronized(LOCK) {
             copy = new Object[args.length];
             System.arraycopy(args, 0, copy, 0, args.length);
         }
-        return call(copy);
+        run(copy);
     }
 
-    public abstract V call(Object[] args);
+    public abstract void run(Object[] args);
 }

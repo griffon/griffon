@@ -107,14 +107,12 @@ public class SampleView extends AbstractGriffonView {
                  .withTarget(model)
                  .withTargetProperty("value")
                  .withConverter(new CallableWithArgs<String>() {
-                      public String call() {
-                          Object[] args = getArgs();
+                      public String call(Object[] args) {
                           return args.length > 0 ? "FOO "+ args[0] : "BAR";
                       }
                   })
                  .withValidator(new CallableWithArgs<Boolean>() {
-                      public Boolean call() {
-                          Object[] args = getArgs();
+                      public Boolean call(Object[] args) {
                           if(args.length == 0) return Boolean.TRUE;
                           try {
                               Integer.parseInt(String.valueOf(args[0]));

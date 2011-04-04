@@ -27,6 +27,7 @@ import java.beans.*;
 import java.lang.ref.*;
 
 import griffon.exceptions.*;
+import griffon.core.MVCClosure;
 import org.codehaus.groovy.reflection.CachedClass;
 
 /** 
@@ -113,6 +114,10 @@ public final class GriffonClassUtils {
         MVC_METHODS.add(new MethodDescriptor("withMVCGroup", new Class[]{String.class, Map.class, Closure.class}));
         MVC_METHODS.add(new MethodDescriptor("withMVCGroup", new Class[]{String.class, String.class, Closure.class}));
         MVC_METHODS.add(new MethodDescriptor("withMVCGroup", new Class[]{String.class, String.class, Map.class, Closure.class}));
+        MVC_METHODS.add(new MethodDescriptor("withMVCGroup", new Class[]{String.class, MVCClosure.class}));
+        MVC_METHODS.add(new MethodDescriptor("withMVCGroup", new Class[]{String.class, Map.class, MVCClosure.class}));
+        MVC_METHODS.add(new MethodDescriptor("withMVCGroup", new Class[]{String.class, String.class, MVCClosure.class}));
+        MVC_METHODS.add(new MethodDescriptor("withMVCGroup", new Class[]{String.class, String.class, Map.class, MVCClosure.class}));
         MVC_METHODS.add(new MethodDescriptor("isUIThread"));
         MVC_METHODS.add(new MethodDescriptor("execAsync", new Class[]{Runnable.class}));
         MVC_METHODS.add(new MethodDescriptor("execAsync", new Class[]{Script.class}));

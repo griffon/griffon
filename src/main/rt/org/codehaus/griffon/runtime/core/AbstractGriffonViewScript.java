@@ -16,10 +16,7 @@
 
 package org.codehaus.griffon.runtime.core;
 
-import griffon.core.GriffonApplication;
-import griffon.core.GriffonClass;
-import griffon.core.GriffonView;
-import griffon.core.GriffonViewClass;
+import griffon.core.*;
 import griffon.util.UIThreadHelper;
 import griffon.util.GriffonExceptionHandler;
 
@@ -136,44 +133,44 @@ public abstract class AbstractGriffonViewScript extends Script implements Griffo
         // empty
     }
 
-    public Map<String, ?> buildMVCGroup(String mvcType) {
+    public Map<String, Object> buildMVCGroup(String mvcType) {
         return GriffonApplicationHelper.buildMVCGroup(getApp(), Collections.emptyMap(), mvcType, mvcType);
     }
 
-    public Map<String, ?> buildMVCGroup(String mvcType, String mvcName) {
+    public Map<String, Object> buildMVCGroup(String mvcType, String mvcName) {
         return GriffonApplicationHelper.buildMVCGroup(getApp(), Collections.emptyMap(), mvcType, mvcName);
     }
 
-    public Map<String, ?> buildMVCGroup(Map<String, Object> args, String mvcType) {
+    public Map<String, Object> buildMVCGroup(Map<String, Object> args, String mvcType) {
         return GriffonApplicationHelper.buildMVCGroup(getApp(), args, mvcType, mvcType);
     }
 
-    public Map<String, ?> buildMVCGroup(Map<String, Object> args, String mvcType, String mvcName) {
+    public Map<String, Object> buildMVCGroup(Map<String, Object> args, String mvcType, String mvcName) {
         return GriffonApplicationHelper.buildMVCGroup(getApp(), args, mvcType, mvcName);
     }
 
-    public List<?> createMVCGroup(String mvcType) {
-        return (List<?>) GriffonApplicationHelper.createMVCGroup(getApp(), mvcType);
+    public List<? extends GriffonMvcArtifact> createMVCGroup(String mvcType) {
+        return GriffonApplicationHelper.createMVCGroup(getApp(), mvcType);
     }
 
-    public List<?> createMVCGroup(Map<String, Object> args, String mvcType) {
-        return (List<?>) GriffonApplicationHelper.createMVCGroup(getApp(), args, mvcType);
+    public List<? extends GriffonMvcArtifact> createMVCGroup(Map<String, Object> args, String mvcType) {
+        return GriffonApplicationHelper.createMVCGroup(getApp(), args, mvcType);
     }
 
-    public List<?> createMVCGroup(String mvcType, Map<String, Object> args) {
-        return (List<?>) GriffonApplicationHelper.createMVCGroup(getApp(), args, mvcType);
+    public List<? extends GriffonMvcArtifact> createMVCGroup(String mvcType, Map<String, Object> args) {
+        return GriffonApplicationHelper.createMVCGroup(getApp(), args, mvcType);
     }
 
-    public List<?> createMVCGroup(String mvcType, String mvcName) {
-        return (List<?>) GriffonApplicationHelper.createMVCGroup(getApp(), mvcType, mvcName);
+    public List<? extends GriffonMvcArtifact> createMVCGroup(String mvcType, String mvcName) {
+        return GriffonApplicationHelper.createMVCGroup(getApp(), mvcType, mvcName);
     }
 
-    public List<?> createMVCGroup(Map<String, Object> args, String mvcType, String mvcName) {
-        return (List<?>) GriffonApplicationHelper.createMVCGroup(getApp(), args, mvcType, mvcName);
+    public List<? extends GriffonMvcArtifact> createMVCGroup(Map<String, Object> args, String mvcType, String mvcName) {
+        return GriffonApplicationHelper.createMVCGroup(getApp(), args, mvcType, mvcName);
     }
 
-    public List<?> createMVCGroup(String mvcType, String mvcName, Map<String, Object> args) {
-        return (List<?>) GriffonApplicationHelper.createMVCGroup(getApp(), args, mvcType, mvcName);
+    public List<? extends GriffonMvcArtifact> createMVCGroup(String mvcType, String mvcName, Map<String, Object> args) {
+        return GriffonApplicationHelper.createMVCGroup(getApp(), args, mvcType, mvcName);
     }
 
     public void destroyMVCGroup(String mvcName) {
@@ -212,7 +209,32 @@ public abstract class AbstractGriffonViewScript extends Script implements Griffo
             try {
                 destroyMVCGroup(mvcName);
             } catch(Exception x) {
-                if(getLog().isWarnEnabled()) getLog().warn("Could not destroy group ["+mvcName+"] of type "+mvcType, GriffonExceptionHandler.sanitize(x));
+                if(getLog().isWarnEnabled()) getApp().getLog().warn("Could not destroy group ["+mvcName+"] of type "+mvcType, GriffonExceptionHandler.sanitize(x));
+            }
+        }
+    }
+
+    public <M extends GriffonModel, V extends GriffonView, C extends GriffonController> void withMVCGroup(String mvcType, MVCClosure<M, V, C> handler) {
+        withMVCGroup(mvcType, mvcType, Collections.<String, Object>emptyMap(), handler);
+    }
+
+    public <M extends GriffonModel, V extends GriffonView, C extends GriffonController> void withMVCGroup(String mvcType, String mvcName, MVCClosure<M, V, C> handler) {
+        withMVCGroup(mvcType, mvcName, Collections.<String, Object>emptyMap(), handler);
+    }
+
+    public <M extends GriffonModel, V extends GriffonView, C extends GriffonController> void withMVCGroup(String mvcType, Map<String, Object> args, MVCClosure<M, V, C> handler) {
+        withMVCGroup(mvcType, mvcType, args, handler);
+    }
+
+    public <M extends GriffonModel, V extends GriffonView, C extends GriffonController> void withMVCGroup(String mvcType, String mvcName, Map<String, Object> args, MVCClosure<M, V, C> handler) {
+        try {
+            List<?> group = createMVCGroup(mvcType, mvcName, args);
+            handler.call((M) group.get(0), (V) group.get(1), (C) group.get(2));
+        } finally {
+            try {
+                destroyMVCGroup(mvcName);
+            } catch(Exception x) {
+                if(getLog().isWarnEnabled()) getApp().getLog().warn("Could not destroy group ["+mvcName+"] of type "+mvcType, GriffonExceptionHandler.sanitize(x));
             }
         }
     }

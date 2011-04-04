@@ -6,10 +6,23 @@ Create a new MVC group instance.
 
 h2. Examples
 
-{code:java}
+Groovy
+{code:groovy}
 class SampleController {
     def action = { evt = null ->
         def (m, v, c) = createMVCGroup('Other') 
+    }
+}
+{code}
+
+Java
+{code:java}
+import griffon.core.*;
+import org.codehaus.griffon.runtime.core.AbstractGriffonController;
+
+public class SampleController extends AbstractGriffonController {
+    void action() {
+        List<? extends GriffonMvcArtifact> mvc = createMVCGroup("Other");
     }
 }
 {code}

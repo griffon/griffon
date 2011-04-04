@@ -61,17 +61,17 @@ public interface GriffonMvcArtifact extends GriffonArtifact {
      * <pre>
      * mvcGroups {
      *     'foo' {
-     *         model = 'com.acme.FooModel'
+     *         model      = 'com.acme.FooModel'
+     *         view       = 'com.acme.FooView'
      *         controller = 'com.acme.FooController'
-     *         view = 'com.acme.FooView'
-     *    }
+     *     }
      * }
      * </pre>
      *
-     * An instance of the "Foo" group can be created as follows
+     * An instance of the "foo" group can be created as follows
      *
      * <pre>
-     * Map<String, ?> fooGroup = buildMVCGroup('foo')
+     * Map<String, Object> fooGroup = buildMVCGroup('foo')
      * assert (fooGroup.controller instanceof FooController)
      * </pre>
      *
@@ -80,7 +80,7 @@ public interface GriffonMvcArtifact extends GriffonArtifact {
      * @throws IllegalArgumentException if the type specified is not found in the application's
      * configuration.
      */
-    Map<String, ?> buildMVCGroup(String mvcType);
+    Map<String, Object> buildMVCGroup(String mvcType);
 
     /**
      * Instantiates an MVC group of the specified type with a particular name.<p>
@@ -93,17 +93,17 @@ public interface GriffonMvcArtifact extends GriffonArtifact {
      * <pre>
      * mvcGroups {
      *     'foo' {
-     *         model = 'com.acme.FooModel'
+     *         model      = 'com.acme.FooModel'
+     *         view       = 'com.acme.FooView'
      *         controller = 'com.acme.FooController'
-     *         view = 'com.acme.FooView'
-     *    }
+     *     }
      * }
      * </pre>
      *
-     * An instance of the "Foo" group can be created as follows
+     * An instance of the "foo" group can be created as follows
      *
      * <pre>
-     * Map<String, ?> fooGroup = buildMVCGroup('foo', 'foo' + System.currentTimeMillis())
+     * Map<String, Object> fooGroup = buildMVCGroup('foo', 'foo' + System.currentTimeMillis())
      * assert (fooGroup.controller instanceof FooController)
      * </pre>
      *
@@ -115,7 +115,7 @@ public interface GriffonMvcArtifact extends GriffonArtifact {
      * @throws IllegalArgumentException if the type specified is not found in the application's
      * configuration.
      */
-    Map<String, ?> buildMVCGroup(String mvcType, String mvcName);
+    Map<String, Object> buildMVCGroup(String mvcType, String mvcName);
 
     /**
      * Instantiates an MVC group of the specified type with additional variables.<p>
@@ -135,15 +135,15 @@ public interface GriffonMvcArtifact extends GriffonArtifact {
      * <pre>
      * mvcGroups {
      *     'foo' {
-     *         model = 'com.acme.FooModel'
+     *         model      = 'com.acme.FooModel'
+     *         view       = 'com.acme.FooView'
      *         controller = 'com.acme.FooController'
-     *         view = 'com.acme.FooView'
-     *    }
-     *    'bar' {
-     *         model = 'com.acme.FooModel'
+     *     }
+     *     'bar' {
+     *         model      = 'com.acme.FooModel'
+     *         view       = 'com.acme.BarView'
      *         controller = 'com.acme.BarController'
-     *         view = 'com.acme.BarView'
-     *    }
+     *     }
      * }
      * </pre>
      *
@@ -151,19 +151,19 @@ public interface GriffonMvcArtifact extends GriffonArtifact {
      * instance by creating the groups in the following way:
      *
      * <pre>
-     * Map<String, ?> fooGroup = buildMVCGroup('foo')
-     * Map<String, ?> barGroup = buildMVCGroup('bar', model: fooGroup.model)
+     * Map<String, Object> fooGroup = buildMVCGroup('foo')
+     * Map<String, Object> barGroup = buildMVCGroup('bar', model: fooGroup.model)
      * assert fooGroup.model == barGroup.model
      * </pre>
      *
-     * @param args any useful values that can be set as properties on eacn MVC member or that
+     * @param args any useful values that can be set as properties on each MVC member or that
      * identify a member that can be shared with other groups.
      * @param mvcType the type of group to build.
      * @return a Map with every member of the group keyed by type
      * @throws IllegalArgumentException if the type specified is not found in the application's
      * configuration.
      */
-    Map<String, ?> buildMVCGroup(Map<String, Object> args, String mvcType);
+    Map<String, Object> buildMVCGroup(Map<String, Object> args, String mvcType);
 
     /**
      * Instantiates an MVC group of the specified type with a particular name.<p>
@@ -183,24 +183,24 @@ public interface GriffonMvcArtifact extends GriffonArtifact {
      * <pre>
      * mvcGroups {
      *     'foo' {
-     *         model = 'com.acme.FooModel'
+     *         model      = 'com.acme.FooModel'
+     *         view       = 'com.acme.FooView'
      *         controller = 'com.acme.FooController'
-     *         view = 'com.acme.FooView'
-     *    }
+     *     }
      * }
      * </pre>
      *
      * We can create two instances of the same group that share the same model instance in the following way:
      *
      * <pre>
-     * Map<String, ?> fooGroup1 = buildMVCGroup('foo', 'foo1')
-     * Map<String, ?> fooGroup2 = buildMVCGroup('bar', 'foo2', model: fooGroup1.model)
+     * Map<String, Object> fooGroup1 = buildMVCGroup('foo', 'foo1')
+     * Map<String, Object> fooGroup2 = buildMVCGroup('bar', 'foo2', model: fooGroup1.model)
      * assert fooGroup1.model == fooGroup2.model
      * </pre>
      *
      * MVC groups must have an unique name.
      *
-     * @param args any useful values that can be set as properties on eacn MVC member or that
+     * @param args any useful values that can be set as properties on each MVC member or that
      * identify a member that can be shared with other groups.
      * @param mvcType the type of group to build.
      * @param mvcName the name to assign to the built group.
@@ -208,7 +208,7 @@ public interface GriffonMvcArtifact extends GriffonArtifact {
      * @throws IllegalArgumentException if the type specified is not found in the application's
      * configuration.
      */
-    Map<String, ?> buildMVCGroup(Map<String, Object> args, String mvcType, String mvcName);
+    Map<String, Object> buildMVCGroup(Map<String, Object> args, String mvcType, String mvcName);
 
     /**
      * Instantiates an MVC group of the specified type returning only the MVC parts.<p>
@@ -221,14 +221,14 @@ public interface GriffonMvcArtifact extends GriffonArtifact {
      * <pre>
      * mvcGroups {
      *     'foo' {
-     *         model = 'com.acme.FooModel'
+     *         model      = 'com.acme.FooModel'
+     *         view       = 'com.acme.FooView'
      *         controller = 'com.acme.FooController'
-     *         view = 'com.acme.FooView'
-     *    }
+     *     }
      * }
      * </pre>
      *
-     * An instance of the "Foo" group can be created as follows
+     * An instance of the "foo" group can be created as follows
      *
      * <pre>
      * def (m, v, c) = createMVCGroup('foo')
@@ -240,7 +240,7 @@ public interface GriffonMvcArtifact extends GriffonArtifact {
      * @throws IllegalArgumentException if the type specified is not found in the application's
      * configuration.
      */
-    List<?> createMVCGroup(String mvcType);
+    List<? extends GriffonMvcArtifact> createMVCGroup(String mvcType);
 
     /**
      * Instantiates an MVC group of the specified type with additional variables.<p>
@@ -260,15 +260,15 @@ public interface GriffonMvcArtifact extends GriffonArtifact {
      * <pre>
      * mvcGroups {
      *     'foo' {
-     *         model = 'com.acme.FooModel'
+     *         model      = 'com.acme.FooModel'
+     *         view       = 'com.acme.FooView'
      *         controller = 'com.acme.FooController'
-     *         view = 'com.acme.FooView'
-     *    }
-     *    'bar' {
-     *         model = 'com.acme.FooModel'
+     *     }
+     *     'bar' {
+     *         model      = 'com.acme.FooModel'
+     *         view       = 'com.acme.BarView'
      *         controller = 'com.acme.BarController'
-     *         view = 'com.acme.BarView'
-     *    }
+     *     }
      * }
      * </pre>
      *
@@ -281,14 +281,14 @@ public interface GriffonMvcArtifact extends GriffonArtifact {
      * assert fm1 == m2
      * </pre>
      *
-     * @param args any useful values that can be set as properties on eacn MVC member or that
+     * @param args any useful values that can be set as properties on each MVC member or that
      * identify a member that can be shared with other groups.
      * @param mvcType the type of group to build.
      * @return a List with the canonical MVC members of the group
      * @throws IllegalArgumentException if the type specified is not found in the application's
      * configuration.
      */
-    List<?> createMVCGroup(Map<String, Object> args, String mvcType);
+    List<? extends GriffonMvcArtifact> createMVCGroup(Map<String, Object> args, String mvcType);
 
     /**
      * Instantiates an MVC group of the specified type with additional variables.<p>
@@ -308,15 +308,15 @@ public interface GriffonMvcArtifact extends GriffonArtifact {
      * <pre>
      * mvcGroups {
      *     'foo' {
-     *         model = 'com.acme.FooModel'
+     *         model      = 'com.acme.FooModel'
+     *         view       = 'com.acme.FooView'
      *         controller = 'com.acme.FooController'
-     *         view = 'com.acme.FooView'
-     *    }
-     *    'bar' {
-     *         model = 'com.acme.FooModel'
+     *     }
+     *     'bar' {
+     *         model      = 'com.acme.FooModel'
+     *         view       = 'com.acme.BarView'
      *         controller = 'com.acme.BarController'
-     *         view = 'com.acme.BarView'
-     *    }
+     *     }
      * }
      * </pre>
      *
@@ -330,13 +330,13 @@ public interface GriffonMvcArtifact extends GriffonArtifact {
      * </pre>
      *
      * @param mvcType the type of group to build.
-     * @param args any useful values that can be set as properties on eacn MVC member or that
+     * @param args any useful values that can be set as properties on each MVC member or that
      * identify a member that can be shared with other groups.
      * @return a List with the canonical MVC members of the group
      * @throws IllegalArgumentException if the type specified is not found in the application's
      * configuration.
      */
-    List<?> createMVCGroup(String mvcType, Map<String, Object> args);
+    List<? extends GriffonMvcArtifact> createMVCGroup(String mvcType, Map<String, Object> args);
 
     /**
      * Instantiates an MVC group of the specified type with a particular name.<p>
@@ -349,14 +349,14 @@ public interface GriffonMvcArtifact extends GriffonArtifact {
      * <pre>
      * mvcGroups {
      *     'foo' {
-     *         model = 'com.acme.FooModel'
+     *         model      = 'com.acme.FooModel'
+     *         view       = 'com.acme.FooView'
      *         controller = 'com.acme.FooController'
-     *         view = 'com.acme.FooView'
-     *    }
+     *      }
      * }
      * </pre>
      *
-     * An instance of the "Foo" group can be created as follows
+     * An instance of the "foo" group can be created as follows
      *
      * <pre>
      * def (m, v, c) = createMVCGroup('foo', 'foo' + System.currenttimeMillis())
@@ -371,7 +371,7 @@ public interface GriffonMvcArtifact extends GriffonArtifact {
      * @throws IllegalArgumentException if the type specified is not found in the application's
      * configuration.
      */
-    List<?> createMVCGroup(String mvcType, String mvcName);
+    List<? extends GriffonMvcArtifact> createMVCGroup(String mvcType, String mvcName);
 
     /**
      * Instantiates an MVC group of the specified type with a particular name.<p>
@@ -391,10 +391,10 @@ public interface GriffonMvcArtifact extends GriffonArtifact {
      * <pre>
      * mvcGroups {
      *     'foo' {
-     *         model = 'com.acme.FooModel'
+     *         model      = 'com.acme.FooModel'
+     *         view       = 'com.acme.FooView'
      *         controller = 'com.acme.FooController'
-     *         view = 'com.acme.FooView'
-     *    }
+     *     }
      * }
      * </pre>
      *
@@ -408,7 +408,7 @@ public interface GriffonMvcArtifact extends GriffonArtifact {
      *
      * MVC groups must have an unique name.
      *
-     * @param args any useful values that can be set as properties on eacn MVC member or that
+     * @param args any useful values that can be set as properties on each MVC member or that
      * identify a member that can be shared with other groups.
      * @param mvcType the type of group to build.
      * @param mvcName the name to assign to the built group.
@@ -416,7 +416,7 @@ public interface GriffonMvcArtifact extends GriffonArtifact {
      * @throws IllegalArgumentException if the type specified is not found in the application's
      * configuration.
      */
-    List<?> createMVCGroup(Map<String, Object> args, String mvcType, String mvcName);
+    List<? extends GriffonMvcArtifact> createMVCGroup(Map<String, Object> args, String mvcType, String mvcName);
 
     /**
      * Instantiates an MVC group of the specified type with a particular name.<p>
@@ -436,10 +436,10 @@ public interface GriffonMvcArtifact extends GriffonArtifact {
      * <pre>
      * mvcGroups {
      *     'foo' {
-     *         model = 'com.acme.FooModel'
+     *         model      = 'com.acme.FooModel'
+     *         view       = 'com.acme.FooView'
      *         controller = 'com.acme.FooController'
-     *         view = 'com.acme.FooView'
-     *    }
+     *     }
      * }
      * </pre>
      *
@@ -455,13 +455,13 @@ public interface GriffonMvcArtifact extends GriffonArtifact {
      *
      * @param mvcType the type of group to build.
      * @param mvcName the name to assign to the built group.
-     * @param args any useful values that can be set as properties on eacn MVC member or that
+     * @param args any useful values that can be set as properties on each MVC member or that
      * identify a member that can be shared with other groups.
      * @return a List with the canonical MVC members of the group
      * @throws IllegalArgumentException if the type specified is not found in the application's
      * configuration.
      */
-    List<?> createMVCGroup(String mvcType, String mvcName, Map<String, Object> args);
+    List<? extends GriffonMvcArtifact> createMVCGroup(String mvcType, String mvcName, Map<String, Object> args);
 
     /**
      * Destroys an MVC group identified by a particular name.<p>
@@ -485,19 +485,19 @@ public interface GriffonMvcArtifact extends GriffonArtifact {
      * <pre>
      * mvcGroups {
      *     'foo' {
-     *         model = 'com.acme.FooModel'
+     *         model      = 'com.acme.FooModel'
+     *         view       = 'com.acme.FooView'
      *         controller = 'com.acme.FooController'
-     *         view = 'com.acme.FooView'
-     *    }
+     *     }
      * }
      * </pre>
      *
-     * An instance of the "Foo" group can be used as follows
+     * An instance of the "foo" group can be used as follows
      *
      * <pre>
      * withMVCGroup('foo') { m, v c ->
-     *    m.someProperty = someValue
-     *    c.invokeAnAction()
+     *     m.someProperty = someValue
+     *     c.invokeAnAction()
      * }
      * </pre>
      *
@@ -522,19 +522,19 @@ public interface GriffonMvcArtifact extends GriffonArtifact {
      * <pre>
      * mvcGroups {
      *     'foo' {
-     *         model = 'com.acme.FooModel'
+     *         model      = 'com.acme.FooModel'
+     *         view       = 'com.acme.FooView'
      *         controller = 'com.acme.FooController'
-     *         view = 'com.acme.FooView'
-     *    }
+     *     }
      * }
      * </pre>
      *
-     * An instance of the "Foo" group can be used as follows
+     * An instance of the "foo" group can be used as follows
      *
      * <pre>
      * withMVCGroup('foo', 'foo1') { m, v c ->
-     *    m.someProperty = someValue
-     *    c.invokeAnAction()
+     *     m.someProperty = someValue
+     *     c.invokeAnAction()
      * }
      * </pre>
      *
@@ -567,19 +567,19 @@ public interface GriffonMvcArtifact extends GriffonArtifact {
      * <pre>
      * mvcGroups {
      *     'foo' {
-     *         model = 'com.acme.FooModel'
+     *         model      = 'com.acme.FooModel'
+     *         view       = 'com.acme.FooView'
      *         controller = 'com.acme.FooController'
-     *         view = 'com.acme.FooView'
-     *    }
+     *     }
      * }
      * </pre>
      *
-     * An instance of the "Foo" group can be used as follows
+     * An instance of the "foo" group can be used as follows
      *
      * <pre>
      * withMVCGroup('foo', 'foo1') { m, v c ->
-     *    m.someProperty = someValue
-     *    c.invokeAnAction()
+     *     m.someProperty = someValue
+     *     c.invokeAnAction()
      * }
      * </pre>
      *
@@ -587,7 +587,7 @@ public interface GriffonMvcArtifact extends GriffonArtifact {
      *
      * @param mvcType the type of group to build.
      * @param mvcName the name to assign to the built group.
-     * @param args any useful values that can be set as properties on eacn MVC member or that
+     * @param args any useful values that can be set as properties on each MVC member or that
      * identify a member that can be shared with other groups.
      * @throws IllegalArgumentException if the type specified is not found in the application's
      * configuration
@@ -614,24 +614,24 @@ public interface GriffonMvcArtifact extends GriffonArtifact {
      * <pre>
      * mvcGroups {
      *     'foo' {
-     *         model = 'com.acme.FooModel'
+     *         model      = 'com.acme.FooModel'
+     *         view       = 'com.acme.FooView'
      *         controller = 'com.acme.FooController'
-     *         view = 'com.acme.FooView'
-     *    }
+     *     }
      * }
      * </pre>
      *
-     * An instance of the "Foo" group can be used as follows
+     * An instance of the "foo" group can be used as follows
      *
      * <pre>
      * withMVCGroup('foo', 'foo1') { m, v c ->
-     *    m.someProperty = someValue
-     *    c.invokeAnAction()
+     *     m.someProperty = someValue
+     *     c.invokeAnAction()
      * }
      * </pre>
      *
      * @param mvcType the type of group to build.
-     * @param args any useful values that can be set as properties on eacn MVC member or that
+     * @param args any useful values that can be set as properties on each MVC member or that
      * identify a member that can be shared with other groups.
      * @throws IllegalArgumentException if the type specified is not found in the application's
      * configuration
@@ -639,4 +639,182 @@ public interface GriffonMvcArtifact extends GriffonArtifact {
      * @since 0.9.3
      */
     void withMVCGroup(String mvcType, Map<String, Object> args, Closure handler);
+
+    /**
+     * Instantiates an MVC group of the specified type then destroys it after it has been handled.<p>
+     * <p>This method is of particular interest when working with short lived MVC groups such as
+     * those used to build dialogs.<p/>
+     * <p>MVC Groups must be previously configured with the application's metadata
+     * before they can be used. This registration process usually takes place automatically
+     * at boot time. The type of the group can be normally found in the application's
+     * configuration file.</p>
+     * For example, with the following entry available in {@code Application.groovy}
+     *
+     * <pre>
+     * mvcGroups {
+     *     'foo' {
+     *         model      = 'com.acme.FooModel'
+     *         view       = 'com.acme.FooView'
+     *         controller = 'com.acme.FooController'
+     *    }
+     * }
+     * </pre>
+     *
+     * An instance of the "foo" group can be used as follows
+     *
+     * <pre>
+     * withMVCGroup("foo", new MVCClosure&lt;FooModel, FooView, FooController&gt;() {
+     *     public void call(FooModel m, FooView v, FooController c) {
+     *         m.setSomeProperty(someValue);
+     *         c.invokeAnAction();
+     *     }
+     * });
+     * </pre>
+     *
+     * @param mvcType the type of group to build.
+     * @throws IllegalArgumentException if the type specified is not found in the application's
+     * configuration
+     *
+     * @since 0.9.3
+     */
+    <M extends GriffonModel, V extends GriffonView, C extends GriffonController> void withMVCGroup(String mvcType, MVCClosure<M, V, C> handler);
+
+    /**
+     * Instantiates an MVC group of the specified type then destroys it after it has been handled.<p>
+     * <p>This method is of particular interest when working with short lived MVC groups such as
+     * those used to build dialogs.<p/>
+     * <p>MVC Groups must be previously configured with the application's metadata
+     * before they can be used. This registration process usually takes place automatically
+     * at boot time. The type of the group can be normally found in the application's
+     * configuration file.</p>
+     * For example, with the following entry available in {@code Application.groovy}
+     *
+     * <pre>
+     * mvcGroups {
+     *     'foo' {
+     *         model      = 'com.acme.FooModel'
+     *         view       = 'com.acme.FooView'
+     *         controller = 'com.acme.FooController'
+     *     }
+     * }
+     * </pre>
+     *
+     * An instance of the "foo" group can be used as follows
+     *
+     * <pre>
+     * withMVCGroup("foo", "foo1", new MVCClosure&lt;FooModel, FooView, FooController&gt;() {
+     *     public void call(FooModel m, FooView v, FooController c) {
+     *         m.setSomeProperty(someValue);
+     *         c.invokeAnAction();
+     *     }
+     * });
+     * </pre>
+     *
+     * MVC groups must have an unique name.
+     *
+     * @param mvcType the type of group to build.
+     * @param mvcName the name to assign to the built group.
+     * @throws IllegalArgumentException if the type specified is not found in the application's
+     * configuration
+     *
+     * @since 0.9.3
+     */
+    <M extends GriffonModel, V extends GriffonView, C extends GriffonController> void withMVCGroup(String mvcType, String mvcName, MVCClosure<M, V, C> handler);
+
+    /**
+     * Instantiates an MVC group of the specified type then destroys it after it has been handled.<p>
+     * <p>This method is of particular interest when working with short lived MVC groups such as
+     * those used to build dialogs.<p/>
+     * <p>MVC Groups must be previously configured with the application's metadata
+     * before they can be used. This registration process usually takes place automatically
+     * at boot time. The type of the group can be normally found in the application's
+     * configuration file.</p>
+     * The <tt>args</tt> Map can contain any value that will be used in one of the following
+     * scenarios <ul>
+     * <li>The key matches a member definition; the value will be used as the instance of such member.</li>
+     * <li>The key does not match a member definition, the value is assumed to be a property that can be set
+     * on any MVC member of the group.</li>
+     * For example, with the following entry available in {@code Application.groovy}
+     *
+     * <pre>
+     * mvcGroups {
+     *     'foo' {
+     *         model      = 'com.acme.FooModel'
+     *         view       = 'com.acme.FooView'
+     *         controller = 'com.acme.FooController'
+     *     }
+     * }
+     * </pre>
+     *
+     * An instance of the "foo" group can be used as follows
+     *
+     * <pre>
+     * Map<String, Object> map = ... // initialized elsewhere
+     * withMVCGroup("foo", "foo1", map, new MVCClosure&lt;FooModel, FooView, FooController&gt;() {
+     *    public void call(FooModel m, FooView v, FooController c) {
+     *        m.setSomeProperty(someValue);
+     *        c.invokeAnAction();
+     *    }
+     * });
+     * </pre>
+     *
+     * MVC groups must have an unique name.
+     *
+     * @param mvcType the type of group to build.
+     * @param mvcName the name to assign to the built group.
+     * @param args any useful values that can be set as properties on each MVC member or that
+     * identify a member that can be shared with other groups.
+     * @throws IllegalArgumentException if the type specified is not found in the application's
+     * configuration
+     *
+     * @since 0.9.3
+     */
+    <M extends GriffonModel, V extends GriffonView, C extends GriffonController> void withMVCGroup(String mvcType, String mvcName, Map<String, Object> args, MVCClosure<M, V, C> handler);
+
+    /**
+     * Instantiates an MVC group of the specified type then destroys it after it has been handled.<p>
+     * <p>This method is of particular interest when working with short lived MVC groups such as
+     * those used to build dialogs.<p/>
+     * <p>MVC Groups must be previously configured with the application's metadata
+     * before they can be used. This registration process usually takes place automatically
+     * at boot time. The type of the group can be normally found in the application's
+     * configuration file.</p>
+     * The <tt>args</tt> Map can contain any value that will be used in one of the following
+     * scenarios <ul>
+     * <li>The key matches a member definition; the value will be used as the instance of such member.</li>
+     * <li>The key does not match a member definition, the value is assumed to be a property that can be set
+     * on any MVC member of the group.</li>
+     * For example, with the following entry available in {@code Application.groovy}
+     *
+     * <pre>
+     * mvcGroups {
+     *     'foo' {
+     *         model      = 'com.acme.FooModel'
+     *         view       = 'com.acme.FooView'
+     *         controller = 'com.acme.FooController'
+     *    }
+     * }
+     * </pre>
+     *
+     * An instance of the "foo" group can be used as follows
+     *
+     * <pre>
+     * Map<String, Object> map = ... // initialized elsewhere
+     * withMVCGroup("foo", map, new MVCClosure&lt;FooModel, FooView, FooController&gt;() {
+     *    public void call(FooModel m, FooView v, FooController c) {
+     *        m.setSomeProperty(someValue);
+     *        c.invokeAnAction();
+     *    }
+     * });
+     * </pre>
+     *
+     * @param mvcType the type of group to build.
+     * @param args any useful values that can be set as properties on each MVC member or that
+     * identify a member that can be shared with other groups.
+     * @throws IllegalArgumentException if the type specified is not found in the application's
+     * configuration
+     *
+     * @since 0.9.3
+     */
+    <M extends GriffonModel, V extends GriffonView, C extends GriffonController> void withMVCGroup(String mvcType, Map<String, Object> args, MVCClosure<M, V, C> handler);
 }

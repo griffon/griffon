@@ -38,10 +38,14 @@ import java.lang.annotation.Target;
  * &nbsp;&nbsp;&nbsp;&nbsp;registers an event listener of type, Map, Script or bean</li>
  * <li><code>public void addEventListener(java.lang.String, groovy.lang.Closure)</code><br/>
  * &nbsp;&nbsp;&nbsp;&nbsp;registers a Closure as event listener</li>
+ * <li><code>public void addEventListener(java.lang.String, griffon.util.RunnableWithArgs)</code><br/>
+ * &nbsp;&nbsp;&nbsp;&nbsp;registers a Runnable as event listener</li>
  * <li><code>public void removeEventListener(java.lang.Object)</code><br/>
  * &nbsp;&nbsp;&nbsp;&nbsp;unregisters an event listener of type, Map, Script or bean</li>
  * <li><code>public void removeEventListener(java.lang.String, groovy.lang.Closure)</code><br/>
  * &nbsp;&nbsp;&nbsp;&nbsp;unregisters a Closure as event listener</li>
+ * <li><code>public void removeEventListener(java.lang.String,griffon.util.RunnableWithArgs)</code><br/>
+ * &nbsp;&nbsp;&nbsp;&nbsp;unregisters a Runnable as event listener</li>
  * <li><code>public void publishEvent(java.lang.String)</code><br/>
  * &nbsp;&nbsp;&nbsp;&nbsp;publishes and event in the current thread</li>
  * <li><code>public void publishEvent(java.lang.String, java.util.List)</code><br/>

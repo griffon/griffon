@@ -15,11 +15,11 @@
  */
 package org.codehaus.griffon.runtime.util
 
-import griffon.core.GriffonClass
-import griffon.core.GriffonApplication
-import griffon.core.ArtifactManager
-import griffon.core.GriffonArtifact
-import griffon.core.GriffonMvcArtifact
+import griffon.core.*
+import griffon.util.Metadata
+import griffon.util.Environment
+import griffon.util.UIThreadHelper
+import griffon.util.GriffonExceptionHandler
 import org.codehaus.griffon.runtime.builder.UberBuilder
 import org.codehaus.griffon.runtime.core.DefaultAddonManager
 import org.codehaus.griffon.runtime.core.DefaultArtifactManager
@@ -27,10 +27,6 @@ import org.codehaus.griffon.runtime.core.ModelArtifactHandler
 import org.codehaus.griffon.runtime.core.ViewArtifactHandler
 import org.codehaus.griffon.runtime.core.ControllerArtifactHandler
 import org.codehaus.griffon.runtime.core.ServiceArtifactHandler
-import griffon.util.Metadata
-import griffon.util.Environment
-import griffon.util.UIThreadHelper
-import griffon.util.GriffonExceptionHandler
 import org.codehaus.groovy.runtime.InvokerHelper
 
 import org.codehaus.griffon.runtime.logging.Log4jConfig
@@ -223,27 +219,27 @@ class GriffonApplicationHelper {
         return instance
     }
 
-    static createMVCGroup(GriffonApplication app, String mvcType) {
+    static List createMVCGroup(GriffonApplication app, String mvcType) {
         createMVCGroup(app, mvcType, mvcType, [:])
     }
 
-    static createMVCGroup(GriffonApplication app, String mvcType, String mvcName) {
+    static List createMVCGroup(GriffonApplication app, String mvcType, String mvcName) {
         createMVCGroup(app, mvcType, mvcName, [:])
     }
 
-    static createMVCGroup(GriffonApplication app, String mvcType, Map bindArgs) {
+    static List createMVCGroup(GriffonApplication app, String mvcType, Map bindArgs) {
         createMVCGroup(app, mvcType, mvcType, bindArgs)
     }
 
-    static createMVCGroup(GriffonApplication app, Map bindArgs, String mvcType, String mvcName) {
+    static List createMVCGroup(GriffonApplication app, Map bindArgs, String mvcType, String mvcName) {
         createMVCGroup(app, mvcType, mvcName, bindArgs)
     }
 
-    static createMVCGroup(GriffonApplication app, Map bindArgs, String mvcType) {
+    static List createMVCGroup(GriffonApplication app, Map bindArgs, String mvcType) {
         createMVCGroup(app, mvcType, mvcType, bindArgs)
     }
 
-    static createMVCGroup(GriffonApplication app, String mvcType, String mvcName, Map bindArgs) {
+    static List createMVCGroup(GriffonApplication app, String mvcType, String mvcName, Map bindArgs) {
         Map results = buildMVCGroup(app, bindArgs, mvcType, mvcName)
         return [results.model, results.view, results.controller]
     }
@@ -272,11 +268,36 @@ class GriffonApplicationHelper {
         }
     }
 
-    static Map buildMVCGroup(GriffonApplication app, String mvcType, String mvcName = mvcType) {
+    static <M extends GriffonModel, V extends GriffonView, C extends GriffonController> void withMVCGroup(GriffonApplication app, String mvcType, MVCClosure<M, V, C> handler) {
+        withMVCGroup(mvcType, mvcType, [:], handler)
+    }
+
+    static <M extends GriffonModel, V extends GriffonView, C extends GriffonController> void withMVCGroup(GriffonApplication app, String mvcType, String mvcName, MVCClosure<M, V, C> handler) {
+        withMVCGroup(mvcType, mvcName, [:], handler)
+    }
+
+    static <M extends GriffonModel, V extends GriffonView, C extends GriffonController> void withMVCGroup(GriffonApplication app, String mvcType, Map<String, Object> args, MVCClosure<M, V, C> handler) {
+        withMVCGroup(mvcType, mvcType, args, handler)
+    }
+
+    static <M extends GriffonModel, V extends GriffonView, C extends GriffonController> void withMVCGroup(GriffonApplication app, String mvcType, String mvcName, Map<String, Object> args, MVCClosure<M, V, C> handler) {
+        try {
+            List<?> group = createMVCGroup(mvcType, mvcName, args)
+            handler.call((M) group[0], (V) group[1], (C) group[2])
+        } finally {
+            try {
+                destroyMVCGroup(app, mvcName)
+            } catch(Exception x) {
+                if(app.log.warnEnabled) app.log.warn("Could not destroy group [$mvcName] of type $mvcType.", GriffonExceptionHandler.sanitize(x))
+            }
+        }
+    }
+
+    static Map<String, Object> buildMVCGroup(GriffonApplication app, String mvcType, String mvcName = mvcType) {
         buildMVCGroup(app, [:], mvcType, mvcName)
     }
 
-    static Map buildMVCGroup(GriffonApplication app, Map bindArgs, String mvcType, String mvcName = mvcType) {
+    static Map<String, Object> buildMVCGroup(GriffonApplication app, Map bindArgs, String mvcType, String mvcName = mvcType) {
         if (!app.mvcGroups.containsKey(mvcType)) {
             throw new IllegalArgumentException("Unknown MVC type \"$mvcType\".  Known types are ${app.mvcGroups.keySet()}")
         }
@@ -305,7 +326,7 @@ class GriffonApplicationHelper {
         argsCopy.each {k, v -> builder.setVariable k, v }
 
         // instantiate the parts
-        def instanceMap = [:]
+        Map<String, Object> instanceMap = [:]
         klassMap.each {k, v ->
             if (argsCopy.containsKey(k)) {
                 // use provided value, even if null
@@ -384,7 +405,7 @@ class GriffonApplicationHelper {
         return instanceMap
     }
 
-    static enhance(GriffonApplication app, Class klass, MetaClass metaClass, Object instance) {
+    static void enhance(GriffonApplication app, Class klass, MetaClass metaClass, Object instance) {
         try {
             instance.setApp(app)
         } catch(MissingMethodException mme) {
@@ -430,7 +451,7 @@ class GriffonApplicationHelper {
      * @param app the current Griffon application
      * @param mvcName name of the group to destroy
      */
-    static destroyMVCGroup(GriffonApplication app, String mvcName) {
+    static void destroyMVCGroup(GriffonApplication app, String mvcName) {
         if(!app.groups[mvcName]) return
         if(LOG.infoEnabled) LOG.info("Destroying MVC group identified by '$mvcName'")
         app.removeApplicationEventListener(app.controllers[mvcName])

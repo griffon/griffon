@@ -1,10 +1,10 @@
 Any artifact or class that abides to the following conventions can be registered as an application listener, those conventions are:
 
-    * it is a Script, class, Map or closure.
-    * in the case of scripts or classes, they must define an event handler whose name matches *on<EventName>*, this handler can be a method or a closure property.
-    * in the case of a Map, each key maps to <EventName>, the value must be a closure.
+    * it is a Script, class, Map, RunnableWithArgs or closure.
+    * in the case of scripts or classes, they must define an event handler whose name matches *on<EventName>*, this handler can be a method, RunnableWithArgs or a closure property.
+    * in the case of a Map, each key maps to <EventName>, the value must be a RunnableWithArgs or a closure.
     * scripts, classes and maps can be registered/unregistered by calling @addApplicationListener@/ @removeApplicationListener@ on the app instance.
-    * closure event handlers must be registered with an overloaded version of @addApplicationListener@/@removeApplicationListener@ that takes *<EventName>* as the first parameter, and the closure itself as the second parameter.
+    * RunnableWithArgs and closure event handlers must be registered with an overloaded version of @addApplicationListener@/@removeApplicationListener@ that takes *<EventName>* as the first parameter, and the runnable/closure itself as the second parameter.
 
 There is a general, per application, script that can provide event handlers. If you want to take advantage of this feature you must define a script named @Events.groovy@ inside @griffon-app/conf@. Lastly both Controller and Service instances are automatically registered as application event listeners. This is the only way to declare event listeners for @Log4jConfigStart@ and @BootstrapStart@ events.
 
@@ -48,13 +48,13 @@ class MyController {
 class MyController {
   def mvcGroupInit(Map args) {
     app.addApplicationListener([
-      "Foo": {-> println "got foo!" }
+      Foo: {-> println 'got foo!' }
     ])
   }
 
   def fooAction = { evt = null ->
     // do something
-    app.event("Foo")
+    app.event('Foo')
   }
 }
 {code}
@@ -63,12 +63,35 @@ class MyController {
 {code}
 class MyController {
   def mvcGroupInit(Map args) {
-    app.addApplicationListener("Foo"){-> println "got foo!" }
+    app.addApplicationListener('Foo'){-> println 'got foo!' }
   }
 
   def fooAction = { evt = null ->
     // do something
-    app.event("Foo")
+    app.event('Foo')
   }
 }
 {code}
+- Second alternative to the previous example using a RunnableWithArgs event handler
+@File: griffon-app/controller/MyController.java@
+{code}
+import java.util.Map;
+import griffon.util.RunnableWithArgs;
+import org.codehaus.griffon.runtime.core.AbstractGriffonController;
+
+public class MyController extends AbstractGriffonController {
+  public void mvcGroupInit(Map<String, Object> params) {
+    getApp().addApplicationListener("Foo", new RunnableWithArgs() {
+        public void run(Object[] args) {
+            System.out.println("got foo!");
+        }
+    });
+  }
+
+  public void fooAction() {
+    // do something
+    getApp().event("Foo");
+  }
+}
+{code}
+

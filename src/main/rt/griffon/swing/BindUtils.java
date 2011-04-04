@@ -115,17 +115,16 @@ public class BindUtils {
     }
 
     private static class BindClosure extends Closure {
-        private final CallableWithArgs<?> callable;
+        private final CallableWithArgs<Object> callable;
 
-        public BindClosure(Object owner, CallableWithArgs<?> callable) {
+        public BindClosure(Object owner, CallableWithArgs<Object> callable) {
             super(owner);
             this.callable = callable;
         }
 
         protected Object doCall(Object[] args) {
-            callable.setArgs(args);
             try {
-                return (Object) callable.call();
+                return (Object) callable.call(args);
             } catch(Exception e) {
                 throw new RuntimeException(e);
             }

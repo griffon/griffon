@@ -107,7 +107,7 @@ class EventRouter {
         return { mode ->
             if (LOG.traceEnabled) LOG.trace("Triggering event '$eventName' $mode")
             eventName = eventName[0].toUpperCase() + eventName[1..-1]
-            def eventHandler = "on" + eventName
+            def eventHandler = 'on' + eventName
             def dispatchEvent = { listener ->
                 // any exceptions that might get thrown should be caught
                 // by GriffonExceptionHandler
@@ -149,13 +149,19 @@ class EventRouter {
     private void fireEvent(Map map, String eventHandler, List params) {
         eventHandler = eventHandler[2..-1]
         def handler = map[eventHandler]
-        if (handler && handler instanceof Closure) {
+        if (handler instanceof Closure) {
             handler(* params)
+        } else if (handler instanceof RunnableWithArgs) {
+            handler.run(params.toArray(new Object[params.size()]))
         }
     }
 
     private void fireEvent(Closure closure, String eventHandler, List params) {
         closure(* params)
+    }
+
+    private void fireEvent(RunnableWithArgs runnable, String eventHandler, List params) {
+        runnable.run(params.toArray(new Object[params.size()]))
     }
 
     private void fireEvent(Object instance, String eventHandler, List params) {
@@ -189,7 +195,7 @@ class EventRouter {
      * @param listener and event listener of type Script, Map or Object
      */
     void addEventListener(listener) {
-        if (!listener || listener instanceof Closure) return
+        if (!listener || listener instanceof Closure || listener instanceof RunnableWithArgs) return
         synchronized (listeners) {
             if (listeners.find { it == listener }) return
             listeners.add(listener)
@@ -213,7 +219,7 @@ class EventRouter {
      * @param listener and event listener of type Script, Map or Object
      */
     void removeEventListener(listener) {
-        if (!listener || listener instanceof Closure) return
+        if (!listener || listener instanceof Closure || listener instanceof RunnableWithArgs) return
         synchronized (listeners) {
             listeners.remove(listener)
         }
@@ -237,6 +243,23 @@ class EventRouter {
     }
 
     /**
+     * Adds a Runnable as an event listener.<p>
+     * Event names must follow the camelCase naming convention.
+     *
+     * @param eventName the name of the event
+     * @param listener the event listener
+     */
+    void addEventListener(String eventName, RunnableWithArgs listener) {
+        if (!eventName || !listener) return
+        eventName = eventName[0].toUpperCase() + eventName[1..-1]
+        synchronized (closureListeners) {
+            def list = closureListeners.get(eventName, [])
+            if (list.find { it == listener }) return
+            list.add(listener)
+        }
+    }
+
+    /**
      * Removes a Closure as an event listener.<p>
      * Event names must follow the camelCase naming convention.
      *
@@ -244,6 +267,22 @@ class EventRouter {
      * @param listener the event listener
      */
     void removeEventListener(String eventName, Closure listener) {
+        if (!eventName || !listener) return
+        eventName = eventName[0].toUpperCase() + eventName[1..-1]
+        synchronized (closureListeners) {
+            def list = closureListeners[eventName]
+            if (list) list.remove(listener)
+        }
+    }
+
+    /**
+     * Removes a Runnable as an event listener.<p>
+     * Event names must follow the camelCase naming convention.
+     *
+     * @param eventName the name of the event
+     * @param listener the event listener
+     */
+    void removeEventListener(String eventName, RunnableWithArgs listener) {
         if (!eventName || !listener) return
         eventName = eventName[0].toUpperCase() + eventName[1..-1]
         synchronized (closureListeners) {
