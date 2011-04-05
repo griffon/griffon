@@ -18,6 +18,9 @@
     }
 
     def preferencesAction = { evt = null ->
+        withMVCGroup('preferences') { m, v, c ->
+            c.show()
+        }
     }
 
     def quitAction = { evt = null ->
@@ -53,5 +56,8 @@
     }
 
     def onOSXPrefs = { app ->
+        withMVCGroup('preferences') { m, v, c ->
+            c.show()
+        }
     }
 }

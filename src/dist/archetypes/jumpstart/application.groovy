@@ -98,6 +98,11 @@ target(name: 'createApplicationProject',
     argsMap.params[0] = qualify('license')
     createMVC()
 
+    argsMap.view = 'PreferencesView'
+    argsMap.model = 'PreferencesModel'
+    argsMap.params[0] = qualify('preferences')
+    createMVC()
+
     copyResources("${basedir}/griffon-app/resources", 'griffon-app/resources/*')
     copyResources("${basedir}/griffon-app/i18n", 'griffon-app/i18n/*')
     ant.replace(dir: "${basedir}/griffon-app/i18n") {
