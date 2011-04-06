@@ -13,6 +13,7 @@ class AboutModel extends AbstractDialogModel {
     protected String getDialogTitle() { 'About' }
 
     void mvcGroupInit(Map<String, Object> args) {
+        super.mvcGroupInit(args)
         resizable = false
         description = app.getMessage('application.dialog.About.description', [Metadata.current.getGriffonVersion()])
  

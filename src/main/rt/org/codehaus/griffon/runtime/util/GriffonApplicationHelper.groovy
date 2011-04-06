@@ -34,9 +34,10 @@ import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import org.apache.log4j.LogManager
 import org.apache.log4j.helpers.LogLog
+import java.lang.reflect.Constructor
 
 /**
- * Utility class for boostrapping an application and handling of MVC groups.</p>
+ * Utility class for bootstrapping an application and handling of MVC groups.</p>
  *
  * @author Danno Ferrin
  * @author Andres Almiray
@@ -53,7 +54,7 @@ class GriffonApplicationHelper {
      */
     static MetaClass expandoMetaClassFor(Class clazz) {
         MetaClass mc = GroovySystem.getMetaClassRegistry().getMetaClass(clazz)
-        if(!(mc instanceof ExpandoMetaClass)) {
+        if (!(mc instanceof ExpandoMetaClass)) {
             mc = new ExpandoMetaClass(clazz, true, true)
             mc.initialize()
             GroovySystem.getMetaClassRegistry().setMetaClass(clazz, mc)
@@ -64,16 +65,16 @@ class GriffonApplicationHelper {
     private static ConfigObject loadConfig(ConfigSlurper configSlurper, Class configClass, String configFileName) {
         ConfigObject config = new ConfigObject()
         try {
-            if(configClass != null) {
+            if (configClass != null) {
                 config.merge(configSlurper.parse(configClass))
             }
             InputStream is = Thread.currentThread().contextClassLoader.getResourceAsStream(configFileName + '.properties')
-            if(is != null) {
+            if (is != null) {
                 Properties p = new Properties()
                 p.load(is)
                 config.merge(configSlurper.parse(p))
             }
-        } catch(x) {
+        } catch (x) {
             LogLog.warn("Cannot read configuration [class: $configClass?.name, file: $configFileName]", GriffonExceptionHandler.sanitize(x))
         }
         config
@@ -121,29 +122,63 @@ class GriffonApplicationHelper {
 
         runScriptInsideUIThread(GriffonApplication.Lifecycle.INITIALIZE.name, app)
 
-        if(!app.artifactManager) { 
-            app.artifactManager = new DefaultArtifactManager(app)
-        }
-        app.artifactManager.with {
-            registerArtifactHandler(new ModelArtifactHandler(app))
-            registerArtifactHandler(new ViewArtifactHandler(app))
-            registerArtifactHandler(new ControllerArtifactHandler(app))
-            registerArtifactHandler(new ServiceArtifactHandler(app))
-            loadArtifactMetadata()
-        }
+        initializeArtifactManager(app)
 
-        if(!app.addonManager) {
+        if (!app.addonManager) {
             app.addonManager = new DefaultAddonManager(app)
         }
         app.addonManager.initialize()
 
         // copy mvc groups in config to app, casting to strings in a new map
-        app.config.mvcGroups.each {k, v->
-            if(LOG.debugEnabled) LOG.debug("Adding MVC group $k")
+        app.config.mvcGroups.each {k, v ->
+            if (LOG.debugEnabled) LOG.debug("Adding MVC group $k")
             app.addMvcGroup(k, v.inject([:]) {m, e -> m[e.key as String] = e.value as String; m})
         }
 
         app.event(GriffonApplication.Event.BOOTSTRAP_END.name, [app])
+    }
+
+    private static void initializeArtifactManager(GriffonApplication app) {
+        if (!app.artifactManager) {
+            app.artifactManager = new DefaultArtifactManager(app)
+        }
+
+        // initialize default Artifact handlers
+        app.artifactManager.with {
+            registerArtifactHandler(new ModelArtifactHandler(app))
+            registerArtifactHandler(new ViewArtifactHandler(app))
+            registerArtifactHandler(new ControllerArtifactHandler(app))
+            registerArtifactHandler(new ServiceArtifactHandler(app))
+        }
+
+        // load additional handlers
+        loadArtifactHandlers(app)
+
+        app.artifactManager.loadArtifactMetadata()
+    }
+
+    private static def loadArtifactHandlers(GriffonApplication app) {
+        Enumeration<URL> urls = null
+
+        try {
+            urls = app.class.classLoader.getResources('META-INF/services/' + ArtifactHandler.class.name)
+        } catch (IOException ioe) {
+            return
+        }
+
+        if (urls?.hasMoreElements()) {
+            URL url = urls.nextElement()
+            url.eachLine { line ->
+                try {
+                    Class artifactHandlerClass = loadClass(app, line)
+                    Constructor ctor = artifactHandlerClass.getDeclaredConstructor(GriffonApplication)
+                    ArtifactHandler handler = ctor? ctor.newInstance(app) : artifactHandlerClass.newInstance()
+                    app.artifactManager.registerArtifactHandler(handler)
+                } catch (Exception e) {
+                    if (LOG.warnEnabled) LOG.warn("Could not load ArtifactHandler with '$line'", GriffonExceptionHandler.sanitize(e))
+                }
+            }
+        }
     }
 
     /**
@@ -182,14 +217,14 @@ class GriffonApplicationHelper {
                 throw cnfe
             }
         }
-        
+
         script.isUIThread = UIThreadHelper.instance.&isUIThread
         script.execAsync = UIThreadHelper.instance.&executeAsync
         script.execSync = UIThreadHelper.instance.&executeSync
         script.execOutside = UIThreadHelper.instance.&executeOutside
-        script.execFuture = {Object... args -> UIThreadHelper.instance.executeFuture(*args) }
+        script.execFuture = {Object... args -> UIThreadHelper.instance.executeFuture(* args) }
 
-        if(LOG.infoEnabled) LOG.info("Running script '$scriptName'")
+        if (LOG.infoEnabled) LOG.info("Running script '$scriptName'")
         UIThreadHelper.instance.executeSync(script)
     }
 
@@ -208,7 +243,7 @@ class GriffonApplicationHelper {
      * @return a newly created instance of type klass
      */
     static Object newInstance(GriffonApplication app, Class klass, String type = '') {
-        if(LOG.debugEnabled) LOG.debug("Instantiating ${klass.name} with type '${type}'")
+        if (LOG.debugEnabled) LOG.debug("Instantiating ${klass.name} with type '${type}'")
         def instance = klass.newInstance()
 
         GriffonClass griffonClass = app.artifactManager.findGriffonClass(klass)
@@ -258,12 +293,12 @@ class GriffonApplicationHelper {
 
     static void withMVCGroup(GriffonApplication app, String mvcType, String mvcName, Map bindArgs, Closure handler) {
         try {
-            handler(*createMVCGroup(app, mvcType, mvcName, bindArgs))
+            handler(* createMVCGroup(app, mvcType, mvcName, bindArgs))
         } finally {
             try {
                 destroyMVCGroup(app, mvcName)
-            } catch(Exception x) {
-                if(app.log.warnEnabled) app.log.warn("Could not destroy group [$mvcName] of type $mvcType.", GriffonExceptionHandler.sanitize(x))
+            } catch (Exception x) {
+                if (app.log.warnEnabled) app.log.warn("Could not destroy group [$mvcName] of type $mvcType.", GriffonExceptionHandler.sanitize(x))
             }
         }
     }
@@ -287,8 +322,8 @@ class GriffonApplicationHelper {
         } finally {
             try {
                 destroyMVCGroup(app, mvcName)
-            } catch(Exception x) {
-                if(app.log.warnEnabled) app.log.warn("Could not destroy group [$mvcName] of type $mvcType.", GriffonExceptionHandler.sanitize(x))
+            } catch (Exception x) {
+                if (app.log.warnEnabled) app.log.warn("Could not destroy group [$mvcName] of type $mvcType.", GriffonExceptionHandler.sanitize(x))
             }
         }
     }
@@ -302,8 +337,8 @@ class GriffonApplicationHelper {
             throw new IllegalArgumentException("Unknown MVC type \"$mvcType\".  Known types are ${app.mvcGroups.keySet()}")
         }
 
-        if(LOG.infoEnabled) LOG.info("Building MVC group '${mvcType}' with name '${mvcName}'")
-        def argsCopy = [app:app, mvcType:mvcType, mvcName:mvcName]
+        if (LOG.infoEnabled) LOG.info("Building MVC group '${mvcType}' with name '${mvcName}'")
+        def argsCopy = [app: app, mvcType: mvcType, mvcName: mvcName]
         argsCopy.putAll(app.bindings.variables)
         argsCopy.putAll(bindArgs)
 
@@ -336,7 +371,7 @@ class GriffonApplicationHelper {
                 GriffonClass griffonClass = griffonClassMap[k]
                 // def instance = griffonClass?.newInstance() ?: newInstance(app, v, k)
                 def instance = null
-                if(griffonClass) {
+                if (griffonClass) {
                     instance = griffonClass.newInstance()
                 } else {
                     instance = newInstance(app, v, k)
@@ -352,7 +387,7 @@ class GriffonApplicationHelper {
         }
         instanceMap.builder = builder
         argsCopy.builder = builder
-        
+
         // special case --
         // controllers are added as application listeners
         // addApplicationListener method is null safe
@@ -361,7 +396,7 @@ class GriffonApplicationHelper {
         // mutually set each other to the available fields and inject args
         instanceMap.each {k, v ->
             // loop on the instance map to get just the instances
-            if (v instanceof Script)  {
+            if (v instanceof Script) {
                 v.binding.variables.putAll(argsCopy)
             } else {
                 // set the args and instances
@@ -377,7 +412,7 @@ class GriffonApplicationHelper {
         app.groups[mvcName] = instanceMap
 
         // initialize the classes and call scripts
-        if(LOG.debugEnabled) LOG.debug("Initializing each MVC member of group '${mvcName}'")
+        if (LOG.debugEnabled) LOG.debug("Initializing each MVC member of group '${mvcName}'")
         instanceMap.each {k, v ->
             if (v instanceof Script) {
                 // special case: view gets executed in the UI thread always
@@ -408,30 +443,30 @@ class GriffonApplicationHelper {
     static void enhance(GriffonApplication app, Class klass, MetaClass metaClass, Object instance) {
         try {
             instance.setApp(app)
-        } catch(MissingMethodException mme) {
+        } catch (MissingMethodException mme) {
             try {
                 instance.app = app
-            } catch(MissingPropertyException mpe) {
+            } catch (MissingPropertyException mpe) {
                 metaClass.app = app
             }
         }
 
-        if(!GriffonMvcArtifact.isAssignableFrom(klass)) {
+        if (!GriffonMvcArtifact.isAssignableFrom(klass)) {
             metaClass.createMVCGroup = {Object... args ->
-                GriffonApplicationHelper.createMVCGroup(app, *args)
+                GriffonApplicationHelper.createMVCGroup(app, * args)
             }
             metaClass.buildMVCGroup = {Object... args ->
-                GriffonApplicationHelper.buildMVCGroup(app, *args)
+                GriffonApplicationHelper.buildMVCGroup(app, * args)
             }
             metaClass.destroyMVCGroup = GriffonApplicationHelper.&destroyMVCGroup.curry(app)
             metaClass.withMVCGroup = {Object... args ->
-                GriffonApplicationHelper.withMVCGroup(app, *args)
+                GriffonApplicationHelper.withMVCGroup(app, * args)
             }
         }
 
-        if(!GriffonArtifact.isAssignableFrom(klass)) {
+        if (!GriffonArtifact.isAssignableFrom(klass)) {
             metaClass.newInstance = {Object... args ->
-                GriffonApplicationHelper.newInstance(app, *args)
+                GriffonApplicationHelper.newInstance(app, * args)
             }
             // metaClass.getGriffonClass = {c ->
             //     app.artifactManager.findGriffonClass(c)
@@ -452,12 +487,12 @@ class GriffonApplicationHelper {
      * @param mvcName name of the group to destroy
      */
     static void destroyMVCGroup(GriffonApplication app, String mvcName) {
-        if(!app.groups[mvcName]) return
-        if(LOG.infoEnabled) LOG.info("Destroying MVC group identified by '$mvcName'")
+        if (!app.groups[mvcName]) return
+        if (LOG.infoEnabled) LOG.info("Destroying MVC group identified by '$mvcName'")
         app.removeApplicationEventListener(app.controllers[mvcName])
         [app.models, app.views, app.controllers].each {
             def part = it.remove(mvcName)
-            if ((part != null)  & !(part instanceof Script)) {
+            if ((part != null) & !(part instanceof Script)) {
                 try {
                     part.mvcGroupDestroy()
                 } catch (MissingMethodException mme) {
@@ -472,9 +507,9 @@ class GriffonApplicationHelper {
 
         try {
             app.builders[mvcName]?.dispose()
-        } catch(MissingMethodException mme) {
+        } catch (MissingMethodException mme) {
             // TODO find out why this call breaks applet mode on shutdown
-            if(LOG.errorEnabled) LOG.error("Application encountered an error while destroying group '$mvcName'", GriffonExceptionHandler.sanitize(mme))
+            if (LOG.errorEnabled) LOG.error("Application encountered an error while destroying group '$mvcName'", GriffonExceptionHandler.sanitize(mme))
         }
 
         // remove the refs from the app caches
@@ -487,14 +522,14 @@ class GriffonApplicationHelper {
     static Class loadClass(GriffonApplication app, String className) throws ClassNotFoundException {
         ClassNotFoundException cnfe = null
 
-        for(cl in [app.class.classLoader, GriffonApplicationHelper.class.classLoader, Thread.currentThread().contextClassLoader]) {
+        for (cl in [app.class.classLoader, GriffonApplicationHelper.class.classLoader, Thread.currentThread().contextClassLoader]) {
             try {
                 return cl.loadClass(className)
-            } catch(ClassNotFoundException e) {
+            } catch (ClassNotFoundException e) {
                 cnfe = e
             }
         }
 
-        if(cnfe) throw cnfe
+        if (cnfe) throw cnfe
     }
 }
