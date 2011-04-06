@@ -19,6 +19,7 @@ import griffon.core.GriffonApplication;
 import griffon.core.GriffonServiceClass;
 import griffon.util.GriffonClassUtils;
 
+import griffon.util.GriffonNameUtils;
 import groovy.lang.Closure;
 import groovy.lang.MetaProperty;
 import groovy.lang.MetaMethod;
@@ -65,7 +66,7 @@ public class DefaultGriffonServiceClass extends DefaultGriffonClass implements G
             for(MetaProperty p : getMetaProperties()) {
                  String propertyName = p.getName();
                  if(GriffonClassUtils.isGetter(p, true)) {
-                     propertyName = GriffonClassUtils.uncapitalize(propertyName.substring(3));
+                     propertyName = GriffonNameUtils.uncapitalize(propertyName.substring(3));
                  }
                  if(!STANDARD_PROPERTIES.contains(propertyName) &&
                     !serviceCache.contains(propertyName) &&
@@ -84,6 +85,6 @@ public class DefaultGriffonServiceClass extends DefaultGriffonClass implements G
             }
         }
     
-        return (String[]) serviceCache.toArray(new String[serviceCache.size()]);
+        return serviceCache.toArray(new String[serviceCache.size()]);
     }
 }

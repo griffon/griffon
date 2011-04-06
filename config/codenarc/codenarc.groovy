@@ -39,6 +39,7 @@ ruleset {
     ruleset('rulesets/exceptions.xml') {
         exclude 'CatchException'
         exclude 'CatchThrowable'
+        exclude 'ReturnNullFromCatchBlock'
     }
     ruleset('rulesets/generic.xml') {
         exclude 'StatelessClass'

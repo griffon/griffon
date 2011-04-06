@@ -16,6 +16,7 @@
 package org.codehaus.griffon.runtime.core;
 
 import griffon.util.GriffonClassUtils;
+import griffon.util.GriffonNameUtils;
 
 import java.beans.PropertyDescriptor;
 import java.lang.reflect.Field;
@@ -154,7 +155,7 @@ public class ClassPropertyFetcher {
                             PropertyFetcher fetcher = new GetterPropertyFetcher(
                                     method, true);
                             staticFetchers.put(name, fetcher);
-                            staticFetchers.put(GriffonClassUtils.uncapitalize(name), fetcher);
+                            staticFetchers.put(GriffonNameUtils.uncapitalize(name), fetcher);
                         }
                     }
                 }

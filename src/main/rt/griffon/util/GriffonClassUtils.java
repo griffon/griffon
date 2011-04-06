@@ -46,7 +46,7 @@ public final class GriffonClassUtils {
     public static final Object[] EMPTY_ARGS = EMPTY_OBJECT_ARRAY;
 
     private static final String PROPERTY_SET_PREFIX = "set";
-    public static final Map PRIMITIVE_TYPE_COMPATIBLE_CLASSES = new HashMap();
+    public static final Map<Class, Class> PRIMITIVE_TYPE_COMPATIBLE_CLASSES = new HashMap<Class, Class>();
 
     private static final Pattern EVENT_HANDLER_PATTERN = Pattern.compile("^on[A-Z][\\w]*$");
     private static final Pattern GETTER_PATTERN_1 = Pattern.compile("^get[A-Z][\\w]*$");
@@ -54,13 +54,14 @@ public final class GriffonClassUtils {
     private static final Pattern SETTER_PATTERN = Pattern.compile("^set[A-Z][\\w]*$");
     private static final Set<MethodDescriptor> BASIC_METHODS = new TreeSet<MethodDescriptor>();
     private static final Set<MethodDescriptor> MVC_METHODS = new TreeSet<MethodDescriptor>();
+    private static final Set<MethodDescriptor> EVENT_PUBLISHER_METHODS = new TreeSet<MethodDescriptor>();
 
     /**
      * Just add two entries to the class compatibility map
      * @param left
      * @param right
      */
-    private static final void registerPrimitiveClassPair(Class<?> left, Class<?> right) {
+    private static void registerPrimitiveClassPair(Class<?> left, Class<?> right) {
         PRIMITIVE_TYPE_COMPATIBLE_CLASSES.put(left, right);
         PRIMITIVE_TYPE_COMPATIBLE_CLASSES.put(right, left);
     }
@@ -135,7 +136,7 @@ public final class GriffonClassUtils {
         MVC_METHODS.add(new MethodDescriptor("doLater", new Class[]{Closure.class}));
         MVC_METHODS.add(new MethodDescriptor("doOutside", new Class[]{Runnable.class}));
         MVC_METHODS.add(new MethodDescriptor("doOutside", new Class[]{Closure.class}));
-      
+
         // Special cases due to the usage of varargs
         MVC_METHODS.add(new MethodDescriptor("newInstance", new Class[]{Object[].class}));
         MVC_METHODS.add(new MethodDescriptor("buildMVCGroup", new Class[]{Object[].class}));
@@ -148,6 +149,19 @@ public final class GriffonClassUtils {
         MVC_METHODS.add(new MethodDescriptor("getArtifactManager"));
         MVC_METHODS.add(new MethodDescriptor("getGriffonClass"));
         MVC_METHODS.add(new MethodDescriptor("setBuilder", new Class[]{FactoryBuilderSupport.class}));
+
+        EVENT_PUBLISHER_METHODS.add(new MethodDescriptor("addEventListener", new Class[]{Object.class}));
+        EVENT_PUBLISHER_METHODS.add(new MethodDescriptor("addEventListener", new Class[]{String.class, Closure.class}));
+        EVENT_PUBLISHER_METHODS.add(new MethodDescriptor("addEventListener", new Class[]{String.class, RunnableWithArgs.class}));
+        EVENT_PUBLISHER_METHODS.add(new MethodDescriptor("removeEventListener", new Class[]{Object.class}));
+        EVENT_PUBLISHER_METHODS.add(new MethodDescriptor("removeEventListener", new Class[]{String.class, Closure.class}));
+        EVENT_PUBLISHER_METHODS.add(new MethodDescriptor("removeEventListener", new Class[]{String.class, RunnableWithArgs.class}));
+        EVENT_PUBLISHER_METHODS.add(new MethodDescriptor("publishEvent", new Class[]{String.class}));
+        EVENT_PUBLISHER_METHODS.add(new MethodDescriptor("publishEvent", new Class[]{String.class, List.class}));
+        EVENT_PUBLISHER_METHODS.add(new MethodDescriptor("publishEventAsync", new Class[]{String.class}));
+        EVENT_PUBLISHER_METHODS.add(new MethodDescriptor("publishEventAsync", new Class[]{String.class, List.class}));
+        EVENT_PUBLISHER_METHODS.add(new MethodDescriptor("publishEventOutside", new Class[]{String.class}));
+        EVENT_PUBLISHER_METHODS.add(new MethodDescriptor("publishEventOutside", new Class[]{String.class, List.class}));
     }
 
     /**
@@ -455,6 +469,61 @@ public final class GriffonClassUtils {
     }
 
     /**
+     * Finds out if the given {@code Method} belongs to the set of
+     * predefined EVENT_PUBLISHER methods by convention.
+     *
+     * <pre>
+     * // assuming getMethod() returns an appropriate Method reference
+     * isEventPublisherMethod(getMethod("addEventPublisher"))  = true
+     * isEventPublisherMethod(getMethod("publishEvent"))       = true
+     * isEventPublisherMethod(getMethod("foo"))                = false
+     * </pre>
+     *
+     * @param method a Method reference
+     * @return true if the method is an EVENT_PUBLISHER method, false otherwise.
+     */
+    public static boolean isEventPublisherMethod(Method method) {
+        return isEventPublisherMethod(MethodDescriptor.forMethod(method));
+    }
+
+    /**
+     * Finds out if the given {@code MetaMethod} belongs to the set of
+     * predefined EVENT_PUBLISHER methods by convention.
+     *
+     * <pre>
+     * // assuming getMethod() returns an appropriate MetaMethod reference
+     * isEventPublisherMethod(getMethod("addEventPublisher"))  = true
+     * isEventPublisherMethod(getMethod("publishEvent"))       = true
+     * isEventPublisherMethod(getMethod("foo"))                = false
+     * </pre>
+     *
+     * @param method a Method reference
+     * @return true if the method is an EVENT_PUBLISHER method, false otherwise.
+     */
+    public static boolean isEventPublisherMethod(MetaMethod method) {
+        return isEventPublisherMethod(MethodDescriptor.forMethod(method));
+    }
+
+    /**
+     * Finds out if the given {@code MethodDescriptor} belongs to the set of
+     * predefined EVENT_PUBLISHER methods by convention.
+     *
+     * <pre>
+     * // assuming getMethod() returns an appropriate MethodDescriptor reference
+     * isEventPublisherMethod(getMethod("addEventPublisher"))  = true
+     * isEventPublisherMethod(getMethod("publishEvent"))       = true
+     * isEventPublisherMethod(getMethod("foo"))                = false
+     * </pre>
+     *
+     * @param method a Method reference
+     * @return true if the method is an EVENT_PUBLISHER method, false otherwise.
+     */
+    public static boolean isEventPublisherMethod(MethodDescriptor method) {
+        if(method == null || !isInstanceMethod(method)) return false;
+        return EVENT_PUBLISHER_METHODS.contains(method);
+    }
+
+    /**
      * Finds out if the given {@code Method} is an instance method, i.e,
      * it is public and non-static.
      *
@@ -495,9 +564,10 @@ public final class GriffonClassUtils {
      * <li>isInstanceMethod(method)</li>
      * <li>! isBasicMethod(method)</li>
      * <li>! isGroovyInjectedMethod(method)</li>
+     * <li>! isMvcMethod(method)</li>
+     * <li>! isEventPublisherMethod(method)</li>
      * <li>! isGetterMethod(method)</li>
      * <li>! isSetterMethod(method)</li>
-     * <li>! isMvcMethod(method)</li>
      * </ul>
      *
      * @param method a Method reference
@@ -512,9 +582,10 @@ public final class GriffonClassUtils {
      * <li>isInstanceMethod(method)</li>
      * <li>! isBasicMethod(method)</li>
      * <li>! isGroovyInjectedMethod(method)</li>
+     * <li>! isMvcMethod(method)</li>
+     * <li>! isEventPublisherMethod(method)</li>
      * <li>! isGetterMethod(method)</li>
      * <li>! isSetterMethod(method)</li>
-     * <li>! isMvcMethod(method)</li>
      * </ul>
      *
      * @param method a Method reference
@@ -529,9 +600,10 @@ public final class GriffonClassUtils {
      * <li>isInstanceMethod(method)</li>
      * <li>! isBasicMethod(method)</li>
      * <li>! isGroovyInjectedMethod(method)</li>
+     * <li>! isMvcMethod(method)</li>
+     * <li>! isEventPublisherMethod(method)</li>
      * <li>! isGetterMethod(method)</li>
      * <li>! isSetterMethod(method)</li>
-     * <li>! isMvcMethod(method)</li>
      * </ul>
      *
      * @param method a MethodDescriptor reference
@@ -541,9 +613,10 @@ public final class GriffonClassUtils {
         return isInstanceMethod(method) &&
                !isBasicMethod(method) &&
                !isGroovyInjectedMethod(method) &&
+               !isMvcMethod(method) &&
+               !isEventPublisherMethod(method) &&
                !isGetterMethod(method) &&
-               !isSetterMethod(method) &&
-               !isMvcMethod(method);
+               !isSetterMethod(method);
     }
 
     public static boolean isGetter(MetaProperty property) {
@@ -1745,11 +1818,11 @@ public final class GriffonClassUtils {
 
     public static class MethodDescriptor implements Comparable {
         private final String methodName;
-        private final Class[] paramTypes;
+        private final String[] paramTypes;
         private final int hashCode;
         private final int modifiers;
 
-        private static final Class[] EMPTY_CLASS_PARAMETERS = new Class[0];
+        private static final String[] EMPTY_CLASS_PARAMETERS = new String[0];
 
         public static MethodDescriptor forMethod(Method method) {
             if(method == null) return null;
@@ -1759,9 +1832,9 @@ public final class GriffonClassUtils {
         public static MethodDescriptor forMethod(MetaMethod method) {
             if(method == null) return null;
             CachedClass[] types = method.getParameterTypes();
-            Class[] parameterTypes = new Class[types.length];
+            String[] parameterTypes = new String[types.length];
             for(int i = 0; i < types.length; i++) {
-                parameterTypes[i] = types[i].getTheClass();
+                parameterTypes[i] = types[i].getTheClass().getName();
             }
             return new MethodDescriptor(method.getName(), parameterTypes, method.getModifiers());
         }
@@ -1778,7 +1851,26 @@ public final class GriffonClassUtils {
             this(methodName, paramTypes, Modifier.PUBLIC);
         }
 
+        public MethodDescriptor(String methodName, String[] paramTypes) {
+            this(methodName, paramTypes, Modifier.PUBLIC);
+        }
+
         public MethodDescriptor(String methodName, Class[] paramTypes, int modifiers) {
+            this.methodName = methodName;
+            if(paramTypes == null) {
+                this.paramTypes = EMPTY_CLASS_PARAMETERS;
+            } else {
+                this.paramTypes = new String[paramTypes.length];
+                for (int i = 0; i < paramTypes.length; i++) {
+                    this.paramTypes[i] = paramTypes[i].getName();
+                }
+            }
+            this.modifiers = modifiers;
+
+            this.hashCode = methodName.length() + modifiers;
+        }
+
+        public MethodDescriptor(String methodName, String[] paramTypes, int modifiers) {
             this.methodName = methodName;
             this.paramTypes = paramTypes == null ? EMPTY_CLASS_PARAMETERS : paramTypes;
             this.modifiers = modifiers;
@@ -1790,7 +1882,7 @@ public final class GriffonClassUtils {
             return methodName;
         }
 
-        public Class[] getParameterTypes() {
+        public String[] getParameterTypes() {
             return paramTypes;
         }
 
@@ -1819,7 +1911,7 @@ public final class GriffonClassUtils {
             b.append(methodName).append("(");
             for(int i = 0; i < paramTypes.length; i++) {
                 if(i != 0) b.append(", ");
-                b.append(paramTypes[i].getName());
+                b.append(paramTypes[i]);
             }
             b.append(")");
             return b.toString();
@@ -1838,7 +1930,7 @@ public final class GriffonClassUtils {
             c = paramTypes.length - md.paramTypes.length;
             if(c != 0) return c;
             for(int i = 0; i < paramTypes.length; i++) {
-                c = paramTypes[i].getName().compareTo(md.paramTypes[i].getName());
+                c = paramTypes[i].compareTo(md.paramTypes[i]);
                 if(c != 0) return c;
             }
 
@@ -1861,15 +1953,10 @@ public final class GriffonClassUtils {
      *
      * @param str  the String to uncapitalize, may be null
      * @return the uncapitalized String, <code>null</code> if null String input
+     * @deprecated use GriffonNameUtils.uncapitalize(String) instead
      */
+    @Deprecated
     public static String uncapitalize(String str) {
-        int strLen;
-        if (str == null || (strLen = str.length()) == 0) {
-            return str;
-        }
-        return new StringBuffer(strLen)
-            .append(Character.toLowerCase(str.charAt(0)))
-            .append(str.substring(1))
-            .toString();
+        return GriffonNameUtils.uncapitalize(str);
     }
 }

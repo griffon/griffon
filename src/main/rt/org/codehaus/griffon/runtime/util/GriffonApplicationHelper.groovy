@@ -157,7 +157,7 @@ class GriffonApplicationHelper {
         app.artifactManager.loadArtifactMetadata()
     }
 
-    private static def loadArtifactHandlers(GriffonApplication app) {
+    private static void loadArtifactHandlers(GriffonApplication app) {
         Enumeration<URL> urls = null
 
         try {
@@ -188,9 +188,9 @@ class GriffonApplicationHelper {
      * @param property the name of the property to set
      * @param value the value to set on the property
      */
-    static void safeSet(reciever, property, value) {
+    static void safeSet(receiver, property, value) {
         try {
-            reciever."$property" = value
+            receiver."$property" = value
         } catch (MissingPropertyException mpe) {
             if (mpe.property != property) {
                 throw mpe

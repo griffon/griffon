@@ -74,7 +74,10 @@ public abstract class AbstractGriffonClass implements GriffonClass {
      * <p>Contructor to be used by all child classes to create a
      * new instance and get the name right.
      *
-     * @param artifactInfo the Griffon artifact
+     * @param app
+     * @param clazz
+     * @param type
+     * @param trailingName
      */
     public AbstractGriffonClass(GriffonApplication app, Class<?> clazz, String type, String trailingName) {
         this.app = app;
@@ -379,7 +382,7 @@ public abstract class AbstractGriffonClass implements GriffonClass {
             for(MetaProperty p : getMetaProperties()) {
                  String propertyName = p.getName();
                  if(GriffonClassUtils.isGetter(p, true)) {
-                     propertyName = GriffonClassUtils.uncapitalize(propertyName.substring(3));
+                     propertyName = GriffonNameUtils.uncapitalize(propertyName.substring(3));
                  }
                  if(!eventsCache.contains(propertyName) &&
                     GriffonClassUtils.isEventHandler(propertyName) &&

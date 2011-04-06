@@ -19,6 +19,7 @@ import griffon.core.GriffonApplication;
 import griffon.core.GriffonModelClass;
 import griffon.util.GriffonClassUtils;
 
+import griffon.util.GriffonNameUtils;
 import groovy.lang.Closure;
 import groovy.lang.MetaProperty;
 
@@ -59,7 +60,7 @@ public class DefaultGriffonModelClass extends DefaultGriffonClass implements Gri
             for(MetaProperty p : getMetaProperties()) {
                  String propertyName = p.getName();
                  if(GriffonClassUtils.isGetter(p, true)) {
-                     propertyName = GriffonClassUtils.uncapitalize(propertyName.substring(3));
+                     propertyName = GriffonNameUtils.uncapitalize(propertyName.substring(3));
                  }
                  if(!propertiesCache.contains(propertyName) &&
                     !GriffonClassUtils.isEventHandler(propertyName) &&
@@ -71,6 +72,6 @@ public class DefaultGriffonModelClass extends DefaultGriffonClass implements Gri
             }
         }
     
-        return (String[]) propertiesCache.toArray(new String[propertiesCache.size()]);
+        return propertiesCache.toArray(new String[propertiesCache.size()]);
     }
 }

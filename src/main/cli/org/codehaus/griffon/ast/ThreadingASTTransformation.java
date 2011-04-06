@@ -54,7 +54,6 @@ public class ThreadingASTTransformation implements ASTTransformation, Opcodes {
     private static final Logger LOG = LoggerFactory.getLogger(ThreadingASTTransformation.class);
 
     private static ClassNode MY_TYPE = new ClassNode(Threading.class);
-    private static ClassNode THREADING_POLICY_CLASS = ClassHelper.makeWithoutCaching(Threading.Policy.class);
     private static ClassNode UITHREAD_HELPER_CLASS = ClassHelper.makeWithoutCaching(UIThreadHelper.class);
     private static final String COMPILER_THREADING_KEY = "compiler.threading";
 
