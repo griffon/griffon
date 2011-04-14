@@ -124,9 +124,9 @@ mvcGroups {
         }
 
         List parts = [] 
-        if(!argsMap.skipModel)      parts << "            model      = '${(argsMap.withModel ?: mvcFullQualifiedClassName + 'Model')}'"
-        if(!argsMap.skipView)       parts << "            view       = '${(argsMap.withView ?: mvcFullQualifiedClassName + 'View')}'"
-        if(!argsMap.skipController) parts << "            controller = '${(argsMap.withController ?: mvcFullQualifiedClassName + 'Controller')}'"
+        if(!argsMap.skipModel)      parts << "        model      = '${(argsMap.withModel ?: mvcFullQualifiedClassName + 'Model')}'"
+        if(!argsMap.skipView)       parts << "        view       = '${(argsMap.withView ?: mvcFullQualifiedClassName + 'View')}'"
+        if(!argsMap.skipController) parts << "        controller = '${(argsMap.withController ?: mvcFullQualifiedClassName + 'Controller')}'"
 
         applicationConfigFile.withWriter { it.write configText.replaceAll(/\s*mvcGroups\s*\{/, """
 mvcGroups {

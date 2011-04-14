@@ -24,7 +24,9 @@ import java.awt.Container
 import java.awt.GraphicsEnvironment
 import javax.swing.JFrame
 import javax.swing.WindowConstants
+
 import griffon.core.GriffonApplication
+import griffon.util.RunnableWithArgs
 
 import static griffon.util.GriffonApplicationUtils.isJdk16
 import static griffon.util.GriffonApplicationUtils.isJdk17
