@@ -19,6 +19,7 @@ import griffon.core.GriffonApplication;
 import griffon.core.GriffonClass;
 import griffon.util.GriffonNameUtils;
 import griffon.util.GriffonClassUtils;
+import griffon.util.GriffonExceptionHandler;
 import griffon.exceptions.NewInstanceCreationException;
 import groovy.lang.Closure;
 import groovy.lang.GroovyObject;
@@ -128,7 +129,7 @@ public abstract class AbstractGriffonClass implements GriffonClass {
             } else {
                 targetException = e;
             }
-            throw new NewInstanceCreationException("Could not create a new instance of class [" + clazz.getName() + "]!", targetException);
+            throw new NewInstanceCreationException("Could not create a new instance of class " + clazz.getName(), GriffonExceptionHandler.sanitize(targetException));
         }
     }
 
