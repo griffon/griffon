@@ -203,7 +203,7 @@ public abstract class AbstractGriffonViewScript extends Script implements Griffo
 
     public void withMVCGroup(String mvcType, String mvcName, Map<String, Object> args, Closure handler) {
         try {
-            List<?> group = createMVCGroup(mvcType, mvcName, args);
+            List<? extends GriffonMvcArtifact> group = createMVCGroup(mvcType, mvcName, args);
             handler.call(group.toArray(new Object[3]));
         } finally {
             try {
@@ -228,7 +228,7 @@ public abstract class AbstractGriffonViewScript extends Script implements Griffo
 
     public <M extends GriffonModel, V extends GriffonView, C extends GriffonController> void withMVCGroup(String mvcType, String mvcName, Map<String, Object> args, MVCClosure<M, V, C> handler) {
         try {
-            List<?> group = createMVCGroup(mvcType, mvcName, args);
+            List<? extends GriffonMvcArtifact> group = createMVCGroup(mvcType, mvcName, args);
             handler.call((M) group.get(0), (V) group.get(1), (C) group.get(2));
         } finally {
             try {

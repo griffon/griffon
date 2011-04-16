@@ -18,7 +18,6 @@ package griffon.swing;
 import java.util.Map;
 import java.util.LinkedHashMap;
 
-import groovy.lang.Closure;
 import groovy.util.FactoryBuilderSupport;
 
 import griffon.util.CallableWithArgs;

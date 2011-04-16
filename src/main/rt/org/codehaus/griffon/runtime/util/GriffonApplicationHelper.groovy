@@ -317,7 +317,7 @@ class GriffonApplicationHelper {
 
     static <M extends GriffonModel, V extends GriffonView, C extends GriffonController> void withMVCGroup(GriffonApplication app, String mvcType, String mvcName, Map<String, Object> args, MVCClosure<M, V, C> handler) {
         try {
-            List<?> group = createMVCGroup(mvcType, mvcName, args)
+            List<? extends GriffonMvcArtifact> group = createMVCGroup(mvcType, mvcName, args)
             handler.call((M) group[0], (V) group[1], (C) group[2])
         } finally {
             try {
