@@ -100,23 +100,25 @@ signingkey {
     }
 }
 
-springVersion = griffon.util.BuildSettingsHolder.settings.springVersion
-
 griffon.project.dependency.resolution = {
-    inherits 'global'
-    log 'warn'
+    inherits"global"
+    log "warn"
     repositories {
         griffonPlugins()
         griffonHome()
         griffonCentral()
+    }
+    dependencies { }
+}
 
-        mavenRepo 'http://repository.springsource.com/maven/bundles/release'
+log4j = {
+    // Example of changing the log pattern for the default console
+    // appender:
+    appenders {
+        console name: 'stdout', layout: pattern(conversionPattern: '%d [%t] %-5p %c - %m%n')
     }
-    dependencies {
-        compile("org.springframework:org.springframework.core:$springVersion") { transitive = false }
-        compile("org.springframework:org.springframework.beans:$springVersion") { transitive = false }
-        compile("org.springframework:org.springframework.context:$springVersion") { transitive = false }
-    }
+
+    error  'org.codehaus.griffon'
 }
 
 griffon {
@@ -127,4 +129,5 @@ griffon {
     }
 }
 
-griffon.disable.threading.injection = true
+app.archetype = 'jumpstart'
+app.fileType = '.groovy'
