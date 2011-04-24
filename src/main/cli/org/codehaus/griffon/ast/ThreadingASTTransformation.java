@@ -57,6 +57,10 @@ public class ThreadingASTTransformation implements ASTTransformation, Opcodes {
     private static ClassNode UITHREAD_HELPER_CLASS = ClassHelper.makeWithoutCaching(UIThreadHelper.class);
     private static final String COMPILER_THREADING_KEY = "compiler.threading";
 
+    public static final String EXECUTE_OUTSIDE = "executeOutside";
+    public static final String EXECUTE_SYNC = "executeSync";
+    public static final String EXECUTE_ASYNC = "executeAsync";
+
     /**
      * Convenience method to see if an annotated node is {@code @Threading}.
      *
@@ -89,13 +93,13 @@ public class ThreadingASTTransformation implements ASTTransformation, Opcodes {
         Threading.Policy threadingPolicy = getThreadingPolicy(annotation);
         if(threadingPolicy == Threading.Policy.SKIP) return;
 
-        String threadingMethod = "executeOutside";
+        String threadingMethod = EXECUTE_OUTSIDE;
         switch(threadingPolicy) {
             case INSIDE_UITHREAD_SYNC:
-                threadingMethod = "executeSync";
+                threadingMethod = EXECUTE_SYNC;
                 break;
             case INSIDE_UITHREAD_ASYNC:
-                threadingMethod = "executeAsync";
+                threadingMethod = EXECUTE_ASYNC;
                 break;
             case OUTSIDE_UITHREAD:
             default:
@@ -135,14 +139,14 @@ public class ThreadingASTTransformation implements ASTTransformation, Opcodes {
             case SKIP:
                 break;
             case INSIDE_UITHREAD_SYNC:
-                threadingMethod = "executeSync";
+                threadingMethod = EXECUTE_SYNC;
                 break;
             case INSIDE_UITHREAD_ASYNC:
-                threadingMethod = "executeAsync";
+                threadingMethod = EXECUTE_ASYNC;
                 break;
             case OUTSIDE_UITHREAD:
             default:
-                threadingMethod = "executeOutside";
+                threadingMethod = EXECUTE_OUTSIDE;
                 break;
         }
 
@@ -158,7 +162,7 @@ public class ThreadingASTTransformation implements ASTTransformation, Opcodes {
     }
 
     public static void handleMethodForInjection(ClassNode classNode, MethodNode method) {
-        handleMethodForInjection(classNode, method, "executeOutside");
+        handleMethodForInjection(classNode, method, EXECUTE_OUTSIDE);
     }
 
     public static void handleMethodForInjection(ClassNode classNode, MethodNode method, String threadingMethod) {
@@ -170,7 +174,7 @@ public class ThreadingASTTransformation implements ASTTransformation, Opcodes {
     }
 
     public static void handlePropertyForInjection(ClassNode classNode, PropertyNode property) {
-        handlePropertyForInjection(classNode, property, "executeOutside");
+        handlePropertyForInjection(classNode, property, EXECUTE_OUTSIDE);
     }
 
     public static void handlePropertyForInjection(ClassNode classNode, PropertyNode property, String threadingMethod) {
@@ -181,7 +185,7 @@ public class ThreadingASTTransformation implements ASTTransformation, Opcodes {
     }
 
     public static void handleFieldForInjection(ClassNode classNode, FieldNode field) {
-        handleFieldForInjection(classNode, field, "executeOutside");
+        handleFieldForInjection(classNode, field, EXECUTE_OUTSIDE);
     }
 
     public static void handleFieldForInjection(ClassNode classNode, FieldNode field, String threadingMethod) {
@@ -203,8 +207,12 @@ public class ThreadingASTTransformation implements ASTTransformation, Opcodes {
 
     private static void wrapStatements(ClassNode declaringClass, MethodNode method, String threadingMethod) {
         if(skipInjection(declaringClass.getName() +"."+ method.getName())) return;
-        method.setCode(wrapStatements(method.getCode(), threadingMethod));
-        if(LOG.isDebugEnabled()) LOG.debug("Modified "+declaringClass.getName()+"."+method.getName()+"() - code wrapped with "+threadingMethod+"{}");
+        Statement code = method.getCode();
+        Statement wrappedCode = wrapStatements(code, threadingMethod);
+        if(code != wrappedCode) {
+            method.setCode(wrappedCode);
+            if(LOG.isDebugEnabled()) LOG.debug("Modified "+declaringClass.getName()+"."+method.getName()+"() - code wrapped with "+threadingMethod+"{}");
+        }
     }
 
     private static void wrapStatements(ClassNode declaringClass, PropertyNode property, String threadingMethod) {
@@ -218,8 +226,11 @@ public class ThreadingASTTransformation implements ASTTransformation, Opcodes {
         Expression initialExpression = field.getInitialExpression();
         if(initialExpression instanceof ClosureExpression) {
             ClosureExpression closure = (ClosureExpression) initialExpression;
-            field.setInitialValueExpression(wrapClosure(closure, closure.getCode(), threadingMethod));
-            modified = true;
+            ClosureExpression wrappedClosure = wrapClosure(closure, threadingMethod);
+            if(closure != wrappedClosure) {
+                field.setInitialValueExpression(wrappedClosure);
+                modified = true;
+            }
         } else if(initialExpression instanceof MethodCallExpression) {
             // very special case in order to deal with curried methods
             MethodCallExpression mce = (MethodCallExpression) initialExpression;
@@ -230,18 +241,26 @@ public class ThreadingASTTransformation implements ASTTransformation, Opcodes {
             Expression last = args.size() > 0 ? args.get(args.size() - 1) : null;
             if(last instanceof ClosureExpression) {
                 ClosureExpression closure = (ClosureExpression) last;
-                args.set(args.size() - 1, wrapClosure(closure, closure.getCode(), threadingMethod));
-                modified = true;
+                ClosureExpression wrappedClosure = wrapClosure(closure, threadingMethod);
+                if(closure != wrappedClosure) {
+                    args.set(args.size() - 1, wrappedClosure);
+                    modified = true;
+                }
             }
         }
 
         if(modified && LOG.isDebugEnabled()) LOG.debug("Modified "+declaringClass.getName()+"."+field.getName()+"() - code wrapped with "+threadingMethod+"{}");
     }
 
-    private static ClosureExpression wrapClosure(ClosureExpression closure, Statement code, String threadingMethod) {
-        ClosureExpression newClosure = new ClosureExpression(closure.getParameters(), wrapStatements(code, threadingMethod));
-        newClosure.setVariableScope(closure.getVariableScope());
-        return newClosure;
+    private static ClosureExpression wrapClosure(ClosureExpression closure, String threadingMethod) {
+        Statement code = closure.getCode();
+        Statement wrappedCode = wrapStatements(closure.getCode(), threadingMethod);
+        if(code != wrappedCode) {
+            ClosureExpression newClosure = new ClosureExpression(closure.getParameters(), wrappedCode);
+            newClosure.setVariableScope(closure.getVariableScope());
+            return newClosure;
+        }
+        return closure;
     }
 
     private static boolean skipInjection(String actionName) {
@@ -258,9 +277,13 @@ public class ThreadingASTTransformation implements ASTTransformation, Opcodes {
     }
 
     private static Statement wrapStatements(Statement code, String threadingMethod) {
-        VariableScope variableScope = new VariableScope();
-        if(code instanceof BlockStatement) variableScope = ((BlockStatement) code).getVariableScope();
-        
+        BlockStatement codeBlock = (BlockStatement) code;
+        List<Statement> statements = codeBlock.getStatements();
+        if(statements.isEmpty()) return code;
+        if(statements.size() == 1 && usesThreadingAlready(statements.get(0))) return code;
+
+        VariableScope variableScope = codeBlock.getVariableScope();
+
         BlockStatement block = new BlockStatement();
         block.setVariableScope(variableScope);
         ClosureExpression closure = new ClosureExpression(Parameter.EMPTY_ARRAY, code);
@@ -275,5 +298,17 @@ public class ThreadingASTTransformation implements ASTTransformation, Opcodes {
                    UITHREAD_HELPER_CLASS,
                    "getInstance",
                    NO_ARGS);
+    }
+
+    private static boolean usesThreadingAlready(Statement stmnt) {
+        // TODO check for usages of UIThreadHelper.instance.execXXX ??
+        if(!(stmnt instanceof ExpressionStatement)) return false;
+        Expression expr = ((ExpressionStatement) stmnt).getExpression();
+        if(!(expr instanceof MethodCallExpression)) return false;
+        String methodName = ((ConstantExpression)((MethodCallExpression) expr).getMethod()).getText();
+
+        return "execOutside".equals(methodName) || "doOutside".equals(methodName) ||
+               "execSync".equals(methodName)    || "edt".equals(methodName) ||
+               "execAsync".equals(methodName)   || "doLater".equals(methodName);
     }
 }
