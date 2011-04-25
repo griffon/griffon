@@ -207,12 +207,14 @@ public class ThreadingASTTransformation implements ASTTransformation, Opcodes {
 
     private static void wrapStatements(ClassNode declaringClass, MethodNode method, String threadingMethod) {
         if(skipInjection(declaringClass.getName() +"."+ method.getName())) return;
-        System.err.println("===> "+declaringClass.getName() +"."+ method.getName());
         Statement code = method.getCode();
         Statement wrappedCode = wrapStatements(code, threadingMethod);
         if(code != wrappedCode) {
             method.setCode(wrappedCode);
-            if(LOG.isDebugEnabled()) LOG.debug("Modified "+declaringClass.getName()+"."+method.getName()+"() - code wrapped with "+threadingMethod+"{}");
+            for(Parameter param : method.getParameters()) {
+                param.setClosureSharedVariable(true);
+            }
+            if(LOG.isDebugEnabled()) LOG.debug("Modified "+declaringClass.getName()+"."+method.getName()+"() - code wrapped with UIThreadHelper.getInstance()."+threadingMethod+"{}");
         }
     }
 
@@ -226,8 +228,7 @@ public class ThreadingASTTransformation implements ASTTransformation, Opcodes {
         boolean modified = false;
         Expression initialExpression = field.getInitialExpression();
         if(initialExpression instanceof ClosureExpression) {
-            ClosureExpression closure = (ClosureExpression) initialExpression;
-            modified = wrapClosure(closure, threadingMethod);
+            modified = wrapClosure((ClosureExpression) initialExpression, threadingMethod);
         } else if(initialExpression instanceof MethodCallExpression) {
             // very special case in order to deal with curried methods
             MethodCallExpression mce = (MethodCallExpression) initialExpression;
@@ -237,17 +238,17 @@ public class ThreadingASTTransformation implements ASTTransformation, Opcodes {
             List<Expression> args = ((ArgumentListExpression) mce.getArguments()).getExpressions();
             Expression last = args.size() > 0 ? args.get(args.size() - 1) : null;
             if(last instanceof ClosureExpression) {
-                ClosureExpression closure = (ClosureExpression) last;
-                modified = wrapClosure(closure, threadingMethod);
+                modified = wrapClosure((ClosureExpression) last, threadingMethod);
             }
         }
 
-        if(modified && LOG.isDebugEnabled()) LOG.debug("Modified "+declaringClass.getName()+"."+field.getName()+"() - code wrapped with "+threadingMethod+"{}");
+        if(modified && LOG.isDebugEnabled()) LOG.debug("Modified "+declaringClass.getName()+"."+field.getName()+"() - code wrapped with UIThreadHelper.getInstance()."+threadingMethod+"{}");
     }
 
     private static boolean wrapClosure(ClosureExpression closure, String threadingMethod) {
         Statement code = closure.getCode();
         Statement wrappedCode = wrapStatements(closure.getCode(), threadingMethod);
+        closure.setCode(wrappedCode);
         return code != wrappedCode;
     }
 
@@ -271,21 +272,17 @@ public class ThreadingASTTransformation implements ASTTransformation, Opcodes {
         if(statements.size() == 1 && usesThreadingAlready(statements.get(0))) return code;
 
         VariableScope variableScope = codeBlock.getVariableScope();
-
         BlockStatement block = new BlockStatement();
-        block.setVariableScope(variableScope);
+        block.setVariableScope(variableScope.copy());
         ClosureExpression closure = new ClosureExpression(Parameter.EMPTY_ARRAY, code);
-        closure.setVariableScope(variableScope);
+        closure.setVariableScope(variableScope.copy());
         block.addStatement(stmnt(new MethodCallExpression(uiThreadHelperInstance(), threadingMethod, args(closure))));
-//System.err.println(block.getText());
+
         return block;
     }
 
     private static Expression uiThreadHelperInstance() {
-        return new StaticMethodCallExpression(
-                   UITHREAD_HELPER_CLASS,
-                   "getInstance",
-                   NO_ARGS);
+        return call(classx(UITHREAD_HELPER_CLASS), "getInstance", NO_ARGS);
     }
 
     private static boolean usesThreadingAlready(Statement stmnt) {
@@ -296,8 +293,8 @@ public class ThreadingASTTransformation implements ASTTransformation, Opcodes {
         String methodName = ((ConstantExpression)(methodExpr).getMethod()).getText();
 
         ClassExpression classExpr = null;
-            // UIThreadHelper.instance
         if(methodExpr.getObjectExpression() instanceof PropertyExpression) {
+            // UIThreadHelper.instance
             PropertyExpression objExpr = (PropertyExpression) methodExpr.getObjectExpression();
             if(!(objExpr.getProperty() instanceof ConstantExpression)) return false;
             ConstantExpression constExpr = (ConstantExpression) objExpr.getProperty();
@@ -305,6 +302,7 @@ public class ThreadingASTTransformation implements ASTTransformation, Opcodes {
             if(!(objExpr.getObjectExpression() instanceof ClassExpression)) return false;
             classExpr = (ClassExpression) objExpr.getObjectExpression();
         } else if(methodExpr.getObjectExpression() instanceof MethodCallExpression) {
+            // UIThreadHelper.getInstance()
             MethodCallExpression objExpr = (MethodCallExpression) methodExpr.getObjectExpression();
             if(!(objExpr.getMethod() instanceof ConstantExpression)) return false;
             ConstantExpression constExpr = (ConstantExpression) objExpr.getMethod();
