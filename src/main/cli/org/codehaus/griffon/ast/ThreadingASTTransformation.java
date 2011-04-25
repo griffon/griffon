@@ -207,6 +207,7 @@ public class ThreadingASTTransformation implements ASTTransformation, Opcodes {
 
     private static void wrapStatements(ClassNode declaringClass, MethodNode method, String threadingMethod) {
         if(skipInjection(declaringClass.getName() +"."+ method.getName())) return;
+        System.err.println("===> "+declaringClass.getName() +"."+ method.getName());
         Statement code = method.getCode();
         Statement wrappedCode = wrapStatements(code, threadingMethod);
         if(code != wrappedCode) {
