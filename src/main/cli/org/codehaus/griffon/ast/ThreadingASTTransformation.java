@@ -226,11 +226,7 @@ public class ThreadingASTTransformation implements ASTTransformation, Opcodes {
         Expression initialExpression = field.getInitialExpression();
         if(initialExpression instanceof ClosureExpression) {
             ClosureExpression closure = (ClosureExpression) initialExpression;
-            ClosureExpression wrappedClosure = wrapClosure(closure, threadingMethod);
-            if(closure != wrappedClosure) {
-                field.setInitialValueExpression(wrappedClosure);
-                modified = true;
-            }
+            modified = wrapClosure(closure, threadingMethod);
         } else if(initialExpression instanceof MethodCallExpression) {
             // very special case in order to deal with curried methods
             MethodCallExpression mce = (MethodCallExpression) initialExpression;
@@ -241,26 +237,17 @@ public class ThreadingASTTransformation implements ASTTransformation, Opcodes {
             Expression last = args.size() > 0 ? args.get(args.size() - 1) : null;
             if(last instanceof ClosureExpression) {
                 ClosureExpression closure = (ClosureExpression) last;
-                ClosureExpression wrappedClosure = wrapClosure(closure, threadingMethod);
-                if(closure != wrappedClosure) {
-                    args.set(args.size() - 1, wrappedClosure);
-                    modified = true;
-                }
+                modified = wrapClosure(closure, threadingMethod);
             }
         }
 
         if(modified && LOG.isDebugEnabled()) LOG.debug("Modified "+declaringClass.getName()+"."+field.getName()+"() - code wrapped with "+threadingMethod+"{}");
     }
 
-    private static ClosureExpression wrapClosure(ClosureExpression closure, String threadingMethod) {
+    private static boolean wrapClosure(ClosureExpression closure, String threadingMethod) {
         Statement code = closure.getCode();
         Statement wrappedCode = wrapStatements(closure.getCode(), threadingMethod);
-        if(code != wrappedCode) {
-            ClosureExpression newClosure = new ClosureExpression(closure.getParameters(), wrappedCode);
-            newClosure.setVariableScope(closure.getVariableScope());
-            return newClosure;
-        }
-        return closure;
+        return code != wrappedCode;
     }
 
     private static boolean skipInjection(String actionName) {
@@ -289,7 +276,7 @@ public class ThreadingASTTransformation implements ASTTransformation, Opcodes {
         ClosureExpression closure = new ClosureExpression(Parameter.EMPTY_ARRAY, code);
         closure.setVariableScope(variableScope);
         block.addStatement(stmnt(new MethodCallExpression(uiThreadHelperInstance(), threadingMethod, args(closure))));
-
+//System.err.println(block.getText());
         return block;
     }
 
@@ -301,12 +288,37 @@ public class ThreadingASTTransformation implements ASTTransformation, Opcodes {
     }
 
     private static boolean usesThreadingAlready(Statement stmnt) {
-        // TODO check for usages of UIThreadHelper.instance.execXXX ??
         if(!(stmnt instanceof ExpressionStatement)) return false;
         Expression expr = ((ExpressionStatement) stmnt).getExpression();
         if(!(expr instanceof MethodCallExpression)) return false;
-        String methodName = ((ConstantExpression)((MethodCallExpression) expr).getMethod()).getText();
+        MethodCallExpression methodExpr = (MethodCallExpression) expr;
+        String methodName = ((ConstantExpression)(methodExpr).getMethod()).getText();
 
+        ClassExpression classExpr = null;
+            // UIThreadHelper.instance
+        if(methodExpr.getObjectExpression() instanceof PropertyExpression) {
+            PropertyExpression objExpr = (PropertyExpression) methodExpr.getObjectExpression();
+            if(!(objExpr.getProperty() instanceof ConstantExpression)) return false;
+            ConstantExpression constExpr = (ConstantExpression) objExpr.getProperty();
+            if(!constExpr.getText().equals("instance")) return false;
+            if(!(objExpr.getObjectExpression() instanceof ClassExpression)) return false;
+            classExpr = (ClassExpression) objExpr.getObjectExpression();
+        } else if(methodExpr.getObjectExpression() instanceof MethodCallExpression) {
+            MethodCallExpression objExpr = (MethodCallExpression) methodExpr.getObjectExpression();
+            if(!(objExpr.getMethod() instanceof ConstantExpression)) return false;
+            ConstantExpression constExpr = (ConstantExpression) objExpr.getMethod();
+            if(!constExpr.getText().equals("getInstance")) return false;
+            if(!(objExpr.getObjectExpression() instanceof ClassExpression)) return false;
+            classExpr = (ClassExpression) objExpr.getObjectExpression();
+        }
+        
+        if(classExpr != null) {    
+            if(!classExpr.getText().equals(UIThreadHelper.class.getName())) return false;
+            return "executeOutside".equals(methodName) || 
+                   "executeSync".equals(methodName) || 
+                   "executeAsync".equals(methodName) || 
+                   "executeFuture".equals(methodName);
+        }
         return "execOutside".equals(methodName) || "doOutside".equals(methodName) ||
                "execSync".equals(methodName)    || "edt".equals(methodName) ||
                "execAsync".equals(methodName)   || "doLater".equals(methodName);
