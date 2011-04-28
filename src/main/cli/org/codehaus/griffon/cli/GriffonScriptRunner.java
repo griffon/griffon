@@ -703,6 +703,12 @@ public class GriffonScriptRunner {
         c = settings.getIncludePluginScriptClosure();
         c.setDelegate(binding);
         binding.setVariable("includePluginScript", c);
+        c = settings.getIncludeScriptClosure();
+        c.setDelegate(binding);
+        binding.setVariable("includeScript", c);
+        c = settings.getResolveResourcesClosure();
+        c.setDelegate(binding);
+        binding.setVariable("resolveResources", c);
         binding.setVariable("griffonSettings", settings);
         PluginBuildSettings pluginBuildSettings = new PluginBuildSettings(settings);
         binding.setVariable("pluginSettings", pluginBuildSettings);
