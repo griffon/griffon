@@ -248,7 +248,12 @@ public class ThreadingASTTransformation implements ASTTransformation, Opcodes {
     private static boolean wrapClosure(ClosureExpression closure, String threadingMethod) {
         Statement code = closure.getCode();
         Statement wrappedCode = wrapStatements(closure.getCode(), threadingMethod);
-        closure.setCode(wrappedCode);
+        if(code != wrappedCode) {
+            closure.setCode(wrappedCode);
+            for(Parameter param : closure.getParameters()) {
+                param.setClosureSharedVariable(true);
+            }
+        }
         return code != wrappedCode;
     }
 

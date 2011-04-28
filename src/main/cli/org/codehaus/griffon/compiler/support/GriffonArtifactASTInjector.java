@@ -50,7 +50,7 @@ public class GriffonArtifactASTInjector implements ASTInjector {
     private static final ClassNode CALLABLE_CLASS = ClassHelper.makeWithoutCaching(Callable.class);
     private static final ClassNode FUTURE_CLASS = ClassHelper.makeWithoutCaching(Future.class);
     private static final ClassNode EXECUTOR_SERVICE_CLASS = ClassHelper.makeWithoutCaching(ExecutorService.class);
-    private static final ClassNode UITH_CLASS = ClassHelper.makeWithoutCaching(UIThreadHelper.class);
+    private static final ClassNode UITHREAD_HELPER_CLASS = ClassHelper.makeWithoutCaching(UIThreadHelper.class);
     private static final ClassNode RUNNABLE_CLASS = ClassHelper.makeWithoutCaching(Runnable.class);
     private static final ClassNode LOGGER_CLASS = ClassHelper.makeWithoutCaching(Logger.class);
     private static final ClassNode LOGGER_FACTORY_CLASS = ClassHelper.makeWithoutCaching(LoggerFactory.class);
@@ -58,10 +58,16 @@ public class GriffonArtifactASTInjector implements ASTInjector {
     private static final ClassNode ABSTRACT_GRIFFON_ARTIFACT_CLASS = ClassHelper.makeWithoutCaching(AbstractGriffonArtifact.class);
     private static final ClassNode EXPANDO_METACLASS_CLASS = ClassHelper.makeWithoutCaching(ExpandoMetaClass.class);
     private static final ClassNode MVCCLOSURE_CLASS = ClassHelper.makeWithoutCaching(MVCClosure.class);
-    private static final ClassNode GRIFFON_MODEL_CLASS = ClassHelper.makeWithoutCaching(GriffonModel.class);
-    private static final ClassNode GRIFFON_VIEW_CLASS = ClassHelper.makeWithoutCaching(GriffonView.class);
-    private static final ClassNode GRIFFON_CONTROLLER_CLASS = ClassHelper.makeWithoutCaching(GriffonController.class);
+    private static final ClassNode COLLECTIONS_CLASS = ClassHelper.makeWithoutCaching(Collections.class);
     public static final String APP = "app";
+
+    private static final String CREATE_MVC_GROUP = "createMVCGroup";
+    private static final String BUILD_MVC_GROUP = "buildMVCGroup";
+    private static final String WITH_MVC_GROUP = "withMVCGroup";
+    private static final String MVC_TYPE = "mvcType";
+    private static final String MVC_NAME = "mvcName";
+    private static final String HANDLER = "handler";
+    private static final String ARGS = "args";
     
     public void inject(ClassNode classNode, String artifactType) {
         // GriffonApplication getApp()
@@ -284,337 +290,295 @@ public class GriffonArtifactASTInjector implements ASTInjector {
     
         // Map buildMVCGroup(String mvcType)
         classNode.addMethod(new MethodNode(
-            "buildMVCGroup",
+            BUILD_MVC_GROUP,
             ACC_PUBLIC,
             ClassHelper.MAP_TYPE,
-            new Parameter[]{new Parameter(ClassHelper.STRING_TYPE, "mvcType")},
+            params(param(ClassHelper.STRING_TYPE, MVC_TYPE)),
             ClassNode.EMPTY_ARRAY,
-            returns(new StaticMethodCallExpression(
+            returns(call(
                 GAH_CLASS,
-                "buildMVCGroup",
-                new ArgumentListExpression(new Expression[]{
-                    var(APP), emptyMap(), var("mvcType"), var("mvcType")
-                })))
+                BUILD_MVC_GROUP,
+                args(var(APP), emptyMap(), var(MVC_TYPE), var(MVC_TYPE))))
         ));
     
         // Map buildMVCGroup(String mvcType, mvcName)
         classNode.addMethod(new MethodNode(
-            "buildMVCGroup",
+            BUILD_MVC_GROUP,
             ACC_PUBLIC,
             ClassHelper.MAP_TYPE,
-            new Parameter[]{
-                new Parameter(ClassHelper.STRING_TYPE, "mvcType"),
-                new Parameter(ClassHelper.STRING_TYPE, "mvcName")},
+            params(
+                param(ClassHelper.STRING_TYPE, MVC_TYPE),
+                param(ClassHelper.STRING_TYPE, MVC_NAME)),
             ClassNode.EMPTY_ARRAY,
-            returns(new StaticMethodCallExpression(
+            returns(call(
                 GAH_CLASS,
-                "buildMVCGroup",
-                new ArgumentListExpression(new Expression[]{
-                    var(APP), emptyMap(), var("mvcType"), var("mvcName")
-                })))
+                BUILD_MVC_GROUP,
+                args(var(APP), emptyMap(), var(MVC_TYPE), var(MVC_NAME))))
         ));
     
         // Map buildMVCGroup(Map args, String mvcType)
         classNode.addMethod(new MethodNode(
-            "buildMVCGroup",
+            BUILD_MVC_GROUP,
             ACC_PUBLIC,
             ClassHelper.MAP_TYPE,
-            new Parameter[]{
-                new Parameter(ClassHelper.MAP_TYPE, "args"),
-                new Parameter(ClassHelper.STRING_TYPE, "mvcType")},
+            params(
+                param(ClassHelper.MAP_TYPE, ARGS),
+                param(ClassHelper.STRING_TYPE, MVC_TYPE)),
             ClassNode.EMPTY_ARRAY,
-            returns(new StaticMethodCallExpression(
+            returns(call(
                 GAH_CLASS,
-                "buildMVCGroup",
-                new ArgumentListExpression(new Expression[]{
-                    var(APP), vars("args"), var("mvcType"), var("mvcType")
-                })))
+                BUILD_MVC_GROUP,
+                args(var(APP), vars(ARGS), var(MVC_TYPE), var(MVC_TYPE))))
         ));
 
         // Map buildMVCGroup(Map args, String mvcType, String mvcName)
         classNode.addMethod(new MethodNode(
-            "buildMVCGroup",
+            BUILD_MVC_GROUP,
             ACC_PUBLIC,
             ClassHelper.MAP_TYPE,
-            new Parameter[]{
-                new Parameter(ClassHelper.MAP_TYPE, "args"),
-                new Parameter(ClassHelper.STRING_TYPE, "mvcType"),
-                new Parameter(ClassHelper.STRING_TYPE, "mvcName")},
+            params(
+                param(ClassHelper.MAP_TYPE, ARGS),
+                param(ClassHelper.STRING_TYPE, MVC_TYPE),
+                param(ClassHelper.STRING_TYPE, MVC_NAME)),
             ClassNode.EMPTY_ARRAY,
-            returns(new StaticMethodCallExpression(
+            returns(call(
                 GAH_CLASS,
-                "buildMVCGroup",
-                new ArgumentListExpression(new Expression[]{
-                    var(APP), vars("args"), var("mvcType"), var("mvcName")
-                })))
+                BUILD_MVC_GROUP,
+                args(var(APP), vars(ARGS), var(MVC_TYPE), var(MVC_NAME))))
         ));
 
         // List createMVCGroup(String mvcType)
         classNode.addMethod(new MethodNode(
-            "createMVCGroup",
+            CREATE_MVC_GROUP,
             ACC_PUBLIC,
             ClassHelper.LIST_TYPE,
-            new Parameter[]{new Parameter(ClassHelper.STRING_TYPE, "mvcType")},
+            params(param(ClassHelper.STRING_TYPE, MVC_TYPE)),
             ClassNode.EMPTY_ARRAY,
-            returns(new StaticMethodCallExpression(
+            returns(call(
                 GAH_CLASS,
-                "createMVCGroup",
-                new ArgumentListExpression(new Expression[]{
-                    var(APP), emptyMap(), var("mvcType"), var("mvcType")
-                })))
+                CREATE_MVC_GROUP,
+                args(var(APP), emptyMap(), var(MVC_TYPE), var(MVC_TYPE))))
         ));
     
         // List createMVCGroup(String mvcType, mvcName)
         classNode.addMethod(new MethodNode(
-            "createMVCGroup",
+            CREATE_MVC_GROUP,
             ACC_PUBLIC,
             ClassHelper.LIST_TYPE,
-            new Parameter[]{
-                new Parameter(ClassHelper.STRING_TYPE, "mvcType"),
-                new Parameter(ClassHelper.STRING_TYPE, "mvcName")},
+            params(
+                param(ClassHelper.STRING_TYPE, MVC_TYPE),
+                param(ClassHelper.STRING_TYPE, MVC_NAME)),
             ClassNode.EMPTY_ARRAY,
             returns(new StaticMethodCallExpression(
                 GAH_CLASS,
-                "createMVCGroup",
-                new ArgumentListExpression(new Expression[]{
-                    var(APP), emptyMap(), var("mvcType"), var("mvcName")
-                })))
+                CREATE_MVC_GROUP,
+                args(var(APP), emptyMap(), var(MVC_TYPE), var(MVC_NAME))))
         ));
     
         // List createMVCGroup(Map args, String mvcType)
         classNode.addMethod(new MethodNode(
-            "createMVCGroup",
+            CREATE_MVC_GROUP,
             ACC_PUBLIC,
             ClassHelper.LIST_TYPE,
-            new Parameter[]{
-                new Parameter(ClassHelper.MAP_TYPE, "args"),
-                new Parameter(ClassHelper.STRING_TYPE, "mvcType")},
+            params(
+                param(ClassHelper.MAP_TYPE, ARGS),
+                param(ClassHelper.STRING_TYPE, MVC_TYPE)),
             ClassNode.EMPTY_ARRAY,
-            returns(new StaticMethodCallExpression(
+            returns(call(
                 GAH_CLASS,
-                "createMVCGroup",
-                new ArgumentListExpression(new Expression[]{
-                    var(APP), vars("args"), var("mvcType"), var("mvcType")
-                })))
+                CREATE_MVC_GROUP,
+                args(var(APP), vars(ARGS), var(MVC_TYPE), var(MVC_TYPE))))
         ));
 
         // List createMVCGroup(String mvcType, Map args)
         classNode.addMethod(new MethodNode(
-            "createMVCGroup",
+            CREATE_MVC_GROUP,
             ACC_PUBLIC,
             ClassHelper.LIST_TYPE,
-            new Parameter[]{
-                new Parameter(ClassHelper.STRING_TYPE, "mvcType"),
-                new Parameter(ClassHelper.MAP_TYPE, "args")},
+            params(
+                param(ClassHelper.STRING_TYPE, MVC_TYPE),
+                param(ClassHelper.MAP_TYPE, ARGS)),
             ClassNode.EMPTY_ARRAY,
-            returns(new StaticMethodCallExpression(
+            returns(call(
                 GAH_CLASS,
-                "createMVCGroup",
-                new ArgumentListExpression(new Expression[]{
-                    var(APP), vars("args"), var("mvcType"), var("mvcType")
-                })))
+                CREATE_MVC_GROUP,
+                args(var(APP), vars(ARGS), var(MVC_TYPE), var(MVC_TYPE))))
         ));
 
         // List createMVCGroup(Map args, String mvcType, String mvcName)
         classNode.addMethod(new MethodNode(
-            "createMVCGroup",
+            CREATE_MVC_GROUP,
             ACC_PUBLIC,
             ClassHelper.LIST_TYPE,
-            new Parameter[]{
-                new Parameter(ClassHelper.MAP_TYPE, "args"),
-                new Parameter(ClassHelper.STRING_TYPE, "mvcType"),
-                new Parameter(ClassHelper.STRING_TYPE, "mvcName")},
+            params(
+                param(ClassHelper.MAP_TYPE, ARGS),
+                param(ClassHelper.STRING_TYPE, MVC_TYPE),
+                param(ClassHelper.STRING_TYPE, MVC_NAME)),
             ClassNode.EMPTY_ARRAY,
-            returns(new StaticMethodCallExpression(
+            returns(call(
                 GAH_CLASS,
-                "createMVCGroup",
-                new ArgumentListExpression(new Expression[]{
-                    var(APP), vars("args"), var("mvcType"), var("mvcName")
-                })))
+                CREATE_MVC_GROUP,
+                args(var(APP), vars(ARGS), var(MVC_TYPE), var(MVC_NAME))))
         ));
 
         // List createMVCGroup(String mvcType, String mvcName, Map args)
         classNode.addMethod(new MethodNode(
-            "createMVCGroup",
+            CREATE_MVC_GROUP,
             ACC_PUBLIC,
             ClassHelper.LIST_TYPE,
-            new Parameter[]{
-                new Parameter(ClassHelper.STRING_TYPE, "mvcType"),
-                new Parameter(ClassHelper.STRING_TYPE, "mvcName"),
-                new Parameter(ClassHelper.MAP_TYPE, "args")},
+            params(
+                param(ClassHelper.STRING_TYPE, MVC_TYPE),
+                param(ClassHelper.STRING_TYPE, MVC_NAME),
+                param(ClassHelper.MAP_TYPE, ARGS)),
             ClassNode.EMPTY_ARRAY,
-            returns(new StaticMethodCallExpression(
+            returns(call(
                 GAH_CLASS,
-                "createMVCGroup",
-                new ArgumentListExpression(new Expression[]{
-                    var(APP), vars("args"), var("mvcType"), var("mvcName")
-                })))
+                CREATE_MVC_GROUP,
+                args(var(APP), vars(ARGS), var(MVC_TYPE), var(MVC_NAME))))
         ));
 
         // void destroyMVCGroup(String mvcName)
-        addMethod(classNode, new MethodNode(
-            "destroyMVCGroup",
-            ACC_PUBLIC,
-            ClassHelper.VOID_TYPE,
-            new Parameter[]{new Parameter(ClassHelper.STRING_TYPE, "mvcName")},
-            ClassNode.EMPTY_ARRAY,
-            new EmptyStatement()
+        classNode.addMethod(new MethodNode(
+                "destroyMVCGroup",
+                ACC_PUBLIC,
+                ClassHelper.VOID_TYPE,
+                params(param(ClassHelper.STRING_TYPE, MVC_NAME)),
+                ClassNode.EMPTY_ARRAY,
+                new EmptyStatement()
         ));
 
         // void withMVCGroup(String mvcType, Closure handler)
         classNode.addMethod(new MethodNode(
-            "withMVCGroup",
+            WITH_MVC_GROUP,
             ACC_PUBLIC,
             ClassHelper.VOID_TYPE,
-            new Parameter[]{new Parameter(ClassHelper.STRING_TYPE, "mvcType"),
-                new Parameter(ClassHelper.CLOSURE_TYPE, "handler")},
+            params(param(ClassHelper.STRING_TYPE, MVC_TYPE),
+                param(ClassHelper.CLOSURE_TYPE, HANDLER)),
             ClassNode.EMPTY_ARRAY,
-            stmnt(new StaticMethodCallExpression(
+            stmnt(call(
                 GAH_CLASS,
-                "withMVCGroup",
-                new ArgumentListExpression(new Expression[]{
-                    vars(APP), var("mvcType"), var("mvcType"), emptyMap(), var("handler")
-                })))
+                WITH_MVC_GROUP,
+                args(vars(APP), var(MVC_TYPE), var(MVC_TYPE), emptyMap(), var(HANDLER))))
         ));
     
         // void withMVCGroup(String mvcType, String mvcName, Closure handler)
         classNode.addMethod(new MethodNode(
-            "withMVCGroup",
+            WITH_MVC_GROUP,
             ACC_PUBLIC,
             ClassHelper.VOID_TYPE,
-            new Parameter[]{
-                new Parameter(ClassHelper.STRING_TYPE, "mvcType"),
-                new Parameter(ClassHelper.STRING_TYPE, "mvcName"),
-                new Parameter(ClassHelper.CLOSURE_TYPE, "handler")},
+            params(
+                param(ClassHelper.STRING_TYPE, MVC_TYPE),
+                param(ClassHelper.STRING_TYPE, MVC_NAME),
+                param(ClassHelper.CLOSURE_TYPE, HANDLER)),
             ClassNode.EMPTY_ARRAY,
-            stmnt(new StaticMethodCallExpression(
+            stmnt(call(
                 GAH_CLASS,
-                "withMVCGroup",
-                new ArgumentListExpression(new Expression[]{
-                    var(APP), var("mvcType"), var("mvcName"), emptyMap(), var("handler")
-                })))
+                WITH_MVC_GROUP,
+                args(var(APP), var(MVC_TYPE), var(MVC_NAME), emptyMap(), var(HANDLER))))
         ));
 
         // void withMVCGroup(String mvcType, Map args, Closure handler)
         classNode.addMethod(new MethodNode(
-            "withMVCGroup",
+            WITH_MVC_GROUP,
             ACC_PUBLIC,
             ClassHelper.VOID_TYPE,
-            new Parameter[]{
-                new Parameter(ClassHelper.STRING_TYPE, "mvcType"),
-                new Parameter(ClassHelper.MAP_TYPE, "args"),
-                new Parameter(ClassHelper.CLOSURE_TYPE, "handler")},
+            params(
+                param(ClassHelper.STRING_TYPE, MVC_TYPE),
+                param(ClassHelper.MAP_TYPE, ARGS),
+                param(ClassHelper.CLOSURE_TYPE, HANDLER)),
             ClassNode.EMPTY_ARRAY,
-            stmnt(new StaticMethodCallExpression(
+            stmnt(call(
                 GAH_CLASS,
-                "withMVCGroup",
-                new ArgumentListExpression(new Expression[]{
-                    var(APP), var("mvcType"), var("mvcType"), vars("args"), var("handler")
-                })))
+                WITH_MVC_GROUP,
+                args(var(APP), var(MVC_TYPE), var(MVC_TYPE), vars(ARGS), var(HANDLER))))
         ));
 
         // void withMVCGroup(String mvcType, String mvcName, Map args, Closure handler)
         classNode.addMethod(new MethodNode(
-            "withMVCGroup",
+            WITH_MVC_GROUP,
             ACC_PUBLIC,
             ClassHelper.VOID_TYPE,
-            new Parameter[]{
-                new Parameter(ClassHelper.STRING_TYPE, "mvcType"),
-                new Parameter(ClassHelper.STRING_TYPE, "mvcName"),
-                new Parameter(ClassHelper.MAP_TYPE, "args"),
-                new Parameter(ClassHelper.CLOSURE_TYPE, "handler")},
+            params(
+                param(ClassHelper.STRING_TYPE, MVC_TYPE),
+                param(ClassHelper.STRING_TYPE, MVC_NAME),
+                param(ClassHelper.MAP_TYPE, ARGS),
+                param(ClassHelper.CLOSURE_TYPE, HANDLER)),
             ClassNode.EMPTY_ARRAY,
-            stmnt(new StaticMethodCallExpression(
+            stmnt(call(
                 GAH_CLASS,
-                "withMVCGroup",
-                new ArgumentListExpression(new Expression[]{
-                    var(APP), var("mvcType"), var("mvcName"), vars("args"), var("handler")
-                })))
+                WITH_MVC_GROUP,
+                args(var(APP), var(MVC_TYPE), var(MVC_NAME), vars(ARGS), var(HANDLER))))
         ));
 
         // void withMVCGroup(String mvcType, MVCClosure handler)
         classNode.addMethod(new MethodNode(
-            "withMVCGroup",
+            WITH_MVC_GROUP,
             ACC_PUBLIC,
             ClassHelper.VOID_TYPE,
-            new Parameter[]{new Parameter(ClassHelper.STRING_TYPE, "mvcType"),
-                new Parameter(MVCCLOSURE_CLASS, "handler")},
+            params(param(ClassHelper.STRING_TYPE, MVC_TYPE),
+                param(MVCCLOSURE_CLASS, HANDLER)),
             ClassNode.EMPTY_ARRAY,
-            stmnt(new StaticMethodCallExpression(
+            stmnt(call(
                 GAH_CLASS,
-                "withMVCGroup",
-                new ArgumentListExpression(new Expression[]{
-                    vars(APP), var("mvcType"), var("mvcType"), emptyMap(), var("handler")
-                })))
+                WITH_MVC_GROUP,
+                args(vars(APP), var(MVC_TYPE), var(MVC_TYPE), emptyMap(), var(HANDLER))))
         ));
 
         // void withMVCGroup(String mvcType, String mvcName, MVCClosure handler)
         classNode.addMethod(new MethodNode(
-            "withMVCGroup",
+            WITH_MVC_GROUP,
             ACC_PUBLIC,
             ClassHelper.VOID_TYPE,
-            new Parameter[]{
-                new Parameter(ClassHelper.STRING_TYPE, "mvcType"),
-                new Parameter(ClassHelper.STRING_TYPE, "mvcName"),
-                new Parameter(MVCCLOSURE_CLASS, "handler")},
+            params(
+                param(ClassHelper.STRING_TYPE, MVC_TYPE),
+                param(ClassHelper.STRING_TYPE, MVC_NAME),
+                param(MVCCLOSURE_CLASS, HANDLER)),
             ClassNode.EMPTY_ARRAY,
-            stmnt(new StaticMethodCallExpression(
+            stmnt(call(
                 GAH_CLASS,
-                "withMVCGroup",
-                new ArgumentListExpression(new Expression[]{
-                    var(APP), var("mvcType"), var("mvcName"), emptyMap(), var("handler")
-                })))
+                WITH_MVC_GROUP,
+                args(var(APP), var(MVC_TYPE), var(MVC_NAME), emptyMap(), var(HANDLER))))
         ));
 
         // void withMVCGroup(String mvcType, Map args, MVCClosure handler)
         classNode.addMethod(new MethodNode(
-            "withMVCGroup",
+            WITH_MVC_GROUP,
             ACC_PUBLIC,
             ClassHelper.VOID_TYPE,
-            new Parameter[]{
-                new Parameter(ClassHelper.STRING_TYPE, "mvcType"),
-                new Parameter(ClassHelper.MAP_TYPE, "args"),
-                new Parameter(MVCCLOSURE_CLASS, "handler")},
+            params(
+                param(ClassHelper.STRING_TYPE, MVC_TYPE),
+                param(ClassHelper.MAP_TYPE, ARGS),
+                param(MVCCLOSURE_CLASS, HANDLER)),
             ClassNode.EMPTY_ARRAY,
-            stmnt(new StaticMethodCallExpression(
+            stmnt(call(
                 GAH_CLASS,
-                "withMVCGroup",
-                new ArgumentListExpression(new Expression[]{
-                    var(APP), var("mvcType"), var("mvcType"), vars("args"), var("handler")
-                })))
+                WITH_MVC_GROUP,
+                args(var(APP), var(MVC_TYPE), var(MVC_TYPE), vars(ARGS), var(HANDLER))))
         ));
 
         // void withMVCGroup(String mvcType, String mvcName, Map args, MVCClosure handler)
         classNode.addMethod(new MethodNode(
-            "withMVCGroup",
+            WITH_MVC_GROUP,
             ACC_PUBLIC,
             ClassHelper.VOID_TYPE,
-            new Parameter[]{
-                new Parameter(ClassHelper.STRING_TYPE, "mvcType"),
-                new Parameter(ClassHelper.STRING_TYPE, "mvcName"),
-                new Parameter(ClassHelper.MAP_TYPE, "args"),
-                new Parameter(MVCCLOSURE_CLASS, "handler")},
+            params(
+                param(ClassHelper.STRING_TYPE, MVC_TYPE),
+                param(ClassHelper.STRING_TYPE, MVC_NAME),
+                param(ClassHelper.MAP_TYPE, ARGS),
+                param(MVCCLOSURE_CLASS, HANDLER)),
             ClassNode.EMPTY_ARRAY,
-            stmnt(new StaticMethodCallExpression(
+            stmnt(call(
                 GAH_CLASS,
-                "withMVCGroup",
-                new ArgumentListExpression(new Expression[]{
-                    var(APP), var("mvcType"), var("mvcName"), vars("args"), var("handler")
-                })))
+                WITH_MVC_GROUP,
+                args(var(APP), var(MVC_TYPE), var(MVC_NAME), vars(ARGS), var(HANDLER))))
         ));
     }
 
     private static Expression emptyMap() {
-        return new StaticMethodCallExpression(
-             ClassHelper.makeWithoutCaching(Collections.class),
-             "emptyMap",
-             ArgumentListExpression.EMPTY_ARGUMENTS);
+        return call(COLLECTIONS_CLASS, "emptyMap", NO_ARGS);
     }
 
     private Expression uiThreadHelperInstance() {
-        return new StaticMethodCallExpression(
-                   UITH_CLASS,
-                   "getInstance",
-                   NO_ARGS);
+        return call(classx(UITHREAD_HELPER_CLASS), "getInstance", NO_ARGS);
     }
 }

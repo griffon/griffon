@@ -17,9 +17,10 @@
 package org.codehaus.griffon.compiler.support;
 
 import org.codehaus.groovy.ast.*;
-import org.codehaus.groovy.ast.expr.*;
 import org.codehaus.groovy.ast.stmt.*;
 
+import static org.codehaus.griffon.ast.GriffonASTUtils.param;
+import static org.codehaus.griffon.ast.GriffonASTUtils.params;
 import static org.codehaus.griffon.ast.GriffonASTUtils.addMethod;
 
 /**
@@ -37,7 +38,7 @@ public class GriffonMvcArtifactASTInjector extends GriffonArtifactASTInjector {
             "mvcGroupInit",
             ACC_PUBLIC,
             ClassHelper.VOID_TYPE,
-            new Parameter[]{new Parameter(ClassHelper.MAP_TYPE, "args")},
+            params(param(ClassHelper.MAP_TYPE, "args")),
             ClassNode.EMPTY_ARRAY,
             new EmptyStatement()
         ));

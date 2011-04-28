@@ -209,10 +209,6 @@ class IvyDependencyManager extends AbstractIvyDependencyManager implements Depen
      * Obtains the default dependency definitions for the given Griffon version
      */
     static Closure getDefaultDependencies(String griffonVersion) {
-        // String antVersion = '1.8.1'
-        // String slf4jVersion = '1.6.1'
-        // String springVersion = '3.0.5.RELEASE'
-
         return {
             // log level of Ivy resolver, either 'error', 'warn', 'info', 'debug' or 'verbose'
             log "warn"

@@ -40,7 +40,7 @@ import org.slf4j.LoggerFactory;
  */
 @GroovyASTTransformation(phase=CompilePhase.CANONICALIZATION)
 public class GriffonModelASTTransformation extends GriffonArtifactASTTransformation {
-    private static final Logger LOG = LoggerFactory.getLogger(GriffonControllerASTTransformation.class);
+    private static final Logger LOG = LoggerFactory.getLogger(GriffonModelASTTransformation.class);
     private static final String ARTIFACT_PATH = "models";
     private static final ClassNode GRIFFON_MODEL_CLASS = ClassHelper.makeWithoutCaching(GriffonModel.class);
     private static final ClassNode ABSTRACT_GRIFFON_MODEL_CLASS = ClassHelper.makeWithoutCaching(AbstractGriffonModel.class);    
