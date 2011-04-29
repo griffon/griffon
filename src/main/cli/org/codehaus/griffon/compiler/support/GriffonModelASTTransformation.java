@@ -16,9 +16,9 @@
 
 package org.codehaus.griffon.compiler.support;
 
+import org.codehaus.griffon.compiler.GriffonCompilerContext;
+import org.codehaus.griffon.compiler.SourceUnitCollector;
 import org.codehaus.groovy.ast.*;
-import org.codehaus.groovy.ast.expr.*;
-import org.codehaus.groovy.ast.stmt.*;
 import org.codehaus.groovy.control.CompilePhase;
 import org.codehaus.groovy.control.SourceUnit;
 import org.codehaus.groovy.transform.GroovyASTTransformation;
@@ -34,32 +34,46 @@ import org.slf4j.LoggerFactory;
  * Handles generation of code for Griffon models.
  * <p/>
  *
- * @author Andres Almiray 
- *
+ * @author Andres Almiray
  * @since 0.9.1
  */
-@GroovyASTTransformation(phase=CompilePhase.CANONICALIZATION)
+@GroovyASTTransformation(phase = CompilePhase.CANONICALIZATION)
 public class GriffonModelASTTransformation extends GriffonArtifactASTTransformation {
     private static final Logger LOG = LoggerFactory.getLogger(GriffonModelASTTransformation.class);
     private static final String ARTIFACT_PATH = "models";
     private static final ClassNode GRIFFON_MODEL_CLASS = ClassHelper.makeWithoutCaching(GriffonModel.class);
-    private static final ClassNode ABSTRACT_GRIFFON_MODEL_CLASS = ClassHelper.makeWithoutCaching(AbstractGriffonModel.class);    
-    
-    protected void transform(ClassNode classNode, SourceUnit source, String artifactPath) {
-        if(!ARTIFACT_PATH.equals(artifactPath) || !classNode.getName().endsWith(GriffonModelClass.TRAILING)) return;
+    private static final ClassNode ABSTRACT_GRIFFON_MODEL_CLASS = ClassHelper.makeWithoutCaching(AbstractGriffonModel.class);
 
-        if(ClassHelper.OBJECT_TYPE.equals(classNode.getSuperClass())) {
-            if(LOG.isDebugEnabled()) LOG.debug("Setting "+ABSTRACT_GRIFFON_MODEL_CLASS.getName()+" as the superclass of "+classNode.getName());
+    public static boolean isModelArtifact(ClassNode classNode, SourceUnit source) {
+        if (classNode == null || source == null) return false;
+        return ARTIFACT_PATH.equals(GriffonCompilerContext.getArtifactPath(source)) && classNode.getName().endsWith(GriffonModelClass.TRAILING);
+    }
+
+    protected void transform(ClassNode classNode, SourceUnit source, String artifactPath) {
+        if (!isModelArtifact(classNode, source)) return;
+
+        if (ClassHelper.OBJECT_TYPE.equals(classNode.getSuperClass())) {
+            if (LOG.isDebugEnabled())
+                LOG.debug("Setting " + ABSTRACT_GRIFFON_MODEL_CLASS.getName() + " as the superclass of " + classNode.getName());
             classNode.setSuperClass(ABSTRACT_GRIFFON_MODEL_CLASS);
-        } else if(!classNode.implementsInterface(GRIFFON_MODEL_CLASS)){
-            if(LOG.isDebugEnabled()) LOG.debug("Injecting "+GRIFFON_MODEL_CLASS.getName()+" behavior to "+ classNode.getName());
-            // 1. add interface
-            classNode.addInterface(GRIFFON_MODEL_CLASS);
-            // 2. add methods
-            ASTInjector injector = new GriffonMvcArtifactASTInjector();
-            injector.inject(classNode, GriffonModelClass.TYPE);
-            injector = new ObservableASTInjector();
-            injector.inject(classNode, GriffonModelClass.TYPE);
+        } else if (!classNode.implementsInterface(GRIFFON_MODEL_CLASS)) {
+            inject(classNode);
         }
+    }
+
+    private void inject(ClassNode classNode) {
+        ClassNode superClass = classNode.getSuperClass();
+        SourceUnit superSource = SourceUnitCollector.getInstance().getSourceUnit(superClass);
+        if (isModelArtifact(superClass, superSource)) return;
+
+        if (LOG.isDebugEnabled())
+            LOG.debug("Injecting " + GRIFFON_MODEL_CLASS.getName() + " behavior to " + classNode.getName());
+        // 1. add interface
+        classNode.addInterface(GRIFFON_MODEL_CLASS);
+        // 2. add methods
+        ASTInjector injector = new GriffonMvcArtifactASTInjector();
+        injector.inject(classNode, GriffonModelClass.TYPE);
+        injector = new ObservableASTInjector();
+        injector.inject(classNode, GriffonModelClass.TYPE);
     }
 }

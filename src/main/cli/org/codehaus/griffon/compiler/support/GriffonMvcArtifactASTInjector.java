@@ -21,7 +21,6 @@ import org.codehaus.groovy.ast.stmt.*;
 
 import static org.codehaus.griffon.ast.GriffonASTUtils.param;
 import static org.codehaus.griffon.ast.GriffonASTUtils.params;
-import static org.codehaus.griffon.ast.GriffonASTUtils.addMethod;
 
 /**
  *
@@ -34,7 +33,7 @@ public class GriffonMvcArtifactASTInjector extends GriffonArtifactASTInjector {
         super.inject(classNode, artifactType);
     
         // void mvcGroupInit(Map args)
-        addMethod(classNode, new MethodNode(
+        classNode.addMethod(new MethodNode(
             "mvcGroupInit",
             ACC_PUBLIC,
             ClassHelper.VOID_TYPE,
@@ -44,7 +43,7 @@ public class GriffonMvcArtifactASTInjector extends GriffonArtifactASTInjector {
         ));
     
         // void mvcGroupDestroy()
-        addMethod(classNode, new MethodNode(
+        classNode.addMethod(new MethodNode(
             "mvcGroupDestroy",
             ACC_PUBLIC,
             ClassHelper.VOID_TYPE,

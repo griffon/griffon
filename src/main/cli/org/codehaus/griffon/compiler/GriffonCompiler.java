@@ -68,7 +68,9 @@ public class GriffonCompiler extends Groovyc {
 
     protected CompilationUnit makeCompileUnit() {
         CompilationUnit compilationUnit = super.makeCompileUnit();
-        
+
+        SourceUnitCollector.getInstance().clear();
+        compilationUnit.addPhaseOperation(SourceUnitCollector.getInstance(), Phases.CONVERSION);
         if(!GriffonCompilerContext.getConfigOption(GriffonCompilerContext.DISABLE_AUTO_IMPORTS)) {
             compilationUnit.addPhaseOperation(new CompilationUnit.PrimaryClassNodeOperation() {
                 public void call(SourceUnit source, GeneratorContext context,

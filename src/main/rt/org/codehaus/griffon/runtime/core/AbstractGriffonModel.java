@@ -64,11 +64,11 @@ public abstract class AbstractGriffonModel extends AbstractGriffonMvcArtifact im
         return pcs.getPropertyChangeListeners(propertyName);
     }
 
-    public void firePropertyChange(PropertyChangeEvent event) {
+    protected void firePropertyChange(PropertyChangeEvent event) {
         pcs.firePropertyChange(event);
     }
 
-    public void firePropertyChange(String propertyName, Object oldValue, Object newValue) {
+    protected void firePropertyChange(String propertyName, Object oldValue, Object newValue) {
         pcs.firePropertyChange(propertyName, oldValue, newValue);
     }
 }

@@ -45,6 +45,8 @@ public final class GriffonClassUtils {
     public static final Class[] EMPTY_TYPES = EMPTY_CLASS_ARRAY;
     public static final Object[] EMPTY_ARGS = EMPTY_OBJECT_ARRAY;
 
+    private static final String PROPERTY_GET_PREFIX = "get";
+    private static final String PROPERTY_IS_PREFIX = "is";
     private static final String PROPERTY_SET_PREFIX = "set";
     public static final Map<Class, Class> PRIMITIVE_TYPE_COMPATIBLE_CLASSES = new HashMap<Class, Class>();
 
@@ -55,6 +57,7 @@ public final class GriffonClassUtils {
     private static final Set<MethodDescriptor> BASIC_METHODS = new TreeSet<MethodDescriptor>();
     private static final Set<MethodDescriptor> MVC_METHODS = new TreeSet<MethodDescriptor>();
     private static final Set<MethodDescriptor> EVENT_PUBLISHER_METHODS = new TreeSet<MethodDescriptor>();
+    private static final Set<MethodDescriptor> OBSERVABLE_METHODS = new TreeSet<MethodDescriptor>();
 
     /**
      * Just add two entries to the class compatibility map
@@ -162,6 +165,13 @@ public final class GriffonClassUtils {
         EVENT_PUBLISHER_METHODS.add(new MethodDescriptor("publishEventAsync", new Class[]{String.class, List.class}));
         EVENT_PUBLISHER_METHODS.add(new MethodDescriptor("publishEventOutside", new Class[]{String.class}));
         EVENT_PUBLISHER_METHODS.add(new MethodDescriptor("publishEventOutside", new Class[]{String.class, List.class}));
+
+        OBSERVABLE_METHODS.add(new MethodDescriptor("addPropertyChangeListener", new Class[]{PropertyChangeListener.class}));
+        OBSERVABLE_METHODS.add(new MethodDescriptor("addPropertyChangeListener", new Class[]{String.class, PropertyChangeListener.class}));
+        OBSERVABLE_METHODS.add(new MethodDescriptor("removePropertyChangeListener", new Class[]{PropertyChangeListener.class}));
+        OBSERVABLE_METHODS.add(new MethodDescriptor("removePropertyChangeListener", new Class[]{String.class, PropertyChangeListener.class}));
+        OBSERVABLE_METHODS.add(new MethodDescriptor("getPropertyChangeListeners", new Class[0]));
+        OBSERVABLE_METHODS.add(new MethodDescriptor("getPropertyChangeListeners", new Class[]{String.class}));
     }
 
     /**
@@ -480,7 +490,7 @@ public final class GriffonClassUtils {
      * </pre>
      *
      * @param method a Method reference
-     * @return true if the method is an EVENT_PUBLISHER method, false otherwise.
+     * @return true if the method is an @EventPublisher method, false otherwise.
      */
     public static boolean isEventPublisherMethod(Method method) {
         return isEventPublisherMethod(MethodDescriptor.forMethod(method));
@@ -498,7 +508,7 @@ public final class GriffonClassUtils {
      * </pre>
      *
      * @param method a Method reference
-     * @return true if the method is an EVENT_PUBLISHER method, false otherwise.
+     * @return true if the method is an @EventPublisher method, false otherwise.
      */
     public static boolean isEventPublisherMethod(MetaMethod method) {
         return isEventPublisherMethod(MethodDescriptor.forMethod(method));
@@ -516,11 +526,66 @@ public final class GriffonClassUtils {
      * </pre>
      *
      * @param method a Method reference
-     * @return true if the method is an EVENT_PUBLISHER method, false otherwise.
+     * @return true if the method is an @EventPublisher method, false otherwise.
      */
     public static boolean isEventPublisherMethod(MethodDescriptor method) {
         if(method == null || !isInstanceMethod(method)) return false;
         return EVENT_PUBLISHER_METHODS.contains(method);
+    }
+
+    /**
+     * Finds out if the given {@code Method} belongs to the set of
+     * predefined OBSERVABLE methods by convention.
+     *
+     * <pre>
+     * // assuming getMethod() returns an appropriate Method reference
+     * isObservableMethod(getMethod("addPropertyChangeListener"))  = true
+     * isObservableMethod(getMethod("getPropertyChangeListeners")) = true
+     * isObservableMethod(getMethod("foo"))                        = false
+     * </pre>
+     *
+     * @param method a Method reference
+     * @return true if the method is an Observable method, false otherwise.
+     */
+    public static boolean isObservableMethod(Method method) {
+        return isObservableMethod(MethodDescriptor.forMethod(method));
+    }
+
+    /**
+     * Finds out if the given {@code MetaMethod} belongs to the set of
+     * predefined OBSERVABLE methods by convention.
+     *
+     * <pre>
+     * // assuming getMethod() returns an appropriate MetaMethod reference
+     * isObservableMethod(getMethod("addPropertyChangeListener"))  = true
+     * isObservableMethod(getMethod("getPropertyChangeListeners")) = true
+     * isObservableMethod(getMethod("foo"))                        = false
+     * </pre>
+     *
+     * @param method a Method reference
+     * @return true if the method is an Observable method, false otherwise.
+     */
+    public static boolean isObservableMethod(MetaMethod method) {
+        return isObservableMethod(MethodDescriptor.forMethod(method));
+    }
+
+    /**
+     * Finds out if the given {@code MethodDescriptor} belongs to the set of
+     * predefined OBSERVABLE methods by convention.
+     *
+     * <pre>
+     * // assuming getMethod() returns an appropriate MethodDescriptor reference
+     * isObservableMethod(getMethod("addPropertyChangeListener"))  = true
+     * isObservableMethod(getMethod("getPropertyChangeListeners")) = true
+     * isObservableMethod(getMethod("foo"))                        = false
+     * </pre>
+     *
+     * @param method a Method reference
+     * @return true if the method is an Observable method, false otherwise.
+     */
+    public static boolean isObservableMethod(MethodDescriptor method) {
+        if(method == null || !isInstanceMethod(method)) return false;
+        return OBSERVABLE_METHODS.contains(method);
     }
 
     /**
@@ -566,6 +631,7 @@ public final class GriffonClassUtils {
      * <li>! isGroovyInjectedMethod(method)</li>
      * <li>! isMvcMethod(method)</li>
      * <li>! isEventPublisherMethod(method)</li>
+     * <li>! isObservableMethod(method)</li>
      * <li>! isGetterMethod(method)</li>
      * <li>! isSetterMethod(method)</li>
      * </ul>
@@ -584,6 +650,7 @@ public final class GriffonClassUtils {
      * <li>! isGroovyInjectedMethod(method)</li>
      * <li>! isMvcMethod(method)</li>
      * <li>! isEventPublisherMethod(method)</li>
+     * <li>! isObservableMethod(method)</li>
      * <li>! isGetterMethod(method)</li>
      * <li>! isSetterMethod(method)</li>
      * </ul>
@@ -602,6 +669,7 @@ public final class GriffonClassUtils {
      * <li>! isGroovyInjectedMethod(method)</li>
      * <li>! isMvcMethod(method)</li>
      * <li>! isEventPublisherMethod(method)</li>
+     * <li>! isObservableMethod(method)</li>
      * <li>! isGetterMethod(method)</li>
      * <li>! isSetterMethod(method)</li>
      * </ul>
@@ -615,6 +683,7 @@ public final class GriffonClassUtils {
                !isGroovyInjectedMethod(method) &&
                !isMvcMethod(method) &&
                !isEventPublisherMethod(method) &&
+               !isObservableMethod(method) &&
                !isGetterMethod(method) &&
                !isSetterMethod(method);
     }
@@ -1021,7 +1090,7 @@ public final class GriffonClassUtils {
      * @return The name for the getter method for this property, if it were to exist, i.e. getConstraints
      */
     public static String getGetterName(String propertyName) {
-        return "get" + Character.toUpperCase(propertyName.charAt(0))
+        return PROPERTY_GET_PREFIX + Character.toUpperCase(propertyName.charAt(0))
             + propertyName.substring(1);
     }
 
@@ -1185,11 +1254,11 @@ public final class GriffonClassUtils {
         if(GriffonNameUtils.isBlank(name) || args == null)return false;
         if(args.length != 0)return false;
 
-        if(name.startsWith("get")) {
+        if(name.startsWith(PROPERTY_GET_PREFIX)) {
             name = name.substring(3);
             if(name.length() > 0 && Character.isUpperCase(name.charAt(0))) return true;            
         }
-        else if(name.startsWith("is")) {
+        else if(name.startsWith(PROPERTY_IS_PREFIX)) {
             name = name.substring(2);
             if(name.length() > 0 && Character.isUpperCase(name.charAt(0))) return true;
         }
@@ -1205,11 +1274,11 @@ public final class GriffonClassUtils {
     public static String getPropertyForGetter(String getterName) {
         if(GriffonNameUtils.isBlank(getterName))return null;
         
-        if(getterName.startsWith("get")) {
+        if(getterName.startsWith(PROPERTY_GET_PREFIX)) {
             String prop = getterName.substring(3);
             return convertPropertyName(prop);
         }
-        else if(getterName.startsWith("is")) {
+        else if(getterName.startsWith(PROPERTY_IS_PREFIX)) {
             String prop = getterName.substring(2);
             return convertPropertyName(prop);
         }
@@ -1936,27 +2005,5 @@ public final class GriffonClassUtils {
 
             return 0;
         }
-    }
-
-    // -- The following methods were copied from commons-lang
-
-    /**
-     * <p>Uncapitalizes a String changing the first letter to title case as
-     * per {@link Character#toLowerCase(char)}. No other letters are changed.</p>
-     *
-     * <pre>
-     * uncapitalize(null)  = null
-     * uncapitalize("")    = ""
-     * uncapitalize("Cat") = "cat"
-     * uncapitalize("CAT") = "cAT"
-     * </pre>
-     *
-     * @param str  the String to uncapitalize, may be null
-     * @return the uncapitalized String, <code>null</code> if null String input
-     * @deprecated use GriffonNameUtils.uncapitalize(String) instead
-     */
-    @Deprecated
-    public static String uncapitalize(String str) {
-        return GriffonNameUtils.uncapitalize(str);
     }
 }

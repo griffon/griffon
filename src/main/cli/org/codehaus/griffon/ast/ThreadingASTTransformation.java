@@ -271,6 +271,9 @@ public class ThreadingASTTransformation implements ASTTransformation, Opcodes {
     }
 
     private static Statement wrapStatements(Statement code, String threadingMethod) {
+        // TODO deal with non-block statements
+        if(!(code instanceof BlockStatement)) return code;
+
         BlockStatement codeBlock = (BlockStatement) code;
         List<Statement> statements = codeBlock.getStatements();
         if(statements.isEmpty()) return code;
