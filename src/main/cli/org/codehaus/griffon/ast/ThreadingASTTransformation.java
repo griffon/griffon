@@ -290,7 +290,7 @@ public class ThreadingASTTransformation implements ASTTransformation, Opcodes {
     }
 
     private static Expression uiThreadHelperInstance() {
-        return call(classx(UITHREAD_HELPER_CLASS), "getInstance", NO_ARGS);
+        return call(UITHREAD_HELPER_CLASS, "getInstance", NO_ARGS);
     }
 
     private static boolean usesThreadingAlready(Statement stmnt) {

@@ -42,12 +42,10 @@ repositories {
     mavenCentral()
     mavenRepo name: 'Codehaus', urls: 'http://repository.codehaus.org'
     mavenRepo name: 'SpringSource', urls: 'http://repository.springsource.com/maven/bundles/release'
-    flatDir(dirs: file('lib/test'))
     flatDir(dirs: file('lib/wrapper'))
 }
 
 dependencies {
-    lib = "$projectDir/lib" as File
     groovy "org.codehaus.groovy:groovy-all:$groovyVersion"
     rt  "org.codehaus.groovy:groovy-all:$groovyVersion",
         "log4j:log4j:1.2.16",
@@ -86,9 +84,9 @@ dependencies {
         "org.apache.ivy:ivy:2.2.0",
         "org.codehaus.gant:gant_groovy1.7:1.9.3"
 
-    swingxFiles ":swing-worker",
-				":swingx:0.9.3",
-				":swingxbuilder:0.1.6-SNAPSHOT"
+    swingxFiles('org.codehaus.griffon:swingxbuilder:0.1.7') {
+        exclude module: 'groovy-all'
+    }
 
 	wrapper ":gradle-wrapper"
 }

@@ -49,7 +49,7 @@ public class GriffonBuildEventListener implements BuildListener {
      * The objects that are listening for build events
      */
     private List<GriffonBuildListener> buildListeners = new LinkedList<GriffonBuildListener>();
-    
+
     public GriffonBuildEventListener(GroovyClassLoader scriptClassLoader, Binding binding, BuildSettings buildSettings) {
         super();
         this.classLoader = scriptClassLoader;
@@ -98,7 +98,7 @@ public class GriffonBuildEventListener implements BuildListener {
             }
         }
     }
-    
+
     public void loadEventsScript(File eventScript) {
         if(eventScript!=null) {
             try {
@@ -212,7 +212,7 @@ public class GriffonBuildEventListener implements BuildListener {
     public void messageLogged(BuildEvent buildEvent) {
         // do nothing
     }
-    
+
     protected void addGriffonBuildListener(String listenerClassName) {
         Class listenerClass;
         try {
@@ -222,7 +222,7 @@ public class GriffonBuildEventListener implements BuildListener {
             System.err.println("Could not load griffon build listener class. " + e);
         }
     }
-    
+
     protected void addGriffonBuildListener(Class listenerClass) {
         if (!GriffonBuildListener.class.isAssignableFrom(listenerClass)) {
             throw new RuntimeException("Intended griffon build listener class of " + listenerClass.getName() + " does not implement " + GriffonBuildListener.class.getName());

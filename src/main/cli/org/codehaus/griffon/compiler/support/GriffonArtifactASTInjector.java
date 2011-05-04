@@ -68,7 +68,7 @@ public class GriffonArtifactASTInjector implements ASTInjector {
     private static final String MVC_NAME = "mvcName";
     private static final String HANDLER = "handler";
     private static final String ARGS = "args";
-    
+
     public void inject(ClassNode classNode, String artifactType) {
         // GriffonApplication getApp()
         // void setApp(GriffonApplication app)
@@ -87,7 +87,7 @@ public class GriffonArtifactASTInjector implements ASTInjector {
             ClassHelper.METACLASS_TYPE,
             Parameter.EMPTY_ARRAY,
             ClassNode.EMPTY_ARRAY,
-            
+
             /*
             if(_metaClass != null) return _metaClass
             MetaClass mc = null
@@ -96,7 +96,7 @@ public class GriffonArtifactASTInjector implements ASTInjector {
             else _metaClass = AbstractGriffonArtifact.metaClassOf(this)
             return _metaClass
             */
-            block(             
+            block(
                 ifs(
                     ne(field(_metaClass), ConstantExpression.NULL),
                     field(_metaClass)
@@ -110,7 +110,7 @@ public class GriffonArtifactASTInjector implements ASTInjector {
                 returns(field(_metaClass))
             )
         ));
-        
+
         // void setMetaClass(MetaClass mc)
         classNode.addMethod(new MethodNode(
             "setMetaClass",
@@ -127,7 +127,7 @@ public class GriffonArtifactASTInjector implements ASTInjector {
                 ))
             )
         ));
-        
+
         // GriffonClass getGriffonClass()
         classNode.addMethod(new MethodNode(
             "getGriffonClass",
@@ -143,7 +143,7 @@ public class GriffonArtifactASTInjector implements ASTInjector {
                 "findGriffonClass",
                 args(classx(classNode))))
         ));
-    
+
         // Object newInstance()
         classNode.addMethod(new MethodNode(
             "newInstance",
@@ -158,7 +158,7 @@ public class GriffonArtifactASTInjector implements ASTInjector {
                 "newInstance",
                 vars(APP, "clazz", "type")))
         ));
-    
+
         // boolean isUIThread()
         classNode.addMethod(new MethodNode(
             "isUIThread",
@@ -184,7 +184,7 @@ public class GriffonArtifactASTInjector implements ASTInjector {
                 "executeAsync",
                 vars("runnable")))
         ));
-    
+
         // void execSync(Runnable)
         classNode.addMethod(new MethodNode(
             "execSync",
@@ -197,7 +197,7 @@ public class GriffonArtifactASTInjector implements ASTInjector {
                 "executeSync",
                 vars("runnable")))
         ));
-    
+
         // void execOutside(Runnable)
         classNode.addMethod(new MethodNode(
             "execOutside",
@@ -210,7 +210,7 @@ public class GriffonArtifactASTInjector implements ASTInjector {
                 "executeOutside",
                 vars("runnable")))
         ));
-    
+
         // Future execFuture(Runnable)
         classNode.addMethod(new MethodNode(
             "execFuture",
@@ -223,7 +223,7 @@ public class GriffonArtifactASTInjector implements ASTInjector {
                 "executeFuture",
                 vars("closure")))
         ));
-    
+
         // Future execFuture(ExecutorService, Closure)
         classNode.addMethod(new MethodNode(
             "execFuture",
@@ -238,7 +238,7 @@ public class GriffonArtifactASTInjector implements ASTInjector {
                 "executeFuture",
                 vars("executorService", "closure")))
         ));
-    
+
         // Future execFuture(Callable)
         classNode.addMethod(new MethodNode(
             "execFuture",
@@ -251,7 +251,7 @@ public class GriffonArtifactASTInjector implements ASTInjector {
                 "executeFuture",
                 vars("callable")))
         ));
-    
+
         // Future execFuture(ExecutorService, Callable)
         classNode.addMethod(new MethodNode(
             "execFuture",
@@ -266,7 +266,7 @@ public class GriffonArtifactASTInjector implements ASTInjector {
                 "executeFuture",
                 vars("executorService", "callable")))
         ));
-        
+
         String loggerCategory = "griffon.app." + artifactType +"."+ classNode.getName();
         FieldNode loggerField = classNode.addField(
             "this$logger",
@@ -277,7 +277,7 @@ public class GriffonArtifactASTInjector implements ASTInjector {
                 "getLogger",
                 args(constx(loggerCategory)))
         );
-        
+
         // Logger getLog()
         classNode.addMethod(new MethodNode(
             "getLog",
@@ -287,7 +287,7 @@ public class GriffonArtifactASTInjector implements ASTInjector {
             ClassNode.EMPTY_ARRAY,
             returns(field(loggerField))
         ));
-    
+
         // Map buildMVCGroup(String mvcType)
         classNode.addMethod(new MethodNode(
             BUILD_MVC_GROUP,
@@ -300,7 +300,7 @@ public class GriffonArtifactASTInjector implements ASTInjector {
                 BUILD_MVC_GROUP,
                 args(var(APP), emptyMap(), var(MVC_TYPE), var(MVC_TYPE))))
         ));
-    
+
         // Map buildMVCGroup(String mvcType, mvcName)
         classNode.addMethod(new MethodNode(
             BUILD_MVC_GROUP,
@@ -315,7 +315,7 @@ public class GriffonArtifactASTInjector implements ASTInjector {
                 BUILD_MVC_GROUP,
                 args(var(APP), emptyMap(), var(MVC_TYPE), var(MVC_NAME))))
         ));
-    
+
         // Map buildMVCGroup(Map args, String mvcType)
         classNode.addMethod(new MethodNode(
             BUILD_MVC_GROUP,
@@ -359,7 +359,7 @@ public class GriffonArtifactASTInjector implements ASTInjector {
                 CREATE_MVC_GROUP,
                 args(var(APP), emptyMap(), var(MVC_TYPE), var(MVC_TYPE))))
         ));
-    
+
         // List createMVCGroup(String mvcType, mvcName)
         classNode.addMethod(new MethodNode(
             CREATE_MVC_GROUP,
@@ -369,12 +369,12 @@ public class GriffonArtifactASTInjector implements ASTInjector {
                 param(ClassHelper.STRING_TYPE, MVC_TYPE),
                 param(ClassHelper.STRING_TYPE, MVC_NAME)),
             ClassNode.EMPTY_ARRAY,
-            returns(new StaticMethodCallExpression(
+            returns(call(
                 GAH_CLASS,
                 CREATE_MVC_GROUP,
                 args(var(APP), emptyMap(), var(MVC_TYPE), var(MVC_NAME))))
         ));
-    
+
         // List createMVCGroup(Map args, String mvcType)
         classNode.addMethod(new MethodNode(
             CREATE_MVC_GROUP,
@@ -460,7 +460,7 @@ public class GriffonArtifactASTInjector implements ASTInjector {
                 WITH_MVC_GROUP,
                 args(vars(APP), var(MVC_TYPE), var(MVC_TYPE), emptyMap(), var(HANDLER))))
         ));
-    
+
         // void withMVCGroup(String mvcType, String mvcName, Closure handler)
         classNode.addMethod(new MethodNode(
             WITH_MVC_GROUP,
@@ -578,7 +578,7 @@ public class GriffonArtifactASTInjector implements ASTInjector {
         return call(COLLECTIONS_CLASS, "emptyMap", NO_ARGS);
     }
 
-    private Expression uiThreadHelperInstance() {
-        return call(classx(UITHREAD_HELPER_CLASS), "getInstance", NO_ARGS);
+    private static Expression uiThreadHelperInstance() {
+        return call(UITHREAD_HELPER_CLASS, "getInstance", NO_ARGS);
     }
 }

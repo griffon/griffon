@@ -36,6 +36,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.PrintStream;
+import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -393,6 +394,12 @@ public class GriffonScriptRunner {
 
     private final Map<String, CachedScript> scriptCache = new HashMap<String, CachedScript>();
     private final List<File> scriptsAllowedOutsideOfProject = new ArrayList<File>();
+    private static final Closure DO_NOTHING_CLOSURE = new Closure(new Object()) {
+        private static final long serialVersionUID = 1L;
+        @Override public Object call(Object arguments) { return null; }
+        @Override public Object call() { return null; }
+        @Override public Object call(Object[] args) { return null; }
+    };
 
     private int callPluginOrGriffonScript(ScriptAndArgs script) {
         // The directory where scripts are cached.
@@ -430,8 +437,8 @@ public class GriffonScriptRunner {
             CachedScript cachedScript = scriptCache.get(script.name);
             potentialScripts = cachedScript.potentialScripts;
             binding = cachedScript.binding;
-        }
-        else {
+            removePrintHooks(binding);
+        } else {
             binding = new GantBinding();
 
             // Gant does not initialise the default input stream for
@@ -486,13 +493,6 @@ public class GriffonScriptRunner {
             }
         }
 
-        final Closure doNothingClosure = new Closure(this) {
-            private static final long serialVersionUID = 1L;
-            @Override public Object call(Object arguments) { return null; }
-            @Override public Object call() { return null; }
-            @Override public Object call(Object[] args) { return null; }
-        };
-
         // First try to load the script from its file. If there is no
         // file, then attempt to load it as a pre-compiled script. If
         // that fails, then let the user know and then exit.
@@ -522,7 +522,7 @@ public class GriffonScriptRunner {
                 gant.setUseCache(true);
                 gant.setCacheDirectory(scriptCacheDir);
                 gant.loadScript(scriptFile);
-                return executeWithGantInstance(gant, doNothingClosure);
+                return executeWithGantInstance(gant, binding);
             }
 
             // If there are multiple scripts to choose from and we
@@ -559,7 +559,7 @@ public class GriffonScriptRunner {
             gant.loadScript(scriptFile);
 
             // Invoke the default target.
-            return executeWithGantInstance(gant, doNothingClosure);
+            return executeWithGantInstance(gant, binding);
         }
 
         out.println("Running pre-compiled script");
@@ -585,7 +585,7 @@ public class GriffonScriptRunner {
 
         setRunningEnvironment(script.name, script.env);
         binding.setVariable("scriptEnv", System.getProperty(Environment.KEY));
-        return executeWithGantInstance(gant, doNothingClosure);
+        return executeWithGantInstance(gant, binding);
     }
 
     private void loadScriptClass(Gant gant, String scriptName) {
@@ -658,10 +658,9 @@ public class GriffonScriptRunner {
         }
     }
 
-    private int executeWithGantInstance(Gant gant, final Closure doNothingClosure) {
+    private int executeWithGantInstance(Gant gant, GantBinding binding) {
+        removePrintHooks(binding);
         gant.prepareTargets();
-        gant.setAllPerTargetPostHooks(doNothingClosure);
-        gant.setAllPerTargetPreHooks(doNothingClosure);
         // Invoke the default target.
         return gant.executeTargets().intValue();
     }
@@ -680,6 +679,42 @@ public class GriffonScriptRunner {
             scriptFileName = scriptFileName.substring(0, scriptFileName.length()-1);
         }
         return scriptFileName;
+    }
+
+    /**
+     * Nuke all prehook and posthook definitions<p>
+     * WARNING: _BIG_HACK_ AHEAD. YE BE WARNED
+     */
+    private void removePrintHooks(GantBinding binding) {
+        try {
+            Field initializing = GantBinding.class.getDeclaredField("initializing");
+            initializing.setAccessible(true);
+            initializing.setBoolean(binding, true);
+
+            final Closure targetClosure = (Closure) binding.getVariable("target");
+
+            binding.setVariable("target", new Closure(targetClosure.getOwner(), targetClosure.getDelegate()) {
+                @Override
+                public Object call(Object[] args) {
+                    if(args!= null && args.length > 0 && args[0] instanceof Map) {
+                        Map params = (Map) args[0];
+                        if(!params.containsKey("name")) {
+                            String key = (String) params.keySet().iterator().next();
+                            params.put("name", key);
+                            params.put("description", params.get(key));
+                            params.remove(key);
+                        }
+                        params.put("prehook", DO_NOTHING_CLOSURE);
+                        params.put("posthook", DO_NOTHING_CLOSURE);
+                    }
+                    return targetClosure.call(args);
+                }
+            });
+
+            initializing.setBoolean(binding, false);
+        } catch (Exception e) {
+            // ignore
+        }
     }
 
     /**
