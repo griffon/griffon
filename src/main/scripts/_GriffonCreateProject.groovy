@@ -23,13 +23,14 @@ import griffon.util.Metadata
  * @author Graeme Rocher (Griffon 0.4)
  */
 
-includeTargets << griffonScript("_GriffonPlugins")
-includeTargets << griffonScript("_GriffonInit")
-includeTargets << griffonScript("CreateMvc" )
-includeTargets << griffonScript("Package")
-includeTargets << griffonScript("IntegrateWith")
+includeTargets << griffonScript('_GriffonPlugins')
+includeTargets << griffonScript('_GriffonInit')
+includeTargets << griffonScript('_GriffonCreateArtifacts')
+includeTargets << griffonScript('CreateMvc')
+includeTargets << griffonScript('Package')
+includeTargets << griffonScript('IntegrateWith')
 
-griffonAppName = ""
+griffonAppName = ''
 projectType = "app"
 
 target(createApp: "Creates a Griffon application for the given name")  {
@@ -44,6 +45,7 @@ target(createApp: "Creates a Griffon application for the given name")  {
     cfg.append("""
 app.archetype = '$archetype'
 app.fileType = '$fileType'
+app.defaultPackageName = '$defaultPackageName'
 """)
 
     event("StatusFinal", ["Created Griffon Application at $basedir"])
@@ -127,10 +129,6 @@ target(initProject: "Initialise an application or plugin project") {
 
     griffonUnpack(dest: basedir, src: "griffon-shared-files.jar")
     griffonUnpack(dest: basedir, src: "griffon-$projectType-files.jar")
-    // integrateEclipse()
-    // integrateAnt()
-    // integrateTextmate()
-    // integrateIntellij()
 
     // make sure Griffon central repo is prepped for default plugin set installation
     griffonSettings.dependencyManager.parseDependencies {
@@ -140,7 +138,7 @@ target(initProject: "Initialise an application or plugin project") {
     }
 }
 
-target(appName : "Evaluates the application name") {
+target(appName: "Evaluates the application name") {
     if(argsMap["params"]) {
         griffonAppName = argsMap["params"].join(" ")
     } else {
@@ -149,6 +147,8 @@ target(appName : "Evaluates the application name") {
                   addProperty:"griffon.app.name")
         griffonAppName = ant.antProject.properties."griffon.app.name"
     }
+
+    createDefaultPackage()
 
     if (!argsMap["inplace"]) {
         basedir = "${basedir}/${griffonAppName}"

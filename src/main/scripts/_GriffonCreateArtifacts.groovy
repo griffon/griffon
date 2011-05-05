@@ -29,7 +29,7 @@ import griffon.util.GriffonNameUtils
 includeTargets << griffonScript("_GriffonPackage")
 includeTargets << griffonScript("_GriffonArgParsing")
 
-rootPackage = null
+defaultPackageName = ''
 replaceNonag = false
 
 createArtifact = { Map args = [:] ->
@@ -158,11 +158,18 @@ resolveTemplate = { template, fileSuffix ->
     templateFile
 }
 
-createRootPackage = {
-    if(rootPackage == null) {
-        rootPackage = (buildConfig.griffon.project.groupId ?: griffonAppName).replace('-','.').toLowerCase()    
+createDefaultPackage = {
+    if(!defaultPackageName) defaultPackageName = buildConfig.app.defaultPackageName
+    if(!defaultPackageName) {
+        if(griffonAppName.indexOf('.') != -1) {
+            int pos = griffonAppName.lastIndexOf('.')
+            defaultPackageName = griffonAppName[0..<pos].toLowerCase()
+            griffonAppName = griffonAppName[(pos+1)..-1]
+        } else {
+            defaultPackageName = (buildConfig.griffon.project.groupId ?: griffonAppName).replace('-','.').toLowerCase() 
+        }   
     }
-    return rootPackage
+    defaultPackageName
 }
 
 createIntegrationTest = { Map args = [:] ->
@@ -212,10 +219,10 @@ extractArtifactName = { name ->
         artifactPkg = artifactName[0..<pos]
         artifactName = artifactName[(pos + 1)..-1]
         if(artifactPkg.startsWith("~")) {
-            artifactPkg = artifactPkg.replace("~", createRootPackage())
+            artifactPkg = artifactPkg.replace("~", createDefaultPackage())
         }
     } else {
-        artifactPkg = argsMap.skipPackagePrompt ? '' : createRootPackage()
+        artifactPkg = argsMap.skipPackagePrompt ? '' : createDefaultPackage()
     }
 
     return [artifactPkg, artifactName]

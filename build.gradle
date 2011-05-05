@@ -39,10 +39,10 @@ configurations {
 }
 
 repositories {
+    flatDir(dirs: file('lib/wrapper'))
     mavenCentral()
     mavenRepo name: 'Codehaus', urls: 'http://repository.codehaus.org'
     mavenRepo name: 'SpringSource', urls: 'http://repository.springsource.com/maven/bundles/release'
-    flatDir(dirs: file('lib/wrapper'))
 }
 
 dependencies {
