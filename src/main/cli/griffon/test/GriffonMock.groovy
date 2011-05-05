@@ -100,14 +100,8 @@ class GriffonMock {
         if (!mockedClass.isInterface()) {
             mockedClass.metaClass.invokeMethod = { String name, Object[] args ->
                 // Find an expando method with the same signature as the one being invoked.
-                def paramTypes = []
-                args.each {
-                    if (it) {
-                        paramTypes << it.getClass()
-                    }
-                    else {
-                        paramTypes << null
-                    }
+                List paramTypes = args.collect([]) { arg ->
+                    arg != null ? arg.getClass() : null
                 }
                 def method = delegate.metaClass.expandoMethods.find { MetaMethod m ->
                     // First check the name

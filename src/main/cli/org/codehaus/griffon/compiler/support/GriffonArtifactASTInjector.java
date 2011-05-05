@@ -328,7 +328,7 @@ public class GriffonArtifactASTInjector implements ASTInjector {
             returns(call(
                 GAH_CLASS,
                 BUILD_MVC_GROUP,
-                args(var(APP), vars(ARGS), var(MVC_TYPE), var(MVC_TYPE))))
+                vars(APP, ARGS, MVC_TYPE, MVC_TYPE)))
         ));
 
         // Map buildMVCGroup(Map args, String mvcType, String mvcName)
@@ -344,7 +344,7 @@ public class GriffonArtifactASTInjector implements ASTInjector {
             returns(call(
                 GAH_CLASS,
                 BUILD_MVC_GROUP,
-                args(var(APP), vars(ARGS), var(MVC_TYPE), var(MVC_NAME))))
+                vars(APP, ARGS, MVC_TYPE, MVC_NAME)))
         ));
 
         // List createMVCGroup(String mvcType)
@@ -387,7 +387,7 @@ public class GriffonArtifactASTInjector implements ASTInjector {
             returns(call(
                 GAH_CLASS,
                 CREATE_MVC_GROUP,
-                args(var(APP), vars(ARGS), var(MVC_TYPE), var(MVC_TYPE))))
+                vars(APP, ARGS, MVC_TYPE, MVC_TYPE)))
         ));
 
         // List createMVCGroup(String mvcType, Map args)
@@ -402,7 +402,7 @@ public class GriffonArtifactASTInjector implements ASTInjector {
             returns(call(
                 GAH_CLASS,
                 CREATE_MVC_GROUP,
-                args(var(APP), vars(ARGS), var(MVC_TYPE), var(MVC_TYPE))))
+                vars(APP, ARGS, MVC_TYPE, MVC_TYPE)))
         ));
 
         // List createMVCGroup(Map args, String mvcType, String mvcName)
@@ -418,7 +418,7 @@ public class GriffonArtifactASTInjector implements ASTInjector {
             returns(call(
                 GAH_CLASS,
                 CREATE_MVC_GROUP,
-                args(var(APP), vars(ARGS), var(MVC_TYPE), var(MVC_NAME))))
+                vars(APP, ARGS, MVC_TYPE, MVC_NAME)))
         ));
 
         // List createMVCGroup(String mvcType, String mvcName, Map args)
@@ -434,7 +434,7 @@ public class GriffonArtifactASTInjector implements ASTInjector {
             returns(call(
                 GAH_CLASS,
                 CREATE_MVC_GROUP,
-                args(var(APP), vars(ARGS), var(MVC_TYPE), var(MVC_NAME))))
+                vars(APP, ARGS, MVC_TYPE, MVC_NAME)))
         ));
 
         // void destroyMVCGroup(String mvcName)
@@ -458,7 +458,7 @@ public class GriffonArtifactASTInjector implements ASTInjector {
             stmnt(call(
                 GAH_CLASS,
                 WITH_MVC_GROUP,
-                args(vars(APP), var(MVC_TYPE), var(MVC_TYPE), emptyMap(), var(HANDLER))))
+                args(var(APP), var(MVC_TYPE), var(MVC_TYPE), emptyMap(), var(HANDLER))))
         ));
 
         // void withMVCGroup(String mvcType, String mvcName, Closure handler)
@@ -490,7 +490,7 @@ public class GriffonArtifactASTInjector implements ASTInjector {
             stmnt(call(
                 GAH_CLASS,
                 WITH_MVC_GROUP,
-                args(var(APP), var(MVC_TYPE), var(MVC_TYPE), vars(ARGS), var(HANDLER))))
+                vars(APP, MVC_TYPE, MVC_TYPE, ARGS, HANDLER)))
         ));
 
         // void withMVCGroup(String mvcType, String mvcName, Map args, Closure handler)
@@ -507,7 +507,8 @@ public class GriffonArtifactASTInjector implements ASTInjector {
             stmnt(call(
                 GAH_CLASS,
                 WITH_MVC_GROUP,
-                args(var(APP), var(MVC_TYPE), var(MVC_NAME), vars(ARGS), var(HANDLER))))
+                vars(APP, MVC_TYPE, MVC_NAME, ARGS, HANDLER)))
+
         ));
 
         // void withMVCGroup(String mvcType, MVCClosure handler)
@@ -521,7 +522,7 @@ public class GriffonArtifactASTInjector implements ASTInjector {
             stmnt(call(
                 GAH_CLASS,
                 WITH_MVC_GROUP,
-                args(vars(APP), var(MVC_TYPE), var(MVC_TYPE), emptyMap(), var(HANDLER))))
+                args(var(APP), var(MVC_TYPE), var(MVC_TYPE), emptyMap(), var(HANDLER))))
         ));
 
         // void withMVCGroup(String mvcType, String mvcName, MVCClosure handler)
@@ -553,7 +554,7 @@ public class GriffonArtifactASTInjector implements ASTInjector {
             stmnt(call(
                 GAH_CLASS,
                 WITH_MVC_GROUP,
-                args(var(APP), var(MVC_TYPE), var(MVC_TYPE), vars(ARGS), var(HANDLER))))
+                vars(APP, MVC_TYPE, MVC_TYPE, ARGS, HANDLER)))
         ));
 
         // void withMVCGroup(String mvcType, String mvcName, Map args, MVCClosure handler)
@@ -570,7 +571,7 @@ public class GriffonArtifactASTInjector implements ASTInjector {
             stmnt(call(
                 GAH_CLASS,
                 WITH_MVC_GROUP,
-                args(var(APP), var(MVC_TYPE), var(MVC_NAME), vars(ARGS), var(HANDLER))))
+                vars(APP, MVC_TYPE, MVC_NAME, ARGS, HANDLER)))
         ));
     }
 

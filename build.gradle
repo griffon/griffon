@@ -40,6 +40,7 @@ configurations {
 
 repositories {
     flatDir(dirs: file('lib/wrapper'))
+    mavenLocal()
     mavenCentral()
     mavenRepo name: 'Codehaus', urls: 'http://repository.codehaus.org'
     mavenRepo name: 'SpringSource', urls: 'http://repository.springsource.com/maven/bundles/release'
@@ -82,7 +83,7 @@ dependencies {
         "radeox:radeox:1.0-b2",
         "org.grails:grails-docs:1.3.6",
         "org.apache.ivy:ivy:2.2.0",
-        "org.codehaus.gant:gant_groovy1.7:1.9.3"
+        "org.codehaus.gant:gant_groovy1.8:1.9.5"
 
     swingxFiles('org.codehaus.griffon:swingxbuilder:0.1.7') {
         exclude module: 'groovy-all'
