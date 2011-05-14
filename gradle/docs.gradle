@@ -111,8 +111,8 @@ task buildGuide(type: Copy) {
 }
 
 task pdfGuide(dependsOn: [buildGuide]) {
-    inputs.dir("$buildDir/manual-src" as File)
-    outputs.file "$buildDir/manual/griffon-guide-${version}.pdf"
+    inputs.file(file("$buildDir/manual/guide/single.html"))
+    outputs.file(file("$buildDir/manual/griffon-guide-${version}.pdf"))
 
     doLast {
         try {
@@ -133,7 +133,6 @@ task pdfGuide(dependsOn: [buildGuide]) {
             into destinationDir
             include '*.pdf'
             rename 'single.pdf', "griffon-guide-${version}.pdf"
-            delete "$destinationDir/guide/single.pdf"
         }
     }
 }
