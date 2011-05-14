@@ -25,7 +25,7 @@ sharedManifest = manifest {
     )
 }
 
-tasks.withType(Jar).allObjects {jar ->
+tasks.withType(Jar).all {jar ->
     jar.mavenArtifact = false
     jar.appFileJar = false
 }

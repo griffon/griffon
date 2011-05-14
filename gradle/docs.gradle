@@ -51,7 +51,7 @@ task buildDocs(type: Groovydoc) {
     docTitle = "Griffon $version"
     header = "Griffon $version"
     windowTitle = "Griffon $version"
-    groovyClassPath = sourceSets.rt.classes + sourceSets.cli.classes + configurations.compile
+    classpath = sourceSets.rt.classes + sourceSets.cli.classes + configurations.compile
     includePrivate = true
     use = true
 
