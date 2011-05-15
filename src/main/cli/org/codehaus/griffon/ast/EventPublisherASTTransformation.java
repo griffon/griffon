@@ -29,6 +29,7 @@ import org.objectweb.asm.Opcodes;
 import java.util.Collection;
 import griffon.util.EventRouter;
 import griffon.util.EventPublisher;
+import griffon.util.RunnableWithArgs;
 
 /**
  * Handles generation of code for the {@code @EventPublisher} annotation.
@@ -42,6 +43,7 @@ import griffon.util.EventPublisher;
  */
 @GroovyASTTransformation(phase= CompilePhase.CANONICALIZATION)
 public class EventPublisherASTTransformation implements ASTTransformation, Opcodes {
+    private static final ClassNode RUNNABLE_WITH_ARGS_CLASS = ClassHelper.makeWithoutCaching(RunnableWithArgs.class);
 
     protected static ClassNode epClassNode = new ClassNode(EventPublisher.class);
     protected ClassNode erClassNode = new ClassNode(EventRouter.class);
@@ -86,14 +88,17 @@ public class EventPublisherASTTransformation implements ASTTransformation, Opcod
     }
 
     /**
-     * Snoops through the declaring class and all parents looking for methods
-     * void addEventListener(Object),
-     * void addEventListener(String,Closure),
-     * void removeEventListener(Object),
-     * void removeEventListener(String,Closure), and
-     * void publishEvent(String, List = []).  If any are defined all
-     * void publishEventOutside(String, List = []).  If any are defined all
-     * void publishEventAsync(String, List = []).  If any are defined all
+     * Snoops through the declaring class and all parents looking for methods<ul>
+     * <li>void addEventListener(Object)</li>
+     * <li>void addEventListener(String,C losure)</li>
+     * <li>void addEventListener(String, RunnableWithArgs)</li>
+     * <li>void removeEventListener(Object)</li>
+     * <li>void removeEventListener(String, Closure)</li>
+     * <li>void removeEventListener(String, RunnableWithArgs)</li>
+     * <li>void publishEvent(String, List = [])</li>
+     * <li>void publishEventOutside(String, List = [])</li>
+     * <li>void publishEventAsync(String, List = [])</li>
+     * </ul>If any are defined all
      * must be defined or a compilation error results.
      *
      * @param declaringClass the class to search
@@ -138,16 +143,18 @@ public class EventPublisherASTTransformation implements ASTTransformation, Opcod
      * Adds the necessary field and methods to support event firing.
      * <p/>
      * Adds a new field:
-     * <code>protected final griffon.util.EventRouter this$eventRouter = new griffon.util.EventRouter()</code>"
+     * <code>protected final griffon.util.EventRouter this$eventRouter = new griffon.util.EventRouter()</code>
      * <p/>
      * Also adds support methods:
-     * <code>public void addEventListener(Object)</code>
-     * <code>public void addEventListener(String, Closure)</code>
-     * <code>public void removeEventListener(Object)</code>
-     * <code>public void removeEventListener(String, Closure)</code>
-     * <code>public void publishEvent(String,List = [])</code>
-     * <code>public void publishEventOutside(String,List = [])</code>
-     * <code>public void publishEventAsync(String,List = [])</code>
+     * <code>public void addEventListener(Object)</code><br/>
+     * <code>public void addEventListener(String, Closure)</code><br/>
+     * <code>public void addEventListener(String, RunnableWithArgs)</code><br/>
+     * <code>public void removeEventListener(Object)</code><br/>
+     * <code>public void removeEventListener(String, Closure)</code><br/>
+     * <code>public void removeEventListener(String, RunnableWithArgs)</code><br/>
+     * <code>public void publishEvent(String,List = [])</code><br/>
+     * <code>public void publishEventOutside(String,List = [])</code><br/>
+     * <code>public void publishEventAsync(String,List = [])</code><br/>
      *
      * @param declaringClass the class to which we add the support field and methods
      */
@@ -170,7 +177,7 @@ public class EventPublisherASTTransformation implements ASTTransformation, Opcod
         declaringClass.addMethod(
                 new MethodNode(
                         "addEventListener",
-                        ACC_PUBLIC | ACC_SYNTHETIC,
+                        ACC_PUBLIC,
                         ClassHelper.VOID_TYPE,
                         new Parameter[]{new Parameter(ClassHelper.DYNAMIC_TYPE, "listener")},
                         ClassNode.EMPTY_ARRAY,
@@ -188,9 +195,27 @@ public class EventPublisherASTTransformation implements ASTTransformation, Opcod
         declaringClass.addMethod(
                 new MethodNode(
                         "addEventListener",
-                        ACC_PUBLIC | ACC_SYNTHETIC,
+                        ACC_PUBLIC,
                         ClassHelper.VOID_TYPE,
                         new Parameter[]{new Parameter(ClassHelper.STRING_TYPE, "name"), new Parameter(ClassHelper.CLOSURE_TYPE, "listener")},
+                        ClassNode.EMPTY_ARRAY,
+                        new ExpressionStatement(
+                                new MethodCallExpression(
+                                        new FieldExpression(erField),
+                                        "addEventListener",
+                                        new ArgumentListExpression(
+                                                new Expression[]{new VariableExpression("name"), new VariableExpression("listener")})))));
+
+        // add method:
+        // void addEventListener(String name, RunnableWithArgs listener) {
+        //     this$eventRouter.addEventListener(name, listener)
+        //  }
+        declaringClass.addMethod(
+                new MethodNode(
+                        "addEventListener",
+                        ACC_PUBLIC,
+                        ClassHelper.VOID_TYPE,
+                        new Parameter[]{new Parameter(ClassHelper.STRING_TYPE, "name"), new Parameter(RUNNABLE_WITH_ARGS_CLASS, "listener")},
                         ClassNode.EMPTY_ARRAY,
                         new ExpressionStatement(
                                 new MethodCallExpression(
@@ -206,7 +231,7 @@ public class EventPublisherASTTransformation implements ASTTransformation, Opcod
         declaringClass.addMethod(
                 new MethodNode(
                         "removeEventListener",
-                        ACC_PUBLIC | ACC_SYNTHETIC,
+                        ACC_PUBLIC,
                         ClassHelper.VOID_TYPE,
                         new Parameter[]{new Parameter(ClassHelper.DYNAMIC_TYPE, "listener")},
                         ClassNode.EMPTY_ARRAY,
@@ -224,9 +249,27 @@ public class EventPublisherASTTransformation implements ASTTransformation, Opcod
         declaringClass.addMethod(
                 new MethodNode(
                         "removeEventListener",
-                        ACC_PUBLIC | ACC_SYNTHETIC,
+                        ACC_PUBLIC,
                         ClassHelper.VOID_TYPE,
                         new Parameter[]{new Parameter(ClassHelper.STRING_TYPE, "name"), new Parameter(ClassHelper.CLOSURE_TYPE, "listener")},
+                        ClassNode.EMPTY_ARRAY,
+                        new ExpressionStatement(
+                                new MethodCallExpression(
+                                        new FieldExpression(erField),
+                                        "removeEventListener",
+                                        new ArgumentListExpression(
+                                                new Expression[]{new VariableExpression("name"), new VariableExpression("listener")})))));
+
+        // add method:
+        // void removeEventListener(String name, RunnableWithArgs listener) {
+        //    return this$eventRouter.removeEventListener(name, listener);
+        // }
+        declaringClass.addMethod(
+                new MethodNode(
+                        "removeEventListener",
+                        ACC_PUBLIC,
+                        ClassHelper.VOID_TYPE,
+                        new Parameter[]{new Parameter(ClassHelper.STRING_TYPE, "name"), new Parameter(RUNNABLE_WITH_ARGS_CLASS, "listener")},
                         ClassNode.EMPTY_ARRAY,
                         new ExpressionStatement(
                                 new MethodCallExpression(
@@ -244,7 +287,7 @@ public class EventPublisherASTTransformation implements ASTTransformation, Opcod
         declaringClass.addMethod(
                 new MethodNode(
                         "publishEvent",
-                        ACC_PUBLIC | ACC_SYNTHETIC,
+                        ACC_PUBLIC,
                         ClassHelper.VOID_TYPE,
                         new Parameter[]{new Parameter(ClassHelper.STRING_TYPE, "name"), args},
                         ClassNode.EMPTY_ARRAY,
@@ -264,7 +307,7 @@ public class EventPublisherASTTransformation implements ASTTransformation, Opcod
         declaringClass.addMethod(
                 new MethodNode(
                         "publishEventOutside",
-                        ACC_PUBLIC | ACC_SYNTHETIC,
+                        ACC_PUBLIC,
                         ClassHelper.VOID_TYPE,
                         new Parameter[]{new Parameter(ClassHelper.STRING_TYPE, "name"), args},
                         ClassNode.EMPTY_ARRAY,
@@ -284,7 +327,7 @@ public class EventPublisherASTTransformation implements ASTTransformation, Opcod
         declaringClass.addMethod(
                 new MethodNode(
                         "publishEventAsync",
-                        ACC_PUBLIC | ACC_SYNTHETIC,
+                        ACC_PUBLIC,
                         ClassHelper.VOID_TYPE,
                         new Parameter[]{new Parameter(ClassHelper.STRING_TYPE, "name"), args},
                         ClassNode.EMPTY_ARRAY,

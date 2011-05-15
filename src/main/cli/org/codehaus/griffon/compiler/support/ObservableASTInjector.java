@@ -56,9 +56,9 @@ public class ObservableASTInjector implements ASTInjector {
 
         if(LOG.isDebugEnabled()) LOG.debug("Injecting "+OBSERVABLE_CLASS.getName()+" behavior to "+ classNode.getName());
     
-        ClassNode pcsClassNode = ClassHelper.make(PropertyChangeSupport.class);
-        ClassNode pclClassNode = ClassHelper.make(PropertyChangeListener.class);
-        ClassNode pceClassNode = ClassHelper.make(PropertyChangeEvent.class);
+        ClassNode pcsClassNode = ClassHelper.makeWithoutCaching(PropertyChangeSupport.class);
+        ClassNode pclClassNode = ClassHelper.makeWithoutCaching(PropertyChangeListener.class);
+        ClassNode pceClassNode = ClassHelper.makeWithoutCaching(PropertyChangeEvent.class);
 
         //String pcsFieldName = "pcs";
 
@@ -75,7 +75,7 @@ public class ObservableASTInjector implements ASTInjector {
         // void addPropertyChangeListener(listener) {
         //     pcs.addPropertyChangeListener(listener)
         //  }
-        addMethod(classNode, 
+        classNode.addMethod(
                 new MethodNode(
                         "addPropertyChangeListener",
                         ACC_PUBLIC,
@@ -93,7 +93,7 @@ public class ObservableASTInjector implements ASTInjector {
         // void addPropertyChangeListener(name, listener) {
         //     pcs.addPropertyChangeListener(name, listener)
         //  }
-        addMethod(classNode, 
+        classNode.addMethod(
                 new MethodNode(
                         "addPropertyChangeListener",
                         ACC_PUBLIC,
@@ -111,7 +111,7 @@ public class ObservableASTInjector implements ASTInjector {
         // boolean removePropertyChangeListener(listener) {
         //    return pcs.removePropertyChangeListener(listener);
         // }
-        addMethod(classNode, 
+        classNode.addMethod(
                 new MethodNode(
                         "removePropertyChangeListener",
                         ACC_PUBLIC,
@@ -126,7 +126,7 @@ public class ObservableASTInjector implements ASTInjector {
                                                 new Expression[]{new VariableExpression("listener")})))));
 
         // add method: void removePropertyChangeListener(name, listener)
-        addMethod(classNode, 
+        classNode.addMethod(
                 new MethodNode(
                         "removePropertyChangeListener",
                         ACC_PUBLIC,
@@ -144,7 +144,7 @@ public class ObservableASTInjector implements ASTInjector {
         // void firePropertyChange(String name, Object oldValue, Object newValue) {
         //     pcs.firePropertyChange(name, oldValue, newValue)
         //  }
-        addMethod(classNode, 
+        classNode.addMethod(
                 new MethodNode(
                         "firePropertyChange",
                         ACC_PROTECTED,
@@ -165,7 +165,7 @@ public class ObservableASTInjector implements ASTInjector {
         // void firePropertyChange(PropertyChangeEvent event) {
         //     pcs.firePropertyChange(event)
         //  }
-        addMethod(classNode, 
+        classNode.addMethod(
                 new MethodNode(
                         "firePropertyChange",
                         ACC_PROTECTED,
@@ -184,7 +184,7 @@ public class ObservableASTInjector implements ASTInjector {
         // PropertyChangeListener[] getPropertyChangeListeners() {
         //   return pcs.getPropertyChangeListeners
         // }
-        addMethod(classNode, 
+        classNode.addMethod(
                 new MethodNode(
                         "getPropertyChangeListeners",
                         ACC_PUBLIC,
@@ -202,7 +202,7 @@ public class ObservableASTInjector implements ASTInjector {
         // PropertyChangeListener[] getPropertyChangeListeners(String name) {
         //   return pcs.getPropertyChangeListeners(name)
         // }
-        addMethod(classNode, 
+        classNode.addMethod(
                 new MethodNode(
                         "getPropertyChangeListeners",
                         ACC_PUBLIC,

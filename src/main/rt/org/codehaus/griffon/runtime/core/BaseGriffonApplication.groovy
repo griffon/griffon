@@ -16,15 +16,8 @@
 
 package org.codehaus.griffon.runtime.core
 
-import griffon.core.GriffonApplication
-import griffon.core.AddonManager
-import griffon.core.ArtifactManager
-import griffon.core.ApplicationPhase
-import griffon.core.ShutdownHandler
-import griffon.util.EventRouter
-import griffon.util.Metadata
-import griffon.util.ApplicationHolder
-import griffon.util.UIThreadHelper
+import griffon.core.*
+import griffon.util.*
 import org.codehaus.griffon.runtime.util.GriffonApplicationHelper
 
 import java.util.concurrent.Callable
@@ -58,12 +51,12 @@ import org.slf4j.LoggerFactory
 class BaseGriffonApplication implements GriffonApplication {
     Map<String, String> addonPrefixes = [:]
 
-    Map<String, Map<String, String>> mvcGroups = [:]
-    Map models      = [:]
-    Map views       = [:]
-    Map controllers = [:]
-    Map builders    = [:]
-    Map groups      = [:]
+    Map<String, Map<String, String>> mvcGroups            = [:]
+    Map<String, ? extends GriffonModel> models            = [:]
+    Map<String, ? extends GriffonView> views              = [:]
+    Map<String, ? extends GriffonController> controllers  = [:]
+    Map<String, ? extends FactoryBuilderSupport> builders = [:]
+    Map<String, Map<String, Object>> groups               = [:]
 
     Binding bindings = new Binding()
     ConfigObject config
@@ -262,11 +255,19 @@ class BaseGriffonApplication implements GriffonApplication {
     }
 
     void addApplicationEventListener(String eventName, Closure listener) {
-       eventRouter.addEventListener(eventName,listener)
+       eventRouter.addEventListener(eventName, listener)
     }
 
     void removeApplicationEventListener(String eventName, Closure listener) {
-       eventRouter.removeEventListener(eventName,listener)
+       eventRouter.removeEventListener(eventName, listener)
+    }
+
+    void addApplicationEventListener(String eventName, RunnableWithArgs listener) {
+       eventRouter.addEventListener(eventName, listener)
+    }
+
+    void removeApplicationEventListener(String eventName, RunnableWithArgs listener) {
+       eventRouter.removeEventListener(eventName, listener)
     }
 
     void addMvcGroup(String mvcType, Map<String, String> mvcPortions) {
@@ -335,47 +336,79 @@ class BaseGriffonApplication implements GriffonApplication {
         GriffonApplicationHelper.newInstance(appDelegate, clazz, type)
     }
 
-    Map<String, ?> buildMVCGroup(String mvcType) {
+    Map<String, Object> buildMVCGroup(String mvcType) {
         GriffonApplicationHelper.buildMVCGroup(appDelegate, [:], mvcType, mvcType)
     }
 
-    Map<String, ?> buildMVCGroup(String mvcType, String mvcName) {
+    Map<String, Object> buildMVCGroup(String mvcType, String mvcName) {
         GriffonApplicationHelper.buildMVCGroup(appDelegate, [:], mvcType, mvcName)
     }
 
-    Map<String, ?> buildMVCGroup(Map<String, ?> args, String mvcType) {
+    Map<String, Object> buildMVCGroup(Map<String, Object> args, String mvcType) {
         GriffonApplicationHelper.buildMVCGroup(appDelegate, args, mvcType, mvcType)
     }
 
-    Map<String, ?> buildMVCGroup(Map<String, ?> args, String mvcType, String mvcName) {
+    Map<String, Object> buildMVCGroup(Map<String, Object> args, String mvcType, String mvcName) {
         GriffonApplicationHelper.buildMVCGroup(appDelegate, args, mvcType, mvcName)
     }
 
-    List<?> createMVCGroup(String mvcType) {
+    List<? extends GriffonMvcArtifact> createMVCGroup(String mvcType) {
         GriffonApplicationHelper.createMVCGroup(appDelegate, mvcType)
     }
 
-    List<?> createMVCGroup(Map<String, ?> args, String mvcType) {
+    List<? extends GriffonMvcArtifact> createMVCGroup(Map<String, Object> args, String mvcType) {
         GriffonApplicationHelper.createMVCGroup(appDelegate, args, mvcType)
     }
 
-    List<?> createMVCGroup(String mvcType, Map<String, ?> args) {
+    List<? extends GriffonMvcArtifact> createMVCGroup(String mvcType, Map<String, Object> args) {
         GriffonApplicationHelper.createMVCGroup(appDelegate, args, mvcType)
     }
 
-    List<?> createMVCGroup(String mvcType, String mvcName) {
+    List<? extends GriffonMvcArtifact> createMVCGroup(String mvcType, String mvcName) {
         GriffonApplicationHelper.createMVCGroup(appDelegate, mvcType, mvcName)
     }
 
-    List<?> createMVCGroup(Map<String, ?> args, String mvcType, String mvcName) {
+    List<? extends GriffonMvcArtifact> createMVCGroup(Map<String, Object> args, String mvcType, String mvcName) {
         GriffonApplicationHelper.createMVCGroup(appDelegate, args, mvcType, mvcName)
     }
 
-    List<?> createMVCGroup(String mvcType, String mvcName, Map<String, ?> args) {
+    List<? extends GriffonMvcArtifact> createMVCGroup(String mvcType, String mvcName, Map<String, Object> args) {
         GriffonApplicationHelper.createMVCGroup(appDelegate, args, mvcType, mvcName)
     }
 
     void destroyMVCGroup(String mvcName) {
         GriffonApplicationHelper.destroyMVCGroup(appDelegate, mvcName)
+    }
+
+    void withMVCGroup(String mvcType, Closure handler) {
+        withMVCGroup(mvcType, mvcType, [:], handler)
+    }
+
+    void withMVCGroup(String mvcType, String mvcName, Closure handler) {
+        withMVCGroup(mvcType, mvcName, [:], handler)
+    }
+
+    void withMVCGroup(String mvcType, Map<String, Object> args, Closure handler) {
+        withMVCGroup(mvcType, mvcType, args, handler)
+    }
+
+    void withMVCGroup(String mvcType, String mvcName, Map<String, Object> args, Closure handler) {
+        GriffonApplicationHelper.withMVCGroup(appDelegate, mvcType, mvcName, args, handler)
+    }
+
+    public <M extends GriffonModel, V extends GriffonView, C extends GriffonController> void withMVCGroup(String mvcType, MVCClosure<M, V, C> handler) {
+        withMVCGroup(mvcType, mvcType, [:], handler)
+    }
+
+    public <M extends GriffonModel, V extends GriffonView, C extends GriffonController> void withMVCGroup(String mvcType, String mvcName, MVCClosure<M, V, C> handler) {
+        withMVCGroup(mvcType, mvcName, [:], handler)
+    }
+
+    public <M extends GriffonModel, V extends GriffonView, C extends GriffonController> void withMVCGroup(String mvcType, Map<String, Object> args, MVCClosure<M, V, C> handler) {
+        withMVCGroup(mvcType, mvcType, args, handler)
+    }
+
+    public <M extends GriffonModel, V extends GriffonView, C extends GriffonController> void withMVCGroup(String mvcType, String mvcName, Map<String, Object> args, MVCClosure<M, V, C> handler) {
+        GriffonApplicationHelper.withMVCGroup(appDelegate, mvcType, mvcName, args, handler)
     }
 }

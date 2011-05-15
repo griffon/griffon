@@ -167,6 +167,16 @@ public final class WindowManager implements ShutdownHandler {
     }
 
     /**
+     * Shows the window.<p>
+     * This method is executed <b>SYNCHRONOUSLY</b> in the UI thread.
+     *
+     * @param name the name of window to show
+     */
+    public void show(String name) {
+        show(findWindow(name));
+    }
+
+    /**
      * Hides the window.<p>
      * This method is executed <b>SYNCHRONOUSLY</b> in the UI thread.
      *
@@ -179,6 +189,16 @@ public final class WindowManager implements ShutdownHandler {
                 app.resolveWindowDisplayHandler().hide(window, app);
             }
         });
+    }
+
+    /**
+     * Hides the window.<p>
+     * This method is executed <b>SYNCHRONOUSLY</b> in the UI thread.
+     *
+     * @param name the name of window to hide
+     */
+    public void hide(String name) {
+        hide(findWindow(name));
     }
 
     public boolean canShutdown(GriffonApplication app) {

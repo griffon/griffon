@@ -1,0 +1,15 @@
+Application's that run in Apple's MacOSX must adhere to an strict set of rules. We recommend you to have a look at Apple's ([Human Interface Guidelines|http://developer.apple.com/library/mac/#documentation/UserExperience/Conceptual/AppleHIGuidelines/XHIGIntro/XHIGIntro.html]).
+
+Griffon makes it easier to integrate with MacOSX by automatically registering a couple of System properties that make the applicaiton behave like a native one
+
+* @apple.laf.useScreenMenuBar@ - if set to true will force the application's menu bar to appear at the top. Griffon sets its value to true.
+* @com.apple.mrj.application.apple.menu.about.name@ - sets the name that will appear next to the @About@ menu option.
+
+Java applications running on MacOSX also have the option to register handlers for @About@, @Preferences@ and @Quit@ menu options. The default handlers will trigger an specific application event each. These events can be disabled with a command flag set in @griffon-app/conf/Config.groovy@. The following table outlines the events, flags and the default behavior when the flags are enabled
+
+{table}
+*Event* | *Fired when* | *Flag* | *Default behavior*
+OSXAbout | user activates About menu | osx.noabout | Default about dialog is displayed
+OSXPrefs | user activates Preferences menu | osx.noprefs | No Preferences menu is available
+OSXQuit | user activates Quit menu | osx.noquit | Application shutdowns immediately
+{table}

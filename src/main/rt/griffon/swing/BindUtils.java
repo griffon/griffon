@@ -18,10 +18,10 @@ package griffon.swing;
 import java.util.Map;
 import java.util.LinkedHashMap;
 
-import groovy.lang.Closure;
 import groovy.util.FactoryBuilderSupport;
 
 import griffon.util.CallableWithArgs;
+import griffon.util.CallableWithArgsClosure;
 import static griffon.util.GriffonNameUtils.isBlank;
 
 /**
@@ -107,28 +107,10 @@ public class BindUtils {
             attributes.put("targetProperty", targetProperty);
             attributes.put("mutual", mutual);
 
-            if(converter != null) attributes.put("converter", new BindClosure(builder, converter));
-            if(validator != null) attributes.put("validator", new BindClosure(builder, validator));
+            if(converter != null) attributes.put("converter", new CallableWithArgsClosure(builder, converter));
+            if(validator != null) attributes.put("validator", new CallableWithArgsClosure(builder, validator));
 
             builder.invokeMethod("bind", attributes);
-        }
-    }
-
-    private static class BindClosure extends Closure {
-        private final CallableWithArgs<?> callable;
-
-        public BindClosure(Object owner, CallableWithArgs<?> callable) {
-            super(owner);
-            this.callable = callable;
-        }
-
-        protected Object doCall(Object[] args) {
-            callable.setArgs(args);
-            try {
-                return (Object) callable.call();
-            } catch(Exception e) {
-                throw new RuntimeException(e);
-            }
         }
     }
 }

@@ -16,17 +16,25 @@
 
 import org.apache.tools.ant.filters.ReplaceTokens
 
-task assembleWrapper(type: Copy) {
+task assembleWrapper(dependsOn: [wrapperClasses]) {
+    inputs.dir sourceSets.wrapper.classes
+    outputs.dir new File("$buildDir/assemble/wrapper")
+
     description = "Merges compiled Wrapper classes with original classes"
-    ant.unjar(dest: "$buildDir/assemble/wrapper", src: "$projectDir/lib/wrapper/gradle-wrapper.jar") {
-        patternset {
-            exclude(name: "META-INF/**")
+
+    doLast {
+        ant.unjar(dest: "$buildDir/assemble/wrapper", src: "$projectDir/lib/wrapper/gradle-wrapper.jar") {
+            patternset {
+                exclude(name: "META-INF/**")
+            }
+        }
+
+        copy {
+            from sourceSets.wrapper.classes
+            into "$buildDir/assemble/wrapper"
+            include '**/*.class'
         }
     }
-
-    from sourceSets.wrapper.classes
-    into "$buildDir/assemble/wrapper"
-    include '**/*.class'
 }
 
 task jarWrapper(type: Jar, dependsOn: ':assembleWrapper') {

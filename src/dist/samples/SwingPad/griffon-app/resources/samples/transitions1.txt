@@ -1,5 +1,5 @@
 import org.pushingpixels.trident.Timeline
-import demo.Transitions
+import griffon.samples.swingpad.Transitions
 
 width = 420
 height = 420
@@ -8,9 +8,9 @@ panel {
     borderLayout()
     panel(constraints: NORTH) {
         gridLayout(cols: 1, rows: 2)
-        comboBox(id: 'cc', items: demo.Transitions.transitions)
+        comboBox(id: 'cc', items: Transitions.transitions)
         textField(id: 'code', editable: false, text: bind(source: cc, sourceProperty: "selectedIndex",
-            converter: { v -> demo.Transitions.code[v] }))
+            converter: { v -> Transitions.code[v] }))
     }
     panel(constraints: SOUTH, id: 'cards', size: [width, height], preferredSize: [width, height]) {
         transitionLayout(defaultDuration: 1500L, mirrorTransition: false,

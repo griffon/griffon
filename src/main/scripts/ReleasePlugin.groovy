@@ -887,10 +887,9 @@ def buildReleaseInfo(root, pluginName, releasePath, releaseTag) {
         root.removeChild(releaseNode)
     }
     try {
-
         // copy the properties to the new node..
         def releaseUrl = "${releasePath}/${releaseTag}"
-        def properties = ['title', 'author', 'authorEmail', 'description', 'documentation']
+        def properties = ['title', 'author', 'authorEmail', 'description', 'documentation', 'platforms', 'toolkits']
         def releaseDescriptor = parseRemoteXML("${releaseUrl}/plugin.xml").documentElement
         def version = releaseDescriptor.'@version'
 
@@ -902,8 +901,7 @@ def buildReleaseInfo(root, pluginName, releasePath, releaseTag) {
             }
         }
         releaseNode.appendChild(builder.createNode('file', "${releaseUrl}/griffon-${pluginName}-${version}.zip"))
-    }
-    catch(e) {
+    } catch(e) {
         // no release info available, probably an older plugin with no plugin.xml defined.
     }
 }

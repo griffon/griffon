@@ -45,7 +45,8 @@ class Log4jConfig {
 
     static final LAYOUTS = [xml: XMLLayout, html: HTMLLayout, simple: SimpleLayout, pattern: PatternLayout]
     static final APPENDERS = ["null": NullAppender, console: ConsoleAppender,
-                              file: FileAppender, rollingFile: RollingFileAppender]
+                              file: FileAppender, rollingFile: RollingFileAppender,
+                              event: GriffonApplicationEventAppender]
 
     private appenders = [:]
 
@@ -83,10 +84,6 @@ class Log4jConfig {
             args && (args[0] instanceof Closure)
     }
 
-    def configure() {
-        configure {}
-    }
-
     def environments(Closure callable) {
         invokeCallable(callable)
     }
@@ -115,31 +112,34 @@ class Log4jConfig {
         }
     }
 
-    def configure(Closure callable) {
+    def configure(Closure callable = {}) {
 
         Logger root = Logger.getRootLogger()
-
-        def consoleAppender = createConsoleAppender()
-        root.setLevel Level.ERROR
-        appenders['stdout'] = consoleAppender
-
-        error 'org.codehaus.griffon'
 
         callable.delegate = this
         callable.resolveStrategy = Closure.DELEGATE_FIRST
 
         try {
             callable.call(root)
+            for(appender in appenders.values()) root.addAppender appender
 
             if (!root.allAppenders.hasMoreElements()) {
+                def consoleAppender = createConsoleAppender()
+                root.setLevel Level.ERROR
+                appenders['stdout'] = consoleAppender
+
+                error 'org.codehaus.griffon'
+
                 root.addAppender appenders['stdout']
             }
+            /*
             Logger logger = Logger.getLogger("StackTrace")
             logger.additivity = false
             def fileAppender = createFullstackTraceAppender()
             if (!logger.allAppenders.hasMoreElements()) {
                 logger.addAppender fileAppender
             }
+            */
         }
         catch (Exception e) {
             LogLog.error "WARNING: Exception occured configuring log4j logging: $e.message"
@@ -331,8 +331,7 @@ class RootLog4jConfig {
             Appender app
             if (appName instanceof Appender) {
                 app = appName
-            }
-            else {
+            } else {
                 app = config.appenders[appName?.toString()]
             }
             if (app) {

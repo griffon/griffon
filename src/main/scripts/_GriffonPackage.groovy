@@ -220,14 +220,12 @@ target(jarFiles: "Jar up the package files") {
                 metainf(dir: metainfDirPath)
             }
         }
+        // delete resources dir as it's already included in the app jar
+        // failure to do so results in duplicate resources
+        ant.delete(dir: resourcesDir, quiet: true, failonerror: false)
+        ant.mkdir(dir: resourcesDir)
     }
     griffonCopyDist(destFileName, jardir, !upToDate)
-
-    // delete resources dir as it's already included in the app jar
-    // failure to do so results in duplicate resources
-    resourcesDir = new File("${resourcesDirPath}/griffon-app/resources")
-    ant.delete(dir: resourcesDir, quiet: true, failonerror: false)
-    ant.mkdir(dir: resourcesDir)
 }
 
 _copyLibs = {

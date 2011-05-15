@@ -44,7 +44,7 @@ public interface Observable {
      * @param propertyName  The name of the property to listen on.
      * @param listener the PropertyChangeListener to be added
      *
-     * @see #removePropertyChangeListener(String)
+     * @see #removePropertyChangeListener(String, PropertyChangeListener)
      */
     void addPropertyChangeListener(String propertyName, PropertyChangeListener listener);
 

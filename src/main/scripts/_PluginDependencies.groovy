@@ -119,6 +119,8 @@ def resetClasspathAndState() {
     GriffonPluginUtils.clearCaches()
     classpathSet = false
     classpath()
+    event('SetClasspath', [classLoader])
+    griffonSettings.resetDependencies()
     PluginManagerHolder.pluginManager = null
 }
 
@@ -463,9 +465,9 @@ private PluginInstallEngine createPluginInstallEngine(Metadata md) {
 
     pluginInstallEngine.postInstallEvent = { pluginInstallPath ->
         File pluginEvents = new File("${pluginInstallPath}/scripts/_Events.groovy")
-         if (pluginEvents.exists()) {
-             eventListener.loadEventsScript(pluginEvents)
-         }
+        if (pluginEvents.exists()) {
+            eventListener.loadEventsScript(pluginEvents)
+        }
         resetClasspath()
     }
     pluginInstallEngine.isInteractive = isInteractive
@@ -477,6 +479,8 @@ private PluginInstallEngine createPluginInstallEngine(Metadata md) {
 protected GriffonPluginManager resetClasspath() {
     classpathSet = false
     classpath()
+    event('SetClasspath', [classLoader])
+    griffonSettings.resetDependencies()
     PluginManagerHolder.pluginManager = null
 }
 

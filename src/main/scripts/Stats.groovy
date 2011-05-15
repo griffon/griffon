@@ -71,6 +71,7 @@ target(default: "Generates basic stats for a Griffon project") {
         [name: "Unit Tests",          path: "test.unit",        filetype: [".groovy",".java"]],
         [name: "Integration Tests",   path: "test.integration", filetype: [".groovy",".java"]],
         [name: "Scripts",             path: "scripts",          filetype: [".groovy"]],
+        [name: "Configuration",       path: "conf",             filetype: [".groovy"]],
     ]
 
     event("StatsStart", [pathToInfo])
@@ -81,6 +82,9 @@ target(default: "Generates basic stats for a Griffon project") {
             def fixedPath = file.path - searchPath.canonicalPath //fix problem when project inside dir "jobs" (eg. hudson stores projects under jobs-directory)
             fixedPath =~ info.path && info.filetype.any{s -> file.path.endsWith(s)}
         }
+        // skip basic configuration files but count the rest
+        if (match && match.name == 'Configuration' && match.path == 'conf' &&
+            file.name in ['Application.groovy', 'BuildConfig.groovy', 'Builder.groovy', 'Config.groovy']) return
         if (match && file.isFile() ) {
             match.filecount = match.filecount ? match.filecount+1 : 1
             // strip whitespace

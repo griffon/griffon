@@ -2,9 +2,11 @@ As the name implies application events are sent system wide. However there is an
 
 This AST transformation will inject the following methods to the annotated classes:
 * addEventListener(Object)
-* addEventListener(String,Closure)
+* addEventListener(String, Closure)
+* addEventListener(String, RunnableWithArgs)
 * removeEventListener(Object)
-* removeEventListener(String,Closure)
+* removeEventListener(String, Closure)
+* removeEventListener(String, RunnableWithArgs)
 * publishEvent(String)
 * publishEvent(String,List)
 * publishEventOutside(String)
@@ -20,19 +22,19 @@ The following example shows a trivial usage of this feature
 @griffon.util.EventPublisher
 class Publisher {
    void doit(String name) {
-      publishEvent("arg",[name])
+      publishEvent('arg', [name])
    }
 
    void doit() {
-      publishEvent("empty")
+      publishEvent('empty')
    }
 }
 
 class Consumer {
    String value
 
-   void onArg(String arg) { value = "arg = "+arg }
-   void onEmpty() { value = "empty" }
+   void onArg(String arg) { value = 'arg = ' + arg }
+   void onEmpty() { value = 'empty' }
 }
 
 p = new Publisher()
@@ -40,7 +42,7 @@ c = new Consumer()
 p.addEventListener(c)
 assert !c.value
 p.doit()
-assert c.value == "empty"
-p.doit("Groovy")
-assert c.value == "arg = Groovy"
+assert c.value == 'empty'
+p.doit('Groovy')
+assert c.value == 'arg = Groovy'
 {code}

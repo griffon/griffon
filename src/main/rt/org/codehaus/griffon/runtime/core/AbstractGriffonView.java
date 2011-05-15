@@ -92,7 +92,7 @@ public abstract class AbstractGriffonView extends AbstractGriffonMvcArtifact imp
      *
      * @since 0.9.2
      */
-    public void buildViewFromXml(Map<String, ?> args) {
+    public void buildViewFromXml(Map<String, Object> args) {
         buildViewFromXml(args, getClass().getName().replace('.','/') + ".xml");
     }
 
@@ -136,7 +136,7 @@ public abstract class AbstractGriffonView extends AbstractGriffonMvcArtifact imp
      *
      * @since 0.9.2
      */
-    public void buildViewFromXml(Map<String, ?> args, String fileName) {
+    public void buildViewFromXml(Map<String, Object> args, String fileName) {
         if(isBlank(fileName)) {
             throw new IllegalArgumentException("Invalid file name for externalized view.");
         }

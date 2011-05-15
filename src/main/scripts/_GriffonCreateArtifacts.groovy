@@ -29,7 +29,7 @@ import griffon.util.GriffonNameUtils
 includeTargets << griffonScript("_GriffonPackage")
 includeTargets << griffonScript("_GriffonArgParsing")
 
-rootPackage = null
+defaultPackageName = ''
 replaceNonag = false
 
 createArtifact = { Map args = [:] ->
@@ -38,12 +38,13 @@ createArtifact = { Map args = [:] ->
 
     def suffix = args['suffix']
     def type = args['type']
+    def template = args['template'] ?: type
     def artifactPath = args['path']
     if(args['fileType']) fileType = args['fileType']
     def lineTerminator = args["lineTerminator"] ?: (fileType != '.groovy'? ';' : '')
     
     def typeProperty = GriffonNameUtils.uncapitalize(type)
-    type = argsMap[typeProperty] && templateExists(argsMap[typeProperty], fileType) ? argsMap[typeProperty] : type
+    template = argsMap[typeProperty] && templateExists(argsMap[typeProperty], fileType) ? argsMap[typeProperty] : template
 
     ant.mkdir(dir: "${basedir}/${artifactPath}")
 
@@ -69,9 +70,9 @@ createArtifact = { Map args = [:] ->
     artifactFile = "${basedir}/${artifactPath}/${pkgPath}${className}${suffix}${fileType}"
     defaultArtifactFile = "${basedir}/${artifactPath}/${pkgPath}${className}${suffix}.groovy"
 
-    templateFile = resolveTemplate(type, fileType)
+    templateFile = resolveTemplate(template, fileType)
     if(!templateFile?.exists() && fileType != '.groovy') {
-        templateFile = resolveTemplate(type, '.groovy')
+        templateFile = resolveTemplate(template, '.groovy')
         lineTerminator = ''
     }
 
@@ -124,32 +125,32 @@ createArtifact = { Map args = [:] ->
     event("CreatedArtefact", [type, className])
 }
 
-templateExists = { type, fileType ->
-    def templateFile = resolveTemplate(type, fileType)
+templateExists = { template, fileType ->
+    def templateFile = resolveTemplate(template, fileType)
     if(!templateFile?.exists() && fileType != '.groovy') {
-        templateFile = resolveTemplate(type, '.groovy')
+        templateFile = resolveTemplate(template, '.groovy')
     }
     templateFile.exists()
 }
 
-resolveTemplate = { type, fileSuffix ->
+resolveTemplate = { template, fileSuffix ->
     // first check for presence of template in application
-    def templateFile = new FileSystemResource("${basedir}/src/templates/artifacts/${type}${fileSuffix}")
+    def templateFile = new FileSystemResource("${basedir}/src/templates/artifacts/${template}${fileSuffix}")
     if (!templateFile.exists()) {
         // now check for template provided by plugins
-        def pluginTemplateFiles = resolveResources("file:${pluginsHome}/*/src/templates/artifacts/${type}${fileSuffix}")
+        def pluginTemplateFiles = resolveResources("file:${pluginsHome}/*/src/templates/artifacts/${template}${fileSuffix}")
         if (pluginTemplateFiles) {
             templateFile = pluginTemplateFiles[0]
         }
         if (!templateFile.exists()) {
             // now check for template provided by an archetype
-            templateFile = new FileSystemResource("${griffonWorkDir}/archetypes/${archetype}/templates/artifacts/${type}${fileSuffix}")
+            templateFile = new FileSystemResource("${griffonWorkDir}/archetypes/${archetype}/templates/artifacts/${template}${fileSuffix}")
             if (!templateFile.exists()) {
                 // now check for template provided by a provided archetype
-                templateFile = griffonResource("archetypes/${archetype}/templates/artifacts/${type}${fileSuffix}")
+                templateFile = griffonResource("archetypes/${archetype}/templates/artifacts/${template}${fileSuffix}")
                 if (!templateFile.exists()) {
                     // template not found in archetypes, use default template
-                    templateFile = new ClassPathResource("archetypes/default/templates/artifacts/${type}${fileSuffix}")
+                    templateFile = new ClassPathResource("archetypes/default/templates/artifacts/${template}${fileSuffix}")
                 }
             }
         }
@@ -157,11 +158,18 @@ resolveTemplate = { type, fileSuffix ->
     templateFile
 }
 
-createRootPackage = {
-    if(rootPackage == null) {
-        rootPackage = (buildConfig.griffon.project.groupId ?: griffonAppName).replace('-','.').toLowerCase()    
+createDefaultPackage = {
+    if(!defaultPackageName) defaultPackageName = buildConfig.app.defaultPackageName
+    if(!defaultPackageName) {
+        if(griffonAppName.indexOf('.') != -1) {
+            int pos = griffonAppName.lastIndexOf('.')
+            defaultPackageName = griffonAppName[0..<pos].toLowerCase()
+            griffonAppName = griffonAppName[(pos+1)..-1]
+        } else {
+            defaultPackageName = (buildConfig.griffon.project.groupId ?: griffonAppName).replace('-','.').toLowerCase() 
+        }   
     }
-    return rootPackage
+    defaultPackageName
 }
 
 createIntegrationTest = { Map args = [:] ->
@@ -188,12 +196,12 @@ purgeRedundantArtifactSuffix = { name, suffix ->
         newName = name.replaceAll(/$suffix$/, '')
     }
 
+    // Also remove variations that start with the same sequence of letters
+    // as the suffix UNLESS that would remove the entire artifact name.
     if(name == newName) {
-        // def pos = newName.lastIndexOf('.')
-        // if(pos > -1) newName = newName[pos+1..-1]
         for(int i = name.length() - 1; i >= 0; i--) {
             def str = name[i..-1]
-            if(suffix.startsWith(str)/* && (newName - str)*/) {
+            if(suffix.startsWith(str) && !(newName - str).endsWith(".")) {
                 newName -= str
                 break
             }
@@ -211,10 +219,10 @@ extractArtifactName = { name ->
         artifactPkg = artifactName[0..<pos]
         artifactName = artifactName[(pos + 1)..-1]
         if(artifactPkg.startsWith("~")) {
-            artifactPkg = artifactPkg.replace("~", createRootPackage())
+            artifactPkg = artifactPkg.replace("~", createDefaultPackage())
         }
     } else {
-        artifactPkg = argsMap.skipPackagePrompt ? '' : createRootPackage()
+        artifactPkg = argsMap.skipPackagePrompt ? '' : createDefaultPackage()
     }
 
     return [artifactPkg, artifactName]

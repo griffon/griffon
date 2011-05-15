@@ -24,18 +24,31 @@ import java.util.concurrent.Callable;
  */
 public abstract class CallableWithArgs<V> implements Callable<V> {
     private static final Object[] NO_ARGS = new Object[0];
-    private Object[] args;
+    private final Object lock = new Object();
+    private Object[] args = NO_ARGS;
 
     public void setArgs(Object[] args) {
         if(args == null) {
             args = NO_ARGS;
         }
-        this.args = new Object[args.length];
-        System.arraycopy(args, 0, this.args, 0, args.length);
+        synchronized(lock) {
+            this.args = new Object[args.length];
+            System.arraycopy(args, 0, this.args, 0, args.length);
+        }
     }
 
     public Object[] getArgs() {
         return args;
     }
-}
 
+    public final V call() {
+        Object[] copy = null;
+        synchronized(lock) {
+            copy = new Object[args.length];
+            System.arraycopy(args, 0, copy, 0, args.length);
+        }
+        return call(copy);
+    }
+
+    public abstract V call(Object[] args);
+}

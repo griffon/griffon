@@ -15,15 +15,11 @@
  */
 package griffon.swing
 
-import java.awt.Window
-import java.awt.Dimension
-import java.awt.Point
-import java.awt.Toolkit
-import java.awt.Component
-import java.awt.Container
-import java.awt.GraphicsEnvironment
+import java.awt.*
+import java.awt.image.BufferedImage
 import javax.swing.JFrame
 import javax.swing.WindowConstants
+
 import griffon.core.GriffonApplication
 
 import static griffon.util.GriffonApplicationUtils.isJdk16
@@ -179,5 +175,36 @@ class SwingUtils {
             }
         }
         return component
+    }
+
+    /**
+     * Takes a snaphot of the target component.
+     *
+     * @param component the component to draw
+     * @param usePrint whether <tt>print()</tt> or <tt>paint()</tt> is used to grab the snapshot
+     * @return a Graphics compatible image of the component
+     */
+    static Image takeSnapshot(Component component, boolean usePrint = false) {
+        BufferedImage image = null
+        GraphicsEnvironment genv = GraphicsEnvironment.localGraphicsEnvironment
+        GraphicsDevice gd = genv.defaultScreenDevice
+        GraphicsConfiguration gc = gd.defaultConfiguration
+
+        if(gc.colorModel.hasAlpha()) {
+            image = gc.createCompatibleImage(
+                component.size.width as int,
+                component.size.height as int)
+        } else {
+            image = new BufferedImage(
+                component.size.width as int,
+                component.size.height as int,
+                BufferedImage.TYPE_INT_ARGB as int)
+        }
+
+        Graphics g = image.graphics
+        usePrint? component.print(g) : component.paint(g)
+        g.dispose()
+
+        return image
     }
 }

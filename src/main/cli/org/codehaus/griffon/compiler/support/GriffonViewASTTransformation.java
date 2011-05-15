@@ -16,9 +16,9 @@
 
 package org.codehaus.griffon.compiler.support;
 
+import org.codehaus.griffon.compiler.GriffonCompilerContext;
+import org.codehaus.griffon.compiler.SourceUnitCollector;
 import org.codehaus.groovy.ast.*;
-import org.codehaus.groovy.ast.expr.*;
-import org.codehaus.groovy.ast.stmt.*;
 import org.codehaus.groovy.control.CompilePhase;
 import org.codehaus.groovy.control.SourceUnit;
 import org.codehaus.groovy.transform.GroovyASTTransformation;
@@ -35,11 +35,10 @@ import org.slf4j.LoggerFactory;
  * Handles generation of code for Griffon views.
  * <p/>
  *
- * @author Andres Almiray 
- *
+ * @author Andres Almiray
  * @since 0.9.1
  */
-@GroovyASTTransformation(phase=CompilePhase.CANONICALIZATION)
+@GroovyASTTransformation(phase = CompilePhase.CANONICALIZATION)
 public class GriffonViewASTTransformation extends GriffonArtifactASTTransformation {
     private static final Logger LOG = LoggerFactory.getLogger(GriffonViewASTTransformation.class);
     private static final String ARTIFACT_PATH = "views";
@@ -47,26 +46,39 @@ public class GriffonViewASTTransformation extends GriffonArtifactASTTransformati
     private static final ClassNode ABSTRACT_GRIFFON_VIEW_CLASS = ClassHelper.makeWithoutCaching(AbstractGriffonView.class);
     private static final ClassNode ABSTRACT_GRIFFON_VIEW_SCRIPT_CLASS = ClassHelper.makeWithoutCaching(AbstractGriffonViewScript.class);
 
+    public static boolean isViewArtifact(ClassNode classNode, SourceUnit source) {
+        if (classNode == null || source == null) return false;
+        return ARTIFACT_PATH.equals(GriffonCompilerContext.getArtifactPath(source)) && classNode.getName().endsWith(GriffonViewClass.TRAILING);
+    }
+
+
     protected boolean allowsScriptAsArtifact() {
         return true;
     }
-    
-    protected void transform(ClassNode classNode, SourceUnit source, String artifactPath) {
-        if(!ARTIFACT_PATH.equals(artifactPath) || !classNode.getName().endsWith(GriffonViewClass.TRAILING)) return;
 
-        if(classNode.isDerivedFrom(ClassHelper.SCRIPT_TYPE)) {
-            if(LOG.isDebugEnabled()) LOG.debug("Setting "+ABSTRACT_GRIFFON_VIEW_SCRIPT_CLASS.getName()+" as the superclass of "+classNode.getName());
+    protected void transform(ClassNode classNode, SourceUnit source, String artifactPath) {
+        if (!isViewArtifact(classNode, source)) return;
+
+        if (classNode.isDerivedFrom(ClassHelper.SCRIPT_TYPE)) {
+            if (LOG.isDebugEnabled())
+                LOG.debug("Setting " + ABSTRACT_GRIFFON_VIEW_SCRIPT_CLASS.getName() + " as the superclass of " + classNode.getName());
             classNode.setSuperClass(ABSTRACT_GRIFFON_VIEW_SCRIPT_CLASS);
-        } else if(ClassHelper.OBJECT_TYPE.equals(classNode.getSuperClass())) {
-            if(LOG.isDebugEnabled()) LOG.debug("Setting "+ABSTRACT_GRIFFON_VIEW_CLASS.getName()+" as the superclass of "+classNode.getName());
+        } else if (ClassHelper.OBJECT_TYPE.equals(classNode.getSuperClass())) {
+            if (LOG.isDebugEnabled())
+                LOG.debug("Setting " + ABSTRACT_GRIFFON_VIEW_CLASS.getName() + " as the superclass of " + classNode.getName());
             classNode.setSuperClass(ABSTRACT_GRIFFON_VIEW_CLASS);
-        } else if(!classNode.implementsInterface(GRIFFON_VIEW_CLASS)){
+        } else if (!classNode.implementsInterface(GRIFFON_VIEW_CLASS)) {
             inject(classNode);
         }
     }
 
     private void inject(ClassNode classNode) {
-        if(LOG.isDebugEnabled()) LOG.debug("Injecting "+GRIFFON_VIEW_CLASS.getName()+" behavior to "+ classNode.getName());
+        ClassNode superClass = classNode.getSuperClass();
+        SourceUnit superSource = SourceUnitCollector.getInstance().getSourceUnit(superClass);
+        if (isViewArtifact(superClass, superSource)) return;
+
+        if (LOG.isDebugEnabled())
+            LOG.debug("Injecting " + GRIFFON_VIEW_CLASS.getName() + " behavior to " + classNode.getName());
         // 1. add interface
         classNode.addInterface(GRIFFON_VIEW_CLASS);
         // 2. add methods

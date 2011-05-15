@@ -51,7 +51,7 @@ task buildDocs(type: Groovydoc) {
     docTitle = "Griffon $version"
     header = "Griffon $version"
     windowTitle = "Griffon $version"
-    groovyClassPath = sourceSets.rt.classes + sourceSets.cli.classes + configurations.compile
+    classpath = sourceSets.rt.classes + sourceSets.cli.classes + configurations.compile
     includePrivate = true
     use = true
 
@@ -81,6 +81,9 @@ task jarSource(type: Jar) {
 task jarDocs(dependsOn: [jarApi, jarSource]) {}
 
 task prepareGuide(type: Copy) {
+    inputs.dir("src/guide" as File)
+    outputs.dir("$buildDir/manual-src" as File)
+
     destinationDir = "$buildDir/manual-src" as File
     from('src/guide') {
         filter(ReplaceTokens, tokens: ['griffon.version': version])
@@ -107,13 +110,11 @@ task buildGuide(type: Copy) {
     }
 }
 
-task pdfGuide(type: Copy) {
-    dependsOn { buildGuide }
+task pdfGuide(dependsOn: [buildGuide]) {
+    inputs.file(file("$buildDir/manual/guide/single.html"))
+    outputs.file(file("$buildDir/manual/griffon-guide-${version}.pdf"))
 
-    inputs.dir("$buildDir/manual" as File)
-    outputs.files "$buildDir/manual/griffon-guide-${version}.pdf"
-
-    doFirst {
+    doLast {
         try {
             grails.doc.PdfBuilder.build(
                 basedir: buildDir.absolutePath,
@@ -125,16 +126,14 @@ task pdfGuide(type: Copy) {
             // the renderer 'finishes' but it actually does
             // ignore for now
         }
-    }
-        
-    destinationDir = "$buildDir/manual" as File
-    from "$destinationDir/guide/"
-    into destinationDir
-    include '*.pdf'
-    rename 'single.pdf', "griffon-guide-${version}.pdf"
 
-    doLast {
-        delete "$destinationDir/guide/single.pdf"
+        def destinationDir = "$buildDir/manual" as File
+        copy {
+            from "$destinationDir/guide/"
+            into destinationDir
+            include '*.pdf'
+            rename 'single.pdf', "griffon-guide-${version}.pdf"
+        }
     }
 }
 

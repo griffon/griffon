@@ -15,9 +15,10 @@
  */
 package griffon.util
 
-import org.codehaus.groovy.runtime.MetaClassHelper
+import java.util.concurrent.LinkedBlockingQueue
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
+import static org.codehaus.groovy.runtime.MetaClassHelper.convertToTypeArray
 
 /**
  * An event handling helper.<p>
@@ -36,199 +37,257 @@ import org.slf4j.LoggerFactory
  * @author Andres Almiray
  */
 class EventRouter {
-   private List listeners = Collections.synchronizedList([])
-   private Map scriptBindings = [:]
-   private Map closureListeners = Collections.synchronizedMap([:])
-   private static final Logger LOG = LoggerFactory.getLogger(EventRouter)
+    private List listeners = Collections.synchronizedList([])
+    private Map scriptBindings = [:]
+    private Map closureListeners = Collections.synchronizedMap([:])
+    private static final Logger LOG = LoggerFactory.getLogger(EventRouter)
+    private final Queue deferredEvents = new LinkedBlockingQueue()
 
-   /**
-    * Publishes an event with optional arguments.</p>
-    * Event listeners will be notified in the same thread
-    * that orifinated the event.
-    *
-    * @param eventName the name of the event
-    * @param params the event's argumnents
-    *
-    */
-   void publish(String eventName, List params = []) {
-       if(!eventName) return
-       buildPublisher(eventName, params)('synchronously')  
-   }
+    private static final Object LOCK = new Object()
+    private static int count = 1
 
-   /**
-    * Publishes an event with optional arguments.</p>
-    * Event listeners are guaranteed to be notified
-    * outside of the UI thread always.
-    *
-    * @param eventName the name of the event
-    * @param params the event's argumnents
-    *
-    */
-   void publishOutside(String eventName, List params = []) {
-       if(!eventName) return
-       UIThreadHelper.instance.executeOutside(buildPublisher(eventName, params).curry('outside'))
-   }
+    private static int identifier() {
+        synchronized(LOCK) {
+            count++
+        }
+    }
 
-   /**
-    * Publishes an event with optional arguments.</p>
-    * Event listeners are guaranteed to be notified
-    * in a different thread than the publisher's, always.
-    *
-    * @param eventName the name of the event
-    * @param params the event's argumnents
-    *
-    */
-   void publishAsync(String eventName, List params = []) {
-       if(!eventName) return
-       UIThreadHelper.instance.executeFuture(buildPublisher(eventName, params).curry('asynchronously'))
-   }
-   
-   private Closure buildPublisher(String eventName, List params) {
-      return { mode ->
-         if(LOG.traceEnabled) LOG.trace("Triggering event '$eventName' $mode")
-         eventName = eventName[0].toUpperCase() + eventName[1..-1]
-         def eventHandler = "on" + eventName
-         def dispatchEvent = { listener ->
-             // any exceptions that might get thrown should be caught
-             // by GriffonExceptionHandler
-             fireEvent(listener, eventHandler, params ?: [])
-         }
+    EventRouter() {
+        new Thread({
+            while (true) {
+                Closure event = deferredEvents.take()
+                event()
+            }
+        }, "EventPublisher-${identifier()}").start()
+    }
 
-         // defensive copying to avoid CME during event dispatching
-         // GRIFFON-224
-         List listenersCopy = []
-         synchronized(listeners) {
-            listenersCopy.addAll(listeners)
-         }
-         synchronized(closureListeners) {
-            closureListeners[eventName].each{ listenersCopy << it }
-         }
+    /**
+     * Publishes an event with optional arguments.</p>
+     * Event listeners will be notified in the same thread
+     * that orifinated the event.
+     *
+     * @param eventName the name of the event
+     * @param params the event's arguments
+     *
+     */
+    void publish(String eventName, List params = []) {
+        if (!eventName) return
+        buildPublisher(eventName, params)('synchronously')
+    }
 
-         listenersCopy.each{ dispatchEvent(it) }
-      }
-   }
+    /**
+     * Publishes an event with optional arguments.</p>
+     * Event listeners are guaranteed to be notified
+     * outside of the UI thread always.
+     *
+     * @param eventName the name of the event
+     * @param params the event's arguments
+     *
+     */
+    void publishOutside(String eventName, List params = []) {
+        if (!eventName) return
+        UIThreadHelper.instance.executeOutside(buildPublisher(eventName, params).curry('outside'))
+    }
 
-   private void fireEvent(Script script, String eventHandler, List params) {
-      def binding = scriptBindings[script]
-      if(!binding) {
-         binding = new Binding()
-         script.binding = binding
-         script.run()
-         scriptBindings[script] = binding
-      }
+    /**
+     * Publishes an event with optional arguments.</p>
+     * Event listeners are guaranteed to be notified
+     * in a different thread than the publisher's, always.
+     *
+     * @param eventName the name of the event
+     * @param params the event's arguments
+     *
+     */
+    void publishAsync(String eventName, List params = []) {
+        if (!eventName) return
+        deferredEvents.offer(buildPublisher(eventName, params).curry('asynchronously'))
+    }
 
-      for(variable in script.binding.variables) {
-         def m = variable.key =~ /$eventHandler/
-         if(m.matches()) {
-            variable.value(*params)
+    private Closure buildPublisher(String eventName, List params) {
+        return { mode ->
+            if (LOG.traceEnabled) LOG.trace("Triggering event '$eventName' $mode")
+            eventName = eventName[0].toUpperCase() + eventName[1..-1]
+            def eventHandler = 'on' + eventName
+            def dispatchEvent = { listener ->
+                // any exceptions that might get thrown should be caught
+                // by GriffonExceptionHandler
+                fireEvent(listener, eventHandler, params ?: [])
+            }
+
+            // defensive copying to avoid CME during event dispatching
+            // GRIFFON-224
+            List listenersCopy = []
+            synchronized (listeners) {
+                listenersCopy.addAll(listeners)
+            }
+            synchronized (closureListeners) {
+                closureListeners[eventName].each { listenersCopy << it }
+            }
+
+            listenersCopy.each { dispatchEvent(it) }
+        }
+    }
+
+    private void fireEvent(Script script, String eventHandler, List params) {
+        def binding = scriptBindings[script]
+        if (!binding) {
+            binding = new Binding()
+            script.binding = binding
+            script.run()
+            scriptBindings[script] = binding
+        }
+
+        for (variable in script.binding.variables) {
+            def m = variable.key =~ /$eventHandler/
+            if (m.matches()) {
+                variable.value(* params)
+                return
+            }
+        }
+    }
+
+    private void fireEvent(Map map, String eventHandler, List params) {
+        eventHandler = eventHandler[2..-1]
+        def handler = map[eventHandler]
+        if (handler instanceof Closure) {
+            handler(* params)
+        } else if (handler instanceof RunnableWithArgs) {
+            handler.run(params.toArray(new Object[params.size()]))
+        }
+    }
+
+    private void fireEvent(Closure closure, String eventHandler, List params) {
+        closure(* params)
+    }
+
+    private void fireEvent(RunnableWithArgs runnable, String eventHandler, List params) {
+        runnable.run(params.toArray(new Object[params.size()]))
+    }
+
+    private void fireEvent(Object instance, String eventHandler, List params) {
+        def mp = instance.metaClass.getMetaProperty(eventHandler)
+        if (mp && mp.getProperty(instance)) {
+            mp.getProperty(instance)(* params)
             return
-         }
-      }
-   }
+        }
 
-   private void fireEvent(Map map, String eventHandler, List params) {
-      eventHandler = eventHandler[2..-1]
-      def handler = map[eventHandler]
-      if(handler && handler instanceof Closure) {
-         handler(*params)
-      }
-   }
+        Class[] argTypes = convertToTypeArray(params as Object[])
+        def mm = instance.metaClass.pickMethod(eventHandler, argTypes)
+        if (mm) {
+            mm.invoke(instance, * params)
+        }
+    }
 
-   private void fireEvent(Closure closure, String eventHandler, List params) {
-      closure(*params)
-   }
+    /**
+     * Adds an event listener.<p>
+     *
+     * A listener may be a<ul>
+     * <li>a <tt>Script</tt></li>
+     * <li>a <tt>Map</tt></li>
+     * <li>a <tt>Object</tt> (a Java bean)</li>
+     * </ul>
+     *
+     * With the exception of Maps, the naming convention for an eventHandler is
+     * "on" + eventName, Maps require handlers to be named as eventName only.<p>
+     * Some examples of eventHandler names are: onStartupStart, onMyCoolEvent.
+     * Event names must follow the camelCase naming convention.<p>
+     *
+     * @param listener and event listener of type Script, Map or Object
+     */
+    void addEventListener(listener) {
+        if (!listener || listener instanceof Closure || listener instanceof RunnableWithArgs) return
+        synchronized (listeners) {
+            if (listeners.find { it == listener }) return
+            listeners.add(listener)
+        }
+    }
 
-   private void fireEvent(Object instance, String eventHandler, List params) {
-      def mp = instance.metaClass.getMetaProperty(eventHandler)
-      if(mp && mp.getProperty(instance)) {
-         mp.getProperty(instance)(*params)
-         return
-      }
+    /**
+     * Removes an event listener.<p>
+     *
+     * A listener may be a<ul>
+     * <li>a <tt>Script</tt></li>
+     * <li>a <tt>Map</tt></li>
+     * <li>a <tt>Object</tt> (a Java bean)</li>
+     * </ul>
+     *
+     * With the exception of Maps, the naming convention for an eventHandler is
+     * "on" + eventName, Maps require handlers to be named as eventName only.<p>
+     * Some examples of eventHandler names are: onStartupStart, onMyCoolEvent.
+     * Event names must follow the camelCase naming convention.<p>
+     *
+     * @param listener and event listener of type Script, Map or Object
+     */
+    void removeEventListener(listener) {
+        if (!listener || listener instanceof Closure || listener instanceof RunnableWithArgs) return
+        synchronized (listeners) {
+            listeners.remove(listener)
+        }
+    }
 
-      Class[] argTypes = MetaClassHelper.convertToTypeArray(params as Object[])
-      def mm = instance.metaClass.pickMethod(eventHandler,argTypes)
-      if(mm) {
-         mm.invoke(instance,*params)
-      }
-   }
+    /**
+     * Adds a Closure as an event listener.<p>
+     * Event names must follow the camelCase naming convention.
+     *
+     * @param eventName the name of the event
+     * @param listener the event listener
+     */
+    void addEventListener(String eventName, Closure listener) {
+        if (!eventName || !listener) return
+        eventName = eventName[0].toUpperCase() + eventName[1..-1]
+        synchronized (closureListeners) {
+            def list = closureListeners.get(eventName, [])
+            if (list.find { it == listener }) return
+            list.add(listener)
+        }
+    }
 
-   /**
-    * Adds an event listener.<p>
-    *
-    * A listener may be a<ul>
-    * <li>a <tt>Script</tt></li>
-    * <li>a <tt>Map</tt></li>
-    * <li>a <tt>Object</tt> (a Java bean)</li>
-    * </ul>
-    *
-    * With the exception of Maps, the naming convention for an eventHandler is
-    * "on" + eventName, Maps require handlers to be named as eventName only.<p>
-    * Some examples of eventHandler names are: onStartupStart, onMyCoolEvent.
-    * Event names must follow the camelCase naming convention.<p>
-    *
-    * @param listener and event listener of type Script, Map or Object
-    */
-   void addEventListener(listener) {
-      if(!listener || listener instanceof Closure) return
-      synchronized(listeners) {
-         if(listeners.find{ it == listener }) return
-         listeners.add(listener)
-      }
-   }
+    /**
+     * Adds a Runnable as an event listener.<p>
+     * Event names must follow the camelCase naming convention.
+     *
+     * @param eventName the name of the event
+     * @param listener the event listener
+     */
+    void addEventListener(String eventName, RunnableWithArgs listener) {
+        if (!eventName || !listener) return
+        eventName = eventName[0].toUpperCase() + eventName[1..-1]
+        synchronized (closureListeners) {
+            def list = closureListeners.get(eventName, [])
+            if (list.find { it == listener }) return
+            list.add(listener)
+        }
+    }
 
-   /**
-    * Removes an event listener.<p>
-    *
-    * A listener may be a<ul>
-    * <li>a <tt>Script</tt></li>
-    * <li>a <tt>Map</tt></li>
-    * <li>a <tt>Object</tt> (a Java bean)</li>
-    * </ul>
-    *
-    * With the exception of Maps, the naming convention for an eventHandler is
-    * "on" + eventName, Maps require handlers to be named as eventName only.<p>
-    * Some examples of eventHandler names are: onStartupStart, onMyCoolEvent.
-    * Event names must follow the camelCase naming convention.<p>
-    *
-    * @param listener and event listener of type Script, Map or Object
-    */
-   void removeEventListener(listener) {
-      if(!listener || listener instanceof Closure) return
-      synchronized(listeners) {
-         listeners.remove(listener)
-      }
-   }
+    /**
+     * Removes a Closure as an event listener.<p>
+     * Event names must follow the camelCase naming convention.
+     *
+     * @param eventName the name of the event
+     * @param listener the event listener
+     */
+    void removeEventListener(String eventName, Closure listener) {
+        if (!eventName || !listener) return
+        eventName = eventName[0].toUpperCase() + eventName[1..-1]
+        synchronized (closureListeners) {
+            def list = closureListeners[eventName]
+            if (list) list.remove(listener)
+        }
+    }
 
-   /**
-    * Adds a Closure as an event listener.<p>
-    * Event names must follow the camelCase naming convention.
-    *
-    * @param eventName the name of the event
-    * @param listener the event listener
-    */
-   void addEventListener(String eventName, Closure listener) {
-      if(!eventName || !listener) return
-      eventName = eventName[0].toUpperCase() + eventName[1..-1]
-      synchronized(closureListeners) {
-         def list = closureListeners.get(eventName,[])
-         if(list.find{ it == listener }) return
-         list.add(listener)
-      }
-   }
-
-   /**
-    * Removes a Closure as an event listener.<p>
-    * Event names must follow the camelCase naming convention.
-    *
-    * @param eventName the name of the event
-    * @param listener the event listener
-    */
-   void removeEventListener(String eventName, Closure listener) {
-      if(!eventName || !listener) return
-      eventName = eventName[0].toUpperCase() + eventName[1..-1]
-      synchronized(closureListeners) {
-         def list = closureListeners[eventName]
-         if(list) list.remove(listener)
-      }
-   }
+    /**
+     * Removes a Runnable as an event listener.<p>
+     * Event names must follow the camelCase naming convention.
+     *
+     * @param eventName the name of the event
+     * @param listener the event listener
+     */
+    void removeEventListener(String eventName, RunnableWithArgs listener) {
+        if (!eventName || !listener) return
+        eventName = eventName[0].toUpperCase() + eventName[1..-1]
+        synchronized (closureListeners) {
+            def list = closureListeners[eventName]
+            if (list) list.remove(listener)
+        }
+    }
 }

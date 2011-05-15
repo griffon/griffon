@@ -209,10 +209,6 @@ class IvyDependencyManager extends AbstractIvyDependencyManager implements Depen
      * Obtains the default dependency definitions for the given Griffon version
      */
     static Closure getDefaultDependencies(String griffonVersion) {
-        // String antVersion = '1.8.1'
-        // String slf4jVersion = '1.6.1'
-        // String springVersion = '3.0.5.RELEASE'
-
         return {
             // log level of Ivy resolver, either 'error', 'warn', 'info', 'debug' or 'verbose'
             log "warn"
@@ -325,7 +321,7 @@ class IvyDependencyManager extends AbstractIvyDependencyManager implements Depen
              def mrid = ModuleRevisionId.newInstance(args.group, args.name, args.version)
              def dd = new EnhancedDefaultDependencyDescriptor(mrid, true, transitive, scope)
              dd.exported = exported
-             dd.inherited=true
+             dd.inherited = true
              dd.plugin = pluginName
              configureDependencyDescriptor(dd, scope)
              if(args.excludes) {
@@ -429,7 +425,7 @@ class IvyDependencyManager extends AbstractIvyDependencyManager implements Depen
     public ResolveReport resolveDependencies(String conf) {
         resolveErrors = false
         if(usedConfigurations.contains(conf) || conf == '') {
-            def options = new ResolveOptions(checkIfChanged:false, outputReport:true, validate:false)
+            def options = new ResolveOptions(checkIfChanged:true, outputReport:true, validate:false)
             if(conf) options.confs = [conf] as String[]
 
             ResolveReport resolve = resolveEngine.resolve(moduleDescriptor, options)

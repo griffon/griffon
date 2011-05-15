@@ -22,8 +22,7 @@ import org.codehaus.groovy.ast.*;
 import org.codehaus.groovy.ast.expr.*;
 import org.codehaus.groovy.ast.stmt.*;
 
-import griffon.core.GriffonApplication;
-import griffon.core.GriffonClass;
+import griffon.core.*;
 import griffon.util.UIThreadHelper;
 import org.codehaus.griffon.runtime.util.GriffonApplicationHelper;
 import org.codehaus.griffon.runtime.core.AbstractGriffonArtifact;
@@ -51,15 +50,25 @@ public class GriffonArtifactASTInjector implements ASTInjector {
     private static final ClassNode CALLABLE_CLASS = ClassHelper.makeWithoutCaching(Callable.class);
     private static final ClassNode FUTURE_CLASS = ClassHelper.makeWithoutCaching(Future.class);
     private static final ClassNode EXECUTOR_SERVICE_CLASS = ClassHelper.makeWithoutCaching(ExecutorService.class);
-    private static final ClassNode UITH_CLASS = ClassHelper.makeWithoutCaching(UIThreadHelper.class);
+    private static final ClassNode UITHREAD_HELPER_CLASS = ClassHelper.makeWithoutCaching(UIThreadHelper.class);
     private static final ClassNode RUNNABLE_CLASS = ClassHelper.makeWithoutCaching(Runnable.class);
     private static final ClassNode LOGGER_CLASS = ClassHelper.makeWithoutCaching(Logger.class);
     private static final ClassNode LOGGER_FACTORY_CLASS = ClassHelper.makeWithoutCaching(LoggerFactory.class);
     private static final ClassNode GROOVY_SYSTEM_CLASS = ClassHelper.makeWithoutCaching(GroovySystem.class);
     private static final ClassNode ABSTRACT_GRIFFON_ARTIFACT_CLASS = ClassHelper.makeWithoutCaching(AbstractGriffonArtifact.class);
     private static final ClassNode EXPANDO_METACLASS_CLASS = ClassHelper.makeWithoutCaching(ExpandoMetaClass.class);
+    private static final ClassNode MVCCLOSURE_CLASS = ClassHelper.makeWithoutCaching(MVCClosure.class);
+    private static final ClassNode COLLECTIONS_CLASS = ClassHelper.makeWithoutCaching(Collections.class);
     public static final String APP = "app";
-    
+
+    private static final String CREATE_MVC_GROUP = "createMVCGroup";
+    private static final String BUILD_MVC_GROUP = "buildMVCGroup";
+    private static final String WITH_MVC_GROUP = "withMVCGroup";
+    private static final String MVC_TYPE = "mvcType";
+    private static final String MVC_NAME = "mvcName";
+    private static final String HANDLER = "handler";
+    private static final String ARGS = "args";
+
     public void inject(ClassNode classNode, String artifactType) {
         // GriffonApplication getApp()
         // void setApp(GriffonApplication app)
@@ -78,7 +87,7 @@ public class GriffonArtifactASTInjector implements ASTInjector {
             ClassHelper.METACLASS_TYPE,
             Parameter.EMPTY_ARRAY,
             ClassNode.EMPTY_ARRAY,
-            
+
             /*
             if(_metaClass != null) return _metaClass
             MetaClass mc = null
@@ -87,7 +96,7 @@ public class GriffonArtifactASTInjector implements ASTInjector {
             else _metaClass = AbstractGriffonArtifact.metaClassOf(this)
             return _metaClass
             */
-            block(             
+            block(
                 ifs(
                     ne(field(_metaClass), ConstantExpression.NULL),
                     field(_metaClass)
@@ -101,7 +110,7 @@ public class GriffonArtifactASTInjector implements ASTInjector {
                 returns(field(_metaClass))
             )
         ));
-        
+
         // void setMetaClass(MetaClass mc)
         classNode.addMethod(new MethodNode(
             "setMetaClass",
@@ -118,7 +127,7 @@ public class GriffonArtifactASTInjector implements ASTInjector {
                 ))
             )
         ));
-        
+
         // GriffonClass getGriffonClass()
         classNode.addMethod(new MethodNode(
             "getGriffonClass",
@@ -134,7 +143,7 @@ public class GriffonArtifactASTInjector implements ASTInjector {
                 "findGriffonClass",
                 args(classx(classNode))))
         ));
-    
+
         // Object newInstance()
         classNode.addMethod(new MethodNode(
             "newInstance",
@@ -149,7 +158,7 @@ public class GriffonArtifactASTInjector implements ASTInjector {
                 "newInstance",
                 vars(APP, "clazz", "type")))
         ));
-    
+
         // boolean isUIThread()
         classNode.addMethod(new MethodNode(
             "isUIThread",
@@ -175,7 +184,7 @@ public class GriffonArtifactASTInjector implements ASTInjector {
                 "executeAsync",
                 vars("runnable")))
         ));
-    
+
         // void execSync(Runnable)
         classNode.addMethod(new MethodNode(
             "execSync",
@@ -188,7 +197,7 @@ public class GriffonArtifactASTInjector implements ASTInjector {
                 "executeSync",
                 vars("runnable")))
         ));
-    
+
         // void execOutside(Runnable)
         classNode.addMethod(new MethodNode(
             "execOutside",
@@ -201,7 +210,7 @@ public class GriffonArtifactASTInjector implements ASTInjector {
                 "executeOutside",
                 vars("runnable")))
         ));
-    
+
         // Future execFuture(Runnable)
         classNode.addMethod(new MethodNode(
             "execFuture",
@@ -214,7 +223,7 @@ public class GriffonArtifactASTInjector implements ASTInjector {
                 "executeFuture",
                 vars("closure")))
         ));
-    
+
         // Future execFuture(ExecutorService, Closure)
         classNode.addMethod(new MethodNode(
             "execFuture",
@@ -229,7 +238,7 @@ public class GriffonArtifactASTInjector implements ASTInjector {
                 "executeFuture",
                 vars("executorService", "closure")))
         ));
-    
+
         // Future execFuture(Callable)
         classNode.addMethod(new MethodNode(
             "execFuture",
@@ -242,7 +251,7 @@ public class GriffonArtifactASTInjector implements ASTInjector {
                 "executeFuture",
                 vars("callable")))
         ));
-    
+
         // Future execFuture(ExecutorService, Callable)
         classNode.addMethod(new MethodNode(
             "execFuture",
@@ -257,7 +266,7 @@ public class GriffonArtifactASTInjector implements ASTInjector {
                 "executeFuture",
                 vars("executorService", "callable")))
         ));
-        
+
         String loggerCategory = "griffon.app." + artifactType +"."+ classNode.getName();
         FieldNode loggerField = classNode.addField(
             "this$logger",
@@ -268,7 +277,7 @@ public class GriffonArtifactASTInjector implements ASTInjector {
                 "getLogger",
                 args(constx(loggerCategory)))
         );
-        
+
         // Logger getLog()
         classNode.addMethod(new MethodNode(
             "getLog",
@@ -278,12 +287,299 @@ public class GriffonArtifactASTInjector implements ASTInjector {
             ClassNode.EMPTY_ARRAY,
             returns(field(loggerField))
         ));
+
+        // Map buildMVCGroup(String mvcType)
+        classNode.addMethod(new MethodNode(
+            BUILD_MVC_GROUP,
+            ACC_PUBLIC,
+            ClassHelper.MAP_TYPE,
+            params(param(ClassHelper.STRING_TYPE, MVC_TYPE)),
+            ClassNode.EMPTY_ARRAY,
+            returns(call(
+                GAH_CLASS,
+                BUILD_MVC_GROUP,
+                args(var(APP), emptyMap(), var(MVC_TYPE), var(MVC_TYPE))))
+        ));
+
+        // Map buildMVCGroup(String mvcType, mvcName)
+        classNode.addMethod(new MethodNode(
+            BUILD_MVC_GROUP,
+            ACC_PUBLIC,
+            ClassHelper.MAP_TYPE,
+            params(
+                param(ClassHelper.STRING_TYPE, MVC_TYPE),
+                param(ClassHelper.STRING_TYPE, MVC_NAME)),
+            ClassNode.EMPTY_ARRAY,
+            returns(call(
+                GAH_CLASS,
+                BUILD_MVC_GROUP,
+                args(var(APP), emptyMap(), var(MVC_TYPE), var(MVC_NAME))))
+        ));
+
+        // Map buildMVCGroup(Map args, String mvcType)
+        classNode.addMethod(new MethodNode(
+            BUILD_MVC_GROUP,
+            ACC_PUBLIC,
+            ClassHelper.MAP_TYPE,
+            params(
+                param(ClassHelper.MAP_TYPE, ARGS),
+                param(ClassHelper.STRING_TYPE, MVC_TYPE)),
+            ClassNode.EMPTY_ARRAY,
+            returns(call(
+                GAH_CLASS,
+                BUILD_MVC_GROUP,
+                vars(APP, ARGS, MVC_TYPE, MVC_TYPE)))
+        ));
+
+        // Map buildMVCGroup(Map args, String mvcType, String mvcName)
+        classNode.addMethod(new MethodNode(
+            BUILD_MVC_GROUP,
+            ACC_PUBLIC,
+            ClassHelper.MAP_TYPE,
+            params(
+                param(ClassHelper.MAP_TYPE, ARGS),
+                param(ClassHelper.STRING_TYPE, MVC_TYPE),
+                param(ClassHelper.STRING_TYPE, MVC_NAME)),
+            ClassNode.EMPTY_ARRAY,
+            returns(call(
+                GAH_CLASS,
+                BUILD_MVC_GROUP,
+                vars(APP, ARGS, MVC_TYPE, MVC_NAME)))
+        ));
+
+        // List createMVCGroup(String mvcType)
+        classNode.addMethod(new MethodNode(
+            CREATE_MVC_GROUP,
+            ACC_PUBLIC,
+            ClassHelper.LIST_TYPE,
+            params(param(ClassHelper.STRING_TYPE, MVC_TYPE)),
+            ClassNode.EMPTY_ARRAY,
+            returns(call(
+                GAH_CLASS,
+                CREATE_MVC_GROUP,
+                args(var(APP), emptyMap(), var(MVC_TYPE), var(MVC_TYPE))))
+        ));
+
+        // List createMVCGroup(String mvcType, mvcName)
+        classNode.addMethod(new MethodNode(
+            CREATE_MVC_GROUP,
+            ACC_PUBLIC,
+            ClassHelper.LIST_TYPE,
+            params(
+                param(ClassHelper.STRING_TYPE, MVC_TYPE),
+                param(ClassHelper.STRING_TYPE, MVC_NAME)),
+            ClassNode.EMPTY_ARRAY,
+            returns(call(
+                GAH_CLASS,
+                CREATE_MVC_GROUP,
+                args(var(APP), emptyMap(), var(MVC_TYPE), var(MVC_NAME))))
+        ));
+
+        // List createMVCGroup(Map args, String mvcType)
+        classNode.addMethod(new MethodNode(
+            CREATE_MVC_GROUP,
+            ACC_PUBLIC,
+            ClassHelper.LIST_TYPE,
+            params(
+                param(ClassHelper.MAP_TYPE, ARGS),
+                param(ClassHelper.STRING_TYPE, MVC_TYPE)),
+            ClassNode.EMPTY_ARRAY,
+            returns(call(
+                GAH_CLASS,
+                CREATE_MVC_GROUP,
+                vars(APP, ARGS, MVC_TYPE, MVC_TYPE)))
+        ));
+
+        // List createMVCGroup(String mvcType, Map args)
+        classNode.addMethod(new MethodNode(
+            CREATE_MVC_GROUP,
+            ACC_PUBLIC,
+            ClassHelper.LIST_TYPE,
+            params(
+                param(ClassHelper.STRING_TYPE, MVC_TYPE),
+                param(ClassHelper.MAP_TYPE, ARGS)),
+            ClassNode.EMPTY_ARRAY,
+            returns(call(
+                GAH_CLASS,
+                CREATE_MVC_GROUP,
+                vars(APP, ARGS, MVC_TYPE, MVC_TYPE)))
+        ));
+
+        // List createMVCGroup(Map args, String mvcType, String mvcName)
+        classNode.addMethod(new MethodNode(
+            CREATE_MVC_GROUP,
+            ACC_PUBLIC,
+            ClassHelper.LIST_TYPE,
+            params(
+                param(ClassHelper.MAP_TYPE, ARGS),
+                param(ClassHelper.STRING_TYPE, MVC_TYPE),
+                param(ClassHelper.STRING_TYPE, MVC_NAME)),
+            ClassNode.EMPTY_ARRAY,
+            returns(call(
+                GAH_CLASS,
+                CREATE_MVC_GROUP,
+                vars(APP, ARGS, MVC_TYPE, MVC_NAME)))
+        ));
+
+        // List createMVCGroup(String mvcType, String mvcName, Map args)
+        classNode.addMethod(new MethodNode(
+            CREATE_MVC_GROUP,
+            ACC_PUBLIC,
+            ClassHelper.LIST_TYPE,
+            params(
+                param(ClassHelper.STRING_TYPE, MVC_TYPE),
+                param(ClassHelper.STRING_TYPE, MVC_NAME),
+                param(ClassHelper.MAP_TYPE, ARGS)),
+            ClassNode.EMPTY_ARRAY,
+            returns(call(
+                GAH_CLASS,
+                CREATE_MVC_GROUP,
+                vars(APP, ARGS, MVC_TYPE, MVC_NAME)))
+        ));
+
+        // void destroyMVCGroup(String mvcName)
+        classNode.addMethod(new MethodNode(
+                "destroyMVCGroup",
+                ACC_PUBLIC,
+                ClassHelper.VOID_TYPE,
+                params(param(ClassHelper.STRING_TYPE, MVC_NAME)),
+                ClassNode.EMPTY_ARRAY,
+                new EmptyStatement()
+        ));
+
+        // void withMVCGroup(String mvcType, Closure handler)
+        classNode.addMethod(new MethodNode(
+            WITH_MVC_GROUP,
+            ACC_PUBLIC,
+            ClassHelper.VOID_TYPE,
+            params(param(ClassHelper.STRING_TYPE, MVC_TYPE),
+                param(ClassHelper.CLOSURE_TYPE, HANDLER)),
+            ClassNode.EMPTY_ARRAY,
+            stmnt(call(
+                GAH_CLASS,
+                WITH_MVC_GROUP,
+                args(var(APP), var(MVC_TYPE), var(MVC_TYPE), emptyMap(), var(HANDLER))))
+        ));
+
+        // void withMVCGroup(String mvcType, String mvcName, Closure handler)
+        classNode.addMethod(new MethodNode(
+            WITH_MVC_GROUP,
+            ACC_PUBLIC,
+            ClassHelper.VOID_TYPE,
+            params(
+                param(ClassHelper.STRING_TYPE, MVC_TYPE),
+                param(ClassHelper.STRING_TYPE, MVC_NAME),
+                param(ClassHelper.CLOSURE_TYPE, HANDLER)),
+            ClassNode.EMPTY_ARRAY,
+            stmnt(call(
+                GAH_CLASS,
+                WITH_MVC_GROUP,
+                args(var(APP), var(MVC_TYPE), var(MVC_NAME), emptyMap(), var(HANDLER))))
+        ));
+
+        // void withMVCGroup(String mvcType, Map args, Closure handler)
+        classNode.addMethod(new MethodNode(
+            WITH_MVC_GROUP,
+            ACC_PUBLIC,
+            ClassHelper.VOID_TYPE,
+            params(
+                param(ClassHelper.STRING_TYPE, MVC_TYPE),
+                param(ClassHelper.MAP_TYPE, ARGS),
+                param(ClassHelper.CLOSURE_TYPE, HANDLER)),
+            ClassNode.EMPTY_ARRAY,
+            stmnt(call(
+                GAH_CLASS,
+                WITH_MVC_GROUP,
+                vars(APP, MVC_TYPE, MVC_TYPE, ARGS, HANDLER)))
+        ));
+
+        // void withMVCGroup(String mvcType, String mvcName, Map args, Closure handler)
+        classNode.addMethod(new MethodNode(
+            WITH_MVC_GROUP,
+            ACC_PUBLIC,
+            ClassHelper.VOID_TYPE,
+            params(
+                param(ClassHelper.STRING_TYPE, MVC_TYPE),
+                param(ClassHelper.STRING_TYPE, MVC_NAME),
+                param(ClassHelper.MAP_TYPE, ARGS),
+                param(ClassHelper.CLOSURE_TYPE, HANDLER)),
+            ClassNode.EMPTY_ARRAY,
+            stmnt(call(
+                GAH_CLASS,
+                WITH_MVC_GROUP,
+                vars(APP, MVC_TYPE, MVC_NAME, ARGS, HANDLER)))
+
+        ));
+
+        // void withMVCGroup(String mvcType, MVCClosure handler)
+        classNode.addMethod(new MethodNode(
+            WITH_MVC_GROUP,
+            ACC_PUBLIC,
+            ClassHelper.VOID_TYPE,
+            params(param(ClassHelper.STRING_TYPE, MVC_TYPE),
+                param(MVCCLOSURE_CLASS, HANDLER)),
+            ClassNode.EMPTY_ARRAY,
+            stmnt(call(
+                GAH_CLASS,
+                WITH_MVC_GROUP,
+                args(var(APP), var(MVC_TYPE), var(MVC_TYPE), emptyMap(), var(HANDLER))))
+        ));
+
+        // void withMVCGroup(String mvcType, String mvcName, MVCClosure handler)
+        classNode.addMethod(new MethodNode(
+            WITH_MVC_GROUP,
+            ACC_PUBLIC,
+            ClassHelper.VOID_TYPE,
+            params(
+                param(ClassHelper.STRING_TYPE, MVC_TYPE),
+                param(ClassHelper.STRING_TYPE, MVC_NAME),
+                param(MVCCLOSURE_CLASS, HANDLER)),
+            ClassNode.EMPTY_ARRAY,
+            stmnt(call(
+                GAH_CLASS,
+                WITH_MVC_GROUP,
+                args(var(APP), var(MVC_TYPE), var(MVC_NAME), emptyMap(), var(HANDLER))))
+        ));
+
+        // void withMVCGroup(String mvcType, Map args, MVCClosure handler)
+        classNode.addMethod(new MethodNode(
+            WITH_MVC_GROUP,
+            ACC_PUBLIC,
+            ClassHelper.VOID_TYPE,
+            params(
+                param(ClassHelper.STRING_TYPE, MVC_TYPE),
+                param(ClassHelper.MAP_TYPE, ARGS),
+                param(MVCCLOSURE_CLASS, HANDLER)),
+            ClassNode.EMPTY_ARRAY,
+            stmnt(call(
+                GAH_CLASS,
+                WITH_MVC_GROUP,
+                vars(APP, MVC_TYPE, MVC_TYPE, ARGS, HANDLER)))
+        ));
+
+        // void withMVCGroup(String mvcType, String mvcName, Map args, MVCClosure handler)
+        classNode.addMethod(new MethodNode(
+            WITH_MVC_GROUP,
+            ACC_PUBLIC,
+            ClassHelper.VOID_TYPE,
+            params(
+                param(ClassHelper.STRING_TYPE, MVC_TYPE),
+                param(ClassHelper.STRING_TYPE, MVC_NAME),
+                param(ClassHelper.MAP_TYPE, ARGS),
+                param(MVCCLOSURE_CLASS, HANDLER)),
+            ClassNode.EMPTY_ARRAY,
+            stmnt(call(
+                GAH_CLASS,
+                WITH_MVC_GROUP,
+                vars(APP, MVC_TYPE, MVC_NAME, ARGS, HANDLER)))
+        ));
     }
 
-    private Expression uiThreadHelperInstance() {
-        return new StaticMethodCallExpression(
-                   UITH_CLASS,
-                   "getInstance",
-                   NO_ARGS);
+    private static Expression emptyMap() {
+        return call(COLLECTIONS_CLASS, "emptyMap", NO_ARGS);
+    }
+
+    private static Expression uiThreadHelperInstance() {
+        return call(UITHREAD_HELPER_CLASS, "getInstance", NO_ARGS);
     }
 }

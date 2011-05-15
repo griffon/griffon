@@ -16,13 +16,11 @@
 package org.codehaus.griffon.compiler;
 
 import org.codehaus.groovy.ast.*;
-import org.codehaus.groovy.ast.expr.*;
-import org.codehaus.groovy.ast.stmt.*;
 import org.codehaus.groovy.classgen.*;
 import org.codehaus.groovy.control.*;
 
-import griffon.core.GriffonControllerClass;
 import static org.codehaus.griffon.ast.ThreadingASTTransformation.*;
+import static org.codehaus.griffon.compiler.support.GriffonControllerASTTransformation.isControllerArtifact;
 
 /**
  * @author Andres Almiray
@@ -32,22 +30,21 @@ public class ThreadingInjectionOperation extends CompilationUnit.PrimaryClassNod
     private static final String ARTIFACT_PATH = "controllers";
 
     public void call(final SourceUnit source, final GeneratorContext context, final ClassNode classNode) throws CompilationFailedException {
-        if(!GriffonCompilerContext.isGriffonArtifact(source)) return;
-        String artifactPath = GriffonCompilerContext.getArtifactPath(source.getName());
-        if(!ARTIFACT_PATH.equals(artifactPath) || !classNode.getName().endsWith(GriffonControllerClass.TRAILING)) return;
+        if (!GriffonCompilerContext.isGriffonArtifact(source)) return;
+        if (!isControllerArtifact(classNode, source)) return;
 
-        for(MethodNode method : classNode.getMethods()) {
-            if(hasThreadingAnnotation(method)) continue;
+        for (MethodNode method : classNode.getMethods()) {
+            if (hasThreadingAnnotation(method)) continue;
             handleMethodForInjection(classNode, method);
         }
 
-        for(PropertyNode property : classNode.getProperties()) {
+        for (PropertyNode property : classNode.getProperties()) {
             FieldNode field = property.getField();
-            if(!hasThreadingAnnotation(field)) {
+            if (!hasThreadingAnnotation(field)) {
                 handlePropertyForInjection(classNode, property);
             } else {
                 String threadingMethod = getThreadingMethod(field);
-                if(threadingMethod == null) continue;
+                if (threadingMethod == null) continue;
                 handlePropertyForInjection(classNode, property, threadingMethod);
             }
         }
