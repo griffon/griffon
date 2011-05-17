@@ -1,0 +1,43 @@
+/*
+ * Copyright 2010-2011 the original author or authors.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+package griffon.dsl
+
+/**
+ * @author Andres Almiray
+ */
+
+contributor(context(ctype: 'griffon.core.GriffonArtifact')) {
+    method name: 'edt', type: 'void', params: [closure: 'groovy.lang.Closure']
+    method name: 'doLater', type: 'void', params: [closure: 'groovy.lang.Closure']
+    method name: 'doOutside', type: 'void', params: [closure: 'groovy.lang.Closure']
+    method name: 'execSync', type: 'void', params: [closure: 'groovy.lang.Closure']
+    method name: 'execAsync', type: 'void', params: [closure: 'groovy.lang.Closure']
+    method name: 'execOutside', type: 'void', params: [closure: 'groovy.lang.Closure']
+    method name: 'execFuture', type: 'java.util.concurrent.Future', params: [closure: 'groovy.lang.Closure']
+    method name: 'isUIThread', type: 'boolean'
+}
+
+contributor(context(ctype: 'griffon.core.GriffonApplication')) {
+    method name: 'edt', type: 'void', params: [closure: 'groovy.lang.Closure']
+    method name: 'doLater', type: 'void', params: [closure: 'groovy.lang.Closure']
+    method name: 'doOutside', type: 'void', params: [closure: 'groovy.lang.Closure']
+    method name: 'execSync', type: 'void', params: [closure: 'groovy.lang.Closure']
+    method name: 'execAsync', type: 'void', params: [closure: 'groovy.lang.Closure']
+    method name: 'execOutside', type: 'void', params: [closure: 'groovy.lang.Closure']
+    method name: 'execFuture', type: 'java.util.concurrent.Future', params: [closure: 'groovy.lang.Closure']
+    method name: 'isUIThread', type: 'boolean'
+}
