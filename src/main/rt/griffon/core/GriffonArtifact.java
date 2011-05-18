@@ -562,7 +562,7 @@ public interface GriffonArtifact {
      * An instance of the "foo" group can be used as follows
      *
      * <pre>
-     * withMVCGroup('foo') { m, v c ->
+     * withMVCGroup('foo') { m, v, c->
      *     m.someProperty = someValue
      *     c.invokeAnAction()
      * }
@@ -599,7 +599,7 @@ public interface GriffonArtifact {
      * An instance of the "foo" group can be used as follows
      *
      * <pre>
-     * withMVCGroup('foo', 'foo1') { m, v c ->
+     * withMVCGroup('foo', 'foo1') { m, v, c->
      *     m.someProperty = someValue
      *     c.invokeAnAction()
      * }
@@ -644,7 +644,7 @@ public interface GriffonArtifact {
      * An instance of the "foo" group can be used as follows
      *
      * <pre>
-     * withMVCGroup('foo', 'foo1') { m, v c ->
+     * withMVCGroup('foo', 'foo1') { m, v, c->
      *     m.someProperty = someValue
      *     c.invokeAnAction()
      * }
@@ -691,7 +691,7 @@ public interface GriffonArtifact {
      * An instance of the "foo" group can be used as follows
      *
      * <pre>
-     * withMVCGroup('foo', 'foo1') { m, v c ->
+     * withMVCGroup('foo', 'foo1') { m, v, c->
      *     m.someProperty = someValue
      *     c.invokeAnAction()
      * }
