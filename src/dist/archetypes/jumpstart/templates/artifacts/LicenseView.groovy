@@ -14,4 +14,9 @@ panel(id: 'content') {
             caretPosition: bind('license', source: model, converter: {0i}))
     } 
     button(closeAction, constraints: 'right')
+
+    keyStrokeAction(component: current,
+        keyStroke: 'ESCAPE',
+        condition: 'in focused window',
+        action: closeAction)
 }
