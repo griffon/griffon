@@ -31,6 +31,7 @@ public class @artifact.name@ extends AbstractGriffonView {
                 //     getImage("/griffon-icon-16x16.png")
                 // ));
                 view.setLocationByPlatform(true);
+                view.setPreferredSize(new Dimension(320, 240));
                 view.getContentPane().add(init());
                 view.pack();
                 ((SwingGriffonApplication) getApp()).getWindowManager().attach(view);
