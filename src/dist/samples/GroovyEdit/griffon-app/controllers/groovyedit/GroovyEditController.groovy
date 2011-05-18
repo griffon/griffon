@@ -21,11 +21,11 @@ class GroovyEditController {
    }
 
    def saveFile = {
-      app.controllers[model.mvcId].saveFile(it)
+      app.controllers[model.mvcId].saveFile()
    }
 
    def closeFile = {
-      app.controllers[model.mvcId].closeFile(it)
+      app.controllers[model.mvcId].closeFile()
    }
 
    def quit = {
