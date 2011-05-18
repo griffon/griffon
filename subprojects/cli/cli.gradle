@@ -1,9 +1,12 @@
+import org.apache.tools.ant.filters.ReplaceTokens
+
 configurations{
 	compile.transitive = false
 	testCompile.transitive = false
 	testRuntime.transitive = false
 	
 }
+
 dependencies{
 	compile "org.codehaus.groovy:groovy-all:$groovyVersion",
         	"log4j:log4j:1.2.16",
@@ -43,4 +46,16 @@ dependencies{
 			"org.codehaus.gant:gant_groovy1.8:1.9.5",
 			
 			project(":rt")
+}
+
+processResources{
+	filter(ReplaceTokens, tokens: [version:version, 
+								   groovyVersion:groovyVersion,
+								   antVersion:antVersion,
+								   slf4jVersion:slf4jVersion,
+								   springVersion:springVersion])
+}
+
+test{
+	systemProperty('user.dir', rootProject.file(".").absolutePath)
 }
