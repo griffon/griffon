@@ -40,7 +40,6 @@ def viewClass = griffonArtifact("views") & isScript()
 	delegatesTo "griffon.core.GriffonMvcArtifact"
 	delegatesTo "griffon.core.GriffonArtifact"
 }
-
 	
 viewClass.accept { 
 	provider = "Griffon DSL"
@@ -184,4 +183,21 @@ viewClass.accept {
 	methodDef name: 'shortcut', type: javax.swing.KeyStroke, params: [key: java.lang.String]
 	methodDef name: 'shortcut', type: javax.swing.KeyStroke, params: [key: java.lang.String, modifier: 'int']
 	methodDef name: 'keyStrokeAction', type: 'void'
+}
+
+enclosingClass(annotatedBy('griffon.util.EventPublisher')).accept {
+    provider = "Griffon DSL"
+
+    method name: 'addEventListener', type: 'void', params: [listener: 'java.lang.Object']
+    method name: 'addEventListener', type: 'void', params: [event: 'java.lang.String', listener: 'groovy.lang.Closure']
+    method name: 'addEventListener', type: 'void', params: [event: 'java.lang.String', listener: 'griffon.util.RunnableWithArgs']
+    method name: 'removeEventListener', type: 'void', params: [listener: 'java.lang.Object']
+    method name: 'removeEventListener', type: 'void', params: [event: 'java.lang.String', listener: 'groovy.lang.Closure']
+    method name: 'removeEventListener', type: 'void', params: [event: 'java.lang.String', listener: 'griffon.util.RunnableWithArgs']
+    method name: 'publishEvent', type: 'void', params: [event: 'java.lang.String']
+    method name: 'publishEvent', type: 'void', params: [event: 'java.lang.String', args: 'java.util.List']
+    method name: 'publishEventOutside', type: 'void', params: [event: 'java.lang.String']
+    method name: 'publishEventOutside', type: 'void', params: [event: 'java.lang.String', args: 'java.util.List']
+    method name: 'publishEventAsync', type: 'void', params: [event: 'java.lang.String']
+    method name: 'publishEventAsync', type: 'void', params: [event: 'java.lang.String', args: 'java.util.List']
 }
