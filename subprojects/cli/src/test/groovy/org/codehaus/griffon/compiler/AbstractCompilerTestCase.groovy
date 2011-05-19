@@ -10,7 +10,7 @@ abstract class AbstractCompilerTestCase extends GroovyTestCase {
 
     AbstractCompilerTestCase(String projectName) {
         this.projectName = projectName
-        this.baseDir = new File("${System.getProperty('user.dir')}/src/test/test-projects/${projectName}")
+        this.baseDir = new File("${System.getProperty('user.dir')}/src/test/resources/test-projects/${projectName}")
         this.classesDir = new File("${baseDir}/target/classes")
     }
 
