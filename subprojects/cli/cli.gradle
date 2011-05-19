@@ -1,9 +1,10 @@
 import org.apache.tools.ant.filters.ReplaceTokens
 
 configurations{
-	compile.transitive = false
-	testCompile.transitive = false
-	testRuntime.transitive = false
+	compile.transitive = false	
+	runtime.transitive = false	
+	testCompile.transitive = false	
+	testRuntime.transitive = false	
 	
 }
 
@@ -46,6 +47,10 @@ dependencies{
 			"org.codehaus.gant:gant_groovy1.8:1.9.5",
 			
 			project(":rt")
+			
+	compile('org.codehaus.griffon:swingxbuilder:0.1.8') {
+		        exclude module: 'groovy-all'
+	}
 }
 
 processResources{

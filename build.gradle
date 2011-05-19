@@ -33,7 +33,7 @@ configurations {
     cli.transitive = false
     scripts.transitive = false
     swingxFiles
-	wrapper
+	//wrapper
     intTestCompile { extendsFrom testCompile }
     intTestRuntime { extendsFrom intTestCompile, testRuntime }
 }
@@ -97,7 +97,7 @@ dependencies {
         exclude module: 'groovy-all'
     }
 
-	wrapper ":gradle-wrapper"
+	//wrapper ":gradle-wrapper"
 }
 
 sourceSets {
@@ -121,11 +121,11 @@ sourceSets {
         groovy.srcDirs = ['src/main/scripts']
         classesDir = "$buildDir/classes/scripts" as File
     }
-    wrapper {
+    /*wrapper {
         compileClasspath = configurations.wrapper
         java.srcDirs = ['src/wrapper/java']
         classesDir = "$buildDir/classes/wrapper" as File
-    }
+    }*/
     test {
         compileClasspath = sourceSets.rt.classes + sourceSets.cli.classes + configurations.cli + configurations.swingxFiles
         runtimeClasspath = classes + sourceSets.rt.classes + sourceSets.cli.classes + configurations.cli + configurations.swingxFiles
