@@ -1,0 +1,8 @@
+dependencies{
+	compile(project(":rt")){
+		exclude module: 'com.springsource.org.aopalliance'
+	}
+	compile (project(":cli")){
+		exclude module: 'com.springsource.org.aopalliance'
+	}
+}
