@@ -41,3 +41,5 @@ root.'CoverflowGriffonAddon'.addon=true
 root.'TransitionsGriffonAddon'.addon=true
 root.'JGoodiesFormsGriffonAddon'.addon=true
 root.'SilkiconsGriffonAddon'.addon=true
+root.'CrystaliconsGriffonAddon'.addon=true
+
