@@ -13,17 +13,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-apply plugin:'java'
+apply plugin:'base'
 
 configurations{
-	runtime { transitive = false }
-	testRuntime { transitive = false }
+	runtime
 }
 
 dependencies{
-	runtime project(":rt")
+	//runtime project(":rt")
 	runtime project(":cli")
-	runtime project("scripts")
+	//runtime project("scripts")
 }
 
 subprojects {
