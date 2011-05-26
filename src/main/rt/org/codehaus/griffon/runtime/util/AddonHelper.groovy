@@ -248,9 +248,9 @@ public class AddonHelper {
         builder.registrationGroup.get(addonName, [] as TreeSet)
         factories.each {String name, factoryOrBean ->
             if(factoryOrBean instanceof Factory) {
-                builder.registerFactory(name, addonName, factoryOrBean)
+                builder.registerFactory("$prefix$name", addonName, factoryOrBean)
             } else {
-                builder.registerBeanFactory(name, addonName, factoryOrBean)
+                builder.registerBeanFactory("$prefix$name", addonName, factoryOrBean)
             }
         }
     }
@@ -258,14 +258,14 @@ public class AddonHelper {
     static void addMethods(UberBuilder builder, Map<String, Closure> methods, String addonName, String prefix) {
         builder.registrationGroup.get(addonName, [] as TreeSet)
         methods.each {String name, Closure closure ->
-            builder.registerExplicitMethod(name, addonName, closure)
+            builder.registerExplicitMethod("$prefix$name", addonName, closure)
         }
     }
 
     static void addProperties(UberBuilder builder, Map<String, List<Closure>> props, String addonName, String prefix) {
         builder.registrationGroup.get(addonName, [] as TreeSet)
         props.each {String name, Map<String, Closure> closures ->
-            builder.registerExplicitProperty(name, addonName, closures.get, closures.set)
+            builder.registerExplicitProperty("$prefix$name", addonName, closures.get, closures.set)
         }
     }
 
