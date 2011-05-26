@@ -47,17 +47,17 @@ public class GriffonCompiler extends Groovyc {
     }
 
     protected CompilationUnit makeCompileUnit() {
-        CompilationUnit compilationUnit = super.makeCompileUnit();
-
-        SourceUnitCollector.getInstance().clear();
-        compilationUnit.addPhaseOperation(SourceUnitCollector.getInstance(), Phases.CONVERSION);
         if(!GriffonCompilerContext.getConfigOption(GriffonCompilerContext.DISABLE_AUTO_IMPORTS)) {
             DefaultImportCompilerCustomizer defaultImportCompilerCustomizer = new DefaultImportCompilerCustomizer();
             defaultImportCompilerCustomizer.collectDefaultImportsPerArtifact();
-            compilationUnit.addPhaseOperation(defaultImportCompilerCustomizer, defaultImportCompilerCustomizer.getPhase().getPhaseNumber());
+            configuration.addCompilationCustomizers(defaultImportCompilerCustomizer);
         } else {
             log("Default imports feature disabled.");
         }
+
+        CompilationUnit compilationUnit = super.makeCompileUnit();
+        SourceUnitCollector.getInstance().clear();
+        compilationUnit.addPhaseOperation(SourceUnitCollector.getInstance(), Phases.CONVERSION);
 
         if(!GriffonCompilerContext.getConfigOption(GriffonCompilerContext.DISABLE_LOGGING_INJECTION)) {
             compilationUnit.addPhaseOperation(new LoggingInjectionOperation(), Phases.CANONICALIZATION);
