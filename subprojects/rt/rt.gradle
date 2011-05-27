@@ -1,5 +1,9 @@
 apply plugin:'groovy'
 
+configurations {
+	runtime.transitive = false
+	compile.transitive = false
+}
 dependencies{
 	compile "org.codehaus.groovy:groovy-all:$groovyVersion",
 		    "log4j:log4j:1.2.16",

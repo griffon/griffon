@@ -16,13 +16,13 @@
 apply plugin:'base'
 
 configurations{
-	runtime
+	runtime {transitive = false}
 }
 
 dependencies{
-	//runtime project(":rt")
+	runtime project(":rt")
 	runtime project(":cli")
-	//runtime project("scripts")
+	runtime project("scripts")
 }
 
 subprojects {
@@ -45,11 +45,17 @@ subprojects {
 	}
 }
 
-task zipMp(type:Zip){
+task zipAll(type:Zip){
 	appendix = "all"
 	from 'src/dist'
 	into('libs') { 
-		from configurations.runtime
+		from project(":cli").configurations.runtime
+	}
+	
+	[":cli",":rt",":scripts"].each { subproj ->
+		from(project(subproj).jar.outputs.files){
+			into("dist")
+		}
 	}
 }
 /*sourceSets {
