@@ -45,12 +45,67 @@ subprojects {
 	}
 }
 
+tasks.withType(Jar).all {jar ->
+    jar.mavenArtifact = false
+    jar.appFileJar = false
+}
+
+task jarSharedFiles(type: Jar) {
+    //dependsOn { distWrapper }
+    appFileJar = true
+    archiveName = "griffon-shared-files.jar"
+    destinationDir = "$buildDir/assemble/jars" as File
+    from "$buildDir/distributions/wrapper"
+}
+
+task jarAppFiles(type: Jar) {
+    appFileJar = true
+    archiveName = "griffon-app-files.jar"
+    destinationDir = "$buildDir/assemble/jars" as File
+    from('src/dist/src/griffon/griffon-app') {
+        into 'griffon-app'
+    }
+}
+
+task jarPluginFiles(type: Jar) {
+    appFileJar = true
+    archiveName = "griffon-plugin-files.jar"
+    destinationDir = "$buildDir/assemble/jars" as File
+    from 'src/dist/src/griffon/templates/plugins'
+}
+
+task jarIntegrationFiles(type: Jar) {
+    appFileJar = true
+    archiveName = "griffon-integration-files.jar"
+    destinationDir = "$buildDir/assemble/jars" as File
+    from 'src/dist/src/griffon/templates/ide-support'
+    from 'src/dist/src/griffon/ant'
+}
+
+resourceFilesJars = tasks.withType(Jar).matching({ jar -> jar.appFileJar } as Spec)
+
+task jarResources(type: Jar) {
+    dependsOn { resourceFilesJars.all }
+    mavenArtifact = true
+    appendix = 'resources'
+   	resourceFilesJars.each{task ->
+		from task.outputs.files
+	}
+}
+
+distJars = tasks.withType(Jar).matching({ jar -> !jar.appFileJar } as Spec)
+
 task zipBinary(type:Zip){
 	description = "Zips the binary distribution."
     classifier = 'bin'
     into "griffon-$version"
-    from 'src/dist'
-	fileMode = 0755
+    from('src/dist'){
+		exclude 'bin'
+	}
+	from('src/dist/bin'){
+		into 'bin'
+        fileMode = 0755	
+	}
 	into('libs') { 
 		from project(":griffon-cli").configurations.runtime
 	}
@@ -60,7 +115,12 @@ task zipBinary(type:Zip){
 			into("dist")
 		}
 	}
+	
+	from(jarResources.outputs.files){
+		into("dist")
+	}	
 }
+
 /*sourceSets {
     scripts {
         compileClasspath = sourceSets.rt.classes + sourceSets.cli.classes + configurations.scripts
