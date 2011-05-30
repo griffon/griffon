@@ -20,9 +20,9 @@ configurations{
 }
 
 dependencies{
-	runtime project(":rt")
-	runtime project(":cli")
-	runtime project("scripts")
+	runtime project(":griffon-rt")
+	runtime project(":griffon-cli")
+	runtime project(":griffon-scripts")
 }
 
 subprojects {
@@ -52,10 +52,10 @@ task zipBinary(type:Zip){
     from 'src/dist'
 	fileMode = 0755
 	into('libs') { 
-		from project(":cli").configurations.runtime
+		from project(":griffon-cli").configurations.runtime
 	}
 	
-	[":cli",":rt",":scripts"].each { subproj ->
+	[":griffon-cli",":griffon-rt",":griffon-scripts"].each { subproj ->
 		from(project(subproj).jar.outputs.files){
 			into("dist")
 		}

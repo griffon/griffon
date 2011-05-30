@@ -1,10 +1,10 @@
-include 'rt'
-include 'cli'
-include 'scripts'
+include 'griffon-rt'
+include 'griffon-cli'
+include 'griffon-scripts'
 
 rootProject.name = 'griffon'
 rootProject.children.each {project ->
-    String fileBaseName = project.name.replaceAll("\\p{Upper}") { "-${it.toLowerCase()}" }
+    String fileBaseName = project.name - "griffon-"
     String projectDirName = "subprojects/$fileBaseName"
     project.projectDir = new File(settingsDir, projectDirName)
     project.buildFileName = "${fileBaseName}.gradle"
