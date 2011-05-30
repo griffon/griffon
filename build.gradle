@@ -45,9 +45,12 @@ subprojects {
 	}
 }
 
-task zipAll(type:Zip){
-	appendix = "all"
-	from 'src/dist'
+task zipBinary(type:Zip){
+	description = "Zips the binary distribution."
+    classifier = 'bin'
+    into "griffon-$version"
+    from 'src/dist'
+	fileMode = 0755
 	into('libs') { 
 		from project(":cli").configurations.runtime
 	}
