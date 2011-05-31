@@ -43,6 +43,11 @@ subprojects {
 	dependencies{
 		groovy "org.codehaus.groovy:groovy-all:$groovyVersion"
 	}
+	
+	task groovyDocJar(type:Jar){
+		classifier = 'javadoc'
+		from (groovydoc.outputs.files)
+	}
 }
 
 tasks.withType(Jar).all {jar ->
@@ -95,6 +100,20 @@ task jarResources(type: Jar) {
 
 distJars = tasks.withType(Jar).matching({ jar -> !jar.appFileJar } as Spec)
 
+task jarSource(type: Jar){
+    description = "Zips the source distribution."
+    from(project(":griffon-cli").sourceSets.main.allSource) {
+        include 'griffon/test/**/*'
+        include 'griffon/beans/**/*'
+        include 'griffon/util/EventPublisher*'
+        include 'griffon/util/Threading*'
+        include '**/*.html'
+    }
+    from(project(":griffon-cli").sourceSets.main.allSource)
+	classifier = 'sources'
+    into "griffon-$version"
+}
+
 task zipBinary(type:Zip){
 	description = "Zips the binary distribution."
     classifier = 'bin'
@@ -106,7 +125,7 @@ task zipBinary(type:Zip){
 		into 'bin'
         fileMode = 0755	
 	}
-	into('libs') { 
+	into('lib') { 
 		from project(":griffon-cli").configurations.runtime
 	}
 	
@@ -118,6 +137,12 @@ task zipBinary(type:Zip){
 	
 	from(jarResources.outputs.files){
 		into("dist")
+	}
+	
+	into('doc'){
+		from(project(":griffon-cli").groovyDocJar.outputs.files)
+		from(project(":griffon-rt").groovyDocJar.outputs.files)
+		from(jarSource.outputs.files)
 	}	
 }
 
