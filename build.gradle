@@ -135,12 +135,6 @@ task jarSource(type: Jar){
     into "griffon-$version"
 }
 
-task copyDocs(type: Copy) {
-    destinationDir = "${buildDir}/javadoc-src" as File
-
-    
-}
-
 // add according excludes/includes in the api files
 // actually files does not support exclusive filter 
 // operation when appended via plus() 
