@@ -20,21 +20,24 @@ apply plugin:'base'
 configurations{
 	runtime {transitive = false}
 	docs
+	groovy
 }
 
 repositories {
 	mavenCentral()
-    mavenRepo name: 'SpringSource', urls: 'http://repository.springsource.com/maven/bundles/release'
+	mavenRepo name: 'SpringSource', urls: 'http://repository.springsource.com/maven/bundles/release'
     mavenRepo name: 'JavaNet', urls: 'http://download.java.net/maven/2/'
 }
 
 dependencies{
+	groovy localGroovy() //for api docs generation needed (groovydoc)
+    
 	runtime project(":griffon-rt")
 	runtime project(":griffon-cli")
 	runtime project(":griffon-scripts")
 
 	// problems with ant classloader makes it necessary to duplicate the deps
-	// in buildSrc/ and this docs configuration
+	// in buildSrc/ and this docs configurations
     docs group: 'org.grails', name: 'grails-docs', version: '1.3.6'
     docs group: 'radeox', name: 'radeox', version: '1.0-b2'
     docs group: 'com.lowagie', name: 'itext', version: '2.0.8'
@@ -132,6 +135,40 @@ task jarSource(type: Jar){
     into "griffon-$version"
 }
 
+task copyDocs(type: Copy) {
+    destinationDir = "${buildDir}/javadoc-src" as File
+
+    
+}
+
+// add according excludes/includes in the api files
+// actually files does not support exclusive filter 
+// operation when appended via plus() 
+// -> @todo: file gradle issue
+
+task apiDocs(type: Groovydoc) {
+	def cliSources = files("subprojects/cli/src/main/groovy")
+	def rtSources = files("subprojects/rt/src/main/groovy")
+    source = rtSources + cliSources
+	destinationDir = "$buildDir/docs/api" as File
+    docTitle = "Griffon $version"
+    header = "Griffon $version"
+    windowTitle = "Griffon $version"
+    groovyClasspath = configurations.groovy
+	classpath = project(":griffon-rt").sourceSets.main.classes + 
+				project(":griffon-cli").sourceSets.main.classes + 
+				project(":griffon-cli").configurations.compile 
+				
+				
+    includePrivate = true
+    use = true
+
+    link('http://java.sun.com/j2se/1.5.0/docs/api', 'java.,org.xml.,javax.,org.xml.')
+    link('http://www.dpml.net/api/ant/1.7.0', 'org.apache.ant.,org.apache.tools.ant.')
+    link('http://junit.sourceforge.net/junit3.8.1/javadoc/', 'org.junit.,junit.framework.')
+    link('http://groovy.codehaus.org/api/', 'groovy.,org.codehaus.groovy.')
+}
+
 task guide(type: GrailsDoc) {
     srcDir = file('src/guide/src')
 	props = file('src/guide/guide.properties')
@@ -184,6 +221,10 @@ task zipBinary(type:Zip){
 	into('guide'){
 		from(guide.outputs.files)
 		filter(ReplaceTokens, tokens: ['griffon.version': version])
+	
+		into('api'){
+			from(apiDocs.outputs.files)
+		}	
 	}
 	
 	/*into('guide') {
