@@ -33,6 +33,8 @@ dependencies{
 	runtime project(":griffon-cli")
 	runtime project(":griffon-scripts")
 
+	// problems with ant classloader makes it necessary to duplicate the deps
+	// in buildSrc/ and this docs configuration
     docs group: 'org.grails', name: 'grails-docs', version: '1.3.6'
     docs group: 'radeox', name: 'radeox', version: '1.0-b2'
     docs group: 'com.lowagie', name: 'itext', version: '2.0.8'
