@@ -13,16 +13,32 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+import org.apache.tools.ant.filters.ReplaceTokens
+
 apply plugin:'base'
 
 configurations{
 	runtime {transitive = false}
+	docs
+}
+
+repositories {
+	mavenCentral()
+    mavenRepo name: 'SpringSource', urls: 'http://repository.springsource.com/maven/bundles/release'
+    mavenRepo name: 'JavaNet', urls: 'http://download.java.net/maven/2/'
 }
 
 dependencies{
 	runtime project(":griffon-rt")
 	runtime project(":griffon-cli")
 	runtime project(":griffon-scripts")
+
+    docs group: 'org.grails', name: 'grails-docs', version: '1.3.6'
+    docs group: 'radeox', name: 'radeox', version: '1.0-b2'
+    docs group: 'com.lowagie', name: 'itext', version: '2.0.8'
+    docs group: 'org.slf4j', name: 'slf4j-api', version: '1.6.1'
+    docs group: 'org.xhtmlrenderer', name: 'core-renderer', version: 'R8'
+    docs group: 'commons-logging', name: 'commons-logging', version: '1.1.1'
 }
 
 subprojects {
@@ -114,6 +130,19 @@ task jarSource(type: Jar){
     into "griffon-$version"
 }
 
+task guide(type: GrailsDoc) {
+    srcDir = file('src/guide/src')
+	props = file('src/guide/guide.properties')
+    imagesDir = file('src/guide/resources/img')
+	outputDir = file("$buildDir/manual")
+}
+
+/*task zipGuide(type: Zip) {
+    dependsOn { [pdfGuide] }
+    appendix = 'guide'
+    from "$buildDir/manual"
+}*/
+
 task zipBinary(type:Zip){
 	description = "Zips the binary distribution."
     classifier = 'bin'
@@ -148,7 +177,16 @@ task zipBinary(type:Zip){
 		from(project(":griffon-cli").groovyDocJar.outputs.files)
 		from(project(":griffon-rt").groovyDocJar.outputs.files)
 		from(jarSource.outputs.files)
-	}	
+	}
+	
+	into('guide'){
+		from(guide.outputs.files)
+		filter(ReplaceTokens, tokens: ['griffon.version': version])
+	}
+	
+	/*into('guide') {
+		from zipGuide.outputs.files
+	}*/	
 }
 
 /*sourceSets {
