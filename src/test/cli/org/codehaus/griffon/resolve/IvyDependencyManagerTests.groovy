@@ -1,22 +1,22 @@
 package org.codehaus.griffon.resolve
 
-import org.apache.ivy.core.module.id.ModuleRevisionId
-import org.apache.ivy.plugins.resolver.FileSystemResolver
-import org.apache.ivy.util.Message
-import org.apache.ivy.util.MessageLogger
-import org.apache.ivy.util.DefaultMessageLogger
-import griffon.util.BuildSettings
 // import griffon.util.BuildSettingsHolder
 // import griffon.util.GriffonUtil
+
+
+import griffon.util.BuildSettings
 import groovy.xml.MarkupBuilder
-import org.apache.ivy.plugins.parser.m2.PomDependencyMgt
-import org.apache.ivy.core.resolve.IvyNode
-import org.apache.ivy.core.module.descriptor.DependencyDescriptor
-import org.apache.ivy.util.url.CredentialsStore
 import org.apache.ivy.core.module.descriptor.DefaultDependencyDescriptor
+import org.apache.ivy.core.module.descriptor.DependencyDescriptor
 import org.apache.ivy.core.module.id.ArtifactId
-import org.apache.ivy.plugins.matcher.PatternMatcher
 import org.apache.ivy.core.module.id.ModuleId
+import org.apache.ivy.core.module.id.ModuleRevisionId
+import org.apache.ivy.plugins.matcher.PatternMatcher
+import org.apache.ivy.plugins.parser.m2.PomDependencyMgt
+import org.apache.ivy.plugins.resolver.FileSystemResolver
+import org.apache.ivy.util.DefaultMessageLogger
+import org.apache.ivy.util.Message
+import org.apache.ivy.util.url.CredentialsStore
 
 /**
  * @author Graeme Rocher

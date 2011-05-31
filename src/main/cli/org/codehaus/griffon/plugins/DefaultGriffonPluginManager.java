@@ -16,26 +16,21 @@
 package org.codehaus.griffon.plugins;
 
 import groovy.lang.GroovyClassLoader;
+import org.apache.commons.lang.ArrayUtils;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.codehaus.griffon.commons.GriffonContext;
+import org.codehaus.griffon.plugins.exceptions.PluginException;
+import org.codehaus.groovy.control.CompilationFailedException;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.net.URI;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.List;
-
-import org.apache.commons.lang.ArrayUtils;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-import org.codehaus.groovy.control.CompilationFailedException;
-import org.codehaus.griffon.commons.GriffonContext;
-import org.codehaus.griffon.plugins.exceptions.PluginException;
-import org.springframework.core.io.Resource;
-import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
+import java.util.*;
 
 /**
  * @author Graeme Rocher (Grails 0.4)

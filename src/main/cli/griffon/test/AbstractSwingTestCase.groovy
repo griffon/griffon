@@ -16,7 +16,7 @@
 
 package griffon.test
 
-import griffon.util.UIThreadHelper
+import griffon.util.UIThreadManager
 import java.lang.reflect.Constructor
 import java.lang.reflect.InvocationTargetException
 
@@ -75,15 +75,15 @@ public class AbstractSwingTestCase extends GroovyTestCase {
     }
 
     /** Executes code synchronously inside the UI thread */
-    def execSync = UIThreadHelper.instance.&executeSync
+    def execSync = UIThreadManager.instance.&executeSync
     /** Executes code asynchronously inside the UI thread */
-    def execAsync = UIThreadHelper.instance.&executeAsync
+    def execAsync = UIThreadManager.instance.&executeAsync
     /** Executes code outside the UI thread */
-    def execOutside = UIThreadHelper.instance.&executeOutside
+    def execOutside = UIThreadManager.instance.&executeOutside
     /** True if the current thread is the UI thread */
-    def isUIThread = UIThreadHelper.instance.&isUIThread
+    def isUIThread = UIThreadManager.instance.&isUIThread
     /** Schedules a block of code as a Future */
     def execFuture = { Object... args ->
-        UIThreadHelper.instance.executeFuture(*args)
+        UIThreadManager.instance.executeFuture(*args)
     }
 }

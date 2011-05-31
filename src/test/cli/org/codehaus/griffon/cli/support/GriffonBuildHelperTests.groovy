@@ -1,7 +1,7 @@
 package org.codehaus.griffon.cli.support
 
-import junit.framework.AssertionFailedError
 import junit.framework.Assert
+import junit.framework.AssertionFailedError
 
 /**
  * Test case for {@link GriffonBuildHelper}.

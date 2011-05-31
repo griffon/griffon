@@ -17,7 +17,6 @@
 package greet
 
 import java.util.prefs.Preferences
-import javax.swing.Action
 
 /**
  * @author Danno Ferrin

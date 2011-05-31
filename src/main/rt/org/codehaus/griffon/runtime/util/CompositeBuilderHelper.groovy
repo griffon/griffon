@@ -15,17 +15,16 @@
  */
 package org.codehaus.griffon.runtime.util
 
-import org.codehaus.griffon.runtime.builder.UberBuilder
+import griffon.core.GriffonApplication
 import groovy.swing.factory.ComponentFactory
 import groovy.swing.factory.LayoutFactory
 import groovy.swing.factory.ScrollPaneFactory
 import groovy.swing.factory.TableFactory
 import java.awt.LayoutManager
-import javax.swing.*
-import griffon.core.GriffonApplication
-
+import org.codehaus.griffon.runtime.builder.UberBuilder
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
+import javax.swing.*
 
 /**
  * Helper class that initialzes a CompositeBuilder with the builder configuration read from the application.

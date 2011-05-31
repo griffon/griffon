@@ -16,23 +16,22 @@
 
 package org.codehaus.griffon.ast;
 
+import griffon.transform.PropertyListener;
 import org.codehaus.groovy.ast.*;
 import org.codehaus.groovy.ast.expr.*;
-import org.codehaus.groovy.ast.stmt.*;
+import org.codehaus.groovy.ast.stmt.BlockStatement;
+import org.codehaus.groovy.ast.stmt.ExpressionStatement;
 import org.codehaus.groovy.control.CompilePhase;
 import org.codehaus.groovy.control.SourceUnit;
-import org.codehaus.groovy.transform.ASTTransformation;
 import org.codehaus.groovy.transform.GroovyASTTransformation;
-import org.objectweb.asm.Opcodes;
 
-import java.util.*;
-import griffon.beans.Listener;
-
-import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
+import java.util.Collection;
+import java.util.Map;
 
 /**
- * Handles generation of code for the {@code @Listener} annotation.
+ * Handles generation of code for the {@code @PropertyListener} annotation.
  * <p/>
  * Any closures found as the annotation's value will be either transformed
  * into inner classes that implement PropertyChangeListener (when the value
@@ -43,14 +42,14 @@ import java.beans.PropertyChangeEvent;
  * @author Andres Almiray
  */
 @GroovyASTTransformation(phase= CompilePhase.CANONICALIZATION)
-public class ListenerASTTransformation implements ASTTransformation, Opcodes {
-    protected static ClassNode LISTENER = new ClassNode(Listener.class);
+public class PropertyListenerASTTransformation extends AbstractASTTransformation {
+    protected static ClassNode LISTENER = new ClassNode(PropertyListener.class);
     protected static ClassNode PROPERTY_CHANGE_LISTENER = ClassHelper.makeWithoutCaching(PropertyChangeListener.class);
     protected static ClassNode PROPERTY_CHANGE_EVENT = ClassHelper.makeWithoutCaching(PropertyChangeEvent.class);
     private static final String EMPTY_STRING = "";
 
     /**
-     * Convenience method to see if an annotated node is {@code @Listener}.
+     * Convenience method to see if an annotated node is {@code @PropertyListener}.
      *
      * @param node the node to check
      * @return true if the node is an event publisher
@@ -85,7 +84,7 @@ public class ListenerASTTransformation implements ASTTransformation, Opcodes {
         }
     }
 
-    private void addListenerToProperty(SourceUnit source, AnnotationNode annotation, ClassNode declaringClass, FieldNode field) {
+    public static void addListenerToProperty(SourceUnit source, AnnotationNode annotation, ClassNode declaringClass, FieldNode field) {
         for(Map.Entry<String, Expression> member : annotation.getMembers().entrySet()) {
             Expression value = member.getValue();
             if((value instanceof ListExpression)) {
@@ -100,7 +99,7 @@ public class ListenerASTTransformation implements ASTTransformation, Opcodes {
         }
     }
 
-    private void addListenerToClass(SourceUnit source, AnnotationNode annotation, ClassNode classNode)  {
+    public static void addListenerToClass(SourceUnit source, AnnotationNode annotation, ClassNode classNode)  {
         for(Map.Entry<String, Expression> member : annotation.getMembers().entrySet()) {
             Expression value = member.getValue();
             if((value instanceof ListExpression)) {
@@ -115,7 +114,7 @@ public class ListenerASTTransformation implements ASTTransformation, Opcodes {
         }
     }
 
-    private void processExpression(ClassNode classNode, String propertyName, Expression expression) {
+    private static void processExpression(ClassNode classNode, String propertyName, Expression expression) {
         if(expression instanceof ClosureExpression) {
             addPropertyChangeListener(classNode, propertyName, (ClosureExpression) expression);
         } else if(expression instanceof VariableExpression) {
@@ -125,7 +124,7 @@ public class ListenerASTTransformation implements ASTTransformation, Opcodes {
         }
     } 
 
-    private void addPropertyChangeListener(ClassNode classNode, String propertyName, ClosureExpression closure) {
+    private static void addPropertyChangeListener(ClassNode classNode, String propertyName, ClosureExpression closure) {
         ArgumentListExpression args = new ArgumentListExpression();
         if(propertyName != null) args.addExpression(new ConstantExpression(propertyName));
         args.addExpression(CastExpression.asExpression(PROPERTY_CHANGE_LISTENER, closure));
@@ -133,7 +132,7 @@ public class ListenerASTTransformation implements ASTTransformation, Opcodes {
         addListenerStatement(classNode, args);
     }
     
-    private void addPropertyChangeListener(ClassNode classNode, String propertyName, VariableExpression variable) {
+    private static void addPropertyChangeListener(ClassNode classNode, String propertyName, VariableExpression variable) {
         ArgumentListExpression args = new ArgumentListExpression();
         if(propertyName != null) args.addExpression(new ConstantExpression(propertyName));
         args.addExpression(CastExpression.asExpression(PROPERTY_CHANGE_LISTENER, variable));
@@ -141,7 +140,7 @@ public class ListenerASTTransformation implements ASTTransformation, Opcodes {
         addListenerStatement(classNode, args);
     }
 
-    private void addListenerStatement(ClassNode classNode, ArgumentListExpression args) {
+    private static void addListenerStatement(ClassNode classNode, ArgumentListExpression args) {
         BlockStatement body = new BlockStatement();
         body.addStatement(new ExpressionStatement(
             new MethodCallExpression(

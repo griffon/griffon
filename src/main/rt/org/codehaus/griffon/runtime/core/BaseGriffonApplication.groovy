@@ -16,19 +16,16 @@
 
 package org.codehaus.griffon.runtime.core
 
-import griffon.core.*
-import griffon.util.*
-import org.codehaus.griffon.runtime.util.GriffonApplicationHelper
-
-import java.util.concurrent.Callable
-import java.util.concurrent.Future
-import java.util.concurrent.ExecutorService
-import java.util.concurrent.CountDownLatch
-
 import groovy.beans.Bindable
-
+import java.util.concurrent.Callable
+import java.util.concurrent.CountDownLatch
+import java.util.concurrent.ExecutorService
+import java.util.concurrent.Future
+import org.codehaus.griffon.runtime.util.GriffonApplicationHelper
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
+import griffon.core.*
+import griffon.util.*
 
 /**
  * Implements the basics for a skeleton GriffonApplication.<p>
@@ -301,35 +298,35 @@ class BaseGriffonApplication implements GriffonApplication {
     // -----------------------
 
     boolean isUIThread() {
-        UIThreadHelper.instance.isUIThread()
+        UIThreadManager.instance.isUIThread()
     }
 
     void execAsync(Runnable runnable) {
-        UIThreadHelper.instance.executeAsync(runnable)
+        UIThreadManager.instance.executeAsync(runnable)
     }
 
     void execSync(Runnable runnable) {
-        UIThreadHelper.instance.executeSync(runnable)
+        UIThreadManager.instance.executeSync(runnable)
     }
 
     void execOutside(Runnable runnable) {
-        UIThreadHelper.instance.executeOutside(runnable)
+        UIThreadManager.instance.executeOutside(runnable)
     }
 
     Future execFuture(ExecutorService executorService, Closure closure) {
-        UIThreadHelper.instance.executeFuture(executorService, closure)
+        UIThreadManager.instance.executeFuture(executorService, closure)
     }
 
     Future execFuture(Closure closure) {
-        UIThreadHelper.instance.executeFuture(closure)
+        UIThreadManager.instance.executeFuture(closure)
     }
 
     Future execFuture(ExecutorService executorService, Callable callable) {
-        UIThreadHelper.instance.executeFuture(executorService, callable)
+        UIThreadManager.instance.executeFuture(executorService, callable)
     }
 
     Future execFuture(Callable callable) {
-        UIThreadHelper.instance.executeFuture(callable)
+        UIThreadManager.instance.executeFuture(callable)
     }
 
     Object newInstance(Class clazz, String type) {

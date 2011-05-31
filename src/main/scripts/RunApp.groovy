@@ -21,8 +21,8 @@
  * Time: 10:35:06 PM
  */
 
-import static griffon.util.GriffonApplicationUtils.isMacOSX
 import griffon.util.GriffonNameUtils
+import static griffon.util.GriffonApplicationUtils.isMacOSX
 
 includeTargets << griffonScript("Package")
 includeTargets << griffonScript("_GriffonBootstrap")

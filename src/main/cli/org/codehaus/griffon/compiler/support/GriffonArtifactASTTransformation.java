@@ -16,12 +16,14 @@
 
 package org.codehaus.griffon.compiler.support;
 
-import org.codehaus.groovy.ast.*;
+import org.codehaus.griffon.compiler.GriffonCompilerContext;
+import org.codehaus.groovy.ast.ASTNode;
+import org.codehaus.groovy.ast.ClassHelper;
+import org.codehaus.groovy.ast.ClassNode;
+import org.codehaus.groovy.ast.ModuleNode;
 import org.codehaus.groovy.control.SourceUnit;
 import org.codehaus.groovy.transform.ASTTransformation;
 import org.objectweb.asm.Opcodes;
-
-import org.codehaus.griffon.compiler.GriffonCompilerContext;
 
 /**
  * Handles generation of code for Griffon artifacts.

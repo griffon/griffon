@@ -154,7 +154,7 @@ def addNodeContributions = { on ->
     }
 }
 
-contributor(scope: annotatedScope(ctype: 'griffon.util.EventPublisher')) {
+contributor(scope: annotatedScope(ctype: 'griffon.transform.EventPublisher')) {
     method name: 'addEventListener', type: 'void', params: [listener: 'java.lang.Object']
     method name: 'addEventListener', type: 'void', params: [event: 'java.lang.String', listener: 'groovy.lang.Closure']
     method name: 'addEventListener', type: 'void', params: [event: 'java.lang.String', listener: 'griffon.util.RunnableWithArgs']

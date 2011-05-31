@@ -16,8 +16,8 @@
 package org.codehaus.griffon.resolve;
 
 import griffon.util.BuildSettings;
-import org.apache.ivy.plugins.resolver.FileSystemResolver;
 import org.apache.ivy.core.settings.IvySettings;
+import org.apache.ivy.plugins.resolver.FileSystemResolver;
 
 import java.io.File;
 

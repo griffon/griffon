@@ -86,7 +86,7 @@ class EventRouter {
      */
     void publishOutside(String eventName, List params = []) {
         if (!eventName) return
-        UIThreadHelper.instance.executeOutside(buildPublisher(eventName, params).curry('outside'))
+        UIThreadManager.instance.executeOutside(buildPublisher(eventName, params).curry('outside'))
     }
 
     /**

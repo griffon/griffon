@@ -17,13 +17,12 @@
 package greet
 
 import java.awt.Cursor
+import java.awt.Insets
 import java.awt.event.ActionEvent
-import javax.swing.Action
 import javax.swing.Timer
-import javax.swing.event.HyperlinkEvent
 import javax.swing.UIManager
 import javax.swing.border.EmptyBorder
-import java.awt.Insets
+import javax.swing.event.HyperlinkEvent
 
 /**
  * @author Danno Ferrin

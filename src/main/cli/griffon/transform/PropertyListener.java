@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package griffon.beans;
+package griffon.transform;
 
 import org.codehaus.groovy.transform.GroovyASTTransformationClass;
 
@@ -49,17 +49,17 @@ import java.lang.annotation.Target;
  * }
  * </pre>
  *
- * <p>Applying &#064;Listener to the previous snippet results in the following code</p>
+ * <p>Applying &#064;PropertyListener to the previous snippet results in the following code</p>
  * <pre>
- * import griffon.beans.Listener
+ * import griffon.transform.PropertyListener
  * import groovy.beans.Bindable
  *
- * &#064;Listener(snoopAll)
+ * &#064;PropertyListener(snoopAll)
  * class MyModel {
  *     &#064;Bindable String name
  *
  *     &#064;Bindable
- *     &#064;Listener({controller.someAction(it)})
+ *     &#064;PropertyListener({controller.someAction(it)})
  *     String lastname
  *
  *     def snoopAll = { evt -> ... }
@@ -73,11 +73,11 @@ import java.lang.annotation.Target;
  * List of closures are also supported.
  *
  * @author Andres Almiray
- * @see org.codehaus.griffon.ast.ListenerASTTransformation
+ * @see org.codehaus.griffon.ast.PropertyListenerASTTransformation
  */
 @Retention(RetentionPolicy.SOURCE)
 @Target({ElementType.FIELD, ElementType.TYPE})
-@GroovyASTTransformationClass("org.codehaus.griffon.ast.ListenerASTTransformation")
-public @interface Listener {
+@GroovyASTTransformationClass("org.codehaus.griffon.ast.PropertyListenerASTTransformation")
+public @interface PropertyListener {
     String value();
 }

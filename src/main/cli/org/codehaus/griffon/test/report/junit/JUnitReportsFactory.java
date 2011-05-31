@@ -16,11 +16,11 @@
 
 package org.codehaus.griffon.test.report.junit;
 
+import groovy.lang.Binding;
+import org.apache.tools.ant.taskdefs.optional.junit.JUnitResultFormatter;
+
 import java.io.File;
 import java.util.List;
-import groovy.lang.Binding;
-
-import org.apache.tools.ant.taskdefs.optional.junit.JUnitResultFormatter;
 
 public class JUnitReportsFactory {
     public static final String XML = "xml";

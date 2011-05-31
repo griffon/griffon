@@ -14,15 +14,13 @@
  * limitations under the License.
  */
 
+import griffon.util.Environment
+import griffon.util.PlatformUtils
+import griffon.util.RunMode
 import java.util.zip.ZipEntry
 import java.util.zip.ZipFile
-import org.codehaus.griffon.commons.*
-import griffon.util.Environment
-import griffon.util.Metadata
-import griffon.util.RunMode
-import griffon.util.PlatformUtils
-import static griffon.util.GriffonApplicationUtils.osArch
 import static griffon.util.GriffonApplicationUtils.is64Bit
+import static griffon.util.GriffonApplicationUtils.osArch
 
 /**
  * Gant script that packages a Griffon application (note: does not create WAR)

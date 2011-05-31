@@ -15,9 +15,14 @@
  */
 package org.codehaus.griffon.compiler;
 
-import org.codehaus.groovy.ast.*;
-import org.codehaus.groovy.classgen.*;
-import org.codehaus.groovy.control.*;
+import org.codehaus.groovy.ast.ClassNode;
+import org.codehaus.groovy.ast.FieldNode;
+import org.codehaus.groovy.ast.MethodNode;
+import org.codehaus.groovy.ast.PropertyNode;
+import org.codehaus.groovy.classgen.GeneratorContext;
+import org.codehaus.groovy.control.CompilationFailedException;
+import org.codehaus.groovy.control.CompilationUnit;
+import org.codehaus.groovy.control.SourceUnit;
 
 import static org.codehaus.griffon.ast.ThreadingASTTransformation.*;
 import static org.codehaus.griffon.compiler.support.GriffonControllerASTTransformation.isControllerArtifact;

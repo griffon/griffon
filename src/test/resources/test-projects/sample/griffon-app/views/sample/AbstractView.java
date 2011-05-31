@@ -1,12 +1,11 @@
 package sample;
 
-import java.awt.*;
-import javax.swing.*;
-import java.util.Map;
-
 import griffon.swing.SwingGriffonApplication;
-import griffon.swing.WindowManager;
 import org.codehaus.griffon.runtime.core.AbstractGriffonView;
+
+import javax.swing.*;
+import java.awt.*;
+import java.util.Map;
 
 public abstract class AbstractView extends AbstractGriffonView {
     private AbstractController controller;

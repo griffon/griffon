@@ -16,9 +16,9 @@
 package griffon.util
 
 import java.util.concurrent.Callable
-import java.util.concurrent.Future
-import java.util.concurrent.Executors
 import java.util.concurrent.ExecutorService
+import java.util.concurrent.Executors
+import java.util.concurrent.Future
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 
@@ -27,24 +27,24 @@ import org.slf4j.LoggerFactory
  *
  * @author Andres Almiray
  */
-class UIThreadHelper {
+class UIThreadManager {
     // Shouldn't need to synchronize access to this field as setting its value
     // should be done at boot time
     private UIThreadHandler uiThreadHandler
     private static final ExecutorService DEFAULT_EXECUTOR_SERVICE = Executors.newFixedThreadPool(2)
-    private static final Logger LOG = LoggerFactory.getLogger(UIThreadHelper)
+    private static final Logger LOG = LoggerFactory.getLogger(UIThreadManager)
 
-    private static final UIThreadHelper INSTANCE = new UIThreadHelper()
+    private static final UIThreadManager INSTANCE = new UIThreadManager()
 
-    static UIThreadHelper getInstance() { INSTANCE }
+    static UIThreadManager getInstance() { INSTANCE }
 
     static enhance(MetaClass metaClass) {
-        metaClass.execSync = UIThreadHelper.instance.&executeSync
-        metaClass.execAsync = UIThreadHelper.instance.&executeAsync
-        metaClass.execOutside = UIThreadHelper.instance.&executeOutside
-        metaClass.isUIThread = UIThreadHelper.instance.&isUIThread
+        metaClass.execSync = UIThreadManager.instance.&executeSync
+        metaClass.execAsync = UIThreadManager.instance.&executeAsync
+        metaClass.execOutside = UIThreadManager.instance.&executeOutside
+        metaClass.isUIThread = UIThreadManager.instance.&isUIThread
         metaClass.execFuture = { Object... args -> 
-            UIThreadHelper.instance.executeFuture(*args)
+            UIThreadManager.instance.executeFuture(*args)
         }
     }
 

@@ -15,20 +15,22 @@
  */ 
 package griffon.util;
 
+import griffon.core.MVCClosure;
+import griffon.exceptions.BeanException;
+import griffon.exceptions.BeanInstantiationException;
 import groovy.lang.*;
 import groovy.util.FactoryBuilderSupport;
+import org.codehaus.groovy.reflection.CachedClass;
 
-import java.lang.reflect.*;
+import java.beans.*;
+import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
 import java.util.*;
-import java.util.regex.Pattern;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
-import java.beans.*;
-import java.lang.ref.*;
-
-import griffon.exceptions.*;
-import griffon.core.MVCClosure;
-import org.codehaus.groovy.reflection.CachedClass;
+import java.util.regex.Pattern;
 
 /** 
  * Class containing utility methods for dealing with Griffon class artifacts.<p>

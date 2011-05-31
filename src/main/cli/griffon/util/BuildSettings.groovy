@@ -16,20 +16,16 @@
 package griffon.util
 
 import java.util.regex.Pattern
-
-import org.apache.ivy.plugins.repository.TransferListener
 import org.apache.ivy.plugins.repository.TransferEvent
+import org.apache.ivy.plugins.repository.TransferListener
 import org.apache.ivy.util.DefaultMessageLogger
 import org.apache.ivy.util.Message
-
-import org.springframework.core.io.Resource
-import org.springframework.core.io.support.PathMatchingResourcePatternResolver
-
 import org.codehaus.griffon.resolve.IvyDependencyManager
 import org.codehaus.groovy.runtime.StackTraceUtils
-
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
+import org.springframework.core.io.Resource
+import org.springframework.core.io.support.PathMatchingResourcePatternResolver
 
 /**
  * <p>Represents the project paths and other build settings

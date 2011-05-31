@@ -15,13 +15,12 @@
  */
 package griffon.core;
 
-import java.util.Map;
-import java.util.List;
-
 import groovy.lang.Closure;
 import groovy.util.FactoryBuilderSupport;
-
 import org.slf4j.Logger;
+
+import java.util.List;
+import java.util.Map;
 
 /**
  * Identifies an Addon artifact.

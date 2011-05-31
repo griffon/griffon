@@ -16,17 +16,15 @@
 
 package org.codehaus.griffon.runtime.util
 
-import griffon.core.GriffonApplication
 import griffon.core.GriffonAddon
 import griffon.core.GriffonAddonDescriptor
-import griffon.util.UIThreadHelper
+import griffon.core.GriffonApplication
 import griffon.util.GriffonNameUtils
 import griffon.util.Metadata
-
+import griffon.util.UIThreadManager
 import org.codehaus.griffon.runtime.builder.UberBuilder
 import org.codehaus.griffon.runtime.core.DefaultGriffonAddon
 import org.codehaus.griffon.runtime.core.DefaultGriffonAddonDescriptor
-
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 
@@ -97,7 +95,7 @@ public class AddonHelper {
         def addonMetaClass = obj.metaClass
         addonMetaClass.app = app
         addonMetaClass.newInstance = GriffonApplicationHelper.&newInstance.curry(app)
-        UIThreadHelper.enhance(addonMetaClass)
+        UIThreadManager.enhance(addonMetaClass)
 
         if(LOG.infoEnabled) LOG.info("Loading addon $addonName with class ${addon.class.name}")
         app.event(GriffonApplication.Event.LOAD_ADDON_START.name, [addonName, addon, app])

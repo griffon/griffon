@@ -17,12 +17,9 @@
 package greet
 
 import java.awt.Point
-import java.awt.event.ComponentEvent
+import javax.swing.Action
 import javax.swing.JComponent
 import javax.swing.JViewport
-import javax.swing.event.ChangeEvent
-import javax.swing.Action
-import javax.swing.JScrollPane
 
 /**
  * @author Danno Ferrin

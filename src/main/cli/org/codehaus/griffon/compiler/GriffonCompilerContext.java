@@ -16,23 +16,22 @@
 
 package org.codehaus.griffon.compiler;
 
-import java.io.File;
-import java.util.Map;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.ArrayList;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
 import griffon.util.BuildSettings;
 import griffon.util.BuildSettingsHolder;
-import groovy.util.ConfigObject;
 import groovy.lang.Closure;
+import groovy.util.ConfigObject;
+import org.apache.log4j.LogManager;
+import org.codehaus.griffon.runtime.logging.Log4jConfig;
 import org.codehaus.groovy.control.SourceUnit;
 import org.codehaus.groovy.runtime.typehandling.DefaultTypeTransformation;
 
-import org.codehaus.griffon.runtime.logging.Log4jConfig;
-import org.apache.log4j.LogManager;
+import java.io.File;
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * @author Andres Almiray

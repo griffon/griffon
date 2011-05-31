@@ -16,12 +16,12 @@
 
 package org.codehaus.griffon.test.report.junit;
 
-import org.apache.tools.ant.taskdefs.optional.junit.JUnitTest;
+import junit.framework.AssertionFailedError;
+import junit.framework.Test;
 import org.apache.tools.ant.taskdefs.optional.junit.JUnitResultFormatter;
+import org.apache.tools.ant.taskdefs.optional.junit.JUnitTest;
 
-import java.io.*;
-
-import junit.framework.*;
+import java.io.OutputStream;
 
 /**
  * Simply propagates to the underlying reports.

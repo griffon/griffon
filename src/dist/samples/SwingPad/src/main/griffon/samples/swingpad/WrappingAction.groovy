@@ -15,11 +15,11 @@
 
 package griffon.samples.swingpad
 
-import javax.swing.Action
-import javax.swing.AbstractAction
 import java.awt.event.ActionEvent
 import java.beans.PropertyChangeEvent
 import java.beans.PropertyChangeListener
+import javax.swing.AbstractAction
+import javax.swing.Action
 
 /**
  * @author Andres Almiray

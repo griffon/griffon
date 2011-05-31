@@ -4,7 +4,7 @@ class ListenerTest extends GroovyTestCase {
     void testSimpleValues() {
         GroovyShell shell = new GroovyShell()
         shell.evaluate("""
-            import griffon.beans.Listener
+            import griffon.transform.PropertyListener
             import groovy.beans.Bindable
 
             class EventHolder {
@@ -13,9 +13,9 @@ class ListenerTest extends GroovyTestCase {
             
             @Bindable
             class Producer {
-                @Listener({EventHolder.event = it})
+                @PropertyListener({EventHolder.event = it})
                 String value1
-                @Listener(foo)
+                @PropertyListener(foo)
                 String value2
 
                 def foo = { EventHolder.event = it }
@@ -38,7 +38,7 @@ class ListenerTest extends GroovyTestCase {
     void testListValues() {
         GroovyShell shell = new GroovyShell()
         shell.evaluate("""
-            import griffon.beans.Listener
+            import griffon.transform.PropertyListener
             import groovy.beans.Bindable
 
             class EventHolder2 {
@@ -47,10 +47,10 @@ class ListenerTest extends GroovyTestCase {
 
             @Bindable
             class Producer2 {
-                @Listener([{EventHolder2.events << it},
+                @PropertyListener([{EventHolder2.events << it},
                            {EventHolder2.events << it}])
                 String value1
-                @Listener([foo, bar])
+                @PropertyListener([foo, bar])
                 String value2
 
                 def foo = { EventHolder2.events << it }
@@ -78,7 +78,7 @@ class ListenerTest extends GroovyTestCase {
     void testAnnotatedClass() {
         GroovyShell shell = new GroovyShell()
         shell.evaluate("""
-            import griffon.beans.Listener
+            import griffon.transform.PropertyListener
             import groovy.beans.Bindable
 
             class EventHolder3 {
@@ -86,14 +86,14 @@ class ListenerTest extends GroovyTestCase {
             }
 
             @Bindable
-            @Listener({EventHolder3.event = it})
+            @PropertyListener({EventHolder3.event = it})
             class Producer3 {
                 String value1
                 String value2
             }
 
             @Bindable
-            @Listener(foo)
+            @PropertyListener(foo)
             class Producer4 {
                 String value1
                 String value2

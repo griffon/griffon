@@ -19,11 +19,10 @@
 
 package griffon.samples.swingpad
 
+import org.fife.ui.rtextarea.RTextArea
 import java.awt.FlowLayout
-import javax.swing.KeyStroke
 import javax.swing.Action
 import static griffon.util.GriffonNameUtils.isBlank
-import org.fife.ui.rtextarea.RTextArea
 
 modifyFont = { sizeFilter, sizeMod ->
     def currentFont = model.font

@@ -15,6 +15,7 @@
 
 package griffon.samples.swingpad
 
+import griffon.transform.Threading
 import java.awt.Window
 
 /**

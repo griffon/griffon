@@ -16,12 +16,11 @@
 
 package org.codehaus.griffon.test.junit4.runner
 
-import org.junit.runner.Runner
-import org.junit.runners.model.RunnerBuilder
-
+import griffon.core.GriffonApplication
 import org.codehaus.griffon.test.GriffonTestTargetPattern
 import org.codehaus.griffon.test.support.GriffonTestMode
-import griffon.core.GriffonApplication
+import org.junit.runner.Runner
+import org.junit.runners.model.RunnerBuilder
 
 class GriffonTestCaseRunnerBuilder extends RunnerBuilder {
     final mode

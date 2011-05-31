@@ -20,7 +20,8 @@
  * @author Graeme Rocher (Grails 0.4)
  */
 
-import org.codehaus.groovy.tools.shell.*
+import org.codehaus.groovy.tools.shell.Groovysh
+import org.codehaus.groovy.tools.shell.IO
 
 includeTargets << griffonScript("_GriffonBootstrap")
 

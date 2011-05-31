@@ -23,6 +23,7 @@
  */
 
 import org.codehaus.griffon.commons.GriffonClassUtils as GCU
+
 import griffon.util.GriffonUtil
 
 includeTargets << griffonScript("Init")

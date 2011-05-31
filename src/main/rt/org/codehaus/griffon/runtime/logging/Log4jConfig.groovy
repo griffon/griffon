@@ -15,23 +15,13 @@
  */
 package org.codehaus.griffon.runtime.logging
 
-import griffon.util.Metadata
 import griffon.util.Environment
-
-import org.codehaus.groovy.runtime.InvokerHelper
-
-import org.apache.log4j.Appender
-import org.apache.log4j.ConsoleAppender
-import org.apache.log4j.FileAppender
-import org.apache.log4j.HTMLLayout
-import org.apache.log4j.Level
-import org.apache.log4j.Logger
-import org.apache.log4j.PatternLayout
-import org.apache.log4j.RollingFileAppender
-import org.apache.log4j.SimpleLayout
+import griffon.util.Metadata
 import org.apache.log4j.helpers.LogLog
 import org.apache.log4j.varia.NullAppender
 import org.apache.log4j.xml.XMLLayout
+import org.codehaus.groovy.runtime.InvokerHelper
+import org.apache.log4j.*
 
 /**
  * Encapsulates the configuration of Log4j.

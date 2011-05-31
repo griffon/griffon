@@ -17,26 +17,23 @@
 package org.codehaus.griffon.runtime.core;
 
 import griffon.core.*;
-import griffon.util.UIThreadHelper;
 import griffon.util.ApplicationHolder;
 import griffon.util.GriffonExceptionHandler;
-
-import java.util.Map;
-import java.util.List;
-import java.util.Collections;
-
-import groovy.lang.MetaClass;
+import griffon.util.UIThreadManager;
 import groovy.lang.Closure;
-import groovy.lang.GroovySystem;
 import groovy.lang.GroovyObjectSupport;
-import java.util.concurrent.Callable;
-import java.util.concurrent.Future;
-import java.util.concurrent.ExecutorService;
-
+import groovy.lang.GroovySystem;
+import groovy.lang.MetaClass;
 import org.codehaus.griffon.runtime.util.GriffonApplicationHelper;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Future;
 
 /**
  * Base implementation of the GriffonArtifact interface.
@@ -86,35 +83,35 @@ public abstract class AbstractGriffonArtifact extends GroovyObjectSupport implem
     }
 
     public boolean isUIThread() {
-        return UIThreadHelper.getInstance().isUIThread();
+        return UIThreadManager.getInstance().isUIThread();
     }
 
     public void execAsync(Runnable runnable) {
-        UIThreadHelper.getInstance().executeAsync(runnable);
+        UIThreadManager.getInstance().executeAsync(runnable);
     }
 
     public void execSync(Runnable runnable) {
-        UIThreadHelper.getInstance().executeSync(runnable);
+        UIThreadManager.getInstance().executeSync(runnable);
     }
 
     public void execOutside(Runnable runnable) {
-        UIThreadHelper.getInstance().executeOutside(runnable);
+        UIThreadManager.getInstance().executeOutside(runnable);
     }
 
     public Future execFuture(ExecutorService executorService, Closure closure) {
-        return UIThreadHelper.getInstance().executeFuture(executorService, closure);
+        return UIThreadManager.getInstance().executeFuture(executorService, closure);
     }
 
     public Future execFuture(Closure closure) {
-        return UIThreadHelper.getInstance().executeFuture(closure);
+        return UIThreadManager.getInstance().executeFuture(closure);
     }
 
     public Future execFuture(ExecutorService executorService, Callable callable) {
-        return UIThreadHelper.getInstance().executeFuture(executorService, callable);
+        return UIThreadManager.getInstance().executeFuture(executorService, callable);
     }
 
     public Future execFuture(Callable callable) {
-        return UIThreadHelper.getInstance().executeFuture(callable);
+        return UIThreadManager.getInstance().executeFuture(callable);
     }
     
     public Logger getLog() {

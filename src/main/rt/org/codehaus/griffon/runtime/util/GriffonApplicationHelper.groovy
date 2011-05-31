@@ -15,26 +15,20 @@
  */
 package org.codehaus.griffon.runtime.util
 
-import griffon.core.*
-import griffon.util.Metadata
 import griffon.util.Environment
-import griffon.util.UIThreadHelper
 import griffon.util.GriffonExceptionHandler
-import org.codehaus.griffon.runtime.builder.UberBuilder
-import org.codehaus.griffon.runtime.core.DefaultAddonManager
-import org.codehaus.griffon.runtime.core.DefaultArtifactManager
-import org.codehaus.griffon.runtime.core.ModelArtifactHandler
-import org.codehaus.griffon.runtime.core.ViewArtifactHandler
-import org.codehaus.griffon.runtime.core.ControllerArtifactHandler
-import org.codehaus.griffon.runtime.core.ServiceArtifactHandler
-import org.codehaus.groovy.runtime.InvokerHelper
-
-import org.codehaus.griffon.runtime.logging.Log4jConfig
-import org.slf4j.Logger
-import org.slf4j.LoggerFactory
+import griffon.util.Metadata
+import griffon.util.UIThreadManager
+import java.lang.reflect.Constructor
 import org.apache.log4j.LogManager
 import org.apache.log4j.helpers.LogLog
-import java.lang.reflect.Constructor
+import org.codehaus.griffon.runtime.builder.UberBuilder
+import org.codehaus.griffon.runtime.logging.Log4jConfig
+import org.codehaus.groovy.runtime.InvokerHelper
+import org.slf4j.Logger
+import org.slf4j.LoggerFactory
+import griffon.core.*
+import org.codehaus.griffon.runtime.core.*
 
 /**
  * Utility class for bootstrapping an application and handling of MVC groups.</p>
@@ -218,14 +212,14 @@ class GriffonApplicationHelper {
             }
         }
 
-        script.isUIThread = UIThreadHelper.instance.&isUIThread
-        script.execAsync = UIThreadHelper.instance.&executeAsync
-        script.execSync = UIThreadHelper.instance.&executeSync
-        script.execOutside = UIThreadHelper.instance.&executeOutside
-        script.execFuture = {Object... args -> UIThreadHelper.instance.executeFuture(* args) }
+        script.isUIThread = UIThreadManager.instance.&isUIThread
+        script.execAsync = UIThreadManager.instance.&executeAsync
+        script.execSync = UIThreadManager.instance.&executeSync
+        script.execOutside = UIThreadManager.instance.&executeOutside
+        script.execFuture = {Object... args -> UIThreadManager.instance.executeFuture(* args) }
 
         if (LOG.infoEnabled) LOG.info("Running script '$scriptName'")
-        UIThreadHelper.instance.executeSync(script)
+        UIThreadManager.instance.executeSync(script)
     }
 
     /**
@@ -417,7 +411,7 @@ class GriffonApplicationHelper {
             if (v instanceof Script) {
                 // special case: view gets executed in the UI thread always
                 if (k == 'view') {
-                    UIThreadHelper.instance.executeSync { builder.build(v) }
+                    UIThreadManager.instance.executeSync { builder.build(v) }
                 } else {
                     // non-view gets built in the builder
                     // they can switch into the UI thread as desired
@@ -471,7 +465,7 @@ class GriffonApplicationHelper {
             // metaClass.getGriffonClass = {c ->
             //     app.artifactManager.findGriffonClass(c)
             // }.curry(klass)
-            UIThreadHelper.enhance(metaClass)
+            UIThreadManager.enhance(metaClass)
         }
     }
 

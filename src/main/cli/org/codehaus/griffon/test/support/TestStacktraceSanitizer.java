@@ -17,8 +17,9 @@
 package org.codehaus.griffon.test.support;
 
 import griffon.util.GriffonUtil;
-import java.util.List;
+
 import java.util.ArrayList;
+import java.util.List;
 
 public class TestStacktraceSanitizer {
     private static final String TEST_RUNNING_CLASS = "_GriffonTest";

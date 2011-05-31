@@ -24,8 +24,6 @@
 if (getBinding().variables.containsKey("_console_called")) return
 _console_called = true
 
-import org.codehaus.griffon.support.*
-
 includeTargets << griffonScript("_GriffonBootstrap")
 
 target(default: "Runs an embedded application in a Groovy console") {

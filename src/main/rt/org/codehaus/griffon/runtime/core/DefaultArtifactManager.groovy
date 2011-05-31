@@ -16,13 +16,12 @@
 
 package org.codehaus.griffon.runtime.core
 
+import griffon.core.ArtifactInfo
+import griffon.core.GriffonApplication
+import java.lang.reflect.Modifier
+import org.codehaus.griffon.runtime.util.GriffonApplicationHelper
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
-
-import java.lang.reflect.Modifier
-import griffon.core.GriffonApplication
-import griffon.core.ArtifactInfo
-import org.codehaus.griffon.runtime.util.GriffonApplicationHelper
 
 /**
  * Default implementation of {@code ArtifactManager}.

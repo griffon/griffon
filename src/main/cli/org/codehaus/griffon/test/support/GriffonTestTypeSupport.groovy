@@ -16,14 +16,12 @@
 
 package org.codehaus.griffon.test.support
 
+import griffon.core.GriffonApplication
+import org.codehaus.griffon.test.GriffonTestTargetPattern
 import org.codehaus.griffon.test.GriffonTestType
 import org.codehaus.griffon.test.GriffonTestTypeResult
-import org.codehaus.griffon.test.GriffonTestTargetPattern
 import org.codehaus.griffon.test.event.GriffonTestEventPublisher
 import org.codehaus.griffon.test.io.SystemOutAndErrSwapper
-
-import org.springframework.core.io.Resource
-import griffon.core.GriffonApplication
 
 /**
  * Provides a convenient base for {@link GriffonTestType} implementations.

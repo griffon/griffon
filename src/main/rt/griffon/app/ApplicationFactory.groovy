@@ -15,11 +15,11 @@
  */
 package griffon.app
 
+import griffon.swing.SwingApplication
 import java.awt.Component
 import java.awt.Window
-import javax.swing.*
-import griffon.swing.SwingApplication
 import org.codehaus.groovy.runtime.InvokerHelper
+import javax.swing.*
 
 /**
  * Created by IntelliJ IDEA.

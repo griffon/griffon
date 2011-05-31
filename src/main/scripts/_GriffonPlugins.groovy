@@ -14,13 +14,12 @@
  * limitations under the License.
  */
 
-import groovy.xml.dom.DOMCategory
-
-import org.codehaus.griffon.plugins.GriffonPluginInfo
-import org.codehaus.griffon.resolve.PluginResolveEngine
 import griffon.util.BuildSettings
 import griffon.util.Metadata
 import griffon.util.PlatformUtils
+import groovy.xml.dom.DOMCategory
+import org.codehaus.griffon.plugins.GriffonPluginInfo
+import org.codehaus.griffon.resolve.PluginResolveEngine
 
 /**
  * Gant script that handles the installation of Griffon plugins

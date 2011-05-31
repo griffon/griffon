@@ -21,8 +21,8 @@
  * @author Sergey Nebolsin (Grails 0.4)
  */
 
-import org.codehaus.griffon.plugins.GriffonPluginUtils
 import org.codehaus.griffon.commons.GriffonContext
+import org.codehaus.griffon.plugins.GriffonPluginUtils
 
 includeTargets << griffonScript("_GriffonInit")
 includeTargets << griffonScript("_GriffonClean")

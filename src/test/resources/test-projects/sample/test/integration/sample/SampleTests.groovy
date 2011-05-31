@@ -1,7 +1,7 @@
 package sample
 
 import griffon.core.GriffonApplication
-import griffon.test.*
+import griffon.test.GriffonUnitTestCase
 
 class SampleTests extends GriffonUnitTestCase {
     GriffonApplication app

@@ -18,12 +18,7 @@ package org.codehaus.griffon.runtime.core
 
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
-
-import griffon.core.GriffonApplication
-import griffon.core.GriffonClass
-import griffon.core.ArtifactManager
-import griffon.core.ArtifactHandler
-import griffon.core.ArtifactInfo
+import griffon.core.*
 
 /**
  * Base implementation of the {@code ArtifactManager} interface.

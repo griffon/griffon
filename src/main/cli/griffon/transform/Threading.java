@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package griffon.util;
+package griffon.transform;
 
 import org.codehaus.groovy.transform.GroovyASTTransformationClass;
 
@@ -39,7 +39,7 @@ import java.lang.annotation.Target;
  *
  * <p>The following snippet exemplifies the compactness of code when the annotation is applied </p>
  * <pre>
- * import griffon.util.Threading
+ * import griffon.transform.Threading
  *
  * class Sample {
  *     &#064;Threading
@@ -55,16 +55,16 @@ import java.lang.annotation.Target;
  *
  * <p>The equivalent, non-annotated code is</p>
  * <pre>
- * import griffon.util.UIThreadHelper
+ * import griffon.util.UIThreadManager
  *
  * class Sample {
  *     void doSomethingOutside(String arg) {
- *         UIThreadHelper.instance.executeOutside {
+ *         UIThreadManager.instance.executeOutside {
  *             println "Outside $arg"
  *         }
  *     }
  *     void doSomethingInside(String arg) {
- *         UIThreadHelper.instance.executeSync {
+ *         UIThreadManager.instance.executeSync {
  *             println "Inside $arg"
  *         }
  *     }
@@ -72,7 +72,7 @@ import java.lang.annotation.Target;
  * </pre>
  *
  * @author Andres Almiray
- * @see griffon.util.Threading.Policy
+ * @see Threading.Policy
  * @see org.codehaus.griffon.ast.ThreadingASTTransformation
  * @since 0.9.2
  */
@@ -93,7 +93,7 @@ public @interface Threading {
      * </ul>
      *
      * @author Andres Almiray
-     * @see griffon.util.Threading
+     * @see Threading
      * @since 0.9.2
      */
     public enum Policy {

@@ -15,10 +15,10 @@
 
 package griffon.samples.swingpad
 
-import javax.swing.JFileChooser
-import java.util.prefs.Preferences
 import griffon.core.GriffonApplication
 import griffon.util.ApplicationHolder
+import java.util.prefs.Preferences
+import javax.swing.JFileChooser
 import static griffon.util.GriffonNameUtils.isBlank
 
 /**

@@ -1,4 +1,5 @@
 import com.u2d.css4swing.style.ComponentStyle
+
 import groovy.swing.factory.BeanFactory
 import javax.swing.JLabel
 

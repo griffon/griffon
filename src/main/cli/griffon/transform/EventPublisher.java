@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package griffon.util;
+package griffon.transform;
 
 import org.codehaus.groovy.transform.GroovyASTTransformationClass;
 

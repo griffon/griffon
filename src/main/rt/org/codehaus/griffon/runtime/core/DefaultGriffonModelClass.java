@@ -18,14 +18,13 @@ package org.codehaus.griffon.runtime.core;
 import griffon.core.GriffonApplication;
 import griffon.core.GriffonModelClass;
 import griffon.util.GriffonClassUtils;
-
 import griffon.util.GriffonNameUtils;
 import groovy.lang.Closure;
 import groovy.lang.MetaProperty;
 
 import java.util.Arrays;
-import java.util.Set;
 import java.util.LinkedHashSet;
+import java.util.Set;
 
 /**
  * @author Andres Almiray

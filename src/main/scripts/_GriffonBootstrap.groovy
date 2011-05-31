@@ -14,11 +14,12 @@
  * limitations under the License.
  */
 
-import griffon.util.RunMode
-import griffon.util.Environment
 import griffon.util.ApplicationHolder
-import static griffon.util.GriffonExceptionHandler.*
+import griffon.util.Environment
+import griffon.util.RunMode
 import static griffon.util.GriffonApplicationUtils.is64Bit
+import static griffon.util.GriffonExceptionHandler.GRIFFON_EXCEPTION_OUTPUT
+import static griffon.util.GriffonExceptionHandler.GRIFFON_FULL_STACKTRACE
 
 /**
  * Gant script that bootstraps a Griffon application

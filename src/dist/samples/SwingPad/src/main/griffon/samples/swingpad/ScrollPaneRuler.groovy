@@ -15,10 +15,13 @@
 
 package griffon.samples.swingpad
 
-import java.awt.*
-import java.awt.event.*
-import javax.swing.*
 import javax.swing.BorderFactory as BF
+
+import java.awt.event.MouseEvent
+import java.awt.event.MouseListener
+import java.awt.event.MouseMotionListener
+import javax.swing.JComponent
+import java.awt.*
 
 /**
  * Creates a Ruler to be used as a row or column view on a ScrollPane

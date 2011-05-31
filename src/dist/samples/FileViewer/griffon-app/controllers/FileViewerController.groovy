@@ -16,7 +16,7 @@
 
 import javax.swing.JFileChooser
 
-/** 
+/**
  * @author Danno Ferrin
  */
 class FileViewerController {

@@ -15,9 +15,8 @@
  */
 package griffon.test.mock
 
-import griffon.core.GriffonApplication
-import griffon.util.UIThreadHelper
 import griffon.util.UIThreadHandler
+import griffon.util.UIThreadManager
 import org.codehaus.griffon.runtime.core.BaseGriffonApplication
 
 /**
@@ -52,7 +51,7 @@ class MockGriffonApplication {
     }
 
     void setUiThreadHandler(UIThreadHandler uiThreadHandler) {
-        UIThreadHelper.instance.setUIThreadHandler(uiThreadHandler)
+        UIThreadManager.instance.setUIThreadHandler(uiThreadHandler)
     }
 
     Class getAppConfigClass() {

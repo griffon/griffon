@@ -20,8 +20,8 @@
  * @author Graeme Rocher (Grails 0.4)
  */
 
-import griffon.util.RunMode
 import griffon.util.GriffonNameUtils
+import griffon.util.RunMode
 
 // No point doing this stuff more than once.
 if (getBinding().variables.containsKey("_package_called")) return

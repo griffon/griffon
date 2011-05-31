@@ -15,10 +15,7 @@
  */
 package griffon.util
 
-import static griffon.util.GriffonApplicationUtils.isLinux
-import static griffon.util.GriffonApplicationUtils.isSolaris
-import static griffon.util.GriffonApplicationUtils.isMacOSX
-import static griffon.util.GriffonApplicationUtils.is64Bit
+import static griffon.util.GriffonApplicationUtils.*
 
 /**
  * @author Andres Almiray

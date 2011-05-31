@@ -18,7 +18,6 @@ package org.codehaus.griffon.runtime.builder
 
 import griffon.core.GriffonArtifact
 import griffon.util.GriffonExceptionHandler
-
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 

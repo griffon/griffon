@@ -16,6 +16,7 @@
 package griffon.core;
 
 import groovy.lang.MetaClass;
+
 import java.util.Arrays;
 import java.util.Set;
 import java.util.TreeSet;

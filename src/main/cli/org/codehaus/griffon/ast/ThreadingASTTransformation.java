@@ -16,34 +16,30 @@
 
 package org.codehaus.griffon.ast;
 
-import org.codehaus.groovy.ast.*;
-import org.codehaus.groovy.ast.Variable;
-import org.codehaus.groovy.ast.expr.*;
-import org.codehaus.groovy.ast.stmt.*;
-import org.codehaus.groovy.control.*;
-import org.codehaus.groovy.control.messages.*;
-import org.codehaus.groovy.syntax.SyntaxException;
-import org.codehaus.groovy.transform.*;
-import org.objectweb.asm.Opcodes;
-import org.codehaus.groovy.runtime.typehandling.DefaultTypeTransformation;
-
-import java.util.Iterator;
-import java.util.Map;
-import java.util.List;
-import java.lang.reflect.Modifier;
-
-import java.util.Arrays;
-
-import griffon.util.Threading;
-import griffon.util.UIThreadHelper;
+import griffon.transform.Threading;
 import griffon.util.GriffonClassUtils;
 import griffon.util.GriffonClassUtils.MethodDescriptor;
+import griffon.util.UIThreadManager;
 import org.codehaus.griffon.compiler.GriffonCompilerContext;
-
-import static org.codehaus.griffon.ast.GriffonASTUtils.*;
-
+import org.codehaus.groovy.ast.*;
+import org.codehaus.groovy.ast.expr.*;
+import org.codehaus.groovy.ast.stmt.BlockStatement;
+import org.codehaus.groovy.ast.stmt.ExpressionStatement;
+import org.codehaus.groovy.ast.stmt.Statement;
+import org.codehaus.groovy.control.CompilePhase;
+import org.codehaus.groovy.control.SourceUnit;
+import org.codehaus.groovy.runtime.typehandling.DefaultTypeTransformation;
+import org.codehaus.groovy.transform.GroovyASTTransformation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.lang.reflect.Modifier;
+import java.util.Arrays;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+
+import static org.codehaus.griffon.ast.GriffonASTUtils.*;
 
 /**
  * Handles generation of code for the {@code @Threading} annotation.
@@ -53,11 +49,11 @@ import org.slf4j.LoggerFactory;
  * @since 0.9.2
  */
 @GroovyASTTransformation(phase = CompilePhase.CANONICALIZATION)
-public class ThreadingASTTransformation implements ASTTransformation, Opcodes {
+public class ThreadingASTTransformation extends AbstractASTTransformation {
     private static final Logger LOG = LoggerFactory.getLogger(ThreadingASTTransformation.class);
 
     private static ClassNode MY_TYPE = new ClassNode(Threading.class);
-    private static ClassNode UITHREAD_HELPER_CLASS = ClassHelper.makeWithoutCaching(UIThreadHelper.class);
+    private static ClassNode UITHREAD_MANAGER_CLASS = ClassHelper.makeWithoutCaching(UIThreadManager.class);
     private static final String COMPILER_THREADING_KEY = "compiler.threading";
 
     public static final String EXECUTE_OUTSIDE = "executeOutside";
@@ -156,14 +152,6 @@ public class ThreadingASTTransformation implements ASTTransformation, Opcodes {
         return threadingMethod;
     }
 
-    public void addError(String msg, ASTNode expr, SourceUnit source) {
-        int line = expr.getLineNumber();
-        int col = expr.getColumnNumber();
-        source.getErrorCollector().addErrorAndContinue(
-                new SyntaxErrorMessage(new SyntaxException(msg + '\n', line, col), source)
-        );
-    }
-
     public static void handleMethodForInjection(ClassNode classNode, MethodNode method) {
         handleMethodForInjection(classNode, method, EXECUTE_OUTSIDE);
     }
@@ -218,7 +206,7 @@ public class ThreadingASTTransformation implements ASTTransformation, Opcodes {
                 param.setClosureSharedVariable(true);
             }
             if (LOG.isDebugEnabled())
-                LOG.debug("Modified " + declaringClass.getName() + "." + method.getName() + "() - code wrapped with UIThreadHelper.getInstance()." + threadingMethod + "{}");
+                LOG.debug("Modified " + declaringClass.getName() + "." + method.getName() + "() - code wrapped with UIThreadManager.getInstance()." + threadingMethod + "{}");
         }
     }
 
@@ -237,7 +225,7 @@ public class ThreadingASTTransformation implements ASTTransformation, Opcodes {
             // very special case in order to deal with curried methods
             MethodCallExpression mce = (MethodCallExpression) initialExpression;
             Expression method = mce.getMethod();
-            String methodName = ((ConstantExpression) method).getText();
+            String methodName = method.getText();
             if (!"curry".equals(methodName)) return;
             List<Expression> args = ((ArgumentListExpression) mce.getArguments()).getExpressions();
             Expression last = args.size() > 0 ? args.get(args.size() - 1) : null;
@@ -247,7 +235,7 @@ public class ThreadingASTTransformation implements ASTTransformation, Opcodes {
         }
 
         if (modified && LOG.isDebugEnabled())
-            LOG.debug("Modified " + declaringClass.getName() + "." + field.getName() + "() - code wrapped with UIThreadHelper.getInstance()." + threadingMethod + "{}");
+            LOG.debug("Modified " + declaringClass.getName() + "." + field.getName() + "() - code wrapped with UIThreadManager.getInstance()." + threadingMethod + "{}");
     }
 
     private static boolean wrapClosure(ClosureExpression closure, String threadingMethod) {
@@ -293,7 +281,7 @@ public class ThreadingASTTransformation implements ASTTransformation, Opcodes {
         VariableScope closureScope =  variableScope.copy();
         makeVariablesShared(closureScope);
         closure.setVariableScope(closureScope);
-        block.addStatement(stmnt(new MethodCallExpression(uiThreadHelperInstance(), threadingMethod, args(closure))));
+        block.addStatement(stmnt(new MethodCallExpression(uiThreadManagerInstance(), threadingMethod, args(closure))));
 
         return block;
     }
@@ -305,8 +293,8 @@ public class ThreadingASTTransformation implements ASTTransformation, Opcodes {
         }
     }
 
-    private static Expression uiThreadHelperInstance() {
-        return call(UITHREAD_HELPER_CLASS, "getInstance", NO_ARGS);
+    private static Expression uiThreadManagerInstance() {
+        return call(UITHREAD_MANAGER_CLASS, "getInstance", NO_ARGS);
     }
 
     private static boolean usesThreadingAlready(Statement stmnt) {
@@ -314,11 +302,11 @@ public class ThreadingASTTransformation implements ASTTransformation, Opcodes {
         Expression expr = ((ExpressionStatement) stmnt).getExpression();
         if (!(expr instanceof MethodCallExpression)) return false;
         MethodCallExpression methodExpr = (MethodCallExpression) expr;
-        String methodName = ((ConstantExpression) (methodExpr).getMethod()).getText();
+        String methodName = (methodExpr.getMethod()).getText();
 
         ClassExpression classExpr = null;
         if (methodExpr.getObjectExpression() instanceof PropertyExpression) {
-            // UIThreadHelper.instance
+            // UIThreadManager.instance
             PropertyExpression objExpr = (PropertyExpression) methodExpr.getObjectExpression();
             if (!(objExpr.getProperty() instanceof ConstantExpression)) return false;
             ConstantExpression constExpr = (ConstantExpression) objExpr.getProperty();
@@ -326,7 +314,7 @@ public class ThreadingASTTransformation implements ASTTransformation, Opcodes {
             if (!(objExpr.getObjectExpression() instanceof ClassExpression)) return false;
             classExpr = (ClassExpression) objExpr.getObjectExpression();
         } else if (methodExpr.getObjectExpression() instanceof MethodCallExpression) {
-            // UIThreadHelper.getInstance()
+            // UIThreadManager.getInstance()
             MethodCallExpression objExpr = (MethodCallExpression) methodExpr.getObjectExpression();
             if (!(objExpr.getMethod() instanceof ConstantExpression)) return false;
             ConstantExpression constExpr = (ConstantExpression) objExpr.getMethod();
@@ -336,7 +324,7 @@ public class ThreadingASTTransformation implements ASTTransformation, Opcodes {
         }
 
         if (classExpr != null) {
-            if (!classExpr.getText().equals(UIThreadHelper.class.getName())) return false;
+            if (!classExpr.getText().equals(UIThreadManager.class.getName())) return false;
             return "executeOutside".equals(methodName) ||
                     "executeSync".equals(methodName)   ||
                     "executeAsync".equals(methodName)  ||

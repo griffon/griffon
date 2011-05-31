@@ -1,17 +1,10 @@
 package swing;
 
-import java.awt.AlphaComposite;
-import java.awt.Composite;
-import java.awt.GradientPaint;
-import java.awt.Graphics;
-import java.awt.Graphics2D;
-import java.awt.Rectangle;
-import java.awt.RenderingHints;
-import java.awt.image.BufferedImage;
 
-import javax.swing.JPanel;
-
-import org.jdesktop.fuse.InjectedResource;
+import org.jdesktop.fuse.InjectedResource
+import java.awt.image.BufferedImage
+import javax.swing.JPanel
+import java.awt.*
 
 class ContentPanel extends JPanel {
     ////////////////////////////////////////////////////////////////////////////

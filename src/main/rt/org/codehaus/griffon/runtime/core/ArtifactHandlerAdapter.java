@@ -16,15 +16,15 @@
 
 package org.codehaus.griffon.runtime.core;
 
-import griffon.core.ArtifactInfo;
 import griffon.core.ArtifactHandler;
-import griffon.core.GriffonClass;
+import griffon.core.ArtifactInfo;
 import griffon.core.GriffonApplication;
+import griffon.core.GriffonClass;
 import griffon.util.GriffonNameUtils;
 
+import java.util.Collections;
 import java.util.Map;
 import java.util.TreeMap;
-import java.util.Collections;
 
 /**
  * Base implementation of the ArtifactHandler interface.

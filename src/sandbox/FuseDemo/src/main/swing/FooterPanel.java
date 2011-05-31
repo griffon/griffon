@@ -1,16 +1,9 @@
 package swing;
 
-import java.awt.Color;
-import java.awt.Dimension;
-import java.awt.GradientPaint;
-import java.awt.Graphics;
-import java.awt.Graphics2D;
-import java.awt.Paint;
-import java.awt.Rectangle;
-
-import javax.swing.JComponent;
-
 import org.jdesktop.fuse.InjectedResource;
+
+import javax.swing.*;
+import java.awt.*;
 
 class FooterPanel extends JComponent {
     ////////////////////////////////////////////////////////////////////////////

@@ -1,5 +1,5 @@
-import griffon.util.GriffonPlatformHelper
 import com.jeta.forms.components.panel.FormPanel
+import griffon.util.GriffonPlatformHelper
 
 GriffonPlatformHelper.tweakForNativePlatform(app)
 

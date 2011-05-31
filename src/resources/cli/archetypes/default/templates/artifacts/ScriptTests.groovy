@@ -1,5 +1,3 @@
-import griffon.test.AbstractCliTestCase
-
 /**
  * Test case for the "@script.name@" Griffon command.
  */

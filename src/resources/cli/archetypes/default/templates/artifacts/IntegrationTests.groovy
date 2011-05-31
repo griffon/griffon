@@ -1,5 +1,4 @@
 @artifact.package@import griffon.core.GriffonApplication
-import griffon.test.*
 
 class @artifact.name@ extends @artifact.superclass@ {
     GriffonApplication app

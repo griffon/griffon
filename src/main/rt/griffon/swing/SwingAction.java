@@ -15,15 +15,12 @@
  */
 package griffon.swing;
 
-import java.awt.event.ActionEvent;
-import javax.swing.Action;
-import javax.swing.AbstractAction;
-import javax.swing.Icon;
-import javax.swing.KeyStroke;
-
-import groovy.lang.Closure;
 import griffon.util.RunnableWithArgs;
 import griffon.util.RunnableWithArgsClosure;
+import groovy.lang.Closure;
+
+import javax.swing.*;
+import java.awt.event.ActionEvent;
 
 /**
  * An action implementation that relies on a closure to handle events.

@@ -1,7 +1,8 @@
 package sample;
 
-import java.awt.event.ActionEvent;
 import org.codehaus.griffon.runtime.core.AbstractGriffonController;
+
+import java.awt.event.ActionEvent;
 
 public abstract class AbstractController extends AbstractGriffonController {
     private AbstractModel model;

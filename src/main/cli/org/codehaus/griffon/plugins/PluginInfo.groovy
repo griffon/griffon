@@ -17,8 +17,8 @@
 package org.codehaus.griffon.plugins
 
 import griffon.util.PluginBuildSettings
-import org.springframework.core.io.Resource
 import groovy.util.slurpersupport.GPathResult
+import org.springframework.core.io.Resource
 
 /**
  * A class used mainly by the build system that encapsulates access to information

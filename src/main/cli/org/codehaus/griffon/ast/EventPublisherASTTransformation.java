@@ -16,20 +16,18 @@
 
 package org.codehaus.griffon.ast;
 
+import griffon.util.EventPublisher;
+import griffon.util.EventRouter;
+import griffon.util.RunnableWithArgs;
 import org.codehaus.groovy.ast.*;
 import org.codehaus.groovy.ast.expr.*;
 import org.codehaus.groovy.ast.stmt.ExpressionStatement;
 import org.codehaus.groovy.control.CompilePhase;
 import org.codehaus.groovy.control.SourceUnit;
 import org.codehaus.groovy.control.messages.SimpleMessage;
-import org.codehaus.groovy.transform.ASTTransformation;
 import org.codehaus.groovy.transform.GroovyASTTransformation;
-import org.objectweb.asm.Opcodes;
 
 import java.util.Collection;
-import griffon.util.EventRouter;
-import griffon.util.EventPublisher;
-import griffon.util.RunnableWithArgs;
 
 /**
  * Handles generation of code for the {@code @EventPublisher} annotation.
@@ -42,11 +40,12 @@ import griffon.util.RunnableWithArgs;
  * @author Andres Almiray
  */
 @GroovyASTTransformation(phase= CompilePhase.CANONICALIZATION)
-public class EventPublisherASTTransformation implements ASTTransformation, Opcodes {
+public class EventPublisherASTTransformation extends AbstractASTTransformation {
     private static final ClassNode RUNNABLE_WITH_ARGS_CLASS = ClassHelper.makeWithoutCaching(RunnableWithArgs.class);
+    private static final ClassNode EVENT_HANDLER_CLASS = ClassHelper.makeWithoutCaching(EventPublisher.class);
 
-    protected static ClassNode epClassNode = new ClassNode(EventPublisher.class);
-    protected ClassNode erClassNode = new ClassNode(EventRouter.class);
+    protected static ClassNode epClassNode = new ClassNode(griffon.transform.EventPublisher.class);
+    protected static ClassNode erClassNode = new ClassNode(EventRouter.class);
 
     /**
      * Convenience method to see if an annotated node is {@code @EventPublisher}.
@@ -70,18 +69,14 @@ public class EventPublisherASTTransformation implements ASTTransformation, Opcod
      * @param source  the source unit for the nodes
      */
     public void visit(ASTNode[] nodes, SourceUnit source) {
-        if (!(nodes[0] instanceof AnnotationNode) || !(nodes[1] instanceof AnnotatedNode)) {
+        if (!(nodes[0] instanceof AnnotationNode) || !(nodes[1] instanceof ClassNode)) {
             throw new RuntimeException("Internal error: wrong types: $node.class / $parent.class");
         }
-        AnnotationNode node = (AnnotationNode) nodes[0];
-        AnnotatedNode parent = (AnnotatedNode) nodes[1];
 
-        if (parent instanceof ClassNode) {
-            addEventRouterToClass(source, node, (ClassNode) parent);
-        }
+        addEventRouterToClass(source, (ClassNode) nodes[1]);
     }
 
-    private void addEventRouterToClass(SourceUnit source, AnnotationNode node, ClassNode classNode) {
+    public static void addEventRouterToClass(SourceUnit source, ClassNode classNode) {
         if (needsEventRouter(classNode, source)) {
             addEventRouter(classNode);
         }
@@ -105,7 +100,7 @@ public class EventPublisherASTTransformation implements ASTTransformation, Opcod
      * @param sourceUnit the source unit, for error reporting. {@code @NotNull}.
      * @return true if property change support should be added
      */
-    protected boolean needsEventRouter(ClassNode declaringClass, SourceUnit sourceUnit) {
+    protected static boolean needsEventRouter(ClassNode declaringClass, SourceUnit sourceUnit) {
         boolean foundAdd = false, foundRemove = false, foundPublish = false;
         ClassNode consideredClass = declaringClass;
         while (consideredClass!= null) {
@@ -131,7 +126,7 @@ public class EventPublisherASTTransformation implements ASTTransformation, Opcod
             sourceUnit.getErrorCollector().addErrorAndContinue(
                 new SimpleMessage("@EventPublisher cannot be processed on "
                     + declaringClass.getName()
-                    + " because some but not all of addEventListener, removeEventListener, publishEvent and publishEventAsync were declared in the current or super classes.",
+                    + " because some but not all of addEventListener, removeEventListener, publishEvent, publishEventAsync and publishEventOutside were declared in the current class or super classes.",
                 sourceUnit)
             );
             return false;
@@ -158,7 +153,9 @@ public class EventPublisherASTTransformation implements ASTTransformation, Opcod
      *
      * @param declaringClass the class to which we add the support field and methods
      */
-    protected void addEventRouter(ClassNode declaringClass) {
+    protected static void addEventRouter(ClassNode declaringClass) {
+        declaringClass.addInterface(EVENT_HANDLER_CLASS);
+
         ClassNode erClassNode = ClassHelper.make(EventRouter.class);
 
         // add field:
@@ -304,6 +301,8 @@ public class EventPublisherASTTransformation implements ASTTransformation, Opcod
         // void publishEventOutside(String name, List args = []) {
         //     this$eventRouter.publishEventOutside(name, args)
         //  }
+        args = new Parameter(ClassHelper.LIST_TYPE, "args");
+        args.setInitialExpression(new ListExpression());
         declaringClass.addMethod(
                 new MethodNode(
                         "publishEventOutside",
@@ -324,6 +323,8 @@ public class EventPublisherASTTransformation implements ASTTransformation, Opcod
         // void publishEventAsync(String name, List args = []) {
         //     this$eventRouter.publishEventAsync(name, args)
         //  }
+        args = new Parameter(ClassHelper.LIST_TYPE, "args");
+        args.setInitialExpression(new ListExpression());
         declaringClass.addMethod(
                 new MethodNode(
                         "publishEventAsync",

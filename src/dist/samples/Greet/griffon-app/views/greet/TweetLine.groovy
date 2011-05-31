@@ -16,8 +16,8 @@
 package greet
 
 import java.awt.Cursor
-import static java.awt.GridBagConstraints.*
 import javax.swing.SwingConstants
+import static java.awt.GridBagConstraints.*
 
 /**
  * Created by IntelliJ IDEA.

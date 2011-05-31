@@ -14,10 +14,6 @@
  * limitations under the License.
  */
 
-import org.springframework.core.io.ClassPathResource
-import org.springframework.core.io.FileSystemResource
-import griffon.util.GriffonUtil
-
 /**
  * Gant script for creating Griffon artifacts of all sorts.
  *
@@ -25,6 +21,9 @@ import griffon.util.GriffonUtil
  */
 
 import griffon.util.GriffonNameUtils
+import griffon.util.GriffonUtil
+import org.springframework.core.io.ClassPathResource
+import org.springframework.core.io.FileSystemResource
 
 includeTargets << griffonScript("_GriffonPackage")
 includeTargets << griffonScript("_GriffonArgParsing")
