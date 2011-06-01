@@ -39,6 +39,8 @@ def viewClass = griffonArtifact("views") & isScript()
 	provider = "Griffon DSL"
 	delegatesTo "griffon.core.GriffonMvcArtifact"
 	delegatesTo "griffon.core.GriffonArtifact"
+	delegatesTo "griffon.core.MVCHandler"
+	delegatesTo "griffon.core.ThreadingHandler"
 }
 	
 viewClass.accept { 
@@ -185,19 +187,17 @@ viewClass.accept {
 	methodDef name: 'keyStrokeAction', type: 'void'
 }
 
-enclosingClass(annotatedBy('griffon.util.EventPublisher')).accept {
+enclosingClass(annotatedBy('griffon.transform.EventPublisher')).accept {
     provider = "Griffon DSL"
+	delegatesTo "griffon.util.EventPublisher"
+}
 
-    method name: 'addEventListener', type: 'void', params: [listener: 'java.lang.Object']
-    method name: 'addEventListener', type: 'void', params: [event: 'java.lang.String', listener: 'groovy.lang.Closure']
-    method name: 'addEventListener', type: 'void', params: [event: 'java.lang.String', listener: 'griffon.util.RunnableWithArgs']
-    method name: 'removeEventListener', type: 'void', params: [listener: 'java.lang.Object']
-    method name: 'removeEventListener', type: 'void', params: [event: 'java.lang.String', listener: 'groovy.lang.Closure']
-    method name: 'removeEventListener', type: 'void', params: [event: 'java.lang.String', listener: 'griffon.util.RunnableWithArgs']
-    method name: 'publishEvent', type: 'void', params: [event: 'java.lang.String']
-    method name: 'publishEvent', type: 'void', params: [event: 'java.lang.String', args: 'java.util.List']
-    method name: 'publishEventOutside', type: 'void', params: [event: 'java.lang.String']
-    method name: 'publishEventOutside', type: 'void', params: [event: 'java.lang.String', args: 'java.util.List']
-    method name: 'publishEventAsync', type: 'void', params: [event: 'java.lang.String']
-    method name: 'publishEventAsync', type: 'void', params: [event: 'java.lang.String', args: 'java.util.List']
+enclosingClass(annotatedBy('griffon.transform.MVCAware')).accept {
+    provider = "Griffon DSL"
+	delegatesTo "griffon.core.MVCHandler"
+}
+
+enclosingClass(annotatedBy('griffon.transform.ThreadingAware')).accept {
+    provider = "Griffon DSL"
+	delegatesTo "griffon.core.ThreadingHandler"
 }
