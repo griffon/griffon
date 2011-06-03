@@ -188,6 +188,9 @@ task zipBinary(type:Zip){
 	from('src/dist'){
 		exclude 'bin'
 	}
+	from('src/griffon'){
+		into 'src/griffon'
+	}
 	from('src/dist/bin'){
 		into 'bin'
         fileMode = 0755	
