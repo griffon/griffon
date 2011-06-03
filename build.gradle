@@ -176,41 +176,6 @@ task pdfGuide(type:PdfGuide, dependsOn:buildGuide) {
 	pdfName = "griffon-guide-${version}.pdf"
 }
 
-/*task pdfGuide(dependsOn: [buildGuide]) {
-    inputs.file(file("$buildDir/manual/guide/single.html"))
-    outputs.file(file("$buildDir/manual/griffon-guide-${version}.pdf"))
-
-    doLast {
-        try {
-            grails.doc.PdfBuilder.build(
-                basedir: buildDir.absolutePath,
-                home: project.file('.').absolutePath,
-                tool: 'griffon'
-            )
-        } catch(x) {
-            // it's very likely that the stream is closed before
-            // the renderer 'finishes' but it actually does
-            // ignore for now
-        }
-
-        def destinationDir = "$buildDir/manual" as File
-        copy {
-            from "$destinationDir/guide/"
-            into destinationDir
-            include '*.pdf'
-            rename 'single.pdf', "griffon-guide-${version}.pdf"
-        }
-    }
-}*/
-
-
-
-/*task zipGuide(type: Zip) {
-    dependsOn { [pdfGuide] }
-    appendix = 'guide'
-    from "$buildDir/manual"
-}*/
-
 task zipBinary(type:Zip){
 	description = "Zips the binary distribution."
     classifier = 'bin'
@@ -241,6 +206,10 @@ task zipBinary(type:Zip){
 		into("dist")
 	}
 	
+	into('scripts'){
+		from(project(":griffon-scripts").sourceSets.main.allSource)
+	}
+	
 	into('doc'){
 		from(project(":griffon-cli").groovyDocJar.outputs.files)
 		from(project(":griffon-rt").groovyDocJar.outputs.files)
@@ -256,10 +225,6 @@ task zipBinary(type:Zip){
 			from(apiDocs.outputs.files)
 		}	
 	}
-	
-	/*into('guide') {
-		from zipGuide.outputs.files
-	}*/	
 }
 
 /*sourceSets {
