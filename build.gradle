@@ -163,12 +163,47 @@ task apiDocs(type: Groovydoc) {
     link('http://groovy.codehaus.org/api/', 'groovy.,org.codehaus.groovy.')
 }
 
-task guide(type: GrailsDoc) {
+
+task buildGuide(type: GrailsDoc) {
     srcDir = file('src/guide/src')
 	props = file('src/guide/guide.properties')
     imagesDir = file('src/guide/resources/img')
 	outputDir = file("$buildDir/manual")
 }
+
+task pdfGuide(type:PdfGuide, dependsOn:buildGuide) {
+	inputs.files file("$buildDir/manual/guide")
+	pdfName = "griffon-guide-${version}.pdf"
+}
+
+/*task pdfGuide(dependsOn: [buildGuide]) {
+    inputs.file(file("$buildDir/manual/guide/single.html"))
+    outputs.file(file("$buildDir/manual/griffon-guide-${version}.pdf"))
+
+    doLast {
+        try {
+            grails.doc.PdfBuilder.build(
+                basedir: buildDir.absolutePath,
+                home: project.file('.').absolutePath,
+                tool: 'griffon'
+            )
+        } catch(x) {
+            // it's very likely that the stream is closed before
+            // the renderer 'finishes' but it actually does
+            // ignore for now
+        }
+
+        def destinationDir = "$buildDir/manual" as File
+        copy {
+            from "$destinationDir/guide/"
+            into destinationDir
+            include '*.pdf'
+            rename 'single.pdf', "griffon-guide-${version}.pdf"
+        }
+    }
+}*/
+
+
 
 /*task zipGuide(type: Zip) {
     dependsOn { [pdfGuide] }
@@ -213,7 +248,8 @@ task zipBinary(type:Zip){
 	}
 	
 	into('guide'){
-		from(guide.outputs.files)
+		from(buildGuide.outputs.files)
+		from(pdfGuide.outputs.files)
 		filter(ReplaceTokens, tokens: ['griffon.version': version])
 	
 		into('api'){
