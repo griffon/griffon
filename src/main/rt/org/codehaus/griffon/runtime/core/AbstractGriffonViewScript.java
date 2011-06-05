@@ -18,7 +18,7 @@ package org.codehaus.griffon.runtime.core;
 
 import griffon.core.*;
 import griffon.util.GriffonExceptionHandler;
-import griffon.util.UIThreadManager;
+import griffon.core.UIThreadManager;
 import groovy.lang.*;
 import groovy.util.FactoryBuilderSupport;
 import org.codehaus.griffon.runtime.builder.UberInterceptorMetaClass;

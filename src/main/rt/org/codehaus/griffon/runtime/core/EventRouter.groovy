@@ -13,12 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package griffon.util
+package org.codehaus.griffon.runtime.core
 
 import java.util.concurrent.LinkedBlockingQueue
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import static org.codehaus.groovy.runtime.MetaClassHelper.convertToTypeArray
+import griffon.core.UIThreadManager
+import griffon.util.RunnableWithArgs
 
 /**
  * An event handling helper.<p>
@@ -64,7 +66,7 @@ class EventRouter {
     /**
      * Publishes an event with optional arguments.</p>
      * Event listeners will be notified in the same thread
-     * that orifinated the event.
+     * that originated the event.
      *
      * @param eventName the name of the event
      * @param params the event's arguments

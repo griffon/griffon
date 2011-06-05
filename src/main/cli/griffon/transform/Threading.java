@@ -55,7 +55,7 @@ import java.lang.annotation.Target;
  *
  * <p>The equivalent, non-annotated code is</p>
  * <pre>
- * import griffon.util.UIThreadManager
+ * import griffon.core.UIThreadManager
  *
  * class Sample {
  *     void doSomethingOutside(String arg) {

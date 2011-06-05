@@ -18,7 +18,7 @@ package org.codehaus.griffon.runtime.util
 import griffon.util.Environment
 import griffon.util.GriffonExceptionHandler
 import griffon.util.Metadata
-import griffon.util.UIThreadManager
+import griffon.core.UIThreadManager
 import java.lang.reflect.Constructor
 import org.apache.log4j.LogManager
 import org.apache.log4j.helpers.LogLog

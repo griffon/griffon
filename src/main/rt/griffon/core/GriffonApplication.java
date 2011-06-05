@@ -168,6 +168,8 @@ public interface GriffonApplication extends ThreadingHandler, MVCHandler {
 
     /**
      * Return's the set of available MVC groups.
+     *
+     * @return a Map of all groups available in the application's configuration.
      */
     Map<String, Map<String, String>> getMvcGroups();
 
@@ -198,26 +200,36 @@ public interface GriffonApplication extends ThreadingHandler, MVCHandler {
 
     /**
      * Returns all currently available model instances, keyed by group name.<p>
+     *
+     * @return a Map of all currently instantiated models.
      */
     Map<String, ? extends GriffonModel> getModels();
 
     /**
      * Returns all currently available view instances, keyed by group name.<p>
+     *
+     * @return a Map of all currently instantiated views.
      */
     Map<String, ? extends GriffonView> getViews();
 
     /**
      * Returns all currently available controller instances, keyed by group name.<p>
+     *
+     * @return a Map of all currently instantiated controllers.
      */
     Map<String, ? extends GriffonController> getControllers();
 
     /**
      * Returns all currently available builder instances, keyed by group name.<p>
+     *
+     * @return a Map of all currently instantiated builders.
      */
     Map<String, ? extends FactoryBuilderSupport> getBuilders();
 
     /**
      * Returns all currently available groups, keyed by group name.<p>
+     *
+     * @return a Map of all currently instantiated groups.
      */
     Map<String, Map<String, Object>> getGroups();
 
@@ -363,17 +375,23 @@ public interface GriffonApplication extends ThreadingHandler, MVCHandler {
 
     /**
      * Gets the application locale.
+     *
+     * @return the current Locale used by the application. Never returns null.
      */    
     Locale getLocale();
 
     /**
      * Sets the application locale.<p>
      * This is a bound property.
+     *
+     * @param locale the Locale value to use
      */
     void setLocale(Locale locale);
 
     /**
      * Returns the current phase.
+     *
+     * @return returns the current ApplicationPhase. Never returns null.
      */
     ApplicationPhase getPhase();
 
@@ -387,7 +405,19 @@ public interface GriffonApplication extends ThreadingHandler, MVCHandler {
     ArtifactManager getArtifactManager();
 
     /**
-     * Creates a new instance of the specified class and type.
+     * Creates a new instance of the specified class and type.<br/>
+     * Triggers the Event.NEW_INSTANCE with the following parameters
+     * <ul>
+     *     <li>clazz - the Class of the object</li>
+     *     <li>type - the symbolical type of the object</li>
+     *     <li>instance -> the object that was created</li>
+     * </ul>
+     *
+     * @param clazz the Class for which an instance must be created
+     * @param type  a symbolical type, for example 'controller' or 'service'. May be null.
+     *
+     * @return a newly instantiated object of type <tt>clazz</tt>. Implementations must be sure
+     * to trigger an event of type Event.NEW_INSTANCE.
      */
     Object newInstance(Class clazz, String type);
 

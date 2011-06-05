@@ -30,7 +30,7 @@ import java.util.concurrent.Future;
  * @since 0.9.3
  */
 public interface ThreadingHandler {
-       /**
+    /**
      * True if the current thread is the UI thread.
      */
     boolean isUIThread();

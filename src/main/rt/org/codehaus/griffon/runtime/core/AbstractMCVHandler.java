@@ -19,103 +19,22 @@ package org.codehaus.griffon.runtime.core;
 import griffon.core.*;
 import griffon.util.ApplicationHolder;
 import griffon.util.GriffonExceptionHandler;
-import griffon.core.UIThreadManager;
 import groovy.lang.Closure;
-import groovy.lang.GroovyObjectSupport;
-import groovy.lang.GroovySystem;
-import groovy.lang.MetaClass;
 import org.codehaus.griffon.runtime.util.GriffonApplicationHelper;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.Callable;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Future;
 
 /**
- * Base implementation of the GriffonArtifact interface.
+ * Base implementation of the MVCHandler interface.
  *
  * @author Andres Almiray
- *
- * @since 0.9.1
+ * @since 0.9.3
  */
-public abstract class AbstractGriffonArtifact extends GroovyObjectSupport implements GriffonArtifact {
-    private GriffonApplication app;
-    private final Logger log;
-    
-    public static MetaClass metaClassOf(GriffonArtifact artifact) {
-        if(artifact == null) return null;
-        return GriffonApplicationHelper.expandoMetaClassFor(artifact.getClass());
-    }
-    
-    public AbstractGriffonArtifact() {
-        log = LoggerFactory.getLogger("griffon.app."+ getArtifactType() +"."+getClass().getName());
-    }
-    
-    protected abstract String getArtifactType();
-
-    public GriffonApplication getApp() {
-        return app;
-    }
-
-    public void setApp(GriffonApplication app) {
-        this.app = app;
-    }
-
-    public Object newInstance(Class clazz, String type) {
-        return GriffonApplicationHelper.newInstance(app, clazz, type);
-    }
-
-    public MetaClass getMetaClass() {
-        return metaClassOf(this);
-    }
-    
-    public void setMetaClass(MetaClass metaClass) {
-        GroovySystem.getMetaClassRegistry().setMetaClass(getClass(), metaClass);
-    }
-
-    public GriffonClass getGriffonClass() {
-        if(app == null) app = ApplicationHolder.getApplication();
-        return app.getArtifactManager().findGriffonClass(getClass());
-    }
-
-    public boolean isUIThread() {
-        return UIThreadManager.getInstance().isUIThread();
-    }
-
-    public void execAsync(Runnable runnable) {
-        UIThreadManager.getInstance().executeAsync(runnable);
-    }
-
-    public void execSync(Runnable runnable) {
-        UIThreadManager.getInstance().executeSync(runnable);
-    }
-
-    public void execOutside(Runnable runnable) {
-        UIThreadManager.getInstance().executeOutside(runnable);
-    }
-
-    public Future execFuture(ExecutorService executorService, Closure closure) {
-        return UIThreadManager.getInstance().executeFuture(executorService, closure);
-    }
-
-    public Future execFuture(Closure closure) {
-        return UIThreadManager.getInstance().executeFuture(closure);
-    }
-
-    public Future execFuture(ExecutorService executorService, Callable callable) {
-        return UIThreadManager.getInstance().executeFuture(executorService, callable);
-    }
-
-    public Future execFuture(Callable callable) {
-        return UIThreadManager.getInstance().executeFuture(callable);
-    }
-    
-    public Logger getLog() {
-        return log;
+public abstract class AbstractMCVHandler implements MVCHandler {
+    protected GriffonApplication getApp() {
+        return ApplicationHolder.getApplication();
     }
 
     public Map<String, Object> buildMVCGroup(String mvcType) {
@@ -181,8 +100,10 @@ public abstract class AbstractGriffonArtifact extends GroovyObjectSupport implem
         } finally {
             try {
                 destroyMVCGroup(mvcName);
-            } catch(Exception x) {
-                if(getApp().getLog().isWarnEnabled()) getApp().getLog().warn("Could not destroy group ["+mvcName+"] of type "+mvcType, GriffonExceptionHandler.sanitize(x));
+            } catch (Exception x) {
+                if (getApp().getLog().isWarnEnabled()) {
+                    getApp().getLog().warn("Could not destroy group [" + mvcName + "] of type " + mvcType, GriffonExceptionHandler.sanitize(x));
+                }
             }
         }
     }
@@ -206,8 +127,10 @@ public abstract class AbstractGriffonArtifact extends GroovyObjectSupport implem
         } finally {
             try {
                 destroyMVCGroup(mvcName);
-            } catch(Exception x) {
-                if(getApp().getLog().isWarnEnabled()) getApp().getLog().warn("Could not destroy group ["+mvcName+"] of type "+mvcType, GriffonExceptionHandler.sanitize(x));
+            } catch (Exception x) {
+                if (getApp().getLog().isWarnEnabled()) {
+                    getApp().getLog().warn("Could not destroy group [" + mvcName + "] of type " + mvcType, GriffonExceptionHandler.sanitize(x));
+                }
             }
         }
     }

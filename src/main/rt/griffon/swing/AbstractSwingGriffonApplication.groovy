@@ -18,7 +18,7 @@ package griffon.swing
 import griffon.application.StandaloneGriffonApplication
 import griffon.util.GriffonExceptionHandler
 import griffon.util.UIThreadHandler
-import griffon.util.UIThreadManager
+import griffon.core.UIThreadManager
 import java.awt.Toolkit
 import java.awt.Window
 import org.codehaus.griffon.runtime.core.BaseGriffonApplication

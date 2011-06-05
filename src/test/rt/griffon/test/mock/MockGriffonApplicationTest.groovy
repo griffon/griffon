@@ -2,7 +2,7 @@ package griffon.test.mock
 
 import griffon.core.ApplicationPhase
 import griffon.core.GriffonApplication
-import griffon.util.UIThreadManager
+import griffon.core.UIThreadManager
 
 class MockGriffonApplicationTest extends GroovyTestCase {
     static {

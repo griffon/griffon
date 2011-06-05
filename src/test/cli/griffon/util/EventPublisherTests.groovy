@@ -7,7 +7,7 @@ class EventPublisherTests extends GroovyTestCase {
         GroovyShell shell = new GroovyShell()
         shell.evaluate("""
             import griffon.transform.EventPublisher
-            import griffon.util.UIThreadManager
+            import griffon.core.UIThreadManager
             import griffon.test.mock.MockUIThreadHandler
 
             @EventPublisher

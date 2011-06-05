@@ -55,7 +55,7 @@ public class PropertyListenerASTTransformation extends AbstractASTTransformation
      * @return true if the node is an event publisher
      */
     public static boolean hasListenerAnnotation(AnnotatedNode node) {
-        for (AnnotationNode annotation : (Collection<AnnotationNode>) node.getAnnotations()) {
+        for (AnnotationNode annotation : node.getAnnotations()) {
             if (LISTENER.equals(annotation.getClassNode())) {
                 return true;
             }

@@ -17,8 +17,8 @@
 package org.codehaus.griffon.ast;
 
 import griffon.core.ThreadingHandler;
+import griffon.core.UIThreadManager;
 import griffon.transform.ThreadingAware;
-import griffon.util.UIThreadManager;
 import org.codehaus.groovy.ast.*;
 import org.codehaus.groovy.ast.expr.Expression;
 import org.codehaus.groovy.control.CompilePhase;

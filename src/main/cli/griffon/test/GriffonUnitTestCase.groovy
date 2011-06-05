@@ -14,7 +14,7 @@
  */
 package griffon.test
 
-import griffon.util.UIThreadManager
+import griffon.core.UIThreadManager
 import org.codehaus.griffon.commons.ConfigurationHolder
 
 /**

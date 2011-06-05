@@ -24,12 +24,27 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * <p>Annotates a method or property.</p>
+ * <p>Annotates a class.</p>
+ *
+ * <p>When annotating a class it indicates that it will be able to
+ * execute code using the Application's threading facilities.</p>
+ * <p/>
+ * The following methods will be added to classes annotated with &#064;ThreadingAware
+ * <ul>
+ * <li><code>public boolean isUIThread()</code></li>
+ * <li><code>public void execAsync(Runnable runnable)</code></li>
+ * <li><code>public void execSync(Runnable runnable)</code></li>
+ * <li><code>public void execOutside(Runnable runnable)</code></li>
+ * <li><code>public Future execFuture(ExecutorService executorService, Closure closure)</code></li>
+ * <li><code>public Future execFuture(Closure closure)</code></li>
+ * <li><code>public Future execFuture(ExecutorService executorService, Callable callable)</code></li>
+ * <li><code>public Future execFuture(Callable callable)</code></li>
+ * </ul>
  *
  * @author Andres Almiray
  * @see griffon.core.ThreadingHandler
  * @see org.codehaus.griffon.ast.ThreadingAwareASTTransformation
- * @since 0.9.2
+ * @since 0.9.3
  */
 @Retention(RetentionPolicy.SOURCE)
 @Target({ElementType.TYPE})

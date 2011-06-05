@@ -16,8 +16,8 @@
 
 package org.codehaus.griffon.ast;
 
-import griffon.util.EventPublisher;
-import griffon.util.EventRouter;
+import griffon.core.EventPublisher;
+import org.codehaus.griffon.runtime.core.EventRouter;
 import griffon.util.RunnableWithArgs;
 import org.codehaus.groovy.ast.*;
 import org.codehaus.groovy.ast.expr.*;
@@ -26,8 +26,6 @@ import org.codehaus.groovy.control.CompilePhase;
 import org.codehaus.groovy.control.SourceUnit;
 import org.codehaus.groovy.control.messages.SimpleMessage;
 import org.codehaus.groovy.transform.GroovyASTTransformation;
-
-import java.util.Collection;
 
 /**
  * Handles generation of code for the {@code @EventPublisher} annotation.
@@ -54,7 +52,7 @@ public class EventPublisherASTTransformation extends AbstractASTTransformation {
      * @return true if the node is an event publisher
      */
     public static boolean hasEventPublisherAnnotation(AnnotatedNode node) {
-        for (AnnotationNode annotation : (Collection<AnnotationNode>) node.getAnnotations()) {
+        for (AnnotationNode annotation : node.getAnnotations()) {
             if (epClassNode.equals(annotation.getClassNode())) {
                 return true;
             }
@@ -138,7 +136,7 @@ public class EventPublisherASTTransformation extends AbstractASTTransformation {
      * Adds the necessary field and methods to support event firing.
      * <p/>
      * Adds a new field:
-     * <code>protected final griffon.util.EventRouter this$eventRouter = new griffon.util.EventRouter()</code>
+     * <code>protected final org.codehaus.griffon.runtime.core.EventRouter this$eventRouter = new org.codehaus.griffon.runtime.core.EventRouter()</code>
      * <p/>
      * Also adds support methods:
      * <code>public void addEventListener(Object)</code><br/>
@@ -159,7 +157,7 @@ public class EventPublisherASTTransformation extends AbstractASTTransformation {
         ClassNode erClassNode = ClassHelper.make(EventRouter.class);
 
         // add field:
-        // protected final EventRouter this$eventRouter = new griffon.util.EventRouter()
+        // protected final EventRouter this$eventRouter = new org.codehaus.griffon.runtime.core.EventRouter()
         FieldNode erField = declaringClass.addField(
                 "this$eventRouter",
                 ACC_FINAL | ACC_PRIVATE | ACC_SYNTHETIC,

@@ -21,7 +21,7 @@ import griffon.core.GriffonAddonDescriptor
 import griffon.core.GriffonApplication
 import griffon.util.GriffonNameUtils
 import griffon.util.Metadata
-import griffon.util.UIThreadManager
+import griffon.core.UIThreadManager
 import org.codehaus.griffon.runtime.builder.UberBuilder
 import org.codehaus.griffon.runtime.core.DefaultGriffonAddon
 import org.codehaus.griffon.runtime.core.DefaultGriffonAddonDescriptor

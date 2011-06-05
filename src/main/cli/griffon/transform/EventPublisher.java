@@ -27,8 +27,8 @@ import java.lang.annotation.Target;
  * <p>Annotates a class.</p>
  *
  * <p>When annotating a class it indicates that it will become an
- * event publishing one. The class will have tha ability to send
- * arbitratry events to any listeners that may have been registered
+ * event publishing one. The class will have the ability to send
+ * arbitrary events to any listeners that may have been registered
  * with it. These events are similar to the ones published by
  * GriffonApplication.</p>
  *

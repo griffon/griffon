@@ -19,7 +19,7 @@ package org.codehaus.griffon.ast;
 import griffon.transform.Threading;
 import griffon.util.GriffonClassUtils;
 import griffon.util.GriffonClassUtils.MethodDescriptor;
-import griffon.util.UIThreadManager;
+import griffon.core.UIThreadManager;
 import org.codehaus.griffon.compiler.GriffonCompilerContext;
 import org.codehaus.groovy.ast.*;
 import org.codehaus.groovy.ast.expr.*;
