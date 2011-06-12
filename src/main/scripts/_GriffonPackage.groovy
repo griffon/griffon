@@ -548,9 +548,9 @@ doPackageTextReplacement = {dir, fileFilters ->
         ant.replace(file: fileName) {
             replacefilter(token:"@griffonAppletClass@", value: griffonAppletClass)
             replacefilter(token:"@griffonApplicationClass@", value: griffonApplicationClass)
-            replacefilter(token:"@griffonAppName@", value:"${griffonAppName}" )
-            replacefilter(token:"@griffonAppVersion@", value:"${griffonAppVersion}" )
-            replacefilter(token:"@griffonAppCodebase@", value:"${buildConfig.griffon.webstart.codebase}")
+            replacefilter(token:"@griffonAppName@", value: capitalize(griffonAppName) )
+            replacefilter(token:"@griffonAppVersion@", value: griffonAppVersion )
+            replacefilter(token:"@griffonAppCodebase@", value: buildConfig.griffon.webstart.codebase)
             replacefilter(token:"@jnlpFileName@", value: new File(fileName).name )
             replacefilter(token:"@jnlpJars@", value:jnlpJars.join('\n') )
             replacefilter(token:"@jnlpExtensions@", value:jnlpExtensions.join('\n'))
