@@ -135,9 +135,12 @@ target(package_jar: "Creates a single jar distribution and zips it.") {
     def libjars = ant.fileset(dir: jardir, includes: '*.jar')
 
     def createJarFile = { jarfile, jars, extra = {} ->
+        mergeManifest()
         ant.jar(destfile: jarfile, duplicate:'preserve') {
             manifest {
-                attribute(name: "Main-Class", value: griffonApplicationClass)
+                manifestMap.each { k, v ->
+                    attribute(name: k, value: v)
+                }
             }
             jars.each {
                 zipfileset(src: it.toString(),

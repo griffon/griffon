@@ -17,8 +17,11 @@
 import griffon.util.Environment
 import griffon.util.PlatformUtils
 import griffon.util.RunMode
+import griffon.util.Metadata
 import java.util.zip.ZipEntry
 import java.util.zip.ZipFile
+import java.text.SimpleDateFormat
+import static griffon.util.GriffonNameUtils.capitalize
 import static griffon.util.GriffonApplicationUtils.is64Bit
 import static griffon.util.GriffonApplicationUtils.osArch
 
@@ -207,6 +210,7 @@ target(jarFiles: "Jar up the package files") {
     }
 
     if (!upToDate) {
+        mergeManifest()
         ant.jar(destfile:destFileName) {
             fileset(dir:classesDirPath) {
                 exclude(name:'BuildConfig*.class')
@@ -217,6 +221,11 @@ target(jarFiles: "Jar up the package files") {
             if(metainfDirPath.list()) {
                 metainf(dir: metainfDirPath)
             }
+            manifest {
+                manifestMap.each { k, v ->
+                    attribute(name: k, value: v)
+                }
+            }
         }
         // delete resources dir as it's already included in the app jar
         // failure to do so results in duplicate resources
@@ -224,6 +233,23 @@ target(jarFiles: "Jar up the package files") {
         ant.mkdir(dir: resourcesDir)
     }
     griffonCopyDist(destFileName, jardir, !upToDate)
+}
+
+target(mergeManifest: 'Generates a Manifest with default and custom settings') {
+    String mainClass = RunMode.current != RunMode.APPLET ? griffonApplicationClass : griffonAppletClass
+    manifestMap = [
+        'Main-Class': mainClass,
+        'Built-By': System.properties['user.name'],
+        'Build-Date': new SimpleDateFormat('dd-MM-yyyy HH:mm:ss').format(new Date()),
+        'Created-By': System.properties['java.vm.version'] +' ('+ System.properties['java.vm.vendor'] +')',
+        'Griffon-Version': Metadata.current.getGriffonVersion(),
+        'Implementation-Title': capitalize(Metadata.current.getApplicationName()),
+        'Implementation-Version': Metadata.current.getApplicationVersion(),
+        'Implementation-Vendor': capitalize(Metadata.current.getApplicationName())
+    ]
+    buildConfig.griffon.jars.manifest?.each { k, v ->
+        manifestMap[k] = v
+    }
 }
 
 _copyLibs = {
