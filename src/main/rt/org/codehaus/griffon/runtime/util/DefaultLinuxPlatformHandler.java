@@ -14,24 +14,18 @@
  * limitations under the License.
  */
 
-package griffon.util
+package org.codehaus.griffon.runtime.util;
 
-import griffon.core.GriffonApplication
+import griffon.util.PlatformHandler;
+import griffon.core.GriffonApplication;
 
 /**
- * Tweaks an application for an specific platform.
+ * Handles Linux integration.
  *
- * @author Danno Ferrin
+ * @author Andres Almiray
+ * @since 0.9.3
  */
-@Deprecated
-class GriffonPlatformHelper {
-    @Deprecated
-    static void tweakForNativePlatform(GriffonApplication app) {
-        // empty
-    }
-
-    @Deprecated
-    static void tweakForMacOSX(GriffonApplication application) {
-        // empty
+public class DefaultLinuxPlatformHandler implements PlatformHandler {
+    public void handle(GriffonApplication app) {
     }
 }

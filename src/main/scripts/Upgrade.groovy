@@ -175,6 +175,12 @@ target('default': "Upgrades a Griffon application from a previous version of Gri
             configObject.writeTo(new FileWriter(new File(baseFile, '/griffon-app/conf/Application.groovy')))
         }
 
+
+        // remove GriffonApplicationHelper from Initialize.groovy
+        def initializeFile = new File(baseFile, '/griffon-app/lifecycle/Initialize.groovy')
+        initializeFile.text -= 'import griffon.util.GriffonPlatformHelper\n'
+        initializeFile.text -= 'GriffonPlatformHelper.tweakForNativePlatform(app)\n'
+
         touch(file: "${basedir}/griffon-app/i18n/messages.properties")
 
         event("StatusUpdate", ["Updating application.properties"])
@@ -237,23 +243,19 @@ griffon {
 }
 """)
         cf.text = '''// log4j configuration
-log4j {
-    appender.stdout = 'org.apache.log4j.ConsoleAppender'
-    appender.'stdout.layout'='org.apache.log4j.PatternLayout'
-    appender.'stdout.layout.ConversionPattern'='[%r] %c{2} %m%n'
-    appender.errors = 'org.apache.log4j.FileAppender'
-    appender.'errors.layout'='org.apache.log4j.PatternLayout'
-    appender.'errors.layout.ConversionPattern'='[%r] %c{2} %m%n'
-    appender.'errors.File'='stacktrace.log'
-    rootLogger='error,stdout'
-    logger {
-        griffon='error'
-        StackTrace='error,errors'
-        org {
-            codehaus.griffon.commons='info' // core / classloading
-        }
+log4j = {
+    // Example of changing the log pattern for the default console
+    // appender:
+    appenders {
+        console name: 'stdout', layout: pattern(conversionPattern: '%d [%t] %-5p %c - %m%n')
     }
-    additivity.StackTrace=false
+
+    error  'org.codehaus.griffon'
+
+    info   'griffon.util',
+           'griffon.core',
+           'griffon.swing',
+           'griffon.app'
 }
 '''
 

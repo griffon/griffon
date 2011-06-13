@@ -14,24 +14,23 @@
  * limitations under the License.
  */
 
-package griffon.util
+package griffon.util;
 
-import griffon.core.GriffonApplication
+import griffon.core.GriffonApplication;
 
 /**
- * Tweaks an application for an specific platform.
+ * A <code>PlatformHandler</code> is capable of tweaking the application
+ * to match the expectations of the current platform so that it feels and
+ * behaves native.
  *
- * @author Danno Ferrin
+ * @author Andres Almiray
+ * @since 0.9.3
  */
-@Deprecated
-class GriffonPlatformHelper {
-    @Deprecated
-    static void tweakForNativePlatform(GriffonApplication app) {
-        // empty
-    }
-
-    @Deprecated
-    static void tweakForMacOSX(GriffonApplication application) {
-        // empty
-    }
+public interface PlatformHandler {
+    /**
+     * Apply platform specific tweaks to the application.
+     *
+     * @param app the current application
+     */
+    void handle(GriffonApplication app);
 }

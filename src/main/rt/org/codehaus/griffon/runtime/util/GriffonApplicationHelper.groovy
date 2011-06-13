@@ -29,6 +29,8 @@ import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import griffon.core.*
 import org.codehaus.griffon.runtime.core.*
+import griffon.util.GriffonApplicationUtils
+import griffon.util.PlatformHandler
 
 /**
  * Utility class for bootstrapping an application and handling of MVC groups.</p>
@@ -39,8 +41,15 @@ import org.codehaus.griffon.runtime.core.*
 class GriffonApplicationHelper {
     private static final Logger LOG = LoggerFactory.getLogger(GriffonApplicationHelper)
 
+    private static final Map DEFAULT_PLATFORM_HANDLERS = [
+         linux: 'org.codehaus.griffon.runtime.util.DefaultLinuxPlatformHandler',
+         macosx: 'org.codehaus.griffon.runtime.util.DefaultMacOSXPlatformHandler',
+         solaris: 'org.codehaus.griffon.runtime.util.DefaultSolarisPlatformHandler',
+         windows: 'org.codehaus.griffon.runtime.util.DefaultWindowsPlatformHandler'
+    ]
+
     /**
-     * Creates, register and assings an ExpandoMetaClass for a target class.<p>
+     * Creates, register and assigns an ExpandoMetaClass for a target class.<p>
      * The newly created metaClass will accept changes after initialization.
      *
      * @param clazz the target class
@@ -114,8 +123,8 @@ class GriffonApplicationHelper {
 
         app.event(GriffonApplication.Event.BOOTSTRAP_START.name, [app])
 
+        applyPlatformTweaks(app)
         runScriptInsideUIThread(GriffonApplication.Lifecycle.INITIALIZE.name, app)
-
         initializeArtifactManager(app)
 
         if (!app.addonManager) {
@@ -130,6 +139,13 @@ class GriffonApplicationHelper {
         }
 
         app.event(GriffonApplication.Event.BOOTSTRAP_END.name, [app])
+    }
+
+    private static void applyPlatformTweaks(GriffonApplication app) {
+        String platform = GriffonApplicationUtils.platform
+        String handlerClassName = app.config.platform.handler?.get(platform) ?: DEFAULT_PLATFORM_HANDLERS[platform]
+        PlatformHandler platformHandler = loadClass(app, handlerClassName).newInstance()
+        platformHandler.handle(app)
     }
 
     private static void initializeArtifactManager(GriffonApplication app) {
