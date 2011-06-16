@@ -51,10 +51,10 @@ target(integrateWith:"Integrates ") {
 target(integrateAnt:"Integrates Ant with Griffon") {
    depends unpackSupportFiles
    ant.copy(todir:basedir) {
-       fileset(dir:integrationFiles, includes:"*.xml")
+       fileset(dir:"${integrationFiles}/ant")
    }
    replaceTokens()
-   println "Created Ant and Ivy builds files."
+   println "Created Ant build file."
 }
 
 target(integrateTextmate:"Integrates Textmate with Griffon") {

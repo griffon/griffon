@@ -93,7 +93,6 @@ task jarIntegrationFiles(type: Jar) {
     archiveName = "griffon-integration-files.jar"
     destinationDir = "$buildDir/assemble/jars" as File
     from 'src/dist/src/griffon/templates/ide-support'
-    from 'src/dist/src/griffon/ant'
 }
 
 resourceFilesJars = tasks.withType(Jar).matching({ jar -> jar.appFileJar } as Spec)
