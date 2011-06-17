@@ -84,11 +84,11 @@ createArtifact = { Map args = [:] ->
     if(similarFiles) {
         def fileSuffix = similarFiles[0].file.name.substring(similarFiles[0].file.name.lastIndexOf('.'))
         if(fileSuffix == fileType) {
-            if(!replaceNonag && !confirmInput("${type} ${className}${suffix}${fileType} already exists. Overwrite? [y/n]","${artifactName}.${suffix}.overwrite")) {
+            if(!replaceNonag && !confirmInput("${type} ${className}${suffix}${fileType} already exists. Overwrite?","${artifactName}.${suffix}.overwrite")) {
                 return
             }        
         } else {
-            if(!replaceNonag && !confirmInput("${type} ${className}${suffix} already exists with type ${fileSuffix}. Rename? [y/n]","${artifactName}.${suffix}.rename")) {
+            if(!replaceNonag && !confirmInput("${type} ${className}${suffix} already exists with type ${fileSuffix}. Rename?","${artifactName}.${suffix}.rename")) {
                 return
             }
             // WATCH OUT!! can cause problems with VCS systems
