@@ -149,7 +149,7 @@ class UberBuilder extends FactoryBuilderSupport {
                     script.setMetaClass(uberMetaClass)
                     if(isArtifact) script.getGriffonClass().setMetaClass(uberMetaClass)
                 }
-                script.setBinding(this)
+                script.binding = this
                 return script.run()
             } catch(x){
                 if(LOG.errorEnabled) LOG.error("An error occurred while building $script", GriffonExceptionHandler.sanitize(x))

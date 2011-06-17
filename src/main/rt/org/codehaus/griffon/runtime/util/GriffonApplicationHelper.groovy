@@ -391,6 +391,7 @@ class GriffonApplicationHelper {
 
                 // all scripts get the builder as their binding
                 if (instance instanceof Script) {
+                    builder.variables.putAll(instance.binding.variables)
                     instance.binding = builder
                 }
             }
