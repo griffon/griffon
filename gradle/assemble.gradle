@@ -33,6 +33,10 @@ tasks.withType(Jar).all {jar ->
 task jarRt(type: Jar) {
     mavenArtifact = true
     appendix = 'rt'
+    metaInf {
+        from 'src/metainf/rt/META-INF'
+        include '**/*'
+    }
     manifest = project.manifest {
         from sharedManifest
         attributes 'Implementation-Title': 'griffon-rt'

@@ -34,10 +34,10 @@ import org.slf4j.LoggerFactory
  * @author Danno Ferrin
  * @author Andres Almiray
  */
-public class AddonHelper {
+class AddonHelper {
     private static final Logger LOG = LoggerFactory.getLogger(AddonHelper)
     
-    public static final DELEGATE_TYPES = Collections.unmodifiableList([
+    static final DELEGATE_TYPES = Collections.unmodifiableList([
             "attributeDelegates",
             "preInstantiateDelegates",
             "postInstantiateDelegates",
@@ -186,7 +186,7 @@ public class AddonHelper {
                     continue
                 }
 
-                def resolvedName = "${prefix}${itemName}"
+                def resolvedName = prefix + itemName
                 if (methods.containsKey(itemName)) {
                     if(LOG.traceEnabled) LOG.trace("Injected method ${resolvedName}() on $partialTarget.key")
                     mc."$resolvedName" = methods[itemName]
@@ -220,7 +220,7 @@ public class AddonHelper {
  
     private static void addFactories(MetaClass mc, Map factories, String prefix, UberBuilder builder) {
         factories.each { fk, fv -> 
-            def resolvedName = "${prefix}${fk}"
+            def resolvedName = prefix + fk
             mc."$resolvedName" = {Object... args -> builder."$resolvedName"(*args) }
         }
     }
@@ -246,9 +246,9 @@ public class AddonHelper {
         builder.registrationGroup.get(addonName, [] as TreeSet)
         factories.each {String name, factoryOrBean ->
             if(factoryOrBean instanceof Factory) {
-                builder.registerFactory("$prefix$name", addonName, factoryOrBean)
+                builder.registerFactory(prefix + name, addonName, factoryOrBean)
             } else {
-                builder.registerBeanFactory("$prefix$name", addonName, factoryOrBean)
+                builder.registerBeanFactory(prefix + name, addonName, factoryOrBean)
             }
         }
     }
@@ -256,14 +256,14 @@ public class AddonHelper {
     static void addMethods(UberBuilder builder, Map<String, Closure> methods, String addonName, String prefix) {
         builder.registrationGroup.get(addonName, [] as TreeSet)
         methods.each {String name, Closure closure ->
-            builder.registerExplicitMethod("$prefix$name", addonName, closure)
+            builder.registerExplicitMethod(prefix + name, addonName, closure)
         }
     }
 
     static void addProperties(UberBuilder builder, Map<String, List<Closure>> props, String addonName, String prefix) {
         builder.registrationGroup.get(addonName, [] as TreeSet)
         props.each {String name, Map<String, Closure> closures ->
-            builder.registerExplicitProperty("$prefix$name", addonName, closures.get, closures.set)
+            builder.registerExplicitProperty(prefix + name, addonName, closures.get, closures.set)
         }
     }
 
