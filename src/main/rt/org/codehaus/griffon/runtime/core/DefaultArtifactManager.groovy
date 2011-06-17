@@ -38,12 +38,16 @@ class DefaultArtifactManager extends AbstractArtifactManager {
 
     Map<String, List<ArtifactInfo>> doLoadArtifactMetadata() {
         Map<String, List<ArtifactInfo>> artifacts = [:]
-        Enumeration urls = app.class.classLoader.getResources('META-INF/griffon-artifacts.properties')
+        Enumeration<URL> urls = app.class.classLoader.getResources('META-INF/griffon-artifacts.properties')
 
-        urls.each { url ->
-            def config = new ConfigSlurper().parse(url)
+        ConfigSlurper slurper = new ConfigSlurper()
+        urls.each { URL url ->
+            Properties p = new Properties()
+            p.load(url.openStream())
+            ConfigObject config = slurper.parse(p)
             if(LOG.debugEnabled) LOG.debug("Loading artifact definitions from $url")
-            config.each { type, classes -> 
+            config.each { String type, String classes ->
+                if(classes.startsWith("'") && classes.endsWith("'")) classes = classes[1..-2]
                 if(LOG.debugEnabled) LOG.debug("Artifacts of type '${type}' = ${classes.split(',').size()}")
                 List list = artifacts.get(type, [])
                 for(className in classes.split(',')) {

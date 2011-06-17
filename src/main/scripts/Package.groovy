@@ -29,6 +29,8 @@ _package_called = true
 
 includeTargets << griffonScript("_GriffonPackage")
 
+ant.taskdef(name: 'fileMerge', classname: 'org.codehaus.griffon.ant.taskdefs.FileMergeTask')
+
 target('default': "Packages a Griffon application.") {
     depends(checkVersion, parseArguments, createConfig)
 
@@ -37,19 +39,19 @@ target('default': "Packages a Griffon application.") {
     ant.mkdir(dir: distDir)
     packageType = ''
 
-    if(argsMap.params) {
+    if (argsMap.params) {
         def internal = ['zip', 'jar', 'applet', 'webstart']
         argsMap.params.each { type ->
             packageType = type
-	        debug("Making package $type")
+            debug("Making package $type")
             try {
                 System.setProperty(RunMode.KEY, RunMode.CUSTOM.name)
-                if(type in internal) {
-                    depends("package_"+type)
+                if (type in internal) {
+                    depends("package_" + type)
                 } else {
-                    event("MakePackage",[type])
+                    event("MakePackage", [type])
                 }
-            } catch(Exception x) {
+            } catch (Exception x) {
                 ant.echo(message: "Could not handle package type '${type}'")
                 ant.echo(message: x.message)
             }
@@ -73,8 +75,8 @@ target(prepackage: "packaging steps all standard packaging options do") {
     packageApp()
 
     // make codebase relative
-    if(buildConfig.griffon.webstart.codebase == "CHANGE ME") buildConfig.griffon.webstart.codebase = "file:./"
-    if(argsMap.codebase) buildConfig.griffon.webstart.codebase = argsMap.codebase
+    if (buildConfig.griffon.webstart.codebase == "CHANGE ME") buildConfig.griffon.webstart.codebase = "file:./"
+    if (argsMap.codebase) buildConfig.griffon.webstart.codebase = argsMap.codebase
 
     event("PrepackageEnd", [])
 }
@@ -83,7 +85,7 @@ target(prepackage: "packaging steps all standard packaging options do") {
  * make sure targetDistDir is set before calling this target
  */
 target(create_binary_package: "Creates a binary distribution") {
-    event("CreateBinaryPackageStart",[packageType])
+    event("CreateBinaryPackageStart", [packageType])
 
     ant.delete(dir: targetDistDir, quiet: true, failOnError: false)
     ant.mkdir(dir: targetDistDir)
@@ -98,27 +100,27 @@ target(create_binary_package: "Creates a binary distribution") {
     _copySharedFiles(targetDistDir)
     _copyPackageFiles(targetDistDir)
 
-    event("CreateBinaryPackageEnd",[packageType])
+    event("CreateBinaryPackageEnd", [packageType])
 }
 
 target(package_zip: "Creates a binary distribution and zips it.") {
     System.setProperty(RunMode.KEY, RunMode.CUSTOM.name)
     packageType = 'zip'
-    event("PackageStart",[packageType])
+    event("PackageStart", [packageType])
 
     distDir = buildConfig.griffon.dist.dir ?: "${basedir}/dist"
     targetDistDir = buildConfig.griffon.dist.zip.dir ?: "${distDir}/zip"
     depends(create_binary_package)
     _zipDist(targetDistDir, false)
 
-    event("PackageEnd",[packageType])
+    event("PackageEnd", [packageType])
 }
 
 target(package_jar: "Creates a single jar distribution and zips it.") {
     System.setProperty(RunMode.KEY, RunMode.CUSTOM.name)
     packageType = 'jar'
-    event("PackageStart",[packageType])
- 
+    event("PackageStart", [packageType])
+
     targetDistDir = buildConfig.griffon.dist.jar.dir ?: "${distDir}/jar"
     ant.delete(dir: targetDistDir, quiet: true, failOnError: false)
     ant.mkdir(dir: targetDistDir)
@@ -129,22 +131,30 @@ target(package_jar: "Creates a single jar distribution and zips it.") {
     _skipSigning = false
 
     String destFileName = argsMap.name ?: buildConfig.griffon.jars.jarName
-    if(!destFileName.endsWith(".jar")) destFile += ".jar"
+    if (!destFileName.endsWith(".jar")) destFile += ".jar"
     File destFile = new File(destFileName)
-    if(!destFile.isAbsolute()) destFile = new File("${targetDistDir}/${destFile}")
+    if (!destFile.isAbsolute()) destFile = new File("${targetDistDir}/${destFile}")
     def libjars = ant.fileset(dir: jardir, includes: '*.jar')
+    File mergeDir = new File("${projectWorkDir}/merge")
+    String signaturesPattern = 'META-INF/*.MF,META-INF/*.SF,META-INF/*.RSA,META-INF/*.DSA'
 
     def createJarFile = { jarfile, jars, extra = {} ->
+        ant.fileMerge(dir: mergeDir, applicationName: griffonAppName) {
+            jars.each {
+                zipfileset(src: it.toString(), excludes: signaturesPattern)
+            }
+            extra()
+        }
         mergeManifest()
-        ant.jar(destfile: jarfile, duplicate:'preserve') {
+        ant.jar(destfile: jarfile, duplicate: 'preserve') {
             manifest {
                 manifestMap.each { k, v ->
                     attribute(name: k, value: v)
                 }
             }
+            fileset(dir: mergeDir)
             jars.each {
-                zipfileset(src: it.toString(),
-                          excludes: "META-INF/*.MF,META-INF/*.SF,META-INF/*.RSA,META-INF/*.DSA")
+                zipfileset(src: it.toString(), excludes: signaturesPattern)
             }
             extra()
         }
@@ -158,8 +168,7 @@ target(package_jar: "Creates a single jar distribution and zips it.") {
         def destfile = new File(destFile.absolutePath - '.jar' + "-${platformOs}.jar") 
         createJarFile(destfile, libjars) {
             platformDir.eachFileMatch(~/.*\.jar/) {f ->
-                zipfileset(src: f.toString(),
-                          excludes: "META-INF/*.MF,META-INF/*.SF,META-INF/*.RSA,META-INF/*.DSA")
+                zipfileset(src: it.toString(), excludes: signaturesPattern)
             }
             File nativeLibDir = new File(platformDir.absolutePath + File.separator + 'native')
             if(nativeLibDir.exists()) fileset(dir: nativeLibDir)
@@ -169,15 +178,15 @@ target(package_jar: "Creates a single jar distribution and zips it.") {
 
     _copySharedFiles(targetDistDir)
     _copyPackageFiles(targetDistDir)
-    if (!buildConfig.griffon.dist.jar.nozip)  _zipDist(targetDistDir)
+    if (!buildConfig.griffon.dist.jar.nozip) _zipDist(targetDistDir)
 
-    event("PackageEnd",[packageType])
+    event("PackageEnd", [packageType])
 }
 
 target(package_applet: "Creates an applet distribution and zips it.") {
     System.setProperty(RunMode.KEY, RunMode.APPLET.name)
     packageType = 'applet'
-    event("PackageStart",[packageType])
+    event("PackageStart", [packageType])
 
     distDir = buildConfig.griffon.dist.dir ?: "${basedir}/dist"
     targetDistDir = buildConfig.griffon.dist.applet.dir ?: "${distDir}/applet"
@@ -187,7 +196,7 @@ target(package_applet: "Creates an applet distribution and zips it.") {
     depends(prepackage, generateJNLP)
 
     ant.copy(todir: targetDistDir) {
-        fileset(dir: buildConfig.griffon.jars.destDir, excludes: buildConfig.griffon.webstart.jnlp )
+        fileset(dir: buildConfig.griffon.jars.destDir, excludes: buildConfig.griffon.webstart.jnlp)
     }
     _copySharedFiles(targetDistDir)
 
@@ -195,13 +204,13 @@ target(package_applet: "Creates an applet distribution and zips it.") {
 
     if (!buildConfig.griffon.dist.applet.nozip) _zipDist(targetDistDir)
 
-    event("PackageEnd",[packageType])
+    event("PackageEnd", [packageType])
 }
 
 target(package_webstart: "Creates a webstart distribution and zips it.") {
     System.setProperty(RunMode.KEY, RunMode.WEBSTART.name)
     packageType = 'webstart'
-    event("PackageStart",[packageType])
+    event("PackageStart", [packageType])
 
     distDir = buildConfig.griffon.dist.dir ?: "${basedir}/dist"
     targetDistDir = buildConfig.griffon.dist.webstart.dir ?: "${distDir}/webstart"
@@ -211,7 +220,7 @@ target(package_webstart: "Creates a webstart distribution and zips it.") {
     depends(prepackage, generateJNLP)
 
     ant.copy(todir: targetDistDir) {
-        fileset(dir: buildConfig.griffon.jars.destDir, excludes: "${buildConfig.griffon.applet.jnlp}, ${buildConfig.griffon.applet.html}" )
+        fileset(dir: buildConfig.griffon.jars.destDir, excludes: "${buildConfig.griffon.applet.jnlp}, ${buildConfig.griffon.applet.html}")
     }
     _copySharedFiles(targetDistDir)
 
@@ -219,7 +228,7 @@ target(package_webstart: "Creates a webstart distribution and zips it.") {
 
     if (!buildConfig.griffon.dist.webstart.nozip) _zipDist(targetDistDir)
 
-    event("PackageEnd",[packageType])
+    event("PackageEnd", [packageType])
 }
 
 target(_copyAppLibs: "") {
@@ -246,7 +255,7 @@ target(_copyLaunchScripts: "") {
         javaOpts << "-XX:maxPermSize=$buildConfig.griffon.memory.maxPermSize"
     }
     if (buildConfig.griffon.app?.javaOpts) {
-      buildConfig.griffon.app?.javaOpts.each { javaOpts << it }
+        buildConfig.griffon.app?.javaOpts.each { javaOpts << it }
     }
     javaOpts = javaOpts ? javaOpts.join(' ') : ""
 
@@ -254,20 +263,20 @@ target(_copyLaunchScripts: "") {
     ant.copy(todir: "${targetDistDir}") {
         fileset(dir: "${griffonSettings.griffonHome}/src/griffon/templates/dist")
     }
-    ant.replace( dir: "${targetDistDir}/bin" ) {
+    ant.replace(dir: "${targetDistDir}/bin") {
         replacefilter(token: "@app.name@", value: GriffonNameUtils.capitalize(griffonAppName))
         replacefilter(token: "@app.version@", value: griffonAppVersion)
         replacefilter(token: "@app.java.opts@", value: javaOpts)
         replacefilter(token: "@app.main.class@", value: griffonApplicationClass)
     }
-    ant.move(file: "${targetDistDir}/bin/app.run",     tofile: "${targetDistDir}/bin/${griffonAppName}")
+    ant.move(file: "${targetDistDir}/bin/app.run", tofile: "${targetDistDir}/bin/${griffonAppName}")
     ant.move(file: "${targetDistDir}/bin/app.run.bat", tofile: "${targetDistDir}/bin/${griffonAppName}.bat")
     ant.chmod(dir: "${targetDistDir}/bin", excludes: '*.bat', perm: 'ugo+x')
 }
 
 _copyFiles = { srcdir, path ->
     def files = new File(srcdir in File ? srcdir.absolutePath : srcdir, path)
-    if(files.exists()) {
+    if (files.exists()) {
         ant.copy(todir: targetDistDir) {
             fileset(dir: files)
         }
@@ -291,7 +300,7 @@ _copyPackageFiles = { targetDistDir ->
 }
 
 _zipDist = { targetDistDir, usePackageType = true ->
-    def suffix = !usePackageType ? "": "-${packageType}"
+    def suffix = !usePackageType ? "" : "-${packageType}"
     def zipFileName = "${targetDistDir}/${griffonAppName}-${griffonAppVersion}${suffix}.zip"
     ant.delete(file: zipFileName, quiet: true, failOnError: false)
     ant.zip(basedir: targetDistDir, destfile: zipFileName)

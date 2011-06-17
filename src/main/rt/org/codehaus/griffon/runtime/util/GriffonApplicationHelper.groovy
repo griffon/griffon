@@ -179,6 +179,7 @@ class GriffonApplicationHelper {
         if (urls?.hasMoreElements()) {
             URL url = urls.nextElement()
             url.eachLine { line ->
+                if(line.startsWith('#')) return
                 try {
                     Class artifactHandlerClass = loadClass(app, line)
                     Constructor ctor = artifactHandlerClass.getDeclaredConstructor(GriffonApplication)
