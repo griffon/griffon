@@ -216,7 +216,7 @@ public class FileMergeTask extends MatchingTask {
 
     static {
         DEFAULT_MAPPINGS.put(Pattern.compile("META-INF/griffon-artifacts.properties"), MergeGriffonArtifacts.INSTANCE);
-        DEFAULT_MAPPINGS.put(Pattern.compile("META-INF/griffon-lookandfeel.properties"), Merge.INSTANCE);
+        // DEFAULT_MAPPINGS.put(Pattern.compile("META-INF/griffon-lookandfeel.properties"), Merge.INSTANCE);
         DEFAULT_MAPPINGS.put(Pattern.compile("META-INF/MANIFEST.MF"), MergeManifest.INSTANCE);
         DEFAULT_MAPPINGS.put(Pattern.compile("META-INF/services/.*"), Merge.INSTANCE);
         DEFAULT_MAPPINGS.put(Pattern.compile(".*.properties"), MergeProperties.INSTANCE);
@@ -337,7 +337,7 @@ public class FileMergeTask extends MatchingTask {
     }
 
     public void addFileSet(FileSet set) {
-        // ignore
+        fileSets.add(set);
     }
 
     private ConfigObject getBuildSettings() {
