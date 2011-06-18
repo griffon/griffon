@@ -95,15 +95,25 @@ target(packageResources : "Presp app/plugin resources for packaging") {
                              dest:i18nDir,
                              includes:"*.properties",
                              encoding:"UTF-8")
+            ant.native2ascii(src:"${basedir}/griffon-app/resources",
+                             dest:resourcesDir,
+                             includes:"*.properties",
+                             encoding:"UTF-8")
         }
     }
     else {
         ant.copy(todir:i18nDir) {
             fileset(dir:"${basedir}/griffon-app/i18n", includes:"*.properties")
         }
+        ant.copy(todir:resourcesDir) {
+            fileset(dir:"${basedir}/griffon-app/resources", includes:"*.properties")
+        }
     }
+    ant.copy(todir:i18nDir) {
+            fileset(dir:"${basedir}/griffon-app/i18n", includes:"*.groovy")
+        }
     ant.copy(todir:resourcesDir) {
-        fileset(dir:"${basedir}/griffon-app/resources", includes:"**/*.*")
+        fileset(dir:"${basedir}/griffon-app/resources", includes:"**/*.*", excludes:"**/*.properties" )
         fileset(dir:"${basedir}/src/main") {
             include(name:"**/*")
             exclude(name:"**/*.java")
