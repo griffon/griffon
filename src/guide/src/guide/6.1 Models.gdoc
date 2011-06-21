@@ -28,12 +28,12 @@ Another annotation, \@Listener, helps you register @PropertyChangeListeners@ wit
 import griffon.transform.PropertyListener
 import groovy.beans.Bindable
 
-@Listener(snoopAll)
+@PropertyListener(snoopAll)
 class MyModel {
     \@Bindable String name
 
     \@Bindable
-    @Listener({controller.someAction(it)})
+    @PropertyListener({controller.someAction(it)})
     String lastname
 
     def snoopAll = { evt -> ... }
@@ -61,7 +61,7 @@ class MyModel {
 }
 {code}
 
-\@Listener accepts the following values
+\@PropertyListener accepts the following values
 * in-place definition of a closure
 * reference of a closure property defined in the same class
 * a List of any of the previous two

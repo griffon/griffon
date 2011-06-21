@@ -11,7 +11,7 @@ Configuration Options:
 * @griffon.jars.jarName@ - name of the application's main jar file.
 * @griffon.dist.jar.nozip@ - skip zipping the distribution if set to true.
 
-There's a high chance of some files to have duplicates, e.g. griffon-artifacts.properties if you have installed a plugin that provides MVC groups. It's possible to instruct the build to merge duplicate files by specifying a regular expression and a merging strategy. The follwing table explains the different merging strategies available
+There's a high chance of some files to have duplicates, e.g. griffon-artifacts.properties if you have installed a plugin that provides MVC groups. It's possible to instruct the build to merge duplicate files by specifying a regular expression and a merging strategy. The following table explains the different merging strategies available
 
 {table}
 *Strategy*            | *Description*
@@ -40,11 +40,11 @@ This setting will overwrite any XML file found in the path with the last version
 The griffon build defines a set of default mappings, which are the ones found in the next table
 
 {table}
-*Regexp*                              | *MergeStrategy*
-META-INF/griffon-artifacts.properties | MergeGriffonArtifacts
-META-INF/MANIFEST.MF                  | MergeManifest
-META-INF/services/.*                  | Merge
-.*.properties                         | MergeProperties
+*Regexp*                               | *MergeStrategy*
+META-INF/griffon-artifacts.properties  | MergeGriffonArtifacts
+META-INF/MANIFEST.MF                   | MergeManifest
+META-INF/services/.\*                  | Merge
+.\*.properties                         | MergeProperties
 {table}
 
-Merging preferences must be defined from the most specific to the least. Your preferences will override any defualt settings.
+Merging preferences must be defined from the most specific to the least. Your preferences will override any default settings.
