@@ -110,7 +110,7 @@ public interface GriffonClass {
     String getPackageName();
 
     /**
-     * Returns the actual clazz represented by the GriffonClass</p>
+     * Returns the actual class represented by the GriffonClass</p>
      *
      * @return the class
      */

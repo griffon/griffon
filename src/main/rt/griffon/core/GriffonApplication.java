@@ -236,7 +236,7 @@ public interface GriffonApplication extends ThreadingHandler, MVCHandler {
     Object createApplicationContainer();
 
     /**
-     * Executes the 'Initilaize' life cycle phase.
+     * Executes the 'Initialze' life cycle phase.
      */
     void initialize();
 

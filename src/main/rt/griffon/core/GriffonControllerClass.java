@@ -29,7 +29,7 @@ public interface GriffonControllerClass extends GriffonClass {
     String TRAILING = "Controller";
 
     /**
-     * Matches all public methods and all porperties that
+     * Matches all public methods and all properties that
      * have a Closure as value.<p>
      */
     String[] getActionNames();
