@@ -98,12 +98,12 @@ def addNodeContributions = { on ->
         method name: 'propertyColumn', type: 'void'
         method name: 'closureColumn', type: 'void'
 
-        method name: 'borderLayout', type: 'java.awt.BorderLayout', params: [closure: 'groovy.lang.Closure']
-        method name: 'cardLayout', type: 'java.awt.CardLayout', params: [closure: 'groovy.lang.Closure']
-        method name: 'flowLayout', type: 'java.awt.FlowLayout', params: [closure: 'groovy.lang.Closure']
-        method name: 'gridLayout', type: 'java.awt.GridLayout', params: [closure: 'groovy.lang.Closure']
-        method name: 'overlayLayout', type: 'javax.swing.OverlayLayout', params: [closure: 'groovy.lang.Closure']
-        method name: 'springLayout', type: 'javax.swing.SpringLayout', params: [closure: 'groovy.lang.Closure']
+        method name: 'borderLayout', type: 'java.awt.BorderLayout', params: [hgap: 'int', vgap: 'int']
+        method name: 'cardLayout', type: 'java.awt.CardLayout
+        method name: 'flowLayout', type: 'java.awt.FlowLayout
+        method name: 'gridLayout', type: 'java.awt.GridLayout', params: [rows: 'int', cols: 'int']
+        method name: 'overlayLayout', type: 'javax.swing.OverlayLayout'
+        method name: 'springLayout', type: 'javax.swing.SpringLayout'
         method name: 'gridBagLayout', type: 'java.awt.GridBagLayout'
         method name: 'gridBagConstraints', type: 'java.awt.GridBagConstraints'
         method name: 'gbc', type: 'java.awt.GridBagConstraints'
@@ -119,7 +119,7 @@ def addNodeContributions = { on ->
         method name: 'glue', type: 'java.awt.Component'
         method name: 'rigidArea', type: 'java.awt.Component'
 
-        method name: 'tableLayout', type: 'groovy.swing.impl.TableLayout', params: [closure: 'groovy.lang.Closure']
+        method name: 'tableLayout', type: 'groovy.swing.impl.TableLayout'
         method name: 'tr', type: 'groovy.swing.impl.TableLayoutRow'
         method name: 'td', type: 'groovy.swing.impl.TableLayoutCell'
 

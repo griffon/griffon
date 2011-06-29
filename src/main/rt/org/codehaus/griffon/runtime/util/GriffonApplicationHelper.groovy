@@ -141,7 +141,7 @@ class GriffonApplicationHelper {
         app.event(GriffonApplication.Event.BOOTSTRAP_END.name, [app])
     }
 
-    private static void applyPlatformTweaks(GriffonApplication app) {
+    static void applyPlatformTweaks(GriffonApplication app) {
         String platform = GriffonApplicationUtils.platform
         String handlerClassName = app.config.platform.handler?.get(platform) ?: DEFAULT_PLATFORM_HANDLERS[platform]
         PlatformHandler platformHandler = loadClass(app, handlerClassName).newInstance()

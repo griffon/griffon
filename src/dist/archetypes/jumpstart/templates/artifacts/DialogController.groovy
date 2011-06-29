@@ -1,5 +1,4 @@
 @artifact.package@import java.awt.Window
-
 import griffon.transform.Threading
 
 class DialogController {
@@ -7,7 +6,7 @@ class DialogController {
     def view
     def builder
     
-    private dialog
+    protected dialog
 
     @Threading(Threading.Policy.INSIDE_UITHREAD_SYNC)
     def show = { Window window = null ->
