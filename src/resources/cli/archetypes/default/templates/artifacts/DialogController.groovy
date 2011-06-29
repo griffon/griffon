@@ -1,4 +1,5 @@
 @artifact.package@import java.awt.Window
+import griffon.transform.Threading
 
 class @artifact.name@ {
     def model
