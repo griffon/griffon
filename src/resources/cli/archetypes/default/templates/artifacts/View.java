@@ -34,7 +34,7 @@ public class @artifact.name@ extends AbstractGriffonView {
                    containerPreInit((Window) container);
                 }
                 container.add(init());
-                if(container instanceof Applet) {
+                if(container instanceof Window) {
                    containerPostInit((Window) container);
                 }
             }
