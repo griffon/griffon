@@ -59,6 +59,7 @@ class ServiceArtifactHandler extends ArtifactHandlerAdapter {
     def onNewInstance = { klass, t, instance ->
         if(type == t || app.config?.griffon?.basic_injection?.disable) return
         instance.metaClass.properties.name.each { propertyName ->
+            if(!propertyName.endsWith(trailing)) return
             def serviceInstance = serviceInstances[propertyName]
             if(!serviceInstance) {
                 GriffonClass griffonClass = findClassFor(propertyName)
