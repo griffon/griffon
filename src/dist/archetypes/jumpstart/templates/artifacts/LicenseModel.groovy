@@ -18,7 +18,7 @@
     static fetchLicenseText() {
         if(LICENSE == null) {
             try {
-                LICENSE = getClass().getResource('/license.txt').text
+                LICENSE = LicenseModel.class.getResource('/license.txt').text
             } catch(x) {
                 LICENSE = ''
             }

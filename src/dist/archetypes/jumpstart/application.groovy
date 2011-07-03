@@ -75,6 +75,15 @@ target(name: 'createApplicationProject',
         template: 'AbstractDialogModel',
         path: 'griffon-app/models')
 
+    if(fileType == '.java') {
+        createArtifact(
+            name: qualify('AbstractDialogView'),
+            suffix: '',
+            type: 'View',
+            template: 'AbstractDialogView',
+            path: 'griffon-app/views')
+    }
+
     createArtifact(
         name: qualify('DialogController'),
         suffix: '',

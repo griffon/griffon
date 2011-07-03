@@ -37,7 +37,7 @@ rowConstraints = "center, span $spanCount, wrap".toString()
 
 panel(id: 'content') {
     migLayout layoutConstraints: 'fill'
-    label(icon: imageIcon('/griffon-icon-64x64.png'), constraints: "center, span $spanCount, wrap".toString())
+    label(icon: imageIcon('/griffon-icon-64x64.png'), constraints: rowConstraints)
     label(GriffonNameUtils.capitalize(app.getMessage('application.title', app.config.application.title)) +
           ' ' + Metadata.current.getApplicationVersion(),
         font: current.font.deriveFont(Font.BOLD),
