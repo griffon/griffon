@@ -133,7 +133,7 @@ setupJavaOpts = { includeNative = true ->
             libraryPath = libraryPath + File.pathSeparator + normalizePathQuotes(nativeLibDir2.absolutePath)
         }
         System.setProperty('java.library.path', libraryPath)
-        javaOpts << "-Djava.library.path=\"$libraryPath\"".toString()
+        javaOpts << "-Djava.library.path=$libraryPath".toString()
     }
 // XXX -- NATIVE
 

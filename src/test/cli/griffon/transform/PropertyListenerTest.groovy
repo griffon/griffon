@@ -1,4 +1,4 @@
-package griffon.beans
+package griffon.transform
 
 class ListenerTest extends GroovyTestCase {
     void testSimpleValues() {
