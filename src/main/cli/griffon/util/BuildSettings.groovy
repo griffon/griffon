@@ -441,6 +441,8 @@ class BuildSettings extends AbstractBuildSettings {
     private boolean buildListenersSet
     private boolean verboseCompileSet
 
+    final Map<String, String> systemProperties = new LinkedHashMap<String, String>();
+
     BuildSettings() {
         this(null, null)
     }

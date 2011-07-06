@@ -115,6 +115,9 @@ setupJavaOpts = { includeNative = true ->
     if (argsMap.javaOpts) {
         javaOpts << argsMap.javaOpts
     }
+    griffonSettings.systemProperties.each { key, value ->
+        javaOpts << "-D${key}=${value}"
+    }
 
 // XXX -- NATIVE
     platformDir = new File(jardir.absolutePath, platform)
