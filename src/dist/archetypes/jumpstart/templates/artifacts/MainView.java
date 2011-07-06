@@ -64,7 +64,7 @@ public class @artifact.name@ extends AbstractGriffonView {
     private void containerPreInit(Window window) {
         if (window instanceof Frame) {
             ((Frame) window).setTitle(GriffonNameUtils.capitalize(
-                    message("application.title", getConfigValue("application.title").toString())));
+                    message("application.title", getApp().getConfigValue("application.title").toString())));
         }
         window.setIconImage(getImage("/griffon-icon-48x48.png"));
         if (Float.parseFloat(GriffonApplicationUtils.getJavaVersion().substring(0, 3)) > 1.5) {
@@ -89,9 +89,5 @@ public class @artifact.name@ extends AbstractGriffonView {
 
     private String message(String key, String defaultValue) {
         return MessageSourceHolder.getMessageSource().getMessage(key, defaultValue);
-    }
-
-    private Object getConfigValue(String key) {
-        return getApp().getConfig().flatten().get(key);
     }
 }

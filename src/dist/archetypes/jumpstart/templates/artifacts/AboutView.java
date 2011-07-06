@@ -78,7 +78,7 @@ public class AboutView extends AbstractDialogView {
         panel.add(label, rowConstraints);
 
         label = new JLabel(GriffonNameUtils.capitalize(message("application.title",
-                getConfigValue("application.title").toString() + " " + Metadata.getCurrent().getApplicationVersion())));
+                getApp().getConfigValue("application.title").toString() + " " + Metadata.getCurrent().getApplicationVersion())));
         label.setFont(label.getFont().deriveFont(Font.BOLD));
         panel.add(label, rowConstraints);
 

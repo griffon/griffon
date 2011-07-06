@@ -95,8 +95,4 @@ public abstract class AbstractDialogView extends AbstractGriffonView {
         return Toolkit.getDefaultToolkit().getImage(
                 getClass().getResource(path));
     }
-
-    protected Object getConfigValue(String key) {
-        return getApp().getConfig().flatten().get(key);
-    }
 }

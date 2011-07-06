@@ -10,7 +10,6 @@ import static griffon.swing.SwingAction.action;
 
 public class PreferencesView extends AbstractDialogView {
     protected JComponent buildContent() {
-
         Action closeAction = action(message("application.action.Close.name", "Close"))
                 .withMnemonic(message("application.action.Close.mnemonic", "C"))
                 .withShortDescription(message("application.action.Close.name", "Close"))
