@@ -10,12 +10,11 @@
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language govnerning permissions and
+ * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package griffon.swing
+package griffon.swing;
 
-import org.codehaus.griffon.runtime.core.BaseGriffonApplication
 
 /**
  * Basic implementation of {@code GriffonApplication} that runs in standalone/webstart mode.
@@ -24,12 +23,16 @@ import org.codehaus.griffon.runtime.core.BaseGriffonApplication
  * @author Andres Almiray
  * @since 0.1
  */
-class SwingApplication extends AbstractSwingGriffonApplication {
-    SwingApplication(String[] args = BaseGriffonApplication.EMPTY_ARGS) {
-        super(args)
+public class SwingApplication extends AbstractSwingGriffonApplication {
+    public SwingApplication() {
+        this(AbstractSwingGriffonApplication.EMPTY_ARGS);
+    }
+
+    public SwingApplication(String[] args) {
+        super(args);
     }
 
     public static void main(String[] args) {
-        AbstractSwingGriffonApplication.run(SwingApplication, args)
+        AbstractSwingGriffonApplication.run(SwingApplication.class, args);
     }
 }

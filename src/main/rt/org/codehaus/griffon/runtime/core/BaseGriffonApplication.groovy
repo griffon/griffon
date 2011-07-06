@@ -30,7 +30,7 @@ import griffon.util.*
 /**
  * Implements the basics for a skeleton GriffonApplication.<p>
  * It is recommended to use this class a starting point for any
- * custom GriffonApplication implementations, in conjuction with
+ * custom GriffonApplication implementations, in conjunction with
  * Groovy's {@code @Delegate} AST transformation, as shown next:
  *
  * <pre>
@@ -126,6 +126,15 @@ class BaseGriffonApplication implements GriffonApplication {
            // ignore - no global event handler will be used
         }
         return null
+    }
+
+    Object getConfigValue(String key) {
+        String[] keys = key.split(/\./);
+        Map cfg = getConfig();
+        for (int i = 0; i < keys.length - 1; i++) {
+            cfg = (Map) cfg.get(keys[i]);
+        }
+        return cfg.get(keys[keys.length - 1]);
     }
 
     void initialize() {
