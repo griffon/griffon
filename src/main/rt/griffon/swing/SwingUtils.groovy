@@ -55,10 +55,10 @@ class SwingUtils {
     }
 
     /**
-     * Creates a Window based on the application's configurarion.<p>
+     * Creates a Window based on the application's configuration.<p>
      * Class lookup order is<ol>
      * <li>value in app.config.application.frameClass</li>
-     * <li>'org.jdesktop.swingx.JXFrame' if SwingX is in teh classpath</li>
+     * <li>'org.jdesktop.swingx.JXFrame' if SwingX is in the classpath</li>
      * <li>'javax.swing.JFrame'</li>
      *
      * @param app the current running application
@@ -152,7 +152,7 @@ class SwingUtils {
     }
 
     /**
-     * Searches a component by name in a particular component hierarrchy.<p>
+     * Searches a component by name in a particular component hierarchy.<p>
      * A component must have a value for its <tt>name</tt> property if it's
      * to be found with this method.<br/>
      * This method performs a depth-first search.

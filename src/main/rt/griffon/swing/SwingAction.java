@@ -30,7 +30,7 @@ import java.awt.event.ActionEvent;
  */
 public class SwingAction extends AbstractAction {
     private final Closure closure;
-    
+
     public SwingAction(Closure closure) {
         this.closure = closure;
     }
@@ -59,10 +59,14 @@ public class SwingAction extends AbstractAction {
         private KeyStroke accelerator;
         private String shortDescription;
         private String longDescription;
+        private String command;
         private Icon smallIcon;
         private Icon largeIcon;
         private Closure closure;
         private RunnableWithArgs runnable;
+        private boolean enabled = true;
+
+        private boolean mnemonicSet = false;
 
         public ActionBuilder withName(String name) {
             this.name = name;
@@ -79,13 +83,30 @@ public class SwingAction extends AbstractAction {
             return this;
         }
 
+        public ActionBuilder withCommand(String command) {
+            this.command = command;
+            return this;
+        }
+
         public ActionBuilder withMnemonic(String mnemonic) {
             this.mnemonic = KeyStroke.getKeyStroke(mnemonic).getKeyCode();
+            mnemonicSet = true;
+            return this;
+        }
+
+        public ActionBuilder withMnemonic(int mnemonic) {
+            this.mnemonic = mnemonic;
+            mnemonicSet = true;
             return this;
         }
 
         public ActionBuilder withAccelerator(String accelerator) {
             this.accelerator = KeyStroke.getKeyStroke(accelerator);
+            return this;
+        }
+
+        public ActionBuilder withAccelerator(KeyStroke accelerator) {
+            this.accelerator = accelerator;
             return this;
         }
 
@@ -111,21 +132,30 @@ public class SwingAction extends AbstractAction {
             return this;
         }
 
+        public ActionBuilder withEnabled(boolean enabled) {
+            this.enabled = enabled;
+            return this;
+        }
+
         public Action build() {
-            if(closure == null && runnable == null) {
+            if (closure == null && runnable == null) {
                 throw new IllegalArgumentException("Either closure: or runnable: must have a value.");
             }
-            if(closure == null) {
+            if (closure == null) {
                 closure = new RunnableWithArgsClosure(runnable);
             }
             Action action = new SwingAction(closure);
+            action.putValue(Action.ACTION_COMMAND_KEY, command);
             action.putValue(Action.NAME, name);
-            action.putValue(Action.MNEMONIC_KEY, mnemonic);
+            if (mnemonicSet) {
+                action.putValue(Action.MNEMONIC_KEY, mnemonic);
+            }
             action.putValue(Action.ACCELERATOR_KEY, accelerator);
             action.putValue(Action.LARGE_ICON_KEY, largeIcon);
             action.putValue(Action.SMALL_ICON, smallIcon);
             action.putValue(Action.LONG_DESCRIPTION, longDescription);
             action.putValue(Action.SHORT_DESCRIPTION, shortDescription);
+            action.setEnabled(enabled);
             return action;
         }
     }
