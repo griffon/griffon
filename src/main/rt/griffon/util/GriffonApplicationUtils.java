@@ -15,10 +15,12 @@
  */
 package griffon.util;
 
+import griffon.core.GriffonApplication;
 import griffon.core.GriffonArtifact;
 import groovy.lang.GroovyObject;
 import groovy.lang.GroovySystem;
 import groovy.lang.MetaClass;
+import groovy.util.ConfigObject;
 
 /**
  * Assorted utility methods and constants.
@@ -405,5 +407,19 @@ public final class GriffonApplicationUtils {
             return ((GroovyObject) obj).getMetaClass();
         }
         return GroovySystem.getMetaClassRegistry().getMetaClass(obj.getClass());
+    }
+
+    public static boolean getConfigValueAsBoolean(String key) {
+        return getConfigValueAsBoolean(ApplicationHolder.getApplication(), key);
+    }
+
+    public static boolean getConfigValueAsBoolean(GriffonApplication app, String key) {
+        Object value = app.getConfigValue(key);
+        if (value instanceof Boolean) {
+            return ((Boolean) value);
+        } else if (value instanceof CharSequence) {
+            return Boolean.parseBoolean(value.toString());
+        }
+        return false;
     }
 }

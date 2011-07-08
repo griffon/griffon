@@ -15,12 +15,13 @@
  */
 package org.codehaus.griffon.runtime.core
 
+import griffon.core.UIThreadManager
+import griffon.util.RunnableWithArgs
 import java.util.concurrent.LinkedBlockingQueue
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import static org.codehaus.groovy.runtime.MetaClassHelper.convertToTypeArray
-import griffon.core.UIThreadManager
-import griffon.util.RunnableWithArgs
+import static griffon.util.GriffonNameUtils.capitalize
 
 /**
  * An event handling helper.<p>
@@ -40,10 +41,10 @@ import griffon.util.RunnableWithArgs
  */
 class EventRouter {
     private List listeners = Collections.synchronizedList([])
-    private Map scriptBindings = [:]
-    private Map closureListeners = Collections.synchronizedMap([:])
+    private Map<Script, Binding> scriptBindings = [:]
+    private Map<String, List> closureListeners = Collections.synchronizedMap([:])
     private static final Logger LOG = LoggerFactory.getLogger(EventRouter)
-    private final Queue deferredEvents = new LinkedBlockingQueue()
+    private final Queue<Closure> deferredEvents = new LinkedBlockingQueue<Closure>()
 
     private static final Object LOCK = new Object()
     private static int count = 1
@@ -108,7 +109,7 @@ class EventRouter {
     private Closure buildPublisher(String eventName, List params) {
         return { mode ->
             if (LOG.traceEnabled) LOG.trace("Triggering event '$eventName' $mode")
-            eventName = eventName[0].toUpperCase() + eventName[1..-1]
+            eventName = capitalize(eventName)
             def eventHandler = 'on' + eventName
             def dispatchEvent = { listener ->
                 // any exceptions that might get thrown should be caught
@@ -236,9 +237,8 @@ class EventRouter {
      */
     void addEventListener(String eventName, Closure listener) {
         if (!eventName || !listener) return
-        eventName = eventName[0].toUpperCase() + eventName[1..-1]
         synchronized (closureListeners) {
-            def list = closureListeners.get(eventName, [])
+            def list = closureListeners.get(capitalize(eventName), [])
             if (list.find { it == listener }) return
             list.add(listener)
         }
@@ -253,9 +253,8 @@ class EventRouter {
      */
     void addEventListener(String eventName, RunnableWithArgs listener) {
         if (!eventName || !listener) return
-        eventName = eventName[0].toUpperCase() + eventName[1..-1]
         synchronized (closureListeners) {
-            def list = closureListeners.get(eventName, [])
+            def list = closureListeners.get(capitalize(eventName), [])
             if (list.find { it == listener }) return
             list.add(listener)
         }
@@ -270,9 +269,8 @@ class EventRouter {
      */
     void removeEventListener(String eventName, Closure listener) {
         if (!eventName || !listener) return
-        eventName = eventName[0].toUpperCase() + eventName[1..-1]
         synchronized (closureListeners) {
-            def list = closureListeners[eventName]
+            def list = closureListeners[capitalize(eventName)]
             if (list) list.remove(listener)
         }
     }
@@ -286,9 +284,8 @@ class EventRouter {
      */
     void removeEventListener(String eventName, RunnableWithArgs listener) {
         if (!eventName || !listener) return
-        eventName = eventName[0].toUpperCase() + eventName[1..-1]
         synchronized (closureListeners) {
-            def list = closureListeners[eventName]
+            def list = closureListeners[capitalize(eventName)]
             if (list) list.remove(listener)
         }
     }
