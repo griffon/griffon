@@ -1,5 +1,4 @@
 @artifact.package@import net.miginfocom.swing.MigLayout;
-
 import java.awt.*;
 import javax.swing.*;
 

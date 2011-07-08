@@ -1,9 +1,7 @@
 @artifact.package@import javax.swing.*;
-
 import griffon.util.ApplicationHolder;
 import griffon.util.RunnableWithArgs;
 import griffon.plugins.i18n.MessageSourceHolder;
-
 import static griffon.swing.SwingAction.action;
 
 public class @artifact.name.plain@Actions {

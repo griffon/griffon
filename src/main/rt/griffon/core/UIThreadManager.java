@@ -1,0 +1,149 @@
+/*
+ * Copyright 2009-2011 the original author or authors.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package griffon.core;
+
+import griffon.util.UIThreadHandler;
+import groovy.lang.ExpandoMetaClass;
+import groovy.lang.MetaClass;
+import groovy.lang.Script;
+import org.codehaus.groovy.runtime.MethodClosure;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
+
+/**
+ * Helper class that can execute code inside the UI thread.
+ *
+ * @author Andres Almiray
+ */
+public class UIThreadManager {
+    // Shouldn't need to synchronize access to this field as setting its value
+    // should be done at boot time
+    private UIThreadHandler uiThreadHandler;
+    private static final ExecutorService DEFAULT_EXECUTOR_SERVICE = Executors.newFixedThreadPool(2);
+    private static final Logger LOG = LoggerFactory.getLogger(UIThreadManager.class);
+
+    private static final UIThreadManager INSTANCE = new UIThreadManager();
+
+    public static UIThreadManager getInstance() {
+        return INSTANCE;
+    }
+
+    public static void enhance(MetaClass metaClass) {
+        if (metaClass instanceof ExpandoMetaClass) {
+            ExpandoMetaClass mc = (ExpandoMetaClass) metaClass;
+            mc.registerInstanceMethod("execSync", new MethodClosure(INSTANCE, "executeSync"));
+            mc.registerInstanceMethod("execAsync", new MethodClosure(INSTANCE, "executeAsync"));
+            mc.registerInstanceMethod("execOutside", new MethodClosure(INSTANCE, "executeOutside"));
+            mc.registerInstanceMethod("isUIThread", new MethodClosure(INSTANCE, "isUIThread"));
+            mc.registerInstanceMethod("execFuture", new MethodClosure(INSTANCE, "executeFuture"));
+        }
+    }
+
+    public void setUIThreadHandler(UIThreadHandler threadHandler) {
+        if (this.uiThreadHandler != null) {
+            if (LOG.isWarnEnabled()) {
+                LOG.warn("UIThreadHandler is already set, it can't be changed!");
+            }
+        } else {
+            this.uiThreadHandler = threadHandler;
+        }
+    }
+
+    public UIThreadHandler getUIThreadHandler() {
+        if (this.uiThreadHandler == null) {
+            try {
+                // attempt loading of default UIThreadHandler -> Swing
+                setUIThreadHandler((UIThreadHandler) getClass().getClassLoader().loadClass("griffon.swing.SwingUIThreadHandler").newInstance());
+            } catch (ClassNotFoundException e) {
+                throw new IllegalStateException("Can't locate a suitable UIThreadHandler.", e);
+            } catch (InstantiationException e) {
+                throw new IllegalStateException("Can't locate a suitable UIThreadHandler.", e);
+            } catch (IllegalAccessException e) {
+                throw new IllegalStateException("Can't locate a suitable UIThreadHandler.", e);
+            }
+        }
+        return this.uiThreadHandler;
+    }
+
+    /**
+     * True if the current thread is the UI thread.
+     */
+    public boolean isUIThread() {
+        return getUIThreadHandler().isUIThread();
+    }
+
+    /**
+     * Executes a code block asynchronously on the UI thread.
+     */
+    public void executeAsync(Runnable runnable) {
+        getUIThreadHandler().executeAsync(runnable);
+    }
+
+    /**
+     * Executes a code block asynchronously on the UI thread.
+     */
+    public void executeAsync(Script script) {
+        getUIThreadHandler().executeAsync(new MethodClosure(script, "run"));
+    }
+
+    /**
+     * Executes a code block synchronously on the UI thread.
+     */
+    public void executeSync(Runnable runnable) {
+        getUIThreadHandler().executeSync(runnable);
+    }
+
+    /**
+     * Executes a code block synchronously on the UI thread.
+     */
+    public void executeSync(Script script) {
+        getUIThreadHandler().executeSync(new MethodClosure(script, "run"));
+    }
+
+    /**
+     * Executes a code block outside of the UI thread.
+     */
+    public void executeOutside(Runnable runnable) {
+        getUIThreadHandler().executeOutside(runnable);
+    }
+
+    /**
+     * Executes a code block outside of the UI thread.
+     */
+    public void executeOutside(Script script) {
+        getUIThreadHandler().executeOutside(new MethodClosure(script, "run"));
+    }
+
+    /**
+     * Executes a code block as a Future on an ExecutorService.
+     */
+    public Future executeFuture(Callable<?> callable) {
+        return executeFuture(DEFAULT_EXECUTOR_SERVICE, callable);
+    }
+
+    /**
+     * Executes a code block as a Future on an ExecutorService.
+     */
+    public Future executeFuture(ExecutorService executorService, Callable<?> callable) {
+        executorService = executorService != null ? executorService : DEFAULT_EXECUTOR_SERVICE;
+        return executorService.submit(callable);
+    }
+}

@@ -1,5 +1,5 @@
 /*
- * Copyright 2009-2011 the original author or authors.
+ * Copyright 2008-2011 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,25 +13,27 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+package griffon.app;
 
-package griffon.util
-
-import griffon.core.GriffonApplication
+import groovy.util.FactoryBuilderSupport;
 
 /**
- * Tweaks an application for an specific platform.
+ * Created by IntelliJ IDEA.
  *
- * @author Danno Ferrin
+ * @author Danno.Ferrin
+ *         Date: Sep 4, 2008
+ *         Time: 10:22:22 AM
  */
-@Deprecated
-class GriffonPlatformHelper {
-    @Deprecated
-    static void tweakForNativePlatform(GriffonApplication app) {
-        // empty
+public class ApplicationBuilder extends FactoryBuilderSupport {
+    public ApplicationBuilder() {
+        super(true);
     }
 
-    @Deprecated
-    static void tweakForMacOSX(GriffonApplication application) {
-        // empty
+    public ApplicationBuilder(boolean init) {
+        super(init);
+    }
+
+    public void registerVisuals() {
+        registerFactory("application", new ApplicationFactory());
     }
 }

@@ -1,7 +1,5 @@
 @artifact.package@import javax.swing.*;
-
 import griffon.plugins.i18n.MessageSourceHolder;
-
 import static griffon.util.GriffonApplicationUtils.*;
 
 public class @artifact.name.plain@MenuBar {
@@ -24,7 +22,7 @@ public class @artifact.name.plain@MenuBar {
         menu.addSeparator();
         menu.add(new JMenu(@artifact.name.plain@Actions.saveAction()));
         menu.add(new JMenu(@artifact.name.plain@Actions.saveAsAction()));
-        if (!getIsMacOSX()) {
+        if (!isMacOSX()) {
             menu.addSeparator();
             menu.add(new JMenu(@artifact.name.plain@Actions.quitAction()));
         }
@@ -53,12 +51,12 @@ public class @artifact.name.plain@MenuBar {
     }
 
     private static void helpMenu(JMenuBar menuBar) {
-        if (!getIsMacOSX()) {
+        if (!isMacOSX()) {
             menuBar.add(Box.createGlue());
         }
         JMenu menu = new JMenu(message("application.menu.Help.name", "Help"));
         menu.setMnemonic(message("application.menu.Help.mnemonic", "H").charAt(0));
-        if (!getIsMacOSX()) {
+        if (!isMacOSX()) {
             menu.add(new JMenu(@artifact.name.plain@Actions.aboutAction()));
             menu.add(new JMenu(@artifact.name.plain@Actions.preferencesAction()));
         }

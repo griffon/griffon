@@ -21,8 +21,8 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 
-import static griffon.util.GriffonApplicationUtils.getIsJdk16;
-import static griffon.util.GriffonApplicationUtils.getIsJdk17;
+import static griffon.util.GriffonApplicationUtils.isJdk16;
+import static griffon.util.GriffonApplicationUtils.isJdk17;
 import static griffon.util.GriffonClassUtils.invokeExactInstanceMethod;
 import static griffon.util.GriffonClassUtils.invokeExactStaticMethod;
 import static griffon.util.GriffonNameUtils.isBlank;
@@ -114,9 +114,9 @@ public class SwingUtils {
      * @return true if Translucency.TRANSLUCENT is supported, false otherwise
      */
     public static boolean isTranslucencySupported() {
-        if (getIsJdk17()) {
+        if (isJdk17()) {
             return true;
-        } else if (getIsJdk16()) {
+        } else if (isJdk16()) {
             Class awtUtilities = loadClass("com.sun.awt.AWTUtilities");
             Class translucency = loadClass("com.sun.awt.AWTUtilities$Translucency");
             Boolean bool = (Boolean) invokeExactStaticMethod(awtUtilities, "isTranslucencySupported", Enum.valueOf(translucency, "TRANSLUCENT"));
@@ -133,9 +133,9 @@ public class SwingUtils {
      */
     public static float getWindowOpacity(Window window) {
         Float value = 1.0f;
-        if (getIsJdk17()) {
+        if (isJdk17()) {
             value = (Float) invokeExactInstanceMethod(window, "getOpacity");
-        } else if (getIsJdk16()) {
+        } else if (isJdk16()) {
             Class awtUtilities = loadClass("com.sun.awt.AWTUtilities");
             value = (Float) invokeExactStaticMethod(awtUtilities, "getWindowOpacity", window);
         }
@@ -149,9 +149,9 @@ public class SwingUtils {
      * @param opacity the new opacity value
      */
     public static void setWindowOpacity(Window window, float opacity) {
-        if (getIsJdk17()) {
+        if (isJdk17()) {
             invokeExactInstanceMethod(window, "setOpacity", opacity);
-        } else if (getIsJdk16()) {
+        } else if (isJdk16()) {
             Class awtUtilities = loadClass("com.sun.awt.AWTUtilities");
             invokeExactStaticMethod(awtUtilities, "setWindowOpacity", window, opacity);
         }

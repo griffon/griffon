@@ -1,7 +1,6 @@
 @artifact.package@import griffon.plugins.i18n.MessageSourceHolder;
 import griffon.util.GriffonNameUtils;
 import org.codehaus.griffon.runtime.core.AbstractGriffonModel;
-
 import java.util.Map;
 
 public class @artifact.name@ extends AbstractGriffonModel {

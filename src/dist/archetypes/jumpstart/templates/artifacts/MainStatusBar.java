@@ -1,7 +1,6 @@
 @artifact.package@import griffon.swing.BindUtils;
 import griffon.util.ApplicationHolder;
 import groovy.util.FactoryBuilderSupport;
-
 import javax.swing.*;
 
 public class @artifact.name.plain@StatusBar {
