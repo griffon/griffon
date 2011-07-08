@@ -178,10 +178,10 @@ target('default': "Upgrades a Griffon application from a previous version of Gri
 
         // remove GriffonApplicationHelper from Initialize.groovy
         def initializeFile = new File(baseFile, '/griffon-app/lifecycle/Initialize.groovy')
-	if (initializeFile.exists()) {
+	    if (initializeFile.exists()) {
             initializeFile.text -= 'import griffon.util.GriffonPlatformHelper\n'
             initializeFile.text -= 'GriffonPlatformHelper.tweakForNativePlatform(app)\n'
-	}
+	    }
 
         touch(file: "${basedir}/griffon-app/i18n/messages.properties")
 

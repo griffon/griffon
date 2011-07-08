@@ -203,9 +203,13 @@ public abstract class AbstractGriffonApplication extends AbstractObservable impl
         String[] keys = key.split("\\.");
         Map config = getConfig();
         for (int i = 0; i < keys.length - 1; i++) {
-            config = (Map) config.get(keys[i]);
+            if (config != null) {
+                config = (Map) config.get(keys[i]);
+            } else {
+                return null;
+            }
         }
-        return config.get(keys[keys.length - 1]);
+        return config != null ? config.get(keys[keys.length - 1]) : null;
     }
 
     public void initialize() {
