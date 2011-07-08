@@ -41,7 +41,7 @@ public abstract class AbstractGriffonAddon extends GroovyObjectSupport implement
     private final GriffonApplication app;
     private final Logger log;
 
-    protected final Map<String, ?> factories = new LinkedHashMap();
+    protected final Map<String, Object> factories = new LinkedHashMap<String, Object>();
     protected final Map<String, Closure> methods = new LinkedHashMap<String, Closure>();
     protected final Map<String, Map<String, Closure>> props = new LinkedHashMap<String, Map<String, Closure>>();
     protected final Map<String, Closure> events = new LinkedHashMap<String, Closure>();
@@ -74,7 +74,7 @@ public abstract class AbstractGriffonAddon extends GroovyObjectSupport implement
     public void addonBuilderInit(GriffonApplication app, FactoryBuilderSupport builder) {}
     public void addonBuilderPostInit(GriffonApplication app, FactoryBuilderSupport builder) {}
 
-    public Map<String, ?> getFactories() {
+    public Map<String, Object> getFactories() {
         return factories;
     }
 
