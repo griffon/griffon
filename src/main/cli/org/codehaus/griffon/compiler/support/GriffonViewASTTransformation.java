@@ -16,18 +16,17 @@
 
 package org.codehaus.griffon.compiler.support;
 
+import griffon.core.GriffonView;
+import griffon.core.GriffonViewClass;
 import org.codehaus.griffon.compiler.GriffonCompilerContext;
 import org.codehaus.griffon.compiler.SourceUnitCollector;
-import org.codehaus.groovy.ast.*;
+import org.codehaus.griffon.runtime.core.AbstractGriffonView;
+import org.codehaus.griffon.runtime.core.AbstractGriffonViewScript;
+import org.codehaus.groovy.ast.ClassHelper;
+import org.codehaus.groovy.ast.ClassNode;
 import org.codehaus.groovy.control.CompilePhase;
 import org.codehaus.groovy.control.SourceUnit;
 import org.codehaus.groovy.transform.GroovyASTTransformation;
-
-import griffon.core.GriffonView;
-import griffon.core.GriffonViewClass;
-import org.codehaus.griffon.runtime.core.AbstractGriffonView;
-import org.codehaus.griffon.runtime.core.AbstractGriffonViewScript;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

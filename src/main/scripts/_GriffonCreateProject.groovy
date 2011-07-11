@@ -55,7 +55,7 @@ createProjectWithDefaults = {
     metadataFile = new File("${basedir}/application.properties")
     initProject()
     ant.replace(dir:"${basedir}/griffon-app/conf", includes:"**/*.*") {
-        replacefilter(token: "@griffon.app.class.name@", value:appClassName )
+        replacefilter(token: "@griffon.app.class.name@", value: appClassName )
         replacefilter(token: "@griffon.version@", value: griffonVersion)
         replacefilter(token: "@griffon.project.name@", value: griffonAppName)
         replacefilter(token: "@griffon.project.key@", value: griffonAppName.replaceAll( /\s/, '.' ).toLowerCase())

@@ -17,11 +17,10 @@
  * @author Andres Almiray
  */
 
+import org.jdesktop.swingx.tips.DefaultTip
+
 import java.awt.Toolkit
 import java.awt.event.KeyEvent
-import javax.swing.KeyStroke
-import org.jdesktop.swingx.tips.DefaultTip
-import static griffon.util.GriffonApplicationUtils.isMacOSX
 
 String keyMask = KeyEvent.getKeyModifiersText(Toolkit.defaultToolkit.menuShortcutKeyMask).toUpperCase()
 

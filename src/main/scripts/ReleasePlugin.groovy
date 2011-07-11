@@ -14,24 +14,23 @@
  * limitations under the License.
  */
 
-import org.tmatesoft.svn.core.io.SVNRepositoryFactory
+import groovy.xml.DOMBuilder
+import groovy.xml.dom.DOMCategory
+import javax.xml.transform.OutputKeys
+import javax.xml.transform.Transformer
+import javax.xml.transform.TransformerFactory
+import javax.xml.transform.dom.DOMSource
+import javax.xml.transform.stream.StreamResult
+import org.codehaus.griffon.plugins.publishing.DefaultPluginPublisher
+import org.springframework.core.io.FileSystemResource
+import org.tmatesoft.svn.core.auth.ISVNAuthenticationManager
 import org.tmatesoft.svn.core.internal.io.dav.DAVRepositoryFactory
 import org.tmatesoft.svn.core.internal.io.fs.FSRepositoryFactory
 import org.tmatesoft.svn.core.internal.io.svn.SVNRepositoryFactoryImpl
-import org.tmatesoft.svn.core.io.*
+import org.tmatesoft.svn.core.io.SVNRepository
+import org.tmatesoft.svn.core.io.SVNRepositoryFactory
 import org.tmatesoft.svn.core.*
-import org.tmatesoft.svn.core.auth.*
 import org.tmatesoft.svn.core.wc.*
-import org.codehaus.griffon.documentation.MetadataGeneratingMetaClassCreationHandle
-import org.codehaus.griffon.plugins.publishing.DefaultPluginPublisher
-import org.springframework.core.io.FileSystemResource
-import groovy.xml.DOMBuilder
-import groovy.xml.dom.DOMCategory
-import javax.xml.transform.TransformerFactory
-import javax.xml.transform.OutputKeys
-import javax.xml.transform.Transformer
-import javax.xml.transform.dom.DOMSource
-import javax.xml.transform.stream.StreamResult
 
 /**
  * Gant script that handles releasing plugins to a plugin repository.

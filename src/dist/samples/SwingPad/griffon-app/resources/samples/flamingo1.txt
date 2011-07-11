@@ -19,7 +19,7 @@ panel {
   gridLayout(cols:2,rows:1)
   panel( id: 'p', constraints: context.CENTER) {
     borderLayout()
-    button( icon: svgIcon("icons/griffon-icon.svg", id:'svg', class: SwingPadController, initialDim: 16) )
+    button( icon: svgIcon("icons/griffon-icon.svg", id:'svg', class: Application, initialDim: 16) )
   }
   flexiSlider( id: 'slider', constraints: context.EAST,
     stateChanged: adjustIconSize ) {
@@ -29,16 +29,16 @@ panel {
     range(name: "Medium -> Large Icons", discrete: false, weight: 1.0 )
     range(name: "Large Icons -> Very Large Icons", discrete: false, weight: 2.0, )
     controlPoint(text: "Tiles",
-      icon: imageIcon("icons/tiles.png", class: SwingPadController) )
+      icon: imageIcon("icons/tiles.png", class: Application) )
     controlPoint(text: "Details",
-      icon: imageIcon("icons/details.png", class: SwingPadController) )
+      icon: imageIcon("icons/details.png", class: Application) )
     controlPoint(text: "Small Icons",
-      icon: imageIcon("icons/small-icons.png", class: SwingPadController) )
+      icon: imageIcon("icons/small-icons.png", class: Application) )
     controlPoint(text: "Medium Icons",
-      icon: imageIcon("icons/medium-icons.png", class: SwingPadController) )
+      icon: imageIcon("icons/medium-icons.png", class: Application) )
     controlPoint(text: "Large Icons",
-      icon: imageIcon("icons/large-icons.png", class: SwingPadController) )
+      icon: imageIcon("icons/large-icons.png", class: Application) )
     controlPoint(text: "Very Large Icons",
-      icon: imageIcon("icons/very-large-icons.png", class: SwingPadController) )
+      icon: imageIcon("icons/very-large-icons.png", class: Application) )
   }
 }

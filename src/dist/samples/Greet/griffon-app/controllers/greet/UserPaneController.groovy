@@ -16,8 +16,6 @@
 
 package greet
 
-import java.beans.PropertyChangeListener
-
 /**
  * @author Danno Ferrin
  */

@@ -15,23 +15,18 @@
  */
 
 import griffon.util.GriffonUtil
-
+import griffon.util.Metadata
 import groovy.xml.MarkupBuilder
 import org.apache.commons.io.FilenameUtils
-import org.codehaus.groovy.control.CompilationUnit
 import org.codehaus.griffon.commons.DefaultGriffonContext
-import org.codehaus.griffon.documentation.DocumentationContext
-import org.codehaus.griffon.documentation.DocumentedMethod
-import org.codehaus.griffon.documentation.DocumentedProperty
 import org.codehaus.griffon.plugins.DefaultGriffonPluginManager
-import org.codehaus.griffon.plugins.PluginManagerHolder
-import org.codehaus.griffon.resolve.IvyDependencyManager
-import org.springframework.core.io.Resource
-import griffon.util.Metadata
-import org.codehaus.griffon.resolve.GriffonRepoResolver
-import org.codehaus.griffon.resolve.PluginInstallEngine
 import org.codehaus.griffon.plugins.GriffonPluginManager
 import org.codehaus.griffon.plugins.GriffonPluginUtils
+import org.codehaus.griffon.plugins.PluginManagerHolder
+import org.codehaus.griffon.resolve.GriffonRepoResolver
+import org.codehaus.griffon.resolve.IvyDependencyManager
+import org.codehaus.griffon.resolve.PluginInstallEngine
+import org.codehaus.groovy.control.CompilationUnit
 
 /**
  * Plugin stuff. If included, must be included after "_ClasspathAndEvents".

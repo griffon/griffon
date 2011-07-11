@@ -12,9 +12,9 @@
  * - execSync { // your code }
  */
 
-import groovy.swing.SwingBuilder
 import griffon.util.GriffonPlatformHelper
-import static griffon.util.GriffonApplicationUtils.*
+import groovy.swing.SwingBuilder
+import static griffon.util.GriffonApplicationUtils.isIsMacOSX
 
 GriffonPlatformHelper.tweakForNativePlatform(app)
 SwingBuilder.lookAndFeel((isMacOSX ? 'system' : 'nimbus'), 'gtk', ['metal', [boldFonts: false]])

@@ -1,0 +1,27 @@
+Griffon will automatically create the following entries in the application's manifest
+
+{code}
+Manifest-Version: 1.0
+Ant-Version: Apache Ant 1.8.1
+Created-By: ${jvm.version} (${jvm.vendor})
+Main-Class: ${griffonApplicationClass} | ${griffonAppletClass}
+Built-By: ${user.name}
+Build-Date: dd-MM-yyyy HH:mm:ss
+Griffon-Version: ${griffonVersion}
+Implementation-Title: capitalize(${griffonAppName})
+Implementation-Version: ${appVersion}
+Implementation-Vendor: capitalize(${griffonAppName})
+{code}
+
+There might be times when you must specify additional attributes or override existing ones. You can do this by adding a new block of configuration to @BuildConfig.groovy@, for example
+
+{code}
+griffon {
+    jars {
+        manifest = [
+            'Foo': 'Bar'
+            'Built-By': 'Acme'
+        ]
+    }
+}
+{code}

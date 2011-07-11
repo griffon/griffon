@@ -16,12 +16,11 @@
 
 package org.codehaus.griffon.test.junit4.listener
 
+import junit.framework.AssertionFailedError
+import junit.framework.JUnit4TestCaseFacade
 import org.apache.tools.ant.taskdefs.optional.junit.JUnitTest
 import org.junit.runner.Description
 import org.junit.runner.notification.Failure
-
-import junit.framework.JUnit4TestCaseFacade
-import junit.framework.AssertionFailedError
 
 class PerTestRunListener {
     final name

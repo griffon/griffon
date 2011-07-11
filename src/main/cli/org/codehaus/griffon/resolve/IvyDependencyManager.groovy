@@ -15,51 +15,38 @@
  */
 package org.codehaus.griffon.resolve
 
+import griffon.util.BuildSettings
+import griffon.util.GriffonUtil
+import griffon.util.Metadata
+import griffon.util.PlatformUtils
+import java.util.concurrent.ConcurrentLinkedQueue
 import org.apache.ivy.core.event.EventManager
-import org.apache.ivy.core.module.descriptor.Configuration
-import org.apache.ivy.core.module.descriptor.DefaultModuleDescriptor
-import org.apache.ivy.core.module.descriptor.DependencyDescriptor
+import org.apache.ivy.core.module.id.ArtifactId
+import org.apache.ivy.core.module.id.ModuleId
 import org.apache.ivy.core.module.id.ModuleRevisionId
-import org.apache.ivy.core.report.ResolveReport
 import org.apache.ivy.core.resolve.IvyNode
 import org.apache.ivy.core.resolve.ResolveEngine
 import org.apache.ivy.core.resolve.ResolveOptions
 import org.apache.ivy.core.settings.IvySettings
 import org.apache.ivy.core.sort.SortEngine
+import org.apache.ivy.plugins.latest.LatestTimeStrategy
+import org.apache.ivy.plugins.matcher.ExactPatternMatcher
+import org.apache.ivy.plugins.matcher.PatternMatcher
+import org.apache.ivy.plugins.parser.m2.PomDependencyMgt
+import org.apache.ivy.plugins.parser.m2.PomReader
+import org.apache.ivy.plugins.repository.TransferListener
+import org.apache.ivy.plugins.repository.file.FileRepository
+import org.apache.ivy.plugins.repository.file.FileResource
 import org.apache.ivy.plugins.resolver.ChainResolver
 import org.apache.ivy.plugins.resolver.FileSystemResolver
 import org.apache.ivy.plugins.resolver.IBiblioResolver
+import org.apache.ivy.plugins.resolver.RepositoryResolver
 import org.apache.ivy.util.DefaultMessageLogger
 import org.apache.ivy.util.Message
-
-import griffon.util.BuildSettings
-import griffon.util.GriffonUtil
-import griffon.util.Metadata
-import griffon.util.PlatformUtils
-import org.apache.ivy.core.module.descriptor.ExcludeRule
-import org.apache.ivy.plugins.parser.m2.PomReader
-import org.apache.ivy.plugins.repository.file.FileResource
-import org.apache.ivy.plugins.repository.file.FileRepository
-import org.apache.ivy.plugins.parser.m2.PomDependencyMgt
-import org.apache.ivy.core.module.id.ModuleId
-import org.apache.ivy.core.report.ArtifactDownloadReport
-import org.apache.ivy.util.url.CredentialsStore
-import org.apache.ivy.core.module.descriptor.ModuleDescriptor
-import org.apache.ivy.core.module.descriptor.DefaultDependencyArtifactDescriptor
-import org.apache.ivy.plugins.latest.LatestTimeStrategy
 import org.apache.ivy.util.MessageLogger
-import org.apache.ivy.core.module.descriptor.Artifact
-import org.apache.ivy.core.report.ConfigurationResolveReport
-import org.apache.ivy.core.report.DownloadReport
-import org.apache.ivy.core.report.DownloadStatus
-import org.apache.ivy.plugins.matcher.PatternMatcher
-import org.apache.ivy.plugins.matcher.ExactPatternMatcher
-import org.apache.ivy.core.module.descriptor.DefaultExcludeRule
-import org.apache.ivy.core.module.id.ArtifactId
-import org.apache.ivy.core.module.descriptor.DefaultDependencyDescriptor
-import org.apache.ivy.plugins.repository.TransferListener
-import java.util.concurrent.ConcurrentLinkedQueue
-import org.apache.ivy.plugins.resolver.RepositoryResolver
+import org.apache.ivy.util.url.CredentialsStore
+import org.apache.ivy.core.module.descriptor.*
+import org.apache.ivy.core.report.*
 
 /**
  * Implementation that uses Apache Ivy under the hood

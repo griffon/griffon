@@ -2,11 +2,11 @@ package griffon.test.mock
 
 import griffon.core.ApplicationPhase
 import griffon.core.GriffonApplication
-import griffon.util.UIThreadHelper
+import griffon.core.UIThreadManager
 
 class MockGriffonApplicationTest extends GroovyTestCase {
     static {
-        UIThreadHelper.instance.setUIThreadHandler(new MockUIThreadHandler())
+        UIThreadManager.instance.setUIThreadHandler(new MockUIThreadHandler())
     }
 
     void testCanCreateApplication() {

@@ -19,29 +19,21 @@ import griffon.util.BuildScope;
 import griffon.util.Environment;
 import groovy.lang.Closure;
 import groovy.lang.GroovyObject;
-
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.codehaus.griffon.commons.GriffonContext;
 import org.codehaus.griffon.commons.GriffonClassUtils;
-import org.codehaus.griffon.plugins.exceptions.PluginException;
+import org.codehaus.griffon.commons.GriffonContext;
 import org.codehaus.griffon.documentation.DocumentationContext;
+import org.codehaus.griffon.plugins.exceptions.PluginException;
 import org.codehaus.groovy.runtime.DefaultGroovyMethods;
 import org.springframework.beans.BeanWrapper;
 import org.springframework.beans.BeanWrapperImpl;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 import org.springframework.core.type.filter.TypeFilter;
+
+import java.io.IOException;
+import java.util.*;
 
 /**
  * Implementation of the GriffonPlugin interface that wraps a Groovy plugin class

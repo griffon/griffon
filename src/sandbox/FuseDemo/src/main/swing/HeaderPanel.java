@@ -1,15 +1,10 @@
 package swing;
 
-import java.awt.Color;
-import java.awt.Dimension;
-import java.awt.Graphics;
-import java.awt.Graphics2D;
-import java.awt.Rectangle;
-import java.awt.image.BufferedImage;
-
-import javax.swing.JComponent;
-
 import org.jdesktop.fuse.InjectedResource;
+
+import javax.swing.*;
+import java.awt.*;
+import java.awt.image.BufferedImage;
 
 class HeaderPanel extends JComponent {
     ////////////////////////////////////////////////////////////////////////////

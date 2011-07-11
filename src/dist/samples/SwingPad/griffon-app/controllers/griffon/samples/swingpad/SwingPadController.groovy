@@ -15,17 +15,19 @@
 
 package griffon.samples.swingpad
 
-import java.awt.Robot
+import griffon.builder.css.CSSDecorator
+
+import griffon.transform.Threading
+import griffon.util.GriffonExceptionHandler
 import java.awt.Rectangle
+import java.awt.Robot
 import java.awt.image.BufferedImage
 import javax.imageio.ImageIO
+import javax.swing.JComponent
 import javax.swing.JFileChooser
 import javax.swing.JOptionPane
-import javax.swing.JComponent
-import griffon.util.GriffonExceptionHandler
-import griffon.builder.css.CSSDecorator
-import static griffon.util.GriffonNameUtils.isBlank
 import static griffon.util.GriffonNameUtils.capitalize
+import static griffon.util.GriffonNameUtils.isBlank
 
 /**
  * @author Andres Almiray

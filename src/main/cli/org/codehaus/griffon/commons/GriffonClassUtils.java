@@ -15,15 +15,18 @@
  */
 package org.codehaus.griffon.commons;
 
+import groovy.lang.*;
+import org.apache.commons.lang.StringUtils;
+import org.springframework.beans.BeanInstantiationException;
+import org.springframework.beans.BeanUtils;
+import org.springframework.beans.BeanWrapper;
+import org.springframework.beans.BeanWrapperImpl;
+
 import java.beans.PropertyDescriptor;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
-
 import java.util.*;
-import groovy.lang.*;
-import org.apache.commons.lang.StringUtils;
-import org.springframework.beans.*;
 
 /**
  * @author Graeme Rocher

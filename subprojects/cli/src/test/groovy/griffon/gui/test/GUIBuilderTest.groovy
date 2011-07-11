@@ -16,10 +16,8 @@
 package griffon.gui.test
 
 import griffon.gui.GUIBuilder
-import groovy.swing.SwingBuilder
+
 import groovy.swing.SwingXBuilder
-import groovy.swing.factory.BeanFactory
-import javax.swing.JPanel
 
 /**
  * Created by IntelliJ IDEA.

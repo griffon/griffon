@@ -16,16 +16,15 @@
 
 package org.codehaus.griffon.runtime.core;
 
-import java.util.Map;
-import java.io.InputStream;
-
-import groovy.lang.Script;
-import groovy.lang.GroovyShell;
-import groovy.util.FactoryBuilderSupport;
-
 import griffon.core.GriffonView;
 import griffon.core.GriffonViewClass;
 import griffon.util.Xml2Groovy;
+import groovy.lang.GroovyShell;
+import groovy.lang.Script;
+import groovy.util.FactoryBuilderSupport;
+
+import java.io.InputStream;
+import java.util.Map;
 
 import static griffon.util.GriffonNameUtils.isBlank;
 

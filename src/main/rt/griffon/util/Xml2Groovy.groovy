@@ -15,8 +15,8 @@
  */
 package griffon.util
 
-import org.xml.sax.InputSource
 import groovy.util.slurpersupport.GPathResult
+import org.xml.sax.InputSource
 
 /**
  * Translates an XML file into a Groovy script that is suitable for a Groovy builder.

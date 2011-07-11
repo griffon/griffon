@@ -15,8 +15,9 @@
  */
 package griffon.util;
 
-import java.util.concurrent.Callable;
 import groovy.lang.Closure;
+
+import java.util.concurrent.Callable;
 
 /**
  * Helper class that executes a Closure as Callable.

@@ -1,12 +1,14 @@
 package groovyedit
 
 // auto import only works with Griffon artifacts
+
+
+import griffon.transform.PropertyListener
 import groovy.beans.Bindable
-import griffon.beans.Listener
 import java.beans.PropertyChangeListener
 
 class DocumentProxy extends Document {
-    @Bindable @Listener(documentUpdater)
+    @Bindable @PropertyListener(documentUpdater)
     Document document = new Document()
 
     // copies one property value from document to itself

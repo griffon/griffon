@@ -15,8 +15,8 @@
  */
 package griffon.swing
 
-import java.awt.Window
 import griffon.core.GriffonApplication
+import java.awt.Window
 
 /**
  * Implementation of a per window {@code WindowDisplayHandler} that can be configured via a DSL.<p>

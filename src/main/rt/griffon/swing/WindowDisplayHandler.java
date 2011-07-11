@@ -15,8 +15,9 @@
  */
 package griffon.swing;
 
-import java.awt.Window;
 import griffon.core.GriffonApplication;
+
+import java.awt.*;
 
 /**
  * Controls how windows are shown and hidden at runtime.

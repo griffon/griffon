@@ -15,9 +15,9 @@
  */ 
 package org.codehaus.griffon.plugins;
 
-import java.util.Map;
-
 import org.springframework.core.io.Resource;
+
+import java.util.Map;
 
 /**
  * Base interface that just contains information about a particular plugin 

@@ -18,6 +18,7 @@ package org.codehaus.griffon.runtime.core;
 
 import griffon.core.GriffonModel;
 import griffon.core.GriffonModelClass;
+
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;

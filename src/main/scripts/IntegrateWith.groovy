@@ -51,10 +51,10 @@ target(integrateWith:"Integrates ") {
 target(integrateAnt:"Integrates Ant with Griffon") {
    depends unpackSupportFiles
    ant.copy(todir:basedir) {
-       fileset(dir:integrationFiles, includes:"*.xml")
+       fileset(dir:"${integrationFiles}/ant")
    }
    replaceTokens()
-   println "Created Ant and Ivy builds files."
+   println "Created Ant build file."
 }
 
 target(integrateTextmate:"Integrates Textmate with Griffon") {
@@ -101,9 +101,13 @@ target(replaceTokens:"Replaces any tokens in the files") {
     def appKey = griffonAppName.replaceAll( /\s/, '.' ).toLowerCase()
     ant.replace(dir: basedir, includes:"*.*") {
         replacefilter(token: "@griffon.intellij.libs@", value: intellijClasspathLibs())
-        replacefilter(token: "@griffon.libs@", value: eclipseClasspathLibs())
-        replacefilter(token: "@griffon.jar@", value: eclipseClasspathGriffonJars())
+        // replacefilter(token: "@griffon.libs@", value: eclipseClasspathLibs())
+        // replacefilter(token: "@griffon.jar@", value: eclipseClasspathGriffonJars())
         replacefilter(token: "@griffon.version@", value: griffonVersion)
+        replacefilter(token: "@groovy.version@", value: griffonSettings.groovyVersion)
+        replacefilter(token: "@ant.version@", value: griffonSettings.antVersion)
+        replacefilter(token: "@slf4j.version@", value: griffonSettings.slf4jVersion)
+        replacefilter(token: "@spring.version@", value: griffonSettings.springVersion)
         replacefilter(token: "@griffon.project.name@", value: griffonAppName)
     }
     def ideaDir = new File("${basedir}/.idea")

@@ -1,8 +1,8 @@
 package org.codehaus.griffon.runtime.core
 
-import groovy.beans.Bindable
 import griffon.core.GriffonClass
 import griffon.core.GriffonModelClass
+import groovy.beans.Bindable
 
 class DefaultGriffonModelClassTests extends AbstractGriffonClassTestCase {
     private GriffonModelClass modelClass

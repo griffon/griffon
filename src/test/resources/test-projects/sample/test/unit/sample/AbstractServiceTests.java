@@ -1,6 +1,6 @@
 package sample
 
-import griffon.test.*
+import griffon.test.GriffonUnitTestCase;
 
 class AbstractServiceTests extends GriffonUnitTestCase {
     protected void setUp() {

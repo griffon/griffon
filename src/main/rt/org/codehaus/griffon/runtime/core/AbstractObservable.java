@@ -16,6 +16,7 @@
 package org.codehaus.griffon.runtime.core;
 
 import griffon.core.Observable;
+
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;

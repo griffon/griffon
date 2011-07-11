@@ -14,7 +14,7 @@
  */
 package griffon.test
 
-import griffon.util.UIThreadHelper
+import griffon.core.UIThreadManager
 import org.codehaus.griffon.commons.ConfigurationHolder
 
 /**
@@ -22,7 +22,7 @@ import org.codehaus.griffon.commons.ConfigurationHolder
  * access to various mocking options, while making sure that the meta-
  * class magic does not leak outside of a single test.
  * It also provides access to the threading facilities exposed by
- * {@code UIThreadHelper}.
+ * {@code UIThreadManager}.
  */
 class GriffonUnitTestCase extends GroovyTestCase {
     Map savedMetaClasses
@@ -83,15 +83,15 @@ class GriffonUnitTestCase extends GroovyTestCase {
     }
 
     /** Executes code synchronously inside the UI thread */
-    def execSync = UIThreadHelper.instance.&executeSync
+    def execSync = UIThreadManager.instance.&executeSync
     /** Executes code asynchronously inside the UI thread */
-    def execAsync = UIThreadHelper.instance.&executeAsync
+    def execAsync = UIThreadManager.instance.&executeAsync
     /** Executes code outside the UI thread */
-    def execOutside = UIThreadHelper.instance.&executeOutside
+    def execOutside = UIThreadManager.instance.&executeOutside
     /** True if the current thread is the UI thread */
-    def isUIThread = UIThreadHelper.instance.&isUIThread
+    def isUIThread = UIThreadManager.instance.&isUIThread
     /** Schedules a block of code as a Future */
     def execFuture = { Object... args ->
-        UIThreadHelper.instance.executeFuture(*args)
+        UIThreadManager.instance.executeFuture(*args)
     }
 }

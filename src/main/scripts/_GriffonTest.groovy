@@ -15,15 +15,13 @@
  */
 
 import griffon.util.GriffonUtil
-
-import org.codehaus.griffon.test.junit4.JUnit4GriffonTestType
-import org.codehaus.griffon.test.support.GriffonTestMode
-import org.codehaus.griffon.test.report.junit.JUnitReportProcessor
-
-import org.codehaus.griffon.test.GriffonTestType
 import org.codehaus.griffon.test.GriffonTestTargetPattern
-import org.codehaus.griffon.test.event.GriffonTestEventPublisher
+import org.codehaus.griffon.test.GriffonTestType
 import org.codehaus.griffon.test.event.GriffonTestEventConsoleReporter
+import org.codehaus.griffon.test.event.GriffonTestEventPublisher
+import org.codehaus.griffon.test.junit4.JUnit4GriffonTestType
+import org.codehaus.griffon.test.report.junit.JUnitReportProcessor
+import org.codehaus.griffon.test.support.GriffonTestMode
 
 /**
  * Gant script that runs the Griffon unit tests

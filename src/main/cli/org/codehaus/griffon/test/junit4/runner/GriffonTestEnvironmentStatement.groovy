@@ -16,9 +16,8 @@
 
 package org.codehaus.griffon.test.junit4.runner
 
-import org.junit.runners.model.Statement
-
 import org.codehaus.griffon.test.support.GriffonTestInterceptor
+import org.junit.runners.model.Statement
 
 class GriffonTestEnvironmentStatement extends Statement {
     private testStatement

@@ -18,9 +18,9 @@ package org.codehaus.griffon.plugins;
 import griffon.util.GriffonUtil;
 import groovy.lang.GroovyObjectSupport;
 import groovy.util.slurpersupport.GPathResult;
-import org.codehaus.griffon.commons.GriffonContext;
-import org.codehaus.griffon.commons.GriffonClassUtils;
 import org.codehaus.griffon.commons.AbstractGriffonClass;
+import org.codehaus.griffon.commons.GriffonClassUtils;
+import org.codehaus.griffon.commons.GriffonContext;
 import org.springframework.util.Assert;
 
 import java.util.HashMap;

@@ -16,17 +16,17 @@
 package org.codehaus.griffon.ast;
 
 import griffon.util.GriffonUtil;
-
-import java.util.List;
-import java.util.ArrayList;
-import java.lang.reflect.Modifier;
-
 import org.apache.commons.lang.StringUtils;
 import org.codehaus.groovy.ast.*;
 import org.codehaus.groovy.ast.expr.*;
 import org.codehaus.groovy.ast.stmt.*;
-import org.codehaus.groovy.syntax.*;
 import org.codehaus.groovy.runtime.MetaClassHelper;
+import org.codehaus.groovy.syntax.Token;
+import org.codehaus.groovy.syntax.Types;
+
+import java.lang.reflect.Modifier;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Helper methods for working with Groovy AST trees.

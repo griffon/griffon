@@ -70,7 +70,7 @@ doInstallArchetypeFromURL = { url, archetypesHome ->
     def destination = "${archetypesHome}/${fullArchetypeName}"
 
     if (new File(destination).exists()) {
-        if(!confirmInput("Archetype '${fullArchetypeName}' is already installed. Overwrite? [y/n]","${fullArchetypeName}.overwrite")) {
+        if(!confirmInput("Archetype '${fullArchetypeName}' is already installed. Overwrite?","${fullArchetypeName}.overwrite")) {
             return
         }
     }
@@ -102,7 +102,7 @@ doInstallArchetypeZip = { zipFile, archetypesHome ->
     def destination = "${archetypesHome}/${fullArchetypeName}"
 
     if (new File(destination).exists()) {
-        if(!confirmInput("Archetype '${fullArchetypeName}' is already insatlled. Overwrite? [y/n]","${fullArchetypeName}.overwrite")) {
+        if(!confirmInput("Archetype '${fullArchetypeName}' is already insatlled. Overwrite?","${fullArchetypeName}.overwrite")) {
             return
         }
     }

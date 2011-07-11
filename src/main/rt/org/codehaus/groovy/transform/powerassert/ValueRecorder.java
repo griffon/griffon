@@ -16,8 +16,9 @@
 
 package org.codehaus.groovy.transform.powerassert;
 
-import java.util.List;
 import org.codehaus.groovy.runtime.powerassert.Value;
+
+import java.util.List;
 
 /**
  * Records values produced during evaluation of an assertion statement's truth

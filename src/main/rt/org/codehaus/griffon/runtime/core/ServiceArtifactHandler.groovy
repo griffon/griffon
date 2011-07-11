@@ -16,11 +16,10 @@
 
 package org.codehaus.griffon.runtime.core
 
+import griffon.core.ArtifactInfo
 import griffon.core.GriffonApplication
 import griffon.core.GriffonClass
 import griffon.core.GriffonServiceClass
-import griffon.core.ArtifactInfo
-
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 

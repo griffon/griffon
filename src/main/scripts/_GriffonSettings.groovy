@@ -14,12 +14,6 @@
  * limitations under the License.
  */
 
-import griffon.util.BuildScope
-import griffon.util.Environment
-import griffon.util.GriffonUtil
-import griffon.util.Metadata
-import griffon.util.PluginBuildSettings
-import griffon.util.PlatformUtils
 import org.codehaus.griffon.cli.ScriptExitException
 import org.codehaus.griffon.plugins.GriffonPluginUtils
 import org.springframework.core.io.ClassPathResource
@@ -27,6 +21,7 @@ import org.springframework.core.io.FileSystemResource
 import org.springframework.core.io.Resource
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver
 import org.springframework.util.FileCopyUtils
+import griffon.util.*
 
 /**
  * Gant script containing build variables.

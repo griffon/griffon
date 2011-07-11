@@ -13,12 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
- import java.awt.Font
- import javax.swing.JPanel
- import java.awt.GraphicsEnvironment
- import groovy.ui.*
- import net.miginfocom.swing.MigLayout
- 
+
+import net.miginfocom.swing.MigLayout
+import java.awt.Font
+import java.awt.GraphicsEnvironment
+import javax.swing.JPanel
+
 class FontPickerController {
 
     // these will be injected by Griffon

@@ -15,11 +15,11 @@
 
 package griffon.samples.swingpad
 
-import java.awt.Font
 import ca.odell.glazedlists.EventList
 import ca.odell.glazedlists.BasicEventList
 import ca.odell.glazedlists.SortedList
 import org.fife.ui.autocomplete.*
+import java.awt.Font
 
 /**
  * @author Andres Almiray

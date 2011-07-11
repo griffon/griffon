@@ -16,6 +16,12 @@
 package griffon.ant;
 
 import griffon.util.GriffonUtil;
+import org.apache.tools.ant.BuildException;
+import org.apache.tools.ant.Task;
+import org.apache.tools.ant.types.Path;
+import org.apache.tools.ant.types.Reference;
+import org.codehaus.griffon.cli.support.GriffonBuildHelper;
+import org.codehaus.griffon.cli.support.GriffonRootLoader;
 
 import java.io.File;
 import java.io.FilenameFilter;
@@ -24,13 +30,6 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-
-import org.apache.tools.ant.BuildException;
-import org.apache.tools.ant.Task;
-import org.apache.tools.ant.types.Path;
-import org.apache.tools.ant.types.Reference;
-import org.codehaus.griffon.cli.support.GriffonBuildHelper;
-import org.codehaus.griffon.cli.support.GriffonRootLoader;
 
 /**
  * <p>Ant task for executing Griffon scripts. To use it, first create a

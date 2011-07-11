@@ -17,47 +17,24 @@
 package org.codehaus.griffon.cli;
 
 import gant.Gant;
-import griffon.util.BuildSettings;
-import griffon.util.BuildSettingsHolder;
-import griffon.util.CosineSimilarity;
-import griffon.util.Environment;
-import griffon.util.GriffonUtil;
-import griffon.util.PlatformUtils;
-import griffon.util.PluginBuildSettings;
+import griffon.util.*;
 import groovy.lang.Closure;
 import groovy.lang.ExpandoMetaClass;
 import groovy.util.AntBuilder;
+import org.apache.tools.ant.Project;
+import org.codehaus.gant.GantBinding;
+import org.codehaus.griffon.resolve.IvyDependencyManager;
+import org.codehaus.groovy.runtime.DefaultGroovyMethods;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileFilter;
-import java.io.FilenameFilter;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.PrintStream;
+import java.io.*;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLClassLoader;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
-import org.apache.tools.ant.Project;
-import org.codehaus.gant.GantBinding;
-import org.codehaus.griffon.resolve.IvyDependencyManager;
-import org.codehaus.groovy.runtime.DefaultGroovyMethods;
-import griffon.util.GriffonExceptionHandler;
 
 /**
  * Class that handles Griffon command line interface for running scripts

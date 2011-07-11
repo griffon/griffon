@@ -16,12 +16,10 @@ class FilePanelController {
    }
 
    def saveFile = {
-      execOutside {
-         // write text to file, outside the EDT
-         model.document.file.text = view.editor.text
-         // update model.text, inside EDT
-         execAsync { model.document.contents = view.editor.text }
-      }
+      // write text to file, outside the EDT
+      model.document.file.text = view.editor.text
+      // update model.text, inside EDT
+      execAsync { model.document.contents = view.editor.text }
    }
 
    def closeFile = {

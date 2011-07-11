@@ -15,11 +15,10 @@
  */
 package groovy.ui;
 
-import javax.swing.JPanel;
-import java.awt.Graphics;
-import java.awt.Graphics2D;
-import java.awt.RenderingHints;
 import net.miginfocom.swing.MigLayout;
+
+import javax.swing.*;
+import java.awt.*;
 /**
  * Created by IntelliJ IDEA.
  * User: Danno.Ferrin

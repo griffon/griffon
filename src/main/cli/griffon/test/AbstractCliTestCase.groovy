@@ -15,11 +15,13 @@
  */
 
 package griffon.test
- 
+
 import griffon.util.BuildSettingsHolder
 import java.util.concurrent.TimeUnit
-import java.util.concurrent.locks.*
- 
+import java.util.concurrent.locks.Condition
+import java.util.concurrent.locks.Lock
+import java.util.concurrent.locks.ReentrantLock
+
 /**
 * This abstract test case makes it easy to run a Griffon command and
 * query its output. It's currently configured via a set of system

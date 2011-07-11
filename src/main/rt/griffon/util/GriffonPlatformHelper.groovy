@@ -23,75 +23,15 @@ import griffon.core.GriffonApplication
  *
  * @author Danno Ferrin
  */
+@Deprecated
 class GriffonPlatformHelper {
+    @Deprecated
     static void tweakForNativePlatform(GriffonApplication app) {
-        if (GriffonApplicationUtils.isMacOSX) {
-            tweakForMacOSX(app)
-        }
+        // empty
     }
 
-    static macOSXHandler = null
-
+    @Deprecated
     static void tweakForMacOSX(GriffonApplication application) {
-
-        // do all this a the end of bootstrap
-        application.addApplicationEventListener("BootstrapEnd", {GriffonApplication app -> 
-            // use unified menu bar
-            System.setProperty("apple.laf.useScreenMenuBar", "true")
-
-            // set menu bar title
-            System.setProperty("com.apple.mrj.application.apple.menu.about.name", GriffonNameUtils.capitalize(app.config.application?.title ?: 'Griffon'))
-            // we may want to have a more specific option like application.shortTitle, that is used first
-
-            // exit handler
-            if (!macOSXHandler) {
-                try {
-                    Binding bindings = new Binding()
-                    bindings.app = app
-                    bindings.skipAbout = app.config.osx.noabout ?: false
-                    bindings.skipPrefs = app.config.osx.noprefs ?: false
-                    bindings.skipQuit = app.config.osx.noquit ?: false
-
-                    GroovyShell shell = new GroovyShell(GriffonPlatformHelper.class.classLoader, bindings)
-                    macOSXHandler = shell.evaluate('''
-                        package griffon.util
-
-                        import griffon.core.GriffonApplication
-                        import com.apple.mrj.*
-
-                        class GriffonMacOsSupport implements MRJAboutHandler, MRJQuitHandler, MRJPrefsHandler {
-                            final GriffonApplication app
-                            final boolean noquit
-
-                            GriffonMacOsSupport(GriffonApplication app, boolean noquit) {
-                                this.app = app
-                                this.noquit = noquit
-                            }
-
-                            public void handleAbout() {
-                                app.event('OSXAbout', [app])
-                            }
-
-                            public void handlePrefs() throws IllegalStateException {
-                                app.event('OSXPrefs', [app])
-                            }
-
-                            public void handleQuit() throws IllegalStateException {
-                                noquit? app.event('OSXQuit', [app]) : app.shutdown()
-                            }
-                        }
-
-                        def handler = new GriffonMacOsSupport(app, skipQuit)
-                        if(!skipAbout) MRJApplicationUtils.registerAboutHandler(handler)
-                        if(!skipPrefs) MRJApplicationUtils.registerPrefsHandler(handler)
-                        MRJApplicationUtils.registerQuitHandler(handler)
-
-                        return handler
-                    ''')
-                } catch (Throwable t) {
-                    t.printStackTrace(System.out)
-                }
-            }
-        })
+        // empty
     }
 }

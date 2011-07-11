@@ -15,6 +15,7 @@
  */
 package org.codehaus.griffon.cli.support;
 
+import griffon.build.GriffonBuildListener;
 import griffon.util.BuildSettings;
 import griffon.util.GriffonUtil;
 import griffon.util.PluginBuildSettings;
@@ -25,15 +26,9 @@ import org.springframework.core.io.Resource;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.LinkedList;
-import java.util.Map;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
-import griffon.build.GriffonBuildListener;
 
 /**
  * @author Graeme Rocher (Grails 1.1)

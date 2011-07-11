@@ -53,4 +53,9 @@ panel(id: 'content') {
     if(model.includeCredits) button(creditsAction, constraints: 'left')
     if(model.includeLicense) button(licenseAction, constraints: (model.includeCredits?'center':'left'))
     button(closeAction, constraints: 'right')
+
+    keyStrokeAction(component: current,
+        keyStroke: 'ESCAPE',
+        condition: 'in focused window',
+        action: closeAction)
 }

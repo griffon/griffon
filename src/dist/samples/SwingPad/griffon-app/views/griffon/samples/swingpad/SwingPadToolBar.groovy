@@ -19,9 +19,9 @@
 
 package griffon.samples.swingpad
 
-import javax.swing.SwingConstants
-import javax.swing.Action
 import org.fife.ui.rtextarea.RTextArea
+import javax.swing.Action
+import javax.swing.SwingConstants
 
 wrapToolbarAction = { int actionId, String id, Map params = [:] ->
     bean(new WrappingAction(RTextArea.getAction(actionId), [Action.NAME, Action.SHORT_DESCRIPTION]), id: id)

@@ -33,6 +33,10 @@ tasks.withType(Jar).all {jar ->
 task jarRt(type: Jar) {
     mavenArtifact = true
     appendix = 'rt'
+    metaInf {
+        from 'src/metainf/rt/META-INF'
+        include '**/*'
+    }
     manifest = project.manifest {
         from sharedManifest
         attributes 'Implementation-Title': 'griffon-rt'
@@ -93,7 +97,6 @@ task jarIntegrationFiles(type: Jar) {
     archiveName = "griffon-integration-files.jar"
     destinationDir = "$buildDir/assemble/jars" as File
     from 'src/dist/src/griffon/templates/ide-support'
-    from 'src/dist/src/griffon/ant'
 }
 
 resourceFilesJars = tasks.withType(Jar).matching({ jar -> jar.appFileJar } as Spec)

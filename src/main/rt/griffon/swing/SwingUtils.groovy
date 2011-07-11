@@ -15,15 +15,13 @@
  */
 package griffon.swing
 
-import java.awt.*
+import griffon.core.GriffonApplication
 import java.awt.image.BufferedImage
 import javax.swing.JFrame
 import javax.swing.WindowConstants
-
-import griffon.core.GriffonApplication
-
 import static griffon.util.GriffonApplicationUtils.isJdk16
 import static griffon.util.GriffonApplicationUtils.isJdk17
+import java.awt.*
 
 /**
  * Additional utilities for Swing based applications.

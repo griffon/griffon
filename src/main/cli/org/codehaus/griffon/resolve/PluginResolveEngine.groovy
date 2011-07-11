@@ -16,14 +16,14 @@
 package org.codehaus.griffon.resolve
 
 import griffon.util.BuildSettings
+import groovy.util.slurpersupport.GPathResult
+import org.apache.ivy.core.cache.ArtifactOrigin
 import org.apache.ivy.core.module.id.ModuleRevisionId
 import org.apache.ivy.core.report.ResolveReport
-import org.apache.ivy.core.cache.ArtifactOrigin
-import org.apache.ivy.plugins.resolver.DependencyResolver
-import org.apache.ivy.plugins.resolver.RepositoryResolver
 import org.apache.ivy.plugins.repository.Repository
 import org.apache.ivy.plugins.repository.Resource
-import groovy.util.slurpersupport.GPathResult
+import org.apache.ivy.plugins.resolver.DependencyResolver
+import org.apache.ivy.plugins.resolver.RepositoryResolver
 
 /**
  *

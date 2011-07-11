@@ -15,13 +15,13 @@
  */
 package griffon.swing;
 
-import java.util.Map;
-import java.util.LinkedHashMap;
-
-import groovy.util.FactoryBuilderSupport;
-
 import griffon.util.CallableWithArgs;
 import griffon.util.CallableWithArgsClosure;
+import groovy.util.FactoryBuilderSupport;
+
+import java.util.LinkedHashMap;
+import java.util.Map;
+
 import static griffon.util.GriffonNameUtils.isBlank;
 
 /**

@@ -14,13 +14,12 @@
  * limitations under the License.
  */
 
+import grails.doc.DocPublisher
+import griffon.util.GriffonUtil
 import org.codehaus.griffon.documentation.DocumentationContext
 import org.codehaus.griffon.documentation.DocumentedMethod
-import org.codehaus.griffon.resolve.IvyDependencyManager;
-
-import griffon.util.GriffonUtil
-import grails.doc.DocPublisher
 import org.codehaus.griffon.documentation.PdfBuilder
+import org.codehaus.griffon.resolve.IvyDependencyManager
 
 /**
  * @author Graeme Rocher (Grails 1.0)

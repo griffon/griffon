@@ -29,7 +29,7 @@ public interface GriffonServiceClass extends GriffonClass {
     String TRAILING = "Service";
 
     /**
-     * Matches all public methods and all porperties that
+     * Matches all public methods and all properties that
      * have a Closure as value.<p>
      */
     String[] getServiceNames();

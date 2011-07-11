@@ -16,21 +16,18 @@
 
 package org.codehaus.griffon.test.junit4
 
-import org.codehaus.griffon.test.junit4.listener.SuiteRunListener
-import org.codehaus.griffon.test.junit4.runner.GriffonTestCaseRunnerBuilder
-import org.codehaus.griffon.test.junit4.result.JUnit4ResultGriffonTestTypeResultAdapter
-
+import java.lang.reflect.Modifier
 import org.codehaus.griffon.test.GriffonTestTypeResult
-import org.codehaus.griffon.test.support.GriffonTestTypeSupport
-import org.codehaus.griffon.test.support.GriffonTestMode
 import org.codehaus.griffon.test.event.GriffonTestEventPublisher
+import org.codehaus.griffon.test.junit4.listener.SuiteRunListener
+import org.codehaus.griffon.test.junit4.result.JUnit4ResultGriffonTestTypeResultAdapter
+import org.codehaus.griffon.test.junit4.runner.GriffonTestCaseRunnerBuilder
 import org.codehaus.griffon.test.report.junit.JUnitReportsFactory
-
-import org.junit.runners.Suite
+import org.codehaus.griffon.test.support.GriffonTestMode
+import org.codehaus.griffon.test.support.GriffonTestTypeSupport
 import org.junit.runner.Result
 import org.junit.runner.notification.RunNotifier
-
-import java.lang.reflect.Modifier
+import org.junit.runners.Suite
 
 /**
  * An {@code GriffonTestType} for JUnit4 tests.

@@ -1,4 +1,3 @@
-import java.awt.Dimension
 import org.fest.swing.fixture.*
 import org.testng.annotations.*
 import griffon.application.SingleFrameApplication

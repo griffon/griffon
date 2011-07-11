@@ -16,9 +16,9 @@
 package org.codehaus.griffon.support
 
 import junit.framework.Test
-import junit.framework.TestCase
 import junit.framework.TestResult
 import junit.framework.TestSuite
+
 //import org.codehaus.griffon.commons.GriffonClassUtils
 //import org.springframework.beans.factory.config.AutowireCapableBeanFactory
 //import org.springframework.context.ApplicationContext

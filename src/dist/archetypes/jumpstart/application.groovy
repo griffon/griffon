@@ -18,8 +18,8 @@
  * @author Andres Almiray
  */
 
-import griffon.util.Metadata
 import griffon.util.GriffonNameUtils
+import griffon.util.Metadata
 import org.springframework.core.io.Resource
 
 includeTargets << griffonScript("_GriffonPlugins")

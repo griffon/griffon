@@ -6,8 +6,8 @@ class EventPublisherTests extends GroovyTestCase {
     void testHappyPath() {
         GroovyShell shell = new GroovyShell()
         shell.evaluate("""
-            import griffon.util.EventPublisher
-            import griffon.util.UIThreadHelper
+            import griffon.transform.EventPublisher
+            import griffon.core.UIThreadManager
             import griffon.test.mock.MockUIThreadHandler
 
             @EventPublisher
@@ -28,7 +28,7 @@ class EventPublisherTests extends GroovyTestCase {
                void onEmpty() { value = "empty" }
             }
 
-            UIThreadHelper.instance.setUIThreadHandler(new MockUIThreadHandler())
+            UIThreadManager.instance.setUIThreadHandler(new MockUIThreadHandler())
 
             p = new Publisher()
             c = new Consumer()
@@ -45,7 +45,7 @@ class EventPublisherTests extends GroovyTestCase {
         shouldFail(CompilationFailedException) {
             GroovyShell shell = new GroovyShell()
             shell.evaluate("""
-                import griffon.util.EventPublisher
+                import griffon.transform.EventPublisher
 
                 @EventPublisher
                 class EventPublisherTestBean2  {

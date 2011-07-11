@@ -1,6 +1,10 @@
 //import swing.*
-import static java.awt.BorderLayout.*
-import static java.awt.FlowLayout.*
+
+
+import static java.awt.BorderLayout.NORTH
+import static java.awt.BorderLayout.SOUTH
+import static java.awt.FlowLayout.CENTER
+import static java.awt.FlowLayout.TRAILING
 
 actions {
    action( id: 'changeToBlackAction',

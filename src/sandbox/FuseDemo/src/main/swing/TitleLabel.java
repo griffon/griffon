@@ -31,20 +31,13 @@
 
 package swing;
 
-import java.awt.AlphaComposite;
-import java.awt.Color;
-import java.awt.Composite;
-import java.awt.Font;
-import java.awt.Graphics;
-import java.awt.Graphics2D;
-import java.awt.RenderingHints;
+import org.jdesktop.fuse.InjectedResource;
+
+import javax.swing.*;
+import java.awt.*;
 import java.awt.font.FontRenderContext;
 import java.awt.font.TextLayout;
 import java.awt.geom.Rectangle2D;
-
-import javax.swing.JComponent;
-
-import org.jdesktop.fuse.InjectedResource;
 
 public class TitleLabel extends JComponent {
     private String text;

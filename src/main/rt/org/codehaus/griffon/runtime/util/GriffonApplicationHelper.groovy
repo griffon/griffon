@@ -15,26 +15,22 @@
  */
 package org.codehaus.griffon.runtime.util
 
-import griffon.core.*
-import griffon.util.Metadata
 import griffon.util.Environment
-import griffon.util.UIThreadHelper
 import griffon.util.GriffonExceptionHandler
-import org.codehaus.griffon.runtime.builder.UberBuilder
-import org.codehaus.griffon.runtime.core.DefaultAddonManager
-import org.codehaus.griffon.runtime.core.DefaultArtifactManager
-import org.codehaus.griffon.runtime.core.ModelArtifactHandler
-import org.codehaus.griffon.runtime.core.ViewArtifactHandler
-import org.codehaus.griffon.runtime.core.ControllerArtifactHandler
-import org.codehaus.griffon.runtime.core.ServiceArtifactHandler
-import org.codehaus.groovy.runtime.InvokerHelper
-
-import org.codehaus.griffon.runtime.logging.Log4jConfig
-import org.slf4j.Logger
-import org.slf4j.LoggerFactory
+import griffon.util.Metadata
+import griffon.core.UIThreadManager
+import java.lang.reflect.Constructor
 import org.apache.log4j.LogManager
 import org.apache.log4j.helpers.LogLog
-import java.lang.reflect.Constructor
+import org.codehaus.griffon.runtime.builder.UberBuilder
+import org.codehaus.griffon.runtime.logging.Log4jConfig
+import org.codehaus.groovy.runtime.InvokerHelper
+import org.slf4j.Logger
+import org.slf4j.LoggerFactory
+import griffon.core.*
+import org.codehaus.griffon.runtime.core.*
+import griffon.util.GriffonApplicationUtils
+import griffon.util.PlatformHandler
 
 /**
  * Utility class for bootstrapping an application and handling of MVC groups.</p>
@@ -45,8 +41,15 @@ import java.lang.reflect.Constructor
 class GriffonApplicationHelper {
     private static final Logger LOG = LoggerFactory.getLogger(GriffonApplicationHelper)
 
+    private static final Map DEFAULT_PLATFORM_HANDLERS = [
+         linux: 'org.codehaus.griffon.runtime.util.DefaultLinuxPlatformHandler',
+         macosx: 'org.codehaus.griffon.runtime.util.DefaultMacOSXPlatformHandler',
+         solaris: 'org.codehaus.griffon.runtime.util.DefaultSolarisPlatformHandler',
+         windows: 'org.codehaus.griffon.runtime.util.DefaultWindowsPlatformHandler'
+    ]
+
     /**
-     * Creates, register and assings an ExpandoMetaClass for a target class.<p>
+     * Creates, register and assigns an ExpandoMetaClass for a target class.<p>
      * The newly created metaClass will accept changes after initialization.
      *
      * @param clazz the target class
@@ -120,8 +123,8 @@ class GriffonApplicationHelper {
 
         app.event(GriffonApplication.Event.BOOTSTRAP_START.name, [app])
 
+        applyPlatformTweaks(app)
         runScriptInsideUIThread(GriffonApplication.Lifecycle.INITIALIZE.name, app)
-
         initializeArtifactManager(app)
 
         if (!app.addonManager) {
@@ -136,6 +139,13 @@ class GriffonApplicationHelper {
         }
 
         app.event(GriffonApplication.Event.BOOTSTRAP_END.name, [app])
+    }
+
+    private static void applyPlatformTweaks(GriffonApplication app) {
+        String platform = GriffonApplicationUtils.platform
+        String handlerClassName = app.config.platform.handler?.get(platform) ?: DEFAULT_PLATFORM_HANDLERS[platform]
+        PlatformHandler platformHandler = loadClass(app, handlerClassName).newInstance()
+        platformHandler.handle(app)
     }
 
     private static void initializeArtifactManager(GriffonApplication app) {
@@ -169,6 +179,7 @@ class GriffonApplicationHelper {
         if (urls?.hasMoreElements()) {
             URL url = urls.nextElement()
             url.eachLine { line ->
+                if(line.startsWith('#')) return
                 try {
                     Class artifactHandlerClass = loadClass(app, line)
                     Constructor ctor = artifactHandlerClass.getDeclaredConstructor(GriffonApplication)
@@ -218,14 +229,14 @@ class GriffonApplicationHelper {
             }
         }
 
-        script.isUIThread = UIThreadHelper.instance.&isUIThread
-        script.execAsync = UIThreadHelper.instance.&executeAsync
-        script.execSync = UIThreadHelper.instance.&executeSync
-        script.execOutside = UIThreadHelper.instance.&executeOutside
-        script.execFuture = {Object... args -> UIThreadHelper.instance.executeFuture(* args) }
+        script.isUIThread = UIThreadManager.instance.&isUIThread
+        script.execAsync = UIThreadManager.instance.&executeAsync
+        script.execSync = UIThreadManager.instance.&executeSync
+        script.execOutside = UIThreadManager.instance.&executeOutside
+        script.execFuture = {Object... args -> UIThreadManager.instance.executeFuture(* args) }
 
         if (LOG.infoEnabled) LOG.info("Running script '$scriptName'")
-        UIThreadHelper.instance.executeSync(script)
+        UIThreadManager.instance.executeSync(script)
     }
 
     /**
@@ -381,6 +392,7 @@ class GriffonApplicationHelper {
 
                 // all scripts get the builder as their binding
                 if (instance instanceof Script) {
+                    builder.variables.putAll(instance.binding.variables)
                     instance.binding = builder
                 }
             }
@@ -417,7 +429,7 @@ class GriffonApplicationHelper {
             if (v instanceof Script) {
                 // special case: view gets executed in the UI thread always
                 if (k == 'view') {
-                    UIThreadHelper.instance.executeSync { builder.build(v) }
+                    UIThreadManager.instance.executeSync { builder.build(v) }
                 } else {
                     // non-view gets built in the builder
                     // they can switch into the UI thread as desired
@@ -471,7 +483,7 @@ class GriffonApplicationHelper {
             // metaClass.getGriffonClass = {c ->
             //     app.artifactManager.findGriffonClass(c)
             // }.curry(klass)
-            UIThreadHelper.enhance(metaClass)
+            UIThreadManager.enhance(metaClass)
         }
     }
 

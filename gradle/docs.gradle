@@ -35,9 +35,7 @@ task copyDocs(type: Copy) {
 
     from('src/main/cli') {
         include 'griffon/test/**/*'
-        include 'griffon/beans/**/*'
-        include 'griffon/util/EventPublisher*'
-        include 'griffon/util/Threading*'
+        include 'griffon/transform/**/*'
         include '**/*.html'
     }
     from 'src/main/rt'

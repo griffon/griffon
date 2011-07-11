@@ -1,5 +1,7 @@
 @artifact.package@import java.awt.Window
 
+import griffon.transform.Threading
+
 class DialogController {
     def model
     def view

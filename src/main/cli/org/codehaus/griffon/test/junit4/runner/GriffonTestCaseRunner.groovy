@@ -16,22 +16,18 @@
 
 package org.codehaus.griffon.test.junit4.runner
 
+import griffon.core.GriffonApplication
+import java.lang.reflect.InvocationTargetException
+import org.codehaus.griffon.test.GriffonTestTargetPattern
 import org.codehaus.griffon.test.junit4.JUnit4GriffonTestType
-
+import org.codehaus.griffon.test.support.GriffonTestMode
+import org.junit.internal.runners.statements.Fail
+import org.junit.internal.runners.statements.RunAfters
+import org.junit.internal.runners.statements.RunBefores
 import org.junit.runners.BlockJUnit4ClassRunner
 import org.junit.runners.model.FrameworkMethod
 import org.junit.runners.model.Statement
-import org.junit.internal.runners.statements.RunAfters
-import org.junit.internal.runners.statements.RunBefores
-import org.junit.internal.runners.statements.Fail
-
-import griffon.core.GriffonApplication
 import org.springframework.util.ReflectionUtils
-
-import org.codehaus.griffon.test.GriffonTestTargetPattern
-import org.codehaus.griffon.test.support.GriffonTestMode
-
-import java.lang.reflect.InvocationTargetException
 
 class GriffonTestCaseRunner extends BlockJUnit4ClassRunner {
 

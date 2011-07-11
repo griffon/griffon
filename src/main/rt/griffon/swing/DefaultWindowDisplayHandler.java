@@ -15,8 +15,9 @@
  */
 package griffon.swing;
 
-import java.awt.Window;
 import griffon.core.GriffonApplication;
+
+import java.awt.*;
 
 /**
  * Default implementation of {@code WindowDisplayHandler} that simply makes the window

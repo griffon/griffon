@@ -17,33 +17,23 @@ package org.codehaus.griffon.runtime.core;
 
 import griffon.core.GriffonApplication;
 import griffon.core.GriffonClass;
-import griffon.util.GriffonNameUtils;
+import griffon.exceptions.NewInstanceCreationException;
 import griffon.util.GriffonClassUtils;
 import griffon.util.GriffonExceptionHandler;
-import griffon.exceptions.NewInstanceCreationException;
-import groovy.lang.Closure;
-import groovy.lang.GroovyObject;
-import groovy.lang.GroovySystem;
-import groovy.lang.MetaClass;
-import groovy.lang.MetaMethod;
-import groovy.lang.MetaProperty;
-import groovy.lang.MetaBeanProperty;
-import groovy.lang.ClosureInvokingMethod;
+import griffon.util.GriffonNameUtils;
+import groovy.lang.*;
+import org.codehaus.griffon.runtime.util.GriffonApplicationHelper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.beans.PropertyDescriptor;
 import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
-import java.lang.reflect.Method;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import org.codehaus.griffon.runtime.util.GriffonApplicationHelper;
 
 /**
  * Abstract base class for Griffon types that provides common functionality for

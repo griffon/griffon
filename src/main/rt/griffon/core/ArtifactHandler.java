@@ -17,15 +17,15 @@
 package griffon.core;
 
 /**
- * The ArtefactHandler interface's purpose is to allow the analysis of conventions within a Griffon application.<p>
- * An artifact is represented by the GriffonClass interface and this interface provides methods that allow artefacts to
+ * The ArtifactHandler interface's purpose is to allow the analysis of conventions within a Griffon application.<p>
+ * An artifact is represented by the GriffonClass interface and this interface provides methods that allow artifacts to
  * be identified, created and initialized.
  *
  * @author Andres Almiray
  */
 public interface ArtifactHandler {
     /**
-     * Get the tye of artifact this handler processes.
+     * Get the type of artifact this handler processes.
      */
     String getType();
 

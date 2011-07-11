@@ -19,8 +19,8 @@
 
 package griffon.samples.swingpad
 
-import static griffon.util.GriffonApplicationUtils.*
 import javax.swing.event.PopupMenuListener
+import static griffon.util.GriffonApplicationUtils.isIsMacOSX
 
 def makeSampleScriptAction = { id, name ->
    noparent {

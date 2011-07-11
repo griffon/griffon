@@ -1,5 +1,5 @@
-import java.awt.event.ActionEvent
 import griffon.util.GriffonApplicationHelper
+import java.awt.event.ActionEvent
 
 class ConsoleController {
 

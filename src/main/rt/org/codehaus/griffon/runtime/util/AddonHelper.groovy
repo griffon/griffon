@@ -16,17 +16,15 @@
 
 package org.codehaus.griffon.runtime.util
 
-import griffon.core.GriffonApplication
 import griffon.core.GriffonAddon
 import griffon.core.GriffonAddonDescriptor
-import griffon.util.UIThreadHelper
+import griffon.core.GriffonApplication
 import griffon.util.GriffonNameUtils
 import griffon.util.Metadata
-
+import griffon.core.UIThreadManager
 import org.codehaus.griffon.runtime.builder.UberBuilder
 import org.codehaus.griffon.runtime.core.DefaultGriffonAddon
 import org.codehaus.griffon.runtime.core.DefaultGriffonAddonDescriptor
-
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 
@@ -36,10 +34,10 @@ import org.slf4j.LoggerFactory
  * @author Danno Ferrin
  * @author Andres Almiray
  */
-public class AddonHelper {
+class AddonHelper {
     private static final Logger LOG = LoggerFactory.getLogger(AddonHelper)
     
-    public static final DELEGATE_TYPES = Collections.unmodifiableList([
+    static final DELEGATE_TYPES = Collections.unmodifiableList([
             "attributeDelegates",
             "preInstantiateDelegates",
             "postInstantiateDelegates",
@@ -97,7 +95,7 @@ public class AddonHelper {
         def addonMetaClass = obj.metaClass
         addonMetaClass.app = app
         addonMetaClass.newInstance = GriffonApplicationHelper.&newInstance.curry(app)
-        UIThreadHelper.enhance(addonMetaClass)
+        UIThreadManager.enhance(addonMetaClass)
 
         if(LOG.infoEnabled) LOG.info("Loading addon $addonName with class ${addon.class.name}")
         app.event(GriffonApplication.Event.LOAD_ADDON_START.name, [addonName, addon, app])
@@ -188,7 +186,7 @@ public class AddonHelper {
                     continue
                 }
 
-                def resolvedName = "${prefix}${itemName}"
+                def resolvedName = prefix + itemName
                 if (methods.containsKey(itemName)) {
                     if(LOG.traceEnabled) LOG.trace("Injected method ${resolvedName}() on $partialTarget.key")
                     mc."$resolvedName" = methods[itemName]
@@ -222,7 +220,7 @@ public class AddonHelper {
  
     private static void addFactories(MetaClass mc, Map factories, String prefix, UberBuilder builder) {
         factories.each { fk, fv -> 
-            def resolvedName = "${prefix}${fk}"
+            def resolvedName = prefix + fk
             mc."$resolvedName" = {Object... args -> builder."$resolvedName"(*args) }
         }
     }
@@ -248,9 +246,9 @@ public class AddonHelper {
         builder.registrationGroup.get(addonName, [] as TreeSet)
         factories.each {String name, factoryOrBean ->
             if(factoryOrBean instanceof Factory) {
-                builder.registerFactory(name, addonName, factoryOrBean)
+                builder.registerFactory(prefix + name, addonName, factoryOrBean)
             } else {
-                builder.registerBeanFactory(name, addonName, factoryOrBean)
+                builder.registerBeanFactory(prefix + name, addonName, factoryOrBean)
             }
         }
     }
@@ -258,14 +256,14 @@ public class AddonHelper {
     static void addMethods(UberBuilder builder, Map<String, Closure> methods, String addonName, String prefix) {
         builder.registrationGroup.get(addonName, [] as TreeSet)
         methods.each {String name, Closure closure ->
-            builder.registerExplicitMethod(name, addonName, closure)
+            builder.registerExplicitMethod(prefix + name, addonName, closure)
         }
     }
 
     static void addProperties(UberBuilder builder, Map<String, List<Closure>> props, String addonName, String prefix) {
         builder.registrationGroup.get(addonName, [] as TreeSet)
         props.each {String name, Map<String, Closure> closures ->
-            builder.registerExplicitProperty(name, addonName, closures.get, closures.set)
+            builder.registerExplicitProperty(prefix + name, addonName, closures.get, closures.set)
         }
     }
 
