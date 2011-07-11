@@ -16,6 +16,7 @@
 package griffon.core;
 
 import groovy.lang.MetaClass;
+
 import java.util.Arrays;
 import java.util.Set;
 import java.util.TreeSet;
@@ -109,7 +110,7 @@ public interface GriffonClass {
     String getPackageName();
 
     /**
-     * Returns the actual clazz represented by the GriffonClass</p>
+     * Returns the actual class represented by the GriffonClass</p>
      *
      * @return the class
      */

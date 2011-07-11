@@ -15,11 +15,14 @@
  */
 package org.codehaus.griffon.compiler;
 
-import org.codehaus.groovy.ast.*;
+import org.codehaus.groovy.ast.ClassCodeExpressionTransformer;
+import org.codehaus.groovy.ast.ClassNode;
+import org.codehaus.groovy.ast.DynamicVariable;
 import org.codehaus.groovy.ast.expr.*;
-import org.codehaus.groovy.classgen.*;
-import org.codehaus.groovy.control.*;
-
+import org.codehaus.groovy.classgen.GeneratorContext;
+import org.codehaus.groovy.control.CompilationFailedException;
+import org.codehaus.groovy.control.CompilationUnit;
+import org.codehaus.groovy.control.SourceUnit;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

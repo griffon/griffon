@@ -21,8 +21,8 @@ import groovy.lang.GroovyObject;
 import org.codehaus.griffon.commons.GriffonContext;
 import org.springframework.core.type.filter.TypeFilter;
 
-import java.util.List;
 import java.util.Collection;
+import java.util.List;
 
 /**
  * <p>Plugin interface that adds Spring {@link org.springframework.beans.factory.config.BeanDefinition}s

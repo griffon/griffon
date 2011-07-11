@@ -16,7 +16,6 @@
 package org.codehaus.griffon.commons;
 
 import groovy.lang.MetaClass;
-
 import org.springframework.beans.BeanWrapper;
 
 /**

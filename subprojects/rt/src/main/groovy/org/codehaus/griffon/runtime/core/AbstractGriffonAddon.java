@@ -16,21 +16,19 @@
 
 package org.codehaus.griffon.runtime.core;
 
-import griffon.core.GriffonApplication;
 import griffon.core.GriffonAddon;
+import griffon.core.GriffonApplication;
 import griffon.util.GriffonNameUtils;
-
-import java.util.List;
-import java.util.ArrayList;
-import java.util.Map;
-import java.util.LinkedHashMap;
-
 import groovy.lang.Closure;
 import groovy.lang.GroovyObjectSupport;
 import groovy.util.FactoryBuilderSupport;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Base implementation of the GriffonAddon interface.

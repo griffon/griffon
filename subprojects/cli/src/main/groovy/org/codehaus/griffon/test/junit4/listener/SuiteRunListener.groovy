@@ -16,10 +16,9 @@
 
 package org.codehaus.griffon.test.junit4.listener
 
-import org.codehaus.griffon.test.io.SystemOutAndErrSwapper
 import org.codehaus.griffon.test.event.GriffonTestEventPublisher
+import org.codehaus.griffon.test.io.SystemOutAndErrSwapper
 import org.codehaus.griffon.test.report.junit.JUnitReportsFactory
-
 import org.junit.runner.Description
 import org.junit.runner.Result
 import org.junit.runner.notification.Failure

@@ -15,6 +15,9 @@
  */
 package org.codehaus.griffon.cli.support;
 
+import org.codehaus.groovy.tools.LoaderConfiguration;
+import org.codehaus.groovy.tools.RootLoader;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -23,9 +26,6 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.net.URL;
 import java.util.Properties;
-
-import org.codehaus.groovy.tools.LoaderConfiguration;
-import org.codehaus.groovy.tools.RootLoader;
 
 /**
  * @author Graeme Rocher (Grails 1.0)

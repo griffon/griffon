@@ -15,20 +15,21 @@
  */
 package griffon.swing;
 
-import java.awt.Window;
-import java.awt.event.ComponentEvent;
-import java.awt.event.ComponentAdapter;
-import java.awt.event.WindowEvent;
-import java.awt.event.WindowAdapter;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Collections;
-import java.util.concurrent.CopyOnWriteArrayList;
-import griffon.core.GriffonApplication;
 import griffon.core.ApplicationPhase;
+import griffon.core.GriffonApplication;
 import griffon.core.ShutdownHandler;
 import griffon.util.GriffonNameUtils;
 import groovy.util.ConfigObject;
+
+import java.awt.*;
+import java.awt.event.ComponentAdapter;
+import java.awt.event.ComponentEvent;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 /**
  * Controls a set of windows that belong to the application.<p>

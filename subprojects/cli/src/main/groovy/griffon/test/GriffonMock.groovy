@@ -16,8 +16,8 @@
 package griffon.test
 
 import groovy.mock.interceptor.Demand
-import groovy.mock.interceptor.StrictExpectation
 import groovy.mock.interceptor.LooseExpectation
+import groovy.mock.interceptor.StrictExpectation
 
 /**
  * <p>Provides similar behaviour to MockFor and StubFor, but uses

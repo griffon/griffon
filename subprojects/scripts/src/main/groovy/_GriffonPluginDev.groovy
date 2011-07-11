@@ -19,11 +19,9 @@ if (getBinding().variables.containsKey("_griffon_plugin_dev_called")) return
 _griffon_plugin_dev_called = true
 
 import griffon.util.PluginBuildSettings
-
-import org.codehaus.griffon.plugins.GriffonPluginUtils
-import org.codehaus.griffon.plugins.PluginManagerHolder
-import org.codehaus.griffon.resolve.IvyDependencyManager
 import org.apache.ivy.core.report.ArtifactDownloadReport
+import org.codehaus.griffon.plugins.GriffonPluginUtils
+import org.codehaus.griffon.resolve.IvyDependencyManager
 
 /**
  * Gant script that deals with those tasks required for plugin developers

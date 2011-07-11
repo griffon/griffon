@@ -16,16 +16,15 @@
 
 package org.codehaus.griffon.plugins.publishing
 
-import groovy.util.slurpersupport.GPathResult
-import groovy.xml.MarkupBuilder
-import org.springframework.core.io.Resource
 import griffon.util.BuildSettingsHolder
-import javax.xml.transform.stream.StreamSource
-import javax.xml.transform.stream.StreamResult
+import groovy.util.slurpersupport.GPathResult
+import javax.xml.transform.OutputKeys
 import javax.xml.transform.Source
 import javax.xml.transform.Transformer
 import javax.xml.transform.TransformerFactory
-import javax.xml.transform.OutputKeys
+import javax.xml.transform.stream.StreamResult
+import javax.xml.transform.stream.StreamSource
+import org.springframework.core.io.Resource
 
 /**
  * Utility methods for manipulating the plugin-list.xml file used

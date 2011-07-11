@@ -15,26 +15,31 @@
  */
 package org.codehaus.griffon.runtime.util
 
-import org.codehaus.griffon.runtime.builder.UberBuilder
-import groovy.swing.factory.ComponentFactory
-import groovy.swing.factory.LayoutFactory
-import groovy.swing.factory.ScrollPaneFactory
-import groovy.swing.factory.TableFactory
-import java.awt.LayoutManager
-import javax.swing.*
 import griffon.core.GriffonApplication
-
+import org.codehaus.griffon.runtime.builder.UberBuilder
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 
 /**
- * Helper class that initialzes a CompositeBuilder with the builder configuration read from the application.
+ * Helper class that initializes a CompositeBuilder with the builder configuration read from the application.
  *
  * @author Danno Ferrin
  * @author Andres Almiray
  */
 class CompositeBuilderHelper {
     private static final Logger LOG = LoggerFactory.getLogger(CompositeBuilderHelper)
+    private final static CompositeBuilderCustomizer builderCustomizer
+
+    static {
+        ClassLoader classLoader = CompositeBuilderHelper.class.classLoader
+        try {
+            URL url = classLoader.getResource('META-INF/services/' + CompositeBuilderCustomizer.class.name)
+            String className = url.text.trim()
+            builderCustomizer = classLoader.loadClass(className).newInstance()
+        } catch (Exception e) {
+            builderCustomizer = new DefaultCompositeBuilderCustomizer()
+        }
+    }
 
     static FactoryBuilderSupport createBuilder(GriffonApplication app, Map<String, MetaClass> targets) {
         UberBuilder uberBuilder = new UberBuilder()
@@ -61,7 +66,7 @@ class CompositeBuilderHelper {
     }
 
     static handleFeatures(UberBuilder uberBuilder, features) {
-        if(features) LOG.debug("Applying 'features' config node to builders")
+        if (features) LOG.debug("Applying 'features' config node to builders")
         for (feature in features) {
             switch (feature.key) {
                 case ~/.*Delegates/:
@@ -77,7 +82,7 @@ class CompositeBuilderHelper {
                 case "methods":
                     addMethods(uberBuilder, feature.value)
                     break
-                case "properties":
+                case "props":
                     addProperties(uberBuilder, feature.value)
                     break
             }
@@ -89,7 +94,7 @@ class CompositeBuilderHelper {
         if (!FactoryBuilderSupport.isAssignableFrom(builderClass)) {
             return;
         }
-        if(LOG.debugEnabled) LOG.debug("Initializing builder ${builderClass.name}")
+        if (LOG.debugEnabled) LOG.debug("Initializing builder ${builderClass.name}")
         FactoryBuilderSupport localBuilder = uberBuilder.uberInit(prefixName, builderClass)
         for (partialTarget in builderClassName.value) {
             if (partialTarget.key == 'view') {
@@ -98,18 +103,18 @@ class CompositeBuilderHelper {
             }
 
             MetaClass mc = targets[partialTarget.key]
-            if(!mc) continue
+            if (!mc) continue
 
-            if(LOG.debugEnabled) LOG.debug("Injecting builder contributions to $partialTarget.key using ${partialTarget.value}")
+            if (LOG.debugEnabled) LOG.debug("Injecting builder contributions to $partialTarget.key using ${partialTarget.value}")
             for (String injectionName in partialTarget.value) {
                 def factories = localBuilder.getLocalFactories()
                 def methods = localBuilder.getLocalExplicitMethods()
                 def props = localBuilder.getLocalExplicitProperties()
 
-                Closure processInjection = {String injectedName ->                
-                    def resolvedName = "${prefixName}${injectedName}"
+                Closure processInjection = {String injectedName ->
+                    String resolvedName = prefixName + injectedName
                     if (methods.containsKey(injectedName)) {
-                        if(LOG.traceEnabled) LOG.trace("Injected method ${resolvedName}() on $partialTarget.key")
+                        if (LOG.traceEnabled) LOG.trace("Injected method ${resolvedName}() on $partialTarget.key")
                         mc."$resolvedName" = methods[injectedName]
                     } else if (props.containsKey(injectedName)) {
                         Closure[] accessors = props[injectedName]
@@ -120,21 +125,21 @@ class CompositeBuilderHelper {
                             beanName = injectedName[0].toUpperCase()
                         }
                         if (accessors[0]) {
-                            if(LOG.traceEnabled) LOG.trace("Injected getter for ${beanName} on $partialTarget.key")
+                            if (LOG.traceEnabled) LOG.trace("Injected getter for ${beanName} on $partialTarget.key")
                             mc."get$beanName" = accessors[0]
                         }
                         if (accessors[1]) {
-                            if(LOG.traceEnabled) LOG.trace("Injected setter for ${beanName} on $partialTarget.key")
+                            if (LOG.traceEnabled) LOG.trace("Injected setter for ${beanName} on $partialTarget.key")
                             mc."set$beanName" = accessors[1]
                         }
                     } else if (factories.containsKey(injectedName)) {
-                        if(LOG.traceEnabled) LOG.trace("Injected factory ${resolvedName} on $partialTarget.key")
-                        mc."${resolvedName}" = {Object ... args -> uberBuilder."$resolvedName"(* args)}
+                        if (LOG.traceEnabled) LOG.trace("Injected factory ${resolvedName} on $partialTarget.key")
+                        mc."${resolvedName}" = {Object... args -> uberBuilder."$resolvedName"(* args)}
                     }
                 }
 
                 if (injectionName == "*") {
-                    for(group in localBuilder.getRegistrationGroups()) {
+                    for (group in localBuilder.getRegistrationGroups()) {
                         localBuilder.getRegistrationGroupItems(group).each processInjection
                     }
                     continue
@@ -151,58 +156,44 @@ class CompositeBuilderHelper {
     }
 
     private static addFactories(UberBuilder uberBuilder, groupedFactories) {
-        // is it too naive to just call registerFactory/registerBeanFactory here ?
-        // TODO handle catch-all groupName "*" ?
-        groupedFactories.each {groupName, factories ->
-            uberBuilder.registrationGroups.get(groupName, [] as TreeSet)
-            factories.each {name, factory ->
+        for (group in groupedFactories) {
+            String groupName = group.key
+            groupName = groupName == 'root' || groupName == '*' ? '' : groupName
+            uberBuilder.@registrationGroup.get(groupName, [] as TreeSet)
+            group.value.each {name, factory ->
                 if (Factory.class.isAssignableFrom(factory.getClass())) {
-                    uberBuilder.registerFactory(name, groupName, factory)
+                    builderCustomizer.registerFactory(uberBuilder, name, groupName, factory)
+                } else if (factory instanceof Class) {
+                    builderCustomizer.registerBeanFactory(uberBuilder, name, groupName, factory)
                 } else {
-                    registerBeanFactory(uberBuilder, name, groupName, factory)
+                    throw new IllegalArgumentException("[builder config] value of factory '$groupName:$name' is neither a Factory nor a Class instance.")
                 }
             }
         }
     }
 
-    // FIXME copied from SwingBuilder
-    // FIXME refactor for specific UI toolkit handler
-    private static registerBeanFactory(UberBuilder uberBuilder, String nodeName, String groupName, Class klass) {
-        // poke at the type to see if we need special handling
-        if (LayoutManager.isAssignableFrom(klass)) {
-            uberBuilder.registerFactory(nodeName, groupName, new LayoutFactory(klass))
-        } else if (JScrollPane.isAssignableFrom(klass)) {
-            uberBuilder.registerFactory(nodeName, groupName, new ScrollPaneFactory(klass))
-        } else if (JTable.isAssignableFrom(klass)) {
-            uberBuilder.registerFactory(nodeName, groupName, new TableFactory(klass))
-        } else if (JComponent.isAssignableFrom(klass)
-                || JApplet.isAssignableFrom(klass)
-                || JDialog.isAssignableFrom(klass)
-                || JFrame.isAssignableFrom(klass)
-                || JWindow.isAssignableFrom(klass)
-        ) {
-            uberBuilder.registerFactory(nodeName, groupName, new ComponentFactory(klass))
-        } else {
-            uberBuilder.registerBeanFactory(nodeName, groupName, klass)
-        }
-    }
-
     private static addMethods(UberBuilder uberBuilder, groupedMethods) {
-        // TODO handle catch-all groupName "*" ?
-        groupedMethods.each {groupName, methods ->
-            uberBuilder.registrationGroups.get(groupName, [] as TreeSet)
-            methods.each {name, method ->
-                uberBuilder.registerExplicitMethod(name, groupName, method)
+        for (group in groupedMethods) {
+            String groupName = group.key
+            groupName = groupName == 'root' || groupName == '*' ? '' : groupName
+            uberBuilder.@registrationGroup.get(groupName, [] as TreeSet)
+            group.value.each {name, method ->
+                if (method instanceof Closure) {
+                    builderCustomizer.registerExplicitMethod(uberBuilder, name, groupName, method)
+                } else {
+                    throw new IllegalArgumentException("[builder config] value of method '$groupName:$name' is not a Closure.")
+                }
             }
         }
     }
 
     private static addProperties(UberBuilder uberBuilder, groupedProperties) {
-        // TODO handle catch-all groupName "*" ?
-        groupedProperties.each {groupName, properties ->
-            uberBuilder.registrationGroups.get(groupName, [] as TreeSet)
-            properties.each {name, propertyTuple ->
-                uberBuilder.registerExplicitProperty(name, groupName, propertyTuple.get, propertyTuple.set)
+        for (group in groupedProperties) {
+            String groupName = group.key
+            groupName = groupName == 'root' || groupName == '*' ? '' : groupName
+            uberBuilder.@registrationGroup.get(groupName, [] as TreeSet)
+            group.value.each {name, propertyTuple ->
+                builderCustomizer.registerExplicitProperty(uberBuilder, name, groupName, propertyTuple.get, propertyTuple.set)
             }
         }
     }

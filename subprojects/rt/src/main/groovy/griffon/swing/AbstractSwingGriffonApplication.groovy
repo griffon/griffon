@@ -15,13 +15,12 @@
  */
 package griffon.swing
 
+import griffon.application.StandaloneGriffonApplication
 import griffon.util.GriffonExceptionHandler
-import griffon.util.UIThreadHelper
 import griffon.util.UIThreadHandler
-import java.awt.EventQueue
+import griffon.core.UIThreadManager
 import java.awt.Toolkit
 import java.awt.Window
-import griffon.application.StandaloneGriffonApplication
 import org.codehaus.griffon.runtime.core.BaseGriffonApplication
 
 /**
@@ -39,7 +38,7 @@ abstract class AbstractSwingGriffonApplication implements SwingGriffonApplicatio
     private static final Class[] CTOR_ARGS = [String[].class] as Class[]
 
     AbstractSwingGriffonApplication(String[] args = BaseGriffonApplication.EMPTY_ARGS) {
-        UIThreadHelper.instance.setUIThreadHandler(getUIThreadHandler())
+        UIThreadManager.instance.setUIThreadHandler(getUIThreadHandler())
         baseApp = new BaseGriffonApplication(this, args)
         windowManager = new WindowManager(this)
         addShutdownHandler(windowManager)
@@ -91,7 +90,7 @@ abstract class AbstractSwingGriffonApplication implements SwingGriffonApplicatio
         // wait for EDT to empty out.... somehow
         boolean empty = false
         while (true) {
-            UIThreadHelper.instance.executeSync {empty = Toolkit.defaultToolkit.systemEventQueue.peekEvent() == null}
+            UIThreadManager.instance.executeSync {empty = Toolkit.defaultToolkit.systemEventQueue.peekEvent() == null}
             if (empty) break
             sleep(100)
         }

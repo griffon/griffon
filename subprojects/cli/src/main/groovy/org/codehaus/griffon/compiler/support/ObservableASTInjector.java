@@ -16,22 +16,19 @@
 
 package org.codehaus.griffon.compiler.support;
 
-import org.codehaus.groovy.ast.*;
-import org.codehaus.groovy.ast.expr.*;
-import org.codehaus.groovy.ast.stmt.*;
-
+import griffon.core.Observable;
 import groovy.beans.BindableASTTransformation;
 import groovy.beans.VetoableASTTransformation;
-import griffon.core.Observable;
-
-import java.beans.PropertyChangeSupport;
-import java.beans.PropertyChangeListener;
-import java.beans.PropertyChangeEvent;
-
-import static org.codehaus.griffon.ast.GriffonASTUtils.*;
-
+import org.codehaus.groovy.ast.*;
+import org.codehaus.groovy.ast.expr.*;
+import org.codehaus.groovy.ast.stmt.ExpressionStatement;
+import org.codehaus.groovy.ast.stmt.ReturnStatement;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
+import java.beans.PropertyChangeSupport;
 
 /**
  *

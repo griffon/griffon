@@ -15,7 +15,6 @@
  */
 package griffon.test.mock
 
-import griffon.core.GriffonApplication
 import griffon.swing.SwingApplication
 import java.util.concurrent.CountDownLatch
 import org.codehaus.griffon.runtime.core.BaseGriffonApplication

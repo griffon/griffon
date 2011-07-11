@@ -17,11 +17,10 @@
 package org.codehaus.griffon.plugins;
 
 import griffon.util.PluginBuildSettings;
+import org.springframework.core.io.Resource;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import org.springframework.core.io.Resource;
 
 /**
  * A PluginDescriptorReader implementation that combines different implementation into one

@@ -20,8 +20,7 @@
 
 package org.codehaus.griffon
 
-import org.codehaus.groovy.tools.*
-
+import org.codehaus.groovy.tools.GroovyStarter
 
 def ant = new AntBuilder()
 ant.property(environment:"env")

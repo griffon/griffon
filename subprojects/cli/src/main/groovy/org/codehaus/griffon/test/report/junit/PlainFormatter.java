@@ -1,10 +1,11 @@
 package org.codehaus.griffon.test.report.junit;
 
-import java.io.*;
-import junit.framework.*;
-import org.apache.tools.ant.taskdefs.optional.junit.PlainJUnitResultFormatter;
+import junit.framework.Test;
 import org.apache.tools.ant.taskdefs.optional.junit.JUnitTest;
+import org.apache.tools.ant.taskdefs.optional.junit.PlainJUnitResultFormatter;
 import org.codehaus.griffon.test.support.TestStacktraceSanitizer;
+
+import java.io.*;
 
 /**
  * JUnit plain text formatter that sanitises the stack traces generated

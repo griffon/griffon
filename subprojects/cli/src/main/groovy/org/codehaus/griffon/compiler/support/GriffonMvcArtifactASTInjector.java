@@ -16,8 +16,11 @@
 
 package org.codehaus.griffon.compiler.support;
 
-import org.codehaus.groovy.ast.*;
-import org.codehaus.groovy.ast.stmt.*;
+import org.codehaus.groovy.ast.ClassHelper;
+import org.codehaus.groovy.ast.ClassNode;
+import org.codehaus.groovy.ast.MethodNode;
+import org.codehaus.groovy.ast.Parameter;
+import org.codehaus.groovy.ast.stmt.EmptyStatement;
 
 import static org.codehaus.griffon.ast.GriffonASTUtils.param;
 import static org.codehaus.griffon.ast.GriffonASTUtils.params;

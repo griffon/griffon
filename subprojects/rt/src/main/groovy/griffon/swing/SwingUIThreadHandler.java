@@ -16,7 +16,8 @@
 package griffon.swing;
 
 import griffon.util.UIThreadHandler;
-import javax.swing.SwingUtilities;
+
+import javax.swing.*;
 import java.lang.reflect.InvocationTargetException;
 
 /**

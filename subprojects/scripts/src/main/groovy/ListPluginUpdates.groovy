@@ -13,8 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import groovy.xml.dom.DOMCategory
+
 import griffon.util.Metadata
+import groovy.xml.dom.DOMCategory
 
 includeTargets << griffonScript("_GriffonInit")
 includeTargets << griffonScript("_GriffonPlugins")

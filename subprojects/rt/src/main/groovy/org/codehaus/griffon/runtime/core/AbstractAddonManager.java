@@ -16,18 +16,17 @@
 
 package org.codehaus.griffon.runtime.core;
 
+import griffon.core.AddonManager;
+import griffon.core.GriffonAddon;
+import griffon.core.GriffonAddonDescriptor;
+import griffon.core.GriffonApplication;
+import griffon.util.GriffonNameUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import griffon.core.GriffonApplication;
-import griffon.core.GriffonAddon;
-import griffon.core.GriffonAddonDescriptor;
-import griffon.core.AddonManager;
-import griffon.util.GriffonNameUtils;
-
-import java.util.Map;
 import java.util.Collections;
 import java.util.LinkedHashMap;
+import java.util.Map;
 
 /**
  * Base implementation of the {@code AddonManager} interface.

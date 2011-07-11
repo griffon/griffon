@@ -16,22 +16,13 @@
 package griffon.util
 
 import groovy.util.slurpersupport.GPathResult
-
 import java.util.concurrent.ConcurrentHashMap
-
 import org.apache.commons.lang.ArrayUtils
-
-import org.codehaus.griffon.plugins.CompositePluginDescriptorReader
-import org.codehaus.griffon.plugins.GriffonPlugin
-import org.codehaus.griffon.plugins.GriffonPluginInfo
-import org.codehaus.griffon.plugins.GriffonPluginManager
-import org.codehaus.griffon.plugins.PluginInfo
-
+import org.codehaus.gant.GantBinding
 import org.springframework.core.io.FileSystemResource
 import org.springframework.core.io.Resource
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver
-
-import org.codehaus.gant.GantBinding
+import org.codehaus.griffon.plugins.*
 
 /**
  * Uses the project BuildSettings object to discover information about the installed plugin

@@ -16,10 +16,9 @@
 package org.codehaus.griffon.plugins;
 
 import griffon.util.PluginBuildSettings;
+import org.springframework.core.io.Resource;
 
 import java.io.IOException;
-
-import org.springframework.core.io.Resource;
 
 /**
  * Reads plugin information from the plugin.xml descriptor

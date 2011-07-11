@@ -15,13 +15,13 @@
  */
 package griffon.util;
 
-import java.util.Map;
-import java.util.Arrays;
 import griffon.core.GriffonApplication;
 import org.codehaus.groovy.runtime.StackTraceUtils;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.Arrays;
+import java.util.Map;
 
 /**
  * Catches and sanitizes all uncaught exceptions.

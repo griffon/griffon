@@ -21,7 +21,6 @@
 */
 
 import groovy.grape.Grape
-import griffon.util.Metadata
 
 // No point doing this stuff more than once.
 if (getBinding().variables.containsKey("_init_called")) return

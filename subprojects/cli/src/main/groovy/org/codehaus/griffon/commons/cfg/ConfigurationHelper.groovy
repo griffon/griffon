@@ -16,12 +16,12 @@
 
 package org.codehaus.griffon.commons.cfg
 
-import org.springframework.core.io.support.PathMatchingResourcePatternResolver
-import org.springframework.core.io.ResourceLoader
-import org.apache.commons.logging.*
 import griffon.util.GriffonUtil
+import org.apache.commons.logging.LogFactory
 import org.codehaus.griffon.commons.ConfigurationHolder
 import org.codehaus.griffon.commons.GriffonContext
+import org.springframework.core.io.ResourceLoader
+import org.springframework.core.io.support.PathMatchingResourcePatternResolver
 
 /**
 * Helper methods for initialising config object

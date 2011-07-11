@@ -15,22 +15,18 @@
  */
 package org.codehaus.griffon.resolve
 
-import griffon.util.PluginBuildSettings
-import griffon.util.BuildSettings
-import griffon.util.Metadata
-import griffon.util.GriffonUtil
-import griffon.util.PlatformUtils
-import org.codehaus.griffon.plugins.GriffonPluginUtils
-import org.springframework.core.io.Resource
-import org.codehaus.griffon.cli.CommandLineHelper
 import groovy.util.slurpersupport.GPathResult
-import org.codehaus.griffon.cli.ScriptExitException
 import java.util.zip.ZipEntry
 import java.util.zip.ZipFile
-import org.apache.ivy.core.report.ResolveReport
-import org.apache.ivy.core.module.id.ModuleRevisionId
 import org.apache.ivy.core.module.descriptor.DependencyDescriptor
+import org.apache.ivy.core.module.id.ModuleRevisionId
 import org.apache.ivy.core.report.ArtifactDownloadReport
+import org.apache.ivy.core.report.ResolveReport
+import org.codehaus.griffon.cli.CommandLineHelper
+import org.codehaus.griffon.cli.ScriptExitException
+import org.codehaus.griffon.plugins.GriffonPluginUtils
+import org.springframework.core.io.Resource
+import griffon.util.*
 
 /**
  * This class is used to manage the installation and uninstallation of plugins

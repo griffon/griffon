@@ -15,15 +15,14 @@
  */ 
 package org.codehaus.griffon.plugins;
 
+import groovy.lang.GroovyObjectSupport;
+import groovy.lang.MissingPropertyException;
+import org.springframework.core.io.Resource;
+
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
-
-import org.springframework.core.io.Resource;
-
-import groovy.lang.GroovyObjectSupport;
-import groovy.lang.MissingPropertyException;
 
 /**
  * Simple Javabean implementation of the GriffonPluginInfo interface

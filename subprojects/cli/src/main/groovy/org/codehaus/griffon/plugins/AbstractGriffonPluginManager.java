@@ -17,8 +17,8 @@
 package org.codehaus.griffon.plugins;
 
 import griffon.util.BuildScope;
-import org.codehaus.griffon.commons.GriffonContext;
 import org.codehaus.griffon.commons.GriffonClassUtils;
+import org.codehaus.griffon.commons.GriffonContext;
 import org.springframework.core.io.Resource;
 import org.springframework.core.type.filter.TypeFilter;
 

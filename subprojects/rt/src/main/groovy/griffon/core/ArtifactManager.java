@@ -16,8 +16,8 @@
 
 package griffon.core;
 
-import java.util.List;
 import java.util.Collections;
+import java.util.List;
 
 /**
  * Helper class capable of dealing with artifacts and their handlers.
