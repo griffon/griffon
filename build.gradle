@@ -120,8 +120,6 @@ task jarResources(type: Jar) {
 	}
 }
 
-distJars = tasks.withType(Jar).matching({ jar -> !jar.appFileJar } as Spec)
-
 task jarSource(type: Jar){
     description = "Zips the source distribution."
     from(project(":griffon-cli").sourceSets.main.allSource) {
@@ -163,7 +161,6 @@ task apiDocs(type: Groovydoc) {
     link('http://junit.sourceforge.net/junit3.8.1/javadoc/', 'org.junit.,junit.framework.')
     link('http://groovy.codehaus.org/api/', 'groovy.,org.codehaus.groovy.')
 }
-
 
 task buildGuide(type: GrailsDoc) {
     srcDir = file('src/guide/src')
@@ -229,6 +226,35 @@ task zipBinary(type:Zip){
 			from(apiDocs.outputs.files)
 		}	
 	}
+}
+
+distSourceSpec = copySpec{
+    from('.') {
+        exclude 'build'
+        exclude '**/.git*'
+        exclude '.git*'
+        exclude '.gradle*'
+        exclude 'clover.license'
+        exclude 'cobertura.ser'
+        exclude '**/*.ipr'
+        exclude '**/*.iws'
+        exclude '**/*.iml'
+    }   
+}
+
+task zipSource(type: Zip){
+    description = "Zips the source distribution."
+    with distSourceSpec
+    classifier = 'src'
+    into "griffon-$version"
+}
+
+task tarSource(type: Tar) {
+    description = "Tars the source distribution."
+    with distSourceSpec
+    classifier = 'src'
+    into "griffon-$version"  
+    compression = Compression.GZIP
 }
 
 /*sourceSets {
