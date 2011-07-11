@@ -10,7 +10,7 @@
 panel(id: 'content') {
     migLayout layoutConstraints: 'fill'
     tabbedPane(constraints: 'grow, wrap') {
-        scrollPane(title: app.getMessage('application.dialog.Credits.writtenby', 'Written by'), constraints: 'grow') {
+        scrollPane(title: app.getMessage('application.dialog.Credits.writtenby', 'Written by')) {
             textArea(editable: false, text: bind{ model.credits },
                 caretPosition: bind('credits', source: model, converter: {0i}))
         }

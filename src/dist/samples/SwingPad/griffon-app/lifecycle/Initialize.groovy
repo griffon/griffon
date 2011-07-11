@@ -18,11 +18,9 @@
  */
 
 import org.jdesktop.swingx.tips.*
-import griffon.util.GriffonPlatformHelper
 import groovy.swing.SwingBuilder
 import static griffon.util.GriffonApplicationUtils.isMacOSX
 
-GriffonPlatformHelper.tweakForNativePlatform(app)
 SwingBuilder.lookAndFeel((isMacOSX ? 'system' : 'nimbus'), 'gtk', ['metal', [boldFonts: false]])
 
 execOutside {

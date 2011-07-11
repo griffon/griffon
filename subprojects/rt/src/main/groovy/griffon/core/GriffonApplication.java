@@ -97,6 +97,7 @@ public interface GriffonApplication extends ThreadingHandler, MVCHandler {
         BOOTSTRAP_START, BOOTSTRAP_END,
         STARTUP_START, STARTUP_END,
         READY_START, READY_END,
+        STOP_START, STOP_END,
         SHUTDOWN_REQUESTED, SHUTDOWN_ABORTED, SHUTDOWN_START,
         NEW_INSTANCE,
         CREATE_MVC_GROUP("CreateMVCGroup"), DESTROY_MVC_GROUP("DestroyMVCGroup"),
@@ -142,6 +143,7 @@ public interface GriffonApplication extends ThreadingHandler, MVCHandler {
      */
     ConfigObject getConfig();
     void setConfig(ConfigObject config);
+    Object getConfigValue(String key);
 
     /**
      * Gets the script class that holds builder configuration (i.e. {@code Builder.groovy})
@@ -236,7 +238,7 @@ public interface GriffonApplication extends ThreadingHandler, MVCHandler {
     Object createApplicationContainer();
 
     /**
-     * Executes the 'Initialze' life cycle phase.
+     * Executes the 'Initialize' life cycle phase.
      */
     void initialize();
 

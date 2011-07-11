@@ -12,7 +12,7 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- */ 
+ */
 package griffon.util;
 
 import griffon.core.MVCClosure;
@@ -32,14 +32,14 @@ import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
 import java.util.regex.Pattern;
 
-/** 
+/**
  * Class containing utility methods for dealing with Griffon class artifacts.<p>
  * Contains utility methods copied from commons-lang and commons-beanutils in order
  * to reduce dependencies on external libraries.<p>
  *
  * <b>Contains code copied from commons-beanutils and commons-langs</b>
  *
- * @author Graeme Rocher (Grails 0.1) 
+ * @author Graeme Rocher (Grails 0.1)
  */
 public final class GriffonClassUtils {
     public static final Class[] EMPTY_CLASS_ARRAY = new Class[0];
@@ -237,11 +237,11 @@ public final class GriffonClassUtils {
     }
 
     /**
-     * Finds out if the given {@code Method} belongs either to the 
+     * Finds out if the given {@code Method} belongs either to the
      * {@code Object} class or the {@code GroovyObject} class.<p>
      *
      * @param method a Method reference
-     * @return true if the method belongs to {@code Object} or 
+     * @return true if the method belongs to {@code Object} or
      * {@code GroovyObject}, false otherwise.
      */
     public static boolean isBasicMethod(Method method) {
@@ -249,11 +249,11 @@ public final class GriffonClassUtils {
     }
 
     /**
-     * Finds out if the given {@code MetaMethod} belongs either to the 
+     * Finds out if the given {@code MetaMethod} belongs either to the
      * {@code Object} class or the {@code GroovyObject} class.<p>
      *
      * @param method a MetaMethod reference
-     * @return true if the method belongs to {@code Object} or 
+     * @return true if the method belongs to {@code Object} or
      * {@code GroovyObject}, false otherwise.
      */
     public static boolean isBasicMethod(MetaMethod method) {
@@ -261,11 +261,11 @@ public final class GriffonClassUtils {
     }
 
     /**
-     * Finds out if the given {@code MethodDescriptor} belongs either to the 
+     * Finds out if the given {@code MethodDescriptor} belongs either to the
      * {@code Object} class or the {@code GroovyObject} class.<p>
      *
      * @param method a MethodDescriptor reference
-     * @return true if the method belongs to {@code Object} or 
+     * @return true if the method belongs to {@code Object} or
      * {@code GroovyObject}, false otherwise.
      */
     public static boolean isBasicMethod(MethodDescriptor method) {
@@ -310,7 +310,7 @@ public final class GriffonClassUtils {
      */
     public static boolean isGroovyInjectedMethod(MethodDescriptor method) {
         if(method == null || !isInstanceMethod(method)) return false;
-        return method.getName().startsWith("super$") || 
+        return method.getName().startsWith("super$") ||
                method.getName().startsWith("this$");
     }
 
@@ -738,7 +738,7 @@ public final class GriffonClassUtils {
            return clazz.newInstance();
        } catch(Exception e) {
            throw new BeanInstantiationException("Could not create an instance of "+ clazz, e);
-       } 
+       }
     }
 
 /*
@@ -760,7 +760,7 @@ public final class GriffonClassUtils {
            return clazz.getDeclaredConstructor(parameterTypes).newInstance(args);
        } catch(Exception e) {
            throw new BeanInstantiationException("Could not create an instance of "+ clazz, e);
-       } 
+       }
     }
 
     /**
@@ -828,7 +828,7 @@ public final class GriffonClassUtils {
             if(isAssignableOrConvertibleFrom(pd.getPropertyType(), propertyValue.getClass())) {
                 Object value;
                 try {
-                    value = getReadMethod(pd).invoke(instance, (Object[]) null);                    
+                    value = getReadMethod(pd).invoke(instance, (Object[]) null);
                 } catch (Exception e) {
                     throw new RuntimeException("Problem calling readMethod of " + pd, e);
                 }
@@ -838,7 +838,7 @@ public final class GriffonClassUtils {
         }
         return null;
     }
-    
+
     /**
      * Returns the type of the given property contained within the specified class
      *
@@ -1193,7 +1193,7 @@ public final class GriffonClassUtils {
 
     /**
      * Checks whether the specified property is inherited from a super class
-     * 
+     *
      * @param clz The class to check
      * @param propertyName The property name
      * @return True if the property is inherited
@@ -1202,9 +1202,9 @@ public final class GriffonClassUtils {
         if(clz == null) return false;
         if(GriffonNameUtils.isBlank(propertyName))
             throw new IllegalArgumentException("Argument [propertyName] cannot be null or blank");
-        
+
         Class<?> superClass = clz.getSuperclass();
-        
+
         PropertyDescriptor pd = null;
         try {
             pd = getPropertyDescriptor(superClass, propertyName);
@@ -1247,7 +1247,7 @@ public final class GriffonClassUtils {
 
     /**
      * Returns true if the name of the method specified and the number of arguments make it a javabean property
-     * 
+     *
      * @param name True if its a Javabean property
      * @param args The arguments
      * @return True if it is a javabean property method
@@ -1258,7 +1258,7 @@ public final class GriffonClassUtils {
 
         if(name.startsWith(PROPERTY_GET_PREFIX)) {
             name = name.substring(3);
-            if(name.length() > 0 && Character.isUpperCase(name.charAt(0))) return true;            
+            if(name.length() > 0 && Character.isUpperCase(name.charAt(0))) return true;
         }
         else if(name.startsWith(PROPERTY_IS_PREFIX)) {
             name = name.substring(2);
@@ -1269,13 +1269,13 @@ public final class GriffonClassUtils {
 
     /**
      * Returns a property name equivalent for the given getter name or null if it is not a getter
-     * 
+     *
      * @param getterName The getter name
      * @return The property name equivalent
      */
     public static String getPropertyForGetter(String getterName) {
         if(GriffonNameUtils.isBlank(getterName))return null;
-        
+
         if(getterName.startsWith(PROPERTY_GET_PREFIX)) {
             String prop = getterName.substring(3);
             return convertPropertyName(prop);
@@ -1298,16 +1298,16 @@ public final class GriffonClassUtils {
             return Character.toLowerCase(prop.charAt(0)) + prop.substring(1);
         }
     }
-    
+
     /**
      * Returns a property name equivalent for the given setter name or null if it is not a getter
-     * 
+     *
      * @param setterName The setter name
      * @return The property name equivalent
      */
     public static String getPropertyForSetter(String setterName) {
         if(GriffonNameUtils.isBlank(setterName))return null;
-        
+
         if(setterName.startsWith(PROPERTY_SET_PREFIX)) {
             String prop = setterName.substring(3);
             return convertPropertyName(prop);
@@ -1317,13 +1317,13 @@ public final class GriffonClassUtils {
 
     public static boolean isSetter(String name, Class[] args) {
         if(GriffonNameUtils.isBlank(name) || args == null)return false;
-        
+
         if(name.startsWith(PROPERTY_SET_PREFIX)) {
             if(args.length != 1) return false;
             name = name.substring(3);
             if(name.length() > 0 && Character.isUpperCase(name.charAt(0))) return true;
         }
-        
+
         return false;
     }
 
@@ -1347,12 +1347,12 @@ public final class GriffonClassUtils {
         }
         isTrue(mc instanceof ExpandoMetaClass,"BUG! Method must return an instance of [ExpandoMetaClass]!");
         return mc;
-    }    
-    
+    }
+
     /**
-     * Returns true if the specified clazz parameter is either the same as, or is a superclass or superinterface 
+     * Returns true if the specified clazz parameter is either the same as, or is a superclass or superinterface
      * of, the specified type parameter. Converts primitive types to compatible class automatically.
-     * 
+     *
      * @param clazz
      * @param type
      * @return True if the class is a taglib
@@ -1381,7 +1381,7 @@ public final class GriffonClassUtils {
      *
      * @param key The key that references the boolean value
      * @param map The map to look in
-     * @return A boolean value which will be false if the map is null, the map doesn't contain the key or the value is false 
+     * @return A boolean value which will be false if the map is null, the map doesn't contain the key or the value is false
      */
     public static boolean getBooleanFromMap(String key, Map map) {
         if(map == null) return false;
@@ -1401,7 +1401,7 @@ public final class GriffonClassUtils {
      * Locates the name of a property for the given value on the target object using Groovy's meta APIs.
      * Note that this method uses the reference so the incorrect result could be returned for two properties
      * that refer to the same reference. Use with caution.
-     * 
+     *
      * @param target The target
      * @param obj The property value
      * @return The property name or null
@@ -1477,7 +1477,7 @@ public final class GriffonClassUtils {
         }
 
         return getPropertyDescriptor(bean instanceof Class? (Class<?>) bean : bean.getClass(), name);
-    } 
+    }
 
     /**
      * <p>Retrieve the property descriptor for the specified property of the
@@ -1512,16 +1512,16 @@ public final class GriffonClassUtils {
         }
 
         PropertyDescriptor[] descriptors = getPropertyDescriptors(clazz);
-        if (descriptors != null) {           
+        if (descriptors != null) {
             for (int i = 0; i < descriptors.length; i++) {
                 if (name.equals(descriptors[i].getName())) {
                     return (descriptors[i]);
                 }
             }
         }
-        
+
         return null;
-    } 
+    }
 
     /**
      * <p>Retrieve the property descriptors for the specified class,
@@ -1679,9 +1679,9 @@ public final class GriffonClassUtils {
     // -- The following methods and properties were copied from commons-lang
 
     /**
-     * <p>Validate that the argument condition is <code>true</code>; otherwise 
+     * <p>Validate that the argument condition is <code>true</code>; otherwise
      * throwing an exception with the specified message. This method is useful when
-     * validating according to an arbitrary boolean expression, such as validating a 
+     * validating according to an arbitrary boolean expression, such as validating a
      * primitive number or using your own custom validation expression.</p>
      *
      * <pre>
@@ -1689,13 +1689,93 @@ public final class GriffonClassUtils {
      * isTrue( myObject.isOk(), "The object is not OK");
      * </pre>
      *
-     * @param expression the boolean expression to check 
+     * @param expression the boolean expression to check
      * @param message the exception message if invalid
      * @throws IllegalArgumentException if expression is <code>false</code>
      */
     public static void isTrue(boolean expression, String message) {
         if (expression) {
             throw new IllegalArgumentException(message);
+        }
+    }
+
+    public static Object invokeInstanceMethod(Object object, String methodName) {
+        return invokeInstanceMethod(object, methodName, EMPTY_ARGS);
+    }
+
+    public static Object invokeInstanceMethod(Object object, String methodName, Object arg) {
+        return invokeInstanceMethod(object, methodName, new Object[]{arg});
+    }
+
+    public static Object invokeInstanceMethod(Object object, String methodName, Object... args) {
+        try {
+            return MethodUtils.invokeMethod(object, methodName, args);
+        } catch (NoSuchMethodException e) {
+            throw new RuntimeException(e);
+        } catch (IllegalAccessException e) {
+            throw new RuntimeException(e);
+        } catch (InvocationTargetException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public static Object invokeExactInstanceMethod(Object object, String methodName) {
+        return invokeExactInstanceMethod(object, methodName, EMPTY_ARGS);
+    }
+
+    public static Object invokeExactInstanceMethod(Object object, String methodName, Object arg) {
+        return invokeExactInstanceMethod(object, methodName, new Object[]{arg});
+    }
+
+    public static Object invokeExactInstanceMethod(Object object, String methodName, Object... args) {
+        try {
+            return MethodUtils.invokeExactMethod(object, methodName, args);
+        } catch (NoSuchMethodException e) {
+            throw new RuntimeException(e);
+        } catch (IllegalAccessException e) {
+            throw new RuntimeException(e);
+        } catch (InvocationTargetException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public static Object invokeStaticMethod(Class type, String methodName) {
+        return invokeStaticMethod(type, methodName, EMPTY_ARGS);
+    }
+
+    public static Object invokeStaticMethod(Class type, String methodName, Object arg) {
+        return invokeStaticMethod(type, methodName, new Object[]{arg});
+    }
+
+    public static Object invokeStaticMethod(Class type, String methodName, Object... args) {
+        try {
+            return MethodUtils.invokeStaticMethod(type, methodName, args);
+        } catch (NoSuchMethodException e) {
+            throw new RuntimeException(e);
+        } catch (IllegalAccessException e) {
+            throw new RuntimeException(e);
+        } catch (InvocationTargetException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public static Object invokeExactStaticMethod(Class type, String methodName) {
+        return invokeExactStaticMethod(type, methodName, EMPTY_ARGS);
+    }
+
+    public static Object invokeExactStaticMethod(Class type, String methodName, Object arg) {
+        return invokeExactStaticMethod(type, methodName, new Object[]{arg});
+    }
+
+    public static Object invokeExactStaticMethod(Class type, String methodName, Object... args) {
+        try {
+            return MethodUtils.invokeExactStaticMethod(type, methodName, args);
+        } catch (NoSuchMethodException e) {
+            throw new RuntimeException(e);
+        } catch (IllegalAccessException e) {
+            throw new RuntimeException(e);
+        } catch (InvocationTargetException e) {
+            throw new RuntimeException(e);
         }
     }
 

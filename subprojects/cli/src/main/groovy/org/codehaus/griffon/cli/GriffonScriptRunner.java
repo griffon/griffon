@@ -22,6 +22,7 @@ import groovy.lang.Closure;
 import groovy.lang.ExpandoMetaClass;
 import groovy.util.AntBuilder;
 import org.apache.tools.ant.Project;
+import org.apache.tools.ant.taskdefs.Java;
 import org.codehaus.gant.GantBinding;
 import org.codehaus.griffon.resolve.IvyDependencyManager;
 import org.codehaus.groovy.runtime.DefaultGroovyMethods;
@@ -172,12 +173,17 @@ public class GriffonScriptRunner {
         return info;
     }
 
+    private static final Map<String, String> SYSTEM_PROPERTIES = new LinkedHashMap<String, String>();
+
     private static String processSystemArguments(String allArgs) {
         String lastMatch = null;
-        Pattern sysPropPattern = Pattern.compile("-D(.+?)=(.+?)\\s+?");
+        Pattern sysPropPattern = Pattern.compile("-D(.+?)=(['\"].+?['\"]|.+?)\\s+?");
         Matcher m = sysPropPattern.matcher(allArgs);
         while (m.find()) {
-            System.setProperty(m.group(1).trim(), m.group(2).trim());
+            String key = m.group(1).trim();
+            String value = unquote(m.group(2).trim());
+            SYSTEM_PROPERTIES.put(key, value);
+            System.setProperty(key, value);
             lastMatch = m.group();
         }
 
@@ -186,6 +192,14 @@ public class GriffonScriptRunner {
             allArgs = allArgs.substring(i);
         }
         return allArgs;
+    }
+
+    private static String unquote(String s) {
+        if ((s.startsWith("'") && s.endsWith("'")) ||
+            (s.startsWith("\"") && s.endsWith("\""))) {
+            return s.substring(1, s.length() - 1);
+        }
+        return s;
     }
 
     private static boolean isEnvironmentArgs(String env) {
@@ -234,6 +248,8 @@ public class GriffonScriptRunner {
     }
 
     private int executeCommand(ScriptAndArgs script) {
+        settings.getSystemProperties().putAll(SYSTEM_PROPERTIES);
+
         // Populate the root loader with all libraries that this app
         // depends on. If a root loader doesn't exist yet, create it now.
         if (settings.getRootLoader() == null) {

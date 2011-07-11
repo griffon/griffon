@@ -146,12 +146,12 @@ viewClass.accept {
 	methodDef name: 'propertyColumn', type: 'void'
 	methodDef name: 'closureColumn', type: 'void'
   
-	methodDef name: 'borderLayout', type: java.awt.BorderLayout, params: [closure: 'groovy.lang.Closure']
-	methodDef name: 'cardLayout', type: java.awt.CardLayout, params: [closure: 'groovy.lang.Closure']
-	methodDef name: 'flowLayout', type: java.awt.FlowLayout, params: [closure: 'groovy.lang.Closure']
-	methodDef name: 'gridLayout', type: java.awt.GridLayout, params: [closure: 'groovy.lang.Closure']
-	methodDef name: 'overlayLayout', type: javax.swing.OverlayLayout, params: [closure: 'groovy.lang.Closure']
-	methodDef name: 'springLayout', type: javax.swing.SpringLayout, params: [closure: 'groovy.lang.Closure']
+	methodDef name: 'borderLayout', type: java.awt.BorderLayout, params: [hgap: 'int', vgap: 'int']
+	methodDef name: 'cardLayout', type: java.awt.CardLayout
+	methodDef name: 'flowLayout', type: java.awt.FlowLayout
+	methodDef name: 'gridLayout', type: java.awt.GridLayout, params: [cols: 'int', rows 'int']
+	methodDef name: 'overlayLayout', type: javax.swing.OverlayLayout
+	methodDef name: 'springLayout', type: javax.swing.SpringLayout
 	methodDef name: 'gridBagLayout', type: java.awt.GridBagLayout
 	methodDef name: 'gridBagConstraints', type: java.awt.GridBagConstraints
 	methodDef name: 'gbc', type: java.awt.GridBagConstraints
@@ -167,7 +167,7 @@ viewClass.accept {
 	methodDef name: 'glue', type: java.awt.Component
 	methodDef name: 'rigidArea', type: java.awt.Component
   
-	methodDef name: 'tableLayout', type: groovy.swing.impl.TableLayout, params: [closure: 'groovy.lang.Closure']
+	methodDef name: 'tableLayout', type: groovy.swing.impl.TableLayout
 	methodDef name: 'tr', type: groovy.swing.impl.TableLayoutRow
 	methodDef name: 'td', type: groovy.swing.impl.TableLayoutCell
   

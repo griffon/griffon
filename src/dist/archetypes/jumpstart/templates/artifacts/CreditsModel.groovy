@@ -15,7 +15,7 @@
     static fetchCreditsText() {
         if(CREDITS == null) {
             try {
-                CREDITS = getClass().getResource('/credits.txt').text
+                CREDITS = CreditsModel.class.getResource('/credits.txt').text
             } catch(x) {
                 CREDITS = ''
             }
