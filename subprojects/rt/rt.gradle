@@ -3,12 +3,16 @@ apply plugin:'groovy'
 configurations {
 	runtime.transitive = false
 	compile.transitive = false
+	// @todo: move to spring dep setup 
+	
 }
 dependencies{
-	compile "org.codehaus.groovy:groovy-all:$groovyVersion",
-		    "log4j:log4j:1.2.16",
-		    "org.slf4j:slf4j-log4j12:$slf4jVersion",
-		    "org.slf4j:slf4j-api:$slf4jVersion",
+	compile ("org.codehaus.groovy:groovy-all:$groovyVersion"){
+		exclude group: '*', module:'*'
+	}
+	compile ("log4j:log4j:1.2.16")
+	compile ("org.slf4j:slf4j-api:$slf4jVersion")
+	runtime "org.slf4j:slf4j-log4j12:$slf4jVersion",
 		    "org.slf4j:jcl-over-slf4j:$slf4jVersion",
 		    "org.slf4j:jul-to-slf4j:$slf4jVersion"
 }
