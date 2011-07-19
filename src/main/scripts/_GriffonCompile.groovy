@@ -135,14 +135,16 @@ target(compile: "Implementation of compilation phase") {
             }
         }
 
-        if(new File("${basedir}").list().grep{ it =~ /GriffonAddon\.groovy/ }){
+        if(griffonSettings.isAddonPlugin()){
             ant.path(id:'addon.classpath') {
                 path(refid: "griffon.compile.classpath")
                 pathElement(location: classesDirPath)
             }
             compileSrc('addon.classpath') {
-                src(path: "$basedir")
-                include(name:'*GriffonAddon.groovy')
+                src(path: basedir)
+                include(name: '*GriffonAddon.groovy')
+                include(name: '*GriffonAddon.java')
+                javac(classpathref:'addon.classpath', encoding:"UTF-8", debug:"yes")
             }
         }
     }

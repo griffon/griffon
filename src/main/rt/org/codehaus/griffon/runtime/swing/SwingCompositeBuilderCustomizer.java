@@ -24,6 +24,8 @@ import java.awt.LayoutManager;
 
 import org.codehaus.griffon.runtime.builder.UberBuilder;
 import org.codehaus.griffon.runtime.util.DefaultCompositeBuilderCustomizer;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.swing.*;
 
@@ -34,13 +36,24 @@ import javax.swing.*;
  * @since 0.9.3
  */
 public class SwingCompositeBuilderCustomizer extends DefaultCompositeBuilderCustomizer {
+    private static final Logger LOG = LoggerFactory.getLogger(SwingCompositeBuilderCustomizer.class);
+
     @Override
     public void registerBeanFactory(UberBuilder uberBuilder, String name, String groupName, Class<?> beanClass) {
         if (LayoutManager.class.isAssignableFrom(beanClass)) {
+            if (LOG.isDebugEnabled()) {
+                LOG.debug("Registering " + name + " with " + beanClass + " using LayoutFactory");
+            }
             uberBuilder.registerFactory(name, groupName, new LayoutFactory(beanClass));
         } else if (JScrollPane.class.isAssignableFrom(beanClass)) {
+            if (LOG.isDebugEnabled()) {
+                LOG.debug("Registering " + name + " with " + beanClass + " using ScrollPaneFactory");
+            }
             uberBuilder.registerFactory(name, groupName, new ScrollPaneFactory(beanClass));
         } else if (JTable.class.isAssignableFrom(beanClass)) {
+            if (LOG.isDebugEnabled()) {
+                LOG.debug("Registering " + name + " with " + beanClass + " using TableFactory");
+            }
             uberBuilder.registerFactory(name, groupName, new TableFactory(beanClass));
         } else if (JComponent.class.isAssignableFrom(beanClass)
                 || JApplet.class.isAssignableFrom(beanClass)
@@ -48,8 +61,14 @@ public class SwingCompositeBuilderCustomizer extends DefaultCompositeBuilderCust
                 || JFrame.class.isAssignableFrom(beanClass)
                 || JWindow.class.isAssignableFrom(beanClass)
                 ) {
+            if (LOG.isDebugEnabled()) {
+                LOG.debug("Registering " + name + " with " + beanClass + " using ComponentFactory");
+            }
             uberBuilder.registerFactory(name, groupName, new ComponentFactory(beanClass));
         } else {
+            if (LOG.isDebugEnabled()) {
+                LOG.debug("Registering " + name + " with " + beanClass + " using default factory");
+            }
             uberBuilder.registerBeanFactory(name, groupName, beanClass);
         }
     }

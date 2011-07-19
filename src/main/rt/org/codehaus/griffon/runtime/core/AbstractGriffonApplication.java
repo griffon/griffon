@@ -43,7 +43,6 @@ import static java.util.Arrays.asList;
  * @author Andres Almiray
  */
 public abstract class AbstractGriffonApplication extends AbstractObservable implements GriffonApplication {
-    private final Map<String, String> addonPrefixes = new LinkedHashMap<String, String>();
     private final Map<String, Map<String, String>> mvcGroups = new LinkedHashMap<String, Map<String, String>>();
     private final Map<String, ? extends GriffonModel> models = new LinkedHashMap<String, GriffonModel>();
     private final Map<String, ? extends GriffonView> views = new LinkedHashMap<String, GriffonView>();
@@ -78,10 +77,6 @@ public abstract class AbstractGriffonApplication extends AbstractObservable impl
         System.arraycopy(args, 0, startupArgs, 0, args.length);
         ApplicationHolder.setApplication(this);
         log = LoggerFactory.getLogger(getClass());
-    }
-
-    public Map<String, String> getAddonPrefixes() {
-        return addonPrefixes;
     }
 
     public Map<String, Map<String, String>> getMvcGroups() {
@@ -170,13 +165,6 @@ public abstract class AbstractGriffonApplication extends AbstractObservable impl
 
     public void setLocale(Locale locale) {
         firePropertyChange("locale", this.locale, this.locale = locale);
-    }
-
-    public Map<String, ?> getAddons() {
-        if (addonManager != null) {
-            return addonManager.getAddons();
-        }
-        return Collections.emptyMap();
     }
 
     public Metadata getMetadata() {

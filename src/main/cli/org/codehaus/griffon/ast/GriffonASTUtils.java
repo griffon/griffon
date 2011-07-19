@@ -395,4 +395,8 @@ public class GriffonASTUtils {
     public static FieldExpression field(ClassNode owner, String fieldName) {
         return new FieldExpression(owner.getField(fieldName));
     }
+
+    public static ConstructorCallExpression ctor(ClassNode type, Expression args){
+        return new ConstructorCallExpression(type, args);
+    }
 }

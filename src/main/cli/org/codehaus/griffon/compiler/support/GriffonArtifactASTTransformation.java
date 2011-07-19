@@ -16,14 +16,13 @@
 
 package org.codehaus.griffon.compiler.support;
 
+import org.codehaus.griffon.ast.AbstractASTTransformation;
 import org.codehaus.griffon.compiler.GriffonCompilerContext;
 import org.codehaus.groovy.ast.ASTNode;
 import org.codehaus.groovy.ast.ClassHelper;
 import org.codehaus.groovy.ast.ClassNode;
 import org.codehaus.groovy.ast.ModuleNode;
 import org.codehaus.groovy.control.SourceUnit;
-import org.codehaus.groovy.transform.ASTTransformation;
-import org.objectweb.asm.Opcodes;
 
 /**
  * Handles generation of code for Griffon artifacts.
@@ -33,7 +32,7 @@ import org.objectweb.asm.Opcodes;
  *
  * @since 0.9.1
  */
-public abstract class GriffonArtifactASTTransformation implements ASTTransformation, Opcodes {
+public abstract class GriffonArtifactASTTransformation extends AbstractASTTransformation {
     public void visit(ASTNode[] nodes, SourceUnit source) {
         if(GriffonCompilerContext.getConfigOption(GriffonCompilerContext.DISABLE_AST_INJECTION) || !GriffonCompilerContext.isGriffonArtifact(source)) return;
         ModuleNode moduleNode = (ModuleNode) nodes[0];

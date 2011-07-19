@@ -101,6 +101,7 @@ eventSetClasspath = { cl ->
     installFile << """
 // check to see if we already have a $name
 boolean $flagVar
+builderConfig = configSlurper.parse(builderConfigFile.text)
 builderConfig.each() { prefix, v ->
     v.each { builder, views ->
         $flagVar = $flagVar || '$fqn' == builder
@@ -123,6 +124,7 @@ root.'$fqn'.addon=true
     uninstallFile << """
 // check to see if we already have a $name
 boolean $flagVar
+builderConfig = configSlurper.parse(builderConfigFile.text)
 builderConfig.each() { prefix, v ->
     v.each { builder, views ->
         $flagVar = $flagVar || '$fqn' == builder
@@ -134,8 +136,6 @@ if ($flagVar) {
     builderConfigFile.text = builderConfigFile.text - "root.'$fqn'.addon=true\\n"
 }
 """
-
-
 }
 
 def generateTempVar(String textToSearch, String prefix = "tmp", String suffix = "") {
