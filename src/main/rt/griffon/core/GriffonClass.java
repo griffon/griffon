@@ -30,7 +30,7 @@ import java.util.TreeSet;
  * @author Graeme Rocher (Grails 0.1)
  * @author Andres Almiray
  */
-public interface GriffonClass {	
+public interface GriffonClass extends ApplicationHandler {
     Set<String> STANDARD_PROPERTIES = new TreeSet<String>(
         Arrays.asList("class", "metaClass", "app", "UIThread", "griffonClass", "log", "artifactType"));
 	
@@ -122,13 +122,6 @@ public interface GriffonClass {
      * @return the artifact type, i.e. "controller".
      */
     String getArtifactType();
-
-    /**
-     * Returns reference to the current application</p>
-     *
-     * @return the app
-     */
-    GriffonApplication getApp();
 
     /**
      * Gets the {@code MetaClass} of this GriffonClass.

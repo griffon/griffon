@@ -23,7 +23,7 @@ package griffon.core;
  *
  * @author Andres Almiray
  */
-public interface ArtifactHandler {
+public interface ArtifactHandler extends ApplicationHandler {
     /**
      * Get the type of artifact this handler processes.
      */
@@ -89,9 +89,4 @@ public interface ArtifactHandler {
      * if the clazz is not handled by this ArtifactHandler.
      */
     GriffonClass getClassFor(String fqnClassName);
-
-    /**
-     * Reference to the current {@code GriffonApplication}
-     */
-    GriffonApplication getApp();
 }

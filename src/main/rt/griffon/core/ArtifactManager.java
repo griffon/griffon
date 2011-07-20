@@ -24,9 +24,7 @@ import java.util.List;
  *
  * @author Andres Almiray
  */
-public interface ArtifactManager {
-    GriffonApplication getApp();
-
+public interface ArtifactManager extends ApplicationHandler {
     GriffonClass[] EMPTY_GRIFFON_CLASS_ARRAY = new GriffonClass[0];
     List<GriffonClass> EMPTY_GRIFFON_CLASS_LIST = Collections.<GriffonClass>emptyList();
 

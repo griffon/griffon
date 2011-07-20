@@ -29,12 +29,7 @@ import java.util.Map;
  *
  * @since 0.9.2
  */
-public interface GriffonAddon extends ThreadingHandler {
-    /**
-     * Returns the reference to the current application.
-     */
-    GriffonApplication getApp();
-
+public interface GriffonAddon extends ApplicationHandler, ThreadingHandler {
     /**
      * Returns a Logger instance suitable for this addon.<p>
      *

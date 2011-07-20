@@ -31,12 +31,7 @@ import org.slf4j.Logger;
  *
  * @since 0.9.1
  */
-public interface GriffonArtifact extends ThreadingHandler, MVCHandler {
-    /**
-     * Returns the reference to the current application.
-     */
-    GriffonApplication getApp();
-    
+public interface GriffonArtifact extends ApplicationHandler, ThreadingHandler, MVCHandler {
     /**
      * Creates a new instance of the specified class and type.
      */

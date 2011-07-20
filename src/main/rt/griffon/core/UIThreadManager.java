@@ -46,9 +46,23 @@ public class UIThreadManager {
         return INSTANCE;
     }
 
+    public static void enhance(Script script) {
+        if (LOG.isTraceEnabled()) {
+            LOG.trace("Enhancing script " + script);
+        }
+        script.getBinding().setVariable("execSync", new MethodClosure(INSTANCE, "executeSync"));
+        script.getBinding().setVariable("execAsync", new MethodClosure(INSTANCE, "executeAsync"));
+        script.getBinding().setVariable("execOutside", new MethodClosure(INSTANCE, "executeOutside"));
+        script.getBinding().setVariable("isUIThread", new MethodClosure(INSTANCE, "isUIThread"));
+        script.getBinding().setVariable("execFuture", new MethodClosure(INSTANCE, "executeFuture"));
+    }
+
     public static void enhance(MetaClass metaClass) {
         if (metaClass instanceof ExpandoMetaClass) {
             ExpandoMetaClass mc = (ExpandoMetaClass) metaClass;
+            if (LOG.isTraceEnabled()) {
+                LOG.trace("Enhancing metaClass " + metaClass);
+            }
             mc.registerInstanceMethod("execSync", new MethodClosure(INSTANCE, "executeSync"));
             mc.registerInstanceMethod("execAsync", new MethodClosure(INSTANCE, "executeAsync"));
             mc.registerInstanceMethod("execOutside", new MethodClosure(INSTANCE, "executeOutside"));

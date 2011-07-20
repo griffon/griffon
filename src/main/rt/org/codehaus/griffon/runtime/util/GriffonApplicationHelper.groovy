@@ -124,7 +124,7 @@ class GriffonApplicationHelper {
         app.event(GriffonApplication.Event.BOOTSTRAP_START.name, [app])
 
         applyPlatformTweaks(app)
-        runScriptInsideUIThread(GriffonApplication.Lifecycle.INITIALIZE.name, app)
+        runLifecycleHandler(GriffonApplication.Lifecycle.INITIALIZE.name, app)
         initializeArtifactManager(app)
 
         if (!app.addonManager) {
@@ -195,7 +195,7 @@ class GriffonApplicationHelper {
     /**
      * Sets a property value ignoring any MissingPropertyExceptions.<p>
      *
-     * @param receiver the objet where the property will be set
+     * @param receiver the object where the property will be set
      * @param property the name of the property to set
      * @param value the value to set on the property
      */
@@ -214,13 +214,24 @@ class GriffonApplicationHelper {
      * Executes a script inside the UI Thread.<p>
      * On Swing this would be the Event Dispatch Thread.
      *
+     * @deprecated use runLifecycleHandler instead
      */
+    @Deprecated
     static void runScriptInsideUIThread(String scriptName, GriffonApplication app) {
-        def script
+         runLifecycleHandler(scriptName, app)
+    }
+
+    /**
+     * Executes a script inside the UI Thread.<p>
+     * On Swing this would be the Event Dispatch Thread.
+     *
+     */
+    static void runLifecycleHandler(String handlerName, GriffonApplication app) {
+        Class<?> handlerClass = null
         try {
-            script = loadClass(app, scriptName).newInstance(app.bindings)
+            handlerClass = loadClass(app, handlerName)
         } catch (ClassNotFoundException cnfe) {
-            if (cnfe.message == scriptName) {
+            if (cnfe.message == handlerName) {
                 // the script must not exist, do nothing
                 //LOGME - may be because of chained failures
                 return
@@ -229,14 +240,24 @@ class GriffonApplicationHelper {
             }
         }
 
-        script.isUIThread = UIThreadManager.instance.&isUIThread
-        script.execAsync = UIThreadManager.instance.&executeAsync
-        script.execSync = UIThreadManager.instance.&executeSync
-        script.execOutside = UIThreadManager.instance.&executeOutside
-        script.execFuture = {Object... args -> UIThreadManager.instance.executeFuture(* args) }
+        if(Script.class.isAssignableFrom(handlerClass)) {
+            runScript(handlerName, handlerClass, app)
+        } else if(LifecycleHandler.class.isAssignableFrom(handlerClass)) {
+            runLifecycleHandler(handlerName, handlerClass, app)
+        }
+    }
 
-        if (LOG.infoEnabled) LOG.info("Running script '$scriptName'")
+    private static void runScript(String scriptName, Class handlerClass, GriffonApplication app) {
+        Script script = handlerClass.newInstance(app.bindings)
+        UIThreadManager.enhance(script)
+        if (LOG.infoEnabled) LOG.info("Running lifecycle handler (script) '$scriptName'")
         UIThreadManager.instance.executeSync(script)
+    }
+
+    private static void runLifecycleHandler(String handlerName, Class handlerClass, GriffonApplication app) {
+        LifecycleHandler handler = handlerClass.newInstance()
+        if (LOG.infoEnabled) LOG.info("Running lifecycle handler (class) '$handlerName'")
+        UIThreadManager.instance.executeSync(handler)
     }
 
     /**
