@@ -43,7 +43,6 @@ import static java.util.Arrays.asList;
  * @author Andres Almiray
  */
 public abstract class AbstractGriffonApplication extends AbstractObservable implements GriffonApplication {
-    private final Map<String, String> addonPrefixes = new LinkedHashMap<String, String>();
     private final Map<String, Map<String, String>> mvcGroups = new LinkedHashMap<String, Map<String, String>>();
     private final Map<String, ? extends GriffonModel> models = new LinkedHashMap<String, GriffonModel>();
     private final Map<String, ? extends GriffonView> views = new LinkedHashMap<String, GriffonView>();
@@ -78,10 +77,6 @@ public abstract class AbstractGriffonApplication extends AbstractObservable impl
         System.arraycopy(args, 0, startupArgs, 0, args.length);
         ApplicationHolder.setApplication(this);
         log = LoggerFactory.getLogger(getClass());
-    }
-
-    public Map<String, String> getAddonPrefixes() {
-        return addonPrefixes;
     }
 
     public Map<String, Map<String, String>> getMvcGroups() {
@@ -172,13 +167,6 @@ public abstract class AbstractGriffonApplication extends AbstractObservable impl
         firePropertyChange("locale", this.locale, this.locale = locale);
     }
 
-    public Map<String, ?> getAddons() {
-        if (addonManager != null) {
-            return addonManager.getAddons();
-        }
-        return Collections.emptyMap();
-    }
-
     public Metadata getMetadata() {
         return Metadata.getCurrent();
     }
@@ -223,7 +211,7 @@ public abstract class AbstractGriffonApplication extends AbstractObservable impl
 
         phase = ApplicationPhase.READY;
         event(GriffonApplication.Event.READY_START.getName(), asList(this));
-        GriffonApplicationHelper.runScriptInsideUIThread(GriffonApplication.Lifecycle.READY.getName(), this);
+        GriffonApplicationHelper.runLifecycleHandler(GriffonApplication.Lifecycle.READY.getName(), this);
         event(GriffonApplication.Event.READY_END.getName(), asList(this));
         phase = ApplicationPhase.MAIN;
     }
@@ -296,7 +284,7 @@ public abstract class AbstractGriffonApplication extends AbstractObservable impl
 
         // stage 4 - call shutdown script
         log.debug("Shutdown stage 4: execute Shutdown script");
-        GriffonApplicationHelper.runScriptInsideUIThread(GriffonApplication.Lifecycle.SHUTDOWN.getName(), this);
+        GriffonApplicationHelper.runLifecycleHandler(GriffonApplication.Lifecycle.SHUTDOWN.getName(), this);
 
         return true;
     }
@@ -318,7 +306,7 @@ public abstract class AbstractGriffonApplication extends AbstractObservable impl
             }
         }
 
-        GriffonApplicationHelper.runScriptInsideUIThread(GriffonApplication.Lifecycle.STARTUP.getName(), this);
+        GriffonApplicationHelper.runLifecycleHandler(GriffonApplication.Lifecycle.STARTUP.getName(), this);
 
         event(GriffonApplication.Event.STARTUP_END.getName(), asList(this));
     }

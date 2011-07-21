@@ -878,7 +878,7 @@ class BuildSettings extends AbstractBuildSettings {
     }
 
     def isAddonPlugin() {
-        baseDir.listFiles().find { it.name.endsWith("GriffonAddon.groovy") }
+        baseDir.listFiles().find { it.name.endsWith("GriffonAddon.groovy") || it.name.endsWith("GriffonAddon.java") }
     }
 
     private void establishProjectStructure() {

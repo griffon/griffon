@@ -30,13 +30,13 @@ target('default': "Creates a new MVC Group") {
     createMVC()
 }
 
-target (createMVC : "Creates a new MVC Group") {
+target(createMVC: "Creates a new MVC Group") {
     depends(checkVersion, parseArguments)
 
-    if(isPluginProject && !isAddonPlugin) {
+    if (isPluginProject && !isAddonPlugin) {
         println """You must create an Addon descriptor first.
 Type in griffon create-addon then execute this command again."""
-        System.exit(1)        
+        System.exit(1)
     }
 
     promptForName(type: "MVC Group")
@@ -44,74 +44,101 @@ Type in griffon create-addon then execute this command again."""
 
     mvcPackageName = pkg ? pkg : ''
     mvcClassName = GCU.getClassNameRepresentation(name)
-    mvcFullQualifiedClassName = "${pkg?pkg:''}${pkg?'.':''}$mvcClassName"
+    mvcFullQualifiedClassName = "${pkg ? pkg : ''}${pkg ? '.' : ''}$mvcClassName"
 
     String modelTemplate      = 'Model'
     String viewTemplate       = 'View'
     String controllerTemplate = 'Controller'
-    if(argsMap.group) {
+    if (argsMap.group) {
         modelTemplate      = argsMap.group + modelTemplate
         viewTemplate       = argsMap.group + viewTemplate
         controllerTemplate = argsMap.group + controllerTemplate
     }
 
-    if(!argsMap.skipModel && !argsMap.withModel) {
+    if (!argsMap.skipModel && !argsMap.withModel) {
         createArtifact(
-            name: mvcFullQualifiedClassName,
-            suffix: 'Model',
-            type: 'Model',
-            template: modelTemplate,
-            path: 'griffon-app/models')
+                name: mvcFullQualifiedClassName,
+                suffix: 'Model',
+                type: 'Model',
+                template: modelTemplate,
+                path: 'griffon-app/models')
     }
 
-    if(!argsMap.skipView && !argsMap.withView) {
+    if (!argsMap.skipView && !argsMap.withView) {
         createArtifact(
-            name: mvcFullQualifiedClassName,
-            suffix: 'View',
-            type: 'View',
-            template: viewTemplate,
-            path: 'griffon-app/views')
+                name: mvcFullQualifiedClassName,
+                suffix: 'View',
+                type: 'View',
+                template: viewTemplate,
+                path: 'griffon-app/views')
     }
 
-    if(!argsMap.skipController && !argsMap.withController) {
+    if (!argsMap.skipController && !argsMap.withController) {
         createArtifact(
-            name: mvcFullQualifiedClassName,
-            suffix: 'Controller',
-            type: 'Controller',
-            template: controllerTemplate,
-            path: 'griffon-app/controllers')
-    
+                name: mvcFullQualifiedClassName,
+                suffix: 'Controller',
+                type: 'Controller',
+                template: controllerTemplate,
+                path: 'griffon-app/controllers')
+
         createIntegrationTest(
-            name: mvcFullQualifiedClassName,
-            suffix: '')
+                name: mvcFullQualifiedClassName,
+                suffix: '')
     }
 
     if (isAddonPlugin) {
         // create mvcGroup in a plugin
+        def isJava = isAddonPlugin.absolutePath.endsWith('.java')
         def addonFile = isAddonPlugin
         def addonText = addonFile.text
 
-        if (!(addonText =~ /\s*def\s*mvcGroups\s*=\s*\[/)) {
-            addonText = addonText.replaceAll(/\}\s*\z/, """
+        if (!isJava) {
+            if (!(addonText =~ /\s*def\s*mvcGroups\s*=\s*\[/)) {
+                addonText = addonText.replaceAll(/\}\s*\z/, """
     def mvcGroups = [
     ]
 }
 """)
-        }
-       
-        List parts = []
-        if(!argsMap.skipModel)      parts << "            model     : '${(argsMap.withModel ?: mvcFullQualifiedClassName + 'Model')}'"
-        if(!argsMap.skipView)       parts << "            view      : '${(argsMap.withView ?: mvcFullQualifiedClassName + 'View')}'"
-        if(!argsMap.skipController) parts << "            controller: '${(argsMap.withController ?: mvcFullQualifiedClassName + 'Controller')}'"
+            }
+            List parts = []
+            if (!argsMap.skipModel)      parts << "            model     : '${(argsMap.withModel ?: mvcFullQualifiedClassName + 'Model')}'"
+            if (!argsMap.skipView)       parts << "            view      : '${(argsMap.withView ?: mvcFullQualifiedClassName + 'View')}'"
+            if (!argsMap.skipController) parts << "            controller: '${(argsMap.withController ?: mvcFullQualifiedClassName + 'Controller')}'"
 
-        addonFile.withWriter { it.write addonText.replaceAll(/\s*def\s*mvcGroups\s*=\s*\[/, """
+            addonFile.withWriter {
+                it.write addonText.replaceAll(/\s*def\s*mvcGroups\s*=\s*\[/, """
     def mvcGroups = [
         // MVC Group for "$name"
         '$name': [
 ${parts.join(',\n')}
-        ]
-    """) }
+        ],
+    """)
+            }
+        } else {
+            if (!(addonText =~ /\s*public Map<String, Map<String, String>>\s*getMvcGroups\(\)\s*\{/)) {
+                addonText = addonText.replaceAll(/\}\s*\z/, """
+    public Map<String, Map<String, String>> getMvcGroups() {
+        Map<String, Map<String, String>> groups = new LinkedHashMap<String, Map<String, String>>();
+        return groups;
+    }
+}
+""")
+            }
 
+            List parts = []
+            if (!argsMap.skipModel)      parts << """            {"model",      "${(argsMap.withModel ?: mvcFullQualifiedClassName + 'Model')}"}"""
+            if (!argsMap.skipView)       parts << """            {"view",       "${(argsMap.withView ?: mvcFullQualifiedClassName + 'View')}"}"""
+            if (!argsMap.skipController) parts << """            {"controller", "${(argsMap.withController ?: mvcFullQualifiedClassName + 'Controller')}"}"""
+
+            addonFile.withWriter {
+                it.write addonText.replaceAll(/\s*Map<String, Map<String, String>> groups = new LinkedHashMap<String, Map<String, String>>\(\);/, """
+        Map<String, Map<String, String>> groups = new LinkedHashMap<String, Map<String, String>>();
+        // MVC Group for "$name"
+        groups.put("$name", groupDef(new String[][]{
+${parts.join(',\n')}
+        }));""")
+            }
+        }
     } else {
         // create mvcGroup in an application
         def applicationConfigFile = new File("${basedir}/griffon-app/conf/Application.groovy")
@@ -123,17 +150,19 @@ mvcGroups {
 """
         }
 
-        List parts = [] 
-        if(!argsMap.skipModel)      parts << "        model      = '${(argsMap.withModel ?: mvcFullQualifiedClassName + 'Model')}'"
-        if(!argsMap.skipView)       parts << "        view       = '${(argsMap.withView ?: mvcFullQualifiedClassName + 'View')}'"
-        if(!argsMap.skipController) parts << "        controller = '${(argsMap.withController ?: mvcFullQualifiedClassName + 'Controller')}'"
+        List parts = []
+        if (!argsMap.skipModel)      parts << "        model      = '${(argsMap.withModel ?: mvcFullQualifiedClassName + 'Model')}'"
+        if (!argsMap.skipView)       parts << "        view       = '${(argsMap.withView ?: mvcFullQualifiedClassName + 'View')}'"
+        if (!argsMap.skipController) parts << "        controller = '${(argsMap.withController ?: mvcFullQualifiedClassName + 'Controller')}'"
 
-        applicationConfigFile.withWriter { it.write configText.replaceAll(/\s*mvcGroups\s*\{/, """
+        applicationConfigFile.withWriter {
+            it.write configText.replaceAll(/\s*mvcGroups\s*\{/, """
 mvcGroups {
     // MVC Group for "$name"
     '$name' {
 ${parts.join('\n')}
     }
-""") }
+""")
+        }
     }
 }

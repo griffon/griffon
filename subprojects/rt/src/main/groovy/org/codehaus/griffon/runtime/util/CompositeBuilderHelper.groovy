@@ -158,28 +158,31 @@ class CompositeBuilderHelper {
     private static addFactories(UberBuilder uberBuilder, groupedFactories) {
         for (group in groupedFactories) {
             String groupName = group.key
-            groupName = groupName == 'root' || groupName == '*' ? '' : groupName
-            uberBuilder.@registrationGroup.get(groupName, [] as TreeSet)
             group.value.each {name, factory ->
-                if (Factory.class.isAssignableFrom(factory.getClass())) {
-                    builderCustomizer.registerFactory(uberBuilder, name, groupName, factory)
-                } else if (factory instanceof Class) {
-                    builderCustomizer.registerBeanFactory(uberBuilder, name, groupName, factory)
-                } else {
-                    throw new IllegalArgumentException("[builder config] value of factory '$groupName:$name' is neither a Factory nor a Class instance.")
-                }
+                addFactory(uberBuilder, groupName, name, factory)
             }
+        }
+    }
+
+    static void addFactory(UberBuilder uberBuilder, String groupName, String name, Object factory) {
+        groupName = groupName == 'root' || groupName == '*' ? '' : groupName
+        uberBuilder.@registrationGroup.get(groupName, [] as TreeSet)
+
+        if (Factory.class.isAssignableFrom(factory.getClass())) {
+            builderCustomizer.registerFactory(uberBuilder, name, groupName, factory)
+        } else if (factory instanceof Class) {
+            builderCustomizer.registerBeanFactory(uberBuilder, name, groupName, factory)
+        } else {
+            throw new IllegalArgumentException("[builder config] value of factory '$groupName:$name' is neither a Factory nor a Class instance.")
         }
     }
 
     private static addMethods(UberBuilder uberBuilder, groupedMethods) {
         for (group in groupedMethods) {
             String groupName = group.key
-            groupName = groupName == 'root' || groupName == '*' ? '' : groupName
-            uberBuilder.@registrationGroup.get(groupName, [] as TreeSet)
             group.value.each {name, method ->
                 if (method instanceof Closure) {
-                    builderCustomizer.registerExplicitMethod(uberBuilder, name, groupName, method)
+                    addMethod(uberBuilder, groupName, name, method)
                 } else {
                     throw new IllegalArgumentException("[builder config] value of method '$groupName:$name' is not a Closure.")
                 }
@@ -187,14 +190,24 @@ class CompositeBuilderHelper {
         }
     }
 
+    static void addMethod(UberBuilder uberBuilder, String groupName, String methodName, Closure method) {
+        groupName = groupName == 'root' || groupName == '*' ? '' : groupName
+        uberBuilder.@registrationGroup.get(groupName, [] as TreeSet)
+        builderCustomizer.registerExplicitMethod(uberBuilder, methodName, groupName, method)
+    }
+
     private static addProperties(UberBuilder uberBuilder, groupedProperties) {
         for (group in groupedProperties) {
             String groupName = group.key
-            groupName = groupName == 'root' || groupName == '*' ? '' : groupName
-            uberBuilder.@registrationGroup.get(groupName, [] as TreeSet)
             group.value.each {name, propertyTuple ->
-                builderCustomizer.registerExplicitProperty(uberBuilder, name, groupName, propertyTuple.get, propertyTuple.set)
+                addProperty(uberBuilder, name, groupName, propertyTuple.get, propertyTuple.set)
             }
         }
+    }
+
+    static void addProperty(UberBuilder uberBuilder, String groupName, String propertyName, Closure getter, Closure setter) {
+        groupName = groupName == 'root' || groupName == '*' ? '' : groupName
+        uberBuilder.@registrationGroup.get(groupName, [] as TreeSet)
+        builderCustomizer.registerExplicitProperty(uberBuilder, propertyName, groupName, getter, setter)
     }
 }

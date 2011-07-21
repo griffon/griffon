@@ -94,7 +94,7 @@ public abstract class AbstractGriffonApplet extends JApplet implements GriffonAp
 
     public void stop() {
         event(GriffonApplication.Event.STOP_START.getName(), asList(this));
-        GriffonApplicationHelper.runScriptInsideUIThread(GriffonApplication.Lifecycle.STOP.getName(), this);
+        GriffonApplicationHelper.runLifecycleHandler(GriffonApplication.Lifecycle.STOP.getName(), this);
         event(GriffonApplication.Event.STOP_END.getName(), asList(this));
     }
 
@@ -247,7 +247,7 @@ public abstract class AbstractGriffonApplet extends JApplet implements GriffonAp
 
         phase = ApplicationPhase.READY;
         event(GriffonApplication.Event.READY_START.getName(), asList(this));
-        GriffonApplicationHelper.runScriptInsideUIThread(GriffonApplication.Lifecycle.READY.getName(), this);
+        GriffonApplicationHelper.runLifecycleHandler(GriffonApplication.Lifecycle.READY.getName(), this);
         event(GriffonApplication.Event.READY_END.getName(), asList(this));
         phase = ApplicationPhase.MAIN;
     }
@@ -320,7 +320,7 @@ public abstract class AbstractGriffonApplet extends JApplet implements GriffonAp
 
         // stage 4 - call shutdown script
         log.debug("Shutdown stage 4: execute Shutdown script");
-        GriffonApplicationHelper.runScriptInsideUIThread(GriffonApplication.Lifecycle.SHUTDOWN.getName(), this);
+        GriffonApplicationHelper.runLifecycleHandler(GriffonApplication.Lifecycle.SHUTDOWN.getName(), this);
 
         return true;
     }
@@ -342,7 +342,7 @@ public abstract class AbstractGriffonApplet extends JApplet implements GriffonAp
             }
         }
 
-        GriffonApplicationHelper.runScriptInsideUIThread(GriffonApplication.Lifecycle.STARTUP.getName(), this);
+        GriffonApplicationHelper.runLifecycleHandler(GriffonApplication.Lifecycle.STARTUP.getName(), this);
 
         event(GriffonApplication.Event.STARTUP_END.getName(), asList(this));
     }

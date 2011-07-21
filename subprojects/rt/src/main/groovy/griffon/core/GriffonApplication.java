@@ -181,19 +181,6 @@ public interface GriffonApplication extends ThreadingHandler, MVCHandler {
     void addMvcGroup(String mvcType, Map<String, String> mvcPortions);
 
     /**
-     * Returns all currently available addon instances, keyed by addon name.<p>
-     * @deprecated use getAddonManager().getAddons()
-     */
-    @Deprecated
-    Map<String, ?> getAddons();
-
-    /**
-     * @deprecated without replacement. Use the AddonManager to query for addons
-     */
-    @Deprecated
-    Map<String, String> getAddonPrefixes();
-
-    /**
      * Returns the application's AddonManager instance.
      *
      * @return the application's AddonManager
