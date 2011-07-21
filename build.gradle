@@ -16,7 +16,6 @@
 import org.apache.tools.ant.filters.ReplaceTokens
 
 apply plugin:'base'
-
 configurations{
 	runtime {transitive = false}
 	docs
@@ -148,8 +147,8 @@ task apiDocs(type: Groovydoc) {
     header = "Griffon $version"
     windowTitle = "Griffon $version"
     groovyClasspath = configurations.groovy
-	classpath = project(":griffon-rt").sourceSets.main.classes + 
-				project(":griffon-cli").sourceSets.main.classes + 
+	classpath = project(":griffon-rt").sourceSets.main.output + 
+				project(":griffon-cli").sourceSets.main.output + 
 				project(":griffon-cli").configurations.compile 
 				
 				
