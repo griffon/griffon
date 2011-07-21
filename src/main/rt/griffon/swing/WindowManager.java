@@ -79,7 +79,7 @@ public final class WindowManager implements ShutdownHandler {
      *
      * @param index the index of the Window to be retrieved
      * @return the Window found at the specified index
-     * @throws IndexArrayOutOfBoundsException if the index is invalid (below 0 or greater than the size
+     * @throws ArrayIndexOutOfBoundsException if the index is invalid (below 0 or greater than the size
      *         of the managed windows list)
      */
     public Window getAt(int index) {
