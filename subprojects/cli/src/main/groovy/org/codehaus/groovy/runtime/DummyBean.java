@@ -111,6 +111,15 @@ public class DummyBean {
         return text.toUpperCase();
     }
 
+    public int hashCode() {
+        int result = name != null ? name.hashCode() : 0;
+        result = 31 * result + (i != null ? i.hashCode() : 0);
+        result = 31 * result + (dynamicProperties != null ? dynamicProperties.hashCode() : 0);
+        result = 31 * result + (point != null ? point.hashCode() : 0);
+        result = 31 * result + (changeSupport != null ? changeSupport.hashCode() : 0);
+        return result;
+    }
+
     public boolean equals(Object that) {
         if (that instanceof DummyBean) {
             return equals((DummyBean) that);

@@ -296,7 +296,7 @@ public class GriffonASTUtils {
         );
     }
     
-    public static Statement ifs_no_return(Expression cond, Expression trueExpr) {
+    public static Statement ifsNoReturn(Expression cond, Expression trueExpr) {
         return new IfStatement(
                 cond instanceof BooleanExpression? (BooleanExpression) cond : new BooleanExpression(cond),
                 new ExpressionStatement(trueExpr),
@@ -304,7 +304,7 @@ public class GriffonASTUtils {
         );
     }
 
-    public static Statement ifs_no_return(Expression cond, Expression trueExpr, Expression falseExpr) {
+    public static Statement ifsNoReturn(Expression cond, Expression trueExpr, Expression falseExpr) {
         return new IfStatement(
                 cond instanceof BooleanExpression? (BooleanExpression) cond : new BooleanExpression(cond),
                 new ExpressionStatement(trueExpr),
@@ -312,7 +312,7 @@ public class GriffonASTUtils {
         );
     }
 
-    public static Statement ifs_no_return(Expression cond, Statement trueStmnt) {
+    public static Statement ifsNoReturn(Expression cond, Statement trueStmnt) {
         return new IfStatement(
                 cond instanceof BooleanExpression? (BooleanExpression) cond : new BooleanExpression(cond),
                 trueStmnt,
@@ -320,7 +320,7 @@ public class GriffonASTUtils {
         );
     }
 
-    public static Statement ifs_no_return(Expression cond, Statement trueStmnt, Statement falseStmnt) {
+    public static Statement ifsNoReturn(Expression cond, Statement trueStmnt, Statement falseStmnt) {
         return new IfStatement(
                 cond instanceof BooleanExpression? (BooleanExpression) cond : new BooleanExpression(cond),
                 trueStmnt,

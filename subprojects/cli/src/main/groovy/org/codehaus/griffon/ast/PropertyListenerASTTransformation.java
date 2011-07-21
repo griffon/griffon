@@ -27,7 +27,6 @@ import org.codehaus.groovy.transform.GroovyASTTransformation;
 
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
-import java.util.Collection;
 import java.util.Map;
 
 /**

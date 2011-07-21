@@ -72,7 +72,9 @@ public class PlainFormatter extends PlainJUnitResultFormatter {
         }
         finally {
             if (writer != null) {
-                try { writer.close(); } catch (IOException ex) {}
+                try { writer.close(); } catch (IOException ignore) {
+                    //IGNORE
+                }
             }
         }
     }

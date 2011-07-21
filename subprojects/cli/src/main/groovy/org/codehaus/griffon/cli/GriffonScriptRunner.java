@@ -22,7 +22,6 @@ import groovy.lang.Closure;
 import groovy.lang.ExpandoMetaClass;
 import groovy.util.AntBuilder;
 import org.apache.tools.ant.Project;
-import org.apache.tools.ant.taskdefs.Java;
 import org.codehaus.gant.GantBinding;
 import org.codehaus.griffon.resolve.IvyDependencyManager;
 import org.codehaus.groovy.runtime.DefaultGroovyMethods;
