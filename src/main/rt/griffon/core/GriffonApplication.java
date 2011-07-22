@@ -100,7 +100,7 @@ public interface GriffonApplication extends ThreadingHandler, MVCHandler {
         STOP_START, STOP_END,
         SHUTDOWN_REQUESTED, SHUTDOWN_ABORTED, SHUTDOWN_START,
         NEW_INSTANCE,
-        CREATE_MVC_GROUP("CreateMVCGroup"), DESTROY_MVC_GROUP("DestroyMVCGroup"),
+        INITIALIZE_MVC_GROUP("InitializeMVCGroup"), CREATE_MVC_GROUP("CreateMVCGroup"), DESTROY_MVC_GROUP("DestroyMVCGroup"),
         WINDOW_SHOWN, WINDOW_HIDDEN;
 
         /** Display friendly name */
