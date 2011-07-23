@@ -33,17 +33,23 @@ import java.util.concurrent.Future;
  *
  * @author Andres Almiray
  */
-public class UIThreadManager {
+public final class UIThreadManager {
     // Shouldn't need to synchronize access to this field as setting its value
     // should be done at boot time
     private UIThreadHandler uiThreadHandler;
-    private static final ExecutorService DEFAULT_EXECUTOR_SERVICE = Executors.newFixedThreadPool(2);
+    private static final ExecutorService DEFAULT_EXECUTOR_SERVICE = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
     private static final Logger LOG = LoggerFactory.getLogger(UIThreadManager.class);
 
     private static final UIThreadManager INSTANCE = new UIThreadManager();
 
     public static UIThreadManager getInstance() {
         return INSTANCE;
+    }
+
+    private UIThreadManager() {
+        if (LOG.isDebugEnabled()) {
+            LOG.debug("Default Executor set to run with " + Runtime.getRuntime().availableProcessors() + " processors");
+        }
     }
 
     public static void enhance(Script script) {
