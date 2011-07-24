@@ -33,11 +33,15 @@ public interface AddonManager {
 
     /**
      * Returns a read-only view of all available addons
+     *
+     * @return a non-null Map of addons keyed by name
      */
     Map<String, GriffonAddon> getAddons();
 
     /**
      * Returns a read-only view of all available addon descriptors
+     *
+     * @return a non-null Map of addon descriptors keyed by name
      */
     Map<String, GriffonAddonDescriptor> getAddonDescriptors();
 
@@ -45,6 +49,9 @@ public interface AddonManager {
      * Finds an addon by name.<p>
      * Example: findAddon("miglayout") will return a GriffonAddon that
      * represents the contibutions of the MigLayout plugin.
+     *
+     * @param name the name of the addon to search for
+     * @return an addon instance if there's a match, false otherwise
      */
     GriffonAddon findAddon(String name);
 
@@ -52,6 +59,9 @@ public interface AddonManager {
      * Finds an addon descriptor by name.<p>
      * Example: findAddonDescriptor("miglayout") will return a GriffonAddonDescriptor that
      * represents the contibutions of the MigLayout plugin.
+     *
+     * @param name the name of the addon to search for
+     * @return an addon descriptor instance if there's a match, false otherwise
      */
     GriffonAddonDescriptor findAddonDescriptor(String name);
 
@@ -60,6 +70,9 @@ public interface AddonManager {
      * Example: findAddonDescriptors("foo") will return al addon descriptors that use 'foo as a prefix.<p>
      * A null or blank prefix should return all addon descriptors registered with the 'root'
      * prefix.
+     *
+     * @param prefix the prefix to search for
+     * @return a non-null Map of matching addon descriptors keyed by name
      */
     Map<String, GriffonAddonDescriptor> findAddonDescriptors(String prefix);
 }

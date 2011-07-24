@@ -25,6 +25,8 @@ package griffon.core;
 public interface ApplicationHandler {
     /**
      * Reference to the current {@code GriffonApplication}
+     *
+     * @return the currently running application
      */
     GriffonApplication getApp();
 }

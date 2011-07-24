@@ -73,10 +73,10 @@ import java.util.Map;
  *     }
  * }
  * </pre>
- *
+ * <p/>
  * Fine grained control for default <code>show</code> and <code>hide</code> is also possible, by specifying <code>defaultShow</code>
  * and/or <code>defaultHide</code> properties at the global level. These properties take precedence over <code>defaultHandler</code> .
- *
+ * <p/>
  * <pre>
  * swing {
  *     windowManager {
@@ -87,7 +87,7 @@ import java.util.Map;
  *     }
  * }
  * </pre>
- *
+ * <p/>
  * <strong>Note:</strong> the value for <code>show</code> and <code>hide</code> can be either a Closure or a {@code RunnableWithArgs}.
  *
  * @author Andres Almiray

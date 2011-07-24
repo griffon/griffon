@@ -19,17 +19,41 @@ package griffon.core;
  * Describes an Addon artifact.
  *
  * @author Andres Almiray
- *
  * @since 0.9.2
  */
 public interface GriffonAddonDescriptor {
+    /**
+     * Returns the prefix for this Addon. May be empty.
+     *
+     * @return the Addon's prefix.
+     */
     String getPrefix();
 
+    /**
+     * Returns the name of the Addon.
+     *
+     * @return the Addon's name
+     */
     String getName();
 
+    /**
+     * Returns the plugin name associated with this Addon
+     *
+     * @return the plugin's name
+     */
     String getPluginName();
 
+    /**
+     * Returns the plugin version associated with this Addon
+     *
+     * @return the plugin's version
+     */
     String getVersion();
 
+    /**
+     * Returns the Addon instance
+     *
+     * @return the Addon itself
+     */
     GriffonAddon getAddon();
 }

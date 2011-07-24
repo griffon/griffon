@@ -19,15 +19,14 @@ package griffon.core;
  * An specialized closure for working with MVC members.
  *
  * @author Andres Almiray
- *
  * @since 0.9.3
  */
 public interface MVCClosure<M extends GriffonModel, V extends GriffonView, C extends GriffonController> {
     /**
      * Executes this closure<p>
      *
-     * @param model the Model member of the group
-     * @param view the View member of the group
+     * @param model      the Model member of the group
+     * @param view       the View member of the group
      * @param controller the Controller member of the group
      */
     void call(M model, V view, C controller);

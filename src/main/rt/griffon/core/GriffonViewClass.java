@@ -12,19 +12,22 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- */ 
+ */
 package griffon.core;
 
 /**
  * Represents a View class in Griffon.<p>
  *
  * @author Andres Almiray
- *
  * @since 0.9.1
  */
 public interface GriffonViewClass extends GriffonClass {
-    /** "view" */
+    /**
+     * "view"
+     */
     String TYPE = "view";
-    /** "View" */
+    /**
+     * "View"
+     */
     String TRAILING = "View";
 }

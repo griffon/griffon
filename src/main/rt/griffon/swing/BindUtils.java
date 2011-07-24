@@ -83,23 +83,23 @@ public class BindUtils {
         }
 
         public void make(FactoryBuilderSupport builder) {
-            if(builder == null) {
+            if (builder == null) {
                 throw new IllegalArgumentException("Cannot make binding with a null builder!");
             }
 
             Map<String, Object> attributes = new LinkedHashMap<String, Object>();
 
-            if(source == null) {
+            if (source == null) {
                 throw new IllegalArgumentException("Unspecified value for: source");
             }
-            if(target == null) {
+            if (target == null) {
                 throw new IllegalArgumentException("Unspecified value for: target");
             }
-            if(isBlank(sourceProperty)) sourceProperty = targetProperty;
-            if(isBlank(sourceProperty)) {
+            if (isBlank(sourceProperty)) sourceProperty = targetProperty;
+            if (isBlank(sourceProperty)) {
                 throw new IllegalArgumentException("Unspecified values for: sourceProperty, targetProperty");
             }
-            if(isBlank(targetProperty)) targetProperty = sourceProperty;
+            if (isBlank(targetProperty)) targetProperty = sourceProperty;
 
             attributes.put("source", source);
             attributes.put("target", target);
@@ -107,8 +107,8 @@ public class BindUtils {
             attributes.put("targetProperty", targetProperty);
             attributes.put("mutual", mutual);
 
-            if(converter != null) attributes.put("converter", new CallableWithArgsClosure(builder, converter));
-            if(validator != null) attributes.put("validator", new CallableWithArgsClosure(builder, validator));
+            if (converter != null) attributes.put("converter", new CallableWithArgsClosure(builder, converter));
+            if (validator != null) attributes.put("validator", new CallableWithArgsClosure(builder, validator));
 
             builder.invokeMethod("bind", attributes);
         }

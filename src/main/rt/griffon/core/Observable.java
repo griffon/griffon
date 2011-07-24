@@ -23,7 +23,6 @@ import java.beans.PropertyChangeListener;
  * Bean Specification</a>.
  *
  * @author Andres Almiray
- *
  * @since 0.9.1
  */
 public interface Observable {
@@ -32,7 +31,6 @@ public interface Observable {
      * The listener is registered for all bound properties of this class.
      *
      * @param listener the PropertyChangeListener to be added
-     *
      * @see #removePropertyChangeListener(PropertyChangeListener)
      */
     void addPropertyChangeListener(PropertyChangeListener listener);
@@ -41,9 +39,8 @@ public interface Observable {
      * Removes the given PropertyChangeListener from the listener list.<p>
      * The listener is registered an specific property of this class.
      *
-     * @param propertyName  The name of the property to listen on.
-     * @param listener the PropertyChangeListener to be added
-     *
+     * @param propertyName The name of the property to listen on.
+     * @param listener     the PropertyChangeListener to be added
      * @see #removePropertyChangeListener(String, PropertyChangeListener)
      */
     void addPropertyChangeListener(String propertyName, PropertyChangeListener listener);
@@ -54,7 +51,6 @@ public interface Observable {
      * registered for all bound properties of this class.
      *
      * @param listener the PropertyChangeListener to be removed
-     *
      * @see #addPropertyChangeListener(PropertyChangeListener)
      */
     void removePropertyChangeListener(PropertyChangeListener listener);
@@ -64,8 +60,8 @@ public interface Observable {
      * This method should be used to remove PropertyChangeListeners that were
      * registered for an specific property of this class.
      *
-     * @param propertyName  The name of the property that was listened on.
-     *
+     * @param propertyName The name of the property that was listened on.
+     * @param listener     the PropertyChangeListener to be removed
      * @see #addPropertyChangeListener(String, PropertyChangeListener)
      */
     void removePropertyChangeListener(String propertyName, PropertyChangeListener listener);
@@ -73,13 +69,13 @@ public interface Observable {
     /**
      * Returns an array of all the listeners that were added with addPropertyChangeListener().<p>
      *
-     * @return all of the {@code PropertyChangeListeners} added or an empty array if no 
-     * listeners have been added.
+     * @return all of the {@code PropertyChangeListeners} added or an empty array if no
+     *         listeners have been added.
      */
     PropertyChangeListener[] getPropertyChangeListeners();
 
     /**
-     * Returns an array of all the listeners which have been associated 
+     * Returns an array of all the listeners which have been associated
      * with the named property.
      *
      * @param propertyName The name of the property being listened to
