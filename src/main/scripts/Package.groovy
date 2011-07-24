@@ -263,6 +263,8 @@ target(_copyLaunchScripts: "") {
     ant.copy(todir: "${targetDistDir}") {
         fileset(dir: "${griffonSettings.griffonHome}/src/griffon/templates/dist")
     }
+    ant.copy(file: resolveApplicationIcnsFile(), tofile: "${targetDistDir}/${griffonAppName}.icns")
+
     ant.replace(dir: "${targetDistDir}/bin") {
         replacefilter(token: "@app.name@", value: GriffonNameUtils.capitalize(griffonAppName))
         replacefilter(token: "@app.version@", value: griffonAppVersion)
