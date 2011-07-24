@@ -119,8 +119,8 @@ target(name: 'createApplicationProject',
     }
 
     Metadata md = Metadata.getInstance(new File("${basedir}/application.properties"))
+    installPluginExternal md, 'actions'
     installPluginExternal md, 'glazedlists'
-    installPluginExternal md, 'i18n'
     installPluginExternal md, 'miglayout'
 }
 

@@ -1,25 +1,19 @@
 @artifact.package@import griffon.swing.BindUtils;
 import griffon.util.CallableWithArgs;
-import griffon.util.RunnableWithArgs;
 
 import javax.swing.*;
 
 import net.miginfocom.swing.MigLayout;
-
+import griffon.plugins.actions.ActionManager;
 import static griffon.swing.SwingAction.action;
 
 public class CreditsView extends AbstractDialogView {
     protected JComponent buildContent() {
-
-        Action closeAction = action(message("application.action.Close.name", "Close"))
+        Action hideAction = action(ActionManager.getInstance().actionFor(controller, "hideAction"))
+                .withName(message("application.action.Close.name", "Close"))
                 .withMnemonic(message("application.action.Close.mnemonic", "C"))
-                .withShortDescription(message("application.action.Close.name", "Close"))
-                .withRunnable(new RunnableWithArgs() {
-                    public void run(Object[] args) {
-                        controller.hide();
-                    }
-                }).build();
-
+                .withShortDescription(message("application.action.Close.short_description", "Close"))
+                .build();
 
         MigLayout layout = new MigLayout();
         layout.setLayoutConstraints("fill");
@@ -51,11 +45,11 @@ public class CreditsView extends AbstractDialogView {
         tabbedPane.addTab(message("application.dialog.Credits.writtenby", "Written by"), scrollPane);
 
         panel.add(tabbedPane, "grow, wrap");
-        panel.add(new JButton(closeAction), "right");
+        panel.add(new JButton(hideAction), "right");
 
         String actionKey = "CloseAction";
         panel.getInputMap(JComponent.WHEN_FOCUSED).put(KeyStroke.getKeyStroke("ESCAPE"), actionKey);
-        panel.getActionMap().put(actionKey, closeAction);
+        panel.getActionMap().put(actionKey, hideAction);
 
         return panel;
     }

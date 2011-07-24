@@ -1,21 +1,22 @@
 @artifact.package@import griffon.core.GriffonApplication;
 import griffon.core.MVCClosure;
+import java.awt.event.ActionEvent;
 import org.codehaus.griffon.runtime.core.AbstractGriffonController;
 
 public class @artifact.name@ extends AbstractGriffonController {    
-    public void newAction() {
+    public void newAction(ActionEvent event) {
     }
 
-    public void openAction() {
+    public void openAction(ActionEvent event) {
     }
 
-    public void saveAction() {
+    public void saveAction(ActionEvent event) {
     }
 
-    public void saveAsAction() {
+    public void saveAsAction(ActionEvent event) {
     }
 
-    public void aboutAction() {
+    public void aboutAction(ActionEvent event) {
         withMVCGroup("about", new MVCClosure<AboutModel, AboutView, DialogController>() {
             public void call(AboutModel m, AboutView v, DialogController c) {
                 c.show();
@@ -23,7 +24,7 @@ public class @artifact.name@ extends AbstractGriffonController {
         });
     }
 
-    public void preferencesAction() {
+    public void preferencesAction(ActionEvent event) {
         withMVCGroup("preferences", new MVCClosure<PreferencesModel, PreferencesView, DialogController>() {
             public void call(PreferencesModel m, PreferencesView v, DialogController c) {
                 c.show();
@@ -31,37 +32,37 @@ public class @artifact.name@ extends AbstractGriffonController {
         });
     }
 
-    public void quitAction() {
+    public void quitAction(ActionEvent event) {
         getApp().shutdown();
     }
 
-    public void undoAction() {
+    public void undoAction(ActionEvent event) {
     }
 
-    public void redoAction() {
+    public void redoAction(ActionEvent event) {
     }
 
-    public void cutAction() {
+    public void cutAction(ActionEvent event) {
     }
 
-    public void copyAction() {
+    public void copyAction(ActionEvent event) {
     }
 
-    public void pasteAction() {
+    public void pasteAction(ActionEvent event) {
     }
 
-    public void deleteAction() {
+    public void deleteAction(ActionEvent event) {
     }
 
     public void onOSXAbout(GriffonApplication app) {
-        aboutAction();
+        aboutAction(null);
     }
 
     public void onOSXQuit(GriffonApplication app) {
-        getApp().shutdown();
+        quitAction(null);
     }
 
     public void onOSXPrefs(GriffonApplication app) {
-        preferencesAction();
+        preferencesAction(null);
     }
 }

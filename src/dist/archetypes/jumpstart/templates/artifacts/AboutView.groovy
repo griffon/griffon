@@ -10,7 +10,7 @@ actions {
                withMVCGroup('credits') { m, v, c -> c.show(window) }
            },
            mnemonic: app.getMessage('application.action.New.mnemonic', 'R'),
-           shortDescription: app.getMessage('application.action.Credits.description', 'Credits')
+           shortDescription: app.getMessage('application.action.Credits.short_description', 'Credits')
         )
     }
     if(model.includeLicense) {
@@ -22,14 +22,13 @@ actions {
                withMVCGroup('license') { m, v, c -> c.show(window) }
            },
            mnemonic: app.getMessage('application.action.License.mnemonic', 'L'),
-           shortDescription: app.getMessage('application.action.License.description', 'License')
+           shortDescription: app.getMessage('application.action.License.short_description', 'License')
         )
     }
-    action(id: 'closeAction',
+    action(hideAction,
        name: app.getMessage('application.action.Close.name', 'Close'),
-       closure: controller.hide,
        mnemonic: app.getMessage('application.action.Close.mnemonic', 'C'),
-       shortDescription: app.getMessage('application.action.Close.description', 'Close')
+       shortDescription: app.getMessage('application.action.Close.short_description', 'Close')
     )
 }
 
@@ -52,10 +51,10 @@ panel(id: 'content') {
     }
     if(model.includeCredits) button(creditsAction, constraints: 'left')
     if(model.includeLicense) button(licenseAction, constraints: (model.includeCredits?'center':'left'))
-    button(closeAction, constraints: 'right')
+    button(hideAction, constraints: 'right')
 
     keyStrokeAction(component: current,
         keyStroke: 'ESCAPE',
         condition: 'in focused window',
-        action: closeAction)
+        action: hideAction)
 }
