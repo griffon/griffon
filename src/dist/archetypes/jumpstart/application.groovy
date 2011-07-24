@@ -112,11 +112,41 @@ target(name: 'createApplicationProject',
     argsMap.params[0] = qualify('preferences')
     createMVC()
 
+    argsMap.skipPackagePrompt = true
+    createArtifact(
+        name: 'Events',
+        suffix: '',
+        type: 'Events',
+        template: 'Events',
+        path: 'griffon-app/conf')
+
     copyResources("${basedir}/griffon-app/resources", 'griffon-app/resources/*')
     copyResources("${basedir}/griffon-app/i18n", 'griffon-app/i18n/*')
     ant.replace(dir: "${basedir}/griffon-app/i18n") {
         replacefilter(token: "@griffon.project.name@", value: GriffonNameUtils.capitalize(griffonAppName))
     }
+
+    File configFile = new File("${basedir}/griffon-app/conf/Config.groovy")
+    configFile.append('''
+import griffon.swing.SwingUtils
+import java.awt.Dialog
+
+swing {
+    windowManager {
+        defaultShow = {w, app ->
+            if(!(w instanceof Dialog)) SwingUtils.centerOnScreen(w)
+            w.visible = true
+        }
+        defualtHide = {w, app ->
+            if(w instanceof Dialog || app.windowManager.windows.findAll{it.visible}.size() > 1) {
+                w.dispose()
+            } else {
+                if(app.config.shutdown.proceed) w.dispose()
+            }
+        }
+    }
+}
+''')
 
     Metadata md = Metadata.getInstance(new File("${basedir}/application.properties"))
     installPluginExternal md, 'actions'

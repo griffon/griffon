@@ -95,6 +95,8 @@ target(compile: "Implementation of compilation phase") {
         compileSrc(classpathId) {
             src(path: "${basedir}/griffon-app/conf")
             include(name: '*.groovy')
+            include(name: '*.java')
+            javac(classpathref: classpathId, encoding: 'UTF-8', debug: 'yes')
         }
         ant.copy(todir: classesDirPath) {
             fileset(dir: "${basedir}/griffon-app/conf") {
