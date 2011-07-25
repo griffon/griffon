@@ -979,12 +979,9 @@ public class MethodUtils {
                 }
             }
         }
-        if ( bestMatch != null ){
+        if ( bestMatch != null ){ //find a match
                  cacheMethod(md, bestMatch);
-        } else {
-        // didn't find a match
         }
-        
         return bestMatch;                                        
     }
 

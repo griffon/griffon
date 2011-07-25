@@ -20,7 +20,6 @@ import griffon.core.GriffonArtifact;
 import groovy.lang.GroovyObject;
 import groovy.lang.GroovySystem;
 import groovy.lang.MetaClass;
-import groovy.util.ConfigObject;
 
 /**
  * Assorted utility methods and constants.

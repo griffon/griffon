@@ -33,7 +33,7 @@ import java.util.TreeSet;
 public interface GriffonClass extends ApplicationHandler {
     Set<String> STANDARD_PROPERTIES = new TreeSet<String>(
         Arrays.asList("class", "metaClass", "app", "UIThread", "griffonClass", "log", "artifactType"));
-	
+    
     /**
      * Gets the initial value of the given property on the class.</p>
      *
@@ -97,7 +97,7 @@ public interface GriffonClass extends ApplicationHandler {
 
     /**
      * Returns the name of the property in natural terms (eg. 'lastName' becomes 'Last Name').<p>
-	 *
+     *
      * @return The natural property name
      */
     String getNaturalName();

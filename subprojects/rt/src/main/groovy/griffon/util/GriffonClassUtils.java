@@ -1059,7 +1059,8 @@ public final class GriffonClassUtils {
                 if (f != null) {
                     return isPublicStatic(f);
                 }
-            } catch (NoSuchFieldException e) {
+            } catch (NoSuchFieldException ignore) {
+                //ignore
             }
         }
 
@@ -1114,7 +1115,8 @@ public final class GriffonClassUtils {
                     return f.get(null);
                 }
             }
-        } catch (Exception e) {
+        } catch (Exception ignore) {
+            //ignore
         }
         return null;
     }

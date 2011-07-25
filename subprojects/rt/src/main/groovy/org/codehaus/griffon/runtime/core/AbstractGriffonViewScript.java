@@ -44,7 +44,7 @@ public abstract class AbstractGriffonViewScript extends Script implements Griffo
     private GriffonApplication app;
     private FactoryBuilderSupport builder;
     private final Logger log;
-    private MetaClass _metaClass;
+    private MetaClass metaClass;
     
     public AbstractGriffonViewScript() {
         log = LoggerFactory.getLogger("griffon.app."+ GriffonViewClass.TYPE +"."+ getClass().getName());
@@ -63,21 +63,21 @@ public abstract class AbstractGriffonViewScript extends Script implements Griffo
     }
 
     public MetaClass getMetaClass() {
-        if(_metaClass == null) {
+        if(metaClass == null) {
             Class clazz = getClass();
-            _metaClass = GroovySystem.getMetaClassRegistry().getMetaClass(clazz);
-            if(!(_metaClass instanceof ExpandoMetaClass) || !(_metaClass instanceof UberInterceptorMetaClass)) {
-                _metaClass = new ExpandoMetaClass(clazz, true, true);
-                log.debug("Upgrading MetaClass to "+_metaClass);   
-                _metaClass.initialize();
-                GroovySystem.getMetaClassRegistry().setMetaClass(clazz, _metaClass);
+            metaClass = GroovySystem.getMetaClassRegistry().getMetaClass(clazz);
+            if(!(metaClass instanceof ExpandoMetaClass) || !(metaClass instanceof UberInterceptorMetaClass)) {
+                metaClass = new ExpandoMetaClass(clazz, true, true);
+                log.debug("Upgrading MetaClass to "+metaClass);   
+                metaClass.initialize();
+                GroovySystem.getMetaClassRegistry().setMetaClass(clazz, metaClass);
             }
         }
-        return _metaClass;
+        return metaClass;
     }
  
     public void setMetaClass(MetaClass metaClass) {
-        _metaClass = metaClass;
+        metaClass = metaClass;
         GroovySystem.getMetaClassRegistry().setMetaClass(getClass(), metaClass);
     }
 
