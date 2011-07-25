@@ -16,6 +16,7 @@
 import org.apache.tools.ant.filters.ReplaceTokens
 
 apply plugin:'base'
+
 configurations{
 	runtime {transitive = false}
 	docs
@@ -174,10 +175,7 @@ task pdfGuide(type:PdfGuide, dependsOn:buildGuide) {
 	pdfName = "griffon-guide-${version}.pdf"
 }
 
-task zipBinary(type:Zip){
-	description = "Zips the binary distribution."
-    classifier = 'bin'
-    into "griffon-$version"
+distBinSpec = copySpec{
     from("."){
 		include "README"
 		include "INSTALL"
@@ -226,6 +224,13 @@ task zipBinary(type:Zip){
 			from(apiDocs.outputs.files)
 		}	
 	}
+}
+
+task zipBinary(type:Zip){
+	description = "Zips the binary distribution."
+    classifier = 'bin'
+    into "griffon-$version"
+	with distBinSpec
 }
 
 distSourceSpec = copySpec{
