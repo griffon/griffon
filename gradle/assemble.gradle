@@ -16,200 +16,14 @@
 
 import org.apache.tools.ant.filters.ReplaceTokens
 
-sharedManifest = manifest {
-    attributes(
-        "Built-By": System.properties['user.name'],
-        "Created-By": System.properties['java.vm.version'] + " (" + System.properties['java.vm.vendor'] + ")",
-        "Implementation-Version": version,
-        "Implementation-Vendor": 'griffon.codehaus.org'
-    )
-}
+//sharedManifest = 
 
 tasks.withType(Jar).all {jar ->
     jar.mavenArtifact = false
     jar.appFileJar = false
 }
 
-task jarRt(type: Jar) {
-    mavenArtifact = true
-    appendix = 'rt'
-    metaInf {
-        from 'src/metainf/rt/META-INF'
-        include '**/*'
-    }
-    manifest = project.manifest {
-        from sharedManifest
-        attributes 'Implementation-Title': 'griffon-rt'
-    }
-    from sourceSets.rt.classes
-}
-
-task jarCli(type: Jar) {
-    mavenArtifact = true
-    appendix = 'cli'
-    metaInf {
-        from 'src/metainf/cli/META-INF'
-        include '**/*'
-    }
-    manifest = project.manifest {
-        from sharedManifest
-        attributes 'Implementation-Title': 'griffon-cli'
-    }
-    from sourceSets.cli.classes
-}
-
-task jarScripts(type: Jar) {
-    mavenArtifact = true
-    appendix = 'scripts'
-    manifest = project.manifest {
-        from sharedManifest
-        attributes 'Implementation-Title': 'griffon-scripts'
-    }
-    from sourceSets.scripts.classes
-}
-
-task jarSharedFiles(type: Jar) {
-    dependsOn { distWrapper }
-    appFileJar = true
-    archiveName = "griffon-shared-files.jar"
-    destinationDir = "$buildDir/assemble/jars" as File
-    from "$buildDir/distributions/wrapper"
-}
-
-task jarAppFiles(type: Jar) {
-    appFileJar = true
-    archiveName = "griffon-app-files.jar"
-    destinationDir = "$buildDir/assemble/jars" as File
-    from('src/dist/src/griffon/griffon-app') {
-        into 'griffon-app'
-    }
-}
-
-task jarPluginFiles(type: Jar) {
-    appFileJar = true
-    archiveName = "griffon-plugin-files.jar"
-    destinationDir = "$buildDir/assemble/jars" as File
-    from 'src/dist/src/griffon/templates/plugins'
-}
-
-task jarIntegrationFiles(type: Jar) {
-    appFileJar = true
-    archiveName = "griffon-integration-files.jar"
-    destinationDir = "$buildDir/assemble/jars" as File
-    from 'src/dist/src/griffon/templates/ide-support'
-}
-
-resourceFilesJars = tasks.withType(Jar).matching({ jar -> jar.appFileJar } as Spec)
-
-task jarResources(type: Jar) {
-    dependsOn { resourceFilesJars.all }
-    mavenArtifact = true
-    appendix = 'resources'
-    from "$buildDir/assemble/jars"
-    include '*-files.jar'
-}
-
 distJars = tasks.withType(Jar).matching({ jar -> !jar.appFileJar } as Spec)
-
-task distBinary(type: Copy) {
-    dependsOn { distJars.all + [pdfGuide]}
-
-    destinationDir = "$buildDir/distributions/binary" as File
-    from('src/dist') {
-        filter(ReplaceTokens, tokens: ['griffon.version': version, 'groovy.version': groovyVersion])
-    }
-    from('src/main/scripts') {
-        into 'scripts'
-    }
-	into('lib'){
-		from configurations.rt
-		from configurations.scripts
-		from configurations.cli
-	}
-    from('.') {
-        include 'LICENSE'
-        include 'INSTALL'
-        include 'README'
-    }
-    from("$buildDir/libs") {
-        into 'dist'
-        include '*.jar'
-    }
-    from('src/griffon') {
-        into 'src/griffon'
-    }
-    from("$buildDir/manual") {
-        into 'guide'
-    }
-    from("$buildDir/assemble/jars") {
-        into 'doc'
-        include '*-sources.jar'
-        include '*-javadoc.jar'
-    }
-
-    doLast {
-        ant.chmod(dir: "$buildDir/distributions/binary/bin", excludes: '*.bat', perm: 'ugo+x')
-    }
-}
-
-distSourceSpec = copySpec{
-    from('.') {
-        exclude 'build'
-        exclude '**/.git*'
-        exclude '.git*'
-        exclude '.gradle*'
-        exclude 'clover.license'
-        exclude 'cobertura.ser'
-        exclude '**/*.ipr'
-        exclude '**/*.iws'
-        exclude '**/*.iml'
-    }   
-}
-
-task zipBinary(type: Zip) {
-    description = "Zips the binary distribution."
-    dependsOn { distBinary }
-    classifier = 'bin'
-    into "griffon-$version"
-    from("$buildDir/distributions/binary") {
-        exclude 'bin'
-    }
-    from("$buildDir/distributions/binary/bin") {
-        into 'bin'
-        fileMode = 0755
-    }
-}
-
-task zipSource(type: Zip){
-    description = "Zips the source distribution."
-    with distSourceSpec
-    classifier = 'src'
-    into "griffon-$version"
-}
-
-task tarBinary(type: Tar) {
-    description = "Tars the binary distribution."
-    dependsOn { distBinary }
-    compression = Compression.GZIP
-    classifier = 'bin'
-    into "griffon-$version"
-    from("$buildDir/distributions/binary") {
-        exclude 'bin'
-    }
-    from("$buildDir/distributions/binary/bin") {
-        into 'bin'
-        fileMode = 0755
-    }
-}
-
-task tarSource(type: Tar) {
-    description = "Tars the source distribution."
-    with distSourceSpec
-    classifier = 'src'
-    into "griffon-$version"  
-    compression = Compression.GZIP
-}
-
 task griffonHome
 griffonHome.dir = null
 
@@ -219,17 +33,16 @@ task checkGriffonHome << {
     println "===> \$GRIFFON_HOME is set to $griffonHome.dir"
 }
 
-task installBinary(dependsOn: [checkGriffonHome, distBinary]) {
+//@todo convert installBinary to plain copy task
+task installBinary(dependsOn: [checkGriffonHome]) {
     description = 'Installs the binary distribution at $GRIFFON_HOME.'
-
-    doFirst {
-        copy {
-            from "$buildDir/distributions/binary"
-            into griffonHome.dir
-        }
-    }
-
-    doLast {
+	doLast{
+		copy{
+	    	into(griffonHome.dir)
+			with distBinSpec
+		}		
+	}
+	doLast {
         ant.chmod(dir: "${griffonHome.dir}/bin", excludes: '*.bat', perm: 'ugo+x')
     }
 }

@@ -46,7 +46,7 @@ dependencies{
     docs group: 'commons-logging', name: 'commons-logging', version: '1.1.1'
 }
 
-subprojects {
+subprojects { subproj ->
 	apply plugin:'groovy'
 	apply from:"${rootDir}/gradle/maven.gradle"
 	apply from:"${rootDir}/gradle/codeQuality.gradle"
@@ -70,6 +70,16 @@ subprojects {
 	task groovyDocJar(type:Jar){
 		classifier = 'javadoc'
 		from (groovydoc.outputs.files)
+	}
+	
+	manifest {
+	    attributes(
+	        'Built-By': System.properties['user.name'],
+	        'Created-By': System.properties['java.vm.version'] + " (" + System.properties['java.vm.vendor'] + ")",
+	        'Implementation-Version': version,
+	        'Implementation-Vendor': 'griffon.codehaus.org',
+			'Implementation-Title': "${subproj.name}"
+	    )
 	}
 }
 
@@ -233,6 +243,14 @@ task zipBinary(type:Zip){
 	with distBinSpec
 }
 
+task tarBinary(type: Tar) {
+    description = "Tars the binary distribution."
+    classifier = 'bin'
+    into "griffon-$version"
+	with distBinSpec
+    compression = Compression.GZIP
+}
+
 distSourceSpec = copySpec{
     from('.') {
         exclude 'build'
@@ -261,6 +279,9 @@ task tarSource(type: Tar) {
     into "griffon-$version"  
     compression = Compression.GZIP
 }
+
+// @todo move apply statements to the top of the build script
+apply from:"${rootDir}/gradle/assemble.gradle"
 
 /*sourceSets {
     scripts {
