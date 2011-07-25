@@ -18,8 +18,10 @@ ruleset {
     ruleset('rulesets/imports.xml')
     ruleset('rulesets/basic.xml') {
         exclude 'EmptyCatchBlock'
+		exclude 'EmptyMethod'
     }
-    ruleset('rulesets/naming.xml') {
+    /*
+	ruleset('rulesets/naming.xml') {
         exclude 'PropertyName'
         'ClassName' {
             regex = '^[A-Z][a-zA-Z0-9]*$'
@@ -95,5 +97,5 @@ ruleset {
         exclude 'UnusedPrivateField'    //TODO: Fix the code and enable rule
         exclude 'UnusedPrivateMethod'   //TODO: Fix the code and enable rule
         exclude 'UnusedVariable'        //TODO: Fix the code and enable rule
-    }
+    }*/
 }

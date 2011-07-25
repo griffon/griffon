@@ -99,6 +99,6 @@ class GriffonTestTargetPattern {
     }
     
     protected classPatternToFilePattern(pattern) {
-        (pattern.indexOf('.') != -1) ? pattern.replace('.', '/') : "**/" + pattern
+        (pattern.indexOf('.') == -1) ? "**/" + pattern : pattern.replace('.', '/')
     }
 }

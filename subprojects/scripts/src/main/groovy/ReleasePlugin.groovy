@@ -170,7 +170,7 @@ private ISVNAuthenticationManager getAuthenticationManager(String repoKey, Strin
     usr = "user.svn.username.${repoType}.${repoKey}".toString()
     psw = "user.svn.password.${repoType}.${repoKey}".toString()
     if(tokenizeUrl[KEY_USER_NAME]) {
-        ant.antProject.setNewProperty usr, ""+tokenizeUrl[KEY_USER_NAME]
+        ant.antProject.setNewProperty usr, tokenizeUrl[KEY_USER_NAME].toString()
         String pswd = tokenizeUrl[KEY_USER_PASS] ?: ""
         ant.antProject.setNewProperty(psw,pswd)
     }
@@ -795,7 +795,7 @@ target(updatePluginsListManually: "Updates the plugin list by manually reading e
                         event("StatusUpdate", ["Plugins list cache has expired. Updating, please wait"])
                         pluginsList.setAttribute('revision', remoteRevision as String)
                         // for each plugin directory under Griffon Plugins SVN in form of 'griffon-*'
-                        while(line=reader.readLine()) {
+                        while((line=reader.readLine()) != null) {
                             line.eachMatch(/<li><a href="griffon-(.+?)">/) {
                                 // extract plugin name
                                 def pluginName = it[1][0..-2]

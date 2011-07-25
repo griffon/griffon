@@ -92,7 +92,33 @@ Type in griffon create-addon then execute this command again."""
         def addonFile = isAddonPlugin
         def addonText = addonFile.text
 
-        if (!isJava) {
+        if(isJava) {
+            if (!(addonText =~ /\s*public Map<String, Map<String, String>>\s*getMvcGroups\(\)\s*\{/)) {
+                            addonText = addonText.replaceAll(/\}\s*\z/, """
+                public Map<String, Map<String, String>> getMvcGroups() {
+                    Map<String, Map<String, String>> groups = new LinkedHashMap<String, Map<String, String>>();
+                    return groups;
+                }
+            }
+            """)
+                        }
+
+                        List parts = []
+                        if (!argsMap.skipModel)      parts << """            {"model",      "${(argsMap.withModel ?: mvcFullQualifiedClassName + 'Model')}"}"""
+                        if (!argsMap.skipView)       parts << """            {"view",       "${(argsMap.withView ?: mvcFullQualifiedClassName + 'View')}"}"""
+                        if (!argsMap.skipController) parts << """            {"controller", "${(argsMap.withController ?: mvcFullQualifiedClassName + 'Controller')}"}"""
+
+                        addonFile.withWriter {
+                            it.write addonText.replaceAll(/\s*Map<String, Map<String, String>> groups = new LinkedHashMap<String, Map<String, String>>\(\);/, """
+                    Map<String, Map<String, String>> groups = new LinkedHashMap<String, Map<String, String>>();
+                    // MVC Group for "$name"
+                    groups.put("$name", groupDef(new String[][]{
+            ${parts.join(',\n')}
+                    }));""")
+                        }
+
+        } else {
+
             if (!(addonText =~ /\s*def\s*mvcGroups\s*=\s*\[/)) {
                 addonText = addonText.replaceAll(/\}\s*\z/, """
     def mvcGroups = [
@@ -113,30 +139,6 @@ Type in griffon create-addon then execute this command again."""
 ${parts.join(',\n')}
         ],
     """)
-            }
-        } else {
-            if (!(addonText =~ /\s*public Map<String, Map<String, String>>\s*getMvcGroups\(\)\s*\{/)) {
-                addonText = addonText.replaceAll(/\}\s*\z/, """
-    public Map<String, Map<String, String>> getMvcGroups() {
-        Map<String, Map<String, String>> groups = new LinkedHashMap<String, Map<String, String>>();
-        return groups;
-    }
-}
-""")
-            }
-
-            List parts = []
-            if (!argsMap.skipModel)      parts << """            {"model",      "${(argsMap.withModel ?: mvcFullQualifiedClassName + 'Model')}"}"""
-            if (!argsMap.skipView)       parts << """            {"view",       "${(argsMap.withView ?: mvcFullQualifiedClassName + 'View')}"}"""
-            if (!argsMap.skipController) parts << """            {"controller", "${(argsMap.withController ?: mvcFullQualifiedClassName + 'Controller')}"}"""
-
-            addonFile.withWriter {
-                it.write addonText.replaceAll(/\s*Map<String, Map<String, String>> groups = new LinkedHashMap<String, Map<String, String>>\(\);/, """
-        Map<String, Map<String, String>> groups = new LinkedHashMap<String, Map<String, String>>();
-        // MVC Group for "$name"
-        groups.put("$name", groupDef(new String[][]{
-${parts.join(',\n')}
-        }));""")
             }
         }
     } else {

@@ -103,10 +103,10 @@ setupJavaOpts = { includeNative = true ->
     javaOpts << "-D${RunMode.KEY}=${RunMode.current}"
     javaOpts << "-Dgriffon.start.dir='"+jardir.parentFile.absolutePath+"'"
     if(System.getProperty(GRIFFON_FULL_STACKTRACE)) {
-       javaOpts << "-D${GRIFFON_FULL_STACKTRACE}=${Boolean.getBoolean(GRIFFON_FULL_STACKTRACE)}"
+       javaOpts << "-D${GRIFFON_FULL_STACKTRACE}=${System.properties[GRIFFON_FULL_STACKTRACE]}"
     }
     if(System.getProperty(GRIFFON_EXCEPTION_OUTPUT)) {
-       javaOpts << "-D${GRIFFON_EXCEPTION_OUTPUT}=${Boolean.getBoolean(GRIFFON_EXCEPTION_OUTPUT)}"
+       javaOpts << "-D${GRIFFON_EXCEPTION_OUTPUT}=${System.properties[GRIFFON_EXCEPTION_OUTPUT]}"
     }
 
     if (buildConfig.griffon.app?.javaOpts) {

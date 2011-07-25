@@ -246,11 +246,11 @@ target(jarFiles: "Jar up the package files") {
 }
 
 target(mergeManifest: 'Generates a Manifest with default and custom settings') {
-    String mainClass = RunMode.current != RunMode.APPLET ? griffonApplicationClass : griffonAppletClass
+    String mainClass = RunMode.current == RunMode.APPLET ? griffonAppletClass : griffonApplicationClass
     manifestMap = [
         'Main-Class': mainClass,
         'Built-By': System.properties['user.name'],
-        'Build-Date': new SimpleDateFormat('dd-MM-yyyy HH:mm:ss').format(new Date()),
+        'Build-Date': new SimpleDateFormat('dd-MM-yyyy HH:mm:ss',Locale.default).format(new Date()),
         'Created-By': System.properties['java.vm.version'] +' ('+ System.properties['java.vm.vendor'] +')',
         'Griffon-Version': Metadata.current.getGriffonVersion(),
         'Implementation-Title': capitalize(Metadata.current.getApplicationName()),
