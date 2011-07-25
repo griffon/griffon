@@ -15,39 +15,22 @@
  */
 
 import org.apache.tools.ant.filters.ReplaceTokens
+apply plugin:'java'
 
-//TODO @move wrapper to subproject
-task assembleWrapper(dependsOn: [wrapperClasses]) {
-    inputs.dir sourceSets.wrapper.classes
-    outputs.dir new File("$buildDir/assemble/wrapper")
-
-    description = "Merges compiled Wrapper classes with original classes"
-
-    doLast {
-        ant.unjar(dest: "$buildDir/assemble/wrapper", src: "$projectDir/lib/wrapper/gradle-wrapper.jar") {
-            patternset {
-                exclude(name: "META-INF/**")
-            }
-        }
-
-        copy {
-            from sourceSets.wrapper.classes
-            into "$buildDir/assemble/wrapper"
-            include '**/*.class'
-        }
-    }
+configurations {
+	runtime.transitive = false
+	compile.transitive = false	
+}
+repositories{
+	//replace flat dir repo by gradles' artifactory
+	flatDir(dirs: file("${rootDir}/lib/wrapper"))
+}
+dependencies{
+	compile ":gradle-wrapper"
 }
 
-task jarWrapper(type: Jar, dependsOn: ':assembleWrapper') {
-    description = "Jars all merged Wrapper classes"
-    archiveName = 'griffon-wrapper.jar'
-    destinationDir = "$buildDir/assemble/jars" as File
-    dependsOn sourceSets.wrapper.classes
-    from "$buildDir/assemble/wrapper"
-    include('org/gradle/wrapper/**')
-}
-
-task distWrapper(type: Copy, dependsOn: ':jarWrapper') {
+//TODO refactor to use wrapper subproject
+/*task distWrapper(type: Copy, dependsOn: ':jarWrapper') {
     description = "Creates a wrapper distribution"
     destinationDir = "$buildDir/distributions/wrapper" as File
     from("$buildDir/assemble/jars") {
@@ -66,4 +49,5 @@ task distWrapper(type: Copy, dependsOn: ':jarWrapper') {
     doLast {
         ant.chmod(dir: "$buildDir/distributions/wrapper", includes: 'griffonw', perm: 'ugo+x')
     }
-}
+}*/
+
