@@ -32,11 +32,11 @@ class GUIBuilder extends UberBuilder {
     protected static final Set<String> BUILDER_PACKAGES = [] as HashSet
     static {
         // TODO also either dynamically add pacakges of builders or match builders themselves as excludes 
-        BUILDER_PACKAGES.add("org.codehaus.groovy.runtime.metaclass");
-        BUILDER_PACKAGES.add("griffon.builder");
-        BUILDER_PACKAGES.add("groovy.util");
-        BUILDER_PACKAGES.add("groovy.swing");
-        BUILDER_PACKAGES.add("griffon.gui");
+        BUILDER_PACKAGES.add('org.codehaus.groovy.runtime.metaclass')
+        BUILDER_PACKAGES.add('griffon.builder')
+        BUILDER_PACKAGES.add('groovy.util')
+        BUILDER_PACKAGES.add('groovy.swing')
+        BUILDER_PACKAGES.add('griffon.gui')
     }
 
     public GUIBuilder() {
@@ -65,10 +65,10 @@ class GUIBuilder extends UberBuilder {
                 Class callingClass = ReflectionUtils.getCallingClass(0, BUILDER_PACKAGES)
                 ResourceBundle.getBundle(
                     callingClass.name.split('\\$')[0].replace('.', '/'),
-                    Locale.getDefault(),
-                    callingClass.getClassLoader())
+                    Locale.default,
+                    callingClass.classLoader)
             },
-            null);
+            null)
     }
 
 }

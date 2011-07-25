@@ -39,14 +39,14 @@ abstract class AbstractCliTestCase extends GroovyTestCase {
     private final Condition condition = lock.newCondition()
  
     private String commandOutput
-    private String griffonHome = System.getProperty("griffon.home") ?: BuildSettingsHolder.settings?.griffonHome?.absolutePath
-    private String griffonVersion = System.getProperty("griffon.version") ?: BuildSettingsHolder.settings?.griffonVersion
-    private File workDir = new File(System.getProperty("griffon.cli.work.dir") ?: ".")
+    private String griffonHome = System.getProperty('griffon.home') ?: BuildSettingsHolder.settings?.griffonHome?.absolutePath
+    private String griffonVersion = System.getProperty('griffon.version') ?: BuildSettingsHolder.settings?.griffonVersion
+    private File workDir = new File(System.getProperty('griffon.cli.work.dir') ?: '.')
  
     private Process process
     private boolean streamsProcessed
  
-    File outputDir = new File(BuildSettingsHolder.settings?.projectTargetDir ?: new File("target"), "cli-output")
+    File outputDir = new File(BuildSettingsHolder.settings?.projectTargetDir ?: new File('target'), 'cli-output')
     long timeout = 2 * 60 * 1000 // min * sec/min * ms/sec
  
     /**
@@ -66,7 +66,7 @@ abstract class AbstractCliTestCase extends GroovyTestCase {
         // the command. Note that we use an absolute path.
         def cmd = [] // new ArrayList<String>(command.size() + 2)
         cmd.add "${griffonHome}/bin/griffon".toString()
-        if (System.getProperty("griffon.work.dir")) {
+        if (System.getProperty('griffon.work.dir')) {
             cmd.add "-Dgriffon.work.dir=${System.getProperty('griffon.work.dir')}".toString()
         }
         cmd.addAll command
@@ -76,7 +76,7 @@ abstract class AbstractCliTestCase extends GroovyTestCase {
         def pb = new ProcessBuilder(cmd)
         pb.redirectErrorStream(true)
         pb.directory(workDir)
-        pb.environment()["GRIFFON_HOME"] = griffonHome
+        pb.environment()['GRIFFON_HOME'] = griffonHome
         
         process = pb.start()
  
@@ -123,7 +123,7 @@ abstract class AbstractCliTestCase extends GroovyTestCase {
      * when running the "create-app" command.
      */
     void enterInput(String input) {
-        process << input << "\r"
+        process << input << '\r'
     }
  
     /**
