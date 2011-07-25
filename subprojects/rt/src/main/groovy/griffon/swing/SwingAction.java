@@ -22,6 +22,8 @@ import groovy.lang.Closure;
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 
+import static griffon.util.GriffonNameUtils.isBlank;
+
 /**
  * An action implementation that relies on a closure to handle events.
  *
@@ -41,6 +43,10 @@ public class SwingAction extends AbstractAction {
 
     public static ActionBuilder action() {
         return new ActionBuilder();
+    }
+
+    public static ActionBuilder action(Action action) {
+        return new ActionBuilder(action);
     }
 
     public static ActionBuilder action(String name) {
@@ -63,10 +69,19 @@ public class SwingAction extends AbstractAction {
         private Icon smallIcon;
         private Icon largeIcon;
         private Closure closure;
-        private RunnableWithArgs runnable;
         private boolean enabled = true;
 
+        private Action action;
         private boolean mnemonicSet = false;
+        private boolean enabledSet = false;
+
+        public ActionBuilder() {
+            this(null);
+        }
+
+        public ActionBuilder(Action action) {
+            this.action = action;
+        }
 
         public ActionBuilder withName(String name) {
             this.name = name;
@@ -122,40 +137,36 @@ public class SwingAction extends AbstractAction {
 
         public ActionBuilder withClosure(Closure closure) {
             this.closure = closure;
-            this.runnable = null;
             return this;
         }
 
         public ActionBuilder withRunnable(RunnableWithArgs runnable) {
-            this.runnable = runnable;
-            this.closure = null;
+            if (runnable != null) this.closure = new RunnableWithArgsClosure(runnable);
             return this;
         }
 
         public ActionBuilder withEnabled(boolean enabled) {
             this.enabled = enabled;
+            this.enabledSet = true;
             return this;
         }
 
         public Action build() {
-            if (closure == null && runnable == null) {
-                throw new IllegalArgumentException("Either closure: or runnable: must have a value.");
+            if (closure == null && action == null) {
+                throw new IllegalArgumentException("Either closure: or action: must have a value.");
             }
-            if (closure == null) {
-                closure = new RunnableWithArgsClosure(runnable);
-            }
-            Action action = new SwingAction(closure);
-            action.putValue(Action.ACTION_COMMAND_KEY, command);
-            action.putValue(Action.NAME, name);
+            if (action == null) action = new SwingAction(closure);
+            if (!isBlank(command)) action.putValue(Action.ACTION_COMMAND_KEY, command);
+            if (!isBlank(name)) action.putValue(Action.NAME, name);
             if (mnemonicSet) {
                 action.putValue(Action.MNEMONIC_KEY, mnemonic);
             }
-            action.putValue(Action.ACCELERATOR_KEY, accelerator);
-            action.putValue(Action.LARGE_ICON_KEY, largeIcon);
-            action.putValue(Action.SMALL_ICON, smallIcon);
-            action.putValue(Action.LONG_DESCRIPTION, longDescription);
-            action.putValue(Action.SHORT_DESCRIPTION, shortDescription);
-            action.setEnabled(enabled);
+            if (accelerator != null) action.putValue(Action.ACCELERATOR_KEY, accelerator);
+            if (largeIcon != null) action.putValue(Action.LARGE_ICON_KEY, largeIcon);
+            if (smallIcon != null) action.putValue(Action.SMALL_ICON, smallIcon);
+            if (!isBlank(longDescription)) action.putValue(Action.LONG_DESCRIPTION, longDescription);
+            if (!isBlank(shortDescription)) action.putValue(Action.SHORT_DESCRIPTION, shortDescription);
+            if (enabledSet) action.setEnabled(enabled);
             return action;
         }
     }

@@ -24,10 +24,9 @@ import griffon.core.GriffonApplication;
  * on the target application.
  *
  * @author Andres Almiray
- * @since 0.9.1
- *
  * @see griffon.swing.WindowManager
  * @see griffon.swing.WindowDisplayHandler
+ * @since 0.9.1
  */
 public interface SwingGriffonApplication extends GriffonApplication {
     /**

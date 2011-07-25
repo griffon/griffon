@@ -33,17 +33,23 @@ import java.util.concurrent.Future;
  *
  * @author Andres Almiray
  */
-public class UIThreadManager {
+public final class UIThreadManager {
     // Shouldn't need to synchronize access to this field as setting its value
     // should be done at boot time
     private UIThreadHandler uiThreadHandler;
-    private static final ExecutorService DEFAULT_EXECUTOR_SERVICE = Executors.newFixedThreadPool(2);
+    private static final ExecutorService DEFAULT_EXECUTOR_SERVICE = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
     private static final Logger LOG = LoggerFactory.getLogger(UIThreadManager.class);
 
     private static final UIThreadManager INSTANCE = new UIThreadManager();
 
     public static UIThreadManager getInstance() {
         return INSTANCE;
+    }
+
+    private UIThreadManager() {
+        if (LOG.isDebugEnabled()) {
+            LOG.debug("Default Executor set to run with " + Runtime.getRuntime().availableProcessors() + " processors");
+        }
     }
 
     public static void enhance(Script script) {
@@ -99,6 +105,8 @@ public class UIThreadManager {
 
     /**
      * True if the current thread is the UI thread.
+     *
+     * @return true if the current thread is the UI thread, false otherwise.
      */
     public boolean isUIThread() {
         return getUIThreadHandler().isUIThread();
@@ -106,6 +114,8 @@ public class UIThreadManager {
 
     /**
      * Executes a code block asynchronously on the UI thread.
+     *
+     * @param runnable a code block to be executed
      */
     public void executeAsync(Runnable runnable) {
         getUIThreadHandler().executeAsync(runnable);
@@ -113,6 +123,8 @@ public class UIThreadManager {
 
     /**
      * Executes a code block asynchronously on the UI thread.
+     *
+     * @param script a code block to be executed
      */
     public void executeAsync(Script script) {
         getUIThreadHandler().executeAsync(new MethodClosure(script, "run"));
@@ -120,6 +132,8 @@ public class UIThreadManager {
 
     /**
      * Executes a code block synchronously on the UI thread.
+     *
+     * @param runnable a code block to be executed
      */
     public void executeSync(Runnable runnable) {
         getUIThreadHandler().executeSync(runnable);
@@ -127,6 +141,8 @@ public class UIThreadManager {
 
     /**
      * Executes a code block synchronously on the UI thread.
+     *
+     * @param script a code block to be executed
      */
     public void executeSync(Script script) {
         getUIThreadHandler().executeSync(new MethodClosure(script, "run"));
@@ -134,6 +150,8 @@ public class UIThreadManager {
 
     /**
      * Executes a code block outside of the UI thread.
+     *
+     * @param runnable a code block to be executed
      */
     public void executeOutside(Runnable runnable) {
         getUIThreadHandler().executeOutside(runnable);
@@ -141,6 +159,8 @@ public class UIThreadManager {
 
     /**
      * Executes a code block outside of the UI thread.
+     *
+     * @param script a code block to be executed
      */
     public void executeOutside(Script script) {
         getUIThreadHandler().executeOutside(new MethodClosure(script, "run"));
@@ -148,6 +168,9 @@ public class UIThreadManager {
 
     /**
      * Executes a code block as a Future on an ExecutorService.
+     *
+     * @param callable a code block to be executed
+     * @return a Future that contains the result of the execution
      */
     public Future executeFuture(Callable<?> callable) {
         return executeFuture(DEFAULT_EXECUTOR_SERVICE, callable);
@@ -155,6 +178,10 @@ public class UIThreadManager {
 
     /**
      * Executes a code block as a Future on an ExecutorService.
+     *
+     * @param executorService the ExecutorService to use. Will use the default ExecutorService if null.
+     * @param callable        a code block to be executed
+     * @return a Future that contains the result of the execution
      */
     public Future executeFuture(ExecutorService executorService, Callable<?> callable) {
         executorService = executorService != null ? executorService : DEFAULT_EXECUTOR_SERVICE;

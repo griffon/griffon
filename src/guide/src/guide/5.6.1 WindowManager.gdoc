@@ -33,6 +33,19 @@ swing {
 }
 {code}
 
+You can go a bit further by specifying a global show or hide behavior as shown in the following example
+
+{code}
+swing {
+    windowManager {
+        defaultShow = {window, app -> ... }
+        // defaultHide = {window, app -> ... }
+        someWindowName = [
+            hide: {window, app -> ... }
+        ]
+    }
+}
+{code}
 
 h4. Custom WindowDisplayHandlers
 

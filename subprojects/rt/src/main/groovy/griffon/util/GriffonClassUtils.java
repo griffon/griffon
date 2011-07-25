@@ -36,7 +36,7 @@ import java.util.regex.Pattern;
  * Class containing utility methods for dealing with Griffon class artifacts.<p>
  * Contains utility methods copied from commons-lang and commons-beanutils in order
  * to reduce dependencies on external libraries.<p>
- *
+ * <p/>
  * <b>Contains code copied from commons-beanutils and commons-langs</b>
  *
  * @author Graeme Rocher (Grails 0.1)
@@ -58,11 +58,13 @@ public final class GriffonClassUtils {
     private static final Pattern SETTER_PATTERN = Pattern.compile("^set[A-Z][\\w]*$");
     private static final Set<MethodDescriptor> BASIC_METHODS = new TreeSet<MethodDescriptor>();
     private static final Set<MethodDescriptor> MVC_METHODS = new TreeSet<MethodDescriptor>();
+    private static final Set<MethodDescriptor> THREADING_METHODS = new TreeSet<MethodDescriptor>();
     private static final Set<MethodDescriptor> EVENT_PUBLISHER_METHODS = new TreeSet<MethodDescriptor>();
     private static final Set<MethodDescriptor> OBSERVABLE_METHODS = new TreeSet<MethodDescriptor>();
 
     /**
      * Just add two entries to the class compatibility map
+     *
      * @param left
      * @param right
      */
@@ -81,23 +83,23 @@ public final class GriffonClassUtils {
         registerPrimitiveClassPair(Float.class, float.class);
         registerPrimitiveClassPair(Double.class, double.class);
 
-        for(Method method : GroovyObject.class.getMethods()) {
-             MethodDescriptor md = MethodDescriptor.forMethod(method);
-             if(!BASIC_METHODS.contains(md)) {
-                 BASIC_METHODS.add(md);
-             }
+        for (Method method : GroovyObject.class.getMethods()) {
+            MethodDescriptor md = MethodDescriptor.forMethod(method);
+            if (!BASIC_METHODS.contains(md)) {
+                BASIC_METHODS.add(md);
+            }
         }
-        for(Method method : GroovyObjectSupport.class.getMethods()) {
-             MethodDescriptor md = MethodDescriptor.forMethod(method);
-             if(!BASIC_METHODS.contains(md)) {
-                 BASIC_METHODS.add(md);
-             }
+        for (Method method : GroovyObjectSupport.class.getMethods()) {
+            MethodDescriptor md = MethodDescriptor.forMethod(method);
+            if (!BASIC_METHODS.contains(md)) {
+                BASIC_METHODS.add(md);
+            }
         }
-        for(Method method : Object.class.getMethods()) {
-             MethodDescriptor md = MethodDescriptor.forMethod(method);
-             if(!BASIC_METHODS.contains(md)) {
-                 BASIC_METHODS.add(md);
-             }
+        for (Method method : Object.class.getMethods()) {
+            MethodDescriptor md = MethodDescriptor.forMethod(method);
+            if (!BASIC_METHODS.contains(md)) {
+                BASIC_METHODS.add(md);
+            }
         }
 
         MVC_METHODS.add(new MethodDescriptor("mvcGroupInit", new Class[]{Map.class}));
@@ -124,36 +126,38 @@ public final class GriffonClassUtils {
         MVC_METHODS.add(new MethodDescriptor("withMVCGroup", new Class[]{String.class, Map.class, MVCClosure.class}));
         MVC_METHODS.add(new MethodDescriptor("withMVCGroup", new Class[]{String.class, String.class, MVCClosure.class}));
         MVC_METHODS.add(new MethodDescriptor("withMVCGroup", new Class[]{String.class, String.class, Map.class, MVCClosure.class}));
-        MVC_METHODS.add(new MethodDescriptor("isUIThread"));
-        MVC_METHODS.add(new MethodDescriptor("execAsync", new Class[]{Runnable.class}));
-        MVC_METHODS.add(new MethodDescriptor("execAsync", new Class[]{Script.class}));
-        MVC_METHODS.add(new MethodDescriptor("execSync", new Class[]{Runnable.class}));
-        MVC_METHODS.add(new MethodDescriptor("execSync", new Class[]{Script.class}));
-        MVC_METHODS.add(new MethodDescriptor("execOutside", new Class[]{Runnable.class}));
-        MVC_METHODS.add(new MethodDescriptor("execOutside", new Class[]{Script.class}));
-        MVC_METHODS.add(new MethodDescriptor("execFuture", new Class[]{Closure.class}));
-        MVC_METHODS.add(new MethodDescriptor("execFuture", new Class[]{Callable.class}));
-        MVC_METHODS.add(new MethodDescriptor("execFuture", new Class[]{ExecutorService.class, Closure.class}));
-        MVC_METHODS.add(new MethodDescriptor("execFuture", new Class[]{ExecutorService.class, Callable.class}));
-        MVC_METHODS.add(new MethodDescriptor("edt", new Class[]{Runnable.class}));
-        MVC_METHODS.add(new MethodDescriptor("edt", new Class[]{Closure.class}));
-        MVC_METHODS.add(new MethodDescriptor("doLater", new Class[]{Runnable.class}));
-        MVC_METHODS.add(new MethodDescriptor("doLater", new Class[]{Closure.class}));
-        MVC_METHODS.add(new MethodDescriptor("doOutside", new Class[]{Runnable.class}));
-        MVC_METHODS.add(new MethodDescriptor("doOutside", new Class[]{Closure.class}));
 
         // Special cases due to the usage of varargs
         MVC_METHODS.add(new MethodDescriptor("newInstance", new Class[]{Object[].class}));
         MVC_METHODS.add(new MethodDescriptor("buildMVCGroup", new Class[]{Object[].class}));
         MVC_METHODS.add(new MethodDescriptor("createMVCGroup", new Class[]{Object[].class}));
         MVC_METHODS.add(new MethodDescriptor("withMVCGroup", new Class[]{Object[].class}));
-        MVC_METHODS.add(new MethodDescriptor("execFuture", new Class[]{Object[].class}));
 
         MVC_METHODS.add(new MethodDescriptor("getApp"));
         MVC_METHODS.add(new MethodDescriptor("getLog"));
         MVC_METHODS.add(new MethodDescriptor("getArtifactManager"));
         MVC_METHODS.add(new MethodDescriptor("getGriffonClass"));
         MVC_METHODS.add(new MethodDescriptor("setBuilder", new Class[]{FactoryBuilderSupport.class}));
+
+        THREADING_METHODS.add(new MethodDescriptor("isUIThread"));
+        THREADING_METHODS.add(new MethodDescriptor("execAsync", new Class[]{Runnable.class}));
+        THREADING_METHODS.add(new MethodDescriptor("execAsync", new Class[]{Script.class}));
+        THREADING_METHODS.add(new MethodDescriptor("execSync", new Class[]{Runnable.class}));
+        THREADING_METHODS.add(new MethodDescriptor("execSync", new Class[]{Script.class}));
+        THREADING_METHODS.add(new MethodDescriptor("execOutside", new Class[]{Runnable.class}));
+        THREADING_METHODS.add(new MethodDescriptor("execOutside", new Class[]{Script.class}));
+        THREADING_METHODS.add(new MethodDescriptor("execFuture", new Class[]{Closure.class}));
+        THREADING_METHODS.add(new MethodDescriptor("execFuture", new Class[]{Callable.class}));
+        THREADING_METHODS.add(new MethodDescriptor("execFuture", new Class[]{ExecutorService.class, Closure.class}));
+        THREADING_METHODS.add(new MethodDescriptor("execFuture", new Class[]{ExecutorService.class, Callable.class}));
+        THREADING_METHODS.add(new MethodDescriptor("edt", new Class[]{Runnable.class}));
+        THREADING_METHODS.add(new MethodDescriptor("edt", new Class[]{Closure.class}));
+        THREADING_METHODS.add(new MethodDescriptor("doLater", new Class[]{Runnable.class}));
+        THREADING_METHODS.add(new MethodDescriptor("doLater", new Class[]{Closure.class}));
+        THREADING_METHODS.add(new MethodDescriptor("doOutside", new Class[]{Runnable.class}));
+        THREADING_METHODS.add(new MethodDescriptor("doOutside", new Class[]{Closure.class}));
+        // Special case due to the usage of varargs
+        THREADING_METHODS.add(new MethodDescriptor("execFuture", new Class[]{Object[].class}));
 
         EVENT_PUBLISHER_METHODS.add(new MethodDescriptor("addEventListener", new Class[]{Object.class}));
         EVENT_PUBLISHER_METHODS.add(new MethodDescriptor("addEventListener", new Class[]{String.class, Closure.class}));
@@ -180,7 +184,7 @@ public final class GriffonClassUtils {
      * Finds out if the given string represents the name of an
      * event handler by matching against the following pattern:
      * "^on[A-Z][\\w]*$"<p>
-     *
+     * <p/>
      * <pre>
      * GriffonClassUtils.isEventHandler("onBootstrapEnd") = true
      * GriffonClassUtils.isEventHandler("mvcGroupInit")   = false
@@ -189,10 +193,10 @@ public final class GriffonClassUtils {
      *
      * @param name the name of a possible event handler
      * @return true if the name matches the given event handler
-     * pattern, false otherwise.
+     *         pattern, false otherwise.
      */
     public static boolean isEventHandler(String name) {
-        if(GriffonNameUtils.isBlank(name)) return false;
+        if (GriffonNameUtils.isBlank(name)) return false;
         return EVENT_HANDLER_PATTERN.matcher(name).matches();
     }
 
@@ -200,10 +204,15 @@ public final class GriffonClassUtils {
      * Finds out if the given Method represents an event handler
      * by matching its name against the following pattern:
      * "^on[A-Z][\\w]*$"<p>
+     * <pre>
+     * GriffonClassUtils.isEventHandler("onBootstrapEnd") = true
+     * GriffonClassUtils.isEventHandler("mvcGroupInit")   = false
+     * GriffonClassUtils.isEventHandler("online")         = false
+     * </pre>
      *
      * @param method a Method reference
      * @return true if the method name matches the given event handler
-     * pattern, false otherwise.
+     *         pattern, false otherwise.
      */
     public static boolean isEventHandler(Method method) {
         return isEventHandler(MethodDescriptor.forMethod(method));
@@ -213,10 +222,15 @@ public final class GriffonClassUtils {
      * Finds out if the given Method represents an event handler
      * by matching its name against the following pattern:
      * "^on[A-Z][\\w]*$"<p>
+     * <pre>
+     * GriffonClassUtils.isEventHandler("onBootstrapEnd") = true
+     * GriffonClassUtils.isEventHandler("mvcGroupInit")   = false
+     * GriffonClassUtils.isEventHandler("online")         = false
+     * </pre>
      *
      * @param method a MetaMethod reference
      * @return true if the method name matches the given event handler
-     * pattern, false otherwise.
+     *         pattern, false otherwise.
      */
     public static boolean isEventHandler(MetaMethod method) {
         return isEventHandler(MethodDescriptor.forMethod(method));
@@ -226,13 +240,18 @@ public final class GriffonClassUtils {
      * Finds out if the given Method represents an event handler
      * by matching its name against the following pattern:
      * "^on[A-Z][\\w]*$"<p>
+     * <pre>
+     * GriffonClassUtils.isEventHandler("onBootstrapEnd") = true
+     * GriffonClassUtils.isEventHandler("mvcGroupInit")   = false
+     * GriffonClassUtils.isEventHandler("online")         = false
+     * </pre>
      *
      * @param method a MethodDescriptor reference
      * @return true if the method name matches the given event handler
-     * pattern, false otherwise.
+     *         pattern, false otherwise.
      */
     public static boolean isEventHandler(MethodDescriptor method) {
-        if(method == null || method.getModifiers() - Modifier.PUBLIC != 0) return false;
+        if (method == null || method.getModifiers() - Modifier.PUBLIC != 0) return false;
         return EVENT_HANDLER_PATTERN.matcher(method.getName()).matches();
     }
 
@@ -242,7 +261,7 @@ public final class GriffonClassUtils {
      *
      * @param method a Method reference
      * @return true if the method belongs to {@code Object} or
-     * {@code GroovyObject}, false otherwise.
+     *         {@code GroovyObject}, false otherwise.
      */
     public static boolean isBasicMethod(Method method) {
         return isBasicMethod(MethodDescriptor.forMethod(method));
@@ -254,7 +273,7 @@ public final class GriffonClassUtils {
      *
      * @param method a MetaMethod reference
      * @return true if the method belongs to {@code Object} or
-     * {@code GroovyObject}, false otherwise.
+     *         {@code GroovyObject}, false otherwise.
      */
     public static boolean isBasicMethod(MetaMethod method) {
         return isBasicMethod(MethodDescriptor.forMethod(method));
@@ -266,17 +285,17 @@ public final class GriffonClassUtils {
      *
      * @param method a MethodDescriptor reference
      * @return true if the method belongs to {@code Object} or
-     * {@code GroovyObject}, false otherwise.
+     *         {@code GroovyObject}, false otherwise.
      */
     public static boolean isBasicMethod(MethodDescriptor method) {
-        if(method == null || !isInstanceMethod(method)) return false;
+        if (method == null || !isInstanceMethod(method)) return false;
         return BASIC_METHODS.contains(method);
     }
 
     /**
      * Finds out if the given {@code Method} was injected by the Groovy
      * compiler.<p>
-     * Performs a basic checks againts the method's name, returning true
+     * Performs a basic checks against the method's name, returning true
      * if the name starts with either "super$" or "this$".
      *
      * @param method a Method reference
@@ -289,7 +308,7 @@ public final class GriffonClassUtils {
     /**
      * Finds out if the given {@code MetaMethod} was injected by the Groovy
      * compiler.<p>
-     * Performs a basic checks againts the method's name, returning true
+     * Performs a basic checks against the method's name, returning true
      * if the name starts with either "super$" or "this$".
      *
      * @param method a MetaMethod reference
@@ -302,28 +321,28 @@ public final class GriffonClassUtils {
     /**
      * Finds out if the given {@code MethodDescriptor} was injected by the Groovy
      * compiler.<p>
-     * Performs a basic checks againts the method's name, returning true
+     * Performs a basic checks against the method's name, returning true
      * if the name starts with either "super$" or "this$".
      *
      * @param method a MethodDescriptor reference
      * @return true if the method matches the given criteria, false otherwise.
      */
     public static boolean isGroovyInjectedMethod(MethodDescriptor method) {
-        if(method == null || !isInstanceMethod(method)) return false;
+        if (method == null || !isInstanceMethod(method)) return false;
         return method.getName().startsWith("super$") ||
-               method.getName().startsWith("this$");
+                method.getName().startsWith("this$");
     }
 
     /**
      * Finds out if the given {@code Method} is a getter method.
-     *
+     * <p/>
      * <pre>
      * // assuming getMethod() returns an appropriate Method reference
      * isGetterMethod(getMethod("getFoo"))       = true
      * isGetterMethod(getMethod("getfoo") )      = false
      * isGetterMethod(getMethod("mvcGroupInit")) = false
      * isGetterMethod(getMethod("isFoo"))        = true
-     * isGetterMethod(getMethod("island"))       = true
+     * isGetterMethod(getMethod("island"))       = false
      * </pre>
      *
      * @param method a Method reference
@@ -335,14 +354,14 @@ public final class GriffonClassUtils {
 
     /**
      * Finds out if the given {@code MetaMethod} is a getter method.
-     *
+     * <p/>
      * <pre>
      * // assuming getMethod() returns an appropriate MetaMethod reference
      * isGetterMethod(getMethod("getFoo"))       = true
      * isGetterMethod(getMethod("getfoo") )      = false
      * isGetterMethod(getMethod("mvcGroupInit")) = false
      * isGetterMethod(getMethod("isFoo"))        = true
-     * isGetterMethod(getMethod("island"))       = true
+     * isGetterMethod(getMethod("island"))       = false
      * </pre>
      *
      * @param method a Method reference
@@ -354,28 +373,28 @@ public final class GriffonClassUtils {
 
     /**
      * Finds out if the given {@code MetaMethod} is a getter method.
-     *
+     * <p/>
      * <pre>
      * // assuming getMethod() returns an appropriate MethodDescriptor reference
      * isGetterMethod(getMethod("getFoo"))       = true
      * isGetterMethod(getMethod("getfoo") )      = false
      * isGetterMethod(getMethod("mvcGroupInit")) = false
      * isGetterMethod(getMethod("isFoo"))        = true
-     * isGetterMethod(getMethod("island"))       = true
+     * isGetterMethod(getMethod("island"))       = false
      * </pre>
      *
      * @param method a MethodDescriptor reference
      * @return true if the method is a getter, false otherwise.
      */
     public static boolean isGetterMethod(MethodDescriptor method) {
-        if(method == null || !isInstanceMethod(method)) return false;
+        if (method == null || !isInstanceMethod(method)) return false;
         return GETTER_PATTERN_1.matcher(method.getName()).matches() ||
-               GETTER_PATTERN_2.matcher(method.getName()).matches();
+                GETTER_PATTERN_2.matcher(method.getName()).matches();
     }
 
     /**
      * Finds out if the given {@code Method} is a setter method.
-     *
+     * <p/>
      * <pre>
      * // assuming getMethod() returns an appropriate Method reference
      * isGetterMethod(getMethod("setFoo"))       = true
@@ -392,7 +411,7 @@ public final class GriffonClassUtils {
 
     /**
      * Finds out if the given {@code MetaMethod} is a setter method.
-     *
+     * <p/>
      * <pre>
      * // assuming getMethod() returns an appropriate MetaMethod reference
      * isGetterMethod(getMethod("setFoo"))       = true
@@ -409,7 +428,7 @@ public final class GriffonClassUtils {
 
     /**
      * Finds out if the given {@code MethodDescriptor} is a setter method.
-     *
+     * <p/>
      * <pre>
      * // assuming getMethod() returns an appropriate MethodDescriptor reference
      * isGetterMethod(getMethod("setFoo"))       = true
@@ -421,14 +440,14 @@ public final class GriffonClassUtils {
      * @return true if the method is a setter, false otherwise.
      */
     public static boolean isSetterMethod(MethodDescriptor method) {
-        if(method == null || !isInstanceMethod(method)) return false;
+        if (method == null || !isInstanceMethod(method)) return false;
         return SETTER_PATTERN.matcher(method.getName()).matches();
     }
 
     /**
      * Finds out if the given {@code Method} belongs to the set of
      * predefined MVC methods by convention.
-     *
+     * <p/>
      * <pre>
      * // assuming getMethod() returns an appropriate Method reference
      * isMvcMethod(getMethod("mvcGroupInit"))    = true
@@ -446,7 +465,7 @@ public final class GriffonClassUtils {
     /**
      * Finds out if the given {@code MetaMethod} belongs to the set of
      * predefined MVC methods by convention.
-     *
+     * <p/>
      * <pre>
      * // assuming getMethod() returns an appropriate MetaMethod reference
      * isMvcMethod(getMethod("mvcGroupInit"))    = true
@@ -464,7 +483,7 @@ public final class GriffonClassUtils {
     /**
      * Finds out if the given {@code MethodDescriptor} belongs to the set of
      * predefined MVC methods by convention.
-     *
+     * <p/>
      * <pre>
      * // assuming getMethod() returns an appropriate MethodDescriptor reference
      * isMvcMethod(getMethod("mvcGroupInit"))    = true
@@ -476,14 +495,69 @@ public final class GriffonClassUtils {
      * @return true if the method is an MVC method, false otherwise.
      */
     public static boolean isMvcMethod(MethodDescriptor method) {
-        if(method == null || !isInstanceMethod(method)) return false;
+        if (method == null || !isInstanceMethod(method)) return false;
         return MVC_METHODS.contains(method);
     }
 
     /**
      * Finds out if the given {@code Method} belongs to the set of
-     * predefined EVENT_PUBLISHER methods by convention.
+     * predefined threading methods by convention.
+     * <p/>
+     * <pre>
+     * // assuming getMethod() returns an appropriate Method reference
+     * isThreadingMethod(getMethod("execOutside"))    = true
+     * isThreadingMethod(getMethod("doLater"))        = true
+     * isThreadingMethod(getMethod("foo"))            = false
+     * </pre>
      *
+     * @param method a Method reference
+     * @return true if the method is a threading method, false otherwise.
+     */
+    public static boolean isThreadingMethod(Method method) {
+        return isThreadingMethod(MethodDescriptor.forMethod(method));
+    }
+
+    /**
+     * Finds out if the given {@code MetaMethod} belongs to the set of
+     * predefined threading methods by convention.
+     * <p/>
+     * <pre>
+     * // assuming getMethod() returns an appropriate MetaMethod reference
+     * isThreadingMethod(getMethod("execOutside"))    = true
+     * isThreadingMethod(getMethod("doLater"))        = true
+     * isThreadingMethod(getMethod("foo"))            = false
+     * </pre>
+     *
+     * @param method a Method reference
+     * @return true if the method is a threading method, false otherwise.
+     */
+    public static boolean isThreadingMethod(MetaMethod method) {
+        return isThreadingMethod(MethodDescriptor.forMethod(method));
+    }
+
+    /**
+     * Finds out if the given {@code MethodDescriptor} belongs to the set of
+     * predefined threading methods by convention.
+     * <p/>
+     * <pre>
+     * // assuming getMethod() returns an appropriate MethodDescriptor reference
+     * isThreadingMethod(getMethod("execOutside"))    = true
+     * isThreadingMethod(getMethod("doLater"))        = true
+     * isThreadingMethod(getMethod("foo"))            = false
+     * </pre>
+     *
+     * @param method a Method reference
+     * @return true if the method is a threading method, false otherwise.
+     */
+    public static boolean isThreadingMethod(MethodDescriptor method) {
+        if (method == null || !isInstanceMethod(method)) return false;
+        return THREADING_METHODS.contains(method);
+    }
+
+    /**
+     * Finds out if the given {@code Method} belongs to the set of
+     * predefined EVENT_PUBLISHER methods by convention.
+     * <p/>
      * <pre>
      * // assuming getMethod() returns an appropriate Method reference
      * isEventPublisherMethod(getMethod("addEventPublisher"))  = true
@@ -501,7 +575,7 @@ public final class GriffonClassUtils {
     /**
      * Finds out if the given {@code MetaMethod} belongs to the set of
      * predefined EVENT_PUBLISHER methods by convention.
-     *
+     * <p/>
      * <pre>
      * // assuming getMethod() returns an appropriate MetaMethod reference
      * isEventPublisherMethod(getMethod("addEventPublisher"))  = true
@@ -519,7 +593,7 @@ public final class GriffonClassUtils {
     /**
      * Finds out if the given {@code MethodDescriptor} belongs to the set of
      * predefined EVENT_PUBLISHER methods by convention.
-     *
+     * <p/>
      * <pre>
      * // assuming getMethod() returns an appropriate MethodDescriptor reference
      * isEventPublisherMethod(getMethod("addEventPublisher"))  = true
@@ -531,14 +605,14 @@ public final class GriffonClassUtils {
      * @return true if the method is an @EventPublisher method, false otherwise.
      */
     public static boolean isEventPublisherMethod(MethodDescriptor method) {
-        if(method == null || !isInstanceMethod(method)) return false;
+        if (method == null || !isInstanceMethod(method)) return false;
         return EVENT_PUBLISHER_METHODS.contains(method);
     }
 
     /**
      * Finds out if the given {@code Method} belongs to the set of
      * predefined OBSERVABLE methods by convention.
-     *
+     * <p/>
      * <pre>
      * // assuming getMethod() returns an appropriate Method reference
      * isObservableMethod(getMethod("addPropertyChangeListener"))  = true
@@ -556,7 +630,7 @@ public final class GriffonClassUtils {
     /**
      * Finds out if the given {@code MetaMethod} belongs to the set of
      * predefined OBSERVABLE methods by convention.
-     *
+     * <p/>
      * <pre>
      * // assuming getMethod() returns an appropriate MetaMethod reference
      * isObservableMethod(getMethod("addPropertyChangeListener"))  = true
@@ -574,7 +648,7 @@ public final class GriffonClassUtils {
     /**
      * Finds out if the given {@code MethodDescriptor} belongs to the set of
      * predefined OBSERVABLE methods by convention.
-     *
+     * <p/>
      * <pre>
      * // assuming getMethod() returns an appropriate MethodDescriptor reference
      * isObservableMethod(getMethod("addPropertyChangeListener"))  = true
@@ -586,7 +660,7 @@ public final class GriffonClassUtils {
      * @return true if the method is an Observable method, false otherwise.
      */
     public static boolean isObservableMethod(MethodDescriptor method) {
-        if(method == null || !isInstanceMethod(method)) return false;
+        if (method == null || !isInstanceMethod(method)) return false;
         return OBSERVABLE_METHODS.contains(method);
     }
 
@@ -620,10 +694,10 @@ public final class GriffonClassUtils {
      * @return true if the method is an instance method, false otherwise.
      */
     public static boolean isInstanceMethod(MethodDescriptor method) {
-        if(method == null) return false;
+        if (method == null) return false;
         int modifiers = method.getModifiers();
         return Modifier.isPublic(modifiers) &&
-              !Modifier.isStatic(modifiers);
+                !Modifier.isStatic(modifiers);
     }
 
     /**
@@ -631,6 +705,7 @@ public final class GriffonClassUtils {
      * <li>isInstanceMethod(method)</li>
      * <li>! isBasicMethod(method)</li>
      * <li>! isGroovyInjectedMethod(method)</li>
+     * <li>! isThreadingMethod(method)</li>
      * <li>! isMvcMethod(method)</li>
      * <li>! isEventPublisherMethod(method)</li>
      * <li>! isObservableMethod(method)</li>
@@ -650,6 +725,7 @@ public final class GriffonClassUtils {
      * <li>isInstanceMethod(method)</li>
      * <li>! isBasicMethod(method)</li>
      * <li>! isGroovyInjectedMethod(method)</li>
+     * <li>! isThreadingMethod(method)</li>
      * <li>! isMvcMethod(method)</li>
      * <li>! isEventPublisherMethod(method)</li>
      * <li>! isObservableMethod(method)</li>
@@ -669,6 +745,7 @@ public final class GriffonClassUtils {
      * <li>isInstanceMethod(method)</li>
      * <li>! isBasicMethod(method)</li>
      * <li>! isGroovyInjectedMethod(method)</li>
+     * <li>! isThreadingMethod(method)</li>
      * <li>! isMvcMethod(method)</li>
      * <li>! isEventPublisherMethod(method)</li>
      * <li>! isObservableMethod(method)</li>
@@ -681,13 +758,14 @@ public final class GriffonClassUtils {
      */
     public static boolean isPlainMethod(MethodDescriptor method) {
         return isInstanceMethod(method) &&
-               !isBasicMethod(method) &&
-               !isGroovyInjectedMethod(method) &&
-               !isMvcMethod(method) &&
-               !isEventPublisherMethod(method) &&
-               !isObservableMethod(method) &&
-               !isGetterMethod(method) &&
-               !isSetterMethod(method);
+                !isBasicMethod(method) &&
+                !isGroovyInjectedMethod(method) &&
+                !isThreadingMethod(method) &&
+                !isMvcMethod(method) &&
+                !isEventPublisherMethod(method) &&
+                !isObservableMethod(method) &&
+                !isGetterMethod(method) &&
+                !isSetterMethod(method);
     }
 
     public static boolean isGetter(MetaProperty property) {
@@ -695,32 +773,29 @@ public final class GriffonClassUtils {
     }
 
     public static boolean isGetter(MetaProperty property, boolean strict) {
-        if(property == null) return false;
+        if (property == null) return false;
         return GETTER_PATTERN_1.matcher(property.getName()).matches() ||
-               (strict && GETTER_PATTERN_2.matcher(property.getName()).matches());
+                (strict && GETTER_PATTERN_2.matcher(property.getName()).matches());
     }
 
     public static boolean isSetter(MetaProperty property) {
-        if(property == null) return false;
+        if (property == null) return false;
         return SETTER_PATTERN.matcher(property.getName()).matches();
     }
 
     /**
-     *
      * Returns true if the specified property in the specified class is of the specified type
      *
-     * @param clazz The class which contains the property
+     * @param clazz        The class which contains the property
      * @param propertyName The property name
-     * @param type The type to check
-     *
+     * @param type         The type to check
      * @return A boolean value
      */
     public static boolean isPropertyOfType(Class<?> clazz, String propertyName, Class<?> type) {
         try {
             Class propType = getPropertyType(clazz, propertyName);
             return propType != null && propType.equals(type);
-        }
-        catch(Exception e) {
+        } catch (Exception e) {
             return false;
         }
     }
@@ -729,16 +804,15 @@ public final class GriffonClassUtils {
      * Instantiates a Class, wrapping any exceptions in a RuntimeException.
      *
      * @param clazz target Class for which an object will be instantiated
-     * @throws BeanInstantiationException if an error occurs when creating the object
-     *
      * @return the newly instantiated object.
+     * @throws BeanInstantiationException if an error occurs when creating the object
      */
     public static Object instantiateClass(Class<?> clazz) {
-       try {
-           return clazz.newInstance();
-       } catch(Exception e) {
-           throw new BeanInstantiationException("Could not create an instance of "+ clazz, e);
-       }
+        try {
+            return clazz.newInstance();
+        } catch (Exception e) {
+            throw new BeanInstantiationException("Could not create an instance of " + clazz, e);
+        }
     }
 
 /*
@@ -748,33 +822,32 @@ public final class GriffonClassUtils {
 */
 
     public static Object instantiate(Class<?> clazz, Object[] args) {
-       try {
-            if(args == null) {
+        try {
+            if (args == null) {
                 args = EMPTY_OBJECT_ARRAY;
             }
             int arguments = args.length;
             Class[] parameterTypes = new Class[arguments];
-            for(int i = 0; i < arguments; i++) {
+            for (int i = 0; i < arguments; i++) {
                 parameterTypes[i] = args[i].getClass();
             }
-           return clazz.getDeclaredConstructor(parameterTypes).newInstance(args);
-       } catch(Exception e) {
-           throw new BeanInstantiationException("Could not create an instance of "+ clazz, e);
-       }
+            return clazz.getDeclaredConstructor(parameterTypes).newInstance(args);
+        } catch (Exception e) {
+            throw new BeanInstantiationException("Could not create an instance of " + clazz, e);
+        }
     }
 
     /**
      * Returns the value of the specified property and type from an instance of the specified Griffon class
      *
-     * @param clazz The name of the class which contains the property
+     * @param clazz        The name of the class which contains the property
      * @param propertyName The property name
      * @param propertyType The property type
-     *
      * @return The value of the property or null if none exists
      */
     public static Object getPropertyValueOfNewInstance(Class<?> clazz, String propertyName, Class<?> propertyType) {
         // validate
-        if(clazz == null || GriffonNameUtils.isBlank(propertyName))
+        if (clazz == null || GriffonNameUtils.isBlank(propertyName))
             return null;
 
         Object instance = null;
@@ -790,14 +863,13 @@ public final class GriffonClassUtils {
     /**
      * Returns the value of the specified property and type from an instance of the specified Griffon class
      *
-     * @param clazz The name of the class which contains the property
+     * @param clazz        The name of the class which contains the property
      * @param propertyName The property name
-     *
      * @return The value of the property or null if none exists
      */
     public static Object getPropertyValueOfNewInstance(Class<?> clazz, String propertyName) {
         // validate
-        if(clazz == null || GriffonNameUtils.isBlank(propertyName))
+        if (clazz == null || GriffonNameUtils.isBlank(propertyName))
             return null;
 
         Object instance = null;
@@ -813,26 +885,26 @@ public final class GriffonClassUtils {
     /**
      * Retrieves a PropertyDescriptor for the specified instance and property value
      *
-     * @param instance The instance
+     * @param instance      The instance
      * @param propertyValue The value of the property
      * @return The PropertyDescriptor
      */
     public static PropertyDescriptor getPropertyDescriptorForValue(Object instance, Object propertyValue) {
-        if(instance == null || propertyValue == null)
+        if (instance == null || propertyValue == null)
             return null;
 
         PropertyDescriptor[] descriptors = getPropertyDescriptors(instance.getClass());
 
         for (int i = 0; i < descriptors.length; i++) {
             PropertyDescriptor pd = descriptors[i];
-            if(isAssignableOrConvertibleFrom(pd.getPropertyType(), propertyValue.getClass())) {
+            if (isAssignableOrConvertibleFrom(pd.getPropertyType(), propertyValue.getClass())) {
                 Object value;
                 try {
                     value = getReadMethod(pd).invoke(instance, (Object[]) null);
                 } catch (Exception e) {
                     throw new RuntimeException("Problem calling readMethod of " + pd, e);
                 }
-                if(propertyValue.equals(value))
+                if (propertyValue.equals(value))
                     return pd;
             }
         }
@@ -842,18 +914,17 @@ public final class GriffonClassUtils {
     /**
      * Returns the type of the given property contained within the specified class
      *
-     * @param clazz The class which contains the property
+     * @param clazz        The class which contains the property
      * @param propertyName The name of the property
-     *
      * @return The property type or null if none exists
      */
     public static Class<?> getPropertyType(Class<?> clazz, String propertyName) {
-        if(clazz == null || GriffonNameUtils.isBlank(propertyName))
+        if (clazz == null || GriffonNameUtils.isBlank(propertyName))
             return null;
 
         try {
             PropertyDescriptor desc = getPropertyDescriptor(clazz, propertyName);
-            if(desc != null) {
+            if (desc != null) {
                 return desc.getPropertyType();
             } else {
                 return null;
@@ -867,13 +938,12 @@ public final class GriffonClassUtils {
     /**
      * Retrieves all the properties of the given class for the given type
      *
-     * @param clazz The class to retrieve the properties from
+     * @param clazz        The class to retrieve the properties from
      * @param propertyType The type of the properties you wish to retrieve
-     *
      * @return An array of PropertyDescriptor instances
      */
     public static PropertyDescriptor[] getPropertiesOfType(Class<?> clazz, Class<?> propertyType) {
-        if(clazz == null || propertyType == null)
+        if (clazz == null || propertyType == null)
             return new PropertyDescriptor[0];
 
         Set properties = new HashSet();
@@ -882,7 +952,7 @@ public final class GriffonClassUtils {
 
             for (int i = 0; i < descriptors.length; i++) {
                 Class<?> currentPropertyType = descriptors[i].getPropertyType();
-                if(isTypeInstanceOfPropertyType(propertyType, currentPropertyType)) {
+                if (isTypeInstanceOfPropertyType(propertyType, currentPropertyType)) {
                     properties.add(descriptors[i]);
                 }
             }
@@ -890,7 +960,7 @@ public final class GriffonClassUtils {
             // if there are any errors in instantiating just return null for the moment
             return new PropertyDescriptor[0];
         }
-        return (PropertyDescriptor[])properties.toArray( new PropertyDescriptor[ properties.size() ] );
+        return (PropertyDescriptor[]) properties.toArray(new PropertyDescriptor[properties.size()]);
     }
 
     private static boolean isTypeInstanceOfPropertyType(Class<?> type, Class<?> propertyType) {
@@ -924,19 +994,19 @@ public final class GriffonClassUtils {
 
     /**
      * Retrieves a property of the given class of the specified name and type
-     * @param clazz The class to retrieve the property from
+     *
+     * @param clazz        The class to retrieve the property from
      * @param propertyName The name of the property
      * @param propertyType The type of the property
-     *
      * @return A PropertyDescriptor instance or null if none exists
      */
     public static PropertyDescriptor getProperty(Class<?> clazz, String propertyName, Class<?> propertyType) {
-        if(clazz == null || propertyName == null || propertyType == null)
+        if (clazz == null || propertyName == null || propertyType == null)
             return null;
 
         try {
             PropertyDescriptor pd = getPropertyDescriptor(clazz, propertyName);
-            if(pd.getPropertyType().equals(propertyType)) {
+            if (pd.getPropertyType().equals(propertyType)) {
                 return pd;
             } else {
                 return null;
@@ -949,11 +1019,12 @@ public final class GriffonClassUtils {
 
     /**
      * Convenience method for converting a collection to an Object[]
+     *
      * @param c The collection
-     * @return  An object array
+     * @return An object array
      */
     public static Object[] collectionToObjectArray(Collection c) {
-        if(c == null) return EMPTY_OBJECT_ARRAY;
+        if (c == null) return EMPTY_OBJECT_ARRAY;
 
         return c.toArray(new Object[c.size()]);
     }
@@ -968,7 +1039,7 @@ public final class GriffonClassUtils {
      * @param leftType
      * @param rightType
      * @return true if one of the classes is a native type and the other the object representation
-     * of the same native type
+     *         of the same native type
      */
     public static boolean isMatchBetweenPrimitiveAndWrapperTypes(Class<?> leftType, Class<?> rightType) {
         if (leftType == null) {
@@ -988,7 +1059,7 @@ public final class GriffonClassUtils {
      * with a bit of magic for native types and polymorphism i.e. Number assigned an int.
      * If either parameter is null an exception is thrown</p>
      *
-     * @param leftType The type of the left hand part of a notional assignment
+     * @param leftType  The type of the left hand part of a notional assignment
      * @param rightType The type of the right hand part of a notional assignment
      * @return True if values of the right hand type can be assigned in Groovy to variables of the left hand type.
      */
@@ -1006,7 +1077,7 @@ public final class GriffonClassUtils {
             Class<?> r = (Class<?>) PRIMITIVE_TYPE_COMPATIBLE_CLASSES.get(leftType);
             boolean result = r == rightType;
 
-            if (!result)  {
+            if (!result) {
                 // If no primitive <-> wrapper match, it may still be assignable
                 // from polymorphic primitives i.e. Number -> int (AKA Integer)
                 if (rightType.isPrimitive()) {
@@ -1025,13 +1096,13 @@ public final class GriffonClassUtils {
     }
 
     private static Method findDeclaredMethod(Class<?> clazz, String methodName, Class[] parameterTypes) {
-        while(clazz != null) {
+        while (clazz != null) {
             try {
                 Method method = clazz.getDeclaredMethod(methodName, parameterTypes);
-                if(method != null) return method;
-            } catch(NoSuchMethodException e) {
+                if (method != null) return method;
+            } catch (NoSuchMethodException e) {
                 // skip
-            } catch(SecurityException e) {
+            } catch (SecurityException e) {
                 // skip
             }
             clazz = clazz.getSuperclass();
@@ -1045,7 +1116,7 @@ public final class GriffonClassUtils {
      * recognize this concept of static properties but Groovy does. We also consider public static fields
      * as static properties with no getters/setters</p>
      *
-     * @param clazz The class to check for static property
+     * @param clazz        The class to check for static property
      * @param propertyName The property name
      * @return true if the property with name propertyName has a static getter method
      */
@@ -1069,6 +1140,7 @@ public final class GriffonClassUtils {
 
     /**
      * Determine whether the method is declared public static
+     *
      * @param m
      * @return True if the method is declared public static
      */
@@ -1079,6 +1151,7 @@ public final class GriffonClassUtils {
 
     /**
      * Determine whether the field is declared public static
+     *
      * @param f
      * @return True if the field is declared public static
      */
@@ -1089,19 +1162,20 @@ public final class GriffonClassUtils {
 
     /**
      * Calculate the name for a getter method to retrieve the specified property
+     *
      * @param propertyName
      * @return The name for the getter method for this property, if it were to exist, i.e. getConstraints
      */
     public static String getGetterName(String propertyName) {
         return PROPERTY_GET_PREFIX + Character.toUpperCase(propertyName.charAt(0))
-            + propertyName.substring(1);
+                + propertyName.substring(1);
     }
 
     /**
      * <p>Get a static property value, which has a public static getter or is just a public static field.</p>
      *
      * @param clazz The class to check for static property
-     * @param name The property name
+     * @param name  The property name
      * @return The value if there is one, or null if unset OR there is no such property
      */
     public static Object getStaticPropertyValue(Class<?> clazz, String name) {
@@ -1138,8 +1212,8 @@ public final class GriffonClassUtils {
         if (isReadable(obj, name)) {
             try {
                 return getProperty(obj, name);
-            } catch(Exception e) {
-                throw new BeanException("Error while reading value of property/field "+name,e);
+            } catch (Exception e) {
+                throw new BeanException("Error while reading value of property/field " + name, e);
             }
         } else {
             // Look for public fields
@@ -1152,7 +1226,7 @@ public final class GriffonClassUtils {
             if (isStaticProperty(clazz, name)) {
                 return getStaticPropertyValue(clazz, name);
             } else {
-               return null;
+                return null;
             }
         }
     }
@@ -1196,13 +1270,13 @@ public final class GriffonClassUtils {
     /**
      * Checks whether the specified property is inherited from a super class
      *
-     * @param clz The class to check
+     * @param clz          The class to check
      * @param propertyName The property name
      * @return True if the property is inherited
      */
     public static boolean isPropertyInherited(Class<?> clz, String propertyName) {
-        if(clz == null) return false;
-        if(GriffonNameUtils.isBlank(propertyName))
+        if (clz == null) return false;
+        if (GriffonNameUtils.isBlank(propertyName))
             throw new IllegalArgumentException("Argument [propertyName] cannot be null or blank");
 
         Class<?> superClass = clz.getSuperclass();
@@ -1210,8 +1284,8 @@ public final class GriffonClassUtils {
         PropertyDescriptor pd = null;
         try {
             pd = getPropertyDescriptor(superClass, propertyName);
-        } catch(Exception e) {
-            throw new BeanException("Could not read property descritptor for "+propertyName+" in "+superClass, e);
+        } catch (Exception e) {
+            throw new BeanException("Could not read property descritptor for " + propertyName + " in " + superClass, e);
         }
         if (pd != null && pd.getReadMethod() != null) {
             return true;
@@ -1221,18 +1295,17 @@ public final class GriffonClassUtils {
 
     /**
      * Creates a concrete collection for the suppied interface
+     *
      * @param interfaceType The interface
      * @return ArrayList for List, TreeSet for SortedSet, HashSet for Set etc.
      */
     public static Collection createConcreteCollection(Class<?> interfaceType) {
         Collection elements;
-        if(interfaceType.equals(List.class)) {
+        if (interfaceType.equals(List.class)) {
             elements = new ArrayList();
-        }
-        else if(interfaceType.equals(SortedSet.class)) {
+        } else if (interfaceType.equals(SortedSet.class)) {
             elements = new TreeSet();
-        }
-        else {
+        } else {
             elements = new HashSet();
         }
         return elements;
@@ -1240,11 +1313,12 @@ public final class GriffonClassUtils {
 
     /**
      * Retrieves the name of a setter for the specified property name
+     *
      * @param propertyName The property name
      * @return The setter equivalent
      */
     public static String getSetterName(String propertyName) {
-        return PROPERTY_SET_PREFIX+propertyName.substring(0,1).toUpperCase()+ propertyName.substring(1);
+        return PROPERTY_SET_PREFIX + propertyName.substring(0, 1).toUpperCase() + propertyName.substring(1);
     }
 
     /**
@@ -1255,16 +1329,15 @@ public final class GriffonClassUtils {
      * @return True if it is a javabean property method
      */
     public static boolean isGetter(String name, Class[] args) {
-        if(GriffonNameUtils.isBlank(name) || args == null)return false;
-        if(args.length != 0)return false;
+        if (GriffonNameUtils.isBlank(name) || args == null) return false;
+        if (args.length != 0) return false;
 
-        if(name.startsWith(PROPERTY_GET_PREFIX)) {
+        if (name.startsWith(PROPERTY_GET_PREFIX)) {
             name = name.substring(3);
-            if(name.length() > 0 && Character.isUpperCase(name.charAt(0))) return true;
-        }
-        else if(name.startsWith(PROPERTY_IS_PREFIX)) {
+            if (name.length() > 0 && Character.isUpperCase(name.charAt(0))) return true;
+        } else if (name.startsWith(PROPERTY_IS_PREFIX)) {
             name = name.substring(2);
-            if(name.length() > 0 && Character.isUpperCase(name.charAt(0))) return true;
+            if (name.length() > 0 && Character.isUpperCase(name.charAt(0))) return true;
         }
         return false;
     }
@@ -1276,13 +1349,12 @@ public final class GriffonClassUtils {
      * @return The property name equivalent
      */
     public static String getPropertyForGetter(String getterName) {
-        if(GriffonNameUtils.isBlank(getterName))return null;
+        if (GriffonNameUtils.isBlank(getterName)) return null;
 
-        if(getterName.startsWith(PROPERTY_GET_PREFIX)) {
+        if (getterName.startsWith(PROPERTY_GET_PREFIX)) {
             String prop = getterName.substring(3);
             return convertPropertyName(prop);
-        }
-        else if(getterName.startsWith(PROPERTY_IS_PREFIX)) {
+        } else if (getterName.startsWith(PROPERTY_IS_PREFIX)) {
             String prop = getterName.substring(2);
             return convertPropertyName(prop);
         }
@@ -1290,13 +1362,11 @@ public final class GriffonClassUtils {
     }
 
     private static String convertPropertyName(String prop) {
-        if(Character.isUpperCase(prop.charAt(0)) && Character.isUpperCase(prop.charAt(1))) {
+        if (Character.isUpperCase(prop.charAt(0)) && Character.isUpperCase(prop.charAt(1))) {
             return prop;
-        }
-        else if(Character.isDigit(prop.charAt(0))) {
+        } else if (Character.isDigit(prop.charAt(0))) {
             return prop;
-        }
-        else {
+        } else {
             return Character.toLowerCase(prop.charAt(0)) + prop.substring(1);
         }
     }
@@ -1308,9 +1378,9 @@ public final class GriffonClassUtils {
      * @return The property name equivalent
      */
     public static String getPropertyForSetter(String setterName) {
-        if(GriffonNameUtils.isBlank(setterName))return null;
+        if (GriffonNameUtils.isBlank(setterName)) return null;
 
-        if(setterName.startsWith(PROPERTY_SET_PREFIX)) {
+        if (setterName.startsWith(PROPERTY_SET_PREFIX)) {
             String prop = setterName.substring(3);
             return convertPropertyName(prop);
         }
@@ -1318,12 +1388,12 @@ public final class GriffonClassUtils {
     }
 
     public static boolean isSetter(String name, Class[] args) {
-        if(GriffonNameUtils.isBlank(name) || args == null)return false;
+        if (GriffonNameUtils.isBlank(name) || args == null) return false;
 
-        if(name.startsWith(PROPERTY_SET_PREFIX)) {
-            if(args.length != 1) return false;
+        if (name.startsWith(PROPERTY_SET_PREFIX)) {
+            if (args.length != 1) return false;
             name = name.substring(3);
-            if(name.length() > 0 && Character.isUpperCase(name.charAt(0))) return true;
+            if (name.length() > 0 && Character.isUpperCase(name.charAt(0))) return true;
         }
 
         return false;
@@ -1334,20 +1404,20 @@ public final class GriffonClassUtils {
         isTrue(registry.getMetaClassCreationHandler() instanceof ExpandoMetaClassCreationHandle, "Griffon requires an instance of [ExpandoMetaClassCreationHandle] to be set in Groovy's MetaClassRegistry!");
         MetaClass mc = registry.getMetaClass(clazz);
         AdaptingMetaClass adapter = null;
-        if(mc instanceof AdaptingMetaClass) {
+        if (mc instanceof AdaptingMetaClass) {
             adapter = (AdaptingMetaClass) mc;
-            mc = ((AdaptingMetaClass)mc).getAdaptee();
+            mc = ((AdaptingMetaClass) mc).getAdaptee();
         }
 
-        if(!(mc instanceof ExpandoMetaClass)) {
+        if (!(mc instanceof ExpandoMetaClass)) {
             // removes cached version
             registry.removeMetaClass(clazz);
             mc = registry.getMetaClass(clazz);
-            if(adapter != null) {
+            if (adapter != null) {
                 adapter.setAdaptee(mc);
             }
         }
-        isTrue(mc instanceof ExpandoMetaClass,"BUG! Method must return an instance of [ExpandoMetaClass]!");
+        isTrue(mc instanceof ExpandoMetaClass, "BUG! Method must return an instance of [ExpandoMetaClass]!");
         return mc;
     }
 
@@ -1363,8 +1433,7 @@ public final class GriffonClassUtils {
     public static boolean isAssignableOrConvertibleFrom(Class<?> clazz, Class<?> type) {
         if (type == null || clazz == null) {
             return false;
-        }
-        else if (type.isPrimitive()) {
+        } else if (type.isPrimitive()) {
             // convert primitive type to compatible class 
             Class<?> primitiveClass = (Class<?>) PRIMITIVE_TYPE_COMPATIBLE_CLASSES.get(type);
             if (primitiveClass == null) {
@@ -1386,14 +1455,14 @@ public final class GriffonClassUtils {
      * @return A boolean value which will be false if the map is null, the map doesn't contain the key or the value is false
      */
     public static boolean getBooleanFromMap(String key, Map map) {
-        if(map == null) return false;
-        if(map.containsKey(key)) {
+        if (map == null) return false;
+        if (map.containsKey(key)) {
             Object o = map.get(key);
-            if(o == null)return false;
-            else if(o instanceof Boolean) {
-                return ((Boolean)o).booleanValue();
+            if (o == null) return false;
+            else if (o instanceof Boolean) {
+                return ((Boolean) o).booleanValue();
             } else {
-                 return Boolean.valueOf(o.toString()).booleanValue();
+                return Boolean.valueOf(o.toString()).booleanValue();
             }
         }
         return false;
@@ -1405,14 +1474,14 @@ public final class GriffonClassUtils {
      * that refer to the same reference. Use with caution.
      *
      * @param target The target
-     * @param obj The property value
+     * @param obj    The property value
      * @return The property name or null
      */
     public static String findPropertyNameForValue(Object target, Object obj) {
         MetaClass mc = GroovySystem.getMetaClassRegistry().getMetaClass(target.getClass());
         List<MetaProperty> metaProperties = mc.getProperties();
         for (MetaProperty metaProperty : metaProperties) {
-            if(isAssignableOrConvertibleFrom(metaProperty.getType(), obj.getClass())) {
+            if (isAssignableOrConvertibleFrom(metaProperty.getType(), obj.getClass())) {
                 Object val = metaProperty.getProperty(target);
                 if (val != null && val.equals(obj))
                     return metaProperty.getName();
@@ -1425,14 +1494,14 @@ public final class GriffonClassUtils {
      * Returns whether the specified class is either within one of the specified packages or
      * within a subpackage of one of the packages
      *
-     * @param theClass The class
+     * @param theClass    The class
      * @param packageList The list of packages
      * @return True if it is within the list of specified packages
      */
     public static boolean isClassBelowPackage(Class<?> theClass, List packageList) {
         String classPackage = theClass.getPackage().getName();
         for (Object packageName : packageList) {
-            if(packageName!=null) {
+            if (packageName != null) {
                 if (classPackage.startsWith(packageName.toString())) {
                     return true;
                 }
@@ -1453,18 +1522,17 @@ public final class GriffonClassUtils {
      *
      * @param bean Bean for which a property descriptor is requested
      * @param name name of the property for which a property descriptor
-     * is requested
+     *             is requested
      * @return the property descriptor or null if the bean does not have
-     * a property that matches the specified name.
-     *
-     * @exception IllegalAccessException if the caller does not have
-     *  access to the property accessor method
-     * @exception IllegalArgumentException if <code>bean</code> or
-     *  <code>name</code> is null
-     * @exception InvocationTargetException if the property accessor method
-     *  throws an exception
-     * @exception NoSuchMethodException if an accessor method for this
-     *  propety cannot be found
+     *         a property that matches the specified name.
+     * @throws IllegalAccessException    if the caller does not have
+     *                                   access to the property accessor method
+     * @throws IllegalArgumentException  if <code>bean</code> or
+     *                                   <code>name</code> is null
+     * @throws InvocationTargetException if the property accessor method
+     *                                   throws an exception
+     * @throws NoSuchMethodException     if an accessor method for this
+     *                                   property cannot be found
      */
     public static PropertyDescriptor getPropertyDescriptor(Object bean,
                                                            String name)
@@ -1478,7 +1546,7 @@ public final class GriffonClassUtils {
                     bean.getClass() + "'");
         }
 
-        return getPropertyDescriptor(bean instanceof Class? (Class<?>) bean : bean.getClass(), name);
+        return getPropertyDescriptor(bean instanceof Class ? (Class<?>) bean : bean.getClass(), name);
     }
 
     /**
@@ -1488,19 +1556,18 @@ public final class GriffonClassUtils {
      * This method does not resolve index, nested nor mapped properties.<p>
      *
      * @param clazz class for which a property descriptor is requested
-     * @param name name of the property for which a property descriptor
-     * is requested
+     * @param name  name of the property for which a property descriptor
+     *              is requested
      * @return the property descriptor or null if the bean does not have
-     * a property that matches the specified name.
-     *
-     * @exception IllegalAccessException if the caller does not have
-     *  access to the property accessor method
-     * @exception IllegalArgumentException if <code>bean</code> or
-     *  <code>name</code> is null
-     * @exception InvocationTargetException if the property accessor method
-     *  throws an exception
-     * @exception NoSuchMethodException if an accessor method for this
-     *  propety cannot be found
+     *         a property that matches the specified name.
+     * @throws IllegalAccessException    if the caller does not have
+     *                                   access to the property accessor method
+     * @throws IllegalArgumentException  if <code>bean</code> or
+     *                                   <code>name</code> is null
+     * @throws InvocationTargetException if the property accessor method
+     *                                   throws an exception
+     * @throws NoSuchMethodException     if an accessor method for this
+     *                                   property cannot be found
      */
     public static PropertyDescriptor getPropertyDescriptor(Class<?> clazz,
                                                            String name)
@@ -1532,8 +1599,7 @@ public final class GriffonClassUtils {
      *
      * @param beanClass Bean class for which property descriptors are requested
      * @return the property descriptors
-     *
-     * @exception IllegalArgumentException if <code>beanClass</code> is null
+     * @throws IllegalArgumentException if <code>beanClass</code> is null
      */
     public static PropertyDescriptor[] getPropertyDescriptors(Class<?> beanClass) {
         if (beanClass == null) {
@@ -1582,11 +1648,9 @@ public final class GriffonClassUtils {
      * @param bean Bean to be examined
      * @param name Property name to be evaluated
      * @return <code>true</code> if the property is readable,
-     * otherwise <code>false</code>
-     *
-     * @exception IllegalArgumentException if <code>bean</code>
-     *  or <code>name</code> is <code>null</code>
-     *
+     *         otherwise <code>false</code>
+     * @throws IllegalArgumentException if <code>bean</code>
+     *                                  or <code>name</code> is <code>null</code>
      * @since BeanUtils 1.6
      */
     public static boolean isReadable(Object bean, String name) {
@@ -1626,17 +1690,16 @@ public final class GriffonClassUtils {
      *
      * @param bean Bean whose property is to be extracted
      * @param name Possibly indexed and/or nested name of the property
-     *  to be extracted
+     *             to be extracted
      * @return the property value
-     *
-     * @exception IllegalAccessException if the caller does not have
-     *  access to the property accessor method
-     * @exception IllegalArgumentException if <code>bean</code> or
-     *  <code>name</code> is null
-     * @exception InvocationTargetException if the property accessor method
-     *  throws an exception
-     * @exception NoSuchMethodException if an accessor method for this
-     *  propety cannot be found
+     * @throws IllegalAccessException    if the caller does not have
+     *                                   access to the property accessor method
+     * @throws IllegalArgumentException  if <code>bean</code> or
+     *                                   <code>name</code> is null
+     * @throws InvocationTargetException if the property accessor method
+     *                                   throws an exception
+     * @throws NoSuchMethodException     if an accessor method for this
+     *                                   property cannot be found
      */
     public static Object getProperty(Object bean, String name)
             throws IllegalAccessException, InvocationTargetException,
@@ -1653,7 +1716,7 @@ public final class GriffonClassUtils {
         PropertyDescriptor descriptor = getPropertyDescriptor(bean, name);
         if (descriptor == null) {
             throw new NoSuchMethodException("Unknown property '" +
-                    name + "' on class '" + bean.getClass() + "'" );
+                    name + "' on class '" + bean.getClass() + "'");
         }
         Method readMethod = getReadMethod(bean.getClass(), descriptor);
         if (readMethod == null) {
@@ -1670,7 +1733,7 @@ public final class GriffonClassUtils {
      * <p>Return an accessible property getter method for this property,
      * if there is one; otherwise return <code>null</code>.</p>
      *
-     * @param clazz The class of the read method will be invoked on
+     * @param clazz      The class of the read method will be invoked on
      * @param descriptor Property descriptor to return a getter for
      * @return The read method
      */
@@ -1685,14 +1748,14 @@ public final class GriffonClassUtils {
      * throwing an exception with the specified message. This method is useful when
      * validating according to an arbitrary boolean expression, such as validating a
      * primitive number or using your own custom validation expression.</p>
-     *
+     * <p/>
      * <pre>
      * isTrue( (i > 0), "The value must be greater than zero");
      * isTrue( myObject.isOk(), "The object is not OK");
      * </pre>
      *
      * @param expression the boolean expression to check
-     * @param message the exception message if invalid
+     * @param message    the exception message if invalid
      * @throws IllegalArgumentException if expression is <code>false</code>
      */
     public static void isTrue(boolean expression, String message) {
@@ -1816,7 +1879,7 @@ public final class GriffonClassUtils {
     /**
      * Add primitive type abbreviation to maps of abbreviations.
      *
-     * @param primitive Canonical name of primitive type
+     * @param primitive    Canonical name of primitive type
      * @param abbreviation Corresponding abbreviation of primitive type
      */
     private static void addAbbreviation(String primitive, String abbreviation) {
@@ -1839,11 +1902,12 @@ public final class GriffonClassUtils {
     }
 
     // ----------------------------------------------------------------------
+
     /**
      * <p>Gets the class name minus the package name for an <code>Object</code>.</p>
      *
-     * @param object  the class to get the short name for, may be null
-     * @param valueIfNull  the value to return if null
+     * @param object      the class to get the short name for, may be null
+     * @param valueIfNull the value to return if null
      * @return the class name of the object without the package name, or the null value
      */
     public static String getShortClassName(Object object, String valueIfNull) {
@@ -1856,7 +1920,7 @@ public final class GriffonClassUtils {
     /**
      * <p>Gets the class name minus the package name from a <code>Class</code>.</p>
      *
-     * @param cls  the class to get the short name for.
+     * @param cls the class to get the short name for.
      * @return the class name without the package name or an empty string
      */
     public static String getShortClassName(Class<?> cls) {
@@ -1868,10 +1932,10 @@ public final class GriffonClassUtils {
 
     /**
      * <p>Gets the class name minus the package name from a String.</p>
-     *
+     * <p/>
      * <p>The string passed in is assumed to be a class name - it is not checked.</p>
      *
-     * @param className  the className to get the short name for
+     * @param className the className to get the short name for
      * @return the class name of the class without the package name or an empty string
      */
     public static String getShortClassName(String className) {
@@ -1897,7 +1961,7 @@ public final class GriffonClassUtils {
         }
 
         if (reverseAbbreviationMap.containsKey(className)) {
-            className = (String)reverseAbbreviationMap.get(className);
+            className = (String) reverseAbbreviationMap.get(className);
         }
 
         int lastDotIdx = className.lastIndexOf(PACKAGE_SEPARATOR_CHAR);
@@ -1912,11 +1976,12 @@ public final class GriffonClassUtils {
 
     // Package name
     // ----------------------------------------------------------------------
+
     /**
      * <p>Gets the package name of an <code>Object</code>.</p>
      *
-     * @param object  the class to get the package name for, may be null
-     * @param valueIfNull  the value to return if null
+     * @param object      the class to get the package name for, may be null
+     * @param valueIfNull the value to return if null
      * @return the package name of the object, or the null value
      */
     public static String getPackageName(Object object, String valueIfNull) {
@@ -1929,7 +1994,7 @@ public final class GriffonClassUtils {
     /**
      * <p>Gets the package name of a <code>Class</code>.</p>
      *
-     * @param cls  the class to get the package name for, may be <code>null</code>.
+     * @param cls the class to get the package name for, may be <code>null</code>.
      * @return the package name or an empty string
      */
     public static String getPackageName(Class<?> cls) {
@@ -1941,11 +2006,11 @@ public final class GriffonClassUtils {
 
     /**
      * <p>Gets the package name from a <code>String</code>.</p>
-     *
+     * <p/>
      * <p>The string passed in is assumed to be a class name - it is not checked.</p>
      * <p>If the class is unpackaged, return an empty string.</p>
      *
-     * @param className  the className to get the package name for, may be <code>null</code>
+     * @param className the className to get the package name for, may be <code>null</code>
      * @return the package name or an empty string
      */
     public static String getPackageName(String className) {
@@ -1978,15 +2043,15 @@ public final class GriffonClassUtils {
         private static final String[] EMPTY_CLASS_PARAMETERS = new String[0];
 
         public static MethodDescriptor forMethod(Method method) {
-            if(method == null) return null;
+            if (method == null) return null;
             return new MethodDescriptor(method.getName(), method.getParameterTypes(), method.getModifiers());
         }
 
         public static MethodDescriptor forMethod(MetaMethod method) {
-            if(method == null) return null;
+            if (method == null) return null;
             CachedClass[] types = method.getParameterTypes();
             String[] parameterTypes = new String[types.length];
-            for(int i = 0; i < types.length; i++) {
+            for (int i = 0; i < types.length; i++) {
                 parameterTypes[i] = types[i].getTheClass().getName();
             }
             return new MethodDescriptor(method.getName(), parameterTypes, method.getModifiers());
@@ -2010,7 +2075,7 @@ public final class GriffonClassUtils {
 
         public MethodDescriptor(String methodName, Class[] paramTypes, int modifiers) {
             this.methodName = methodName;
-            if(paramTypes == null) {
+            if (paramTypes == null) {
                 this.paramTypes = EMPTY_CLASS_PARAMETERS;
             } else {
                 this.paramTypes = new String[paramTypes.length];
@@ -2047,11 +2112,11 @@ public final class GriffonClassUtils {
             if (!(obj instanceof MethodDescriptor)) {
                 return false;
             }
-            MethodDescriptor md = (MethodDescriptor)obj;
+            MethodDescriptor md = (MethodDescriptor) obj;
 
             return methodName.equals(md.methodName) &&
-                modifiers == md.modifiers &&
-                java.util.Arrays.equals(paramTypes, md.paramTypes);
+                    modifiers == md.modifiers &&
+                    java.util.Arrays.equals(paramTypes, md.paramTypes);
         }
 
         public int hashCode() {
@@ -2062,8 +2127,8 @@ public final class GriffonClassUtils {
             StringBuilder b = new StringBuilder();
             b.append(Modifier.toString(modifiers)).append(" ");
             b.append(methodName).append("(");
-            for(int i = 0; i < paramTypes.length; i++) {
-                if(i != 0) b.append(", ");
+            for (int i = 0; i < paramTypes.length; i++) {
+                if (i != 0) b.append(", ");
                 b.append(paramTypes[i]);
             }
             b.append(")");
@@ -2074,17 +2139,17 @@ public final class GriffonClassUtils {
             if (!(obj instanceof MethodDescriptor)) {
                 return -1;
             }
-            MethodDescriptor md = (MethodDescriptor)obj;
+            MethodDescriptor md = (MethodDescriptor) obj;
 
             int c = methodName.compareTo(md.methodName);
-            if(c != 0) return c;
+            if (c != 0) return c;
             c = modifiers - md.modifiers;
-            if(c != 0) return c;
+            if (c != 0) return c;
             c = paramTypes.length - md.paramTypes.length;
-            if(c != 0) return c;
-            for(int i = 0; i < paramTypes.length; i++) {
+            if (c != 0) return c;
+            for (int i = 0; i < paramTypes.length; i++) {
                 c = paramTypes[i].compareTo(md.paramTypes[i]);
-                if(c != 0) return c;
+                if (c != 0) return c;
             }
 
             return 0;

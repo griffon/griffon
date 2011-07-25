@@ -631,3 +631,19 @@ _copyNativeLibs = { srcdir, destdir, os ->
         }
     }
 }
+
+resolveApplicationIcnsFile = {
+    File icnsFile = null
+    if (buildConfig.application.icon) {
+        icnsFile = new File(basedir, buildConfig.application.icon)
+        if (!icnsFile.exists()) icnsFile = null
+    }
+    if (icnsFile == null) {
+        icnsFile = new File(basedir, "griffon-app/conf/dist/shared/${griffonAppName}.icns")
+        if (!icnsFile.exists()) icnsFile = null
+    }
+    if (icnsFile == null) {
+        icnsFile = new File("${griffonHome}/media/griffon.icns")
+    }
+    icnsFile
+}

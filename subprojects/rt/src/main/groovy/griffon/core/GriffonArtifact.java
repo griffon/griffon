@@ -28,12 +28,15 @@ import org.slf4j.Logger;
  * but not enforced.
  *
  * @author Andres Almiray
- *
  * @since 0.9.1
  */
 public interface GriffonArtifact extends ApplicationHandler, ThreadingHandler, MVCHandler {
     /**
      * Creates a new instance of the specified class and type.
+     *
+     * @param clazz the Class to be instantiated
+     * @param type  a logical type, such as 'controller'. May be null.
+     * @return the newly created instance
      */
     Object newInstance(Class clazz, String type);
 
@@ -47,6 +50,8 @@ public interface GriffonArtifact extends ApplicationHandler, ThreadingHandler, M
 
     /**
      * Returns the <tt>GriffonClass</tt> associated with this artifact.
+     *
+     * @return the <tt>GriffonClass</tt> associated with this artifact
      */
     GriffonClass getGriffonClass();
 
@@ -58,7 +63,6 @@ public interface GriffonArtifact extends ApplicationHandler, ThreadingHandler, M
      * 'griffon.app.controller.com.acme.SampleController'.
      *
      * @return a Logger instance associated with this artifact.
-     *
      * @since 0.9.2
      */
     Logger getLog();

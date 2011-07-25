@@ -421,6 +421,8 @@ class GriffonApplicationHelper {
         instanceMap.builder = builder
         argsCopy.builder = builder
 
+        app.event(GriffonApplication.Event.INITIALIZE_MVC_GROUP.name, [mvcType, mvcName, instanceMap])
+
         // special case --
         // controllers are added as application listeners
         // addApplicationListener method is null safe

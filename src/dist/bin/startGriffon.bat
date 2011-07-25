@@ -203,12 +203,15 @@ set STARTER_CONF=%GRIFFON_HOME%\conf\groovy-starter.conf
 set JAVA_EXE=%JAVA_HOME%\bin\java.exe
 set TOOLS_JAR=%JAVA_HOME%\lib\tools.jar
 
+set STACKTRACE_FILTERS="groovy., org.codehaus.groovy., java., javax., sun., gjdk.groovy., gant., org.codehaus.gant."
+
 if "%JAVA_OPTS%" == "" set JAVA_OPTS="-Xmx512m"
 set JAVA_OPTS=%JAVA_OPTS% -Dprogram.name="%PROGNAME%"
 set JAVA_OPTS=%JAVA_OPTS% -Dgriffon.home="%GRIFFON_HOME%"
 set JAVA_OPTS=%JAVA_OPTS% -Dbase.dir="."
 set JAVA_OPTS=%JAVA_OPTS% -Dtools.jar="%TOOLS_JAR%"
 set JAVA_OPTS=%JAVA_OPTS% -Dgroovy.starter.conf="%STARTER_CONF%"
+set JAVA_OPTS=%JAVA_OPTS% -Dgroovy.sanitized.stacktraces="%STACKTRACE_FILTERS%"
 
 if exist "%USERPROFILE%/.groovy/postinit.bat" call "%USERPROFILE%/.groovy/postinit.bat"
 

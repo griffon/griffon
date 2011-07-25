@@ -232,6 +232,8 @@ STARTER_MAIN_CLASS=org.codehaus.griffon.cli.support.GriffonStarter
 
 lateInit
 
+STACKTRACE_FILTERS="groovy., org.codehaus.groovy., java., javax., sun., gjdk.groovy., gant., org.codehaus.gant."
+
 startGriffon() {
   CLASS=$1
   shift
@@ -248,6 +250,7 @@ startGriffon() {
           -Dgriffon.home="$GRIFFON_HOME" \
           -Dbase.dir="." \
           -Dtools.jar="$TOOLS_JAR" \
+          -Dgroovy.sanitized.stacktraces="$STACKTRACE_FILTERS" \
           $STARTER_MAIN_CLASS \
           --main $CLASS \
           --conf "$GROOVY_CONF" \
@@ -260,6 +263,7 @@ startGriffon() {
           -Dgriffon.home="$GRIFFON_HOME" \
           -Dbase.dir="." \
           -Dtools.jar="$TOOLS_JAR" \
+          -Dgroovy.sanitized.stacktraces="$STACKTRACE_FILTERS" \
           $STARTER_MAIN_CLASS \
           --main $CLASS \
           --conf "$GROOVY_CONF" \

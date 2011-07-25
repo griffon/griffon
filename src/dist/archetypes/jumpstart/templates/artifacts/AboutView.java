@@ -14,7 +14,7 @@ import java.awt.*;
 import java.util.Map;
 
 import net.miginfocom.swing.MigLayout;
-
+import griffon.plugins.actions.ActionManager;
 import static griffon.swing.SwingAction.action;
 
 public class AboutView extends AbstractDialogView {
@@ -23,20 +23,17 @@ public class AboutView extends AbstractDialogView {
         Action creditsAction = null;
         Action licenseAction = null;
 
-        Action closeAction = action(message("application.action.Close.name", "Close"))
+        Action hideAction = action(ActionManager.getInstance().actionFor(controller, "hideAction"))
+                .withName(message("application.action.Close.name", "Close"))
                 .withMnemonic(message("application.action.Close.mnemonic", "C"))
-                .withShortDescription(message("application.action.Close.name", "Close"))
-                .withRunnable(new RunnableWithArgs() {
-                    public void run(Object[] args) {
-                        controller.hide();
-                    }
-                }).build();
+                .withShortDescription(message("application.action.Close.short_description", "Close"))
+                .build();
 
         if (aboutModel().isIncludeCredits()) {
             spanCount++;
             creditsAction = action(message("application.action.Credits.name", "Credits"))
                     .withMnemonic(message("application.action.Credits.mnemonic", "R"))
-                    .withShortDescription(message("application.action.Credits.name", "Credits"))
+                    .withShortDescription(message("application.action.Credits.short_description", "Credits"))
                     .withRunnable(new RunnableWithArgs() {
                         public void run(Object[] args) {
                             withMVCGroup("credits", new MVCClosure<CreditsModel, CreditsView, DialogController>() {
@@ -54,7 +51,7 @@ public class AboutView extends AbstractDialogView {
             spanCount++;
             licenseAction = action(message("application.action.License.name", "License"))
                     .withMnemonic(message("application.action.License.mnemonic", "R"))
-                    .withShortDescription(message("application.action.License.name", "License"))
+                    .withShortDescription(message("application.action.License.short_description", "License"))
                     .withRunnable(new RunnableWithArgs() {
                         public void run(Object[] args) {
                             withMVCGroup("license", new MVCClosure<LicenseModel, LicenseView, DialogController>() {
@@ -118,11 +115,11 @@ public class AboutView extends AbstractDialogView {
         if (aboutModel().isIncludeLicense()) {
             panel.add(new JButton(licenseAction), aboutModel().isIncludeCredits() ? "center" : "left");
         }
-        panel.add(new JButton(closeAction), "right");
+        panel.add(new JButton(hideAction), "right");
 
         String actionKey = "CloseAction";
         panel.getInputMap(JComponent.WHEN_FOCUSED).put(KeyStroke.getKeyStroke("ESCAPE"), actionKey);
-        panel.getActionMap().put(actionKey, closeAction);
+        panel.getActionMap().put(actionKey, hideAction);
 
         return panel;
     }

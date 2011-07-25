@@ -651,10 +651,15 @@ public class GriffonScriptRunner {
     }
 
     private int executeWithGantInstance(Gant gant, GantBinding binding) {
-        removePrintHooks(binding);
-        gant.prepareTargets();
-        // Invoke the default target.
-        return gant.executeTargets().intValue();
+        try {
+            removePrintHooks(binding);
+            gant.prepareTargets();
+            // Invoke the default target.
+            return gant.executeTargets().intValue();
+        } catch (RuntimeException e) {
+            GriffonExceptionHandler.sanitize(e).printStackTrace();
+            return 1;
+        }
     }
 
     private boolean isGriffonProject() {

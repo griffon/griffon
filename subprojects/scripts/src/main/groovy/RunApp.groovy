@@ -77,7 +77,7 @@ target('runApp': "Runs the application from the command line") {
     }
     if (isMacOSX) {
         javaOpts << "-Xdock:name=${GriffonNameUtils.capitalize(griffonAppName)}"
-        javaOpts << "-Xdock:icon=${griffonHome}/media/griffon.icns"
+        javaOpts << "-Xdock:icon=${resolveApplicationIcnsFile().absolutePath}"
     }
 
     debug("Running JVM options:")

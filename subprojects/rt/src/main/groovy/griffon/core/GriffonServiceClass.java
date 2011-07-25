@@ -12,25 +12,30 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- */ 
+ */
 package griffon.core;
 
 /**
  * Represents a Service class in Griffon.<p>
  *
  * @author Andres Almiray
- *
  * @since 0.9.1
  */
 public interface GriffonServiceClass extends GriffonClass {
-    /** "service" */
+    /**
+     * "service"
+     */
     String TYPE = "service";
-    /** "Service" */
+    /**
+     * "Service"
+     */
     String TRAILING = "Service";
 
     /**
      * Matches all public methods and all properties that
      * have a Closure as value.<p>
+     *
+     * @return an array containing the names of all service methods.
      */
     String[] getServiceNames();
 
@@ -38,6 +43,8 @@ public interface GriffonServiceClass extends GriffonClass {
      * Matches all public methods and closure properties whose name
      * matches the event handler convention, i.e, starts with "on" and
      * is followed by at least one uppercase character.<p>
+     *
+     * @return an array containing the names of all event handlers.
      */
     String[] getEventNames();
 }

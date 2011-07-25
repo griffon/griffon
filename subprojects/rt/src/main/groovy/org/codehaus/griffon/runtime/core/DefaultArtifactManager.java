@@ -42,7 +42,7 @@ public class DefaultArtifactManager extends AbstractArtifactManager {
         super(app);
     }
 
-    public Map<String, List<ArtifactInfo>> doLoadArtifactMetadata() {
+    protected Map<String, List<ArtifactInfo>> doLoadArtifactMetadata() {
         Map<String, List<ArtifactInfo>> artifacts = new LinkedHashMap<String, List<ArtifactInfo>>();
         try {
             Enumeration<URL> urls = getApp().getClass().getClassLoader().getResources("META-INF/griffon-artifacts.properties");

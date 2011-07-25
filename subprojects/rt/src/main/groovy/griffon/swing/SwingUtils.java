@@ -23,8 +23,8 @@ import java.awt.image.BufferedImage;
 
 import static griffon.util.GriffonApplicationUtils.isJdk16;
 import static griffon.util.GriffonApplicationUtils.isJdk17;
-import static griffon.util.GriffonClassUtils.invokeExactInstanceMethod;
-import static griffon.util.GriffonClassUtils.invokeExactStaticMethod;
+import static griffon.util.GriffonClassUtils.invokeInstanceMethod;
+import static griffon.util.GriffonClassUtils.invokeStaticMethod;
 import static griffon.util.GriffonNameUtils.isBlank;
 
 /**
@@ -119,8 +119,7 @@ public class SwingUtils {
         } else if (isJdk16()) {
             Class awtUtilities = loadClass("com.sun.awt.AWTUtilities");
             Class translucency = loadClass("com.sun.awt.AWTUtilities$Translucency");
-            Boolean bool = (Boolean) invokeExactStaticMethod(awtUtilities, "isTranslucencySupported", Enum.valueOf(translucency, "TRANSLUCENT"));
-            return bool.booleanValue();
+            return (Boolean) invokeStaticMethod(awtUtilities, "isTranslucencySupported", Enum.valueOf(translucency, "TRANSLUCENT"));
         }
         return false;
     }
@@ -134,10 +133,10 @@ public class SwingUtils {
     public static float getWindowOpacity(Window window) {
         Float value = 1.0f;
         if (isJdk17()) {
-            value = (Float) invokeExactInstanceMethod(window, "getOpacity");
+            value = (Float) invokeInstanceMethod(window, "getOpacity");
         } else if (isJdk16()) {
             Class awtUtilities = loadClass("com.sun.awt.AWTUtilities");
-            value = (Float) invokeExactStaticMethod(awtUtilities, "getWindowOpacity", window);
+            value = (Float) invokeStaticMethod(awtUtilities, "getWindowOpacity", window);
         }
         return value;
     }
@@ -150,10 +149,10 @@ public class SwingUtils {
      */
     public static void setWindowOpacity(Window window, float opacity) {
         if (isJdk17()) {
-            invokeExactInstanceMethod(window, "setOpacity", opacity);
+            invokeInstanceMethod(window, "setOpacity", opacity);
         } else if (isJdk16()) {
             Class awtUtilities = loadClass("com.sun.awt.AWTUtilities");
-            invokeExactStaticMethod(awtUtilities, "setWindowOpacity", window, opacity);
+            invokeStaticMethod(awtUtilities, "setWindowOpacity", window, opacity);
         }
     }
 
@@ -184,7 +183,7 @@ public class SwingUtils {
     }
 
     /**
-     * Takes a snaphot of the target component.
+     * Takes a snapshot of the target component.
      *
      * @param component the component to draw
      * @return a Graphics compatible image of the component
@@ -194,7 +193,7 @@ public class SwingUtils {
     }
 
     /**
-     * Takes a snaphot of the target component.
+     * Takes a snapshot of the target component.
      *
      * @param component the component to draw
      * @param usePrint  whether <tt>print()</tt> or <tt>paint()</tt> is used to grab the snapshot

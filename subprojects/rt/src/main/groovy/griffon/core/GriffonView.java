@@ -21,7 +21,6 @@ import groovy.util.FactoryBuilderSupport;
  * Identifies a View artifact.
  *
  * @author Andres Almiray
- *
  * @since 0.9.1
  */
 public interface GriffonView extends GriffonMvcArtifact {
@@ -31,7 +30,7 @@ public interface GriffonView extends GriffonMvcArtifact {
      * however they can opt out and build the UI by other means.
      *
      * @param builder the builder instance that belongs to the same MVC group
-     * as this View.
+     *                as this View.
      */
     void setBuilder(FactoryBuilderSupport builder);
 }

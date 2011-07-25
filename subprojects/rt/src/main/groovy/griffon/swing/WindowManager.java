@@ -20,33 +20,35 @@ import griffon.core.GriffonApplication;
 import griffon.core.ShutdownHandler;
 import griffon.util.GriffonNameUtils;
 import groovy.util.ConfigObject;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.awt.*;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
+
+import static java.util.Arrays.asList;
 
 /**
  * Controls a set of windows that belong to the application.<p>
  * Windows that are controlled by a WindowManager can be shown/hidden
  * using a custom strategy ({@code WindowDisplayHandler})
  *
- * @see griffon.swing.WindowDisplayHandler
- *
  * @author Andres Almiray
+ * @see griffon.swing.WindowDisplayHandler
  * @since 0.3.1
  */
 public final class WindowManager implements ShutdownHandler {
+    private static final Logger LOG = LoggerFactory.getLogger(WindowManager.class);
     private final SwingGriffonApplication app;
     private final WindowHelper windowHelper = new WindowHelper();
     private final ComponentHelper componentHelper = new ComponentHelper();
     private final List<Window> windows = new CopyOnWriteArrayList<Window>();
-
     private boolean hideBeforeHandler = false;
 
     /**
@@ -65,9 +67,9 @@ public final class WindowManager implements ShutdownHandler {
      * @return a Window if a match is found, null otherwise.
      */
     public Window findWindow(String name) {
-        if(!GriffonNameUtils.isBlank(name)) {
-            for(Window window : windows) {
-                if(name.equals(window.getName())) return window;
+        if (!GriffonNameUtils.isBlank(name)) {
+            for (Window window : windows) {
+                if (name.equals(window.getName())) return window;
             }
         }
         return null;
@@ -79,8 +81,8 @@ public final class WindowManager implements ShutdownHandler {
      *
      * @param index the index of the Window to be retrieved
      * @return the Window found at the specified index
-     * @throws IndexArrayOutOfBoundsException if the index is invalid (below 0 or greater than the size
-     *         of the managed windows list)
+     * @throws ArrayIndexOutOfBoundsException if the index is invalid (below 0 or greater than the size
+     *                                        of the managed windows list)
      */
     public Window getAt(int index) {
         return windows.get(index);
@@ -88,31 +90,50 @@ public final class WindowManager implements ShutdownHandler {
 
     /**
      * Finds the Window that should be displayed during the Ready phase of an application.<p>
-     * The WindowManager expects a configuration flag <code>swing.windowManager.startingWindow</code>. If it's not 
+     * The WindowManager expects a configuration flag <code>swing.windowManager.startingWindow</code>. If it's not
      * present in order to determine which Window will be displayed during the Ready phase. If no configuration
-     * found then the WindowManmager will pick the first Window found in the list of managed windows.<p>
+     * found then the WindowManager will pick the first Window found in the list of managed windows.<p>
      * The configuration flag accepts two value types:<ul>
      * <li>a String that defines the name of the Window. You must make sure the Window has a matching name property.</li>
      * <li>a Number that defines the index of the Window in the list of managed windows.</li>
      * </ul>
      *
-     * @return a Window that matches the given criteria or null if no match is found. 
+     * @return a Window that matches the given criteria or null if no match is found.
      */
     public Window getStartingWindow() {
-        Object value = fetchConfigProperty(fetchConfigProperty(app.getConfig(), "swing"), "windowManager").getProperty("startingWindow");
-        if(value instanceof ConfigObject) {
-            if(windows.size() > 0) return windows.get(0);
-        } else if(value instanceof String) {
-            return findWindow((String) value);
-        } else if(value instanceof Number) {
-            int index = ((Number)value).intValue();
-            if(index >= 0 && index < windows.size()) return windows.get(index);
+        Window window = null;
+        Object value = app.getConfigValue("swing.windowManager.startingWindow");
+        if (LOG.isDebugEnabled()) {
+            LOG.debug("swing.windowManager.startingWindow configured to " + value);
         }
-        return null;
-    }
+        if (value == null || value instanceof ConfigObject) {
+            if (windows.size() > 0) {
+                if (LOG.isDebugEnabled()) {
+                    LOG.debug("No startingWindow configured, selecting the first one in the list of windows");
+                }
+                window = windows.get(0);
+            }
+        } else if (value instanceof String) {
+            String windowName = (String) value;
+            if (LOG.isDebugEnabled()) {
+                LOG.debug("Selecting window " + windowName + " as starting window");
+            }
+            window = findWindow(windowName);
+        } else if (value instanceof Number) {
+            int index = ((Number) value).intValue();
+            if (index >= 0 && index < windows.size()) {
+                if (LOG.isDebugEnabled()) {
+                    LOG.debug("Selecting window at index " + index + " as starting window");
+                }
+                window = windows.get(index);
+            }
+        }
 
-    private static ConfigObject fetchConfigProperty(ConfigObject parent, String property) {
-        return (ConfigObject) parent.getProperty(property);
+        if (LOG.isDebugEnabled()) {
+            LOG.debug("Starting Window is " + window);
+        }
+
+        return window;
     }
 
     /**
@@ -131,10 +152,13 @@ public final class WindowManager implements ShutdownHandler {
      * @param window the window to be added to the list of managed windows
      */
     public void attach(Window window) {
-         if(window == null || windows.contains(window)) return;
-         window.addWindowListener(windowHelper);
-         window.addComponentListener(componentHelper);
-         windows.add(window);
+        if (window == null || windows.contains(window)) return;
+        window.addWindowListener(windowHelper);
+        window.addComponentListener(componentHelper);
+        if (LOG.isDebugEnabled()) {
+            LOG.debug("Attaching window with name: '" + window.getName() + "' at index " + windows.size() + " " + window);
+        }
+        windows.add(window);
     }
 
     /**
@@ -144,10 +168,13 @@ public final class WindowManager implements ShutdownHandler {
      * @param window the window to be removed
      */
     public void detach(Window window) {
-        if(window == null) return;
-        if(windows.contains(window)) {
+        if (window == null) return;
+        if (windows.contains(window)) {
             window.removeWindowListener(windowHelper);
             window.removeComponentListener(componentHelper);
+            if (LOG.isDebugEnabled()) {
+                LOG.debug("Detaching window with name: '" + window.getName() + "' at index " + windows.indexOf(window) + " " + window);
+            }
             windows.remove(window);
         }
     }
@@ -159,9 +186,12 @@ public final class WindowManager implements ShutdownHandler {
      * @param window the window to show
      */
     public void show(final Window window) {
-        if(window == null) return;
+        if (window == null) return;
         app.execSync(new Runnable() {
             public void run() {
+                if (LOG.isDebugEnabled()) {
+                    LOG.debug("Showing window with name: '" + window.getName() + "' at index " + windows.indexOf(window) + " " + window);
+                }
                 app.resolveWindowDisplayHandler().show(window, app);
             }
         });
@@ -184,9 +214,12 @@ public final class WindowManager implements ShutdownHandler {
      * @param window the window to hide
      */
     public void hide(final Window window) {
-        if(window == null) return;
+        if (window == null) return;
         app.execSync(new Runnable() {
             public void run() {
+                if (LOG.isDebugEnabled()) {
+                    LOG.debug("Hiding window with name: '" + window.getName() + "' at index " + windows.indexOf(window) + " " + window);
+                }
                 app.resolveWindowDisplayHandler().hide(window, app);
             }
         });
@@ -210,13 +243,14 @@ public final class WindowManager implements ShutdownHandler {
      * Hides all visible windows
      */
     public void onShutdown(GriffonApplication app) {
-        for(Window window : windows) {
-            if(window.isVisible()) hide(window);
+        for (Window window : windows) {
+            if (window.isVisible()) hide(window);
         }
     }
 
     /**
-     * Should the window be hidden before all ShutdownHandlers will be called ?
+     * Should the window be hidden before all ShutdownHandlers be called ?
+     *
      * @return current value
      */
     public boolean isHideBeforeHandler() {
@@ -224,7 +258,8 @@ public final class WindowManager implements ShutdownHandler {
     }
 
     /**
-     * Set if the window should be hidden before all ShutdownHandler will be called.
+     * Set if the window should be hidden before all ShutdownHandler be called.
+     *
      * @param hideBeforeHandler new value
      */
     public void setHideBeforeHandler(boolean hideBeforeHandler) {
@@ -238,19 +273,22 @@ public final class WindowManager implements ShutdownHandler {
      */
     private class WindowHelper extends WindowAdapter {
         public void windowClosing(WindowEvent event) {
-            if(isHideBeforeHandler()) hide(event.getWindow());
-            
-            if(app.getPhase() == ApplicationPhase.SHUTDOWN) return;
+            if (app.getPhase() == ApplicationPhase.SHUTDOWN) return;
             int visibleWindows = 0;
-            for(Window window : windows) {
-                if(window.isVisible()) {
+            for (Window window : windows) {
+                if (window.isVisible()) {
                     visibleWindows++;
                 }
             }
 
+            if (isHideBeforeHandler() || visibleWindows > 1) hide(event.getWindow());
+
             Boolean autoShutdown = (Boolean) app.getConfig().flatten().get("application.autoShutdown");
-            if(visibleWindows <= 1 && autoShutdown != null && autoShutdown.booleanValue()) {
-                if(!app.shutdown()) show(event.getWindow());
+            if (visibleWindows <= 1 && autoShutdown != null && autoShutdown) {
+                if (LOG.isDebugEnabled()) {
+                    LOG.debug("Attempting to shutdown application");
+                }
+                if (!app.shutdown()) show(event.getWindow());
             }
         }
     }
@@ -265,14 +303,14 @@ public final class WindowManager implements ShutdownHandler {
          * Triggers a <tt>WindowShown</tt> event with the window as sole argument
          */
         public void componentShown(ComponentEvent event) {
-            app.event(GriffonApplication.Event.WINDOW_SHOWN.getName(), Arrays.asList(event.getSource()));
+            app.event(GriffonApplication.Event.WINDOW_SHOWN.getName(), asList(event.getSource()));
         }
 
         /**
          * Triggers a <tt>WindowHidden</tt> event with the window as sole argument
          */
         public void componentHidden(ComponentEvent event) {
-            app.event(GriffonApplication.Event.WINDOW_HIDDEN.getName(), Arrays.asList(event.getSource()));
+            app.event(GriffonApplication.Event.WINDOW_HIDDEN.getName(), asList(event.getSource()));
         }
     }
 }

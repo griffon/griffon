@@ -24,6 +24,8 @@ import org.codehaus.griffon.runtime.core.AbstractGriffonApplication;
 import java.awt.*;
 import java.lang.reflect.InvocationTargetException;
 
+import static griffon.util.GriffonExceptionHandler.sanitize;
+
 /**
  * Basic implementation of {@code GriffonApplication} that runs in standalone/webstart mode using Swing.
  *
@@ -130,17 +132,13 @@ public abstract class AbstractSwingGriffonApplication extends AbstractGriffonApp
             app.realize();
             app.show();
         } catch (InstantiationException e) {
-            GriffonExceptionHandler.sanitize(e);
-            e.printStackTrace();
+            sanitize(e).printStackTrace();
         } catch (IllegalAccessException e) {
-            GriffonExceptionHandler.sanitize(e);
-            e.printStackTrace();
+            sanitize(e).printStackTrace();
         } catch (InvocationTargetException e) {
-            GriffonExceptionHandler.sanitize(e);
-            e.printStackTrace();
+            sanitize(e).printStackTrace();
         } catch (NoSuchMethodException e) {
-            GriffonExceptionHandler.sanitize(e);
-            e.printStackTrace();
+            sanitize(e).printStackTrace();
         }
     }
 }
