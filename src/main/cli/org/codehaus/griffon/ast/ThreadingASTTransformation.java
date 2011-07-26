@@ -159,9 +159,16 @@ public class ThreadingASTTransformation extends AbstractASTTransformation {
     public static void handleMethodForInjection(ClassNode classNode, MethodNode method, String threadingMethod) {
         MethodDescriptor md = methodDescriptorFor(method);
         if (GriffonClassUtils.isPlainMethod(md) &&
-                !GriffonClassUtils.isEventHandler(md)) {
+                !GriffonClassUtils.isEventHandler(md) &&
+                hasVoidOrDefAsReturnType(method)) {
             wrapStatements(classNode, method, threadingMethod);
         }
+    }
+
+    private static boolean hasVoidOrDefAsReturnType(MethodNode method) {
+        Class<?> returnType = method.getReturnType().getTypeClass();
+        return returnType.equals(ClassHelper.DYNAMIC_TYPE.getTypeClass()) ||
+                returnType.equals(ClassHelper.VOID_TYPE.getTypeClass());
     }
 
     public static void handlePropertyForInjection(ClassNode classNode, PropertyNode property) {
@@ -278,7 +285,7 @@ public class ThreadingASTTransformation extends AbstractASTTransformation {
         makeVariablesShared(blockScope);
         block.setVariableScope(blockScope);
         ClosureExpression closure = new ClosureExpression(Parameter.EMPTY_ARRAY, code);
-        VariableScope closureScope =  variableScope.copy();
+        VariableScope closureScope = variableScope.copy();
         makeVariablesShared(closureScope);
         closure.setVariableScope(closureScope);
         block.addStatement(stmnt(new MethodCallExpression(uiThreadManagerInstance(), threadingMethod, args(closure))));
@@ -287,7 +294,7 @@ public class ThreadingASTTransformation extends AbstractASTTransformation {
     }
 
     private static void makeVariablesShared(VariableScope scope) {
-        for (Iterator<Variable> vars = scope.getReferencedLocalVariablesIterator(); vars.hasNext();) {
+        for (Iterator<Variable> vars = scope.getReferencedLocalVariablesIterator(); vars.hasNext(); ) {
             Variable var = vars.next();
             var.setClosureSharedVariable(true);
         }
