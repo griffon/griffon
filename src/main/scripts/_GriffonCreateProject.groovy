@@ -95,7 +95,7 @@ resetBaseDirectory = { String basedir ->
 }
 
 target(createPlugin: "The implementation target")  {
-    depends(parseArguments, appName)
+    depends(parseArguments, appName, resolveFileType)
     metadataFile = new File("${basedir}/application.properties")
     projectType = "plugin"
     initProject()

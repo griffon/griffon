@@ -257,7 +257,7 @@ public class ThreadingASTTransformation extends AbstractASTTransformation {
         return code != wrappedCode;
     }
 
-    private static boolean skipInjection(String actionName) {
+    public static boolean skipInjection(String actionName) {
         Map settings = GriffonCompilerContext.getFlattenedBuildSettings();
 
         String keyName = COMPILER_THREADING_KEY + "." + actionName;

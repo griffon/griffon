@@ -250,12 +250,10 @@ target(packagePlugin:"Packages a Griffon plugin") {
         zipfileset(dir: "${projectTargetDir}", includes: "*.jar", prefix: "dist")
         zipfileset(dir: "${projectTargetDir}/docs", prefix: "docs")
 
-        if (isAddonPlugin)  {
             new File(addonJarDir).eachFileMatch(~/.*\.jar/) { addonJar ->
                 zipfileset(dir: addonJarDir, includes: addonJar.name,
                            fullpath: "addon/${addonJar.name}")
             }
-        }
     }
 
     if(plugin.metaClass.hasProperty(plugin, 'pluginIncludes')) {

@@ -37,13 +37,13 @@ import org.codehaus.groovy.transform.GroovyASTTransformation;
  *
  * @author Andres Almiray
  */
-@GroovyASTTransformation(phase= CompilePhase.CANONICALIZATION)
+@GroovyASTTransformation(phase = CompilePhase.CANONICALIZATION)
 public class EventPublisherASTTransformation extends AbstractASTTransformation {
     private static final ClassNode RUNNABLE_WITH_ARGS_CLASS = ClassHelper.makeWithoutCaching(RunnableWithArgs.class);
     private static final ClassNode EVENT_HANDLER_CLASS = ClassHelper.makeWithoutCaching(EventPublisher.class);
 
     protected static ClassNode epClassNode = new ClassNode(griffon.transform.EventPublisher.class);
-    protected static ClassNode erClassNode = new ClassNode(EventRouter.class);
+    protected static ClassNode erClassNode = ClassHelper.make(EventRouter.class);
 
     /**
      * Convenience method to see if an annotated node is {@code @EventPublisher}.
@@ -63,8 +63,8 @@ public class EventPublisherASTTransformation extends AbstractASTTransformation {
     /**
      * Handles the bulk of the processing, mostly delegating to other methods.
      *
-     * @param nodes   the ast nodes
-     * @param source  the source unit for the nodes
+     * @param nodes  the ast nodes
+     * @param source the source unit for the nodes
      */
     public void visit(ASTNode[] nodes, SourceUnit source) {
         if (!(nodes[0] instanceof AnnotationNode) || !(nodes[1] instanceof ClassNode)) {
@@ -95,13 +95,13 @@ public class EventPublisherASTTransformation extends AbstractASTTransformation {
      * must be defined or a compilation error results.
      *
      * @param declaringClass the class to search
-     * @param sourceUnit the source unit, for error reporting. {@code @NotNull}.
+     * @param sourceUnit     the source unit, for error reporting. {@code @NotNull}.
      * @return true if property change support should be added
      */
     protected static boolean needsEventRouter(ClassNode declaringClass, SourceUnit sourceUnit) {
         boolean foundAdd = false, foundRemove = false, foundPublish = false;
         ClassNode consideredClass = declaringClass;
-        while (consideredClass!= null) {
+        while (consideredClass != null) {
             for (MethodNode method : consideredClass.getMethods()) {
                 // just check length, MOP will match it up
                 foundAdd = foundAdd || method.getName().equals("addEventListener") && method.getParameters().length == 1;
@@ -122,10 +122,10 @@ public class EventPublisherASTTransformation extends AbstractASTTransformation {
         }
         if (foundAdd || foundRemove || foundPublish) {
             sourceUnit.getErrorCollector().addErrorAndContinue(
-                new SimpleMessage("@EventPublisher cannot be processed on "
-                    + declaringClass.getName()
-                    + " because some but not all of addEventListener, removeEventListener, publishEvent, publishEventAsync and publishEventOutside were declared in the current class or super classes.",
-                sourceUnit)
+                    new SimpleMessage("@EventPublisher cannot be processed on "
+                            + declaringClass.getName()
+                            + " because some but not all of addEventListener, removeEventListener, publishEvent, publishEventAsync and publishEventOutside were declared in the current class or super classes.",
+                            sourceUnit)
             );
             return false;
         }
@@ -153,8 +153,6 @@ public class EventPublisherASTTransformation extends AbstractASTTransformation {
      */
     protected static void addEventRouter(ClassNode declaringClass) {
         declaringClass.addInterface(EVENT_HANDLER_CLASS);
-
-        ClassNode erClassNode = ClassHelper.make(EventRouter.class);
 
         // add field:
         // protected final EventRouter this$eventRouter = new org.codehaus.griffon.runtime.core.EventRouter()
