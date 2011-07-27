@@ -26,6 +26,9 @@ import org.codehaus.groovy.control.SourceUnit;
 import org.codehaus.groovy.control.messages.SimpleMessage;
 import org.codehaus.groovy.transform.GroovyASTTransformation;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import static org.codehaus.griffon.ast.GriffonASTUtils.*;
 
 /**
@@ -40,6 +43,7 @@ import static org.codehaus.griffon.ast.GriffonASTUtils.*;
  */
 @GroovyASTTransformation(phase = CompilePhase.CANONICALIZATION)
 public class EventPublisherASTTransformation extends AbstractASTTransformation {
+    private static final Logger LOG = LoggerFactory.getLogger(EventPublisherASTTransformation.class);
     private static final ClassNode RUNNABLE_WITH_ARGS_CLASS = ClassHelper.makeWithoutCaching(RunnableWithArgs.class);
     private static final ClassNode EVENT_HANDLER_CLASS = ClassHelper.makeWithoutCaching(EventPublisher.class);
     private static final ClassNode EVENT_PUBLISHER_CLASS = ClassHelper.makeWithoutCaching(griffon.transform.EventPublisher.class);
@@ -73,6 +77,9 @@ public class EventPublisherASTTransformation extends AbstractASTTransformation {
 
     public static void addEventRouterToClass(SourceUnit source, ClassNode classNode) {
         if (needsEventRouter(classNode, source)) {
+            if(LOG.isDebugEnabled()) {
+                LOG.debug("Injecting "+ EventPublisher.class.getName() +" into "+ classNode.getName());
+            }
             addEventRouter(classNode);
         }
     }

@@ -37,7 +37,7 @@ import static org.codehaus.griffon.ast.GriffonASTUtils.*;
  */
 @GroovyASTTransformation(phase = CompilePhase.CANONICALIZATION)
 public class MVCAwareASTTransformation extends AbstractASTTransformation {
-    private static final Logger LOG = LoggerFactory.getLogger(ThreadingASTTransformation.class);
+    private static final Logger LOG = LoggerFactory.getLogger(MVCAwareASTTransformation.class);
 
     private static ClassNode MY_TYPE = ClassHelper.makeWithoutCaching(MVCAware.class);
     private static ClassNode MVC_HANDLER_TYPE = ClassHelper.makeWithoutCaching(MVCHandler.class);
@@ -78,6 +78,9 @@ public class MVCAwareASTTransformation extends AbstractASTTransformation {
 
         ClassNode classNode = (ClassNode) nodes[1];
         if (!classNode.implementsInterface(MVC_HANDLER_TYPE)) {
+            if(LOG.isDebugEnabled()) {
+                LOG.debug("Injecting "+ MVCHandler.class.getName() +" into "+ classNode.getName());
+            }
             apply(classNode);
         }
     }
