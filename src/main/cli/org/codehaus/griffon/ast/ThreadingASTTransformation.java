@@ -52,7 +52,7 @@ import static org.codehaus.griffon.ast.GriffonASTUtils.*;
 public class ThreadingASTTransformation extends AbstractASTTransformation {
     private static final Logger LOG = LoggerFactory.getLogger(ThreadingASTTransformation.class);
 
-    private static ClassNode MY_TYPE = new ClassNode(Threading.class);
+    private static ClassNode MY_TYPE = ClassHelper.makeWithoutCaching(Threading.class);
     private static ClassNode UITHREAD_MANAGER_CLASS = ClassHelper.makeWithoutCaching(UIThreadManager.class);
     private static final String COMPILER_THREADING_KEY = "compiler.threading";
 

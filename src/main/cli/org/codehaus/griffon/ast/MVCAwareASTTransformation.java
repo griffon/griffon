@@ -39,7 +39,7 @@ import static org.codehaus.griffon.ast.GriffonASTUtils.*;
 public class MVCAwareASTTransformation extends AbstractASTTransformation {
     private static final Logger LOG = LoggerFactory.getLogger(ThreadingASTTransformation.class);
 
-    private static ClassNode MY_TYPE = new ClassNode(MVCAware.class);
+    private static ClassNode MY_TYPE = ClassHelper.makeWithoutCaching(MVCAware.class);
     private static ClassNode MVC_HANDLER_TYPE = ClassHelper.makeWithoutCaching(MVCHandler.class);
     private static final ClassNode GAH_CLASS = ClassHelper.makeWithoutCaching(GriffonApplicationHelper.class);
     private static final ClassNode MVCCLOSURE_CLASS = ClassHelper.makeWithoutCaching(MVCClosure.class);
