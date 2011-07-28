@@ -67,7 +67,10 @@ public class PropertyListenerASTTransformation extends AbstractASTTransformation
      * @param source  the source unit for the nodes
      */
     public void visit(ASTNode[] nodes, SourceUnit source) {
-        checkNodesForAnnotationAndType(nodes[0], nodes[1]);
+        if (!(nodes[0] instanceof AnnotationNode) || !(nodes[1] instanceof AnnotatedNode)) {
+            throw new RuntimeException("Internal error: wrong types: "+ nodes[0].getClass() +" / "+ nodes[1].getClass());
+        }
+
         AnnotationNode annotation = (AnnotationNode) nodes[0];
         AnnotatedNode parent = (AnnotatedNode) nodes[1];
 
