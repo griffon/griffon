@@ -12,6 +12,10 @@
     // }
 
     /*
+        Remember that actions will be called outside of the UI thread
+        by default. You can change this setting of course.
+        Please read chapter 9 of the Griffon Guide to know more.
+       
     def action = { evt = null ->
     }
     */

@@ -6,6 +6,7 @@ import griffon.swing.SwingGriffonApplication;
 import org.codehaus.griffon.runtime.core.AbstractGriffonView;
 
 public class @artifact.name@ extends AbstractGriffonView {
+    // these will be injected by Griffon
     private @artifact.name.plain@Controller controller;
     private @artifact.name.plain@Model model;
 
