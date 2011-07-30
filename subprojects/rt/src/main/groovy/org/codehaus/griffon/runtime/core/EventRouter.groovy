@@ -29,6 +29,7 @@ import static griffon.util.GriffonNameUtils.capitalize
  * <li>a <tt>Script</tt></li>
  * <li>a <tt>Map</tt></li>
  * <li>a <tt>Closure</tt></li>
+ * <li>a <tt>RunnableWithArgs</tt></li>
  * <li>a <tt>Object</tt> (a Java bean)</li>
  * </ul>
  *

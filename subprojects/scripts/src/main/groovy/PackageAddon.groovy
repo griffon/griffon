@@ -26,21 +26,19 @@ _package_addon_called = true
 
 includeTargets << griffonScript("_GriffonPackage")
 
-target ('default': "Packages a Griffon addon. Note: to package a plugin use 'griffon package-plugin'") {
+target('default': "Packages a Griffon addon. Note: to package a plugin use 'griffon package-plugin'") {
     packageAddon()
 }
 
-target ('packageAddon': "Packages a Griffon addon. Note: to package a plugin use 'griffon package-plugin'") {
+target('packageAddon': "Packages a Griffon addon. Note: to package a plugin use 'griffon package-plugin'") {
     depends(checkVersion, createStructure, pluginConfig)
-
-    if (!isAddonPlugin) return;
 
     try {
         profile("compile") {
             compile()
         }
-    } catch(Exception e) {
-        logError("Compilation error",e)
+    } catch (Exception e) {
+        logError("Compilation error", e)
         exit(1)
     }
     profile("creating config") {
@@ -48,32 +46,35 @@ target ('packageAddon': "Packages a Griffon addon. Note: to package a plugin use
     }
 
     addonJarDir = ant.antProject.replaceProperties(buildConfig.griffon.jars.destDir ?: "target/addon")
-    ant.mkdir(dir:addonJarDir)
-    packageResources()
+    ant.mkdir(dir: addonJarDir)
 
-    File metainfDirPath = new File("${basedir}/griffon-app/conf/metainf")
-    addonJarName = ( buildConfig.griffon?.jars?.jarName
-        ? "${buildConfig.griffon.jars.jarName}"
-        : "griffon-${pluginName}-addon-${plugin.version}.jar" )
-    ant.jar(destfile:"$addonJarDir/$addonJarName") {
-        fileset(dir:classesDirPath) {
-            exclude(name:'Config*.class')
-            exclude(name:'BuildConfig*.class')
-            exclude(name:'*GriffonPlugin*.class')
-            exclude(name:'application.properties')
-        }
-        fileset(dir:i18nDir)
-        fileset(dir:resourcesDir)
-
-        if(metainfDirPath.list()) {
-            metainf(dir: metainfDirPath)
+    cliJarName = "griffon-${pluginName}-cli-${plugin.version}.jar"
+    if (cliSourceDir.exists()) {
+        ant.jar(destfile: "$addonJarDir/$cliJarName") {
+            fileset(dir: cliClassesDir)
         }
     }
 
-    cliJarName = "griffon-${pluginName}-cli-${plugin.version}.jar"
-    if(cliSourceDir.exists()) {
-        ant.jar(destfile: "$addonJarDir/$cliJarName") {
-            fileset(dir: cliClassesDir)
+    if (!isAddonPlugin) return;
+
+    packageResources()
+
+    File metainfDirPath = new File("${basedir}/griffon-app/conf/metainf")
+    addonJarName = (buildConfig.griffon?.jars?.jarName
+    ? "${buildConfig.griffon.jars.jarName}"
+    : "griffon-${pluginName}-addon-${plugin.version}.jar")
+    ant.jar(destfile: "$addonJarDir/$addonJarName") {
+        fileset(dir: classesDirPath) {
+            exclude(name: 'Config*.class')
+            exclude(name: 'BuildConfig*.class')
+            exclude(name: '*GriffonPlugin*.class')
+            exclude(name: 'application.properties')
+        }
+        fileset(dir: i18nDir)
+        fileset(dir: resourcesDir)
+
+        if (metainfDirPath.list()) {
+            metainf(dir: metainfDirPath)
         }
     }
 }

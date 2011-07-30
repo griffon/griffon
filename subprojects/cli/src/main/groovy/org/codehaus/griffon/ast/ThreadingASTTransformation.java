@@ -52,7 +52,7 @@ import static org.codehaus.griffon.ast.GriffonASTUtils.*;
 public class ThreadingASTTransformation extends AbstractASTTransformation {
     private static final Logger LOG = LoggerFactory.getLogger(ThreadingASTTransformation.class);
 
-    private static ClassNode MY_TYPE = new ClassNode(Threading.class);
+    private static ClassNode MY_TYPE = ClassHelper.makeWithoutCaching(Threading.class);
     private static ClassNode UITHREAD_MANAGER_CLASS = ClassHelper.makeWithoutCaching(UIThreadManager.class);
     private static final String COMPILER_THREADING_KEY = "compiler.threading";
 
@@ -159,9 +159,16 @@ public class ThreadingASTTransformation extends AbstractASTTransformation {
     public static void handleMethodForInjection(ClassNode classNode, MethodNode method, String threadingMethod) {
         MethodDescriptor md = methodDescriptorFor(method);
         if (GriffonClassUtils.isPlainMethod(md) &&
-                !GriffonClassUtils.isEventHandler(md)) {
+                !GriffonClassUtils.isEventHandler(md) &&
+                hasVoidOrDefAsReturnType(method)) {
             wrapStatements(classNode, method, threadingMethod);
         }
+    }
+
+    private static boolean hasVoidOrDefAsReturnType(MethodNode method) {
+        Class<?> returnType = method.getReturnType().getTypeClass();
+        return returnType.equals(ClassHelper.DYNAMIC_TYPE.getTypeClass()) ||
+                returnType.equals(ClassHelper.VOID_TYPE.getTypeClass());
     }
 
     public static void handlePropertyForInjection(ClassNode classNode, PropertyNode property) {
@@ -250,7 +257,7 @@ public class ThreadingASTTransformation extends AbstractASTTransformation {
         return code != wrappedCode;
     }
 
-    private static boolean skipInjection(String actionName) {
+    public static boolean skipInjection(String actionName) {
         Map settings = GriffonCompilerContext.getFlattenedBuildSettings();
 
         String keyName = COMPILER_THREADING_KEY + "." + actionName;
@@ -278,7 +285,7 @@ public class ThreadingASTTransformation extends AbstractASTTransformation {
         makeVariablesShared(blockScope);
         block.setVariableScope(blockScope);
         ClosureExpression closure = new ClosureExpression(Parameter.EMPTY_ARRAY, code);
-        VariableScope closureScope =  variableScope.copy();
+        VariableScope closureScope = variableScope.copy();
         makeVariablesShared(closureScope);
         closure.setVariableScope(closureScope);
         block.addStatement(stmnt(new MethodCallExpression(uiThreadManagerInstance(), threadingMethod, args(closure))));
@@ -287,7 +294,7 @@ public class ThreadingASTTransformation extends AbstractASTTransformation {
     }
 
     private static void makeVariablesShared(VariableScope scope) {
-        for (Iterator<Variable> vars = scope.getReferencedLocalVariablesIterator(); vars.hasNext();) {
+        for (Iterator<Variable> vars = scope.getReferencedLocalVariablesIterator(); vars.hasNext(); ) {
             Variable var = vars.next();
             var.setClosureSharedVariable(true);
         }

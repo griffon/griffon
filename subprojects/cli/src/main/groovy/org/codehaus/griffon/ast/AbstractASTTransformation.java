@@ -18,6 +18,7 @@ package org.codehaus.griffon.ast;
 
 import griffon.util.ApplicationHolder;
 import org.codehaus.groovy.ast.ASTNode;
+import org.codehaus.groovy.ast.AnnotationNode;
 import org.codehaus.groovy.ast.ClassHelper;
 import org.codehaus.groovy.ast.ClassNode;
 import org.codehaus.groovy.ast.expr.Expression;
@@ -50,6 +51,12 @@ public abstract class AbstractASTTransformation implements ASTTransformation, Op
         );
     }
 
+    protected void checkNodesForAnnotationAndType(ASTNode node1, ASTNode node2) {
+        if (!(node1 instanceof AnnotationNode) || !(node2 instanceof ClassNode)) {
+            throw new RuntimeException("Internal error: wrong types: "+ node1.getClass() +" / "+ node2.getClass());
+        }
+    }
+    
     public static Expression emptyMap() {
         return call(COLLECTIONS_CLASS, "emptyMap", NO_ARGS);
     }

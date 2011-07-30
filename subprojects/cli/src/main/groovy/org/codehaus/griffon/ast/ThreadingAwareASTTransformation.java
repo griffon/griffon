@@ -29,6 +29,9 @@ import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Future;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import static org.codehaus.griffon.ast.GriffonASTUtils.*;
 
 /**
@@ -38,6 +41,7 @@ import static org.codehaus.griffon.ast.GriffonASTUtils.*;
  */
 @GroovyASTTransformation(phase = CompilePhase.CANONICALIZATION)
 public class ThreadingAwareASTTransformation extends AbstractASTTransformation {
+    private static final Logger LOG = LoggerFactory.getLogger(ThreadingAwareASTTransformation.class);
 
     private static ClassNode MY_TYPE = new ClassNode(ThreadingAware.class);
     private static ClassNode THREADING_HANDLER_TYPE = ClassHelper.makeWithoutCaching(ThreadingHandler.class);
@@ -73,12 +77,13 @@ public class ThreadingAwareASTTransformation extends AbstractASTTransformation {
      * @param source the source unit for the nodes
      */
     public void visit(ASTNode[] nodes, SourceUnit source) {
-        if (!(nodes[0] instanceof AnnotationNode) || !(nodes[1] instanceof ClassNode)) {
-            throw new RuntimeException("Internal error: wrong types: $node.class / $parent.class");
-        }
+        checkNodesForAnnotationAndType(nodes[0], nodes[1]);
 
         ClassNode classNode = (ClassNode) nodes[1];
         if (!classNode.implementsInterface(THREADING_HANDLER_TYPE)) {
+            if(LOG.isDebugEnabled()) {
+                LOG.debug("Injecting "+ ThreadingHandler.class.getName() +" into "+ classNode.getName());
+            }
             apply(classNode);
         }
     }

@@ -37,9 +37,9 @@ import static org.codehaus.griffon.ast.GriffonASTUtils.*;
  */
 @GroovyASTTransformation(phase = CompilePhase.CANONICALIZATION)
 public class MVCAwareASTTransformation extends AbstractASTTransformation {
-    private static final Logger LOG = LoggerFactory.getLogger(ThreadingASTTransformation.class);
+    private static final Logger LOG = LoggerFactory.getLogger(MVCAwareASTTransformation.class);
 
-    private static ClassNode MY_TYPE = new ClassNode(MVCAware.class);
+    private static ClassNode MY_TYPE = ClassHelper.makeWithoutCaching(MVCAware.class);
     private static ClassNode MVC_HANDLER_TYPE = ClassHelper.makeWithoutCaching(MVCHandler.class);
     private static final ClassNode GAH_CLASS = ClassHelper.makeWithoutCaching(GriffonApplicationHelper.class);
     private static final ClassNode MVCCLOSURE_CLASS = ClassHelper.makeWithoutCaching(MVCClosure.class);
@@ -74,12 +74,13 @@ public class MVCAwareASTTransformation extends AbstractASTTransformation {
      * @param source the source unit for the nodes
      */
     public void visit(ASTNode[] nodes, SourceUnit source) {
-        if (!(nodes[0] instanceof AnnotationNode) || !(nodes[1] instanceof ClassNode)) {
-            throw new RuntimeException("Internal error: wrong types: $node.class / $parent.class");
-        }
+        checkNodesForAnnotationAndType(nodes[0], nodes[1]);
 
         ClassNode classNode = (ClassNode) nodes[1];
         if (!classNode.implementsInterface(MVC_HANDLER_TYPE)) {
+            if(LOG.isDebugEnabled()) {
+                LOG.debug("Injecting "+ MVCHandler.class.getName() +" into "+ classNode.getName());
+            }
             apply(classNode);
         }
     }
