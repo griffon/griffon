@@ -1,8 +1,17 @@
+apply plugin:'groovy'
+
 dependencies{
+	groovy "org.codehaus.groovy:groovy-all:$groovyVersion"
+	
 	compile(project(":griffon-rt")){
 		exclude module: 'com.springsource.org.aopalliance'
 	}
 	compile (project(":griffon-cli")){
 		exclude module: 'com.springsource.org.aopalliance'
 	}
+}
+
+task groovyDocJar(type:Jar){
+	classifier = 'javadoc'
+	from (groovydoc.outputs.files)
 }

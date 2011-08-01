@@ -29,6 +29,10 @@ repositories {
     mavenRepo name: 'JavaNet', urls: 'http://download.java.net/maven/2/'
 }
 
+evaluationDependsOn(':griffon-cli')
+evaluationDependsOn(':griffon-rt')
+evaluationDependsOn(':griffon-scripts')
+
 dependencies{
 	groovy localGroovy() //for api docs generation needed (groovydoc)
     
@@ -47,7 +51,7 @@ dependencies{
 }
 
 subprojects { subproj ->
-	apply plugin:'groovy'
+	apply plugin:'java'
 	apply from:"${rootDir}/gradle/maven.gradle"
 	apply from:"${rootDir}/gradle/codeQuality.gradle"
 	
@@ -62,16 +66,7 @@ subprojects { subproj ->
 	    mavenRepo name: 'Codehaus', urls: 'http://repository.codehaus.org'
 	    mavenRepo name: 'SpringSource', urls: 'http://repository.springsource.com/maven/bundles/release'
 	}
-	
-	dependencies{
-		groovy "org.codehaus.groovy:groovy-all:$groovyVersion"
-	}
-	
-	task groovyDocJar(type:Jar){
-		classifier = 'javadoc'
-		from (groovydoc.outputs.files)
-	}
-	
+
 	manifest {
 	    attributes(
 	        'Built-By': System.properties['user.name'],

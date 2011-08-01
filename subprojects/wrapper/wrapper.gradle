@@ -21,33 +21,34 @@ configurations {
 	runtime.transitive = false
 	compile.transitive = false	
 }
+
 repositories{
 	//replace flat dir repo by gradles' artifactory
 	flatDir(dirs: file("${rootDir}/lib/wrapper"))
 }
+
 dependencies{
 	compile ":gradle-wrapper"
 }
 
-//TODO refactor to use wrapper subproject
-/*task distWrapper(type: Copy, dependsOn: ':jarWrapper') {
-    description = "Creates a wrapper distribution"
-    destinationDir = "$buildDir/distributions/wrapper" as File
-    from("$buildDir/assemble/jars") {
-        include 'griffon-wrapper.jar'
-        into 'wrapper'
-    }
-    from('src/wrapper') {
-        include '*.properties'
-        into 'wrapper'
-        filter(ReplaceTokens, tokens: ['griffon.version': version])
-    }
-    from('src/wrapper/bin') {
-        filter(ReplaceTokens, tokens: ['griffon.version': version])
-    }
+jar.doFirst {
+   from configurations.compile.collect { it.isDirectory() ? it : zipTree(it) }
+}
 
-    doLast {
-        ant.chmod(dir: "$buildDir/distributions/wrapper", includes: 'griffonw', perm: 'ugo+x')
+task dist(type: Zip) {
+    description = "Creates a wrapper distribution"
+    into('wrapper'){
+		from(jar.outputs.files){
+			rename "griffon-wrapper-$version", 'griffon-wrapper'
+		}
+		from('.') {
+	        include '*.properties'
+	        filter(ReplaceTokens, tokens: ['griffon.version': version])
+	    }	
+	}
+	from('bin') {
+        filter(ReplaceTokens, tokens: ['griffon.version': version])
+        fileMode = 0755	
     }
-}*/
+}
 
