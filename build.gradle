@@ -16,6 +16,7 @@
 import org.apache.tools.ant.filters.ReplaceTokens
 
 apply plugin:'base'
+apply from:"${rootDir}/gradle/assemble.gradle"
 
 configurations{
 	runtime {transitive = false}
@@ -53,7 +54,7 @@ dependencies{
 subprojects { subproj ->
 	apply plugin:'java'
 	apply from:"${rootDir}/gradle/maven.gradle"
-	apply from:"${rootDir}/gradle/codeQuality.gradle"
+	//apply from:"${rootDir}/gradle/codeQuality.gradle"
 	
 	sourceCompatibility = '1.5'
 	targetCompatibility = '1.5'
@@ -276,7 +277,6 @@ task tarSource(type: Tar) {
 }
 
 // @todo move apply statements to the top of the build script
-apply from:"${rootDir}/gradle/assemble.gradle"
 
 /*sourceSets {
     scripts {
