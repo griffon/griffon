@@ -21,6 +21,7 @@ import java.util.Enumeration;
 import java.util.Locale;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
+import java.net.URI;
 
 /**
  * @author Hans Dockter
@@ -52,7 +53,7 @@ public class Install {
             tmpZipFile.delete();
             String downloadUrl = urlRoot + "/" + distName + "-" + distVersion + "-" + distClassifier + ".zip";
             System.out.println("Downloading " + downloadUrl);
-            download.download(downloadUrl, tmpZipFile);
+            download.download(new URI(downloadUrl), tmpZipFile);
             tmpZipFile.renameTo(localZipFile);
         }
         if (griffonHomeFile.isDirectory()) {

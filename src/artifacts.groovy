@@ -10,7 +10,13 @@ scripts {
     name = 'Griffon Scripts'
     description = 'Griffon Command Scripts'
 }
+
 resources {
     name = 'Griffon Resources'
     description = 'Griffon Common Resources'
+}
+
+wrapper {
+    name = 'Griffon Wrapper'
+    description = 'Griffon Wrapper'	
 }

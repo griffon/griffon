@@ -24,11 +24,11 @@ configurations {
 
 repositories{
 	//replace flat dir repo by gradles' artifactory
-	flatDir(dirs: file("${rootDir}/lib/wrapper"))
+	//flatDir(dirs: file("${rootDir}/lib/wrapper"))
 }
 
 dependencies{
-	compile ":gradle-wrapper"
+	compile 'org.gradle:gradle-wrapper:1.0-milestone-3'
 }
 
 jar.doFirst {
@@ -37,7 +37,8 @@ jar.doFirst {
 
 task dist(type: Zip) {
     description = "Creates a wrapper distribution"
-    into('wrapper'){
+    classifier = "bin"
+	into('wrapper'){
 		from(jar.outputs.files){
 			rename "griffon-wrapper-$version", 'griffon-wrapper'
 		}

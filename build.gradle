@@ -33,6 +33,7 @@ repositories {
 evaluationDependsOn(':griffon-cli')
 evaluationDependsOn(':griffon-rt')
 evaluationDependsOn(':griffon-scripts')
+evaluationDependsOn(':griffon-wrapper')
 
 dependencies{
 	groovy localGroovy() //for api docs generation needed (groovydoc)
@@ -61,11 +62,11 @@ subprojects { subproj ->
 	group = 'org.codehaus.griffon'
 
 	repositories {
-	    flatDir(dirs: file('lib/wrapper'))
 	    mavenLocal()
 	    mavenCentral()
 	    mavenRepo name: 'Codehaus', urls: 'http://repository.codehaus.org'
 	    mavenRepo name: 'SpringSource', urls: 'http://repository.springsource.com/maven/bundles/release'
+		mavenRepo name: 'Gradle', urls: 'http://gradle.artifactoryonline.com/gradle/libs-releases-local'
 	}
 
 	manifest {

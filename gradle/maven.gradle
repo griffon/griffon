@@ -25,67 +25,7 @@ dependencies {
                  'org.apache.maven:maven-ant-tasks:2.1.0'
 }
 
-/*collectDependencies = { type ->
-    configurations."${type}".allDependencies.grep(ExternalModuleDependency).collect([]) { dependency ->
-        org.apache.maven.model.Dependency mavenDependency = new org.apache.maven.model.Dependency()
-        mavenDependency.groupId = dependency.group
-        mavenDependency.artifactId = dependency.name
-        mavenDependency.version = dependency.version
-        if(dependency.group == 'org.springframework') {
-            mavenDependency.addExclusion(new org.apache.maven.model.Exclusion(
-                groupId: 'commons-logging',
-                artifactId: 'commons-logging'
-            ))
-        } else if(dependency.name == 'gpars') {
-            mavenDependency.addExclusion(new org.apache.maven.model.Exclusion(
-                groupId: 'org.jboss.netty',
-                artifactId: 'netty'
-            ))
-        } else if(dependency.name == 'groovy-all' ||
-                  dependency.name == 'gant_groovy1.7' ||
-                  dependency.name == 'log4j' ||
-                  dependency.name.contains('slf4j')) {
-            mavenDependency.addExclusion(new org.apache.maven.model.Exclusion(
-                groupId: '*',
-                artifactId: '*'
-            ))
-        }
-        mavenDependency
-    }
-}*/
-
 artifactData = new ConfigSlurper().parse(file("${rootProject.rootDir}/src/artifacts.groovy").toURI().toURL())
-artifactData.resources.dependencies = []
-//artifactData.rt.dependencies = collectDependencies('rt')
-
-/*artifactData.cli.dependencies = [
-    new org.apache.maven.model.Dependency(
-        groupId: group,
-        artifactId: 'griffon-rt',
-        version: version
-    )
-] + collectDependencies('cli')
-depsToRemove = artifactData.rt.dependencies.inject([]) { l, d ->
-    if(artifactData.cli.dependencies.find{ it.artifactId == d.artifactId }) {
-        l << d.artifactId
-    }
-    l
-}
-depsToRemove.each { id -> artifactData.cli.dependencies.remove(artifactData.cli.dependencies.find{ it.artifactId == id }) }
-
-artifactData.scripts.dependencies = [
-    new org.apache.maven.model.Dependency(
-        groupId: group,
-        artifactId: 'griffon-cli',
-        version: version,
-    ),
-    new org.apache.maven.model.Dependency(
-        groupId: group,
-        artifactId: 'griffon-resources',
-        version: version,
-    )
-]
-*/
 
 installer = install.repositories.mavenInstaller
 def deployer = null
@@ -124,20 +64,7 @@ uploadArchives {
                         url 'http://www.apache.org/licenses/LICENSE-2.0.txt'
                         distribution 'repo'
                     }
-                }/*
-                distributionManagement {
-                    repository {
-                        id('codehaus.org')
-                        name('Griffon Central Repository')
-                        url('dav:https://dav.codehaus.org/repository/griffon/')
-                    }
-                    snapshotRepository {
-                        uniqueVersion('false')
-                        id('codehaus.org')
-                        name('Griffon Central Development Repository')
-                        url('dav:https://dav.codehaus.org/snapshots.repository/griffon/')
-                    }
-                }*/
+                }
                 repositories {
                     repository {
                         id('codehaus-release')
@@ -156,8 +83,5 @@ uploadArchives {
                     }
                 }
             }
-  			//pom(type).whenConfigured { pom ->
-            //    pom.dependencies = artifactData[type].dependencies
-            //}
-	}
+ 	}
 }
