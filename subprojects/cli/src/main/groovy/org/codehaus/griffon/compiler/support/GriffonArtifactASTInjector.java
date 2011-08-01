@@ -81,7 +81,7 @@ public class GriffonArtifactASTInjector implements ASTInjector {
                     field(_metaClass)
                 ),
                 decls(var("mc", ClassHelper.METACLASS_TYPE), ConstantExpression.NULL),
-                ifsNoReturn(
+                ifs_no_return(
                         iof(THIS, EXPANDO_METACLASS_CLASS),
                         assigns(field(_metaClass), var("mc")),
                         assigns(field(_metaClass), call(ABSTRACT_GRIFFON_ARTIFACT_CLASS, "metaClassOf", args(THIS)))
