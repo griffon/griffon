@@ -29,6 +29,8 @@ ant.taskdef (name: 'groovyc', classname : 'org.codehaus.groovy.ant.Groovyc')
 ant.taskdef (name: 'griffonc', classname : 'org.codehaus.griffon.compiler.GriffonCompiler')
 ant.path(id: "griffon.compile.classpath", compileClasspath)
 
+additionalSources = []
+
 compilerPaths = { String classpathId ->
     def excludedPaths = ["resources", "i18n", "conf"] // conf gets special handling
 
@@ -41,6 +43,11 @@ compilerPaths = { String classpathId ->
 
     def srcMain = new File("${griffonSettings.sourceDir}/main")
     if(srcMain.exists()) src(path: srcMain)
+
+    additionalSources.each { srcPath ->
+        if(new File(srcPath).exists()) src(path: srcPath)
+    }
+
     javac(classpathref:classpathId, encoding:"UTF-8", debug:"yes")
 }
 
@@ -90,7 +97,7 @@ target(compile: "Implementation of compilation phase") {
         String classpathId = "griffon.compile.classpath"
 
         compileSrc = compileSources.curry(classesDirPath)
-
+        event("CompileSourcesStart", [])
         compileSrc(classpathId, compilerPaths.curry(classpathId))
         compileSrc(classpathId) {
             src(path: "${basedir}/griffon-app/conf")
@@ -105,6 +112,7 @@ target(compile: "Implementation of compilation phase") {
             }
         }
         addUrlIfNotPresent classLoader, griffonSettings.pluginClassesDir
+        event("CompileSourcesEnd", [])
 
         // If this is a plugin project, the descriptor is not included
         // in the compiler's source path. So, we manually compile it
