@@ -21,7 +21,7 @@
  *
  */
 
-import org.codehaus.griffon.commons.GriffonClassUtils as GCU
+import griffon.util.GriffonUtil
 
 includeTargets << griffonScript("Init")
 includeTargets << griffonScript("CreateIntegrationTest")
@@ -43,7 +43,7 @@ Type in griffon create-addon then execute this command again."""
     def (pkg, name) = extractArtifactName(argsMap['params'][0])
 
     mvcPackageName = pkg ? pkg : ''
-    mvcClassName = GCU.getClassNameRepresentation(name)
+    mvcClassName = GriffonUtil.getClassNameRepresentation(name)
     mvcFullQualifiedClassName = "${pkg ? pkg : ''}${pkg ? '.' : ''}$mvcClassName"
 
     String modelTemplate      = 'Model'
@@ -85,6 +85,8 @@ Type in griffon create-addon then execute this command again."""
                 name: mvcFullQualifiedClassName,
                 suffix: '')
     }
+
+    name = GriffonUtil.uncapitalize(name)
 
     if (isAddonPlugin) {
         // create mvcGroup in a plugin

@@ -16,8 +16,8 @@
 
 package org.codehaus.griffon.plugins;
 
+import griffon.util.GriffonUtil;
 import griffon.util.BuildScope;
-import org.codehaus.griffon.commons.GriffonClassUtils;
 import org.codehaus.griffon.commons.GriffonContext;
 import org.springframework.core.io.Resource;
 import org.springframework.core.type.filter.TypeFilter;
@@ -78,7 +78,7 @@ public abstract class AbstractGriffonPluginManager implements GriffonPluginManag
     }
 
     public GriffonPlugin getFailedPlugin(String name) {
-        if(name.indexOf('-') > -1) name = GriffonClassUtils.getPropertyNameForLowerCaseHyphenSeparatedName(name);
+        if(name.indexOf('-') > -1) name = GriffonUtil.getPropertyNameForLowerCaseHyphenSeparatedName(name);
         return (GriffonPlugin)this.failedPlugins.get(name);
     }
 
@@ -87,12 +87,12 @@ public abstract class AbstractGriffonPluginManager implements GriffonPluginManag
     }
 
     public GriffonPlugin getGriffonPlugin(String name) {
-        if(name.indexOf('-') > -1) name = GriffonClassUtils.getPropertyNameForLowerCaseHyphenSeparatedName(name);
+        if(name.indexOf('-') > -1) name = GriffonUtil.getPropertyNameForLowerCaseHyphenSeparatedName(name);
         return (GriffonPlugin)this.plugins.get(name);
     }
 
     public GriffonPlugin getGriffonPlugin(String name, Object version) {
-      if(name.indexOf('-') > -1) name = GriffonClassUtils.getPropertyNameForLowerCaseHyphenSeparatedName(name);
+      if(name.indexOf('-') > -1) name = GriffonUtil.getPropertyNameForLowerCaseHyphenSeparatedName(name);
         GriffonPlugin plugin = (GriffonPlugin)this.plugins.get(name);
         if(plugin != null) {
             if(GriffonPluginUtils.isValidVersion(plugin.getVersion(), version.toString()))
@@ -106,7 +106,7 @@ public abstract class AbstractGriffonPluginManager implements GriffonPluginManag
     }
 
     public boolean hasGriffonPlugin(String name) {
-        if(name.indexOf('-') > -1) name = GriffonClassUtils.getPropertyNameForLowerCaseHyphenSeparatedName(name);
+        if(name.indexOf('-') > -1) name = GriffonUtil.getPropertyNameForLowerCaseHyphenSeparatedName(name);
         return this.plugins.containsKey(name);
     }
 

@@ -19,7 +19,6 @@ import griffon.util.GriffonUtil;
 import groovy.lang.GroovyObjectSupport;
 import groovy.util.slurpersupport.GPathResult;
 import org.codehaus.griffon.commons.AbstractGriffonClass;
-import org.codehaus.griffon.commons.GriffonClassUtils;
 import org.codehaus.griffon.commons.GriffonContext;
 import org.springframework.util.Assert;
 
@@ -105,7 +104,7 @@ public abstract class AbstractGriffonPlugin extends GroovyObjectSupport implemen
     }
 
     public String getPluginPath() {
-        return PLUGINS_PATH + '/' + GriffonClassUtils.getScriptName(getName()) + '-' + getVersion();
+        return PLUGINS_PATH + '/' + GriffonUtil.getScriptName(getName()) + '-' + getVersion();
     }
 
     public GriffonPluginManager getManager() {
