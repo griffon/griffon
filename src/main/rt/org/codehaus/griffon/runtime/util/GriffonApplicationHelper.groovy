@@ -42,10 +42,10 @@ class GriffonApplicationHelper {
     private static final Logger LOG = LoggerFactory.getLogger(GriffonApplicationHelper)
 
     private static final Map DEFAULT_PLATFORM_HANDLERS = [
-         linux: 'org.codehaus.griffon.runtime.util.DefaultLinuxPlatformHandler',
-         macosx: 'org.codehaus.griffon.runtime.util.DefaultMacOSXPlatformHandler',
-         solaris: 'org.codehaus.griffon.runtime.util.DefaultSolarisPlatformHandler',
-         windows: 'org.codehaus.griffon.runtime.util.DefaultWindowsPlatformHandler'
+            linux: 'org.codehaus.griffon.runtime.util.DefaultLinuxPlatformHandler',
+            macosx: 'org.codehaus.griffon.runtime.util.DefaultMacOSXPlatformHandler',
+            solaris: 'org.codehaus.griffon.runtime.util.DefaultSolarisPlatformHandler',
+            windows: 'org.codehaus.griffon.runtime.util.DefaultWindowsPlatformHandler'
     ]
 
     /**
@@ -179,11 +179,11 @@ class GriffonApplicationHelper {
         if (urls?.hasMoreElements()) {
             URL url = urls.nextElement()
             url.eachLine { line ->
-                if(line.startsWith('#')) return
+                if (line.startsWith('#')) return
                 try {
                     Class artifactHandlerClass = loadClass(app, line)
                     Constructor ctor = artifactHandlerClass.getDeclaredConstructor(GriffonApplication)
-                    ArtifactHandler handler = ctor? ctor.newInstance(app) : artifactHandlerClass.newInstance()
+                    ArtifactHandler handler = ctor ? ctor.newInstance(app) : artifactHandlerClass.newInstance()
                     app.artifactManager.registerArtifactHandler(handler)
                 } catch (Exception e) {
                     if (LOG.warnEnabled) LOG.warn("Could not load ArtifactHandler with '$line'", GriffonExceptionHandler.sanitize(e))
@@ -218,7 +218,7 @@ class GriffonApplicationHelper {
      */
     @Deprecated
     static void runScriptInsideUIThread(String scriptName, GriffonApplication app) {
-         runLifecycleHandler(scriptName, app)
+        runLifecycleHandler(scriptName, app)
     }
 
     /**
@@ -240,9 +240,9 @@ class GriffonApplicationHelper {
             }
         }
 
-        if(Script.class.isAssignableFrom(handlerClass)) {
+        if (Script.class.isAssignableFrom(handlerClass)) {
             runScript(handlerName, handlerClass, app)
-        } else if(LifecycleHandler.class.isAssignableFrom(handlerClass)) {
+        } else if (LifecycleHandler.class.isAssignableFrom(handlerClass)) {
             runLifecycleHandler(handlerName, handlerClass, app)
         }
     }
@@ -287,11 +287,11 @@ class GriffonApplicationHelper {
     }
 
     static List createMVCGroup(GriffonApplication app, String mvcType) {
-        createMVCGroup(app, mvcType, mvcType, [:])
+        createMVCGroup(app, mvcType, mvcType, Collections.EMPTY_MAP)
     }
 
     static List createMVCGroup(GriffonApplication app, String mvcType, String mvcName) {
-        createMVCGroup(app, mvcType, mvcName, [:])
+        createMVCGroup(app, mvcType, mvcName, Collections.EMPTY_MAP)
     }
 
     static List createMVCGroup(GriffonApplication app, String mvcType, Map bindArgs) {
@@ -312,11 +312,11 @@ class GriffonApplicationHelper {
     }
 
     static void withMVCGroup(GriffonApplication app, String mvcType, Closure handler) {
-        withMVCGroup(app, mvcType, mvcType, [:], handler)
+        withMVCGroup(app, mvcType, mvcType, Collections.EMPTY_MAP, handler)
     }
 
     static void withMVCGroup(GriffonApplication app, String mvcType, String mvcName, Closure handler) {
-        withMVCGroup(app, mvcType, mvcName, [:], handler)
+        withMVCGroup(app, mvcType, mvcName, Collections.EMPTY_MAP, handler)
     }
 
     static void withMVCGroup(GriffonApplication app, String mvcType, Map bindArgs, Closure handler) {
@@ -336,11 +336,11 @@ class GriffonApplicationHelper {
     }
 
     static <M extends GriffonModel, V extends GriffonView, C extends GriffonController> void withMVCGroup(GriffonApplication app, String mvcType, MVCClosure<M, V, C> handler) {
-        withMVCGroup(mvcType, mvcType, [:], handler)
+        withMVCGroup(mvcType, mvcType, Collections.EMPTY_MAP, handler)
     }
 
     static <M extends GriffonModel, V extends GriffonView, C extends GriffonController> void withMVCGroup(GriffonApplication app, String mvcType, String mvcName, MVCClosure<M, V, C> handler) {
-        withMVCGroup(mvcType, mvcName, [:], handler)
+        withMVCGroup(mvcType, mvcName, Collections.EMPTY_MAP, handler)
     }
 
     static <M extends GriffonModel, V extends GriffonView, C extends GriffonController> void withMVCGroup(GriffonApplication app, String mvcType, Map<String, Object> args, MVCClosure<M, V, C> handler) {
@@ -361,12 +361,26 @@ class GriffonApplicationHelper {
     }
 
     static Map<String, Object> buildMVCGroup(GriffonApplication app, String mvcType, String mvcName = mvcType) {
-        buildMVCGroup(app, [:], mvcType, mvcName)
+        buildMVCGroup(app, Collections.EMPTY_MAP, mvcType, mvcName)
     }
 
     static Map<String, Object> buildMVCGroup(GriffonApplication app, Map bindArgs, String mvcType, String mvcName = mvcType) {
         if (!app.mvcGroups.containsKey(mvcType)) {
-            throw new IllegalArgumentException("Unknown MVC type \"$mvcType\".  Known types are ${app.mvcGroups.keySet()}")
+            abort(new IllegalArgumentException("Unknown MVC type '$mvcType'.  Known types are ${app.mvcGroups.keySet()}"))
+        }
+        if (app.groups.containsKey(mvcName)) {
+            String action = app.config.griffon.mvcid.collision ?: 'exception'
+            switch (action) {
+                case 'warning':
+                    if (LOG.warnEnabled) {
+                        LOG.warn("A previous instance of MVC group '$mvcType' with name '$mvcName' exists. Destroying the old instance first.")
+                        destroyMVCGroup(app, mvcName)
+                    }
+                    break
+                case 'exception':
+                default:
+                    abort(new IllegalArgumentException("Can not instantiate MVC group '${mvcType}' with name '${mvcName}' because a previous instance with that name exists and was not disposed of properly."))
+            }
         }
 
         if (LOG.infoEnabled) LOG.info("Building MVC group '${mvcType}' with name '${mvcName}'")
@@ -566,5 +580,12 @@ class GriffonApplicationHelper {
         }
 
         if (cnfe) throw cnfe
+    }
+
+    private static abort(Exception ex) {
+        ex = GriffonExceptionHandler.sanitize(ex)
+        LOG.error("Unrecoverable error", ex)
+        ex.printStackTrace()
+        System.exit(1)
     }
 }
