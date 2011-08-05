@@ -16,95 +16,26 @@
 
 package griffon.core;
 
-import java.util.Collections;
-import java.util.LinkedHashMap;
-import java.util.Map;
-
-import static griffon.util.GriffonNameUtils.isBlank;
-
 /**
- * Defines the contents of an MVC group
+ * Defines an MVC group and its contents
  *
  * @author Andres Almiray
+ * @since 0.9.3
  */
-public class MVCGroup {
-    private final Map<String, String> configuration = new LinkedHashMap<String, String>();
-    private final Map<String, Object> members = new LinkedHashMap<String, Object>();
-    private final String mvcType;
-    private final GriffonApplication app;
-    private String mvcId;
-    private boolean initialized;
-    private final Object lock = new Object();
+public interface MVCGroup extends ApplicationHandler {
+    MVCGroupConfiguration getConfiguration();
 
-    public MVCGroup(GriffonApplication app, String mvcType, Map<String, String> configuration) {
-        this.app = app;
-        this.mvcType = mvcType;
-        this.configuration.putAll(configuration);
-    }
+    String getMvcType();
 
-    public String getMvcType() {
-        return mvcType;
-    }
+    String getMvcId();
 
-    public Map<String, String> getConfiguration() {
-        return Collections.unmodifiableMap(configuration);
-    }
+    GriffonModel getModel();
 
-    public String getMvcId() {
-        return mvcId;
-    }
+    GriffonView getView();
 
-    public boolean isInitialized() {
-        synchronized (lock) {
-            return initialized;
-        }
-    }
+    GriffonController getController();
 
-    public GriffonController getController() {
-        return (GriffonController) getMember(GriffonControllerClass.TYPE);
-    }
+    Object getMember(String name);
 
-    public GriffonModel getModel() {
-        return (GriffonModel) getMember(GriffonModelClass.TYPE);
-    }
-
-    public GriffonView getView() {
-        return (GriffonView) getMember(GriffonViewClass.TYPE);
-    }
-
-    public Object getMember(String name) {
-        return members.get(name);
-    }
-
-    public void create() {
-        create(mvcType, Collections.<String, Object>emptyMap());
-    }
-
-    public void create(String mvcId) {
-        create(mvcId, Collections.<String, Object>emptyMap());
-    }
-
-    public void create(Map<String, Object> args) {
-        create(mvcType, args);
-    }
-
-    public void create(String mvcId, Map<String, Object> args) {
-        synchronized (lock) {
-            if (initialized) return;
-            this.mvcId = !isBlank(mvcId) ? mvcId : mvcType;
-            members.putAll(app.buildMVCGroup(args, mvcType, mvcId));
-            initialized = true;
-        }
-    }
-
-    public void destroy() {
-        synchronized (lock) {
-            if (initialized) {
-                app.destroyMVCGroup(mvcId);
-                members.clear();
-                mvcId = null;
-                initialized = false;
-            }
-        }
-    }
+    void destroy();
 }
