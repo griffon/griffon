@@ -31,6 +31,7 @@ import griffon.core.*
 import org.codehaus.griffon.runtime.core.*
 import griffon.util.GriffonApplicationUtils
 import griffon.util.PlatformHandler
+import static griffon.util.GriffonNameUtils.isBlank
 
 /**
  * Utility class for bootstrapping an application and handling of MVC groups.</p>
@@ -286,41 +287,9 @@ class GriffonApplicationHelper {
         return instance
     }
 
-    static List createMVCGroup(GriffonApplication app, String mvcType) {
-        createMVCGroup(app, mvcType, mvcType, Collections.EMPTY_MAP)
-    }
-
-    static List createMVCGroup(GriffonApplication app, String mvcType, String mvcName) {
-        createMVCGroup(app, mvcType, mvcName, Collections.EMPTY_MAP)
-    }
-
-    static List createMVCGroup(GriffonApplication app, String mvcType, Map bindArgs) {
-        createMVCGroup(app, mvcType, mvcType, bindArgs)
-    }
-
-    static List createMVCGroup(GriffonApplication app, Map bindArgs, String mvcType, String mvcName) {
-        createMVCGroup(app, mvcType, mvcName, bindArgs)
-    }
-
-    static List createMVCGroup(GriffonApplication app, Map bindArgs, String mvcType) {
-        createMVCGroup(app, mvcType, mvcType, bindArgs)
-    }
-
     static List createMVCGroup(GriffonApplication app, String mvcType, String mvcName, Map bindArgs) {
-        Map results = buildMVCGroup(app, bindArgs, mvcType, mvcName)
+        Map results = buildMVCGroup(app, mvcType, mvcName, bindArgs)
         return [results.model, results.view, results.controller]
-    }
-
-    static void withMVCGroup(GriffonApplication app, String mvcType, Closure handler) {
-        withMVCGroup(app, mvcType, mvcType, Collections.EMPTY_MAP, handler)
-    }
-
-    static void withMVCGroup(GriffonApplication app, String mvcType, String mvcName, Closure handler) {
-        withMVCGroup(app, mvcType, mvcName, Collections.EMPTY_MAP, handler)
-    }
-
-    static void withMVCGroup(GriffonApplication app, String mvcType, Map bindArgs, Closure handler) {
-        withMVCGroup(app, mvcType, mvcType, bindArgs, handler)
     }
 
     static void withMVCGroup(GriffonApplication app, String mvcType, String mvcName, Map bindArgs, Closure handler) {
@@ -333,18 +302,6 @@ class GriffonApplicationHelper {
                 if (app.log.warnEnabled) app.log.warn("Could not destroy group [$mvcName] of type $mvcType.", GriffonExceptionHandler.sanitize(x))
             }
         }
-    }
-
-    static <M extends GriffonModel, V extends GriffonView, C extends GriffonController> void withMVCGroup(GriffonApplication app, String mvcType, MVCClosure<M, V, C> handler) {
-        withMVCGroup(mvcType, mvcType, Collections.EMPTY_MAP, handler)
-    }
-
-    static <M extends GriffonModel, V extends GriffonView, C extends GriffonController> void withMVCGroup(GriffonApplication app, String mvcType, String mvcName, MVCClosure<M, V, C> handler) {
-        withMVCGroup(mvcType, mvcName, Collections.EMPTY_MAP, handler)
-    }
-
-    static <M extends GriffonModel, V extends GriffonView, C extends GriffonController> void withMVCGroup(GriffonApplication app, String mvcType, Map<String, Object> args, MVCClosure<M, V, C> handler) {
-        withMVCGroup(mvcType, mvcType, args, handler)
     }
 
     static <M extends GriffonModel, V extends GriffonView, C extends GriffonController> void withMVCGroup(GriffonApplication app, String mvcType, String mvcName, Map<String, Object> args, MVCClosure<M, V, C> handler) {
@@ -360,11 +317,10 @@ class GriffonApplicationHelper {
         }
     }
 
-    static Map<String, Object> buildMVCGroup(GriffonApplication app, String mvcType, String mvcName = mvcType) {
-        buildMVCGroup(app, Collections.EMPTY_MAP, mvcType, mvcName)
-    }
+    static Map<String, Object> buildMVCGroup(GriffonApplication app, String mvcType, String mvcName, Map bindArgs) {
+        if(isBlank(mvcName)) mvcName = mvcType
+        if(bindArgs == null) bindArgs = Collections.EMPTY_MAP
 
-    static Map<String, Object> buildMVCGroup(GriffonApplication app, Map bindArgs, String mvcType, String mvcName = mvcType) {
         if (!app.mvcGroups.containsKey(mvcType)) {
             abort(new IllegalArgumentException("Unknown MVC type '$mvcType'.  Known types are ${app.mvcGroups.keySet()}"))
         }

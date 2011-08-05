@@ -120,12 +120,16 @@ public final class GriffonClassUtils {
         MVC_METHODS.add(new MethodDescriptor("destroyMVCGroup", new Class[]{String.class}));
         MVC_METHODS.add(new MethodDescriptor("withMVCGroup", new Class[]{String.class, Closure.class}));
         MVC_METHODS.add(new MethodDescriptor("withMVCGroup", new Class[]{String.class, Map.class, Closure.class}));
+        MVC_METHODS.add(new MethodDescriptor("withMVCGroup", new Class[]{Map.class, String.class, Closure.class}));
         MVC_METHODS.add(new MethodDescriptor("withMVCGroup", new Class[]{String.class, String.class, Closure.class}));
         MVC_METHODS.add(new MethodDescriptor("withMVCGroup", new Class[]{String.class, String.class, Map.class, Closure.class}));
+        MVC_METHODS.add(new MethodDescriptor("withMVCGroup", new Class[]{Map.class, String.class, String.class, Closure.class}));
         MVC_METHODS.add(new MethodDescriptor("withMVCGroup", new Class[]{String.class, MVCClosure.class}));
         MVC_METHODS.add(new MethodDescriptor("withMVCGroup", new Class[]{String.class, Map.class, MVCClosure.class}));
+        MVC_METHODS.add(new MethodDescriptor("withMVCGroup", new Class[]{Map.class, String.class, MVCClosure.class}));
         MVC_METHODS.add(new MethodDescriptor("withMVCGroup", new Class[]{String.class, String.class, MVCClosure.class}));
         MVC_METHODS.add(new MethodDescriptor("withMVCGroup", new Class[]{String.class, String.class, Map.class, MVCClosure.class}));
+        MVC_METHODS.add(new MethodDescriptor("withMVCGroup", new Class[]{Map.class, String.class, String.class, MVCClosure.class}));
 
         // Special cases due to the usage of varargs
         MVC_METHODS.add(new MethodDescriptor("newInstance", new Class[]{Object[].class}));

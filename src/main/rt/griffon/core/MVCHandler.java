@@ -143,6 +143,54 @@ public interface MVCHandler {
     Map<String, Object> buildMVCGroup(Map<String, Object> args, String mvcType);
 
     /**
+     * Instantiates an MVC group of the specified type with additional variables.<p>
+     * MVC Groups must be previously configured with the application's metadata
+     * before they can be used. This registration process usually takes place automatically
+     * at boot time. The type of the group can be normally found in the application's
+     * configuration file.<p>
+     * The <tt>args</tt> Map can contain any value that will be used in one of the following
+     * scenarios <ul>
+     * <li>The key matches a member definition; the value will be used as the instance of such member.</li>
+     * <li>The key does not match a member definition, the value is assumed to be a property that can be set
+     * on any MVC member of the group.</li>
+     * </ul>
+     * <p/>
+     * For example, with the following entry available in {@code Application.groovy}
+     * <p/>
+     * <pre>
+     * mvcGroups {
+     *     'foo' {
+     *         model      = 'com.acme.FooModel'
+     *         view       = 'com.acme.FooView'
+     *         controller = 'com.acme.FooController'
+     *     }
+     *     'bar' {
+     *         model      = 'com.acme.FooModel'
+     *         view       = 'com.acme.BarView'
+     *         controller = 'com.acme.BarController'
+     *     }
+     * }
+     * </pre>
+     * <p/>
+     * Notice that groups "foo" and "bar share the same model type, We can make them share the same model
+     * instance by creating the groups in the following way:
+     * <p/>
+     * <pre>
+     * Map<String, Object> fooGroup = buildMVCGroup('foo')
+     * Map<String, Object> barGroup = buildMVCGroup('bar', model: fooGroup.model)
+     * assert fooGroup.model == barGroup.model
+     * </pre>
+     *
+     * @param mvcType the type of group to build.
+     * @param args    any useful values that can be set as properties on each MVC member or that
+     *                identify a member that can be shared with other groups.
+     * @return a Map with every member of the group keyed by type
+     * @throws IllegalArgumentException if the type specified is not found in the application's
+     *                                  configuration.
+     */
+    Map<String, Object> buildMVCGroup(String mvcType, Map<String, Object> args);
+
+    /**
      * Instantiates an MVC group of the specified type with a particular name.<p>
      * MVC Groups must be previously configured with the application's metadata
      * before they can be used. This registration process usually takes place automatically
@@ -186,6 +234,51 @@ public interface MVCHandler {
      *                                  configuration.
      */
     Map<String, Object> buildMVCGroup(Map<String, Object> args, String mvcType, String mvcName);
+
+    /**
+     * Instantiates an MVC group of the specified type with a particular name.<p>
+     * MVC Groups must be previously configured with the application's metadata
+     * before they can be used. This registration process usually takes place automatically
+     * at boot time. The type of the group can be normally found in the application's
+     * configuration file.<p>
+     * The <tt>args</tt> Map can contain any value that will be used in one of the following
+     * scenarios <ul>
+     * <li>The key matches a member definition; the value will be used as the instance of such member.</li>
+     * <li>The key does not match a member definition, the value is assumed to be a property that can be set
+     * on any MVC member of the group.</li>
+     * </ul>
+     * <p/>
+     * For example, with the following entry available in {@code Application.groovy}
+     * <p/>
+     * <pre>
+     * mvcGroups {
+     *     'foo' {
+     *         model      = 'com.acme.FooModel'
+     *         view       = 'com.acme.FooView'
+     *         controller = 'com.acme.FooController'
+     *     }
+     * }
+     * </pre>
+     * <p/>
+     * We can create two instances of the same group that share the same model instance in the following way:
+     * <p/>
+     * <pre>
+     * Map<String, Object> fooGroup1 = buildMVCGroup('foo', 'foo1')
+     * Map<String, Object> fooGroup2 = buildMVCGroup('bar', 'foo2', model: fooGroup1.model)
+     * assert fooGroup1.model == fooGroup2.model
+     * </pre>
+     * <p/>
+     * MVC groups must have an unique name.
+     *
+     * @param mvcType the type of group to build.
+     * @param mvcName the name to assign to the built group.
+     * @param args    any useful values that can be set as properties on each MVC member or that
+     *                identify a member that can be shared with other groups.
+     * @return a Map with every member of the group keyed by type
+     * @throws IllegalArgumentException if the type specified is not found in the application's
+     *                                  configuration.
+     */
+    Map<String, Object> buildMVCGroup(String mvcType, String mvcName, Map<String, Object> args);
 
     /**
      * Instantiates an MVC group of the specified type returning only the MVC parts.<p>
@@ -606,6 +699,53 @@ public interface MVCHandler {
      *     c.invokeAnAction()
      * }
      * </pre>
+     * <p/>
+     * MVC groups must have an unique name.
+     *
+     * @param args    any useful values that can be set as properties on each MVC member or that
+     *                identify a member that can be shared with other groups.
+     * @param mvcType the type of group to build.
+     * @param mvcName the name to assign to the built group.
+     * @param handler a code block used to configure and manage the instantiated group
+     * @throws IllegalArgumentException if the type specified is not found in the application's
+     *                                  configuration
+     * @since 0.9.3
+     */
+    void withMVCGroup(Map<String, Object> args, String mvcType, String mvcName, Closure handler);
+
+    /**
+     * Instantiates an MVC group of the specified type then destroys it after it has been handled.<p>
+     * <p>This method is of particular interest when working with short lived MVC groups such as
+     * those used to build dialogs.<p/>
+     * <p>MVC Groups must be previously configured with the application's metadata
+     * before they can be used. This registration process usually takes place automatically
+     * at boot time. The type of the group can be normally found in the application's
+     * configuration file.</p>
+     * The <tt>args</tt> Map can contain any value that will be used in one of the following
+     * scenarios <ul>
+     * <li>The key matches a member definition; the value will be used as the instance of such member.</li>
+     * <li>The key does not match a member definition, the value is assumed to be a property that can be set
+     * on any MVC member of the group.</li>
+     * For example, with the following entry available in {@code Application.groovy}
+     * <p/>
+     * <pre>
+     * mvcGroups {
+     *     'foo' {
+     *         model      = 'com.acme.FooModel'
+     *         view       = 'com.acme.FooView'
+     *         controller = 'com.acme.FooController'
+     *     }
+     * }
+     * </pre>
+     * <p/>
+     * An instance of the "foo" group can be used as follows
+     * <p/>
+     * <pre>
+     * withMVCGroup('foo', 'foo1') { m, v, c->
+     *     m.someProperty = someValue
+     *     c.invokeAnAction()
+     * }
+     * </pre>
      *
      * @param mvcType the type of group to build.
      * @param args    any useful values that can be set as properties on each MVC member or that
@@ -616,6 +756,50 @@ public interface MVCHandler {
      * @since 0.9.3
      */
     void withMVCGroup(String mvcType, Map<String, Object> args, Closure handler);
+
+    /**
+     * Instantiates an MVC group of the specified type then destroys it after it has been handled.<p>
+     * <p>This method is of particular interest when working with short lived MVC groups such as
+     * those used to build dialogs.<p/>
+     * <p>MVC Groups must be previously configured with the application's metadata
+     * before they can be used. This registration process usually takes place automatically
+     * at boot time. The type of the group can be normally found in the application's
+     * configuration file.</p>
+     * The <tt>args</tt> Map can contain any value that will be used in one of the following
+     * scenarios <ul>
+     * <li>The key matches a member definition; the value will be used as the instance of such member.</li>
+     * <li>The key does not match a member definition, the value is assumed to be a property that can be set
+     * on any MVC member of the group.</li>
+     * For example, with the following entry available in {@code Application.groovy}
+     * <p/>
+     * <pre>
+     * mvcGroups {
+     *     'foo' {
+     *         model      = 'com.acme.FooModel'
+     *         view       = 'com.acme.FooView'
+     *         controller = 'com.acme.FooController'
+     *     }
+     * }
+     * </pre>
+     * <p/>
+     * An instance of the "foo" group can be used as follows
+     * <p/>
+     * <pre>
+     * withMVCGroup('foo', 'foo1') { m, v, c->
+     *     m.someProperty = someValue
+     *     c.invokeAnAction()
+     * }
+     * </pre>
+     *
+     * @param args    any useful values that can be set as properties on each MVC member or that
+     *                identify a member that can be shared with other groups.
+     * @param mvcType the type of group to build.
+     * @param handler a code block used to configure and manage the instantiated group
+     * @throws IllegalArgumentException if the type specified is not found in the application's
+     *                                  configuration
+     * @since 0.9.3
+     */
+    void withMVCGroup(Map<String, Object> args, String mvcType, Closure handler);
 
     /**
      * Instantiates an MVC group of the specified type then destroys it after it has been handled.<p>
@@ -769,6 +953,56 @@ public interface MVCHandler {
      *         model      = 'com.acme.FooModel'
      *         view       = 'com.acme.FooView'
      *         controller = 'com.acme.FooController'
+     *     }
+     * }
+     * </pre>
+     * <p/>
+     * An instance of the "foo" group can be used as follows
+     * <p/>
+     * <pre>
+     * Map<String, Object> map = ... // initialized elsewhere
+     * withMVCGroup("foo", "foo1", map, new MVCClosure&lt;FooModel, FooView, FooController&gt;() {
+     *    public void call(FooModel m, FooView v, FooController c) {
+     *        m.setSomeProperty(someValue);
+     *        c.invokeAnAction();
+     *    }
+     * });
+     * </pre>
+     * <p/>
+     * MVC groups must have an unique name.
+     *
+     * @param args    any useful values that can be set as properties on each MVC member or that
+     *                identify a member that can be shared with other groups.
+     * @param mvcType the type of group to build.
+     * @param mvcName the name to assign to the built group.
+     * @param handler a code block used to configure and manage the instantiated group
+     * @throws IllegalArgumentException if the type specified is not found in the application's
+     *                                  configuration
+     * @since 0.9.3
+     */
+    <M extends GriffonModel, V extends GriffonView, C extends GriffonController> void withMVCGroup(Map<String, Object> args, String mvcType, String mvcName, MVCClosure<M, V, C> handler);
+
+    /**
+     * Instantiates an MVC group of the specified type then destroys it after it has been handled.<p>
+     * <p>This method is of particular interest when working with short lived MVC groups such as
+     * those used to build dialogs.<p/>
+     * <p>MVC Groups must be previously configured with the application's metadata
+     * before they can be used. This registration process usually takes place automatically
+     * at boot time. The type of the group can be normally found in the application's
+     * configuration file.</p>
+     * The <tt>args</tt> Map can contain any value that will be used in one of the following
+     * scenarios <ul>
+     * <li>The key matches a member definition; the value will be used as the instance of such member.</li>
+     * <li>The key does not match a member definition, the value is assumed to be a property that can be set
+     * on any MVC member of the group.</li>
+     * For example, with the following entry available in {@code Application.groovy}
+     * <p/>
+     * <pre>
+     * mvcGroups {
+     *     'foo' {
+     *         model      = 'com.acme.FooModel'
+     *         view       = 'com.acme.FooView'
+     *         controller = 'com.acme.FooController'
      *    }
      * }
      * </pre>
@@ -794,4 +1028,51 @@ public interface MVCHandler {
      * @since 0.9.3
      */
     <M extends GriffonModel, V extends GriffonView, C extends GriffonController> void withMVCGroup(String mvcType, Map<String, Object> args, MVCClosure<M, V, C> handler);
+
+    /**
+     * Instantiates an MVC group of the specified type then destroys it after it has been handled.<p>
+     * <p>This method is of particular interest when working with short lived MVC groups such as
+     * those used to build dialogs.<p/>
+     * <p>MVC Groups must be previously configured with the application's metadata
+     * before they can be used. This registration process usually takes place automatically
+     * at boot time. The type of the group can be normally found in the application's
+     * configuration file.</p>
+     * The <tt>args</tt> Map can contain any value that will be used in one of the following
+     * scenarios <ul>
+     * <li>The key matches a member definition; the value will be used as the instance of such member.</li>
+     * <li>The key does not match a member definition, the value is assumed to be a property that can be set
+     * on any MVC member of the group.</li>
+     * For example, with the following entry available in {@code Application.groovy}
+     * <p/>
+     * <pre>
+     * mvcGroups {
+     *     'foo' {
+     *         model      = 'com.acme.FooModel'
+     *         view       = 'com.acme.FooView'
+     *         controller = 'com.acme.FooController'
+     *    }
+     * }
+     * </pre>
+     * <p/>
+     * An instance of the "foo" group can be used as follows
+     * <p/>
+     * <pre>
+     * Map<String, Object> map = ... // initialized elsewhere
+     * withMVCGroup("foo", map, new MVCClosure&lt;FooModel, FooView, FooController&gt;() {
+     *    public void call(FooModel m, FooView v, FooController c) {
+     *        m.setSomeProperty(someValue);
+     *        c.invokeAnAction();
+     *    }
+     * });
+     * </pre>
+     *
+     * @param args    any useful values that can be set as properties on each MVC member or that
+     *                identify a member that can be shared with other groups.
+     * @param mvcType the type of group to build.
+     * @param handler a code block used to configure and manage the instantiated group
+     * @throws IllegalArgumentException if the type specified is not found in the application's
+     *                                  configuration
+     * @since 0.9.3
+     */
+    <M extends GriffonModel, V extends GriffonView, C extends GriffonController> void withMVCGroup(Map<String, Object> args, String mvcType, MVCClosure<M, V, C> handler);
 }
