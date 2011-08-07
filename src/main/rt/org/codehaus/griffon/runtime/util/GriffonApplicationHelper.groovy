@@ -15,10 +15,6 @@
  */
 package org.codehaus.griffon.runtime.util
 
-import griffon.util.Environment
-import griffon.util.GriffonExceptionHandler
-import griffon.util.Metadata
-import griffon.core.UIThreadManager
 import java.lang.reflect.Constructor
 import org.apache.log4j.LogManager
 import org.apache.log4j.helpers.LogLog
@@ -28,10 +24,9 @@ import org.codehaus.groovy.runtime.InvokerHelper
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import griffon.core.*
-import org.codehaus.griffon.runtime.core.*
-import griffon.util.GriffonApplicationUtils
-import griffon.util.PlatformHandler
+import griffon.util.*
 import static griffon.util.GriffonNameUtils.isBlank
+import org.codehaus.griffon.runtime.core.*
 
 /**
  * Utility class for bootstrapping an application and handling of MVC groups.</p>
@@ -102,6 +97,19 @@ class GriffonApplicationHelper {
         Metadata.current.getGriffonStartDir()
         Metadata.current.getGriffonWorkingDir()
 
+        readAndSetConfiguration(app)
+        app.event(GriffonApplication.Event.BOOTSTRAP_START.name, [app])
+
+        applyPlatformTweaks(app)
+        runLifecycleHandler(GriffonApplication.Lifecycle.INITIALIZE.name, app)
+        initializeArtifactManager(app)
+        initializeAddonManager(app)
+        readMvcConfiguration(app)
+
+        app.event(GriffonApplication.Event.BOOTSTRAP_END.name, [app])
+    }
+
+    private static void readAndSetConfiguration(GriffonApplication app) {
         ConfigSlurper configSlurper = new ConfigSlurper(Environment.current.name)
         app.config = loadConfig(configSlurper, app.appConfigClass, GriffonApplication.Configuration.APPLICATION.name)
         app.config.merge(loadConfig(configSlurper, app.configClass, GriffonApplication.Configuration.CONFIG.name))
@@ -121,25 +129,6 @@ class GriffonApplicationHelper {
             LogManager.resetConfiguration()
             new Log4jConfig().configure(log4jConfig)
         }
-
-        app.event(GriffonApplication.Event.BOOTSTRAP_START.name, [app])
-
-        applyPlatformTweaks(app)
-        runLifecycleHandler(GriffonApplication.Lifecycle.INITIALIZE.name, app)
-        initializeArtifactManager(app)
-
-        if (!app.addonManager) {
-            app.addonManager = new DefaultAddonManager(app)
-        }
-        app.addonManager.initialize()
-
-        // copy mvc groups in config to app, casting to strings in a new map
-        app.config.mvcGroups.each {k, v ->
-            if (LOG.debugEnabled) LOG.debug("Adding MVC group $k")
-            app.addMvcGroup(k, v.inject([:]) {m, e -> m[e.key as String] = e.value as String; m})
-        }
-
-        app.event(GriffonApplication.Event.BOOTSTRAP_END.name, [app])
     }
 
     static void applyPlatformTweaks(GriffonApplication app) {
@@ -166,6 +155,23 @@ class GriffonApplicationHelper {
         loadArtifactHandlers(app)
 
         app.artifactManager.loadArtifactMetadata()
+    }
+
+    private static void initializeAddonManager(GriffonApplication app) {
+        if (!app.addonManager) {
+            app.addonManager = new DefaultAddonManager(app)
+        }
+        app.addonManager.initialize()
+    }
+
+    private static void readMvcConfiguration(GriffonApplication app) {
+        // copy mvc groups in config to app, casting to strings in a new map
+        app.config.mvcGroups.each {String type, Map members ->
+            if (LOG.debugEnabled) LOG.debug("Adding MVC group $type")
+            Map membersCopy = members.inject([:]) {m, e -> m[e.key as String] = e.value as String; m}
+            // MVCGroupConfiguration mvcConfig = new DefaultMVCGroupConfiguration(app, type, membersCopy)
+            app.addMvcGroup(type, membersCopy)
+        }
     }
 
     private static void loadArtifactHandlers(GriffonApplication app) {
@@ -287,7 +293,87 @@ class GriffonApplicationHelper {
         return instance
     }
 
-    static List createMVCGroup(GriffonApplication app, String mvcType, String mvcName, Map bindArgs) {
+    static Map<String, Object> buildMVCGroup(GriffonApplication app, String mvcType) {
+        buildMVCGroup(app, mvcType, mvcType, Collections.emptyMap())
+    }
+
+    static Map<String, Object> buildMVCGroup(GriffonApplication app, String mvcType, String mvcName) {
+        buildMVCGroup(app, mvcType, mvcName, Collections.emptyMap())
+    }
+
+    static Map<String, Object> buildMVCGroup(GriffonApplication app, Map<String, Object> args, String mvcType) {
+        buildMVCGroup(app, mvcType, mvcType, args)
+    }
+
+    static Map<String, Object> buildMVCGroup(GriffonApplication app, String mvcType, Map<String, Object> args) {
+        buildMVCGroup(app, mvcType, mvcType, args)
+    }
+
+    static Map<String, Object> buildMVCGroup(GriffonApplication app, Map<String, Object> args, String mvcType, String mvcName) {
+        buildMVCGroup(app, mvcType, mvcName, args)
+    }
+
+    static List<? extends GriffonMvcArtifact> createMVCGroup(GriffonApplication app, String mvcType) {
+        createMVCGroup(app, mvcType, mvcType, Collections.emptyMap())
+    }
+
+    static List<? extends GriffonMvcArtifact> createMVCGroup(GriffonApplication app, Map<String, Object> args, String mvcType) {
+        createMVCGroup(app, mvcType, mvcType, args)
+    }
+
+    static List<? extends GriffonMvcArtifact> createMVCGroup(GriffonApplication app, String mvcType, Map<String, Object> args) {
+        createMVCGroup(app, mvcType, mvcType, args)
+    }
+
+    static List<? extends GriffonMvcArtifact> createMVCGroup(GriffonApplication app, String mvcType, String mvcName) {
+        createMVCGroup(app, mvcType, mvcName, Collections.emptyMap())
+    }
+
+    static List<? extends GriffonMvcArtifact> createMVCGroup(GriffonApplication app, Map<String, Object> args, String mvcType, String mvcName) {
+        createMVCGroup(app, mvcType, mvcName, args)
+    }
+
+    static void withMVCGroup(GriffonApplication app, String mvcType, Closure handler) {
+        withMVCGroup(app, mvcType, mvcType, Collections.<String, Object> emptyMap(), handler)
+    }
+
+    static void withMVCGroup(GriffonApplication app, String mvcType, String mvcName, Closure handler) {
+        withMVCGroup(app, mvcType, mvcName, Collections.<String, Object> emptyMap(), handler)
+    }
+
+    static void withMVCGroup(GriffonApplication app, String mvcType, Map<String, Object> args, Closure handler) {
+        withMVCGroup(app, mvcType, mvcType, args, handler)
+    }
+
+    static void withMVCGroup(GriffonApplication app, Map<String, Object> args, String mvcType, Closure handler) {
+        withMVCGroup(app, mvcType, mvcType, args, handler)
+    }
+
+    static void withMVCGroup(GriffonApplication app, Map<String, Object> args, String mvcType, String mvcName, Closure handler) {
+        withMVCGroup(app, mvcType, mvcName, args, handler)
+    }
+
+    static <M extends GriffonModel, V extends GriffonView, C extends GriffonController> void withMVCGroup(GriffonApplication app, String mvcType, MVCClosure<M, V, C> handler) {
+        withMVCGroup(app, mvcType, mvcType, Collections.<String, Object> emptyMap(), handler)
+    }
+
+    static <M extends GriffonModel, V extends GriffonView, C extends GriffonController> void withMVCGroup(GriffonApplication app, String mvcType, String mvcName, MVCClosure<M, V, C> handler) {
+        withMVCGroup(app, mvcType, mvcName, Collections.<String, Object> emptyMap(), handler)
+    }
+
+    static <M extends GriffonModel, V extends GriffonView, C extends GriffonController> void withMVCGroup(GriffonApplication app, String mvcType, Map<String, Object> args, MVCClosure<M, V, C> handler) {
+        withMVCGroup(app, mvcType, mvcType, args, handler)
+    }
+
+    static <M extends GriffonModel, V extends GriffonView, C extends GriffonController> void withMVCGroup(GriffonApplication app, Map<String, Object> args, String mvcType, MVCClosure<M, V, C> handler) {
+        withMVCGroup(app, mvcType, mvcType, args, handler)
+    }
+
+    static <M extends GriffonModel, V extends GriffonView, C extends GriffonController> void withMVCGroup(GriffonApplication app, Map<String, Object> args, String mvcType, String mvcName, MVCClosure<M, V, C> handler) {
+        withMVCGroup(app, mvcType, mvcName, args, handler)
+    }
+
+    static List<? extends GriffonMvcArtifact> createMVCGroup(GriffonApplication app, String mvcType, String mvcName, Map bindArgs) {
         Map results = buildMVCGroup(app, mvcType, mvcName, bindArgs)
         return [results.model, results.view, results.controller]
     }
@@ -306,7 +392,7 @@ class GriffonApplicationHelper {
 
     static <M extends GriffonModel, V extends GriffonView, C extends GriffonController> void withMVCGroup(GriffonApplication app, String mvcType, String mvcName, Map<String, Object> args, MVCClosure<M, V, C> handler) {
         try {
-            List<? extends GriffonMvcArtifact> group = createMVCGroup(mvcType, mvcName, args)
+            List<? extends GriffonMvcArtifact> group = createMVCGroup(app, mvcType, mvcName, args)
             handler.call((M) group[0], (V) group[1], (C) group[2])
         } finally {
             try {
@@ -318,8 +404,8 @@ class GriffonApplicationHelper {
     }
 
     static Map<String, Object> buildMVCGroup(GriffonApplication app, String mvcType, String mvcName, Map bindArgs) {
-        if(isBlank(mvcName)) mvcName = mvcType
-        if(bindArgs == null) bindArgs = Collections.EMPTY_MAP
+        if (isBlank(mvcName)) mvcName = mvcType
+        if (bindArgs == null) bindArgs = Collections.EMPTY_MAP
 
         if (!app.mvcGroups.containsKey(mvcType)) {
             abort(new IllegalArgumentException("Unknown MVC type '$mvcType'.  Known types are ${app.mvcGroups.keySet()}"))

@@ -145,11 +145,11 @@ public abstract class AbstractGriffonArtifact extends GroovyObjectSupport implem
     }
 
     public List<? extends GriffonMvcArtifact> createMVCGroup(Map<String, Object> args, String mvcType) {
-        return GriffonApplicationHelper.createMVCGroup(getApp(), mvcType, mvcType, Collections.emptyMap());
+        return GriffonApplicationHelper.createMVCGroup(getApp(), mvcType, mvcType, args);
     }
 
     public List<? extends GriffonMvcArtifact> createMVCGroup(String mvcType, Map<String, Object> args) {
-        return GriffonApplicationHelper.createMVCGroup(getApp(), mvcType, mvcType, Collections.emptyMap());
+        return GriffonApplicationHelper.createMVCGroup(getApp(), mvcType, mvcType, args);
     }
 
     public List<? extends GriffonMvcArtifact> createMVCGroup(String mvcType, String mvcName) {
@@ -157,11 +157,11 @@ public abstract class AbstractGriffonArtifact extends GroovyObjectSupport implem
     }
 
     public List<? extends GriffonMvcArtifact> createMVCGroup(Map<String, Object> args, String mvcType, String mvcName) {
-        return GriffonApplicationHelper.createMVCGroup(getApp(), mvcType, mvcName, Collections.emptyMap());
+        return GriffonApplicationHelper.createMVCGroup(getApp(), mvcType, mvcName, args);
     }
 
     public List<? extends GriffonMvcArtifact> createMVCGroup(String mvcType, String mvcName, Map<String, Object> args) {
-        return GriffonApplicationHelper.createMVCGroup(getApp(), mvcType, mvcName, Collections.emptyMap());
+        return GriffonApplicationHelper.createMVCGroup(getApp(), mvcType, mvcName, args);
     }
 
     public void destroyMVCGroup(String mvcName) {
@@ -169,19 +169,19 @@ public abstract class AbstractGriffonArtifact extends GroovyObjectSupport implem
     }
 
     public void withMVCGroup(String mvcType, Closure handler) {
-        withMVCGroup(mvcType, mvcType, Collections.<String, Object>emptyMap(), handler);
+        GriffonApplicationHelper.withMVCGroup(getApp(), mvcType, mvcType, Collections.<String, Object>emptyMap(), handler);
     }
 
     public void withMVCGroup(String mvcType, String mvcName, Closure handler) {
-        withMVCGroup(mvcType, mvcName, Collections.<String, Object>emptyMap(), handler);
+        GriffonApplicationHelper.withMVCGroup(getApp(), mvcType, mvcName, Collections.<String, Object>emptyMap(), handler);
     }
 
     public void withMVCGroup(String mvcType, Map<String, Object> args, Closure handler) {
-        withMVCGroup(mvcType, mvcType, args, handler);
+        GriffonApplicationHelper.withMVCGroup(getApp(), mvcType, mvcType, args, handler);
     }
 
     public void withMVCGroup(Map<String, Object> args, String mvcType, Closure handler) {
-        withMVCGroup(mvcType, mvcType, args, handler);
+        GriffonApplicationHelper.withMVCGroup(getApp(), mvcType, mvcType, args, handler);
     }
 
     public void withMVCGroup(String mvcType, String mvcName, Map<String, Object> args, Closure handler) {
@@ -193,19 +193,19 @@ public abstract class AbstractGriffonArtifact extends GroovyObjectSupport implem
     }
 
     public <M extends GriffonModel, V extends GriffonView, C extends GriffonController> void withMVCGroup(String mvcType, MVCClosure<M, V, C> handler) {
-        withMVCGroup(mvcType, mvcType, Collections.<String, Object>emptyMap(), handler);
+        GriffonApplicationHelper.withMVCGroup(getApp(), mvcType, mvcType, Collections.<String, Object>emptyMap(), handler);
     }
 
     public <M extends GriffonModel, V extends GriffonView, C extends GriffonController> void withMVCGroup(String mvcType, String mvcName, MVCClosure<M, V, C> handler) {
-        withMVCGroup(mvcType, mvcName, Collections.<String, Object>emptyMap(), handler);
+        GriffonApplicationHelper.withMVCGroup(getApp(), mvcType, mvcName, Collections.<String, Object>emptyMap(), handler);
     }
 
     public <M extends GriffonModel, V extends GriffonView, C extends GriffonController> void withMVCGroup(String mvcType, Map<String, Object> args, MVCClosure<M, V, C> handler) {
-        withMVCGroup(mvcType, mvcType, args, handler);
+        GriffonApplicationHelper.withMVCGroup(getApp(), mvcType, mvcType, args, handler);
     }
 
     public <M extends GriffonModel, V extends GriffonView, C extends GriffonController> void withMVCGroup(Map<String, Object> args, String mvcType, MVCClosure<M, V, C> handler) {
-        withMVCGroup(mvcType, mvcType, args, handler);
+        GriffonApplicationHelper.withMVCGroup(getApp(), mvcType, mvcType, args, handler);
     }
 
     public <M extends GriffonModel, V extends GriffonView, C extends GriffonController> void withMVCGroup(String mvcType, String mvcName, Map<String, Object> args, MVCClosure<M, V, C> handler) {
