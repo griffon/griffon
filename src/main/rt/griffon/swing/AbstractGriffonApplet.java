@@ -16,6 +16,7 @@
 package griffon.swing;
 
 import griffon.core.*;
+import griffon.exceptions.MVCGroupInstantiationException;
 import griffon.util.ApplicationHolder;
 import griffon.util.Metadata;
 import griffon.util.RunnableWithArgs;
@@ -79,6 +80,7 @@ public abstract class AbstractGriffonApplet extends JApplet implements GriffonAp
         System.arraycopy(args, 0, startupArgs, 0, args.length);
         ApplicationHolder.setApplication(this);
         log = LoggerFactory.getLogger(getClass());
+        addApplicationEventListener("UncaughtMVCGroupInstantiationException", new MVCGroupInstantiationExceptionHandler());
     }
 
     // ------------------------------------------------------
@@ -560,7 +562,7 @@ public abstract class AbstractGriffonApplet extends JApplet implements GriffonAp
     public <M extends GriffonModel, V extends GriffonView, C extends GriffonController> void withMVCGroup(Map<String, Object> args, String mvcType, String mvcName, MVCClosure<M, V, C> handler) {
         GriffonApplicationHelper.withMVCGroup(this, mvcType, mvcName, args, handler);
     }
-    
+
     private Class loadClass(String className) {
         try {
             return getClass().getClassLoader().loadClass(className);
@@ -568,5 +570,14 @@ public abstract class AbstractGriffonApplet extends JApplet implements GriffonAp
             // ignored
         }
         return null;
+    }
+
+    private class MVCGroupInstantiationExceptionHandler extends RunnableWithArgs {
+        public void run(Object[] args) {
+            MVCGroupInstantiationException exception = (MVCGroupInstantiationException) args[0];
+            getLog().error("Unrecoverable error", exception);
+            exception.printStackTrace();
+            System.exit(1);
+        }
     }
 }

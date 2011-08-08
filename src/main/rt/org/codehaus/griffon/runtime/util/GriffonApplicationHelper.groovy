@@ -27,6 +27,7 @@ import griffon.core.*
 import griffon.util.*
 import static griffon.util.GriffonNameUtils.isBlank
 import org.codehaus.griffon.runtime.core.*
+import griffon.exceptions.MVCGroupInstantiationException
 
 /**
  * Utility class for bootstrapping an application and handling of MVC groups.</p>
@@ -408,7 +409,7 @@ class GriffonApplicationHelper {
         if (bindArgs == null) bindArgs = Collections.EMPTY_MAP
 
         if (!app.mvcGroups.containsKey(mvcType)) {
-            abort(new IllegalArgumentException("Unknown MVC type '$mvcType'.  Known types are ${app.mvcGroups.keySet()}"))
+            throw new MVCGroupInstantiationException("Unknown MVC type '$mvcType'.  Known types are ${app.mvcGroups.keySet()}", mvcType, mvcName)
         }
         if (app.groups.containsKey(mvcName)) {
             String action = app.config.griffon.mvcid.collision ?: 'exception'
@@ -421,7 +422,7 @@ class GriffonApplicationHelper {
                     break
                 case 'exception':
                 default:
-                    abort(new IllegalArgumentException("Can not instantiate MVC group '${mvcType}' with name '${mvcName}' because a previous instance with that name exists and was not disposed of properly."))
+                    throw new MVCGroupInstantiationException("Can not instantiate MVC group '${mvcType}' with name '${mvcName}' because a previous instance with that name exists and was not disposed off properly.", mvcType, mvcName)
             }
         }
 
@@ -622,12 +623,5 @@ class GriffonApplicationHelper {
         }
 
         if (cnfe) throw cnfe
-    }
-
-    private static abort(Exception ex) {
-        ex = GriffonExceptionHandler.sanitize(ex)
-        LOG.error("Unrecoverable error", ex)
-        ex.printStackTrace()
-        System.exit(1)
     }
 }
