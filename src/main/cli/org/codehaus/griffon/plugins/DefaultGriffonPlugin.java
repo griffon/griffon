@@ -17,11 +17,11 @@ package org.codehaus.griffon.plugins;
 
 import griffon.util.BuildScope;
 import griffon.util.Environment;
+import griffon.util.GriffonClassUtils;
 import groovy.lang.Closure;
 import groovy.lang.GroovyObject;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.codehaus.griffon.commons.GriffonClassUtils;
 import org.codehaus.griffon.commons.GriffonContext;
 import org.codehaus.griffon.documentation.DocumentationContext;
 import org.codehaus.griffon.plugins.exceptions.PluginException;

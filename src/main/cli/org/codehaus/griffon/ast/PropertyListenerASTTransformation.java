@@ -25,9 +25,7 @@ import org.codehaus.groovy.control.CompilePhase;
 import org.codehaus.groovy.control.SourceUnit;
 import org.codehaus.groovy.transform.GroovyASTTransformation;
 
-import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
-import java.util.Collection;
 import java.util.Map;
 
 /**
@@ -43,9 +41,8 @@ import java.util.Map;
  */
 @GroovyASTTransformation(phase= CompilePhase.CANONICALIZATION)
 public class PropertyListenerASTTransformation extends AbstractASTTransformation {
-    protected static ClassNode LISTENER = new ClassNode(PropertyListener.class);
-    protected static ClassNode PROPERTY_CHANGE_LISTENER = ClassHelper.makeWithoutCaching(PropertyChangeListener.class);
-    protected static ClassNode PROPERTY_CHANGE_EVENT = ClassHelper.makeWithoutCaching(PropertyChangeEvent.class);
+    private static final ClassNode PROPERTY_LISTENER_CLASS = ClassHelper.makeWithoutCaching(PropertyListener.class);
+    private static final ClassNode PROPERTY_CHANGE_LISTENER_CLASS = ClassHelper.makeWithoutCaching(PropertyChangeListener.class);
     private static final String EMPTY_STRING = "";
 
     /**
@@ -56,7 +53,7 @@ public class PropertyListenerASTTransformation extends AbstractASTTransformation
      */
     public static boolean hasListenerAnnotation(AnnotatedNode node) {
         for (AnnotationNode annotation : node.getAnnotations()) {
-            if (LISTENER.equals(annotation.getClassNode())) {
+            if (PROPERTY_LISTENER_CLASS.equals(annotation.getClassNode())) {
                 return true;
             }
         }
@@ -71,8 +68,9 @@ public class PropertyListenerASTTransformation extends AbstractASTTransformation
      */
     public void visit(ASTNode[] nodes, SourceUnit source) {
         if (!(nodes[0] instanceof AnnotationNode) || !(nodes[1] instanceof AnnotatedNode)) {
-            throw new RuntimeException("Internal error: wrong types: $node.class / $parent.class");
+            throw new RuntimeException("Internal error: wrong types: "+ nodes[0].getClass() +" / "+ nodes[1].getClass());
         }
+
         AnnotationNode annotation = (AnnotationNode) nodes[0];
         AnnotatedNode parent = (AnnotatedNode) nodes[1];
 
@@ -127,7 +125,7 @@ public class PropertyListenerASTTransformation extends AbstractASTTransformation
     private static void addPropertyChangeListener(ClassNode classNode, String propertyName, ClosureExpression closure) {
         ArgumentListExpression args = new ArgumentListExpression();
         if(propertyName != null) args.addExpression(new ConstantExpression(propertyName));
-        args.addExpression(CastExpression.asExpression(PROPERTY_CHANGE_LISTENER, closure));
+        args.addExpression(CastExpression.asExpression(PROPERTY_CHANGE_LISTENER_CLASS, closure));
 
         addListenerStatement(classNode, args);
     }
@@ -135,7 +133,7 @@ public class PropertyListenerASTTransformation extends AbstractASTTransformation
     private static void addPropertyChangeListener(ClassNode classNode, String propertyName, VariableExpression variable) {
         ArgumentListExpression args = new ArgumentListExpression();
         if(propertyName != null) args.addExpression(new ConstantExpression(propertyName));
-        args.addExpression(CastExpression.asExpression(PROPERTY_CHANGE_LISTENER, variable));
+        args.addExpression(CastExpression.asExpression(PROPERTY_CHANGE_LISTENER_CLASS, variable));
 
         addListenerStatement(classNode, args);
     }

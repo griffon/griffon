@@ -35,7 +35,6 @@ import java.util.regex.Pattern;
 
 /**
  * @author Andres Almiray
- *
  * @since 0.9.1
  */
 public class GriffonCompilerContext {
@@ -55,17 +54,18 @@ public class GriffonCompilerContext {
     public static Pattern[] excludedArtifacts;
     public static Pattern griffonArtifactPattern;
 
-    private static final String[] ARTIFACT_EXCLUDES = { "conf", "i18n", "resources" };
+    private static final String[] ARTIFACT_EXCLUDES = {"conf", "i18n", "resources"};
     private static final boolean isWindows = System.getProperty("os.name").matches("Windows.*");
 
     private static Pattern normalizePattern(String regex) {
-        if(isWindows) {
+        if (isWindows) {
             StringBuilder b = new StringBuilder();
             int size = regex.length();
             int i = 0;
-            while(i < size) {
+            while (i < size) {
                 char c = regex.charAt(i++);
-                if(c == '\\') b.append("\\\\"); else b.append(c);
+                if (c == '\\') b.append("\\\\");
+                else b.append(c);
             }
             regex = b.toString();
         }
@@ -77,11 +77,11 @@ public class GriffonCompilerContext {
         isArtifactPattern = normalizePattern("^" + basedir + File.separator + "griffon-app" + File.separator + ".*$");
         excludedArtifacts = new Pattern[ARTIFACT_EXCLUDES.length];
         int i = 0;
-        for(String dir : ARTIFACT_EXCLUDES) {
-            excludedArtifacts[i++] = normalizePattern("^" + basedir + File.separator + "griffon-app" + File.separator + dir + File.separator + ".*$");        
+        for (String dir : ARTIFACT_EXCLUDES) {
+            excludedArtifacts[i++] = normalizePattern("^" + basedir + File.separator + "griffon-app" + File.separator + dir + File.separator + ".*$");
         }
         griffonArtifactPattern = normalizePattern("^" + basedir + File.separator + "griffon-app" + File.separator + "([a-z]+)" + File.separator + ".*.groovy$");
-        isAddonPattern = normalizePattern("^" + basedir + File.separator + ".*GriffonAddon.groovy$");
+        isAddonPattern = normalizePattern("^" + basedir + File.separator + ".*GriffonAddon(.groovy|.java)$");
         scriptPatterns = new Pattern[2];
         scriptPatterns[0] = normalizePattern("^" + basedir + File.separator + "griffon-app" + File.separator + "conf" + File.separator + ".*.groovy$");
         scriptPatterns[1] = normalizePattern("^" + basedir + File.separator + "scripts" + File.separator + ".*.groovy$");
@@ -91,55 +91,55 @@ public class GriffonCompilerContext {
     }
 
     public static boolean isGriffonArtifact(SourceUnit source) {
-        if(source == null) return false;
+        if (source == null) return false;
         return isGriffonArtifact(source.getName());
     }
 
     public static boolean isGriffonArtifact(String path) {
-         if(projectName == null) return false;
-    
-         for(Pattern p : excludedArtifacts) {
-             if(p.matcher(path).matches()) return false;
-         }
-         return isArtifactPattern.matcher(path).matches();  
+        if (projectName == null) return false;
+
+        for (Pattern p : excludedArtifacts) {
+            if (p.matcher(path).matches()) return false;
+        }
+        return isArtifactPattern.matcher(path).matches();
     }
 
     public static boolean isGriffonAddon(SourceUnit source) {
-        if(source == null) return false;
+        if (source == null) return false;
         return isGriffonAddon(source.getName());
     }
-    
+
     public static boolean isGriffonAddon(String path) {
-         if(projectName == null) return false;
-         return isAddonPattern.matcher(path).matches();
+        if (projectName == null) return false;
+        return isAddonPattern.matcher(path).matches();
     }
 
     public static boolean isGriffonScript(SourceUnit source) {
-        if(source == null) return false;
+        if (source == null) return false;
         return isGriffonScript(source.getName());
     }
 
     public static boolean isGriffonScript(String path) {
-         if(projectName == null) return false;
+        if (projectName == null) return false;
 
-         for(Pattern p : scriptPatterns) {
-             if(p.matcher(path).matches()) return true;
-         }
-         return false;
+        for (Pattern p : scriptPatterns) {
+            if (p.matcher(path).matches()) return true;
+        }
+        return false;
     }
 
     public static boolean isTestSource(SourceUnit source) {
-        if(source == null) return false;
+        if (source == null) return false;
         return isTestSource(source.getName());
     }
 
     public static boolean isTestSource(String path) {
-         if(projectName == null) return false;
-         return isTestPattern.matcher(path).matches();
+        if (projectName == null) return false;
+        return isTestPattern.matcher(path).matches();
     }
 
     public static String getArtifactPath(SourceUnit source) {
-        if(source == null) return null;
+        if (source == null) return null;
         return getArtifactPath(source.getName());
     }
 
@@ -153,14 +153,20 @@ public class GriffonCompilerContext {
      * Never returns null
      */
     public static String[] merge(String[] a, String[] b) {
-        if(a == null) a = new String[0];
-        if(b == null) b = new String[0];
+        if (a == null) a = new String[0];
+        if (b == null) b = new String[0];
 
         List<String> c = new ArrayList<String>();
-        for(String s : a) { s = s.trim(); if(!c.contains(s)) c.add(s); }
-        for(String s : b) { s = s.trim(); if(!c.contains(s)) c.add(s); }
+        for (String s : a) {
+            s = s.trim();
+            if (!c.contains(s)) c.add(s);
+        }
+        for (String s : b) {
+            s = s.trim();
+            if (!c.contains(s)) c.add(s);
+        }
 
-        return c.toArray(new String[c.size()]);    
+        return c.toArray(new String[c.size()]);
     }
 
     public static ConfigObject getBuildSettings() {
@@ -173,9 +179,9 @@ public class GriffonCompilerContext {
     }
 
     public static boolean getConfigOption(String key) {
-        if(System.getProperty(key) != null) return Boolean.getBoolean(key);
+        if (System.getProperty(key) != null) return Boolean.getBoolean(key);
         Object value = getFlattenedBuildSettings().get(key);
-        if(value != null) return DefaultTypeTransformation.castToBoolean(value);
+        if (value != null) return DefaultTypeTransformation.castToBoolean(value);
         return false;
     }
 

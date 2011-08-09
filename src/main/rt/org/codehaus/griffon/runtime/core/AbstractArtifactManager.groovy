@@ -57,8 +57,9 @@ abstract class AbstractArtifactManager implements ArtifactManager {
             }
         }
     }
-    
-    protected abstract Map<String, List<ArtifactInfo>> doLoadArtifactMetadata()
+
+    // commented out generics because it fails with groovy 1.8.1
+    protected abstract Map/*<String, List<ArtifactInfo>>*/ doLoadArtifactMetadata()
 
     void registerArtifactHandler(ArtifactHandler handler) {
         if(!handler) return

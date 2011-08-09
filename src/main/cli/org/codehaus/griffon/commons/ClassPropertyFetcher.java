@@ -15,6 +15,7 @@
  */
 package org.codehaus.griffon.commons;
 
+import griffon.util.GriffonClassUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.BeanUtils;

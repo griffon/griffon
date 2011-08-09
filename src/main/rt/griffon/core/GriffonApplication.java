@@ -44,7 +44,9 @@ public interface GriffonApplication extends ThreadingHandler, MVCHandler {
     public enum Configuration {
         APPLICATION, CONFIG, BUILDER, EVENTS;
 
-        /** Display friendly name */
+        /**
+         * Display friendly name
+         */
         private String name;
 
         /**
@@ -53,7 +55,7 @@ public interface GriffonApplication extends ThreadingHandler, MVCHandler {
          * @return a capitalized String
          */
         public String getName() {
-            if(name == null) {
+            if (name == null) {
                 return GriffonNameUtils.capitalize(this.toString().toLowerCase(Locale.getDefault()));
             }
             return name;
@@ -69,7 +71,9 @@ public interface GriffonApplication extends ThreadingHandler, MVCHandler {
     public enum Lifecycle {
         INITIALIZE, STARTUP, READY, SHUTDOWN, STOP;
 
-        /** Display friendly name */
+        /**
+         * Display friendly name
+         */
         private String name;
 
         /**
@@ -78,7 +82,7 @@ public interface GriffonApplication extends ThreadingHandler, MVCHandler {
          * @return a capitalized String
          */
         public String getName() {
-            if(name == null) {
+            if (name == null) {
                 return GriffonNameUtils.capitalize(this.toString().toLowerCase(Locale.getDefault()));
             }
             return name;
@@ -97,16 +101,19 @@ public interface GriffonApplication extends ThreadingHandler, MVCHandler {
         BOOTSTRAP_START, BOOTSTRAP_END,
         STARTUP_START, STARTUP_END,
         READY_START, READY_END,
+        STOP_START, STOP_END,
         SHUTDOWN_REQUESTED, SHUTDOWN_ABORTED, SHUTDOWN_START,
         NEW_INSTANCE,
-        CREATE_MVC_GROUP("CreateMVCGroup"), DESTROY_MVC_GROUP("DestroyMVCGroup"),
+        INITIALIZE_MVC_GROUP("InitializeMVCGroup"), CREATE_MVC_GROUP("CreateMVCGroup"), DESTROY_MVC_GROUP("DestroyMVCGroup"),
         WINDOW_SHOWN, WINDOW_HIDDEN;
 
-        /** Display friendly name */
+        /**
+         * Display friendly name
+         */
         private String name;
 
         Event() {
-            String name = name().toLowerCase().replaceAll("_","-");
+            String name = name().toLowerCase().replaceAll("_", "-");
             this.name = GriffonNameUtils.getClassNameForLowerCaseHyphenSeparatedName(name);
         }
 
@@ -126,6 +133,8 @@ public interface GriffonApplication extends ThreadingHandler, MVCHandler {
 
     /**
      * Gets the application's configuration set on 'application.properties'.<p>
+     *
+     * @return the application's metadata configuration
      */
     Metadata getMetadata();
 
@@ -133,37 +142,47 @@ public interface GriffonApplication extends ThreadingHandler, MVCHandler {
      * Gets the script class that holds the MVC configuration (i.e. {@code Application.groovy})
      */
     Class getAppConfigClass();
+
     /**
      * Gets the script class that holds additional configuration (i.e. {@code Config.groovy})
      */
     Class getConfigClass();
+
     /**
      * Returns the merged runtime configuration from {@code appConfig} and {@code config}
      */
     ConfigObject getConfig();
+
     void setConfig(ConfigObject config);
+
+    Object getConfigValue(String key);
 
     /**
      * Gets the script class that holds builder configuration (i.e. {@code Builder.groovy})
      */
     Class getBuilderClass();
+
     /**
-     * Returns the runtime configuration required for instantiating a {@CompositeBuilder}
+     * Returns the runtime configuration required for instantiating a {@code CompositeBuilder}
      */
     ConfigObject getBuilderConfig();
+
     void setBuilderConfig(ConfigObject builderConfig);
 
     /**
      * Gets the script class that holds global event handler configuration (i.e. {@code Events.groovy})
      */
     Class getEventsClass();
+
     /**
      * Returns the runtime configuration for global event handlers.
      */
     Object getEventsConfig();
+
     void setEventsConfig(Object eventsConfig);
 
     Binding getBindings();
+
     void setBindings(Binding bindings);
 
     /**
@@ -175,21 +194,11 @@ public interface GriffonApplication extends ThreadingHandler, MVCHandler {
 
     /**
      * Register an MVC group for instantiation.<p>
+     *
+     * @param mvcType     the group type, e.g.  'main' or 'navigation'
+     * @param mvcPortions all group members keyed by type.
      */
     void addMvcGroup(String mvcType, Map<String, String> mvcPortions);
-
-    /**
-     * Returns all currently available addon instances, keyed by addon name.<p>
-     * @deprecated use getAddonManager().getAddons()
-     */
-    @Deprecated
-    Map<String, ?> getAddons();
-
-    /**
-     * @deprecated without replacement. Use the AddonManager to query for addons
-     */
-    @Deprecated
-    Map<String, String> getAddonPrefixes();
 
     /**
      * Returns the application's AddonManager instance.
@@ -236,7 +245,7 @@ public interface GriffonApplication extends ThreadingHandler, MVCHandler {
     Object createApplicationContainer();
 
     /**
-     * Executes the 'Initialze' life cycle phase.
+     * Executes the 'Initialize' life cycle phase.
      */
     void initialize();
 
@@ -276,7 +285,7 @@ public interface GriffonApplication extends ThreadingHandler, MVCHandler {
      * Adds a closure as an application event listener.<p>
      *
      * @param eventName the name of the event
-     * @param listener an application event listener
+     * @param listener  an application event listener
      */
     void addApplicationEventListener(String eventName, Closure listener);
 
@@ -284,7 +293,7 @@ public interface GriffonApplication extends ThreadingHandler, MVCHandler {
      * Adds a runnable as an application event listener.<p>
      *
      * @param eventName the name of the event
-     * @param listener an application event listener
+     * @param listener  an application event listener
      */
     void addApplicationEventListener(String eventName, RunnableWithArgs listener);
 
@@ -294,13 +303,13 @@ public interface GriffonApplication extends ThreadingHandler, MVCHandler {
      *
      * @param listener an application event listener
      */
-    void removeApplicationEventListener(Object listener );
+    void removeApplicationEventListener(Object listener);
 
     /**
      * Removes a closure as an application event listener.<p>
      *
      * @param eventName the name of the event
-     * @param listener an application event listener
+     * @param listener  an application event listener
      */
     void removeApplicationEventListener(String eventName, Closure listener);
 
@@ -308,7 +317,7 @@ public interface GriffonApplication extends ThreadingHandler, MVCHandler {
      * Removes a runnable as an application event listener.<p>
      *
      * @param eventName the name of the event
-     * @param listener an application event listener
+     * @param listener  an application event listener
      */
     void removeApplicationEventListener(String eventName, RunnableWithArgs listener);
 
@@ -323,7 +332,7 @@ public interface GriffonApplication extends ThreadingHandler, MVCHandler {
      * Publishes an application event.<p>
      *
      * @param eventName the name of the event
-     * @param params event arguments sent to listeners
+     * @param params    event arguments sent to listeners
      */
     void event(String eventName, List params);
 
@@ -338,7 +347,7 @@ public interface GriffonApplication extends ThreadingHandler, MVCHandler {
      * Publishes an application event asynchronously off the UI thread.<p>
      *
      * @param eventName the name of the event
-     * @param params event arguments sent to listeners
+     * @param params    event arguments sent to listeners
      */
     void eventOutside(String eventName, List params);
 
@@ -353,7 +362,7 @@ public interface GriffonApplication extends ThreadingHandler, MVCHandler {
      * Publishes an application event asynchronously off the publisher's thread.<p>
      *
      * @param eventName the name of the event
-     * @param params event arguments sent to listeners
+     * @param params    event arguments sent to listeners
      */
     void eventAsync(String eventName, List params);
 
@@ -363,7 +372,7 @@ public interface GriffonApplication extends ThreadingHandler, MVCHandler {
      * @param handler the shutdown handler to be registered; null and/or
      *                duplicated values should be ignored
      */
-    void addShutdownHandler(ShutdownHandler handler);    
+    void addShutdownHandler(ShutdownHandler handler);
 
     /**
      * Removes a ShutdownHandler from this application
@@ -371,13 +380,13 @@ public interface GriffonApplication extends ThreadingHandler, MVCHandler {
      * @param handler the shutdown handler to be removed; null and/or
      *                duplicated values should be ignored
      */
-    void removeShutdownHandler(ShutdownHandler handler);    
+    void removeShutdownHandler(ShutdownHandler handler);
 
     /**
      * Gets the application locale.
      *
      * @return the current Locale used by the application. Never returns null.
-     */    
+     */
     Locale getLocale();
 
     /**
@@ -408,32 +417,31 @@ public interface GriffonApplication extends ThreadingHandler, MVCHandler {
      * Creates a new instance of the specified class and type.<br/>
      * Triggers the Event.NEW_INSTANCE with the following parameters
      * <ul>
-     *     <li>clazz - the Class of the object</li>
-     *     <li>type - the symbolical type of the object</li>
-     *     <li>instance -> the object that was created</li>
+     * <li>clazz - the Class of the object</li>
+     * <li>type - the symbolical type of the object</li>
+     * <li>instance -> the object that was created</li>
      * </ul>
      *
      * @param clazz the Class for which an instance must be created
      * @param type  a symbolical type, for example 'controller' or 'service'. May be null.
-     *
      * @return a newly instantiated object of type <tt>clazz</tt>. Implementations must be sure
-     * to trigger an event of type Event.NEW_INSTANCE.
+     *         to trigger an event of type Event.NEW_INSTANCE.
      */
     Object newInstance(Class clazz, String type);
 
     /**
      * Returns the arguments set on the command line (if any).<p>
      *
-     * @since 0.9.2
      * @return an array of command line arguments. Never returns null.
+     * @since 0.9.2
      */
     String[] getStartupArgs();
 
     /**
      * Returns a Logger instance suitable for this application.
      *
-     * @since 0.9.2
      * @return a Logger instance.
+     * @since 0.9.2
      */
     Logger getLog();
 }

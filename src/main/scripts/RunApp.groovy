@@ -77,14 +77,14 @@ target('runApp': "Runs the application from the command line") {
     }
     if (isMacOSX) {
         javaOpts << "-Xdock:name=${GriffonNameUtils.capitalize(griffonAppName)}"
-        javaOpts << "-Xdock:icon=${griffonHome}/media/griffon.icns"
+        javaOpts << "-Xdock:icon=${resolveApplicationIcnsFile().absolutePath}"
     }
 
     debug("Running JVM options:")
     javaOpts.each{ debug("  $it") }
 
     def runtimeClasspath = runtimeJars.collect { f ->
-        f.absolutePath - jardir.absolutePath - File.separator
+        f.absolutePath.startsWith(jardir.absolutePath) ? f.absolutePath - jardir.absolutePath - File.separator : f
     }.join(File.pathSeparator)
 
     runtimeClasspath = [i18nDir, resourcesDir, runtimeClasspath, classesDir, pluginClassesDir].join(File.pathSeparator)

@@ -12,7 +12,7 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- */ 
+ */
 package org.codehaus.griffon.runtime.core;
 
 import griffon.core.GriffonApplication;
@@ -38,11 +38,10 @@ import java.util.TreeSet;
 /**
  * Abstract base class for Griffon types that provides common functionality for
  * evaluating conventions within classes
- * 
+ *
  * @author Steven Devijver (Grails 0.1)
  * @author Graeme Rocher (Grails 0.1)
  * @author Andres Almiray
- *
  * @since 0.9.1
  */
 public abstract class AbstractGriffonClass implements GriffonClass {
@@ -57,7 +56,7 @@ public abstract class AbstractGriffonClass implements GriffonClass {
     private final String propertyName;
     private final String logicalPropertyName;
     private final ClassPropertyFetcher classPropertyFetcher;
-    
+
     protected final Set<String> eventsCache = new TreeSet<String>();
     protected final Logger log;
 
@@ -75,13 +74,13 @@ public abstract class AbstractGriffonClass implements GriffonClass {
         this.clazz = clazz;
         this.type = type;
         fullName = clazz.getName();
-        log = LoggerFactory.getLogger(getClass().getSimpleName() +"["+ fullName +"]");
+        log = LoggerFactory.getLogger(getClass().getSimpleName() + "[" + fullName + "]");
         packageName = GriffonClassUtils.getPackageName(clazz);
         naturalName = GriffonNameUtils.getNaturalName(clazz.getName());
-        shortName = GriffonClassUtils.getShortClassName(clazz);        
+        shortName = GriffonClassUtils.getShortClassName(clazz);
         name = GriffonNameUtils.getLogicalName(clazz, trailingName);
         propertyName = GriffonNameUtils.getPropertyNameRepresentation(shortName);
-        if(GriffonNameUtils.isBlank(name)) {
+        if (GriffonNameUtils.isBlank(name)) {
             logicalPropertyName = propertyName;
         } else {
             logicalPropertyName = GriffonNameUtils.getPropertyNameRepresentation(name);
@@ -108,14 +107,14 @@ public abstract class AbstractGriffonClass implements GriffonClass {
     public Object newInstance() {
         try {
             Object instance = GriffonApplicationHelper.newInstance(app, clazz, type);
-            if(instance instanceof AbstractGriffonArtifact) {
+            if (instance instanceof AbstractGriffonArtifact) {
                 ((AbstractGriffonArtifact) instance).setApp(app);
             }
             return instance;
         } catch (Exception e) {
             Throwable targetException = null;
             if (e instanceof InvocationTargetException) {
-                targetException = ((InvocationTargetException)e).getTargetException();
+                targetException = ((InvocationTargetException) e).getTargetException();
             } else {
                 targetException = e;
             }
@@ -149,16 +148,27 @@ public abstract class AbstractGriffonClass implements GriffonClass {
 
     public Object getReferenceInstance() {
         Object obj = classPropertyFetcher.getReference();
+        MetaClass myMetaClass = getMetaClass();
         if (obj instanceof GroovyObject) {
-            log.debug("Setting MetaClass "+getMetaClass()+" on GroovyObject "+obj);
-            ((GroovyObject)obj).setMetaClass(getMetaClass());
+            MetaClass otherMetaClass = ((GroovyObject) obj).getMetaClass();
+            if (myMetaClass != otherMetaClass) {
+                if (log.isDebugEnabled()) {
+                    log.debug("Setting MetaClass " + myMetaClass + " on GroovyObject " + obj);
+                }
+                ((GroovyObject) obj).setMetaClass(myMetaClass);
+            }
         } else {
-            log.debug("Setting MetaClass "+getMetaClass()+" on non-GroovyObject "+obj);
-            GroovySystem.getMetaClassRegistry().setMetaClass(clazz, getMetaClass());
+            MetaClass otherMetaClass = GroovySystem.getMetaClassRegistry().getMetaClass(clazz);
+            if (myMetaClass != otherMetaClass) {
+                if (log.isDebugEnabled()) {
+                    log.debug("Setting MetaClass " + myMetaClass + " on non-GroovyObject " + obj);
+                }
+                GroovySystem.getMetaClassRegistry().setMetaClass(clazz, myMetaClass);
+            }
         }
         return obj;
     }
-    
+
     public PropertyDescriptor[] getPropertyDescriptors() {
         return classPropertyFetcher.getPropertyDescriptors();
     }
@@ -173,38 +183,38 @@ public abstract class AbstractGriffonClass implements GriffonClass {
     public String[] getPropertiesWithFields() {
         return classPropertyFetcher.getPropertiesWithFields();
     }
-    
+
     public Class<?> getPropertyType(String name) {
         return classPropertyFetcher.getPropertyType(name);
     }
-    
+
     public boolean isReadableProperty(String name) {
         return classPropertyFetcher.isReadableProperty(name);
     }
-    
+
     public boolean hasMetaMethod(String name) {
         return hasMetaMethod(name, null);
     }
-    
+
     public boolean hasMetaMethod(String name, Object[] args) {
         return (getMetaClass().getMetaMethod(name, args) != null);
     }
-    
+
     public boolean hasMetaProperty(String name) {
         return (getMetaClass().getMetaProperty(name) != null);
     }
 
     public MetaProperty[] getMetaProperties() {
         List<MetaProperty> properties = new ArrayList<MetaProperty>();
-        for(MetaProperty property : getMetaClass().getProperties()) {
-            if(!"class".equals(property.getName()) && !"metaClass".equals(property.getName())) {
+        for (MetaProperty property : getMetaClass().getProperties()) {
+            if (!"class".equals(property.getName()) && !"metaClass".equals(property.getName())) {
                 properties.add(property);
             }
         }
-        
+
         return properties.toArray(new MetaProperty[properties.size()]);
     }
-    
+
     /**
      * <p>Looks for a property of the reference instance with a given name and type.</p>
      * <p>If found its value is returned. We follow the Java bean conventions with augmentation for groovy support
@@ -216,14 +226,13 @@ public abstract class AbstractGriffonClass implements GriffonClass {
      * <li>Standard public bean property (with getter or just public field, using normal introspection)
      * </ol>
      *
-     *
      * @return property value or null if no property or static field was found
      */
     protected Object getPropertyOrStaticPropertyOrFieldValue(@SuppressWarnings("hiding") String name, Class<?> type) {
         Object value = classPropertyFetcher.getPropertyValue(name);
         return returnOnlyIfInstanceOf(value, type);
     }
-    
+
     /**
      * Get the value of the named static property.
      *
@@ -242,6 +251,7 @@ public abstract class AbstractGriffonClass implements GriffonClass {
     /**
      * Get the value of the named property, with support for static properties in both Java and Groovy classes
      * (which as of Groovy JSR 1.0 RC 01 only have getters in the metaClass)
+     *
      * @param propName
      * @param type
      * @return The property value or null
@@ -255,7 +265,7 @@ public abstract class AbstractGriffonClass implements GriffonClass {
         return returnOnlyIfInstanceOf(value, type);
     }
 
-    private <T> T  getGroovyProperty(String propName, Class<T> type, boolean onlyStatic) {
+    private <T> T getGroovyProperty(String propName, Class<T> type, boolean onlyStatic) {
         Object value = null;
         if (GroovyObject.class.isAssignableFrom(getClazz())) {
             MetaProperty metaProperty = getMetaClass().getMetaProperty(propName);
@@ -263,8 +273,7 @@ public abstract class AbstractGriffonClass implements GriffonClass {
                 int modifiers = metaProperty.getModifiers();
                 if (Modifier.isStatic(modifiers)) {
                     value = metaProperty.getProperty(clazz);
-                }
-                else if (!onlyStatic){
+                } else if (!onlyStatic) {
                     value = metaProperty.getProperty(getReferenceInstance());
                 }
             }
@@ -278,8 +287,8 @@ public abstract class AbstractGriffonClass implements GriffonClass {
 
     @SuppressWarnings("unchecked")
     private <T> T returnOnlyIfInstanceOf(Object value, Class<T> type) {
-        if ((value != null) && (type==Object.class || GriffonClassUtils.isGroovyAssignableFrom(type, value.getClass()))) {
-            return (T)value;
+        if ((value != null) && (type == Object.class || GriffonClassUtils.isGroovyAssignableFrom(type, value.getClass()))) {
+            return (T) value;
         }
 
         return null;
@@ -294,14 +303,14 @@ public abstract class AbstractGriffonClass implements GriffonClass {
      */
     public boolean isClosureMetaProperty(MetaProperty property) {
         Object value = property.getProperty(getReferenceInstance());
-        
-        if(value != null) return Closure.class.isAssignableFrom(value.getClass());
-        
-        if(property instanceof MetaBeanProperty) {
+
+        if (value != null) return Closure.class.isAssignableFrom(value.getClass());
+
+        if (property instanceof MetaBeanProperty) {
             // Instances of MetaBeanProperty store the closure in a descendant
             // of ClosureInvokingMethod so we only need to check the type of
             // the getter
-            MetaMethod getter = ((MetaBeanProperty)property).getGetter();
+            MetaMethod getter = ((MetaBeanProperty) property).getGetter();
             return getter instanceof ClosureInvokingMethod;
         }
 
@@ -332,10 +341,10 @@ public abstract class AbstractGriffonClass implements GriffonClass {
     }
 
     public boolean equals(Object obj) {
-        if(this == obj) return true;
-        if(obj == null) return false;
-        if(!obj.getClass().getName().equals(getClass().getName())) return false;
-    
+        if (this == obj) return true;
+        if (obj == null) return false;
+        if (!obj.getClass().getName().equals(getClass().getName())) return false;
+
         GriffonClass gc = (GriffonClass) obj;
         return clazz.getName().equals(gc.getClazz().getName());
     }
@@ -345,7 +354,7 @@ public abstract class AbstractGriffonClass implements GriffonClass {
     }
 
     public void updateMetaClass(Closure updater) {
-        if(updater == null) return;
+        if (updater == null) return;
         updater.setDelegate(getMetaClass());
         updater.setResolveStrategy(Closure.DELEGATE_FIRST);
         updater.run();
@@ -354,43 +363,43 @@ public abstract class AbstractGriffonClass implements GriffonClass {
 
     // Any artifact can become an Event listener
     public String[] getEventNames() {
-        if(eventsCache.isEmpty()) {
-            for(String propertyName : getPropertiesWithFields()) {
-                 if(!eventsCache.contains(propertyName) &&
-                    GriffonClassUtils.isEventHandler(propertyName) &&
-                    getPropertyValue(propertyName, Closure.class) != null) {
-                      eventsCache.add(propertyName.substring(2));
-                 }
+        if (eventsCache.isEmpty()) {
+            for (String propertyName : getPropertiesWithFields()) {
+                if (!eventsCache.contains(propertyName) &&
+                        GriffonClassUtils.isEventHandler(propertyName) &&
+                        getPropertyValue(propertyName, Closure.class) != null) {
+                    eventsCache.add(propertyName.substring(2));
+                }
             }
-            for(Method method : getClazz().getMethods()) {
-                 String methodName = method.getName();
-                 if(!eventsCache.contains(methodName) &&
-                    GriffonClassUtils.isPlainMethod(method) &&
-                    GriffonClassUtils.isEventHandler(methodName)) {
-                      eventsCache.add(methodName.substring(2));
-                 }
+            for (Method method : getClazz().getMethods()) {
+                String methodName = method.getName();
+                if (!eventsCache.contains(methodName) &&
+                        GriffonClassUtils.isPlainMethod(method) &&
+                        GriffonClassUtils.isEventHandler(methodName)) {
+                    eventsCache.add(methodName.substring(2));
+                }
             }
-            for(MetaProperty p : getMetaProperties()) {
-                 String propertyName = p.getName();
-                 if(GriffonClassUtils.isGetter(p, true)) {
-                     propertyName = GriffonNameUtils.uncapitalize(propertyName.substring(3));
-                 }
-                 if(!eventsCache.contains(propertyName) &&
-                    GriffonClassUtils.isEventHandler(propertyName) &&
-                    isClosureMetaProperty(p)) {
-                      eventsCache.add(propertyName.substring(2));
-                 }
+            for (MetaProperty p : getMetaProperties()) {
+                String propertyName = p.getName();
+                if (GriffonClassUtils.isGetter(p, true)) {
+                    propertyName = GriffonNameUtils.uncapitalize(propertyName.substring(3));
+                }
+                if (!eventsCache.contains(propertyName) &&
+                        GriffonClassUtils.isEventHandler(propertyName) &&
+                        isClosureMetaProperty(p)) {
+                    eventsCache.add(propertyName.substring(2));
+                }
             }
-            for(MetaMethod method : getMetaClass().getMethods()) {
-                 String methodName = method.getName();
-                 if(!eventsCache.contains(methodName) &&
-                    GriffonClassUtils.isPlainMethod(method) &&
-                    GriffonClassUtils.isEventHandler(methodName)) {
-                      eventsCache.add(methodName.substring(2));
-                 }
+            for (MetaMethod method : getMetaClass().getMethods()) {
+                String methodName = method.getName();
+                if (!eventsCache.contains(methodName) &&
+                        GriffonClassUtils.isPlainMethod(method) &&
+                        GriffonClassUtils.isEventHandler(methodName)) {
+                    eventsCache.add(methodName.substring(2));
+                }
             }
         }
-    
-        return (String[]) eventsCache.toArray(new String[eventsCache.size()]);
+
+        return eventsCache.toArray(new String[eventsCache.size()]);
     }
 }

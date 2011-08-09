@@ -30,6 +30,7 @@ includeTargets << griffonScript("_GriffonArgParsing")
 
 defaultPackageName = ''
 replaceNonag = false
+allowDuplicate = false
 
 createArtifact = { Map args = [:] ->
     resolveArchetype()
@@ -87,7 +88,7 @@ createArtifact = { Map args = [:] ->
             if(!replaceNonag && !confirmInput("${type} ${className}${suffix}${fileType} already exists. Overwrite?","${artifactName}.${suffix}.overwrite")) {
                 return
             }        
-        } else {
+        } else if(!allowDuplicate) {
             if(!replaceNonag && !confirmInput("${type} ${className}${suffix} already exists with type ${fileSuffix}. Rename?","${artifactName}.${suffix}.rename")) {
                 return
             }

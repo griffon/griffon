@@ -145,7 +145,7 @@ public abstract class AbstractGriffonView extends AbstractGriffonMvcArtifact imp
             throw new IllegalArgumentException("Could not read file "+ fileName);
         }
 
-        String groovyScript = new Xml2Groovy().parse(is);
+        String groovyScript = Xml2Groovy.getInstance().parse(is);
         if(isBlank(groovyScript)) {
             throw new IllegalArgumentException("File "+ fileName +" is empty.");
         } else if(getLog().isTraceEnabled()) {

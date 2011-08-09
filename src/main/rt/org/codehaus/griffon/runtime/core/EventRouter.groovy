@@ -15,12 +15,13 @@
  */
 package org.codehaus.griffon.runtime.core
 
+import griffon.core.UIThreadManager
+import griffon.util.RunnableWithArgs
 import java.util.concurrent.LinkedBlockingQueue
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import static org.codehaus.groovy.runtime.MetaClassHelper.convertToTypeArray
-import griffon.core.UIThreadManager
-import griffon.util.RunnableWithArgs
+import static griffon.util.GriffonNameUtils.capitalize
 
 /**
  * An event handling helper.<p>
@@ -28,6 +29,7 @@ import griffon.util.RunnableWithArgs
  * <li>a <tt>Script</tt></li>
  * <li>a <tt>Map</tt></li>
  * <li>a <tt>Closure</tt></li>
+ * <li>a <tt>RunnableWithArgs</tt></li>
  * <li>a <tt>Object</tt> (a Java bean)</li>
  * </ul>
  *
@@ -40,16 +42,16 @@ import griffon.util.RunnableWithArgs
  */
 class EventRouter {
     private List listeners = Collections.synchronizedList([])
-    private Map scriptBindings = [:]
-    private Map closureListeners = Collections.synchronizedMap([:])
+    private Map<Script, Binding> scriptBindings = [:]
+    private Map<String, List> closureListeners = Collections.synchronizedMap([:])
     private static final Logger LOG = LoggerFactory.getLogger(EventRouter)
-    private final Queue deferredEvents = new LinkedBlockingQueue()
+    private final Queue<Closure> deferredEvents = new LinkedBlockingQueue<Closure>()
 
     private static final Object LOCK = new Object()
     private static int count = 1
 
     private static int identifier() {
-        synchronized(LOCK) {
+        synchronized (LOCK) {
             count++
         }
     }
@@ -57,10 +59,9 @@ class EventRouter {
     EventRouter() {
         new Thread({
             while (true) {
-                Closure event = deferredEvents.take()
-                event()
+                deferredEvents.take()()
             }
-        }, "EventPublisher-${identifier()}").start()
+        }, "EventRouter-${identifier()}").start()
     }
 
     /**
@@ -108,13 +109,8 @@ class EventRouter {
     private Closure buildPublisher(String eventName, List params) {
         return { mode ->
             if (LOG.traceEnabled) LOG.trace("Triggering event '$eventName' $mode")
-            eventName = eventName[0].toUpperCase() + eventName[1..-1]
+            eventName = capitalize(eventName)
             def eventHandler = 'on' + eventName
-            def dispatchEvent = { listener ->
-                // any exceptions that might get thrown should be caught
-                // by GriffonExceptionHandler
-                fireEvent(listener, eventHandler, params ?: [])
-            }
 
             // defensive copying to avoid CME during event dispatching
             // GRIFFON-224
@@ -123,10 +119,14 @@ class EventRouter {
                 listenersCopy.addAll(listeners)
             }
             synchronized (closureListeners) {
-                closureListeners[eventName].each { listenersCopy << it }
+                for(listener in closureListeners[eventName]) {
+                    listenersCopy << listener
+                }
             }
 
-            listenersCopy.each { dispatchEvent(it) }
+            for(listener in listenersCopy) {
+                fireEvent(listener, eventHandler, params)
+            }
         }
     }
 
@@ -194,13 +194,43 @@ class EventRouter {
      * Some examples of eventHandler names are: onStartupStart, onMyCoolEvent.
      * Event names must follow the camelCase naming convention.<p>
      *
-     * @param listener and event listener of type Script, Map or Object
+     * @param listener an event listener of type Script, Map or Object
      */
     void addEventListener(listener) {
         if (!listener || listener instanceof Closure || listener instanceof RunnableWithArgs) return
+        if (listener instanceof Map) {
+            addEventListener((Map) listener)
+            return
+        }
         synchronized (listeners) {
             if (listeners.find { it == listener }) return
+            try {
+                LOG.debug("Adding listener $listener")
+            } catch (UnsupportedOperationException uoe) {
+                LOG.debug("Adding listener ${listener.class.name}")
+            }
             listeners.add(listener)
+        }
+    }
+
+    /**
+     * Adds a Map containing event listeners.<p>
+     *
+     * An event listener may be a<ul>
+     * <li>a <tt>Closure</tt></li>
+     * <li>a <tt>RunnableWithArgs</tt></li>
+     * </ul>
+     *
+     * Maps require handlers to be named as eventName only.<p>
+     * Some examples of eventHandler names are: StartupStart, MyCoolEvent.
+     * Event names must follow the camelCase naming convention.<p>
+     *
+     * @param listener an event listener of type Script, Map or Object
+     */
+    void addEventListener(Map listener) {
+        if (!listener) return
+        for (entry in listener) {
+            addEventListener(entry.key, entry.value)
         }
     }
 
@@ -218,12 +248,45 @@ class EventRouter {
      * Some examples of eventHandler names are: onStartupStart, onMyCoolEvent.
      * Event names must follow the camelCase naming convention.<p>
      *
-     * @param listener and event listener of type Script, Map or Object
+     * @param listener an event listener of type Script, Map or Object
      */
     void removeEventListener(listener) {
         if (!listener || listener instanceof Closure || listener instanceof RunnableWithArgs) return
+        if (listener instanceof Map) {
+            removeEventListener((Map) listener)
+            return
+        }
         synchronized (listeners) {
+            if (LOG.debugEnabled) {
+                try {
+                    LOG.debug("Removing listener $listener")
+                } catch (UnsupportedOperationException uoe) {
+                    LOG.debug("Removing listener ${listener.class.name}")
+                }
+            }
             listeners.remove(listener)
+            removeNestedListeners(listener)
+        }
+    }
+
+    /**
+     * Removes a Map containing event listeners.<p>
+     *
+     * An event listener may be a<ul>
+     * <li>a <tt>Closure</tt></li>
+     * <li>a <tt>RunnableWithArgs</tt></li>
+     * </ul>
+     *
+     * Maps require handlers to be named as eventName only.<p>
+     * Some examples of eventHandler names are: StartupStart, MyCoolEvent.
+     * Event names must follow the camelCase naming convention.<p>
+     *
+     * @param listener an event listener of type Script, Map or Object
+     */
+    void removeEventListener(Map listener) {
+        if (!listener) return
+        for (entry in listener) {
+            removeEventListener(entry.key, entry.value)
         }
     }
 
@@ -236,10 +299,12 @@ class EventRouter {
      */
     void addEventListener(String eventName, Closure listener) {
         if (!eventName || !listener) return
-        eventName = eventName[0].toUpperCase() + eventName[1..-1]
         synchronized (closureListeners) {
-            def list = closureListeners.get(eventName, [])
+            def list = closureListeners.get(capitalize(eventName), [])
             if (list.find { it == listener }) return
+            if (LOG.debugEnabled) {
+                LOG.debug("Adding listener ${listener.class.name} on $eventName")
+            }
             list.add(listener)
         }
     }
@@ -253,10 +318,12 @@ class EventRouter {
      */
     void addEventListener(String eventName, RunnableWithArgs listener) {
         if (!eventName || !listener) return
-        eventName = eventName[0].toUpperCase() + eventName[1..-1]
         synchronized (closureListeners) {
-            def list = closureListeners.get(eventName, [])
+            def list = closureListeners.get(capitalize(eventName), [])
             if (list.find { it == listener }) return
+            if (LOG.debugEnabled) {
+                LOG.debug("Adding listener ${listener.class.name} on $eventName")
+            }
             list.add(listener)
         }
     }
@@ -270,10 +337,14 @@ class EventRouter {
      */
     void removeEventListener(String eventName, Closure listener) {
         if (!eventName || !listener) return
-        eventName = eventName[0].toUpperCase() + eventName[1..-1]
         synchronized (closureListeners) {
-            def list = closureListeners[eventName]
-            if (list) list.remove(listener)
+            def list = closureListeners[capitalize(eventName)]
+            if (list) {
+                if (LOG.debugEnabled) {
+                    LOG.debug("Removing listener ${listener.class.name} on $eventName")
+                }
+                list.remove(listener)
+            }
         }
     }
 
@@ -286,10 +357,47 @@ class EventRouter {
      */
     void removeEventListener(String eventName, RunnableWithArgs listener) {
         if (!eventName || !listener) return
-        eventName = eventName[0].toUpperCase() + eventName[1..-1]
         synchronized (closureListeners) {
-            def list = closureListeners[eventName]
-            if (list) list.remove(listener)
+            def list = closureListeners[capitalize(eventName)]
+            if (list) {
+                if (LOG.debugEnabled) {
+                    LOG.debug("Removing listener ${listener.class.name} on $eventName")
+                }
+                list.remove(listener)
+            }
         }
+    }
+
+    private void removeNestedListeners(Object subject) {
+        synchronized (closureListeners) {
+            for (event in closureListeners.entrySet()) {
+                String eventName = event.key
+                List listenerList = event.value
+                List toRemove = []
+                for (listener in listenerList) {
+                    if (isNestedListener(listener, subject)) {
+                        toRemove << listener
+                    }
+                }
+                for (listener in toRemove) {
+                    if (LOG.debugEnabled) {
+                        LOG.debug("Removing listener ${listener.class.name} on $eventName")
+                    }
+                    listenerList.remove(listener)
+                }
+            }
+        }
+    }
+
+    private boolean isNestedListener(listener, subject) {
+        if (listener instanceof Closure) {
+            return listener.owner == subject
+        } else if (listener instanceof RunnableWithArgs) {
+            Class listenerClass = listener.class
+            if (listenerClass.memberClass && listenerClass.enclosingClass == subject.class) {
+                return listener['this$0'] == subject
+            }
+        }
+        false
     }
 }

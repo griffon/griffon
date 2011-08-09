@@ -3,10 +3,10 @@ import javax.swing.*;
 import java.util.Map;
 
 import griffon.swing.SwingGriffonApplication;
-import griffon.swing.WindowManager;
 import org.codehaus.griffon.runtime.core.AbstractGriffonView;
 
 public class @artifact.name@ extends AbstractGriffonView {
+    // these will be injected by Griffon
     private @artifact.name.plain@Controller controller;
     private @artifact.name.plain@Model model;
 
@@ -26,7 +26,7 @@ public class @artifact.name@ extends AbstractGriffonView {
     }
 
     @Override
-    public void mvcGroupInit(Map<String, Object> args) {
+    public void mvcGroupInit(final Map<String, Object> args) {
         execSync(new Runnable() {
             public void run() {
                 Container container = (Container) getApp().createApplicationContainer();
@@ -34,7 +34,7 @@ public class @artifact.name@ extends AbstractGriffonView {
                    containerPreInit((Window) container);
                 }
                 container.add(init());
-                if(container instanceof Applet) {
+                if(container instanceof Window) {
                    containerPostInit((Window) container);
                 }
             }

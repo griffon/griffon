@@ -27,6 +27,7 @@ import org.codehaus.griffon.runtime.core.DefaultGriffonAddon
 import org.codehaus.griffon.runtime.core.DefaultGriffonAddonDescriptor
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
+import griffon.core.ThreadingHandler
 
 /**
  * Helper class for dealing with addon initialization.
@@ -36,7 +37,7 @@ import org.slf4j.LoggerFactory
  */
 class AddonHelper {
     private static final Logger LOG = LoggerFactory.getLogger(AddonHelper)
-    
+
     static final DELEGATE_TYPES = Collections.unmodifiableList([
             "attributeDelegates",
             "preInstantiateDelegates",
@@ -51,7 +52,7 @@ class AddonHelper {
         for (node in app.builderConfig) {
             String nodeName = node.key
             switch (nodeName) {
-                case "addons" :
+                case "addons":
                 case "features":
                     // reserved words, not addon prefixes
                     break
@@ -73,7 +74,7 @@ class AddonHelper {
                 if (mme.method != 'addonPostInit') throw mme
             }
             app.event(GriffonApplication.Event.LOAD_ADDON_END.name, [name, addon, app])
-            if(LOG.infoEnabled) LOG.info("Loaded addon $name")
+            if (LOG.infoEnabled) LOG.info("Loaded addon $name")
         }
 
         app.event(GriffonApplication.Event.LOAD_ADDONS_END.name, [app, app.addonManager.addons])
@@ -82,22 +83,24 @@ class AddonHelper {
 
     static void handleAddon(GriffonApplication app, Class addonClass, String prefix, String addonName) {
         GriffonAddonDescriptor addonDescriptor = app.addonManager.findAddonDescriptor(addonName)
-        if(addonDescriptor) return
+        if (addonDescriptor) return
 
         def obj = addonClass.newInstance()
         String pluginName = GriffonNameUtils.getHyphenatedName(addonName - 'GriffonAddon')
         String addonVersion = Metadata.current['plugins.' + pluginName]
-        GriffonAddon addon = new DefaultGriffonAddon(app, obj)
+        GriffonAddon addon = obj instanceof GriffonAddon ? obj : new DefaultGriffonAddon(app, obj)
         addonDescriptor = new DefaultGriffonAddonDescriptor(prefix, addonName, pluginName, addonVersion, addon)
 
         app.addonManager.registerAddon(addonDescriptor)
 
-        def addonMetaClass = obj.metaClass
-        addonMetaClass.app = app
-        addonMetaClass.newInstance = GriffonApplicationHelper.&newInstance.curry(app)
-        UIThreadManager.enhance(addonMetaClass)
+        MetaClass addonMetaClass = obj.metaClass
+        if (!(obj instanceof GriffonAddon)) {
+            addonMetaClass.app = app
+            addonMetaClass.newInstance = GriffonApplicationHelper.&newInstance.curry(app)
+        }
+        if (!(obj instanceof ThreadingHandler)) UIThreadManager.enhance(addonMetaClass)
 
-        if(LOG.infoEnabled) LOG.info("Loading addon $addonName with class ${addon.class.name}")
+        if (LOG.infoEnabled) LOG.info("Loading addon $addonName with class ${addon.class.name}")
         app.event(GriffonApplication.Event.LOAD_ADDON_START.name, [addonName, addon, app])
 
         addon.addonInit(app)
@@ -109,7 +112,7 @@ class AddonHelper {
         for (node in app.builderConfig) {
             String nodeName = node.key
             switch (nodeName) {
-                case "addons" :
+                case "addons":
                 case "features":
                     // reserved words, not addon prefixes
                     break
@@ -118,7 +121,7 @@ class AddonHelper {
                     node.value.each {addon ->
                         Class addonClass = Class.forName(addon.key) //FIXME get correct classloader
                         if (!FactoryBuilderSupport.isAssignableFrom(addonClass)) {
-                            AddonHelper.handleAddonForBuilder(app, builder, targets, addon, nodeName)
+                            handleAddonForBuilder(app, builder, targets, addon, nodeName)
                         }
                     }
             }
@@ -165,30 +168,30 @@ class AddonHelper {
             if (!mc) continue
             for (String itemName in partialTarget.value) {
                 if (itemName == '*') {
-                    if(methods && LOG.traceEnabled) LOG.trace("Injecting all methods on $partialTarget.key")
+                    if (methods && LOG.traceEnabled) LOG.trace("Injecting all methods on $partialTarget.key")
                     addMethods(mc, methods, prefix)
-                    if(factories && LOG.traceEnabled) LOG.trace("Injecting all factories on $partialTarget.key")
+                    if (factories && LOG.traceEnabled) LOG.trace("Injecting all factories on $partialTarget.key")
                     addFactories(mc, factories, prefix, builder)
-                    if(props && LOG.traceEnabled) LOG.trace("Injecting all properties on $partialTarget.key")
+                    if (props && LOG.traceEnabled) LOG.trace("Injecting all properties on $partialTarget.key")
                     addProps(mc, props, prefix)
                     continue
                 } else if (itemName == '*:methods') {
-                    if(methods && LOG.traceEnabled) LOG.trace("Injecting all methods on $partialTarget.key")
+                    if (methods && LOG.traceEnabled) LOG.trace("Injecting all methods on $partialTarget.key")
                     addMethods(mc, methods, prefix)
                     continue
                 } else if (itemName == '*:factories') {
-                    if(factories && LOG.traceEnabled) LOG.trace("Injecting all factories on $partialTarget.key")
+                    if (factories && LOG.traceEnabled) LOG.trace("Injecting all factories on $partialTarget.key")
                     addFactories(mc, factories, prefix, builder)
                     continue
                 } else if (itemName == '*:props') {
-                    if(props && LOG.traceEnabled) LOG.trace("Injecting all properties on $partialTarget.key")
+                    if (props && LOG.traceEnabled) LOG.trace("Injecting all properties on $partialTarget.key")
                     addProps(mc, props, prefix)
                     continue
                 }
 
                 def resolvedName = prefix + itemName
                 if (methods.containsKey(itemName)) {
-                    if(LOG.traceEnabled) LOG.trace("Injected method ${resolvedName}() on $partialTarget.key")
+                    if (LOG.traceEnabled) LOG.trace("Injected method ${resolvedName}() on $partialTarget.key")
                     mc."$resolvedName" = methods[itemName]
                 } else if (props.containsKey(itemName)) {
                     Map accessors = props[itemName]
@@ -199,16 +202,16 @@ class AddonHelper {
                         beanName = itemName[0].toUpperCase()
                     }
                     if (accessors.containsKey('get')) {
-                        if(LOG.traceEnabled) LOG.trace("Injected getter for ${beanName} on $partialTarget.key")
+                        if (LOG.traceEnabled) LOG.trace("Injected getter for ${beanName} on $partialTarget.key")
                         mc."get$beanName" = accessors['get']
                     }
                     if (accessors.containsKey('set')) {
-                        if(LOG.traceEnabled) LOG.trace("Injected setter for ${beanName} on $partialTarget.key")
+                        if (LOG.traceEnabled) LOG.trace("Injected setter for ${beanName} on $partialTarget.key")
                         mc."set$beanName" = accessors['set']
                     }
                 } else if (factories.containsKey(itemName)) {
-                    if(LOG.traceEnabled) LOG.trace("Injected factory ${resolvedName} on $partialTarget.key")
-                    mc."${resolvedName}" = {Object ... args -> builder."$resolvedName"(* args)}
+                    if (LOG.traceEnabled) LOG.trace("Injected factory ${resolvedName} on $partialTarget.key")
+                    mc."${resolvedName}" = {Object... args -> builder."$resolvedName"(* args)}
                 }
             }
         }
@@ -217,11 +220,11 @@ class AddonHelper {
     private static void addMethods(MetaClass mc, Map methods, String prefix) {
         methods.each { mk, mv -> mc."${prefix}${mk}" = mv }
     }
- 
+
     private static void addFactories(MetaClass mc, Map factories, String prefix, UberBuilder builder) {
-        factories.each { fk, fv -> 
+        factories.each { fk, fv ->
             def resolvedName = prefix + fk
-            mc."$resolvedName" = {Object... args -> builder."$resolvedName"(*args) }
+            mc."$resolvedName" = {Object... args -> builder."$resolvedName"(* args) }
         }
     }
 
@@ -242,28 +245,21 @@ class AddonHelper {
         groups.each {k, v -> app.addMvcGroup(k, v) }
     }
 
-    static void addFactories(UberBuilder builder, Map factories, String addonName, String prefix) {
-        builder.registrationGroup.get(addonName, [] as TreeSet)
+    static void addFactories(UberBuilder builder, Map<String, Object> factories, String addonName, String prefix) {
         factories.each {String name, factoryOrBean ->
-            if(factoryOrBean instanceof Factory) {
-                builder.registerFactory(prefix + name, addonName, factoryOrBean)
-            } else {
-                builder.registerBeanFactory(prefix + name, addonName, factoryOrBean)
-            }
+            CompositeBuilderHelper.addFactory(builder, addonName - 'GriffonAddon', prefix + name, factoryOrBean)
         }
     }
 
     static void addMethods(UberBuilder builder, Map<String, Closure> methods, String addonName, String prefix) {
-        builder.registrationGroup.get(addonName, [] as TreeSet)
         methods.each {String name, Closure closure ->
-            builder.registerExplicitMethod(prefix + name, addonName, closure)
+            CompositeBuilderHelper.addMethod(builder, addonName - 'GriffonAddon', prefix + name, closure)
         }
     }
 
     static void addProperties(UberBuilder builder, Map<String, List<Closure>> props, String addonName, String prefix) {
-        builder.registrationGroup.get(addonName, [] as TreeSet)
         props.each {String name, Map<String, Closure> closures ->
-            builder.registerExplicitProperty(prefix + name, addonName, closures.get, closures.set)
+            CompositeBuilderHelper.addProperty(builder, addonName - 'GriffonAddon', prefix + name, closures.get, closures.set)
         }
     }
 

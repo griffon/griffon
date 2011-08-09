@@ -37,9 +37,9 @@ import static org.codehaus.griffon.ast.GriffonASTUtils.*;
  */
 @GroovyASTTransformation(phase = CompilePhase.CANONICALIZATION)
 public class MVCAwareASTTransformation extends AbstractASTTransformation {
-    private static final Logger LOG = LoggerFactory.getLogger(ThreadingASTTransformation.class);
+    private static final Logger LOG = LoggerFactory.getLogger(MVCAwareASTTransformation.class);
 
-    private static ClassNode MY_TYPE = new ClassNode(MVCAware.class);
+    private static ClassNode MY_TYPE = ClassHelper.makeWithoutCaching(MVCAware.class);
     private static ClassNode MVC_HANDLER_TYPE = ClassHelper.makeWithoutCaching(MVCHandler.class);
     private static final ClassNode GAH_CLASS = ClassHelper.makeWithoutCaching(GriffonApplicationHelper.class);
     private static final ClassNode MVCCLOSURE_CLASS = ClassHelper.makeWithoutCaching(MVCClosure.class);
@@ -74,12 +74,13 @@ public class MVCAwareASTTransformation extends AbstractASTTransformation {
      * @param source the source unit for the nodes
      */
     public void visit(ASTNode[] nodes, SourceUnit source) {
-        if (!(nodes[0] instanceof AnnotationNode) || !(nodes[1] instanceof ClassNode)) {
-            throw new RuntimeException("Internal error: wrong types: $node.class / $parent.class");
-        }
+        checkNodesForAnnotationAndType(nodes[0], nodes[1]);
 
         ClassNode classNode = (ClassNode) nodes[1];
         if (!classNode.implementsInterface(MVC_HANDLER_TYPE)) {
+            if (LOG.isDebugEnabled()) {
+                LOG.debug("Injecting " + MVCHandler.class.getName() + " into " + classNode.getName());
+            }
             apply(classNode);
         }
     }
@@ -97,7 +98,7 @@ public class MVCAwareASTTransformation extends AbstractASTTransformation {
                 returns(call(
                         GAH_CLASS,
                         BUILD_MVC_GROUP,
-                        args(applicationInstance(), emptyMap(), var(MVC_TYPE), var(MVC_TYPE))))
+                        args(applicationInstance(), var(MVC_TYPE), var(MVC_TYPE), emptyMap())))
         ));
 
         // Map buildMVCGroup(String mvcType, mvcName)
@@ -112,7 +113,7 @@ public class MVCAwareASTTransformation extends AbstractASTTransformation {
                 returns(call(
                         GAH_CLASS,
                         BUILD_MVC_GROUP,
-                        args(applicationInstance(), emptyMap(), var(MVC_TYPE), var(MVC_NAME))))
+                        args(applicationInstance(), var(MVC_TYPE), var(MVC_NAME), emptyMap())))
         ));
 
         // Map buildMVCGroup(Map args, String mvcType)
@@ -127,7 +128,22 @@ public class MVCAwareASTTransformation extends AbstractASTTransformation {
                 returns(call(
                         GAH_CLASS,
                         BUILD_MVC_GROUP,
-                        args(applicationInstance(), var(ARGS), var(MVC_TYPE), var(MVC_NAME))))
+                        args(applicationInstance(), var(MVC_TYPE), var(MVC_NAME), var(ARGS))))
+        ));
+
+        // Map buildMVCGroup(String mvcType, Map args)
+        classNode.addMethod(new MethodNode(
+                BUILD_MVC_GROUP,
+                ACC_PUBLIC,
+                ClassHelper.MAP_TYPE,
+                params(
+                        param(ClassHelper.STRING_TYPE, MVC_TYPE),
+                        param(ClassHelper.MAP_TYPE, ARGS)),
+                ClassNode.EMPTY_ARRAY,
+                returns(call(
+                        GAH_CLASS,
+                        BUILD_MVC_GROUP,
+                        args(applicationInstance(), var(MVC_TYPE), var(MVC_NAME), var(ARGS))))
         ));
 
         // Map buildMVCGroup(Map args, String mvcType, String mvcName)
@@ -143,7 +159,23 @@ public class MVCAwareASTTransformation extends AbstractASTTransformation {
                 returns(call(
                         GAH_CLASS,
                         BUILD_MVC_GROUP,
-                        args(applicationInstance(), var(ARGS), var(MVC_TYPE), var(MVC_NAME))))
+                        args(applicationInstance(), var(MVC_TYPE), var(MVC_NAME), var(ARGS))))
+        ));
+
+        // Map buildMVCGroup(String mvcType, String mvcName, Map args)
+        classNode.addMethod(new MethodNode(
+                BUILD_MVC_GROUP,
+                ACC_PUBLIC,
+                ClassHelper.MAP_TYPE,
+                params(
+                        param(ClassHelper.STRING_TYPE, MVC_TYPE),
+                        param(ClassHelper.STRING_TYPE, MVC_NAME),
+                        param(ClassHelper.MAP_TYPE, ARGS)),
+                ClassNode.EMPTY_ARRAY,
+                returns(call(
+                        GAH_CLASS,
+                        BUILD_MVC_GROUP,
+                        args(applicationInstance(), var(MVC_TYPE), var(MVC_NAME), var(ARGS))))
         ));
 
         // List createMVCGroup(String mvcType)
@@ -156,7 +188,7 @@ public class MVCAwareASTTransformation extends AbstractASTTransformation {
                 returns(call(
                         GAH_CLASS,
                         CREATE_MVC_GROUP,
-                        args(applicationInstance(), emptyMap(), var(MVC_TYPE), var(MVC_TYPE))))
+                        args(applicationInstance(), var(MVC_TYPE), var(MVC_TYPE), emptyMap())))
         ));
 
         // List createMVCGroup(String mvcType, mvcName)
@@ -171,7 +203,7 @@ public class MVCAwareASTTransformation extends AbstractASTTransformation {
                 returns(call(
                         GAH_CLASS,
                         CREATE_MVC_GROUP,
-                        args(applicationInstance(), emptyMap(), var(MVC_TYPE), var(MVC_NAME))))
+                        args(applicationInstance(), var(MVC_TYPE), var(MVC_NAME), emptyMap())))
         ));
 
         // List createMVCGroup(Map args, String mvcType)
@@ -186,7 +218,7 @@ public class MVCAwareASTTransformation extends AbstractASTTransformation {
                 returns(call(
                         GAH_CLASS,
                         CREATE_MVC_GROUP,
-                        args(applicationInstance(), var(ARGS), var(MVC_TYPE), var(MVC_TYPE))))
+                        args(applicationInstance(), var(MVC_TYPE), var(MVC_TYPE), var(ARGS))))
         ));
 
         // List createMVCGroup(String mvcType, Map args)
@@ -201,7 +233,7 @@ public class MVCAwareASTTransformation extends AbstractASTTransformation {
                 returns(call(
                         GAH_CLASS,
                         CREATE_MVC_GROUP,
-                        args(applicationInstance(), var(ARGS), var(MVC_TYPE), var(MVC_TYPE))))
+                        args(applicationInstance(), var(MVC_TYPE), var(MVC_TYPE), var(ARGS))))
         ));
 
         // List createMVCGroup(Map args, String mvcType, String mvcName)
@@ -217,7 +249,7 @@ public class MVCAwareASTTransformation extends AbstractASTTransformation {
                 returns(call(
                         GAH_CLASS,
                         CREATE_MVC_GROUP,
-                        args(applicationInstance(), var(ARGS), var(MVC_TYPE), var(MVC_NAME))))
+                        args(applicationInstance(), var(MVC_TYPE), var(MVC_NAME), var(ARGS))))
         ));
 
         // List createMVCGroup(String mvcType, String mvcName, Map args)
@@ -233,7 +265,7 @@ public class MVCAwareASTTransformation extends AbstractASTTransformation {
                 returns(call(
                         GAH_CLASS,
                         CREATE_MVC_GROUP,
-                        args(applicationInstance(), var(ARGS), var(MVC_TYPE), var(MVC_NAME))))
+                        args(applicationInstance(), var(MVC_TYPE), var(MVC_NAME), var(ARGS))))
         ));
 
         // void destroyMVCGroup(String mvcName)
@@ -251,7 +283,8 @@ public class MVCAwareASTTransformation extends AbstractASTTransformation {
                 WITH_MVC_GROUP,
                 ACC_PUBLIC,
                 ClassHelper.VOID_TYPE,
-                params(param(ClassHelper.STRING_TYPE, MVC_TYPE),
+                params(
+                        param(ClassHelper.STRING_TYPE, MVC_TYPE),
                         param(ClassHelper.CLOSURE_TYPE, HANDLER)),
                 ClassNode.EMPTY_ARRAY,
                 stmnt(call(
@@ -292,6 +325,22 @@ public class MVCAwareASTTransformation extends AbstractASTTransformation {
                         args(applicationInstance(), var(MVC_TYPE), var(MVC_TYPE), var(ARGS), var(HANDLER))))
         ));
 
+        // void withMVCGroup(Map args, String mvcType, Closure handler)
+        classNode.addMethod(new MethodNode(
+                WITH_MVC_GROUP,
+                ACC_PUBLIC,
+                ClassHelper.VOID_TYPE,
+                params(
+                        param(ClassHelper.MAP_TYPE, ARGS),
+                        param(ClassHelper.STRING_TYPE, MVC_TYPE),
+                        param(ClassHelper.CLOSURE_TYPE, HANDLER)),
+                ClassNode.EMPTY_ARRAY,
+                stmnt(call(
+                        GAH_CLASS,
+                        WITH_MVC_GROUP,
+                        args(applicationInstance(), var(MVC_TYPE), var(MVC_TYPE), var(ARGS), var(HANDLER))))
+        ));
+
         // void withMVCGroup(String mvcType, String mvcName, Map args, Closure handler)
         classNode.addMethod(new MethodNode(
                 WITH_MVC_GROUP,
@@ -310,12 +359,31 @@ public class MVCAwareASTTransformation extends AbstractASTTransformation {
 
         ));
 
+        // void withMVCGroup(Map args, String mvcType, String mvcName, Closure handler)
+        classNode.addMethod(new MethodNode(
+                WITH_MVC_GROUP,
+                ACC_PUBLIC,
+                ClassHelper.VOID_TYPE,
+                params(
+                        param(ClassHelper.MAP_TYPE, ARGS),
+                        param(ClassHelper.STRING_TYPE, MVC_TYPE),
+                        param(ClassHelper.STRING_TYPE, MVC_NAME),
+                        param(ClassHelper.CLOSURE_TYPE, HANDLER)),
+                ClassNode.EMPTY_ARRAY,
+                stmnt(call(
+                        GAH_CLASS,
+                        WITH_MVC_GROUP,
+                        args(applicationInstance(), var(MVC_TYPE), var(MVC_NAME), var(ARGS), var(HANDLER))))
+
+        ));
+
         // void withMVCGroup(String mvcType, MVCClosure handler)
         classNode.addMethod(new MethodNode(
                 WITH_MVC_GROUP,
                 ACC_PUBLIC,
                 ClassHelper.VOID_TYPE,
-                params(param(ClassHelper.STRING_TYPE, MVC_TYPE),
+                params(
+                        param(ClassHelper.STRING_TYPE, MVC_TYPE),
                         param(MVCCLOSURE_CLASS, HANDLER)),
                 ClassNode.EMPTY_ARRAY,
                 stmnt(call(
@@ -356,6 +424,22 @@ public class MVCAwareASTTransformation extends AbstractASTTransformation {
                         args(applicationInstance(), var(MVC_TYPE), var(MVC_TYPE), var(ARGS), var(HANDLER))))
         ));
 
+        // void withMVCGroup(Map args, String mvcType, MVCClosure handler)
+        classNode.addMethod(new MethodNode(
+                WITH_MVC_GROUP,
+                ACC_PUBLIC,
+                ClassHelper.VOID_TYPE,
+                params(
+                        param(ClassHelper.MAP_TYPE, ARGS),
+                        param(ClassHelper.STRING_TYPE, MVC_TYPE),
+                        param(MVCCLOSURE_CLASS, HANDLER)),
+                ClassNode.EMPTY_ARRAY,
+                stmnt(call(
+                        GAH_CLASS,
+                        WITH_MVC_GROUP,
+                        args(applicationInstance(), var(MVC_TYPE), var(MVC_TYPE), var(ARGS), var(HANDLER))))
+        ));
+
         // void withMVCGroup(String mvcType, String mvcName, Map args, MVCClosure handler)
         classNode.addMethod(new MethodNode(
                 WITH_MVC_GROUP,
@@ -365,6 +449,23 @@ public class MVCAwareASTTransformation extends AbstractASTTransformation {
                         param(ClassHelper.STRING_TYPE, MVC_TYPE),
                         param(ClassHelper.STRING_TYPE, MVC_NAME),
                         param(ClassHelper.MAP_TYPE, ARGS),
+                        param(MVCCLOSURE_CLASS, HANDLER)),
+                ClassNode.EMPTY_ARRAY,
+                stmnt(call(
+                        GAH_CLASS,
+                        WITH_MVC_GROUP,
+                        args(applicationInstance(), var(MVC_TYPE), var(MVC_NAME), var(ARGS), var(HANDLER))))
+        ));
+
+        // void withMVCGroup(Map args, String mvcType, String mvcName, MVCClosure handler)
+        classNode.addMethod(new MethodNode(
+                WITH_MVC_GROUP,
+                ACC_PUBLIC,
+                ClassHelper.VOID_TYPE,
+                params(
+                        param(ClassHelper.MAP_TYPE, ARGS),
+                        param(ClassHelper.STRING_TYPE, MVC_TYPE),
+                        param(ClassHelper.STRING_TYPE, MVC_NAME),
                         param(MVCCLOSURE_CLASS, HANDLER)),
                 ClassNode.EMPTY_ARRAY,
                 stmnt(call(

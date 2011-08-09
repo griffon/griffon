@@ -28,10 +28,10 @@ import java.awt.*;
  */
 public class DefaultWindowDisplayHandler implements WindowDisplayHandler {
     public void show(Window window, GriffonApplication application) {
-        if(window != null) window.setVisible(true);
+        if (window != null) window.setVisible(true);
     }
 
     public void hide(Window window, GriffonApplication application) {
-        if(window != null) window.dispose();
+        if (window != null) window.dispose();
     }
 }

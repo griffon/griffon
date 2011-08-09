@@ -25,7 +25,6 @@ import java.util.Map;
  * and nothing more.
  *
  * @author Andres Almiray
- *
  * @since 0.9.1
  */
 public interface GriffonMvcArtifact extends GriffonArtifact {

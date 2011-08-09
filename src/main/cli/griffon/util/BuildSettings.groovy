@@ -441,6 +441,8 @@ class BuildSettings extends AbstractBuildSettings {
     private boolean buildListenersSet
     private boolean verboseCompileSet
 
+    final Map<String, String> systemProperties = new LinkedHashMap<String, String>();
+
     BuildSettings() {
         this(null, null)
     }
@@ -876,7 +878,7 @@ class BuildSettings extends AbstractBuildSettings {
     }
 
     def isAddonPlugin() {
-        baseDir.listFiles().find { it.name.endsWith("GriffonAddon.groovy") }
+        baseDir.listFiles().find { it.name.endsWith("GriffonAddon.groovy") || it.name.endsWith("GriffonAddon.java") }
     }
 
     private void establishProjectStructure() {

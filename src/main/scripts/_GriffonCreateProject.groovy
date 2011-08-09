@@ -34,7 +34,7 @@ griffonAppName = ''
 projectType = "app"
 
 target(createApp: "Creates a Griffon application for the given name")  {
-    depends(parseArguments, appName)
+    depends(parseArguments, appName, resolveFileType)
 
     loadArchetypeFor 'application'
     createApplicationProject()
@@ -95,7 +95,7 @@ resetBaseDirectory = { String basedir ->
 }
 
 target(createPlugin: "The implementation target")  {
-    depends(parseArguments, appName)
+    depends(parseArguments, appName, resolveFileType)
     metadataFile = new File("${basedir}/application.properties")
     projectType = "plugin"
     initProject()
@@ -129,6 +129,14 @@ target(initProject: "Initialise an application or plugin project") {
 
     griffonUnpack(dest: basedir, src: "griffon-shared-files.jar")
     griffonUnpack(dest: basedir, src: "griffon-$projectType-files.jar")
+
+    ant.delete(quiet: true, failonerror: false) {
+        if (fileType == '.java') {
+            fileset(dir: "${basedir}/griffon-app/lifecycle", excludes: '*.java')
+        } else {
+            fileset(dir: "${basedir}/griffon-app/lifecycle", includes: '*.java')
+        }
+    }
 
     // make sure Griffon central repo is prepped for default plugin set installation
     griffonSettings.dependencyManager.parseDependencies {

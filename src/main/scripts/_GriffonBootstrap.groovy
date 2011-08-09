@@ -115,6 +115,9 @@ setupJavaOpts = { includeNative = true ->
     if (argsMap.javaOpts) {
         javaOpts << argsMap.javaOpts
     }
+    griffonSettings.systemProperties.each { key, value ->
+        javaOpts << "-D${key}=${value}"
+    }
 
 // XXX -- NATIVE
     platformDir = new File(jardir.absolutePath, platform)
@@ -122,12 +125,12 @@ setupJavaOpts = { includeNative = true ->
     platformDir2 = new File(jardir.absolutePath, platform[0..-3])
     File nativeLibDir2 = new File(platformDir2.absolutePath, 'native')
     if(includeNative) {
-        String libraryPath = System.getProperty('java.library.path')
+        String libraryPath = normalizePathQuotes(System.getProperty('java.library.path'))
         if(nativeLibDir.exists()) {
-            libraryPath = libraryPath + File.pathSeparator + nativeLibDir.absolutePath
+            libraryPath = libraryPath + File.pathSeparator + normalizePathQuotes(nativeLibDir.absolutePath)
         }
         if(is64Bit && nativeLibDir2.exists()) {
-            libraryPath = libraryPath + File.pathSeparator + nativeLibDir2.absolutePath
+            libraryPath = libraryPath + File.pathSeparator + normalizePathQuotes(nativeLibDir2.absolutePath)
         }
         System.setProperty('java.library.path', libraryPath)
         javaOpts << "-Djava.library.path=$libraryPath".toString()
@@ -135,4 +138,10 @@ setupJavaOpts = { includeNative = true ->
 // XXX -- NATIVE
 
     return javaOpts
+}
+
+normalizePathQuotes = { s ->
+    s.split(File.pathSeparator).collect { String path ->
+        (path.startsWith('"') && path.endsWith('"')) || (path.startsWith("'") && path.endsWith("'")) ? path[1..-2]: path
+    }.join(File.pathSeparator)
 }

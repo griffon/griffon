@@ -21,11 +21,15 @@ import org.codehaus.griffon.runtime.core.EventRouter;
 import griffon.util.RunnableWithArgs;
 import org.codehaus.groovy.ast.*;
 import org.codehaus.groovy.ast.expr.*;
-import org.codehaus.groovy.ast.stmt.ExpressionStatement;
 import org.codehaus.groovy.control.CompilePhase;
 import org.codehaus.groovy.control.SourceUnit;
 import org.codehaus.groovy.control.messages.SimpleMessage;
 import org.codehaus.groovy.transform.GroovyASTTransformation;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import static org.codehaus.griffon.ast.GriffonASTUtils.*;
 
 /**
  * Handles generation of code for the {@code @EventPublisher} annotation.
@@ -37,13 +41,13 @@ import org.codehaus.groovy.transform.GroovyASTTransformation;
  *
  * @author Andres Almiray
  */
-@GroovyASTTransformation(phase= CompilePhase.CANONICALIZATION)
+@GroovyASTTransformation(phase = CompilePhase.CANONICALIZATION)
 public class EventPublisherASTTransformation extends AbstractASTTransformation {
+    private static final Logger LOG = LoggerFactory.getLogger(EventPublisherASTTransformation.class);
     private static final ClassNode RUNNABLE_WITH_ARGS_CLASS = ClassHelper.makeWithoutCaching(RunnableWithArgs.class);
     private static final ClassNode EVENT_HANDLER_CLASS = ClassHelper.makeWithoutCaching(EventPublisher.class);
-
-    protected static ClassNode epClassNode = new ClassNode(griffon.transform.EventPublisher.class);
-    protected static ClassNode erClassNode = new ClassNode(EventRouter.class);
+    private static final ClassNode EVENT_PUBLISHER_CLASS = ClassHelper.makeWithoutCaching(griffon.transform.EventPublisher.class);
+    private static final ClassNode EVENT_ROUTER_CLASS = ClassHelper.makeWithoutCaching(EventRouter.class);
 
     /**
      * Convenience method to see if an annotated node is {@code @EventPublisher}.
@@ -53,7 +57,7 @@ public class EventPublisherASTTransformation extends AbstractASTTransformation {
      */
     public static boolean hasEventPublisherAnnotation(AnnotatedNode node) {
         for (AnnotationNode annotation : node.getAnnotations()) {
-            if (epClassNode.equals(annotation.getClassNode())) {
+            if (EVENT_PUBLISHER_CLASS.equals(annotation.getClassNode())) {
                 return true;
             }
         }
@@ -63,19 +67,19 @@ public class EventPublisherASTTransformation extends AbstractASTTransformation {
     /**
      * Handles the bulk of the processing, mostly delegating to other methods.
      *
-     * @param nodes   the ast nodes
-     * @param source  the source unit for the nodes
+     * @param nodes  the ast nodes
+     * @param source the source unit for the nodes
      */
     public void visit(ASTNode[] nodes, SourceUnit source) {
-        if (!(nodes[0] instanceof AnnotationNode) || !(nodes[1] instanceof ClassNode)) {
-            throw new RuntimeException("Internal error: wrong types: $node.class / $parent.class");
-        }
-
+        checkNodesForAnnotationAndType(nodes[0], nodes[1]);
         addEventRouterToClass(source, (ClassNode) nodes[1]);
     }
 
     public static void addEventRouterToClass(SourceUnit source, ClassNode classNode) {
         if (needsEventRouter(classNode, source)) {
+            if(LOG.isDebugEnabled()) {
+                LOG.debug("Injecting "+ EventPublisher.class.getName() +" into "+ classNode.getName());
+            }
             addEventRouter(classNode);
         }
     }
@@ -83,7 +87,7 @@ public class EventPublisherASTTransformation extends AbstractASTTransformation {
     /**
      * Snoops through the declaring class and all parents looking for methods<ul>
      * <li>void addEventListener(Object)</li>
-     * <li>void addEventListener(String,C losure)</li>
+     * <li>void addEventListener(String, Closure)</li>
      * <li>void addEventListener(String, RunnableWithArgs)</li>
      * <li>void removeEventListener(Object)</li>
      * <li>void removeEventListener(String, Closure)</li>
@@ -95,13 +99,13 @@ public class EventPublisherASTTransformation extends AbstractASTTransformation {
      * must be defined or a compilation error results.
      *
      * @param declaringClass the class to search
-     * @param sourceUnit the source unit, for error reporting. {@code @NotNull}.
+     * @param sourceUnit     the source unit, for error reporting. {@code @NotNull}.
      * @return true if property change support should be added
      */
     protected static boolean needsEventRouter(ClassNode declaringClass, SourceUnit sourceUnit) {
         boolean foundAdd = false, foundRemove = false, foundPublish = false;
         ClassNode consideredClass = declaringClass;
-        while (consideredClass!= null) {
+        while (consideredClass != null) {
             for (MethodNode method : consideredClass.getMethods()) {
                 // just check length, MOP will match it up
                 foundAdd = foundAdd || method.getName().equals("addEventListener") && method.getParameters().length == 1;
@@ -122,10 +126,10 @@ public class EventPublisherASTTransformation extends AbstractASTTransformation {
         }
         if (foundAdd || foundRemove || foundPublish) {
             sourceUnit.getErrorCollector().addErrorAndContinue(
-                new SimpleMessage("@EventPublisher cannot be processed on "
-                    + declaringClass.getName()
-                    + " because some but not all of addEventListener, removeEventListener, publishEvent, publishEventAsync and publishEventOutside were declared in the current class or super classes.",
-                sourceUnit)
+                    new SimpleMessage("@EventPublisher cannot be processed on "
+                            + declaringClass.getName()
+                            + " because some but not all of addEventListener, removeEventListener, publishEvent, publishEventAsync and publishEventOutside were declared in the current class or super classes.",
+                            sourceUnit)
             );
             return false;
         }
@@ -154,189 +158,170 @@ public class EventPublisherASTTransformation extends AbstractASTTransformation {
     protected static void addEventRouter(ClassNode declaringClass) {
         declaringClass.addInterface(EVENT_HANDLER_CLASS);
 
-        ClassNode erClassNode = ClassHelper.make(EventRouter.class);
-
         // add field:
         // protected final EventRouter this$eventRouter = new org.codehaus.griffon.runtime.core.EventRouter()
         FieldNode erField = declaringClass.addField(
                 "this$eventRouter",
                 ACC_FINAL | ACC_PRIVATE | ACC_SYNTHETIC,
-                erClassNode,
-                new ConstructorCallExpression(erClassNode,
-                        ArgumentListExpression.EMPTY_ARGUMENTS));
+                EVENT_ROUTER_CLASS,
+                ctor(EVENT_ROUTER_CLASS, NO_ARGS));
 
         // add method:
         // void addEventListener(listener) {
         //     this$eventRouter.addEventListener(listener)
         //  }
-        declaringClass.addMethod(
-                new MethodNode(
+        declaringClass.addMethod(new MethodNode(
+                "addEventListener",
+                ACC_PUBLIC,
+                ClassHelper.VOID_TYPE,
+                params(param(ClassHelper.DYNAMIC_TYPE, "listener")),
+                ClassNode.EMPTY_ARRAY,
+                stmnt(call(
+                        field(erField),
                         "addEventListener",
-                        ACC_PUBLIC,
-                        ClassHelper.VOID_TYPE,
-                        new Parameter[]{new Parameter(ClassHelper.DYNAMIC_TYPE, "listener")},
-                        ClassNode.EMPTY_ARRAY,
-                        new ExpressionStatement(
-                                new MethodCallExpression(
-                                        new FieldExpression(erField),
-                                        "addEventListener",
-                                        new ArgumentListExpression(
-                                                new Expression[]{new VariableExpression("listener")})))));
+                        vars("listener")))
+        ));
 
         // add method:
         // void addEventListener(String name, Closure listener) {
         //     this$eventRouter.addEventListener(name, listener)
         //  }
-        declaringClass.addMethod(
-                new MethodNode(
+        declaringClass.addMethod(new MethodNode(
+                "addEventListener",
+                ACC_PUBLIC,
+                ClassHelper.VOID_TYPE,
+                params(
+                        param(ClassHelper.STRING_TYPE, "name"),
+                        param(ClassHelper.CLOSURE_TYPE, "listener")),
+                ClassNode.EMPTY_ARRAY,
+                stmnt(call(
+                        field(erField),
                         "addEventListener",
-                        ACC_PUBLIC,
-                        ClassHelper.VOID_TYPE,
-                        new Parameter[]{new Parameter(ClassHelper.STRING_TYPE, "name"), new Parameter(ClassHelper.CLOSURE_TYPE, "listener")},
-                        ClassNode.EMPTY_ARRAY,
-                        new ExpressionStatement(
-                                new MethodCallExpression(
-                                        new FieldExpression(erField),
-                                        "addEventListener",
-                                        new ArgumentListExpression(
-                                                new Expression[]{new VariableExpression("name"), new VariableExpression("listener")})))));
+                        vars("name", "listener")))
+        ));
 
         // add method:
         // void addEventListener(String name, RunnableWithArgs listener) {
         //     this$eventRouter.addEventListener(name, listener)
         //  }
-        declaringClass.addMethod(
-                new MethodNode(
+        declaringClass.addMethod(new MethodNode(
+                "addEventListener",
+                ACC_PUBLIC,
+                ClassHelper.VOID_TYPE,
+                params(
+                        param(ClassHelper.STRING_TYPE, "name"),
+                        param(RUNNABLE_WITH_ARGS_CLASS, "listener")),
+                ClassNode.EMPTY_ARRAY,
+                stmnt(call(
+                        field(erField),
                         "addEventListener",
-                        ACC_PUBLIC,
-                        ClassHelper.VOID_TYPE,
-                        new Parameter[]{new Parameter(ClassHelper.STRING_TYPE, "name"), new Parameter(RUNNABLE_WITH_ARGS_CLASS, "listener")},
-                        ClassNode.EMPTY_ARRAY,
-                        new ExpressionStatement(
-                                new MethodCallExpression(
-                                        new FieldExpression(erField),
-                                        "addEventListener",
-                                        new ArgumentListExpression(
-                                                new Expression[]{new VariableExpression("name"), new VariableExpression("listener")})))));
+                        vars("name", "listener")))
+        ));
 
         // add method:
         // void removeEventListener(listener) {
         //    return this$eventRouter.removeEventListener(listener);
         // }
-        declaringClass.addMethod(
-                new MethodNode(
+        declaringClass.addMethod(new MethodNode(
+                "removeEventListener",
+                ACC_PUBLIC,
+                ClassHelper.VOID_TYPE,
+                params(param(ClassHelper.DYNAMIC_TYPE, "listener")),
+                ClassNode.EMPTY_ARRAY,
+                stmnt(call(
+                        field(erField),
                         "removeEventListener",
-                        ACC_PUBLIC,
-                        ClassHelper.VOID_TYPE,
-                        new Parameter[]{new Parameter(ClassHelper.DYNAMIC_TYPE, "listener")},
-                        ClassNode.EMPTY_ARRAY,
-                        new ExpressionStatement(
-                                new MethodCallExpression(
-                                        new FieldExpression(erField),
-                                        "removeEventListener",
-                                        new ArgumentListExpression(
-                                                new Expression[]{new VariableExpression("listener")})))));
+                        vars("listener")))
+        ));
 
         // add method:
         // void removeEventListener(String name, Closure listener) {
         //    return this$eventRouter.removeEventListener(name, listener);
         // }
-        declaringClass.addMethod(
-                new MethodNode(
+        declaringClass.addMethod(new MethodNode(
+                "removeEventListener",
+                ACC_PUBLIC,
+                ClassHelper.VOID_TYPE,
+                params(
+                        param(ClassHelper.STRING_TYPE, "name"),
+                        param(ClassHelper.CLOSURE_TYPE, "listener")),
+                ClassNode.EMPTY_ARRAY,
+                stmnt(call(
+                        field(erField),
                         "removeEventListener",
-                        ACC_PUBLIC,
-                        ClassHelper.VOID_TYPE,
-                        new Parameter[]{new Parameter(ClassHelper.STRING_TYPE, "name"), new Parameter(ClassHelper.CLOSURE_TYPE, "listener")},
-                        ClassNode.EMPTY_ARRAY,
-                        new ExpressionStatement(
-                                new MethodCallExpression(
-                                        new FieldExpression(erField),
-                                        "removeEventListener",
-                                        new ArgumentListExpression(
-                                                new Expression[]{new VariableExpression("name"), new VariableExpression("listener")})))));
+                        vars("name", "listener")))
+        ));
 
         // add method:
         // void removeEventListener(String name, RunnableWithArgs listener) {
         //    return this$eventRouter.removeEventListener(name, listener);
         // }
-        declaringClass.addMethod(
-                new MethodNode(
+        declaringClass.addMethod(new MethodNode(
+                "removeEventListener",
+                ACC_PUBLIC,
+                ClassHelper.VOID_TYPE,
+                params(
+                        param(ClassHelper.STRING_TYPE, "name"),
+                        param(RUNNABLE_WITH_ARGS_CLASS, "listener")),
+                ClassNode.EMPTY_ARRAY,
+                stmnt(call(
+                        field(erField),
                         "removeEventListener",
-                        ACC_PUBLIC,
-                        ClassHelper.VOID_TYPE,
-                        new Parameter[]{new Parameter(ClassHelper.STRING_TYPE, "name"), new Parameter(RUNNABLE_WITH_ARGS_CLASS, "listener")},
-                        ClassNode.EMPTY_ARRAY,
-                        new ExpressionStatement(
-                                new MethodCallExpression(
-                                        new FieldExpression(erField),
-                                        "removeEventListener",
-                                        new ArgumentListExpression(
-                                                new Expression[]{new VariableExpression("name"), new VariableExpression("listener")})))));
+                        vars("name", "listener")))
+        ));
 
         // add method:
         // void publishEvent(String name, List args = []) {
         //     this$eventRouter.publishEvent(name, args)
         //  }
-        Parameter args = new Parameter(ClassHelper.LIST_TYPE, "args");
-        args.setInitialExpression(new ListExpression());
-        declaringClass.addMethod(
-                new MethodNode(
-                        "publishEvent",
-                        ACC_PUBLIC,
-                        ClassHelper.VOID_TYPE,
-                        new Parameter[]{new Parameter(ClassHelper.STRING_TYPE, "name"), args},
-                        ClassNode.EMPTY_ARRAY,
-                        new ExpressionStatement(
-                                new MethodCallExpression(
-                                        new FieldExpression(erField),
-                                        "publish",
-                                        new ArgumentListExpression(
-                                                new Expression[]{
-                                                        new VariableExpression("name"),
-                                                        new VariableExpression("args")})))));
+        declaringClass.addMethod(new MethodNode(
+                "publishEvent",
+                ACC_PUBLIC,
+                ClassHelper.VOID_TYPE,
+                params(
+                        param(ClassHelper.STRING_TYPE, "name"),
+                        param(ClassHelper.LIST_TYPE, "args", new ListExpression())),
+                ClassNode.EMPTY_ARRAY,
+                stmnt(call(
+                        field(erField),
+                        "publish",
+                        vars("name", "args")))
+        ));
 
         // add method:
         // void publishEventOutside(String name, List args = []) {
         //     this$eventRouter.publishEventOutside(name, args)
         //  }
-        args = new Parameter(ClassHelper.LIST_TYPE, "args");
-        args.setInitialExpression(new ListExpression());
-        declaringClass.addMethod(
-                new MethodNode(
-                        "publishEventOutside",
-                        ACC_PUBLIC,
-                        ClassHelper.VOID_TYPE,
-                        new Parameter[]{new Parameter(ClassHelper.STRING_TYPE, "name"), args},
-                        ClassNode.EMPTY_ARRAY,
-                        new ExpressionStatement(
-                                new MethodCallExpression(
-                                        new FieldExpression(erField),
-                                        "publishOutside",
-                                        new ArgumentListExpression(
-                                                new Expression[]{
-                                                        new VariableExpression("name"),
-                                                        new VariableExpression("args")})))));
+        declaringClass.addMethod(new MethodNode(
+                "publishEventOutside",
+                ACC_PUBLIC,
+                ClassHelper.VOID_TYPE,
+                params(
+                        param(ClassHelper.STRING_TYPE, "name"),
+                        param(ClassHelper.LIST_TYPE, "args", new ListExpression())),
+                ClassNode.EMPTY_ARRAY,
+                stmnt(call(
+                        field(erField),
+                        "publishOutside",
+                        vars("name", "args")))
+        ));
 
         // add method:
         // void publishEventAsync(String name, List args = []) {
         //     this$eventRouter.publishEventAsync(name, args)
         //  }
-        args = new Parameter(ClassHelper.LIST_TYPE, "args");
-        args.setInitialExpression(new ListExpression());
-        declaringClass.addMethod(
-                new MethodNode(
-                        "publishEventAsync",
-                        ACC_PUBLIC,
-                        ClassHelper.VOID_TYPE,
-                        new Parameter[]{new Parameter(ClassHelper.STRING_TYPE, "name"), args},
-                        ClassNode.EMPTY_ARRAY,
-                        new ExpressionStatement(
-                                new MethodCallExpression(
-                                        new FieldExpression(erField),
-                                        "publishAsync",
-                                        new ArgumentListExpression(
-                                                new Expression[]{
-                                                        new VariableExpression("name"),
-                                                        new VariableExpression("args")})))));
+        declaringClass.addMethod(new MethodNode(
+                "publishEventAsync",
+                ACC_PUBLIC,
+                ClassHelper.VOID_TYPE,
+                params(
+                        param(ClassHelper.STRING_TYPE, "name"),
+                        param(ClassHelper.LIST_TYPE, "args", new ListExpression())),
+                ClassNode.EMPTY_ARRAY,
+                stmnt(call(
+                        field(erField),
+                        "publishAsync",
+                        vars("name", "args")))
+        ));
     }
 }

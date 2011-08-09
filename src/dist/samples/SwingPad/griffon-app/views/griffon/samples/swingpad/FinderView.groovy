@@ -62,10 +62,10 @@ panel(id: 'content') {
     migLayout layoutConstraints: 'fill'
     
     label(app.getMessage('application.dialog.Finder.find', 'Find:'))
-    textField(columns: 40, constraints: 'left, wrap',
+    textField(columns: 40, constraints: 'right, wrap',
         text: bind('toFind', source: model, mutual: true))
     label(app.getMessage('application.dialog.Finder.replace', 'Replace:'))
-    textField(columns: 40, constraints: 'left, wrap',
+    textField(columns: 40, constraints: 'right, wrap',
         text: bind('replaceWith', source: model, mutual: true))
         
     panel(constraints: 'span 2, grow, wrap') {

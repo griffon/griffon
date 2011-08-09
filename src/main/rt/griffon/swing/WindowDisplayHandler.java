@@ -29,7 +29,7 @@ public interface WindowDisplayHandler {
     /**
      * Callback for displaying a window.
      *
-     * @param window the window to be displayed
+     * @param window      the window to be displayed
      * @param application the current application
      */
     void show(Window window, GriffonApplication application);
@@ -37,7 +37,7 @@ public interface WindowDisplayHandler {
     /**
      * Callback for hiding a window.
      *
-     * @param window the window to hide
+     * @param window      the window to hide
      * @param application the current application
      */
     void hide(Window window, GriffonApplication application);

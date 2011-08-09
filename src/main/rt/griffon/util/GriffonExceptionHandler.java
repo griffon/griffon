@@ -20,8 +20,9 @@ import org.codehaus.groovy.runtime.StackTraceUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.Arrays;
 import java.util.Map;
+
+import static java.util.Arrays.asList;
 
 /**
  * Catches and sanitizes all uncaught exceptions.
@@ -52,13 +53,13 @@ public class GriffonExceptionHandler implements Thread.UncaughtExceptionHandler 
             GriffonApplication app = ApplicationHolder.getApplication();
             if(app != null) {
                 LOG.error("Uncaught Exception", throwable);
-                app.event("Uncaught" + GriffonNameUtils.getShortName(throwable.getClass()), Arrays.asList(throwable));
-                app.event(GriffonApplication.Event.UNCAUGHT_EXCEPTION_THROWN.getName(), Arrays.asList(throwable));
+                app.event("Uncaught" + GriffonNameUtils.getShortName(throwable.getClass()), asList(throwable));
+                app.event(GriffonApplication.Event.UNCAUGHT_EXCEPTION_THROWN.getName(), asList(throwable));
             }
          } catch (Throwable t) {
             sanitize(t);
             if(isOutputEnabled()) t.printStackTrace(System.err);
-            LOG.error("An error occured while handling uncaught exception " + throwable, t);
+            LOG.error("An error occurred while handling uncaught exception " + throwable, t);
         }
     }
 

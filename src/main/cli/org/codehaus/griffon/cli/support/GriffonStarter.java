@@ -15,6 +15,7 @@
  */
 package org.codehaus.griffon.cli.support;
 
+import org.codehaus.groovy.runtime.StackTraceUtils;
 import org.codehaus.groovy.tools.LoaderConfiguration;
 import org.codehaus.groovy.tools.RootLoader;
 
@@ -34,11 +35,6 @@ public class GriffonStarter {
     private static final String GRIFFON_ROOT_CLASSLOADER = "griffon.root.classloader";
     private static final String LOADER_FILE = ".loader";
 
-    static void printUsage() {
-        System.out.println("possible programs are 'groovyc','groovy','console', and 'groovysh'");
-        System.exit(1);
-    }
-
     public static void rootLoader(String args[]) {
         final String separator = System.getProperty("file.separator");
 
@@ -53,23 +49,6 @@ public class GriffonStarter {
                     "groovy.starter.conf",
                     griffonHome + separator + "conf" + separator + "groovy-starter.conf");
         }
-
-//        // Initialise the Griffon version if it's not set already.
-//        if (System.getProperty("griffon.version") == null) {
-//            Properties griffonProps = new Properties();
-//            InputStream is = null;
-//            try {
-//                // Load Griffon' "build.properties" file.
-//                is = GriffonStarter.class.getClassLoader().getResourceAsStream(griffonHome + separator + "build.properties");
-//                griffonProps.load(is);
-//
-//                // Extract the Griffon version and store as a system
-//                // property so that it can be referenced from the
-//                // starter configuration file.
-//                System.setProperty("griffon.version", griffonProps.getProperty("griffon.version"));
-//            } catch (IOException ex) { System.out.println("Failed to load Griffon file: " + ex.getMessage()); System.exit(1); }
-//            finally { if (is != null) try { is.close(); } catch (IOException ex2) {/*ignored*/} }
-//        }
 
         String conf = System.getProperty("groovy.starter.conf", null);
         LoaderConfiguration lc = new LoaderConfiguration();
@@ -143,7 +122,7 @@ public class GriffonStarter {
                 loaderProps.load(input);
                 loaderClassName = loaderProps.getProperty(GRIFFON_ROOT_CLASSLOADER);
             } catch (Exception e) {
-                e.printStackTrace();
+                StackTraceUtils.deepSanitize(e).printStackTrace();
                 System.out.println("ERROR: There was an error loading a Griffon custom classloader using the properties file ["+loaderFile.getAbsolutePath()+"]: " + e.getClass().getName() + ":" + e.getMessage());
             }
             finally {
@@ -162,7 +141,7 @@ public class GriffonStarter {
                 Class<?> loaderClass = GriffonStarter.class.getClassLoader().loadClass(loaderClassName);
                 loader = (RootLoader) loaderClass.newInstance();
             } catch (Exception e) {
-                e.printStackTrace();
+                StackTraceUtils.deepSanitize(e).printStackTrace();
                 System.out.println("ERROR: There was an error loading a Griffon custom classloader using the properties file ["+loaderFile.getAbsolutePath()+"]: " + e.getClass().getName() + ":" + e.getMessage());
             }
         }
@@ -227,7 +206,7 @@ public class GriffonStarter {
     }
 
     private static void exit(Exception e) {
-        e.printStackTrace();
+        StackTraceUtils.deepSanitize(e).printStackTrace();
         System.exit(1);
     }
 
@@ -244,7 +223,7 @@ public class GriffonStarter {
             rootLoader(args);
         } catch (Throwable t) {
             System.out.println("Error starting Griffon: " + t.getMessage());
-            t.printStackTrace(System.err);
+            StackTraceUtils.deepSanitize(t).printStackTrace(System.err);
             System.exit(1);
         }
     }

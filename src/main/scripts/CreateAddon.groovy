@@ -22,8 +22,6 @@
  *
  */
 
-import org.codehaus.griffon.commons.GriffonClassUtils as GCU
-
 import griffon.util.GriffonUtil
 
 includeTargets << griffonScript("Init")
@@ -44,7 +42,7 @@ target ('default' : "Creates a new Addon for a plugin") {
     argsMap.skipPackagePrompt = true
     def (pkg, name) = extractArtifactName(argsMap["params"][0])
 //    if (pkg) logErrorAndExit("Addons cannot have package names currently", new RuntimeException())
-    def fqn = "${pkg?pkg:''}${pkg?'.':''}${GCU.getClassNameRepresentation(name)}"
+    def fqn = "${pkg?pkg:''}${pkg?'.':''}${GriffonUtil.getClassNameRepresentation(name)}"
 
     createArtifact(
         name: fqn,
@@ -52,7 +50,7 @@ target ('default' : "Creates a new Addon for a plugin") {
         type: "GriffonAddon",
         path: ".")
     fqn += 'GriffonAddon'
-    name = "${GCU.getClassNameRepresentation(name)}GriffonAddon"
+    name = "${GriffonUtil.getClassNameRepresentation(name)}GriffonAddon"
 
     def pluginConfigFile = new File('griffon-app/conf/BuildConfig.groovy')
     if (!pluginConfigFile.exists()) {
@@ -101,6 +99,7 @@ eventSetClasspath = { cl ->
     installFile << """
 // check to see if we already have a $name
 boolean $flagVar
+builderConfig = configSlurper.parse(builderConfigFile.text)
 builderConfig.each() { prefix, v ->
     v.each { builder, views ->
         $flagVar = $flagVar || '$fqn' == builder
@@ -123,6 +122,7 @@ root.'$fqn'.addon=true
     uninstallFile << """
 // check to see if we already have a $name
 boolean $flagVar
+builderConfig = configSlurper.parse(builderConfigFile.text)
 builderConfig.each() { prefix, v ->
     v.each { builder, views ->
         $flagVar = $flagVar || '$fqn' == builder
@@ -134,8 +134,6 @@ if ($flagVar) {
     builderConfigFile.text = builderConfigFile.text - "root.'$fqn'.addon=true\\n"
 }
 """
-
-
 }
 
 def generateTempVar(String textToSearch, String prefix = "tmp", String suffix = "") {

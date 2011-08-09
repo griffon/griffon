@@ -38,8 +38,7 @@ import java.util.jar.Manifest;
  *
  * Griffon utility methods for command line and GUI applications
  *
- * @author Graeme Rocher
- * @since 0.2
+ * @author Graeme Rocher (Grails 0.2)
  */
 public class GriffonUtil extends GriffonNameUtils {
     private GriffonUtil() {}

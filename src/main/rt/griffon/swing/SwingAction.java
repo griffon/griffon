@@ -15,12 +15,15 @@
  */
 package griffon.swing;
 
+import griffon.util.GriffonNameUtils;
 import griffon.util.RunnableWithArgs;
 import griffon.util.RunnableWithArgsClosure;
 import groovy.lang.Closure;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
+
+import static griffon.util.GriffonNameUtils.isBlank;
 
 /**
  * An action implementation that relies on a closure to handle events.
@@ -30,7 +33,7 @@ import java.awt.event.ActionEvent;
  */
 public class SwingAction extends AbstractAction {
     private final Closure closure;
-    
+
     public SwingAction(Closure closure) {
         this.closure = closure;
     }
@@ -41,6 +44,10 @@ public class SwingAction extends AbstractAction {
 
     public static ActionBuilder action() {
         return new ActionBuilder();
+    }
+
+    public static ActionBuilder action(Action action) {
+        return new ActionBuilder(action);
     }
 
     public static ActionBuilder action(String name) {
@@ -59,10 +66,23 @@ public class SwingAction extends AbstractAction {
         private KeyStroke accelerator;
         private String shortDescription;
         private String longDescription;
+        private String command;
         private Icon smallIcon;
         private Icon largeIcon;
         private Closure closure;
-        private RunnableWithArgs runnable;
+        private boolean enabled = true;
+
+        private Action action;
+        private boolean mnemonicSet = false;
+        private boolean enabledSet = false;
+
+        public ActionBuilder() {
+            this(null);
+        }
+
+        public ActionBuilder(Action action) {
+            this.action = action;
+        }
 
         public ActionBuilder withName(String name) {
             this.name = name;
@@ -79,13 +99,30 @@ public class SwingAction extends AbstractAction {
             return this;
         }
 
+        public ActionBuilder withCommand(String command) {
+            this.command = command;
+            return this;
+        }
+
         public ActionBuilder withMnemonic(String mnemonic) {
             this.mnemonic = KeyStroke.getKeyStroke(mnemonic).getKeyCode();
+            mnemonicSet = true;
+            return this;
+        }
+
+        public ActionBuilder withMnemonic(int mnemonic) {
+            this.mnemonic = mnemonic;
+            mnemonicSet = true;
             return this;
         }
 
         public ActionBuilder withAccelerator(String accelerator) {
             this.accelerator = KeyStroke.getKeyStroke(accelerator);
+            return this;
+        }
+
+        public ActionBuilder withAccelerator(KeyStroke accelerator) {
+            this.accelerator = accelerator;
             return this;
         }
 
@@ -101,31 +138,36 @@ public class SwingAction extends AbstractAction {
 
         public ActionBuilder withClosure(Closure closure) {
             this.closure = closure;
-            this.runnable = null;
             return this;
         }
 
         public ActionBuilder withRunnable(RunnableWithArgs runnable) {
-            this.runnable = runnable;
-            this.closure = null;
+            if (runnable != null) this.closure = new RunnableWithArgsClosure(runnable);
+            return this;
+        }
+
+        public ActionBuilder withEnabled(boolean enabled) {
+            this.enabled = enabled;
+            this.enabledSet = true;
             return this;
         }
 
         public Action build() {
-            if(closure == null && runnable == null) {
-                throw new IllegalArgumentException("Either closure: or runnable: must have a value.");
+            if (closure == null && action == null) {
+                throw new IllegalArgumentException("Either closure: or action: must have a value.");
             }
-            if(closure == null) {
-                closure = new RunnableWithArgsClosure(runnable);
+            if (action == null) action = new SwingAction(closure);
+            if (!isBlank(command)) action.putValue(Action.ACTION_COMMAND_KEY, command);
+            if (!isBlank(name)) action.putValue(Action.NAME, name);
+            if (mnemonicSet) {
+                action.putValue(Action.MNEMONIC_KEY, mnemonic);
             }
-            Action action = new SwingAction(closure);
-            action.putValue(Action.NAME, name);
-            action.putValue(Action.MNEMONIC_KEY, mnemonic);
-            action.putValue(Action.ACCELERATOR_KEY, accelerator);
-            action.putValue(Action.LARGE_ICON_KEY, largeIcon);
-            action.putValue(Action.SMALL_ICON, smallIcon);
-            action.putValue(Action.LONG_DESCRIPTION, longDescription);
-            action.putValue(Action.SHORT_DESCRIPTION, shortDescription);
+            if (accelerator != null) action.putValue(Action.ACCELERATOR_KEY, accelerator);
+            if (largeIcon != null) action.putValue(Action.LARGE_ICON_KEY, largeIcon);
+            if (smallIcon != null) action.putValue(Action.SMALL_ICON, smallIcon);
+            if (!isBlank(longDescription)) action.putValue(Action.LONG_DESCRIPTION, longDescription);
+            if (!isBlank(shortDescription)) action.putValue(Action.SHORT_DESCRIPTION, shortDescription);
+            if (enabledSet) action.setEnabled(enabled);
             return action;
         }
     }

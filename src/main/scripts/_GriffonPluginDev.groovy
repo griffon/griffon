@@ -103,7 +103,7 @@ target(pluginDocs: "Generates and packages plugin documentation") {
             sources.each { d ->
                 srcfiles(dir: d, excludes: "**/CVS/**, **/.svn/**")
             }
-            srcfiles(dir: basedir, includes: "*GriffonAddon.groovy")
+            srcfiles(dir: basedir, includes: "*GriffonAddon*")
             if(hasSrcMain) srcfiles(dir: srcMainDir, includes: "**/*")
             if(hasTestShared) srcfiles(dir: testSharedDir, includes: "**/*")
             srcfiles(dir: classesDirPath, includes: "**/*")
@@ -113,7 +113,7 @@ target(pluginDocs: "Generates and packages plugin documentation") {
         if(!uptodate) {
             ant.jar(destfile: jarFileName) {
                 sources.each { d -> fileset(dir: d, excludes: '**/CVS/**, **/.svn/**') }
-                fileset(dir: basedir, includes: '*GriffonAddon.groovy')
+                fileset(dir: basedir, includes: '*GriffonAddon*')
                 if(hasSrcMain) fileset(dir: srcMainDir, includes: '**/*.groovy, **/*.java')
                 if(hasTestShared) fileset(dir: testSharedDir, includes: '**/*.groovy, **/*.java')
             }
@@ -250,12 +250,10 @@ target(packagePlugin:"Packages a Griffon plugin") {
         zipfileset(dir: "${projectTargetDir}", includes: "*.jar", prefix: "dist")
         zipfileset(dir: "${projectTargetDir}/docs", prefix: "docs")
 
-        if (isAddonPlugin)  {
             new File(addonJarDir).eachFileMatch(~/.*\.jar/) { addonJar ->
                 zipfileset(dir: addonJarDir, includes: addonJar.name,
                            fullpath: "addon/${addonJar.name}")
             }
-        }
     }
 
     if(plugin.metaClass.hasProperty(plugin, 'pluginIncludes')) {

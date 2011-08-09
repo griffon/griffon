@@ -29,12 +29,7 @@ import java.util.Map;
  *
  * @since 0.9.2
  */
-public interface GriffonAddon {
-    /**
-     * Returns the reference to the current application.
-     */
-    GriffonApplication getApp();
-
+public interface GriffonAddon extends ApplicationHandler, ThreadingHandler {
     /**
      * Returns a Logger instance suitable for this addon.<p>
      *
@@ -42,12 +37,14 @@ public interface GriffonAddon {
      */
     Logger getLog();
 
+    Object newInstance(Class klass, String type);
+
     void addonInit(GriffonApplication app);
     void addonPostInit(GriffonApplication app);
     void addonBuilderInit(GriffonApplication app, FactoryBuilderSupport builder);
     void addonBuilderPostInit(GriffonApplication app, FactoryBuilderSupport builder);
 
-    Map<String, ?> getFactories();
+    Map<String, Object> getFactories();
     Map<String, Closure> getMethods();
     Map<String, Map<String, Closure>> getProps();
     Map<String, Closure> getEvents();

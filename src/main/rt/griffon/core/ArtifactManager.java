@@ -24,20 +24,22 @@ import java.util.List;
  *
  * @author Andres Almiray
  */
-public interface ArtifactManager {
-    GriffonApplication getApp();
-
+public interface ArtifactManager extends ApplicationHandler {
     GriffonClass[] EMPTY_GRIFFON_CLASS_ARRAY = new GriffonClass[0];
     List<GriffonClass> EMPTY_GRIFFON_CLASS_LIST = Collections.<GriffonClass>emptyList();
 
     /**
      * Registers an ArtifactHandler by type.<p>
      * Should call initialize() on the handler.
+     *
+     * @param handler an ArtifactHandler
      */
     void registerArtifactHandler(ArtifactHandler handler);
 
     /**
      * Removes an ArtifactHandler by type.
+     *
+     * @param handler an ArtifactHandler
      */
     void unregisterArtifactHandler(ArtifactHandler handler);
 
@@ -52,6 +54,10 @@ public interface ArtifactManager {
      * Finds an artifact by name and type.<p>
      * Example: findGriffonClass("Book", "controller") will return an
      * artifact class that describes BookController.
+     *
+     * @param name the name of the artifact, e.g. 'Book'
+     * @param type the type of the artifact, e.g. 'controller'
+     * @return the GriffonClass associated with the artifact is there's a match, null otherwise.
      */
     GriffonClass findGriffonClass(String name, String type);
 
@@ -59,6 +65,10 @@ public interface ArtifactManager {
      * Finds an artifact by class and type.<p>
      * Example: findGriffonClass(BookController, "controller") will return an
      * artifact class that describes BookController.
+     *
+     * @param clazz the name of the artifact, e.g. com.acme.BookController
+     * @param type  the type of the artifact, e.g. 'controller'
+     * @return the GriffonClass associated with the artifact is there's a match, null otherwise.
      */
     GriffonClass findGriffonClass(Class clazz, String type);
 
@@ -66,6 +76,9 @@ public interface ArtifactManager {
      * Finds an artifact by class.<p>
      * Example: findGriffonClass(aBookControllerInstance) will return an
      * artifact class that describes BookController.
+     *
+     * @param obj an artifact instance
+     * @return the GriffonClass associated with the artifact is there's a match, null otherwise.
      */
     GriffonClass findGriffonClass(Object obj);
 
@@ -73,6 +86,9 @@ public interface ArtifactManager {
      * Finds an artifact by class.<p>
      * Example: findGriffonClass(BookController) will return an
      * artifact class that describes BookController.
+     *
+     * @param clazz a Class instance
+     * @return the GriffonClass associated with the artifact is there's a match, null otherwise.
      */
     GriffonClass findGriffonClass(Class clazz);
 
@@ -80,6 +96,9 @@ public interface ArtifactManager {
      * Finds an artifact by name.<p>
      * Example: findGriffonClass("BookController") will return an
      * artifact class that describes BookController.
+     *
+     * @param fqnClassName full qualified class name
+     * @return the GriffonClass associated with the artifact is there's a match, null otherwise.
      */
     GriffonClass findGriffonClass(String fqnClassName);
 
@@ -87,11 +106,16 @@ public interface ArtifactManager {
      * Finds all artifacts of an specific type.<p>
      * Example: getClassesOfType("controller") will return all
      * artifact classes that describe controllers.
+     *
+     * @param type an artifact type, e.g. 'controller'
+     * @return a List of matching artifacts or an empty List if no match. Never returns null.
      */
     List<GriffonClass> getClassesOfType(String type);
 
     /**
      * Finds all artifact classes.<p>
+     *
+     * @return a List of all available GriffonClass instances. Never returns null.
      */
     List<GriffonClass> getAllClasses();
 }

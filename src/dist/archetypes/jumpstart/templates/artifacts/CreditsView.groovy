@@ -1,24 +1,23 @@
 @artifact.package@actions {
-    action(id: 'closeAction',
+    action(hideAction,
        name: app.getMessage('application.action.Close.name', 'Close'),
-       closure: controller.hide,
        mnemonic: app.getMessage('application.action.Close.mnemonic', 'C'),
-       shortDescription: app.getMessage('application.action.Close.description', 'Close')
+       shortDescription: app.getMessage('application.action.Close.short_description', 'Close')
     )
 }
 
 panel(id: 'content') {
     migLayout layoutConstraints: 'fill'
     tabbedPane(constraints: 'grow, wrap') {
-        scrollPane(title: app.getMessage('application.dialog.Credits.writtenby', 'Written by'), constraints: 'grow') {
+        scrollPane(title: app.getMessage('application.dialog.Credits.writtenby', 'Written by')) {
             textArea(editable: false, text: bind{ model.credits },
                 caretPosition: bind('credits', source: model, converter: {0i}))
         }
     }   
-    button(closeAction, constraints: 'right')
+    button(hideAction, constraints: 'right')
 
     keyStrokeAction(component: current,
         keyStroke: 'ESCAPE',
         condition: 'in focused window',
-        action: closeAction)
+        action: hideAction)
 }

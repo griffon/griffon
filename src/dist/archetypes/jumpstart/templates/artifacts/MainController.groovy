@@ -1,48 +1,48 @@
 @artifact.package@class @artifact.name@ {
-    def newAction = { evt = null ->
+    def newAction = {
     }
 
-    def openAction = { evt = null ->
+    def openAction = {
     }
 
-    def saveAction = { evt = null ->
+    def saveAction = {
     }
 
-    def saveAsAction = { evt = null ->
+    def saveAsAction = {
     }
 
-    def aboutAction = { evt = null ->
+    def aboutAction = {
         withMVCGroup('about') { m, v, c ->
             c.show()
         }
     }
 
-    def preferencesAction = { evt = null ->
+    def preferencesAction = {
         withMVCGroup('preferences') { m, v, c ->
             c.show()
         }
     }
 
-    def quitAction = { evt = null ->
+    def quitAction = {
         app.shutdown()
     }
 
-    def undoAction = { evt = null ->
+    def undoAction = {
     }
 
-    def redoAction = { evt = null ->
+    def redoAction = {
     }
 
-    def cutAction = { evt = null ->
+    def cutAction = {
     }
 
-    def copyAction = { evt = null ->
+    def copyAction = {
     }
 
-    def pasteAction = { evt = null ->
+    def pasteAction = {
     }
 
-    def deleteAction = { evt = null ->
+    def deleteAction = {
     }
 
     def onOSXAbout = { app ->
@@ -52,7 +52,7 @@
     }
 
     def onOSXQuit = { app ->
-        app.shutdown()
+        quitAction()
     }
 
     def onOSXPrefs = { app ->

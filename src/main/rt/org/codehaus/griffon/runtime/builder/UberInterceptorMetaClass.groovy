@@ -109,39 +109,21 @@ class UberInterceptorMetaClass extends DelegatingMetaClass {
         }
     }
 
-    Object invokeMethod(Object object, String methodName, Object arguments) {
-        try {
-            return delegate.invokeMethod(object, methodName, arguments)
-        } catch (MissingMethodException mme) {
-            if (mme.method != methodName) {
-                throw mme
-            }
-            // attempt method resolution
-            for (UberBuilderRegistration reg in factory.builderRegistration) {
-                try {
-                    def builder = reg.builder
-                    if (!builder.getMetaClass().respondsTo(builder, methodName).isEmpty()) {
-                        return InvokerHelper.invokeMethod(builder, methodName, arguments)
-                    }
-                } catch (MissingMethodException mme2) {
-                    if (mme2.method != methodName) {
-                        throw mme2
-                    }
-                    // drop the exception, there will be many
-                }
-            }
-            // dispatch to factories if it is not a literal method
-            return invokeFactoryMethod(methodName, arguments, mme)
+    private void exceptionIfMethodNotFound(String methodName, MissingMethodException mme) {
+        if (mme.method != methodName) {
+            throw mme
         }
     }
 
-    Object invokeMethod(Object object, String methodName, Object[] arguments) {
+    Object invokeMethod(Object object, String methodName, Object arguments) {
+        // try {
+        //     return invokeMethod(object, methodName, arguments);
+        // } catch (MissingMethodException mme) {
+        //     exceptionIfMethodNotFound(methodName, mme);
         try {
             return delegate.invokeMethod(object, methodName, arguments)
-        } catch (MissingMethodException mme) {
-            if (mme.method != methodName) {
-                throw mme
-            }
+        } catch (MissingMethodException mme2) {
+            exceptionIfMethodNotFound(methodName, mme2);
             // attempt method resolution
             for (UberBuilderRegistration reg in factory.builderRegistration) {
                 try {
@@ -149,16 +131,42 @@ class UberInterceptorMetaClass extends DelegatingMetaClass {
                     if (!builder.getMetaClass().respondsTo(builder, methodName).isEmpty()) {
                         return InvokerHelper.invokeMethod(builder, methodName, arguments)
                     }
-                } catch (MissingMethodException mme2) {
-                    if (mme2.method != methodName) {
-                        throw mme2
-                    }
+                } catch (MissingMethodException mme3) {
+                    exceptionIfMethodNotFound(methodName, mme3);
                     // drop the exception, there will be many
                 }
             }
             // dispatch to factories if it is not a literal method
-            return invokeFactoryMethod(methodName, arguments, mme)
+            return invokeFactoryMethod(methodName, arguments, mme2)
         }
+        // }
+    }
+
+    Object invokeMethod(Object object, String methodName, Object[] arguments) {
+        // try {
+        //     return invokeMethod(object, methodName, arguments);
+        // } catch (MissingMethodException mme) {
+        //     exceptionIfMethodNotFound(methodName, mme);
+        try {
+            return delegate.invokeMethod(object, methodName, arguments)
+        } catch (MissingMethodException mme2) {
+            exceptionIfMethodNotFound(methodName, mme2);
+            // attempt method resolution
+            for (UberBuilderRegistration reg in factory.builderRegistration) {
+                try {
+                    def builder = reg.builder
+                    if (!builder.getMetaClass().respondsTo(builder, methodName).isEmpty()) {
+                        return InvokerHelper.invokeMethod(builder, methodName, arguments)
+                    }
+                } catch (MissingMethodException mme3) {
+                    exceptionIfMethodNotFound(methodName, mme3);
+                    // drop the exception, there will be many
+                }
+            }
+            // dispatch to factories if it is not a literal method
+            return invokeFactoryMethod(methodName, arguments, mme2)
+        }
+        // }
     }
 
     Object invokeStaticMethod(Object object, String methodName, Object[] arguments) {
@@ -169,12 +177,11 @@ class UberInterceptorMetaClass extends DelegatingMetaClass {
                 return doInvokeStaticMethod(object, methodName, arguments)
             }
         } catch (MissingMethodException mme) {
+            exceptionIfMethodNotFound(methodName, mme);
             try {
                 return delegate.invokeMethod(object, methodName, arguments)
             } catch (MissingMethodException mme2) {
-                if (mme2.method != methodName) {
-                    throw mme2
-                }
+                exceptionIfMethodNotFound(methodName, mme2);
 
                 // attempt method resolution
                 for (UberBuilderRegistration reg in factory.builderRegistration) {
@@ -184,9 +191,7 @@ class UberInterceptorMetaClass extends DelegatingMetaClass {
                             return InvokerHelper.invokeMethod(builder, methodName, arguments)
                         }
                     } catch (MissingMethodException mme3) {
-                        if (mme3.method != methodName) {
-                            throw mme3
-                        }
+                        exceptionIfMethodNotFound(methodName, mme3);
 
                         // drop the exception, there will be many
                     }
