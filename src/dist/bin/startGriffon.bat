@@ -211,7 +211,7 @@ set JAVA_OPTS=%JAVA_OPTS% -Dgriffon.home="%GRIFFON_HOME%"
 set JAVA_OPTS=%JAVA_OPTS% -Dbase.dir="."
 set JAVA_OPTS=%JAVA_OPTS% -Dtools.jar="%TOOLS_JAR%"
 set JAVA_OPTS=%JAVA_OPTS% -Dgroovy.starter.conf="%STARTER_CONF%"
-set JAVA_OPTS=%JAVA_OPTS% -Dgroovy.sanitized.stacktraces="%STACKTRACE_FILTERS%"
+set JAVA_OPTS=%JAVA_OPTS% -Dgroovy.sanitized.stacktraces=%STACKTRACE_FILTERS%
 
 if exist "%USERPROFILE%/.groovy/postinit.bat" call "%USERPROFILE%/.groovy/postinit.bat"
 
