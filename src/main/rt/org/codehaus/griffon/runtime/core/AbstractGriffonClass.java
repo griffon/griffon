@@ -302,6 +302,9 @@ public abstract class AbstractGriffonClass implements GriffonClass {
      * Finds out if the property was defined with a Closure as value.<p>
      */
     public boolean isClosureMetaProperty(MetaProperty property) {
+        int modifiers = property.getModifiers();
+        if(modifiers != Modifier.PUBLIC) return false;
+
         Object value = property.getProperty(getReferenceInstance());
 
         if (value != null) return Closure.class.isAssignableFrom(value.getClass());
