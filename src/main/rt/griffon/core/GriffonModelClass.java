@@ -47,4 +47,22 @@ public interface GriffonModelClass extends GriffonClass {
      * @return an array containing the names of all event handlers.
      */
     String[] getEventNames();
+
+    /**
+     * Sets a value of a model property.
+     *
+     * @param model        the model to be affected
+     * @param propertyName the name of the property to update
+     * @param value        new value
+     */
+    void setModelPropertyValue(GriffonModel model, String propertyName, Object value);
+
+    /**
+     * Returns the value of a model property.
+     *
+     * @param model        the model to query
+     * @param propertyName the name of the property to query
+     * @return the value of the property
+     */
+    Object getModelPropertyValue(GriffonModel model, String propertyName);
 }
