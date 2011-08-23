@@ -98,19 +98,12 @@ eventSetClasspath = { cl ->
     //TODO we should slurp the config, tweak it in place, and re-write instead of append
     installFile << """
 // check to see if we already have a $name
-boolean $flagVar
-builderConfig = configSlurper.parse(builderConfigFile.text)
-builderConfig.each() { prefix, v ->
-    v.each { builder, views ->
-        $flagVar = $flagVar || '$fqn' == builder
-    }
-}
-
-if (!$flagVar) {
+def configText = '''root.'$name'.addon=true'''
+if(!(builderConfigFile.text.contains(configText))) {
     println 'Adding $name to Builder.groovy'
-    builderConfigFile.append('''
-root.'$fqn'.addon=true
-''')
+    builderConfigFile.append(\"\"\"
+\$configText
+\"\"\")
 }"""
 
     def uninstallFile = new File("scripts/_Uninstall.groovy")
@@ -121,19 +114,11 @@ root.'$fqn'.addon=true
     //TODO we should slurp the config, tweak it in place, and re-write instead of append
     uninstallFile << """
 // check to see if we already have a $name
-boolean $flagVar
-builderConfig = configSlurper.parse(builderConfigFile.text)
-builderConfig.each() { prefix, v ->
-    v.each { builder, views ->
-        $flagVar = $flagVar || '$fqn' == builder
-    }
-}
-
-if ($flagVar) {
+def configText = '''root.'$name'.addon=true'''
+if(builderConfigFile.text.contains(configText)) {
     println 'Removing $name from Builder.groovy'
-    builderConfigFile.text = builderConfigFile.text - "root.'$fqn'.addon=true\\n"
-}
-"""
+    builderConfigFile.text -= configText
+}"""
 }
 
 def generateTempVar(String textToSearch, String prefix = "tmp", String suffix = "") {
