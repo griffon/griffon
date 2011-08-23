@@ -14,20 +14,21 @@
  * limitations under the License.
  */
 
-package org.codehaus.griffon.runtime.core;
+package org.codehaus.griffon.runtime.core.factories;
 
-import java.util.Map;
-
-import griffon.core.*;
+import griffon.core.MVCGroupManager;
+import griffon.core.GriffonApplication;
+import griffon.core.factories.MVCGroupManagerFactory;
+import org.codehaus.griffon.runtime.core.DefaultMVCGroupManager;
 
 /**
- * Default implementation of the {@code MVCGroup} interface
+ * Default implementation of the {@code MVCGroupManagerFactory} interface.
  *
  * @author Andres Almiray
- * @since 0.9.3
+ * @since 0.9.4
  */
-public class DefaultMVCGroup extends AbstractMVCGroup {
-    public DefaultMVCGroup(GriffonApplication app, MVCGroupConfiguration configuration, String mvcId, Map<String, Object> members) {
-        super(app, configuration, mvcId, members);
+public class DefaultMVCGroupManagerFactory implements MVCGroupManagerFactory {
+    public MVCGroupManager create(GriffonApplication app) {
+        return new DefaultMVCGroupManager(app);
     }
 }

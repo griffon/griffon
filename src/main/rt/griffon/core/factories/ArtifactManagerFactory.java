@@ -1,5 +1,5 @@
 /*
- * Copyright 2009-2011 the original author or authors.
+ * Copyright 2010-2011 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,21 +13,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+package griffon.core.factories;
 
-package org.codehaus.griffon.runtime.core;
 
-import java.util.Map;
-
-import griffon.core.*;
+import griffon.core.ArtifactManager;
+import griffon.core.GriffonApplication;
 
 /**
- * Default implementation of the {@code MVCGroup} interface
+ * Creates instances of {@code ArtifactManager}.
  *
  * @author Andres Almiray
- * @since 0.9.3
+ * @since 0.9.4
  */
-public class DefaultMVCGroup extends AbstractMVCGroup {
-    public DefaultMVCGroup(GriffonApplication app, MVCGroupConfiguration configuration, String mvcId, Map<String, Object> members) {
-        super(app, configuration, mvcId, members);
-    }
+public interface ArtifactManagerFactory {
+    ArtifactManager create(GriffonApplication app);
 }

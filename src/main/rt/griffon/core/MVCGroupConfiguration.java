@@ -25,15 +25,52 @@ import java.util.Map;
  * @since 0.9.3
  */
 public interface MVCGroupConfiguration extends ApplicationHandler {
+    /**
+     * Returns the type of this group.
+     *
+     * @return the type of the group.
+     */
     String getMvcType();
 
-    Map<String, String> getConfiguration();
+    /**
+     * Returns a Map with the names of all members keyed by type.
+     *
+     * @return a Map of all configured members as defined by the application's configuration or and addon contribution.
+     */
+    Map<String, String> getMembers();
 
-    void create();
+    /**
+     * Creates a new MVCGroup instance based in this configuration.
+     * The group's id will should be set to the group's type and an empty Map should be used as the additional arguments.
+     *
+     * @return a newly instantiated MVCGroup
+     */
+    MVCGroup create();
 
-    void create(String mvcId);
+    /**
+     * Creates a new MVCGroup instance based in this configuration.
+     * An empty Map should be used as the additional arguments.
+     *
+     * @param mvcId the id to assign to this group
+     * @return a newly instantiated MVCGroup
+     */
+    MVCGroup create(String mvcId);
 
-    void create(Map<String, Object> args);
+    /**
+     * Creates a new MVCGroup instance based in this configuration.
+     * The group's id will should be set to the group's type.
+     *
+     * @param args additional arguments sent to each member when initializing
+     * @return a newly instantiated MVCGroup
+     */
+    MVCGroup create(Map<String, Object> args);
 
+    /**
+     * Creates a new MVCGroup instance based in this configuration.
+     *
+     * @param mvcId the id to assign to this group
+     * @param args  additional arguments sent to each member when initializing
+     * @return a newly instantiated MVCGroup
+     */
     MVCGroup create(String mvcId, Map<String, Object> args);
 }

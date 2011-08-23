@@ -80,7 +80,7 @@ public class @artifact.name.plain@Actions {
     }
 
     private static @artifact.name.plain@Controller controller() {
-        return (@artifact.name.plain@Controller) ApplicationHolder.getApplication().getGroups().get("@griffon.project.name@").get("controller");
+        return (@artifact.name.plain@Controller) ApplicationHolder.getApplication().getMvcGroupManager().findGroup("@griffon.project.name@").getController();
     }
 
     private static String message(String key, String defaultValue) {

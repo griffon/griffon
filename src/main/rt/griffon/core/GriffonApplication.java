@@ -186,28 +186,6 @@ public interface GriffonApplication extends ThreadingHandler, MVCHandler {
     void setBindings(Binding bindings);
 
     /**
-     * Return's the set of available MVC groups.
-     *
-     * @return a Map of all groups available in the application's configuration.
-     */
-    Map<String, Map<String, String>> getMvcGroups();
-
-    /**
-     * Register an MVC group for instantiation.<p>
-     *
-     * @param mvcType     the group type, e.g.  'main' or 'navigation'
-     * @param mvcPortions all group members keyed by type.
-     */
-    void addMvcGroup(String mvcType, Map<String, String> mvcPortions);
-
-    /**
-     * Returns the application's AddonManager instance.
-     *
-     * @return the application's AddonManager
-     */
-    AddonManager getAddonManager();
-
-    /**
      * Returns all currently available model instances, keyed by group name.<p>
      *
      * @return a Map of all currently instantiated models.
@@ -240,7 +218,21 @@ public interface GriffonApplication extends ThreadingHandler, MVCHandler {
      *
      * @return a Map of all currently instantiated groups.
      */
-    Map<String, Map<String, Object>> getGroups();
+    Map<String, MVCGroup> getGroups();
+
+    /**
+     * Returns the application's AddonManager instance.
+     *
+     * @return the application's AddonManager
+     */
+    AddonManager getAddonManager();
+
+    /**
+     * Returns the application's MVCGroupManager instance.
+     *
+     * @return the application's MVCGroupManager
+     */
+    MVCGroupManager getMvcGroupManager();
 
     Object createApplicationContainer();
 

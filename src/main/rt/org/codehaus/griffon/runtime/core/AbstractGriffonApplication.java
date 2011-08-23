@@ -44,19 +44,13 @@ import static java.util.Arrays.asList;
  * @author Andres Almiray
  */
 public abstract class AbstractGriffonApplication extends AbstractObservable implements GriffonApplication {
-    private final Map<String, Map<String, String>> mvcGroups = new LinkedHashMap<String, Map<String, String>>();
-    private final Map<String, ? extends GriffonModel> models = new LinkedHashMap<String, GriffonModel>();
-    private final Map<String, ? extends GriffonView> views = new LinkedHashMap<String, GriffonView>();
-    private final Map<String, ? extends GriffonController> controllers = new LinkedHashMap<String, GriffonController>();
-    private final Map<String, ? extends FactoryBuilderSupport> builders = new LinkedHashMap<String, FactoryBuilderSupport>();
-    private final Map<String, Map<String, Object>> groups = new LinkedHashMap<String, Map<String, Object>>();
-
     private Binding bindings = new Binding();
     private ConfigObject config;
     private ConfigObject builderConfig;
     private Object eventsConfig;
     private AddonManager addonManager;
     private ArtifactManager artifactManager;
+    private MVCGroupManager mvcGroupManager;
 
     private Locale locale = Locale.getDefault();
     public static final String[] EMPTY_ARGS = new String[0];
@@ -79,30 +73,6 @@ public abstract class AbstractGriffonApplication extends AbstractObservable impl
         ApplicationHolder.setApplication(this);
         log = LoggerFactory.getLogger(getClass());
         addApplicationEventListener("UncaughtMVCGroupInstantiationException", new MVCGroupInstantiationExceptionHandler());
-    }
-
-    public Map<String, Map<String, String>> getMvcGroups() {
-        return mvcGroups;
-    }
-
-    public Map<String, ? extends GriffonModel> getModels() {
-        return models;
-    }
-
-    public Map<String, ? extends GriffonView> getViews() {
-        return views;
-    }
-
-    public Map<String, ? extends GriffonController> getControllers() {
-        return controllers;
-    }
-
-    public Map<String, ? extends FactoryBuilderSupport> getBuilders() {
-        return builders;
-    }
-
-    public Map<String, Map<String, Object>> getGroups() {
-        return groups;
     }
 
     public Binding getBindings() {
@@ -137,6 +107,26 @@ public abstract class AbstractGriffonApplication extends AbstractObservable impl
         this.eventsConfig = eventsConfig;
     }
 
+    public Map<String, ? extends GriffonModel> getModels() {
+        return getMvcGroupManager().getModels();
+    }
+
+    public Map<String, ? extends GriffonView> getViews() {
+        return getMvcGroupManager().getViews();
+    }
+
+    public Map<String, ? extends GriffonController> getControllers() {
+        return getMvcGroupManager().getControllers();
+    }
+
+    public Map<String, ? extends FactoryBuilderSupport> getBuilders() {
+        return getMvcGroupManager().getBuilders();
+    }
+
+    public Map<String, MVCGroup> getGroups() {
+        return getMvcGroupManager().getGroups();
+    }
+
     public AddonManager getAddonManager() {
         return addonManager;
     }
@@ -151,6 +141,14 @@ public abstract class AbstractGriffonApplication extends AbstractObservable impl
 
     public void setArtifactManager(ArtifactManager artifactManager) {
         this.artifactManager = artifactManager;
+    }
+
+    public MVCGroupManager getMvcGroupManager() {
+        return mvcGroupManager;
+    }
+
+    public void setMvcGroupManager(MVCGroupManager mvcGroupManager) {
+        this.mvcGroupManager = mvcGroupManager;
     }
 
     public Locale getLocale() {
@@ -278,7 +276,7 @@ public abstract class AbstractGriffonApplication extends AbstractObservable impl
 
         // stage 3 - destroy all mvc groups
         List<String> mvcNames = new ArrayList<String>();
-        mvcNames.addAll(groups.keySet());
+        mvcNames.addAll(getMvcGroupManager().getGroups().keySet());
         log.debug("Shutdown stage 3: destroy all MVC groups");
         for (String name : mvcNames) {
             destroyMVCGroup(name);
@@ -361,10 +359,6 @@ public abstract class AbstractGriffonApplication extends AbstractObservable impl
         eventRouter.removeEventListener(eventName, listener);
     }
 
-    public void addMvcGroup(String mvcType, Map<String, String> mvcPortions) {
-        mvcGroups.put(mvcType, mvcPortions);
-    }
-
     public Object createApplicationContainer() {
         return null;
     }
@@ -427,104 +421,104 @@ public abstract class AbstractGriffonApplication extends AbstractObservable impl
         return GriffonApplicationHelper.newInstance(this, clazz, type);
     }
 
-    public Map<String, Object> buildMVCGroup(String mvcType) {
-        return GriffonApplicationHelper.buildMVCGroup(this, mvcType, mvcType, Collections.emptyMap());
+    public MVCGroup buildMVCGroup(String mvcType) {
+        return getMvcGroupManager().buildMVCGroup(mvcType, mvcType, Collections.<String, Object>emptyMap());
     }
 
-    public Map<String, Object> buildMVCGroup(String mvcType, String mvcName) {
-        return GriffonApplicationHelper.buildMVCGroup(this, mvcType, mvcName, Collections.emptyMap());
+    public MVCGroup buildMVCGroup(String mvcType, String mvcName) {
+        return getMvcGroupManager().buildMVCGroup(mvcType, mvcName, Collections.<String, Object>emptyMap());
     }
 
-    public Map<String, Object> buildMVCGroup(Map<String, Object> args, String mvcType) {
-        return GriffonApplicationHelper.buildMVCGroup(this, mvcType, mvcType, args);
+    public MVCGroup buildMVCGroup(Map<String, Object> args, String mvcType) {
+        return getMvcGroupManager().buildMVCGroup(mvcType, mvcType, args);
     }
 
-    public Map<String, Object> buildMVCGroup(String mvcType, Map<String, Object> args) {
-        return GriffonApplicationHelper.buildMVCGroup(this, mvcType, mvcType, args);
+    public MVCGroup buildMVCGroup(String mvcType, Map<String, Object> args) {
+        return getMvcGroupManager().buildMVCGroup(mvcType, mvcType, args);
     }
 
-    public Map<String, Object> buildMVCGroup(Map<String, Object> args, String mvcType, String mvcName) {
-        return GriffonApplicationHelper.buildMVCGroup(this, mvcType, mvcName, args);
+    public MVCGroup buildMVCGroup(Map<String, Object> args, String mvcType, String mvcName) {
+        return getMvcGroupManager().buildMVCGroup(mvcType, mvcName, args);
     }
 
-    public Map<String, Object> buildMVCGroup(String mvcType, String mvcName, Map<String, Object> args) {
-        return GriffonApplicationHelper.buildMVCGroup(this, mvcType, mvcName, args);
+    public MVCGroup buildMVCGroup(String mvcType, String mvcName, Map<String, Object> args) {
+        return getMvcGroupManager().buildMVCGroup(mvcType, mvcName, args);
     }
 
     public List<? extends GriffonMvcArtifact> createMVCGroup(String mvcType) {
-        return GriffonApplicationHelper.createMVCGroup(this, mvcType, mvcType, Collections.emptyMap());
+        return getMvcGroupManager().createMVCGroup(mvcType, mvcType, Collections.<String, Object>emptyMap());
     }
 
     public List<? extends GriffonMvcArtifact> createMVCGroup(Map<String, Object> args, String mvcType) {
-        return GriffonApplicationHelper.createMVCGroup(this, mvcType, mvcType, args);
+        return getMvcGroupManager().createMVCGroup(mvcType, mvcType, args);
     }
 
     public List<? extends GriffonMvcArtifact> createMVCGroup(String mvcType, Map<String, Object> args) {
-        return GriffonApplicationHelper.createMVCGroup(this, mvcType, mvcType, args);
+        return getMvcGroupManager().createMVCGroup(mvcType, mvcType, args);
     }
 
     public List<? extends GriffonMvcArtifact> createMVCGroup(String mvcType, String mvcName) {
-        return GriffonApplicationHelper.createMVCGroup(this, mvcType, mvcName, Collections.emptyMap());
+        return getMvcGroupManager().createMVCGroup(mvcType, mvcName, Collections.<String, Object>emptyMap());
     }
 
     public List<? extends GriffonMvcArtifact> createMVCGroup(Map<String, Object> args, String mvcType, String mvcName) {
-        return GriffonApplicationHelper.createMVCGroup(this, mvcType, mvcName, args);
+        return getMvcGroupManager().createMVCGroup(mvcType, mvcName, args);
     }
 
     public List<? extends GriffonMvcArtifact> createMVCGroup(String mvcType, String mvcName, Map<String, Object> args) {
-        return GriffonApplicationHelper.createMVCGroup(this, mvcType, mvcName, args);
+        return getMvcGroupManager().createMVCGroup(mvcType, mvcName, args);
     }
 
     public void destroyMVCGroup(String mvcName) {
-        GriffonApplicationHelper.destroyMVCGroup(this, mvcName);
+        getMvcGroupManager().destroyMVCGroup(mvcName);
     }
 
     public void withMVCGroup(String mvcType, Closure handler) {
-        GriffonApplicationHelper.withMVCGroup(this, mvcType, mvcType, Collections.<String, Object>emptyMap(), handler);
+        getMvcGroupManager().withMVCGroup(mvcType, mvcType, Collections.<String, Object>emptyMap(), handler);
     }
 
     public void withMVCGroup(String mvcType, String mvcName, Closure handler) {
-        GriffonApplicationHelper.withMVCGroup(this, mvcType, mvcName, Collections.<String, Object>emptyMap(), handler);
+        getMvcGroupManager().withMVCGroup(mvcType, mvcName, Collections.<String, Object>emptyMap(), handler);
     }
 
     public void withMVCGroup(String mvcType, Map<String, Object> args, Closure handler) {
-        GriffonApplicationHelper.withMVCGroup(this, mvcType, mvcType, args, handler);
+        getMvcGroupManager().withMVCGroup(mvcType, mvcType, args, handler);
     }
 
     public void withMVCGroup(Map<String, Object> args, String mvcType, Closure handler) {
-        GriffonApplicationHelper.withMVCGroup(this, mvcType, mvcType, args, handler);
+        getMvcGroupManager().withMVCGroup(mvcType, mvcType, args, handler);
     }
 
     public void withMVCGroup(String mvcType, String mvcName, Map<String, Object> args, Closure handler) {
-        GriffonApplicationHelper.withMVCGroup(this, mvcType, mvcName, args, handler);
+        getMvcGroupManager().withMVCGroup(mvcType, mvcName, args, handler);
     }
 
     public void withMVCGroup(Map<String, Object> args, String mvcType, String mvcName, Closure handler) {
-        GriffonApplicationHelper.withMVCGroup(this, mvcType, mvcName, args, handler);
+        getMvcGroupManager().withMVCGroup(mvcType, mvcName, args, handler);
     }
 
     public <M extends GriffonModel, V extends GriffonView, C extends GriffonController> void withMVCGroup(String mvcType, MVCClosure<M, V, C> handler) {
-        GriffonApplicationHelper.withMVCGroup(this, mvcType, mvcType, Collections.<String, Object>emptyMap(), handler);
+        getMvcGroupManager().withMVCGroup(mvcType, mvcType, Collections.<String, Object>emptyMap(), handler);
     }
 
     public <M extends GriffonModel, V extends GriffonView, C extends GriffonController> void withMVCGroup(String mvcType, String mvcName, MVCClosure<M, V, C> handler) {
-        GriffonApplicationHelper.withMVCGroup(this, mvcType, mvcName, Collections.<String, Object>emptyMap(), handler);
+        getMvcGroupManager().withMVCGroup(mvcType, mvcName, Collections.<String, Object>emptyMap(), handler);
     }
 
     public <M extends GriffonModel, V extends GriffonView, C extends GriffonController> void withMVCGroup(String mvcType, Map<String, Object> args, MVCClosure<M, V, C> handler) {
-        GriffonApplicationHelper.withMVCGroup(this, mvcType, mvcType, args, handler);
+        getMvcGroupManager().withMVCGroup(mvcType, mvcType, args, handler);
     }
 
     public <M extends GriffonModel, V extends GriffonView, C extends GriffonController> void withMVCGroup(Map<String, Object> args, String mvcType, MVCClosure<M, V, C> handler) {
-        GriffonApplicationHelper.withMVCGroup(this, mvcType, mvcType, args, handler);
+        getMvcGroupManager().withMVCGroup(mvcType, mvcType, args, handler);
     }
 
     public <M extends GriffonModel, V extends GriffonView, C extends GriffonController> void withMVCGroup(String mvcType, String mvcName, Map<String, Object> args, MVCClosure<M, V, C> handler) {
-        GriffonApplicationHelper.withMVCGroup(this, mvcType, mvcName, args, handler);
+        getMvcGroupManager().withMVCGroup(mvcType, mvcName, args, handler);
     }
 
     public <M extends GriffonModel, V extends GriffonView, C extends GriffonController> void withMVCGroup(Map<String, Object> args, String mvcType, String mvcName, MVCClosure<M, V, C> handler) {
-        GriffonApplicationHelper.withMVCGroup(this, mvcType, mvcName, args, handler);
+        getMvcGroupManager().withMVCGroup(mvcType, mvcName, args, handler);
     }
 
     private Class loadClass(String className) {
