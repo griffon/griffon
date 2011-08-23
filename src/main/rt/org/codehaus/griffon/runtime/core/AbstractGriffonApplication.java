@@ -19,6 +19,7 @@ package org.codehaus.griffon.runtime.core;
 import griffon.core.*;
 import griffon.exceptions.MVCGroupInstantiationException;
 import griffon.util.ApplicationHolder;
+import griffon.util.ConfigUtils;
 import griffon.util.Metadata;
 import griffon.util.RunnableWithArgs;
 import groovy.lang.Binding;
@@ -187,19 +188,6 @@ public abstract class AbstractGriffonApplication extends AbstractObservable impl
         return loadClass(GriffonApplication.Configuration.EVENTS.getName());
     }
 
-    public Object getConfigValue(String key) {
-        String[] keys = key.split("\\.");
-        Map config = getConfig();
-        for (int i = 0; i < keys.length - 1; i++) {
-            if (config != null) {
-                config = (Map) config.get(keys[i]);
-            } else {
-                return null;
-            }
-        }
-        return config != null ? config.get(keys[keys.length - 1]) : null;
-    }
-
     public void initialize() {
         if (phase == ApplicationPhase.INITIALIZE) {
             GriffonApplicationHelper.prepare(this);
@@ -295,7 +283,7 @@ public abstract class AbstractGriffonApplication extends AbstractObservable impl
         phase = phase.STARTUP;
         event(GriffonApplication.Event.STARTUP_START.getName(), asList(this));
 
-        Object startupGroups = getConfigValue("application.startupGroups");
+        Object startupGroups = ConfigUtils.getConfigValue(getConfig(), "application.startupGroups");
         if (log.isInfoEnabled()) {
             log.info("Initializing all startup groups: " + startupGroups);
         }

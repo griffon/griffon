@@ -30,7 +30,7 @@ import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-import static griffon.util.GriffonApplicationUtils.getConfigValueAsBoolean;
+import static griffon.util.ConfigUtils.getConfigValueAsBoolean;
 
 /**
  * Handler for 'Service' artifacts.
@@ -61,7 +61,7 @@ public class ServiceArtifactHandler extends ArtifactHandlerAdapter {
 
     public void initialize(ArtifactInfo[] artifacts) {
         super.initialize(artifacts);
-        if (getConfigValueAsBoolean(getApp(), "griffon.basic_injection.disable")) return;
+        if (getConfigValueAsBoolean(getApp().getConfig(), "griffon.basic_injection.disable", false)) return;
         getApp().addApplicationEventListener(this);
     }
 
@@ -71,7 +71,7 @@ public class ServiceArtifactHandler extends ArtifactHandlerAdapter {
      * is not set to true
      */
     public void onNewInstance(Class klass, String t, Object instance) {
-        if (getType().equals(t) || getConfigValueAsBoolean(getApp(), "griffon.basic_injection.disable")) return;
+        if (getType().equals(t) || getConfigValueAsBoolean(getApp().getConfig(), "griffon.basic_injection.disable", false)) return;
         MetaClass metaClass = InvokerHelper.getMetaClass(instance);
         for (MetaProperty property : metaClass.getProperties()) {
             String propertyName = property.getName();

@@ -155,8 +155,6 @@ public interface GriffonApplication extends ThreadingHandler, MVCHandler {
 
     void setConfig(ConfigObject config);
 
-    Object getConfigValue(String key);
-
     /**
      * Gets the script class that holds builder configuration (i.e. {@code Builder.groovy})
      */
