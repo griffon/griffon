@@ -34,7 +34,7 @@ import org.springframework.core.io.support.PathMatchingResourcePatternResolver
  * setting the appropriate system property or specifying a value for
  * it in the BuildConfig.groovy file.</p>
  * <p><b>Warning</b> The behaviour is poorly defined if you explicitly
- * set some of the project paths (such as {@link #projectWorkDir }),
+ * set some of the project paths (such as {@link #projectWorkDir}),
  * but not others. If you set one of them explicitly, set all of them
  * to ensure consistent behaviour.</p>
  */
@@ -129,6 +129,11 @@ class BuildSettings extends AbstractBuildSettings {
     public static final String VERBOSE_COMPILE = "griffon.project.compile.verbose"
 
     /**
+     * The name of the system property for {@link #sourceEncoding}.
+     */
+    public static final String SOURCE_ENCODING = "griffon.source.encoding"
+
+    /**
      * The base directory for the build, which is normally the root
      * directory of the current project. If a command is run outside
      * of a project, then this will be the current working directory
@@ -200,6 +205,9 @@ class BuildSettings extends AbstractBuildSettings {
 
     /** The location of the test source. */
     File testSourceDir
+
+    /** Src Encoding  */
+    String sourceEncoding
 
     /** The root loader for the build. This has the required libraries on the classpath. */
     URLClassLoader rootLoader
@@ -307,12 +315,9 @@ class BuildSettings extends AbstractBuildSettings {
 
     /** List containing the default (resolved via the dependencyManager) compile-time dependencies of the app as File instances. */
     private defaultCompileDependenciesClosure = {
-        def jarFiles = dependencyManager
-                            .resolveDependencies(IvyDependencyManager.COMPILE_CONFIGURATION)
-                            .allArtifactsReports
-                            .localFile + applicationJars
-        Message.debug("Resolved jars for [compile]: ${{->jarFiles.join('\n')}}")
-        if(LOG.debugEnabled) LOG.debug("Resolved jars for [compile]: ${{->jarFiles.join('\n')}}")
+        def jarFiles = dependencyManager.resolveDependencies(IvyDependencyManager.COMPILE_CONFIGURATION).allArtifactsReports.localFile + applicationJars
+        Message.debug("Resolved jars for [compile]: ${{-> jarFiles.join('\n')}}")
+        if (LOG.debugEnabled) LOG.debug("Resolved jars for [compile]: ${{-> jarFiles.join('\n')}}")
         return jarFiles
     }
     /** List containing the default (resolved via the dependencyManager) compile-time dependencies of the app as File instances. */
@@ -338,12 +343,9 @@ class BuildSettings extends AbstractBuildSettings {
     }
 
     private defaultTestDependenciesClosure = {
-        def jarFiles = dependencyManager
-                            .resolveDependencies(IvyDependencyManager.TEST_CONFIGURATION)
-                            .allArtifactsReports
-                            .localFile + applicationJars
-        Message.debug("Resolved jars for [test]: ${{->jarFiles.join('\n')}}")
-        if(LOG.debugEnabled) LOG.debug("Resolved jars for [test]: ${{->jarFiles.join('\n')}}")
+        def jarFiles = dependencyManager.resolveDependencies(IvyDependencyManager.TEST_CONFIGURATION).allArtifactsReports.localFile + applicationJars
+        Message.debug("Resolved jars for [test]: ${{-> jarFiles.join('\n')}}")
+        if (LOG.debugEnabled) LOG.debug("Resolved jars for [test]: ${{-> jarFiles.join('\n')}}")
         return jarFiles
     }
     /** List containing the default test-time dependencies of the app as File instances. */
@@ -369,12 +371,9 @@ class BuildSettings extends AbstractBuildSettings {
     }
 
     private defaultRuntimeDependenciesClosure = {
-        def jarFiles = dependencyManager
-                   .resolveDependencies(IvyDependencyManager.RUNTIME_CONFIGURATION)
-                   .allArtifactsReports
-                   .localFile + applicationJars
-        Message.debug("Resolved jars for [runtime]: ${{->jarFiles.join('\n')}}")
-        if(LOG.debugEnabled) LOG.debug("Resolved jars for [runtime]: ${{->jarFiles.join('\n')}}")
+        def jarFiles = dependencyManager.resolveDependencies(IvyDependencyManager.RUNTIME_CONFIGURATION).allArtifactsReports.localFile + applicationJars
+        Message.debug("Resolved jars for [runtime]: ${{-> jarFiles.join('\n')}}")
+        if (LOG.debugEnabled) LOG.debug("Resolved jars for [runtime]: ${{-> jarFiles.join('\n')}}")
         return jarFiles
     }
     /** List containing the default runtime-time dependencies of the app as File instances. */
@@ -384,27 +383,21 @@ class BuildSettings extends AbstractBuildSettings {
         if (dependenciesExternallyConfigured) {
             return []
         }
-        def jarFiles = dependencyManager
-                       .resolveDependencies(IvyDependencyManager.PROVIDED_CONFIGURATION)
-                       .allArtifactsReports
-                       .localFile
-        Message.debug("Resolved jars for [provided]: ${{->jarFiles.join('\n')}}")
-        if(LOG.debugEnabled) LOG.debug("Resolved jars for [provided]: ${{->jarFiles.join('\n')}}")
+        def jarFiles = dependencyManager.resolveDependencies(IvyDependencyManager.PROVIDED_CONFIGURATION).allArtifactsReports.localFile
+        Message.debug("Resolved jars for [provided]: ${{-> jarFiles.join('\n')}}")
+        if (LOG.debugEnabled) LOG.debug("Resolved jars for [provided]: ${{-> jarFiles.join('\n')}}")
         return jarFiles
     }
-    /** List containing the dependencies needed at development time, but provided by the container at runtime **/
+    /** List containing the dependencies needed at development time, but provided by the container at runtime    **/
     @Lazy List<File> providedDependencies = providedDependenciesClosure()
 
     private buildDependenciesClosure = {
         if (dependenciesExternallyConfigured) {
             return []
         }
-        def jarFiles = dependencyManager
-                           .resolveDependencies(IvyDependencyManager.BUILD_CONFIGURATION)
-                           .allArtifactsReports
-                           .localFile + applicationJars
-        Message.debug("Resolved jars for [build]: ${{->jarFiles.join('\n')}}")
-        if(LOG.debugEnabled) LOG.debug("Resolved jars for [build]: ${{->jarFiles.join('\n')}}")
+        def jarFiles = dependencyManager.resolveDependencies(IvyDependencyManager.BUILD_CONFIGURATION).allArtifactsReports.localFile + applicationJars
+        Message.debug("Resolved jars for [build]: ${{-> jarFiles.join('\n')}}")
+        if (LOG.debugEnabled) LOG.debug("Resolved jars for [build]: ${{-> jarFiles.join('\n')}}")
         return jarFiles
     }
     /** List containing the dependencies required for the build system only */
@@ -425,7 +418,7 @@ class BuildSettings extends AbstractBuildSettings {
      * TODO Sort out this mess. Must decide on what can set this properties,
      * when, and how. Also when and how values can be overridden. This
      * is critically important for the Maven and Ant support.
-     */
+  */
     private boolean griffonWorkDirSet
     private boolean projectWorkDirSet
     private boolean projectTargetDirSet
@@ -440,6 +433,7 @@ class BuildSettings extends AbstractBuildSettings {
     private boolean testSourceDirSet
     private boolean buildListenersSet
     private boolean verboseCompileSet
+    private boolean sourceEncodingSet
 
     final Map<String, String> systemProperties = new LinkedHashMap<String, String>();
 
@@ -495,7 +489,7 @@ class BuildSettings extends AbstractBuildSettings {
         griffonScriptClosure = {String name ->
             File potentialScript = new File("${griffonHome}/scripts/${name}.groovy")
             potentialScript = potentialScript.exists() ? potentialScript : new File("${griffonHome}/scripts/${name}_.groovy")
-            if(potentialScript.exists()) {
+            if (potentialScript.exists()) {
                 return potentialScript
             } else {
                 try {
@@ -510,22 +504,22 @@ class BuildSettings extends AbstractBuildSettings {
         includeScriptClosure = {String name ->
             try {
                 return griffonScriptClosure(name)
-            } catch(ClassNotFoundException cnfe) {
+            } catch (ClassNotFoundException cnfe) {
                 Resource[] potentialScripts = resolveResourcesClosure(pluginScriptsPattern(name))
-                switch(potentialScripts.size()) {
+                switch (potentialScripts.size()) {
                     case 1: return potentialScripts[0].file
                     case 0: throw new IllegalArgumentException("No script matches the name $name")
                     default:
-                         throw new IllegalArgumentException("Multiple choices available:\n${potentialScripts.file.absolutePath.join('\n')}")
+                        throw new IllegalArgumentException("Multiple choices available:\n${potentialScripts.file.absolutePath.join('\n')}")
                 }
             }
         }
 
         includePluginScriptClosure = {String pluginName, String scriptName ->
             def pluginHome = pluginSettings.getPluginDirForName(pluginName)?.file
-            if(!pluginHome) return
-            def scriptFile = new File(pluginHome,"/scripts/${scriptName}.groovy")
-            if(scriptFile.exists()) includeTargets << scriptFile
+            if (!pluginHome) return
+            def scriptFile = new File(pluginHome, "/scripts/${scriptName}.groovy")
+            if (scriptFile.exists()) includeTargets << scriptFile
         }
     }
 
@@ -535,7 +529,7 @@ class BuildSettings extends AbstractBuildSettings {
 
     private def loadBuildPropertiesFromClasspath(Properties buildProps) {
         InputStream stream = getClass().classLoader.getResourceAsStream("griffon.build.properties")
-        if(stream == null) {
+        if (stream == null) {
             stream = getClass().classLoader.getResourceAsStream("build.properties")
         }
         if (stream) {
@@ -646,6 +640,11 @@ class BuildSettings extends AbstractBuildSettings {
         verboseCompileSet = true
     }
 
+    void setSourceEncoding(String encoding) {
+        sourceEncoding = encoding
+        sourceEncodingSet = true
+    }
+
     /**
      * Loads the application's BuildConfig.groovy file if it exists
      * and returns the corresponding config object. If the file does
@@ -680,7 +679,7 @@ class BuildSettings extends AbstractBuildSettings {
                 postLoadConfig()
             }
         }
-        catch(e) {
+        catch (e) {
             StackTraceUtils.deepSanitize e
             throw e
         }
@@ -708,6 +707,7 @@ class BuildSettings extends AbstractBuildSettings {
     }
 
     protected boolean settingsFileLoaded = false
+
     protected ConfigObject loadSettingsFile() {
         if (!settingsFileLoaded) {
             def settingsFile = new File("$userHome/.griffon/settings.groovy")
@@ -721,14 +721,14 @@ class BuildSettings extends AbstractBuildSettings {
             }
 
             this.proxySettingsFile = new File("$userHome/.griffon/ProxySettings.groovy")
-            if(proxySettingsFile.exists()) {
+            if (proxySettingsFile.exists()) {
                 slurper = createConfigSlurper()
                 try {
                     Script script = gcl.parseClass(proxySettingsFile)?.newInstance()
                     if (script) {
                         proxySettings = slurper.parse(script)
                         def current = proxySettings.currentProxy
-                        if(current) {
+                        if (current) {
                             proxySettings[current]?.each { key, value ->
                                 System.setProperty(key, value)
                             }
@@ -747,6 +747,7 @@ class BuildSettings extends AbstractBuildSettings {
     }
 
     private GroovyClassLoader gcl
+
     GroovyClassLoader obtainGroovyClassLoader() {
         if (gcl == null) {
             gcl = rootLoader != null ? new GroovyClassLoader(rootLoader) : new GroovyClassLoader(ClassLoader.getSystemClassLoader())
@@ -765,13 +766,13 @@ class BuildSettings extends AbstractBuildSettings {
                 appVersion, this, metadata)
 
         dependencyManager.transferListener = { TransferEvent e ->
-            switch(e.eventType) {
+            switch (e.eventType) {
                 case TransferEvent.TRANSFER_STARTED:
                     println "Downloading: ${e.resource.name} ..."
-                break
+                    break
                 case TransferEvent.TRANSFER_COMPLETED:
                     println "Download complete."
-                break
+                    break
             }
         } as TransferListener
 
@@ -803,9 +804,9 @@ class BuildSettings extends AbstractBuildSettings {
         // All projects need the plugins to be resolved.
         def handlePluginDirectory = pluginDependencyHandler()
         def pluginDirs = getPluginDirectories()
-		for(dir in pluginDirs) {
-			handlePluginDirectory(dir)
-		}
+        for (dir in pluginDirs) {
+            handlePluginDirectory(dir)
+        }
     }
 
     Closure pluginDependencyHandler() {
@@ -841,8 +842,8 @@ class BuildSettings extends AbstractBuildSettings {
                     }
 
                     def inlinePlugins = getInlinePluginsFromConfiguration(pluginConfig, dir)
-                    if(inlinePlugins) {
-                        for(File inlinePlugin in inlinePlugins) {
+                    if (inlinePlugins) {
+                        for (File inlinePlugin in inlinePlugins) {
                             addPluginDirectory inlinePlugin, true
                             // recurse
                             def handleInlinePlugin = pluginDependencyHandler()
@@ -868,8 +869,8 @@ class BuildSettings extends AbstractBuildSettings {
                 griffonVersion: griffonVersion,
                 userHome: userHome,
                 griffonSettings: this,
-                appName:Metadata.current.getApplicationName(),
-                appVersion:Metadata.current.getApplicationVersion())
+                appName: Metadata.current.getApplicationName(),
+                appVersion: Metadata.current.getApplicationVersion())
         return slurper
     }
 
@@ -892,11 +893,11 @@ class BuildSettings extends AbstractBuildSettings {
         if (!griffonWorkDirSet) griffonWorkDir = new File(getPropertyValue(WORK_DIR, props, "${userHome}/.griffon/${griffonVersion}"))
         if (!projectWorkDirSet) projectWorkDir = new File(getPropertyValue(PROJECT_WORK_DIR, props, "$griffonWorkDir/projects/${baseDir.name}"))
         if (!projectTargetDirSet) projectTargetDir = new File(getPropertyValue(PROJECT_TARGET_DIR, props, "$baseDir/target"))
-        if (!classesDirSet)classesDir = new File(getPropertyValue(PROJECT_CLASSES_DIR, props, "$projectWorkDir/classes"))
+        if (!classesDirSet) classesDir = new File(getPropertyValue(PROJECT_CLASSES_DIR, props, "$projectWorkDir/classes"))
         if (!testClassesDirSet) testClassesDir = new File(getPropertyValue(PROJECT_TEST_CLASSES_DIR, props, "$projectWorkDir/test-classes"))
-        if (!pluginClassesDirSet)  pluginClassesDir = new File(getPropertyValue(PROJECT_PLUGIN_CLASSES_DIR, props, "$projectWorkDir/plugin-classes"))
+        if (!pluginClassesDirSet) pluginClassesDir = new File(getPropertyValue(PROJECT_PLUGIN_CLASSES_DIR, props, "$projectWorkDir/plugin-classes"))
         if (!resourcesDirSet) resourcesDir = new File(getPropertyValue(PROJECT_RESOURCES_DIR, props, "$projectWorkDir/resources"))
-        if (!testResourcesDirSet)  testResourcesDir = new File(getPropertyValue(PROJECT_TEST_RESOURCES_DIR, props, "$projectWorkDir/test-resources"))
+        if (!testResourcesDirSet) testResourcesDir = new File(getPropertyValue(PROJECT_TEST_RESOURCES_DIR, props, "$projectWorkDir/test-resources"))
         if (!sourceDirSet) sourceDir = new File(getPropertyValue(PROJECT_SOURCE_DIR, props, "$baseDir/src"))
         if (!projectPluginsDirSet) this.@projectPluginsDir = new File(getPropertyValue(PLUGINS_DIR, props, "$projectWorkDir/plugins"))
         if (!globalPluginsDirSet) this.@globalPluginsDir = new File(getPropertyValue(GLOBAL_PLUGINS_DIR, props, "$griffonWorkDir/global-plugins"))
@@ -904,6 +905,7 @@ class BuildSettings extends AbstractBuildSettings {
         if (!docsOutputDirSet) docsOutputDir = new File(getPropertyValue(PROJECT_DOCS_OUTPUT_DIR, props, "${projectTargetDir}/docs"))
         if (!testSourceDirSet) testSourceDir = new File(getPropertyValue(PROJECT_TEST_SOURCE_DIR, props, "${baseDir}/test"))
         if (!verboseCompileSet) verboseCompile = getPropertyValue(VERBOSE_COMPILE, props, '').toBoolean()
+        if (!sourceEncodingSet) sourceEncoding = getPropertyValue(SOURCE_ENCODING, props, "UTF-8")
     }
 
     protected void parseGriffonBuildListeners() {
@@ -952,7 +954,7 @@ class BuildSettings extends AbstractBuildSettings {
         }
         else {
             baseDir = new File("")
-            if(!new File(baseDir, "griffon-app").exists()) {
+            if (!new File(baseDir, "griffon-app").exists()) {
                 // be careful with this next step...
                 // baseDir.parentFile will return null since baseDir is new File("")
                 // baseDir.absoluteFile needs to happen before retrieving the parentFile

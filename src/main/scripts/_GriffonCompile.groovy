@@ -48,7 +48,7 @@ compilerPaths = { String classpathId ->
         if(new File(srcPath).exists()) src(path: srcPath)
     }
 
-    javac(classpathref:classpathId, encoding:"UTF-8", debug:"yes")
+    javac(classpathref:classpathId, encoding: griffonSettings.sourceEncoding, debug:"yes")
 }
 
 target(setCompilerSettings: "Updates the compile build settings based on args") {
@@ -74,7 +74,7 @@ compileSources = { destinationDir, classpathId, sources ->
                     basedir: griffonSettings.baseDir.path,
                     verbose: (argsMap.verboseCompiler? true : false),
                     classpathref: classpathId,
-                    encoding:"UTF-8", sources)
+                    encoding: griffonSettings.sourceEncoding, sources)
         addUrlIfNotPresent classLoader, destinationDir
     }
     catch(Exception e) {
@@ -154,7 +154,7 @@ target(compile: "Implementation of compilation phase") {
                 src(path: basedir)
                 include(name: '*GriffonAddon.groovy')
                 include(name: '*GriffonAddon.java')
-                javac(classpathref:'addon.classpath', encoding:"UTF-8", debug:"yes")
+                javac(classpathref:'addon.classpath', encoding: griffonSettings.sourceEncoding, debug:"yes")
             }
         }
     }
@@ -187,7 +187,7 @@ target(compilePlugins: "Compiles source files of all referenced plugins.") {
                 }
                 exclude(name: "**/BuildConfig.groovy")
                 exclude(name: "**/Config.groovy")
-                javac(classpathref:classpathId, encoding:"UTF-8", debug:"yes")
+                javac(classpathref:classpathId, encoding: griffonSettings.sourceEncoding, debug:"yes")
             }
             for(dir in pluginResources.file) {
                 compileSharedTestSrc(dir)
