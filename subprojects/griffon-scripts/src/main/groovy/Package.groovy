@@ -71,8 +71,8 @@ target(prepackage: "packaging steps all standard packaging options do") {
 
     createConfig()
 
-    griffonAppletClass = buildConfig.griffon.applet.mainClass ?: defaultGriffonAppletClass
-    griffonApplicationClass = buildConfig.griffon.application.mainClass ?: defaultGriffonApplicationClass
+    griffonAppletClass = buildConfig.griffon.applet.mainClass
+    griffonApplicationClass = buildConfig.griffon.application.mainClass
 
     packageApp()
 

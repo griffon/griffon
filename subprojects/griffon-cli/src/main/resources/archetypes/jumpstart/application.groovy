@@ -43,6 +43,8 @@ target(name: 'createApplicationProject',
         template: 'MainActions',
         path: 'griffon-app/views')
 
+    String baseMvcName = mvcFullQualifiedClassName
+
     createArtifact(
         name: mvcFullQualifiedClassName,
         suffix: 'MenuBar',
@@ -63,6 +65,7 @@ target(name: 'createApplicationProject',
         type: 'Content',
         template: 'MainContent',
         path: 'griffon-app/views')
+
 
     argsMap.model = ''
     argsMap.view = ''
@@ -122,33 +125,29 @@ target(name: 'createApplicationProject',
 
     copyGriffonResources("${basedir}/griffon-app/resources", '/archetypes/jumpstart/griffon-app/resources/*')
     copyGriffonResources("${basedir}/griffon-app/i18n", '/archetypes/jumpstart/griffon-app/i18n/*')
+    argsMap.skipPackagePrompt = false
+    createArtifact(
+        name: baseMvcName,
+        suffix: 'WindowDisplayHandler',
+        type: 'WindowDisplayHandler',
+        template: 'WindowDisplayHandler',
+        path: 'src/main')
+
     ant.replace(dir: "${basedir}/griffon-app/i18n") {
         replacefilter(token: "@griffon.project.name@", value: GriffonNameUtils.capitalize(griffonAppName))
     }
 
     File configFile = new File("${basedir}/griffon-app/conf/Config.groovy")
-    configFile.append('''
-import griffon.swing.SwingUtils
-import java.awt.Dialog
-
+    configFile.append("""
 swing {
     windowManager {
-        defaultShow = {w, app ->
-            if(!(w instanceof Dialog)) SwingUtils.centerOnScreen(w)
-            w.visible = true
-        }
-        defaultHide = {w, app ->
-            if(w instanceof Dialog || app.windowManager.windows.findAll{it.visible}.size() > 1) {
-                w.dispose()
-            } else {
-                if(app.config.shutdown.proceed) w.dispose()
-            }
-        }
+        defaultHandler = new ${fullyQualifiedClassName}()
     }
 }
-''')
+""")
 
     Metadata md = Metadata.getInstance(new File("${basedir}/application.properties"))
+    installPluginExternal md, 'swing'
     installPluginExternal md, 'actions'
     installPluginExternal md, 'glazedlists'
     installPluginExternal md, 'miglayout'

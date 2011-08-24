@@ -1,0 +1,231 @@
+/*
+ * Copyright 2010-2011 the original author or authors.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+import org.apache.tools.ant.filters.ReplaceTokens
+
+sharedManifest = manifest {
+    attributes(
+        "Built-By": System.properties['user.name'],
+        "Created-By": System.properties['java.vm.version'] + " (" + System.properties['java.vm.vendor'] + ")",
+        "Implementation-Version": version,
+        "Implementation-Vendor": 'griffon.codehaus.org'
+    )
+}
+
+tasks.withType(Jar).all {jar ->
+    jar.mavenArtifact = false
+    jar.appFileJar = false
+}
+
+task jarRt(type: Jar) {
+    mavenArtifact = true
+    appendix = 'rt'
+    manifest = project.manifest {
+        from sharedManifest
+        attributes 'Implementation-Title': 'griffon-rt'
+    }
+    from sourceSets.rt.classes
+}
+
+task jarCli(type: Jar) {
+    mavenArtifact = true
+    appendix = 'cli'
+    metaInf {
+        from 'src/metainf/cli/META-INF'
+        include '**/*'
+    }
+    manifest = project.manifest {
+        from sharedManifest
+        attributes 'Implementation-Title': 'griffon-cli'
+    }
+    from sourceSets.cli.classes
+}
+
+task jarScripts(type: Jar) {
+    mavenArtifact = true
+    appendix = 'scripts'
+    manifest = project.manifest {
+        from sharedManifest
+        attributes 'Implementation-Title': 'griffon-scripts'
+    }
+    from sourceSets.scripts.classes
+}
+
+task jarSharedFiles(type: Jar) {
+    dependsOn { distWrapper }
+    appFileJar = true
+    archiveName = "griffon-shared-files.jar"
+    destinationDir = "$buildDir/assemble/jars" as File
+    from "$buildDir/distributions/wrapper"
+}
+
+task jarAppFiles(type: Jar) {
+    appFileJar = true
+    archiveName = "griffon-app-files.jar"
+    destinationDir = "$buildDir/assemble/jars" as File
+    from('src/dist/src/griffon/griffon-app') {
+        into 'griffon-app'
+    }
+}
+
+task jarPluginFiles(type: Jar) {
+    appFileJar = true
+    archiveName = "griffon-plugin-files.jar"
+    destinationDir = "$buildDir/assemble/jars" as File
+    from 'src/dist/src/griffon/templates/plugins'
+}
+
+task jarIntegrationFiles(type: Jar) {
+    appFileJar = true
+    archiveName = "griffon-integration-files.jar"
+    destinationDir = "$buildDir/assemble/jars" as File
+    from 'src/dist/src/griffon/templates/ide-support'
+}
+
+resourceFilesJars = tasks.withType(Jar).matching({ jar -> jar.appFileJar } as Spec)
+
+task jarResources(type: Jar) {
+    dependsOn { resourceFilesJars.all }
+    mavenArtifact = true
+    appendix = 'resources'
+    from "$buildDir/assemble/jars"
+    include '*-files.jar'
+}
+
+distJars = tasks.withType(Jar).matching({ jar -> !jar.appFileJar } as Spec)
+
+task distBinary(type: Copy) {
+    dependsOn { distJars.all + [pdfGuide]}
+
+    destinationDir = "$buildDir/distributions/binary" as File
+    from('src/dist') {
+        filter(ReplaceTokens, tokens: ['griffon.version': version, 'groovy.version': groovyVersion])
+    }
+    from('src/main/scripts') {
+        into 'scripts'
+    }
+	into('lib'){
+		from configurations.rt
+		from configurations.scripts
+		from configurations.cli
+	}
+    from('.') {
+        include 'LICENSE'
+        include 'INSTALL'
+        include 'README'
+    }
+    from("$buildDir/libs") {
+        into 'dist'
+        include '*.jar'
+    }
+    from('src/griffon') {
+        into 'src/griffon'
+    }
+    from("$buildDir/manual") {
+        into 'guide'
+    }
+    from("$buildDir/assemble/jars") {
+        into 'doc'
+        include '*-sources.jar'
+        include '*-javadoc.jar'
+    }
+
+    doLast {
+        ant.chmod(dir: "$buildDir/distributions/binary/bin", excludes: '*.bat', perm: 'ugo+x')
+    }
+}
+
+distSourceSpec = copySpec{
+    from('.') {
+        exclude 'build'
+        exclude '**/.git*'
+        exclude '.git*'
+        exclude '.gradle*'
+        exclude 'clover.license'
+        exclude 'cobertura.ser'
+        exclude '**/*.ipr'
+        exclude '**/*.iws'
+        exclude '**/*.iml'
+    }   
+}
+
+task zipBinary(type: Zip) {
+    description = "Zips the binary distribution."
+    dependsOn { distBinary }
+    classifier = 'bin'
+    into "griffon-$version"
+    from("$buildDir/distributions/binary") {
+        exclude 'bin'
+    }
+    from("$buildDir/distributions/binary/bin") {
+        into 'bin'
+        fileMode = 0755
+    }
+}
+
+task zipSource(type: Zip){
+    description = "Zips the source distribution."
+    with distSourceSpec
+    classifier = 'src'
+    into "griffon-$version"
+}
+
+task tarBinary(type: Tar) {
+    description = "Tars the binary distribution."
+    dependsOn { distBinary }
+    compression = Compression.GZIP
+    classifier = 'bin'
+    into "griffon-$version"
+    from("$buildDir/distributions/binary") {
+        exclude 'bin'
+    }
+    from("$buildDir/distributions/binary/bin") {
+        into 'bin'
+        fileMode = 0755
+    }
+}
+
+task tarSource(type: Tar) {
+    description = "Tars the source distribution."
+    with distSourceSpec
+    classifier = 'src'
+    into "griffon-$version"  
+    compression = Compression.GZIP
+}
+
+task griffonHome
+griffonHome.dir = null
+
+task checkGriffonHome << {
+    griffonHome.dir = System.getProperty('griffon.home') ?: System.env['GRIFFON_HOME']
+    assert griffonHome.dir : 'You must define a value for $GRIFFON_HOME first!'
+    println "===> \$GRIFFON_HOME is set to $griffonHome.dir"
+}
+
+task installBinary(dependsOn: [checkGriffonHome, distBinary]) {
+    description = 'Installs the binary distribution at $GRIFFON_HOME.'
+
+    doFirst {
+        copy {
+            from "$buildDir/distributions/binary"
+            into griffonHome.dir
+        }
+    }
+
+    doLast {
+        ant.chmod(dir: "${griffonHome.dir}/bin", excludes: '*.bat', perm: 'ugo+x')
+    }
+}

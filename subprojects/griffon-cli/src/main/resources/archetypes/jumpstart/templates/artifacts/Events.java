@@ -22,7 +22,7 @@ public class Events {
                     boolean proceed = JOptionPane.showConfirmDialog(
                             window,
                             message("application.confirm.shutdown.message", "Do you really want to exit?"),
-                            message("application.confirm.shutdown.title","Exit"),
+                            message("application.confirm.shutdown.title", "Exit"),
                             JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION;                   
                     app.getConfig().put("shutdown.proceed", proceed);
                     return proceed;
