@@ -93,6 +93,7 @@ target('default': "Upgrades a Griffon application from a previous version of Gri
             def extensionJNLPs = configObject.griffon?.extensions?.jnlpUrls
             def signingKeyFile = configObject.signingkey?.params?.sigfile
             def signingKeyStore = configObject.signingkey?.params?.keystore
+            def deploy = configObject.deploy
 
             if ([packJars, signJars, extensionJars, extensionJNLPs, signingKeyFile].contains([:])) {
                 event("StatusUpdate", ["Adding properties to Config.groovy"])
@@ -126,6 +127,45 @@ target('default': "Upgrades a Griffon application from a previous version of Gri
                         it.writeLine('    }\n}')
                     }
                 }
+            }
+
+            if (deploy == [:]) {
+                configFile.append('''deploy {
+    application {
+        title = '@griffonAppName@ @griffonAppVersion@'
+        vendor = System.properties['user.name']
+        homepage = 'http://localhost/@griffonAppName@'
+        description {
+            complete = '@griffonAppName@ @griffonAppVersion@'
+            oneline  = '@griffonAppName@ @griffonAppVersion@'
+            minimal  = '@griffonAppName@ @griffonAppVersion@'
+            tooltip  = '@griffonAppName@ @griffonAppVersion@'
+        }
+        icon {
+            fallback {
+                name = 'griffon-icon-48x48.png'
+                width = '48'
+                height = '48'
+            }
+            splash {
+                name = 'griffon.png'
+                width = '391'
+                height = '123'
+            }
+            menu {
+                name = 'griffon-icon-16x16.png'
+                width = '48'
+                height = '48'
+            }
+            desktop {
+                name = 'griffon-icon-32x32.png'
+                width = '32'
+                height = '32'
+            }
+        }
+    }
+}
+''')
             }
         }
 
@@ -236,6 +276,16 @@ target('default': "Upgrades a Griffon application from a previous version of Gri
     }
 }
 
+log4j = {
+    // Example of changing the log pattern for the default console
+    // appender:
+    appenders {
+        console name: 'stdout', layout: pattern(conversionPattern: '%d [%t] %-5p %c - %m%n')
+    }
+
+    error  'org.codehaus.griffon'
+}
+
 griffon {
     doc {
         logo = '<a href="http://griffon.codehaus.org" target="_blank"><img alt="The Griffon Framework" src="../img/griffon.png" border="0"/></a>'
@@ -243,7 +293,42 @@ griffon {
         footer = "<br/><br/>Made with Griffon ($griffonVersion)"
     }
 }
-""")
+
+deploy {
+    application {
+        title = '@griffonAppName@ @griffonAppVersion@'
+        vendor = System.properties['user.name']
+        homepage = 'http://localhost/@griffonAppName@'
+        description {
+            complete = '@griffonAppName@ @griffonAppVersion@'
+            oneline  = '@griffonAppName@ @griffonAppVersion@'
+            minimal  = '@griffonAppName@ @griffonAppVersion@'
+            tooltip  = '@griffonAppName@ @griffonAppVersion@'
+        }
+        icon {
+            fallback {
+                name = 'griffon-icon-48x48.png'
+                width = '48'
+                height = '48'
+            }
+            splash {
+                name = 'griffon.png'
+                width = '391'
+                height = '123'
+            }
+            menu {
+                name = 'griffon-icon-16x16.png'
+                width = '48'
+                height = '48'
+            }
+            desktop {
+                name = 'griffon-icon-32x32.png'
+                width = '32'
+                height = '32'
+            }
+        }
+    }
+}""")
         cf.text = '''// log4j configuration
 log4j = {
     // Example of changing the log pattern for the default console
@@ -260,7 +345,6 @@ log4j = {
            'griffon.app'
 }
 '''
-
     }
 
     // ensure a href= is in the application
@@ -275,14 +359,28 @@ log4j = {
                 replacefilter(token: 'codebase=', value: 'href="@jnlpFileName@" codebase=')
             }
             replacefilter(token: '<j2se version="1.5+"/>', value: '<j2se version="1.5+" @memoryOptions@/>')
+            replacefilter(token: '<title>@griffonAppName@</title>',
+                          value: '<title>@griffon.application.title@</title>')
+            replacefilter(token: '<vendor>@griffonAppName@</vendor>',
+                          value: '<vendor>@griffon.application.vendor@</vendor>')
+            replacefilter(token: '<!--<homepage href="http://app.example.com/"/>-->',
+                          value: '<homepage href="@griffon.application.homepage@"/>')
+            replacefilter(token: '<description>@griffonAppName@</description>',
+                          value: '<description>@griffon.application.description.complete@</description>')
+            replacefilter(token: '<description kind="one-line">@griffonAppName@</description>',
+                          value: '<description kind="one-line">@griffon.application.description.oneline@</description>')
+            replacefilter(token: '<description kind="short">@griffonAppName@</description>',
+                          value: '<description kind="short">@griffon.application.description.minimal@</description>')
+            replacefilter(token: '<description kind="tooltip">@griffonAppName@</description>',
+                          value: '<description kind="tooltip">@griffon.application.description.tooltip@</description>')
             replacefilter(token: '<!--<icon href="http://example.com/icon.gif" kind="splash" width="" height=""/>-->',
-                          value: '<icon href="griffon.png" kind="splash" width="381" height="123"/>')
+                          value: '<icon href="@griffon.application.icon.fallback@" kind="default" width="@griffon.application.icon.fallback.width@" height="@griffon.application.icon.fallback.height@"/>')
             replacefilter(token: '<!--<icon href="http://example.com/icon.gif" kind="default" width="" height=""/>-->',
-                          value: '<icon href="griffon-icon-48x48.png" kind="default" width="48" height="48"/>')
+                          value: '<icon href="@griffon.application.icon.splash@" kind="default" width="@griffon.application.icon.splash.width@" height="@griffon.application.icon.splash.height@"/>')
             replacefilter(token: '<!--<icon href="http://example.com/icon.gif" kind="shortcut" width="16" height="16"/>-->',
-                          value: '<icon href="griffon-icon-16x16.png" kind="shortcut" width="16" height="16"/>')
+                          value: '<icon href="@griffon.application.icon.menu@" kind="default" width="@griffon.application.icon.menu.width@" height="@griffon.application.icon.menu.height@"/>')
             replacefilter(token: '<!--<icon href="http://example.com/icon.gif" kind="shortcut" width="32" height="32"/>-->',
-                          value: '<icon href="griffon-icon-32x32.png" kind="shortcut" width="32" height="32"/>')
+                          value: '<icon href="@griffon.application.icon.desktop@" kind="default" width="@griffon.application.icon.desktop.width@" height="@griffon.application.icon.desktop.height@"/>')
             if (!fileText.contains('@jnlpExtensions@')) {
             	replacefilter(token: '</resources>', value: '@jnlpExtensions@ \n</resources>')
             }

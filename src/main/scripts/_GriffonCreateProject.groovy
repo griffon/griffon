@@ -16,6 +16,7 @@
 
 import griffon.util.GriffonUtil
 import griffon.util.Metadata
+import static griffon.util.GriffonNameUtils.capitalize
 
 /**
  * Gant script that handles the creation of Griffon applications
@@ -47,6 +48,11 @@ app.archetype = '$archetype'
 app.fileType = '$fileType'
 app.defaultPackageName = '$defaultPackageName'
 """)
+
+    ant.replace(dir: "${basedir}/griffon-app/conf", includes:"**/*.*") {
+        replacefilter(token: "@griffonAppName@", value: capitalize(griffonAppName))
+        replacefilter(token: "@griffonAppVersion@", value: griffonAppVersion ?: "0.1")
+    }
 
     event("StatusFinal", ["Created Griffon Application at $basedir"])
 }
