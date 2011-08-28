@@ -182,7 +182,7 @@ class PluginInstallEngine {
     }
 
     private String getPluginVersion(path) {
-        (path =~ /^[\w][\w\.-]*-([0-9][\w\.]*)$/)[0][1]
+        (path =~ /^[\w][\w\.-]*-([0-9][\w\.\-]*)$/)[0][1]
     }
 
     protected void installPluginZipInternal(String name, String version, File pluginZip, boolean globalInstall = false, boolean overwrite = false) {
