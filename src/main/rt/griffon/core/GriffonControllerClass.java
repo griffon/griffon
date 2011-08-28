@@ -34,8 +34,15 @@ public interface GriffonControllerClass extends GriffonClass {
     /**
      * Matches all public methods and all properties that
      * have a Closure as value.<p>
+     * Actions are subject to the following rules in order to be considered as such:<ul>
+     * <li>must have public (Java) or default (Groovy) visibility modifier. </li>
+     * <li>name does not match an event handler, i.e, it does not begin with <tt>on</tt>.</li>
+     * <li>must pass {code GriffonClassUtils.isPlainMethod()} if it's a method.</li>
+     * <li>must have <tt>void</tt> as return type if it's a method.</li>
+     * <li>value must be a closure (including curried method pointers) if it's a property.</li>
+     * </ul>
      *
-     * @return an array containing the names of all aciton names.
+     * @return an array containing the names of all action names.
      */
     String[] getActionNames();
 

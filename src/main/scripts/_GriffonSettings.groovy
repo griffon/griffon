@@ -337,7 +337,7 @@ logErrorAndExit = { String message, Throwable t ->
 }
 
 isDebugEnabled = {
-    if(System.getProperty('griffon.cli.verbose') != null) return Boolean.parseBoolean('griffon.cli.verbose')
+    if(System.getProperty('griffon.cli.verbose') != null) return Boolean.getBoolean('griffon.cli.verbose')
     def value = buildConfig?.flatten().get('griffon.cli.verbose')
     value != null? value as boolean : false
 }
