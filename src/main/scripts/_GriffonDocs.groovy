@@ -37,11 +37,11 @@ groovydocDir = "${griffonSettings.docsOutputDir}/api"
 docEncoding = "UTF-8"
 docSourceLevel = "1.5"
 links = [
-    [packages: "java.,org.xml.,javax.,org.xml.",        href: "http://java.sun.com/j2se/1.5.0/docs/api"],
-    [packages: "org.apache.ant.,org.apache.tools.ant.", href: "http://www.dpml.net/api/ant/1.7.0"],
-    [packages: "org.junit.,junit.framework.",           href: "http://junit.sourceforge.net/junit3.8.1/javadoc/"],
-    [packages: "groovy.,org.codehaus.groovy.",          href: "http://groovy.codehaus.org/api/"],
-    [packages: 'griffon.,org.codehaus.griffon.',        href: 'http://dist.codehaus.org/griffon/guide/api/']
+        [packages: "java.,org.xml.,javax.,org.xml.", href: "http://java.sun.com/j2se/1.5.0/docs/api"],
+        [packages: "org.apache.ant.,org.apache.tools.ant.", href: "http://www.dpml.net/api/ant/1.7.0"],
+        [packages: "org.junit.,junit.framework.", href: "http://junit.sourceforge.net/junit3.8.1/javadoc/"],
+        [packages: "groovy.,org.codehaus.groovy.", href: "http://groovy.codehaus.org/api/"],
+        [packages: 'griffon.,org.codehaus.griffon.', href: 'http://dist.codehaus.org/griffon/guide/api/']
 ]
 
 docsDisabled = { argsMap.nodoc == true }
@@ -54,13 +54,13 @@ ant.taskdef(name: "groovydoc", classname: "org.codehaus.groovy.ant.Groovydoc")
 
 target(docs: "Produces documentation for a Griffon project") {
     parseArguments()
-    if(argsMap.init) {
-        ant.mkdir(dir:"${basedir}/src/docs/img")
-        ant.copy(todir:"${basedir}/src/docs/img") {
-            fileset(dir:"${griffonHome}/media/", includes: "*.png")
+    if (argsMap.init) {
+        ant.mkdir(dir: "${basedir}/src/docs/img")
+        ant.copy(todir: "${basedir}/src/docs/img") {
+            fileset(dir: "${griffonHome}/media/", includes: "*.png")
         }
-        ant.mkdir(dir:"${basedir}/src/docs/guide")
-        ant.mkdir(dir:"${basedir}/src/docs/ref/Items")
+        ant.mkdir(dir: "${basedir}/src/docs/guide")
+        ant.mkdir(dir: "${basedir}/src/docs/ref/Items")
         new File("${basedir}/src/docs/guide/1. Introduction.gdoc").write '''
 This is an example documentation template. The syntax format is similar to "Textile":http://textile.thresholdstate.com/.
         
@@ -76,7 +76,7 @@ As well as numbered lists:
         
 The documentation also handles links to [guide items|guide:1. Introduction] as well as [reference|items]        
         '''
-        
+
         new File("${basedir}/src/docs/ref/Items/reference.gdoc").write '''
 h1. example
 
@@ -96,26 +96,26 @@ h2. Description
 
 And provide a detailed description        
         '''
-        
+
         println "Example documentation created in ${basedir}/src/docs. Use 'griffon doc' to publish."
     } else {
         docsInternal()
-    }    
+    }
 }
 
-target(docsInternal:"Actual documentation task") {
+target(docsInternal: "Actual documentation task") {
     depends(compile, /*javadoc,*/ groovydoc, refdocs, pdf, createIndex)
 }
 
-target(setupDoc:"Sets up the doc directories") {
-    ant.mkdir(dir:griffonSettings.docsOutputDir)
-    ant.mkdir(dir:groovydocDir)
+target(setupDoc: "Sets up the doc directories") {
+    ant.mkdir(dir: griffonSettings.docsOutputDir)
+    ant.mkdir(dir: groovydocDir)
     // ant.mkdir(dir:javadocDir)
     IvyDependencyManager dependencyManager = griffonSettings.dependencyManager
     dependencyManager.loadDependencies('docs')
 }
 
-target(groovydoc:"Produces groovydoc documentation") {
+target(groovydoc: "Produces groovydoc documentation") {
     depends(parseArguments, setupDoc)
 
     if (docsDisabled()) {
@@ -123,23 +123,23 @@ target(groovydoc:"Produces groovydoc documentation") {
         return
     }
 
-    ant.taskdef(name:"groovydoc", classname:"org.codehaus.groovy.ant.Groovydoc")
+    ant.taskdef(name: "groovydoc", classname: "org.codehaus.groovy.ant.Groovydoc")
     event("DocStart", ['groovydoc'])
     try {
         invokeGroovydoc(
-        destdir: groovydocDir,
-            windowtitle: "${griffonAppName} ${griffonAppVersion}",
-            doctitle: "${griffonAppName} ${griffonAppVersion}",
-            sourcepath: "src/main, griffon-app/controllers, griffon-app/models, griffon-app/services"
+                destdir: groovydocDir,
+                windowtitle: "${griffonAppName} ${griffonAppVersion}",
+                doctitle: "${griffonAppName} ${griffonAppVersion}",
+                sourcepath: "src/main, griffon-app/controllers, griffon-app/models, griffon-app/services"
         )
     }
-    catch(Exception e) {
-       event("StatusError", ["Error generating groovydoc: ${e.message}"])
+    catch (Exception e) {
+        event("StatusError", ["Error generating groovydoc: ${e.message}"])
     }
     event("DocEnd", ['groovydoc'])
 }
 
-target(javadoc:"Produces javadoc documentation") {
+target(javadoc: "Produces javadoc documentation") {
     depends(parseArguments, setupDoc)
 
     if (docsDisabled()) {
@@ -149,34 +149,34 @@ target(javadoc:"Produces javadoc documentation") {
 
     event("DocStart", ['javadoc'])
     File javaDir = new File("${griffonSettings.sourceDir}/main")
-    if (javaDir.listFiles().find{ !it.name.startsWith(".")}) {
-       try {
-           invokeJavadoc(access:"protected",
-                        destdir:javadocDir,
-                        encoding:docEncoding,
-                        classpathref:"griffon.compile.classpath",
-                        use:"yes",
-                        windowtitle:griffonAppName,
-                        docencoding:docEncoding,
-                        charset:docEncoding,
-                        source:docSourceLevel,
-                        useexternalfile:"yes",
-                        breakiterator:"true",
-                        linksource:"yes",
-                        maxmemory:"128m",
-                        failonerror:false,
-                        sourcepath:javaDir.absolutePath) {
-           }
-       }
-       catch(Exception e) {
-          event("StatusError", ["Error generating javadoc: ${e.message}"])
-          // ignore, empty src/java directory
-       }
-   }
+    if (javaDir.listFiles().find { !it.name.startsWith(".")}) {
+        try {
+            invokeJavadoc(access: "protected",
+                    destdir: javadocDir,
+                    encoding: docEncoding,
+                    classpathref: "griffon.compile.classpath",
+                    use: "yes",
+                    windowtitle: griffonAppName,
+                    docencoding: docEncoding,
+                    charset: docEncoding,
+                    source: docSourceLevel,
+                    useexternalfile: "yes",
+                    breakiterator: "true",
+                    linksource: "yes",
+                    maxmemory: "128m",
+                    failonerror: false,
+                    sourcepath: javaDir.absolutePath) {
+            }
+        }
+        catch (Exception e) {
+            event("StatusError", ["Error generating javadoc: ${e.message}"])
+            // ignore, empty src/java directory
+        }
+    }
     event("DocEnd", ['javadoc'])
 }
 
-target(refdocs:"Generates Griffon style reference documentation") {
+target(refdocs: "Generates Griffon style reference documentation") {
     depends(parseArguments, createConfig, loadPlugins, setupDoc)
 
     if (docsDisabled()) return
@@ -188,10 +188,10 @@ target(refdocs:"Generates Griffon style reference documentation") {
 
     def context = DocumentationContext.getInstance()
     if (context?.hasMetadata()) {
-        for(DocumentedMethod m in context.methods) {
+        for (DocumentedMethod m in context.methods) {
             if (m.artefact && m.artefact != 'Unknown') {
                 String refDir = "${srcDocs}/ref/${GriffonUtil.getNaturalName(m.artefact)}"
-                ant.mkdir(dir:refDir)
+                ant.mkdir(dir: refDir)
                 def refFile = new File("${refDir}/${m.name}.gdoc")
                 if (!refFile.exists()) {
                     println "Generating documentation ${refFile}"
@@ -214,7 +214,7 @@ ${m.text ?: ''}
 
 Arguments:
 
-${m.arguments?.collect { '* @'+GriffonUtil.getPropertyName(it)+'@\n' }}
+${m.arguments?.collect { '* @' + GriffonUtil.getPropertyName(it) + '@\n' }}
 """
                 }
             }
@@ -223,9 +223,9 @@ ${m.arguments?.collect { '* @'+GriffonUtil.getPropertyName(it)+'@\n' }}
 
     if (srcDocsGuide.exists() || srcDocsRef.exists()) {
         File refDocsDir = new File("${griffonSettings.docsOutputDir}/manual")
-        ant.mkdir(dir:"${refDocsDir}/img")
-        if(srcDocsImg.exists()) {
-            ant.copy(todir:"${refDocsDir}/img") {
+        ant.mkdir(dir: "${refDocsDir}/img")
+        if (srcDocsImg.exists()) {
+            ant.copy(todir: "${refDocsDir}/img") {
                 fileset(dir: srcDocsImg, includes: "*.png")
             }
         }
@@ -253,34 +253,34 @@ ${m.arguments?.collect { '* @'+GriffonUtil.getPropertyName(it)+'@\n' }}
 }
 
 target(pdf: "Produces PDF documentation") {
-   depends(parseArguments)
+    depends(parseArguments)
 
-   File refDocsDir = new File("${griffonSettings.docsOutputDir}/manual")
-   File singleHtml = new File(refDocsDir, 'guide/single.html')
+    File refDocsDir = new File("${griffonSettings.docsOutputDir}/manual")
+    File singleHtml = new File(refDocsDir, 'guide/single.html')
 
-   if (docsDisabled() || !pdfEnabled() || !singleHtml.exists()) {
-       event("DocSkip", ['pdf'])
-       return
-   }
+    if (docsDisabled() || !pdfEnabled() || !singleHtml.exists()) {
+        event("DocSkip", ['pdf'])
+        return
+    }
 
-   event("DocStart", ['pdf'])
+    event("DocStart", ['pdf'])
 
-   PdfBuilder.build(griffonSettings.docsOutputDir.canonicalPath, griffonHome)
+    PdfBuilder.build(griffonSettings.docsOutputDir.canonicalPath, griffonHome)
 
-   createdPdf = true
+    createdPdf = true
 
-   println "Built user manual PDF at ${refDocsDir}/guide/single.pdf"
+    println "Built user manual PDF at ${refDocsDir}/guide/single.pdf"
 
-   event("DocEnd", ['pdf'])
+    event("DocEnd", ['pdf'])
 }
 
 target(createIndex: "Produces an index.html page in the root directory") {
-   if (docsDisabled()) {
-       return
-   }
+    if (docsDisabled()) {
+        return
+    }
 
-   new File("${griffonSettings.docsOutputDir}/index.html").withWriter { writer ->
-               writer.write """\
+    new File("${griffonSettings.docsOutputDir}/index.html").withWriter { writer ->
+        writer.write """\
 <html>
 
        <head>
@@ -291,20 +291,20 @@ target(createIndex: "Produces an index.html page in the root directory") {
                <a href="api/index.html">API docs</a><br />
 """
 
-               if (createdManual) {
-                       writer.write '\t\t<a href="manual/index.html">Manual (Frames)</a><br />\n'
-                       writer.write '\t\t<a href="manual/guide/single.html">Manual (Single)</a><br />\n'
-               }
+        if (createdManual) {
+            writer.write '\t\t<a href="manual/index.html">Manual (Frames)</a><br />\n'
+            writer.write '\t\t<a href="manual/guide/single.html">Manual (Single)</a><br />\n'
+        }
 
-               if (createdPdf) {
-                       writer.write '\t\t<a href="manual/guide/single.pdf">Manual (PDF)</a><br />\n'
-               }
+        if (createdPdf) {
+            writer.write '\t\t<a href="manual/guide/single.pdf">Manual (PDF)</a><br />\n'
+        }
 
-               writer.write """\
+        writer.write """\
        </body>
 </html>
 """
-   }
+    }
 }
 
 
@@ -326,7 +326,7 @@ def readPluginMetadataForDocs(DocPublisher publisher) {
 
 def readDocProperties(DocPublisher publisher) {
     ['copyright', 'license', 'authors', 'footer', 'images',
-     'css', 'style', 'encoding', 'logo', 'sponsorLogo'].each { readIfSet publisher, it }
+            'css', 'style', 'encoding', 'logo', 'sponsorLogo'].each { readIfSet publisher, it }
 }
 
 def configureAliases() {
@@ -340,7 +340,7 @@ def configureAliases() {
 }
 
 
-private readIfSet(DocPublisher publisher,String prop) {
+private readIfSet(DocPublisher publisher, String prop) {
     if (buildConfig.griffon.doc."$prop") {
         publisher[prop] = buildConfig.griffon.doc."$prop"
     }
@@ -367,48 +367,62 @@ invokeGroovydoc = { Map args ->
     ant.mkdir(dir: args.destdir)
 
     Map groovydocProps = [
-        use: 'true',
-        'private': 'true',
-        packagenames: '**.*'
+            use: 'true',
+            'private': 'true',
+            packagenames: '**.*'
     ]
 
     def additionalLinks = args.remove('links') ?: []
     def sources = args.remove('sourcepath') ?: ["${basedir}/src/main"]
-    if(!(sources instanceof List)) sources = sources.toString().split(',')
-    def groovydocSourcePaths = ant.path {
-        sources.each { pathElement(location: it.toString().trim()) }
+    if (!(sources instanceof List)) sources = sources.toString().split(',')
+    def runGroovydoc = sources.inject(true) { dir, run ->
+        run &= hasJavaOrGroovySources(dir: dir)
     }
 
-    ant.groovydoc([*:groovydocProps, *:args, sourcepath: groovydocSourcePaths]) {
-        links.each { l -> link(packages: l.packages, href: l.href) }
-        additionalLinks.each { l -> link(packages: l.packages, href: l.href) }
+    if (runGroovydoc) {
+        def groovydocSourcePaths = ant.path {
+            sources.each { pathElement(location: it.toString().trim()) }
+        }
+
+        ant.groovydoc([*: groovydocProps, *: args, sourcepath: groovydocSourcePaths]) {
+            links.each { l -> link(packages: l.packages, href: l.href) }
+            additionalLinks.each { l -> link(packages: l.packages, href: l.href) }
+        }
     }
 }
 
 invokeJavadoc = { Map args ->
     Map javadocProps = [
-        access: "protected",
-        encoding: docEncoding,
-        classpathref: "griffon.compile.classpath",
-        use: "yes",
-        windowtitle: griffonAppName,
-        docencoding: docEncoding,
-        charset: docEncoding,
-        source: docSourceLevel,
-        useexternalfile: "yes",
-        breakiterator: "true",
-        linksource: "yes",
-        maxmemory: "128m"
+            access: "protected",
+            encoding: docEncoding,
+            classpathref: "griffon.compile.classpath",
+            use: "yes",
+            windowtitle: griffonAppName,
+            docencoding: docEncoding,
+            charset: docEncoding,
+            source: docSourceLevel,
+            useexternalfile: "yes",
+            breakiterator: "true",
+            linksource: "yes",
+            maxmemory: "128m"
     ]
 
     def additionalLinks = args.remove('links') ?: []
     def sources = args.remove('sources') ?: ["${basedir}/src/main"]
-    if(!(sources instanceof List)) sources = sources.toString().split(',')
+    if (!(sources instanceof List)) sources = sources.toString().split(',')
 
     ant.mkdir(dir: args.destdir)
-    ant.javadoc([*:javadocProps, *:args]) {
+    ant.javadoc([*: javadocProps, *: args]) {
         sources.each { srcdir -> fileset(dir: srcdir.toString().trim()) }
         links.each { l -> link(href: l) }
         additionalLinks.each { l -> link(href: l) }
     }
+}
+
+hasFiles = { Map params ->
+    params.dir.exists() ? ant.fileset(params).size() > 0 : false
+}
+
+hasJavaOrGroovySources = { dir ->
+    hasFiles(dir: dir, includes: '**/*.groovy, **/*.java')
 }
