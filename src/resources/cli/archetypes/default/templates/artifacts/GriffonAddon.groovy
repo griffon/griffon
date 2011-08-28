@@ -12,12 +12,12 @@ class @artifact.name@ {
     //}
 
     // called many times, after creating a builder
-    //void addonBuilderInit(GriffonApplication app) {
+    //void addonBuilderInit(GriffonApplication app, FactoryBuilderSupport builder) {
     //}
 
     // called many times, after creating a builder and after
     // all addons have been inited
-    //void addonBuilderPostInit(GriffonApplication app) {
+    //void addonBuilderPostInit(GriffonApplication app, FactoryBuilderSupport builder) {
     //}
 
 
