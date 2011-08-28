@@ -22,8 +22,6 @@ import griffon.util.PluginBuildSettings;
 import groovy.lang.*;
 import org.apache.tools.ant.BuildEvent;
 import org.apache.tools.ant.BuildListener;
-import org.codehaus.groovy.runtime.DateGroovyMethods;
-import org.codehaus.groovy.runtime.typehandling.DefaultTypeTransformation;
 import org.springframework.core.io.Resource;
 
 import java.io.File;
@@ -154,7 +152,7 @@ public class GriffonBuildEventListener implements BuildListener {
         String targetName = buildEvent.getTarget().getName();
         String eventName = GriffonUtil.getClassNameRepresentation(targetName) + "Start";
 
-        debug(">> " + targetName);
+        buildSettings.debug(">> " + targetName);
         timings.put(targetName, System.currentTimeMillis());
         triggerEvent(eventName, binding);
     }
@@ -198,7 +196,7 @@ public class GriffonBuildEventListener implements BuildListener {
 
         triggerEvent(eventName, binding);
         Long timing = System.currentTimeMillis() - timings.get(targetName);
-        debug("<< " + targetName + " [" + timing + "ms]");
+        buildSettings.debug("<< " + targetName + " [" + timing + "ms]");
     }
 
     public void taskStarted(BuildEvent buildEvent) {
@@ -238,21 +236,5 @@ public class GriffonBuildEventListener implements BuildListener {
 
     public void addGriffonBuildListener(GriffonBuildListener listener) {
         buildListeners.add(listener);
-    }
-
-    private boolean isDebugEnabled() {
-        if (System.getProperty("griffon.cli.verbose") != null) return Boolean.getBoolean("griffon.cli.verbose");
-        return DefaultTypeTransformation.castToBoolean(buildSettings.getConfig().flatten().get("griffon.cli.verbose"));
-    }
-
-    private void debug(String msg) {
-        if (isDebugEnabled()) {
-            Date now = new Date();
-            System.out.println("[" +
-                    DateGroovyMethods.getDateString(now)
-                    + " " +
-                    DateGroovyMethods.getTimeString(now)
-                    + "] " + msg);
-        }
     }
 }

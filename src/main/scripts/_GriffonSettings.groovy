@@ -337,16 +337,11 @@ logErrorAndExit = { String message, Throwable t ->
 }
 
 isDebugEnabled = {
-    if(System.getProperty('griffon.cli.verbose') != null) return Boolean.getBoolean('griffon.cli.verbose')
-    def value = buildConfig?.flatten().get('griffon.cli.verbose')
-    value != null? value as boolean : false
+    griffonSettings.debugEnabled
 }
 
 debug = { msg ->
-    if(isDebugEnabled()) {
-        Date now = new Date()
-        println "[$now.dateString $now.timeString] $msg"
-    }
+    griffonSettings.debug(msg)
 }
 
 compilingPlugin = { pluginName ->
