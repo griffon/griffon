@@ -20,12 +20,22 @@ import griffon.transform.Threading
 
 class Sample {
     @Threading
-    def doStuff() {
+    void doStuff() {
         // executed outside of the UI thread
     }
 
     @Threading(Threading.Policy.INSIDE_UITHREAD_SYNC)
-    def moreStuff() {
+    void moreStuff() {
+        // executed synchronously inside the UI thread
+    }
+
+    @Threading
+    def work = {
+        // executed outside of the UI thread
+    }
+
+    @Threading(Threading.Policy.INSIDE_UITHREAD_SYNC)
+    def update = {
         // executed synchronously inside the UI thread
     }
 }
