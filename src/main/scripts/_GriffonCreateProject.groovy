@@ -17,6 +17,7 @@
 import griffon.util.GriffonUtil
 import griffon.util.Metadata
 import static griffon.util.GriffonNameUtils.capitalize
+import static griffon.util.GriffonNameUtils.uncapitalize
 
 /**
  * Gant script that handles the creation of Griffon applications
@@ -64,6 +65,7 @@ createProjectWithDefaults = {
         replacefilter(token: "@griffon.app.class.name@", value: appClassName )
         replacefilter(token: "@griffon.version@", value: griffonVersion)
         replacefilter(token: "@griffon.project.name@", value: griffonAppName)
+        replacefilter(token: "@griffon.application.name@", value: uncapitalize(appClassName))
         replacefilter(token: "@griffon.project.key@", value: griffonAppName.replaceAll( /\s/, '.' ).toLowerCase())
     }
 
