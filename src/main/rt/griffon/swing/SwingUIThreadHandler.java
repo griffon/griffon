@@ -15,21 +15,17 @@
  */
 package griffon.swing;
 
-import griffon.util.UIThreadHandler;
+import org.codehaus.griffon.runtime.util.AbstractUIThreadHandler;
 
 import javax.swing.*;
 import java.lang.reflect.InvocationTargetException;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
 /**
  * Executes code using SwingUtilities.
  *
  * @author Andres Almiray
  */
-public class SwingUIThreadHandler implements UIThreadHandler {
-    private static final ExecutorService DEFAULT_EXECUTOR_SERVICE = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
-
+public class SwingUIThreadHandler extends AbstractUIThreadHandler {
     public boolean isUIThread() {
         return SwingUtilities.isEventDispatchThread();
     }
@@ -47,16 +43,8 @@ public class SwingUIThreadHandler implements UIThreadHandler {
             } catch (InterruptedException ie) {
                 // ignore
             } catch (InvocationTargetException ite) {
-                // ignore
+                throw new RuntimeException(ite.getCause());
             }
-        }
-    }
-
-    public void executeOutside(Runnable runnable) {
-        if (!isUIThread()) {
-            runnable.run();
-        } else {
-            DEFAULT_EXECUTOR_SERVICE.submit(runnable);
         }
     }
 }

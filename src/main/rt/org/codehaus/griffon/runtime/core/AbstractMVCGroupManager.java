@@ -17,6 +17,7 @@
 package org.codehaus.griffon.runtime.core;
 
 import griffon.core.*;
+import griffon.exceptions.MVCGroupConfigurationException;
 import griffon.util.GriffonExceptionHandler;
 import groovy.lang.Closure;
 import groovy.util.FactoryBuilderSupport;
@@ -64,7 +65,7 @@ public abstract class AbstractMVCGroupManager implements MVCGroupManager {
         }
 
         if (configuration == null) {
-            throw new IllegalArgumentException("Unknown MVC type '" + mvcType + "'.  Known types are " + configurations.keySet());
+            throw new MVCGroupConfigurationException("Unknown MVC type '" + mvcType + "'. Known types are " + configurations.keySet(), mvcType);
         }
         return configuration;
     }

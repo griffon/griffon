@@ -17,7 +17,6 @@
 package org.codehaus.griffon.runtime.core;
 
 import griffon.core.*;
-import griffon.exceptions.MVCGroupInstantiationException;
 import griffon.util.ApplicationHolder;
 import griffon.util.ConfigUtils;
 import griffon.util.Metadata;
@@ -27,6 +26,7 @@ import groovy.lang.Closure;
 import groovy.util.ConfigObject;
 import groovy.util.FactoryBuilderSupport;
 import org.codehaus.griffon.runtime.util.GriffonApplicationHelper;
+import org.codehaus.griffon.runtime.util.MVCGroupExceptionHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -73,7 +73,7 @@ public abstract class AbstractGriffonApplication extends AbstractObservable impl
         System.arraycopy(args, 0, startupArgs, 0, args.length);
         ApplicationHolder.setApplication(this);
         log = LoggerFactory.getLogger(getClass());
-        addApplicationEventListener("UncaughtMVCGroupInstantiationException", new MVCGroupInstantiationExceptionHandler());
+        MVCGroupExceptionHandler.registerWith(this);
     }
 
     public Binding getBindings() {
@@ -516,14 +516,5 @@ public abstract class AbstractGriffonApplication extends AbstractObservable impl
             // ignored
         }
         return null;
-    }
-
-    private class MVCGroupInstantiationExceptionHandler extends RunnableWithArgs {
-        public void run(Object[] args) {
-            MVCGroupInstantiationException exception = (MVCGroupInstantiationException) args[0];
-            getLog().error("Unrecoverable error", exception);
-            exception.printStackTrace();
-            System.exit(1);
-        }
     }
 }

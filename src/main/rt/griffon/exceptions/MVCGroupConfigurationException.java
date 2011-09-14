@@ -17,31 +17,25 @@ package griffon.exceptions;
 
 /**
  * @author Andres Almiray
- * @since 0.9.3
+ * @since 0.9.4
  */
-public class MVCGroupInstantiationException extends MVCGroupException {
+public class MVCGroupConfigurationException extends MVCGroupException {
     private final String mvcType;
-    private final String mvcName;
 
-    public MVCGroupInstantiationException(String message, String mvcType, String mvcName) {
-        this(message, mvcType, mvcName, null);
+    public MVCGroupConfigurationException(String message, String mvcType) {
+        this(message, mvcType, null);
     }
 
-    public MVCGroupInstantiationException(String message, String mvcType, String mvcName, Throwable cause) {
+    public MVCGroupConfigurationException(String message, String mvcType, Throwable cause) {
         super(message, cause);
         this.mvcType = mvcType;
-        this.mvcName = mvcName;
     }
 
-    public MVCGroupInstantiationException(String mvcType, String mvcName, Throwable cause) {
-        this("", mvcType, mvcName, cause);
+    public MVCGroupConfigurationException(String mvcType, Throwable cause) {
+        this("", mvcType, cause);
     }
 
     public String getMvcType() {
         return mvcType;
-    }
-
-    public String getMvcName() {
-        return mvcName;
     }
 }
