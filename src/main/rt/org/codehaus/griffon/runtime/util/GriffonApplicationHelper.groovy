@@ -318,26 +318,22 @@ class GriffonApplicationHelper {
             }
         }
 
-        if (!GriffonMvcArtifact.isAssignableFrom(klass)) {
+        if (!GriffonArtifact.isAssignableFrom(klass)) {
             metaClass.createMVCGroup = {Object... args ->
-                GriffonApplicationHelper.createMVCGroup(app, * args)
+                app.mvcGroupManager.createMVCGroup(* args)
             }
             metaClass.buildMVCGroup = {Object... args ->
-                GriffonApplicationHelper.buildMVCGroup(app, * args)
+                app.mvcGroupManager.buildMVCGroup(* args)
             }
-            metaClass.destroyMVCGroup = GriffonApplicationHelper.&destroyMVCGroup.curry(app)
+            metaClass.destroyMVCGroup = {String mvcName ->
+                app.mvcGroupManager.destroyMVCGroup(mvcName)
+            }
             metaClass.withMVCGroup = {Object... args ->
-                GriffonApplicationHelper.withMVCGroup(app, * args)
+                app.mvcGroupManager.withMVCGroup(* args)
             }
-        }
-
-        if (!GriffonArtifact.isAssignableFrom(klass)) {
             metaClass.newInstance = {Object... args ->
                 GriffonApplicationHelper.newInstance(app, * args)
             }
-            // metaClass.getGriffonClass = {c ->
-            //     app.artifactManager.findGriffonClass(c)
-            // }.curry(klass)
             UIThreadManager.enhance(metaClass)
         }
     }
