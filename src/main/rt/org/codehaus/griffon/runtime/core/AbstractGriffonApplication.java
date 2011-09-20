@@ -212,7 +212,7 @@ public abstract class AbstractGriffonApplication extends AbstractObservable impl
                     event(GriffonApplication.Event.SHUTDOWN_ABORTED.getName(), asList(this));
                     if (log.isDebugEnabled()) {
                         try {
-                            log.debug("Shutdown aborted by $handler");
+                            log.debug("Shutdown aborted by "+ handler);
                         } catch (UnsupportedOperationException uoe) {
                             log.debug("Shutdown aborted by a handler");
                         }
