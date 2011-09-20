@@ -71,7 +71,7 @@ public class ServiceArtifactHandler extends ArtifactHandlerAdapter {
      * is not set to true
      */
     public void onNewInstance(Class klass, String t, Object instance) {
-        if (getType().equals(t) || getConfigValueAsBoolean(getApp().getConfig(), "griffon.basic_injection.disable", false)) return;
+        if (getConfigValueAsBoolean(getApp().getConfig(), "griffon.basic_injection.disable", false)) return;
         MetaClass metaClass = InvokerHelper.getMetaClass(instance);
         for (MetaProperty property : metaClass.getProperties()) {
             String propertyName = property.getName();
