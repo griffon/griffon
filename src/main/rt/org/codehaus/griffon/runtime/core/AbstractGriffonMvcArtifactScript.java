@@ -17,26 +17,25 @@
 package org.codehaus.griffon.runtime.core;
 
 import griffon.core.*;
-import groovy.util.FactoryBuilderSupport;
+
+import java.util.Map;
 
 /**
- * Base implementation of the GriffonView interface for Script based views
+ * Base implementation of the GriffonMvcArtifact interface for Script based artifacts.
  *
  * @author Andres Almiray
- * @since 0.9.1
+ * @since 0.9.4
  */
-public abstract class AbstractGriffonViewScript extends AbstractGriffonMvcArtifactScript implements GriffonView {
-    private FactoryBuilderSupport builder;
-
-    public AbstractGriffonViewScript() {
-        super(GriffonViewClass.TYPE);
+public abstract class AbstractGriffonMvcArtifactScript extends AbstractGriffonArtifactScript implements GriffonMvcArtifact {
+    public AbstractGriffonMvcArtifactScript(String type) {
+        super(type);
     }
 
-    public FactoryBuilderSupport getBuilder() {
-        return builder;
+    public void mvcGroupInit(Map<String, Object> args) {
+        // empty
     }
 
-    public void setBuilder(FactoryBuilderSupport builder) {
-        this.builder = builder;
+    public void mvcGroupDestroy() {
+        // empty
     }
 }

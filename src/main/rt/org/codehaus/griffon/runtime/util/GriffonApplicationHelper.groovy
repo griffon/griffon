@@ -351,9 +351,4 @@ class GriffonApplicationHelper {
 
         if (cnfe) throw cnfe
     }
-
-    private static instantiateManager(String className, GriffonApplication app) {
-        Class klass = loadClass(app, className)
-        klass.newInstance([app] as Object[])
-    }
 }
