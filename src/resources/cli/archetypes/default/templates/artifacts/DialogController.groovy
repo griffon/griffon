@@ -9,7 +9,7 @@ class @artifact.name@ {
     protected dialog
 
     @Threading(Threading.Policy.INSIDE_UITHREAD_SYNC)
-    void show(final Window window) {
+    void show(Window window) {
         window = window ?: Window.windows.find{it.focused}
         if(!dialog || dialog.owner != window) {
             app.windowManager.hide(dialog)
