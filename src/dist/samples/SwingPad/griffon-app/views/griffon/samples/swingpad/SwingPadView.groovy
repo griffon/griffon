@@ -29,7 +29,7 @@ application(title: GriffonNameUtils.capitalize(app.getMessage('application.title
     iconImages: [imageIcon('/griffon-icon-48x48.png').image,
                imageIcon('/griffon-icon-32x32.png').image,
                imageIcon('/griffon-icon-16x16.png').image]) {
-   menuBar(build(SwingPadMenuBar))
+   widget(build(SwingPadMenuBar))
    migLayout(layoutConstraints: 'fill')
    toolBar(build(SwingPadToolBar), constraints: 'north')
    widget(build(SwingPadContent), constraints: 'center, grow')
