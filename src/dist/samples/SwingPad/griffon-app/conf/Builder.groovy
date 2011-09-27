@@ -3,9 +3,6 @@ root {
         controller = ['Threading']
         view = '*'
     }
-    'griffon.app.ApplicationBuilder' {
-        view = '*'
-    }
 }
 
 jx {
@@ -14,6 +11,7 @@ jx {
     }
 }
 
+root.'SwingGriffonAddon'.addon=true
 root.'GlazedlistsGriffonAddon'.addon=true
 root.'I18nGriffonAddon'.addon=true
 root.'MiglayoutGriffonAddon'.addon=true

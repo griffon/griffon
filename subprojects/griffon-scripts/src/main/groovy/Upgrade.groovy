@@ -21,6 +21,7 @@
  * @author Sergey Nebolsin (Grails 0.4)
  */
 
+import griffon.util.Metadata
 import org.codehaus.griffon.commons.GriffonContext
 import org.codehaus.griffon.plugins.GriffonPluginUtils
 
@@ -210,7 +211,6 @@ target('default': "Upgrades a Griffon application from a previous version of Gri
             configObject.writeTo(new FileWriter(new File(baseFile, '/griffon-app/conf/Application.groovy')))
         }
 
-
         // remove GriffonApplicationHelper from Initialize.groovy
         def initializeFile = new File(baseFile, '/griffon-app/lifecycle/Initialize.groovy')
 	    if (initializeFile.exists()) {
@@ -224,8 +224,9 @@ target('default': "Upgrades a Griffon application from a previous version of Gri
         propertyfile(file: "${basedir}/application.properties",
                 comment: "Do not edit app.griffon.* properties, they may change automatically. " +
                         "DO NOT put application configuration in here, it is not the right place!") {
-            entry(key: "app.name", value: "$griffonAppName")
-            entry(key: "app.griffon.version", value: "$griffonVersion")
+            entry(key: "app.name", value: griffonAppName)
+            entry(key: "app.griffon.version", value: griffonVersion)
+            if(!isPluginProject) entry(key: "plugins.swing", value: griffonVersion)
         }
     }
 

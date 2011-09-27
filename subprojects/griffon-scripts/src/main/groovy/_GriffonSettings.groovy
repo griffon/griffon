@@ -366,3 +366,5 @@ hasJavaOrGroovySources = { dir ->
 
 includeTargets << griffonScript("_GriffonArgParsing")
 includeTargets << griffonScript("_GriffonEvents")
+
+buildConfig.griffon.application.mainClass = buildConfig.griffon.application.mainClass ?: 'griffon.test.mock.MockGriffonApplication'

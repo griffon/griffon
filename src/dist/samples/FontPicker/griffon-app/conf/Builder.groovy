@@ -3,9 +3,7 @@ root {
         controller = ['Threading']
         view = "*"
     }
-    'griffon.app.ApplicationBuilder' {
-        view = "*"
-    }
 }
 
+root.'SwingGriffonAddon'.addon=true
 root.'MiglayoutGriffonAddon'.addon=true

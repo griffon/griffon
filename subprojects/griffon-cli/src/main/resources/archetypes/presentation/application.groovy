@@ -48,6 +48,7 @@ mvcGroups {
     }
 
     Metadata md = Metadata.getInstance(new File("${basedir}/application.properties"))
+    installPluginExternal md, 'swing'
     installPluginExternal md, 'slideware'
 }
 setDefaultTarget(createApplicationProject)

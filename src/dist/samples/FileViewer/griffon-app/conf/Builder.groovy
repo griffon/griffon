@@ -3,14 +3,6 @@ root {
         controller = ['Threading']
         view = '*'
     }
-    'griffon.app.ApplicationBuilder' {
-        view = '*'
-    }
 }
-/*
-jx {
-    'groovy.swing.SwingXBuilder' {
-        view = '*'
-    }
-}
-*/
+
+root.'SwingGriffonAddon'.addon=true
