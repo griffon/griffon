@@ -44,6 +44,10 @@ class GriffonApplicationHelper {
             windows: 'org.codehaus.griffon.runtime.util.DefaultWindowsPlatformHandler'
     ]
 
+    static {
+        ExpandoMetaClassCreationHandle.enable()
+    }
+
     /**
      * Creates, register and assigns an ExpandoMetaClass for a target class.<p>
      * The newly created metaClass will accept changes after initialization.
