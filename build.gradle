@@ -17,6 +17,7 @@ import org.apache.tools.ant.filters.ReplaceTokens
 
 apply plugin:'base'
 apply from:"${rootDir}/gradle/assemble.gradle"
+//apply installer tasks
 
 configurations{
 	runtime {transitive = false}
@@ -26,14 +27,16 @@ configurations{
 
 repositories {
 	mavenCentral()
-	mavenRepo name: 'SpringSource', urls: 'http://repository.springsource.com/maven/bundles/release'
-    mavenRepo name: 'JavaNet', urls: 'http://download.java.net/maven/2/'
+	mavenRepo name: 'SpringSource', url: 'http://repository.springsource.com/maven/bundles/release'
+    mavenRepo name: 'JavaNet', url: 'http://download.java.net/maven/2/'
 }
 
 evaluationDependsOn(':griffon-cli')
 evaluationDependsOn(':griffon-rt')
 evaluationDependsOn(':griffon-scripts')
 evaluationDependsOn(':griffon-wrapper')
+
+dependsOnChildren()
 
 dependencies{
 	groovy localGroovy() //for api docs generation needed (groovydoc)
@@ -55,21 +58,20 @@ dependencies{
 subprojects { subproj ->
 	apply plugin:'java'
 	apply from:"${rootDir}/gradle/maven.gradle"
-	//apply from:"${rootDir}/gradle/codeQuality.gradle"
 	
-	sourceCompatibility = '1.5'
+    sourceCompatibility = '1.5'
 	targetCompatibility = '1.5'
 	group = 'org.codehaus.griffon'
 
 	repositories {
 	    mavenLocal()
 	    mavenCentral()
-	    mavenRepo name: 'Codehaus', urls: 'http://repository.codehaus.org'
-	    mavenRepo name: 'SpringSource', urls: 'http://repository.springsource.com/maven/bundles/release'
-		mavenRepo name: 'Gradle', urls: 'http://gradle.artifactoryonline.com/gradle/libs-releases-local'
+	    mavenRepo name: 'Codehaus', url: 'http://repository.codehaus.org'
+	    mavenRepo name: 'SpringSource', url: 'http://repository.springsource.com/maven/bundles/release'
+		mavenRepo name: 'Gradle', url: 'http://gradle.artifactoryonline.com/gradle/libs-releases-local'
 	}
 
-	manifest {
+    manifest {
 	    attributes(
 	        'Built-By': System.properties['user.name'],
 	        'Created-By': System.properties['java.vm.version'] + " (" + System.properties['java.vm.vendor'] + ")",
@@ -80,6 +82,7 @@ subprojects { subproj ->
 	}
 }
 
+// move the following to resources(!java project) subproject
 tasks.withType(Jar).all {jar ->
     jar.mavenArtifact = false
     jar.appFileJar = false
@@ -146,7 +149,6 @@ task jarSource(type: Jar){
 // actually files does not support exclusive filter 
 // operation when appended via plus() 
 // -> @todo: file gradle issue
-
 task apiDocs(type: Groovydoc) {
 	def cliSources = files("subprojects/cli/src/main/groovy")
 	def rtSources = files("subprojects/rt/src/main/groovy")
@@ -157,6 +159,7 @@ task apiDocs(type: Groovydoc) {
     windowTitle = "Griffon $version"
     groovyClasspath = configurations.groovy
 	classpath = project(":griffon-rt").sourceSets.main.output + 
+				// filter cli source (griffon.transform)
 				project(":griffon-cli").sourceSets.main.output + 
 				project(":griffon-cli").configurations.compile 
 				
