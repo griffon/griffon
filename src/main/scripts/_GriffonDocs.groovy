@@ -375,13 +375,14 @@ invokeGroovydoc = { Map args ->
     def additionalLinks = args.remove('links') ?: []
     def sources = args.remove('sourcepath') ?: ["${basedir}/src/main"]
     if (!(sources instanceof List)) sources = sources.toString().split(',')
-    def runGroovydoc = sources.inject(true) { dir, run ->
-        run &= hasJavaOrGroovySources(dir: dir)
+    def groovydocSources = []
+    sources.each { dir ->
+        if(hasJavaOrGroovySources(dir)) groovydocSources << dir
     }
 
-    if (runGroovydoc) {
+    if (groovydocSources) {
         def groovydocSourcePaths = ant.path {
-            sources.each { pathElement(location: it.toString().trim()) }
+            groovydocSources.each { pathElement(location: it.toString().trim()) }
         }
 
         ant.groovydoc([*: groovydocProps, *: args, sourcepath: groovydocSourcePaths]) {
@@ -420,9 +421,10 @@ invokeJavadoc = { Map args ->
 }
 
 hasFiles = { Map params ->
+    params.dir = params.dir as File
     params.dir.exists() ? ant.fileset(params).size() > 0 : false
 }
 
 hasJavaOrGroovySources = { dir ->
-    hasFiles(dir: dir, includes: '**/*.groovy, **/*.java')
+    hasFiles(dir: dir, includes: '**/*.groovy **/*.java')
 }

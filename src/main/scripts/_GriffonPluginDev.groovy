@@ -136,7 +136,7 @@ target(pluginDocs: "Generates and packages plugin documentation") {
                     sourcepath: [srcMainDir, testSharedDir] + groovydocSources,
                     windowtitle: "${pluginName} ${plugin.version}",
                     doctitle: "${pluginName} ${plugin.version}")
-            if (!javadocDir.list().isEmpty()) {
+            if (javadocDir.list()) {
                 jarFileName = "${projectTargetDir}/griffon-${pluginName}-${plugin.version}-javadoc.jar"
                 ant.jar(destfile: jarFileName) {
                     fileset(dir: javadocDir)
