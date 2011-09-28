@@ -1,0 +1,27 @@
+Provided by: *Griffon*
+
+Identifies the top level node of a secondary View script. View scripts are expected to return the top level node, however there may be times when further customizations prevent this from happening, for example wiring up a custom listener. When that happens the result has to be made explicit otherwise the script will return the wrong value. Using the @root()@ node avoids forgetting this fact while also providing an alias for the node.
+
+Secondary view script named "SampleSecondary"
+{code}
+root(
+    tree(id: 'mytree')
+)
+
+mytree.addTreeSelectionModel(new DefaultTreeSelectionModel() {
+   ...
+})
+{code}
+
+Primary view script named "SampleView"
+
+{code}
+build(SampleSecondary)
+application(title: 'Sample') {
+    borderLayout()
+    label 'Options', constraints: NORTH
+    widget root(SampleSecondary)
+}
+{code}
+
+This node accepts an additional parameter @name@ that can be used to override the default alias assigned to the node. If you specify a value for this parameter when the node is built then you'll need to use it again to retrieve the node.

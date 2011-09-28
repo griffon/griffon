@@ -22,7 +22,7 @@ import java.util.Map;
  * Holds the configuration of an MVC group
  *
  * @author Andres Almiray
- * @since 0.9.3
+ * @since 0.9.4
  */
 public interface MVCGroupConfiguration extends ApplicationHandler {
     /**

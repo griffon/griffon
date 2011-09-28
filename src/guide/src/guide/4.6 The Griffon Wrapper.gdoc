@@ -1,0 +1,24 @@
+This neat feature lets you execute Griffon commands without having a previously installing Griffon in your environment. This is a perfect fit for running tests in a continuous integration environment like [Jenkins|http://jenkins-ci.org/] as there are no other requirements than a matching JDK.
+
+When an application or plugin are created you'll get also the hooks for calling the wrapper, even configuring it in case you need it to point to a different Griffon release. These files are
+
+ * griffonw
+ * griffonw.bat
+ * wrapper/griffon-wrapper.jar
+ * wrapper/griffon-wrapper.properties
+
+The first 2 files define platform dependent launch scripts. The third file contains the required classes to bootstrap the wrapper itself. The last file defines the configuration that the wrapper requires to work properly.
+
+The wrapper works in the same way as the Griffon command, this means you can feed it every single command target and parameter the Griffon command accepts, like the following ones
+
+{code}
+./griffonw run-app
+{code}
+
+Compiles and runs the application in standalone mode.
+
+{code}
+./griffon list-plugin-updates -install
+{code}
+
+Displays a list of available updates for all plugins installed and proceeds to update them if the confirmation is successful.

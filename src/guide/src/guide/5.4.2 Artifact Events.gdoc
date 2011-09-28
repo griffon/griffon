@@ -8,6 +8,6 @@ The following events will be triggered by the application when dealing with arti
 
 These events will be triggered when dealing with MVC groups
 
-* @InitializeMVCGroup\[type, name, instanceMap\]@ - when a new MVC group is initialized. @instanceMap@ contains all MVC members keyed by type.
-* @CreateMVCGroup\[type, name, instanceMap\]@ - when a new MVC group is created. @instanceMap@ contains all MVC members keyed by type.
-* @DestroyMVCGroup\[\name]@ - when an MVC group is destroyed.
+* @InitializeMVCGroup\[configuration, group\]@ - when a new MVC group is initialized. @configuration@ is of type [MVCGroupConfiguration|api:griffon.core.MVCGroupConfiguration]; @group@ is of type [MVCGroup|api:griffon.core.MVCGroup].
+* @CreateMVCGroup\[group\]@ - when a new MVC group is created. @configuration@ is of type [MVCGroupConfiguration|api:griffon.core.MVCGroupConfiguration]; @group@ is of type [MVCGroup|api:griffon.core.MVCGroup].
+* @DestroyMVCGroup\[\group]@ - when an MVC group is destroyed.  @group@ is of type [MVCGroup|api:griffon.core.MVCGroup].

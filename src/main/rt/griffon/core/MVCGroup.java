@@ -22,7 +22,7 @@ import groovy.util.FactoryBuilderSupport;
  * Defines an MVC group and its contents
  *
  * @author Andres Almiray
- * @since 0.9.3
+ * @since 0.9.4
  */
 public interface MVCGroup extends ApplicationHandler {
     /**
@@ -99,7 +99,7 @@ public interface MVCGroup extends ApplicationHandler {
     /**
      * Returns whether this group has been destroyed or not.
      *
-     * @return false if the group has not been destroyed yet, false otherwise
+     * @return true if the group has not been destroyed yet, false otherwise
      */
     boolean isAlive();
 }
