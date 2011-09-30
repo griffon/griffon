@@ -37,4 +37,6 @@ class RootFactory extends AbstractFactory {
         }
         value
     }
+
+    boolean isLeaf() { true }
 }
