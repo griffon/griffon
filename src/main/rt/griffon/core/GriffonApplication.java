@@ -212,6 +212,13 @@ public interface GriffonApplication extends ThreadingHandler, MVCHandler {
     Map<String, ? extends FactoryBuilderSupport> getBuilders();
 
     /**
+     * Returns all currently available service instances, keyed by group name.<p>
+     *
+     * @return a Map of all currently instantiated services.
+     */
+    Map<String, ? extends GriffonService> getServices();
+
+    /**
      * Returns all currently available groups, keyed by group name.<p>
      *
      * @return a Map of all currently instantiated groups.
@@ -231,6 +238,13 @@ public interface GriffonApplication extends ThreadingHandler, MVCHandler {
      * @return the application's MVCGroupManager
      */
     MVCGroupManager getMvcGroupManager();
+
+    /**
+     * Returns the application's ServiceManager instance.
+     *
+     * @return the application's ServiceManager
+     */
+    ServiceManager getServiceManager();
 
     Object createApplicationContainer();
 

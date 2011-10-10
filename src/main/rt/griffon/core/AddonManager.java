@@ -24,9 +24,7 @@ import java.util.Map;
  * @author Andres Almiray
  * @since 0.9.2
  */
-public interface AddonManager {
-    GriffonApplication getApp();
-
+public interface AddonManager extends ApplicationHandler {
     void initialize();
 
     void registerAddon(GriffonAddonDescriptor addonDescriptor);
@@ -51,7 +49,7 @@ public interface AddonManager {
      * represents the contibutions of the MigLayout plugin.
      *
      * @param name the name of the addon to search for
-     * @return an addon instance if there's a match, false otherwise
+     * @return an addon instance if there's a match, null otherwise
      */
     GriffonAddon findAddon(String name);
 
@@ -61,7 +59,7 @@ public interface AddonManager {
      * represents the contibutions of the MigLayout plugin.
      *
      * @param name the name of the addon to search for
-     * @return an addon descriptor instance if there's a match, false otherwise
+     * @return an addon descriptor instance if there's a match, null otherwise
      */
     GriffonAddonDescriptor findAddonDescriptor(String name);
 
