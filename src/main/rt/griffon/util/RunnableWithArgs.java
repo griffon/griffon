@@ -22,26 +22,28 @@ package griffon.util;
  */
 public abstract class RunnableWithArgs implements Runnable {
     private static final Object[] NO_ARGS = new Object[0];
-    private final Object lock = new Object();
+    private final Object[] lock = new Object[0];
     private Object[] args = NO_ARGS;
 
     public void setArgs(Object[] args) {
-        if(args == null) {
+        if (args == null) {
             args = NO_ARGS;
         }
-        synchronized(lock) {
+        synchronized (lock) {
             this.args = new Object[args.length];
             System.arraycopy(args, 0, this.args, 0, args.length);
         }
     }
 
     public Object[] getArgs() {
-        return args;
+        synchronized (lock) {
+            return args;
+        }
     }
 
     public final void run() {
         Object[] copy = null;
-        synchronized(lock) {
+        synchronized (lock) {
             copy = new Object[args.length];
             System.arraycopy(args, 0, copy, 0, args.length);
         }
