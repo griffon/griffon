@@ -357,5 +357,14 @@ if(hasCliSources) {
     ant.mkdir(dir: cliClassesDirPath)
 }
 
+hasFiles = { Map params ->
+    params.dir = params.dir as File
+    params.dir.exists() ? ant.fileset(params).size() > 0 : false
+}
+
+hasJavaOrGroovySources = { dir ->
+    hasFiles(dir: dir, includes: '**/*.groovy **/*.java')
+}
+
 includeTargets << griffonScript("_GriffonArgParsing")
 includeTargets << griffonScript("_GriffonEvents")

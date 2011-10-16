@@ -49,7 +49,7 @@ packageFiles = { String from ->
 target( packagePlugins : "Packages any Griffon plugins that are installed for this project") {
    depends( classpath )
     def pluginInfos = GriffonPluginUtils.getPluginInfos(pluginsHome)
-    for(PluginInfo info in pluginInfos) {
+    for(info in pluginInfos) {
         try {
             def pluginBase = info.pluginDir.file
             packageFiles(pluginBase.path)

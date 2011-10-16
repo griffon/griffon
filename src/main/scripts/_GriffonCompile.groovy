@@ -207,7 +207,7 @@ target(compileSharedTests : "Compiles shared test sources") {
     }
     compileSharedTestSrc(basedir)
     def metainfDir = new File("${basedir}/griffon-app/conf/metainf")
-    boolean hasMetainf = metainfDir.exists() ? ant.fileset(dir: metainfDir, excludes: '**/*.svn/**, **/CVS/**').size() > 0 : false
+    boolean hasMetainf = hasFiles(dir: metainfDir, excludes: '**/*.svn/**, **/CVS/**')
     if(hasMetainf) {
         def metaResourcesDir = new File("${testResourcesDirPath}/META-INF")
         ant.copy(todir: metaResourcesDir) {
@@ -219,7 +219,7 @@ target(compileSharedTests : "Compiles shared test sources") {
 
 compileSharedTestSrc = { rootDir ->
     def testShared = new File("${rootDir}/src/test")
-    boolean hasTestShared = testShared.exists() ? ant.fileset(dir: testShared, includes: '**/*.groovy, **/*.java').size() > 0 : false
+    boolean hasTestShared = hasFiles(dir: testShared, includes: '**/*.groovy, **/*.java')
 
     if(hasTestShared) {
         def testSharedDir = new File(griffonSettings.testClassesDir, 'shared')
@@ -237,7 +237,7 @@ compileSharedTestSrc = { rootDir ->
         }
     } 
     def testResources = new File("${basedir}/test/resources")
-    boolean hasTestResources = testResources.exists() ? ant.fileset(dir: testResources, excludes: '**/*.svn/**, **/CVS/**').size() > 0 : false
+    boolean hasTestResources = hasFiles(dir: testResources, excludes: '**/*.svn/**, **/CVS/**')
     if(hasTestResources) {
         ant.mkdir(dir: testResourcesDirPath)
         ant.copy(todir: testResourcesDirPath) {

@@ -419,12 +419,3 @@ invokeJavadoc = { Map args ->
         additionalLinks.each { l -> link(href: l) }
     }
 }
-
-hasFiles = { Map params ->
-    params.dir = params.dir as File
-    params.dir.exists() ? ant.fileset(params).size() > 0 : false
-}
-
-hasJavaOrGroovySources = { dir ->
-    hasFiles(dir: dir, includes: '**/*.groovy **/*.java')
-}
