@@ -19,6 +19,24 @@ import java.util.concurrent.Callable;
 
 /**
  * A Callable that can have arguments.
+ * Instances of this class can be seen as substitutes for Closures when dealing
+ * with non-Groovy languages. There are several Griffon core and Griffon plugin APIs
+ * that accept a {@code CallableWithArgs} where a Closure would be used.</p>
+ * <p>Example:</p>
+ * <pre>
+Callable&lt;Boolean&gt; c = new CallableWithArgs&lt;Boolean&gt;() {
+    public Boolean call(Object[] args) {
+        return "Hello".equals(args[0]);
+    }
+};
+
+c.setArgs("Hello");
+assert c.call()
+c.setArgs("world!");
+assert !c.call();
+assert !c.call(new Object[]{ "again" });
+ * </pre>
+ *
  *
  * @author Andres Almiray
  */

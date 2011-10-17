@@ -33,7 +33,41 @@ import java.util.Map;
 
 /**
  * Translates an XML file into a Groovy script that is suitable for a Groovy builder.
- * String literals must be escaped either using single or double quotes.
+ * String literals must be escaped either using single or double quotes. <p>
+ * This helper class is useful for translating an XML View definition into a Groovy
+ * script that can be handled by an UberBuilder, for example this View
+ *
+ * <xmp>
+<application title="app.config.application.title"
+             pack="true">
+    <actions>
+        <action id="'clickAction'"
+                name="'Click'"
+                closure="{controller.click(it)}"/>
+    </actions>
+
+    <gridLayout cols="1" rows="3"/>
+    <textField id="'input'" columns="20"
+        text="bind('value', target: model)"/>
+    <textField id="'output'" columns="20"
+        text="bind{model.value}" editable="false"/>
+    <button action="clickAction"/>
+</application>
+ * </xmp>
+ *
+ * results in the following script
+ *
+ * <pre>
+application(title: app.config.application.title, pack: true) {
+  actions {
+    action(id: 'clickAction', name: 'Click', closure: {controller.click(it)})
+  }
+  gridLayout(cols: 1, rows: 3)
+  textField(id: 'input', text: bind('value', target: model), columns: 20)
+  textField(id: 'output', text: bind{model.value}, columns: 20, editable: false)
+  button(action: clickAction)
+}
+ * </pre>
  *
  * @author Andres Almiray
  */
