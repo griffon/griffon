@@ -89,8 +89,11 @@ public abstract class AbstractMVCGroupManager implements MVCGroupManager {
         }
     }
 
-    protected void addConfiguration(MVCGroupConfiguration configuration) {
+    public void addConfiguration(MVCGroupConfiguration configuration) {
         synchronized (lock) {
+            if (initialized && configurations.get(configuration.getMvcType()) != null) {
+                return;
+            }
             configurations.put(configuration.getMvcType(), configuration);
         }
     }

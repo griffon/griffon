@@ -34,6 +34,8 @@ public interface MVCGroupManager extends MVCHandler, ApplicationHandler {
 
     void initialize(Map<String, MVCGroupConfiguration> configurations);
 
+    void addConfiguration(MVCGroupConfiguration configuration);
+
     Map<String, MVCGroupConfiguration> getConfigurations();
 
     Map<String, MVCGroup> getGroups();

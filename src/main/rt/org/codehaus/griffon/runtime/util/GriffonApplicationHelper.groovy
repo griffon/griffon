@@ -107,8 +107,8 @@ class GriffonApplicationHelper {
         applyPlatformTweaks(app)
         runLifecycleHandler(GriffonApplication.Lifecycle.INITIALIZE.name, app)
         initializeArtifactManager(app)
+        initializeMvcManager(app)
         initializeAddonManager(app)
-        readMvcConfiguration(app)
 
         app.event(GriffonApplication.Event.BOOTSTRAP_END.name, [app])
     }
@@ -174,7 +174,7 @@ class GriffonApplicationHelper {
         app.addonManager.initialize()
     }
 
-    private static void readMvcConfiguration(GriffonApplication app) {
+    private static void initializeMvcManager(GriffonApplication app) {
         if (!app.mvcGroupManager) {
             String className = app.config.app.artifactManager.factory ?: 'org.codehaus.griffon.runtime.core.factories.DefaultMVCGroupManagerFactory'
             if (LOG.debugEnabled) LOG.debug("Using $className as MVCGroupManagerFactory")
