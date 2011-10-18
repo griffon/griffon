@@ -166,7 +166,7 @@ class GriffonApplicationHelper {
 
     private static void initializeAddonManager(GriffonApplication app) {
         if (!app.addonManager) {
-            String className = app.config.app.artifactManager.factory ?: 'org.codehaus.griffon.runtime.core.factories.DefaultAddonManagerFactory'
+            String className = app.config.app.addonManager.factory ?: 'org.codehaus.griffon.runtime.core.factories.DefaultAddonManagerFactory'
             if (LOG.debugEnabled) LOG.debug("Using $className as AddonManagerFactory")
             AddonManagerFactory factory = loadClass(app, className).newInstance()
             app.addonManager = factory.create(app)
@@ -176,7 +176,7 @@ class GriffonApplicationHelper {
 
     private static void initializeMvcManager(GriffonApplication app) {
         if (!app.mvcGroupManager) {
-            String className = app.config.app.artifactManager.factory ?: 'org.codehaus.griffon.runtime.core.factories.DefaultMVCGroupManagerFactory'
+            String className = app.config.app.mvcGroupManager.factory ?: 'org.codehaus.griffon.runtime.core.factories.DefaultMVCGroupManagerFactory'
             if (LOG.debugEnabled) LOG.debug("Using $className as MVCGroupManagerFactory")
             MVCGroupManagerFactory factory = loadClass(app, className).newInstance()
             app.mvcGroupManager = factory.create(app)
