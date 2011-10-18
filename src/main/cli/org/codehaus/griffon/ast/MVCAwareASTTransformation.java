@@ -277,7 +277,7 @@ public class MVCAwareASTTransformation extends AbstractASTTransformation {
                 ClassHelper.VOID_TYPE,
                 params(param(ClassHelper.STRING_TYPE, MVC_NAME)),
                 ClassNode.EMPTY_ARRAY,
-                returns(call(
+                stmnt(call(
                         mvcGroupManagerInstance(),
                         DESTROY_MVC_GROUP,
                         args(var(MVC_NAME))))

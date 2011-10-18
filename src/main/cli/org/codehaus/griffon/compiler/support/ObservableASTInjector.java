@@ -21,8 +21,6 @@ import groovy.beans.BindableASTTransformation;
 import groovy.beans.VetoableASTTransformation;
 import org.codehaus.groovy.ast.*;
 import org.codehaus.groovy.ast.expr.*;
-import org.codehaus.groovy.ast.stmt.ExpressionStatement;
-import org.codehaus.groovy.ast.stmt.ReturnStatement;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -30,10 +28,10 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 
+import static org.codehaus.griffon.ast.GriffonASTUtils.*;
+
 /**
- *
- * @author Andres Almiray 
- *
+ * @author Andres Almiray
  * @since 0.9.1
  */
 public class ObservableASTInjector implements ASTInjector {
@@ -41,32 +39,32 @@ public class ObservableASTInjector implements ASTInjector {
     private static final ClassNode OBSERVABLE_CLASS = ClassHelper.makeWithoutCaching(Observable.class);
 
     public void inject(ClassNode classNode, String artifactType) {
-        if(!classNode.implementsInterface(OBSERVABLE_CLASS)){
+        if (!classNode.implementsInterface(OBSERVABLE_CLASS)) {
             classNode.addInterface(OBSERVABLE_CLASS);
         }
 
-        if(isBindableOrVetoable(classNode)) return;
+        if (isBindableOrVetoable(classNode)) return;
 
-        for(FieldNode fieldNode : classNode.getFields()) {
-            if(isBindableOrVetoable(fieldNode)) return;
+        for (FieldNode fieldNode : classNode.getFields()) {
+            if (isBindableOrVetoable(fieldNode)) return;
         }
 
-        if(LOG.isDebugEnabled()) LOG.debug("Injecting "+OBSERVABLE_CLASS.getName()+" behavior to "+ classNode.getName());
-    
+        if (LOG.isDebugEnabled())
+            LOG.debug("Injecting " + OBSERVABLE_CLASS.getName() + " behavior to " + classNode.getName());
+
         ClassNode pcsClassNode = ClassHelper.makeWithoutCaching(PropertyChangeSupport.class);
         ClassNode pclClassNode = ClassHelper.makeWithoutCaching(PropertyChangeListener.class);
         ClassNode pceClassNode = ClassHelper.makeWithoutCaching(PropertyChangeEvent.class);
 
-        //String pcsFieldName = "pcs";
+        //String pcsFieldName = "this$propertyChangeSupport";
 
         // add field:
-        // protected final PropertyChangeSupport pcs = new java.beans.PropertyChangeSupport(this)
+        // protected final PropertyChangeSupport this$propertyChangeSupport = new java.beans.PropertyChangeSupport(this)
         FieldNode pcsField = classNode.addField(
-                "pcs",
+                "this$propertyChangeSupport",
                 ACC_FINAL | ACC_PROTECTED,
                 pcsClassNode,
-                new ConstructorCallExpression(pcsClassNode,
-                        new ArgumentListExpression(new Expression[]{new VariableExpression("this")})));
+                ctor(pcsClassNode, args(VariableExpression.THIS_EXPRESSION)));
 
         // add method:
         // void addPropertyChangeListener(listener) {
@@ -77,14 +75,12 @@ public class ObservableASTInjector implements ASTInjector {
                         "addPropertyChangeListener",
                         ACC_PUBLIC,
                         ClassHelper.VOID_TYPE,
-                        new Parameter[]{new Parameter(pclClassNode, "listener")},
+                        params(param(pclClassNode, "listener")),
                         ClassNode.EMPTY_ARRAY,
-                        new ExpressionStatement(
-                                new MethodCallExpression(
-                                        new FieldExpression(pcsField),
-                                        "addPropertyChangeListener",
-                                        new ArgumentListExpression(
-                                                new Expression[]{new VariableExpression("listener")})))));
+                        stmnt(call(
+                                field(pcsField),
+                                "addPropertyChangeListener",
+                                args(var("listener"))))));
 
         // add method:
         // void addPropertyChangeListener(name, listener) {
@@ -95,17 +91,17 @@ public class ObservableASTInjector implements ASTInjector {
                         "addPropertyChangeListener",
                         ACC_PUBLIC,
                         ClassHelper.VOID_TYPE,
-                        new Parameter[]{new Parameter(ClassHelper.STRING_TYPE, "name"), new Parameter(pclClassNode, "listener")},
+                        params(
+                                param(ClassHelper.STRING_TYPE, "name"),
+                                param(pclClassNode, "listener")),
                         ClassNode.EMPTY_ARRAY,
-                        new ExpressionStatement(
-                                new MethodCallExpression(
-                                        new FieldExpression(pcsField),
-                                        "addPropertyChangeListener",
-                                        new ArgumentListExpression(
-                                                new Expression[]{new VariableExpression("name"), new VariableExpression("listener")})))));
+                        stmnt(call(
+                                field(pcsField),
+                                "addPropertyChangeListener",
+                                args(var("name"), var("listener"))))));
 
         // add method:
-        // boolean removePropertyChangeListener(listener) {
+        // void removePropertyChangeListener(listener) {
         //    return pcs.removePropertyChangeListener(listener);
         // }
         classNode.addMethod(
@@ -113,29 +109,29 @@ public class ObservableASTInjector implements ASTInjector {
                         "removePropertyChangeListener",
                         ACC_PUBLIC,
                         ClassHelper.VOID_TYPE,
-                        new Parameter[]{new Parameter(pclClassNode, "listener")},
+                        params(param(pclClassNode, "listener")),
                         ClassNode.EMPTY_ARRAY,
-                        new ExpressionStatement(
-                                new MethodCallExpression(
-                                        new FieldExpression(pcsField),
-                                        "removePropertyChangeListener",
-                                        new ArgumentListExpression(
-                                                new Expression[]{new VariableExpression("listener")})))));
+                        stmnt(call(
+                                field(pcsField),
+                                "removePropertyChangeListener",
+                                args(var("listener"))))));
 
-        // add method: void removePropertyChangeListener(name, listener)
+        // add method:
+        // void removePropertyChangeListener(name, listener) {
+        //    return pcs.removePropertyChangeListener(name, listener);
+        // }
         classNode.addMethod(
                 new MethodNode(
                         "removePropertyChangeListener",
                         ACC_PUBLIC,
                         ClassHelper.VOID_TYPE,
-                        new Parameter[]{new Parameter(ClassHelper.STRING_TYPE, "name"), new Parameter(pclClassNode, "listener")},
-                        ClassNode.EMPTY_ARRAY,
-                        new ExpressionStatement(
-                                new MethodCallExpression(
-                                        new FieldExpression(pcsField),
-                                        "removePropertyChangeListener",
-                                        new ArgumentListExpression(
-                                                new Expression[]{new VariableExpression("name"), new VariableExpression("listener")})))));
+                        params(
+                                param(ClassHelper.STRING_TYPE, "name"),
+                                param(pclClassNode, "listener")), ClassNode.EMPTY_ARRAY,
+                        stmnt(call(
+                                field(pcsField),
+                                "removePropertyChangeListener",
+                                args(var("name"), var("listener"))))));
 
         // add method:
         // void firePropertyChange(String name, Object oldValue, Object newValue) {
@@ -146,17 +142,15 @@ public class ObservableASTInjector implements ASTInjector {
                         "firePropertyChange",
                         ACC_PROTECTED,
                         ClassHelper.VOID_TYPE,
-                        new Parameter[]{new Parameter(ClassHelper.STRING_TYPE, "name"), new Parameter(ClassHelper.OBJECT_TYPE, "oldValue"), new Parameter(ClassHelper.OBJECT_TYPE, "newValue")},
+                        params(
+                                param(ClassHelper.STRING_TYPE, "name"),
+                                param(ClassHelper.OBJECT_TYPE, "oldValue"),
+                                param(ClassHelper.OBJECT_TYPE, "newValue")),
                         ClassNode.EMPTY_ARRAY,
-                        new ExpressionStatement(
-                                new MethodCallExpression(
-                                        new FieldExpression(pcsField),
-                                        "firePropertyChange",
-                                        new ArgumentListExpression(
-                                                new Expression[]{
-                                                        new VariableExpression("name"),
-                                                        new VariableExpression("oldValue"),
-                                                        new VariableExpression("newValue")})))));
+                        stmnt(call(
+                                field(pcsField),
+                                "firePropertyChange",
+                                args(var("name"), var("oldValue"), var("newValue"))))));
 
         // add method:
         // void firePropertyChange(PropertyChangeEvent event) {
@@ -167,15 +161,12 @@ public class ObservableASTInjector implements ASTInjector {
                         "firePropertyChange",
                         ACC_PROTECTED,
                         ClassHelper.VOID_TYPE,
-                        new Parameter[]{new Parameter(pceClassNode, "name")},
+                        params(param(pceClassNode, "event")),
                         ClassNode.EMPTY_ARRAY,
-                        new ExpressionStatement(
-                                new MethodCallExpression(
-                                        new FieldExpression(pcsField),
-                                        "firePropertyChange",
-                                        new ArgumentListExpression(
-                                                new Expression[]{
-                                                        new VariableExpression("event")})))));
+                        stmnt(call(
+                                field(pcsField),
+                                "firePropertyChange",
+                                args(var("event"))))));
 
         // add method:
         // PropertyChangeListener[] getPropertyChangeListeners() {
@@ -188,12 +179,10 @@ public class ObservableASTInjector implements ASTInjector {
                         pclClassNode.makeArray(),
                         Parameter.EMPTY_ARRAY,
                         ClassNode.EMPTY_ARRAY,
-                        new ReturnStatement(
-                                new ExpressionStatement(
-                                        new MethodCallExpression(
-                                                new FieldExpression(pcsField),
-                                                "getPropertyChangeListeners",
-                                                ArgumentListExpression.EMPTY_ARGUMENTS)))));
+                        returns(call(
+                                field(pcsField),
+                                "getPropertyChangeListeners",
+                                NO_ARGS))));
 
         // add method:
         // PropertyChangeListener[] getPropertyChangeListeners(String name) {
@@ -204,22 +193,19 @@ public class ObservableASTInjector implements ASTInjector {
                         "getPropertyChangeListeners",
                         ACC_PUBLIC,
                         pclClassNode.makeArray(),
-                        new Parameter[]{new Parameter(ClassHelper.STRING_TYPE, "name")},
+                        params(param(ClassHelper.STRING_TYPE, "name")),
                         ClassNode.EMPTY_ARRAY,
-                        new ReturnStatement(
-                                new ExpressionStatement(
-                                        new MethodCallExpression(
-                                                new FieldExpression(pcsField),
-                                                "getPropertyChangeListeners",
-                                                new ArgumentListExpression(
-                                                new Expression[]{new VariableExpression("name")}))))));
+                        returns(call(
+                                field(pcsField),
+                                "getPropertyChangeListeners",
+                                args(var("name"))))));
     }
 
     private static boolean isBindableOrVetoable(AnnotatedNode node) {
-        if(VetoableASTTransformation.hasVetoableAnnotation(node) ||
-           BindableASTTransformation.hasBindableAnnotation(node)) {
+        if (VetoableASTTransformation.hasVetoableAnnotation(node) ||
+                BindableASTTransformation.hasBindableAnnotation(node)) {
             return true;
         }
         return false;
-    } 
+    }
 }
