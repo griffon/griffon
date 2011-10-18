@@ -17,12 +17,13 @@
 package griffon.test.mock
 
 import groovy.beans.Bindable
+import org.codehaus.griffon.runtime.core.AbstractGriffonModel
 
 /**
- * Trivial implementation of a model class with an observable proeprty
+ * Trivial implementation of a model class with an observable property
  *
  * @author Andres Almiray
  */
-class MockModel {
+class MockModel extends AbstractGriffonModel {
    @Bindable String value
 }

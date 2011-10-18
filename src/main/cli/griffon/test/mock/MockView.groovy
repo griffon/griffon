@@ -16,8 +16,15 @@
 
 package griffon.test.mock
 
+import org.codehaus.griffon.runtime.core.AbstractGriffonView
+
 /**
  * @author Andres Almiray
  */
 
-mock(type: 'mock')
+class MockView extends AbstractGriffonView {
+    @Override
+    void mvcGroupInit(Map<String, Object> args) {
+        builder.mock(type: 'mock')
+    }
+}

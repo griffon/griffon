@@ -16,12 +16,14 @@
 
 package griffon.test.mock
 
+import org.codehaus.griffon.runtime.core.AbstractGriffonController
+
 /**
  * Empty implementation of a controller
  *
  * @author Andres Almiray
  */
-class MockController {
+class MockController extends AbstractGriffonController {
     def model
     def view
     def builder
