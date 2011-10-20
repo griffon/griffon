@@ -16,6 +16,8 @@
 
 import griffon.util.GriffonUtil
 import griffon.util.Metadata
+import static griffon.util.GriffonNameUtils.capitalize
+import static griffon.util.GriffonNameUtils.uncapitalize
 
 /**
  * Gant script that handles the creation of Griffon applications
@@ -48,6 +50,11 @@ app.fileType = '$fileType'
 app.defaultPackageName = '$defaultPackageName'
 """)
 
+    ant.replace(dir: "${basedir}/griffon-app/conf", includes:"**/*.*") {
+        replacefilter(token: "@griffonAppName@", value: capitalize(griffonAppName))
+        replacefilter(token: "@griffonAppVersion@", value: griffonAppVersion ?: "0.1")
+    }
+
     event("StatusFinal", ["Created Griffon Application at $basedir"])
 }
 
@@ -58,6 +65,7 @@ createProjectWithDefaults = {
         replacefilter(token: "@griffon.app.class.name@", value: appClassName )
         replacefilter(token: "@griffon.version@", value: griffonVersion)
         replacefilter(token: "@griffon.project.name@", value: griffonAppName)
+        replacefilter(token: "@griffon.application.name@", value: uncapitalize(appClassName))
         replacefilter(token: "@griffon.project.key@", value: griffonAppName.replaceAll( /\s/, '.' ).toLowerCase())
     }
 
@@ -78,16 +86,9 @@ resetBaseDirectory = { String basedir ->
     metadataFile = new File("$basedir/${Metadata.FILE}")
     metadata = Metadata.getInstance(metadataFile)
 
-    applicationConfig = new ConfigObject()
     applicationConfigFile = new File(basedir, 'griffon-app/conf/Application.groovy')
-    if(applicationConfigFile.exists()) applicationConfig = configSlurper.parse(applicationConfigFile.text)
-    builderConfig = new ConfigObject()
     builderConfigFile = new File(basedir, 'griffon-app/conf/Builder.groovy')
-    if(builderConfigFile.exists()) builderConfig = configSlurper.parse(builderConfigFile.text)
-    config = new ConfigObject()
     configFile = new File(basedir, 'griffon-app/conf/Config.groovy')
-    if(configFile.exists()) config = configSlurper.parse(configFile.text)
-
 
     // Reset the plugin stuff.
     pluginSettings.clearCache()
@@ -150,8 +151,8 @@ target(appName: "Evaluates the application name") {
     if(argsMap["params"]) {
         griffonAppName = argsMap["params"].join(" ")
     } else {
-        String type = scriptName.toLowerCase().indexOf('plugin') > -1 ? 'Plugin' : 'Application'
-        ant.input(message:"$type name not specified. Please enter:",
+        String type = projectType == 'plugin' ? 'Plugin' : 'Application'
+        ant.input(message: "$type name not specified. Please enter:",
                   addProperty:"griffon.app.name")
         griffonAppName = ant.antProject.properties."griffon.app.name"
     }

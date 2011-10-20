@@ -19,14 +19,22 @@ package griffon.exceptions;
  * @author Andres Almiray
  * @since 0.9.3
  */
-public class MVCGroupInstantiationException extends GriffonException {
+public class MVCGroupInstantiationException extends MVCGroupException {
     private final String mvcType;
     private final String mvcName;
 
     public MVCGroupInstantiationException(String message, String mvcType, String mvcName) {
-        super(message);
+        this(message, mvcType, mvcName, null);
+    }
+
+    public MVCGroupInstantiationException(String message, String mvcType, String mvcName, Throwable cause) {
+        super(message, cause);
         this.mvcType = mvcType;
         this.mvcName = mvcName;
+    }
+
+    public MVCGroupInstantiationException(String mvcType, String mvcName, Throwable cause) {
+        this("", mvcType, mvcName, cause);
     }
 
     public String getMvcType() {

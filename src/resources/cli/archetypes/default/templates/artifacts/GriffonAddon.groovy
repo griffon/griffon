@@ -1,21 +1,23 @@
-@artifact.package@class @artifact.name@ {
+@artifact.package@import griffon.core.GriffonApplication
+
+class @artifact.name@ {
     // lifecycle methods
 
     // called once, after the addon is created
-    //def addonInit(app) {
+    //void addonInit(GriffonApplication app) {
     //}
 
     // called once, after all addons have been inited
-    //def addonPostInit(app) {
+    //void addonPostInit(GriffonApplication app) {
     //}
 
     // called many times, after creating a builder
-    //def addonBuilderInit(app) {
+    //void addonBuilderInit(GriffonApplication app, FactoryBuilderSupport builder) {
     //}
 
     // called many times, after creating a builder and after
     // all addons have been inited
-    //def addonBuilderPostInit(app) {
+    //void addonBuilderPostInit(GriffonApplication app, FactoryBuilderSupport builder) {
     //}
 
 

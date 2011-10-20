@@ -16,6 +16,7 @@
 package griffon.swing;
 
 import griffon.core.GriffonApplication;
+import griffon.util.ConfigUtils;
 import griffon.util.GriffonNameUtils;
 import griffon.util.RunnableWithArgs;
 import groovy.lang.Closure;
@@ -161,7 +162,7 @@ public class ConfigurableWindowDisplayHandler implements WindowDisplayHandler {
     }
 
     private Map<String, Object> windowManagerBlock(GriffonApplication application) {
-        Map<String, Object> block = (Map<String, Object>) application.getConfigValue("swing.windowManager");
+        Map<String, Object> block = (Map<String, Object>) ConfigUtils.getConfigValue(application.getConfig(), "swing.windowManager");
         return block != null ? block : Collections.<String, Object>emptyMap();
     }
 

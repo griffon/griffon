@@ -16,6 +16,8 @@
 package griffon.util;
 
 import groovy.util.ConfigObject;
+import org.codehaus.groovy.runtime.DateGroovyMethods;
+import org.codehaus.groovy.runtime.typehandling.DefaultTypeTransformation;
 
 import java.io.File;
 import java.io.FileFilter;
@@ -39,12 +41,18 @@ public abstract class AbstractBuildSettings {
      * Used to cache results of certain expensive operations
      */
     protected Map<String, Object> cache = new ConcurrentHashMap<String, Object>();
-    /** The settings stored in the project's BuildConfig.groovy file if there is one. */
+    /**
+     * The settings stored in the project's BuildConfig.groovy file if there is one.
+     */
     protected ConfigObject config = new ConfigObject();
-    /** The location where project-specific plugins are installed to. */
+    /**
+     * The location where project-specific plugins are installed to.
+     */
     protected File projectPluginsDir;
 
-    /** The location where global plugins are installed to. */
+    /**
+     * The location where global plugins are installed to.
+     */
     protected File globalPluginsDir;
 
     protected boolean projectPluginsDirSet;
@@ -57,7 +65,7 @@ public abstract class AbstractBuildSettings {
     protected Map flatConfig = Collections.emptyMap();
 
     abstract File getBaseDir();
-    
+
     /**
      * Clears any locally cached values
      */
@@ -93,6 +101,7 @@ public abstract class AbstractBuildSettings {
 
     /**
      * Adds a plugin directory
+     *
      * @param location The plugin's locatino
      */
     public void addPluginDirectory(File location, boolean isInline) {
@@ -112,7 +121,7 @@ public abstract class AbstractBuildSettings {
      */
     @SuppressWarnings("unchecked")
     public Collection<File> getPluginDirectories() {
-        Collection<File> pluginDirectoryResources = (Collection<File>)cache.get(KEY_PLUGIN_DIRECTORY_RESOURCES);
+        Collection<File> pluginDirectoryResources = (Collection<File>) cache.get(KEY_PLUGIN_DIRECTORY_RESOURCES);
         if (pluginDirectoryResources == null) {
             pluginDirectoryResources = getImplicitPluginDirectories();
 
@@ -129,20 +138,20 @@ public abstract class AbstractBuildSettings {
 
     /**
      * Extracts the inline plugin dirs relative to the base dir of this project.
-     * 
+     *
      * @see getInlinePluginsFromConfiguration(Map, File)
      */
-    @SuppressWarnings({ "rawtypes" })
+    @SuppressWarnings({"rawtypes"})
     protected Collection<File> getInlinePluginsFromConfiguration(@SuppressWarnings("hiding") Map config) {
         return getInlinePluginsFromConfiguration(config, getBaseDir());
     }
-    
+
     /**
      * Extracts the inline plugin dirs from the given config, relative to the given baseDir.
-     * 
+     *
      * @todo consider trowing an error here if an plugin does not exists at the location.
      */
-    @SuppressWarnings({ "rawtypes", "hiding" })
+    @SuppressWarnings({"rawtypes", "hiding"})
     protected Collection<File> getInlinePluginsFromConfiguration(Map config, File baseDir) {
         Collection<File> inlinePlugins = new ConcurrentLinkedQueue<File>();
         if (config != null) {
@@ -154,9 +163,8 @@ public abstract class AbstractBuildSettings {
                         try {
                             resource = new File(baseDir, value.toString()).getCanonicalFile();
                             inlinePlugins.add(resource);
-                        }
-                        catch (IOException e) {
-                            System.err.println("Cannot add location ["+value+"] as an inline plugin dependencies due to I/O error: " + e.getMessage());
+                        } catch (IOException e) {
+                            System.err.println("Cannot add location [" + value + "] as an inline plugin dependencies due to I/O error: " + e.getMessage());
                         }
                     }
                 }
@@ -165,12 +173,12 @@ public abstract class AbstractBuildSettings {
         return inlinePlugins;
     }
 
-    @SuppressWarnings({ "rawtypes", "hiding" })
+    @SuppressWarnings({"rawtypes", "hiding"})
     private Map lookupPluginLocationConfig(Map config) {
         return getIfMap(getIfMap(getIfMap(config, "griffon"), "plugin"), "location");
     }
 
-    @SuppressWarnings({ "rawtypes", "hiding" })
+    @SuppressWarnings({"rawtypes", "hiding"})
     private Map getIfMap(Map config, String name) {
         if (config != null) {
             Object o = config.get(name);
@@ -191,10 +199,10 @@ public abstract class AbstractBuildSettings {
         ConcurrentLinkedQueue<File> dirList = new ConcurrentLinkedQueue<File>();
 
         for (String pluginBase : getPluginBaseDirectories()) {
-            File[] pluginDirs = new File(pluginBase).listFiles(new FileFilter(){
+            File[] pluginDirs = new File(pluginBase).listFiles(new FileFilter() {
                 public boolean accept(File pathname) {
                     final String fileName = pathname.getName();
-                    return pathname.isDirectory() && (!fileName.startsWith(".") && fileName.indexOf('-') >- 1);
+                    return pathname.isDirectory() && (!fileName.startsWith(".") && fileName.indexOf('-') > -1);
                 }
             });
             if (pluginDirs != null) {
@@ -207,6 +215,7 @@ public abstract class AbstractBuildSettings {
 
     /**
      * Gets a list of all the known plugin base directories (directories where plugins are installed to).
+     *
      * @return Returns the base location where plugins are kept
      */
     @SuppressWarnings("unchecked")
@@ -216,16 +225,14 @@ public abstract class AbstractBuildSettings {
             dirs = new ArrayList<String>();
             if (projectPluginsDir != null) try {
                 dirs.add(projectPluginsDir.getCanonicalPath());
-            }
-            catch (IOException e) {
-                System.err.println("Cannot read project plugins directory ["+projectPluginsDir+"] due to I/O error: " + e.getMessage());
+            } catch (IOException e) {
+                System.err.println("Cannot read project plugins directory [" + projectPluginsDir + "] due to I/O error: " + e.getMessage());
             }
 
             if (globalPluginsDir != null) try {
                 dirs.add(globalPluginsDir.getCanonicalPath());
-            }
-            catch (IOException e) {
-                System.err.println("Cannot read global plugins directory ["+globalPluginsDir+"] due to I/O error: " + e.getMessage());
+            } catch (IOException e) {
+                System.err.println("Cannot read global plugins directory [" + globalPluginsDir + "] due to I/O error: " + e.getMessage());
             }
             cache.put(KEY_PLUGIN_BASE_DIRECTORIES, dirs);
         }
@@ -250,10 +257,26 @@ public abstract class AbstractBuildSettings {
     public Collection<File> getInlinePluginDirectories() {
         getPluginDirectories(); // initailize the cache
         Collection<File> locations = (ConcurrentLinkedQueue<File>) cache.get(KEY_INLINE_PLUGIN_LOCATIONS);
-        if (locations == null){
+        if (locations == null) {
             locations = new ConcurrentLinkedQueue<File>();
             cache.put(KEY_INLINE_PLUGIN_LOCATIONS, locations);
         }
         return locations;
+    }
+
+    public boolean isDebugEnabled() {
+        if (System.getProperty("griffon.cli.verbose") != null) return Boolean.getBoolean("griffon.cli.verbose");
+        return DefaultTypeTransformation.castToBoolean(getConfig().flatten().get("griffon.cli.verbose"));
+    }
+
+    public void debug(String msg) {
+        if (isDebugEnabled()) {
+            Date now = new Date();
+            System.out.println("[" +
+                    DateGroovyMethods.getDateString(now)
+                    + " " +
+                    DateGroovyMethods.getTimeString(now)
+                    + "] " + msg);
+        }
     }
 }

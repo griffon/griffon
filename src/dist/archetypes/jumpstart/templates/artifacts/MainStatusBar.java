@@ -22,10 +22,10 @@ public class @artifact.name.plain@StatusBar {
     }
 
     private static @artifact.name.plain@Model model() {
-        return (@artifact.name.plain@Model) ApplicationHolder.getApplication().getGroups().get("@griffon.project.name@").get("model");
+        return (@artifact.name.plain@Model) ApplicationHolder.getApplication().getMvcGroupManager().findGroup("@griffon.project.name@").getModel();
     }
 
     private static FactoryBuilderSupport builder() {
-        return (FactoryBuilderSupport) ApplicationHolder.getApplication().getGroups().get("@griffon.project.name@").get("builder");
+        return ApplicationHolder.getApplication().getMvcGroupManager().findGroup("@griffon.project.name@").getBuilder();
     }
 }

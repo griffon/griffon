@@ -137,7 +137,7 @@ swing {
             if(!(w instanceof Dialog)) SwingUtils.centerOnScreen(w)
             w.visible = true
         }
-        defualtHide = {w, app ->
+        defaultHide = {w, app ->
             if(w instanceof Dialog || app.windowManager.windows.findAll{it.visible}.size() > 1) {
                 w.dispose()
             } else {

@@ -18,16 +18,15 @@ package org.codehaus.griffon.runtime.util
 import java.lang.reflect.Constructor
 import org.apache.log4j.LogManager
 import org.apache.log4j.helpers.LogLog
-import org.codehaus.griffon.runtime.builder.UberBuilder
 import org.codehaus.griffon.runtime.logging.Log4jConfig
-import org.codehaus.groovy.runtime.InvokerHelper
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import griffon.core.*
 import griffon.util.*
-import static griffon.util.GriffonNameUtils.isBlank
 import org.codehaus.griffon.runtime.core.*
-import griffon.exceptions.MVCGroupInstantiationException
+import griffon.core.factories.ArtifactManagerFactory
+import griffon.core.factories.AddonManagerFactory
+import griffon.core.factories.MVCGroupManagerFactory
 
 /**
  * Utility class for bootstrapping an application and handling of MVC groups.</p>
@@ -44,6 +43,10 @@ class GriffonApplicationHelper {
             solaris: 'org.codehaus.griffon.runtime.util.DefaultSolarisPlatformHandler',
             windows: 'org.codehaus.griffon.runtime.util.DefaultWindowsPlatformHandler'
     ]
+
+    static {
+        ExpandoMetaClassCreationHandle.enable()
+    }
 
     /**
      * Creates, register and assigns an ExpandoMetaClass for a target class.<p>
@@ -104,8 +107,8 @@ class GriffonApplicationHelper {
         applyPlatformTweaks(app)
         runLifecycleHandler(GriffonApplication.Lifecycle.INITIALIZE.name, app)
         initializeArtifactManager(app)
+        initializeMvcManager(app)
         initializeAddonManager(app)
-        readMvcConfiguration(app)
 
         app.event(GriffonApplication.Event.BOOTSTRAP_END.name, [app])
     }
@@ -141,7 +144,10 @@ class GriffonApplicationHelper {
 
     private static void initializeArtifactManager(GriffonApplication app) {
         if (!app.artifactManager) {
-            app.artifactManager = new DefaultArtifactManager(app)
+            String className = app.config.app.artifactManager.factory ?: 'org.codehaus.griffon.runtime.core.factories.DefaultArtifactManagerFactory'
+            if (LOG.debugEnabled) LOG.debug("Using $className as ArtifactManagerFactory")
+            ArtifactManagerFactory factory = loadClass(app, className).newInstance()
+            app.artifactManager = factory.create(app)
         }
 
         // initialize default Artifact handlers
@@ -160,19 +166,30 @@ class GriffonApplicationHelper {
 
     private static void initializeAddonManager(GriffonApplication app) {
         if (!app.addonManager) {
-            app.addonManager = new DefaultAddonManager(app)
+            String className = app.config.app.addonManager.factory ?: 'org.codehaus.griffon.runtime.core.factories.DefaultAddonManagerFactory'
+            if (LOG.debugEnabled) LOG.debug("Using $className as AddonManagerFactory")
+            AddonManagerFactory factory = loadClass(app, className).newInstance()
+            app.addonManager = factory.create(app)
         }
         app.addonManager.initialize()
     }
 
-    private static void readMvcConfiguration(GriffonApplication app) {
-        // copy mvc groups in config to app, casting to strings in a new map
+    private static void initializeMvcManager(GriffonApplication app) {
+        if (!app.mvcGroupManager) {
+            String className = app.config.app.mvcGroupManager.factory ?: 'org.codehaus.griffon.runtime.core.factories.DefaultMVCGroupManagerFactory'
+            if (LOG.debugEnabled) LOG.debug("Using $className as MVCGroupManagerFactory")
+            MVCGroupManagerFactory factory = loadClass(app, className).newInstance()
+            app.mvcGroupManager = factory.create(app)
+        }
+
+        Map<String, MVCGroupConfiguration> configurations = [:]
         app.config.mvcGroups.each {String type, Map members ->
             if (LOG.debugEnabled) LOG.debug("Adding MVC group $type")
             Map membersCopy = members.inject([:]) {m, e -> m[e.key as String] = e.value as String; m}
-            // MVCGroupConfiguration mvcConfig = new DefaultMVCGroupConfiguration(app, type, membersCopy)
-            app.addMvcGroup(type, membersCopy)
+            configurations.put(type, app.mvcGroupManager.newMVCGroupConfiguration(app, type, membersCopy))
         }
+
+        app.mvcGroupManager.initialize(configurations)
     }
 
     private static void loadArtifactHandlers(GriffonApplication app) {
@@ -294,244 +311,6 @@ class GriffonApplicationHelper {
         return instance
     }
 
-    static Map<String, Object> buildMVCGroup(GriffonApplication app, String mvcType) {
-        buildMVCGroup(app, mvcType, mvcType, Collections.emptyMap())
-    }
-
-    static Map<String, Object> buildMVCGroup(GriffonApplication app, String mvcType, String mvcName) {
-        buildMVCGroup(app, mvcType, mvcName, Collections.emptyMap())
-    }
-
-    static Map<String, Object> buildMVCGroup(GriffonApplication app, Map<String, Object> args, String mvcType) {
-        buildMVCGroup(app, mvcType, mvcType, args)
-    }
-
-    static Map<String, Object> buildMVCGroup(GriffonApplication app, String mvcType, Map<String, Object> args) {
-        buildMVCGroup(app, mvcType, mvcType, args)
-    }
-
-    static Map<String, Object> buildMVCGroup(GriffonApplication app, Map<String, Object> args, String mvcType, String mvcName) {
-        buildMVCGroup(app, mvcType, mvcName, args)
-    }
-
-    static List<? extends GriffonMvcArtifact> createMVCGroup(GriffonApplication app, String mvcType) {
-        createMVCGroup(app, mvcType, mvcType, Collections.emptyMap())
-    }
-
-    static List<? extends GriffonMvcArtifact> createMVCGroup(GriffonApplication app, Map<String, Object> args, String mvcType) {
-        createMVCGroup(app, mvcType, mvcType, args)
-    }
-
-    static List<? extends GriffonMvcArtifact> createMVCGroup(GriffonApplication app, String mvcType, Map<String, Object> args) {
-        createMVCGroup(app, mvcType, mvcType, args)
-    }
-
-    static List<? extends GriffonMvcArtifact> createMVCGroup(GriffonApplication app, String mvcType, String mvcName) {
-        createMVCGroup(app, mvcType, mvcName, Collections.emptyMap())
-    }
-
-    static List<? extends GriffonMvcArtifact> createMVCGroup(GriffonApplication app, Map<String, Object> args, String mvcType, String mvcName) {
-        createMVCGroup(app, mvcType, mvcName, args)
-    }
-
-    static void withMVCGroup(GriffonApplication app, String mvcType, Closure handler) {
-        withMVCGroup(app, mvcType, mvcType, Collections.<String, Object> emptyMap(), handler)
-    }
-
-    static void withMVCGroup(GriffonApplication app, String mvcType, String mvcName, Closure handler) {
-        withMVCGroup(app, mvcType, mvcName, Collections.<String, Object> emptyMap(), handler)
-    }
-
-    static void withMVCGroup(GriffonApplication app, String mvcType, Map<String, Object> args, Closure handler) {
-        withMVCGroup(app, mvcType, mvcType, args, handler)
-    }
-
-    static void withMVCGroup(GriffonApplication app, Map<String, Object> args, String mvcType, Closure handler) {
-        withMVCGroup(app, mvcType, mvcType, args, handler)
-    }
-
-    static void withMVCGroup(GriffonApplication app, Map<String, Object> args, String mvcType, String mvcName, Closure handler) {
-        withMVCGroup(app, mvcType, mvcName, args, handler)
-    }
-
-    static <M extends GriffonModel, V extends GriffonView, C extends GriffonController> void withMVCGroup(GriffonApplication app, String mvcType, MVCClosure<M, V, C> handler) {
-        withMVCGroup(app, mvcType, mvcType, Collections.<String, Object> emptyMap(), handler)
-    }
-
-    static <M extends GriffonModel, V extends GriffonView, C extends GriffonController> void withMVCGroup(GriffonApplication app, String mvcType, String mvcName, MVCClosure<M, V, C> handler) {
-        withMVCGroup(app, mvcType, mvcName, Collections.<String, Object> emptyMap(), handler)
-    }
-
-    static <M extends GriffonModel, V extends GriffonView, C extends GriffonController> void withMVCGroup(GriffonApplication app, String mvcType, Map<String, Object> args, MVCClosure<M, V, C> handler) {
-        withMVCGroup(app, mvcType, mvcType, args, handler)
-    }
-
-    static <M extends GriffonModel, V extends GriffonView, C extends GriffonController> void withMVCGroup(GriffonApplication app, Map<String, Object> args, String mvcType, MVCClosure<M, V, C> handler) {
-        withMVCGroup(app, mvcType, mvcType, args, handler)
-    }
-
-    static <M extends GriffonModel, V extends GriffonView, C extends GriffonController> void withMVCGroup(GriffonApplication app, Map<String, Object> args, String mvcType, String mvcName, MVCClosure<M, V, C> handler) {
-        withMVCGroup(app, mvcType, mvcName, args, handler)
-    }
-
-    static List<? extends GriffonMvcArtifact> createMVCGroup(GriffonApplication app, String mvcType, String mvcName, Map bindArgs) {
-        Map results = buildMVCGroup(app, mvcType, mvcName, bindArgs)
-        return [results.model, results.view, results.controller]
-    }
-
-    static void withMVCGroup(GriffonApplication app, String mvcType, String mvcName, Map bindArgs, Closure handler) {
-        try {
-            handler(* createMVCGroup(app, mvcType, mvcName, bindArgs))
-        } finally {
-            try {
-                destroyMVCGroup(app, mvcName)
-            } catch (Exception x) {
-                if (app.log.warnEnabled) app.log.warn("Could not destroy group [$mvcName] of type $mvcType.", GriffonExceptionHandler.sanitize(x))
-            }
-        }
-    }
-
-    static <M extends GriffonModel, V extends GriffonView, C extends GriffonController> void withMVCGroup(GriffonApplication app, String mvcType, String mvcName, Map<String, Object> args, MVCClosure<M, V, C> handler) {
-        try {
-            List<? extends GriffonMvcArtifact> group = createMVCGroup(app, mvcType, mvcName, args)
-            handler.call((M) group[0], (V) group[1], (C) group[2])
-        } finally {
-            try {
-                destroyMVCGroup(app, mvcName)
-            } catch (Exception x) {
-                if (app.log.warnEnabled) app.log.warn("Could not destroy group [$mvcName] of type $mvcType.", GriffonExceptionHandler.sanitize(x))
-            }
-        }
-    }
-
-    static Map<String, Object> buildMVCGroup(GriffonApplication app, String mvcType, String mvcName, Map bindArgs) {
-        if (isBlank(mvcName)) mvcName = mvcType
-        if (bindArgs == null) bindArgs = Collections.EMPTY_MAP
-
-        if (!app.mvcGroups.containsKey(mvcType)) {
-            throw new MVCGroupInstantiationException("Unknown MVC type '$mvcType'.  Known types are ${app.mvcGroups.keySet()}", mvcType, mvcName)
-        }
-        if (app.groups.containsKey(mvcName)) {
-            String action = app.config.griffon.mvcid.collision ?: 'exception'
-            switch (action) {
-                case 'warning':
-                    if (LOG.warnEnabled) {
-                        LOG.warn("A previous instance of MVC group '$mvcType' with name '$mvcName' exists. Destroying the old instance first.")
-                        destroyMVCGroup(app, mvcName)
-                    }
-                    break
-                case 'exception':
-                default:
-                    throw new MVCGroupInstantiationException("Can not instantiate MVC group '${mvcType}' with name '${mvcName}' because a previous instance with that name exists and was not disposed off properly.", mvcType, mvcName)
-            }
-        }
-
-        if (LOG.infoEnabled) LOG.info("Building MVC group '${mvcType}' with name '${mvcName}'")
-        def argsCopy = [app: app, mvcType: mvcType, mvcName: mvcName]
-        argsCopy.putAll(app.bindings.variables)
-        argsCopy.putAll(bindArgs)
-
-        // figure out what the classes are and prep the metaclass
-        Map<String, MetaClass> metaClassMap = [:]
-        Map<String, Class> klassMap = [:]
-        Map<String, GriffonClass> griffonClassMap = [:]
-        app.mvcGroups[mvcType].each {k, v ->
-            GriffonClass griffonClass = app.artifactManager.findGriffonClass(v)
-            Class klass = griffonClass?.clazz ?: loadClass(app, v)
-            MetaClass metaClass = griffonClass?.getMetaClass() ?: klass.getMetaClass()
-
-            metaClassMap[k] = metaClass
-            klassMap[k] = klass
-            griffonClassMap[k] = griffonClass
-        }
-
-        // create the builder
-        UberBuilder builder = CompositeBuilderHelper.createBuilder(app, metaClassMap)
-        argsCopy.each {k, v -> builder.setVariable k, v }
-
-        // instantiate the parts
-        Map<String, Object> instanceMap = [:]
-        klassMap.each {k, v ->
-            if (argsCopy.containsKey(k)) {
-                // use provided value, even if null
-                instanceMap[k] = argsCopy[k]
-            } else {
-                // otherwise create a new value
-                GriffonClass griffonClass = griffonClassMap[k]
-                // def instance = griffonClass?.newInstance() ?: newInstance(app, v, k)
-                def instance = null
-                if (griffonClass) {
-                    instance = griffonClass.newInstance()
-                } else {
-                    instance = newInstance(app, v, k)
-                }
-                instanceMap[k] = instance
-                argsCopy[k] = instance
-
-                // all scripts get the builder as their binding
-                if (instance instanceof Script) {
-                    builder.variables.putAll(instance.binding.variables)
-                    instance.binding = builder
-                }
-            }
-        }
-        instanceMap.builder = builder
-        argsCopy.builder = builder
-
-        app.event(GriffonApplication.Event.INITIALIZE_MVC_GROUP.name, [mvcType, mvcName, instanceMap])
-
-        // special case --
-        // controllers are added as application listeners
-        // addApplicationListener method is null safe
-        app.addApplicationEventListener(instanceMap.controller)
-
-        // mutually set each other to the available fields and inject args
-        instanceMap.each {k, v ->
-            // loop on the instance map to get just the instances
-            if (v instanceof Script) {
-                v.binding.variables.putAll(argsCopy)
-            } else {
-                // set the args and instances
-                InvokerHelper.setProperties(v, argsCopy)
-            }
-        }
-
-        // store the refs in the app caches
-        app.models[mvcName] = instanceMap.model
-        app.views[mvcName] = instanceMap.view
-        app.controllers[mvcName] = instanceMap.controller
-        app.builders[mvcName] = instanceMap.builder
-        app.groups[mvcName] = instanceMap
-
-        // initialize the classes and call scripts
-        if (LOG.debugEnabled) LOG.debug("Initializing each MVC member of group '${mvcName}'")
-        instanceMap.each {k, v ->
-            if (v instanceof Script) {
-                // special case: view gets executed in the UI thread always
-                if (k == 'view') {
-                    UIThreadManager.instance.executeSync { builder.build(v) }
-                } else {
-                    // non-view gets built in the builder
-                    // they can switch into the UI thread as desired
-                    builder.build(v)
-                }
-            } else if (k != 'builder') {
-                try {
-                    v.mvcGroupInit(argsCopy)
-                } catch (MissingMethodException mme) {
-                    if (mme.method != 'mvcGroupInit') {
-                        throw mme
-                    }
-                    // MME on mvcGroupInit means they didn't define
-                    // an init method.  This is not an error.
-                }
-            }
-        }
-
-        app.event(GriffonApplication.Event.CREATE_MVC_GROUP.name, [mvcType, mvcName, instanceMap])
-        return instanceMap
-    }
-
     static void enhance(GriffonApplication app, Class klass, MetaClass metaClass, Object instance) {
         try {
             instance.setApp(app)
@@ -543,72 +322,24 @@ class GriffonApplicationHelper {
             }
         }
 
-        if (!GriffonMvcArtifact.isAssignableFrom(klass)) {
+        if (!GriffonArtifact.isAssignableFrom(klass)) {
             metaClass.createMVCGroup = {Object... args ->
-                GriffonApplicationHelper.createMVCGroup(app, * args)
+                app.mvcGroupManager.createMVCGroup(* args)
             }
             metaClass.buildMVCGroup = {Object... args ->
-                GriffonApplicationHelper.buildMVCGroup(app, * args)
+                app.mvcGroupManager.buildMVCGroup(* args)
             }
-            metaClass.destroyMVCGroup = GriffonApplicationHelper.&destroyMVCGroup.curry(app)
+            metaClass.destroyMVCGroup = {String mvcName ->
+                app.mvcGroupManager.destroyMVCGroup(mvcName)
+            }
             metaClass.withMVCGroup = {Object... args ->
-                GriffonApplicationHelper.withMVCGroup(app, * args)
+                app.mvcGroupManager.withMVCGroup(* args)
             }
-        }
-
-        if (!GriffonArtifact.isAssignableFrom(klass)) {
             metaClass.newInstance = {Object... args ->
                 GriffonApplicationHelper.newInstance(app, * args)
             }
-            // metaClass.getGriffonClass = {c ->
-            //     app.artifactManager.findGriffonClass(c)
-            // }.curry(klass)
             UIThreadManager.enhance(metaClass)
         }
-    }
-
-    /**
-     * Cleanups and removes an MVC group from the application.<p>
-     * Calls <strong>mvcGroupDestroy()</strong> on model, view and controller
-     * if the method is defined.<p>
-     * Publishes a <strong>DestroyMVCGroup</strong> event with the following arguments<ul>
-     * <li>mvcName - the name of the group</li>
-     * </ul>
-     *
-     * @param app the current Griffon application
-     * @param mvcName name of the group to destroy
-     */
-    static void destroyMVCGroup(GriffonApplication app, String mvcName) {
-        if (!app.groups[mvcName]) return
-        if (LOG.infoEnabled) LOG.info("Destroying MVC group identified by '$mvcName'")
-        app.removeApplicationEventListener(app.controllers[mvcName])
-        [app.models, app.views, app.controllers].each {
-            def part = it.remove(mvcName)
-            if ((part != null) & !(part instanceof Script)) {
-                try {
-                    part.mvcGroupDestroy()
-                } catch (MissingMethodException mme) {
-                    if (mme.method != 'mvcGroupDestroy') {
-                        throw mme
-                    }
-                    // MME on mvcGroupDestroy means they didn't define
-                    // a destroy method.  This is not an error.
-                }
-            }
-        }
-
-        try {
-            app.builders[mvcName]?.dispose()
-        } catch (MissingMethodException mme) {
-            // TODO find out why this call breaks applet mode on shutdown
-            if (LOG.errorEnabled) LOG.error("Application encountered an error while destroying group '$mvcName'", GriffonExceptionHandler.sanitize(mme))
-        }
-
-        // remove the refs from the app caches
-        app.builders.remove(mvcName)
-        app.groups.remove(mvcName)
-
-        app.event(GriffonApplication.Event.DESTROY_MVC_GROUP.name, [mvcName])
     }
 
     static Class loadClass(GriffonApplication app, String className) throws ClassNotFoundException {

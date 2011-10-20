@@ -83,7 +83,13 @@ testReportsDir = griffonSettings.testReportsDir
 testSourceDir = griffonSettings.testSourceDir
 
 // The 'styledir' argument to the 'junitreport' ant task (null == default provided by Ant)
-junitReportStyleDir = new File(griffonSettings.griffonHome, "lib")
+// junitReportStyleDir = new File(griffonSettings.griffonHome, "lib")
+if (griffonSettings.griffonHome) {
+    junitReportStyleDir = new File(griffonSettings.griffonHome, "src/resources/tests")
+    if (!junitReportStyleDir.exists()) {
+        junitReportStyleDir = new File(griffonSettings.griffonHome, "griffon-resources/src/griffon/home/tests")
+    }
+}
 
 // Set up an Ant path for the tests.
 ant.path(id: "griffon.test.classpath", testClasspath)

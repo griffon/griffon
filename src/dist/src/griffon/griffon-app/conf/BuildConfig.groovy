@@ -143,3 +143,39 @@ griffon {
         footer = "<br/><br/>Made with Griffon (@griffon.version@)"
     }
 }
+
+deploy {
+    application {
+        title = '@griffonAppName@ @griffonAppVersion@'
+        vendor = System.properties['user.name']
+        homepage = 'http://localhost/@griffonAppName@'
+        description {
+            complete = '@griffonAppName@ @griffonAppVersion@'
+            oneline  = '@griffonAppName@ @griffonAppVersion@'
+            minimal  = '@griffonAppName@ @griffonAppVersion@'
+            tooltip  = '@griffonAppName@ @griffonAppVersion@'
+        }
+        icon {
+            fallback {
+                name = 'griffon-icon-48x48.png'
+                width = '48'
+                height = '48'
+            }
+            splash {
+                name = 'griffon.png'
+                width = '391'
+                height = '123'
+            }
+            menu {
+                name = 'griffon-icon-16x16.png'
+                width = '48'
+                height = '48'
+            }
+            desktop {
+                name = 'griffon-icon-32x32.png'
+                width = '32'
+                height = '32'
+            }
+        }
+    }
+}

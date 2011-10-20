@@ -18,6 +18,7 @@ package griffon.swing;
 import griffon.core.ApplicationPhase;
 import griffon.core.GriffonApplication;
 import griffon.core.ShutdownHandler;
+import griffon.util.ConfigUtils;
 import griffon.util.GriffonNameUtils;
 import groovy.util.ConfigObject;
 import org.slf4j.Logger;
@@ -102,7 +103,7 @@ public final class WindowManager implements ShutdownHandler {
      */
     public Window getStartingWindow() {
         Window window = null;
-        Object value = app.getConfigValue("swing.windowManager.startingWindow");
+        Object value = ConfigUtils.getConfigValue(app.getConfig(), "swing.windowManager.startingWindow");
         if (LOG.isDebugEnabled()) {
             LOG.debug("swing.windowManager.startingWindow configured to " + value);
         }

@@ -19,31 +19,51 @@ import java.util.concurrent.Callable;
 
 /**
  * A Callable that can have arguments.
+ * Instances of this class can be seen as substitutes for Closures when dealing
+ * with non-Groovy languages. There are several Griffon core and Griffon plugin APIs
+ * that accept a {@code CallableWithArgs} where a Closure would be used.</p>
+ * <p>Example:</p>
+ * <pre>
+Callable&lt;Boolean&gt; c = new CallableWithArgs&lt;Boolean&gt;() {
+    public Boolean call(Object[] args) {
+        return "Hello".equals(args[0]);
+    }
+};
+
+c.setArgs("Hello");
+assert c.call()
+c.setArgs("world!");
+assert !c.call();
+assert !c.call(new Object[]{ "again" });
+ * </pre>
+ *
  *
  * @author Andres Almiray
  */
 public abstract class CallableWithArgs<V> implements Callable<V> {
     private static final Object[] NO_ARGS = new Object[0];
-    private final Object lock = new Object();
+    private final Object[] lock = new Object[0];
     private Object[] args = NO_ARGS;
 
     public void setArgs(Object[] args) {
-        if(args == null) {
+        if (args == null) {
             args = NO_ARGS;
         }
-        synchronized(lock) {
+        synchronized (lock) {
             this.args = new Object[args.length];
             System.arraycopy(args, 0, this.args, 0, args.length);
         }
     }
 
     public Object[] getArgs() {
-        return args;
+        synchronized (lock) {
+            return args;
+        }
     }
 
     public final V call() {
         Object[] copy = null;
-        synchronized(lock) {
+        synchronized (lock) {
             copy = new Object[args.length];
             System.arraycopy(args, 0, copy, 0, args.length);
         }

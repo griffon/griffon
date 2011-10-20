@@ -1,6 +1,6 @@
 application {
     title = '@griffon.app.class.name@'
-    startupGroups = ['@griffon.project.name@']
+    startupGroups = ['@griffon.application.name@']
 
     // Should Griffon exit when no Griffon created frames are showing?
     autoShutdown = true

@@ -27,10 +27,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.Collections;
-import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
-import static griffon.util.GriffonApplicationUtils.getConfigValueAsBoolean;
+import static griffon.util.ConfigUtils.getConfigValueAsBoolean;
 
 /**
  * Handler for 'Service' artifacts.
@@ -40,19 +40,46 @@ import static griffon.util.GriffonApplicationUtils.getConfigValueAsBoolean;
  */
 public class ServiceArtifactHandler extends ArtifactHandlerAdapter {
     private static final Logger LOG = LoggerFactory.getLogger(ServiceArtifactHandler.class);
-    private final Map<String, GriffonService> serviceInstances = new LinkedHashMap<String, GriffonService>();
+    private final ServiceManager serviceManager;
 
-    public ServiceArtifactHandler(GriffonApplication app) {
-        super(app, GriffonServiceClass.TYPE, GriffonServiceClass.TRAILING);
-        MetaClass metaClass = GroovySystem.getMetaClassRegistry().getMetaClass(app.getClass());
-        if (metaClass instanceof ExpandoMetaClass) {
-            ExpandoMetaClass mc = (ExpandoMetaClass) metaClass;
-            mc.registerInstanceMethod("getServices", new MethodClosure(this, "getServicesInternal"));
+    private class DefaultServiceManager extends AbstractServiceManager {
+        private final Map<String, GriffonService> serviceInstances = new ConcurrentHashMap<String, GriffonService>();
+
+        public DefaultServiceManager(GriffonApplication app) {
+            super(app);
+        }
+
+        public Map<String, GriffonService> getServices() {
+            return Collections.unmodifiableMap(serviceInstances);
+        }
+
+        public GriffonService findService(String name) {
+            GriffonService serviceInstance = serviceInstances.get(name);
+            if (serviceInstance == null) {
+                GriffonClass griffonClass = findClassFor(name);
+                if (griffonClass != null) {
+                    serviceInstance = instantiateService(griffonClass);
+                    serviceInstances.put(name, serviceInstance);
+                }
+            }
+            return serviceInstance;
+        }
+
+        private GriffonService instantiateService(GriffonClass griffonClass) {
+            GriffonService serviceInstance = (GriffonService) griffonClass.newInstance();
+            InvokerHelper.setProperty(serviceInstance, "app", getApp());
+            getApp().addApplicationEventListener(serviceInstance);
+            return serviceInstance;
         }
     }
 
-    private Map<String, GriffonService> getServicesInternal() {
-        return Collections.unmodifiableMap(serviceInstances);
+    public ServiceArtifactHandler(GriffonApplication app) {
+        super(app, GriffonServiceClass.TYPE, GriffonServiceClass.TRAILING);
+        serviceManager = new DefaultServiceManager(app);
+        if (LOG.isDebugEnabled()) {
+            LOG.debug("Registering " + serviceManager + " as ServiceManager.");
+        }
+        InvokerHelper.setProperty(app, "serviceManager", serviceManager);
     }
 
     protected GriffonClass newGriffonClassInstance(Class clazz) {
@@ -61,7 +88,16 @@ public class ServiceArtifactHandler extends ArtifactHandlerAdapter {
 
     public void initialize(ArtifactInfo[] artifacts) {
         super.initialize(artifacts);
-        if (getConfigValueAsBoolean(getApp(), "griffon.basic_injection.disable")) return;
+        if (isBasicInjectionDisabled()) return;
+        if (isEagerInstantiationEnabled()) {
+            if (LOG.isDebugEnabled()) {
+                LOG.debug("Instantiating service instances eagerly");
+            }
+            for (ArtifactInfo artifactInfo : artifacts) {
+                GriffonClass griffonClass = getClassFor(artifactInfo.getClazz());
+                serviceManager.findService(griffonClass.getPropertyName());
+            }
+        }
         getApp().addApplicationEventListener(this);
     }
 
@@ -71,21 +107,12 @@ public class ServiceArtifactHandler extends ArtifactHandlerAdapter {
      * is not set to true
      */
     public void onNewInstance(Class klass, String t, Object instance) {
-        if (getType().equals(t) || getConfigValueAsBoolean(getApp(), "griffon.basic_injection.disable")) return;
+        if (isBasicInjectionDisabled()) return;
         MetaClass metaClass = InvokerHelper.getMetaClass(instance);
         for (MetaProperty property : metaClass.getProperties()) {
             String propertyName = property.getName();
             if (!propertyName.endsWith(getTrailing())) continue;
-            GriffonService serviceInstance = serviceInstances.get(propertyName);
-            if (serviceInstance == null) {
-                GriffonClass griffonClass = findClassFor(propertyName);
-                if (griffonClass != null) {
-                    serviceInstance = (GriffonService) griffonClass.newInstance();
-                    InvokerHelper.setProperty(serviceInstance, "app", getApp());
-                    getApp().addApplicationEventListener(serviceInstance);
-                    serviceInstances.put(propertyName, serviceInstance);
-                }
-            }
+            GriffonService serviceInstance = serviceManager.findService(propertyName);
 
             if (serviceInstance != null) {
                 if (LOG.isDebugEnabled()) {
@@ -94,5 +121,13 @@ public class ServiceArtifactHandler extends ArtifactHandlerAdapter {
                 InvokerHelper.setProperty(instance, propertyName, serviceInstance);
             }
         }
+    }
+
+    private boolean isBasicInjectionDisabled() {
+        return getConfigValueAsBoolean(getApp().getConfig(), "griffon.basic_injection.disable", false);
+    }
+
+    private boolean isEagerInstantiationEnabled() {
+        return getConfigValueAsBoolean(getApp().getConfig(), "griffon.services.eager.instantiation", false);
     }
 }

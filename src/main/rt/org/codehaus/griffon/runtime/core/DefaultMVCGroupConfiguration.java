@@ -16,17 +16,10 @@
 
 package org.codehaus.griffon.runtime.core;
 
-
-import java.util.Collections;
-import java.util.LinkedHashMap;
 import java.util.Map;
-
-import static griffon.util.GriffonNameUtils.isBlank;
 
 import griffon.core.GriffonApplication;
 import griffon.core.MVCGroup;
-import griffon.core.MVCGroupConfiguration;
-import org.codehaus.griffon.runtime.util.GriffonApplicationHelper;
 
 /**
  * Default implementation of the {@code MVCGroupConfiguration} interface
@@ -34,43 +27,12 @@ import org.codehaus.griffon.runtime.util.GriffonApplicationHelper;
  * @author Andres Almiray
  * @since 0.9.3
  */
-public class DefaultMVCGroupConfiguration implements MVCGroupConfiguration {
-    private final Map<String, String> configuration = new LinkedHashMap<String, String>();
-    private final String mvcType;
-    private final GriffonApplication app;
-
-    public DefaultMVCGroupConfiguration(GriffonApplication app, String mvcType, Map<String, String> configuration) {
-        this.app = app;
-        this.mvcType = mvcType;
-        this.configuration.putAll(configuration);
+public class DefaultMVCGroupConfiguration extends AbstractMVCGroupConfiguration {
+    public DefaultMVCGroupConfiguration(GriffonApplication app, String mvcType, Map<String, String> members) {
+        super(app, mvcType, members);
     }
 
-    public GriffonApplication getApp() {
-        return app;
-    }
-
-    public String getMvcType() {
-        return mvcType;
-    }
-
-    public Map<String, String> getConfiguration() {
-        return Collections.unmodifiableMap(configuration);
-    }
-
-    public void create() {
-        create(mvcType, Collections.<String, Object>emptyMap());
-    }
-
-    public void create(String mvcId) {
-        create(mvcId, Collections.<String, Object>emptyMap());
-    }
-
-    public void create(Map<String, Object> args) {
-        create(mvcType, args);
-    }
-
-    public MVCGroup create(String mvcId, Map<String, Object> args) {
-        mvcId = !isBlank(mvcId) ? mvcId : mvcType;
-        return new DefaultMVCGroup(app, this, mvcId, GriffonApplicationHelper.buildMVCGroup(app, mvcType, mvcId, args));
+    protected MVCGroup instantiateMVCGroup(String mvcId, Map<String, Object> args) {
+        return app.getMvcGroupManager().buildMVCGroup(getMvcType(), mvcId, args);
     }
 }

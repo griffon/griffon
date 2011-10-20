@@ -28,6 +28,7 @@ import org.codehaus.griffon.runtime.core.DefaultGriffonAddonDescriptor
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import griffon.core.ThreadingHandler
+import griffon.core.MVCGroupConfiguration
 
 /**
  * Helper class for dealing with addon initialization.
@@ -242,7 +243,10 @@ class AddonHelper {
     }
 
     static void addMVCGroups(GriffonApplication app, Map<String, Map<String, String>> groups) {
-        groups.each {k, v -> app.addMvcGroup(k, v) }
+        groups.each {String type, Map<String, String> members ->
+            Map membersCopy = members.inject([:]) {m, e -> m[e.key as String] = e.value as String; m}
+            app.mvcGroupManager.addConfiguration(app.mvcGroupManager.newMVCGroupConfiguration(app, type, membersCopy))
+        }
     }
 
     static void addFactories(UberBuilder builder, Map<String, Object> factories, String addonName, String prefix) {

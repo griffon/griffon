@@ -23,4 +23,5 @@
 
 includeTargets << griffonScript("_GriffonCreateProject")
 
+projectType = 'plugin'
 setDefaultTarget("createPlugin")

@@ -57,6 +57,20 @@ task buildDocs(type: Groovydoc) {
     link('http://www.dpml.net/api/ant/1.7.0', 'org.apache.ant.,org.apache.tools.ant.')
     link('http://junit.sourceforge.net/junit3.8.1/javadoc/', 'org.junit.,junit.framework.')
     link('http://groovy.codehaus.org/api/', 'groovy.,org.codehaus.groovy.')
+
+    doLast { task ->
+        copy {
+            into task.destinationDir
+            from "src/dist/media/griffon.ico", "src/guide/resources/css/stylesheet.css"
+        }
+		ant {
+		    replace(dir: task.destinationDir,
+					token: "groovy.ico",
+					value: "griffon.ico") {
+					    include(name: "**/*.html")
+			}
+		}
+    }
 }
 
 task jarApi(type: Jar) {

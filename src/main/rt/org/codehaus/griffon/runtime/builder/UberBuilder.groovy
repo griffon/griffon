@@ -140,21 +140,30 @@ class UberBuilder extends FactoryBuilderSupport {
 
     public Object build(Script script) {
         synchronized (script) {
-            try{
+            Object oldScriptName = builder.variables[FactoryBuilderSupport.SCRIPT_CLASS_NAME]
+            try {
                 MetaClass scriptMetaClass = script.getMetaClass()
                 boolean isArtifact = script instanceof GriffonArtifact
-                if(isArtifact) scriptMetaClass = script.getGriffonClass().getMetaClass()
-                if(!(scriptMetaClass instanceof UberInterceptorMetaClass)) {
+                if (isArtifact) scriptMetaClass = script.getGriffonClass().getMetaClass()
+                if (!(scriptMetaClass instanceof UberInterceptorMetaClass)) {
                     MetaClass uberMetaClass = new UberInterceptorMetaClass(scriptMetaClass, this)
                     script.setMetaClass(uberMetaClass)
-                    if(isArtifact) script.getGriffonClass().setMetaClass(uberMetaClass)
+                    if (isArtifact) script.getGriffonClass().setMetaClass(uberMetaClass)
                 }
+                builder[FactoryBuilderSupport.SCRIPT_CLASS_NAME] = script.getClass().name
                 script.binding = this
                 return script.run()
-            } catch(x){
-                if(LOG.errorEnabled) LOG.error("An error occurred while building $script", GriffonExceptionHandler.sanitize(x))
+            } catch (x) {
+                if (LOG.errorEnabled) LOG.error("An error occurred while building $script", GriffonExceptionHandler.sanitize(x))
                 throw x
+            } finally {
+                if (oldScriptName != null) {
+                    builder[FactoryBuilderSupport.SCRIPT_CLASS_NAME] = oldScriptName
+                } else {
+                    builder.variables.remove(FactoryBuilderSupport.SCRIPT_CLASS_NAME)
+                }
             }
+
         }
     }
 
@@ -192,7 +201,7 @@ class UberBuilder extends FactoryBuilderSupport {
         builderRegistration.each {UberBuilderRegistration ubr ->
             try {
                 ubr.builder.dispose()
-            } catch(UnsupportedOperationException uoe) {
+            } catch (UnsupportedOperationException uoe) {
                 // Sometimes an UOE may appear due to a TriggerBinding
                 // see http://jira.codehaus.org/browse/GRIFFON-165
                 // however there is little that can be done so we

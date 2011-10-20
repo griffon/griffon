@@ -16,6 +16,7 @@
 package griffon.swing;
 
 import griffon.core.GriffonApplication;
+import griffon.util.ConfigUtils;
 
 import javax.swing.*;
 import java.awt.*;
@@ -72,7 +73,7 @@ public class SwingUtils {
     public static Window createApplicationFrame(GriffonApplication app) {
         JFrame frame = null;
         // try config specified first
-        String frameClass = (String) app.getConfigValue("application.frameClass");
+        String frameClass = (String) ConfigUtils.getConfigValue(app.getConfig(), "application.frameClass");
         if (!isBlank(frameClass)) {
             try {
                 ClassLoader cl = SwingUtils.class.getClassLoader();

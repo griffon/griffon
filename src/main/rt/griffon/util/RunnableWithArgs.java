@@ -16,32 +16,51 @@
 package griffon.util;
 
 /**
- * A Runnable that can have arguments.
+ * A Runnable that can have arguments. <p>
+ * Instances of this class can be seen as substitutes for Closures when dealing
+ * with non-Groovy languages. There are several Griffon core and Griffon plugin APIs
+ * that accept a {@code RunnableWithArgs} where a Closure would be used.</p>
+ * <p>Example:</p>
+ * <pre>
+Runnable r = new RunnableWithArgs() {
+    public void run(Object[] args) {
+        System.out.println("Hello "+ args[0]);
+    }
+};
+
+r.setArgs("world!");
+r.run();
+// prints Hello world!
+r.run(new Object[]{ "again" });
+// prints Hello again
+ * </pre>
  *
  * @author Andres Almiray
  */
 public abstract class RunnableWithArgs implements Runnable {
     private static final Object[] NO_ARGS = new Object[0];
-    private final Object lock = new Object();
+    private final Object[] lock = new Object[0];
     private Object[] args = NO_ARGS;
 
     public void setArgs(Object[] args) {
-        if(args == null) {
+        if (args == null) {
             args = NO_ARGS;
         }
-        synchronized(lock) {
+        synchronized (lock) {
             this.args = new Object[args.length];
             System.arraycopy(args, 0, this.args, 0, args.length);
         }
     }
 
     public Object[] getArgs() {
-        return args;
+        synchronized (lock) {
+            return args;
+        }
     }
 
     public final void run() {
         Object[] copy = null;
-        synchronized(lock) {
+        synchronized (lock) {
             copy = new Object[args.length];
             System.arraycopy(args, 0, copy, 0, args.length);
         }

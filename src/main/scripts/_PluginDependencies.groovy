@@ -404,6 +404,12 @@ runPluginScript = { File scriptFile, fullPluginName, msg ->
         // instrumenting plugin scripts adding 'pluginBasedir' variable
         def instrumentedInstallScript = "def pluginBasedir = '${pluginsHome}/${fullPluginName}'\n".toString().replaceAll('\\\\','/') + scriptFile.text
         // we are using text form of script here to prevent Gant caching
+
+        // temporary crutch --- REMOVE BEFORE 1.0!!
+        builderConfig = new ConfigObject()
+        if(builderConfigFile.exists()) builderConfig = configSlurper.parse(builderConfigFile.text)
+        // temporary crutch --- REMOVE BEFORE 1.0!!
+
         includeTargets << instrumentedInstallScript
     }
 }

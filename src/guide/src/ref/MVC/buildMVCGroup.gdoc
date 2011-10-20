@@ -9,7 +9,7 @@ h2. Examples
 {code:java}
 class SampleController {
     def action = { evt = null ->
-        Map members = buildMVCGroup('Other') 
+        MVCGroup group = buildMVCGroup('Other') 
     }
 }
 {code}
@@ -23,10 +23,11 @@ This method lets you create new instances of an MVC group. There are several way
 * @buildMVCGroup(String groupName, Map params)@ - creates a new group identified by <groupName> with additional params. The @params@ argument will be fed as the @args@ value of @mvcGroupInit()@.
 * @buildMVCGroup(String groupName, String groupId, Map params)@ - a combination of all previous definitions.
 
-Use this method when building a group that may contain additional mvc members as @createMVCGroup()@ returns strict MVC members only (Model, View, Controller).
+Use this method when building a group that may contain additional MVC members as @createMVCGroup()@ returns strict MVC members only (Model, View, Controller).
 
 
 Fired Events: 
 
 * @NewInstance@ - for each member of the MVC group that had to be instantiated
+* @InitializeMVCGroup@ - before each group member is initialized
 * @CreateMVCGroup@ - after the group has been created

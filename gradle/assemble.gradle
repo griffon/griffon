@@ -15,14 +15,21 @@
  */
 
 import org.apache.tools.ant.filters.ReplaceTokens
+import java.text.SimpleDateFormat
 
 sharedManifest = manifest {
+    Date buildTime = new Date()
     attributes(
         "Built-By": System.properties['user.name'],
         "Created-By": System.properties['java.vm.version'] + " (" + System.properties['java.vm.vendor'] + ")",
-        "Implementation-Version": version,
-        "Implementation-Vendor": 'griffon.codehaus.org'
-    )
+        "Build-Date": new SimpleDateFormat('dd-MMM-yyyy').format(buildTime),
+        "Build-Time": new SimpleDateFormat('hh:mm aa').format(buildTime),
+		"Specification-Title": 'Griffon, a Grails inspired desktop application development platform for the JVM',
+		"Specification-Version": project.version,
+		"Specification-Vendor": 'griffon.codehaus.org',
+		"Implementation-Title": 'Griffon, a Grails inspired desktop application development platform for the JVM',
+		"Implementation-Version": project.version,
+		"Implementation-Vendor": 'griffon.codehaus.org')
 }
 
 tasks.withType(Jar).all {jar ->
@@ -39,7 +46,7 @@ task jarRt(type: Jar) {
     }
     manifest = project.manifest {
         from sharedManifest
-        attributes 'Implementation-Title': 'griffon-rt'
+        attributes 'Extension-Name': 'griffon-rt'
     }
     from sourceSets.rt.classes
 }
@@ -53,7 +60,7 @@ task jarCli(type: Jar) {
     }
     manifest = project.manifest {
         from sharedManifest
-        attributes 'Implementation-Title': 'griffon-cli'
+        attributes 'Extension-Name': 'griffon-cli'
     }
     from sourceSets.cli.classes
 }
@@ -63,7 +70,7 @@ task jarScripts(type: Jar) {
     appendix = 'scripts'
     manifest = project.manifest {
         from sharedManifest
-        attributes 'Implementation-Title': 'griffon-scripts'
+        attributes 'Extension-Name': 'griffon-scripts'
     }
     from sourceSets.scripts.classes
 }

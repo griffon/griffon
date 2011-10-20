@@ -155,8 +155,6 @@ public interface GriffonApplication extends ThreadingHandler, MVCHandler {
 
     void setConfig(ConfigObject config);
 
-    Object getConfigValue(String key);
-
     /**
      * Gets the script class that holds builder configuration (i.e. {@code Builder.groovy})
      */
@@ -184,28 +182,6 @@ public interface GriffonApplication extends ThreadingHandler, MVCHandler {
     Binding getBindings();
 
     void setBindings(Binding bindings);
-
-    /**
-     * Return's the set of available MVC groups.
-     *
-     * @return a Map of all groups available in the application's configuration.
-     */
-    Map<String, Map<String, String>> getMvcGroups();
-
-    /**
-     * Register an MVC group for instantiation.<p>
-     *
-     * @param mvcType     the group type, e.g.  'main' or 'navigation'
-     * @param mvcPortions all group members keyed by type.
-     */
-    void addMvcGroup(String mvcType, Map<String, String> mvcPortions);
-
-    /**
-     * Returns the application's AddonManager instance.
-     *
-     * @return the application's AddonManager
-     */
-    AddonManager getAddonManager();
 
     /**
      * Returns all currently available model instances, keyed by group name.<p>
@@ -236,11 +212,39 @@ public interface GriffonApplication extends ThreadingHandler, MVCHandler {
     Map<String, ? extends FactoryBuilderSupport> getBuilders();
 
     /**
+     * Returns all currently available service instances, keyed by group name.<p>
+     *
+     * @return a Map of all currently instantiated services.
+     */
+    Map<String, ? extends GriffonService> getServices();
+
+    /**
      * Returns all currently available groups, keyed by group name.<p>
      *
      * @return a Map of all currently instantiated groups.
      */
-    Map<String, Map<String, Object>> getGroups();
+    Map<String, MVCGroup> getGroups();
+
+    /**
+     * Returns the application's AddonManager instance.
+     *
+     * @return the application's AddonManager
+     */
+    AddonManager getAddonManager();
+
+    /**
+     * Returns the application's MVCGroupManager instance.
+     *
+     * @return the application's MVCGroupManager
+     */
+    MVCGroupManager getMvcGroupManager();
+
+    /**
+     * Returns the application's ServiceManager instance.
+     *
+     * @return the application's ServiceManager
+     */
+    ServiceManager getServiceManager();
 
     Object createApplicationContainer();
 

@@ -40,9 +40,9 @@ createArtifact = { Map args = [:] ->
     def type = args['type']
     def template = args['template'] ?: type
     def artifactPath = args['path']
-    if(args['fileType']) fileType = args['fileType']
-    def lineTerminator = args["lineTerminator"] ?: (fileType != '.groovy'? ';' : '')
-    
+    if (args['fileType']) fileType = args['fileType']
+    def lineTerminator = args["lineTerminator"] ?: (fileType != '.groovy' ? ';' : '')
+
     def typeProperty = GriffonNameUtils.uncapitalize(type)
     template = argsMap[typeProperty] && templateExists(argsMap[typeProperty], fileType) ? argsMap[typeProperty] : template
 
@@ -71,45 +71,45 @@ createArtifact = { Map args = [:] ->
     defaultArtifactFile = "${basedir}/${artifactPath}/${pkgPath}${className}${suffix}.groovy"
 
     templateFile = resolveTemplate(template, fileType)
-    if(!templateFile?.exists() && fileType != '.groovy') {
+    if (!templateFile?.exists() && fileType != '.groovy') {
         templateFile = resolveTemplate(template, '.groovy')
         lineTerminator = ''
     }
 
-    if(!templateFile?.exists()) {
+    if (!templateFile?.exists()) {
         event('StatusFinal', ["Could not locate a suitable template for $artifactFile"])
         exit(1)
     }
 
     def similarFiles = resolveResources("file:${basedir}/${artifactPath}/${pkgPath}${className}${suffix}.*")
-    if(similarFiles) {
+    if (similarFiles) {
         def fileSuffix = similarFiles[0].file.name.substring(similarFiles[0].file.name.lastIndexOf('.'))
-        if(fileSuffix == fileType) {
-            if(!replaceNonag && !confirmInput("${type} ${className}${suffix}${fileType} already exists. Overwrite?","${artifactName}.${suffix}.overwrite")) {
+        if (fileSuffix == fileType) {
+            if (!replaceNonag && !confirmInput("${type} ${className}${suffix}${fileType} already exists. Overwrite?", "${artifactName}.${suffix}.overwrite")) {
                 return
-            }        
-        } else if(!allowDuplicate) {
-            if(!replaceNonag && !confirmInput("${type} ${className}${suffix} already exists with type ${fileSuffix}. Rename?","${artifactName}.${suffix}.rename")) {
+            }
+        } else if (!allowDuplicate) {
+            if (!replaceNonag && !confirmInput("${type} ${className}${suffix} already exists with type ${fileSuffix}. Rename?", "${artifactName}.${suffix}.rename")) {
                 return
             }
             // WATCH OUT!! can cause problems with VCS systems
             ant.mkdir(dir: "${basedir}/renamed")
-            ant.move(tofile: "${basedir}/renamed/${className}${suffix}${fileSuffix}", file: similarFiles[0].file)        
+            ant.move(tofile: "${basedir}/renamed/${className}${suffix}${fileSuffix}", file: similarFiles[0].file)
         }
-    } else if(replaceNonag) {
+    } else if (replaceNonag) {
         event('StatusFinal', ["${basedir}/${artifactPath}/${pkgPath}${className}${suffix} cannot be replaced because it does not exist."])
-        exit(1)    
+        exit(1)
     }
 
     copyGriffonResource(artifactFile, templateFile)
     ant.replace(file: artifactFile) {
-        replacefilter(token: "@artifact.name@", value: "${className}${suffix}" )
-        replacefilter(token: "@artifact.name.plain@", value: className )
-        replacefilter(token: "@artifact.suffix@", value: suffix )
-        replacefilter(token: "@griffon.app.class.name@", value: appClassName )
+        replacefilter(token: "@artifact.name@", value: "${className}${suffix}")
+        replacefilter(token: "@artifact.name.plain@", value: className)
+        replacefilter(token: "@artifact.suffix@", value: suffix)
+        replacefilter(token: "@griffon.app.class.name@", value: appClassName)
         replacefilter(token: "@griffon.version@", value: griffonVersion)
         replacefilter(token: "@griffon.project.name@", value: griffonAppName)
-        replacefilter(token: "@griffon.project.key@", value: griffonAppName.replaceAll( /\s/, '.' ).toLowerCase())
+        replacefilter(token: "@griffon.project.key@", value: griffonAppName.replaceAll(/\s/, '.').toLowerCase())
     }
     if (artifactPkg) {
         ant.replace(file: artifactFile, token: "@artifact.package@", value: "package ${artifactPkg}${lineTerminator}\n\n")
@@ -127,7 +127,7 @@ createArtifact = { Map args = [:] ->
 
 templateExists = { template, fileType ->
     def templateFile = resolveTemplate(template, fileType)
-    if(!templateFile?.exists() && fileType != '.groovy') {
+    if (!templateFile?.exists() && fileType != '.groovy') {
         templateFile = resolveTemplate(template, '.groovy')
     }
     templateFile.exists()
@@ -159,15 +159,15 @@ resolveTemplate = { template, fileSuffix ->
 }
 
 createDefaultPackage = {
-    if(!defaultPackageName) defaultPackageName = buildConfig.app.defaultPackageName
-    if(!defaultPackageName) {
-        if(griffonAppName.indexOf('.') != -1) {
+    if (!defaultPackageName) defaultPackageName = buildConfig.app.defaultPackageName
+    if (!defaultPackageName) {
+        if (griffonAppName.indexOf('.') != -1) {
             int pos = griffonAppName.lastIndexOf('.')
             defaultPackageName = griffonAppName[0..<pos].toLowerCase()
-            griffonAppName = griffonAppName[(pos+1)..-1]
+            griffonAppName = griffonAppName[(pos + 1)..-1]
         } else {
-            defaultPackageName = (buildConfig.griffon.project.groupId ?: griffonAppName).replace('-','.').toLowerCase() 
-        }   
+            defaultPackageName = (buildConfig.griffon.project.groupId ?: griffonAppName).replace('-', '.').toLowerCase()
+        }
     }
     defaultPackageName
 }
@@ -190,18 +190,18 @@ promptForName = { Map args = [:] ->
 }
 
 purgeRedundantArtifactSuffix = { name, suffix ->
-    if(!suffix) return name
+    if (!suffix) return name
     def newName = name
-    if(name && name =~ /.+$suffix$/) {
+    if (name && name =~ /.+$suffix$/) {
         newName = name.replaceAll(/$suffix$/, '')
     }
 
     // Also remove variations that start with the same sequence of letters
     // as the suffix UNLESS that would remove the entire artifact name.
-    if(name == newName) {
-        for(int i = name.length() - 1; i >= 0; i--) {
+    if (name == newName) {
+        for (int i = name.length() - 1; i >= 0; i--) {
             def str = name[i..-1]
-            if(suffix.startsWith(str) && !(newName - str).endsWith(".")) {
+            if (suffix.startsWith(str) && !(newName - str).endsWith(".")) {
                 newName -= str
                 break
             }
@@ -218,7 +218,7 @@ extractArtifactName = { name ->
     if (pos != -1) {
         artifactPkg = artifactName[0..<pos]
         artifactName = artifactName[(pos + 1)..-1]
-        if(artifactPkg.startsWith("~")) {
+        if (artifactPkg.startsWith("~")) {
             artifactPkg = artifactPkg.replace("~", createDefaultPackage())
         }
     } else {
@@ -230,16 +230,16 @@ extractArtifactName = { name ->
 
 target(resolveArchetype: '') {
     archetype = buildConfig.app.archetype
-    if(!archetype && archetype instanceof ConfigObject) archetype = null
+    if (!archetype && archetype instanceof ConfigObject) archetype = null
     archetype = archetype ?: argsMap.archetype
     archetype = archetype ?: 'default'
 }
 
 target(resolveFileType: '') {
     def cfileType = buildConfig.app.fileType
-    if(!cfileType && cfileType instanceof ConfigObject) cfileType = null
+    if (!cfileType && cfileType instanceof ConfigObject) cfileType = null
     fileType = argsMap.fileType ?: (cfileType ?: 'groovy')
-    if(!fileType.startsWith('.')) fileType = '.'+fileType
+    if (!fileType.startsWith('.')) fileType = '.' + fileType
 }
 
 loadArchetypeFor = { type = 'application' ->
@@ -247,22 +247,28 @@ loadArchetypeFor = { type = 'application' ->
 
     def gcl = new GroovyClassLoader(classLoader)
     def archetypeFile = new FileSystemResource("${griffonWorkDir}/archetypes/${archetype}/${type}.groovy")
-    if(!archetypeFile.exists()) {
+    if (!archetypeFile.exists()) {
         archetypeFile = griffonResource("archetypes/${archetype}/${type}.groovy")
     }
 
-    if(archetypeFile.exists()) {
+    if (archetypeFile.exists()) {
         try {
-            includeTargets << gcl.parseClass(archetypeFile.file) 
-        } catch(Exception e) {
+            if (archetypeFile instanceof FileSystemResource) {
+                includeTargets << gcl.parseClass(archetypeFile.file)
+            } else if (archetypeFile instanceof ClassPathResource) {
+                includeTargets << gcl.parseClass(archetypeFile.getURL().text)
+            } else {
+                throw new IllegalArgumentException("Don't know how to deal with $archetypeFile")
+            }
+        } catch (Exception e) {
             logError("An error ocurred while parsing archetype ${archetype}. Using 'default' archetype instead.", e)
             archetype = 'default'
             archetypeFile = new ClassPathResource("archetypes/default/${type}.groovy")
-            includeTargets << gcl.parseClass(archetypeFile.getURL().text) 
+            includeTargets << gcl.parseClass(archetypeFile.getURL().text)
         }
     } else {
         archetype = 'default'
         archetypeFile = new ClassPathResource("archetypes/default/${type}.groovy")
-        includeTargets << gcl.parseClass(archetypeFile.getURL().text) 
+        includeTargets << gcl.parseClass(archetypeFile.getURL().text)
     }
 }

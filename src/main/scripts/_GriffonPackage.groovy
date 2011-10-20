@@ -47,7 +47,7 @@ target(createConfig: "Creates the configuration object") {
     configTweaks.each {tweak -> tweak() }
 }
 
-target(packageApp : "Implementation of package target") {
+target(packageApp: "Implementation of package target") {
     depends(createStructure)
 
     try {
@@ -55,8 +55,8 @@ target(packageApp : "Implementation of package target") {
             compile()
         }
     }
-    catch(Exception e) {
-        logError("Compilation error",e)
+    catch (Exception e) {
+        logError("Compilation error", e)
         exit(1)
     }
     profile("creating config") {
@@ -65,9 +65,9 @@ target(packageApp : "Implementation of package target") {
 
     // flag if <application>.jar is up to date
     jardir = ant.antProject.replaceProperties(buildConfig.griffon.jars.destDir)
-    ant.uptodate(property:'appJarUpToDate', targetfile:"${jardir}/${buildConfig.griffon.jars.jarName}") {
-        srcfiles(dir:"${basedir}/griffon-app/", includes:"**/*")
-        srcfiles(dir:"$classesDirPath", includes:"**/*")
+    ant.uptodate(property: 'appJarUpToDate', targetfile: "${jardir}/${buildConfig.griffon.jars.jarName}") {
+        srcfiles(dir: "${basedir}/griffon-app/", includes: "**/*")
+        srcfiles(dir: "$classesDirPath", includes: "**/*")
     }
 
     packageResources()
@@ -77,73 +77,73 @@ target(packageApp : "Implementation of package target") {
     _copyLibs()
     jarFiles()
 
-    event("PackagingEnd",[])
+    event("PackagingEnd", [])
 }
 
-target(packageResources : "Presp app/plugin resources for packaging") {
+target(packageResources: "Presp app/plugin resources for packaging") {
     i18nDir = new File("${resourcesDirPath}/griffon-app/i18n")
-    ant.mkdir(dir:i18nDir)
+    ant.mkdir(dir: i18nDir)
 
     resourcesDir = new File("${resourcesDirPath}/griffon-app/resources")
-    ant.mkdir(dir:resourcesDir)
+    ant.mkdir(dir: resourcesDir)
 
-    if(!isPluginProject || isAddonPlugin) collectArtifactMetadata()
+    if (!isPluginProject || isAddonPlugin) collectArtifactMetadata()
 
-    if(buildConfig.griffon.enable.native2ascii) {
+    if (buildConfig.griffon.enable.native2ascii) {
         profile("converting native message bundles to ascii") {
-            ant.native2ascii(src:"${basedir}/griffon-app/i18n",
-                             dest:i18nDir,
-                             includes:"*.properties",
-                             encoding:"UTF-8")
-            ant.native2ascii(src:"${basedir}/griffon-app/resources",
-                             dest:resourcesDir,
-                             includes:"*.properties",
-                             encoding:"UTF-8")
+            ant.native2ascii(src: "${basedir}/griffon-app/i18n",
+                    dest: i18nDir,
+                    includes: "*.properties",
+                    encoding: "UTF-8")
+            ant.native2ascii(src: "${basedir}/griffon-app/resources",
+                    dest: resourcesDir,
+                    includes: "*.properties",
+                    encoding: "UTF-8")
         }
     }
     else {
-        ant.copy(todir:i18nDir) {
-            fileset(dir:"${basedir}/griffon-app/i18n", includes:"*.properties")
+        ant.copy(todir: i18nDir) {
+            fileset(dir: "${basedir}/griffon-app/i18n", includes: "*.properties")
         }
-        ant.copy(todir:resourcesDir) {
-            fileset(dir:"${basedir}/griffon-app/resources", includes:"*.properties")
-        }
-    }
-    ant.copy(todir:i18nDir) {
-            fileset(dir:"${basedir}/griffon-app/i18n", includes:"*.groovy")
-        }
-    ant.copy(todir:resourcesDir) {
-        fileset(dir:"${basedir}/griffon-app/resources", includes:"**/*.*", excludes:"**/*.properties" )
-        fileset(dir:"${basedir}/src/main") {
-            include(name:"**/*")
-            exclude(name:"**/*.java")
-            exclude(name:"**/*.groovy")
+        ant.copy(todir: resourcesDir) {
+            fileset(dir: "${basedir}/griffon-app/resources", includes: "*.properties")
         }
     }
-    ant.copy(todir:classesDirPath) {
-        fileset(dir:"${basedir}", includes:metadataFile.name)
+    ant.copy(todir: i18nDir) {
+        fileset(dir: "${basedir}/griffon-app/i18n", includes: "*.groovy")
+    }
+    ant.copy(todir: resourcesDir) {
+        fileset(dir: "${basedir}/griffon-app/resources", includes: "**/*.*", excludes: "**/*.properties")
+        fileset(dir: "${basedir}/src/main") {
+            include(name: "**/*")
+            exclude(name: "**/*.java")
+            exclude(name: "**/*.groovy")
+        }
+    }
+    ant.copy(todir: classesDirPath) {
+        fileset(dir: "${basedir}", includes: metadataFile.name)
     }
 
     // GRIFFON-189 add environment info to metadata
     def metaFile = new File(classesDirPath, metadataFile.name)
     updateMetadata(metaFile, (Environment.KEY): Environment.current.name)
 
-    ant.copy(todir:resourcesDirPath, failonerror:false) {
-        fileset(dir:"${basedir}/griffon-app/conf", includes:"**", excludes:"*.groovy, log4j*, webstart")
-        fileset(dir:"${basedir}/src/main") {
-            include(name:"**/**")
-            exclude(name:"**/*.java")
-            exclude(name:"**/*.groovy")
+    ant.copy(todir: resourcesDirPath, failonerror: false) {
+        fileset(dir: "${basedir}/griffon-app/conf", includes: "**", excludes: "*.groovy, log4j*, webstart")
+        fileset(dir: "${basedir}/src/main") {
+            include(name: "**/**")
+            exclude(name: "**/*.java")
+            exclude(name: "**/*.groovy")
         }
     }
 }
 
 collectArtifactMetadata = {
     def artifactPaths = [
-        [type: "model",      path: "models",      suffix: "Model"],
-        [type: "view",       path: "views",       suffix: "View"],
-        [type: "controller", path: "controllers", suffix: "Controller"],
-        [type: "service",    path: "services",    suffix: "Service"]
+            [type: "model", path: "models", suffix: "Model"],
+            [type: "view", path: "views", suffix: "View"],
+            [type: "controller", path: "controllers", suffix: "Controller"],
+            [type: "service", path: "services", suffix: "Service"]
     ]
 
     event("CollectArtifacts", [artifactPaths])
@@ -155,11 +155,11 @@ collectArtifactMetadata = {
     searchPath.eachFileRecurse { file ->
         artifactPaths.find { entry ->
             def fixedPath = file.path - searchPath.canonicalPath //fix problem when project inside dir "jobs" (eg. hudson stores projects under jobs-directory)
-            if(fixedPath =~ entry.path && file.isFile()) {
-                def klass = fixedPath.substring(2 + entry.path.size()).replace(File.separator,".")
+            if (fixedPath =~ entry.path && file.isFile()) {
+                def klass = fixedPath.substring(2 + entry.path.size()).replace(File.separator, ".")
                 klass = klass.substring(0, klass.lastIndexOf("."))
-                if(entry.suffix) {
-                    if(klass.endsWith(entry.suffix)) artifacts.get(entry.type, []) << klass
+                if (entry.suffix) {
+                    if (klass.endsWith(entry.suffix)) artifacts.get(entry.type, []) << klass
                 } else {
                     artifacts.get(entry.type, []) << klass
                 }
@@ -167,19 +167,19 @@ collectArtifactMetadata = {
         }
     }
 
-    if(artifacts) {
+    if (artifacts) {
         File artifactMetadataDir = new File("${resourcesDirPath}/griffon-app/resources/META-INF")
         artifactMetadataDir.mkdirs()
         File artifactMetadataFile = new File(artifactMetadataDir, '/griffon-artifacts.properties')
         artifactMetadataFile.withPrintWriter { writer ->
             artifacts.each { type, list ->
-               writer.println("$type = '${list.join(',')}'")
+                writer.println("$type = '${list.join(',')}'")
             }
         }
     }
 }
 
-target(checkKey: "Check to see if the keystore exists")  {
+target(checkKey: "Check to see if the keystore exists") {
     if (buildConfig.griffon.jars.sign) {
         // check for passwords
         // pw is echoed, but jarsigner does that too...
@@ -196,7 +196,7 @@ target(checkKey: "Check to see if the keystore exists")  {
         if (!(new File(ant.antProject.replaceProperties(buildConfig.signingkey.params.keystore)).exists())) {
             println "Auto-generating a local self-signed key"
             Map genKeyParams = [:]
-            genKeyParams.dname =  'CN=Auto Gen Self-Signed Key -- Not for Production, OU=Development, O=Griffon'
+            genKeyParams.dname = 'CN=Auto Gen Self-Signed Key -- Not for Production, OU=Development, O=Griffon'
             for (key in ['alias', 'storepass', 'keystore', 'storetype', 'keypass', 'sigalg', 'keyalg', 'verbose', 'dname', 'validity', 'keysize']) {
                 if (buildConfig.signingkey.params."$key") {
                     genKeyParams[key] = buildConfig.signingkey.params[key]
@@ -208,27 +208,27 @@ target(checkKey: "Check to see if the keystore exists")  {
 }
 
 target(jarFiles: "Jar up the package files") {
-    if(argsMap['jar']) return
+    if (argsMap['jar']) return
     boolean upToDate = ant.antProject.properties.appJarUpToDate
-    ant.mkdir(dir:jardir)
+    ant.mkdir(dir: jardir)
 
     String destFileName = "$jardir/${buildConfig.griffon.jars.jarName}"
     metainfDirPath = new File("${basedir}/griffon-app/conf/metainf")
-    if(Environment.current == Environment.DEVELOPMENT && !metainfDirPath.list() && RunMode.current == RunMode.STANDALONE) {
+    if (Environment.current == Environment.DEVELOPMENT && !metainfDirPath.list() && RunMode.current == RunMode.STANDALONE) {
         ant.delete(file: destFileName, quiet: true, failonerror: false)
         return
     }
 
     if (!upToDate) {
         mergeManifest()
-        ant.jar(destfile:destFileName) {
-            fileset(dir:classesDirPath) {
-                exclude(name:'BuildConfig*.class')
-                exclude(name:'*GriffonPlugin.class')
+        ant.jar(destfile: destFileName) {
+            fileset(dir: classesDirPath) {
+                exclude(name: 'BuildConfig*.class')
+                exclude(name: '*GriffonPlugin.class')
             }
-            fileset(dir:i18nDir)
-            fileset(dir:resourcesDir)
-            if(metainfDirPath.list()) {
+            fileset(dir: i18nDir)
+            fileset(dir: resourcesDir)
+            if (metainfDirPath.list()) {
                 metainf(dir: metainfDirPath)
             }
             manifest {
@@ -248,14 +248,14 @@ target(jarFiles: "Jar up the package files") {
 target(mergeManifest: 'Generates a Manifest with default and custom settings') {
     String mainClass = RunMode.current != RunMode.APPLET ? griffonApplicationClass : griffonAppletClass
     manifestMap = [
-        'Main-Class': mainClass,
-        'Built-By': System.properties['user.name'],
-        'Build-Date': new SimpleDateFormat('dd-MM-yyyy HH:mm:ss').format(new Date()),
-        'Created-By': System.properties['java.vm.version'] +' ('+ System.properties['java.vm.vendor'] +')',
-        'Griffon-Version': Metadata.current.getGriffonVersion(),
-        'Implementation-Title': capitalize(Metadata.current.getApplicationName()),
-        'Implementation-Version': Metadata.current.getApplicationVersion(),
-        'Implementation-Vendor': capitalize(Metadata.current.getApplicationName())
+            'Main-Class': mainClass,
+            'Built-By': System.properties['user.name'],
+            'Build-Date': new SimpleDateFormat('dd-MM-yyyy HH:mm:ss').format(new Date()),
+            'Created-By': System.properties['java.vm.version'] + ' (' + System.properties['java.vm.vendor'] + ')',
+            'Griffon-Version': Metadata.current.getGriffonVersion(),
+            'Implementation-Title': capitalize(Metadata.current.getApplicationName()),
+            'Implementation-Version': Metadata.current.getApplicationVersion(),
+            'Implementation-Vendor': capitalize(Metadata.current.getApplicationName())
     ]
     buildConfig.griffon.jars.manifest?.each { k, v ->
         manifestMap[k] = v
@@ -267,18 +267,18 @@ _copyLibs = {
     event("CopyLibsStart", [jardir])
 
 // XXX -- NATIVE 
-    copyPlatformJars("${basedir}/lib", new File(jardir).absolutePath) 
-    copyNativeLibs("${basedir}/lib", new File(jardir).absolutePath) 
+    copyPlatformJars("${basedir}/lib", new File(jardir).absolutePath)
+    copyNativeLibs("${basedir}/lib", new File(jardir).absolutePath)
     doWithPlugins { pluginName, pluginVersion, pluginDir ->
-        copyPlatformJars("${pluginDir}/lib", new File(jardir).absolutePath) 
-        copyNativeLibs("${pluginDir}/lib", new File(jardir).absolutePath) 
+        copyPlatformJars("${pluginDir}/lib", new File(jardir).absolutePath)
+        copyNativeLibs("${pluginDir}/lib", new File(jardir).absolutePath)
     }
 // XXX -- NATIVE 
 
     griffonSettings.runtimeDependencies?.each { File f ->
         griffonCopyDist(f.absolutePath, jardir)
     }
-    
+
     event("CopyLibsEnd", [jardir])
 }
 
@@ -286,7 +286,7 @@ _copyLibs = {
  * The presence of a .SF, .DSA, or .RSA file in meta-inf means yes
  */
 boolean isJarSigned(File jarFile, File targetFile) {
-    File fileToSearch  = targetFile.exists() ? targetFile : jarFile
+    File fileToSearch = targetFile.exists() ? targetFile : jarFile
 
     ZipFile zf = new ZipFile(fileToSearch)
     try {
@@ -320,15 +320,15 @@ griffonCopyDist = { jarname, targetDir, boolean force = false ->
     // long originalLastMod = targetFile.lastModified()
     force = force || !(buildConfig.signingkey?.params?.lazy)
 
-    ant.copy(file:srcFile, toFile:targetFile, overwrite:force)
+    ant.copy(file: srcFile, toFile: targetFile, overwrite: force)
 
     maybePackAndSign(srcFile, targetFile, force)
 }
 
 maybePackAndSign = {srcFile, targetFile = srcFile, boolean force = false ->
-    if(!srcFile.name.endsWith('.jar')) return
+    if (!srcFile.name.endsWith('.jar')) return
     // GRIFFON-118 required for avoiding signing jars twice when using jar package target
-    if(_skipSigning/* && !force*/) return
+    if (_skipSigning/* && !force*/) return
 
     // we may already be copied, but not packed or signed
     // first see if the config calls for packing or signing
@@ -360,14 +360,14 @@ maybePackAndSign = {srcFile, targetFile = srcFile, boolean force = false ->
     //TODO strip old signatures?
 
     def packOptions = [
-        '-mlatest', // smaller files, set modification time on the files to latest
-        '-Htrue', // smaller files, always use DEFLATE hint
-        '--segment-limit=-1', // unlimited segmenting
+            '-mlatest', // smaller files, set modification time on the files to latest
+            '-Htrue', // smaller files, always use DEFLATE hint
+            '--segment-limit=-1', // unlimited segmenting
     ]
 
     debug("Jar $targetFile")
     debug("pack: $doJarPacking, sign: $doJarSigning")
-    if(doJarPacking) debug("Pack options $packOptions")
+    if (doJarPacking) debug("Pack options $packOptions")
 
     def signJarParams = [:]
     // prep sign jar params
@@ -381,7 +381,7 @@ maybePackAndSign = {srcFile, targetFile = srcFile, boolean force = false ->
         signJarParams.jar = targetFile.path
 
         // GRIFFON-294 remove signatures from jar
-        if(jarIsSigned && configSaysUnsignJar) {
+        if (jarIsSigned && configSaysUnsignJar) {
             def unpackDir = new File(griffonTmp, srcFile.name[0..-5])
             ant.delete(dir: unpackDir, quiet: true, failonerror: false)
             ant.unjar(src: targetFile, dest: unpackDir)
@@ -397,12 +397,12 @@ maybePackAndSign = {srcFile, targetFile = srcFile, boolean force = false ->
 
     // repack so we can sign pack200
     if (doJarPacking) {
-        ant.exec(executable:'pack200') {
+        ant.exec(executable: 'pack200') {
             for (option in packOptions) {
-                arg(value:option)
+                arg(value: option)
             }
-            arg(value:'--repack')
-            arg(value:targetFile)
+            arg(value: '--repack')
+            arg(value: targetFile)
         }
     }
 
@@ -410,15 +410,15 @@ maybePackAndSign = {srcFile, targetFile = srcFile, boolean force = false ->
     if (doJarSigning && doJarPacking) {
         ant.signjar(signJarParams)
     }
-  
+
     // repack so we can sign pack200
     if (doJarPacking) {
-        ant.exec(executable:'pack200') {
+        ant.exec(executable: 'pack200') {
             for (option in packOptions) {
-                arg(value:option)
+                arg(value: option)
             }
-            arg(value:'--repack')
-            arg(value:targetFile)
+            arg(value: '--repack')
+            arg(value: targetFile)
         }
     }
 
@@ -429,12 +429,12 @@ maybePackAndSign = {srcFile, targetFile = srcFile, boolean force = false ->
 
     // pack jar for real
     if (doJarPacking) {
-        ant.exec(executable:'pack200') {
+        ant.exec(executable: 'pack200') {
             for (option in packOptions) {
-                arg(value:option)
+                arg(value: option)
             }
-            arg(value:"${targetFile}.pack.gz")
-            arg(value:targetFile)
+            arg(value: "${targetFile}.pack.gz")
+            arg(value: targetFile)
         }
 
         //TODO? validate packed jar is signed properly
@@ -448,9 +448,9 @@ maybePackAndSign = {srcFile, targetFile = srcFile, boolean force = false ->
     return targetFile
 }
 
-target(generateJNLP:"Generates the JNLP File") {
-    ant.copy (todir:jardir, overwrite:true) {
-        fileset(dir:"${basedir}/griffon-app/conf/webstart")
+target(generateJNLP: "Generates the JNLP File") {
+    ant.copy(todir: jardir, overwrite: true) {
+        fileset(dir: "${basedir}/griffon-app/conf/webstart")
     }
 
     jnlpJars = []
@@ -482,7 +482,7 @@ target(generateJNLP:"Generates the JNLP File") {
     }
     new File(jardir).eachFileMatch(~/.*\.jar/) { f ->
         if (!(f.name =~ /griffon-rt-.*/) && !remoteJars.contains(f.name)) {
-            if(buildConfig.griffon.jars.jarName == f.name){
+            if (buildConfig.griffon.jars.jarName == f.name) {
                 jnlpJars << "        <jar href='$f.name' main='${appJarIsMain}' />"
             } else {
                 jnlpJars << "        <jar href='$f.name'/>"
@@ -493,10 +493,10 @@ target(generateJNLP:"Generates the JNLP File") {
     }
     buildConfig.griffon.extensions?.resources?.each { osKey, values ->
         jnlpResources << "<resources os='${PlatformUtils.PLATFORMS[osKey].webstartName}'>" // TODO resolve arch
-        for(j in values?.jars) jnlpResources << "    <jar href='$j' />"
-        for(l in values?.nativelibs) jnlpResources << "    <nativelib href='$l' />"
-        for(p in values?.props) jnlpResources << "    <property name='${p.key}' value='${p.value}' />"
-        if(values.j2se) {
+        for (j in values?.jars) jnlpResources << "    <jar href='$j' />"
+        for (l in values?.nativelibs) jnlpResources << "    <nativelib href='$l' />"
+        for (p in values?.props) jnlpResources << "    <property name='${p.key}' value='${p.value}' />"
+        if (values.j2se) {
             jnlpResources << "    <j2se "
             values.j2se.each { k, v -> jnlpResources << "        $k='$v'" }
             jnlpResources << "    />"
@@ -506,7 +506,7 @@ target(generateJNLP:"Generates the JNLP File") {
     buildConfig.griffon?.extensions?.props?.each { propName, propValue ->
         jnlpProperties << "    <property name='$propName' value='$propValue' />"
     }
-    if(buildConfig.griffon?.extensions?.j2se) {
+    if (buildConfig.griffon?.extensions?.j2se) {
         jnlpProperties << "    <j2se "
         buildConfig.griffon.extensions.j2se.each { k, v -> jnlpProperties << "        $k='$v'" }
         jnlpProperties << "    />"
@@ -520,13 +520,13 @@ target(generateJNLP:"Generates the JNLP File") {
 
 // XXX -- NATIVE
     doForAllPlatforms { platformDir, platformOs ->
-        if(platformDir.list()) {
+        if (platformDir.list()) {
             jnlpResources << "<resources os='${PlatformUtils.PLATFORMS[platformOs].webstartName}' arch='${osArch}'>"
             platformDir.eachFileMatch(~/.*\.jar/) { f ->
                 jnlpResources << "    <jar href='${platformOs}/${f.name}' />"
             }
             def nativeLibDir = new File(platformDir.absolutePath, 'native')
-            if(nativeLibDir.exists() && nativeLibDir.list()) {
+            if (nativeLibDir.exists() && nativeLibDir.list()) {
                 nativeLibDir.eachFileMatch(~/.*\.jar/) { f ->
                     jnlpResources << "    <nativelib href='${platformOs}/native/${f.name}' />"
                     maybePackAndSign(f, f, true)
@@ -553,36 +553,76 @@ target(generateJNLP:"Generates the JNLP File") {
 }
 
 doPackageTextReplacement = {dir, fileFilters ->
-    ant.fileset(dir:dir, includes:fileFilters).each {
+    ant.fileset(dir: dir, includes: fileFilters).each {
         String fileName = it.toString()
         ant.replace(file: fileName) {
-            replacefilter(token:"@griffonAppletClass@", value: griffonAppletClass)
-            replacefilter(token:"@griffonApplicationClass@", value: griffonApplicationClass)
-            replacefilter(token:"@griffonAppName@", value: capitalize(griffonAppName) )
-            replacefilter(token:"@griffonAppVersion@", value: griffonAppVersion )
-            replacefilter(token:"@griffonAppCodebase@", value: buildConfig.griffon.webstart.codebase)
-            replacefilter(token:"@jnlpFileName@", value: new File(fileName).name )
-            replacefilter(token:"@jnlpJars@", value:jnlpJars.join('\n') )
-            replacefilter(token:"@jnlpExtensions@", value:jnlpExtensions.join('\n'))
-            replacefilter(token:"@jnlpProperties@", value:jnlpProperties.join('\n'))
-            replacefilter(token:"@jnlpResources@", value:jnlpResources.join('\n'))
-            replacefilter(token:"@appletJars@", value:appletJars.join(',') )
-            replacefilter(token:"@memoryOptions@", value:memOptions.join(' ') )
-            replacefilter(token:"@applet.width@", value: argsMap.appletWidth ?: defaultAppletWidth )
-            replacefilter(token:"@applet.height@", value: argsMap.appletHeight ?: defaultAppletHeight )
-            replacefilter(token:"@applet.tag.params@", value: appletTagParams.join('\n') )
-            replacefilter(token:"@applet.script.params@", value: appletScriptParams.join(' ') )
+            replacefilter(token: "@griffonAppletClass@", value: griffonAppletClass)
+            replacefilter(token: "@griffonApplicationClass@", value: griffonApplicationClass)
+            replacefilter(token: "@griffonAppName@", value: capitalize(griffonAppName))
+            replacefilter(token: "@griffonAppVersion@", value: griffonAppVersion)
+            replacefilter(token: "@griffonAppCodebase@", value: buildConfig.griffon.webstart.codebase)
+            replacefilter(token: "@jnlpFileName@", value: new File(fileName).name)
+            replacefilter(token: "@jnlpJars@", value: jnlpJars.join('\n'))
+            replacefilter(token: "@jnlpExtensions@", value: jnlpExtensions.join('\n'))
+            replacefilter(token: "@jnlpProperties@", value: jnlpProperties.join('\n'))
+            replacefilter(token: "@jnlpResources@", value: jnlpResources.join('\n'))
+            replacefilter(token: "@appletJars@", value: appletJars.join(','))
+            replacefilter(token: "@memoryOptions@", value: memOptions.join(' '))
+            replacefilter(token: "@applet.width@", value: argsMap.appletWidth ?: defaultAppletWidth)
+            replacefilter(token: "@applet.height@", value: argsMap.appletHeight ?: defaultAppletHeight)
+            replacefilter(token: "@applet.tag.params@", value: appletTagParams.join('\n'))
+            replacefilter(token: "@applet.script.params@", value: appletScriptParams.join(' '))
+
+            String appTitle = capitalize(griffonAppName) + ' ' + griffonAppVersion
+            replacefilter(token: "@griffon.application.title@",
+                    value: buildConfig.deploy.application.title ?: appTitle)
+            replacefilter(token: "@griffon.application.vendor@",
+                    value: buildConfig.deploy.application.vendor ?: System.properties['user.name'])
+            replacefilter(token: "@griffon.application.homepage@",
+                    value: buildConfig.deploy.application.homepage ?: "http://localhost/$griffonAppName")
+            replacefilter(token: "@griffon.application.description.complete@",
+                    value: buildConfig.deploy.application.description.complete ?: appTitle)
+            replacefilter(token: "@griffon.application.description.oneline@",
+                    value: buildConfig.deploy.application.description.oneline ?: appTitle)
+            replacefilter(token: "@griffon.application.description.minimal@",
+                    value: buildConfig.deploy.application.description.minimal ?: appTitle)
+            replacefilter(token: "@griffon.application.description.tooltip@",
+                    value: buildConfig.deploy.application.description.tooltip ?: appTitle)
+            replacefilter(token: "@griffon.application.icon.fallback@",
+                    value: buildConfig.deploy.application.icon.fallback.name ?: 'griffon-icon-48x48.png')
+            replacefilter(token: "@griffon.application.icon.fallback.width@",
+                    value: buildConfig.deploy.application.icon.fallback.width ?: '48')
+            replacefilter(token: "@griffon.application.icon.fallback.height@",
+                    value: buildConfig.deploy.application.icon.fallback.height ?: '48')
+            replacefilter(token: "@griffon.application.icon.splash@",
+                    value: buildConfig.deploy.application.icon.splash.name ?: 'griffon.png')
+            replacefilter(token: "@griffon.application.icon.splash.width@",
+                    value: buildConfig.deploy.application.icon.splash.width ?: '381')
+            replacefilter(token: "@griffon.application.icon.splash.height@",
+                    value: buildConfig.deploy.application.icon.splash.height ?: '123')
+            replacefilter(token: "@griffon.application.icon.menu@",
+                    value: buildConfig.deploy.application.icon.menu.name ?: 'griffon-icon-16x16.png')
+            replacefilter(token: "@griffon.application.icon.menu.width@",
+                    value: buildConfig.deploy.application.icon.menu.width ?: '16')
+            replacefilter(token: "@griffon.application.icon.menu.height@",
+                    value: buildConfig.deploy.application.icon.menu.height ?: '16')
+            replacefilter(token: "@griffon.application.icon.desktop@",
+                    value: buildConfig.deploy.application.icon.desktop.name ?: 'griffon-icon-32x32.png')
+            replacefilter(token: "@griffon.application.icon.desktop.width@",
+                    value: buildConfig.deploy.application.icon.desktop.width ?: '32')
+            replacefilter(token: "@griffon.application.icon.desktop.height@",
+                    value: buildConfig.deploy.application.icon.desktop.height ?: '32')
         }
     }
 }
 
 copyPlatformJars = { srcdir, destdir ->
     def env = Environment.current
-    if(env == Environment.DEVELOPMENT || env == Environment.TEST) {
+    if (env == Environment.DEVELOPMENT || env == Environment.TEST) {
         String plf = platform
         File platformDir = new File(srcdir.toString() + File.separator + plf)
         _copyPlatformJars(srcdir.toString(), destdir.toString(), plf)
-        if(!platformDir.exists() && is64Bit) plf -= '64'
+        if (!platformDir.exists() && is64Bit) plf -= '64'
         _copyPlatformJars(srcdir.toString(), destdir.toString(), plf)
     } else {
         doForAllPlatforms { key, value ->
@@ -595,7 +635,7 @@ _copyPlatformJars = { srcdir, destdir, os ->
     File src = new File(srcdir + File.separator + os)
     File dest = new File(destdir + File.separator + os)
     dest.mkdirs()
-    if(src.exists()) {
+    if (src.exists()) {
         ant.mkdir(dir: dest)
         src.eachFileMatch(~/.*\.jar/) { jarfile ->
             griffonCopyDist(jarfile.toString(), dest.toString())
@@ -605,11 +645,11 @@ _copyPlatformJars = { srcdir, destdir, os ->
 
 copyNativeLibs = { srcdir, destdir ->
     def env = Environment.current
-    if(env == Environment.DEVELOPMENT || env == Environment.TEST) {
+    if (env == Environment.DEVELOPMENT || env == Environment.TEST) {
         String plf = platform
         File platformDir = new File(srcdir.toString() + File.separator + plf)
         _copyNativeLibs(srcdir.toString(), destdir.toString(), plf)
-        if(!platformDir.exists() && is64Bit) plf -= '64'
+        if (!platformDir.exists() && is64Bit) plf -= '64'
         _copyNativeLibs(srcdir.toString(), destdir.toString(), plf)
     } else {
         doForAllPlatforms { key, value ->
@@ -622,10 +662,10 @@ _copyNativeLibs = { srcdir, destdir, os ->
     File src = new File([srcdir, os, 'native'].join(File.separator))
     File dest = new File([destdir, os, 'native'].join(File.separator))
     dest.mkdirs()
-    if(src.exists()) {
+    if (src.exists()) {
         ant.mkdir(dir: dest)
         src.eachFile { srcFile ->
-            if(srcFile.toString().endsWith(PlatformUtils.PLATFORMS[os].nativelib) || srcFile.toString().endsWith('.jar')) {
+            if (srcFile.toString().endsWith(PlatformUtils.PLATFORMS[os].nativelib) || srcFile.toString().endsWith('.jar')) {
                 griffonCopyDist(srcFile.toString(), dest.absolutePath)
             }
         }

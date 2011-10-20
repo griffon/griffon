@@ -12,10 +12,11 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- */ 
+ */
 package org.codehaus.griffon.runtime.core;
 
 import griffon.core.GriffonApplication;
+import griffon.core.GriffonModel;
 import griffon.core.GriffonModelClass;
 import griffon.util.GriffonClassUtils;
 import griffon.util.GriffonNameUtils;
@@ -28,13 +29,12 @@ import java.util.Set;
 
 /**
  * @author Andres Almiray
- *
  * @since 0.9.1
  */
 public class DefaultGriffonModelClass extends DefaultGriffonClass implements GriffonModelClass {
     protected final Set<String> propertiesCache = new LinkedHashSet<String>();
     private static final Set<String> BINDABLE_PROPERTIES = new LinkedHashSet<String>(
-        Arrays.asList("propertyChangeListeners", "vetoableChangeListeners"));
+            Arrays.asList("propertyChangeListeners", "vetoableChangeListeners"));
 
     public DefaultGriffonModelClass(GriffonApplication app, Class<?> clazz) {
         super(app, clazz, TYPE, TRAILING);
@@ -46,31 +46,39 @@ public class DefaultGriffonModelClass extends DefaultGriffonClass implements Gri
     }
 
     public String[] getPropertyNames() {
-        if(propertiesCache.isEmpty()) {
-            for(String propertyName : getPropertiesWithFields()) {
-                 if(!propertiesCache.contains(propertyName) &&
-                    !GriffonClassUtils.isEventHandler(propertyName) &&
-                    getPropertyValue(propertyName, Closure.class) == null &&
-                    !STANDARD_PROPERTIES.contains(propertyName) &&
-                    !BINDABLE_PROPERTIES.contains(propertyName)) {
-                     propertiesCache.add(propertyName);
-                 }
+        if (propertiesCache.isEmpty()) {
+            for (String propertyName : getPropertiesWithFields()) {
+                if (!propertiesCache.contains(propertyName) &&
+                        !GriffonClassUtils.isEventHandler(propertyName) &&
+                        getPropertyValue(propertyName, Closure.class) == null &&
+                        !STANDARD_PROPERTIES.contains(propertyName) &&
+                        !BINDABLE_PROPERTIES.contains(propertyName)) {
+                    propertiesCache.add(propertyName);
+                }
             }
-            for(MetaProperty p : getMetaProperties()) {
-                 String propertyName = p.getName();
-                 if(GriffonClassUtils.isGetter(p, true)) {
-                     propertyName = GriffonNameUtils.uncapitalize(propertyName.substring(3));
-                 }
-                 if(!propertiesCache.contains(propertyName) &&
-                    !GriffonClassUtils.isEventHandler(propertyName) &&
-                    !isClosureMetaProperty(p) &&
-                    !STANDARD_PROPERTIES.contains(propertyName) &&
-                    !BINDABLE_PROPERTIES.contains(propertyName)) {
-                      propertiesCache.add(propertyName);
-                 }
+            for (MetaProperty p : getMetaProperties()) {
+                String propertyName = p.getName();
+                if (GriffonClassUtils.isGetter(p, true)) {
+                    propertyName = GriffonNameUtils.uncapitalize(propertyName.substring(3));
+                }
+                if (!propertiesCache.contains(propertyName) &&
+                        !GriffonClassUtils.isEventHandler(propertyName) &&
+                        !isClosureMetaProperty(p) &&
+                        !STANDARD_PROPERTIES.contains(propertyName) &&
+                        !BINDABLE_PROPERTIES.contains(propertyName)) {
+                    propertiesCache.add(propertyName);
+                }
             }
         }
-    
+
         return propertiesCache.toArray(new String[propertiesCache.size()]);
+    }
+
+    public void setModelPropertyValue(GriffonModel model, String propertyName, Object value) {
+        getMetaClass().setProperty(model, propertyName, value);
+    }
+
+    public Object getModelPropertyValue(GriffonModel model, String propertyName) {
+        return getMetaClass().getProperty(model, propertyName);
     }
 }

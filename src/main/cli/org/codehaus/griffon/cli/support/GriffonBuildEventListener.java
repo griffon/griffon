@@ -39,6 +39,7 @@ public class GriffonBuildEventListener implements BuildListener {
     private Binding binding;
     protected Map<String, List<Closure>> globalEventHooks = new HashMap<String, List<Closure>>();
     private BuildSettings buildSettings;
+    private final Map<String, Long> timings = new LinkedHashMap<String, Long>();
 
     /**
      * The objects that are listening for build events
@@ -66,16 +67,15 @@ public class GriffonBuildEventListener implements BuildListener {
     }
 
     protected void loadEventHooks(BuildSettings buildSettings) {
-        if(buildSettings!=null) {
-            loadEventsScript(findEventsScript(new File(buildSettings.getUserHome(),".griffon/scripts")));
+        if (buildSettings != null) {
+            loadEventsScript(findEventsScript(new File(buildSettings.getUserHome(), ".griffon/scripts")));
             loadEventsScript(findEventsScript(new File(buildSettings.getBaseDir(), "scripts")));
 
             PluginBuildSettings pluginSettings = (PluginBuildSettings) binding.getVariable("pluginSettings");
             for (Resource pluginBase : pluginSettings.getSortedPluginDirectories()) {
                 try {
                     loadEventsScript(findEventsScript(new File(pluginBase.getFile(), "scripts")));
-                }
-                catch (IOException ex) {
+                } catch (IOException ex) {
                     throw new RuntimeException(ex);
                 }
             }
@@ -85,9 +85,9 @@ public class GriffonBuildEventListener implements BuildListener {
     protected void loadGriffonBuildListeners() {
         for (Object listener : buildSettings.getBuildListeners()) {
             if (listener instanceof String) {
-                addGriffonBuildListener((String)listener);
+                addGriffonBuildListener((String) listener);
             } else if (listener instanceof Class) {
-                addGriffonBuildListener((Class)listener);
+                addGriffonBuildListener((Class) listener);
             } else {
                 throw new IllegalStateException("buildSettings.getBuildListeners() returned a " + listener.getClass().getName());
             }
@@ -95,23 +95,23 @@ public class GriffonBuildEventListener implements BuildListener {
     }
 
     public void loadEventsScript(File eventScript) {
-        if(eventScript!=null) {
+        if (eventScript != null) {
             try {
                 Class scriptClass = classLoader.parseClass(eventScript);
-                if(scriptClass != null) {
+                if (scriptClass != null) {
                     Script script = (Script) scriptClass.newInstance();
                     script.setBinding(new Binding(this.binding.getVariables()) {
                         @Override
                         public void setVariable(String var, Object o) {
                             final Matcher matcher = EVENT_NAME_PATTERN.matcher(var);
-                            if(matcher.matches() && (o instanceof Closure)) {
+                            if (matcher.matches() && (o instanceof Closure)) {
                                 String eventName = matcher.group(1);
                                 List<Closure> hooks = globalEventHooks.get(eventName);
-                                if(hooks == null) {
+                                if (hooks == null) {
                                     hooks = new ArrayList<Closure>();
                                     globalEventHooks.put(eventName, hooks);
                                 }
-                                if(!hooks.contains(o)) hooks.add((Closure) o);
+                                if (!hooks.contains(o)) hooks.add((Closure) o);
                             }
                             super.setVariable(var, o);
                         }
@@ -120,12 +120,10 @@ public class GriffonBuildEventListener implements BuildListener {
                 } else {
                     System.err.println("Could not load event script (script may be empty): " + eventScript);
                 }
-            }
-
-            catch (Throwable e) {
+            } catch (Throwable e) {
                 GriffonUtil.deepSanitize(e);
                 e.printStackTrace();
-                System.out.println("Error loading event script from file ["+eventScript+"] " + e.getMessage());
+                System.out.println("Error loading event script from file [" + eventScript + "] " + e.getMessage());
             }
         }
     }
@@ -154,11 +152,14 @@ public class GriffonBuildEventListener implements BuildListener {
         String targetName = buildEvent.getTarget().getName();
         String eventName = GriffonUtil.getClassNameRepresentation(targetName) + "Start";
 
+        buildSettings.debug(">> " + targetName);
+        timings.put(targetName, System.currentTimeMillis());
         triggerEvent(eventName, binding);
     }
 
     /**
      * Triggers and event for the given name and binding
+     *
      * @param eventName The name of the event
      */
     public void triggerEvent(String eventName) {
@@ -167,18 +168,18 @@ public class GriffonBuildEventListener implements BuildListener {
 
     /**
      * Triggers an event for the given name and arguments
+     *
      * @param eventName The name of the event
      * @param arguments The arguments
      */
     public void triggerEvent(String eventName, Object... arguments) {
         List<Closure> handlers = globalEventHooks.get(eventName);
-        if(handlers!=null) {
+        if (handlers != null) {
             for (Closure handler : handlers) {
                 handler.setDelegate(binding);
                 try {
                     handler.call(arguments);
-                }
-                catch (MissingPropertyException mpe) {
+                } catch (MissingPropertyException mpe) {
                     // ignore
                 }
             }
@@ -194,6 +195,8 @@ public class GriffonBuildEventListener implements BuildListener {
         String eventName = GriffonUtil.getClassNameRepresentation(targetName) + "End";
 
         triggerEvent(eventName, binding);
+        Long timing = System.currentTimeMillis() - timings.get(targetName);
+        buildSettings.debug("<< " + targetName + " [" + timing + "ms]");
     }
 
     public void taskStarted(BuildEvent buildEvent) {
@@ -224,10 +227,10 @@ public class GriffonBuildEventListener implements BuildListener {
         }
         GriffonBuildListener listener;
         try {
-            listener = (GriffonBuildListener)listenerClass.newInstance();
+            listener = (GriffonBuildListener) listenerClass.newInstance();
             addGriffonBuildListener(listener);
         } catch (Exception e) {
-            System.err.println("Could not instantiate " + listenerClass.getName()+". " + e);
+            System.err.println("Could not instantiate " + listenerClass.getName() + ". " + e);
         }
     }
 

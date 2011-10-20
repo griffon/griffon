@@ -40,10 +40,24 @@ Service injection is trivial, it does not provide a full blown DI, in other word
 
 Given that services are inherently treated as singletons they are also automatically registered as application event listeners. Be aware that services will be instantiated lazily which means that some events might not reach a particular service if it has not been instantiated by the framework by the time of event publication. It also discouraged to use the \@Singleton annotation on a Service class as it will cause trouble with the automatic singleton management Griffon has in place.
 
-Lastly, all services instances will become available through a Map keyed by service name. This Map is added via metaclasses to the running application instance. The name of the property that holds the map reference is @services@, which means that you can iterate over all instantiated services with the following snippet
+Lastly, all services instances will become available through an instance of type @griffon.core.ServiceManager@. This helper class exposes available services via a Map. You can query all currently available services in the following manner
 
 {code}
-app.services.each { name, instance ->
+app.serviceManager.services.each { name, instance ->
    // do something cool with services
 }
+{code}
+
+You can also query for a particular service instance in the following way
+
+{code}
+def fooService = app.serviceManager.findService('foo')
+{code}
+
+It's worth mentioning that the previous method will instantiate the service if it wasn't available up to that point.
+
+All services are instantiated lazily by default. You can change this behavior by adding a configuration flag to @Config.groovy@
+
+{code}
+griffon.services.eager.instantiation = true
 {code}

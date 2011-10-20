@@ -33,13 +33,6 @@ import griffon.util.*
 if (getBinding().variables.containsKey("_settings_called")) return true
 _settings_called = true
 
-// Read build properties for Griffon into ant properties.
-if (griffonSettings.griffonHome) {
-    ant.property(file: "${griffonHome}/build.properties")
-} else {
-    ant.property(resource: "build.properties")
-}
-
 /**
  * Resolves the value for a given property name. It first looks for a
  * system property, then in the BuildSettings configuration, and finally
@@ -112,8 +105,8 @@ defaultGriffonApplicationClass = isAddonPlugin ? 'griffon.test.mock.MockGriffonA
 defaultGriffonAppletClass = 'griffon.swing.SwingApplet'
 makeJNLP = false
 _skipSigning = false // GRIFFON-118
-defaultAppletWidth = 240 // GRIFFON-127
-defaultAppletHeight = 320 // GRIFFON-127
+defaultAppletWidth = 320 // GRIFFON-127
+defaultAppletHeight = 240 // GRIFFON-127
 
 // Set up the Griffon environment for this script.
 if (!System.getProperty("griffon.env.set")) {
@@ -143,15 +136,9 @@ configSlurper.setBinding(griffonHome:griffonHome,
                          userHome:userHome,
                          basedir:basedir)
 
-applicationConfig = new ConfigObject()
 applicationConfigFile = new File(basedir, 'griffon-app/conf/Application.groovy')
-if(applicationConfigFile.exists()) applicationConfig = configSlurper.parse(applicationConfigFile.text)
-builderConfig = new ConfigObject()
 builderConfigFile = new File(basedir, 'griffon-app/conf/Builder.groovy')
-if(builderConfigFile.exists()) builderConfig = configSlurper.parse(builderConfigFile.text)
-config = new ConfigObject()
 configFile = new File(basedir, 'griffon-app/conf/Config.groovy')
-if(configFile.exists()) config = configSlurper.parse(configFile.text)
 
 // Ant path based on the class loader for the scripts. This basically
 // includes all the Griffon JARs, the plugin libraries, and any JARs
@@ -350,16 +337,11 @@ logErrorAndExit = { String message, Throwable t ->
 }
 
 isDebugEnabled = {
-    if(System.getProperty('griffon.cli.verbose') != null) return Boolean.parseBoolean('griffon.cli.verbose')
-    def value = buildConfig?.flatten()['griffon.cli.verbose']
-    value != null? value as boolean : false
+    griffonSettings.debugEnabled
 }
 
 debug = { msg ->
-    if(isDebugEnabled()) {
-        Date now = new Date()
-        println "[$now.dateString $now.timeString] $msg"
-    }
+    griffonSettings.debug(msg)
 }
 
 compilingPlugin = { pluginName ->
@@ -373,6 +355,15 @@ cliClassesDirPath = cliClassesDir.absolutePath
 hasCliSources = cliSourceDir.exists()
 if(hasCliSources) {
     ant.mkdir(dir: cliClassesDirPath)
+}
+
+hasFiles = { Map params ->
+    params.dir = params.dir as File
+    params.dir.exists() ? ant.fileset(params).size() > 0 : false
+}
+
+hasJavaOrGroovySources = { dir ->
+    hasFiles(dir: dir, includes: '**/*.groovy **/*.java')
 }
 
 includeTargets << griffonScript("_GriffonArgParsing")

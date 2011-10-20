@@ -16,12 +16,9 @@
 
 package org.codehaus.griffon.runtime.core;
 
-
-import java.util.LinkedHashMap;
 import java.util.Map;
 
 import griffon.core.*;
-import org.codehaus.griffon.runtime.util.GriffonApplicationHelper;
 
 /**
  * Default implementation of the {@code MVCGroup} interface
@@ -29,53 +26,8 @@ import org.codehaus.griffon.runtime.util.GriffonApplicationHelper;
  * @author Andres Almiray
  * @since 0.9.3
  */
-public class DefaultMVCGroup implements MVCGroup {
-    private final GriffonApplication app;
-    private final MVCGroupConfiguration configurationDefault;
-    private final String mvcId;
-    private final Map<String, Object> members = new LinkedHashMap<String, Object>();
-
-    public DefaultMVCGroup(GriffonApplication app, MVCGroupConfiguration configurationDefault, String mvcId, Map<String, Object> members) {
-        this.app = app;
-        this.configurationDefault = configurationDefault;
-        this.mvcId = mvcId;
-        this.members.putAll(members);
-    }
-
-    public GriffonApplication getApp() {
-        return app;
-    }
-
-    public MVCGroupConfiguration getConfiguration() {
-        return configurationDefault;
-    }
-
-    public String getMvcType() {
-        return configurationDefault.getMvcType();
-    }
-
-    public String getMvcId() {
-        return mvcId;
-    }
-
-    public GriffonModel getModel() {
-        return (GriffonModel) getMember(GriffonModelClass.TYPE);
-    }
-
-    public GriffonView getView() {
-        return (GriffonView) getMember(GriffonViewClass.TYPE);
-    }
-
-    public GriffonController getController() {
-        return (GriffonController) getMember(GriffonControllerClass.TYPE);
-    }
-
-    public Object getMember(String name) {
-        return members.get(name);
-    }
-
-    public void destroy() {
-        GriffonApplicationHelper.destroyMVCGroup(app, mvcId);
-        members.clear();
+public class DefaultMVCGroup extends AbstractMVCGroup {
+    public DefaultMVCGroup(GriffonApplication app, MVCGroupConfiguration configuration, String mvcId, Map<String, Object> members) {
+        super(app, configuration, mvcId, members);
     }
 }

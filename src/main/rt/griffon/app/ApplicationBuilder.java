@@ -35,5 +35,6 @@ public class ApplicationBuilder extends FactoryBuilderSupport {
 
     public void registerVisuals() {
         registerFactory("application", new ApplicationFactory());
+        registerFactory("root", new RootFactory());
     }
 }
