@@ -307,11 +307,13 @@ public abstract class AbstractGriffonApplet extends JApplet implements GriffonAp
         }
 
         // stage 3 - destroy all mvc groups
-        List<String> mvcNames = new ArrayList<String>();
-        mvcNames.addAll(getMvcGroupManager().getGroups().keySet());
         log.debug("Shutdown stage 3: destroy all MVC groups");
-        for (String name : mvcNames) {
-            destroyMVCGroup(name);
+        List<String> mvcNames = new ArrayList<String>();
+        if (getMvcGroupManager() != null) {
+            mvcNames.addAll(getMvcGroupManager().getGroups().keySet());
+            for (String name : mvcNames) {
+                destroyMVCGroup(name);
+            }
         }
 
         // stage 4 - call shutdown script
