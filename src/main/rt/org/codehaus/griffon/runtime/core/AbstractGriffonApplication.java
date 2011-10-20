@@ -225,7 +225,7 @@ public abstract class AbstractGriffonApplication extends AbstractObservable impl
                     event(GriffonApplication.Event.SHUTDOWN_ABORTED.getName(), asList(this));
                     if (log.isDebugEnabled()) {
                         try {
-                            log.debug("Shutdown aborted by "+ handler);
+                            log.debug("Shutdown aborted by " + handler);
                         } catch (UnsupportedOperationException uoe) {
                             log.debug("Shutdown aborted by a handler");
                         }
@@ -276,11 +276,13 @@ public abstract class AbstractGriffonApplication extends AbstractObservable impl
         }
 
         // stage 3 - destroy all mvc groups
-        List<String> mvcNames = new ArrayList<String>();
-        mvcNames.addAll(getMvcGroupManager().getGroups().keySet());
         log.debug("Shutdown stage 3: destroy all MVC groups");
-        for (String name : mvcNames) {
-            destroyMVCGroup(name);
+        List<String> mvcNames = new ArrayList<String>();
+        if (getMvcGroupManager() != null) {
+            mvcNames.addAll(getMvcGroupManager().getGroups().keySet());
+            for (String name : mvcNames) {
+                destroyMVCGroup(name);
+            }
         }
 
         // stage 4 - call shutdown script
