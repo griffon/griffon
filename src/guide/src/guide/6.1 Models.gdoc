@@ -30,6 +30,7 @@ import groovy.beans.Bindable
 
 @PropertyListener(snoopAll)
 class MyModel {
+    def controller
     \@Bindable String name
 
     \@Bindable
@@ -47,6 +48,7 @@ import groovy.beans.Bindable
 import java.beans.PropertyChangeListener
 
 class MyModel {
+    def controller
     @Bindable String name
     @Bindable String lastname
 

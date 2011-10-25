@@ -21,8 +21,15 @@ application(title: 'Action sample', pack: true) {
 }
 {code}
 
+Actions must follow these rules in order to be considered as such:
+ * must have public (Java) or default (Groovy) visibility modifier.
+ * name does not match an event handler, i.e, it does not begin with @on@.
+ * must pass @[GriffonClassUtils.isPlainMethod()|api:griffon.util.GriffonClassUtils#isPlainMethod(java.lang.reflect.Method)]@ if it's a method.
+ * must have @void@ as return type if it's a method.
+ * value must be a closure (including curried method pointers) if it's a property.
+
 Controllers can perform other tasks:
-* listen to [application events|guide:applicationEvents].
-* create and destroy MVC groups via a pair of methods ([createMVCGroup|MVC], [destroyMVCGroup|MVC]).
-* react to MVC initialization/destruction via a pair of methods ([mvcGroupInit|MVC], [mvcGroupDestroy|MVC]).
-* hold [service|guide:services] references.
+ * listen to [application events|guide:applicationEvents].
+ * create and destroy MVC groups via a pair of methods ([createMVCGroup|MVC], [destroyMVCGroup|MVC]).
+ * react to MVC initialization/destruction via a pair of methods ([mvcGroupInit|MVC], [mvcGroupDestroy|MVC]).
+ * hold [service|guide:services] references.

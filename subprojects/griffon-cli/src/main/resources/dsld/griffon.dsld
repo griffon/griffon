@@ -1,0 +1,203 @@
+/*
+ * Copyright 2010-2011 the original author or authors.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+import org.codehaus.groovy.ast.ClassNode;
+import org.codehaus.groovy.ast.expr.MethodCallExpression;
+
+/**
+ * @author Andrew Eisenberg
+ * @author Andres Almiray
+ */
+
+supportsVersion(groovyEclipse: '2.5.1')
+
+def griffonArtifact = { String folder ->
+	sourceFolderOfCurrentType("griffon-app/" + folder)
+}
+
+def modelClass = griffonArtifact("models")
+def controllerClass = griffonArtifact("controllers")
+def serviceClass = griffonArtifact("services")
+def viewClass = griffonArtifact("views") & isScript()
+
+(modelClass | controllerClass | 
+	serviceClass | viewClass).accept {
+	
+	provider = "Griffon DSL"
+	delegatesTo "griffon.core.GriffonMvcArtifact"
+	delegatesTo "griffon.core.GriffonArtifact"
+	delegatesTo "griffon.core.MVCHandler"
+	delegatesTo "griffon.core.ThreadingHandler"
+}
+	
+viewClass.accept { 
+	provider = "Griffon DSL"
+	delegatesTo "griffon.core.GriffonView"
+	
+	def makeParams = { type ->
+		if (! (type instanceof Class)) {
+			return
+		}
+		
+		ClassNode clazz = resolver.resolve(type.name)
+		def res =  [:]
+		clazz.methods.each {
+			if (it.name =~ /set[A-Z][\\w]*/ ) {
+				if (it.parameters.length == 1) {
+					def propertyName = it.name[3..-1]
+					propertyName = propertyName.size() ==1 ? propertyName.toLowerCase() : propertyName[0].toLowerCase() + propertyName[1..-1]
+					res[propertyName] =it.parameters[0].type
+				}
+			}
+		} 
+		res
+	}
+	
+	def methodDef = { Map args ->
+		method useNamedArgs: true, name: args.name, type: args.type, params: makeParams(args.type)
+		if (args.params) {
+			method useNamedArgs: false, name: args.name, type: args.type, params: args.params
+		} else {
+			method useNamedArgs: false, name: args.name, type: args.type
+		}
+	}
+	
+	methodDef name:'application', type: javax.swing.JFrame
+	
+	methodDef name: 'action', type: javax.swing.Action
+	methodDef name: 'actions', type: java.util.List, params: [closure: 'groovy.lang.Closure']
+	methodDef name: 'map', type: java.util.Map
+	methodDef name: 'imageIcon', type: javax.swing.ImageIcon
+	methodDef name: 'buttonGroup', type: javax.swing.ButtonGroup
+	methodDef name: 'noparent', type: 'void', params: [closure: 'groovy.lang.Closure']
+	methodDef name: 'widget', type: java.awt.Component
+	methodDef name: 'container', type: java.awt.Container, params: [closure: 'groovy.lang.Closure']
+	methodDef name: 'bean', type: java.lang.Object
+	methodDef name: 'bind', type: java.lang.Object
+  
+	methodDef name: 'dialog', type: javax.swing.JDialog, params: [closure: 'groovy.lang.Closure']
+	methodDef name: 'fileChooser', type: javax.swing.JFileChooser, params: [closure: 'groovy.lang.Closure']
+	methodDef name: 'frame', type: javax.swing.JFrame, params: [closure: 'groovy.lang.Closure']
+	methodDef name: 'optionPane', type: javax.swing.JOptionPane, params: [closure: 'groovy.lang.Closure']
+	methodDef name: 'window', type: javax.swing.JWindow, params: [closure: 'groovy.lang.Closure']
+  
+	methodDef name: 'button', type: javax.swing.JButton
+	methodDef name: 'checkBox', type: javax.swing.JCheckBox
+	methodDef name: 'checkBoxMenuItem', type: javax.swing.JCheckBoxMenuItem
+	methodDef name: 'menuItem', type: javax.swing.JMenuItem
+	methodDef name: 'radioButton', type: javax.swing.JRadioButton
+	methodDef name: 'radioButtonMenuItem', type: javax.swing.JRadioButtonMenuItem
+	methodDef name: 'toggleButton', type: javax.swing.JToggleButton
+  
+	methodDef name: 'editorPane', type: javax.swing.JEditorPane
+	methodDef name: 'label', type: javax.swing.JLabel
+	methodDef name: 'passwordField', type: javax.swing.JPasswordField
+	methodDef name: 'textArea', type: javax.swing.JTextArea
+	methodDef name: 'textField', type: javax.swing.JTextField
+	methodDef name: 'formattedTextField', type: javax.swing.JFormattedTextField
+	methodDef name: 'textPane', type: javax.swing.JTextPane
+  
+	methodDef name: 'desktopPane', type: javax.swing.JDesktopPane
+	methodDef name: 'internalFrame', type: javax.swing.JInternalFrame
+  
+	methodDef name: 'colorChooser', type: javax.swing.JColorChooser
+	methodDef name: 'comboBox', type: javax.swing.JComboBox
+	methodDef name: 'list', type: javax.swing.JList
+	methodDef name: 'progressBar', type: javax.swing.JProgressBar
+	methodDef name: 'separator', type: javax.swing.JSeparator
+	methodDef name: 'scrollBar', type: javax.swing.JScrollBar
+	methodDef name: 'slider', type: javax.swing.JSlider
+	methodDef name: 'spinner', type: javax.swing.JSpinner
+	methodDef name: 'tree', type: javax.swing.JTree
+  
+	methodDef name: 'menu', type: javax.swing.JMenu, params: [closure: 'groovy.lang.Closure']
+	methodDef name: 'menuBar', type: javax.swing.JMenuBar, params: [closure: 'groovy.lang.Closure']
+	methodDef name: 'popupMenu', type: javax.swing.JPopupMenu, params: [closure: 'groovy.lang.Closure']
+  
+	methodDef name: 'panel', type: javax.swing.JPanel, params: [closure: 'groovy.lang.Closure']
+	methodDef name: 'scrollPane', type: javax.swing.JScrollPane, params: [closure: 'groovy.lang.Closure']
+	methodDef name: 'splitPane', type: javax.swing.JSplitPane, params: [closure: 'groovy.lang.Closure']
+	methodDef name: 'tabbedPane', type: javax.swing.JTabbedPane
+	methodDef name: 'toolBar', type: javax.swing.JToolBar
+	methodDef name: 'viewport', type: javax.swing.JViewPort
+	methodDef name: 'layeredPane', type: javax.swing.JLayeredPane
+  
+	methodDef name: 'boundedRangeModel', type: javax.swing.DefaultBoundedRangeModel
+	methodDef name: 'spinnerDateModel', type: javax.swing.SpinnerDateModel
+	methodDef name: 'spinnerListModel', type: javax.swing.SpinnerListModel
+	methodDef name: 'spinnerNumberModel', type: javax.swing.SpinnerNumberModel
+  
+	methodDef name: 'table', type: javax.swing.JTable, params: [closure: 'groovy.lang.Closure']
+	methodDef name: 'tableColumn', type: javax.swing.table.TableColumn
+	methodDef name: 'tableModel', type: javax.swing.table.TableModel
+	methodDef name: 'propertyColumn', type: 'void'
+	methodDef name: 'closureColumn', type: 'void'
+  
+	methodDef name: 'borderLayout', type: java.awt.BorderLayout, params: [hgap: 'int', vgap: 'int']
+	methodDef name: 'cardLayout', type: java.awt.CardLayout
+	methodDef name: 'flowLayout', type: java.awt.FlowLayout
+	methodDef name: 'gridLayout', type: java.awt.GridLayout, params: [cols: 'int', rows: 'int']
+	methodDef name: 'overlayLayout', type: javax.swing.OverlayLayout
+	methodDef name: 'springLayout', type: javax.swing.SpringLayout
+	methodDef name: 'gridBagLayout', type: java.awt.GridBagLayout
+	methodDef name: 'gridBagConstraints', type: java.awt.GridBagConstraints
+	methodDef name: 'gbc', type: java.awt.GridBagConstraints
+  
+	methodDef name: 'box', type: javax.swing.Box
+	methodDef name: 'boxLayout', type: javax.swing.BoxLayout
+	methodDef name: 'hbox', type: javax.swing.Box
+	methodDef name: 'hglue', type: java.awt.Component
+	methodDef name: 'hstrut', type: java.awt.Component
+	methodDef name: 'vbox', type: javax.swing.Box
+	methodDef name: 'vglue', type: java.awt.Component
+	methodDef name: 'vstrut', type: java.awt.Component
+	methodDef name: 'glue', type: java.awt.Component
+	methodDef name: 'rigidArea', type: java.awt.Component
+  
+	methodDef name: 'tableLayout', type: groovy.swing.impl.TableLayout
+	methodDef name: 'tr', type: groovy.swing.impl.TableLayoutRow
+	methodDef name: 'td', type: groovy.swing.impl.TableLayoutCell
+  
+	methodDef name: 'lineBorder', type: javax.swing.border.LineBorder
+	methodDef name: 'loweredBevelBorder', type: javax.swing.border.BevelBorder
+	methodDef name: 'raisedBevelBorder', type: javax.swing.border.BevelBorder
+	methodDef name: 'etchedBorder', type: javax.swing.border.EtchedBorder
+	methodDef name: 'loweredEtchedBorder', type: javax.swing.border.EtchedBorder
+	methodDef name: 'raisedEtchedBorder', type: javax.swing.border.EtchedBorder
+	methodDef name: 'titledBorder', type: javax.swing.border.TitledBorder
+	methodDef name: 'emptyBorder', type: javax.swing.border.EmptyBorder
+	methodDef name: 'compoundBorder', type: javax.swing.border.CompoundBorder
+	methodDef name: 'matteBorder', type: javax.swing.border.MatteBorder
+  
+	methodDef name: 'shortcut', type: javax.swing.KeyStroke, params: [key: java.lang.String]
+	methodDef name: 'shortcut', type: javax.swing.KeyStroke, params: [key: java.lang.String, modifier: 'int']
+	methodDef name: 'keyStrokeAction', type: 'void'
+}
+
+enclosingClass(annotatedBy('griffon.transform.EventPublisher')).accept {
+    provider = "Griffon DSL"
+	delegatesTo "griffon.util.EventPublisher"
+}
+
+enclosingClass(annotatedBy('griffon.transform.MVCAware')).accept {
+    provider = "Griffon DSL"
+	delegatesTo "griffon.core.MVCHandler"
+}
+
+enclosingClass(annotatedBy('griffon.transform.ThreadingAware')).accept {
+    provider = "Griffon DSL"
+	delegatesTo "griffon.core.ThreadingHandler"
+}

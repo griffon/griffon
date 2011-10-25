@@ -2,7 +2,13 @@ If all the other projects in your team or company are built using a standard bui
 
 h3. Ant Integration
 
-When you create a Griffon application via the [create-app|commandLine] command, Griffon automatically creates an "Apache Ant":http://ant.apache.org/ @build.xml@ file for you containing the following targets:
+When you invoke the [integrate-with|commandLine] command with the -ant option enabled
+
+{code}
+griffon integrate-with -ant
+{code}
+
+Griffon creates an "Apache Ant":http://ant.apache.org/ @build.xml@ file for you containing the following targets:
 
 * @clean@ - Cleans the Griffon application
 * @debug-app@ - Runs the application in debug mode
@@ -18,7 +24,7 @@ Each of these can be run by Ant, for example:
 ant clean
 {code}
 
-The build file is all geared up to use "Apache Ivy":http://ant.apache.org/ivy/ for dependency management, which means that it will automatically download all the requisite Griffon JAR files and other dependencies on demand. You don't even have to install Griffon locally to use it! That makes it particularly useful for continuous integration systems such as "CruiseControl":http://cruisecontrol.sourceforge.net/ or "Hudson":https://hudson.dev.java.net/.
+The build file is all geared up to use "Apache Ivy":http://ant.apache.org/ivy/ for dependency management, which means that it will automatically download all the requisite Griffon JAR files and other dependencies on demand. You don't even have to install Griffon locally to use it! That makes it particularly useful for continuous integration systems such as "CruiseControl":http://cruisecontrol.sourceforge.net/ or "Jenkins":http://jenkins-ci.org/.
 
 It uses the Griffon [Ant task|api:griffon.ant.GriffonTask] to hook into the existing Griffon build system. The task allows you to run any Griffon script that's available, not just the ones used by the generated build file. To use the task, you must first declare it:
 {code}

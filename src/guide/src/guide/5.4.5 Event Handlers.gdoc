@@ -46,7 +46,7 @@ class MyController {
 @File: griffon-app/controller/MyController.groovy@
 {code}
 class MyController {
-  def mvcGroupInit(Map args) {
+  void mvcGroupInit(Map args) {
     app.addApplicationListener([
       Foo: {-> println 'got foo!' }
     ])
@@ -62,7 +62,7 @@ class MyController {
 @File: griffon-app/controller/MyController.groovy@
 {code}
 class MyController {
-  def mvcGroupInit(Map args) {
+  void mvcGroupInit(Map args) {
     app.addApplicationListener('Foo'){-> println 'got foo!' }
   }
 

@@ -7,8 +7,9 @@ Perform customizations before builder contributions are made.
 h2. Examples
 
 bc.
+import griffon.core.GriffonApplication
 class SampleGriffonAddon {
-    def addonBuilderInit(app, builder) {
+    void addonBuilderInit(GriffonApplication app, FactoryBuilderSupport builder) {
         // init code goes here
     }
 }
