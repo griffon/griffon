@@ -6,7 +6,7 @@ include 'griffon-wrapper'
 
 rootProject.name = 'griffon'
 rootProject.children.each {project ->
-    String fileBaseName = project.name // - "griffon-"
+    String fileBaseName = project.name
     String projectDirName = "subprojects/$fileBaseName"
     project.projectDir = new File(settingsDir, projectDirName)
     project.buildFileName = "${fileBaseName}.gradle"

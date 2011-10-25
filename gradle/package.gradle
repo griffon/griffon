@@ -1,0 +1,106 @@
+/*
+ * Copyright 2010-2011 the original author or authors.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+import org.apache.tools.ant.filters.ReplaceTokens
+
+distBinSpec = copySpec {
+    from("."){
+		include "README"
+		include "INSTALL"
+		include "LICENSE"
+	}
+	from('src/dist'){
+		exclude 'bin'
+	}
+	from('src/griffon'){
+		into 'src/griffon'
+	}
+	from('src/dist/bin'){
+		into 'bin'
+        fileMode = 0755	
+	}
+	into('lib') { 
+		from(project(":griffon-cli").configurations.runtime) {
+		    exclude 'griffon*'
+		}
+	}
+	
+	['rt', 'cli', 'scripts', 'resources'].each { subproj ->
+		from(project(':griffon-' + subproj).jar.outputs.files){
+			into('dist')
+		}
+	}
+	
+	into('scripts'){
+		from(project(":griffon-scripts").sourceSets.main.allSource)
+	}
+	
+	into('doc'){
+		from(jarApi.outputs.files)
+		from(jarSource.outputs.files)
+		from('src/dist/doc')
+	}
+	
+	into('guide'){
+		from(buildGuide.outputs.files)
+		from(pdfGuide.outputs.files)
+		filter(ReplaceTokens, tokens: ['griffon.version': version])	
+	}
+}
+
+task zipBinary(type:Zip){
+	description = "Zips the binary distribution."
+    classifier = 'bin'
+    into "griffon-$version"
+	with distBinSpec
+}
+
+task tarBinary(type: Tar) {
+    description = "Tars the binary distribution."
+    classifier = 'bin'
+    into "griffon-$version"
+	with distBinSpec
+    compression = Compression.GZIP
+}
+
+distSourceSpec = copySpec{
+    from('.') {
+        exclude 'build'
+        exclude '**/.git*'
+        exclude '**/.gradle*'
+        exclude '**/.idea*'
+        exclude 'clover.license'
+        exclude 'cobertura.ser'
+        exclude '**/*.ipr'
+        exclude '**/*.iws'
+        exclude '**/*.iml'
+    }   
+}
+
+task zipSource(type: Zip){
+    description = "Zips the source distribution."
+    with distSourceSpec
+    classifier = 'src'
+    into "griffon-$version"
+}
+
+task tarSource(type: Tar) {
+    description = "Tars the source distribution."
+    with distSourceSpec
+    classifier = 'src'
+    into "griffon-$version"  
+    compression = Compression.GZIP
+}

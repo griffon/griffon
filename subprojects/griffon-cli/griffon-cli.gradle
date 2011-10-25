@@ -23,7 +23,7 @@ dependencies {
         	"org.slf4j:jcl-over-slf4j:$slf4jVersion",
         	"org.slf4j:jul-to-slf4j:$slf4jVersion"
 	compile	("org.codehaus.gpars:gpars:0.9"){
-		exclude group: '*', module: '*'
+		exclude group: 'org.jboss.netty', module: 'netty'
 	}
 	compile	"org.coconut.forkjoin:jsr166y:070108",
 	        "junit:junit:4.8.1",
@@ -40,8 +40,9 @@ dependencies {
 	        "commons-io:commons-io:1.4",
 	        "commons-lang:commons-lang:2.5"
 	
-	compile("org.springframework:org.springframework.core:$springVersion"){
-		exclude (group: 'commons-logging', module: 'commons-logging')
+	compile("org.springframework:org.springframework.core:$springVersion") {
+		exclude group: 'commons-logging', module: 'commons-logging'
+		exclude group: 'org.aopalliance', module: 'com.springsource.org.aopalliance'
 	}
 	compile("org.springframework:org.springframework.aop:$springVersion",
 	        "org.springframework:org.springframework.aspects:$springVersion",

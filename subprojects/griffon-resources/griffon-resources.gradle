@@ -1,16 +1,22 @@
-
+apply plugin: 'java'
+	
 dependencies {
     // compile(project(':griffon-wrapper'))
+}
+
+tasks.withType(Jar).all { task ->
+    task.appFileJar = false
 }
 
 /*
 task jarSharedFiles(type: Jar) {
     archiveName = 'griffon-shared-files.jar'
     destinationDir = "$buildDir/assemble/jars" as File
-	from(project(":griffon-wrapper").assemble.outputs.files)
-}*/
-
+	from(project(":griffon-wrapper").dist.outputs.files)
+}
+*/
 task jarAppFiles(type: Jar) {
+    appFileJar = true
     archiveName = 'griffon-app-files.jar'
     destinationDir = "$buildDir/assemble/jars" as File
     from('../../src/dist/src/griffon/griffon-app') {
@@ -19,22 +25,22 @@ task jarAppFiles(type: Jar) {
 }
 
 task jarPluginFiles(type: Jar) {
+    appFileJar = true
     archiveName = 'griffon-plugin-files.jar'
     destinationDir = "$buildDir/assemble/jars" as File
     from '../../src/dist/src/griffon/templates/plugins'
 }
 
 task jarIntegrationFiles(type: Jar) {
+    appFileJar = true
     archiveName = 'griffon-integration-files.jar'
     destinationDir = "$buildDir/assemble/jars" as File
     from '../../src/dist/src/griffon/templates/ide-support'
 }
 
-resourceFilesJars = tasks.withType(Jar).matching({ jar -> jar.name != 'jarResources' } as Spec)
+resourceFilesJars = tasks.withType(Jar).matching({ task -> task.appFileJar } as Spec)
 
-task jarResources(type: Jar) {
-    dependsOn { resourceFilesJars }
-    // appendix = 'resources'
+task jarResources(type: Jar, dependsOn: resourceFilesJars) {
    	resourceFilesJars.each { task ->
 		from task.outputs.files
 	}

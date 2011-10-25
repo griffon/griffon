@@ -16,40 +16,33 @@
 
 import org.apache.tools.ant.filters.ReplaceTokens
 
-buildscript {
-    repositories {
-        mavenCentral()
-        mavenRepo name: 'SpringSource', urls: 'http://repository.springsource.com/maven/bundles/release'
-    }
-
-    dependencies {
-        classpath("org.grails:grails-docs:1.3.6") { transitive = false }
-        classpath("org.xhtmlrenderer:core-renderer:R8pre2") { transitive = false }
-        classpath("com.lowagie:itext:2.0.8") { transitive = false }
-        classpath("radeox:radeox:1.0-b2") { transitive = false }
-    }
-}
-
 task copyDocs(type: Copy) {
     destinationDir = "${buildDir}/javadoc-src" as File
-
-    from('src/main/cli') {
+    from(project(":griffon-cli").sourceSets.main.allSource) {
         include 'griffon/test/**/*'
         include 'griffon/transform/**/*'
-        include '**/*.html'
     }
-    from 'src/main/rt'
+    from(project(":griffon-rt").sourceSets.main.allSource)
 }
 
-task buildDocs(type: Groovydoc) {
-    dependsOn { copyDocs }
-
-    source = files("$buildDir/javadoc-src")
-    destinationDir = "$buildDir/manual/api" as File
+task apiDocs(type: Groovydoc, dependsOn: copyDocs) {
+	// def cliSources = files("subprojects/griffon-cli/src/main/groovy") {
+    //     include 'griffon/test/**/*'
+    //     include 'griffon/transform/**/*'
+    // }
+	// def rtSources = files("subprojects/griffon-rt/src/main/groovy") {
+	//     include '**/*'
+	// }
+    // source = cliSources + rtSources
+    source = "${buildDir}/javadoc-src" as File
+	destinationDir = "$buildDir/manual/api" as File
     docTitle = "Griffon $version"
     header = "Griffon $version"
     windowTitle = "Griffon $version"
-    classpath = sourceSets.rt.classes + sourceSets.cli.classes + configurations.compile
+    groovyClasspath = configurations.groovy
+	classpath = project(":griffon-rt").sourceSets.main.output +
+                project(":griffon-rt").configurations.compile
+
     includePrivate = true
     use = true
 
@@ -61,29 +54,26 @@ task buildDocs(type: Groovydoc) {
     doLast { task ->
         copy {
             into task.destinationDir
-            from "src/dist/media/griffon.ico", "src/guide/resources/css/stylesheet.css"
+            from "src/dist/media/griffon.ico",
+                 "src/guide/resources/css/stylesheet.css"
         }
-		ant {
-		    replace(dir: task.destinationDir,
-					token: "groovy.ico",
-					value: "griffon.ico") {
-					    include(name: "**/*.html")
-			}
-		}
+        ant {
+            replace(dir: task.destinationDir,
+                    token: "groovy.ico",
+                    value: "griffon.ico") {
+                include(name: "**/*.html")
+            }
+        }
     }
 }
 
-task jarApi(type: Jar) {
-    dependsOn { buildDocs }
-
+task jarApi(type: Jar, dependsOn: apiDocs) {
     classifier = 'javadoc'
     destinationDir = "$buildDir/assemble/jars" as File
     from "$buildDir/manual/api"
 }
 
-task jarSource(type: Jar) {
-    dependsOn { copyDocs }
-
+task jarSource(type: Jar, dependsOn: copyDocs) {
     classifier = 'sources'
     destinationDir = "$buildDir/assemble/jars" as File
     from "$buildDir/javadoc-src"
@@ -92,65 +82,20 @@ task jarSource(type: Jar) {
 
 task jarDocs(dependsOn: [jarApi, jarSource]) {}
 
-task prepareGuide(type: Copy) {
-    inputs.dir("src/guide" as File)
-    outputs.dir("$buildDir/manual-src" as File)
-
-    destinationDir = "$buildDir/manual-src" as File
-    from('src/guide') {
-        filter(ReplaceTokens, tokens: ['griffon.version': version])
-    }
+task buildGuide(type: GrailsDoc, dependsOn: apiDocs) {
+	srcDir = file('src/guide/src')
+	props = file('src/guide/guide.properties')
+	imagesDir = file('src/guide/resources/img')
+	outputDir = file("$buildDir/manual")
 }
 
-task buildGuide(type: Copy) {
-    dependsOn { [buildDocs, prepareGuide] }
-
-    def manualSrc = "$buildDir/manual-src" as File
-    destinationDir = "$buildDir/manual" as File
-    from(manualSrc) {
-        include '*.properties'
-    }
-
-    doLast {
-        ant.taskdef(name: 'gdocs',
-                    classname: 'grails.doc.ant.DocPublisherTask',
-                    classpath: configurations.cli.asPath)
-        ant.gdocs(src: "$manualSrc/src",
-                  dest: destinationDir,
-                  imagesdir: "$manualSrc/resources/img",
-                  properties: "$destinationDir/guide.properties")
-    }
-}
-
-task pdfGuide(dependsOn: [buildGuide]) {
-    inputs.file(file("$buildDir/manual/guide/single.html"))
-    outputs.file(file("$buildDir/manual/griffon-guide-${version}.pdf"))
-
-    doLast {
-        try {
-            grails.doc.PdfBuilder.build(
-                basedir: buildDir.absolutePath,
-                home: project.file('.').absolutePath,
-                tool: 'griffon'
-            )
-        } catch(x) {
-            // it's very likely that the stream is closed before
-            // the renderer 'finishes' but it actually does
-            // ignore for now
-        }
-
-        def destinationDir = "$buildDir/manual" as File
-        copy {
-            from "$destinationDir/guide/"
-            into destinationDir
-            include '*.pdf'
-            rename 'single.pdf', "griffon-guide-${version}.pdf"
-        }
-    }
+task pdfGuide(type:PdfGuide, dependsOn: buildGuide) {
+	inputs.files file("$buildDir/manual/guide")
+	pdfName = "griffon-guide-${version}.pdf"
 }
 
 task zipGuide(type: Zip) {
-    dependsOn { [pdfGuide, jarDocs] }
-    appendix = 'guide'
-    from "$buildDir/manual"
+	dependsOn { [pdfGuide, jarDocs] }
+	appendix = 'guide'
+	from "$buildDir/manual"
 }

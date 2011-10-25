@@ -14,15 +14,13 @@
  * limitations under the License.
  */
 
-import org.apache.tools.ant.filters.ReplaceTokens
 import java.text.SimpleDateFormat
 
 apply plugin: 'base'
 apply from: "${rootDir}/gradle/assemble.gradle"
-//apply installer tasks
 
-configurations{
-	runtime {transitive = false}
+configurations {
+	runtime { transitive = false }
 	docs
 	groovy
 }
@@ -43,7 +41,7 @@ evaluationDependsOn(':griffon-wrapper')
 
 dependsOnChildren()
 
-dependencies{
+dependencies {
 	groovy localGroovy() //for api docs generation needed (groovydoc)
     
 	runtime project(":griffon-rt")
@@ -64,6 +62,7 @@ dependencies{
 subprojects { subproj ->
 	apply plugin: 'java'
 	apply from: "${rootDir}/gradle/maven.gradle"
+	// apply from: "${rootDir}/gradle/coverage.gradle"
 	
     sourceCompatibility = '1.5'
 	targetCompatibility = '1.5'
@@ -95,222 +94,21 @@ subprojects { subproj ->
 	}
 }
 
-/*
-// move the following to resources(!java project) subproject
-tasks.withType(Jar).all {jar ->
-    jar.mavenArtifact = false
-    jar.appFileJar = false
-}
-*/
-
-task jarSource(type: Jar){
-    description = "Zips the source distribution."
-    from(project(":griffon-cli").sourceSets.main.allSource) {
-        include 'griffon/test/**/*'
-        include 'griffon/transform/**/*'
-    }
-    from(project(":griffon-rt").sourceSets.main.allSource)
-	classifier = 'sources'
-    into "griffon-$version"
-}
-
-task copyDocs(type: Copy) {
-    destinationDir = "${buildDir}/javadoc-src" as File
-
-    from(project(":griffon-cli").sourceSets.main.allSource) {
-        include 'griffon/test/**/*'
-        include 'griffon/transform/**/*'
-    }
-    from(project(":griffon-rt").sourceSets.main.allSource)
-}
-
-// add according excludes/includes in the api files
-// actually files does not support exclusive filter 
-// operation when appended via plus() 
-// -> @todo: file gradle issue
-task apiDocs(type: Groovydoc, dependsOn: copyDocs) {
-	// def cliSources = files("subprojects/griffon-cli/src/main/groovy") {
-    //     include 'griffon/test/**/*'
-    //     include 'griffon/transform/**/*'
-    // }
-	// def rtSources = files("subprojects/griffon-rt/src/main/groovy") {
-	//     include '**/*'
-	// }
-    // source = cliSources + rtSources
-    source = "${buildDir}/javadoc-src" as File
-	destinationDir = "$buildDir/manual/api" as File
-    docTitle = "Griffon $version"
-    header = "Griffon $version"
-    windowTitle = "Griffon $version"
-    groovyClasspath = configurations.groovy
-	classpath = project(":griffon-rt").sourceSets.main.output + 
-				project(":griffon-rt").configurations.compile				
-				
-    includePrivate = true
-    use = true
-
-    link('http://java.sun.com/j2se/1.5.0/docs/api', 'java.,org.xml.,javax.,org.xml.')
-    link('http://www.dpml.net/api/ant/1.7.0', 'org.apache.ant.,org.apache.tools.ant.')
-    link('http://junit.sourceforge.net/junit3.8.1/javadoc/', 'org.junit.,junit.framework.')
-    link('http://groovy.codehaus.org/api/', 'groovy.,org.codehaus.groovy.')
-}
-
-task buildGuide(type: GrailsDoc, dependsOn: apiDocs) {
-    srcDir = file('src/guide/src')
-	props = file('src/guide/guide.properties')
-    imagesDir = file('src/guide/resources/img')
-	outputDir = file("$buildDir/manual")
-}
-
-task pdfGuide(type:PdfGuide, dependsOn: buildGuide) {
-	inputs.files file("$buildDir/manual/guide")
-	pdfName = "griffon-guide-${version}.pdf"
-}
-
-distBinSpec = copySpec {
-    from("."){
-		include "README"
-		include "INSTALL"
-		include "LICENSE"
-	}
-	from('src/dist'){
-		exclude 'bin'
-	}
-	from('src/griffon'){
-		into 'src/griffon'
-	}
-	from('src/dist/bin'){
-		into 'bin'
-        fileMode = 0755	
-	}
-	into('lib') { 
-		from project(":griffon-cli").configurations.runtime
-	}
-	
-	[":griffon-cli",":griffon-rt",":griffon-scripts"].each { subproj ->
-		from(project(subproj).jar.outputs.files){
-			into("dist")
-		}
-	}
-	
-	/*
-	from(jarResources.outputs.files){
-		into("dist")
-	}
-	*/
-	
-	into('scripts'){
-		from(project(":griffon-scripts").sourceSets.main.allSource)
-	}
-	
-	/*
-	into('doc'){
-		from(project(":griffon-cli").groovyDocJar.outputs.files)
-		from(project(":griffon-rt").groovyDocJar.outputs.files)
-		from(jarSource.outputs.files)
-	}
-	*/
-	
-	into('guide'){
-		from(buildGuide.outputs.files)
-		from(pdfGuide.outputs.files)
-		filter(ReplaceTokens, tokens: ['griffon.version': version])
-	
-		into('api'){
-			from(apiDocs.outputs.files)
-		}	
-	}
-}
-
-task zipBinary(type:Zip){
-	description = "Zips the binary distribution."
-    classifier = 'bin'
-    into "griffon-$version"
-	with distBinSpec
-}
-
-task tarBinary(type: Tar) {
-    description = "Tars the binary distribution."
-    classifier = 'bin'
-    into "griffon-$version"
-	with distBinSpec
-    compression = Compression.GZIP
-}
-
-distSourceSpec = copySpec{
-    from('.') {
-        exclude 'build'
-        exclude '**/.git*'
-        exclude '.git*'
-        exclude '.gradle*'
-        exclude 'clover.license'
-        exclude 'cobertura.ser'
-        exclude '**/*.ipr'
-        exclude '**/*.iws'
-        exclude '**/*.iml'
-    }   
-}
-
-task zipSource(type: Zip){
-    description = "Zips the source distribution."
-    with distSourceSpec
-    classifier = 'src'
-    into "griffon-$version"
-}
-
-task tarSource(type: Tar) {
-    description = "Tars the source distribution."
-    with distSourceSpec
-    classifier = 'src'
-    into "griffon-$version"  
-    compression = Compression.GZIP
-}
-
 // @todo move apply statements to the top of the build script
+apply from: "${rootDir}/gradle/docs.gradle"
+apply from: "${rootDir}/gradle/package.gradle"
+apply from: "${rootDir}/gradle/installer.gradle"
 
-/*sourceSets {
-    scripts {
-        compileClasspath = sourceSets.rt.classes + sourceSets.cli.classes + configurations.scripts
-        java.srcDirs = []
-        groovy.srcDirs = ['src/main/scripts']
-        classesDir = "$buildDir/classes/scripts" as File
-    }*/
-    /*wrapper {
-        compileClasspath = configurations.wrapper
-        java.srcDirs = ['src/wrapper/java']
-        classesDir = "$buildDir/classes/wrapper" as File
-    }
-    intTest {
-        compileClasspath = sourceSets.rt.classes + sourceSets.cli.classes + sourceSets.scripts.classes + configurations.cli + configurations.scripts
-        runtimeClasspath = classes + sourceSets.rt.classes + sourceSets.cli.classes + sourceSets.scripts.classes + configurations.cli + configurations.scripts + files(fileTree("$buildDir/libs/griffon-resources-${version}.jar"))
-        java.srcDirs = []
-        groovy.srcDirs = ['src/test/integration']
-    }
-}*/
-
-/*
-task allClasses(dependsOn: [rtClasses, cliClasses, scriptsClasses]) {
-    description = "Compiles all rt, cli and script classes."
-}*/
-
-
-/*
-task intTest(type: Test) {
-    dependsOn jarResources
-    testClassesDir = sourceSets.intTest.classesDir
-    classpath = sourceSets.intTest.runtimeClasspath
-    testSrcDirs = sourceSets.intTest.groovy.srcDirs as List
-}
-
-task allTests(dependsOn: [test, intTest]) {
-    description = "Runs all unit and integration tests."
+task allTests {
+    dependsOn { [project(':griffon-rt').test] }
+    description = "Runs all tests."
 }
 
 task fullDist(dependsOn: [zipGuide, zipBinary, zipSource, tarBinary, tarSource, izpack, deb]) {
     description = "Assembles all packages."
 }
 
-task bambooStage1(dependsOn: [clean, test]) {
+task bambooStage1(dependsOn: [clean, allTests]) {
     description = "Makes a full test run and assembles all packages."
 }
 
@@ -319,7 +117,6 @@ task bambooStage2(dependsOn: [bambooStage1, fullDist, rpm]) {
 }
 
 task wrapper(type: Wrapper) {
-    gradleVersion = '0.9.2'
+    gradleVersion = '1.0-milestone-5'
     jarFile = 'gradle/wrapper/gradle-wrapper.jar'
 }
-*/

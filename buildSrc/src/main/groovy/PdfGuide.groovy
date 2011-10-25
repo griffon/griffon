@@ -27,7 +27,7 @@ class PdfGuide extends DefaultTask {
 	
 	public PdfGuide(){
 		super()
-		outputFile = new File("${project.buildDir}/pdfGuide")
+		outputFile = new File("${project.buildDir}/manual")
 	}
 	
 	@TaskAction
@@ -36,7 +36,7 @@ class PdfGuide extends DefaultTask {
             PdfBuilder.build(
                     basedir: project.buildDir.absolutePath,
                     home: project.file('grails-doc').absolutePath,
-                    tool: 'pdf/gpars'
+                    tool: 'griffon'
             )
         } catch (x) {
             // it's very likely that the stream is closed before
