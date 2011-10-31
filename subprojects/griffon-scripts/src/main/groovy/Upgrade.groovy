@@ -70,14 +70,9 @@ target('default': "Upgrades a Griffon application from a previous version of Gri
  
         createStructure()
 
-        // Unpack the shared files into a temporary directory, and then
-        // copy over the IDE files.
-        def tmpDir = new File("${basedir}/tmp-upgrade")
-        griffonUnpack(dest: tmpDir.path, src: "griffon-shared-files.jar")
-        copy(todir: "${basedir}") {
-            fileset(dir: tmpDir.path, includes: "*")
-        }
-        delete(dir: tmpDir.path)
+        griffonUnpack(dest: basedir, src: "griffon-shared-files.jar")
+        ant.unzip(src: "${basedir}/griffon-wrapper-files.zip", dest: basedir)
+        ant.delete(file: "${basedir}/griffon-wrapper-files.zip", quiet: true)
 
         // if Config.groovy exists and it does not contain values added
         // since 0.0 then sensible defaultsare provided which keep previous

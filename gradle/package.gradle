@@ -27,9 +27,11 @@ distBinSpec = copySpec {
 	}
 	from('src/griffon'){
 		into 'src/griffon'
+		filter(ReplaceTokens, tokens: ['griffon.version': version, 'groovy.version': groovyVersion])	
 	}
 	from('src/dist/bin'){
 		into 'bin'
+		filter(ReplaceTokens, tokens: ['griffon.version': version, 'groovy.version': groovyVersion])	
         fileMode = 0755	
 	}
 	into('lib') { 
@@ -38,10 +40,13 @@ distBinSpec = copySpec {
 		}
 	}
 	
-	['rt', 'cli', 'scripts', 'resources'].each { subproj ->
+	['rt', 'cli', 'scripts'].each { subproj ->
 		from(project(':griffon-' + subproj).jar.outputs.files){
 			into('dist')
 		}
+	}
+	from(project(':griffon-resources').jarResources.outputs.files){
+		into('dist')
 	}
 	
 	into('scripts'){
@@ -52,12 +57,13 @@ distBinSpec = copySpec {
 		from(jarApi.outputs.files)
 		from(jarSource.outputs.files)
 		from('src/dist/doc')
+		filter(ReplaceTokens, tokens: ['griffon.version': version, 'groovy.version': groovyVersion])	
 	}
 	
 	into('guide'){
 		from(buildGuide.outputs.files)
 		from(pdfGuide.outputs.files)
-		filter(ReplaceTokens, tokens: ['griffon.version': version])	
+		filter(ReplaceTokens, tokens: ['griffon.version': version, 'groovy.version': groovyVersion])	
 	}
 }
 

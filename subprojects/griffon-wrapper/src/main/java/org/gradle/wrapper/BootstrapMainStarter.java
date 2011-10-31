@@ -40,19 +40,19 @@ public class BootstrapMainStarter {
                 return file.getAbsolutePath().endsWith(".jar");
             }
         });
-        for(File file: files) {
+        for (File file : files) {
             libs.add(file);
         }
 
         if (debug) {
-            for(File file: libs) {
+            for (File file : libs) {
                 System.out.println(file.getAbsolutePath());
             }
         }
 
         int i = 0;
         URL[] urls = new URL[libs.size()];
-        for(File file: libs) {
+        for (File file : libs) {
             urls[i++] = file.toURI().toURL();
         }
 
@@ -65,6 +65,6 @@ public class BootstrapMainStarter {
         // Thread.currentThread().setContextClassLoader(contextClassLoader);
         Class<?> mainClass = contextClassLoader.loadClass("org.codehaus.griffon.cli.support.GriffonStarter");
         Method mainMethod = mainClass.getMethod("main", String[].class);
-        mainMethod.invoke(null, new Object[] {args});
+        mainMethod.invoke(null, new Object[]{args});
     }
 }

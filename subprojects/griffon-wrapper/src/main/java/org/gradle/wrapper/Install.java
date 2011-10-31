@@ -17,21 +17,22 @@
 package org.gradle.wrapper;
 
 import java.io.*;
+import java.net.URI;
 import java.util.Enumeration;
+import java.util.Formatter;
 import java.util.Locale;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
-import java.net.URI;
 
 /**
  * @author Hans Dockter
  */
 public class Install {
-    private IDownload download = new Download();
-
-    private boolean alwaysDownload;
-    private boolean alwaysUnpack;
-    private PathAssembler pathAssembler;
+    public static final String DEFAULT_DISTRIBUTION_PATH = "wrapper/dists";
+    private final IDownload download;
+    private final boolean alwaysDownload;
+    private final boolean alwaysUnpack;
+    private final PathAssembler pathAssembler;
 
     public Install(boolean alwaysDownload, boolean alwaysUnpack, IDownload download, PathAssembler pathAssembler) {
         this.alwaysDownload = alwaysDownload;
@@ -40,34 +41,40 @@ public class Install {
         this.pathAssembler = pathAssembler;
     }
 
-    public String createDist(String urlRoot, String distBase, String distPath, String distName, String distVersion,
-                             String distClassifier, String zipBase, String zipPath) throws Exception {
-        String griffonHome = pathAssembler.griffonHome(distBase, distPath, distName, distVersion);
-        File griffonHomeFile = new File(griffonHome);
-        if (!alwaysDownload && !alwaysUnpack && griffonHomeFile.isDirectory()) {
+    public File createDist(URI distributionUrl) throws Exception {
+        return createDist(distributionUrl, PathAssembler.GRIFFON_USER_HOME_STRING, DEFAULT_DISTRIBUTION_PATH, PathAssembler.GRIFFON_USER_HOME_STRING, DEFAULT_DISTRIBUTION_PATH);
+    }
+
+    public File createDist(URI distributionUrl, String distBase, String distPath, String zipBase, String zipPath) throws Exception {
+        File griffonHome = pathAssembler.griffonHome(distBase, distPath, distributionUrl);
+        if (!alwaysDownload && !alwaysUnpack && griffonHome.isDirectory()) {
             return griffonHome;
         }
-        File localZipFile = new File(pathAssembler.distZip(zipBase, zipPath, distName, distVersion, distClassifier));
+        File localZipFile = pathAssembler.distZip(zipBase, zipPath, distributionUrl);
         if (alwaysDownload || !localZipFile.exists()) {
             File tmpZipFile = new File(localZipFile.getParentFile(), localZipFile.getName() + ".part");
             tmpZipFile.delete();
-            String downloadUrl = urlRoot + "/" + distName + "-" + distVersion + "-" + distClassifier + ".zip";
-            System.out.println("Downloading " + downloadUrl);
-            download.download(new URI(downloadUrl), tmpZipFile);
+            System.out.println("Downloading " + distributionUrl);
+            download.download(distributionUrl, tmpZipFile);
             tmpZipFile.renameTo(localZipFile);
         }
-        if (griffonHomeFile.isDirectory()) {
-            System.out.println("Deleting directory " + griffonHomeFile.getAbsolutePath());
-            deleteDir(griffonHomeFile);
+        if (griffonHome.isDirectory()) {
+            System.out.println("Deleting directory " + griffonHome.getAbsolutePath());
+            deleteDir(griffonHome);
         }
-        File distDest = griffonHomeFile.getParentFile();
+        File distDest = griffonHome.getParentFile();
         System.out.println("Unzipping " + localZipFile.getAbsolutePath() + " to " + distDest.getAbsolutePath());
         unzip(localZipFile, distDest);
+        if (!griffonHome.isDirectory()) {
+            throw new RuntimeException(String.format(
+                    "Griffon distribution '%s' does not contain expected root directory '%s'.", distributionUrl,
+                    griffonHome.getName()));
+        }
         setExecutablePermissions(griffonHome);
         return griffonHome;
     }
 
-    private void setExecutablePermissions(String griffonHome) {
+    private void setExecutablePermissions(File griffonHome) {
         if (isWindows()) {
             return;
         }
@@ -80,11 +87,12 @@ public class Install {
                 System.out.println("Set executable permissions for: " + griffonCommand.getAbsolutePath());
             } else {
                 BufferedReader is = new BufferedReader(new InputStreamReader(p.getInputStream()));
-                errorMessage = "";
+                Formatter stdout = new Formatter();
                 String line;
                 while ((line = is.readLine()) != null) {
-                    errorMessage += line + System.getProperty("line.separator");
+                    stdout.format("%s%n", line);
                 }
+                errorMessage = stdout.toString();
             }
         } catch (IOException e) {
             errorMessage = e.getMessage();
@@ -93,7 +101,7 @@ public class Install {
         }
         if (errorMessage != null) {
             System.out.println("Could not set executable permissions for: " + griffonCommand.getAbsolutePath());
-            System.out.println("Please do this manually if you want to use the Gradle UI.");
+            System.out.println("Please do this manually if you want to use the Griffon UI.");
         }
     }
 
@@ -140,7 +148,6 @@ public class Install {
                     new BufferedOutputStream(new FileOutputStream(new File(dest, entry.getName()))));
         }
         zipFile.close();
-        zip.delete();
     }
 
     public void copyInputStream(InputStream in, OutputStream out) throws IOException {

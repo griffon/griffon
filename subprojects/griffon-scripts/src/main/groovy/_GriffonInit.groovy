@@ -109,6 +109,8 @@ target(init: "main init target") {
 
     griffonUnpack(dest: basedir, src: "griffon-shared-files.jar")
     griffonUnpack(dest: basedir, src: "griffon-app-files.jar")
+    ant.unzip(src: "${basedir}/griffon-wrapper-files.zip", dest: basedir)
+    ant.delete(file: "${basedir}/griffon-wrapper-files.zip", quiet: true)
 
     classpath()
 

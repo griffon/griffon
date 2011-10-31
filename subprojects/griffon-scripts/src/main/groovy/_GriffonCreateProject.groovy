@@ -130,6 +130,8 @@ target(initProject: "Initialise an application or plugin project") {
 
     griffonUnpack(dest: basedir, src: "griffon-shared-files.jar")
     griffonUnpack(dest: basedir, src: "griffon-$projectType-files.jar")
+    ant.unzip(src: "${basedir}/griffon-wrapper-files.zip", dest: basedir)
+    ant.delete(file: "${basedir}/griffon-wrapper-files.zip", quiet: true)
 
     ant.delete(quiet: true, failonerror: false) {
         if (fileType == '.java') {

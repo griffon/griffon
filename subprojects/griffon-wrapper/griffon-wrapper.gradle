@@ -29,16 +29,16 @@ repositories {
 }
 
 dependencies {
-	compile 'org.gradle:gradle-wrapper:1.0-milestone-3'
+	compile 'org.gradle:gradle-wrapper:1.0-milestone-5'
 }
 
 jar.doFirst {
    from configurations.compile.collect { it.isDirectory() ? it : zipTree(it) }
 }
 
-task dist(type: Zip) {
-    description = "Creates a wrapper distribution"
-    classifier = "bin"
+task dist(type: Zip) {   
+    description = 'Creates a wrapper distribution'
+    archiveName = 'griffon-wrapper-files.zip'
 	into('wrapper'){
 		from(jar.outputs.files){
 			rename "griffon-wrapper-$version", 'griffon-wrapper'

@@ -17,13 +17,19 @@
 package org.gradle.wrapper;
 
 import java.io.File;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.Map;
+import java.util.Properties;
 
 /**
  * @author Hans Dockter
  * @author Andres Almiray
  */
 public class GriffonWrapperMain {
-    public static final String ALWAYS_UNPACK_ENV = "GRIFFON_WRAPPER_ALWAYS_UNPACK";
+        public static final String ALWAYS_UNPACK_ENV = "GRIFFON_WRAPPER_ALWAYS_UNPACK";
     public static final String ALWAYS_DOWNLOAD_ENV = "GRIFFON_WRAPPER_ALWAYS_DOWNLOAD";
     public static final String DEFAULT_GRIFFON_USER_HOME = System.getProperty("user.home") + "/.griffon";
     public static final String GRIFFON_USER_HOME_PROPERTY_KEY = "griffon.user.home";
@@ -31,35 +37,72 @@ public class GriffonWrapperMain {
     public static final String DEBUG_PROPERTY_KEY = "griffon.wrapper.debug";
 
     public static void main(String[] args) throws Exception {
-        addSystemProperties(args);
-        
-        if (isDebug()) {
-            System.out.println(ALWAYS_UNPACK_ENV + " env variable: " + System.getenv(ALWAYS_UNPACK_ENV));
-            System.out.println(ALWAYS_DOWNLOAD_ENV + " env variable: " + System.getenv(ALWAYS_DOWNLOAD_ENV));
-        }
+        File wrapperJar = wrapperJar();
+        File propertiesFile = wrapperProperties(wrapperJar);
+        File rootDir = rootDir(wrapperJar);
+
+        Properties systemProperties = System.getProperties();
+        systemProperties.putAll(parseSystemPropertiesFromArgs(args));
+
+        addSystemProperties(rootDir);
+
         boolean alwaysDownload = Boolean.parseBoolean(System.getenv(ALWAYS_DOWNLOAD_ENV));
         boolean alwaysUnpack = Boolean.parseBoolean(System.getenv(ALWAYS_UNPACK_ENV));
 
-        new Wrapper().execute(
+        WrapperExecutor.forWrapperPropertiesFile(propertiesFile, System.out).execute(
                 args,
                 new Install(alwaysDownload, alwaysUnpack, new Download(), new PathAssembler(griffonUserHome())),
                 new BootstrapMainStarter());
     }
 
-    private static void addSystemProperties(String[] args) {
-        System.getProperties().putAll(SystemPropertiesHandler.getSystemProperties(args));
-        System.getProperties().putAll(SystemPropertiesHandler.getSystemProperties(new File(griffonUserHome(), "griffon.properties")));
-        System.getProperties().putAll(SystemPropertiesHandler.getSystemProperties(new File("griffon.properties")));
+    private static Map<String, String> parseSystemPropertiesFromArgs(String[] args) {
+        /*
+        SystemPropertiesCommandLineConverter converter = new SystemPropertiesCommandLineConverter();
+        converter.setCommandLineParserFactory(new CommandLineParserFactory() {
+            public CommandLineParser create() {
+                return new CommandLineParser().allowUnknownOptions();
+            }
+        });
+
+        return converter.convert(Arrays.asList(args));
+        */
+        return Collections.emptyMap();
     }
 
-    private static String griffonUserHome() {
-        String griffonUserHome = System.getProperty(GRIFFON_USER_HOME_PROPERTY_KEY);
-        if (griffonUserHome != null) {
-            return griffonUserHome;
-        } else if((griffonUserHome = System.getenv(GRIFFON_USER_HOME_ENV_KEY)) != null) {
-            return griffonUserHome;
+    private static void addSystemProperties(File rootDir) {
+        System.getProperties().putAll(SystemPropertiesHandler.getSystemProperties(new File(griffonUserHome(), "griffon.properties")));
+        System.getProperties().putAll(SystemPropertiesHandler.getSystemProperties(new File(rootDir, "griffon.properties")));
+    }
+
+    private static File rootDir(File wrapperJar) {
+        return wrapperJar.getParentFile().getParentFile().getParentFile();
+    }
+
+    private static File wrapperProperties(File wrapperJar) {
+        return new File(wrapperJar.getParent(), wrapperJar.getName().replaceFirst("\\.jar$", ".properties"));
+    }
+
+    private static File wrapperJar() {
+        URI location;
+        try {
+            location = GriffonWrapperMain.class.getProtectionDomain().getCodeSource().getLocation().toURI();
+        } catch (URISyntaxException e) {
+            throw new RuntimeException(e);
+        }
+        if (!location.getScheme().equals("file")) {
+            throw new RuntimeException(String.format("Cannot determine classpath for wrapper Jar from codebase '%s'.", location));
+        }
+        return new File(location.getPath());
+    }
+
+    private static File griffonUserHome() {
+        String gradleUserHome = System.getProperty(GRIFFON_USER_HOME_PROPERTY_KEY);
+        if (gradleUserHome != null) {
+            return new File(gradleUserHome);
+        } else if((gradleUserHome = System.getenv(GRIFFON_USER_HOME_ENV_KEY)) != null) {
+            return new File(gradleUserHome);
         } else {
-            return DEFAULT_GRIFFON_USER_HOME;
+            return new File(DEFAULT_GRIFFON_USER_HOME);
         }
     }
 

@@ -1,20 +1,22 @@
 apply plugin: 'java'
+
+jar.enabled = false
 	
 dependencies {
-    // compile(project(':griffon-wrapper'))
+    compile(project(':griffon-wrapper'))
 }
 
 tasks.withType(Jar).all { task ->
     task.appFileJar = false
 }
 
-/*
-task jarSharedFiles(type: Jar) {
+task jarSharedFiles(type: Jar, dependsOn: ':griffon-wrapper:dist') {
+    appFileJar = true
     archiveName = 'griffon-shared-files.jar'
     destinationDir = "$buildDir/assemble/jars" as File
-	from(project(":griffon-wrapper").dist.outputs.files)
+	from(project(':griffon-wrapper').file("build/distributions/griffon-wrapper-files.zip"))
 }
-*/
+
 task jarAppFiles(type: Jar) {
     appFileJar = true
     archiveName = 'griffon-app-files.jar'

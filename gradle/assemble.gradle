@@ -17,112 +17,9 @@
 import org.apache.tools.ant.filters.ReplaceTokens
 import java.text.SimpleDateFormat
 
-/*
-sharedManifest = manifest {
-    Date buildTime = new Date()
-    attributes(
-        "Built-By": System.properties['user.name'],
-        "Created-By": System.properties['java.vm.version'] + " (" + System.properties['java.vm.vendor'] + ")",
-        "Build-Date": new SimpleDateFormat('dd-MMM-yyyy').format(buildTime),
-        "Build-Time": new SimpleDateFormat('hh:mm aa').format(buildTime),
-		"Specification-Title": 'Griffon, a Grails inspired desktop application development platform for the JVM',
-		"Specification-Version": project.version,
-		"Specification-Vendor": 'griffon.codehaus.org',
-		"Implementation-Title": 'Griffon, a Grails inspired desktop application development platform for the JVM',
-		"Implementation-Version": project.version,
-		"Implementation-Vendor": 'griffon.codehaus.org')
+task griffonHome {
+    dir = System.getProperty('griffon.home') ?: System.env['GRIFFON_HOME']
 }
-*/
-
-tasks.withType(Jar).all {jar ->
-    jar.mavenArtifact = false
-    jar.appFileJar = false
-}
-
-
-// task jarRt(type: Jar) {
-//     mavenArtifact = true
-//     appendix = 'rt'
-//     metaInf {
-//         from 'src/metainf/rt/META-INF'
-//         include '**/*'
-//     }
-//     manifest = project.manifest {
-//         from sharedManifest
-//         attributes 'Extension-Name': 'griffon-rt'
-//     }
-//     from sourceSets.rt.classes
-// }
-
-// task jarCli(type: Jar) {
-//     mavenArtifact = true
-//     appendix = 'cli'
-//     metaInf {
-//         from 'src/metainf/cli/META-INF'
-//         include '**/*'
-//     }
-//     manifest = project.manifest {
-//         from sharedManifest
-//         attributes 'Extension-Name': 'griffon-cli'
-//     }
-//     from sourceSets.cli.classes
-// }
-/*
-task jarScripts(type: Jar) {
-    mavenArtifact = true
-    appendix = 'scripts'
-    manifest = project.manifest {
-        from sharedManifest
-        attributes 'Extension-Name': 'griffon-scripts'
-    }
-    from sourceSets.scripts.classes
-}
-
-task jarSharedFiles(type: Jar) {
-    dependsOn { distWrapper }
-    appFileJar = true
-    archiveName = "griffon-shared-files.jar"
-    destinationDir = "$buildDir/assemble/jars" as File
-    from "$buildDir/distributions/wrapper"
-}
-
-task jarAppFiles(type: Jar) {
-    appFileJar = true
-    archiveName = "griffon-app-files.jar"
-    destinationDir = "$buildDir/assemble/jars" as File
-    from('src/dist/src/griffon/griffon-app') {
-        into 'griffon-app'
-    }
-}
-
-task jarPluginFiles(type: Jar) {
-    appFileJar = true
-    archiveName = "griffon-plugin-files.jar"
-    destinationDir = "$buildDir/assemble/jars" as File
-    from 'src/dist/src/griffon/templates/plugins'
-}
-
-task jarIntegrationFiles(type: Jar) {
-    appFileJar = true
-    archiveName = "griffon-integration-files.jar"
-    destinationDir = "$buildDir/assemble/jars" as File
-    from 'src/dist/src/griffon/templates/ide-support'
-}
-
-resourceFilesJars = tasks.withType(Jar).matching({ jar -> jar.appFileJar } as Spec)
-
-task jarResources(type: Jar) {
-    dependsOn { resourceFilesJars.all }
-    mavenArtifact = true
-    appendix = 'resources'
-    from "$buildDir/assemble/jars"
-    include '*-files.jar'
-}
-*/
-
-distJars = tasks.withType(Jar).matching({ jar -> !jar.appFileJar } as Spec)
-task griffonHome
-griffonHome.dir = null
 
 task checkGriffonHome << {
     griffonHome.dir = System.getProperty('griffon.home') ?: System.env['GRIFFON_HOME']
@@ -130,15 +27,10 @@ task checkGriffonHome << {
     println "===> \$GRIFFON_HOME is set to $griffonHome.dir"
 }
 
-//@todo convert installBinary to plain copy task
-task installBinary(dependsOn: [checkGriffonHome]) {
+task installBinary(type: Copy, dependsOn: checkGriffonHome) {
     description = 'Installs the binary distribution at $GRIFFON_HOME.'
-	doLast{
-		copy{
-	    	into(griffonHome.dir)
-			with distBinSpec
-		}		
-	}
+	destinationDir = griffonHome.dir as File
+	with distBinSpec
 	doLast {
         ant.chmod(dir: "${griffonHome.dir}/bin", excludes: '*.bat', perm: 'ugo+x')
     }
