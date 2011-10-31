@@ -69,7 +69,7 @@ set CMD_LINE_ARGS=%$
 :execute
 @rem Setup the command line
 
-set CLASSPATH=%APP_HOME%\griffon\wrapper\griffon-wrapper.jar
+set CLASSPATH=%APP_HOME%\wrapper\griffon-wrapper.jar
 
 @rem Execute Griffon
 "%JAVA_EXE%" %DEFAULT_JVM_OPTS% %JAVA_OPTS% %GRIFFON_OPTS% "-Dorg.gradle.appname=%APP_BASE_NAME%" -classpath "%CLASSPATH%" org.gradle.wrapper.GriffonWrapperMain %CMD_LINE_ARGS%

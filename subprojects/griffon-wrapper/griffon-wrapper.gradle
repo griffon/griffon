@@ -23,15 +23,6 @@ configurations {
 	compile.transitive = false	
 }
 
-repositories {
-	//replace flat dir repo by gradles' artifactory
-	//flatDir(dirs: file("${rootDir}/lib/wrapper"))
-}
-
-dependencies {
-	compile 'org.gradle:gradle-wrapper:1.0-milestone-5'
-}
-
 jar.doFirst {
    from configurations.compile.collect { it.isDirectory() ? it : zipTree(it) }
 }
@@ -43,14 +34,12 @@ task dist(type: Zip) {
 		from(jar.outputs.files){
 			rename "griffon-wrapper-$version", 'griffon-wrapper'
 		}
-		from('.') {
-	        include '*.properties'
+		from('src/resources') {
 	        filter(ReplaceTokens, tokens: ['griffon.version': version])
 	    }	
 	}
-	from('bin') {
+	from('src/bin') {
         filter(ReplaceTokens, tokens: ['griffon.version': version])
         fileMode = 0755	
     }
 }
-

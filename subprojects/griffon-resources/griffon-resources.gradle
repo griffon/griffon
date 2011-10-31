@@ -1,10 +1,6 @@
 apply plugin: 'java'
 
 jar.enabled = false
-	
-dependencies {
-    compile(project(':griffon-wrapper'))
-}
 
 tasks.withType(Jar).all { task ->
     task.appFileJar = false
@@ -46,4 +42,8 @@ task jarResources(type: Jar, dependsOn: resourceFilesJars) {
    	resourceFilesJars.each { task ->
 		from task.outputs.files
 	}
+}
+
+artifacts {
+    archives jarResources
 }

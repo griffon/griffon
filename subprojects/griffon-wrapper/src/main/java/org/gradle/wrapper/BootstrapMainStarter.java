@@ -27,15 +27,13 @@ import java.util.List;
  * @author Hans Dockter
  */
 public class BootstrapMainStarter {
-    public void start(String[] args, String griffonHome, String version) throws Exception {
+    public void start(String[] args, File griffonHome) throws Exception {
         boolean debug = GriffonWrapperMain.isDebug();
 
-        File griffonHomeDir = new File(griffonHome);
         List<File> libs = new ArrayList<File>();
-        libs.add(new File(griffonHomeDir, "dist/griffon-cli-" + version + ".jar"));
-        libs.add(new File(griffonHomeDir, "dist/griffon-rt-" + version + ".jar"));
+        libs.addAll(findLauncherJars(griffonHome));
 
-        File[] files = new File(griffonHomeDir, "lib").listFiles(new FileFilter() {
+        File[] files = new File(griffonHome, "lib").listFiles(new FileFilter() {
             public boolean accept(File file) {
                 return file.getAbsolutePath().endsWith(".jar");
             }
@@ -56,8 +54,8 @@ public class BootstrapMainStarter {
             urls[i++] = file.toURI().toURL();
         }
 
-        String griffonHomeDirPath = griffonHomeDir.getCanonicalPath();
-        System.setProperty("griffon.home", griffonHomeDir.getCanonicalPath());
+        String griffonHomeDirPath = griffonHome.getCanonicalPath();
+        System.setProperty("griffon.home", griffonHome.getCanonicalPath());
         System.setProperty("program.name", "Griffon");
         System.setProperty("base.dir", ".");
         System.setProperty("groovy.starter.conf", griffonHomeDirPath + "/conf/groovy-starter.conf");
@@ -66,5 +64,15 @@ public class BootstrapMainStarter {
         Class<?> mainClass = contextClassLoader.loadClass("org.codehaus.griffon.cli.support.GriffonStarter");
         Method mainMethod = mainClass.getMethod("main", String[].class);
         mainMethod.invoke(null, new Object[]{args});
+    }
+
+    private List<File> findLauncherJars(File griffonHome) {
+        List<File> archives = new ArrayList<File>();
+        for (File file : new File(griffonHome, "dist").listFiles()) {
+            if (file.getName().matches("griffon-.*\\.jar")) {
+                archives.add(file);
+            }
+        }
+        return archives;
     }
 }

@@ -110,3 +110,22 @@ task tarSource(type: Tar) {
     into "griffon-$version"  
     compression = Compression.GZIP
 }
+
+task griffonHome {
+    dir = System.getProperty('griffon.home') ?: System.env['GRIFFON_HOME']
+}
+
+task checkGriffonHome << {
+    griffonHome.dir = System.getProperty('griffon.home') ?: System.env['GRIFFON_HOME']
+    assert griffonHome.dir : 'You must define a value for $GRIFFON_HOME first!'
+    println "===> \$GRIFFON_HOME is set to $griffonHome.dir"
+}
+
+task installBinary(type: Copy, dependsOn: checkGriffonHome) {
+    description = 'Installs the binary distribution at $GRIFFON_HOME.'
+	destinationDir = griffonHome.dir as File
+	with distBinSpec
+	doLast {
+        ant.chmod(dir: "${griffonHome.dir}/bin", excludes: '*.bat', perm: 'ugo+x')
+    }
+}
