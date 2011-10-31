@@ -23,7 +23,6 @@ import griffon.core.GriffonAddonDescriptor;
  * Base implementation of the GriffonAddonDescriptor interface.
  *
  * @author Andres Almiray
- *
  * @since 0.9.2
  */
 public class DefaultGriffonAddonDescriptor implements GriffonAddonDescriptor {
@@ -42,25 +41,25 @@ public class DefaultGriffonAddonDescriptor implements GriffonAddonDescriptor {
     }
 
     public String toString() {
-        return name +" "+ version;
+        return name + " " + version;
     }
 
     public String getName() {
         return name;
     }
-    
+
     public String getPluginName() {
         return pluginName;
     }
-    
+
     public String getVersion() {
         return version;
     }
-    
+
     public String getPrefix() {
         return prefix;
     }
-    
+
     public GriffonAddon getAddon() {
         return addon;
     }

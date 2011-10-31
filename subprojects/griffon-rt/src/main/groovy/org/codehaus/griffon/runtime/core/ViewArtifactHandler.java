@@ -19,11 +19,11 @@ package org.codehaus.griffon.runtime.core;
 import griffon.core.GriffonApplication;
 import griffon.core.GriffonClass;
 import griffon.core.GriffonViewClass;
+
 /**
  * Handler for 'View' artifacts.
  *
  * @author Andres Almiray
- *
  * @since 0.9.1
  */
 public class ViewArtifactHandler extends ArtifactHandlerAdapter {

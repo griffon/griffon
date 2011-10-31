@@ -47,7 +47,7 @@ class EventRouter {
     private static int count = 1
 
     private static int identifier() {
-        synchronized(LOCK) {
+        synchronized (LOCK) {
             count++
         }
     }

@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.codehaus.griffon.runtime.core; 
+package org.codehaus.griffon.runtime.core;
 
 import griffon.core.GriffonApplication;
 import griffon.core.ShutdownHandler;
@@ -30,6 +30,6 @@ public class ShutdownHandlerAdapter implements ShutdownHandler {
     }
 
     public void onShutdown(GriffonApplication application) {
-        
+
     }
 }

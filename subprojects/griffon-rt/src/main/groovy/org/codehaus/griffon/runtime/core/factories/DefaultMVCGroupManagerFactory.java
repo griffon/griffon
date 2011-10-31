@@ -16,8 +16,8 @@
 
 package org.codehaus.griffon.runtime.core.factories;
 
-import griffon.core.MVCGroupManager;
 import griffon.core.GriffonApplication;
+import griffon.core.MVCGroupManager;
 import griffon.core.factories.MVCGroupManagerFactory;
 import org.codehaus.griffon.runtime.core.DefaultMVCGroupManager;
 

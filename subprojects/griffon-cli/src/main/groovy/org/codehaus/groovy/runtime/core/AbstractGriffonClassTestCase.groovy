@@ -1,10 +1,9 @@
 package org.codehaus.griffon.runtime.core
 
-import griffon.core.GriffonClass
 import griffon.core.GriffonApplication
+import griffon.core.GriffonClass
 import griffon.test.GriffonUnitTestCase
 import griffon.test.mock.MockGriffonApplication
-
 import griffon.util.ApplicationHolder
 import java.util.concurrent.Callable
 import java.util.concurrent.ExecutorService

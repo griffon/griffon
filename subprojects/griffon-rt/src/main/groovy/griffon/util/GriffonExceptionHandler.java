@@ -31,15 +31,19 @@ import static java.util.Arrays.asList;
  * @author Andres Almiray
  */
 public class GriffonExceptionHandler implements Thread.UncaughtExceptionHandler {
-    /** "griffon.full.stacktrace" */
+    /**
+     * "griffon.full.stacktrace"
+     */
     public static final String GRIFFON_FULL_STACKTRACE = "griffon.full.stacktrace";
-    /** "griffon.exception.output" */
+    /**
+     * "griffon.exception.output"
+     */
     public static final String GRIFFON_EXCEPTION_OUTPUT = "griffon.exception.output";
 
     private static final Logger LOG = LoggerFactory.getLogger(GriffonExceptionHandler.class);
     private static final String[] CONFIG_OPTIONS = {
-        GRIFFON_FULL_STACKTRACE,
-        GRIFFON_EXCEPTION_OUTPUT
+            GRIFFON_FULL_STACKTRACE,
+            GRIFFON_EXCEPTION_OUTPUT
     };
 
     public void uncaughtException(Thread t, Throwable e) {
@@ -49,23 +53,23 @@ public class GriffonExceptionHandler implements Thread.UncaughtExceptionHandler 
     public void handle(Throwable throwable) {
         try {
             sanitize(throwable);
-            if(isOutputEnabled()) throwable.printStackTrace(System.err);
+            if (isOutputEnabled()) throwable.printStackTrace(System.err);
             GriffonApplication app = ApplicationHolder.getApplication();
-            if(app != null) {
+            if (app != null) {
                 LOG.error("Uncaught Exception", throwable);
                 app.event("Uncaught" + GriffonNameUtils.getShortName(throwable.getClass()), asList(throwable));
                 app.event(GriffonApplication.Event.UNCAUGHT_EXCEPTION_THROWN.getName(), asList(throwable));
             }
-         } catch (Throwable t) {
+        } catch (Throwable t) {
             sanitize(t);
-            if(isOutputEnabled()) t.printStackTrace(System.err);
+            if (isOutputEnabled()) t.printStackTrace(System.err);
             LOG.error("An error occurred while handling uncaught exception " + throwable, t);
         }
     }
 
     public static Throwable sanitize(Throwable throwable) {
         try {
-            if(!Boolean.getBoolean(GRIFFON_FULL_STACKTRACE)) StackTraceUtils.deepSanitize(throwable);
+            if (!Boolean.getBoolean(GRIFFON_FULL_STACKTRACE)) StackTraceUtils.deepSanitize(throwable);
         } catch (Throwable t) {
             // don't let the exception get thrown out, will cause infinite looping!
         }
@@ -77,8 +81,8 @@ public class GriffonExceptionHandler implements Thread.UncaughtExceptionHandler 
     }
 
     public static void configure(Map config) {
-        for(String option : CONFIG_OPTIONS) {
-            if(config.containsKey(option)) {
+        for (String option : CONFIG_OPTIONS) {
+            if (config.containsKey(option)) {
                 System.setProperty(option, String.valueOf(config.get(option)));
             }
         }

@@ -24,7 +24,6 @@ import java.util.Map;
  * Base implementation of the GriffonMvcArtifact interface.
  *
  * @author Andres Almiray
- *
  * @since 0.9.1
  */
 public abstract class AbstractGriffonMvcArtifact extends AbstractGriffonArtifact implements GriffonMvcArtifact {

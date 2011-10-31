@@ -12,7 +12,7 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- */ 
+ */
 package org.codehaus.griffon.runtime.core;
 
 import griffon.core.GriffonApplication;
@@ -29,7 +29,6 @@ import java.util.Set;
 
 /**
  * @author Andres Almiray
- *
  * @since 0.9.1
  */
 public class DefaultGriffonServiceClass extends DefaultGriffonClass implements GriffonServiceClass {
@@ -45,45 +44,45 @@ public class DefaultGriffonServiceClass extends DefaultGriffonClass implements G
     }
 
     public String[] getServiceNames() {
-        if(serviceCache.isEmpty()) {
-            for(String propertyName : getPropertiesWithFields()) {
-                 if(!STANDARD_PROPERTIES.contains(propertyName) &&
-                    !serviceCache.contains(propertyName) &&
-                    !GriffonClassUtils.isEventHandler(propertyName) &&
-                    getPropertyValue(propertyName, Closure.class) != null) {
-                      serviceCache.add(propertyName);
-                 }
+        if (serviceCache.isEmpty()) {
+            for (String propertyName : getPropertiesWithFields()) {
+                if (!STANDARD_PROPERTIES.contains(propertyName) &&
+                        !serviceCache.contains(propertyName) &&
+                        !GriffonClassUtils.isEventHandler(propertyName) &&
+                        getPropertyValue(propertyName, Closure.class) != null) {
+                    serviceCache.add(propertyName);
+                }
             }
-            for(Method method : getClazz().getMethods()) {
-                 String methodName = method.getName();
-                 if(!serviceCache.contains(methodName) &&
-                    GriffonClassUtils.isPlainMethod(method) &&
-                    !GriffonClassUtils.isEventHandler(methodName)) {
-                      serviceCache.add(methodName);
-                 }
+            for (Method method : getClazz().getMethods()) {
+                String methodName = method.getName();
+                if (!serviceCache.contains(methodName) &&
+                        GriffonClassUtils.isPlainMethod(method) &&
+                        !GriffonClassUtils.isEventHandler(methodName)) {
+                    serviceCache.add(methodName);
+                }
             }
-            for(MetaProperty p : getMetaProperties()) {
-                 String propertyName = p.getName();
-                 if(GriffonClassUtils.isGetter(p, true)) {
-                     propertyName = GriffonNameUtils.uncapitalize(propertyName.substring(3));
-                 }
-                 if(!STANDARD_PROPERTIES.contains(propertyName) &&
-                    !serviceCache.contains(propertyName) &&
-                    !GriffonClassUtils.isEventHandler(propertyName) &&
-                    isClosureMetaProperty(p)) {
-                      serviceCache.add(propertyName);
-                 }
+            for (MetaProperty p : getMetaProperties()) {
+                String propertyName = p.getName();
+                if (GriffonClassUtils.isGetter(p, true)) {
+                    propertyName = GriffonNameUtils.uncapitalize(propertyName.substring(3));
+                }
+                if (!STANDARD_PROPERTIES.contains(propertyName) &&
+                        !serviceCache.contains(propertyName) &&
+                        !GriffonClassUtils.isEventHandler(propertyName) &&
+                        isClosureMetaProperty(p)) {
+                    serviceCache.add(propertyName);
+                }
             }
-            for(MetaMethod method : getMetaClass().getMethods()) {
-                 String methodName = method.getName();
-                 if(!serviceCache.contains(methodName) &&
-                    GriffonClassUtils.isPlainMethod(method) &&
-                    !GriffonClassUtils.isEventHandler(methodName)) {
-                      serviceCache.add(methodName);
-                 }
+            for (MetaMethod method : getMetaClass().getMethods()) {
+                String methodName = method.getName();
+                if (!serviceCache.contains(methodName) &&
+                        GriffonClassUtils.isPlainMethod(method) &&
+                        !GriffonClassUtils.isEventHandler(methodName)) {
+                    serviceCache.add(methodName);
+                }
             }
         }
-    
+
         return serviceCache.toArray(new String[serviceCache.size()]);
     }
 }

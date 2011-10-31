@@ -16,15 +16,15 @@
 
 package org.codehaus.griffon.runtime.core
 
-import griffon.core.*
-import griffon.util.GriffonExceptionHandler
-import org.slf4j.LoggerFactory
-import org.slf4j.Logger
-import static griffon.util.GriffonNameUtils.isBlank
 import griffon.exceptions.MVCGroupInstantiationException
+import griffon.util.GriffonExceptionHandler
 import org.codehaus.griffon.runtime.builder.UberBuilder
 import org.codehaus.griffon.runtime.util.CompositeBuilderHelper
 import org.codehaus.groovy.runtime.InvokerHelper
+import org.slf4j.Logger
+import org.slf4j.LoggerFactory
+import griffon.core.*
+import static griffon.util.GriffonNameUtils.isBlank
 
 /**
  * Base implementation of the {@code MVCGroupManager} interface.

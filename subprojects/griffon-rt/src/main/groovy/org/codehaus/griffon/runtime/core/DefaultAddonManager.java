@@ -27,7 +27,7 @@ import org.codehaus.griffon.runtime.util.AddonHelper;
 public class DefaultAddonManager extends AbstractAddonManager {
     public DefaultAddonManager(GriffonApplication app) {
         super(app);
-    } 
+    }
 
     protected void doInitialize() {
         AddonHelper.handleAddonsAtStartup(getApp());

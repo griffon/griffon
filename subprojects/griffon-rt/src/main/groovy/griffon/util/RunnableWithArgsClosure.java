@@ -37,7 +37,7 @@ public class RunnableWithArgsClosure extends Closure {
     protected Object doCall(Object[] args) {
         try {
             runnable.run(args);
-        } catch(Exception e) {
+        } catch (Exception e) {
             throw new RuntimeException(e);
         }
         return null;

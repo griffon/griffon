@@ -16,9 +16,9 @@
 package griffon.util
 
 import java.util.concurrent.Callable
-import java.util.concurrent.Future
-import java.util.concurrent.Executors
 import java.util.concurrent.ExecutorService
+import java.util.concurrent.Executors
+import java.util.concurrent.Future
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 
@@ -43,25 +43,25 @@ class UIThreadHelper {
         metaClass.execAsync = UIThreadHelper.instance.&executeAsync
         metaClass.execOutside = UIThreadHelper.instance.&executeOutside
         metaClass.isUIThread = UIThreadHelper.instance.&isUIThread
-        metaClass.execFuture = { Object... args -> 
-            UIThreadHelper.instance.executeFuture(*args)
+        metaClass.execFuture = { Object... args ->
+            UIThreadHelper.instance.executeFuture(* args)
         }
     }
 
     void setUIThreadHandler(UIThreadHandler threadHandler) {
-        if(this.uiThreadHandler) {
-            if(LOG.warnEnabled) LOG.warn("UIThreadHandler is already set, you can't change it!")
+        if (this.uiThreadHandler) {
+            if (LOG.warnEnabled) LOG.warn("UIThreadHandler is already set, you can't change it!")
         } else {
             this.uiThreadHandler = threadHandler
         }
     }
 
     UIThreadHandler getUIThreadHandler() {
-        if(!this.uiThreadHandler) {
+        if (!this.uiThreadHandler) {
             try {
                 // attempt loading of default UIThreadHandler -> Swing
                 setUIThreadHandler(getClass().classLoader.loadClass("griffon.swing.SwingUIThreadHandler").newInstance())
-            } catch(ClassNotFoundException e) {
+            } catch (ClassNotFoundException e) {
                 throw new IllegalStateException("Can't locate a suitable UIThreadHandler. Did you forget to register one?")
             }
         }

@@ -23,10 +23,9 @@ import java.beans.PropertyChangeSupport;
 
 /**
  * @author Andres Almiray
- *
  * @since 0.9.1
  */
-public abstract class AbstractObservable implements  Observable {
+public abstract class AbstractObservable implements Observable {
     protected PropertyChangeSupport pcs;
 
     public AbstractObservable() {

@@ -27,8 +27,8 @@ import java.util.regex.Pattern;
  *
  * @author Graeme Rocher
  * @since 1.1
- * 
- * Created: Dec 12, 2008
+ *        <p/>
+ *        Created: Dec 12, 2008
  */
 
 public class Metadata extends Properties {
@@ -58,22 +58,23 @@ public class Metadata extends Properties {
      */
     public static void reset() {
         Metadata m = metadata.get();
-        if(m!=null) {
+        if (m != null) {
             m.clear();
-            m.initialized=false;            
+            m.initialized = false;
         }
     }
+
     /**
      * @return Returns the metadata for the current application
      */
     public static Metadata getCurrent() {
         Metadata m = metadata.get();
-        if(m == null) {
+        if (m == null) {
             metadata = new SoftReference<Metadata>(new Metadata());
-            m = metadata.get();            
+            m = metadata.get();
         }
-        if(!m.initialized) {
-            InputStream input=null;
+        if (!m.initialized) {
+            InputStream input = null;
             try {
                 // GRIFFON-108 enable reading metadata from a local file IF AND ONLY IF
                 // current environment == 'dev'.
@@ -86,16 +87,14 @@ public class Metadata extends Properties {
                 // GRIFFON-255 there may be multiple versions of "application.properties" in the classpath
                 // due to addon packaging. Avoid any URLS that look like plugin dirs or addon jars
                 input = fetchApplicationProperties(Thread.currentThread().getContextClassLoader());
-                if(input == null) input = fetchApplicationProperties(Metadata.class.getClassLoader());
+                if (input == null) input = fetchApplicationProperties(Metadata.class.getClassLoader());
 
-                if(input != null) {
+                if (input != null) {
                     m.load(input);
                 }
-            }
-            catch (Exception e) {
+            } catch (Exception e) {
                 throw new RuntimeException("Cannot load application metadata:" + e.getMessage(), e);
-            }
-            finally {
+            } finally {
                 closeQuietly(input);
                 m.initialized = true;
             }
@@ -106,6 +105,7 @@ public class Metadata extends Properties {
 
     /**
      * Loads a Metadata instance from a Reader
+     *
      * @param inputStream The InputStream
      * @return a Metadata instance
      */
@@ -115,9 +115,8 @@ public class Metadata extends Properties {
 
         try {
             m.load(inputStream);
-            m.initialized=true;
-        }
-        catch (IOException e) {
+            m.initialized = true;
+        } catch (IOException e) {
             throw new RuntimeException("Cannot load application metadata:" + e.getMessage(), e);
         }
         return m;
@@ -125,6 +124,7 @@ public class Metadata extends Properties {
 
     /**
      * Loads and returns a new Metadata object for the given File
+     *
      * @param file The File
      * @return A Metadata object
      */
@@ -132,17 +132,15 @@ public class Metadata extends Properties {
         Metadata m = new Metadata(file);
         metadata = new FinalReference<Metadata>(m);
 
-        if(file!= null && file.exists()) {
+        if (file != null && file.exists()) {
             FileInputStream input = null;
             try {
                 input = new FileInputStream(file);
                 m.load(input);
                 m.initialized = true;
-            }
-            catch (Exception e) {
+            } catch (Exception e) {
                 throw new RuntimeException("Cannot load application metadata:" + e.getMessage(), e);
-            }
-            finally {
+            } finally {
                 closeQuietly(input);
             }
         }
@@ -151,14 +149,15 @@ public class Metadata extends Properties {
 
     /**
      * Reloads the application metadata
+     *
      * @return The metadata object
      */
     public static Metadata reload() {
         File f = getCurrent().metadataFile;
-        
-        if(f!=null) {
+
+        if (f != null) {
             return getInstance(f);
-        }            
+        }
         return getCurrent();
     }
 
@@ -192,6 +191,7 @@ public class Metadata extends Properties {
 
     /**
      * Obtains a map (name->version) of installed plugins specified in the project metadata
+     *
      * @return A map of installed plugins
      */
     public Map<String, String> getInstalledPlugins() {
@@ -216,21 +216,21 @@ public class Metadata extends Properties {
      */
     public String getGriffonStartDir() {
         String griffonStartDir = (String) get(GRIFFON_START_DIR);
-        if(griffonStartDir == null) {
+        if (griffonStartDir == null) {
             griffonStartDir = System.getProperty(GRIFFON_START_DIR);
-            if(griffonStartDir != null && griffonStartDir.length() > 1 &&
-                griffonStartDir.startsWith("\"") && griffonStartDir.endsWith("\"")) {
+            if (griffonStartDir != null && griffonStartDir.length() > 1 &&
+                    griffonStartDir.startsWith("\"") && griffonStartDir.endsWith("\"")) {
                 // normalize without double quotes
                 griffonStartDir = griffonStartDir.substring(1, griffonStartDir.length() - 1);
                 System.setProperty(GRIFFON_START_DIR, griffonStartDir);
             }
-            if(griffonStartDir != null && griffonStartDir.length() > 1 &&
-                griffonStartDir.startsWith("'") && griffonStartDir.endsWith("'")) {
+            if (griffonStartDir != null && griffonStartDir.length() > 1 &&
+                    griffonStartDir.startsWith("'") && griffonStartDir.endsWith("'")) {
                 // normalize without single quotes
                 griffonStartDir = griffonStartDir.substring(1, griffonStartDir.length() - 1);
                 System.setProperty(GRIFFON_START_DIR, griffonStartDir);
             }
-            if(griffonStartDir != null) {
+            if (griffonStartDir != null) {
                 put(GRIFFON_START_DIR, griffonStartDir);
             }
         }
@@ -246,9 +246,9 @@ public class Metadata extends Properties {
      */
     public String getGriffonStartDirSafe() {
         String griffonStartDir = getGriffonStartDir();
-        if(griffonStartDir == null) {
+        if (griffonStartDir == null) {
             File path = new File(".");
-            if(path.canWrite()) {
+            if (path.canWrite()) {
                 return path.getAbsolutePath();
             }
             return System.getProperty("user.dir");
@@ -261,10 +261,10 @@ public class Metadata extends Properties {
      */
     public File getGriffonWorkingDir() {
         String griffonWorkingDir = (String) get(GRIFFON_WORKING_DIR);
-        if(griffonWorkingDir == null) {
+        if (griffonWorkingDir == null) {
             String griffonStartDir = getGriffonStartDirSafe();
             File workDir = new File(griffonStartDir);
-            if(workDir.canWrite()) {
+            if (workDir.canWrite()) {
                 put(GRIFFON_WORKING_DIR, griffonStartDir);
                 return workDir;
             } else {
@@ -274,13 +274,13 @@ public class Metadata extends Properties {
                     workDir = new File(temp.getParent(), getApplicationName());
                     put(GRIFFON_WORKING_DIR, workDir.getAbsolutePath());
                     return workDir;
-                } catch(IOException ioe) {
+                } catch (IOException ioe) {
                     // ignore ??
                     // should not happen
                 }
             }
         }
-        
+
         return new File(griffonWorkingDir);
     }
 
@@ -289,19 +289,17 @@ public class Metadata extends Properties {
      */
     public void persist() {
         if (propertiesHaveNotChanged())
-            return;    
+            return;
 
-        if(metadataFile != null) {
+        if (metadataFile != null) {
             FileOutputStream out = null;
 
             try {
                 out = new FileOutputStream(metadataFile);
                 store(out, "Griffon Metadata file");
-            }
-            catch (Exception e) {
-                throw new RuntimeException("Error persisting metadata to file ["+metadataFile+"]: " + e.getMessage(),e );
-            }
-            finally {
+            } catch (Exception e) {
+                throw new RuntimeException("Error persisting metadata to file [" + metadataFile + "]: " + e.getMessage(), e);
+            } finally {
                 closeQuietly(out);
             }
         }
@@ -309,23 +307,23 @@ public class Metadata extends Properties {
 
     /**
      * @return Returns true if these properties have not changed since they were loaded
-     */    
-    public boolean propertiesHaveNotChanged(){
+     */
+    public boolean propertiesHaveNotChanged() {
         Metadata transientMetadata = getCurrent();
-        
+
         Metadata allStringValuesMetadata = new Metadata();
-        Map<Object,Object> transientMap = (Map<Object,Object>)transientMetadata;
-        for(Map.Entry<Object, Object> entry : transientMap.entrySet()) {
-            if(entry.getValue() != null) {
+        Map<Object, Object> transientMap = (Map<Object, Object>) transientMetadata;
+        for (Map.Entry<Object, Object> entry : transientMap.entrySet()) {
+            if (entry.getValue() != null) {
                 allStringValuesMetadata.put(entry.getKey().toString(), entry.getValue().toString());
             }
         }
 
-        Metadata persistedMetadata = Metadata.reload();    
+        Metadata persistedMetadata = Metadata.reload();
         boolean result = allStringValuesMetadata.equals(persistedMetadata);
         metadata = new SoftReference<Metadata>(transientMetadata);
         return result;
-    }    
+    }
 
     /**
      * Overrides, called by the store method.
@@ -334,19 +332,18 @@ public class Metadata extends Properties {
     public synchronized Enumeration keys() {
         Enumeration keysEnum = super.keys();
         Vector keyList = new Vector();
-        while(keysEnum.hasMoreElements()){
+        while (keysEnum.hasMoreElements()) {
             keyList.add(keysEnum.nextElement());
         }
         Collections.sort(keyList);
         return keyList.elements();
     }
-    
+
     private static void closeQuietly(Closeable c) {
         if (c != null) {
             try {
                 c.close();
-            }
-            catch (Exception ignored) {
+            } catch (Exception ignored) {
                 // ignored
             }
         }
@@ -354,9 +351,10 @@ public class Metadata extends Properties {
 
     static class FinalReference<T> extends SoftReference<T> {
         private T ref;
+
         public FinalReference(T t) {
             super(t);
-            this.ref =t;
+            this.ref = t;
         }
 
         @Override
@@ -370,18 +368,18 @@ public class Metadata extends Properties {
 
         try {
             urls = classLoader.getResources(FILE);
-        } catch(IOException ioe) {
+        } catch (IOException ioe) {
             throw new RuntimeException(ioe);
         }
 
-        while(urls.hasMoreElements()) {
-           try {
-               URL url = urls.nextElement();
-               if(SKIP_PATTERN.matcher(url.toString()).matches()) continue;
-               return url.openStream();
-           } catch(IOException ioe) {
-               // skip
-           }
+        while (urls.hasMoreElements()) {
+            try {
+                URL url = urls.nextElement();
+                if (SKIP_PATTERN.matcher(url.toString()).matches()) continue;
+                return url.openStream();
+            } catch (IOException ioe) {
+                // skip
+            }
         }
 
         return null;

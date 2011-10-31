@@ -17,15 +17,15 @@
 package org.codehaus.griffon.runtime.core;
 
 
+import griffon.core.GriffonApplication;
+import griffon.core.MVCGroup;
+import griffon.core.MVCGroupConfiguration;
+
 import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
 import static griffon.util.GriffonNameUtils.isBlank;
-
-import griffon.core.GriffonApplication;
-import griffon.core.MVCGroup;
-import griffon.core.MVCGroupConfiguration;
 
 /**
  * Base implementation of the {@code MVCGroupConfiguration} interface

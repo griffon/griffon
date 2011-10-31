@@ -17,12 +17,9 @@
 package org.codehaus.griffon.runtime.core;
 
 import griffon.core.*;
-import groovy.lang.ExpandoMetaClass;
-import groovy.lang.GroovySystem;
 import groovy.lang.MetaClass;
 import groovy.lang.MetaProperty;
 import org.codehaus.groovy.runtime.InvokerHelper;
-import org.codehaus.groovy.runtime.MethodClosure;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

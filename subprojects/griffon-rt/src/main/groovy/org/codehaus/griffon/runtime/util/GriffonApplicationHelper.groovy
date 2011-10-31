@@ -15,18 +15,21 @@
  */
 package org.codehaus.griffon.runtime.util
 
+import griffon.core.factories.AddonManagerFactory
+import griffon.core.factories.ArtifactManagerFactory
+import griffon.core.factories.MVCGroupManagerFactory
 import java.lang.reflect.Constructor
 import org.apache.log4j.LogManager
 import org.apache.log4j.helpers.LogLog
+import org.codehaus.griffon.runtime.core.ControllerArtifactHandler
+import org.codehaus.griffon.runtime.core.ModelArtifactHandler
+import org.codehaus.griffon.runtime.core.ServiceArtifactHandler
+import org.codehaus.griffon.runtime.core.ViewArtifactHandler
 import org.codehaus.griffon.runtime.logging.Log4jConfig
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import griffon.core.*
 import griffon.util.*
-import org.codehaus.griffon.runtime.core.*
-import griffon.core.factories.ArtifactManagerFactory
-import griffon.core.factories.AddonManagerFactory
-import griffon.core.factories.MVCGroupManagerFactory
 
 /**
  * Utility class for bootstrapping an application and handling of MVC groups.</p>

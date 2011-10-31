@@ -45,17 +45,17 @@ public class ArtifactInfo {
     }
 
     public boolean equals(Object obj) {
-        if(this == obj) return true;
-        if(obj == null) return false;
-        if(!(obj instanceof ArtifactInfo)) return false;
+        if (this == obj) return true;
+        if (obj == null) return false;
+        if (!(obj instanceof ArtifactInfo)) return false;
 
         ArtifactInfo other = (ArtifactInfo) obj;
         return clazz.equals(other.clazz) &&
-               type.equals(other.type);
+                type.equals(other.type);
     }
 
     public int hashCode() {
         return (clazz.hashCode() * 37) +
-               (type.hashCode() * 31);
+                (type.hashCode() * 31);
     }
 }

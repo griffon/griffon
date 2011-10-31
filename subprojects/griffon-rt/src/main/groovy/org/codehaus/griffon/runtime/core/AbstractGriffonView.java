@@ -32,12 +32,11 @@ import static griffon.util.GriffonNameUtils.isBlank;
  * Base implementation of the GriffonView interface.
  *
  * @author Andres Almiray
- *
  * @since 0.9.1
  */
 public abstract class AbstractGriffonView extends AbstractGriffonMvcArtifact implements GriffonView {
     private FactoryBuilderSupport builder;
-    
+
     protected String getArtifactType() {
         return GriffonViewClass.TYPE;
     }
@@ -72,7 +71,7 @@ public abstract class AbstractGriffonView extends AbstractGriffonMvcArtifact imp
      *     <button action="clickAction"/>
      * </application>
      * </xmp></pre>
-     *
+     * <p/>
      * <p>are translated to</p>
      * <pre>
      * application(title: app.config.application.title, pack: true) {
@@ -88,11 +87,10 @@ public abstract class AbstractGriffonView extends AbstractGriffonMvcArtifact imp
      *
      * @param args a Map containing all relevant values that the build might need to build the
      *             View; this typically includes 'app', 'controller' and 'model'.
-     *
      * @since 0.9.2
      */
     public void buildViewFromXml(Map<String, Object> args) {
-        buildViewFromXml(args, getClass().getName().replace('.','/') + ".xml");
+        buildViewFromXml(args, getClass().getName().replace('.', '/') + ".xml");
     }
 
     /**
@@ -115,7 +113,7 @@ public abstract class AbstractGriffonView extends AbstractGriffonMvcArtifact imp
      *     <button action="clickAction"/>
      * </application>
      * </xmp></pre>
-     *
+     * <p/>
      * <p>are translated to</p>
      * <pre>
      * application(title: app.config.application.title, pack: true) {
@@ -129,32 +127,31 @@ public abstract class AbstractGriffonView extends AbstractGriffonMvcArtifact imp
      * }
      * </pre>
      *
-     * @param args a Map containing all relevant values that the build might need to build the
-     *             View; this typically includes 'app', 'controller' and 'model'.
+     * @param args     a Map containing all relevant values that the build might need to build the
+     *                 View; this typically includes 'app', 'controller' and 'model'.
      * @param fileName the name of an XML file
-     *
      * @since 0.9.2
      */
     public void buildViewFromXml(Map<String, Object> args, String fileName) {
-        if(isBlank(fileName)) {
+        if (isBlank(fileName)) {
             throw new IllegalArgumentException("Invalid file name for externalized view.");
         }
-   
+
         InputStream is = getClass().getClassLoader().getResourceAsStream(fileName);
-        if(is == null) {
-            throw new IllegalArgumentException("Could not read file "+ fileName);
+        if (is == null) {
+            throw new IllegalArgumentException("Could not read file " + fileName);
         }
 
         String groovyScript = Xml2Groovy.getInstance().parse(is);
-        if(isBlank(groovyScript)) {
-            throw new IllegalArgumentException("File "+ fileName +" is empty.");
-        } else if(getLog().isTraceEnabled()) {
-            getLog().trace("View script for "+ fileName +"\n"+ groovyScript);
+        if (isBlank(groovyScript)) {
+            throw new IllegalArgumentException("File " + fileName + " is empty.");
+        } else if (getLog().isTraceEnabled()) {
+            getLog().trace("View script for " + fileName + "\n" + groovyScript);
         }
 
         final Script script = new GroovyShell().parse(groovyScript);
         script.setBinding(getBuilder());
-        for(Map.Entry<String, ?> arg : args.entrySet()) {
+        for (Map.Entry<String, ?> arg : args.entrySet()) {
             script.getBinding().setVariable(arg.getKey(), arg.getValue());
         }
 

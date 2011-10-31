@@ -25,7 +25,7 @@ class AbstractSyntheticMetaMethods {
     static boolean hasBeenEnhanced(Class klass) {
         MetaClassRegistry mcr = GroovySystem.metaClassRegistry
         MetaClass mc = mcr.getMetaClass(klass)
-        if( !(mc instanceof ExpandoMetaClass) ) return false
+        if (!(mc instanceof ExpandoMetaClass)) return false
         return mc.hasMetaProperty(ENHANCED)
     }
 
@@ -33,8 +33,8 @@ class AbstractSyntheticMetaMethods {
         MetaClassRegistry mcr = GroovySystem.metaClassRegistry
         MetaClass mc = mcr.getMetaClass(klass)
         boolean init = false
-        if( !(mc instanceof ExpandoMetaClass) ||
-             (mc instanceof ExpandoMetaClass && !mc.isModified()) ) {
+        if (!(mc instanceof ExpandoMetaClass) ||
+                (mc instanceof ExpandoMetaClass && !mc.isModified())) {
             mcr.removeMetaClass klass
             mc = new ExpandoMetaClass(klass)
             init = true
@@ -48,7 +48,7 @@ class AbstractSyntheticMetaMethods {
                 mc.registerInstanceMethod(k, v)
             }
         }
-        mc.registerBeanProperty(ENHANCED,true)
+        mc.registerBeanProperty(ENHANCED, true)
         if (init) {
             mc.initialize()
             mcr.setMetaClass(klass, mc)

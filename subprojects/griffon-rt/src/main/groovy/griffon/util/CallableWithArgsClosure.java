@@ -37,7 +37,7 @@ public class CallableWithArgsClosure<T> extends Closure {
     protected Object doCall(Object[] args) {
         try {
             return (Object) callable.call(args);
-        } catch(Exception e) {
+        } catch (Exception e) {
             throw new RuntimeException(e);
         }
     }

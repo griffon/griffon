@@ -20,7 +20,6 @@ package griffon.core;
  * Models should always be {@code Observable}.
  *
  * @author Andres Almiray
- *
  * @since 0.9.1
  */
 public interface GriffonModel extends GriffonMvcArtifact, Observable {

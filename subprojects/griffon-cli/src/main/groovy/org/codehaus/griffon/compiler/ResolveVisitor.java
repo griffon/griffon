@@ -15,8 +15,8 @@
  */
 package org.codehaus.griffon.compiler;
 
-import org.codehaus.groovy.control.*;
 import groovy.lang.GroovyClassLoader;
+import org.codehaus.groovy.GroovyBugError;
 import org.codehaus.groovy.ast.*;
 import org.codehaus.groovy.ast.expr.*;
 import org.codehaus.groovy.ast.stmt.BlockStatement;
@@ -24,9 +24,11 @@ import org.codehaus.groovy.ast.stmt.CatchStatement;
 import org.codehaus.groovy.ast.stmt.ForStatement;
 import org.codehaus.groovy.ast.stmt.Statement;
 import org.codehaus.groovy.classgen.Verifier;
+import org.codehaus.groovy.control.CompilationFailedException;
+import org.codehaus.groovy.control.CompilationUnit;
+import org.codehaus.groovy.control.SourceUnit;
 import org.codehaus.groovy.control.messages.ExceptionMessage;
 import org.codehaus.groovy.syntax.Types;
-import org.codehaus.groovy.GroovyBugError;
 import org.objectweb.asm.Opcodes;
 
 import java.io.File;

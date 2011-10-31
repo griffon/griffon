@@ -31,6 +31,7 @@ public class ApplicationHolder {
 
     /**
      * Returns the current running application.
+     *
      * @return a reference to the current running application
      */
     public static synchronized GriffonApplication getApplication() {

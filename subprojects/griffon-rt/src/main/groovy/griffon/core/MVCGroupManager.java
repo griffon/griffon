@@ -15,10 +15,8 @@
  */
 package griffon.core;
 
-import groovy.lang.Closure;
 import groovy.util.FactoryBuilderSupport;
 
-import java.util.List;
 import java.util.Map;
 
 /**

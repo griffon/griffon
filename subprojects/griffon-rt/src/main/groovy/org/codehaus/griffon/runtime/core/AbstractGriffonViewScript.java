@@ -16,7 +16,8 @@
 
 package org.codehaus.griffon.runtime.core;
 
-import griffon.core.*;
+import griffon.core.GriffonView;
+import griffon.core.GriffonViewClass;
 import groovy.util.FactoryBuilderSupport;
 
 /**

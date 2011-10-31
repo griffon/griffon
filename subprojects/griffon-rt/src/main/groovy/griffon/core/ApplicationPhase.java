@@ -22,14 +22,24 @@ package griffon.core;
  * @since 0.9
  */
 public enum ApplicationPhase {
-    /** 1st phase. All applications start with this one */
+    /**
+     * 1st phase. All applications start with this one
+     */
     INITIALIZE,
-    /** 2nd phase. This is where MVC groups are created */
+    /**
+     * 2nd phase. This is where MVC groups are created
+     */
     STARTUP,
-    /** 3rd phase. Called after main window is shown */
+    /**
+     * 3rd phase. Called after main window is shown
+     */
     READY,
-    /** Main phase. */
+    /**
+     * Main phase.
+     */
     MAIN,
-    /** Last phase. */
+    /**
+     * Last phase.
+     */
     SHUTDOWN
 }

@@ -23,23 +23,23 @@ import java.lang.reflect.Method;
 
 /**
  * Represents a regular expression of the form ~<double quoted string> which creates
- * a regular expression. 
- * 
+ * a regular expression.
+ *
  * @author <a href="mailto:james@coredevelopers.net">James Strachan</a>
  * @version $Revision$
  */
 @Deprecated
 public class RegexExpression extends Expression {
-    
+
     private static final Logger LOG = Logger.getLogger(RegexExpression.class);
 
     private final Expression string;
-    
+
     public RegexExpression(Expression string) {
         this.string = string;
         super.setType(ClassHelper.PATTERN_TYPE);
     }
-    
+
     public void visit(GroovyCodeVisitor visitor) {
 
         // find the visitRegexExpression if it exists, ignore otherwise
@@ -48,15 +48,15 @@ public class RegexExpression extends Expression {
             method.invoke(visitor, this);
         } catch (NoSuchMethodException ignored) {
             // no method is the most likely case
-        }catch (Exception e) {
+        } catch (Exception e) {
             LOG.error("An exception occurred dispatching to visitRegexExpression", e);
         }
     }
 
     public Expression transformExpression(ExpressionTransformer transformer) {
-        Expression ret = new RegexExpression(transformer.transform(string)); 
+        Expression ret = new RegexExpression(transformer.transform(string));
         ret.setSourcePosition(this);
-        return ret;       
+        return ret;
     }
 
     public Expression getRegex() {

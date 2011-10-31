@@ -15,8 +15,8 @@
  */
 package org.codehaus.griffon.commons;
 
-import griffon.util.GriffonUtil;
 import griffon.util.GriffonClassUtils;
+import griffon.util.GriffonUtil;
 import groovy.lang.GroovyObject;
 import groovy.lang.GroovySystem;
 import groovy.lang.MetaClass;

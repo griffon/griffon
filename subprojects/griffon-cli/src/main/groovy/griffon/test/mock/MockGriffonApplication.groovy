@@ -15,8 +15,8 @@
  */
 package griffon.test.mock
 
-import griffon.util.UIThreadHandler
 import griffon.core.UIThreadManager
+import griffon.util.UIThreadHandler
 import org.codehaus.griffon.runtime.core.AbstractGriffonApplication
 
 /**

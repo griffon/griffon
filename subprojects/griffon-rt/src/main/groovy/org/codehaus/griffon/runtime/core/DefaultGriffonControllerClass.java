@@ -79,7 +79,7 @@ public class DefaultGriffonControllerClass extends DefaultGriffonClass implement
                 String methodName = method.getName();
                 if (!actionsCache.contains(methodName) &&
                         GriffonClassUtils.isPlainMethod(method) &&
-                        !GriffonClassUtils.isEventHandler(methodName)&&
+                        !GriffonClassUtils.isEventHandler(methodName) &&
                         hasVoidOrDefAsReturnType(method)) {
                     actionsCache.add(methodName);
                 }

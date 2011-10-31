@@ -17,15 +17,14 @@
 package org.codehaus.griffon.ast;
 
 import griffon.core.EventPublisher;
-import org.codehaus.griffon.runtime.core.EventRouter;
 import griffon.util.RunnableWithArgs;
+import org.codehaus.griffon.runtime.core.EventRouter;
 import org.codehaus.groovy.ast.*;
-import org.codehaus.groovy.ast.expr.*;
+import org.codehaus.groovy.ast.expr.ListExpression;
 import org.codehaus.groovy.control.CompilePhase;
 import org.codehaus.groovy.control.SourceUnit;
 import org.codehaus.groovy.control.messages.SimpleMessage;
 import org.codehaus.groovy.transform.GroovyASTTransformation;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

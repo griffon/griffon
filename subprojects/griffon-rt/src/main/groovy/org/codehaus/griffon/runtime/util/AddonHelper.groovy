@@ -16,19 +16,14 @@
 
 package org.codehaus.griffon.runtime.util
 
-import griffon.core.GriffonAddon
-import griffon.core.GriffonAddonDescriptor
-import griffon.core.GriffonApplication
 import griffon.util.GriffonNameUtils
 import griffon.util.Metadata
-import griffon.core.UIThreadManager
 import org.codehaus.griffon.runtime.builder.UberBuilder
 import org.codehaus.griffon.runtime.core.DefaultGriffonAddon
 import org.codehaus.griffon.runtime.core.DefaultGriffonAddonDescriptor
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
-import griffon.core.ThreadingHandler
-import griffon.core.MVCGroupConfiguration
+import griffon.core.*
 
 /**
  * Helper class for dealing with addon initialization.

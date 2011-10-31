@@ -16,8 +16,8 @@
 
 package org.codehaus.griffon.runtime.core;
 
-import griffon.core.ServiceManager;
 import griffon.core.GriffonApplication;
+import griffon.core.ServiceManager;
 
 /**
  * Base implementation of the {@code ServiceManager} interface.

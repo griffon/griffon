@@ -18,7 +18,6 @@ package org.codehaus.griffon.runtime.core;
 
 import griffon.core.*;
 import griffon.util.ApplicationHolder;
-import griffon.core.UIThreadManager;
 import groovy.lang.Closure;
 import groovy.lang.GroovyObjectSupport;
 import groovy.lang.GroovySystem;

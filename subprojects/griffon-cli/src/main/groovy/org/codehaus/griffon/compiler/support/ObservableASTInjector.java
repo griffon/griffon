@@ -20,7 +20,7 @@ import griffon.core.Observable;
 import groovy.beans.BindableASTTransformation;
 import groovy.beans.VetoableASTTransformation;
 import org.codehaus.groovy.ast.*;
-import org.codehaus.groovy.ast.expr.*;
+import org.codehaus.groovy.ast.expr.VariableExpression;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

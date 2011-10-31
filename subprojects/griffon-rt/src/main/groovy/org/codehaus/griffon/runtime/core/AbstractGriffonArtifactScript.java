@@ -17,9 +17,7 @@
 package org.codehaus.griffon.runtime.core;
 
 import griffon.core.*;
-import griffon.core.UIThreadManager;
 import groovy.lang.*;
-import groovy.util.FactoryBuilderSupport;
 import org.codehaus.griffon.runtime.builder.UberInterceptorMetaClass;
 import org.codehaus.griffon.runtime.util.GriffonApplicationHelper;
 import org.slf4j.Logger;
@@ -40,9 +38,8 @@ import java.util.concurrent.Future;
  */
 public abstract class AbstractGriffonArtifactScript extends Script implements GriffonArtifact {
     private GriffonApplication app;
-    private FactoryBuilderSupport builder;
     private final Logger log;
-    private MetaClass _metaClass;
+    private MetaClass myMetaClass;
 
     public AbstractGriffonArtifactScript(String type) {
         log = LoggerFactory.getLogger("griffon.app." + type + "." + getClass().getName());
@@ -61,21 +58,21 @@ public abstract class AbstractGriffonArtifactScript extends Script implements Gr
     }
 
     public MetaClass getMetaClass() {
-        if (_metaClass == null) {
+        if (myMetaClass == null) {
             Class clazz = getClass();
-            _metaClass = GroovySystem.getMetaClassRegistry().getMetaClass(clazz);
-            if (!(_metaClass instanceof ExpandoMetaClass) || !(_metaClass instanceof UberInterceptorMetaClass)) {
-                _metaClass = new ExpandoMetaClass(clazz, true, true);
-                log.debug("Upgrading MetaClass to " + _metaClass);
-                _metaClass.initialize();
-                GroovySystem.getMetaClassRegistry().setMetaClass(clazz, _metaClass);
+            myMetaClass = GroovySystem.getMetaClassRegistry().getMetaClass(clazz);
+            if (!(myMetaClass instanceof ExpandoMetaClass) || !(myMetaClass instanceof UberInterceptorMetaClass)) {
+                myMetaClass = new ExpandoMetaClass(clazz, true, true);
+                log.debug("Upgrading MetaClass to " + myMetaClass);
+                myMetaClass.initialize();
+                GroovySystem.getMetaClassRegistry().setMetaClass(clazz, myMetaClass);
             }
         }
-        return _metaClass;
+        return myMetaClass;
     }
 
     public void setMetaClass(MetaClass metaClass) {
-        _metaClass = metaClass;
+        myMetaClass = metaClass;
         GroovySystem.getMetaClassRegistry().setMetaClass(getClass(), metaClass);
     }
 

@@ -56,19 +56,18 @@ public enum RunMode {
     public static RunMode getCurrent() {
         String modeName = System.getProperty(RunMode.KEY);
 
-        if(isBlank(modeName)) {
+        if (isBlank(modeName)) {
             return STANDALONE;
         } else {
             RunMode mode = getRunMode(modeName);
-            if(mode == null) {
+            if (mode == null) {
                 try {
                     mode = RunMode.valueOf(modeName.toUpperCase());
-                }
-                catch (IllegalArgumentException e) {
+                } catch (IllegalArgumentException e) {
                     // ignore
                 }
             }
-            if(mode == null) {
+            if (mode == null) {
                 mode = RunMode.CUSTOM;
                 mode.setName(modeName);
             }
@@ -80,24 +79,25 @@ public enum RunMode {
      * @see #getCurrent()
      */
     public static RunMode getCurrentRunMode() {
-        return getCurrent();        
+        return getCurrent();
     }
 
     /**
      * @return Return true if the running mode has been set as a System property
      */
     public static boolean isSystemSet() {
-        return System.getProperty(KEY) !=null;
+        return System.getProperty(KEY) != null;
     }
 
     /**
      * Returns the running mode for the given short name
+     *
      * @param shortName The short name
      * @return The RunMode or null if not known
      */
     public static RunMode getRunMode(String shortName) {
         final String modeName = modeNameMappings.get(shortName);
-        if(modeName !=null) {
+        if (modeName != null) {
             return RunMode.valueOf(modeName.toUpperCase());
         }
         return null;
@@ -110,10 +110,10 @@ public enum RunMode {
     private String name;
 
     /**
-     * @return The name of the running mode 
+     * @return The name of the running mode
      */
     public String getName() {
-        if(name == null) {
+        if (name == null) {
             return this.toString().toLowerCase(Locale.getDefault());
         }
         return name;

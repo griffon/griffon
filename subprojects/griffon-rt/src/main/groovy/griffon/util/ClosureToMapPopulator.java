@@ -59,16 +59,14 @@ public class ClosureToMapPopulator extends GroovyObjectSupport {
     public Object invokeMethod(String name, Object o) {
         if (o != null) {
             if (o.getClass().isArray()) {
-                Object[] args = (Object[])o;
+                Object[] args = (Object[]) o;
                 if (args.length == 1) {
                     map.put(name, args[0]);
-                }
-                else {
+                } else {
                     map.put(name, Arrays.asList(args));
                 }
-            }
-            else {
-                map.put(name,o);
+            } else {
+                map.put(name, o);
             }
         }
         return null;

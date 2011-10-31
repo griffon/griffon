@@ -29,12 +29,12 @@ public interface ShutdownHandler {
      * @param application the current running application
      * @return true if the shutdown sequence can proceed, false otherwise
      */
-    boolean canShutdown(GriffonApplication application);    
+    boolean canShutdown(GriffonApplication application);
 
     /**
      * Called when the shutdown sequence continues
      *
      * @param application the current running application
      */
-    void onShutdown(GriffonApplication application);    
+    void onShutdown(GriffonApplication application);
 }

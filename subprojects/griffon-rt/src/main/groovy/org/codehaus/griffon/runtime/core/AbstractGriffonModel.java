@@ -27,12 +27,11 @@ import java.beans.PropertyChangeSupport;
  * Base implementation of the GriffonModel interface.
  *
  * @author Andres Almiray
- *
  * @since 0.9.1
  */
 public abstract class AbstractGriffonModel extends AbstractGriffonMvcArtifact implements GriffonModel {
     protected PropertyChangeSupport pcs;
-    
+
     protected String getArtifactType() {
         return GriffonModelClass.TYPE;
     }
@@ -44,7 +43,7 @@ public abstract class AbstractGriffonModel extends AbstractGriffonMvcArtifact im
     public void addPropertyChangeListener(PropertyChangeListener listener) {
         pcs.addPropertyChangeListener(listener);
     }
- 
+
     public void addPropertyChangeListener(String propertyName, PropertyChangeListener listener) {
         pcs.addPropertyChangeListener(propertyName, listener);
     }

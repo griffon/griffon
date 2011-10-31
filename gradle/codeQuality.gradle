@@ -16,9 +16,9 @@
 
 apply plugin: 'code-quality'
 
-def configDir = new File(buildscript.sourceFile.parentFile.parentFile, 'config')
+def configDir = project(':').file('config')
 
 checkstyleConfigDir = "$configDir/checkstyle"
-checkstyleConfigFileName = new File(checkstyleConfigDir, "checkstyle.xml")
+checkstyleConfigFileName = new File(checkstyleConfigDir, 'checkstyle.xml')
 checkstyleProperties.checkstyleConfigDir = checkstyleConfigDir
 codeNarcConfigFileName = "$configDir/codenarc/codenarc.groovy"

@@ -20,8 +20,8 @@ import griffon.util.RunnableWithArgs
 import java.util.concurrent.LinkedBlockingQueue
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
-import static org.codehaus.groovy.runtime.MetaClassHelper.convertToTypeArray
 import static griffon.util.GriffonNameUtils.capitalize
+import static org.codehaus.groovy.runtime.MetaClassHelper.convertToTypeArray
 
 /**
  * An event handling helper.<p>
@@ -119,12 +119,12 @@ class EventRouter {
                 listenersCopy.addAll(listeners)
             }
             synchronized (closureListeners) {
-                for(listener in closureListeners[eventName]) {
+                for (listener in closureListeners[eventName]) {
                     listenersCopy << listener
                 }
             }
 
-            for(listener in listenersCopy) {
+            for (listener in listenersCopy) {
                 fireEvent(listener, eventHandler, params)
             }
         }

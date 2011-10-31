@@ -19,7 +19,6 @@ package griffon.core;
  * Identifies a Controller artifact.
  *
  * @author Andres Almiray
- *
  * @since 0.9.1
  */
 public interface GriffonController extends GriffonMvcArtifact {

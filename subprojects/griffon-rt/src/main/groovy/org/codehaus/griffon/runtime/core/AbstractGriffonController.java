@@ -23,7 +23,6 @@ import griffon.core.GriffonControllerClass;
  * Base implementation of the GriffonController interface.
  *
  * @author Andres Almiray
- *
  * @since 0.9.1
  */
 public abstract class AbstractGriffonController extends AbstractGriffonMvcArtifact implements GriffonController {

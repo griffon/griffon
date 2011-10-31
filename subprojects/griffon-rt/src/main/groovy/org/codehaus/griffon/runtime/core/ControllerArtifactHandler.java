@@ -24,7 +24,6 @@ import griffon.core.GriffonControllerClass;
  * Handler for 'Controller' artifacts.
  *
  * @author Andres Almiray
- *
  * @since 0.9.1
  */
 public class ControllerArtifactHandler extends ArtifactHandlerAdapter {

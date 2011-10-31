@@ -16,10 +16,10 @@
 
 package org.codehaus.griffon.runtime.core;
 
-import java.util.Map;
-
 import griffon.core.GriffonApplication;
 import griffon.core.MVCGroup;
+
+import java.util.Map;
 
 /**
  * Default implementation of the {@code MVCGroupConfiguration} interface

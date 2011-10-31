@@ -46,7 +46,7 @@ public abstract class AbstractAddonManager implements AddonManager {
 
     public AbstractAddonManager(GriffonApplication app) {
         this.app = app;
-    } 
+    }
 
     public GriffonApplication getApp() {
         return app;
@@ -61,23 +61,23 @@ public abstract class AbstractAddonManager implements AddonManager {
     }
 
     public GriffonAddon findAddon(String name) {
-        if(GriffonNameUtils.isBlank(name)) return null;
-        if(!name.endsWith("GriffonAddon")) name += "GriffonAddon";
+        if (GriffonNameUtils.isBlank(name)) return null;
+        if (!name.endsWith("GriffonAddon")) name += "GriffonAddon";
         return addons.get(GriffonNameUtils.capitalize(name));
     }
 
     public GriffonAddonDescriptor findAddonDescriptor(String name) {
-        if(GriffonNameUtils.isBlank(name)) return null;
-        if(!name.endsWith("GriffonAddon")) name += "GriffonAddon";
+        if (GriffonNameUtils.isBlank(name)) return null;
+        if (!name.endsWith("GriffonAddon")) name += "GriffonAddon";
         return addonDescriptors.get(GriffonNameUtils.capitalize(name));
     }
 
     public Map<String, GriffonAddonDescriptor> findAddonDescriptors(String prefix) {
-        if("root".equals(prefix) || GriffonNameUtils.isBlank(prefix)) prefix = "";
+        if ("root".equals(prefix) || GriffonNameUtils.isBlank(prefix)) prefix = "";
 
         Map<String, GriffonAddonDescriptor> map = new LinkedHashMap<String, GriffonAddonDescriptor>();
-        for(Map.Entry<String, GriffonAddonDescriptor> entry : addonDescriptors.entrySet()) {
-            if(prefix.equals(entry.getValue().getPrefix())) {
+        for (Map.Entry<String, GriffonAddonDescriptor> entry : addonDescriptors.entrySet()) {
+            if (prefix.equals(entry.getValue().getPrefix())) {
                 map.put(entry.getKey(), entry.getValue());
             }
         }
@@ -86,20 +86,20 @@ public abstract class AbstractAddonManager implements AddonManager {
     }
 
     public final void registerAddon(GriffonAddonDescriptor addonDescriptor) {
-        synchronized(lock) {
-            if(!initialized) {
-                 LOG.debug("Registering addon descriptor "+addonDescriptor);
-                 doRegisterAddon(addonDescriptor);
-                 addons.put(addonDescriptor.getName(), addonDescriptor.getAddon());
+        synchronized (lock) {
+            if (!initialized) {
+                LOG.debug("Registering addon descriptor " + addonDescriptor);
+                doRegisterAddon(addonDescriptor);
+                addons.put(addonDescriptor.getName(), addonDescriptor.getAddon());
             }
-        }    
+        }
     }
 
     public final void initialize() {
-        synchronized(lock) {
-            if(!initialized) {
-                 doInitialize();
-                 initialized = true;
+        synchronized (lock) {
+            if (!initialized) {
+                doInitialize();
+                initialized = true;
             }
         }
     }

@@ -303,7 +303,7 @@ public abstract class AbstractGriffonClass implements GriffonClass {
      */
     public boolean isClosureMetaProperty(MetaProperty property) {
         int modifiers = property.getModifiers();
-        if(modifiers != Modifier.PUBLIC) return false;
+        if (modifiers != Modifier.PUBLIC) return false;
 
         Object value = property.getProperty(getReferenceInstance());
 

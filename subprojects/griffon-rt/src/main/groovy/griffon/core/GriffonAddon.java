@@ -26,7 +26,6 @@ import java.util.Map;
  * Identifies an Addon artifact.
  *
  * @author Andres Almiray
- *
  * @since 0.9.2
  */
 public interface GriffonAddon extends ApplicationHandler, ThreadingHandler {
@@ -40,18 +39,28 @@ public interface GriffonAddon extends ApplicationHandler, ThreadingHandler {
     Object newInstance(Class klass, String type);
 
     void addonInit(GriffonApplication app);
+
     void addonPostInit(GriffonApplication app);
+
     void addonBuilderInit(GriffonApplication app, FactoryBuilderSupport builder);
+
     void addonBuilderPostInit(GriffonApplication app, FactoryBuilderSupport builder);
 
     Map<String, Object> getFactories();
+
     Map<String, Closure> getMethods();
+
     Map<String, Map<String, Closure>> getProps();
+
     Map<String, Closure> getEvents();
+
     Map<String, Map<String, String>> getMvcGroups();
 
     List<Closure> getAttributeDelegates();
+
     List<Closure> getPreInstantiateDelegates();
+
     List<Closure> getPostInstantiateDelegates();
+
     List<Closure> getPostNodeCompletionDelegates();
 }

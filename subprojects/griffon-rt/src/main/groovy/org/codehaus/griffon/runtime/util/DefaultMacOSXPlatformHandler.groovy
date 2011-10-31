@@ -16,9 +16,9 @@
 
 package org.codehaus.griffon.runtime.util
 
+import griffon.core.GriffonApplication
 import griffon.util.PlatformHandler
 import static griffon.util.GriffonNameUtils.capitalize
-import griffon.core.GriffonApplication
 
 /**
  * Handles OSX' menubar, about, quit and preferences menus.
@@ -28,6 +28,7 @@ import griffon.core.GriffonApplication
  */
 class DefaultMacOSXPlatformHandler implements PlatformHandler {
     private static macOSXHandler = null
+
     void handle(GriffonApplication app) {
         // use unified menu bar
         System.setProperty("apple.laf.useScreenMenuBar", "true")

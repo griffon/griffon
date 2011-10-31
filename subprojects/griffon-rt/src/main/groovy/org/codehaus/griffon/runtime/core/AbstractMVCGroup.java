@@ -17,12 +17,11 @@
 package org.codehaus.griffon.runtime.core;
 
 
-import java.util.LinkedHashMap;
-import java.util.Map;
-
 import griffon.core.*;
 import groovy.util.FactoryBuilderSupport;
-import org.codehaus.griffon.runtime.util.GriffonApplicationHelper;
+
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 /**
  * Base implementation of the {@code MVCGroup} interface

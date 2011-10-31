@@ -53,7 +53,7 @@ public final class UIThreadManager {
     }
 
     public static void enhance(Script script) {
-        if(script instanceof ThreadingHandler) return;
+        if (script instanceof ThreadingHandler) return;
         if (LOG.isTraceEnabled()) {
             LOG.trace("Enhancing script " + script);
         }

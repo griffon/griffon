@@ -26,7 +26,7 @@ import griffon.util.RunnableWithArgs;
 public final class MVCGroupExceptionHandler extends RunnableWithArgs {
     private final GriffonApplication application;
 
-    public static void registerWith(GriffonApplication application){
+    public static void registerWith(GriffonApplication application) {
         new MVCGroupExceptionHandler(application);
     }
 

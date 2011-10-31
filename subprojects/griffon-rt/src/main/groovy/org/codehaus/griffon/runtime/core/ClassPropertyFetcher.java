@@ -12,7 +12,7 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- */ 
+ */
 package org.codehaus.griffon.runtime.core;
 
 import griffon.util.GriffonClassUtils;
@@ -23,15 +23,14 @@ import java.lang.reflect.*;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
-/** 
+/**
  * Accesses class "properties": static fields, static getters, instance fields
  * or instance getters
- * 
+ * <p/>
  * Method and Field instances are cached for fast access
- * 
+ *
  * @author Lari Hotari, Sagire Software Oy (Grails)
  * @author Andres Almiray
- *
  * @since 0.9.1
  */
 public class ClassPropertyFetcher {
@@ -141,7 +140,7 @@ public class ClassPropertyFetcher {
                                     && name.startsWith("is")
                                     && Character.isUpperCase(name.charAt(2))
                                     && (method.getReturnType() == Boolean.class || method
-                                            .getReturnType() == boolean.class)) {
+                                    .getReturnType() == boolean.class)) {
                                 name = name.substring(2);
                             }
                             PropertyFetcher fetcher = new GetterPropertyFetcher(
@@ -199,11 +198,11 @@ public class ClassPropertyFetcher {
         final List<String> properties = new ArrayList<String>();
         for (Class<?> c : allClasses) {
             final List<String> props = new ArrayList<String>();
-            for(PropertyDescriptor p : GriffonClassUtils.getPropertyDescriptors(clazz)) {
+            for (PropertyDescriptor p : GriffonClassUtils.getPropertyDescriptors(clazz)) {
                 props.add(p.getName());
             }
             for (Field field : c.getDeclaredFields()) {
-                if(field.isSynthetic()) continue;
+                if (field.isSynthetic()) continue;
                 final int modifiers = field.getModifiers();
                 if (!Modifier.isPrivate(modifiers) || Modifier.isStatic(modifiers)) continue;
                 final String fieldName = field.getName();
@@ -238,8 +237,7 @@ public class ClassPropertyFetcher {
         if (fetcher != null) {
             try {
                 return fetcher.get(callback);
-            }
-            catch (Exception e) {
+            } catch (Exception e) {
                 // ignore ?
                 // log.warn("Error fetching property's " + name + " value from class " + clazz.getName(), e);
             }
@@ -249,20 +247,21 @@ public class ClassPropertyFetcher {
 
     public <T> T getStaticPropertyValue(String name, Class<T> c) {
         PropertyFetcher fetcher = staticFetchers.get(name);
-        if(fetcher != null) {
+        if (fetcher != null) {
             Object v = getPropertyValueWithFetcher(name, fetcher);
             return returnOnlyIfInstanceOf(v, c);
         }
         return null;
     }
+
     public <T> T getPropertyValue(String name, Class<T> c) {
         return returnOnlyIfInstanceOf(getPropertyValue(name, false), c);
     }
 
     @SuppressWarnings("unchecked")
     private <T> T returnOnlyIfInstanceOf(Object value, Class<T> type) {
-        if ((value != null) && (type==Object.class || GriffonClassUtils.isGroovyAssignableFrom( type, value.getClass()))) {
-            return (T)value;
+        if ((value != null) && (type == Object.class || GriffonClassUtils.isGroovyAssignableFrom(type, value.getClass()))) {
+            return (T) value;
         }
 
         return null;
@@ -297,7 +296,8 @@ public class ClassPropertyFetcher {
 
     static interface PropertyFetcher {
         public Object get(ReferenceInstanceCallback callback)
-            throws IllegalArgumentException, IllegalAccessException, InvocationTargetException;
+                throws IllegalArgumentException, IllegalAccessException, InvocationTargetException;
+
         public Class<?> getPropertyType(String name);
     }
 
@@ -358,10 +358,10 @@ public class ClassPropertyFetcher {
     }
 
     private static void makeAccessible(AccessibleObject obj) {
-        if(!obj.isAccessible()) {
+        if (!obj.isAccessible()) {
             try {
                 obj.setAccessible(true);
-            } catch(SecurityException e) {
+            } catch (SecurityException e) {
                 // skip
             }
         }

@@ -16,8 +16,8 @@
 
 package org.codehaus.griffon.runtime.util;
 
-import griffon.util.PlatformHandler;
 import griffon.core.GriffonApplication;
+import griffon.util.PlatformHandler;
 
 /**
  * Handles Solaris integration.

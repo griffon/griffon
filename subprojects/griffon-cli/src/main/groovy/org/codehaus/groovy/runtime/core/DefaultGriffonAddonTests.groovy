@@ -3,7 +3,6 @@ package org.codehaus.griffon.runtime.core
 import griffon.core.GriffonApplication
 import griffon.test.GriffonUnitTestCase
 import griffon.test.mock.MockGriffonApplication
-
 import griffon.util.ApplicationHolder
 
 class DefaultGriffonAddonTests extends GriffonUnitTestCase {

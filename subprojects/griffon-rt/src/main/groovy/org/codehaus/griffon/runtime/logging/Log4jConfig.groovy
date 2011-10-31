@@ -31,12 +31,12 @@ import org.apache.log4j.*
  */
 class Log4jConfig {
     static final DEFAULT_PATTERN_LAYOUT = new PatternLayout(
-        conversionPattern: '%d [%t] %-5p %c{2} %x - %m%n')
+            conversionPattern: '%d [%t] %-5p %c{2} %x - %m%n')
 
     static final LAYOUTS = [xml: XMLLayout, html: HTMLLayout, simple: SimpleLayout, pattern: PatternLayout]
     static final APPENDERS = ["null": NullAppender, console: ConsoleAppender,
-                              file: FileAppender, rollingFile: RollingFileAppender,
-                              event: GriffonApplicationEventAppender]
+            file: FileAppender, rollingFile: RollingFileAppender,
+            event: GriffonApplicationEventAppender]
 
     private appenders = [:]
 
@@ -70,8 +70,8 @@ class Log4jConfig {
 
     private boolean isCustomEnvironmentMethod(String name, args) {
         Environment.current == Environment.CUSTOM &&
-            Environment.current.name == name &&
-            args && (args[0] instanceof Closure)
+                Environment.current.name == name &&
+                args && (args[0] instanceof Closure)
     }
 
     def environments(Closure callable) {
@@ -111,7 +111,7 @@ class Log4jConfig {
 
         try {
             callable.call(root)
-            for(appender in appenders.values()) root.addAppender appender
+            for (appender in appenders.values()) root.addAppender appender
 
             if (!root.allAppenders.hasMoreElements()) {
                 def consoleAppender = createConsoleAppender()
@@ -137,7 +137,7 @@ class Log4jConfig {
     }
 
     private createConsoleAppender() {
-        def consoleAppender = new ConsoleAppender(layout:DEFAULT_PATTERN_LAYOUT, name:"stdout")
+        def consoleAppender = new ConsoleAppender(layout: DEFAULT_PATTERN_LAYOUT, name: "stdout")
         consoleAppender.activateOptions()
         appenders.console = consoleAppender
         return consoleAppender
@@ -148,7 +148,7 @@ class Log4jConfig {
             return appenders.stacktrace
         }
 
-        def fileAppender = new FileAppender(layout:DEFAULT_PATTERN_LAYOUT, name:"stacktraceLog")
+        def fileAppender = new FileAppender(layout: DEFAULT_PATTERN_LAYOUT, name: "stacktraceLog")
         if (Environment.current == Environment.DEVELOPMENT) {
             def targetDir = Metadata.current.getGriffonWorkingDir()
             if (targetDir) targetDir.mkdirs()
@@ -312,10 +312,10 @@ class RootLog4jConfig {
     }
 
     def debug(Object[] appenders = null) {
-        setLevelAndAppender(Level.DEBUG,appenders)
+        setLevelAndAppender(Level.DEBUG, appenders)
     }
 
-    private setLevelAndAppender(Level level,Object[] appenders) {
+    private setLevelAndAppender(Level level, Object[] appenders) {
         root.level = level
         for (appName in appenders) {
             Appender app
@@ -331,31 +331,31 @@ class RootLog4jConfig {
     }
 
     def info(Object[] appenders = null) {
-        setLevelAndAppender(Level.INFO,appenders)
+        setLevelAndAppender(Level.INFO, appenders)
     }
 
     def warn(Object[] appenders = null) {
-        setLevelAndAppender(Level.WARN,appenders)
+        setLevelAndAppender(Level.WARN, appenders)
     }
 
     def trace(Object[] appenders = null) {
-        setLevelAndAppender(Level.TRACE,appenders)
+        setLevelAndAppender(Level.TRACE, appenders)
     }
 
     def all(Object[] appenders = null) {
-        setLevelAndAppender(Level.ALL,appenders)
+        setLevelAndAppender(Level.ALL, appenders)
     }
 
     def error(Object[] appenders = null) {
-        setLevelAndAppender(Level.ERROR,appenders)
+        setLevelAndAppender(Level.ERROR, appenders)
     }
 
     def fatal(Object[] appenders = null) {
-        setLevelAndAppender(Level.FATAL,appenders)
+        setLevelAndAppender(Level.FATAL, appenders)
     }
 
     def off(Object[] appenders = null) {
-        setLevelAndAppender(Level.OFF,appenders)
+        setLevelAndAppender(Level.OFF, appenders)
     }
 
     void setProperty(String s, Object o) {

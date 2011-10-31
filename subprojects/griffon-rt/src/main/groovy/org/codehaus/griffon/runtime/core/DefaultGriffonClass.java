@@ -23,7 +23,6 @@ import griffon.core.GriffonApplication;
  *
  * @author Graeme Rocher (Grails 0.1)
  * @author Andres Almiray
- *
  * @since 0.9.1
  */
 public class DefaultGriffonClass extends AbstractGriffonClass {

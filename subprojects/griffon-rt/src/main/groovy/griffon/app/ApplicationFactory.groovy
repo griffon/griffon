@@ -23,7 +23,7 @@ import javax.swing.*
 
 /**
  * Created by IntelliJ IDEA.
- *@author Danno.Ferrin
+ * @author Danno.Ferrin
  * Date: Sep 4, 2008
  * Time: 8:52:40 PM
  */
@@ -43,7 +43,7 @@ class ApplicationFactory extends AbstractFactory {
             if (cl) {
                 jxStatusBarClass = cl.loadClass('org.jdesktop.swingx.JXStatusBar')
             } else {
-                jxStatusBarClass = Class.forName('org.jdesktop.swingx.JXStatusBar') 
+                jxStatusBarClass = Class.forName('org.jdesktop.swingx.JXStatusBar')
             }
             swingXPresent = true
         } catch (Throwable t) {
@@ -56,11 +56,11 @@ class ApplicationFactory extends AbstractFactory {
         def window = getContainingWindow(application)
 
         if (application instanceof JApplet && swingXPresent) {
-           // bake in some JXFrame stuff if present
-           application.rootPane = getClass().getClassLoader().loadClass('org.jdesktop.swingx.JXRootPane').newInstance()
+            // bake in some JXFrame stuff if present
+            application.rootPane = getClass().getClassLoader().loadClass('org.jdesktop.swingx.JXRootPane').newInstance()
         }
 
-        if(!window) return application
+        if (!window) return application
 
         if (swingXPresent) {
             builder.context[DELEGATE_PROPERTY_CANCEL_BUTTON] = attributes.remove("cancelButtonProperty") ?: DEFAULT_DELEGATE_PROPERTY_CANCEL_BUTTON
@@ -73,14 +73,14 @@ class ApplicationFactory extends AbstractFactory {
                     }
                 }
         }
-        
+
         builder.context.pack = attributes.remove('pack')
         builder.context.show = attributes.remove('show')
         builder.addDisposalClosure(application.&dispose)
         builder.containingWindows.add(window)
 
-        if(attributes.containsKey('hideBeforeHandler') && builder.app instanceof SwingApplication) {
-          builder.app.windowManager.hideBeforeHandler = attributes.remove('hideBeforeHandler')
+        if (attributes.containsKey('hideBeforeHandler') && builder.app instanceof SwingApplication) {
+            builder.app.windowManager.hideBeforeHandler = attributes.remove('hideBeforeHandler')
         }
 
         builder.context[DELEGATE_PROPERTY_DEFAULT_BUTTON] = attributes.remove("defaultButtonProperty") ?: DEFAULT_DELEGATE_PROPERTY_DEFAULT_BUTTON
@@ -106,7 +106,7 @@ class ApplicationFactory extends AbstractFactory {
     }
 
     public boolean onHandleNodeAttributes(FactoryBuilderSupport builder, Object node, Map attributes) {
-        for (Map.Entry entry : (Set<Map.Entry>) attributes.entrySet()) {
+        for (Map.Entry entry: (Set<Map.Entry>) attributes.entrySet()) {
             String property = entry.getKey().toString();
             Object value = entry.getValue();
             // be forgiving on attributes, so an applet can set an icon without punishment, etc
@@ -150,16 +150,16 @@ class ApplicationFactory extends AbstractFactory {
             }
             if (builder.context.show) {
                 window.visible = true
-            }  
+            }
         }
 
         builder.removeAttributeDelegate(builder.context.defaultButtonDelegate)
     }
 
     private getContainingWindow(node) {
-        if(node instanceof JApplet || node instanceof Window) {
+        if (node instanceof JApplet || node instanceof Window) {
             return node
-        } else if(node instanceof Component) {
+        } else if (node instanceof Component) {
             return SwingUtilities.getWindowAncestor(node)
         }
         return null

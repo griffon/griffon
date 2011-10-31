@@ -23,7 +23,6 @@ import griffon.core.GriffonServiceClass;
  * Base implementation of the GriffonService interface.
  *
  * @author Andres Almiray
- *
  * @since 0.9.1
  */
 public abstract class AbstractGriffonService extends AbstractGriffonArtifact implements GriffonService {

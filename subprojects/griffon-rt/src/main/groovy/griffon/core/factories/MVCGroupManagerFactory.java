@@ -16,8 +16,8 @@
 package griffon.core.factories;
 
 
-import griffon.core.MVCGroupManager;
 import griffon.core.GriffonApplication;
+import griffon.core.MVCGroupManager;
 
 /**
  * Creates instances of {@code MVCGroupManager}.

@@ -12,7 +12,7 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- */ 
+ */
 package org.codehaus.griffon.runtime.core;
 
 import griffon.core.GriffonApplication;
@@ -20,7 +20,6 @@ import griffon.core.GriffonViewClass;
 
 /**
  * @author Andres Almiray
- *
  * @since 0.9.1
  */
 public class DefaultGriffonViewClass extends DefaultGriffonClass implements GriffonViewClass {

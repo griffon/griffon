@@ -19,15 +19,13 @@ import groovy.swing.factory.ComponentFactory;
 import groovy.swing.factory.LayoutFactory;
 import groovy.swing.factory.ScrollPaneFactory;
 import groovy.swing.factory.TableFactory;
-
-import java.awt.LayoutManager;
-
 import org.codehaus.griffon.runtime.builder.UberBuilder;
 import org.codehaus.griffon.runtime.util.DefaultCompositeBuilderCustomizer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.swing.*;
+import java.awt.*;
 
 /**
  * Swing based implementation of the <code>CompositeBuilderCustomizer</code> interface.
