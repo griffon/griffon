@@ -30,7 +30,7 @@ import java.util.Map;
  * @author Andres Almiray
  * @since 0.9.3
  */
-public abstract class AbstractMCVHandler implements MVCHandler {
+public abstract class AbstractMVCHandler implements MVCHandler {
     protected GriffonApplication getApp() {
         return ApplicationHolder.getApplication();
     }
