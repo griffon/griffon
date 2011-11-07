@@ -54,20 +54,20 @@ distBinSpec = copySpec {
 	}
 	
 	into('doc'){
-		from(jarApi.outputs.files)
-		from(jarSource.outputs.files)
+		from(project(':griffon-guide').jarApi.outputs.files)
+		from(project(':griffon-guide').jarSource.outputs.files)
 		from('src/dist/doc')
 		filter(ReplaceTokens, tokens: ['griffon.version': version, 'groovy.version': groovyVersion])	
 	}
 	
 	into('guide'){
-		from(buildGuide.outputs.files)
-		from(pdfGuide.outputs.files)
+		from(project(':griffon-guide').buildGuide.outputs.files)
+		from(project(':griffon-guide').pdfGuide.outputs.files)
 		filter(ReplaceTokens, tokens: ['griffon.version': version, 'groovy.version': groovyVersion])	
 	}
 }
 
-task zipBinary(type:Zip){
+task zipBinary(type: Zip, dependsOn: ':griffon-guide:dist'){
 	description = "Zips the binary distribution."
     classifier = 'bin'
     into "griffon-$version"

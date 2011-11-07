@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+ 
 import org.gradle.api.file.FileCollection
 import org.gradle.api.DefaultTask
 import org.gradle.api.tasks.InputFiles
@@ -35,7 +36,7 @@ class PdfGuide extends DefaultTask {
 		try {
             PdfBuilder.build(
                     basedir: project.buildDir.absolutePath,
-                    home: project.file('grails-doc').absolutePath,
+                    home: project.file('.').absolutePath,
                     tool: 'griffon'
             )
         } catch (x) {
