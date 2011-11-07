@@ -40,7 +40,7 @@ public class GriffonMvcArtifactASTInjector extends GriffonArtifactASTInjector {
             "mvcGroupInit",
             ACC_PUBLIC,
             ClassHelper.VOID_TYPE,
-            params(param(ClassHelper.MAP_TYPE, "args")),
+            params(param(newClass(ClassHelper.MAP_TYPE), "args")),
             ClassNode.EMPTY_ARRAY,
             new EmptyStatement()
         ));

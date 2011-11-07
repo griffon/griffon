@@ -34,7 +34,7 @@ import static org.codehaus.griffon.ast.GriffonASTUtils.*;
  * @author Andres Almiray
  * @since 0.9.1
  */
-public class ObservableASTInjector implements ASTInjector {
+public class ObservableASTInjector extends AbstractASTInjector {
     private static final Logger LOG = LoggerFactory.getLogger(ObservableASTInjector.class);
     private static final ClassNode OBSERVABLE_CLASS = ClassHelper.makeWithoutCaching(Observable.class);
 
@@ -144,7 +144,7 @@ public class ObservableASTInjector implements ASTInjector {
                         ClassHelper.VOID_TYPE,
                         params(
                                 param(ClassHelper.STRING_TYPE, "name"),
-                                param(ClassHelper.OBJECT_TYPE, "oldValue"),
+                                param(newClass(ClassHelper.OBJECT_TYPE), "oldValue"),
                                 param(ClassHelper.OBJECT_TYPE, "newValue")),
                         ClassNode.EMPTY_ARRAY,
                         stmnt(call(

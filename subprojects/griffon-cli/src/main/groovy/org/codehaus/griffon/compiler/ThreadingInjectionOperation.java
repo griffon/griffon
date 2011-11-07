@@ -32,8 +32,6 @@ import static org.codehaus.griffon.compiler.support.GriffonControllerASTTransfor
  * @since 0.9.2
  */
 public class ThreadingInjectionOperation extends CompilationUnit.PrimaryClassNodeOperation {
-    private static final String ARTIFACT_PATH = "controllers";
-
     public void call(final SourceUnit source, final GeneratorContext context, final ClassNode classNode) throws CompilationFailedException {
         if (!GriffonCompilerContext.isGriffonArtifact(source)) return;
         if (!isControllerArtifact(classNode, source)) return;

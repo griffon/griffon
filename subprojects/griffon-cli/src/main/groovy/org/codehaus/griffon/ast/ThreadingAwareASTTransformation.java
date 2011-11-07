@@ -146,8 +146,8 @@ public class ThreadingAwareASTTransformation extends AbstractASTTransformation {
         classNode.addMethod(new MethodNode(
             "execFuture",
             ACC_PUBLIC,
-            FUTURE_CLASS,
-            params(param(ClassHelper.CLOSURE_TYPE, CLOSURE)),
+            newClass(FUTURE_CLASS),
+            params(param(newClass(ClassHelper.CLOSURE_TYPE), CLOSURE)),
             ClassNode.EMPTY_ARRAY,
             returns(call(
                 uiThreadManagerInstance(),
@@ -159,10 +159,10 @@ public class ThreadingAwareASTTransformation extends AbstractASTTransformation {
         classNode.addMethod(new MethodNode(
             "execFuture",
             ACC_PUBLIC,
-            FUTURE_CLASS,
+            newClass(FUTURE_CLASS),
             params(
                 param(EXECUTOR_SERVICE_CLASS, "executorService"),
-                param(ClassHelper.CLOSURE_TYPE, CLOSURE)),
+                param(newClass(ClassHelper.CLOSURE_TYPE), CLOSURE)),
             ClassNode.EMPTY_ARRAY,
             returns(call(
                 uiThreadManagerInstance(),
@@ -174,8 +174,8 @@ public class ThreadingAwareASTTransformation extends AbstractASTTransformation {
         classNode.addMethod(new MethodNode(
             "execFuture",
             ACC_PUBLIC,
-            FUTURE_CLASS,
-            params(param(CALLABLE_CLASS, CALLABLE)),
+            newClass(FUTURE_CLASS),
+            params(param(newClass(CALLABLE_CLASS), CALLABLE)),
             ClassNode.EMPTY_ARRAY,
             returns(call(
                 uiThreadManagerInstance(),
@@ -187,10 +187,10 @@ public class ThreadingAwareASTTransformation extends AbstractASTTransformation {
         classNode.addMethod(new MethodNode(
             "execFuture",
             ACC_PUBLIC,
-            FUTURE_CLASS,
+            newClass(FUTURE_CLASS),
             params(
                 param(EXECUTOR_SERVICE_CLASS, "executorService"),
-                param(CALLABLE_CLASS, CALLABLE)),
+                param(newClass(CALLABLE_CLASS), CALLABLE)),
             ClassNode.EMPTY_ARRAY,
             returns(call(
                 uiThreadManagerInstance(),

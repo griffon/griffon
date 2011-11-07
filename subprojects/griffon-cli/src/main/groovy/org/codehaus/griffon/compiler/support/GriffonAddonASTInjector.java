@@ -30,7 +30,7 @@ import static org.codehaus.griffon.ast.GriffonASTUtils.*;
  * @author Andres Almiray
  * @since 0.9.1
  */
-public class GriffonAddonASTInjector implements ASTInjector {
+public class GriffonAddonASTInjector extends AbstractASTInjector {
     private static final ClassNode GRIFFON_APPLICATION_CLASS = ClassHelper.makeWithoutCaching(GriffonApplication.class);
     private static final ClassNode GAH_CLASS = ClassHelper.makeWithoutCaching(GriffonApplicationHelper.class);
     private static final ClassNode LOGGER_CLASS = ClassHelper.makeWithoutCaching(Logger.class);
@@ -48,7 +48,7 @@ public class GriffonAddonASTInjector implements ASTInjector {
         classNode.addMethod(new MethodNode(
                 "newInstance",
                 ACC_PUBLIC,
-                ClassHelper.OBJECT_TYPE,
+                newClass(ClassHelper.OBJECT_TYPE),
                 params(
                         param(ClassHelper.CLASS_Type, "clazz"),
                         param(ClassHelper.STRING_TYPE, "type")),
