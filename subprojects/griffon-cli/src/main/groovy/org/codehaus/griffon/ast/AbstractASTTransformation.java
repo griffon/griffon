@@ -64,4 +64,8 @@ public abstract class AbstractASTTransformation implements ASTTransformation, Op
     public static Expression applicationInstance() {
         return call(APPLICATION_HOLDER_TYPE, "getApplication", NO_ARGS);
     }
+
+    protected static ClassNode newClass(ClassNode classNode) {
+        return new ClassNode(classNode.getTypeClass());
+    }
 }

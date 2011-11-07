@@ -191,7 +191,7 @@ public class EventPublisherASTTransformation extends AbstractASTTransformation {
                 ClassHelper.VOID_TYPE,
                 params(
                         param(ClassHelper.STRING_TYPE, "name"),
-                        param(ClassHelper.CLOSURE_TYPE, "listener")),
+                        param(newClass(ClassHelper.CLOSURE_TYPE), "listener")),
                 ClassNode.EMPTY_ARRAY,
                 stmnt(call(
                         field(erField),
@@ -243,7 +243,7 @@ public class EventPublisherASTTransformation extends AbstractASTTransformation {
                 ClassHelper.VOID_TYPE,
                 params(
                         param(ClassHelper.STRING_TYPE, "name"),
-                        param(ClassHelper.CLOSURE_TYPE, "listener")),
+                        param(newClass(ClassHelper.CLOSURE_TYPE), "listener")),
                 ClassNode.EMPTY_ARRAY,
                 stmnt(call(
                         field(erField),
@@ -279,7 +279,7 @@ public class EventPublisherASTTransformation extends AbstractASTTransformation {
                 ClassHelper.VOID_TYPE,
                 params(
                         param(ClassHelper.STRING_TYPE, "name"),
-                        param(ClassHelper.LIST_TYPE, "args", new ListExpression())),
+                        param(newClass(ClassHelper.LIST_TYPE), "args", new ListExpression())),
                 ClassNode.EMPTY_ARRAY,
                 stmnt(call(
                         field(erField),
@@ -297,7 +297,7 @@ public class EventPublisherASTTransformation extends AbstractASTTransformation {
                 ClassHelper.VOID_TYPE,
                 params(
                         param(ClassHelper.STRING_TYPE, "name"),
-                        param(ClassHelper.LIST_TYPE, "args", new ListExpression())),
+                        param(newClass(ClassHelper.LIST_TYPE), "args", new ListExpression())),
                 ClassNode.EMPTY_ARRAY,
                 stmnt(call(
                         field(erField),
@@ -315,7 +315,7 @@ public class EventPublisherASTTransformation extends AbstractASTTransformation {
                 ClassHelper.VOID_TYPE,
                 params(
                         param(ClassHelper.STRING_TYPE, "name"),
-                        param(ClassHelper.LIST_TYPE, "args", new ListExpression())),
+                        param(newClass(ClassHelper.LIST_TYPE), "args", new ListExpression())),
                 ClassNode.EMPTY_ARRAY,
                 stmnt(call(
                         field(erField),
