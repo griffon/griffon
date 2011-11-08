@@ -1,7 +1,4 @@
-
 apply plugin: 'java'
-
-jar.enabled = false
 
 tasks.withType(Jar).all { task ->
     task.appFileJar = false
@@ -39,12 +36,9 @@ task jarIntegrationFiles(type: Jar) {
 
 resourceFilesJars = tasks.withType(Jar).matching({ task -> task.appFileJar } as Spec)
 
-task jarResources(type: Jar, dependsOn: resourceFilesJars) {
+jar{
+	dependsOn: resourceFilesJars
    	resourceFilesJars.each { task ->
 		from task.outputs.files
 	}
-}
-
-artifacts {
-    archives jarResources
 }

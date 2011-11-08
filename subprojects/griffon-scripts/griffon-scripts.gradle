@@ -1,4 +1,6 @@
 apply plugin: 'groovy'
+apply from: "${rootDir}/gradle/coverage.gradle"
+apply from: "${rootDir}/gradle/codeQuality.gradle"
 
 dependencies {
 	groovy "org.codehaus.groovy:groovy-all:$groovyVersion"

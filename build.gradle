@@ -33,15 +33,16 @@ configure(mavenizedProjects()) {
 }
 
 subprojects { subproj ->
-	apply plugin: 'java'
 	apply plugin: 'idea'
-	apply from: "${rootDir}/gradle/coverage.gradle"
-	apply from: "${rootDir}/gradle/codeQuality.gradle"
-	
-    sourceCompatibility = '1.5'
-	targetCompatibility = '1.5'
-	group = 'org.codehaus.griffon'
+	if(plugins.hasPlugin('java')){
+        sourceCompatibility = 1.5
+        targetCompatibility = 1.5
+		group = 'org.codehaus.griffon'
 
+		apply from: "${rootDir}/gradle/coverage.gradle"
+		apply from: "${rootDir}/gradle/codeQuality.gradle"	
+	} 
+	
 	repositories {
 	    mavenLocal()
 	    mavenCentral()
@@ -51,20 +52,22 @@ subprojects { subproj ->
 		mavenRepo name: 'Gradle', url: 'http://gradle.artifactoryonline.com/gradle/libs-releases-local'
 	}
 
-    jar.manifest {
-        Date buildTime = new Date()
-	    attributes(
-			'Built-By': System.properties['user.name'],
-			'Created-By': System.properties['java.vm.version'] + " (" + System.properties['java.vm.vendor'] + ")",
-			'Build-Date': new SimpleDateFormat('dd-MMM-yyyy').format(buildTime),
-			'Build-Time': new SimpleDateFormat('hh:mm aa').format(buildTime),
-			'Specification-Title': subproj.name,
-			'Specification-Version': project.version,
-			'Specification-Vendor': 'griffon.codehaus.org',
-			'Implementation-Title': subproj.name,
-			'Implementation-Version': project.version,
-			'Implementation-Vendor': 'griffon.codehaus.org'
-	    )
+    tasks.withType(Jar).each{jarTask ->
+		jarTask.manifest {
+	        Date buildTime = new Date()
+		    attributes(
+				'Built-By': System.properties['user.name'],
+				'Created-By': System.properties['java.vm.version'] + " (" + System.properties['java.vm.vendor'] + ")",
+				'Build-Date': new SimpleDateFormat('dd-MMM-yyyy').format(buildTime),
+				'Build-Time': new SimpleDateFormat('hh:mm aa').format(buildTime),
+				'Specification-Title': subproj.name,
+				'Specification-Version': project.version,
+				'Specification-Vendor': 'griffon.codehaus.org',
+				'Implementation-Title': subproj.name,
+				'Implementation-Version': project.version,
+				'Implementation-Vendor': 'griffon.codehaus.org'
+		    )
+		}
 	}
 }
 
