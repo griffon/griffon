@@ -214,7 +214,7 @@ class IvyDependencyManager extends AbstractIvyDependencyManager implements Depen
                       "jline:jline:0.9.94",
                       "org.fusesource.jansi:jansi:1.4",
                       "commons-io:commons-io:1.4",
-                      "commons-lang:commons-lang:2.5",
+                      "commons-lang:commons-lang:2.6",
                       "org.codehaus.griffon:griffon-cli:$griffonVersion",
                       "org.codehaus.griffon:griffon-scripts:$griffonVersion",
                       "org.codehaus.griffon:griffon-rt:$griffonVersion",

@@ -1,21 +1,29 @@
 apply plugin: 'groovy'
 
 configurations {
-	runtime.transitive = false
-	compile.transitive = false
-	// @todo: move to spring dep setup 	
+	// runtime.transitive = false
+	// compile.transitive = false	
 }
 
 dependencies {
 	groovy "org.codehaus.groovy:groovy-all:$groovyVersion"
 	
-	compile ("org.codehaus.groovy:groovy-all:$groovyVersion"){
-		exclude group: '*', module:'*'
-	}
-	compile ("log4j:log4j:1.2.16")
-	compile ("org.slf4j:slf4j-api:$slf4jVersion")
-	runtime "org.slf4j:slf4j-log4j12:$slf4jVersion",
-		    "org.slf4j:jcl-over-slf4j:$slf4jVersion",
-		    "org.slf4j:jul-to-slf4j:$slf4jVersion"
+	compile("org.codehaus.groovy:groovy-all:$groovyVersion")
+	compile('log4j:log4j:1.2.16') {
+		exclude group: 'ant',         module: 'ant-nodeps'
+		exclude group: 'ant',         module: 'ant-junit'
+		exclude group: 'ant-contrib', module: 'ant-contrib'
+    }
+	compile("org.slf4j:slf4j-log4j12:$slf4jVersion") {
+		exclude group: 'org.slf4j', module: 'slf4j-api'
+		exclude group: 'log4j',     module: 'log4j'
+    }
+	compile("org.slf4j:slf4j-api:$slf4jVersion")
+	compile("org.slf4j:jcl-over-slf4j:$slf4jVersion")  {
+		exclude group: 'org.slf4j', module: 'slf4j-api'
+    }
+	compile("org.slf4j:jul-to-slf4j:$slf4jVersion")  {
+		exclude group: 'org.slf4j', module: 'slf4j-api'
+    }
 	testCompile 'junit:junit:4.8.1'
 }

@@ -3,11 +3,7 @@ apply plugin: 'groovy'
 dependencies {
 	groovy "org.codehaus.groovy:groovy-all:$groovyVersion"
 	
-	compile(project(":griffon-rt")){
-		exclude module: 'com.springsource.org.aopalliance'
-	}
-	compile(project(":griffon-cli")){
-		exclude module: 'com.springsource.org.aopalliance'
-	}
-	compile(project(":griffon-resources"))
+	compile project(':griffon-rt'),
+	        project(':griffon-cli'),
+	        project(':griffon-resources')
 }
