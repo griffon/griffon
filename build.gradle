@@ -31,7 +31,7 @@ dependsOnChildren()
 subprojects { subproj ->
 	apply plugin: 'java'
 	apply plugin: 'idea'
-	apply from: "${rootDir}/gradle/maven.gradle"
+	if(subproj.mavenize) apply from: "${rootDir}/gradle/maven.gradle"
 	apply from: "${rootDir}/gradle/coverage.gradle"
 	apply from: "${rootDir}/gradle/codeQuality.gradle"
 	
