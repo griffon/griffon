@@ -44,14 +44,10 @@ dependencies {
 		exclude group: 'commons-logging', module: 'commons-logging'
 		exclude group: 'org.aopalliance', module: 'com.springsource.org.aopalliance'
 	}
-	compile("org.springframework:org.springframework.aop:$springVersion",
-	        "org.springframework:org.springframework.aspects:$springVersion",
-	        "org.springframework:org.springframework.asm:$springVersion",
+	compile("org.springframework:org.springframework.core:$springVersion",
 	        "org.springframework:org.springframework.beans:$springVersion",
 	        "org.springframework:org.springframework.context:$springVersion",
-	        "org.springframework:org.springframework.context.support:$springVersion",
-	        "org.springframework:org.springframework.expression:$springVersion",
-	        "org.springframework:org.springframework.instrument:$springVersion")
+	        "org.springframework:org.springframework.context.support:$springVersion")
 	compile "org.xhtmlrenderer:core-renderer:R8pre2",
 	        "com.lowagie:itext:2.0.8",
 	        "radeox:radeox:1.0-b2",

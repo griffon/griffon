@@ -18,12 +18,13 @@ import org.apache.tools.ant.filters.ReplaceTokens
 
 distBinSpec = copySpec {
     from("."){
-		include "README"
-		include "INSTALL"
-		include "LICENSE"
+		include 'README'
+		include 'INSTALL'
+		include 'LICENSE'
 	}
 	from('src/dist'){
 		exclude 'bin'
+		filter(ReplaceTokens, tokens: ['griffon.version': version, 'groovy.version': groovyVersion])
 	}
 	from('src/griffon'){
 		into 'src/griffon'

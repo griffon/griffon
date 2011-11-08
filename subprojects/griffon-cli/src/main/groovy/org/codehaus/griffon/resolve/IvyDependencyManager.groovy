@@ -219,14 +219,9 @@ class IvyDependencyManager extends AbstractIvyDependencyManager implements Depen
                       "org.codehaus.griffon:griffon-scripts:$griffonVersion",
                       "org.codehaus.griffon:griffon-rt:$griffonVersion",
                       "org.springframework:org.springframework.core:$buildSettings.springVersion",
-                      "org.springframework:org.springframework.aop:$buildSettings.springVersion",
-                      "org.springframework:org.springframework.aspects:$buildSettings.springVersion",
-                      "org.springframework:org.springframework.asm:$buildSettings.springVersion",
                       "org.springframework:org.springframework.beans:$buildSettings.springVersion",
                       "org.springframework:org.springframework.context:$buildSettings.springVersion",
-                      "org.springframework:org.springframework.context.support:$buildSettings.springVersion",
-                      "org.springframework:org.springframework.expression:$buildSettings.springVersion",
-                      "org.springframework:org.springframework.instrument:$buildSettings.springVersion"
+                      "org.springframework:org.springframework.context.support:$buildSettings.springVersion"
                 build("log4j:log4j:1.2.16",
                       "org.slf4j:slf4j-log4j12:$buildSettings.slf4jVersion",
                       "org.slf4j:slf4j-api:$buildSettings.slf4jVersion",
