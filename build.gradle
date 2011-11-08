@@ -28,10 +28,13 @@ evaluationDependsOn(':griffon-guide')
 
 dependsOnChildren()
 
+configure(mavenizedProjects()) {
+	apply from: "${rootDir}/gradle/maven.gradle"
+}
+
 subprojects { subproj ->
 	apply plugin: 'java'
 	apply plugin: 'idea'
-	if(subproj.mavenize) apply from: "${rootDir}/gradle/maven.gradle"
 	apply from: "${rootDir}/gradle/coverage.gradle"
 	apply from: "${rootDir}/gradle/codeQuality.gradle"
 	
@@ -90,3 +93,12 @@ task wrapper(type: Wrapper) {
     gradleVersion = '1.0-milestone-5'
     jarFile = 'gradle/wrapper/gradle-wrapper.jar'
 }
+
+def mavenizedProjects() {
+    [ project(':griffon-cli'), 
+	  project(':griffon-resources'), 
+	  project(':griffon-rt'), 
+	  project(':griffon-scripts')
+	]
+}
+
