@@ -20,9 +20,9 @@ import java.io.File;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.Map;
 import java.util.Properties;
+import org.gradle.cli.*;
 
 /**
  * @author Hans Dockter
@@ -56,7 +56,6 @@ public class GriffonWrapperMain {
     }
 
     private static Map<String, String> parseSystemPropertiesFromArgs(String[] args) {
-        /*
         SystemPropertiesCommandLineConverter converter = new SystemPropertiesCommandLineConverter();
         converter.setCommandLineParserFactory(new CommandLineParserFactory() {
             public CommandLineParser create() {
@@ -65,8 +64,6 @@ public class GriffonWrapperMain {
         });
 
         return converter.convert(Arrays.asList(args));
-        */
-        return Collections.emptyMap();
     }
 
     private static void addSystemProperties(File rootDir) {
