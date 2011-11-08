@@ -70,7 +70,7 @@ apply from: "${rootDir}/gradle/package.gradle"
 apply from: "${rootDir}/gradle/installer.gradle"
 
 task allTests {
-    dependsOn { [project(':griffon-rt').test] }
+    dependsOn { [project(':griffon-rt').test, project(':griffon-cli').test] }
     description = "Runs all tests."
 }
 
