@@ -35,14 +35,14 @@ configure(mavenizedProjects()) {
 subprojects { subproj ->
 	apply plugin: 'idea'
 	if(plugins.hasPlugin('java')){
-        sourceCompatibility = 1.5
-        targetCompatibility = 1.5
+		sourceCompatibility = 1.5
+		targetCompatibility = 1.5
 		group = 'org.codehaus.griffon'
 
 		apply from: "${rootDir}/gradle/coverage.gradle"
-		apply from: "${rootDir}/gradle/codeQuality.gradle"	
-	} 
-	
+		apply from: "${rootDir}/gradle/codeQuality.gradle"
+	}
+
 	repositories {
 	    mavenLocal()
 	    mavenCentral()
@@ -52,7 +52,7 @@ subprojects { subproj ->
 		mavenRepo name: 'Gradle', url: 'http://gradle.artifactoryonline.com/gradle/libs-releases-local'
 	}
 
-    tasks.withType(Jar).each{jarTask ->
+    tasks.withType(Jar).each{ jarTask ->
 		jarTask.manifest {
 	        Date buildTime = new Date()
 		    attributes(
@@ -98,10 +98,10 @@ task wrapper(type: Wrapper) {
 }
 
 def mavenizedProjects() {
-    [ project(':griffon-cli'), 
-	  project(':griffon-resources'), 
-	  project(':griffon-rt'), 
-	  project(':griffon-scripts')
+	[
+		project(':griffon-rt'),
+		project(':griffon-cli'),
+		project(':griffon-resources'),
+		project(':griffon-scripts')
 	]
 }
-

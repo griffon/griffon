@@ -180,7 +180,7 @@ class DefaultMVCGroupManager extends AbstractMVCGroupManager {
         if (LOG.infoEnabled) LOG.info("Destroying MVC group identified by '$mvcName'")
         app.removeApplicationEventListener(group.controller)
         [group.model, group.view, group.controller].each { member ->
-            if ((member != null) & !(member instanceof Script)) {
+            if ((member != null) && !(member instanceof Script)) {
                 try {
                     member.mvcGroupDestroy()
                 } catch (MissingMethodException mme) {
