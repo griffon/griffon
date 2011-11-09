@@ -25,10 +25,7 @@ import java.util.regex.Pattern;
 /**
  * Represents the application Metadata and loading mechanics
  *
- * @author Graeme Rocher
- * @since 1.1
- *        <p/>
- *        Created: Dec 12, 2008
+ * @author Graeme Rocher (Grails 1.1)
  */
 
 public class Metadata extends Properties {

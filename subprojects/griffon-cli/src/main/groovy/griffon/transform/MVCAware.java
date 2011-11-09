@@ -25,7 +25,7 @@ import java.lang.annotation.Target;
 
 /**
  * <p>Annotates a class.</p>
- *
+ * <p/>
  * <p>When annotating a class it indicates that it will be able to
  * handle MVC groups, that is, instantiate them. The class will have
  * the ability to create new instances of MVC groups, including short-lived
@@ -37,7 +37,9 @@ import java.lang.annotation.Target;
  * <li><code>public Map&lt;String, Object&gt; buildMVCGroup(String mvcType)</code></li>
  * <li><code>public Map&lt;String, Object&gt; buildMVCGroup(String mvcType, String mvcName)</code></li>
  * <li><code>public Map&lt;String, Object&gt; buildMVCGroup(Map&lt;String, Object&gt; args, String mvcType)</code></li>
+ * <li><code>public Map&lt;String, Object&gt; buildMVCGroup(String mvcType, Map&lt;String, Object&gt; args)</code></li>
  * <li><code>public Map&lt;String, Object&gt; buildMVCGroup(Map&lt;String, Object&gt; args, String mvcType, String mvcName)</code></li>
+ * <li><code>public Map&lt;String, Object&gt; buildMVCGroup(String mvcType, String mvcName, Map&lt;String, Object&gt; args)</code></li>
  * <li><code>public List&lt;? extends GriffonMvcArtifact&gt; createMVCGroup(String mvcType)</code></li>
  * <li><code>public List&lt;? extends GriffonMvcArtifact&gt; createMVCGroup(Map&lt;String, Object&gt; args, String mvcType)</code></li>
  * <li><code>public List&lt;? extends GriffonMvcArtifact&gt; createMVCGroup(String mvcType, Map&lt;String, Object&gt; args)</code></li>
@@ -48,12 +50,16 @@ import java.lang.annotation.Target;
  * <li><code>public void withMVCGroup(String mvcType, Closure handler)</code></li>
  * <li><code>public void withMVCGroup(String mvcType, String mvcName, Closure handler)</code></li>
  * <li><code>public void withMVCGroup(String mvcType, String mvcName, Map&lt;String, Object&gt; args, Closure handler)</code></li>
+ * <li><code>public void withMVCGroup(Map&lt;String, Object&gt; args, String mvcType, String mvcName, Closure handler)</code></li>
  * <li><code>public void withMVCGroup(String mvcType, Map&lt;String, Object&gt; args, Closure handler)</code></li>
+ * <li><code>public void withMVCGroup( Object&gt; args, String mvcType, Map&lt;String,Closure handler)</code></li>
  * <li><code>public &lt;M extends GriffonModel, V extends GriffonView, C extends GriffonController&gt; void withMVCGroup(String mvcType, MVCClosure&lt;M, V, C&gt; handler)</code></li>
  * <li><code>public &lt;M extends GriffonModel, V extends GriffonView, C extends GriffonController&gt; void withMVCGroup(String mvcType, String mvcName, MVCClosure&lt;M, V, C&gt; handler)</code></li>
  * <li><code>public &lt;M extends GriffonModel, V extends GriffonView, C extends GriffonController&gt; void withMVCGroup(String mvcType, String mvcName, Map&lt;String, Object&gt; args, MVCClosure&lt;M, V, C&gt; handler)</code></li>
+ * <li><code>public &lt;M extends GriffonModel, V extends GriffonView, C extends GriffonController&gt; void withMVCGroup(Map&lt;String, Object&gt; args, String mvcType, String mvcName, MVCClosure&lt;M, V, C&gt; handler)</code></li>
  * <li><code>public &lt;M extends GriffonModel, V extends GriffonView, C extends GriffonController&gt; void withMVCGroup(String mvcType, Map&lt;String, Object&gt; args, MVCClosure&lt;M, V, C&gt; handler)</code></li>
  * <p/>
+ * <li><code>public &lt;M extends GriffonModel, V extends GriffonView, C extends GriffonController&gt; void withMVCGroup(Map&lt;String, Object&gt; args, String mvcType, MVCClosure&lt;M, V, C&gt; handler)</code></li>
  * <p/>
  * </ul>
  *

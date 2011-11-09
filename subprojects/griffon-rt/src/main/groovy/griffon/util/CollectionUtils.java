@@ -22,22 +22,22 @@ import java.util.*;
  * <p><strong>Creating Maps</strong><br/>
  * <pre>
  * Map<String, Object> m = map()
-                            .e("foo", foo)
-                            .e("bar", bar);
+ *     .e("foo", foo)
+ *     .e("bar", bar);
  * </pre></p>
  *
  * <p><strong>Creating Lists</strong><br/>
  * <pre>
  * List<String> l = list()
-                      .e("foo")
-                      .e("bar");
+ *     .e("foo")
+ *     .e("bar");
  * </pre></p>
  *
  * <p><strong>Creating Maps</strong><br/>
  * <pre>
  * Set<String> s = set()
-                    .e("foo")
-                    .e("bar");
+ *     .e("foo")
+ *     .e("bar");
  * </pre></p>
  *
  * @author Andres Almiray
