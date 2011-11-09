@@ -41,13 +41,10 @@ distBinSpec = copySpec {
 		}
 	}
 	
-	['rt', 'cli', 'scripts'].each { subproj ->
+	['rt', 'cli', 'scripts', 'resources'].each { subproj ->
 		from(project(':griffon-' + subproj).jar.outputs.files){
 			into('dist')
 		}
-	}
-	from(project(':griffon-resources').jar.outputs.files){
-		into('dist')
 	}
 	
 	into('scripts'){
