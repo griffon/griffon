@@ -69,12 +69,12 @@ task prepareRpm(type: Copy) {
 
     destinationDir = "$buildDir/assemble/rpm" as File
     from('installer/rpm') {
-		into 'SPECS'
-		include '*.spec'
-		filter(ReplaceTokens, tokens: ['griffon.version': version, 'griffon.version.rpm': version.replace('-','_')])
+        into 'SPECS'
+        include '*.spec'
+        filter(ReplaceTokens, tokens: ['griffon.version': version, 'griffon.version.rpm': version.replace('-','_')])
     }
     into("griffon-$version") {
-	    with distBinSpec
+        with distBinSpec
     }
 }
 
@@ -111,7 +111,7 @@ task prepareDmg(type: Copy) {
         filter(ReplaceTokens, tokens: ['griffon.version': version])
     }
     into("griffon-${version}") {
-	    with distBinSpec
+        with distBinSpec
     }
 }
 
@@ -158,9 +158,9 @@ task deb(dependsOn: prepareDeb) {
     inputs.dir prepareDeb.outputs.files
     outputs.file "$buildDir/distributions/griffon-${version}-1_all.deb"
 
-	File debSrcDir = project.file('installer/deb')
-	File debDir = "$buildDir/assemble/deb" as File
-	destinationDir = new File(debDir.absolutePath, 'dist')
+    File debSrcDir = project.file('installer/deb')
+    File debDir = "$buildDir/assemble/deb" as File
+    destinationDir = new File(debDir.absolutePath, 'dist')
 
     doLast {
         ant.taskdef(resource: 'ant_deb_task.properties',

@@ -53,49 +53,49 @@ uploadArchives {
 
 [installer, deployer].each { repo ->
     configure(repo) {
-		pom.project {
-			def dataName = project.name - "griffon-"
-			name(artifactData[dataName].name)
-			description(artifactData[dataName].description)
-			url('http://griffon.codehaus.org')
-			inceptionYear '2008'
-			licenses {
-			    license {
-			        name 'The Apache Software License, Version 2.0'
-			        url 'http://www.apache.org/licenses/LICENSE-2.0.txt'
-			        distribution 'repo'
-			    }
-			}
-			scm {
+        pom.project {
+            def dataName = project.name - "griffon-"
+            name(artifactData[dataName].name)
+            description(artifactData[dataName].description)
+            url('http://griffon.codehaus.org')
+            inceptionYear '2008'
+            licenses {
+                license {
+                    name 'The Apache Software License, Version 2.0'
+                    url 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+                    distribution 'repo'
+                }
+            }
+            scm {
                 url "https://github.com/griffon/griffon"
             }
-			developers {
-			    [aalmiray: 'Andres Almiray',
-			     shemnon: 'Danno Ferrin',
-			     jwill: 'James Williams',
-			     aklein: 'Alexander Klein',
-			     rgroeschke: 'Rene Groeschke'].each { devId, devName ->
-			        developer {
-			            id devId
-			            name devName
-			            roles {
-			                role 'Developer'
-			            }
-			        }
-			    }
-			}
-			contributors {
-			    ['Dierk Koenig',
-			     'Guillaume Laforge',
-			     'Dean Iverson'].each { devName ->
-			        contributor {
-			            name devName
-			            roles {
-			                role 'Contributor'
-			            }
-			        }
-			    }
-			}
-		}
- 	}
+            developers {
+                [aalmiray: 'Andres Almiray',
+                 shemnon: 'Danno Ferrin',
+                 jwill: 'James Williams',
+                 aklein: 'Alexander Klein',
+                 rgroeschke: 'Rene Groeschke'].each { devId, devName ->
+                    developer {
+                        id devId
+                        name devName
+                        roles {
+                            role 'Developer'
+                        }
+                    }
+                }
+            }
+            contributors {
+                ['Dierk Koenig',
+                 'Guillaume Laforge',
+                 'Dean Iverson'].each { devName ->
+                    contributor {
+                        name devName
+                        roles {
+                            role 'Contributor'
+                        }
+                    }
+                }
+            }
+        }
+     }
 }

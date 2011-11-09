@@ -19,19 +19,19 @@ import org.apache.tools.ant.filters.ReplaceTokens
 apply plugin: 'java'
 
 configurations {
-	groovy
-	docs { transitive = false }
+    groovy
+    docs { transitive = false }
 }
 
 repositories {
-	mavenCentral()
+    mavenCentral()
 }
 
 dependencies {
-	groovy localGroovy() //for api docs generation needed (groovydoc)
+    groovy localGroovy() //for api docs generation needed (groovydoc)
 
-	// problems with ant classloader makes it necessary to duplicate the deps
-	// in buildSrc/ and the docs configurations
+    // problems with ant classloader makes it necessary to duplicate the deps
+    // in buildSrc/ and the docs configurations
     docs(localGroovy(),
          "org.grails:grails-docs:$grailsDocsVersion",
          'radeox:radeox:1.0-b2',
@@ -53,21 +53,21 @@ task copyDocs(type: Copy) {
 }
 
 task apiDocs(type: Groovydoc, dependsOn: copyDocs) {
-	// def cliSources = files("subprojects/griffon-cli/src/main/groovy") {
+    // def cliSources = files("subprojects/griffon-cli/src/main/groovy") {
     //     include 'griffon/test/**/*'
     //     include 'griffon/transform/**/*'
     // }
-	// def rtSources = files("subprojects/griffon-rt/src/main/groovy") {
-	//     include '**/*'
-	// }
+    // def rtSources = files("subprojects/griffon-rt/src/main/groovy") {
+    //     include '**/*'
+    // }
     // source = cliSources + rtSources
     source = "${buildDir}/javadoc-src" as File
-	destinationDir = "$buildDir/api" as File
+    destinationDir = "$buildDir/api" as File
     docTitle = "Griffon $version"
     header = "Griffon $version"
     windowTitle = "Griffon $version"
     groovyClasspath = configurations.groovy
-	classpath = project(":griffon-rt").sourceSets.main.output +
+    classpath = project(":griffon-rt").sourceSets.main.output +
                 project(":griffon-rt").configurations.compile
 
     includePrivate = true
@@ -110,25 +110,25 @@ task jarSource(type: Jar, dependsOn: copyDocs) {
 task jarDocs(dependsOn: [jarApi, jarSource]) {}
 
 task buildGuide(type: GrailsDoc, dependsOn: apiDocs) {
-	srcDir = file('src/guide/src')
-	props = file('src/guide/guide.properties')
-	imagesDir = file('src/guide/resources/img')
-	outputDir = file("$buildDir/manual")
-	
-	doFirst {
+    srcDir = file('src/guide/src')
+    props = file('src/guide/guide.properties')
+    imagesDir = file('src/guide/resources/img')
+    outputDir = file("$buildDir/manual")
+
+    doFirst {
         copy {
             into file("$buildDir/manual/api")
             from "$buildDir/api"
         }
-	}
+    }
 }
 
 task pdfGuide(type:PdfGuide, dependsOn: buildGuide) {
-	inputs.files file("$buildDir/manual/guide")
-	pdfName = "griffon-guide-${version}.pdf"
+    inputs.files file("$buildDir/manual/guide")
+    pdfName = "griffon-guide-${version}.pdf"
 }
 
 task dist(type: Zip) {
-	dependsOn { [pdfGuide, jarDocs] }
-	from "$buildDir/manual"
+    dependsOn { [pdfGuide, jarDocs] }
+    from "$buildDir/manual"
 }

@@ -19,8 +19,8 @@ import org.apache.tools.ant.filters.ReplaceTokens
 apply plugin: 'java'
 
 configurations {
-	runtime.transitive = false
-	compile.transitive = false	
+    runtime.transitive = false
+    compile.transitive = false    
 }
 
 jar.doFirst {
@@ -30,16 +30,16 @@ jar.doFirst {
 task dist(type: Zip) {   
     description = 'Creates a wrapper distribution'
     archiveName = 'griffon-wrapper-files.zip'
-	into('wrapper'){
-		from(jar.outputs.files){
-			rename "griffon-wrapper-$version", 'griffon-wrapper'
-		}
-		from('src/resources') {
-	        filter(ReplaceTokens, tokens: ['griffon.version': version])
-	    }	
-	}
-	from('src/bin') {
+    into('wrapper'){
+        from(jar.outputs.files){
+            rename "griffon-wrapper-$version", 'griffon-wrapper'
+        }
+        from('src/resources') {
+            filter(ReplaceTokens, tokens: ['griffon.version': version])
+        }    
+    }
+    from('src/bin') {
         filter(ReplaceTokens, tokens: ['griffon.version': version])
-        fileMode = 0755	
+        fileMode = 0755    
     }
 }

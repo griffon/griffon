@@ -18,65 +18,65 @@ import org.apache.tools.ant.filters.ReplaceTokens
 
 distBinSpec = copySpec {
     from("."){
-		include 'README'
-		include 'INSTALL'
-		include 'LICENSE'
-	}
-	from('src/dist'){
-		exclude 'bin'
-		filter(ReplaceTokens, tokens: ['griffon.version': version, 'groovy.version': groovyVersion])
-	}
-	from('src/griffon'){
-		into 'src/griffon'
-		filter(ReplaceTokens, tokens: ['griffon.version': version, 'groovy.version': groovyVersion])	
-	}
-	from('src/dist/bin'){
-		into 'bin'
-		filter(ReplaceTokens, tokens: ['griffon.version': version, 'groovy.version': groovyVersion])	
-        fileMode = 0755	
-	}
-	into('lib') { 
-		from(project(":griffon-cli").configurations.runtime) {
-		    exclude 'griffon*'
-		}
-	}
-	
-	['rt', 'cli', 'scripts', 'resources'].each { subproj ->
-		from(project(':griffon-' + subproj).jar.outputs.files){
-			into('dist')
-		}
-	}
-	
-	into('scripts'){
-		from(project(":griffon-scripts").sourceSets.main.allSource)
-	}
-	
-	into('doc'){
-		from(project(':griffon-guide').jarApi.outputs.files)
-		from(project(':griffon-guide').jarSource.outputs.files)
-		from('src/dist/doc')
-		filter(ReplaceTokens, tokens: ['griffon.version': version, 'groovy.version': groovyVersion])	
-	}
-	
-	into('guide'){
-		from(project(':griffon-guide').buildGuide.outputs.files)
-		from(project(':griffon-guide').pdfGuide.outputs.files)
-		filter(ReplaceTokens, tokens: ['griffon.version': version, 'groovy.version': groovyVersion])	
-	}
+        include 'README'
+        include 'INSTALL'
+        include 'LICENSE'
+    }
+    from('src/dist'){
+        exclude 'bin'
+        filter(ReplaceTokens, tokens: ['griffon.version': version, 'groovy.version': groovyVersion])
+    }
+    from('src/griffon'){
+        into 'src/griffon'
+        filter(ReplaceTokens, tokens: ['griffon.version': version, 'groovy.version': groovyVersion])    
+    }
+    from('src/dist/bin'){
+        into 'bin'
+        filter(ReplaceTokens, tokens: ['griffon.version': version, 'groovy.version': groovyVersion])    
+        fileMode = 0755    
+    }
+    into('lib') { 
+        from(project(":griffon-cli").configurations.runtime) {
+            exclude 'griffon*'
+        }
+    }
+    
+    ['rt', 'cli', 'scripts', 'resources'].each { subproj ->
+        from(project(':griffon-' + subproj).jar.outputs.files){
+            into('dist')
+        }
+    }
+    
+    into('scripts'){
+        from(project(":griffon-scripts").sourceSets.main.allSource)
+    }
+    
+    into('doc'){
+        from(project(':griffon-guide').jarApi.outputs.files)
+        from(project(':griffon-guide').jarSource.outputs.files)
+        from('src/dist/doc')
+        filter(ReplaceTokens, tokens: ['griffon.version': version, 'groovy.version': groovyVersion])    
+    }
+    
+    into('guide'){
+        from(project(':griffon-guide').buildGuide.outputs.files)
+        from(project(':griffon-guide').pdfGuide.outputs.files)
+        filter(ReplaceTokens, tokens: ['griffon.version': version, 'groovy.version': groovyVersion])    
+    }
 }
 
 task zipBinary(type: Zip, dependsOn: ':griffon-guide:dist'){
-	description = "Zips the binary distribution."
+    description = "Zips the binary distribution."
     classifier = 'bin'
     into "griffon-$version"
-	with distBinSpec
+    with distBinSpec
 }
 
 task tarBinary(type: Tar) {
     description = "Tars the binary distribution."
     classifier = 'bin'
     into "griffon-$version"
-	with distBinSpec
+    with distBinSpec
     compression = Compression.GZIP
 }
 
@@ -121,9 +121,9 @@ task checkGriffonHome << {
 
 task installBinary(type: Copy, dependsOn: checkGriffonHome) {
     description = 'Installs the binary distribution at $GRIFFON_HOME.'
-	destinationDir = griffonHome.dir as File
-	with distBinSpec
-	doLast {
+    destinationDir = griffonHome.dir as File
+    with distBinSpec
+    doLast {
         ant.chmod(dir: "${griffonHome.dir}/bin", excludes: '*.bat', perm: 'ugo+x')
     }
 }

@@ -24,7 +24,7 @@ task jarSharedFiles(type: Jar, dependsOn: ':griffon-wrapper:dist') {
     appFileJar = true
     archiveName = 'griffon-shared-files.jar'
     destinationDir = "$buildDir/assemble/jars" as File
-	from(project(':griffon-wrapper').file("build/distributions/griffon-wrapper-files.zip"))
+    from(project(':griffon-wrapper').file("build/distributions/griffon-wrapper-files.zip"))
 }
 
 task jarAppFiles(type: Jar) {
@@ -53,8 +53,8 @@ task jarIntegrationFiles(type: Jar) {
 resourceFilesJars = tasks.withType(Jar).matching({ task -> task.appFileJar } as Spec)
 
 jar {
-	dependsOn: resourceFilesJars
-	resourceFilesJars.each { task ->
-		from task.outputs.files
-	}
+    dependsOn: resourceFilesJars
+    resourceFilesJars.each { task ->
+        from task.outputs.files
+    }
 }
