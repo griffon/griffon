@@ -3,10 +3,11 @@ import javax.swing.*;
 import java.util.Arrays;
 import java.util.Map;
 
-import griffon.util.GriffonApplicationUtils;
 import net.miginfocom.swing.MigLayout;
-import griffon.swing.SwingGriffonApplication;
+import griffon.util.GriffonApplicationUtils;
 import griffon.util.GriffonNameUtils;
+import griffon.util.ConfigUtils;
+import griffon.swing.SwingGriffonApplication;
 import org.codehaus.griffon.runtime.core.AbstractGriffonView;
 import griffon.plugins.i18n.MessageSourceHolder;
 
@@ -64,7 +65,7 @@ public class @artifact.name@ extends AbstractGriffonView {
     private void containerPreInit(Window window) {
         if (window instanceof Frame) {
             ((Frame) window).setTitle(GriffonNameUtils.capitalize(
-                    message("application.title", getApp().getConfigValue("application.title").toString())));
+                    message("application.title", ConfigUtils.getConfigValue(getApp().getConfig(), "application.title").toString())));
         }
         window.setIconImage(getImage("/griffon-icon-48x48.png"));
         if (Float.parseFloat(GriffonApplicationUtils.getJavaVersion().substring(0, 3)) > 1.5) {

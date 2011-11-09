@@ -8,6 +8,7 @@ import griffon.swing.BindUtils;
 import griffon.util.GriffonNameUtils;
 import griffon.util.Metadata;
 import griffon.util.RunnableWithArgs;
+import griffon.util.ConfigUtils;
 
 import javax.swing.*;
 import java.awt.*;
@@ -75,7 +76,7 @@ public class AboutView extends AbstractDialogView {
         panel.add(label, rowConstraints);
 
         label = new JLabel(GriffonNameUtils.capitalize(message("application.title",
-                getApp().getConfigValue("application.title").toString() + " " + Metadata.getCurrent().getApplicationVersion())));
+                ConfigUtils.getConfigValue(getApp().getConfig(), "application.title").toString() + " " + Metadata.getCurrent().getApplicationVersion())));
         label.setFont(label.getFont().deriveFont(Font.BOLD));
         panel.add(label, rowConstraints);
 
