@@ -33,8 +33,6 @@ includeTargets << griffonScript("CreateIntegrationTest")
  * * tweaks griffon-app/conf/BuildConfig.groovy to have griffon.jars.destDir set (don't change)
  * * tweaks griffon-app/conf/BuildConfig.groovy to have griffon.jars.jarName set (don't change)
  * * Adds copy libs events for the destDir
- * * Adds install hooks to wire in addon to griffon-app/conf/Builder.groovy
- * * Adds uninstall hooks to remove the addon from griffon-app/conf/Builder.groovy
  */
 target('default': "Creates an Addon for a plugin") {
     depends(parseArguments)
@@ -98,40 +96,10 @@ eventSetClasspath = { cl ->
     ])
 }
 """
-
-    def installFile = new File("${basedir}/scripts/_Install.groovy")
-    // all plugins should have an install, no need to insure
-    String installText = installFile.text
-    def flagVar = generateTempVar(installText, 'addonIsSet')
-
-    //TODO we should slurp the config, tweak it in place, and re-write instead of append
-    installFile << """
-// check to see if we already have a $addonName
-def configText = '''root.'$addonName'.addon=true'''
-if(!(builderConfigFile.text.contains(configText))) {
-    println 'Adding $addonName to Builder.groovy'
-    builderConfigFile.append(\"\"\"
-\$configText
-\"\"\")
-}"""
-
-    def uninstallFile = new File("${basedir}/scripts/_Uninstall.groovy")
-    // all plugins should have an install, no need to insure
-    String uninstallText = uninstallFile.text
-    flagVar = generateTempVar(uninstallText, 'addonIsSet')
-
-    //TODO we should slurp the config, tweak it in place, and re-write instead of append
-    uninstallFile << """
-// check to see if we already have a $addonName
-def configText = '''root.'$addonName'.addon=true'''
-if(builderConfigFile.text.contains(configText)) {
-    println 'Removing $addonName from Builder.groovy'
-    builderConfigFile.text -= configText
-}"""
 }
 
-def generateTempVar (String textToSearch, String prefix = "tmp", String suffix = "") {
-int i = 1;
-while (textToSearch =~ "\\W$prefix$i$suffix\\W") i++
-return "$prefix$i$suffix"
+def generateTempVar(String textToSearch, String prefix = "tmp", String suffix = "") {
+    int i = 1;
+    while (textToSearch =~ "\\W$prefix$i$suffix\\W") i++
+    return "$prefix$i$suffix"
 }

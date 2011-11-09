@@ -45,22 +45,42 @@ class AddonHelper {
         LOG.info("Loading addons [START]")
         app.event(GriffonApplication.Event.LOAD_ADDONS_START.name, [app])
 
+        Map addons = [:]
+
+        for (String key: Metadata.current.stringPropertyNames()) {
+            if (!key.startsWith('plugins.')) continue
+            key = key[8..-1].toString()
+            addons[key] = [
+                    auto: true,
+                    prefix: '',
+                    name: key,
+                    className: GriffonNameUtils.getClassNameForLowerCaseHyphenSeparatedName(key) + 'GriffonAddon'
+            ]
+        }
+
         for (node in app.builderConfig) {
             String nodeName = node.key
             switch (nodeName) {
-                case "addons":
-                case "features":
+                case 'addons':
+                case 'features':
                     // reserved words, not addon prefixes
                     break
                 default:
-                    if (nodeName == "root") nodeName = ""
-                    node.value.each {addon ->
-                        Class addonClass = Class.forName(addon.key) //FIXME get correct classloader
-                        if (!FactoryBuilderSupport.isAssignableFrom(addonClass)) {
-                            AddonHelper.handleAddon(app, addonClass, nodeName, addon.key)
-                        }
+                    if (nodeName == 'root') nodeName = ''
+                    node.value.each { addon ->
+                        String pluginName = GriffonNameUtils.getHyphenatedName(addon.key - 'GriffonAddon')
+                        addons[pluginName] = [
+                                auto: false,
+                                prefix: nodeName,
+                                name: pluginName,
+                                className: addon.key.toString()
+                        ]
                     }
             }
+        }
+
+        for (config in addons.values()) {
+            handleAddon(app, config)
         }
 
         app.addonManager.addons.each {name, addon ->
@@ -77,15 +97,22 @@ class AddonHelper {
         LOG.info("Loading addons [END]")
     }
 
-    static void handleAddon(GriffonApplication app, Class addonClass, String prefix, String addonName) {
-        GriffonAddonDescriptor addonDescriptor = app.addonManager.findAddonDescriptor(addonName)
+    private static void handleAddon(GriffonApplication app, Map config) {
+        try {
+            config.addonClass = Class.forName(config.className)
+        } catch (ClassNotFoundException cnfe) {
+            if (!config.auto) throw cnfe
+        }
+
+        if (FactoryBuilderSupport.isAssignableFrom(config.addonClass)) return
+
+        GriffonAddonDescriptor addonDescriptor = app.addonManager.findAddonDescriptor(config.name)
         if (addonDescriptor) return
 
-        def obj = addonClass.newInstance()
-        String pluginName = GriffonNameUtils.getHyphenatedName(addonName - 'GriffonAddon')
-        String addonVersion = Metadata.current['plugins.' + pluginName]
+        def obj = config.addonClass.newInstance()
+        String addonVersion = Metadata.current['plugins.' + config.name]
         GriffonAddon addon = obj instanceof GriffonAddon ? obj : new DefaultGriffonAddon(app, obj)
-        addonDescriptor = new DefaultGriffonAddonDescriptor(prefix, addonName, pluginName, addonVersion, addon)
+        addonDescriptor = new DefaultGriffonAddonDescriptor(config.prefix, config.className, config.name, addonVersion, addon)
 
         app.addonManager.registerAddon(addonDescriptor)
 
@@ -96,8 +123,8 @@ class AddonHelper {
         }
         if (!(obj instanceof ThreadingHandler)) UIThreadManager.enhance(addonMetaClass)
 
-        if (LOG.infoEnabled) LOG.info("Loading addon $addonName with class ${addon.class.name}")
-        app.event(GriffonApplication.Event.LOAD_ADDON_START.name, [addonName, addon, app])
+        if (LOG.infoEnabled) LOG.info("Loading addon $config.name with class ${addon.class.name}")
+        app.event(GriffonApplication.Event.LOAD_ADDON_START.name, [config.name, addon, app])
 
         addon.addonInit(app)
         addMVCGroups(app, addon.mvcGroups)
@@ -108,12 +135,12 @@ class AddonHelper {
         for (node in app.builderConfig) {
             String nodeName = node.key
             switch (nodeName) {
-                case "addons":
-                case "features":
+                case 'addons':
+                case 'features':
                     // reserved words, not addon prefixes
                     break
                 default:
-                    if (nodeName == "root") nodeName = ""
+                    if (nodeName == 'root') nodeName = ''
                     node.value.each {addon ->
                         Class addonClass = Class.forName(addon.key) //FIXME get correct classloader
                         if (!FactoryBuilderSupport.isAssignableFrom(addonClass)) {
@@ -239,6 +266,7 @@ class AddonHelper {
 
     static void addMVCGroups(GriffonApplication app, Map<String, Map<String, String>> groups) {
         groups.each {String type, Map<String, String> members ->
+            if (LOG.debugEnabled) LOG.debug("Adding MVC group $type")
             Map membersCopy = members.inject([:]) {m, e -> m[e.key as String] = e.value as String; m}
             app.mvcGroupManager.addConfiguration(app.mvcGroupManager.newMVCGroupConfiguration(app, type, membersCopy))
         }
