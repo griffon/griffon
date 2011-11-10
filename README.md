@@ -42,12 +42,12 @@ The Griffon installation structure is defined as follows
    * lib - buildtime dependencies
    * media - griffon images and icons
    * samples
-      ** FileViewer - simple file contents visualizer
-      ** FontPicker - displays available system fonts and preview
-      ** Greet - the 1st Griffon application ever: a Twitter client
-      ** GroovyEdit - simple multi-tabbed file editor
-      ** SwingPad - visual editor for View scripts
-      ** Weatherwidget - showcases animations and network calls
+      * FileViewer - simple file contents visualizer
+      * FontPicker - displays available system fonts and preview
+      * Greet - the 1st Griffon application ever: a Twitter client
+      * GroovyEdit - simple multi-tabbed file editor
+      * SwingPad - visual editor for View scripts
+      * Weatherwidget - showcases animations and network calls
    * scripts - minimal set of griffon commands
    * src - application and artifact templates
 
