@@ -36,6 +36,8 @@ import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import static griffon.util.GriffonNameUtils.isBlank;
+
 /**
  * Class that handles Griffon command line interface for running scripts
  *
@@ -193,7 +195,7 @@ public class GriffonScriptRunner {
         return allArgs;
     }
 
-    private static String unquote(String s) {
+    public static String unquote(String s) {
         if ((s.startsWith("'") && s.endsWith("'")) ||
             (s.startsWith("\"") && s.endsWith("\""))) {
             return s.substring(1, s.length() - 1);
@@ -299,12 +301,12 @@ public class GriffonScriptRunner {
         return callPluginOrGriffonScript(script);
     }
 
-    private void setRunningEnvironment(String scriptName, String env) {
+    public void setRunningEnvironment(String scriptName, String env) {
         // Get the default environment if one hasn't been set.
         boolean useDefaultEnv = env == null;
         if (useDefaultEnv) {
             env = DEFAULT_ENVS.get(scriptName);
-            env = env != null ? env : Environment.DEVELOPMENT.getName();
+            env = !isBlank(env) ? env : Environment.DEVELOPMENT.getName();
         }
 
         System.setProperty("base.dir", settings.getBaseDir().getPath());
@@ -599,7 +601,7 @@ public class GriffonScriptRunner {
         }
     }
 
-    private String fixScriptName(String scriptName, List<File> allScripts) {
+    public static String fixScriptName(String scriptName, List<File> allScripts) {
         try {
             Set<String> names = new HashSet<String>();
             for (File script : allScripts) {
@@ -617,7 +619,7 @@ public class GriffonScriptRunner {
         }
     }
 
-    private String askUserForBestMatch(String scriptName, List<String> topMatches) throws IOException {
+    public static String askUserForBestMatch(String scriptName, List<String> topMatches) throws IOException {
         System.out.println("Script '" + scriptName + "' not found, did you mean:");
         int i = 0;
         for (String s : topMatches) {
@@ -650,7 +652,7 @@ public class GriffonScriptRunner {
         }
     }
 
-    private int executeWithGantInstance(Gant gant, GantBinding binding) {
+    public static int executeWithGantInstance(Gant gant, GantBinding binding) {
         try {
             removePrintHooks(binding);
             gant.prepareTargets();
@@ -670,7 +672,7 @@ public class GriffonScriptRunner {
         return scriptsAllowedOutsideOfProject.contains(scriptFile);
     }
 
-    private String getScriptNameFromFile(File scriptPath) {
+    public static String getScriptNameFromFile(File scriptPath) {
         String scriptFileName = scriptPath.getName().substring(0,scriptPath.getName().length()-7); // trim .groovy extension
         if(scriptFileName.endsWith("_")) {
             scriptFileName = scriptFileName.substring(0, scriptFileName.length()-1);
@@ -682,7 +684,7 @@ public class GriffonScriptRunner {
      * Nuke all prehook and posthook definitions<p>
      * WARNING: _BIG_HACK_ AHEAD. YE BE WARNED
      */
-    private void removePrintHooks(GantBinding binding) {
+    public static void removePrintHooks(GantBinding binding) {
         try {
             Field initializing = GantBinding.class.getDeclaredField("initializing");
             initializing.setAccessible(true);
@@ -728,7 +730,7 @@ public class GriffonScriptRunner {
      * will load the "Init" script from $Griffon_HOME/scripts if it
      * exists there; otherwise it will load the Init class.
      */
-    private GantBinding initBinding(GantBinding binding) {
+    public GantBinding initBinding(GantBinding binding) {
         Closure c = settings.getGriffonScriptClosure();
         c.setDelegate(binding);
         binding.setVariable("griffonScript", c);
@@ -875,11 +877,15 @@ public class GriffonScriptRunner {
     private static void addCommandScripts(File dir, List<File> scripts) {
         if (dir.exists()) {
             for (File file : dir.listFiles()) {
-                if (scriptFilePattern.matcher(file.getName()).matches()) {
+                if (isCommandScript(file)) {
                     scripts.add(file);
                 }
             }
         }
+    }
+
+    public static boolean isCommandScript(File file) {
+        return scriptFilePattern.matcher(file.getName()).matches();
     }
 
     /**
@@ -956,7 +962,7 @@ public class GriffonScriptRunner {
      * @return A list of all known plugin directories, or an empty list if there are none.
      */
     @SuppressWarnings("unchecked")
-    private static List<File> listKnownPluginDirs(BuildSettings settings) {
+    public static List<File> listKnownPluginDirs(BuildSettings settings) {
         List<File> dirs = new ArrayList<File>();
 
         // First look in the global plugins directory.

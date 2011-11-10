@@ -1784,7 +1784,7 @@ public final class GriffonClassUtils {
         } catch (IllegalAccessException e) {
             throw new RuntimeException(e);
         } catch (InvocationTargetException e) {
-            throw new RuntimeException(e);
+            throw new RuntimeException(e.getMessage(), e.getTargetException());
         }
     }
 
@@ -1804,7 +1804,7 @@ public final class GriffonClassUtils {
         } catch (IllegalAccessException e) {
             throw new RuntimeException(e);
         } catch (InvocationTargetException e) {
-            throw new RuntimeException(e);
+            throw new RuntimeException(e.getMessage(), e.getTargetException());
         }
     }
 
@@ -1824,7 +1824,7 @@ public final class GriffonClassUtils {
         } catch (IllegalAccessException e) {
             throw new RuntimeException(e);
         } catch (InvocationTargetException e) {
-            throw new RuntimeException(e);
+            throw new RuntimeException(e.getMessage(), e.getTargetException());
         }
     }
 
@@ -1844,7 +1844,7 @@ public final class GriffonClassUtils {
         } catch (IllegalAccessException e) {
             throw new RuntimeException(e);
         } catch (InvocationTargetException e) {
-            throw new RuntimeException(e);
+            throw new RuntimeException(e.getMessage(), e.getTargetException());
         }
     }
 

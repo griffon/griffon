@@ -29,7 +29,6 @@ dependencies {
     compile 'org.coconut.forkjoin:jsr166y:070108',
             'junit:junit:4.8.1',
             'asm:asm:3.2',
-            'org.fusesource.jansi:jansi:1.4',
             'commons-cli:commons-cli:1.2',
             'commons-io:commons-io:1.4',
             'commons-lang:commons-lang:2.6'
@@ -52,9 +51,6 @@ dependencies {
     compile("org.apache.ant:ant-antlr:$antVersion") {
         exclude group: 'org.apache.ant', module: 'ant'
         exclude group: 'antlr',          module: 'antlr'
-    }
-    compile('jline:jline:0.9.94') {
-        exclude group: 'junit', module: 'junit'
     }
     
     compile("org.springframework:org.springframework.core:$springVersion") {
@@ -141,18 +137,13 @@ dependencies {
         exclude group: 'org.bouncycastle',   module: 'bcpg-jdk14'
         exclude group: 'org.bouncycastle',   module: 'bcprov-jdk14'
     }
-    compile('org.codehaus.gant:gant_groovy1.8:1.9.6') {
+    compile('org.codehaus.gant:gant_groovy1.8:1.9.7') {
         exclude group: 'org.apache.ant', module: 'ant'
         exclude group: 'commons-cli',    module: 'commons-cli'
     }
-    /*        
-    compile('org.codehaus.griffon:swingxbuilder:0.1.8') {
-                exclude module: 'groovy-all'
-    }
-    */    
 }
 
-processResources{
+processResources {
     filter(ReplaceTokens, tokens: [version:version, 
                                    groovyVersion:groovyVersion,
                                    antVersion:antVersion,
@@ -160,6 +151,6 @@ processResources{
                                    springVersion:springVersion])
 }
 
-test{
+test {
     systemProperty('user.dir', rootProject.file('.').absolutePath)
 }

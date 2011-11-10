@@ -211,8 +211,6 @@ class IvyDependencyManager extends AbstractIvyDependencyManager implements Depen
                       "org.apache.ant:ant-launcher:$buildSettings.antVersion",
                       "org.apache.ant:ant-junit:$buildSettings.antVersion",
                       "org.apache.ant:ant-nodeps:$buildSettings.antVersion",
-                      "jline:jline:0.9.94",
-                      "org.fusesource.jansi:jansi:1.4",
                       "commons-io:commons-io:1.4",
                       "commons-lang:commons-lang:2.6",
                       "org.codehaus.griffon:griffon-cli:$griffonVersion",
