@@ -27,6 +27,7 @@ Directory Structure
 -------------------
 
 The Griffon installation structure is defined as follows
+
    * INSTALL - install instructions
    * LICENSE - project license (ASL 2.0)
    * README.md - this file
