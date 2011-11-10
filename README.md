@@ -28,28 +28,28 @@ Directory Structure
 
 The Griffon installation structure is defined as follows
 
-    * INSTALL - install instructions
-    * LICENSE - project license (ASL 2.0)
-    * README.md - this file
-    * archetypes - bundled application archetypes
-    * bash - griffon command autocompletion script
-    * bin - griffon launchers
-    * conf - griffon command classloading configuration
-    * dist - current griffon buildtime and runtime distribution
-    * doc - miscellaneous documentation
-    * guide - the Griffon Guide
-       ** api - framework javadocs
-    * lib - buildtime dependencies
-    * media - griffon images and icons
-    * samples
-       ** FileViewer - simple file contents visualizer
-       ** FontPicker - displays available system fonts and preview
-       ** Greet - the 1st Griffon application ever: a Twitter client
-       ** GroovyEdit - simple multi-tabbed file editor
-       ** SwingPad - visual editor for View scripts
-       ** Weatherwidget - showcases animations and network calls
-    * scripts - minimal set of griffon commands
-    * src - application and artifact templates
+   * INSTALL - install instructions
+   * LICENSE - project license (ASL 2.0)
+   * README.md - this file
+   * archetypes - bundled application archetypes
+   * bash - griffon command autocompletion script
+   * bin - griffon launchers
+   * conf - griffon command classloading configuration
+   * dist - current griffon buildtime and runtime distribution
+   * doc - miscellaneous documentation
+   * guide - the Griffon Guide
+      ** api - framework javadocs
+   * lib - buildtime dependencies
+   * media - griffon images and icons
+   * samples
+      ** FileViewer - simple file contents visualizer
+      ** FontPicker - displays available system fonts and preview
+      ** Greet - the 1st Griffon application ever: a Twitter client
+      ** GroovyEdit - simple multi-tabbed file editor
+      ** SwingPad - visual editor for View scripts
+      ** Weatherwidget - showcases animations and network calls
+   * scripts - minimal set of griffon commands
+   * src - application and artifact templates
 
 Links
 -----
