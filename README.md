@@ -38,7 +38,7 @@ The Griffon installation structure is defined as follows
    * dist - current griffon buildtime and runtime distribution
    * doc - miscellaneous documentation
    * guide - the Griffon Guide
-      ** api - framework javadocs
+      * api - framework javadocs
    * lib - buildtime dependencies
    * media - griffon images and icons
    * samples
