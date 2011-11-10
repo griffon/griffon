@@ -137,6 +137,10 @@ def addNodeContributions = { on ->
         method name: 'shortcut', type: 'javax.swing.KeyStroke', params: [key: 'java.lang.String']
         method name: 'shortcut', type: 'javax.swing.KeyStroke', params: [key: 'java.lang.String', modifier: 'int']
         method name: 'keyStrokeAction', type: 'void'
+
+        method name: 'edt', type: 'void', params: [closure: 'groovy.lang.Closure']
+        method name: 'doLater', type: 'void', params: [closure: 'groovy.lang.Closure']
+        method name: 'doOutside', type: 'void', params: [closure: 'groovy.lang.Closure']
     }
 }
 
@@ -149,6 +153,12 @@ def addNodeContributions = { on ->
 
             if (type == 'View') {
                 addNodeContributions(delegate)
+            }
+
+            if (type == 'Controller') {
+                method name: 'edt', type: 'void', params: [closure: 'groovy.lang.Closure']
+                method name: 'doLater', type: 'void', params: [closure: 'groovy.lang.Closure']
+                method name: 'doOutside', type: 'void', params: [closure: 'groovy.lang.Closure']
             }
         }
     }

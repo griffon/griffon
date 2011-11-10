@@ -42,6 +42,12 @@ def viewClass = griffonArtifact("views") & isScript()
 	delegatesTo "griffon.core.MVCHandler"
 	delegatesTo "griffon.core.ThreadingHandler"
 }
+
+controllerClass.accept {
+	methodDef name: 'edt', type: 'void', params: [closure: 'groovy.lang.Closure']
+	methodDef name: 'doLater', type: 'void', params: [closure: 'groovy.lang.Closure']
+	methodDef name: 'doOutside', type: 'void', params: [closure: 'groovy.lang.Closure']
+}
 	
 viewClass.accept { 
 	provider = "Griffon DSL"
@@ -185,6 +191,10 @@ viewClass.accept {
 	methodDef name: 'shortcut', type: javax.swing.KeyStroke, params: [key: java.lang.String]
 	methodDef name: 'shortcut', type: javax.swing.KeyStroke, params: [key: java.lang.String, modifier: 'int']
 	methodDef name: 'keyStrokeAction', type: 'void'
+
+	methodDef name: 'edt', type: 'void', params: [closure: 'groovy.lang.Closure']
+	methodDef name: 'doLater', type: 'void', params: [closure: 'groovy.lang.Closure']
+	methodDef name: 'doOutside', type: 'void', params: [closure: 'groovy.lang.Closure']
 }
 
 enclosingClass(annotatedBy('griffon.transform.EventPublisher')).accept {
