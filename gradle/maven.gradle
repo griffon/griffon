@@ -25,8 +25,6 @@ dependencies {
                  'org.apache.maven:maven-ant-tasks:2.1.0'
 }
 
-artifactData = new ConfigSlurper().parse(file("${rootProject.rootDir}/src/artifacts.groovy").toURI().toURL())
-
 installer = install.repositories.mavenInstaller
 def deployer = null
 
@@ -54,9 +52,8 @@ uploadArchives {
 [installer, deployer].each { repo ->
     configure(repo) {
         pom.project {
-            def dataName = project.name - "griffon-"
-            name(artifactData[dataName].name)
-            description(artifactData[dataName].description)
+            name(project.name)
+            description(project.pomDescription)
             url('http://griffon.codehaus.org')
             inceptionYear '2008'
             licenses {
@@ -97,5 +94,5 @@ uploadArchives {
                 }
             }
         }
-     }
+    }
 }
