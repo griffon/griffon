@@ -21,6 +21,7 @@ import griffon.util.GriffonNameUtils;
 import griffon.util.RunnableWithArgs;
 import groovy.lang.Closure;
 
+import javax.swing.*;
 import java.awt.*;
 import java.util.Collections;
 import java.util.Map;
@@ -149,11 +150,71 @@ public class ConfigurableWindowDisplayHandler implements WindowDisplayHandler {
         fetchDefaultWindowDisplayHandler(application).hide(window, application);
     }
 
+    public void show(JInternalFrame window, GriffonApplication application) {
+        String name = window.getName();
+        if (!GriffonNameUtils.isBlank(name)) {
+            Map<String, Object> options = windowBlock(application, name);
+            if (!options.isEmpty()) {
+                Object handler = options.get("show");
+                if (canBeRun(handler)) {
+                    run(handler, window, application);
+                    return;
+                } else if (options.get("handler") instanceof WindowDisplayHandler) {
+                    ((WindowDisplayHandler) options.get("handler")).show(window, application);
+                    return;
+                }
+            }
+        }
+        Map<String, Object> options = windowManagerBlock(application);
+        if (!options.isEmpty()) {
+            Object handler = options.get("defaultShow");
+            if (canBeRun(handler)) {
+                run(handler, window, application);
+                return;
+            }
+        }
+        fetchDefaultWindowDisplayHandler(application).show(window, application);
+    }
+
+    public void hide(JInternalFrame window, GriffonApplication application) {
+        String name = window.getName();
+        if (!GriffonNameUtils.isBlank(name)) {
+            Map<String, Object> options = windowBlock(application, name);
+            if (!options.isEmpty()) {
+                Object handler = options.get("hide");
+                if (canBeRun(handler)) {
+                    run(handler, window, application);
+                    return;
+                } else if (options.get("handler") instanceof WindowDisplayHandler) {
+                    ((WindowDisplayHandler) options.get("handler")).hide(window, application);
+                    return;
+                }
+            }
+        }
+        Map<String, Object> options = windowManagerBlock(application);
+        if (!options.isEmpty()) {
+            Object handler = options.get("defaultHide");
+            if (canBeRun(handler)) {
+                run(handler, window, application);
+                return;
+            }
+        }
+        fetchDefaultWindowDisplayHandler(application).hide(window, application);
+    }
+
     private boolean canBeRun(Object obj) {
         return obj instanceof Closure || obj instanceof RunnableWithArgs;
     }
 
     private void run(Object obj, Window window, GriffonApplication application) {
+        if (obj instanceof Closure) {
+            ((Closure) obj).call(window, application);
+        } else {
+            ((RunnableWithArgs) obj).run(new Object[]{window, application});
+        }
+    }
+
+    private void run(Object obj, JInternalFrame window, GriffonApplication application) {
         if (obj instanceof Closure) {
             ((Closure) obj).call(window, application);
         } else {

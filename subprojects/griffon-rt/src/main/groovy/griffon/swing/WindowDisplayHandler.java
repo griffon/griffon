@@ -17,10 +17,11 @@ package griffon.swing;
 
 import griffon.core.GriffonApplication;
 
+import javax.swing.*;
 import java.awt.*;
 
 /**
- * Controls how windows are shown and hidden at runtime.
+ * Controls how windows and internal frames are shown and hidden at runtime.
  *
  * @author Andres Almiray
  * @since 0.3.1
@@ -41,4 +42,22 @@ public interface WindowDisplayHandler {
      * @param application the current application
      */
     void hide(Window window, GriffonApplication application);
+
+    /**
+     * Callback for displaying an internal frame.
+     *
+     * @param window      the window to be displayed
+     * @param application the current application
+     * @since 0.9.5
+     */
+    void show(JInternalFrame window, GriffonApplication application);
+
+    /**
+     * Callback for hiding an internal frame.
+     *
+     * @param window      the window to hide
+     * @param application the current application
+     * @since 0.9.5
+     */
+    void hide(JInternalFrame window, GriffonApplication application);
 }

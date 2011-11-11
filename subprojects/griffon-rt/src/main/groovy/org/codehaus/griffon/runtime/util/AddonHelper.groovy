@@ -78,7 +78,6 @@ class AddonHelper {
                     }
             }
         }
-
         for (config in addons.values()) {
             handleAddon(app, config)
         }
@@ -101,7 +100,12 @@ class AddonHelper {
         try {
             config.addonClass = Class.forName(config.className)
         } catch (ClassNotFoundException cnfe) {
-            if (!config.auto) throw cnfe
+            if (!config.auto) {
+                throw cnfe
+            } else {
+                // skip
+                return
+            }
         }
 
         if (FactoryBuilderSupport.isAssignableFrom(config.addonClass)) return

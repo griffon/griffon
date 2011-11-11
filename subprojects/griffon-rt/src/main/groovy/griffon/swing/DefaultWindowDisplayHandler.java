@@ -17,6 +17,7 @@ package griffon.swing;
 
 import griffon.core.GriffonApplication;
 
+import javax.swing.*;
 import java.awt.*;
 
 /**
@@ -32,6 +33,14 @@ public class DefaultWindowDisplayHandler implements WindowDisplayHandler {
     }
 
     public void hide(Window window, GriffonApplication application) {
+        if (window != null) window.dispose();
+    }
+
+    public void show(JInternalFrame window, GriffonApplication application) {
+        if (window != null) window.setVisible(true);
+    }
+
+    public void hide(JInternalFrame window, GriffonApplication application) {
         if (window != null) window.dispose();
     }
 }

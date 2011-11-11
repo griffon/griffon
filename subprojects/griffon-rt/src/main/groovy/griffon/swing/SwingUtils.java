@@ -43,6 +43,8 @@ public class SwingUtils {
      * @param window a Window object
      */
     public static void centerOnScreen(Window window) {
+        if (window == null) return;
+
         Point center = GraphicsEnvironment.getLocalGraphicsEnvironment().getCenterPoint();
         Dimension screen = Toolkit.getDefaultToolkit().getScreenSize();
 
@@ -57,6 +59,34 @@ public class SwingUtils {
         );
 
         window.setLocation(corner);
+    }
+
+    /**
+     * Centers a JInternalFrame on the screen<p>
+     * Sets the internal frame on the top left corner if the frame's
+     * dimensions are bigger than the desktop's.
+     *
+     * @param internalFrame a JInternalFrame object
+     */
+    public static void centerOnScreen(JInternalFrame internalFrame) {
+        if (internalFrame == null) return;
+
+        JDesktopPane desktop = internalFrame.getDesktopPane();
+        if(desktop == null) return;
+        Dimension screen = desktop.getSize();
+        Point center = new Point(screen.width / 2, screen.height / 2);
+
+        double w = Math.min(internalFrame.getWidth(), screen.width);
+        double h = Math.min(internalFrame.getHeight(), screen.height);
+        int x = (int) (center.x - (w / 2));
+        int y = (int) (center.y - (h / 2));
+
+        Point corner = new Point(
+                (x >= 0 ? x : 0),
+                (y >= 0 ? y : 0)
+        );
+
+        internalFrame.setLocation(corner);
     }
 
     /**

@@ -24,6 +24,9 @@ import groovy.util.ConfigObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.swing.*;
+import javax.swing.event.InternalFrameAdapter;
+import javax.swing.event.InternalFrameEvent;
 import java.awt.*;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
@@ -49,7 +52,9 @@ public final class WindowManager implements ShutdownHandler {
     private final SwingGriffonApplication app;
     private final WindowHelper windowHelper = new WindowHelper();
     private final ComponentHelper componentHelper = new ComponentHelper();
+    private final InternalFrameHelper internalFrameHelper = new InternalFrameHelper();
     private final List<Window> windows = new CopyOnWriteArrayList<Window>();
+    private final List<JInternalFrame> internalFrames = new CopyOnWriteArrayList<JInternalFrame>();
     private boolean hideBeforeHandler = false;
 
     /**
@@ -71,6 +76,22 @@ public final class WindowManager implements ShutdownHandler {
         if (!GriffonNameUtils.isBlank(name)) {
             for (Window window : windows) {
                 if (name.equals(window.getName())) return window;
+            }
+        }
+        return null;
+    }
+
+    /**
+     * Finds a JInternalFrame by name.
+     *
+     * @param name the value of the name: property
+     * @return a JInternalFrame if a match is found, null otherwise.
+     * @since 0.9.5
+     */
+    public JInternalFrame findInternalFrame(String name) {
+        if (!GriffonNameUtils.isBlank(name)) {
+            for (JInternalFrame internalFrame : internalFrames) {
+                if (name.equals(internalFrame.getName())) return internalFrame;
             }
         }
         return null;
@@ -147,6 +168,16 @@ public final class WindowManager implements ShutdownHandler {
     }
 
     /**
+     * Returns the list of internal frames managed by this manager.
+     *
+     * @return a List of currently managed internal frames
+     * @since 0.9.5
+     */
+    public List<JInternalFrame> getInternalFrames() {
+        return Collections.<JInternalFrame>unmodifiableList(internalFrames);
+    }
+
+    /**
      * Registers a window on this manager if an only if the window is not null
      * and it's not registered already.
      *
@@ -160,6 +191,23 @@ public final class WindowManager implements ShutdownHandler {
             LOG.debug("Attaching window with name: '" + window.getName() + "' at index " + windows.size() + " " + window);
         }
         windows.add(window);
+    }
+
+    /**
+     * Registers an internal frame on this manager if an only if the internal frame is not null
+     * and it's not registered already.
+     *
+     * @param internalFrame the internal frame to be added to the list of managed internal frames
+     * @since 0.9.5
+     */
+    public void attach(JInternalFrame internalFrame) {
+        if (internalFrame == null || internalFrames.contains(internalFrame)) return;
+        internalFrame.addInternalFrameListener(internalFrameHelper);
+        internalFrame.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
+        if (LOG.isDebugEnabled()) {
+            LOG.debug("Attaching internal frame with name: '" + internalFrame.getName() + "' at index " + internalFrames.size() + " " + internalFrame);
+        }
+        internalFrames.add(internalFrame);
     }
 
     /**
@@ -177,6 +225,24 @@ public final class WindowManager implements ShutdownHandler {
                 LOG.debug("Detaching window with name: '" + window.getName() + "' at index " + windows.indexOf(window) + " " + window);
             }
             windows.remove(window);
+        }
+    }
+
+    /**
+     * Removes the internal frame from the list of manages internal frames if and only if it
+     * is registered with this manager.
+     *
+     * @param internalFrame the internal frame to be removed
+     * @since 0.9.5
+     */
+    public void detach(JInternalFrame internalFrame) {
+        if (internalFrame == null) return;
+        if (internalFrames.contains(internalFrame)) {
+            internalFrame.removeInternalFrameListener(internalFrameHelper);
+            if (LOG.isDebugEnabled()) {
+                LOG.debug("Detaching internal frame with name: '" + internalFrame.getName() + "' at index " + internalFrames.indexOf(internalFrame) + " " + internalFrame);
+            }
+            internalFrames.remove(internalFrame);
         }
     }
 
@@ -199,13 +265,38 @@ public final class WindowManager implements ShutdownHandler {
     }
 
     /**
+     * Shows the internal frame.<p>
+     * This method is executed <b>SYNCHRONOUSLY</b> in the UI thread.
+     *
+     * @param internalFrame the internal frame to show
+     * @since 0.9.5
+     */
+    public void show(final JInternalFrame internalFrame) {
+        if (internalFrame == null) return;
+        app.execSync(new Runnable() {
+            public void run() {
+                if (LOG.isDebugEnabled()) {
+                    LOG.debug("Showing internalFrame with name: '" + internalFrame.getName() + " " + internalFrame);
+                }
+                app.resolveWindowDisplayHandler().show(internalFrame, app);
+            }
+        });
+    }
+
+    /**
      * Shows the window.<p>
      * This method is executed <b>SYNCHRONOUSLY</b> in the UI thread.
      *
      * @param name the name of window to show
      */
     public void show(String name) {
-        show(findWindow(name));
+        Window window = findWindow(name);
+        if (window != null) {
+            show(window);
+        } else {
+            JInternalFrame frame = findInternalFrame(name);
+            if (frame != null) show(frame);
+        }
     }
 
     /**
@@ -227,13 +318,38 @@ public final class WindowManager implements ShutdownHandler {
     }
 
     /**
+     * Hides the internal frame.<p>
+     * This method is executed <b>SYNCHRONOUSLY</b> in the UI thread.
+     *
+     * @param internalFrame the internal frame to hide
+     * @since 0.9.5
+     */
+    public void hide(final JInternalFrame internalFrame) {
+        if (internalFrame == null) return;
+        app.execSync(new Runnable() {
+            public void run() {
+                if (LOG.isDebugEnabled()) {
+                    LOG.debug("Hiding internal frame with name: '" + internalFrame.getName() + " " + internalFrame);
+                }
+                app.resolveWindowDisplayHandler().hide(internalFrame, app);
+            }
+        });
+    }
+
+    /**
      * Hides the window.<p>
      * This method is executed <b>SYNCHRONOUSLY</b> in the UI thread.
      *
      * @param name the name of window to hide
      */
     public void hide(String name) {
-        hide(findWindow(name));
+        Window window = findWindow(name);
+        if (window != null) {
+            hide(window);
+        } else {
+            JInternalFrame frame = findInternalFrame(name);
+            if (frame != null) hide(frame);
+        }
     }
 
     public boolean canShutdown(GriffonApplication app) {
@@ -311,6 +427,33 @@ public final class WindowManager implements ShutdownHandler {
          * Triggers a <tt>WindowHidden</tt> event with the window as sole argument
          */
         public void componentHidden(ComponentEvent event) {
+            app.event(GriffonApplication.Event.WINDOW_HIDDEN.getName(), asList(event.getSource()));
+        }
+    }
+
+    /**
+     * InternalFrameAdapter that triggers application events when a window is shown/hidden,
+     * it also invokes hide() when the window is about to be closed.
+     *
+     * @author Andres Almiray
+     */
+    private class InternalFrameHelper extends InternalFrameAdapter {
+        public void internalFrameClosing(InternalFrameEvent event) {
+            hide(event.getInternalFrame());
+        }
+
+        /**
+         * Triggers a <tt>WindowShown</tt> event with the internal frame as sole argument
+         */
+        public void internalFrameOpened(InternalFrameEvent event) {
+            app.event(GriffonApplication.Event.WINDOW_SHOWN.getName(), asList(event.getSource()));
+
+        }
+
+        /**
+         * Triggers a <tt>WindowHidden</tt> event with the internal frame as sole argument
+         */
+        public void internalFrameClosed(InternalFrameEvent event) {
             app.event(GriffonApplication.Event.WINDOW_HIDDEN.getName(), asList(event.getSource()));
         }
     }
