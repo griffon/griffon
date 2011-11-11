@@ -80,18 +80,27 @@ task tarBinary(type: Tar) {
     compression = Compression.GZIP
 }
 
-distSourceSpec = copySpec{
+distSourceSpec = copySpec {
     from('.') {
         exclude 'build'
-        exclude '**/.git*'
-        exclude '**/.gradle*'
-        exclude '**/.idea*'
+        exclude '.git*'
         exclude 'clover.license'
-        exclude 'cobertura.ser'
+        exclude '.idea'
+        exclude '.clover'
+        exclude '.gradle'
+        exclude 'buildSrc/build'
+        exclude 'buildSrc/.gradle'
+        exclude 'buildSrc/.idea'
+        exclude 'subprojects/griffon-shell'
+        exclude 'subprojects/griffon-*/build'
+        exclude 'subprojects/griffon-*/.gradle'
+        exclude 'subprojects/griffon-*/.idea'
+        exclude 'subprojects/griffon-*/.clover'
+        exclude '**/cobertura.ser'
         exclude '**/*.ipr'
         exclude '**/*.iws'
         exclude '**/*.iml'
-    }   
+    }
 }
 
 task zipSource(type: Zip){
