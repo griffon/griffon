@@ -57,17 +57,15 @@ task izpack(dependsOn: prepareIzpack) {
 }
 
 task prepareRpm(type: Copy) {
+    def rpmDir = "$buildDir/assemble/rpm" as File
+    into rpmDir    
     doFirst {
-        def rpmDir = "$buildDir/assemble/rpm" as File
-    
         mkdir("${rpmDir}/BUILD")
         mkdir("${rpmDir}/SOURCES")
         mkdir("${rpmDir}/SPECS")
         mkdir("${rpmDir}/SRPMS")
         mkdir("${rpmDir}/RPMS/noarch")
     }
-
-    destinationDir = "$buildDir/assemble/rpm" as File
     from('installer/rpm') {
         into 'SPECS'
         include '*.spec'
@@ -83,16 +81,13 @@ task rpm(dependsOn: prepareRpm) {
     destinationDir = "$buildDir/distributions" as File
     inputs.dir prepareRpm.outputs.files
     outputs.files "$destinationDir/griffon-${version.replace('-','_')}-1.noarch.rpm"
-    def rpmDir = "$buildDir/distributions" as File
-
+    def rpmDir = "$buildDir/assemble/rpm" as File
     doLast {
         ant.chmod(dir: "$rpmDir/griffon-${version}/bin", excludes: '*.bat', perm: 'ugo+x')
-    
         ant.zip(
             destfile: "$rpmDir/SOURCES/griffon-${version}-bin.zip",
             basedir: rpmDir,
-            includes: "griffon-${version}/**/*")
-    
+            includes: "griffon-${version}/**/*")    
         ant.rpm(specFile: 'griffon.spec',
                 topDir: rpmDir,
                 cleanBuildDir: false,
