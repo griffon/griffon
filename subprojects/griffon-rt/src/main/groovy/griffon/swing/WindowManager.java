@@ -112,9 +112,9 @@ public final class WindowManager implements ShutdownHandler {
 
     /**
      * Finds the Window that should be displayed during the Ready phase of an application.<p>
-     * The WindowManager expects a configuration flag <code>swing.windowManager.startingWindow</code>. If it's not
+     * The WindowManager expects a configuration flag <code>swing.windowManager.startingWindow</code> to be
      * present in order to determine which Window will be displayed during the Ready phase. If no configuration
-     * found then the WindowManager will pick the first Window found in the list of managed windows.<p>
+     * is found the WindowManager will pick the first Window found in the list of managed windows.<p>
      * The configuration flag accepts two value types:<ul>
      * <li>a String that defines the name of the Window. You must make sure the Window has a matching name property.</li>
      * <li>a Number that defines the index of the Window in the list of managed windows.</li>

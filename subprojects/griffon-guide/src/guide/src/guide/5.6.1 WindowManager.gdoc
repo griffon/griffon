@@ -55,11 +55,11 @@ In @src/main/Dropper.groovy@
 {code}
 import java.awt.Window
 import griffon.swing.SwingUtils
-import griffon.swing.WindowDisplayHandler
+import griffon.swing.DefaultWindowDisplayHandler
 import griffon.core.GriffonApplication
 import griffon.effects.Effects
 
-class Dropper implements WindowDisplayHandler {
+class Dropper extends DefaultWindowDisplayHandler {
     void show(Window window, GriffonApplication app) {
         SwingUtils.centerOnScreen(window)
         app.execOutside {
@@ -99,6 +99,8 @@ swing {
     }
 }
 {code}
+
+The @WindowDisplayHandler@ interface also defines show/hide methods that can manage @JInternalFrame@ instances.
 
 h4. Starting Window
 

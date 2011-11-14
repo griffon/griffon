@@ -168,8 +168,8 @@ deploy {
             }
             menu {
                 name = 'griffon-icon-16x16.png'
-                width = '48'
-                height = '48'
+                width = '16'
+                height = '16'
             }
             desktop {
                 name = 'griffon-icon-32x32.png'
