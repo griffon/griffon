@@ -113,7 +113,7 @@ task java2html(dependsOn: [apiDocs]) {
     doLast {
         ant {
             taskdef(name: 'java2html',
-                classname: 'de.java2html.anttasks.Java2Html    Task',
+                classname: 'de.java2html.anttasks.Java2HtmlTask',
                 classpath: configurations.java2html.asPath)
 
             java2html(srcdir: "${buildDir}/sources",
