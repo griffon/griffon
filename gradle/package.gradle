@@ -54,6 +54,7 @@ distBinSpec = copySpec {
     into('doc'){
         from(project(':griffon-guide').jarApi.outputs.files)
         from(project(':griffon-guide').jarSource.outputs.files)
+        from(project(':griffon-guide').jarSourceHtml.outputs.files)
         from('src/dist/doc')
         filter(ReplaceTokens, tokens: ['griffon.version': version, 'groovy.version': groovyVersion])    
     }

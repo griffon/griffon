@@ -21,6 +21,7 @@ apply plugin: 'java'
 configurations {
     groovy
     docs { transitive = false }
+    java2html
 }
 
 repositories {
@@ -41,10 +42,12 @@ dependencies {
          "org.slf4j:slf4j-api:$slf4jVersion",
          "org.slf4j:slf4j-log4j12:$slf4jVersion",
          "org.slf4j:jcl-over-slf4j:$slf4jVersion")
+
+    java2html 'de.java2html:java2html:5.0'
 }
 
 task copyDocs(type: Copy) {
-    destinationDir = "${buildDir}/javadoc-src" as File
+    destinationDir = "${buildDir}/sources" as File
     from(project(":griffon-cli").sourceSets.main.allSource) {
         include 'griffon/test/**/*'
         include 'griffon/transform/**/*'
@@ -61,7 +64,7 @@ task apiDocs(type: Groovydoc, dependsOn: copyDocs) {
     //     include '**/*'
     // }
     // source = cliSources + rtSources
-    source = "${buildDir}/javadoc-src" as File
+    source = "${buildDir}/sources" as File
     destinationDir = "$buildDir/api" as File
     docTitle = "Griffon $version"
     header = "Griffon $version"
@@ -94,6 +97,42 @@ task apiDocs(type: Groovydoc, dependsOn: copyDocs) {
     }
 }
 
+task java2html(dependsOn: [apiDocs]) {
+    inputs.files "${buildDir}/sources" as File
+    outputs.dir("${buildDir}/java2html" as File)
+
+    java2htmlDestinationDir = "${buildDir}/java2html" as File
+
+    doFirst {
+        copy {
+            into java2htmlDestinationDir
+            from apiDocs.destinationDir
+        }
+    }
+
+    doLast {
+        ant {
+            taskdef(name: 'java2html',
+                classname: 'de.java2html.anttasks.Java2Html    Task',
+                classpath: configurations.java2html.asPath)
+
+            java2html(srcdir: "${buildDir}/sources",
+                destdir: java2htmlDestinationDir,
+                tabs: 4,
+                style: 'eclipse',
+                outputFormat: 'html',
+                showLineNumbers: true,
+                addLineAnchors: true,
+                showFileName: true,
+                useShortFileName: true,
+                overwrite: true,
+                showDefaultTitle: true,
+                includeDocumentHeader: true,
+                includeDocumentFooter: true)
+        }
+    }
+}
+
 task jarApi(type: Jar, dependsOn: apiDocs) {
     archiveName = "griffon-${project.version}-javadoc.jar"
     destinationDir = "$buildDir/assemble/jars" as File
@@ -103,13 +142,19 @@ task jarApi(type: Jar, dependsOn: apiDocs) {
 task jarSource(type: Jar, dependsOn: copyDocs) {
     archiveName = "griffon-${project.version}-sources.jar"
     destinationDir = "$buildDir/assemble/jars" as File
-    from "$buildDir/javadoc-src"
+    from "$buildDir/sources"
     exclude '**/*.html'
 }
 
-task jarDocs(dependsOn: [jarApi, jarSource]) {}
+task jarSourceHtml(type: Jar, dependsOn: java2html) {
+    archiveName = "griffon-${project.version}-sources-html.jar"
+    destinationDir = "$buildDir/assemble/jars" as File
+    from "$buildDir/java2html"
+}
 
-task buildGuide(type: GrailsDoc, dependsOn: apiDocs) {
+task jarDocs(dependsOn: [jarApi, jarSource, jarSourceHtml]) {}
+
+task buildGuide(type: GrailsDoc, dependsOn: java2html) {
     srcDir = file('src/guide/src')
     props = file('src/guide/guide.properties')
     imagesDir = file('src/guide/resources/img')
@@ -117,8 +162,11 @@ task buildGuide(type: GrailsDoc, dependsOn: apiDocs) {
 
     doFirst {
         copy {
-            into file("$buildDir/manual/api")
-            from "$buildDir/api"
+            into("$buildDir/manual/api")
+            from("$buildDir/api")
+            into('src-html') {
+                from("$buildDir/java2html")
+            }
         }
     }
 }
