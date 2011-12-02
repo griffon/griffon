@@ -39,23 +39,25 @@ target('default': "Packages a Griffon application.") {
     ant.mkdir(dir: distDir)
     packageType = ''
 
-    if (argsMap.params) {
-        def internal = ['zip', 'jar', 'applet', 'webstart']
-        argsMap.params.each { type ->
-            packageType = type
-            debug("Making package $type")
-            try {
-                System.setProperty(RunMode.KEY, RunMode.CUSTOM.name)
-                if (type in internal) {
-                    depends("package_" + type)
-                } else {
-                    event("MakePackage", [type])
-                }
-            } catch (Exception x) {
-                ant.echo(message: "Could not handle package type '${type}'")
-                ant.echo(message: x.message)
+    def makePackage = { type ->
+        packageType = type
+        debug("Making package $type")
+        try {
+            System.setProperty(RunMode.KEY, RunMode.CUSTOM.name)
+            if (type in ['zip', 'jar', 'applet', 'webstart']) {
+                depends("package_" + type)
+            } else {
+                event("MakePackage", [type])
             }
+        } catch (Exception x) {
+            ant.echo(message: "Could not handle package type '${type}'")
+            ant.echo(message: x.message)
         }
+    }
+    if (argsMap.params) {
+        argsMap.params.each { type -> makePackage(type) }
+    } else if(buildConfig.griffon.packaging) {
+        buildConfig.griffon.packaging.each { type -> makePackage(type) }
     } else {
         package_zip()
         package_jar()

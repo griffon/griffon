@@ -2,34 +2,28 @@ h1. package
 
 h2. Purpose
 
-Lorem ipsum
+Packages an application for a particular deployment target
 
 h2. Examples
 
-As an include:
-
-{code}
-includeTargets << griffonScript("Package")
-{code}
-
-As a command:
-
-{code:java}
+bc.
 griffon package
-{code}
+griffon package zip jar
 
 h2. Description
 
+When called without arguments this command will package the application with the following deployment targets: @zip@, @jar@, @applet@ and @webstart@. You can configure a different default set of deployment targets that will be used when invoking this command without arguments. Simply add a configuration flag to @BuildConfig.groovy@ like this
+
+bc.
+griffon.packaging = ['zip']
+
+Now, any time you call the package command without arguments only the @zip@ target will be executed.
+
 Usage: 
-{code:java}
-griffon package
-{code}
+bc.
+griffon package \[deployment_targets\]
 
+Arguments
+* @deployment_targets@ - The name of a deployment_target. Default recognized values are @zip@, @jar@, @applet@ and @webstart@. If the Installer plugin is available then additional deployment targets become available too: @dmg@, @rpm@, @deb@, @izpack@, @jsmooth@.
 
-Once this is in place there are a number of useful commands that can be re-used:
-
-* @loadPlugins@ - Loads all of the Griffon plug-ins and creates the GriffonPluginManager instance
-* @packageApp@ - Calls all of the above 3 targets in the appropriate order
-
-Typically @packageApp@ is the most useful as it performs all the necessary packaging steps
 
