@@ -48,6 +48,15 @@ target(integrateWith:"Integrates ") {
     }
 }
 
+target(integrateGradle:"Integrates Gradle with Griffon") {
+   depends unpackSupportFiles
+   ant.copy(todir:basedir) {
+       fileset(dir:"${integrationFiles}/gradle")
+   }
+   replaceTokens()
+   println "Created Gradle build file."
+}
+
 target(integrateAnt:"Integrates Ant with Griffon") {
    depends unpackSupportFiles
    ant.copy(todir:basedir) {
@@ -81,6 +90,11 @@ target(integrateEclipse:"Integrates Eclipse STS with Griffon") {
     println "Created Eclipse project files."
 }
 
+
+target(integrateIdea:"Integrates Intellij with Griffon") {
+    integrateIntellij()
+}
+
 target(integrateIntellij:"Integrates Intellij with Griffon") {
     depends unpackSupportFiles
 
@@ -109,6 +123,7 @@ target(replaceTokens:"Replaces any tokens in the files") {
         replacefilter(token: "@slf4j.version@", value: griffonSettings.slf4jVersion)
         replacefilter(token: "@spring.version@", value: griffonSettings.springVersion)
         replacefilter(token: "@griffon.project.name@", value: griffonAppName)
+        replacefilter(token: "@griffon.app.version@", value: griffonAppVersion ?: '0.1')
     }
     def ideaDir = new File("${basedir}/.idea")
     if(ideaDir.exists()) {

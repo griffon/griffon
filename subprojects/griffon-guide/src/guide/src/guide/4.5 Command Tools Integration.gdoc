@@ -33,7 +33,7 @@ It uses the Griffon [Ant task|api:griffon.ant.GriffonTask] to hook into the exis
          classpathref="griffon.classpath"/>
 {code}
 
-This raises the question: what should be in "griffon.classpath"? The task itself is in the "griffon-bootstrap" JAR artifact, so that needs to be on the classpath at least. You should also include the "groovy-all" JAR. With the task defined, you just need to use it! The following table shows you what attributes are available:
+This raises the question: what should be in "griffon.classpath"? The task itself is in the "griffon-cli" JAR artifact, so that needs to be on the classpath at least. You should also include the "groovy-all" JAR. With the task defined, you just need to use it! The following table shows you what attributes are available:
 {table}
  Attribute | Description | Required
  home | The location of the Griffon installation directory to use for the build. | Yes, unless classpath is specified.
@@ -56,4 +56,18 @@ How you populate these paths is up to you. If you are using the @home@ attribute
 h3. Maven Integration
 
 TBD
+
+h3. Gradle Integration
+
+When you invoke the [integrate-with|commandLine] command with the -gradle option enabled
+
+{code}
+griffon integrate-with -gradle
+{code}
+
+Griffon creates a "Gradle":http://gradle.org/ @build.gradle@ file for you. From here you can call the standard Gradle commands such as @clean@, @assemble@ and @build@ to build your application. You can also use @griffon@ as a command prefix to execute any of the regular Griffon command targets such as
+
+{code}
+gradle griffon-run-app
+{code}
 
