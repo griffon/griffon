@@ -78,23 +78,22 @@ task prepareRpm(type: Copy) {
 
 task rpm(dependsOn: prepareRpm) {
     description = "Creates an RPM package from the binary distribution."
-    destinationDir = "$buildDir/distributions" as File
     inputs.dir prepareRpm.outputs.files
-    outputs.files "$destinationDir/griffon-${version.replace('-','_')}-1.noarch.rpm"
+    outputs.files "$buildDir/distributions/griffon-${version.replace('-','_')}-1.noarch.rpm"
     def rpmDir = "$buildDir/assemble/rpm" as File
     doLast {
         ant.chmod(dir: "$rpmDir/griffon-${version}/bin", excludes: '*.bat', perm: 'ugo+x')
         ant.zip(
             destfile: "$rpmDir/SOURCES/griffon-${version}-bin.zip",
             basedir: rpmDir,
-            includes: "griffon-${version}/**/*")    
+            includes: "griffon-${version}/**/*")
         ant.rpm(specFile: 'griffon.spec',
                 topDir: rpmDir,
                 cleanBuildDir: false,
                 failOnError: true)
         copy {
+            into "$buildDir/distributions"
             from "$rpmDir/RPMS/noarch/"
-            into destinationDir
             include '*.rpm'
         }
     }
