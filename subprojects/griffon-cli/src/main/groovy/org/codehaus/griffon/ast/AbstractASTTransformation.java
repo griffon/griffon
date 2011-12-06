@@ -66,6 +66,6 @@ public abstract class AbstractASTTransformation implements ASTTransformation, Op
     }
 
     protected static ClassNode newClass(ClassNode classNode) {
-        return new ClassNode(classNode.getTypeClass());
+        return classNode.getPlainNodeReference();
     }
 }
