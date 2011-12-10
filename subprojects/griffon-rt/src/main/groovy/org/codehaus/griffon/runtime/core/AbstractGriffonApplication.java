@@ -307,6 +307,10 @@ public abstract class AbstractGriffonApplication extends AbstractObservable impl
             for (String groupName : (List<String>) startupGroups) {
                 createMVCGroup(groupName);
             }
+        } else if(startupGroups != null && startupGroups.getClass().isArray()) {
+            for(Object groupName : (Object[]) startupGroups) {
+                createMVCGroup(String.valueOf(groupName));
+            }
         }
 
         GriffonApplicationHelper.runLifecycleHandler(GriffonApplication.Lifecycle.STARTUP.getName(), this);
