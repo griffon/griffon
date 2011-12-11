@@ -166,7 +166,10 @@ class AddonHelper {
             }
             MetaClass mc = targets[partialTarget.key]
             if (!mc) continue
-            for (String itemName in partialTarget.value) {
+	    def values = partialTarget.value
+	    if(values instanceof String)
+	        values = [partialTarget.value]
+            for (String itemName in values) {
                 if (itemName == '*') {
                     if (methods && LOG.traceEnabled) LOG.trace("Injecting all methods on $partialTarget.key")
                     addMethods(mc, methods, prefix)
@@ -229,7 +232,7 @@ class AddonHelper {
     }
 
     private static void addProps(MetaClass mc, Map props, String prefix) {
-        props.each = { pk, accessors ->
+        props.each { pk, accessors ->
             String beanName
             if (pk.length() > 1) {
                 beanName = pk[0].toUpperCase() + pk.substring(1)
