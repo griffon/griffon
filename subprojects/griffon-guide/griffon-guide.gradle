@@ -14,8 +14,6 @@
  * limitations under the License.
  */
 
-import org.apache.tools.ant.filters.ReplaceTokens
-
 apply plugin: 'java'
 
 configurations {
@@ -56,14 +54,6 @@ task copyDocs(type: Copy) {
 }
 
 task apiDocs(type: Groovydoc, dependsOn: copyDocs) {
-    // def cliSources = files("subprojects/griffon-cli/src/main/groovy") {
-    //     include 'griffon/test/**/*'
-    //     include 'griffon/transform/**/*'
-    // }
-    // def rtSources = files("subprojects/griffon-rt/src/main/groovy") {
-    //     include '**/*'
-    // }
-    // source = cliSources + rtSources
     source = "${buildDir}/sources" as File
     destinationDir = "$buildDir/api" as File
     docTitle = "Griffon $version"
@@ -86,12 +76,15 @@ task apiDocs(type: Groovydoc, dependsOn: copyDocs) {
             into task.destinationDir
             from project(':').file('src/dist/media/griffon.ico'),
                  'src/guide/resources/css/stylesheet.css'
+            // from('src/resources/javadoc') {
+            //     into 'resources'
+            // }
         }
         ant {
             replace(dir: task.destinationDir,
                     token: 'groovy.ico',
                     value: 'griffon.ico') {
-                include(name: "**/*.html")
+                include(name: '**/*.html')
             }
         }
     }
@@ -169,11 +162,20 @@ task buildGuide(type: GrailsDoc, dependsOn: java2html) {
             }
         }
     }
+
+    doLast {
+        ant {
+            replace(dir: "$buildDir/manual") {
+                replacefilter(token: '@griffon.version@', value: version)
+            }
+        }
+    }
 }
 
 task pdfGuide(type:PdfGuide, dependsOn: buildGuide) {
     inputs.files file("$buildDir/manual/guide")
     pdfName = "griffon-guide-${version}.pdf"
+    home = project(':').file('.').absolutePath
 }
 
 task dist(type: Zip) {

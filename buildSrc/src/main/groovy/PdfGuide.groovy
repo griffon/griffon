@@ -20,23 +20,25 @@ import org.gradle.api.tasks.InputFiles
 import org.gradle.api.tasks.Input
 import org.gradle.api.tasks.OutputDirectory
 import org.gradle.api.tasks.TaskAction
-import grails.doc.PdfBuilder
+import grails.doc.PdfBuilder2
 
 class PdfGuide extends DefaultTask {
     @OutputDirectory File outputFile
 	@Input String pdfName
+	@Input String home
 	
 	public PdfGuide(){
 		super()
 		outputFile = new File("${project.buildDir}/manual")
+		home = project.file('.').absolutePath
 	}
 	
 	@TaskAction
     def publish() {
 		try {
-            PdfBuilder.build(
+            PdfBuilder2.build(
                     basedir: project.buildDir.absolutePath,
-                    home: project.file('.').absolutePath,
+                    home: home,
                     tool: 'griffon'
             )
         } catch (x) {
