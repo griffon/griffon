@@ -204,8 +204,9 @@ class GriffonApplicationHelper {
             return
         }
 
-        if (urls?.hasMoreElements()) {
+        while (urls?.hasMoreElements()) {
             URL url = urls.nextElement()
+            if (LOG.debugEnabled) LOG.debug("Reading ${ArtifactHandler.class.name} definitions from $url")
             url.eachLine { line ->
                 if (line.startsWith('#')) return
                 try {
