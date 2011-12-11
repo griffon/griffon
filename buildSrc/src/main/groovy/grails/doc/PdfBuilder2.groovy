@@ -70,7 +70,6 @@ class PdfBuilder2 {
         Document doc = builder.parse(new ByteArrayInputStream(xml.getBytes()))
 
         ITextRenderer renderer = new ITextRenderer()
-        println urlBase
         new File('/tmp/single.xml').text = xml
         renderer.setDocument(doc, urlBase + '/foo')
 

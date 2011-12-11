@@ -124,9 +124,41 @@ Refresh the contents of your project. Open the build file in the Ant View. Selec
 
 h3. TextMate
 
-Since Griffon' focus is on simplicity it is often possible to utilize more simple editors and "TextMate":http://macromates.com/ on the Mac has an excellent Groovy/Griffon bundle available from the [Texmate bundles SVN|http://wiki.macromates.com/Main/SubversionCheckout].
+Since Griffon' focus is on simplicity it is often possible to utilize more simple editors and "TextMate":http://macromates.com/ on the Mac has an excellent Groovy/Griffon bundle available.
 
-Follow the instructions found at [https://github.com/griffon/griffon.tmbundle] to install the Griffon bundle.
+Follow these steps to install the Groovy bundle
+
+*#1* Create a local bundle directory
+
+bc.
+mkdir ~/Library/Application\ Support/TextMate/Bundles/
+
+*#2a* If you have git installed then just clone the repository
+
+bc.
+cd ~/Library/Application\ Support/TextMate/Bundles/
+git clone https://github.com/textmate/groovy.tmbundle.git
+
+*#2b* Alternatively download a copy of the latest version from [github|https://github.com/textmate/groovy.tmbundle/zipball/master] as a zip and unpack it. Rename the unpacked directory to @groovy.tmbundle@.
+
+Follow these steps to install the Griffon bundle
+
+*#1* Create a local bundle directory
+
+bc.
+mkdir ~/Library/Application\ Support/TextMate/Bundles/
+
+*#2a* If you have git installed then just clone the repository
+
+bc.
+cd ~/Library/Application\ Support/TextMate/Bundles/
+git clone https://github.com/griffon/griffon.tmbundle.git
+
+*#2b* Alternatively download a copy of the latest version from [github|https://github.com/griffon/griffon.tmbundle/zipball/master] as a zip and unpack it. Rename the unpacked directory to @griffon.tmbundle@.
+
+Now configure the @PATH@ environment variable within TextMate. Make sure that @$GRIFFON_HOME/bin@ in expanded form is set
+
+!griffon-tm.1.png!
 
 h4. Integrating an existing Griffon project
 
@@ -141,3 +173,17 @@ Alternatively TextMate can easily open any project with its command line integra
 {code}
 mate .
 {code}
+
+You should see a similar display like the next one
+
+!griffon-tm.2.png!
+
+h5. Running Griffon commands within TextMate
+
+The Griffon bundle provides new commands under the "Bundles" menu. Search for the "Griffon submenu".
+
+!griffon-tm.3.png!
+
+Selecting "Run App" will execute the [run-app|commandLine] command on the currently open project
+
+!griffon-tm.4.png!
