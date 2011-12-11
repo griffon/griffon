@@ -295,20 +295,25 @@ public abstract class AbstractGriffonApplication extends AbstractObservable impl
     public void startup() {
         if (phase != ApplicationPhase.INITIALIZE) return;
 
-        phase = phase.STARTUP;
+        phase = ApplicationPhase.STARTUP;
         event(GriffonApplication.Event.STARTUP_START.getName(), asList(this));
 
         Object startupGroups = ConfigUtils.getConfigValue(getConfig(), "application.startupGroups");
-        if (log.isInfoEnabled()) {
-            log.info("Initializing all startup groups: " + startupGroups);
-        }
-
         if (startupGroups instanceof List) {
+            if (log.isInfoEnabled()) {
+                log.info("Initializing all startup groups: " + startupGroups);
+            }
+
             for (String groupName : (List<String>) startupGroups) {
                 createMVCGroup(groupName);
             }
         } else if(startupGroups != null && startupGroups.getClass().isArray()) {
-            for(Object groupName : (Object[]) startupGroups) {
+            Object[] groups = (Object[]) startupGroups;
+            if (log.isInfoEnabled()) {
+                log.info("Initializing all startup groups: " + Arrays.toString(groups));
+            }
+
+            for(Object groupName : groups) {
                 createMVCGroup(String.valueOf(groupName));
             }
         }
