@@ -38,6 +38,9 @@ public class ObservableASTInjector extends AbstractASTInjector {
     private static final Logger LOG = LoggerFactory.getLogger(ObservableASTInjector.class);
     private static final ClassNode OBSERVABLE_CLASS = ClassHelper.makeWithoutCaching(Observable.class);
 
+    private static final String LISTENER = "listener";
+    private static final String NAME = "name";
+
     public void inject(ClassNode classNode, String artifactType) {
         if (!classNode.implementsInterface(OBSERVABLE_CLASS)) {
             classNode.addInterface(OBSERVABLE_CLASS);
@@ -60,7 +63,7 @@ public class ObservableASTInjector extends AbstractASTInjector {
 
         // add field:
         // protected final PropertyChangeSupport this$propertyChangeSupport = new java.beans.PropertyChangeSupport(this)
-        FieldNode pcsField = classNode.addField(
+        FieldNode pcsField = injectField(classNode,
                 "this$propertyChangeSupport",
                 ACC_FINAL | ACC_PROTECTED,
                 pcsClassNode,
@@ -70,93 +73,93 @@ public class ObservableASTInjector extends AbstractASTInjector {
         // void addPropertyChangeListener(listener) {
         //     pcs.addPropertyChangeListener(listener)
         //  }
-        classNode.addMethod(
+        injectMethod(classNode,
                 new MethodNode(
                         "addPropertyChangeListener",
                         ACC_PUBLIC,
                         ClassHelper.VOID_TYPE,
-                        params(param(pclClassNode, "listener")),
+                        params(param(pclClassNode, LISTENER)),
                         ClassNode.EMPTY_ARRAY,
                         stmnt(call(
                                 field(pcsField),
                                 "addPropertyChangeListener",
-                                args(var("listener"))))));
+                                args(var(LISTENER))))));
 
         // add method:
         // void addPropertyChangeListener(name, listener) {
         //     pcs.addPropertyChangeListener(name, listener)
         //  }
-        classNode.addMethod(
+        injectMethod(classNode,
                 new MethodNode(
                         "addPropertyChangeListener",
                         ACC_PUBLIC,
                         ClassHelper.VOID_TYPE,
                         params(
-                                param(ClassHelper.STRING_TYPE, "name"),
-                                param(pclClassNode, "listener")),
+                                param(ClassHelper.STRING_TYPE, NAME),
+                                param(pclClassNode, LISTENER)),
                         ClassNode.EMPTY_ARRAY,
                         stmnt(call(
                                 field(pcsField),
                                 "addPropertyChangeListener",
-                                args(var("name"), var("listener"))))));
+                                args(var(NAME), var(LISTENER))))));
 
         // add method:
         // void removePropertyChangeListener(listener) {
         //    return pcs.removePropertyChangeListener(listener);
         // }
-        classNode.addMethod(
+        injectMethod(classNode,
                 new MethodNode(
                         "removePropertyChangeListener",
                         ACC_PUBLIC,
                         ClassHelper.VOID_TYPE,
-                        params(param(pclClassNode, "listener")),
+                        params(param(pclClassNode, LISTENER)),
                         ClassNode.EMPTY_ARRAY,
                         stmnt(call(
                                 field(pcsField),
                                 "removePropertyChangeListener",
-                                args(var("listener"))))));
+                                args(var(LISTENER))))));
 
         // add method:
         // void removePropertyChangeListener(name, listener) {
         //    return pcs.removePropertyChangeListener(name, listener);
         // }
-        classNode.addMethod(
+        injectMethod(classNode,
                 new MethodNode(
                         "removePropertyChangeListener",
                         ACC_PUBLIC,
                         ClassHelper.VOID_TYPE,
                         params(
-                                param(ClassHelper.STRING_TYPE, "name"),
-                                param(pclClassNode, "listener")), ClassNode.EMPTY_ARRAY,
+                                param(ClassHelper.STRING_TYPE, NAME),
+                                param(pclClassNode, LISTENER)), ClassNode.EMPTY_ARRAY,
                         stmnt(call(
                                 field(pcsField),
                                 "removePropertyChangeListener",
-                                args(var("name"), var("listener"))))));
+                                args(var(NAME), var(LISTENER))))));
 
         // add method:
         // void firePropertyChange(String name, Object oldValue, Object newValue) {
         //     pcs.firePropertyChange(name, oldValue, newValue)
         //  }
-        classNode.addMethod(
+        injectMethod(classNode,
                 new MethodNode(
                         "firePropertyChange",
                         ACC_PROTECTED,
                         ClassHelper.VOID_TYPE,
                         params(
-                                param(ClassHelper.STRING_TYPE, "name"),
+                                param(ClassHelper.STRING_TYPE, NAME),
                                 param(newClass(ClassHelper.OBJECT_TYPE), "oldValue"),
                                 param(ClassHelper.OBJECT_TYPE, "newValue")),
                         ClassNode.EMPTY_ARRAY,
                         stmnt(call(
                                 field(pcsField),
                                 "firePropertyChange",
-                                args(var("name"), var("oldValue"), var("newValue"))))));
+                                args(var(NAME), var("oldValue"), var("newValue"))))));
 
         // add method:
         // void firePropertyChange(PropertyChangeEvent event) {
         //     pcs.firePropertyChange(event)
         //  }
-        classNode.addMethod(
+        injectMethod(classNode,
                 new MethodNode(
                         "firePropertyChange",
                         ACC_PROTECTED,
@@ -172,7 +175,7 @@ public class ObservableASTInjector extends AbstractASTInjector {
         // PropertyChangeListener[] getPropertyChangeListeners() {
         //   return pcs.getPropertyChangeListeners
         // }
-        classNode.addMethod(
+        injectMethod(classNode,
                 new MethodNode(
                         "getPropertyChangeListeners",
                         ACC_PUBLIC,
@@ -188,17 +191,17 @@ public class ObservableASTInjector extends AbstractASTInjector {
         // PropertyChangeListener[] getPropertyChangeListeners(String name) {
         //   return pcs.getPropertyChangeListeners(name)
         // }
-        classNode.addMethod(
+        injectMethod(classNode,
                 new MethodNode(
                         "getPropertyChangeListeners",
                         ACC_PUBLIC,
                         pclClassNode.makeArray(),
-                        params(param(ClassHelper.STRING_TYPE, "name")),
+                        params(param(ClassHelper.STRING_TYPE, NAME)),
                         ClassNode.EMPTY_ARRAY,
                         returns(call(
                                 field(pcsField),
                                 "getPropertyChangeListeners",
-                                args(var("name"))))));
+                                args(var(NAME))))));
     }
 
     private static boolean isBindableOrVetoable(AnnotatedNode node) {

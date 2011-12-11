@@ -60,7 +60,6 @@ public class GriffonAddonASTTransformation extends AbstractASTTransformation {
     }
 
     private void inject(ClassNode classNode) {
-        ClassNode superClass = classNode.getSuperClass();
         if (LOG.isDebugEnabled()) {
             LOG.debug("Injecting " + GRIFFON_ADDON_CLASS.getName() + " behavior to " + classNode.getName());
         }

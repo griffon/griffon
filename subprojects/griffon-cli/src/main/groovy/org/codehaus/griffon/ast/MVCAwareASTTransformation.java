@@ -87,10 +87,10 @@ public class MVCAwareASTTransformation extends AbstractASTTransformation {
     }
 
     public static void apply(ClassNode classNode) {
-        classNode.addInterface(MVC_HANDLER_TYPE);
+        injectInterface(classNode, MVC_HANDLER_TYPE);
 
         // MVCGroup buildMVCGroup(String mvcType)
-        classNode.addMethod(new MethodNode(
+        injectMethod(classNode, new MethodNode(
                 BUILD_MVC_GROUP,
                 ACC_PUBLIC,
                 MVCGROUP_CLASS,
@@ -103,7 +103,7 @@ public class MVCAwareASTTransformation extends AbstractASTTransformation {
         ));
 
         // MVCGroup buildMVCGroup(String mvcType, mvcName)
-        classNode.addMethod(new MethodNode(
+        injectMethod(classNode, new MethodNode(
                 BUILD_MVC_GROUP,
                 ACC_PUBLIC,
                 MVCGROUP_CLASS,
@@ -118,7 +118,7 @@ public class MVCAwareASTTransformation extends AbstractASTTransformation {
         ));
 
         // MVCGroup buildMVCGroup(Map args, String mvcType)
-        classNode.addMethod(new MethodNode(
+        injectMethod(classNode, new MethodNode(
                 BUILD_MVC_GROUP,
                 ACC_PUBLIC,
                 MVCGROUP_CLASS,
@@ -133,7 +133,7 @@ public class MVCAwareASTTransformation extends AbstractASTTransformation {
         ));
 
         // MVCGroup buildMVCGroup(String mvcType, Map args)
-        classNode.addMethod(new MethodNode(
+        injectMethod(classNode, new MethodNode(
                 BUILD_MVC_GROUP,
                 ACC_PUBLIC,
                 MVCGROUP_CLASS,
@@ -148,7 +148,7 @@ public class MVCAwareASTTransformation extends AbstractASTTransformation {
         ));
 
         // MVCGroup buildMVCGroup(Map args, String mvcType, String mvcName)
-        classNode.addMethod(new MethodNode(
+        injectMethod(classNode, new MethodNode(
                 BUILD_MVC_GROUP,
                 ACC_PUBLIC,
                 MVCGROUP_CLASS,
@@ -164,7 +164,7 @@ public class MVCAwareASTTransformation extends AbstractASTTransformation {
         ));
 
         // MVCGroup buildMVCGroup(String mvcType, String mvcName, Map args)
-        classNode.addMethod(new MethodNode(
+        injectMethod(classNode, new MethodNode(
                 BUILD_MVC_GROUP,
                 ACC_PUBLIC,
                 MVCGROUP_CLASS,
@@ -180,7 +180,7 @@ public class MVCAwareASTTransformation extends AbstractASTTransformation {
         ));
 
         // List createMVCGroup(String mvcType)
-        classNode.addMethod(new MethodNode(
+        injectMethod(classNode, new MethodNode(
                 CREATE_MVC_GROUP,
                 ACC_PUBLIC,
                 newClass(ClassHelper.LIST_TYPE),
@@ -193,7 +193,7 @@ public class MVCAwareASTTransformation extends AbstractASTTransformation {
         ));
 
         // List createMVCGroup(String mvcType, mvcName)
-        classNode.addMethod(new MethodNode(
+        injectMethod(classNode, new MethodNode(
                 CREATE_MVC_GROUP,
                 ACC_PUBLIC,
                 newClass(ClassHelper.LIST_TYPE),
@@ -208,7 +208,7 @@ public class MVCAwareASTTransformation extends AbstractASTTransformation {
         ));
 
         // List createMVCGroup(Map args, String mvcType)
-        classNode.addMethod(new MethodNode(
+        injectMethod(classNode, new MethodNode(
                 CREATE_MVC_GROUP,
                 ACC_PUBLIC,
                 newClass(ClassHelper.LIST_TYPE),
@@ -223,7 +223,7 @@ public class MVCAwareASTTransformation extends AbstractASTTransformation {
         ));
 
         // List createMVCGroup(String mvcType, Map args)
-        classNode.addMethod(new MethodNode(
+        injectMethod(classNode, new MethodNode(
                 CREATE_MVC_GROUP,
                 ACC_PUBLIC,
                 newClass(ClassHelper.LIST_TYPE),
@@ -238,7 +238,7 @@ public class MVCAwareASTTransformation extends AbstractASTTransformation {
         ));
 
         // List createMVCGroup(Map args, String mvcType, String mvcName)
-        classNode.addMethod(new MethodNode(
+        injectMethod(classNode, new MethodNode(
                 CREATE_MVC_GROUP,
                 ACC_PUBLIC,
                 newClass(ClassHelper.LIST_TYPE),
@@ -254,7 +254,7 @@ public class MVCAwareASTTransformation extends AbstractASTTransformation {
         ));
 
         // List createMVCGroup(String mvcType, String mvcName, Map args)
-        classNode.addMethod(new MethodNode(
+        injectMethod(classNode, new MethodNode(
                 CREATE_MVC_GROUP,
                 ACC_PUBLIC,
                 newClass(ClassHelper.LIST_TYPE),
@@ -270,7 +270,7 @@ public class MVCAwareASTTransformation extends AbstractASTTransformation {
         ));
 
         // void destroyMVCGroup(String mvcName)
-        classNode.addMethod(new MethodNode(
+        injectMethod(classNode, new MethodNode(
                 DESTROY_MVC_GROUP,
                 ACC_PUBLIC,
                 ClassHelper.VOID_TYPE,
@@ -283,7 +283,7 @@ public class MVCAwareASTTransformation extends AbstractASTTransformation {
         ));
 
         // void withMVCGroup(String mvcType, Closure handler)
-        classNode.addMethod(new MethodNode(
+        injectMethod(classNode, new MethodNode(
                 WITH_MVC_GROUP,
                 ACC_PUBLIC,
                 ClassHelper.VOID_TYPE,
@@ -298,7 +298,7 @@ public class MVCAwareASTTransformation extends AbstractASTTransformation {
         ));
 
         // void withMVCGroup(String mvcType, String mvcName, Closure handler)
-        classNode.addMethod(new MethodNode(
+        injectMethod(classNode, new MethodNode(
                 WITH_MVC_GROUP,
                 ACC_PUBLIC,
                 ClassHelper.VOID_TYPE,
@@ -314,7 +314,7 @@ public class MVCAwareASTTransformation extends AbstractASTTransformation {
         ));
 
         // void withMVCGroup(String mvcType, Map args, Closure handler)
-        classNode.addMethod(new MethodNode(
+        injectMethod(classNode, new MethodNode(
                 WITH_MVC_GROUP,
                 ACC_PUBLIC,
                 ClassHelper.VOID_TYPE,
@@ -330,7 +330,7 @@ public class MVCAwareASTTransformation extends AbstractASTTransformation {
         ));
 
         // void withMVCGroup(Map args, String mvcType, Closure handler)
-        classNode.addMethod(new MethodNode(
+        injectMethod(classNode, new MethodNode(
                 WITH_MVC_GROUP,
                 ACC_PUBLIC,
                 ClassHelper.VOID_TYPE,
@@ -346,7 +346,7 @@ public class MVCAwareASTTransformation extends AbstractASTTransformation {
         ));
 
         // void withMVCGroup(String mvcType, String mvcName, Map args, Closure handler)
-        classNode.addMethod(new MethodNode(
+        injectMethod(classNode, new MethodNode(
                 WITH_MVC_GROUP,
                 ACC_PUBLIC,
                 ClassHelper.VOID_TYPE,
@@ -364,7 +364,7 @@ public class MVCAwareASTTransformation extends AbstractASTTransformation {
         ));
 
         // void withMVCGroup(Map args, String mvcType, String mvcName, Closure handler)
-        classNode.addMethod(new MethodNode(
+        injectMethod(classNode, new MethodNode(
                 WITH_MVC_GROUP,
                 ACC_PUBLIC,
                 ClassHelper.VOID_TYPE,
@@ -382,7 +382,7 @@ public class MVCAwareASTTransformation extends AbstractASTTransformation {
         ));
 
         // void withMVCGroup(String mvcType, MVCClosure handler)
-        classNode.addMethod(new MethodNode(
+        injectMethod(classNode, new MethodNode(
                 WITH_MVC_GROUP,
                 ACC_PUBLIC,
                 ClassHelper.VOID_TYPE,
@@ -397,7 +397,7 @@ public class MVCAwareASTTransformation extends AbstractASTTransformation {
         ));
 
         // void withMVCGroup(String mvcType, String mvcName, MVCClosure handler)
-        classNode.addMethod(new MethodNode(
+        injectMethod(classNode, new MethodNode(
                 WITH_MVC_GROUP,
                 ACC_PUBLIC,
                 ClassHelper.VOID_TYPE,
@@ -413,7 +413,7 @@ public class MVCAwareASTTransformation extends AbstractASTTransformation {
         ));
 
         // void withMVCGroup(String mvcType, Map args, MVCClosure handler)
-        classNode.addMethod(new MethodNode(
+        injectMethod(classNode, new MethodNode(
                 WITH_MVC_GROUP,
                 ACC_PUBLIC,
                 ClassHelper.VOID_TYPE,
@@ -429,7 +429,7 @@ public class MVCAwareASTTransformation extends AbstractASTTransformation {
         ));
 
         // void withMVCGroup(Map args, String mvcType, MVCClosure handler)
-        classNode.addMethod(new MethodNode(
+        injectMethod(classNode, new MethodNode(
                 WITH_MVC_GROUP,
                 ACC_PUBLIC,
                 ClassHelper.VOID_TYPE,
@@ -445,7 +445,7 @@ public class MVCAwareASTTransformation extends AbstractASTTransformation {
         ));
 
         // void withMVCGroup(String mvcType, String mvcName, Map args, MVCClosure handler)
-        classNode.addMethod(new MethodNode(
+        injectMethod(classNode, new MethodNode(
                 WITH_MVC_GROUP,
                 ACC_PUBLIC,
                 ClassHelper.VOID_TYPE,
@@ -462,7 +462,7 @@ public class MVCAwareASTTransformation extends AbstractASTTransformation {
         ));
 
         // void withMVCGroup(Map args, String mvcType, String mvcName, MVCClosure handler)
-        classNode.addMethod(new MethodNode(
+        injectMethod(classNode, new MethodNode(
                 WITH_MVC_GROUP,
                 ACC_PUBLIC,
                 ClassHelper.VOID_TYPE,

@@ -17,6 +17,7 @@ package org.codehaus.griffon.ast;
 
 import griffon.util.GriffonUtil;
 import org.apache.commons.lang.StringUtils;
+import org.codehaus.griffon.compiler.SourceUnitCollector;
 import org.codehaus.groovy.ast.*;
 import org.codehaus.groovy.ast.expr.*;
 import org.codehaus.groovy.ast.stmt.*;
@@ -102,6 +103,102 @@ public class GriffonASTUtils {
         return false;
     }
 
+    public static boolean implementsMethod(ClassNode classNode, MethodNode methodNode) {
+        MethodNode method = classNode.getDeclaredMethod(methodNode.getName(), methodNode.getParameters());
+        return method != null && method.getModifiers() == methodNode.getModifiers();
+    }
+
+    public static boolean implementsOrInheritsMethod(ClassNode classNode, MethodNode methodNode) {
+        if (implementsMethod(classNode, methodNode)) {
+            return true;
+        }
+
+        ClassNode parent = classNode.getSuperClass();
+        while (parent != null && !getFullName(parent).equals("java.lang.Object")) {
+            if (implementsMethod(parent, methodNode)) {
+                return true;
+            }
+            parent = parent.getSuperClass();
+        }
+        return false;
+    }
+
+    public static void injectMethod(ClassNode classNode, MethodNode methodNode) {
+        injectMethod(classNode, methodNode, true);
+    }
+
+    public static void injectMethod(ClassNode classNode, MethodNode methodNode, boolean deep) {
+        if (deep) {
+            if (!implementsOrInheritsMethod(classNode, methodNode)) {
+                getFurthestParent(classNode).addMethod(methodNode);
+            }
+        } else {
+            if (!implementsMethod(classNode, methodNode)) {
+                classNode.addMethod(methodNode);
+            }
+        }
+    }
+
+    public static boolean hasField(ClassNode classNode, String name, int modifiers, ClassNode type) {
+        FieldNode fieldNode = classNode.getDeclaredField(name);
+        return fieldNode != null && fieldNode.getModifiers() == modifiers &&
+                fieldNode.getType().equals(type);
+    }
+
+    public static boolean hasOrInheritsField(ClassNode classNode, String name, int modifiers, ClassNode type) {
+        if (hasField(classNode, name, modifiers, type)) {
+            return true;
+        }
+
+        ClassNode parent = classNode.getSuperClass();
+        while (parent != null && !getFullName(parent).equals("java.lang.Object")) {
+            if (hasField(parent, name, modifiers, type)) {
+                return true;
+            }
+            parent = parent.getSuperClass();
+        }
+        return false;
+    }
+
+    public static FieldNode injectField(ClassNode classNode, String name, int modifiers, ClassNode type, Object value) {
+        return injectField(classNode, name, modifiers, type, value, true);
+    }
+
+    public static FieldNode injectField(ClassNode classNode, String name, int modifiers, ClassNode type, Object value, boolean deep) {
+        Expression initialExpression = null;
+        if (value != null) initialExpression = new ConstantExpression(value);
+        return injectField(classNode, name, modifiers, type, initialExpression, deep);
+    }
+
+    public static FieldNode injectField(ClassNode classNode, String name, int modifiers, ClassNode type, Expression initialExpression) {
+        return injectField(classNode, name, modifiers, type, initialExpression, true);
+    }
+
+    public static FieldNode injectField(ClassNode classNode, String name, int modifiers, ClassNode type, Expression initialExpression, boolean deep) {
+        if (deep) {
+            if (!hasOrInheritsField(classNode, name, modifiers, type)) {
+                return getFurthestParent(classNode).addField(name, modifiers, type, initialExpression);
+            }
+        } else {
+            if (!hasField(classNode, name, modifiers, type)) {
+                return classNode.addField(name, modifiers, type, initialExpression);
+            }
+        }
+        return null;
+    }
+
+    public static void injectInterface(ClassNode classNode, ClassNode type) {
+        injectInterface(classNode, type, true);
+    }
+
+    public static void injectInterface(ClassNode classNode, ClassNode type, boolean deep) {
+        if (deep) {
+            getFurthestParent(classNode).addInterface(type);
+        } else {
+            classNode.addInterface(type);
+        }
+    }
+
     /**
      * Gets the full name of a ClassNode.
      *
@@ -115,6 +212,7 @@ public class GriffonASTUtils {
     public static ClassNode getFurthestParent(ClassNode classNode) {
         ClassNode parent = classNode.getSuperClass();
         while (parent != null && !getFullName(parent).equals("java.lang.Object")) {
+            if (SourceUnitCollector.getInstance().getSourceUnit(parent) == null) break;
             classNode = parent;
             parent = parent.getSuperClass();
         }
@@ -165,18 +263,36 @@ public class GriffonASTUtils {
     }
 
     public static void injectProperty(ClassNode classNode, String propertyName, Class propertyClass) {
-        injectProperty(classNode, propertyName, propertyClass, null);
+        injectProperty(classNode, propertyName, Modifier.PUBLIC, new ClassNode(propertyClass), null);
     }
 
     public static void injectProperty(ClassNode classNode, String propertyName, Class propertyClass, Object value) {
-        final boolean hasProperty = hasOrInheritsProperty(classNode, propertyName);
+        injectProperty(classNode, propertyName, Modifier.PUBLIC, new ClassNode(propertyClass), value);
+    }
 
-        if (!hasProperty) {
+    public static void injectProperty(ClassNode classNode, String propertyName, int modifiers, Class propertyClass) {
+        injectProperty(classNode, propertyName, modifiers, new ClassNode(propertyClass), null);
+    }
+
+    public static void injectProperty(ClassNode classNode, String propertyName, int modifiers, Class propertyClass, Object value) {
+        injectProperty(classNode, propertyName, modifiers, new ClassNode(propertyClass), value);
+    }
+
+    public static void injectProperty(ClassNode classNode, String propertyName, ClassNode propertyClass) {
+        injectProperty(classNode, propertyName, Modifier.PUBLIC, propertyClass, null);
+    }
+
+    public static void injectProperty(ClassNode classNode, String propertyName, int modifiers, ClassNode propertyClass) {
+        injectProperty(classNode, propertyName, modifiers, propertyClass, null);
+    }
+
+    public static void injectProperty(ClassNode classNode, String propertyName, int modifiers, ClassNode propertyClass, Object value) {
+        if (!hasOrInheritsProperty(classNode, propertyName)) {
             // inject into furthest relative
-            // ClassNode parent = getFurthestParent(classNode);
-            Expression initialExpression = null;
-            if (value != null) initialExpression = new ConstantExpression(value);
-            classNode.addProperty(propertyName, Modifier.PUBLIC, new ClassNode(propertyClass), initialExpression, null, null);
+            ClassNode parent = getFurthestParent(classNode);
+            Expression initialExpression = value instanceof Expression ? (Expression) value : null;
+            if (value != null && initialExpression == null) initialExpression = new ConstantExpression(value);
+            parent.addProperty(propertyName, modifiers, propertyClass, initialExpression, null, null);
         }
     }
 

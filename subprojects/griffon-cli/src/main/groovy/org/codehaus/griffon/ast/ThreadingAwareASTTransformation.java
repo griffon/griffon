@@ -49,7 +49,7 @@ public class ThreadingAwareASTTransformation extends AbstractASTTransformation {
     private static final ClassNode EXECUTOR_SERVICE_CLASS = ClassHelper.makeWithoutCaching(ExecutorService.class);
     private static final ClassNode UITHREAD_MANAGER_CLASS = ClassHelper.makeWithoutCaching(UIThreadManager.class);
     private static final ClassNode RUNNABLE_CLASS = ClassHelper.makeWithoutCaching(Runnable.class);
-    
+
     private static final String RUNNABLE = "runnable";
     private static final String CALLABLE = "callable";
     private static final String CLOSURE = "closure";
@@ -80,122 +80,122 @@ public class ThreadingAwareASTTransformation extends AbstractASTTransformation {
 
         ClassNode classNode = (ClassNode) nodes[1];
         if (!classNode.implementsInterface(THREADING_HANDLER_TYPE)) {
-            if(LOG.isDebugEnabled()) {
-                LOG.debug("Injecting "+ ThreadingHandler.class.getName() +" into "+ classNode.getName());
+            if (LOG.isDebugEnabled()) {
+                LOG.debug("Injecting " + ThreadingHandler.class.getName() + " into " + classNode.getName());
             }
             apply(classNode);
         }
     }
 
     public static void apply(ClassNode classNode) {
-        classNode.addInterface(THREADING_HANDLER_TYPE);
+        injectInterface(classNode, THREADING_HANDLER_TYPE);
 
         // boolean isUIThread()
-        classNode.addMethod(new MethodNode(
-            "isUIThread",
-            ACC_PUBLIC,
-            ClassHelper.boolean_TYPE,
-            Parameter.EMPTY_ARRAY,
-            ClassNode.EMPTY_ARRAY,
-            returns(call(
-                uiThreadManagerInstance(),
+        injectMethod(classNode, new MethodNode(
                 "isUIThread",
-                NO_ARGS))
+                ACC_PUBLIC,
+                ClassHelper.boolean_TYPE,
+                Parameter.EMPTY_ARRAY,
+                ClassNode.EMPTY_ARRAY,
+                returns(call(
+                        uiThreadManagerInstance(),
+                        "isUIThread",
+                        NO_ARGS))
         ));
 
         // void execAsync(Runnable)
-        classNode.addMethod(new MethodNode(
-            "execAsync",
-            ACC_PUBLIC,
-            ClassHelper.VOID_TYPE,
-            params(param(RUNNABLE_CLASS, RUNNABLE)),
-            ClassNode.EMPTY_ARRAY,
-            stmnt(call(
-                uiThreadManagerInstance(),
-                "executeAsync",
-                vars(RUNNABLE)))
+        injectMethod(classNode, new MethodNode(
+                "execAsync",
+                ACC_PUBLIC,
+                ClassHelper.VOID_TYPE,
+                params(param(RUNNABLE_CLASS, RUNNABLE)),
+                ClassNode.EMPTY_ARRAY,
+                stmnt(call(
+                        uiThreadManagerInstance(),
+                        "executeAsync",
+                        vars(RUNNABLE)))
         ));
 
         // void execSync(Runnable)
-        classNode.addMethod(new MethodNode(
-            "execSync",
-            ACC_PUBLIC,
-            ClassHelper.VOID_TYPE,
-            params(param(RUNNABLE_CLASS, RUNNABLE)),
-            ClassNode.EMPTY_ARRAY,
-            stmnt(call(
-                uiThreadManagerInstance(),
-                "executeSync",
-                vars(RUNNABLE)))
+        injectMethod(classNode, new MethodNode(
+                "execSync",
+                ACC_PUBLIC,
+                ClassHelper.VOID_TYPE,
+                params(param(RUNNABLE_CLASS, RUNNABLE)),
+                ClassNode.EMPTY_ARRAY,
+                stmnt(call(
+                        uiThreadManagerInstance(),
+                        "executeSync",
+                        vars(RUNNABLE)))
         ));
 
         // void execOutside(Runnable)
-        classNode.addMethod(new MethodNode(
-            "execOutside",
-            ACC_PUBLIC,
-            ClassHelper.VOID_TYPE,
-            params(param(RUNNABLE_CLASS, RUNNABLE)),
-            ClassNode.EMPTY_ARRAY,
-            stmnt(call(
-                uiThreadManagerInstance(),
-                "executeOutside",
-                vars(RUNNABLE)))
+        injectMethod(classNode, new MethodNode(
+                "execOutside",
+                ACC_PUBLIC,
+                ClassHelper.VOID_TYPE,
+                params(param(RUNNABLE_CLASS, RUNNABLE)),
+                ClassNode.EMPTY_ARRAY,
+                stmnt(call(
+                        uiThreadManagerInstance(),
+                        "executeOutside",
+                        vars(RUNNABLE)))
         ));
 
         // Future execFuture(Runnable)
-        classNode.addMethod(new MethodNode(
-            "execFuture",
-            ACC_PUBLIC,
-            newClass(FUTURE_CLASS),
-            params(param(newClass(ClassHelper.CLOSURE_TYPE), CLOSURE)),
-            ClassNode.EMPTY_ARRAY,
-            returns(call(
-                uiThreadManagerInstance(),
-                "executeFuture",
-                vars(CLOSURE)))
+        injectMethod(classNode, new MethodNode(
+                "execFuture",
+                ACC_PUBLIC,
+                newClass(FUTURE_CLASS),
+                params(param(newClass(ClassHelper.CLOSURE_TYPE), CLOSURE)),
+                ClassNode.EMPTY_ARRAY,
+                returns(call(
+                        uiThreadManagerInstance(),
+                        "executeFuture",
+                        vars(CLOSURE)))
         ));
 
         // Future execFuture(ExecutorService, Closure)
-        classNode.addMethod(new MethodNode(
-            "execFuture",
-            ACC_PUBLIC,
-            newClass(FUTURE_CLASS),
-            params(
-                param(EXECUTOR_SERVICE_CLASS, "executorService"),
-                param(newClass(ClassHelper.CLOSURE_TYPE), CLOSURE)),
-            ClassNode.EMPTY_ARRAY,
-            returns(call(
-                uiThreadManagerInstance(),
-                "executeFuture",
-                vars("executorService", CLOSURE)))
+        injectMethod(classNode, new MethodNode(
+                "execFuture",
+                ACC_PUBLIC,
+                newClass(FUTURE_CLASS),
+                params(
+                        param(EXECUTOR_SERVICE_CLASS, "executorService"),
+                        param(newClass(ClassHelper.CLOSURE_TYPE), CLOSURE)),
+                ClassNode.EMPTY_ARRAY,
+                returns(call(
+                        uiThreadManagerInstance(),
+                        "executeFuture",
+                        vars("executorService", CLOSURE)))
         ));
 
         // Future execFuture(Callable)
-        classNode.addMethod(new MethodNode(
-            "execFuture",
-            ACC_PUBLIC,
-            newClass(FUTURE_CLASS),
-            params(param(newClass(CALLABLE_CLASS), CALLABLE)),
-            ClassNode.EMPTY_ARRAY,
-            returns(call(
-                uiThreadManagerInstance(),
-                "executeFuture",
-                vars(CALLABLE)))
+        injectMethod(classNode, new MethodNode(
+                "execFuture",
+                ACC_PUBLIC,
+                newClass(FUTURE_CLASS),
+                params(param(newClass(CALLABLE_CLASS), CALLABLE)),
+                ClassNode.EMPTY_ARRAY,
+                returns(call(
+                        uiThreadManagerInstance(),
+                        "executeFuture",
+                        vars(CALLABLE)))
         ));
 
         // Future execFuture(ExecutorService, Callable)
-        classNode.addMethod(new MethodNode(
-            "execFuture",
-            ACC_PUBLIC,
-            newClass(FUTURE_CLASS),
-            params(
-                param(EXECUTOR_SERVICE_CLASS, "executorService"),
-                param(newClass(CALLABLE_CLASS), CALLABLE)),
-            ClassNode.EMPTY_ARRAY,
-            returns(call(
-                uiThreadManagerInstance(),
-                "executeFuture",
-                vars("executorService", CALLABLE)))
+        injectMethod(classNode, new MethodNode(
+                "execFuture",
+                ACC_PUBLIC,
+                newClass(FUTURE_CLASS),
+                params(
+                        param(EXECUTOR_SERVICE_CLASS, "executorService"),
+                        param(newClass(CALLABLE_CLASS), CALLABLE)),
+                ClassNode.EMPTY_ARRAY,
+                returns(call(
+                        uiThreadManagerInstance(),
+                        "executeFuture",
+                        vars("executorService", CALLABLE)))
         ));
     }
 

@@ -22,37 +22,34 @@ import org.codehaus.groovy.ast.MethodNode;
 import org.codehaus.groovy.ast.Parameter;
 import org.codehaus.groovy.ast.stmt.EmptyStatement;
 
-import static org.codehaus.griffon.ast.GriffonASTUtils.param;
-import static org.codehaus.griffon.ast.GriffonASTUtils.params;
+import static org.codehaus.griffon.ast.GriffonASTUtils.*;
 
 /**
- *
- * @author Andres Almiray 
- *
+ * @author Andres Almiray
  * @since 0.9.1
  */
 public class GriffonMvcArtifactASTInjector extends GriffonArtifactASTInjector {
     public void inject(ClassNode classNode, String artifactType) {
         super.inject(classNode, artifactType);
-    
+
         // void mvcGroupInit(Map args)
-        classNode.addMethod(new MethodNode(
-            "mvcGroupInit",
-            ACC_PUBLIC,
-            ClassHelper.VOID_TYPE,
-            params(param(newClass(ClassHelper.MAP_TYPE), "args")),
-            ClassNode.EMPTY_ARRAY,
-            new EmptyStatement()
+        injectMethod(classNode, new MethodNode(
+                "mvcGroupInit",
+                ACC_PUBLIC,
+                ClassHelper.VOID_TYPE,
+                params(param(newClass(ClassHelper.MAP_TYPE), "args")),
+                ClassNode.EMPTY_ARRAY,
+                new EmptyStatement()
         ));
-    
+
         // void mvcGroupDestroy()
-        classNode.addMethod(new MethodNode(
-            "mvcGroupDestroy",
-            ACC_PUBLIC,
-            ClassHelper.VOID_TYPE,
-            Parameter.EMPTY_ARRAY,
-            ClassNode.EMPTY_ARRAY,
-            new EmptyStatement()
+        injectMethod(classNode, new MethodNode(
+                "mvcGroupDestroy",
+                ACC_PUBLIC,
+                ClassHelper.VOID_TYPE,
+                Parameter.EMPTY_ARRAY,
+                ClassNode.EMPTY_ARRAY,
+                new EmptyStatement()
         ));
     }
 }

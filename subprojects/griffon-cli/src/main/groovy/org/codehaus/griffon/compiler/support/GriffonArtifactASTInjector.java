@@ -32,9 +32,7 @@ import org.slf4j.LoggerFactory;
 import static org.codehaus.griffon.ast.GriffonASTUtils.*;
 
 /**
- *
- * @author Andres Almiray 
- *
+ * @author Andres Almiray
  * @since 0.9.1
  */
 public class GriffonArtifactASTInjector extends AbstractASTInjector {
@@ -51,112 +49,112 @@ public class GriffonArtifactASTInjector extends AbstractASTInjector {
     public void inject(ClassNode classNode, String artifactType) {
         // GriffonApplication getApp()
         // void setApp(GriffonApplication app)
-        classNode.addProperty(APP, ACC_PUBLIC, GRIFFON_APPLICATION_CLASS, null, null, null);
+        injectProperty(classNode, APP, ACC_PUBLIC, GRIFFON_APPLICATION_CLASS);
 
-        FieldNode _metaClass = classNode.addField(
-            "_metaClass",
-            ACC_PRIVATE | ACC_SYNTHETIC,
-            ClassHelper.METACLASS_TYPE,
-            ConstantExpression.NULL);
+        FieldNode _metaClass = injectField(classNode,
+                "_metaClass",
+                ACC_PRIVATE | ACC_SYNTHETIC,
+                ClassHelper.METACLASS_TYPE,
+                ConstantExpression.NULL);
 
         // MetaClass getMetaClass()
-        classNode.addMethod(new MethodNode(
-            "getMetaClass",
-            ACC_PUBLIC,
-            ClassHelper.METACLASS_TYPE,
-            Parameter.EMPTY_ARRAY,
-            ClassNode.EMPTY_ARRAY,
+        injectMethod(classNode, new MethodNode(
+                "getMetaClass",
+                ACC_PUBLIC,
+                ClassHelper.METACLASS_TYPE,
+                Parameter.EMPTY_ARRAY,
+                ClassNode.EMPTY_ARRAY,
 
-            /*
-            if(_metaClass != null) return _metaClass
-            MetaClass mc = null
-            if(this instanceof GroovyObject)  mc = super.getMetaClass()
-            if(mc instanceof ExpandoMetaClass) _metaClass = mc
-            else _metaClass = AbstractGriffonArtifact.metaClassOf(this)
-            return _metaClass
-            */
-            block(
-                ifs(
-                    ne(field(_metaClass), ConstantExpression.NULL),
-                    field(_metaClass)
-                ),
-                decls(var("mc", ClassHelper.METACLASS_TYPE), ConstantExpression.NULL),
-                ifs_no_return(
-                        iof(THIS, EXPANDO_METACLASS_CLASS),
-                        assigns(field(_metaClass), var("mc")),
-                        assigns(field(_metaClass), call(ABSTRACT_GRIFFON_ARTIFACT_CLASS, "metaClassOf", args(THIS)))
-                ),
-                returns(field(_metaClass))
-            )
+                /*
+                if(_metaClass != null) return _metaClass
+                MetaClass mc = null
+                if(this instanceof GroovyObject)  mc = super.getMetaClass()
+                if(mc instanceof ExpandoMetaClass) _metaClass = mc
+                else _metaClass = AbstractGriffonArtifact.metaClassOf(this)
+                return _metaClass
+                */
+                block(
+                        ifs(
+                                ne(field(_metaClass), ConstantExpression.NULL),
+                                field(_metaClass)
+                        ),
+                        decls(var("mc", ClassHelper.METACLASS_TYPE), ConstantExpression.NULL),
+                        ifs_no_return(
+                                iof(THIS, EXPANDO_METACLASS_CLASS),
+                                assigns(field(_metaClass), var("mc")),
+                                assigns(field(_metaClass), call(ABSTRACT_GRIFFON_ARTIFACT_CLASS, "metaClassOf", args(THIS)))
+                        ),
+                        returns(field(_metaClass))
+                )
         ));
 
         // void setMetaClass(MetaClass mc)
-        classNode.addMethod(new MethodNode(
-            "setMetaClass",
-            ACC_PUBLIC,
-            ClassHelper.VOID_TYPE,
-            params(param(ClassHelper.METACLASS_TYPE, "mc")),
-            ClassNode.EMPTY_ARRAY,
-            block(
-                assigns(field(_metaClass), var("mc")),
-                stmnt(call(
-                    call(GROOVY_SYSTEM_CLASS, "getMetaClassRegistry", NO_ARGS),
-                    "setMetaClass",
-                    args(call(THIS, "getClass", NO_ARGS), var("mc"))
-                ))
-            )
+        injectMethod(classNode, new MethodNode(
+                "setMetaClass",
+                ACC_PUBLIC,
+                ClassHelper.VOID_TYPE,
+                params(param(ClassHelper.METACLASS_TYPE, "mc")),
+                ClassNode.EMPTY_ARRAY,
+                block(
+                        assigns(field(_metaClass), var("mc")),
+                        stmnt(call(
+                                call(GROOVY_SYSTEM_CLASS, "getMetaClassRegistry", NO_ARGS),
+                                "setMetaClass",
+                                args(call(THIS, "getClass", NO_ARGS), var("mc"))
+                        ))
+                )
         ));
 
         // GriffonClass getGriffonClass()
-        classNode.addMethod(new MethodNode(
-            "getGriffonClass",
-            ACC_PUBLIC,
-            GRIFFON_CLASS_CLASS,
-            Parameter.EMPTY_ARRAY,
-            ClassNode.EMPTY_ARRAY,
-            returns(call(
-                call(
-                    call(THIS, "getApp", NO_ARGS),
-                    "getArtifactManager",
-                    NO_ARGS),
-                "findGriffonClass",
-                args(classx(classNode))))
+        injectMethod(classNode, new MethodNode(
+                "getGriffonClass",
+                ACC_PUBLIC,
+                GRIFFON_CLASS_CLASS,
+                Parameter.EMPTY_ARRAY,
+                ClassNode.EMPTY_ARRAY,
+                returns(call(
+                        call(
+                                call(THIS, "getApp", NO_ARGS),
+                                "getArtifactManager",
+                                NO_ARGS),
+                        "findGriffonClass",
+                        args(classx(classNode))))
         ));
 
         // Object newInstance()
-        classNode.addMethod(new MethodNode(
-            "newInstance",
-            ACC_PUBLIC,
-            newClass(ClassHelper.OBJECT_TYPE),
-            params(
-                param(newClass(ClassHelper.CLASS_Type), "clazz"),
-                param(ClassHelper.STRING_TYPE, "type")),
-            ClassNode.EMPTY_ARRAY,
-            returns(call(
-                GAH_CLASS,
+        injectMethod(classNode, new MethodNode(
                 "newInstance",
-                vars(APP, "clazz", "type")))
+                ACC_PUBLIC,
+                newClass(ClassHelper.OBJECT_TYPE),
+                params(
+                        param(newClass(ClassHelper.CLASS_Type), "clazz"),
+                        param(ClassHelper.STRING_TYPE, "type")),
+                ClassNode.EMPTY_ARRAY,
+                returns(call(
+                        GAH_CLASS,
+                        "newInstance",
+                        vars(APP, "clazz", "type")))
         ));
 
-        String loggerCategory = "griffon.app." + artifactType +"."+ classNode.getName();
-        FieldNode loggerField = classNode.addField(
-            "this$logger",
-            ACC_FINAL | ACC_PRIVATE | ACC_SYNTHETIC,
-            LOGGER_CLASS,
-            call(
-                LOGGER_FACTORY_CLASS,
-                "getLogger",
-                args(constx(loggerCategory)))
+        String loggerCategory = "griffon.app." + artifactType + "." + classNode.getName();
+        FieldNode loggerField = injectField(classNode,
+                "this$logger",
+                ACC_FINAL | ACC_PRIVATE | ACC_SYNTHETIC,
+                LOGGER_CLASS,
+                call(
+                        LOGGER_FACTORY_CLASS,
+                        "getLogger",
+                        args(constx(loggerCategory)))
         );
 
         // Logger getLog()
-        classNode.addMethod(new MethodNode(
-            "getLog",
-            ACC_PUBLIC,
-            LOGGER_CLASS,
-            Parameter.EMPTY_ARRAY,
-            ClassNode.EMPTY_ARRAY,
-            returns(field(loggerField))
+        injectMethod(classNode, new MethodNode(
+                "getLog",
+                ACC_PUBLIC,
+                LOGGER_CLASS,
+                Parameter.EMPTY_ARRAY,
+                ClassNode.EMPTY_ARRAY,
+                returns(field(loggerField))
         ));
 
         ThreadingAwareASTTransformation.apply(classNode);

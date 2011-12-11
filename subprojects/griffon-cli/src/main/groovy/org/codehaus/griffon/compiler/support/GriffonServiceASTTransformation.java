@@ -18,6 +18,7 @@ package org.codehaus.griffon.compiler.support;
 
 import griffon.core.GriffonService;
 import griffon.core.GriffonServiceClass;
+import org.codehaus.griffon.ast.GriffonASTUtils;
 import org.codehaus.griffon.compiler.GriffonCompilerContext;
 import org.codehaus.griffon.compiler.SourceUnitCollector;
 import org.codehaus.griffon.runtime.core.AbstractGriffonService;
@@ -50,27 +51,36 @@ public class GriffonServiceASTTransformation extends GriffonArtifactASTTransform
 
     protected void transform(ClassNode classNode, SourceUnit source, String artifactPath) {
         if (!isServiceArtifact(classNode, source)) return;
+        doTransform(classNode);
+    }
 
-        if (ClassHelper.OBJECT_TYPE.equals(classNode.getSuperClass())) {
-            if (LOG.isDebugEnabled())
+    private void doTransform(ClassNode classNode) {
+        ClassNode superClass = classNode.getSuperClass();
+        if (ClassHelper.OBJECT_TYPE.equals(superClass)) {
+            if (LOG.isDebugEnabled()) {
                 LOG.debug("Setting " + ABSTRACT_GRIFFON_SERVICE_CLASS.getName() + " as the superclass of " + classNode.getName());
+            }
             classNode.setSuperClass(ABSTRACT_GRIFFON_SERVICE_CLASS);
         } else if (!classNode.implementsInterface(GRIFFON_SERVICE_CLASS)) {
-            inject(classNode);
+            inject(classNode, superClass);
         }
     }
 
-    private void inject(ClassNode classNode) {
-        ClassNode superClass = classNode.getSuperClass();
+    private void inject(ClassNode classNode, ClassNode superClass) {
         SourceUnit superSource = SourceUnitCollector.getInstance().getSourceUnit(superClass);
         if (isServiceArtifact(superClass, superSource)) return;
 
-        if (LOG.isDebugEnabled())
-            LOG.debug("Injecting " + GRIFFON_SERVICE_CLASS.getName() + " behavior to " + classNode.getName());
-        // 1. add interface
-        classNode.addInterface(GRIFFON_SERVICE_CLASS);
-        // 2. add methods
-        ASTInjector injector = new GriffonMvcArtifactASTInjector();
-        injector.inject(classNode, GriffonServiceClass.TYPE);
+        if (superSource == null) {
+            if (LOG.isDebugEnabled()) {
+                LOG.debug("Injecting " + GRIFFON_SERVICE_CLASS.getName() + " behavior to " + classNode.getName());
+            }
+            // 1. add interface
+            GriffonASTUtils.injectInterface(classNode, GRIFFON_SERVICE_CLASS);
+            // 2. add methods
+            ASTInjector injector = new GriffonMvcArtifactASTInjector();
+            injector.inject(classNode, GriffonServiceClass.TYPE);
+        } else {
+            doTransform(superClass);
+        }
     }
 }

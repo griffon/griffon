@@ -59,6 +59,7 @@ public class ThreadingASTTransformation extends AbstractASTTransformation {
     public static final String EXECUTE_OUTSIDE = "executeOutside";
     public static final String EXECUTE_SYNC = "executeSync";
     public static final String EXECUTE_ASYNC = "executeAsync";
+    public static final String EXECUTE_FUTURE = "executeFuture";
 
     /**
      * Convenience method to see if an annotated node is {@code @Threading}.
@@ -212,8 +213,9 @@ public class ThreadingASTTransformation extends AbstractASTTransformation {
             for (Parameter param : method.getParameters()) {
                 param.setClosureSharedVariable(true);
             }
-            if (LOG.isDebugEnabled())
+            if (LOG.isDebugEnabled()) {
                 LOG.debug("Modified " + declaringClass.getName() + "." + method.getName() + "() - code wrapped with UIThreadManager.getInstance()." + threadingMethod + "{}");
+            }
         }
     }
 
@@ -241,8 +243,9 @@ public class ThreadingASTTransformation extends AbstractASTTransformation {
             }
         }
 
-        if (modified && LOG.isDebugEnabled())
+        if (modified && LOG.isDebugEnabled()) {
             LOG.debug("Modified " + declaringClass.getName() + "." + field.getName() + "() - code wrapped with UIThreadManager.getInstance()." + threadingMethod + "{}");
+        }
     }
 
     private static boolean wrapClosure(ClosureExpression closure, String threadingMethod) {
@@ -332,10 +335,10 @@ public class ThreadingASTTransformation extends AbstractASTTransformation {
 
         if (classExpr != null) {
             if (!classExpr.getText().equals(UIThreadManager.class.getName())) return false;
-            return "executeOutside".equals(methodName) ||
-                    "executeSync".equals(methodName)   ||
-                    "executeAsync".equals(methodName)  ||
-                    "executeFuture".equals(methodName);
+            return EXECUTE_OUTSIDE.equals(methodName) ||
+                    EXECUTE_SYNC.equals(methodName) ||
+                    EXECUTE_ASYNC.equals(methodName) ||
+                    EXECUTE_FUTURE.equals(methodName);
         }
         return "execOutside".equals(methodName) || "doOutside".equals(methodName) ||
                 "execSync".equals(methodName)   || "edt".equals(methodName) ||
