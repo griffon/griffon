@@ -26,14 +26,14 @@ task jarSharedFiles(type: Jar, dependsOn: ':griffon-wrapper:dist') {
     appFileJar = true
     archiveName = 'griffon-shared-files.jar'
     destinationDir = "$buildDir/assemble/jars" as File
-    from(project(':griffon-wrapper').file("build/distributions/griffon-wrapper-files.zip"))
+    from(project(':griffon-wrapper').file('build/distributions/griffon-wrapper-files.zip'))
 }
 
 task jarAppFiles(type: Jar) {
     appFileJar = true
     archiveName = 'griffon-app-files.jar'
     destinationDir = "$buildDir/assemble/jars" as File
-    from("${rootDir}/src/dist/src/griffon/griffon-app") {
+    from('src/app') {
         into 'griffon-app'
     }
 }
@@ -42,14 +42,21 @@ task jarPluginFiles(type: Jar) {
     appFileJar = true
     archiveName = 'griffon-plugin-files.jar'
     destinationDir = "$buildDir/assemble/jars" as File
-    from "${rootDir}/src/dist/src/griffon/templates/plugins"
+    from 'src/plugin'
 }
 
 task jarIntegrationFiles(type: Jar) {
     appFileJar = true
     archiveName = 'griffon-integration-files.jar'
     destinationDir = "$buildDir/assemble/jars" as File
-    from "${rootDir}/src/dist/src/griffon/templates/ide-support"
+    from 'src/ide'
+}
+
+task jarDistFiles(type: Jar) {
+    appFileJar = true
+    archiveName = 'griffon-dist-files.jar'
+    destinationDir = "$buildDir/assemble/jars" as File
+    from 'src/dist'
 }
 
 resourceFilesJars = tasks.withType(Jar).matching({ task -> task.appFileJar } as Spec)

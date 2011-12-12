@@ -56,7 +56,7 @@ target('default': "Packages a Griffon application.") {
     }
     if (argsMap.params) {
         argsMap.params.each { type -> makePackage(type) }
-    } else if(buildConfig.griffon.packaging) {
+    } else if (buildConfig.griffon.packaging) {
         buildConfig.griffon.packaging.each { type -> makePackage(type) }
     } else {
         package_zip()
@@ -167,13 +167,13 @@ target(package_jar: "Creates a single jar distribution and zips it.") {
 
 // XXX -- NATIVE
     doForAllPlatforms { platformDir, platformOs ->
-        def destfile = new File(destFile.absolutePath - '.jar' + "-${platformOs}.jar") 
+        def destfile = new File(destFile.absolutePath - '.jar' + "-${platformOs}.jar")
         createJarFile(destfile, libjars) {
             platformDir.eachFileMatch(~/.*\.jar/) {f ->
                 zipfileset(src: it.toString(), excludes: signaturesPattern)
             }
             File nativeLibDir = new File(platformDir.absolutePath + File.separator + 'native')
-            if(nativeLibDir.exists()) fileset(dir: nativeLibDir)
+            if (nativeLibDir.exists()) fileset(dir: nativeLibDir)
         }
     }
 // XXX -- NATIVE
@@ -262,9 +262,8 @@ target(_copyLaunchScripts: "") {
     javaOpts = javaOpts ? javaOpts.join(' ') : ""
 
     ant.mkdir(dir: "${targetDistDir}")
-    ant.copy(todir: "${targetDistDir}") {
-        fileset(dir: "${griffonSettings.griffonHome}/src/griffon/templates/dist")
-    }
+    griffonUnpack(dest: targetDistDir, src: 'griffon-dist-files.jar')
+    ant.delete(file: "${targetDistDir}/META-INF", quiet: true)
     ant.copy(file: resolveApplicationIcnsFile(), tofile: "${targetDistDir}/${griffonAppName}.icns")
 
     ant.replace(dir: "${targetDistDir}/bin") {
@@ -304,7 +303,7 @@ _copyPackageFiles = { targetDistDir ->
 }
 
 _zipDist = { targetDistDir, usePackageType = true ->
-    def suffix = usePackageType ? "-${packageType}" : "" 
+    def suffix = usePackageType ? "-${packageType}" : ""
     def zipFileName = "${targetDistDir}/${griffonAppName}-${griffonAppVersion}${suffix}.zip"
     ant.delete(file: zipFileName, quiet: true, failOnError: false)
     ant.zip(basedir: targetDistDir, destfile: zipFileName)
