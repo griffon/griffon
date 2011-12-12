@@ -7,7 +7,7 @@ application(title: GriffonNameUtils.capitalize(app.getMessage('application.title
     iconImages: [imageIcon('/griffon-icon-48x48.png').image,
                imageIcon('/griffon-icon-32x32.png').image,
                imageIcon('/griffon-icon-16x16.png').image]) {
-   menuBar(build(@artifact.name.plain@MenuBar))
+   widget(build(@artifact.name.plain@MenuBar))
    migLayout(layoutConstraints: 'fill')
    widget(build(@artifact.name.plain@Content), constraints: 'center, grow')
    widget(build(@artifact.name.plain@StatusBar), constraints: 'south, grow')

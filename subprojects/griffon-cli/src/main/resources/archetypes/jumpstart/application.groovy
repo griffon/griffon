@@ -120,8 +120,8 @@ target(name: 'createApplicationProject',
         template: 'Events',
         path: 'griffon-app/conf')
 
-    copyResources("${basedir}/griffon-app/resources", 'griffon-app/resources/*')
-    copyResources("${basedir}/griffon-app/i18n", 'griffon-app/i18n/*')
+    copyGriffonResources("${basedir}/griffon-app/resources", '/archetypes/jumpstart/griffon-app/resources/*')
+    copyGriffonResources("${basedir}/griffon-app/i18n", '/archetypes/jumpstart/griffon-app/i18n/*')
     ant.replace(dir: "${basedir}/griffon-app/i18n") {
         replacefilter(token: "@griffon.project.name@", value: GriffonNameUtils.capitalize(griffonAppName))
     }
@@ -160,7 +160,8 @@ qualify = { className ->
 
 copyResources = { destDir, pattern, boolean overwrite = true ->
     new File(destDir.toString()).mkdirs()
-    Resource[] resources = resolveResources("file://${griffonSettings.griffonHome}/archetypes/jumpstart/${pattern}")
+    Resource[] resources = resolveResources("classpath://archetypes/jumpstart/${pattern}")
+    println resources
     resources.each { Resource res ->
         if (res.readable) {
             copyGriffonResource("${destDir}/${res.filename}", res, overwrite)

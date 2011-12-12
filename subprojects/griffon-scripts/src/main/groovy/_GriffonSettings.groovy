@@ -182,7 +182,7 @@ copyGriffonResource = { targetFile, Resource resource, boolean overwrite = true 
 // by an Ant-style path-matching pattern.
 copyGriffonResources = { destDir, pattern, boolean overwrite = true ->
     new File(destDir.toString()).mkdirs()
-    Resource[] resources = resolveResources("classpath:${pattern}")
+    Resource[] resources = resolveResources("classpath*:${pattern}")
     resources.each { Resource res ->
         if (res.readable) {
             copyGriffonResource("${destDir}/${res.filename}", res, overwrite)

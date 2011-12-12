@@ -31,7 +31,6 @@ The Griffon installation structure is defined as follows
    * INSTALL - install instructions
    * LICENSE - project license (ASL 2.0)
    * README.md - this file
-   * archetypes - bundled application archetypes
    * bash - griffon command autocompletion script
    * bin - griffon launchers
    * conf - griffon command classloading configuration
@@ -49,7 +48,6 @@ The Griffon installation structure is defined as follows
       * SwingPad - visual editor for View scripts
       * Weatherwidget - showcases animations and network calls
    * scripts - minimal set of griffon commands
-   * src - application and artifact templates
 
 Links
 -----

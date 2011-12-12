@@ -147,7 +147,7 @@ resolveTemplate = { template, fileSuffix ->
             templateFile = new FileSystemResource("${griffonWorkDir}/archetypes/${archetype}/templates/artifacts/${template}${fileSuffix}")
             if (!templateFile.exists()) {
                 // now check for template provided by a provided archetype
-                templateFile = griffonResource("archetypes/${archetype}/templates/artifacts/${template}${fileSuffix}")
+                templateFile = new ClassPathResource("archetypes/${archetype}/templates/artifacts/${template}${fileSuffix}")
                 if (!templateFile.exists()) {
                     // template not found in archetypes, use default template
                     templateFile = new ClassPathResource("archetypes/default/templates/artifacts/${template}${fileSuffix}")
@@ -248,7 +248,7 @@ loadArchetypeFor = { type = 'application' ->
     def gcl = new GroovyClassLoader(classLoader)
     def archetypeFile = new FileSystemResource("${griffonWorkDir}/archetypes/${archetype}/${type}.groovy")
     if (!archetypeFile.exists()) {
-        archetypeFile = griffonResource("archetypes/${archetype}/${type}.groovy")
+        archetypeFile = new ClassPathResource("archetypes/${archetype}/${type}.groovy")
     }
 
     if (archetypeFile.exists()) {
