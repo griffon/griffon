@@ -158,15 +158,4 @@ qualify = { className ->
     (mvcPackageName? mvcPackageName + '.':'') + className
 }
 
-copyResources = { destDir, pattern, boolean overwrite = true ->
-    new File(destDir.toString()).mkdirs()
-    Resource[] resources = resolveResources("classpath://archetypes/jumpstart/${pattern}")
-    println resources
-    resources.each { Resource res ->
-        if (res.readable) {
-            copyGriffonResource("${destDir}/${res.filename}", res, overwrite)
-        }
-    }
-}
-
 setDefaultTarget(createApplicationProject)
