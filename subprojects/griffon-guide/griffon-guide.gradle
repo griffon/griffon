@@ -175,7 +175,7 @@ task buildGuide(type: GrailsDoc, dependsOn: java2html) {
 task pdfGuide(type:PdfGuide, dependsOn: buildGuide) {
     inputs.files file("$buildDir/manual/guide")
     pdfName = "griffon-guide-${version}.pdf"
-    home = project(':').file('.').absolutePath
+    // home = project(':').file('.').absolutePath
 }
 
 task dist(type: Zip) {

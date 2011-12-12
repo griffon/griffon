@@ -17,7 +17,7 @@
 import org.apache.tools.ant.filters.ReplaceTokens
 
 distBinSpec = copySpec {
-    from("."){
+    from('.'){
         include 'README.md'
         include 'INSTALL'
         include 'LICENSE'
@@ -26,7 +26,7 @@ distBinSpec = copySpec {
         exclude 'bin'
         filter(ReplaceTokens, tokens: ['griffon.version': version, 'groovy.version': groovyVersion])
     }
-    from('src/griffon'){
+    from(project(':griffon-guide').file('src/griffon')){
         into 'src/griffon'
         filter(ReplaceTokens, tokens: ['griffon.version': version, 'groovy.version': groovyVersion])    
     }
@@ -36,7 +36,7 @@ distBinSpec = copySpec {
         fileMode = 0755    
     }
     into('lib') { 
-        from(project(":griffon-cli").configurations.runtime) {
+        from(project(':griffon-cli').configurations.runtime) {
             exclude 'griffon*'
         }
     }

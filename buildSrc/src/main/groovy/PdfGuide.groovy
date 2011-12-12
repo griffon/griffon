@@ -20,7 +20,7 @@ import org.gradle.api.tasks.InputFiles
 import org.gradle.api.tasks.Input
 import org.gradle.api.tasks.OutputDirectory
 import org.gradle.api.tasks.TaskAction
-import grails.doc.PdfBuilder2
+import grails.doc.PdfBuilder
 
 class PdfGuide extends DefaultTask {
     @OutputDirectory File outputFile
@@ -36,7 +36,7 @@ class PdfGuide extends DefaultTask {
 	@TaskAction
     def publish() {
 		try {
-            PdfBuilder2.build(
+            PdfBuilder.build(
                     basedir: project.buildDir.absolutePath,
                     home: home,
                     tool: 'griffon'
