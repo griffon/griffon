@@ -228,9 +228,10 @@ intellijAddonJarsFixes = { List paths ->
 pluginPaths = {
     IvyDependencyManager dependencyManager = griffonSettings.dependencyManager
     def pDeps = dependencyManager.resolvePluginDependencies()
+    def localPlugins = [] as Set
     if (dependencyManager.resolveErrors) {
-        println "Error: There was an error resolving plugin JAR dependencies"
-        exit 1
+	pDeps.allProblemMessages.findAll{it.startsWith('unresolved dependency: ')}.each{def m = it =~ /.*#(.*);(.*):/ ; localPlugins << [artifact: m[0][1], revision: m[0][2]]}
+        println "Warning: There was an error resolving plugin JAR dependencies. This is acceptable if all of this plugins are installed local only: ${localPlugins}"
     }
     def plugins = [ ]
     if (pDeps) {
@@ -246,6 +247,13 @@ pluginPaths = {
                 }
             } catch (e) {}
         }
+    }
+    for(def attr: localPlugins) {
+        plugins << [
+            addon: ".griffon/${griffonVersion}/projects/${griffonAppName}/plugins/${attr.artifact}-${attr.revision}/addon",
+            javadoc : ".griffon/${griffonVersion}/projects/${griffonAppName}/plugins/${attr.artifact}-${attr.revision}/dist/griffon-${attr.artifact}-${attr.revision}-javadoc.jar",
+            sources : ".griffon/${griffonVersion}/projects/${griffonAppName}/plugins/${attr.artifact}-${attr.revision}/dist/griffon-${attr.artifact}-${attr.revision}-sources.jar",
+        ]
     }
     plugins
 }
