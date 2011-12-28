@@ -29,7 +29,7 @@ dependencies {
         exclude group: 'org.coconut.forkjoin', module: 'jsr166y'
     }
     compile 'org.coconut.forkjoin:jsr166y:070108',
-            'junit:junit:4.8.1',
+            'junit:junit:4.10',
             'asm:asm:3.2',
             'commons-cli:commons-cli:1.2',
             'commons-io:commons-io:1.4',
@@ -43,16 +43,9 @@ dependencies {
         exclude group: 'org.apache.ant', module: 'ant-launcher'
     }
     compile "org.apache.ant:ant-launcher:$antVersion"
-    compile("org.apache.ant:ant-nodeps:$antVersion") {
-        exclude group: 'org.apache.ant', module: 'ant'
-    }
     compile("org.apache.ant:ant-junit:$antVersion") {
         exclude group: 'org.apache.ant', module: 'ant'
         exclude group: 'junit',          module: 'junit'
-    }
-    compile("org.apache.ant:ant-antlr:$antVersion") {
-        exclude group: 'org.apache.ant', module: 'ant'
-        exclude group: 'antlr',          module: 'antlr'
     }
     
     compile("org.springframework:org.springframework.core:$springVersion") {

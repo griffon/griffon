@@ -210,7 +210,6 @@ class IvyDependencyManager extends AbstractIvyDependencyManager implements Depen
                       "org.apache.ant:ant:$buildSettings.antVersion",
                       "org.apache.ant:ant-launcher:$buildSettings.antVersion",
                       "org.apache.ant:ant-junit:$buildSettings.antVersion",
-                      "org.apache.ant:ant-nodeps:$buildSettings.antVersion",
                       "commons-io:commons-io:1.4",
                       "commons-lang:commons-lang:2.6",
                       "org.codehaus.griffon:griffon-cli:$griffonVersion",
@@ -246,7 +245,7 @@ class IvyDependencyManager extends AbstractIvyDependencyManager implements Depen
                         "org.slf4j:slf4j-api:$buildSettings.slf4jVersion"
 
                 // dependencies needed for running tests
-                test "junit:junit:4.8.1",
+                test "junit:junit:4.10",
                      "org.codehaus.griffon:griffon-cli:$griffonVersion"
 
                 // logging
