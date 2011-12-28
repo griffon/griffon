@@ -107,6 +107,8 @@ griffon.project.dependency.resolution = {
         griffonPlugins()
         griffonHome()
         griffonCentral()
+        mavenCentral()
+        mavenRepo "https://repository.jboss.org/nexus/content/groups/public-jboss"
     }
     dependencies { }
 }

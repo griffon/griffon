@@ -62,14 +62,14 @@ public abstract class AbstractAddonManager implements AddonManager {
 
     public GriffonAddon findAddon(String name) {
         if (GriffonNameUtils.isBlank(name)) return null;
-        if (!name.endsWith("GriffonAddon")) name += "GriffonAddon";
-        return addons.get(GriffonNameUtils.capitalize(name));
+        if (name.endsWith("GriffonAddon")) name = name.substring(0, name.length() - 12);
+        return addons.get(GriffonNameUtils.getPropertyName(name));
     }
 
     public GriffonAddonDescriptor findAddonDescriptor(String name) {
         if (GriffonNameUtils.isBlank(name)) return null;
-        if (!name.endsWith("GriffonAddon")) name += "GriffonAddon";
-        return addonDescriptors.get(GriffonNameUtils.capitalize(name));
+        if (name.endsWith("GriffonAddon")) name = name.substring(0, name.length() - 12);
+        return addonDescriptors.get(GriffonNameUtils.getPropertyName(name));
     }
 
     public Map<String, GriffonAddonDescriptor> findAddonDescriptors(String prefix) {
@@ -90,7 +90,7 @@ public abstract class AbstractAddonManager implements AddonManager {
             if (!initialized) {
                 LOG.debug("Registering addon descriptor " + addonDescriptor);
                 doRegisterAddon(addonDescriptor);
-                addons.put(addonDescriptor.getName(), addonDescriptor.getAddon());
+                addons.put(addonDescriptor.getPluginName(), addonDescriptor.getAddon());
             }
         }
     }

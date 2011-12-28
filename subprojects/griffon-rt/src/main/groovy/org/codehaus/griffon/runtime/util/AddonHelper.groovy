@@ -18,6 +18,7 @@ package org.codehaus.griffon.runtime.util
 
 import griffon.util.GriffonNameUtils
 import griffon.util.Metadata
+import groovy.transform.Synchronized
 import org.codehaus.griffon.runtime.builder.UberBuilder
 import org.codehaus.griffon.runtime.core.DefaultGriffonAddon
 import org.codehaus.griffon.runtime.core.DefaultGriffonAddonDescriptor
@@ -34,6 +35,8 @@ import griffon.core.*
 class AddonHelper {
     private static final Logger LOG = LoggerFactory.getLogger(AddonHelper)
 
+    private static final Map<String, Map<String, Object>> ADDON_CACHE = [:]
+
     static final DELEGATE_TYPES = Collections.unmodifiableList([
             "attributeDelegates",
             "preInstantiateDelegates",
@@ -41,17 +44,20 @@ class AddonHelper {
             "postNodeCompletionDelegates"
     ])
 
-    static void handleAddonsAtStartup(GriffonApplication app) {
-        LOG.info("Loading addons [START]")
-        app.event(GriffonApplication.Event.LOAD_ADDONS_START.name, [app])
+    @Synchronized
+    private static Map<String, Map<String, Object>> getAddonCache() {
+        ADDON_CACHE
+    }
 
-        Map addons = [:]
+    @Synchronized
+    private static void computeAddonCache(GriffonApplication app) {
+        if (!ADDON_CACHE.isEmpty()) return
 
         for (String key: Metadata.current.stringPropertyNames()) {
             if (!key.startsWith('plugins.')) continue
             key = key[8..-1].toString()
-            addons[key] = [
-                    auto: true,
+            ADDON_CACHE[key] = [
+                    node: null,
                     prefix: '',
                     name: key,
                     className: GriffonNameUtils.getClassNameForLowerCaseHyphenSeparatedName(key) + 'GriffonAddon'
@@ -69,8 +75,8 @@ class AddonHelper {
                     if (nodeName == 'root') nodeName = ''
                     node.value.each { addon ->
                         String pluginName = GriffonNameUtils.getHyphenatedName(addon.key - 'GriffonAddon')
-                        addons[pluginName] = [
-                                auto: false,
+                        ADDON_CACHE[pluginName] = [
+                                node: addon,
                                 prefix: nodeName,
                                 name: pluginName,
                                 className: addon.key.toString()
@@ -78,7 +84,14 @@ class AddonHelper {
                     }
             }
         }
-        for (config in addons.values()) {
+    }
+
+    static void handleAddonsAtStartup(GriffonApplication app) {
+        LOG.info("Loading addons [START]")
+        app.event(GriffonApplication.Event.LOAD_ADDONS_START.name, [app])
+
+        computeAddonCache(app)
+        for (config in getAddonCache().values()) {
             handleAddon(app, config)
         }
 
@@ -100,7 +113,7 @@ class AddonHelper {
         try {
             config.addonClass = Class.forName(config.className)
         } catch (ClassNotFoundException cnfe) {
-            if (!config.auto) {
+            if (config.node) {
                 throw cnfe
             } else {
                 // skip
@@ -127,7 +140,7 @@ class AddonHelper {
         }
         if (!(obj instanceof ThreadingHandler)) UIThreadManager.enhance(addonMetaClass)
 
-        if (LOG.infoEnabled) LOG.info("Loading addon $config.name with class ${addon.class.name}")
+        if (LOG.infoEnabled) LOG.info("Loading addon ${config.name} with class ${addon.class.name}")
         app.event(GriffonApplication.Event.LOAD_ADDON_START.name, [config.name, addon, app])
 
         addon.addonInit(app)
@@ -136,22 +149,9 @@ class AddonHelper {
     }
 
     static void handleAddonsForBuilders(GriffonApplication app, UberBuilder builder, Map<String, MetaClass> targets) {
-        for (node in app.builderConfig) {
-            String nodeName = node.key
-            switch (nodeName) {
-                case 'addons':
-                case 'features':
-                    // reserved words, not addon prefixes
-                    break
-                default:
-                    if (nodeName == 'root') nodeName = ''
-                    node.value.each {addon ->
-                        Class addonClass = Class.forName(addon.key) //FIXME get correct classloader
-                        if (!FactoryBuilderSupport.isAssignableFrom(addonClass)) {
-                            handleAddonForBuilder(app, builder, targets, addon, nodeName)
-                        }
-                    }
-            }
+        computeAddonCache(app)
+        for (config in getAddonCache().values()) {
+            handleAddonForBuilder(app, builder, targets, config)
         }
 
         app.addonManager.addons.each {name, addon ->
@@ -163,9 +163,23 @@ class AddonHelper {
         }
     }
 
-    static void handleAddonForBuilder(GriffonApplication app, UberBuilder builder, Map<String, MetaClass> targets, def addonNode, String prefix) {
-        def addonName = addonNode.key
-        GriffonAddon addon = app.addonManager.addons[addonName]
+    static void handleAddonForBuilder(GriffonApplication app, UberBuilder builder, Map<String, MetaClass> targets, Map addonConfig) {
+        try {
+            addonConfig.addonClass = Class.forName(addonConfig.className)
+        } catch (ClassNotFoundException cnfe) {
+            if (addonConfig.node) {
+                throw cnfe
+            } else {
+                // skip
+                return
+            }
+        }
+
+        if (FactoryBuilderSupport.isAssignableFrom(addonConfig.addonClass)) return
+
+        String addonName = addonConfig.name
+        String prefix = addonConfig.prefix
+        GriffonAddon addon = app.addonManager.findAddon(addonName)
 
         addon.addonBuilderInit(app, builder)
 
@@ -186,7 +200,7 @@ class AddonHelper {
         Map props = addon.props
         addProperties(builder, props, addonName, prefix)
 
-        for (partialTarget in addonNode.value) {
+        for (partialTarget in addonConfig.node?.value) {
             if (partialTarget.key == 'view') {
                 // this needs special handling, skip it for now
                 continue
@@ -278,19 +292,19 @@ class AddonHelper {
 
     static void addFactories(UberBuilder builder, Map<String, Object> factories, String addonName, String prefix) {
         factories.each {String name, factoryOrBean ->
-            CompositeBuilderHelper.addFactory(builder, addonName - 'GriffonAddon', prefix + name, factoryOrBean)
+            CompositeBuilderHelper.addFactory(builder, addonName, prefix + name, factoryOrBean)
         }
     }
 
     static void addMethods(UberBuilder builder, Map<String, Closure> methods, String addonName, String prefix) {
         methods.each {String name, Closure closure ->
-            CompositeBuilderHelper.addMethod(builder, addonName - 'GriffonAddon', prefix + name, closure)
+            CompositeBuilderHelper.addMethod(builder, addonName, prefix + name, closure)
         }
     }
 
     static void addProperties(UberBuilder builder, Map<String, List<Closure>> props, String addonName, String prefix) {
         props.each {String name, Map<String, Closure> closures ->
-            CompositeBuilderHelper.addProperty(builder, addonName - 'GriffonAddon', prefix + name, closures.get, closures.set)
+            CompositeBuilderHelper.addProperty(builder, addonName, prefix + name, closures.get, closures.set)
         }
     }
 
