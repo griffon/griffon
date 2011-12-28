@@ -270,20 +270,20 @@ class GriffonApplicationHelper {
         }
 
         if (Script.class.isAssignableFrom(handlerClass)) {
-            runScript(handlerName, handlerClass, app)
+            _runScript(handlerName, handlerClass, app)
         } else if (LifecycleHandler.class.isAssignableFrom(handlerClass)) {
-            runLifecycleHandler(handlerName, handlerClass, app)
+            _runLifecycleHandler(handlerName, handlerClass, app)
         }
     }
 
-    private static void runScript(String scriptName, Class handlerClass, GriffonApplication app) {
+    private static void _runScript(String scriptName, Class handlerClass, GriffonApplication app) {
         Script script = handlerClass.newInstance(app.bindings)
         UIThreadManager.enhance(script)
         if (LOG.infoEnabled) LOG.info("Running lifecycle handler (script) '$scriptName'")
         UIThreadManager.instance.executeSync(script)
     }
 
-    private static void runLifecycleHandler(String handlerName, Class handlerClass, GriffonApplication app) {
+    private static void _runLifecycleHandler(String handlerName, Class handlerClass, GriffonApplication app) {
         LifecycleHandler handler = handlerClass.newInstance()
         if (LOG.infoEnabled) LOG.info("Running lifecycle handler (class) '$handlerName'")
         UIThreadManager.instance.executeSync(handler)

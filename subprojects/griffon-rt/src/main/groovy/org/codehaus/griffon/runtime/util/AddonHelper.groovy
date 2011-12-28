@@ -196,23 +196,23 @@ class AddonHelper {
             for (String itemName in partialTarget.value) {
                 if (itemName == '*') {
                     if (methods && LOG.traceEnabled) LOG.trace("Injecting all methods on $partialTarget.key")
-                    addMethods(mc, methods, prefix)
+                    _addMethods(mc, methods, prefix)
                     if (factories && LOG.traceEnabled) LOG.trace("Injecting all factories on $partialTarget.key")
-                    addFactories(mc, factories, prefix, builder)
+                    _addFactories(mc, factories, prefix, builder)
                     if (props && LOG.traceEnabled) LOG.trace("Injecting all properties on $partialTarget.key")
-                    addProps(mc, props, prefix)
+                    _addProps(mc, props, prefix)
                     continue
                 } else if (itemName == '*:methods') {
                     if (methods && LOG.traceEnabled) LOG.trace("Injecting all methods on $partialTarget.key")
-                    addMethods(mc, methods, prefix)
+                    _addMethods(mc, methods, prefix)
                     continue
                 } else if (itemName == '*:factories') {
                     if (factories && LOG.traceEnabled) LOG.trace("Injecting all factories on $partialTarget.key")
-                    addFactories(mc, factories, prefix, builder)
+                    _addFactories(mc, factories, prefix, builder)
                     continue
                 } else if (itemName == '*:props') {
                     if (props && LOG.traceEnabled) LOG.trace("Injecting all properties on $partialTarget.key")
-                    addProps(mc, props, prefix)
+                    _addProps(mc, props, prefix)
                     continue
                 }
 
@@ -244,18 +244,18 @@ class AddonHelper {
         }
     }
 
-    private static void addMethods(MetaClass mc, Map methods, String prefix) {
+    private static void _addMethods(MetaClass mc, Map methods, String prefix) {
         methods.each { mk, mv -> mc."${prefix}${mk}" = mv }
     }
 
-    private static void addFactories(MetaClass mc, Map factories, String prefix, UberBuilder builder) {
+    private static void _addFactories(MetaClass mc, Map factories, String prefix, UberBuilder builder) {
         factories.each { fk, fv ->
             def resolvedName = prefix + fk
             mc."$resolvedName" = {Object... args -> builder."$resolvedName"(* args) }
         }
     }
 
-    private static void addProps(MetaClass mc, Map props, String prefix) {
+    private static void _addProps(MetaClass mc, Map props, String prefix) {
         props.each = { pk, accessors ->
             String beanName
             if (pk.length() > 1) {
