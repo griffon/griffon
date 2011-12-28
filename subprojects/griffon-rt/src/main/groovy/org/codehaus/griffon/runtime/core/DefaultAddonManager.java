@@ -34,6 +34,6 @@ public class DefaultAddonManager extends AbstractAddonManager {
     }
 
     protected void doRegisterAddon(GriffonAddonDescriptor addonDescriptor) {
-        getAddonsInternal().put(addonDescriptor.getName(), addonDescriptor);
+        getAddonsInternal().put(addonDescriptor.getPluginName(), addonDescriptor);
     }
 }
