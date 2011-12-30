@@ -22,11 +22,11 @@ import org.codehaus.griffon.artifacts.model.Archetype
 
 includeTargets << griffonScript('_GriffonArtifacts')
 
-target(installArchetype: "Installs an archetype for the given URL or name and version") {
+target(listArchetypes: 'Lists all archetypes available in an artifact repository') {
     depends(parseArguments, configureProxy, configureArtifactRepositories)
 
-    ant.mkdir(dir: archetypesBase)
-    installArtifact(Archetype.TYPE)
+    selectArtifactRepository()
+    listArtifacts(Archetype.TYPE, artifactRepository)
 }
 
-setDefaultTarget(installArchetype)
+setDefaultTarget(listArchetypes)

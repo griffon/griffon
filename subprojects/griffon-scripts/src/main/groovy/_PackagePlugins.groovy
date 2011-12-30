@@ -15,7 +15,6 @@
  */
 
 import org.codehaus.griffon.plugins.GriffonPluginUtils
-import org.codehaus.griffon.plugins.PluginInfo
 
 /**
  * Gant script that handles the packaging of Griffon plug-ins

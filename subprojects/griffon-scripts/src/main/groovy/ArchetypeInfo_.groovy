@@ -22,11 +22,19 @@ import org.codehaus.griffon.artifacts.model.Archetype
 
 includeTargets << griffonScript('_GriffonArtifacts')
 
-target(installArchetype: "Installs an archetype for the given URL or name and version") {
+target(archetypeInfo: 'Displays information on a Griffon archetype') {
     depends(parseArguments, configureProxy, configureArtifactRepositories)
 
-    ant.mkdir(dir: archetypesBase)
-    installArtifact(Archetype.TYPE)
+    selectArtifactRepository()
+
+    if (argsMap.params) {
+        def name = argsMap.params[0]
+        def version = argsMap.params.size() > 1 ? argsMap.params[1] : null
+
+        displayArtifact(Archetype.TYPE, name, version, artifactRepository)
+    } else {
+        event('StatusError', ['Usage: griffon archetype-info <archetype-name> [version]'])
+    }
 }
 
-setDefaultTarget(installArchetype)
+setDefaultTarget(archetypeInfo)

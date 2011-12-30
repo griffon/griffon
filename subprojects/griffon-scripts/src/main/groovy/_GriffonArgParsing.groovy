@@ -48,8 +48,9 @@ target(name: 'parseArguments', description: "Parse the arguments passed on the c
         }
     }
 
-    if(argsMap.containsKey('non-interactive')) {
+    if (argsMap.containsKey('non-interactive')) {
         println "Setting non-interactive mode"
         isInteractive = !(argsMap.'non-interactive')
+        System.setProperty("griffon.interactive.mode", "${isInteractive}")
     }
 }

@@ -82,7 +82,7 @@ class IvyDependencyManager extends AbstractIvyDependencyManager implements Depen
         ivySettings.defaultInit()
         // don't cache for snapshots
         if(settings?.griffonVersion?.endsWith("SNAPSHOT")) {
-            ivySettings.setDefaultUseOrigin(true) 
+            ivySettings.setDefaultUseOrigin(true)
         }
 
         ivySettings.validate = false
@@ -127,11 +127,11 @@ class IvyDependencyManager extends AbstractIvyDependencyManager implements Depen
         Message.setDefaultLogger logger
         this.logger = logger
     }
-    
+
     MessageLogger getLogger() { this.logger }
 
      /**
-      * @return The current chain resolver 
+      * @return The current chain resolver
      */
     ChainResolver getChainResolver() { chainResolver }
 
@@ -181,7 +181,7 @@ class IvyDependencyManager extends AbstractIvyDependencyManager implements Depen
         for (EnhancedDefaultDependencyDescriptor dd in dependencyDescriptors) {
             // dependencies inherited by Griffon' global config are not included
             if(dd.inherited) continue
-            
+
             def mrid = dd.dependencyRevisionId
             builder.dependency( group: mrid.organisation, name: mrid.name, version: mrid.revision, conf: dd.scope, transitive: dd.transitive ) {
                 for(ExcludeRule er in dd.allExcludeRules) {
@@ -206,12 +206,23 @@ class IvyDependencyManager extends AbstractIvyDependencyManager implements Depen
             dependencies {
                 // dependencies needed by the Griffon build system
                 build "org.codehaus.gpars:gpars:0.9",
-                      "org.tmatesoft.svnkit:svnkit:1.3.1",
+                      // "org.tmatesoft.svnkit:svnkit:1.3.1",
                       "org.apache.ant:ant:$buildSettings.antVersion",
                       "org.apache.ant:ant-launcher:$buildSettings.antVersion",
                       "org.apache.ant:ant-junit:$buildSettings.antVersion",
-                      "commons-io:commons-io:1.4",
+                      "commons-io:commons-io:2.1",
                       "commons-lang:commons-lang:2.6",
+                      "commons-codec:commons-codec:1.6",
+                      "commons-collections:commons-collections:3.2.1",
+                      "commons-beanutils:commons-beanutils:1.8.0",
+                      "org.apache.httpcomponents:httpcore:4.1.2",
+                      "org.apache.httpcomponents:httpclient:4.1.2",
+                      "com.jcraft:jsch:0.1.45",
+                      "com.jcraft:jzlib:1.0.7",
+                      "org.codehaus.groovy.modules.http-builder:http-builder:0.5.2",
+                      "xerces:xercesImpl:2.9.1",
+                      "net.sf.ezmorph:ezmorph:1.0.6",
+                      "xml-resolver:xml-resolver:1.2",
                       "org.codehaus.griffon:griffon-cli:$griffonVersion",
                       "org.codehaus.griffon:griffon-scripts:$griffonVersion",
                       "org.codehaus.griffon:griffon-rt:$griffonVersion",
@@ -226,10 +237,11 @@ class IvyDependencyManager extends AbstractIvyDependencyManager implements Depen
                       "org.slf4j:jul-to-slf4j:$buildSettings.slf4jVersion") {
                     excludes 'mail', 'jms', 'jmxtools', 'jmxri'
                 }
+                build(group: 'net.sf.json-lib', name: 'json-lib', version: '2.4', classifier: 'jdk15')
                 build("org.codehaus.groovy:groovy-all:$buildSettings.groovyVersion") {
                     transitive = false
                 }
-                      
+
                 docs("org.xhtmlrenderer:core-renderer:R8pre2",
                      "com.lowagie:itext:2.0.8",
                      "radeox:radeox:1.0-b2",
@@ -246,6 +258,7 @@ class IvyDependencyManager extends AbstractIvyDependencyManager implements Depen
 
                 // dependencies needed for running tests
                 test "junit:junit:4.10",
+                     "org.hamcrest:hamcrest-core:1.1"
                      "org.codehaus.griffon:griffon-cli:$griffonVersion"
 
                 // logging
@@ -306,7 +319,7 @@ class IvyDependencyManager extends AbstractIvyDependencyManager implements Depen
              if(args.excludes) {
                  for(ex in excludes) {
                      dd.exclude(ex)
-                 }                 
+                 }
             }
             addDependencyDescriptor dd
         }
@@ -337,7 +350,7 @@ class IvyDependencyManager extends AbstractIvyDependencyManager implements Depen
     }
 
     boolean isPluginConfiguredByApplication(String name) {
-        (configuredPlugins.contains(name) || configuredPlugins.contains(GriffonUtil.getPropertyNameForLowerCaseHyphenSeparatedName(name)))        
+        (configuredPlugins.contains(name) || configuredPlugins.contains(GriffonUtil.getPropertyNameForLowerCaseHyphenSeparatedName(name)))
     }
 
     def configureDependencyDescriptor(EnhancedDefaultDependencyDescriptor dependencyDescriptor, String scope, Closure dependencyConfigurer=null, boolean pluginMode = false) {
@@ -396,7 +409,7 @@ class IvyDependencyManager extends AbstractIvyDependencyManager implements Depen
     ResolveReport resolveDependencies(Configuration conf) {
         resolveDependencies(conf.name)
     }
-    
+
     /**
      * Performs a resolve of all dependencies for the given configuration,
      * potentially going out to the internet to download jars if they are not found locally
@@ -415,11 +428,11 @@ class IvyDependencyManager extends AbstractIvyDependencyManager implements Depen
         // return an empty resolve report
         return new ResolveReport(moduleDescriptor)
     }
-    
+
     /**
      * Similar to resolveDependencies, but will load the resolved dependencies into the 
      * application RootLoader if it exists
-     * 
+     *
      * @return The ResolveReport
      * @throws IllegalStateException If no RootLoader exists
      */
@@ -519,7 +532,7 @@ class IvyDependencyManager extends AbstractIvyDependencyManager implements Depen
         // return an empty resolve report
         return new ResolveReport(createModuleDescriptor())
     }
-    
+
      /**
      * Tests whether the given ModuleId is defined in the list of dependencies
      */
@@ -539,7 +552,7 @@ class IvyDependencyManager extends AbstractIvyDependencyManager implements Depen
      */
     void parseDependencies(Closure definition) {
         if(definition && applicationName && applicationVersion) {
-            if(this.moduleDescriptor == null) {                
+            if(this.moduleDescriptor == null) {
                 this.moduleDescriptor = createModuleDescriptor()
             }
 
@@ -707,7 +720,7 @@ class IvyDomainSpecificLanguageEvaluator {
         } else {
             for(String conf in configurationNames) {
                 currentDependencyDescriptor.addExcludeRule(conf, excludeRule);
-            }            
+            }
         }
 
     }
@@ -808,9 +821,9 @@ class IvyDomainSpecificLanguageEvaluator {
     }
 
     void griffonPlugins() {
-        if(isResolverNotAlreadyDefined('griffonPlugins')) {            
+        if(isResolverNotAlreadyDefined('griffonPlugins')) {
            repositoryData << ['type':'griffonPlugins', name:"griffonPlugins"]
-           if(buildSettings!=null) {               
+           if(buildSettings!=null) {
                def pluginResolver = new GriffonPluginsDirectoryResolver(buildSettings, ivySettings)
                addToChainResolver(pluginResolver)
            }
@@ -879,7 +892,7 @@ class IvyDomainSpecificLanguageEvaluator {
         if(resolver) {
             resolver.setSettings(ivySettings)
             addToChainResolver(resolver)
-        }        
+        }
     }
 
     void ebr() {
@@ -908,7 +921,7 @@ class IvyDomainSpecificLanguageEvaluator {
      * against non-Maven repositories 
      */
     void griffonRepo(String url, String name=null) {
-        if(isResolverNotAlreadyDefined(name ?: url)) {            
+        if(isResolverNotAlreadyDefined(name ?: url)) {
             repositoryData << ['type':'griffonRepo', url:url]
             def urlResolver = new GriffonRepoResolver(name ?: url, new URL(url) )
             urlResolver.addArtifactPattern("${url}/griffon-[artifact]/tags/RELEASE_*/griffon-[artifact]-[revision].[ext]")
@@ -949,7 +962,7 @@ class IvyDomainSpecificLanguageEvaluator {
 
             localMavenResolver.addArtifactPattern(
                     "${repoPath}/[organisation]/[module]/[revision]/[module]-[revision](-[classifier]).[ext]")
-            
+
             localMavenResolver.settings = ivySettings
             addToChainResolver(localMavenResolver)
         }
@@ -973,7 +986,7 @@ class IvyDomainSpecificLanguageEvaluator {
 
             if(dependencies) {
                 parseDependenciesInternal(dependencies, name, callable)
-            }            
+            }
         }
     }
 
@@ -988,7 +1001,7 @@ class IvyDomainSpecificLanguageEvaluator {
                     }
                     def depDefinition = dependency.toString()
 
-                    def m = depDefinition =~ /([a-zA-Z0-9\-\/\._+=]*?):([a-zA-Z0-9\-\/\._+=]+?):([a-zA-Z0-9\-\/\._+=]+)/
+                    def m = depDefinition =~ /([a-zA-Z0-9\-\/\._+=]*?):([a-zA-Z0-9\-\/\._+=]+?):([a-zA-Z0-9\-\/\._+=]+)(:[a-zA-Z0-9\-\\/\._+=]+)*?/
 
                     if (m.matches()) {
 
@@ -1000,7 +1013,7 @@ class IvyDomainSpecificLanguageEvaluator {
                             if(pluginMode) {
                                 group = group ?: 'org.codehaus.griffon.plugins'
                             }
-                            
+
                             def mrid = ModuleRevisionId.newInstance(group, name, version)
 
                             def dependencyDescriptor = new EnhancedDefaultDependencyDescriptor(mrid, false, getBooleanValue(args, 'transitive'), scope)
@@ -1010,7 +1023,7 @@ class IvyDomainSpecificLanguageEvaluator {
                                 dependencyDescriptor.addDependencyArtifact(scope, artifact)
                             } else {
                                 def artifact = new DefaultDependencyArtifactDescriptor(dependencyDescriptor, name, "jar", "jar", null, null )
-                                dependencyDescriptor.addDependencyArtifact(scope, artifact)                                
+                                dependencyDescriptor.addDependencyArtifact(scope, artifact)
                                 addDependency mrid
                             }
                             dependencyDescriptor.exported = getBooleanValue(args, 'export')
@@ -1030,7 +1043,7 @@ class IvyDomainSpecificLanguageEvaluator {
                 else if(dependency instanceof Map) {
                     def name = dependency.name
                     if(!dependency.group && pluginMode) dependency.group = "org.codehaus.griffon.plugins"
-                    
+
                     if(dependency.group && name && dependency.version) {
                        boolean isExcluded = currentPluginBeingConfigured ? isExcludedFromPlugin(currentPluginBeingConfigured, name) : isExcluded(name)
                        if(!isExcluded) {
@@ -1074,6 +1087,6 @@ class IvyDomainSpecificLanguageEvaluator {
             for(dep in dependencies) {
                 parseDep dep
                 if((dependencies[-1] == dep) && usedArgs) break
-            }          
+            }
     }
 }

@@ -55,6 +55,8 @@ getPropertyValue = { String propName, defaultValue ->
 // over those defined in BuildSettings, which in turn take precedence
 // over the defaults.
 isInteractive = true
+System.setProperty("griffon.interactive.mode", "true")
+
 buildProps = buildConfig.toProperties()
 enableProfile = getPropertyValue("griffon.script.profile", false).toBoolean()
 pluginsHome = griffonSettings.projectPluginsDir.path
@@ -80,7 +82,7 @@ if (!griffonAppName) {
     griffonAppName = griffonSettings.baseDir.name
 }
 
-if(griffonAppName.indexOf('/') >-1)
+if (griffonAppName.indexOf('/') > -1)
     appClassName = griffonAppName[griffonAppName.lastIndexOf('/')..-1]
 else
     appClassName = GriffonUtil.getClassNameRepresentation(griffonAppName)
@@ -119,7 +121,7 @@ if (!System.getProperty("griffon.env.set")) {
     println "Environment set to ${griffonEnv}"
     System.setProperty("griffon.env.set", "true")
 }
-if(getBinding().variables.containsKey("scriptScope")) {
+if (getBinding().variables.containsKey("scriptScope")) {
     buildScope = (scriptScope instanceof BuildScope) ? scriptScope : BuildScope.valueOf(scriptScope.toString().toUpperCase());
     buildScope.enable()
 }
@@ -130,11 +132,11 @@ else {
 
 // Prepare a configuration file parser based on the current environment.
 configSlurper = new ConfigSlurper(griffonEnv)
-configSlurper.setBinding(griffonHome:griffonHome,
-                         appName:griffonAppName,
-                         appVersion:griffonAppVersion,
-                         userHome:userHome,
-                         basedir:basedir)
+configSlurper.setBinding(griffonHome: griffonHome,
+        appName: griffonAppName,
+        appVersion: griffonAppVersion,
+        userHome: userHome,
+        basedir: basedir)
 
 applicationConfigFile = new File(basedir, 'griffon-app/conf/Application.groovy')
 builderConfigFile = new File(basedir, 'griffon-app/conf/Builder.groovy')
@@ -212,7 +214,7 @@ griffonUnpack = {Map args ->
     }
     finally {
         // Don't need the JAR file any more, so remove it.
-        ant.delete(file: "${dir}/${src}", failonerror:false)
+        ant.delete(file: "${dir}/${src}", failonerror: false)
     }
 }
 
@@ -250,7 +252,7 @@ exit = {
 }
 
 printFramed = { message, c = '*', padded = false ->
-    def pieces = message.split('\n').collect { it.replace('\t',' ') }
+    def pieces = message.split('\n').collect { it.replace('\t', ' ') }
     def length = pieces*.size().max() + 4
     def frame = c * length
     def result = pieces.collect {
@@ -262,8 +264,14 @@ printFramed = { message, c = '*', padded = false ->
     print result
 }
 
-confirmInput = { String message, String code = ""->
-    if(!isInteractive) {
+confirmInput = { String message, String code = "" ->
+    if (!isInteractive) {
+        if (griffonSettings.defaultAnswerNonInteractive.equalsIgnoreCase('y')) {
+            return true
+        } else if (griffonSettings.defaultAnswerNonInteractive.equalsIgnoreCase('n')) {
+            return false
+        }
+        // no default answer means we must bail out immediately
         println("Cannot ask for input when --non-interactive flag is passed. You need to check the value of the 'isInteractive' variable before asking for input")
         exit(1)
     }
@@ -282,9 +290,9 @@ askAndDoNoNag = { message, yesCallback = null, noCallback = null ->
     nonagYes = 'y'.equalsIgnoreCase(argsMap.nonag) ?: false
     nonagNo = 'n'.equalsIgnoreCase(argsMap.nonag) ?: false
 
-    if(nonagNo) return
+    if (nonagNo) return
     boolean proceed = nonagYes
-    if(!proceed) {
+    if (!proceed) {
         proceed = confirmInput(message)
     }
     proceed ? yesCallback?.call() : noCallback?.call()
@@ -295,7 +303,7 @@ askAndDoNoNag = { message, yesCallback = null, noCallback = null ->
  * file. If it doesn't exist, the file is created.
  */
 updateMetadata = { Map entries, file = null ->
-    if(!file) file = metadataFile
+    if (!file) file = metadataFile
     if (!file.exists()) {
         ant.propertyfile(
                 file: file,
@@ -311,7 +319,7 @@ updateMetadata = { Map entries, file = null ->
     meta.putAll(stringifiedEntries)
     meta.persist()
 
-    if(file.absolutePath == metadataFile.absolutePath) {
+    if (file.absolutePath == metadataFile.absolutePath) {
         metadata.reload()
     }
 }
@@ -319,7 +327,7 @@ updateMetadata = { Map entries, file = null ->
 doForAllPlatforms = { callback ->
     PlatformUtils.PLATFORMS.each { platformKey, platformValue ->
         def platformDir = new File(jardir, platformKey)
-        if(callback && platformDir.exists()) {
+        if (callback && platformDir.exists()) {
             callback(platformDir, platformKey)
         }
     }
@@ -353,7 +361,7 @@ cliSourceDirPath = cliSourceDir.absolutePath
 cliClassesDir = new File("${griffonSettings.projectWorkDir}/cli-classes")
 cliClassesDirPath = cliClassesDir.absolutePath
 hasCliSources = cliSourceDir.exists()
-if(hasCliSources) {
+if (hasCliSources) {
     ant.mkdir(dir: cliClassesDirPath)
 }
 
@@ -368,3 +376,26 @@ hasJavaOrGroovySources = { dir ->
 
 includeTargets << griffonScript("_GriffonArgParsing")
 includeTargets << griffonScript("_GriffonEvents")
+
+// --== ARTIAFACT STUFF ==--
+
+loadArtifactDescriptorClass = { String artifactFile ->
+    try {
+        // Rather than compiling the descriptor via Ant, we just load
+        // the Groovy file into a GroovyClassLoader. We add the classes
+        // directory to the class loader in case it didn't exist before
+        // the associated descriptor's sources were compiled.
+        def gcl = new GroovyClassLoader(classLoader)
+        addUrlIfNotPresent gcl, classesDir
+
+        String artifactClassName = artifactFile.endsWith('.groovy') ? artifactFile[0..-8] : artifactFile
+        return gcl.loadClass(artifactClassName).newInstance()
+    }
+    catch (Throwable t) {
+        event('StatusError', [t.message])
+        GriffonUtil.sanitize(t).printStackTrace(System.out)
+        ant.fail('Cannot instantiate artifact file')
+    }
+}
+
+archetypesBase = "${griffonWorkDir}/archetypes".toString().replaceAll('\\\\', '/')

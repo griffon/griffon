@@ -94,10 +94,11 @@ target(checkVersion: "Stops build if app expects different Griffon version") {
 
 
 target(updateAppProperties: "Updates default application.properties") {
-    def entries = [ "app.name": "$griffonAppName", "app.griffon.version": "$griffonVersion" ]
-    if (griffonAppVersion) {
-        entries["app.version"] = "$griffonAppVersion"
-    }
+    def entries = [
+            'app.name': griffonAppName,
+            'app.griffon.version': griffonVersion,
+            'app.version': griffonAppVersion ?: '0.1'
+    ]
     updateMetadata(entries)
 
     // Make sure if this is a new project that we update the var to include version
@@ -116,7 +117,4 @@ target(init: "main init target") {
 
     // Create a message bundle to get the user started.
     touch(file: "${basedir}/griffon-app/i18n/messages.properties")
-
-    // Set the default version number for the application
-    updateMetadata("app.version": griffonAppVersion ?: "0.1")
 }

@@ -14,7 +14,9 @@
  */
 package org.codehaus.griffon.cli
 
+import griffon.util.BuildSettingsHolder
 import org.codehaus.groovy.runtime.DefaultGroovyMethods
+import static griffon.util.ConfigUtils.getConfigValueAsString
 
 /**
  * Utility methods for use on the command line, including method to accept user input etc. 
@@ -32,7 +34,7 @@ public class CommandLineHelper {
         this.out = out
     }
 
-   /**
+    /**
      * Replacement for AntBuilder.input() to eliminate dependency of
      * GriffonScriptRunner on the Ant libraries. Prints a message and
      * returns whatever the user enters (once they press &ltreturn&gt).
@@ -65,10 +67,21 @@ public class CommandLineHelper {
             responsesString = DefaultGroovyMethods.join(validResponses, ",")
         }
 
+        if (System.getProperty("griffon.interactive.mode") == null || !Boolean.getBoolean("griffon.interactive.mode")) {
+            if (getDefaultAnswerNonInteractive().equalsIgnoreCase('y')) {
+                return 'y'
+            } else if (getDefaultAnswerNonInteractive().equalsIgnoreCase('n')) {
+                return 'n'
+            } else {
+                println("Cannot ask for input when --non-interactive flag is passed. You need to check the value of the 'isInteractive' variable before asking for input")
+                System.exit(1)
+            }
+        }
+
         BufferedReader reader = new BufferedReader(new InputStreamReader(System.in))
 
         for (int it = 0; it < 3; it++) {
-            out.print(message)
+            out.print(message + ' ')
             if (responsesString != null) {
                 out.print(" [")
                 out.print(responsesString)
@@ -80,7 +93,7 @@ public class CommandLineHelper {
 
                 if (validResponses == null) return line
 
-                for (String validResponse : validResponses) {
+                for (String validResponse: validResponses) {
                     if (line != null && line.equalsIgnoreCase(validResponse)) {
                         return line
                     }
@@ -98,13 +111,23 @@ public class CommandLineHelper {
         // No valid response given.
         out.println("No valid response entered - giving up asking.")
         return null
-    }    
+    }
 
     boolean confirmInput(String msg) {
-        userInput(msg, ['y','n'] as String[]) == 'y'
+        userInput(msg, ['y', 'n'] as String[]) == 'y'
     }
 
     String askAndDo(String message, Closure yesCallback = null, Closure noCallback = null) {
         confirmInput(message) ? yesCallback?.call() : noCallback?.call()
+    }
+
+    public String getDefaultAnswerNonInteractive() {
+        String configKey = 'griffon.noninteractive.default.answer'
+        if (System.getProperty(configKey) != null) return System.getProperty(configKey)
+        return getConfigValueAsString(getConfig(), configKey, '')
+    }
+
+    private ConfigObject getConfig() {
+        BuildSettingsHolder.settings?.config ?: new ConfigObject()
     }
 }

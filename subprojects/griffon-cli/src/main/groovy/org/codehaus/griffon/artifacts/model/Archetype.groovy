@@ -1,5 +1,5 @@
 /*
- * Copyright 2010-2011 the original author or authors.
+ * Copyright 2011 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,11 +14,12 @@
  * limitations under the License.
  */
 
+package org.codehaus.griffon.artifacts.model
+
 /**
  * @author Andres Almiray
+ * @since 0.9.5
  */
-
-includeTargets << griffonScript("_GriffonCreateProject")
-
-projectType = 'archetype'
-setDefaultTarget("createArchetype")
+class Archetype extends Artifact {
+    static final String TYPE = 'archetype'
+}

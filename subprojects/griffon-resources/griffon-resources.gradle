@@ -38,6 +38,13 @@ task jarAppFiles(type: Jar) {
     }
 }
 
+task jarArchetypeFiles(type: Jar) {
+    appFileJar = true
+    archiveName = 'griffon-archetype-files.jar'
+    destinationDir = "$buildDir/assemble/jars" as File
+    from 'src/archetype'
+}
+
 task jarPluginFiles(type: Jar) {
     appFileJar = true
     archiveName = 'griffon-plugin-files.jar'

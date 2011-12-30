@@ -265,8 +265,15 @@ public abstract class AbstractBuildSettings {
     }
 
     public boolean isDebugEnabled() {
-        if (System.getProperty("griffon.cli.verbose") != null) return Boolean.getBoolean("griffon.cli.verbose");
-        return DefaultTypeTransformation.castToBoolean(getConfig().flatten().get("griffon.cli.verbose"));
+        String configKey = "griffon.cli.verbose";
+        if (System.getProperty(configKey) != null) return Boolean.getBoolean(configKey);
+        return DefaultTypeTransformation.castToBoolean(getConfig().flatten().get(configKey));
+    }
+
+    public String getDefaultAnswerNonInteractive() {
+        String configKey = "griffon.noninteractive.default.answer";
+        if (System.getProperty(configKey) != null) return System.getProperty(configKey);
+        return ConfigUtils.getConfigValueAsString(getConfig(), configKey, "");
     }
 
     public void debug(String msg) {

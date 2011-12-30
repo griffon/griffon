@@ -1,5 +1,5 @@
-/*
- * Copyright 2010-2011 the original author or authors.
+/* 
+ * Copyright 2004-2011 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,11 +14,27 @@
  * limitations under the License.
  */
 
+package org.codehaus.griffon.artifacts;
+
 /**
- * @author Andres Almiray
+ * Throw when a specified version number is invalid
+ *
+ * @author Graeme Rocher
+ * @since 1.2
  */
+public class InvalidVersionException extends RuntimeException {
+    public InvalidVersionException() {
+    }
 
-includeTargets << griffonScript("_GriffonCreateProject")
+    public InvalidVersionException(String s) {
+        super(s);
+    }
 
-projectType = 'archetype'
-setDefaultTarget("createArchetype")
+    public InvalidVersionException(String s, Throwable throwable) {
+        super(s, throwable);
+    }
+
+    public InvalidVersionException(Throwable throwable) {
+        super(throwable);
+    }
+}

@@ -678,12 +678,11 @@ class BuildSettings extends AbstractBuildSettings {
             } else {
                 postLoadConfig()
             }
-        }
-        catch (e) {
+        } catch (e) {
             StackTraceUtils.deepSanitize e
             throw e
         }
-
+        config
     }
 
     ConfigObject loadConfig(ConfigObject config) {
@@ -878,8 +877,17 @@ class BuildSettings extends AbstractBuildSettings {
         baseDir.listFiles().find { it.name.endsWith("GriffonPlugin.groovy") }
     }
 
+    def isArchetypeProject() {
+        baseDir.listFiles().find { it.name.endsWith("GriffonArchetype.groovy") }
+    }
+
     def isAddonPlugin() {
         baseDir.listFiles().find { it.name.endsWith("GriffonAddon.groovy") || it.name.endsWith("GriffonAddon.java") }
+    }
+
+    def isGriffonProject() {
+        baseDir.listFiles().find { it.name == 'application.properties' } &&
+        baseDir.listFiles().find { it.name == 'griffon-app' && it.directory }
     }
 
     private void establishProjectStructure() {

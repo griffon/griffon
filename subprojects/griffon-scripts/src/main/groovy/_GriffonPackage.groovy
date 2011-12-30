@@ -15,15 +15,15 @@
  */
 
 import griffon.util.Environment
+import griffon.util.Metadata
 import griffon.util.PlatformUtils
 import griffon.util.RunMode
-import griffon.util.Metadata
+import java.text.SimpleDateFormat
 import java.util.zip.ZipEntry
 import java.util.zip.ZipFile
-import java.text.SimpleDateFormat
-import static griffon.util.GriffonNameUtils.capitalize
 import static griffon.util.GriffonApplicationUtils.is64Bit
 import static griffon.util.GriffonApplicationUtils.osArch
+import static griffon.util.GriffonNameUtils.capitalize
 
 /**
  * Gant script that packages a Griffon application (note: does not create WAR)

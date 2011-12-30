@@ -337,7 +337,7 @@ For further info visit http://griffon.codehaus.org/Plugins
 }
 
 target(pluginInfo:"Displays information on a Griffon plugin") {
-    depends(parseArguments)
+    depends(parseArguments, configureProxy)
 
     if( argsMap.params ) {
         displayHeader()
