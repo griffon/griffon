@@ -61,7 +61,7 @@ createArtifactRelease = { String type, Map artifactInfo ->
 
     File releaseNotes = new File("${basedir}/release_notes.md")
     if (!releaseNotes.exists() && !argsMap['no-release-notes']) {
-        println "No release notes were found for ${artifactInfo.name}-${artifactInfo.version}. Did you forget to create a relese_notes.md file?"
+        println "No release notes were found for ${artifactInfo.name}-${artifactInfo.version}. Did you forget to create a release_notes.md file?"
         if (!confirmInput("Would you like to continue with the release without adding release notes?")) {
             exit 1
         }

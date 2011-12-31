@@ -54,9 +54,11 @@ zipArchetype = { Map artifactInfo ->
     builder.call(artifactInfo)
 
     new File(artifactPackageDirPath, 'archetype.json').text = builder.toString()
-    // ant.copy(file: "${basedir}/application.groovy", todir: artifactPackageDirPath)
     ant.copy(todir: artifactPackageDirPath) {
         fileset(dir: basedir, includes: 'LICENSE*, application.groovy')
+    }
+    ant.copy(todir: "${artifactPackageDirPath}/griffon-app") {
+        fileset(dir: "${basedir}/griffon-app", excludes: '**/conf/BuildConfig.groovy')
     }
     File templatesDir = new File(basedir, 'templates')
     if (templatesDir.exists()) {
