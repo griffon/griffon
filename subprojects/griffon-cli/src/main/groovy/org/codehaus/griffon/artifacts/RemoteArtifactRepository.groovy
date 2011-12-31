@@ -235,6 +235,7 @@ class RemoteArtifactRepository extends AbstractArtifactRepository {
 
     private static Map<String, String> getDefaultHeaders() {
         [
+                'User-Agent': 'HTTPBuilder 0.5.2',
                 'X-Griffon-Version': GriffonUtil.getGriffonVersion(),
                 'X-Java-Version': System.getProperty('java.version'),
                 'X-Os-Name': System.getProperty('os.name'),

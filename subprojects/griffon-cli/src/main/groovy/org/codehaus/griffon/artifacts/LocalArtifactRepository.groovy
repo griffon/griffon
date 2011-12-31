@@ -22,6 +22,7 @@ import groovy.json.JsonBuilder
 import groovy.json.JsonSlurper
 import java.util.zip.ZipEntry
 import java.util.zip.ZipFile
+import org.apache.commons.io.FileUtils
 import org.codehaus.griffon.artifacts.model.Artifact
 import org.codehaus.griffon.artifacts.model.Release
 import org.slf4j.Logger
@@ -151,6 +152,10 @@ class LocalArtifactRepository extends AbstractArtifactRepository {
             builder = new JsonBuilder()
             builder.call(artifactAsMap)
             os << builder.toString()
+
+            File packageFile = new File("${releasePath}/package/${file.name}")
+            packageFile.parentFile.mkdirs()
+            FileUtils.copyFile(file, packageFile)
         } catch (Exception e) {
             GriffonExceptionHandler.sanitize(e)
             LOG.trace("Could not upload artifact ${file}", e)
