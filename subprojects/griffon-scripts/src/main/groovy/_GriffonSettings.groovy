@@ -399,3 +399,5 @@ loadArtifactDescriptorClass = { String artifactFile ->
 }
 
 archetypesBase = "${griffonWorkDir}/archetypes".toString().replaceAll('\\\\', '/')
+archetypeName = ''
+archetypeVersion = ''

@@ -22,6 +22,11 @@
 
 import griffon.util.GriffonNameUtils
 import griffon.util.GriffonUtil
+import griffon.util.Metadata
+import java.util.regex.Matcher
+import java.util.regex.Pattern
+import org.codehaus.griffon.artifacts.ArtifactUtils
+import org.codehaus.griffon.artifacts.model.Archetype
 import org.springframework.core.io.ClassPathResource
 import org.springframework.core.io.FileSystemResource
 
@@ -31,6 +36,7 @@ includeTargets << griffonScript("_GriffonArgParsing")
 defaultPackageName = ''
 replaceNonag = false
 allowDuplicate = false
+artifactNameVersionPattern = Pattern.compile("^([\\w][\\w\\.-]*)-([0-9][\\w\\.-]*)\$")
 
 createArtifact = { Map args = [:] ->
     resolveArchetype()
@@ -144,10 +150,10 @@ resolveTemplate = { template, fileSuffix ->
         }
         if (!templateFile.exists()) {
             // now check for template provided by an archetype
-            templateFile = new FileSystemResource("${griffonWorkDir}/archetypes/${archetype}/templates/artifacts/${template}${fileSuffix}")
+            templateFile = new FileSystemResource("${griffonWorkDir}/archetypes/${archetypeName}-${archetypeVersion}/templates/artifacts/${template}${fileSuffix}")
             if (!templateFile.exists()) {
-                // now check for template provided by a provided archetype
-                templateFile = new ClassPathResource("archetypes/${archetype}/templates/artifacts/${template}${fileSuffix}")
+                // now check for template provided by a bundled archetype
+                templateFile = new ClassPathResource("archetypes/${archetypeName}/templates/artifacts/${template}${fileSuffix}")
                 if (!templateFile.exists()) {
                     // template not found in archetypes, use default template
                     templateFile = new ClassPathResource("archetypes/default/templates/artifacts/${template}${fileSuffix}")
@@ -229,10 +235,37 @@ extractArtifactName = { name ->
 }
 
 target(resolveArchetype: '') {
-    archetype = buildConfig.app.archetype
-    if (!archetype && archetype instanceof ConfigObject) archetype = null
-    archetype = archetype ?: argsMap.archetype
-    archetype = archetype ?: 'default'
+    if (!archetypeName && !archetypeVersion) {
+        for (String key: Metadata.current.stringPropertyNames()) {
+            if (!key.startsWith('archetype.')) continue
+            archetypeName = key[10..-1].toString()
+            archetypeVersion = Metadata.current[key]
+        }
+    }
+
+    if (!archetypeName && !archetypeVersion) {
+        String archetype = argsMap.archetype ?: ''
+        if (archetype) {
+            Matcher matcher = artifactNameVersionPattern.matcher(archetype)
+            if (matcher.find()) {
+                archetypeName = matcher.group(1)
+                archetypeVersion = matcher.group(2)
+            } else {
+                File file = ArtifactUtils.findArtifactDirForName(Archetype.TYPE, archetype)
+                if (file) {
+                    matcher = artifactNameVersionPattern.matcher(file.name)
+                    matcher.find()
+                    archetypeName = matcher.group(1)
+                    archetypeVersion = matcher.group(2)
+                }
+            }
+        }
+    }
+
+    if (!archetypeName && !archetypeVersion) {
+        archetypeName = 'default'
+        archetypeVersion = GriffonUtil.getGriffonVersion()
+    }
 }
 
 target(resolveFileType: '') {
@@ -246,9 +279,10 @@ loadArchetypeFor = { type = 'application' ->
     resolveArchetype()
 
     def gcl = new GroovyClassLoader(classLoader)
-    def archetypeFile = new FileSystemResource("${griffonWorkDir}/archetypes/${archetype}/${type}.groovy")
+    def archetypeFile = new FileSystemResource("${griffonWorkDir}/archetypes/${archetypeName}-${archetypeVersion}/${type}.groovy")
     if (!archetypeFile.exists()) {
-        archetypeFile = new ClassPathResource("archetypes/${archetype}/${type}.groovy")
+        // bundled archetypes have no version
+        archetypeFile = new ClassPathResource("archetypes/${archetypeName}/${type}.groovy")
     }
 
     if (archetypeFile.exists()) {
@@ -261,14 +295,16 @@ loadArchetypeFor = { type = 'application' ->
                 throw new IllegalArgumentException("Don't know how to deal with $archetypeFile")
             }
         } catch (Exception e) {
-            logError("An error ocurred while parsing archetype ${archetype}. Using 'default' archetype instead.", e)
-            archetype = 'default'
-            archetypeFile = new ClassPathResource("archetypes/default/${type}.groovy")
+            logError("An error ocurred while parsing archetype ${archetypeName}-${archetypeVersion}. Using 'default' archetype instead.", e)
+            archetypeName = 'default'
+            archetypeVersion = GriffonUtil.getGriffonVersion()
+            archetypeFile = new ClassPathResource("archetypes/${archetypeName}/${type}.groovy")
             includeTargets << gcl.parseClass(archetypeFile.getURL().text)
         }
     } else {
-        archetype = 'default'
-        archetypeFile = new ClassPathResource("archetypes/default/${type}.groovy")
+        archetypeName = 'default'
+        archetypeVersion = GriffonUtil.getGriffonVersion()
+        archetypeFile = new ClassPathResource("archetypes/${archetypeName}/${type}.groovy")
         includeTargets << gcl.parseClass(archetypeFile.getURL().text)
     }
 }

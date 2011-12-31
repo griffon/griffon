@@ -42,10 +42,9 @@ target(createApp: "Creates a Griffon application for the given name") {
     createApplicationProject()
 
     // Set the default version number for the application
-    updateMetadata("app.version": griffonAppVersion ?: "0.1")
+    updateMetadata("app.version": griffonAppVersion ?: "0.1", "archetype.${archetypeName}": archetypeVersion)
     def cfg = new File("${basedir}/griffon-app/conf/BuildConfig.groovy")
     cfg.append("""
-app.archetype = '$archetype'
 app.fileType = '$fileType'
 app.defaultPackageName = '$defaultPackageName'
 """)
@@ -144,6 +143,11 @@ target(createArchetype: "The implementation target") {
         println "Error: Specified archetype name [$griffonAppName] is invalid. Archetype names can only contain word characters separated by hyphens."
         exit 1
     }
+    if(archetypeName == 'default') {
+        println "Error: Specified archetype name [$archetypeName] is invalid. You cannot override the default archetype provided by Griffon."
+        exit 1
+    }
+
     ant.move(
             file: "${basedir}/GriffonArchetype.groovy",
             tofile: "${basedir}/${archetypeName}GriffonArchetype.groovy",

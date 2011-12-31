@@ -15,7 +15,6 @@
 */
 
 import griffon.util.GriffonExceptionHandler
-import griffon.util.GriffonNameUtils
 import griffon.util.GriffonUtil
 import griffon.util.Metadata
 import groovy.json.JsonSlurper
@@ -23,6 +22,7 @@ import org.codehaus.griffon.artifacts.model.Archetype
 import org.codehaus.griffon.artifacts.model.Artifact
 import org.codehaus.griffon.artifacts.model.Plugin
 import org.codehaus.griffon.artifacts.model.Release
+import static griffon.util.GriffonNameUtils.capitalize
 import static griffon.util.GriffonNameUtils.isBlank
 import org.codehaus.griffon.artifacts.*
 import static org.codehaus.griffon.artifacts.ArtifactUtils.artifactBase
@@ -64,26 +64,25 @@ listArtifacts = { String type, ArtifactRepository repository ->
 
     List<Artifact> artifacts = repository.listArtifacts(type)
     if (artifacts) {
-        artifacts.each { Artifact artifact -> println formatArtifactHeader(artifact) }
+        artifacts.each { Artifact artifact -> println formatArtifactForPrint(artifact) }
     } else {
         println "No ${type}s found in repository: ${repository.name}."
     }
 
-    // TODO: list installed artifacts of matching $type
-
+    listInstalledArtifacts(type)
     listArtifactsFooter(type)
 }
 
 listArtifactsHeader = { repository, type ->
     println """
-${GriffonNameUtils.capitalize(type)}s available in the ${repository.name} repository are listed below:
+${capitalize(type)}s available in the ${repository.name} repository are listed below:
 -----------------------------------------------------------------------
-${'Name'.padRight(30, ' ')}${'Releases'.padRight(8, ' ')} Title
+${'Name'.padRight(25, ' ')}${'Releases'.padRight(16, ' ')} Title
 """
 }
 
-formatArtifactHeader = { Artifact artifact ->
-    "${artifact.name.padRight(30, ' ')}${artifact.releases.size().toString().padRight(8, ' ')} ${artifact.title}"
+formatArtifactForPrint = { Artifact artifact ->
+    "${artifact.name.padRight(25, ' ')}${artifact.releases.size().toString().padRight(16, ' ')} ${artifact.title}"
 }
 
 listArtifactsFooter = { type ->
@@ -92,8 +91,34 @@ To find more info about ${type} type 'griffon ${type}-info [NAME]'
 
 To install type 'griffon install-${type} [NAME] [VERSION]'
 
-For further info visit http://griffon.codehaus.org/${GriffonNameUtils.capitalize(type)}s
+For further info visit http://griffon.codehaus.org/${capitalize(type)}s
 """
+}
+
+listInstalledArtifacts = { String type ->
+    Map installedArtifacts = getInstalledArtifacts(type)
+    if (type == Archetype.TYPE) {
+        installedArtifacts['default'] = [
+                version: GriffonUtil.getGriffonVersion(),
+                title: 'Used when no archetype is specified'
+        ]
+    }
+
+    if (installedArtifacts) {
+        println """
+${capitalize(type)}s you currently have installed are listed below:
+-----------------------------------------------------------------------
+${'Name'.padRight(25, ' ')}${'Version'.padRight(16, ' ')} Title
+"""
+
+        List list = installedArtifacts.collect([]) { entry ->
+            "${entry.key.padRight(25, ' ')}${entry.value.version.toString().padRight(16, ' ')} ${entry.value.title}"
+        }
+        list.sort()
+        list.each { println it }
+    } else {
+        println "You do not have any ${type}s installed."
+    }
 }
 
 displayArtifact = { String type, String name, String version, ArtifactRepository repository ->
@@ -113,7 +138,7 @@ Information about ${type} listed at ${repository.name}
 displayArtifactInfo = { String type, String name, String version, ArtifactRepository repository ->
     Artifact artifact = repository.findArtifact(type, name)
     if (artifact == null) {
-        event('StatusError', ["${GriffonNameUtils.capitalize(type)} with name '${name}' was not found in repository ${repository.name}"])
+        event('StatusError', ["${capitalize(type)} with name '${name}' was not found in repository ${repository.name}"])
         exit 1
     }
 
@@ -188,7 +213,7 @@ To install latest version of ${type} type 'griffon install-${type} [NAME]'
 
 To install specific version of ${type} type 'griffon install-${type} [NAME] [VERSION]'
 
-For further info visit http://griffon.codehaus.org/${GriffonNameUtils.capitalize(type)}s
+For further info visit http://griffon.codehaus.org/${capitalize(type)}s
 """
 }
 
@@ -290,7 +315,7 @@ doInstallArtifact = { ArtifactRepository artifactRepository, String type, name, 
             Artifact artifact = artifactRepository.findArtifact(type, name)
             if (!artifact) {
                 if (!failOnError) return false
-                event('StatusError', ["${GriffonNameUtils.capitalize(type)} ${name} was not found in repository ${artifactRepository.name}."])
+                event('StatusError', ["${capitalize(type)} ${name} was not found in repository ${artifactRepository.name}."])
                 exit 1
             }
             for (release in artifact.releases) {
@@ -400,8 +425,8 @@ resolveCommitMessage = {
 // --== LIST ARTIFACTS ==--
 
 doListArtifactUpdates = { String type ->
-    Map<String, String> availableArtifacts = getAvailableArtifacts(type)
-    Map<String, String> installedArtifacts = getInstalledArtifacts(type)
+    Map availableArtifacts = getAvailableArtifacts(type)
+    Map installedArtifacts = getInstalledArtifacts(type)
     Map<String, String> outdatedArtifacts = [:]
 
     if (!availableArtifacts) {
@@ -410,18 +435,19 @@ doListArtifactUpdates = { String type ->
 
     boolean headerDisplayed = false
     if (installedArtifacts) {
-        installedArtifacts.each {name, version ->
-            String availableVersion = availableArtifacts."$name"
+        installedArtifacts.each {name, data ->
+            String version = data.version
+            String availableVersion = availableArtifacts[name].version
             if (availableVersion != version && availableVersion != null) {
                 if (!headerDisplayed) {
                     println """
-${GriffonNameUtils.capitalize(type)}s with available updates are listed below:
+${capitalize(type)}s with available updates are listed below:
 -----------------------------------------------------------------------
-<${GriffonNameUtils.capitalize(type)}>                   <Current>         <Available>"""
+<${capitalize(type)}>                   <Current>         <Available>"""
                     headerDisplayed = true
                 }
                 println "${name.padRight(27 + (type == Archetype.TYPE ? 3 : 0), " ")}${version.padRight(16, " ")}  ${availableVersion}"
-                outdatedArtifacts[name.toString()] = availableVersion.toString()
+                outdatedArtifacts[name] = availableVersion
             }
         }
         if (!headerDisplayed) {
@@ -453,13 +479,16 @@ ${GriffonNameUtils.capitalize(type)}s with available updates are listed below:
 }
 
 getAvailableArtifacts = { String type ->
-    Map<String, String> artifacts = [:]
+    Map artifacts = [:]
 
     def finder = { repository ->
         repository.listArtifacts(type).each { Artifact artifact ->
             for (release in artifact.releases) {
                 if (isValidVersion(release.griffonVersion, GriffonUtil.getGriffonVersion())) {
-                    artifacts[artifact.name] = release.version
+                    artifacts[artifact.name] = [
+                            version: release.version,
+                            title: artifact.title
+                    ]
                     break
                 }
             }
@@ -481,11 +510,14 @@ getAvailableArtifacts = { String type ->
 }
 
 getInstalledArtifacts = { String type ->
-    Map<String, String> artifacts = [:]
+    Map artifacts = [:]
 
     for (resource in ArtifactUtils.resolveResources("file://${artifactBase(type)}/*/${type}.json")) {
         Release release = Release.make(type, new JsonSlurper().parseText(resource.file.text))
-        artifacts[release.artifact.name] = release.version
+        artifacts[release.artifact.name] = [
+                version: release.version,
+                title: release.artifact.title
+        ]
     }
 
     artifacts
