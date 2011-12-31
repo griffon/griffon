@@ -280,8 +280,12 @@ loadArchetypeFor = { type = 'application' ->
 
     def gcl = new GroovyClassLoader(classLoader)
     def archetypeFile = new FileSystemResource("${griffonWorkDir}/archetypes/${archetypeName}-${archetypeVersion}/${type}.groovy")
+
+    archetypeDirPath = "${griffonWorkDir}/archetypes/${archetypeName}-${archetypeVersion}"
+
     if (!archetypeFile.exists()) {
         // bundled archetypes have no version
+        archetypeDirPath = null
         archetypeFile = new ClassPathResource("archetypes/${archetypeName}/${type}.groovy")
     }
 
