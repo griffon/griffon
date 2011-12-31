@@ -18,15 +18,14 @@ import griffon.util.GriffonExceptionHandler
 import griffon.util.GriffonNameUtils
 import griffon.util.GriffonUtil
 import griffon.util.Metadata
-import org.codehaus.griffon.artifacts.ArtifactInstallEngine
-import org.codehaus.griffon.artifacts.ArtifactRepository
-import org.codehaus.griffon.artifacts.ArtifactRepositoryRegistry
-import org.codehaus.griffon.artifacts.RemoteArtifactRepository
+import groovy.json.JsonSlurper
 import org.codehaus.griffon.artifacts.model.Archetype
 import org.codehaus.griffon.artifacts.model.Artifact
 import org.codehaus.griffon.artifacts.model.Plugin
 import org.codehaus.griffon.artifacts.model.Release
 import static griffon.util.GriffonNameUtils.isBlank
+import org.codehaus.griffon.artifacts.*
+import static org.codehaus.griffon.artifacts.ArtifactUtils.artifactBase
 import static org.codehaus.griffon.artifacts.ArtifactUtils.isValidVersion
 
 /**
@@ -49,6 +48,14 @@ selectArtifactRepository = {
     if (artifactRepository == null) {
         event('StatusError', ["Artifact repository ${repositoryName} is not configured."])
         exit 1
+    }
+}
+
+resolveArtifactRepository = {
+    if (argsMap.repository) {
+        artifactRepository = ArtifactRepositoryRegistry.instance.findRepository(argsMap.repository)
+    } else {
+        artifactRepository = null
     }
 }
 
@@ -189,12 +196,10 @@ For further info visit http://griffon.codehaus.org/${GriffonNameUtils.capitalize
 
 installArtifact = { String type ->
     selectArtifactRepository()
-
     try {
         def artifactArgs = argsMap['params']
 
         if (artifactArgs) {
-
             File artifactFile = new File(artifactArgs[0])
             def urlPattern = ~"^[a-zA-Z][a-zA-Z0-9\\-\\.\\+]*://"
             if (artifactArgs[0] =~ urlPattern) {
@@ -205,7 +210,8 @@ installArtifact = { String type ->
             } else {
                 // The first argument is the artifact name, the second
                 // (if provided) is the artifact version.
-                doInstallArtifact(type, artifactArgs[0], artifactArgs[1])
+                failOnError = true
+                doInstallArtifact(artifactRepository, type, artifactArgs[0], artifactArgs[1])
             }
         } else {
             event('StatusError', [installArtifactErrorMessage(Archetype.TYPE)])
@@ -258,7 +264,7 @@ uninstallArtifactErrorMessage = { type ->
 
 private withArtifactInstall(String type, Closure callable) {
     try {
-        callable.call()
+        return callable.call()
     } catch (e) {
         logError("Error installing ${type}: ${e.message}", GriffonExceptionHandler.sanitize(e))
         exit(1)
@@ -266,23 +272,24 @@ private withArtifactInstall(String type, Closure callable) {
 }
 
 doInstallArtifactFromURL = { String type, URL url, Metadata md = metadata ->
-    withArtifactInstall(type) {
+    return withArtifactInstall(type) {
         File file = RemoteArtifactRepository.downloadFromURL(url)
         doInstallFromFile(type, file, md)
     }
 }
 
 doInstallArtifactFromZip = { String type, File file, Metadata md = metadata ->
-    withArtifactInstall(type) {
+    return withArtifactInstall(type) {
         doInstallFromFile(type, file, md)
     }
 }
 
-doInstallArtifact = { String type, name, version = null, Metadata md = metadata ->
-    withArtifactInstall(type) {
+doInstallArtifact = { ArtifactRepository artifactRepository, String type, name, version = null, Metadata md = metadata ->
+    return withArtifactInstall(type) {
         if (!version) {
             Artifact artifact = artifactRepository.findArtifact(type, name)
             if (!artifact) {
+                if (!failOnError) return false
                 event('StatusError', ["${GriffonNameUtils.capitalize(type)} ${name} was not found in repository ${artifactRepository.name}."])
                 exit 1
             }
@@ -293,12 +300,31 @@ doInstallArtifact = { String type, name, version = null, Metadata md = metadata 
                 }
             }
             if (!version) {
+                if (!failOnError) return false
                 event('StatusError', ["Repository ${artifactRepository.name} does not contain a suitable release for ${type} ${name}."])
                 exit 1
             }
         }
         File file = artifactRepository.downloadFile(type, name, version, null)
         doInstallFromFile(type, file, md)
+        return true
+    }
+}
+
+installArtifactForName = { String type, String name, String version, Metadata md ->
+    failOnError = false
+    installed = false
+
+    if (artifactRepository) {
+        doInstallArtifact(artifactRepository, type, name, version, md)
+    } else {
+        ArtifactRepositoryRegistry.instance.withRepositories { aname, artifactRepository ->
+            if (installed) return
+            if (doInstallArtifact(artifactRepository, type, name, version, md)) {
+                installed = true
+                return
+            }
+        }
     }
 }
 
@@ -369,4 +395,98 @@ resolveCommitMessage = {
     }
 
     commitMessage
+}
+
+// --== LIST ARTIFACTS ==--
+
+doListArtifactUpdates = { String type ->
+    Map<String, String> availableArtifacts = getAvailableArtifacts(type)
+    Map<String, String> installedArtifacts = getInstalledArtifacts(type)
+    Map<String, String> outdatedArtifacts = [:]
+
+    if (!availableArtifacts) {
+        println "\nNo ${type}s available${artifactRepository ? ' in ' + artifactRepository.name : ''}."
+    }
+
+    boolean headerDisplayed = false
+    if (installedArtifacts) {
+        installedArtifacts.each {name, version ->
+            String availableVersion = availableArtifacts."$name"
+            if (availableVersion != version && availableVersion != null) {
+                if (!headerDisplayed) {
+                    println """
+${GriffonNameUtils.capitalize(type)}s with available updates are listed below:
+-----------------------------------------------------------------------
+<${GriffonNameUtils.capitalize(type)}>                   <Current>         <Available>"""
+                    headerDisplayed = true
+                }
+                println "${name.padRight(27 + (type == Archetype.TYPE ? 3 : 0), " ")}${version.padRight(16, " ")}  ${availableVersion}"
+                outdatedArtifacts[name.toString()] = availableVersion.toString()
+            }
+        }
+        if (!headerDisplayed) {
+            println "\nAll ${type}s are up to date."
+        }
+        if (argsMap.install && outdatedArtifacts) {
+            println ''
+            if (confirmInput("Proceed with ${type} upgrades?", "artifact.upgrade")) {
+                wasInteractive = isInteractive
+                isInteractive = false
+                try {
+                    System.setProperty('griffon.artifact.force.updates', 'true')
+                    outdatedArtifacts.each { name, version ->
+                        // skip if name-version has been installed already because
+                        // it is a dependency of another artifact that was upgraded in  a previous
+                        // iteration
+                        if (Metadata.current["${type}${type == Plugin.TYPE ? 's' : ''}" + name] == version) return
+                        installArtifactForName(type, name, version, Metadata.current)
+                    }
+                } finally {
+                    isInteractive = wasInteractive
+                    System.setProperty('griffon.artifact.force.updates', 'false')
+                }
+            }
+        }
+    } else {
+        println "\nYou do not have any ${type}s installed."
+    }
+}
+
+getAvailableArtifacts = { String type ->
+    Map<String, String> artifacts = [:]
+
+    def finder = { repository ->
+        repository.listArtifacts(type).each { Artifact artifact ->
+            for (release in artifact.releases) {
+                if (isValidVersion(release.griffonVersion, GriffonUtil.getGriffonVersion())) {
+                    artifacts[artifact.name] = release.version
+                    break
+                }
+            }
+        }
+    }
+
+    resolveArtifactRepository()
+
+    if (artifactRepository) {
+        finder(artifactRepository)
+    }
+    else {
+        ArtifactRepositoryRegistry.instance.withRepositories {String name, ArtifactRepository artifactRepository ->
+            finder(artifactRepository)
+        }
+    }
+
+    artifacts
+}
+
+getInstalledArtifacts = { String type ->
+    Map<String, String> artifacts = [:]
+
+    for (resource in ArtifactUtils.resolveResources("file://${artifactBase(type)}/*/${type}.json")) {
+        Release release = Release.make(type, new JsonSlurper().parseText(resource.file.text))
+        artifacts[release.artifact.name] = release.version
+    }
+
+    artifacts
 }

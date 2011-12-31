@@ -68,7 +68,7 @@ class ArtifactUtils {
         }
     }
 
-    private static String artifactBase(String type) {
+    static String artifactBase(String type) {
         switch (type) {
             case Plugin.TYPE:
                 return pluginsBase()
@@ -77,11 +77,11 @@ class ArtifactUtils {
         }
     }
 
-    private static String pluginsBase() {
+    static String pluginsBase() {
         BuildSettingsHolder.settings.projectPluginsDir.absolutePath
     }
 
-    private static String archetypesBase() {
+    static String archetypesBase() {
         new File("${BuildSettingsHolder.settings.griffonWorkDir}/archetypes/").absolutePath
     }
 
