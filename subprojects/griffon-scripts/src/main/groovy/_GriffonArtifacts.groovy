@@ -26,6 +26,7 @@ import org.codehaus.griffon.artifacts.model.Archetype
 import org.codehaus.griffon.artifacts.model.Artifact
 import org.codehaus.griffon.artifacts.model.Plugin
 import org.codehaus.griffon.artifacts.model.Release
+import static griffon.util.GriffonNameUtils.isBlank
 import static org.codehaus.griffon.artifacts.ArtifactUtils.isValidVersion
 
 /**
@@ -318,4 +319,54 @@ private ArtifactInstallEngine createArtifactInstallEngine(Metadata md) {
         exit(1)
     }
     artifactInstallEngine
+}
+
+// --== RELEASE ==--
+
+setupCredentials = {
+    username = ''
+    password = ''
+    if (artifactRepository.type != ArtifactRepository.REMOTE) return
+
+    username = resolveCredential('username')
+    password = resolveCredential('password')
+}
+
+resolveCredential = { String key ->
+    String value = artifactRepository[key]
+
+    if (isBlank(value)) {
+        value = argsMap[key]
+    }
+
+    if (isBlank(value)) {
+        String prop = "credential.${key}".toString()
+        ant.input(message: "Please enter your ${key}:", addproperty: prop) {
+            if (key == 'password') handler(type: 'secure')
+        }
+        value = ant.antProject.getProperty(prop)
+    }
+
+    if (isBlank(value)) {
+        event('StatusError', ["You must provide a value for your ${key} when releasing artifacts to ${repository.name}."])
+        exit(1)
+    }
+
+    value
+}
+
+resolveCommitMessage = {
+    commitMessage = argsMap.message
+
+    if (isBlank(commitMessage)) {
+        ant.input(message: 'Enter a commit message: ', addproperty: 'commit.message')
+        commitMessage = ant.antProject.properties.'commit.message'
+    }
+
+    if (isBlank(commitMessage)) {
+        event('StatusError', ["You must provide a commit message when releasing artifacts."])
+        exit(1)
+    }
+
+    commitMessage
 }

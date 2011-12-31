@@ -32,7 +32,7 @@ import org.codehaus.griffon.artifacts.model.*
 class ArtifactUtils {
     static final String PLUGIN_DESCRIPTOR_SUFFIX = 'GriffonPlugin.groovy'
     static final String ARCHETYPE_DESCRIPTOR_SUFFIX = 'GriffonArchetype.groovy'
-    private final static String TIMESTAMP_FORMAT = "yyyy-MM-dd'T'HH:mm:ssZ"
+    static final String TIMESTAMP_FORMAT = "yyyy-MM-dd'T'HH:mm:ssZ"
     private static final PathMatchingResourcePatternResolver RESOLVER = new PathMatchingResourcePatternResolver()
 
     static Resource[] resolveResources(String pattern) {

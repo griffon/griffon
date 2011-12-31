@@ -176,7 +176,7 @@ class ArtifactInstallEngine {
             throw new IllegalArgumentException("Can't parse ${type}.json", e)
         }
 
-        Release.make(zipFile, type, json)
+        Release.make(type, json)
     }
 
     private void verifyArtifact(ZipFile zipFile, json) {

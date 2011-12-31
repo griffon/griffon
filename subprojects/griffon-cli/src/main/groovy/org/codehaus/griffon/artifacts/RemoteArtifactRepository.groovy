@@ -16,6 +16,10 @@
 
 package org.codehaus.griffon.artifacts
 
+import com.jcraft.jsch.Channel
+import com.jcraft.jsch.JSch
+import com.jcraft.jsch.Session
+import com.jcraft.jsch.UserInfo
 import griffon.util.GriffonExceptionHandler
 import griffon.util.GriffonUtil
 import groovy.transform.Synchronized
@@ -39,11 +43,18 @@ class RemoteArtifactRepository extends AbstractArtifactRepository {
     String url
     String username
     String password
+    int port
+    final String type = REMOTE
 
     private HttpURLClient http
 
     RemoteArtifactRepository() {
+        port = 2222
         setUrl(null)
+    }
+
+    String toString() {
+        "$name ($url)"
     }
 
     void setUrl(String url) {
@@ -133,7 +144,63 @@ class RemoteArtifactRepository extends AbstractArtifactRepository {
     }
 
     boolean uploadRelease(Release release, String username, String password) {
-        false
+        File file = release.file
+        try {
+            // adapted from http://www.jcraft.com/jsch/examples/ScpTo.java
+            JSch jsch = new JSch()
+            Session session = jsch.getSession(username, getHostname(), port)
+            session.userInfo = new SimpleUserInfo(username, password)
+            session.connect()
+
+
+            String command = 'scp -p -t /tmp/' + file.name
+            Channel channel = session.openChannel('exec')
+            channel.command = command
+
+            // get I/O streams for remote scp
+            OutputStream out = channel.outputStream
+            InputStream is = channel.inputStream
+
+            channel.connect()
+
+            if (checkAck(is) != 0) {
+                return false
+            }
+
+            // send "C0644 filesize filename", where filename should not include '/'
+            long filesize = file.length()
+            command = "C0644 " + filesize + " "
+            if (file.name.lastIndexOf('/') > 0) {
+                command += file.name.substring(file.name.lastIndexOf('/') + 1)
+            }
+            else {
+                command += file.name
+            }
+            command += "\n"
+            out.write(command.bytes)
+            out.flush()
+            if (checkAck(is) != 0) {
+                return false
+            }
+
+            out << new FileInputStream(file)
+
+            // send '\0'
+            byte[] buf = new byte[1]
+            buf[0] = 0; out.write(buf, 0, 1); out.flush();
+            if (checkAck(is) != 0) {
+                return false
+            }
+            out.close()
+
+            channel.disconnect()
+            session.disconnect()
+        } catch (IOException ioe) {
+            GriffonExceptionHandler.sanitize(ioe)
+            LOG.trace("Could not upload artifact ${file}", ioe)
+            throw ioe
+        }
+        true
     }
 
     static File downloadFromURL(String url) {
@@ -163,6 +230,10 @@ class RemoteArtifactRepository extends AbstractArtifactRepository {
         file
     }
 
+    private String getHostname() {
+        url.toURL().getHost()
+    }
+
     private static Map<String, String> getDefaultHeaders() {
         [
                 'X-Griffon-Version': GriffonUtil.getGriffonVersion(),
@@ -173,5 +244,67 @@ class RemoteArtifactRepository extends AbstractArtifactRepository {
                 'X-Java-Vm-Version': System.getProperty('java.vm.version'),
                 'X-Java-Vm-Name': System.getProperty('java.vm.name')
         ]
+    }
+
+    static int checkAck(InputStream is) throws IOException {
+        int b = is.read()
+        // b may be 0 for success,
+        //          1 for error,
+        //          2 for fatal error,
+        //          -1
+        if (b == 0) return b
+        if (b == -1) return b
+
+        if (b == 1 || b == 2) {
+            StringBuffer sb = new StringBuffer()
+            int c
+            while (c != '\n') {
+                c = is.read()
+                sb.append((char) c)
+
+            }
+            if (b == 1) { // error
+                System.out.print(sb.toString())
+            }
+            if (b == 2) { // fatal error
+                System.out.print(sb.toString())
+            }
+        }
+        return b
+    }
+
+    static class SimpleUserInfo implements UserInfo {
+        final String username
+        final String password
+
+        SimpleUserInfo(String username, String password) {
+            this.username = username
+            this.password = password
+        }
+
+        @Override
+        String getPassphrase() {
+            null
+        }
+
+        @Override
+        boolean promptPassword(String message) {
+            true
+        }
+
+        @Override
+        boolean promptPassphrase(String message) {
+            true
+        }
+
+        @Override
+        boolean promptYesNo(String message) {
+            true
+        }
+
+        @Override
+        void showMessage(String message) {
+
+        }
     }
 }

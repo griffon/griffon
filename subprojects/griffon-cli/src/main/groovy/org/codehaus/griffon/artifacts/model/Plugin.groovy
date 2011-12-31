@@ -16,6 +16,8 @@
 
 package org.codehaus.griffon.artifacts.model
 
+import groovy.json.JsonBuilder
+
 /**
  * @author Andres Almiray
  * @since 0.9.5
@@ -32,6 +34,29 @@ class Plugin extends Artifact {
                 toolkits: toolkits,
                 platforms: platforms,
                 dependencies: dependencies
+        ]
+    }
+
+    def toJSON() {
+        JsonBuilder builder = new JsonBuilder()
+        builder.call(asMap())
+        builder
+    }
+
+    Map asMap() {
+        [
+                type: type,
+                name: name,
+                title: title,
+                license: license,
+                source: source ?: '',
+                toolkits: toolkits*.getLowercaseName(),
+                platforms: platforms*.getLowercaseName(),
+                dependencies: dependencies.collect([]) {dep ->
+                    [name: dep.key, version: dep.value]
+                },
+                authors: authors*.asMap(),
+                releases: releases*.asMap()
         ]
     }
 }

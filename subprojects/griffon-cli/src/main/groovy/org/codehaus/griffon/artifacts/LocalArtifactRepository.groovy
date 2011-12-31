@@ -16,29 +16,147 @@
 
 package org.codehaus.griffon.artifacts
 
+import griffon.util.GriffonExceptionHandler
+import griffon.util.MD5
+import groovy.json.JsonBuilder
+import groovy.json.JsonSlurper
+import java.util.zip.ZipEntry
+import java.util.zip.ZipFile
 import org.codehaus.griffon.artifacts.model.Artifact
 import org.codehaus.griffon.artifacts.model.Release
+import org.slf4j.Logger
+import org.slf4j.LoggerFactory
+import static griffon.util.GriffonNameUtils.isBlank
 
 /**
  * @author Andres Almiray
  * @since 0.9.5
  */
 class LocalArtifactRepository extends AbstractArtifactRepository {
+    private static final Logger LOG = LoggerFactory.getLogger(LocalArtifactRepository)
+
     String path
+    final String type = LOCAL
+
+    LocalArtifactRepository() {
+        setPath(null)
+    }
+
+    String toString() {
+        "${name} ($path)"
+    }
+
+    void setPath(String path) {
+        if (isBlank(path)) {
+            path = System.getProperty('user.home') + File.separator + '.griffon/repository'
+        }
+        this.path = path
+    }
 
     List<Artifact> listArtifacts(String type) {
-        return null
+        List<Artifact> artifacts = []
+        File releasePath = new File(path, "${type}s")
+        if (!releasePath.exists()) return artifacts
+
+        releasePath.eachDir { dir ->
+            Artifact artifact = findArtifact(type, dir.name)
+            if (artifact) artifacts << artifact
+        }
+
+        artifacts
     }
 
     Artifact findArtifact(String type, String name) {
-        return null
+        File releasePath = new File(path, "${type}s/${name}")
+        String fileName = "${type}.json"
+
+        File artifactFile = new File(releasePath, fileName)
+        if (artifactFile.exists()) {
+            def json = new JsonSlurper().parseText(artifactFile.text)
+            return ArtifactUtils.parseArtifact(type, json)
+        }
+        null
     }
 
     File downloadFile(String type, String name, String version, String username) {
-        return null
+        File releasePath = new File(path, "${type}s/${name}/${version}")
+        String fileName = "griffon-${name}-${version}.zip"
+
+        File releaseFile = new File(releasePath, fileName)
+        if (releaseFile.exists()) {
+            return releaseFile
+        }
+
+        null
     }
 
     boolean uploadRelease(Release release, String username, String password) {
-        return false
+        File file = release.file
+        release.date = new Date()
+        try {
+            File releasePath = new File(path, "${release.artifact.type}s/${release.artifact.name}/${release.version}/")
+            releasePath.mkdirs()
+
+            ZipFile zipFile = new ZipFile(file)
+            String descriptorName = "${release.artifact.type}.json"
+            String fileName = "griffon-${release.artifact.name}-${release.version}.zip"
+            ZipEntry artifactFileEntry = zipFile.getEntry(fileName)
+            ZipEntry md5ChecksumEntry = zipFile.getEntry("${fileName}.md5")
+
+            if (artifactFileEntry == null) {
+                throw new IOException("Release does not contain expected zip entry ${fileName}")
+            }
+            if (md5ChecksumEntry == null) {
+                throw new IOException("Release does not contain expected zip entry ${fileName}.md5")
+            }
+
+            byte[] bytes = zipFile.getInputStream(artifactFileEntry).bytes
+            String computedHash = MD5.encode(bytes)
+            String releaseHash = zipFile.getInputStream(md5ChecksumEntry).text
+
+            if (computedHash.trim() != releaseHash.trim()) {
+                throw new IOException("Wrong checksum for ${fileName}")
+            }
+
+            OutputStream os = new FileOutputStream("${releasePath}/${fileName}")
+            os.bytes = zipFile.getInputStream(artifactFileEntry).bytes
+            os = new FileOutputStream("${releasePath}/${fileName}.md5")
+            os.bytes = zipFile.getInputStream(md5ChecksumEntry).bytes
+
+            Map artifactAsMap = release.artifact.asMap()
+            release.checksum = computedHash
+            Map releaseAsMap = release.asMap()
+
+            artifactAsMap.remove('releases')
+            artifactAsMap.release = releaseAsMap
+
+            os = new FileOutputStream("${releasePath}/${descriptorName}")
+            JsonBuilder builder = new JsonBuilder()
+            builder.call(artifactAsMap)
+            os << builder.toString()
+
+            artifactAsMap.remove('release')
+            artifactAsMap.releases = [releaseAsMap]
+            File out = new File("${releasePath.parentFile.absolutePath}/${descriptorName}")
+            if (out.exists()) {
+                def json = new JsonSlurper().parseText(out.text)
+                json.releases?.each { rel ->
+                    if (rel.version == release.version) return
+                    artifactAsMap.releases << ArtifactUtils.parseRelease(rel).asMap()
+                }
+                artifactAsMap.releases.sort {a, b -> b.version <=> a.version}
+            }
+
+            os = new FileOutputStream("${releasePath.parentFile.absolutePath}/${descriptorName}")
+            builder = new JsonBuilder()
+            builder.call(artifactAsMap)
+            os << builder.toString()
+        } catch (Exception e) {
+            GriffonExceptionHandler.sanitize(e)
+            LOG.trace("Could not upload artifact ${file}", e)
+            throw e
+        }
+
+        true
     }
 }

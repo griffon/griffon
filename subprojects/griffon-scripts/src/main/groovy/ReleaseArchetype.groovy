@@ -16,51 +16,74 @@
 
 import griffon.util.MD5
 import groovy.json.JsonBuilder
-import org.codehaus.griffon.artifacts.ArtifactUtils
-import org.springframework.core.io.Resource
+import org.codehaus.griffon.artifacts.model.Archetype
+import org.codehaus.griffon.artifacts.model.Release
 
 /**
  * @author Andres Almiray
  */
 
-includeTargets << griffonScript('Init')
+includeTargets << griffonScript('_GriffonArtifacts')
 includeTargets << griffonScript('PackageArchetype')
 
 target(releaseArchetype: 'Publishes a Griffon archetype release') {
-    depends(packageArchetype)
-    Resource archetypeDescriptor = ArtifactUtils.getArchetypeDescriptor(basedir)
-    if (!archetypeDescriptor?.exists()) {
-        event('StatusFinal', ['Current directory does not appear to be a Griffon archetype project.'])
-        exit(1)
-    }
+    depends(configureArtifactRepositories)
 
-    Map archetypeInfo = loadArchetypeInfo(archetypeDescriptor)
-    createArchetypeRelease(archetypeInfo)
+    packageForRelelease = true
+    packageArchetype()
+    createArtifactRelease(Archetype.TYPE, archetypeInfo)
+    selectArtifactRepository()
+    setupCredentials()
+    event 'StatusUpdate', ["Contacting repository ${artifactRepository}"]
+    try {
+        if (artifactRepository.uploadRelease(release, username, password)) {
+            event 'StatusFinal', ["Successfully published ${archetypeInfo.name}-${archetypeInfo.version} to ${artifactRepository.name}"]
+        } else {
+            event 'StatusError', ["Could not publish ${archetypeInfo.name}-${archetypeInfo.version} to ${artifactRepository.name}"]
+        }
+    } catch (x) {
+        event 'StatusError', ["Could not publish ${archetypeInfo.name}-${archetypeInfo.version} to ${artifactRepository.name} => ${x}"]
+    }
 }
 
 setDefaultTarget(releaseArchetype)
 
-createArchetypeRelease = { Map archetypeInfo ->
-    archetypeReleaseDirPath = "${projectTargetDir}/release"
-    ant.delete(dir: archetypeReleaseDirPath, quiet: true, failOnError: false)
-    ant.mkdir(dir: archetypeReleaseDirPath)
-    String archetypeZipChecksumFileName = new File("${archetypeReleaseDirPath}/${archetypeZipFileName}.md5")
-    String checksum = MD5.encode(new File("${archetypePackageDirPath}/${archetypeZipFileName}").bytes)
-    new File(archetypeZipChecksumFileName).text = checksum
-    archetypeInfo.checksum = checksum
-    archetypeInfo.type = 'archetype'
-    archetypeInfo.comment = argsMap.comment
+createArtifactRelease = { String type, Map artifactInfo ->
+    artifactReleaseDirPath = "${projectTargetDir}/release"
+    ant.delete(dir: artifactReleaseDirPath, quiet: true, failOnError: false)
+    ant.mkdir(dir: artifactReleaseDirPath)
+    String artifactZipChecksumFileName = new File("${artifactReleaseDirPath}/${artifactZipFileName}.md5")
+    String checksum = MD5.encode(new File("${artifactPackageDirPath}/${artifactZipFileName}").bytes)
+    new File(artifactZipChecksumFileName).text = checksum
+    artifactInfo.checksum = checksum
+    artifactInfo.type = type
+    artifactInfo.comment = resolveCommitMessage()
+
+    File releaseNotes = new File("${basedir}/release_notes.md")
+    if (!releaseNotes.exists() && !argsMap['no-release-notes']) {
+        println "No release notes were found for ${artifactInfo.name}-${artifactInfo.version}. Did you forget to create a relese_notes.md file?"
+        if (!confirmInput("Would you like to continue with the release without adding release notes?")) {
+            exit 1
+        }
+    } else {
+        ant.copy(file: releaseNotes, todir: artifactReleaseDirPath, failOnError: false)
+    }
 
     JsonBuilder builder = new JsonBuilder()
-    builder.call(archetypeInfo)
+    builder.call(artifactInfo)
+    new File(artifactReleaseDirPath, "${type}.json").text = builder.toString()
 
-    new File(archetypeReleaseDirPath, 'archetype.json').text = builder.toString()
-    ant.delete(file: "${archetypeReleaseDirPath}/${archetypeZipFileName}", quiet: true, failOnError: false)
+    releaseFile = new File("${artifactReleaseDirPath}/${artifactZipFileName}")
 
-    ant.zip(destfile: "${archetypeReleaseDirPath}/${archetypeZipFileName}", filesonly: true) {
-        fileset(dir: archetypeReleaseDirPath)
-        zipfileset(dir: archetypePackageDirPath,
-                includes: archetypeZipFileName,
-                fullpath: archetypeZipFileName)
+    ant.delete(file: releaseFile, quiet: true, failOnError: false)
+
+    ant.zip(destfile: releaseFile, filesonly: true) {
+        fileset(dir: artifactReleaseDirPath)
+        zipfileset(dir: artifactPackageDirPath,
+                includes: artifactZipFileName,
+                fullpath: artifactZipFileName)
     }
+
+    release = Release.make(type, artifactInfo)
+    release.file = releaseFile
 }

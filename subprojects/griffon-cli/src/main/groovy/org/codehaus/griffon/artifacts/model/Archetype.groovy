@@ -16,10 +16,30 @@
 
 package org.codehaus.griffon.artifacts.model
 
+import groovy.json.JsonBuilder
+
 /**
  * @author Andres Almiray
  * @since 0.9.5
  */
 class Archetype extends Artifact {
     static final String TYPE = 'archetype'
+
+    def toJSON() {
+        JsonBuilder builder = new JsonBuilder()
+        builder.call(asMap())
+        builder
+    }
+
+    Map asMap() {
+        [
+                type: type,
+                name: name,
+                title: title,
+                license: license,
+                source: source ?: '',
+                authors: authors*.asMap(),
+                releases: releases*.asMap()
+        ]
+    }
 }

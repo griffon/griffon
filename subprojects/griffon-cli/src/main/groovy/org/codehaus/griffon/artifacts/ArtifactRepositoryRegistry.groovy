@@ -17,6 +17,7 @@
 package org.codehaus.griffon.artifacts
 
 import griffon.util.BuildSettingsHolder
+import groovy.transform.Synchronized
 import java.util.concurrent.ConcurrentHashMap
 
 /**
@@ -38,44 +39,56 @@ class ArtifactRepositoryRegistry {
         REPOSITORIES[name]
     }
 
+    @Synchronized
+    void withRepositories(Closure closure) {
+        REPOSITORIES.each { name, repository ->
+            closure(name, repository)
+        }
+    }
+
     void configureRepositories() {
         ConfigObject config = BuildSettingsHolder.settings.loadConfig()
 
-        ArtifactRepository repository = new RemoteArtifactRepository(name: ArtifactRepository.DEFAULT)
-        repository.url = 'http://localhost:8080/griffon-artifact-portal/'
-        registerRepository(repository)
+        ArtifactRepository griffonCentral = new RemoteArtifactRepository(name: ArtifactRepository.DEFAULT)
+        griffonCentral.url = 'http://localhost:8080/griffon-artifact-portal/'
+        registerRepository(griffonCentral)
 
         config.griffon?.artifact?.repositories?.each { String name, Map repoConfig ->
-            repository = null
+            ArtifactRepository repository = null
             if (name == ArtifactRepository.DEFAULT) {
-                repository = REPOSITORIES[ArtifactRepository.DEFAULT]
-                if (repoConfig.username) repository.username = repoConfig.username
-                if (repoConfig.password) repository.password = repoConfig.password
+                if (repoConfig.username) griffonCentral.username = repoConfig.username
+                if (repoConfig.password) griffonCentral.password = repoConfig.password
+                if (repoConfig.port) griffonCentral.port = repoConfig.port
+                return
             }
-            if (!repository) {
-                if (!repoConfig.type) {
-                    throw new IllegalArgumentException("Misconfigured repository ${name} -> no type specified!")
-                }
-                switch (repoConfig.type) {
-                    case 'remote':
-                        repository = new RemoteArtifactRepository(name: name)
-                        if (!repoConfig.url) {
-                            throw new IllegalArgumentException("Misconfigured repository ${name} -> no url specified!")
-                        }
-                        repository.url = repoConfig.url
-                        if (repoConfig.username) repository.username = repoConfig.username
-                        if (repoConfig.password) repository.password = repoConfig.password
-                        break
-                    case 'local':
-                        repository = new LocalArtifactRepository(name: name)
-                        if (!repoConfig.path) {
-                            throw new IllegalArgumentException("Misconfigured repository ${name} -> no path specified!")
-                        }
-                        repository.path = repoConfig.path
-                        break
-                }
+
+            if (!repoConfig.type) {
+                throw new IllegalArgumentException("Misconfigured repository ${name} -> no type specified!")
+            }
+            switch (repoConfig.type) {
+                case 'remote':
+                    repository = new RemoteArtifactRepository(name: name)
+                    if (!repoConfig.url) {
+                        throw new IllegalArgumentException("Misconfigured repository ${name} -> no url specified!")
+                    }
+                    if (repoConfig.port) {
+                        repository.port = repoConfig.port
+                    }
+                    repository.url = repoConfig.url
+                    if (repoConfig.username) repository.username = repoConfig.username
+                    if (repoConfig.password) repository.password = repoConfig.password
+                    break
+                case 'local':
+                    repository = new LocalArtifactRepository(name: name)
+                    if (!repoConfig.path) {
+                        throw new IllegalArgumentException("Misconfigured repository ${name} -> no path specified!")
+                    }
+                    repository.path = repoConfig.path
+                    break
             }
             registerRepository(repository)
         }
+
+        registerRepository(griffonCentral)
     }
 }

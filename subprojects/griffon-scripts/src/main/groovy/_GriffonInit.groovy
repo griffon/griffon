@@ -15,10 +15,10 @@
  */
 
 /**
-* Gant script that handles general initialization of a Griffon applications
-*
-* @author Graeme Rocher (Grails 0.4)
-*/
+ * Gant script that handles general initialization of a Griffon applications
+ *
+ * @author Graeme Rocher (Grails 0.4)
+ */
 
 import groovy.grape.Grape
 
@@ -31,7 +31,6 @@ Grape.enableAutoDownload = true
 // add includes
 includeTargets << griffonScript("_GriffonArgParsing")
 includeTargets << griffonScript("_PluginDependencies")
-
 
 // Generates Eclipse .classpath entries for all the Griffon dependencies,
 // i.e. a string containing a "<classpath entry ..>" element for each
@@ -96,9 +95,11 @@ target(checkVersion: "Stops build if app expects different Griffon version") {
 target(updateAppProperties: "Updates default application.properties") {
     def entries = [
             'app.name': griffonAppName,
-            'app.griffon.version': griffonVersion,
-            'app.version': griffonAppVersion ?: '0.1'
+            'app.griffon.version': griffonVersion
     ]
+    if (griffonAppVersion) {
+        entries['app.version'] = griffonAppVersion
+    }
     updateMetadata(entries)
 
     // Make sure if this is a new project that we update the var to include version

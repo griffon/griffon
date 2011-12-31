@@ -28,8 +28,12 @@ import java.util.List;
  */
 public interface ArtifactRepository {
     String DEFAULT = "griffon-central";
+    String REMOTE = "remote";
+    String LOCAL = "local";
 
     String getName();
+
+    String getType();
 
     List<Artifact> listArtifacts(String type);
 

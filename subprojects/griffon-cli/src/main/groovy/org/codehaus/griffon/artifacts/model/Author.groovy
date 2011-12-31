@@ -16,6 +16,8 @@
 
 package org.codehaus.griffon.artifacts.model
 
+import groovy.json.JsonBuilder
+
 /**
  * @author Andres Almiray
  * @since 0.9.5
@@ -27,7 +29,20 @@ class Author {
     String toString() {
         [
                 name: name,
-                email: email,
+                email: email
+        ]
+    }
+
+    def toJSON() {
+        JsonBuilder builder = new JsonBuilder()
+        builder.call(asMap())
+        builder
+    }
+
+    Map asMap() {
+        [
+                name: name,
+                email: email
         ]
     }
 }

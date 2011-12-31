@@ -16,7 +16,8 @@
 
 package org.codehaus.griffon.artifacts.model
 
-import java.util.zip.ZipFile
+import groovy.json.JsonBuilder
+import org.codehaus.griffon.artifacts.ArtifactUtils
 import static org.codehaus.griffon.artifacts.ArtifactUtils.*
 
 /**
@@ -24,12 +25,11 @@ import static org.codehaus.griffon.artifacts.ArtifactUtils.*
  * @since 0.9.5
  */
 class Release {
-    String version
-    String griffonVersion
-    String comment
-    String checksum
-    String releaseNotes
-    Date date
+    String version = ''
+    String griffonVersion = ''
+    String comment = ''
+    String checksum = ''
+    Date date = new Date()
     Artifact artifact
     File file
 
@@ -45,7 +45,23 @@ class Release {
         ]
     }
 
-    static Release make(ZipFile zipFile, String type, json) {
+    def toJSON() {
+        JsonBuilder builder = new JsonBuilder()
+        builder.call(asMap())
+        builder
+    }
+
+    Map asMap() {
+        [
+                version: version,
+                griffonVersion: griffonVersion,
+                comment: comment,
+                checksum: checksum,
+                date: date.format(ArtifactUtils.TIMESTAMP_FORMAT)
+        ]
+    }
+
+    static Release make(String type, json) {
         Release release = parseRelease(json)
         switch (type) {
             case Plugin.TYPE:
