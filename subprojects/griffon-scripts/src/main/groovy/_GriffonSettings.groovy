@@ -377,7 +377,7 @@ hasJavaOrGroovySources = { dir ->
 includeTargets << griffonScript("_GriffonArgParsing")
 includeTargets << griffonScript("_GriffonEvents")
 
-// --== ARTIAFACT STUFF ==--
+// --== ARTIFACT STUFF ==--
 
 loadArtifactDescriptorClass = { String artifactFile ->
     try {

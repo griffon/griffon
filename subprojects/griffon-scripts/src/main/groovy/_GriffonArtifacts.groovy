@@ -43,7 +43,7 @@ target(configureArtifactRepositories: 'Configures available artifact repositorie
 }
 
 selectArtifactRepository = {
-    repositoryName = argsMap.repository ?: ArtifactRepository.DEFAULT
+    repositoryName = argsMap.repository ?: ArtifactRepository.DEFAULT_REMOTE_NAME
     artifactRepository = ArtifactRepositoryRegistry.instance.findRepository(repositoryName)
     if (artifactRepository == null) {
         event('StatusError', ["Artifact repository ${repositoryName} is not configured."])
@@ -66,7 +66,7 @@ listArtifacts = { String type, ArtifactRepository repository ->
     if (artifacts) {
         artifacts.each { Artifact artifact -> println formatArtifactForPrint(artifact) }
     } else {
-        println "No ${type}s found in repository: ${repository.name}."
+        println "No ${type}s found in repository ${repository.name}."
     }
 
     listInstalledArtifacts(type)

@@ -23,7 +23,6 @@ import com.jcraft.jsch.UserInfo
 import griffon.util.GriffonExceptionHandler
 import griffon.util.GriffonUtil
 import groovy.transform.Synchronized
-import groovyx.net.http.HttpResponseException
 import groovyx.net.http.HttpURLClient
 import groovyx.net.http.Status
 import org.codehaus.griffon.artifacts.model.Artifact
@@ -59,7 +58,7 @@ class RemoteArtifactRepository extends AbstractArtifactRepository {
 
     void setUrl(String url) {
         if (isBlank(url)) {
-            url = 'http://localhost:8080/griffon-artifact-portal/'
+            url = DEFAULT_REMOTE_LOCATION
         }
         if (!url.endsWith('/')) url += '/'
         this.url = url
@@ -103,8 +102,8 @@ class RemoteArtifactRepository extends AbstractArtifactRepository {
                     parseArtifact(type, json)
                 }
             }
-        } catch (HttpResponseException httpre) {
-            LOG.trace("Could not list artifacts of type ${type}", GriffonExceptionHandler.sanitize(httpre))
+        } catch (Exception e) {
+            LOG.trace("Could not list artifacts of type ${type}", GriffonExceptionHandler.sanitize(e))
         }
         artifacts
     }
@@ -116,8 +115,8 @@ class RemoteArtifactRepository extends AbstractArtifactRepository {
             if (response.status == 200) {
                 artifact = parseArtifact(type, response.data)
             }
-        } catch (HttpResponseException httpre) {
-            LOG.trace("Could not locate artifact ${type}:${name}", GriffonExceptionHandler.sanitize(httpre))
+        } catch (Exception e) {
+            LOG.trace("Could not locate artifact ${type}:${name}", GriffonExceptionHandler.sanitize(e))
         }
         artifact
     }
@@ -136,8 +135,8 @@ class RemoteArtifactRepository extends AbstractArtifactRepository {
                 file.deleteOnExit()
                 file.bytes = response.data.bytes
             }
-        } catch (HttpResponseException httpre) {
-            LOG.trace("Could not download artifact ${type}:${name}:${version}", GriffonExceptionHandler.sanitize(httpre))
+        } catch (Exception e) {
+            LOG.trace("Could not download artifact ${type}:${name}:${version}", GriffonExceptionHandler.sanitize(e))
             throw httpre
         }
         file
@@ -195,10 +194,10 @@ class RemoteArtifactRepository extends AbstractArtifactRepository {
 
             channel.disconnect()
             session.disconnect()
-        } catch (IOException ioe) {
-            GriffonExceptionHandler.sanitize(ioe)
-            LOG.trace("Could not upload artifact ${file}", ioe)
-            throw ioe
+        } catch (Exception e) {
+            GriffonExceptionHandler.sanitize(e)
+            LOG.trace("Could not upload artifact ${file}", e)
+            throw e
         }
         true
     }

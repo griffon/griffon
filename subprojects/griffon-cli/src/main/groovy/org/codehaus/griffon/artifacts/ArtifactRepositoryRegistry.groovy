@@ -17,8 +17,6 @@
 package org.codehaus.griffon.artifacts
 
 import griffon.util.BuildSettingsHolder
-import groovy.transform.Synchronized
-import java.util.concurrent.ConcurrentHashMap
 
 /**
  * @author Andres Almiray
@@ -26,7 +24,7 @@ import java.util.concurrent.ConcurrentHashMap
  */
 @Singleton
 class ArtifactRepositoryRegistry {
-    private static final ConcurrentHashMap<String, ArtifactRepository> REPOSITORIES = [:]
+    private static final Map<String, ArtifactRepository> REPOSITORIES = [:].asSynchronized()
 
     void registerRepository(ArtifactRepository repository) {
         if (!repository.name) {
@@ -39,23 +37,29 @@ class ArtifactRepositoryRegistry {
         REPOSITORIES[name]
     }
 
-    @Synchronized
     void withRepositories(Closure closure) {
-        REPOSITORIES.each { name, repository ->
-            closure(name, repository)
+        synchronized (REPOSITORIES) {
+            REPOSITORIES.each { name, repository ->
+                closure(name, repository)
+            }
         }
     }
 
     void configureRepositories() {
+        REPOSITORIES.clear()
+
         ConfigObject config = BuildSettingsHolder.settings.loadConfig()
 
-        ArtifactRepository griffonCentral = new RemoteArtifactRepository(name: ArtifactRepository.DEFAULT)
-        griffonCentral.url = 'http://localhost:8080/griffon-artifact-portal/'
-        registerRepository(griffonCentral)
+        ArtifactRepository griffonLocal = new LocalArtifactRepository(name: ArtifactRepository.DEFAULT_LOCAL_NAME)
+        griffonLocal.path = ArtifactRepository.DEFAULT_LOCAL_LOCATION
+        registerRepository(griffonLocal)
+
+        ArtifactRepository griffonCentral = new RemoteArtifactRepository(name: ArtifactRepository.DEFAULT_REMOTE_NAME)
+        griffonCentral.url = ArtifactRepository.DEFAULT_REMOTE_LOCATION
 
         config.griffon?.artifact?.repositories?.each { String name, Map repoConfig ->
             ArtifactRepository repository = null
-            if (name == ArtifactRepository.DEFAULT) {
+            if (name == ArtifactRepository.DEFAULT_REMOTE_NAME) {
                 if (repoConfig.username) griffonCentral.username = repoConfig.username
                 if (repoConfig.password) griffonCentral.password = repoConfig.password
                 if (repoConfig.port) griffonCentral.port = repoConfig.port

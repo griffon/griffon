@@ -48,7 +48,7 @@ class LocalArtifactRepository extends AbstractArtifactRepository {
 
     void setPath(String path) {
         if (isBlank(path)) {
-            path = System.getProperty('user.home') + File.separator + '.griffon/repository'
+            path = DEFAULT_LOCAL_LOCATION
         }
         this.path = path
     }
