@@ -77,12 +77,12 @@ listArtifactsHeader = { repository, type ->
     println """
 ${capitalize(type)}s available in the ${repository.name} repository are listed below:
 -----------------------------------------------------------------------
-${'Name'.padRight(25, ' ')}${'Releases'.padRight(16, ' ')} Title
+${'Name'.padRight(29, ' ')}${'Releases'.padRight(12, ' ')} Title
 """
 }
 
 formatArtifactForPrint = { Artifact artifact ->
-    "${artifact.name.padRight(25, ' ')}${artifact.releases.size().toString().padRight(16, ' ')} ${artifact.title}"
+    "${artifact.name.padRight(29, ' ')}${artifact.releases.size().toString().padRight(12, ' ')} ${artifact.title}"
 }
 
 listArtifactsFooter = { type ->
@@ -108,11 +108,11 @@ listInstalledArtifacts = { String type ->
         println """
 ${capitalize(type)}s you currently have installed are listed below:
 -----------------------------------------------------------------------
-${'Name'.padRight(25, ' ')}${'Version'.padRight(16, ' ')} Title
+${'Name'.padRight(29, ' ')}${'Version'.padRight(12, ' ')} Title
 """
 
         List list = installedArtifacts.collect([]) { entry ->
-            "${entry.key.padRight(25, ' ')}${entry.value.version.toString().padRight(16, ' ')} ${entry.value.title}"
+            "${entry.key.padRight(29, ' ')}${entry.value.version.toString().padRight(12, ' ')} ${entry.value.title}"
         }
         list.sort()
         list.each { println it }
@@ -163,12 +163,6 @@ displayArtifactInfo = { String type, String name, String version, ArtifactReposi
         ].each { label, value ->
             println "${label.padRight(padding, ' ')}: ${value}"
         }
-        if (artifact.dependencies) {
-            println 'Dependencies:'
-            artifact.dependencies.each { depname, depversion ->
-                println "\t${depname}-${depversion}"
-            }
-        }
         println '--------------------------------------------------------------------------'
     }
 
@@ -186,6 +180,12 @@ displayArtifactInfo = { String type, String name, String version, ArtifactReposi
                     'Date': release.date,
             ].each { label, value ->
                 println "${label.padRight(15, ' ')}: ${value}"
+            }
+            if (release.dependencies) {
+                println 'Dependencies:'
+                release.dependencies.each { depname, depversion ->
+                    println "\t${depname}-${depversion}"
+                }
             }
         } else {
             println "<release ${version} not found for this ${type}>"

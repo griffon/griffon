@@ -85,6 +85,42 @@ class ArtifactUtils {
         new File("${BuildSettingsHolder.settings.griffonWorkDir}/archetypes/").absolutePath
     }
 
+    static Resource getArtifactDescriptor(String type, String dir) {
+        switch (type) {
+            case Plugin.TYPE:
+                return getPluginDescriptor(dir)
+            case Archetype.TYPE:
+                return getArchetypeDescriptor(dir)
+        }
+    }
+
+    static Resource getArtifactDescriptor(String type, Resource dir) {
+        switch (type) {
+            case Plugin.TYPE:
+                return getPluginDescriptor(dir)
+            case Archetype.TYPE:
+                return getArchetypeDescriptor(dir)
+        }
+    }
+
+    static String getArtifactNameFromDescriptor(String type, String dir) {
+        switch (type) {
+            case Plugin.TYPE:
+                return getPluginNameFromDescriptor(dir)
+            case Archetype.TYPE:
+                return getArchetypeNameFromDescriptor(dir)
+        }
+    }
+
+    static String getArtifactNameFromDescriptor(String type, Resource dir) {
+        switch (type) {
+            case Plugin.TYPE:
+                return getPluginNameFromDescriptor(dir)
+            case Archetype.TYPE:
+                return getArchetypeNameFromDescriptor(dir)
+        }
+    }
+
     static Resource getPluginDescriptor(String dir) {
         getPluginDescriptor(new FileSystemResource(dir))
     }
@@ -155,10 +191,6 @@ class ArtifactUtils {
                     new Author(name: author.name, email: author.email)
                 },
                 releases: !json.releases ? [] : json.releases.collect([]) {parseRelease(it)},
-                dependencies: json.dependencies.inject([:]) { m, dep ->
-                    m[dep.name] = dep.version
-                    m
-                },
                 toolkits: json.toolkits.collect([]) { toolkit ->
                     Toolkit.findByName(toolkit)
                 },
@@ -173,7 +205,11 @@ class ArtifactUtils {
                 version: json.version,
                 griffonVersion: json.griffonVersion,
                 checksum: json.checksum,
-                date: json.date ? Date.parse(TIMESTAMP_FORMAT, json.date) : null
+                date: json.date ? Date.parse(TIMESTAMP_FORMAT, json.date) : null,
+                dependencies: json.dependencies.inject([:]) { m, dep ->
+                    m[dep.name] = dep.version
+                    m
+                },
         )
     }
 

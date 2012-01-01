@@ -14,7 +14,8 @@
 * limitations under the License.
 */
 
-import org.codehaus.griffon.artifacts.ArtifactUtils
+import griffon.util.GriffonNameUtils
+import griffon.util.GriffonUtil
 import org.codehaus.griffon.artifacts.model.Plugin
 import org.springframework.core.io.Resource
 
@@ -28,6 +29,8 @@ _package_artifact_called = true
 
 includeTargets << griffonScript('Init')
 
+packageForRelease = false
+
 checkLicense = { String type ->
     if (!(new File("${basedir}/LICENSE").exists()) && !(new File("${basedir}/LICENSE.txt").exists())) {
         println "No LICENSE.txt file for ${type} found. Please provide a license file containing the appropriate software licensing information (eg. Apache 2.0, GPL etc.)"
@@ -38,14 +41,57 @@ checkLicense = { String type ->
 loadArtifactInfo = { String type, Resource artifactDescriptor ->
     def descriptorInstance = loadArtifactDescriptorClass(artifactDescriptor.file.name)
 
+    String name = artifactDescriptor.file.name - "Griffon${GriffonNameUtils.capitalize(type)}.groovy"
+    name = GriffonNameUtils.getShortName(name)
+
+    if (packageForRelease) {
+        if (descriptorInstance.license == '<UNKNOWN>') {
+            println "No suitable license chosen. Please provide a license name (eg. Apache 2.0, GPL etc.)"
+            exit(1)
+        }
+        List authors = [
+                [
+                        name: 'Your Name',
+                        email: 'your@email.com'
+                ]
+        ]
+
+        if (descriptorInstance.authors == authors) {
+            println "Please update the artifact's autorship information before releasing."
+            exit(1)
+        }
+
+        if (descriptorInstance.title == "${GriffonNameUtils.capitalize(type)} summary/headline") {
+            println "Please update the artifact's title before releasing."
+            exit(1)
+        }
+
+        String description = """
+Brief description of ${name}.
+
+Usage
+----
+Lorem ipsum
+
+Configuration
+-------------
+Lorem ipsum
+""".trim()
+        if (descriptorInstance.description.trim() == description) {
+            println "Please update the artifact's description before releasing."
+            exit(1)
+        }
+    }
+
     Map map = [
-            name: ArtifactUtils.getArchetypeNameFromDescriptor(artifactDescriptor),
+            name: GriffonUtil.getHyphenatedName(name),
             title: descriptorInstance.title,
             license: descriptorInstance.license,
             version: descriptorInstance.version,
             griffonVersion: descriptorInstance.griffonVersion,
             description: descriptorInstance.description.trim(),
-            authors: descriptorInstance.authors
+            authors: descriptorInstance.authors,
+            dependencies: []
     ]
 
     if (type == Plugin.TYPE) {

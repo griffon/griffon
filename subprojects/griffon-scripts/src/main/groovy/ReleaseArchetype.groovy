@@ -29,7 +29,7 @@ includeTargets << griffonScript('PackageArchetype')
 target(releaseArchetype: 'Publishes a Griffon archetype release') {
     depends(configureArtifactRepositories)
 
-    packageForRelelease = true
+    packageForRelease = true
     packageArchetype()
     createArtifactRelease(Archetype.TYPE, archetypeInfo)
     selectArtifactRepository()

@@ -24,8 +24,6 @@ import org.codehaus.griffon.artifacts.model.Archetype
 
 includeTargets << griffonScript('_PackageArtifact')
 
-packageForRelelease = false
-
 target(packageArchetype: 'Packages a Griffon archetype') {
     depends(parseArguments, checkVersion)
 
@@ -37,7 +35,7 @@ target(packageArchetype: 'Packages a Griffon archetype') {
 
     archetypeInfo = loadArtifactInfo(Archetype.TYPE, archetypeDescriptor)
 
-    if (packageForRelelease) {
+    if (packageForRelease) {
         checkLicense(Archetype.TYPE)
     }
 

@@ -31,6 +31,7 @@ class Release {
     String checksum = ''
     Date date = new Date()
     Artifact artifact
+    Map<String, String> dependencies = [:]
     File file
 
     String toString() {
@@ -41,6 +42,7 @@ class Release {
                 checksum: checksum,
                 date: date,
                 artifact: artifact,
+                dependencies: dependencies,
                 file: file
         ]
     }
@@ -57,7 +59,10 @@ class Release {
                 griffonVersion: griffonVersion,
                 comment: comment,
                 checksum: checksum,
-                date: date.format(ArtifactUtils.TIMESTAMP_FORMAT)
+                date: date.format(ArtifactUtils.TIMESTAMP_FORMAT),
+                dependencies: dependencies.collect([]) {dep ->
+                    [name: dep.key, version: dep.value]
+                }
         ]
     }
 

@@ -27,13 +27,11 @@ class Plugin extends Artifact {
 
     List<Toolkit> toolkits = []
     List<Platform> platforms = []
-    Map<String, String> dependencies = [:]
 
     String toString() {
         super.toString() + [
                 toolkits: toolkits,
-                platforms: platforms,
-                dependencies: dependencies
+                platforms: platforms
         ]
     }
 
@@ -52,9 +50,6 @@ class Plugin extends Artifact {
                 source: source ?: '',
                 toolkits: toolkits*.getLowercaseName(),
                 platforms: platforms*.getLowercaseName(),
-                dependencies: dependencies.collect([]) {dep ->
-                    [name: dep.key, version: dep.value]
-                },
                 authors: authors*.asMap(),
                 releases: releases*.asMap()
         ]
