@@ -1,25 +1,40 @@
 /*
- * Copyright 2004-2011 the original author or authors.
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
+* Copyright 2010-2011 the original author or authors.
+*
+* Licensed under the Apache License, Version 2.0 (the "License");
+* you may not use this file except in compliance with the License.
+* You may obtain a copy of the License at
+*
+*      http://www.apache.org/licenses/LICENSE-2.0
+*
+* Unless required by applicable law or agreed to in writing, software
+* distributed under the License is distributed on an "AS IS" BASIS,
+* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+* See the License for the specific language governing permissions and
+* limitations under the License.
+*/
+
+import org.codehaus.griffon.artifacts.model.Plugin
 
 /**
- * Gant script that displays info about a given plugin
- *
- * @author Sergey Nebolsin (Grails 0.5.5)
+ * @author Andres Almiray
  */
 
-includeTargets << griffonScript("_GriffonPlugins")
+includeTargets << griffonScript('_GriffonArtifacts')
 
-setDefaultTarget("pluginInfo")
+target(pluginInfo: 'Displays information on a Griffon plugin') {
+    depends(parseArguments, configureProxy, configureArtifactRepositories)
+
+    selectArtifactRepository()
+
+    if (argsMap.params) {
+        def name = argsMap.params[0]
+        def version = argsMap.params.size() > 1 ? argsMap.params[1] : null
+
+        displayArtifact(Plugin.TYPE, name, version, artifactRepository)
+    } else {
+        event('StatusError', ['Usage: griffon plugin-info <plugin-name> [version]'])
+    }
+}
+
+setDefaultTarget(pluginInfo)

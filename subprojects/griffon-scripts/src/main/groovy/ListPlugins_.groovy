@@ -25,8 +25,7 @@ includeTargets << griffonScript('_GriffonArtifacts')
 target(listPlugins: 'Lists all plugins available in an artifact repository') {
     depends(parseArguments, configureProxy, configureArtifactRepositories)
 
-    selectArtifactRepository()
-    listArtifacts(Plugin.TYPE, artifactRepository)
+    listArtifacts(Plugin.TYPE)
 }
 
 setDefaultTarget(listPlugins)

@@ -94,5 +94,6 @@ class ArtifactRepositoryRegistry {
         }
 
         registerRepository(griffonCentral)
+        registerRepository(new LegacyArtifactRepository())
     }
 }

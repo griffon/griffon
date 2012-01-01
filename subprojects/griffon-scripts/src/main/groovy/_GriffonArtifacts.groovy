@@ -59,14 +59,25 @@ resolveArtifactRepository = {
     }
 }
 
-listArtifacts = { String type, ArtifactRepository repository ->
-    listArtifactsHeader(repository, type)
+listArtifacts = { String type ->
+    resolveArtifactRepository()
 
-    List<Artifact> artifacts = repository.listArtifacts(type)
-    if (artifacts) {
-        artifacts.each { Artifact artifact -> println formatArtifactForPrint(artifact) }
+    def artifactLister = { repository ->
+        List<Artifact> artifacts = repository.listArtifacts(type)
+        if (artifacts) {
+            listArtifactsHeader(repository, type)
+            artifacts.each { Artifact artifact -> println formatArtifactForPrint(artifact) }
+        } else {
+            println "No ${type}s found in repository ${repository.name}."
+        }
+    }
+
+    if (artifactRepository) {
+        artifactLister(artifactRepository)
     } else {
-        println "No ${type}s found in repository ${repository.name}."
+        ArtifactRepositoryRegistry.instance.withRepositories {name, repository ->
+            artifactLister(repository)
+        }
     }
 
     listInstalledArtifacts(type)
@@ -158,8 +169,8 @@ displayArtifactInfo = { String type, String name, String version, ArtifactReposi
 
     if (type == Plugin.TYPE) {
         [
-                'Toolkits': artifact.toolkits*.getLowercaseName().join(', ') ?: 'This plugin works with all toolkits.',
-                'Platforms': artifact.platforms*.getLowercaseName().join(', ') ?: 'This plugin works in all platforms.',
+                'Toolkits': artifact.toolkits*.getLowercaseName().join(', ') ?: 'works with all toolkits',
+                'Platforms': artifact.platforms*.getLowercaseName().join(', ') ?: 'works in all platforms',
         ].each { label, value ->
             println "${label.padRight(padding, ' ')}: ${value}"
         }
@@ -427,10 +438,10 @@ resolveCommitMessage = {
 doListArtifactUpdates = { String type ->
     Map availableArtifacts = getAvailableArtifacts(type)
     Map installedArtifacts = getInstalledArtifacts(type)
-    Map<String, String> outdatedArtifacts = [:]
+    Map outdatedArtifacts = [:]
 
     if (!availableArtifacts) {
-        println "\nNo ${type}s available${artifactRepository ? ' in ' + artifactRepository.name : ''}."
+        println "\nNo ${type} updates available in configured repositories."
     }
 
     boolean headerDisplayed = false
@@ -447,7 +458,10 @@ ${capitalize(type)}s with available updates are listed below:
                     headerDisplayed = true
                 }
                 println "${name.padRight(27 + (type == Archetype.TYPE ? 3 : 0), " ")}${version.padRight(16, " ")}  ${availableVersion}"
-                outdatedArtifacts[name] = availableVersion
+                outdatedArtifacts[name] = [
+                        version: availableVersion,
+                        repository: availableArtifacts[name].repository
+                ]
             }
         }
         if (!headerDisplayed) {
@@ -460,12 +474,12 @@ ${capitalize(type)}s with available updates are listed below:
                 isInteractive = false
                 try {
                     System.setProperty('griffon.artifact.force.updates', 'true')
-                    outdatedArtifacts.each { name, version ->
+                    outdatedArtifacts.each { name, data ->
                         // skip if name-version has been installed already because
                         // it is a dependency of another artifact that was upgraded in  a previous
                         // iteration
-                        if (Metadata.current["${type}${type == Plugin.TYPE ? 's' : ''}" + name] == version) return
-                        installArtifactForName(type, name, version, Metadata.current)
+                        if (Metadata.current["${type}${type == Plugin.TYPE ? 's' : ''}" + name] == data.version) return
+                        doInstallArtifact(data.repository, type, name, data.version, Metadata.current)
                     }
                 } finally {
                     isInteractive = wasInteractive
@@ -484,10 +498,11 @@ getAvailableArtifacts = { String type ->
     def finder = { repository ->
         repository.listArtifacts(type).each { Artifact artifact ->
             for (release in artifact.releases) {
-                if (isValidVersion(release.griffonVersion, GriffonUtil.getGriffonVersion())) {
+                if (isValidVersion(GriffonUtil.getGriffonVersion(), release.griffonVersion)) {
                     artifacts[artifact.name] = [
                             version: release.version,
-                            title: artifact.title
+                            title: artifact.title,
+                            repository: repository
                     ]
                     break
                 }
@@ -499,8 +514,7 @@ getAvailableArtifacts = { String type ->
 
     if (artifactRepository) {
         finder(artifactRepository)
-    }
-    else {
+    } else {
         ArtifactRepositoryRegistry.instance.withRepositories {String name, ArtifactRepository artifactRepository ->
             finder(artifactRepository)
         }
@@ -518,6 +532,17 @@ getInstalledArtifacts = { String type ->
                 version: release.version,
                 title: release.artifact.title
         ]
+    }
+
+    // legacy plugins
+    if (type == Plugin.TYPE) {
+        for (resource in ArtifactUtils.resolveResources("file://${artifactBase(type)}/*/plugin.xml")) {
+            def xml = new XmlSlurper().parse(resource.file)
+            artifacts[xml.@name.text()] = [
+                    version: xml.@version.text(),
+                    title: xml.title.text()
+            ]
+        }
     }
 
     artifacts

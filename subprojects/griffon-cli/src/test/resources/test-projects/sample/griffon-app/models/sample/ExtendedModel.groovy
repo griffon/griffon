@@ -1,5 +1,7 @@
 package sample
 
-class ExtendedModel extends AbstractModel {
+import groovy.beans.Bindable
+
+class ExtendedModel extends sample.AbstractModel {
     @Bindable String name
 }

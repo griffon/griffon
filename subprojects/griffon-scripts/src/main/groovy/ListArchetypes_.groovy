@@ -25,8 +25,7 @@ includeTargets << griffonScript('_GriffonArtifacts')
 target(listArchetypes: 'Lists all archetypes available in an artifact repository') {
     depends(parseArguments, configureProxy, configureArtifactRepositories)
 
-    selectArtifactRepository()
-    listArtifacts(Archetype.TYPE, artifactRepository)
+    listArtifacts(Archetype.TYPE)
 }
 
 setDefaultTarget(listArchetypes)

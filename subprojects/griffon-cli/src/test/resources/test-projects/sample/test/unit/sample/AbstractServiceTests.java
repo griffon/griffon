@@ -1,17 +1,17 @@
-package sample
+package sample;
 
 import griffon.test.GriffonUnitTestCase;
 
-class AbstractServiceTests extends GriffonUnitTestCase {
+public class AbstractServiceTests extends GriffonUnitTestCase {
     protected void setUp() {
-        super.setUp()
+        super.setUp();
     }
 
     protected void tearDown() {
-        super.tearDown()
+        super.tearDown();
     }
 
-    void testSomething() {
+    public void testSomething() {
 
     }
 }

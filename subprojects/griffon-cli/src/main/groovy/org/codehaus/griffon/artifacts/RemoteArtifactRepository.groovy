@@ -137,7 +137,7 @@ class RemoteArtifactRepository extends AbstractArtifactRepository {
             }
         } catch (Exception e) {
             LOG.trace("Could not download artifact ${type}:${name}:${version}", GriffonExceptionHandler.sanitize(e))
-            throw httpre
+            throw e
         }
         file
     }
