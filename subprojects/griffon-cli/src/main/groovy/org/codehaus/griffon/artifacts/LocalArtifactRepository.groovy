@@ -143,7 +143,7 @@ class LocalArtifactRepository extends AbstractArtifactRepository {
                 def json = new JsonSlurper().parseText(out.text)
                 json.releases?.each { rel ->
                     if (rel.version == release.version) return
-                    artifactAsMap.releases << ArtifactUtils.parseRelease(rel).asMap()
+                    artifactAsMap.releases << ArtifactUtils.parseReleaseFromJSON(rel).asMap()
                 }
                 artifactAsMap.releases.sort {a, b -> b.version <=> a.version}
             }

@@ -17,7 +17,6 @@
 import griffon.util.GriffonExceptionHandler
 import griffon.util.GriffonUtil
 import griffon.util.Metadata
-import groovy.json.JsonSlurper
 import org.codehaus.griffon.artifacts.model.Archetype
 import org.codehaus.griffon.artifacts.model.Artifact
 import org.codehaus.griffon.artifacts.model.Plugin
@@ -25,7 +24,6 @@ import org.codehaus.griffon.artifacts.model.Release
 import static griffon.util.GriffonNameUtils.capitalize
 import static griffon.util.GriffonNameUtils.isBlank
 import org.codehaus.griffon.artifacts.*
-import static org.codehaus.griffon.artifacts.ArtifactUtils.artifactBase
 import static org.codehaus.griffon.artifacts.ArtifactUtils.isValidVersion
 
 /**
@@ -266,8 +264,8 @@ uninstallArtifact = { String type ->
             String artifactName = artifactArgs[0]
             String artifactVersion = artifactArgs[1]
 
-            ArtifactInstallEngine pluginInstallEngine = createArtifactInstallEngine(metadata)
-            pluginInstallEngine.uninstall(type, artifactName, artifactVersion)
+            ArtifactInstallEngine artifactInstallEngine = createArtifactInstallEngine(metadata)
+            artifactInstallEngine.uninstall(type, artifactName, artifactVersion)
         } else {
             event('StatusError', [uninstallArtifactErrorMessage(Archetype.TYPE)])
         }
@@ -330,7 +328,7 @@ doInstallArtifact = { ArtifactRepository artifactRepository, String type, name, 
                 exit 1
             }
             for (release in artifact.releases) {
-                if (isValidVersion(release.griffonVersion, GriffonUtil.getGriffonVersion())) {
+                if (isValidVersion(GriffonUtil.getGriffonVersion(), release.griffonVersion)) {
                     version = release.version
                     break
                 }
@@ -365,21 +363,47 @@ installArtifactForName = { String type, String name, String version, Metadata md
 }
 
 doInstallFromFile = { type, file, md ->
-    ArtifactInstallEngine pluginInstallEngine = createArtifactInstallEngine(metadata)
-    pluginInstallEngine.installFromFile(type, file)
+    ArtifactInstallEngine artifactInstallEngine = createArtifactInstallEngine(md)
+    try {
+        artifactInstallEngine.installFromFile(type, file)
+    } catch (InstallArtifactException iae) {
+        artifactInstallEngine.errorHandler "Installation of ${file} aborted."
+    } catch (UninstallArtifactException uae) {
+        artifactInstallEngine.errorHandler "Installation of ${file} aborted."
+    }
 }
 
 private ArtifactInstallEngine createArtifactInstallEngine(Metadata md) {
+    if (!md) md = Metadata.current
     def artifactInstallEngine = new ArtifactInstallEngine(griffonSettings, md, ant)
     artifactInstallEngine.pluginScriptRunner = runPluginScript
     artifactInstallEngine.eventHandler = { eventName, msg -> event(eventName, [msg]) }
     artifactInstallEngine.errorHandler = { msg ->
         event('StatusError', [msg])
+        // install or uninstalled too
         for (dir in artifactInstallEngine.installedArtifacts) {
             ant.delete(dir: dir, failonerror: false)
         }
         exit(1)
     }
+
+    /*
+    artifactInstallEngine.postUninstallEvent = {
+        resetClasspath()
+    }
+
+    artifactInstallEngine.postInstallEvent = { pluginInstallPath ->
+        File pluginEvents = new File("${pluginInstallPath}/scripts/_Events.groovy")
+        if (pluginEvents.exists()) {
+            eventListener.loadEventsScript(pluginEvents)
+        }
+        resetClasspath()
+    }
+    */
+
+    artifactInstallEngine.interactive = isInteractive
+    artifactInstallEngine.variableStore = binding
+
     artifactInstallEngine
 }
 
@@ -524,26 +548,6 @@ getAvailableArtifacts = { String type ->
 }
 
 getInstalledArtifacts = { String type ->
-    Map artifacts = [:]
-
-    for (resource in ArtifactUtils.resolveResources("file://${artifactBase(type)}/*/${type}.json")) {
-        Release release = Release.make(type, new JsonSlurper().parseText(resource.file.text))
-        artifacts[release.artifact.name] = [
-                version: release.version,
-                title: release.artifact.title
-        ]
-    }
-
-    // legacy plugins
-    if (type == Plugin.TYPE) {
-        for (resource in ArtifactUtils.resolveResources("file://${artifactBase(type)}/*/plugin.xml")) {
-            def xml = new XmlSlurper().parse(resource.file)
-            artifacts[xml.@name.text()] = [
-                    version: xml.@version.text(),
-                    title: xml.title.text()
-            ]
-        }
-    }
-
-    artifacts
+    ArtifactInstallEngine artifactInstallEngine = createArtifactInstallEngine()
+    artifactInstallEngine.getInstalledArtifacts(type)
 }

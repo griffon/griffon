@@ -84,6 +84,6 @@ createArtifactRelease = { String type, Map artifactInfo ->
                 fullpath: artifactZipFileName)
     }
 
-    release = Release.make(type, artifactInfo)
+    release = Release.makeFromJSON(type, artifactInfo)
     release.file = releaseFile
 }

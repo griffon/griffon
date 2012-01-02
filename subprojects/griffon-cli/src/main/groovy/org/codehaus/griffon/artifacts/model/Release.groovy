@@ -31,7 +31,7 @@ class Release {
     String checksum = ''
     Date date = new Date()
     Artifact artifact
-    Map<String, String> dependencies = [:]
+    List<Map<String, String>> dependencies = []
     File file
 
     String toString() {
@@ -60,20 +60,18 @@ class Release {
                 comment: comment,
                 checksum: checksum,
                 date: date.format(ArtifactUtils.TIMESTAMP_FORMAT),
-                dependencies: dependencies.collect([]) {dep ->
-                    [name: dep.key, version: dep.value]
-                }
+                dependencies: dependencies
         ]
     }
 
-    static Release make(String type, json) {
-        Release release = parseRelease(json)
+    static Release makeFromJSON(String type, json) {
+        Release release = parseReleaseFromJSON(json)
         switch (type) {
             case Plugin.TYPE:
-                release.artifact = parsePlugin(json)
+                release.artifact = parsePluginFromJSON(json)
                 break
             case Archetype.TYPE:
-                release.artifact = parseArchetype(json)
+                release.artifact = parseArchetypeFromJSON(json)
                 break
         }
 

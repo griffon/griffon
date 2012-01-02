@@ -65,6 +65,9 @@ class LegacyArtifactRepository extends AbstractArtifactRepository {
     }
 
     Artifact findArtifact(String type, String name) {
+        if (LOG.debugEnabled) {
+            LOG.debug("${name}: searching for ${type}:${name}")
+        }
         Artifact artifact = null
         if (type == Archetype.TYPE) return artifact
 
@@ -87,7 +90,7 @@ class LegacyArtifactRepository extends AbstractArtifactRepository {
         try {
             String formattedVersion = version.replace('.', '_')
             String path = "griffon-${name}/tags/RELEASE_${formattedVersion}/griffon-${name}-${version}.zip"
-            println "Downloading ${path} ..."
+            println "Downloading ${url}${path} ..."
 
             def response = http.request(path: path)
             if (response.status == 200) {

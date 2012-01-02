@@ -160,14 +160,14 @@ class ArtifactUtils {
     static Artifact parseArtifact(String type, json) {
         switch (type) {
             case Plugin.TYPE:
-                return parsePlugin(json)
+                return parsePluginFromJSON(json)
             case Archetype.TYPE:
-                return parseArchetype(json)
+                return parseArchetypeFromJSON(json)
         }
     }
 
-    static Archetype parseArchetype(json) {
-        new Archetype(
+    static Archetype parseArchetypeFromJSON(json) {
+        Archetype archetype = new Archetype(
                 name: json.name,
                 title: json.title,
                 description: json.description,
@@ -176,12 +176,14 @@ class ArtifactUtils {
                 authors: json.authors.collect([]) { author ->
                     new Author(name: author.name, email: author.email)
                 },
-                releases: !json.releases ? [] : json.releases.collect([]) {parseRelease(it)}
+                releases: !json.releases ? [] : json.releases.collect([]) {parseReleaseFromJSON(it)}
         )
+        archetype.releases.each { it.artifact = archetype }
+        archetype
     }
 
-    static Plugin parsePlugin(json) {
-        new Plugin(
+    static Plugin parsePluginFromJSON(json) {
+        Plugin plugin = new Plugin(
                 name: json.name,
                 title: json.title,
                 description: json.description,
@@ -190,7 +192,7 @@ class ArtifactUtils {
                 authors: json.authors.collect([]) { author ->
                     new Author(name: author.name, email: author.email)
                 },
-                releases: !json.releases ? [] : json.releases.collect([]) {parseRelease(it)},
+                releases: !json.releases ? [] : json.releases.collect([]) {parseReleaseFromJSON(it)},
                 toolkits: json.toolkits.collect([]) { toolkit ->
                     Toolkit.findByName(toolkit)
                 },
@@ -198,17 +200,18 @@ class ArtifactUtils {
                     Platform.findByName(platform)
                 }
         )
+        plugin.releases.each { it.artifact = plugin }
+        plugin
     }
 
-    static Release parseRelease(json) {
+    static Release parseReleaseFromJSON(json) {
         new Release(
                 version: json.version,
                 griffonVersion: json.griffonVersion,
                 checksum: json.checksum,
                 date: json.date ? Date.parse(TIMESTAMP_FORMAT, json.date) : null,
-                dependencies: json.dependencies.inject([:]) { m, dep ->
-                    m[dep.name] = dep.version
-                    m
+                dependencies: json.dependencies.collect([]) { dep ->
+                    [name: dep.name, version: dep.version]
                 },
         )
     }
