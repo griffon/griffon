@@ -775,7 +775,6 @@ public class GriffonScriptRunner {
         binding.setVariable("resourcesDirPath", settings.getResourcesDir().getPath());
         binding.setVariable("testResourcesDirPath", settings.getTestResourcesDir().getPath());
         binding.setVariable("pluginsDirPath", settings.getProjectPluginsDir().getPath());
-        binding.setVariable("globalPluginsDirPath", settings.getGlobalPluginsDir().getPath());
 
         binding.setVariable("platform", PlatformUtils.getPlatform());
 
@@ -926,7 +925,7 @@ public class GriffonScriptRunner {
             System.out.println("Dependencies resolved in "+(System.currentTimeMillis()-now)+"ms.");
         }
 
-        // Add the libraries of both project and global plugins.
+        // Add the libraries of project plugins.
         if (!skipPlugins) {
             for (File dir : listKnownPluginDirs(settings)) {
                 addPluginLibs(dir, urls, settings);
@@ -962,9 +961,6 @@ public class GriffonScriptRunner {
     @SuppressWarnings("unchecked")
     public static List<File> listKnownPluginDirs(BuildSettings settings) {
         List<File> dirs = new ArrayList<File>();
-
-        // First look in the global plugins directory.
-        dirs.addAll(Arrays.asList(listPluginDirs(settings.getGlobalPluginsDir())));
 
         // Next up, the project's plugins directory.
         dirs.addAll(Arrays.asList(listPluginDirs(settings.getProjectPluginsDir())));

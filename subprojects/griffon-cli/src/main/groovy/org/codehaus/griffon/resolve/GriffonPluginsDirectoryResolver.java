@@ -38,7 +38,6 @@ public class GriffonPluginsDirectoryResolver extends FileSystemResolver{
                 addArtifactPattern(basedir.getAbsolutePath()+ LIB_DIR_PATTERN);
             }
             addPatternsForPluginsDirectory(pluginsDir);
-            addPatternsForPluginsDirectory(buildSettings.getGlobalPluginsDir());
         }
         setName(GRIFFON_PLUGINS);
         setSettings(ivySettings);

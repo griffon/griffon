@@ -176,14 +176,6 @@ public class GriffonBuildHelper {
         invokeMethod(this.settings, "setProjectPluginsDir", new Object[] { dir });
     }
 
-    public File getGlobalPluginsDir() {
-        return (File) invokeMethod(this.settings, "getGlobalPluginsDir", new Object[0]);
-    }
-
-    public void setGlobalPluginsDir(File dir) {
-        invokeMethod(this.settings, "setGlobalPluginsDir", new Object[] { dir });
-    }
-
     public File getTestReportsDir() {
         return (File) invokeMethod(this.settings, "getTestReportsDir", new Object[0]);
     }

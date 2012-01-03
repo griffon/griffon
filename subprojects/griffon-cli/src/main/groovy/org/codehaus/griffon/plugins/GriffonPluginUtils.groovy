@@ -219,10 +219,6 @@ class GriffonPluginUtils {
         getPluginBuildSettings().getImplicitPluginDirectories()
     }
 
-    static boolean isGlobalPluginLocation(Resource pluginDir) {
-        getPluginBuildSettings().isGlobalPluginLocation(pluginDir)
-    }
-
     /**
      * All artefact resources (all Groovy files contained within the griffon-app directory of plugins or applications).
      */
@@ -317,13 +313,6 @@ class GriffonPluginUtils {
      */
     static Resource[] getPluginI18nDirectories(String pluginsDirPath = BuildSettingsHolder.settings?.projectPluginsDir?.path) {
         getPluginBuildSettings().getPluginI18nDirectories()
-    }
-
-    /**
-     * The path to the global plugins directory.
-     */
-    static String getGlobalPluginsPath() {
-        getPluginBuildSettings().getGlobalPluginsPath()
     }
 
     /**

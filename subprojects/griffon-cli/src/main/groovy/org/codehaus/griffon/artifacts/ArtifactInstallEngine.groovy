@@ -35,6 +35,8 @@ import griffon.util.*
 import static griffon.util.GriffonNameUtils.*
 import static griffon.util.GriffonUtil.getScriptName
 import static org.codehaus.griffon.artifacts.ArtifactUtils.*
+import static org.codehaus.griffon.artifacts.ArtifactUtils.resolveResources
+import org.springframework.core.io.Resource
 
 /**
  * @author Andres Almiray
@@ -75,11 +77,11 @@ class ArtifactInstallEngine {
         value = value ? value.toString().toLowerCase() : INSTALL_FAILURE_CONTINUE
         value in [INSTALL_FAILURE_ABORT, INSTALL_FAILURE_CONTINUE] ? value : INSTALL_FAILURE_CONTINUE
     }
-
+    
     Map getInstalledArtifacts(String type) {
         Map artifacts = [:]
 
-        for (resource in ArtifactUtils.resolveResources("file://${artifactBase(type)}/*/${type}.json")) {
+        for (resource in resolveResources("file://${artifactBase(type)}/*/${type}.json")) {
             Release release = Release.makeFromJSON(type, new JsonSlurper().parseText(resource.file.text))
             artifacts[release.artifact.name] = [
                     type: type,
@@ -92,7 +94,7 @@ class ArtifactInstallEngine {
         // TODO - remove this code before 1.0
         // legacy plugins
         if (type == Plugin.TYPE) {
-            for (resource in ArtifactUtils.resolveResources("file://${artifactBase(type)}/*/plugin.xml")) {
+            for (resource in resolveResources("file://${artifactBase(type)}/*/plugin.xml")) {
                 def xml = new XmlSlurper().parse(resource.file)
                 String name = xml.@name.text()
                 if (artifacts[name]) continue
@@ -450,7 +452,7 @@ class ArtifactInstallEngine {
         }
     }
 
-    private static ArtifactDependency resolveDependencyTree(String type, String name, String version = null) {
+    private ArtifactDependency resolveDependencyTree(String type, String name, String version = null) {
         ArtifactDependency artifactDependency = new ArtifactDependency(name)
         artifactDependency.version = version
 
@@ -481,7 +483,7 @@ class ArtifactInstallEngine {
         artifactDependency
     }
 
-    private static ArtifactDependency resolveDependenciesOf(ArtifactDependency artifactDependency) {
+    private ArtifactDependency resolveDependenciesOf(ArtifactDependency artifactDependency) {
         boolean resolutionTrouble = false
         for (dependency in artifactDependency.release.dependencies) {
             // Watch out, only plugins can be resolved as dependencies
@@ -497,7 +499,7 @@ class ArtifactInstallEngine {
         artifactDependency
     }
 
-    private static List<ArtifactDependency> resolveEvictions(Collection<ArtifactDependency> installed, ArtifactDependency target) {
+    private List<ArtifactDependency> resolveEvictions(Collection<ArtifactDependency> installed, ArtifactDependency target) {
 
         List evictions = []
         fillEvictions(target, evictions)
@@ -555,7 +557,7 @@ class ArtifactInstallEngine {
         installPlan
     }
 
-    private static void processEvictionsAndConflicts(ArtifactDependency artifactDependency, List<ArtifactDependency> list) {
+    private void processEvictionsAndConflicts(ArtifactDependency artifactDependency, List<ArtifactDependency> list) {
         for (dependency in artifactDependency.dependencies) {
             processEvictionsAndConflicts(dependency, list)
         }
@@ -564,7 +566,7 @@ class ArtifactInstallEngine {
         }
     }
 
-    private static void fillEvictions(ArtifactDependency artifactDependency, List<Map> evictions) {
+    private void fillEvictions(ArtifactDependency artifactDependency, List<Map> evictions) {
         evictions << [
                 name: artifactDependency.name,
                 version: artifactDependency.version,

@@ -18,9 +18,11 @@ package org.codehaus.griffon.artifacts
 
 import griffon.util.BuildSettingsHolder
 import griffon.util.GriffonUtil
+import groovy.json.JsonSlurper
 import org.springframework.core.io.FileSystemResource
 import org.springframework.core.io.Resource
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver
+import static griffon.util.GriffonNameUtils.capitalize
 import org.codehaus.griffon.artifacts.model.*
 
 /**
@@ -66,6 +68,22 @@ class ArtifactUtils {
         } else {
             return new File[0]
         }
+    }
+
+    static Release getReleaseFromMetadata(String type, String name, String version = null) {
+        File file = null
+        if (version) {
+            file = new File("${artifactBase(type)}/${name}-${version}/${type}.json")
+            if (!file.exists()) {
+                throw new IllegalArgumentException("${capitalize(type)} ${name}-${version} is not installed.")
+            }
+        } else {
+            file = findArtifactDirForName(type, name)
+            if (!file || !file.exists()) {
+                throw new IllegalArgumentException("${capitalize(type)} ${name}-${version} is not installed.")
+            }
+        }
+        Release.makeFromJSON(type, new JsonSlurper().parseText(file.text))
     }
 
     static String artifactBase(String type) {
@@ -176,7 +194,7 @@ class ArtifactUtils {
                 authors: json.authors.collect([]) { author ->
                     new Author(name: author.name, email: author.email)
                 },
-                releases: !json.releases ? [] : json.releases.collect([]) {parseReleaseFromJSON(it)}
+                releases: json.releases ? json.releases.collect([]) {parseReleaseFromJSON(it)} : []
         )
         archetype.releases.each { it.artifact = archetype }
         archetype
@@ -192,7 +210,7 @@ class ArtifactUtils {
                 authors: json.authors.collect([]) { author ->
                     new Author(name: author.name, email: author.email)
                 },
-                releases: !json.releases ? [] : json.releases.collect([]) {parseReleaseFromJSON(it)},
+                releases: json.releases ? json.releases.collect([]) {parseReleaseFromJSON(it)} : [],
                 toolkits: json.toolkits.collect([]) { toolkit ->
                     Toolkit.findByName(toolkit)
                 },

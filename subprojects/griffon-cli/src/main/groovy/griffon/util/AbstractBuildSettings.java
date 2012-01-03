@@ -50,13 +50,7 @@ public abstract class AbstractBuildSettings {
      */
     protected File projectPluginsDir;
 
-    /**
-     * The location where global plugins are installed to.
-     */
-    protected File globalPluginsDir;
-
     protected boolean projectPluginsDirSet;
-    protected boolean globalPluginsDirSet;
 
     /**
      * Flattened version of the ConfigObject for easy access from Java
@@ -88,15 +82,6 @@ public abstract class AbstractBuildSettings {
     public void setProjectPluginsDir(File projectPluginsDir) {
         this.projectPluginsDir = projectPluginsDir;
         projectPluginsDirSet = true;
-    }
-
-    public File getGlobalPluginsDir() {
-        return globalPluginsDir;
-    }
-
-    public void setGlobalPluginsDir(File globalPluginsDir) {
-        this.globalPluginsDir = globalPluginsDir;
-        globalPluginsDirSet = true;
     }
 
     /**
@@ -190,8 +175,7 @@ public abstract class AbstractBuildSettings {
     }
 
     /**
-     * Returns a list of all plugin directories in both the given path
-     * and the global "plugins" directory together.
+     * Returns a list of all plugin directories in the given path.
      *
      * @return A list of plugin directories as File objects
      */
@@ -229,11 +213,6 @@ public abstract class AbstractBuildSettings {
                 System.err.println("Cannot read project plugins directory [" + projectPluginsDir + "] due to I/O error: " + e.getMessage());
             }
 
-            if (globalPluginsDir != null) try {
-                dirs.add(globalPluginsDir.getCanonicalPath());
-            } catch (IOException e) {
-                System.err.println("Cannot read global plugins directory [" + globalPluginsDir + "] due to I/O error: " + e.getMessage());
-            }
             cache.put(KEY_PLUGIN_BASE_DIRECTORIES, dirs);
         }
         return dirs;

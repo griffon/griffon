@@ -463,21 +463,7 @@ class PluginBuildSettings {
     List<String> getPluginBaseDirectories() {
         def list = []
         if (pluginDirPath) list << pluginDirPath
-        String globalPluginPath = buildSettings?.globalPluginsDir?.path
-        if (globalPluginPath) list << globalPluginPath
         return list
-    }
-
-    /**
-     * Returns true if the specified plugin directory is a global plugin.
-     */
-    boolean isGlobalPluginLocation(Resource pluginDir) {
-        def globalPluginsDir = buildSettings?.globalPluginsDir?.canonicalFile
-        def containingDir = pluginDir?.file?.parentFile?.canonicalFile
-        if (globalPluginsDir || containingDir) {
-            return globalPluginsDir == containingDir
-        }
-        return false
     }
 
     /**
@@ -564,11 +550,6 @@ class PluginBuildSettings {
             resourceResolver("file:${pluginDir}/griffon-app/i18n")
         }
     }
-
-    /**
-     * Obtains the path to the global plugins directory.
-     */
-    String getGlobalPluginsPath() { buildSettings?.globalPluginsDir?.path }
 
     /**
      * Obtains a plugin directory for the given name.

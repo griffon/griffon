@@ -64,11 +64,6 @@ class BuildSettings extends AbstractBuildSettings {
     public static final String PLUGINS_DIR = "griffon.project.plugins.dir"
 
     /**
-     * The name of the system property for {@link #globalPluginsDir}.
-     */
-    public static final String GLOBAL_PLUGINS_DIR = "griffon.global.plugins.dir"
-
-    /**
      * The name of the system property for {@link #resourcesDir}.
      */
     public static final String PROJECT_RESOURCES_DIR = "griffon.project.resource.dir"
@@ -426,7 +421,7 @@ class BuildSettings extends AbstractBuildSettings {
     private boolean verboseCompileSet
     private boolean sourceEncodingSet
 
-    final Map<String, String> systemProperties = new LinkedHashMap<String, String>();
+    final Map<String, String> systemProperties = [:]
 
     BuildSettings() {
         this(null, null)
@@ -893,7 +888,6 @@ class BuildSettings extends AbstractBuildSettings {
         if (!testResourcesDirSet) testResourcesDir = new File(getPropertyValue(PROJECT_TEST_RESOURCES_DIR, props, "$projectWorkDir/test-resources"))
         if (!sourceDirSet) sourceDir = new File(getPropertyValue(PROJECT_SOURCE_DIR, props, "$baseDir/src"))
         if (!projectPluginsDirSet) this.@projectPluginsDir = new File(getPropertyValue(PLUGINS_DIR, props, "$projectWorkDir/plugins"))
-        if (!globalPluginsDirSet) this.@globalPluginsDir = new File(getPropertyValue(GLOBAL_PLUGINS_DIR, props, "$griffonWorkDir/global-plugins"))
         if (!testReportsDirSet) testReportsDir = new File(getPropertyValue(PROJECT_TEST_REPORTS_DIR, props, "${projectTargetDir}/test-reports"))
         if (!docsOutputDirSet) docsOutputDir = new File(getPropertyValue(PROJECT_DOCS_OUTPUT_DIR, props, "${projectTargetDir}/docs"))
         if (!testSourceDirSet) testSourceDir = new File(getPropertyValue(PROJECT_TEST_SOURCE_DIR, props, "${baseDir}/test"))
