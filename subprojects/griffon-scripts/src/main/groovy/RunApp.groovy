@@ -87,7 +87,7 @@ target('runApp': "Runs the application from the command line") {
         f.absolutePath.startsWith(jardir.absolutePath) ? f.absolutePath - jardir.absolutePath - File.separator : f
     }.join(File.pathSeparator)
 
-    runtimeClasspath = [i18nDir, resourcesDir, runtimeClasspath, classesDir, pluginClassesDir].join(File.pathSeparator)
+    runtimeClasspath = [i18nDir, resourcesDir, runtimeClasspath, classesDir].join(File.pathSeparator)
 
     // start the process
     try {

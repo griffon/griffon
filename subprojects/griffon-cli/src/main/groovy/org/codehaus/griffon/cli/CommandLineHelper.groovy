@@ -34,6 +34,18 @@ public class CommandLineHelper {
         this.out = out
     }
 
+    String forceUserInput(String message) {
+        return forceUserInput(message, null);
+    }
+
+    String forceUserInput(String message, String[] validResponses) {
+        String interactiveValue = System.getProperty("griffon.interactive.mode");
+        System.setProperty("griffon.interactive.mode", "true");
+        String enteredValue = userInput(message, validResponses);
+        System.setProperty("griffon.interactive.mode", interactiveValue);
+        return enteredValue;
+    }
+
     /**
      * Replacement for AntBuilder.input() to eliminate dependency of
      * GriffonScriptRunner on the Ant libraries. Prints a message and

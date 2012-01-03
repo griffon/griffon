@@ -41,7 +41,7 @@ target(loadApp:'Loads the Griffon application object') {
     depends(prepackage)
     event('AppLoadStart', ['Loading Griffon Application'])
 
-    [classesDir, pluginClassesDir, i18nDir, resourcesDir].each { d ->
+    [classesDir, i18nDir, resourcesDir].each { d ->
         addUrlIfNotPresent rootLoader, d
     }
     setupRuntimeJars().each { j ->

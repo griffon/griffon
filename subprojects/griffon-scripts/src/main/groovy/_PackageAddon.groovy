@@ -31,7 +31,7 @@ target('default': "Packages a Griffon addon. Note: to package a plugin use 'grif
 }
 
 target('packageAddon': "Packages a Griffon addon. Note: to package a plugin use 'griffon package-plugin'") {
-    depends(checkVersion, createStructure, pluginConfig)
+    depends(checkVersion, createStructure)
 
     try {
         profile("compile") {
@@ -41,28 +41,27 @@ target('packageAddon': "Packages a Griffon addon. Note: to package a plugin use 
         logError("Compilation error", e)
         exit(1)
     }
-    profile("creating config") {
-        createConfig()
-    }
 
-    addonJarDir = ant.antProject.replaceProperties(buildConfig.griffon.jars.destDir ?: "target/addon")
+    addonJarDir = "${artifactPackageDirPath}/addon"
     ant.mkdir(dir: addonJarDir)
 
-    cliJarName = "griffon-${pluginName}-cli-${plugin.version}.jar"
+    cliJarName = "griffon-${pluginName}-cli-${pluginVersion}.jar"
     if (cliSourceDir.exists()) {
         ant.jar(destfile: "$addonJarDir/$cliJarName") {
             fileset(dir: cliClassesDir)
         }
     }
 
-    if (!isAddonPlugin) return;
+    if (!isAddonPlugin) return
+
+    profile("creating config") {
+        createConfig()
+    }
 
     packageResources()
 
     File metainfDirPath = new File("${basedir}/griffon-app/conf/metainf")
-    addonJarName = (buildConfig.griffon?.jars?.jarName
-    ? "${buildConfig.griffon.jars.jarName}"
-    : "griffon-${pluginName}-addon-${plugin.version}.jar")
+    addonJarName = "griffon-${pluginName}-addon-${pluginVersion}.jar"
     ant.jar(destfile: "$addonJarDir/$addonJarName") {
         fileset(dir: classesDirPath) {
             exclude(name: 'Config*.class')

@@ -535,11 +535,11 @@ public class GriffonScriptRunner {
                 validArgs[i] = String.valueOf(i + 1);
             }
 
-            String enteredValue = helper.userInput("Enter #", validArgs);
+            String enteredValue = helper.forceUserInput("Enter #", validArgs);
             if (enteredValue == null) return 1;
 
             int number = Integer.parseInt(enteredValue);
-            File scriptFile = (File) potentialScripts.get(number - 1);
+            File scriptFile = potentialScripts.get(number - 1);
             out.println("Running script "+ scriptFile.getAbsolutePath());
             // We can now safely set the default environment
             String scriptFileName = getScriptNameFromFile(scriptFile);
@@ -769,10 +769,8 @@ public class GriffonScriptRunner {
         binding.setVariable("projectWorkDir", settings.getProjectWorkDir().getPath());
         binding.setVariable("projectTargetDir", settings.getProjectTargetDir());
         binding.setVariable("classesDir", settings.getClassesDir());
-        binding.setVariable("pluginClassesDir", settings.getPluginClassesDir());
         binding.setVariable("griffonTmp", griffonWork +"/tmp");
         binding.setVariable("classesDirPath", settings.getClassesDir().getPath());
-        binding.setVariable("pluginClassesDirPath", settings.getPluginClassesDir().getPath());
         binding.setVariable("testDirPath", settings.getTestClassesDir().getPath());
         binding.setVariable("resourcesDirPath", settings.getResourcesDir().getPath());
         binding.setVariable("testResourcesDirPath", settings.getTestResourcesDir().getPath());

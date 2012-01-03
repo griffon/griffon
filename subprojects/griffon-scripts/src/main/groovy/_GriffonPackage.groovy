@@ -38,7 +38,6 @@ if (getBinding().variables.containsKey("_griffon_package_called")) return
 _griffon_package_called = true
 
 includeTargets << griffonScript("_GriffonCompile")
-includeTargets << griffonScript("_PackagePlugins")
 
 configTweaks = []
 

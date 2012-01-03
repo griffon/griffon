@@ -14,7 +14,6 @@
 * limitations under the License.
 */
 
-import groovy.json.JsonBuilder
 import org.codehaus.griffon.artifacts.ArtifactUtils
 import org.codehaus.griffon.artifacts.model.Archetype
 
@@ -33,25 +32,13 @@ target(packageArchetype: 'Packages a Griffon archetype') {
         exit(1)
     }
 
-    archetypeInfo = loadArtifactInfo(Archetype.TYPE, archetypeDescriptor)
-
-    if (packageForRelease) {
-        checkLicense(Archetype.TYPE)
-    }
-
-    zipArchetype(archetypeInfo)
+    artifactInfo = loadArtifactInfo(Archetype.TYPE, archetypeDescriptor)
+    packageArtifact()
 }
 
 setDefaultTarget(packageArchetype)
 
-zipArchetype = { Map artifactInfo ->
-    artifactPackageDirPath = "${projectTargetDir}/package"
-    ant.delete(dir: artifactPackageDirPath, quiet: true, failOnError: false)
-    ant.mkdir(dir: artifactPackageDirPath)
-    JsonBuilder builder = new JsonBuilder()
-    builder.call(artifactInfo)
-
-    new File(artifactPackageDirPath, 'archetype.json').text = builder.toString()
+target('package_archetype': '') {
     ant.copy(todir: artifactPackageDirPath) {
         fileset(dir: basedir, includes: 'LICENSE*, application.groovy')
     }
@@ -64,8 +51,8 @@ zipArchetype = { Map artifactInfo ->
             fileset(dir: templatesDir, excludes: '**/.git/**, **/.svn/**, **/CVS/**')
         }
     }
+}
 
-    artifactZipFileName = "griffon-${artifactInfo.name}-${artifactInfo.version}.zip"
-    ant.delete(file: "${artifactPackageDirPath}/${artifactZipFileName}", quiet: true, failOnError: false)
-    ant.zip(destfile: "${artifactPackageDirPath}/${artifactZipFileName}", basedir: artifactPackageDirPath)
+target('post_package_archetype': '') {
+    // empty
 }

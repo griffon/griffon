@@ -206,7 +206,6 @@ class IvyDependencyManager extends AbstractIvyDependencyManager implements Depen
             dependencies {
                 // dependencies needed by the Griffon build system
                 build "org.codehaus.gpars:gpars:0.9",
-                      // "org.tmatesoft.svnkit:svnkit:1.3.1",
                       "org.apache.ant:ant:$buildSettings.antVersion",
                       "org.apache.ant:ant-launcher:$buildSettings.antVersion",
                       "org.apache.ant:ant-junit:$buildSettings.antVersion",

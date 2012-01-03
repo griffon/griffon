@@ -16,8 +16,11 @@
 
 import griffon.util.GriffonNameUtils
 import griffon.util.GriffonUtil
+import groovy.json.JsonBuilder
 import org.codehaus.griffon.artifacts.model.Plugin
 import org.springframework.core.io.Resource
+import griffon.util.MD5
+import org.codehaus.griffon.artifacts.model.Release
 
 /**
  * @author Andres Almiray
@@ -31,13 +34,6 @@ includeTargets << griffonScript('Init')
 
 packageForRelease = false
 
-checkLicense = { String type ->
-    if (!(new File("${basedir}/LICENSE").exists()) && !(new File("${basedir}/LICENSE.txt").exists())) {
-        println "No LICENSE.txt file for ${type} found. Please provide a license file containing the appropriate software licensing information (eg. Apache 2.0, GPL etc.)"
-        exit(1)
-    }
-}
-
 loadArtifactInfo = { String type, Resource artifactDescriptor ->
     def descriptorInstance = loadArtifactDescriptorClass(artifactDescriptor.file.name)
 
@@ -45,6 +41,11 @@ loadArtifactInfo = { String type, Resource artifactDescriptor ->
     name = GriffonNameUtils.getShortName(name)
 
     if (packageForRelease) {
+        if (!(new File("${basedir}/LICENSE").exists()) && !(new File("${basedir}/LICENSE.txt").exists())) {
+            println "No LICENSE.txt file for ${type} found. Please provide a license file containing the appropriate software licensing information (eg. Apache 2.0, GPL etc.)"
+            exit(1)
+        }
+
         if (descriptorInstance.license == '<UNKNOWN>') {
             println "No suitable license chosen. Please provide a license name (eg. Apache 2.0, GPL etc.)"
             exit(1)
@@ -84,6 +85,7 @@ Lorem ipsum
     }
 
     Map map = [
+            type: type,
             name: GriffonUtil.getHyphenatedName(name),
             title: descriptorInstance.title,
             license: descriptorInstance.license,
@@ -105,4 +107,65 @@ Lorem ipsum
     }
 
     map
+}
+
+target('packageArtifact': '') {
+    artifactPackageDirPath = "${projectTargetDir}/package"
+    ant.delete(dir: artifactPackageDirPath, quiet: true, failOnError: false)
+    ant.mkdir(dir: artifactPackageDirPath)
+
+    createArtifactDescriptor(artifactInfo, artifactPackageDirPath)
+    depends("package_${artifactInfo.type}")
+
+    artifactZipFileName = "griffon-${artifactInfo.name}-${artifactInfo.version}.zip"
+    ant.delete(file: "${artifactPackageDirPath}/${artifactZipFileName}", quiet: true, failOnError: false)
+    ant.zip(destfile: "${artifactPackageDirPath}/${artifactZipFileName}", basedir: artifactPackageDirPath)
+
+    depends("post_package_${artifactInfo.type}")
+}
+
+createArtifactDescriptor = { Map artifactInfo, String path ->
+    JsonBuilder builder = new JsonBuilder()
+    builder.call(artifactInfo)
+    new File(path, "${artifactInfo.type}.json").text = builder.toString()
+}
+
+createArtifactRelease = { String type, Map artifactInfo ->
+    artifactReleaseDirPath = "${projectTargetDir}/release"
+    ant.delete(dir: artifactReleaseDirPath, quiet: true, failOnError: false)
+    ant.mkdir(dir: artifactReleaseDirPath)
+    String artifactZipChecksumFileName = new File("${artifactReleaseDirPath}/${artifactZipFileName}.md5")
+    String checksum = MD5.encode(new File("${artifactPackageDirPath}/${artifactZipFileName}").bytes)
+    new File(artifactZipChecksumFileName).text = checksum
+    artifactInfo.checksum = checksum
+    artifactInfo.type = type
+    artifactInfo.comment = resolveCommitMessage()
+
+    File releaseNotes = new File("${basedir}/release_notes.md")
+    if (!releaseNotes.exists() && !argsMap['no-release-notes']) {
+        println "No release notes were found for ${artifactInfo.name}-${artifactInfo.version}. Did you forget to create a release_notes.md file?"
+        if (!confirmInput("Would you like to continue with the release without adding release notes?")) {
+            exit 1
+        }
+    } else {
+        ant.copy(file: releaseNotes, todir: artifactReleaseDirPath, failOnError: false)
+    }
+
+    JsonBuilder builder = new JsonBuilder()
+    builder.call(artifactInfo)
+    new File(artifactReleaseDirPath, "${type}.json").text = builder.toString()
+
+    releaseFile = new File("${artifactReleaseDirPath}/${artifactZipFileName}")
+
+    ant.delete(file: releaseFile, quiet: true, failOnError: false)
+
+    ant.zip(destfile: releaseFile, filesonly: true) {
+        fileset(dir: artifactReleaseDirPath)
+        zipfileset(dir: artifactPackageDirPath,
+                includes: artifactZipFileName,
+                fullpath: artifactZipFileName)
+    }
+
+    release = Release.makeFromJSON(type, artifactInfo)
+    release.file = releaseFile
 }

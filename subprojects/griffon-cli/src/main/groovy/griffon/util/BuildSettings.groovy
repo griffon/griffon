@@ -84,11 +84,6 @@ class BuildSettings extends AbstractBuildSettings {
     public static final String PROJECT_CLASSES_DIR = "griffon.project.class.dir"
 
     /**
-     * The name of the system property for {@link #pluginClassesDir}.
-     */
-    public static final String PROJECT_PLUGIN_CLASSES_DIR = "griffon.project.plugin.class.dir"
-
-    /**
      * The name of the system property for {@link #testClassesDir}.
      */
     public static final String PROJECT_TEST_CLASSES_DIR = "griffon.project.test.class.dir"
@@ -187,9 +182,6 @@ class BuildSettings extends AbstractBuildSettings {
 
     /** The location to which Griffon writes a project's test resources. */
     File testResourcesDir
-
-    /** The location to which Griffon compiles a project's plugin classes. */
-    File pluginClassesDir
 
     /** The location where Griffon keeps temporary copies of a project's resources. */
     File resourcesDir
@@ -424,7 +416,6 @@ class BuildSettings extends AbstractBuildSettings {
     private boolean projectTargetDirSet
     private boolean classesDirSet
     private boolean testClassesDirSet
-    private boolean pluginClassesDirSet
     private boolean resourcesDirSet
     private boolean testResourcesDirSet
     private boolean sourceDirSet
@@ -596,11 +587,6 @@ class BuildSettings extends AbstractBuildSettings {
     void setTestClassesDir(File dir) {
         testClassesDir = dir
         testClassesDirSet = true
-    }
-
-    void setPluginClassesDir(File dir) {
-        pluginClassesDir = dir
-        pluginClassesDirSet = true
     }
 
     void setResourcesDir(File dir) {
@@ -903,7 +889,6 @@ class BuildSettings extends AbstractBuildSettings {
         if (!projectTargetDirSet) projectTargetDir = new File(getPropertyValue(PROJECT_TARGET_DIR, props, "$baseDir/target"))
         if (!classesDirSet) classesDir = new File(getPropertyValue(PROJECT_CLASSES_DIR, props, "$projectWorkDir/classes"))
         if (!testClassesDirSet) testClassesDir = new File(getPropertyValue(PROJECT_TEST_CLASSES_DIR, props, "$projectWorkDir/test-classes"))
-        if (!pluginClassesDirSet) pluginClassesDir = new File(getPropertyValue(PROJECT_PLUGIN_CLASSES_DIR, props, "$projectWorkDir/plugin-classes"))
         if (!resourcesDirSet) resourcesDir = new File(getPropertyValue(PROJECT_RESOURCES_DIR, props, "$projectWorkDir/resources"))
         if (!testResourcesDirSet) testResourcesDir = new File(getPropertyValue(PROJECT_TEST_RESOURCES_DIR, props, "$projectWorkDir/test-resources"))
         if (!sourceDirSet) sourceDir = new File(getPropertyValue(PROJECT_SOURCE_DIR, props, "$baseDir/src"))

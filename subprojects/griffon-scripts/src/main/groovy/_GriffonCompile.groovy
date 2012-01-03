@@ -117,7 +117,6 @@ target(compile: "Implementation of compilation phase") {
                 include(name: '*.xml')
             }
         }
-        addUrlIfNotPresent classLoader, griffonSettings.pluginClassesDir
         event("CompileSourcesEnd", [])
 
         // If this is a plugin project, the descriptor is not included

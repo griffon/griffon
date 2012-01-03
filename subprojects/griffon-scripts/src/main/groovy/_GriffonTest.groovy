@@ -98,8 +98,31 @@ createTestReports = true
 
 testsFailed = false
 
+packageFiles = { String from ->
+    def targetPath = griffonSettings.resourcesDir.path
+    def dir = new File(from, "griffon-app/conf")
+    if (dir.exists()) {
+        ant.copy(todir:targetPath, failonerror:false) {
+            fileset(dir:dir.path) {
+                exclude(name:"**/*.groovy")
+                exclude(name:"**/log4j*")
+            }
+        }
+    }
+
+    dir = new File(from, "src/main")
+    if (dir.exists()) {
+        ant.copy(todir:targetPath, failonerror:false) {
+            fileset(dir:dir.path) {
+                exclude(name:"**/*.groovy")
+                exclude(name:"**/*.java")
+            }
+        }
+    }
+}
+
 target(allTests: "Runs the project's tests.") {
-    def dependencies = [compile, packagePlugins]
+    def dependencies = [compile/*, packagePlugins*/]
     if (testOptions.clean) dependencies = [clean] + dependencies
     depends(*dependencies)
     

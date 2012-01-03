@@ -123,9 +123,7 @@ commonClasspath = {
     }
 
     pathelement(location: "${classesDir.absolutePath}")
-    pathelement(location: "${pluginClassesDir.absolutePath}")
     debug "  ${classesDir.absolutePath}"
-    debug "  ${pluginClassesDir.absolutePath}"
 
     def pluginLibDirs = pluginSettings.pluginLibDirectories.findAll { it.exists() }
     for (pluginLib in pluginLibDirs) {
@@ -271,7 +269,6 @@ void setClasspath() {
 
     if(isApplicationProject || isPluginProject) {
         if(!(new File(classesDir.absolutePath).exists())) ant.mkdir(dir: classesDir.absolutePath)
-        if(!(new File(pluginClassesDir.absolutePath).exists())) ant.mkdir(dir: pluginClassesDir.absolutePath)
         if(!(new File("${griffonSettings.testClassesDir}/shared").exists())) ant.mkdir(dir: "${griffonSettings.testClassesDir}/shared")
         if(!(griffonSettings.testResourcesDir.exists())) ant.mkdir(dir: griffonSettings.testResourcesDir)
     }
@@ -292,7 +289,6 @@ void setClasspath() {
         //rootLoader?.addURL(dir.URL)
     }
     cpath << classesDirPath << File.pathSeparator
-    cpath << pluginClassesDirPath << File.pathSeparator
     
     for (jar in jarFiles) {
         cpath << jar.file.absolutePath << File.pathSeparator
