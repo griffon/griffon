@@ -35,8 +35,6 @@ import griffon.util.*
 import static griffon.util.GriffonNameUtils.*
 import static griffon.util.GriffonUtil.getScriptName
 import static org.codehaus.griffon.artifacts.ArtifactUtils.*
-import static org.codehaus.griffon.artifacts.ArtifactUtils.resolveResources
-import org.springframework.core.io.Resource
 
 /**
  * @author Andres Almiray
@@ -77,7 +75,13 @@ class ArtifactInstallEngine {
         value = value ? value.toString().toLowerCase() : INSTALL_FAILURE_CONTINUE
         value in [INSTALL_FAILURE_ABORT, INSTALL_FAILURE_CONTINUE] ? value : INSTALL_FAILURE_CONTINUE
     }
-    
+
+    /**
+     * Finds all artifacts of the given type that are installed.
+     *
+     * @param type one of <tt>Archetype.TYPE</tt> or <tt>Plugin.TYPE</tt>.
+     * @return
+     */
     Map getInstalledArtifacts(String type) {
         Map artifacts = [:]
 
@@ -105,6 +109,36 @@ class ArtifactInstallEngine {
                         dependencies: xml.dependencies?.plugin?.collect([]) {it.@name.text()}
                 ]
             }
+        }
+
+        artifacts
+    }
+
+    /**
+     * Finds all artifacts of the given type that are registered with the project's metadata.
+     *
+     * @param type one of <tt>Archetype.TYPE</tt> or <tt>Plugin.TYPE</tt>.
+     * @return
+     */
+    Map<String, String> getRegisteredArtifacts(String type) {
+        Map artifacts = [:]
+
+        switch (type) {
+            case Archetype.TYPE:
+                String property = metadata.propertyNames().find {it.startsWith('archetype.')}
+                if (property) {
+                    String name = property - 'archetype.'
+                    String version = metadata[property]
+                    artifacts[name] = version
+                }
+                break
+            case Plugin.TYPE:
+                metadata.propertyNames().grep {it.startsWith('plugins.')}.each { property ->
+                    String name = property - 'plugins.'
+                    String version = metadata[property]
+                    artifacts[name] = version
+                }
+                break
         }
 
         artifacts
@@ -409,10 +443,10 @@ class ArtifactInstallEngine {
 
     private void displayNewScripts(String pluginName, installPath) {
         def providedScripts = new File("${installPath}/scripts").listFiles().findAll { !it.name.startsWith('_') && it.name.endsWith('.groovy')}
-        eventHandler 'StatusFinal', "Plugin ${pluginName} installed"
         if (providedScripts) {
-            println 'Plugin provides the following new scripts:'
-            println '------------------------------------------'
+            String legend = "Plugin ${pluginName} provides the following new scripts:"
+            println legend
+            println('_' * legend.length())
             providedScripts.each { File file ->
                 println "griffon ${getScriptName(file.name)}"
             }

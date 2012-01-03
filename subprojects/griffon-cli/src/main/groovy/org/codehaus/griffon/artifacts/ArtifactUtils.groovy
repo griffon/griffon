@@ -70,6 +70,10 @@ class ArtifactUtils {
         }
     }
 
+    static boolean isArtifactInstalled(String type, String name, String version) {
+        new File("${artifactBase(type)}/${name}-${version}").exists()
+    }
+
     static Release getReleaseFromMetadata(String type, String name, String version = null) {
         File file = null
         if (version) {
