@@ -18,7 +18,7 @@ package org.codehaus.griffon.artifacts
 
 import groovy.json.JsonException
 import groovy.json.JsonSlurper
-import groovy.transform.InheritConstructors
+
 import java.util.zip.ZipEntry
 import java.util.zip.ZipFile
 import org.codehaus.griffon.artifacts.model.Archetype
@@ -27,7 +27,7 @@ import org.codehaus.griffon.artifacts.model.Plugin
 import org.codehaus.griffon.artifacts.model.Release
 import org.codehaus.griffon.cli.CommandLineHelper
 import org.codehaus.griffon.cli.ScriptExitException
-import org.codehaus.griffon.exceptions.GriffonException
+
 import org.codehaus.griffon.resolve.IvyDependencyManager
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
@@ -610,85 +610,5 @@ class ArtifactInstallEngine {
         for (dependency in artifactDependency.dependencies) {
             fillEvictions(dependency, evictions)
         }
-    }
-}
-
-@InheritConstructors
-class InstallArtifactException extends GriffonException {}
-
-@InheritConstructors
-class UninstallArtifactException extends GriffonException {}
-
-class ArtifactDependency {
-    private static VERSION_NUMBER_PATTERN = ~/(\d+)\.(\d+)(\.(\d).*?)?/
-
-    final String name
-    Release release
-    String version
-
-    int major = 0
-    int minor = 0
-    int revision = 0
-
-    ArtifactRepository repository
-    boolean installed
-    boolean evicted
-    boolean resolved
-    boolean conflicted
-
-    List<ArtifactDependency> dependencies = []
-
-    ArtifactDependency(String name) {
-        this.name = name
-    }
-
-    void setVersion(String version) {
-        this.version = version
-
-        if (version) {
-            def m = version =~ VERSION_NUMBER_PATTERN
-            major = m[0][1].toInteger()
-            minor = m[0][2]?.toInteger() ?: 0i
-            revision = m[0][4]?.toInteger() ?: 0i
-        }
-    }
-
-    void updateConflicts() {
-        for (dependency in dependencies) {
-            dependency.updateConflicts()
-            if (dependency.conflicted) conflicted = true
-        }
-    }
-
-    void printout(int indent, PrintStream out = System.out, boolean includeDependencies = true) {
-        out.print(' ' * indent)
-        if (!resolved) {
-            out.print '? '
-        } else if (conflicted) {
-            out.print '! '
-        } else if (evicted) {
-            out.print '- '
-        } else if (!installed) {
-            out.print '+ '
-        } else {
-            out.print '. '
-        }
-        out.print "${name}-${version ? version : '<noversion>'}"
-        if (!installed) {
-            out.print "${repository ? ' from ' + repository.name : ' not found in any repository'}"
-        }
-        out.println ''
-        if (includeDependencies) {
-            for (dependency in dependencies) {
-                dependency.printout(indent + 3, out)
-            }
-        }
-    }
-
-    String toString() {
-        ByteArrayOutputStream baos = new ByteArrayOutputStream()
-        PrintStream out = new PrintStream(baos)
-        printout(0, out, false)
-        baos.toString()
     }
 }
