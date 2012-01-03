@@ -318,7 +318,7 @@ doInstallArtifactFromZip = { String type, File file, Metadata md = metadata ->
     }
 }
 
-doInstallArtifact = { ArtifactRepository artifactRepository, String type, name, version = null, Metadata md = metadata ->
+doInstallArtifact = { ArtifactRepository artifactRepository, String type, String name, String version = null, Metadata md = metadata ->
     return withArtifactInstall(type) {
         if (!version) {
             Artifact artifact = artifactRepository.findArtifact(type, name)
@@ -345,7 +345,7 @@ doInstallArtifact = { ArtifactRepository artifactRepository, String type, name, 
     }
 }
 
-installArtifactForName = { String type, String name, String version, Metadata md ->
+installArtifactForName = { Metadata md, String type, String name, String version = null ->
     failOnError = false
     installed = false
 
@@ -358,6 +358,10 @@ installArtifactForName = { String type, String name, String version, Metadata md
                 installed = true
                 return
             }
+        }
+        if (!installed) {
+            event('StatusError', ["Failed to install ${type} ${name}${version ? '-' + version : ''}"])
+            exit 1
         }
     }
 }
