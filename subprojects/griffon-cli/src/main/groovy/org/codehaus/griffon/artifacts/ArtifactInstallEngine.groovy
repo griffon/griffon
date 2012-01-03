@@ -18,7 +18,6 @@ package org.codehaus.griffon.artifacts
 
 import groovy.json.JsonException
 import groovy.json.JsonSlurper
-
 import java.util.zip.ZipEntry
 import java.util.zip.ZipFile
 import org.codehaus.griffon.artifacts.model.Archetype
@@ -27,7 +26,6 @@ import org.codehaus.griffon.artifacts.model.Plugin
 import org.codehaus.griffon.artifacts.model.Release
 import org.codehaus.griffon.cli.CommandLineHelper
 import org.codehaus.griffon.cli.ScriptExitException
-
 import org.codehaus.griffon.resolve.IvyDependencyManager
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
@@ -416,7 +414,8 @@ class ArtifactInstallEngine {
             if (requiredToolkits) {
                 List<String> supportedToolkits = metadata.getApplicationToolkits().toList()
                 List<String> unsupportedToolkits = supportedToolkits - requiredToolkits
-                if (unsupportedToolkits) {
+                // 2nd condition is a special case for plugins that provide toolkit support
+                if (unsupportedToolkits && unsupportedToolkits != [release.artifact.name]) {
                     eventHandler 'StatusError', "Current application has ${supportedToolkits} as supported UI toolkits.\nThe plugin [${artifactNameAndVersion}] requires any of the following toolkits: ${requiredToolkits}"
                     throw new InstallArtifactException("Installation of ${type} ${artifactNameAndVersion} aborted.")
                 }
