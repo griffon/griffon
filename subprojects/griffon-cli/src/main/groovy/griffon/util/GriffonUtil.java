@@ -34,20 +34,22 @@ import java.util.List;
 import java.util.jar.Attributes;
 import java.util.jar.Manifest;
 
+import static org.codehaus.griffon.cli.CommandLineConstants.KEY_FULL_STACKTRACE;
+
 /**
- *
  * Griffon utility methods for command line and GUI applications
  *
  * @author Graeme Rocher (Grails 0.2)
  */
 public class GriffonUtil extends GriffonNameUtils {
-    private GriffonUtil() {}
+    private GriffonUtil() {
+    }
 
-    private static final Log LOG  = LogFactory.getLog(GriffonUtil.class);
-    private static final Log STACK_LOG  = LogFactory.getLog("StackTrace");
+    private static final Log LOG = LogFactory.getLog(GriffonUtil.class);
+    private static final Log STACK_LOG = LogFactory.getLog("StackTrace");
     private static final String GRIFFON_IMPLEMENTATION_TITLE = "griffon-rt";
     private static final String GRIFFON_VERSION;
-    private static final String[] GRIFFON_PACKAGES = new String[] {
+    private static final String[] GRIFFON_PACKAGES = new String[]{
             // "org.codehaus.griffon.",
             "org.codehaus.groovy.runtime.",
             "org.codehaus.groovy.reflection.",
@@ -62,7 +64,7 @@ public class GriffonUtil extends GriffonNameUtils {
     static {
         Package p = GriffonUtil.class.getPackage();
         String version = p != null ? p.getImplementationVersion() : null;
-        if (version==null || isBlank(version)) {
+        if (version == null || isBlank(version)) {
             PathMatchingResourcePatternResolver resolver = new PathMatchingResourcePatternResolver();
             try {
                 Resource[] manifests = resolver.getResources("classpath*:META-INF/MANIFEST.MF");
@@ -74,12 +76,11 @@ public class GriffonUtil extends GriffonNameUtils {
                     try {
                         inputStream = r.getInputStream();
                         mf = new Manifest(inputStream);
-                    }
-                    finally {
+                    } finally {
                         IOUtils.closeQuietly(inputStream);
                     }
                     String implTitle = mf.getMainAttributes().getValue(Attributes.Name.IMPLEMENTATION_TITLE);
-                    if (!isBlank(implTitle) && implTitle.equals(GRIFFON_IMPLEMENTATION_TITLE))   {
+                    if (!isBlank(implTitle) && implTitle.equals(GRIFFON_IMPLEMENTATION_TITLE)) {
                         griffonManifest = mf;
                         break;
                     }
@@ -93,8 +94,7 @@ public class GriffonUtil extends GriffonNameUtils {
                     LOG.error("Unable to read Griffon version from MANIFEST.MF. Are you sure the griffon-core jar is on the classpath? ");
                     version = "Unknown";
                 }
-            }
-            catch (Exception e) {
+            } catch (Exception e) {
                 version = "Unknown";
                 LOG.error("Unable to read Griffon version from MANIFEST.MF. Are you sure it the griffon-core jar is on the classpath? " + e.getMessage(), e);
             }
@@ -128,21 +128,21 @@ public class GriffonUtil extends GriffonNameUtils {
     /**
      * Logs warning message about deprecation of specified property or method of some class.
      *
-     * @param clazz A class
+     * @param clazz            A class
      * @param methodOrPropName Name of deprecated property or method
      */
-    public static void deprecated(Class clazz, String methodOrPropName ) {
+    public static void deprecated(Class clazz, String methodOrPropName) {
         deprecated(clazz, methodOrPropName, getGriffonVersion());
     }
 
     /**
      * Logs warning message about deprecation of specified property or method of some class.
      *
-     * @param clazz A class
+     * @param clazz            A class
      * @param methodOrPropName Name of deprecated property or method
-     * @param version Version of Griffon release in which property or method were deprecated
+     * @param version          Version of Griffon release in which property or method were deprecated
      */
-    public static void deprecated(Class<?> clazz, String methodOrPropName, String version ) {
+    public static void deprecated(Class<?> clazz, String methodOrPropName, String version) {
         deprecated("Property or method [" + methodOrPropName + "] of class [" + clazz.getName() +
                 "] is deprecated in [" + version +
                 "] and will be removed in future releases");
@@ -170,18 +170,19 @@ public class GriffonUtil extends GriffonNameUtils {
     /**
      * <p>Remove all apparently Griffon-internal trace entries from the exception instance<p>
      * <p>This modifies the original instance and returns it, it does not clone</p>
+     *
      * @param t
      * @return The exception passed in, after cleaning the stack trace
      */
     public static Throwable sanitize(Throwable t) {
         // Note that this getProperty access may well be synced...
-        if (!Boolean.valueOf(System.getProperty("griffon.full.stacktrace")).booleanValue()) {
+        if (!Boolean.valueOf(System.getProperty(KEY_FULL_STACKTRACE)).booleanValue()) {
             StackTraceElement[] trace = t.getStackTrace();
             List<StackTraceElement> newTrace = new ArrayList<StackTraceElement>();
             for (int i = 0; i < trace.length; i++) {
                 StackTraceElement stackTraceElement = trace[i];
                 if (isApplicationClass(stackTraceElement.getClassName())) {
-                    newTrace.add( stackTraceElement);
+                    newTrace.add(stackTraceElement);
                 }
             }
 
@@ -204,9 +205,9 @@ public class GriffonUtil extends GriffonNameUtils {
         StackTraceElement[] trace = t.getStackTrace();
         for (int i = 0; i < trace.length; i++) {
             StackTraceElement stackTraceElement = trace[i];
-            p.println(  "at "+stackTraceElement.getClassName()
-                        +"("+stackTraceElement.getMethodName()
-                        +":"+stackTraceElement.getLineNumber()+")");
+            p.println("at " + stackTraceElement.getClassName()
+                    + "(" + stackTraceElement.getMethodName()
+                    + ":" + stackTraceElement.getLineNumber() + ")");
         }
     }
 
@@ -226,6 +227,7 @@ public class GriffonUtil extends GriffonNameUtils {
 
     /**
      * <p>Extracts the root cause of the exception, no matter how nested it is</p>
+     *
      * @param t the throwable to sanitize
      * @return The deepest cause of the exception that can be found
      */
@@ -240,6 +242,7 @@ public class GriffonUtil extends GriffonNameUtils {
     /**
      * <p>Get the root cause of an exception and sanitize it for display to the user</p>
      * <p>This will MODIFY the stacktrace of the root cause exception object and return it</p>
+     *
      * @param t the throwable to sanitize
      * @return The root cause exception instance, with its stace trace modified to filter out griffon runtime classes
      */
@@ -250,6 +253,7 @@ public class GriffonUtil extends GriffonNameUtils {
     /**
      * <p>Sanitize the exception and ALL nested causes</p>
      * <p>This will MODIFY the stacktrace of the exception instance and all its causes irreversibly</p>
+     *
      * @param t
      * @return The root cause exception instances, with stack trace modified to filter out griffon runtime classes
      */
@@ -264,17 +268,18 @@ public class GriffonUtil extends GriffonNameUtils {
     /**
      * Writes out a GPathResult (i.e. the result of parsing XML using
      * XmlSlurper) to the given writer.
+     *
      * @param result The root node of the XML to write out.
      * @param output Where to write the XML to.
      * @throws java.io.IOException If the writing fails due to a closed stream
-     * or unwritable file.
+     *                             or unwritable file.
      */
     public static void writeSlurperResult(GPathResult result, Writer output) throws IOException {
         Binding b = new Binding();
         b.setVariable("node", result);
         // this code takes the XML parsed by XmlSlurper and writes it out using StreamingMarkupBuilder
         // don't ask me how it works, refer to John Wilson ;-)
-        Writable w = (Writable)new GroovyShell(b).evaluate(
+        Writable w = (Writable) new GroovyShell(b).evaluate(
                 "new groovy.xml.StreamingMarkupBuilder().bind {" +
                         " mkp.declareNamespace(\"\":  \"http://java.sun.com/xml/ns/j2ee\");" +
                         " mkp.yield node}");
@@ -318,12 +323,13 @@ public class GriffonUtil extends GriffonNameUtils {
      * Returns the name of a plugin given the name of the *GriffonPlugin.groovy
      * descriptor file. For example, "DbUtilsGriffonPlugin.groovy" gives
      * "db-utils".
+     *
      * @param descriptorName The simple name of the plugin descriptor.
      * @return The plugin name for the descriptor, or <code>null</code>
-     * if <i>descriptorName</i> is <code>null</code>, or an empty string
-     * if <i>descriptorName</i> is an empty string.
+     *         if <i>descriptorName</i> is <code>null</code>, or an empty string
+     *         if <i>descriptorName</i> is an empty string.
      * @throws IllegalArgumentException if the given descriptor name is
-     * not valid, i.e. if it doesn't end with "GriffonPlugin.groovy".
+     *                                  not valid, i.e. if it doesn't end with "GriffonPlugin.groovy".
      */
     public static String getPluginName(String descriptorName) {
         if (descriptorName == null || descriptorName.length() == 0) {

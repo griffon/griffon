@@ -44,6 +44,7 @@ import java.util.regex.Pattern;
 
 import static griffon.util.GriffonNameUtils.isBlank;
 import static org.codehaus.griffon.artifacts.ArtifactUtils.getInstalledArtifacts;
+import static org.codehaus.griffon.cli.CommandLineConstants.KEY_INTERACTIVE_MODE;
 
 /**
  * Class that handles Griffon command line interface for running scripts
@@ -126,7 +127,7 @@ public class GriffonScriptRunner {
         } catch (Throwable t) {
             String msg = "Error executing script " + script.name + ": " + t.getMessage();
             System.out.println(msg);
-            sanitizeStacktrace(t);
+            GriffonExceptionHandler.sanitize(t);
             t.printStackTrace(System.out);
             exitWithError(msg);
         }
@@ -338,7 +339,7 @@ public class GriffonScriptRunner {
 
         // Disable exiting
         System.setProperty("griffon.disable.exit", "true");
-        System.setProperty("griffon.interactive.mode", "true");
+        System.setProperty(KEY_INTERACTIVE_MODE, "true");
 
         ScriptAndArgs script = new ScriptAndArgs();
         String env = null;
@@ -1000,25 +1001,6 @@ public class GriffonScriptRunner {
         });
 
         return dirs == null ? new File[0] : dirs;
-    }
-
-    /**
-     * Sanitizes a stack trace using GriffonUtil.deepSanitize(). We use
-     * this method so that the GriffonUtil class is loaded from the
-     * context class loader. Basically, we don't want this class to
-     * have a direct dependency on GriffonUtil otherwise the class loader
-     * used to load this class (GriffonScriptRunner) would have to have
-     * far more libraries on its classpath than we want.
-     */
-    private static void sanitizeStacktrace(Throwable t) {
-        try {
-            ClassLoader loader = Thread.currentThread().getContextClassLoader();
-            Class<?> clazz = loader.loadClass("griffon.util.GriffonExceptionHandler");
-            Method method = clazz.getMethod("sanitize", Throwable.class);
-            method.invoke(null, t);
-        } catch (Exception ex) {
-            ex.printStackTrace();
-        }
     }
 
     /**

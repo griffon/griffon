@@ -26,6 +26,9 @@ import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
+import static org.codehaus.griffon.cli.CommandLineConstants.KEY_CLI_VERBOSE;
+import static org.codehaus.griffon.cli.CommandLineConstants.KEY_NON_INTERACTIVE_DEFAULT_ANSWER;
+
 /**
  * Methods optimized to Java for the BuildSettings class.
  *
@@ -244,15 +247,14 @@ public abstract class AbstractBuildSettings {
     }
 
     public boolean isDebugEnabled() {
-        String configKey = "griffon.cli.verbose";
-        if (System.getProperty(configKey) != null) return Boolean.getBoolean(configKey);
-        return DefaultTypeTransformation.castToBoolean(getConfig().flatten().get(configKey));
+        if (System.getProperty(KEY_CLI_VERBOSE) != null) return Boolean.getBoolean(KEY_CLI_VERBOSE);
+        return DefaultTypeTransformation.castToBoolean(getConfig().flatten().get(KEY_CLI_VERBOSE));
     }
 
     public String getDefaultAnswerNonInteractive() {
-        String configKey = "griffon.noninteractive.default.answer";
-        if (System.getProperty(configKey) != null) return System.getProperty(configKey);
-        return ConfigUtils.getConfigValueAsString(getConfig(), configKey, "");
+        if (System.getProperty(KEY_NON_INTERACTIVE_DEFAULT_ANSWER) != null)
+            return System.getProperty(KEY_NON_INTERACTIVE_DEFAULT_ANSWER);
+        return ConfigUtils.getConfigValueAsString(getConfig(), KEY_NON_INTERACTIVE_DEFAULT_ANSWER, "");
     }
 
     public void debug(String msg) {

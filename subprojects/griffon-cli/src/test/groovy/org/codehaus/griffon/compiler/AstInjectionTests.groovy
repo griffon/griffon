@@ -1,6 +1,7 @@
 package org.codehaus.griffon.compiler
 
 import org.codehaus.groovy.control.MultipleCompilationErrorsException
+import static org.codehaus.griffon.cli.CommandLineConstants.*
 
 class AstInjectionTests extends AbstractCompilerTestCase {
     AstInjectionTests() {
@@ -9,32 +10,32 @@ class AstInjectionTests extends AbstractCompilerTestCase {
 
     void testProjectCompilesOK() {
         compile()
-        //TODO: assert injections on artifacs
+        //TODO: assert injections on artifacts
     }
 
     void testProjectCompilesOKWithoutInjections() {
-        System.setProperty(GriffonCompilerContext.DISABLE_AST_INJECTION, 'true')
-        System.setProperty(GriffonCompilerContext.DISABLE_LOGGING_INJECTION, 'true')
-        System.setProperty(GriffonCompilerContext.DISABLE_THREADING_INJECTION, 'true')
+        System.setProperty(KEY_DISABLE_AST_INJECTION, 'true')
+        System.setProperty(KEY_DISABLE_LOGGING_INJECTION, 'true')
+        System.setProperty(KEY_DISABLE_THREADING_INJECTION, 'true')
 
         try {
             compile()
         } finally {
-            System.clearProperty(GriffonCompilerContext.DISABLE_AST_INJECTION)
-            System.clearProperty(GriffonCompilerContext.DISABLE_LOGGING_INJECTION)
-            System.clearProperty(GriffonCompilerContext.DISABLE_THREADING_INJECTION)
+            System.clearProperty(KEY_DISABLE_AST_INJECTION)
+            System.clearProperty(KEY_DISABLE_LOGGING_INJECTION)
+            System.clearProperty(KEY_DISABLE_THREADING_INJECTION)
         }
     }
 
     void testProjectFailsCompilationDueToUnresolvedImports() {
-        System.setProperty(GriffonCompilerContext.DISABLE_AUTO_IMPORTS, 'true')
+        System.setProperty(KEY_DISABLE_AUTO_IMPORTS, 'true')
 
         try {
             shouldFail(MultipleCompilationErrorsException) {
                 compile()
             }
         } finally {
-            System.clearProperty(GriffonCompilerContext.DISABLE_AUTO_IMPORTS)
+            System.clearProperty(KEY_DISABLE_AUTO_IMPORTS)
         }
     }
 }

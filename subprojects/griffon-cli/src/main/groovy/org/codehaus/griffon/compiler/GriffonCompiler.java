@@ -16,6 +16,7 @@
 
 package org.codehaus.griffon.compiler;
 
+import org.codehaus.griffon.cli.CommandLineConstants;
 import org.codehaus.groovy.ant.Groovyc;
 import org.codehaus.groovy.control.CompilationUnit;
 import org.codehaus.groovy.control.Phases;
@@ -24,7 +25,6 @@ import java.io.File;
 
 /**
  * @author Andres Almiray
- *
  * @since 0.9.1
  */
 public class GriffonCompiler extends Groovyc {
@@ -33,7 +33,7 @@ public class GriffonCompiler extends Groovyc {
     }
 
     public void setBasedir(String basedir) {
-        if(basedir.endsWith(File.separator)) basedir = basedir.substring(0, basedir.length() - 2);
+        if (basedir.endsWith(File.separator)) basedir = basedir.substring(0, basedir.length() - 2);
         GriffonCompilerContext.basedir = basedir;
     }
 
@@ -47,7 +47,7 @@ public class GriffonCompiler extends Groovyc {
     }
 
     protected CompilationUnit makeCompileUnit() {
-        if(!GriffonCompilerContext.getConfigOption(GriffonCompilerContext.DISABLE_AUTO_IMPORTS)) {
+        if (!GriffonCompilerContext.getConfigOption(CommandLineConstants.KEY_DISABLE_AUTO_IMPORTS)) {
             DefaultImportCompilerCustomizer defaultImportCompilerCustomizer = new DefaultImportCompilerCustomizer();
             defaultImportCompilerCustomizer.collectDefaultImportsPerArtifact();
             configuration.addCompilationCustomizers(defaultImportCompilerCustomizer);
@@ -59,19 +59,19 @@ public class GriffonCompiler extends Groovyc {
         SourceUnitCollector.getInstance().clear();
         compilationUnit.addPhaseOperation(SourceUnitCollector.getInstance(), Phases.CONVERSION);
 
-        if(!GriffonCompilerContext.getConfigOption(GriffonCompilerContext.DISABLE_LOGGING_INJECTION)) {
+        if (!GriffonCompilerContext.getConfigOption(CommandLineConstants.KEY_DISABLE_LOGGING_INJECTION)) {
             compilationUnit.addPhaseOperation(new LoggingInjectionOperation(), Phases.CANONICALIZATION);
         } else {
             log("Conditional logging feature disabled.");
         }
 
-        if(!GriffonCompilerContext.getConfigOption(GriffonCompilerContext.DISABLE_THREADING_INJECTION)) {
+        if (!GriffonCompilerContext.getConfigOption(CommandLineConstants.KEY_DISABLE_THREADING_INJECTION)) {
             compilationUnit.addPhaseOperation(new ThreadingInjectionOperation(), Phases.CANONICALIZATION);
         } else {
             log("Threading injection feature disabled.");
         }
 
-        if(GriffonCompilerContext.getConfigOption(GriffonCompilerContext.DISABLE_AST_INJECTION)) {
+        if (GriffonCompilerContext.getConfigOption(CommandLineConstants.KEY_DISABLE_AST_INJECTION)) {
             log("Artifact AST injection feature disabled.");
         }
 

@@ -22,6 +22,7 @@ import org.springframework.core.io.Resource
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver
 import org.springframework.util.FileCopyUtils
 import griffon.util.*
+import static org.codehaus.griffon.cli.CommandLineConstants.KEY_INTERACTIVE_MODE
 
 /**
  * Gant script containing build variables.
@@ -55,7 +56,7 @@ getPropertyValue = { String propName, defaultValue ->
 // over those defined in BuildSettings, which in turn take precedence
 // over the defaults.
 isInteractive = true
-System.setProperty("griffon.interactive.mode", "true")
+System.setProperty(KEY_INTERACTIVE_MODE, "true")
 
 buildProps = buildConfig.toProperties()
 enableProfile = getPropertyValue("griffon.script.profile", false).toBoolean()

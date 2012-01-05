@@ -17,6 +17,8 @@ package org.codehaus.griffon.cli
 import griffon.util.BuildSettingsHolder
 import org.codehaus.groovy.runtime.DefaultGroovyMethods
 import static griffon.util.ConfigUtils.getConfigValueAsString
+import static org.codehaus.griffon.cli.CommandLineConstants.KEY_INTERACTIVE_MODE
+import static org.codehaus.griffon.cli.CommandLineConstants.KEY_NON_INTERACTIVE_DEFAULT_ANSWER
 
 /**
  * Utility methods for use on the command line, including method to accept user input etc. 
@@ -25,8 +27,6 @@ import static griffon.util.ConfigUtils.getConfigValueAsString
  */
 public class CommandLineHelper {
     private PrintStream out = System.out
-
-    private static final String INTERACTIVE_KEY = 'griffon.interactive.mode'
 
     public CommandLineHelper() {
         // default
@@ -41,10 +41,10 @@ public class CommandLineHelper {
     }
 
     String forceUserInput(String message, String[] validResponses) {
-        String interactiveValue = System.getProperty(INTERACTIVE_KEY)
-        System.setProperty(INTERACTIVE_KEY, 'true')
+        String interactiveValue = System.getProperty(KEY_INTERACTIVE_MODE)
+        System.setProperty(KEY_INTERACTIVE_MODE, 'true')
         String enteredValue = userInput(message, validResponses)
-        System.setProperty(INTERACTIVE_KEY, interactiveValue ?: 'true')
+        System.setProperty(KEY_INTERACTIVE_MODE, interactiveValue ?: 'true')
         return enteredValue
     }
 
@@ -81,7 +81,7 @@ public class CommandLineHelper {
             responsesString = DefaultGroovyMethods.join(validResponses, ",")
         }
 
-        if (System.getProperty(INTERACTIVE_KEY) == null || !Boolean.getBoolean(INTERACTIVE_KEY)) {
+        if (System.getProperty(INTERACTIVE_MODE_KEY) == null || !Boolean.getBoolean(INTERACTIVE_MODE_KEY)) {
             if (getDefaultAnswerNonInteractive().equalsIgnoreCase('y')) {
                 return 'y'
             } else if (getDefaultAnswerNonInteractive().equalsIgnoreCase('n')) {
@@ -136,9 +136,8 @@ public class CommandLineHelper {
     }
 
     public String getDefaultAnswerNonInteractive() {
-        String configKey = 'griffon.noninteractive.default.answer'
-        if (System.getProperty(configKey) != null) return System.getProperty(configKey)
-        return getConfigValueAsString(getConfig(), configKey, '')
+        if (System.getProperty(KEY_NON_INTERACTIVE_DEFAULT_ANSWER) != null) return System.getProperty(KEY_NON_INTERACTIVE_DEFAULT_ANSWER)
+        return getConfigValueAsString(getConfig(), KEY_NON_INTERACTIVE_DEFAULT_ANSWER, '')
     }
 
     private ConfigObject getConfig() {

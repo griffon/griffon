@@ -35,11 +35,6 @@ import java.util.regex.Pattern;
  * @since 0.9.1
  */
 public class GriffonCompilerContext {
-    public static final String DISABLE_AST_INJECTION = "griffon.disable.ast.injection";
-    public static final String DISABLE_AUTO_IMPORTS = "griffon.disable.auto.imports";
-    public static final String DISABLE_LOGGING_INJECTION = "griffon.disable.logging.injection";
-    public static final String DISABLE_THREADING_INJECTION = "griffon.disable.threading.injection";
-
     public static boolean verbose;
     public static String basedir;
     public static String projectName;

@@ -500,7 +500,6 @@ ${'-' * 80}
                 wasInteractive = isInteractive
                 isInteractive = false
                 try {
-                    System.setProperty('griffon.artifact.force.updates', 'true')
                     outdatedArtifacts.each { name, data ->
                         // skip if name-version has been installed already because
                         // it is a dependency of another artifact that was upgraded in  a previous
@@ -510,7 +509,6 @@ ${'-' * 80}
                     }
                 } finally {
                     isInteractive = wasInteractive
-                    System.setProperty('griffon.artifact.force.updates', 'false')
                 }
             }
         }
