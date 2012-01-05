@@ -20,12 +20,15 @@ import org.apache.ivy.plugins.repository.TransferEvent
 import org.apache.ivy.plugins.repository.TransferListener
 import org.apache.ivy.util.DefaultMessageLogger
 import org.apache.ivy.util.Message
+import org.codehaus.griffon.artifacts.ArtifactUtils
+import org.codehaus.griffon.artifacts.model.Plugin
 import org.codehaus.griffon.resolve.IvyDependencyManager
 import org.codehaus.groovy.runtime.StackTraceUtils
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import org.springframework.core.io.Resource
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver
+import static org.codehaus.griffon.artifacts.ArtifactUtils.*
 
 /**
  * <p>Represents the project paths and other build settings
@@ -40,6 +43,7 @@ import org.springframework.core.io.support.PathMatchingResourcePatternResolver
  */
 class BuildSettings extends AbstractBuildSettings {
     private static final Logger LOG = LoggerFactory.getLogger(BuildSettings)
+    private static final String GRIFFON_APP = "griffon-app"
 
     static final Pattern JAR_PATTERN = ~/^\S+\.jar$/
 
@@ -220,11 +224,6 @@ class BuildSettings extends AbstractBuildSettings {
     Closure resolveResourcesClosure
 
     private static final PathMatchingResourcePatternResolver RESOLVER = new PathMatchingResourcePatternResolver()
-
-    /**
-     * A Set of plugin names that represent the default set of plugins installed when creating Griffon applications
-     */
-    Set defaultPluginSet
 
     /**
      * A Set of plugin names and versions that represent the default set of plugins installed when creating Griffon applications
@@ -472,9 +471,9 @@ class BuildSettings extends AbstractBuildSettings {
         }
 
         includePluginScriptClosure = {String pluginName, String scriptName ->
-            def pluginHome = pluginSettings.getPluginDirForName(pluginName)?.file
+            File pluginHome = ArtifactUtils.findArtifactDirForName(Plugin.TYPE, pluginName)
             if (!pluginHome) return
-            def scriptFile = new File(pluginHome, "/scripts/${scriptName}.groovy")
+            File scriptFile = new File(pluginHome, "/scripts/${scriptName}.groovy")
             if (scriptFile.exists()) includeTargets << scriptFile
         }
     }
@@ -649,9 +648,6 @@ class BuildSettings extends AbstractBuildSettings {
     protected void postLoadConfig() {
         establishProjectStructure()
         parseGriffonBuildListeners()
-        if (config.griffon.default.plugin.set instanceof List) {
-            defaultPluginSet = config.griffon.default.plugin.set
-        }
         flatConfig = config.flatten()
         configureDependencyManager(config)
     }
@@ -754,10 +750,10 @@ class BuildSettings extends AbstractBuildSettings {
     }
 
     Closure pluginDependencyHandler(IvyDependencyManager dependencyManager) {
-        def pluginSlurper = createConfigSlurper()
+        ConfigSlurper pluginSlurper = createConfigSlurper()
 
         return { File dir ->
-            def pluginName = dir.name
+            String pluginName = dir.name
             def matcher = pluginName =~ /(\S+?)-(\d\S+)/
             pluginName = matcher ? matcher[0][1] : pluginName
             // Try BuildConfig.groovy first, which should
@@ -789,7 +785,7 @@ class BuildSettings extends AbstractBuildSettings {
     }
 
     ConfigSlurper createConfigSlurper() {
-        def slurper = new ConfigSlurper(Environment.current.name)
+        ConfigSlurper slurper = new ConfigSlurper(Environment.current.name)
         slurper.setBinding(
                 basedir: baseDir.path,
                 baseFile: baseDir,
@@ -804,20 +800,20 @@ class BuildSettings extends AbstractBuildSettings {
     }
 
     def isPluginProject() {
-        baseDir.listFiles().find { it.name.endsWith("GriffonPlugin.groovy") }
+        baseDir.listFiles().find { it.name.endsWith(PLUGIN_DESCRIPTOR_SUFFIX) }
     }
 
     def isArchetypeProject() {
-        baseDir.listFiles().find { it.name.endsWith("GriffonArchetype.groovy") }
+        baseDir.listFiles().find { it.name.endsWith(ARCHETYPE_DESCRIPTOR_SUFFIX) }
     }
 
     def isAddonPlugin() {
-        baseDir.listFiles().find { it.name.endsWith("GriffonAddon.groovy") || it.name.endsWith("GriffonAddon.java") }
+        baseDir.listFiles().find { it.name.endsWith(ADDON_DESCRIPTOR_SUFFIX) || it.name.endsWith(ADDON_DESCRIPTOR_SUFFIX_JAVA) }
     }
 
     def isGriffonProject() {
         baseDir.listFiles().find { it.name == 'application.properties' } &&
-                baseDir.listFiles().find { it.name == 'griffon-app' && it.directory }
+                baseDir.listFiles().find { it.name == GRIFFON_APP && it.directory }
     }
 
     private void establishProjectStructure() {
@@ -890,7 +886,7 @@ class BuildSettings extends AbstractBuildSettings {
         }
         else {
             baseDir = new File("")
-            if (!new File(baseDir, "griffon-app").exists()) {
+            if (!new File(baseDir, GRIFFON_APP).exists()) {
                 // be careful with this next step...
                 // baseDir.parentFile will return null since baseDir is new File("")
                 // baseDir.absoluteFile needs to happen before retrieving the parentFile
@@ -899,7 +895,7 @@ class BuildSettings extends AbstractBuildSettings {
                 // keep moving up one directory until we find
                 // one that contains the griffon-app dir or get
                 // to the top of the filesystem...
-                while (parentDir != null && !new File(parentDir, "griffon-app").exists()) {
+                while (parentDir != null && !new File(parentDir, GRIFFON_APP).exists()) {
                     parentDir = parentDir.parentFile
                 }
 

@@ -22,8 +22,7 @@
  */
 
 includeTargets << griffonScript("Package")
-includeTargets << griffonScript("_GriffonBootstrap" )
-includeTargets << griffonScript("_PackagePlugins" )
+includeTargets << griffonScript("_GriffonBootstrap")
 
 target(tweakConfig:' tweaks for webstart') {
     configTweaks << { buildConfig.griffon.jars.sign = true }

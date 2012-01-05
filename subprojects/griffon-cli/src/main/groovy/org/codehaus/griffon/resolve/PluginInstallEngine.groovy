@@ -454,7 +454,7 @@ You cannot upgrade a plugin that is configured via BuildConfig.groovy, remove th
                     def upperVersion = GriffonPluginUtils.getUpperVersion(depVersion)
                     def installVersion = upperVersion
                     if (installVersion == '*') {
-                        installVersion = settings.defaultPluginSet.contains(depName) ? GriffonUtil.getGriffonVersion() : null
+                        installVersion = null
                     }
 
                     // recurse

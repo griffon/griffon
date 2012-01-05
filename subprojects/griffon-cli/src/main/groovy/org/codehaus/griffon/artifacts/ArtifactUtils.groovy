@@ -36,6 +36,8 @@ import org.codehaus.griffon.artifacts.model.*
 class ArtifactUtils {
     static final String PLUGIN_DESCRIPTOR_SUFFIX = 'GriffonPlugin.groovy'
     static final String ARCHETYPE_DESCRIPTOR_SUFFIX = 'GriffonArchetype.groovy'
+    static final String ADDON_DESCRIPTOR_SUFFIX = 'GriffonAddon.groovy'
+    static final String ADDON_DESCRIPTOR_SUFFIX_JAVA = 'GriffonAddon.java'
     static final String TIMESTAMP_FORMAT = "yyyy-MM-dd'T'HH:mm:ssZ"
     private static final PathMatchingResourcePatternResolver RESOLVER = new PathMatchingResourcePatternResolver()
 
@@ -127,6 +129,7 @@ class ArtifactUtils {
     }
 
     static File findArtifactDirForName(String type, String name) {
+        name = GriffonUtil.getHyphenatedName(name)
         String basedir = artifactBase(type)
         Resource[] resources = resolveResources("file://${basedir}/${name}-*")
         if (resources) {
@@ -141,6 +144,7 @@ class ArtifactUtils {
     }
 
     static File[] findAllArtifactDirsForName(String type, String name) {
+        name = GriffonUtil.getHyphenatedName(name)
         String basedir = artifactBase(type)
         Resource[] resources = resolveResources("file://${basedir}/${name}-*")
         if (resources) {
@@ -155,6 +159,7 @@ class ArtifactUtils {
     }
 
     static File getInstallPathFor(String type, String name, String version) {
+        name = GriffonUtil.getHyphenatedName(name)
         new File("${artifactBase(type)}/${name}-${version}")
     }
 
@@ -163,6 +168,7 @@ class ArtifactUtils {
     }
 
     static Release getReleaseFromMetadata(String type, String name, String version = null) {
+        name = GriffonUtil.getHyphenatedName(name)
         File file = null
         if (version) {
             file = new File("${artifactBase(type)}/${name}-${version}/${type}.json")
