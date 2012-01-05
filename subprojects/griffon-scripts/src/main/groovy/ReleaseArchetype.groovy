@@ -24,8 +24,6 @@ includeTargets << griffonScript('_GriffonArtifacts')
 includeTargets << griffonScript('PackageArchetype')
 
 target(releaseArchetype: 'Publishes a Griffon archetype release') {
-    depends(configureArtifactRepositories)
-
     packageForRelease = true
     packageArchetype()
     createArtifactRelease(Archetype.TYPE, artifactInfo)

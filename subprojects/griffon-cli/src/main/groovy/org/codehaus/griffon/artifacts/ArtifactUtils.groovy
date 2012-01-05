@@ -18,15 +18,17 @@ package org.codehaus.griffon.artifacts
 
 import griffon.util.BuildSettingsHolder
 import griffon.util.GriffonUtil
+import griffon.util.Metadata
 import groovy.json.JsonSlurper
 import org.springframework.core.io.FileSystemResource
 import org.springframework.core.io.Resource
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver
 import static griffon.util.GriffonNameUtils.capitalize
+import static griffon.util.GriffonNameUtils.isBlank
 import org.codehaus.griffon.artifacts.model.*
 
 /**
- * Common utilities for dealing with artifacts such as artifacts and archetypes.
+ * Common utilities for dealing with artifacts such as plugins and archetypes.
  *
  * @author Andres Almiray
  * @since 0.9.5
@@ -44,6 +46,84 @@ class ArtifactUtils {
         catch (Throwable e) {
             return [] as Resource[]
         }
+    }
+
+    /**
+     * Finds all artifacts of the given type that are installed.
+     *
+     * @param type one of <tt>Archetype.TYPE</tt> or <tt>Plugin.TYPE</tt>.
+     * @return
+     */
+    static Map<String, String> getInstalledArtifacts(String type) {
+        Map artifacts = [:]
+
+        for (resource in resolveResources("file://${artifactBase(type)}/*/${type}.json")) {
+            Release release = Release.makeFromFile(type, resource.file)
+            artifacts[release.artifact.name] = release.version
+        }
+
+        // TODO - remove this code before 1.0
+        // legacy plugins
+        if (type == Plugin.TYPE) {
+            for (resource in resolveResources("file://${artifactBase(type)}/*/plugin.xml")) {
+                Release release = Release.makeFromFile(type, resource.file)
+                if (artifacts[release.artifact.name]) continue
+                artifacts[release.artifact.name] = release.version
+            }
+        }
+
+        artifacts
+    }
+
+    static Map<String, Release> getInstalledReleases(String type) {
+        Map<String, Release> artifacts = [:]
+
+        for (resource in resolveResources("file://${artifactBase(type)}/*/${type}.json")) {
+            Release release = Release.makeFromFile(type, resource.file)
+            artifacts[release.artifact.name] = release
+        }
+
+        // TODO - remove this code before 1.0
+        // legacy plugins
+        if (type == Plugin.TYPE) {
+            for (resource in resolveResources("file://${artifactBase(type)}/*/plugin.xml")) {
+                Release release = Release.makeFromFile(type, resource.file)
+                if (artifacts[release.artifact.name]) continue
+                artifacts[release.artifact.name] = release
+            }
+        }
+
+        artifacts
+    }
+
+    /**
+     * Finds all artifacts of the given type that are registered with the project's metadata.
+     *
+     * @param type one of <tt>Archetype.TYPE</tt> or <tt>Plugin.TYPE</tt>.
+     * @return
+     */
+    static Map<String, String> getRegisteredArtifacts(String type, Metadata metadata = Metadata.current) {
+        Map artifacts = [:]
+
+        switch (type) {
+            case Archetype.TYPE:
+                String property = metadata.propertyNames().find {it.startsWith('archetype.')}
+                if (property) {
+                    String name = property - 'archetype.'
+                    String version = metadata[property]
+                    artifacts[name] = version
+                }
+                break
+            case Plugin.TYPE:
+                metadata.propertyNames().grep {it.startsWith('plugins.')}.each { property ->
+                    String name = property - 'plugins.'
+                    String version = metadata[property]
+                    artifacts[name] = version
+                }
+                break
+        }
+
+        artifacts
     }
 
     static File findArtifactDirForName(String type, String name) {
@@ -70,8 +150,16 @@ class ArtifactUtils {
         }
     }
 
+    static Resource[] findAllArtifactDirsForType(String type) {
+        resolveResources("file://${artifactBase(type)}/*")
+    }
+
+    static File getInstallPathFor(String type, String name, String version) {
+        new File("${artifactBase(type)}/${name}-${version}")
+    }
+
     static boolean isArtifactInstalled(String type, String name, String version) {
-        new File("${artifactBase(type)}/${name}-${version}").exists()
+        getInstallPathFor(type, name, version).exists()
     }
 
     static Release getReleaseFromMetadata(String type, String name, String version = null) {
@@ -179,7 +267,15 @@ class ArtifactUtils {
         GriffonUtil.getHyphenatedName(artifactName)
     }
 
-    static Artifact parseArtifact(String type, json) {
+    static Release getArtifactRelease(String type, String dir) {
+        getArtifactRelease(type, new File(dir))
+    }
+
+    static Release getArtifactRelease(String type, File dir) {
+        Release.makeFromFile(type, new File("${dir}/${type}.json"))
+    }
+
+    static Artifact parseArtifactFromJSON(String type, json) {
         switch (type) {
             case Plugin.TYPE:
                 return parsePluginFromJSON(json)
@@ -235,6 +331,51 @@ class ArtifactUtils {
                 dependencies: json.dependencies.collect([]) { dep ->
                     [name: dep.name, version: dep.version]
                 },
+        )
+    }
+
+
+    static Artifact parseArtifactFromXML(String type, xml) {
+        switch (type) {
+            case Plugin.TYPE:
+                return parsePluginFromXML(xml)
+            case Archetype.TYPE:
+                return null
+        }
+    }
+
+    static Release parseReleaseFromXML(xml) {
+        new Release(
+                version: xml.@version.text(),
+                griffonVersion: xml.@griffonVersion?.text() ?: '0.3 < *',
+                date: new Date(),
+                dependencies: (xml.dependencies?.plugin ?: [:]).collect([]) { plugin ->
+                    [name: plugin.@name.text(), version: plugin.@version.text()]
+                }
+        )
+    }
+
+    static Plugin parsePluginFromXML(xml) {
+        new Plugin(
+                name: xml.@name.text(),
+                title: xml.title.text(),
+                description: xml.description?.text() ?: '',
+                license: xml.license?.text() ?: '<UNKNOWN>',
+                source: '',
+                authors: [
+                        new Author(
+                                name: xml.author?.text() ?: '',
+                                email: xml.authorEmail?.text() ?: ''
+                        )
+                ],
+                toolkits: (xml.toolkits?.text()?.split(',') ?: []).inject([]) { l, toolkit ->
+                    if (!isBlank(toolkit)) l << Toolkit.findByName(toolkit)
+                    l
+                },
+                platforms: (xml.platforms?.text()?.split(',') ?: []).inject([]) { l, platform ->
+                    if (!isBlank(platform)) l << Platform.findByName(platform)
+                    l
+                }
         )
     }
 
@@ -326,59 +467,4 @@ class ArtifactUtils {
 
         return tokens.findAll { it ==~ /\d+/ || it == '*'}.join(".")
     }
-}
-
-class VersionComparator implements Comparator {
-    int compare(o1, o2) {
-        int result = 0
-        if (o1 == '*') {
-            result = 1
-        }
-        else if (o2 == '*') {
-            result = -1
-        }
-        else {
-            def nums1
-            try {
-                def tokens = o1.split(/\./)
-                tokens = tokens.findAll { it.trim() ==~ /\d+/ }
-                nums1 = tokens*.toInteger()
-            }
-            catch (NumberFormatException e) {
-                throw new InvalidVersionException("Cannot compare versions, left side [$o1] is invalid: ${e.message}")
-            }
-            def nums2
-            try {
-                def tokens = o2.split(/\./)
-                tokens = tokens.findAll { it.trim() ==~ /\d+/ }
-                nums2 = tokens*.toInteger()
-            }
-            catch (NumberFormatException e) {
-                throw new InvalidVersionException("Cannot compare versions, right side [$o2] is invalid: ${e.message}")
-            }
-            boolean bigRight = nums2.size() > nums1.size()
-            boolean bigLeft = nums1.size() > nums2.size()
-            for (i in 0..<nums1.size()) {
-                if (nums2.size() > i) {
-                    result = nums1[i] <=> nums2[i]
-                    if (result != 0) {
-                        break
-                    }
-                    if (i == (nums1.size() - 1) && bigRight) {
-                        if (nums2[i + 1] != 0)
-                            result = -1; break
-                    }
-                }
-                else if (bigLeft) {
-                    if (nums1[i] != 0)
-                        result = 1; break
-                }
-            }
-        }
-        result
-    }
-
-    boolean equals(obj) { false }
-
-    int hashCode() { System.identityHashCode(this) }
 }

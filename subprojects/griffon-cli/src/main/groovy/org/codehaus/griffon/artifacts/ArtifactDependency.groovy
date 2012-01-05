@@ -26,8 +26,8 @@ class ArtifactDependency {
     private static VERSION_NUMBER_PATTERN = ~/(\d+)\.(\d+)(\.(\d).*?)?/
 
     final String name
-    Release release
     String version
+    Release release
 
     int major = 0
     int minor = 0
@@ -93,5 +93,38 @@ class ArtifactDependency {
         PrintStream out = new PrintStream(baos)
         printout(0, out, false)
         baos.toString()
+    }
+
+    static class Key {
+        final String name
+        final String version
+
+        Key(String name, String version) {
+            this.name = name
+            this.version = version
+        }
+
+        boolean equals(o) {
+            if (this.is(o)) return true
+            if (!(o instanceof Key)) return false
+
+            Key key = (Key) o
+
+            if (name != key.name) return false
+            if (version != key.version) return false
+
+            return true
+        }
+
+        int hashCode() {
+            int result
+            result = name.hashCode()
+            result = 31 * result + version.hashCode()
+            return result
+        }
+
+        String toString() {
+            "${name}-${version}"
+        }
     }
 }

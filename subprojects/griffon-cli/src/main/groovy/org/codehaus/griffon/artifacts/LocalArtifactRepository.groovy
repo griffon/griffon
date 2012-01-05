@@ -74,7 +74,7 @@ class LocalArtifactRepository extends AbstractArtifactRepository {
         File artifactFile = new File(releasePath, fileName)
         if (artifactFile.exists()) {
             def json = new JsonSlurper().parseText(artifactFile.text)
-            return ArtifactUtils.parseArtifact(type, json)
+            return ArtifactUtils.parseArtifactFromJSON(type, json)
         }
         null
     }
@@ -158,7 +158,7 @@ class LocalArtifactRepository extends AbstractArtifactRepository {
             FileUtils.copyFile(file, packageFile)
         } catch (Exception e) {
             GriffonExceptionHandler.sanitize(e)
-            LOG.trace("Could not upload artifact ${file}", e)
+            if (LOG.warnEnabled) LOG.warn("Could not upload artifact ${file}", e)
             throw e
         }
 

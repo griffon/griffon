@@ -24,12 +24,7 @@ dependencies {
     groovy "org.codehaus.groovy:groovy-all:$groovyVersion"
 
     compile project(':griffon-rt')
-    compile    ('org.codehaus.gpars:gpars:0.9'){
-        exclude group: 'org.jboss.netty',      module: 'netty'
-        exclude group: 'org.coconut.forkjoin', module: 'jsr166y'
-    }
-    compile 'org.coconut.forkjoin:jsr166y:070108',
-            'junit:junit:4.10',
+    compile 'junit:junit:4.10',
             'asm:asm:3.2',
             'commons-cli:commons-cli:1.2',
             'commons-io:commons-io:2.1',

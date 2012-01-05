@@ -24,6 +24,7 @@ import org.codehaus.griffon.artifacts.model.Release
 import static griffon.util.GriffonNameUtils.capitalize
 import static griffon.util.GriffonNameUtils.isBlank
 import org.codehaus.griffon.artifacts.*
+import static org.codehaus.griffon.artifacts.ArtifactUtils.getInstalledReleases
 import static org.codehaus.griffon.artifacts.ArtifactUtils.isValidVersion
 
 /**
@@ -36,9 +37,7 @@ _griffon_artifacts_called = true
 
 includeTargets << griffonScript('Init')
 
-target(configureArtifactRepositories: 'Configures available artifact repositories') {
-    ArtifactRepositoryRegistry.instance.configureRepositories()
-}
+artifactRepository = null
 
 selectArtifactRepository = {
     repositoryName = argsMap.repository ?: ArtifactRepository.DEFAULT_REMOTE_NAME
@@ -85,13 +84,13 @@ listArtifacts = { String type ->
 listArtifactsHeader = { repository, type ->
     println """
 ${capitalize(type)}s available in the ${repository.name} repository are listed below:
------------------------------------------------------------------------
-${'Name'.padRight(29, ' ')}${'Releases'.padRight(12, ' ')} Title
+${'-' * 80}
+${'Name'.padRight(30, ' ')}${'Releases'.padRight(20, ' ')} Title
 """
 }
 
 formatArtifactForPrint = { Artifact artifact ->
-    "${artifact.name.padRight(29, ' ')}${artifact.releases.size().toString().padRight(12, ' ')} ${artifact.title}"
+    "${artifact.name.padRight(30, ' ')}${artifact.releases.size().toString().padRight(20, ' ')} ${artifact.title}"
 }
 
 listArtifactsFooter = { type ->
@@ -105,7 +104,7 @@ For further info visit http://griffon.codehaus.org/${capitalize(type)}s
 }
 
 listInstalledArtifacts = { String type ->
-    Map installedArtifacts = getInstalledArtifacts(type)
+    Map installedArtifacts = getInstalledReleases(type)
     if (type == Archetype.TYPE) {
         installedArtifacts['default'] = [
                 version: GriffonUtil.getGriffonVersion(),
@@ -116,12 +115,12 @@ listInstalledArtifacts = { String type ->
     if (installedArtifacts) {
         println """
 ${capitalize(type)}s you currently have installed are listed below:
------------------------------------------------------------------------
-${'Name'.padRight(29, ' ')}${'Version'.padRight(12, ' ')} Title
+${'-' * 80}
+${'Name'.padRight(30, ' ')}${'Version'.padRight(20, ' ')} Title
 """
 
         List list = installedArtifacts.collect([]) { entry ->
-            "${entry.key.padRight(29, ' ')}${entry.value.version.toString().padRight(12, ' ')} ${entry.value.title}"
+            "${entry.key.padRight(30, ' ')}${entry.value.version.toString().padRight(20, ' ')} ${entry.value.title}"
         }
         list.sort()
         list.each { println it }
@@ -138,9 +137,9 @@ displayArtifact = { String type, String name, String version, ArtifactRepository
 
 displayArtifactHeader = { String type, ArtifactRepository repository ->
     println """
---------------------------------------------------------------------------
+${'-' * 80}
 Information about ${type} listed at ${repository.name}
---------------------------------------------------------------------------\
+${'-' * 80}\
 """
 }
 
@@ -163,7 +162,7 @@ displayArtifactInfo = { String type, String name, String version, ArtifactReposi
     ].each { label, value ->
         println "${label.padRight(padding, ' ')}: ${value}"
     }
-    println '--------------------------------------------------------------------------'
+    println('-' * 80)
 
     if (type == Plugin.TYPE) {
         [
@@ -172,14 +171,14 @@ displayArtifactInfo = { String type, String name, String version, ArtifactReposi
         ].each { label, value ->
             println "${label.padRight(padding, ' ')}: ${value}"
         }
-        println '--------------------------------------------------------------------------'
+        println('-' * 80)
     }
 
     println 'Authors:'
     artifact.authors.each { author ->
         println "\t${author.name} (${author.email})"
     }
-    println '--------------------------------------------------------------------------'
+    println('-' * 80)
 
     if (version) {
         if (release) {
@@ -198,7 +197,7 @@ displayArtifactInfo = { String type, String name, String version, ArtifactReposi
             }
         } else {
             println "<release ${version} not found for this ${type}>"
-            println '--------------------------------------------------------------------------'
+            println('-' * 80)
         }
     } else if (artifact.releases) {
         println 'Releases:'
@@ -208,7 +207,7 @@ displayArtifactInfo = { String type, String name, String version, ArtifactReposi
         }
     } else {
         println "No releases found for this ${type}"
-        println '--------------------------------------------------------------------------'
+        println('-' * 80)
     }
 }
 
@@ -229,7 +228,6 @@ For further info visit http://griffon.codehaus.org/${capitalize(type)}s
 // --== INSTALL ==-
 
 installArtifact = { String type ->
-    selectArtifactRepository()
     try {
         def artifactArgs = argsMap['params']
 
@@ -245,7 +243,7 @@ installArtifact = { String type ->
                 // The first argument is the artifact name, the second
                 // (if provided) is the artifact version.
                 failOnError = true
-                doInstallArtifact(artifactRepository, type, artifactArgs[0], artifactArgs[1])
+                installArtifactForName(Metadata.current, type, artifactArgs[0], artifactArgs[1])
             }
         } else {
             event('StatusError', [installArtifactErrorMessage(Archetype.TYPE)])
@@ -346,6 +344,7 @@ doInstallArtifact = { ArtifactRepository artifactRepository, String type, String
 }
 
 installArtifactForName = { Metadata md, String type, String name, String version = null ->
+    resolveArtifactRepository()
     failOnError = false
     installed = false
 
@@ -370,6 +369,7 @@ doInstallFromFile = { type, file, md ->
     ArtifactInstallEngine artifactInstallEngine = createArtifactInstallEngine(md)
     try {
         artifactInstallEngine.installFromFile(type, file)
+        md.reload()
     } catch (InstallArtifactException iae) {
         artifactInstallEngine.errorHandler "Installation of ${file} aborted."
     } catch (UninstallArtifactException uae) {
@@ -377,8 +377,7 @@ doInstallFromFile = { type, file, md ->
     }
 }
 
-private ArtifactInstallEngine createArtifactInstallEngine(Metadata md) {
-    if (!md) md = Metadata.current
+private ArtifactInstallEngine createArtifactInstallEngine(Metadata md = metadata) {
     def artifactInstallEngine = new ArtifactInstallEngine(griffonSettings, md, ant)
     artifactInstallEngine.pluginScriptRunner = runPluginScript
     artifactInstallEngine.eventHandler = { eventName, msg -> event(eventName, [msg]) }
@@ -465,7 +464,7 @@ resolveCommitMessage = {
 
 doListArtifactUpdates = { String type ->
     Map availableArtifacts = getAvailableArtifacts(type)
-    Map installedArtifacts = getInstalledArtifacts(type)
+    Map installedArtifacts = getInstalledReleases(type)
     Map outdatedArtifacts = [:]
 
     if (!availableArtifacts) {
@@ -474,18 +473,18 @@ doListArtifactUpdates = { String type ->
 
     boolean headerDisplayed = false
     if (installedArtifacts) {
-        installedArtifacts.each {name, data ->
-            String version = data.version
+        installedArtifacts.each {name, release ->
+            String version = release.version
             String availableVersion = availableArtifacts[name].version
             if (availableVersion != version && availableVersion != null) {
                 if (!headerDisplayed) {
                     println """
 ${capitalize(type)}s with available updates are listed below:
------------------------------------------------------------------------
+${'-' * 80}
 <${capitalize(type)}>                   <Current>         <Available>"""
                     headerDisplayed = true
                 }
-                println "${name.padRight(27 + (type == Archetype.TYPE ? 3 : 0), " ")}${version.padRight(16, " ")}  ${availableVersion}"
+                println "${name.padRight(27 + (type == Archetype.TYPE ? 3 : 0), " ")}${version.padRight(20, " ")}  ${availableVersion}"
                 outdatedArtifacts[name] = [
                         version: availableVersion,
                         repository: availableArtifacts[name].repository
@@ -549,9 +548,4 @@ getAvailableArtifacts = { String type ->
     }
 
     artifacts
-}
-
-getInstalledArtifacts = { String type ->
-    ArtifactInstallEngine artifactInstallEngine = createArtifactInstallEngine()
-    artifactInstallEngine.getInstalledArtifacts(type)
 }

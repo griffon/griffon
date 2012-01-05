@@ -23,7 +23,7 @@ import groovy.json.JsonBuilder
  * @since 0.9.5
  */
 class Archetype extends Artifact {
-    static final String TYPE = 'archetype'
+    public static final String TYPE = 'archetype'
 
     def toJSON() {
         JsonBuilder builder = new JsonBuilder()

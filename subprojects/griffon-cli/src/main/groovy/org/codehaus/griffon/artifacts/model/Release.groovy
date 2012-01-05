@@ -17,6 +17,7 @@
 package org.codehaus.griffon.artifacts.model
 
 import groovy.json.JsonBuilder
+import groovy.json.JsonSlurper
 import org.codehaus.griffon.artifacts.ArtifactUtils
 import static org.codehaus.griffon.artifacts.ArtifactUtils.*
 
@@ -76,5 +77,47 @@ class Release {
         }
 
         release
+    }
+
+    static Release makeFromFile(String type, File file) {
+        if (file == null || !file.exists()) {
+            throw new IllegalArgumentException("Cannot create Release based on file $file")
+        }
+
+        String fileType = file.name[file.name.lastIndexOf('.')..-1]
+
+        if (!(fileType in ['.json', '.xml'])) {
+            throw new IllegalArgumentException("Cannot create Release based on file $file")
+        }
+
+        switch (type) {
+            case Plugin.TYPE:
+            case Archetype.TYPE:
+                switch (fileType) {
+                    case '.json':
+                        return makeFromJSON(type, new JsonSlurper().parseText(file.text))
+                        break
+                    case '.xml':
+                        return makeFromXML(type, new XmlSlurper().parse(file))
+                        break
+                }
+                break
+            default:
+                throw new IllegalArgumentException("Cannot create Release based on file $file")
+        }
+    }
+
+    static Release makeFromXML(String type, xml) {
+        switch (type) {
+            case Plugin.TYPE:
+                Release release = parseReleaseFromXML(xml)
+                release.artifact = parsePluginFromXML(xml)
+                return release
+                break
+            case Archetype.TYPE:
+                break
+        }
+
+        null
     }
 }

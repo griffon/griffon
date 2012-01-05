@@ -26,6 +26,8 @@ import static griffon.util.ConfigUtils.getConfigValueAsString
 public class CommandLineHelper {
     private PrintStream out = System.out
 
+    private static final String INTERACTIVE_KEY = 'griffon.interactive.mode'
+
     public CommandLineHelper() {
         // default
     }
@@ -39,11 +41,11 @@ public class CommandLineHelper {
     }
 
     String forceUserInput(String message, String[] validResponses) {
-        String interactiveValue = System.getProperty("griffon.interactive.mode");
-        System.setProperty("griffon.interactive.mode", "true");
-        String enteredValue = userInput(message, validResponses);
-        System.setProperty("griffon.interactive.mode", interactiveValue);
-        return enteredValue;
+        String interactiveValue = System.getProperty(INTERACTIVE_KEY)
+        System.setProperty(INTERACTIVE_KEY, 'true')
+        String enteredValue = userInput(message, validResponses)
+        System.setProperty(INTERACTIVE_KEY, interactiveValue ?: 'true')
+        return enteredValue
     }
 
     /**
@@ -79,7 +81,7 @@ public class CommandLineHelper {
             responsesString = DefaultGroovyMethods.join(validResponses, ",")
         }
 
-        if (System.getProperty("griffon.interactive.mode") == null || !Boolean.getBoolean("griffon.interactive.mode")) {
+        if (System.getProperty(INTERACTIVE_KEY) == null || !Boolean.getBoolean(INTERACTIVE_KEY)) {
             if (getDefaultAnswerNonInteractive().equalsIgnoreCase('y')) {
                 return 'y'
             } else if (getDefaultAnswerNonInteractive().equalsIgnoreCase('n')) {

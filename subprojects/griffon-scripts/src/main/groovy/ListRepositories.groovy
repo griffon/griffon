@@ -24,7 +24,7 @@ import org.codehaus.griffon.artifacts.ArtifactRepositoryRegistry
 includeTargets << griffonScript('_GriffonArtifacts')
 
 target(listReposiories: 'Lists all configured repositories') {
-    depends(parseArguments, configureProxy, configureArtifactRepositories)
+    depends(parseArguments, configureProxy)
 
     listRepositoriesHeader()
     ArtifactRepositoryRegistry.instance.withRepositories { String name, ArtifactRepository artifactRepository ->

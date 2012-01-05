@@ -23,7 +23,7 @@ import org.codehaus.griffon.artifacts.model.Archetype
 includeTargets << griffonScript('_GriffonArtifacts')
 
 target(listArchetypes: 'Lists all archetypes available in an artifact repository') {
-    depends(parseArguments, configureProxy, configureArtifactRepositories)
+    depends(parseArguments, configureProxy)
 
     listArtifacts(Archetype.TYPE)
 }

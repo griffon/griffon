@@ -22,9 +22,20 @@ import griffon.util.BuildSettingsHolder
  * @author Andres Almiray
  * @since 0.9.5
  */
-@Singleton
-class ArtifactRepositoryRegistry {
+final class ArtifactRepositoryRegistry {
     private static final Map<String, ArtifactRepository> REPOSITORIES = [:].asSynchronized()
+
+    private static final ArtifactRepositoryRegistry INSTANCE
+
+    static {
+        INSTANCE = new ArtifactRepositoryRegistry()
+    }
+
+    static ArtifactRepositoryRegistry getInstance() {
+        INSTANCE
+    }
+
+    private ArtifactRepositoryRegistry() {}
 
     void registerRepository(ArtifactRepository repository) {
         if (!repository.name) {

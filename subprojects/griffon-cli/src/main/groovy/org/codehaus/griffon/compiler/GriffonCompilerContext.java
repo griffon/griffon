@@ -18,10 +18,7 @@ package org.codehaus.griffon.compiler;
 
 import griffon.util.BuildSettings;
 import griffon.util.BuildSettingsHolder;
-import groovy.lang.Closure;
 import groovy.util.ConfigObject;
-import org.apache.log4j.LogManager;
-import org.codehaus.griffon.runtime.logging.Log4jConfig;
 import org.codehaus.groovy.control.SourceUnit;
 import org.codehaus.groovy.runtime.typehandling.DefaultTypeTransformation;
 
@@ -86,8 +83,6 @@ public class GriffonCompilerContext {
         scriptPatterns[0] = normalizePattern("^" + basedir + File.separator + "griffon-app" + File.separator + "conf" + File.separator + ".*.groovy$");
         scriptPatterns[1] = normalizePattern("^" + basedir + File.separator + "scripts" + File.separator + ".*.groovy$");
         isTestPattern = normalizePattern("^" + basedir + File.separator + "test" + File.separator + ".*.groovy$");
-
-        setLoggingOptions();
     }
 
     public static boolean isGriffonArtifact(SourceUnit source) {
@@ -183,13 +178,5 @@ public class GriffonCompilerContext {
         Object value = getFlattenedBuildSettings().get(key);
         if (value != null) return DefaultTypeTransformation.castToBoolean(value);
         return false;
-    }
-
-    private static void setLoggingOptions() {
-        Object log4jConfig = getBuildSettings().get("log4j");
-        if (log4jConfig instanceof Closure) {
-            LogManager.resetConfiguration();
-            new Log4jConfig().configure((Closure) log4jConfig);
-        }
     }
 }

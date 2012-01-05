@@ -18,10 +18,10 @@ package org.codehaus.griffon.cli.support;
 import griffon.build.GriffonBuildListener;
 import griffon.util.BuildSettings;
 import griffon.util.GriffonUtil;
-import griffon.util.PluginBuildSettings;
 import groovy.lang.*;
 import org.apache.tools.ant.BuildEvent;
 import org.apache.tools.ant.BuildListener;
+import org.codehaus.griffon.artifacts.PluginUtils;
 import org.springframework.core.io.Resource;
 
 import java.io.File;
@@ -71,8 +71,8 @@ public class GriffonBuildEventListener implements BuildListener {
             loadEventsScript(findEventsScript(new File(buildSettings.getUserHome(), ".griffon/scripts")));
             loadEventsScript(findEventsScript(new File(buildSettings.getBaseDir(), "scripts")));
 
-            PluginBuildSettings pluginSettings = (PluginBuildSettings) binding.getVariable("pluginSettings");
-            for (Resource pluginBase : pluginSettings.getSortedPluginDirectories()) {
+            // PluginBuildSettings pluginSettings = (PluginBuildSettings) binding.getVariable("pluginSettings");
+            for (Resource pluginBase : PluginUtils.getSortedPluginDirectories()) {
                 try {
                     loadEventsScript(findEventsScript(new File(pluginBase.getFile(), "scripts")));
                 } catch (IOException ex) {

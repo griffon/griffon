@@ -76,6 +76,8 @@ createArtifact = { Map args = [:] ->
     artifactFile = "${basedir}/${artifactPath}/${pkgPath}${className}${suffix}${fileType}"
     defaultArtifactFile = "${basedir}/${artifactPath}/${pkgPath}${className}${suffix}.groovy"
 
+    fullyQualifiedClassName = "${packageName ? packageName + '.' : ''}$className${suffix}"
+
     templateFile = resolveTemplate(template, fileType)
     if (!templateFile?.exists() && fileType != '.groovy') {
         templateFile = resolveTemplate(template, '.groovy')

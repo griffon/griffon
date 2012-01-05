@@ -8,8 +8,6 @@ includeTargets << griffonScript('_GriffonArtifacts')
 includeTargets << griffonScript('PackagePlugin')
 
 target(releasePlugin: 'Publishes a Griffon plugin release') {
-    depends(configureArtifactRepositories)
-
     packageForRelease = true
     packagePlugin()
     createArtifactRelease(Plugin.TYPE, artifactInfo)

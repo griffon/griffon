@@ -30,7 +30,8 @@ import org.codehaus.griffon.artifacts.model.Release
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import static griffon.util.GriffonNameUtils.isBlank
-import static org.codehaus.griffon.artifacts.ArtifactUtils.parseArtifact
+import static groovyx.net.http.ContentType.JSON
+import static org.codehaus.griffon.artifacts.ArtifactUtils.parseArtifactFromJSON
 
 /**
  * @author Andres Almiray
@@ -96,14 +97,14 @@ class RemoteArtifactRepository extends AbstractArtifactRepository {
     List<Artifact> listArtifacts(String type) {
         List<Artifact> artifacts = []
         try {
-            def response = http().request(path: "api/${type}s")
+            def response = http().request(path: "api/${type}s", contentType: JSON)
             if (response.status == 200) {
                 response.data.collect(artifacts) { json ->
-                    parseArtifact(type, json)
+                    parseArtifactFromJSON(type, json)
                 }
             }
         } catch (Exception e) {
-            LOG.trace("Could not list artifacts of type ${type}", GriffonExceptionHandler.sanitize(e))
+            if (LOG.warnEnabled) LOG.warn("Could not list artifacts of type ${type}", GriffonExceptionHandler.sanitize(e))
         }
         artifacts
     }
@@ -111,12 +112,12 @@ class RemoteArtifactRepository extends AbstractArtifactRepository {
     Artifact findArtifact(String type, String name) {
         Artifact artifact = null
         try {
-            def response = http().request(path: "api/${type}s/${name}")
+            def response = http().request(path: "api/${type}s/${name}", contentType: JSON)
             if (response.status == 200) {
-                artifact = parseArtifact(type, response.data)
+                artifact = parseArtifactFromJSON(type, response.data)
             }
         } catch (Exception e) {
-            LOG.trace("Could not locate artifact ${type}:${name}", GriffonExceptionHandler.sanitize(e))
+            if (LOG.warnEnabled) LOG.warn("Could not locate artifact ${type}:${name}", GriffonExceptionHandler.sanitize(e))
         }
         artifact
     }
@@ -129,14 +130,14 @@ class RemoteArtifactRepository extends AbstractArtifactRepository {
 
             println "Downloading ${http().url}api/${type}s/${name}/download/${version} ..."
 
-            def response = http().request(path: "api/${type}s/${name}/download/${version}", headers: headers)
+            def response = http().request(path: "api/${type}s/${name}/download/${version}", headers: headers, contentType: JSON)
             if (response.status == 200) {
                 file = File.createTempFile("griffon-${name}-${version}-", '.zip')
                 file.deleteOnExit()
                 file.bytes = response.data.bytes
             }
         } catch (Exception e) {
-            LOG.trace("Could not download artifact ${type}:${name}:${version}", GriffonExceptionHandler.sanitize(e))
+            if (LOG.warnEnabled) LOG.warn("Could not download artifact ${type}:${name}:${version}", GriffonExceptionHandler.sanitize(e))
             throw e
         }
         file
@@ -196,7 +197,7 @@ class RemoteArtifactRepository extends AbstractArtifactRepository {
             session.disconnect()
         } catch (Exception e) {
             GriffonExceptionHandler.sanitize(e)
-            LOG.trace("Could not upload artifact ${file}", e)
+            if (LOG.warnEnabled) LOG.warn("Could not upload artifact ${file}", e)
             throw e
         }
         true
@@ -223,7 +224,7 @@ class RemoteArtifactRepository extends AbstractArtifactRepository {
                 file.bytes = conn.inputStream.bytes
             }
         } catch (Exception e) {
-            LOG.trace("Could not download artifact form URL ${url}", GriffonExceptionHandler.sanitize(e))
+            if (LOG.warnEnabled) LOG.warn("Could not download artifact form URL ${url}", GriffonExceptionHandler.sanitize(e))
             throw e
         }
         file
@@ -246,7 +247,7 @@ class RemoteArtifactRepository extends AbstractArtifactRepository {
         ]
     }
 
-    static int checkAck(InputStream is) throws IOException {
+    private static int checkAck(InputStream is) throws IOException {
         int b = is.read()
         // b may be 0 for success,
         //          1 for error,
@@ -273,7 +274,7 @@ class RemoteArtifactRepository extends AbstractArtifactRepository {
         return b
     }
 
-    static class SimpleUserInfo implements UserInfo {
+    private static class SimpleUserInfo implements UserInfo {
         final String username
         final String password
 
@@ -282,29 +283,14 @@ class RemoteArtifactRepository extends AbstractArtifactRepository {
             this.password = password
         }
 
-        @Override
-        String getPassphrase() {
-            null
-        }
+        String getPassphrase() { null }
 
-        @Override
-        boolean promptPassword(String message) {
-            true
-        }
+        boolean promptPassword(String message) { true }
 
-        @Override
-        boolean promptPassphrase(String message) {
-            true
-        }
+        boolean promptPassphrase(String message) { true }
 
-        @Override
-        boolean promptYesNo(String message) {
-            true
-        }
+        boolean promptYesNo(String message) { true }
 
-        @Override
-        void showMessage(String message) {
-
-        }
+        void showMessage(String message) { }
     }
 }

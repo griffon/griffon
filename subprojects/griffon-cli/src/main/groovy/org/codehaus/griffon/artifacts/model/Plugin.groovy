@@ -23,7 +23,7 @@ import groovy.json.JsonBuilder
  * @since 0.9.5
  */
 class Plugin extends Artifact {
-    static final String TYPE = 'plugin'
+    public static final String TYPE = 'plugin'
 
     List<Toolkit> toolkits = []
     List<Platform> platforms = []

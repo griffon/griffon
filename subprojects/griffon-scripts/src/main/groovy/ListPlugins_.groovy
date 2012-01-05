@@ -23,7 +23,7 @@ import org.codehaus.griffon.artifacts.model.Plugin
 includeTargets << griffonScript('_GriffonArtifacts')
 
 target(listPlugins: 'Lists all plugins available in an artifact repository') {
-    depends(parseArguments, configureProxy, configureArtifactRepositories)
+    depends(parseArguments, configureProxy)
 
     listArtifacts(Plugin.TYPE)
 }

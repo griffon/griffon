@@ -23,7 +23,7 @@ import org.codehaus.griffon.artifacts.model.Plugin
 includeTargets << griffonScript("_GriffonArtifacts")
 
 target(listPluginUpdates: '') {
-    depends(parseArguments, configureArtifactRepositories)
+    depends(parseArguments)
 
     doListArtifactUpdates(Plugin.TYPE)
 }

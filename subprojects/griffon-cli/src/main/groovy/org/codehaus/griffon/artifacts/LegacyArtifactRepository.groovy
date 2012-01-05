@@ -24,7 +24,7 @@ import org.codehaus.griffon.artifacts.model.Release
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import static groovyx.net.http.ContentType.JSON
-import static org.codehaus.griffon.artifacts.ArtifactUtils.parseArtifact
+import static org.codehaus.griffon.artifacts.ArtifactUtils.parseArtifactFromJSON
 
 /**
  * @author Andres Almiray
@@ -54,11 +54,11 @@ class LegacyArtifactRepository extends AbstractArtifactRepository {
             def response = http.request(path: 'repository.json', contentType: JSON)
             if (response.status == 200) {
                 response.data.collect(artifacts) { json ->
-                    parseArtifact(type, json)
+                    parseArtifactFromJSON(type, json)
                 }
             }
         } catch (Exception e) {
-            LOG.error("Could not list artifacts of type ${type}", GriffonExceptionHandler.sanitize(e))
+            if (LOG.warnEnabled) LOG.warn("Could not list artifacts of type ${type}", GriffonExceptionHandler.sanitize(e))
         }
 
         artifacts
@@ -74,10 +74,10 @@ class LegacyArtifactRepository extends AbstractArtifactRepository {
         try {
             def response = http.request(path: "griffon-${name}/tags/LATEST_RELEASE/plugin.json", contentType: JSON)
             if (response.status == 200) {
-                artifact = parseArtifact(type, response.data)
+                artifact = parseArtifactFromJSON(type, response.data)
             }
         } catch (Exception e) {
-            LOG.error("Could not locate artifact ${type}:${name}", GriffonExceptionHandler.sanitize(e))
+            if (LOG.warnEnabled) LOG.warn("Could not locate artifact ${type}:${name}", GriffonExceptionHandler.sanitize(e))
         }
 
         artifact
@@ -99,7 +99,7 @@ class LegacyArtifactRepository extends AbstractArtifactRepository {
                 file.bytes = response.data.bytes
             }
         } catch (Exception e) {
-            LOG.trace("Could not download artifact ${type}:${name}:${version}", GriffonExceptionHandler.sanitize(e))
+            if (LOG.warnEnabled) LOG.warn("Could not download artifact ${type}:${name}:${version}", GriffonExceptionHandler.sanitize(e))
             throw e
         }
         file

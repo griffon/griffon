@@ -21,7 +21,6 @@ import groovy.json.JsonSlurper
 import java.util.zip.ZipEntry
 import java.util.zip.ZipFile
 import org.codehaus.griffon.artifacts.model.Archetype
-import org.codehaus.griffon.artifacts.model.Artifact
 import org.codehaus.griffon.artifacts.model.Plugin
 import org.codehaus.griffon.artifacts.model.Release
 import org.codehaus.griffon.cli.CommandLineHelper
@@ -74,109 +73,76 @@ class ArtifactInstallEngine {
         value in [INSTALL_FAILURE_ABORT, INSTALL_FAILURE_CONTINUE] ? value : INSTALL_FAILURE_CONTINUE
     }
 
-    /**
-     * Finds all artifacts of the given type that are installed.
-     *
-     * @param type one of <tt>Archetype.TYPE</tt> or <tt>Plugin.TYPE</tt>.
-     * @return
-     */
-    Map getInstalledArtifacts(String type) {
-        Map artifacts = [:]
+    void resolvePluginDependencies() {
+        Map<String, String> registeredPlugins = getRegisteredArtifacts(Plugin.TYPE, metadata)
+        Map<String, String> installedPlugins = getInstalledArtifacts(Plugin.TYPE)
 
-        for (resource in resolveResources("file://${artifactBase(type)}/*/${type}.json")) {
-            Release release = Release.makeFromJSON(type, new JsonSlurper().parseText(resource.file.text))
-            artifacts[release.artifact.name] = [
-                    type: type,
-                    version: release.version,
-                    title: release.artifact.title,
-                    dependencies: release.dependencies.collect([]) {it.name}
-            ]
+        if (LOG.debugEnabled) {
+            String registered = registeredPlugins.collect([]) {k, v -> "${k}-${v}"}.join('\n\t')
+            if (registered) LOG.debug("Registered plugins:\n\t${registered}")
+            String installed = installedPlugins.collect([]) {k, v -> "${k}-${v}"}.join('\n\t')
+            if (installed) LOG.debug("Installed plugins:\n\t${installed}")
         }
 
-        // TODO - remove this code before 1.0
-        // legacy plugins
-        if (type == Plugin.TYPE) {
-            for (resource in resolveResources("file://${artifactBase(type)}/*/plugin.xml")) {
-                def xml = new XmlSlurper().parse(resource.file)
-                String name = xml.@name.text()
-                if (artifacts[name]) continue
-                artifacts[name] = [
-                        type: type,
-                        version: xml.@version.text(),
-                        title: xml.title.text(),
-                        dependencies: xml.dependencies?.plugin?.collect([]) {it.@name.text()}
-                ]
+        Map<String, String> pluginsToDelete = [:]
+        Map<String, String> missingPlugins = [:]
+        registeredPlugins.each {name, version ->
+            String v = installedPlugins[name]
+            if (v != version) {
+                missingPlugins[name] = version
             }
         }
 
-        artifacts
-    }
-
-    /**
-     * Finds all artifacts of the given type that are registered with the project's metadata.
-     *
-     * @param type one of <tt>Archetype.TYPE</tt> or <tt>Plugin.TYPE</tt>.
-     * @return
-     */
-    Map<String, String> getRegisteredArtifacts(String type) {
-        Map artifacts = [:]
-
-        switch (type) {
-            case Archetype.TYPE:
-                String property = metadata.propertyNames().find {it.startsWith('archetype.')}
-                if (property) {
-                    String name = property - 'archetype.'
-                    String version = metadata[property]
-                    artifacts[name] = version
-                }
-                break
-            case Plugin.TYPE:
-                metadata.propertyNames().grep {it.startsWith('plugins.')}.each { property ->
-                    String name = property - 'plugins.'
-                    String version = metadata[property]
-                    artifacts[name] = version
-                }
-                break
-        }
-
-        artifacts
-    }
-
-    void installPlugin(String name, String version = null) {
-        String type = Plugin.TYPE
-        installedArtifacts.clear()
-        uninstalledArtifacts.clear()
-
-        Map installedArtifacts = getInstalledArtifacts(type)
-
-        Map<String, ArtifactDependency> installedDependencies = [:]
-        installedArtifacts.each { String key, installed ->
-            ArtifactDependency dep = installedDependencies[key]
-            if (!dep) {
-                dep = new ArtifactDependency(key)
-                dep.version = installed.version
-                dep.installed = true
-                dep.resolved = true
-                installedDependencies[key] = dep
-            }
-        }
-
-        installedArtifacts.each { key, installed ->
-            ArtifactDependency dependency = installedDependencies[key]
-            installed.dependencies.each { k ->
-                ArtifactDependency dep = installedDependencies[k]
-                if (dep) dependency.dependencies << dep
+        installedPlugins.each {name, version ->
+            String v = registeredPlugins[name]
+            if (v != version) {
+                pluginsToDelete[name] = version
             }
         }
 
         if (LOG.debugEnabled) {
-            LOG.debug('Installed dependencies:')
-            installedDependencies.values().each {LOG.debug it.toString().trim()}
+            String installed = installedPlugins.collect([]) {k, v -> "${k}-${v}"}.join('\n\t')
+            if (installed) LOG.debug("Installed plugins (confirmed):\n\t${installed}")
+            String missing = missingPlugins.collect([]) {k, v -> "${k}-${v}"}.join('\n\t')
+            if (missing) LOG.debug("Missing plugins:\n\t${missing}")
+            String todelete = pluginsToDelete.collect([]) {k, v -> "${k}-${v}"}.join('\n\t')
+            if (todelete) LOG.debug("Plugins to be deleted:\n\t${todelete}")
         }
 
-        ArtifactDependency artifactDependency = null
+        pluginsToDelete.each {name, version ->
+            eventHandler 'StatusUpdate', "Plugin ${name}-${version} is installed, but was not found in the application's metadata. Removing this plugin from the application's plugin base."
+            ant.delete(dir: getInstallPathFor(Plugin.TYPE, name, version), failonerror: false)
+            installedPlugins.remove(name)
+        }
+
+        ArtifactDependencyResolver resolver = new ArtifactDependencyResolver()
+        List<ArtifactDependency> dependencies = []
         try {
-            artifactDependency = resolveDependencyTree(type, name, version)
+            dependencies = resolver.resolveDependencyTree(Plugin.TYPE, missingPlugins)
+        } catch (Exception e) {
+            GriffonExceptionHandler.sanitize(e)
+            eventHandler 'StatusError', "Some missing plugins failed to resolve => $e"
+            errorHandler "Cannot continue with unresolved dependencies."
+        }
+
+        if (LOG.debugEnabled) {
+            LOG.debug("Dependency resolution outcome:\n${dependencies.collect([]) {printDependencyTree(it, true)}.join('\n')}")
+        }
+
+        try {
+            installPlugins(dependencies, resolver)
+        } catch (InstallArtifactException iae) {
+            errorHandler "Could not resolve plugin dependencies."
+        }
+    }
+
+    void installPlugin(String name, String version = null) {
+        String type = Plugin.TYPE
+
+        ArtifactDependencyResolver resolver = new ArtifactDependencyResolver()
+        List<ArtifactDependency> dependencies = null
+        try {
+            dependencies << resolver.resolveDependencyTree(type, name, version)
         } catch (Exception e) {
             GriffonExceptionHandler.sanitize(e)
             eventHandler 'StatusError', "${capitalize(type)} ${name}${version ? '-' + version : ''} could not be installed => $e"
@@ -184,36 +150,72 @@ class ArtifactInstallEngine {
         }
 
         if (LOG.debugEnabled) {
-            LOG.debug('Dependency resolution outcome:')
-            LOG.debug printDependencyTree(artifactDependency)
+            LOG.debug("Dependency resolution outcome:\n${dependencies.collect([]) {printDependencyTree(it, true)}.join('\n')}")
         }
 
-        if (!artifactDependency.resolved) {
-            String installed = ''
-            installedDependencies.values().each {installed += it.toString() }
-            String target = printDependencyTree(artifactDependency)
-            eventHandler 'StatusError', "${capitalize(type)} ${name}${version ? '-' + version : ''} could not be installed because some of its dependencies could not be resolved.\n${installed}${target}"
+        try {
+            installPlugins(dependencies, resolver)
+        } catch (InstallArtifactException iae) {
             errorHandler "Installation of ${type} ${name}${version ? '-' + version : ''} aborted."
         }
+    }
 
-        List<ArtifactDependency> installPlan = resolveEvictions(installedDependencies.values(), artifactDependency)
-        if (LOG.debugEnabled) {
-            LOG.debug('Dependency evictions & conflicts outcome:')
-            installedDependencies.values().each {LOG.debug it.toString().trim()}
-            LOG.debug printDependencyTree(artifactDependency)
+    private void installPlugins(List<ArtifactDependency> dependencies, ArtifactDependencyResolver resolver) {
+        String type = Plugin.TYPE
+        installedArtifacts.clear()
+        uninstalledArtifacts.clear()
+
+        Map<String, Release> installedReleases = getInstalledReleases(Plugin.TYPE)
+
+        Map<String, ArtifactDependency> installedDependencies = [:]
+        installedReleases.each { String key, release ->
+            ArtifactDependency dep = installedDependencies[key]
+            if (!dep) {
+                dep = new ArtifactDependency(key)
+                dep.version = release.version
+                dep.installed = true
+                dep.resolved = true
+                installedDependencies[key] = dep
+            }
         }
 
-        if (artifactDependency.conflicted) {
-            String installed = ''
-            installedDependencies.values().each {installed += it.toString() }
-            String target = printDependencyTree(artifactDependency)
-            eventHandler 'StatusError', "${capitalize(type)} ${name}${version ? '-' + version : ''} could not be installed because some of its dependencies have conflicts.\n${installed}${target}"
-            errorHandler "Installation of ${type} ${name}${version ? '-' + version : ''} aborted."
+        installedReleases.each { key, installed ->
+            ArtifactDependency dependency = installedDependencies[key]
+            installed.dependencies.each { entry ->
+                ArtifactDependency dep = installedDependencies[entry.name]
+                if (dep) dependency.dependencies << dep
+            }
         }
 
         if (LOG.debugEnabled) {
-            LOG.debug('Dependency install plan:')
-            installPlan.each {LOG.debug it.toString().trim()}
+            if (installedDependencies) {
+                LOG.debug("Installed dependencies: ${installedDependencies.values().collect([]) {printDependencyTree(it, true)}.join('\n')}")
+            }
+        }
+
+        if (dependencies.grep {!it.resolved}) {
+            String installed = installedDependencies.values().collect([]) {printDependencyTree(it, true)}.join('\n')
+            String target = dependencies.collect([]) {printDependencyTree(it, true)}.join('\n')
+            eventHandler 'StatusError', "Some dependencies could not be resolved.\n${installed}\n----------\n${target}"
+            throw new InstallArtifactException('There are unresolved plugin dependencies.')
+        }
+
+        List<ArtifactDependency> installPlan = resolver.resolveEvictions(installedDependencies.values(), dependencies)
+        if (LOG.debugEnabled) {
+            String installed = installedDependencies.values().collect([]) {printDependencyTree(it, true)}.join('\n')
+            String target = dependencies.collect([]) {printDependencyTree(it, true)}.join('\n')
+            LOG.debug("Dependency evictions & conflicts outcome:\n- INSTALLED -\n${installed}\n- MISSING -\n${target}")
+        }
+
+        if (dependencies.grep {it.conflicted}) {
+            String installed = installedDependencies.values().collect([]) {printDependencyTree(it, true)}.join('\n')
+            String target = dependencies.collect([]) {printDependencyTree(it, true)}.join('\n')
+            eventHandler 'StatusError', "Some dependencies have conflicts.\n${installed}\n----------\n${target}"
+            throw new InstallArtifactException('There are plugin dependencies with unresolved conflicts.')
+        }
+
+        if (LOG.debugEnabled) {
+            LOG.debug("Dependency install plan:\n${installPlan.collect([]) {it.toString().trim()}.join('\n')}")
         }
 
         List<ArtifactDependency> failedDependencies = []
@@ -235,8 +237,8 @@ class ArtifactInstallEngine {
                         // try next dependency
                         break
                     case INSTALL_FAILURE_ABORT:
-                        eventHandler 'StatusError', "${capitalize(type)} ${name}${version ? '-' + version : ''} could not be installed => $e"
-                        errorHandler "Installation of ${type} ${name}${version ? '-' + version : ''} aborted."
+                        eventHandler 'StatusError', "${capitalize(type)} ${dependency.name}-${dependency.version} could not be installed => $e"
+                        throw new InstallArtifactException("Installation of ${dependency.name}-${dependency.version} aborted.")
                 }
             }
         }
@@ -248,11 +250,11 @@ class ArtifactInstallEngine {
         }
     }
 
-    private String printDependencyTree(ArtifactDependency artifactDependency) {
+    private String printDependencyTree(ArtifactDependency artifactDependency, boolean trim = false) {
         ByteArrayOutputStream baos = new ByteArrayOutputStream()
         PrintStream out = new PrintStream(baos)
         artifactDependency.printout(0i, out, true)
-        baos.toString()
+        trim ? baos.toString().trim() : baos.toString()
     }
 
     void installFromFile(String type, File file) {
@@ -445,7 +447,7 @@ class ArtifactInstallEngine {
         if (providedScripts) {
             String legend = "Plugin ${pluginName} provides the following new scripts:"
             println legend
-            println('_' * legend.length())
+            println('-' * legend.length())
             providedScripts.each { File file ->
                 println "griffon ${getScriptName(file.name)}"
             }
@@ -482,132 +484,6 @@ class ArtifactInstallEngine {
             } else {
                 pluginScriptRunner.call(scriptFile, fullPluginName, msg)
             }
-        }
-    }
-
-    private ArtifactDependency resolveDependencyTree(String type, String name, String version = null) {
-        ArtifactDependency artifactDependency = new ArtifactDependency(name)
-        artifactDependency.version = version
-
-        Artifact artifact = null
-        ArtifactRepositoryRegistry.instance.withRepositories {String repoName, ArtifactRepository repository ->
-            if (artifact) return
-            artifact = repository.findArtifact(type, name)
-            if (artifact) {
-                artifactDependency.repository = repository
-            }
-        }
-
-        if (version) {
-            Release release = artifact.releases.find {it.version == version}
-            if (release) {
-                artifactDependency.release = release
-                return resolveDependenciesOf(artifactDependency)
-            }
-        } else {
-            for (release in artifact.releases) {
-                if (isValidVersion(GriffonUtil.griffonVersion, release.griffonVersion)) {
-                    artifactDependency.release = release
-                    artifactDependency.version = release.version
-                    return resolveDependenciesOf(artifactDependency)
-                }
-            }
-        }
-        artifactDependency
-    }
-
-    private ArtifactDependency resolveDependenciesOf(ArtifactDependency artifactDependency) {
-        boolean resolutionTrouble = false
-        for (dependency in artifactDependency.release.dependencies) {
-            // Watch out, only plugins can be resolved as dependencies
-            ArtifactDependency dep = resolveDependencyTree(Plugin.TYPE, dependency.name, dependency.version)
-            artifactDependency.dependencies << dep
-            if (!dep.resolved) {
-                artifactDependency.resolved = false
-                resolutionTrouble = true
-            }
-        }
-
-        artifactDependency.resolved = !resolutionTrouble
-        artifactDependency
-    }
-
-    private List<ArtifactDependency> resolveEvictions(Collection<ArtifactDependency> installed, ArtifactDependency target) {
-
-        List evictions = []
-        fillEvictions(target, evictions)
-        installed.each { dep ->
-            evictions.grep {it.dependency.name == dep.name && it.dependency.version == dep.version}.each {
-                it.dependency.installed = true
-            }
-        }
-        installed.collect(evictions) { dep ->
-            [
-                    name: dep.name,
-                    version: dep.version,
-                    dependency: dep,
-                    processed: false
-            ]
-        }
-
-        for (element in evictions) {
-            if (element.processed) continue
-            element.processed = true
-            List<Map> matches = evictions.findAll {it.name == element.name}
-            if (matches.size() > 1) {
-                matches.sort {a, b -> b.dependency.major <=> a.dependency.major}
-                def winner = matches[0]
-                if (matches.find {it.dependency.major != element.dependency.major}) {
-                    matches.each {it.dependency.conflicted = it.processed = true}
-                    continue
-                }
-                matches.sort {a, b -> b.dependency.minor <=> a.dependency.minor}
-                winner = matches[0]
-                matches.grep {it.dependency.minor < winner.dependency.minor}.each {it.dependency.evicted = true}
-                matches.sort {a, b -> b.dependency.revision <=> a.dependency.revision}
-                winner = matches[0]
-                matches.grep {it.dependency.revision != winner.dependency.revision}.each {it.dependency.evicted = true}
-                matches.each {it.processed = true}
-
-                matches = evictions.findAll {it.name == element.name && it.version == element.version}
-                if (matches.size() > 1) {
-                    List alreadyInstalled = matches.findAll {it.dependency.installed}
-                    if (matches.size() == alreadyInstalled.size()) continue
-                    matches[0].dependency.evicted = false
-                    matches[1..-1].each {it.dependency.evicted = true}
-                }
-            }
-        }
-
-        target.updateConflicts()
-
-        List<ArtifactDependency> installPlan = []
-        for (dependency in installed) {
-            // first mark installed & evicted dependencies to uninstall
-            if (dependency.evicted) installPlan << dependency
-        }
-        processEvictionsAndConflicts(target, installPlan)
-        installPlan
-    }
-
-    private void processEvictionsAndConflicts(ArtifactDependency artifactDependency, List<ArtifactDependency> list) {
-        for (dependency in artifactDependency.dependencies) {
-            processEvictionsAndConflicts(dependency, list)
-        }
-        if (!artifactDependency.evicted && !artifactDependency.conflicted && !artifactDependency.installed) {
-            list << artifactDependency
-        }
-    }
-
-    private void fillEvictions(ArtifactDependency artifactDependency, List<Map> evictions) {
-        evictions << [
-                name: artifactDependency.name,
-                version: artifactDependency.version,
-                dependency: artifactDependency,
-                processed: false
-        ]
-        for (dependency in artifactDependency.dependencies) {
-            fillEvictions(dependency, evictions)
         }
     }
 }
