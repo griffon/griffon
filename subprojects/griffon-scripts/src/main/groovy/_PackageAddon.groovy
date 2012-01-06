@@ -24,11 +24,7 @@
 if (getBinding().variables.containsKey("_package_addon_called")) return
 _package_addon_called = true
 
-includeTargets << griffonScript("_GriffonPackage")
-
-target('default': "Packages a Griffon addon. Note: to package a plugin use 'griffon package-plugin'") {
-    packageAddon()
-}
+includeTargets << griffonScript('_GriffonPackage')
 
 target('packageAddon': "Packages a Griffon addon. Note: to package a plugin use 'griffon package-plugin'") {
     depends(checkVersion, createStructure)

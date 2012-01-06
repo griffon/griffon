@@ -20,10 +20,7 @@ import org.codehaus.griffon.artifacts.model.Archetype
  * @author Andres Almiray
  */
 
-target(listArchetypes: 'Lists all archetypes available in an artifact repository') {
-    depends(configureProxy)
-
-    listArtifacts(Archetype.TYPE)
+target(listArchetypeUpdates: '') {
+    doListArtifactUpdates(Archetype.TYPE)
 }
-
-setDefaultTarget(listArchetypes)
+setDefaultTarget(listArchetypeUpdates)

@@ -1,6 +1,5 @@
 import griffon.util.Metadata
 
-includeTargets << griffonScript('_GriffonArtifacts')
 includeTargets << griffonScript('CreateMvc' )
 
 target(name: 'createApplicationProject',

@@ -29,8 +29,8 @@ import org.codehaus.griffon.resolve.IvyDependencyManager
 if (getBinding().variables.containsKey("_griffon_docs_called")) return
 _griffon_docs_called = true
 
-includeTargets << griffonScript("_GriffonCompile")
-includeTargets << griffonScript("_GriffonPackage")
+includeTargets << griffonScript('_GriffonCompile')
+includeTargets << griffonScript('_GriffonPackage')
 
 // javadocDir = "${griffonSettings.docsOutputDir}/api"
 groovydocDir = "${griffonSettings.docsOutputDir}/api"
@@ -377,7 +377,7 @@ invokeGroovydoc = { Map args ->
     if (!(sources instanceof List)) sources = sources.toString().split(',')
     def groovydocSources = []
     sources.each { dir ->
-        if(hasJavaOrGroovySources(dir)) groovydocSources << dir
+        if (hasJavaOrGroovySources(dir)) groovydocSources << dir
     }
 
     if (groovydocSources) {

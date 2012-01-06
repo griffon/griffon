@@ -30,8 +30,7 @@ import org.codehaus.griffon.artifacts.model.Archetype
 import org.springframework.core.io.ClassPathResource
 import org.springframework.core.io.FileSystemResource
 
-includeTargets << griffonScript("_GriffonPackage")
-includeTargets << griffonScript("_GriffonArgParsing")
+includeTargets << griffonScript('_GriffonPackage')
 
 defaultPackageName = ''
 replaceNonag = false
@@ -180,12 +179,12 @@ createDefaultPackage = {
     defaultPackageName
 }
 
-createIntegrationTest = { Map args = [:] ->
+doCreateIntegrationTest = { Map args = [:] ->
     def superClass = args["superClass"] ?: "GriffonUnitTestCase"
     createArtifact(name: args["name"], suffix: "${args['suffix']}Tests", type: "IntegrationTests", path: "test/integration", superClass: superClass)
 }
 
-createUnitTest = { Map args = [:] ->
+doCreateUnitTest = { Map args = [:] ->
     def superClass = args["superClass"] ?: "GriffonUnitTestCase"
     createArtifact(name: args["name"], suffix: "${args['suffix']}Tests", type: "Tests", path: "test/unit", superClass: superClass)
 }

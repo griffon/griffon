@@ -21,13 +21,12 @@
 import java.awt.Component
 import java.beans.Introspector
 
-includeTargets << griffonScript("Init")
-includeTargets << griffonScript("_GriffonCreateArtifacts")
-includeTargets << griffonScript("_GriffonCompile")
+includeTargets << griffonScript('_GriffonCreateArtifacts')
+includeTargets << griffonScript('_GriffonCompile')
 
 
-target('default': "Generates a view script from an existing class") {
-    depends(checkVersion, parseArguments, classpath, compile)
+target('generateViewScript': "Generates a view script from an existing class") {
+    depends(checkVersion, classpath, compile)
 
     promptForName(type: "Class to Proxy View for:")
     String klassName = argsMap["params"][0]
@@ -55,7 +54,7 @@ The target file already exists:
  -> $outputFile
 If you continue all contents of that file will be deleted.
 Do you wish to continue and overwrite the existing file?""")
-            if(result == 'n') exit(0)
+            if (result == 'n') exit(0)
         }
 
         new File(outputFileName).withWriter {writer ->
@@ -64,19 +63,19 @@ Do you wish to continue and overwrite the existing file?""")
             }
 
             if (Component.isAssignableFrom(klass)) {
-                writer <<  """// create instance of view object
+                writer << """// create instance of view object
 widget(new $klassName(), id:'$varName')
 
 """
             } else {
-                writer <<  """// create instance of view object
+                writer << """// create instance of view object
 $varName = new $klassName()
 
 """
             }
 
-            if( fields ) {
-               writer << "noparent {\n"
+            if (fields) {
+                writer << "noparent {\n"
             }
             fields.each {field ->
                 writer << """    // $field.type.name $field.name declared in $field.declaringClass.name
@@ -84,8 +83,8 @@ $varName = new $klassName()
 
 """
             }
-            if( fields ) {
-               writer << """}
+            if (fields) {
+                writer << """}
 return $varName
 """
             }
@@ -97,3 +96,4 @@ return $varName
     }
 }
 
+setDefaultTarget(generateViewScript)

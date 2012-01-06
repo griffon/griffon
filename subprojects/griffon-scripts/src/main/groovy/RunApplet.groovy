@@ -21,14 +21,14 @@
  * Time: 10:35:06 PM
  */
 
-includeTargets << griffonScript("Package")
-includeTargets << griffonScript("_GriffonBootstrap" )
+includeTargets << griffonScript('Package')
+includeTargets << griffonScript('_GriffonBootstrap')
 
-target(tweakConfig:' tweaks for webstart') {
+target(tweakConfig: ' tweaks for webstart') {
     configTweaks << { buildConfig.griffon.jars.sign = true }
 }
-target('default': "Runs the applet from Java WebStart") {
-    if(isPluginProject) {
+target('runApplet': "Runs the applet from Java WebStart") {
+    if (isPluginProject) {
         println "Cannot run application: project is a plugin!"
         exit(1)
     }
@@ -37,14 +37,14 @@ target('default': "Runs the applet from Java WebStart") {
     // calculate the needed jars
     File jardir = new File(ant.antProject.replaceProperties(buildConfig.griffon.jars.destDir))
     // launch event after jardir has been defined
-    event("RunAppletTweak",[])
+    event("RunAppletTweak", [])
 
     // setup the vm
     if (!binding.variables.webstartVM) {
         webstartVM = [System.properties['java.home'], 'bin', 'javaws'].join(File.separator)
     }
     def javaOpts = setupJavaOpts(false)
-    javaOpts = "-J"+javaOpts.join(" -J")
+    javaOpts = "-J" + javaOpts.join(" -J")
 
     // TODO set proxy settings
     // start the processess
@@ -56,3 +56,5 @@ target('default': "Runs the applet from Java WebStart") {
     // wait for it.... wait for it...
     p.waitFor()
 }
+
+setDefaultTarget(runApplet)

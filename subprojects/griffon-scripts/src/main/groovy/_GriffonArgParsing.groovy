@@ -25,7 +25,7 @@ import static org.codehaus.griffon.cli.CommandLineConstants.KEY_INTERACTIVE_MODE
 if (getBinding().variables.containsKey("_args_parsing_called")) return
 _args_parsing_called = true
 
-includeTargets << griffonScript("_GriffonSettings")
+// includeTargets << griffonScript("_GriffonSettings")
 
 argsMap = [params: []]
 

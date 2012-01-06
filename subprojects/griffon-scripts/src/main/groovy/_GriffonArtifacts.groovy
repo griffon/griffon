@@ -35,7 +35,7 @@ import static org.codehaus.griffon.artifacts.ArtifactUtils.isValidVersion
 if (getBinding().variables.containsKey('_griffon_artifacts_called')) return
 _griffon_artifacts_called = true
 
-includeTargets << griffonScript('Init')
+// includeTargets << griffonScript('Init')
 
 artifactRepository = null
 
@@ -368,7 +368,7 @@ installArtifactForName = { Metadata md, String type, String name, String version
 doInstallFromFile = { type, file, md ->
     ArtifactInstallEngine artifactInstallEngine = createArtifactInstallEngine(md)
     try {
-        artifactInstallEngine.installFromFile(type, file)
+        artifactInstallEngine.installFromFile(type, file, true)
         md.reload()
     } catch (InstallArtifactException iae) {
         artifactInstallEngine.errorHandler "Installation of ${file} aborted."
@@ -377,12 +377,15 @@ doInstallFromFile = { type, file, md ->
     }
 }
 
-private ArtifactInstallEngine createArtifactInstallEngine(Metadata md = metadata) {
-    def artifactInstallEngine = new ArtifactInstallEngine(griffonSettings, md, ant)
+installError = false
+createArtifactInstallEngine = { Metadata md = metadata ->
+    installError = false
+    ArtifactInstallEngine artifactInstallEngine = new ArtifactInstallEngine(griffonSettings, md, ant)
     artifactInstallEngine.pluginScriptRunner = runPluginScript
     artifactInstallEngine.eventHandler = { eventName, msg -> event(eventName, [msg]) }
     artifactInstallEngine.errorHandler = { msg ->
         event('StatusError', [msg])
+        installError = true
         // install or uninstalled too
         for (dir in artifactInstallEngine.installedArtifacts) {
             ant.delete(dir: dir, failonerror: false)
@@ -390,19 +393,12 @@ private ArtifactInstallEngine createArtifactInstallEngine(Metadata md = metadata
         exit(1)
     }
 
-    /*
-    artifactInstallEngine.postUninstallEvent = {
-        resetClasspath()
-    }
-
     artifactInstallEngine.postInstallEvent = { pluginInstallPath ->
         File pluginEvents = new File("${pluginInstallPath}/scripts/_Events.groovy")
         if (pluginEvents.exists()) {
             eventListener.loadEventsScript(pluginEvents)
         }
-        resetClasspath()
     }
-    */
 
     artifactInstallEngine.interactive = isInteractive
     artifactInstallEngine.variableStore = binding
@@ -546,4 +542,20 @@ getAvailableArtifacts = { String type ->
     }
 
     artifacts
+}
+
+runPluginScript = { File scriptFile, fullPluginName, msg ->
+    if (scriptFile.exists()) {
+        event 'StatusUpdate', ["Executing ${fullPluginName} plugin $msg"]
+        // instrumenting plugin scripts adding 'pluginBasedir' variable
+        def instrumentedInstallScript = "def pluginBasedir = '${pluginsHome}/${fullPluginName}'\n".toString().replaceAll('\\\\', '/') + scriptFile.text
+        // we are using text form of script here to prevent Gant caching
+
+        // temporary crutch --- REMOVE BEFORE 1.0!!
+        builderConfig = new ConfigObject()
+        if (builderConfigFile.exists()) builderConfig = configSlurper.parse(builderConfigFile.text)
+        // temporary crutch --- REMOVE BEFORE 1.0!!
+
+        includeTargets << instrumentedInstallScript
+    }
 }

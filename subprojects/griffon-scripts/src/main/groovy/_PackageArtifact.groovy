@@ -16,11 +16,11 @@
 
 import griffon.util.GriffonNameUtils
 import griffon.util.GriffonUtil
+import griffon.util.MD5
 import groovy.json.JsonBuilder
 import org.codehaus.griffon.artifacts.model.Plugin
-import org.springframework.core.io.Resource
-import griffon.util.MD5
 import org.codehaus.griffon.artifacts.model.Release
+import org.springframework.core.io.Resource
 
 /**
  * @author Andres Almiray
@@ -29,8 +29,6 @@ import org.codehaus.griffon.artifacts.model.Release
 // No point doing this stuff more than once.
 if (getBinding().variables.containsKey('_package_artifact_called')) return
 _package_artifact_called = true
-
-includeTargets << griffonScript('Init')
 
 packageForRelease = false
 

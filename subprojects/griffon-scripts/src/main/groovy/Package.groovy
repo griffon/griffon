@@ -27,11 +27,11 @@ import griffon.util.RunMode
 if (getBinding().variables.containsKey("_package_called")) return
 _package_called = true
 
-includeTargets << griffonScript("_GriffonPackage")
+includeTargets << griffonScript('_GriffonPackage')
 
 ant.taskdef(name: 'fileMerge', classname: 'org.codehaus.griffon.ant.taskdefs.FileMergeTask')
 
-target('default': "Packages a Griffon application.") {
+target('package': "Packages a Griffon application.") {
     depends(checkVersion, parseArguments, createConfig)
 
     // create general dist dir
@@ -65,6 +65,7 @@ target('default': "Packages a Griffon application.") {
         package_webstart()
     }
 }
+setDefaultTarget('package')
 
 target(prepackage: "packaging steps all standard packaging options do") {
     event("PrepackageStart", [])

@@ -21,9 +21,7 @@ import org.codehaus.groovy.runtime.StackTraceUtils
  *
  * @author Graeme Rocher (Grails 0.4)
  */
-includeTargets << griffonScript("_GriffonInit")
-includeTargets << griffonScript("_GriffonArgParsing")
-includeTargets << griffonScript("_PluginDependencies")
+includeTargets << griffonScript('_PluginDependencies')
 
 ant.taskdef(name: 'groovyc', classname: 'org.codehaus.groovy.ant.Groovyc')
 ant.taskdef(name: 'griffonc', classname: 'org.codehaus.griffon.compiler.GriffonCompiler')
@@ -52,7 +50,6 @@ compilerPaths = { String classpathId ->
 }
 
 target(setCompilerSettings: "Updates the compile build settings based on args") {
-    depends(parseArguments)
     if (argsMap.containsKey('verboseCompile')) {
         griffonSettings.verboseCompile = argsMap.verboseCompile as boolean
     }

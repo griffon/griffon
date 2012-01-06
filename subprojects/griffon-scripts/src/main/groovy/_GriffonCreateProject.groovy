@@ -25,18 +25,15 @@ import static griffon.util.GriffonNameUtils.uncapitalize
  * @author Graeme Rocher (Griffon 0.4)
  */
 
-includeTargets << griffonScript('_GriffonPlugins')
-includeTargets << griffonScript('_GriffonInit')
 includeTargets << griffonScript('_GriffonCreateArtifacts')
 includeTargets << griffonScript('CreateMvc')
 includeTargets << griffonScript('Package')
 includeTargets << griffonScript('IntegrateWith')
 
 griffonAppName = ''
-projectType = "app"
 
 target(createApp: "Creates a Griffon application for the given name") {
-    depends(parseArguments, appName, resolveFileType)
+    depends(appName, resolveFileType)
 
     loadArchetypeFor 'application'
     createApplicationProject()
@@ -54,7 +51,7 @@ app.defaultPackageName = '$defaultPackageName'
         replacefilter(token: "@griffonAppVersion@", value: griffonAppVersion ?: "0.1")
     }
 
-    event("StatusFinal", ["Created Griffon Application at $basedir"])
+    event('StatusFinal', ["Created Griffon Application at $basedir"])
 }
 
 createProjectWithDefaults = {
@@ -90,12 +87,12 @@ resetBaseDirectory = { String basedir ->
     configFile = new File(basedir, 'griffon-app/conf/Config.groovy')
 
     // Reset the plugin stuff.
-    pluginSettings.clearCache()
+    // pluginSettings.clearCache()
     pluginsHome = griffonSettings.projectPluginsDir.path
 }
 
 target(createPlugin: "The implementation target") {
-    depends(parseArguments, appName, resolveFileType)
+    depends(appName, resolveFileType)
     metadataFile = new File("${basedir}/application.properties")
     projectType = "plugin"
     initProject()
@@ -121,11 +118,11 @@ target(createPlugin: "The implementation target") {
         replacefilter(token: "@griffon.version@", value: griffonVersion)
     }
 
-    event("StatusFinal", ["Created plugin ${pluginName}"])
+    event('StatusFinal', ["Created plugin ${pluginName}"])
 }
 
 target(createArchetype: "The implementation target") {
-    depends(parseArguments, appName)
+    depends(appName)
     metadataFile = new File("${basedir}/application.properties")
     ant.mkdir(dir: "${basedir}/griffon-app")
     ant.touch(file: metadataFile)
@@ -143,7 +140,7 @@ target(createArchetype: "The implementation target") {
         println "Error: Specified archetype name [$griffonAppName] is invalid. Archetype names can only contain word characters separated by hyphens."
         exit 1
     }
-    if(archetypeName == 'default') {
+    if (archetypeName == 'default') {
         println "Error: Specified archetype name [$archetypeName] is invalid. You cannot override the default archetype provided by Griffon."
         exit 1
     }

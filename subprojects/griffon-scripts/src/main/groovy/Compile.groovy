@@ -20,6 +20,6 @@
  * @author Graeme Rocher (Grails 0.4)
  */
 
-includeTargets << griffonScript("_GriffonCompile")
+includeTargets << griffonScript('_GriffonCompile')
 
 setDefaultTarget("compile")

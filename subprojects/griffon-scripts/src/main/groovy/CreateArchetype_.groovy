@@ -18,7 +18,7 @@
  * @author Andres Almiray
  */
 
-includeTargets << griffonScript("_GriffonCreateProject")
+includeTargets << griffonScript('_GriffonCreateProject')
 
 projectType = 'archetype'
 setDefaultTarget("createArchetype")

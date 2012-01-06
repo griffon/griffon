@@ -18,22 +18,25 @@ package org.codehaus.griffon.cli;
 
 import gant.Gant;
 import griffon.util.*;
+import groovy.lang.Binding;
 import groovy.lang.Closure;
 import groovy.lang.ExpandoMetaClass;
 import groovy.util.AntBuilder;
 import org.apache.log4j.LogManager;
+import org.apache.tools.ant.BuildEvent;
+import org.apache.tools.ant.BuildListener;
 import org.apache.tools.ant.Project;
 import org.codehaus.gant.GantBinding;
 import org.codehaus.griffon.artifacts.ArtifactRepositoryRegistry;
 import org.codehaus.griffon.artifacts.ArtifactUtils;
 import org.codehaus.griffon.artifacts.model.Plugin;
 import org.codehaus.griffon.artifacts.model.Release;
+import org.codehaus.griffon.cli.support.BuildListenerAdapter;
 import org.codehaus.griffon.resolve.IvyDependencyManager;
 import org.codehaus.griffon.runtime.logging.Log4jConfig;
 import org.codehaus.groovy.runtime.DefaultGroovyMethods;
 
 import java.io.*;
-import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -43,6 +46,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import static griffon.util.GriffonNameUtils.isBlank;
+import static java.util.Arrays.asList;
 import static org.codehaus.griffon.artifacts.ArtifactUtils.getInstalledArtifacts;
 import static org.codehaus.griffon.cli.CommandLineConstants.KEY_INTERACTIVE_MODE;
 
@@ -68,6 +72,9 @@ public class GriffonScriptRunner {
     }
 
     private static final Pattern scriptFilePattern = Pattern.compile("^[^_]\\w+\\.groovy$");
+    private static final String VAR_SCRIPT_NAME = "scriptName";
+    private static final String VAR_SCRIPT_FILE = "scriptFile";
+    private static final String VAR_SCRIPT_ENV = "scriptEnv";
 
     /**
      * Evaluate the arguments to get the name of the script to execute, which environment
@@ -417,30 +424,7 @@ public class GriffonScriptRunner {
     private int callPluginOrGriffonScript(ScriptAndArgs script) {
         // The directory where scripts are cached.
         File scriptCacheDir = new File(settings.getProjectWorkDir(), "scriptCache");
-        // The class loader we will use to run Gant. It's the root
-        // loader plus all the application's compiled classes.
-        URLClassLoader classLoader;
-        try {
-            // JARs already on the classpath should be ed.
-            Set<String> existingJars = new HashSet<String>();
-            for (URL url : settings.getRootLoader().getURLs()) {
-                existingJars.add(url.getFile());
-            }
-
-            // Add the remaining JARs (from 'griffonHome', the app, and
-            // the plugins) to the root loader.
-            boolean skipPlugins = "UninstallPlugin".equals(script.name) || "InstallPlugin".equals(script.name);
-
-            URL[] urls = getClassLoaderUrls(settings, scriptCacheDir, existingJars, skipPlugins);
-            addUrlsToRootLoader(settings.getRootLoader(), urls);
-
-            // The compiled classes of the application!
-            urls = new URL[]{settings.getClassesDir().toURI().toURL()};
-            classLoader = new URLClassLoader(urls, settings.getRootLoader());
-            Thread.currentThread().setContextClassLoader(classLoader);
-        } catch (MalformedURLException ex) {
-            throw new RuntimeException("Invalid classpath URL", ex);
-        }
+        URLClassLoader classLoader = createClassLoader(script, scriptCacheDir);
 
         List<File> potentialScripts;
         List<File> allScripts = getAvailableScripts(settings);
@@ -449,59 +433,10 @@ public class GriffonScriptRunner {
             CachedScript cachedScript = scriptCache.get(script.name);
             potentialScripts = cachedScript.potentialScripts;
             binding = cachedScript.binding;
-            removePrintHooks(binding);
         } else {
             binding = new GantBinding();
-
-            // Gant does not initialise the default input stream for
-            // the Ant project, so we manually do it here.
-            AntBuilder antBuilder = (AntBuilder) binding.getVariable("ant");
-            Project p = antBuilder.getAntProject();
-            try {
-                p.setDefaultInputStream(System.in);
-            } catch (NoSuchMethodError nsme) {
-                // will only happen due to a bug in JRockit
-                // note - the only approach that works is to loop through the public methods
-                for (Method m : p.getClass().getMethods()) {
-                    if ("setDefaultInputStream".equals(m.getName()) && m.getParameterTypes().length == 1 &&
-                            InputStream.class.equals(m.getParameterTypes()[0])) {
-                        try {
-                            m.invoke(p, System.in);
-                            break;
-                        } catch (Exception e) {
-                            // shouldn't happen, but let it bubble up to the catch(Throwable)
-                            throw new RuntimeException(e);
-                        }
-                    }
-                }
-            }
-
-            // Now find what scripts match the one requested by the user.
-            boolean exactMatchFound = false;
-            potentialScripts = new ArrayList<File>();
-            for (File scriptPath : allScripts) {
-                String scriptFileName = scriptPath.getName().substring(0, scriptPath.getName().length() - 7); // trim .groovy extension
-                if (scriptFileName.endsWith("_")) {
-                    scriptsAllowedOutsideOfProject.add(scriptPath);
-                    scriptFileName = scriptFileName.substring(0, scriptFileName.length() - 1);
-                }
-
-                if (scriptFileName.equals(script.name)) {
-                    potentialScripts.add(scriptPath);
-                    exactMatchFound = true;
-                    continue;
-                }
-
-                if (!exactMatchFound && ScriptNameResolver.resolvesTo(script.name, scriptFileName))
-                    potentialScripts.add(scriptPath);
-            }
-
-            if (!potentialScripts.isEmpty() && !exactMatchFound) {
-                CachedScript cachedScript = new CachedScript();
-                cachedScript.binding = binding;
-                cachedScript.potentialScripts = potentialScripts;
-                scriptCache.put("scriptName", cachedScript);
-            }
+            initializeProjectInputStream(binding);
+            potentialScripts = findPotentialScripts(script, allScripts, binding);
         }
 
         // First try to load the script from its file. If there is no
@@ -525,11 +460,12 @@ public class GriffonScriptRunner {
                 // We can now safely set the default environment
                 String scriptFileName = getScriptNameFromFile(scriptFile);
                 setRunningEnvironment(scriptFileName, script.env);
-                binding.setVariable("scriptName", scriptFileName);
+                binding.setVariable(VAR_SCRIPT_NAME, scriptFileName);
+                binding.setVariable(VAR_SCRIPT_FILE, scriptFile);
                 script.name = scriptFileName;
 
                 // Setup the script to call.
-                Gant gant = new Gant(initBinding(binding), classLoader);
+                Gant gant = createGantInstance(classLoader, binding, script);
                 gant.setUseCache(true);
                 gant.setCacheDirectory(scriptCacheDir);
                 gant.loadScript(scriptFile);
@@ -561,12 +497,12 @@ public class GriffonScriptRunner {
             // We can now safely set the default environment
             String scriptFileName = getScriptNameFromFile(scriptFile);
             setRunningEnvironment(scriptFileName, script.env);
-            binding.setVariable("scriptName", scriptFileName);
+            binding.setVariable(VAR_SCRIPT_NAME, scriptFileName);
+            binding.setVariable(VAR_SCRIPT_FILE, scriptFile);
             script.name = scriptFileName;
 
             // Set up the script to call.
-            Gant gant = new Gant(initBinding(binding), classLoader);
-
+            Gant gant = createGantInstance(classLoader, binding, script);
             gant.loadScript(scriptFile);
 
             // Invoke the default target.
@@ -576,7 +512,7 @@ public class GriffonScriptRunner {
         out.println("Running pre-compiled script");
 
         // Get Gant to load the class by name using our class loader.
-        Gant gant = new Gant(initBinding(binding), classLoader);
+        Gant gant = createGantInstance(classLoader, binding, script);
 
         try {
             loadScriptClass(gant, script.name);
@@ -594,8 +530,102 @@ public class GriffonScriptRunner {
         }
 
         setRunningEnvironment(script.name, script.env);
-        binding.setVariable("scriptEnv", System.getProperty(Environment.KEY));
+        binding.setVariable(VAR_SCRIPT_ENV, System.getProperty(Environment.KEY));
         return executeWithGantInstance(gant, binding);
+    }
+
+    private Gant createGantInstance(URLClassLoader classLoader, GantBinding binding, ScriptAndArgs script) {
+        Gant gant = new Gant(initBinding(binding), classLoader);
+        if (griffonInitBuildListener != null && binding.getBuildListeners().contains(griffonInitBuildListener)) {
+            binding.removeBuildListener(griffonInitBuildListener);
+        }
+        griffonInitBuildListener = new GriffonInitBuildListener(settings, binding, gant);
+        binding.addBuildListener(griffonInitBuildListener);
+        return gant;
+    }
+
+    private List<File> findPotentialScripts(ScriptAndArgs script, List<File> allScripts, GantBinding binding) {
+        List<File> potentialScripts;
+        // Now find what scripts match the one requested by the user.
+        boolean exactMatchFound = false;
+        potentialScripts = new ArrayList<File>();
+        for (File scriptPath : allScripts) {
+            String scriptFileName = scriptPath.getName().substring(0, scriptPath.getName().length() - 7); // trim .groovy extension
+            if (scriptFileName.endsWith("_")) {
+                scriptsAllowedOutsideOfProject.add(scriptPath);
+                scriptFileName = scriptFileName.substring(0, scriptFileName.length() - 1);
+            }
+
+            if (scriptFileName.equals(script.name)) {
+                potentialScripts.add(scriptPath);
+                exactMatchFound = true;
+                continue;
+            }
+
+            if (!exactMatchFound && ScriptNameResolver.resolvesTo(script.name, scriptFileName))
+                potentialScripts.add(scriptPath);
+        }
+
+        if (!potentialScripts.isEmpty() && !exactMatchFound) {
+            CachedScript cachedScript = new CachedScript();
+            cachedScript.binding = binding;
+            cachedScript.potentialScripts = potentialScripts;
+            scriptCache.put(VAR_SCRIPT_NAME, cachedScript);
+        }
+        return potentialScripts;
+    }
+
+    private URLClassLoader createClassLoader(ScriptAndArgs script, File scriptCacheDir) {
+        // The class loader we will use to run Gant. It's the root
+        // loader plus all the application's compiled classes.
+        URLClassLoader classLoader;
+        try {
+            // JARs already on the classpath should be added.
+            Set<String> existingJars = new HashSet<String>();
+            for (URL url : settings.getRootLoader().getURLs()) {
+                existingJars.add(url.getFile());
+            }
+
+            // Add the remaining JARs (from 'griffonHome', the app, and
+            // the plugins) to the root loader.
+            boolean skipPlugins = "UninstallPlugin".equals(script.name) || "InstallPlugin".equals(script.name);
+
+            URL[] urls = getClassLoaderUrls(settings, scriptCacheDir, existingJars, skipPlugins);
+            addUrlsToRootLoader(settings.getRootLoader(), urls);
+
+            // The compiled classes of the application!
+            urls = new URL[]{settings.getClassesDir().toURI().toURL()};
+            classLoader = new URLClassLoader(urls, settings.getRootLoader());
+            Thread.currentThread().setContextClassLoader(classLoader);
+        } catch (MalformedURLException ex) {
+            throw new RuntimeException("Invalid classpath URL", ex);
+        }
+        return classLoader;
+    }
+
+    private void initializeProjectInputStream(GantBinding binding) {
+        // Gant does not initialise the default input stream for
+        // the Ant project, so we manually do it here.
+        AntBuilder antBuilder = (AntBuilder) binding.getVariable("ant");
+        Project p = antBuilder.getAntProject();
+        try {
+            p.setDefaultInputStream(System.in);
+        } catch (NoSuchMethodError nsme) {
+            // will only happen due to a bug in JRockit
+            // note - the only approach that works is to loop through the public methods
+            for (Method m : p.getClass().getMethods()) {
+                if ("setDefaultInputStream".equals(m.getName()) && m.getParameterTypes().length == 1 &&
+                        InputStream.class.equals(m.getParameterTypes()[0])) {
+                    try {
+                        m.invoke(p, System.in);
+                        break;
+                    } catch (Exception e) {
+                        // shouldn't happen, but let it bubble up to the catch(Throwable)
+                        throw new RuntimeException(e);
+                    }
+                }
+            }
+        }
     }
 
     private void loadScriptClass(Gant gant, String scriptName) {
@@ -666,10 +696,9 @@ public class GriffonScriptRunner {
 
     public static int executeWithGantInstance(Gant gant, GantBinding binding) {
         try {
-            removePrintHooks(binding);
-            gant.prepareTargets();
+            // gant.prepareTargets();
             // Invoke the default target.
-            return gant.executeTargets().intValue();
+            return gant.executeTargets();
         } catch (RuntimeException e) {
             GriffonExceptionHandler.sanitize(e).printStackTrace();
             return 1;
@@ -692,40 +721,9 @@ public class GriffonScriptRunner {
         return scriptFileName;
     }
 
-    /**
-     * Nuke all prehook and posthook definitions<p>
-     * WARNING: _BIG_HACK_ AHEAD. YE BE WARNED
-     */
-    public static void removePrintHooks(GantBinding binding) {
-        try {
-            Field initializing = GantBinding.class.getDeclaredField("initializing");
-            initializing.setAccessible(true);
-            initializing.setBoolean(binding, true);
-
-            final Closure targetClosure = (Closure) binding.getVariable("target");
-
-            binding.setVariable("target", new Closure(targetClosure.getOwner(), targetClosure.getDelegate()) {
-                @Override
-                public Object call(Object[] args) {
-                    if (args != null && args.length > 0 && args[0] instanceof Map) {
-                        Map params = (Map) args[0];
-                        if (!params.containsKey("name")) {
-                            String key = (String) params.keySet().iterator().next();
-                            params.put("name", key);
-                            params.put("description", params.get(key));
-                            params.remove(key);
-                        }
-                        params.put("prehook", DO_NOTHING_CLOSURE);
-                        params.put("posthook", DO_NOTHING_CLOSURE);
-                    }
-                    return targetClosure.call(args);
-                }
-            });
-
-            initializing.setBoolean(binding, false);
-        } catch (Exception e) {
-            // ignore
-        }
+    public static boolean isContextlessScriptName(File scriptPath) {
+        String scriptFileName = scriptPath.getName().substring(0, scriptPath.getName().length() - 7);
+        return scriptFileName.endsWith("_");
     }
 
     /**
@@ -884,15 +882,18 @@ public class GriffonScriptRunner {
         addDependenciesToURLs(excludes, urls, buildDependencies);
         // Add the project's test dependencies (which include runtime dependencies) because most of them
         // will be required for the build to work.
-        addDependenciesToURLs(excludes, urls, settings.getTestDependencies());
+        // addDependenciesToURLs(excludes, urls, settings.getTestDependencies());
+
         System.out.println("Dependencies resolved in " + (System.currentTimeMillis() - now) + "ms.");
 
+        /*
         // Add the libraries of project plugins.
         if (!skipPlugins) {
             for (File dir : listKnownPluginDirs(settings)) {
                 addPluginLibs(dir, urls, settings);
             }
         }
+        */
         return urls.toArray(new URL[urls.size()]);
     }
 
@@ -924,7 +925,7 @@ public class GriffonScriptRunner {
         List<File> dirs = new ArrayList<File>();
 
         // Next up, the project's plugins directory.
-        dirs.addAll(Arrays.asList(listPluginDirs(settings.getProjectPluginsDir())));
+        dirs.addAll(asList(listPluginDirs(settings.getProjectPluginsDir())));
 
         return dirs;
     }
@@ -1073,5 +1074,58 @@ public class GriffonScriptRunner {
         public String name;
         public String env;
         public String args;
+    }
+
+    private BuildListener griffonInitBuildListener;
+
+    private static class GriffonInitBuildListener extends BuildListenerAdapter {
+        private final BuildSettings settings;
+        private final Binding binding;
+        private final Gant gant;
+
+        private GriffonInitBuildListener(BuildSettings settings, Binding binding, Gant gant) {
+            this.settings = settings;
+            this.binding = binding;
+            this.gant = gant;
+            // preload basic stuff that should always be there
+            setupScript("_GriffonSettings");
+            setupScript("_GriffonEvents");
+            setupScript("_GriffonArgParsing");
+            setupScript("_GriffonProxy");
+            setupScript("_ResolveDependencies");
+            File scriptFile = (File) binding.getVariable(VAR_SCRIPT_FILE);
+            gant.loadScript(scriptFile);
+            gant.prepareTargets();
+
+            gant.setAllPerTargetPreHooks(DO_NOTHING_CLOSURE);
+            gant.setAllPerTargetPostHooks(DO_NOTHING_CLOSURE);
+        }
+
+        private void setupScript(String scriptName) {
+            gant.loadScript(scriptFileFor(scriptName));
+            gant.prepareTargets();
+        }
+
+        private File scriptFileFor(String scriptName) {
+            return new File(settings.getGriffonHome(), "scripts/" + scriptName + ".groovy");
+        }
+
+        @Override
+        public void targetStarted(BuildEvent buildEvent) {
+            String targetName = buildEvent.getTarget().getName();
+            String defaultTargetName = (String) binding.getVariable("defaultTarget");
+            File scriptFile = (File) binding.getVariable(VAR_SCRIPT_FILE);
+            if (defaultTargetName.equals(targetName)) {
+                List<String> targets = new ArrayList<String>();
+                if (isContextlessScriptName(scriptFile)) {
+                    // assure arguments were parsed before running the target
+                    targets.add("parseArguments");
+                } else {
+                    // attempt dependency/plugin resolution before running the target
+                    targets.add("resolveDependencies");
+                }
+                gant.executeTargets("dispatch", targets);
+            }
+        }
     }
 }

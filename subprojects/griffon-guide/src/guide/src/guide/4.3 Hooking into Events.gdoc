@@ -35,11 +35,9 @@ You can see here the three handlers @eventCreatedArtefact@, @eventStatusUpdate@,
 
 h4. Triggering events
 
-To trigger an event simply include the Init.groovy script and call the event() closure:
+To trigger an event simply call the event() closure:
 
 {code}
-includeTargets << griffonScript("_GriffonEvents")
-
 event("StatusFinal", ["Super duper plugin action complete!"])
 {code}
 

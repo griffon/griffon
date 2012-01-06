@@ -23,26 +23,24 @@
 import org.codehaus.groovy.tools.shell.Groovysh
 import org.codehaus.groovy.tools.shell.IO
 
-includeTargets << griffonScript("_GriffonBootstrap")
+includeTargets << griffonScript('_GriffonBootstrap')
 
-target(default: "Runs an embedded application in a Groovy Shell") {
+target(shell: "Runs an embedded application in a Groovy Shell") {
     depends(checkVersion, configureProxy, classpath, createConfig)
 
     jardir = ant.antProject.replaceProperties(buildConfig.griffon.jars.destDir)
-    ant.copy(todir:jardir) { fileset(dir:"${griffonHome}/lib/", includes: "jline-*.jar") }
+    ant.copy(todir: jardir) { fileset(dir: "${griffonHome}/lib/", includes: "jline-*.jar") }
 
-    shell()
-}
-
-target(shell: "Load the Griffon interactive shell") {
-    if(!isPluginProject) {
+    if (!isPluginProject) {
         bootstrap()
         loadApp()
     }
 
     def b = new Binding()
-    if(!isPluginProject) b.app = griffonApp
+    if (!isPluginProject) b.app = griffonApp
 
     def shell = new Groovysh(classLoader, b, new IO(System.in, System.out, System.err))
     shell.run([] as String[])
 }
+
+setDefaultTarget(shell)

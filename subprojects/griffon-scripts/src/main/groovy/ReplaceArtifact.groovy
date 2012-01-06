@@ -16,41 +16,42 @@
 
 /**
  * Gant script that replaces one artifact with anothee template
- * 
+ *
  * @author Andres Almiray
  * @since 0.9.1
  */
 
 import griffon.util.GriffonNameUtils
 
-includeTargets << griffonScript("_GriffonInit")
-includeTargets << griffonScript("_GriffonCreateArtifacts")
+includeTargets << griffonScript('_GriffonCreateArtifacts')
 
-target('default': "Replaces an artifact file using another template") {
-    depends(checkVersion, parseArguments)
+target(replaceArtifact: "Replaces an artifact file using another template") {
+    depends(checkVersion)
 
-    if(!argsMap.type) {
+    if (!argsMap.type) {
         ant.input(addProperty: "artifact.type", message: "Artifact type not specified. Please enter:")
         argsMap.type = ant.antProject.properties."artifact.type"
     }
     argsMap.type = GriffonNameUtils.capitalize(argsMap.type)
     path = (GriffonNameUtils.uncapitalize(argsMap.type) + 's')
 
-    ant.mkdir(dir:"${basedir}/griffon-app/${path}")
+    ant.mkdir(dir: "${basedir}/griffon-app/${path}")
 
     def type = argsMap.type
     promptForName(type: type)
 
     def name = argsMap["params"][0]
 
-    if(!argsMap.fileType) {
+    if (!argsMap.fileType) {
         ant.input(addProperty: "artifact.fileType", message: "Artifact file type not specified. Please enter:")
         argsMap.fileType = GriffonNameUtils.uncapitalize(ant.antProject.properties."artifact.fileType")
     }
 
     replaceNonag = true
     createArtifact(name: name,
-        suffix: type,
-        type: type,
-        path: "griffon-app/${path}")
+            suffix: type,
+            type: type,
+            path: "griffon-app/${path}")
 }
+
+setDefaultTarget(replaceArtifact)

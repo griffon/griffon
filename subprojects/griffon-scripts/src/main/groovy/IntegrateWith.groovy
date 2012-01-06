@@ -22,18 +22,15 @@ import griffon.util.GriffonUtil
  * @author Graeme Rocher (Grails 1.2)
  * @author Sergey Nebolsin (Grails 1.2)
  */
-includeTargets << griffonScript("_GriffonInit")
 
 integrationFiles = new File("${projectWorkDir}/integration-files")
 
-target(integrateWith:"Integrates ") {
-    depends(parseArguments)
-
+target(integrateWith: "Integrates ") {
     def keys = argsMap.keySet()
     try {
         event("IntegrateWithInit", keys.toList())
-        for(key in keys) {
-            if(key == 'params') continue
+        for (key in keys) {
+            if (key == 'params') continue
             try {
                 def name = GriffonUtil.getClassNameRepresentation(key)
                 "integrate${name}"()
@@ -44,45 +41,45 @@ target(integrateWith:"Integrates ") {
             }
         }
     } finally {
-        ant.delete(dir:integrationFiles, failonerror:false)
+        ant.delete(dir: integrationFiles, failonerror: false)
     }
 }
 
-target(integrateGradle:"Integrates Gradle with Griffon") {
-   depends unpackSupportFiles
-   ant.copy(todir:basedir) {
-       fileset(dir:"${integrationFiles}/gradle")
-   }
-   replaceTokens()
-   println "Created Gradle build file."
+target(integrateGradle: "Integrates Gradle with Griffon") {
+    depends unpackSupportFiles
+    ant.copy(todir: basedir) {
+        fileset(dir: "${integrationFiles}/gradle")
+    }
+    replaceTokens()
+    println "Created Gradle build file."
 }
 
-target(integrateAnt:"Integrates Ant with Griffon") {
-   depends unpackSupportFiles
-   ant.copy(todir:basedir) {
-       fileset(dir:"${integrationFiles}/ant")
-   }
-   replaceTokens()
-   println "Created Ant build file."
+target(integrateAnt: "Integrates Ant with Griffon") {
+    depends unpackSupportFiles
+    ant.copy(todir: basedir) {
+        fileset(dir: "${integrationFiles}/ant")
+    }
+    replaceTokens()
+    println "Created Ant build file."
 }
 
-target(integrateTextmate:"Integrates Textmate with Griffon") {
-   depends unpackSupportFiles
-   ant.copy(todir:basedir) {
-       fileset(dir:"${integrationFiles}/textmate")
-   }
+target(integrateTextmate: "Integrates Textmate with Griffon") {
+    depends unpackSupportFiles
+    ant.copy(todir: basedir) {
+        fileset(dir: "${integrationFiles}/textmate")
+    }
 
-   ant.move(file: "${basedir}/project.tmproj", tofile: "${basedir}/${griffonAppName}.tmproj", overwrite: true)
+    ant.move(file: "${basedir}/project.tmproj", tofile: "${basedir}/${griffonAppName}.tmproj", overwrite: true)
 
-   replaceTokens()
-   println "Created Textmate project files."
+    replaceTokens()
+    println "Created Textmate project files."
 }
 
-target(integrateEclipse:"Integrates Eclipse STS with Griffon") {
+target(integrateEclipse: "Integrates Eclipse STS with Griffon") {
     depends unpackSupportFiles
 
-    ant.copy(todir:basedir) {
-        fileset(dir:"${integrationFiles}/eclipse")
+    ant.copy(todir: basedir) {
+        fileset(dir: "${integrationFiles}/eclipse")
     }
     ant.move(file: "${basedir}/.launch", tofile: "${basedir}/${griffonAppName}.launch", overwrite: true)
 
@@ -91,29 +88,29 @@ target(integrateEclipse:"Integrates Eclipse STS with Griffon") {
 }
 
 
-target(integrateIdea:"Integrates Intellij with Griffon") {
+target(integrateIdea: "Integrates Intellij with Griffon") {
     integrateIntellij()
 }
 
-target(integrateIntellij:"Integrates Intellij with Griffon") {
+target(integrateIntellij: "Integrates Intellij with Griffon") {
     depends unpackSupportFiles
 
-    ant.copy(todir:basedir) {
-        fileset(dir:"${integrationFiles}/intellij")
+    ant.copy(todir: basedir) {
+        fileset(dir: "${integrationFiles}/intellij")
     }
     def griffonIdeaVersion = griffonVersion.replace('-' as char, '_' as char)
-                                           .replace('.' as char, '_' as char)
+            .replace('.' as char, '_' as char)
     ant.move(file: "${basedir}/ideaGriffonProject.iml", tofile: "${basedir}/${griffonAppName}.iml", overwrite: true)
     ant.move(file: "${basedir}/.idea/libraries/griffon.xml",
-           tofile: "${basedir}/.idea/libraries/griffon_${griffonIdeaVersion}.xml", overwrite: true)
+            tofile: "${basedir}/.idea/libraries/griffon_${griffonIdeaVersion}.xml", overwrite: true)
 
     replaceTokens()
     println "Created IntelliJ project files."
 }
 
-target(replaceTokens:"Replaces any tokens in the files") {
-    def appKey = griffonAppName.replaceAll( /\s/, '.' ).toLowerCase()
-    ant.replace(dir: basedir, includes:"*.*") {
+target(replaceTokens: "Replaces any tokens in the files") {
+    def appKey = griffonAppName.replaceAll(/\s/, '.').toLowerCase()
+    ant.replace(dir: basedir, includes: "*.*") {
         replacefilter(token: "@griffon.intellij.libs@", value: intellijClasspathLibs())
         // replacefilter(token: "@griffon.libs@", value: eclipseClasspathLibs())
         // replacefilter(token: "@griffon.jar@", value: eclipseClasspathGriffonJars())
@@ -126,7 +123,7 @@ target(replaceTokens:"Replaces any tokens in the files") {
         replacefilter(token: "@griffon.app.version@", value: griffonAppVersion ?: '0.1')
     }
     def ideaDir = new File("${basedir}/.idea")
-    if(ideaDir.exists()) {
+    if (ideaDir.exists()) {
         ant.replace(dir: ideaDir) {
             replacefilter(token: "@griffon.intellij.libs@", value: intellijClasspathLibs())
             replacefilter(token: "@griffon.version@", value: griffonVersion)
@@ -135,8 +132,8 @@ target(replaceTokens:"Replaces any tokens in the files") {
     }
 }
 
-target(unpackSupportFiles:"Unpacks the support files") {
-    if(!integrationFiles.exists()) {
+target(unpackSupportFiles: "Unpacks the support files") {
+    if (!integrationFiles.exists()) {
         griffonUnpack(dest: integrationFiles.path, src: "griffon-integration-files.jar")
     }
 }

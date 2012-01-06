@@ -48,7 +48,7 @@ PLUGIN_RESOURCES = [
 ]
 
 target(packagePlugin: 'Packages a Griffon plugin') {
-    depends(parseArguments, checkVersion)
+    depends(checkVersion)
 
     pluginDescriptor = ArtifactUtils.getPluginDescriptor(basedir)
     if (!pluginDescriptor?.exists()) {

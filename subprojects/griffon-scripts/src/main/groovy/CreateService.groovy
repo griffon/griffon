@@ -16,26 +16,28 @@
 
 /**
  * Gant script that creates a Griffon service class
- * 
+ *
  * @author Graeme Rocher (Grails 0.4)
  */
 
-includeTargets << griffonScript("_GriffonInit")
-includeTargets << griffonScript("_GriffonCreateArtifacts")
+includeTargets << griffonScript('_GriffonCreateArtifacts')
 
-target('default': "Creates a new service class") {
-    depends(checkVersion, parseArguments)
+target('createScript': "Creates a new service class") {
+    depends(checkVersion)
 
-    ant.mkdir(dir:"${basedir}/griffon-app/services")
+    ant.mkdir(dir: "${basedir}/griffon-app/services")
 
-    def type = "Service"
+    String type = 'Service'
     promptForName(type: type)
 
     def name = argsMap["params"][0]
 
-    createArtifact(name: name,
-        suffix: type,
-        type: type,
-        path: "griffon-app/services")
-    createUnitTest(name: name, suffix: type)
+    createArtifact(
+            name:   name,
+            suffix: type,
+            type:   type,
+            path:   'griffon-app/services')
+    doCreateUnitTest(name: name, suffix: type)
 }
+
+setDefaultTarget(createScript)

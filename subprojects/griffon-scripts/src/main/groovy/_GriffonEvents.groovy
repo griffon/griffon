@@ -26,7 +26,7 @@ import org.codehaus.griffon.cli.support.GriffonBuildEventListener
 if (getBinding().variables.containsKey("_griffon_events_called")) return
 _griffon_events_called = true
 
-includeTargets << griffonScript("_GriffonClasspath")
+includeTargets << griffonScript('_GriffonClasspath')
 
 // Class loader to use for loading events scripts.
 eventsClassLoader = new GroovyClassLoader(classLoader)
@@ -36,26 +36,30 @@ eventsClassLoader = new GroovyClassLoader(classLoader)
 
 eventListener = new GriffonBuildEventListener(eventsClassLoader, binding, griffonSettings)
 eventListener.globalEventHooks = [
-    StatusFinal: [ {message -> println message } ],
-    StatusUpdate: [ {message -> println message + ' ...' } ],
-    StatusError: [ {message -> System.err.println message } ],
-    CreatedArtefact: [ {artefactType, artefactName -> println "Created $artefactType for $artefactName" } ]
+        StatusFinal: [{message -> println message }],
+        StatusUpdate: [{message -> println message + ' ...' }],
+        StatusError: [{message -> System.err.println message }],
+        CreatedArtefact: [{artefactType, artefactName -> println "Created $artefactType for $artefactName" }]
 ]
 
 hooksLoaded = false
 binding.addBuildListener(eventListener)
-// Set up the classpath for the event hooks.
-classpath()
-
-// Now load them.
-eventListener.classLoader = new GroovyClassLoader(classLoader)
-eventListener.initialize()
 
 // Send a scripting event notification to any and all event hooks in plugins/user scripts
 event = {String name, def args ->
-    eventListener.triggerEvent(name, *args)
+    eventListener.triggerEvent(name, * args)
 }
 
+target(loadEventHooks: '') {
+    /*
+// Set up the classpath for the event hooks.
+    classpath()
+
+// Now load them.
+    eventListener.classLoader = new GroovyClassLoader(classLoader)
+    eventListener.initialize()
 // Give scripts a chance to modify classpath
-event('SetClasspath', [classLoader])
-griffonSettings.resetDependencies()
+    event('SetClasspath', [classLoader])
+    griffonSettings.resetDependencies()
+    */
+}

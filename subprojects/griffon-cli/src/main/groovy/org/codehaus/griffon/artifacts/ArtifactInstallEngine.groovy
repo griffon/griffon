@@ -55,6 +55,7 @@ class ArtifactInstallEngine {
     Closure errorHandler = { String msg -> throw new ScriptExitException(msg) }
     Closure eventHandler = { String name, String msg -> println msg }
     Closure pluginScriptRunner
+    Closure postInstallEvent
     boolean interactive
 
     ArtifactInstallEngine(BuildSettings settings, Metadata metadata, AntBuilder ant) {
@@ -73,7 +74,7 @@ class ArtifactInstallEngine {
         value in [INSTALL_FAILURE_ABORT, INSTALL_FAILURE_CONTINUE] ? value : INSTALL_FAILURE_CONTINUE
     }
 
-    void resolvePluginDependencies() {
+    boolean resolvePluginDependencies() {
         Map<String, String> registeredPlugins = getRegisteredArtifacts(Plugin.TYPE, metadata)
         Map<String, String> installedPlugins = getInstalledArtifacts(Plugin.TYPE)
 
@@ -125,22 +126,77 @@ class ArtifactInstallEngine {
             errorHandler "Cannot continue with unresolved dependencies."
         }
 
-        if (LOG.debugEnabled) {
+        if (LOG.debugEnabled && dependencies) {
             LOG.debug("Dependency resolution outcome:\n${dependencies.collect([]) {printDependencyTree(it, true)}.join('\n')}")
         }
 
         try {
-            installPlugins(dependencies, resolver)
+            return installPlugins(dependencies, resolver)
         } catch (InstallArtifactException iae) {
             errorHandler "Could not resolve plugin dependencies."
         }
     }
 
-    void installPlugin(String name, String version = null) {
+    boolean installPlugin(String name, String version = null) {
         String type = Plugin.TYPE
 
         ArtifactDependencyResolver resolver = new ArtifactDependencyResolver()
-        List<ArtifactDependency> dependencies = null
+        List<ArtifactDependency> dependencies = resolveDependenciesFor(resolver, type, name, version)
+
+        try {
+            return installPlugins(dependencies, resolver)
+        } catch (InstallArtifactException iae) {
+            errorHandler "Installation of ${type} ${name}${version ? '-' + version : ''} aborted."
+        }
+    }
+
+    private boolean installPlugins(List<ArtifactDependency> dependencies, ArtifactDependencyResolver resolver) {
+        installedArtifacts.clear()
+        uninstalledArtifacts.clear()
+
+        List<ArtifactDependency> installPlan = resolveDependenciesFor(dependencies, resolver)
+        installPluginsInternal(installPlan)
+    }
+
+    private boolean installPluginsInternal(List<ArtifactDependency> installPlan) {
+        String type = Plugin.TYPE
+        List<ArtifactDependency> failedDependencies = []
+        for (ArtifactDependency dependency: installPlan) {
+            try {
+                if (dependency.evicted) {
+                    doUninstall(type, dependency.name, dependency.version)
+                } else {
+                    File file = dependency.repository.downloadFile(type, dependency.name, dependency.version, null)
+                    installFromFile(type, file)
+                }
+            } catch (Exception e) {
+                failedDependencies << dependency
+                GriffonExceptionHandler.sanitize(e)
+                eventHandler 'StatusError', "${dependency.toString().trim()} [FAILED]"
+                eventHandler 'StatusError', e.message
+                switch (getInstallFailureStrategy()) {
+                    case INSTALL_FAILURE_CONTINUE:
+                        // try next dependency
+                        break
+                    case INSTALL_FAILURE_ABORT:
+                        eventHandler 'StatusError', "Plugin ${dependency.name}-${dependency.version} could not be installed => $e"
+                        throw new InstallArtifactException("Installation of ${dependency.name}-${dependency.version} aborted.")
+                }
+            }
+        }
+
+        if (failedDependencies) {
+            String failed = ''
+            failedDependencies.each {failed += it.toString() }
+            eventHandler 'StatusFinal', "The following plugins failed to be installed due to missing dependencies or a postinstall error.\n${failed}"
+            return false
+        }
+
+        true
+    }
+
+    private List resolveDependenciesFor(ArtifactDependencyResolver resolver, String type, String name, String version) {
+        List<ArtifactDependency> dependencies = []
         try {
             dependencies << resolver.resolveDependencyTree(type, name, version)
         } catch (Exception e) {
@@ -149,22 +205,13 @@ class ArtifactInstallEngine {
             errorHandler "Installation of ${type} ${name}${version ? '-' + version : ''} aborted."
         }
 
-        if (LOG.debugEnabled) {
+        if (LOG.debugEnabled && dependencies) {
             LOG.debug("Dependency resolution outcome:\n${dependencies.collect([]) {printDependencyTree(it, true)}.join('\n')}")
         }
-
-        try {
-            installPlugins(dependencies, resolver)
-        } catch (InstallArtifactException iae) {
-            errorHandler "Installation of ${type} ${name}${version ? '-' + version : ''} aborted."
-        }
+        dependencies
     }
 
-    private void installPlugins(List<ArtifactDependency> dependencies, ArtifactDependencyResolver resolver) {
-        String type = Plugin.TYPE
-        installedArtifacts.clear()
-        uninstalledArtifacts.clear()
-
+    private List<ArtifactDependency> resolveDependenciesFor(List<ArtifactDependency> dependencies, ArtifactDependencyResolver resolver) {
         Map<String, Release> installedReleases = getInstalledReleases(Plugin.TYPE)
 
         Map<String, ArtifactDependency> installedDependencies = [:]
@@ -187,16 +234,14 @@ class ArtifactInstallEngine {
             }
         }
 
-        if (LOG.debugEnabled) {
-            if (installedDependencies) {
-                LOG.debug("Installed dependencies: ${installedDependencies.values().collect([]) {printDependencyTree(it, true)}.join('\n')}")
-            }
+        if (LOG.debugEnabled && installedDependencies) {
+            LOG.debug("Installed dependencies:\n${installedDependencies.values().collect([]) {printDependencyTree(it, true)}.join('\n')}")
         }
 
         if (dependencies.grep {!it.resolved}) {
             String installed = installedDependencies.values().collect([]) {printDependencyTree(it, true)}.join('\n')
             String target = dependencies.collect([]) {printDependencyTree(it, true)}.join('\n')
-            eventHandler 'StatusError', "Some dependencies could not be resolved.\n${installed}\n----------\n${target}"
+            eventHandler 'StatusError', "Some dependencies could not be resolved.\n-= INSTALLED =-\n${installed}\n-= MISSING =-\n${target}"
             throw new InstallArtifactException('There are unresolved plugin dependencies.')
         }
 
@@ -204,50 +249,21 @@ class ArtifactInstallEngine {
         if (LOG.debugEnabled) {
             String installed = installedDependencies.values().collect([]) {printDependencyTree(it, true)}.join('\n')
             String target = dependencies.collect([]) {printDependencyTree(it, true)}.join('\n')
-            LOG.debug("Dependency evictions & conflicts outcome:\n-= INSTALLED =-\n${installed}\n-= MISSING =-\n${target}")
+            if (installed || target) LOG.debug("Dependency evictions & conflicts outcome:\n-= INSTALLED =-\n${installed}\n-= MISSING =-\n${target}")
         }
 
         if (dependencies.grep {it.conflicted}) {
             String installed = installedDependencies.values().collect([]) {printDependencyTree(it, true)}.join('\n')
             String target = dependencies.collect([]) {printDependencyTree(it, true)}.join('\n')
-            eventHandler 'StatusError', "Some dependencies have conflicts.\n${installed}\n----------\n${target}"
+            eventHandler 'StatusError', "Some dependencies have conflicts.\n-= INSTALLED =-\n${installed}\n-= MISSING =-\n${target}"
             throw new InstallArtifactException('There are plugin dependencies with unresolved conflicts.')
         }
 
-        if (LOG.debugEnabled) {
+        if (LOG.debugEnabled && installPlan) {
             LOG.debug("Dependency install plan:\n${installPlan.collect([]) {it.toString().trim()}.join('\n')}")
         }
 
-        List<ArtifactDependency> failedDependencies = []
-        for (ArtifactDependency dependency: installPlan) {
-            try {
-                if (dependency.evicted) {
-                    doUninstall(type, dependency.name, dependency.version)
-                } else {
-                    File file = dependency.repository.downloadFile(type, dependency.name, dependency.version, null)
-                    installFromFile(type, file)
-                }
-            } catch (Exception e) {
-                failedDependencies << dependency
-                GriffonExceptionHandler.sanitize(e)
-                eventHandler 'StatusError', "${dependency.toString().trim()} [FAILED]"
-                eventHandler 'StatusError', e.message
-                switch (getInstallFailureStrategy()) {
-                    case INSTALL_FAILURE_CONTINUE:
-                        // try next dependency
-                        break
-                    case INSTALL_FAILURE_ABORT:
-                        eventHandler 'StatusError', "${capitalize(type)} ${dependency.name}-${dependency.version} could not be installed => $e"
-                        throw new InstallArtifactException("Installation of ${dependency.name}-${dependency.version} aborted.")
-                }
-            }
-        }
-
-        if (failedDependencies) {
-            String failed = ''
-            failedDependencies.each {failed += it.toString() }
-            eventHandler 'StatusFinal', "The following ${type}s failed to be installed due to missing dependencies or a postinstall error.\n${failed}"
-        }
+        installPlan
     }
 
     private String printDependencyTree(ArtifactDependency artifactDependency, boolean trim = false) {
@@ -257,12 +273,28 @@ class ArtifactInstallEngine {
         trim ? baos.toString().trim() : baos.toString()
     }
 
-    void installFromFile(String type, File file) {
+    void installFromFile(String type, File file, boolean resolveDependencies = false) {
         Release release = inspectArtifactRelease(type, file)
 
         String artifactName = release.artifact.name
+        String releaseVersion = release.version
         String releaseName = "${artifactName}-${release.version}"
         String artifactInstallPath = "${artifactBase(type)}/${releaseName}"
+
+        if (resolveDependencies && type == Plugin.TYPE) {
+            ArtifactDependencyResolver resolver = new ArtifactDependencyResolver()
+            List<ArtifactDependency> dependencies = resolveDependenciesFor(resolver, type, artifactName, releaseVersion)
+            // this is the file we already got
+            dependencies.findAll {it.name == artifactName && it.version == releaseVersion}.each {dependency ->
+                dependency.installed = true
+                dependency.resolved = true
+            }
+            List<ArtifactDependency> installPlan = resolveDependenciesFor(dependencies, resolver)
+            // if we've reached this stage then we can proceed with installs
+            if (!installPluginsInternal(installPlan)) {
+                throw new InstallArtifactException("Could not install plugin ${releaseName}")
+            }
+        }
 
         if (new File(artifactInstallPath).exists()) {
             if (!commandLineHelper.confirmInput("${capitalize(type)} '${releaseName}' is already installed. Overwrite?")) {
@@ -309,6 +341,10 @@ class ArtifactInstallEngine {
             installedArtifacts << artifactInstallPath
         }
 
+        if (type == Plugin.TYPE) {
+            postInstallEvent?.call(artifactInstallPath)
+        }
+
         eventHandler 'StatusFinal', "Installed ${type} '${releaseName}' in ${artifactInstallPath}"
     }
 
@@ -324,14 +360,16 @@ class ArtifactInstallEngine {
             if (resolveReport.hasError()) {
                 throw new InstallArtifactException("Plugin ${pluginName} has missing JAR dependencies.")
             } else {
-                addJarsToRootLoader resolveReport.allArtifactsReports.localFile
+                // addJarsToRootLoader resolveReport.allArtifactsReports.localFile
             }
         }
+        /*
         List pluginJars = new File("${pluginInstallPath}/lib").listFiles().findAll {it.name.endsWith('.jar')}
         addJarsToRootLoader(pluginJars)
+        */
     }
 
-    protected def addJarsToRootLoader(Collection pluginJars) {
+    private void addJarsToRootLoader(Collection pluginJars) {
         ClassLoader loader = getClass().classLoader.rootLoader
         for (File jar: pluginJars) {
             loader.addURL(jar.toURI().toURL())
@@ -413,6 +451,7 @@ class ArtifactInstallEngine {
 
             // check toolkits
             List<String> requiredToolkits = release.artifact.toolkits*.lowercaseName
+            println requiredToolkits
             if (requiredToolkits) {
                 List<String> supportedToolkits = metadata.getApplicationToolkits().toList()
                 List<String> unsupportedToolkits = supportedToolkits - requiredToolkits

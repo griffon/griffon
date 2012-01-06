@@ -20,11 +20,7 @@ import org.codehaus.griffon.artifacts.model.Plugin
  * @author Andres Almiray
  */
 
-includeTargets << griffonScript("_GriffonArtifacts")
-
 target(listPluginUpdates: '') {
-    depends(parseArguments)
-
     doListArtifactUpdates(Plugin.TYPE)
 }
 setDefaultTarget(listPluginUpdates)

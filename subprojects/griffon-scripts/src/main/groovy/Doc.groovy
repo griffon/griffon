@@ -18,6 +18,6 @@
  * @author Graeme Rocher (Grails 1.0)
  */
 
-includeTargets << griffonScript("_GriffonDocs")
+includeTargets << griffonScript('_GriffonDocs')
 
 setDefaultTarget("docs")

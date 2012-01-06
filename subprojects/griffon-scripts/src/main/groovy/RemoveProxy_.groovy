@@ -18,10 +18,7 @@
  * @author Graeme Rocher (Grails 1.2.3)
  */
 
-includeTargets << griffonScript("_GriffonArgParsing")
-target(default: "Removes a proxy configuration") {
-    depends(parseArguments)
-
+target(removeProxy: "Removes a proxy configuration") {
     if (!argsMap.params) {
         println msg()
         exit 1
@@ -43,3 +40,5 @@ Usage: griffon remove-proxy [name]
 Example: griffon remove-proxy client
 '''
 }
+
+setDefaultTarget(removeProxy)

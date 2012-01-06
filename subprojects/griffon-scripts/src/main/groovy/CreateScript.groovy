@@ -22,36 +22,35 @@
 
 import griffon.util.GriffonUtil
 
-includeTargets << griffonScript("_GriffonInit")
-includeTargets << griffonScript("_GriffonCreateArtifacts")
+includeTargets << griffonScript('_GriffonCreateArtifacts')
 
-target(default : "Creates a Griffon Gant Script") {
-    depends(parseArguments)
-
+target(createScript: "Creates a Griffon Gant Script") {
     def type = "Script"
     promptForName(type: type)
     argsMap.skipPackagePrompt = true
-    def (pkg, name) = extractArtifactName(argsMap["params"][0])
+    def (pkg, name) = extractArtifactName(argsMap['params'][0])
 
     createArtifact(
-        name: name,
-        suffix: "",
-        type: type,
-        path: "scripts")
+            name:   name,
+            suffix: '',
+            type:   type,
+            path:   'scripts')
 
-    if(isApplicationProject || isPluginProject) {
+    if (isApplicationProject || isPluginProject) {
         createArtifact(
-            name: name,
-            suffix: "Tests",
-            type: "ScriptTests",
-            path: "test/cli")
-    
+                name:   name,
+                suffix: 'Tests',
+                type:   'ScriptTests',
+                path:   'test/cli')
+
         className = GriffonUtil.getClassNameRepresentation(name)
         artifactFile = "${basedir}/test/cli/${className}Tests.groovy"
-    
+
         ant.replace(file: artifactFile) {
-            replacefilter(token: "@script.name@", value: name )
-            replacefilter(token: "${className}Tests", value: className )
+            replacefilter(token: '@script.name@', value: name)
+            replacefilter(token: "${className}Tests", value: className)
         }
     }
 }
+
+setDefaultTarget(createScript)

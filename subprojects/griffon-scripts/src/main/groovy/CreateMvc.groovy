@@ -23,15 +23,11 @@
 
 import griffon.util.GriffonUtil
 
-includeTargets << griffonScript("Init")
-includeTargets << griffonScript("CreateIntegrationTest")
+includeTargets << griffonScript('CreateIntegrationTest')
 
-target('default': "Creates a new MVC Group") {
-    createMVC()
-}
 
 target(createMVC: "Creates a new MVC Group") {
-    depends(checkVersion, parseArguments)
+    depends(checkVersion)
 
     if (isPluginProject && !isAddonPlugin) {
         println """You must create an Addon descriptor first.
@@ -57,32 +53,32 @@ Type in griffon create-addon then execute this command again."""
 
     if (!argsMap.skipModel && !argsMap.withModel) {
         createArtifact(
-                name: mvcFullQualifiedClassName,
-                suffix: 'Model',
-                type: 'Model',
+                name:     mvcFullQualifiedClassName,
+                suffix:   'Model',
+                type:     'Model',
                 template: modelTemplate,
-                path: 'griffon-app/models')
+                path:     'griffon-app/models')
     }
 
     if (!argsMap.skipView && !argsMap.withView) {
         createArtifact(
-                name: mvcFullQualifiedClassName,
-                suffix: 'View',
-                type: 'View',
+                name:     mvcFullQualifiedClassName,
+                suffix:   'View',
+                type:     'View',
                 template: viewTemplate,
-                path: 'griffon-app/views')
+                path:     'griffon-app/views')
     }
 
     if (!argsMap.skipController && !argsMap.withController) {
         createArtifact(
-                name: mvcFullQualifiedClassName,
-                suffix: 'Controller',
-                type: 'Controller',
+                name:     mvcFullQualifiedClassName,
+                suffix:   'Controller',
+                type:     'Controller',
                 template: controllerTemplate,
-                path: 'griffon-app/controllers')
+                path:     'griffon-app/controllers')
 
-        createIntegrationTest(
-                name: mvcFullQualifiedClassName,
+        doCreateIntegrationTest(
+                name:   mvcFullQualifiedClassName,
                 suffix: '')
     }
 
@@ -94,30 +90,30 @@ Type in griffon create-addon then execute this command again."""
         def addonFile = isAddonPlugin
         def addonText = addonFile.text
 
-        if(isJava) {
+        if (isJava) {
             if (!(addonText =~ /\s*public Map<String, Map<String, String>>\s*getMvcGroups\(\)\s*\{/)) {
-                            addonText = addonText.replaceAll(/\}\s*\z/, """
+                addonText = addonText.replaceAll(/\}\s*\z/, """
                 public Map<String, Map<String, String>> getMvcGroups() {
                     Map<String, Map<String, String>> groups = new LinkedHashMap<String, Map<String, String>>();
                     return groups;
                 }
             }
             """)
-                        }
+            }
 
-                        List parts = []
-                        if (!argsMap.skipModel)      parts << """            {"model",      "${(argsMap.withModel ?: mvcFullQualifiedClassName + 'Model')}"}"""
-                        if (!argsMap.skipView)       parts << """            {"view",       "${(argsMap.withView ?: mvcFullQualifiedClassName + 'View')}"}"""
-                        if (!argsMap.skipController) parts << """            {"controller", "${(argsMap.withController ?: mvcFullQualifiedClassName + 'Controller')}"}"""
+            List parts = []
+            if (!argsMap.skipModel)      parts << """            {"model",      "${(argsMap.withModel ?: mvcFullQualifiedClassName + 'Model')}"}"""
+            if (!argsMap.skipView)       parts << """            {"view",       "${(argsMap.withView ?: mvcFullQualifiedClassName + 'View')}"}"""
+            if (!argsMap.skipController) parts << """            {"controller", "${(argsMap.withController ?: mvcFullQualifiedClassName + 'Controller')}"}"""
 
-                        addonFile.withWriter {
-                            it.write addonText.replaceAll(/\s*Map<String, Map<String, String>> groups = new LinkedHashMap<String, Map<String, String>>\(\);/, """
+            addonFile.withWriter {
+                it.write addonText.replaceAll(/\s*Map<String, Map<String, String>> groups = new LinkedHashMap<String, Map<String, String>>\(\);/, """
                     Map<String, Map<String, String>> groups = new LinkedHashMap<String, Map<String, String>>();
                     // MVC Group for "$name"
                     groups.put("$name", groupDef(new String[][]{
             ${parts.join(',\n')}
                     }));""")
-                        }
+            }
 
         } else {
 
@@ -170,3 +166,5 @@ ${parts.join('\n')}
         }
     }
 }
+
+setDefaultTarget(createMVC)

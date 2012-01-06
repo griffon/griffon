@@ -22,11 +22,10 @@
 
 import griffon.util.GriffonUtil
 
-includeTargets << griffonScript("Init")
-
 class HelpEvaluatingCategory {
     static defaultTask = ""
     static helpText = [:]
+
     static target(Object obj, Map args, Closure callable) {
         def entry = args.entrySet().iterator().next()
         helpText[(entry.key)] = entry.value
@@ -35,6 +34,7 @@ class HelpEvaluatingCategory {
             defaultTask = "default"
         }
     }
+
     static getDefaultDescription(Object obj) {
         return helpText[defaultTask]
     }
@@ -53,25 +53,25 @@ File getHelpFile(File script) {
 
 boolean shouldGenerateHelp(File script) {
     File file = getHelpFile(script)
-    return (!file.exists() || file.lastModified() < script.lastModified() )
+    return (!file.exists() || file.lastModified() < script.lastModified())
 }
 
-target ('help' : "Prints out the help for each script") {
-    ant.mkdir(dir:griffonTmp)
+target('help': "Prints out the help for each script") {
+    ant.mkdir(dir: griffonTmp)
     def scripts = pluginSettings.availableScripts.collect { it.file }
 
     def helpText = ""
 
 
-    if(args) {
+    if (args) {
         def fileName = GriffonUtil.getNameFromScript(args)
         def file = scripts.find {
             def scriptFileName = it.name[0..-8]
-            if(scriptFileName.endsWith("_")) scriptFileName = scriptFileName[0..-2]
+            if (scriptFileName.endsWith("_")) scriptFileName = scriptFileName[0..-2]
             scriptFileName == fileName
         }
 
-        if(file) {
+        if (file) {
             println """
     Usage (optionals marked with *):
     griffon [environment]*
@@ -88,11 +88,11 @@ target ('help' : "Prints out the help for each script") {
 
                         helpText = "griffon ${scriptName} -- ${getDefaultDescription()}"
                         File helpFile = getHelpFile(file)
-                        if(!helpFile.exists())
+                        if (!helpFile.exists())
                             helpFile.createNewFile()
                         helpFile.write(helpText)
                     }
-                    catch(Throwable t) {
+                    catch (Throwable t) {
                         println "Warning: Error caching created help for ${file}: ${t.message}"
                         println helpText
                     }
@@ -107,7 +107,7 @@ target ('help' : "Prints out the help for each script") {
         }
     }
     else {
-            println """
+        println """
 Usage (optionals marked with *):
 griffon [environment]* [target] [arguments]*
 
@@ -117,7 +117,7 @@ griffon create-app books
 
 Available Targets (type griffon help 'target-name' for more info):"""
 
-        scripts.unique { it.name }. sort{ it.name }.each { file ->
+        scripts.unique { it.name }.sort { it.name }.each { file ->
             def scriptName = GriffonUtil.getScriptName(file.name)
             println "griffon ${scriptName}"
         }
@@ -138,7 +138,7 @@ target(showHelp: "Show help for a particular command") {
                 helpText = "griffon ${scriptName} -- ${getDefaultDescription()}"
                 getHelpFile(file).write(helpText)
             }
-            catch(Throwable t) {
+            catch (Throwable t) {
                 println "Error creating help for ${file}: ${t.message}"
                 GriffonUtil.deepSanitize(t)
                 t.printStackTrace(System.out)

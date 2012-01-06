@@ -23,10 +23,7 @@ import griffon.util.GriffonUtil
  * @author Kiyotaka Oku (@kiy0taka)
  */
 
-includeTargets << griffonScript("Init")
-
 target('createCommandAlias': 'Create Griffon command alias') {
-    depends(parseArguments)
     def params = argsMap["params"]
     if (params.size() < 2) {
         println """\

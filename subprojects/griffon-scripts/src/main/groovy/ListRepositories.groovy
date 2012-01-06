@@ -21,10 +21,8 @@ import org.codehaus.griffon.artifacts.ArtifactRepositoryRegistry
  * @author Andres Almiray
  */
 
-includeTargets << griffonScript('_GriffonArtifacts')
-
-target(listReposiories: 'Lists all configured repositories') {
-    depends(parseArguments, configureProxy)
+target(listRepositories: 'Lists all configured repositories') {
+    depends(configureProxy)
 
     listRepositoriesHeader()
     ArtifactRepositoryRegistry.instance.withRepositories { String name, ArtifactRepository artifactRepository ->
@@ -33,7 +31,7 @@ target(listReposiories: 'Lists all configured repositories') {
     listRepositoriesFooter()
 }
 
-setDefaultTarget(listReposiories)
+setDefaultTarget(listRepositories)
 
 listRepositoriesHeader = {->
     println """

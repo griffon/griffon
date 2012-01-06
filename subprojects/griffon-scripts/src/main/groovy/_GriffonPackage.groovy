@@ -37,7 +37,7 @@ import static griffon.util.GriffonNameUtils.capitalize
 if (getBinding().variables.containsKey("_griffon_package_called")) return
 _griffon_package_called = true
 
-includeTargets << griffonScript("_GriffonCompile")
+includeTargets << griffonScript('_GriffonCompile')
 
 configTweaks = []
 
@@ -247,14 +247,14 @@ target(jarFiles: "Jar up the package files") {
 target(mergeManifest: 'Generates a Manifest with default and custom settings') {
     String mainClass = RunMode.current == RunMode.APPLET ? griffonAppletClass : griffonApplicationClass
     manifestMap = [
-        'Main-Class': mainClass,
-        'Built-By': System.properties['user.name'],
-        'Build-Date': new SimpleDateFormat('dd-MM-yyyy HH:mm:ss',Locale.default).format(new Date()),
-        'Created-By': System.properties['java.vm.version'] +' ('+ System.properties['java.vm.vendor'] +')',
-        'Griffon-Version': Metadata.current.getGriffonVersion(),
-        'Implementation-Title': capitalize(Metadata.current.getApplicationName()),
-        'Implementation-Version': Metadata.current.getApplicationVersion(),
-        'Implementation-Vendor': capitalize(Metadata.current.getApplicationName())
+            'Main-Class': mainClass,
+            'Built-By': System.properties['user.name'],
+            'Build-Date': new SimpleDateFormat('dd-MM-yyyy HH:mm:ss', Locale.default).format(new Date()),
+            'Created-By': System.properties['java.vm.version'] + ' (' + System.properties['java.vm.vendor'] + ')',
+            'Griffon-Version': Metadata.current.getGriffonVersion(),
+            'Implementation-Title': capitalize(Metadata.current.getApplicationName()),
+            'Implementation-Version': Metadata.current.getApplicationVersion(),
+            'Implementation-Vendor': capitalize(Metadata.current.getApplicationName())
     ]
     buildConfig.griffon.jars.manifest?.each { k, v ->
         manifestMap[k] = v

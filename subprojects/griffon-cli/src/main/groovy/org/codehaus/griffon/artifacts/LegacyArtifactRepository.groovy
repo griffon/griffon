@@ -58,7 +58,7 @@ class LegacyArtifactRepository extends AbstractArtifactRepository {
                 }
             }
         } catch (Exception e) {
-            if (LOG.warnEnabled) LOG.warn("Could not list artifacts of type ${type}", GriffonExceptionHandler.sanitize(e))
+            if (LOG.warnEnabled) LOG.warn("[${this.name}] Could not list artifacts of type ${type}", GriffonExceptionHandler.sanitize(e))
         }
 
         artifacts
@@ -77,7 +77,7 @@ class LegacyArtifactRepository extends AbstractArtifactRepository {
                 artifact = parseArtifactFromJSON(type, response.data)
             }
         } catch (Exception e) {
-            if (LOG.warnEnabled) LOG.warn("Could not locate artifact ${type}:${name}", GriffonExceptionHandler.sanitize(e))
+            if (LOG.warnEnabled) LOG.warn("[${this.name}] Could not locate artifact ${type}:${name}", GriffonExceptionHandler.sanitize(e))
         }
 
         artifact
@@ -99,7 +99,7 @@ class LegacyArtifactRepository extends AbstractArtifactRepository {
                 file.bytes = response.data.bytes
             }
         } catch (Exception e) {
-            if (LOG.warnEnabled) LOG.warn("Could not download artifact ${type}:${name}:${version}", GriffonExceptionHandler.sanitize(e))
+            if (LOG.warnEnabled) LOG.warn("[${this.name}] Could not download artifact ${type}:${name}:${version}", GriffonExceptionHandler.sanitize(e))
             throw e
         }
         file

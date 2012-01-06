@@ -20,7 +20,6 @@ import org.codehaus.griffon.artifacts.model.Archetype
  * @author Andres Almiray
  */
 
-includeTargets << griffonScript('_GriffonArtifacts')
 includeTargets << griffonScript('PackageArchetype')
 
 target(releaseArchetype: 'Publishes a Griffon archetype release') {

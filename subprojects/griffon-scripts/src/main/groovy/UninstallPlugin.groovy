@@ -20,11 +20,7 @@ import org.codehaus.griffon.artifacts.model.Plugin
  * @author Andres Almiray
  */
 
-includeTargets << griffonScript('_GriffonArtifacts')
-
 target(uninstallPlugin: "Uninstalls a Griffon application plugin") {
-    depends(parseArguments)
-
     uninstallArtifact(Plugin.TYPE)
 }
 setDefaultTarget(uninstallPlugin)

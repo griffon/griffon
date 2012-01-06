@@ -24,7 +24,7 @@ import org.codehaus.griffon.artifacts.model.Archetype
 includeTargets << griffonScript('_PackageArtifact')
 
 target(packageArchetype: 'Packages a Griffon archetype') {
-    depends(parseArguments, checkVersion)
+    depends(checkVersion)
 
     archetypeDescriptor = ArtifactUtils.getArchetypeDescriptor(basedir)
     if (!archetypeDescriptor?.exists()) {

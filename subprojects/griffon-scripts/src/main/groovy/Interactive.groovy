@@ -19,4 +19,8 @@
  * The actual "interactive mode" is built into the GriffonScriptRunner.
  * @author Kenneth Liu (Grails 1.3.1)
  */
-target('default': 'Starts Griffon CLI (script runner) in interactive mode. Keeps the JVM running between griffon commands for faster script execution.'){}
+target('interactive': 'Starts Griffon CLI (script runner) in interactive mode. Keeps the JVM running between griffon commands for faster script execution.') {
+
+}
+
+setDefaultTarget(interactive)

@@ -1,5 +1,5 @@
 /*
-* Copyright 2010-2011 the original author or authors.
+* Copyright 2011 the original author or authors.
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
@@ -14,17 +14,24 @@
 * limitations under the License.
 */
 
-import org.codehaus.griffon.artifacts.model.Archetype
+import org.codehaus.griffon.artifacts.ArtifactInstallEngine
 
 /**
  * @author Andres Almiray
  */
 
-includeTargets << griffonScript("_GriffonArtifacts")
+// No point doing this stuff more than once.
+if (getBinding().variables.containsKey('_resolve_dependencies_called')) return
+_resolve_dependencies_called = true
 
-target(listArchetypeUpdates: '') {
+includeTargets << griffonScript('_GriffonArtifacts')
+
+target('resolveDependencies': '') {
     depends(parseArguments)
 
-    doListArtifactUpdates(Archetype.TYPE)
+    ArtifactInstallEngine artifactInstallEngine = createArtifactInstallEngine()
+    if (!artifactInstallEngine.resolvePluginDependencies()) {
+        installError = true
+        exit(1)
+    }
 }
-setDefaultTarget(listArchetypeUpdates)

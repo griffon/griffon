@@ -23,8 +23,6 @@
  * @since 0.3.2
  */
 
-includeTargets << griffonScript("RunApp")
+includeTargets << griffonScript('RunApp')
 
-target('default': "Runs the application from the command line") {
-    depends(runApp)
-}
+setDefaultTarget(runApp)

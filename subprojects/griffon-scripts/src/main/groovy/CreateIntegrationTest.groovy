@@ -16,18 +16,18 @@
 
 /**
  * Gant script that creates a new Griffon integration test
- * 
+ *
  * @author Graeme Rocher (Grails 0.4)
  */
 
-includeTargets << griffonScript("_GriffonInit")
-includeTargets << griffonScript("_GriffonCreateArtifacts")
+includeTargets << griffonScript('_GriffonCreateArtifacts')
 
-target ('default': "Creates a new Griffon integration test which loads the whole Griffon environment when run") {
-	depends(checkVersion, parseArguments)
+target(createIntegrationTest: "Creates a new Griffon integration test which loads the whole Griffon environment when run") {
+    depends(checkVersion)
 
     promptForName(type: "Integration test")
 
     def name = argsMap["params"][0]
-    createIntegrationTest(name: name, suffix: "")
+    doCreateIntegrationTest(name: name, suffix: "")
 }
+setDefaultTarget(createIntegrationTest)

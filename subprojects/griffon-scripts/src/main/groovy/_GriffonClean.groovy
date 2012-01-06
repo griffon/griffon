@@ -24,8 +24,7 @@
 if (getBinding().variables.containsKey("_griffon_clean_called")) return
 _griffon_clean_called = true
 
-
-includeTargets << griffonScript("_GriffonEvents")
+// includeTargets << griffonScript("_GriffonEvents")
 
 target(cleanAll: "Cleans a Griffon project") {
     clean()
@@ -33,52 +32,52 @@ target(cleanAll: "Cleans a Griffon project") {
 }
 
 target(clean: "Implementation of clean") {
-    depends(parseArguments, classpath, cleanCompiledSources, cleanPackaging)
+    depends(classpath, cleanCompiledSources, cleanPackaging)
 }
 
 target(cleanCompiledSources: "Cleans compiled Java and Groovy sources") {
-    ant.delete(dir:classesDirPath)
-    ant.delete(dir:resourcesDirPath)
-    ant.delete(dir:testDirPath)
-    ant.delete(dir:testResourcesDirPath)
-    ant.delete(dir:cliClassesDirPath)
+    ant.delete(dir: classesDirPath)
+    ant.delete(dir: resourcesDirPath)
+    ant.delete(dir: testDirPath)
+    ant.delete(dir: testResourcesDirPath)
+    ant.delete(dir: cliClassesDirPath)
 }
 
 target(cleanTestReports: "Cleans the test reports") {
     // Delete all reports *except* TEST-TestSuites.xml which we need
     // for the "--rerun" option to work.
-    ant.delete(failonerror:false, includeemptydirs: true) {
-        fileset(dir:griffonSettings.testReportsDir.path) {
+    ant.delete(failonerror: false, includeemptydirs: true) {
+        fileset(dir: griffonSettings.testReportsDir.path) {
             include(name: "**/*")
             exclude(name: "TESTS-TestSuites.xml")
         }
     }
 }
 
-target(cleanPackaging : "Cleans the distribtion directories") {
-    if(buildConfigFile.exists()) {
+target(cleanPackaging: "Cleans the distribtion directories") {
+    if (buildConfigFile.exists()) {
         def cfg = configSlurper.parse(buildConfigFile.toURL())
         cfg.setConfigFile(buildConfigFile.toURL())
 
-        def distDir =  cfg.griffon.dist.dir ?: "${basedir}/dist"
-        def destDir =  cfg.griffon.jars.destDir
+        def distDir = cfg.griffon.dist.dir ?: "${basedir}/dist"
+        def destDir = cfg.griffon.jars.destDir
 
-        ant.delete(dir:ant.antProject.replaceProperties(distDir))
-        if(destDir) ant.delete(dir:ant.antProject.replaceProperties(destDir))
+        ant.delete(dir: ant.antProject.replaceProperties(distDir))
+        if (destDir) ant.delete(dir: ant.antProject.replaceProperties(destDir))
     }
 
     def cleanPackage = { type ->
         try {
-            event('CleanPackage',[type])
-        } catch(Exception x) {
+            event('CleanPackage', [type])
+        } catch (Exception x) {
             ant.echo(message: "Could not handle package type '${type}'")
             ant.echo(message: x.message)
         }
     }
 
     def keys = argsMap.keySet()
-    for(key in keys) {
-        if(key == 'params') continue
+    for (key in keys) {
+        if (key == 'params') continue
         cleanPackage(key)
     }
 
@@ -86,5 +85,5 @@ target(cleanPackaging : "Cleans the distribtion directories") {
         cleanPackage(type)
     }
 
-    ant.delete(dir:projectTargetDir)
+    ant.delete(dir: projectTargetDir)
 }

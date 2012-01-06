@@ -24,19 +24,15 @@
 import griffon.util.GriffonNameUtils
 import static griffon.util.GriffonApplicationUtils.isMacOSX
 
-includeTargets << griffonScript("Package")
-includeTargets << griffonScript("_GriffonBootstrap")
-
-target('default': "Runs the application from the command line") {
-    runApp()
-}
+includeTargets << griffonScript('Package')
+includeTargets << griffonScript('_GriffonBootstrap')
 
 target('runApp': "Runs the application from the command line") {
-    if(isPluginProject) {
+    if (isPluginProject) {
         println "Cannot run application: project is a plugin!"
         exit(1)
     }
-    depends(checkVersion, configureProxy, parseArguments, prepackage)
+    depends(checkVersion, configureProxy, prepackage)
 
     // calculate the needed jars
     File jardir = new File(ant.antProject.replaceProperties(buildConfig.griffon.jars.destDir))
@@ -53,8 +49,8 @@ target('runApp': "Runs the application from the command line") {
 
     def javaOpts = setupJavaOpts(true)
     if (argsMap.containsKey('debug')) {
-        def portNum = argsMap.debugPort?:'18290'  //default is 'Gr' in ASCII
-        def addr = argsMap.debugAddr?:'127.0.0.1'
+        def portNum = argsMap.debugPort ?: '18290'  //default is 'Gr' in ASCII
+        def addr = argsMap.debugAddr ?: '127.0.0.1'
         def debugSocket = ''
         if (portNum =~ /\d+/) {
             if (addr == '127.0.0.1') {
@@ -80,7 +76,7 @@ target('runApp': "Runs the application from the command line") {
     }
 
     debug("Running JVM options:")
-    javaOpts.each{ debug("  $it") }
+    javaOpts.each { debug("  $it") }
 
     def runtimeClasspath = runtimeJars.collect { f ->
         f.absolutePath.startsWith(jardir.absolutePath) ? f.absolutePath - jardir.absolutePath - File.separator : f
@@ -92,25 +88,27 @@ target('runApp': "Runs the application from the command line") {
     try {
         def cmd = [javaVM]
         // let's make sure no empty/null String is added
-        javaOpts.each { s -> if(s) cmd << s }
-        [proxySettings, '-classpath', runtimeClasspath, griffonApplicationClass].each { s -> if(s) cmd << s }
-        args?.tokenize().each { s -> if(s) cmd << s }
+        javaOpts.each { s -> if (s) cmd << s }
+        [proxySettings, '-classpath', runtimeClasspath, griffonApplicationClass].each { s -> if (s) cmd << s }
+        args?.tokenize().each { s -> if (s) cmd << s }
         debug("Executing ${cmd.join(' ')}")
         Process p = Runtime.runtime.exec(cmd as String[], null, jardir)
 
         // pipe the output
         p.consumeProcessOutput(System.out, System.err)
-    
+
         // wait for it.... wait for it...
         p.waitFor()
     } finally {
 // XXX -- NATIVE
-        if(platformDir.exists()) {
+        if (platformDir.exists()) {
             ant.delete(dir: platformDir)
         }
-        if(platformDir2.exists()) {
+        if (platformDir2.exists()) {
             ant.delete(dir: platformDir2)
         }
 // XXX -- NATIVE
     }
 }
+
+setDefaultTarget(runApp)

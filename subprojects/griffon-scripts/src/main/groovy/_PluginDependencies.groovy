@@ -43,10 +43,10 @@ includeTargets << griffonScript("_GriffonProxy")
 // Properties
 pluginsList = null
 globalInstall = false
-pluginsBase = "${griffonWorkDir}/plugins".toString().replaceAll('\\\\','/')
+pluginsBase = "${griffonWorkDir}/plugins".toString().replaceAll('\\\\', '/')
 
 // Targets
-target(resolveDependencies:"Resolve plugin dependencies") {
+target(resolveDependencies: "Resolve plugin dependencies") {
     depends(parseArguments, initInplacePlugins)
 
     def installEngine = createPluginInstallEngine(metadata)
@@ -70,21 +70,21 @@ loadPluginClass = { String pluginFile ->
         return gcl.loadClass(pluginClassName).newInstance()
     }
     catch (Throwable t) {
-        event("StatusError", [ t.message])
+        event("StatusError", [t.message])
         t.printStackTrace(System.out)
         ant.fail("Cannot instantiate plugin file")
     }
 }
 
 resolvePluginClasspathDependencies = { plugin ->
-    def plugins = [] 
-    if(plugin.metaClass.hasProperty(plugin,'dependsOn')) {
-        for(dep in plugin.dependsOn) {
+    def plugins = []
+    if (plugin.metaClass.hasProperty(plugin, 'dependsOn')) {
+        for (dep in plugin.dependsOn) {
             plugins << [name: dep.key, version: dep.value.toString()]
         }
     }
     _resolveDependencies(plugins) { pluginName, pluginVersion, pluginDir ->
-        def pluginFile = pluginDir.list().find{ it =~ /GriffonPlugin\.groovy/ }
+        def pluginFile = pluginDir.list().find { it =~ /GriffonPlugin\.groovy/ }
         addUrlIfNotPresent classLoader, pluginDir
         resolvePluginClasspathDependencies(loadPluginClass(pluginFile))
     }
@@ -93,19 +93,19 @@ resolvePluginClasspathDependencies = { plugin ->
 _resolveDependencies = { List plugins, callback = null ->
     boolean installedPlugins = false
 
-    for(p in plugins) {
+    for (p in plugins) {
         def name = p.name
         def version = p.version
         def fullName = "$name-$version"
         def pluginLoc = getPluginDirForName(name)
-        if(!pluginLoc?.exists()) {
+        if (!pluginLoc?.exists()) {
             println "Plugin [${fullName}] not installed, resolving.."
             installPluginForName(name, version)
-            if(callback) callback(name, version, getPluginDirForName(name).file)
+            if (callback) callback(name, version, getPluginDirForName(name).file)
             installedPlugins = true
         }
     }
-    if(installedPlugins) {
+    if (installedPlugins) {
         resetClasspathAndState()
     }
 }
@@ -133,13 +133,13 @@ compileInplacePlugin = { File pluginDir ->
         // classes that might conflict with the project's.
         def classpathId = "griffon.compile.classpath"
         def pluginResources = pluginSettings.getPluginSourceFiles(pluginDir)
-        
+
         if (pluginResources) {
             // Only perform the compilation if there are some plugins
             // installed or otherwise referenced.
             try {
                 compileSources(classesDirPath, classpathId) {
-                    for(File dir in pluginResources.file) {
+                    for (File dir in pluginResources.file) {
                         if (dir.exists() && dir.isDirectory()) {
                             src(path: dir.absolutePath)
                         }
@@ -158,21 +158,21 @@ compileInplacePlugin = { File pluginDir ->
 }
 
 doWithPlugins = { callback = null ->
-    if(!callback) return
+    if (!callback) return
 
     def plugins = metadata.findAll { it.key.startsWith("plugins.")}.collect {
-       [
-        name:it.key[8..-1],
-        version: it.value
-       ]
+        [
+                name: it.key[8..-1],
+                version: it.value
+        ]
     }
 
-    for(p in plugins) {
+    for (p in plugins) {
         def name = p.name
         def version = p.version
         // def fullName = "$name-$version"
         def pluginDir = getPluginDirForName(name)
-        if(!pluginDir) installPluginForName(name)
+        if (!pluginDir) installPluginForName(name)
     }
 
     // read again as the list might have been updated
@@ -193,8 +193,8 @@ generatePluginXml = { File descriptor, boolean compilePlugin = true ->
     // access its properties.
     Class pluginClass
     def plugin
-    
-    if(compilePlugin) {
+
+    if (compilePlugin) {
         try {
             // Rather than compiling the descriptor via Ant, we just load
             // the Groovy file into a GroovyClassLoader. We add the classes
@@ -226,43 +226,43 @@ generatePluginXml = { File descriptor, boolean compilePlugin = true ->
     def xml = new MarkupBuilder(writer)
 
     // Write the content!
-    def props = ['author','authorEmail','title','description','documentation','license']
+    def props = ['author', 'authorEmail', 'title', 'description', 'documentation', 'license']
     def resourceList = pluginSettings.getArtefactResourcesForOne(descriptor.parentFile.absolutePath)
 
-    def rcComparator = [ compare: {a, b -> a.URI <=> b.URI } ] as Comparator
+    def rcComparator = [compare: {a, b -> a.URI <=> b.URI }] as Comparator
     Arrays.sort(resourceList, rcComparator)
 
     pluginGriffonVersion = "${GriffonUtil.griffonVersion} > *"
     def pluginProps = compilePlugin ? plugin.properties : pluginSettings.getPluginInfo(pluginBaseDir.absolutePath)
-    if(pluginProps["griffonVersion"]) {
+    if (pluginProps["griffonVersion"]) {
         pluginGriffonVersion = pluginProps["griffonVersion"]
     }
- 
+
     def jdk = pluginProps.jdk ?: '1.5'
 
-    xml.plugin(name:"${pluginName}", version:"${pluginProps.version}", griffonVersion:pluginGriffonVersion, jdk: jdk) {
-        for( p in props) {
-            if( pluginProps[p] ) "${p}"(pluginProps[p].toString().trim())
+    xml.plugin(name: "${pluginName}", version: "${pluginProps.version}", griffonVersion: pluginGriffonVersion, jdk: jdk) {
+        for (p in props) {
+            if (pluginProps[p]) "${p}"(pluginProps[p].toString().trim())
         }
-        if(pluginProps.toolkits) {
+        if (pluginProps.toolkits) {
             toolkits(pluginProps.toolkits.join(','))
         }
-        if(pluginProps.platforms) {
+        if (pluginProps.platforms) {
             platforms(pluginProps.platforms.join(','))
         }
         xml.resources {
-            for(r in resourceList) {
-                 def matcher = r.URL.toString() =~ artefactPattern
-                 def name = matcher[0][1].replaceAll('/', /\./)
-                 xml.resource(name)
+            for (r in resourceList) {
+                def matcher = r.URL.toString() =~ artefactPattern
+                def name = matcher[0][1].replaceAll('/', /\./)
+                xml.resource(name)
             }
         }
-        dependencies {        
-            if(pluginProps["dependsOn"]) {
-                for(d in pluginProps.dependsOn) {
-                    delegate.plugin(name:d.key, version:d.value)
+        dependencies {
+            if (pluginProps["dependsOn"]) {
+                for (d in pluginProps.dependsOn) {
+                    delegate.plugin(name: d.key, version: d.value)
                 }
-            } 
+            }
         }
 
 /*
@@ -302,38 +302,38 @@ generatePluginXml = { File descriptor, boolean compilePlugin = true ->
     return plugin
 }
 
-target(loadPlugins:"Loads Griffon' plugins") {
-    if(PluginManagerHolder.pluginManager) { // plugin manager already loaded?
+target(loadPlugins: "Loads Griffon' plugins") {
+    if (PluginManagerHolder.pluginManager) { // plugin manager already loaded?
         // Add the plugin manager to the binding so that it can be accessed
         // from any target.
         pluginManager = PluginManagerHolder.pluginManager
     } else {
         compConfig.setTargetDirectory(classesDir)
-        def unit = new CompilationUnit ( compConfig , null , new GroovyClassLoader(classLoader) )
+        def unit = new CompilationUnit(compConfig, null, new GroovyClassLoader(classLoader))
         def pluginFiles = pluginSettings.pluginDescriptors
 
-        for(plugin in pluginFiles) {
+        for (plugin in pluginFiles) {
             def pluginFile = plugin.file
             def className = pluginFile.name - '.groovy'
             def classFile = new File("${classesDirPath}/${className}.class")
 
-            if(pluginFile.lastModified() > classFile.lastModified())
-                  unit.addSource ( pluginFile )
+            if (pluginFile.lastModified() > classFile.lastModified())
+                unit.addSource(pluginFile)
         }
 
         try {
             profile("compiling plugins") {
-                unit.compile ()
+                unit.compile()
             }
             def pluginClasses = []
             profile("construct plugin manager with ${pluginFiles.inspect()}") {
-                for(plugin in pluginFiles) {
-                   def className = plugin.file.name - '.groovy'
-                   pluginClasses << classLoader.loadClass(className)
+                for (plugin in pluginFiles) {
+                    def className = plugin.file.name - '.groovy'
+                    pluginClasses << classLoader.loadClass(className)
                 }
 
                 profile("creating plugin manager with classes ${pluginClasses}") {
-                    if(griffonContext == null) {
+                    if (griffonContext == null) {
                         griffonContext = new DefaultGriffonContext(new Class[0], new GroovyClassLoader(classLoader))
                     }
                     pluginManager = new DefaultGriffonPluginManager(pluginClasses as Class[], griffonContext)
@@ -346,16 +346,16 @@ target(loadPlugins:"Loads Griffon' plugins") {
                 event("PluginLoadStart", [pluginManager])
                 pluginManager.loadPlugins()
                 def baseDescriptor = pluginSettings.basePluginDescriptor
-                if(baseDescriptor) {                    
+                if (baseDescriptor) {
                     def baseName = FilenameUtils.getBaseName(baseDescriptor.filename)
                     def plugin = pluginManager.getGriffonPluginForClassName(baseName)
-                    if(plugin) {
+                    if (plugin) {
                         plugin.basePlugin = true
                     }
                 }
-                if(pluginManager.failedLoadPlugins) {
+                if (pluginManager.failedLoadPlugins) {
                     event("StatusError", ["Error: The following plugins failed to load due to missing dependencies: ${pluginManager.failedLoadPlugins*.name}"])
-                    for(p in pluginManager.failedLoadPlugins) {
+                    for (p in pluginManager.failedLoadPlugins) {
                         println "- Plugin: $p.name, Dependencies: $p.dependencyNames"
                     }
                     exit(1)
@@ -367,7 +367,7 @@ target(loadPlugins:"Loads Griffon' plugins") {
             }
         } catch (Exception e) {
             GriffonUtil.deepSanitize(e).printStackTrace()
-            event("StatusFinal", [ "Error loading plugin manager: " + e.message ])
+            event("StatusFinal", ["Error loading plugin manager: " + e.message])
             exit(1)
         }
     }
@@ -402,19 +402,19 @@ runPluginScript = { File scriptFile, fullPluginName, msg ->
     if (scriptFile.exists()) {
         event("StatusUpdate", ["Executing ${fullPluginName} plugin $msg"])
         // instrumenting plugin scripts adding 'pluginBasedir' variable
-        def instrumentedInstallScript = "def pluginBasedir = '${pluginsHome}/${fullPluginName}'\n".toString().replaceAll('\\\\','/') + scriptFile.text
+        def instrumentedInstallScript = "def pluginBasedir = '${pluginsHome}/${fullPluginName}'\n".toString().replaceAll('\\\\', '/') + scriptFile.text
         // we are using text form of script here to prevent Gant caching
 
         // temporary crutch --- REMOVE BEFORE 1.0!!
         builderConfig = new ConfigObject()
-        if(builderConfigFile.exists()) builderConfig = configSlurper.parse(builderConfigFile.text)
+        if (builderConfigFile.exists()) builderConfig = configSlurper.parse(builderConfigFile.text)
         // temporary crutch --- REMOVE BEFORE 1.0!!
 
         includeTargets << instrumentedInstallScript
     }
 }
 
-readMetadataFromZip = { String zipLocation, pluginFile=zipLocation ->
+readMetadataFromZip = { String zipLocation, pluginFile = zipLocation ->
     def installEngine = createPluginInstallEngine(metadata)
     installEngine.readMetadataFromZip(zipLocation)
 }
@@ -432,7 +432,7 @@ readMetadataFromZip = { String zipLocation, pluginFile=zipLocation ->
 /**
  * Uninstalls a plugin for the given name and version
  */
-uninstallPluginForName = { name, version=null ->
+uninstallPluginForName = { name, version = null ->
     def pluginInstallEngine = createPluginInstallEngine(metadata)
     pluginInstallEngine.uninstallPlugin name, version
 
@@ -444,7 +444,7 @@ installPluginForName = { String name, String version = null, boolean globalInsta
     PluginInstallEngine pluginInstallEngine = createPluginInstallEngine(metadata)
     if (name) {
         event("InstallPluginStart", ["$name-$version"])
-        pluginInstallEngine.installPlugin(name, version, globalInstall)       
+        pluginInstallEngine.installPlugin(name, version, globalInstall)
     }
 }
 
@@ -508,8 +508,8 @@ doInstallPlugin = { pluginName, pluginVersion = null, Metadata md = metadata ->
 
 eachRepository = { Closure callable ->
     IvyDependencyManager dependencyManager = griffonSettings.dependencyManager
-    for(resolver in dependencyManager.chainResolver.resolvers) {
-        if(resolver instanceof GriffonRepoResolver) {
+    for (resolver in dependencyManager.chainResolver.resolvers) {
+        if (resolver instanceof GriffonRepoResolver) {
             pluginsList = resolver.getPluginList(new File("${griffonWorkDir}/plugins-list-${resolver.name}.xml"))
             callable(resolver.name, resolver.repositoryRoot)
         }

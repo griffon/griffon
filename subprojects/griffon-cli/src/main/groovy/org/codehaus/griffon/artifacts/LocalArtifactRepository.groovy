@@ -105,10 +105,10 @@ class LocalArtifactRepository extends AbstractArtifactRepository {
             ZipEntry md5ChecksumEntry = zipFile.getEntry("${fileName}.md5")
 
             if (artifactFileEntry == null) {
-                throw new IOException("Release does not contain expected zip entry ${fileName}")
+                throw new IOException("[${this.name}] Release does not contain expected zip entry ${fileName}")
             }
             if (md5ChecksumEntry == null) {
-                throw new IOException("Release does not contain expected zip entry ${fileName}.md5")
+                throw new IOException("[${this.name}] Release does not contain expected zip entry ${fileName}.md5")
             }
 
             byte[] bytes = zipFile.getInputStream(artifactFileEntry).bytes
@@ -116,7 +116,7 @@ class LocalArtifactRepository extends AbstractArtifactRepository {
             String releaseHash = zipFile.getInputStream(md5ChecksumEntry).text
 
             if (computedHash.trim() != releaseHash.trim()) {
-                throw new IOException("Wrong checksum for ${fileName}")
+                throw new IOException("[${this.name}] Wrong checksum for ${fileName}")
             }
 
             OutputStream os = new FileOutputStream("${releasePath}/${fileName}")
@@ -158,7 +158,7 @@ class LocalArtifactRepository extends AbstractArtifactRepository {
             FileUtils.copyFile(file, packageFile)
         } catch (Exception e) {
             GriffonExceptionHandler.sanitize(e)
-            if (LOG.warnEnabled) LOG.warn("Could not upload artifact ${file}", e)
+            if (LOG.warnEnabled) LOG.warn("[${this.name}] Could not upload artifact ${file}", e)
             throw e
         }
 

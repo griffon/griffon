@@ -4,7 +4,6 @@ import org.codehaus.griffon.artifacts.model.Plugin
  * @author Andres Almiray
  */
 
-includeTargets << griffonScript('_GriffonArtifacts')
 includeTargets << griffonScript('PackagePlugin')
 
 target(releasePlugin: 'Publishes a Griffon plugin release') {

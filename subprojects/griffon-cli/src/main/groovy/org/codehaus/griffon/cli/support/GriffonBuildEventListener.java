@@ -20,7 +20,6 @@ import griffon.util.BuildSettings;
 import griffon.util.GriffonUtil;
 import groovy.lang.*;
 import org.apache.tools.ant.BuildEvent;
-import org.apache.tools.ant.BuildListener;
 import org.codehaus.griffon.artifacts.PluginUtils;
 import org.springframework.core.io.Resource;
 
@@ -33,7 +32,7 @@ import java.util.regex.Pattern;
 /**
  * @author Graeme Rocher (Grails 1.1)
  */
-public class GriffonBuildEventListener implements BuildListener {
+public class GriffonBuildEventListener extends BuildListenerAdapter {
     private static final Pattern EVENT_NAME_PATTERN = Pattern.compile("event([A-Z]\\w*)");
     private GroovyClassLoader classLoader;
     private Binding binding;
@@ -140,14 +139,6 @@ public class GriffonBuildEventListener implements BuildListener {
         return f.exists() ? f : null;
     }
 
-    public void buildStarted(BuildEvent buildEvent) {
-        // do nothing
-    }
-
-    public void buildFinished(BuildEvent buildEvent) {
-        // do nothing
-    }
-
     public void targetStarted(BuildEvent buildEvent) {
         String targetName = buildEvent.getTarget().getName();
         String eventName = GriffonUtil.getClassNameRepresentation(targetName) + "Start";
@@ -197,18 +188,6 @@ public class GriffonBuildEventListener implements BuildListener {
         triggerEvent(eventName, binding);
         Long timing = System.currentTimeMillis() - timings.get(targetName);
         buildSettings.debug("<< " + targetName + " [" + timing + "ms]");
-    }
-
-    public void taskStarted(BuildEvent buildEvent) {
-        // do nothing
-    }
-
-    public void taskFinished(BuildEvent buildEvent) {
-        // do nothing
-    }
-
-    public void messageLogged(BuildEvent buildEvent) {
-        // do nothing
     }
 
     protected void addGriffonBuildListener(String listenerClassName) {

@@ -29,12 +29,12 @@ import static griffon.util.GriffonApplicationUtils.is64Bit
 if (getBinding().variables.containsKey("_griffon_classpath_called")) return
 _griffon_classpath_called = true
 
-includeTargets << griffonScript("_GriffonSettings")
+includeTargets << griffonScript('_GriffonSettings')
 
 classpathSet = false
 includePluginJarsOnClasspath = true
 
-target(name:'classpath', description: "Sets the Griffon classpath", prehook:null, posthook:null) {
+target(name: 'classpath', description: "Sets the Griffon classpath", prehook: null, posthook: null) {
     setClasspath()
 }
 
@@ -63,7 +63,7 @@ getPluginTestFiles = {
 
 getJarFiles = {->
     def jarFiles = resolveResources("file:${basedir}/lib/*.jar").toList()
-    if(includePluginJarsOnClasspath) {
+    if (includePluginJarsOnClasspath) {
         def pluginJars = pluginSettings.pluginJarFiles
 
         for (pluginJar in pluginJars) {
@@ -87,8 +87,8 @@ getJarFiles = {->
         jarFiles << platformPluginJar
     }
 
-    if(is64Bit) {
-        if(!localPlatformJarsAdded) {
+    if (is64Bit) {
+        if (!localPlatformJarsAdded) {
             resolveResources("file:${basedir}/lib/${PlatformUtils.platform[0..-3]}/*.jar").each { platformJar ->
                 jarFiles << platformJar
             }
@@ -105,10 +105,10 @@ getJarFiles = {->
 }
 
 getExtraDependencies = {
-    def jarFiles =[]
-    if(buildConfig?.griffon?.compiler?.dependencies) {
+    def jarFiles = []
+    if (buildConfig?.griffon?.compiler?.dependencies) {
         def extraDeps = ant.fileScanner(buildConfig.griffon.compiler.dependencies)
-        for(jar in extraDeps) {
+        for (jar in extraDeps) {
             jarFiles << new FileSystemResource(jar)
         }
     }
@@ -134,52 +134,52 @@ commonClasspath = {
 // XXX -- NATIVE
     def localPlatformLibAdded = false
     platformDir = new File("${basedir}/lib/${PlatformUtils.platform}")
-    if(platformDir.exists()) {
+    if (platformDir.exists()) {
         debug "  ${platformDir.absolutePath}"
         fileset(dir: platformDir.absolutePath)
         localPlatformLibAdded = true
     }
     resolveResources("file:${pluginsHome}/*/lib/${PlatformUtils.platform}").each { platformPluginLib ->
-        if(platformPluginLib.file.exists()) {
+        if (platformPluginLib.file.exists()) {
             debug "  ${platformPluginLib.file.absolutePath}"
             fileset(dir: platformPluginLib.file.absolutePath)
         }
     }
     def localPlatformNativeAdded = false
     def platformLibDir = new File("${basedir}/lib/${PlatformUtils.platform}/native")
-    if(platformLibDir.exists()) {
+    if (platformLibDir.exists()) {
         debug "  ${platformLibDir.absolutePath}"
         fileset(dir: platformLibDir.absolutePath)
         localPlatformNativeAdded = true
     }
     for (pluginLibDir in pluginLibDirs) {
         platformLibDir = new File("${pluginLibDir}/lib/${PlatformUtils.platform}/native")
-        if(platformLibDir.exists()) {
+        if (platformLibDir.exists()) {
             debug "  ${platformLibDir.absolutePath}"
             fileset(dir: platformLibDir.absolutePath)
         }
     }
 
-    if(is64Bit) {
+    if (is64Bit) {
         platformDir = new File("${basedir}/lib/${PlatformUtils.platform[0..-3]}")
-        if(!localPlatformLibAdded && platformDir.exists()) {
+        if (!localPlatformLibAdded && platformDir.exists()) {
             debug "  ${platformDir.absolutePath}"
             fileset(dir: platformDir.absolutePath)
         }
         resolveResources("file:${pluginsHome}/*/lib/${PlatformUtils.platform[0..-3]}").each { platformPluginLib ->
-            if(platformPluginLib.file.exists()) {
+            if (platformPluginLib.file.exists()) {
                 debug "  ${platformPluginLib.file.absolutePath}"
                 fileset(dir: platformPluginLib.file.absolutePath)
             }
         }
         platformLibDir = new File("${basedir}/lib/${PlatformUtils.platform[0..-3]}/native")
-        if(!localPlatformNativeAdded && platformLibDir.exists()) {
+        if (!localPlatformNativeAdded && platformLibDir.exists()) {
             debug "  ${platformLibDir.absolutePath}"
             fileset(dir: platformLibDir.absolutePath)
         }
         for (pluginLibDir in pluginLibDirs) {
             platformLibDir = new File("${pluginLibDir}/lib/${PlatformUtils.platform[0..-3]}/native")
-            if(platformLibDir.exists()) {
+            if (platformLibDir.exists()) {
                 debug "  ${platformLibDir.absolutePath}"
                 fileset(dir: platformLibDir.absolutePath)
             }
@@ -194,9 +194,9 @@ compileClasspath = {
     commonClasspath.call()
 
     def dependencies = griffonSettings.compileDependencies
-    if(dependencies) {
-        for(File f in dependencies) {
-            if(f) {
+    if (dependencies) {
+        for (File f in dependencies) {
+            if (f) {
                 debug "  ${f.absolutePath}"
                 pathelement(location: f.absolutePath)
             }
@@ -210,9 +210,9 @@ testClasspath = {
     commonClasspath.call()
 
     def dependencies = griffonSettings.testDependencies
-    if(dependencies) {
-        for(File f in dependencies) {
-            if(f) {
+    if (dependencies) {
+        for (File f in dependencies) {
+            if (f) {
                 debug "  ${f.absolutePath}"
                 pathelement(location: f.absolutePath)
             }
@@ -223,13 +223,13 @@ testClasspath = {
     pathelement(location: "${griffonSettings.testResourcesDir}")
     debug "  ${griffonSettings.testClassesDir}/shared"
     debug "  ${griffonSettings.testResourcesDir}"
-    if(hasCliSources) {
+    if (hasCliSources) {
         pathelement(location: cliClassesDirPath)
         debug "  $cliClassesDirPath"
     }
 
     for (pluginTestJar in getPluginTestFiles()) {
-        if(pluginTestJar.file.exists()) {
+        if (pluginTestJar.file.exists()) {
             debug "  ${pluginTestJar.file.absolutePath}"
             file(file: pluginTestJar.file.absolutePath)
         }
@@ -242,9 +242,9 @@ runtimeClasspath = {
     commonClasspath.call()
 
     def dependencies = griffonSettings.runtimeDependencies
-    if(dependencies) {        
-        for(File f in dependencies) {
-            if(f) {
+    if (dependencies) {
+        for (File f in dependencies) {
+            if (f) {
                 debug "  ${f.absolutePath}"
                 pathelement(location: f.absolutePath)
             }
@@ -267,10 +267,10 @@ void setClasspath() {
     // Make sure the following code is only executed once.
     if (classpathSet) return
 
-    if(isApplicationProject || isPluginProject) {
-        if(!(new File(classesDir.absolutePath).exists())) ant.mkdir(dir: classesDir.absolutePath)
-        if(!(new File("${griffonSettings.testClassesDir}/shared").exists())) ant.mkdir(dir: "${griffonSettings.testClassesDir}/shared")
-        if(!(griffonSettings.testResourcesDir.exists())) ant.mkdir(dir: griffonSettings.testResourcesDir)
+    if (isApplicationProject || isPluginProject) {
+        if (!(new File(classesDir.absolutePath).exists())) ant.mkdir(dir: classesDir.absolutePath)
+        if (!(new File("${griffonSettings.testClassesDir}/shared").exists())) ant.mkdir(dir: "${griffonSettings.testClassesDir}/shared")
+        if (!(griffonSettings.testResourcesDir.exists())) ant.mkdir(dir: griffonSettings.testResourcesDir)
     }
 
     ant.path(id: "griffon.compile.classpath", compileClasspath)
@@ -289,7 +289,7 @@ void setClasspath() {
         //rootLoader?.addURL(dir.URL)
     }
     cpath << classesDirPath << File.pathSeparator
-    
+
     for (jar in jarFiles) {
         cpath << jar.file.absolutePath << File.pathSeparator
         addUrlIfNotPresent rootLoader, jar.file
@@ -303,7 +303,7 @@ void setClasspath() {
     compConfig.setClasspath(cpath.toString());
     compConfig.sourceEncoding = "UTF-8"
 
-    if(isApplicationProject || isPluginProject) {
+    if (isApplicationProject || isPluginProject) {
         // if(!resourcesDir.exists()) ant.mkdir(dir: resourcesDirPath)
         // if(!griffonSettings.testResourcesDir.exists()) ant.mkdir(dir: griffonSettings.testResourcesDir)
         addUrlIfNotPresent rootLoader, resourcesDirPath
@@ -314,26 +314,26 @@ void setClasspath() {
 }
 
 addUrlIfNotPresent = { to, what ->
-    if(!to || !what) return
+    if (!to || !what) return
     def urls = to.URLs.toList()
-    switch(what.class) {
-         case URL: what = new File(what.toURI()); break
-         case String: what = new File(what); break
-         case GString: what = new File(what.toString()); break
-         case File: break; // ok
-         default:
-             println "Don't know how to deal with $what as it is not an URL nor a File"
-             System.exit(1)
+    switch (what.class) {
+        case URL: what = new File(what.toURI()); break
+        case String: what = new File(what); break
+        case GString: what = new File(what.toString()); break
+        case File: break; // ok
+        default:
+            println "Don't know how to deal with $what as it is not an URL nor a File"
+            System.exit(1)
     }
 
-    if(what.directory && !what.exists()) what.mkdirs()
+    if (what.directory && !what.exists()) what.mkdirs()
     def url = what.toURI().toURL()
-    if(!urls.contains(url) && (what.directory || !urls.find{it.path.endsWith(what.name)})) {
+    if (!urls.contains(url) && (what.directory || !urls.find {it.path.endsWith(what.name)})) {
         to.addURL(url)
     }
 }
 
 dirNotEmpty = { Map args ->
-    if(!args.dir.exists()) retunr false
+    if (!args.dir.exists()) return false
     return ant.fileset(args).size() > 0
 }

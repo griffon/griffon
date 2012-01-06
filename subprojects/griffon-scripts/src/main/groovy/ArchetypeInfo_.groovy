@@ -20,10 +20,8 @@ import org.codehaus.griffon.artifacts.model.Archetype
  * @author Andres Almiray
  */
 
-includeTargets << griffonScript('_GriffonArtifacts')
-
 target(archetypeInfo: 'Displays information on a Griffon archetype') {
-    depends(parseArguments, configureProxy)
+    depends(configureProxy)
 
     selectArtifactRepository()
 

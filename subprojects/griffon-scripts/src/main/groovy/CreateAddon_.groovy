@@ -24,8 +24,7 @@
 
 import griffon.util.GriffonUtil
 
-includeTargets << griffonScript("Init")
-includeTargets << griffonScript("CreateIntegrationTest")
+includeTargets << griffonScript('CreateIntegrationTest')
 
 /**
  * Stuff this addon does:
@@ -34,19 +33,17 @@ includeTargets << griffonScript("CreateIntegrationTest")
  * * tweaks griffon-app/conf/BuildConfig.groovy to have griffon.jars.jarName set (don't change)
  * * Adds copy libs events for the destDir
  */
-target('default': "Creates an Addon for a plugin") {
-    depends(parseArguments)
-
+target(createAddon: "Creates an Addon for a plugin") {
     if (metadataFile.exists()) {
         if (!isPluginProject) {
-            event("StatusFinal", ["CAnnot create an Addon in a non-plugin project."])
+            event("StatusFinal", ["Cannot create an Addon in a non-plugin project."])
             exit(1)
         } else {
             checkVersion()
             pluginName = isPluginProject.name - 'GriffonPlugin.groovy'
         }
     } else {
-        includeTargets << griffonScript("_GriffonCreateProject")
+        includeTargets << griffonScript('_GriffonCreateProject')
         projectType = 'plugin'
         createPlugin()
     }
@@ -97,6 +94,7 @@ eventSetClasspath = { cl ->
 }
 """
 }
+setDefaultTarget(createAddon)
 
 def generateTempVar(String textToSearch, String prefix = "tmp", String suffix = "") {
     int i = 1;

@@ -20,11 +20,7 @@ import org.codehaus.griffon.artifacts.model.Plugin
  * @author Andres Almiray
  */
 
-includeTargets << griffonScript('_GriffonArtifacts')
-
 target(pluginInfo: 'Displays information on a Griffon plugin') {
-    depends(parseArguments, configureProxy)
-
     selectArtifactRepository()
 
     if (argsMap.params) {

@@ -104,7 +104,7 @@ class RemoteArtifactRepository extends AbstractArtifactRepository {
                 }
             }
         } catch (Exception e) {
-            if (LOG.warnEnabled) LOG.warn("Could not list artifacts of type ${type}", GriffonExceptionHandler.sanitize(e))
+            if (LOG.warnEnabled) LOG.warn("[${this.name}] Could not list artifacts of type ${type}", GriffonExceptionHandler.sanitize(e))
         }
         artifacts
     }
@@ -117,7 +117,7 @@ class RemoteArtifactRepository extends AbstractArtifactRepository {
                 artifact = parseArtifactFromJSON(type, response.data)
             }
         } catch (Exception e) {
-            if (LOG.warnEnabled) LOG.warn("Could not locate artifact ${type}:${name}", GriffonExceptionHandler.sanitize(e))
+            if (LOG.warnEnabled) LOG.warn("[${this.name}] Could not locate artifact ${type}:${name}", GriffonExceptionHandler.sanitize(e))
         }
         artifact
     }
@@ -137,7 +137,7 @@ class RemoteArtifactRepository extends AbstractArtifactRepository {
                 file.bytes = response.data.bytes
             }
         } catch (Exception e) {
-            if (LOG.warnEnabled) LOG.warn("Could not download artifact ${type}:${name}:${version}", GriffonExceptionHandler.sanitize(e))
+            if (LOG.warnEnabled) LOG.warn("[${this.name}] Could not download artifact ${type}:${name}:${version}", GriffonExceptionHandler.sanitize(e))
             throw e
         }
         file
@@ -197,7 +197,7 @@ class RemoteArtifactRepository extends AbstractArtifactRepository {
             session.disconnect()
         } catch (Exception e) {
             GriffonExceptionHandler.sanitize(e)
-            if (LOG.warnEnabled) LOG.warn("Could not upload artifact ${file}", e)
+            if (LOG.warnEnabled) LOG.warn("[${this.name}] Could not upload artifact ${file}", e)
             throw e
         }
         true

@@ -14,12 +14,17 @@
  * limitations under the License.
  */
 
+import org.codehaus.griffon.artifacts.model.Plugin
+
 /**
- * Gant script that handles the installation of Griffon plugins
- *
- * @author Graeme Rocher (Grails 0.4)
- * @author Sergey Nebolsin (Grails 0.4)
+ * @author Andres Almiray
  */
-includeTargets << griffonScript("_GriffonPlugins")
+
+target(installPlugin: "Installs a plugin for the given URL or name and version") {
+    depends(configureProxy)
+
+    ant.mkdir(dir: pluginsBase)
+    installArtifact(Plugin.TYPE)
+}
 
 setDefaultTarget(installPlugin)

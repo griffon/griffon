@@ -37,7 +37,7 @@ target(bootstrap: 'Loads and configures a Griffon instance') {
     loadApp()
 }
 
-target(loadApp:'Loads the Griffon application object') {
+target(loadApp: 'Loads the Griffon application object') {
     depends(prepackage)
     event('AppLoadStart', ['Loading Griffon Application'])
 
@@ -73,17 +73,17 @@ setupRuntimeJars = {
 
 // XXX -- NATIVE
     platformDir = new File(jardir.absolutePath, platform)
-    if(platformDir.exists()) {
-	    debug("Platform specific jars ($platform):")
+    if (platformDir.exists()) {
+        debug("Platform specific jars ($platform):")
         platformDir.eachFileMatch(~/.*\.jar/) {f ->
             runtimeJars += f
             debug("  $f.name")
         }
     }
-    
+
     platformDir2 = new File(jardir.absolutePath, platform[0..-3])
-    if(is64Bit && platformDir2.exists()) {
-	    debug("Platform specific jars (${platform[0..-3]}):")
+    if (is64Bit && platformDir2.exists()) {
+        debug("Platform specific jars (${platform[0..-3]}):")
         platformDir2.eachFileMatch(~/.*\.jar/) {f ->
             runtimeJars += f
             debug("  $f.name")
@@ -101,12 +101,12 @@ setupJavaOpts = { includeNative = true ->
     def env = System.getProperty(Environment.KEY)
     javaOpts << "-D${Environment.KEY}=${env}"
     javaOpts << "-D${RunMode.KEY}=${RunMode.current}"
-    javaOpts << "-Dgriffon.start.dir='"+jardir.parentFile.absolutePath+"'"
-    if(System.getProperty(GRIFFON_FULL_STACKTRACE)) {
-       javaOpts << "-D${GRIFFON_FULL_STACKTRACE}=${System.properties[GRIFFON_FULL_STACKTRACE]}"
+    javaOpts << "-Dgriffon.start.dir='" + jardir.parentFile.absolutePath + "'"
+    if (System.getProperty(GRIFFON_FULL_STACKTRACE)) {
+        javaOpts << "-D${GRIFFON_FULL_STACKTRACE}=${System.properties[GRIFFON_FULL_STACKTRACE]}"
     }
-    if(System.getProperty(GRIFFON_EXCEPTION_OUTPUT)) {
-       javaOpts << "-D${GRIFFON_EXCEPTION_OUTPUT}=${System.properties[GRIFFON_EXCEPTION_OUTPUT]}"
+    if (System.getProperty(GRIFFON_EXCEPTION_OUTPUT)) {
+        javaOpts << "-D${GRIFFON_EXCEPTION_OUTPUT}=${System.properties[GRIFFON_EXCEPTION_OUTPUT]}"
     }
 
     if (buildConfig.griffon.app?.javaOpts) {
@@ -124,12 +124,12 @@ setupJavaOpts = { includeNative = true ->
     File nativeLibDir = new File(platformDir.absolutePath, 'native')
     platformDir2 = new File(jardir.absolutePath, platform[0..-3])
     File nativeLibDir2 = new File(platformDir2.absolutePath, 'native')
-    if(includeNative) {
+    if (includeNative) {
         String libraryPath = normalizePathQuotes(System.getProperty('java.library.path'))
-        if(nativeLibDir.exists()) {
+        if (nativeLibDir.exists()) {
             libraryPath = libraryPath + File.pathSeparator + normalizePathQuotes(nativeLibDir.absolutePath)
         }
-        if(is64Bit && nativeLibDir2.exists()) {
+        if (is64Bit && nativeLibDir2.exists()) {
             libraryPath = libraryPath + File.pathSeparator + normalizePathQuotes(nativeLibDir2.absolutePath)
         }
         System.setProperty('java.library.path', libraryPath)
@@ -142,6 +142,6 @@ setupJavaOpts = { includeNative = true ->
 
 normalizePathQuotes = { s ->
     s.split(File.pathSeparator).collect { String path ->
-        (path.startsWith('"') && path.endsWith('"')) || (path.startsWith("'") && path.endsWith("'")) ? path[1..-2]: path
+        (path.startsWith('"') && path.endsWith('"')) || (path.startsWith("'") && path.endsWith("'")) ? path[1..-2] : path
     }.join(File.pathSeparator)
 }

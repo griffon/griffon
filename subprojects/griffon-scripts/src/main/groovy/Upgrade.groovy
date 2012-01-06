@@ -24,12 +24,9 @@
 import org.codehaus.griffon.commons.GriffonContext
 import org.codehaus.griffon.plugins.GriffonPluginUtils
 
-includeTargets << griffonScript("_GriffonInit")
-includeTargets << griffonScript("_GriffonClean")
+includeTargets << griffonScript('_GriffonClean')
 
-target('default': "Upgrades a Griffon application from a previous version of Griffon") {
-    depends(parseArguments)
-
+target(upgrade: "Upgrades a Griffon application from a previous version of Griffon") {
     boolean force = argsMap.force || !isInteractive ?: false
 
     if (appGriffonVersion != griffonVersion) {
@@ -41,8 +38,8 @@ target('default': "Upgrades a Griffon application from a previous version of Gri
         WARNING: Your application appears to be configured for Griffon ${griffonVersion} already.
         Are you sure you want to continue?
                    """,
-                    validargs: "y,n",
-                    addproperty: "griffon.overwrite.warning")
+                validargs: "y,n",
+                addproperty: "griffon.overwrite.warning")
 
         def answer = ant.antProject.properties."griffon.overwrite.warning"
         if (answer == "n") exit(0)
@@ -54,8 +51,8 @@ target('default': "Upgrades a Griffon application from a previous version of Gri
         WARNING: This target will upgrade an older Griffon application to ${griffonVersion}.
         Are you sure you want to continue?
                    """,
-                    validargs: "y,n",
-                    addproperty: "griffon.upgrade.warning")
+                validargs: "y,n",
+                addproperty: "griffon.upgrade.warning")
 
         def answer = ant.antProject.properties."griffon.upgrade.warning"
         if (answer == "n") exit(0)
@@ -67,7 +64,7 @@ target('default': "Upgrades a Griffon application from a previous version of Gri
 
     ant.sequential {
         delete(dir: "${basedir}/tmp", failonerror: false)
- 
+
         createStructure()
 
         griffonUnpack(dest: basedir, src: "griffon-shared-files.jar")
@@ -103,7 +100,7 @@ target('default': "Upgrades a Griffon application from a previous version of Gri
                     if (signJars == [:]) it.writeLine "${indent}griffon.jars.sign=true // jars were automatically signed in Griffon 0.0"
                     if (extensionJars == [:]) it.writeLine "${indent}griffon.extensions.jarUrls = [] // remote jars were not possible in Griffon 0.1"
                     if (extensionJNLPs == [:]) it.writeLine "${indent}griffon.extensions.jnlpUrls = [] // remote jars were not possible in Griffon 0.1"
-                    if (signingKeyFile == [:] || signingKeyStore == [:])  {
+                    if (signingKeyFile == [:] || signingKeyStore == [:]) {
                         it.writeLine "// may safely be removed, but calling upgrade will restore it"
                         it.writeLine "${indent}def env = griffon.util.Environment.current.name"
                         it.writeLine "${indent}signingkey.params.sigfile='GRIFFON' + env"
@@ -182,7 +179,7 @@ target('default': "Upgrades a Griffon application from a previous version of Gri
                 }
 
                 if (startupGroups == [:]) {
-                    configObject.application.autoShutdown=true
+                    configObject.application.autoShutdown = true
                 }
             }
 
@@ -200,23 +197,22 @@ target('default': "Upgrades a Griffon application from a previous version of Gri
             // GRIFFON-147 make sure group names that contain hyphens are correctly scaped
             def groupsToFix = []
             configObject.mvcGroups.each { k, v ->
-                if(k.contains('-')) groupsToFix << k
+                if (k.contains('-')) groupsToFix << k
             }
             groupsToFix.each { k ->
-               def v = configObject.mvcGroups.remove(k)
-               configObject.mvcGroups.put("'$k'".toString(), v)
+                def v = configObject.mvcGroups.remove(k)
+                configObject.mvcGroups.put("'$k'".toString(), v)
             }
 
             configObject.writeTo(new FileWriter(new File(baseFile, '/griffon-app/conf/Application.groovy')))
         }
 
-
         // remove GriffonApplicationHelper from Initialize.groovy
         def initializeFile = new File(baseFile, '/griffon-app/lifecycle/Initialize.groovy')
-	    if (initializeFile.exists()) {
+        if (initializeFile.exists()) {
             initializeFile.text -= 'import griffon.util.GriffonPlatformHelper\n'
             initializeFile.text -= 'GriffonPlatformHelper.tweakForNativePlatform(app)\n'
-	    }
+        }
 
         touch(file: "${basedir}/griffon-app/i18n/messages.properties")
 
@@ -243,7 +239,7 @@ target('default': "Upgrades a Griffon application from a previous version of Gri
     // Create BuildConfig.groovy if it does not exist
     def bcf = new File(baseFile, '/griffon-app/conf/BuildConfig.groovy')
     def cf = new File(baseFile, '/griffon-app/conf/Config.groovy')
-    if(!bcf.exists()) {
+    if (!bcf.exists()) {
         bcf.text = cf.text
         bcf.append("""griffon.project.dependency.resolution = {
     // inherit Griffon' default dependencies
@@ -347,7 +343,7 @@ log4j = {
     // ensure all .jnlp files support remote jnlps
     // add splash to jnlps
     // set icons for jnlps
-    fileset(dir:"${basedir}/griffon-app/conf/", includes:"**/*.jnlp").each {
+    fileset(dir: "${basedir}/griffon-app/conf/", includes: "**/*.jnlp").each {
         def fileText = it.getFile().getText()
         ant.replace(file: it.toString()) {
             if (!fileText.contains('href="@jnlpFileName@"')) {
@@ -355,35 +351,35 @@ log4j = {
             }
             replacefilter(token: '<j2se version="1.5+"/>', value: '<j2se version="1.5+" @memoryOptions@/>')
             replacefilter(token: '<title>@griffonAppName@</title>',
-                          value: '<title>@griffon.application.title@</title>')
+                    value: '<title>@griffon.application.title@</title>')
             replacefilter(token: '<vendor>@griffonAppName@</vendor>',
-                          value: '<vendor>@griffon.application.vendor@</vendor>')
+                    value: '<vendor>@griffon.application.vendor@</vendor>')
             replacefilter(token: '<!--<homepage href="http://app.example.com/"/>-->',
-                          value: '<homepage href="@griffon.application.homepage@"/>')
+                    value: '<homepage href="@griffon.application.homepage@"/>')
             replacefilter(token: '<description>@griffonAppName@</description>',
-                          value: '<description>@griffon.application.description.complete@</description>')
+                    value: '<description>@griffon.application.description.complete@</description>')
             replacefilter(token: '<description kind="one-line">@griffonAppName@</description>',
-                          value: '<description kind="one-line">@griffon.application.description.oneline@</description>')
+                    value: '<description kind="one-line">@griffon.application.description.oneline@</description>')
             replacefilter(token: '<description kind="short">@griffonAppName@</description>',
-                          value: '<description kind="short">@griffon.application.description.minimal@</description>')
+                    value: '<description kind="short">@griffon.application.description.minimal@</description>')
             replacefilter(token: '<description kind="tooltip">@griffonAppName@</description>',
-                          value: '<description kind="tooltip">@griffon.application.description.tooltip@</description>')
+                    value: '<description kind="tooltip">@griffon.application.description.tooltip@</description>')
             replacefilter(token: '<!--<icon href="http://example.com/icon.gif" kind="splash" width="" height=""/>-->',
-                          value: '<icon href="@griffon.application.icon.fallback@" kind="default" width="@griffon.application.icon.fallback.width@" height="@griffon.application.icon.fallback.height@"/>')
+                    value: '<icon href="@griffon.application.icon.fallback@" kind="default" width="@griffon.application.icon.fallback.width@" height="@griffon.application.icon.fallback.height@"/>')
             replacefilter(token: '<!--<icon href="http://example.com/icon.gif" kind="default" width="" height=""/>-->',
-                          value: '<icon href="@griffon.application.icon.splash@" kind="default" width="@griffon.application.icon.splash.width@" height="@griffon.application.icon.splash.height@"/>')
+                    value: '<icon href="@griffon.application.icon.splash@" kind="default" width="@griffon.application.icon.splash.width@" height="@griffon.application.icon.splash.height@"/>')
             replacefilter(token: '<!--<icon href="http://example.com/icon.gif" kind="shortcut" width="16" height="16"/>-->',
-                          value: '<icon href="@griffon.application.icon.menu@" kind="default" width="@griffon.application.icon.menu.width@" height="@griffon.application.icon.menu.height@"/>')
+                    value: '<icon href="@griffon.application.icon.menu@" kind="default" width="@griffon.application.icon.menu.width@" height="@griffon.application.icon.menu.height@"/>')
             replacefilter(token: '<!--<icon href="http://example.com/icon.gif" kind="shortcut" width="32" height="32"/>-->',
-                          value: '<icon href="@griffon.application.icon.desktop@" kind="default" width="@griffon.application.icon.desktop.width@" height="@griffon.application.icon.desktop.height@"/>')
+                    value: '<icon href="@griffon.application.icon.desktop@" kind="default" width="@griffon.application.icon.desktop.width@" height="@griffon.application.icon.desktop.height@"/>')
             if (!fileText.contains('@jnlpExtensions@')) {
-            	replacefilter(token: '</resources>', value: '@jnlpExtensions@ \n</resources>')
+                replacefilter(token: '</resources>', value: '@jnlpExtensions@ \n</resources>')
             }
         }
     }
 
     // update the icons in the html
-    fileset(dir:"${basedir}/griffon-app/conf/", includes:"**/*.html").each {
+    fileset(dir: "${basedir}/griffon-app/conf/", includes: "**/*.html").each {
         ant.replace(file: it.toString()) {
             replacefilter(token: "image:'griffon.jpeg'", value: "image:'griffon.png'")
         }
@@ -412,12 +408,12 @@ log4j = {
     }
 
     def wrapperConfig = new File(baseFile, '/wrapper/griffon-wrapper.properties')
-    if(isPost09 && wrapperConfig.exists()) {
+    if (isPost09 && wrapperConfig.exists()) {
         def wrapperProps = new Properties()
         wrapperConfig.eachLine {l ->
-            if(l.startsWith('#')) return
+            if (l.startsWith('#')) return
             List kv = l.tokenize('=')
-            kv[1] = kv[1].replace('\\','')
+            kv[1] = kv[1].replace('\\', '')
             wrapperProps.put(kv[0], kv[1])
         }
         wrapperProps.put('distributionVersion', griffonVersion)
@@ -431,3 +427,5 @@ log4j = {
 
     event("StatusFinal", ["Project upgraded"])
 }
+
+setDefaultTarget(upgrade)
