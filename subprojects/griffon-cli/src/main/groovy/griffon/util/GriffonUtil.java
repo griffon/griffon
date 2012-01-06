@@ -91,7 +91,7 @@ public class GriffonUtil extends GriffonNameUtils {
                 }
 
                 if (isBlank(version)) {
-                    LOG.error("Unable to read Griffon version from MANIFEST.MF. Are you sure the griffon-core jar is on the classpath? ");
+                    LOG.error("Unable to read Griffon version from MANIFEST.MF. Are you sure the griffon-core jar is on the classpath?");
                     version = "Unknown";
                 }
             } catch (Exception e) {

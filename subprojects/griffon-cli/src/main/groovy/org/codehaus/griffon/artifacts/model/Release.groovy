@@ -42,7 +42,6 @@ class Release {
                 comment: comment,
                 checksum: checksum,
                 date: date,
-                artifact: artifact,
                 dependencies: dependencies,
                 file: file
         ]

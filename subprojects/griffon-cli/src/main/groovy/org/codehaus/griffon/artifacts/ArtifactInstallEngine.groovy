@@ -204,7 +204,7 @@ class ArtifactInstallEngine {
         if (LOG.debugEnabled) {
             String installed = installedDependencies.values().collect([]) {printDependencyTree(it, true)}.join('\n')
             String target = dependencies.collect([]) {printDependencyTree(it, true)}.join('\n')
-            LOG.debug("Dependency evictions & conflicts outcome:\n- INSTALLED -\n${installed}\n- MISSING -\n${target}")
+            LOG.debug("Dependency evictions & conflicts outcome:\n-= INSTALLED =-\n${installed}\n-= MISSING =-\n${target}")
         }
 
         if (dependencies.grep {it.conflicted}) {

@@ -154,7 +154,14 @@ class ArtifactDependencyResolver {
                 matches.sort {a, b -> b.dependency.major <=> a.dependency.major}
                 def winner = matches[0]
                 if (matches.find {it.dependency.major != element.dependency.major}) {
-                    matches.each {it.dependency.conflicted = it.processed = true}
+                    if (winner.dependency.installed) {
+                        matches.each {
+                            if (it.version != winner.version) it.dependency.evicted = true
+                            it.processed = true
+                        }
+                    } else {
+                        matches.each {it.dependency.conflicted = it.processed = true}
+                    }
                     continue
                 }
                 matches.sort {a, b -> b.dependency.minor <=> a.dependency.minor}
@@ -169,8 +176,9 @@ class ArtifactDependencyResolver {
                 if (matches.size() > 1) {
                     List alreadyInstalled = matches.findAll {it.dependency.installed}
                     if (matches.size() == alreadyInstalled.size()) continue
-                    matches[0].dependency.evicted = false
-                    matches[1..-1].each {it.dependency.evicted = true}
+                    winner = matches[0]
+                    winner.dependency.evicted = false
+                    matches.each {it.dependency.evicted = it != winner}
                 }
             }
         }
@@ -188,12 +196,11 @@ class ArtifactDependencyResolver {
         installPlan
     }
 
-    private void processEvictionsAndConflicts(ArtifactDependency artifactDependency, List<ArtifactDependency> list) {
-        for (dependency in artifactDependency.dependencies) {
-            processEvictionsAndConflicts(dependency, list)
-        }
-        if (!artifactDependency.evicted && !artifactDependency.conflicted && !artifactDependency.installed) {
-            list << artifactDependency
+    private void processEvictionsAndConflicts(ArtifactDependency dependency, List<ArtifactDependency> list) {
+        dependency.dependencies.each {processEvictionsAndConflicts(it, list)}
+        if (!dependency.evicted && !dependency.conflicted && !dependency.installed &&
+                !list.find {it.name == dependency.name && it.version == dependency.version}) {
+            list << dependency
         }
     }
 
