@@ -6,6 +6,7 @@ log4j = {
     }
 
     error 'org.codehaus.griffon',
-          'org.springframework'
+          'org.springframework',
+          'groovyx.net'
     warn  'griffon'
 }
