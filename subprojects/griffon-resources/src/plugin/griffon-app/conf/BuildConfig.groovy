@@ -4,9 +4,7 @@ griffon.project.dependency.resolution = {
     }
     log "warn" // log level of Ivy resolver, either 'error', 'warn', 'info', 'debug' or 'verbose'
     repositories {
-        griffonPlugins()
         griffonHome()
-        griffonCentral()
 
         // uncomment the below to enable remote dependency resolution
         // from public Maven repositories
@@ -16,9 +14,16 @@ griffon.project.dependency.resolution = {
         //mavenRepo "http://repository.codehaus.org"
         //mavenRepo "http://download.java.net/maven/2/"
         //mavenRepo "http://repository.jboss.com/maven2/"
+
+        // implicit variables
+        // pluginName:    plugin's name
+        // pluginVersion: plugin's version
+        // pluginDirPath: plugin's install path
+
+        flatDir name: "${pluginName}LibDir", dirs: ["${pluginDirPath}/lib"]
     }
     dependencies {
-        // specify dependencies here under either 'build', 'compile', 'runtime', 'test' or 'provided' scopes eg.
+        // specify dependencies here under either 'build', 'compile', 'runtime' or 'test' scopes eg.
 
         // runtime 'mysql:mysql-connector-java:5.1.5'
     }

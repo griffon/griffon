@@ -404,8 +404,6 @@ class ArtifactInstallEngine {
                 }
             }
         }
-        // List pluginJars = new File("${pluginInstallPath}/lib").listFiles().findAll {it.name.endsWith('.jar')}
-        // addJarsToRootLoader(pluginJars)
     }
 
     void uninstall(String type, String name, String version = null) {
