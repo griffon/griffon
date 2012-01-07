@@ -30,7 +30,6 @@ import org.slf4j.LoggerFactory
 import org.springframework.core.io.Resource
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver
 import static org.codehaus.griffon.artifacts.ArtifactUtils.*
-import org.codehaus.griffon.artifacts.ArtifactUtils
 
 /**
  * <p>Represents the project paths and other build settings
@@ -1032,5 +1031,31 @@ class BuildSettings extends AbstractBuildSettings {
 
         }
         return baseDir.canonicalFile
+    }
+
+    void addJarsToRootLoader(Collection pluginJars) {
+        ClassLoader loader = getClass().classLoader.rootLoader
+        for (File jar: pluginJars) {
+            addUrlIfNotPresent loader, jar
+        }
+    }
+
+    private void addUrlIfNotPresent(ClassLoader to, what) {
+        if (!to || !what) return
+        def urls = to.URLs.toList()
+        switch (what.class) {
+            case URL: what = new File(what.toURI()); break
+            case String: what = new File(what); break
+            case GString: what = new File(what.toString()); break
+            case File: break; // ok
+            default:
+                return
+        }
+
+        if (what.directory && !what.exists()) what.mkdirs()
+        def url = what.toURI().toURL()
+        if (!urls.contains(url) && (what.directory || !urls.find {it.path.endsWith(what.name)})) {
+            to.addURL(url)
+        }
     }
 }

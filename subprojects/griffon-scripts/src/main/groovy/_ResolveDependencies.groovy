@@ -31,4 +31,6 @@ target('resolveDependencies': '') {
     if (!artifactInstallEngine.resolvePluginDependencies()) {
         exit(1)
     }
+
+    pluginSettings.resolveAndAddAllPluginDependencies()
 }

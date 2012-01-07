@@ -395,44 +395,17 @@ class ArtifactInstallEngine {
             def callable = settings.pluginDependencyHandler()
             callable.call(new File(pluginInstallPath), pluginName, pluginVersion)
             IvyDependencyManager dependencyManager = settings.dependencyManager
-            // dependencyManager.resetGriffonPluginsResolver()
             for (conf in ['compile', 'build', 'test', 'runtime']) {
                 def resolveReport = dependencyManager.resolveDependencies(IvyDependencyManager."${conf.toUpperCase()}_CONFIGURATION")
                 if (resolveReport.hasError()) {
                     throw new InstallArtifactException("Plugin ${pluginName}-${pluginVersion} has missing JAR dependencies.")
                 } else {
-                    addJarsToRootLoader resolveReport.allArtifactsReports.localFile
+                    settings.addJarsToRootLoader resolveReport.allArtifactsReports.localFile
                 }
             }
         }
         // List pluginJars = new File("${pluginInstallPath}/lib").listFiles().findAll {it.name.endsWith('.jar')}
         // addJarsToRootLoader(pluginJars)
-    }
-
-    private void addJarsToRootLoader(Collection pluginJars) {
-        ClassLoader loader = getClass().classLoader.rootLoader
-        for (File jar: pluginJars) {
-            addUrlIfNotPresent loader, jar
-        }
-    }
-
-    private void addUrlIfNotPresent(ClassLoader to, what) {
-        if (!to || !what) return
-        def urls = to.URLs.toList()
-        switch (what.class) {
-            case URL: what = new File(what.toURI()); break
-            case String: what = new File(what); break
-            case GString: what = new File(what.toString()); break
-            case File: break; // ok
-            default:
-                return
-        }
-
-        if (what.directory && !what.exists()) what.mkdirs()
-        def url = what.toURI().toURL()
-        if (!urls.contains(url) && (what.directory || !urls.find {it.path.endsWith(what.name)})) {
-            to.addURL(url)
-        }
     }
 
     void uninstall(String type, String name, String version = null) {

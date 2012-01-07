@@ -18,8 +18,10 @@ package griffon.util
 
 import java.util.concurrent.ConcurrentHashMap
 import org.codehaus.gant.GantBinding
+import org.codehaus.griffon.artifacts.InstallArtifactException
 import org.codehaus.griffon.artifacts.model.Plugin
 import org.codehaus.griffon.artifacts.model.Release
+import org.codehaus.griffon.resolve.IvyDependencyManager
 import org.springframework.core.io.FileSystemResource
 import org.springframework.core.io.Resource
 import static griffon.util.GriffonNameUtils.getHyphenatedName
@@ -34,7 +36,7 @@ import static org.codehaus.griffon.artifacts.ArtifactUtils.*
  */
 class PluginSettings {
     final BuildSettings settings
-    private Map<String, Resource[]> cache = new ConcurrentHashMap<String, Resource[]>()
+    private Map<String, Object> cache = new ConcurrentHashMap<String, Object>()
     private Map<String, Resource> nameToPluginDirMap = new ConcurrentHashMap<String, Resource>()
 
     PluginSettings(BuildSettings settings) {
@@ -60,6 +62,19 @@ class PluginSettings {
             cache['pluginDirectories'] = pluginDirectories
         }
         pluginDirectories
+    }
+
+    Map<String, Release> getPlugins() {
+        Map<String, Release> plugins = cache['plugins']
+        if (!plugins) {
+            plugins = [:]
+            getPluginDirectories().each { Resource pluginDir ->
+                Release release = getArtifactRelease(Plugin.TYPE, pluginDir.file)
+                plugins[release.artifact.name] = release
+            }
+            cache['plugins'] = plugins
+        }
+        plugins
     }
 
     Resource[] getPluginScripts() {
@@ -140,6 +155,43 @@ class PluginSettings {
     Resource[] getPluginTestJars() {
         resolveForEachPlugin('pluginTestJars') { pluginDir ->
             resolveResources("file//${pluginDir}/lib/test/*.jar")
+        }
+    }
+
+    void doWithPlugins(Closure closure) {
+        getPlugins().each { name, release ->
+            closure(name, release)
+        }
+    }
+
+    void resolveAndAddAllPluginDependencies() {
+        Map<String, List<File>> configurations = [:]
+
+        doWithPlugins { String pluginName, Release release ->
+            String pluginVersion = release.version
+            String pluginInstallPath = getInstallPathFor(Plugin.TYPE, pluginName, pluginVersion)
+            List<File> dependencyDescriptors = [
+                    new File("$pluginInstallPath/dependencies.groovy"),
+                    new File("$pluginInstallPath/plugin-dependencies.groovy")
+            ]
+
+            if (dependencyDescriptors.any {it.exists()}) {
+                def callable = settings.pluginDependencyHandler()
+                callable.call(new File(pluginInstallPath), pluginName, pluginVersion)
+                IvyDependencyManager dependencyManager = settings.dependencyManager
+                for (conf in ['compile', 'build', 'test', 'runtime']) {
+                    def resolveReport = dependencyManager.resolveDependencies(IvyDependencyManager."${conf.toUpperCase()}_CONFIGURATION")
+                    if (resolveReport.hasError()) {
+                        throw new InstallArtifactException("Plugin ${pluginName}-${pluginVersion} has missing JAR dependencies.")
+                    } else {
+                        configurations.get(conf, []).addAll(resolveReport.allArtifactsReports.localFile)
+                    }
+                }
+            }
+        }
+
+        configurations.each { conf, list ->
+            settings.addJarsToRootLoader list.unique()
         }
     }
 

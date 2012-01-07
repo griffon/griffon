@@ -307,9 +307,14 @@ doForAllPlatforms = { callback ->
 }
 
 logError = { String message, Throwable t ->
-    GriffonUtil.deepSanitize(t)
-    t.printStackTrace()
-    event('StatusError', ["$message: ${t.message}"])
+    if (t) {
+        GriffonUtil.deepSanitize(t)
+        t.printStackTrace()
+        event 'StatusError', ["$message: ${t.message}"]
+    }
+    else {
+        event 'StatusError', message
+    }
 }
 
 logErrorAndExit = { String message, Throwable t ->
