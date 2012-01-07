@@ -22,8 +22,6 @@ import org.codehaus.griffon.artifacts.ArtifactRepositoryRegistry
  */
 
 target(listRepositories: 'Lists all configured repositories') {
-    depends(configureProxy)
-
     listRepositoriesHeader()
     ArtifactRepositoryRegistry.instance.withRepositories { String name, ArtifactRepository artifactRepository ->
         println formatRepositoryForPrint(artifactRepository)

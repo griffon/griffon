@@ -21,7 +21,6 @@ import org.codehaus.groovy.runtime.StackTraceUtils
  *
  * @author Graeme Rocher (Grails 0.4)
  */
-includeTargets << griffonScript('_PluginDependencies')
 
 ant.taskdef(name: 'groovyc', classname: 'org.codehaus.groovy.ant.Groovyc')
 ant.taskdef(name: 'griffonc', classname: 'org.codehaus.griffon.compiler.GriffonCompiler')
@@ -158,14 +157,10 @@ target(compile: "Implementation of compilation phase") {
 }
 
 target(compileSharedTests: "Compiles shared test sources") {
-    for (pluginDir in pluginSettings.pluginDirectories.file) {
-        def pluginDistDir = new File(pluginDir, 'dist')
-        if (pluginDistDir.exists()) {
-            ant.fileset(dir: pluginDistDir, includes: '*-test.jar').each { jar ->
-                addUrlIfNotPresent classLoader, jar.file
-            }
-        }
+    pluginSettings.pluginTestJars.each { jarResource ->
+        addUrlIfNotPresent classLoader, jarResource.file
     }
+
     compileSharedTestSrc(basedir)
     def metainfDir = new File("${basedir}/griffon-app/conf/metainf")
     boolean hasMetainf = hasFiles(dir: metainfDir, excludes: '**/*.svn/**, **/CVS/**')

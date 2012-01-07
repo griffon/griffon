@@ -85,6 +85,7 @@ class Release {
 
         String fileType = file.name[file.name.lastIndexOf('.')..-1]
 
+        // TODO LEGACY - remove this code before 1.0
         if (!(fileType in ['.json', '.xml'])) {
             throw new IllegalArgumentException("Cannot create Release based on file $file")
         }
@@ -97,6 +98,7 @@ class Release {
                         return makeFromJSON(type, new JsonSlurper().parseText(file.text))
                         break
                     case '.xml':
+                        // TODO LEGACY - remove this code before 1.0
                         return makeFromXML(type, new XmlSlurper().parse(file))
                         break
                 }
@@ -106,6 +108,7 @@ class Release {
         }
     }
 
+    // TODO LEGACY - remove this code before 1.0
     static Release makeFromXML(String type, xml) {
         switch (type) {
             case Plugin.TYPE:

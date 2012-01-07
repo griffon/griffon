@@ -139,9 +139,11 @@ class IvyDependencyManager extends AbstractIvyDependencyManager implements Depen
      * Resets the Griffon plugin resolver if it is used
      */
     void resetGriffonPluginsResolver() {
+        /*
        def resolver = chainResolver.resolvers.find { it.name == 'griffonPlugins' }
        chainResolver.resolvers.remove(resolver)
        chainResolver.resolvers.add(new GriffonPluginsDirectoryResolver(buildSettings, ivySettings))
+       */
     }
     /**
      * Returns true if the application has any dependencies that are not inherited
@@ -200,7 +202,7 @@ class IvyDependencyManager extends AbstractIvyDependencyManager implements Depen
             // log level of Ivy resolver, either 'error', 'warn', 'info', 'debug' or 'verbose'
             log "warn"
             repositories {
-                griffonPlugins()
+                // griffonPlugins()
                 griffonHome()
             }
             dependencies {
@@ -257,7 +259,6 @@ class IvyDependencyManager extends AbstractIvyDependencyManager implements Depen
                 // dependencies needed for running tests
                 test "junit:junit:4.10",
                      "org.hamcrest:hamcrest-core:1.1"
-                     "org.codehaus.griffon:griffon-cli:$griffonVersion"
 
                 // logging
                 runtime("log4j:log4j:1.2.16",
@@ -582,6 +583,7 @@ class IvyDependencyManager extends AbstractIvyDependencyManager implements Depen
                 }
             }
 
+            /*
             def installedPlugins = metadata?.getInstalledPlugins()
             if(installedPlugins) {
                 for(entry in installedPlugins) {
@@ -598,6 +600,7 @@ class IvyDependencyManager extends AbstractIvyDependencyManager implements Depen
                     }
                 }
             }
+            */
         }
     }
 
@@ -819,6 +822,7 @@ class IvyDomainSpecificLanguageEvaluator {
     }
 
     void griffonPlugins() {
+        /*
         if(isResolverNotAlreadyDefined('griffonPlugins')) {
            repositoryData << ['type':'griffonPlugins', name:"griffonPlugins"]
            if(buildSettings!=null) {
@@ -826,6 +830,7 @@ class IvyDomainSpecificLanguageEvaluator {
                addToChainResolver(pluginResolver)
            }
         }
+        */
     }
 
     void griffonHome() {
@@ -919,22 +924,24 @@ class IvyDomainSpecificLanguageEvaluator {
      * against non-Maven repositories 
      */
     void griffonRepo(String url, String name=null) {
-        if(isResolverNotAlreadyDefined(name ?: url)) {
-            repositoryData << ['type':'griffonRepo', url:url]
-            def urlResolver = new GriffonRepoResolver(name ?: url, new URL(url) )
-            urlResolver.addArtifactPattern("${url}/griffon-[artifact]/tags/RELEASE_*/griffon-[artifact]-[revision].[ext]")
-            urlResolver.settings = ivySettings
-            urlResolver.latestStrategy = new org.apache.ivy.plugins.latest.LatestTimeStrategy()
-            urlResolver.changingPattern = ".*"
-            urlResolver.setCheckmodified(true)
-            addToChainResolver(urlResolver)
-        }
+        // if(isResolverNotAlreadyDefined(name ?: url)) {
+        //     repositoryData << ['type':'griffonRepo', url:url]
+        //     def urlResolver = new GriffonRepoResolver(name ?: url, new URL(url) )
+        //     urlResolver.addArtifactPattern("${url}/griffon-[artifact]/tags/RELEASE_*/griffon-[artifact]-[revision].[ext]")
+        //     urlResolver.settings = ivySettings
+        //     urlResolver.latestStrategy = new org.apache.ivy.plugins.latest.LatestTimeStrategy()
+        //     urlResolver.changingPattern = ".*"
+        //     urlResolver.setCheckmodified(true)
+        //     addToChainResolver(urlResolver)
+        // }
     }
 
     void griffonCentral() {
+        /*
         if(isResolverNotAlreadyDefined('griffonCentral')) {
             griffonRepo("http://svn.codehaus.org/griffon/plugins", "griffonCentral")
         }
+        */
     }
 
     void mavenCentral() {

@@ -21,8 +21,6 @@ import org.codehaus.griffon.artifacts.model.Plugin
  */
 
 target(installPlugin: "Installs a plugin for the given URL or name and version") {
-    depends(configureProxy)
-
     ant.mkdir(dir: pluginsBase)
     installArtifact(Plugin.TYPE)
 }

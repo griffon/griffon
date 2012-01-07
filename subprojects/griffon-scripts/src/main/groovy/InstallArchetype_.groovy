@@ -21,8 +21,6 @@ import org.codehaus.griffon.artifacts.model.Archetype
  */
 
 target(installArchetype: "Installs an archetype for the given URL or name and version") {
-    depends(configureProxy)
-
     ant.mkdir(dir: archetypesBase)
     installArtifact(Archetype.TYPE)
 }

@@ -18,9 +18,11 @@ package org.codehaus.griffon.cli.support;
 import griffon.build.GriffonBuildListener;
 import griffon.util.BuildSettings;
 import griffon.util.GriffonUtil;
+import griffon.util.PluginSettings;
 import groovy.lang.*;
 import org.apache.tools.ant.BuildEvent;
-import org.codehaus.griffon.artifacts.PluginUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.core.io.Resource;
 
 import java.io.File;
@@ -29,10 +31,13 @@ import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import static org.codehaus.groovy.runtime.typehandling.DefaultTypeTransformation.castToBoolean;
+
 /**
  * @author Graeme Rocher (Grails 1.1)
  */
 public class GriffonBuildEventListener extends BuildListenerAdapter {
+    private static final Logger LOG = LoggerFactory.getLogger(GriffonBuildEventListener.class);
     private static final Pattern EVENT_NAME_PATTERN = Pattern.compile("event([A-Z]\\w*)");
     private GroovyClassLoader classLoader;
     private Binding binding;
@@ -70,10 +75,12 @@ public class GriffonBuildEventListener extends BuildListenerAdapter {
             loadEventsScript(findEventsScript(new File(buildSettings.getUserHome(), ".griffon/scripts")));
             loadEventsScript(findEventsScript(new File(buildSettings.getBaseDir(), "scripts")));
 
-            // PluginBuildSettings pluginSettings = (PluginBuildSettings) binding.getVariable("pluginSettings");
-            for (Resource pluginBase : PluginUtils.getSortedPluginDirectories()) {
+            for (Map.Entry<String, Resource> plugin : PluginSettings.getSortedPluginDirectories().entrySet()) {
                 try {
-                    loadEventsScript(findEventsScript(new File(pluginBase.getFile(), "scripts")));
+                    if (!castToBoolean(binding.getVariables().get("events_loaded_" + plugin.getKey()))) {
+                        loadEventsScript(findEventsScript(new File(plugin.getValue().getFile(), "scripts")));
+                        binding.setVariable("events_loaded_" + plugin.getKey(), true);
+                    }
                 } catch (IOException ex) {
                     throw new RuntimeException(ex);
                 }
@@ -95,6 +102,9 @@ public class GriffonBuildEventListener extends BuildListenerAdapter {
 
     public void loadEventsScript(File eventScript) {
         if (eventScript != null) {
+            if (LOG.isDebugEnabled()) {
+                LOG.debug("Loading event handlers from " + eventScript.getAbsolutePath());
+            }
             try {
                 Class scriptClass = classLoader.parseClass(eventScript);
                 if (scriptClass != null) {
@@ -132,7 +142,7 @@ public class GriffonBuildEventListener extends BuildListenerAdapter {
         if (!f.exists()) {
             f = new File(dir, "Events.groovy");
             if (f.exists()) {
-                GriffonUtil.deprecated("Use of 'Events.groovy' is DEPRECATED.  Please rename to '_Events.groovy'.");
+                GriffonUtil.deprecated("Use of 'Events.groovy' is DEPRECATED. Please rename to '_Events.groovy'.");
             }
         }
 
@@ -143,7 +153,7 @@ public class GriffonBuildEventListener extends BuildListenerAdapter {
         String targetName = buildEvent.getTarget().getName();
         String eventName = GriffonUtil.getClassNameRepresentation(targetName) + "Start";
 
-        buildSettings.debug(">> " + targetName);
+        buildSettings.debug(">>>> " + targetName);
         timings.put(targetName, System.currentTimeMillis());
         triggerEvent(eventName, binding);
     }
@@ -164,6 +174,9 @@ public class GriffonBuildEventListener extends BuildListenerAdapter {
      * @param arguments The arguments
      */
     public void triggerEvent(String eventName, Object... arguments) {
+        if (LOG.isTraceEnabled()) {
+            LOG.trace("Triggering event " + eventName);
+        }
         List<Closure> handlers = globalEventHooks.get(eventName);
         if (handlers != null) {
             for (Closure handler : handlers) {
@@ -187,7 +200,7 @@ public class GriffonBuildEventListener extends BuildListenerAdapter {
 
         triggerEvent(eventName, binding);
         Long timing = System.currentTimeMillis() - timings.get(targetName);
-        buildSettings.debug("<< " + targetName + " [" + timing + "ms]");
+        buildSettings.debug("<<<< " + targetName + " [" + timing + "ms]");
     }
 
     protected void addGriffonBuildListener(String listenerClassName) {

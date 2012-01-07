@@ -25,7 +25,9 @@ import griffon.util.GriffonUtil
 includeTargets << griffonScript('_GriffonCreateArtifacts')
 
 target(createScript: "Creates a Griffon Gant Script") {
-    def type = "Script"
+    depends(checkVersion)
+
+    String type = "Script"
     promptForName(type: type)
     argsMap.skipPackagePrompt = true
     def (pkg, name) = extractArtifactName(argsMap['params'][0])

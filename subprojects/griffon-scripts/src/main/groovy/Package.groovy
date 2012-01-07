@@ -32,7 +32,7 @@ includeTargets << griffonScript('_GriffonPackage')
 ant.taskdef(name: 'fileMerge', classname: 'org.codehaus.griffon.ant.taskdefs.FileMergeTask')
 
 target('package': "Packages a Griffon application.") {
-    depends(checkVersion, parseArguments, createConfig)
+    depends(checkVersion, createConfig)
 
     // create general dist dir
     distDir = buildConfig.griffon.dist.dir ?: "${basedir}/dist"

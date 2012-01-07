@@ -55,7 +55,6 @@ class ArtifactInstallEngine {
     Closure errorHandler = { String msg -> throw new ScriptExitException(msg) }
     Closure eventHandler = { String name, String msg -> println msg }
     Closure pluginScriptRunner
-    Closure postInstallEvent
     boolean interactive
 
     ArtifactInstallEngine(BuildSettings settings, Metadata metadata, AntBuilder ant) {
@@ -314,6 +313,9 @@ class ArtifactInstallEngine {
             case Plugin.TYPE:
                 variableStore["${getPropertyNameForLowerCaseHyphenSeparatedName(artifactName)}PluginDir"] = new File(artifactInstallPath).absoluteFile
                 variableStore["${getPropertyNameForLowerCaseHyphenSeparatedName(artifactName)}PluginVersion"] = release.version
+                if (new File(artifactInstallPath, 'plugin.xml').exists()) {
+                    generateDependencyDescriptorFor(artifactInstallPath, artifactName, releaseVersion)
+                }
                 resolvePluginJarDependencies(releaseName, artifactInstallPath)
                 if (!settings.isPluginProject()) {
                     def installScript = new File("${artifactInstallPath}/scripts/_Install.groovy")
@@ -335,32 +337,73 @@ class ArtifactInstallEngine {
                     break
             }
             metadata.persist()
+            metadata.reload()
         }
 
         if (!installedArtifacts.contains(artifactInstallPath)) {
             installedArtifacts << artifactInstallPath
         }
 
-        if (type == Plugin.TYPE) {
-            postInstallEvent?.call(artifactInstallPath)
-        }
-
+        eventHandler "${capitalize(type)}Installed", [type, artifactName, releaseVersion, artifactInstallPath]
         eventHandler 'StatusFinal', "Installed ${type} '${releaseName}' in ${artifactInstallPath}"
     }
 
+    private void generateDependencyDescriptorFor(String pluginDirPath, String name, String version) {
+        File addonJar = new File(pluginDirPath, "addon/griffon-${name}-addon-${version}.jar")
+        File cliJar = new File(pluginDirPath, "addon/griffon-${name}-cli-${version}.jar")
+        File testJar = new File(pluginDirPath, "dist/griffon-${name}-${version}-test.jar")
+
+        String compile = ''
+        if (addonJar.exists()) {
+            compile = "compile(group: '${name}', name: 'griffon-${name}-addon', version: '${version}')"
+        }
+        if (cliJar.exists()) {
+            compile += "\n\t\tcompile(group: '${name}', name: 'griffon-${name}-cli', version: '${version}')"
+        }
+        String test = ''
+        if (testJar.exists()) {
+            test = "test(group: '${name}', name: 'griffon-${name}', version: ${version}', classifier: 'test')"
+        }
+
+        File dependencyDescriptor = new File("${pluginDirPath}/plugin-dependencies.groovy")
+        dependencyDescriptor.text = """
+        |griffon.project.dependency.resolution = {
+        |    repositories {
+        |        flatDir(name: '${name}PluginLib', dirs: [
+        |            '${pluginDirPath}/dist',
+        |            '${pluginDirPath}/addon'
+        |        ])
+        |    }
+        |
+        |    dependencies {
+        |        ${compile.trim()}
+        |        $test
+        |    }
+        |}""".stripMargin().trim()
+    }
+
     private void resolvePluginJarDependencies(String pluginName, String pluginInstallPath) {
-        File pluginDependencyDescriptor = new File("$pluginInstallPath/dependencies.groovy")
-        if (pluginDependencyDescriptor.exists()) {
+        List<File> dependencyDescriptors = [
+                new File("$pluginInstallPath/dependencies.groovy"),
+                new File("$pluginInstallPath/plugin-dependencies.groovy")
+        ]
+
+        if (dependencyDescriptors.any {it.exists()}) {
             eventHandler 'StatusUpdate', 'Resolving plugin JAR dependencies'
             def callable = settings.pluginDependencyHandler()
-            callable.call(new File(pluginInstallPath))
+            callable.call(pluginName, new File(pluginInstallPath))
             IvyDependencyManager dependencyManager = settings.dependencyManager
-            dependencyManager.resetGriffonPluginsResolver()
-            def resolveReport = dependencyManager.resolveDependencies(IvyDependencyManager.RUNTIME_CONFIGURATION)
-            if (resolveReport.hasError()) {
-                throw new InstallArtifactException("Plugin ${pluginName} has missing JAR dependencies.")
-            } else {
-                // addJarsToRootLoader resolveReport.allArtifactsReports.localFile
+            // dependencyManager.resetGriffonPluginsResolver()
+            for (conf in ['compile', 'build', 'test', 'runtime']) {
+                def resolveReport = dependencyManager.resolveDependencies(IvyDependencyManager."${conf.toUpperCase()}_CONFIGURATION")
+                if (resolveReport.hasError()) {
+                    throw new InstallArtifactException("Plugin ${pluginName} has missing JAR dependencies.")
+                } else {
+                    resolveReport.allArtifactsReports.each { r ->
+                        println "[$conf] ${r.localFile}"
+                    }
+                    // addJarsToRootLoader resolveReport.allArtifactsReports.localFile
+                }
             }
         }
         /*
@@ -442,6 +485,9 @@ class ArtifactInstallEngine {
         if (type == Plugin.TYPE) {
             // check platforms
             List<String> requiredPlatforms = release.artifact.platforms*.lowercaseName
+            if (LOG.debugEnabled) {
+                LOG.debug("Plugin ${artifactNameAndVersion} requires platforms: ${requiredPlatforms}")
+            }
             if (requiredPlatforms) {
                 if (!(PlatformUtils.isCompatible(requiredPlatforms*.lowercaseName))) {
                     eventHandler 'StatusError', "Required platforms are [${requiredPlatforms}], current one is ${PlatformUtils.platform}"
@@ -449,11 +495,20 @@ class ArtifactInstallEngine {
                 }
             }
 
+            metadata.propertyNames().each { property ->
+                println "${property} ${metadata[property]}"
+            }
+
             // check toolkits
             List<String> requiredToolkits = release.artifact.toolkits*.lowercaseName
-            println requiredToolkits
+            if (LOG.debugEnabled) {
+                LOG.debug("Plugin ${artifactNameAndVersion} requires toolkits: ${requiredToolkits}")
+            }
             if (requiredToolkits) {
                 List<String> supportedToolkits = metadata.getApplicationToolkits().toList()
+                if (LOG.debugEnabled) {
+                    LOG.debug("Supported toolkits: ${supportedToolkits}")
+                }
                 List<String> unsupportedToolkits = supportedToolkits - requiredToolkits
                 // 2nd condition is a special case for plugins that provide toolkit support
                 if (unsupportedToolkits && unsupportedToolkits != [release.artifact.name]) {

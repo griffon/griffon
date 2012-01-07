@@ -26,7 +26,7 @@ includeTargets << griffonScript('_GriffonCompile')
 
 
 target('generateViewScript': "Generates a view script from an existing class") {
-    depends(checkVersion, classpath, compile)
+    depends(checkVersion, compile)
 
     promptForName(type: "Class to Proxy View for:")
     String klassName = argsMap["params"][0]

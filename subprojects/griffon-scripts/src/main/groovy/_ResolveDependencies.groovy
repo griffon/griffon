@@ -27,11 +27,8 @@ _resolve_dependencies_called = true
 includeTargets << griffonScript('_GriffonArtifacts')
 
 target('resolveDependencies': '') {
-    depends(parseArguments)
-
     ArtifactInstallEngine artifactInstallEngine = createArtifactInstallEngine()
     if (!artifactInstallEngine.resolvePluginDependencies()) {
-        installError = true
         exit(1)
     }
 }

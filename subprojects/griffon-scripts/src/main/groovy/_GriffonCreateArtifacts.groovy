@@ -237,10 +237,10 @@ extractArtifactName = { name ->
 
 target(resolveArchetype: '') {
     if (!archetypeName && !archetypeVersion) {
-        for (String key: Metadata.current.stringPropertyNames()) {
-            if (!key.startsWith('archetype.')) continue
-            archetypeName = key[10..-1].toString()
-            archetypeVersion = Metadata.current[key]
+        Map<String, String> archetype = Metadata.current.getArchetype()
+        if (archetype) {
+            archetypeName = archetype.name
+            archetypeVersion = archetype.version
         }
     }
 

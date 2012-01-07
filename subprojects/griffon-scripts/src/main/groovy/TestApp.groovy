@@ -26,7 +26,7 @@ includeTargets << griffonScript('_GriffonTest')
 TEST_PHASE_AND_TYPE_SEPARATOR = ':'
 
 target(testApp: "Run a Griffon applications unit tests") {
-    depends(checkVersion, configureProxy, cleanTestReports)
+    depends(checkVersion, cleanTestReports)
 
     // The test targeting patterns
     def testTargeters = []

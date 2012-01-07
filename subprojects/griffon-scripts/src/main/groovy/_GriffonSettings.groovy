@@ -15,7 +15,6 @@
  */
 
 import org.codehaus.griffon.cli.ScriptExitException
-import org.codehaus.griffon.plugins.GriffonPluginUtils
 import org.springframework.core.io.ClassPathResource
 import org.springframework.core.io.FileSystemResource
 import org.springframework.core.io.Resource
@@ -64,14 +63,6 @@ pluginsBase = pluginsHome.toString().replaceAll('\\\\', '/')
 archetypesBase = "${griffonWorkDir}/archetypes".toString().replaceAll('\\\\', '/')
 archetypeName = ''
 archetypeVersion = ''
-
-// Used to find out about plugins used by this app. The plugin manager
-// is configured later when its created (see _PluginDependencies).
-// pluginSettings = new PluginBuildSettings(griffonSettings)
-
-// While some code still relies on GriffonPluginUtils, make sure it
-// uses the same PluginBuildSettings instance as the scripts.
-GriffonPluginUtils.pluginBuildSettings = pluginSettings
 
 // Load the application metadata (application.properties)
 metadataFile = new File("${basedir}/application.properties")
@@ -136,10 +127,10 @@ else {
 configSlurper = new ConfigSlurper(griffonEnv)
 configSlurper.setBinding(
         griffonHome: griffonHome,
-        appName:     griffonAppName,
-        appVersion:  griffonAppVersion,
-        userHome:    userHome,
-        basedir:     basedir)
+        appName: griffonAppName,
+        appVersion: griffonAppVersion,
+        userHome: userHome,
+        basedir: basedir)
 
 applicationConfigFile = new File(basedir, 'griffon-app/conf/Application.groovy')
 builderConfigFile = new File(basedir, 'griffon-app/conf/Builder.groovy')

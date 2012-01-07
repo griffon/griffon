@@ -21,8 +21,6 @@ import org.codehaus.griffon.artifacts.model.Plugin
  */
 
 target(listPlugins: 'Lists all plugins available in an artifact repository') {
-    depends(configureProxy)
-
     listArtifacts(Plugin.TYPE)
 }
 

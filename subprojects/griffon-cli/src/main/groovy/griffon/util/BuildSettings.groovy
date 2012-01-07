@@ -20,7 +20,7 @@ import org.apache.ivy.plugins.repository.TransferEvent
 import org.apache.ivy.plugins.repository.TransferListener
 import org.apache.ivy.util.DefaultMessageLogger
 import org.apache.ivy.util.Message
-import org.codehaus.griffon.artifacts.ArtifactUtils
+import griffon.util.PluginSettings
 import org.codehaus.griffon.artifacts.model.Plugin
 import org.codehaus.griffon.resolve.IvyDependencyManager
 import org.codehaus.groovy.runtime.StackTraceUtils
@@ -116,11 +116,6 @@ class BuildSettings extends AbstractBuildSettings {
      * The name of the system property for multiple {@link #buildListeners}.
      */
     public static final String BUILD_LISTENERS = "griffon.build.listeners"
-
-    /**
-     * The name of the system property for enabling verbose compilation {@link #verboseCompile}.
-     */
-    public static final String VERBOSE_COMPILE = "griffon.project.compile.verbose"
 
     /**
      * The name of the system property for {@link #sourceEncoding}.
@@ -226,21 +221,11 @@ class BuildSettings extends AbstractBuildSettings {
     private static final PathMatchingResourcePatternResolver RESOLVER = new PathMatchingResourcePatternResolver()
 
     /**
-     * A Set of plugin names and versions that represent the default set of plugins installed when creating Griffon applications
-     */
-    Map defaultPluginMap
-
-    /**
      * List of jars provided in the applications 'lib' directory
      */
     List applicationJars = []
 
     List buildListeners = []
-
-    /**
-     * Setting for whether or not to enable verbose compilation, can be overridden via -verboseCompile(=[true|false])?
-     */
-    boolean verboseCompile = false
 
     public void resetDependencies() {
         resetCompileDependencies()
@@ -391,6 +376,7 @@ class BuildSettings extends AbstractBuildSettings {
     private boolean sourceEncodingSet
 
     final Map<String, String> systemProperties = [:]
+    public final PluginSettings pluginSettings
 
     BuildSettings() {
         this(null, null)
@@ -406,6 +392,7 @@ class BuildSettings extends AbstractBuildSettings {
 
     BuildSettings(File griffonHome, File baseDir) {
         userHome = new File(System.getProperty("user.home"))
+        pluginSettings = new PluginSettings(this)
 
         if (griffonHome) this.griffonHome = griffonHome
 
@@ -460,7 +447,7 @@ class BuildSettings extends AbstractBuildSettings {
             try {
                 return griffonScriptClosure(name)
             } catch (ClassNotFoundException cnfe) {
-                Resource[] potentialScripts = resolveResourcesClosure(pluginScriptsPattern(name))
+                Resource[] potentialScripts = pluginSettings.getAvailableScripts(name)
                 switch (potentialScripts.size()) {
                     case 1: return potentialScripts[0].file
                     case 0: throw new IllegalArgumentException("No script matches the name $name")
@@ -471,15 +458,11 @@ class BuildSettings extends AbstractBuildSettings {
         }
 
         includePluginScriptClosure = {String pluginName, String scriptName ->
-            File pluginHome = ArtifactUtils.findArtifactDirForName(Plugin.TYPE, pluginName)
+            File pluginHome = findArtifactDirForName(Plugin.TYPE, pluginName)
             if (!pluginHome) return
             File scriptFile = new File(pluginHome, "/scripts/${scriptName}.groovy")
             if (scriptFile.exists()) includeTargets << scriptFile
         }
-    }
-
-    private String pluginScriptsPattern(String name) {
-        'file:' + getProjectPluginsDir().path + '/*/scripts/' + name + '.groovy'
     }
 
     private def loadBuildPropertiesFromClasspath(Properties buildProps) {
@@ -584,11 +567,6 @@ class BuildSettings extends AbstractBuildSettings {
     }
 
     Object[] getBuildListeners() { buildListeners.toArray() }
-
-    void setVerboseCompile(boolean flag) {
-        verboseCompile = flag
-        verboseCompileSet = true
-    }
 
     void setSourceEncoding(String encoding) {
         sourceEncoding = encoding
@@ -701,7 +679,7 @@ class BuildSettings extends AbstractBuildSettings {
         return gcl
     }
 
-    def configureDependencyManager(ConfigObject config) {
+    void configureDependencyManager(ConfigObject config) {
         Message.setDefaultLogger new DefaultMessageLogger(Message.MSG_WARN)
 
         Metadata metadata = Metadata.current
@@ -729,20 +707,24 @@ class BuildSettings extends AbstractBuildSettings {
         }
 
         def dependencyConfig = config.griffon.project.dependency.resolution
+        /*
         if (!dependencyConfig) {
             dependencyConfig = config.griffon.global.dependency.resolution
             dependencyManager.inheritsAll = true
         }
+        */
         if (dependencyConfig) {
             dependencyManager.parseDependencies dependencyConfig
         }
 
+        /*
         // All projects need the plugins to be resolved.
         def handlePluginDirectory = pluginDependencyHandler()
         def pluginDirs = getPluginDirectories()
         for (dir in pluginDirs) {
             handlePluginDirectory(dir)
         }
+        */
     }
 
     Closure pluginDependencyHandler() {
@@ -752,33 +734,30 @@ class BuildSettings extends AbstractBuildSettings {
     Closure pluginDependencyHandler(IvyDependencyManager dependencyManager) {
         ConfigSlurper pluginSlurper = createConfigSlurper()
 
-        return { File dir ->
-            String pluginName = dir.name
-            def matcher = pluginName =~ /(\S+?)-(\d\S+)/
-            pluginName = matcher ? matcher[0][1] : pluginName
-            // Try BuildConfig.groovy first, which should
-            // work for in-place plugins.
-            def path = dir.absolutePath
-            def pluginDependencyDescriptor = new File("${path}/griffon-app/conf/BuildConfig.groovy")
+        return { String pluginName, File dir ->
+            String path = dir.absolutePath
+            List<File> dependencyDescriptors = [
+                    new File("$path/dependencies.groovy"),
+                    new File("$path/plugin-dependencies.groovy")
+            ]
 
-            if (!pluginDependencyDescriptor.exists()) {
-                // OK, that doesn't exist, so try dependencies.groovy.
-                pluginDependencyDescriptor = new File("$path/dependencies.groovy")
-            }
+            dependencyDescriptors.each { File dependencyDescriptor ->
+                if (dependencyDescriptor.exists()) {
+                    def gcl = obtainGroovyClassLoader()
 
-            if (pluginDependencyDescriptor.exists()) {
-                def gcl = obtainGroovyClassLoader()
-
-                try {
-                    Script script = gcl.parseClass(pluginDependencyDescriptor)?.newInstance()
-                    def pluginConfig = pluginSlurper.parse(script)
-                    def pluginDependencyConfig = pluginConfig.griffon.project.dependency.resolution
-                    if (pluginDependencyConfig instanceof Closure) {
-                        dependencyManager.parseDependencies(pluginName, pluginDependencyConfig)
+                    try {
+                        debug("Parsing dependencies from ${dependencyDescriptor}")
+                        Script script = gcl.parseClass(dependencyDescriptor)?.newInstance()
+                        if (script) {
+                            def pluginConfig = pluginSlurper.parse(script)
+                            def pluginDependencyConfig = pluginConfig.griffon.project.dependency.resolution
+                            if (pluginDependencyConfig instanceof Closure) {
+                                dependencyManager.parseDependencies(pluginName, pluginDependencyConfig)
+                            }
+                        }
+                    } catch (e) {
+                        println "WARNING: Dependencies cannot be resolved for plugin [$pluginName] due to error: ${e.message}"
                     }
-                }
-                catch (e) {
-                    println "WARNING: Dependencies cannot be resolved for plugin [$pluginName] due to error: ${e.message}"
                 }
             }
         }
@@ -836,7 +815,6 @@ class BuildSettings extends AbstractBuildSettings {
         if (!testReportsDirSet) testReportsDir = new File(getPropertyValue(PROJECT_TEST_REPORTS_DIR, props, "${projectTargetDir}/test-reports"))
         if (!docsOutputDirSet) docsOutputDir = new File(getPropertyValue(PROJECT_DOCS_OUTPUT_DIR, props, "${projectTargetDir}/docs"))
         if (!testSourceDirSet) testSourceDir = new File(getPropertyValue(PROJECT_TEST_SOURCE_DIR, props, "${baseDir}/test"))
-        if (!verboseCompileSet) verboseCompile = getPropertyValue(VERBOSE_COMPILE, props, '').toBoolean()
         if (!sourceEncodingSet) sourceEncoding = getPropertyValue(SOURCE_ENCODING, props, "UTF-8")
     }
 

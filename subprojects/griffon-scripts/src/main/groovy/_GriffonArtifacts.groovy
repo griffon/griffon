@@ -35,8 +35,6 @@ import static org.codehaus.griffon.artifacts.ArtifactUtils.isValidVersion
 if (getBinding().variables.containsKey('_griffon_artifacts_called')) return
 _griffon_artifacts_called = true
 
-// includeTargets << griffonScript('Init')
-
 artifactRepository = null
 
 selectArtifactRepository = {
@@ -377,27 +375,17 @@ doInstallFromFile = { type, file, md ->
     }
 }
 
-installError = false
 createArtifactInstallEngine = { Metadata md = metadata ->
-    installError = false
     ArtifactInstallEngine artifactInstallEngine = new ArtifactInstallEngine(griffonSettings, md, ant)
     artifactInstallEngine.pluginScriptRunner = runPluginScript
     artifactInstallEngine.eventHandler = { eventName, msg -> event(eventName, [msg]) }
     artifactInstallEngine.errorHandler = { msg ->
         event('StatusError', [msg])
-        installError = true
         // install or uninstalled too
         for (dir in artifactInstallEngine.installedArtifacts) {
             ant.delete(dir: dir, failonerror: false)
         }
         exit(1)
-    }
-
-    artifactInstallEngine.postInstallEvent = { pluginInstallPath ->
-        File pluginEvents = new File("${pluginInstallPath}/scripts/_Events.groovy")
-        if (pluginEvents.exists()) {
-            eventListener.loadEventsScript(pluginEvents)
-        }
     }
 
     artifactInstallEngine.interactive = isInteractive

@@ -87,7 +87,6 @@ resetBaseDirectory = { String basedir ->
     configFile = new File(basedir, 'griffon-app/conf/Config.groovy')
 
     // Reset the plugin stuff.
-    // pluginSettings.clearCache()
     pluginsHome = griffonSettings.projectPluginsDir.path
 }
 

@@ -27,7 +27,9 @@ _package_addon_called = true
 includeTargets << griffonScript('_GriffonPackage')
 
 target('packageAddon': "Packages a Griffon addon. Note: to package a plugin use 'griffon package-plugin'") {
-    depends(checkVersion, createStructure)
+    depends(checkVersion)
+    projectType = 'plugin'
+    createStructure()
 
     try {
         profile("compile") {
@@ -41,7 +43,7 @@ target('packageAddon': "Packages a Griffon addon. Note: to package a plugin use 
     addonJarDir = "${artifactPackageDirPath}/addon"
     ant.mkdir(dir: addonJarDir)
 
-    cliJarName = "griffon-${pluginName}-cli-${pluginVersion}.jar"
+    cliJarName = "griffon-${pluginName}-${pluginVersion}-compile.jar"
     if (cliSourceDir.exists()) {
         ant.jar(destfile: "$addonJarDir/$cliJarName") {
             fileset(dir: cliClassesDir)
@@ -57,7 +59,7 @@ target('packageAddon': "Packages a Griffon addon. Note: to package a plugin use 
     packageResources()
 
     File metainfDirPath = new File("${basedir}/griffon-app/conf/metainf")
-    addonJarName = "griffon-${pluginName}-addon-${pluginVersion}.jar"
+    addonJarName = "griffon-${pluginName}-${pluginVersion}-runtime.jar"
     ant.jar(destfile: "$addonJarDir/$addonJarName") {
         fileset(dir: classesDirPath) {
             exclude(name: 'Config*.class')

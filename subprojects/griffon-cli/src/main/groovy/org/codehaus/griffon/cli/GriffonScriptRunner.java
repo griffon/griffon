@@ -30,11 +30,10 @@ import org.codehaus.gant.GantBinding;
 import org.codehaus.griffon.artifacts.ArtifactRepositoryRegistry;
 import org.codehaus.griffon.artifacts.ArtifactUtils;
 import org.codehaus.griffon.artifacts.model.Plugin;
-import org.codehaus.griffon.artifacts.model.Release;
 import org.codehaus.griffon.cli.support.BuildListenerAdapter;
-import org.codehaus.griffon.resolve.IvyDependencyManager;
 import org.codehaus.griffon.runtime.logging.Log4jConfig;
 import org.codehaus.groovy.runtime.DefaultGroovyMethods;
+import org.springframework.core.io.Resource;
 
 import java.io.*;
 import java.lang.reflect.Method;
@@ -46,9 +45,8 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import static griffon.util.GriffonNameUtils.isBlank;
-import static java.util.Arrays.asList;
+import static java.util.Arrays.binarySearch;
 import static org.codehaus.griffon.artifacts.ArtifactUtils.getInstalledArtifacts;
-import static org.codehaus.griffon.cli.CommandLineConstants.KEY_INTERACTIVE_MODE;
 
 /**
  * Class that handles Griffon command line interface for running scripts
@@ -295,6 +293,7 @@ public class GriffonScriptRunner {
         setLoggingOptions();
         ArtifactRepositoryRegistry.getInstance().configureRepositories();
 
+        /*
         // Either run the script or enter interactive mode.
         if (script.name.equalsIgnoreCase("interactive")) {
             // Can't operate interactively in non-interactive mode!
@@ -309,6 +308,7 @@ public class GriffonScriptRunner {
             runInteractive();
             return 0;
         }
+        */
         return callPluginOrGriffonScript(script);
     }
 
@@ -341,6 +341,7 @@ public class GriffonScriptRunner {
     /**
      * Runs Griffon in interactive mode.
      */
+    /*
     private void runInteractive() {
         String message = "Interactive mode ready. Enter a Griffon command or type \"exit\" to quit interactive mode (hit ENTER to run the last command):\n";
 
@@ -399,6 +400,7 @@ public class GriffonScriptRunner {
             out.println("Command " + script.name + " completed in " + (end - now) + "ms");
         }
     }
+    */
 
     private final Map<String, CachedScript> scriptCache = new HashMap<String, CachedScript>();
     private final List<File> scriptsAllowedOutsideOfProject = new ArrayList<File>();
@@ -427,7 +429,7 @@ public class GriffonScriptRunner {
         URLClassLoader classLoader = createClassLoader(script, scriptCacheDir);
 
         List<File> potentialScripts;
-        List<File> allScripts = getAvailableScripts(settings);
+        Resource[] allScripts = settings.pluginSettings.getAvailableScripts(); //getAvailableScripts(settings);
         GantBinding binding;
         if (scriptCache.get(script.name) != null) {
             CachedScript cachedScript = scriptCache.get(script.name);
@@ -544,12 +546,20 @@ public class GriffonScriptRunner {
         return gant;
     }
 
-    private List<File> findPotentialScripts(ScriptAndArgs script, List<File> allScripts, GantBinding binding) {
+    private List<File> findPotentialScripts(ScriptAndArgs script, Resource[] allScripts, GantBinding binding) {
         List<File> potentialScripts;
         // Now find what scripts match the one requested by the user.
         boolean exactMatchFound = false;
         potentialScripts = new ArrayList<File>();
-        for (File scriptPath : allScripts) {
+        for (Resource resource : allScripts) {
+            File scriptPath = null;
+            try {
+                scriptPath = resource.getFile();
+            } catch (IOException e) {
+                GriffonExceptionHandler.sanitize(e);
+                settings.debug("Script location " + resource + " has been blacklisted => " + e);
+                continue;
+            }
             String scriptFileName = scriptPath.getName().substring(0, scriptPath.getName().length() - 7); // trim .groovy extension
             if (scriptFileName.endsWith("_")) {
                 scriptsAllowedOutsideOfProject.add(scriptPath);
@@ -645,10 +655,11 @@ public class GriffonScriptRunner {
         }
     }
 
-    public static String fixScriptName(String scriptName, List<File> allScripts) {
+    public static String fixScriptName(String scriptName, Resource[] allScripts) {
         try {
             Set<String> names = new HashSet<String>();
-            for (File script : allScripts) {
+            for (Resource resource : allScripts) {
+                File script = resource.getFile();
                 names.add(script.getName().substring(0, script.getName().length() - 7));
             }
             List<String> mostSimilar = CosineSimilarity.mostSimilar(scriptName, names);
@@ -689,7 +700,7 @@ public class GriffonScriptRunner {
 
             attempts++;
             if (attempts > 4) {
-                exitWithError("TODO");
+                exitWithError("Failed to make a correct choice. Aborting.");
             }
         }
     }
@@ -754,9 +765,8 @@ public class GriffonScriptRunner {
         c.setDelegate(binding);
         binding.setVariable("resolveResources", c);
         binding.setVariable("griffonSettings", settings);
-        PluginBuildSettings pluginBuildSettings = new PluginBuildSettings(settings);
-        binding.setVariable("pluginSettings", pluginBuildSettings);
-        pluginBuildSettings.initBinding(binding);
+        binding.setVariable("pluginSettings", settings.pluginSettings);
+        settings.pluginSettings.initBinding(binding);
 
         // Add other binding variables, such as Griffon version and environment.
         final File basedir = settings.getBaseDir();
@@ -806,6 +816,7 @@ public class GriffonScriptRunner {
     /**
      * Returns a list of all the executable Gant scripts available to this application.
      */
+    /*
     private static List<File> getAvailableScripts(BuildSettings settings) {
         List<File> scripts = new ArrayList<File>();
         if (settings.getGriffonHome() != null) {
@@ -822,6 +833,7 @@ public class GriffonScriptRunner {
 
         return scripts;
     }
+    */
 
     /**
      * Collects all the command scripts provided by the plugin contained
@@ -920,6 +932,7 @@ public class GriffonScriptRunner {
      * @param settings The build settings for this project.
      * @return A list of all known plugin directories, or an empty list if there are none.
      */
+    /*
     @SuppressWarnings("unchecked")
     public static List<File> listKnownPluginDirs(BuildSettings settings) {
         List<File> dirs = new ArrayList<File>();
@@ -929,6 +942,7 @@ public class GriffonScriptRunner {
 
         return dirs;
     }
+    */
 
     /**
      * Adds all the libraries in a plugin to the given list of URLs.
@@ -937,6 +951,7 @@ public class GriffonScriptRunner {
      * @param urls      The list of URLs to add the plugin JARs to.
      * @param settings
      */
+    /*
     private static void addPluginLibs(File pluginDir, List<URL> urls, BuildSettings settings) throws MalformedURLException {
         if (!pluginDir.exists()) return;
 
@@ -959,6 +974,7 @@ public class GriffonScriptRunner {
             addLibs(libDir, urls, excludes != null ? excludes : Collections.emptyList());
         }
     }
+    */
 
     /**
      * Adds all the JAR files in the given directory to the list of URLs. Excludes any
@@ -992,6 +1008,7 @@ public class GriffonScriptRunner {
      * basically check that the name of each directory looks about
      * right.
      */
+    /*
     private static File[] listPluginDirs(File dir) {
         File[] dirs = dir.listFiles(new FileFilter() {
             public boolean accept(File path) {
@@ -1003,6 +1020,7 @@ public class GriffonScriptRunner {
 
         return dirs == null ? new File[0] : dirs;
     }
+    */
 
     /**
      * <p>A Groovy RootLoader should be used to load GriffonScriptRunner,
@@ -1055,6 +1073,7 @@ public class GriffonScriptRunner {
      * @param pluginDir The directory containing the plugin.
      * @return The name of the plugin contained in the given directory.
      */
+    /*
     private static String getPluginName(File pluginDir) {
         // Get the plugin descriptor from the given directory and use
         // it to infer the name of the plugin.
@@ -1064,6 +1083,7 @@ public class GriffonScriptRunner {
         }
         return Release.makeFromFile(Plugin.TYPE, desc).getArtifact().getName();
     }
+    */
 
     /**
      * Contains details about a Griffon command invocation such as the
@@ -1089,8 +1109,8 @@ public class GriffonScriptRunner {
             this.gant = gant;
             // preload basic stuff that should always be there
             setupScript("_GriffonSettings");
-            setupScript("_GriffonEvents");
             setupScript("_GriffonArgParsing");
+            setupScript("_GriffonEvents");
             setupScript("_GriffonProxy");
             setupScript("_ResolveDependencies");
             File scriptFile = (File) binding.getVariable(VAR_SCRIPT_FILE);
@@ -1117,15 +1137,26 @@ public class GriffonScriptRunner {
             File scriptFile = (File) binding.getVariable(VAR_SCRIPT_FILE);
             if (defaultTargetName.equals(targetName)) {
                 List<String> targets = new ArrayList<String>();
-                if (isContextlessScriptName(scriptFile)) {
-                    // assure arguments were parsed before running the target
-                    targets.add("parseArguments");
-                } else {
-                    // attempt dependency/plugin resolution before running the target
+                targets.add("parseArguments");
+                if (binarySearch(CONFIGURE_PROXY_EXCLUSIONS, targetName) > -1) targets.add("configureProxy");
+                if (!isContextlessScriptName(scriptFile) &&
+                        binarySearch(RESOLVE_DEPENDENCIES_EXCLUSIONS, targetName) < 0) {
                     targets.add("resolveDependencies");
+                    targets.add("loadEventHooks");
                 }
+                settings.debug("** " + targets + " **");
                 gant.executeTargets("dispatch", targets);
             }
         }
+
+        private static String[] CONFIGURE_PROXY_EXCLUSIONS = {
+                "addProxy", "clearProxy", "removeProxy", "setProxy", "configureProxy",
+                "help", "integrateWith", "setVersion", "showHelp", "stats",
+                "createAddon", "createPlugin", "upgrade"
+        };
+
+        private static String[] RESOLVE_DEPENDENCIES_EXCLUSIONS = {
+                "integrateWith", "setVersion", "stats", "upgrade"
+        };
     }
 }

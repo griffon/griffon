@@ -21,8 +21,6 @@ import org.codehaus.griffon.artifacts.model.Archetype
  */
 
 target(archetypeInfo: 'Displays information on a Griffon archetype') {
-    depends(configureProxy)
-
     selectArtifactRepository()
 
     if (argsMap.params) {

@@ -36,7 +36,7 @@ includeTargets << griffonScript('CreateIntegrationTest')
 target(createAddon: "Creates an Addon for a plugin") {
     if (metadataFile.exists()) {
         if (!isPluginProject) {
-            event("StatusFinal", ["Cannot create an Addon in a non-plugin project."])
+            event('StatusFinal', ['Cannot create an Addon in a non-plugin project.'])
             exit(1)
         } else {
             checkVersion()
@@ -50,12 +50,13 @@ target(createAddon: "Creates an Addon for a plugin") {
 
     argsMap.skipPackagePrompt = true
     createArtifact(
-            name: pluginName,
-            suffix: "GriffonAddon",
-            type: "GriffonAddon",
-            path: ".")
-    addonName = "${GriffonUtil.getClassNameRepresentation(pluginName)}GriffonAddon"
+            name:   pluginName,
+            suffix: 'GriffonAddon',
+            type:   'GriffonAddon',
+            path:   '.')
 
+    /*
+    addonName = "${GriffonUtil.getClassNameRepresentation(pluginName)}GriffonAddon"
     def pluginConfigFile = new File("${basedir}/griffon-app/conf/BuildConfig.groovy")
     if (!pluginConfigFile.exists()) {
         pluginConfigFile.text = "griffon {}\n"
@@ -93,6 +94,7 @@ eventSetClasspath = { cl ->
     ])
 }
 """
+    */
 }
 setDefaultTarget(createAddon)
 

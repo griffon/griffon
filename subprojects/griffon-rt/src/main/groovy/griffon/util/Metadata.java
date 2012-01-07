@@ -212,6 +212,21 @@ public class Metadata extends Properties {
         return newMap;
     }
 
+    public Map<String, String> getArchetype() {
+        Map<String, String> newMap = new LinkedHashMap<String, String>();
+
+        for (Map.Entry<Object, Object> entry : entrySet()) {
+            String key = entry.getKey().toString();
+            Object val = entry.getValue();
+            if (key.startsWith("archetype.") && val != null) {
+                newMap.put("name", key.substring(10));
+                newMap.put("version", val.toString());
+                break;
+            }
+        }
+        return newMap;
+    }
+
     /**
      * Returns the application's starting directory.<p>
      * The value comes from the System property 'griffon.start.dir'

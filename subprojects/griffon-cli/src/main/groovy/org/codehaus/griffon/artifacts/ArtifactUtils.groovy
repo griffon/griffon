@@ -64,7 +64,7 @@ class ArtifactUtils {
             artifacts[release.artifact.name] = release.version
         }
 
-        // TODO - remove this code before 1.0
+        // TODO LEGACY - remove this code before 1.0
         // legacy plugins
         if (type == Plugin.TYPE) {
             for (resource in resolveResources("file://${artifactBase(type)}/*/plugin.xml")) {
@@ -85,7 +85,7 @@ class ArtifactUtils {
             artifacts[release.artifact.name] = release
         }
 
-        // TODO - remove this code before 1.0
+        // TODO LEGACY - remove this code before 1.0
         // legacy plugins
         if (type == Plugin.TYPE) {
             for (resource in resolveResources("file://${artifactBase(type)}/*/plugin.xml")) {

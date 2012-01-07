@@ -44,6 +44,38 @@ import java.util.*;
  * @since 0.9.4
  */
 public final class CollectionUtils {
+    @SuppressWarnings({"rawtypes", "unchecked"})
+    public static <K, V> Map newMap(Object... keysAndValues) {
+        if (keysAndValues == null) {
+            return Collections.emptyMap();
+        }
+        if (keysAndValues.length % 2 == 1) {
+            throw new IllegalArgumentException("Must have an even number of keys and values");
+        }
+
+        Map<K, V> map = new HashMap<K, V>();
+        for (int i = 0; i < keysAndValues.length; i += 2) {
+            map.put((K) keysAndValues[i], (V) keysAndValues[i + 1]);
+        }
+        return map;
+    }
+
+    public static <T> Set<T> newSet(T... values) {
+        if (values == null) {
+            return Collections.emptySet();
+        }
+
+        return new HashSet<T>(Arrays.asList(values));
+    }
+
+    public static <T> List<T> newList(T... values) {
+        if (values == null) {
+            return Collections.emptyList();
+        }
+
+        return new ArrayList<T>(Arrays.asList(values));
+    }
+
     public static <K, V> MapBuilder<K, V> map() {
         return map(new LinkedHashMap<K, V>());
     }

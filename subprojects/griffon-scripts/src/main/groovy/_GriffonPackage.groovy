@@ -148,8 +148,6 @@ collectArtifactMetadata = {
     event("CollectArtifacts", [artifactPaths])
 
     def artifacts = [:]
-    // def pluginDirectories = pluginSettings.pluginDirectories.file
-    // ([new File(basedir)] + pluginDirectories).each { searchPath ->
     searchPath = new File(basedir, 'griffon-app')
     searchPath.eachFileRecurse { file ->
         artifactPaths.find { entry ->

@@ -32,7 +32,7 @@ target('runApp': "Runs the application from the command line") {
         println "Cannot run application: project is a plugin!"
         exit(1)
     }
-    depends(checkVersion, configureProxy, prepackage)
+    depends(checkVersion, prepackage)
 
     // calculate the needed jars
     File jardir = new File(ant.antProject.replaceProperties(buildConfig.griffon.jars.destDir))

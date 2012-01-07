@@ -21,8 +21,6 @@ import org.codehaus.griffon.artifacts.model.Archetype
  */
 
 target(listArchetypes: 'Lists all archetypes available in an artifact repository') {
-    depends(configureProxy)
-
     listArtifacts(Archetype.TYPE)
 }
 

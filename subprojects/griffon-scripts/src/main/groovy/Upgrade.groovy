@@ -21,8 +21,8 @@
  * @author Sergey Nebolsin (Grails 0.4)
  */
 
-import org.codehaus.griffon.commons.GriffonContext
-import org.codehaus.griffon.plugins.GriffonPluginUtils
+import griffon.util.Environment
+import org.codehaus.griffon.artifacts.ArtifactUtils
 
 includeTargets << griffonScript('_GriffonClean')
 
@@ -60,7 +60,7 @@ target(upgrade: "Upgrades a Griffon application from a previous version of Griff
 
     clean()
 
-    boolean isPost09 = GriffonPluginUtils.compareVersions(appGriffonVersion, '0.9') >= 0
+    boolean isPost09 = ArtifactUtils.compareVersions(appGriffonVersion, '0.9') >= 0
 
     ant.sequential {
         delete(dir: "${basedir}/tmp", failonerror: false)
@@ -76,7 +76,7 @@ target(upgrade: "Upgrades a Griffon application from a previous version of Griff
         // behavior even if it is not the default in the current version.
         def configFile = new File(baseFile, '/griffon-app/conf/Config.groovy')
         if (!isPost09 && configFile.exists()) {
-            def configSlurper = new ConfigSlurper(System.getProperty(GriffonContext.ENVIRONMENT))
+            def configSlurper = new ConfigSlurper(System.getProperty(Environment.KEY))
             def configObject = configSlurper.parse(configFile.toURI().toURL())
 
             def packJars = configObject.griffon?.jars?.pack
@@ -92,9 +92,9 @@ target(upgrade: "Upgrades a Griffon application from a previous version of Griff
                 configFile.withWriterAppend {
                     def indent = ''
                     it.writeLine '\n// The following properties have been added by the Upgrade process...'
-                    if (!Boolean.valueOf(System.getProperty(GriffonContext.ENVIRONMENT_DEFAULT))) {
+                    if (!Boolean.valueOf(System.getProperty(Environment.DEFAULT))) {
                         indent = '        '
-                        it.writeLine "environments {\n    ${System.getProperty(GriffonContext.ENVIRONMENT)} {"
+                        it.writeLine "environments {\n    ${System.getProperty(Environment.KEY)} {"
                     }
                     if (packJars == [:]) it.writeLine "${indent}griffon.jars.pack=false // jars were not automatically packed in Griffon 0.0"
                     if (signJars == [:]) it.writeLine "${indent}griffon.jars.sign=true // jars were automatically signed in Griffon 0.0"
@@ -166,7 +166,7 @@ target(upgrade: "Upgrades a Griffon application from a previous version of Griff
         // behavior even if it is not the default in the current version.
         def applicationFile = new File(baseFile, '/griffon-app/conf/Application.groovy')
         if (!isPost09 && applicationFile.exists()) {
-            def configSlurper = new ConfigSlurper(System.getProperty(GriffonContext.ENVIRONMENT))
+            def configSlurper = new ConfigSlurper(System.getProperty(Environment.KEY))
             def configObject = configSlurper.parse(applicationFile.toURI().toURL())
 
             def startupGroups = configObject.application.startupGroups
@@ -382,28 +382,6 @@ log4j = {
     fileset(dir: "${basedir}/griffon-app/conf/", includes: "**/*.html").each {
         ant.replace(file: it.toString()) {
             replacefilter(token: "image:'griffon.jpeg'", value: "image:'griffon.png'")
-        }
-    }
-
-    // proceed plugin-specific upgrade logic contained in 'scripts/_Upgrade.groovy' under plugin's root
-    def plugins = GriffonPluginUtils.getPluginBaseDirectories(pluginsHome)
-    if (plugins) {
-        for (pluginDir in plugins) {
-            def f = new File(pluginDir)
-            if (f.isDirectory() && f.name != 'core') {
-                // fix for Windows-style path with backslashes
-
-                def pluginBase = "${basedir}/plugins/${f.name}".toString().replaceAll("\\\\", "/")
-                // proceed _Upgrade.groovy plugin script if exists
-                def upgradeScript = new File("${pluginBase}/scripts/_Upgrade.groovy")
-                if (upgradeScript.exists()) {
-                    event("StatusUpdate", ["Executing ${f.name} plugin upgrade script"])
-                    // instrumenting plugin scripts adding 'pluginBasedir' variable
-                    def instrumentedUpgradeScript = "def pluginBasedir = '${pluginBase}'\n" + upgradeScript.text
-                    // we are using text form of script here to prevent Gant caching
-                    includeTargets << instrumentedUpgradeScript
-                }
-            }
         }
     }
 

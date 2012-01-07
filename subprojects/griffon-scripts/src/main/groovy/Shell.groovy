@@ -26,7 +26,7 @@ import org.codehaus.groovy.tools.shell.IO
 includeTargets << griffonScript('_GriffonBootstrap')
 
 target(shell: "Runs an embedded application in a Groovy Shell") {
-    depends(checkVersion, configureProxy, classpath, createConfig)
+    depends(checkVersion, createConfig)
 
     jardir = ant.antProject.replaceProperties(buildConfig.griffon.jars.destDir)
     ant.copy(todir: jardir) { fileset(dir: "${griffonHome}/lib/", includes: "jline-*.jar") }

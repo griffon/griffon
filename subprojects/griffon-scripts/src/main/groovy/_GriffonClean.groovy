@@ -32,7 +32,7 @@ target(cleanAll: "Cleans a Griffon project") {
 }
 
 target(clean: "Implementation of clean") {
-    depends(classpath, cleanCompiledSources, cleanPackaging)
+    depends(cleanCompiledSources, cleanPackaging)
 }
 
 target(cleanCompiledSources: "Cleans compiled Java and Groovy sources") {
