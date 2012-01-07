@@ -18,16 +18,17 @@ package org.codehaus.griffon.resolve;
 import groovy.lang.Closure;
 
 /**
- * An interface that defines methods for parsing dependency definitions
- * defined in the form of a Groovy DSL
+ * Defines methods for parsing dependency definitions defined in the form of a Groovy DSL.
  *
  * @author Graeme Rocher (Grails 1.2)
  */
 public interface DependencyDefinitionParser {
+
     /**
-     * Parses DSL code into a dependency definition
+     * Parses DSL code into a dependency definition.
      *
      * @param definition The DSL code
      */
+    @SuppressWarnings("rawtypes")
     void parseDependencies(Closure definition);
 }

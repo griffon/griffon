@@ -347,6 +347,26 @@ hasJavaOrGroovySources = { dir ->
     hasFiles(dir: dir, includes: '**/*.groovy **/*.java')
 }
 
+addUrlIfNotPresent = { to, what ->
+    if (!to || !what) return
+    def urls = to.URLs.toList()
+    switch (what.class) {
+        case URL: what = new File(what.toURI()); break
+        case String: what = new File(what); break
+        case GString: what = new File(what.toString()); break
+        case File: break; // ok
+        default:
+            println "Don't know how to deal with $what as it is not an URL nor a File"
+            System.exit(1)
+    }
+
+    if (what.directory && !what.exists()) what.mkdirs()
+    def url = what.toURI().toURL()
+    if (!urls.contains(url) && (what.directory || !urls.find {it.path.endsWith(what.name)})) {
+        to.addURL(url)
+    }
+}
+
 // --== ARTIFACT STUFF ==--
 
 loadArtifactDescriptorClass = { String artifactFile ->

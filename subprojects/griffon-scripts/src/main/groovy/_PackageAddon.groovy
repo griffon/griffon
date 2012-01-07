@@ -40,7 +40,7 @@ target('packageAddon': "Packages a Griffon addon. Note: to package a plugin use 
         exit(1)
     }
 
-    addonJarDir = "${artifactPackageDirPath}/addon"
+    addonJarDir = "${artifactPackageDirPath}/dist"
     ant.mkdir(dir: addonJarDir)
 
     cliJarName = "griffon-${pluginName}-${pluginVersion}-compile.jar"

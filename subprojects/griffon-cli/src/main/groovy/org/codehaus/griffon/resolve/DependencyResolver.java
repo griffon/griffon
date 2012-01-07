@@ -21,7 +21,7 @@ import org.apache.ivy.core.report.ResolveReport;
 import java.util.Set;
 
 /**
- * An interface that defines methods to resolve dependencies based
+ * Defines methods to resolve dependencies based
  * on a supplied dependency definition.
  *
  * @author Graeme Rocher (Grails 1.2)

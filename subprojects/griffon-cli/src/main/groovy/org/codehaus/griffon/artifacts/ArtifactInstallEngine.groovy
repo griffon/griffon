@@ -313,10 +313,11 @@ class ArtifactInstallEngine {
             case Plugin.TYPE:
                 variableStore["${getPropertyNameForLowerCaseHyphenSeparatedName(artifactName)}PluginDir"] = new File(artifactInstallPath).absoluteFile
                 variableStore["${getPropertyNameForLowerCaseHyphenSeparatedName(artifactName)}PluginVersion"] = release.version
+                // TODO LEGACY - remove before 1.0
                 if (new File(artifactInstallPath, 'plugin.xml').exists()) {
                     generateDependencyDescriptorFor(artifactInstallPath, artifactName, releaseVersion)
                 }
-                resolvePluginJarDependencies(releaseName, artifactInstallPath)
+                resolvePluginJarDependencies(artifactInstallPath, artifactName, releaseVersion)
                 if (!settings.isPluginProject()) {
                     def installScript = new File("${artifactInstallPath}/scripts/_Install.groovy")
                     runPluginScript(installScript, releaseName, 'post-install script')
@@ -348,6 +349,7 @@ class ArtifactInstallEngine {
         eventHandler 'StatusFinal', "Installed ${type} '${releaseName}' in ${artifactInstallPath}"
     }
 
+    // TODO LEGACY - remove before 1.0
     private void generateDependencyDescriptorFor(String pluginDirPath, String name, String version) {
         File addonJar = new File(pluginDirPath, "addon/griffon-${name}-addon-${version}.jar")
         File cliJar = new File(pluginDirPath, "addon/griffon-${name}-cli-${version}.jar")
@@ -369,7 +371,7 @@ class ArtifactInstallEngine {
         dependencyDescriptor.text = """
         |griffon.project.dependency.resolution = {
         |    repositories {
-        |        flatDir(name: '${name}PluginLib', dirs: [
+        |        flatDir(name: 'plugin ${name}-${version}', dirs: [
         |            '${pluginDirPath}/dist',
         |            '${pluginDirPath}/addon'
         |        ])
@@ -382,7 +384,7 @@ class ArtifactInstallEngine {
         |}""".stripMargin().trim()
     }
 
-    private void resolvePluginJarDependencies(String pluginName, String pluginInstallPath) {
+    private void resolvePluginJarDependencies(String pluginInstallPath, String pluginName, String pluginVersion) {
         List<File> dependencyDescriptors = [
                 new File("$pluginInstallPath/dependencies.groovy"),
                 new File("$pluginInstallPath/plugin-dependencies.groovy")
@@ -391,31 +393,45 @@ class ArtifactInstallEngine {
         if (dependencyDescriptors.any {it.exists()}) {
             eventHandler 'StatusUpdate', 'Resolving plugin JAR dependencies'
             def callable = settings.pluginDependencyHandler()
-            callable.call(pluginName, new File(pluginInstallPath))
+            callable.call(new File(pluginInstallPath), pluginName, pluginVersion)
             IvyDependencyManager dependencyManager = settings.dependencyManager
             // dependencyManager.resetGriffonPluginsResolver()
             for (conf in ['compile', 'build', 'test', 'runtime']) {
                 def resolveReport = dependencyManager.resolveDependencies(IvyDependencyManager."${conf.toUpperCase()}_CONFIGURATION")
                 if (resolveReport.hasError()) {
-                    throw new InstallArtifactException("Plugin ${pluginName} has missing JAR dependencies.")
+                    throw new InstallArtifactException("Plugin ${pluginName}-${pluginVersion} has missing JAR dependencies.")
                 } else {
-                    resolveReport.allArtifactsReports.each { r ->
-                        println "[$conf] ${r.localFile}"
-                    }
-                    // addJarsToRootLoader resolveReport.allArtifactsReports.localFile
+                    addJarsToRootLoader resolveReport.allArtifactsReports.localFile
                 }
             }
         }
-        /*
-        List pluginJars = new File("${pluginInstallPath}/lib").listFiles().findAll {it.name.endsWith('.jar')}
-        addJarsToRootLoader(pluginJars)
-        */
+        // List pluginJars = new File("${pluginInstallPath}/lib").listFiles().findAll {it.name.endsWith('.jar')}
+        // addJarsToRootLoader(pluginJars)
     }
 
     private void addJarsToRootLoader(Collection pluginJars) {
         ClassLoader loader = getClass().classLoader.rootLoader
         for (File jar: pluginJars) {
-            loader.addURL(jar.toURI().toURL())
+            addUrlIfNotPresent loader, jar
+        }
+    }
+
+    private void addUrlIfNotPresent(ClassLoader to, what) {
+        if (!to || !what) return
+        def urls = to.URLs.toList()
+        switch (what.class) {
+            case URL: what = new File(what.toURI()); break
+            case String: what = new File(what); break
+            case GString: what = new File(what.toString()); break
+            case File: break; // ok
+            default:
+                return
+        }
+
+        if (what.directory && !what.exists()) what.mkdirs()
+        def url = what.toURI().toURL()
+        if (!urls.contains(url) && (what.directory || !urls.find {it.path.endsWith(what.name)})) {
+            to.addURL(url)
         }
     }
 

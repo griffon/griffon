@@ -71,6 +71,37 @@ target('package_plugin': '') {
         ant.copy(file: "$basedir/griffon-app/conf/BuildConfig.groovy",
                 tofile: "$artifactPackageDirPath/dependencies.groovy", failonerror: false)
     }
+
+    File runtimeJar = new File("${artifactPackageDirPath}/dist/griffon-${name}-${version}-runtime.jar")
+    File compileJar = new File("${artifactPackageDirPath}/dist/griffon-${name}-${version}-compile.jar")
+    File testJar = new File("${artifactPackageDirPath}/dist/griffon-${name}-${version}-test.jar")
+
+    String compile = ''
+    if (runtimeJar.exists()) {
+        compile = "compile(group: '${name}', name: 'griffon-${name}', version: '${version}', classifier: 'runtime')"
+    }
+    if (compileJar.exists()) {
+        compile += "\n\t\tcompile(group: '${name}', name: 'griffon-${name}', version: '${version}' classifier: 'compile')"
+    }
+    String test = ''
+    if (testJar.exists()) {
+        test = "test(group: '${name}', name: 'griffon-${name}', version: ${version}', classifier: 'test')"
+    }
+
+    File dependencyDescriptor = new File("${artifactPackageDirPath}/plugin-dependencies.groovy")
+    dependencyDescriptor.text = """
+        |griffon.project.dependency.resolution = {
+        |    repositories {
+        |        flatDir(name: 'plugin ${name}-${version}', dirs: [
+        |            '\${pluginDirPath}/dist'
+        |        ])
+        |    }
+        |
+        |    dependencies {
+        |        ${compile.trim()}
+        |        $test
+        |    }
+        |}""".stripMargin().trim()
 }
 
 target('post_package_plugin': '') {

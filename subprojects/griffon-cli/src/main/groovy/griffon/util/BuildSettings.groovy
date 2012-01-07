@@ -15,13 +15,14 @@
  */
 package griffon.util
 
+import java.util.concurrent.ConcurrentHashMap
 import java.util.regex.Pattern
+import org.apache.ivy.core.report.ResolveReport
 import org.apache.ivy.plugins.repository.TransferEvent
 import org.apache.ivy.plugins.repository.TransferListener
 import org.apache.ivy.util.DefaultMessageLogger
 import org.apache.ivy.util.Message
-import griffon.util.PluginSettings
-import org.codehaus.griffon.artifacts.model.Plugin
+import org.codehaus.griffon.resolve.GriffonCoreDependencies
 import org.codehaus.griffon.resolve.IvyDependencyManager
 import org.codehaus.groovy.runtime.StackTraceUtils
 import org.slf4j.Logger
@@ -29,6 +30,7 @@ import org.slf4j.LoggerFactory
 import org.springframework.core.io.Resource
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver
 import static org.codehaus.griffon.artifacts.ArtifactUtils.*
+import org.codehaus.griffon.artifacts.ArtifactUtils
 
 /**
  * <p>Represents the project paths and other build settings
@@ -48,6 +50,15 @@ class BuildSettings extends AbstractBuildSettings {
     static final Pattern JAR_PATTERN = ~/^\S+\.jar$/
 
     /**
+     * The compiler source level to use
+     */
+    public static final String COMPILER_SOURCE_LEVEL = "griffon.project.source.level"
+    /**
+     * The compiler source level to use
+     */
+    public static final String COMPILER_TARGET_LEVEL = "griffon.project.target.level"
+
+    /**
      * The base directory of the application
      */
     public static final String APP_BASE_DIR = "base.dir"
@@ -61,6 +72,8 @@ class BuildSettings extends AbstractBuildSettings {
      * The name of the system property for {@link #projectWorkDir}.
      */
     public static final String PROJECT_WORK_DIR = "griffon.project.work.dir"
+
+    public static final String OFFLINE_MODE = "griffon.offline.mode"
 
     /**
      * The name of the system property for {@link #projectPluginsDir}.
@@ -151,8 +164,32 @@ class BuildSettings extends AbstractBuildSettings {
     /** The environment for the current script. */
     String griffonEnv
 
-    /** <code>true</code> if the default environment for a script should be used. */
+    /**
+     * The compiler source level to use
+     */
+    String compilerSourceLevel
+
+    /**
+     * The compiler target level to use
+     */
+    String compilerTargetLevel = "1.6"
+
+    /** <code>true</code> if the default environment for a script should be used.  */
     boolean defaultEnv
+
+    /**
+     * whether to include source attachments in a resolve
+     */
+    boolean includeSource
+    /**
+     * whether to include javadoc attachments in a resolve
+     */
+    boolean includeJavadoc
+
+    /**
+     * Whether to enable resolving dependencies
+     */
+    boolean enableResolve = true
 
     /** The location of the Griffon working directory where non-project-specific temporary files are stored. */
     File griffonWorkDir
@@ -227,6 +264,7 @@ class BuildSettings extends AbstractBuildSettings {
 
     List buildListeners = []
 
+    /*
     public void resetDependencies() {
         resetCompileDependencies()
         resetRuntimeDependencies()
@@ -253,6 +291,19 @@ class BuildSettings extends AbstractBuildSettings {
         buildDependencies.clear()
         buildDependencies.addAll(buildDependenciesClosure())
     }
+    */
+
+    /**
+     * Return whether the BuildConfig has been modified
+     */
+    boolean modified = false
+
+    /**
+     * Whether the build is allowed to connect to remote servers to resolve dependencies
+     */
+    boolean offline = false
+
+    GriffonCoreDependencies coreDependencies
 
     private List<File> compileDependencies = []
     private boolean defaultCompileDepsAdded = false
@@ -273,14 +324,35 @@ class BuildSettings extends AbstractBuildSettings {
         compileDependencies = deps
     }
 
-    /** List containing the default (resolved via the dependencyManager) compile-time dependencies of the app as File instances. */
-    private defaultCompileDependenciesClosure = {
-        def jarFiles = dependencyManager.resolveDependencies(IvyDependencyManager.COMPILE_CONFIGURATION).allArtifactsReports.localFile + applicationJars
-        if (LOG.debugEnabled) LOG.debug("Resolved jars for [compile]: ${{-> jarFiles.join('\n')}}")
+    /**
+     * The dependency report for all configurations
+     */
+    @Lazy ResolveReport allDependenciesReport = {
+        dependencyManager.resolveAllDependencies()
+    }()
+
+    ResolveReport buildResolveReport
+    ResolveReport compileResolveReport
+    ResolveReport testResolveReport
+    ResolveReport runtimeResolveReport
+
+    /** List containing the default (resolved via the dependencyManager) compile-time dependencies of the app as File instances.  */
+    private List<File> internalCompileDependencies
+    @Lazy List<File> defaultCompileDependencies = {
+        if (internalCompileDependencies) return internalCompileDependencies
+        LOG.info "Resolving [compile] dependencies..."
+        List<File> jarFiles
+        if (shouldResolve()) {
+            compileResolveReport = dependencyManager.resolveDependencies(IvyDependencyManager.COMPILE_CONFIGURATION)
+            jarFiles = compileResolveReport.getArtifactsReports(null, false).findAll {it.downloadStatus.toString() != 'failed'}.localFile + applicationJars
+
+            //jarFiles = findAndRemovePluginDependencies("compile", jarFiles, internalPluginCompileDependencies)
+            LOG.debug("Resolved jars for [compile]: ${{-> jarFiles.join('\n')}}")
+        } else {
+            jarFiles = []
+        }
         return jarFiles
     }
-    /** List containing the default (resolved via the dependencyManager) compile-time dependencies of the app as File instances. */
-    @Lazy List<File> defaultCompileDependencies = defaultCompileDependenciesClosure()
 
     private List<File> testDependencies = []
     private boolean defaultTestDepsAdded = false
@@ -301,13 +373,22 @@ class BuildSettings extends AbstractBuildSettings {
         testDependencies = deps
     }
 
-    private defaultTestDependenciesClosure = {
-        def jarFiles = dependencyManager.resolveDependencies(IvyDependencyManager.TEST_CONFIGURATION).allArtifactsReports.localFile + applicationJars
-        if (LOG.debugEnabled) LOG.debug("Resolved jars for [test]: ${{-> jarFiles.join('\n')}}")
-        return jarFiles
-    }
-    /** List containing the default test-time dependencies of the app as File instances. */
-    @Lazy List<File> defaultTestDependencies = defaultTestDependenciesClosure()
+    /** List containing the default test-time dependencies of the app as File instances.  */
+    private List<File> internalTestDependencies
+    @Lazy List<File> defaultTestDependencies = {
+        LOG.info "Resolving [test] dependencies..."
+        if (internalTestDependencies) return internalTestDependencies
+        if (shouldResolve()) {
+
+            testResolveReport = dependencyManager.resolveDependencies(IvyDependencyManager.TEST_CONFIGURATION)
+            def jarFiles = testResolveReport.getArtifactsReports(null, false).findAll {it.downloadStatus.toString() != 'failed'}.localFile + applicationJars
+            // jarFiles = findAndRemovePluginDependencies("test", jarFiles, internalPluginTestDependencies)
+            LOG.debug("Resolved jars for [test]: ${{-> jarFiles.join('\n')}}")
+            return jarFiles
+        } else {
+            return []
+        }
+    }()
 
     private List<File> runtimeDependencies = []
     private boolean defaultRuntimeDepsAdded = false
@@ -328,21 +409,66 @@ class BuildSettings extends AbstractBuildSettings {
         runtimeDependencies = deps
     }
 
-    private defaultRuntimeDependenciesClosure = {
-        def jarFiles = dependencyManager.resolveDependencies(IvyDependencyManager.RUNTIME_CONFIGURATION).allArtifactsReports.localFile + applicationJars
-        if (LOG.debugEnabled) LOG.debug("Resolved jars for [runtime]: ${{-> jarFiles.join('\n')}}")
-        return jarFiles
-    }
-    /** List containing the default runtime-time dependencies of the app as File instances. */
-    @Lazy List<File> defaultRuntimeDependencies = defaultRuntimeDependenciesClosure()
+    /** List containing the default runtime-time dependencies of the app as File instances.  */
+    private List<File> internalRuntimeDependencies
+    @Lazy List<File> defaultRuntimeDependencies = {
+        LOG.info "Resolving [runtime] dependencies..."
+        if (internalRuntimeDependencies) return internalRuntimeDependencies
+        if (shouldResolve()) {
 
-    private buildDependenciesClosure = {
-        def jarFiles = dependencyManager.resolveDependencies(IvyDependencyManager.BUILD_CONFIGURATION).allArtifactsReports.localFile + applicationJars
-        if (LOG.debugEnabled) LOG.debug("Resolved jars for [build]: ${{-> jarFiles.join('\n')}}")
-        return jarFiles
+            runtimeResolveReport = dependencyManager.resolveDependencies(IvyDependencyManager.RUNTIME_CONFIGURATION)
+            def jarFiles = runtimeResolveReport.getArtifactsReports(null, false).findAll {it.downloadStatus.toString() != 'failed'}.localFile + applicationJars
+            // jarFiles = findAndRemovePluginDependencies("runtime", jarFiles, internalPluginRuntimeDependencies)
+            LOG.debug("Resolved jars for [runtime]: ${{-> jarFiles.join('\n')}}")
+
+            return jarFiles
+        }
+        return []
+    }()
+
+    private List<File> buildDependencies = []
+    private boolean defaultBuildDepsAdded = false
+
+    /** List containing the runtime dependencies of the app as File instances.  */
+    List<File> getBuildDependencies() {
+        if (!defaultBuildDepsAdded) {
+            buildDependencies += defaultBuildDependencies
+            defaultBuildDepsAdded = true
+        }
+        return buildDependencies
     }
-    /** List containing the dependencies required for the build system only */
-    @Lazy List<File> buildDependencies = buildDependenciesClosure()
+
+    /**
+     * Sets the runtime dependencies for the project
+     */
+    void setBuildDependencies(List<File> deps) {
+        buildDependencies = deps
+    }
+
+    /**
+     * List containing the dependencies required for the build system only
+     */
+    private List<File> internalBuildDependencies
+    @Lazy List<File> defaultBuildDependencies = {
+        if (internalBuildDependencies) return internalBuildDependencies
+
+        if (shouldResolve()) {
+
+            LOG.info "Resolving [build] dependencies..."
+            buildResolveReport = dependencyManager.resolveDependencies(IvyDependencyManager.BUILD_CONFIGURATION)
+            def jarFiles = buildResolveReport.getArtifactsReports(null, false).findAll {it.downloadStatus.toString() != 'failed'}.localFile + applicationJars
+
+            // jarFiles = findAndRemovePluginDependencies("build", jarFiles, internalPluginBuildDependencies)
+            LOG.debug("Resolved jars for [build]: ${{-> jarFiles.join('\n')}}")
+
+            return jarFiles
+        }
+        return []
+    }()
+
+    protected boolean shouldResolve() {
+        return dependencyManager != null && enableResolve
+    }
 
     /**
      * Manages dependencies and dependency resolution in a Griffon application
@@ -374,6 +500,9 @@ class BuildSettings extends AbstractBuildSettings {
     private boolean buildListenersSet
     private boolean verboseCompileSet
     private boolean sourceEncodingSet
+    private String resolveChecksum
+    private Map resolveCache = new ConcurrentHashMap()
+    private boolean readFromCache = false
 
     final Map<String, String> systemProperties = [:]
     public final PluginSettings pluginSettings
@@ -415,6 +544,10 @@ class BuildSettings extends AbstractBuildSettings {
 
         // Update the base directory. This triggers some extra config.
         setBaseDir(baseDir)
+
+        if (![Environment.DEVELOPMENT, Environment.TEST].contains(Environment.current)) {
+            modified = true
+        }
 
         resolveResourcesClosure = {String pattern ->
             try {
@@ -689,10 +822,16 @@ class BuildSettings extends AbstractBuildSettings {
         dependencyManager = new IvyDependencyManager(appName,
                 appVersion, this, metadata)
 
+        dependencyManager.offline = offline
+        dependencyManager.includeJavadoc = includeJavadoc
+        dependencyManager.includeSource = includeSource
+
         dependencyManager.transferListener = { TransferEvent e ->
             switch (e.eventType) {
                 case TransferEvent.TRANSFER_STARTED:
-                    println "Downloading: ${e.resource.name} ..."
+                    def resourceName = e.resource.name
+                    resourceName = resourceName[resourceName.lastIndexOf('/') + 1..-1]
+                    println "Downloading: ${resourceName}"
                     break
                 case TransferEvent.TRANSFER_COMPLETED:
                     println "Download complete."
@@ -700,19 +839,20 @@ class BuildSettings extends AbstractBuildSettings {
             }
         } as TransferListener
 
-        config.griffon.global.dependency.resolution = IvyDependencyManager.getDefaultDependencies(griffonVersion)
-        def credentials = config.griffon.project.ivy.authentication
+        def griffonConfig = config.griffon
+        // If griffon.dependency.cache.dir is set, use it for Ivy.
+        if (griffonConfig.dependency.cache.dir) {
+            dependencyManager.ivySettings.defaultCache = griffonConfig.dependency.cache.dir as File
+        }
+
+        coreDependencies = new GriffonCoreDependencies(griffonVersion, this)
+        griffonConfig.global.dependency.resolution = coreDependencies.createDeclaration()
+        def credentials = griffonConfig.project.ivy.authentication
         if (credentials instanceof Closure) {
             dependencyManager.parseDependencies credentials
         }
 
-        def dependencyConfig = config.griffon.project.dependency.resolution
-        /*
-        if (!dependencyConfig) {
-            dependencyConfig = config.griffon.global.dependency.resolution
-            dependencyManager.inheritsAll = true
-        }
-        */
+        def dependencyConfig = griffonConfig.project.dependency.resolution
         if (dependencyConfig) {
             dependencyManager.parseDependencies dependencyConfig
         }
@@ -734,7 +874,7 @@ class BuildSettings extends AbstractBuildSettings {
     Closure pluginDependencyHandler(IvyDependencyManager dependencyManager) {
         ConfigSlurper pluginSlurper = createConfigSlurper()
 
-        return { String pluginName, File dir ->
+        return { File dir, String pluginName, String pluginVersion ->
             String path = dir.absolutePath
             List<File> dependencyDescriptors = [
                     new File("$path/dependencies.groovy"),
@@ -748,6 +888,9 @@ class BuildSettings extends AbstractBuildSettings {
                     try {
                         debug("Parsing dependencies from ${dependencyDescriptor}")
                         Script script = gcl.parseClass(dependencyDescriptor)?.newInstance()
+                        script.binding.pluginName = pluginName
+                        script.binding.pluginVersion = pluginVersion
+                        script.binding.pluginDirPath = path
                         if (script) {
                             def pluginConfig = pluginSlurper.parse(script)
                             def pluginDependencyConfig = pluginConfig.griffon.project.dependency.resolution
@@ -778,19 +921,19 @@ class BuildSettings extends AbstractBuildSettings {
         return slurper
     }
 
-    def isPluginProject() {
+    File isPluginProject() {
         baseDir.listFiles().find { it.name.endsWith(PLUGIN_DESCRIPTOR_SUFFIX) }
     }
 
-    def isArchetypeProject() {
+    File isArchetypeProject() {
         baseDir.listFiles().find { it.name.endsWith(ARCHETYPE_DESCRIPTOR_SUFFIX) }
     }
 
-    def isAddonPlugin() {
+    File isAddonPlugin() {
         baseDir.listFiles().find { it.name.endsWith(ADDON_DESCRIPTOR_SUFFIX) || it.name.endsWith(ADDON_DESCRIPTOR_SUFFIX_JAVA) }
     }
 
-    def isGriffonProject() {
+    boolean isGriffonProject() {
         baseDir.listFiles().find { it.name == 'application.properties' } &&
                 baseDir.listFiles().find { it.name == GRIFFON_APP && it.directory }
     }
@@ -801,6 +944,10 @@ class BuildSettings extends AbstractBuildSettings {
         // null, a default value. This ensures that we don't override
         // settings provided by, for example, the Maven plugin.
         def props = config.toProperties()
+        offline = Boolean.valueOf(getPropertyValue(OFFLINE_MODE, props, String.valueOf(offline)))
+        compilerSourceLevel = getPropertyValue(COMPILER_SOURCE_LEVEL, props, null)
+        compilerTargetLevel = getPropertyValue(COMPILER_TARGET_LEVEL, props, "1.6")
+
         // read metadata file
         Metadata.current
         if (!griffonWorkDirSet) griffonWorkDir = new File(getPropertyValue(WORK_DIR, props, "${userHome}/.griffon/${griffonVersion}"))

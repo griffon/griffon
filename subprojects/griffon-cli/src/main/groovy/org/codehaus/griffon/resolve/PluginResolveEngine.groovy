@@ -18,7 +18,6 @@ package org.codehaus.griffon.resolve
 import griffon.util.BuildSettings
 import groovy.util.slurpersupport.GPathResult
 import org.apache.ivy.core.cache.ArtifactOrigin
-import org.apache.ivy.core.module.id.ModuleRevisionId
 import org.apache.ivy.core.report.ResolveReport
 import org.apache.ivy.plugins.repository.Repository
 import org.apache.ivy.plugins.repository.Resource
@@ -26,29 +25,149 @@ import org.apache.ivy.plugins.resolver.DependencyResolver
 import org.apache.ivy.plugins.resolver.RepositoryResolver
 
 /**
- *
- * A class with utility methods for resolving plugin zips and information
- * used in conjunction with an IvyDependencyManager instance
+ * Utility methods for resolving plugin zips and information
+ * used in conjunction with an IvyDependencyManager instance.
  *
  * @author Graeme Rocher (Grails 1.3)
  */
 final class PluginResolveEngine {
+
     IvyDependencyManager dependencyManager
     BuildSettings settings
-    Closure messageReporter = { it ? println(it) : println() }
+    Closure messageReporter = { if (it) GriffonConsole.instance.updateStatus(it) }
 
     PluginResolveEngine(IvyDependencyManager dependencyManager, BuildSettings settings) {
-        this.dependencyManager = dependencyManager;
-        this.settings = settings;
+        this.dependencyManager = dependencyManager
+        this.settings = settings
     }
 
     IvyDependencyManager createFreshDependencyManager() {
-        IvyDependencyManager dm = new IvyDependencyManager(dependencyManager.applicationName, dependencyManager.applicationVersion ?: "0.1", settings)
-        dm.chainResolver = dependencyManager.chainResolver
-        if(dependencyManager.logger) {            
-            dm.logger = dependencyManager.logger
+        dependencyManager.createCopy(settings)
+    }
+
+    /**
+     * Renders plugin info to the target writer
+     *
+     * @param pluginName The plugin name
+     * @param pluginVersion The plugin version
+     * @param output The target writer
+     */
+    GPathResult renderPluginInfo(String pluginName, String pluginVersion, OutputStream outputStream) {
+        renderPluginInfo(pluginName, pluginVersion, new OutputStreamWriter(outputStream))
+    }
+    /**
+     * Renders plugin info to the target writer
+     *
+     * @param pluginName The plugin name
+     * @param pluginVersion The plugin version
+     * @param output The target writer
+     */
+    GPathResult renderPluginInfo(String pluginName, String pluginVersion, Writer writer) {
+        def pluginXml = resolvePluginMetadata(pluginName, pluginVersion)
+
+        if (pluginXml != null) {
+            def output = new PrintWriter(writer)
+            def line = "Name: ${pluginName}"
+            line += "\t| Latest release: ${pluginXml.@version}"
+            output.println getPluginInfoHeader()
+            output.println line
+            printLineSeparator(output)
+            def release = pluginXml
+            if (release) {
+                if (release.'title'.text()) {
+                    output.println "${release.'title'.text()}"
+                }
+                else {
+                    output.println "No info about this plugin available"
+                }
+                printLineSeparator(output)
+                if (release.'author'.text()) {
+                    output.println "Author: ${release.'author'.text()}"
+                    printLineSeparator(output)
+                }
+                if (release.'authorEmail'.text()) {
+                    output.println "Author's e-mail: ${release.'authorEmail'.text()}"
+                    printLineSeparator(output)
+                }
+                if (release.'documentation'.text()) {
+                    output.println "Find more info here: ${release.'documentation'.text()}"
+                    printLineSeparator(output)
+                }
+                if (release.'description'.text()) {
+                    output.println "${release.'description'.text()}"
+                    printLineSeparator(output)
+                }
+
+                if (release.repositories) {
+                    printSectionTitle(output, "Required Repositories")
+                    release.repositories.repository.each { repo ->
+                        output.println("- ${repo.@url}")
+                    }
+                    printLineSeparator(output)
+                }
+
+                if (release.dependencies.size()) {
+                    printSectionTitle(output, "Required Dependencies")
+                    printDependencies(output, release.dependencies)
+                    printLineSeparator(output)
+                }
+                if (release.plugins.size()) {
+                    printSectionTitle(output, "Required Plugins")
+                    printDependencies(output, release.plugins)
+                    printLineSeparator(output)
+                }
+            }
+            else {
+                output.println "<release not found for this plugin>"
+                printLineSeparator(output)
+            }
+
+            output.println getPluginInfoFooter()
+            output.flush()
         }
-        return dm
+
+        return pluginXml
+    }
+
+    protected def printDependencies(output, dependencies) {
+        dependencies.children().each { scope ->
+            def scopeName = scope.name()
+            scope.dependency.each { dep ->
+                output.println("- ${dep.@group}:${dep.@name}:${dep.@version} ($scopeName)")
+            }
+        }
+    }
+
+    protected def printSectionTitle(PrintWriter output, String title) {
+        output.println()
+        output.println title
+        printLineSeparator(output)
+    }
+
+    protected def printLineSeparator(PrintWriter output) {
+        output.println '--------------------------------------------------------------------------'
+    }
+
+    protected String getPluginInfoHeader() {
+        '''
+--------------------------------------------------------------------------
+Information about Griffon plugin
+--------------------------------------------------------------------------\
+'''
+    }
+
+    protected String getPluginInfoFooter() {
+        '''
+To get info about specific release of plugin 'griffon plugin-info [NAME] [VERSION]'
+
+To get list of all plugins type 'griffon list-plugins'
+
+To install latest version of plugin type 'griffon install-plugin [NAME]'
+
+To install specific version of plugin type 'griffon install-plugin [NAME] [VERSION]'
+
+For further info visit http://griffon.org/Plugins
+'''
     }
 
     /**
@@ -57,15 +176,9 @@ final class PluginResolveEngine {
      * @param pluginsToInstall The list of plugins
      * @param scope The scope (defaults to runtime)
      */
-    ResolveReport resolvePlugins(List<ModuleRevisionId> pluginsToInstall, String scope = '') {
+    ResolveReport resolvePlugins(Collection<EnhancedDefaultDependencyDescriptor> pluginsToInstall, String scope = '') {
         IvyDependencyManager newManager = createFreshDependencyManager()
-        newManager.parseDependencies {
-            plugins {
-                for(ModuleRevisionId id in pluginsToInstall) {
-                    runtime group:id.organisation ?: "org.codehaus.griffon.plugins", name:id.name, version:id.revision
-                }
-            }
-        }
+        pluginsToInstall.each { newManager.registerPluginDependency("runtime", it) }
         return newManager.resolvePluginDependencies(scope)
     }
 
@@ -87,22 +200,23 @@ final class PluginResolveEngine {
 
         messageReporter "Resolving plugin ${pluginName}. Please wait..."
         messageReporter()
-        def report = dependencyManager.resolvePluginDependencies(scope,args)
-        if(report.hasError()) {
-            messageReporter "Error resolving plugin ${resolveArgs}."
-            return null
+        def report = dependencyManager.resolvePluginDependencies(scope, args)
+
+        try {
+            def reports = report.getArtifactsReports(null, false)
+            def artifactReport = reports.find { it.artifact.attributes.organisation == resolveArgs.group && it.artifact.name == resolveArgs.name && (pluginVersion == null || it.artifact.moduleRevisionId.revision == pluginVersion) }
+            if (artifactReport == null) {
+                artifactReport = reports.find { it.artifact.name == pluginName && (pluginVersion == null || it.artifact.moduleRevisionId.revision == pluginVersion) }
+            }
+            if (artifactReport) {
+                return artifactReport.localFile
+            }
+            messageReporter "Error resolving plugin ${resolveArgs}. Plugin not found."
+
+        } catch (e) {
+            messageReporter "Error resolving plugin ${resolveArgs}. ${e.message}"
         }
 
-        def reports = report.allArtifactsReports
-        def artifactReport = reports.find { it.artifact.attributes.organisation == resolveArgs.group && it.artifact.name == resolveArgs.name && (pluginVersion == null || it.artifact.moduleRevisionId.revision == pluginVersion) }
-        if(artifactReport == null) {
-            artifactReport = reports.find { it.artifact.name == pluginName && (pluginVersion == null || it.artifact.moduleRevisionId.revision == pluginVersion) }
-        }
-        if (artifactReport) {
-            return artifactReport.localFile
-        }
-
-        messageReporter "Error resolving plugin ${resolveArgs}. Plugin not found."
         return null
     }
 
@@ -126,16 +240,18 @@ final class PluginResolveEngine {
         // first try resolve via plugin.xml that resides next to zip
         dependencyManager.parseDependencies {
             plugins {
-                runtime resolveArgs
+                runtime(resolveArgs) {
+                    transitive = false
+                }
             }
         }
-        def report = dependencyManager.resolvePluginDependencies('runtime', [download:false])
-        if(!report.hasError() && report.allArtifactsReports) {
-            ArtifactOrigin origin = report.allArtifactsReports.origin.first()
+        def report = dependencyManager.resolveDependencies("runtime", [download: false])
+        if (report.getArtifactsReports(null, false)) {
+            ArtifactOrigin origin = report.getArtifactsReports(null, false).origin.first()
             def location = origin.location
-            def parent = location[0..location.lastIndexOf('/')-1]
-            for(DependencyResolver dr in dependencyManager.chainResolver.resolvers) {
-                if(dr instanceof RepositoryResolver) {
+            def parent = location[0..location.lastIndexOf('/') - 1]
+            for (DependencyResolver dr in this.dependencyManager.chainResolver.resolvers) {
+                if (dr instanceof RepositoryResolver) {
                     Repository r = dr.repository
 
                     def pluginFile = "$parent/plugin.xml"
@@ -148,9 +264,9 @@ final class PluginResolveEngine {
                         }
                         finally {
                             input.close()
-                        }                        
+                        }
                     }
-                    catch(e) {
+                    catch (e) {
                         // ignore
                     }
                 }
@@ -158,7 +274,7 @@ final class PluginResolveEngine {
         }
 
         // if the plugin.xml was never found, try via maven-style attachments using a classifier
-        if(!report.hasError()) {
+        if (!report.hasError()) {
             resolveArgs.classifier = "plugin"
             dependencyManager = createFreshDependencyManager()
 
@@ -170,11 +286,11 @@ final class PluginResolveEngine {
 
             report = dependencyManager.resolvePluginDependencies()
 
-            if(report.hasError() || !report.allArtifactsReports) {
+            if (report.hasError() || !report.getArtifactsReports(null, false)) {
                 return null
             }
 
-            return new XmlSlurper().parse(report.allArtifactsReports.localFile.first())
+            return new XmlSlurper().parse(report.getArtifactsReports(null, false).localFile.first())
         }
     }
 }
