@@ -21,7 +21,10 @@ import org.codehaus.griffon.artifacts.model.Archetype
  * @author Andres Almiray
  */
 
-includeTargets << griffonScript('_PackageArtifact')
+if (getBinding().variables.containsKey('_griffon_package_archetype_called')) return
+_griffon_package_archetype_called = true
+
+includeTargets << griffonScript('_GriffonPackageArtifact')
 
 target(name: 'packageArchetype',
        description: 'Packages a Griffon archetype',

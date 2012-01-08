@@ -18,17 +18,21 @@ import griffon.util.GriffonNameUtils
 import griffon.util.GriffonUtil
 import griffon.util.MD5
 import groovy.json.JsonBuilder
+import org.codehaus.griffon.artifacts.ArtifactRepository
 import org.codehaus.griffon.artifacts.model.Plugin
 import org.codehaus.griffon.artifacts.model.Release
 import org.springframework.core.io.Resource
+import static griffon.util.GriffonNameUtils.isBlank
 
 /**
  * @author Andres Almiray
  */
 
 // No point doing this stuff more than once.
-if (getBinding().variables.containsKey('_package_artifact_called')) return
-_package_artifact_called = true
+if (getBinding().variables.containsKey('_griffon_package_artifact_called')) return
+_griffon_package_artifact_called = true
+
+includeTargets << griffonScript('_GriffonArtifacts')
 
 packageForRelease = false
 
@@ -167,4 +171,52 @@ createArtifactRelease = { String type, Map artifactInfo ->
 
     release = Release.makeFromJSON(type, artifactInfo)
     release.file = releaseFile
+}
+
+setupCredentials = {
+    username = ''
+    password = ''
+    if (artifactRepository.type != ArtifactRepository.REMOTE) return
+
+    username = resolveCredential('username')
+    password = resolveCredential('password')
+}
+
+resolveCredential = { String key ->
+    String value = artifactRepository[key]
+
+    if (isBlank(value)) {
+        value = argsMap[key]
+    }
+
+    if (isBlank(value)) {
+        String prop = "credential.${key}".toString()
+        ant.input(message: "Please enter your ${key}:", addproperty: prop) {
+            if (key == 'password') handler(type: 'secure')
+        }
+        value = ant.antProject.getProperty(prop)
+    }
+
+    if (isBlank(value)) {
+        event('StatusError', ["You must provide a value for your ${key} when releasing artifacts to ${repository.name}."])
+        exit(1)
+    }
+
+    value
+}
+
+resolveCommitMessage = {
+    commitMessage = argsMap.message
+
+    if (isBlank(commitMessage)) {
+        ant.input(message: 'Enter a commit message: ', addproperty: 'commit.message')
+        commitMessage = ant.antProject.properties.'commit.message'
+    }
+
+    if (isBlank(commitMessage)) {
+        event('StatusError', ["You must provide a commit message when releasing artifacts."])
+        exit(1)
+    }
+
+    commitMessage
 }

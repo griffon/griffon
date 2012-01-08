@@ -18,6 +18,7 @@
  * @author Andres Almiray
  */
 
+includeTargets << griffonScript('_GriffonArtifacts')
 includeTargets << griffonScript('_GriffonCreateProject')
 
 projectType = 'archetype'

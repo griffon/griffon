@@ -20,6 +20,8 @@ import org.codehaus.griffon.artifacts.model.Archetype
  * @author Andres Almiray
  */
 
+includeTargets << griffonScript('_GriffonListArtifacts')
+
 target(listArchetypes: 'Lists all archetypes available in an artifact repository') {
     listArtifacts(Archetype.TYPE)
 }

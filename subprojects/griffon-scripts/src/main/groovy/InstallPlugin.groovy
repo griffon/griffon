@@ -20,6 +20,8 @@ import org.codehaus.griffon.artifacts.model.Plugin
  * @author Andres Almiray
  */
 
+includeTargets << griffonScript('_GriffonArtifacts')
+
 target(installPlugin: "Installs a plugin for the given URL or name and version") {
     ant.mkdir(dir: pluginsBase)
     installArtifact(Plugin.TYPE)

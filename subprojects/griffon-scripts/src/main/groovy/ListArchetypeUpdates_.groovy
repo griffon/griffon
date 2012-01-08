@@ -20,6 +20,8 @@ import org.codehaus.griffon.artifacts.model.Archetype
  * @author Andres Almiray
  */
 
+includeTargets << griffonScript('_GriffonListArtifacts')
+
 target(listArchetypeUpdates: '') {
     doListArtifactUpdates(Archetype.TYPE)
 }

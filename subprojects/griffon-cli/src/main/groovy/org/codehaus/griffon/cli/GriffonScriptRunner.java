@@ -921,7 +921,7 @@ public class GriffonScriptRunner {
             setupScript("_GriffonArgParsing");
             setupScript("_GriffonEvents");
             setupScript("_GriffonProxy");
-            setupScript("_ResolveDependencies");
+            setupScript("_GriffonResolveDependencies");
             setupScript("_GriffonClasspath");
         }
 

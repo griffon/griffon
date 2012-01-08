@@ -21,9 +21,12 @@ import org.codehaus.griffon.artifacts.model.Plugin
  * @author Andres Almiray
  */
 
-includeTargets << griffonScript('_PackageArtifact')
+if (getBinding().variables.containsKey('_griffon_package_plugin_called')) return
+_griffon_package_plugin_called = true
+
+includeTargets << griffonScript('_GriffonPackageArtifact')
 includeTargets << griffonScript('_GriffonPackage')
-includeTargets << griffonScript('_PackageAddon')
+includeTargets << griffonScript('_GriffonPackageAddon')
 includeTargets << griffonScript('_GriffonDocs')
 
 PLUGIN_RESOURCES = [

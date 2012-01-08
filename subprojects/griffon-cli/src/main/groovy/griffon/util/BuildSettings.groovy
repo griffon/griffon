@@ -263,35 +263,6 @@ class BuildSettings extends AbstractBuildSettings {
 
     List buildListeners = []
 
-    /*
-    public void resetDependencies() {
-        resetCompileDependencies()
-        resetRuntimeDependencies()
-        resetTestDependencies()
-        resetBuildDependencies()
-    }
-
-    public void resetCompileDependencies() {
-        compileDependencies.clear()
-        compileDependencies.addAll(defaultCompileDependenciesClosure())
-    }
-
-    public void resetRuntimeDependencies() {
-        runtimeDependencies.clear()
-        runtimeDependencies.addAll(defaultRuntimeDependenciesClosure())
-    }
-
-    public void resetTestDependencies() {
-        testDependencies.clear()
-        testDependencies.addAll(defaultTestDependenciesClosure())
-    }
-
-    public void resetBuildDependencies() {
-        buildDependencies.clear()
-        buildDependencies.addAll(buildDependenciesClosure())
-    }
-    */
-
     /**
      * Return whether the BuildConfig has been modified
      */
@@ -884,6 +855,7 @@ class BuildSettings extends AbstractBuildSettings {
                     new File("$path/plugin-dependencies.groovy")
             ]
 
+            debug("Resolving plugin ${pluginName}-${pluginVersion} JAR dependencies")
             dependencyDescriptors.each { File dependencyDescriptor ->
                 if (dependencyDescriptor.exists()) {
                     def gcl = obtainGroovyClassLoader()
@@ -1042,29 +1014,14 @@ class BuildSettings extends AbstractBuildSettings {
         return baseDir.canonicalFile
     }
 
-    void addJarsToRootLoader(Collection pluginJars) {
-        ClassLoader loader = getClass().classLoader.rootLoader
-        for (File jar: pluginJars) {
-            addUrlIfNotPresent loader, jar
-        }
-    }
-
-    private void addUrlIfNotPresent(ClassLoader to, what) {
-        if (!to || !what) return
-        def urls = to.URLs.toList()
-        switch (what.class) {
-            case URL: what = new File(what.toURI()); break
-            case String: what = new File(what); break
-            case GString: what = new File(what.toString()); break
-            case File: break; // ok
-            default:
-                return
-        }
-
-        if (what.directory && !what.exists()) what.mkdirs()
-        def url = what.toURI().toURL()
-        if (!urls.contains(url) && (what.directory || !urls.find {it.path.endsWith(what.name)})) {
-            to.addURL(url)
+    void updateDependenciesFor(String conf, List<File> dependencies) {
+        List<File> existingDependencies = this."${conf}Dependencies"
+        List<File> newDependencies = existingDependencies - dependencies.unique()
+        if (newDependencies) {
+            this."${conf}Dependencies".addAll(newDependencies)
+            for (File jar: newDependencies) {
+                getClass().classLoader.rootLoader.addURL(jar.toURI().toURL())
+            }
         }
     }
 }

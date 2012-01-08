@@ -21,20 +21,23 @@ import org.codehaus.griffon.artifacts.ArtifactInstallEngine
  */
 
 // No point doing this stuff more than once.
-if (getBinding().variables.containsKey('_resolve_dependencies_called')) return
-_resolve_dependencies_called = true
+if (getBinding().variables.containsKey('_griffon_resolve_dependencies_called')) return
+_griffon_resolve_dependencies_called = true
 
 includeTargets << griffonScript('_GriffonArtifacts')
 
+runDependencyResolution = true
 target('resolveDependencies': '') {
-    long start = System.currentTimeMillis()
-    event 'StatusUpdate', ['Resolving plugin dependencies']
-    ArtifactInstallEngine artifactInstallEngine = createArtifactInstallEngine()
-    if (!artifactInstallEngine.resolvePluginDependencies()) {
-        exit(1)
-    }
+    if (runDependencyResolution) {
+        long start = System.currentTimeMillis()
+        event 'StatusUpdate', ['Resolving plugin dependencies']
+        ArtifactInstallEngine artifactInstallEngine = createArtifactInstallEngine()
+        if (!artifactInstallEngine.resolvePluginDependencies()) {
+            exit(1)
+        }
 
-    pluginSettings.resolveAndAddAllPluginDependencies()
-    long end = System.currentTimeMillis()
-    event 'StatusFinal', ["Plugin dependencies resolved in ${end - start} ms."]
+        pluginSettings.resolveAndAddAllPluginDependencies()
+        long end = System.currentTimeMillis()
+        event 'StatusFinal', ["Plugin dependencies resolved in ${end - start} ms."]
+    }
 }

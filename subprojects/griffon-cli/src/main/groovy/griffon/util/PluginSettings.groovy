@@ -196,8 +196,8 @@ class PluginSettings {
             }
         }
 
-        configurations.each { conf, list ->
-            settings.addJarsToRootLoader list.unique()
+        configurations.each { String conf, List<File> dependencies ->
+            settings.updateDependenciesFor conf, dependencies
         }
     }
 

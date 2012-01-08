@@ -115,6 +115,21 @@ class ArtifactInstallEngine {
             installedPlugins.remove(name)
         }
 
+        if (!missingPlugins) {
+            /*
+            try {
+                installedPlugins.each { name, version ->
+                    resolvePluginJarDependencies(getInstallPathFor(Plugin.TYPE, name, version).absolutePath, name, version)
+                }
+            } catch (Exception e) {
+                GriffonExceptionHandler.sanitize(e)
+                eventHandler 'StatusError', e.message
+                errorHandler "Cannot continue with unresolved dependencies."
+            }
+            */
+            return true
+        }
+
         ArtifactDependencyResolver resolver = new ArtifactDependencyResolver()
         List<ArtifactDependency> dependencies = []
         try {
@@ -417,7 +432,7 @@ class ArtifactInstallEngine {
         ]
 
         if (dependencyDescriptors.any {it.exists()}) {
-            eventHandler 'StatusUpdate', 'Resolving plugin JAR dependencies'
+            eventHandler 'StatusUpdate', "Resolving plugin ${pluginName}-${pluginVersion} JAR dependencies"
             def callable = settings.pluginDependencyHandler()
             callable.call(new File(pluginInstallPath), pluginName, pluginVersion)
             IvyDependencyManager dependencyManager = settings.dependencyManager
@@ -426,7 +441,7 @@ class ArtifactInstallEngine {
                 if (resolveReport.hasError()) {
                     throw new InstallArtifactException("Plugin ${pluginName}-${pluginVersion} has missing JAR dependencies.")
                 } else {
-                    settings.addJarsToRootLoader resolveReport.allArtifactsReports.localFile
+                    settings.updateDependenciesFor conf, resolveReport.allArtifactsReports.localFile
                 }
             }
         }

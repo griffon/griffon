@@ -20,6 +20,8 @@ import org.codehaus.griffon.artifacts.model.Plugin
  * @author Andres Almiray
  */
 
+includeTargets << griffonScript('_GriffonListArtifacts')
+
 target(listPluginUpdates: '') {
     doListArtifactUpdates(Plugin.TYPE)
 }

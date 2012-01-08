@@ -21,8 +21,8 @@
  */
 
 // No point doing this stuff more than once.
-if (getBinding().variables.containsKey("_package_addon_called")) return
-_package_addon_called = true
+if (getBinding().variables.containsKey('_griffon_package_addon_called')) return
+_griffon_package_addon_called = true
 
 includeTargets << griffonScript('_GriffonPackage')
 

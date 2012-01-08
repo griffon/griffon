@@ -20,6 +20,8 @@ import org.codehaus.griffon.artifacts.model.Archetype
  * @author Andres Almiray
  */
 
+includeTargets << griffonScript('_GriffonArtifacts')
+
 target(installArchetype: "Installs an archetype for the given URL or name and version") {
     ant.mkdir(dir: archetypesBase)
     installArtifact(Archetype.TYPE)
