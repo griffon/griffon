@@ -41,12 +41,14 @@ includeTargets << griffonScript('_GriffonCompile')
 
 configTweaks = []
 
-target(createConfig: "Creates the configuration object") {
+target(name: 'createConfig', description: 'Creates the configuration object',
+        prehook: null, posthook: null) {
     depends(compile)
     configTweaks.each {tweak -> tweak() }
 }
 
-target(packageApp: "Implementation of package target") {
+target(name: 'packageApp', description: '',
+        prehook: null, posthook: null) {
     depends(createStructure)
 
     try {
@@ -78,7 +80,8 @@ target(packageApp: "Implementation of package target") {
     event("PackagingEnd", [])
 }
 
-target(packageResources: "Presp app/plugin resources for packaging") {
+target(name: 'packageResources', description: "Presp app/plugin resources for packaging",
+        prehook: null, posthook: null) {
     i18nDir = new File("${resourcesDirPath}/griffon-app/i18n")
     ant.mkdir(dir: i18nDir)
 
@@ -175,7 +178,8 @@ collectArtifactMetadata = {
     }
 }
 
-target(checkKey: "Check to see if the keystore exists") {
+target(name: 'checkKey', description: "Check to see if the keystore exists",
+        prehook: null, posthook: null) {
     if (buildConfig.griffon.jars.sign) {
         // check for passwords
         // pw is echoed, but jarsigner does that too...
@@ -203,7 +207,8 @@ target(checkKey: "Check to see if the keystore exists") {
     }
 }
 
-target(jarFiles: "Jar up the package files") {
+target(name: 'jarFiles', description: "Jar up the package files",
+        prehook: null, posthook: null) {
     if (argsMap['jar']) return
     boolean upToDate = ant.antProject.properties.appJarUpToDate
     ant.mkdir(dir: jardir)
@@ -241,7 +246,8 @@ target(jarFiles: "Jar up the package files") {
     griffonCopyDist(destFileName, jardir, !upToDate)
 }
 
-target(mergeManifest: 'Generates a Manifest with default and custom settings') {
+target(name: 'mergeManifest', description: 'Generates a Manifest with default and custom settings',
+        prehook: null, posthook: null) {
     String mainClass = RunMode.current == RunMode.APPLET ? griffonAppletClass : griffonApplicationClass
     manifestMap = [
             'Main-Class': mainClass,
@@ -444,7 +450,8 @@ maybePackAndSign = {srcFile, targetFile = srcFile, boolean force = false ->
     return targetFile
 }
 
-target(generateJNLP: "Generates the JNLP File") {
+target(name: 'generateJNLP', description: "Generates the JNLP File",
+        prehook: null, posthook: null) {
     ant.copy(todir: jardir, overwrite: true) {
         fileset(dir: "${basedir}/griffon-app/conf/webstart")
     }

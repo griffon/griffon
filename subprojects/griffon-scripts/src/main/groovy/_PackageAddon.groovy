@@ -26,7 +26,8 @@ _package_addon_called = true
 
 includeTargets << griffonScript('_GriffonPackage')
 
-target('packageAddon': "Packages a Griffon addon. Note: to package a plugin use 'griffon package-plugin'") {
+target(name: 'packageAddon', description: 'Packages a Griffon addon',
+        prehook: null, posthook: null) {
     depends(checkVersion)
     projectType = 'plugin'
     createStructure()

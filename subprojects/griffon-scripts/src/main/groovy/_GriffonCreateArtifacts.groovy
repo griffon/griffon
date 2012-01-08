@@ -235,7 +235,7 @@ extractArtifactName = { name ->
     return [artifactPkg, artifactName]
 }
 
-target(resolveArchetype: '') {
+target(name: 'resolveArchetype', description: '', prehook: null, posthook: null) {
     if (!archetypeName && !archetypeVersion) {
         Map<String, String> archetype = Metadata.current.getArchetype()
         if (archetype) {
@@ -269,7 +269,7 @@ target(resolveArchetype: '') {
     }
 }
 
-target(resolveFileType: '') {
+target(name: 'resolveFileType', description: '', prehook: null, posthook: null) {
     def cfileType = buildConfig.app.fileType
     if (!cfileType && cfileType instanceof ConfigObject) cfileType = null
     fileType = argsMap.fileType ?: (cfileType ?: 'groovy')

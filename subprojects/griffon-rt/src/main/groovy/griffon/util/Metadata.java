@@ -191,7 +191,12 @@ public class Metadata extends Properties {
      * @return Supported toolkits by this application
      */
     public String[] getApplicationToolkits() {
-        return ((String) get(APPLICATION_TOOLKITS)).split(",");
+        String toolkits = (String) get(APPLICATION_TOOLKITS);
+        if (toolkits == null) {
+            return new String[0];
+        } else {
+            return toolkits.split(",");
+        }
     }
 
     /**
@@ -308,8 +313,7 @@ public class Metadata extends Properties {
      * Saves the current state of the Metadata object
      */
     public void persist() {
-        if (propertiesHaveNotChanged())
-            return;
+        // if (propertiesHaveNotChanged()) return;
 
         if (metadataFile != null) {
             FileOutputStream out = null;

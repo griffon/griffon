@@ -339,7 +339,7 @@ class BuildSettings extends AbstractBuildSettings {
     private List<File> internalCompileDependencies
     @Lazy List<File> defaultCompileDependencies = {
         if (internalCompileDependencies) return internalCompileDependencies
-        LOG.info "Resolving [compile] dependencies..."
+        LOG.debug "Resolving [compile] dependencies..."
         List<File> jarFiles
         if (shouldResolve()) {
             compileResolveReport = dependencyManager.resolveDependencies(IvyDependencyManager.COMPILE_CONFIGURATION)
@@ -375,7 +375,7 @@ class BuildSettings extends AbstractBuildSettings {
     /** List containing the default test-time dependencies of the app as File instances.  */
     private List<File> internalTestDependencies
     @Lazy List<File> defaultTestDependencies = {
-        LOG.info "Resolving [test] dependencies..."
+        LOG.debug "Resolving [test] dependencies..."
         if (internalTestDependencies) return internalTestDependencies
         if (shouldResolve()) {
 
@@ -411,7 +411,7 @@ class BuildSettings extends AbstractBuildSettings {
     /** List containing the default runtime-time dependencies of the app as File instances.  */
     private List<File> internalRuntimeDependencies
     @Lazy List<File> defaultRuntimeDependencies = {
-        LOG.info "Resolving [runtime] dependencies..."
+        LOG.debug "Resolving [runtime] dependencies..."
         if (internalRuntimeDependencies) return internalRuntimeDependencies
         if (shouldResolve()) {
 
@@ -453,7 +453,7 @@ class BuildSettings extends AbstractBuildSettings {
 
         if (shouldResolve()) {
 
-            LOG.info "Resolving [build] dependencies..."
+            LOG.debug "Resolving [build] dependencies..."
             buildResolveReport = dependencyManager.resolveDependencies(IvyDependencyManager.BUILD_CONFIGURATION)
             def jarFiles = buildResolveReport.getArtifactsReports(null, false).findAll {it.downloadStatus.toString() != 'failed'}.localFile + applicationJars
 
@@ -891,10 +891,12 @@ class BuildSettings extends AbstractBuildSettings {
                     try {
                         debug("Parsing dependencies from ${dependencyDescriptor}")
                         Script script = gcl.parseClass(dependencyDescriptor)?.newInstance()
-                        script.binding.pluginName = pluginName
-                        script.binding.pluginVersion = pluginVersion
-                        script.binding.pluginDirPath = path
                         if (script) {
+                            pluginSlurper.binding = [
+                                    pluginName: pluginName,
+                                    pluginVersion: pluginVersion,
+                                    pluginDirPath: path
+                            ]
                             def pluginConfig = pluginSlurper.parse(script)
                             def pluginDependencyConfig = pluginConfig.griffon.project.dependency.resolution
                             if (pluginDependencyConfig instanceof Closure) {
@@ -925,15 +927,18 @@ class BuildSettings extends AbstractBuildSettings {
     }
 
     File isPluginProject() {
-        baseDir.listFiles().find { it.name.endsWith(PLUGIN_DESCRIPTOR_SUFFIX) }
+        baseDir.listFiles().find {it.name.endsWith(PLUGIN_DESCRIPTOR_SUFFIX)}
     }
 
     File isArchetypeProject() {
-        baseDir.listFiles().find { it.name.endsWith(ARCHETYPE_DESCRIPTOR_SUFFIX) }
+        baseDir.listFiles().find {it.name.endsWith(ARCHETYPE_DESCRIPTOR_SUFFIX)}
     }
 
     File isAddonPlugin() {
-        baseDir.listFiles().find { it.name.endsWith(ADDON_DESCRIPTOR_SUFFIX) || it.name.endsWith(ADDON_DESCRIPTOR_SUFFIX_JAVA) }
+        baseDir.listFiles().find {
+            it.name.endsWith(ADDON_DESCRIPTOR_SUFFIX) ||
+                    it.name.endsWith(ADDON_DESCRIPTOR_SUFFIX_JAVA)
+        }
     }
 
     boolean isGriffonProject() {

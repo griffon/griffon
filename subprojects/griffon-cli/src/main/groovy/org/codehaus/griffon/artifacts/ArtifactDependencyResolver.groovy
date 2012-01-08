@@ -39,8 +39,11 @@ class ArtifactDependencyResolver {
         processedDependencies.clear()
         List<ArtifactDependency> artifactDependencies = []
         dependencies.each { name, version ->
-            ArtifactDependency.Key key = new ArtifactDependency.Key(name, version)
-            if (processedDependencies.get(key)) return
+            if (version == '<noversion>' || version == '<latest>') version = null
+            if (version) {
+                ArtifactDependency.Key key = new ArtifactDependency.Key(name, version)
+                if (processedDependencies.get(key)) return
+            }
             ArtifactDependency dependency = resolveDependencyTree(type, name, version)
             artifactDependencies << dependency
         }

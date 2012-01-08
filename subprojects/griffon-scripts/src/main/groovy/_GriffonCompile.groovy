@@ -76,17 +76,12 @@ compileSources = { destinationDir, classpathId, sources ->
     }
 }
 
-target(compile: "Implementation of compilation phase") {
+target(name: 'compile', description: "Implementation of compilation phase",
+        prehook: null, posthook: null) {
     profile("Compiling sources to location [$projectMainClassesDir]") {
         // If this is a plugin project, the descriptor is not included
         // in the compiler's source path. So, we manually compile it
         // now.
-        /*
-        if (isPluginProject) {
-            def pluginFile = new File("${basedir}").list().find { it =~ /GriffonPlugin\.groovy/ }
-            resolvePluginClasspathDependencies(loadPluginClass(pluginFile))
-        }
-        */
 
         String classpathId = 'griffon.compile.classpath'
 
@@ -148,13 +143,8 @@ target(compile: "Implementation of compilation phase") {
     compileProjectTests()
 }
 
-target(compileProjectTests: "Compiles shared test sources") {
-    /*
-    pluginSettings.pluginTestJars.each { jarResource ->
-        addUrlIfNotPresent classLoader, jarResource.file
-    }
-    */
-
+target(name: 'compileProjectTests', description: "Compiles shared test sources",
+        prehook: null, posthook: null) {
     compileProjectTestSrc(basedir)
     def metainfDir = new File("${basedir}/griffon-app/conf/metainf")
     boolean hasMetainf = hasFiles(dir: metainfDir, excludes: '**/*.svn/**, **/CVS/**')

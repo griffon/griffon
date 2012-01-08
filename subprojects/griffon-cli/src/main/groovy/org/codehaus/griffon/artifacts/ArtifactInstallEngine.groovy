@@ -110,7 +110,7 @@ class ArtifactInstallEngine {
         }
 
         pluginsToDelete.each {name, version ->
-            eventHandler 'StatusUpdate', "Plugin ${name}-${version} is installed, but was not found in the application's metadata. Removing this plugin from the application's plugin base."
+            eventHandler 'StatusUpdate', "Plugin ${name}-${version} is installed, but was not found in the application's metadata. Removing this plugin from the application's plugin base"
             ant.delete(dir: getInstallPathFor(Plugin.TYPE, name, version), failonerror: false)
             installedPlugins.remove(name)
         }
@@ -130,7 +130,7 @@ class ArtifactInstallEngine {
         }
 
         try {
-            return installPlugins(dependencies, resolver)
+            return _installPlugins(dependencies, resolver)
         } catch (InstallArtifactException iae) {
             errorHandler "Could not resolve plugin dependencies."
         }
@@ -143,7 +143,7 @@ class ArtifactInstallEngine {
         List<ArtifactDependency> dependencies = resolveDependenciesFor(resolver, type, name, version)
 
         try {
-            return installPlugins(dependencies, resolver)
+            return _installPlugins(dependencies, resolver)
         } catch (InstallArtifactException iae) {
             errorHandler "Installation of ${type} ${name}${version ? '-' + version : ''} aborted."
         }
@@ -165,13 +165,13 @@ class ArtifactInstallEngine {
         }
 
         try {
-            return installPlugins(dependencies, resolver)
+            return _installPlugins(dependencies, resolver)
         } catch (InstallArtifactException iae) {
             errorHandler "Could not resolve plugin dependencies."
         }
     }
 
-    private boolean installPlugins(List<ArtifactDependency> dependencies, ArtifactDependencyResolver resolver) {
+    private boolean _installPlugins(List<ArtifactDependency> dependencies, ArtifactDependencyResolver resolver) {
         installedArtifacts.clear()
         uninstalledArtifacts.clear()
 
@@ -339,7 +339,12 @@ class ArtifactInstallEngine {
                 if (new File(artifactInstallPath, 'plugin.xml').exists()) {
                     generateDependencyDescriptorFor(artifactInstallPath, artifactName, releaseVersion)
                 }
-                resolvePluginJarDependencies(artifactInstallPath, artifactName, releaseVersion)
+                try {
+                    resolvePluginJarDependencies(artifactInstallPath, artifactName, releaseVersion)
+                } catch (InstallArtifactException iae) {
+                    ant.mkdir(dir: artifactInstallPath)
+                    throw iae
+                }
                 if (!settings.isPluginProject()) {
                     def installScript = new File("${artifactInstallPath}/scripts/_Install.groovy")
                     runPluginScript(installScript, releaseName, 'post-install script')
@@ -350,7 +355,7 @@ class ArtifactInstallEngine {
                 break
         }
 
-        if (settings.isGriffonProject() && !settings.isArchetypeProject()) {
+        if (!settings.isArchetypeProject()) {
             switch (type) {
                 case Plugin.TYPE:
                     metadata["${type}s." + release.artifact.name] = release.version
@@ -378,14 +383,14 @@ class ArtifactInstallEngine {
 
         String compile = ''
         if (addonJar.exists()) {
-            compile = "compile(group: '${name}', name: 'griffon-${name}-addon', version: '${version}')"
+            compile = "compile(group: 'org.codehaus.griffon.plugins', name: 'griffon-${name}-addon', version: '${version}')"
         }
         if (cliJar.exists()) {
-            compile += "\n\t\tcompile(group: '${name}', name: 'griffon-${name}-cli', version: '${version}')"
+            compile += "\n\t\tcompile(group: 'org.codehaus.griffon.plugins', name: 'griffon-${name}-cli', version: '${version}')"
         }
         String test = ''
         if (testJar.exists()) {
-            test = "test(group: '${name}', name: 'griffon-${name}', version: ${version}', classifier: 'test')"
+            test = "test(group: 'org.codehaus.griffon.plugins', name: 'griffon-${name}', version: ${version}', classifier: 'test')"
         }
 
         File dependencyDescriptor = new File("${pluginDirPath}/plugin-dependencies.groovy")
@@ -393,8 +398,8 @@ class ArtifactInstallEngine {
         |griffon.project.dependency.resolution = {
         |    repositories {
         |        flatDir(name: 'plugin ${name}-${version}', dirs: [
-        |            '${pluginDirPath}/dist',
-        |            '${pluginDirPath}/addon'
+        |            "\${pluginDirPath}/dist",
+        |            "\${pluginDirPath}/addon"
         |        ])
         |    }
         |
@@ -503,10 +508,6 @@ class ArtifactInstallEngine {
                 }
             }
 
-            metadata.propertyNames().each { property ->
-                println "${property} ${metadata[property]}"
-            }
-
             // check toolkits
             List<String> requiredToolkits = release.artifact.toolkits*.lowercaseName
             if (LOG.debugEnabled) {
@@ -519,7 +520,7 @@ class ArtifactInstallEngine {
                 }
                 List<String> unsupportedToolkits = supportedToolkits - requiredToolkits
                 // 2nd condition is a special case for plugins that provide toolkit support
-                if (unsupportedToolkits && unsupportedToolkits != [release.artifact.name]) {
+                if (!unsupportedToolkits.isEmpty() && unsupportedToolkits != [release.artifact.name]) {
                     eventHandler 'StatusError', "Current application has ${supportedToolkits} as supported UI toolkits.\nThe plugin [${artifactNameAndVersion}] requires any of the following toolkits: ${requiredToolkits}"
                     throw new InstallArtifactException("Installation of ${type} ${artifactNameAndVersion} aborted.")
                 }

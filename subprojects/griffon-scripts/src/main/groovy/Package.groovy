@@ -31,8 +31,22 @@ includeTargets << griffonScript('_GriffonPackage')
 
 ant.taskdef(name: 'fileMerge', classname: 'org.codehaus.griffon.ant.taskdefs.FileMergeTask')
 
-target('package': "Packages a Griffon application.") {
-    depends(checkVersion, createConfig)
+target('package': 'Packages a Griffon project according to its type') {
+    if(griffonSettings.isPluginProject()) {
+        includeTargets << griffonScript('PackagePlugin')
+        depends(checkVersion, packagePlugin)
+        return
+    } else if(griffonSettings.isArchetypeProject()) {
+        includeTargets << griffonScript('PackageArchetype')
+        depends(checkVersion, packageArchetype)
+        return
+    } else {
+        depends(checkVersion, packageApplication)
+    }
+}
+
+target(packageApplication: 'Packages a GriffonApplication') {
+    depends(createConfig)
 
     // create general dist dir
     distDir = buildConfig.griffon.dist.dir ?: "${basedir}/dist"

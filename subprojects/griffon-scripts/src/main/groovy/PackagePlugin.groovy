@@ -47,7 +47,8 @@ PLUGIN_RESOURCES = [
         ]
 ]
 
-target(packagePlugin: 'Packages a Griffon plugin') {
+target(name: 'packagePlugin', description: 'Packages a Griffon plugin',
+        prehook: null, posthook: null) {
     depends(checkVersion)
 
     pluginDescriptor = ArtifactUtils.getPluginDescriptor(basedir)
@@ -64,36 +65,38 @@ target(packagePlugin: 'Packages a Griffon plugin') {
 
 setDefaultTarget(packagePlugin)
 
-target('package_plugin': '') {
-    depends(compile, packageAddon, pluginDocs, pluginShared)
+target(name: 'package_plugin', description: '',
+        prehook: null, posthook: null) {
+    depends(compile, packageAddon, pluginDocs, pluginTest)
 
     if (griffonSettings.dependencyManager.hasApplicationDependencies()) {
         ant.copy(file: "$basedir/griffon-app/conf/BuildConfig.groovy",
                 tofile: "$artifactPackageDirPath/dependencies.groovy", failonerror: false)
     }
 
-    File runtimeJar = new File("${artifactPackageDirPath}/dist/griffon-${name}-${version}-runtime.jar")
-    File compileJar = new File("${artifactPackageDirPath}/dist/griffon-${name}-${version}-compile.jar")
-    File testJar = new File("${artifactPackageDirPath}/dist/griffon-${name}-${version}-test.jar")
+    File runtimeJar = new File("${artifactPackageDirPath}/dist/griffon-${pluginName}-${pluginVersion}-runtime.jar")
+    File compileJar = new File("${artifactPackageDirPath}/dist/griffon-${pluginName}-${pluginVersion}-compile.jar")
+    File testJar = new File("${artifactPackageDirPath}/dist/griffon-${pluginName}-${pluginVersion}-test.jar")
 
     String compile = ''
     if (runtimeJar.exists()) {
-        compile = "compile(group: '${name}', name: 'griffon-${name}', version: '${version}', classifier: 'runtime')"
+        compile = "compile(group: 'org.codehaus.griffon.plugins', name: 'griffon-${pluginName}', version: '${pluginVersion}', classifier: 'runtime')"
     }
     if (compileJar.exists()) {
-        compile += "\n\t\tcompile(group: '${name}', name: 'griffon-${name}', version: '${version}' classifier: 'compile')"
+        compile += "\n\t\tcompile(group: 'org.codehaus.griffon.plugins', name: 'griffon-${pluginName}', version: '${pluginVersion}' classifier: 'compile')"
     }
     String test = ''
     if (testJar.exists()) {
-        test = "test(group: '${name}', name: 'griffon-${name}', version: ${version}', classifier: 'test')"
+        test = "test(group: 'org.codehaus.griffon.plugins', name: 'griffon-${pluginName}', version: ${pluginVersion}', classifier: 'test')"
     }
 
-    File dependencyDescriptor = new File("${artifactPackageDirPath}/plugin-dependencies.groovy")
-    dependencyDescriptor.text = """
+    if (compile || test) {
+        File dependencyDescriptor = new File("${artifactPackageDirPath}/plugin-dependencies.groovy")
+        dependencyDescriptor.text = """
         |griffon.project.dependency.resolution = {
         |    repositories {
-        |        flatDir(name: 'plugin ${name}-${version}', dirs: [
-        |            '\${pluginDirPath}/dist'
+        |        flatDir(name: 'plugin ${pluginName}-${pluginVersion}', dirs: [
+        |            "\${pluginDirPath}/dist"
         |        ])
         |    }
         |
@@ -102,9 +105,11 @@ target('package_plugin': '') {
         |        $test
         |    }
         |}""".stripMargin().trim()
+    }
 }
 
-target('post_package_plugin': '') {
+target(name: 'post_package_plugin', description: '',
+        prehook: null, posthook: null) {
     ant.zip(destfile: "${artifactPackageDirPath}/${artifactZipFileName}", update: true, filesonly: true) {
         fileset(dir: basedir) {
             PLUGIN_RESOURCES.INCLUSIONS.each {
@@ -128,7 +133,8 @@ target('post_package_plugin': '') {
     }
 }
 
-target(pluginDocs: "Generates and packages plugin documentation") {
+target(name: 'pluginDocs', description: 'Generates and packages plugin documentation',
+        prehook: null, posthook: null) {
     pluginDocDir = "${artifactPackageDirPath}/docs"
     ant.mkdir(dir: pluginDocDir)
 
@@ -210,7 +216,8 @@ target(pluginDocs: "Generates and packages plugin documentation") {
     }
 }
 
-target(pluginShared: '') {
+target(name: 'pluginTest', description: '',
+        prehook: null, posthook: null) {
     def projectTestDir = new File("${basedir}/src/test")
     def testResourcesDir = new File("${basedir}/test/resources")
 

@@ -95,7 +95,7 @@ Lorem ipsum
     ]
 
     if (type == Plugin.TYPE) {
-        map + [
+        map += [
                 toolkits: descriptorInstance.toolkits,
                 platforms: descriptorInstance.platforms,
                 dependencies: descriptorInstance.dependsOn.collect([]) { entry ->
@@ -107,7 +107,8 @@ Lorem ipsum
     map
 }
 
-target('packageArtifact': '') {
+target(name: 'packageArtifact', description: '',
+        prehook: null, posthook: null) {
     artifactPackageDirPath = "${projectTargetDir}/package"
     ant.delete(dir: artifactPackageDirPath, quiet: true, failOnError: false)
     ant.mkdir(dir: artifactPackageDirPath)

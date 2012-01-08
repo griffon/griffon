@@ -23,7 +23,9 @@ import org.codehaus.griffon.artifacts.model.Archetype
 
 includeTargets << griffonScript('_PackageArtifact')
 
-target(packageArchetype: 'Packages a Griffon archetype') {
+target(name: 'packageArchetype',
+       description: 'Packages a Griffon archetype',
+       prehook: null, posthook: null) {
     depends(checkVersion)
 
     archetypeDescriptor = ArtifactUtils.getArchetypeDescriptor(basedir)
@@ -38,7 +40,8 @@ target(packageArchetype: 'Packages a Griffon archetype') {
 
 setDefaultTarget(packageArchetype)
 
-target('package_archetype': '') {
+target(name: 'package_archetype', description: '',
+       prehook: null, posthook: null) {
     ant.copy(todir: artifactPackageDirPath) {
         fileset(dir: basedir, includes: 'LICENSE*, application.groovy')
     }
@@ -53,6 +56,7 @@ target('package_archetype': '') {
     }
 }
 
-target('post_package_archetype': '') {
+target(name: 'post_package_archetype', description: '',
+        prehook: null, posthook: null) {
     // empty
 }

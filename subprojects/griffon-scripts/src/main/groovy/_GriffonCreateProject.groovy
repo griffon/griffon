@@ -32,7 +32,8 @@ includeTargets << griffonScript('IntegrateWith')
 
 griffonAppName = ''
 
-target(createApp: "Creates a Griffon application for the given name") {
+target(name: 'createApp', description: "Creates a Griffon application for the given name",
+        prehook: null, posthook: null) {
     depends(appName, resolveFileType)
 
     loadArchetypeFor 'application'
@@ -90,7 +91,8 @@ resetBaseDirectory = { String basedir ->
     pluginsHome = griffonSettings.projectPluginsDir.path
 }
 
-target(createPlugin: "The implementation target") {
+target(name: 'createPlugin', description: '',
+        prehook: null, posthook: null) {
     depends(appName, resolveFileType)
     metadataFile = new File("${basedir}/application.properties")
     projectType = "plugin"
@@ -120,7 +122,8 @@ target(createPlugin: "The implementation target") {
     event('StatusFinal', ["Created plugin ${pluginName}"])
 }
 
-target(createArchetype: "The implementation target") {
+target(name: 'createArchetype', description: '',
+        prehook: null, posthook: null) {
     depends(appName)
     metadataFile = new File("${basedir}/application.properties")
     ant.mkdir(dir: "${basedir}/griffon-app")
@@ -160,7 +163,8 @@ target(createArchetype: "The implementation target") {
     event('StatusFinal', ["Created archetype ${archetypeName}"])
 }
 
-target(initProject: "Initialise an application or plugin project") {
+target(name: 'initProject', description: "Initialise an application or plugin project",
+        prehook: null, posthook: null) {
     depends(createStructure, updateAppProperties)
 
     griffonUnpack(dest: basedir, src: "griffon-shared-files.jar")
@@ -184,7 +188,8 @@ target(initProject: "Initialise an application or plugin project") {
     }
 }
 
-target(appName: "Evaluates the application name") {
+target(name: 'appName', description: "Evaluates the application name",
+        prehook: null, posthook: null) {
     if (argsMap["params"]) {
         griffonAppName = argsMap["params"].join(" ")
     } else {

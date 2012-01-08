@@ -404,7 +404,7 @@ public class GriffonScriptRunner {
 
     private final Map<String, CachedScript> scriptCache = new HashMap<String, CachedScript>();
     private final List<File> scriptsAllowedOutsideOfProject = new ArrayList<File>();
-    private static final Closure DO_NOTHING_CLOSURE = new Closure(new Object()) {
+    private static final Closure DO_NOTHING_CLOSURE = new Closure(GriffonScriptRunner.class) {
         private static final long serialVersionUID = 1L;
 
         @Override
@@ -425,21 +425,13 @@ public class GriffonScriptRunner {
 
     private int callPluginOrGriffonScript(ScriptAndArgs script) {
         // The directory where scripts are cached.
-        File scriptCacheDir = new File(settings.getProjectWorkDir(), "scriptCache");
-        URLClassLoader classLoader = createClassLoader(script, scriptCacheDir);
+        URLClassLoader classLoader = createClassLoader(script);
 
         List<File> potentialScripts;
-        Resource[] allScripts = settings.pluginSettings.getAvailableScripts(); //getAvailableScripts(settings);
-        GantBinding binding;
-        if (scriptCache.get(script.name) != null) {
-            CachedScript cachedScript = scriptCache.get(script.name);
-            potentialScripts = cachedScript.potentialScripts;
-            binding = cachedScript.binding;
-        } else {
-            binding = new GantBinding();
+        Resource[] allScripts = settings.pluginSettings.getAvailableScripts();
+        GantBinding binding = new GantBinding();
             initializeProjectInputStream(binding);
             potentialScripts = findPotentialScripts(script, allScripts, binding);
-        }
 
         // First try to load the script from its file. If there is no
         // file, then attempt to load it as a pre-compiled script. If
@@ -467,9 +459,7 @@ public class GriffonScriptRunner {
                 script.name = scriptFileName;
 
                 // Setup the script to call.
-                Gant gant = createGantInstance(classLoader, binding, script);
-                gant.setUseCache(true);
-                gant.setCacheDirectory(scriptCacheDir);
+                Gant gant = createGantInstance(classLoader, binding);
                 gant.loadScript(scriptFile);
                 return executeWithGantInstance(gant, binding);
             }
@@ -504,39 +494,16 @@ public class GriffonScriptRunner {
             script.name = scriptFileName;
 
             // Set up the script to call.
-            Gant gant = createGantInstance(classLoader, binding, script);
+            Gant gant = createGantInstance(classLoader, binding);
             gant.loadScript(scriptFile);
 
             // Invoke the default target.
             return executeWithGantInstance(gant, binding);
         }
-
-        out.println("Running pre-compiled script");
-
-        // Get Gant to load the class by name using our class loader.
-        Gant gant = createGantInstance(classLoader, binding, script);
-
-        try {
-            loadScriptClass(gant, script.name);
-        } catch (ScriptNotFoundException e) {
-            if (isInteractive) {
-                script.name = fixScriptName(script.name, allScripts);
-                if (script.name == null) {
-                    throw e;
-                }
-
-                loadScriptClass(gant, script.name);
-            } else {
-                throw e;
-            }
-        }
-
-        setRunningEnvironment(script.name, script.env);
-        binding.setVariable(VAR_SCRIPT_ENV, System.getProperty(Environment.KEY));
-        return executeWithGantInstance(gant, binding);
+        return 1;
     }
 
-    private Gant createGantInstance(URLClassLoader classLoader, GantBinding binding, ScriptAndArgs script) {
+    private Gant createGantInstance(URLClassLoader classLoader, GantBinding binding) {
         Gant gant = new Gant(initBinding(binding), classLoader);
         if (griffonInitBuildListener != null && binding.getBuildListeners().contains(griffonInitBuildListener)) {
             binding.removeBuildListener(griffonInitBuildListener);
@@ -585,7 +552,7 @@ public class GriffonScriptRunner {
         return potentialScripts;
     }
 
-    private URLClassLoader createClassLoader(ScriptAndArgs script, File scriptCacheDir) {
+    private URLClassLoader createClassLoader(ScriptAndArgs script) {
         // The class loader we will use to run Gant. It's the root
         // loader plus all the application's compiled classes.
         URLClassLoader classLoader;
@@ -598,9 +565,8 @@ public class GriffonScriptRunner {
 
             // Add the remaining JARs (from 'griffonHome', the app, and
             // the plugins) to the root loader.
-            boolean skipPlugins = "UninstallPlugin".equals(script.name) || "InstallPlugin".equals(script.name);
 
-            URL[] urls = getClassLoaderUrls(settings, scriptCacheDir, existingJars, skipPlugins);
+            URL[] urls = getClassLoaderUrls(settings, existingJars);
             addUrlsToRootLoader(settings.getRootLoader(), urls);
 
             // The compiled classes of the application!
@@ -707,8 +673,9 @@ public class GriffonScriptRunner {
 
     public static int executeWithGantInstance(Gant gant, GantBinding binding) {
         try {
-            // gant.prepareTargets();
-            // Invoke the default target.
+            gant.prepareTargets();
+            gant.setAllPerTargetPreHooks(DO_NOTHING_CLOSURE);
+            gant.setAllPerTargetPostHooks(DO_NOTHING_CLOSURE);
             return gant.executeTargets();
         } catch (RuntimeException e) {
             GriffonExceptionHandler.sanitize(e).printStackTrace();
@@ -814,28 +781,6 @@ public class GriffonScriptRunner {
     }
 
     /**
-     * Returns a list of all the executable Gant scripts available to this application.
-     */
-    /*
-    private static List<File> getAvailableScripts(BuildSettings settings) {
-        List<File> scripts = new ArrayList<File>();
-        if (settings.getGriffonHome() != null) {
-            addCommandScripts(new File(settings.getGriffonHome(), "scripts"), scripts);
-        }
-        addCommandScripts(new File(settings.getBaseDir(), "scripts"), scripts);
-        addCommandScripts(new File(settings.getUserHome(), ".griffon/scripts"), scripts);
-
-        for (File dir : listKnownPluginDirs(settings)) {
-            addPluginScripts(dir, scripts);
-        }
-
-        Collections.sort(scripts);
-
-        return scripts;
-    }
-    */
-
-    /**
      * Collects all the command scripts provided by the plugin contained
      * in the given directory and adds them to the given list.
      */
@@ -868,14 +813,8 @@ public class GriffonScriptRunner {
      * Creates a new root loader with the Griffon libraries and the
      * application's plugin libraries on the classpath.
      */
-    private static URL[] getClassLoaderUrls(BuildSettings settings, File cacheDir, Set<String> excludes, boolean skipPlugins) throws MalformedURLException {
+    private static URL[] getClassLoaderUrls(BuildSettings settings, Set<String> excludes) throws MalformedURLException {
         List<URL> urls = new ArrayList<URL>();
-
-        // If 'griffonHome' is set, make sure the script cache directory takes precedence
-        // over the "griffon-scripts" JAR by adding it first.
-        if (settings.getGriffonHome() != null) {
-            urls.add(cacheDir.toURI().toURL());
-        }
 
         // Add the "resources" directory so that config files and the
         // like can be picked up off the classpath.
@@ -892,20 +831,8 @@ public class GriffonScriptRunner {
             exitWithError("Required Griffon build dependencies were not found. Either GRIFFON_HOME is not set or your dependencies are misconfigured in griffon-app/conf/BuildConfig.groovy");
         }
         addDependenciesToURLs(excludes, urls, buildDependencies);
-        // Add the project's test dependencies (which include runtime dependencies) because most of them
-        // will be required for the build to work.
-        // addDependenciesToURLs(excludes, urls, settings.getTestDependencies());
-
         System.out.println("Dependencies resolved in " + (System.currentTimeMillis() - now) + "ms.");
 
-        /*
-        // Add the libraries of project plugins.
-        if (!skipPlugins) {
-            for (File dir : listKnownPluginDirs(settings)) {
-                addPluginLibs(dir, urls, settings);
-            }
-        }
-        */
         return urls.toArray(new URL[urls.size()]);
     }
 
@@ -925,102 +852,6 @@ public class GriffonScriptRunner {
             }
         }
     }
-
-    /**
-     * List all plugin directories that we know about.
-     *
-     * @param settings The build settings for this project.
-     * @return A list of all known plugin directories, or an empty list if there are none.
-     */
-    /*
-    @SuppressWarnings("unchecked")
-    public static List<File> listKnownPluginDirs(BuildSettings settings) {
-        List<File> dirs = new ArrayList<File>();
-
-        // Next up, the project's plugins directory.
-        dirs.addAll(asList(listPluginDirs(settings.getProjectPluginsDir())));
-
-        return dirs;
-    }
-    */
-
-    /**
-     * Adds all the libraries in a plugin to the given list of URLs.
-     *
-     * @param pluginDir The directory containing the plugin.
-     * @param urls      The list of URLs to add the plugin JARs to.
-     * @param settings
-     */
-    /*
-    private static void addPluginLibs(File pluginDir, List<URL> urls, BuildSettings settings) throws MalformedURLException {
-        if (!pluginDir.exists()) return;
-
-        // otherwise just add them
-        File libDir = new File(pluginDir, "lib");
-        if (libDir.exists()) {
-            final IvyDependencyManager dependencyManager = settings.getDependencyManager();
-            String pluginName = getPluginName(pluginDir);
-            Collection<?> excludes = dependencyManager.getPluginExcludes(pluginName);
-            // TODO filter out platform directories
-            // TODO add native directories
-            addLibs(libDir, urls, excludes != null ? excludes : Collections.emptyList());
-        }
-
-        libDir = new File(pluginDir, "addon");
-        if (libDir.exists()) {
-            final IvyDependencyManager dependencyManager = settings.getDependencyManager();
-            String pluginName = getPluginName(pluginDir);
-            Collection<?> excludes = dependencyManager.getPluginExcludes(pluginName);
-            addLibs(libDir, urls, excludes != null ? excludes : Collections.emptyList());
-        }
-    }
-    */
-
-    /**
-     * Adds all the JAR files in the given directory to the list of URLs. Excludes any
-     * "standard-*.jar" and "jstl-*.jar" because these are added to the classpath in another
-     * place. They depend on the servlet version of the app and so need to be treated specially.
-     */
-    private static void addLibs(File dir, List<URL> urls, Collection<?> excludes) throws MalformedURLException {
-        if (!dir.exists()) {
-            return;
-        }
-
-        for (File file : dir.listFiles()) {
-            boolean include = true;
-            for (Object me : excludes) {
-                String exclude = me.toString();
-                if (file.getName().contains(exclude)) {
-                    include = false;
-                    break;
-                }
-            }
-            if (include) {
-                urls.add(file.toURI().toURL());
-            }
-        }
-    }
-
-    /**
-     * Lists all the sub-directories (non-recursively) of the given
-     * directory that look like directories that contain a plugin.
-     * If there are no directories, an empty array is returned. We
-     * basically check that the name of each directory looks about
-     * right.
-     */
-    /*
-    private static File[] listPluginDirs(File dir) {
-        File[] dirs = dir.listFiles(new FileFilter() {
-            public boolean accept(File path) {
-                return path.isDirectory() &&
-                        !path.getName().startsWith(".") &&
-                        path.getName().indexOf('-') > -1;
-            }
-        });
-
-        return dirs == null ? new File[0] : dirs;
-    }
-    */
 
     /**
      * <p>A Groovy RootLoader should be used to load GriffonScriptRunner,
@@ -1064,28 +895,6 @@ public class GriffonScriptRunner {
     }
 
     /**
-     * Gets the name of a plugin based on its directory. The method
-     * basically finds the plugin descriptor and uses the name of the
-     * class to determine the plugin name. To be honest, this class
-     * shouldn't be plugin-aware in my view, so hopefully this will
-     * only be a temporary method.
-     *
-     * @param pluginDir The directory containing the plugin.
-     * @return The name of the plugin contained in the given directory.
-     */
-    /*
-    private static String getPluginName(File pluginDir) {
-        // Get the plugin descriptor from the given directory and use
-        // it to infer the name of the plugin.
-        File desc = new File(pluginDir, "plugin.json");
-        if (!desc.exists()) {
-            throw new RuntimeException("Cannot find plugin descriptor in plugin directory '" + pluginDir + "'.");
-        }
-        return Release.makeFromFile(Plugin.TYPE, desc).getArtifact().getName();
-    }
-    */
-
-    /**
      * Contains details about a Griffon command invocation such as the
      * name of the corresponding script, the environment (if specified),
      * and the arguments to the command.
@@ -1114,12 +923,6 @@ public class GriffonScriptRunner {
             setupScript("_GriffonProxy");
             setupScript("_ResolveDependencies");
             setupScript("_GriffonClasspath");
-            File scriptFile = (File) binding.getVariable(VAR_SCRIPT_FILE);
-            gant.loadScript(scriptFile);
-            gant.prepareTargets();
-
-            gant.setAllPerTargetPreHooks(DO_NOTHING_CLOSURE);
-            gant.setAllPerTargetPostHooks(DO_NOTHING_CLOSURE);
         }
 
         private void setupScript(String scriptName) {

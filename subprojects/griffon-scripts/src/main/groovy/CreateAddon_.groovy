@@ -55,51 +55,40 @@ target(createAddon: "Creates an Addon for a plugin") {
             type:   'GriffonAddon',
             path:   '.')
 
-    /*
+
     addonName = "${GriffonUtil.getClassNameRepresentation(pluginName)}GriffonAddon"
-    def pluginConfigFile = new File("${basedir}/griffon-app/conf/BuildConfig.groovy")
-    if (!pluginConfigFile.exists()) {
-        pluginConfigFile.text = "griffon {}\n"
-    }
-    ConfigSlurper slurper = new ConfigSlurper()
-    def pluginConfig = slurper.parse(pluginConfigFile.toURL())
 
-    if (!pluginConfig.griffon?.jars?.destDir) {
-        pluginConfigFile << "\ngriffon.jars.destDir=\'target/addon\'\n"
-    }
-    if (!pluginConfig.griffon?.jars?.jarName) {
-        pluginConfigFile << "\n//griffon.jars.jarName='${addonName}.jar'\n"
-    }
+    def installFile = new File("${basedir}/scripts/_Install.groovy")
+    //TODO we should slurp the config, tweak it in place, and re-write instead of append
+    installFile << """
+// Update the following configuration if your addon
+// requires a different prefix or exposes nodes in
+// a different way.
+// Remember to apply the reverse changes in _Uninstall.groovy
+//
+// check to see if we already have a $addonName
+// def configText = '''root.'$addonName'.addon=true'''
+// if(!(builderConfigFile.text.contains(configText))) {
+//     println 'Adding $addonName to Builder.groovy'
+//     builderConfigFile.append(\"\"\"
+// \$configText
+// \"\"\")
+// }"""
 
-    def eventsFile = new File("${basedir}/scripts/_Events.groovy")
-    if (!eventsFile.exists()) {
-        eventsFile.text = "\n"
-    }
+    def uninstallFile = new File("${basedir}/scripts/_Uninstall.groovy")
+    //TODO we should slurp the config, tweak it in place, and re-write instead of append
+    uninstallFile << """
+// Update the following configuration if your addon
+// requires a different prefix or exposes nodes in
+// a different way.
+// Remember to apply the reverse changes in _Install.groovy
+//
+// check to see if we already have a $addonName
+// def configText = '''root.'$addonName'.addon=true'''
+// if(builderConfigFile.text.contains(configText)) {
+//     println 'Removing $addonName from Builder.groovy'
+//     builderConfigFile.text -= configText
+// }"""
 
-    def eventsText = eventsFile.text
-    def classpathTempVar = generateTempVar(eventsText, "eventClosure")
-    pluginName = GriffonUtil.getScriptName(pluginName)
-    def pluginName2 = GriffonUtil.getPropertyNameForLowerCaseHyphenSeparatedName(griffonAppName)
-    eventsFile << """
-def $classpathTempVar = binding.variables.containsKey('eventSetClasspath') ? eventSetClasspath : {cl->}
-eventSetClasspath = { cl ->
-    $classpathTempVar(cl)
-    if(compilingPlugin('$pluginName')) return
-    griffonSettings.dependencyManager.flatDirResolver name: 'griffon-${pluginName}-plugin', dirs: "\${${pluginName2}PluginDir}/addon"
-    griffonSettings.dependencyManager.addPluginDependency('$pluginName', [
-        conf: 'compile',
-        name: 'griffon-${pluginName}-addon',
-        group: 'org.codehaus.griffon.plugins',
-        version: ${pluginName2}PluginVersion
-    ])
-}
-"""
-    */
 }
 setDefaultTarget(createAddon)
-
-def generateTempVar(String textToSearch, String prefix = "tmp", String suffix = "") {
-    int i = 1;
-    while (textToSearch =~ "\\W$prefix$i$suffix\\W") i++
-    return "$prefix$i$suffix"
-}

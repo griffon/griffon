@@ -63,7 +63,7 @@ listArtifacts = { String type ->
             listArtifactsHeader(repository, type)
             artifacts.each { Artifact artifact -> println formatArtifactForPrint(artifact) }
         } else {
-            println "No ${type}s found in repository ${repository.name}."
+            println "\nNo ${type}s found in repository ${repository.name}."
         }
     }
 
@@ -106,7 +106,7 @@ listInstalledArtifacts = { String type ->
     if (type == Archetype.TYPE) {
         installedArtifacts['default'] = [
                 version: GriffonUtil.getGriffonVersion(),
-                title: 'Used when no archetype is specified'
+                artifact: [title: 'Used when no archetype is specified']
         ]
     }
 
@@ -118,12 +118,12 @@ ${'Name'.padRight(30, ' ')}${'Version'.padRight(20, ' ')} Title
 """
 
         List list = installedArtifacts.collect([]) { entry ->
-            "${entry.key.padRight(30, ' ')}${entry.value.version.toString().padRight(20, ' ')} ${entry.value.title}"
+            "${entry.key.padRight(30, ' ')}${entry.value.version.toString().padRight(20, ' ')} ${entry.value.artifact.title}"
         }
         list.sort()
         list.each { println it }
     } else {
-        println "You do not have any ${type}s installed."
+        println "\nYou do not have any ${type}s installed."
     }
 }
 
@@ -199,7 +199,7 @@ displayArtifactInfo = { String type, String name, String version, ArtifactReposi
         }
     } else if (artifact.releases) {
         println 'Releases:'
-        println "${'Version'.padRight(20, ' ')}${'Griffon Version'.padRight(25, ' ')}Date"
+        println "${'Version'.padRight(20, ' ')}${'Griffon Version'.padRight(25, ' ')}Date\n"
         artifact.releases.each { r ->
             println "${r.version.padRight(20, ' ')}${r.griffonVersion.padRight(25, ' ')}${r.date}"
         }
@@ -276,10 +276,23 @@ uninstallArtifact = { String type ->
     }
 }
 
-installPlugins = { Map<String, String> plugins, Metadata md ->
+installPlugins = { Metadata md, Map<String, String> plugins ->
     ArtifactInstallEngine artifactInstallEngine = createArtifactInstallEngine(md)
     artifactInstallEngine.installPlugins(plugins)
     md.reload()
+}
+
+installPluginExternal = { Metadata md, String name, String version = null ->
+    failOnError = true
+    installArtifactForName(Metadata.current, Plugin.TYPE, name, version)
+}
+
+installPluginsLatest = { Metadata md, List<String> plugins ->
+    Map<String, String> transformed = plugins.inject([:]) { map, name ->
+        map[name] = '<latest>'
+        map
+    }
+    installPlugins(md, transformed)
 }
 
 installArtifactErrorMessage = { type ->
@@ -377,7 +390,6 @@ doInstallFromFile = { type, file, md ->
     ArtifactInstallEngine artifactInstallEngine = createArtifactInstallEngine(md)
     try {
         artifactInstallEngine.installFromFile(type, file, true)
-        md.reload()
     } catch (InstallArtifactException iae) {
         artifactInstallEngine.errorHandler "Installation of ${file} aborted."
     } catch (UninstallArtifactException uae) {
@@ -497,7 +509,7 @@ ${'-' * 80}
                     outdatedArtifacts.each { name, data ->
                         plugins[name] = data.version
                     }
-                    installPlugins(plugins, Metadata.current)
+                    installPlugins(Metadata.current, plugins)
                 } else {
                     outdatedArtifacts.each { name, data ->
                         doInstallArtifact(data.repository, type, name, data.version, Metadata.current)
