@@ -116,17 +116,6 @@ class ArtifactInstallEngine {
         }
 
         if (!missingPlugins) {
-            /*
-            try {
-                installedPlugins.each { name, version ->
-                    resolvePluginJarDependencies(getInstallPathFor(Plugin.TYPE, name, version).absolutePath, name, version)
-                }
-            } catch (Exception e) {
-                GriffonExceptionHandler.sanitize(e)
-                eventHandler 'StatusError', e.message
-                errorHandler "Cannot continue with unresolved dependencies."
-            }
-            */
             return true
         }
 
