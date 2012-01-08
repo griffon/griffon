@@ -66,12 +66,11 @@ target(packageApp: "Implementation of package target") {
     jardir = ant.antProject.replaceProperties(buildConfig.griffon.jars.destDir)
     ant.uptodate(property: 'appJarUpToDate', targetfile: "${jardir}/${buildConfig.griffon.jars.jarName}") {
         srcfiles(dir: "${basedir}/griffon-app/", includes: "**/*")
-        srcfiles(dir: "$classesDirPath", includes: "**/*")
+        srcfiles(dir: "$projectMainClassesDir", includes: "**/*")
     }
 
     packageResources()
 
-    loadPlugins()
     checkKey()
     _copyLibs()
     jarFiles()
@@ -119,12 +118,12 @@ target(packageResources: "Presp app/plugin resources for packaging") {
             exclude(name: "**/*.groovy")
         }
     }
-    ant.copy(todir: classesDirPath) {
+    ant.copy(todir: projectMainClassesDir) {
         fileset(dir: "${basedir}", includes: metadataFile.name)
     }
 
     // GRIFFON-189 add environment info to metadata
-    def metaFile = new File(classesDirPath, metadataFile.name)
+    def metaFile = new File(projectMainClassesDir, metadataFile.name)
     updateMetadata(metaFile, (Environment.KEY): Environment.current.name)
 
     ant.copy(todir: resourcesDirPath, failonerror: false) {
@@ -219,7 +218,7 @@ target(jarFiles: "Jar up the package files") {
     if (!upToDate) {
         mergeManifest()
         ant.jar(destfile: destFileName) {
-            fileset(dir: classesDirPath) {
+            fileset(dir: projectMainClassesDir) {
                 exclude(name: 'BuildConfig*.class')
                 exclude(name: '*GriffonPlugin.class')
             }
@@ -266,7 +265,7 @@ _copyLibs = {
 // XXX -- NATIVE 
     copyPlatformJars("${basedir}/lib", new File(jardir).absolutePath)
     copyNativeLibs("${basedir}/lib", new File(jardir).absolutePath)
-    doWithPlugins { pluginName, pluginVersion, pluginDir ->
+    pluginSettings.doWithPlugins { pluginName, pluginVersion, pluginDir ->
         copyPlatformJars("${pluginDir}/lib", new File(jardir).absolutePath)
         copyNativeLibs("${pluginDir}/lib", new File(jardir).absolutePath)
     }

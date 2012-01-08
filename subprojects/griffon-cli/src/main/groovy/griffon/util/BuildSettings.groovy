@@ -351,7 +351,7 @@ class BuildSettings extends AbstractBuildSettings {
             jarFiles = []
         }
         return jarFiles
-    }
+    }()
 
     private List<File> testDependencies = []
     private boolean defaultTestDepsAdded = false
@@ -852,6 +852,10 @@ class BuildSettings extends AbstractBuildSettings {
         }
 
         def dependencyConfig = griffonConfig.project.dependency.resolution
+        if (!dependencyConfig) {
+            dependencyConfig = griffonConfig.global.dependency.resolution
+            dependencyManager.inheritsAll = true
+        }
         if (dependencyConfig) {
             dependencyManager.parseDependencies dependencyConfig
         }

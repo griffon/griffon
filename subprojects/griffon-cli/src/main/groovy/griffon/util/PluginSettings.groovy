@@ -83,6 +83,12 @@ class PluginSettings {
         }
     }
 
+    Resource[] getPluginLibDirectories() {
+        resolveForEachPlugin('pluginLibs') { pluginDir ->
+            resolveResources("file:${pluginDir}/lib")
+        }
+    }
+
     Resource[] getAvailableScripts() {
         Resource[] availableScripts = cache['availableScripts']
         if (!availableScripts) {
@@ -159,17 +165,17 @@ class PluginSettings {
     }
 
     void doWithPlugins(Closure closure) {
-        getPlugins().each { name, release ->
-            closure(name, release)
+        getPlugins().each { pluginName, release ->
+            String pluginVersion = release.version
+            String pluginInstallPath = getInstallPathFor(Plugin.TYPE, pluginName, pluginVersion)
+            closure(pluginName, pluginVersion, pluginInstallPath)
         }
     }
 
     void resolveAndAddAllPluginDependencies() {
         Map<String, List<File>> configurations = [:]
 
-        doWithPlugins { String pluginName, Release release ->
-            String pluginVersion = release.version
-            String pluginInstallPath = getInstallPathFor(Plugin.TYPE, pluginName, pluginVersion)
+        doWithPlugins { String pluginName, String pluginVersion, String pluginInstallPath ->
             List<File> dependencyDescriptors = [
                     new File("$pluginInstallPath/dependencies.groovy"),
                     new File("$pluginInstallPath/plugin-dependencies.groovy")

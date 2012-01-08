@@ -336,12 +336,14 @@ compilingPlugin = { pluginName ->
 
 cliSourceDir = new File("${basedir}/src/cli")
 cliSourceDirPath = cliSourceDir.absolutePath
+/*
 cliClassesDir = new File("${griffonSettings.projectWorkDir}/cli-classes")
 cliClassesDirPath = cliClassesDir.absolutePath
 hasCliSources = cliSourceDir.exists()
 if (hasCliSources) {
     ant.mkdir(dir: cliClassesDirPath)
 }
+*/
 
 hasFiles = { Map params ->
     params.dir = params.dir as File
@@ -381,8 +383,6 @@ loadArtifactDescriptorClass = { String artifactFile ->
         // directory to the class loader in case it didn't exist before
         // the associated descriptor's sources were compiled.
         def gcl = new GroovyClassLoader(classLoader)
-        addUrlIfNotPresent gcl, classesDir
-
         String artifactClassName = artifactFile.endsWith('.groovy') ? artifactFile[0..-8] : artifactFile
         return gcl.loadClass(artifactClassName).newInstance()
     }

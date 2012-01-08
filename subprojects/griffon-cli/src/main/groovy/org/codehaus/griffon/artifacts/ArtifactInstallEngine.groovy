@@ -338,7 +338,6 @@ class ArtifactInstallEngine {
                     break
             }
             metadata.persist()
-            metadata.reload()
         }
 
         if (!installedArtifacts.contains(artifactInstallPath)) {

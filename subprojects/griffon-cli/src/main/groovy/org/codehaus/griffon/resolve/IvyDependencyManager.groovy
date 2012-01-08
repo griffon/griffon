@@ -16,7 +16,6 @@
 package org.codehaus.griffon.resolve
 
 import griffon.util.BuildSettings
-import griffon.util.GriffonNameUtils
 import griffon.util.Metadata
 import java.util.concurrent.ConcurrentLinkedQueue
 import org.apache.ivy.core.event.EventManager
@@ -35,8 +34,9 @@ import org.apache.ivy.plugins.resolver.ChainResolver
 import org.apache.ivy.util.Message
 import org.apache.ivy.util.MessageLogger
 import org.codehaus.griffon.plugins.VersionComparator
-import org.apache.ivy.core.report.*
 import static griffon.util.GriffonNameUtils.getPropertyNameForLowerCaseHyphenSeparatedName
+import org.apache.ivy.core.report.*
+import org.apache.ivy.core.module.descriptor.DefaultModuleDescriptor
 
 /**
  * Implementation that uses Apache Ivy under the hood.
@@ -80,6 +80,10 @@ class IvyDependencyManager extends AbstractIvyDependencyManager implements Depen
 
         this.applicationName = applicationName
         this.applicationVersion = applicationVersion
+
+        if (moduleDescriptor == null) {
+            setModuleDescriptor((DefaultModuleDescriptor) createModuleDescriptor());
+        }
     }
 
     IvyDependencyManager createCopy(BuildSettings buildSettings) {

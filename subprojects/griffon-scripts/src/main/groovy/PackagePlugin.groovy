@@ -142,11 +142,11 @@ target(pluginDocs: "Generates and packages plugin documentation") {
 
     // package sources
     def srcMainDir = new File("${basedir}/src/main")
-    def testSharedDir = new File("${basedir}/src/test")
-    def testSharedDirPath = new File(griffonSettings.testClassesDir, 'shared')
+    def projectTestDir = new File("${basedir}/src/test")
+    def projectTestDirPath = new File(griffonSettings.testClassesDir, 'shared')
 
     boolean hasSrcMain = hasJavaOrGroovySources(srcMainDir)
-    boolean hasTestShared = hasJavaOrGroovySources(testSharedDir)
+    boolean hasTestSources = hasJavaOrGroovySources(projectTestDir)
     List sources = []
     List excludedPaths = ['resources', 'i18n', 'conf']
     for (dir in new File("${basedir}/griffon-app").listFiles()) {
@@ -162,7 +162,7 @@ target(pluginDocs: "Generates and packages plugin documentation") {
         }
     }
 
-    if (isAddonPlugin || hasSrcMain || hasTestShared || sources) {
+    if (isAddonPlugin || hasSrcMain || hasTestSources || sources) {
         String jarFileName = "${artifactPackageDirPath}/dist/griffon-${pluginName}-${pluginVersion}-sources.jar"
 
         ant.uptodate(property: 'pluginSourceJarUpToDate', targetfile: jarFileName) {
@@ -171,9 +171,9 @@ target(pluginDocs: "Generates and packages plugin documentation") {
             }
             srcfiles(dir: basedir, includes: '*GriffonAddon*')
             if (hasSrcMain) srcfiles(dir: srcMainDir, includes: '**/*')
-            if (hasTestShared) srcfiles(dir: testSharedDir, includes: '**/*')
-            srcfiles(dir: classesDirPath, includes: '**/*')
-            if (hasTestShared) srcfiles(dir: testSharedDirPath, includes: '**/*')
+            if (hasTestSources) srcfiles(dir: projectTestDir, includes: '**/*')
+            srcfiles(dir: projectMainClassesDir, includes: '**/*')
+            if (hasTestSources) srcfiles(dir: projectTestDirPath, includes: '**/*')
         }
         boolean uptodate = ant.antProject.properties.pluginSourceJarUpToDate
         if (!uptodate) {
@@ -181,7 +181,7 @@ target(pluginDocs: "Generates and packages plugin documentation") {
                 sources.each { d -> fileset(dir: d, excludes: '**/CVS/**, **/.svn/**') }
                 fileset(dir: basedir, includes: '*GriffonAddon*')
                 if (hasSrcMain) fileset(dir: srcMainDir, includes: '**/*.groovy, **/*.java')
-                if (hasTestShared) fileset(dir: testSharedDir, includes: '**/*.groovy, **/*.java')
+                if (hasTestSources) fileset(dir: projectTestDir, includes: '**/*.groovy, **/*.java')
             }
         }
 
@@ -193,10 +193,10 @@ target(pluginDocs: "Generates and packages plugin documentation") {
             }
         }
 
-        if (!argsMap.nodoc && (hasSrcMain || hasTestShared || groovydocSources)) {
+        if (!argsMap.nodoc && (hasSrcMain || hasTestSources || groovydocSources)) {
             File javadocDir = new File("${projectTargetDir}/docs/api")
             invokeGroovydoc(destdir: javadocDir,
-                    sourcepath: [srcMainDir, testSharedDir] + groovydocSources,
+                    sourcepath: [srcMainDir, projectTestDir] + groovydocSources,
                     windowtitle: "${pluginName} ${pluginVersion}",
                     doctitle: "${pluginName} ${pluginVersion}")
             if (javadocDir.list()) {
@@ -211,31 +211,29 @@ target(pluginDocs: "Generates and packages plugin documentation") {
 }
 
 target(pluginShared: '') {
-    def testSharedDir = new File("${basedir}/src/test")
-    def testSharedDirPath = new File(griffonSettings.testClassesDir, 'shared')
+    def projectTestDir = new File("${basedir}/src/test")
     def testResourcesDir = new File("${basedir}/test/resources")
-    def testResourcesDirPath = griffonSettings.testResourcesDir
 
-    boolean hasTestShared = hasJavaOrGroovySources(testSharedDir)
+    boolean hasTestSources = hasJavaOrGroovySources(projectTestDir)
     boolean hasTestResources = hasFiles(dir: testResourcesDir, excludes: '**/*.svn/**, **/CVS/**')
 
-    if (hasTestShared || hasTestResources) {
+    if (hasTestSources || hasTestResources) {
         String jarFileName = "${artifactPackageDirPath}/dist/griffon-${pluginName}-${pluginVersion}-test.jar"
 
         ant.uptodate(property: 'pluginTestJarUpToDate', targetfile: jarFileName) {
-            if (hasTestShared) {
-                srcfiles(dir: testSharedDir, includes: "**/*")
-                srcfiles(dir: testSharedDirPath, includes: "**/*")
+            if (hasTestSources) {
+                srcfiles(dir: projectTestDir, includes: "**/*")
+                srcfiles(dir: projectTestClassesDir, includes: "**/*")
             }
             if (hasTestResources) {
                 srcfiles(dir: testResourcesDir, includes: "**/*")
-                srcfiles(dir: testResourcesDirPath, includes: "**/*")
+                srcfiles(dir: griffonSettings.testResourcesDir, includes: "**/*")
             }
         }
         boolean uptodate = ant.antProject.properties.pluginTestJarUpToDate
         if (!uptodate) {
             ant.jar(destfile: jarFileName) {
-                if (hasTestShared) fileset(dir: testSharedDirPath, includes: '**/*.class')
+                if (hasTestSources) fileset(dir: projectTestClassesDir, includes: '**/*.class')
                 if (hasTestResources) fileset(dir: testResourcesDir)
             }
         }

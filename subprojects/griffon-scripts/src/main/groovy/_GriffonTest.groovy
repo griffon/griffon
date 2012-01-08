@@ -278,7 +278,7 @@ compileTests = { GriffonTestType type, File source, File dest ->
         javac(classpathref: 'griffon.test.classpath', debug: "yes")
         src(path: source)
     }
-    addUrlIfNotPresent rootLoader, griffonSettings.classesDir
+    addUrlIfNotPresent rootLoader, projectMainClassesDir
     addUrlIfNotPresent rootLoader, destDir
     addUrlIfNotPresent classLoader, destDir
 

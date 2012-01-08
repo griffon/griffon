@@ -15,8 +15,6 @@
  */
 
 import griffon.util.PlatformUtils
-import org.codehaus.groovy.control.CompilerConfiguration
-import org.springframework.core.io.FileSystemResource
 import static griffon.util.GriffonApplicationUtils.is64Bit
 
 /**
@@ -26,93 +24,13 @@ import static griffon.util.GriffonApplicationUtils.is64Bit
  */
 
 // No point doing this stuff more than once.
-if (getBinding().variables.containsKey("_griffon_classpath_called")) return
+if (getBinding().variables.containsKey('_griffon_classpath_called')) return
 _griffon_classpath_called = true
 
-includeTargets << griffonScript('_GriffonSettings')
-
 classpathSet = false
-includePluginJarsOnClasspath = true
 
 target(name: 'classpath', description: "Sets the Griffon classpath", prehook: null, posthook: null) {
     setClasspath()
-}
-
-/**
- * Obtains all of the plug-in Lib directories
- * @deprecated Use "pluginSettings.pluginLibDirectories"
- */
-getPluginLibDirs = {
-    pluginSettings.pluginLibDirectories
-}
-
-/**
- * Obtains an array of all plug-in JAR files as Spring Resource objects
- * @deprecated Use "pluginSettings.pluginJarFiles".
- */
-getPluginJarFiles = {
-    pluginSettings.pluginJarFiles
-}
-
-/**
- * Obtains an array of all plug-in test JAR files as Spring Resource objects
- */
-getPluginTestFiles = {
-    pluginSettings.pluginTestFiles
-}
-
-getJarFiles = {->
-    def jarFiles = resolveResources("file:${basedir}/lib/*.jar").toList()
-    if (includePluginJarsOnClasspath) {
-        def pluginJars = pluginSettings.pluginJarFiles
-
-        for (pluginJar in pluginJars) {
-            boolean matches = jarFiles.any {it.file.name == pluginJar.file.name}
-            if (!matches) jarFiles.add(pluginJar)
-        }
-    }
-
-    def userJars = resolveResources("file:${userHome}/.griffon/lib/*.jar")
-    for (userJar in userJars) {
-        jarFiles.add(userJar)
-    }
-
-// XXX -- NATIVE
-    def localPlatformJarsAdded = false
-    resolveResources("file:${basedir}/lib/${PlatformUtils.platform}/*.jar").each { platformJar ->
-        jarFiles << platformJar
-        localPlatformJarsAdded = true
-    }
-    resolveResources("file:${pluginsHome}/*/lib/${PlatformUtils.platform}/*.jar").each { platformPluginJar ->
-        jarFiles << platformPluginJar
-    }
-
-    if (is64Bit) {
-        if (!localPlatformJarsAdded) {
-            resolveResources("file:${basedir}/lib/${PlatformUtils.platform[0..-3]}/*.jar").each { platformJar ->
-                jarFiles << platformJar
-            }
-        }
-        resolveResources("file:${pluginsHome}/*/lib/${PlatformUtils.platform[0..-3]}/*.jar").each { platformPluginJar ->
-            jarFiles << platformPluginJar
-        }
-    }
-// XXX -- NATIVE
-
-    jarFiles.addAll(getExtraDependencies())
-
-    jarFiles
-}
-
-getExtraDependencies = {
-    def jarFiles = []
-    if (buildConfig?.griffon?.compiler?.dependencies) {
-        def extraDeps = ant.fileScanner(buildConfig.griffon.compiler.dependencies)
-        for (jar in extraDeps) {
-            jarFiles << new FileSystemResource(jar)
-        }
-    }
-    jarFiles
 }
 
 commonClasspath = {
@@ -122,14 +40,18 @@ commonClasspath = {
         pathelement(location: "${d.file.absolutePath}")
     }
 
-    pathelement(location: "${classesDir.absolutePath}")
-    debug "  ${classesDir.absolutePath}"
+    if (projectMainClassesDir.exists()) {
+        pathelement(location: "${projectMainClassesDir.absolutePath}")
+        debug "  ${projectMainClassesDir.absolutePath}"
+    }
 
-    def pluginLibDirs = pluginSettings.pluginLibDirectories.findAll { it.exists() }
+    def pluginLibDirs = pluginSettings.pluginLibDirectories.findAll {it.exists()}
+    /*
     for (pluginLib in pluginLibDirs) {
         debug "  ${pluginLib.file.absolutePath}"
         fileset(dir: pluginLib.file.absolutePath)
     }
+    */
 
 // XXX -- NATIVE
     def localPlatformLibAdded = false
@@ -219,21 +141,27 @@ testClasspath = {
         }
     }
 
-    pathelement(location: "${griffonSettings.testClassesDir}/shared")
-    pathelement(location: "${griffonSettings.testResourcesDir}")
-    debug "  ${griffonSettings.testClassesDir}/shared"
-    debug "  ${griffonSettings.testResourcesDir}"
-    if (hasCliSources) {
-        pathelement(location: cliClassesDirPath)
-        debug "  $cliClassesDirPath"
+    if (projectTestClassesDir.exists()) {
+        pathelement(location: projectTestClassesDir)
+        debug "  ${projectTestClassesDir}"
+    }
+    if (griffonSettings.testResourcesDir.exists()) {
+        pathelement(location: "${griffonSettings.testResourcesDir}")
+        debug "  ${griffonSettings.testResourcesDir}"
+    }
+    if (cliSourceDir.exists()) {
+        pathelement(location: projectCompileClassesDir)
+        debug "  $projectCompileClassesDir"
     }
 
+    /*
     for (pluginTestJar in getPluginTestFiles()) {
         if (pluginTestJar.file.exists()) {
             debug "  ${pluginTestJar.file.absolutePath}"
             file(file: pluginTestJar.file.absolutePath)
         }
     }
+    */
 }
 
 runtimeClasspath = {
@@ -256,27 +184,39 @@ runtimeClasspath = {
  * Converts an Ant path into a list of URLs.
  */
 classpathToUrls = { String classpathId ->
-    def propName = "converted.classpath"
-    ant.pathconvert(refid: classpathId, dirsep: "/", pathsep: ":", property: propName)
+    def propName = 'converted.classpath'
+    ant.pathconvert(refid: classpathId, dirsep: '/', pathsep: ':', property: propName)
 
-    return ant.project.properties.get(propName).split(":").collect { new File(it).toURI().toURL() }
+    return ant.project.properties.get(propName).split(':').collect { new File(it).toURI().toURL() }
 }
-
 
 void setClasspath() {
     // Make sure the following code is only executed once.
     if (classpathSet) return
 
+    projectCompileClassesDir = new File("${classesDir.absolutePath}/compile")
+    projectMainClassesDir = new File("${classesDir.absolutePath}/main")
+    projectTestClassesDir = new File("${classesDir.absolutePath}/test")
+
     if (isApplicationProject || isPluginProject) {
-        if (!(new File(classesDir.absolutePath).exists())) ant.mkdir(dir: classesDir.absolutePath)
-        if (!(new File("${griffonSettings.testClassesDir}/shared").exists())) ant.mkdir(dir: "${griffonSettings.testClassesDir}/shared")
-        if (!(griffonSettings.testResourcesDir.exists())) ant.mkdir(dir: griffonSettings.testResourcesDir)
+        [
+                projectCompileClassesDir,
+                projectMainClassesDir,
+                projectTestClassesDir,
+                griffonSettings.testClassesDir,
+                griffonSettings.testResourcesDir,
+                griffonSettings.resourcesDir
+        ].each { dir ->
+            if (!dir.exists()) ant.mkdir(dir: dir)
+            addUrlIfNotPresent rootLoader, dir
+        }
     }
 
-    ant.path(id: "griffon.compile.classpath", compileClasspath)
-    ant.path(id: "griffon.test.classpath", testClasspath)
-    ant.path(id: "griffon.runtime.classpath", runtimeClasspath)
+    ant.path(id: 'griffon.compile.classpath', compileClasspath)
+    ant.path(id: 'griffon.test.classpath', testClasspath)
+    ant.path(id: 'griffon.runtime.classpath', runtimeClasspath)
 
+    /*
     def griffonDir = resolveResources("file:${basedir}/griffon-app/*")
     StringBuffer cpath = new StringBuffer("")
 
@@ -309,6 +249,7 @@ void setClasspath() {
         addUrlIfNotPresent rootLoader, resourcesDirPath
         addUrlIfNotPresent rootLoader, griffonSettings.testResourcesDir
     }
+    */
 
     classpathSet = true
 }

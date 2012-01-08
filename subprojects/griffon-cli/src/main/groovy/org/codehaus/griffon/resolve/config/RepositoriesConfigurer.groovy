@@ -36,7 +36,7 @@ class RepositoriesConfigurer extends AbstractDependencyManagementConfigurer {
     }
 
     void flatDir(Map args) {
-        def name = args.name?.toString()
+        String name = args.name?.toString()
         if (name && args.dirs) {
             def fileSystemResolver = new FileSystemResolver()
             fileSystemResolver.local = true
@@ -93,8 +93,7 @@ class RepositoriesConfigurer extends AbstractDependencyManagementConfigurer {
         addToChainResolver(fileSystemResolver)
         */
 
-        flatDir(name: "griffonHome", dirs: "${griffonHome}/libs")
-        flatDir(name: "griffonHome", dirs: "${griffonHome}/dist")
+        flatDir(name: "griffonHome", dirs: ["${griffonHome}/dist", "${griffonHome}/libs"])
         /*
         final workDir = dependencyManager.buildSettings?.griffonWorkDir
         if (workDir) flatDir(name: "griffonHome", dirs: "${workDir}/cached-installed-plugins")

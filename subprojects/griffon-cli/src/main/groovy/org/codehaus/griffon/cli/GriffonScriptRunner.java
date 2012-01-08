@@ -1113,6 +1113,7 @@ public class GriffonScriptRunner {
             setupScript("_GriffonEvents");
             setupScript("_GriffonProxy");
             setupScript("_ResolveDependencies");
+            setupScript("_GriffonClasspath");
             File scriptFile = (File) binding.getVariable(VAR_SCRIPT_FILE);
             gant.loadScript(scriptFile);
             gant.prepareTargets();
@@ -1138,11 +1139,15 @@ public class GriffonScriptRunner {
             if (defaultTargetName.equals(targetName)) {
                 List<String> targets = new ArrayList<String>();
                 targets.add("parseArguments");
-                if (binarySearch(CONFIGURE_PROXY_EXCLUSIONS, targetName) > -1) targets.add("configureProxy");
-                if (!isContextlessScriptName(scriptFile) &&
-                        binarySearch(RESOLVE_DEPENDENCIES_EXCLUSIONS, targetName) < 0) {
-                    targets.add("resolveDependencies");
+                if (binarySearch(CONFIGURE_PROXY_EXCLUSIONS, targetName) < 0) targets.add("configureProxy");
+                if (!isContextlessScriptName(scriptFile)) {
+                    if (binarySearch(RESOLVE_DEPENDENCIES_EXCLUSIONS, targetName) < 0) {
+                        targets.add("resolveDependencies");
+                    }
                     targets.add("loadEventHooks");
+                    if (binarySearch(CLASSPATH_EXCLUSIONS, targetName) < 0) {
+                        targets.add("classpath");
+                    }
                 }
                 settings.debug("** " + targets + " **");
                 gant.executeTargets("dispatch", targets);
@@ -1152,11 +1157,22 @@ public class GriffonScriptRunner {
         private static String[] CONFIGURE_PROXY_EXCLUSIONS = {
                 "addProxy", "clearProxy", "removeProxy", "setProxy", "configureProxy",
                 "help", "integrateWith", "setVersion", "showHelp", "stats",
-                "createAddon", "createPlugin", "upgrade"
+                "createAddon", "createPlugin", "upgrade",
+                "createCommandAlias"
         };
 
         private static String[] RESOLVE_DEPENDENCIES_EXCLUSIONS = {
-                "integrateWith", "setVersion", "stats", "upgrade"
+                "integrateWith", "setVersion", "stats", "upgrade",
+                "createCommandAlias"
+        };
+
+        private static String[] CLASSPATH_EXCLUSIONS = {
+                "integrateWith", "setVersion", "stats", "upgrade",
+                "packageArchetype", "listPluginUpdates",
+                "createCommandAlias", "createIntegrationTest",
+                "createMvc", "createScript", "createService",
+                "createUnitTest", "generateViewScript",
+                "releaseArchetype", "replaceArtifact"
         };
     }
 }

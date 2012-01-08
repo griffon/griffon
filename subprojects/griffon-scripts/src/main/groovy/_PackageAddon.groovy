@@ -46,7 +46,7 @@ target('packageAddon': "Packages a Griffon addon. Note: to package a plugin use 
     cliJarName = "griffon-${pluginName}-${pluginVersion}-compile.jar"
     if (cliSourceDir.exists()) {
         ant.jar(destfile: "$addonJarDir/$cliJarName") {
-            fileset(dir: cliClassesDir)
+            fileset(dir: projectCompileClassesDir)
         }
     }
 
@@ -61,7 +61,7 @@ target('packageAddon': "Packages a Griffon addon. Note: to package a plugin use 
     File metainfDirPath = new File("${basedir}/griffon-app/conf/metainf")
     addonJarName = "griffon-${pluginName}-${pluginVersion}-runtime.jar"
     ant.jar(destfile: "$addonJarDir/$addonJarName") {
-        fileset(dir: classesDirPath) {
+        fileset(dir: projectMainClassesDir) {
             exclude(name: 'Config*.class')
             exclude(name: 'BuildConfig*.class')
             exclude(name: '*GriffonPlugin*.class')

@@ -36,11 +36,16 @@ target(clean: "Implementation of clean") {
 }
 
 target(cleanCompiledSources: "Cleans compiled Java and Groovy sources") {
-    ant.delete(dir: classesDirPath)
-    ant.delete(dir: resourcesDirPath)
-    ant.delete(dir: testDirPath)
-    ant.delete(dir: testResourcesDirPath)
-    ant.delete(dir: cliClassesDirPath)
+    [
+            projectCompileClassesDir,
+            projectMainClassesDir,
+            projectTestClassesDir,
+            griffonSettings.testClassesDir,
+            griffonSettings.testResourcesDir,
+            griffonSettings.resourcesDir
+    ].each { dir ->
+        ant.delete(dir: dir, failonerror: false)
+    }
 }
 
 target(cleanTestReports: "Cleans the test reports") {
