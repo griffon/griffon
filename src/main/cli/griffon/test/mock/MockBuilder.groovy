@@ -1,11 +1,11 @@
 /*
- * Copyright 2004-2011 the original author or authors.
+ * Copyright 2010-2011 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ *     http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -14,19 +14,22 @@
  * limitations under the License.
  */
 
+package griffon.test.mock
+
 /**
+ * Trivial mplementation of FactoryBuilderSupport that register a single node: mock.
+ * 
  * @author Andres Almiray
  */
+public class MockBuilder extends FactoryBuilderSupport {
+   public MockBuilder(boolean init = true) {
+      super(init)
+   }
 
-import griffon.util.Metadata
-
-includeTargets << griffonScript('CreateMvc')
-
-target(name: 'createApplicationProject', description: '', prehook: null, posthook: null) {
-    createProjectWithDefaults()
-    createMVC()
-
-    Metadata md = Metadata.getInstance(new File("${basedir}/application.properties"))
-    installPluginExternal md, 'swing'
+   /**
+    * Registers a 'mock' node that returns a Map
+    */
+   def registerMock() {
+      registerFactory('mock', new MockNodeFactory())
+   }
 }
-setDefaultTarget(createApplicationProject)

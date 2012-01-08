@@ -20,14 +20,16 @@ class MockGriffonApplicationTest extends GroovyTestCase {
         app.initialize()
         assert app.bindings.mocked == 0
         app.event('Mock', [app])
-        assert app.bindings.mocked == 1
+        assert app.bindings.mocked == 1 
         app.event('Mock', [app])
-        assert app.bindings.mocked == 2
+        assert app.bindings.mocked == 2 
 
-        assert app.mvcGroupManager.findConfiguration('mock').members == [
-            model     : 'griffon.test.mock.MockModel',
-            controller: 'griffon.test.mock.MockController',
-            view      : 'griffon.test.mock.MockView'
+        assert app.mvcGroups == [
+            mock: [
+                model: 'griffon.test.mock.MockModel',
+                controller: 'griffon.test.mock.MockController',
+                view: 'griffon.test.mock.MockView'
+            ]
         ]
     }
 
@@ -36,10 +38,10 @@ class MockGriffonApplicationTest extends GroovyTestCase {
         app.initialize()
         app.startup()
         assert app.phase == ApplicationPhase.STARTUP
-
+        
         assert app.models.mock instanceof MockModel
         assert app.controllers.mock instanceof MockController
-        // assert app.views.mock instanceof MockView
+        assert app.views.mock instanceof MockView
 
         assert app.builders.mock.mock(foo: 'bar') == [foo: 'bar']
     }

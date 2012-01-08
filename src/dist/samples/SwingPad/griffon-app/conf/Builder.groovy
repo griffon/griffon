@@ -1,9 +1,7 @@
+
 root {
     'groovy.swing.SwingBuilder' {
         controller = ['Threading']
-        view = '*'
-    }
-    'griffon.app.ApplicationBuilder' {
         view = '*'
     }
 }
@@ -14,6 +12,7 @@ jx {
     }
 }
 
+root.'SwingGriffonAddon'.addon=true
 root.'GlazedlistsGriffonAddon'.addon=true
 root.'I18nGriffonAddon'.addon=true
 root.'MiglayoutGriffonAddon'.addon=true

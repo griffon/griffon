@@ -89,14 +89,13 @@ griffonApp = null
 isApplicationProject = metadataFile.exists()
 isPluginProject = griffonSettings.isPluginProject()
 isAddonPlugin = griffonSettings.isAddonPlugin()
+isArchetypeProject = griffonSettings.isArchetypeProject()
 
 // Pattern that matches artefacts in the 'griffon-app' directory.
 // Note that the capturing group matches any package directory
 // structure.
 artefactPattern = /\S+?\/griffon-app\/\S+?\/(\S+?)\.groovy/
 
-defaultGriffonApplicationClass = isAddonPlugin ? 'griffon.test.mock.MockGriffonApplication' : 'griffon.swing.SwingApplication'
-defaultGriffonAppletClass = 'griffon.swing.SwingApplet'
 makeJNLP = false
 _skipSigning = false // GRIFFON-118
 defaultAppletWidth = 320 // GRIFFON-127
@@ -327,14 +326,6 @@ compilingPlugin = { pluginName ->
 
 cliSourceDir = new File("${basedir}/src/cli")
 cliSourceDirPath = cliSourceDir.absolutePath
-/*
-cliClassesDir = new File("${griffonSettings.projectWorkDir}/cli-classes")
-cliClassesDirPath = cliClassesDir.absolutePath
-hasCliSources = cliSourceDir.exists()
-if (hasCliSources) {
-    ant.mkdir(dir: cliClassesDirPath)
-}
-*/
 
 hasFiles = { Map params ->
     params.dir = params.dir as File
@@ -446,3 +437,5 @@ target(updateAppProperties: "Updates default application.properties") {
     // Make sure if this is a new project that we update the var to include version
     appGriffonVersion = griffonVersion
 }
+
+buildConfig.griffon.application.mainClass = buildConfig.griffon.application.mainClass ?: 'griffon.test.mock.MockGriffonApplication'

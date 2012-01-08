@@ -21,6 +21,7 @@
  * @author Sergey Nebolsin (Grails 0.4)
  */
 
+import griffon.util.Metadata
 import griffon.util.Environment
 import org.codehaus.griffon.artifacts.ArtifactUtils
 
@@ -220,8 +221,9 @@ target(upgrade: "Upgrades a Griffon application from a previous version of Griff
         propertyfile(file: "${basedir}/application.properties",
                 comment: "Do not edit app.griffon.* properties, they may change automatically. " +
                         "DO NOT put application configuration in here, it is not the right place!") {
-            entry(key: "app.name", value: "$griffonAppName")
-            entry(key: "app.griffon.version", value: "$griffonVersion")
+            entry(key: "app.name", value: griffonAppName)
+            entry(key: "app.griffon.version", value: griffonVersion)
+            if(!isPluginProject && isArchetypeProject) entry(key: "plugins.swing", value: griffonVersion)
         }
     }
 
