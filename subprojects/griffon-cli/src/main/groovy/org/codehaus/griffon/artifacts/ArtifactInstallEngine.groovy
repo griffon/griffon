@@ -149,6 +149,28 @@ class ArtifactInstallEngine {
         }
     }
 
+    boolean installPlugins(Map<String, String> plugins) {
+        ArtifactDependencyResolver resolver = new ArtifactDependencyResolver()
+        List<ArtifactDependency> dependencies = []
+        try {
+            dependencies = resolver.resolveDependencyTree(Plugin.TYPE, plugins)
+        } catch (Exception e) {
+            GriffonExceptionHandler.sanitize(e)
+            eventHandler 'StatusError', "Some plugins failed to resolve => $e"
+            errorHandler "Cannot continue with unresolved dependencies."
+        }
+
+        if (LOG.debugEnabled && dependencies) {
+            LOG.debug("Dependency resolution outcome:\n${dependencies.collect([]) {printDependencyTree(it, true)}.join('\n')}")
+        }
+
+        try {
+            return installPlugins(dependencies, resolver)
+        } catch (InstallArtifactException iae) {
+            errorHandler "Could not resolve plugin dependencies."
+        }
+    }
+
     private boolean installPlugins(List<ArtifactDependency> dependencies, ArtifactDependencyResolver resolver) {
         installedArtifacts.clear()
         uninstalledArtifacts.clear()

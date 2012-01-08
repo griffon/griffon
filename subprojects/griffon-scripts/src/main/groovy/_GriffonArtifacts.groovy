@@ -230,6 +230,10 @@ installArtifact = { String type ->
         def artifactArgs = argsMap['params']
 
         if (artifactArgs) {
+            if (argsMap['force-upgrade']) {
+                System.setProperty(ArtifactDependencyResolver.KEY_FORCE_UPGRADE, 'true')
+            }
+
             File artifactFile = new File(artifactArgs[0])
             def urlPattern = ~"^[a-zA-Z][a-zA-Z0-9\\-\\.\\+]*://"
             if (artifactArgs[0] =~ urlPattern) {
@@ -270,6 +274,12 @@ uninstallArtifact = { String type ->
         logError("Error installing ${type}: ${e.message}", e)
         exit(1)
     }
+}
+
+installPlugins = { Map<String, String> plugins, Metadata md ->
+    ArtifactInstallEngine artifactInstallEngine = createArtifactInstallEngine(md)
+    artifactInstallEngine.installPlugins(plugins)
+    md.reload()
 }
 
 installArtifactErrorMessage = { type ->
@@ -481,18 +491,17 @@ ${'-' * 80}
         if (argsMap.install && outdatedArtifacts) {
             println ''
             if (confirmInput("Proceed with ${type} upgrades?", "artifact.upgrade")) {
-                wasInteractive = isInteractive
-                isInteractive = false
-                try {
+                System.setProperty(ArtifactDependencyResolver.KEY_FORCE_UPGRADE, 'true')
+                if (type == Plugin.TYPE) {
+                    Map<String, String> plugins = [:]
                     outdatedArtifacts.each { name, data ->
-                        // skip if name-version has been installed already because
-                        // it is a dependency of another artifact that was upgraded in  a previous
-                        // iteration
-                        if (Metadata.current["${type}${type == Plugin.TYPE ? 's' : ''}" + name] == data.version) return
+                        plugins[name] = data.version
+                    }
+                    installPlugins(plugins, Metadata.current)
+                } else {
+                    outdatedArtifacts.each { name, data ->
                         doInstallArtifact(data.repository, type, name, data.version, Metadata.current)
                     }
-                } finally {
-                    isInteractive = wasInteractive
                 }
             }
         }

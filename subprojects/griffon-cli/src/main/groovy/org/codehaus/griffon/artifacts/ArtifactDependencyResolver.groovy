@@ -31,6 +31,8 @@ import static org.codehaus.griffon.artifacts.ArtifactUtils.isValidVersion
 class ArtifactDependencyResolver {
     private static final Logger LOG = LoggerFactory.getLogger(ArtifactDependencyResolver)
 
+    static final String KEY_FORCE_UPGRADE = 'griffon.artifact.force.upgrade'
+
     private final Map<ArtifactDependency.Key, ArtifactDependency> processedDependencies = [:]
 
     List<ArtifactDependency> resolveDependencyTree(String type, Map<String, String> dependencies) {
@@ -154,7 +156,7 @@ class ArtifactDependencyResolver {
                 matches.sort {a, b -> b.dependency.major <=> a.dependency.major}
                 def winner = matches[0]
                 if (matches.find {it.dependency.major != element.dependency.major}) {
-                    if (winner.dependency.installed) {
+                    if (winner.dependency.installed || System.getProperty(KEY_FORCE_UPGRADE) == 'true') {
                         matches.each {
                             if (it.version != winner.version) it.dependency.evicted = true
                             it.processed = true

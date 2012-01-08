@@ -161,6 +161,26 @@ class ArtifactDependencyResolverTests extends GroovyTestCase {
         assert dependency.conflicted
     }
 
+    void testResolveEvictionsWithInstalledReleases_withOneTarget_forcedUpgradeOnMajor() {
+        List<ArtifactDependency> installed = [new ArtifactDependency('one')]
+        installed[0].version = '1.0.0'
+        installed[0].installed = true
+        installed[0].resolved = true
+        System.setProperty(ArtifactDependencyResolver.KEY_FORCE_UPGRADE, 'true')
+        try {
+            ArtifactDependencyResolver resolver = new ArtifactDependencyResolver()
+            ArtifactDependency dependency = resolver.resolveDependencyTree(Plugin.TYPE, 'one', '2.0.0')
+            assert dependency.resolved
+            List<ArtifactDependency> installPlan = resolver.resolveEvictions(installed, [dependency])
+            assert installPlan
+            assert installPlan.size() == 2
+            assert installed[0].evicted
+            assert installPlan[1] == dependency
+        } finally {
+            System.setProperty(ArtifactDependencyResolver.KEY_FORCE_UPGRADE, 'false')
+        }
+    }
+
     void testResolveEvictionsWithInstalledReleases_withOneTarget_noconflict() {
         List<ArtifactDependency> installed = [new ArtifactDependency('one')]
         installed[0].version = '2.0.0'
