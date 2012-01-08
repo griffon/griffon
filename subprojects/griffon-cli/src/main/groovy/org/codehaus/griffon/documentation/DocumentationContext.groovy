@@ -16,7 +16,7 @@
 
 package org.codehaus.griffon.documentation
 
-import org.codehaus.griffon.commons.GriffonClassUtils
+import griffon.util.GriffonClassUtils
 
 /**
  * A Class that gather information about the behavior a plugin adds at runtime.

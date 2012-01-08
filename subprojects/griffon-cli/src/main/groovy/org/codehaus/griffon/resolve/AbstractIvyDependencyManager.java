@@ -491,7 +491,7 @@ public abstract class AbstractIvyDependencyManager {
         // The dependency config can use the pom(Boolean) method to declare
         // that this project has a POM and it has the dependencies, which means
         // we now have to inspect it for the dependencies to use.
-        if (readPom == true && buildSettings != null) {
+        if (readPom && buildSettings != null) {
             registerPomDependencies();
         }
 

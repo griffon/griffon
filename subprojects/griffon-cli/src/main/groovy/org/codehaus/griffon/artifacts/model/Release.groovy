@@ -110,16 +110,8 @@ class Release {
 
     // TODO LEGACY - remove this code before 1.0
     static Release makeFromXML(String type, xml) {
-        switch (type) {
-            case Plugin.TYPE:
-                Release release = parseReleaseFromXML(xml)
-                release.artifact = parsePluginFromXML(xml)
-                return release
-                break
-            case Archetype.TYPE:
-                break
-        }
-
-        null
+        Release release = parseReleaseFromXML(xml)
+        release.artifact = parsePluginFromXML(xml)
+        release
     }
 }

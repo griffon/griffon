@@ -86,7 +86,6 @@ else
 args = System.getProperty("griffon.cli.args")
 classesDir = griffonSettings.classesDir
 griffonApp = null
-griffonContext = null
 isApplicationProject = metadataFile.exists()
 isPluginProject = griffonSettings.isPluginProject()
 isAddonPlugin = griffonSettings.isAddonPlugin()
@@ -113,14 +112,6 @@ if (!System.getProperty('griffon.env.set')) {
     }
     println "Environment set to ${griffonEnv}"
     System.setProperty('griffon.env.set', 'true')
-}
-if (getBinding().variables.containsKey("scriptScope")) {
-    buildScope = (scriptScope instanceof BuildScope) ? scriptScope : BuildScope.valueOf(scriptScope.toString().toUpperCase());
-    buildScope.enable()
-}
-else {
-    buildScope = BuildScope.ALL
-    buildScope.enable()
 }
 
 // Prepare a configuration file parser based on the current environment.
