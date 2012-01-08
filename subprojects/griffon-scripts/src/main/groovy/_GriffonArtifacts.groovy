@@ -561,8 +561,8 @@ runPluginScript = { File scriptFile, fullPluginName, msg ->
         // we are using text form of script here to prevent Gant caching
 
         // temporary crutch --- REMOVE BEFORE 1.0!!
-        builderConfig = new ConfigObject()
-        if (builderConfigFile.exists()) builderConfig = configSlurper.parse(builderConfigFile.text)
+        // builderConfig = new ConfigObject()
+        // if (builderConfigFile.exists()) builderConfig = configSlurper.parse(builderConfigFile.text)
         // temporary crutch --- REMOVE BEFORE 1.0!!
 
         includeTargets << instrumentedInstallScript

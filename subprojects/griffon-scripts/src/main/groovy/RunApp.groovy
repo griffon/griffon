@@ -84,6 +84,7 @@ target('runApp': "Runs the application from the command line") {
 
     runtimeClasspath = [i18nDir, resourcesDir, runtimeClasspath, projectMainClassesDir].join(File.pathSeparator)
 
+    event 'StatusUpdate', ['Launching application']
     // start the process
     try {
         def cmd = [javaVM]

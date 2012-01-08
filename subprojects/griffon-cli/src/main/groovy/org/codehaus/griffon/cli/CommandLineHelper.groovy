@@ -81,7 +81,7 @@ public class CommandLineHelper {
             responsesString = DefaultGroovyMethods.join(validResponses, ",")
         }
 
-        if (System.getProperty(INTERACTIVE_MODE_KEY) == null || !Boolean.getBoolean(INTERACTIVE_MODE_KEY)) {
+        if (System.getProperty(KEY_INTERACTIVE_MODE) == null || !Boolean.getBoolean(KEY_INTERACTIVE_MODE)) {
             if (getDefaultAnswerNonInteractive().equalsIgnoreCase('y')) {
                 return 'y'
             } else if (getDefaultAnswerNonInteractive().equalsIgnoreCase('n')) {

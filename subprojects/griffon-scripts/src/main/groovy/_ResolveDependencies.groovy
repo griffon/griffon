@@ -27,10 +27,14 @@ _resolve_dependencies_called = true
 includeTargets << griffonScript('_GriffonArtifacts')
 
 target('resolveDependencies': '') {
+    long start = System.currentTimeMillis()
+    event 'StatusUpdate', ['Resolving plugin dependencies']
     ArtifactInstallEngine artifactInstallEngine = createArtifactInstallEngine()
     if (!artifactInstallEngine.resolvePluginDependencies()) {
         exit(1)
     }
 
     pluginSettings.resolveAndAddAllPluginDependencies()
+    long end = System.currentTimeMillis()
+    event 'StatusFinal', ["Plugin dependencies resolved in ${end - start} ms."]
 }
