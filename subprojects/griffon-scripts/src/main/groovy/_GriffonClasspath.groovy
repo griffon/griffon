@@ -29,6 +29,10 @@ _griffon_classpath_called = true
 
 classpathSet = false
 
+projectCompileClassesDir = new File("${classesDir.absolutePath}/compile")
+projectMainClassesDir = new File("${classesDir.absolutePath}/main")
+projectTestClassesDir = new File("${classesDir.absolutePath}/test")
+
 target(name: 'classpath', description: "Sets the Griffon classpath", prehook: null, posthook: null) {
     setClasspath()
 }
@@ -46,12 +50,6 @@ commonClasspath = {
     }
 
     def pluginLibDirs = pluginSettings.pluginLibDirectories.findAll {it.exists()}
-    /*
-    for (pluginLib in pluginLibDirs) {
-        debug "  ${pluginLib.file.absolutePath}"
-        fileset(dir: pluginLib.file.absolutePath)
-    }
-    */
 
 // XXX -- NATIVE
     def localPlatformLibAdded = false
@@ -153,15 +151,6 @@ testClasspath = {
         pathelement(location: projectCompileClassesDir)
         debug "  $projectCompileClassesDir"
     }
-
-    /*
-    for (pluginTestJar in getPluginTestFiles()) {
-        if (pluginTestJar.file.exists()) {
-            debug "  ${pluginTestJar.file.absolutePath}"
-            file(file: pluginTestJar.file.absolutePath)
-        }
-    }
-    */
 }
 
 runtimeClasspath = {
@@ -194,67 +183,10 @@ void setClasspath() {
     // Make sure the following code is only executed once.
     if (classpathSet) return
 
-    projectCompileClassesDir = new File("${classesDir.absolutePath}/compile")
-    projectMainClassesDir = new File("${classesDir.absolutePath}/main")
-    projectTestClassesDir = new File("${classesDir.absolutePath}/test")
-
-    if (isApplicationProject || isPluginProject) {
-        [
-                projectCompileClassesDir,
-                projectMainClassesDir,
-                projectTestClassesDir,
-                griffonSettings.testClassesDir,
-                griffonSettings.testResourcesDir,
-                griffonSettings.resourcesDir
-        ].each { dir ->
-            if (!dir.exists()) ant.mkdir(dir: dir)
-            addUrlIfNotPresent rootLoader, dir
-        }
-    }
-
     ant.path(id: 'griffon.compile.classpath', compileClasspath)
     ant.path(id: 'griffon.test.classpath', testClasspath)
     ant.path(id: 'griffon.runtime.classpath', runtimeClasspath)
 
-    /*
-    def griffonDir = resolveResources("file:${basedir}/griffon-app/*")
-    StringBuffer cpath = new StringBuffer("")
-
-    def jarFiles = getJarFiles()
-
-    for (dir in griffonDir) {
-        cpath << dir.file.absolutePath << File.pathSeparator
-        // Adding the griffon-app folders to the root loader causes re-load issues as
-        // root loader returns old class before the griffon GCL attempts to recompile it
-        //rootLoader?.addURL(dir.URL)
-    }
-    cpath << classesDirPath << File.pathSeparator
-
-    for (jar in jarFiles) {
-        cpath << jar.file.absolutePath << File.pathSeparator
-        addUrlIfNotPresent rootLoader, jar.file
-    }
-    cpath << testResourcesDirPath << File.pathSeparator
-
-    // We need to set up this configuration so that we can compile the
-    // plugin descriptors, which lurk in the root of the plugin's project
-    // directory.
-    compConfig = new CompilerConfiguration()
-    compConfig.setClasspath(cpath.toString());
-    compConfig.sourceEncoding = "UTF-8"
-
-    if (isApplicationProject || isPluginProject) {
-        // if(!resourcesDir.exists()) ant.mkdir(dir: resourcesDirPath)
-        // if(!griffonSettings.testResourcesDir.exists()) ant.mkdir(dir: griffonSettings.testResourcesDir)
-        addUrlIfNotPresent rootLoader, resourcesDirPath
-        addUrlIfNotPresent rootLoader, griffonSettings.testResourcesDir
-    }
-    */
-
     classpathSet = true
 }
 
-dirNotEmpty = { Map args ->
-    if (!args.dir.exists()) return false
-    return ant.fileset(args).size() > 0
-}

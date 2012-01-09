@@ -40,8 +40,13 @@ distBinSpec = copySpec {
             exclude 'griffon*'
         }
     }
+    into('lib/shell') {
+        from((project(':griffon-shell').configurations.runtime - project(':griffon-cli').configurations.runtime)) {
+            exclude 'griffon*'
+        }
+    }
     
-    ['rt', 'cli', 'scripts', 'resources'].each { subproj ->
+    ['rt', 'cli', 'scripts', 'resources', 'shell'].each { subproj ->
         from(project(':griffon-' + subproj).jar.outputs.files){
             into('dist')
         }
@@ -92,7 +97,6 @@ distSourceSpec = copySpec {
         exclude 'buildSrc/build'
         exclude 'buildSrc/.gradle'
         exclude 'buildSrc/.idea'
-        exclude 'subprojects/griffon-shell'
         exclude 'subprojects/griffon-*/build'
         exclude 'subprojects/griffon-*/.gradle'
         exclude 'subprojects/griffon-*/.idea'

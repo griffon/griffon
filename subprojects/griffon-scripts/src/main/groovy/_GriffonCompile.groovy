@@ -22,6 +22,8 @@ import org.codehaus.groovy.runtime.StackTraceUtils
  * @author Graeme Rocher (Grails 0.4)
  */
 
+includeTargets << griffonScript('_GriffonClasspath')
+
 ant.taskdef(name: 'groovyc', classname: 'org.codehaus.groovy.ant.Groovyc')
 ant.taskdef(name: 'griffonc', classname: 'org.codehaus.griffon.compiler.GriffonCompiler')
 
@@ -78,6 +80,22 @@ compileSources = { destinationDir, classpathId, sources ->
 
 target(name: 'compile', description: "Implementation of compilation phase",
         prehook: null, posthook: null) {
+    depends(classpath)
+
+    if (isApplicationProject || isPluginProject) {
+        [
+                projectCompileClassesDir,
+                projectMainClassesDir,
+                projectTestClassesDir,
+                griffonSettings.testClassesDir,
+                griffonSettings.testResourcesDir,
+                griffonSettings.resourcesDir
+        ].each { dir ->
+            if (!dir.exists()) ant.mkdir(dir: dir)
+            addUrlIfNotPresent rootLoader, dir
+        }
+    }
+
     profile("Compiling sources to location [$projectMainClassesDir]") {
         // If this is a plugin project, the descriptor is not included
         // in the compiler's source path. So, we manually compile it

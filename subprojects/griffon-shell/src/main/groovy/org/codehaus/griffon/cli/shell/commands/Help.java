@@ -1,12 +1,12 @@
 /*
- * Copyright 2004-2012 the original author or authors.
- * 
+ * Copyright 2008-2011 the original author or authors.
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
- *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -14,13 +14,15 @@
  * limitations under the License.
  */
 
+package org.codehaus.griffon.cli.shell.commands;
+
+import org.apache.felix.gogo.commands.Command;
+import org.apache.karaf.shell.console.HelpAction;
+
 /**
- * Dummy script to define the help for Griffon interactive mode.
- * The actual "interactive mode" is built into the GriffonScriptRunner.
- * @author Kenneth Liu (Grails 1.3.1)
+ * @author Andres Almiray
+ * @since 0.9.5
  */
-target('interactive': 'Starts Griffon CLI (script runner) in interactive mode. Keeps the JVM running between griffon commands for faster script execution.') {
-
+@Command(scope = "griffon", name = "help", description = "Displays this help or help about a command")
+public class Help extends HelpAction {
 }
-
-setDefaultTarget(interactive)

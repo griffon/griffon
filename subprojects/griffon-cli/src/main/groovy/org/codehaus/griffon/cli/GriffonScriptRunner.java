@@ -46,6 +46,7 @@ import java.util.regex.Pattern;
 
 import static griffon.util.GriffonNameUtils.isBlank;
 import static java.util.Arrays.binarySearch;
+import static java.util.Arrays.sort;
 import static org.codehaus.griffon.artifacts.ArtifactUtils.getInstalledArtifacts;
 
 /**
@@ -70,9 +71,9 @@ public class GriffonScriptRunner {
     }
 
     private static final Pattern scriptFilePattern = Pattern.compile("^[^_]\\w+\\.groovy$");
-    private static final String VAR_SCRIPT_NAME = "scriptName";
-    private static final String VAR_SCRIPT_FILE = "scriptFile";
-    private static final String VAR_SCRIPT_ENV = "scriptEnv";
+    public static final String VAR_SCRIPT_NAME = "scriptName";
+    public static final String VAR_SCRIPT_FILE = "scriptFile";
+    public static final String VAR_SCRIPT_ENV = "scriptEnv";
 
     /**
      * Evaluate the arguments to get the name of the script to execute, which environment
@@ -232,6 +233,10 @@ public class GriffonScriptRunner {
         this.settings = settings;
     }
 
+    public BuildSettings getSettings() {
+        return settings;
+    }
+
     public PrintStream getOut() {
         return this.out;
     }
@@ -256,7 +261,7 @@ public class GriffonScriptRunner {
         return executeCommand(script);
     }
 
-    private int executeCommand(ScriptAndArgs script) {
+    public void setup() {
         settings.getSystemProperties().putAll(SYSTEM_PROPERTIES);
 
         // Populate the root loader with all libraries that this app
@@ -264,6 +269,18 @@ public class GriffonScriptRunner {
         if (settings.getRootLoader() == null) {
             settings.setRootLoader((URLClassLoader) GriffonScriptRunner.class.getClassLoader());
         }
+
+        // Load the BuildSettings file for this project if it exists. Note
+        // that this does not load any environment-specific settings.
+        BuildSettingsHolder.setSettings(settings);
+        settings.loadConfig();
+        BuildSettingsHolder.setSettings(settings);
+        setLoggingOptions();
+        ArtifactRepositoryRegistry.getInstance().configureRepositories();
+    }
+
+    private int executeCommand(ScriptAndArgs script) {
+        setup();
 
         if (script.args != null) {
             // Check whether we are running in non-interactive mode
@@ -285,30 +302,6 @@ public class GriffonScriptRunner {
             System.setProperty("griffon.cli.args", "");
         }
 
-        // Load the BuildSettings file for this project if it exists. Note
-        // that this does not load any environment-specific settings.
-        BuildSettingsHolder.setSettings(settings);
-        settings.loadConfig();
-        BuildSettingsHolder.setSettings(settings);
-        setLoggingOptions();
-        ArtifactRepositoryRegistry.getInstance().configureRepositories();
-
-        /*
-        // Either run the script or enter interactive mode.
-        if (script.name.equalsIgnoreCase("interactive")) {
-            // Can't operate interactively in non-interactive mode!
-            if (!isInteractive) {
-                out.println("You cannot use '--non-interactive' with interactive mode.");
-                return 1;
-            }
-
-            setRunningEnvironment(script.name, script.env);
-            // This never exits unless an exception is thrown or
-            // the process is interrupted via a signal.
-            runInteractive();
-            return 0;
-        }
-        */
         return callPluginOrGriffonScript(script);
     }
 
@@ -425,13 +418,13 @@ public class GriffonScriptRunner {
 
     private int callPluginOrGriffonScript(ScriptAndArgs script) {
         // The directory where scripts are cached.
-        URLClassLoader classLoader = createClassLoader(script);
+        URLClassLoader classLoader = createClassLoader();
 
         List<File> potentialScripts;
         Resource[] allScripts = settings.pluginSettings.getAvailableScripts();
         GantBinding binding = new GantBinding();
-            initializeProjectInputStream(binding);
-            potentialScripts = findPotentialScripts(script, allScripts, binding);
+        initializeProjectInputStream(binding);
+        potentialScripts = findPotentialScripts(script, allScripts, binding);
 
         // First try to load the script from its file. If there is no
         // file, then attempt to load it as a pre-compiled script. If
@@ -459,7 +452,7 @@ public class GriffonScriptRunner {
                 script.name = scriptFileName;
 
                 // Setup the script to call.
-                Gant gant = createGantInstance(classLoader, binding);
+                Gant gant = createGantInstance(binding);
                 gant.loadScript(scriptFile);
                 return executeWithGantInstance(gant, binding);
             }
@@ -494,7 +487,7 @@ public class GriffonScriptRunner {
             script.name = scriptFileName;
 
             // Set up the script to call.
-            Gant gant = createGantInstance(classLoader, binding);
+            Gant gant = createGantInstance(binding);
             gant.loadScript(scriptFile);
 
             // Invoke the default target.
@@ -503,13 +496,23 @@ public class GriffonScriptRunner {
         return 1;
     }
 
-    private Gant createGantInstance(URLClassLoader classLoader, GantBinding binding) {
+    public Gant createGantInstance(GantBinding binding) {
+        return createGantInstance(binding, true);
+    }
+
+    public Gant createGantInstance(GantBinding binding, boolean reload) {
+        URLClassLoader classLoader = createClassLoader();
         Gant gant = new Gant(initBinding(binding), classLoader);
-        if (griffonInitBuildListener != null && binding.getBuildListeners().contains(griffonInitBuildListener)) {
-            binding.removeBuildListener(griffonInitBuildListener);
+        if (reload) {
+            if (griffonInitBuildListener != null && binding.getBuildListeners().contains(griffonInitBuildListener)) {
+                binding.removeBuildListener(griffonInitBuildListener);
+            }
+            griffonInitBuildListener = new GriffonInitBuildListener(settings, binding, gant, reload);
+            binding.addBuildListener(griffonInitBuildListener);
+        } else if (griffonInitBuildListener == null) {
+            griffonInitBuildListener = new GriffonInitBuildListener(settings, binding, gant, reload);
+            binding.addBuildListener(griffonInitBuildListener);
         }
-        griffonInitBuildListener = new GriffonInitBuildListener(settings, binding, gant);
-        binding.addBuildListener(griffonInitBuildListener);
         return gant;
     }
 
@@ -552,7 +555,7 @@ public class GriffonScriptRunner {
         return potentialScripts;
     }
 
-    private URLClassLoader createClassLoader(ScriptAndArgs script) {
+    private URLClassLoader createClassLoader() {
         // The class loader we will use to run Gant. It's the root
         // loader plus all the application's compiled classes.
         URLClassLoader classLoader;
@@ -911,11 +914,13 @@ public class GriffonScriptRunner {
         private final BuildSettings settings;
         private final Binding binding;
         private final Gant gant;
+        private final boolean reload;
 
-        private GriffonInitBuildListener(BuildSettings settings, Binding binding, Gant gant) {
+        private GriffonInitBuildListener(BuildSettings settings, Binding binding, Gant gant, boolean reload) {
             this.settings = settings;
             this.binding = binding;
             this.gant = gant;
+            this.reload = reload;
             // preload basic stuff that should always be there
             setupScript("_GriffonSettings");
             setupScript("_GriffonArgParsing");
@@ -936,6 +941,7 @@ public class GriffonScriptRunner {
 
         @Override
         public void targetStarted(BuildEvent buildEvent) {
+            if (!reload) return;
             String targetName = buildEvent.getTarget().getName();
             String defaultTargetName = (String) binding.getVariable("defaultTarget");
             File scriptFile = (File) binding.getVariable(VAR_SCRIPT_FILE);
@@ -975,7 +981,13 @@ public class GriffonScriptRunner {
                 "createCommandAlias", "createIntegrationTest",
                 "createMvc", "createScript", "createService",
                 "createUnitTest", "generateViewScript",
-                "releaseArchetype", "replaceArtifact"
+                "releaseArchetype", "replaceArtifact", "clean"
         };
+        
+        static {
+            sort(CONFIGURE_PROXY_EXCLUSIONS);
+            sort(RESOLVE_DEPENDENCIES_EXCLUSIONS);
+            sort(CLASSPATH_EXCLUSIONS);
+        }
     }
 }
