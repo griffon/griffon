@@ -1,5 +1,5 @@
 /*
- * Copyright 2008-2011 the original author or authors.
+ * Copyright 2012 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,21 +14,17 @@
  * limitations under the License.
  */
 
-package org.codehaus.griffon.cli.shell.commands;
+package org.codehaus.griffon.cli.shell.command;
 
-import org.apache.felix.gogo.commands.Action;
-import org.apache.felix.gogo.commands.Command;
-import org.apache.felix.service.command.CommandSession;
-import org.apache.karaf.shell.console.CloseShellException;
+import org.codehaus.griffon.cli.shell.AbstractGriffonCommand;
+import org.codehaus.griffon.cli.shell.Command;
 
 /**
  * @author Andres Almiray
  * @since 0.9.5
  */
-@Command(scope = "griffon", name = "exit", description = "Exit the shell")
-public class Exit implements Action {
-    @Override
-    public Object execute(CommandSession session) throws Exception {
-        throw new CloseShellException();
-    }
+@Command(scope = "griffon",
+        name = "list-repositories",
+        description = "Lists all configured repositories")
+public class ListRepositoriesCommand extends AbstractGriffonCommand {
 }

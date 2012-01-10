@@ -19,10 +19,10 @@ package org.codehaus.griffon.cli.shell;
 import griffon.util.BuildSettingsHolder;
 import griffon.util.Environment;
 import griffon.util.GriffonUtil;
-import org.apache.felix.gogo.commands.Action;
 import org.apache.felix.gogo.commands.Option;
 import org.apache.felix.service.command.CommandSession;
 import org.codehaus.griffon.cli.GriffonScriptRunner;
+import org.codehaus.griffon.cli.shell.support.CommandArguments;
 
 import static griffon.util.GriffonNameUtils.getShortName;
 import static org.codehaus.griffon.cli.shell.GriffonScriptRunnerHolder.*;
@@ -31,20 +31,35 @@ import static org.codehaus.griffon.cli.shell.GriffonScriptRunnerHolder.*;
  * @author Andres Almiray
  * @since 0.9.5
  */
-public abstract class AbstractGriffonShellCommand implements Action {
+public abstract class AbstractGriffonShellCommand implements GriffonCommand {
     @Option(name = "--env", description = "Sets the environment to use.")
     protected String env = Environment.DEVELOPMENT.getName();
+
+    @Option(name = "--non-interactive", description = "Controls if the shell can ask for input or not.")
+    protected boolean nonInteractive = false;
+
+    private CommandArguments commandArguments;
+
+    public CommandArguments getCommandArguments() {
+        return commandArguments;
+    }
+
+    public void setCommandArguments(CommandArguments commandArguments) {
+        this.commandArguments = commandArguments;
+    }
 
     @Override
     public Object execute(CommandSession session) throws Exception {
         GriffonScriptRunner runner = getGriffonScriptRunner();
         setEnvironment(runner);
-        return doExecute(session);
+        return doExecute(session, commandArguments);
     }
+
 
     private void setEnvironment(GriffonScriptRunner runner) {
         System.clearProperty(Environment.KEY);
         runner.setRunningEnvironment(getScriptName(), env);
+        runner.setInteractive(!nonInteractive);
         String currentEnvironment = BuildSettingsHolder.getSettings().getGriffonEnv();
         if (!currentEnvironment.equalsIgnoreCase(getLastEnvironment())) {
             System.clearProperty("griffon.env.set");
@@ -56,5 +71,5 @@ public abstract class AbstractGriffonShellCommand implements Action {
         return GriffonUtil.getScriptName(getShortName(getClass().getName()));
     }
 
-    protected abstract Object doExecute(CommandSession session) throws Exception;
+    protected abstract Object doExecute(CommandSession session, CommandArguments commandArguments) throws Exception;
 }

@@ -63,7 +63,7 @@ compileSources = { destinationDir, classpathId, sources ->
         ant.griffonc(destdir: destinationDir,
                 projectName: griffonAppName,
                 basedir: griffonSettings.baseDir.path,
-                verbose: (argsMap.verboseCompiler ? true : false),
+                verbose: (argsMap.verboseCompile ? true : false),
                 classpathref: classpathId,
                 encoding: griffonSettings.sourceEncoding, sources)
         addUrlIfNotPresent classLoader, destinationDir

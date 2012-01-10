@@ -74,6 +74,7 @@ public class GriffonScriptRunner {
     public static final String VAR_SCRIPT_NAME = "scriptName";
     public static final String VAR_SCRIPT_FILE = "scriptFile";
     public static final String VAR_SCRIPT_ENV = "scriptEnv";
+    public static final String KEY_SCRIPT_ARGS = "griffon.cli.args";
 
     /**
      * Evaluate the arguments to get the name of the script to execute, which environment
@@ -119,7 +120,7 @@ public class GriffonScriptRunner {
         // If there aren't any arguments, then we don't have a command
         // to execute. So we have to exit.
         if (script.name == null) {
-            System.out.println("No script name specified. Use 'griffon help' for more info or 'griffon interactive' to enter interactive mode");
+            System.out.println("No script name specified. Use 'griffon help' for more info or 'griffonsh' to enter interactive mode");
             System.exit(0);
         }
 
@@ -261,6 +262,14 @@ public class GriffonScriptRunner {
         return executeCommand(script);
     }
 
+    public boolean isInteractive() {
+        return isInteractive;
+    }
+
+    public void setInteractive(boolean interactive) {
+        isInteractive = interactive;
+    }
+
     public void setup() {
         settings.getSystemProperties().putAll(SYSTEM_PROPERTIES);
 
@@ -294,12 +303,12 @@ public class GriffonScriptRunner {
                 }
             }
 
-            System.setProperty("griffon.cli.args", script.args.replace(' ', '\n'));
+            System.setProperty(KEY_SCRIPT_ARGS, script.args.replace(' ', '\n'));
         } else {
             // If GriffonScriptRunner is executed more than once in a
             // single JVM, we have to make sure that the CLI args are
             // reset.
-            System.setProperty("griffon.cli.args", "");
+            System.setProperty(KEY_SCRIPT_ARGS, "");
         }
 
         return callPluginOrGriffonScript(script);
@@ -359,9 +368,9 @@ public class GriffonScriptRunner {
                 // Update the relevant system property, otherwise the
                 // arguments will be "remembered" from the previous run.
                 if (script.args != null) {
-                    System.setProperty("griffon.cli.args", script.args);
+                    System.setProperty(KEY_SCRIPT_ARGS, script.args);
                 } else {
-                    System.setProperty("griffon.cli.args", "");
+                    System.setProperty(KEY_SCRIPT_ARGS, "");
                 }
 
                 env = script.env != null ? script.env : Environment.DEVELOPMENT.getName();
@@ -454,7 +463,7 @@ public class GriffonScriptRunner {
                 // Setup the script to call.
                 Gant gant = createGantInstance(binding);
                 gant.loadScript(scriptFile);
-                return executeWithGantInstance(gant, binding);
+                return executeWithGantInstanceNoException(gant, binding);
             }
 
             // If there are multiple scripts to choose from and we
@@ -491,7 +500,7 @@ public class GriffonScriptRunner {
             gant.loadScript(scriptFile);
 
             // Invoke the default target.
-            return executeWithGantInstance(gant, binding);
+            return executeWithGantInstanceNoException(gant, binding);
         }
         return 1;
     }
@@ -681,7 +690,16 @@ public class GriffonScriptRunner {
             gant.setAllPerTargetPostHooks(DO_NOTHING_CLOSURE);
             return gant.executeTargets();
         } catch (RuntimeException e) {
-            GriffonExceptionHandler.sanitize(e).printStackTrace();
+            GriffonExceptionHandler.sanitize(e);
+            throw e;
+        }
+    }
+
+    private static int executeWithGantInstanceNoException(Gant gant, GantBinding binding) {
+        try {
+            return executeWithGantInstance(gant, binding);
+        } catch (RuntimeException e) {
+            e.printStackTrace();
             return 1;
         }
     }
@@ -983,7 +1001,7 @@ public class GriffonScriptRunner {
                 "createUnitTest", "generateViewScript",
                 "releaseArchetype", "replaceArtifact", "clean"
         };
-        
+
         static {
             sort(CONFIGURE_PROXY_EXCLUSIONS);
             sort(RESOLVE_DEPENDENCIES_EXCLUSIONS);

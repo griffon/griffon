@@ -14,14 +14,12 @@
  * limitations under the License.
  */
 
-package org.codehaus.griffon.cli.shell.commands;
+package org.codehaus.griffon.cli.shell.command;
 
 import griffon.util.BuildSettings;
 import griffon.util.Metadata;
 import org.apache.felix.gogo.commands.Action;
 import org.apache.felix.gogo.commands.Command;
-import org.apache.felix.gogo.commands.basic.AbstractCommand;
-import org.apache.felix.gogo.commands.basic.ActionPreparator;
 import org.apache.felix.gogo.runtime.CommandProcessorImpl;
 import org.apache.felix.service.command.CommandSession;
 import org.apache.felix.service.command.Function;
@@ -29,8 +27,7 @@ import org.codehaus.griffon.artifacts.ArtifactUtils;
 import org.codehaus.griffon.artifacts.model.Plugin;
 import org.codehaus.griffon.artifacts.model.Release;
 import org.codehaus.griffon.cli.GriffonScriptRunner;
-import org.codehaus.griffon.cli.shell.GantAwareAction;
-import org.codehaus.griffon.cli.shell.GriffonActionPreparator;
+import org.codehaus.griffon.cli.shell.support.GriffonCommandFactory;
 
 import java.io.File;
 import java.util.LinkedHashSet;
@@ -43,20 +40,21 @@ import static java.util.Arrays.binarySearch;
 import static java.util.Arrays.sort;
 import static org.codehaus.griffon.cli.GriffonScriptRunner.getScriptNameFromFile;
 import static org.codehaus.griffon.cli.shell.CommandProcessorImplHolder.getCommandProcessor;
+import static org.codehaus.griffon.cli.shell.support.CommandUtils.clearCaches;
 
 /**
  * @author Andres Almiray
  * @since 0.9.5
  */
-@Command(scope = "griffon", name = "reload-commands", description = "Reloads the list of available commands")
-public class ReloadCommands implements Action {
+@Command(scope = "shell", name = "reload-commands", description = "Reloads the list of available commands")
+public class ReloadCommandsCommand implements Action {
     public static void reload() {
         CommandProcessorImpl commandProcessor = getCommandProcessor();
 
         Set<String[]> commandsToRemove = new LinkedHashSet<String[]>();
         for (String commandName : commandProcessor.getCommands()) {
             String[] tmp = commandName.split(":");
-            if ("griffon".equalsIgnoreCase(tmp[0])) continue;
+            if ("shell".equalsIgnoreCase(tmp[0])) continue;
             commandsToRemove.add(tmp);
         }
 
@@ -66,6 +64,7 @@ public class ReloadCommands implements Action {
 
         BuildSettings buildSettings = getSettings();
 
+        addCommandScripts("griffon", new File(buildSettings.getGriffonHome(), "scripts"), commandProcessor);
         addCommandScripts("global", new File(buildSettings.getUserHome(), ".griffon/scripts"), commandProcessor);
 
         boolean isPluginProject = buildSettings.isPluginProject() != null;
@@ -81,20 +80,17 @@ public class ReloadCommands implements Action {
         }
     }
 
-    public static void loadGriffonCommands() {
-        CommandProcessorImpl commandProcessor = getCommandProcessor();
-        BuildSettings buildSettings = getSettings();
-        addCommandScripts("griffon", new File(buildSettings.getGriffonHome(), "scripts"), commandProcessor);
-    }
-
     @Override
     public Object execute(CommandSession session) throws Exception {
+        clearCaches();
         reload();
         return null;
     }
 
     private static final String[] FORBIDDEN_NAMES = {
-            "exit", "help", "reload-commands"
+            "exit", "help", "info", "reload-commands",
+            "create-app", "create-plugin", "create-archetype",
+            "create-addon"
     };
 
     static {
@@ -105,20 +101,10 @@ public class ReloadCommands implements Action {
         if (dir.exists()) {
             for (File file : dir.listFiles()) {
                 if (GriffonScriptRunner.isCommandScript(file)) {
-                    final String commandName = getHyphenatedName(getScriptNameFromFile(file)).trim();
+                    final String commandName = getHyphenatedName(getScriptNameFromFile(file));
                     if (binarySearch(FORBIDDEN_NAMES, commandName) >= 0) continue;
                     final File scriptFile = file;
-                    Function function = new AbstractCommand() {
-                        @Override
-                        public Action createNewAction() {
-                            return new GantAwareAction(scriptFile);
-                        }
-
-                        @Override
-                        protected ActionPreparator getPreparator() throws Exception {
-                            return new GriffonActionPreparator(scope, commandName, scriptFile);
-                        }
-                    };
+                    Function function = new GriffonCommandFactory(scope, commandName, scriptFile);
                     commandProcessor.addCommand(scope, function, commandName);
                 }
             }

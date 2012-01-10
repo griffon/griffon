@@ -14,12 +14,15 @@
  * limitations under the License.
  */
 
+import griffon.util.Environment
+import griffon.util.GriffonUtil
+import griffon.util.Metadata
+import griffon.util.PlatformUtils
 import org.codehaus.griffon.cli.ScriptExitException
 import org.springframework.core.io.ClassPathResource
 import org.springframework.core.io.FileSystemResource
 import org.springframework.core.io.Resource
 import org.springframework.util.FileCopyUtils
-import griffon.util.*
 import static org.codehaus.griffon.cli.CommandLineConstants.KEY_INTERACTIVE_MODE
 
 /**
@@ -27,6 +30,48 @@ import static org.codehaus.griffon.cli.CommandLineConstants.KEY_INTERACTIVE_MODE
  *
  * @author Peter Ledbrook (Grails 1.1)
  */
+
+args = System.getProperty('griffon.cli.args')
+
+// Set up the Griffon environment for this script.
+if (!System.getProperty('griffon.env.set')) {
+    if (griffonSettings.defaultEnv && getBinding().variables.containsKey('scriptEnv')) {
+        griffonEnv = scriptEnv
+        griffonSettings.griffonEnv = griffonEnv
+        System.setProperty(Environment.KEY, griffonEnv)
+        System.setProperty(Environment.DEFAULT, "")
+    }
+    println "Environment set to ${griffonEnv}"
+    System.setProperty('griffon.env.set', 'true')
+}
+
+// Load the application metadata (application.properties)
+metadataFile = new File("${basedir}/application.properties")
+metadata = metadataFile.exists() ? Metadata.getInstance(metadataFile) : Metadata.current
+
+griffonAppName = metadata.getApplicationName()
+griffonAppVersion = metadata.getApplicationVersion()
+appGriffonVersion = metadata.getGriffonVersion()
+
+// If no app name property (upgraded/new/edited project) default to basedir.
+if (!griffonAppName) {
+    griffonAppName = griffonSettings.baseDir.name
+}
+
+if (griffonAppName.indexOf('/') > -1) {
+    appClassName = griffonAppName[griffonAppName.lastIndexOf('/')..-1]
+} else {
+    appClassName = GriffonUtil.getClassNameRepresentation(griffonAppName)
+}
+
+// Prepare a configuration file parser based on the current environment.
+configSlurper = new ConfigSlurper(griffonEnv)
+configSlurper.setBinding(
+        griffonHome: griffonHome,
+        appName: griffonAppName,
+        appVersion: griffonAppVersion,
+        userHome: userHome,
+        basedir: basedir)
 
 // No point doing this stuff more than once.
 if (getBinding().variables.containsKey("_settings_called")) return true
@@ -64,26 +109,7 @@ archetypesBase = "${griffonWorkDir}/archetypes".toString().replaceAll('\\\\', '/
 archetypeName = ''
 archetypeVersion = ''
 
-// Load the application metadata (application.properties)
-metadataFile = new File("${basedir}/application.properties")
-metadata = metadataFile.exists() ? Metadata.getInstance(metadataFile) : Metadata.current
-
-griffonAppName = metadata.getApplicationName()
-griffonAppVersion = metadata.getApplicationVersion()
-appGriffonVersion = metadata.getGriffonVersion()
-
-// If no app name property (upgraded/new/edited project) default to basedir.
-if (!griffonAppName) {
-    griffonAppName = griffonSettings.baseDir.name
-}
-
-if (griffonAppName.indexOf('/') > -1)
-    appClassName = griffonAppName[griffonAppName.lastIndexOf('/')..-1]
-else
-    appClassName = GriffonUtil.getClassNameRepresentation(griffonAppName)
-
 // Other useful properties.
-args = System.getProperty("griffon.cli.args")
 classesDir = griffonSettings.classesDir
 griffonApp = null
 isApplicationProject = metadataFile.exists()
@@ -100,27 +126,6 @@ makeJNLP = false
 _skipSigning = false // GRIFFON-118
 defaultAppletWidth = 320 // GRIFFON-127
 defaultAppletHeight = 240 // GRIFFON-127
-
-// Set up the Griffon environment for this script.
-if (!System.getProperty('griffon.env.set')) {
-    if (griffonSettings.defaultEnv && getBinding().variables.containsKey('scriptEnv')) {
-        griffonEnv = scriptEnv
-        griffonSettings.griffonEnv = griffonEnv
-        System.setProperty(Environment.KEY, griffonEnv)
-        System.setProperty(Environment.DEFAULT, "")
-    }
-    println "Environment set to ${griffonEnv}"
-    System.setProperty('griffon.env.set', 'true')
-}
-
-// Prepare a configuration file parser based on the current environment.
-configSlurper = new ConfigSlurper(griffonEnv)
-configSlurper.setBinding(
-        griffonHome: griffonHome,
-        appName: griffonAppName,
-        appVersion: griffonAppVersion,
-        userHome: userHome,
-        basedir: basedir)
 
 applicationConfigFile = new File(basedir, 'griffon-app/conf/Application.groovy')
 builderConfigFile = new File(basedir, 'griffon-app/conf/Builder.groovy')

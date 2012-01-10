@@ -558,6 +558,10 @@ target(name: 'generateJNLP', description: "Generates the JNLP File",
 doPackageTextReplacement = {dir, fileFilters ->
     ant.fileset(dir: dir, includes: fileFilters).each {
         String fileName = it.toString()
+        // compatibility
+        argsMap['applet-width'] = argsMap['applet-width'] ?: argsMap.appletWidth
+        argsMap['applet-height'] = argsMap['applet-height'] ?: argsMap.appletHeight
+        // compatibility
         ant.replace(file: fileName) {
             replacefilter(token: "@griffonAppletClass@", value: griffonAppletClass)
             replacefilter(token: "@griffonApplicationClass@", value: griffonApplicationClass)
@@ -571,8 +575,8 @@ doPackageTextReplacement = {dir, fileFilters ->
             replacefilter(token: "@jnlpResources@", value: jnlpResources.join('\n'))
             replacefilter(token: "@appletJars@", value: appletJars.join(','))
             replacefilter(token: "@memoryOptions@", value: memOptions.join(' '))
-            replacefilter(token: "@applet.width@", value: argsMap.appletWidth ?: defaultAppletWidth)
-            replacefilter(token: "@applet.height@", value: argsMap.appletHeight ?: defaultAppletHeight)
+            replacefilter(token: "@applet.width@", value: argsMap['applet-width'] ?: defaultAppletWidth)
+            replacefilter(token: "@applet.height@", value: argsMap['applet-height'] ?: defaultAppletHeight)
             replacefilter(token: "@applet.tag.params@", value: appletTagParams.join('\n'))
             replacefilter(token: "@applet.script.params@", value: appletScriptParams.join(' '))
 

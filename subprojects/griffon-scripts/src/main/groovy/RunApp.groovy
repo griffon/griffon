@@ -49,8 +49,10 @@ target('runApp': "Runs the application from the command line") {
 
     def javaOpts = setupJavaOpts(true)
     if (argsMap.containsKey('debug')) {
-        def portNum = argsMap.debugPort ?: '18290'  //default is 'Gr' in ASCII
-        def addr = argsMap.debugAddr ?: '127.0.0.1'
+        argsMap['debug-port'] = argsMap.debugPort
+        argsMap['debug-addr'] = argsMap.debugAddr
+        def portNum = argsMap['debug-port'] ?: '18290'  //default is 'Gr' in ASCII
+        def addr = argsMap['debug-addr'] ?: '127.0.0.1'
         def debugSocket = ''
         if (portNum =~ /\d+/) {
             if (addr == '127.0.0.1') {

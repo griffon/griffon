@@ -1,5 +1,5 @@
 /*
- * Copyright 2008-2011 the original author or authors.
+ * Copyright 2012 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,15 +14,22 @@
  * limitations under the License.
  */
 
-package org.codehaus.griffon.cli.shell.commands;
+package org.codehaus.griffon.cli.shell.command;
 
-import org.apache.felix.gogo.commands.Command;
-import org.apache.karaf.shell.console.HelpAction;
+import org.codehaus.griffon.cli.shell.AbstractGriffonCommand;
+import org.codehaus.griffon.cli.shell.Command;
+import org.codehaus.griffon.cli.shell.Option;
 
 /**
  * @author Andres Almiray
  * @since 0.9.5
  */
-@Command(scope = "griffon", name = "help", description = "Displays this help or help about a command")
-public class Help extends HelpAction {
+@Command(scope = "griffon",
+        name = "shell",
+        description = "Runs an embedded application in a Groovy shell")
+public class ShellCommand extends AbstractGriffonCommand {
+    @Option(name = "--java-opts",
+            description = "Additional JVM options.",
+            required = false)
+    private String javaOpts;
 }

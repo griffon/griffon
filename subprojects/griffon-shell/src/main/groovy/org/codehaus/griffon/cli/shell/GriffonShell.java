@@ -25,7 +25,6 @@ import org.apache.felix.gogo.commands.Command;
 import org.apache.felix.gogo.runtime.CommandProcessorImpl;
 import org.apache.felix.service.command.CommandSession;
 import org.apache.karaf.shell.console.jline.Console;
-import org.codehaus.griffon.artifacts.ArtifactRepositoryRegistry;
 import org.codehaus.griffon.cli.GriffonScriptRunner;
 import org.fusesource.jansi.Ansi;
 
@@ -33,7 +32,6 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.PrintStream;
-import java.net.URLClassLoader;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.regex.Matcher;
@@ -42,7 +40,7 @@ import java.util.regex.Pattern;
 import static griffon.util.GriffonExceptionHandler.sanitize;
 import static org.codehaus.griffon.cli.GriffonScriptRunner.unquote;
 import static org.codehaus.griffon.cli.shell.GriffonScriptRunnerHolder.setGriffonScriptRunner;
-import static org.codehaus.griffon.cli.shell.commands.ReloadCommands.loadGriffonCommands;
+import static org.codehaus.griffon.cli.shell.command.ReloadCommandsCommand.reload;
 
 /**
  * @author Andres Almiray
@@ -90,6 +88,7 @@ public class GriffonShell extends KarafMain implements Action {
             exitWithError("Griffon' installation directory not found: " + buildSettings.getGriffonHome());
         }
 
+        System.setProperty("griffon.disable.exit", "true");
         GriffonScriptRunner runner = new GriffonScriptRunner(buildSettings);
         setGriffonScriptRunner(runner);
         buildSettings.getSystemProperties().putAll(SYSTEM_PROPERTIES);
@@ -145,7 +144,8 @@ public class GriffonShell extends KarafMain implements Action {
                 session.getConsole().println(
                         "Welcome to Griffon " + buildSettings.getGriffonVersion() + " - http://griffon.codehaus.org/" + '\n' +
                                 "Licensed under Apache Standard License 2.0" + '\n' +
-                                "Griffon home is " + (griffonHome == null ? "not set" : "set to: " + griffonHome) + '\n');
+                                "Griffon home is " + (griffonHome == null ? "not set" : "set to: " + griffonHome) + '\n' + '\n' +
+                                "Type 'exit' or ^D to terminate this interactive shell" + '\n' + '\n');
             }
 
             @Override
@@ -172,6 +172,6 @@ public class GriffonShell extends KarafMain implements Action {
     @Override
     protected void discoverCommands(CommandProcessorImpl commandProcessor, ClassLoader cl) throws IOException, ClassNotFoundException {
         super.discoverCommands(commandProcessor, cl);
-        loadGriffonCommands();
+        reload();
     }
 }

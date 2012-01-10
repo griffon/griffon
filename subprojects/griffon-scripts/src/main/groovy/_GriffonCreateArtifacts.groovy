@@ -229,7 +229,8 @@ extractArtifactName = { name ->
             artifactPkg = artifactPkg.replace("~", createDefaultPackage())
         }
     } else {
-        artifactPkg = argsMap.skipPackagePrompt ? '' : createDefaultPackage()
+        argsMap['skip-package-prompt'] = argsMap['skip-package-prompt'] ?: argsMap.skipPackagePrompt
+        artifactPkg = argsMap['skip-package-prompt'] ? '' : createDefaultPackage()
     }
 
     return [artifactPkg, artifactName]
@@ -270,9 +271,10 @@ target(name: 'resolveArchetype', description: '', prehook: null, posthook: null)
 }
 
 target(name: 'resolveFileType', description: '', prehook: null, posthook: null) {
+    argsMap['file-type'] = argsMap['file-type'] ?: argsMap.fileType
     def cfileType = buildConfig.app.fileType
     if (!cfileType && cfileType instanceof ConfigObject) cfileType = null
-    fileType = argsMap.fileType ?: (cfileType ?: 'groovy')
+    fileType = argsMap['file-type'] ?: (cfileType ?: 'groovy')
     if (!fileType.startsWith('.')) fileType = '.' + fileType
 }
 

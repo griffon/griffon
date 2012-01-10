@@ -18,9 +18,12 @@ apply plugin: 'groovy'
 
 pomDescription = 'Griffon interactive shell'
 
+karafVersion = '2.2.5'
+
 dependencies {
     groovy "org.codehaus.groovy:groovy-all:$groovyVersion"
-    
+
     compile project(':griffon-cli'),
-            'org.apache.karaf.shell:org.apache.karaf.shell.console:2.2.5'
+            "org.apache.karaf.shell:org.apache.karaf.shell.console:$karafVersion",
+            "org.apache.karaf.shell:org.apache.karaf.shell.commands:$karafVersion"
 }

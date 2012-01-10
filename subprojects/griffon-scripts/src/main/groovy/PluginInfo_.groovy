@@ -20,6 +20,8 @@ import org.codehaus.griffon.artifacts.model.Plugin
  * @author Andres Almiray
  */
 
+includeTargets << griffonScript('_GriffonListArtifacts')
+
 target(pluginInfo: 'Displays information on a Griffon plugin') {
     selectArtifactRepository()
 

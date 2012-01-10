@@ -112,8 +112,9 @@ setupJavaOpts = { includeNative = true ->
     if (buildConfig.griffon.app?.javaOpts) {
         buildConfig.griffon.app?.javaOpts.each { javaOpts << it }
     }
-    if (argsMap.javaOpts) {
-        javaOpts << argsMap.javaOpts
+    argsMap['java-opts'] = argsMap.javaOpts
+    if (argsMap['java-opts']) {
+        javaOpts << argsMap['java-opts']
     }
     griffonSettings.systemProperties.each { key, value ->
         javaOpts << "-D${key}=${value}"

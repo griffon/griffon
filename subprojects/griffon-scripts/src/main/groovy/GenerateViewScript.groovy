@@ -35,7 +35,7 @@ target('generateViewScript': "Generates a view script from an existing class") {
     def fields = []
 
     try {
-        GroovyClassLoader gcl = new GroovyClassLoader(rootLoader, compConfig)
+        GroovyClassLoader gcl = new GroovyClassLoader(rootLoader)
         Class klass = gcl.loadClass(klassName)
         while (klass != null && !(klass.getPackage()?.name ==~ "java(x)?\\..*")) {
             klass.declaredFields.collect(fields) {it}
@@ -91,7 +91,10 @@ return $varName
         }
 
     } catch (ClassNotFoundException cnfe) {
-        event('StatusFinal', ["Source class cound not be found: $klassName"])
+        event('StatusError', ["Source class cound not be found: $klassName"])
+        exit(1)
+    } catch(Exception e) {
+        event('StatusError', ["Could not generate view script => $e"])
         exit(1)
     }
 }
