@@ -28,11 +28,13 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import static griffon.util.GriffonNameUtils.isBlank;
+
 @SuppressWarnings("unchecked")
 abstract class AbstractDependenciesConfigurer extends AbstractDependencyManagementConfigurer {
     private static final Logger LOG = LoggerFactory.getLogger(AbstractDependenciesConfigurer.class);
 
-    private static final Pattern DEPENDENCY_PATTERN = Pattern.compile("([a-zA-Z0-9\\-/\\._+=]*?):([a-zA-Z0-9\\-/\\._+=]+?):([a-zA-Z0-9\\-/\\.,\\]\\[\\(\\)_+=]+)");
+    private static final Pattern DEPENDENCY_PATTERN = Pattern.compile("([a-zA-Z0-9\\-/\\._+=]*?):([a-zA-Z0-9\\-/\\._+=]+?):([a-zA-Z0-9\\-/\\.,\\]\\[\\(\\)_+=]+)(:([a-zA-Z0-9\\-/\\.,\\]\\[\\(\\)_+=]+))?");
 
     public AbstractDependenciesConfigurer(DependencyConfigurationContext context) {
         super(context);
@@ -118,6 +120,11 @@ abstract class AbstractDependenciesConfigurer extends AbstractDependencyManageme
             properties.put("name", matcher.group(2));
             properties.put("group", matcher.group(1));
             properties.put("version", matcher.group(3));
+            String classifier = matcher.group(4);
+            if (!isBlank(classifier) && classifier.startsWith(":")) {
+                classifier = classifier.substring(1);
+            }
+            properties.put("classifier", classifier);
             return properties;
         }
         LOG.error("WARNING: Specified dependency definition " + scope + "(" + dependency + ") is invalid! Skipping..");

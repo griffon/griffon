@@ -23,7 +23,7 @@ import org.codehaus.griffon.resolve.IvyDependencyManager
  * @author Graeme Rocher (Grails 1.2)
  */
 
-target(dependencyReport: "Produces a dependency report for the current Griffon application") {
+target(dependencyReport: "Produces a dependency report for the current Griffon project") {
     // create ivy namespace
     ivy = NamespaceBuilder.newInstance(ant, 'antlib:org.apache.ivy.ant')
 

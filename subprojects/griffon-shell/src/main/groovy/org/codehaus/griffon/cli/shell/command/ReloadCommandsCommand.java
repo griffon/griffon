@@ -97,14 +97,13 @@ public class ReloadCommandsCommand implements Action {
         sort(FORBIDDEN_NAMES);
     }
 
-    private static void addCommandScripts(final String scope, File dir, CommandProcessorImpl commandProcessor) {
+    private static void addCommandScripts(String scope, File dir, CommandProcessorImpl commandProcessor) {
         if (dir.exists()) {
             for (File file : dir.listFiles()) {
                 if (GriffonScriptRunner.isCommandScript(file)) {
-                    final String commandName = getHyphenatedName(getScriptNameFromFile(file));
+                    String commandName = getHyphenatedName(getScriptNameFromFile(file));
                     if (binarySearch(FORBIDDEN_NAMES, commandName) >= 0) continue;
-                    final File scriptFile = file;
-                    Function function = new GriffonCommandFactory(scope, commandName, scriptFile);
+                    Function function = new GriffonCommandFactory(scope, commandName, file);
                     commandProcessor.addCommand(scope, function, commandName);
                 }
             }
