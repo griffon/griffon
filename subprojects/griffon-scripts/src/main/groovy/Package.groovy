@@ -61,11 +61,14 @@ target(packageApplication: 'Packages a GriffonApplication') {
             if (type in ['zip', 'jar', 'applet', 'webstart']) {
                 depends("package_" + type)
             } else {
-                event("MakePackage", [type])
+                event('MakePackage', [type])
             }
         } catch (Exception x) {
             ant.echo(message: "Could not handle package type '${type}'")
             ant.echo(message: x.message)
+            if(getPropertyValue('griffon.package.abort.onfailure', false)) {
+                exit(1)
+            }
         }
     }
     if (argsMap.params) {
@@ -82,8 +85,6 @@ target(packageApplication: 'Packages a GriffonApplication') {
 setDefaultTarget('package')
 
 target(prepackage: "packaging steps all standard packaging options do") {
-    event("PrepackageStart", [])
-
     createConfig()
 
     griffonAppletClass = buildConfig.griffon.applet.mainClass
@@ -94,8 +95,6 @@ target(prepackage: "packaging steps all standard packaging options do") {
     // make codebase relative
     if (buildConfig.griffon.webstart.codebase == "CHANGE ME") buildConfig.griffon.webstart.codebase = "file:./"
     if (argsMap.codebase) buildConfig.griffon.webstart.codebase = argsMap.codebase
-
-    event("PrepackageEnd", [])
 }
 
 /*
