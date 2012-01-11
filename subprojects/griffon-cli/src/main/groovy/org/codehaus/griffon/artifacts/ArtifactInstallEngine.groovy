@@ -16,10 +16,6 @@
 
 package org.codehaus.griffon.artifacts
 
-import groovy.json.JsonException
-import groovy.json.JsonSlurper
-import java.util.zip.ZipEntry
-import java.util.zip.ZipFile
 import org.codehaus.griffon.artifacts.model.Archetype
 import org.codehaus.griffon.artifacts.model.Plugin
 import org.codehaus.griffon.artifacts.model.Release
@@ -535,17 +531,10 @@ class ArtifactInstallEngine {
     }
 
     private Release createReleaseFromMetadata(String type, File file) {
-        ZipFile zipFile = new ZipFile(file.absolutePath)
-        ZipEntry artifactEntry = zipFile.getEntry(type + '.json')
-        if (artifactEntry == null) {
-            throw new InstallArtifactException("Not a valid griffon artifact of type $type: missing ${type}.json")
-        }
-
         try {
-            def json = new JsonSlurper().parseText(zipFile.getInputStream(artifactEntry).text)
-            Release.makeFromJSON(type, json)
-        } catch (JsonException e) {
-            throw new InstallArtifactException("Can't parse ${type}.json", e)
+            ArtifactUtils.createReleaseFromMetadata(type, file)
+        } catch (IllegalArgumentException iae) {
+            throw new InstallArtifactException(iae.message)
         }
     }
 

@@ -26,6 +26,7 @@ import org.apache.felix.gogo.runtime.CommandProcessorImpl;
 import org.apache.felix.service.command.CommandSession;
 import org.apache.karaf.shell.console.jline.Console;
 import org.codehaus.griffon.cli.GriffonScriptRunner;
+import org.codehaus.griffon.cli.GriffonSetup;
 import org.fusesource.jansi.Ansi;
 
 import java.io.File;
@@ -146,6 +147,7 @@ public class GriffonShell extends KarafMain implements Action {
                                 "Licensed under Apache Standard License 2.0" + '\n' +
                                 "Griffon home is " + (griffonHome == null ? "not set" : "set to: " + griffonHome) + '\n' + '\n' +
                                 "Type 'exit' or ^D to terminate this interactive shell" + '\n' + '\n');
+                GriffonSetup.run(buildSettings);
             }
 
             @Override

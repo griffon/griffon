@@ -6,14 +6,15 @@ import org.codehaus.griffon.artifacts.model.Plugin
 
 includeTargets << griffonScript('PackagePlugin')
 
-target(releasePlugin: 'Publishes a Griffon plugin release') {
+target(name: 'releasePlugin', description: 'Publishes a Griffon plugin release',
+        prehook: null, posthook: null) {
     depends(checkVersion)
 
     packageForRelease = true
     packagePlugin()
     createArtifactRelease(Plugin.TYPE, artifactInfo)
 
-    if(argsMap['package-only']) exit(0)
+    if (argsMap['package-only']) exit(0)
 
     selectArtifactRepository()
     setupCredentials()

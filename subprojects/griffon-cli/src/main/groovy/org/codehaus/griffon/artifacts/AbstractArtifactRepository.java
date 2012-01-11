@@ -14,12 +14,20 @@
  * limitations under the License.
  */
 
-package org.codehaus.griffon.artifacts
+package org.codehaus.griffon.artifacts;
 
 /**
  * @author Andres Almiray
  * @since 0.9.5
  */
-abstract class AbstractArtifactRepository implements ArtifactRepository {
-    String name
+public abstract class AbstractArtifactRepository implements ArtifactRepository {
+    private String name;
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
 }

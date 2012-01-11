@@ -19,7 +19,10 @@ package org.codehaus.griffon.artifacts
 import griffon.util.BuildSettingsHolder
 import griffon.util.GriffonUtil
 import griffon.util.Metadata
+import groovy.json.JsonException
 import groovy.json.JsonSlurper
+import java.util.zip.ZipEntry
+import java.util.zip.ZipFile
 import org.springframework.core.io.FileSystemResource
 import org.springframework.core.io.Resource
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver
@@ -38,7 +41,7 @@ class ArtifactUtils {
     static final String ARCHETYPE_DESCRIPTOR_SUFFIX = 'GriffonArchetype.groovy'
     static final String ADDON_DESCRIPTOR_SUFFIX = 'GriffonAddon.groovy'
     static final String ADDON_DESCRIPTOR_SUFFIX_JAVA = 'GriffonAddon.java'
-    static final String TIMESTAMP_FORMAT = "yyyy-MM-dd'T'HH:mm:ssZ"
+    public static final String TIMESTAMP_FORMAT = "yyyy-MM-dd'T'HH:mm:ssZ"
     private static final PathMatchingResourcePatternResolver RESOLVER = new PathMatchingResourcePatternResolver()
 
     static Resource[] resolveResources(String pattern) {
@@ -383,6 +386,21 @@ class ArtifactUtils {
                     l
                 }
         )
+    }
+
+    static Release createReleaseFromMetadata(String type, File file) {
+        ZipFile zipFile = new ZipFile(file.absolutePath)
+        ZipEntry artifactEntry = zipFile.getEntry(type + '.json')
+        if (artifactEntry == null) {
+            throw new IllegalArgumentException("Not a valid griffon artifact of type $type: missing ${type}.json")
+        }
+
+        try {
+            def json = new JsonSlurper().parseText(zipFile.getInputStream(artifactEntry).text)
+            Release.makeFromJSON(type, json)
+        } catch (JsonException e) {
+            throw new IllegalArgumentException("Can't parse ${type}.json", e)
+        }
     }
 
     /**

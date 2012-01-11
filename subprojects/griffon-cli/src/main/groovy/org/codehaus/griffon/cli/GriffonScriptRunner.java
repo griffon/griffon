@@ -96,7 +96,6 @@ public class GriffonScriptRunner {
         // available.
         String griffonHome = System.getProperty("griffon.home");
 
-        // Now we can pick up the Griffon version from the Ant project properties.
         BuildSettings build = null;
         try {
             build = new BuildSettings(new File(griffonHome));
@@ -116,6 +115,8 @@ public class GriffonScriptRunner {
                 "Welcome to Griffon " + build.getGriffonVersion() + " - http://griffon.codehaus.org/" + '\n' +
                         "Licensed under Apache Standard License 2.0" + '\n' +
                         "Griffon home is " + (griffonHome == null ? "not set" : "set to: " + griffonHome) + '\n');
+
+        GriffonSetup.run(build);
 
         // If there aren't any arguments, then we don't have a command
         // to execute. So we have to exit.
