@@ -303,17 +303,14 @@ class ArtifactInstallEngine {
         String artifactInstallPath = "${artifactBase(type)}/${releaseName}"
 
         if (resolveDependencies && type == Plugin.TYPE) {
-            ArtifactDependencyResolver resolver = new ArtifactDependencyResolver()
-            List<ArtifactDependency> dependencies = resolveDependenciesFor(resolver, type, artifactName, releaseVersion)
-            // this is the file we already got
-            dependencies.findAll {it.name == artifactName && it.version == releaseVersion}.each {dependency ->
-                dependency.installed = true
-                dependency.resolved = true
-            }
-            List<ArtifactDependency> installPlan = resolveDependenciesFor(dependencies, resolver)
-            // if we've reached this stage then we can proceed with installs
-            if (!installPluginsInternal(installPlan)) {
-                throw new InstallArtifactException("Could not install plugin ${releaseName}")
+            if (release.dependencies) {
+                Map<String, String> plugins = [:]
+                release.dependencies.each { entry ->
+                    plugins[entry.name] = entry.version
+                }
+                if (!installPlugins(plugins)) {
+                    throw new InstallArtifactException("Could not install plugin ${releaseName}")
+                }
             }
         }
 
@@ -390,7 +387,7 @@ class ArtifactInstallEngine {
         }
         String test = ''
         if (testJar.exists()) {
-            test = "test(group: 'org.codehaus.griffon.plugins', name: 'griffon-${name}', version: ${version}', classifier: 'test')"
+            test = "test(group: 'org.codehaus.griffon.plugins', name: 'griffon-${name}', version: '${version}', classifier: 'test')"
         }
 
         File dependencyDescriptor = new File("${pluginDirPath}/plugin-dependencies.groovy")
@@ -480,7 +477,7 @@ class ArtifactInstallEngine {
                 uninstalledArtifacts << uninstallData
             }
             eventHandler "${capitalize(type)}Uninstalled", "Uninstalled ${type} [${name}]."
-            true
+            return true
         }
         false
     }

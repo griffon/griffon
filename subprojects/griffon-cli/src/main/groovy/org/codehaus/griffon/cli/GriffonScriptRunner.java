@@ -986,12 +986,12 @@ public class GriffonScriptRunner {
                 "addProxy", "clearProxy", "removeProxy", "setProxy", "configureProxy",
                 "help", "integrateWith", "setVersion", "showHelp", "stats",
                 "createAddon", "createPlugin", "upgrade",
-                "createCommandAlias"
+                "createCommandAlias", "docs"
         };
 
         private static String[] RESOLVE_DEPENDENCIES_EXCLUSIONS = {
                 "integrateWith", "setVersion", "stats", "upgrade",
-                "createCommandAlias"
+                "createCommandAlias", "docs", "uninstall-plugin"
         };
 
         private static String[] CLASSPATH_EXCLUSIONS = {
@@ -1000,7 +1000,8 @@ public class GriffonScriptRunner {
                 "createCommandAlias", "createIntegrationTest",
                 "createMvc", "createScript", "createService",
                 "createUnitTest", "generateViewScript",
-                "releaseArchetype", "replaceArtifact", "clean"
+                "releaseArchetype", "replaceArtifact", "clean",
+                "testApp", "cleanAll", "docs", "uninstall-plugin"
         };
 
         static {

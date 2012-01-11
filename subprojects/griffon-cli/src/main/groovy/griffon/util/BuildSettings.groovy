@@ -30,6 +30,7 @@ import org.slf4j.LoggerFactory
 import org.springframework.core.io.Resource
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver
 import static org.codehaus.griffon.artifacts.ArtifactUtils.*
+import static griffon.util.GriffonNameUtils.capitalize
 
 /**
  * <p>Represents the project paths and other build settings
@@ -1020,13 +1021,18 @@ class BuildSettings extends AbstractBuildSettings {
     }
 
     void updateDependenciesFor(String conf, List<File> dependencies) {
-        List<File> existingDependencies = this."${conf}Dependencies"
-        List<File> newDependencies = existingDependencies - dependencies.unique()
+        List<File> existingDependencies = this."get${capitalize(conf)}Dependencies"()
+        List<File> newDependencies = dependencies.unique() - existingDependencies
         if (newDependencies) {
-            this."${conf}Dependencies".addAll(newDependencies)
+            this."get${capitalize(conf)}Dependencies"().addAll(newDependencies)
             for (File jar: newDependencies) {
                 getClass().classLoader.rootLoader.addURL(jar.toURI().toURL())
             }
+        }
+
+        // required for testing until we spin tests out to their own process
+        if(conf == 'test') {
+            updateDependenciesFor('build', dependencies)
         }
     }
 }

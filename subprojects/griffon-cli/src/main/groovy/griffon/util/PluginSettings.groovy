@@ -199,6 +199,9 @@ class PluginSettings {
         configurations.each { String conf, List<File> dependencies ->
             settings.updateDependenciesFor conf, dependencies
         }
+
+        // Finally copy over test into build
+        settings.updateDependenciesFor 'build', settings.getTestDependencies()
     }
 
     private Resource[] resolveForEachPlugin(String key, Closure closure) {

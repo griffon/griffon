@@ -29,9 +29,8 @@ import org.codehaus.griffon.test.support.GriffonTestMode
  * @author Graeme Rocher (Grails 0.4)
  */
 
-includeTargets << griffonScript("_GriffonBootstrap")
-includeTargets << griffonScript("_GriffonSettings")
-includeTargets << griffonScript("_GriffonClean")
+includeTargets << griffonScript('_GriffonBootstrap')
+includeTargets << griffonScript('_GriffonClean')
 
 // Miscellaneous 'switches' that affect test operation
 testOptions = [:]
@@ -90,9 +89,6 @@ if (griffonSettings.griffonHome) {
         junitReportStyleDir = new File(griffonSettings.griffonHome, "griffon-resources/src/griffon/home/tests")
     }
 }
-
-// Set up an Ant path for the tests.
-ant.path(id: "griffon.test.classpath", testClasspath)
 
 createTestReports = true
 
