@@ -867,7 +867,12 @@ class BuildSettings extends AbstractBuildSettings {
                             pluginSlurper.binding = [
                                     pluginName: pluginName,
                                     pluginVersion: pluginVersion,
-                                    pluginDirPath: path
+                                    pluginDirPath: path,
+                                    griffonVersion: this.griffonVersion,
+                                    groovyVersion: this.groovyVersion,
+                                    springVersion: this.springVersion,
+                                    antVersion: this.antVersion,
+                                    slf4jVersion: this.slf4jVersion
                             ]
                             def pluginConfig = pluginSlurper.parse(script)
                             def pluginDependencyConfig = pluginConfig.griffon.project.dependency.resolution

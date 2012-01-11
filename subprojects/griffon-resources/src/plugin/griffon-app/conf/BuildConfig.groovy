@@ -1,4 +1,14 @@
 griffon.project.dependency.resolution = {
+    // implicit variables
+    // pluginName:    plugin's name
+    // pluginVersion: plugin's version
+    // pluginDirPath: plugin's install path
+    // griffonVersion: current Griffon version
+    // groovyVersion: bundled groovy
+    // springVersion: bundled Spring
+    // antVertsion:   bundled Ant
+    // slf4jVersion:  bundled Slf4j
+
     // inherit Griffon' default dependencies
     inherits("global") {
     }
@@ -14,11 +24,6 @@ griffon.project.dependency.resolution = {
         //mavenRepo "http://repository.codehaus.org"
         //mavenRepo "http://download.java.net/maven/2/"
         //mavenRepo "http://repository.jboss.com/maven2/"
-
-        // implicit variables
-        // pluginName:    plugin's name
-        // pluginVersion: plugin's version
-        // pluginDirPath: plugin's install path
 
         flatDir name: "${pluginName}LibDir", dirs: ["${pluginDirPath}/lib"]
     }
