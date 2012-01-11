@@ -24,9 +24,10 @@ includeTargets << griffonScript('CreateMvc')
 
 target(name: 'createApplicationProject', description: '', prehook: null, posthook: null) {
     createProjectWithDefaults()
-    createMVC()
 
     Metadata md = Metadata.getInstance(new File("${basedir}/application.properties"))
     installPluginExternal md, 'swing'
+
+    createMVC()
 }
 setDefaultTarget(createApplicationProject)

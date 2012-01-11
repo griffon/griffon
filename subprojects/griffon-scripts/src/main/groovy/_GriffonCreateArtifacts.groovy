@@ -111,7 +111,9 @@ createArtifact = { Map args = [:] ->
     copyGriffonResource(artifactFile, templateFile)
     ant.replace(file: artifactFile) {
         replacefilter(token: "@artifact.name@", value: "${className}${suffix}")
+        replacefilter(token: "@artifact.name.lowercase@", value: "${className}${suffix}".toLowerCase())
         replacefilter(token: "@artifact.name.plain@", value: className)
+        replacefilter(token: "@artifact.name.plain.lowercase@", value: className.toLowerCase())
         replacefilter(token: "@artifact.suffix@", value: suffix)
         replacefilter(token: "@griffon.app.class.name@", value: appClassName)
         replacefilter(token: "@griffon.version@", value: griffonVersion)

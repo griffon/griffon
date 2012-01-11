@@ -44,12 +44,12 @@ loadArtifactInfo = { String type, Resource artifactDescriptor ->
 
     if (packageForRelease) {
         if (!(new File("${basedir}/LICENSE").exists()) && !(new File("${basedir}/LICENSE.txt").exists())) {
-            println "No LICENSE.txt file for ${type} found. Please provide a license file containing the appropriate software licensing information (eg. Apache 2.0, GPL etc.)"
+            println "No LICENSE.txt file for ${type} found. Please provide a license file containing the appropriate software licensing information (eg. Apache 2.0, BSD, LGPL etc.)"
             exit(1)
         }
 
         if (descriptorInstance.license == '<UNKNOWN>') {
-            println "No suitable license chosen. Please provide a license name (eg. Apache 2.0, GPL etc.)"
+            println "No suitable license chosen. Please provide a license name (eg. Apache 2.0, BSD, LGPL etc.)"
             exit(1)
         }
         List authors = [

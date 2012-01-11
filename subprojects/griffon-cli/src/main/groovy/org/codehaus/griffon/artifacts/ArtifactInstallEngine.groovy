@@ -404,7 +404,7 @@ class ArtifactInstallEngine {
                 break
         }
 
-        if (!settings.isArchetypeProject()) {
+        if (settings.isGriffonProject() && !settings.isArchetypeProject()) {
             switch (type) {
                 case Plugin.TYPE:
                     metadata["${type}s." + release.artifact.name] = release.version
