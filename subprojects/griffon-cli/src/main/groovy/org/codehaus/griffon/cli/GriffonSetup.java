@@ -17,6 +17,10 @@
 package org.codehaus.griffon.cli;
 
 import griffon.util.BuildSettings;
+import griffon.util.BuildSettingsHolder;
+import griffon.util.Metadata;
+import groovy.util.AntBuilder;
+import org.codehaus.griffon.artifacts.ArtifactInstallEngine;
 import org.codehaus.griffon.artifacts.LocalArtifactRepository;
 import org.codehaus.griffon.artifacts.model.Archetype;
 import org.codehaus.griffon.artifacts.model.Plugin;
@@ -27,12 +31,16 @@ import java.io.FileFilter;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 import static java.lang.System.out;
+import static java.util.Collections.emptyMap;
 import static org.codehaus.griffon.artifacts.ArtifactRepository.DEFAULT_LOCAL_LOCATION;
 import static org.codehaus.griffon.artifacts.ArtifactRepository.DEFAULT_LOCAL_NAME;
 import static org.codehaus.griffon.artifacts.ArtifactUtils.TIMESTAMP_FORMAT;
 import static org.codehaus.griffon.artifacts.ArtifactUtils.createReleaseFromMetadata;
+import static org.codehaus.griffon.cli.CommandLineConstants.KEY_NON_INTERACTIVE_DEFAULT_ANSWER;
 import static org.codehaus.groovy.runtime.DefaultGroovyMethods.setText;
 
 /**
@@ -42,15 +50,32 @@ import static org.codehaus.groovy.runtime.DefaultGroovyMethods.setText;
 public final class GriffonSetup {
     public static void run(BuildSettings settings) {
         if (isFirstRun(settings)) {
-            out.println("It looks like you're running Griffon " + settings.getGriffonVersion() + " for the first time");
-            out.println("Please wait a few moments while Griffon configures itself.");
-            out.println(" ");
-            uploadBundles(settings);
-            configured(settings);
-            out.println(" ");
-            out.println("Done.");
-            out.println(" ");
+            String defaultAnswerNonInteractive = System.getProperty(KEY_NON_INTERACTIVE_DEFAULT_ANSWER);
+            BuildSettingsHolder.setSettings(settings);
+            System.setProperty(KEY_NON_INTERACTIVE_DEFAULT_ANSWER, "y");
+            try {
+                printSetupHeader(settings);
+                uploadBundles(settings);
+                configured(settings);
+                printSetupFooter();
+            } finally {
+                if (defaultAnswerNonInteractive != null) {
+                    System.setProperty(KEY_NON_INTERACTIVE_DEFAULT_ANSWER, defaultAnswerNonInteractive);
+                }
+            }
         }
+    }
+
+    private static void printSetupHeader(BuildSettings settings) {
+        out.println("It looks like you're running Griffon " + settings.getGriffonVersion() + " for the first time");
+        out.println("Please wait a few moments while Griffon configures itself.");
+        out.println(" ");
+    }
+
+    private static void printSetupFooter() {
+        out.println(" ");
+        out.println("Done.");
+        out.println(" ");
     }
 
     private static boolean isFirstRun(BuildSettings settings) {
@@ -66,13 +91,14 @@ public final class GriffonSetup {
         File bundleHome = new File(settings.getGriffonHome(), "bundles");
         if (!bundleHome.exists()) return;
 
-        uploadBundles(Plugin.TYPE, bundleHome, griffonLocal);
-        uploadBundles(Archetype.TYPE, bundleHome, griffonLocal);
+        Map<String, String> plugins = uploadBundles(Plugin.TYPE, bundleHome, griffonLocal);
+        Map<String, String> archetypes = uploadBundles(Archetype.TYPE, bundleHome, griffonLocal);
+        installArchetypes(settings, griffonLocal, archetypes);
     }
 
-    private static void uploadBundles(String type, File bundleHome, LocalArtifactRepository griffonLocal) {
+    private static Map<String, String> uploadBundles(String type, File bundleHome, LocalArtifactRepository griffonLocal) {
         File artifactDir = new File(bundleHome, type + "s");
-        if (!artifactDir.exists()) return;
+        if (!artifactDir.exists()) emptyMap();
 
         File[] artifacts = artifactDir.listFiles(new FileFilter() {
             @Override
@@ -82,16 +108,30 @@ public final class GriffonSetup {
             }
         });
 
+        Map<String, String> releases = new LinkedHashMap<String, String>();
+
         for (File file : artifacts) {
             out.println("Uploading " + type + " " + file.getName() + " to griffon-local");
             try {
                 Release release = createReleaseFromMetadata(type, file);
                 release.setFile(file);
                 griffonLocal.uploadRelease(release, null, null);
+                releases.put(release.getArtifact().getName(), release.getVersion());
             } catch (Exception e) {
                 // oops
                 out.println("Failed to upload " + type + " " + file.getName() + " => " + e);
             }
+        }
+
+        return releases;
+    }
+
+    private static void installArchetypes(BuildSettings settings, LocalArtifactRepository griffonLocal, Map<String, String> archetypes) {
+        ArtifactInstallEngine artifactInstallEngine = new ArtifactInstallEngine(settings, Metadata.getCurrent(), new AntBuilder());
+        for (Map.Entry<String, String> release : archetypes.entrySet()) {
+            out.println("Installing archetype " + release.getKey() + "-" + release.getValue());
+            File file = griffonLocal.downloadFile(Archetype.TYPE, release.getKey(), release.getValue(), null);
+            artifactInstallEngine.installFromFile(Archetype.TYPE, file);
         }
     }
 

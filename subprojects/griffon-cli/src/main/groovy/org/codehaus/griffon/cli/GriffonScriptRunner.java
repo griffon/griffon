@@ -428,8 +428,6 @@ public class GriffonScriptRunner {
 
     private int callPluginOrGriffonScript(ScriptAndArgs script) {
         // The directory where scripts are cached.
-        URLClassLoader classLoader = createClassLoader();
-
         List<File> potentialScripts;
         Resource[] allScripts = settings.pluginSettings.getAvailableScripts();
         GantBinding binding = new GantBinding();
@@ -973,9 +971,6 @@ public class GriffonScriptRunner {
                         targets.add("resolveDependencies");
                     }
                     targets.add("loadEventHooks");
-                    if (binarySearch(CLASSPATH_EXCLUSIONS, targetName) < 0) {
-                        targets.add("classpath");
-                    }
                 }
                 settings.debug("** " + targets + " **");
                 gant.executeTargets("dispatch", targets);
@@ -991,23 +986,13 @@ public class GriffonScriptRunner {
 
         private static String[] RESOLVE_DEPENDENCIES_EXCLUSIONS = {
                 "integrateWith", "setVersion", "stats", "upgrade",
-                "createCommandAlias", "docs", "uninstall-plugin"
-        };
-
-        private static String[] CLASSPATH_EXCLUSIONS = {
-                "integrateWith", "setVersion", "stats", "upgrade",
-                "packageArchetype", "listPluginUpdates",
-                "createCommandAlias", "createIntegrationTest",
-                "createMvc", "createScript", "createService",
-                "createUnitTest", "generateViewScript",
-                "releaseArchetype", "replaceArtifact", "clean",
-                "testApp", "cleanAll", "docs", "uninstall-plugin"
+                "createCommandAlias", "docs", "uninstallPlugin",
+                "listPluginUpdates"
         };
 
         static {
             sort(CONFIGURE_PROXY_EXCLUSIONS);
             sort(RESOLVE_DEPENDENCIES_EXCLUSIONS);
-            sort(CLASSPATH_EXCLUSIONS);
         }
     }
 }

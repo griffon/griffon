@@ -24,8 +24,7 @@ import org.codehaus.griffon.artifacts.model.Artifact
 import org.codehaus.griffon.artifacts.model.Plugin
 import org.codehaus.griffon.artifacts.model.Release
 import static griffon.util.GriffonNameUtils.capitalize
-import static org.codehaus.griffon.artifacts.ArtifactUtils.getInstalledReleases
-import static org.codehaus.griffon.artifacts.ArtifactUtils.isValidVersion
+import static org.codehaus.griffon.artifacts.ArtifactUtils.*
 
 /**
  * @author Andres Almiray
@@ -208,17 +207,18 @@ For further info visit http://griffon.codehaus.org/${capitalize(type)}s
 
 doListArtifactUpdates = { String type ->
     Map availableArtifacts = getAvailableArtifacts(type)
-    Map installedArtifacts = getInstalledReleases(type)
+    Map installedArtifacts = type == Plugin.TYPE ? getRegisteredArtifacts(type) : getInstalledReleases(type)
     Map outdatedArtifacts = [:]
 
     if (!availableArtifacts) {
         println "\nNo ${type} updates available in configured repositories."
+        exit 0
     }
 
     boolean headerDisplayed = false
     if (installedArtifacts) {
-        installedArtifacts.each {name, release ->
-            String version = release.version
+        installedArtifacts.each {name, version ->
+            if (version instanceof Release) version = version.version
             String availableVersion = availableArtifacts[name].version
             if (availableVersion != version && availableVersion != null) {
                 if (!headerDisplayed) {

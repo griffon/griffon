@@ -17,6 +17,7 @@
 package org.codehaus.griffon.artifacts
 
 import org.codehaus.griffon.artifacts.model.Archetype
+import org.codehaus.griffon.artifacts.model.Artifact
 import org.codehaus.griffon.artifacts.model.Plugin
 import org.codehaus.griffon.artifacts.model.Release
 import org.codehaus.griffon.cli.CommandLineHelper
@@ -48,8 +49,8 @@ class ArtifactInstallEngine {
     final List uninstalledArtifacts = []
     def variableStore = [:]
 
-    Closure errorHandler = { String msg -> throw new ScriptExitException(msg) }
-    Closure eventHandler = { String name, String msg -> println msg }
+    Closure errorHandler = { msg -> throw new ScriptExitException(1, msg) }
+    Closure eventHandler = { name, msg -> if(msg instanceof CharSequence) println msg}
     Closure pluginScriptRunner
     boolean interactive
 
@@ -134,6 +135,57 @@ class ArtifactInstallEngine {
         } catch (InstallArtifactException iae) {
             errorHandler "Could not resolve plugin dependencies."
         }
+    }
+
+    boolean installArtifact(String type, String name, String version = null) {
+        switch (type) {
+            case Plugin.TYPE:
+                return installPlugin(name, version)
+            case Archetype.TYPE:
+                return installArchetype(name, version)
+        }
+    }
+
+    boolean installArchetype(String name, String version = null) {
+        String type = Archetype.TYPE
+        Artifact artifact = null
+        ArtifactRepository artifactRepository = null
+
+        ArtifactRepositoryRegistry.instance.withRepositories {String repoName, ArtifactRepository repository ->
+            if (artifact) return
+            artifact = repository.findArtifact(type, name)
+            if (artifact) {
+                if (LOG.debugEnabled) {
+                    LOG.debug("Resolved ${type}:${name}:${version ? version : '<noversion>'} with repository ${repository.name}")
+                }
+            }
+            artifactRepository = repository
+        }
+
+        Release release = null
+        if (artifact != null) {
+            if (version != null) {
+                release = artifact.releases.find {it.version == version}
+            } else {
+                for (r in artifact.releases) {
+                    if (isValidVersion(GriffonUtil.griffonVersion, r.griffonVersion)) {
+                        release = r
+                        break
+                    }
+                }
+            }
+        }
+
+        if (release == null) {
+            if (LOG.debugEnabled) {
+                LOG.debug("Could not resolve ${type}:${name}:${version ? version : '<noversion>'}")
+            }
+            errorHandler "Installation of ${type} ${name}${version ? '-' + version : ''} aborted."
+        }
+
+        File file = artifactRepository.downloadFile(type, name, release.version, null)
+        installFromFile(type, file)
+        true
     }
 
     boolean installPlugin(String name, String version = null) {
@@ -320,7 +372,7 @@ class ArtifactInstallEngine {
             }
         }
 
-        eventHandler 'StatusUpdate', "${release.artifact.capitalizedType} license for ${releaseName} is '${release.artifact.license}'"
+        eventHandler 'StatusUpdate', "Software license of ${releaseName} is '${release.artifact.license}'"
 
         for (dir in findAllArtifactDirsForName(type, release.artifact.name)) {
             ant.delete(dir: dir, failonerror: false)

@@ -49,7 +49,6 @@ eventListener.globalEventHooks = [
         }]
 ]
 
-hooksLoaded = false
 binding.addBuildListener(eventListener)
 
 // Send a scripting event notification to any and all event hooks in plugins/user scripts
@@ -58,16 +57,5 @@ event = {String name, def args ->
 }
 
 target(loadEventHooks: 'Loads all event handlers defined by application/plugin scripts') {
-    /*
-// Set up the classpath for the event hooks.
-    classpath()
-
-// Now load them.
-    eventListener.classLoader = new GroovyClassLoader(classLoader)
-    eventListener.initialize()
-// Give scripts a chance to modify classpath
-    event('SetClasspath', [classLoader])
-    griffonSettings.resetDependencies()
-    */
     eventListener.initialize()
 }
