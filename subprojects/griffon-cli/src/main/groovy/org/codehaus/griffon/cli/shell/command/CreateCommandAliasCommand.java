@@ -42,7 +42,7 @@ public class CreateCommandAliasCommand extends AbstractGriffonCommand {
             required = true)
     private String target;
 
-    @Argument(index = 3,
+    @Argument(index = 2,
             name = "arguments",
             description = "Optional arguments to be set on the alias.",
             required = false,

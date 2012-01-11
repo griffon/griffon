@@ -42,12 +42,12 @@ public class AddProxyCommand extends AbstractGriffonCommand {
     @Option(name = "--username",
             description = "Username credentials.",
             required = false)
-    private String username = "";
+    private String username;
 
     @Option(name = "--password",
             description = "Password credentials.",
             required = false)
-    private String password = "";
+    private String password;
 
     @Argument(index = 0,
             name = "name",

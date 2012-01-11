@@ -41,7 +41,7 @@ public class CreateServiceCommand extends AbstractGriffonCommand {
     private boolean skipPackagePrompt = false;
 
     @Option(name = "--file-type",
-            description = "Source file type",
+            description = "Source file type.",
             required = false)
     private String fileType = "groovy";
 
