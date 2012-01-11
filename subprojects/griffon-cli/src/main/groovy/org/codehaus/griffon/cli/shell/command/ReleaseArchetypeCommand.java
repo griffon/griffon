@@ -42,4 +42,9 @@ public class ReleaseArchetypeCommand extends AbstractGriffonCommand {
             description = "Do not ask for missing release notes.",
             required = false)
     private boolean releaseNotes;
+
+    @Option(name = "--package-only",
+            description = "Create a release package but do not publish it.",
+            required = false)
+    private boolean packageOnly;
 }

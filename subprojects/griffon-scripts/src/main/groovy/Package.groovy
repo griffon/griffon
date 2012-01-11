@@ -24,7 +24,7 @@ import griffon.util.GriffonNameUtils
 import griffon.util.RunMode
 
 // No point doing this stuff more than once.
-if (getBinding().variables.containsKey("_package_called")) return
+if (getBinding().variables.containsKey('_package_called')) return
 _package_called = true
 
 includeTargets << griffonScript('_GriffonPackage')

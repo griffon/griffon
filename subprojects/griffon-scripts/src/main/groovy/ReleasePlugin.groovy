@@ -7,9 +7,14 @@ import org.codehaus.griffon.artifacts.model.Plugin
 includeTargets << griffonScript('PackagePlugin')
 
 target(releasePlugin: 'Publishes a Griffon plugin release') {
+    depends(checkVersion)
+
     packageForRelease = true
     packagePlugin()
     createArtifactRelease(Plugin.TYPE, artifactInfo)
+
+    if(argsMap['package-only']) exit(0)
+
     selectArtifactRepository()
     setupCredentials()
     event 'StatusUpdate', ["Contacting repository ${artifactRepository}"]

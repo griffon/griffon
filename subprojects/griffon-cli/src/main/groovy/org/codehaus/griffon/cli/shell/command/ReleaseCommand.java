@@ -25,9 +25,9 @@ import org.codehaus.griffon.cli.shell.Option;
  * @since 0.9.5
  */
 @Command(scope = "griffon",
-        name = "release-plugin",
-        description = "Publishes a Griffon plugin release")
-public class ReleasePluginCommand extends AbstractGriffonCommand {
+        name = "release",
+        description = "Publishes a Griffon project according to its type")
+public class ReleaseCommand extends AbstractGriffonCommand {
     @Option(name = "--nodoc",
             description = "Skips generation of Javadoc and guide documentation.",
             required = false)

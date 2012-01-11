@@ -23,9 +23,14 @@ import org.codehaus.griffon.artifacts.model.Archetype
 includeTargets << griffonScript('PackageArchetype')
 
 target(releaseArchetype: 'Publishes a Griffon archetype release') {
+    depends(checkVersion)
+
     packageForRelease = true
     packageArchetype()
     createArtifactRelease(Archetype.TYPE, artifactInfo)
+
+    if(argsMap['package-only']) exit(0)
+
     selectArtifactRepository()
     setupCredentials()
     event 'StatusUpdate', ["Contacting repository ${artifactRepository}"]
