@@ -53,27 +53,14 @@ class DefaultMVCGroupManager extends AbstractMVCGroupManager {
         }
     }
 
-    protected MVCGroup buildMVCGroup(MVCGroupConfiguration configuration, String mvcName, Map<String, Object> args) {
-        if (isBlank(mvcName)) mvcName = configuration.mvcType
+    protected MVCGroup buildMVCGroup(MVCGroupConfiguration configuration, String mvcId, Map<String, Object> args) {
+        if (isBlank(mvcId)) mvcId = configuration.mvcType
         if (args == null) args = Collections.EMPTY_MAP
 
-        if (findGroup(mvcName)) {
-            String action = app.config.griffon.mvcid.collision ?: 'exception'
-            switch (action) {
-                case 'warning':
-                    if (LOG.warnEnabled) {
-                        LOG.warn("A previous instance of MVC group '${configuration.mvcType}' with name '$mvcName' exists. Destroying the old instance first.")
-                        destroyMVCGroup(mvcName)
-                    }
-                    break
-                case 'exception':
-                default:
-                    throw new MVCGroupInstantiationException("Can not instantiate MVC group '${configuration.mvcType}' with name '${mvcName}' because a previous instance with that name exists and was not disposed off properly.", configuration.mvcType, mvcName)
-            }
-        }
+        checkIdIsUnique(mvcId, configuration)
 
-        if (LOG.infoEnabled) LOG.info("Building MVC group '${configuration.mvcType}' with name '${mvcName}'")
-        def argsCopy = [app: app, mvcType: configuration.mvcType, mvcName: mvcName]
+        if (LOG.infoEnabled) LOG.info("Building MVC group '${configuration.mvcType}' with name '${mvcId}'")
+        Map<String, Object> argsCopy = [app: app, mvcType: configuration.mvcType, mvcName: mvcId]
         argsCopy.putAll(app.bindings.variables)
         argsCopy.putAll(args)
 
@@ -95,6 +82,48 @@ class DefaultMVCGroupManager extends AbstractMVCGroupManager {
         UberBuilder builder = CompositeBuilderHelper.createBuilder(app, metaClassMap)
         argsCopy.each {k, v -> builder.setVariable k, v }
 
+        Map<String, Object> instances = instantiateMembers(klassMap, argsCopy, griffonClassMap, builder)
+        instances.builder = builder
+        argsCopy.builder = builder
+
+        MVCGroup group = newMVCGroup(app, configuration, mvcId, instances)
+
+        app.event(GriffonApplication.Event.INITIALIZE_MVC_GROUP.name, [configuration, group])
+
+        // special case --
+        // controllers are added as application listeners
+        // addApplicationListener method is null safe
+        app.addApplicationEventListener(instances.controller)
+
+        // mutually set each other to the available fields and inject args
+        fillReferencedProperties(instances, argsCopy)
+
+        doAddGroup(group)
+
+        initializeMembers(mvcId, instances, argsCopy)
+
+        app.event(GriffonApplication.Event.CREATE_MVC_GROUP.name, [group])
+        return group
+    }
+
+    protected checkIdIsUnique(String mvcId, MVCGroupConfiguration configuration) {
+        if (findGroup(mvcId)) {
+            String action = app.config.griffon.mvcid.collision ?: 'exception'
+            switch (action) {
+                case 'warning':
+                    if (LOG.warnEnabled) {
+                        LOG.warn("A previous instance of MVC group '${configuration.mvcType}' with name '$mvcId' exists. Destroying the old instance first.")
+                        destroyMVCGroup(mvcId)
+                    }
+                    break
+                case 'exception':
+                default:
+                    throw new MVCGroupInstantiationException("Can not instantiate MVC group '${configuration.mvcType}' with name '${mvcId}' because a previous instance with that name exists and was not disposed off properly.", configuration.mvcType, mvcId)
+            }
+        }
+    }
+
+    protected Map<String, Object> instantiateMembers(Map<String, Class> klassMap, Map<String, Object> argsCopy, Map<String, GriffonClass> griffonClassMap, UberBuilder builder) {
         // instantiate the parts
         Map<String, Object> instanceMap = [:]
         klassMap.each {memberType, memberClass ->
@@ -120,46 +149,25 @@ class DefaultMVCGroupManager extends AbstractMVCGroupManager {
                 }
             }
         }
-        instanceMap.builder = builder
-        argsCopy.builder = builder
+        return instanceMap
+    }
 
-        MVCGroup group = newMVCGroup(app, configuration, mvcName, instanceMap)
-
-        app.event(GriffonApplication.Event.INITIALIZE_MVC_GROUP.name, [configuration, group])
-
-        // special case --
-        // controllers are added as application listeners
-        // addApplicationListener method is null safe
-        app.addApplicationEventListener(instanceMap.controller)
-
-        // mutually set each other to the available fields and inject args
-        instanceMap.each {k, v ->
-            // loop on the instance map to get just the instances
-            if (v instanceof Script) {
-                v.binding.variables.putAll(argsCopy)
-            } else {
-                // set the args and instances
-                InvokerHelper.setProperties(v, argsCopy)
-            }
-        }
-
-        addGroup(group)
-
+    protected initializeMembers(String mvcId, Map<String, Object> instances, Map<String, Object> args) {
         // initialize the classes and call scripts
-        if (LOG.debugEnabled) LOG.debug("Initializing each MVC member of group '${mvcName}'")
-        instanceMap.each {String memberType, member ->
+        if (LOG.debugEnabled) LOG.debug("Initializing each MVC member of group '${mvcId}'")
+        instances.each {String memberType, member ->
             if (member instanceof Script) {
                 // special case: view gets executed in the UI thread always
                 if (memberType == 'view') {
-                    UIThreadManager.instance.executeSync { builder.build(member) }
+                    UIThreadManager.instance.executeSync { instances.builder.build(member) }
                 } else {
                     // non-view gets built in the builder
                     // they can switch into the UI thread as desired
-                    builder.build(member)
+                    instances.builder.build(member)
                 }
             } else if (memberType != 'builder') {
                 try {
-                    member.mvcGroupInit(argsCopy)
+                    member.mvcGroupInit(args)
                 } catch (MissingMethodException mme) {
                     if (mme.method != 'mvcGroupInit') {
                         throw mme
@@ -169,9 +177,22 @@ class DefaultMVCGroupManager extends AbstractMVCGroupManager {
                 }
             }
         }
+    }
 
-        app.event(GriffonApplication.Event.CREATE_MVC_GROUP.name, [group])
-        return group
+    protected fillReferencedProperties(Map<String, Object> instances, Map<String, Object> args) {
+        instances.each {k, v ->
+            // loop on the instance map to get just the instances
+            if (v instanceof Script) {
+                v.binding.variables.putAll(args)
+            } else {
+                // set the args and instances
+                InvokerHelper.setProperties(v, args)
+            }
+        }
+    }
+
+    protected doAddGroup(MVCGroup group) {
+        addGroup(group)
     }
 
     void destroyMVCGroup(String mvcName) {
@@ -200,8 +221,12 @@ class DefaultMVCGroupManager extends AbstractMVCGroupManager {
             if (LOG.errorEnabled) LOG.error("Application encountered an error while destroying group '$mvcName'", GriffonExceptionHandler.sanitize(mme))
         }
 
-        removeGroup(group)
+        doRemoveGroup(group)
 
         app.event(GriffonApplication.Event.DESTROY_MVC_GROUP.name, [group])
+    }
+
+    protected doRemoveGroup(MVCGroup group) {
+        removeGroup(group)
     }
 }
