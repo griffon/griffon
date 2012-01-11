@@ -14,7 +14,6 @@
  * limitations under the License.
  */
 
-import griffon.util.PlatformUtils
 import static griffon.util.GriffonApplicationUtils.is64Bit
 
 /**
@@ -52,56 +51,53 @@ commonClasspath = {
     def pluginLibDirs = pluginSettings.pluginLibDirectories.findAll {it.exists()}
 
 // XXX -- NATIVE
-    def localPlatformLibAdded = false
-    platformDir = new File("${basedir}/lib/${PlatformUtils.platform}")
-    if (platformDir.exists()) {
-        debug "  ${platformDir.absolutePath}"
-        fileset(dir: platformDir.absolutePath)
-        localPlatformLibAdded = true
-    }
-    resolveResources("file:${pluginsHome}/*/lib/${PlatformUtils.platform}").each { platformPluginLib ->
-        if (platformPluginLib.file.exists()) {
-            debug "  ${platformPluginLib.file.absolutePath}"
-            fileset(dir: platformPluginLib.file.absolutePath)
-        }
-    }
-    def localPlatformNativeAdded = false
-    def platformLibDir = new File("${basedir}/lib/${PlatformUtils.platform}/native")
-    if (platformLibDir.exists()) {
-        debug "  ${platformLibDir.absolutePath}"
-        fileset(dir: platformLibDir.absolutePath)
-        localPlatformNativeAdded = true
-    }
-    for (pluginLibDir in pluginLibDirs) {
-        platformLibDir = new File("${pluginLibDir}/lib/${PlatformUtils.platform}/native")
-        if (platformLibDir.exists()) {
-            debug "  ${platformLibDir.absolutePath}"
-            fileset(dir: platformLibDir.absolutePath)
-        }
-    }
-
-    if (is64Bit) {
-        platformDir = new File("${basedir}/lib/${PlatformUtils.platform[0..-3]}")
-        if (!localPlatformLibAdded && platformDir.exists()) {
+    def processPlatformDir = { platformId ->
+        platformDir = new File("${basedir}/lib/${platformId}")
+        if (platformDir.exists()) {
             debug "  ${platformDir.absolutePath}"
             fileset(dir: platformDir.absolutePath)
         }
-        resolveResources("file:${pluginsHome}/*/lib/${PlatformUtils.platform[0..-3]}").each { platformPluginLib ->
-            if (platformPluginLib.file.exists()) {
-                debug "  ${platformPluginLib.file.absolutePath}"
-                fileset(dir: platformPluginLib.file.absolutePath)
+        resolveResources("file:${pluginsHome}/*/lib/${platformId}").each { dir ->
+            if (dir.file.exists()) {
+                debug "  ${dir.file.absolutePath}"
+                fileset(dir: dir.file.absolutePath)
             }
         }
-        platformLibDir = new File("${basedir}/lib/${PlatformUtils.platform[0..-3]}/native")
-        if (!localPlatformNativeAdded && platformLibDir.exists()) {
-            debug "  ${platformLibDir.absolutePath}"
-            fileset(dir: platformLibDir.absolutePath)
+    }
+
+    def processNativeDir = { platformId ->
+        def nativeDir = new File("${basedir}/lib/${platformId}/native")
+        if (nativeDir.exists()) {
+            debug "  ${nativeDir.absolutePath}"
+            fileset(dir: nativeDir.absolutePath)
         }
-        for (pluginLibDir in pluginLibDirs) {
-            platformLibDir = new File("${pluginLibDir}/lib/${PlatformUtils.platform[0..-3]}/native")
-            if (platformLibDir.exists()) {
-                debug "  ${platformLibDir.absolutePath}"
-                fileset(dir: platformLibDir.absolutePath)
+        resolveResources("file:${pluginsHome}/*/lib/${platformId}/native").each { dir ->
+            if (dir.exists()) {
+                debug "  ${dir.absolutePath}"
+                fileset(dir: dir.absolutePath)
+            }
+        }
+    }
+
+    processPlatformDir platform
+    processNativeDir platform
+    if (is64Bit) {
+        processPlatformDir platform[0..-3]
+        processNativeDir platform[0..-3]
+    }
+
+    Map<String, List<File>> jars = [:]
+    processPlatformLibraries(jars, platform)
+    if (is64Bit) {
+        processPlatformLibraries(jars, platform[0..-3], false)
+    }
+
+    if (jars) {
+        List<File> files = []
+        jars.values().each { list ->
+            list.each { f ->
+                debug "  ${f.absolutePath}"
+                pathelement(location: f.absolutePath)
             }
         }
     }

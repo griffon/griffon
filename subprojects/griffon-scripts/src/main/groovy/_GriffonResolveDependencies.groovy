@@ -15,6 +15,7 @@
 */
 
 import org.codehaus.griffon.artifacts.ArtifactInstallEngine
+import static griffon.util.GriffonApplicationUtils.is64Bit
 
 /**
  * @author Andres Almiray
@@ -39,5 +40,38 @@ target('resolveDependencies': '') {
         pluginSettings.resolveAndAddAllPluginDependencies()
         long end = System.currentTimeMillis()
         event 'StatusFinal', ["Plugin dependencies resolved in ${end - start} ms."]
+
+// XXX -- NATIVE
+        Map<String, List<File>> jars = [:]
+        processPlatformLibraries(jars, platform)
+        if (is64Bit) {
+            processPlatformLibraries(jars, platform[0..-3], false)
+        }
+
+        if (jars) {
+            List<File> files = []
+            jars.values().each { files.addAll it }
+            griffonSettings.updateDependenciesFor 'runtime', files
+            griffonSettings.updateDependenciesFor 'test', files
+        }
+// XXX -- NATIVE
     }
 }
+
+// XXX -- NATIVE
+processPlatformLibraries = { Map<String, List<File>> jars, String platformId, boolean overwrite = true ->
+    platformDir = new File("${basedir}/lib/${platformId}")
+    resolveResources("file:${platformDir}/*.jar").each { jar ->
+        List<File> list = jars.get(platformDir, [])
+        if (list && !overwrite) return
+        if (!list.contains(jar.file)) list << jar.file
+    }
+    resolveResources("file:${pluginsHome}/*/lib/${platformId}/*.jar").each { jar ->
+        String pluginDir = jar.file.parentFile.parentFile
+        List<File> list = jars.get(pluginDir, [])
+        if (list && !overwrite) return
+        if (!list.contains(jar.file)) list << jar.file
+    }
+    jars
+}
+// XXX -- NATIVE
