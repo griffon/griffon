@@ -69,8 +69,11 @@ target('runApp': "Runs the application from the command line") {
     if (buildConfig.griffon.memory?.max) {
         javaOpts << "-Xmx$buildConfig.griffon.memory.max"
     }
+    if (buildConfig.griffon.memory?.minPermSize) {
+        javaOpts << "-XX:PermSize=$buildConfig.griffon.memory.minPermSize"
+    }
     if (buildConfig.griffon.memory?.maxPermSize) {
-        javaOpts << "-XX:maxPermSize=$buildConfig.griffon.memory.maxPermSize"
+        javaOpts << "-XX:MaxPermSize=$buildConfig.griffon.memory.maxPermSize"
     }
     if (isMacOSX) {
         javaOpts << "-Xdock:name=${GriffonNameUtils.capitalize(griffonAppName)}"
