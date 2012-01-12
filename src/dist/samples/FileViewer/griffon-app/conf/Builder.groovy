@@ -1,4 +1,3 @@
-
 root {
     'groovy.swing.SwingBuilder' {
         controller = ['Threading']
@@ -6,4 +5,3 @@ root {
     }
 }
 
-root.'SwingGriffonAddon'.addon=true

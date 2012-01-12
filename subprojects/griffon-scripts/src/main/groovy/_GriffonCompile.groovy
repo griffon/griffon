@@ -39,9 +39,7 @@ compilerPaths = { String classpathId ->
     // Handle conf/ separately to exclude subdirs/package misunderstandings
     // src(path: "${basedir}/griffon-app/conf")
 
-    File srcMain = new File("${griffonSettings.sourceDir}/main")
-    if (!srcMain.exists()) ant.mkdir(dir: srcMain)
-    src(path: srcMain)
+    src(path: new File("${griffonSettings.sourceDir}/main"))
 
     additionalSources.each { srcPath ->
         if (new File(srcPath).exists()) src(path: srcPath)
@@ -96,6 +94,9 @@ target(name: 'compile', description: "Implementation of compilation phase",
             addUrlIfNotPresent rootLoader, dir
         }
     }
+
+    File srcMain = new File("${griffonSettings.sourceDir}/main")
+    if (!srcMain.exists()) ant.mkdir(dir: srcMain)
 
     profile("Compiling sources to location [$projectMainClassesDir]") {
         // If this is a plugin project, the descriptor is not included

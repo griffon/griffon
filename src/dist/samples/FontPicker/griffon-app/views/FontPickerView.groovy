@@ -1,5 +1,5 @@
 /*
- * Copyright 2008-2010 the original author or authors.
+ * Copyright 2008-2012 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,7 +13,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import net.miginfocom.swing.MigLayout 
+import net.miginfocom.swing.MigLayout
+ 
 application(title:'FontPicker',
   size:[850,480],
   locationByPlatform:true,

@@ -50,7 +50,7 @@ class ArtifactInstallEngine {
     def variableStore = [:]
 
     Closure errorHandler = { msg -> throw new ScriptExitException(1, msg) }
-    Closure eventHandler = { name, msg -> if(msg instanceof CharSequence) println msg}
+    Closure eventHandler = { name, msg -> if (msg instanceof CharSequence) println msg}
     Closure pluginScriptRunner
     boolean interactive
 
@@ -249,6 +249,7 @@ class ArtifactInstallEngine {
                 eventHandler 'StatusError', e.message
                 switch (getInstallFailureStrategy()) {
                     case INSTALL_FAILURE_CONTINUE:
+                        ant.delete(dir: getInstallPathFor(type, dependency.name, dependency.version), failonerror: false)
                         // try next dependency
                         break
                     case INSTALL_FAILURE_ABORT:

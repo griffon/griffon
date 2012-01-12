@@ -1,5 +1,5 @@
 /*
- * Copyright 2008-2010 the original author or authors.
+ * Copyright 2008-2012 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,14 +19,15 @@
  */
 
 openAction = action(closure: controller.openFile, name:"Open")
+
+fileChooserWindow = fileChooser()
 fileViewerFrame = application(title:'File Viewer',
   size:[500,300],
   locationByPlatform:true,
   iconImage: imageIcon('/griffon-icon-48x48.png').image,
   iconImages: [imageIcon('/griffon-icon-48x48.png').image,
                imageIcon('/griffon-icon-32x32.png').image,
-               imageIcon('/griffon-icon-16x16.png').image]
-) {
+               imageIcon('/griffon-icon-16x16.png').image]) {
     borderLayout()
 	hbox(constraints:NORTH) {
         textField(columns:20, action:openAction,
@@ -36,4 +37,3 @@ fileViewerFrame = application(title:'File Viewer',
     }
     filesPane = tabbedPane(constraints:CENTER)
 }
-fileChooserWindow = fileChooser()

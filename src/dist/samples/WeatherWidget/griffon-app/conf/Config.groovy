@@ -11,6 +11,7 @@ log4j = {
 
     warn   'griffon.util',
            'griffon.core',
-           'griffon.swing'
+           'griffon.swing',
+           'griffon.app'
 }
 

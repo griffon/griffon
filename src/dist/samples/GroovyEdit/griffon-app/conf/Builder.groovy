@@ -5,5 +5,3 @@ root {
         view = '*'
     }
 }
-
-root.'SwingGriffonAddon'.addon=true
