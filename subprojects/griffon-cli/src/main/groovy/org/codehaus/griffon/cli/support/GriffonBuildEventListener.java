@@ -18,6 +18,7 @@ package org.codehaus.griffon.cli.support;
 import griffon.build.GriffonBuildListener;
 import griffon.util.BuildSettings;
 import griffon.util.GriffonUtil;
+import griffon.util.Metadata;
 import griffon.util.PluginSettings;
 import groovy.lang.*;
 import org.apache.tools.ant.BuildEvent;
@@ -31,6 +32,7 @@ import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import static griffon.util.GriffonNameUtils.getPropertyNameForLowerCaseHyphenSeparatedName;
 import static org.codehaus.groovy.runtime.typehandling.DefaultTypeTransformation.castToBoolean;
 
 /**
@@ -73,11 +75,18 @@ public class GriffonBuildEventListener extends BuildListenerAdapter {
     protected void loadEventHooks(BuildSettings buildSettings) {
         if (buildSettings != null) {
             loadEventsScript(findEventsScript(new File(buildSettings.getUserHome(), ".griffon/scripts")));
+
+            if (buildSettings.isPluginProject() != null) {
+                String pluginName = getPropertyNameForLowerCaseHyphenSeparatedName(Metadata.getCurrent().getApplicationName());
+                binding.setVariable(pluginName + "PluginDir", buildSettings.getBaseDir());
+            }
             loadEventsScript(findEventsScript(new File(buildSettings.getBaseDir(), "scripts")));
 
             for (Map.Entry<String, Resource> plugin : PluginSettings.getSortedPluginDirectories().entrySet()) {
                 try {
                     if (!castToBoolean(binding.getVariables().get("events_loaded_" + plugin.getKey()))) {
+                        String pluginName = getPropertyNameForLowerCaseHyphenSeparatedName(plugin.getKey());
+                        binding.setVariable(pluginName + "PluginDir", plugin.getValue().getFile());
                         loadEventsScript(findEventsScript(new File(plugin.getValue().getFile(), "scripts")));
                         binding.setVariable("events_loaded_" + plugin.getKey(), true);
                     }

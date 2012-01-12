@@ -39,8 +39,9 @@ compilerPaths = { String classpathId ->
     // Handle conf/ separately to exclude subdirs/package misunderstandings
     // src(path: "${basedir}/griffon-app/conf")
 
-    def srcMain = new File("${griffonSettings.sourceDir}/main")
-    if (srcMain.exists()) src(path: srcMain)
+    File srcMain = new File("${griffonSettings.sourceDir}/main")
+    if (!srcMain.exists()) ant.mkdir(dir: srcMain)
+    src(path: srcMain)
 
     additionalSources.each { srcPath ->
         if (new File(srcPath).exists()) src(path: srcPath)
