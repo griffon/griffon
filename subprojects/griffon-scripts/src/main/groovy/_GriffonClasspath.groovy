@@ -28,7 +28,7 @@ _griffon_classpath_called = true
 
 classpathSet = false
 
-projectCompileClassesDir = new File("${classesDir.absolutePath}/compile")
+projectCompileClassesDir = new File("${classesDir.absolutePath}/cli")
 projectMainClassesDir = new File("${classesDir.absolutePath}/main")
 projectTestClassesDir = new File("${classesDir.absolutePath}/test")
 

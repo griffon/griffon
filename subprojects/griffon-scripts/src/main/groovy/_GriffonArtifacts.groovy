@@ -99,7 +99,7 @@ uninstallArtifact = { String type ->
         }
     }
     catch (Exception e) {
-        logError("Error installing ${type}: ${e.message}", e)
+        logError("Error uninstalling ${type}: ${e.message}", e)
         exit(1)
     }
 }
@@ -252,8 +252,8 @@ runPluginScript = { File scriptFile, fullPluginName, msg ->
         // we are using text form of script here to prevent Gant caching
 
         // temporary crutch --- REMOVE BEFORE 1.0!!
-        // builderConfig = new ConfigObject()
-        // if (builderConfigFile.exists()) builderConfig = configSlurper.parse(builderConfigFile.text)
+        builderConfig = new ConfigObject()
+        if (builderConfigFile.exists()) builderConfig = configSlurper.parse(builderConfigFile.text)
         // temporary crutch --- REMOVE BEFORE 1.0!!
 
         includeTargets << instrumentedInstallScript
