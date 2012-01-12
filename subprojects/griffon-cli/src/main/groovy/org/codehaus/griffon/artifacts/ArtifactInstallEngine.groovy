@@ -29,6 +29,7 @@ import griffon.util.*
 import static griffon.util.GriffonNameUtils.*
 import static griffon.util.GriffonUtil.getScriptName
 import static org.codehaus.griffon.artifacts.ArtifactUtils.*
+import static org.codehaus.griffon.artifacts.ArtifactUtils.getInstallPathFor
 
 /**
  * @author Andres Almiray
@@ -506,7 +507,7 @@ class ArtifactInstallEngine {
         File artifactDir = null
 
         if (name && version) {
-            artifactDir = new File("${artifactBase(type)}/${name}-${version}")
+            artifactDir = getInstallPathFor(type, name, version)
         } else {
             artifactDir = findArtifactDirForName(type, name)
         }

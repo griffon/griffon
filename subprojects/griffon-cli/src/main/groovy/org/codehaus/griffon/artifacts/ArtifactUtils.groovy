@@ -26,9 +26,9 @@ import java.util.zip.ZipFile
 import org.springframework.core.io.FileSystemResource
 import org.springframework.core.io.Resource
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver
-import static griffon.util.GriffonNameUtils.capitalize
-import static griffon.util.GriffonNameUtils.isBlank
+import static griffon.util.GriffonNameUtils.*
 import org.codehaus.griffon.artifacts.model.*
+import static griffon.util.GriffonNameUtils.getHyphenatedName
 
 /**
  * Common utilities for dealing with artifacts such as plugins and archetypes.
@@ -132,7 +132,7 @@ class ArtifactUtils {
     }
 
     static File findArtifactDirForName(String type, String name) {
-        name = GriffonUtil.getHyphenatedName(name)
+        name = getHyphenatedName(name)
         String basedir = artifactBase(type)
         Resource[] resources = resolveResources("file://${basedir}/${name}-*")
         if (resources) {
@@ -147,7 +147,7 @@ class ArtifactUtils {
     }
 
     static File[] findAllArtifactDirsForName(String type, String name) {
-        name = GriffonUtil.getHyphenatedName(name)
+        // name = getHyphenatedName(name)
         String basedir = artifactBase(type)
         Resource[] resources = resolveResources("file://${basedir}/${name}-*")
         if (resources) {
@@ -162,7 +162,7 @@ class ArtifactUtils {
     }
 
     static File getInstallPathFor(String type, String name, String version) {
-        name = GriffonUtil.getHyphenatedName(name)
+        // name = getHyphenatedName(name)
         new File("${artifactBase(type)}/${name}-${version}")
     }
 
@@ -171,7 +171,7 @@ class ArtifactUtils {
     }
 
     static Release getReleaseFromMetadata(String type, String name, String version = null) {
-        name = GriffonUtil.getHyphenatedName(name)
+        // name = getHyphenatedName(name)
         File file = null
         if (version) {
             file = new File("${artifactBase(type)}/${name}-${version}/${type}.json")
