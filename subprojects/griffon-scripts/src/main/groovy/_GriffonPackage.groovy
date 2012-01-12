@@ -595,30 +595,42 @@ doPackageTextReplacement = {dir, fileFilters ->
                     value: buildConfig.deploy.application.description.minimal ?: appTitle)
             replacefilter(token: "@griffon.application.description.tooltip@",
                     value: buildConfig.deploy.application.description.tooltip ?: appTitle)
-            replacefilter(token: "@griffon.application.icon.fallback@",
-                    value: buildConfig.deploy.application.icon.fallback.name ?: 'griffon-icon-48x48.png')
-            replacefilter(token: "@griffon.application.icon.fallback.width@",
-                    value: buildConfig.deploy.application.icon.fallback.width ?: '48')
-            replacefilter(token: "@griffon.application.icon.fallback.height@",
-                    value: buildConfig.deploy.application.icon.fallback.height ?: '48')
+            replacefilter(token: "@griffon.application.icon.default@",
+                    value: buildConfig.deploy.application.icon.default.name ?: 'griffon-icon-64x64.png')
+            replacefilter(token: "@griffon.application.icon.default.width@",
+                    value: buildConfig.deploy.application.icon.default.width ?: '64')
+            replacefilter(token: "@griffon.application.icon.default.height@",
+                    value: buildConfig.deploy.application.icon.default.height ?: '64')
             replacefilter(token: "@griffon.application.icon.splash@",
                     value: buildConfig.deploy.application.icon.splash.name ?: 'griffon.png')
             replacefilter(token: "@griffon.application.icon.splash.width@",
                     value: buildConfig.deploy.application.icon.splash.width ?: '381')
             replacefilter(token: "@griffon.application.icon.splash.height@",
                     value: buildConfig.deploy.application.icon.splash.height ?: '123')
-            replacefilter(token: "@griffon.application.icon.menu@",
-                    value: buildConfig.deploy.application.icon.menu.name ?: 'griffon-icon-16x16.png')
-            replacefilter(token: "@griffon.application.icon.menu.width@",
-                    value: buildConfig.deploy.application.icon.menu.width ?: '16')
-            replacefilter(token: "@griffon.application.icon.menu.height@",
-                    value: buildConfig.deploy.application.icon.menu.height ?: '16')
-            replacefilter(token: "@griffon.application.icon.desktop@",
-                    value: buildConfig.deploy.application.icon.desktop.name ?: 'griffon-icon-32x32.png')
-            replacefilter(token: "@griffon.application.icon.desktop.width@",
-                    value: buildConfig.deploy.application.icon.desktop.width ?: '32')
-            replacefilter(token: "@griffon.application.icon.desktop.height@",
-                    value: buildConfig.deploy.application.icon.desktop.height ?: '32')
+            replacefilter(token: "@griffon.application.icon.selected@",
+                    value: buildConfig.deploy.application.icon.selected.name ?: 'griffon-icon-64x64.png')
+            replacefilter(token: "@griffon.application.icon.selected.width@",
+                    value: buildConfig.deploy.application.icon.selected.width ?: '64')
+            replacefilter(token: "@griffon.application.icon.selected.height@",
+                    value: buildConfig.deploy.application.icon.selected.height ?: '64')
+            replacefilter(token: "@griffon.application.icon.disabled@",
+                    value: buildConfig.deploy.application.icon.disabled.name ?: 'griffon-icon-64x64.png')
+            replacefilter(token: "@griffon.application.icon.disabled.width@",
+                    value: buildConfig.deploy.application.icon.disabled.width ?: '64')
+            replacefilter(token: "@griffon.application.icon.disabled.height@",
+                    value: buildConfig.deploy.application.icon.disabled.height ?: '64')
+            replacefilter(token: "@griffon.application.icon.rollover@",
+                    value: buildConfig.deploy.application.icon.rollover.name ?: 'griffon-icon-64x64.png')
+            replacefilter(token: "@griffon.application.icon.rollover.width@",
+                    value: buildConfig.deploy.application.icon.rollover.width ?: '64')
+            replacefilter(token: "@griffon.application.icon.rollover.height@",
+                    value: buildConfig.deploy.application.icon.rollover.height ?: '64')
+            replacefilter(token: "@griffon.application.icon.shortcut@",
+                    value: buildConfig.deploy.application.icon.shortcut.name ?: 'griffon-icon-64x64.png')
+            replacefilter(token: "@griffon.application.icon.shortcut.width@",
+                    value: buildConfig.deploy.application.icon.shortcut.width ?: '64')
+            replacefilter(token: "@griffon.application.icon.shortcut.height@",
+                    value: buildConfig.deploy.application.icon.shortcut.height ?: '64')
         }
     }
 }

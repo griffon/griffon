@@ -120,25 +120,35 @@ deploy {
             tooltip  = '@griffonAppName@ @griffonAppVersion@'
         }
         icon {
-            fallback {
-                name = 'griffon-icon-48x48.png'
-                width = '48'
-                height = '48'
+            'default' {
+                name   = 'griffon-icon-64x64.png'
+                width  = '64'
+                height = '64'
             }
             splash {
-                name = 'griffon.png'
-                width = '391'
+                name   = 'griffon.png'
+                width  = '391'
                 height = '123'
             }
-            menu {
-                name = 'griffon-icon-16x16.png'
-                width = '16'
-                height = '16'
+            selected {
+                name   = 'griffon-icon-64x64.png'
+                width  = '64'
+                height = '64'
             }
-            desktop {
-                name = 'griffon-icon-32x32.png'
-                width = '32'
-                height = '32'
+            disabled {
+                name   = 'griffon-icon-64x64.png'
+                width  = '64'
+                height = '64'
+            }
+            rollover {
+                name   = 'griffon-icon-64x64.png'
+                width  = '64'
+                height = '64'
+            }
+            shortcut {
+                name   = 'griffon-icon-64x64.png'
+                width  = '64'
+                height = '64'
             }
         }
     }
