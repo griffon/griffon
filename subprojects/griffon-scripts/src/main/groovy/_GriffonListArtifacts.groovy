@@ -219,7 +219,7 @@ doListArtifactUpdates = { String type ->
     if (installedArtifacts) {
         installedArtifacts.each {name, version ->
             if (version instanceof Release) version = version.version
-            String availableVersion = availableArtifacts[name].version
+            String availableVersion = availableArtifacts.get(name)?.version
             if (availableVersion != version && availableVersion != null) {
                 if (!headerDisplayed) {
                     println """

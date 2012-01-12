@@ -449,7 +449,8 @@ class ArtifactInstallEngine {
         |    repositories {
         |        flatDir(name: 'plugin ${name}-${version}', dirs: [
         |            "\${pluginDirPath}/dist",
-        |            "\${pluginDirPath}/addon"
+        |            "\${pluginDirPath}/addon",
+        |            "\${pluginDirPath}/lib"
         |        ])
         |    }
         |
