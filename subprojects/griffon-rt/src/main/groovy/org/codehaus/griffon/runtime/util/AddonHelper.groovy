@@ -207,7 +207,10 @@ class AddonHelper {
             }
             MetaClass mc = targets[partialTarget.key]
             if (!mc) continue
-            for (String itemName in partialTarget.value) {
+	    def values = partialTarget.value
+	    if(values instanceof String)
+	        values = [partialTarget.value]
+            for (String itemName in values) {
                 if (itemName == '*') {
                     if (methods && LOG.traceEnabled) LOG.trace("Injecting all methods on $partialTarget.key")
                     _addMethods(mc, methods, prefix)
