@@ -81,27 +81,7 @@ class RepositoriesConfigurer extends AbstractDependencyManagementConfigurer {
         }
 
         griffonHome = new File(griffonHome).absolutePath
-        /*
-        def fileSystemResolver = new FileSystemResolver()
-        fileSystemResolver.local = true
-        fileSystemResolver.name = "griffonHome"
-        fileSystemResolver.addIvyPattern("${griffonHome}/lib/ivy-[revision](-[classifier]).xml")
-        fileSystemResolver.addIvyPattern("${griffonHome}/dist/ivy-[revision](-[classifier]).xml")
-        fileSystemResolver.addArtifactPattern "${griffonHome}/lib/[module]-[revision](-[classifier]).[ext]"
-        fileSystemResolver.addArtifactPattern "${griffonHome}/dist/[module]-[revision](-[classifier]).[ext]"
-        fileSystemResolver.settings = dependencyManager.ivySettings
-        addToChainResolver(fileSystemResolver)
-        */
-
-        flatDir(name: "griffonHome", dirs: ["${griffonHome}/dist", "${griffonHome}/libs"])
-        /*
-        final workDir = dependencyManager.buildSettings?.griffonWorkDir
-        if (workDir) flatDir(name: "griffonHome", dirs: "${workDir}/cached-installed-plugins")
-        if (griffonHome != '.') {
-            def resolver = createLocalPluginResolver("griffonHome", griffonHome)
-            addToChainResolver(resolver)
-        }
-        */
+        flatDir(name: "griffonHome", dirs: ["${griffonHome}/dist", "${griffonHome}/lib"])
     }
 
     void mavenRepo(String url) {
