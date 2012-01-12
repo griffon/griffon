@@ -27,7 +27,8 @@ import org.codehaus.griffon.cli.shell.Option;
  */
 @Command(scope = "griffon",
         name = "create-mvc",
-        description = "Creates a new MVC Group")
+        description = "Creates a new MVC Group",
+        detailedDescription = "classpath:create-mvc.txt")
 public class CreateMvcCommand extends AbstractGriffonCommand {
     @Argument(index = 0,
             name = "name",
@@ -51,17 +52,17 @@ public class CreateMvcCommand extends AbstractGriffonCommand {
     private String archetype = "default";
 
     @Option(name = "--with-model",
-            description = "Fully qualified className Model to use. WARNING: the command will not create a file for this member.",
+            description = "Fully qualified className Model to use.\nWARNING: the command will not create a file for this member.",
             required = false)
     private String withModel;
 
     @Option(name = "--with-view",
-            description = "Fully qualified className View to use. WARNING: the command will not create a file for this member.",
+            description = "Fully qualified className View to use.\nWARNING: the command will not create a file for this member.",
             required = false)
     private String withView;
 
     @Option(name = "--with-controller",
-            description = "Fully qualified className Controller to use. WARNING: the command will not create a file for this member.",
+            description = "Fully qualified className Controller to use.\nWARNING: the command will not create a file for this member.",
             required = false)
     private String withController;
 

@@ -43,13 +43,13 @@ Arguments
 * @controller@ - The name of the controller template, defaults to 'Controller'
 * @group@ - The name of the common template prefix for Model, View and Controller. Can be overriden by individual members
 * @integrationTests@ - The name of the integration test template, defaults to 'IntegrationTests'
-* @fileType@ - The file type of each artifact, i.e, groovy|java|etc
-* @skipModel@ - Skips generating a model member if set to true
-* @skipView@ - Skips generating a view member if set to true
-* @skipController@ - Skips generating a controller member if set to true
-* @withModel@ - Sets the model member to the specified full qualified class name
-* @withView@ - Sets the view member to the specified full qualified class name
-* @withController@ - Sets the controller member to the specified full qualified class name
+* @file-type@ - The file type of each artifact, i.e, groovy|java|etc
+* @skip-model@ - Skips generating a model member if set to true
+* @skip-view@ - Skips generating a view member if set to true
+* @skip-controller@ - Skips generating a controller member if set to true
+* @with-model@ - Sets the model member to the specified full qualified class name
+* @with-view@ - Sets the view member to the specified full qualified class name
+* @with-controller@ - Sets the controller member to the specified full qualified class name
 
 More Examples:
 
@@ -64,7 +64,7 @@ griffon create-mvc foo -view=Dialog
 Creates a new group definition overriding the default template for the View only.
 
 bc.
-griffon create-mvc foo -skipController=true
+griffon create-mvc foo -skip-controller=true
 
 Creates a new group definition without a Controller. The configuration will look like this
 
@@ -79,7 +79,7 @@ mvcGroups {
 }
 
 bc.
-griffon create-mvc foo -withController=foor.BarController
+griffon create-mvc foo -with-controller=foor.BarController
 
 Creates a new group definition with another Controller class. The Controller is assumed to exist, a file will not be created for it. The configuration will look like this
 

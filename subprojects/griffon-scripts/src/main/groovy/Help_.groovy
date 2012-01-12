@@ -16,6 +16,7 @@
 
 import griffon.util.GriffonUtil
 import org.springframework.core.io.Resource
+import static org.apache.commons.lang.WordUtils.wrap
 
 /**
  * Displays help description for Gant scripts
@@ -27,19 +28,20 @@ target(name: 'help', description: 'Displays this help or help about a command',
         prehook: null, posthook: null) {
     String command = argsMap.command ?: args
     if (command) {
-        Resource[] commandInfo = resolveResources("classpath*:/org/codehaus/griffon/cli/shell/help/${command}.txt")
-        String text = null
-        if (commandInfo) {
-            try {
-                text = commandInfo[0].getURL().text
-            } catch (Exception e) {
-                // can't retrieve information from classpath
-            }
-        }
+        int maxwidth = 72i
+        String prefix = '        '
+        String mainDescription = getMainDescription(command)
+        String detailedDescription = getDetailedDescription(command)
 
-        if (text) {
+        if (mainDescription) {
             println ' '
-            println text
+            println mainDescription
+            if (detailedDescription) {
+                println 'DETAILS'
+                detailedDescription.eachLine { line ->
+                    println(prefix + wrap(line, maxwidth, '\n' + prefix, true))
+                }
+            }
         } else {
             println """
             |  There's no help available for command $command
@@ -66,3 +68,27 @@ target(name: 'help', description: 'Displays this help or help about a command',
 }
 
 setDefaultTarget(help)
+
+def getMainDescription(String command) {
+    Resource[] commandInfo = resolveResources("classpath*:/org/codehaus/griffon/cli/shell/help/${command}.txt")
+    if (commandInfo) {
+        try {
+            return commandInfo[0].getURL().text
+        } catch (Exception e) {
+            // can't retrieve information from classpath
+        }
+    }
+    return null
+}
+
+def getDetailedDescription(String command) {
+    Resource[] commandInfo = resolveResources("classpath*:/org/codehaus/griffon/cli/shell/command/${command}.txt")
+    if (commandInfo) {
+        try {
+            return commandInfo[0].getURL().text
+        } catch (Exception e) {
+            // can't retrieve information from classpath
+        }
+    }
+    return null
+}

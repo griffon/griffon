@@ -17,6 +17,7 @@
 package org.codehaus.griffon.cli.shell.support;
 
 import jline.Terminal;
+import org.apache.commons.lang.WordUtils;
 import org.apache.felix.gogo.commands.Action;
 import org.apache.felix.gogo.commands.CommandException;
 import org.apache.felix.gogo.commands.basic.DefaultActionPreparator;
@@ -30,8 +31,7 @@ import org.codehaus.griffon.cli.shell.GantAwareAction;
 import org.codehaus.griffon.cli.shell.Option;
 import org.fusesource.jansi.Ansi;
 
-import java.io.File;
-import java.io.PrintStream;
+import java.io.*;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.lang.reflect.Type;
@@ -505,7 +505,21 @@ public class GriffonCommandPreparator extends DefaultActionPreparator {
         if (commandDetailedDescription.length() > 0) {
             out.println(Ansi.ansi().a(Ansi.Attribute.INTENSITY_BOLD).a("DETAILS").a(Ansi.Attribute.RESET));
             String desc = loadDescription(action.getClass(), commandDetailedDescription);
-            printFormatted("        ", desc, term != null ? term.getWidth() : 80, out);
+            printFormattedFixed("        ", desc, term != null ? term.getWidth() : 80, out);
+        }
+    }
+
+    public static void printFormattedFixed(String prefix, String str, int termWidth, PrintStream out) {
+        int pfxLen = length(prefix);
+        int maxwidth = termWidth - pfxLen;
+        BufferedReader reader = new BufferedReader(new StringReader(str));
+        try {
+            String line = null;
+            while ((line = reader.readLine()) != null) {
+                out.println(prefix + WordUtils.wrap(line, maxwidth, '\n' + prefix, true));
+            }
+        } catch (IOException e) {
+            // ignore
         }
     }
 
