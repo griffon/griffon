@@ -846,6 +846,10 @@ class BuildSettings extends AbstractBuildSettings {
         return pluginDependencyHandler(dependencyManager)
     }
 
+    public static final int RESOLUTION_SKIPPED = 0i
+    public static final int RESOLUTION_OK = 1i
+    public static final int RESOLUTION_ERROR = 2i
+
     Closure pluginDependencyHandler(IvyDependencyManager dependencyManager) {
         ConfigSlurper pluginSlurper = createConfigSlurper()
 
@@ -856,6 +860,7 @@ class BuildSettings extends AbstractBuildSettings {
                     new File("$path/plugin-dependencies.groovy")
             ]
 
+            int result = RESOLUTION_SKIPPED
             debug("Resolving plugin ${pluginName}-${pluginVersion} JAR dependencies")
             dependencyDescriptors.each { File dependencyDescriptor ->
                 if (dependencyDescriptor.exists()) {
@@ -881,11 +886,14 @@ class BuildSettings extends AbstractBuildSettings {
                                 dependencyManager.parseDependencies(pluginName, pluginDependencyConfig)
                             }
                         }
+                        if(result != RESOLUTION_ERROR) result = RESOLUTION_OK
                     } catch (e) {
+                        result = RESOLUTION_ERROR
                         println "WARNING: Dependencies cannot be resolved for plugin [$pluginName] due to error: ${e.message}"
                     }
                 }
             }
+            return result
         }
     }
 

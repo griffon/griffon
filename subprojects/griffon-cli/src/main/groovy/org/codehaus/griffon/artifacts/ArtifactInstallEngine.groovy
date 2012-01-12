@@ -443,22 +443,24 @@ class ArtifactInstallEngine {
             test = "test(group: 'org.codehaus.griffon.plugins', name: 'griffon-${name}', version: '${version}', classifier: 'test')"
         }
 
-        File dependencyDescriptor = new File("${pluginDirPath}/plugin-dependencies.groovy")
-        dependencyDescriptor.text = """
-        |griffon.project.dependency.resolution = {
-        |    repositories {
-        |        flatDir(name: 'plugin ${name}-${version}', dirs: [
-        |            "\${pluginDirPath}/dist",
-        |            "\${pluginDirPath}/addon",
-        |            "\${pluginDirPath}/lib"
-        |        ])
-        |    }
-        |
-        |    dependencies {
-        |        ${compile.trim()}
-        |        $test
-        |    }
-        |}""".stripMargin().trim()
+        if (compile || test) {
+            File dependencyDescriptor = new File("${pluginDirPath}/plugin-dependencies.groovy")
+            dependencyDescriptor.text = """
+            |griffon.project.dependency.resolution = {
+            |    repositories {
+            |        flatDir(name: 'plugin ${name}-${version}', dirs: [
+            |            "\${pluginDirPath}/dist",
+            |            "\${pluginDirPath}/addon",
+            |            "\${pluginDirPath}/lib"
+            |        ])
+            |    }
+            |
+            |    dependencies {
+            |        ${compile.trim()}
+            |        $test
+            |    }
+            |}""".stripMargin().trim()
+        }
     }
 
     private void resolvePluginJarDependencies(String pluginInstallPath, String pluginName, String pluginVersion) {
@@ -470,14 +472,16 @@ class ArtifactInstallEngine {
         if (dependencyDescriptors.any {it.exists()}) {
             eventHandler 'StatusUpdate', "Resolving plugin ${pluginName}-${pluginVersion} JAR dependencies"
             def callable = settings.pluginDependencyHandler()
-            callable.call(new File(pluginInstallPath), pluginName, pluginVersion)
-            IvyDependencyManager dependencyManager = settings.dependencyManager
-            for (conf in ['compile', 'build', 'test', 'runtime']) {
-                def resolveReport = dependencyManager.resolveDependencies(IvyDependencyManager."${conf.toUpperCase()}_CONFIGURATION")
-                if (resolveReport.hasError()) {
-                    throw new InstallArtifactException("Plugin ${pluginName}-${pluginVersion} has missing JAR dependencies.")
-                } else {
-                    settings.updateDependenciesFor conf, resolveReport.allArtifactsReports.localFile
+            int result = callable.call(new File(pluginInstallPath), pluginName, pluginVersion)
+            if (result == BuildSettings.RESOLUTION_OK) {
+                IvyDependencyManager dependencyManager = settings.dependencyManager
+                for (conf in ['compile', 'build', 'test', 'runtime']) {
+                    def resolveReport = dependencyManager.resolveDependencies(IvyDependencyManager."${conf.toUpperCase()}_CONFIGURATION")
+                    if (resolveReport.hasError()) {
+                        throw new InstallArtifactException("Plugin ${pluginName}-${pluginVersion} has missing JAR dependencies.")
+                    } else {
+                        settings.updateDependenciesFor conf, resolveReport.allArtifactsReports.localFile
+                    }
                 }
             }
         }
