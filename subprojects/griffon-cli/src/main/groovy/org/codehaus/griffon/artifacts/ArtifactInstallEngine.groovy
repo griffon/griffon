@@ -29,7 +29,6 @@ import griffon.util.*
 import static griffon.util.GriffonNameUtils.*
 import static griffon.util.GriffonUtil.getScriptName
 import static org.codehaus.griffon.artifacts.ArtifactUtils.*
-import static org.codehaus.griffon.artifacts.ArtifactUtils.getInstallPathFor
 
 /**
  * @author Andres Almiray
@@ -75,6 +74,16 @@ class ArtifactInstallEngine {
         Map<String, String> registeredPlugins = getRegisteredArtifacts(Plugin.TYPE, metadata)
         Map<String, String> installedPlugins = getInstalledArtifacts(Plugin.TYPE)
 
+        File pluginDescriptor = settings.isPluginProject()
+        if (pluginDescriptor) {
+            GroovyClassLoader gcl = new GroovyClassLoader(getClass().classLoader)
+            String artifactClassName = pluginDescriptor.name[0..-8]
+            def plugin = gcl.loadClass(artifactClassName).newInstance()
+            plugin.dependsOn.each { name, version ->
+                registeredPlugins[name] = version
+            }
+        }
+
         if (LOG.debugEnabled) {
             String registered = registeredPlugins.collect([]) {k, v -> "${k}-${v}"}.join('\n\t')
             if (registered) LOG.debug("Registered plugins:\n\t${registered}")
@@ -96,6 +105,13 @@ class ArtifactInstallEngine {
             if (v != version) {
                 pluginsToDelete[name] = version
             }
+        }
+
+        if (installedPlugins) {
+            installedPlugins.each { name, version ->
+                metadata["plugins.${name}"] = version
+            }
+            metadata.persist()
         }
 
         if (LOG.debugEnabled) {
