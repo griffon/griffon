@@ -206,8 +206,9 @@ target(name: 'appName', description: "Evaluates the application name",
         resetBaseDirectory(basedir)
     }
 
-    if (argsMap["appVersion"]) {
-        griffonAppVersion = argsMap["appVersion"]
+    argsMap['app-version'] = argsMap['app-version'] ?: argsMap.appVersion
+    if (argsMap['app-version']) {
+        griffonAppVersion = argsMap['app-version']
     }
 
     appClassName = GriffonUtil.getClassNameRepresentation(griffonAppName)

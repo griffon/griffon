@@ -1,23 +1,28 @@
 DESCRIPTION
-        create-unit-test
+        create-app
 
-	Creates a new Griffon unit test. A unit test requires that you mock out
-	access to dynamic methods, but executes a lot quicker.
+	Creates a new Griffon application for the given name.
 
 SYNTAX
-        create-unit-test [options] [name] 
+        create-app [options] [name]
 
 ARGUMENTS
         name
-                The name of the test to be created.
+                The name of the application to be created.
 
 OPTIONS
+        --app-version
+                Version to be set on the application.
+                (defaults to 0.1)
         --archetype
                 Archetype to be searched for templates.
                 (defaults to default)
         --file-type
                 Source file type.
                 (defaults to groovy)
+        --inplace
+                If true creates the application in the current directory.
+                (defaults to false)
         --non-interactive
                 Controls if the shell can ask for input or not.
         --skip-package-prompt
