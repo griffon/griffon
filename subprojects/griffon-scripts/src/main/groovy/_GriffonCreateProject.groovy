@@ -16,8 +16,10 @@
 
 import griffon.util.GriffonUtil
 import griffon.util.Metadata
+import org.codehaus.griffon.artifacts.model.Plugin
 import static griffon.util.GriffonNameUtils.capitalize
 import static griffon.util.GriffonNameUtils.uncapitalize
+import static org.codehaus.griffon.artifacts.ArtifactUtils.artifactBase
 
 /**
  * Gant script that handles the creation of Griffon applications
@@ -88,7 +90,7 @@ resetBaseDirectory = { String basedir ->
     configFile = new File(basedir, 'griffon-app/conf/Config.groovy')
 
     // Reset the plugin stuff.
-    pluginsHome = griffonSettings.projectPluginsDir.path
+    // pluginsHome = artifactBase(Plugin.TYPE)
 }
 
 target(name: 'createPlugin', description: '',

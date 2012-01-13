@@ -15,7 +15,9 @@
 */
 
 import org.codehaus.griffon.artifacts.ArtifactInstallEngine
+import org.codehaus.griffon.artifacts.model.Plugin
 import static griffon.util.GriffonApplicationUtils.is64Bit
+import static org.codehaus.griffon.artifacts.ArtifactUtils.artifactBase
 
 /**
  * @author Andres Almiray
@@ -66,7 +68,7 @@ processPlatformLibraries = { Map<String, List<File>> jars, String platformId, bo
         if (list && !overwrite) return
         if (!list.contains(jar.file)) list << jar.file
     }
-    resolveResources("file:${pluginsHome}/*/lib/${platformId}/*.jar").each { jar ->
+    resolveResources("file:${artifactBase(Plugin.TYPE)}/*/lib/${platformId}/*.jar").each { jar ->
         String pluginDir = jar.file.parentFile.parentFile
         List<File> list = jars.get(pluginDir, [])
         if (list && !overwrite) return

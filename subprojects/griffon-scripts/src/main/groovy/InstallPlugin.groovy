@@ -15,6 +15,7 @@
  */
 
 import org.codehaus.griffon.artifacts.model.Plugin
+import static org.codehaus.griffon.artifacts.ArtifactUtils.artifactBase
 
 /**
  * @author Andres Almiray
@@ -23,7 +24,7 @@ import org.codehaus.griffon.artifacts.model.Plugin
 includeTargets << griffonScript('_GriffonArtifacts')
 
 target(installPlugin: "Installs a plugin for the given URL or name and version") {
-    ant.mkdir(dir: pluginsBase)
+    ant.mkdir(dir: artifactBase(Plugin.TYPE))
     installArtifact(Plugin.TYPE)
 }
 

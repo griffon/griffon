@@ -18,11 +18,13 @@ import griffon.util.Environment
 import griffon.util.GriffonUtil
 import griffon.util.Metadata
 import griffon.util.PlatformUtils
+import org.codehaus.griffon.artifacts.model.Archetype
 import org.codehaus.griffon.cli.ScriptExitException
 import org.springframework.core.io.ClassPathResource
 import org.springframework.core.io.FileSystemResource
 import org.springframework.core.io.Resource
 import org.springframework.util.FileCopyUtils
+import static org.codehaus.griffon.artifacts.ArtifactUtils.artifactBase
 import static org.codehaus.griffon.cli.CommandLineConstants.KEY_INTERACTIVE_MODE
 
 /**
@@ -103,9 +105,9 @@ System.setProperty(KEY_INTERACTIVE_MODE, "true")
 
 buildProps = buildConfig.toProperties()
 enableProfile = getPropertyValue("griffon.script.profile", false).toBoolean()
-pluginsHome = griffonSettings.projectPluginsDir.path
-pluginsBase = pluginsHome.toString().replaceAll('\\\\', '/')
-archetypesBase = "${griffonWorkDir}/archetypes".toString().replaceAll('\\\\', '/')
+// pluginsHome = artifactBase(Plugin.TYPE)
+// pluginsBase = pluginsHome.toString().replaceAll('\\\\', '/')
+// archetypesBase = artifactBase(Archetype.TYPE)
 archetypeName = ''
 archetypeVersion = ''
 

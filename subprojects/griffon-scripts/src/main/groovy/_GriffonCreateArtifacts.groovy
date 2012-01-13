@@ -27,8 +27,10 @@ import java.util.regex.Matcher
 import java.util.regex.Pattern
 import org.codehaus.griffon.artifacts.ArtifactUtils
 import org.codehaus.griffon.artifacts.model.Archetype
+import org.codehaus.griffon.artifacts.model.Plugin
 import org.springframework.core.io.ClassPathResource
 import org.springframework.core.io.FileSystemResource
+import static org.codehaus.griffon.artifacts.ArtifactUtils.artifactBase
 
 includeTargets << griffonScript('_GriffonPackage')
 
@@ -147,7 +149,7 @@ resolveTemplate = { template, fileSuffix ->
     def templateFile = new FileSystemResource("${basedir}/src/templates/artifacts/${template}${fileSuffix}")
     if (!templateFile.exists()) {
         // now check for template provided by plugins
-        def pluginTemplateFiles = resolveResources("file:${pluginsHome}/*/src/templates/artifacts/${template}${fileSuffix}")
+        def pluginTemplateFiles = resolveResources("file:${artifactBase(Plugin.TYPE)}/*/src/templates/artifacts/${template}${fileSuffix}")
         if (pluginTemplateFiles) {
             templateFile = pluginTemplateFiles[0]
         }

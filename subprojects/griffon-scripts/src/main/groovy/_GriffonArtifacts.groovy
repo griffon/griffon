@@ -23,6 +23,7 @@ import org.codehaus.griffon.artifacts.model.Plugin
 import static griffon.util.GriffonNameUtils.capitalize
 import org.codehaus.griffon.artifacts.*
 import static org.codehaus.griffon.artifacts.ArtifactUtils.isValidVersion
+import static org.codehaus.griffon.artifacts.ArtifactUtils.artifactBase
 
 /**
  * @author Andres Almiray
@@ -248,7 +249,7 @@ runPluginScript = { File scriptFile, fullPluginName, msg ->
     if (scriptFile.exists()) {
         event 'StatusUpdate', ["Executing ${fullPluginName} plugin $msg"]
         // instrumenting plugin scripts adding 'pluginBasedir' variable
-        def instrumentedInstallScript = "def pluginBasedir = '${pluginsHome}/${fullPluginName}'\n".toString().replaceAll('\\\\', '/') + scriptFile.text
+        def instrumentedInstallScript = "def pluginBasedir = '${artifactBase(Plugin.TYPE)}/${fullPluginName}'\n".toString().replaceAll('\\\\', '/') + scriptFile.text
         // we are using text form of script here to prevent Gant caching
 
         // temporary crutch --- REMOVE BEFORE 1.0!!

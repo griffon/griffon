@@ -677,13 +677,20 @@ class BuildSettings extends AbstractBuildSettings {
         sourceEncodingSet = true
     }
 
+    ConfigObject resetConfig() {
+        config = new ConfigObject()
+        gcl = null
+        settingsFileLoaded = false
+        loadConfig()
+    }
+
     /**
      * Loads the application's BuildConfig.groovy file if it exists
      * and returns the corresponding config object. If the file does
      * not exist, this returns an empty config.
      */
     ConfigObject loadConfig() {
-        loadConfig(new File(baseDir, "griffon-app/conf/BuildConfig.groovy"))
+        loadConfig(new File(baseDir, 'griffon-app/conf/BuildConfig.groovy'))
     }
 
     /**
@@ -831,15 +838,6 @@ class BuildSettings extends AbstractBuildSettings {
         if (dependencyConfig) {
             dependencyManager.parseDependencies dependencyConfig
         }
-
-        /*
-        // All projects need the plugins to be resolved.
-        def handlePluginDirectory = pluginDependencyHandler()
-        def pluginDirs = getPluginDirectories()
-        for (dir in pluginDirs) {
-            handlePluginDirectory(dir)
-        }
-        */
     }
 
     Closure pluginDependencyHandler() {

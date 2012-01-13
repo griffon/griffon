@@ -315,7 +315,7 @@ public class GriffonScriptRunner {
         return callPluginOrGriffonScript(script);
     }
 
-    private void setLoggingOptions() {
+    public void setLoggingOptions() {
         Object log4jConfig = settings.getConfig().get("log4j");
         if (log4jConfig instanceof Closure) {
             LogManager.resetConfiguration();

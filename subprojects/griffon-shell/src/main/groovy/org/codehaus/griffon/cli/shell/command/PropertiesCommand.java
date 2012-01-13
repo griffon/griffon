@@ -37,7 +37,7 @@ import static org.codehaus.griffon.cli.shell.GriffonShellContext.*;
 public class PropertiesCommand extends AbstractAction {
     @Option(name = "--reset",
             description = "Reset property values as if the shell was just launched.")
-    protected boolean reset;
+    private boolean reset;
 
     protected Object doExecute() throws Exception {
         if (reset) {
@@ -103,11 +103,11 @@ public class PropertiesCommand extends AbstractAction {
         return properties;
     }
 
-    void printSysValue(String prop, int pad) {
+    private void printSysValue(String prop, int pad) {
         printValue(prop, pad, System.getProperty(prop));
     }
 
-    void printValue(String name, int pad, String value) {
+    private void printValue(String name, int pad, String value) {
         if (value == null) {
             value = "<not set>";
         } else if (value.equals("")) {
@@ -118,7 +118,7 @@ public class PropertiesCommand extends AbstractAction {
                 .a("   ").a(value).toString());
     }
 
-    String spaces(int nb) {
+    private String spaces(int nb) {
         StringBuilder sb = new StringBuilder();
         for (int i = 0; i < nb; i++) {
             sb.append(' ');
