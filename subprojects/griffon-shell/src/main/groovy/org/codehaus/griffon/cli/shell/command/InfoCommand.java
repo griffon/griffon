@@ -59,6 +59,7 @@ public class InfoCommand extends OsgiCommandSupport {
         try {
             printValue("Process CPU time", maxNameLen, printDuration(getSunOsValueAsLong(os, "getProcessCpuTime") / 1000000));
         } catch (Throwable t) {
+            // ignore
         }
         /*
         printValue("Total compile time", maxNameLen, printDuration(ManagementFactory.getCompilationMXBean().getTotalCompilationTime()));
@@ -96,6 +97,7 @@ public class InfoCommand extends OsgiCommandSupport {
             printValue("Total swap space", maxNameLen, printSizeInKb(getSunOsValueAsLong(os, "getTotalSwapSpaceSize")));
             printValue("Free swap space", maxNameLen, printSizeInKb(getSunOsValueAsLong(os, "getFreeSwapSpaceSize")));
         } catch (Throwable t) {
+            // ignore
         }
 
         return null;

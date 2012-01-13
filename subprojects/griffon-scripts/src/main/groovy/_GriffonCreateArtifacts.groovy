@@ -48,7 +48,7 @@ createArtifact = { Map args = [:] ->
     def template = args['template'] ?: type
     def artifactPath = args['path']
     if (args['fileType']) fileType = args['fileType']
-    def lineTerminator = args["lineTerminator"] ?: (fileType != '.groovy' ? ';' : '')
+    def lineTerminator = args["lineTerminator"] ?: (fileType == '.groovy' ? '' : ';')
 
     def typeProperty = GriffonNameUtils.uncapitalize(type)
     template = argsMap[typeProperty] && templateExists(argsMap[typeProperty], fileType) ? argsMap[typeProperty] : template

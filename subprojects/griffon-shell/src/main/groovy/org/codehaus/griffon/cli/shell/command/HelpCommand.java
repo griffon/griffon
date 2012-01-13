@@ -82,8 +82,6 @@ public class HelpCommand extends AbstractAction {
                             name = name.substring(2);
                         }
                         commands.put(name, description);
-                    } else {
-
                     }
                 }
                 // Post process the commands list
@@ -124,6 +122,7 @@ public class HelpCommand extends AbstractAction {
                 }
             }
         } catch (Throwable t) {
+            // ignore
         }
         return function;
     }

@@ -93,9 +93,7 @@ public class GantAwareAction extends AbstractGriffonShellCommand {
             // allowed when running inside the interactive shell
         } catch (RuntimeException e) {
             // bummer, we got a problem
-            if (e instanceof ScriptExitException || e.getCause() instanceof ScriptExitException) {
-                // false alarm
-            } else {
+            if (!(e instanceof ScriptExitException) && !(e.getCause() instanceof ScriptExitException)) {
                 session.getConsole().print(Ansi.ansi().fg(Ansi.Color.RED).toString());
                 e.printStackTrace(session.getConsole());
                 session.getConsole().print(Ansi.ansi().fg(Ansi.Color.DEFAULT).toString());

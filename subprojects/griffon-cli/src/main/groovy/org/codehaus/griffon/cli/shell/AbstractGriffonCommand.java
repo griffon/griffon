@@ -17,7 +17,6 @@
 package org.codehaus.griffon.cli.shell;
 
 import griffon.util.Environment;
-import org.codehaus.griffon.cli.shell.Option;
 
 /**
  * @author Andres Almiray

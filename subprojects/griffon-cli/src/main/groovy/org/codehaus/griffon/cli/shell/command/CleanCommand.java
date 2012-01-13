@@ -19,7 +19,6 @@ package org.codehaus.griffon.cli.shell.command;
 import org.codehaus.griffon.cli.shell.AbstractGriffonCommand;
 import org.codehaus.griffon.cli.shell.Argument;
 import org.codehaus.griffon.cli.shell.Command;
-import org.codehaus.griffon.cli.shell.Option;
 
 import java.util.List;
 
