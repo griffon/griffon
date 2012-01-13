@@ -71,4 +71,15 @@ public interface CommandLineConstants {
      * <p>Valid values are <tt>'true'</tt> or <tt>'false'</tt>. Default is <tt>'false'</tt>.</p>
      */
     String KEY_DISABLE_THREADING_INJECTION = "griffon.disable.threading.injection";
+
+    String[] KEYS = {
+            KEY_INTERACTIVE_MODE,
+            KEY_NON_INTERACTIVE_DEFAULT_ANSWER,
+            KEY_FULL_STACKTRACE,
+            KEY_CLI_VERBOSE,
+            KEY_DISABLE_AST_INJECTION,
+            KEY_DISABLE_AUTO_IMPORTS,
+            KEY_DISABLE_LOGGING_INJECTION,
+            KEY_DISABLE_THREADING_INJECTION
+    };
 }

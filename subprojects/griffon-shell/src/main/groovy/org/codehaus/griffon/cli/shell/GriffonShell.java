@@ -33,14 +33,16 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.PrintStream;
+import java.util.ArrayList;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import static griffon.util.GriffonExceptionHandler.sanitize;
 import static org.codehaus.griffon.cli.GriffonScriptRunner.unquote;
-import static org.codehaus.griffon.cli.shell.GriffonScriptRunnerHolder.setGriffonScriptRunner;
+import static org.codehaus.griffon.cli.shell.GriffonShellContext.*;
 import static org.codehaus.griffon.cli.shell.command.ReloadCommandsCommand.reload;
 
 /**
@@ -49,16 +51,13 @@ import static org.codehaus.griffon.cli.shell.command.ReloadCommandsCommand.reloa
  */
 @Command(scope = "griffon", name = "griffon", description = "Executes the Griffon interactive shell")
 public class GriffonShell extends KarafMain implements Action {
+    private static final Pattern SYSTEM_PROPERTY_PATTERN = Pattern.compile("-D(.+?)=(['\"].+?['\"]|.+?)");
+
     public static void main(String[] args) {
         Ansi.ansi();
         try {
-            StringBuilder allArgs = new StringBuilder("");
-            for (String arg : args) {
-                allArgs.append(" ").append(arg);
-            }
-            processSystemArguments(allArgs.toString().trim());
-
-            new GriffonShell().run(args);
+            String[] transformedArgs = processSystemArguments(args);
+            new GriffonShell().run(transformedArgs);
         } catch (Exception e) {
             sanitize(e).printStackTrace();
         }
@@ -98,23 +97,24 @@ public class GriffonShell extends KarafMain implements Action {
 
     private static final Map<String, String> SYSTEM_PROPERTIES = new LinkedHashMap<String, String>();
 
-    private static String processSystemArguments(String allArgs) {
-        String lastMatch = null;
-        Pattern sysPropPattern = Pattern.compile("-D(.+?)=(['\"].+?['\"]|.+?)\\s+?");
-        Matcher m = sysPropPattern.matcher(allArgs);
-        while (m.find()) {
-            String key = m.group(1).trim();
-            String value = unquote(m.group(2).trim());
-            SYSTEM_PROPERTIES.put(key, value);
-            System.setProperty(key, value);
-            lastMatch = m.group();
-        }
+    private static String[] processSystemArguments(String[] args) {
+        List<String> transformedArgs = new ArrayList<String>();
 
-        if (lastMatch != null) {
-            int i = allArgs.lastIndexOf(lastMatch) + lastMatch.length();
-            allArgs = allArgs.substring(i);
+        for (String arg : args) {
+            Matcher m = SYSTEM_PROPERTY_PATTERN.matcher(arg);
+            if (m.matches()) {
+                String key = m.group(1).trim();
+                String value = unquote(m.group(2).trim());
+                SYSTEM_PROPERTIES.put(key, value);
+                System.setProperty(key, value);
+            } else {
+                transformedArgs.add(arg);
+            }
         }
-        return allArgs;
+        setInitialSystemProperties(SYSTEM_PROPERTIES);
+        setSystemProperties(SYSTEM_PROPERTIES);
+
+        return transformedArgs.toArray(new String[transformedArgs.size()]);
     }
 
     private static void exitWithError(String error) {

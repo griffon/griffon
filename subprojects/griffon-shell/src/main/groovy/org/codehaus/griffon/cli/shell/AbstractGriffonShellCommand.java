@@ -25,7 +25,7 @@ import org.codehaus.griffon.cli.GriffonScriptRunner;
 import org.codehaus.griffon.cli.shell.support.CommandArguments;
 
 import static griffon.util.GriffonNameUtils.getShortName;
-import static org.codehaus.griffon.cli.shell.GriffonScriptRunnerHolder.*;
+import static org.codehaus.griffon.cli.shell.GriffonShellContext.*;
 
 /**
  * @author Andres Almiray

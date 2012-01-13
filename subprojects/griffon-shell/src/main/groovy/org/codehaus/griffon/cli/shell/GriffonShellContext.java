@@ -16,17 +16,27 @@
 
 package org.codehaus.griffon.cli.shell;
 
+import org.apache.commons.lang.ArrayUtils;
 import org.codehaus.gant.GantBinding;
+import org.codehaus.griffon.cli.CommandLineConstants;
 import org.codehaus.griffon.cli.GriffonScriptRunner;
+
+import java.util.LinkedHashMap;
+import java.util.Map;
+
+import static java.util.Arrays.sort;
+import static org.apache.commons.lang.ArrayUtils.contains;
 
 /**
  * @author Andres Almiray
  * @since 0.9.5
  */
-public class GriffonScriptRunnerHolder {
+public class GriffonShellContext {
     private static GriffonScriptRunner griffonScriptRunner;
     private static String lastEnvironment;
     private static GantBinding gantBinding;
+    private static Map<String, String> initialSystemProperties = new LinkedHashMap<String, String>();
+    private static Map<String, String> systemProperties = new LinkedHashMap<String, String>();
 
     public static GriffonScriptRunner getGriffonScriptRunner() {
         return griffonScriptRunner;
@@ -50,5 +60,32 @@ public class GriffonScriptRunnerHolder {
 
     public static void setGantBinding(GantBinding binding) {
         gantBinding = binding;
+    }
+
+    public static Map<String, String> getInitialSystemProperties() {
+        return initialSystemProperties;
+    }
+
+    public static void setInitialSystemProperties(Map<String, String> properties) {
+        initialSystemProperties.clear();
+        initialSystemProperties.putAll(properties);
+    }
+
+    public static Map<String, String> getSystemProperties() {
+        return systemProperties;
+    }
+
+    public static void setSystemProperties(Map<String, String> properties) {
+        systemProperties.clear();
+        addSystemProperties(properties);
+    }
+
+    public static void addSystemProperties(Map<String, String> properties) {
+        String[] commandProperties = (String[]) ArrayUtils.clone(CommandLineConstants.KEYS);
+        sort(commandProperties);
+        for (Map.Entry<String, String> entry : properties.entrySet()) {
+            if (contains(commandProperties, entry.getKey())) continue;
+            systemProperties.put(entry.getKey(), entry.getValue());
+        }
     }
 }

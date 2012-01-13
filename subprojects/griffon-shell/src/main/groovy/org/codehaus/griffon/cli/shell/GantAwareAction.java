@@ -34,7 +34,7 @@ import java.util.List;
 import java.util.Map;
 
 import static org.codehaus.griffon.cli.GriffonScriptRunner.*;
-import static org.codehaus.griffon.cli.shell.GriffonScriptRunnerHolder.*;
+import static org.codehaus.griffon.cli.shell.GriffonShellContext.*;
 import static org.codehaus.groovy.runtime.DefaultGroovyMethods.join;
 
 /**

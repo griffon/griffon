@@ -19,7 +19,6 @@ package org.codehaus.griffon.cli.shell.command;
 import griffon.util.BuildSettings;
 import griffon.util.BuildSettingsHolder;
 import org.apache.felix.gogo.commands.Command;
-import org.apache.karaf.shell.commands.info.InfoProvider;
 import org.apache.karaf.shell.console.OsgiCommandSupport;
 import org.fusesource.jansi.Ansi;
 
@@ -28,15 +27,12 @@ import java.lang.reflect.Method;
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
 import java.text.NumberFormat;
-import java.util.*;
+import java.util.Locale;
 
 @Command(scope = "shell", name = "info", description = "Prints system information.")
 public class InfoCommand extends OsgiCommandSupport {
-
     private NumberFormat fmtI = new DecimalFormat("###,###", new DecimalFormatSymbols(Locale.ENGLISH));
     private NumberFormat fmtD = new DecimalFormat("###,##0.000", new DecimalFormatSymbols(Locale.ENGLISH));
-
-    private List<InfoProvider> infoProviders = new LinkedList<InfoProvider>();
 
     protected Object doExecute() throws Exception {
         int maxNameLen;
@@ -102,27 +98,6 @@ public class InfoCommand extends OsgiCommandSupport {
         } catch (Throwable t) {
         }
 
-        //Display Information from external information providers.
-        Map<String, Map<Object, Object>> properties = new HashMap<String, Map<Object, Object>>();
-        if (infoProviders != null) {
-
-            // dump all properties to Map, KARAF-425
-            for (InfoProvider provider : infoProviders) {
-                if (!properties.containsKey(provider.getName())) {
-                    properties.put(provider.getName(), new Properties());
-                }
-                properties.get(provider.getName()).putAll(provider.getProperties());
-            }
-
-            for (String section : properties.keySet()) {
-                System.out.println(section);
-
-                for (Object key : properties.get(section).keySet()) {
-                    printValue(String.valueOf(key), maxNameLen, String.valueOf(properties.get(section).get(key)));
-                }
-            }
-        }
-
         return null;
     }
 
@@ -186,13 +161,5 @@ public class InfoCommand extends OsgiCommandSupport {
             sb.append(' ');
         }
         return sb.toString();
-    }
-
-    public List<InfoProvider> getInfoProviders() {
-        return infoProviders;
-    }
-
-    public void setInfoProviders(List<InfoProvider> infoProviders) {
-        this.infoProviders = infoProviders;
     }
 }
