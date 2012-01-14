@@ -22,6 +22,7 @@
  */
 
 import griffon.util.GriffonUtil
+import griffon.util.GriffonNameUtils
 
 includeTargets << griffonScript('CreateIntegrationTest')
 
@@ -91,7 +92,7 @@ Type in griffon create-addon then execute this command again."""
                 suffix: '')
     }
 
-    name = GriffonUtil.uncapitalize(name)
+    name = GriffonNameUtils.getPropertyName(name)
 
     if (isAddonPlugin) {
         // create mvcGroup in a plugin

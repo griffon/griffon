@@ -26,6 +26,7 @@ import org.springframework.core.io.Resource
 import org.springframework.util.FileCopyUtils
 import static org.codehaus.griffon.artifacts.ArtifactUtils.artifactBase
 import static org.codehaus.griffon.cli.CommandLineConstants.KEY_INTERACTIVE_MODE
+import griffon.util.GriffonNameUtils
 
 /**
  * Gant script containing build variables.
@@ -433,7 +434,7 @@ target(checkVersion: "Stops build if app expects different Griffon version") {
 
 target(updateAppProperties: "Updates default application.properties") {
     def entries = [
-            'app.name': griffonAppName,
+            'app.name': GriffonNameUtils.getPropertyName(griffonAppName),
             'app.griffon.version': griffonVersion
     ]
     if (griffonAppVersion) {

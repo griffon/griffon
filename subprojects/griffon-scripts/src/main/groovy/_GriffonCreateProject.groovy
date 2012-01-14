@@ -14,12 +14,10 @@
  * limitations under the License.
  */
 
+import griffon.util.GriffonNameUtils
 import griffon.util.GriffonUtil
 import griffon.util.Metadata
-import org.codehaus.griffon.artifacts.model.Plugin
 import static griffon.util.GriffonNameUtils.capitalize
-import static griffon.util.GriffonNameUtils.uncapitalize
-import static org.codehaus.griffon.artifacts.ArtifactUtils.artifactBase
 
 /**
  * Gant script that handles the creation of Griffon applications
@@ -42,7 +40,8 @@ target(name: 'createApp', description: "Creates a Griffon application for the gi
     createApplicationProject()
 
     // Set the default version number for the application
-    updateMetadata("app.version": griffonAppVersion ?: "0.1", "archetype.${archetypeName}": archetypeVersion)
+    updateMetadata('app.version': griffonAppVersion ?: '0.1',
+            "archetype.${archetypeName}": archetypeVersion)
     def cfg = new File("${basedir}/griffon-app/conf/BuildConfig.groovy")
     cfg.append("""
 app.fileType = '$fileType'
@@ -64,7 +63,7 @@ createProjectWithDefaults = {
         replacefilter(token: "@griffon.app.class.name@", value: appClassName)
         replacefilter(token: "@griffon.version@", value: griffonVersion)
         replacefilter(token: "@griffon.project.name@", value: griffonAppName)
-        replacefilter(token: "@griffon.application.name@", value: uncapitalize(appClassName))
+        replacefilter(token: "@griffon.application.name@", value: GriffonNameUtils.getPropertyName(appClassName))
         replacefilter(token: "@griffon.project.key@", value: griffonAppName.replaceAll(/\s/, '.').toLowerCase())
     }
 
