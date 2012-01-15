@@ -30,7 +30,10 @@ _griffon_resolve_dependencies_called = true
 includeTargets << griffonScript('_GriffonArtifacts')
 
 runDependencyResolution = true
-target('resolveDependencies': '') {
+target(name: 'resolveDependencies', description: 'Resolves project and plugin dependencies',
+    prehook: null, posthook: null) {
+    if(!griffonSettings.isGriffonProject()) return
+
     if (runDependencyResolution) {
         long start = System.currentTimeMillis()
         event 'StatusUpdate', ['Resolving plugin dependencies']

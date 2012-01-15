@@ -48,6 +48,7 @@ createArtifact = { Map args = [:] ->
     def template = args['template'] ?: type
     def artifactPath = args['path']
     if (args['fileType']) fileType = args['fileType']
+    if(!fileType.startsWith('.')) fileType = '.' + fileType
     def lineTerminator = args["lineTerminator"] ?: (fileType == '.groovy' ? '' : ';')
 
     def typeProperty = GriffonNameUtils.uncapitalize(type)
@@ -74,8 +75,8 @@ createArtifact = { Map args = [:] ->
     packageName = artifactPkg
     className = GriffonUtil.getClassNameRepresentation(artifactName)
     propertyName = GriffonUtil.getPropertyNameRepresentation(artifactName)
-    artifactFile = "${basedir}/${artifactPath}/${pkgPath}${className}${suffix}${fileType}"
-    defaultArtifactFile = "${basedir}/${artifactPath}/${pkgPath}${className}${suffix}.groovy"
+    artifactFile = new File("${basedir}/${artifactPath}/${pkgPath}${className}${suffix}${fileType}")
+    defaultArtifactFile = new File("${basedir}/${artifactPath}/${pkgPath}${className}${suffix}.groovy")
 
     fullyQualifiedClassName = "${packageName ? packageName + '.' : ''}$className${suffix}"
 
@@ -132,8 +133,8 @@ createArtifact = { Map args = [:] ->
         ant.replace(file: artifactFile, token: "@artifact.superclass@", value: args["superClass"])
     }
 
-    event("CreatedFile", [artifactFile])
-    event("CreatedArtefact", [type, className])
+    event('CreatedFile', [artifactFile])
+    event('CreatedArtefact', [type, className])
 }
 
 templateExists = { template, fileType ->

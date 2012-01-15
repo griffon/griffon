@@ -39,4 +39,9 @@ public class CreateScriptCommand extends AbstractGriffonCommand {
             description = "Archetype to be searched for templates.",
             required = false)
     private String archetype = "default";
+
+    @Option(name = "--with-command-support",
+            description = "Creates additional files required for shell options and help.",
+            required = false)
+    private boolean withCommandSupport;
 }

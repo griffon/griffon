@@ -21,6 +21,7 @@
  */
 
 import griffon.util.GriffonUtil
+import griffon.util.GriffonNameUtils
 
 includeTargets << griffonScript('_GriffonCreateArtifacts')
 
@@ -52,6 +53,40 @@ target(createScript: "Creates a Griffon Gant Script") {
             replacefilter(token: '@script.name@', value: name)
             replacefilter(token: "${className}Tests", value: className)
         }
+    }
+
+    if (argsMap['with-command-support']) {
+        commandName = className.toLowerCase()
+        commandScope = griffonSettings.isPluginProject() ? GriffonNameUtils.getPropertyName(griffonAppName) : 'app'
+        createArtifact(
+                name:     name,
+                suffix:   'Command',
+                type:     'ShellCommand',
+                fileType: 'java',
+                path:     'src/cli/org/codehaus/griffon/cli/shell/command'
+        )
+        ant.replace(file: artifactFile) {
+            replaceFilter(token: '@command.name@', value: commandName)
+            replaceFilter(token: '@command.scope@', value: commandScope)
+        }
+
+        createArtifact(
+                name:     commandName,
+                suffix:   '',
+                type:     'ShellHelp',
+                fileType: 'txt',
+                path:     'src/cli/org/codehaus/griffon/cli/shell/help'
+        )
+        ant.replace(file: artifactFile) {
+            replaceFilter(token: '@command.name@', value: commandName)
+        }
+
+        ant.move(
+                file: artifactFile,
+                tofile: new File(artifactFile.parentFile, "${commandName}.txt")
+        )
+
+        touch(file: "src/cli/org/codehaus/griffon/cli/shell/command/${commandName}.txt")
     }
 }
 

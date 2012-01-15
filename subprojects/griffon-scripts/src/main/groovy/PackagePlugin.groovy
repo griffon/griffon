@@ -86,7 +86,7 @@ target(name: 'package_plugin', description: '',
         compile = "compile(group: 'org.codehaus.griffon.plugins', name: 'griffon-${pluginName}', version: '${pluginVersion}', classifier: 'runtime')"
     }
     if (compileJar.exists()) {
-        compile += "\n\t\tcompile(group: 'org.codehaus.griffon.plugins', name: 'griffon-${pluginName}', version: '${pluginVersion}' classifier: 'compile')"
+        compile += "\n\t\tcompile(group: 'org.codehaus.griffon.plugins', name: 'griffon-${pluginName}', version: '${pluginVersion}', classifier: 'compile')"
     }
     String test = ''
     if (testJar.exists()) {

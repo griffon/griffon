@@ -24,8 +24,12 @@ import static org.apache.commons.lang.WordUtils.wrap
  * @author Andres Almiray
  */
 
+includeTargets << griffonScript('_GriffonResolveDependencies')
+
 target(name: 'help', description: 'Displays this help or help about a command',
         prehook: null, posthook: null) {
+    depends(resolveDependencies)
+
     String command = argsMap.command ?: args
     if (command) {
         int maxwidth = 72i
