@@ -447,3 +447,9 @@ target(updateAppProperties: "Updates default application.properties") {
 }
 
 buildConfig.griffon.application.mainClass = buildConfig.griffon.application.mainClass ?: 'griffon.test.mock.MockGriffonApplication'
+
+resetDependencyResolution = {
+    pluginSettings.clearCaches()
+    runDependencyResolution = true
+    classpathSet = false
+}

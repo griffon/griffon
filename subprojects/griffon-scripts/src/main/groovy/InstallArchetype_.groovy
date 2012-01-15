@@ -26,6 +26,7 @@ includeTargets << griffonScript('_GriffonArtifacts')
 target(installArchetype: "Installs an archetype for the given URL or name and version") {
     ant.mkdir(dir: artifactBase(Archetype.TYPE))
     installArtifact(Archetype.TYPE)
+    resetDependencyResolution()
 }
 
 setDefaultTarget(installArchetype)

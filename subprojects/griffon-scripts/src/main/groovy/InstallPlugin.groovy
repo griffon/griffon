@@ -26,6 +26,7 @@ includeTargets << griffonScript('_GriffonArtifacts')
 target(installPlugin: "Installs a plugin for the given URL or name and version") {
     ant.mkdir(dir: artifactBase(Plugin.TYPE))
     installArtifact(Plugin.TYPE)
+    resetDependencyResolution()
 }
 
 setDefaultTarget(installPlugin)

@@ -39,6 +39,7 @@ target('resolveDependencies': '') {
             exit(1)
         }
 
+        pluginSettings.clearCaches()
         pluginSettings.resolveAndAddAllPluginDependencies()
         long end = System.currentTimeMillis()
         event 'StatusFinal', ["Plugin dependencies resolved in ${end - start} ms."]
@@ -57,6 +58,7 @@ target('resolveDependencies': '') {
             griffonSettings.updateDependenciesFor 'test', files
         }
 // XXX -- NATIVE
+        runDependencyResolution = false
     }
 }
 

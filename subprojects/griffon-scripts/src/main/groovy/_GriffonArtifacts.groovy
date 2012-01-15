@@ -109,6 +109,7 @@ installPlugins = { Metadata md, Map<String, String> plugins ->
     ArtifactInstallEngine artifactInstallEngine = createArtifactInstallEngine(md)
     artifactInstallEngine.installPlugins(plugins)
     md.reload()
+    resetDependencyResolution()
 }
 
 installPluginExternal = { Metadata md, String name, String version = null ->
@@ -122,6 +123,7 @@ installPluginsLatest = { Metadata md, List<String> plugins ->
         map
     }
     installPlugins(md, transformed)
+    resetDependencyResolution()
 }
 
 installArtifactErrorMessage = { type ->
