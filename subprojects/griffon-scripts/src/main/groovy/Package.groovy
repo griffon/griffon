@@ -267,8 +267,11 @@ target(_copyLaunchScripts: "") {
     if (buildConfig.griffon.memory?.max) {
         javaOpts << "-Xmx$buildConfig.griffon.memory.max"
     }
+    if (buildConfig.griffon.memory?.minPermSize) {
+        javaOpts << "-XX:PermSize=$buildConfig.griffon.memory.minPermSize"
+    }
     if (buildConfig.griffon.memory?.maxPermSize) {
-        javaOpts << "-XX:maxPermSize=$buildConfig.griffon.memory.maxPermSize"
+        javaOpts << "-XX:MaxPermSize=$buildConfig.griffon.memory.maxPermSize"
     }
     if (buildConfig.griffon.app?.javaOpts) {
         buildConfig.griffon.app?.javaOpts.each { javaOpts << it }

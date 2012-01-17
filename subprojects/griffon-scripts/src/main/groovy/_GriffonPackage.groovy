@@ -541,15 +541,21 @@ target(name: 'generateJNLP', description: "Generates the JNLP File",
 // XXX -- NATIVE
 
     memOptions = []
+    def permOptions = []
     if (buildConfig.griffon.memory?.min) {
         memOptions << "initial-heap-size='$buildConfig.griffon.memory.min'"
     }
     if (buildConfig.griffon.memory?.max) {
         memOptions << "max-heap-size='$buildConfig.griffon.memory.max'"
     }
+    if (buildConfig.griffon.memory?.minPermSize) {
+        permOptions << "-XX:PermSize=$buildConfig.griffon.memory.minPermSize"
+    }
     if (buildConfig.griffon.memory?.maxPermSize) {
-        // may be fragile
-        memOptions << "java-vm-args='-XX:maxPermSize=$buildConfig.griffon.memory.maxPermSize'"
+        permOptions << "-XX:MaxPermSize=$buildConfig.griffon.memory.maxPermSize"
+    }
+    if(permOptions) {
+        memOptions << "java-vm-args='${permOptions.join(' ')}'"
     }
 
     doPackageTextReplacement(jardir, "*.jnlp,*.html")
