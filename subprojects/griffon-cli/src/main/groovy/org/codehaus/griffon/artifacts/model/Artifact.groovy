@@ -41,5 +41,7 @@ abstract class Artifact {
 
     abstract Map asMap()
 
+    abstract Map asMap(boolean includeReleases)
+
     abstract def toJSON()
 }

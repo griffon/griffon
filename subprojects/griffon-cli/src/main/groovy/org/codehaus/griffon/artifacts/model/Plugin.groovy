@@ -41,8 +41,8 @@ class Plugin extends Artifact {
         builder
     }
 
-    Map asMap() {
-        [
+    Map asMap(boolean includeReleases = true) {
+        Map map = [
                 type: type,
                 name: name,
                 title: title,
@@ -51,7 +51,10 @@ class Plugin extends Artifact {
                 toolkits: toolkits*.getLowercaseName(),
                 platforms: platforms*.getLowercaseName(),
                 authors: authors*.asMap(),
-                releases: releases*.asMap()
         ]
+        if (includeReleases) {
+            map.releases = releases*.asMap()
+        }
+        map
     }
 }

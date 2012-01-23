@@ -93,14 +93,14 @@ class ArtifactInstallEngine {
 
         Map<String, String> pluginsToDelete = [:]
         Map<String, String> missingPlugins = [:]
-        registeredPlugins.each {name, version ->
+        registeredPlugins.each { name, version ->
             String v = installedPlugins[name]
-            if (v != version) {
+            if (version.endsWith('-SNAPSHOT') || v != version) {
                 missingPlugins[name] = version
             }
         }
 
-        installedPlugins.each {name, version ->
+        installedPlugins.each { name, version ->
             String v = registeredPlugins[name]
             if (v != version) {
                 pluginsToDelete[name] = version
@@ -123,8 +123,8 @@ class ArtifactInstallEngine {
             if (todelete) LOG.debug("Plugins to be deleted:\n\t${todelete}")
         }
 
-        pluginsToDelete.each {name, version ->
-            eventHandler 'StatusUpdate', "Plugin ${name}-${version} is installed, but was not found in the application's metadata. Removing this plugin from the application's plugin base"
+        pluginsToDelete.each { name, version ->
+            if (!version.endsWith('-SNAPSHOT')) eventHandler 'StatusUpdate', "Plugin ${name}-${version} is installed, but was not found in the application's metadata. Removing this plugin from the application's plugin base"
             ant.delete(dir: getInstallPathFor(Plugin.TYPE, name, version), failonerror: false)
             installedPlugins.remove(name)
         }
@@ -256,8 +256,23 @@ class ArtifactInstallEngine {
                 if (dependency.evicted) {
                     doUninstall(type, dependency.name, dependency.version)
                 } else {
+                    if (dependency.snapshot) {
+                        Map<String, Release> installedReleases = ArtifactUtils.getInstalledReleases(Plugin.TYPE)
+                        Release installedRelease = installedReleases[dependency.name]
+                        if (installedRelease) {
+                            if (LOG.debugEnabled) {
+                                LOG.debug("${dependency.name}-${dependency.version} installed=[checksum: ${installedRelease.checksum}, date: ${installedRelease.date}] download=[checksum: ${dependency.release.checksum}, date: ${dependency.release.date}] ")
+                            }
+                            if (installedRelease.checksum == dependency.release.checksum ||
+                                    installedRelease.date >= dependency.release.date) continue
+                        }
+                    }
+
                     File file = dependency.repository.downloadFile(type, dependency.name, dependency.version, null)
                     installFromFile(type, file)
+                    String artifactInstallPath = ArtifactUtils.getInstallPathFor(Plugin.TYPE, dependency.name, dependency.version)
+                    File releaseFile = new File(artifactInstallPath, 'plugin.json')
+                    releaseFile.text = dependency.release.toJSON().toString()
                 }
             } catch (Exception e) {
                 failedDependencies << dependency
@@ -308,7 +323,7 @@ class ArtifactInstallEngine {
         Map<String, ArtifactDependency> installedDependencies = [:]
         installedReleases.each { String key, release ->
             ArtifactDependency dep = installedDependencies[key]
-            if (!dep) {
+            if (!dep && !release.version.endsWith('-SNAPSHOT')) {
                 dep = new ArtifactDependency(key)
                 dep.version = release.version
                 dep.installed = true
@@ -384,7 +399,7 @@ class ArtifactInstallEngine {
             }
         }
 
-        if (new File(artifactInstallPath).exists()) {
+        if (!release.snapshot && new File(artifactInstallPath).exists()) {
             if (!commandLineHelper.confirmInput("${capitalize(type)} '${releaseName}' is already installed. Overwrite?")) {
                 return
             }

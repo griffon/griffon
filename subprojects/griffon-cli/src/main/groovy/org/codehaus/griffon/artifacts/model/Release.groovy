@@ -35,6 +35,10 @@ class Release {
     List<Map<String, String>> dependencies = []
     File file
 
+    boolean isSnapshot() {
+        version.endsWith('-SNAPSHOT')
+    }
+
     String toString() {
         [
                 version: version,
@@ -49,7 +53,7 @@ class Release {
 
     def toJSON() {
         JsonBuilder builder = new JsonBuilder()
-        builder.call(asMap())
+        builder.call(asMap() + artifact.asMap(false))
         builder
     }
 

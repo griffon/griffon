@@ -31,15 +31,18 @@ class Archetype extends Artifact {
         builder
     }
 
-    Map asMap() {
-        [
+    Map asMap(boolean includeReleases = true) {
+        Map map = [
                 type: type,
                 name: name,
                 title: title,
                 license: license,
                 source: source ?: '',
-                authors: authors*.asMap(),
-                releases: releases*.asMap()
+                authors: authors*.asMap()
         ]
+        if (includeReleases) {
+            map.releases = releases*.asMap()
+        }
+        map
     }
 }

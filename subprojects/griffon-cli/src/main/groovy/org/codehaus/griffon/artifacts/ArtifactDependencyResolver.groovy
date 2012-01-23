@@ -64,15 +64,61 @@ class ArtifactDependencyResolver {
             LOG.debug("Resolving for ${type}:${name}:${version ? version : '<noversion>'}")
         }
 
-        Artifact artifact = null
-        ArtifactRepositoryRegistry.instance.withRepositories {String repoName, ArtifactRepository repository ->
-            if (artifact) return
-            artifact = repository.findArtifact(type, name)
+        Release release = null
+        List<Map<String, Object>> snapshots = []
+        ArtifactRepositoryRegistry.instance.withRepositories { String repoName, ArtifactRepository repository ->
+            if (release) return
+            Artifact artifact = repository.findArtifact(type, name)
             if (artifact) {
                 artifactDependency.repository = repository
+
+                String v = version
+                if (v) {
+                    release = artifact.releases.find {it.version == version}
+                } else {
+                    for (r in artifact.releases) {
+                        if (isValidVersion(GriffonUtil.griffonVersion, r.griffonVersion)) {
+                            release = r
+                            v = r.version
+                            break
+                        }
+                    }
+                }
+
+                if (v.endsWith('-SNAPSHOT')) {
+                    snapshots << [
+                            release: release,
+                            repository: repository
+                    ]
+                    release = null
+                }
             }
         }
 
+        if(snapshots) {
+            snapshots.sort { a, b ->
+                b.release.date <=> a.release.date
+            }
+            release = snapshots[0].release
+            artifactDependency.repository = snapshots[0].repository
+        }
+
+        if(release) {
+            if (LOG.debugEnabled) {
+                LOG.debug("Resolved ${type}:${name}:${version} with repository ${artifactDependency.repository.name}")
+            }
+            artifactDependency.release = release
+            artifactDependency.version = release.version
+
+            ArtifactDependency.Key key = new ArtifactDependency.Key(name, release.version)
+            ArtifactDependency processed = processedDependencies.get(key)
+            if (processed) return processed
+
+            processedDependencies[key] = artifactDependency
+            return resolveDependenciesOf(artifactDependency)
+        }
+
+        /*
         if (artifact) {
             if (version) {
                 Release release = artifact.releases.find {it.version == version}
@@ -108,6 +154,7 @@ class ArtifactDependencyResolver {
                 }
             }
         }
+        */
 
         if (LOG.debugEnabled) {
             LOG.debug("Could not resolve ${type}:${name}:${version ? version : '<noversion>'}")

@@ -56,6 +56,10 @@ class ArtifactDependency {
         }
     }
 
+    boolean isSnapshot() {
+        version?.endsWith('-SNAPSHOT')
+    }
+
     void updateConflicts() {
         for (dependency in dependencies) {
             dependency.updateConflicts()
