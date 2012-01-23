@@ -81,7 +81,7 @@ resetBaseDirectory = { String basedir ->
     griffonSettings.loadConfig()
 
     // Reload the application metadata.
-    metadataFile = new File("$basedir/${Metadata.FILE}")
+    metadataFile = new File("${basedir}/application.properties")
     metadata = Metadata.getInstance(metadataFile)
 
     applicationConfigFile = new File(basedir, 'griffon-app/conf/Application.groovy')

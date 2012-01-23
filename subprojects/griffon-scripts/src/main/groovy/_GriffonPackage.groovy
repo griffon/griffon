@@ -21,6 +21,7 @@ import griffon.util.RunMode
 import java.text.SimpleDateFormat
 import java.util.zip.ZipEntry
 import java.util.zip.ZipFile
+import org.springframework.core.io.Resource
 import static griffon.util.GriffonApplicationUtils.is64Bit
 import static griffon.util.GriffonApplicationUtils.osArch
 import static griffon.util.GriffonNameUtils.capitalize
@@ -88,7 +89,10 @@ target(name: 'packageResources', description: "Presp app/plugin resources for pa
     resourcesDir = new File("${resourcesDirPath}/griffon-app/resources")
     ant.mkdir(dir: resourcesDir)
 
-    if (!isPluginProject || isAddonPlugin) collectArtifactMetadata()
+    if (!isPluginProject || isAddonPlugin) {
+        collectArtifactMetadata()
+        collectAddonMetadata()
+    }
 
     if (buildConfig.griffon.enable.native2ascii) {
         profile("converting native message bundles to ascii") {
@@ -126,7 +130,7 @@ target(name: 'packageResources', description: "Presp app/plugin resources for pa
     }
 
     // GRIFFON-189 add environment info to metadata
-    def metaFile = new File(projectMainClassesDir, metadataFile.name)
+    File metaFile = new File(projectMainClassesDir, metadataFile.name)
     updateMetadata(metaFile, (Environment.KEY): Environment.current.name)
 
     ant.copy(todir: resourcesDirPath, failonerror: false) {
@@ -173,6 +177,32 @@ collectArtifactMetadata = {
         artifactMetadataFile.withPrintWriter { writer ->
             artifacts.each { type, list ->
                 writer.println("$type = '${list.join(',')}'")
+            }
+        }
+    }
+}
+
+collectAddonMetadata = {
+    Map addons = [:]
+    pluginSettings.sortedPluginDirectories.each { String name, Resource dir ->
+        if (resolveResources("file://${dir.file}/dist/griffon-${name}-*-runtime.jar") ||
+                resolveResources("file://${dir.file}/addon/griffon-${name}-addon-*.jar")) {
+            String pluginDirName = dir.file.name
+            String pluginVersion = pluginDirName[(name.size() + 1)..-1]
+            addons[name] = pluginVersion
+        }
+    }
+    if (addons) {
+        // toolkit plugin always goes first
+        String toolkit = Metadata.current.getApplicationToolkit()
+        String toolkitVersion = addons.remove(toolkit)
+        addons = [(toolkit): toolkitVersion] + addons
+        File addonMetadataDir = new File("${resourcesDirPath}/griffon-app/resources/META-INF")
+        addonMetadataDir.mkdirs()
+        File addonMetadataFile = new File(addonMetadataDir, '/griffon-addons.properties')
+        addonMetadataFile.withPrintWriter { writer ->
+            addons.each { name, version ->
+                writer.println("$name = $version")
             }
         }
     }
@@ -554,7 +584,7 @@ target(name: 'generateJNLP', description: "Generates the JNLP File",
     if (buildConfig.griffon.memory?.maxPermSize) {
         permOptions << "-XX:MaxPermSize=$buildConfig.griffon.memory.maxPermSize"
     }
-    if(permOptions) {
+    if (permOptions) {
         memOptions << "java-vm-args='${permOptions.join(' ')}'"
     }
 

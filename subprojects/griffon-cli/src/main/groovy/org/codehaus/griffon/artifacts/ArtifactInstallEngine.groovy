@@ -423,6 +423,7 @@ class ArtifactInstallEngine {
         }
 
         if (settings.isGriffonProject() && !settings.isArchetypeProject()) {
+            Metadata.reload()
             switch (type) {
                 case Plugin.TYPE:
                     metadata["${type}s." + release.artifact.name] = release.version
@@ -432,6 +433,7 @@ class ArtifactInstallEngine {
                     break
             }
             metadata.persist()
+            Metadata.reload()
         }
 
         if (!installedArtifacts.contains(artifactInstallPath)) {
@@ -586,7 +588,7 @@ class ArtifactInstallEngine {
                 LOG.debug("Plugin ${artifactNameAndVersion} requires toolkits: ${requiredToolkits}")
             }
             if (requiredToolkits) {
-                List<String> supportedToolkits = metadata.getApplicationToolkits().toList()
+                List<String> supportedToolkits = metadata.getApplicationToolkit() ? [metadata.getApplicationToolkit()] : []
                 if (LOG.debugEnabled) {
                     LOG.debug("Supported toolkits: ${supportedToolkits}")
                 }

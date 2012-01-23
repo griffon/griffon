@@ -35,7 +35,7 @@ public class Metadata extends Properties {
     public static final String APPLICATION_GRIFFON_VERSION = "app.griffon.version";
     public static final String GRIFFON_START_DIR = "griffon.start.dir";
     public static final String GRIFFON_WORKING_DIR = "griffon.working.dir";
-    public static final String APPLICATION_TOOLKITS = "app.toolkits";
+    public static final String APPLICATION_TOOLKIT = "app.toolkit";
 
     private static final Pattern SKIP_PATTERN = Pattern.compile("^.*\\/griffon-.*.jar!\\/application.properties$");
     private static Reference<Metadata> metadata = new SoftReference<Metadata>(new Metadata());
@@ -188,15 +188,10 @@ public class Metadata extends Properties {
     }
 
     /**
-     * @return Supported toolkits by this application
+     * @return Supported toolkit by this application
      */
-    public String[] getApplicationToolkits() {
-        String toolkits = (String) get(APPLICATION_TOOLKITS);
-        if (toolkits == null) {
-            return new String[0];
-        } else {
-            return toolkits.split(",");
-        }
+    public String getApplicationToolkit() {
+        return (String) get(APPLICATION_TOOLKIT);
     }
 
     /**
