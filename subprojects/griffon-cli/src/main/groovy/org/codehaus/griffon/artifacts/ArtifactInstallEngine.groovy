@@ -29,6 +29,8 @@ import griffon.util.*
 import static griffon.util.GriffonNameUtils.*
 import static griffon.util.GriffonUtil.getScriptName
 import static org.codehaus.griffon.artifacts.ArtifactUtils.*
+import static org.codehaus.griffon.artifacts.ArtifactUtils.getInstalledRelease
+import static org.codehaus.griffon.artifacts.ArtifactUtils.getInstallPathFor
 
 /**
  * @author Andres Almiray
@@ -257,8 +259,7 @@ class ArtifactInstallEngine {
                     doUninstall(type, dependency.name, dependency.version)
                 } else {
                     if (dependency.snapshot) {
-                        Map<String, Release> installedReleases = ArtifactUtils.getInstalledReleases(Plugin.TYPE)
-                        Release installedRelease = installedReleases[dependency.name]
+                        Release installedRelease = getInstalledRelease(Plugin.TYPE, dependency.name, dependency.version)
                         if (installedRelease) {
                             if (LOG.debugEnabled) {
                                 LOG.debug("${dependency.name}-${dependency.version} installed=[checksum: ${installedRelease.checksum}, date: ${installedRelease.date}] download=[checksum: ${dependency.release.checksum}, date: ${dependency.release.date}] ")
@@ -270,7 +271,7 @@ class ArtifactInstallEngine {
 
                     File file = dependency.repository.downloadFile(type, dependency.name, dependency.version, null)
                     installFromFile(type, file)
-                    String artifactInstallPath = ArtifactUtils.getInstallPathFor(Plugin.TYPE, dependency.name, dependency.version)
+                    String artifactInstallPath = getInstallPathFor(Plugin.TYPE, dependency.name, dependency.version)
                     File releaseFile = new File(artifactInstallPath, 'plugin.json')
                     releaseFile.text = dependency.release.toJSON().toString()
                 }

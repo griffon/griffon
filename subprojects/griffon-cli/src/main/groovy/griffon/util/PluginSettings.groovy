@@ -140,30 +140,6 @@ class PluginSettings {
         pluginDir
     }
 
-    Resource[] getPluginBuildJars() {
-        resolveForEachPlugin('pluginTestJars') { pluginDir ->
-            resolveResources("file//${pluginDir}/lib/build/*.jar")
-        }
-    }
-
-    Resource[] getPluginCompileJars() {
-        resolveForEachPlugin('pluginTestJars') { pluginDir ->
-            resolveResources("file//${pluginDir}/lib/compile/*.jar")
-        }
-    }
-
-    Resource[] getPluginRuntimeJars() {
-        resolveForEachPlugin('pluginTestJars') { pluginDir ->
-            resolveResources("file//${pluginDir}/lib/runtime/*.jar")
-        }
-    }
-
-    Resource[] getPluginTestJars() {
-        resolveForEachPlugin('pluginTestJars') { pluginDir ->
-            resolveResources("file//${pluginDir}/lib/test/*.jar")
-        }
-    }
-
     void doWithPlugins(Closure closure) {
         getPlugins().each { pluginName, release ->
             String pluginVersion = release.version

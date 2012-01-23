@@ -101,6 +101,22 @@ class ArtifactUtils {
         artifacts
     }
 
+    static Release getInstalledRelease(String type, String name) {
+        Resource[] resources = resolveResources("file://${artifactBase(type)}/${name}-*/${type}.json")
+        if(resources[0]?.file?.exists()) {
+            return Release.makeFromFile(type, resources[0].file)
+        }
+        return null
+    }
+
+    static Release getInstalledRelease(String type, String name, String version) {
+        Resource[] resources = resolveResources("file://${artifactBase(type)}/${name}-${version}/${type}.json")
+        if(resources[0]?.file?.exists()) {
+            return Release.makeFromFile(type, resources[0].file)
+        }
+        return null
+    }
+
     /**
      * Finds all artifacts of the given type that are registered with the project's metadata.
      *

@@ -51,6 +51,7 @@ class Plugin extends Artifact {
                 toolkits: toolkits*.getLowercaseName(),
                 platforms: platforms*.getLowercaseName(),
                 authors: authors*.asMap(),
+                description: description
         ]
         if (includeReleases) {
             map.releases = releases*.asMap()
