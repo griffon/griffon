@@ -273,7 +273,7 @@ class AddonHelper {
     }
 
     private static void _addProps(MetaClass mc, Map props, String prefix) {
-        props.each = { pk, accessors ->
+        props.each { pk, accessors ->
             String beanName
             if (pk.length() > 1) {
                 beanName = pk[0].toUpperCase() + pk.substring(1)
