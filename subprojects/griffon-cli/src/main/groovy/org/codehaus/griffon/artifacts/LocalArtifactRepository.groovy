@@ -28,6 +28,7 @@ import org.codehaus.griffon.artifacts.model.Release
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import static griffon.util.GriffonNameUtils.isBlank
+import static org.codehaus.griffon.artifacts.ArtifactUtils.parseArtifactFromJSON
 
 /**
  * @author Andres Almiray
@@ -74,7 +75,19 @@ class LocalArtifactRepository extends AbstractArtifactRepository {
         File artifactFile = new File(releasePath, fileName)
         if (artifactFile.exists()) {
             def json = new JsonSlurper().parseText(artifactFile.text)
-            return ArtifactUtils.parseArtifactFromJSON(type, json)
+            return parseArtifactFromJSON(type, json)
+        }
+        null
+    }
+
+    Artifact findArtifact(String type, String name, String version) {
+        File releasePath = new File(path, "${type}s/${name}/${version}")
+        String fileName = "${type}.json"
+
+        File artifactFile = new File(releasePath, fileName)
+        if (artifactFile.exists()) {
+            def json = new JsonSlurper().parseText(artifactFile.text)
+            return parseArtifactFromJSON(type, json)
         }
         null
     }

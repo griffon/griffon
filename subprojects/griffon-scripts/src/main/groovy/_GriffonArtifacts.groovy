@@ -170,6 +170,8 @@ doInstallArtifactFromZip = { String type, File file, Metadata md = metadata ->
 
 doInstallArtifact = { ArtifactRepository artifactRepository, String type, String name, String version = null, Metadata md = metadata ->
     return withArtifactInstall(type) {
+        def release = null
+
         if (!version) {
             Artifact artifact = artifactRepository.findArtifact(type, name)
             if (!artifact) {
@@ -177,9 +179,10 @@ doInstallArtifact = { ArtifactRepository artifactRepository, String type, String
                 event('StatusError', ["${capitalize(type)} ${name} was not found in repository ${artifactRepository.name}."])
                 exit 1
             }
-            for (release in artifact.releases) {
-                if (isValidVersion(GriffonUtil.getGriffonVersion(), release.griffonVersion)) {
-                    version = release.version
+            for (r in artifact.releases) {
+                if (isValidVersion(GriffonUtil.getGriffonVersion(), r.griffonVersion)) {
+                    version = r.version
+                    release = r
                     break
                 }
             }
@@ -188,9 +191,20 @@ doInstallArtifact = { ArtifactRepository artifactRepository, String type, String
                 event('StatusError', ["Repository ${artifactRepository.name} does not contain a suitable release for ${type} ${name}."])
                 exit 1
             }
+        } else {
+            Artifact artifact = artifactRepository.findArtifact(type, name, version)
+            if(artifact?.releases) release = artifact.releases[0]
         }
+
+        if(!release) return false
+
         File file = artifactRepository.downloadFile(type, name, version, null)
         doInstallFromFile(type, file, md)
+
+        ArtifactInstallEngine artifactInstallEngine = createArtifactInstallEngine(md)
+        artifactInstallEngine.updateLocalReleaseMetadata(type, release)
+        artifactInstallEngine.publishReleaseToGriffonLocal(release, file)
+
         return true
     }
 }

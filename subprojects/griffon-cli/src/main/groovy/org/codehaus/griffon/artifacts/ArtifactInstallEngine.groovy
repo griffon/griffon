@@ -16,6 +16,8 @@
 
 package org.codehaus.griffon.artifacts
 
+import groovy.json.JsonBuilder
+import org.apache.commons.io.FileUtils
 import org.codehaus.griffon.artifacts.model.Archetype
 import org.codehaus.griffon.artifacts.model.Artifact
 import org.codehaus.griffon.artifacts.model.Plugin
@@ -28,9 +30,8 @@ import org.slf4j.LoggerFactory
 import griffon.util.*
 import static griffon.util.GriffonNameUtils.*
 import static griffon.util.GriffonUtil.getScriptName
+import static griffon.util.GriffonUtil.sanitize
 import static org.codehaus.griffon.artifacts.ArtifactUtils.*
-import static org.codehaus.griffon.artifacts.ArtifactUtils.getInstalledRelease
-import static org.codehaus.griffon.artifacts.ArtifactUtils.getInstallPathFor
 
 /**
  * @author Andres Almiray
@@ -271,9 +272,9 @@ class ArtifactInstallEngine {
 
                     File file = dependency.repository.downloadFile(type, dependency.name, dependency.version, null)
                     installFromFile(type, file)
-                    String artifactInstallPath = getInstallPathFor(Plugin.TYPE, dependency.name, dependency.version)
-                    File releaseFile = new File(artifactInstallPath, 'plugin.json')
-                    releaseFile.text = dependency.release.toJSON().toString()
+
+                    updateLocalReleaseMetadata(Plugin.TYPE, dependency.release)
+                    publishReleaseToGriffonLocal(dependency.release, file)
                 }
             } catch (Exception e) {
                 failedDependencies << dependency
@@ -300,6 +301,61 @@ class ArtifactInstallEngine {
         }
 
         true
+    }
+
+    void updateLocalReleaseMetadata(String type, Release release) {
+        String artifactInstallPath = getInstallPathFor(type, release.artifact.name, release.version)
+        File releaseFile = new File(artifactInstallPath, "${type}.json")
+        releaseFile.text = release.toJSON().toString()
+    }
+
+    void publishReleaseToGriffonLocal(Release release, File file) {
+        if (!release.snapshot && !settings.config.griffon.disable.local.repository.sync) {
+            _publishReleaseToGriffonLocal(release.artifact.type, release.artifact.name, release.version, file)
+        }
+    }
+
+    private void _publishReleaseToGriffonLocal(String type, String name, String version, File file) {
+        ArtifactRepository griffonLocal = ArtifactRepositoryRegistry.instance.findRepository(ArtifactRepository.DEFAULT_LOCAL_NAME)
+
+        // don't install if already available at griffon-local
+        if (griffonLocal.findArtifact(type, name, version)) return
+
+        File tmpdir = new File(System.getProperty('java.io.tmpdir'), "griffon-${name}-${version}")
+        tmpdir.deleteOnExit()
+        try {
+            tmpdir.mkdirs()
+
+            Release release = getInstalledRelease(type, name, version)
+
+            Map map = release.artifact.asMap(false)
+            map.release = release.asMap()
+            JsonBuilder builder = new JsonBuilder()
+            builder.call(map)
+
+            File releaseDescriptor = new File("${tmpdir}/${type}.json")
+            releaseDescriptor.text = builder.toString()
+
+            File checksum = new File("${tmpdir}/griffon-${name}-${version}.zip.md5")
+            checksum.text = release.checksum
+
+            FileUtils.copyFile(file, new File("${tmpdir}/griffon-${name}-${version}.zip"))
+
+            File releaseZipFile = new File("${System.getProperty('java.io.tmpdir')}/griffon-${name}-${version}.zip")
+            ant.zip(destfile: releaseZipFile, filesonly: true) {
+                fileset(dir: tmpdir)
+            }
+
+            release.file = releaseZipFile
+            griffonLocal.uploadRelease(release, null, null)
+            if (LOG.infoEnabled) {
+                LOG.info("Successfully published plugin ${name}-${version} to griffon-local.")
+            }
+        } catch (Exception e) {
+            if (LOG.warnEnabled) {
+                LOG.warn("Could not push release ${name}-${version} to griffon-local.", sanitize(e))
+            }
+        }
     }
 
     private List resolveDependenciesFor(ArtifactDependencyResolver resolver, String type, String name, String version) {
@@ -385,7 +441,7 @@ class ArtifactInstallEngine {
 
         String artifactName = release.artifact.name
         String releaseVersion = release.version
-        String releaseName = "${artifactName}-${release.version}"
+        String releaseName = "${artifactName}-${releaseVersion}"
         String artifactInstallPath = "${artifactBase(type)}/${releaseName}"
 
         if (resolveDependencies && type == Plugin.TYPE) {
@@ -408,7 +464,7 @@ class ArtifactInstallEngine {
 
         eventHandler 'StatusUpdate', "Software license of ${releaseName} is '${release.artifact.license}'"
 
-        for (dir in findAllArtifactDirsForName(type, release.artifact.name)) {
+        for (dir in findAllArtifactDirsForName(type, releaseName)) {
             ant.delete(dir: dir, failonerror: false)
         }
         ant.mkdir(dir: artifactInstallPath)
@@ -417,7 +473,7 @@ class ArtifactInstallEngine {
         switch (type) {
             case Plugin.TYPE:
                 variableStore["${getPropertyNameForLowerCaseHyphenSeparatedName(artifactName)}PluginDir"] = new File(artifactInstallPath).absoluteFile
-                variableStore["${getPropertyNameForLowerCaseHyphenSeparatedName(artifactName)}PluginVersion"] = release.version
+                variableStore["${getPropertyNameForLowerCaseHyphenSeparatedName(artifactName)}PluginVersion"] = releaseVersion
                 // TODO LEGACY - remove before 1.0
                 if (new File(artifactInstallPath, 'plugin.xml').exists()) {
                     generateDependencyDescriptorFor(artifactInstallPath, artifactName, releaseVersion)
@@ -438,16 +494,9 @@ class ArtifactInstallEngine {
                 break
         }
 
-        if (settings.isGriffonProject() && !settings.isArchetypeProject()) {
+        if (settings.isGriffonProject() && !settings.isArchetypeProject() && type == Plugin.TYPE) {
             Metadata.reload()
-            switch (type) {
-                case Plugin.TYPE:
-                    metadata["${type}s." + release.artifact.name] = release.version
-                    break
-                case Archetype.TYPE:
-                    metadata["${type}." + release.artifact.name] = release.version
-                    break
-            }
+            metadata["${type}s." + artifactName] = releaseVersion
             metadata.persist()
             Metadata.reload()
         }
@@ -639,29 +688,6 @@ class ArtifactInstallEngine {
             }
         }
     }
-
-    /*
-    private void verifyArtifact(ZipFile zipFile, json) {
-        String fileName = "griffon-${json.name}-${json.release.version}.zip"
-        ZipEntry artifactFileEntry = zipFile.getEntry(fileName)
-        ZipEntry md5ChecksumEntry = zipFile.getEntry("${fileName}.md5")
-
-        if (artifactFileEntry == null) {
-            throw new IllegalArgumentException("Release does not contain expected zip entry ${fileName}")
-        }
-        if (md5ChecksumEntry == null) {
-            throw new IllegalArgumentException("Release does not contain expected zip entry ${fileName}.md5")
-        }
-
-        byte[] bytes = zipFile.getInputStream(artifactFileEntry).bytes
-        String computedHash = MD5.encode(bytes)
-        String releaseHash = zipFile.getInputStream(md5ChecksumEntry).text
-
-        if (computedHash.trim() != releaseHash.trim()) {
-            throw new IllegalArgumentException("Wrong checksum for ${fileName}")
-        }
-    }
-    */
 
     private void runPluginScript(File scriptFile, fullPluginName, msg) {
         if (pluginScriptRunner != null) {

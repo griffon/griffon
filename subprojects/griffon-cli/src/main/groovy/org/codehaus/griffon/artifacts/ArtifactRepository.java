@@ -42,6 +42,8 @@ public interface ArtifactRepository {
 
     Artifact findArtifact(String type, String name);
 
+    Artifact findArtifact(String type, String name, String version);
+
     File downloadFile(String type, String name, String version, String username);
 
     boolean uploadRelease(Release release, String username, String password);

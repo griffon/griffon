@@ -83,6 +83,27 @@ class LegacyArtifactRepository extends AbstractArtifactRepository {
         artifact
     }
 
+    Artifact findArtifact(String type, String name, String version) {
+        if (LOG.debugEnabled) {
+            LOG.debug("${name}: searching for ${type}:${name}${version}")
+        }
+        Artifact artifact = null
+        if (type == Archetype.TYPE) return artifact
+
+        try {
+            String v = version.replaceAll('-','_')
+            v = v.replaceAll('\\.','_')
+            def response = http.request(path: "griffon-${name}/tags/RELEASE_${v}/plugin.json", contentType: JSON)
+            if (response.status == 200) {
+                artifact = parseArtifactFromJSON(type, response.data)
+            }
+        } catch (Exception e) {
+            if (LOG.warnEnabled) LOG.warn("[${this.name}] Could not locate artifact ${type}:${name}:${version}", GriffonExceptionHandler.sanitize(e))
+        }
+
+        artifact
+    }
+
     File downloadFile(String type, String name, String version, String username) {
         if (type == Archetype.TYPE) return null
 

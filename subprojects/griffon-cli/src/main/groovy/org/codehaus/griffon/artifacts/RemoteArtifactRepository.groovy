@@ -122,6 +122,19 @@ class RemoteArtifactRepository extends AbstractArtifactRepository {
         artifact
     }
 
+    Artifact findArtifact(String type, String name, String version) {
+        Artifact artifact = null
+        try {
+            def response = http().request(path: "api/${type}s/${name}/${version}", contentType: JSON)
+            if (response.status == 200) {
+                artifact = parseArtifactFromJSON(type, response.data)
+            }
+        } catch (Exception e) {
+            if (LOG.warnEnabled) LOG.warn("[${this.name}] Could not locate artifact ${type}:${name}:${version}", GriffonExceptionHandler.sanitize(e))
+        }
+        artifact
+    }
+
     File downloadFile(String type, String name, String version, String username) {
         File file = null
         try {
