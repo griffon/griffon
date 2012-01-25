@@ -46,11 +46,11 @@ subprojects { subproj ->
 
     repositories {
         mavenRepo name: 'Codehaus',       url: 'http://repository.codehaus.org'
-        mavenRepo name: 'Grails Central', url: 'http://repo.grails.org/grails/core/'
         mavenRepo name: 'SpringSource',   url: 'http://repository.springsource.com/maven/bundles/release'
         mavenRepo name: 'Gradle',         url: 'http://gradle.artifactoryonline.com/gradle/libs-releases-local'
         mavenCentral()
         mavenRepo name: 'Sonaytpe',       url: 'http://repository.sonatype.org/content/groups/public'
+        mavenRepo name: 'Grails Central', url: 'http://repo.grails.org/grails/core/'
     }
 
     tasks.withType(Jar).each{ jarTask ->

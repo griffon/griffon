@@ -25,8 +25,8 @@ configurations {
 
 dependencies {
     cobertura 'net.sourceforge.cobertura:cobertura:1.9.4.1',
-              'junit:junit:4.8.1'
-    clover 'com.cenqua.clover:clover:3.1.1'
+              'junit:junit:4.10'
+    clover 'com.cenqua.clover:clover:3.1.2'
 }
 
 coberturaEnabled = project.hasProperty('withCobertura')
@@ -63,9 +63,11 @@ test.doFirst  {
 
         ant."clover-clean"()
         ant.'clover-setup'(initString: "${buildDir}/clover/clover.db", tmpDir: "${buildDir}/clover/tmp") {
-            fileset(dir: 'src/main/groovy') {
-                include(name: '**/*.groovy')
-                include(name: '**/*.java')
+            doWithSourceDirs(sourceSets.main) { srcdir ->
+                fileset(dir: srcdir) {
+                    include(name: '**/*.groovy')
+                    include(name: '**/*.java')
+                }
             }
         }
         
@@ -90,7 +92,9 @@ test.doFirst  {
                 }
             }
 
-            src(path: 'src/main/groovy')
+            doWithSourceDirs(sourceSets.main) { srcdir ->
+                src(path: srcdir)
+            }
         }
         
         //copy resources
@@ -120,7 +124,9 @@ test.doLast {
         // create cobertura reports
         ant.'cobertura-report'(destdir:"${reportsDir}/coverage",
              format: 'html', datafile: cobSerFile) {
-            fileset(dir: 'src/main/groovy')
+            doWithSourceDirs(sourceSets.main) { srcdir ->
+                fileset(dir: srcdir)
+            }
         }
     }
 
@@ -133,5 +139,11 @@ test.doLast {
             current(outfile:"${reportsDir}/clover/clover.xml")
         }
         ant."clover-html-report"(outdir:"${reportsDir}/clover/html")
+    }
+}
+
+doWithSourceDirs = { sourceSet, callback ->
+    sourceSet.allSource.srcDirs.each { srcdir ->
+        if(srcdir.exists() && !srcdir.name.endsWith('resources')) callback(srcdir)
     }
 }
