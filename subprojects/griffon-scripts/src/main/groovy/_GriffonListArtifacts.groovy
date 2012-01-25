@@ -49,11 +49,13 @@ listArtifacts = { String type ->
         }
     }
 
-    if (artifactRepository) {
-        artifactLister(artifactRepository)
-    } else {
-        ArtifactRepositoryRegistry.instance.withRepositories {name, repository ->
-            artifactLister(repository)
+    if (!argsMap.installed) {
+        if (artifactRepository) {
+            artifactLister(artifactRepository)
+        } else {
+            ArtifactRepositoryRegistry.instance.withRepositories {name, repository ->
+                artifactLister(repository)
+            }
         }
     }
 
@@ -225,7 +227,7 @@ doListArtifactUpdates = { String type ->
                     println """
 ${capitalize(type)}s with available updates are listed below:
 ${'-' * 80}
-<${capitalize(type)}>                   <Current>         <Available>"""
+<${capitalize(type)}>                   <Current>             <Available>"""
                     headerDisplayed = true
                 }
                 println "${name.padRight(27 + (type == Archetype.TYPE ? 3 : 0), " ")}${version.padRight(20, " ")}  ${availableVersion}"

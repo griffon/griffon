@@ -31,13 +31,13 @@ target(shell: "Runs an embedded application in a Groovy Shell") {
     jardir = ant.antProject.replaceProperties(buildConfig.griffon.jars.destDir)
     ant.copy(todir: jardir) { fileset(dir: "${griffonHome}/lib/", includes: "jline-*.jar") }
 
-    if (!isPluginProject) {
+    if (!isPluginProject && !isArchetypeProject) {
         bootstrap()
         loadApp()
     }
 
     def b = new Binding()
-    if (!isPluginProject) b.app = griffonApp
+    if (!isPluginProject && !isArchetypeProject) b.app = griffonApp
 
     def shell = new Groovysh(classLoader, b, new IO(System.in, System.out, System.err))
     shell.run([] as String[])

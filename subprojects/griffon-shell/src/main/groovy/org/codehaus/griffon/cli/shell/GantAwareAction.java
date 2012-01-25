@@ -102,7 +102,6 @@ public class GantAwareAction extends AbstractGriffonShellCommand {
             // perform some cleanup in the binding
             System.setProperty(GriffonScriptRunner.KEY_SCRIPT_ARGS, "");
             binding.setVariable("argsMap", emptyArgsMap());
-            binding.setVariable("classpathSet", false);
         }
 
         return null;

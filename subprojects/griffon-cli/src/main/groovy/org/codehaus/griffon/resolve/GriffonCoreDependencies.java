@@ -122,6 +122,8 @@ public class GriffonCoreDependencies {
                                 ModuleRevisionId.newInstance("org.apache.ant", "ant", antVersion),
                                 ModuleRevisionId.newInstance("org.apache.ant", "ant-launcher", antVersion),
                                 ModuleRevisionId.newInstance("org.apache.ant", "ant-junit", antVersion),
+                                ModuleRevisionId.newInstance("org.fusesource.jansi", "jansi", "1.7"),
+                                ModuleRevisionId.newInstance("jline", "jline" ,"0.9.94"),
                                 ModuleRevisionId.newInstance("commons-io", "commons-io", "2.1"),
                                 ModuleRevisionId.newInstance("commons-lang", "commons-lang", "2.6"),
                                 ModuleRevisionId.newInstance("commons-codec", "commons-codec", "1.6"),

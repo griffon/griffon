@@ -21,7 +21,7 @@
  */
 
 // No point doing this stuff more than once.
-if (getBinding().variables.containsKey("_console_called")) return
+if (getBinding().variables.containsKey('_console_called')) return
 _console_called = true
 
 includeTargets << griffonScript('_GriffonBootstrap')
@@ -40,9 +40,9 @@ target(console: "Runs an embedded application in a Groovy console") {
 setDefaultTarget(console)
 
 createConsole = {
-    if (!isPluginProject) bootstrap()
+    if (!isPluginProject && !isArchetypeProject) bootstrap()
     def b = new Binding()
-    if (!isPluginProject) b.app = griffonApp
+    if (!isPluginProject && !isArchetypeProject) b.app = griffonApp
     def cl = griffonApp?.class?.classLoader ?: classLoader
 
     def console = new groovy.ui.Console(cl, b)

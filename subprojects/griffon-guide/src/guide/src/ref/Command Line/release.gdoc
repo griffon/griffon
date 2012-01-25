@@ -1,21 +1,21 @@
-h1. release-plugin
+h1. release
 
 h2. Purpose
 
-Releases a Griffon plugin to a griffon artifact repository
+Releases a Griffon plugin or archetype depending on the type of project. This is an alias for both [release-archetype|commandLine] and [release-plugin|commandLine].
 
 h2. Examples
 
 {code:java}
-griffon release-plugin
+griffon release
 {code}
 
 h2. Description
 
 Usage: 
 {code:java}
-griffon release-plugin
-griffon release-plugin --repository=myRepository
+griffon release
+griffon release --repository=myRepository
 {code}
 
 The command allows Griffon to manage the release process for you.
@@ -29,6 +29,6 @@ Options:
 * @no-release-notes@ - Do not ask for missing release notes.
 * @package-only@ - Create a release package but do not publish it.
 
-If you require access to the Griffon Central Repository and wish to release your plugin there contact a member of the Griffon development team. 
+If you require access to the Griffon Central Repository and wish to release your plugin/archetype there contact a member of the Griffon development team. 
 
-Once published, the plugin will automatically be available via the [list-plugins|commandLine] command.
+Once published, the artifact will automatically be available via the [list-plugins|commandLine] or [list-archetypes|commandLine] command.

@@ -32,7 +32,7 @@ public class ArchetypeInfoCommand extends AbstractGriffonCommand {
     @Option(name = "--repository",
             description = "Name of an specific repository where the search will be performed.",
             required = false)
-    private String repository;
+    private String repository = "griffon-central";
 
     @Argument(index = 0,
             name = "name",

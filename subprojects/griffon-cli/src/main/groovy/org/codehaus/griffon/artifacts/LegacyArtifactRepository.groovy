@@ -25,6 +25,7 @@ import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import static groovyx.net.http.ContentType.JSON
 import static org.codehaus.griffon.artifacts.ArtifactUtils.parseArtifactFromJSON
+import static org.codehaus.griffon.artifacts.ArtifactUtils.parseReleaseFromJSON
 
 /**
  * @author Andres Almiray
@@ -85,7 +86,7 @@ class LegacyArtifactRepository extends AbstractArtifactRepository {
 
     Artifact findArtifact(String type, String name, String version) {
         if (LOG.debugEnabled) {
-            LOG.debug("${name}: searching for ${type}:${name}${version}")
+            LOG.debug("${name}: searching for ${type}:${name}:${version}")
         }
         Artifact artifact = null
         if (type == Archetype.TYPE) return artifact
@@ -96,6 +97,10 @@ class LegacyArtifactRepository extends AbstractArtifactRepository {
             def response = http.request(path: "griffon-${name}/tags/RELEASE_${v}/plugin.json", contentType: JSON)
             if (response.status == 200) {
                 artifact = parseArtifactFromJSON(type, response.data)
+                Release release = parseReleaseFromJSON(response.data)
+                release.artifact = artifact
+                artifact.releases.clear()
+                artifact.releases << release
             }
         } catch (Exception e) {
             if (LOG.warnEnabled) LOG.warn("[${this.name}] Could not locate artifact ${type}:${name}:${version}", GriffonExceptionHandler.sanitize(e))

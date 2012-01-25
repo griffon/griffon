@@ -2,7 +2,7 @@ h1. create-plugin
 
 h2. Purpose
 
-The @create-plugin@ command will create a Griffon plug-in project.
+The @create-plugin@ command will create a Griffon plugin project.
 
 h2. Examples
 
@@ -12,9 +12,9 @@ griffon create-plugin simple
 
 h2. Description        
 
-Creates a Griffon plug-in project. A Griffon plug-in project is just like a regular Griffon project except it contains a plug-in descriptor and can be packaged up as a plug-in and installed into other applications.
+Creates a Griffon plugin project. A Griffon plugin project is just like a regular Griffon project except it contains a plugin descriptor and can be packaged up as a plugin and installed into other applications.
 
-Plug-ins are not just useful for plug-in developers, but also as a way to modularize large Griffon applications. Refer to the section on [Plug-in Development|guide:plug-ins] in the user guide for more information on developing plug-ins for Griffon.
+Plug-ins are not just useful for plugin developers, but also as a way to modularize large Griffon applications. Refer to the section on [Plug-in Development|guide:plugins] in the user guide for more information on developing plugins for Griffon.
 
 Usage: 
 
@@ -22,6 +22,9 @@ Usage:
 griffon create-plugin \[name\]
 {code}
 
-Fired Events: 
+Arguments:
+* @name@ - The name of the plugin
 
-* @StatusFinal@ - When the plug-in has been created
+Options:
+* @app-version@ - Version to be set on the plugin. Defaults to 0.1.
+* @inplace@ - If true creates the plugin in the current directory. Defaults to false.

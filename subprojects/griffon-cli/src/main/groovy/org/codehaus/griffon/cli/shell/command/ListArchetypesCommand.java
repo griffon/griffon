@@ -32,4 +32,9 @@ public class ListArchetypesCommand extends AbstractGriffonCommand {
             description = "Name of an specific repository where the search will be performed.",
             required = false)
     private String repository;
+
+    @Option(name = "--installed",
+            description = "Lists all installed archetypes only.",
+            required = false)
+    private boolean installed;
 }
