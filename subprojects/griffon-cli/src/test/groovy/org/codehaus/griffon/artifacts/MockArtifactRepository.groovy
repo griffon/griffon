@@ -21,6 +21,15 @@ class MockArtifactRepository extends AbstractArtifactRepository {
         artifacts.get(type, [:])[name]
     }
 
+    Artifact findArtifact(String type, String name, String version) {
+        Artifact artifact = artifacts.get(type, [:])[name]
+        if (artifact) {
+            Release release = artifact.releases.find {it.version == version}
+            return release ? artifact : null
+        }
+        null
+    }
+
     File downloadFile(String type, String name, String version, String username) {
         return null
     }
