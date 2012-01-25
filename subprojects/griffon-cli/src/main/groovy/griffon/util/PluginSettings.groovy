@@ -159,18 +159,17 @@ class PluginSettings {
 
             if (dependencyDescriptors.any {it.exists()}) {
                 def callable = settings.pluginDependencyHandler()
-                int result = callable.call(new File(pluginInstallPath), pluginName, pluginVersion)
-                if (result == BuildSettings.RESOLUTION_OK) {
-                    IvyDependencyManager dependencyManager = settings.dependencyManager
-                    for (conf in ['compile', 'build', 'test', 'runtime']) {
-                        def resolveReport = dependencyManager.resolveDependencies(IvyDependencyManager."${conf.toUpperCase()}_CONFIGURATION")
-                        if (resolveReport.hasError()) {
-                            throw new InstallArtifactException("Plugin ${pluginName}-${pluginVersion} has missing JAR dependencies.")
-                        } else {
-                            configurations.get(conf, []).addAll(resolveReport.allArtifactsReports.localFile)
-                        }
-                    }
-                }
+                callable.call(new File(pluginInstallPath), pluginName, pluginVersion)
+            }
+        }
+
+        IvyDependencyManager dependencyManager = settings.dependencyManager
+        for (conf in ['compile', 'build', 'test', 'runtime']) {
+            def resolveReport = dependencyManager.resolveDependencies(IvyDependencyManager."${conf.toUpperCase()}_CONFIGURATION")
+            if (resolveReport.hasError()) {
+                throw new IllegalStateException("Some dependencies failed to be resolved.")
+            } else {
+                configurations.get(conf, []).addAll(resolveReport.allArtifactsReports.localFile)
             }
         }
 
