@@ -407,7 +407,7 @@ public class GriffonScriptRunner {
 
     private final Map<String, CachedScript> scriptCache = new HashMap<String, CachedScript>();
     private final List<File> scriptsAllowedOutsideOfProject = new ArrayList<File>();
-    private static final Closure DO_NOTHING_CLOSURE = new Closure(GriffonScriptRunner.class) {
+    public static final Closure DO_NOTHING_CLOSURE = new Closure(GriffonScriptRunner.class) {
         private static final long serialVersionUID = 1L;
 
         @Override
@@ -987,7 +987,7 @@ public class GriffonScriptRunner {
         private static String[] RESOLVE_DEPENDENCIES_EXCLUSIONS = {
                 "integrateWith", "setVersion", "stats", "upgrade",
                 "createCommandAlias", "docs", "uninstallPlugin",
-                "listPluginUpdates"
+                "listPluginUpdates", "resolveDependencies"
         };
 
         static {
