@@ -90,7 +90,7 @@ public class ReloadCommandsCommand implements Action {
     private static final String[] FORBIDDEN_NAMES = {
             "exit", "help", "info", "reload-commands",
             "create-app", "create-plugin", "create-archetype",
-            "create-addon"
+            "create-addon", "init", "interactive"
     };
 
     static {

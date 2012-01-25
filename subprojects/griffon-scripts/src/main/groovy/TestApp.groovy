@@ -44,7 +44,7 @@ target(testApp: "Run a Griffon applications unit tests") {
     if (testTargeters) testNames = testTargeters
 
     // treat pre 1.2 phase targeting args as '[phase]:' for backwards compatibility
-    for (type in ["unit", "integration", "functional", "other"]) {
+    for (type in ["unit", "integration", "other"]) {
         if (argsMap[type]) {
             phaseAndTypeTargeters << "${type}${TEST_PHASE_AND_TYPE_SEPARATOR}"
             argsMap.remove(type) // these are not test "options"
@@ -71,8 +71,7 @@ target(testApp: "Run a Griffon applications unit tests") {
     if (argsMap["xml"]) {
         reportFormats = ["xml"]
         createTestReports = false
-    }
-    else {
+    } else {
         createTestReports = !argsMap["no-reports"]
     }
 
