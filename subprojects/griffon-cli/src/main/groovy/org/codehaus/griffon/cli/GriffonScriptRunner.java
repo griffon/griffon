@@ -90,8 +90,6 @@ public class GriffonScriptRunner {
             allArgs.append(" ").append(arg);
         }
 
-        ScriptAndArgs script = processArgumentsAndReturnScriptName(allArgs.toString().trim());
-
         // Get hold of the Griffon_HOME environment variable if it is
         // available.
         String griffonHome = System.getProperty("griffon.home");
@@ -103,6 +101,16 @@ public class GriffonScriptRunner {
             System.err.println("An error occurred loading the griffon-app/conf/BuildConfig.groovy file: " + e.getMessage());
             System.exit(1);
         }
+
+        String rawArgs = allArgs.toString().trim();
+        if ("--version".equals(rawArgs) || "-v".equals(rawArgs)) {
+            System.out.println("Griffon version " + build.getGriffonVersion());
+            System.out.println("Groovy version " + build.getGroovyVersion());
+            System.out.println("Java version " + System.getProperty("java.version") + " (" + System.getProperty("java.vm.version") + ")");
+            System.exit(0);
+        }
+
+        ScriptAndArgs script = processArgumentsAndReturnScriptName(rawArgs);
 
         // Check that Griffon' home actually exists.
         final File griffonHomeInSettings = build.getGriffonHome();
