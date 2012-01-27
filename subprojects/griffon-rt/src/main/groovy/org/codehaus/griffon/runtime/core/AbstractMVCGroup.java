@@ -18,6 +18,7 @@ package org.codehaus.griffon.runtime.core;
 
 
 import griffon.core.*;
+import groovy.lang.Script;
 import groovy.util.FactoryBuilderSupport;
 
 import java.util.LinkedHashMap;
@@ -36,6 +37,7 @@ public abstract class AbstractMVCGroup implements MVCGroup {
     protected final Map<String, Object> members = new LinkedHashMap<String, Object>();
     private boolean alive;
     private final Object[] lock = new Object[0];
+    protected final Map<String, Object> scriptResults = new LinkedHashMap<String, Object>();
 
     public AbstractMVCGroup(GriffonApplication app, MVCGroupConfiguration configuration, String mvcId, Map<String, Object> members) {
         this.app = app;
@@ -100,6 +102,27 @@ public abstract class AbstractMVCGroup implements MVCGroup {
     protected void checkIfAlive() {
         if (!isAlive()) {
             throw new IllegalStateException("Group " + getMvcType() + ":" + mvcId + " has been destroyed already.");
+        }
+    }
+
+    public Object getScriptResult(String name) {
+        return scriptResults.get(name);
+    }
+
+    public void buildScriptMember(final String name) {
+        Object member = members.get(name);
+        if (!(member instanceof Script)) return;
+        final Script script = (Script) member;
+
+        // special case: view gets executed in the UI thread always
+        if ("view".equals(name)) {
+            UIThreadManager.getInstance().executeSync(new Runnable() {
+                public void run() {
+                    scriptResults.put(name, getBuilder().build(script));
+                }
+            });
+        } else {
+            scriptResults.put(name, getBuilder().build(script));
         }
     }
 }

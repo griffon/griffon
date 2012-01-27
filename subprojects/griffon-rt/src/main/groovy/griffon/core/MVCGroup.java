@@ -102,4 +102,18 @@ public interface MVCGroup extends ApplicationHandler {
      * @return true if the group has not been destroyed yet, false otherwise
      */
     boolean isAlive();
+
+    /**
+     * Returns the result of the evaluation of the specified member if it's a Script.
+     *
+     * @param name the name of a member
+     * @return the last expression evaluated if the member is a Script, null otherwise.
+     */
+    Object getScriptResult(String name);
+
+    /**
+     * Builds the target member if it's a Script, storing the result.
+     * @param name the name of a member
+     */
+    void buildScriptMember(String name);
 }

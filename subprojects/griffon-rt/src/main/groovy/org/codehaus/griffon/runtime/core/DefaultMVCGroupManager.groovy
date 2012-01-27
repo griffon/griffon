@@ -100,7 +100,7 @@ class DefaultMVCGroupManager extends AbstractMVCGroupManager {
 
         doAddGroup(group)
 
-        initializeMembers(mvcId, instances, argsCopy)
+        initializeMembers(mvcId, instances, argsCopy, group)
 
         app.event(GriffonApplication.Event.CREATE_MVC_GROUP.name, [group])
         return group
@@ -152,19 +152,12 @@ class DefaultMVCGroupManager extends AbstractMVCGroupManager {
         return instanceMap
     }
 
-    protected initializeMembers(String mvcId, Map<String, Object> instances, Map<String, Object> args) {
+    protected initializeMembers(String mvcId, Map<String, Object> instances, Map<String, Object> args, MVCGroup group) {
         // initialize the classes and call scripts
         if (LOG.debugEnabled) LOG.debug("Initializing each MVC member of group '${mvcId}'")
         instances.each {String memberType, member ->
             if (member instanceof Script) {
-                // special case: view gets executed in the UI thread always
-                if (memberType == 'view') {
-                    UIThreadManager.instance.executeSync { instances.builder.build(member) }
-                } else {
-                    // non-view gets built in the builder
-                    // they can switch into the UI thread as desired
-                    instances.builder.build(member)
-                }
+                group.buildScriptMember(memberType)
             } else if (memberType != 'builder') {
                 try {
                     member.mvcGroupInit(args)
