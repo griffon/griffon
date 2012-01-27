@@ -32,6 +32,9 @@ import static griffon.util.GriffonNameUtils.*
 import static griffon.util.GriffonUtil.getScriptName
 import static griffon.util.GriffonUtil.sanitize
 import static org.codehaus.griffon.artifacts.ArtifactUtils.*
+import org.codehaus.griffon.cli.CommandLineConstants
+import static org.codehaus.griffon.cli.CommandLineConstants.KEY_DEFAULT_INSTALL_ARTIFACT_REPOSITORY
+import static org.codehaus.griffon.artifacts.ArtifactRepository.DEFAULT_LOCAL_NAME
 
 /**
  * @author Andres Almiray
@@ -333,7 +336,8 @@ class ArtifactInstallEngine {
     }
 
     private void _publishReleaseToGriffonLocal(String type, String name, String version, File file) {
-        ArtifactRepository griffonLocal = ArtifactRepositoryRegistry.instance.findRepository(ArtifactRepository.DEFAULT_LOCAL_NAME)
+        String repositoryName = settings.getConfigValue(KEY_DEFAULT_INSTALL_ARTIFACT_REPOSITORY, DEFAULT_LOCAL_NAME)
+        ArtifactRepository griffonLocal = ArtifactRepositoryRegistry.instance.findRepository(repositoryName)
 
         // don't install if already available at griffon-local
         if (griffonLocal.findArtifact(type, name, version)) return

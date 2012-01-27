@@ -1041,4 +1041,10 @@ class BuildSettings extends AbstractBuildSettings {
             updateDependenciesFor('build', dependencies)
         }
     }
+
+    Object getConfigValue(String key, Object defaultValue) {
+        Object value = System.getProperty(key)
+        if(value) return value
+        config.flatten([:])[key] ?: defaultValue
+    }
 }
