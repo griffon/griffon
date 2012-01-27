@@ -56,5 +56,5 @@ public class RunAppCommand extends AbstractGriffonCommand {
             description = "Optional arguments to be passed to the application.",
             required = false,
             multiValued = true)
-    private List<String> args;
+    private List<String> arguments;
 }
