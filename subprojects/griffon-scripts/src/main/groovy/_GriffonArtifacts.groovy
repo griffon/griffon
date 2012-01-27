@@ -24,6 +24,8 @@ import static griffon.util.GriffonNameUtils.capitalize
 import org.codehaus.griffon.artifacts.*
 import static org.codehaus.griffon.artifacts.ArtifactUtils.isValidVersion
 import static org.codehaus.griffon.artifacts.ArtifactUtils.artifactBase
+import org.codehaus.griffon.cli.CommandLineConstants
+import static org.codehaus.griffon.cli.CommandLineConstants.KEY_DEFAULT_ARTIFACT_REPOSITORY
 
 /**
  * @author Andres Almiray
@@ -36,7 +38,7 @@ _griffon_artifacts_called = true
 artifactRepository = null
 
 selectArtifactRepository = {
-    repositoryName = argsMap.repository ?: ArtifactRepository.DEFAULT_REMOTE_NAME
+    repositoryName = argsMap.repository ?: getPropertyValue(KEY_DEFAULT_ARTIFACT_REPOSITORY, ArtifactRepository.DEFAULT_REMOTE_NAME)
     artifactRepository = ArtifactRepositoryRegistry.instance.findRepository(repositoryName)
     if (artifactRepository == null) {
         event('StatusError', ["Artifact repository ${repositoryName} is not configured."])

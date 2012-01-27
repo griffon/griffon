@@ -78,6 +78,12 @@ public interface CommandLineConstants {
      */
     String KEY_INSTALL_FAILURE_KEY = "griffon.install.failure";
 
+    /**
+     * Defines the name of the default repository to use.
+     * <p>Defaults to <tt>ArtifactRepository.DEFAULT_REMOTE_NAME</tt>.</p>
+     */
+    String KEY_DEFAULT_ARTIFACT_REPOSITORY = "griffon.default.artifact.repository";
+
     String[] KEYS = {
             KEY_INTERACTIVE_MODE,
             KEY_NON_INTERACTIVE_DEFAULT_ANSWER,
@@ -87,6 +93,7 @@ public interface CommandLineConstants {
             KEY_DISABLE_AUTO_IMPORTS,
             KEY_DISABLE_LOGGING_INJECTION,
             KEY_DISABLE_THREADING_INJECTION,
-            KEY_INSTALL_FAILURE_KEY
+            KEY_INSTALL_FAILURE_KEY,
+            KEY_DEFAULT_ARTIFACT_REPOSITORY
     };
 }
