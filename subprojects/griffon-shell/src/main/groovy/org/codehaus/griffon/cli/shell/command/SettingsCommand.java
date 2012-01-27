@@ -58,8 +58,13 @@ public class SettingsCommand extends AbstractAction {
         printValue("Griffon home", maxNameLen, settings.getGriffonHome().getAbsolutePath());
         printValue("Groovy version", maxNameLen, settings.getGroovyVersion());
         printValue("Basedir", maxNameLen, settings.getBaseDir().getAbsolutePath());
-        printValue("Config files", maxNameLen, settings.getConfig().getConfigFile().getFile());
-        printValue("", maxNameLen, new File(settings.getUserHome() + "/.griffon/settings.groovy").getAbsolutePath());
+        URL configFile = settings.getConfig().getConfigFile();
+        String configHeader = "Config files";
+        if (configFile != null) {
+            printValue(configHeader, maxNameLen, configFile.getFile());
+            configHeader = "";
+        }
+        printValue(configHeader, maxNameLen, new File(settings.getUserHome() + "/.griffon/settings.groovy").getAbsolutePath());
         printValue("", maxNameLen, new File(settings.getUserHome() + "/.griffon/ProxySettings.groovy").getAbsolutePath());
         System.out.println();
 
