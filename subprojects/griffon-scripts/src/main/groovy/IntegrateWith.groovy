@@ -15,6 +15,14 @@
  */
 
 import griffon.util.GriffonUtil
+import org.apache.ivy.core.module.descriptor.Artifact
+import org.apache.ivy.core.resolve.IvyNode
+import org.codehaus.griffon.resolve.IvyDependencyManager
+import org.codehaus.griffon.artifacts.ArtifactUtils
+import org.codehaus.griffon.artifacts.model.Plugin
+
+import static griffon.util.GriffonApplicationUtils.isWindows
+import griffon.util.PluginSettings
 
 /**
  * Command to enable integration of Griffon with external IDEs and build systems
@@ -101,6 +109,7 @@ target(integrateIntellij: "Integrates Intellij with Griffon") {
     def griffonIdeaVersion = griffonVersion.replace('-' as char, '_' as char)
             .replace('.' as char, '_' as char)
     ant.move(file: "${basedir}/ideaGriffonProject.iml", tofile: "${basedir}/${griffonAppName}.iml", overwrite: true)
+    ant.move(file: "${basedir}/ideaGriffonProjectFixes.iml", tofile: "${basedir}/${griffonAppName}-griffonPluginFixes.iml", overwrite: true)
     ant.move(file: "${basedir}/.idea/libraries/griffon.xml",
             tofile: "${basedir}/.idea/libraries/griffon_${griffonIdeaVersion}.xml", overwrite: true)
 
@@ -111,9 +120,7 @@ target(integrateIntellij: "Integrates Intellij with Griffon") {
 target(replaceTokens: "Replaces any tokens in the files") {
     def appKey = griffonAppName.replaceAll(/\s/, '.').toLowerCase()
     ant.replace(dir: basedir, includes: "*.*") {
-        replacefilter(token: "@griffon.intellij.libs@", value: intellijClasspathLibs())
-        // replacefilter(token: "@griffon.libs@", value: eclipseClasspathLibs())
-        // replacefilter(token: "@griffon.jar@", value: eclipseClasspathGriffonJars())
+        replacefilter(token: "@griffon.intellij.libs@", value: '')
         replacefilter(token: "@griffon.version@", value: griffonVersion)
         replacefilter(token: "@groovy.version@", value: griffonSettings.groovyVersion)
         replacefilter(token: "@ant.version@", value: griffonSettings.antVersion)
@@ -121,6 +128,11 @@ target(replaceTokens: "Replaces any tokens in the files") {
         replacefilter(token: "@spring.version@", value: griffonSettings.springVersion)
         replacefilter(token: "@griffon.project.name@", value: griffonAppName)
         replacefilter(token: "@griffon.app.version@", value: griffonAppVersion ?: '0.1')
+        def paths = pluginPaths()
+        replacefilter(token: "@griffon.intellij.addons@", value: intellijAddonsFixes(paths.jars))
+        replacefilter(token: "@griffon.intellij.javadoc@", value: intellijJavadocFixes(paths.javadoc))
+        replacefilter(token: "@griffon.intellij.sources@", value: intellijSourcesFixes(paths.sources))
+        replacefilter(token: "@java.sdk@", value: getPropertyValue('idea.java.sdk', '1.6'))
     }
     def ideaDir = new File("${basedir}/.idea")
     if (ideaDir.exists()) {
@@ -128,6 +140,7 @@ target(replaceTokens: "Replaces any tokens in the files") {
             replacefilter(token: "@griffon.intellij.libs@", value: intellijClasspathLibs())
             replacefilter(token: "@griffon.version@", value: griffonVersion)
             replacefilter(token: "@griffon.project.name@", value: griffonAppName)
+            replacefilter(token: "@java.sdk@", value: getPropertyValue('idea.java.sdk', '1.6'))
         }
     }
 }
@@ -139,6 +152,15 @@ target(unpackSupportFiles: "Unpacks the support files") {
 }
 
 setDefaultTarget("integrateWith")
+
+griffonLibs = {
+    def libs = [] as Set
+    if (griffonHome) {
+        (new File("${griffonHome}/dist")).eachFileMatch(~/^griffon-.*\.jar/) {file -> libs << file.name }
+        (new File("${griffonHome}/lib")).eachFileMatch(~/.*\.jar/) {file ->if (!file.name.startsWith("gant-")) libs << file.name }
+    }
+    return libs
+}
 
 intellijClasspathLibs = {
     def builder = new StringBuilder()
@@ -166,4 +188,98 @@ eclipseClasspathGriffonJars = {args ->
         }
     }
     result
+}
+
+intellijAddonsFixes = { List paths ->
+    def builder = new StringBuilder()
+    for(def plugin: paths) {
+        builder << "          <root url=\"jar://${plugin}!/\" />\n"
+    }
+    return builder.toString()
+}
+
+intellijJavadocFixes = { List paths ->
+    def builder = new StringBuilder()
+    for(def plugin: paths) {
+        builder << "          <root url=\"jar://${plugin}!/\" />\n"
+    }
+    return builder.toString()
+}
+
+intellijSourcesFixes = { List paths ->
+    def builder = new StringBuilder()
+    for(def plugin: paths) {
+        builder << "          <root url=\"jar://${plugin}!/\" />\n"
+    }
+    return builder.toString()
+}
+
+pluginPaths = {
+    def visitedDependencies = []
+
+    String userHomeRegex = isWindows ? userHome.toString().replace('\\', '\\\\') : userHome.toString()
+    String griffonHomeRegex = isWindows ? griffonHome.toString().replace('\\', '\\\\') : griffonHome.toString()
+    String baseDirPath = isWindows ? griffonSettings.baseDir.path.replace('\\', '\\\\') : griffonSettings.baseDir.path
+
+    def normalizeFilePath = { file ->
+        String path = file.absolutePath
+        path = path.replaceFirst(~/$griffonHomeRegex/, '\\$GRIFFON_HOME\\$')
+        path = path.replaceFirst(~/$userHomeRegex/, '\\$USER_HOME\\$')
+        path.replaceFirst(~/${baseDirPath}(\\|\/)/, '')
+    }
+
+    def plugins = [ jars: [], javadoc: [], sources: [] ]
+    def visitDependencies = {List dependencies ->
+        dependencies.each { File f ->
+            if(visitedDependencies.contains(f)) return
+            visitedDependencies << f
+            String path = normalizeFilePath(f)
+            def pluginDir = new File(path).parentFile.parentFile
+            plugins.jars << path
+        }
+    }
+
+    visitDependencies(griffonSettings.runtimeDependencies)
+    visitDependencies(griffonSettings.testDependencies)
+    visitDependencies(griffonSettings.compileDependencies)
+    visitDependencies(griffonSettings.buildDependencies)
+
+    pluginSettings.doWithPlugins{String name, String version, String path ->
+        def pluginDir = new File(path, 'dist')
+        def javadoc = new File(pluginDir, "griffon-$name-$version-javadoc.jar")
+        if(javadoc.exists())
+            plugins.javadoc << normalizeFilePath(javadoc)
+        def sources = new File(pluginDir, "griffon-$name-$version-sources.jar")
+        if(sources.exists())
+            plugins.sources << normalizeFilePath(sources)
+    }
+
+    // TODO: Add support for linked plugins
+    plugins
+}
+
+dependencyPaths = {
+    IvyDependencyManager dependencyManager = griffonSettings.dependencyManager
+    def deps = dependencyManager.resolveDependencies()
+    if (dependencyManager.resolveErrors) {
+        println "Error: There was an error resolving plugin JAR dependencies"
+        exit 1
+    }
+    def locations = []
+    Set libs = griffonLibs()
+    if (deps) {
+        for (IvyNode dep: deps.dependencies) {
+            try {
+                for (Artifact artifact: dep.allArtifacts) {
+                    def attr = artifact.attributes
+                    if(attr.organisation != 'org.codehaus.griffon.plugins') {
+                        def name = "${attr.artifact}-${attr.revision}.${attr.ext}".toString()
+                        if(! libs.contains(name))
+                            locations << ".ivy2/cache/${attr.organisation}/${attr.module}/${attr.type}s/${name}"
+                    }
+                }
+            } catch (e) {}
+        }
+    }
+    locations
 }
