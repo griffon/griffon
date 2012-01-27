@@ -140,7 +140,9 @@ public class GantAwareAction extends AbstractGriffonShellCommand {
                 field.setAccessible(true);
                 Object value = field.get(subject);
                 if (value != null) {
-                    arguments.add(optionName + "=" + quote(value));
+                    String val = value.toString();
+                    if ("false".equalsIgnoreCase(val)) continue;
+                    arguments.add(optionName + "=" + quote(val));
                 }
             } catch (IllegalAccessException e) {
                 throw new CommandException("Could not read option " + optionName + " due to " + e.getMessage());
