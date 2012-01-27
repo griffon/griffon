@@ -42,6 +42,7 @@ class ArtifactInstallEngine {
     private static final String INSTALL_FAILURE_KEY = 'griffon.install.failure'
     private static final String INSTALL_FAILURE_ABORT = 'abort'
     private static final String INSTALL_FAILURE_CONTINUE = 'continue'
+    private static final String INSTALL_FAILURE_RETRY = 'retry'
 
     private final BuildSettings settings
     private final Metadata metadata
@@ -252,15 +253,34 @@ class ArtifactInstallEngine {
     }
 
     private boolean installPluginsInternal(List<ArtifactDependency> installPlan) {
-        String type = Plugin.TYPE
         List<ArtifactDependency> failedDependencies = []
-        for (ArtifactDependency dependency: installPlan) {
+        List<ArtifactDependency> retryDependencies = []
+
+        _installDependencies(installPlan, failedDependencies, retryDependencies, true)
+
+        if (retryDependencies) {
+            _installDependencies(retryDependencies, failedDependencies, [], false)
+        }
+
+        if (failedDependencies) {
+            String failed = ''
+            failedDependencies.each {failed += it.toString() }
+            eventHandler 'StatusFinal', "The following plugins failed to be installed due to missing dependencies or a postinstall error.\n${failed}"
+            return false
+        }
+
+        true
+    }
+
+    private void _installDependencies(List<ArtifactDependency> dependencies, List<ArtifactDependency> failedDependencies, List<ArtifactDependency> retryDependencies, boolean retryAllowed) {
+        String type = Plugin.TYPE
+        for (ArtifactDependency dependency: dependencies) {
             try {
                 if (dependency.evicted) {
                     doUninstall(type, dependency.name, dependency.version)
                 } else {
                     if (dependency.snapshot) {
-                        Release installedRelease = getInstalledRelease(Plugin.TYPE, dependency.name, dependency.version)
+                        Release installedRelease = getInstalledRelease(type, dependency.name, dependency.version)
                         if (installedRelease) {
                             if (LOG.debugEnabled) {
                                 LOG.debug("${dependency.name}-${dependency.version} installed=[checksum: ${installedRelease.checksum}, date: ${installedRelease.date}] download=[checksum: ${dependency.release.checksum}, date: ${dependency.release.date}] ")
@@ -273,7 +293,7 @@ class ArtifactInstallEngine {
                     File file = dependency.repository.downloadFile(type, dependency.name, dependency.version, null)
                     installFromFile(type, file)
 
-                    updateLocalReleaseMetadata(Plugin.TYPE, dependency.release)
+                    updateLocalReleaseMetadata(type, dependency.release)
                     publishReleaseToGriffonLocal(dependency.release, file)
                 }
             } catch (Exception e) {
@@ -286,21 +306,18 @@ class ArtifactInstallEngine {
                         ant.delete(dir: getInstallPathFor(type, dependency.name, dependency.version), failonerror: false)
                         // try next dependency
                         break
+                    case INSTALL_FAILURE_RETRY:
+                        if (retryAllowed) {
+                            failedDependencies.remove(dependency)
+                            retryDependencies << dependency
+                        }
+                        break
                     case INSTALL_FAILURE_ABORT:
                         eventHandler 'StatusError', "Plugin ${dependency.name}-${dependency.version} could not be installed => $e"
                         throw new InstallArtifactException("Installation of ${dependency.name}-${dependency.version} aborted.")
                 }
             }
         }
-
-        if (failedDependencies) {
-            String failed = ''
-            failedDependencies.each {failed += it.toString() }
-            eventHandler 'StatusFinal', "The following plugins failed to be installed due to missing dependencies or a postinstall error.\n${failed}"
-            return false
-        }
-
-        true
     }
 
     void updateLocalReleaseMetadata(String type, Release release) {

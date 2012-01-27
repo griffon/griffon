@@ -72,6 +72,12 @@ public interface CommandLineConstants {
      */
     String KEY_DISABLE_THREADING_INJECTION = "griffon.disable.threading.injection";
 
+    /**
+     * Controls the action to take when a plugin fails to be installed.
+     * <p>Valid values are <tt>'abort'</tt>, <tt>'continue'</tt> or <tt>'retry'</tt>. Default is <tt>'continue'</tt>.</p>
+     */
+    String KEY_INSTALL_FAILURE_KEY = "griffon.install.failure";
+
     String[] KEYS = {
             KEY_INTERACTIVE_MODE,
             KEY_NON_INTERACTIVE_DEFAULT_ANSWER,
@@ -80,6 +86,7 @@ public interface CommandLineConstants {
             KEY_DISABLE_AST_INJECTION,
             KEY_DISABLE_AUTO_IMPORTS,
             KEY_DISABLE_LOGGING_INJECTION,
-            KEY_DISABLE_THREADING_INJECTION
+            KEY_DISABLE_THREADING_INJECTION,
+            KEY_INSTALL_FAILURE_KEY
     };
 }
