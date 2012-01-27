@@ -29,7 +29,7 @@ import java.util.List;
 public interface ArtifactRepository {
     String DEFAULT_REMOTE_NAME = "griffon-central";
     String DEFAULT_LOCAL_NAME = "griffon-local";
-    String DEFAULT_REMOTE_LOCATION = "http://localhost:8080/griffon-artifact-portal/";
+    String DEFAULT_REMOTE_LOCATION = "http://artifacts.griffon-framework.org/";
     String DEFAULT_LOCAL_LOCATION = System.getProperty("user.home") + File.separator + ".griffon" + File.separator + "repository";
     String REMOTE = "remote";
     String LOCAL = "local";
