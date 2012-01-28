@@ -26,9 +26,9 @@ import java.util.Map;
  * @since 0.9.4
  */
 public interface MVCGroupManager extends MVCHandler, ApplicationHandler {
-    MVCGroupConfiguration newMVCGroupConfiguration(GriffonApplication app, String mvcType, Map<String, String> members, Map<String, Object> config);
+    MVCGroupConfiguration newMVCGroupConfiguration(String mvcType, Map<String, String> members, Map<String, Object> config);
 
-    MVCGroup newMVCGroup(GriffonApplication app, MVCGroupConfiguration configuration, String mvcId, Map<String, Object> members);
+    MVCGroup newMVCGroup(MVCGroupConfiguration configuration, String mvcId, Map<String, Object> members);
 
     void initialize(Map<String, MVCGroupConfiguration> configurations);
 

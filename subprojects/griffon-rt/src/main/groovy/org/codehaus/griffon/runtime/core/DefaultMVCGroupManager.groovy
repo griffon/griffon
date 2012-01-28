@@ -39,11 +39,11 @@ class DefaultMVCGroupManager extends AbstractMVCGroupManager {
         super(app)
     }
 
-    MVCGroupConfiguration newMVCGroupConfiguration(GriffonApplication app, String mvcType, Map<String, String> members, Map<String, Object> config) {
+    MVCGroupConfiguration newMVCGroupConfiguration(String mvcType, Map<String, String> members, Map<String, Object> config) {
         new DefaultMVCGroupConfiguration(app, mvcType, members, config);
     }
 
-    MVCGroup newMVCGroup(GriffonApplication app, MVCGroupConfiguration configuration, String mvcId, Map<String, Object> members) {
+    MVCGroup newMVCGroup(MVCGroupConfiguration configuration, String mvcId, Map<String, Object> members) {
         new DefaultMVCGroup(app, configuration, mvcId, members);
     }
 
@@ -86,7 +86,7 @@ class DefaultMVCGroupManager extends AbstractMVCGroupManager {
         instances.builder = builder
         argsCopy.builder = builder
 
-        MVCGroup group = newMVCGroup(app, configuration, mvcId, instances)
+        MVCGroup group = newMVCGroup(configuration, mvcId, instances)
 
         app.event(GriffonApplication.Event.INITIALIZE_MVC_GROUP.name, [configuration, group])
 

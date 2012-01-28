@@ -198,7 +198,7 @@ class GriffonApplicationHelper {
                 }
                 m
             }
-            configurations.put(type, app.mvcGroupManager.newMVCGroupConfiguration(app, type, membersCopy, configMap))
+            configurations.put(type, app.mvcGroupManager.newMVCGroupConfiguration(type, membersCopy, configMap))
         }
 
         app.mvcGroupManager.initialize(configurations)
