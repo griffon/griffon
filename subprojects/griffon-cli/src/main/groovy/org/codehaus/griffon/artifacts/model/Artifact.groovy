@@ -8,6 +8,7 @@ abstract class Artifact {
     String description = ''
     String license = ''
     String source = ''
+    String documentation = ''
     List<Author> authors = []
     List<Release> releases = []
 
@@ -35,7 +36,8 @@ abstract class Artifact {
                 license: license,
                 authors: authors*.toString(),
                 releases: releases,
-                source: source
+                source: source,
+                documentation: documentation
         ]
     }
 

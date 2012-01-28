@@ -38,6 +38,7 @@ class Archetype extends Artifact {
                 title: title,
                 license: license,
                 source: source ?: '',
+                documentation: documentation ?: '',
                 authors: authors*.asMap()
         ]
         if (includeReleases) {

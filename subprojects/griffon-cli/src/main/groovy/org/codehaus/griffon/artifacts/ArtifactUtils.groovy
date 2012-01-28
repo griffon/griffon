@@ -316,6 +316,7 @@ class ArtifactUtils {
                 description: json.description,
                 license: json.license,
                 source: json.source,
+                documentation: json.documentation,
                 authors: json.authors.collect([]) { author ->
                     new Author(name: author.name, email: author.email)
                 },
@@ -332,6 +333,7 @@ class ArtifactUtils {
                 description: json.description,
                 license: json.license,
                 source: json.source,
+                documentation: json.documentation,
                 authors: json.authors.collect([]) { author ->
                     new Author(name: author.name, email: author.email)
                 },
@@ -387,6 +389,7 @@ class ArtifactUtils {
                 description: xml.description?.text() ?: '',
                 license: xml.license?.text() ?: '<UNKNOWN>',
                 source: '',
+                documentation: '',
                 authors: [
                         new Author(
                                 name: xml.author?.text() ?: '',

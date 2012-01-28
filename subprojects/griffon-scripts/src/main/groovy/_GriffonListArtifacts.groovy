@@ -134,13 +134,14 @@ displayArtifactInfo = { String type, String name, String version, ArtifactReposi
 
     Release release = artifact.releases.find { it.version == version }
 
-    int padding = type == Archetype.TYPE ? 8i : 9i
+    int padding = 13i
 
     [
             'Name': artifact.name,
             'Title': artifact.title,
             'License': artifact.license,
-            'Source': artifact.source ?: 'No source link provided'
+            'Source': artifact.source ?: 'No source link provided',
+            'Documentation': artifact.documentation ?: 'No documentation link provided'
     ].each { label, value ->
         println "${label.padRight(padding, ' ')}: ${value}"
     }

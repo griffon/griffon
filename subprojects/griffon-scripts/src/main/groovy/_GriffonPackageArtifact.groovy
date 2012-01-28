@@ -92,6 +92,8 @@ Lorem ipsum
             title: descriptorInstance.title,
             license: descriptorInstance.license,
             version: descriptorInstance.version,
+            source: descriptorInstance.source,
+            documentation: descriptorInstance.documentation,
             griffonVersion: descriptorInstance.griffonVersion,
             description: descriptorInstance.description.trim(),
             authors: descriptorInstance.authors,

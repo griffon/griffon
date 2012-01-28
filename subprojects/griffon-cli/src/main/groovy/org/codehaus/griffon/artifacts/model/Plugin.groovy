@@ -48,6 +48,7 @@ class Plugin extends Artifact {
                 title: title,
                 license: license,
                 source: source ?: '',
+                documentation: documentation ?: '',
                 toolkits: toolkits*.getLowercaseName(),
                 platforms: platforms*.getLowercaseName(),
                 authors: authors*.asMap(),

@@ -5,8 +5,11 @@ class @archetype.name@GriffonArchetype {
     String griffonVersion = '@griffon.version@ > *'
     // the archetype license
     String license = '<UNKNOWN>'
+    // URL where documentation can be found
+    String documentation = ''
+    // URL where source can be found
+    String source = ''
 
-    // TODO Fill in these fields
     List authors = [
         [
             name: 'Your Name',
@@ -26,7 +29,4 @@ Configuration
 -------------
 Lorem ipsum
 '''
-
-    // URL to the archetype's documentation
-    String documentation = 'http://griffon.codehaus.org/@archetype.name@+Archetype'
 }

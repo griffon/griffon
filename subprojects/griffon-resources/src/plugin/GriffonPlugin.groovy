@@ -16,8 +16,11 @@ class @plugin.name@GriffonPlugin {
     // Valid values are:
     // linux, linux64, windows, windows64, macosx, macosx64, solaris
     List platforms = []
+    // URL where documentation can be found
+    String documentation = ''
+    // URL where source can be found
+    String source = ''
 
-    // TODO Fill in these fields
     List authors = [
         [
             name: 'Your Name',
@@ -37,7 +40,4 @@ Configuration
 -------------
 Lorem ipsum
 '''
-
-    // URL to the plugin's documentation
-    String documentation = 'http://griffon.codehaus.org/@plugin.name@+Plugin'
 }
