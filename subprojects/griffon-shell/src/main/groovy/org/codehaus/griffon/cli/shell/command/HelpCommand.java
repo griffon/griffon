@@ -16,10 +16,6 @@
 
 package org.codehaus.griffon.cli.shell.command;
 
-import gant.Gant;
-import griffon.util.BuildSettings;
-import griffon.util.BuildSettingsHolder;
-import griffon.util.Environment;
 import griffon.util.GriffonExceptionHandler;
 import jline.Terminal;
 import org.apache.felix.gogo.commands.Argument;
@@ -30,16 +26,12 @@ import org.apache.felix.gogo.commands.basic.DefaultActionPreparator;
 import org.apache.felix.service.command.Function;
 import org.apache.karaf.shell.console.AbstractAction;
 import org.apache.karaf.shell.console.NameScoping;
-import org.codehaus.gant.GantBinding;
-import org.codehaus.griffon.cli.GriffonScriptRunner;
-import org.codehaus.griffon.cli.ScriptExitException;
 import org.codehaus.griffon.cli.shell.GriffonCommand;
 import org.codehaus.griffon.cli.shell.support.CommandUtils;
 import org.fusesource.jansi.Ansi;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.ServiceReference;
 
-import java.io.File;
 import java.io.PrintStream;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
@@ -47,9 +39,6 @@ import java.util.Map;
 import java.util.Set;
 import java.util.SortedMap;
 import java.util.TreeMap;
-
-import static org.codehaus.griffon.cli.GriffonScriptRunner.*;
-import static org.codehaus.griffon.cli.shell.GriffonShellContext.*;
 
 /**
  * @author Andres Almiray
@@ -65,7 +54,7 @@ public class HelpCommand extends AbstractAction {
 
     public Object doExecute() throws Exception {
         if (resolveDependencies) {
-            resolvePluginDependencies();
+            ResolveDependenciesCommand.resolveDependencies(session);
         }
 
         if (command == null) {
@@ -119,43 +108,6 @@ public class HelpCommand extends AbstractAction {
             return null;
         } else {
             return session.execute(command + " --help");
-        }
-    }
-
-    private void resolvePluginDependencies() {
-        GriffonScriptRunner runner = getGriffonScriptRunner();
-        GantBinding binding = getGantBinding();
-        if (binding == null) {
-            binding = new GantBinding();
-            setGantBinding(binding);
-        }
-
-        String scriptName = "_GriffonResolveDependencies";
-        BuildSettings settings = BuildSettingsHolder.getSettings();
-        File scriptFile = new File(settings.getGriffonHome(), "scripts/" + scriptName + ".groovy");
-        System.setProperty(Environment.KEY, Environment.DEVELOPMENT.getName());
-        settings.setGriffonEnv(Environment.DEVELOPMENT.getName());
-        binding.setVariable(VAR_SCRIPT_ENV, Environment.DEVELOPMENT.getName());
-        binding.setVariable(VAR_SCRIPT_NAME, scriptName);
-        binding.setVariable(VAR_SCRIPT_FILE, scriptFile);
-        binding.setVariable("runDependencyResolution", Boolean.TRUE);
-        Gant gant = runner.createGantInstance(binding);
-
-        try {
-            gant.setAllPerTargetPreHooks(DO_NOTHING_CLOSURE);
-            gant.setAllPerTargetPostHooks(DO_NOTHING_CLOSURE);
-            gant.processTargets("resolveDependencies");
-        } catch (ScriptExitException see) {
-            // OK, we just got this exception because exit is not
-            // allowed when running inside the interactive shell
-        } catch (RuntimeException e) {
-            GriffonExceptionHandler.sanitize(e);
-            // bummer, we got a problem
-            if (!(e instanceof ScriptExitException) && !(e.getCause() instanceof ScriptExitException)) {
-                session.getConsole().print(Ansi.ansi().fg(Ansi.Color.RED).toString());
-                e.printStackTrace(session.getConsole());
-                session.getConsole().print(Ansi.ansi().fg(Ansi.Color.DEFAULT).toString());
-            }
         }
     }
 
