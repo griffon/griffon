@@ -40,6 +40,13 @@ public interface MVCGroupConfiguration extends ApplicationHandler {
     Map<String, String> getMembers();
 
     /**
+     * Returns a Map with additional configuration for this group.
+     *
+     * @return a Map with additional configuration for this group.
+     */
+    Map<String, Object> getConfig();
+
+    /**
      * Creates a new MVCGroup instance based in this configuration.
      * The group's id will should be set to the group's type and an empty Map should be used as the additional arguments.
      *

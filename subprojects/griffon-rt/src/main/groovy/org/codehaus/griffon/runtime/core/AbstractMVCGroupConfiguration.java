@@ -35,13 +35,15 @@ import static griffon.util.GriffonNameUtils.isBlank;
  */
 public abstract class AbstractMVCGroupConfiguration implements MVCGroupConfiguration {
     protected final Map<String, String> members = new LinkedHashMap<String, String>();
+    protected final Map<String, Object> config = new LinkedHashMap<String, Object>();
     protected final String mvcType;
     protected final GriffonApplication app;
 
-    public AbstractMVCGroupConfiguration(GriffonApplication app, String mvcType, Map<String, String> members) {
+    public AbstractMVCGroupConfiguration(GriffonApplication app, String mvcType, Map<String, String> members, Map<String, Object> config) {
         this.app = app;
         this.mvcType = mvcType;
         this.members.putAll(members);
+        this.config.putAll(config);
     }
 
     public final GriffonApplication getApp() {
@@ -54,6 +56,10 @@ public abstract class AbstractMVCGroupConfiguration implements MVCGroupConfigura
 
     public final Map<String, String> getMembers() {
         return Collections.unmodifiableMap(members);
+    }
+
+    public final Map<String, Object> getConfig() {
+        return Collections.unmodifiableMap(config);
     }
 
     public final MVCGroup create() {

@@ -39,8 +39,8 @@ class DefaultMVCGroupManager extends AbstractMVCGroupManager {
         super(app)
     }
 
-    MVCGroupConfiguration newMVCGroupConfiguration(GriffonApplication app, String mvcType, Map<String, String> members) {
-        new DefaultMVCGroupConfiguration(app, mvcType, members);
+    MVCGroupConfiguration newMVCGroupConfiguration(GriffonApplication app, String mvcType, Map<String, String> members, Map<String, Object> config) {
+        new DefaultMVCGroupConfiguration(app, mvcType, members, config);
     }
 
     MVCGroup newMVCGroup(GriffonApplication app, MVCGroupConfiguration configuration, String mvcId, Map<String, Object> members) {

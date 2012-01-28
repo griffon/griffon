@@ -28,8 +28,8 @@ import java.util.Map;
  * @since 0.9.3
  */
 public class DefaultMVCGroupConfiguration extends AbstractMVCGroupConfiguration {
-    public DefaultMVCGroupConfiguration(GriffonApplication app, String mvcType, Map<String, String> members) {
-        super(app, mvcType, members);
+    public DefaultMVCGroupConfiguration(GriffonApplication app, String mvcType, Map<String, String> members, Map<String, Object> config) {
+        super(app, mvcType, members, config);
     }
 
     protected MVCGroup instantiateMVCGroup(String mvcId, Map<String, Object> args) {
