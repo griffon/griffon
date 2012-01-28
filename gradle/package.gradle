@@ -133,7 +133,7 @@ task checkGriffonHome << {
     println "===> \$GRIFFON_HOME is set to $griffonHome.dir"
 }
 
-task installBinary(type: Copy, dependsOn: checkGriffonHome) {
+task installBinary(type: Sync, dependsOn: checkGriffonHome) {
     description = 'Installs the binary distribution at $GRIFFON_HOME.'
     destinationDir = griffonHome.dir as File
     with distBinSpec
