@@ -16,6 +16,10 @@
 
 package org.codehaus.griffon.runtime.core
 
+import griffon.core.GriffonApplication
+import griffon.core.GriffonClass
+import griffon.core.MVCGroup
+import griffon.core.MVCGroupConfiguration
 import griffon.exceptions.MVCGroupInstantiationException
 import griffon.util.GriffonExceptionHandler
 import org.codehaus.griffon.runtime.builder.UberBuilder
@@ -23,7 +27,6 @@ import org.codehaus.griffon.runtime.util.CompositeBuilderHelper
 import org.codehaus.groovy.runtime.InvokerHelper
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
-import griffon.core.*
 import static griffon.util.GriffonNameUtils.isBlank
 
 /**
@@ -34,6 +37,7 @@ import static griffon.util.GriffonNameUtils.isBlank
  */
 class DefaultMVCGroupManager extends AbstractMVCGroupManager {
     private static final Logger LOG = LoggerFactory.getLogger(DefaultMVCGroupManager)
+    private static final String CONFIG_KEY_COMPONENT = 'component'
 
     DefaultMVCGroupManager(GriffonApplication app) {
         super(app)
@@ -54,10 +58,20 @@ class DefaultMVCGroupManager extends AbstractMVCGroupManager {
     }
 
     protected MVCGroup buildMVCGroup(MVCGroupConfiguration configuration, String mvcId, Map<String, Object> args) {
-        if (isBlank(mvcId)) mvcId = configuration.mvcType
         if (args == null) args = Collections.EMPTY_MAP
 
-        checkIdIsUnique(mvcId, configuration)
+        boolean component = configuration.config[CONFIG_KEY_COMPONENT]
+        boolean checkId = true
+
+        if(isBlank(mvcId)) {
+            if(component) {
+                checkId = false
+            } else {
+                mvcId = configuration.mvcType
+            }
+        }
+
+        if (checkId) checkIdIsUnique(mvcId, configuration)
 
         if (LOG.infoEnabled) LOG.info("Building MVC group '${configuration.mvcType}' with name '${mvcId}'")
         Map<String, Object> argsCopy = [app: app, mvcType: configuration.mvcType, mvcName: mvcId]
@@ -98,7 +112,7 @@ class DefaultMVCGroupManager extends AbstractMVCGroupManager {
         // mutually set each other to the available fields and inject args
         fillReferencedProperties(instances, argsCopy)
 
-        doAddGroup(group)
+        if (checkId) doAddGroup(group)
 
         initializeMembers(mvcId, instances, argsCopy, group)
 

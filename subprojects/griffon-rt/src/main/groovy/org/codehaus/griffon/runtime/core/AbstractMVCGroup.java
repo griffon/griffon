@@ -23,6 +23,7 @@ import groovy.util.FactoryBuilderSupport;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.UUID;
 
 /**
  * Base implementation of the {@code MVCGroup} interface
@@ -42,7 +43,7 @@ public abstract class AbstractMVCGroup implements MVCGroup {
     public AbstractMVCGroup(GriffonApplication app, MVCGroupConfiguration configuration, String mvcId, Map<String, Object> members) {
         this.app = app;
         this.configuration = configuration;
-        this.mvcId = mvcId;
+        this.mvcId = mvcId == null ? configuration.getMvcType() + "-" + UUID.randomUUID().toString() : mvcId;
         this.members.putAll(members);
         this.alive = true;
     }
