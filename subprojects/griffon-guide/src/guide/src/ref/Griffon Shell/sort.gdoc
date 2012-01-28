@@ -1,0 +1,30 @@
+h1. sort
+
+h2. Purpose
+
+Writes sorted concatenation of all files to standard output.
+
+h2. Examples
+
+{code}
+griffon> sort griffon-app/conf/Application.groovy
+{code}
+
+h2. Description
+
+Usage: 
+{code}
+sort \[options\] \[files\] 
+{code}
+
+Arguments:
+* @files@ -  A list of files separated by whitespaces
+
+Options:
+* @n, numeric-sort@ - compare according to string numerical value
+* @t, field-separator@ - use SEP instead of non-blank to blank transition
+* @b, ignore-leading-blanks@ - ignore leading blanks
+* @f, -ignore-case@ - fold lower case to upper case characters
+* @r, reverse@ - reverse the result of comparisons
+* @k, key@ - Fields to use for sorting separated by whitespaces
+* @u, unique@ - output only the first of an equal run
