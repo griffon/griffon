@@ -74,7 +74,7 @@ class DefaultMVCGroupManager extends AbstractMVCGroupManager {
         if (checkId) checkIdIsUnique(mvcId, configuration)
 
         if (LOG.infoEnabled) LOG.info("Building MVC group '${configuration.mvcType}' with name '${mvcId}'")
-        Map<String, Object> argsCopy = [app: app, mvcType: configuration.mvcType, mvcName: mvcId]
+        Map<String, Object> argsCopy = [app: app, mvcType: configuration.mvcType, mvcName: mvcId, configuration: configuration]
         argsCopy.putAll(app.bindings.variables)
         argsCopy.putAll(args)
 
@@ -101,6 +101,9 @@ class DefaultMVCGroupManager extends AbstractMVCGroupManager {
         argsCopy.builder = builder
 
         MVCGroup group = newMVCGroup(configuration, mvcId, instances)
+        // must set it again because mvcId might have been initialized internally
+        argsCopy.mvcName = group.mvcId
+        argsCopy.group = group
 
         app.event(GriffonApplication.Event.INITIALIZE_MVC_GROUP.name, [configuration, group])
 
@@ -137,13 +140,13 @@ class DefaultMVCGroupManager extends AbstractMVCGroupManager {
         }
     }
 
-    protected Map<String, Object> instantiateMembers(Map<String, Class> klassMap, Map<String, Object> argsCopy, Map<String, GriffonClass> griffonClassMap, UberBuilder builder) {
+    protected Map<String, Object> instantiateMembers(Map<String, Class> klassMap, Map<String, Object> args, Map<String, GriffonClass> griffonClassMap, UberBuilder builder) {
         // instantiate the parts
         Map<String, Object> instanceMap = [:]
         klassMap.each {memberType, memberClass ->
-            if (argsCopy.containsKey(memberType)) {
+            if (args.containsKey(memberType)) {
                 // use provided value, even if null
-                instanceMap[memberType] = argsCopy[memberType]
+                instanceMap[memberType] = args[memberType]
             } else {
                 // otherwise create a new value
                 GriffonClass griffonClass = griffonClassMap[memberType]
@@ -154,7 +157,7 @@ class DefaultMVCGroupManager extends AbstractMVCGroupManager {
                     instance = app.newInstance(memberClass, memberType)
                 }
                 instanceMap[memberType] = instance
-                argsCopy[memberType] = instance
+                args[memberType] = instance
 
                 // all scripts get the builder as their binding
                 if (instance instanceof Script) {
