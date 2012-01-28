@@ -30,7 +30,7 @@ String userHomeRegex = isWindows ? userHome.toString().replace('\\', '\\\\') : u
 String griffonHomeRegex = isWindows ? griffonHome.toString().replace('\\', '\\\\') : griffonHome.toString()
 String baseDirPath = isWindows ? griffonSettings.baseDir.path.replace('\\', '\\\\') : griffonSettings.baseDir.path
 
-target(integrateWith: "Integrates ") {
+target(name: 'integrateWith', description: "Integrates ", prehook: null, posthook: null) {
     def keys = argsMap.keySet()
     try {
         event("IntegrateWithInit", keys.toList())
@@ -39,10 +39,8 @@ target(integrateWith: "Integrates ") {
             try {
                 def name = GriffonUtil.getClassNameRepresentation(key)
                 "integrate${name}"()
-            }
-            catch (e) {
+            } catch (e) {
                 println "Error: failed to integrate [${key}] with Griffon: ${e.message}"
-                exit 1
             }
         }
     } finally {
@@ -50,7 +48,7 @@ target(integrateWith: "Integrates ") {
     }
 }
 
-target(integrateGradle: "Integrates Gradle with Griffon") {
+target(name: 'integrateGradle', description: "Integrates Gradle with Griffon", prehook: null, posthook: null) {
     depends unpackSupportFiles
     ant.copy(todir: basedir) {
         fileset(dir: "${integrationFiles}/gradle")
@@ -59,7 +57,7 @@ target(integrateGradle: "Integrates Gradle with Griffon") {
     println "Created Gradle build file."
 }
 
-target(integrateAnt: "Integrates Ant with Griffon") {
+target(name: 'integrateAnt', description: "Integrates Ant with Griffon", prehook: null, posthook: null) {
     depends unpackSupportFiles
     ant.copy(todir: basedir) {
         fileset(dir: "${integrationFiles}/ant")
@@ -68,7 +66,7 @@ target(integrateAnt: "Integrates Ant with Griffon") {
     println "Created Ant build file."
 }
 
-target(integrateTextmate: "Integrates Textmate with Griffon") {
+target(name: 'integrateTextmate', description: "Integrates Textmate with Griffon", prehook: null, posthook: null) {
     depends unpackSupportFiles
     ant.copy(todir: basedir) {
         fileset(dir: "${integrationFiles}/textmate")
@@ -80,7 +78,7 @@ target(integrateTextmate: "Integrates Textmate with Griffon") {
     println "Created Textmate project files."
 }
 
-target(integrateEclipse: "Integrates Eclipse STS with Griffon") {
+target(name: 'integrateEclipse', description: "Integrates Eclipse STS with Griffon", prehook: null, posthook: null) {
     depends unpackSupportFiles
 
     ant.copy(todir: basedir) {
@@ -93,11 +91,11 @@ target(integrateEclipse: "Integrates Eclipse STS with Griffon") {
 }
 
 
-target(integrateIdea: "Integrates Intellij with Griffon") {
+target(name: 'integrateIdea', description: "Integrates Intellij with Griffon", prehook: null, posthook: null) {
     integrateIntellij()
 }
 
-target(integrateIntellij: "Integrates Intellij with Griffon") {
+target(name: 'integrateIntellij', description: "Integrates Intellij with Griffon", prehook: null, posthook: null) {
     depends unpackSupportFiles
 
     ant.copy(todir: basedir) {
@@ -114,10 +112,11 @@ target(integrateIntellij: "Integrates Intellij with Griffon") {
     println "Created IntelliJ project files."
 }
 
-target(replaceTokens: "Replaces any tokens in the files") {
+target(name: 'replaceTokens', description: "Replaces any tokens in the files", prehook: null, posthook: null) {
     def appKey = griffonAppName.replaceAll(/\s/, '.').toLowerCase()
     ant.replace(dir: basedir, includes: "*.*") {
         replacefilter(token: "@griffon.intellij.libs@", value: intellijGriffonJars())
+        replacefilter(token: "@griffon.eclipse.libs@", value: eclipseGriffonJars())
         replacefilter(token: "@griffon.version@", value: griffonVersion)
         replacefilter(token: "@groovy.version@", value: griffonSettings.groovyVersion)
         replacefilter(token: "@ant.version@", value: griffonSettings.antVersion)
@@ -134,7 +133,7 @@ target(replaceTokens: "Replaces any tokens in the files") {
     def ideaDir = new File("${basedir}/.idea")
     if (ideaDir.exists()) {
         ant.replace(dir: ideaDir) {
-            replacefilter(token: "@griffon.intellij.libs@", value: intellijClasspathLibs())
+            replacefilter(token: "@griffon.intellij.libs@", value: intellijGriffonJars())
             replacefilter(token: "@griffon.version@", value: griffonVersion)
             replacefilter(token: "@griffon.project.name@", value: griffonAppName)
             replacefilter(token: "@java.sdk@", value: getPropertyValue('idea.java.sdk', '1.6'))
@@ -142,7 +141,7 @@ target(replaceTokens: "Replaces any tokens in the files") {
     }
 }
 
-target(unpackSupportFiles: "Unpacks the support files") {
+target(name: 'unpackSupportFiles', description: "Unpacks the support files", prehook: null, posthook: null) {
     if (!integrationFiles.exists()) {
         griffonUnpack(dest: integrationFiles.path, src: "griffon-integration-files.jar")
     }
@@ -150,41 +149,19 @@ target(unpackSupportFiles: "Unpacks the support files") {
 
 setDefaultTarget("integrateWith")
 
-griffonLibs = {
-    def libs = [] as Set
-    if (griffonHome) {
-        (new File("${griffonHome}/dist")).eachFileMatch(~/^griffon-.*\.jar/) {file -> libs << file.name }
-        (new File("${griffonHome}/lib")).eachFileMatch(~/.*\.jar/) {file -> if (!file.name.startsWith("gant-")) libs << file.name }
-    }
-    return libs
-}
-
-intellijClasspathLibs = {
-    def builder = new StringBuilder()
-    if (griffonHome) {
-        (new File("${griffonHome}/dist")).eachFileMatch(~/^griffon-.*\.jar/) {file ->
-            builder << "      <root url=\"jar://${griffonHome}/dist/${file.name}!/\" />\n"
-        }
-        (new File("${griffonHome}/lib")).eachFileMatch(~/.*\.jar/) {file ->
-            if (!file.name.startsWith("gant-")) {
-                builder << "      <root url=\"jar://${griffonHome}/lib/${file.name}!/\" />\n"
-            }
-        }
-    }
-
-    return builder.toString()
-}
-
 // Generates Eclipse .classpath entries for the Griffon distribution
 // JARs. This only works if $GRIFFON_HOME is set.
-eclipseClasspathGriffonJars = {args ->
-    result = ''
-    if (griffonHome) {
-        (new File("${griffonHome}/dist")).eachFileMatch(~/^griffon-.*\.jar/) {file ->
-            result += "    <classpathentry kind=\"var\" path=\"GRIFFON_HOME/dist/${file.name}\" />\n"
+eclipseGriffonJars = {args ->
+    def jars = []
+    new File("${griffonHome}/dist").eachFileMatch(~/^griffon-.*\.jar/) {file ->
+        jars << "<classpathentry kind=\"var\" path=\"GRIFFON_HOME/dist/${file.name}\" />"
+    }
+    new File("${griffonHome}/lib").eachFileMatch(~/.*\.jar/) {file ->
+        if (!file.name.startsWith("gant")) {
+            jars << "<classpathentry kind=\"var\" path=\"GRIFFON_HOME/lib/${file.name}\" />"
         }
     }
-    result
+    jars.join('\n')
 }
 
 griffonJars = {->
@@ -192,11 +169,10 @@ griffonJars = {->
     new File("${griffonHome}/dist").eachFileMatch(~/^griffon-.*\.jar/) {file ->
         jars << file
     }
-    new File("${griffonHome}/lib/shell").eachFileMatch(~/.*\.jar/) {file ->
-        jars << file
-    }
     new File("${griffonHome}/lib").eachFileMatch(~/.*\.jar/) {file ->
-        jars << file
+        if (!file.name.startsWith("gant")) {
+            jars << file
+        }
     }
     jars
 }
