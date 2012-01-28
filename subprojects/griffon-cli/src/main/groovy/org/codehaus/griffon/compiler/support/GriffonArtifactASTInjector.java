@@ -118,7 +118,7 @@ public class GriffonArtifactASTInjector extends AbstractASTInjector {
                                 "getArtifactManager",
                                 NO_ARGS),
                         "findGriffonClass",
-                        args(classx(classNode))))
+                        args(call(THIS, "getClass", NO_ARGS))))
         ));
 
         // Object newInstance()

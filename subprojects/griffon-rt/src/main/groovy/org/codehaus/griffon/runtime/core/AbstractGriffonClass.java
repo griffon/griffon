@@ -23,6 +23,7 @@ import griffon.util.GriffonExceptionHandler;
 import griffon.util.GriffonNameUtils;
 import groovy.lang.*;
 import org.codehaus.griffon.runtime.util.GriffonApplicationHelper;
+import org.codehaus.groovy.runtime.InvokerHelper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -34,6 +35,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
+
+import static griffon.util.GriffonExceptionHandler.sanitize;
 
 /**
  * Abstract base class for Griffon types that provides common functionality for
@@ -107,9 +110,7 @@ public abstract class AbstractGriffonClass implements GriffonClass {
     public Object newInstance() {
         try {
             Object instance = GriffonApplicationHelper.newInstance(app, clazz, type);
-            if (instance instanceof AbstractGriffonArtifact) {
-                ((AbstractGriffonArtifact) instance).setApp(app);
-            }
+            InvokerHelper.setProperty(instance, "app", app);
             return instance;
         } catch (Exception e) {
             Throwable targetException = null;
@@ -118,7 +119,7 @@ public abstract class AbstractGriffonClass implements GriffonClass {
             } else {
                 targetException = e;
             }
-            throw new NewInstanceCreationException("Could not create a new instance of class " + clazz.getName(), GriffonExceptionHandler.sanitize(targetException));
+            throw new NewInstanceCreationException("Could not create a new instance of class " + clazz.getName(), sanitize(targetException));
         }
     }
 
