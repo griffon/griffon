@@ -110,6 +110,14 @@ public abstract class AbstractMVCGroupManager implements MVCGroupManager {
         }
     }
 
+    public MVCGroupConfiguration cloneMVCGroupConfiguration(String mvcType, Map<String, Object> config) {
+        MVCGroupConfiguration configuration = findConfiguration(mvcType);
+        Map<String, Object> configCopy = new LinkedHashMap<String, Object>();
+        configCopy.putAll(configuration.getConfig());
+        if(config != null) configCopy.putAll(config);
+        return newMVCGroupConfiguration(mvcType, configuration.getMembers(), configCopy);
+    }
+
     protected abstract void doInitialize(Map<String, MVCGroupConfiguration> configurations);
 
     public MVCGroup buildMVCGroup(String mvcType) {

@@ -26,10 +26,41 @@ import java.util.Map;
  * @since 0.9.4
  */
 public interface MVCGroupManager extends MVCHandler, ApplicationHandler {
+    /**
+     * Creates an MVCConfiguration instance with the given arguments.
+     *
+     * @param mvcType the name of the MVC group
+     * @param members members of the group
+     * @param config  additional configuration required by the group
+     * @return a ready-to-use MVCGroupConfiguration instance
+     */
     MVCGroupConfiguration newMVCGroupConfiguration(String mvcType, Map<String, String> members, Map<String, Object> config);
 
+    /**
+     * Clones an existing MVCGroupConfiguration, optionally overriding additional config values.
+     *
+     * @param mvcType the name of the configuration to clone
+     * @param config  additional config parameters to be set on the configuration
+     * @return a ready-to-use MVCGroupConfiguration instance
+     * @since 0.9.5
+     */
+    MVCGroupConfiguration cloneMVCGroupConfiguration(String mvcType, Map<String, Object> config);
+
+    /**
+     * Creates a new MVCGroup instance.
+     *
+     * @param configuration the configuration of the group
+     * @param mvcId         the id to use for the group
+     * @param members       the instance members of the group
+     * @return a ready-to-use MVCGroup instance
+     */
     MVCGroup newMVCGroup(MVCGroupConfiguration configuration, String mvcId, Map<String, Object> members);
 
+    /**
+     * Initializes this manager with the group configurations provided by the application and addons.
+     *
+     * @param configurations available group configurations
+     */
     void initialize(Map<String, MVCGroupConfiguration> configurations);
 
     void addConfiguration(MVCGroupConfiguration configuration);

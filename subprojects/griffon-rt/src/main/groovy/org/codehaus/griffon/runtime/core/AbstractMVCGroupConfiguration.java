@@ -79,4 +79,13 @@ public abstract class AbstractMVCGroupConfiguration implements MVCGroupConfigura
     }
 
     protected abstract MVCGroup instantiateMVCGroup(String mvcId, Map<String, Object> args);
+
+    @Override
+    public String toString() {
+        return "MVCGroupConfiguration{" +
+                "mvcType='" + mvcType + '\'' +
+                ", members=" + members +
+                ", config=" + config +
+                '}';
+    }
 }
