@@ -1,5 +1,5 @@
 /*
- * Copyright 2004-2011 the original author or authors.
+ * Copyright 2004-2012 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,21 +21,17 @@ import org.codehaus.griffon.resolve.IvyDependencyManager
  *
  * @author Graeme Rocher (Grails 1.1)
  */
-includeTargets << griffonScript("_GriffonInit")
-includeTargets << griffonScript("_GriffonArgParsing")
 
-target(main:"Install a JAR dependency into a project") {
-    depends(parseArguments)
-
+target(installDependency: "Install a JAR dependency into a project") {
     def dep
-    if(argsMap.params) {
+    if (argsMap.params) {
         dep = argsMap.params[0].toString()
     }
-    else if(argsMap.group && argsMap.name && argsMap.version) {
+    else if (argsMap.group && argsMap.name && argsMap.version) {
         dep = argsMap
     }
 
-    if(dep) {
+    if (dep) {
         def manager = new IvyDependencyManager(griffonAppName, griffonAppVersion, griffonSettings)
         manager.parseDependencies {
             repositories {
@@ -50,7 +46,7 @@ target(main:"Install a JAR dependency into a project") {
                 mavenRepo "http://repository.springsource.com/maven/bundles/release"
                 mavenRepo "http://repository.springsource.com/maven/bundles/external"
                 mavenRepo "http://repository.springsource.com/maven/bundles/milestone"
-                if(argsMap.repository) {
+                if (argsMap.repository) {
                     mavenRepo argsMap.repository.toString()
                 }
             }
@@ -60,7 +56,7 @@ target(main:"Install a JAR dependency into a project") {
 
         println "Installing dependency '${dep}'. Please wait.."
         def report = manager.resolveDependencies()
-        if(report.hasError()) {
+        if (report.hasError()) {
             println """
 There was an error resolving the dependency '${dep}'.
 This could be because you have passed an invalid dependency name or because the dependency was not found in one of the default repositories.
@@ -68,18 +64,18 @@ Try passing a valid Maven repository with the --repository argument."""
             exit 1
         }
         else {
-            for(File file in report.allArtifactsReports.localFile) {
-				if(argsMap.dir) {
-					ant.copy(file:file, todir:argsMap.dir)
-                	println "Installed dependency '${dep}' to location '${argsMap.dir}'"					
-				}
-				else {
-                	println "Installed dependency '${dep}'."					
-				}
+            for (File file in report.allArtifactsReports.localFile) {
+                if (argsMap.dir) {
+                    ant.copy(file: file, todir: argsMap.dir)
+                    println "Installed dependency '${dep}' to location '${argsMap.dir}'"
+                }
+                else {
+                    println "Installed dependency '${dep}'."
+                }
             }
 
         }
     }
 }
 
-setDefaultTarget("main")
+setDefaultTarget(installDependency)

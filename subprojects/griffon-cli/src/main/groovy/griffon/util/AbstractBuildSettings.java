@@ -1,5 +1,5 @@
 /*
- * Copyright 2008-2011 the original author or authors.
+ * Copyright 2008-2012 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -26,15 +26,16 @@ import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
+import static org.codehaus.griffon.cli.CommandLineConstants.KEY_CLI_VERBOSE;
+import static org.codehaus.griffon.cli.CommandLineConstants.KEY_NON_INTERACTIVE_DEFAULT_ANSWER;
+
 /**
  * Methods optimized to Java for the BuildSettings class.
  *
  * @since 0.9.1
  */
 public abstract class AbstractBuildSettings {
-
     private static final String KEY_PLUGIN_DIRECTORY_RESOURCES = "pluginDirectoryResources";
-    private static final String KEY_INLINE_PLUGIN_LOCATIONS = "inlinePluginLocations";
     private static final String KEY_PLUGIN_BASE_DIRECTORIES = "pluginBaseDirectories";
 
     /**
@@ -50,13 +51,7 @@ public abstract class AbstractBuildSettings {
      */
     protected File projectPluginsDir;
 
-    /**
-     * The location where global plugins are installed to.
-     */
-    protected File globalPluginsDir;
-
     protected boolean projectPluginsDirSet;
-    protected boolean globalPluginsDirSet;
 
     /**
      * Flattened version of the ConfigObject for easy access from Java
@@ -90,32 +85,6 @@ public abstract class AbstractBuildSettings {
         projectPluginsDirSet = true;
     }
 
-    public File getGlobalPluginsDir() {
-        return globalPluginsDir;
-    }
-
-    public void setGlobalPluginsDir(File globalPluginsDir) {
-        this.globalPluginsDir = globalPluginsDir;
-        globalPluginsDirSet = true;
-    }
-
-    /**
-     * Adds a plugin directory
-     *
-     * @param location The plugin's locatino
-     */
-    public void addPluginDirectory(File location, boolean isInline) {
-        if (location != null) {
-            Collection<File> directories = getPluginDirectories();
-            if (!directories.contains(location)) {
-                directories.add(location);
-                if (isInline) {
-                    getInlinePluginDirectories().add(location);
-                }
-            }
-        }
-    }
-
     /**
      * Obtains a list of plugin directories for the application
      */
@@ -124,74 +93,13 @@ public abstract class AbstractBuildSettings {
         Collection<File> pluginDirectoryResources = (Collection<File>) cache.get(KEY_PLUGIN_DIRECTORY_RESOURCES);
         if (pluginDirectoryResources == null) {
             pluginDirectoryResources = getImplicitPluginDirectories();
-
-            // Also add any explicit plugin locations specified by the
-            // BuildConfig setting "griffon.plugin.location.<name>"
-            Collection<File> inlinePlugins = getInlinePluginsFromConfiguration(config);
-            cache.put(KEY_INLINE_PLUGIN_LOCATIONS, inlinePlugins);
-            pluginDirectoryResources.addAll(inlinePlugins);
-
             cache.put(KEY_PLUGIN_DIRECTORY_RESOURCES, pluginDirectoryResources);
         }
         return pluginDirectoryResources;
     }
 
     /**
-     * Extracts the inline plugin dirs relative to the base dir of this project.
-     *
-     * @see getInlinePluginsFromConfiguration(Map, File)
-     */
-    @SuppressWarnings({"rawtypes"})
-    protected Collection<File> getInlinePluginsFromConfiguration(@SuppressWarnings("hiding") Map config) {
-        return getInlinePluginsFromConfiguration(config, getBaseDir());
-    }
-
-    /**
-     * Extracts the inline plugin dirs from the given config, relative to the given baseDir.
-     *
-     * @todo consider trowing an error here if an plugin does not exists at the location.
-     */
-    @SuppressWarnings({"rawtypes", "hiding"})
-    protected Collection<File> getInlinePluginsFromConfiguration(Map config, File baseDir) {
-        Collection<File> inlinePlugins = new ConcurrentLinkedQueue<File>();
-        if (config != null) {
-            Map pluginLocations = lookupPluginLocationConfig(config);
-            if (pluginLocations != null) {
-                for (Object value : pluginLocations.values()) {
-                    if (value != null) {
-                        File resource;
-                        try {
-                            resource = new File(baseDir, value.toString()).getCanonicalFile();
-                            inlinePlugins.add(resource);
-                        } catch (IOException e) {
-                            System.err.println("Cannot add location [" + value + "] as an inline plugin dependencies due to I/O error: " + e.getMessage());
-                        }
-                    }
-                }
-            }
-        }
-        return inlinePlugins;
-    }
-
-    @SuppressWarnings({"rawtypes", "hiding"})
-    private Map lookupPluginLocationConfig(Map config) {
-        return getIfMap(getIfMap(getIfMap(config, "griffon"), "plugin"), "location");
-    }
-
-    @SuppressWarnings({"rawtypes", "hiding"})
-    private Map getIfMap(Map config, String name) {
-        if (config != null) {
-            Object o = config.get(name);
-            if (o instanceof Map) {
-                return ((Map) o);
-            }
-        }
-        return Collections.emptyMap();
-    }
-
-    /**
-     * Returns a list of all plugin directories in both the given path
-     * and the global "plugins" directory together.
+     * Returns a list of all plugin directories in the given path.
      *
      * @return A list of plugin directories as File objects
      */
@@ -229,44 +137,20 @@ public abstract class AbstractBuildSettings {
                 System.err.println("Cannot read project plugins directory [" + projectPluginsDir + "] due to I/O error: " + e.getMessage());
             }
 
-            if (globalPluginsDir != null) try {
-                dirs.add(globalPluginsDir.getCanonicalPath());
-            } catch (IOException e) {
-                System.err.println("Cannot read global plugins directory [" + globalPluginsDir + "] due to I/O error: " + e.getMessage());
-            }
             cache.put(KEY_PLUGIN_BASE_DIRECTORIES, dirs);
         }
         return dirs;
     }
 
-    /**
-     * Returns true if the specified plugin location is an inline location.
-     */
-    @SuppressWarnings("unchecked")
-    public boolean isInlinePluginLocation(File pluginLocation) {
-        if (pluginLocation == null) return false;
-        getPluginDirectories(); // initialize the cache
-        ConcurrentLinkedQueue<File> locations = (ConcurrentLinkedQueue<File>) cache.get(KEY_INLINE_PLUGIN_LOCATIONS);
-        return locations != null && locations.contains(pluginLocation);
-    }
-
-    /**
-     * Returns an array of the inplace plugin locations.
-     */
-    @SuppressWarnings("unchecked")
-    public Collection<File> getInlinePluginDirectories() {
-        getPluginDirectories(); // initailize the cache
-        Collection<File> locations = (ConcurrentLinkedQueue<File>) cache.get(KEY_INLINE_PLUGIN_LOCATIONS);
-        if (locations == null) {
-            locations = new ConcurrentLinkedQueue<File>();
-            cache.put(KEY_INLINE_PLUGIN_LOCATIONS, locations);
-        }
-        return locations;
-    }
-
     public boolean isDebugEnabled() {
-        if (System.getProperty("griffon.cli.verbose") != null) return Boolean.getBoolean("griffon.cli.verbose");
-        return DefaultTypeTransformation.castToBoolean(getConfig().flatten().get("griffon.cli.verbose"));
+        if (System.getProperty(KEY_CLI_VERBOSE) != null) return Boolean.getBoolean(KEY_CLI_VERBOSE);
+        return DefaultTypeTransformation.castToBoolean(getConfig().flatten().get(KEY_CLI_VERBOSE));
+    }
+
+    public String getDefaultAnswerNonInteractive() {
+        if (System.getProperty(KEY_NON_INTERACTIVE_DEFAULT_ANSWER) != null)
+            return System.getProperty(KEY_NON_INTERACTIVE_DEFAULT_ANSWER);
+        return ConfigUtils.getConfigValueAsString(getConfig(), KEY_NON_INTERACTIVE_DEFAULT_ANSWER, "");
     }
 
     public void debug(String msg) {

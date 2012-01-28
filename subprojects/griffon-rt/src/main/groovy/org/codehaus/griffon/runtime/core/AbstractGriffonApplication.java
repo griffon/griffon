@@ -1,5 +1,5 @@
 /*
- * Copyright 2008-2011 the original author or authors.
+ * Copyright 2008-2012 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -434,7 +434,7 @@ public abstract class AbstractGriffonApplication extends AbstractObservable impl
     }
 
     public MVCGroup buildMVCGroup(String mvcType) {
-        return getMvcGroupManager().buildMVCGroup(mvcType, mvcType, Collections.<String, Object>emptyMap());
+        return getMvcGroupManager().buildMVCGroup(mvcType, null, Collections.<String, Object>emptyMap());
     }
 
     public MVCGroup buildMVCGroup(String mvcType, String mvcName) {
@@ -442,11 +442,11 @@ public abstract class AbstractGriffonApplication extends AbstractObservable impl
     }
 
     public MVCGroup buildMVCGroup(Map<String, Object> args, String mvcType) {
-        return getMvcGroupManager().buildMVCGroup(mvcType, mvcType, args);
+        return getMvcGroupManager().buildMVCGroup(mvcType, null, args);
     }
 
     public MVCGroup buildMVCGroup(String mvcType, Map<String, Object> args) {
-        return getMvcGroupManager().buildMVCGroup(mvcType, mvcType, args);
+        return getMvcGroupManager().buildMVCGroup(mvcType, null, args);
     }
 
     public MVCGroup buildMVCGroup(Map<String, Object> args, String mvcType, String mvcName) {
@@ -458,15 +458,15 @@ public abstract class AbstractGriffonApplication extends AbstractObservable impl
     }
 
     public List<? extends GriffonMvcArtifact> createMVCGroup(String mvcType) {
-        return getMvcGroupManager().createMVCGroup(mvcType, mvcType, Collections.<String, Object>emptyMap());
+        return getMvcGroupManager().createMVCGroup(mvcType, null, Collections.<String, Object>emptyMap());
     }
 
     public List<? extends GriffonMvcArtifact> createMVCGroup(Map<String, Object> args, String mvcType) {
-        return getMvcGroupManager().createMVCGroup(mvcType, mvcType, args);
+        return getMvcGroupManager().createMVCGroup(mvcType, null, args);
     }
 
     public List<? extends GriffonMvcArtifact> createMVCGroup(String mvcType, Map<String, Object> args) {
-        return getMvcGroupManager().createMVCGroup(mvcType, mvcType, args);
+        return getMvcGroupManager().createMVCGroup(mvcType, null, args);
     }
 
     public List<? extends GriffonMvcArtifact> createMVCGroup(String mvcType, String mvcName) {
@@ -486,7 +486,7 @@ public abstract class AbstractGriffonApplication extends AbstractObservable impl
     }
 
     public void withMVCGroup(String mvcType, Closure handler) {
-        getMvcGroupManager().withMVCGroup(mvcType, mvcType, Collections.<String, Object>emptyMap(), handler);
+        getMvcGroupManager().withMVCGroup(mvcType, null, Collections.<String, Object>emptyMap(), handler);
     }
 
     public void withMVCGroup(String mvcType, String mvcName, Closure handler) {
@@ -494,11 +494,11 @@ public abstract class AbstractGriffonApplication extends AbstractObservable impl
     }
 
     public void withMVCGroup(String mvcType, Map<String, Object> args, Closure handler) {
-        getMvcGroupManager().withMVCGroup(mvcType, mvcType, args, handler);
+        getMvcGroupManager().withMVCGroup(mvcType, null, args, handler);
     }
 
     public void withMVCGroup(Map<String, Object> args, String mvcType, Closure handler) {
-        getMvcGroupManager().withMVCGroup(mvcType, mvcType, args, handler);
+        getMvcGroupManager().withMVCGroup(mvcType, null, args, handler);
     }
 
     public void withMVCGroup(String mvcType, String mvcName, Map<String, Object> args, Closure handler) {
@@ -510,7 +510,7 @@ public abstract class AbstractGriffonApplication extends AbstractObservable impl
     }
 
     public <M extends GriffonModel, V extends GriffonView, C extends GriffonController> void withMVCGroup(String mvcType, MVCClosure<M, V, C> handler) {
-        getMvcGroupManager().withMVCGroup(mvcType, mvcType, Collections.<String, Object>emptyMap(), handler);
+        getMvcGroupManager().withMVCGroup(mvcType, null, Collections.<String, Object>emptyMap(), handler);
     }
 
     public <M extends GriffonModel, V extends GriffonView, C extends GriffonController> void withMVCGroup(String mvcType, String mvcName, MVCClosure<M, V, C> handler) {
@@ -518,11 +518,11 @@ public abstract class AbstractGriffonApplication extends AbstractObservable impl
     }
 
     public <M extends GriffonModel, V extends GriffonView, C extends GriffonController> void withMVCGroup(String mvcType, Map<String, Object> args, MVCClosure<M, V, C> handler) {
-        getMvcGroupManager().withMVCGroup(mvcType, mvcType, args, handler);
+        getMvcGroupManager().withMVCGroup(mvcType, null, args, handler);
     }
 
     public <M extends GriffonModel, V extends GriffonView, C extends GriffonController> void withMVCGroup(Map<String, Object> args, String mvcType, MVCClosure<M, V, C> handler) {
-        getMvcGroupManager().withMVCGroup(mvcType, mvcType, args, handler);
+        getMvcGroupManager().withMVCGroup(mvcType, null, args, handler);
     }
 
     public <M extends GriffonModel, V extends GriffonView, C extends GriffonController> void withMVCGroup(String mvcType, String mvcName, Map<String, Object> args, MVCClosure<M, V, C> handler) {

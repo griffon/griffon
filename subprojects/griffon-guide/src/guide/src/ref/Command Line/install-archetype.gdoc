@@ -2,13 +2,14 @@ h1. install-archetype
 
 h2. Purpose
 
-Installs an archetype from a file or URL
+Installs an archetype from a file, URL or name/version pair.
 
 h2. Examples
 
 {code:java}
-griffon install-archetype http://foo.com/bar-griffon-archetype.zip
-griffon install-archetype ../bar-griffon-archetype.zip
+griffon install-archetype http://foo.com/griffon-bar-1.0.zip
+griffon install-archetype ../griffon-bar-1.0.zip
+griffon install-archetype bar 1.0
 {code}
 
 h2. Description
@@ -16,14 +17,10 @@ h2. Description
 Usage: 
 {code:java}
 griffon install-archetype \[URL/File\]
+griffon install-plugin \[name\] \[version\]* --repository=<repositoryName>
 {code}
 
-Fired Events: 
-
-* @StatusError@ - When an error occurs during archetype installation
-* @StatusFinal@ - When the archetype is installed successfully
-
-The @install-archetype@ command is a versatile command that allows the installation of archetypes from a remote URL or a local file.
+The @install-archetype@ command is a versatile command that allows the installation of archetypes from a remote URL, a local file or a name/version combination
 
 To install from a URL simply specify the absolute URL to the archetype package:
 
@@ -37,3 +34,15 @@ To install from a local file specify the absolute or relative path to the file:
 griffon install-archetype ../bar-griffon-archetype.zip
 {code}
 
+To install from an artifact repository specify the name of the archetype, the version is optional
+
+{code:java}
+griffon install-archetype bar
+{code}
+
+Arguments:
+* @name@ -The name of the archetype to install. You may specify an URL, a zip file or a regular name.
+* @version@ - The version of the archetype to install. May only be specified if an archetype name is supplied.
+
+Options:
+* @repository@ - Name of an specific repository where the search will be performed. Defaults to griffon-central

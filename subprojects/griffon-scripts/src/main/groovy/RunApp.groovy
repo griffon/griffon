@@ -1,5 +1,5 @@
 /*
- * Copyright 2008-2011 the original author or authors.
+ * Copyright 2008-2012 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,20 +24,15 @@
 import griffon.util.GriffonNameUtils
 import static griffon.util.GriffonApplicationUtils.isMacOSX
 
-includeTargets << griffonScript("Package")
-includeTargets << griffonScript("_GriffonBootstrap")
-includeTargets << griffonScript("_PackagePlugins" )
-
-target('default': "Runs the application from the command line") {
-    runApp()
-}
+includeTargets << griffonScript('Package')
+includeTargets << griffonScript('_GriffonBootstrap')
 
 target('runApp': "Runs the application from the command line") {
-    if(isPluginProject) {
+    if (isPluginProject) {
         println "Cannot run application: project is a plugin!"
         exit(1)
     }
-    depends(checkVersion, configureProxy, parseArguments, prepackage)
+    depends(checkVersion, prepackage)
 
     // calculate the needed jars
     File jardir = new File(ant.antProject.replaceProperties(buildConfig.griffon.jars.destDir))
@@ -54,8 +49,10 @@ target('runApp': "Runs the application from the command line") {
 
     def javaOpts = setupJavaOpts(true)
     if (argsMap.containsKey('debug')) {
-        def portNum = argsMap.debugPort?:'18290'  //default is 'Gr' in ASCII
-        def addr = argsMap.debugAddr?:'127.0.0.1'
+        argsMap['debug-port'] = argsMap.debugPort
+        argsMap['debug-addr'] = argsMap.debugAddr
+        def portNum = argsMap['debug-port'] ?: '18290'  //default is 'Gr' in ASCII
+        def addr = argsMap['debug-addr'] ?: '127.0.0.1'
         def debugSocket = ''
         if (portNum =~ /\d+/) {
             if (addr == '127.0.0.1') {
@@ -72,8 +69,11 @@ target('runApp': "Runs the application from the command line") {
     if (buildConfig.griffon.memory?.max) {
         javaOpts << "-Xmx$buildConfig.griffon.memory.max"
     }
+    if (buildConfig.griffon.memory?.minPermSize) {
+        javaOpts << "-XX:PermSize=$buildConfig.griffon.memory.minPermSize"
+    }
     if (buildConfig.griffon.memory?.maxPermSize) {
-        javaOpts << "-XX:maxPermSize=$buildConfig.griffon.memory.maxPermSize"
+        javaOpts << "-XX:MaxPermSize=$buildConfig.griffon.memory.maxPermSize"
     }
     if (isMacOSX) {
         javaOpts << "-Xdock:name=${GriffonNameUtils.capitalize(griffonAppName)}"
@@ -81,37 +81,40 @@ target('runApp': "Runs the application from the command line") {
     }
 
     debug("Running JVM options:")
-    javaOpts.each{ debug("  $it") }
+    javaOpts.each { debug("  $it") }
 
     def runtimeClasspath = runtimeJars.collect { f ->
         f.absolutePath.startsWith(jardir.absolutePath) ? f.absolutePath - jardir.absolutePath - File.separator : f
     }.join(File.pathSeparator)
 
-    runtimeClasspath = [i18nDir, resourcesDir, runtimeClasspath, classesDir, pluginClassesDir].join(File.pathSeparator)
+    runtimeClasspath = [i18nDir, resourcesDir, runtimeClasspath, projectMainClassesDir].join(File.pathSeparator)
 
+    event 'StatusUpdate', ['Launching application']
     // start the process
     try {
         def cmd = [javaVM]
         // let's make sure no empty/null String is added
-        javaOpts.each { s -> if(s) cmd << s }
-        [proxySettings, '-classpath', runtimeClasspath, griffonApplicationClass].each { s -> if(s) cmd << s }
-        args?.tokenize().each { s -> if(s) cmd << s }
+        javaOpts.each { s -> if (s) cmd << s }
+        [proxySettings, '-classpath', runtimeClasspath, griffonApplicationClass].each { s -> if (s) cmd << s }
+        args?.tokenize().each { s -> if (s) cmd << s }
         debug("Executing ${cmd.join(' ')}")
         Process p = Runtime.runtime.exec(cmd as String[], null, jardir)
 
         // pipe the output
         p.consumeProcessOutput(System.out, System.err)
-    
+
         // wait for it.... wait for it...
         p.waitFor()
     } finally {
 // XXX -- NATIVE
-        if(platformDir.exists()) {
+        if (platformDir.exists()) {
             ant.delete(dir: platformDir)
         }
-        if(platformDir2.exists()) {
+        if (platformDir2.exists()) {
             ant.delete(dir: platformDir2)
         }
 // XXX -- NATIVE
     }
 }
+
+setDefaultTarget(runApp)

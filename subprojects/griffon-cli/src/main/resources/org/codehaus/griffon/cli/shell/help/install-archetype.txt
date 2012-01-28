@@ -1,0 +1,25 @@
+DESCRIPTION
+        install-archetype
+
+	Installs an archetype for the given URL or name and version.
+
+SYNTAX
+        install-archetype [options] name [version] 
+
+ARGUMENTS
+        name
+                The name of the archetype to install. You may specify an URL,
+                a zip file or a regular name.
+        version
+                The version of the archetype to install. May only be specified
+                if an archetype name is supplied.
+
+OPTIONS
+        --force-upgrade
+                Forces upgrade if the archetype to be installed ahs a bigger
+                major version than the currently installed (if there's one
+                archetype installed that matches the same name).
+        --non-interactive
+                Controls if the shell can ask for input or not.
+        --repository
+                Name of an specific repository where the search will be performed.

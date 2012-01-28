@@ -1,5 +1,5 @@
 /*
- * Copyright 2004-2011 the original author or authors.
+ * Copyright 2004-2012 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,15 +24,29 @@ import griffon.util.GriffonNameUtils
 import griffon.util.RunMode
 
 // No point doing this stuff more than once.
-if (getBinding().variables.containsKey("_package_called")) return
+if (getBinding().variables.containsKey('_package_called')) return
 _package_called = true
 
-includeTargets << griffonScript("_GriffonPackage")
+includeTargets << griffonScript('_GriffonPackage')
 
 ant.taskdef(name: 'fileMerge', classname: 'org.codehaus.griffon.ant.taskdefs.FileMergeTask')
 
-target('default': "Packages a Griffon application.") {
-    depends(checkVersion, parseArguments, createConfig)
+target('package': 'Packages a Griffon project according to its type') {
+    if(griffonSettings.isPluginProject()) {
+        includeTargets << griffonScript('PackagePlugin')
+        depends(checkVersion, packagePlugin)
+        return
+    } else if(griffonSettings.isArchetypeProject()) {
+        includeTargets << griffonScript('PackageArchetype')
+        depends(checkVersion, packageArchetype)
+        return
+    } else {
+        depends(checkVersion, packageApplication)
+    }
+}
+
+target(packageApplication: 'Packages a GriffonApplication') {
+    depends(createConfig)
 
     // create general dist dir
     distDir = buildConfig.griffon.dist.dir ?: "${basedir}/dist"
@@ -47,11 +61,14 @@ target('default': "Packages a Griffon application.") {
             if (type in ['zip', 'jar', 'applet', 'webstart']) {
                 depends("package_" + type)
             } else {
-                event("MakePackage", [type])
+                event('MakePackage', [type])
             }
         } catch (Exception x) {
             ant.echo(message: "Could not handle package type '${type}'")
             ant.echo(message: x.message)
+            if(getPropertyValue('griffon.package.abort.onfailure', false)) {
+                exit(1)
+            }
         }
     }
     if (argsMap.params) {
@@ -65,22 +82,19 @@ target('default': "Packages a Griffon application.") {
         package_webstart()
     }
 }
+setDefaultTarget('package')
 
 target(prepackage: "packaging steps all standard packaging options do") {
-    event("PrepackageStart", [])
-
     createConfig()
 
-    griffonAppletClass = buildConfig.griffon.applet.mainClass ?: defaultGriffonAppletClass
-    griffonApplicationClass = buildConfig.griffon.application.mainClass ?: defaultGriffonApplicationClass
+    griffonAppletClass = buildConfig.griffon.applet.mainClass
+    griffonApplicationClass = buildConfig.griffon.application.mainClass
 
     packageApp()
 
     // make codebase relative
     if (buildConfig.griffon.webstart.codebase == "CHANGE ME") buildConfig.griffon.webstart.codebase = "file:./"
     if (argsMap.codebase) buildConfig.griffon.webstart.codebase = argsMap.codebase
-
-    event("PrepackageEnd", [])
 }
 
 /*
@@ -253,8 +267,11 @@ target(_copyLaunchScripts: "") {
     if (buildConfig.griffon.memory?.max) {
         javaOpts << "-Xmx$buildConfig.griffon.memory.max"
     }
+    if (buildConfig.griffon.memory?.minPermSize) {
+        javaOpts << "-XX:PermSize=$buildConfig.griffon.memory.minPermSize"
+    }
     if (buildConfig.griffon.memory?.maxPermSize) {
-        javaOpts << "-XX:maxPermSize=$buildConfig.griffon.memory.maxPermSize"
+        javaOpts << "-XX:MaxPermSize=$buildConfig.griffon.memory.maxPermSize"
     }
     if (buildConfig.griffon.app?.javaOpts) {
         buildConfig.griffon.app?.javaOpts.each { javaOpts << it }
@@ -289,7 +306,7 @@ _copyFiles = { srcdir, path ->
 _copySharedFiles = { targetDistDir ->
     def sharedFilesPath = 'griffon-app/conf/dist/shared'
     _copyFiles(basedir, sharedFilesPath)
-    doWithPlugins { pluginName, pluginVersion, pluginDir ->
+    pluginSettings.doWithPlugins { pluginName, pluginVersion, pluginDir ->
         _copyFiles(pluginDir, sharedFilesPath)
     }
 }
@@ -297,7 +314,7 @@ _copySharedFiles = { targetDistDir ->
 _copyPackageFiles = { targetDistDir ->
     def packageFilesPath = 'griffon-app/conf/dist/' + packageType
     _copyFiles(basedir, packageFilesPath)
-    doWithPlugins { pluginName, pluginVersion, pluginDir ->
+    pluginSettings.doWithPlugins { pluginName, pluginVersion, pluginDir ->
         _copyFiles(pluginDir, packageFilesPath)
     }
 }

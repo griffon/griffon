@@ -1,5 +1,5 @@
 /*
- * Copyright 2004-2005 the original author or authors.
+ * Copyright 2004-2012 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,10 +18,9 @@
  * @author Graeme Rocher (Grails 1.2.3)
  */
 
-includeTargets << griffonScript("_GriffonArgParsing")
-target(default:"Adds a proxy configuration") {
-    depends(parseArguments)
+// includeTargets << griffonScript("_GriffonArgParsing")
 
+target(addProxy: "Adds a proxy configuration") {
     if (!argsMap.params) {
         println msg()
         exit 1
@@ -31,10 +30,10 @@ target(default:"Adds a proxy configuration") {
         def settingsFile = griffonSettings.proxySettingsFile
         def config = griffonSettings.proxySettings
 
-        config[argsMap.params[0]] = ['http.proxyHost':argsMap.host,
-                                     'http.proxyPort':argsMap.port,
-                                     "http.proxyUserName": argsMap.username?: '',
-                                     "http.proxyPassword": argsMap.password?: '']
+        config[argsMap.params[0]] = ['http.proxyHost': argsMap.host,
+                'http.proxyPort': argsMap.port,
+                "http.proxyUserName": argsMap.username ?: '',
+                "http.proxyPassword": argsMap.password ?: '']
 
         settingsFile.withWriter { w -> config.writeTo(w) }
 
@@ -45,6 +44,7 @@ target(default:"Adds a proxy configuration") {
         exit 1
     }
 }
+setDefaultTarget(addProxy)
 
 String msg() {
     return '''\

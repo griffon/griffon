@@ -1,5 +1,5 @@
 /*
- * Copyright 2004-2011 the original author or authors.
+ * Copyright 2004-2012 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,15 +15,16 @@
  */
 
 import griffon.util.Environment
+import griffon.util.Metadata
 import griffon.util.PlatformUtils
 import griffon.util.RunMode
-import griffon.util.Metadata
+import java.text.SimpleDateFormat
 import java.util.zip.ZipEntry
 import java.util.zip.ZipFile
-import java.text.SimpleDateFormat
-import static griffon.util.GriffonNameUtils.capitalize
+import org.springframework.core.io.Resource
 import static griffon.util.GriffonApplicationUtils.is64Bit
 import static griffon.util.GriffonApplicationUtils.osArch
+import static griffon.util.GriffonNameUtils.capitalize
 
 /**
  * Gant script that packages a Griffon application (note: does not create WAR)
@@ -37,17 +38,18 @@ import static griffon.util.GriffonApplicationUtils.osArch
 if (getBinding().variables.containsKey("_griffon_package_called")) return
 _griffon_package_called = true
 
-includeTargets << griffonScript("_GriffonCompile")
-includeTargets << griffonScript("_PackagePlugins")
+includeTargets << griffonScript('_GriffonCompile')
 
 configTweaks = []
 
-target(createConfig: "Creates the configuration object") {
+target(name: 'createConfig', description: 'Creates the configuration object',
+        prehook: null, posthook: null) {
     depends(compile)
     configTweaks.each {tweak -> tweak() }
 }
 
-target(packageApp: "Implementation of package target") {
+target(name: 'packageApp', description: '',
+        prehook: null, posthook: null) {
     depends(createStructure)
 
     try {
@@ -67,12 +69,11 @@ target(packageApp: "Implementation of package target") {
     jardir = ant.antProject.replaceProperties(buildConfig.griffon.jars.destDir)
     ant.uptodate(property: 'appJarUpToDate', targetfile: "${jardir}/${buildConfig.griffon.jars.jarName}") {
         srcfiles(dir: "${basedir}/griffon-app/", includes: "**/*")
-        srcfiles(dir: "$classesDirPath", includes: "**/*")
+        srcfiles(dir: "$projectMainClassesDir", includes: "**/*")
     }
 
     packageResources()
 
-    loadPlugins()
     checkKey()
     _copyLibs()
     jarFiles()
@@ -80,14 +81,18 @@ target(packageApp: "Implementation of package target") {
     event("PackagingEnd", [])
 }
 
-target(packageResources: "Presp app/plugin resources for packaging") {
+target(name: 'packageResources', description: "Presp app/plugin resources for packaging",
+        prehook: null, posthook: null) {
     i18nDir = new File("${resourcesDirPath}/griffon-app/i18n")
     ant.mkdir(dir: i18nDir)
 
     resourcesDir = new File("${resourcesDirPath}/griffon-app/resources")
     ant.mkdir(dir: resourcesDir)
 
-    if (!isPluginProject || isAddonPlugin) collectArtifactMetadata()
+    if (!isPluginProject || isAddonPlugin) {
+        collectArtifactMetadata()
+        collectAddonMetadata()
+    }
 
     if (buildConfig.griffon.enable.native2ascii) {
         profile("converting native message bundles to ascii") {
@@ -120,12 +125,12 @@ target(packageResources: "Presp app/plugin resources for packaging") {
             exclude(name: "**/*.groovy")
         }
     }
-    ant.copy(todir: classesDirPath) {
+    ant.copy(todir: projectMainClassesDir) {
         fileset(dir: "${basedir}", includes: metadataFile.name)
     }
 
     // GRIFFON-189 add environment info to metadata
-    def metaFile = new File(classesDirPath, metadataFile.name)
+    File metaFile = new File(projectMainClassesDir, metadataFile.name)
     updateMetadata(metaFile, (Environment.KEY): Environment.current.name)
 
     ant.copy(todir: resourcesDirPath, failonerror: false) {
@@ -149,8 +154,6 @@ collectArtifactMetadata = {
     event("CollectArtifacts", [artifactPaths])
 
     def artifacts = [:]
-    // def pluginDirectories = pluginSettings.pluginDirectories.file
-    // ([new File(basedir)] + pluginDirectories).each { searchPath ->
     searchPath = new File(basedir, 'griffon-app')
     searchPath.eachFileRecurse { file ->
         artifactPaths.find { entry ->
@@ -179,7 +182,34 @@ collectArtifactMetadata = {
     }
 }
 
-target(checkKey: "Check to see if the keystore exists") {
+collectAddonMetadata = {
+    Map addons = [:]
+    pluginSettings.sortedPluginDirectories.each { String name, Resource dir ->
+        if (resolveResources("file://${dir.file}/dist/griffon-${name}-*-runtime.jar") ||
+                resolveResources("file://${dir.file}/addon/griffon-${name}-addon-*.jar")) {
+            String pluginDirName = dir.file.name
+            String pluginVersion = pluginDirName[(name.size() + 1)..-1]
+            addons[name] = pluginVersion
+        }
+    }
+    if (addons) {
+        // toolkit plugin always goes first
+        String toolkit = Metadata.current.getApplicationToolkit()
+        String toolkitVersion = addons.remove(toolkit)
+        addons = [(toolkit): toolkitVersion] + addons
+        File addonMetadataDir = new File("${resourcesDirPath}/griffon-app/resources/META-INF")
+        addonMetadataDir.mkdirs()
+        File addonMetadataFile = new File(addonMetadataDir, '/griffon-addons.properties')
+        addonMetadataFile.withPrintWriter { writer ->
+            addons.each { name, version ->
+                writer.println("$name = $version")
+            }
+        }
+    }
+}
+
+target(name: 'checkKey', description: "Check to see if the keystore exists",
+        prehook: null, posthook: null) {
     if (buildConfig.griffon.jars.sign) {
         // check for passwords
         // pw is echoed, but jarsigner does that too...
@@ -207,7 +237,8 @@ target(checkKey: "Check to see if the keystore exists") {
     }
 }
 
-target(jarFiles: "Jar up the package files") {
+target(name: 'jarFiles', description: "Jar up the package files",
+        prehook: null, posthook: null) {
     if (argsMap['jar']) return
     boolean upToDate = ant.antProject.properties.appJarUpToDate
     ant.mkdir(dir: jardir)
@@ -222,7 +253,7 @@ target(jarFiles: "Jar up the package files") {
     if (!upToDate) {
         mergeManifest()
         ant.jar(destfile: destFileName) {
-            fileset(dir: classesDirPath) {
+            fileset(dir: projectMainClassesDir) {
                 exclude(name: 'BuildConfig*.class')
                 exclude(name: '*GriffonPlugin.class')
             }
@@ -245,17 +276,18 @@ target(jarFiles: "Jar up the package files") {
     griffonCopyDist(destFileName, jardir, !upToDate)
 }
 
-target(mergeManifest: 'Generates a Manifest with default and custom settings') {
+target(name: 'mergeManifest', description: 'Generates a Manifest with default and custom settings',
+        prehook: null, posthook: null) {
     String mainClass = RunMode.current == RunMode.APPLET ? griffonAppletClass : griffonApplicationClass
     manifestMap = [
-        'Main-Class': mainClass,
-        'Built-By': System.properties['user.name'],
-        'Build-Date': new SimpleDateFormat('dd-MM-yyyy HH:mm:ss',Locale.default).format(new Date()),
-        'Created-By': System.properties['java.vm.version'] +' ('+ System.properties['java.vm.vendor'] +')',
-        'Griffon-Version': Metadata.current.getGriffonVersion(),
-        'Implementation-Title': capitalize(Metadata.current.getApplicationName()),
-        'Implementation-Version': Metadata.current.getApplicationVersion(),
-        'Implementation-Vendor': capitalize(Metadata.current.getApplicationName())
+            'Main-Class': mainClass,
+            'Built-By': System.properties['user.name'],
+            'Build-Date': new SimpleDateFormat('dd-MM-yyyy HH:mm:ss', Locale.default).format(new Date()),
+            'Created-By': System.properties['java.vm.version'] + ' (' + System.properties['java.vm.vendor'] + ')',
+            'Griffon-Version': Metadata.current.getGriffonVersion(),
+            'Implementation-Title': capitalize(Metadata.current.getApplicationName()),
+            'Implementation-Version': Metadata.current.getApplicationVersion(),
+            'Implementation-Vendor': capitalize(Metadata.current.getApplicationName())
     ]
     buildConfig.griffon.jars.manifest?.each { k, v ->
         manifestMap[k] = v
@@ -269,7 +301,7 @@ _copyLibs = {
 // XXX -- NATIVE 
     copyPlatformJars("${basedir}/lib", new File(jardir).absolutePath)
     copyNativeLibs("${basedir}/lib", new File(jardir).absolutePath)
-    doWithPlugins { pluginName, pluginVersion, pluginDir ->
+    pluginSettings.doWithPlugins { pluginName, pluginVersion, pluginDir ->
         copyPlatformJars("${pluginDir}/lib", new File(jardir).absolutePath)
         copyNativeLibs("${pluginDir}/lib", new File(jardir).absolutePath)
     }
@@ -448,7 +480,8 @@ maybePackAndSign = {srcFile, targetFile = srcFile, boolean force = false ->
     return targetFile
 }
 
-target(generateJNLP: "Generates the JNLP File") {
+target(name: 'generateJNLP', description: "Generates the JNLP File",
+        prehook: null, posthook: null) {
     ant.copy(todir: jardir, overwrite: true) {
         fileset(dir: "${basedir}/griffon-app/conf/webstart")
     }
@@ -538,15 +571,21 @@ target(generateJNLP: "Generates the JNLP File") {
 // XXX -- NATIVE
 
     memOptions = []
+    def permOptions = []
     if (buildConfig.griffon.memory?.min) {
         memOptions << "initial-heap-size='$buildConfig.griffon.memory.min'"
     }
     if (buildConfig.griffon.memory?.max) {
         memOptions << "max-heap-size='$buildConfig.griffon.memory.max'"
     }
+    if (buildConfig.griffon.memory?.minPermSize) {
+        permOptions << "-XX:PermSize=$buildConfig.griffon.memory.minPermSize"
+    }
     if (buildConfig.griffon.memory?.maxPermSize) {
-        // may be fragile
-        memOptions << "java-vm-args='-XX:maxPermSize=$buildConfig.griffon.memory.maxPermSize'"
+        permOptions << "-XX:MaxPermSize=$buildConfig.griffon.memory.maxPermSize"
+    }
+    if (permOptions) {
+        memOptions << "java-vm-args='${permOptions.join(' ')}'"
     }
 
     doPackageTextReplacement(jardir, "*.jnlp,*.html")
@@ -555,6 +594,10 @@ target(generateJNLP: "Generates the JNLP File") {
 doPackageTextReplacement = {dir, fileFilters ->
     ant.fileset(dir: dir, includes: fileFilters).each {
         String fileName = it.toString()
+        // compatibility
+        argsMap['applet-width'] = argsMap['applet-width'] ?: argsMap.appletWidth
+        argsMap['applet-height'] = argsMap['applet-height'] ?: argsMap.appletHeight
+        // compatibility
         ant.replace(file: fileName) {
             replacefilter(token: "@griffonAppletClass@", value: griffonAppletClass)
             replacefilter(token: "@griffonApplicationClass@", value: griffonApplicationClass)
@@ -568,8 +611,8 @@ doPackageTextReplacement = {dir, fileFilters ->
             replacefilter(token: "@jnlpResources@", value: jnlpResources.join('\n'))
             replacefilter(token: "@appletJars@", value: appletJars.join(','))
             replacefilter(token: "@memoryOptions@", value: memOptions.join(' '))
-            replacefilter(token: "@applet.width@", value: argsMap.appletWidth ?: defaultAppletWidth)
-            replacefilter(token: "@applet.height@", value: argsMap.appletHeight ?: defaultAppletHeight)
+            replacefilter(token: "@applet.width@", value: argsMap['applet-width'] ?: defaultAppletWidth)
+            replacefilter(token: "@applet.height@", value: argsMap['applet-height'] ?: defaultAppletHeight)
             replacefilter(token: "@applet.tag.params@", value: appletTagParams.join('\n'))
             replacefilter(token: "@applet.script.params@", value: appletScriptParams.join(' '))
 
@@ -588,30 +631,42 @@ doPackageTextReplacement = {dir, fileFilters ->
                     value: buildConfig.deploy.application.description.minimal ?: appTitle)
             replacefilter(token: "@griffon.application.description.tooltip@",
                     value: buildConfig.deploy.application.description.tooltip ?: appTitle)
-            replacefilter(token: "@griffon.application.icon.fallback@",
-                    value: buildConfig.deploy.application.icon.fallback.name ?: 'griffon-icon-48x48.png')
-            replacefilter(token: "@griffon.application.icon.fallback.width@",
-                    value: buildConfig.deploy.application.icon.fallback.width ?: '48')
-            replacefilter(token: "@griffon.application.icon.fallback.height@",
-                    value: buildConfig.deploy.application.icon.fallback.height ?: '48')
+            replacefilter(token: "@griffon.application.icon.default@",
+                    value: buildConfig.deploy.application.icon.default.name ?: 'griffon-icon-64x64.png')
+            replacefilter(token: "@griffon.application.icon.default.width@",
+                    value: buildConfig.deploy.application.icon.default.width ?: '64')
+            replacefilter(token: "@griffon.application.icon.default.height@",
+                    value: buildConfig.deploy.application.icon.default.height ?: '64')
             replacefilter(token: "@griffon.application.icon.splash@",
                     value: buildConfig.deploy.application.icon.splash.name ?: 'griffon.png')
             replacefilter(token: "@griffon.application.icon.splash.width@",
                     value: buildConfig.deploy.application.icon.splash.width ?: '381')
             replacefilter(token: "@griffon.application.icon.splash.height@",
                     value: buildConfig.deploy.application.icon.splash.height ?: '123')
-            replacefilter(token: "@griffon.application.icon.menu@",
-                    value: buildConfig.deploy.application.icon.menu.name ?: 'griffon-icon-16x16.png')
-            replacefilter(token: "@griffon.application.icon.menu.width@",
-                    value: buildConfig.deploy.application.icon.menu.width ?: '16')
-            replacefilter(token: "@griffon.application.icon.menu.height@",
-                    value: buildConfig.deploy.application.icon.menu.height ?: '16')
-            replacefilter(token: "@griffon.application.icon.desktop@",
-                    value: buildConfig.deploy.application.icon.desktop.name ?: 'griffon-icon-32x32.png')
-            replacefilter(token: "@griffon.application.icon.desktop.width@",
-                    value: buildConfig.deploy.application.icon.desktop.width ?: '32')
-            replacefilter(token: "@griffon.application.icon.desktop.height@",
-                    value: buildConfig.deploy.application.icon.desktop.height ?: '32')
+            replacefilter(token: "@griffon.application.icon.selected@",
+                    value: buildConfig.deploy.application.icon.selected.name ?: 'griffon-icon-64x64.png')
+            replacefilter(token: "@griffon.application.icon.selected.width@",
+                    value: buildConfig.deploy.application.icon.selected.width ?: '64')
+            replacefilter(token: "@griffon.application.icon.selected.height@",
+                    value: buildConfig.deploy.application.icon.selected.height ?: '64')
+            replacefilter(token: "@griffon.application.icon.disabled@",
+                    value: buildConfig.deploy.application.icon.disabled.name ?: 'griffon-icon-64x64.png')
+            replacefilter(token: "@griffon.application.icon.disabled.width@",
+                    value: buildConfig.deploy.application.icon.disabled.width ?: '64')
+            replacefilter(token: "@griffon.application.icon.disabled.height@",
+                    value: buildConfig.deploy.application.icon.disabled.height ?: '64')
+            replacefilter(token: "@griffon.application.icon.rollover@",
+                    value: buildConfig.deploy.application.icon.rollover.name ?: 'griffon-icon-64x64.png')
+            replacefilter(token: "@griffon.application.icon.rollover.width@",
+                    value: buildConfig.deploy.application.icon.rollover.width ?: '64')
+            replacefilter(token: "@griffon.application.icon.rollover.height@",
+                    value: buildConfig.deploy.application.icon.rollover.height ?: '64')
+            replacefilter(token: "@griffon.application.icon.shortcut@",
+                    value: buildConfig.deploy.application.icon.shortcut.name ?: 'griffon-icon-64x64.png')
+            replacefilter(token: "@griffon.application.icon.shortcut.width@",
+                    value: buildConfig.deploy.application.icon.shortcut.width ?: '64')
+            replacefilter(token: "@griffon.application.icon.shortcut.height@",
+                    value: buildConfig.deploy.application.icon.shortcut.height ?: '64')
         }
     }
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright 2008-2011 the original author or authors.
+ * Copyright 2008-2012 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,15 +22,22 @@
 
 import griffon.util.GriffonNameUtils
 import griffon.util.GriffonUtil
+import griffon.util.Metadata
+import java.util.regex.Matcher
+import java.util.regex.Pattern
+import org.codehaus.griffon.artifacts.ArtifactUtils
+import org.codehaus.griffon.artifacts.model.Archetype
+import org.codehaus.griffon.artifacts.model.Plugin
 import org.springframework.core.io.ClassPathResource
 import org.springframework.core.io.FileSystemResource
+import static org.codehaus.griffon.artifacts.ArtifactUtils.artifactBase
 
-includeTargets << griffonScript("_GriffonPackage")
-includeTargets << griffonScript("_GriffonArgParsing")
+includeTargets << griffonScript('_GriffonPackage')
 
 defaultPackageName = ''
 replaceNonag = false
 allowDuplicate = false
+artifactNameVersionPattern = Pattern.compile("^([\\w][\\w\\.-]*)-([0-9][\\w\\.-]*)\$")
 
 createArtifact = { Map args = [:] ->
     resolveArchetype()
@@ -41,7 +48,8 @@ createArtifact = { Map args = [:] ->
     def template = args['template'] ?: type
     def artifactPath = args['path']
     if (args['fileType']) fileType = args['fileType']
-    def lineTerminator = args["lineTerminator"] ?: (fileType != '.groovy' ? ';' : '')
+    if(!fileType.startsWith('.')) fileType = '.' + fileType
+    def lineTerminator = args["lineTerminator"] ?: (fileType == '.groovy' ? '' : ';')
 
     def typeProperty = GriffonNameUtils.uncapitalize(type)
     template = argsMap[typeProperty] && templateExists(argsMap[typeProperty], fileType) ? argsMap[typeProperty] : template
@@ -67,8 +75,10 @@ createArtifact = { Map args = [:] ->
     packageName = artifactPkg
     className = GriffonUtil.getClassNameRepresentation(artifactName)
     propertyName = GriffonUtil.getPropertyNameRepresentation(artifactName)
-    artifactFile = "${basedir}/${artifactPath}/${pkgPath}${className}${suffix}${fileType}"
-    defaultArtifactFile = "${basedir}/${artifactPath}/${pkgPath}${className}${suffix}.groovy"
+    artifactFile = new File("${basedir}/${artifactPath}/${pkgPath}${className}${suffix}${fileType}")
+    defaultArtifactFile = new File("${basedir}/${artifactPath}/${pkgPath}${className}${suffix}.groovy")
+
+    fullyQualifiedClassName = "${packageName ? packageName + '.' : ''}$className${suffix}"
 
     templateFile = resolveTemplate(template, fileType)
     if (!templateFile?.exists() && fileType != '.groovy') {
@@ -104,7 +114,9 @@ createArtifact = { Map args = [:] ->
     copyGriffonResource(artifactFile, templateFile)
     ant.replace(file: artifactFile) {
         replacefilter(token: "@artifact.name@", value: "${className}${suffix}")
+        replacefilter(token: "@artifact.name.lowercase@", value: "${className}${suffix}".toLowerCase())
         replacefilter(token: "@artifact.name.plain@", value: className)
+        replacefilter(token: "@artifact.name.plain.lowercase@", value: className.toLowerCase())
         replacefilter(token: "@artifact.suffix@", value: suffix)
         replacefilter(token: "@griffon.app.class.name@", value: appClassName)
         replacefilter(token: "@griffon.version@", value: griffonVersion)
@@ -121,8 +133,8 @@ createArtifact = { Map args = [:] ->
         ant.replace(file: artifactFile, token: "@artifact.superclass@", value: args["superClass"])
     }
 
-    event("CreatedFile", [artifactFile])
-    event("CreatedArtefact", [type, className])
+    event('CreatedFile', [artifactFile])
+    event('CreatedArtefact', [type, className])
 }
 
 templateExists = { template, fileType ->
@@ -138,16 +150,16 @@ resolveTemplate = { template, fileSuffix ->
     def templateFile = new FileSystemResource("${basedir}/src/templates/artifacts/${template}${fileSuffix}")
     if (!templateFile.exists()) {
         // now check for template provided by plugins
-        def pluginTemplateFiles = resolveResources("file:${pluginsHome}/*/src/templates/artifacts/${template}${fileSuffix}")
+        def pluginTemplateFiles = resolveResources("file:${artifactBase(Plugin.TYPE)}/*/src/templates/artifacts/${template}${fileSuffix}")
         if (pluginTemplateFiles) {
             templateFile = pluginTemplateFiles[0]
         }
         if (!templateFile.exists()) {
             // now check for template provided by an archetype
-            templateFile = new FileSystemResource("${griffonWorkDir}/archetypes/${archetype}/templates/artifacts/${template}${fileSuffix}")
+            templateFile = new FileSystemResource("${griffonWorkDir}/archetypes/${archetypeName}-${archetypeVersion}/templates/artifacts/${template}${fileSuffix}")
             if (!templateFile.exists()) {
-                // now check for template provided by a provided archetype
-                templateFile = new ClassPathResource("archetypes/${archetype}/templates/artifacts/${template}${fileSuffix}")
+                // now check for template provided by a bundled archetype
+                templateFile = new ClassPathResource("archetypes/${archetypeName}/templates/artifacts/${template}${fileSuffix}")
                 if (!templateFile.exists()) {
                     // template not found in archetypes, use default template
                     templateFile = new ClassPathResource("archetypes/default/templates/artifacts/${template}${fileSuffix}")
@@ -172,12 +184,12 @@ createDefaultPackage = {
     defaultPackageName
 }
 
-createIntegrationTest = { Map args = [:] ->
+doCreateIntegrationTest = { Map args = [:] ->
     def superClass = args["superClass"] ?: "GriffonUnitTestCase"
     createArtifact(name: args["name"], suffix: "${args['suffix']}Tests", type: "IntegrationTests", path: "test/integration", superClass: superClass)
 }
 
-createUnitTest = { Map args = [:] ->
+doCreateUnitTest = { Map args = [:] ->
     def superClass = args["superClass"] ?: "GriffonUnitTestCase"
     createArtifact(name: args["name"], suffix: "${args['suffix']}Tests", type: "Tests", path: "test/unit", superClass: superClass)
 }
@@ -222,23 +234,52 @@ extractArtifactName = { name ->
             artifactPkg = artifactPkg.replace("~", createDefaultPackage())
         }
     } else {
-        artifactPkg = argsMap.skipPackagePrompt ? '' : createDefaultPackage()
+        argsMap['skip-package-prompt'] = argsMap['skip-package-prompt'] ?: argsMap.skipPackagePrompt
+        artifactPkg = argsMap['skip-package-prompt'] ? '' : createDefaultPackage()
     }
 
     return [artifactPkg, artifactName]
 }
 
-target(resolveArchetype: '') {
-    archetype = buildConfig.app.archetype
-    if (!archetype && archetype instanceof ConfigObject) archetype = null
-    archetype = archetype ?: argsMap.archetype
-    archetype = archetype ?: 'default'
+target(name: 'resolveArchetype', description: '', prehook: null, posthook: null) {
+    if (!archetypeName && !archetypeVersion) {
+        Map<String, String> archetype = Metadata.current.getArchetype()
+        if (archetype) {
+            archetypeName = archetype.name
+            archetypeVersion = archetype.version
+        }
+    }
+
+    if (!archetypeName && !archetypeVersion) {
+        String archetype = argsMap.archetype ?: ''
+        if (archetype) {
+            Matcher matcher = artifactNameVersionPattern.matcher(archetype)
+            if (matcher.find()) {
+                archetypeName = matcher.group(1)
+                archetypeVersion = matcher.group(2)
+            } else {
+                File file = ArtifactUtils.findArtifactDirForName(Archetype.TYPE, archetype)
+                if (file) {
+                    matcher = artifactNameVersionPattern.matcher(file.name)
+                    matcher.find()
+                    archetypeName = matcher.group(1)
+                    archetypeVersion = matcher.group(2)
+                }
+            }
+        }
+    }
+
+    if (!archetypeName && !archetypeVersion) {
+        archetypeName = 'default'
+        archetypeVersion = GriffonUtil.getGriffonVersion()
+    }
 }
 
-target(resolveFileType: '') {
+target(name: 'resolveFileType', description: '', prehook: null, posthook: null) {
+    argsMap['file-type'] = argsMap['file-type'] ?: argsMap.fileType
     def cfileType = buildConfig.app.fileType
     if (!cfileType && cfileType instanceof ConfigObject) cfileType = null
-    fileType = argsMap.fileType ?: (cfileType ?: 'groovy')
+    fileType = argsMap['file-type'] ?: (cfileType ?: 'groovy')
     if (!fileType.startsWith('.')) fileType = '.' + fileType
 }
 
@@ -246,9 +287,14 @@ loadArchetypeFor = { type = 'application' ->
     resolveArchetype()
 
     def gcl = new GroovyClassLoader(classLoader)
-    def archetypeFile = new FileSystemResource("${griffonWorkDir}/archetypes/${archetype}/${type}.groovy")
+    def archetypeFile = new FileSystemResource("${griffonWorkDir}/archetypes/${archetypeName}-${archetypeVersion}/${type}.groovy")
+
+    archetypeDirPath = "${griffonWorkDir}/archetypes/${archetypeName}-${archetypeVersion}"
+
     if (!archetypeFile.exists()) {
-        archetypeFile = new ClassPathResource("archetypes/${archetype}/${type}.groovy")
+        // bundled archetypes have no version
+        archetypeDirPath = null
+        archetypeFile = new ClassPathResource("archetypes/${archetypeName}/${type}.groovy")
     }
 
     if (archetypeFile.exists()) {
@@ -261,14 +307,16 @@ loadArchetypeFor = { type = 'application' ->
                 throw new IllegalArgumentException("Don't know how to deal with $archetypeFile")
             }
         } catch (Exception e) {
-            logError("An error ocurred while parsing archetype ${archetype}. Using 'default' archetype instead.", e)
-            archetype = 'default'
-            archetypeFile = new ClassPathResource("archetypes/default/${type}.groovy")
+            logError("An error ocurred while parsing archetype ${archetypeName}-${archetypeVersion}. Using 'default' archetype instead.", e)
+            archetypeName = 'default'
+            archetypeVersion = GriffonUtil.getGriffonVersion()
+            archetypeFile = new ClassPathResource("archetypes/${archetypeName}/${type}.groovy")
             includeTargets << gcl.parseClass(archetypeFile.getURL().text)
         }
     } else {
-        archetype = 'default'
-        archetypeFile = new ClassPathResource("archetypes/default/${type}.groovy")
+        archetypeName = 'default'
+        archetypeVersion = GriffonUtil.getGriffonVersion()
+        archetypeFile = new ClassPathResource("archetypes/${archetypeName}/${type}.groovy")
         includeTargets << gcl.parseClass(archetypeFile.getURL().text)
     }
 }

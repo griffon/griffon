@@ -1,4 +1,5 @@
-/* Copyright 2008 the original author or authors.
+/*
+ * Copyright 2008-2012 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,7 +16,6 @@
 package griffon.test
 
 import griffon.core.UIThreadManager
-import org.codehaus.griffon.commons.ConfigurationHolder
 
 /**
  * Support class for writing unit tests in Griffon. It mainly provides
@@ -26,12 +26,10 @@ import org.codehaus.griffon.commons.ConfigurationHolder
  */
 class GriffonUnitTestCase extends GroovyTestCase {
     Map savedMetaClasses
-    private previousConfig
 
     protected void setUp() {
         super.setUp()
         savedMetaClasses = [:]
-        previousConfig = ConfigurationHolder.config
     }
 
     protected void tearDown() {
@@ -39,11 +37,9 @@ class GriffonUnitTestCase extends GroovyTestCase {
 
         // Restore all the saved meta classes.
         savedMetaClasses.each { clazz, metaClass ->
-            GroovySystem.metaClassRegistry.removeMetaClass(clazz) 
+            GroovySystem.metaClassRegistry.removeMetaClass(clazz)
             GroovySystem.metaClassRegistry.setMetaClass(clazz, metaClass)
         }
-
-        ConfigurationHolder.config = previousConfig
     }
 
     /**
@@ -78,10 +74,6 @@ class GriffonUnitTestCase extends GroovyTestCase {
         return new GriffonMock(clazz, loose)
     }
 
-    protected void mockConfig(String config) {
-        ConfigurationHolder.config = new ConfigSlurper().parse(config)
-    }
-
     /** Executes code synchronously inside the UI thread */
     def execSync = UIThreadManager.instance.&executeSync
     /** Executes code asynchronously inside the UI thread */
@@ -92,6 +84,6 @@ class GriffonUnitTestCase extends GroovyTestCase {
     def isUIThread = UIThreadManager.instance.&isUIThread
     /** Schedules a block of code as a Future */
     def execFuture = { Object... args ->
-        UIThreadManager.instance.executeFuture(*args)
+        UIThreadManager.instance.executeFuture(* args)
     }
 }

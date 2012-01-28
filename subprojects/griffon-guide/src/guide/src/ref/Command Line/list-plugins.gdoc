@@ -2,7 +2,7 @@ h1. list-plugins
 
 h2. Purpose
 
-Lists the plug-ins available from the Griffon standard repository
+Lists the plugins available from the Griffon standard repository
 
 h2. Examples
 
@@ -15,39 +15,41 @@ h2. Description
 Usage: 
 {code:java}
 griffon list-plugins
-griffon list-plugins -repository=myRepository
-griffon list-plugins -installed
+griffon list-plugins --repository=myRepository
+griffon list-plugins --installed
 {code}
 
-Fired Events: 
-
-* @StatusUpdate@ - When the plug-in list is being refreshed
-* @StatusError@ - When there was an error updating the plug-in list
-
-Arguments:
-
-* @repository@ - The name of the repository used to produce the list of available plugins, otherwise all known repositories will be scanned. See the section on [Plugin repositories|guide:repositories] in the user guide.
+Options:
+* @repository@ - The name of the repository used to produce the list of available plugins, otherwise all known repositories will be scanned. See the section on [Artifact repositories|guide:repositories] in the user guide.
 * @installed@ - List only the plugins that are installed into the current Griffon application.
 
-Lists the plug-ins that are installable via the Griffon standard repository. Note: This command can take a while to execute depending in your internet connectivity. Typical output looks like this:
+Lists the plugins that are installable via the Griffon standard repository. Note: This command can take a while to execute depending in your internet connectivity. Typical output looks like this:
 
 {code}
-Plug-ins available in the Griffon.codehaus.org repository are listed below:
--------------------------------------------------------------
-abeilleform-builder <0.1>            --  A Builder for Abeille Forms
-clojure             <0.3>            --  Enables Clojure
-code-coverage       <0.3.1>          --  Generates Code Coverage reports
-codenarc            <0.2>            --  CodeNarc plugin
-coverflow           <0.1>            --  Plugin summary/headline
-css-builder         <0.3>            --  CSS for Swing
-easyb               <0.1.1>          --  Enables BDD testing with Easyb
-fast-translate      <0.1>            --  Provides fast translation services for human language. Backed by Google Translate.
-fest                <0.3>            --  Enables application testing with FEST
-flamingo-builder    <0.2>            --  FlamingoBuilder Plugin
+Plugins available in the griffon-local repository are listed below:
+--------------------------------------------------------------------------------
+Name                          Releases             Title
+
+swing                         1                    Enables Swing support
+swt                           1                    Enables SWT support
+
+Plugins available in the griffon-legacy repository are listed below:
+--------------------------------------------------------------------------------
+Name                          Releases             Title
+
+abeilleform-builder           3                    A Builder for Abeille Forms
+actions                       2                    Action management
+activejdbc                    3                    Persistence support via Activejdbc
+airbag                        1                    Griffon Airbag Plugin
+avro                          3                    Apache Avro support
+barcode                       2                    Generate and display barcodes
+berkeleydb                    6                    Berkeleydb support
+carbonado                     3                    Persistence support via Carbonado
+cassandra                     1                    Cassandra support
+...
 {code}
 
-The first column contains the plugin name, the second the version and the last the description. If you require more info about a plug-in you can use the [plugin-info|commandLine] command. If you wish to install a plug-in you can use the plug-in name and/or version in combination with the [install-plugin|commandLine].
-
+The first column contains the plugin name, the second the version and the last the description. If you require more info about a plugin you can use the [plugin-info|commandLine] command. If you wish to install a plugin you can use the plugin name and/or version in combination with the [install-plugin|commandLine].
 
 {note}
 Note: If you are behind a proxy you may want to consider using the [set-proxy|commandLine] command prior to running this command.

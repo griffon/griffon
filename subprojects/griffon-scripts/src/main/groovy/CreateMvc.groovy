@@ -1,5 +1,5 @@
 /*
- * Copyright 2004-2011 the original author or authors.
+ * Copyright 2004-2012 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,16 +22,13 @@
  */
 
 import griffon.util.GriffonUtil
+import griffon.util.GriffonNameUtils
 
-includeTargets << griffonScript("Init")
-includeTargets << griffonScript("CreateIntegrationTest")
+includeTargets << griffonScript('CreateIntegrationTest')
 
-target('default': "Creates a new MVC Group") {
-    createMVC()
-}
 
 target(createMVC: "Creates a new MVC Group") {
-    depends(checkVersion, parseArguments)
+    depends(checkVersion)
 
     if (isPluginProject && !isAddonPlugin) {
         println """You must create an Addon descriptor first.
@@ -46,6 +43,15 @@ Type in griffon create-addon then execute this command again."""
     mvcClassName = GriffonUtil.getClassNameRepresentation(name)
     mvcFullQualifiedClassName = "${pkg ? pkg : ''}${pkg ? '.' : ''}$mvcClassName"
 
+    // -- compatibility
+    argsMap['with-model']      = argsMap['with-model']      ?: argsMap.withModel
+    argsMap['with-view']       = argsMap['with-view']       ?: argsMap.withView
+    argsMap['with-controller'] = argsMap['with-controller'] ?: argsMap.withController
+    argsMap['skip-model']      = argsMap['skip-model']      ?: argsMap.skipModel
+    argsMap['skip-view']       = argsMap['skip-view']       ?: argsMap.skipView
+    argsMap['skip-controller'] = argsMap['skip-controller'] ?: argsMap.skipController
+    // -- compatibility
+
     String modelTemplate      = 'Model'
     String viewTemplate       = 'View'
     String controllerTemplate = 'Controller'
@@ -55,38 +61,38 @@ Type in griffon create-addon then execute this command again."""
         controllerTemplate = argsMap.group + controllerTemplate
     }
 
-    if (!argsMap.skipModel && !argsMap.withModel) {
+    if (!argsMap['skip-model'] && !argsMap['with-model']) {
         createArtifact(
-                name: mvcFullQualifiedClassName,
-                suffix: 'Model',
-                type: 'Model',
+                name:     mvcFullQualifiedClassName,
+                suffix:   'Model',
+                type:     'Model',
                 template: modelTemplate,
-                path: 'griffon-app/models')
+                path:     'griffon-app/models')
     }
 
-    if (!argsMap.skipView && !argsMap.withView) {
+    if (!argsMap['skip-view'] && !argsMap['with-view']) {
         createArtifact(
-                name: mvcFullQualifiedClassName,
-                suffix: 'View',
-                type: 'View',
+                name:     mvcFullQualifiedClassName,
+                suffix:   'View',
+                type:     'View',
                 template: viewTemplate,
-                path: 'griffon-app/views')
+                path:     'griffon-app/views')
     }
 
-    if (!argsMap.skipController && !argsMap.withController) {
+    if (!argsMap['skip-controller'] && !argsMap['with-controller']) {
         createArtifact(
-                name: mvcFullQualifiedClassName,
-                suffix: 'Controller',
-                type: 'Controller',
+                name:     mvcFullQualifiedClassName,
+                suffix:   'Controller',
+                type:     'Controller',
                 template: controllerTemplate,
-                path: 'griffon-app/controllers')
+                path:     'griffon-app/controllers')
 
-        createIntegrationTest(
-                name: mvcFullQualifiedClassName,
+        doCreateIntegrationTest(
+                name:   mvcFullQualifiedClassName,
                 suffix: '')
     }
 
-    name = GriffonUtil.uncapitalize(name)
+    name = GriffonNameUtils.getPropertyName(name)
 
     if (isAddonPlugin) {
         // create mvcGroup in a plugin
@@ -94,30 +100,30 @@ Type in griffon create-addon then execute this command again."""
         def addonFile = isAddonPlugin
         def addonText = addonFile.text
 
-        if(isJava) {
+        if (isJava) {
             if (!(addonText =~ /\s*public Map<String, Map<String, String>>\s*getMvcGroups\(\)\s*\{/)) {
-                            addonText = addonText.replaceAll(/\}\s*\z/, """
+                addonText = addonText.replaceAll(/\}\s*\z/, """
                 public Map<String, Map<String, String>> getMvcGroups() {
                     Map<String, Map<String, String>> groups = new LinkedHashMap<String, Map<String, String>>();
                     return groups;
                 }
             }
             """)
-                        }
+            }
 
-                        List parts = []
-                        if (!argsMap.skipModel)      parts << """            {"model",      "${(argsMap.withModel ?: mvcFullQualifiedClassName + 'Model')}"}"""
-                        if (!argsMap.skipView)       parts << """            {"view",       "${(argsMap.withView ?: mvcFullQualifiedClassName + 'View')}"}"""
-                        if (!argsMap.skipController) parts << """            {"controller", "${(argsMap.withController ?: mvcFullQualifiedClassName + 'Controller')}"}"""
+            List parts = []
+            if (!argsMap['skip-model'])      parts << """            {"model",      "${(argsMap['with-model'] ?: mvcFullQualifiedClassName + 'Model')}"}"""
+            if (!argsMap['skip-view'])       parts << """            {"view",       "${(argsMap['with-view'] ?: mvcFullQualifiedClassName + 'View')}"}"""
+            if (!argsMap['skip-controller']) parts << """            {"controller", "${(argsMap['with-controller'] ?: mvcFullQualifiedClassName + 'Controller')}"}"""
 
-                        addonFile.withWriter {
-                            it.write addonText.replaceAll(/\s*Map<String, Map<String, String>> groups = new LinkedHashMap<String, Map<String, String>>\(\);/, """
+            addonFile.withWriter {
+                it.write addonText.replaceAll(/\s*Map<String, Map<String, String>> groups = new LinkedHashMap<String, Map<String, String>>\(\);/, """
                     Map<String, Map<String, String>> groups = new LinkedHashMap<String, Map<String, String>>();
                     // MVC Group for "$name"
                     groups.put("$name", groupDef(new String[][]{
             ${parts.join(',\n')}
                     }));""")
-                        }
+            }
 
         } else {
 
@@ -129,9 +135,9 @@ Type in griffon create-addon then execute this command again."""
 """)
             }
             List parts = []
-            if (!argsMap.skipModel)      parts << "            model     : '${(argsMap.withModel ?: mvcFullQualifiedClassName + 'Model')}'"
-            if (!argsMap.skipView)       parts << "            view      : '${(argsMap.withView ?: mvcFullQualifiedClassName + 'View')}'"
-            if (!argsMap.skipController) parts << "            controller: '${(argsMap.withController ?: mvcFullQualifiedClassName + 'Controller')}'"
+            if (!argsMap['skip-model'])      parts << "            model     : '${(argsMap['with-model'] ?: mvcFullQualifiedClassName + 'Model')}'"
+            if (!argsMap['skip-view'])       parts << "            view      : '${(argsMap['with-view'] ?: mvcFullQualifiedClassName + 'View')}'"
+            if (!argsMap['skip-controller']) parts << "            controller: '${(argsMap['with-controller'] ?: mvcFullQualifiedClassName + 'Controller')}'"
 
             addonFile.withWriter {
                 it.write addonText.replaceAll(/\s*def\s*mvcGroups\s*=\s*\[/, """
@@ -155,9 +161,9 @@ mvcGroups {
         }
 
         List parts = []
-        if (!argsMap.skipModel)      parts << "        model      = '${(argsMap.withModel ?: mvcFullQualifiedClassName + 'Model')}'"
-        if (!argsMap.skipView)       parts << "        view       = '${(argsMap.withView ?: mvcFullQualifiedClassName + 'View')}'"
-        if (!argsMap.skipController) parts << "        controller = '${(argsMap.withController ?: mvcFullQualifiedClassName + 'Controller')}'"
+        if (!argsMap['skip-model'])      parts << "        model      = '${(argsMap['with-model'] ?: mvcFullQualifiedClassName + 'Model')}'"
+        if (!argsMap['skip-view'])       parts << "        view       = '${(argsMap['with-view'] ?: mvcFullQualifiedClassName + 'View')}'"
+        if (!argsMap['skip-controller']) parts << "        controller = '${(argsMap['with-controller'] ?: mvcFullQualifiedClassName + 'Controller')}'"
 
         applicationConfigFile.withWriter {
             it.write configText.replaceAll(/\s*mvcGroups\s*\{/, """
@@ -170,3 +176,5 @@ ${parts.join('\n')}
         }
     }
 }
+
+setDefaultTarget(createMVC)

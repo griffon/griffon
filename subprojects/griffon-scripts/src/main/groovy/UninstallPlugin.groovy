@@ -1,5 +1,5 @@
 /*
- * Copyright 2004-2011 the original author or authors.
+ * Copyright 2004-2012 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,13 +14,14 @@
  * limitations under the License.
  */
 
+import org.codehaus.griffon.artifacts.model.Plugin
+
 /**
- * Gant script that handles the removal of Griffon plugins from a project.
- *
- * @author Graeme Rocher (Grails 1.1)
+ * @author Andres Almiray
  */
-includeTargets << griffonScript("_GriffonPlugins")
 
-includePluginJarsOnClasspath=false
-
-setDefaultTarget("uninstallPlugin")
+target(uninstallPlugin: "Uninstalls a Griffon application plugin") {
+    uninstallArtifact(Plugin.TYPE)
+    resetDependencyResolution()
+}
+setDefaultTarget(uninstallPlugin)

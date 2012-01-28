@@ -1,5 +1,5 @@
 /*
- * Copyright 2009-2011 the original author or authors.
+ * Copyright 2009-2012 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -38,6 +38,13 @@ public interface MVCGroupConfiguration extends ApplicationHandler {
      * @return a Map of all configured members as defined by the application's configuration or and addon contribution.
      */
     Map<String, String> getMembers();
+
+    /**
+     * Returns a Map with additional configuration for this group.
+     *
+     * @return a Map with additional configuration for this group.
+     */
+    Map<String, Object> getConfig();
 
     /**
      * Creates a new MVCGroup instance based in this configuration.

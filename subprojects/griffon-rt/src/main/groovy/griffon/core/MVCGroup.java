@@ -1,5 +1,5 @@
 /*
- * Copyright 2009-2011 the original author or authors.
+ * Copyright 2009-2012 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -102,4 +102,18 @@ public interface MVCGroup extends ApplicationHandler {
      * @return true if the group has not been destroyed yet, false otherwise
      */
     boolean isAlive();
+
+    /**
+     * Returns the result of the evaluation of the specified member if it's a Script.
+     *
+     * @param name the name of a member
+     * @return the last expression evaluated if the member is a Script, null otherwise.
+     */
+    Object getScriptResult(String name);
+
+    /**
+     * Builds the target member if it's a Script, storing the result.
+     * @param name the name of a member
+     */
+    void buildScriptMember(String name);
 }

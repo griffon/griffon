@@ -1,5 +1,5 @@
 /*
- * Copyright 2004-2011 the original author or authors.
+ * Copyright 2004-2012 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,16 +18,17 @@ package org.codehaus.griffon.resolve;
 import groovy.lang.Closure;
 
 /**
- * An interface that defines methods for parsing dependency definitions
- * defined in the form of a Groovy DSL
+ * Defines methods for parsing dependency definitions defined in the form of a Groovy DSL.
  *
  * @author Graeme Rocher (Grails 1.2)
  */
 public interface DependencyDefinitionParser {
+
     /**
-     * Parses DSL code into a dependency definition
+     * Parses DSL code into a dependency definition.
      *
      * @param definition The DSL code
      */
+    @SuppressWarnings("rawtypes")
     void parseDependencies(Closure definition);
 }

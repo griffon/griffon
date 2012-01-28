@@ -1,5 +1,5 @@
 /*
- * Copyright 2009-2011 the original author or authors.
+ * Copyright 2009-2012 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,7 +17,6 @@
 package org.codehaus.griffon.runtime.util
 
 import griffon.util.GriffonNameUtils
-import griffon.util.Metadata
 import groovy.transform.Synchronized
 import org.codehaus.griffon.runtime.builder.UberBuilder
 import org.codehaus.griffon.runtime.core.DefaultGriffonAddon
@@ -25,6 +24,7 @@ import org.codehaus.griffon.runtime.core.DefaultGriffonAddonDescriptor
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import griffon.core.*
+import static griffon.util.GriffonNameUtils.getClassNameForLowerCaseHyphenSeparatedName
 
 /**
  * Helper class for dealing with addon initialization.
@@ -53,15 +53,20 @@ class AddonHelper {
     private static void computeAddonCache(GriffonApplication app) {
         if (!ADDON_CACHE.isEmpty()) return
 
-        for (String key: Metadata.current.stringPropertyNames()) {
-            if (!key.startsWith('plugins.')) continue
-            key = key[8..-1].toString()
-            ADDON_CACHE[key] = [
-                    node: null,
-                    prefix: '',
-                    name: key,
-                    className: GriffonNameUtils.getClassNameForLowerCaseHyphenSeparatedName(key) + 'GriffonAddon'
-            ]
+        // Load addons in order
+        URL addonMetadata = AddonHelper.classLoader.getResource('META-INF/griffon-addons.properties')
+        if (addonMetadata) {
+            addonMetadata.text.eachLine { line ->
+                String[] parts = line.split('=')
+                String pluginName = parts[0].trim()
+                ADDON_CACHE[pluginName] = [
+                        node: null,
+                        version: parts[1].trim(),
+                        prefix: '',
+                        name: pluginName,
+                        className: getClassNameForLowerCaseHyphenSeparatedName(pluginName) + 'GriffonAddon'
+                ]
+            }
         }
 
         for (node in app.builderConfig) {
@@ -75,12 +80,11 @@ class AddonHelper {
                     if (nodeName == 'root') nodeName = ''
                     node.value.each { addon ->
                         String pluginName = GriffonNameUtils.getHyphenatedName(addon.key - 'GriffonAddon')
-                        ADDON_CACHE[pluginName] = [
-                                node: addon,
-                                prefix: nodeName,
-                                name: pluginName,
-                                className: addon.key.toString()
-                        ]
+                        Map config = ADDON_CACHE[pluginName]
+                        if (config) {
+                            config.node = addon
+                            config.prefix = nodeName
+                        }
                     }
             }
         }
@@ -127,9 +131,8 @@ class AddonHelper {
         if (addonDescriptor) return
 
         def obj = config.addonClass.newInstance()
-        String addonVersion = Metadata.current['plugins.' + config.name]
         GriffonAddon addon = obj instanceof GriffonAddon ? obj : new DefaultGriffonAddon(app, obj)
-        addonDescriptor = new DefaultGriffonAddonDescriptor(config.prefix, config.className, config.name, addonVersion, addon)
+        addonDescriptor = new DefaultGriffonAddonDescriptor(config.prefix, config.className, config.name, config.version, addon)
 
         app.addonManager.registerAddon(addonDescriptor)
 

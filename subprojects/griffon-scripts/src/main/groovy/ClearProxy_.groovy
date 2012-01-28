@@ -18,7 +18,7 @@
  * @author Graeme Rocher (Grails 1.2.3)
  */
 
-target(default: "Clears a proxy configuration") {
+target(clearProxy: "Clears a proxy configuration") {
     def settingsFile = griffonSettings.proxySettingsFile
     def config = griffonSettings.proxySettings
     config.remove('currentProxy')
@@ -27,3 +27,5 @@ target(default: "Clears a proxy configuration") {
 
     println "Cleared proxy settings."
 }
+
+setDefaultTarget(clearProxy)

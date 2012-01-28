@@ -1,5 +1,5 @@
 /*
- * Copyright 2004-2011 the original author or authors.
+ * Copyright 2004-2012 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,10 +23,8 @@ import org.codehaus.griffon.cli.support.GriffonBuildEventListener
  */
 
 // No point doing this stuff more than once.
-if (getBinding().variables.containsKey("_griffon_events_called")) return
+if (getBinding().variables.containsKey('_griffon_events_called')) return
 _griffon_events_called = true
-
-includeTargets << griffonScript("_GriffonClasspath")
 
 // Class loader to use for loading events scripts.
 eventsClassLoader = new GroovyClassLoader(classLoader)
@@ -36,26 +34,28 @@ eventsClassLoader = new GroovyClassLoader(classLoader)
 
 eventListener = new GriffonBuildEventListener(eventsClassLoader, binding, griffonSettings)
 eventListener.globalEventHooks = [
-    StatusFinal: [ {message -> println message } ],
-    StatusUpdate: [ {message -> println message + ' ...' } ],
-    StatusError: [ {message -> System.err.println message } ],
-    CreatedArtefact: [ {artefactType, artefactName -> println "Created $artefactType for $artefactName" } ]
+        StatusFinal: [{message -> println message }],
+        StatusUpdate: [{message -> println message + ' ...' }],
+        StatusError: [{message -> System.err.println message }],
+        CreatedArtefact: [{artefactType, artefactName -> println "Created $artefactType for $artefactName"}],
+        PluginInstalled: [{type, name, version, path ->
+            if (!getBinding().variables["events_loaded_$name"]) {
+                File pluginEvents = new File("${path}/scripts/_Events.groovy")
+                if (pluginEvents.exists()) {
+                    eventListener.loadEventsScript(pluginEvents)
+                    getBinding().variables["events_loaded_$name"] = true
+                }
+            }
+        }]
 ]
 
-hooksLoaded = false
 binding.addBuildListener(eventListener)
-// Set up the classpath for the event hooks.
-classpath()
-
-// Now load them.
-eventListener.classLoader = new GroovyClassLoader(classLoader)
-eventListener.initialize()
 
 // Send a scripting event notification to any and all event hooks in plugins/user scripts
 event = {String name, def args ->
-    eventListener.triggerEvent(name, *args)
+    eventListener.triggerEvent(name, * args)
 }
 
-// Give scripts a chance to modify classpath
-event('SetClasspath', [classLoader])
-griffonSettings.resetDependencies()
+target(loadEventHooks: 'Loads all event handlers defined by application/plugin scripts') {
+    eventListener.initialize()
+}

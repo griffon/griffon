@@ -1,5 +1,5 @@
 /*
- * Copyright 2004-2011 the original author or authors.
+ * Copyright 2004-2012 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,24 +22,25 @@
  * @author Graeme Rocher (Grails 0.5)
  */
 
-includeTargets << griffonScript("_GriffonEvents")
+includeTargets << griffonScript('_GriffonEvents')
 
-target ('default': "Sets the current application version") {
+target(setVersion: "Sets the current application version") {
     if (isPluginProject) {
-        println "The set-version command cannot update the version of a plugin project. Change the value of the 'version' property in ${pluginSettings.basePluginDescriptor.filename} instead." 
+        println "The set-version command cannot update the version of a plugin project. Change the value of the 'version' property in ${pluginSettings.basePluginDescriptor.filename} instead."
         exit(1)
     }
 
     if (args != null) {
-        ant.property(name:"app.version.new", value: args)
+        ant.property(name: "app.version.new", value: args)
     } else {
         def oldVersion = metadata.'app.version'
-        ant.input(addProperty:"app.version.new", message:"Enter the new version", defaultvalue:oldVersion)
+        ant.input(addProperty: "app.version.new", message: "Enter the new version", defaultvalue: oldVersion)
     }
 
     def newVersion = ant.antProject.properties.'app.version.new'
     metadata.'app.version' = newVersion
     metadata.persist()
-    event("StatusFinal", [ "Application version updated to $newVersion"])
+    event("StatusFinal", ["Application version updated to $newVersion"])
 }
 
+setDefaultTarget(setVersion)

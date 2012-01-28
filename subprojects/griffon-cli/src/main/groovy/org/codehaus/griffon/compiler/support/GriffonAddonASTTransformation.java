@@ -1,5 +1,5 @@
 /*
- * Copyright 2010-2011 the original author or authors.
+ * Copyright 2010-2012 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,6 +18,7 @@ package org.codehaus.griffon.compiler.support;
 
 import griffon.core.GriffonAddon;
 import org.codehaus.griffon.ast.AbstractASTTransformation;
+import org.codehaus.griffon.cli.CommandLineConstants;
 import org.codehaus.griffon.compiler.GriffonCompilerContext;
 import org.codehaus.griffon.runtime.core.AbstractGriffonAddon;
 import org.codehaus.groovy.ast.ASTNode;
@@ -44,7 +45,8 @@ public class GriffonAddonASTTransformation extends AbstractASTTransformation {
     private static final ClassNode ABSTRACT_GRIFFON_ADDON_CLASS = ClassHelper.makeWithoutCaching(AbstractGriffonAddon.class);
 
     public void visit(ASTNode[] nodes, SourceUnit source) {
-        if(GriffonCompilerContext.getConfigOption(GriffonCompilerContext.DISABLE_AST_INJECTION) || !GriffonCompilerContext.isGriffonAddon(source)) return;
+        if (GriffonCompilerContext.getConfigOption(CommandLineConstants.KEY_DISABLE_AST_INJECTION) || !GriffonCompilerContext.isGriffonAddon(source))
+            return;
         ModuleNode moduleNode = (ModuleNode) nodes[0];
         ClassNode classNode = moduleNode.getClasses().get(0);
 

@@ -100,42 +100,6 @@ signingkey {
     }
 }
 
-griffon.project.dependency.resolution = {
-    // inherit Griffon' default dependencies
-    inherits("global") {
-    }
-    log "warn" // log level of Ivy resolver, either 'error', 'warn', 'info', 'debug' or 'verbose'
-    repositories {
-        griffonPlugins()
-        griffonHome()
-        griffonCentral()
-
-        // uncomment the below to enable remote dependency resolution
-        // from public Maven repositories
-        //mavenLocal()
-        //mavenCentral()
-        //mavenRepo "http://snapshots.repository.codehaus.org"
-        //mavenRepo "http://repository.codehaus.org"
-        //mavenRepo "http://download.java.net/maven/2/"
-        //mavenRepo "http://repository.jboss.com/maven2/"
-    }
-    dependencies {
-        // specify dependencies here under either 'build', 'compile', 'runtime', 'test' or 'provided' scopes eg.
-
-        // runtime 'mysql:mysql-connector-java:5.1.5'
-    }
-}
-
-log4j = {
-    // Example of changing the log pattern for the default console
-    // appender:
-    appenders {
-        console name: 'stdout', layout: pattern(conversionPattern: '%d [%t] %-5p %c - %m%n')
-    }
-
-    error  'org.codehaus.griffon'
-}
-
 griffon {
     doc {
         logo = '<a href="http://griffon.codehaus.org" target="_blank"><img alt="The Griffon Framework" src="../img/griffon.png" border="0"/></a>'
@@ -156,27 +120,61 @@ deploy {
             tooltip  = '@griffonAppName@ @griffonAppVersion@'
         }
         icon {
-            fallback {
-                name = 'griffon-icon-48x48.png'
-                width = '48'
-                height = '48'
+            'default' {
+                name   = 'griffon-icon-64x64.png'
+                width  = '64'
+                height = '64'
             }
             splash {
-                name = 'griffon.png'
-                width = '391'
+                name   = 'griffon.png'
+                width  = '391'
                 height = '123'
             }
-            menu {
-                name = 'griffon-icon-16x16.png'
-                width = '16'
-                height = '16'
+            selected {
+                name   = 'griffon-icon-64x64.png'
+                width  = '64'
+                height = '64'
             }
-            desktop {
-                name = 'griffon-icon-32x32.png'
-                width = '32'
-                height = '32'
+            disabled {
+                name   = 'griffon-icon-64x64.png'
+                width  = '64'
+                height = '64'
+            }
+            rollover {
+                name   = 'griffon-icon-64x64.png'
+                width  = '64'
+                height = '64'
+            }
+            shortcut {
+                name   = 'griffon-icon-64x64.png'
+                width  = '64'
+                height = '64'
             }
         }
+    }
+}
+
+griffon.project.dependency.resolution = {
+    // inherit Griffon' default dependencies
+    inherits("global") {
+    }
+    log "warn" // log level of Ivy resolver, either 'error', 'warn', 'info', 'debug' or 'verbose'
+    repositories {
+        griffonHome()
+
+        // uncomment the below to enable remote dependency resolution
+        // from public Maven repositories
+        //mavenLocal()
+        //mavenCentral()
+        //mavenRepo "http://snapshots.repository.codehaus.org"
+        //mavenRepo "http://repository.codehaus.org"
+        //mavenRepo "http://download.java.net/maven/2/"
+        //mavenRepo "http://repository.jboss.com/maven2/"
+    }
+    dependencies {
+        // specify dependencies here under either 'build', 'compile', 'runtime' or 'test' scopes eg.
+
+        // runtime 'mysql:mysql-connector-java:5.1.5'
     }
 }
 
@@ -187,6 +185,10 @@ log4j = {
         console name: 'stdout', layout: pattern(conversionPattern: '%d [%t] %-5p %c - %m%n')
     }
 
-    error  'org.codehaus.griffon'
+    error 'org.codehaus.griffon',
+          'org.springframework',
+          'org.apache.karaf',
+          'groovyx.net'
+    warn  'griffon'
 }
 

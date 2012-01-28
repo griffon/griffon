@@ -12,9 +12,9 @@ griffon create-addon
 
 h2. Description        
 
-Creates a Griffon addon artifact. Addons are usually packaged by a plug-in and installed into other applications.
+Creates a Griffon addon artifact. Addons are usually packaged by a plugin and installed into other applications.
 
-Addons contribute new runtime capabilities to applications. Refer to the section on [Plug-in Development|guide:plug-ins] in the user guide for more information on developing plug-ins and addons for Griffon.
+Addons contribute new runtime capabilities to applications. Refer to the section on [Plugin Development|guide:plug-ins] in the user guide for more information on developing plugins and addons for Griffon.
 
 Usage: 
 
@@ -24,6 +24,11 @@ griffon create-addon \[name\]
 
 The @name@ parameter is optional if @create-addon@ was invoked inside a plugin project.
 
-Fired Events: 
+Arguments:
+* @name@ - Name of the addon to create. It must match the name of the plugin that contains it.
 
-* @StatusFinal@ - When the addon has been created
+Options:
+* @app-version@ - Version to be set on the addon. Defaults to 0.1.
+* @archetype@ - Archetype to be searched for templates. Defaults to default.
+* @file-type@ - Source file type. Defaults to groovy.
+* @inplace@ - If true creates the addon in the current directory. Defaults to false.

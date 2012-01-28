@@ -1,5 +1,5 @@
 /*
- * Copyright 2004-2011 the original author or authors.
+ * Copyright 2004-2012 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,8 +24,7 @@
 
 import griffon.util.GriffonUtil
 
-includeTargets << griffonScript("Init")
-includeTargets << griffonScript("CreateIntegrationTest")
+includeTargets << griffonScript('CreateIntegrationTest')
 
 /**
  * Stuff this addon does:
@@ -34,72 +33,62 @@ includeTargets << griffonScript("CreateIntegrationTest")
  * * tweaks griffon-app/conf/BuildConfig.groovy to have griffon.jars.jarName set (don't change)
  * * Adds copy libs events for the destDir
  */
-target('default': "Creates an Addon for a plugin") {
-    depends(parseArguments)
-
+target(createAddon: "Creates an Addon for a plugin") {
     if (metadataFile.exists()) {
         if (!isPluginProject) {
-            event("StatusFinal", ["CAnnot create an Addon in a non-plugin project."])
+            event('StatusFinal', ['Cannot create an Addon in a non-plugin project.'])
             exit(1)
         } else {
             checkVersion()
             pluginName = isPluginProject.name - 'GriffonPlugin.groovy'
         }
     } else {
-        includeTargets << griffonScript("_GriffonCreateProject")
+        includeTargets << griffonScript('_GriffonCreateProject')
         projectType = 'plugin'
         createPlugin()
     }
 
     argsMap.skipPackagePrompt = true
     createArtifact(
-            name: pluginName,
-            suffix: "GriffonAddon",
-            type: "GriffonAddon",
-            path: ".")
+            name:   pluginName,
+            suffix: 'GriffonAddon',
+            type:   'GriffonAddon',
+            path:   '.')
+
+
     addonName = "${GriffonUtil.getClassNameRepresentation(pluginName)}GriffonAddon"
 
-    def pluginConfigFile = new File("${basedir}/griffon-app/conf/BuildConfig.groovy")
-    if (!pluginConfigFile.exists()) {
-        pluginConfigFile.text = "griffon {}\n"
-    }
-    ConfigSlurper slurper = new ConfigSlurper()
-    def pluginConfig = slurper.parse(pluginConfigFile.toURL())
+    def installFile = new File("${basedir}/scripts/_Install.groovy")
+    //TODO we should slurp the config, tweak it in place, and re-write instead of append
+    installFile << """
+// Update the following configuration if your addon
+// requires a different prefix or exposes nodes in
+// a different way.
+// Remember to apply the reverse changes in _Uninstall.groovy
+//
+// check to see if we already have a $addonName
+// def configText = '''root.'$addonName'.addon=true'''
+// if(!(builderConfigFile.text.contains(configText))) {
+//     println 'Adding $addonName to Builder.groovy'
+//     builderConfigFile.append(\"\"\"
+// \$configText
+// \"\"\")
+// }"""
 
-    if (!pluginConfig.griffon?.jars?.destDir) {
-        pluginConfigFile << "\ngriffon.jars.destDir=\'target/addon\'\n"
-    }
-    if (!pluginConfig.griffon?.jars?.jarName) {
-        pluginConfigFile << "\n//griffon.jars.jarName='${addonName}.jar'\n"
-    }
+    def uninstallFile = new File("${basedir}/scripts/_Uninstall.groovy")
+    //TODO we should slurp the config, tweak it in place, and re-write instead of append
+    uninstallFile << """
+// Update the following configuration if your addon
+// requires a different prefix or exposes nodes in
+// a different way.
+// Remember to apply the reverse changes in _Install.groovy
+//
+// check to see if we already have a $addonName
+// def configText = '''root.'$addonName'.addon=true'''
+// if(builderConfigFile.text.contains(configText)) {
+//     println 'Removing $addonName from Builder.groovy'
+//     builderConfigFile.text -= configText
+// }"""
 
-    def eventsFile = new File("${basedir}/scripts/_Events.groovy")
-    if (!eventsFile.exists()) {
-        eventsFile.text = "\n"
-    }
-
-    def eventsText = eventsFile.text
-    def classpathTempVar = generateTempVar(eventsText, "eventClosure")
-    pluginName = GriffonUtil.getScriptName(pluginName)
-    def pluginName2 = GriffonUtil.getPropertyNameForLowerCaseHyphenSeparatedName(griffonAppName)
-    eventsFile << """
-def $classpathTempVar = binding.variables.containsKey('eventSetClasspath') ? eventSetClasspath : {cl->}
-eventSetClasspath = { cl ->
-    $classpathTempVar(cl)
-    if(compilingPlugin('$pluginName')) return
-    griffonSettings.dependencyManager.flatDirResolver name: 'griffon-${pluginName}-plugin', dirs: "\${${pluginName2}PluginDir}/addon"
-    griffonSettings.dependencyManager.addPluginDependency('$pluginName', [
-        conf: 'compile',
-        name: 'griffon-${pluginName}-addon',
-        group: 'org.codehaus.griffon.plugins',
-        version: ${pluginName2}PluginVersion
-    ])
 }
-"""
-}
-
-def generateTempVar(String textToSearch, String prefix = "tmp", String suffix = "") {
-    int i = 1;
-    while (textToSearch =~ "\\W$prefix$i$suffix\\W") i++
-    return "$prefix$i$suffix"
-}
+setDefaultTarget(createAddon)

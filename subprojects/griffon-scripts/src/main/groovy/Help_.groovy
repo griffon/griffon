@@ -1,151 +1,98 @@
 /*
- * Copyright 2004-2011 the original author or authors.
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-
-/**
- * Gant script that evaluates all installed scripts to create help output
- *
- * @author Graeme Rocher (Grails 0.4)
- */
+* Copyright 2012 the original author or authors.
+*
+* Licensed under the Apache License, Version 2.0 (the "License");
+* you may not use this file except in compliance with the License.
+* You may obtain a copy of the License at
+*
+*      http://www.apache.org/licenses/LICENSE-2.0
+*
+* Unless required by applicable law or agreed to in writing, software
+* distributed under the License is distributed on an "AS IS" BASIS,
+* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+* See the License for the specific language governing permissions and
+* limitations under the License.
+*/
 
 import griffon.util.GriffonUtil
+import org.springframework.core.io.Resource
+import static org.apache.commons.lang.WordUtils.wrap
 
-includeTargets << griffonScript("Init")
+/**
+ * Displays help description for Gant scripts
+ *
+ * @author Andres Almiray
+ */
 
-class HelpEvaluatingCategory {
-    static defaultTask = ""
-    static helpText = [:]
-    static target(Object obj, Map args, Closure callable) {
-        def entry = args.entrySet().iterator().next()
-        helpText[(entry.key)] = entry.value
+includeTargets << griffonScript('_GriffonResolveDependencies')
 
-        if (entry.key == "default") {
-            defaultTask = "default"
-        }
-    }
-    static getDefaultDescription(Object obj) {
-        return helpText[defaultTask]
-    }
+target(name: 'help', description: 'Displays this help or help about a command',
+        prehook: null, posthook: null) {
+    depends(resolveDependencies)
 
-    static setDefaultTarget(Object obj, val) {
-        defaultTask = val
-    }
-}
+    String command = argsMap.command ?: args
+    if (command) {
+        int maxwidth = 72i
+        String prefix = '        '
+        String mainDescription = getMainDescription(command)
+        String detailedDescription = getDetailedDescription(command)
 
-File getHelpFile(File script) {
-    File helpDir = new File(griffonTmp, "help")
-    if (!helpDir.exists()) helpDir.mkdir()
-    String scriptname = script.getName()
-    return new File(helpDir, scriptname.substring(0, scriptname.lastIndexOf('.')) + ".txt")
-}
-
-boolean shouldGenerateHelp(File script) {
-    File file = getHelpFile(script)
-    return (!file.exists() || file.lastModified() < script.lastModified() )
-}
-
-target ('default' : "Prints out the help for each script") {
-    ant.mkdir(dir:griffonTmp)
-    def scripts = pluginSettings.availableScripts.collect { it.file }
-
-    def helpText = ""
-
-
-    if(args) {
-        def fileName = GriffonUtil.getNameFromScript(args)
-        def file = scripts.find {
-            def scriptFileName = it.name[0..-8]
-            if(scriptFileName.endsWith("_")) scriptFileName = scriptFileName[0..-2]
-            scriptFileName == fileName
-        }
-
-        if(file) {
-            println """
-    Usage (optionals marked with *):
-    griffon [environment]*
-            """
-            def gcl = new GroovyClassLoader()
-            use(HelpEvaluatingCategory.class) {
-                if (shouldGenerateHelp(file)) {
-                    try {
-                        def script = gcl.parseClass(file).newInstance()
-                        script.binding = binding
-                        script.run()
-
-                        def scriptName = GriffonUtil.getScriptName(file.name)
-
-                        helpText = "griffon ${scriptName} -- ${getDefaultDescription()}"
-                        File helpFile = getHelpFile(file)
-                        if(!helpFile.exists())
-                            helpFile.createNewFile()
-                        helpFile.write(helpText)
-                    }
-                    catch(Throwable t) {
-                        println "Warning: Error caching created help for ${file}: ${t.message}"
-                        println helpText
-                    }
-                } else {
-                    helpText = getHelpFile(file).text
+        if (mainDescription) {
+            println ' '
+            println mainDescription
+            if (detailedDescription) {
+                println 'DETAILS'
+                detailedDescription.eachLine { line ->
+                    println(prefix + wrap(line, maxwidth, '\n' + prefix, true))
                 }
-                println helpText
-            }
-        }
-        else {
-            println "No script found for name: $args"
-        }
-    }
-    else {
-            println """
-Usage (optionals marked with *):
-griffon [environment]* [target] [arguments]*
-
-Examples:
-griffon dev run-app
-griffon create-app books
-
-Available Targets (type griffon help 'target-name' for more info):"""
-
-        scripts.unique { it.name }. sort{ it.name }.each { file ->
-            def scriptName = GriffonUtil.getScriptName(file.name)
-            println "griffon ${scriptName}"
-        }
-    }
-}
-
-target(showHelp: "Show help for a particular command") {
-    def gcl = new GroovyClassLoader()
-    use(HelpEvaluatingCategory.class) {
-        if (shouldGenerateHelp(file)) {
-            try {
-                def script = gcl.parseClass(file).newInstance()
-                script.binding = binding
-                script.run()
-
-                def scriptName = GriffonUtil.getScriptName(file.name)
-
-                helpText = "griffon ${scriptName} -- ${getDefaultDescription()}"
-                getHelpFile(file).write(helpText)
-            }
-            catch(Throwable t) {
-                println "Error creating help for ${file}: ${t.message}"
-                GriffonUtil.deepSanitize(t)
-                t.printStackTrace(System.out)
             }
         } else {
-            helpText = getHelpFile(file).text
+            println """
+            |  There's no help available for command $command
+            |""".stripMargin()
         }
-        println helpText
+    } else {
+        List<File> scripts = pluginSettings.availableScripts.collect {it.file}
+
+        println '''
+        |  Usage (optionals marked with *):
+        |     griffon [environment]* [target] [arguments]*
+        |
+        |  Examples:
+        |     griffon dev run-app
+        |     griffon create-app books
+        |
+        |  Available Targets (type griffon help 'target-name' for more info):
+        |'''.stripMargin()
+
+        scripts.unique {it.name}.sort {it.name}.each { File file ->
+            println "  griffon ${GriffonUtil.getScriptName(file.name)}"
+        }
     }
+}
+
+setDefaultTarget(help)
+
+def getMainDescription(String command) {
+    Resource[] commandInfo = resolveResources("classpath*:/org/codehaus/griffon/cli/shell/help/${command}.txt")
+    if (commandInfo) {
+        try {
+            return commandInfo[0].getURL().text
+        } catch (Exception e) {
+            // can't retrieve information from classpath
+        }
+    }
+    return null
+}
+
+def getDetailedDescription(String command) {
+    Resource[] commandInfo = resolveResources("classpath*:/org/codehaus/griffon/cli/shell/command/${command}.txt")
+    if (commandInfo) {
+        try {
+            return commandInfo[0].getURL().text
+        } catch (Exception e) {
+            // can't retrieve information from classpath
+        }
+    }
+    return null
 }

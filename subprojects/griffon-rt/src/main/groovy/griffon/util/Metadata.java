@@ -1,5 +1,5 @@
 /*
- * Copyright 2004-2011 the original author or authors.
+ * Copyright 2004-2012 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -35,6 +35,7 @@ public class Metadata extends Properties {
     public static final String APPLICATION_GRIFFON_VERSION = "app.griffon.version";
     public static final String GRIFFON_START_DIR = "griffon.start.dir";
     public static final String GRIFFON_WORKING_DIR = "griffon.working.dir";
+    public static final String APPLICATION_TOOLKIT = "app.toolkit";
 
     private static final Pattern SKIP_PATTERN = Pattern.compile("^.*\\/griffon-.*.jar!\\/application.properties$");
     private static Reference<Metadata> metadata = new SoftReference<Metadata>(new Metadata());
@@ -187,6 +188,13 @@ public class Metadata extends Properties {
     }
 
     /**
+     * @return Supported toolkit by this application
+     */
+    public String getApplicationToolkit() {
+        return (String) get(APPLICATION_TOOLKIT);
+    }
+
+    /**
      * Obtains a map (name->version) of installed plugins specified in the project metadata
      *
      * @return A map of installed plugins
@@ -199,6 +207,21 @@ public class Metadata extends Properties {
             Object val = entry.getValue();
             if (key.startsWith("plugins.") && val != null) {
                 newMap.put(key.substring(8), val.toString());
+            }
+        }
+        return newMap;
+    }
+
+    public Map<String, String> getArchetype() {
+        Map<String, String> newMap = new LinkedHashMap<String, String>();
+
+        for (Map.Entry<Object, Object> entry : entrySet()) {
+            String key = entry.getKey().toString();
+            Object val = entry.getValue();
+            if (key.startsWith("archetype.") && val != null) {
+                newMap.put("name", key.substring(10));
+                newMap.put("version", val.toString());
+                break;
             }
         }
         return newMap;
@@ -285,8 +308,7 @@ public class Metadata extends Properties {
      * Saves the current state of the Metadata object
      */
     public void persist() {
-        if (propertiesHaveNotChanged())
-            return;
+        // if (propertiesHaveNotChanged()) return;
 
         if (metadataFile != null) {
             FileOutputStream out = null;

@@ -1,5 +1,5 @@
 /*
- * Copyright 2008-2011 the original author or authors.
+ * Copyright 2008-2012 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,15 +21,15 @@
  * Time: 10:35:06 PM
  */
 
-includeTargets << griffonScript("Package")
-includeTargets << griffonScript("_GriffonBootstrap" )
-includeTargets << griffonScript("_PackagePlugins" )
+includeTargets << griffonScript('Package')
+includeTargets << griffonScript('_GriffonBootstrap')
 
-target(tweakConfig:' tweaks for webstart') {
+target(tweakConfig: ' tweaks for webstart') {
     configTweaks << { buildConfig.griffon.jars.sign = true }
 }
-target('default': "Runs the application with Java Webstart") {
-    if(isPluginProject) {
+
+target('runWebstart': "Runs the application with Java Webstart") {
+    if (isPluginProject) {
         println "Cannot run application: project is a plugin!"
         exit(1)
     }
@@ -43,7 +43,7 @@ target('default': "Runs the application with Java Webstart") {
     // calculate the needed jars
     File jardir = new File(ant.antProject.replaceProperties(buildConfig.griffon.jars.destDir))
     // launch event after jardir has been defined
-    event("RunWebstartTweak",[])
+    event("RunWebstartTweak", [])
 
     // setup the vm
     if (!binding.variables.webstartVM) {
@@ -51,7 +51,7 @@ target('default': "Runs the application with Java Webstart") {
     }
 
     def javaOpts = setupJavaOpts(false)
-    javaOpts = "-J"+javaOpts.join(" -J")
+    javaOpts = "-J" + javaOpts.join(" -J")
 
     // TODO set proxy settings
     // start the processess
@@ -64,3 +64,4 @@ target('default': "Runs the application with Java Webstart") {
     p.waitFor()
 }
 
+setDefaultTarget(runWebstart)

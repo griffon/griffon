@@ -10,6 +10,6 @@ public class @artifact.name@ extends @artifact.superclass@ {
     }
 
     public void testSomething() {
-
+        fail("Not implemented!");
     }
 }

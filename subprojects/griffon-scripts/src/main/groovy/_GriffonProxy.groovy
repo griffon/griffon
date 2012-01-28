@@ -1,5 +1,5 @@
 /*
- * Copyright 2004-2011 the original author or authors.
+ * Copyright 2004-2012 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,8 +21,8 @@
  */
 
 target(configureProxy: "The implementation target") {
-    proxySettings = ""
-    def scriptFile = new File("${userHome}/.griffon/scripts/ProxyConfig.groovy")
+    proxySettings = ''
+    File scriptFile = new File("${userHome}/.griffon/scripts/ProxyConfig.groovy")
     if (!scriptFile.exists()) {
         return
     }
@@ -34,16 +34,22 @@ target(configureProxy: "The implementation target") {
     }
 
     // Let's configure proxy...
-    def proxyHost = proxyConfig.proxyHost
-    def proxyPort = proxyConfig.proxyPort ? proxyConfig.proxyPort : '80'
-    def proxyUser = proxyConfig.proxyUser ? proxyConfig.proxyUser : ''
-    def proxyPassword = proxyConfig.proxyPassword ? proxyConfig.proxyPassword : ''
+    String proxyHost = proxyConfig.proxyHost
+    String proxyPort = proxyConfig.proxyPort ? proxyConfig.proxyPort : '80'
+    String proxyUser = proxyConfig.proxyUser ? proxyConfig.proxyUser : ''
+    String proxyPassword = proxyConfig.proxyPassword ? proxyConfig.proxyPassword : ''
     println "Configured HTTP proxy: ${proxyHost}:${proxyPort}${proxyConfig.proxyUser ? '(' + proxyUser + ')' : ''}"
     // ... for ant. We can remove this line with ant 1.7.0 as it uses system properties.
-    ant.setproxy(proxyhost: proxyHost, proxyport: proxyPort, proxyuser: proxyUser, proxypassword: proxyPassword)
+    ant.setproxy(proxyhost: proxyHost,
+            proxyport: proxyPort,
+            proxyuser: proxyUser,
+            proxypassword: proxyPassword)
     // ... for all other code
-    System.properties.putAll(["http.proxyHost": proxyHost, "http.proxyPort": proxyPort,
-                              "http.proxyUserName": proxyUser, "http.proxyPassword": proxyPassword])
+    System.properties.putAll([
+            'http.proxyHost': proxyHost,
+            'http.proxyPort': proxyPort,
+            'http.proxyUserName': proxyUser,
+            'http.proxyPassword': proxyPassword])
 
     proxySettings += "-Dproxy.host=$proxyHost "
     proxySettings += "-Dproxy.port=$proxyPort "

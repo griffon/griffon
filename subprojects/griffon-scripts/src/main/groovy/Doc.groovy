@@ -1,5 +1,5 @@
 /*
- * Copyright 2004-2011 the original author or authors.
+ * Copyright 2004-2012 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,6 +18,6 @@
  * @author Graeme Rocher (Grails 1.0)
  */
 
-includeTargets << griffonScript("_GriffonDocs")
+includeTargets << griffonScript('_GriffonDocs')
 
 setDefaultTarget("docs")

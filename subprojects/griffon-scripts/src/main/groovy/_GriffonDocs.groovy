@@ -1,5 +1,5 @@
 /*
- * Copyright 2004-2011 the original author or authors.
+ * Copyright 2004-2012 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,6 +20,9 @@ import org.codehaus.griffon.documentation.DocumentationContext
 import org.codehaus.griffon.documentation.DocumentedMethod
 import org.codehaus.griffon.documentation.PdfBuilder
 import org.codehaus.griffon.resolve.IvyDependencyManager
+import org.codehaus.griffon.artifacts.ArtifactUtils
+import org.codehaus.griffon.artifacts.model.Plugin
+import griffon.util.GriffonNameUtils
 
 /**
  * @author Graeme Rocher (Grails 1.0)
@@ -29,8 +32,9 @@ import org.codehaus.griffon.resolve.IvyDependencyManager
 if (getBinding().variables.containsKey("_griffon_docs_called")) return
 _griffon_docs_called = true
 
-includeTargets << griffonScript("_GriffonCompile")
-includeTargets << griffonScript("_GriffonPackage")
+includeTargets << griffonScript('_GriffonCompile')
+includeTargets << griffonScript('_GriffonPackage')
+includeTargets << griffonScript('_GriffonPackageArtifact')
 
 // javadocDir = "${griffonSettings.docsOutputDir}/api"
 groovydocDir = "${griffonSettings.docsOutputDir}/api"
@@ -105,6 +109,14 @@ And provide a detailed description
 
 target(docsInternal: "Actual documentation task") {
     depends(compile, /*javadoc,*/ groovydoc, refdocs, pdf, createIndex)
+
+    ant.replace(dir: "${griffonSettings.docsOutputDir}/manual") {
+        include(name: "**/*.html")
+        replacefilter(token: "@griffon.version@", value: griffonVersion)
+        replacefilter(token: "@griffon.project.name@", value: griffonAppName)
+        replacefilter(token: "@griffon.application.name@", value: GriffonNameUtils.getPropertyName(griffonAppName))
+        replacefilter(token: "@griffon.project.key@", value: griffonAppName.replaceAll(/\s/, '.').toLowerCase())
+    }
 }
 
 target(setupDoc: "Sets up the doc directories") {
@@ -177,7 +189,7 @@ target(javadoc: "Produces javadoc documentation") {
 }
 
 target(refdocs: "Generates Griffon style reference documentation") {
-    depends(parseArguments, createConfig, loadPlugins, setupDoc)
+    depends(createConfig, setupDoc)
 
     if (docsDisabled()) return
 
@@ -311,16 +323,11 @@ target(createIndex: "Produces an index.html page in the root directory") {
 def readPluginMetadataForDocs(DocPublisher publisher) {
     def basePlugin = loadBasePlugin()
     if (basePlugin) {
-        if (basePlugin.hasProperty("title"))
-            publisher.title = basePlugin.title
-        if (basePlugin.hasProperty("description"))
-            publisher.subtitle = basePlugin.description
-        if (basePlugin.hasProperty("version"))
-            publisher.version = basePlugin.version
-        if (basePlugin.hasProperty("license"))
-            publisher.license = basePlugin.license
-        if (basePlugin.hasProperty("author"))
-            publisher.authors = basePlugin.author
+        publisher.title = basePlugin.title
+        publisher.subtitle = basePlugin.title
+        publisher.version = basePlugin.version
+        publisher.license = basePlugin.license
+        publisher.authors = basePlugin.authors.collect([]) { it.name }.join(', ')
     }
 }
 
@@ -347,7 +354,8 @@ private readIfSet(DocPublisher publisher, String prop) {
 }
 
 private loadBasePlugin() {
-    pluginManager?.allPlugins?.find { it.basePlugin }
+    pluginDescriptor = ArtifactUtils.getPluginDescriptor(basedir)
+    pluginDescriptor?.exists() ? loadArtifactInfo(Plugin.TYPE, pluginDescriptor) : null
 }
 
 // target(docs: "Produces documentation for a Griffon project") {
@@ -377,7 +385,7 @@ invokeGroovydoc = { Map args ->
     if (!(sources instanceof List)) sources = sources.toString().split(',')
     def groovydocSources = []
     sources.each { dir ->
-        if(hasJavaOrGroovySources(dir)) groovydocSources << dir
+        if (hasJavaOrGroovySources(dir)) groovydocSources << dir
     }
 
     if (groovydocSources) {

@@ -1,5 +1,5 @@
 /*
- * Copyright 2010-2011 the original author or authors.
+ * Copyright 2010-2012 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,6 +17,7 @@
 package org.codehaus.griffon.compiler.support;
 
 import org.codehaus.griffon.ast.AbstractASTTransformation;
+import org.codehaus.griffon.cli.CommandLineConstants;
 import org.codehaus.griffon.compiler.GriffonCompilerContext;
 import org.codehaus.groovy.ast.ASTNode;
 import org.codehaus.groovy.ast.ClassHelper;
@@ -28,16 +29,16 @@ import org.codehaus.groovy.control.SourceUnit;
  * Handles generation of code for Griffon artifacts.
  * <p/>
  *
- * @author Andres Almiray 
- *
+ * @author Andres Almiray
  * @since 0.9.1
  */
 public abstract class GriffonArtifactASTTransformation extends AbstractASTTransformation {
     public void visit(ASTNode[] nodes, SourceUnit source) {
-        if(GriffonCompilerContext.getConfigOption(GriffonCompilerContext.DISABLE_AST_INJECTION) || !GriffonCompilerContext.isGriffonArtifact(source)) return;
+        if (GriffonCompilerContext.getConfigOption(CommandLineConstants.KEY_DISABLE_AST_INJECTION) || !GriffonCompilerContext.isGriffonArtifact(source))
+            return;
         ModuleNode moduleNode = (ModuleNode) nodes[0];
         ClassNode classNode = moduleNode.getClasses().get(0);
-        if(classNode.isDerivedFrom(ClassHelper.SCRIPT_TYPE) && !allowsScriptAsArtifact()) return;
+        if (classNode.isDerivedFrom(ClassHelper.SCRIPT_TYPE) && !allowsScriptAsArtifact()) return;
         transform(classNode, source, GriffonCompilerContext.getArtifactPath(source));
     }
 

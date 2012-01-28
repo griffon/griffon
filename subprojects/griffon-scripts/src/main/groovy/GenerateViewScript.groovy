@@ -1,5 +1,5 @@
 /*
- * Copyright 2009-2011 the original author or authors.
+ * Copyright 2009-2012 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,13 +21,12 @@
 import java.awt.Component
 import java.beans.Introspector
 
-includeTargets << griffonScript("Init")
-includeTargets << griffonScript("_GriffonCreateArtifacts")
-includeTargets << griffonScript("_GriffonCompile")
+includeTargets << griffonScript('_GriffonCreateArtifacts')
+includeTargets << griffonScript('_GriffonCompile')
 
 
-target('default': "Generates a view script from an existing class") {
-    depends(checkVersion, parseArguments, classpath, compile)
+target('generateViewScript': "Generates a view script from an existing class") {
+    depends(checkVersion, compile)
 
     promptForName(type: "Class to Proxy View for:")
     String klassName = argsMap["params"][0]
@@ -36,7 +35,7 @@ target('default': "Generates a view script from an existing class") {
     def fields = []
 
     try {
-        GroovyClassLoader gcl = new GroovyClassLoader(rootLoader, compConfig)
+        GroovyClassLoader gcl = new GroovyClassLoader(rootLoader)
         Class klass = gcl.loadClass(klassName)
         while (klass != null && !(klass.getPackage()?.name ==~ "java(x)?\\..*")) {
             klass.declaredFields.collect(fields) {it}
@@ -55,7 +54,7 @@ The target file already exists:
  -> $outputFile
 If you continue all contents of that file will be deleted.
 Do you wish to continue and overwrite the existing file?""")
-            if(result == 'n') exit(0)
+            if (result == 'n') exit(0)
         }
 
         new File(outputFileName).withWriter {writer ->
@@ -64,19 +63,19 @@ Do you wish to continue and overwrite the existing file?""")
             }
 
             if (Component.isAssignableFrom(klass)) {
-                writer <<  """// create instance of view object
+                writer << """// create instance of view object
 widget(new $klassName(), id:'$varName')
 
 """
             } else {
-                writer <<  """// create instance of view object
+                writer << """// create instance of view object
 $varName = new $klassName()
 
 """
             }
 
-            if( fields ) {
-               writer << "noparent {\n"
+            if (fields) {
+                writer << "noparent {\n"
             }
             fields.each {field ->
                 writer << """    // $field.type.name $field.name declared in $field.declaringClass.name
@@ -84,16 +83,20 @@ $varName = new $klassName()
 
 """
             }
-            if( fields ) {
-               writer << """}
+            if (fields) {
+                writer << """}
 return $varName
 """
             }
         }
 
     } catch (ClassNotFoundException cnfe) {
-        event('StatusFinal', ["Source class cound not be found: $klassName"])
+        event('StatusError', ["Source class cound not be found: $klassName"])
+        exit(1)
+    } catch(Exception e) {
+        event('StatusError', ["Could not generate view script => $e"])
         exit(1)
     }
 }
 
+setDefaultTarget(generateViewScript)

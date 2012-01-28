@@ -56,7 +56,6 @@ class BuildSettingsTests extends GroovyTestCase {
         assertEquals new File("${settings.projectWorkDir}/test-classes"), settings.testClassesDir
         assertEquals new File("${settings.projectWorkDir}/resources"), settings.resourcesDir
         assertEquals new File("${settings.projectWorkDir}/plugins"), settings.projectPluginsDir
-        assertEquals new File("$defaultWorkPath/global-plugins"), settings.globalPluginsDir
 
         // Dependencies.
         /*
@@ -121,7 +120,6 @@ class BuildSettingsTests extends GroovyTestCase {
             assertEquals new File("${settings.projectWorkDir}/test-classes"), settings.testClassesDir
             assertEquals new File("${settings.projectWorkDir}/resources"), settings.resourcesDir
             assertEquals new File("${settings.projectWorkDir}/plugins"), settings.projectPluginsDir
-            assertEquals new File("$defaultWorkPath/global-plugins"), settings.globalPluginsDir
         }
         finally {
             griffonHome.delete()
@@ -142,7 +140,6 @@ class BuildSettingsTests extends GroovyTestCase {
         assertEquals new File("${settings.projectWorkDir}/test-classes"), settings.testClassesDir
         assertEquals new File("${settings.projectWorkDir}/resources"), settings.resourcesDir
         assertEquals new File("${userHome}/my-plugins"), settings.projectPluginsDir
-        assertEquals new File("$defaultWorkPath/global-plugins"), settings.globalPluginsDir
     }
 
 /*
@@ -160,7 +157,6 @@ class BuildSettingsTests extends GroovyTestCase {
         assertEquals new File("${defaultProjectWorkDir}/test-classes"), settings.testClassesDir
         assertEquals new File("${defaultProjectWorkDir}/resources"), settings.resourcesDir
         assertEquals new File("target/pluginsDir"), settings.projectPluginsDir
-        assertEquals new File("$defaultWorkPath/global-plugins"), settings.globalPluginsDir
         assertEquals new File("target").canonicalFile, settings.projectTargetDir
 
         // Load a configuration file and check that the values we set
@@ -174,7 +170,6 @@ class BuildSettingsTests extends GroovyTestCase {
         assertEquals new File("build/test-classes"), settings.testClassesDir
         assertEquals new File("projectDir/resources"), settings.resourcesDir
         assertEquals new File("target/pluginsDir"), settings.projectPluginsDir
-        assertEquals new File("workDir/global-plugins"), settings.globalPluginsDir
         assertEquals new File("target").canonicalFile, settings.projectTargetDir
     }
 */
@@ -190,7 +185,6 @@ class BuildSettingsTests extends GroovyTestCase {
         assertEquals new File("${settings.projectWorkDir}/test-classes"), settings.testClassesDir
         assertEquals new File("${settings.projectWorkDir}/resources"), settings.resourcesDir
         assertEquals new File("${settings.projectWorkDir}/plugins"), settings.projectPluginsDir
-        assertEquals new File("$defaultWorkPath/global-plugins"), settings.globalPluginsDir
     }
 
 /*
@@ -209,7 +203,6 @@ class BuildSettingsTests extends GroovyTestCase {
         assertEquals new File("build/test-classes"), settings.testClassesDir
         assertEquals new File("${settings.projectWorkDir}/resources"), settings.resourcesDir
         assertEquals new File("${userHome}/my-plugins"), settings.projectPluginsDir
-        assertEquals new File("$defaultWorkPath/global-plugins"), settings.globalPluginsDir
     }
 */
 
@@ -227,7 +220,6 @@ class BuildSettingsTests extends GroovyTestCase {
         assertEquals new File("${settings.projectWorkDir}/test-classes"), settings.testClassesDir
         assertEquals new File("${settings.projectWorkDir}/resources"), settings.resourcesDir
         assertEquals new File("${userHome}/my-plugins"), settings.projectPluginsDir
-        assertEquals new File("$defaultWorkPath/global-plugins"), settings.globalPluginsDir
     }
 
     private void setSystemProperty(String name, String value) {

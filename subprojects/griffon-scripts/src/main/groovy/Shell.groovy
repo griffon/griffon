@@ -1,5 +1,5 @@
 /*
- * Copyright 2004-2011 the original author or authors.
+ * Copyright 2004-2012 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,26 +23,24 @@
 import org.codehaus.groovy.tools.shell.Groovysh
 import org.codehaus.groovy.tools.shell.IO
 
-includeTargets << griffonScript("_GriffonBootstrap")
+includeTargets << griffonScript('_GriffonBootstrap')
 
-target(default: "Runs an embedded application in a Groovy Shell") {
-    depends(checkVersion, configureProxy, classpath, createConfig)
+target(shell: "Runs an embedded application in a Groovy Shell") {
+    depends(checkVersion, createConfig)
 
     jardir = ant.antProject.replaceProperties(buildConfig.griffon.jars.destDir)
-    ant.copy(todir:jardir) { fileset(dir:"${griffonHome}/lib/", includes: "jline-*.jar") }
+    ant.copy(todir: jardir) { fileset(dir: "${griffonHome}/lib/", includes: "jline-*.jar") }
 
-    shell()
-}
-
-target(shell: "Load the Griffon interactive shell") {
-    if(!isPluginProject) {
+    if (!isPluginProject && !isArchetypeProject) {
         bootstrap()
         loadApp()
     }
 
     def b = new Binding()
-    if(!isPluginProject) b.app = griffonApp
+    if (!isPluginProject && !isArchetypeProject) b.app = griffonApp
 
     def shell = new Groovysh(classLoader, b, new IO(System.in, System.out, System.err))
     shell.run([] as String[])
 }
+
+setDefaultTarget(shell)

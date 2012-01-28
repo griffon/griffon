@@ -1,5 +1,5 @@
 /*
- * Copyright 2004-2011 the original author or authors.
+ * Copyright 2004-2012 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,27 +21,28 @@
  */
 
 // No point doing this stuff more than once.
-if (getBinding().variables.containsKey("_console_called")) return
+if (getBinding().variables.containsKey('_console_called')) return
 _console_called = true
 
-includeTargets << griffonScript("_GriffonBootstrap")
+includeTargets << griffonScript('_GriffonBootstrap')
 
-target(default: "Runs an embedded application in a Groovy console") {
-    depends(checkVersion, configureProxy, classpath)
+target(console: "Runs an embedded application in a Groovy console") {
+    depends(checkVersion)
 
     try {
         def console = createConsole()
         console.run()
-        while(console.consoleControllers) { sleep(3500) }
+        while (console.consoleControllers) { sleep(3500) }
     } catch (Exception e) {
         event("StatusFinal", ["Error starting console: ${e.message}"])
     }
 }
+setDefaultTarget(console)
 
 createConsole = {
-    if(!isPluginProject) bootstrap()
+    if (!isPluginProject && !isArchetypeProject) bootstrap()
     def b = new Binding()
-    if(!isPluginProject) b.app = griffonApp
+    if (!isPluginProject && !isArchetypeProject) b.app = griffonApp
     def cl = griffonApp?.class?.classLoader ?: classLoader
 
     def console = new groovy.ui.Console(cl, b)

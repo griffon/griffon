@@ -1,5 +1,5 @@
-/* 
- * Copyright 2004-2011 the original author or authors.
+/*
+ * Copyright 2004-2012 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,42 +16,45 @@
 package org.codehaus.griffon.resolve;
 
 import griffon.util.BuildSettings;
-import org.apache.ivy.core.settings.IvySettings;
-import org.apache.ivy.plugins.resolver.FileSystemResolver;
 
 import java.io.File;
 
+import org.apache.ivy.core.settings.IvySettings;
+import org.apache.ivy.plugins.resolver.FileSystemResolver;
+
 /**
- * A resolver that resolves JAR files from plugin lib directories
+ * A resolver that resolves JAR files from plugin lib directories.
  *
  * @author Graeme Rocher (Grails 1.2)
  */
-public class GriffonPluginsDirectoryResolver extends FileSystemResolver{
+public class GriffonPluginsDirectoryResolver extends FileSystemResolver {
     private static final String GRIFFON_PLUGINS = "griffonPlugins";
     private static final String LIB_DIR_PATTERN = "/lib/[artifact]-[revision].[ext]";
 
     public GriffonPluginsDirectoryResolver(BuildSettings buildSettings, IvySettings ivySettings) {
-        if(buildSettings != null) {
+        if (buildSettings != null) {
             final File pluginsDir = buildSettings.getProjectPluginsDir();
             final File basedir = buildSettings.getBaseDir();
-            if(basedir!=null) {
-                addArtifactPattern(basedir.getAbsolutePath()+ LIB_DIR_PATTERN);
+            if (basedir != null) {
+                addArtifactPattern(basedir.getAbsolutePath() + LIB_DIR_PATTERN);
             }
             addPatternsForPluginsDirectory(pluginsDir);
-            addPatternsForPluginsDirectory(buildSettings.getGlobalPluginsDir());
+            // addPatternsForPluginsDirectory(buildSettings.getGlobalPluginsDir());
         }
         setName(GRIFFON_PLUGINS);
         setSettings(ivySettings);
     }
 
     private void addPatternsForPluginsDirectory(File pluginsDir) {
-        if(pluginsDir!=null) {
-            final File[] files = pluginsDir.listFiles();
-            if(files!=null) {
-                for(File f : files) {
-                    if(f.isDirectory()) {
-                        addArtifactPattern(f.getAbsolutePath()+ LIB_DIR_PATTERN);
-                    }
+        if (pluginsDir == null) {
+            return;
+        }
+
+        final File[] files = pluginsDir.listFiles();
+        if (files != null) {
+            for (File f : files) {
+                if (f.isDirectory()) {
+                    addArtifactPattern(f.getAbsolutePath()+ LIB_DIR_PATTERN);
                 }
             }
         }

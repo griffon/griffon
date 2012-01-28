@@ -2,35 +2,48 @@ h1. plugin-info
 
 h2. Purpose
 
-Displays detailed info about a given plug-in
+Displays detailed info about a given plugin
 
 h2. Examples
 
 {code:java}
-griffon plugin-info 
+griffon plugin-info actions
 {code}
 
 h2. Description
 
 Usage: 
 {code:java}
-griffon plugin-info \[name\]
+griffon plugin-info \[name\] \[version\] --repository=<repositoryName>
 {code}
 
-This command will display more detailed info about a given plug-in such as the author, location of documentation and so on. An example of the output of the JSecurity plug-in can be seen below:
+This command will display more detailed info about a given plugin such as the author, available releases and so on. An example of the output of the Actions plugin can be seen below:
 
 {code}
---------------------------------------------------------------------------
-Information about Griffon plugin
---------------------------------------------------------------------------
-Name: rest      | Latest release: 0.2
---------------------------------------------------------------------------
-REST client libraries
---------------------------------------------------------------------------
-Author: Andres Almiray
---------------------------------------------------------------------------
-Author's e-mail: aalmiray@users.sourceforge.net
---------------------------------------------------------------------------
-Find more info here: http://griffon.codehaus.org/Rest+Plugin
---------------------------------------------------------------------------
+--------------------------------------------------------------------------------
+Information about plugin listed at griffon-legacy
+--------------------------------------------------------------------------------
+Name     : actions
+Title    : Action management
+License  : Apache Software License 2.0
+Source   : http://svn.codehaus.org/griffon/plugins/griffon-actions
+--------------------------------------------------------------------------------
+Toolkits : swing
+Platforms: works in all platforms
+--------------------------------------------------------------------------------
+Authors:
+	Andres Almiray (aalmiray@users.sourceforge.net)
+--------------------------------------------------------------------------------
+Releases:
+Version             Griffon Version          Date
+
+0.2                 0.9.4 > *                Fri Oct 21 19:48:12 CEST 2011
+0.1                 0.9.3 > *                Mon Aug 15 13:34:36 CEST 2011
 {code}
+
+Arguments:
+* @name@ - Name of the plugin to search
+* @version@ - Version of the plugin to search
+
+Options:
+* @repository@ - Name of an specific repository where the search will be performed. Defaults to griffon-central

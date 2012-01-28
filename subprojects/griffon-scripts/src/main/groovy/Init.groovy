@@ -1,5 +1,5 @@
 /*
- * Copyright 2004-2011 the original author or authors.
+ * Copyright 2004-2012 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,15 +15,16 @@
  */
 
 /**
- * Gant script that handles general initialization of a Griffon applications
  *
- * @deprecated Use "create-app --inplace" or "upgrade".
- * @author Graeme Rocher (Grails 0.4)
- * @author Peter Ledbrook (Grails 0.4)
+ * @author Andres Almiray
  */
 
-includeTargets << griffonScript("_GriffonInit")
+def space = ' '
+println space
+printFramed("""
+    | This script is no longer supported;
+    | it will be removed in a future version.
+    | ${space}
+    |""".stripMargin())
 
-target('default': "legacy init target") {
-    init()
-}
+exit(1)

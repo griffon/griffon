@@ -1,5 +1,5 @@
 /*
- * Copyright 2010-2011 the original author or authors.
+ * Copyright 2010-2012 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,6 +23,7 @@ evaluationDependsOn(':griffon-rt')
 evaluationDependsOn(':griffon-cli')
 evaluationDependsOn(':griffon-resources')
 evaluationDependsOn(':griffon-scripts')
+evaluationDependsOn(':griffon-shell')
 evaluationDependsOn(':griffon-wrapper')
 evaluationDependsOn(':griffon-guide')
 
@@ -44,12 +45,12 @@ subprojects { subproj ->
     }
 
     repositories {
-        mavenLocal()
+        mavenRepo name: 'Codehaus',       url: 'http://repository.codehaus.org'
+        mavenRepo name: 'SpringSource',   url: 'http://repository.springsource.com/maven/bundles/release'
+        mavenRepo name: 'Gradle',         url: 'http://gradle.artifactoryonline.com/gradle/libs-releases-local'
         mavenCentral()
-        mavenRepo name: 'Codehaus', url: 'http://repository.codehaus.org'
+        mavenRepo name: 'Sonaytpe',       url: 'http://repository.sonatype.org/content/groups/public'
         mavenRepo name: 'Grails Central', url: 'http://repo.grails.org/grails/core/'
-        mavenRepo name: 'SpringSource', url: 'http://repository.springsource.com/maven/bundles/release'
-        mavenRepo name: 'Gradle', url: 'http://gradle.artifactoryonline.com/gradle/libs-releases-local'
     }
 
     tasks.withType(Jar).each{ jarTask ->
@@ -101,6 +102,7 @@ def mavenizedProjects() {
         project(':griffon-rt'),
         project(':griffon-cli'),
         project(':griffon-resources'),
-        project(':griffon-scripts')
+        project(':griffon-scripts'),
+        project(':griffon-shell')
     ]
 }

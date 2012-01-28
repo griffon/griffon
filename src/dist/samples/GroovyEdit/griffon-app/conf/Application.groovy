@@ -10,13 +10,13 @@ application {
 }
 mvcGroups {
     'GroovyEdit' {
-        model = 'groovyedit.GroovyEditModel'
+        model      = 'groovyedit.GroovyEditModel'
+        view       = 'groovyedit.GroovyEditView'
         controller = 'groovyedit.GroovyEditController'
-        view = 'groovyedit.GroovyEditView'
     }
     'FilePanel' {
-        model = 'groovyedit.FilePanelModel'
+        model      = 'groovyedit.FilePanelModel'
+        view       = 'groovyedit.FilePanelView'
         controller = 'groovyedit.FilePanelController'
-        view = 'groovyedit.FilePanelView'
     }
 }

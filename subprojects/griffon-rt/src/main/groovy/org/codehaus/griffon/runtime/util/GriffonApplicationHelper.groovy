@@ -1,5 +1,5 @@
 /*
- * Copyright 2008-2011 the original author or authors.
+ * Copyright 2008-2012 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -188,8 +188,17 @@ class GriffonApplicationHelper {
         Map<String, MVCGroupConfiguration> configurations = [:]
         app.config.mvcGroups.each {String type, Map members ->
             if (LOG.debugEnabled) LOG.debug("Adding MVC group $type")
-            Map membersCopy = members.inject([:]) {m, e -> m[e.key as String] = e.value as String; m}
-            configurations.put(type, app.mvcGroupManager.newMVCGroupConfiguration(app, type, membersCopy))
+            Map configMap = [:]
+            Map membersCopy = members.inject([:]) { m, e ->
+                String key = e.key as String
+                if (key == 'config' && e.value instanceof Map) {
+                    configMap = e.value
+                } else {
+                    m[key] = e.value as String
+                }
+                m
+            }
+            configurations.put(type, app.mvcGroupManager.newMVCGroupConfiguration(type, membersCopy, configMap))
         }
 
         app.mvcGroupManager.initialize(configurations)

@@ -1,5 +1,5 @@
 /*
- * Copyright 2004-2011 the original author or authors.
+ * Copyright 2004-2012 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,37 +21,73 @@
  */
 
 import griffon.util.GriffonUtil
+import griffon.util.GriffonNameUtils
 
-includeTargets << griffonScript("_GriffonInit")
-includeTargets << griffonScript("_GriffonCreateArtifacts")
+includeTargets << griffonScript('_GriffonCreateArtifacts')
 
-target(default : "Creates a Griffon Gant Script") {
-    depends(parseArguments)
+target(createScript: "Creates a Griffon Gant Script") {
+    depends(checkVersion)
 
-    def type = "Script"
+    String type = "Script"
     promptForName(type: type)
     argsMap.skipPackagePrompt = true
-    def (pkg, name) = extractArtifactName(argsMap["params"][0])
+    def (pkg, name) = extractArtifactName(argsMap['params'][0])
 
     createArtifact(
-        name: name,
-        suffix: "",
-        type: type,
-        path: "scripts")
+            name:   name,
+            suffix: '',
+            type:   type,
+            path:   'scripts')
 
-    if(isApplicationProject || isPluginProject) {
+    if (isApplicationProject || isPluginProject) {
         createArtifact(
-            name: name,
-            suffix: "Tests",
-            type: "ScriptTests",
-            path: "test/cli")
-    
+                name:   name,
+                suffix: 'Tests',
+                type:   'ScriptTests',
+                path:   'test/cli')
+
         className = GriffonUtil.getClassNameRepresentation(name)
         artifactFile = "${basedir}/test/cli/${className}Tests.groovy"
-    
+
         ant.replace(file: artifactFile) {
-            replacefilter(token: "@script.name@", value: name )
-            replacefilter(token: "${className}Tests", value: className )
+            replacefilter(token: '@script.name@', value: name)
+            replacefilter(token: "${className}Tests", value: className)
         }
     }
+
+    if (argsMap['with-command-support']) {
+        commandName = className.toLowerCase()
+        commandScope = griffonSettings.isPluginProject() ? GriffonNameUtils.getPropertyName(griffonAppName) : 'app'
+        createArtifact(
+                name:     name,
+                suffix:   'Command',
+                type:     'ShellCommand',
+                fileType: 'java',
+                path:     'src/cli/org/codehaus/griffon/cli/shell/command'
+        )
+        ant.replace(file: artifactFile) {
+            replaceFilter(token: '@command.name@', value: commandName)
+            replaceFilter(token: '@command.scope@', value: commandScope)
+        }
+
+        createArtifact(
+                name:     commandName,
+                suffix:   '',
+                type:     'ShellHelp',
+                fileType: 'txt',
+                path:     'src/cli/org/codehaus/griffon/cli/shell/help'
+        )
+        ant.replace(file: artifactFile) {
+            replaceFilter(token: '@command.name@', value: commandName)
+        }
+
+        ant.move(
+                file: artifactFile,
+                tofile: new File(artifactFile.parentFile, "${commandName}.txt")
+        )
+
+        touch(file: "src/cli/org/codehaus/griffon/cli/shell/command/${commandName}.txt")
+    }
 }
+
+setDefaultTarget(createScript)

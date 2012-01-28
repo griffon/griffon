@@ -1,5 +1,5 @@
 /*
- * Copyright 2010-2011 the original author or authors.
+ * Copyright 2010-2012 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,10 +18,7 @@ package org.codehaus.griffon.compiler;
 
 import griffon.util.BuildSettings;
 import griffon.util.BuildSettingsHolder;
-import groovy.lang.Closure;
 import groovy.util.ConfigObject;
-import org.apache.log4j.LogManager;
-import org.codehaus.griffon.runtime.logging.Log4jConfig;
 import org.codehaus.groovy.control.SourceUnit;
 import org.codehaus.groovy.runtime.typehandling.DefaultTypeTransformation;
 
@@ -38,11 +35,6 @@ import java.util.regex.Pattern;
  * @since 0.9.1
  */
 public class GriffonCompilerContext {
-    public static final String DISABLE_AST_INJECTION = "griffon.disable.ast.injection";
-    public static final String DISABLE_AUTO_IMPORTS = "griffon.disable.auto.imports";
-    public static final String DISABLE_LOGGING_INJECTION = "griffon.disable.logging.injection";
-    public static final String DISABLE_THREADING_INJECTION = "griffon.disable.threading.injection";
-
     public static boolean verbose;
     public static String basedir;
     public static String projectName;
@@ -86,8 +78,6 @@ public class GriffonCompilerContext {
         scriptPatterns[0] = normalizePattern("^" + basedir + File.separator + "griffon-app" + File.separator + "conf" + File.separator + ".*.groovy$");
         scriptPatterns[1] = normalizePattern("^" + basedir + File.separator + "scripts" + File.separator + ".*.groovy$");
         isTestPattern = normalizePattern("^" + basedir + File.separator + "test" + File.separator + ".*.groovy$");
-
-        setLoggingOptions();
     }
 
     public static boolean isGriffonArtifact(SourceUnit source) {
@@ -183,13 +173,5 @@ public class GriffonCompilerContext {
         Object value = getFlattenedBuildSettings().get(key);
         if (value != null) return DefaultTypeTransformation.castToBoolean(value);
         return false;
-    }
-
-    private static void setLoggingOptions() {
-        Object log4jConfig = getBuildSettings().get("log4j");
-        if (log4jConfig instanceof Closure) {
-            LogManager.resetConfiguration();
-            new Log4jConfig().configure((Closure) log4jConfig);
-        }
     }
 }

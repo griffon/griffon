@@ -1,5 +1,5 @@
 /*
- * Copyright 2004-2011 the original author or authors.
+ * Copyright 2004-2012 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,20 +14,67 @@
  * limitations under the License.
  */
 
+import griffon.util.Environment
+import griffon.util.GriffonUtil
+import griffon.util.Metadata
+import griffon.util.PlatformUtils
+import org.codehaus.griffon.artifacts.model.Archetype
 import org.codehaus.griffon.cli.ScriptExitException
-import org.codehaus.griffon.plugins.GriffonPluginUtils
 import org.springframework.core.io.ClassPathResource
 import org.springframework.core.io.FileSystemResource
 import org.springframework.core.io.Resource
-import org.springframework.core.io.support.PathMatchingResourcePatternResolver
 import org.springframework.util.FileCopyUtils
-import griffon.util.*
+import static org.codehaus.griffon.artifacts.ArtifactUtils.artifactBase
+import static org.codehaus.griffon.cli.CommandLineConstants.KEY_INTERACTIVE_MODE
+import griffon.util.GriffonNameUtils
 
 /**
  * Gant script containing build variables.
  *
  * @author Peter Ledbrook (Grails 1.1)
  */
+
+args = System.getProperty('griffon.cli.args')
+
+// Set up the Griffon environment for this script.
+if (!System.getProperty('griffon.env.set')) {
+    if (griffonSettings.defaultEnv && getBinding().variables.containsKey('scriptEnv')) {
+        griffonEnv = scriptEnv
+        griffonSettings.griffonEnv = griffonEnv
+        System.setProperty(Environment.KEY, griffonEnv)
+        System.setProperty(Environment.DEFAULT, "")
+    }
+    println "Environment set to ${griffonEnv}"
+    System.setProperty('griffon.env.set', 'true')
+}
+
+// Load the application metadata (application.properties)
+metadataFile = new File("${basedir}/application.properties")
+metadata = metadataFile.exists() ? Metadata.getInstance(metadataFile) : Metadata.current
+
+griffonAppName = metadata.getApplicationName()
+griffonAppVersion = metadata.getApplicationVersion()
+appGriffonVersion = metadata.getGriffonVersion()
+
+// If no app name property (upgraded/new/edited project) default to basedir.
+if (!griffonAppName) {
+    griffonAppName = griffonSettings.baseDir.name
+}
+
+if (griffonAppName.indexOf('/') > -1) {
+    appClassName = griffonAppName[griffonAppName.lastIndexOf('/')..-1]
+} else {
+    appClassName = GriffonUtil.getClassNameRepresentation(griffonAppName)
+}
+
+// Prepare a configuration file parser based on the current environment.
+configSlurper = new ConfigSlurper(griffonEnv)
+configSlurper.setBinding(
+        griffonHome: griffonHome,
+        appName: griffonAppName,
+        appVersion: griffonAppVersion,
+        userHome: userHome,
+        basedir: basedir)
 
 // No point doing this stuff more than once.
 if (getBinding().variables.containsKey("_settings_called")) return true
@@ -55,111 +102,37 @@ getPropertyValue = { String propName, defaultValue ->
 // over those defined in BuildSettings, which in turn take precedence
 // over the defaults.
 isInteractive = true
+System.setProperty(KEY_INTERACTIVE_MODE, "true")
+
 buildProps = buildConfig.toProperties()
 enableProfile = getPropertyValue("griffon.script.profile", false).toBoolean()
-pluginsHome = griffonSettings.projectPluginsDir.path
-
-// Used to find out about plugins used by this app. The plugin manager
-// is configured later when its created (see _PluginDependencies).
-// pluginSettings = new PluginBuildSettings(griffonSettings)
-
-// While some code still relies on GriffonPluginUtils, make sure it
-// uses the same PluginBuildSettings instance as the scripts.
-GriffonPluginUtils.pluginBuildSettings = pluginSettings
-
-// Load the application metadata (application.properties)
-metadataFile = new File("${basedir}/application.properties")
-metadata = metadataFile.exists() ? Metadata.getInstance(metadataFile) : Metadata.current
-
-griffonAppName = metadata.getApplicationName()
-griffonAppVersion = metadata.getApplicationVersion()
-appGriffonVersion = metadata.getGriffonVersion()
-
-// If no app name property (upgraded/new/edited project) default to basedir.
-if (!griffonAppName) {
-    griffonAppName = griffonSettings.baseDir.name
-}
-
-if(griffonAppName.indexOf('/') >-1)
-    appClassName = griffonAppName[griffonAppName.lastIndexOf('/')..-1]
-else
-    appClassName = GriffonUtil.getClassNameRepresentation(griffonAppName)
+// pluginsHome = artifactBase(Plugin.TYPE)
+// pluginsBase = pluginsHome.toString().replaceAll('\\\\', '/')
+// archetypesBase = artifactBase(Archetype.TYPE)
+archetypeName = ''
+archetypeVersion = ''
 
 // Other useful properties.
-args = System.getProperty("griffon.cli.args")
 classesDir = griffonSettings.classesDir
 griffonApp = null
-griffonContext = null
 isApplicationProject = metadataFile.exists()
 isPluginProject = griffonSettings.isPluginProject()
 isAddonPlugin = griffonSettings.isAddonPlugin()
-
-shouldPackageTemplates = false
+isArchetypeProject = griffonSettings.isArchetypeProject()
 
 // Pattern that matches artefacts in the 'griffon-app' directory.
 // Note that the capturing group matches any package directory
 // structure.
 artefactPattern = /\S+?\/griffon-app\/\S+?\/(\S+?)\.groovy/
 
-defaultGriffonApplicationClass = isAddonPlugin ? 'griffon.test.mock.MockGriffonApplication' : 'griffon.swing.SwingApplication'
-defaultGriffonAppletClass = 'griffon.swing.SwingApplet'
 makeJNLP = false
 _skipSigning = false // GRIFFON-118
 defaultAppletWidth = 320 // GRIFFON-127
 defaultAppletHeight = 240 // GRIFFON-127
 
-// Set up the Griffon environment for this script.
-if (!System.getProperty("griffon.env.set")) {
-    if (griffonSettings.defaultEnv && getBinding().variables.containsKey("scriptEnv")) {
-        griffonEnv = scriptEnv
-        griffonSettings.griffonEnv = griffonEnv
-        System.setProperty(Environment.KEY, griffonEnv)
-        System.setProperty(Environment.DEFAULT, "")
-    }
-    println "Environment set to ${griffonEnv}"
-    System.setProperty("griffon.env.set", "true")
-}
-if(getBinding().variables.containsKey("scriptScope")) {
-    buildScope = (scriptScope instanceof BuildScope) ? scriptScope : BuildScope.valueOf(scriptScope.toString().toUpperCase());
-    buildScope.enable()
-}
-else {
-    buildScope = BuildScope.ALL
-    buildScope.enable()
-}
-
-// Prepare a configuration file parser based on the current environment.
-configSlurper = new ConfigSlurper(griffonEnv)
-configSlurper.setBinding(griffonHome:griffonHome,
-                         appName:griffonAppName,
-                         appVersion:griffonAppVersion,
-                         userHome:userHome,
-                         basedir:basedir)
-
 applicationConfigFile = new File(basedir, 'griffon-app/conf/Application.groovy')
 builderConfigFile = new File(basedir, 'griffon-app/conf/Builder.groovy')
 configFile = new File(basedir, 'griffon-app/conf/Config.groovy')
-
-// Ant path based on the class loader for the scripts. This basically
-// includes all the Griffon JARs, the plugin libraries, and any JARs
-// provided by the application. Useful for task definitions.
-ant.path(id: "core.classpath") {
-    classLoader.URLs.each { URL url ->
-        pathelement(location: url.file)
-    }
-}
-
-// a resolver that doesn't throw exceptions when resolving resources
-resolver = new PathMatchingResourcePatternResolver()
-
-resolveResources = {String pattern ->
-    try {
-        return resolver.getResources(pattern)
-    }
-    catch (Throwable e) {
-        return [] as Resource[]
-    }
-}
 
 // Closure that returns a Spring Resource - either from $GRIFFON_HOME
 // if that is set, or from the classpath.
@@ -212,7 +185,7 @@ griffonUnpack = {Map args ->
     }
     finally {
         // Don't need the JAR file any more, so remove it.
-        ant.delete(file: "${dir}/${src}", failonerror:false)
+        ant.delete(file: "${dir}/${src}", failonerror: false)
     }
 }
 
@@ -241,16 +214,16 @@ profile = {String name, Closure callable ->
  * Exits the build immediately with a given exit code.
  */
 exit = {
-    event("Exiting", [it])
+    event('Exiting', [it])
     // Prevent system.exit during unit/integration testing
-    if (System.getProperty("griffon.cli.testing") || System.getProperty("griffon.disable.exit")) {
+    if (System.getProperty('griffon.cli.testing') || System.getProperty('griffon.disable.exit')) {
         throw new ScriptExitException(it)
     }
     System.exit(it)
 }
 
 printFramed = { message, c = '*', padded = false ->
-    def pieces = message.split('\n').collect { it.replace('\t',' ') }
+    def pieces = message.split('\n').collect { it.replace('\t', ' ') }
     def length = pieces*.size().max() + 4
     def frame = c * length
     def result = pieces.collect {
@@ -262,13 +235,19 @@ printFramed = { message, c = '*', padded = false ->
     print result
 }
 
-confirmInput = { String message, String code = ""->
-    if(!isInteractive) {
+confirmInput = { String message, String code = '' ->
+    if (!isInteractive) {
+        if (griffonSettings.defaultAnswerNonInteractive.equalsIgnoreCase('y')) {
+            return true
+        } else if (griffonSettings.defaultAnswerNonInteractive.equalsIgnoreCase('n')) {
+            return false
+        }
+        // no default answer means we must bail out immediately
         println("Cannot ask for input when --non-interactive flag is passed. You need to check the value of the 'isInteractive' variable before asking for input")
         exit(1)
     }
-    code = code ? code : "confirm.message" + System.currentTimeMillis()
-    ant.input(message: message, addproperty: code, validargs: "y,n")
+    code = code ? code : 'confirm.message' + System.currentTimeMillis()
+    ant.input(message: message, addproperty: code, validargs: 'y,n')
     ant.antProject.properties[code].toLowerCase() == 'y'
 }
 
@@ -282,9 +261,9 @@ askAndDoNoNag = { message, yesCallback = null, noCallback = null ->
     nonagYes = 'y'.equalsIgnoreCase(argsMap.nonag) ?: false
     nonagNo = 'n'.equalsIgnoreCase(argsMap.nonag) ?: false
 
-    if(nonagNo) return
+    if (nonagNo) return
     boolean proceed = nonagYes
-    if(!proceed) {
+    if (!proceed) {
         proceed = confirmInput(message)
     }
     proceed ? yesCallback?.call() : noCallback?.call()
@@ -294,41 +273,46 @@ askAndDoNoNag = { message, yesCallback = null, noCallback = null ->
  * Modifies the application's metadata, as stored in the "application.properties"
  * file. If it doesn't exist, the file is created.
  */
-updateMetadata = { Map entries, file = null ->
-    if(!file) file = metadataFile
+updateMetadata = { Map entries, File file = null ->
+    if (!file) file = metadataFile
     if (!file.exists()) {
         ant.propertyfile(
                 file: file,
                 comment: "Do not edit app.griffon.* properties, they may change automatically. " +
                         "DO NOT put application configuration in here, it is not the right place!")
     }
-    def meta = Metadata.getInstance(file)
+    Metadata meta = file == metadataFile ? Metadata.current : Metadata.getInstance(file)
 
     // Convert GStrings to Strings.
-    def stringifiedEntries = [:]
+    Map stringifiedEntries = [:]
     entries.each { key, value -> stringifiedEntries[key.toString()] = value.toString() }
 
     meta.putAll(stringifiedEntries)
     meta.persist()
 
-    if(file.absolutePath == metadataFile.absolutePath) {
-        metadata.reload()
+    if (file.absolutePath == metadataFile.absolutePath) {
+        Metadata.reload()
     }
 }
 
 doForAllPlatforms = { callback ->
     PlatformUtils.PLATFORMS.each { platformKey, platformValue ->
-        def platformDir = new File(jardir, platformKey)
-        if(callback && platformDir.exists()) {
+        File platformDir = new File(jardir, platformKey)
+        if (callback && platformDir.exists()) {
             callback(platformDir, platformKey)
         }
     }
 }
 
 logError = { String message, Throwable t ->
-    GriffonUtil.deepSanitize(t)
-    t.printStackTrace()
-    event("StatusError", ["$message: ${t.message}"])
+    if (t) {
+        GriffonUtil.deepSanitize(t)
+        t.printStackTrace()
+        event 'StatusError', ["$message: ${t.message}"]
+    }
+    else {
+        event 'StatusError', message
+    }
 }
 
 logErrorAndExit = { String message, Throwable t ->
@@ -350,12 +334,6 @@ compilingPlugin = { pluginName ->
 
 cliSourceDir = new File("${basedir}/src/cli")
 cliSourceDirPath = cliSourceDir.absolutePath
-cliClassesDir = new File("${griffonSettings.projectWorkDir}/cli-classes")
-cliClassesDirPath = cliClassesDir.absolutePath
-hasCliSources = cliSourceDir.exists()
-if(hasCliSources) {
-    ant.mkdir(dir: cliClassesDirPath)
-}
 
 hasFiles = { Map params ->
     params.dir = params.dir as File
@@ -366,5 +344,112 @@ hasJavaOrGroovySources = { dir ->
     hasFiles(dir: dir, includes: '**/*.groovy **/*.java')
 }
 
-includeTargets << griffonScript("_GriffonArgParsing")
-includeTargets << griffonScript("_GriffonEvents")
+addUrlIfNotPresent = { to, what ->
+    if (!to || !what) return
+    def urls = to.URLs.toList()
+    switch (what.class) {
+        case URL: what = new File(what.toURI()); break
+        case String: what = new File(what); break
+        case GString: what = new File(what.toString()); break
+        case File: break; // ok
+        default:
+            println "Don't know how to deal with $what as it is not an URL nor a File"
+            System.exit(1)
+    }
+
+    if (what.directory && !what.exists()) what.mkdirs()
+    def url = what.toURI().toURL()
+    if (!urls.contains(url) && (what.directory || !urls.find {it.path.endsWith(what.name)})) {
+        to.addURL(url)
+    }
+}
+
+// --== ARTIFACT STUFF ==--
+
+loadArtifactDescriptorClass = { String artifactFile ->
+    try {
+        // Rather than compiling the descriptor via Ant, we just load
+        // the Groovy file into a GroovyClassLoader. We add the classes
+        // directory to the class loader in case it didn't exist before
+        // the associated descriptor's sources were compiled.
+        def gcl = new GroovyClassLoader(classLoader)
+        String artifactClassName = artifactFile.endsWith('.groovy') ? artifactFile[0..-8] : artifactFile
+        return gcl.loadClass(artifactClassName).newInstance()
+    }
+    catch (Throwable t) {
+        event('StatusError', [t.message])
+        GriffonUtil.sanitize(t).printStackTrace(System.out)
+        ant.fail('Cannot instantiate artifact file')
+    }
+}
+
+projectType = 'app'
+
+target(createStructure: "Creates the application directory structure") {
+    ant.sequential {
+        mkdir(dir: "${basedir}/griffon-app")
+        mkdir(dir: "${basedir}/griffon-app/conf")
+        if (projectType == 'app') {
+            mkdir(dir: "${basedir}/griffon-app/conf/keys")
+            mkdir(dir: "${basedir}/griffon-app/conf/webstart")
+            mkdir(dir: "${basedir}/griffon-app/conf/dist")
+            mkdir(dir: "${basedir}/griffon-app/conf/dist/applet")
+            mkdir(dir: "${basedir}/griffon-app/conf/dist/jar")
+            mkdir(dir: "${basedir}/griffon-app/conf/dist/shared")
+            mkdir(dir: "${basedir}/griffon-app/conf/dist/webstart")
+            mkdir(dir: "${basedir}/griffon-app/conf/dist/zip")
+        }
+        mkdir(dir: "${basedir}/griffon-app/conf/metainf")
+        mkdir(dir: "${basedir}/griffon-app/controllers")
+        mkdir(dir: "${basedir}/griffon-app/i18n")
+        mkdir(dir: "${basedir}/griffon-app/lifecycle")
+        mkdir(dir: "${basedir}/griffon-app/models")
+        mkdir(dir: "${basedir}/griffon-app/resources")
+        mkdir(dir: "${basedir}/griffon-app/views")
+        mkdir(dir: "${basedir}/lib")
+        mkdir(dir: "${basedir}/scripts")
+        mkdir(dir: "${basedir}/src")
+        mkdir(dir: "${basedir}/src/main")
+        mkdir(dir: "${basedir}/test")
+        mkdir(dir: "${basedir}/test/integration")
+        mkdir(dir: "${basedir}/test/unit")
+    }
+}
+
+target(checkVersion: "Stops build if app expects different Griffon version") {
+    if (metadataFile.exists()) {
+        if (appGriffonVersion != griffonVersion) {
+            event('StatusFinal', ["Application expects griffon version [$appGriffonVersion], but GRIFFON_HOME is version " +
+                    "[$griffonVersion] - use the correct Griffon version or run 'griffon upgrade' if this Griffon " +
+                    "version is newer than the version your application expects."])
+            exit(1)
+        }
+    } else {
+        // Griffon has always had version numbers, this is an error state
+        event('StatusFinal', ["Application is an unknown Griffon version, please run: griffon upgrade"])
+        exit(1)
+    }
+}
+
+
+target(updateAppProperties: "Updates default application.properties") {
+    def entries = [
+            'app.name': GriffonNameUtils.getPropertyName(griffonAppName),
+            'app.griffon.version': griffonVersion
+    ]
+    if (griffonAppVersion) {
+        entries['app.version'] = griffonAppVersion
+    }
+    updateMetadata(entries)
+
+    // Make sure if this is a new project that we update the var to include version
+    appGriffonVersion = griffonVersion
+}
+
+buildConfig.griffon.application.mainClass = buildConfig.griffon.application.mainClass ?: 'griffon.test.mock.MockGriffonApplication'
+
+resetDependencyResolution = {
+    pluginSettings.clearCaches()
+    runDependencyResolution = true
+    classpathSet = false
+}

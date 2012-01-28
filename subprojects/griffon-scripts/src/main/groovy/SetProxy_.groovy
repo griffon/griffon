@@ -22,11 +22,7 @@ import griffon.util.BuildSettings
  * @author Graeme Rocher (Grials 1.2.3)
  */
 
-includeTargets << griffonScript("_GriffonArgParsing")
-
-target ("default" : "Sets HTTP proxy configuration for Griffon") {
-    depends(parseArguments)
-
+target(setProxy: "Sets HTTP proxy configuration for Griffon") {
     if (argsMap.params) {
         def name = argsMap.params[0]
 
@@ -53,3 +49,5 @@ Sets a named proxy. Use "griffon add-proxy" to add a named proxy.
         exit 1
     }
 }
+
+setDefaultTarget(setProxy)

@@ -1,5 +1,5 @@
 /*
- * Copyright 2004-2011 the original author or authors.
+ * Copyright 2004-2012 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,9 +23,7 @@ import org.codehaus.griffon.resolve.IvyDependencyManager
  * @author Graeme Rocher (Grails 1.2)
  */
 
-includeTargets << griffonScript("_GriffonSettings")
-
-target(dependencyReport:"Produces a dependency report for the current Griffon application") {
+target(dependencyReport: "Produces a dependency report for the current Griffon project") {
     // create ivy namespace
     ivy = NamespaceBuilder.newInstance(ant, 'antlib:org.apache.ivy.ant')
 
@@ -35,24 +33,24 @@ target(dependencyReport:"Produces a dependency report for the current Griffon ap
 
     println "Obtaining dependency data..."
     IvyDependencyManager dependencyManager = griffonSettings.dependencyManager
-    for(conf in IvyDependencyManager.ALL_CONFIGURATIONS) {
+    for (conf in IvyDependencyManager.ALL_CONFIGURATIONS) {
         dependencyManager.resolveDependencies(conf)
     }
 
     def conf = args.trim().replace('\n' as char, ',' as char) ?: 'build, compile, provided, runtime, test'
     def confs = []
-    for(type in conf.split(',')) {
+    for (type in conf.split(',')) {
         type = type.trim()
         try {
-            if(griffonSettings."${type}Dependencies") confs << type
-        } catch(x) { /* ignore */ }
+            if (griffonSettings."${type}Dependencies") confs << type
+        } catch (x) { /* ignore */ }
     }
 
-    if(confs) {
+    if (confs) {
         ivy.report(organisation: 'org.codehaus.griffon.internal', module: griffonAppName, todir: targetDir, conf: confs.join(', '))
         println "Dependency report output to [$targetDir]"
     } else {
-        println "Can't generate dependency report for configuration${conf.size()?'s':''} $conf"
+        println "Can't generate dependency report for configuration${conf.size() ? 's' : ''} $conf"
     }
 }
 setDefaultTarget(dependencyReport)

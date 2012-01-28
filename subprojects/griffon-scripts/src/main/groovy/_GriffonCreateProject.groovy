@@ -1,5 +1,5 @@
 /*
- * Copyright 2004-2011 the original author or authors.
+ * Copyright 2004-2012 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,10 +14,10 @@
  * limitations under the License.
  */
 
+import griffon.util.GriffonNameUtils
 import griffon.util.GriffonUtil
 import griffon.util.Metadata
 import static griffon.util.GriffonNameUtils.capitalize
-import static griffon.util.GriffonNameUtils.uncapitalize
 
 /**
  * Gant script that handles the creation of Griffon applications
@@ -25,48 +25,46 @@ import static griffon.util.GriffonNameUtils.uncapitalize
  * @author Graeme Rocher (Griffon 0.4)
  */
 
-includeTargets << griffonScript('_GriffonPlugins')
-includeTargets << griffonScript('_GriffonInit')
 includeTargets << griffonScript('_GriffonCreateArtifacts')
 includeTargets << griffonScript('CreateMvc')
 includeTargets << griffonScript('Package')
 includeTargets << griffonScript('IntegrateWith')
 
 griffonAppName = ''
-projectType = "app"
 
-target(createApp: "Creates a Griffon application for the given name")  {
-    depends(parseArguments, appName, resolveFileType)
+target(name: 'createApp', description: "Creates a Griffon application for the given name",
+        prehook: null, posthook: null) {
+    depends(appName, resolveFileType)
 
     loadArchetypeFor 'application'
     createApplicationProject()
 
     // Set the default version number for the application
-    updateMetadata("app.version": griffonAppVersion ?: "0.1")
+    updateMetadata('app.version': griffonAppVersion ?: '0.1',
+            "archetype.${archetypeName}": archetypeVersion)
     def cfg = new File("${basedir}/griffon-app/conf/BuildConfig.groovy")
     cfg.append("""
-app.archetype = '$archetype'
 app.fileType = '$fileType'
 app.defaultPackageName = '$defaultPackageName'
 """)
 
-    ant.replace(dir: "${basedir}/griffon-app/conf", includes:"**/*.*") {
+    ant.replace(dir: "${basedir}/griffon-app/conf", includes: "**/*.*") {
         replacefilter(token: "@griffonAppName@", value: capitalize(griffonAppName))
         replacefilter(token: "@griffonAppVersion@", value: griffonAppVersion ?: "0.1")
     }
 
-    event("StatusFinal", ["Created Griffon Application at $basedir"])
+    event('StatusFinal', ["Created Griffon Application at $basedir"])
 }
 
 createProjectWithDefaults = {
     metadataFile = new File("${basedir}/application.properties")
     initProject()
-    ant.replace(dir:"${basedir}/griffon-app/conf", includes:"**/*.*") {
-        replacefilter(token: "@griffon.app.class.name@", value: appClassName )
+    ant.replace(dir: "${basedir}/griffon-app/conf", includes: "**/*.*") {
+        replacefilter(token: "@griffon.app.class.name@", value: appClassName)
         replacefilter(token: "@griffon.version@", value: griffonVersion)
         replacefilter(token: "@griffon.project.name@", value: griffonAppName)
-        replacefilter(token: "@griffon.application.name@", value: uncapitalize(appClassName))
-        replacefilter(token: "@griffon.project.key@", value: griffonAppName.replaceAll( /\s/, '.' ).toLowerCase())
+        replacefilter(token: "@griffon.application.name@", value: GriffonNameUtils.getPropertyName(appClassName))
+        replacefilter(token: "@griffon.project.key@", value: griffonAppName.replaceAll(/\s/, '.').toLowerCase())
     }
 
     ant.touch(file: metadataFile)
@@ -83,7 +81,7 @@ resetBaseDirectory = { String basedir ->
     griffonSettings.loadConfig()
 
     // Reload the application metadata.
-    metadataFile = new File("$basedir/${Metadata.FILE}")
+    metadataFile = new File("${basedir}/application.properties")
     metadata = Metadata.getInstance(metadataFile)
 
     applicationConfigFile = new File(basedir, 'griffon-app/conf/Application.groovy')
@@ -91,19 +89,19 @@ resetBaseDirectory = { String basedir ->
     configFile = new File(basedir, 'griffon-app/conf/Config.groovy')
 
     // Reset the plugin stuff.
-    pluginSettings.clearCache()
-    pluginsHome = griffonSettings.projectPluginsDir.path
+    // pluginsHome = artifactBase(Plugin.TYPE)
 }
 
-target(createPlugin: "The implementation target")  {
-    depends(parseArguments, appName, resolveFileType)
+target(name: 'createPlugin', description: '',
+        prehook: null, posthook: null) {
+    depends(appName, resolveFileType)
     metadataFile = new File("${basedir}/application.properties")
     projectType = "plugin"
     initProject()
 
     // Rename the plugin descriptor.
     pluginName = GriffonUtil.getNameFromScript(griffonAppName)
-    if(!(pluginName ==~ /[a-zA-Z][a-zA-Z0-9-]*/)) {
+    if (!(pluginName ==~ /[a-zA-Z][a-zA-Z0-9-]*/)) {
         println "Error: Specified plugin name [$griffonAppName] is invalid. Plugin names can only contain word characters separated by hyphens."
         exit 1
     }
@@ -113,7 +111,7 @@ target(createPlugin: "The implementation target")  {
             overwrite: true)
 
     // Insert the name of the plugin into whatever files need it.
-    ant.replace(dir:"${basedir}") {
+    ant.replace(dir: "${basedir}") {
         include(name: "*GriffonPlugin.groovy")
         include(name: "scripts/*")
         replacefilter(token: "@plugin.name@", value: pluginName)
@@ -122,10 +120,52 @@ target(createPlugin: "The implementation target")  {
         replacefilter(token: "@griffon.version@", value: griffonVersion)
     }
 
-    event("StatusFinal", [ "Created plugin ${pluginName}" ])
+    event('StatusFinal', ["Created plugin ${pluginName}"])
 }
 
-target(initProject: "Initialise an application or plugin project") {
+target(name: 'createArchetype', description: '',
+        prehook: null, posthook: null) {
+    depends(appName)
+    metadataFile = new File("${basedir}/application.properties")
+    ant.mkdir(dir: "${basedir}/griffon-app")
+    ant.touch(file: metadataFile)
+
+    updateAppProperties()
+
+    griffonUnpack(dest: basedir, src: "griffon-shared-files.jar")
+    griffonUnpack(dest: basedir, src: "griffon-archetype-files.jar")
+    ant.unzip(src: "${basedir}/griffon-wrapper-files.zip", dest: basedir)
+    ant.delete(file: "${basedir}/griffon-wrapper-files.zip", quiet: true)
+
+    // Rename the archetype descriptor.
+    archetypeName = GriffonUtil.getNameFromScript(griffonAppName)
+    if (!(archetypeName ==~ /[a-zA-Z][a-zA-Z0-9-]*/)) {
+        println "Error: Specified archetype name [$griffonAppName] is invalid. Archetype names can only contain word characters separated by hyphens."
+        exit 1
+    }
+    if (archetypeName == 'default') {
+        println "Error: Specified archetype name [$archetypeName] is invalid. You cannot override the default archetype provided by Griffon."
+        exit 1
+    }
+
+    ant.move(
+            file: "${basedir}/GriffonArchetype.groovy",
+            tofile: "${basedir}/${archetypeName}GriffonArchetype.groovy",
+            overwrite: true)
+
+    ant.replace(dir: basedir) {
+        include(name: '*GriffonArchetype.groovy')
+        replacefilter(token: '@archetype.name@', value: archetypeName)
+        replacefilter(token: '@archetype.short.name@', value: GriffonUtil.getScriptName(archetypeName))
+        replacefilter(token: '@archetype.version@', value: griffonAppVersion ?: '0.1')
+        replacefilter(token: '@griffon.version@', value: griffonVersion)
+    }
+
+    event('StatusFinal', ["Created archetype ${archetypeName}"])
+}
+
+target(name: 'initProject', description: "Initialise an application or plugin project",
+        prehook: null, posthook: null) {
     depends(createStructure, updateAppProperties)
 
     griffonUnpack(dest: basedir, src: "griffon-shared-files.jar")
@@ -149,13 +189,14 @@ target(initProject: "Initialise an application or plugin project") {
     }
 }
 
-target(appName: "Evaluates the application name") {
-    if(argsMap["params"]) {
+target(name: 'appName', description: "Evaluates the application name",
+        prehook: null, posthook: null) {
+    if (argsMap["params"]) {
         griffonAppName = argsMap["params"].join(" ")
     } else {
         String type = projectType == 'plugin' ? 'Plugin' : 'Application'
         ant.input(message: "$type name not specified. Please enter:",
-                  addProperty:"griffon.app.name")
+                addProperty: "griffon.app.name")
         griffonAppName = ant.antProject.properties."griffon.app.name"
     }
 
@@ -166,8 +207,9 @@ target(appName: "Evaluates the application name") {
         resetBaseDirectory(basedir)
     }
 
-    if (argsMap["appVersion"]) {
-        griffonAppVersion = argsMap["appVersion"]
+    argsMap['app-version'] = argsMap['app-version'] ?: argsMap.appVersion
+    if (argsMap['app-version']) {
+        griffonAppVersion = argsMap['app-version']
     }
 
     appClassName = GriffonUtil.getClassNameRepresentation(griffonAppName)

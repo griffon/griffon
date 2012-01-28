@@ -1,5 +1,5 @@
 /*
- * Copyright 2004-2005 the original author or authors.
+ * Copyright 2004-2012 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -29,17 +29,16 @@ import org.codehaus.griffon.test.support.GriffonTestMode
  * @author Graeme Rocher (Grails 0.4)
  */
 
-includeTargets << griffonScript("_GriffonBootstrap")
-includeTargets << griffonScript("_GriffonSettings")
-includeTargets << griffonScript("_GriffonClean")
+includeTargets << griffonScript('_GriffonBootstrap')
+includeTargets << griffonScript('_GriffonClean')
 
 // Miscellaneous 'switches' that affect test operation
 testOptions = [:]
 
 // The four test phases that we can run.
-unitTests = [ "unit" ]
-integrationTests = [ "integration" ]
-otherTests = [ "cli" ]
+unitTests = ["unit"]
+integrationTests = ["integration"]
+otherTests = ["cli"]
 
 // The potential phases for execution, modify this by responding to the TestPhasesStart event
 phasesToRun = ["unit", "integration", "other"]
@@ -72,7 +71,7 @@ testTargetPatterns = null // created in allTests()
 // Controls which result formats are generated. By default both XML
 // and plain text files are created. You can override this in your
 // own scripts.
-reportFormats = [ "xml", "plain" ]
+reportFormats = ["xml", "plain"]
 
 // If true, only run the tests that failed before.
 reRunTests = false
@@ -91,18 +90,38 @@ if (griffonSettings.griffonHome) {
     }
 }
 
-// Set up an Ant path for the tests.
-ant.path(id: "griffon.test.classpath", testClasspath)
-
 createTestReports = true
 
 testsFailed = false
 
+packageFiles = { String from ->
+    def targetPath = griffonSettings.resourcesDir.path
+    def dir = new File(from, "griffon-app/conf")
+    if (dir.exists()) {
+        ant.copy(todir: targetPath, failonerror: false) {
+            fileset(dir: dir.path) {
+                exclude(name: "**/*.groovy")
+                exclude(name: "**/log4j*")
+            }
+        }
+    }
+
+    dir = new File(from, "src/main")
+    if (dir.exists()) {
+        ant.copy(todir: targetPath, failonerror: false) {
+            fileset(dir: dir.path) {
+                exclude(name: "**/*.groovy")
+                exclude(name: "**/*.java")
+            }
+        }
+    }
+}
+
 target(allTests: "Runs the project's tests.") {
-    def dependencies = [compile, packagePlugins]
+    def dependencies = [compile]
     if (testOptions.clean) dependencies = [clean] + dependencies
-    depends(*dependencies)
-    
+    depends(* dependencies)
+
     packageFiles(basedir)
 
     ant.mkdir(dir: testReportsDir)
@@ -112,16 +131,16 @@ target(allTests: "Runs the project's tests.") {
     // If we are to run the tests that failed, replace the list of
     // test names with the failed ones.
     if (reRunTests) testNames = getFailedTests()
-    
+
     testTargetPatterns = testNames.collect { new GriffonTestTargetPattern(it) } as GriffonTestTargetPattern[]
-    if(isPluginProject && !isAddonPlugin) phasesToRun.remove('integration')
-    if(!phasesToRun) {
+    if (isPluginProject && !isAddonPlugin) phasesToRun.remove('integration')
+    if (!phasesToRun) {
         println "No test phases were defined. Aborting"
         System.exit(1)
     }
-    
+
     event("TestPhasesStart", [phasesToRun])
-    
+
     // Handle pre 0.9 style testing configuration
     def convertedPhases = [:]
     phasesToRun.each { phaseName ->
@@ -132,7 +151,7 @@ target(allTests: "Runs the project's tests.") {
                     def rawTypeString = rawType.toString()
                     if (phaseName in ['integration']) {
                         def mode = new GriffonTestMode(
-                            autowire: true
+                                autowire: true
                         )
                         new JUnit4GriffonTestType(rawTypeString, rawTypeString, mode)
                     } else {
@@ -174,15 +193,15 @@ target(allTests: "Runs the project's tests.") {
             addUrlIfNotPresent classLoader, it
         }
 
-        if(isDebugEnabled()) {
+        if (isDebugEnabled()) {
             debug "=== RootLoader urls === "
-            rootLoader.URLs.each{debug("  $it")}
+            rootLoader.URLs.each {debug("  $it")}
         }
 
         // Process the tests in each phase that is configured to run.
         filteredPhases.each { phase, types ->
             currentTestPhaseName = phase
-            
+
             // Add a blank line before the start of this phase so that it
             // is easier to distinguish
             println()
@@ -222,7 +241,7 @@ target(allTests: "Runs the project's tests.") {
  */
 processTests = { GriffonTestType type ->
     currentTestTypeName = type.name
-    
+
     def relativePathToSource = type.relativeSourcePath
     def dest = null
     if (relativePathToSource) {
@@ -232,7 +251,7 @@ processTests = { GriffonTestType type ->
         dest = new File(griffonSettings.testClassesDir, relativePathToSource)
         compileTests(type, source, dest)
     }
-    
+
     runTests(type, dest)
     currentTestTypeName = null
 }
@@ -252,20 +271,20 @@ compileTests = { GriffonTestType type, File source, File dest ->
     ant.mkdir(dir: destDir.path)
 
     compileSources(destDir, 'griffon.test.classpath') {
-        javac(classpathref: 'griffon.test.classpath', debug:"yes")
+        javac(classpathref: 'griffon.test.classpath', debug: "yes")
         src(path: source)
     }
-    addUrlIfNotPresent rootLoader, griffonSettings.classesDir
+    addUrlIfNotPresent rootLoader, projectMainClassesDir
     addUrlIfNotPresent rootLoader, destDir
     addUrlIfNotPresent classLoader, destDir
- 
-    if(argsMap.compileTrace) {
-        println('-'*80)
+
+    if (argsMap.compileTrace) {
+        println('-' * 80)
         println "[GRIFFON] classLoader urls"
-        classLoader.URLs.each{println("  $it")}
+        classLoader.URLs.each {println("  $it")}
         println "[GRIFFON] rootLoader urls"
-        rootLoader.URLs.each{println("  $it")}
-        println('-'*80)
+        rootLoader.URLs.each {println("  $it")}
+        println('-' * 80)
     }
 
     event("TestCompileEnd", [type])
@@ -273,7 +292,7 @@ compileTests = { GriffonTestType type, File source, File dest ->
 
 runTests = { GriffonTestType type, File compiledClassesDir ->
     def testCount = type.prepare(testTargetPatterns, compiledClassesDir, binding)
-    
+
     if (testCount) {
         try {
             event("TestSuiteStart", [type.name])
@@ -285,11 +304,11 @@ runTests = { GriffonTestType type, File compiledClassesDir ->
             def start = new Date()
             def result = type.run(testEventPublisher)
             def end = new Date()
-            
+
             event("StatusUpdate", ["Tests Completed in ${end.time - start.time}ms"])
 
             if (result.failCount > 0) testsFailed = true
-            
+
             println "-------------------------------------------------------"
             println "Tests passed: ${result.passCount}"
             println "Tests failed: ${result.failCount}"

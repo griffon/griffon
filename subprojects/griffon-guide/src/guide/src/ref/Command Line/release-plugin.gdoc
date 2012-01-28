@@ -2,7 +2,7 @@ h1. release-plugin
 
 h2. Purpose
 
-Tags and releases a Griffon plug-in to the Griffon plug-in repository
+Releases a Griffon plugin to a griffon artifact repository
 
 h2. Examples
 
@@ -15,37 +15,20 @@ h2. Description
 Usage: 
 {code:java}
 griffon release-plugin
-griffon release-plugin -repository=myRepository
-griffon release-plugin -pluginlist
+griffon release-plugin --repository=myRepository
 {code}
 
-This command is for users who have access to the Griffon standard plug-in repository at "http://griffon.codehaus.org/plugins":http://griffon.codehaus.org/plugins
+The command allows Griffon to manage the release process for you.
 
-The command allows Griffon to manage the release process for you by integrating SVN with Griffon. The @release-plugin@ command supports the following arguments:
+Options:
+* @repository@ - The name of the repository to publish to. See the section on [Artifact repositories|guide:repositories] in the user guide.
+* @nodoc@ - Skips the generation of groovydoc and plugin reference documentation.
+* @username@ - The username to use.
+* @password@ - The password to use.
+* @message@ - The commit message to use.
+* @no-release-notes@ - Do not ask for missing release notes.
+* @package-only@ - Create a release package but do not publish it.
 
-* @repository@ - The name of the repository to publish to. See the section on [Plugin repositories|guide:repositories] in the user guide.
-* @pluginlist@ - Publish only an updated plugin list and not the plugin itself
-* @zipOnly@ - Use this flag if you want to only publish the plugin zip files and metadata and not the sources
-* @nodoc@ - Skips the generation of groovydoc and plugin reference documentation
-* @snapshot@ - Creates a snapshot release that will not replace the 'latest' release but can be installed by specifying the version number
-* @username@ - The username to use
-* @password@ - The password to use
-* @message@ - The commit message to use
+If you require access to the Griffon Central Repository and wish to release your plugin there contact a member of the Griffon development team. 
 
-If you require access to repository and wish to release your plug-in there contact a member of the Griffon development team. 
-
-The command will check whether the plug-in currently exists in the repository and if not will check-in the plug-in and create a release. The command will automatically upload the plugin to a location such as @http://griffon.codehaus.org/plugins/griffon-[name]@. It will also automatically create the following structure:
-
-{code:java}
-griffon-[name]
-   tags
-      LATEST_RELEASE
-      RELEASE_XY
-   trunk               
-{code}
-
-The @trunk@ directory contains the current latest sources. The @tags@ directory contains tagged versions of each release and a @LATEST_RELEASE@ tag that indicates the current latest release.
-
-If the plug-in already exists in the repository Griffon will update first, then commit the latest change and finally tag the release.
-
-Either way the plug-in will then automatically be available via the [list-plugins|commandLine] command.
+Once published, the plugin will automatically be available via the [list-plugins|commandLine] command.

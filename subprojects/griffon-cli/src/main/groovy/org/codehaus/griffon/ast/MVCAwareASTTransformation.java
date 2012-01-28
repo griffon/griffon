@@ -1,5 +1,5 @@
 /*
- * Copyright 2009-2011 the original author or authors.
+ * Copyright 2009-2012 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,6 +21,7 @@ import griffon.core.MVCGroup;
 import griffon.core.MVCHandler;
 import griffon.transform.MVCAware;
 import org.codehaus.groovy.ast.*;
+import org.codehaus.groovy.ast.expr.ConstantExpression;
 import org.codehaus.groovy.ast.expr.Expression;
 import org.codehaus.groovy.control.CompilePhase;
 import org.codehaus.groovy.control.SourceUnit;
@@ -99,7 +100,7 @@ public class MVCAwareASTTransformation extends AbstractASTTransformation {
                 returns(call(
                         mvcGroupManagerInstance(),
                         BUILD_MVC_GROUP,
-                        args(var(MVC_TYPE), var(MVC_TYPE), emptyMap())))
+                        args(var(MVC_TYPE), ConstantExpression.NULL, emptyMap())))
         ));
 
         // MVCGroup buildMVCGroup(String mvcType, mvcName)
@@ -189,7 +190,7 @@ public class MVCAwareASTTransformation extends AbstractASTTransformation {
                 returns(call(
                         mvcGroupManagerInstance(),
                         CREATE_MVC_GROUP,
-                        args(var(MVC_TYPE), var(MVC_TYPE), emptyMap())))
+                        args(var(MVC_TYPE), ConstantExpression.NULL, emptyMap())))
         ));
 
         // List createMVCGroup(String mvcType, mvcName)
@@ -219,7 +220,7 @@ public class MVCAwareASTTransformation extends AbstractASTTransformation {
                 returns(call(
                         mvcGroupManagerInstance(),
                         CREATE_MVC_GROUP,
-                        args(var(MVC_TYPE), var(MVC_TYPE), var(ARGS))))
+                        args(var(MVC_TYPE), ConstantExpression.NULL, var(ARGS))))
         ));
 
         // List createMVCGroup(String mvcType, Map args)
@@ -234,7 +235,7 @@ public class MVCAwareASTTransformation extends AbstractASTTransformation {
                 returns(call(
                         mvcGroupManagerInstance(),
                         CREATE_MVC_GROUP,
-                        args(var(MVC_TYPE), var(MVC_TYPE), var(ARGS))))
+                        args(var(MVC_TYPE), ConstantExpression.NULL, var(ARGS))))
         ));
 
         // List createMVCGroup(Map args, String mvcType, String mvcName)
@@ -294,7 +295,7 @@ public class MVCAwareASTTransformation extends AbstractASTTransformation {
                 stmnt(call(
                         mvcGroupManagerInstance(),
                         WITH_MVC_GROUP,
-                        args(var(MVC_TYPE), var(MVC_TYPE), emptyMap(), var(HANDLER))))
+                        args(var(MVC_TYPE), ConstantExpression.NULL, emptyMap(), var(HANDLER))))
         ));
 
         // void withMVCGroup(String mvcType, String mvcName, Closure handler)
@@ -326,7 +327,7 @@ public class MVCAwareASTTransformation extends AbstractASTTransformation {
                 stmnt(call(
                         mvcGroupManagerInstance(),
                         WITH_MVC_GROUP,
-                        args(var(MVC_TYPE), var(MVC_TYPE), var(ARGS), var(HANDLER))))
+                        args(var(MVC_TYPE), ConstantExpression.NULL, var(ARGS), var(HANDLER))))
         ));
 
         // void withMVCGroup(Map args, String mvcType, Closure handler)
@@ -342,7 +343,7 @@ public class MVCAwareASTTransformation extends AbstractASTTransformation {
                 stmnt(call(
                         mvcGroupManagerInstance(),
                         WITH_MVC_GROUP,
-                        args(var(MVC_TYPE), var(MVC_TYPE), var(ARGS), var(HANDLER))))
+                        args(var(MVC_TYPE), ConstantExpression.NULL, var(ARGS), var(HANDLER))))
         ));
 
         // void withMVCGroup(String mvcType, String mvcName, Map args, Closure handler)
@@ -393,7 +394,7 @@ public class MVCAwareASTTransformation extends AbstractASTTransformation {
                 stmnt(call(
                         mvcGroupManagerInstance(),
                         WITH_MVC_GROUP,
-                        args(var(MVC_TYPE), var(MVC_TYPE), emptyMap(), var(HANDLER))))
+                        args(var(MVC_TYPE), ConstantExpression.NULL, emptyMap(), var(HANDLER))))
         ));
 
         // void withMVCGroup(String mvcType, String mvcName, MVCClosure handler)
@@ -425,7 +426,7 @@ public class MVCAwareASTTransformation extends AbstractASTTransformation {
                 stmnt(call(
                         mvcGroupManagerInstance(),
                         WITH_MVC_GROUP,
-                        args(var(MVC_TYPE), var(MVC_TYPE), var(ARGS), var(HANDLER))))
+                        args(var(MVC_TYPE), ConstantExpression.NULL, var(ARGS), var(HANDLER))))
         ));
 
         // void withMVCGroup(Map args, String mvcType, MVCClosure handler)
@@ -441,7 +442,7 @@ public class MVCAwareASTTransformation extends AbstractASTTransformation {
                 stmnt(call(
                         mvcGroupManagerInstance(),
                         WITH_MVC_GROUP,
-                        args(var(MVC_TYPE), var(MVC_TYPE), var(ARGS), var(HANDLER))))
+                        args(var(MVC_TYPE), ConstantExpression.NULL, var(ARGS), var(HANDLER))))
         ));
 
         // void withMVCGroup(String mvcType, String mvcName, Map args, MVCClosure handler)

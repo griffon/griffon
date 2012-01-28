@@ -1,4 +1,5 @@
-/* Copyright 2004-2011 the original author or authors.
+/*
+ * Copyright 2004-2012 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License")
  * you may not use this file except in compliance with the License.
@@ -14,7 +15,11 @@
  */
 package org.codehaus.griffon.cli
 
+import griffon.util.BuildSettingsHolder
 import org.codehaus.groovy.runtime.DefaultGroovyMethods
+import static griffon.util.ConfigUtils.getConfigValueAsString
+import static org.codehaus.griffon.cli.CommandLineConstants.KEY_INTERACTIVE_MODE
+import static org.codehaus.griffon.cli.CommandLineConstants.KEY_NON_INTERACTIVE_DEFAULT_ANSWER
 
 /**
  * Utility methods for use on the command line, including method to accept user input etc. 
@@ -32,7 +37,19 @@ public class CommandLineHelper {
         this.out = out
     }
 
-   /**
+    String forceUserInput(String message) {
+        return forceUserInput(message, null);
+    }
+
+    String forceUserInput(String message, String[] validResponses) {
+        String interactiveValue = System.getProperty(KEY_INTERACTIVE_MODE)
+        System.setProperty(KEY_INTERACTIVE_MODE, 'true')
+        String enteredValue = userInput(message, validResponses)
+        System.setProperty(KEY_INTERACTIVE_MODE, interactiveValue ?: 'true')
+        return enteredValue
+    }
+
+    /**
      * Replacement for AntBuilder.input() to eliminate dependency of
      * GriffonScriptRunner on the Ant libraries. Prints a message and
      * returns whatever the user enters (once they press &ltreturn&gt).
@@ -65,10 +82,21 @@ public class CommandLineHelper {
             responsesString = DefaultGroovyMethods.join(validResponses, ",")
         }
 
+        if (System.getProperty(KEY_INTERACTIVE_MODE) == null || !Boolean.getBoolean(KEY_INTERACTIVE_MODE)) {
+            if (getDefaultAnswerNonInteractive().equalsIgnoreCase('y')) {
+                return 'y'
+            } else if (getDefaultAnswerNonInteractive().equalsIgnoreCase('n')) {
+                return 'n'
+            } else {
+                println("Cannot ask for input when --non-interactive flag is passed. You need to check the value of the 'isInteractive' variable before asking for input")
+                System.exit(1)
+            }
+        }
+
         BufferedReader reader = new BufferedReader(new InputStreamReader(System.in))
 
         for (int it = 0; it < 3; it++) {
-            out.print(message)
+            out.print(message + ' ')
             if (responsesString != null) {
                 out.print(" [")
                 out.print(responsesString)
@@ -80,7 +108,7 @@ public class CommandLineHelper {
 
                 if (validResponses == null) return line
 
-                for (String validResponse : validResponses) {
+                for (String validResponse: validResponses) {
                     if (line != null && line.equalsIgnoreCase(validResponse)) {
                         return line
                     }
@@ -98,13 +126,22 @@ public class CommandLineHelper {
         // No valid response given.
         out.println("No valid response entered - giving up asking.")
         return null
-    }    
+    }
 
     boolean confirmInput(String msg) {
-        userInput(msg, ['y','n'] as String[]) == 'y'
+        userInput(msg, ['y', 'n'] as String[]) == 'y'
     }
 
     String askAndDo(String message, Closure yesCallback = null, Closure noCallback = null) {
         confirmInput(message) ? yesCallback?.call() : noCallback?.call()
+    }
+
+    public String getDefaultAnswerNonInteractive() {
+        if (System.getProperty(KEY_NON_INTERACTIVE_DEFAULT_ANSWER) != null) return System.getProperty(KEY_NON_INTERACTIVE_DEFAULT_ANSWER)
+        return getConfigValueAsString(getConfig(), KEY_NON_INTERACTIVE_DEFAULT_ANSWER, '')
+    }
+
+    private ConfigObject getConfig() {
+        BuildSettingsHolder.settings?.config ?: new ConfigObject()
     }
 }

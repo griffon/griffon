@@ -1,12 +1,12 @@
+
 root {
     'groovy.swing.SwingBuilder' {
         controller = ['Threading','Binding','SupportNodes']
         view = '*'
     }
-    'griffon.app.ApplicationBuilder' {
-        view = '*'
-    }
 }
+
+root.'SwingGriffonAddon'.addon=true
 
 features {
     attributeDelegates = [

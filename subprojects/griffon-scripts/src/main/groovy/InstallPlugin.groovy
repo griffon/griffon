@@ -1,5 +1,5 @@
 /*
- * Copyright 2004-2011 the original author or authors.
+ * Copyright 2004-2012 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,12 +14,19 @@
  * limitations under the License.
  */
 
+import org.codehaus.griffon.artifacts.model.Plugin
+import static org.codehaus.griffon.artifacts.ArtifactUtils.artifactBase
+
 /**
- * Gant script that handles the installation of Griffon plugins
- *
- * @author Graeme Rocher (Grails 0.4)
- * @author Sergey Nebolsin (Grails 0.4)
+ * @author Andres Almiray
  */
-includeTargets << griffonScript("_GriffonPlugins")
+
+includeTargets << griffonScript('_GriffonArtifacts')
+
+target(installPlugin: "Installs a plugin for the given URL or name and version") {
+    ant.mkdir(dir: artifactBase(Plugin.TYPE))
+    installArtifact(Plugin.TYPE)
+    resetDependencyResolution()
+}
 
 setDefaultTarget(installPlugin)

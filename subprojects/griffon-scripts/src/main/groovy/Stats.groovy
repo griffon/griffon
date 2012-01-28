@@ -1,5 +1,5 @@
 /*
- * Copyright 2004-2011 the original author or authors.
+ * Copyright 2004-2012 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,56 +23,51 @@ import groovy.xml.MarkupBuilder
  * @author Andres Almiray
  */
 
-includeTargets << griffonScript("_GriffonSettings")
-includeTargets << griffonScript("Init")
-
-target(default: "Generates basic stats for a Griffon project") {
-    depends(parseArguments) 
-   
+target(stats: "Generates basic stats for a Griffon project") {
     EMPTY = /^\s*$/
     SLASH_SLASH = /^\s*\/\/.*/
     SLASH_STAR_STAR_SLASH = /^(.*)\/\*(.*)\*\/(.*)$/
-    
+
     // TODO - handle slash_star comments inside strings
     DEFAULT_LOC_MATCHER = { file ->
         def loc = 0
         def comment = 0
         file.eachLine { line ->
-            if(!line.trim().length() || line ==~ EMPTY) return
-            else if(line ==~ SLASH_SLASH) return
+            if (!line.trim().length() || line ==~ EMPTY) return
+            else if (line ==~ SLASH_SLASH) return
             else {
                 def m = line =~ SLASH_STAR_STAR_SLASH
-                if(m.count && m[0][1] ==~ EMPTY && m[0][3] ==~ EMPTY) return
+                if (m.count && m[0][1] ==~ EMPTY && m[0][3] ==~ EMPTY) return
                 int open = line.indexOf("/*")
                 int close = line.indexOf("*/")
-                if(open != -1 && (close-open) <= 1) comment++
-                else if(close != -1 && comment) {
+                if (open != -1 && (close - open) <= 1) comment++
+                else if (close != -1 && comment) {
                     comment--
-                    if(!comment) return
+                    if (!comment) return
                 }
             }
-            if(!comment) loc++
-        } 
+            if (!comment) loc++
+        }
         loc
     }
 
     LOC_MATCHERS_PER_TYPE = [
-        '.groovy': DEFAULT_LOC_MATCHER,
-        '.java': DEFAULT_LOC_MATCHER
+            '.groovy': DEFAULT_LOC_MATCHER,
+            '.java': DEFAULT_LOC_MATCHER
     ]
 
     // maps file path to
     def pathToInfo = [
-        [name: "Models",              path: "models",           filetype: [".groovy",".java"]],
-        [name: "Views",               path: "views",            filetype: [".groovy",".java"]],
-        [name: "Controllers",         path: "controllers",      filetype: [".groovy",".java"]],
-        [name: "Services",            path: "services",         filetype: [".groovy",".java"]],
-        [name: "Lifecycle",           path: "lifecycle",        filetype: [".groovy"]],
-        [name: "Groovy/Java Sources", path: "src.main",         filetype: [".groovy",".java"]],
-        [name: "Unit Tests",          path: "test.unit",        filetype: [".groovy",".java"]],
-        [name: "Integration Tests",   path: "test.integration", filetype: [".groovy",".java"]],
-        [name: "Scripts",             path: "scripts",          filetype: [".groovy"]],
-        [name: "Configuration",       path: "conf",             filetype: [".groovy"]],
+            [name: 'Models',              path: 'models',           filetype: ['.groovy', '.java']],
+            [name: 'Views',               path: 'views',            filetype: ['.groovy', '.java']],
+            [name: 'Controllers',         path: 'controllers',      filetype: ['.groovy', '.java']],
+            [name: 'Services',            path: 'services',         filetype: ['.groovy', '.java']],
+            [name: 'Lifecycle',           path: 'lifecycle',        filetype: ['.groovy']],
+            [name: 'Groovy/Java Sources', path: 'src.main',         filetype: ['.groovy', '.java']],
+            [name: 'Unit Tests',          path: 'test.unit',        filetype: ['.groovy', '.java']],
+            [name: 'Integration Tests',   path: 'test.integration', filetype: ['.groovy', '.java']],
+            [name: 'Scripts',             path: 'scripts',          filetype: ['.groovy']],
+            [name: 'Configuration',       path: 'conf',             filetype: ['.groovy']]
     ]
 
     event("StatsStart", [pathToInfo])
@@ -81,16 +76,16 @@ target(default: "Generates basic stats for a Griffon project") {
     searchPath.eachFileRecurse { file ->
         def match = pathToInfo.find { info ->
             def fixedPath = file.path - searchPath.canonicalPath //fix problem when project inside dir "jobs" (eg. hudson stores projects under jobs-directory)
-            fixedPath =~ info.path && info.filetype.any{s -> file.path.endsWith(s)}
+            fixedPath =~ info.path && info.filetype.any {s -> file.path.endsWith(s)}
         }
         // skip basic configuration files but count the rest
         if (match && match.name == 'Configuration' && match.path == 'conf' &&
-            file.name in ['Application.groovy', 'BuildConfig.groovy', 'Builder.groovy', 'Config.groovy']) return
-        if (match && file.isFile() ) {
-            match.filecount = match.filecount ? match.filecount+1 : 1
+                file.name in ['Application.groovy', 'BuildConfig.groovy', 'Builder.groovy', 'Config.groovy']) return
+        if (match && file.isFile()) {
+            match.filecount = match.filecount ? match.filecount + 1 : 1
             // strip whitespace
             def ext = file.path.substring(file.path.lastIndexOf('.'))
-            loc = match.locmatcher ? match.locmatcher(file) : (LOC_MATCHERS_PER_TYPE[ext]? LOC_MATCHERS_PER_TYPE[ext](file) : DEFAULT_LOC_MATCHER(file))
+            loc = match.locmatcher ? match.locmatcher(file) : (LOC_MATCHERS_PER_TYPE[ext] ? LOC_MATCHERS_PER_TYPE[ext](file) : DEFAULT_LOC_MATCHER(file))
             match.loc = match.loc ? match.loc + loc : loc
         }
     }
@@ -106,10 +101,12 @@ target(default: "Generates basic stats for a Griffon project") {
     }
 
     output(pathToInfo, totalFiles.toString(), totalLOC.toString(), new PrintWriter(System.out))
-    if(argsMap.xml)  xmlOutput(pathToInfo, totalFiles.toString(), totalLOC.toString())
-    if(argsMap.html) htmlOutput(pathToInfo, totalFiles.toString(), totalLOC.toString())
-    if(argsMap.txt)  output(pathToInfo, totalFiles.toString(), totalLOC.toString(), new PrintWriter(getOutputFile("txt")))
+    if (argsMap.xml) xmlOutput(pathToInfo, totalFiles.toString(), totalLOC.toString())
+    if (argsMap.html) htmlOutput(pathToInfo, totalFiles.toString(), totalLOC.toString())
+    if (argsMap.txt) output(pathToInfo, totalFiles.toString(), totalLOC.toString(), new PrintWriter(getOutputFile("txt")))
 }
+
+setDefaultTarget(stats)
 
 private getOutputFile(String suffix) {
     def outputDir = buildConfig.griffon.testing.reports.destDir ?: "${basedir}/target"
@@ -126,9 +123,9 @@ private output(infos, totalFiles, totalLOC, out) {
     infos.each { info ->
         if (info.filecount) {
             out.println "    | " +
-                info.name.padRight(20," ") + " | " +
-                info.filecount.toString().padLeft(5, " ") + " | " +
-                info.loc.toString().padLeft(5," ") + " | "
+                    info.name.padRight(20, " ") + " | " +
+                    info.filecount.toString().padLeft(5, " ") + " | " +
+                    info.loc.toString().padLeft(5, " ") + " | "
         }
     }
 

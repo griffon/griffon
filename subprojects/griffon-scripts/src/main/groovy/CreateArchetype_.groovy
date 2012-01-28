@@ -1,5 +1,5 @@
 /*
- * Copyright 2010-2011 the original author or authors.
+ * Copyright 2010-2012 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,37 +18,8 @@
  * @author Andres Almiray
  */
 
-includeTargets << griffonScript("Init")
-includeTargets << griffonScript("CreateIntegrationTest")
+includeTargets << griffonScript('_GriffonArtifacts')
+includeTargets << griffonScript('_GriffonCreateProject')
 
-target(createArchetype: "Creates a new Griffon application archetype") {
-    depends(parseArguments)
-    promptForName(type: "Application Archetype")
-    def (pkg, name) = extractArtifactName(argsMap["params"][0])
-
-    ant.mkdir(dir: name)
-    ant.mkdir(dir: "$name/templates/artifacts")
-
-    new File("$name/application.groovy").append('''
-import griffon.util.Metadata
-
-includeTargets << griffonScript("_GriffonPlugins")
-includeTargets << griffonScript("_GriffonInit")
-includeTargets << griffonScript("CreateMvc" )
-
-target(name: 'createApplicationProject',
-       description: 'Creates a new application project',
-       prehook: null, posthook: null) {
-    createProjectWithDefaults()
-    createMVC()
-
-    // to install plugins do the following
-    // Metadata md = Metadata.getInstance(new File("${basedir}/application.properties"))
-    // installPluginExternal md, pluginName, pluginVersion
-    //
-    // pluginVersion is optional
-}
-setDefaultTarget(createApplicationProject)
-''')
-}
-setDefaultTarget(createArchetype)
+projectType = 'archetype'
+setDefaultTarget("createArchetype")

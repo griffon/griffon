@@ -2,7 +2,7 @@ h1. package-plugin
 
 h2. Purpose
 
-Packages a plug-in as a zip archive which can then be installed into another application
+Packages a plugin as a zip archive which can then be installed into another application
 
 h2. Examples
 
@@ -17,11 +17,7 @@ Usage:
 griffon package-plugin
 {code}
 
-Fired Events: 
-
-* @StatusError@ - When there was an error during packaging
-
-The plug-in archive will be named with the convention @griffon-[name]-[version].zip@. The name and version are obtained from the plug-in descriptor (the Groovy class ending with the convention @GriffonPlugin.groovy@) in the root of the plug-in directory. For example the following plug-in:
+The plugin archive will be named with the convention @griffon-[name]-[version].zip@. The name and version are obtained from the plugin descriptor (the Groovy class ending with the convention @GriffonPlugin.groovy@) in the root of the plugin directory. For example the following plugin:
 
 {code:java}
 class SimpleGriffonPlugin {
@@ -31,7 +27,5 @@ class SimpleGriffonPlugin {
 
 Will result in a zip archive called @griffon-simple-0.1.zip@, which can then be installed into an application with the [install-plugin|commandLine] command.
 
-The @package-plugin@ command supports the following arguments:
-
+Options:
 * @nodoc@ - Skips the generation of groovydoc and plugin reference documentation
-

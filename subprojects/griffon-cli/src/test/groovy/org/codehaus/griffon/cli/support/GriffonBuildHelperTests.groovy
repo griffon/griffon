@@ -41,7 +41,6 @@ class GriffonBuildHelperTests extends GroovyTestCase {
         testHelper.testClassesDir = new File("target/test-classes")
         testHelper.resourcesDir = new File("target/res")
         testHelper.projectPluginsDir = new File("plugins")
-        testHelper.globalPluginsDir = new File("global-work/plugins")
         testHelper.testReportsDir = new File("target/test-reports")
         testHelper.compileDependencies = testCompileDeps
         testHelper.testDependencies = testTestDeps
@@ -53,7 +52,6 @@ class GriffonBuildHelperTests extends GroovyTestCase {
         assertEquals new File("target/test-classes"), testSettings.testClassesDir
         assertEquals new File("target/res"), testSettings.resourcesDir
         assertEquals new File("plugins"), testSettings.projectPluginsDir
-        assertEquals new File("global-work/plugins"), testSettings.globalPluginsDir
         assertEquals new File("target/test-reports"), testSettings.testReportsDir
         assertEquals testCompileDeps, testSettings.compileDependencies
         assertEquals testTestDeps, testSettings.testDependencies
@@ -98,7 +96,6 @@ class MockBuildSettings {
     File testClassesDir
     File resourcesDir
     File projectPluginsDir
-    File globalPluginsDir
     File testReportsDir
     List compileDependencies
     List testDependencies
