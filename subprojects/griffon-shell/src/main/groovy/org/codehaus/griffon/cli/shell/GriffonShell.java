@@ -40,6 +40,7 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import static griffon.util.BuildSettingsHolder.getSettings;
 import static griffon.util.GriffonExceptionHandler.sanitize;
 import static org.codehaus.griffon.cli.GriffonScriptRunner.unquote;
 import static org.codehaus.griffon.cli.shell.GriffonShellContext.*;
@@ -140,14 +141,14 @@ public class GriffonShell extends KarafMain implements Action {
 
             @Override
             protected void welcome() {
-                BuildSettings buildSettings = BuildSettingsHolder.getSettings();
+                BuildSettings buildSettings = getSettings();
                 File griffonHome = buildSettings.getGriffonHome();
                 session.getConsole().println(
                         "Welcome to Griffon " + buildSettings.getGriffonVersion() + " - http://griffon.codehaus.org/" + '\n' +
                                 "Licensed under Apache Standard License 2.0" + '\n' +
                                 "Griffon home is " + (griffonHome == null ? "not set" : "set to: " + griffonHome) + '\n' + '\n' +
                                 "Type 'exit' or ^D to terminate this interactive shell" + '\n' + '\n');
-                GriffonSetup.run(buildSettings);
+                GriffonSetup.run();
             }
 
             @Override

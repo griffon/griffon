@@ -31,10 +31,9 @@ import griffon.util.*
 import static griffon.util.GriffonNameUtils.*
 import static griffon.util.GriffonUtil.getScriptName
 import static griffon.util.GriffonUtil.sanitize
-import static org.codehaus.griffon.artifacts.ArtifactUtils.*
-import org.codehaus.griffon.cli.CommandLineConstants
-import static org.codehaus.griffon.cli.CommandLineConstants.KEY_DEFAULT_INSTALL_ARTIFACT_REPOSITORY
 import static org.codehaus.griffon.artifacts.ArtifactRepository.DEFAULT_LOCAL_NAME
+import static org.codehaus.griffon.artifacts.ArtifactUtils.*
+import static org.codehaus.griffon.cli.CommandLineConstants.KEY_DEFAULT_INSTALL_ARTIFACT_REPOSITORY
 
 /**
  * @author Andres Almiray

@@ -94,7 +94,7 @@ class PluginSettings {
         if (!availableScripts) {
             List<Resource> scripts = []
             String userHome = System.getProperty("user.home")
-            String griffonHome = settings.griffonHome.absolutePath
+            String griffonHome = settings.griffonHome?.absolutePath
             String basedir = settings.baseDir.absolutePath
 
             def addScripts = {if (!it.file.name.startsWith('_')) scripts << it}
@@ -113,7 +113,7 @@ class PluginSettings {
     Resource[] getAvailableScripts(String scriptName) {
         List<Resource> scripts = []
         String userHome = System.getProperty("user.home")
-        String griffonHome = settings.griffonHome.absolutePath
+        String griffonHome = settings.griffonHome?.absolutePath
         String basedir = settings.baseDir.absolutePath
         String pluginHome = settings.projectPluginsDir.absolutePath
 

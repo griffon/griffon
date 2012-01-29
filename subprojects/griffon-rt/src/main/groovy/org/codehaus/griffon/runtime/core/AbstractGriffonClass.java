@@ -19,7 +19,6 @@ import griffon.core.GriffonApplication;
 import griffon.core.GriffonClass;
 import griffon.exceptions.NewInstanceCreationException;
 import griffon.util.GriffonClassUtils;
-import griffon.util.GriffonExceptionHandler;
 import griffon.util.GriffonNameUtils;
 import groovy.lang.*;
 import org.codehaus.griffon.runtime.util.GriffonApplicationHelper;

@@ -14,19 +14,13 @@
  * limitations under the License.
  */
 
-import griffon.util.Environment
-import griffon.util.GriffonUtil
-import griffon.util.Metadata
-import griffon.util.PlatformUtils
-import org.codehaus.griffon.artifacts.model.Archetype
 import org.codehaus.griffon.cli.ScriptExitException
 import org.springframework.core.io.ClassPathResource
 import org.springframework.core.io.FileSystemResource
 import org.springframework.core.io.Resource
 import org.springframework.util.FileCopyUtils
-import static org.codehaus.griffon.artifacts.ArtifactUtils.artifactBase
+import griffon.util.*
 import static org.codehaus.griffon.cli.CommandLineConstants.KEY_INTERACTIVE_MODE
-import griffon.util.GriffonNameUtils
 
 /**
  * Gant script containing build variables.
@@ -389,30 +383,32 @@ target(createStructure: "Creates the application directory structure") {
     ant.sequential {
         mkdir(dir: "${basedir}/griffon-app")
         mkdir(dir: "${basedir}/griffon-app/conf")
-        if (projectType == 'app') {
-            mkdir(dir: "${basedir}/griffon-app/conf/keys")
-            mkdir(dir: "${basedir}/griffon-app/conf/webstart")
-            mkdir(dir: "${basedir}/griffon-app/conf/dist")
-            mkdir(dir: "${basedir}/griffon-app/conf/dist/applet")
-            mkdir(dir: "${basedir}/griffon-app/conf/dist/jar")
-            mkdir(dir: "${basedir}/griffon-app/conf/dist/shared")
-            mkdir(dir: "${basedir}/griffon-app/conf/dist/webstart")
-            mkdir(dir: "${basedir}/griffon-app/conf/dist/zip")
+        if (projectType != 'archetype') {
+            if (projectType == 'app') {
+                mkdir(dir: "${basedir}/griffon-app/conf/keys")
+                mkdir(dir: "${basedir}/griffon-app/conf/webstart")
+                mkdir(dir: "${basedir}/griffon-app/conf/dist")
+                mkdir(dir: "${basedir}/griffon-app/conf/dist/applet")
+                mkdir(dir: "${basedir}/griffon-app/conf/dist/jar")
+                mkdir(dir: "${basedir}/griffon-app/conf/dist/shared")
+                mkdir(dir: "${basedir}/griffon-app/conf/dist/webstart")
+                mkdir(dir: "${basedir}/griffon-app/conf/dist/zip")
+            }
+            mkdir(dir: "${basedir}/griffon-app/conf/metainf")
+            mkdir(dir: "${basedir}/griffon-app/controllers")
+            mkdir(dir: "${basedir}/griffon-app/i18n")
+            mkdir(dir: "${basedir}/griffon-app/lifecycle")
+            mkdir(dir: "${basedir}/griffon-app/models")
+            mkdir(dir: "${basedir}/griffon-app/resources")
+            mkdir(dir: "${basedir}/griffon-app/views")
+            mkdir(dir: "${basedir}/lib")
+            mkdir(dir: "${basedir}/scripts")
+            mkdir(dir: "${basedir}/src")
+            mkdir(dir: "${basedir}/src/main")
+            mkdir(dir: "${basedir}/test")
+            mkdir(dir: "${basedir}/test/integration")
+            mkdir(dir: "${basedir}/test/unit")
         }
-        mkdir(dir: "${basedir}/griffon-app/conf/metainf")
-        mkdir(dir: "${basedir}/griffon-app/controllers")
-        mkdir(dir: "${basedir}/griffon-app/i18n")
-        mkdir(dir: "${basedir}/griffon-app/lifecycle")
-        mkdir(dir: "${basedir}/griffon-app/models")
-        mkdir(dir: "${basedir}/griffon-app/resources")
-        mkdir(dir: "${basedir}/griffon-app/views")
-        mkdir(dir: "${basedir}/lib")
-        mkdir(dir: "${basedir}/scripts")
-        mkdir(dir: "${basedir}/src")
-        mkdir(dir: "${basedir}/src/main")
-        mkdir(dir: "${basedir}/test")
-        mkdir(dir: "${basedir}/test/integration")
-        mkdir(dir: "${basedir}/test/unit")
     }
 }
 

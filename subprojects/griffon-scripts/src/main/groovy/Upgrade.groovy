@@ -1,18 +1,20 @@
 /*
- * Copyright 2004-2012 the original author or authors.
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
+* Copyright 2004-2012 the original author or authors.
+*
+* Licensed under the Apache License, Version 2.0 (the "License");
+* you may not use this file except in compliance with the License.
+* You may obtain a copy of the License at
+*
+*      http://www.apache.org/licenses/LICENSE-2.0
+*
+* Unless required by applicable law or agreed to in writing, software
+* distributed under the License is distributed on an "AS IS" BASIS,
+* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+* See the License for the specific language governing permissions and
+* limitations under the License.
+*/
+
+import static griffon.util.GriffonNameUtils.capitalize
 
 /**
  * Gant script that handles upgrading of a Griffon applications
@@ -20,9 +22,6 @@
  * @author Graeme Rocher (Grails 0.4)
  * @author Sergey Nebolsin (Grails 0.4)
  */
-
-import griffon.util.Environment
-import org.codehaus.griffon.artifacts.ArtifactUtils
 
 includeTargets << griffonScript('_GriffonClean')
 
@@ -60,165 +59,68 @@ target(upgrade: "Upgrades a Griffon application from a previous version of Griff
 
     clean()
 
-    boolean isPost09 = ArtifactUtils.compareVersions(appGriffonVersion, '0.9') >= 0
+    projectType = 'app'
+    if (isPluginProject) projectType = 'plugin'
+    if (isArchetypeProject) projectType = 'archetype'
+    createStructure()
 
-    ant.sequential {
-        delete(dir: "${basedir}/tmp", failonerror: false)
+    griffonUnpack(dest: basedir, src: "griffon-shared-files.jar")
+    ant.unzip(src: "${basedir}/griffon-wrapper-files.zip", dest: basedir)
+    ant.delete(file: "${basedir}/griffon-wrapper-files.zip", quiet: true)
 
-        createStructure()
+    File upgradeDir = new File("${basedir}/upgrade")
+    ant.mkdir(dir: upgradeDir)
+    File inBuildConfigFile = new File("${basedir}/griffon-app/conf/BuildConfig.groovy")
+    File inConfigFile = new File("${basedir}/griffon-app/conf/Config.groovy")
+    File inBuilderConfigFile = new File("${basedir}/griffon-app/conf/Builder.groovy")
+    File outBuildConfigFile = new File("${upgradeDir}/BuildConfig.groovy")
+    File outConfigFile = new File("${upgradeDir}/Config.groovy")
+    File outBuilderConfigFile = new File("${upgradeDir}/Builder.groovy")
 
-        griffonUnpack(dest: basedir, src: "griffon-shared-files.jar")
-        ant.unzip(src: "${basedir}/griffon-wrapper-files.zip", dest: basedir)
-        ant.delete(file: "${basedir}/griffon-wrapper-files.zip", quiet: true)
+    if (inBuildConfigFile.exists() && !outBuildConfigFile.exists()) ant.move(file: inBuildConfigFile, tofile: outBuildConfigFile)
+    if (inConfigFile.exists() && !outConfigFile.exists()) ant.move(file: inConfigFile, tofile: outConfigFile)
+    if (inBuilderConfigFile.exists() && !outBuilderConfigFile.exists()) ant.move(file: inBuilderConfigFile, tofile: outBuilderConfigFile)
 
-        // if Config.groovy exists and it does not contain values added
-        // since 0.0 then sensible defaultsare provided which keep previous
-        // behavior even if it is not the default in the current version.
-        def configFile = new File(baseFile, '/griffon-app/conf/Config.groovy')
-        if (!isPost09 && configFile.exists()) {
-            def configSlurper = new ConfigSlurper(System.getProperty(Environment.KEY))
-            def configObject = configSlurper.parse(configFile.toURI().toURL())
+    // Unpack the shared files into a temporary directory
+    File tmpdir = new File("${basedir}/tmp-upgrade")
+    griffonUnpack(dest: tmpdir.path, src: "griffon-${projectType}-files.jar")
 
-            def packJars = configObject.griffon?.jars?.pack
-            def signJars = configObject.griffon?.jars?.sign
-            def extensionJars = configObject.griffon?.extensions?.jarUrls
-            def extensionJNLPs = configObject.griffon?.extensions?.jnlpUrls
-            def signingKeyFile = configObject.signingkey?.params?.sigfile
-            def signingKeyStore = configObject.signingkey?.params?.keystore
-            def deploy = configObject.deploy
+    try {
+        switch (projectType) {
+            case 'app':
+                ant.copy(todir: "${basedir}/griffon-app/conf", file: "${tmpdir}/griffon-app/conf/BuildConfig.groovy")
+                ant.copy(todir: "${basedir}/griffon-app/conf", file: "${tmpdir}/griffon-app/conf/Config.groovy")
+                ant.copy(todir: "${basedir}/griffon-app/conf", file: "${tmpdir}/griffon-app/conf/Builder.groovy")
 
-            if ([packJars, signJars, extensionJars, extensionJNLPs, signingKeyFile].contains([:])) {
-                event("StatusUpdate", ["Adding properties to Config.groovy"])
-                configFile.withWriterAppend {
-                    def indent = ''
-                    it.writeLine '\n// The following properties have been added by the Upgrade process...'
-                    if (!Boolean.valueOf(System.getProperty(Environment.DEFAULT))) {
-                        indent = '        '
-                        it.writeLine "environments {\n    ${System.getProperty(Environment.KEY)} {"
-                    }
-                    if (packJars == [:]) it.writeLine "${indent}griffon.jars.pack=false // jars were not automatically packed in Griffon 0.0"
-                    if (signJars == [:]) it.writeLine "${indent}griffon.jars.sign=true // jars were automatically signed in Griffon 0.0"
-                    if (extensionJars == [:]) it.writeLine "${indent}griffon.extensions.jarUrls = [] // remote jars were not possible in Griffon 0.1"
-                    if (extensionJNLPs == [:]) it.writeLine "${indent}griffon.extensions.jnlpUrls = [] // remote jars were not possible in Griffon 0.1"
-                    if (signingKeyFile == [:] || signingKeyStore == [:]) {
-                        it.writeLine "// may safely be removed, but calling upgrade will restore it"
-                        it.writeLine "${indent}def env = griffon.util.Environment.current.name"
-                        it.writeLine "${indent}signingkey.params.sigfile='GRIFFON' + env"
-                        it.writeLine "${indent}signingkey.params.keystore = \"\${basedir}/griffon-app/conf/keys/\${env}Keystore\""
-                        it.writeLine "${indent}signingkey.params.alias = env"
-                        it.writeLine "${indent}// signingkey.params.storepass = 'BadStorePassword'"
-                        it.writeLine "${indent}// signingkey.params.keyPass = 'BadKeyPassword'"
-                        it.writeLine "${indent}signingkey.params.lazy = true // only sign when unsigned"
-                    }
+                def value = outBuildConfigFile.text =~ /.*app.fileType = (.*)/
+                if (value) inBuildConfigFile.append("""\n${value[0][0]}\n""")
+                value = outBuildConfigFile.text =~ /.*app.defaultPackageName = (.*)/
+                if (value) inBuildConfigFile.append("""\n${value[0][0]}\n""")
 
-                    it.writeLine "// you may now tweak memory parameters"
-                    it.writeLine "//${indent}griffon.memory.min='16m'"
-                    it.writeLine "//${indent}griffon.memory.max='64m'"
-                    it.writeLine "//${indent}griffon.memory.maxPermSize='64m'"
-                    if (indent != '') {
-                        it.writeLine('    }\n}')
-                    }
+                // copy new icons to griffon-app/conf/webstart
+                // copy new icons to griffon-app/resources
+                ant.copy(todir: "${basedir}") {
+                    fileset(dir: tmpdir.path, includes: "**/*.png")
                 }
-            }
+                break
+            case 'plugin':
+                ant.copy(todir: "${basedir}/griffon-app/conf", file: "${tmpdir}/griffon-app/conf/BuildConfig.groovy")
+                break
+            case 'archetype':
+                ant.copy(todir: "${basedir}/griffon-app/conf", file: "${tmpdir}/griffon-app/conf/BuildConfig.groovy")
+        }
 
-            if (deploy == [:]) {
-                configFile.append('''deploy {
-    application {
-        title = '@griffonAppName@ @griffonAppVersion@'
-        vendor = System.properties['user.name']
-        homepage = 'http://localhost/@griffonAppName@'
-        description {
-            complete = '@griffonAppName@ @griffonAppVersion@'
-            oneline  = '@griffonAppName@ @griffonAppVersion@'
-            minimal  = '@griffonAppName@ @griffonAppVersion@'
-            tooltip  = '@griffonAppName@ @griffonAppVersion@'
+        ant.replace(dir: "${basedir}/griffon-app/conf", includes: "**/*.*") {
+            replacefilter(token: "@griffonAppName@", value: capitalize(griffonAppName))
+            replacefilter(token: "@griffonAppVersion@", value: griffonAppVersion ?: "0.1")
         }
-        icon {
-            'default' {
-                name   = 'griffon-icon-64x64.png'
-                width  = '64'
-                height = '64'
-            }
-            splash {
-                name   = 'griffon.png'
-                width  = '391'
-                height = '123'
-            }
-            selected {
-                name   = 'griffon-icon-64x64.png'
-                width  = '64'
-                height = '64'
-            }
-            disabled {
-                name   = 'griffon-icon-64x64.png'
-                width  = '64'
-                height = '64'
-            }
-            rollover {
-                name   = 'griffon-icon-64x64.png'
-                width  = '64'
-                height = '64'
-            }
-            shortcut {
-                name   = 'griffon-icon-64x64.png'
-                width  = '64'
-                height = '64'
-            }
-        }
+    } finally {
+        delete(dir: tmpdir.path)
     }
-}
-''')
-            }
-        }
 
-        // if Application.groovy exists and it does not contain values added
-        // since 0.0 then sensible defaults are provided which keep previous
-        // behavior even if it is not the default in the current version.
-        def applicationFile = new File(baseFile, '/griffon-app/conf/Application.groovy')
-        if (!isPost09 && applicationFile.exists()) {
-            def configSlurper = new ConfigSlurper(System.getProperty(Environment.KEY))
-            def configObject = configSlurper.parse(applicationFile.toURI().toURL())
-
-            def startupGroups = configObject.application.startupGroups
-            def autoShutdown = configObject.application.autoShutdown
-
-            if ([startupGroups, autoShutdown].contains([:])) {
-                event("StatusUpdate", ["Adding properties to Application.groovy"])
-                if (startupGroups == [:]) {
-                    configObject.application.startupGroups = ['root']
-                }
-
-                if (startupGroups == [:]) {
-                    configObject.application.autoShutdown = true
-                }
-            }
-
-            // update MVCGroups if we are pre 0.2
-            if (appGriffonVersion =~ /0\.[01].*/) {
-                event("StatusUpdate", ["Re-ordering MVCGroups"])
-
-                configObject.mvcGroups.each {group, ConfigObject portions ->
-                    if (portions.keySet().contains('view')) {
-                        portions.view = portions.remove('view')
-                    }
-                }
-            }
-
-            // GRIFFON-147 make sure group names that contain hyphens are correctly scaped
-            def groupsToFix = []
-            configObject.mvcGroups.each { k, v ->
-                if (k.contains('-')) groupsToFix << k
-            }
-            groupsToFix.each { k ->
-                def v = configObject.mvcGroups.remove(k)
-                configObject.mvcGroups.put("'$k'".toString(), v)
-            }
-
-            configObject.writeTo(new FileWriter(new File(baseFile, '/griffon-app/conf/Application.groovy')))
-        }
-
+    if (!isArchetypeProject) {
         // remove GriffonApplicationHelper from Initialize.groovy
-        def initializeFile = new File(baseFile, '/griffon-app/lifecycle/Initialize.groovy')
+        def initializeFile = new File(basedir, '/griffon-app/lifecycle/Initialize.groovy')
         if (initializeFile.exists()) {
             initializeFile.text -= 'import griffon.util.GriffonPlatformHelper\n'
             initializeFile.text -= 'GriffonPlatformHelper.tweakForNativePlatform(app)\n'
@@ -232,189 +134,16 @@ target(upgrade: "Upgrades a Griffon application from a previous version of Griff
                         "DO NOT put application configuration in here, it is not the right place!") {
             entry(key: "app.name", value: griffonAppName)
             entry(key: "app.griffon.version", value: griffonVersion)
-            if (!isPluginProject && !isArchetypeProject) {
+            if (!isPluginProject) {
                 entry(key: "plugins.swing", value: griffonVersion)
+                entry(key: "archetype.default", value: griffonVersion)
                 entry(key: "app.toolkit", value: 'swing')
             }
         }
     }
 
-    // Unpack the shared files into a temporary directory, and then
-    // copy over the IDE files.
-    def tmpDir = new File("${basedir}/tmp-upgrade")
-    griffonUnpack(dest: tmpDir.path, src: "griffon-app-files.jar")
-    // copy new icons to griffon-app/conf/webstart
-    // copy new icons to griffon-app/resources
-    copy(todir: "${basedir}") {
-        fileset(dir: tmpDir.path, includes: "**/*.png")
-    }
-    delete(dir: tmpDir.path)
-
-    // Create BuildConfig.groovy if it does not exist
-    def bcf = new File(baseFile, '/griffon-app/conf/BuildConfig.groovy')
-    def cf = new File(baseFile, '/griffon-app/conf/Config.groovy')
-    if (!bcf.exists()) {
-        bcf.text = cf.text
-        bcf.append("""griffon.project.dependency.resolution = {
-    // inherit Griffon' default dependencies
-    inherits("global") {
-    }
-    log "warn" // log level of Ivy resolver, either 'error', 'warn', 'info', 'debug' or 'verbose'
-    repositories {
-        griffonPlugins()
-        griffonHome()
-        griffonCentral()
-
-        // uncomment the below to enable remote dependency resolution
-        // from public Maven repositories
-        //mavenLocal()
-        //mavenCentral()
-        //mavenRepo "http://snapshots.repository.codehaus.org"
-        //mavenRepo "http://repository.codehaus.org"
-        //mavenRepo "http://download.java.net/maven/2/"
-        //mavenRepo "http://repository.jboss.com/maven2/"
-    }
-    dependencies {
-        // specify dependencies here under either 'build', 'compile', 'runtime', 'test' or 'provided' scopes eg.
-
-        // runtime 'mysql:mysql-connector-java:5.1.5'
-    }
-}
-
-griffon {
-    doc {
-        logo = '<a href="http://griffon.codehaus.org" target="_blank"><img alt="The Griffon Framework" src="../img/griffon.png" border="0"/></a>'
-        sponsorLogo = "<br/>"
-        footer = "<br/><br/>Made with Griffon ($griffonVersion)"
-    }
-}
-
-deploy {
-    application {
-        title = '@griffonAppName@ @griffonAppVersion@'
-        vendor = System.properties['user.name']
-        homepage = 'http://localhost/@griffonAppName@'
-        description {
-            complete = '@griffonAppName@ @griffonAppVersion@'
-            oneline  = '@griffonAppName@ @griffonAppVersion@'
-            minimal  = '@griffonAppName@ @griffonAppVersion@'
-            tooltip  = '@griffonAppName@ @griffonAppVersion@'
-        }
-        icon {
-            'default' {
-                name   = 'griffon-icon-64x64.png'
-                width  = '64'
-                height = '64'
-            }
-            splash {
-                name   = 'griffon.png'
-                width  = '391'
-                height = '123'
-            }
-            selected {
-                name   = 'griffon-icon-64x64.png'
-                width  = '64'
-                height = '64'
-            }
-            disabled {
-                name   = 'griffon-icon-64x64.png'
-                width  = '64'
-                height = '64'
-            }
-            rollover {
-                name   = 'griffon-icon-64x64.png'
-                width  = '64'
-                height = '64'
-            }
-            shortcut {
-                name   = 'griffon-icon-64x64.png'
-                width  = '64'
-                height = '64'
-            }
-        }
-    }
-}
-
-log4j = {
-    // Example of changing the log pattern for the default console
-    // appender:
-    appenders {
-        console name: 'stdout', layout: pattern(conversionPattern: '%d [%t] %-5p %c - %m%n')
-    }
-
-    error 'org.codehaus.griffon',
-          'org.springframework',
-          'org.apache.karaf',
-          'groovyx.net'
-    warn  'griffon'
-}""")
-        cf.text = '''// log4j configuration
-log4j = {
-    // Example of changing the log pattern for the default console
-    // appender:
-    appenders {
-        console name: 'stdout', layout: pattern(conversionPattern: '%d [%t] %-5p %c - %m%n')
-    }
-
-    error  'org.codehaus.griffon'
-
-    info   'griffon.util',
-           'griffon.core',
-           'griffon.swing',
-           'griffon.app'
-}
-'''
-    }
-
-    // ensure a href= is in the application
-    // ensure all .jnlp files have a memory hook, unless already tweaked
-    // ensure all .jnlp files support remote jnlps
-    // add splash to jnlps
-    // set icons for jnlps
-    fileset(dir: "${basedir}/griffon-app/conf/", includes: "**/*.jnlp").each {
-        def fileText = it.getFile().getText()
-        ant.replace(file: it.toString()) {
-            if (!fileText.contains('href="@jnlpFileName@"')) {
-                replacefilter(token: 'codebase=', value: 'href="@jnlpFileName@" codebase=')
-            }
-            replacefilter(token: '<j2se version="1.5+"/>', value: '<j2se version="1.5+" @memoryOptions@/>')
-            replacefilter(token: '<title>@griffonAppName@</title>',
-                    value: '<title>@griffon.application.title@</title>')
-            replacefilter(token: '<vendor>@griffonAppName@</vendor>',
-                    value: '<vendor>@griffon.application.vendor@</vendor>')
-            replacefilter(token: '<!--<homepage href="http://app.example.com/"/>-->',
-                    value: '<homepage href="@griffon.application.homepage@"/>')
-            replacefilter(token: '<description>@griffonAppName@</description>',
-                    value: '<description>@griffon.application.description.complete@</description>')
-            replacefilter(token: '<description kind="one-line">@griffonAppName@</description>',
-                    value: '<description kind="one-line">@griffon.application.description.oneline@</description>')
-            replacefilter(token: '<description kind="short">@griffonAppName@</description>',
-                    value: '<description kind="short">@griffon.application.description.minimal@</description>')
-            replacefilter(token: '<description kind="tooltip">@griffonAppName@</description>',
-                    value: '<description kind="tooltip">@griffon.application.description.tooltip@</description>')
-            replacefilter(token: '<!--<icon href="http://example.com/icon.gif" kind="splash" width="" height=""/>-->',
-                    value: '<icon href="@griffon.application.icon.default@" kind="default" width="@griffon.application.icon.default.width@" height="@griffon.application.icon.default.height@"/>')
-            replacefilter(token: '<!--<icon href="http://example.com/icon.gif" kind="default" width="" height=""/>-->',
-                    value: '<icon href="@griffon.application.icon.splash@" kind="splash" width="@griffon.application.icon.splash.width@" height="@griffon.application.icon.splash.height@"/>')
-            replacefilter(token: '<!--<icon href="http://example.com/icon.gif" kind="shortcut" width="16" height="16"/>-->',
-                    value: '<icon href="@griffon.application.icon.selected@" kind="selected" width="@griffon.application.icon.selected.width@" height="@griffon.application.icon.selected.height@"/>')
-            replacefilter(token: '<!--<icon href="http://example.com/icon.gif" kind="shortcut" width="32" height="32"/>-->',
-                    value: '<icon href="@griffon.application.icon.shortcut@" kind="shortcut" width="@griffon.application.icon.shortcut.width@" height="@griffon.application.icon.shortcut.height@"/>')
-            if (!fileText.contains('@jnlpExtensions@')) {
-                replacefilter(token: '</resources>', value: '@jnlpExtensions@ \n</resources>')
-            }
-        }
-    }
-
-    // update the icons in the html
-    fileset(dir: "${basedir}/griffon-app/conf/", includes: "**/*.html").each {
-        ant.replace(file: it.toString()) {
-            replacefilter(token: "image:'griffon.jpeg'", value: "image:'griffon.png'")
-        }
-    }
-
-    def wrapperConfig = new File(baseFile, '/wrapper/griffon-wrapper.properties')
-    if (isPost09 && wrapperConfig.exists()) {
+    def wrapperConfig = new File(basedir, '/wrapper/griffon-wrapper.properties')
+    if (wrapperConfig.exists()) {
         def wrapperProps = new Properties()
         wrapperConfig.eachLine {l ->
             if (l.startsWith('#')) return
@@ -423,13 +152,28 @@ log4j = {
             wrapperProps.put(kv[0], kv[1])
         }
         wrapperProps.put('distributionVersion', griffonVersion)
-        wrapperConfig.withOutputStream {o ->
+        wrapperConfig.withOutputStream { o ->
             wrapperProps.store(o, "Griffon $griffonVersion upgrade")
         }
     }
 
-    //TODO create an upgrade README
-    //event("StatusUpdate", ["Please make sure you view the README for important information about changes to your source code."])
+    printFramed("""
+        | Project ${griffonAppName} has been upgraded.
+        |
+        | Griffon ${griffonVersion} brings substantial changes to logging
+        | and packaging configuration. The upgrade process has taken the
+        | precuation of making copies of your configuration files and placed
+        | them inside
+        |
+        |   ${upgradeDir.absolutePath}
+        |
+        | Please review and copy over any project specific values into their
+        | respective configuration files, taking into account that builder
+        | configuration will be set automatically as plugins are installed.
+        |
+        | Also, review that the values of 'application.properties' are
+        | appropriate for the current project.
+        |""".stripMargin())
 
     event("StatusFinal", ["Project upgraded"])
 }
