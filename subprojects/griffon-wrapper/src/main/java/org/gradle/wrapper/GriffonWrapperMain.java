@@ -16,20 +16,28 @@
 
 package org.gradle.wrapper;
 
+import org.gradle.cli.CommandLineParser;
+import org.gradle.cli.CommandLineParserFactory;
+import org.gradle.cli.SystemPropertiesCommandLineConverter;
+
 import java.io.File;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.Arrays;
 import java.util.Map;
 import java.util.Properties;
-import org.gradle.cli.*;
+
+import static java.lang.Boolean.parseBoolean;
+import static java.lang.System.getProperties;
+import static org.gradle.wrapper.SystemPropertiesHandler.getSystemProperties;
+import static org.gradle.wrapper.WrapperExecutor.forWrapperPropertiesFile;
 
 /**
  * @author Hans Dockter
  * @author Andres Almiray
  */
 public class GriffonWrapperMain {
-        public static final String ALWAYS_UNPACK_ENV = "GRIFFON_WRAPPER_ALWAYS_UNPACK";
+    public static final String ALWAYS_UNPACK_ENV = "GRIFFON_WRAPPER_ALWAYS_UNPACK";
     public static final String ALWAYS_DOWNLOAD_ENV = "GRIFFON_WRAPPER_ALWAYS_DOWNLOAD";
     public static final String DEFAULT_GRIFFON_USER_HOME = System.getProperty("user.home") + "/.griffon";
     public static final String GRIFFON_USER_HOME_PROPERTY_KEY = "griffon.user.home";
@@ -41,15 +49,15 @@ public class GriffonWrapperMain {
         File propertiesFile = wrapperProperties(wrapperJar);
         File rootDir = rootDir(wrapperJar);
 
-        Properties systemProperties = System.getProperties();
+        Properties systemProperties = getProperties();
         systemProperties.putAll(parseSystemPropertiesFromArgs(args));
 
         addSystemProperties(rootDir);
 
-        boolean alwaysDownload = Boolean.parseBoolean(System.getenv(ALWAYS_DOWNLOAD_ENV));
-        boolean alwaysUnpack = Boolean.parseBoolean(System.getenv(ALWAYS_UNPACK_ENV));
+        boolean alwaysDownload = parseBoolean(System.getenv(ALWAYS_DOWNLOAD_ENV));
+        boolean alwaysUnpack = parseBoolean(System.getenv(ALWAYS_UNPACK_ENV));
 
-        WrapperExecutor.forWrapperPropertiesFile(propertiesFile, System.out).execute(
+        forWrapperPropertiesFile(propertiesFile, System.out).execute(
                 args,
                 new Install(alwaysDownload, alwaysUnpack, new Download(), new PathAssembler(griffonUserHome())),
                 new BootstrapMainStarter());
@@ -67,8 +75,8 @@ public class GriffonWrapperMain {
     }
 
     private static void addSystemProperties(File rootDir) {
-        System.getProperties().putAll(SystemPropertiesHandler.getSystemProperties(new File(griffonUserHome(), "griffon.properties")));
-        System.getProperties().putAll(SystemPropertiesHandler.getSystemProperties(new File(rootDir, "griffon.properties")));
+        getProperties().putAll(getSystemProperties(new File(griffonUserHome(), "griffon.properties")));
+        getProperties().putAll(getSystemProperties(new File(rootDir, "griffon.properties")));
     }
 
     private static File rootDir(File wrapperJar) {
@@ -96,7 +104,7 @@ public class GriffonWrapperMain {
         String gradleUserHome = System.getProperty(GRIFFON_USER_HOME_PROPERTY_KEY);
         if (gradleUserHome != null) {
             return new File(gradleUserHome);
-        } else if((gradleUserHome = System.getenv(GRIFFON_USER_HOME_ENV_KEY)) != null) {
+        } else if ((gradleUserHome = System.getenv(GRIFFON_USER_HOME_ENV_KEY)) != null) {
             return new File(gradleUserHome);
         } else {
             return new File(DEFAULT_GRIFFON_USER_HOME);

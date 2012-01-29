@@ -124,6 +124,7 @@ public class GriffonScriptRunner {
                         "Licensed under Apache Standard License 2.0" + '\n' +
                         "Griffon home is " + (griffonHome == null ? "not set" : "set to: " + griffonHome) + '\n');
 
+        BuildSettingsHolder.setSettings(build);
         GriffonSetup.run();
 
         // If there aren't any arguments, then we don't have a command

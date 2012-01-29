@@ -35,7 +35,7 @@ target(name: 'integrateWith', description: "Integrates ", prehook: null, posthoo
     try {
         event("IntegrateWithInit", keys.toList())
         for (key in keys) {
-            if (key == 'params') continue
+            if (key == 'params' || key == 'file-type') continue
             try {
                 def name = GriffonUtil.getClassNameRepresentation(key)
                 "integrate${name}"()
