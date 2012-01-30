@@ -38,7 +38,7 @@ _griffon_artifacts_called = true
 artifactRepository = null
 
 selectArtifactRepository = {
-    repositoryName = argsMap.repository ?: getPropertyValue(KEY_DEFAULT_ARTIFACT_REPOSITORY, ArtifactRepository.DEFAULT_REMOTE_NAME)
+    repositoryName = argsMap.repository ?: getPropertyValue(KEY_DEFAULT_ARTIFACT_REPOSITORY, 'griffon-legacy') //ArtifactRepository.DEFAULT_REMOTE_NAME)
     artifactRepository = ArtifactRepositoryRegistry.instance.findRepository(repositoryName)
     if (artifactRepository == null) {
         event('StatusError', ["Artifact repository ${repositoryName} is not configured."])

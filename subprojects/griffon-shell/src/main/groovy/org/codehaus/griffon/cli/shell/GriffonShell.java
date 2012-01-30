@@ -17,7 +17,6 @@
 package org.codehaus.griffon.cli.shell;
 
 import griffon.util.BuildSettings;
-import griffon.util.BuildSettingsHolder;
 import jline.Terminal;
 import org.apache.felix.gogo.commands.Action;
 import org.apache.felix.gogo.commands.Argument;

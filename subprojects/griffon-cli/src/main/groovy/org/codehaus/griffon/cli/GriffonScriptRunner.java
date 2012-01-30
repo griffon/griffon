@@ -97,6 +97,7 @@ public class GriffonScriptRunner {
         BuildSettings build = null;
         try {
             build = new BuildSettings(new File(griffonHome));
+            BuildSettingsHolder.setSettings(build);
         } catch (Exception e) {
             System.err.println("An error occurred loading the griffon-app/conf/BuildConfig.groovy file: " + e.getMessage());
             System.exit(1);
@@ -104,9 +105,12 @@ public class GriffonScriptRunner {
 
         String rawArgs = allArgs.toString().trim();
         if ("--version".equals(rawArgs) || "-v".equals(rawArgs)) {
+            /*
             System.out.println("Griffon version " + build.getGriffonVersion());
             System.out.println("Groovy version " + build.getGroovyVersion());
             System.out.println("Java version " + System.getProperty("java.version") + " (" + System.getProperty("java.vm.version") + ")");
+            */
+            System.out.println(GriffonEnvironment.prettyPrint());
             System.exit(0);
         }
 
@@ -124,7 +128,6 @@ public class GriffonScriptRunner {
                         "Licensed under Apache Standard License 2.0" + '\n' +
                         "Griffon home is " + (griffonHome == null ? "not set" : "set to: " + griffonHome) + '\n');
 
-        BuildSettingsHolder.setSettings(build);
         GriffonSetup.run();
 
         // If there aren't any arguments, then we don't have a command
