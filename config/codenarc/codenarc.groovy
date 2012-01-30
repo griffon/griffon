@@ -14,11 +14,13 @@
  * limitations under the License.
  */
 
-ruleset {    
-    ruleset('rulesets/imports.xml')
+ruleset {
     ruleset('rulesets/basic.xml') {
         exclude 'EmptyCatchBlock'
 		exclude 'EmptyMethod'
+    }
+    ruleset('rulesets/imports.xml') {
+        exclude 'MisorderedStaticImports'
     }
     /*
 	ruleset('rulesets/naming.xml') {

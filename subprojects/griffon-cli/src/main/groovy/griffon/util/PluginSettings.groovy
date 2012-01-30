@@ -18,7 +18,6 @@ package griffon.util
 
 import java.util.concurrent.ConcurrentHashMap
 import org.codehaus.gant.GantBinding
-import org.codehaus.griffon.artifacts.InstallArtifactException
 import org.codehaus.griffon.artifacts.model.Plugin
 import org.codehaus.griffon.artifacts.model.Release
 import org.codehaus.griffon.resolve.IvyDependencyManager

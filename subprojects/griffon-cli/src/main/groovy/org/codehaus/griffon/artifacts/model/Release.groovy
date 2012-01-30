@@ -100,11 +100,9 @@ class Release {
                 switch (fileType) {
                     case '.json':
                         return makeFromJSON(type, new JsonSlurper().parseText(file.text))
-                        break
                     case '.xml':
                         // TODO LEGACY - remove this code before 1.0
                         return makeFromXML(type, new XmlSlurper().parse(file))
-                        break
                 }
                 break
             default:
