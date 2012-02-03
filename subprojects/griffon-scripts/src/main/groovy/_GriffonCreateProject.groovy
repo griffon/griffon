@@ -48,7 +48,7 @@ app.fileType = '$fileType'
 app.defaultPackageName = '$defaultPackageName'
 """)
 
-    ant.replace(dir: "${basedir}/griffon-app/conf", includes: "**/*.*") {
+    ant.replace(dir: "${basedir}/griffon-app/conf", includes: "*") {
         replacefilter(token: "@griffonAppName@", value: capitalize(griffonAppName))
         replacefilter(token: "@griffonAppVersion@", value: griffonAppVersion ?: "0.1")
     }
@@ -59,7 +59,7 @@ app.defaultPackageName = '$defaultPackageName'
 createProjectWithDefaults = {
     metadataFile = new File("${basedir}/application.properties")
     initProject()
-    ant.replace(dir: "${basedir}/griffon-app/conf", includes: "**/*.*") {
+    ant.replace(dir: "${basedir}/griffon-app/conf", includes: "*") {
         replacefilter(token: "@griffon.app.class.name@", value: appClassName)
         replacefilter(token: "@griffon.version@", value: griffonVersion)
         replacefilter(token: "@griffon.project.name@", value: griffonAppName)
