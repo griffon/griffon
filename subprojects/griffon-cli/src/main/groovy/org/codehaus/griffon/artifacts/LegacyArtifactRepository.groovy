@@ -37,6 +37,7 @@ class LegacyArtifactRepository extends AbstractArtifactRepository {
     final String type = 'legacy'
     final String name = 'griffon-legacy'
     final String url = 'http://svn.codehaus.org/griffon/plugins/'
+    final int timeout = 30000i
 
     private final HttpURLClient http
 
@@ -52,7 +53,7 @@ class LegacyArtifactRepository extends AbstractArtifactRepository {
         if (type == Archetype.TYPE) return artifacts
 
         try {
-            def response = http.request(path: 'repository.json', contentType: JSON)
+            def response = http.request(path: 'repository.json', contentType: JSON, timeout: timeout)
             if (response.status == 200) {
                 response.data.collect(artifacts) { json ->
                     parseArtifactFromJSON(type, json)
@@ -73,7 +74,7 @@ class LegacyArtifactRepository extends AbstractArtifactRepository {
         if (type == Archetype.TYPE) return artifact
 
         try {
-            def response = http.request(path: "griffon-${name}/tags/LATEST_RELEASE/plugin.json", contentType: JSON)
+            def response = http.request(path: "griffon-${name}/tags/LATEST_RELEASE/plugin.json", contentType: JSON, timeout: timeout)
             if (response.status == 200) {
                 artifact = parseArtifactFromJSON(type, response.data)
             }
@@ -92,9 +93,9 @@ class LegacyArtifactRepository extends AbstractArtifactRepository {
         if (type == Archetype.TYPE) return artifact
 
         try {
-            String v = version.replaceAll('-','_')
-            v = v.replaceAll('\\.','_')
-            def response = http.request(path: "griffon-${name}/tags/RELEASE_${v}/plugin.json", contentType: JSON)
+            String v = version.replaceAll('-', '_')
+            v = v.replaceAll('\\.', '_')
+            def response = http.request(path: "griffon-${name}/tags/RELEASE_${v}/plugin.json", contentType: JSON, timeout: timeout)
             if (response.status == 200) {
                 artifact = parseArtifactFromJSON(type, response.data)
                 Release release = parseReleaseFromJSON(response.data)

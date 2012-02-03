@@ -89,6 +89,9 @@ final class ArtifactRepositoryRegistry {
                     if (repoConfig.port) {
                         repository.port = repoConfig.port
                     }
+                    if (repoConfig.timeout) {
+                        repository.timeout = repoConfig.timeout
+                    }
                     repository.url = repoConfig.url
                     if (repoConfig.username) repository.username = repoConfig.username
                     if (repoConfig.password) repository.password = repoConfig.password

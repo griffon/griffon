@@ -20,7 +20,6 @@ import com.jcraft.jsch.Channel
 import com.jcraft.jsch.JSch
 import com.jcraft.jsch.Session
 import com.jcraft.jsch.UserInfo
-import griffon.util.GriffonExceptionHandler
 import griffon.util.GriffonUtil
 import groovy.transform.Synchronized
 import groovyx.net.http.HttpURLClient
@@ -29,6 +28,7 @@ import org.codehaus.griffon.artifacts.model.Artifact
 import org.codehaus.griffon.artifacts.model.Release
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
+import static griffon.util.GriffonExceptionHandler.sanitize
 import static griffon.util.GriffonNameUtils.isBlank
 import static groovyx.net.http.ContentType.JSON
 import static org.codehaus.griffon.artifacts.ArtifactUtils.parseArtifactFromJSON
@@ -44,6 +44,7 @@ class RemoteArtifactRepository extends AbstractArtifactRepository {
     String username
     String password
     int port
+    int timeout = 30i
     final String type = REMOTE
 
     private HttpURLClient http
@@ -55,6 +56,11 @@ class RemoteArtifactRepository extends AbstractArtifactRepository {
 
     String toString() {
         "$name ($url)"
+    }
+
+    void setTimeout(int timeout) {
+        if (timeout < 1000) timeout = timeout * 1000
+        this.timeout = timeout
     }
 
     void setUrl(String url) {
@@ -97,14 +103,14 @@ class RemoteArtifactRepository extends AbstractArtifactRepository {
     List<Artifact> listArtifacts(String type) {
         List<Artifact> artifacts = []
         try {
-            def response = http().request(path: "api/${type}s", contentType: JSON)
+            def response = http().request(path: "api/${type}s", contentType: JSON, timeout: timeout)
             if (response.status == 200) {
                 response.data.collect(artifacts) { json ->
                     parseArtifactFromJSON(type, json)
                 }
             }
         } catch (Exception e) {
-            if (LOG.warnEnabled) LOG.warn("[${this.name}] Could not list artifacts of type ${type}", GriffonExceptionHandler.sanitize(e))
+            if (LOG.warnEnabled) LOG.warn("[${this.name}] Could not list artifacts of type ${type}", sanitize(e))
         }
         artifacts
     }
@@ -112,12 +118,12 @@ class RemoteArtifactRepository extends AbstractArtifactRepository {
     Artifact findArtifact(String type, String name) {
         Artifact artifact = null
         try {
-            def response = http().request(path: "api/${type}s/${name}", contentType: JSON)
+            def response = http().request(path: "api/${type}s/${name}", contentType: JSON, timeout: timeout)
             if (response.status == 200) {
                 artifact = parseArtifactFromJSON(type, response.data)
             }
         } catch (Exception e) {
-            if (LOG.warnEnabled) LOG.warn("[${this.name}] Could not locate artifact ${type}:${name}", GriffonExceptionHandler.sanitize(e))
+            if (LOG.warnEnabled) LOG.warn("[${this.name}] Could not locate artifact ${type}:${name}", sanitize(e))
         }
         artifact
     }
@@ -125,12 +131,12 @@ class RemoteArtifactRepository extends AbstractArtifactRepository {
     Artifact findArtifact(String type, String name, String version) {
         Artifact artifact = null
         try {
-            def response = http().request(path: "api/${type}s/${name}/${version}", contentType: JSON)
+            def response = http().request(path: "api/${type}s/${name}/${version}", contentType: JSON, timeout: timeout)
             if (response.status == 200) {
                 artifact = parseArtifactFromJSON(type, response.data)
             }
         } catch (Exception e) {
-            if (LOG.warnEnabled) LOG.warn("[${this.name}] Could not locate artifact ${type}:${name}:${version}", GriffonExceptionHandler.sanitize(e))
+            if (LOG.warnEnabled) LOG.warn("[${this.name}] Could not locate artifact ${type}:${name}:${version}", sanitize(e))
         }
         artifact
     }
@@ -143,14 +149,14 @@ class RemoteArtifactRepository extends AbstractArtifactRepository {
 
             println "Downloading ${http().url}api/${type}s/${name}/download/${version} ..."
 
-            def response = http().request(path: "api/${type}s/${name}/download/${version}", headers: headers, contentType: JSON)
+            def response = http().request(path: "api/${type}s/${name}/download/${version}", headers: headers, contentType: JSON, timeout: timeout)
             if (response.status == 200) {
                 file = File.createTempFile("griffon-${name}-${version}-", '.zip')
                 file.deleteOnExit()
                 file.bytes = response.data.bytes
             }
         } catch (Exception e) {
-            if (LOG.warnEnabled) LOG.warn("[${this.name}] Could not download artifact ${type}:${name}:${version}", GriffonExceptionHandler.sanitize(e))
+            if (LOG.warnEnabled) LOG.warn("[${this.name}] Could not download artifact ${type}:${name}:${version}", sanitize(e))
             throw e
         }
         file
@@ -209,7 +215,7 @@ class RemoteArtifactRepository extends AbstractArtifactRepository {
             channel.disconnect()
             session.disconnect()
         } catch (Exception e) {
-            GriffonExceptionHandler.sanitize(e)
+            sanitize(e)
             if (LOG.warnEnabled) LOG.warn("[${this.name}] Could not upload artifact ${file}", e)
             throw e
         }
@@ -237,7 +243,7 @@ class RemoteArtifactRepository extends AbstractArtifactRepository {
                 file.bytes = conn.inputStream.bytes
             }
         } catch (Exception e) {
-            if (LOG.warnEnabled) LOG.warn("Could not download artifact form URL ${url}", GriffonExceptionHandler.sanitize(e))
+            if (LOG.warnEnabled) LOG.warn("Could not download artifact form URL ${url}", sanitize(e))
             throw e
         }
         file
