@@ -18,6 +18,8 @@ package griffon.core;
 
 import groovy.util.FactoryBuilderSupport;
 
+import java.util.Map;
+
 /**
  * Defines an MVC group and its contents
  *
@@ -89,6 +91,14 @@ public interface MVCGroup extends ApplicationHandler {
     Object getMember(String name);
 
     /**
+     * Returns a read-only view of all instance members.
+     *
+     * @return an unmodifiable Map view of all members.
+     * @throws IllegalStateException if the group has been destroyed already
+     */
+    Map<String, Object> getMembers();
+
+    /**
      * Destroys the current group.
      * <strong>Should only be called once.</strong>
      *
@@ -113,6 +123,7 @@ public interface MVCGroup extends ApplicationHandler {
 
     /**
      * Builds the target member if it's a Script, storing the result.
+     *
      * @param name the name of a member
      */
     void buildScriptMember(String name);

@@ -25,6 +25,8 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.UUID;
 
+import static java.util.Collections.unmodifiableMap;
+
 /**
  * Base implementation of the {@code MVCGroup} interface
  *
@@ -83,6 +85,11 @@ public abstract class AbstractMVCGroup implements MVCGroup {
     public Object getMember(String name) {
         checkIfAlive();
         return members.get(name);
+    }
+
+    public Map<String, Object> getMembers() {
+        checkIfAlive();
+        return unmodifiableMap(members);
     }
 
     public void destroy() {

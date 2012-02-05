@@ -25,8 +25,6 @@ import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-import static griffon.util.GriffonNameUtils.isBlank;
-
 /**
  * Base implementation of the {@code MVCGroupConfiguration} interface
  *
@@ -63,7 +61,7 @@ public abstract class AbstractMVCGroupConfiguration implements MVCGroupConfigura
     }
 
     public final MVCGroup create() {
-        return create(mvcType, Collections.<String, Object>emptyMap());
+        return create(null, Collections.<String, Object>emptyMap());
     }
 
     public final MVCGroup create(String mvcId) {
@@ -71,11 +69,11 @@ public abstract class AbstractMVCGroupConfiguration implements MVCGroupConfigura
     }
 
     public final MVCGroup create(Map<String, Object> args) {
-        return create(mvcType, args);
+        return create(null, args);
     }
 
     public final MVCGroup create(String mvcId, Map<String, Object> args) {
-        return instantiateMVCGroup(!isBlank(mvcId) ? mvcId : mvcType, args);
+        return instantiateMVCGroup(mvcId, args);
     }
 
     protected abstract MVCGroup instantiateMVCGroup(String mvcId, Map<String, Object> args);

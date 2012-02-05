@@ -18,11 +18,14 @@ package org.codehaus.griffon.runtime.core;
 
 import griffon.core.*;
 import griffon.exceptions.MVCGroupConfigurationException;
-import griffon.util.GriffonExceptionHandler;
 import groovy.lang.Closure;
 import groovy.util.FactoryBuilderSupport;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.*;
+
+import static griffon.util.GriffonExceptionHandler.sanitize;
 
 /**
  * Base implementation of the {@code MVCGroupManager} interface.
@@ -31,6 +34,8 @@ import java.util.*;
  * @since 0.9.4
  */
 public abstract class AbstractMVCGroupManager implements MVCGroupManager {
+    private static final Logger LOG = LoggerFactory.getLogger(AbstractMVCGroupManager.class);
+
     private final GriffonApplication app;
 
     private final Map<String, MVCGroupConfiguration> configurations = new LinkedHashMap<String, MVCGroupConfiguration>();
@@ -72,6 +77,9 @@ public abstract class AbstractMVCGroupManager implements MVCGroupManager {
 
     public MVCGroup findGroup(String mvcId) {
         synchronized (lock) {
+            if (LOG.isDebugEnabled()) {
+                LOG.debug("Searching group " + mvcId);
+            }
             return groups.get(mvcId);
         }
     }
@@ -100,13 +108,23 @@ public abstract class AbstractMVCGroupManager implements MVCGroupManager {
 
     protected void addGroup(MVCGroup group) {
         synchronized (lock) {
-            groups.put(group.getMvcId(), group);
+            if (group != null) {
+                if (LOG.isDebugEnabled()) {
+                    LOG.debug("Adding group " + group.getMvcId() + ":" + group);
+                }
+                groups.put(group.getMvcId(), group);
+            }
         }
     }
 
     protected void removeGroup(MVCGroup group) {
         synchronized (lock) {
-            groups.remove(group.getMvcId());
+            if (group != null) {
+                if (LOG.isDebugEnabled()) {
+                    LOG.debug("Removing group " + group.getMvcId() + ":" + group);
+                }
+                groups.remove(group.getMvcId());
+            }
         }
     }
 
@@ -114,7 +132,7 @@ public abstract class AbstractMVCGroupManager implements MVCGroupManager {
         MVCGroupConfiguration configuration = findConfiguration(mvcType);
         Map<String, Object> configCopy = new LinkedHashMap<String, Object>();
         configCopy.putAll(configuration.getConfig());
-        if(config != null) configCopy.putAll(config);
+        if (config != null) configCopy.putAll(config);
         return newMVCGroupConfiguration(mvcType, configuration.getMembers(), configCopy);
     }
 
@@ -221,37 +239,43 @@ public abstract class AbstractMVCGroupManager implements MVCGroupManager {
         return Arrays.asList(group.getModel(), group.getView(), group.getController());
     }
 
-    protected void withMVCGroup(MVCGroupConfiguration configuration, String mvcName, Map<String, Object> args, Closure handler) {
+    protected void withMVCGroup(MVCGroupConfiguration configuration, String mvcId, Map<String, Object> args, Closure handler) {
+        MVCGroup group = null;
         try {
-            List<? extends GriffonMvcArtifact> group = createMVCGroup(configuration, mvcName, args);
-            handler.call(group.get(0), group.get(1), group.get(2));
+            group = buildMVCGroup(configuration, mvcId, args);
+            handler.call(group.getModel(), group.getView(), group.getController());
         } finally {
             try {
-                destroyMVCGroup(mvcName);
+                if (group != null) {
+                    destroyMVCGroup(group.getMvcId());
+                }
             } catch (Exception x) {
                 if (app.getLog().isWarnEnabled()) {
-                    app.getLog().warn("Could not destroy group [" + mvcName + "] of type " + configuration.getMvcType() + ".", GriffonExceptionHandler.sanitize(x));
+                    app.getLog().warn("Could not destroy group [" + mvcId + "] of type " + configuration.getMvcType() + ".", sanitize(x));
                 }
             }
         }
     }
 
-    protected <M extends GriffonModel, V extends GriffonView, C extends GriffonController> void withMVCGroup(MVCGroupConfiguration configuration, String mvcName, Map<String, Object> args, MVCClosure<M, V, C> handler) {
+    protected <M extends GriffonModel, V extends GriffonView, C extends GriffonController> void withMVCGroup(MVCGroupConfiguration configuration, String mvcId, Map<String, Object> args, MVCClosure<M, V, C> handler) {
+        MVCGroup group = null;
         try {
-            List<? extends GriffonMvcArtifact> group = createMVCGroup(configuration, mvcName, args);
-            handler.call((M) group.get(0), (V) group.get(1), (C) group.get(2));
+            group = buildMVCGroup(configuration, mvcId, args);
+            handler.call((M) group.getModel(), (V) group.getView(), (C) group.getController());
         } finally {
             try {
-                destroyMVCGroup(mvcName);
+                if (group != null) {
+                    destroyMVCGroup(group.getMvcId());
+                }
             } catch (Exception x) {
                 if (app.getLog().isWarnEnabled()) {
-                    app.getLog().warn("Could not destroy group [" + mvcName + "] of type " + configuration.getMvcType() + ".", GriffonExceptionHandler.sanitize(x));
+                    app.getLog().warn("Could not destroy group [" + mvcId + "] of type " + configuration.getMvcType() + ".", sanitize(x));
                 }
             }
         }
     }
 
-    protected abstract MVCGroup buildMVCGroup(MVCGroupConfiguration configuration, String mvcName, Map<String, Object> args);
+    protected abstract MVCGroup buildMVCGroup(MVCGroupConfiguration configuration, String mvcId, Map<String, Object> args);
 
     public final Map<String, ? extends FactoryBuilderSupport> getBuilders() {
         Map<String, FactoryBuilderSupport> builders = new LinkedHashMap<String, FactoryBuilderSupport>();

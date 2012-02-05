@@ -21,13 +21,13 @@ import griffon.core.GriffonClass
 import griffon.core.MVCGroup
 import griffon.core.MVCGroupConfiguration
 import griffon.exceptions.MVCGroupInstantiationException
-import griffon.util.GriffonExceptionHandler
 import org.codehaus.griffon.runtime.builder.UberBuilder
-import org.codehaus.griffon.runtime.util.CompositeBuilderHelper
 import org.codehaus.groovy.runtime.InvokerHelper
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
+import static griffon.util.GriffonExceptionHandler.sanitize
 import static griffon.util.GriffonNameUtils.isBlank
+import static org.codehaus.griffon.runtime.util.CompositeBuilderHelper.createBuilder
 
 /**
  * Base implementation of the {@code MVCGroupManager} interface.
@@ -63,8 +63,8 @@ class DefaultMVCGroupManager extends AbstractMVCGroupManager {
         boolean component = configuration.config[CONFIG_KEY_COMPONENT]
         boolean checkId = true
 
-        if(isBlank(mvcId)) {
-            if(component) {
+        if (isBlank(mvcId)) {
+            if (component) {
                 checkId = false
             } else {
                 mvcId = configuration.mvcType
@@ -93,7 +93,7 @@ class DefaultMVCGroupManager extends AbstractMVCGroupManager {
         }
 
         // create the builder
-        UberBuilder builder = CompositeBuilderHelper.createBuilder(app, metaClassMap)
+        UberBuilder builder = createBuilder(app, metaClassMap)
         argsCopy.each {k, v -> builder.setVariable k, v }
 
         Map<String, Object> instances = instantiateMembers(klassMap, argsCopy, griffonClassMap, builder)
@@ -205,13 +205,14 @@ class DefaultMVCGroupManager extends AbstractMVCGroupManager {
         addGroup(group)
     }
 
-    void destroyMVCGroup(String mvcName) {
-        MVCGroup group = findGroup(mvcName)
+    void destroyMVCGroup(String mvcId) {
+        MVCGroup group = findGroup(mvcId)
+        if (LOG.debugEnabled) LOG.trace("Group ${mvcId} points to $group")
         if (group == null) return
-        if (LOG.infoEnabled) LOG.info("Destroying MVC group identified by '$mvcName'")
+        if (LOG.infoEnabled) LOG.info("Destroying MVC group identified by '$mvcId'")
         app.removeApplicationEventListener(group.controller)
-        [group.model, group.view, group.controller].each { member ->
-            if ((member != null) && !(member instanceof Script)) {
+        group.members.each { memberType, member ->
+            if (memberType != 'builder' && (member != null) && !(member instanceof Script)) {
                 try {
                     member.mvcGroupDestroy()
                 } catch (MissingMethodException mme) {
@@ -228,10 +229,11 @@ class DefaultMVCGroupManager extends AbstractMVCGroupManager {
             group.builder?.dispose()
         } catch (MissingMethodException mme) {
             // TODO find out why this call breaks applet mode on shutdown
-            if (LOG.errorEnabled) LOG.error("Application encountered an error while destroying group '$mvcName'", GriffonExceptionHandler.sanitize(mme))
+            if (LOG.errorEnabled) LOG.error("Application encountered an error while destroying group '$mvcId'", sanitize(mme))
         }
 
         doRemoveGroup(group)
+        group.destroy()
 
         app.event(GriffonApplication.Event.DESTROY_MVC_GROUP.name, [group])
     }
