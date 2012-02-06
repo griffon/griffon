@@ -21,14 +21,16 @@ import griffon.util.GriffonUtil
 import griffon.util.Metadata
 import groovy.json.JsonException
 import groovy.json.JsonSlurper
+import java.util.regex.Matcher
+import java.util.regex.Pattern
 import java.util.zip.ZipEntry
 import java.util.zip.ZipFile
 import org.springframework.core.io.FileSystemResource
 import org.springframework.core.io.Resource
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver
-import static griffon.util.GriffonNameUtils.*
+import static griffon.util.GriffonNameUtils.capitalize
+import static griffon.util.GriffonNameUtils.isBlank
 import org.codehaus.griffon.artifacts.model.*
-import static griffon.util.GriffonNameUtils.getHyphenatedName
 
 /**
  * Common utilities for dealing with artifacts such as plugins and archetypes.
@@ -43,6 +45,7 @@ class ArtifactUtils {
     static final String ADDON_DESCRIPTOR_SUFFIX_JAVA = 'GriffonAddon.java'
     public static final String TIMESTAMP_FORMAT = "yyyy-MM-dd'T'HH:mm:ssZ"
     private static final PathMatchingResourcePatternResolver RESOLVER = new PathMatchingResourcePatternResolver()
+    private static final Pattern ARTIFACT_NAME_VERSION_PATTERN = Pattern.compile('([a-zA-Z0-9\\-/\\._+=]+?)-([0-9][a-zA-Z0-9\\-/\\.,\\]\\[\\(\\)_+=]+)')
 
     static Resource[] resolveResources(String pattern) {
         try {
@@ -103,15 +106,16 @@ class ArtifactUtils {
 
     static Release getInstalledRelease(String type, String name) {
         Resource[] resources = resolveResources("file://${artifactBase(type)}/${name}-*/${type}.json")
-        if(resources[0]?.file?.exists()) {
-            return Release.makeFromFile(type, resources[0].file)
+        for (resource in resources) {
+            Matcher matcher = ARTIFACT_NAME_VERSION_PATTERN.matcher(resource.file.name)
+            if (matcher[0][1] == name) return Release.makeFromFile(type, resource.file)
         }
         return null
     }
 
     static Release getInstalledRelease(String type, String name, String version) {
         Resource[] resources = resolveResources("file://${artifactBase(type)}/${name}-${version}/${type}.json")
-        if(resources[0]?.file?.exists()) {
+        if (resources[0]?.file?.exists()) {
             return Release.makeFromFile(type, resources[0].file)
         }
         return null
@@ -148,18 +152,14 @@ class ArtifactUtils {
     }
 
     static File findArtifactDirForName(String type, String name) {
-        name = getHyphenatedName(name)
+        // name = getHyphenatedName(name)
         String basedir = artifactBase(type)
         Resource[] resources = resolveResources("file://${basedir}/${name}-*")
-        if (resources) {
-            if (resources.length == 1) {
-                return resources[0].file
-            } else {
-                throw new IllegalArgumentException("Multiple installations of ${type} '${name}' exist in ${basedir}: ${resources.file.name}")
-            }
-        } else {
-            return null
+        for (resource in resources) {
+            Matcher matcher = ARTIFACT_NAME_VERSION_PATTERN.matcher(resource.file.name)
+            if (matcher[0][1] == name) return resource.file
         }
+        return null
     }
 
     static File[] findAllArtifactDirsForName(String type, String name) {
@@ -167,10 +167,15 @@ class ArtifactUtils {
         String basedir = artifactBase(type)
         Resource[] resources = resolveResources("file://${basedir}/${name}-*")
         if (resources) {
-            return (resources.file) as File[]
-        } else {
-            return new File[0]
+            List<File> files = []
+            for (resource in resources) {
+                Matcher matcher = ARTIFACT_NAME_VERSION_PATTERN.matcher(resource.file.name)
+                if (matcher[0][1] == name) files << resource.file
+            }
+            return files as File[]
         }
+        return new File[0]
+
     }
 
     static Resource[] findAllArtifactDirsForType(String type) {
