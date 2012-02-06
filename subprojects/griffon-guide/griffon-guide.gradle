@@ -15,11 +15,21 @@
  */
 
 apply plugin: 'java'
+apply plugin: 'java2html'
+
+buildscript {
+    repositories {
+        add gitHub()
+    }
+
+    dependencies {
+        classpath 'bmuschko:gradle-java2html-plugin:0.3'
+    }
+}
 
 configurations {
     groovy
     docs { transitive = false }
-    java2html
 }
 
 repositories {
@@ -90,40 +100,10 @@ task apiDocs(type: Groovydoc, dependsOn: copyDocs) {
     }
 }
 
-task java2html(dependsOn: [apiDocs]) {
-    inputs.files "${buildDir}/sources" as File
-    outputs.dir("${buildDir}/java2html" as File)
+task java2html(dependsOn: apiDocs) << {
+    java2htmlConvertCode.execute()
+    java2htmlGenerateOverview.execute()
 
-    java2htmlDestinationDir = "${buildDir}/java2html" as File
-
-    doFirst {
-        copy {
-            into java2htmlDestinationDir
-            from apiDocs.destinationDir
-        }
-    }
-
-    doLast {
-        ant {
-            taskdef(name: 'java2html',
-                classname: 'de.java2html.anttasks.Java2HtmlTask',
-                classpath: configurations.java2html.asPath)
-
-            java2html(srcdir: "${buildDir}/sources",
-                destdir: java2htmlDestinationDir,
-                tabs: 4,
-                style: 'eclipse',
-                outputFormat: 'html',
-                showLineNumbers: true,
-                addLineAnchors: true,
-                showFileName: true,
-                useShortFileName: true,
-                overwrite: true,
-                showDefaultTitle: true,
-                includeDocumentHeader: true,
-                includeDocumentFooter: true)
-        }
-    }
 }
 
 task jarApi(type: Jar, dependsOn: apiDocs) {
@@ -180,4 +160,36 @@ task pdfGuide(type:PdfGuide, dependsOn: buildGuide) {
 task dist(type: Zip) {
     dependsOn { [pdfGuide, jarDocs] }
     from "$buildDir/manual"
+}
+
+java2html {
+    conversion {
+        srcDirs = files("${buildDir}/sources")
+        destDir = file("${buildDir}/java2html")
+        tabs = 4
+        style = 'eclipse'
+        outputFormat = 'html'
+        showLineNumbers = true
+        addLineAnchors = true
+        showFileName = true
+        useShortFileName = true
+        overwrite = true
+        showDefaultTitle = true
+        includeDocumentHeader = true
+        includeDocumentFooter = true
+    }
+
+    overview {
+        srcDirs = files("${buildDir}/java2html")
+        destDir = file("${buildDir}/java2html")
+        windowTitle = "Griffon $version"
+        docTitle = "Griffon $version"
+        docDescription = """Griffon is a Grails like application framework for developing desktop
+                            applications in Groovy. Inspired by Grails, Griffon follows the Convention over
+                            Configuration paradigm, paired with an intuitive MVC architecture and a command
+                            line interface."""
+        header = "Griffon $version"
+        icon = project(':').file('src/dist/media/griffon.ico')
+        stylesheet = file('src/guide/resources/css/stylesheet.css')
+    }
 }

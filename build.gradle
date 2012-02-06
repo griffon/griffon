@@ -15,9 +15,23 @@
  */
 
 import java.text.SimpleDateFormat
+import org.apache.ivy.plugins.resolver.URLResolver
 
 apply plugin: 'base'
 apply plugin: 'idea'
+
+buildscript {
+    gitHub = {
+        def resolver = new URLResolver()
+
+        resolver.with {
+            name = 'GitHub'
+            addArtifactPattern 'http://cloud.github.com/downloads/[organisation]/[module]/[module]-[revision].[ext]'
+        }
+
+        resolver
+    }
+}
 
 evaluationDependsOn(':griffon-rt')
 evaluationDependsOn(':griffon-cli')
