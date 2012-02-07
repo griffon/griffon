@@ -4,7 +4,6 @@ Griffon features 5 dependency resolution configurations (or 'scopes') which you 
 *  @compile@: Dependencies for the compile step
 *  @runtime@: Dependencies needed at runtime but not for compilation (see above)
 *  @test@: Dependencies needed for testing but not at runtime (see above)
-*  @provided@: Dependencies needed at development time, but not during WAR deployment
 
 Within the @dependencies@ block you can specify a dependency that falls into one of these configurations by calling the equivalent method. For example if your application requires the MySQL driver to function at @runtime@ you can specify as such:
 
@@ -22,14 +21,22 @@ Multiple dependencies can be specified by passing multiple arguments:
 
 {code}
 runtime 'com.mysql:mysql-connector-java:5.1.5',
-        'net.sf.ehcache:ehcache:1.6.1'
+        'commons-lang:commons-lang:2.6'
 
 // Or
 
 runtime(
-    [group:'com.mysql', name:'mysql-connector-java', version:'5.1.5'],
-    [group:'net.sf.ehcache', name:'ehcache', version:'1.6.1']
+    [group: 'com.mysql',     name: 'mysql-connector-java', version: '5.1.5'],
+    [group: 'commnons-lang', name: 'commons-lang',         version: '2.6']
 )
 {code}
 
+You may specify a classifier too
 
+{code}
+runtime 'net.sf.json-lib:json-lib:2.4:jdk15'
+
+// Or
+
+runtime group: 'net.sf.json-lib' name: 'json-lib', version: '2.4', classifier: 'jdk15'
+{code}

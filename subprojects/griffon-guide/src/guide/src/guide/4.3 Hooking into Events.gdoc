@@ -58,5 +58,4 @@ Event | Parameters | Description
  CompileEnd | kind | Called when compilation is finished, passing the kind of compile - source or tests 
  DocStart | kind | Called when documentation generation is about to start - javadoc or groovydoc
  DocEnd | kind | Called when documentation generation has ended - javadoc or groovydoc
- SetClasspath | rootLoader | Called during classpath initialization so plugins can augment the classpath with rootLoader.addURL(...). Note that this augments the classpath *after* event scripts are loaded so you cannot use this to load a class that your event script needs to import, although you can do this if you load the class by name.
 {table}

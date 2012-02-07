@@ -32,14 +32,14 @@ dependencies {
     // problems with ant classloader makes it necessary to duplicate the deps
     // in buildSrc/ and the docs configurations
     docs(localGroovy(),
-         "org.grails:grails-docs:$grailsDocsVersion",
-         'radeox:radeox:1.0-b2',
-         'com.lowagie:itext:2.0.8',
-         'org.xhtmlrenderer:core-renderer:R8pre2',
-         'log4j:log4j:1.2.16',
-         "org.slf4j:slf4j-api:$slf4jVersion",
-         "org.slf4j:slf4j-log4j12:$slf4jVersion",
-         "org.slf4j:jcl-over-slf4j:$slf4jVersion")
+            "org.grails:grails-docs:$grailsDocsVersion",
+            'radeox:radeox:1.0-b2',
+            'com.lowagie:itext:2.0.8',
+            'org.xhtmlrenderer:core-renderer:R8pre2',
+            'log4j:log4j:1.2.16',
+            "org.slf4j:slf4j-api:$slf4jVersion",
+            "org.slf4j:slf4j-log4j12:$slf4jVersion",
+            "org.slf4j:jcl-over-slf4j:$slf4jVersion")
 
     java2html 'de.java2html:java2html:5.0'
 }
@@ -61,7 +61,7 @@ task apiDocs(type: Groovydoc, dependsOn: copyDocs) {
     windowTitle = "Griffon $version"
     groovyClasspath = configurations.groovy
     classpath = project(":griffon-rt").sourceSets.main.output +
-                project(":griffon-rt").configurations.compile
+            project(":griffon-rt").configurations.compile
 
     includePrivate = true
     use = true
@@ -75,7 +75,7 @@ task apiDocs(type: Groovydoc, dependsOn: copyDocs) {
         copy {
             into task.destinationDir
             from project(':').file('src/dist/media/griffon.ico'),
-                 'src/guide/resources/css/stylesheet.css'
+                    'src/guide/resources/css/stylesheet.css'
             // from('src/resources/javadoc') {
             //     into 'resources'
             // }
@@ -106,22 +106,22 @@ task java2html(dependsOn: [apiDocs]) {
     doLast {
         ant {
             taskdef(name: 'java2html',
-                classname: 'de.java2html.anttasks.Java2HtmlTask',
-                classpath: configurations.java2html.asPath)
+                    classname: 'de.java2html.anttasks.Java2HtmlTask',
+                    classpath: configurations.java2html.asPath)
 
             java2html(srcdir: "${buildDir}/sources",
-                destdir: java2htmlDestinationDir,
-                tabs: 4,
-                style: 'eclipse',
-                outputFormat: 'html',
-                showLineNumbers: true,
-                addLineAnchors: true,
-                showFileName: true,
-                useShortFileName: true,
-                overwrite: true,
-                showDefaultTitle: true,
-                includeDocumentHeader: true,
-                includeDocumentFooter: true)
+                    destdir: java2htmlDestinationDir,
+                    tabs: 4,
+                    style: 'eclipse',
+                    outputFormat: 'html',
+                    showLineNumbers: true,
+                    addLineAnchors: true,
+                    showFileName: true,
+                    useShortFileName: true,
+                    overwrite: true,
+                    showDefaultTitle: true,
+                    includeDocumentHeader: true,
+                    includeDocumentFooter: true)
         }
     }
 }
@@ -147,8 +147,20 @@ task jarSourceHtml(type: Jar, dependsOn: java2html) {
 
 task jarDocs(dependsOn: [jarApi, jarSource, jarSourceHtml]) {}
 
-task buildGuide(type: GrailsDoc, dependsOn: java2html) {
-    srcDir = file('src/guide/src')
+task prepareGuide(type: Copy) {
+    destinationDir = "$buildDir/guide" as File
+    from('src/guide/src')
+    doLast {
+        ant {
+            replace(dir: "$buildDir/guide", includes: '**/*.*') {
+                replacefilter(token: '@griffon.version@', value: version)
+            }
+        }
+    }
+}
+
+task buildGuide(type: GrailsDoc, dependsOn: [java2html, prepareGuide]) {
+    srcDir = file("$buildDir/guide")
     props = file('src/guide/guide.properties')
     imagesDir = file('src/guide/resources/img')
     outputDir = file("$buildDir/manual")
@@ -172,7 +184,7 @@ task buildGuide(type: GrailsDoc, dependsOn: java2html) {
     }
 }
 
-task pdfGuide(type:PdfGuide, dependsOn: buildGuide) {
+task pdfGuide(type: PdfGuide, dependsOn: buildGuide) {
     inputs.files file("$buildDir/manual/guide")
     pdfName = "griffon-guide-${version}.pdf"
 }

@@ -338,6 +338,13 @@ class ArtifactInstallEngine {
         String repositoryName = settings.getConfigValue(KEY_DEFAULT_INSTALL_ARTIFACT_REPOSITORY, DEFAULT_LOCAL_NAME)
         ArtifactRepository griffonLocal = ArtifactRepositoryRegistry.instance.findRepository(repositoryName)
 
+        if(griffonLocal.type != ArtifactRepository.LOCAL) {
+            if (LOG.warnEnabled) {
+                LOG.warn("Repository ${repositoryName} is not a local repository; will use ${DEFAULT_LOCAL_NAME} instead.")
+            }
+            griffonLocal = ArtifactRepositoryRegistry.instance.findRepository(DEFAULT_LOCAL_NAME)
+        }
+
         // don't install if already available at griffon-local
         if (griffonLocal.findArtifact(type, name, version)) return
 
@@ -369,7 +376,7 @@ class ArtifactInstallEngine {
             release.file = releaseZipFile
             griffonLocal.uploadRelease(release, null, null)
             if (LOG.infoEnabled) {
-                LOG.info("Successfully published plugin ${name}-${version} to griffon-local.")
+                LOG.info("Successfully published plugin ${name}-${version} to ${repositoryName}.")
             }
         } catch (Exception e) {
             if (LOG.warnEnabled) {

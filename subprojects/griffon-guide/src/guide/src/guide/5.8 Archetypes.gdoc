@@ -18,19 +18,26 @@ If no valid archetype is found then the default archetype will be used. Followin
 {code}
 import griffon.util.Metadata
 
-includeTargets << griffonScript("_GriffonPlugins")
-includeTargets << griffonScript("_GriffonInit")
-includeTargets << griffonScript("CreateMvc" )
+includeTargets << griffonScript('CreateMvc')
 
-target(createApplicationProject: 'Creates a new application project') {
+target(name: 'createApplicationProject',
+        description: 'Creates a new application project',
+        prehook: null, posthook: null) {
     createProjectWithDefaults()
     createMVC()
 
     // to install plugins do the following
     // Metadata md = Metadata.getInstance(new File("${basedir}/application.properties"))
-    // installPluginExternal md, pluginName, pluginVersion
     //
-    // pluginVersion is optional
+    // for a single plugin
+    //     installPluginExternal md, pluginName, pluginVersion
+    //        ** pluginVersion is optional **
+    //
+    // for multiple plugins where the latest version is preferred
+    //     installPluginsLatest md, [pluginName1, pluginName2]
+    //
+    // for multiple plugins with an specific version
+    //     installPlugins md, [pluginName1: pluginVersion1]
 }
 setDefaultTarget(createApplicationProject)
 {code}

@@ -12,27 +12,25 @@ The default configuration looks like the following:
 
 {code}
 griffon.project.dependency.resolution = {
-    inherits "global" // inherit Griffon' default dependencies
-    log "warn" // log level of Ivy resolver, either 'error',
-               // 'warn', 'info', 'debug' or 'verbose'
+    // inherit Griffon' default dependencies
+    inherits("global") {
+    }
+    log "warn" // log level of Ivy resolver, either 'error', 'warn', 'info', 'debug' or 'verbose'
     repositories {
-        griffonPlugins()
         griffonHome()
-        griffonCentral()
 
         // uncomment the below to enable remote dependency resolution
         // from public Maven repositories
-
+        //mavenLocal()
         //mavenCentral()
         //mavenRepo "http://snapshots.repository.codehaus.org"
         //mavenRepo "http://repository.codehaus.org"
         //mavenRepo "http://download.java.net/maven/2/"
-        //mavenRepo "http://repository.jboss.com/maven2/
+        //mavenRepo "http://repository.jboss.com/maven2/"
     }
     dependencies {
-        // specify dependencies here under either 'build', 'compile',
-        // 'runtime', 'test' or 'provided' scopes, e.g.
-        // runtime 'com.mysql:mysql-connector-java:5.1.5'
+        // specify dependencies here under either 'build', 'compile', 'runtime' or 'test' scopes eg.
+        // runtime 'mysql:mysql-connector-java:5.1.5'
     }
 }
 {code}

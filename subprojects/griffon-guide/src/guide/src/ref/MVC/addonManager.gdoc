@@ -1,0 +1,48 @@
+h1. addonManager
+
+h2. Purpose
+
+Property that points to the AddonManager instance.
+
+h2. Description
+
+The @AddonManager@ is responsible for handling all addons registered with the application. You can query it for info on any addon, for example, building a table with addon names and versions that can be used to display what capabilities are available in the application can be done in the following way.
+
+First the Model
+
+{code}
+import ca.odell.glazedlists.EventList
+import ca.odell.glazedlists.BasicEventList
+import ca.odell.glazedlists.SortedList
+
+class AboutModel {
+    EventList plugins = new SortedList(new BasicEventList(),
+                 {a, b -> a.name <=> b.name} as Comparator)
+
+    void mvcGroupInit(Map<String, Object> args) {
+        List tmp = []
+        for(String addonName : app.addonManager.addonDescriptors.keySet().sort()) {
+            GriffonAddonDescriptor gad = app.addonManager.findAddonDescriptor(addonName)
+            tmp << [name: gad.pluginName, version: gad.version]
+        }
+        plugins.addAll(tmp)
+    }
+}
+{code}
+
+Next is the View
+
+{code}
+panel {
+    migLayout layoutConstraints: 'fill'
+    scrollPane(preferredSize: [320, 160], constraints: 'center') {
+        table {
+            tableFormat = defaultTableFormat(columnNames: ['Name', 'Version'])
+            eventTableModel(source: model.plugins, format: tableFormat)
+            installTableComparatorChooser(source: model.plugins)
+        }
+    }
+}
+{code}
+
+You'll require the @glazedlists@ and @miglayout@ plugins for this code to work.

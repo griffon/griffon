@@ -1,3 +1,53 @@
 All Griffon applications operate with a basic unit called the MVC group. An MVC group is comprised of 3 member parts: [Models|guide:models], [Views|guide:views] and [Controllers|guide:controllers]. However it is possible to add (or even remove) members from an MVC group by carefully choosing a suitable configuration.
 
 MVC groups configuration is setup in @Application.groovy@ located inside @griffon-app/conf@. This file holds an entry for every MVC group that the application has (not counting those provided by [plugins/addons|guide:addons]).
+
+Here's how a typical MVC group configuration looks like
+
+{code}
+mvcGroups {
+    // MVC Group for "sample"
+    'sample' {
+        model      = 'sample.SampleModel'
+        view       = 'sample.SampleView'
+        controller = 'sample.SampleController'
+    }
+}
+{code}
+
+The order of the members is very important, it determines the order in which each member will be initialized. In the previous example both @model@ and @view@ will be initialized before the @controller@. Do not mistake initialization for instantiation, as initialization relies on calling [mvcGroupInit|MVC] on the group member.
+
+MVC group configurations accept a special key that defines additional configuration for that group, as it can be seen in the following snippet
+
+{code}
+mvcGroups {
+    // MVC Group for "sample"
+    'sample' {
+        model      = 'sample.SampleModel'
+        view       = 'sample.SampleView'
+        controller = 'sample.SampleController'
+    }
+
+    // MVC Group for "foo"
+    'foo' {
+        model      = 'sample.FooModel'
+        view       = 'sample.FooView'
+        controller = 'sample.FooController'
+        config {
+            key = 'bar'
+        }
+    }
+}
+{code}
+
+Values placed under this key become available to MVC members during the call to [mvcGroupInit|MVC], as part of the arguments sent to that method. Here's how the @FooController@ can reach the key defined in the configuration
+
+{code}
+class FooController {
+    void mvcGroupInit(Map args) {
+        println args.configuration.config.key
+    }
+}
+{code}
+
+While being able to set additional values under this key is a certainly an advantage it would probably be better if those values could be mutated or tweaked, probably treating them as variables, effectively making a group configuration work as a template. For that we'll have to discuss the [mvcGroupManager|MVC] first.

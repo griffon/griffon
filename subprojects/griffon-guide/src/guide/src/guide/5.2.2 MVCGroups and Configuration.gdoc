@@ -1,0 +1,16 @@
+Now that you know there are several ways to instantiate MVC groups we can go back to customizing them.
+
+The simples way is to pass in new values as part of the arguments map that [mvcGroupInit|MVC] receives, for exmaple
+
+{code}
+def group = app.mvcGroupManager.buildMVCGroup('foo', [key: 'foo'])
+{code}
+
+However is you wish to use the special @config@ key that every MVC group configuration may have then you must instantiate the group in the following way
+
+{code}
+def configuration = app.mvcGroupManager.cloneMVCConfiguration('foo', [key: 'someValue'])
+def group = configuration.create()
+{code}
+
+Note that you can still send custom arguments to the @create()@ method.
