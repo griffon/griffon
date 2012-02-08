@@ -68,8 +68,10 @@ class PluginSettings {
         if (!plugins) {
             plugins = [:]
             getPluginDirectories().each { Resource pluginDir ->
-                Release release = getArtifactRelease(Plugin.TYPE, pluginDir.file)
-                plugins[release.artifact.name] = release
+                if (pluginDir.exists()) {
+                    Release release = getArtifactRelease(Plugin.TYPE, pluginDir.file)
+                    plugins[release.artifact.name] = release
+                }
             }
             cache['plugins'] = plugins
         }
@@ -143,6 +145,7 @@ class PluginSettings {
         getPlugins().each { pluginName, release ->
             String pluginVersion = release.version
             String pluginInstallPath = getInstallPathFor(Plugin.TYPE, pluginName, pluginVersion)
+            if (!new File(pluginInstallPath).exists()) return
             closure(pluginName, pluginVersion, pluginInstallPath)
         }
     }
