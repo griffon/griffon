@@ -27,4 +27,4 @@ printFramed("""
     | ${space}
     |""".stripMargin())
 
-exit(1)
+// exit(1)

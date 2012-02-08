@@ -188,7 +188,9 @@ public class GriffonBuildEventListener extends BuildListenerAdapter {
         }
         List<Closure> handlers = globalEventHooks.get(eventName);
         if (handlers != null) {
-            for (Closure handler : handlers) {
+            List<Closure> eventHandlers = new ArrayList<Closure>();
+            eventHandlers.addAll(handlers);
+            for (Closure handler : eventHandlers) {
                 handler.setDelegate(binding);
                 try {
                     handler.call(arguments);

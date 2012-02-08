@@ -31,6 +31,7 @@ import org.springframework.core.io.Resource
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver
 import static org.codehaus.griffon.artifacts.ArtifactUtils.*
 import static griffon.util.GriffonNameUtils.capitalize
+import org.codehaus.griffon.artifacts.model.Plugin
 
 /**
  * <p>Represents the project paths and other build settings
