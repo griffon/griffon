@@ -109,7 +109,7 @@ uninstallArtifact = { String type ->
 installPlugins = { Metadata md, Map<String, String> plugins ->
     ArtifactInstallEngine artifactInstallEngine = createArtifactInstallEngine(md)
     artifactInstallEngine.installPlugins(plugins)
-    md.reload()
+    // md.reload()
     resetDependencyResolution()
 }
 

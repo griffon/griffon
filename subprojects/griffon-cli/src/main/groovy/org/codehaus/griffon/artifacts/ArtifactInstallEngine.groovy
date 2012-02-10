@@ -522,10 +522,10 @@ class ArtifactInstallEngine {
         }
 
         if (settings.isGriffonProject() && !settings.isArchetypeProject() && type == Plugin.TYPE) {
-            Metadata.reload()
+            // Metadata.reload()
             metadata["${type}s." + artifactName] = releaseVersion
             metadata.persist()
-            Metadata.reload()
+            // Metadata.reload()
         }
 
         if (!installedArtifacts.contains(artifactInstallPath)) {
