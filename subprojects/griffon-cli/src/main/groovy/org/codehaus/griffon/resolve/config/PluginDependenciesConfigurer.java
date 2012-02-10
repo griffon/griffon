@@ -30,7 +30,7 @@ class PluginDependenciesConfigurer extends AbstractDependenciesConfigurer {
             descriptor.setTransitivelyIncluded(true);
         }
 
-        getDependencyManager().registerPluginDependency(scope, descriptor);
+        // getDependencyManager().registerPluginDependency(scope, descriptor);
     }
 
     @Override
