@@ -83,6 +83,7 @@ createArtifact = { Map args = [:] ->
     templateFile = resolveTemplate(template, fileType)
     if (!templateFile?.exists() && fileType != '.groovy') {
         templateFile = resolveTemplate(template, '.groovy')
+        fileType = '.groovy'
         lineTerminator = ''
     }
 
@@ -167,6 +168,7 @@ resolveTemplate = { template, fileSuffix ->
             }
         }
     }
+    debug("template ${templateFile} exists=${templateFile.exists()}")
     templateFile
 }
 
