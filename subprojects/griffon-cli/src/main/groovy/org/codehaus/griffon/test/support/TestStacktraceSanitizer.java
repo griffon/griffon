@@ -16,16 +16,16 @@
 
 package org.codehaus.griffon.test.support;
 
-import griffon.util.GriffonUtil;
+import griffon.util.GriffonExceptionHandler;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class TestStacktraceSanitizer {
     private static final String TEST_RUNNING_CLASS = "_GriffonTest";
-    
+
     public static Throwable sanitize(Throwable t) {
-        GriffonUtil.deepSanitize(t);
+        GriffonExceptionHandler.sanitize(t);
         StackTraceElement[] trace = t.getStackTrace();
         List newTrace = new ArrayList();
         for (int i = 0; i < trace.length; i++) {
@@ -42,5 +42,5 @@ public class TestStacktraceSanitizer {
         t.setStackTrace(clean);
         return t;
     }
-    
+
 }

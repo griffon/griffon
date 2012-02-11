@@ -75,7 +75,7 @@ class PerTestRunListener {
         def testCase = getTest(failure.description)
         def exception = failure.exception
 
-        if (exception instanceof AssertionError) {
+        if (exception instanceof AssertionError || exception instanceof AssertionFailedError) {
             eventPublisher.testFailure(testName, exception)
             failureCount++
             reports.addFailure(testCase, toAssertionFailedError(exception))

@@ -22,6 +22,7 @@ import org.codehaus.griffon.test.event.GriffonTestEventPublisher
 import org.codehaus.griffon.test.junit4.JUnit4GriffonTestType
 import org.codehaus.griffon.test.report.junit.JUnitReportProcessor
 import org.codehaus.griffon.test.support.GriffonTestMode
+import griffon.util.GriffonExceptionHandler
 
 /**
  * Gant script that runs the Griffon unit tests
@@ -316,7 +317,7 @@ runTests = { GriffonTestType type, File compiledClassesDir ->
             event("TestSuiteEnd", [type.name])
         } catch (Exception e) {
             event("StatusFinal", ["Error running $type.name tests: ${e.toString()}"])
-            GriffonUtil.deepSanitize(e)
+            GriffonExceptionHandler.sanitize(e)
             e.printStackTrace()
             testsFailed = true
         } finally {
