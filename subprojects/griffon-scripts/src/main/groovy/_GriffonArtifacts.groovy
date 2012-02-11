@@ -22,9 +22,10 @@ import org.codehaus.griffon.artifacts.model.Artifact
 import org.codehaus.griffon.artifacts.model.Plugin
 import static griffon.util.GriffonNameUtils.capitalize
 import org.codehaus.griffon.artifacts.*
-import static org.codehaus.griffon.artifacts.ArtifactUtils.isValidVersion
 import static org.codehaus.griffon.artifacts.ArtifactUtils.artifactBase
+import static org.codehaus.griffon.artifacts.ArtifactUtils.isValidVersion
 import static org.codehaus.griffon.cli.CommandLineConstants.KEY_DEFAULT_ARTIFACT_REPOSITORY
+import static org.codehaus.griffon.cli.CommandLineConstants.KEY_DEFAULT_INSTALL_ARTIFACT_REPOSITORY
 
 /**
  * @author Andres Almiray
@@ -37,6 +38,7 @@ _griffon_artifacts_called = true
 artifactRepository = null
 
 selectArtifactRepository = {
+    artifactRepository = null
     repositoryName = argsMap.repository ?: getPropertyValue(KEY_DEFAULT_ARTIFACT_REPOSITORY, 'griffon-legacy') //ArtifactRepository.DEFAULT_REMOTE_NAME)
     artifactRepository = ArtifactRepositoryRegistry.instance.findRepository(repositoryName)
     if (artifactRepository == null) {
@@ -46,10 +48,29 @@ selectArtifactRepository = {
 }
 
 resolveArtifactRepository = {
+    artifactRepository = null
     if (argsMap.repository) {
         artifactRepository = ArtifactRepositoryRegistry.instance.findRepository(argsMap.repository)
     } else {
         artifactRepository = null
+    }
+}
+
+doWithSelectedRepository = { callback ->
+    String defaultInstallRepository = getPropertyValue(KEY_DEFAULT_INSTALL_ARTIFACT_REPOSITORY, ArtifactRepository.DEFAULT_LOCAL_NAME)
+    String defaultSearchRepository = getPropertyValue(KEY_DEFAULT_ARTIFACT_REPOSITORY, 'griffon-legacy') // ArtifactRepository.DEFAULT_REMOTE_NAME)
+    String customRepository = argsMap.repository
+
+    List<String> repositories = []
+    if (ArtifactRepositoryRegistry.instance.findRepository(customRepository)) {
+        repositories << customRepository
+    }
+    if (!repositories.contains(defaultInstallRepository)) repositories << defaultInstallRepository
+    if (!repositories.contains(defaultSearchRepository)) repositories << defaultSearchRepository
+
+    for(String repositoryName : repositories) {
+        artifactRepository = ArtifactRepositoryRegistry.instance.findRepository(repositoryName)
+        if(callback(artifactRepository)) break
     }
 }
 
@@ -194,10 +215,10 @@ doInstallArtifact = { ArtifactRepository artifactRepository, String type, String
             }
         } else {
             Artifact artifact = artifactRepository.findArtifact(type, name, version)
-            if(artifact?.releases) release = artifact.releases[0]
+            if (artifact?.releases) release = artifact.releases[0]
         }
 
-        if(!release) return false
+        if (!release) return false
 
         File file = artifactRepository.downloadFile(type, name, version, null)
         doInstallFromFile(type, file, md)

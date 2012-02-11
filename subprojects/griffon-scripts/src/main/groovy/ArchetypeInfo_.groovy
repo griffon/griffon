@@ -23,13 +23,11 @@ import org.codehaus.griffon.artifacts.model.Archetype
 includeTargets << griffonScript('_GriffonListArtifacts')
 
 target(archetypeInfo: 'Displays information on a Griffon archetype') {
-    selectArtifactRepository()
-
     if (argsMap.params) {
         def name = argsMap.params[0]
         def version = argsMap.params.size() > 1 ? argsMap.params[1] : null
 
-        displayArtifact(Archetype.TYPE, name, version, artifactRepository)
+        displayArtifact(Archetype.TYPE, name, version)
     } else {
         event('StatusError', ['Usage: griffon archetype-info <archetype-name> [version]'])
     }

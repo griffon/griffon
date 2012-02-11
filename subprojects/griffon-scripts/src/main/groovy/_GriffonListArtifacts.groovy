@@ -111,9 +111,20 @@ ${'Name'.padRight(30, ' ')}${'Version'.padRight(20, ' ')} Title
     }
 }
 
-displayArtifact = { String type, String name, String version, ArtifactRepository repository ->
-    displayArtifactHeader(type, repository)
-    displayArtifactInfo(type, name, version, repository)
+displayArtifact = { String type, String name, String version ->
+    Artifact artifact = null
+    doWithSelectedRepository { repository ->
+        artifact = repository.findArtifact(type, name)
+        artifact != null
+    }
+
+    if (artifact == null) {
+        event('StatusError', ["${capitalize(type)} with name '${name}' was not found"])
+        exit 1
+    }
+
+    displayArtifactHeader(type, artifactRepository)
+    displayArtifactInfo(type, name, version, artifactRepository)
     displayArtifactFooter(type)
 }
 

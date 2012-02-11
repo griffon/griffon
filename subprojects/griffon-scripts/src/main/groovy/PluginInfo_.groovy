@@ -23,13 +23,11 @@ import org.codehaus.griffon.artifacts.model.Plugin
 includeTargets << griffonScript('_GriffonListArtifacts')
 
 target(pluginInfo: 'Displays information on a Griffon plugin') {
-    selectArtifactRepository()
-
     if (argsMap.params) {
         def name = argsMap.params[0]
         def version = argsMap.params.size() > 1 ? argsMap.params[1] : null
 
-        displayArtifact(Plugin.TYPE, name, version, artifactRepository)
+        displayArtifact(Plugin.TYPE, name, version)
     } else {
         event('StatusError', ['Usage: griffon plugin-info <plugin-name> [version]'])
     }
