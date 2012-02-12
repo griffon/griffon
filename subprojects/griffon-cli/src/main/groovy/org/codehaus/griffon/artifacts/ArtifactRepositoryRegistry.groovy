@@ -107,7 +107,7 @@ final class ArtifactRepositoryRegistry {
             registerRepository(repository)
         }
 
-        //registerRepository(griffonCentral)
+        registerRepository(griffonCentral)
         registerRepository(new LegacyArtifactRepository())
     }
 }
