@@ -1,0 +1,23 @@
+h1. generate-view-script 
+
+h2. Purpose
+
+Provides integration with view classes built with NetBeans' Matisse.
+
+h2. Examples
+
+bc.
+griffon generate-view-script
+
+h2. Description
+
+NetBeans' Matisse is a popular visual designer tool used by many to create windows, dialogs and forms. Matisse writes can write Java and/or XML code, however Griffon Views require Groovy code. This script can generate an appropriate Groovy View script that wraps the generated Java code. It will even expose all view members as variables, allowing you to tweak them at your volition; for example by adding an action reference to a button member.
+
+Usage: 
+{code:java}
+griffon generate-view-script \[name\] \[view\]
+{code}
+
+Arguments:
+* @name@ - The name of the Matisse enabled class.
+* @view@ - The name of the View to create. Defaults to the supplied name plus 'View' as a suffix.

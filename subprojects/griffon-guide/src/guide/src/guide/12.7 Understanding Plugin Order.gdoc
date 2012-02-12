@@ -1,0 +1,35 @@
+h4. Controlling Plugin Dependencies
+
+Plugins often depend on the presence of other plugins and can also adapt depending on the presence of others. To cover this, a plugin can define a @dependsOn@ property. For example, take a look at this snippet from the Griffon Clojure plugin:
+
+{code:java}
+class ClojureGriffonPlugin {
+   def version = 0.3
+   def dependsOn = ["lang-bridge": "0.2.1"]
+
+}
+{code}
+
+As the above example demonstrates the Clojure plugin is dependent on the presence of a single plugin: the @lang-bridge@ plugin.
+
+Essentially the dependencies will be loaded first and then the Clojure plugin. If all dependencies do not load, then the plugin will not load.
+
+The @dependsOn@ property also supports a mini expression language for specifying version ranges. A few examples of the syntax can be seen below:
+
+{code:java}
+def dependsOn = [foo:"* > 1.0"]
+def dependsOn = [foo:"1.0 > 1.1"]
+def dependsOn = [foo:"1.0 > *"]
+{code}
+
+When the wildcard * character is used it denotes "any" version. The expression syntax also excludes any suffixes such as -BETA, -ALPHA etc. so for example the expression "1.0 > 1.1" would match any of the following versions:
+
+* 1.1
+* 1.0
+* 1.0.1
+* 1.0.3-SNAPSHOT
+* 1.1-BETA2
+
+h4. Controlling Addon Load Order
+
+Addons will be loaded in the order determined by the dependencies set forth in their containing plugins. Using @dependsOn@ establishes a "hard" dependency. Any addons provided by the dependencies will be added first to the builder configuration file when installed.

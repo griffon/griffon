@@ -1,0 +1,177 @@
+/*
+ * Copyright 2010-2012 the original author or authors.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+
+import com.intellij.patterns.*
+import com.intellij.openapi.diagnostic.*
+
+/**
+ * @author Kasper Fock
+ * @author David Askirk
+ * @author Peter Gromov
+ * @author Andres Almiray
+ */
+
+def addNodeContributions = { on ->
+    on.with {
+        method name: 'application', type: 'javax.swing.JFrame'
+
+        method name: 'action', type: 'javax.swing.Action'
+        method name: 'actions', type: 'java.util.List', params: [closure: 'groovy.lang.Closure']
+        method name: 'map', type: 'java.util.Map'
+        method name: 'imageIcon', type: 'javax.swing.ImageIcon'
+        method name: 'buttonGroup', type: 'javax.swing.ButtonGroup'
+        method name: 'noparent', type: 'void', params: [closure: 'groovy.lang.Closure']
+        method name: 'widget', type: 'java.awt.Component'
+        method name: 'container', type: 'java.awt.Container', params: [closure: 'groovy.lang.Closure']
+        method name: 'bean', type: 'java.lang.Object'
+        method name: 'bind', type: 'java.lang.Object'
+
+        method name: 'dialog', type: 'javax.swing.JDialog', params: [closure: 'groovy.lang.Closure']
+        method name: 'fileChooser', type: 'javax.swing.JFileChooser', params: [closure: 'groovy.lang.Closure']
+        method name: 'frame', type: 'javax.swing.JFrame', params: [closure: 'groovy.lang.Closure']
+        method name: 'optionPane', type: 'javax.swing.JOptionPane', params: [closure: 'groovy.lang.Closure']
+        method name: 'window', type: 'javax.swing.JWindow', params: [closure: 'groovy.lang.Closure']
+
+        method name: 'button', type: 'javax.swing.JButton'
+        method name: 'checkBox', type: 'javax.swing.JCheckBox'
+        method name: 'checkBoxMenuItem', type: 'javax.swing.JCheckBoxMenuItem'
+        method name: 'menuItem', type: 'javax.swing.JMenuItem'
+        method name: 'radioButton', type: 'javax.swing.JRadioButton'
+        method name: 'radioButtonMenuItem', type: 'javax.swing.JRadioButtonMenuItem'
+        method name: 'toggleButton', type: 'javax.swing.JToggleButton'
+
+        method name: 'editorPane', type: 'javax.swing.JEditorPane'
+        method name: 'label', type: 'javax.swing.JLabel'
+        method name: 'passwordField', type: 'javax.swing.JPasswordField'
+        method name: 'textArea', type: 'javax.swing.JTextArea'
+        method name: 'textField', type: 'javax.swing.JTextField'
+        method name: 'formattedTextField', type: 'javax.swing.JFormattedTextField'
+        method name: 'textPane', type: 'javax.swing.JTextPane'
+
+        method name: 'desktopPane', type: 'javax.swing.JDesktopPane'
+        method name: 'internalFrame', type: 'javax.swing.JInternalFrame'
+
+        method name: 'colorChooser', type: 'javax.swing.JColorChooser'
+        method name: 'comboBox', type: 'javax.swing.JComboBox'
+        method name: 'list', type: 'javax.swing.JList'
+        method name: 'progressBar', type: 'javax.swing.JProgressBar'
+        method name: 'separator', type: 'javax.swing.JSeparator'
+        method name: 'scrollBar', type: 'javax.swing.JScrollBar'
+        method name: 'slider', type: 'javax.swing.JSlider'
+        method name: 'spinner', type: 'javax.swing.JSpinner'
+        method name: 'tree', type: 'javax.swing.JTree'
+
+        method name: 'menu', type: 'javax.swing.JMenu', params: [closure: 'groovy.lang.Closure']
+        method name: 'menuBar', type: 'javax.swing.JMenuBar', params: [closure: 'groovy.lang.Closure']
+        method name: 'popupMenu', type: 'javax.swing.JPopupMenu', params: [closure: 'groovy.lang.Closure']
+
+        method name: 'panel', type: 'javax.swing.JPanel', params: [closure: 'groovy.lang.Closure']
+        method name: 'scrollPane', type: 'javax.swing.JScrollPane', params: [closure: 'groovy.lang.Closure']
+        method name: 'splitPane', type: 'javax.swing.JSplitPane', params: [closure: 'groovy.lang.Closure']
+        method name: 'tabbedPane', type: 'javax.swing.JTabbedPane'
+        method name: 'toolBar', type: 'javax.swing.JToolBar'
+        method name: 'viewport', type: 'javax.swing.JViewPort'
+        method name: 'layeredPane', type: 'javax.swing.JLayeredPane'
+
+        method name: 'boundedRangeModel', type: 'javax.swing.DefaultBoundedRangeModel'
+        method name: 'spinnerDateModel', type: 'javax.swing.SpinnerDateModel'
+        method name: 'spinnerListModel', type: 'javax.swing.SpinnerListModel'
+        method name: 'spinnerNumberModel', type: 'javax.swing.SpinnerNumberModel'
+
+        method name: 'table', type: 'javax.swing.JTable', params: [closure: 'groovy.lang.Closure']
+        method name: 'tableColumn', type: 'javax.swing.table.TableColumn'
+        method name: 'tableModel', type: 'javax.swing.table.TableModel'
+        method name: 'propertyColumn', type: 'void'
+        method name: 'closureColumn', type: 'void'
+
+        method name: 'borderLayout', type: 'java.awt.BorderLayout', params: [hgap: 'int', vgap: 'int']
+        method name: 'cardLayout', type: 'java.awt.CardLayout'
+        method name: 'flowLayout', type: 'java.awt.FlowLayout'
+        method name: 'gridLayout', type: 'java.awt.GridLayout', params: [rows: 'int', cols: 'int']
+        method name: 'overlayLayout', type: 'javax.swing.OverlayLayout'
+        method name: 'springLayout', type: 'javax.swing.SpringLayout'
+        method name: 'gridBagLayout', type: 'java.awt.GridBagLayout'
+        method name: 'gridBagConstraints', type: 'java.awt.GridBagConstraints'
+        method name: 'gbc', type: 'java.awt.GridBagConstraints'
+
+        method name: 'box', type: 'javax.swing.Box'
+        method name: 'boxLayout', type: 'javax.swing.BoxLayout'
+        method name: 'hbox', type: 'javax.swing.Box'
+        method name: 'hglue', type: 'java.awt.Component'
+        method name: 'hstrut', type: 'java.awt.Component'
+        method name: 'vbox', type: 'javax.swing.Box'
+        method name: 'vglue', type: 'java.awt.Component'
+        method name: 'vstrut', type: 'java.awt.Component'
+        method name: 'glue', type: 'java.awt.Component'
+        method name: 'rigidArea', type: 'java.awt.Component'
+
+        method name: 'tableLayout', type: 'groovy.swing.impl.TableLayout'
+        method name: 'tr', type: 'groovy.swing.impl.TableLayoutRow'
+        method name: 'td', type: 'groovy.swing.impl.TableLayoutCell'
+
+        method name: 'lineBorder', type: 'javax.swing.border.LineBorder'
+        method name: 'loweredBevelBorder', type: 'javax.swing.border.BevelBorder'
+        method name: 'raisedBevelBorder', type: 'javax.swing.border.BevelBorder'
+        method name: 'etchedBorder', type: 'javax.swing.border.EtchedBorder'
+        method name: 'loweredEtchedBorder', type: 'javax.swing.border.EtchedBorder'
+        method name: 'raisedEtchedBorder', type: 'javax.swing.border.EtchedBorder'
+        method name: 'titledBorder', type: 'javax.swing.border.TitledBorder'
+        method name: 'emptyBorder', type: 'javax.swing.border.EmptyBorder'
+        method name: 'compoundBorder', type: 'javax.swing.border.CompoundBorder'
+        method name: 'matteBorder', type: 'javax.swing.border.MatteBorder'
+
+        method name: 'shortcut', type: 'javax.swing.KeyStroke', params: [key: 'java.lang.String']
+        method name: 'shortcut', type: 'javax.swing.KeyStroke', params: [key: 'java.lang.String', modifier: 'int']
+        method name: 'keyStrokeAction', type: 'void'
+
+        method name: 'edt', type: 'void', params: [closure: 'groovy.lang.Closure']
+        method name: 'doLater', type: 'void', params: [closure: 'groovy.lang.Closure']
+        method name: 'doOutside', type: 'void', params: [closure: 'groovy.lang.Closure']
+    }
+}
+
+['Controller', 'Model', 'View', 'Service'].each { type ->
+    String artifactPath = type.toLowerCase() + 's'
+    contributor(ctype: PsiJavaPatterns.psiClass().withName(PlatformPatterns.string().matches(/.*${type}/))) {
+        def path = psiClass.containingFile.originalFile.virtualFile.path
+        if (path =~ ".*/*griffon-app/${artifactPath}/.*") {
+            delegatesTo(findClass("griffon.core.Griffon${type}"))
+
+            if (type == 'View') {
+                addNodeContributions(delegate)
+            }
+
+            if (type == 'Controller') {
+                method name: 'edt', type: 'void', params: [closure: 'groovy.lang.Closure']
+                method name: 'doLater', type: 'void', params: [closure: 'groovy.lang.Closure']
+                method name: 'doOutside', type: 'void', params: [closure: 'groovy.lang.Closure']
+            }
+        }
+    }
+}
+
+contributor(scope: annotatedScope(ctype: 'griffon.transform.EventPublisher')) {
+    delegatesTo(findClass('griffon.core.EventPublisher'))
+}
+
+contributor(scope: annotatedScope(ctype: 'griffon.transform.MVCAware')) {
+    delegatesTo(findClass('griffon.core.MVCHandler'))
+}
+
+contributor(scope: annotatedScope(ctype: 'griffon.transform.ThreadingAware')) {
+    delegatesTo(findClass('griffon.core.ThreadingHandler'))
+}

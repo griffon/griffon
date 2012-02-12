@@ -1,0 +1,45 @@
+h1. archetype-info
+
+h2. Purpose
+
+Displays detailed info about a given archetype
+
+h2. Examples
+
+{code:java}
+griffon archetype-info jumpstart
+{code}
+
+h2. Description
+
+Usage: 
+{code:java}
+griffon archetype-info \[name\] \[version\] --repository=<repositoryName>
+{code}
+
+This command will display more detailed info about a given archetype such as the author, available releases and so on. An example of the output of the Jumpstart archetype can be seen below:
+
+{code}
+--------------------------------------------------------------------------------
+Information about archetype listed at griffon-local
+--------------------------------------------------------------------------------
+Name    : jumpstart
+Title   : Adds typical setup and dialogs
+License : Apache Software License 2.0
+Source  : https://github.com/griffon/griffon-jumpstart-archetype
+--------------------------------------------------------------------------------
+Authors:
+	Andres Almiray (aalmiray@yahoo.com)
+--------------------------------------------------------------------------------
+Releases:
+Version             Griffon Version          Date
+
+1.0                 0.9.5 > *                Tue Jan 24 10:52:30 CET 2012
+{code}
+
+Arguments:
+* @name@ - Name of the archetype to search
+* @version@ - Version of the archetype to search
+
+Options:
+* @repository@ - Name of an specific repository where the search will be performed. Defaults to griffon-central

@@ -1,0 +1,23 @@
+h1. uninstall-plugin 
+
+h2. Purpose
+
+Uninstalls a installed plugin. from the current Griffon application.
+
+h2. Examples
+
+{code:java}
+griffon uninstall-plugin miglayout 
+{code}
+
+h2. Description
+
+Usage: 
+{code:java}
+griffon uninstall-plugin \[name\]
+{code}
+
+Arguments:
+* @name@ - The name of the plugin to be uninstalled
+
+This target will perform a clean and then uninstall the plugin for the given name if it is already installed. The command will remove any metadata referring to the plugin from the @application.properties@ file and executed the @scripts/_Uninstall.groovy@ file contained within the plugin.

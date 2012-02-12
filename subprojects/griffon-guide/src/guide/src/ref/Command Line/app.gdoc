@@ -1,0 +1,28 @@
+h1. app
+
+h2. Purpose
+
+Runs a Griffon application in standalone mode. This is an alias for [run-app|commandLine]
+
+h2. Examples
+
+{code:java}
+griffon app
+griffon test app
+{code}
+
+h2. Description
+
+Usage: 
+{code:java}
+griffon [env]* app --java-opts=<options> \[args\]
+{code}
+
+Arguments:
+Any arguments defined at the command line will be sent to the launched application. They can be retrieved by calling @getStartupArgs()@ on the application instance.
+
+Options:
+* @debug@ - Whether to run the application in debug more or not
+* @debug-addr@ - Debugging address. Defaults to 127.0.0.1
+* @debug-port@ - Debugging port connection. Defaults to 18290
+* @java-opts@  - Additional JVM options.

@@ -1,0 +1,28 @@
+h4. Post-Install Configuration and Participating in Upgrades
+
+Griffon plugins can do post-install configuration and participate in application upgrade process (the [upgrade|commandLine] command). This is achieved via two specially named scripts under @scripts@ directory of the plugin - @_Install.groovy@ and @_Upgrade.groovy@. 
+
+@_Install.groovy@ is executed after the plugin has been installed and @_Upgrade.groovy@ is executed each time the user upgrades his application with [upgrade|commandLine] command.
+
+These scripts are normal [Gant|guide:commandLine] scripts so you can use the full power of Gant. An addition to the standard Gant variables is the @pluginBasedir@ variable which points at the plugin installation basedir.
+
+As an example the below @_Install.groovy@  script will create a new directory type under the @griffon-app@ directory and install a configuration template:
+
+{code:java}
+ant.mkdir(dir:"${basedir}/griffon-app/jobs")
+ant.copy(file:"${pluginBasedir}/src/samples/SamplePluginConfiguration.groovy",
+         todir:"${basedir}/griffon-app/conf")
+
+// To access Griffon home you can use following code:
+// ant.property(environment:"env")
+// griffonHome = ant.antProject.properties."env.GRIFFON_HOME"
+{code}
+
+
+h4. Scripting events
+
+It is also possible to hook into command line scripting events through plugins. These are events triggered during execution of Griffon target and plugin scripts.
+
+For example, you can hook into status update output (i.e. "Tests passed", "Server running") and the creation of files or artifacts.
+
+A plugin merely has to provide an @_Events.groovy@ script to listen to the required events. Refer the documentation on [Hooking into Events|guide:4.3 Hooking into Events] for further information.

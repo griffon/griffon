@@ -1,0 +1,57 @@
+MVC groups are the basis for Griffon's MVC implementation. Refer to the [MVC Pattern Overview] section in the Griffon Guide to know more about MVC groups and their features. Calling `griffon create-mvc foo` results in the following files being created
+
+    griffon-app/controllers/FooController.groovy
+    griffon-app/models/FooModel.groovy
+    griffon-app/views/FooView.groovy
+    test/integration/FooTests.groovy
+
+The file 'griffon-app/conf/Application.groovy' will be updated with a new group definition
+
+    mvcGroups {
+        // MVC Group for "foo"
+        'foo' {
+            model      = 'foo.FooModel'
+            view       = 'foo.FooView'
+            controller = 'foo.FooController'
+        }
+        ...
+    }
+
+More Examples:
+
+    griffon create-mvc foo -group=Custom
+
+Creates a new group definition where MVC member templates are assumed to be 'CustomModel', 'CustomView' and 'CustomController'. Will use the default template when there's no match.
+
+    griffon create-mvc foo -view=Dialog
+
+Creates a new group definition overriding the default template for the View only.
+
+    griffon create-mvc foo -skip-controller=true
+
+Creates a new group definition without a Controller. The configuration will look like this
+
+    mvcGroups {
+        // MVC Group for "foo"
+        'foo' {
+            model      = 'foo.FooModel'
+            view       = 'foo.FooView'
+        }
+        ...
+    }
+
+Lastly
+
+    griffon create-mvc foo -with-controller=foor.BarController
+
+Creates a new group definition with another Controller class. The Controller is assumed to exist, a file will not be created for it. The configuration will look like this
+
+    mvcGroups {
+        // MVC Group for "foo"
+        'foo' {
+            model      = 'foo.FooModel'
+            view       = 'foo.FooView'
+            controller = 'bar.BarController'
+        }
+        ...
+    }

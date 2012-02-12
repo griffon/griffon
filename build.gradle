@@ -1,5 +1,5 @@
 /*
- * Copyright 2010-2011 the original author or authors.
+ * Copyright 2010-2012 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,190 +14,77 @@
  * limitations under the License.
  */
 
-apply plugin: 'groovy'
+import java.text.SimpleDateFormat
 
-sourceCompatibility = '1.5'
-targetCompatibility = '1.5'
-archivesBaseName = 'griffon'
-group = 'org.codehaus.griffon'
+apply plugin: 'base'
+apply plugin: 'idea'
 
-// we'll build jars our own way
-jar.enabled = false
+evaluationDependsOn(':griffon-rt')
+evaluationDependsOn(':griffon-cli')
+evaluationDependsOn(':griffon-resources')
+evaluationDependsOn(':griffon-scripts')
+evaluationDependsOn(':griffon-shell')
+evaluationDependsOn(':griffon-wrapper')
+evaluationDependsOn(':griffon-guide')
 
-configurations {
-    rt
-    cli { extendsFrom rt }
-    scripts { extendsFrom cli }
-    resources
-    rt.transitive = false
-    cli.transitive = false
-    scripts.transitive = false
-    swingxFiles
-	wrapper
-    intTestCompile { extendsFrom testCompile }
-    intTestRuntime { extendsFrom intTestCompile, testRuntime }
+dependsOnChildren()
+
+configure(mavenizedProjects()) {
+    apply from: "${rootDir}/gradle/maven.gradle"
 }
 
-repositories {
-    flatDir(dirs: file('lib/wrapper'))
-    mavenLocal()
-    mavenCentral()
-    mavenRepo name: 'Codehaus', urls: 'http://repository.codehaus.org'
-    mavenRepo name: 'SpringSource', urls: 'http://repository.springsource.com/maven/bundles/release'
-}
+subprojects { subproj ->
+    apply plugin: 'idea'
+    if(plugins.hasPlugin('java')){
+        sourceCompatibility = 1.5
+        targetCompatibility = 1.5
+        group = 'org.codehaus.griffon'
 
-dependencies {
-    groovy "org.codehaus.groovy:groovy-all:$groovyVersion"
-    rt  "org.codehaus.groovy:groovy-all:$groovyVersion",
-        "log4j:log4j:1.2.16",
-        "org.slf4j:slf4j-log4j12:$slf4jVersion",
-        "org.slf4j:slf4j-api:$slf4jVersion",
-        "org.slf4j:jcl-over-slf4j:$slf4jVersion",
-        "org.slf4j:jul-to-slf4j:$slf4jVersion"
-    cli "org.codehaus.gpars:gpars:0.9",
-        "org.coconut.forkjoin:jsr166y:070108",
-        "junit:junit:4.8.1",
-        "asm:asm:3.2",
-        "org.tmatesoft.svnkit:svnkit:1.3.1",
-        "org.apache.ant:ant:$antVersion",
-        "org.apache.ant:ant-antlr:$antVersion",
-        "org.apache.ant:ant-launcher:$antVersion",
-        "org.apache.ant:ant-junit:$antVersion",
-        "org.apache.ant:ant-nodeps:$antVersion",
-        "jline:jline:0.9.94",
-        "org.fusesource.jansi:jansi:1.4",
-        "commons-cli:commons-cli:1.2",
-        "commons-io:commons-io:1.4",
-        "commons-lang:commons-lang:2.5",
-        "org.springframework:org.springframework.core:$springVersion",
-        "org.springframework:org.springframework.aop:$springVersion",
-        "org.springframework:org.springframework.aspects:$springVersion",
-        "org.springframework:org.springframework.asm:$springVersion",
-        "org.springframework:org.springframework.beans:$springVersion",
-        "org.springframework:org.springframework.context:$springVersion",
-        "org.springframework:org.springframework.context.support:$springVersion",
-        "org.springframework:org.springframework.expression:$springVersion",
-        "org.springframework:org.springframework.instrument:$springVersion",
-        "org.xhtmlrenderer:core-renderer:R8pre2",
-        "com.lowagie:itext:2.0.8",
-        "radeox:radeox:1.0-b2",
-        "org.grails:grails-docs:1.3.6",
-        "org.apache.ivy:ivy:2.2.0",
-        "org.codehaus.gant:gant_groovy1.8:1.9.6"
-
-    swingxFiles('org.codehaus.griffon:swingxbuilder:0.1.8') {
-        exclude module: 'groovy-all'
+        apply from: "${rootDir}/gradle/coverage.gradle"
+        apply from: "${rootDir}/gradle/codeQuality.gradle"
     }
 
-	wrapper ":gradle-wrapper"
-}
-
-sourceSets {
-    rt {
-        compileClasspath = configurations.rt
-        java.srcDirs = []
-        groovy.srcDirs = ['src/main/rt']
-        classesDir = "$buildDir/classes/rt" as File
-        resources.srcDirs = ['src/resources/rt']
+    repositories {
+        mavenRepo name: 'Codehaus',       url: 'http://repository.codehaus.org'
+        mavenRepo name: 'SpringSource',   url: 'http://repository.springsource.com/maven/bundles/release'
+        mavenRepo name: 'Gradle',         url: 'http://gradle.artifactoryonline.com/gradle/libs-releases-local'
+        mavenCentral()
+        mavenRepo name: 'Sonatype',       url: 'http://repository.sonatype.org/content/groups/public'
+        mavenRepo name: 'Grails Central', url: 'http://repo.grails.org/grails/core/'
     }
-    cli {
-        compileClasspath = sourceSets.rt.classes + configurations.cli
-        java.srcDirs = []
-        groovy.srcDirs = ['src/main/cli']
-        classesDir = "$buildDir/classes/cli" as File
-        resources.srcDirs = ['src/resources/cli']
-    }
-    scripts {
-        compileClasspath = sourceSets.rt.classes + sourceSets.cli.classes + configurations.scripts
-        java.srcDirs = []
-        groovy.srcDirs = ['src/main/scripts']
-        classesDir = "$buildDir/classes/scripts" as File
-    }
-    wrapper {
-        compileClasspath = configurations.wrapper
-        java.srcDirs = ['src/wrapper/java']
-        classesDir = "$buildDir/classes/wrapper" as File
-    }
-    test {
-        compileClasspath = sourceSets.rt.classes + sourceSets.cli.classes + configurations.cli + configurations.swingxFiles
-        runtimeClasspath = classes + sourceSets.rt.classes + sourceSets.cli.classes + configurations.cli + configurations.swingxFiles
-        java.srcDirs = []
-        groovy.srcDirs = ['src/test/rt', 'src/test/cli']
-    }
-    intTest {
-        compileClasspath = sourceSets.rt.classes + sourceSets.cli.classes + sourceSets.scripts.classes + configurations.cli + configurations.scripts
-        runtimeClasspath = classes + sourceSets.rt.classes + sourceSets.cli.classes + sourceSets.scripts.classes + configurations.cli + configurations.scripts + files(fileTree("$buildDir/libs/griffon-resources-${version}.jar"))
-        java.srcDirs = []
-        groovy.srcDirs = ['src/test/integration']
-    }
-}
 
-task allClasses(dependsOn: [rtClasses, cliClasses, scriptsClasses]) {
-    description = "Compiles all rt, cli and script classes."
-}
-
-task createBuildProperties {
-    inputs.file new File("$buildDir/tmp/build.properties")
-    outputs.file new File("$buildDir/classes/cli/build.properties")
-
-    doLast {
-        new File("$buildDir/classes/cli/").mkdirs()
-
-        File tmpDir = new File("$buildDir/tmp/")
-        tmpDir.mkdirs()
-
-        def buildProps = new File("$tmpDir/build.properties")
-        buildProps.text = """            griffon.version=$version
-            groovy.version=$groovyVersion
-            ant.version=$antVersion
-            slf4j.version=$slf4jVersion
-            spring.version=$springVersion""".stripIndent(12)
-        copy {
-            from tmpDir
-            into "$buildDir/classes/cli/"
-            include '*.properties'
+    tasks.withType(Jar).each{ jarTask ->
+        jarTask.manifest {
+            Date buildTime = new Date()
+            attributes(
+                'Built-By': System.properties['user.name'],
+                'Created-By': System.properties['java.vm.version'] + " (" + System.properties['java.vm.vendor'] + ")",
+                'Build-Date': new SimpleDateFormat('dd-MMM-yyyy').format(buildTime),
+                'Build-Time': new SimpleDateFormat('hh:mm aa').format(buildTime),
+                'Specification-Title': subproj.name,
+                'Specification-Version': project.version,
+                'Specification-Vendor': 'griffon.codehaus.org',
+                'Implementation-Title': subproj.name,
+                'Implementation-Version': project.version,
+                'Implementation-Vendor': 'griffon.codehaus.org'
+            )
         }
     }
 }
 
-cliClasses.dependsOn createBuildProperties
+// @todo move apply statements to the top of the build script
+apply from: "${rootDir}/gradle/package.gradle"
+apply from: "${rootDir}/gradle/installer.gradle"
 
-configure([compileGroovy, compileTestGroovy]) {
-    groovyOptions.fork(memoryInitialSize: '128M', memoryMaximumSize: '1G')
-    groovyOptions.encoding = "UTF-8"
+task allTests(dependsOn: [clean, project(':griffon-rt').test, project(':griffon-cli').test]) {
+    description = "Runs all tests."
 }
 
-configure([compileJava, compileTestJava]) {
-    options.deprecation = true
-    options.debug = true
-}
-
-apply {
-    from 'gradle/wrapper.gradle'
-    from 'gradle/assemble.gradle'
-    from 'gradle/docs.gradle'
-    from 'gradle/installer.gradle'
-    from 'gradle/maven.gradle'
-    from 'gradle/coverage.gradle'
-//    from 'gradle/codeQuality.gradle'
-}
-
-task intTest(type: Test) {
-    dependsOn jarResources
-    testClassesDir = sourceSets.intTest.classesDir
-    classpath = sourceSets.intTest.runtimeClasspath
-    testSrcDirs = sourceSets.intTest.groovy.srcDirs as List
-}
-
-task allTests(dependsOn: [test, intTest]) {
-    description = "Runs all unit and integration tests."
-}
-
-task fullDist(dependsOn: [zipGuide, zipBinary, zipSource, tarBinary, tarSource, izpack, deb]) {
+task fullDist(dependsOn: [zipBinary, zipSource, tarBinary, tarSource, izpack, deb]) {
     description = "Assembles all packages."
 }
 
-task bambooStage1(dependsOn: [clean, test]) {
+task bambooStage1(dependsOn: allTests) {
     description = "Makes a full test run and assembles all packages."
 }
 
@@ -206,6 +93,16 @@ task bambooStage2(dependsOn: [bambooStage1, fullDist, rpm]) {
 }
 
 task wrapper(type: Wrapper) {
-    gradleVersion = '0.9.2'
+    gradleVersion = '1.0-milestone-6'
     jarFile = 'gradle/wrapper/gradle-wrapper.jar'
+}
+
+def mavenizedProjects() {
+    [
+        project(':griffon-rt'),
+        project(':griffon-cli'),
+        project(':griffon-resources'),
+        project(':griffon-scripts'),
+        project(':griffon-shell')
+    ]
 }

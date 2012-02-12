@@ -1,5 +1,5 @@
 /*
- * Copyright 2010-2011 the original author or authors.
+ * Copyright 2010-2012 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,15 +16,8 @@
 
 package griffon.test.mock
 
-import org.codehaus.griffon.runtime.core.AbstractGriffonView
-
 /**
  * @author Andres Almiray
  */
 
-class MockView extends AbstractGriffonView {
-    @Override
-    void mvcGroupInit(Map<String, Object> args) {
-        builder.mock(type: 'mock')
-    }
-}
+mock(type: 'mock')

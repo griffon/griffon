@@ -1,0 +1,40 @@
+h1. shell
+
+h2. Purpose
+
+Starts an instance of the Groovy terminal shell with an initialized Griffon runtime.    
+
+h2. Examples
+
+{code:java}
+   griffon shell
+{code}
+
+h2. Description   
+
+Usage: 
+{code:java}
+griffon [environment]* shell
+{code}
+
+Starts the Griffon shell, which is an extended version of the regular Groovy shell. Within the binding of the shell there are a couple of useful variables:
+
+* @app@ - The GriffonApplication instance
+
+These are useful as they allow access to the conventions within Griffon and interesting beans in the context.                
+
+Example Shell:
+
+{code}
+Groovy Shell (1.8.5, JVM: 1.6.0_29)
+Type 'help' or '\h' for help.
+------------------------------------------------
+groovy:000> app
+===> griffon.swing.SwingApplication@769652dd
+groovy:000> app.phase
+===> INITIALIZE
+groovy:000> 
+{code}
+
+Options:
+* @java-opts@  - Additional JVM options.

@@ -1,0 +1,31 @@
+h1. package-plugin 
+
+h2. Purpose
+
+Packages a plugin as a zip archive which can then be installed into another application
+
+h2. Examples
+
+{code:java}
+griffon package-plugin
+{code}
+
+h2. Description
+
+Usage: 
+{code:java}
+griffon package-plugin
+{code}
+
+The plugin archive will be named with the convention @griffon-[name]-[version].zip@. The name and version are obtained from the plugin descriptor (the Groovy class ending with the convention @GriffonPlugin.groovy@) in the root of the plugin directory. For example the following plugin:
+
+{code:java}
+class SimpleGriffonPlugin {
+	def version = 0.1
+}
+{code}
+
+Will result in a zip archive called @griffon-simple-0.1.zip@, which can then be installed into an application with the [install-plugin|commandLine] command.
+
+Options:
+* @nodoc@ - Skips the generation of groovydoc and plugin reference documentation

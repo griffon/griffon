@@ -1,0 +1,7 @@
+When a plugin or archetype is downloaded from an artifact repository the Griffon build will place a copy of it in the @griffon-local@ repository. This speeds up searches and further plugin installations. If you would like to specify a different local repository to be used as a cache then define a value for the @griffon.artifact.repository.default.install@ key.
+
+Assuming that '@my-local-repo@' is configured in the project's settings then the following command will download the miglayout plugin and place a copy in that specific repository.
+
+{code}
+griffon -Dgriffon.artifact.repository.default.install='my-local-repo' install-plugin miglayout
+{code}

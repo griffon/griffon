@@ -1,0 +1,63 @@
+Griffon ships with a lot of command line functionality out of the box that you may find useful in your own scripts (See the command line reference in the reference guide for info on all the commands). Of particular use are the [compile|commandLine] and [package|commandLine] scripts.
+
+h3. Pulling in targets from other scripts
+
+Gant allows you to pull in all targets (except "default") from another Gant script. You can then depend upon or invoke those targets as if they had been defined in the current script. The mechanism for doing this is the @includeTargets@ property. Simply "append" a file or class to it using the left-shift operator:
+{code}
+includeTargets << new File("/path/to/my/script.groovy")
+includeTargets << gant.tools.Ivy
+{code}
+Don't worry too much about the syntax using a class, it's quite specialized. If you're interested, look into the Gant documentation.
+
+h3. Core Griffon targets
+
+As you saw in the example at the beginning of this section, you use neither the File- nor the class-based syntax for @includeTargets@ when including core Griffon targets. Instead, you should use the special @griffonScript()@ method that is provided by the Griffon command launcher (note that this is not available in normal Gant scripts, just Griffon ones).
+
+The syntax for the @griffonScript()@ method is pretty straightforward: simply pass it the name of the Griffon script you want to include, without any path information. Here is a list of Griffon scripts that you may want to re-use:
+{table}
+ *Script* | *Description*
+ \_GriffonSettings | You really should include this! Fortunately, it is included automatically by all other Griffon scripts bar one (\_GriffonProxy), so you usually don't have to include it explicitly.
+ \_GriffonEvents | If you want to fire events, you need to include this. Adds an @event(String eventName, List args)@ method. Again, included by almost all other Griffon scripts.
+ \_GriffonClasspath | Sets up compilation, test, and runtime classpaths. If you want to use or play with them, include this script. Again, included by almost all other Griffon scripts.
+ \_GriffonProxy | If you want to access the internet, include this script so that you don't run into problems with proxies.
+ \_GriffonArgParsing | Provides a @parseArguments@ target that does what it says on the tin: parses the arguments provided by the user when they run your script. Adds them to the @argsMap@ property.
+ \_GriffonTest | Contains all the shared test code. Useful if you want to add any extra tests.
+ RunApp | Provides all you need to run the application in standalone mode.
+ RunApplet | Provides all you need to run the application in applet mode.
+ RunWebstart | Provides all you need to run the application in webstart mode.
+ {table}
+
+There are many more scripts provided by Griffon, so it is worth digging into the scripts themselves to find out what kind of targets are available. Anything that starts with an "\_" is designed for re-use.
+
+h3. Script architecture
+
+You maybe wondering what those underscores are doing in the names of the Griffon scripts. That is Griffon' way of determining that a script is _internal_, or in other words that it has not corresponding "command". So you can't run "griffon _griffon-settings" for example. That is also why they don't have a default target.
+ 
+Internal scripts are all about code sharing and re-use. In fact, we recommend you take a similar approach in your own scripts: put all your targets into an internal script that can be easily shared, and provide simple command scripts that parse any command line arguments and delegate to the targets in the internal script. Say you have a script that runs some functional tests - you can split it like this:
+{code}
+./scripts/FunctionalTests.groovy:
+
+includeTargets << new File("${basedir}/scripts/_FunctionalTests.groovy")
+
+target(default: "Runs the functional tests for this project.") {
+    depends(runFunctionalTests)
+}
+
+./scripts/_FunctionalTests.groovy:
+
+includeTargets << griffonScript("_GriffonTest")
+
+target(runFunctionalTests: "Run functional tests.") {
+    depends(...)
+    ...
+}
+{code}
+
+Here are a few general guidelines on writing scripts:
+
+* Split scripts into a "command" script and an internal one.
+* Put the bulk of the implementation in the internal script.
+* Put argument parsing into the "command" script.
+* To pass arguments to a target, create some script variables and initialize them before calling the target.
+* Avoid name clashes by using closures assigned to script variables instead of targets. You can then pass arguments direct to the closures.
+

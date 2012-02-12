@@ -1,5 +1,5 @@
 /*
- * Copyright 2010-2011 the original author or authors.
+ * Copyright 2010-2012 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,26 +14,7 @@
  * limitations under the License.
  */
 
-/*
-buildscript {
-    repositories {
-        mavenCentral()
-    }
-
-    dependencies {
-        classpath("org.apache.maven:maven-model:3.0.3") { transitive = false }
-    }
-}
-*/
-
 apply plugin: 'maven'
-
-artifacts {
-    archives jarRt
-    archives jarCli
-    archives jarScripts
-    archives jarResources
-}
 
 configurations {
     deployerJars
@@ -43,67 +24,6 @@ dependencies {
     deployerJars 'org.apache.maven.wagon:wagon-webdav:1.0-beta-2',
                  'org.apache.maven:maven-ant-tasks:2.1.0'
 }
-
-collectDependencies = { type ->
-    configurations."${type}".allDependencies.grep(ExternalModuleDependency).collect([]) { dependency ->
-        org.apache.maven.model.Dependency mavenDependency = new org.apache.maven.model.Dependency()
-        mavenDependency.groupId = dependency.group
-        mavenDependency.artifactId = dependency.name
-        mavenDependency.version = dependency.version
-        if(dependency.group == 'org.springframework') {
-            mavenDependency.addExclusion(new org.apache.maven.model.Exclusion(
-                groupId: 'commons-logging',
-                artifactId: 'commons-logging'
-            ))
-        } else if(dependency.name == 'gpars') {
-            mavenDependency.addExclusion(new org.apache.maven.model.Exclusion(
-                groupId: 'org.jboss.netty',
-                artifactId: 'netty'
-            ))
-        } else if(dependency.name == 'groovy-all' ||
-                  dependency.name == 'gant_groovy1.8' ||
-                  dependency.name == 'log4j' ||
-                  dependency.name.contains('slf4j')) {
-            mavenDependency.addExclusion(new org.apache.maven.model.Exclusion(
-                groupId: '*',
-                artifactId: '*'
-            ))
-        }
-        mavenDependency
-    }
-}
-
-artifactData = new ConfigSlurper().parse(file('src/artifacts.groovy').toURI().toURL())
-artifactData.resources.dependencies = []
-artifactData.rt.dependencies = collectDependencies('rt')
-
-artifactData.cli.dependencies = [
-    new org.apache.maven.model.Dependency(
-        groupId: group,
-        artifactId: 'griffon-rt',
-        version: version
-    )
-] + collectDependencies('cli')
-depsToRemove = artifactData.rt.dependencies.inject([]) { l, d ->
-    if(artifactData.cli.dependencies.find{ it.artifactId == d.artifactId }) {
-        l << d.artifactId
-    }
-    l
-}
-depsToRemove.each { id -> artifactData.cli.dependencies.remove(artifactData.cli.dependencies.find{ it.artifactId == id }) }
-
-artifactData.scripts.dependencies = [
-    new org.apache.maven.model.Dependency(
-        groupId: group,
-        artifactId: 'griffon-cli',
-        version: version,
-    ),
-    new org.apache.maven.model.Dependency(
-        groupId: group,
-        artifactId: 'griffon-resources',
-        version: version,
-    )
-]
 
 installer = install.repositories.mavenInstaller
 def deployer = null
@@ -131,55 +51,47 @@ uploadArchives {
 
 [installer, deployer].each { repo ->
     configure(repo) {
-        ['rt', 'cli', 'scripts', 'resources'].each { type ->
-            addFilter(type) {artifact, file ->
-                artifact.name == 'griffon-'+type
+        pom.project {
+            name(project.name)
+            description(project.pomDescription)
+            url('http://griffon.codehaus.org')
+            inceptionYear '2008'
+            licenses {
+                license {
+                    name 'The Apache Software License, Version 2.0'
+                    url 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+                    distribution 'repo'
+                }
             }
-
-            pom(type).project {
-                name(artifactData[type].name)
-                description(artifactData[type].description)
-                url('http://griffon.codehaus.org')
-                licenses {
-                    license {
-                        name 'The Apache Software License, Version 2.0'
-                        url 'http://www.apache.org/licenses/LICENSE-2.0.txt'
-                        distribution 'repo'
-                    }
-                }/*
-                distributionManagement {
-                    repository {
-                        id('codehaus.org')
-                        name('Griffon Central Repository')
-                        url('dav:https://dav.codehaus.org/repository/griffon/')
-                    }
-                    snapshotRepository {
-                        uniqueVersion('false')
-                        id('codehaus.org')
-                        name('Griffon Central Development Repository')
-                        url('dav:https://dav.codehaus.org/snapshots.repository/griffon/')
-                    }
-                }*/
-                repositories {
-                    repository {
-                        id('codehaus-release')
-                        name('Codehaus')
-                        url('http://repository.codehaus.org')
-                    }
-                    repository {
-                        id('java.net')
-                        name('Java.net')
-                        url('http://download.java.net/maven/2')
-                    }
-                    repository {
-                        id('spring-release')
-                        name('SpringSource')
-                        url('http://repository.springsource.com/maven/bundles/release')
+            scm {
+                url "https://github.com/griffon/griffon"
+            }
+            developers {
+                [aalmiray: 'Andres Almiray',
+                 shemnon: 'Danno Ferrin',
+                 jwill: 'James Williams',
+                 aklein: 'Alexander Klein',
+                 rgroeschke: 'Rene Groeschke'].each { devId, devName ->
+                    developer {
+                        id devId
+                        name devName
+                        roles {
+                            role 'Developer'
+                        }
                     }
                 }
             }
-            pom(type).whenConfigured { pom ->
-                pom.dependencies = artifactData[type].dependencies
+            contributors {
+                ['Dierk Koenig',
+                 'Guillaume Laforge',
+                 'Dean Iverson'].each { devName ->
+                    contributor {
+                        name devName
+                        roles {
+                            role 'Contributor'
+                        }
+                    }
+                }
             }
         }
     }

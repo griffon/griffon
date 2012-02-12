@@ -1,0 +1,34 @@
+h1. grep
+
+h2. Purpose
+
+Prints lines matching the given pattern.
+
+h2. Examples
+
+{code}
+griffon> head griffon-app/conf/Application.groovy | grep startup
+    startupGroups = ['sample']
+{code}
+
+h2. Description
+
+Usage: 
+{code}
+grep [options] pattern
+{code} 
+
+Arguments:
+* @pattern@ - Regular expression
+
+Options:
+* @w, word-regexp@ - Selects only those lines containing matches that form whole words. The test is that the matching substring must either be at  the beginning of the line, or preceded by a non-word   constituent character. Similarly, it must be either at the end of the line or followed by a non-word constituent character.  Word-constituent characters are letters, digits, and the underscore.
+* @c, count@ -  only print a count of matching lines per FILE
+* @n, line-number@ - Prefixes each line of output with the line number within its input file.
+* @v, invert-match@ - Inverts the sense of matching, to select non-matching lines.
+* @i, ignore-case@ - Ignores case distinctions in both the PATTERN and the input files.
+* @C, context@ - Print NUM lines of output context.  Places a line containing  between contiguous groups of matches.
+* @x, line-regexp@ - Selects only those matches that exactly match the whole line.
+* @A, after-context@ - Print NUM lines of trailing context after matching lines.  Places a line containing  between contiguous groups of matches. (defaults to -1)
+* @-color, colour@ - use markers to distinguish the matching string. WHEN may be `always', `never' or `auto' (defaults to auto)
+* @B, before-context@ - Print NUM lines of leading context before matching lines.  Places a line containing  between contiguous groups of matches. (defaults to -1)

@@ -1,5 +1,5 @@
 <!--
-  ~ Copyright 2010-2011 the original author or authors.
+  ~ Copyright 2010-2012 the original author or authors.
   ~
   ~ Licensed under the Apache License, Version 2.0 (the "License");
   ~ you may not use this file except in compliance with the License.
@@ -65,7 +65,9 @@
         <module name="LocalFinalVariableName"/>
         <!--<module name="LocalVariableName"/>-->
         <module name="MemberName"/>
-        <module name="MethodName"/>
+        <module name="MethodName">
+            <property name="format" value="^[a-z]+([a-zA-Z0-9_]*)*$"/>
+        </module>
         <module name="MethodTypeParameterName"/>
         <module name="PackageName">
             <property name="format" value="^[a-z]+(\.[a-z][a-z0-9]*)*$"/>

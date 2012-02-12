@@ -1,0 +1,23 @@
+DESCRIPTION
+        package
+
+	Packages a Griffon project according to its type.
+
+SYNTAX
+        package [options] [packages] 
+
+ARGUMENTS
+        packages
+                Optional list of packages to create, e.g. zip jar izpack. Valid
+                only when packaging an application.
+                (defaults to [applet, jar, webstart, zip])
+
+OPTIONS
+        --codebase
+                Codebase to be set in the JNLP file. USed when 'applet' or
+                'webstart' packages are in effect.
+        --name
+                Name of the application jar to create. USed when 'jar' package
+                is in effect.
+        --non-interactive
+                Controls if the shell can ask for input or not.

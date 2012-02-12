@@ -1,5 +1,5 @@
 /*
- * Copyright 2007-2011 the original author or authors.
+ * Copyright 2007-2012 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -125,7 +125,7 @@ menuBar = menuBar {
             menu(text: app.getMessage('application.menu.Effects.name', 'Effect')) {
                 [trident1: "Trident - ButtonFG",
                 trident2: "Trident - Snake",
-                gfx1: "Gfx - Sphere",
+                //gfx1: "Gfx - Sphere",
                 jexplose1: "JExplose",
                 transitions1: "Transitions - Picker",
                 gfx2: "Gfx - Animation"].each { id, name ->

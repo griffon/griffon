@@ -12,6 +12,7 @@ List of available plugins.
 == Griffon Guide ==
 
 Located at $GRIFFON_HOME/guide
+Online at http://griffon.codehaus.org/guide/latest/
 
 == Javadocs ==
 
@@ -31,8 +32,8 @@ subscriptions.
 Todd Costella produces and hosts a series of screencasts on Griffon.
 
  - http://grailspodcast.com
-The Groovy, Grails and Griffon podcast, hosted by Sven Haiges (@hansamann) and
-Glen Smith (@glen_a_smith).
+The Groovy, Grails and Griffon podcast, hosted by Sven Haiges (@hansamann),
+Glen Smith (@glen_a_smith) and Peter Ledbrook (@pledbrook).
 
  - http://groovyblogs.org
 Feed aggregator on Groovy news and blogs. Created and maintained by Glen Smith
@@ -48,4 +49,4 @@ Follow @theaviary on Twitter to stay up-to-date on Griffon news.
 == Book ==
 
 There's a book available from Manning: Griffon in Action. Currently in MEAP it
-will be available in print by late 2010. http://manning.com/almiray
+will be available in print by late 2011. http://manning.com/almiray

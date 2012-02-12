@@ -1,0 +1,33 @@
+h1. release-archetype
+
+h2. Purpose
+
+Releases a Griffon archetype to a griffon artifact repository
+
+h2. Examples
+
+{code:java}
+griffon release-archetype
+{code}
+
+h2. Description
+
+Usage: 
+{code:java}
+griffon release-archetype
+griffon release-archetype --repository=myRepository
+{code}
+
+The command allows Griffon to manage the release process for you.
+
+Options:
+* @repository@ - The name of the repository to publish to. See the section on [Artifact repositories|guide:repositories] in the user guide.
+* @username@ - The username to use.
+* @password@ - The password to use.
+* @message@ - The commit message to use.
+* @no-release-notes@ - Do not ask for missing release notes.
+* @package-only@ - Create a release package but do not publish it.
+
+If you require access to the Griffon Central Repository and wish to release your archetype there contact a member of the Griffon development team. 
+
+Once published, the archetype will automatically be available via the [list-archetypes|commandLine] command.

@@ -1,0 +1,26 @@
+h1. clean 
+
+h2. Purpose
+
+The @clean@ command will delete all compiled resources from the current Griffon application. Since Groovy is a compiled language, as with Java, this is sometimes useful to clear old instances of classes out and ensure correct compilation
+
+h2. Examples
+
+bc.
+griffon clean
+
+h2. Description
+
+Usage: 
+{code:java}
+griffon clean \[packages\]
+{code}
+
+You can specify additional packages to be cleaned. For example, to clean both @zip@ and @izpack@ installers you'll issue the following command
+
+{code}
+griffon clean zip izpack
+{code}
+
+Arguments:
+* @packages@ - a list of additional packages to clean. Accepted values are @zip@, @jar@, @applet@, @webstart@. If the Installer plugin is available then the following packages also become available: @izpack@, @rpm@, @deb@, @dmg@, @jsmooth@.

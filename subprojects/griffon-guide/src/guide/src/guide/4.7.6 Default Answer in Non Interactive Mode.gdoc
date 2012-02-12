@@ -1,0 +1,9 @@
+Sometimes a command may require the user to specify a missing value. When the build is run in interactive mode (the default mode) then it's just a matter of typing the value in the console. However, if the build is run in non-interactive mode then it's very likely it will fail.
+
+For this reason, the Griffon build accepts the definition of a default answer if the @griffon.noninteractive.default.answer@ key is specified, like this
+
+{code}
+griffon -Dgriffon.noninteractive.default.answer=y release-plugin
+{code}
+
+Be warned that this setting applies to every single input asked by a command.
