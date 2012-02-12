@@ -1,6 +1,6 @@
-h4. Controlling Plug-in Dependencies
+h4. Controlling Plugin Dependencies
 
-Plug-ins often depend on the presence of other plugins and can also adapt depending on the presence of others. To cover this, a plugin can define a @dependsOn@ property. For example, take a look at this snippet from the Griffon Clojure plugin:
+Plugins often depend on the presence of other plugins and can also adapt depending on the presence of others. To cover this, a plugin can define a @dependsOn@ property. For example, take a look at this snippet from the Griffon Clojure plugin:
 
 {code:java}
 class ClojureGriffonPlugin {
@@ -32,4 +32,4 @@ When the wildcard * character is used it denotes "any" version. The expression s
 
 h4. Controlling Addon Load Order
 
-Addons will be loaded in the order they are found in @griffon-app/conf/Builder.groovy@.  Using @dependsOn@ establishes a "hard" dependency. Any addons provided by the dependencies will be added first to the builder configuration file when installed.
+Addons will be loaded in the order determined by the dependencies set forth in their containing plugins. Using @dependsOn@ establishes a "hard" dependency. Any addons provided by the dependencies will be added first to the builder configuration file when installed.

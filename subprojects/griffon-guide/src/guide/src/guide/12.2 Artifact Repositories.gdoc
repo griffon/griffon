@@ -1,0 +1,24 @@
+There are 3 types of plugin repositories: @local@, @remote@ and @legacy@. Artifact repositories can be either configured locally to a project (inside @griffon-app/conf/BuildConfig@) or globally to all projects (inside @$USER_HOME/.griffon/settings.groovy@),
+
+h4. Local Artifact Repositories
+
+This type of repository is file based and can be hosted anywhere in the file system, even on shared folders over the network. Local repositories makes it easier to share snapshot releases among team mates as the network latency should be smaller. Their configuration requires but one parameter to be specified: the path where the artifacts will be placed. Here's a sample configuration for a local repository named '@my-local-repo@'.
+
+{code}
+griffon.artifact.repositories = [
+    'my-local-repo': [
+        type: 'local',
+        path: '/usr/local/share/griffon/repository'
+    ]
+]
+{code}
+
+There's a local repository available to you at all times. It's name is '@griffon-local@' and it's default path is @$USER_HOME/.griffon/repository@. This repository is the default place where downloaded plugins will be installed for speeding up retrievals at a later time.
+
+h4. Remote Artifact Repositories
+
+TBD
+
+h4. Legacy Artifact Repository
+
+This is a very special type of repository that exists only for backward compatibility during the migration of the old Griffon plugin repository to the new infrastructure in "http://artifacts.griffon-framework.org":http://artifacts.griffon-framework.org There are no configuration options for this repository, neither you can publish a release to it; it's effectively read-only.
