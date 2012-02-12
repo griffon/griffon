@@ -85,7 +85,7 @@ class ArtifactDependencyResolver {
                     }
                 }
 
-                if (v.endsWith('-SNAPSHOT')) {
+                if (v.endsWith('-SNAPSHOT') && release) {
                     snapshots << [
                             release: release,
                             repository: repository

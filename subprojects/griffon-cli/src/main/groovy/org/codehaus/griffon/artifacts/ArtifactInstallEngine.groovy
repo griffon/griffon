@@ -525,7 +525,7 @@ class ArtifactInstallEngine {
             // Metadata.reload()
             metadata["${type}s." + artifactName] = releaseVersion
             metadata.persist()
-            // Metadata.reload()
+            Metadata.reload()
         }
 
         if (!installedArtifacts.contains(artifactInstallPath)) {
