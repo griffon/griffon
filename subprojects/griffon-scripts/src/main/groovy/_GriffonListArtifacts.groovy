@@ -19,6 +19,7 @@ import griffon.util.Metadata
 import org.codehaus.griffon.artifacts.ArtifactDependencyResolver
 import org.codehaus.griffon.artifacts.ArtifactRepository
 import org.codehaus.griffon.artifacts.ArtifactRepositoryRegistry
+import org.codehaus.griffon.artifacts.VersionComparator
 import org.codehaus.griffon.artifacts.model.Archetype
 import org.codehaus.griffon.artifacts.model.Artifact
 import org.codehaus.griffon.artifacts.model.Plugin
@@ -235,16 +236,18 @@ doListArtifactUpdates = { String type ->
             if (version instanceof Release) version = version.version
             String availableVersion = availableArtifacts.get(name)?.version
             if (availableVersion != version && availableVersion != null) {
+                String repositoryName = availableArtifacts.get(name).repository.name
                 if (!headerDisplayed) {
                     println """
 ${capitalize(type)}s with available updates are listed below:
 ${'-' * 80}
-<${capitalize(type)}>                   <Current>             <Available>"""
+${('<' + capitalize(type) + '>').padRight(20, ' ')}${'<Current>'.padRight(20, ' ')}${'<Available>'.padRight(20, ' ')}<From>"""
                     headerDisplayed = true
                 }
-                println "${name.padRight(27 + (type == Archetype.TYPE ? 3 : 0), " ")}${version.padRight(20, " ")}  ${availableVersion}"
+                println "${name.padRight(20, ' ')}${version.padRight(20, ' ')}${availableVersion.padRight(20, ' ')}${repositoryName}"
                 outdatedArtifacts[name] = [
-                        version: availableVersion,
+                        newVersion: availableVersion,
+                        oldVersion: version,
                         repository: availableArtifacts[name].repository
                 ]
             }
@@ -259,7 +262,8 @@ ${'-' * 80}
                 if (type == Plugin.TYPE) {
                     Map<String, String> plugins = [:]
                     outdatedArtifacts.each { name, data ->
-                        plugins[name] = data.version
+                        plugins[name] = data.newVersion
+                        doUninstallArtifact Plugin.TYPE, name, data.oldVersion, false
                     }
                     installPlugins(Metadata.current, plugins)
                 } else {
@@ -278,14 +282,18 @@ getAvailableArtifacts = { String type ->
     Map artifacts = [:]
 
     def finder = { repository ->
+        VersionComparator versionComparator = new VersionComparator()
         repository.listArtifacts(type).each { Artifact artifact ->
             for (release in artifact.releases) {
                 if (isValidVersion(GriffonUtil.getGriffonVersion(), release.griffonVersion)) {
-                    artifacts[artifact.name] = [
-                            version: release.version,
-                            title: artifact.title,
-                            repository: repository
-                    ]
+                    Map data = artifacts[artifact.name]
+                    if (!data || versionComparator.compare(release.version, data.version) > 0) {
+                        artifacts[artifact.name] = [
+                                version: release.version,
+                                title: artifact.title,
+                                repository: repository
+                        ]
+                    }
                     break
                 }
             }

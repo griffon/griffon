@@ -21,22 +21,37 @@ package org.codehaus.griffon.artifacts
  * @since 0.9.5
  */
 class VersionComparator implements Comparator {
+    private final boolean reverse
+
+    VersionComparator(boolean reverse = false) {
+        this.reverse = reverse
+    }
+
     int compare(o1, o2) {
+        boolean snapshot1 = o1.toString().endsWith('-SNAPSHOT')
+        boolean snapshot2 = o2.toString().endsWith('-SNAPSHOT')
+
+        if (reverse) {
+            def o = o1
+            o1 = o2
+            o2 = o
+        }
+
+        o1 = o1.toString() - '-SNAPSHOT'
+        o2 = o2.toString() - '-SNAPSHOT'
+
         int result = 0
         if (o1 == '*') {
             result = 1
-        }
-        else if (o2 == '*') {
+        } else if (o2 == '*') {
             result = -1
-        }
-        else {
+        } else {
             def nums1
             try {
                 def tokens = o1.split(/\./)
                 tokens = tokens.findAll { it.trim() ==~ /\d+/ }
                 nums1 = tokens*.toInteger()
-            }
-            catch (NumberFormatException e) {
+            } catch (NumberFormatException e) {
                 throw new InvalidVersionException("Cannot compare versions, left side [$o1] is invalid: ${e.message}")
             }
             def nums2
@@ -44,12 +59,12 @@ class VersionComparator implements Comparator {
                 def tokens = o2.split(/\./)
                 tokens = tokens.findAll { it.trim() ==~ /\d+/ }
                 nums2 = tokens*.toInteger()
-            }
-            catch (NumberFormatException e) {
+            } catch (NumberFormatException e) {
                 throw new InvalidVersionException("Cannot compare versions, right side [$o2] is invalid: ${e.message}")
             }
             boolean bigRight = nums2.size() > nums1.size()
             boolean bigLeft = nums1.size() > nums2.size()
+
             for (i in 0..<nums1.size()) {
                 if (nums2.size() > i) {
                     result = nums1[i] <=> nums2[i]
@@ -57,16 +72,28 @@ class VersionComparator implements Comparator {
                         break
                     }
                     if (i == (nums1.size() - 1) && bigRight) {
-                        if (nums2[i + 1] != 0)
-                            result = -1; break
+                        if (nums2[i + 1] != 0) {
+                            result = -1
+                            break
+                        }
                     }
-                }
-                else if (bigLeft) {
-                    if (nums1[i] != 0)
-                        result = 1; break
+                } else if (bigLeft) {
+                    if (nums1[i] != 0) {
+                        result = 1
+                        break
+                    }
                 }
             }
         }
+
+        if (result == 0) {
+            if (snapshot1 && !snapshot2) {
+                result = 1
+            } else if (!snapshot1 && snapshot2) {
+                result = -1
+            }
+        }
+
         result
     }
 

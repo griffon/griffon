@@ -26,7 +26,7 @@ includeTargets << griffonScript('_GriffonEvents')
 
 target(setVersion: "Sets the current application version") {
     if (isPluginProject) {
-        println "The set-version command cannot update the version of a plugin project. Change the value of the 'version' property in ${pluginSettings.basePluginDescriptor.filename} instead."
+        println "The set-version command cannot update the version of a plugin project. Change the value of the 'version' property in ${griffonSettings.isPluginProject().name} instead."
         exit(1)
     }
 

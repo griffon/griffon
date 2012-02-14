@@ -275,8 +275,6 @@ class BuildSettings extends AbstractBuildSettings {
      */
     boolean offline = false
 
-    GriffonCoreDependencies coreDependencies
-
     private List<File> compileDependencies = []
     private boolean defaultCompileDepsAdded = false
 
@@ -739,7 +737,7 @@ class BuildSettings extends AbstractBuildSettings {
         establishProjectStructure()
         parseGriffonBuildListeners()
         flatConfig = config.flatten()
-        configureDependencyManager(config)
+        dependencyManager = configureDependencyManager(config)
     }
 
     protected boolean settingsFileLoaded = false
@@ -791,14 +789,14 @@ class BuildSettings extends AbstractBuildSettings {
         return gcl
     }
 
-    void configureDependencyManager(ConfigObject config) {
+    IvyDependencyManager configureDependencyManager(ConfigObject config) {
         Message.setDefaultLogger new DefaultMessageLogger(Message.MSG_WARN)
 
         Metadata metadata = Metadata.current
         def appName = metadata.getApplicationName() ?: "griffon"
         def appVersion = metadata.getApplicationVersion() ?: griffonVersion
 
-        dependencyManager = new IvyDependencyManager(appName,
+        IvyDependencyManager dependencyManager = new IvyDependencyManager(appName,
                 appVersion, this, metadata)
 
         dependencyManager.offline = offline
@@ -824,7 +822,7 @@ class BuildSettings extends AbstractBuildSettings {
             dependencyManager.ivySettings.defaultCache = griffonConfig.dependency.cache.dir as File
         }
 
-        coreDependencies = new GriffonCoreDependencies(griffonVersion, this)
+        GriffonCoreDependencies coreDependencies = new GriffonCoreDependencies(griffonVersion, this)
         griffonConfig.global.dependency.resolution = coreDependencies.createDeclaration()
         def credentials = griffonConfig.project.ivy.authentication
         if (credentials instanceof Closure) {
@@ -839,6 +837,7 @@ class BuildSettings extends AbstractBuildSettings {
         if (dependencyConfig) {
             dependencyManager.parseDependencies dependencyConfig
         }
+        dependencyManager
     }
 
     Closure pluginDependencyHandler() {

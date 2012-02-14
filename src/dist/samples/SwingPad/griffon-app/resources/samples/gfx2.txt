@@ -1,5 +1,5 @@
 import groovy.beans.Bindable
-import org.pushingpixels.trident.Timeline.TimelineState
+import org.pushingpixels.trident.Timeline
 
 @Bindable
 class Model {
@@ -13,7 +13,7 @@ anim = timeline(model, duration: 4000, loop: 'reverse') {
   interpolatedProperty(property: "ra", from: 0f, to: 360f)
 }
 mouseHandler = {
-  anim.state == TimelineState.SUSPENDED? anim.resume() : anim.suspend()
+  anim.state == Timeline.TimelineState.SUSPENDED? anim.resume() : anim.suspend()
 }
 
 cx = 100

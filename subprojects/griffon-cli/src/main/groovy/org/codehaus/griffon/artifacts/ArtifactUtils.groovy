@@ -327,7 +327,12 @@ class ArtifactUtils {
                 },
                 releases: json.releases ? json.releases.collect([]) {parseReleaseFromJSON(it)} : []
         )
+        if (json.release) {
+            if (!archetype.releases) archetype.releases = []
+            archetype.releases << parseReleaseFromJSON(json.release)
+        }
         archetype.releases.each { it.artifact = archetype }
+        archetype.releases.sort()
         archetype
     }
 
@@ -350,7 +355,12 @@ class ArtifactUtils {
                     Platform.findByName(platform)
                 }
         )
+        if (json.release) {
+            if (!plugin.releases) plugin.releases = []
+            plugin.releases << parseReleaseFromJSON(json.release)
+        }
         plugin.releases.each { it.artifact = plugin }
+        plugin.releases.sort()
         plugin
     }
 

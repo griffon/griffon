@@ -103,7 +103,7 @@ class DefaultMVCGroupManager extends AbstractMVCGroupManager {
         MVCGroup group = newMVCGroup(configuration, mvcId, instances)
         // must set it again because mvcId might have been initialized internally
         argsCopy.mvcName = group.mvcId
-        argsCopy.group = group
+        argsCopy.mvcGroup = group
 
         app.event(GriffonApplication.Event.INITIALIZE_MVC_GROUP.name, [configuration, group])
 

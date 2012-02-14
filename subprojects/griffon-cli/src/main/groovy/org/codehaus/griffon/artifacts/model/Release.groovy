@@ -19,13 +19,14 @@ package org.codehaus.griffon.artifacts.model
 import groovy.json.JsonBuilder
 import groovy.json.JsonSlurper
 import org.codehaus.griffon.artifacts.ArtifactUtils
+import org.codehaus.griffon.artifacts.VersionComparator
 import static org.codehaus.griffon.artifacts.ArtifactUtils.*
 
 /**
  * @author Andres Almiray
  * @since 0.9.5
  */
-class Release {
+class Release implements Comparable<Release> {
     String version = ''
     String griffonVersion = ''
     String comment = ''
@@ -115,5 +116,11 @@ class Release {
         Release release = parseReleaseFromXML(xml)
         release.artifact = parsePluginFromXML(xml)
         release
+    }
+
+    private static final Comparator VERSION_COMPARATOR = new VersionComparator(true)
+    int compareTo(Release other) {
+        if (other == null) return -1
+        VERSION_COMPARATOR.compare(version, other.version)
     }
 }

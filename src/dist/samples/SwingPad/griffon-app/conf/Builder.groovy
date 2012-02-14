@@ -24,7 +24,6 @@ root.'TrayBuilderGriffonAddon'.addon=true
 root.'JbusyComponentGriffonAddon'.addon=true
 root.'griffon.builder.trident.TridentBuilder'.view = '*'
 root.'ZonelayoutGriffonAddon'.addon=true
-root.'griffon.builder.swingxtras.SwingxtrasBuilder'.view = '*'
 root.'DesigngridlayoutGriffonAddon'.addon=true
 root.'griffon.builder.macwidgets.MacWidgetsBuilder'.view = '*'
 root.'JexploseGriffonAddon'.addon=true

@@ -68,9 +68,9 @@ doWithSelectedRepository = { callback ->
     if (!repositories.contains(defaultInstallRepository)) repositories << defaultInstallRepository
     if (!repositories.contains(defaultSearchRepository)) repositories << defaultSearchRepository
 
-    for(String repositoryName : repositories) {
+    for (String repositoryName: repositories) {
         artifactRepository = ArtifactRepositoryRegistry.instance.findRepository(repositoryName)
-        if(callback(artifactRepository)) break
+        if (callback(artifactRepository)) break
     }
 }
 
@@ -109,21 +109,23 @@ installArtifact = { String type ->
 }
 
 uninstallArtifact = { String type ->
-    try {
-        def artifactArgs = argsMap['params']
-        if (artifactArgs) {
-            String artifactName = artifactArgs[0]
-            String artifactVersion = artifactArgs[1]
-
-            ArtifactInstallEngine artifactInstallEngine = createArtifactInstallEngine(metadata)
-            artifactInstallEngine.uninstall(type, artifactName, artifactVersion)
-        } else {
-            event('StatusError', [uninstallArtifactErrorMessage(Archetype.TYPE)])
-        }
+    def artifactArgs = argsMap['params']
+    if (artifactArgs) {
+        String artifactName = artifactArgs[0]
+        String artifactVersion = artifactArgs[1]
+        doUninstallArtifact type, artifactName, artifactVersion, true
+    } else {
+        event('StatusError', [uninstallArtifactErrorMessage(Archetype.TYPE)])
     }
-    catch (Exception e) {
+}
+
+doUninstallArtifact = { String type, String name, String version = null, boolean failOnError = true ->
+    try {
+        ArtifactInstallEngine artifactInstallEngine = createArtifactInstallEngine(metadata)
+        artifactInstallEngine.uninstall(type, name, version)
+    } catch (Exception e) {
         logError("Error uninstalling ${type}: ${e.message}", e)
-        exit(1)
+        if (failOnError) exit(1)
     }
 }
 

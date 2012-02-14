@@ -147,9 +147,9 @@ class RemoteArtifactRepository extends AbstractArtifactRepository {
             Map<String, String> headers = getDefaultHeaders()
             if (username) headers.'X-Username' = username
 
-            println "Downloading ${http().url}api/${type}s/${name}/download/${version} ..."
+            println "Downloading ${http().url}api/${type}s/${name}/${version}/download ..."
 
-            def response = http().request(path: "api/${type}s/${name}/download/${version}", headers: headers, contentType: JSON, timeout: timeout)
+            def response = http().request(path: "api/${type}s/${name}/${version}/download", headers: headers, timeout: timeout)
             if (response.status == 200) {
                 file = File.createTempFile("griffon-${name}-${version}-", '.zip')
                 file.deleteOnExit()

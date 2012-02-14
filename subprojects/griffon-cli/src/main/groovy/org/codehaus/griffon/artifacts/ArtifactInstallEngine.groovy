@@ -16,6 +16,10 @@
 
 package org.codehaus.griffon.artifacts
 
+import griffon.util.BuildSettings
+import griffon.util.GriffonUtil
+import griffon.util.Metadata
+import griffon.util.PlatformUtils
 import groovy.json.JsonBuilder
 import org.apache.commons.io.FileUtils
 import org.codehaus.griffon.artifacts.model.Archetype
@@ -27,10 +31,9 @@ import org.codehaus.griffon.cli.ScriptExitException
 import org.codehaus.griffon.resolve.IvyDependencyManager
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
-import griffon.util.*
+import static griffon.util.GriffonExceptionHandler.sanitize
 import static griffon.util.GriffonNameUtils.*
 import static griffon.util.GriffonUtil.getScriptName
-import static griffon.util.GriffonUtil.sanitize
 import static org.codehaus.griffon.artifacts.ArtifactRepository.DEFAULT_LOCAL_NAME
 import static org.codehaus.griffon.artifacts.ArtifactUtils.*
 import static org.codehaus.griffon.cli.CommandLineConstants.KEY_DEFAULT_INSTALL_ARTIFACT_REPOSITORY
@@ -144,7 +147,7 @@ class ArtifactInstallEngine {
         try {
             dependencies = resolver.resolveDependencyTree(Plugin.TYPE, missingPlugins)
         } catch (Exception e) {
-            GriffonExceptionHandler.sanitize(e)
+            sanitize(e)
             eventHandler 'StatusError', "Some missing plugins failed to resolve => $e"
             errorHandler "Cannot continue with unresolved dependencies."
         }
@@ -230,7 +233,7 @@ class ArtifactInstallEngine {
         try {
             dependencies = resolver.resolveDependencyTree(Plugin.TYPE, plugins)
         } catch (Exception e) {
-            GriffonExceptionHandler.sanitize(e)
+            sanitize(e)
             eventHandler 'StatusError', "Some plugins failed to resolve => $e"
             errorHandler "Cannot continue with unresolved dependencies."
         }
@@ -267,7 +270,7 @@ class ArtifactInstallEngine {
         if (failedDependencies) {
             String failed = ''
             failedDependencies.each {failed += it.toString() }
-            eventHandler 'StatusFinal', "The following plugins failed to be installed due to missing dependencies or a postinstall error.\n${failed}"
+            eventHandler 'StatusFinal', "The following plugins failed to be installed due to missing dependencies or a postinstall error:\n${failed}"
             return false
         }
 
@@ -300,7 +303,7 @@ class ArtifactInstallEngine {
                 }
             } catch (Exception e) {
                 failedDependencies << dependency
-                GriffonExceptionHandler.sanitize(e)
+                sanitize(e)
                 eventHandler 'StatusError', "${dependency.toString().trim()} [FAILED]"
                 eventHandler 'StatusError', e.message
                 switch (getInstallFailureStrategy()) {
@@ -338,7 +341,7 @@ class ArtifactInstallEngine {
         String repositoryName = settings.getConfigValue(KEY_DEFAULT_INSTALL_ARTIFACT_REPOSITORY, DEFAULT_LOCAL_NAME)
         ArtifactRepository griffonLocal = ArtifactRepositoryRegistry.instance.findRepository(repositoryName)
 
-        if(griffonLocal.type != ArtifactRepository.LOCAL) {
+        if (griffonLocal.type != ArtifactRepository.LOCAL) {
             if (LOG.warnEnabled) {
                 LOG.warn("Repository ${repositoryName} is not a local repository; will use ${DEFAULT_LOCAL_NAME} instead.")
             }
@@ -380,7 +383,7 @@ class ArtifactInstallEngine {
             }
         } catch (Exception e) {
             if (LOG.warnEnabled) {
-                LOG.warn("Could not push release ${name}-${version} to griffon-local.", sanitize(e))
+                LOG.warn("Could not push release ${name}-${version} to griffon-local.", GriffonUtil.sanitize(e))
             }
         }
     }
@@ -390,7 +393,7 @@ class ArtifactInstallEngine {
         try {
             dependencies << resolver.resolveDependencyTree(type, name, version)
         } catch (Exception e) {
-            GriffonExceptionHandler.sanitize(e)
+            sanitize(e)
             eventHandler 'StatusError', "${capitalize(type)} ${name}${version ? '-' + version : ''} could not be installed => $e"
             errorHandler "Installation of ${type} ${name}${version ? '-' + version : ''} aborted."
         }
@@ -582,10 +585,12 @@ class ArtifactInstallEngine {
 
         if (dependencyDescriptors.any {it.exists()}) {
             eventHandler 'StatusUpdate', "Resolving plugin ${pluginName}-${pluginVersion} JAR dependencies"
-            def callable = settings.pluginDependencyHandler()
+            // create a local dependency manager to avoid conflicts with other plugins
+            // this enables isolated resolution of dependencies at the cost of time
+            IvyDependencyManager dependencyManager = settings.configureDependencyManager(settings.config)
+            def callable = settings.pluginDependencyHandler(dependencyManager)
             int result = callable.call(new File(pluginInstallPath), pluginName, pluginVersion)
             if (result == BuildSettings.RESOLUTION_OK) {
-                IvyDependencyManager dependencyManager = settings.dependencyManager
                 for (conf in ['compile', 'build', 'test', 'runtime']) {
                     def resolveReport = dependencyManager.resolveDependencies(IvyDependencyManager."${conf.toUpperCase()}_CONFIGURATION")
                     if (resolveReport.hasError()) {
@@ -607,7 +612,7 @@ class ArtifactInstallEngine {
                 errorHandler "No ${type} [$name${version ? '-' + version : ''}] installed, cannot uninstall."
             }
         } catch (e) {
-            GriffonExceptionHandler.sanitize(e)
+            sanitize(e)
             errorHandler "An error occured uninstalling the ${type} [$name${version ? '-' + version : ''}]: ${e.message}"
         }
     }
