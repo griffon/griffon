@@ -16,6 +16,12 @@
 
 import org.apache.tools.ant.filters.ReplaceTokens
 
+apply plugin: 'izpack'
+
+dependencies {
+    izpack files('installer/izpack/lib/izpack-standalone-compiler-4.3.3.jar')
+}
+
 task prepareIzpack(type: Copy) {
     destinationDir = "$buildDir/assemble/izpack" as File
     from('installer/izpack/resources') {
@@ -30,30 +36,19 @@ task prepareIzpack(type: Copy) {
     }
 }
 
-task izpack(dependsOn: prepareIzpack) {
-    description = "Creates an IzPack based installer for both binary and source distributions."
-    inputs.dir prepareIzpack.outputs.files
-    outputs.files "$buildDir/distributions/griffon-${version}-installer.jar"
+izPackCreateInstaller.dependsOn prepareIzpack
+izPackCreateInstaller.doFirst {
+    ant.chmod(dir: "$buildDir/assemble/izpack/binary/bin", excludes: '*.bat', perm: 'ugo+x')
+}
 
-    doLast {
-        ant.taskdef(name: 'izpack',
-                    classpath: fileTree(dir: file('installer/izpack/lib'), includes: ['*.jar']).asPath,
-                    classname: 'com.izforge.izpack.ant.IzPackTask')
-    
-        ant.property(name: 'app.group',   value: 'Griffon')
-        ant.property(name: 'app.name',    value: 'griffon')
-        ant.property(name: 'app.title',   value: 'Griffon')
-        ant.property(name: 'app.version', value: version)
-        ant.property(name: 'app.subpath', value: "Griffon-$version")
-    
-        ant.chmod(dir: "$buildDir/assemble/izpack/binary/bin", excludes: '*.bat', perm: 'ugo+x')
-        ant.izpack(basedir: "$buildDir/assemble/izpack",
-                   output: "$buildDir/distributions/griffon-${version}-installer.jar",
-                   compression: 'deflate',
-                   compressionlevel: '9') {
-            config(file('installer/izpack/installer.xml').text)
-        }
-    }
+izpack {
+    baseDir = file("$buildDir/assemble/izpack")
+    installFile = file('installer/izpack/installer.xml')
+    outputFile = file("$buildDir/distributions/griffon-${version}-installer.jar")
+    compression = 'deflate'
+    compressionLevel = 9
+    appProperties = ['app.group': 'Griffon', 'app.name': 'griffon', 'app.title': 'Griffon',
+                     'app.version': version, 'app.subpath': "Griffon-$version"]
 }
 
 task prepareRpm(type: Copy) {
