@@ -33,6 +33,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+import static griffon.util.GriffonExceptionHandler.sanitize;
 import static org.codehaus.griffon.cli.GriffonScriptRunner.*;
 import static org.codehaus.griffon.cli.shell.GriffonShellContext.*;
 import static org.codehaus.groovy.runtime.DefaultGroovyMethods.join;
@@ -69,10 +70,10 @@ public class GantAwareAction extends AbstractGriffonShellCommand {
     protected Object doExecute(CommandSession session, CommandArguments args) throws Exception {
         GriffonScriptRunner runner = getGriffonScriptRunner();
         GantBinding binding = getGantBinding();
-        if (binding == null) {
+        //if (binding == null) {
             binding = new GantBinding();
             setGantBinding(binding);
-        }
+        //}
 
         List<String> arguments = new ArrayList<String>();
         populateOptions(arguments, args.options, args.subject);
@@ -87,12 +88,13 @@ public class GantAwareAction extends AbstractGriffonShellCommand {
         gant.loadScript(scriptFile);
 
         try {
-            executeWithGantInstance(gant, binding);
+            runner.executeWithGantInstance(gant, binding);
         } catch (ScriptExitException see) {
             // OK, we just got this exception because exit is not
             // allowed when running inside the interactive shell
         } catch (RuntimeException e) {
             // bummer, we got a problem
+            sanitize(e);
             if (!(e instanceof ScriptExitException) && !(e.getCause() instanceof ScriptExitException)) {
                 session.getConsole().print(Ansi.ansi().fg(Ansi.Color.RED).toString());
                 e.printStackTrace(session.getConsole());

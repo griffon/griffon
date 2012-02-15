@@ -20,7 +20,6 @@ import gant.Gant;
 import griffon.util.BuildSettings;
 import griffon.util.BuildSettingsHolder;
 import griffon.util.Environment;
-import griffon.util.GriffonExceptionHandler;
 import org.apache.felix.gogo.commands.Command;
 import org.apache.felix.service.command.CommandSession;
 import org.apache.karaf.shell.console.AbstractAction;
@@ -31,6 +30,7 @@ import org.fusesource.jansi.Ansi;
 
 import java.io.File;
 
+import static griffon.util.GriffonExceptionHandler.sanitize;
 import static org.codehaus.griffon.cli.GriffonScriptRunner.*;
 import static org.codehaus.griffon.cli.shell.GriffonShellContext.*;
 
@@ -72,7 +72,7 @@ public class ResolveDependenciesCommand extends AbstractAction {
             // OK, we just got this exception because exit is not
             // allowed when running inside the interactive shell
         } catch (RuntimeException e) {
-            GriffonExceptionHandler.sanitize(e);
+            sanitize(e);
             // bummer, we got a problem
             if (!(e instanceof ScriptExitException) && !(e.getCause() instanceof ScriptExitException)) {
                 session.getConsole().print(Ansi.ansi().fg(Ansi.Color.RED).toString());

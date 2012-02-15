@@ -22,9 +22,8 @@
 def space = ' '
 println space
 printFramed("""
-    | This script is no longer supported;
+    | The script 'Init' is no longer supported;
     | it will be removed in a future version.
     | ${space}
     |""".stripMargin())
 
-// exit(1)

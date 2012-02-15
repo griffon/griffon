@@ -20,7 +20,8 @@
  * @author Peter Ledbrook (Grails 1.1)
  */
 
-target(configureProxy: "The implementation target") {
+target(name: 'configureProxy', description: 'Configure an HTTP proxy',
+     prehook: null, posthook: null) {
     proxySettings = ''
     File scriptFile = new File("${userHome}/.griffon/scripts/ProxyConfig.groovy")
     if (!scriptFile.exists()) {

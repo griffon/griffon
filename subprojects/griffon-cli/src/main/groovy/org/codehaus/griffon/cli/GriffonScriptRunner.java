@@ -23,14 +23,11 @@ import groovy.lang.Closure;
 import groovy.lang.ExpandoMetaClass;
 import groovy.util.AntBuilder;
 import org.apache.log4j.LogManager;
-import org.apache.tools.ant.BuildEvent;
-import org.apache.tools.ant.BuildListener;
 import org.apache.tools.ant.Project;
 import org.codehaus.gant.GantBinding;
 import org.codehaus.griffon.artifacts.ArtifactRepositoryRegistry;
 import org.codehaus.griffon.artifacts.ArtifactUtils;
 import org.codehaus.griffon.artifacts.model.Plugin;
-import org.codehaus.griffon.cli.support.BuildListenerAdapter;
 import org.codehaus.griffon.runtime.logging.Log4jConfig;
 import org.codehaus.groovy.runtime.DefaultGroovyMethods;
 import org.springframework.core.io.Resource;
@@ -44,6 +41,7 @@ import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import static griffon.util.GriffonExceptionHandler.sanitize;
 import static griffon.util.GriffonNameUtils.isBlank;
 import static java.util.Arrays.binarySearch;
 import static java.util.Arrays.sort;
@@ -147,7 +145,7 @@ public class GriffonScriptRunner {
         } catch (Throwable t) {
             String msg = "Error executing script " + script.name + ": " + t.getMessage();
             System.out.println(msg);
-            GriffonExceptionHandler.sanitize(t);
+            sanitize(t);
             t.printStackTrace(System.out);
             exitWithError(msg);
         }
@@ -353,70 +351,6 @@ public class GriffonScriptRunner {
         settings.loadConfig();
     }
 
-    /**
-     * Runs Griffon in interactive mode.
-     */
-    /*
-    private void runInteractive() {
-        String message = "Interactive mode ready. Enter a Griffon command or type \"exit\" to quit interactive mode (hit ENTER to run the last command):\n";
-
-        // Disable exiting
-        System.setProperty("griffon.disable.exit", "true");
-        System.setProperty(KEY_INTERACTIVE_MODE, "true");
-
-        ScriptAndArgs script = new ScriptAndArgs();
-        String env = null;
-        while (true) {
-            // Clear unhelpful system properties.
-            System.clearProperty("griffon.env.set");
-            System.clearProperty(Environment.KEY);
-            env = null;
-
-            out.println("--------------------------------------------------------");
-            String enteredName = helper.userInput(message);
-
-            if (enteredName != null && enteredName.trim().length() > 0) {
-                script = processArgumentsAndReturnScriptName(enteredName);
-
-                // Update the relevant system property, otherwise the
-                // arguments will be "remembered" from the previous run.
-                if (script.args != null) {
-                    System.setProperty(KEY_SCRIPT_ARGS, script.args);
-                } else {
-                    System.setProperty(KEY_SCRIPT_ARGS, "");
-                }
-
-                env = script.env != null ? script.env : Environment.DEVELOPMENT.getName();
-            }
-
-            if (script.name == null) {
-                out.println("You must enter a command.\n");
-                continue;
-            } else if (script.name.equalsIgnoreCase("exit") || script.name.equalsIgnoreCase("quit")) {
-                return;
-            }
-
-            long now = System.currentTimeMillis();
-            try {
-                script.env = env;
-                callPluginOrGriffonScript(script);
-            } catch (ScriptNotFoundException ex) {
-                out.println("No script found for " + script.name);
-            } catch (Throwable ex) {
-                if (ex.getCause() instanceof ScriptExitException) {
-                    out.println("Script exited with code " + ((ScriptExitException) ex.getCause()).getExitCode());
-                } else {
-                    out.println("Script threw exception");
-                    ex.printStackTrace(out);
-                }
-            }
-            long end = System.currentTimeMillis();
-            out.println("--------------------------------------------------------");
-            out.println("Command " + script.name + " completed in " + (end - now) + "ms");
-        }
-    }
-    */
-
     private final Map<String, CachedScript> scriptCache = new HashMap<String, CachedScript>();
     private final List<File> scriptsAllowedOutsideOfProject = new ArrayList<File>();
     public static final Closure DO_NOTHING_CLOSURE = new Closure(GriffonScriptRunner.class) {
@@ -473,7 +407,7 @@ public class GriffonScriptRunner {
 
                 // Setup the script to call.
                 Gant gant = createGantInstance(binding);
-                gant.loadScript(scriptFile);
+                // gant.loadScript(scriptFile);
                 return executeWithGantInstanceNoException(gant, binding);
             }
 
@@ -508,7 +442,7 @@ public class GriffonScriptRunner {
 
             // Set up the script to call.
             Gant gant = createGantInstance(binding);
-            gant.loadScript(scriptFile);
+            // gant.loadScript(scriptFile);
 
             // Invoke the default target.
             return executeWithGantInstanceNoException(gant, binding);
@@ -517,22 +451,9 @@ public class GriffonScriptRunner {
     }
 
     public Gant createGantInstance(GantBinding binding) {
-        return createGantInstance(binding, true);
-    }
-
-    public Gant createGantInstance(GantBinding binding, boolean reload) {
         URLClassLoader classLoader = createClassLoader();
         Gant gant = new Gant(initBinding(binding), classLoader);
-        if (reload) {
-            if (griffonInitBuildListener != null && binding.getBuildListeners().contains(griffonInitBuildListener)) {
-                binding.removeBuildListener(griffonInitBuildListener);
-            }
-            griffonInitBuildListener = new GriffonInitBuildListener(settings, binding, gant, reload);
-            binding.addBuildListener(griffonInitBuildListener);
-        } else if (griffonInitBuildListener == null) {
-            griffonInitBuildListener = new GriffonInitBuildListener(settings, binding, gant, reload);
-            binding.addBuildListener(griffonInitBuildListener);
-        }
+        gantCustomizer = new GantCustomizer(settings, binding, gant);
         return gant;
     }
 
@@ -546,7 +467,7 @@ public class GriffonScriptRunner {
             try {
                 scriptPath = resource.getFile();
             } catch (IOException e) {
-                GriffonExceptionHandler.sanitize(e);
+                sanitize(e);
                 settings.debug("Script location " + resource + " has been blacklisted => " + e);
                 continue;
             }
@@ -694,19 +615,17 @@ public class GriffonScriptRunner {
         }
     }
 
-    public static int executeWithGantInstance(Gant gant, GantBinding binding) {
+    public int executeWithGantInstance(Gant gant, GantBinding binding) {
         try {
-            gant.prepareTargets();
-            gant.setAllPerTargetPreHooks(DO_NOTHING_CLOSURE);
-            gant.setAllPerTargetPostHooks(DO_NOTHING_CLOSURE);
+            gantCustomizer.prepareTargets();
             return gant.executeTargets();
         } catch (RuntimeException e) {
-            GriffonExceptionHandler.sanitize(e);
+            sanitize(e);
             throw e;
         }
     }
 
-    private static int executeWithGantInstanceNoException(Gant gant, GantBinding binding) {
+    private int executeWithGantInstanceNoException(Gant gant, GantBinding binding) {
         try {
             return executeWithGantInstance(gant, binding);
         } catch (RuntimeException e) {
@@ -812,31 +731,6 @@ public class GriffonScriptRunner {
         return binding;
     }
 
-    /**
-     * Collects all the command scripts provided by the plugin contained
-     * in the given directory and adds them to the given list.
-     */
-    private static void addPluginScripts(File pluginDir, List<File> scripts) {
-        if (!pluginDir.exists()) return;
-
-        File scriptDir = new File(pluginDir, "scripts");
-        if (scriptDir.exists()) addCommandScripts(scriptDir, scripts);
-    }
-
-    /**
-     * Adds all the command scripts (i.e. those whose name does *not* start with an
-     * underscore, '_') found in the given directory to the given list.
-     */
-    private static void addCommandScripts(File dir, List<File> scripts) {
-        if (dir.exists()) {
-            for (File file : dir.listFiles()) {
-                if (isCommandScript(file)) {
-                    scripts.add(file);
-                }
-            }
-        }
-    }
-
     public static boolean isCommandScript(File file) {
         return scriptFilePattern.matcher(file.getName()).matches();
     }
@@ -937,26 +831,17 @@ public class GriffonScriptRunner {
         public String args;
     }
 
-    private BuildListener griffonInitBuildListener;
+    private GantCustomizer gantCustomizer;
 
-    private static class GriffonInitBuildListener extends BuildListenerAdapter {
+    private static class GantCustomizer { // extends BuildListenerAdapter {
         private final BuildSettings settings;
         private final Binding binding;
         private final Gant gant;
-        private final boolean reload;
 
-        private GriffonInitBuildListener(BuildSettings settings, Binding binding, Gant gant, boolean reload) {
+        private GantCustomizer(BuildSettings settings, Binding binding, Gant gant) {
             this.settings = settings;
             this.binding = binding;
             this.gant = gant;
-            this.reload = reload;
-            // preload basic stuff that should always be there
-            setupScript("_GriffonSettings");
-            setupScript("_GriffonArgParsing");
-            setupScript("_GriffonEvents");
-            setupScript("_GriffonProxy");
-            setupScript("_GriffonResolveDependencies");
-            setupScript("_GriffonClasspath");
         }
 
         private void setupScript(String scriptName) {
@@ -965,28 +850,37 @@ public class GriffonScriptRunner {
         }
 
         private File scriptFileFor(String scriptName) {
+            // TODO load from classpath
             return new File(settings.getGriffonHome(), "scripts/" + scriptName + ".groovy");
         }
 
-        @Override
-        public void targetStarted(BuildEvent buildEvent) {
-            if (!reload) return;
-            String targetName = buildEvent.getTarget().getName();
-            String defaultTargetName = (String) binding.getVariable("defaultTarget");
+        public void prepareTargets() {
+            // preload basic stuff that should always be there
+            setupScript("_GriffonSettings");
+            setupScript("_GriffonArgParsing");
+            setupScript("_GriffonEvents");
+            setupScript("_GriffonProxy");
+            setupScript("_GriffonResolveDependencies");
+            setupScript("_GriffonClasspath");
+
             File scriptFile = (File) binding.getVariable(VAR_SCRIPT_FILE);
-            if (defaultTargetName.equals(targetName)) {
-                List<String> targets = new ArrayList<String>();
-                targets.add("parseArguments");
-                if (binarySearch(CONFIGURE_PROXY_EXCLUSIONS, targetName) < 0) targets.add("configureProxy");
-                if (!isContextlessScriptName(scriptFile)) {
-                    if (binarySearch(RESOLVE_DEPENDENCIES_EXCLUSIONS, targetName) < 0) {
-                        targets.add("resolveDependencies");
-                    }
-                    targets.add("loadEventHooks");
+            gant.loadScript(scriptFile);
+            gant.prepareTargets();
+
+            String targetName = (String) binding.getVariable("defaultTarget");
+            List<String> targets = new ArrayList<String>();
+            targets.add("parseArguments");
+            if (binarySearch(CONFIGURE_PROXY_EXCLUSIONS, targetName) < 0) targets.add("configureProxy");
+            if (!isContextlessScriptName(scriptFile)) {
+                if (binarySearch(RESOLVE_DEPENDENCIES_EXCLUSIONS, targetName) < 0) {
+                    targets.add("resolveDependencies");
                 }
-                settings.debug("** " + targets + " **");
-                gant.executeTargets("dispatch", targets);
+                targets.add("loadEventHooks");
             }
+            settings.debug("** " + targets + " **");
+            gant.setAllPerTargetPreHooks(DO_NOTHING_CLOSURE);
+            gant.setAllPerTargetPostHooks(DO_NOTHING_CLOSURE);
+            gant.executeTargets("dispatch", targets);
         }
 
         private static String[] CONFIGURE_PROXY_EXCLUSIONS = {
