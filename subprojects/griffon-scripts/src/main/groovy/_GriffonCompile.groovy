@@ -83,7 +83,7 @@ target(name: 'compile', description: "Implementation of compilation phase",
 
     if (isApplicationProject || isPluginProject) {
         [
-                projectCompileClassesDir,
+                projectCliClassesDir,
                 projectMainClassesDir,
                 projectTestClassesDir,
                 griffonSettings.testClassesDir,
@@ -127,16 +127,16 @@ target(name: 'compile', description: "Implementation of compilation phase",
         // now.
         if (isPluginProject) {
             if (cliSourceDir.exists()) {
-                ant.mkdir(dir: projectCompileClassesDir)
+                ant.mkdir(dir: projectCliClassesDir)
                 ant.path(id: 'plugin.cli.compile.classpath') {
                     path(refid: 'griffon.compile.classpath')
                     pathElement(location: projectMainClassesDir)
                 }
-                compileSources(projectCompileClassesDir, 'plugin.cli.compile.classpath') {
+                compileSources(projectCliClassesDir, 'plugin.cli.compile.classpath') {
                     src(path: cliSourceDir)
                     javac(classpathref: 'plugin.cli.compile.classpath', encoding: griffonSettings.sourceEncoding, debug: 'yes')
                 }
-                ant.copy(todir: projectCompileClassesDir) {
+                ant.copy(todir: projectCliClassesDir) {
                     fileset(dir: "${basedir}/src/cli") {
                         exclude(name: '**/*.java')
                         exclude(name: '**/*.groovy')

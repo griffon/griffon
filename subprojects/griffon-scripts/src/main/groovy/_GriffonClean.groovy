@@ -37,7 +37,7 @@ target(clean: "Implementation of clean") {
 
 target(cleanCompiledSources: "Cleans compiled Java and Groovy sources") {
     [
-            projectCompileClassesDir,
+            projectCliClassesDir,
             projectMainClassesDir,
             projectTestClassesDir,
             griffonSettings.testClassesDir,

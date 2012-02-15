@@ -22,6 +22,7 @@ import org.apache.ivy.plugins.repository.TransferEvent
 import org.apache.ivy.plugins.repository.TransferListener
 import org.apache.ivy.util.DefaultMessageLogger
 import org.apache.ivy.util.Message
+import org.codehaus.griffon.artifacts.model.Plugin
 import org.codehaus.griffon.resolve.GriffonCoreDependencies
 import org.codehaus.griffon.resolve.IvyDependencyManager
 import org.codehaus.groovy.runtime.StackTraceUtils
@@ -29,9 +30,8 @@ import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import org.springframework.core.io.Resource
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver
-import static org.codehaus.griffon.artifacts.ArtifactUtils.*
 import static griffon.util.GriffonNameUtils.capitalize
-import org.codehaus.griffon.artifacts.model.Plugin
+import static org.codehaus.griffon.artifacts.ArtifactUtils.*
 
 /**
  * <p>Represents the project paths and other build settings
@@ -315,8 +315,6 @@ class BuildSettings extends AbstractBuildSettings {
         if (shouldResolve()) {
             compileResolveReport = dependencyManager.resolveDependencies(IvyDependencyManager.COMPILE_CONFIGURATION)
             jarFiles = compileResolveReport.getArtifactsReports(null, false).findAll {it.downloadStatus.toString() != 'failed'}.localFile + applicationJars
-
-            //jarFiles = findAndRemovePluginDependencies("compile", jarFiles, internalPluginCompileDependencies)
             LOG.debug("Resolved jars for [compile]: ${{-> jarFiles.join('\n')}}")
         } else {
             jarFiles = []
@@ -349,10 +347,8 @@ class BuildSettings extends AbstractBuildSettings {
         LOG.debug "Resolving [test] dependencies..."
         if (internalTestDependencies) return internalTestDependencies
         if (shouldResolve()) {
-
             testResolveReport = dependencyManager.resolveDependencies(IvyDependencyManager.TEST_CONFIGURATION)
             def jarFiles = testResolveReport.getArtifactsReports(null, false).findAll {it.downloadStatus.toString() != 'failed'}.localFile + applicationJars
-            // jarFiles = findAndRemovePluginDependencies("test", jarFiles, internalPluginTestDependencies)
             LOG.debug("Resolved jars for [test]: ${{-> jarFiles.join('\n')}}")
             return jarFiles
         } else {
@@ -385,12 +381,9 @@ class BuildSettings extends AbstractBuildSettings {
         LOG.debug "Resolving [runtime] dependencies..."
         if (internalRuntimeDependencies) return internalRuntimeDependencies
         if (shouldResolve()) {
-
             runtimeResolveReport = dependencyManager.resolveDependencies(IvyDependencyManager.RUNTIME_CONFIGURATION)
             def jarFiles = runtimeResolveReport.getArtifactsReports(null, false).findAll {it.downloadStatus.toString() != 'failed'}.localFile + applicationJars
-            // jarFiles = findAndRemovePluginDependencies("runtime", jarFiles, internalPluginRuntimeDependencies)
             LOG.debug("Resolved jars for [runtime]: ${{-> jarFiles.join('\n')}}")
-
             return jarFiles
         }
         return []
@@ -420,17 +413,12 @@ class BuildSettings extends AbstractBuildSettings {
      */
     private List<File> internalBuildDependencies
     @Lazy List<File> defaultBuildDependencies = {
+        LOG.debug "Resolving [build] dependencies..."
         if (internalBuildDependencies) return internalBuildDependencies
-
         if (shouldResolve()) {
-
-            LOG.debug "Resolving [build] dependencies..."
             buildResolveReport = dependencyManager.resolveDependencies(IvyDependencyManager.BUILD_CONFIGURATION)
             def jarFiles = buildResolveReport.getArtifactsReports(null, false).findAll {it.downloadStatus.toString() != 'failed'}.localFile + applicationJars
-
-            // jarFiles = findAndRemovePluginDependencies("build", jarFiles, internalPluginBuildDependencies)
             LOG.debug("Resolved jars for [build]: ${{-> jarFiles.join('\n')}}")
-
             return jarFiles
         }
         return []
@@ -884,7 +872,7 @@ class BuildSettings extends AbstractBuildSettings {
                                 dependencyManager.parseDependencies(pluginName, pluginDependencyConfig)
                             }
                         }
-                        if(result != RESOLUTION_ERROR) result = RESOLUTION_OK
+                        if (result != RESOLUTION_ERROR) result = RESOLUTION_OK
                     } catch (e) {
                         result = RESOLUTION_ERROR
                         println "WARNING: Dependencies cannot be resolved for plugin [$pluginName] due to error: ${e.message}"
@@ -1030,6 +1018,9 @@ class BuildSettings extends AbstractBuildSettings {
         List<File> existingDependencies = this."get${capitalize(conf)}Dependencies"()
         List<File> newDependencies = dependencies.unique() - existingDependencies
         if (newDependencies) {
+            if(LOG.debugEnabled) {
+                LOG.debug("Adding the following dependencies to $conf: ${newDependencies.name.join(', ')}")
+            }
             this."get${capitalize(conf)}Dependencies"().addAll(newDependencies)
             for (File jar: newDependencies) {
                 getClass().classLoader.rootLoader.addURL(jar.toURI().toURL())
@@ -1037,14 +1028,14 @@ class BuildSettings extends AbstractBuildSettings {
         }
 
         // required for testing until we spin tests out to their own process
-        if(conf == 'test') {
+        if (conf == 'test') {
             updateDependenciesFor('build', dependencies)
         }
     }
 
     Object getConfigValue(String key, Object defaultValue) {
         Object value = System.getProperty(key)
-        if(value) return value
+        if (value) return value
         config.flatten([:])[key] ?: defaultValue
     }
 }

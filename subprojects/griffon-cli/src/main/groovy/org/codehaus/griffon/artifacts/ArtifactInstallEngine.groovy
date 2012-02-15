@@ -37,6 +37,7 @@ import static griffon.util.GriffonUtil.getScriptName
 import static org.codehaus.griffon.artifacts.ArtifactRepository.DEFAULT_LOCAL_NAME
 import static org.codehaus.griffon.artifacts.ArtifactUtils.*
 import static org.codehaus.griffon.cli.CommandLineConstants.KEY_DEFAULT_INSTALL_ARTIFACT_REPOSITORY
+import static org.codehaus.griffon.cli.CommandLineConstants.KEY_DISABLE_LOCAL_REPOSITORY_SYNC
 
 /**
  * @author Andres Almiray
@@ -332,7 +333,7 @@ class ArtifactInstallEngine {
     }
 
     void publishReleaseToGriffonLocal(Release release, File file) {
-        if (!release.snapshot && !settings.config.griffon.disable.local.repository.sync) {
+        if (!release.snapshot && !settings.getConfigValue(KEY_DISABLE_LOCAL_REPOSITORY_SYNC, false)) {
             _publishReleaseToGriffonLocal(release.artifact.type, release.artifact.name, release.version, file)
         }
     }
@@ -379,7 +380,7 @@ class ArtifactInstallEngine {
             release.file = releaseZipFile
             griffonLocal.uploadRelease(release, null, null)
             if (LOG.infoEnabled) {
-                LOG.info("Successfully published plugin ${name}-${version} to ${repositoryName}.")
+                LOG.info("Successfully published ${type} ${name}-${version} to ${repositoryName}.")
             }
         } catch (Exception e) {
             if (LOG.warnEnabled) {

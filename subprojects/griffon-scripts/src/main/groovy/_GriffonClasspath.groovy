@@ -30,7 +30,7 @@ _griffon_classpath_called = true
 
 classpathSet = false
 
-projectCompileClassesDir = new File("${classesDir.absolutePath}/cli")
+projectCliClassesDir = new File("${classesDir.absolutePath}/cli")
 projectMainClassesDir = new File("${classesDir.absolutePath}/main")
 projectTestClassesDir = new File("${classesDir.absolutePath}/test")
 
@@ -146,8 +146,8 @@ testClasspath = {
         debug "  ${griffonSettings.testResourcesDir}"
     }
     if (cliSourceDir.exists()) {
-        pathelement(location: projectCompileClassesDir)
-        debug "  $projectCompileClassesDir"
+        pathelement(location: projectCliClassesDir)
+        debug "  $projectCliClassesDir"
     }
 }
 

@@ -90,6 +90,12 @@ public interface CommandLineConstants {
      */
     String KEY_DEFAULT_INSTALL_ARTIFACT_REPOSITORY = "griffon.artifact.repository.default.install";
 
+    /**
+     * Controls if installed artifacts are copied to a local repository for faster lookups.
+     * <p>Valid values are <tt>'true'</tt> or <tt>'false'</tt>. Default is <tt>'false'</tt>.</p>
+     */
+    String KEY_DISABLE_LOCAL_REPOSITORY_SYNC = "griffon.disable.local.repository.sync";
+
     String[] KEYS = {
             KEY_INTERACTIVE_MODE,
             KEY_NON_INTERACTIVE_DEFAULT_ANSWER,
@@ -101,6 +107,7 @@ public interface CommandLineConstants {
             KEY_DISABLE_THREADING_INJECTION,
             KEY_INSTALL_FAILURE_KEY,
             KEY_DEFAULT_ARTIFACT_REPOSITORY,
-            KEY_DEFAULT_INSTALL_ARTIFACT_REPOSITORY
+            KEY_DEFAULT_INSTALL_ARTIFACT_REPOSITORY,
+            KEY_DISABLE_LOCAL_REPOSITORY_SYNC
     };
 }
