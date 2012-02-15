@@ -323,7 +323,10 @@ debug = { msg ->
 }
 
 compilingPlugin = { pluginName ->
-    getPluginDirForName(pluginName)?.file?.canonicalPath == basedir
+    File pluginDescriptor = griffonSettings.isPluginProject()
+    if(!pluginDescriptor) return false
+    String pluginDescriptorName = GriffonUtil.getClassNameRepresentation(pluginName) + 'GriffonPlugin.groovy'
+    pluginDescriptorName == pluginDescriptor.name
 }
 
 cliSourceDir = new File("${basedir}/src/cli")

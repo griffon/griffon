@@ -56,6 +56,8 @@ event = {String name, def args ->
     eventListener.triggerEvent(name, * args)
 }
 
-target(loadEventHooks: 'Loads all event handlers defined by application/plugin scripts') {
+target(name: 'loadEventHooks',
+        description: 'Loads all event handlers defined by application/plugin scripts',
+        prehook: null, posthook: null) {
     eventListener.initialize()
 }
