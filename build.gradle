@@ -15,9 +15,23 @@
  */
 
 import java.text.SimpleDateFormat
+import org.apache.ivy.plugins.resolver.URLResolver
 
 apply plugin: 'base'
 apply plugin: 'idea'
+
+buildscript {
+    repositories {
+        add(new URLResolver()) {
+            name = 'GitHub'
+            addArtifactPattern 'http://cloud.github.com/downloads/[organisation]/[module]/[module]-[revision].[ext]'
+        }
+    }
+    dependencies {
+        classpath 'bmuschko:gradle-izpack-plugin:0.1'
+        classpath 'bmuschko:gradle-java2html-plugin:0.3'
+    }
+}
 
 evaluationDependsOn(':griffon-rt')
 evaluationDependsOn(':griffon-cli')
@@ -80,7 +94,7 @@ task allTests(dependsOn: [clean, project(':griffon-rt').test, project(':griffon-
     description = "Runs all tests."
 }
 
-task fullDist(dependsOn: [zipBinary, zipSource, tarBinary, tarSource, izpack, deb]) {
+task fullDist(dependsOn: [zipBinary, zipSource, tarBinary, tarSource, izPackCreateInstaller, deb]) {
     description = "Assembles all packages."
 }
 
