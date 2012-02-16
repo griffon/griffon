@@ -864,15 +864,17 @@ public class GriffonScriptRunner {
             setupScript("_GriffonClasspath");
 
             File scriptFile = (File) binding.getVariable(VAR_SCRIPT_FILE);
-            gant.loadScript(scriptFile);
-            gant.prepareTargets();
+            String scriptFileName = scriptFile.getName();
+            if(scriptFileName.endsWith(".groovy")) {
+                scriptFileName = scriptFileName.substring(0, scriptFileName.length() - ".groovy".length());
+            }
 
-            String targetName = (String) binding.getVariable("defaultTarget");
+            //String targetName = (String) binding.getVariable("defaultTarget");
             List<String> targets = new ArrayList<String>();
             targets.add("parseArguments");
-            if (binarySearch(CONFIGURE_PROXY_EXCLUSIONS, targetName) < 0) targets.add("configureProxy");
+            if (binarySearch(CONFIGURE_PROXY_EXCLUSIONS, scriptFileName) < 0) targets.add("configureProxy");
             if (!isContextlessScriptName(scriptFile)) {
-                if (binarySearch(RESOLVE_DEPENDENCIES_EXCLUSIONS, targetName) < 0) {
+                if (binarySearch(RESOLVE_DEPENDENCIES_EXCLUSIONS, scriptFileName) < 0) {
                     targets.add("resolveDependencies");
                 }
                 targets.add("loadEventHooks");
@@ -881,19 +883,24 @@ public class GriffonScriptRunner {
             gant.setAllPerTargetPreHooks(DO_NOTHING_CLOSURE);
             gant.setAllPerTargetPostHooks(DO_NOTHING_CLOSURE);
             gant.executeTargets("dispatch", targets);
+
+            gant.loadScript(scriptFile);
+            gant.prepareTargets();
+            gant.setAllPerTargetPreHooks(DO_NOTHING_CLOSURE);
+            gant.setAllPerTargetPostHooks(DO_NOTHING_CLOSURE);
         }
 
         private static String[] CONFIGURE_PROXY_EXCLUSIONS = {
-                "addProxy", "clearProxy", "removeProxy", "setProxy", "configureProxy",
-                "help", "setVersion", "showHelp", "stats",
-                "createAddon", "createPlugin", "upgrade",
-                "createCommandAlias", "docs"
+                "AddProxy", "ClearProxy", "RemoveProxy", "SetProxy", "ConfigureProxy",
+                "Help", "SetVersion", "Stats",
+                "CreateAddon", "CreatePlugin", "Upgrade",
+                "CreateCommandAlias", "Doc"
         };
 
         private static String[] RESOLVE_DEPENDENCIES_EXCLUSIONS = {
-                "setVersion", "stats", "upgrade",
-                "createCommandAlias", "docs", "uninstallPlugin",
-                "listPluginUpdates", "resolveDependencies"
+                "SetVersion", "Stats", "Upgrade",
+                "CreateCommandAlias", "Doc", "UninstallPlugin",
+                "ListPluginUpdates", "_GriffonResolveDependencies"
         };
 
         static {
