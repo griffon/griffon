@@ -78,19 +78,19 @@ target(name: 'package_plugin', description: '',
     }
 
     File runtimeJar = new File("${artifactPackageDirPath}/dist/griffon-${pluginName}-${pluginVersion}-runtime.jar")
-    File compileJar = new File("${artifactPackageDirPath}/dist/griffon-${pluginName}-${pluginVersion}-compile.jar")
-    File testJar = new File("${artifactPackageDirPath}/dist/griffon-${pluginName}-${pluginVersion}-test.jar")
+    File compileJar = new File("${artifactPackageDirPath}/dist/griffon-${pluginName}-cli-${pluginVersion}.jar")
+    File testJar = new File("${artifactPackageDirPath}/dist/griffon-${pluginName}-test-${pluginVersion}.jar")
 
     String compile = ''
     if (runtimeJar.exists()) {
         compile = "compile(group: 'org.codehaus.griffon.plugins', name: 'griffon-${pluginName}', version: '${pluginVersion}', classifier: 'runtime')"
     }
     if (compileJar.exists()) {
-        compile += "\n\t\tcompile(group: 'org.codehaus.griffon.plugins', name: 'griffon-${pluginName}', version: '${pluginVersion}', classifier: 'compile')"
+        compile += "\n\tbuild(group: 'org.codehaus.griffon.plugins', name: 'griffon-${pluginName}-cli', version: '${pluginVersion}')"
     }
     String test = ''
     if (testJar.exists()) {
-        test = "test(group: 'org.codehaus.griffon.plugins', name: 'griffon-${pluginName}', version: ${pluginVersion}', classifier: 'test')"
+        test = "test(group: 'org.codehaus.griffon.plugins', name: 'griffon-${pluginName}-test', version: ${pluginVersion}')"
     }
 
     if (compile || test) {
@@ -102,7 +102,6 @@ target(name: 'package_plugin', description: '',
         |            "\${pluginDirPath}/dist"
         |        ])
         |    }
-        |
         |    dependencies {
         |        ${compile.trim()}
         |        $test
@@ -228,7 +227,7 @@ target(name: 'pluginTest', description: '',
     boolean hasTestResources = hasFiles(dir: testResourcesDir, excludes: '**/*.svn/**, **/CVS/**')
 
     if (hasTestSources || hasTestResources) {
-        String jarFileName = "${artifactPackageDirPath}/dist/griffon-${pluginName}-${pluginVersion}-test.jar"
+        String jarFileName = "${artifactPackageDirPath}/dist/griffon-${pluginName}-test-${pluginVersion}.jar"
 
         ant.uptodate(property: 'pluginTestJarUpToDate', targetfile: jarFileName) {
             if (hasTestSources) {

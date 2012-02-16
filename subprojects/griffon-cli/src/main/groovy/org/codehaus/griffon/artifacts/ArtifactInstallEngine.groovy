@@ -551,7 +551,7 @@ class ArtifactInstallEngine {
             compile = "compile(group: 'org.codehaus.griffon.plugins', name: 'griffon-${name}-addon', version: '${version}')"
         }
         if (cliJar.exists()) {
-            compile += "\n\t\tcompile(group: 'org.codehaus.griffon.plugins', name: 'griffon-${name}-cli', version: '${version}')"
+            compile += "\nbuild(group: 'org.codehaus.griffon.plugins', name: 'griffon-${name}-cli', version: '${version}')"
         }
         String test = ''
         if (testJar.exists()) {
@@ -569,7 +569,6 @@ class ArtifactInstallEngine {
             |            "\${pluginDirPath}/lib"
             |        ])
             |    }
-            |
             |    dependencies {
             |        ${compile.trim()}
             |        $test
@@ -592,12 +591,12 @@ class ArtifactInstallEngine {
             def callable = settings.pluginDependencyHandler(dependencyManager)
             int result = callable.call(new File(pluginInstallPath), pluginName, pluginVersion)
             if (result == BuildSettings.RESOLUTION_OK) {
-                for (conf in ['compile', 'build', 'test', 'runtime']) {
-                    def resolveReport = dependencyManager.resolveDependencies(IvyDependencyManager."${conf.toUpperCase()}_CONFIGURATION")
+                for (String conf: ['runtime', 'compile', 'test', 'build']) {
+                    def resolveReport = dependencyManager.resolveDependencies(conf)
                     if (resolveReport.hasError()) {
                         throw new InstallArtifactException("Plugin ${pluginName}-${pluginVersion} has missing JAR dependencies.")
                     } else {
-                        settings.updateDependenciesFor conf, resolveReport.allArtifactsReports.localFile
+                        settings.updateDependenciesFor conf, resolveReport.getConfigurationReport(conf).allArtifactsReports.localFile
                     }
                 }
             }

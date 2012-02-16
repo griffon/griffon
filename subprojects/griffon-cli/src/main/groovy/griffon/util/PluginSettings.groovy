@@ -166,7 +166,7 @@ class PluginSettings {
         }
 
         IvyDependencyManager dependencyManager = settings.dependencyManager
-        for (conf in ['compile', 'build', 'test', 'runtime']) {
+        for (conf in ['runtime', 'compile', 'test', 'build']) {
             def resolveReport = dependencyManager.resolveDependencies(IvyDependencyManager."${conf.toUpperCase()}_CONFIGURATION")
             if (resolveReport.hasError()) {
                 throw new IllegalStateException("Some dependencies failed to be resolved.")
@@ -178,9 +178,6 @@ class PluginSettings {
         configurations.each { String conf, List<File> dependencies ->
             settings.updateDependenciesFor conf, dependencies
         }
-
-        // Finally copy over test into build
-        settings.updateDependenciesFor 'build', settings.getTestDependencies()
     }
 
     private Resource[] resolveForEachPlugin(String key, Closure closure) {

@@ -55,7 +55,6 @@ public abstract class AbstractIvyDependencyManager {
      * - compile: Dependencies for the compile step
      * - runtime: Dependencies needed at runtime but not for compilation (see above)
      * - test: Dependencies needed for testing but not at runtime (see above)
-     * - provided: Dependencies needed at development time, but not during WAR deployment
      */
     public static Configuration BUILD_CONFIGURATION = new Configuration(
             "build",
