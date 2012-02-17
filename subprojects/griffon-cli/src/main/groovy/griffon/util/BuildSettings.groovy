@@ -30,6 +30,7 @@ import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import org.springframework.core.io.Resource
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver
+import static griffon.util.GriffonExceptionHandler.sanitize
 import static griffon.util.GriffonNameUtils.capitalize
 import static org.codehaus.griffon.artifacts.ArtifactUtils.*
 import static org.codehaus.griffon.cli.CommandLineConstants.KEY_OFFLINE_MODE
@@ -229,9 +230,6 @@ class BuildSettings extends AbstractBuildSettings {
 
     /** The root loader for the build. This has the required libraries on the classpath. */
     URLClassLoader rootLoader
-
-    /** The settings stored in the project's BuildConfig.groovy file if there is one. */
-    ConfigObject config = new ConfigObject()
 
     /**
      * The settings used to establish the HTTP proxy to use for dependency resolution etc. 
@@ -489,7 +487,7 @@ class BuildSettings extends AbstractBuildSettings {
             springVersion = buildProps.'spring.version'
         }
         catch (IOException ex) {
-            StackTraceUtils.deepSanitize(ex).printStackTrace()
+            sanitize(ex).printStackTrace()
             throw new IOException("Unable to find 'build.properties' - make " +
                     "that sure the 'griffon-cli-*.jar' file is on the classpath.")
         }

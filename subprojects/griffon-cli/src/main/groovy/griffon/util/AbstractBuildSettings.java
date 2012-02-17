@@ -35,9 +35,6 @@ import static org.codehaus.griffon.cli.CommandLineConstants.KEY_NON_INTERACTIVE_
  * @since 0.9.1
  */
 public abstract class AbstractBuildSettings {
-    private static final String KEY_PLUGIN_DIRECTORY_RESOURCES = "pluginDirectoryResources";
-    private static final String KEY_PLUGIN_BASE_DIRECTORIES = "pluginBaseDirectories";
-
     /**
      * Used to cache results of certain expensive operations
      */
@@ -83,63 +80,6 @@ public abstract class AbstractBuildSettings {
     public void setProjectPluginsDir(File projectPluginsDir) {
         this.projectPluginsDir = projectPluginsDir;
         projectPluginsDirSet = true;
-    }
-
-    /**
-     * Obtains a list of plugin directories for the application
-     */
-    @SuppressWarnings("unchecked")
-    public Collection<File> getPluginDirectories() {
-        Collection<File> pluginDirectoryResources = (Collection<File>) cache.get(KEY_PLUGIN_DIRECTORY_RESOURCES);
-        if (pluginDirectoryResources == null) {
-            pluginDirectoryResources = getImplicitPluginDirectories();
-            cache.put(KEY_PLUGIN_DIRECTORY_RESOURCES, pluginDirectoryResources);
-        }
-        return pluginDirectoryResources;
-    }
-
-    /**
-     * Returns a list of all plugin directories in the given path.
-     *
-     * @return A list of plugin directories as File objects
-     */
-    public Collection<File> getImplicitPluginDirectories() {
-        ConcurrentLinkedQueue<File> dirList = new ConcurrentLinkedQueue<File>();
-
-        for (String pluginBase : getPluginBaseDirectories()) {
-            File[] pluginDirs = new File(pluginBase).listFiles(new FileFilter() {
-                public boolean accept(File pathname) {
-                    final String fileName = pathname.getName();
-                    return pathname.isDirectory() && (!fileName.startsWith(".") && fileName.indexOf('-') > -1);
-                }
-            });
-            if (pluginDirs != null) {
-                dirList.addAll(Arrays.asList(pluginDirs));
-            }
-        }
-
-        return dirList;
-    }
-
-    /**
-     * Gets a list of all the known plugin base directories (directories where plugins are installed to).
-     *
-     * @return Returns the base location where plugins are kept
-     */
-    @SuppressWarnings("unchecked")
-    public Collection<String> getPluginBaseDirectories() {
-        List<String> dirs = (List<String>) cache.get(KEY_PLUGIN_BASE_DIRECTORIES);
-        if (dirs == null) {
-            dirs = new ArrayList<String>();
-            if (projectPluginsDir != null) try {
-                dirs.add(projectPluginsDir.getCanonicalPath());
-            } catch (IOException e) {
-                System.err.println("Cannot read project plugins directory [" + projectPluginsDir + "] due to I/O error: " + e.getMessage());
-            }
-
-            cache.put(KEY_PLUGIN_BASE_DIRECTORIES, dirs);
-        }
-        return dirs;
     }
 
     public boolean isDebugEnabled() {

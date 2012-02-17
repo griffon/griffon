@@ -100,7 +100,7 @@ class PluginSettings {
 
             def addScripts = {if (!it.file.name.startsWith('_')) scripts << it}
 
-            resolveResources("file:${griffonHome}/scripts/*.groovy").each addScripts
+            if (griffonHome) resolveResources("file:${griffonHome}/scripts/*.groovy").each addScripts
             resolveResources("file:${basedir}/scripts/*.groovy").each addScripts
             resolveResources("file:${userHome}/.griffon/scripts/*.groovy").each addScripts
             pluginScripts.each addScripts
@@ -120,10 +120,10 @@ class PluginSettings {
 
         def addScripts = {if (!it.file.name.startsWith('_')) scripts << it}
 
-        resolveResources("file:${griffonHome}/scripts/${scriptName}/*.groovy").each addScripts
-        resolveResources("file:${basedir}/scripts/${scriptName}/*.groovy").each addScripts
-        resolveResources("file:${userHome}/.griffon/${scriptName}/scripts/*.groovy").each addScripts
-        resolveResources("file:${pluginHome}/scripts/${scriptName}/*.groovy").each addScripts
+        if (griffonHome) resolveResources("file:${griffonHome}/scripts/${scriptName}.groovy").each addScripts
+        resolveResources("file:${basedir}/scripts/${scriptName}.groovy").each addScripts
+        resolveResources("file:${userHome}/.griffon/scripts/${scriptName}.groovy").each addScripts
+        resolveResources("file:${pluginHome}/scripts/${scriptName}.groovy").each addScripts
 
         scripts as Resource[]
     }
