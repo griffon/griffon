@@ -47,4 +47,10 @@ public interface ArtifactRepository {
     File downloadFile(String type, String name, String version, String username);
 
     boolean uploadRelease(Release release, String username, String password);
+
+    boolean isLocal();
+
+    boolean isRemote();
+
+    boolean isLegacy();
 }

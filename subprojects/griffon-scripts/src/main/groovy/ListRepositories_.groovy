@@ -40,7 +40,7 @@ ${'Name'.padRight(20, ' ')}${'Type'.padRight(8, ' ')} Location
 }
 
 formatRepositoryForPrint = { ArtifactRepository repository ->
-    "${repository.name.padRight(20, ' ')}${repository.type.toString().padRight(8, ' ')} ${repository.type == ArtifactRepository.LOCAL ? repository.path : repository.url}"
+    "${repository.name.padRight(20, ' ')}${repository.type.toString().padRight(8, ' ')} ${repository.local ? repository.path : repository.url}"
 }
 
 listRepositoriesFooter = {->

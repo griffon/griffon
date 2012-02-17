@@ -57,17 +57,7 @@ class RepositoriesConfigurer extends AbstractDependencyManagementConfigurer {
     }
 
     void griffonPlugins() {
-        /*
-        if (!context.offline) {
-            if (isResolverNotAlreadyDefined('griffonPlugins')) {
-                dependencyManager.repositoryData << [type: 'griffonPlugins', name: "griffonPlugins"]
-                if (dependencyManager.buildSettings != null) {
-                    def pluginResolver = new GriffonPluginsDirectoryResolver(dependencyManager.buildSettings, dependencyManager.ivySettings)
-                    addToChainResolver(pluginResolver)
-                }
-            }
-        }
-        */
+        // empty
     }
 
     void griffonHome() {
@@ -139,28 +129,11 @@ class RepositoriesConfigurer extends AbstractDependencyManagementConfigurer {
      * against non-Maven repositories
      */
     void griffonRepo(String url, String name = null) {
-        // if (!context.offline && isResolverNotAlreadyDefined(name ?: url)) {
-        //     dependencyManager.repositoryData << ['type': 'griffonRepo', url: url]
-        //     def urlResolver = new GriffonRepoResolver(name ?: url, new URL(url))
-        //     urlResolver.addArtifactPattern("${url}/griffon-[module]/tags/RELEASE_*/griffon-[module]-[revision].[ext]")
-        //     urlResolver.addIvyPattern("${url}/griffon-[module]/tags/RELEASE_*/[module]-[revision].pom")
-        //     urlResolver.settings = dependencyManager.ivySettings
-        //     urlResolver.latestStrategy = new LatestTimeStrategy()
-        //     urlResolver.changingPattern = ".*SNAPSHOT"
-        //     urlResolver.setCheckmodified(true)
-        //     addToChainResolver(urlResolver)
-        // }
+        // empty
     }
 
     void griffonCentral() {
-        /*
-        if (!context.offline && isResolverNotAlreadyDefined('griffonCentral')) {
-            griffonRepo("http://plugins.griffon.org", "griffonCentral")
-            mavenRepo("http://repo.griffon.org/griffon/plugins")
-            mavenRepo("http://repo.griffon.org/griffon/core")
-            griffonRepo("http://svn.codehaus.org/griffon/trunk/griffon-plugins", "griffonCore")
-        }
-        */
+        // empty
     }
 
     void mavenCentral() {

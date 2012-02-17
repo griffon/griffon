@@ -45,12 +45,20 @@ selectArtifactRepository = {
         event('StatusError', ["Artifact repository ${repositoryName} is not configured."])
         exit 1
     }
+    if (griffonSettings.offlineMode && !artifactRepository.local) {
+        event('StatusError', ["Repository ${repositoryName} cannot be used while offline mode is enabled."])
+        exit 1
+    }
 }
 
 resolveArtifactRepository = {
     artifactRepository = null
     if (argsMap.repository) {
         artifactRepository = ArtifactRepositoryRegistry.instance.findRepository(argsMap.repository)
+        if (griffonSettings.offlineMode && !artifactRepository.local) {
+            event('StatusError', ["Repository ${repositoryName} cannot be used while offline mode is enabled."])
+            exit 1
+        }
     } else {
         artifactRepository = null
     }
@@ -70,7 +78,10 @@ doWithSelectedRepository = { callback ->
 
     for (String repositoryName: repositories) {
         artifactRepository = ArtifactRepositoryRegistry.instance.findRepository(repositoryName)
-        if (callback(artifactRepository)) break
+        if (artifactRepository) {
+            if(griffonSettings.offlineMode && !artifactRepository.local) return
+            if (callback(artifactRepository)) break
+        }
     }
 }
 
@@ -249,7 +260,7 @@ installArtifactForName = { Metadata md, String type, String name, String version
             }
         }
         if (!installed) {
-            event('StatusError', ["Failed to install ${type} ${name}${version ? '-' + version : ''}"])
+            event('StatusError', ["Failed to install ${type} ${name}${version ? '-' + version : ''} [offline: ${griffonSettings.offlineMode}]"])
             exit 1
         }
     }

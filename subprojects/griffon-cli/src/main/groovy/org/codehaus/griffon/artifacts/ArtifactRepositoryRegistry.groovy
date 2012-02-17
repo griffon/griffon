@@ -17,6 +17,7 @@
 package org.codehaus.griffon.artifacts
 
 import griffon.util.BuildSettingsHolder
+import static org.codehaus.griffon.cli.CommandLineConstants.KEY_OFFLINE_MODE
 
 /**
  * @author Andres Almiray
@@ -49,8 +50,10 @@ final class ArtifactRepositoryRegistry {
     }
 
     void withRepositories(Closure closure) {
+        boolean offline = BuildSettingsHolder.getSettings().isOfflineMode()
         synchronized (REPOSITORIES) {
             REPOSITORIES.each { name, repository ->
+                if (offline && !repository.local) return
                 closure(name, repository)
             }
         }

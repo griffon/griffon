@@ -40,6 +40,10 @@ class LocalArtifactRepository extends AbstractArtifactRepository {
     String path
     final String type = LOCAL
 
+    final boolean local = true
+    final boolean remote = false
+    final boolean legacy = false
+
     LocalArtifactRepository() {
         setPath(null)
     }

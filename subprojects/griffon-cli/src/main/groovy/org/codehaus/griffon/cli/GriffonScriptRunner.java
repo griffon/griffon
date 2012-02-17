@@ -833,7 +833,7 @@ public class GriffonScriptRunner {
 
     private GantCustomizer gantCustomizer;
 
-    private static class GantCustomizer { // extends BuildListenerAdapter {
+    private static class GantCustomizer {
         private final BuildSettings settings;
         private final Binding binding;
         private final Gant gant;
@@ -865,11 +865,10 @@ public class GriffonScriptRunner {
 
             File scriptFile = (File) binding.getVariable(VAR_SCRIPT_FILE);
             String scriptFileName = scriptFile.getName();
-            if(scriptFileName.endsWith(".groovy")) {
+            if (scriptFileName.endsWith(".groovy")) {
                 scriptFileName = scriptFileName.substring(0, scriptFileName.length() - ".groovy".length());
             }
 
-            //String targetName = (String) binding.getVariable("defaultTarget");
             List<String> targets = new ArrayList<String>();
             targets.add("parseArguments");
             if (binarySearch(CONFIGURE_PROXY_EXCLUSIONS, scriptFileName) < 0) targets.add("configureProxy");

@@ -178,7 +178,7 @@ createArtifactRelease = { String type, Map artifactInfo ->
 setupCredentials = {
     username = ''
     password = ''
-    if (artifactRepository.type != ArtifactRepository.REMOTE) return
+    if (!artifactRepository.remote) return
 
     username = resolveCredential('username')
     password = resolveCredential('password')

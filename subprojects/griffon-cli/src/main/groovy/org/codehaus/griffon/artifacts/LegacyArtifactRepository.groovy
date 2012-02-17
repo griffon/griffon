@@ -39,6 +39,10 @@ class LegacyArtifactRepository extends AbstractArtifactRepository {
     final String url = 'http://svn.codehaus.org/griffon/plugins/'
     final int timeout = 30000i
 
+    final boolean local = false
+    final boolean remote = false
+    final boolean legacy = true
+
     private final HttpURLClient http
 
     LegacyArtifactRepository() {

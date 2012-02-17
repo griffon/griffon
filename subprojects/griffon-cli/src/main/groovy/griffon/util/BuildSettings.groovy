@@ -32,6 +32,7 @@ import org.springframework.core.io.Resource
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver
 import static griffon.util.GriffonNameUtils.capitalize
 import static org.codehaus.griffon.artifacts.ArtifactUtils.*
+import static org.codehaus.griffon.cli.CommandLineConstants.KEY_OFFLINE_MODE
 
 /**
  * <p>Represents the project paths and other build settings
@@ -73,8 +74,6 @@ class BuildSettings extends AbstractBuildSettings {
      * The name of the system property for {@link #projectWorkDir}.
      */
     public static final String PROJECT_WORK_DIR = "griffon.project.work.dir"
-
-    public static final String OFFLINE_MODE = "griffon.offline.mode"
 
     /**
      * The name of the system property for {@link #projectPluginsDir}.
@@ -269,11 +268,6 @@ class BuildSettings extends AbstractBuildSettings {
      * Return whether the BuildConfig has been modified
      */
     boolean modified = false
-
-    /**
-     * Whether the build is allowed to connect to remote servers to resolve dependencies
-     */
-    boolean offline = false
 
     private List<File> compileDependencies = []
     private boolean defaultCompileDepsAdded = false
@@ -787,7 +781,6 @@ class BuildSettings extends AbstractBuildSettings {
         IvyDependencyManager dependencyManager = new IvyDependencyManager(appName,
                 appVersion, this, metadata)
 
-        dependencyManager.offline = offline
         dependencyManager.includeJavadoc = includeJavadoc
         dependencyManager.includeSource = includeSource
 
@@ -918,13 +911,16 @@ class BuildSettings extends AbstractBuildSettings {
                 baseDir.listFiles().find { it.name == GRIFFON_APP && it.directory }
     }
 
+    boolean isOfflineMode() {
+        getConfigValue(KEY_OFFLINE_MODE, false) as boolean
+    }
+
     private void establishProjectStructure() {
         // The third argument to "getPropertyValue()" is either the
         // existing value of the corresponding field, or if that's
         // null, a default value. This ensures that we don't override
         // settings provided by, for example, the Maven plugin.
         def props = config.toProperties()
-        offline = Boolean.valueOf(getPropertyValue(OFFLINE_MODE, props, String.valueOf(offline)))
         compilerSourceLevel = getPropertyValue(COMPILER_SOURCE_LEVEL, props, null)
         compilerTargetLevel = getPropertyValue(COMPILER_TARGET_LEVEL, props, "1.6")
 
@@ -1018,7 +1014,7 @@ class BuildSettings extends AbstractBuildSettings {
         List<File> existingDependencies = this."get${capitalize(conf)}Dependencies"()
         List<File> newDependencies = dependencies.unique() - existingDependencies
         if (newDependencies) {
-            if(LOG.debugEnabled) {
+            if (LOG.debugEnabled) {
                 LOG.debug("Adding the following dependencies to $conf: ${newDependencies.name.join(', ')}")
             }
             this."get${capitalize(conf)}Dependencies"().addAll(newDependencies)
@@ -1035,7 +1031,7 @@ class BuildSettings extends AbstractBuildSettings {
 
     Object getConfigValue(String key, Object defaultValue) {
         Object value = System.getProperty(key)
-        if (value) return value
+        if (value != null) return value
         config.flatten([:])[key] ?: defaultValue
     }
 }

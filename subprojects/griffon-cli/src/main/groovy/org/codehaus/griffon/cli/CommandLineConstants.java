@@ -96,6 +96,12 @@ public interface CommandLineConstants {
      */
     String KEY_DISABLE_LOCAL_REPOSITORY_SYNC = "griffon.disable.local.repository.sync";
 
+    /**
+     * Defines if the command tool should resolve dependencies over the network or not.
+     * <p>Valid values are <tt>'true'</tt> or <tt>'false'</tt>.</p>
+     */
+    String KEY_OFFLINE_MODE = "griffon.offline.mode";
+
     String[] KEYS = {
             KEY_INTERACTIVE_MODE,
             KEY_NON_INTERACTIVE_DEFAULT_ANSWER,
@@ -108,6 +114,7 @@ public interface CommandLineConstants {
             KEY_INSTALL_FAILURE_KEY,
             KEY_DEFAULT_ARTIFACT_REPOSITORY,
             KEY_DEFAULT_INSTALL_ARTIFACT_REPOSITORY,
-            KEY_DISABLE_LOCAL_REPOSITORY_SYNC
+            KEY_DISABLE_LOCAL_REPOSITORY_SYNC,
+            KEY_OFFLINE_MODE
     };
 }

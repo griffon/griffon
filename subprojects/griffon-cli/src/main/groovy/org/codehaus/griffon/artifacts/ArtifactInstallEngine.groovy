@@ -342,7 +342,7 @@ class ArtifactInstallEngine {
         String repositoryName = settings.getConfigValue(KEY_DEFAULT_INSTALL_ARTIFACT_REPOSITORY, DEFAULT_LOCAL_NAME)
         ArtifactRepository griffonLocal = ArtifactRepositoryRegistry.instance.findRepository(repositoryName)
 
-        if (griffonLocal.type != ArtifactRepository.LOCAL) {
+        if (!griffonLocal.local) {
             if (LOG.warnEnabled) {
                 LOG.warn("Repository ${repositoryName} is not a local repository; will use ${DEFAULT_LOCAL_NAME} instead.")
             }

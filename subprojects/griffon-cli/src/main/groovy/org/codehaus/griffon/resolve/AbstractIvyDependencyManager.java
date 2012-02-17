@@ -14,10 +14,7 @@
  */
 package org.codehaus.griffon.resolve;
 
-import griffon.util.BuildSettings;
-import griffon.util.CollectionUtils;
-import griffon.util.GriffonUtil;
-import griffon.util.Metadata;
+import griffon.util.*;
 import groovy.lang.Closure;
 import org.apache.ivy.core.module.descriptor.*;
 import org.apache.ivy.core.module.id.ArtifactId;
@@ -130,7 +127,6 @@ public abstract class AbstractIvyDependencyManager {
     final protected IvySettings ivySettings;
     final protected BuildSettings buildSettings;
     final protected Metadata metadata;
-    private boolean offline;
 
     private ChainResolver chainResolver;
 
@@ -150,12 +146,7 @@ public abstract class AbstractIvyDependencyManager {
         updateChangingPattern();
     }
 
-    public void setOffline(boolean offline) {
-        this.offline = offline;
-        updateChangingPattern();
-    }
-
-    private void updateChangingPattern() {
+    protected void updateChangingPattern() {
         chainResolver.setChangingPattern(isOffline() ? null : IvyDependencyManager.SNAPSHOT_CHANGING_PATTERN);
     }
 
@@ -177,7 +168,7 @@ public abstract class AbstractIvyDependencyManager {
     }
 
     public boolean isOffline() {
-        return offline;
+        return BuildSettingsHolder.getSettings().isOfflineMode();
     }
 
     public void setIncludeSource(boolean includeSource) {
@@ -380,6 +371,8 @@ public abstract class AbstractIvyDependencyManager {
      * @see #registerPluginDependency(String, EnhancedDefaultDependencyDescriptor)
      */
     public void registerDependency(String scope, EnhancedDefaultDependencyDescriptor descriptor) {
+        updateChangingPattern();
+
         String plugin = descriptor.getPlugin();
         if (plugin != null) {
             EnhancedDefaultDependencyDescriptor pluginDependencyDescriptor = (EnhancedDefaultDependencyDescriptor) getPluginDependencyDescriptor(plugin);
@@ -429,6 +422,8 @@ public abstract class AbstractIvyDependencyManager {
      * @see #registerDependency(String, EnhancedDefaultDependencyDescriptor)
      */
     public void registerPluginDependency(String scope, EnhancedDefaultDependencyDescriptor descriptor) {
+        updateChangingPattern();
+
         ModuleId dependencyId = descriptor.getDependencyId();
         String name = dependencyId.getName();
 
@@ -534,6 +529,7 @@ public abstract class AbstractIvyDependencyManager {
      * @see EnhancedDefaultDependencyDescriptor#plugin
      */
     private void doParseDependencies(Closure<?> definition, String pluginName) {
+        updateChangingPattern();
         DependencyConfigurationContext context;
 
         // Temporary while we move all of the Groovy super class here
@@ -545,8 +541,6 @@ public abstract class AbstractIvyDependencyManager {
             context = DependencyConfigurationContext.forPlugin(dependencyManager, pluginName);
         }
 
-        context.setOffline(this.offline);
-
         definition.setDelegate(new DependencyConfigurationConfigurer(context));
         definition.setResolveStrategy(Closure.DELEGATE_FIRST);
         definition.call();
@@ -556,7 +550,7 @@ public abstract class AbstractIvyDependencyManager {
      * Aspects of registering a dependency common to both plugins and jar dependencies.
      */
     private void registerDependencyCommon(String scope, EnhancedDefaultDependencyDescriptor descriptor, boolean isPluginDep) {
-        if (offline && descriptor.isChanging()) {
+        if (isOffline() && descriptor.isChanging()) {
             descriptor.setChanging(false);
         }
 

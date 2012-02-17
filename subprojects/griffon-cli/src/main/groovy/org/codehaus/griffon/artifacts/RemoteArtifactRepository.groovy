@@ -47,6 +47,10 @@ class RemoteArtifactRepository extends AbstractArtifactRepository {
     int timeout = 30i
     final String type = REMOTE
 
+    final boolean local = false
+    final boolean remote = true
+    final boolean legacy = false
+
     private HttpURLClient http
 
     RemoteArtifactRepository() {

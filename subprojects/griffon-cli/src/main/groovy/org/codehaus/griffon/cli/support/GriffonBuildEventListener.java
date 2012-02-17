@@ -32,6 +32,7 @@ import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import static griffon.util.GriffonExceptionHandler.sanitize;
 import static griffon.util.GriffonNameUtils.getPropertyNameForLowerCaseHyphenSeparatedName;
 import static org.codehaus.groovy.runtime.typehandling.DefaultTypeTransformation.castToBoolean;
 
@@ -139,7 +140,7 @@ public class GriffonBuildEventListener extends BuildListenerAdapter {
                     System.err.println("Could not load event script (script may be empty): " + eventScript);
                 }
             } catch (Throwable e) {
-                GriffonUtil.deepSanitize(e);
+                sanitize(e);
                 e.printStackTrace();
                 System.out.println("Error loading event script from file [" + eventScript + "] " + e.getMessage());
             }
