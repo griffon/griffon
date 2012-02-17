@@ -29,6 +29,8 @@ import org.codehaus.griffon.cli.ScriptExitException;
 import org.fusesource.jansi.Ansi;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
 
 import static griffon.util.GriffonExceptionHandler.sanitize;
 import static org.codehaus.griffon.cli.GriffonScriptRunner.*;
@@ -63,11 +65,11 @@ public class ResolveDependenciesCommand extends AbstractAction {
         binding.setVariable(VAR_SCRIPT_FILE, scriptFile);
         binding.setVariable("runDependencyResolution", Boolean.TRUE);
         Gant gant = runner.createGantInstance(binding);
+        List<String> targets = new ArrayList<String>();
+        targets.add("resolveDependencies");
 
         try {
-            gant.setAllPerTargetPreHooks(DO_NOTHING_CLOSURE);
-            gant.setAllPerTargetPostHooks(DO_NOTHING_CLOSURE);
-            gant.processTargets("resolveDependencies");
+            runner.executeWithGantInstance(gant, binding, targets);
         } catch (ScriptExitException see) {
             // OK, we just got this exception because exit is not
             // allowed when running inside the interactive shell

@@ -625,6 +625,16 @@ public class GriffonScriptRunner {
         }
     }
 
+    public int executeWithGantInstance(Gant gant, GantBinding binding, List<String> targets) {
+        try {
+            gantCustomizer.prepareTargets();
+            return gant.executeTargets("dispatch", targets);
+        } catch (RuntimeException e) {
+            sanitize(e);
+            throw e;
+        }
+    }
+
     private int executeWithGantInstanceNoException(Gant gant, GantBinding binding) {
         try {
             return executeWithGantInstance(gant, binding);
@@ -833,7 +843,7 @@ public class GriffonScriptRunner {
 
     private GantCustomizer gantCustomizer;
 
-    private static class GantCustomizer {
+    public static class GantCustomizer {
         private final BuildSettings settings;
         private final Binding binding;
         private final Gant gant;
