@@ -50,6 +50,10 @@ import static org.codehaus.groovy.runtime.DefaultGroovyMethods.setText;
 public final class GriffonSetup {
     public static void run() {
         BuildSettings settings = BuildSettingsHolder.getSettings();
+        if (settings != null) {
+            settings.debug("Checking configuration for initial setup");
+        }
+
         if (settings != null && isFirstRun(settings)) {
             String defaultAnswerNonInteractive = System.getProperty(KEY_NON_INTERACTIVE_DEFAULT_ANSWER);
             System.setProperty(KEY_NON_INTERACTIVE_DEFAULT_ANSWER, "y");

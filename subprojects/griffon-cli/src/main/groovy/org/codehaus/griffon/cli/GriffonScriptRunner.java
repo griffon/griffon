@@ -21,6 +21,7 @@ import griffon.util.*;
 import groovy.lang.Binding;
 import groovy.lang.Closure;
 import groovy.lang.ExpandoMetaClass;
+import groovy.lang.MissingPropertyException;
 import groovy.util.AntBuilder;
 import org.apache.log4j.LogManager;
 import org.apache.tools.ant.Project;
@@ -138,7 +139,7 @@ public class GriffonScriptRunner {
         System.out.println("Base Directory: " + build.getBaseDir().getPath());
 
         try {
-            int exitCode = new GriffonScriptRunner(build).executeCommand(script);
+            int exitCode = new GriffonScriptRunner(build)._executeCommand(script);
             System.exit(exitCode);
         } catch (ScriptNotFoundException ex) {
             System.out.println("Script not found: " + ex.getScriptName());
@@ -262,7 +263,7 @@ public class GriffonScriptRunner {
         ScriptAndArgs script = new ScriptAndArgs();
         script.name = name;
         script.args = args;
-        return executeCommand(script);
+        return _executeCommand(script);
     }
 
     public int executeCommand(String name, String args, String env) {
@@ -270,7 +271,7 @@ public class GriffonScriptRunner {
         script.name = name;
         script.args = args;
         script.env = env;
-        return executeCommand(script);
+        return _executeCommand(script);
     }
 
     public boolean isInteractive() {
@@ -299,8 +300,10 @@ public class GriffonScriptRunner {
         ArtifactRepositoryRegistry.getInstance().configureRepositories();
     }
 
-    private int executeCommand(ScriptAndArgs script) {
+    private int _executeCommand(ScriptAndArgs script) {
         setup();
+
+        settings.debug("Executing script name: " + script.name + " env: " + script.env + " args: " + script.args);
 
         if (script.args != null) {
             // Check whether we are running in non-interactive mode
@@ -447,7 +450,45 @@ public class GriffonScriptRunner {
             // Invoke the default target.
             return executeWithGantInstanceNoException(gant, binding);
         }
-        return 1;
+        return attemptPrecompiledScriptExecute(script, binding, allScripts);
+    }
+
+    private int attemptPrecompiledScriptExecute(ScriptAndArgs script, GantBinding binding, Resource[] allScripts) {
+        out.println("Running pre-compiled script");
+
+        // Must be called before the binding is initialised.
+        setRunningEnvironment(script.name, script.env);
+
+        Gant gant = createGantInstance(binding);
+        String scriptName = script.name;
+        binding.setVariable(VAR_SCRIPT_NAME, scriptName);
+
+        try {
+            loadScriptClass(gant, scriptName);
+        } catch (ScriptNotFoundException e) {
+            if (isInteractive) {
+                scriptName = fixScriptName(scriptName, allScripts);
+                if (scriptName == null) {
+                    throw e;
+                }
+
+                loadScriptClass(gant, scriptName);
+
+                // at this point if they were calling a script that has a non-default
+                // env (e.g. war or test-app) it wouldn't have been correctly set, so
+                // set it now, but only if they didn't specify the env (e.g. "grails test war" -> "grails test war")
+
+                if (Boolean.TRUE.toString().equals(System.getProperty(Environment.DEFAULT))) {
+                    setRunningEnvironment(scriptName, script.env);
+                    settings.setDefaultEnv(false);
+                    System.setProperty(Environment.DEFAULT, Boolean.FALSE.toString());
+                }
+            } else {
+                throw e;
+            }
+        }
+
+        return executeWithGantInstanceNoException(gant, binding);
     }
 
     public Gant createGantInstance(GantBinding binding) {
@@ -550,6 +591,7 @@ public class GriffonScriptRunner {
 
     private void loadScriptClass(Gant gant, String scriptName) {
         try {
+            gantCustomizer.prepareTargets();
             // try externalized script first
             gant.loadScriptClass(scriptName + "_");
         } catch (Exception e) {
@@ -660,9 +702,13 @@ public class GriffonScriptRunner {
         return scriptFileName;
     }
 
-    public static boolean isContextlessScriptName(File scriptPath) {
-        String scriptFileName = scriptPath.getName().substring(0, scriptPath.getName().length() - 7);
-        return scriptFileName.endsWith("_");
+    public static boolean isContextlessScriptName(String scriptName) {
+        if (scriptName.endsWith(".groovy")) {
+            scriptName = scriptName.substring(0, scriptName.length() - 7);
+        } else if (scriptName.endsWith(".class")) {
+            scriptName = scriptName.substring(0, scriptName.length() - 6);
+        }
+        return scriptName.endsWith("_");
     }
 
     /**
@@ -847,6 +893,7 @@ public class GriffonScriptRunner {
         private final BuildSettings settings;
         private final Binding binding;
         private final Gant gant;
+        private boolean prepared = false;
 
         private GantCustomizer(BuildSettings settings, Binding binding, Gant gant) {
             this.settings = settings;
@@ -855,45 +902,61 @@ public class GriffonScriptRunner {
         }
 
         private void setupScript(String scriptName) {
-            gant.loadScript(scriptFileFor(scriptName));
+            File scriptFile = scriptFileFor(scriptName);
+            if (scriptFile != null && scriptFile.exists()) {
+                gant.loadScript(scriptFile);
+            } else {
+                gant.loadScriptClass(scriptName);
+            }
             gant.prepareTargets();
         }
 
         private File scriptFileFor(String scriptName) {
-            // TODO load from classpath
             return new File(settings.getGriffonHome(), "scripts/" + scriptName + ".groovy");
         }
 
         public void prepareTargets() {
-            // preload basic stuff that should always be there
-            setupScript("_GriffonSettings");
-            setupScript("_GriffonArgParsing");
-            setupScript("_GriffonEvents");
-            setupScript("_GriffonProxy");
-            setupScript("_GriffonResolveDependencies");
-            setupScript("_GriffonClasspath");
+            if (!prepared) {
+                // preload basic stuff that should always be there
+                setupScript("_GriffonSettings");
+                setupScript("_GriffonArgParsing");
+                setupScript("_GriffonEvents");
+                setupScript("_GriffonProxy");
+                setupScript("_GriffonResolveDependencies");
+                setupScript("_GriffonClasspath");
 
-            File scriptFile = (File) binding.getVariable(VAR_SCRIPT_FILE);
-            String scriptFileName = scriptFile.getName();
-            if (scriptFileName.endsWith(".groovy")) {
-                scriptFileName = scriptFileName.substring(0, scriptFileName.length() - ".groovy".length());
-            }
-
-            List<String> targets = new ArrayList<String>();
-            targets.add("parseArguments");
-            if (binarySearch(CONFIGURE_PROXY_EXCLUSIONS, scriptFileName) < 0) targets.add("configureProxy");
-            if (!isContextlessScriptName(scriptFile)) {
-                if (binarySearch(RESOLVE_DEPENDENCIES_EXCLUSIONS, scriptFileName) < 0) {
-                    targets.add("resolveDependencies");
+                String scriptName = (String) binding.getVariable(VAR_SCRIPT_NAME);
+                File scriptFile = null;
+                try {
+                    scriptFile = (File) binding.getVariable(VAR_SCRIPT_FILE);
+                } catch (MissingPropertyException mpe) {
+                    //ignore
                 }
-                targets.add("loadEventHooks");
-            }
-            settings.debug("** " + targets + " **");
-            gant.setAllPerTargetPreHooks(DO_NOTHING_CLOSURE);
-            gant.setAllPerTargetPostHooks(DO_NOTHING_CLOSURE);
-            gant.executeTargets("dispatch", targets);
+                if (scriptFile != null && scriptFile.exists()) {
+                    if (scriptName.endsWith(".groovy")) {
+                        scriptName = scriptName.substring(0, scriptName.length() - ".groovy".length());
+                    }
+                }
 
-            gant.loadScript(scriptFile);
+                List<String> targets = new ArrayList<String>();
+                targets.add("parseArguments");
+                if (binarySearch(CONFIGURE_PROXY_EXCLUSIONS, scriptName) < 0) targets.add("configureProxy");
+                if (!isContextlessScriptName(scriptName)) {
+                    if (binarySearch(RESOLVE_DEPENDENCIES_EXCLUSIONS, scriptName) < 0) {
+                        targets.add("resolveDependencies");
+                    }
+                    targets.add("loadEventHooks");
+                }
+                settings.debug("** " + targets + " **");
+                gant.setAllPerTargetPreHooks(DO_NOTHING_CLOSURE);
+                gant.setAllPerTargetPostHooks(DO_NOTHING_CLOSURE);
+                gant.executeTargets("dispatch", targets);
+
+                if (scriptFile != null) {
+                    gant.loadScript(scriptFile);
+                }
+                prepared = true;
+            }
             gant.prepareTargets();
             gant.setAllPerTargetPreHooks(DO_NOTHING_CLOSURE);
             gant.setAllPerTargetPostHooks(DO_NOTHING_CLOSURE);

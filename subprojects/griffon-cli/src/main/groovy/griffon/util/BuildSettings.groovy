@@ -188,6 +188,11 @@ class BuildSettings extends AbstractBuildSettings {
     boolean includeJavadoc
 
     /**
+     * Whether the project required build dependencies are externally configured (by Maven for example) or not
+     */
+    boolean dependenciesExternallyConfigured = false
+
+    /**
      * Whether to enable resolving dependencies
      */
     boolean enableResolve = true
@@ -406,6 +411,9 @@ class BuildSettings extends AbstractBuildSettings {
     private List<File> internalBuildDependencies
     @Lazy List<File> defaultBuildDependencies = {
         LOG.debug "Resolving [build] dependencies..."
+        if (dependenciesExternallyConfigured) {
+            return []
+        }
         if (internalBuildDependencies) return internalBuildDependencies
         if (shouldResolve()) {
             buildResolveReport = dependencyManager.resolveDependencies(IvyDependencyManager.BUILD_CONFIGURATION)
@@ -801,11 +809,21 @@ class BuildSettings extends AbstractBuildSettings {
             dependencyManager.ivySettings.defaultCache = griffonConfig.dependency.cache.dir as File
         }
 
-        GriffonCoreDependencies coreDependencies = new GriffonCoreDependencies(griffonVersion, this)
-        griffonConfig.global.dependency.resolution = coreDependencies.createDeclaration()
-        def credentials = griffonConfig.project.ivy.authentication
-        if (credentials instanceof Closure) {
-            dependencyManager.parseDependencies credentials
+        if (!dependenciesExternallyConfigured) {
+            GriffonCoreDependencies coreDependencies = new GriffonCoreDependencies(griffonVersion, this)
+            griffonConfig.global.dependency.resolution = coreDependencies.createDeclaration()
+            def credentials = griffonConfig.project.ivy.authentication
+            if (credentials instanceof Closure) {
+                dependencyManager.parseDependencies credentials
+            }
+        } else {
+            // Even if the dependencies are handled externally, we still
+            // to handle plugin dependencies.
+            griffonConfig.global.dependency.resolution = {
+                repositories {
+
+                }
+            }
         }
 
         def dependencyConfig = griffonConfig.project.dependency.resolution
