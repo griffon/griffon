@@ -90,7 +90,7 @@ class ArtifactInstallEngine {
             String artifactClassName = pluginDescriptor.name[0..-8]
             def plugin = gcl.loadClass(artifactClassName).newInstance()
             plugin.dependsOn.each { name, version ->
-                registeredPlugins[name] = version
+                registeredPlugins[name] = version.toString()
             }
         }
 
