@@ -25,6 +25,8 @@ import java.util.regex.Matcher
 import java.util.regex.Pattern
 import java.util.zip.ZipEntry
 import java.util.zip.ZipFile
+import org.slf4j.Logger
+import org.slf4j.LoggerFactory
 import org.springframework.core.io.FileSystemResource
 import org.springframework.core.io.Resource
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver
@@ -39,6 +41,7 @@ import org.codehaus.griffon.artifacts.model.*
  * @since 0.9.5
  */
 class ArtifactUtils {
+    private static final Logger LOG = LoggerFactory.getLogger(ArtifactUtils)
     static final String PLUGIN_DESCRIPTOR_SUFFIX = 'GriffonPlugin.groovy'
     static final String ARCHETYPE_DESCRIPTOR_SUFFIX = 'GriffonArchetype.groovy'
     static final String ADDON_DESCRIPTOR_SUFFIX = 'GriffonAddon.groovy'
@@ -152,9 +155,10 @@ class ArtifactUtils {
     }
 
     static File findArtifactDirForName(String type, String name) {
-        // name = getHyphenatedName(name)
-        String basedir = artifactBase(type)
-        Resource[] resources = resolveResources("file://${basedir}/${name}-*")
+        if (LOG.debugEnabled) {
+            LOG.debug("Searching dir matching file://${artifactBase(type)}/${name}-*")
+        }
+        Resource[] resources = resolveResources("file://${artifactBase(type)}/${name}-*")
         for (resource in resources) {
             Matcher matcher = ARTIFACT_NAME_VERSION_PATTERN.matcher(resource.file.name)
             if (matcher[0][1] == name) return resource.file
@@ -163,9 +167,10 @@ class ArtifactUtils {
     }
 
     static File[] findAllArtifactDirsForName(String type, String name) {
-        // name = getHyphenatedName(name)
-        String basedir = artifactBase(type)
-        Resource[] resources = resolveResources("file://${basedir}/${name}-*")
+        if (LOG.debugEnabled) {
+            LOG.debug("Searching all dirs matching file://${artifactBase(type)}/${name}-*")
+        }
+        Resource[] resources = resolveResources("file://${artifactBase(type)}/${name}-*")
         if (resources) {
             List<File> files = []
             for (resource in resources) {
@@ -175,7 +180,6 @@ class ArtifactUtils {
             return files as File[]
         }
         return new File[0]
-
     }
 
     static Resource[] findAllArtifactDirsForType(String type) {

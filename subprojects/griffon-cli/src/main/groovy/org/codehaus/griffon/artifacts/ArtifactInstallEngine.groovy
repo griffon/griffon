@@ -495,7 +495,7 @@ class ArtifactInstallEngine {
 
         eventHandler 'StatusUpdate', "Software license of ${releaseName} is '${release.artifact.license}'"
 
-        for (dir in findAllArtifactDirsForName(type, releaseName)) {
+        for (dir in findAllArtifactDirsForName(type, artifactName)) {
             ant.delete(dir: dir, failonerror: false)
         }
         ant.mkdir(dir: artifactInstallPath)
