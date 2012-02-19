@@ -88,7 +88,7 @@ public final class GriffonSetup {
         Map<String, String> archetypes = uploadBundles(Archetype.TYPE, bundleHome, griffonLocal)
         installArchetypes(settings, griffonLocal, archetypes)
 
-        ant.delete(dir: bundleHome, failonerror: false)
+        ant.delete(dir: bundleHome, failonerror: false, quiet: true)
     }
 
     private static File unpackBundles(AntBuilder ant) {
