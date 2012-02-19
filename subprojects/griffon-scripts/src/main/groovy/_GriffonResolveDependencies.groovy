@@ -62,6 +62,8 @@ target(name: 'resolveDependencies', description: 'Resolves project and plugin de
         }
 // XXX -- NATIVE
         runDependencyResolution = false
+        // reset appName
+        if(metadata) griffonAppName = metadata.getApplicationName()
     }
 }
 
