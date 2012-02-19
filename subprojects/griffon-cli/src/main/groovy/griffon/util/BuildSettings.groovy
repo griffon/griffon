@@ -791,9 +791,11 @@ class BuildSettings extends AbstractBuildSettings {
 
         def griffonConfig = config.griffon
         // If griffon.dependency.cache.dir is set, use it for Ivy.
+        /*
         if (griffonConfig.dependency.cache.dir) {
             dependencyManager.ivySettings.defaultCache = griffonConfig.dependency.cache.dir as File
         }
+        */
 
         if (!dependenciesExternallyConfigured) {
             GriffonCoreDependencies coreDependencies = new GriffonCoreDependencies(griffonVersion, this)

@@ -969,7 +969,7 @@ public class GriffonScriptRunner {
                 "AddProxy", "ClearProxy", "RemoveProxy", "SetProxy", "ConfigureProxy",
                 "Help", "SetVersion", "Stats",
                 "CreateAddon", "CreatePlugin", "Upgrade",
-                "CreateCommandAlias", "Doc"
+                "CreateCommandAlias", "Doc", "ClearDependencyCache"
         };
 
         private static String[] RESOLVE_DEPENDENCIES_EXCLUSIONS = {
