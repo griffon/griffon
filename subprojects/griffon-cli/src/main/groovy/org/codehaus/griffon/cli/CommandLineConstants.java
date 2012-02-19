@@ -102,6 +102,24 @@ public interface CommandLineConstants {
      */
     String KEY_OFFLINE_MODE = "griffon.offline.mode";
 
+    /**
+     * The compiler source level to use.
+     * Defaults to <tt>1.6</tt>
+     */
+    String KEY_COMPILER_SOURCE_LEVEL = "griffon.project.source.level";
+
+    /**
+     * The compiler target level to use.
+     * Defaults to <tt>1.6</tt>
+     */
+    String KEY_COMPILER_TARGET_LEVEL = "griffon.project.target.level";
+
+    /**
+     * Source file encoding.
+     * Defaults to <tt>UTF-8</tt>
+     */
+    String KEY_SOURCE_ENCODING = "griffon.source.encoding";
+
     String[] KEYS = {
             KEY_INTERACTIVE_MODE,
             KEY_NON_INTERACTIVE_DEFAULT_ANSWER,
@@ -115,6 +133,9 @@ public interface CommandLineConstants {
             KEY_DEFAULT_ARTIFACT_REPOSITORY,
             KEY_DEFAULT_INSTALL_ARTIFACT_REPOSITORY,
             KEY_DISABLE_LOCAL_REPOSITORY_SYNC,
-            KEY_OFFLINE_MODE
+            KEY_OFFLINE_MODE,
+            KEY_COMPILER_SOURCE_LEVEL,
+            KEY_COMPILER_TARGET_LEVEL,
+            KEY_SOURCE_ENCODING
     };
 }

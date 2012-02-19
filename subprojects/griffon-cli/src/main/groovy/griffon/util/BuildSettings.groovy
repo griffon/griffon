@@ -33,7 +33,7 @@ import org.springframework.core.io.support.PathMatchingResourcePatternResolver
 import static griffon.util.GriffonExceptionHandler.sanitize
 import static griffon.util.GriffonNameUtils.capitalize
 import static org.codehaus.griffon.artifacts.ArtifactUtils.*
-import static org.codehaus.griffon.cli.CommandLineConstants.KEY_OFFLINE_MODE
+import static org.codehaus.griffon.cli.CommandLineConstants.*
 
 /**
  * <p>Represents the project paths and other build settings
@@ -51,15 +51,6 @@ class BuildSettings extends AbstractBuildSettings {
     private static final String GRIFFON_APP = "griffon-app"
 
     static final Pattern JAR_PATTERN = ~/^\S+\.jar$/
-
-    /**
-     * The compiler source level to use
-     */
-    public static final String COMPILER_SOURCE_LEVEL = "griffon.project.source.level"
-    /**
-     * The compiler source level to use
-     */
-    public static final String COMPILER_TARGET_LEVEL = "griffon.project.target.level"
 
     /**
      * The base directory of the application
@@ -132,11 +123,6 @@ class BuildSettings extends AbstractBuildSettings {
     public static final String BUILD_LISTENERS = "griffon.build.listeners"
 
     /**
-     * The name of the system property for {@link #sourceEncoding}.
-     */
-    public static final String SOURCE_ENCODING = "griffon.source.encoding"
-
-    /**
      * The base directory for the build, which is normally the root
      * directory of the current project. If a command is run outside
      * of a project, then this will be the current working directory
@@ -168,12 +154,12 @@ class BuildSettings extends AbstractBuildSettings {
     /**
      * The compiler source level to use
      */
-    String compilerSourceLevel
+    String compilerSourceLevel = '1.6'
 
     /**
      * The compiler target level to use
      */
-    String compilerTargetLevel = "1.6"
+    String compilerTargetLevel = '1.6'
 
     /** <code>true</code> if the default environment for a script should be used.  */
     boolean defaultEnv
@@ -231,7 +217,7 @@ class BuildSettings extends AbstractBuildSettings {
     File testSourceDir
 
     /** Src Encoding  */
-    String sourceEncoding
+    String sourceEncoding = 'UTF-8'
 
     /** The root loader for the build. This has the required libraries on the classpath. */
     URLClassLoader rootLoader
@@ -937,8 +923,8 @@ class BuildSettings extends AbstractBuildSettings {
         // null, a default value. This ensures that we don't override
         // settings provided by, for example, the Maven plugin.
         def props = config.toProperties()
-        compilerSourceLevel = getPropertyValue(COMPILER_SOURCE_LEVEL, props, null)
-        compilerTargetLevel = getPropertyValue(COMPILER_TARGET_LEVEL, props, "1.6")
+        compilerSourceLevel = getPropertyValue(KEY_COMPILER_SOURCE_LEVEL, props, '1.6')
+        compilerTargetLevel = getPropertyValue(KEY_COMPILER_TARGET_LEVEL, props, '1.6')
 
         // read metadata file
         Metadata.current
@@ -954,7 +940,7 @@ class BuildSettings extends AbstractBuildSettings {
         if (!testReportsDirSet) testReportsDir = new File(getPropertyValue(PROJECT_TEST_REPORTS_DIR, props, "${projectTargetDir}/test-reports"))
         if (!docsOutputDirSet) docsOutputDir = new File(getPropertyValue(PROJECT_DOCS_OUTPUT_DIR, props, "${projectTargetDir}/docs"))
         if (!testSourceDirSet) testSourceDir = new File(getPropertyValue(PROJECT_TEST_SOURCE_DIR, props, "${baseDir}/test"))
-        if (!sourceEncodingSet) sourceEncoding = getPropertyValue(SOURCE_ENCODING, props, "UTF-8")
+        if (!sourceEncodingSet) sourceEncoding = getPropertyValue(KEY_SOURCE_ENCODING, props, "UTF-8")
     }
 
     protected void parseGriffonBuildListeners() {

@@ -272,8 +272,12 @@ compileTests = { GriffonTestType type, File source, File dest ->
     ant.mkdir(dir: destDir.path)
 
     compileSources(destDir, 'griffon.test.classpath') {
-        javac(classpathref: 'griffon.test.classpath', debug: "yes")
         src(path: source)
+        javac(classpathref: 'griffon.test.classpath',
+                encoding: griffonSettings.sourceEncoding,
+                debug: 'yes',
+                source: griffonSettings.compilerSourceLevel,
+                target: griffonSettings.compilerTargetLevel)
     }
     addUrlIfNotPresent rootLoader, projectMainClassesDir
     addUrlIfNotPresent rootLoader, destDir

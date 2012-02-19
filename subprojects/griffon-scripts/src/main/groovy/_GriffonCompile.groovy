@@ -45,7 +45,11 @@ compilerPaths = { String classpathId ->
         if (new File(srcPath).exists()) src(path: srcPath)
     }
 
-    javac(classpathref: classpathId, encoding: griffonSettings.sourceEncoding, debug: 'yes')
+    javac(classpathref: classpathId,
+            encoding: griffonSettings.sourceEncoding,
+            debug: 'yes',
+            source: griffonSettings.compilerSourceLevel,
+            target: griffonSettings.compilerTargetLevel)
 }
 
 compileSources = { destinationDir, classpathId, sources ->
@@ -112,7 +116,11 @@ target(name: 'compile', description: "Implementation of compilation phase",
             src(path: "${basedir}/griffon-app/conf")
             include(name: '*.groovy')
             include(name: '*.java')
-            javac(classpathref: classpathId, encoding: griffonSettings.sourceEncoding, debug: 'yes')
+            javac(classpathref: classpathId,
+                    encoding: griffonSettings.sourceEncoding,
+                    debug: 'yes',
+                    source: griffonSettings.compilerSourceLevel,
+                    target: griffonSettings.compilerTargetLevel)
         }
         ant.copy(todir: projectMainClassesDir) {
             fileset(dir: "${basedir}/griffon-app/conf") {
@@ -122,9 +130,6 @@ target(name: 'compile', description: "Implementation of compilation phase",
         }
         event('CompileSourcesEnd', [])
 
-        // If this is a plugin project, the descriptor is not included
-        // in the compiler's source path. So, we manually compile it
-        // now.
         if (isPluginProject) {
             if (cliSourceDir.exists()) {
                 ant.mkdir(dir: projectCliClassesDir)
@@ -134,7 +139,11 @@ target(name: 'compile', description: "Implementation of compilation phase",
                 }
                 compileSources(projectCliClassesDir, 'plugin.cli.compile.classpath') {
                     src(path: cliSourceDir)
-                    javac(classpathref: 'plugin.cli.compile.classpath', encoding: griffonSettings.sourceEncoding, debug: 'yes')
+                    javac(classpathref: 'plugin.cli.compile.classpath',
+                            encoding: griffonSettings.sourceEncoding,
+                            debug: 'yes',
+                            source: griffonSettings.compilerSourceLevel,
+                            target: griffonSettings.compilerTargetLevel)
                 }
                 ant.copy(todir: projectCliClassesDir) {
                     fileset(dir: "${basedir}/src/cli") {
@@ -155,7 +164,11 @@ target(name: 'compile', description: "Implementation of compilation phase",
                 src(path: basedir)
                 include(name: '*GriffonAddon.groovy')
                 include(name: '*GriffonAddon.java')
-                javac(classpathref: 'addon.classpath', encoding: griffonSettings.sourceEncoding, debug: 'yes')
+                javac(classpathref: 'addon.classpath',
+                        encoding: griffonSettings.sourceEncoding,
+                        debug: 'yes',
+                        source: griffonSettings.compilerSourceLevel,
+                        target: griffonSettings.compilerTargetLevel)
             }
         }
     }
@@ -190,7 +203,11 @@ compileProjectTestSrc = { rootDir ->
             }
             compileSources(projectTestClassesDir, 'projectTest.classpath') {
                 src(path: projectTest)
-                javac(classpathref: 'projectTest.classpath', encoding: griffonSettings.sourceEncoding, debug: 'yes')
+                javac(classpathref: 'projectTest.classpath',
+                        encoding: griffonSettings.sourceEncoding,
+                        debug: 'yes',
+                        source: griffonSettings.compilerSourceLevel,
+                        target: griffonSettings.compilerTargetLevel)
             }
         }
     }
