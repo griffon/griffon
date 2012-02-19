@@ -23,6 +23,7 @@ import org.apache.karaf.shell.console.AbstractAction;
 import org.codehaus.griffon.cli.CommandLineConstants;
 import org.fusesource.jansi.Ansi;
 
+import java.util.Arrays;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Properties;
@@ -86,6 +87,7 @@ public class PropertiesCommand extends AbstractAction {
 
     private Map<String, String> getCommandLineProperties() {
         Map<String, String> properties = new LinkedHashMap<String, String>();
+        Arrays.sort(CommandLineConstants.KEYS);
         for (String key : CommandLineConstants.KEYS) {
             properties.put(key, null);
         }
