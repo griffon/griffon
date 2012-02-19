@@ -83,6 +83,10 @@ public class GriffonEnvironment {
         BUILD_TIME = buildTime;
     }
 
+    private GriffonEnvironment() {
+        // disable instantiation
+    }
+
     public static String getGriffonVersion() {
         return getSettings().getGriffonVersion();
     }
@@ -124,9 +128,12 @@ public class GriffonEnvironment {
         return sb.toString();
     }
 
+    public static String getBuildDateTime() {
+        return BUILD_DATE + " " + BUILD_TIME;
+    }
+
     public static String prettyPrint() {
         padLeft("Griffon", 8);
-
 
         final StringBuilder sb = new StringBuilder();
         sb.append("\n------------------------------------------------------------\n")
@@ -134,7 +141,7 @@ public class GriffonEnvironment {
                 .append(" ")
                 .append(getGriffonVersion())
                 .append("\n------------------------------------------------------------\n\n");
-        entry("Build", BUILD_DATE + " " + BUILD_TIME, sb);
+        entry("Build", getBuildDateTime(), sb);
         entry("Groovy", getGroovyVersion(), sb);
         entry("Ant", getAntVersion(), sb);
         entry("Slf4j", getSlf4jVersion(), sb);
