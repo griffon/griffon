@@ -37,20 +37,13 @@ target(dependencyReport: "Produces a dependency report for the current Griffon p
         dependencyManager.resolveDependencies(conf)
     }
 
-    def conf = args.trim().replace('\n' as char, ',' as char) ?: 'build, compile, provided, runtime, test'
-    def confs = []
-    for (type in conf.split(',')) {
-        type = type.trim()
-        try {
-            if (griffonSettings."${type}Dependencies") confs << type
-        } catch (x) { /* ignore */ }
-    }
+    def conf = args.trim() ?: 'build, compile, runtime, test'
+    ivy.report(organisation: 'org.codehaus.griffon.internal', module: griffonAppName, todir: targetDir, conf: conf)
 
-    if (confs) {
-        ivy.report(organisation: 'org.codehaus.griffon.internal', module: griffonAppName, todir: targetDir, conf: confs.join(', '))
-        println "Dependency report output to [$targetDir]"
-    } else {
-        println "Can't generate dependency report for configuration${conf.size() ? 's' : ''} $conf"
-    }
+    // Copy the runtime dependency report to 'index.html' for easy opening.
+    ant.copy file: "${targetDir}/org.codehaus.griffon.internal-${griffonAppName}-runtime.html",
+             tofile: "${targetDir}/index.html"
+
+    event 'StatusFinal', ["Dependency report output to [${targetDir}/index.html"]
 }
 setDefaultTarget(dependencyReport)
