@@ -416,16 +416,16 @@ target(createStructure: "Creates the application directory structure") {
 }
 
 target(checkVersion: "Stops build if app expects different Griffon version") {
-    if (metadataFile.exists()) {
+    if (metadataFile?.exists()) {
         if (appGriffonVersion != griffonVersion) {
-            event('StatusFinal', ["Application expects griffon version [$appGriffonVersion], but GRIFFON_HOME is version " +
+            println "Application expects griffon version [$appGriffonVersion], but GRIFFON_HOME is version " +
                     "[$griffonVersion] - use the correct Griffon version or run 'griffon upgrade' if this Griffon " +
-                    "version is newer than the version your application expects."])
+                    "version is newer than the version your application expects."
             exit(1)
         }
     } else {
         // Griffon has always had version numbers, this is an error state
-        event('StatusFinal', ["Application is an unknown Griffon version, please run: griffon upgrade"])
+        println "Application is an unknown Griffon version, please run: griffon upgrade"
         exit(1)
     }
 }

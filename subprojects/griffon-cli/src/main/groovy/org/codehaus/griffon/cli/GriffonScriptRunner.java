@@ -942,6 +942,9 @@ public class GriffonScriptRunner {
                 targets.add("parseArguments");
                 if (binarySearch(CONFIGURE_PROXY_EXCLUSIONS, scriptName) < 0) targets.add("configureProxy");
                 if (!isContextlessScriptName(scriptName)) {
+                    if (binarySearch(CHECK_VERSION_EXCLUSIONS, scriptName) < 0) {
+                        targets.add("checkVersion");
+                    }
                     if (binarySearch(RESOLVE_DEPENDENCIES_EXCLUSIONS, scriptName) < 0) {
                         targets.add("resolveDependencies");
                     }
@@ -975,9 +978,14 @@ public class GriffonScriptRunner {
                 "ListPluginUpdates", "_GriffonResolveDependencies"
         };
 
+        private static String[] CHECK_VERSION_EXCLUSIONS = {
+                "Upgrade"
+        };
+
         static {
             sort(CONFIGURE_PROXY_EXCLUSIONS);
             sort(RESOLVE_DEPENDENCIES_EXCLUSIONS);
+            sort(CHECK_VERSION_EXCLUSIONS);
         }
     }
 }
