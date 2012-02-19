@@ -933,6 +933,7 @@ public class GriffonScriptRunner {
                     //ignore
                 }
                 if (scriptFile != null && scriptFile.exists()) {
+                    scriptName = scriptFile.getName();
                     if (scriptName.endsWith(".groovy")) {
                         scriptName = scriptName.substring(0, scriptName.length() - ".groovy".length());
                     }
