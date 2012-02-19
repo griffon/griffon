@@ -66,6 +66,13 @@ task jarDistFiles(type: Jar) {
     from 'src/dist'
 }
 
+task jarDefaultBundles(type: Jar) {
+    appFileJar = true
+    archiveName = 'griffon-default-bundles.jar'
+    destinationDir = "$buildDir/assemble/jars" as File
+    from 'src/bundles'
+}
+
 resourceFilesJars = tasks.withType(Jar).matching({ task -> task.appFileJar } as Spec)
 
 jar {

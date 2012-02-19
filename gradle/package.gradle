@@ -36,9 +36,6 @@ distBinSpec = copySpec {
         filter(ReplaceTokens, tokens: ['griffon.version': version, 'groovy.version': groovyVersion])    
         fileMode = 0755    
     }
-    into('bundles') {
-        from('src/dist/bundles')
-    }
     into('lib') { 
         from(project(':griffon-cli').configurations.runtime) {
             exclude 'griffon*'

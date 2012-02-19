@@ -135,7 +135,7 @@ target(upgrade: "Upgrades a Griffon application from a previous version of Griff
             entry(key: "app.name", value: griffonAppName)
             entry(key: "app.griffon.version", value: griffonVersion)
             if (!isPluginProject) {
-                entry(key: "plugins.swing", value: griffonVersion)
+                entry(key: "plugins.swing", value: '0.9.5')
                 entry(key: "archetype.default", value: griffonVersion)
                 entry(key: "app.toolkit", value: 'swing')
             }
