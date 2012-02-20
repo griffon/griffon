@@ -36,7 +36,7 @@ target('runApp': "Runs the application from the command line") {
 }
 
 target('doRunApp': "Runs the application from the command line") {
-    depends(checkVersion, prepackage)
+    depends(prepackage)
 
     // calculate the needed jars
     File jardir = new File(ant.antProject.replaceProperties(buildConfig.griffon.jars.destDir))

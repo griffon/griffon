@@ -27,8 +27,6 @@ _console_called = true
 includeTargets << griffonScript('_GriffonBootstrap')
 
 target(console: "Runs an embedded application in a Groovy console") {
-    depends(checkVersion)
-
     try {
         def console = createConsole()
         console.run()

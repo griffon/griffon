@@ -28,7 +28,6 @@ includeTargets << griffonScript('_GriffonPackage')
 
 target(name: 'packageAddon', description: 'Packages a Griffon addon',
         prehook: null, posthook: null) {
-    depends(checkVersion)
     projectType = 'plugin'
     createStructure()
 

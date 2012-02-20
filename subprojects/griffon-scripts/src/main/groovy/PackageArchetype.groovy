@@ -29,8 +29,6 @@ includeTargets << griffonScript('_GriffonPackageArtifact')
 target(name: 'packageArchetype',
        description: 'Packages a Griffon archetype',
        prehook: null, posthook: null) {
-    depends(checkVersion)
-
     archetypeDescriptor = ArtifactUtils.getArchetypeDescriptor(basedir)
     if (!archetypeDescriptor?.exists()) {
         event('StatusFinal', ['Current directory does not appear to be a Griffon archetype project.'])

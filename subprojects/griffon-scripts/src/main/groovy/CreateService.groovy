@@ -23,8 +23,6 @@
 includeTargets << griffonScript('_GriffonCreateArtifacts')
 
 target('createScript': "Creates a new service class") {
-    depends(checkVersion)
-
     ant.mkdir(dir: "${basedir}/griffon-app/services")
 
     String type = 'Service'

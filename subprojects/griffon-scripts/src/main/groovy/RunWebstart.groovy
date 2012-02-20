@@ -37,7 +37,7 @@ target('runWebstart': "Runs the application with Java Webstart") {
 }
 
 target('doRunWebstart': "Runs the application with Java Webstart") {
-    depends(checkVersion, tweakConfig, createConfig, package_webstart)
+    depends(tweakConfig, createConfig, package_webstart)
 
     if ((buildConfig.griffon.jars.sign != [:]) && !buildConfig.griffon.jars.sign) {
         event("StatusFinal", ["Cannot run WebStart application because Webstart requires code signing.\n in BuildConfig.groovy griffon.jars.sign = false"])

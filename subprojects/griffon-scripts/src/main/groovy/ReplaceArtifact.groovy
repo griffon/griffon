@@ -26,8 +26,6 @@ import griffon.util.GriffonNameUtils
 includeTargets << griffonScript('_GriffonCreateArtifacts')
 
 target(replaceArtifact: "Replaces an artifact file using another template") {
-    depends(checkVersion)
-
     if (!argsMap.type) {
         ant.input(addProperty: "artifact.type", message: "Artifact type not specified. Please enter:")
         argsMap.type = ant.antProject.properties."artifact.type"

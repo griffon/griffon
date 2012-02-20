@@ -28,8 +28,6 @@ includeTargets << griffonScript('CreateIntegrationTest')
 
 
 target(createMVC: "Creates a new MVC Group") {
-    depends(checkVersion)
-
     if (isPluginProject && !isAddonPlugin) {
         println """You must create an Addon descriptor first.
 Type in griffon create-addon then execute this command again."""

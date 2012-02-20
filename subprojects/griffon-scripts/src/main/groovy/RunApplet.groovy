@@ -36,7 +36,7 @@ target('runApplet': "Runs the applet from Java WebStart") {
 }
 
 target('doRunApplet': "Runs the applet from Java WebStart") {
-    depends(checkVersion, tweakConfig, createConfig, package_applet)
+    depends(tweakConfig, createConfig, package_applet)
 
     // calculate the needed jars
     File jardir = new File(ant.antProject.replaceProperties(buildConfig.griffon.jars.destDir))

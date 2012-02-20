@@ -52,8 +52,6 @@ PLUGIN_RESOURCES = [
 
 target(name: 'packagePlugin', description: 'Packages a Griffon plugin',
         prehook: null, posthook: null) {
-    depends(checkVersion)
-
     pluginDescriptor = ArtifactUtils.getPluginDescriptor(basedir)
     if (!pluginDescriptor?.exists()) {
         event('StatusFinal', ['Current directory does not appear to be a Griffon plugin project.'])
