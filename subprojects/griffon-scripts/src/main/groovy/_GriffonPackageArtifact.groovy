@@ -123,6 +123,7 @@ target(name: 'packageArtifact', description: '',
     depends("package_${artifactInfo.type}")
 
     artifactZipFileName = "griffon-${artifactInfo.name}-${artifactInfo.version}.zip"
+    artifactReleaseZipFileName = "griffon-${artifactInfo.name}-${artifactInfo.version}-release.zip"
     ant.delete(file: "${artifactPackageDirPath}/${artifactZipFileName}", quiet: true, failOnError: false)
     ant.zip(destfile: "${artifactPackageDirPath}/${artifactZipFileName}", basedir: artifactPackageDirPath)
 
@@ -160,7 +161,7 @@ createArtifactRelease = { String type, Map artifactInfo ->
     builder.call(artifactInfo)
     new File(artifactReleaseDirPath, "${type}.json").text = builder.toString()
 
-    releaseFile = new File("${artifactReleaseDirPath}/${artifactZipFileName}")
+    releaseFile = new File("${artifactReleaseDirPath}/${artifactReleaseZipFileName}")
 
     ant.delete(file: releaseFile, quiet: true, failOnError: false)
 

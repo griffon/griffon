@@ -175,7 +175,6 @@ class RemoteArtifactRepository extends AbstractArtifactRepository {
             session.userInfo = new SimpleUserInfo(username, password)
             session.connect()
 
-
             String command = 'scp -p -t /tmp/' + file.name
             Channel channel = session.openChannel('exec')
             channel.command = command
