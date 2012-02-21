@@ -86,6 +86,7 @@ public final class GriffonSetup {
 
         uploadBundles(Plugin.TYPE, bundleHome, griffonLocal)
         Map<String, String> archetypes = uploadBundles(Archetype.TYPE, bundleHome, griffonLocal)
+        if (archetypes) println ' '
         installArchetypes(settings, griffonLocal, archetypes)
 
         ant.delete(dir: bundleHome, failonerror: false, quiet: true)
@@ -106,6 +107,8 @@ public final class GriffonSetup {
             }
         }
 
+        println ' '
+
         bundleHome
     }
 
@@ -117,7 +120,7 @@ public final class GriffonSetup {
             @Override
             public boolean accept(File file) {
                 return file.getName().startsWith("griffon-") &&
-                        file.getName().endsWith(".zip")
+                        file.getName().endsWith("-release.zip")
             }
         })
 
