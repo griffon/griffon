@@ -103,12 +103,7 @@ public class GriffonScriptRunner {
         }
 
         String rawArgs = allArgs.toString().trim();
-        if ("--version".equals(rawArgs) || "-v".equals(rawArgs)) {
-            /*
-            System.out.println("Griffon version " + build.getGriffonVersion());
-            System.out.println("Groovy version " + build.getGroovyVersion());
-            System.out.println("Java version " + System.getProperty("java.version") + " (" + System.getProperty("java.vm.version") + ")");
-            */
+        if ("--version".equals(rawArgs) || "-version".equals(rawArgs) ||"-v".equals(rawArgs)) {
             System.out.println(GriffonEnvironment.prettyPrint());
             System.exit(0);
         }
