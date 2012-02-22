@@ -87,7 +87,7 @@ public class SimpleView extends AbstractGriffonView {
 
     @Override
     public void mvcGroupInit(Map<String, Object> args) {
-        execSync(new Runnable() {
+        execInsideUISync(new Runnable() {
             public void run() {
                 Container container = (Container) getApp().createApplicationContainer();
                 if(container instanceof Window) {

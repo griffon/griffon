@@ -1,0 +1,21 @@
+h1. execOutsideUI{}
+
+h2. Purpose
+
+Executes a block of code outside of the UI Thread.
+
+h2. Examples
+
+{code:java}
+class SampleController {
+    def action = { evt = null ->
+        execOutsideUI {
+            // long running computation
+        }
+    }
+}
+{code}
+
+h2. Description
+
+See the [threading|guide:threading] section for more information about this method and others like it.

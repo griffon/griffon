@@ -57,9 +57,14 @@ public final class UIThreadManager {
         if (LOG.isTraceEnabled()) {
             LOG.trace("Enhancing script " + script);
         }
+        // TODO @deprecated - remove before 1.0
         script.getBinding().setVariable("execSync", new MethodClosure(INSTANCE, "executeSync"));
         script.getBinding().setVariable("execAsync", new MethodClosure(INSTANCE, "executeAsync"));
         script.getBinding().setVariable("execOutside", new MethodClosure(INSTANCE, "executeOutside"));
+
+        script.getBinding().setVariable("execInsideUISync", new MethodClosure(INSTANCE, "executeSync"));
+        script.getBinding().setVariable("execInsideUIAsync", new MethodClosure(INSTANCE, "executeAsync"));
+        script.getBinding().setVariable("execOutsideUI", new MethodClosure(INSTANCE, "executeOutside"));
         script.getBinding().setVariable("isUIThread", new MethodClosure(INSTANCE, "isUIThread"));
         script.getBinding().setVariable("execFuture", new MethodClosure(INSTANCE, "executeFuture"));
     }
@@ -70,9 +75,14 @@ public final class UIThreadManager {
             if (LOG.isTraceEnabled()) {
                 LOG.trace("Enhancing metaClass " + metaClass);
             }
+            // TODO @deprecated - remove before 1.0
             mc.registerInstanceMethod("execSync", new MethodClosure(INSTANCE, "executeSync"));
             mc.registerInstanceMethod("execAsync", new MethodClosure(INSTANCE, "executeAsync"));
             mc.registerInstanceMethod("execOutside", new MethodClosure(INSTANCE, "executeOutside"));
+
+            mc.registerInstanceMethod("execInsideUISync", new MethodClosure(INSTANCE, "executeSync"));
+            mc.registerInstanceMethod("execInsideUIAsync", new MethodClosure(INSTANCE, "executeAsync"));
+            mc.registerInstanceMethod("execOutsideUI", new MethodClosure(INSTANCE, "executeOutside"));
             mc.registerInstanceMethod("isUIThread", new MethodClosure(INSTANCE, "isUIThread"));
             mc.registerInstanceMethod("execFuture", new MethodClosure(INSTANCE, "executeFuture"));
         }

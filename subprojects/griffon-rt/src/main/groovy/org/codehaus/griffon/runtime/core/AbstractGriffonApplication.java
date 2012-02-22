@@ -331,12 +331,22 @@ public abstract class AbstractGriffonApplication extends AbstractObservable impl
         eventRouter.publish(eventName, params);
     }
 
+    // TODO @deprecated - remove before 1.0
     public void eventOutside(String eventName) {
-        eventRouter.publishOutside(eventName, Collections.emptyList());
+        eventOutsideUI(eventName, Collections.emptyList());
     }
 
+    // TODO @deprecated - remove before 1.0
     public void eventOutside(String eventName, List params) {
-        eventRouter.publishOutside(eventName, params);
+        eventOutsideUI(eventName, params);
+    }
+
+    public void eventOutsideUI(String eventName) {
+        eventRouter.publishOutsideUI(eventName, Collections.emptyList());
+    }
+
+    public void eventOutsideUI(String eventName, List params) {
+        eventRouter.publishOutsideUI(eventName, params);
     }
 
     public void eventAsync(String eventName) {
@@ -409,15 +419,30 @@ public abstract class AbstractGriffonApplication extends AbstractObservable impl
         return UIThreadManager.getInstance().isUIThread();
     }
 
+    // TODO @deprecated - remove before 1.0
     public void execAsync(Runnable runnable) {
+        execInsideUIAsync(runnable);
+    }
+
+    // TODO @deprecated - remove before 1.0
+    public void execSync(Runnable runnable) {
+        execInsideUIAsync(runnable);
+    }
+
+    // TODO @deprecated - remove before 1.0
+    public void execOutside(Runnable runnable) {
+        execOutsideUI(runnable);
+    }
+
+    public void execInsideUIAsync(Runnable runnable) {
         UIThreadManager.getInstance().executeAsync(runnable);
     }
 
-    public void execSync(Runnable runnable) {
+    public void execInsideUISync(Runnable runnable) {
         UIThreadManager.getInstance().executeSync(runnable);
     }
 
-    public void execOutside(Runnable runnable) {
+    public void execOutsideUI(Runnable runnable) {
         UIThreadManager.getInstance().executeOutside(runnable);
     }
 

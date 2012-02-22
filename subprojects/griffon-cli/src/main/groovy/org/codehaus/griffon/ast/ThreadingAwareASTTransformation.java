@@ -103,6 +103,7 @@ public class ThreadingAwareASTTransformation extends AbstractASTTransformation {
                         NO_ARGS))
         ));
 
+        // TODO @deprecated - remove before 1.0
         // void execAsync(Runnable)
         injectMethod(classNode, new MethodNode(
                 "execAsync",
@@ -116,6 +117,7 @@ public class ThreadingAwareASTTransformation extends AbstractASTTransformation {
                         vars(RUNNABLE)))
         ));
 
+        // TODO @deprecated - remove before 1.0
         // void execSync(Runnable)
         injectMethod(classNode, new MethodNode(
                 "execSync",
@@ -129,9 +131,49 @@ public class ThreadingAwareASTTransformation extends AbstractASTTransformation {
                         vars(RUNNABLE)))
         ));
 
+        // TODO @deprecated - remove before 1.0
         // void execOutside(Runnable)
         injectMethod(classNode, new MethodNode(
                 "execOutside",
+                ACC_PUBLIC,
+                ClassHelper.VOID_TYPE,
+                params(param(RUNNABLE_CLASS, RUNNABLE)),
+                ClassNode.EMPTY_ARRAY,
+                stmnt(call(
+                        uiThreadManagerInstance(),
+                        "executeOutside",
+                        vars(RUNNABLE)))
+        ));
+
+        // void execInsideUIAsync(Runnable)
+        injectMethod(classNode, new MethodNode(
+                "execInsideUIAsync",
+                ACC_PUBLIC,
+                ClassHelper.VOID_TYPE,
+                params(param(RUNNABLE_CLASS, RUNNABLE)),
+                ClassNode.EMPTY_ARRAY,
+                stmnt(call(
+                        uiThreadManagerInstance(),
+                        "executeAsync",
+                        vars(RUNNABLE)))
+        ));
+
+        // void execInsideUISync(Runnable)
+        injectMethod(classNode, new MethodNode(
+                "execInsideUISync",
+                ACC_PUBLIC,
+                ClassHelper.VOID_TYPE,
+                params(param(RUNNABLE_CLASS, RUNNABLE)),
+                ClassNode.EMPTY_ARRAY,
+                stmnt(call(
+                        uiThreadManagerInstance(),
+                        "executeSync",
+                        vars(RUNNABLE)))
+        ));
+
+        // void execOutsideUI(Runnable)
+        injectMethod(classNode, new MethodNode(
+                "execOutsideUI",
                 ACC_PUBLIC,
                 ClassHelper.VOID_TYPE,
                 params(param(RUNNABLE_CLASS, RUNNABLE)),

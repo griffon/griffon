@@ -111,12 +111,26 @@ class EventRouter {
      *
      * @param eventName the name of the event
      * @param params the event's arguments
+     * @deprecated use #eventOutsideUI() instead
+     */
+    @Deprecated
+    void publishOutside(String eventName, List params = []) {
+        publishOutsideUI(eventName, params)
+    }
+
+    /**
+     * Publishes an event with optional arguments.</p>
+     * Event listeners are guaranteed to be notified
+     * outside of the UI thread always.
+     *
+     * @param eventName the name of the event
+     * @param params the event's arguments
      *
      */
-    void publishOutside(String eventName, List params = []) {
+    void publishOutsideUI(String eventName, List params = []) {
         if (!isEnabled()) return
         if (!eventName) return
-        UIThreadManager.instance.executeOutside(buildPublisher(eventName, params).curry('outside'))
+        UIThreadManager.instance.executeOutside(buildPublisher(eventName, params).curry('outside UI'))
     }
 
     /**

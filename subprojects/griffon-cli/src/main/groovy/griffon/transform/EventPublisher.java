@@ -47,17 +47,17 @@ import java.lang.annotation.Target;
  * <li><code>public void removeEventListener(java.lang.String,griffon.util.RunnableWithArgs)</code><br/>
  * &nbsp;&nbsp;&nbsp;&nbsp;unregisters a Runnable as event listener</li>
  * <li><code>public void publishEvent(java.lang.String)</code><br/>
- * &nbsp;&nbsp;&nbsp;&nbsp;publishes and event in the current thread</li>
+ * &nbsp;&nbsp;&nbsp;&nbsp;publishes an event in the current thread</li>
  * <li><code>public void publishEvent(java.lang.String, java.util.List)</code><br/>
- * &nbsp;&nbsp;&nbsp;&nbsp;publishes and event in the current thread</li>
- * <li><code>public void publishEventOutside(java.lang.String)</code><br/>
- * &nbsp;&nbsp;&nbsp;&nbsp;publishes and event outside of the UI thread</li>
- * <li><code>public void publishEventOutside(java.lang.String, java.util.List)</code><br/>
- * &nbsp;&nbsp;&nbsp;&nbsp;publishes and event outside of the UI thread</li>
+ * &nbsp;&nbsp;&nbsp;&nbsp;publishes an event in the current thread</li>
+ * <li><code>public void publishEventOutsideUI(java.lang.String)</code><br/>
+ * &nbsp;&nbsp;&nbsp;&nbsp;publishes an event outside of the UI thread</li>
+ * <li><code>public void publishEventOutsideUI(java.lang.String, java.util.List)</code><br/>
+ * &nbsp;&nbsp;&nbsp;&nbsp;publishes an event outside of the UI thread</li>
  * <li><code>public void publishEventAsync(java.lang.String)</code><br/>
- * &nbsp;&nbsp;&nbsp;&nbsp;publishes and event outside of the publisher's thread</li>
+ * &nbsp;&nbsp;&nbsp;&nbsp;publishes an event outside of the publisher's thread</li>
  * <li><code>public void publishEventAsync(java.lang.String, java.util.List)</code><br/>
- * &nbsp;&nbsp;&nbsp;&nbsp;publishes and event outside of the publisher's thread</li>
+ * &nbsp;&nbsp;&nbsp;&nbsp;publishes an event outside of the publisher's thread</li>
  * <li><code>public boolean isEventPublishingEnabled()</code><br/>
  * &nbsp;&nbsp;&nbsp;&nbsp;if events will be published or not</li>
  * <li><code>public void setEventPublishingEnabled(boolean enabled)</code><br/>

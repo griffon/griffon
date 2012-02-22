@@ -97,7 +97,7 @@ public class EventPublisherASTTransformation extends AbstractASTTransformation {
      * <li>void removeEventListener(String, Closure)</li>
      * <li>void removeEventListener(String, RunnableWithArgs)</li>
      * <li>void publishEvent(String, List = [])</li>
-     * <li>void publishEventOutside(String, List = [])</li>
+     * <li>void publishEventOutsideUI(String, List = [])</li>
      * <li>void publishEventAsync(String, List = [])</li>
      * <li>boolean isEventPublishingEnabled()</li>
      * <li>void setEventPublishingEnabled(boolean)</li>
@@ -120,8 +120,8 @@ public class EventPublisherASTTransformation extends AbstractASTTransformation {
                 foundRemove = foundRemove || method.getName().equals("removeEventListener") && method.getParameters().length == 2;
                 foundPublish = foundPublish || method.getName().equals("publishEvent") && method.getParameters().length == 1;
                 foundPublish = foundPublish || method.getName().equals("publishEvent") && method.getParameters().length == 2;
-                foundPublish = foundPublish || method.getName().equals("publishEventOutside") && method.getParameters().length == 1;
-                foundPublish = foundPublish || method.getName().equals("publishEventOutside") && method.getParameters().length == 2;
+                foundPublish = foundPublish || method.getName().equals("publishEventOutsideUI") && method.getParameters().length == 1;
+                foundPublish = foundPublish || method.getName().equals("publishEventOutsideUI") && method.getParameters().length == 2;
                 foundPublish = foundPublish || method.getName().equals("publishEventAsync") && method.getParameters().length == 1;
                 foundPublish = foundPublish || method.getName().equals("publishEventAsync") && method.getParameters().length == 2;
                 foundEnabled = foundEnabled || method.getName().equals("isEventPublishingEnabled") && method.getParameters().length == 0;
@@ -136,7 +136,7 @@ public class EventPublisherASTTransformation extends AbstractASTTransformation {
             sourceUnit.getErrorCollector().addErrorAndContinue(
                     new SimpleMessage("@EventPublisher cannot be processed on "
                             + declaringClass.getName()
-                            + " because some but not all of addEventListener, removeEventListener, publishEvent, publishEventAsync and publishEventOutside were declared in the current class or super classes.",
+                            + " because some but not all of addEventListener, removeEventListener, publishEvent, publishEventAsync and publishEventOutsideUI were declared in the current class or super classes.",
                             sourceUnit)
             );
             return false;
@@ -158,7 +158,7 @@ public class EventPublisherASTTransformation extends AbstractASTTransformation {
      * <code>public void removeEventListener(String, Closure)</code><br/>
      * <code>public void removeEventListener(String, RunnableWithArgs)</code><br/>
      * <code>public void publishEvent(String,List = [])</code><br/>
-     * <code>public void publishEventOutside(String,List = [])</code><br/>
+     * <code>public void publishEventOutsideUI(String,List = [])</code><br/>
      * <code>public void publishEventAsync(String,List = [])</code><br/>
      * <code>public boolean isEventPublishingEnabled()</code><br/>
      * <code>public void setEventPublishingEnabled(boolean)</code><br/>
@@ -298,6 +298,7 @@ public class EventPublisherASTTransformation extends AbstractASTTransformation {
                         vars(NAME, ARGS)))
         ));
 
+        // TODO @deprecated - remove before 1.0
         // add method:
         // void publishEventOutside(String name, List args = []) {
         //     this$eventRouter.publishEventOutside(name, args)
@@ -313,6 +314,24 @@ public class EventPublisherASTTransformation extends AbstractASTTransformation {
                 stmnt(call(
                         field(erField),
                         "publishOutside",
+                        vars(NAME, ARGS)))
+        ));
+
+        // add method:
+        // void publishEventOutsideUI(String name, List args = []) {
+        //     this$eventRouter.publishEventOutsideUI(name, args)
+        //  }
+        injectMethod(declaringClass, new MethodNode(
+                "publishEventOutsideUI",
+                ACC_PUBLIC,
+                ClassHelper.VOID_TYPE,
+                params(
+                        param(ClassHelper.STRING_TYPE, NAME),
+                        param(newClass(ClassHelper.LIST_TYPE), ARGS, new ListExpression())),
+                ClassNode.EMPTY_ARRAY,
+                stmnt(call(
+                        field(erField),
+                        "publishOutsideUI",
                         vars(NAME, ARGS)))
         ));
 

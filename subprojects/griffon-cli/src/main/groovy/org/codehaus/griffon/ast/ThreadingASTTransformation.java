@@ -340,8 +340,8 @@ public class ThreadingASTTransformation extends AbstractASTTransformation {
                     EXECUTE_ASYNC.equals(methodName) ||
                     EXECUTE_FUTURE.equals(methodName);
         }
-        return "execOutside".equals(methodName) || "doOutside".equals(methodName) ||
-                "execSync".equals(methodName)   || "edt".equals(methodName) ||
-                "execAsync".equals(methodName)  || "doLater".equals(methodName);
+        return "execOutsideUI".equals(methodName)       || "doOutside".equals(methodName) ||
+                "execInsideUISync".equals(methodName)   || "edt".equals(methodName) ||
+                "execInsideUIAsync".equals(methodName)  || "doLater".equals(methodName);
     }
 }

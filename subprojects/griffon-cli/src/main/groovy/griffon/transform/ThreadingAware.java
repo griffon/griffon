@@ -32,9 +32,9 @@ import java.lang.annotation.Target;
  * The following methods will be added to classes annotated with &#064;ThreadingAware
  * <ul>
  * <li><code>public boolean isUIThread()</code></li>
- * <li><code>public void execAsync(Runnable runnable)</code></li>
- * <li><code>public void execSync(Runnable runnable)</code></li>
- * <li><code>public void execOutside(Runnable runnable)</code></li>
+ * <li><code>public void execInsideUIAsync(Runnable runnable)</code></li>
+ * <li><code>public void execInsideUISync(Runnable runnable)</code></li>
+ * <li><code>public void execOutsideUI(Runnable runnable)</code></li>
  * <li><code>public Future execFuture(ExecutorService executorService, Closure closure)</code></li>
  * <li><code>public Future execFuture(Closure closure)</code></li>
  * <li><code>public Future execFuture(ExecutorService executorService, Callable callable)</code></li>

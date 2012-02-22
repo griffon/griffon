@@ -84,15 +84,30 @@ public abstract class AbstractGriffonArtifactScript extends Script implements Gr
         return UIThreadManager.getInstance().isUIThread();
     }
 
+    // TODO @deprecated - remove before 1.0
     public void execAsync(Runnable runnable) {
+        execInsideUIAsync(runnable);
+    }
+
+    // TODO @deprecated - remove before 1.0
+    public void execSync(Runnable runnable) {
+        execInsideUISync(runnable);
+    }
+
+    // TODO @deprecated - remove before 1.0
+    public void execOutside(Runnable runnable) {
+        execOutsideUI(runnable);
+    }
+
+    public void execInsideUIAsync(Runnable runnable) {
         UIThreadManager.getInstance().executeAsync(runnable);
     }
 
-    public void execSync(Runnable runnable) {
+    public void execInsideUISync(Runnable runnable) {
         UIThreadManager.getInstance().executeSync(runnable);
     }
 
-    public void execOutside(Runnable runnable) {
+    public void execOutsideUI(Runnable runnable) {
         UIThreadManager.getInstance().executeOutside(runnable);
     }
 

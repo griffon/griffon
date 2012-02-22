@@ -9,10 +9,12 @@ This AST transformation will inject the following methods to the annotated class
 * removeEventListener(String, RunnableWithArgs)
 * publishEvent(String)
 * publishEvent(String,List)
-* publishEventOutside(String)
-* publishEventOutside(String,List)
+* publishEventOutsideUI(String)
+* publishEventOutsideUI(String,List)
 * publishEventAsync(String)
 * publishEventAsync(String,List)
+* isEventPublishingEnabled()
+* setEventPublishingEnabled(boolean)
 
 Event listeners registered with these classes should follow the same rules as application event handlers (they can be Scripts, classes, maps or closures, and so on).
 

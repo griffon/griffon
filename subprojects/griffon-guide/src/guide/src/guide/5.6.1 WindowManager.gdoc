@@ -62,13 +62,13 @@ import griffon.effects.Effects
 class Dropper extends DefaultWindowDisplayHandler {
     void show(Window window, GriffonApplication app) {
         SwingUtils.centerOnScreen(window)
-        app.execOutside {
+        app.execOutsideUI {
             Effects.dropIn(window, wait: true)
         }
     }
 
     void hide(Window window, GriffonApplication app) {
-        app.execOutside {
+        app.execOutsideUI {
             Effects.dropOut(window, wait: true)
         }
     }

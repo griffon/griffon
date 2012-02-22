@@ -1,0 +1,19 @@
+h1. execInsideUIAsync{}
+
+h2. Purpose
+
+Executes a block of code by making an asynchronous call inside the UI Thread.
+
+h2. Examples
+
+{code:java}
+class SampleController {
+    def action = { evt = null ->
+        execInsideUIAsync { model.value = 'some deferred update' }
+    }
+}
+{code}
+
+h2. Description
+
+See the [threading|guide:threading] section for more information about this method and others like it.

@@ -1,4 +1,4 @@
-Synchronous calls inside the UIThread are made by invoking the @execSync{}@ method. This method is equivalent to calling @edt{}@ in Swing.
+Synchronous calls inside the UIThread are made by invoking the @execInsideUISync{}@ method. This method is equivalent to calling @edt{}@ in Swing.
 
 Example:
 
@@ -11,7 +11,7 @@ class MyController {
         def value = model.value
         Thread.start {
             // do some calculations
-            execSync {
+            execInsideUISync {
                 // back inside the UI thread
                 model.result = ...
             }
@@ -22,7 +22,7 @@ class MyController {
         // will be invoked outside of the UI thread by default (post 0.9.2)
         def value = model.value
         // do some calculations
-        execSync {
+        execInsideUISync {
             // back inside the UI thread
             model.result = ...
         }
