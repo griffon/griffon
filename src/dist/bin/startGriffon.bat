@@ -175,9 +175,6 @@ goto win9xME_args_loop
 set CMD_LINE_ARGS=%$
 
 :execute
-@rem Setup the command line
-set STARTER_CLASSPATH=%GRIFFON_HOME%\lib\groovy-all-@groovy.version@.jar;%GRIFFON_HOME%\dist\griffon-cli-@griffon.version@.jar;%GRIFFON_HOME%\dist\griffon-rt-@griffon.version@.jar
-
 @rem Setting a classpath using the -cp or -classpath option means not to use
 @rem the global classpath. Groovy behaves then the same as the java 
 @rem interpreter
@@ -194,7 +191,6 @@ set CP=%CP%;%CLASSPATH%
 :after_classpath
 
 set STARTER_MAIN_CLASS=org.codehaus.griffon.cli.support.GriffonStarter
-set STARTER_CONF=%GRIFFON_HOME%\conf\groovy-starter.conf
 
 set JAVA_EXE=%JAVA_HOME%\bin\java.exe
 set TOOLS_JAR=%JAVA_HOME%\lib\tools.jar

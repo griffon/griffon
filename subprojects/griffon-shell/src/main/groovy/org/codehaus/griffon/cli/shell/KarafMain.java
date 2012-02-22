@@ -18,6 +18,7 @@
  */
 package org.codehaus.griffon.cli.shell;
 
+import griffon.util.GriffonNameUtils;
 import jline.Terminal;
 import org.apache.felix.gogo.commands.Action;
 import org.apache.felix.gogo.commands.Command;
@@ -43,6 +44,8 @@ import java.net.URLClassLoader;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.List;
+
+import static griffon.util.GriffonNameUtils.isBlank;
 
 public class KarafMain {
     private String application = System.getProperty("karaf.name", "root");
@@ -121,15 +124,18 @@ public class KarafMain {
 
     private void run(final CommandProcessorImpl commandProcessor, String[] args, final InputStream in, final PrintStream out, final PrintStream err) throws Exception {
 
+        StringBuilder sb = new StringBuilder();
         if (args.length > 0) {
-            StringBuilder sb = new StringBuilder();
             for (int i = 0; i < args.length; i++) {
                 if (i > 0) {
                     sb.append(" ");
                 }
                 sb.append(args[i]);
             }
+        }
+        String stringifiedArgs = sb.toString().trim();
 
+        if(!isBlank(stringifiedArgs)) {
             // Shell is directly executing a sub/command, we don't setup a terminal and console
             // in this case, this avoids us reading from stdin un-necessarily.
             CommandSession session = commandProcessor.createSession(in, out, err);
@@ -138,7 +144,7 @@ public class KarafMain {
             session.put(NameScoping.MULTI_SCOPE_MODE_KEY, Boolean.toString(isMultiScopeMode()));
 
             try {
-                session.execute(sb);
+                session.execute(stringifiedArgs);
             } catch (Throwable t) {
                 if (t instanceof CommandNotFoundException) {
                     String str = Ansi.ansi()
@@ -183,7 +189,6 @@ public class KarafMain {
 
             terminalFactory.destroy();
         }
-
     }
 
     /**

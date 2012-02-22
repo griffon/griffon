@@ -12,4 +12,8 @@ if "%OS%"=="Windows_NT" setlocal
 set DIRNAME=%~dp0
 if "%DIRNAME%" == "" set DIRNAME=.\
 
+set STARTER_CLASSPATH=%GRIFFON_HOME%\lib\groovy-all-@groovy.version@.jar;%GRIFFON_HOME%\dist\griffon-cli-@griffon.version@.jar;%GRIFFON_HOME%\dist\griffon-rt-@griffon.version@.jar
+
+set STARTER_CONF=%GRIFFON_HOME%\conf\groovy-starter.conf
+
 CALL "%DIRNAME%\startGriffon.bat" "%DIRNAME%" org.codehaus.griffon.cli.GriffonScriptRunner %*
