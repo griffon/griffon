@@ -134,7 +134,7 @@ public class GriffonScriptRunner {
         System.out.println("Base Directory: " + build.getBaseDir().getPath());
 
         try {
-            int exitCode = new GriffonScriptRunner(build)._executeCommand(script);
+            int exitCode = new GriffonScriptRunner(build).doExecuteCommand(script);
             System.exit(exitCode);
         } catch (ScriptNotFoundException ex) {
             System.out.println("Script not found: " + ex.getScriptName());
@@ -258,7 +258,7 @@ public class GriffonScriptRunner {
         ScriptAndArgs script = new ScriptAndArgs();
         script.name = name;
         script.args = args;
-        return _executeCommand(script);
+        return doExecuteCommand(script);
     }
 
     public int executeCommand(String name, String args, String env) {
@@ -266,7 +266,7 @@ public class GriffonScriptRunner {
         script.name = name;
         script.args = args;
         script.env = env;
-        return _executeCommand(script);
+        return doExecuteCommand(script);
     }
 
     public boolean isInteractive() {
@@ -295,7 +295,7 @@ public class GriffonScriptRunner {
         ArtifactRepositoryRegistry.getInstance().configureRepositories();
     }
 
-    private int _executeCommand(ScriptAndArgs script) {
+    private int doExecuteCommand(ScriptAndArgs script) {
         setup();
 
         settings.debug("Executing script name: " + script.name + " env: " + script.env + " args: " + script.args);

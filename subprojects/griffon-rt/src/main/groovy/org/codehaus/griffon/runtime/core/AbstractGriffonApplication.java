@@ -307,13 +307,13 @@ public abstract class AbstractGriffonApplication extends AbstractObservable impl
             for (String groupName : (List<String>) startupGroups) {
                 createMVCGroup(groupName);
             }
-        } else if(startupGroups != null && startupGroups.getClass().isArray()) {
+        } else if (startupGroups != null && startupGroups.getClass().isArray()) {
             Object[] groups = (Object[]) startupGroups;
             if (log.isInfoEnabled()) {
                 log.info("Initializing all startup groups: " + Arrays.toString(groups));
             }
 
-            for(Object groupName : groups) {
+            for (Object groupName : groups) {
                 createMVCGroup(String.valueOf(groupName));
             }
         }
@@ -369,6 +369,14 @@ public abstract class AbstractGriffonApplication extends AbstractObservable impl
 
     public void removeApplicationEventListener(String eventName, RunnableWithArgs listener) {
         eventRouter.removeEventListener(eventName, listener);
+    }
+
+    public boolean isEventPublishingEnabled() {
+        return eventRouter.isEnabled();
+    }
+
+    public void setEventPublishingEnabled(boolean enabled) {
+        eventRouter.setEnabled(enabled);
     }
 
     public Object createApplicationContainer() {

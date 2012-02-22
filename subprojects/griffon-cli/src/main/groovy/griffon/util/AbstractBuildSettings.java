@@ -20,11 +20,10 @@ import org.codehaus.groovy.runtime.DateGroovyMethods;
 import org.codehaus.groovy.runtime.typehandling.DefaultTypeTransformation;
 
 import java.io.File;
-import java.io.FileFilter;
-import java.io.IOException;
-import java.util.*;
+import java.util.Collections;
+import java.util.Date;
+import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ConcurrentLinkedQueue;
 
 import static org.codehaus.griffon.cli.CommandLineConstants.KEY_CLI_VERBOSE;
 import static org.codehaus.griffon.cli.CommandLineConstants.KEY_NON_INTERACTIVE_DEFAULT_ANSWER;

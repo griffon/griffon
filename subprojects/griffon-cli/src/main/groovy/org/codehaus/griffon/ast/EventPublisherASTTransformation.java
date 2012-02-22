@@ -51,6 +51,7 @@ public class EventPublisherASTTransformation extends AbstractASTTransformation {
     private static final String LISTENER = "listener";
     private static final String NAME = "name";
     private static final String ARGS = "args";
+    private static final String ENABLED = "enabled";
 
     /**
      * Convenience method to see if an annotated node is {@code @EventPublisher}.
@@ -98,6 +99,8 @@ public class EventPublisherASTTransformation extends AbstractASTTransformation {
      * <li>void publishEvent(String, List = [])</li>
      * <li>void publishEventOutside(String, List = [])</li>
      * <li>void publishEventAsync(String, List = [])</li>
+     * <li>boolean isEventPublishingEnabled()</li>
+     * <li>void setEventPublishingEnabled(boolean)</li>
      * </ul>If any are defined all
      * must be defined or a compilation error results.
      *
@@ -106,7 +109,7 @@ public class EventPublisherASTTransformation extends AbstractASTTransformation {
      * @return true if property change support should be added
      */
     protected static boolean needsEventRouter(ClassNode declaringClass, SourceUnit sourceUnit) {
-        boolean foundAdd = false, foundRemove = false, foundPublish = false;
+        boolean foundAdd = false, foundRemove = false, foundPublish = false, foundEnabled = false;
         ClassNode consideredClass = declaringClass;
         while (consideredClass != null) {
             for (MethodNode method : consideredClass.getMethods()) {
@@ -121,13 +124,15 @@ public class EventPublisherASTTransformation extends AbstractASTTransformation {
                 foundPublish = foundPublish || method.getName().equals("publishEventOutside") && method.getParameters().length == 2;
                 foundPublish = foundPublish || method.getName().equals("publishEventAsync") && method.getParameters().length == 1;
                 foundPublish = foundPublish || method.getName().equals("publishEventAsync") && method.getParameters().length == 2;
-                if (foundAdd && foundRemove && foundPublish) {
+                foundEnabled = foundEnabled || method.getName().equals("isEventPublishingEnabled") && method.getParameters().length == 0;
+                foundEnabled = foundEnabled || method.getName().equals("setEventPublishingEnabled") && method.getParameters().length == 1;
+                if (foundAdd && foundRemove && foundPublish && foundEnabled) {
                     return false;
                 }
             }
             consideredClass = consideredClass.getSuperClass();
         }
-        if (foundAdd || foundRemove || foundPublish) {
+        if (foundAdd || foundRemove || foundPublish || foundEnabled) {
             sourceUnit.getErrorCollector().addErrorAndContinue(
                     new SimpleMessage("@EventPublisher cannot be processed on "
                             + declaringClass.getName()
@@ -155,6 +160,8 @@ public class EventPublisherASTTransformation extends AbstractASTTransformation {
      * <code>public void publishEvent(String,List = [])</code><br/>
      * <code>public void publishEventOutside(String,List = [])</code><br/>
      * <code>public void publishEventAsync(String,List = [])</code><br/>
+     * <code>public boolean isEventPublishingEnabled()</code><br/>
+     * <code>public void setEventPublishingEnabled(boolean)</code><br/>
      *
      * @param declaringClass the class to which we add the support field and methods
      */
@@ -325,6 +332,40 @@ public class EventPublisherASTTransformation extends AbstractASTTransformation {
                         field(erField),
                         "publishAsync",
                         vars(NAME, ARGS)))
+        ));
+
+        // add method:
+        // boolean isEventPublishingEnabled() {
+        //      $this.eventRouter.isEnabled()
+        // }
+        injectMethod(declaringClass, new MethodNode(
+                "isEventPublishingEnabled",
+                ACC_PUBLIC,
+                ClassHelper.boolean_TYPE,
+                params(),
+                ClassNode.EMPTY_ARRAY,
+                returns(call(
+                        field(erField),
+                        "isEnabled",
+                        NO_ARGS
+                ))
+        ));
+
+        // add method:
+        // void setEventPublishingEnabled(boolean enabled) {
+        //      $this.eventRouter.setEnabled(enabled)
+        // }
+        injectMethod(declaringClass, new MethodNode(
+                "setEventPublishingEnabled",
+                ACC_PUBLIC,
+                ClassHelper.VOID_TYPE,
+                params(param(ClassHelper.boolean_TYPE, ENABLED)),
+                ClassNode.EMPTY_ARRAY,
+                stmnt(call(
+                        field(erField),
+                        "setEnabled",
+                        vars(ENABLED)
+                ))
         ));
     }
 }

@@ -326,6 +326,21 @@ public interface GriffonApplication extends ThreadingHandler, MVCHandler {
     void removeApplicationEventListener(String eventName, RunnableWithArgs listener);
 
     /**
+     * Returns whether events will be published by the application's event bus or not.
+     *
+     * @return true if event publishing is enabled; false otherwise.
+     */
+    boolean isEventPublishingEnabled();
+
+    /**
+     * Sets the enabled state for event publishing.</p>
+     * Events will be automatically discarded when the enabled state is set to false.
+     *
+     * @param enabled the value fot the enabled state.
+     */
+    void setEventPublishingEnabled(boolean enabled);
+
+    /**
      * Publishes an application event.<p>
      *
      * @param eventName the name of the event

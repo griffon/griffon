@@ -58,6 +58,10 @@ import java.lang.annotation.Target;
  * &nbsp;&nbsp;&nbsp;&nbsp;publishes and event outside of the publisher's thread</li>
  * <li><code>public void publishEventAsync(java.lang.String, java.util.List)</code><br/>
  * &nbsp;&nbsp;&nbsp;&nbsp;publishes and event outside of the publisher's thread</li>
+ * <li><code>public boolean isEventPublishingEnabled()</code><br/>
+ * &nbsp;&nbsp;&nbsp;&nbsp;if events will be published or not</li>
+ * <li><code>public void setEventPublishingEnabled(boolean enabled)</code><br/>
+ * &nbsp;&nbsp;&nbsp;&nbsp;if events will be published or not</li>
  * <p/>
  * </ul>
  *

@@ -1,4 +1,4 @@
-package griffon.util
+package griffon.transform
 
 import org.codehaus.groovy.control.CompilationFailedException
 

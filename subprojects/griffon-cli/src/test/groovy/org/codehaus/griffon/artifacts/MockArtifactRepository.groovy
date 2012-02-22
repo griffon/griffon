@@ -6,6 +6,9 @@ import org.codehaus.griffon.artifacts.model.Release
 class MockArtifactRepository extends AbstractArtifactRepository {
     final String type = 'mock'
     final Map<String, Map<String, Artifact>> artifacts = [:]
+    boolean legacy
+    boolean local = true
+    boolean remote
 
     MockArtifactRepository() {
         name = 'mock'

@@ -1,6 +1,6 @@
 package griffon.transform
 
-class ListenerTest extends GroovyTestCase {
+class PropertyListenerTests extends GroovyTestCase {
     void testSimpleValues() {
         GroovyShell shell = new GroovyShell()
         shell.evaluate("""

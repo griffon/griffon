@@ -50,7 +50,7 @@ final class ArtifactRepositoryRegistry {
     }
 
     void withRepositories(Closure closure) {
-        boolean offline = BuildSettingsHolder.getSettings().isOfflineMode()
+        boolean offline = BuildSettingsHolder.settings?.offlineMode ?: false
         synchronized (REPOSITORIES) {
             REPOSITORIES.each { name, repository ->
                 if (offline && !repository.local) return

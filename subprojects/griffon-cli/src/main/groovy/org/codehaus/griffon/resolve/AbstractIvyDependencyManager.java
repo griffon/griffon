@@ -168,7 +168,9 @@ public abstract class AbstractIvyDependencyManager {
     }
 
     public boolean isOffline() {
-        return BuildSettingsHolder.getSettings().isOfflineMode();
+        BuildSettings settings = BuildSettingsHolder.getSettings();
+        if (settings != null) return settings.isOfflineMode();
+        return false;
     }
 
     public void setIncludeSource(boolean includeSource) {

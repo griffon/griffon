@@ -41,6 +41,7 @@ import static org.codehaus.groovy.runtime.MetaClassHelper.convertToTypeArray
  * @author Andres Almiray
  */
 class EventRouter {
+    private boolean enabled = true
     private List listeners = Collections.synchronizedList([])
     private Map<Script, Binding> scriptBindings = [:]
     private Map<String, List> closureListeners = Collections.synchronizedMap([:])
@@ -65,6 +66,30 @@ class EventRouter {
     }
 
     /**
+     * Returns the current enabled state.
+     * @return true if the router is enabled; false otherwise.
+     */
+    boolean isEnabled() {
+        synchronized (LOCK) {
+            this.@enabled
+        }
+    }
+
+    /**
+     * Sets the enabled state of this router.</p>
+     * A disabled router will simply discard all events that are sent to it, in other
+     * words listeners will never be notified. Discarded events cannot be recovered, even
+     * if the router is enabled at a later point in time.
+     *
+     * @param enabled the value for the enabled state
+     */
+    void setEnabled(boolean enabled) {
+        synchronized (LOCK) {
+            this.@enabled = enabled
+        }
+    }
+
+    /**
      * Publishes an event with optional arguments.</p>
      * Event listeners will be notified in the same thread
      * that originated the event.
@@ -74,6 +99,7 @@ class EventRouter {
      *
      */
     void publish(String eventName, List params = []) {
+        if (!isEnabled()) return
         if (!eventName) return
         buildPublisher(eventName, params)('synchronously')
     }
@@ -88,6 +114,7 @@ class EventRouter {
      *
      */
     void publishOutside(String eventName, List params = []) {
+        if (!isEnabled()) return
         if (!eventName) return
         UIThreadManager.instance.executeOutside(buildPublisher(eventName, params).curry('outside'))
     }
@@ -102,6 +129,7 @@ class EventRouter {
      *
      */
     void publishAsync(String eventName, List params = []) {
+        if (!isEnabled()) return
         if (!eventName) return
         deferredEvents.offer(buildPublisher(eventName, params).curry('asynchronously'))
     }

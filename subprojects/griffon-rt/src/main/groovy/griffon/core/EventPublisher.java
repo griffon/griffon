@@ -126,4 +126,19 @@ public interface EventPublisher {
      * @param args      event arguments sent to listeners
      */
     void publishEventAsync(String eventName, List args);
+
+    /**
+     * Returns whether events will be published by the event bus or not.
+     *
+     * @return true if event publishing is enabled; false otherwise.
+     */
+    boolean isEventPublishingEnabled();
+
+    /**
+     * Sets the enabled state for event publishing.</p>
+     * Events will be automatically discarded when the enabled state is set to false.
+     *
+     * @param enabled the value fot the enabled state.
+     */
+    void setEventPublishingEnabled(boolean enabled);
 }
