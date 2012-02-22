@@ -18,12 +18,13 @@ package greet
 
 import groovy.beans.Bindable
 import java.beans.PropertyChangeListener
+import twitter4j.User
 
 /**
  * @author Danno Ferrin
  */
 class UserPaneModel {
-    Map user
+    User user
     String screenName
     @Bindable boolean busy
     @Bindable boolean following
@@ -36,9 +37,9 @@ class UserPaneModel {
         MicroblogService microblogService = app.controllers.Greet.microblogService
 
         user = args.user
-        screenName = user.screen_name
-        following = microblogService.currentUserFollows(args.user.id)
-        follows = microblogService.follows(args.user.id, microblogService.authenticatedUser.id)
+        screenName = user.screenName
+        following = microblogService.currentUserFollows(user.screenName)
+        follows = microblogService.follows(user.screenName, microblogService.authenticatedUser.screenName)
 
         addPropertyChangeListener("showTweets", args.controller.&updateTimeline as PropertyChangeListener)
         addPropertyChangeListener("showReplies", args.controller.&updateTimeline as PropertyChangeListener)

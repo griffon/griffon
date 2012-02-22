@@ -28,6 +28,7 @@ import javax.swing.event.HyperlinkEvent
  * @author Danno Ferrin
  */
 class GreetController {
+
     // these will be injected by Griffon
     GreetModel model
     GreetView view
@@ -96,7 +97,7 @@ class GreetController {
             def cleanup = { model.tweeting = false }
             try {
                 if (model.sendingDM) {
-                    microblogService.sendDM(model.targetUser, view.tweetBox.text)
+                    microblogService.sendDirectMessage(model.targetUser, view.tweetBox.text)
                 } else  {
                     microblogService.tweet(view.tweetBox.text, model.targetTweet)
                 }
@@ -167,7 +168,6 @@ class GreetController {
         }
     }
 
-
     def selectReplyToTweet(ActionEvent evt) {
         String tweetID = evt.actionCommand
         def tweet = microblogService.tweetCache[tweetID]
@@ -176,7 +176,7 @@ class GreetController {
             model.targetUser = null
         } else {
             model.targetTweet = tweetID
-            model.targetUser = tweet.user.screen_name
+            model.targetUser = tweet.user.screenName
             view.tweetBox.text = "@$model.targetUser ${view.tweetBox.text.replaceAll("@$model.targetUser ", '')}"
         }
     }

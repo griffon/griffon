@@ -24,7 +24,7 @@ import javax.swing.JScrollPane
 import javax.swing.JTabbedPane
 import javax.swing.KeyStroke
 
-greetFrame = application(title:"Greet - A Groovy Twitter Client",
+greetFrame = application(title:"Greet - A Griffon Twitter Client",
   size:[320,640],
   locationByPlatform:true,
   iconImage: imageIcon('/griffon-icon-48x48.png').image,

@@ -35,12 +35,12 @@ def tweetText = ("$tweet.text"
     // change @username to twitter links
     .replaceAll(/(?:@(\w*+))?([^@]*)/, {f,l,t->l?"@<a href='http://twitter.com/$l'>$l</a>$t":"$t"})
 )
-tweetText = "<a href='http://twitter.com/${tweetUser.screen_name}'><b>${tweetUser.screen_name}</b></a> $tweetText"
+tweetText = "<a href='http://twitter.com/${tweetUser.screenName}'><b>${tweetUser.screenName}</b></a> $tweetText"
 
-panel(new RoundedPanel(foreground: java.awt.Color.WHITE, opaque:true),
-        name:tweet.id) {
+panel(new RoundedPanel(foreground: java.awt.Color.WHITE, opaque: true),
+        name: tweet.id) {
     gridBagLayout()
-    label(icon:new DelayedImageIcon(48, 48, new URL(tweetUser.profile_image_url as String)),
+    label(icon:new DelayedImageIcon(48, 48, tweetUser.profileImageURL),
         verticalTextPosition:SwingConstants.BOTTOM,
         horizontalTextPosition:SwingConstants.CENTER,
         anchor: NORTH, insets: [6, 6, 6, 3])
@@ -60,16 +60,16 @@ panel(new RoundedPanel(foreground: java.awt.Color.WHITE, opaque:true),
                 contentAreaFilled:false, font:tweetTimeFont, cursor:Cursor.getPredefinedCursor(Cursor.HAND_CURSOR))
             bt.maximumSize = bt.preferredSize
         }
-        if (tweet.in_reply_to_screen_name) {
+        if (tweet.inReplyToScreenName) {
             hstrut(3)
-            def bt = button(showTweetAction, actionCommand:tweet.in_reply_to_screen_name,
-                text:"<html>re: <a href='http://twitter.com/$tweet.in_reply_to_screen_name'>$tweet.in_reply_to_screen_name</a>" as String,
+            def bt = button(showTweetAction, actionCommand:tweet.inReplyToScreenName,
+                text:"<html>re: <a href='http://twitter.com/$tweet.inReplyToScreenName'>$tweet.inReplyToScreenName</a>" as String,
                 border:null, contentAreaFilled:false, font:tweetTimeFont,
                 cursor:Cursor.getPredefinedCursor(Cursor.HAND_CURSOR))
             bt.maximumSize = bt.preferredSize
         }
         glue()
-        label(new TimeLabel(tweet.created_at), border:emptyBorder(0,3,3,0), font:tweetTimeFont)
+        label(new TimeLabel(tweet.createdAt), border:emptyBorder(0,3,3,0), font:tweetTimeFont)
         hstrut(6)
     }
 }

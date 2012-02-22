@@ -17,6 +17,7 @@
 package greet
 
 import java.util.prefs.Preferences
+import javax.swing.JOptionPane
 
 /**
  * @author Danno Ferrin
@@ -29,28 +30,23 @@ class LoginPaneController {
     void login(evt) {
         edt { model.loggingIn = true }
         def username = model.loginUser
-        def password = model.loginPassword
-        def urlBase = model.serviceURL
         doOutside {
             try {
                 GreetController greetController = app.controllers.Greet
-
                 MicroblogService microblogService = greetController.microblogService
-                microblogService.urlBase = urlBase
-                if (microblogService.login(username, password as char[])) {
+                if (microblogService.login(username)) {
                 	app.models.Greet.primaryUser = username
 
                     Preferences prefs = Preferences.userNodeForPackage(this.getClass())
                     prefs.put("user", model.loginUser);
-                    prefs.put("serviceURL", model.serviceURL)
-
 
                     def tabbedPane = app.views.Greet.tweetsTabbedPane
-
+                    microblogService.authenticatedUser = microblogService.twitter.verifyCredentials()
+                    microblogService.storeUser(microblogService.authenticatedUser)
                     microblogService.getReplies()
                     microblogService.getTweets(username)
                     def userPane = buildMVCGroup('UserPane', "UserPane_$username",
-                        user:microblogService.userCache[username], closable:false);
+                        user: microblogService.userCache[username], closable: false);
                     tabbedPane.addTab("@$username", userPane.view.userPane)
 
 

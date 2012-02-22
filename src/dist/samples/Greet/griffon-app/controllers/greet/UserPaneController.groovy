@@ -29,20 +29,20 @@ class UserPaneController {
     MicroblogService microblogService
 
     void mvcGroupInit(Map args) {
-        def timelinePane = buildMVCGroup('TimelinePane', "TimelinePane_user_$args.user.screen_name");
+        def timelinePane = buildMVCGroup('TimelinePane', "TimelinePane_user_$args.user.screenName");
         timelinePaneController = timelinePane.controller
 
         timelinePane.model.tweetListGenerator = {MicroblogService microblogService ->
             def thisScreenName = model.screenName
             def tweets = microblogService.tweetCache.values().findAll {
-                ((model.showTweets && (it.user.screen_name == thisScreenName))
-                || (model.showReplies && (it.in_reply_to_screen_name == thisScreenName)))
+                ((model.showTweets && (it.user.screenName == thisScreenName))
+                || (model.showReplies && (it.inReplyToScreenName == thisScreenName)))
             }
-            tweets.addAll (microblogService.dmCache.values().findAll {
-                model.showDirectMessages && ((it.sender_screen_name == thisScreenName)
-                || (it.recipient_screen_name == thisScreenName))
+            tweets.addAll (microblogService.directMessageCache.values().findAll {
+                model.showDirectMessages && ((it.senderScreenName == thisScreenName)
+                || (it.recipientScreenName == thisScreenName))
             })
-            tweets.sort( {a, b-> b.created_at <=> a.created_at}).collect { it.id }
+            tweets.sort( {a, b-> b.createdAt <=> a.createdAt}).collect { it.id }
         }
 
         view.timelinePane = timelinePane.view.timeline
@@ -54,8 +54,8 @@ class UserPaneController {
 
     def close(evt) {
         view.userPane.parent.remove(view.userPane)
-        destroyMVCGroup("UserPane_$model.user.screen_name")
-        destroyMVCGroup("TimelinePane_user_$model.user.screen_name")
+        destroyMVCGroup("UserPane_$model.user.screenName")
+        destroyMVCGroup("TimelinePane_user_$model.user.screenName")
     }
 
     def follow(evt) {
@@ -90,6 +90,6 @@ class UserPaneController {
 
     def directMessage(evt) {
         app.models.Greet.sendingDM = true
-        app.models.Greet.targetUser = model.user.screen_name
+        app.models.Greet.targetUser = model.user.screenName
     }
 }

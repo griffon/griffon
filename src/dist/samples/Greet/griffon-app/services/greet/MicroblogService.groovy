@@ -19,61 +19,103 @@ import groovy.beans.Bindable
 import groovy.util.slurpersupport.GPathResult
 import java.text.DateFormat
 import java.text.SimpleDateFormat
+import twitter4j.Twitter
+import twitter4j.conf.ConfigurationBuilder
+import twitter4j.TwitterFactory
+import twitter4j.auth.RequestToken
+import twitter4j.auth.AccessToken
+import java.awt.Desktop
+
+import twitter4j.TwitterException
+import javax.swing.JOptionPane
+import twitter4j.Status
+import twitter4j.User
+import twitter4j.DirectMessage
 
 /**
  * @author Danno Ferrin
  */
 class MicroblogService {
+    static Twitter twitter;
+
+    def instantiateTwitter = { String login ->
+        ConfigObject config = new ConfigSlurper().parse(new File('twitter4j.properties').toURL())
+        ConfigurationBuilder configurationBuilder = new ConfigurationBuilder()
+        configurationBuilder.with {
+            if (config?.debug) {
+                debugEnabled = config.debug
+            }
+            if (config?.oauth?.consumerKey) {
+                OAuthConsumerKey = config.oauth.consumerKey
+            }
+            if (config?.oauth?.consumerSecret) {
+                OAuthConsumerSecret = config.oauth.consumerSecret
+            }
+            if (config?.oauth?.accessToken) {
+                OAuthAccessToken = config.oauth.accessToken
+            }
+            if (config?.oauth?.accessTokenSecret) {
+                OAuthAccessTokenSecret = config.oauth.accessTokenSecret
+            }
+        }
+        twitter = new TwitterFactory(configurationBuilder.build()).getInstance()
+        Long userId = twitter.showUser(login).id
+        if (!accessTokens.containsKey(userId)) {
+            RequestToken requestToken = twitter.getOAuthRequestToken();
+            AccessToken accessToken = null;
+            while (null == accessToken) {
+                if (Desktop.isDesktopSupported()) {
+                    Desktop.getDesktop().browse(new URI(requestToken.getAuthorizationURL()))
+                }
+                String pin = (String) JOptionPane.showInputDialog(null,
+                        'Please provide a PIN from the application authorization page.',
+                        'Application authorization', JOptionPane.QUESTION_MESSAGE)
+                try {
+                    if (pin.length() > 0) {
+                        accessToken = twitter.getOAuthAccessToken(requestToken, pin);
+                    } else {
+                        accessToken = twitter.getOAuthAccessToken();
+                    }
+                } catch (TwitterException e) {
+                    if (401 == e?.getStatusCode()) {
+                        System.out.println("Unable to get the access token.");
+                    } else {
+                        e?.printStackTrace();
+                    }
+                }
+            }
+            twitter.setOAuthAccessToken(accessToken)
+            accessTokens.put(userId, accessToken)
+            //persist to the accessToken for future reference.
+            storeAccessToken(twitter.verifyCredentials().getId(), accessToken);
+        } else {
+            twitter.setOAuthAccessToken(accessTokens.get(userId))
+        }
+    }
 
     static final DateFormat twitterFormat = new SimpleDateFormat("EEE MMM dd HH:mm:ss Z yyyy", Locale.ENGLISH)
 
     Map tweetCache = new CacheMap(500)
-    Map dmCache = new CacheMap(50)
+    Map directMessageCache = new CacheMap(50)
     Map userCache = new CacheMap(200)
 
-    String urlBase = "http://twitter.com"
     @Bindable String status = ""
-    Map authenticatedUser
+    User authenticatedUser
     XmlSlurper slurper = new XmlSlurper()
 
-    Map storeTweet(GPathResult tweet, Map user=null) {
-        def mapTweet = [:]
-        tweet.children().each {
-            mapTweet[it.name()] = it as String
-        }
-        tweetCache[mapTweet.id] = mapTweet
-        if (user) {
-            mapTweet.user = user
-        } else {
-            mapTweet.user = storeUser(tweet.user)
-        }
-        mapTweet.created_at = twitterFormat.parse(mapTweet.created_at).time
-        return mapTweet
+    Status storeTweet(Status tweet) {
+        tweetCache[tweet.id] = tweet
+        return tweet
     }
 
-    Map storeDM(GPathResult dm) {
-        def mapDM = [:]
-        dm.children().each {
-            mapDM[it.name()] = it as String
-        }
-        mapDM.sender = storeUser(dm.sender)
-        mapDM.recipient = storeUser(dm.recipient)
-        mapDM.created_at = twitterFormat.parse(mapDM.created_at).time
-        dmCache[mapDM.id] = mapDM
-        return mapDM
+    DirectMessage storeDirectMessage(DirectMessage directMessage) {
+        directMessageCache[directMessage.id] = directMessage
+        return directMessage
     }
 
-    Map storeUser(GPathResult user) {
-        def mapUser = [:]
-        user.children().each {
-            mapUser[it.name()] = it as String
-        }
-        userCache[mapUser.screen_name] = mapUser
-        mapUser.status = null
-        if (user.status as String) {
-            storeTweet(user.status, mapUser)
-        }
-        return mapUser
+    User storeUser(User user) {
+        userCache[user.screenName] = user
+        return user
     }
 
     def withStatus(String status, Closure c) {
@@ -112,16 +154,12 @@ class MicroblogService {
         }
     }
 
-    boolean login(String name, def password) {
+    boolean login(String username) {
         withStatus("Logging in") {
-            Authenticator.default = [
-				getPasswordAuthentication: {
-                	return new PasswordAuthentication(name, password)
-            	}
-			] as Authenticator
-            slurpAPIStream("$urlBase/account/verify_credentials.xml")
-            authenticatedUser = getUser(name)
+            instantiateTwitter(username)
+            authenticatedUser = getUser(username)
         }
+        true
     }
 
     List<Map> getFriends() {
@@ -136,18 +174,22 @@ class MicroblogService {
         def friends = [user]
         withStatus("Loading Friends") {
             def page = 1
-            def list = slurpAPIStream("$urlBase/statuses/friends/${user.screen_name}.xml")
-            while (list.user.size()) {
-                list.user.collect(friends) {storeUser(it)}
+            def list = twitter.getFriendsIDs(user.screeName)
+            while (list.size()) {
+                list.collect(friends) {
+                    storeUser(it)
+                }
                 page++
                 try {
-                    list = slurpAPIStream("$urlBase/statuses/friends/${user.screen_name}.xml&page=$page")
-                } catch (Exception e) { break }
+                    list = twitter.getFriendsIDs(user.screenName, page)
+                } catch (Exception e) {
+                    break
+                }
             }
         }
         withStatus("Loading Friends Images") {
             return friends.each {
-                loadImage(it.profile_image_url as String)
+                loadImage(it.profileImageURL)
             }
         }
     }
@@ -164,48 +206,49 @@ class MicroblogService {
         def friends = [user]
         withStatus("Loading Followers") {
             def page = 1
-            def list = slurpAPIStream("$urlBase/statuses/followers/${user.screen_name}.xml")
-            while (list.user.size()) {
-                list.user.collect(friends) {storeUser(it)}
+            def list = twitter.getFollowersIDs(user.screenName)//slurpAPIStream("$urlBase/statuses/followers/${user.screen_name}.xml")
+            while (list.size()) {
+                list.collect(friends) {
+                    storeUser(it)
+                }
                 page++
                 try {
-                    list = slurpAPIStream("$urlBase/statuses/followers/${user.screen_name}.xml&page=$page")
-                } catch (Exception e) { break }
+                    list = twitter.getFollowersIDs(user.screenName, page)//slurpAPIStream("$urlBase/statuses/followers/${user.screen_name}.xml&page=$page")
+                } catch (Exception e) { 
+                    break 
+                }
             }
         }
         withStatus("Loading Followers Images") {
             return friends.each {
-                loadImage(it.profile_image_url as String)
+                loadImage(it.profileImageURL)
             }
         }
     }
 
-    def follow(String userID, boolean notificaitons=false) {
+    def follow(String userID, boolean notificaitons = false) {
         withStatus("Following $userID") {
-            def urlConnection = new URL("$urlBase/friendships/create/${userID}.xml").openConnection()
-            urlConnection.requestMethod = "POST"
-            return slurper.parse(urlConnection.inputStream)
+            twitter.createFriendship(userID)
         }
     }
 
     def unfollow(String userID) {
         withStatus("UInfollowing $userID") {
-            def urlConnection = new URL("$urlBase/friendships/destroy/${userID}.xml").openConnection()
-            urlConnection.requestMethod = "DELETE"
-            return slurper.parse(urlConnection.inputStream)
+            twitter.destroyFriendship(userID)
         }
     }
 
     boolean currentUserFollows(String toUserID) {
-        follows(authenticatedUser.id, toUserID)
+        follows(authenticatedUser?.screenName, toUserID)
     }
 
     boolean follows(String fromUserID, String toUserID) {
         withStatus("Checking Following") {
-            return Boolean.valueOf(slurpAPIStream(
-                    "$urlBase/friendships/exists.xml?user_a=$fromUserID&user_b=$toUserID"
-                ).toString())
+            if(fromUserID && toUserID) {
+                return twitter.existsFriendship(fromUserID, toUserID)
+            }
         }
+        return false
     }
 
     String getLargestID(List<Map> tweets) {
@@ -222,144 +265,132 @@ class MicroblogService {
     List<Map> getFriendsTimeline(String sinceID = '0', int count = 20) {
         def timeline = []
         withStatus("Loading Timeline") {
-            timeline =  slurpAPIStream(
-                    "$urlBase/statuses/friends_timeline.xml?count=$count&${sinceID=='0'?'':'&since_id='}${sinceID=='0'?'':sinceID}"
-                ).status.collect {storeTweet(it)}
+            timeline = twitter.getFriendsTimeline().collect {
+                storeTweet(it)
+            }
         }
         withStatus("Loading Timeline Images") {
             return timeline.each {
-                loadImage(it.user.profile_image_url as String)
+                loadImage(it.user.profileImageURL)
             }
         }
     }
 
-    List<Map> getReplies() {
-        def replies = []
+    List<Status> getReplies() {
+        List<Status> replies = []
         withStatus("Loading Replies") {
-            replies = slurpAPIStream(
-                    "$urlBase/statuses/replies.xml"
-                ).status.collect {storeTweet(it)}
+            replies = twitter.mentions.collect {
+                storeTweet(it)
+            }
         }
         withStatus("Loading Replies Images") {
-            return replies.each {
-                loadImage(it.user.profile_image_url as String)
+            return replies.each { Status reply ->
+                loadImage(reply?.user?.profileImageURL)
             }
         }
     }
 
-    List<Map> getTweets() {
-        return getTweets(user)
+    List<Status> getTweets() {
+        return getTweets(authenticatedUser)
     }
 
-    List<Map> getTweets(String friend) {
+    List<Status> getTweets(String friend) {
         return getTweets(getUser(friend))
     }
 
-    List<Map> getTweets(Map friend) {
-        def tweets = []
+    List<Status> getTweets(User friend) {
+        List<Status> statuses = []
         withStatus("Loading Tweets") {
-            tweets = slurpAPIStream(
-                    "$urlBase/statuses/user_timeline/${friend.screen_name}.xml"
-                ).status.collect {storeTweet(it)}
+            statuses = twitter.getUserTimeline(friend.screenName).collect {
+                storeTweet(it)
+            }
         }
         withStatus("Loading Tweet Images") {
-            return tweets.each {
-                loadImage(it.user.profile_image_url as String)
+            return statuses.each { status ->
+                loadImage(status?.user?.profileImageURL)
             }
         }
     }
 
-    List<Map> getDirectMessages() {
-        def dms = []
-        withStatus("Loading DMs") {
-            dms = slurpAPIStream(
-                    "$urlBase/direct_messages.xml"
-                ).direct_message.collect {storeDM(it)}
+    List<DirectMessage> getDirectMessages() {
+        def directMessages = []
+        withStatus("Loading Direct Messages") {
+            directMessages = twitter.directMessages.collect {
+                storeDirectMessage(it)
+            }
         }
-        withStatus("Loading DM Images") {
-            return dms.each {
-                loadImage(it.sender.profile_image_url as String)
+        withStatus("Loading Direct Messages Images") {
+            return directMessages.each { DirectMessage directMessage ->
+                loadImage(directMessage?.sender?.profileImageURL)
             }
         }
     }
 
-    List<Map> getDirectMessagesSent() {
-        def dms = []
-        withStatus("Loading DMs Sent") {
-            dms = slurpAPIStream(
-                    "$urlBase/direct_messages/sent.xml"
-                ).direct_message.collect {storeDM(it)}
+    List<DirectMessage> getDirectMessagesSent() {
+        def directMessages = []
+        withStatus("Loading Sent Direct Messages") {
+            directMessages = twitter.getSentDirectMessages().collect {
+                storeDirectMessage(it)
+            }
         }
-        withStatus("Loading DM Images") {
-            return dms.each {
-                loadImage(it.sender.profile_image_url as String)
+        withStatus("Loading Direct Messages Images") {
+            return directMessages.each {
+                loadImage(it.sender.profileImageURL)
             }
         }
     }
 
-    Map getUser(String screen_name) {
-        withStatus("Loading User $screen_name") {
-            if (screen_name.contains('@')) {
-                return storeUser(slurpAPIStream(
-                       "$urlBase/users/show.xml?email=${screen_name}"
-                    ))
-            } else {
-                return storeUser(slurpAPIStream(
-                        "$urlBase/users/show/${screen_name}.xml"
-                    ))
-            }
+    User getUser(String screenName) {
+        withStatus("Loading User ${screenName}") {
+            return storeUser(twitter.showUser(screenName))
         }
     }
 
-    Map tweet(String message, String inReplyToID = null) {
+    Status tweet(String message, String inReplyToStatusId = null) {
         withStatus("Tweeting") {
-            def urlConnection = new URL("$urlBase/statuses/update.xml").openConnection()
-            urlConnection.doOutput = true
-            urlConnection.outputStream << "source=greet&status=${URLEncoder.encode(message, 'UTF-8')}"
-            if (inReplyToID) urlConnection.outputStream << "&in_reply_to_status_id=$inReplyToID"
-            return storeTweet(slurper.parse(urlConnection.inputStream))
+            Status status = twitter.updateStatus(message)
+            if (inReplyToStatusId) {
+                status.inReplyToStatusId(inReplyToStatusId)
+            }
+            return storeTweet(status)
         }
     }
 
-    def untweet(String tweetID) {
+    def untweet(Long statusId) {
         withStatus("Deleting Tweet") {
-            slurpAPIStream("$urlBase/statuses/destroy/${tweetID}.xml")
-            // if we get here, delete suceeded
-            tweetCache.remove(tweetID)
+            twitter.destroyStatus(statusId)
+
+            // if we get here, delete succeeded
+            tweetCache.remove(statusId)
         }
     }
 
-    Map sendDM(String toUserID, String message) {
-        withStatus("DMing") {
-            def urlConnection = new URL("$urlBase/direct_messages/new.xml").openConnection()
-            urlConnection.doOutput = true
-            urlConnection.outputStream << "source=greet&user=$toUserID&text=${URLEncoder.encode(message, 'UTF-8')}"
-            return storeDM(slurper.parse(urlConnection.inputStream))
+    Map sendDirectMessage(String toUserID, String message) {
+        withStatus("Sending Direct Message") {
+            return storeDirectMessage(twitter.sendDirectMessage(toUserID, message))
         }
     }
 
 
-    Map unsendDM(String tweetID) {
+    Map destroyDirectMessage(String directMessageId) {
         withStatus("Deleting DM") {
-            slurpAPIStream("$urlBase/direct_messages/destroy/${tweetID}.xml")
-            // if we get here, delete suceeded
-            dmCache.remove(tweetID)
+            twitter.destroyDirectMessage(directMessageId)
+
+            // if we get here, delete succeeded
+            directMessageCache.remove(directMessageId)
         }
     }
 
     // no need to read these, swing seems to cache these so the EDT won't stall
     def loadImage(image) {
         // no-op for now
-//        if (!imageMap[image]) {
-//            Thread.start {imageMap[image] = new DelayedImageIcon(48, 48, new URL(image))}
-//        }
+        // if (!imageMap[image]) {
+        //     Thread.start {imageMap[image] = new DelayedImageIcon(48, 48, new URL(image))}
+        // }
     }
 
     static String timeAgo(date) {
-        if (date as String)
-            return timeAgo(twitterFormat.parse(date as String))
-        else
-            return ""
+        return (date as String) ? timeAgo(twitterFormat.parse(date as String)) : ''
     }
 
     static String timeAgo(Date d) {
@@ -370,7 +401,7 @@ class MicroblogService {
         def parts
         switch (secs) {
             case 0..119:
-                parts = [1,"minute", dir]; break
+                parts = [1, "minute", dir]; break
             case 120..3599:
                 parts = [(secs / 60) as int, "minutes", dir]; break
             case 3600..7199:
@@ -379,10 +410,36 @@ class MicroblogService {
                 parts = [(secs / 3600) as int, "hours", dir]; break
             case 86400..172799:
                 parts = [1, "day", dir]; break
-            default :
+            default:
                 parts = [(secs / 86400) as int, "days", dir]; break
         }
         return parts.join(" ")
     }
 
+    private Map<Long, AccessToken> accessTokens = new HashMap<Long, AccessToken>() {
+        {
+            File storage = new File('accessToken.storage')
+            storage.withReader('UTF-8') {
+                String string
+                while ((string = it.readLine())) {
+                    if (string ==~ /.*,.*,.*/) {
+                        def (userId, accessToken, accessTokenSecret) = string.split(',')
+                        put(userId as Long, new AccessToken(accessToken, accessTokenSecret))
+                    }
+                }
+            }
+        }
+    }
+    private void storeAccessToken(Long userId, AccessToken accessToken) {
+        try {
+            File storage = new File('accessToken.storage')
+            storage << "${userId},${accessToken.token},${accessToken.tokenSecret}"
+        } catch (IOException e) {
+            e.printStackTrace()
+        }
+    }
+
+    private AccessToken loadAccessToken(Long userId) {
+        return accessTokens.get(userId);
+    }
 }

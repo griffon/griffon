@@ -5,6 +5,7 @@ import java.awt.*;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Date;
 
 /**
  * Created by IntelliJ IDEA.
@@ -18,6 +19,12 @@ public class TimeLabel extends JLabel {
 
     final long timeRepresented;
     long nextUpdate;
+
+	 public TimeLabel(Date twitterTime) {
+		setText("unknown");
+		setOpaque(false);
+		timeRepresented = twitterTime.getTime();
+	 }
 
     public TimeLabel(String twitterTime) {
         setText("unknown");

@@ -18,10 +18,6 @@
  * @author Danno Ferrin
  */
 
-
 app.models.LoginPane.loggingIn = false
 def focusField = app.views.LoginPane.twitterNameField
-if (focusField.text) {
-    focusField = app.views.LoginPane.twitterPasswordField
-}
 focusField.requestFocusInWindow()

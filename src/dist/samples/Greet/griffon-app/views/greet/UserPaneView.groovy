@@ -31,13 +31,13 @@ userPane = panel() {
     gridBagLayout()
     panel(anchor:NORTHWEST, gridheight:4) {
         gridBagLayout()
-        label(icon: imageIcon(new URL(model.user.profile_image_url as String)),
-            anchor:NORTHWEST, gridwidth:REMAINDER, insets:[6,6,6,3]
+        label(icon: imageIcon(model.user.profileImageURL),
+            anchor: NORTHWEST, gridwidth: REMAINDER, insets: [6,6,6,3]
         )
         toggleButton("Tweets",
-            contentMargin:[2,2,2,2], font:buttonFont, focusable:false,
-            selected:bind(target:model, targetProperty:'showTweets', value:true),
-            fill:HORIZONTAL, gridwidth:REMAINDER, insets:[1,6,1,3],
+            contentMargin: [2,2,2,2], font: buttonFont, focusable: false,
+            selected: bind(target:model, targetProperty: 'showTweets', value: true),
+            fill: HORIZONTAL, gridwidth: REMAINDER, insets: [1,6,1,3],
         )
         toggleButton("Replies",
             contentMargin:[2,2,2,2], font:buttonFont, focusable:false,
@@ -52,14 +52,19 @@ userPane = panel() {
     }
 
     vbox(insets:[6,3,6,3], anchor:NORTHWEST, weightx:1.0, gridheight:4, fill:HORIZONTAL) {
-
-        label(model.user.screen_name as String)
-        label(model.user.name as String)
-        label(model.user.location as String)
-        label(mouseClicked: { app.controllers.Greet.displayURL(new URL(model.user.url)) },
-            text:"<html><a href='$model.user.url'>$model.user.url</a>" as String,
-            cursor:Cursor.getPredefinedCursor(Cursor.HAND_CURSOR))
-        label("<html>$model.user.description" as String)
+        //label(model.user.screenName)
+        label(model.user.name)
+        if(model.user.location) {
+            label(model.user.location)
+        }
+        if(model.user.url) {
+            label(mouseClicked: { app.controllers.Greet.displayURL(new URL(model.user.url)) },
+                text:"<html><a href='$model.user.url'>$model.user.url</a>" as String,
+                cursor:Cursor.getPredefinedCursor(Cursor.HAND_CURSOR))
+        }
+        if(model.user.description) {
+            label("<html>$model.user.description")
+        }
     }
 
     if (closable) {

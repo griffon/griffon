@@ -36,12 +36,12 @@ def dmText = ("$dm.text"
     // change @username to twitter links
     .replaceAll(/(?:@(\w*+))?([^@]*)/, {f,l,t->l?"@<a href='http://twitter.com/$l'>$l</a>$t":"$t"})
 )
-dmText = "<a href='http://twitter.com/${dmUser.screen_name}'><b>${dmUser.screen_name}</b></a> said to <a href='http://twitter.com/${dmReciever.screen_name}'><b>${dmReciever.screen_name}</b></a> $dmText"
+dmText = "<a href='http://twitter.com/${dmUser.screenName}'><b>${dmUser.screenName}</b></a> said to <a href='http://twitter.com/${dmReciever.screenName}'><b>${dmReciever.screenName}</b></a> $dmText"
 
-panel(new RoundedPanel(foreground: java.awt.Color.LIGHT_GRAY, opaque:true),
+panel(new RoundedPanel(foreground: java.awt.Color.LIGHT_GRAY, opaque: true),
         name:dm.id) {
     gridBagLayout()
-    label(icon:new DelayedImageIcon(48, 48, new URL(dmUser.profile_image_url as String)),
+    label(icon:new DelayedImageIcon(48, 48, dmUser.profileImageURL),
         verticalTextPosition:SwingConstants.BOTTOM,
         horizontalTextPosition:SwingConstants.CENTER,
         anchor: NORTH, insets: [6, 6, 6, 3])
@@ -50,7 +50,7 @@ panel(new RoundedPanel(foreground: java.awt.Color.LIGHT_GRAY, opaque:true),
         opaque: false, editable: false, font: tweetLineFont,
         background: new Color(0,0,0,0),
         gridwidth: REMAINDER, weightx: 1.0, fill: BOTH, insets: [3, 3, 3, 6])
-    hbox(fill:BOTH, gridwidth:REMAINDER) {
+    hbox(fill: BOTH, gridwidth: REMAINDER) {
         hstrut(6)
 //        button(replyAction, actionCommand:dm.id, border:null,
 //            icon:imageIcon(resource:"/sound_grey.png"), rolloverIcon:imageIcon(resource:"/sound_spearmint.png"), pressedIcon:imageIcon(resource:"/sound_white.png"),
@@ -71,6 +71,6 @@ panel(new RoundedPanel(foreground: java.awt.Color.LIGHT_GRAY, opaque:true),
 //            bt.maximumSize = bt.preferredSize
 //        }
         glue()
-        label(new TimeLabel(dm.created_at), border:emptyBorder(0,3,3,6), font:tweetTimeFont)
+        label(new TimeLabel(dm.createdAt), border: emptyBorder(0,3,3,6), font: tweetTimeFont)
     }
 }

@@ -55,7 +55,7 @@ def updateTweets() {
     edt {
         Map<String, JComponent> keptTweetPanels = [:]
         def tweetCache = tweet = greetController.microblogService.tweetCache
-        def dmCache = greetController.microblogService.dmCache
+        def dmCache = greetController.microblogService.directMessageCache
         model.tweets.each {tweetID ->
             def tweetLine = tweetLinePanels[tweetID]
             if (tweetLine) {
