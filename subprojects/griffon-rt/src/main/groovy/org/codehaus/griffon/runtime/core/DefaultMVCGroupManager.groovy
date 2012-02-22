@@ -74,22 +74,17 @@ class DefaultMVCGroupManager extends AbstractMVCGroupManager {
         if (checkId) checkIdIsUnique(mvcId, configuration)
 
         if (LOG.infoEnabled) LOG.info("Building MVC group '${configuration.mvcType}' with name '${mvcId}'")
-        Map<String, Object> argsCopy = [app: app, mvcType: configuration.mvcType, mvcName: mvcId, configuration: configuration]
-        argsCopy.putAll(app.bindings.variables)
-        argsCopy.putAll(args)
+        Map<String, Object> argsCopy = copyAndConfigureArguments(args, configuration, mvcId)
 
         // figure out what the classes are and prep the metaclass
         Map<String, MetaClass> metaClassMap = [:]
         Map<String, Class> klassMap = [:]
         Map<String, GriffonClass> griffonClassMap = [:]
         configuration.members.each {String memberType, String memberClassName ->
-            GriffonClass griffonClass = app.artifactManager.findGriffonClass(memberClassName)
-            Class klass = griffonClass?.clazz ?: Thread.currentThread().contextClassLoader.loadClass(memberClassName)
-            MetaClass metaClass = griffonClass?.getMetaClass() ?: klass.getMetaClass()
-
-            metaClassMap[memberType] = metaClass
-            klassMap[memberType] = klass
-            griffonClassMap[memberType] = griffonClass
+            def (c, mc, gc) = selectClassesPerMember(memberType, memberClassName)
+            klassMap[memberType] = c
+            metaClassMap[memberType] = mc
+            griffonClassMap[memberType] = gc
         }
 
         // create the builder
@@ -105,25 +100,51 @@ class DefaultMVCGroupManager extends AbstractMVCGroupManager {
         argsCopy.mvcName = group.mvcId
         argsCopy.mvcGroup = group
 
-        app.event(GriffonApplication.Event.INITIALIZE_MVC_GROUP.name, [configuration, group])
+        triggerMVCGroupInitializationEvent(configuration, group)
 
         // special case --
         // controllers are added as application listeners
         // addApplicationListener method is null safe
-        app.addApplicationEventListener(instances.controller)
+        registerApplicationEventListeners(group)
 
         // mutually set each other to the available fields and inject args
-        fillReferencedProperties(instances, argsCopy)
+        fillReferencedProperties(group, argsCopy)
 
         if (checkId) doAddGroup(group)
 
-        initializeMembers(mvcId, instances, argsCopy, group)
+        initializeMembers(group, argsCopy)
 
-        app.event(GriffonApplication.Event.CREATE_MVC_GROUP.name, [group])
+        triggerMVCGroupCreationEvent(group)
         return group
     }
 
-    protected checkIdIsUnique(String mvcId, MVCGroupConfiguration configuration) {
+    protected void registerApplicationEventListeners(MVCGroup group) {
+        app.addApplicationEventListener(group.controller)
+    }
+
+    protected void triggerMVCGroupCreationEvent(MVCGroup group) {
+        app.event(GriffonApplication.Event.CREATE_MVC_GROUP.name, [group])
+    }
+
+    protected void triggerMVCGroupInitializationEvent(MVCGroupConfiguration configuration, MVCGroup group) {
+        app.event(GriffonApplication.Event.INITIALIZE_MVC_GROUP.name, [configuration, group])
+    }
+
+    protected List selectClassesPerMember(String memberType, String memberClassName) {
+        GriffonClass griffonClass = app.artifactManager.findGriffonClass(memberClassName)
+        Class klass = griffonClass?.clazz ?: Thread.currentThread().contextClassLoader.loadClass(memberClassName)
+        MetaClass metaClass = griffonClass?.getMetaClass() ?: klass.getMetaClass()
+        [klass, metaClass, griffonClass]
+    }
+
+    protected Map<String, Object> copyAndConfigureArguments(Map<String, Object> args, MVCGroupConfiguration configuration, String mvcId) {
+        Map<String, Object> argsCopy = [app: app, mvcType: configuration.mvcType, mvcName: mvcId, configuration: configuration]
+        argsCopy.putAll(app.bindings.variables)
+        argsCopy.putAll(args)
+        return argsCopy
+    }
+
+    protected void checkIdIsUnique(String mvcId, MVCGroupConfiguration configuration) {
         if (findGroup(mvcId)) {
             String action = app.config.griffon.mvcid.collision ?: 'exception'
             switch (action) {
@@ -169,10 +190,10 @@ class DefaultMVCGroupManager extends AbstractMVCGroupManager {
         return instanceMap
     }
 
-    protected initializeMembers(String mvcId, Map<String, Object> instances, Map<String, Object> args, MVCGroup group) {
+    protected void initializeMembers(MVCGroup group, Map<String, Object> args) {
         // initialize the classes and call scripts
-        if (LOG.debugEnabled) LOG.debug("Initializing each MVC member of group '${mvcId}'")
-        instances.each {String memberType, member ->
+        if (LOG.debugEnabled) LOG.debug("Initializing each MVC member of group '${group.mvcId}'")
+        group.members.each {String memberType, member ->
             if (member instanceof Script) {
                 group.buildScriptMember(memberType)
             } else if (memberType != 'builder') {
@@ -189,8 +210,8 @@ class DefaultMVCGroupManager extends AbstractMVCGroupManager {
         }
     }
 
-    protected fillReferencedProperties(Map<String, Object> instances, Map<String, Object> args) {
-        instances.each {k, v ->
+    protected void fillReferencedProperties(MVCGroup group, Map<String, Object> args) {
+        group.members.each {k, v ->
             // loop on the instance map to get just the instances
             if (v instanceof Script) {
                 v.binding.variables.putAll(args)
@@ -201,7 +222,7 @@ class DefaultMVCGroupManager extends AbstractMVCGroupManager {
         }
     }
 
-    protected doAddGroup(MVCGroup group) {
+    protected void doAddGroup(MVCGroup group) {
         addGroup(group)
     }
 
@@ -238,7 +259,7 @@ class DefaultMVCGroupManager extends AbstractMVCGroupManager {
         app.event(GriffonApplication.Event.DESTROY_MVC_GROUP.name, [group])
     }
 
-    protected doRemoveGroup(MVCGroup group) {
+    protected void doRemoveGroup(MVCGroup group) {
         removeGroup(group)
     }
 }

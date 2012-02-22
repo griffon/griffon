@@ -18,7 +18,6 @@
  */
 package org.codehaus.griffon.cli.shell;
 
-import griffon.util.GriffonNameUtils;
 import jline.Terminal;
 import org.apache.felix.gogo.commands.Action;
 import org.apache.felix.gogo.commands.Command;
@@ -135,7 +134,7 @@ public class KarafMain {
         }
         String stringifiedArgs = sb.toString().trim();
 
-        if(!isBlank(stringifiedArgs)) {
+        if (!isBlank(stringifiedArgs)) {
             // Shell is directly executing a sub/command, we don't setup a terminal and console
             // in this case, this avoids us reading from stdin un-necessarily.
             CommandSession session = commandProcessor.createSession(in, out, err);
