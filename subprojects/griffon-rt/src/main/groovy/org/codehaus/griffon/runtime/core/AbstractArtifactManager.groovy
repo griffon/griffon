@@ -51,7 +51,9 @@ abstract class AbstractArtifactManager implements ArtifactManager {
         Map<String, List<ArtifactInfo>> loadedArtifacts = doLoadArtifactMetadata()
 
         synchronized (lock) {
-            loadedArtifacts.each { type, list ->
+            for (Map.Entry<String, List<ArtifactInfo>> artifactsEntry: loadedArtifacts.entrySet()) {
+                String type = artifactsEntry.key
+                List<ArtifactInfo> list = artifactsEntry.value
                 artifacts[type] = (list as ArtifactInfo[])
                 artifactHandlers[type]?.initialize(artifacts[type])
             }
@@ -80,7 +82,7 @@ abstract class AbstractArtifactManager implements ArtifactManager {
 
     GriffonClass findGriffonClass(String name, String type) {
         if (!name || !type) return null
-        if(LOG.debugEnabled) LOG.debug("Searching for griffonClass of ${type}:${name}")
+        if (LOG.debugEnabled) LOG.debug("Searching for griffonClass of ${type}:${name}")
         synchronized (lock) {
             return artifactHandlers[type]?.findClassFor(name)
         }
@@ -88,7 +90,7 @@ abstract class AbstractArtifactManager implements ArtifactManager {
 
     GriffonClass findGriffonClass(Class clazz, String type) {
         if (!clazz || !type) return null
-        if(LOG.debugEnabled) LOG.debug("Searching for griffonClass of ${type}:${clazz.name}")
+        if (LOG.debugEnabled) LOG.debug("Searching for griffonClass of ${type}:${clazz.name}")
         synchronized (lock) {
             return artifactHandlers[type]?.getClassFor(clazz)
         }
@@ -96,7 +98,7 @@ abstract class AbstractArtifactManager implements ArtifactManager {
 
     GriffonClass findGriffonClass(Object obj) {
         if (obj == null) return null
-        if(LOG.debugEnabled) LOG.debug("Searching for griffonClass of ${obj}")
+        if (LOG.debugEnabled) LOG.debug("Searching for griffonClass of ${obj}")
         synchronized (lock) {
             return findGriffonClass(obj.getClass())
         }
@@ -104,7 +106,7 @@ abstract class AbstractArtifactManager implements ArtifactManager {
 
     GriffonClass findGriffonClass(Class clazz) {
         if (!clazz) return null
-        if(LOG.debugEnabled) LOG.debug("Searching for griffonClass of ${clazz.name}")
+        if (LOG.debugEnabled) LOG.debug("Searching for griffonClass of ${clazz.name}")
         synchronized (lock) {
             for (handler in artifactHandlers.values()) {
                 GriffonClass griffonClass = handler.getClassFor(clazz)
@@ -116,7 +118,7 @@ abstract class AbstractArtifactManager implements ArtifactManager {
 
     GriffonClass findGriffonClass(String fqnClassName) {
         if (!fqnClassName) return null
-        if(LOG.debugEnabled) LOG.debug("Searching for griffonClass of ${fqnClassName}")
+        if (LOG.debugEnabled) LOG.debug("Searching for griffonClass of ${fqnClassName}")
         synchronized (lock) {
             for (handler in artifactHandlers.values()) {
                 GriffonClass griffonClass = handler.getClassFor(fqnClassName)
@@ -138,7 +140,9 @@ abstract class AbstractArtifactManager implements ArtifactManager {
     List<GriffonClass> getAllClasses() {
         List<GriffonClass> all = []
         synchronized (lock) {
-            artifactHandlers.each { k, h -> all.addAll(h.getClasses().toList()) }
+            for (ArtifactHandler handler: artifactHandlers.values()) {
+                all.addAll(handler.getClasses().toList())
+            }
         }
         return Collections.unmodifiableList(all)
     }
