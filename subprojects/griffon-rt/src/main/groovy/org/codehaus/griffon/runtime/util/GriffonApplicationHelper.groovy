@@ -192,7 +192,7 @@ class GriffonApplicationHelper {
             Map membersCopy = members.inject([:]) { m, e ->
                 String key = e.key as String
                 if (key == 'config' && e.value instanceof Map) {
-                    configMap = e.value
+                    configMap = e.value instanceof ConfigObject? e.value.flatten() : e.value
                 } else {
                     m[key] = e.value as String
                 }
