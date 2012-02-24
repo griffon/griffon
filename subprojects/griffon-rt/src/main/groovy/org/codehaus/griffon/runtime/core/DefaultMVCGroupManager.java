@@ -35,6 +35,7 @@ import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
+import static griffon.util.ConfigUtils.getConfigValueAsBoolean;
 import static griffon.util.ConfigUtils.getConfigValueAsString;
 import static griffon.util.GriffonExceptionHandler.sanitize;
 import static griffon.util.GriffonNameUtils.isBlank;
@@ -104,8 +105,20 @@ public class DefaultMVCGroupManager extends AbstractMVCGroupManager {
 
         // create the builder
         FactoryBuilderSupport builder = createBuilder(getApp(), metaClassMap);
+        boolean fireEvents = isConfigFlagEnabled(configuration, CONFIG_KEY_EVENTS_FIRE);
 
-        Map<String, Object> instances = instantiateMembers(klassMap, argsCopy, griffonClassMap, builder);
+        boolean isEventPublishingEnabled = getApp().isEventPublishingEnabled();
+        if (!fireEvents && fireEvents != isEventPublishingEnabled) getApp().setEventPublishingEnabled(false);
+
+        Map<String, Object> instances = null;
+        try {
+            instances = instantiateMembers(klassMap, argsCopy, griffonClassMap, builder);
+        } finally {
+            if (!fireEvents && fireEvents != isEventPublishingEnabled) {
+                getApp().setEventPublishingEnabled(isEventPublishingEnabled);
+            }
+        }
+
         instances.put("builder", builder);
         argsCopy.put("builder", builder);
 
@@ -119,7 +132,9 @@ public class DefaultMVCGroupManager extends AbstractMVCGroupManager {
             builder.setVariable(variable.getKey(), variable.getValue());
         }
 
-        triggerMVCGroupInitializationEvent(configuration, group);
+        if (fireEvents) {
+            getApp().event(GriffonApplication.Event.INITIALIZE_MVC_GROUP.getName(), asList(configuration, group));
+        }
 
         // special case --
         // controllers are added as application listeners
@@ -133,20 +148,14 @@ public class DefaultMVCGroupManager extends AbstractMVCGroupManager {
 
         initializeMembers(group, argsCopy);
 
-        triggerMVCGroupCreationEvent(group);
+        if (fireEvents) getApp().event(GriffonApplication.Event.CREATE_MVC_GROUP.getName(), asList(group));
+
         return group;
     }
 
     protected void registerApplicationEventListeners(MVCGroup group) {
+
         getApp().addApplicationEventListener(group.getController());
-    }
-
-    protected void triggerMVCGroupCreationEvent(MVCGroup group) {
-        getApp().event(GriffonApplication.Event.CREATE_MVC_GROUP.getName(), asList(group));
-    }
-
-    protected void triggerMVCGroupInitializationEvent(MVCGroupConfiguration configuration, MVCGroup group) {
-        getApp().event(GriffonApplication.Event.INITIALIZE_MVC_GROUP.getName(), asList(configuration, group));
     }
 
     protected void selectClassesPerMember(String memberType, String memberClassName, Map<String, Class> klassMap, Map<String, MetaClass> metaClassMap, Map<String, GriffonClass> griffonClassMap) {
@@ -287,7 +296,9 @@ public class DefaultMVCGroupManager extends AbstractMVCGroupManager {
         doRemoveGroup(group);
         group.destroy();
 
-        getApp().event(GriffonApplication.Event.DESTROY_MVC_GROUP.getName(), asList(group));
+        if (isConfigFlagEnabled(group.getConfiguration(), CONFIG_KEY_EVENTS_FIRE)) {
+            getApp().event(GriffonApplication.Event.DESTROY_MVC_GROUP.getName(), asList(group));
+        }
     }
 
     protected void doRemoveGroup(MVCGroup group) {
@@ -301,5 +312,10 @@ public class DefaultMVCGroupManager extends AbstractMVCGroupManager {
             // ignored
         }
         return null;
+    }
+
+    protected boolean isConfigFlagEnabled(MVCGroupConfiguration configuration, String key) {
+        System.err.println(configuration.getConfig());
+        return getConfigValueAsBoolean(configuration.getConfig(), key, true);
     }
 }

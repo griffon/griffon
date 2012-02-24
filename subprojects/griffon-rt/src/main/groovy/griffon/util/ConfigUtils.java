@@ -70,7 +70,12 @@ public abstract class ConfigUtils {
         String[] keys = key.split("\\.");
         for (int i = 0; i < keys.length - 1; i++) {
             if (config != null) {
-                config = (Map) config.get(keys[i]);
+                Object node = config.get(keys[i]);
+                if(node instanceof Map) {
+                    config = (Map) node;
+                } else {
+                    return defaultValue;
+                }
             } else {
                 return defaultValue;
             }
