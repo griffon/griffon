@@ -28,7 +28,7 @@ import java.util.Map;
  * @author Andres Almiray
  * @since 0.9.2
  */
-public interface GriffonAddon extends ApplicationHandler, ThreadingHandler {
+public interface GriffonAddon extends ApplicationHandler, ThreadingHandler, ResourceHandler {
     /**
      * Returns a Logger instance suitable for this addon.<p>
      *

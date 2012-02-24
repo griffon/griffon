@@ -26,6 +26,8 @@ import org.codehaus.griffon.runtime.util.GriffonApplicationHelper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.InputStream;
+import java.net.URL;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -228,5 +230,13 @@ public abstract class AbstractGriffonArtifact extends GroovyObjectSupport implem
 
     public <M extends GriffonModel, V extends GriffonView, C extends GriffonController> void withMVCGroup(Map<String, Object> args, String mvcType, String mvcName, MVCClosure<M, V, C> handler) {
         getApp().getMvcGroupManager().withMVCGroup(mvcType, mvcName, args, handler);
+    }
+
+    public InputStream getResourceAsStream(String name) {
+        return this.getClass().getClassLoader().getResourceAsStream(name);
+    }
+
+    public URL getResourceAsURL(String name) {
+        return this.getClass().getClassLoader().getResource(name);
     }
 }

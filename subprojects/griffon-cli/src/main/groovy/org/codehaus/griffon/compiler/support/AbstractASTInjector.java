@@ -16,14 +16,34 @@
 
 package org.codehaus.griffon.compiler.support;
 
+import org.codehaus.groovy.ast.ClassHelper;
 import org.codehaus.groovy.ast.ClassNode;
+import org.codehaus.groovy.ast.expr.Expression;
+
+import static org.codehaus.griffon.ast.GriffonASTUtils.NO_ARGS;
+import static org.codehaus.griffon.ast.GriffonASTUtils.call;
+import static org.codehaus.groovy.ast.expr.VariableExpression.THIS_EXPRESSION;
 
 /**
  * @author Andres Almiray
  * @since 0.9.5
  */
 public abstract class AbstractASTInjector implements ASTInjector {
+    private static final ClassNode THREAD_CLASS = ClassHelper.makeWithoutCaching(Thread.class);
+
     protected ClassNode newClass(ClassNode classNode) {
         return new ClassNode(classNode.getTypeClass());
+    }
+
+    public static Expression currentThread() {
+        return call(THREAD_CLASS, "currentThread", NO_ARGS);
+    }
+
+    public static Expression myClass() {
+        return call(THIS_EXPRESSION, "getClass", NO_ARGS);
+    }
+
+    public static Expression myClassLoader() {
+        return call(myClass(), "getClassLoader", NO_ARGS);
     }
 }

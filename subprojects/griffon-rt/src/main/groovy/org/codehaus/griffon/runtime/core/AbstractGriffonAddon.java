@@ -27,6 +27,8 @@ import org.codehaus.griffon.runtime.util.GriffonApplicationHelper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.InputStream;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -192,5 +194,13 @@ public abstract class AbstractGriffonAddon extends GroovyObjectSupport implement
             map.put(parts[i][0], parts[i][1]);
         }
         return map;
+    }
+
+    public InputStream getResourceAsStream(String name) {
+        return this.getClass().getClassLoader().getResourceAsStream(name);
+    }
+
+    public URL getResourceAsURL(String name) {
+        return this.getClass().getClassLoader().getResource(name);
     }
 }

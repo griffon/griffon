@@ -24,6 +24,9 @@ import org.codehaus.groovy.ast.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.InputStream;
+import java.net.URL;
+
 import static org.codehaus.griffon.ast.GriffonASTUtils.*;
 
 /**
@@ -35,6 +38,8 @@ public class GriffonAddonASTInjector extends AbstractASTInjector {
     private static final ClassNode GAH_CLASS = ClassHelper.makeWithoutCaching(GriffonApplicationHelper.class);
     private static final ClassNode LOGGER_CLASS = ClassHelper.makeWithoutCaching(Logger.class);
     private static final ClassNode LOGGER_FACTORY_CLASS = ClassHelper.makeWithoutCaching(LoggerFactory.class);
+    private static final ClassNode URL_CLASS = ClassHelper.makeWithoutCaching(URL.class);
+    private static final ClassNode INPUTSTREAM_CLASS = ClassHelper.makeWithoutCaching(InputStream.class);
     public static final String APP = "app";
 
     public void inject(ClassNode classNode, String artifactType) {
@@ -81,6 +86,26 @@ public class GriffonAddonASTInjector extends AbstractASTInjector {
         ));
 
         ThreadingAwareASTTransformation.apply(classNode);
+
+        // URL getResourceAsURL(String name)
+        classNode.addMethod(new MethodNode(
+                "getResourceAsURL",
+                ACC_PUBLIC,
+                URL_CLASS,
+                params(param(ClassHelper.STRING_TYPE, "name")),
+                ClassNode.EMPTY_ARRAY,
+                returns(call(myClassLoader(), "getResource", vars("name")))
+        ));
+
+        // InputStream getResourceAsStream(String name)
+        classNode.addMethod(new MethodNode(
+                "getResourceAsStream",
+                ACC_PUBLIC,
+                INPUTSTREAM_CLASS,
+                params(param(ClassHelper.STRING_TYPE, "name")),
+                ClassNode.EMPTY_ARRAY,
+                returns(call(myClassLoader(), "getResourceAsStream", vars("name")))
+        ));
     }
 
     public static void addDefaultConstructor(ClassNode classNode) {

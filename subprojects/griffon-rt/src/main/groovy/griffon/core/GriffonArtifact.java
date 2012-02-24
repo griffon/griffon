@@ -30,7 +30,7 @@ import org.slf4j.Logger;
  * @author Andres Almiray
  * @since 0.9.1
  */
-public interface GriffonArtifact extends ApplicationHandler, ThreadingHandler, MVCHandler {
+public interface GriffonArtifact extends ApplicationHandler, ThreadingHandler, MVCHandler, ResourceHandler {
     /**
      * Creates a new instance of the specified class and type.
      *

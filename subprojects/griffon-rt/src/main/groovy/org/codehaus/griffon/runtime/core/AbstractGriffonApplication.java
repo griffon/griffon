@@ -30,6 +30,8 @@ import org.codehaus.griffon.runtime.util.MVCGroupExceptionHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.InputStream;
+import java.net.URL;
 import java.util.*;
 import java.util.concurrent.Callable;
 import java.util.concurrent.CountDownLatch;
@@ -573,5 +575,13 @@ public abstract class AbstractGriffonApplication extends AbstractObservable impl
             // ignored
         }
         return null;
+    }
+
+    public InputStream getResourceAsStream(String name) {
+        return this.getClass().getClassLoader().getResourceAsStream(name);
+    }
+
+    public URL getResourceAsURL(String name) {
+        return this.getClass().getClassLoader().getResource(name);
     }
 }
