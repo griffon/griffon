@@ -18,6 +18,7 @@ package org.codehaus.griffon.runtime.util
 
 import griffon.util.GriffonNameUtils
 import groovy.transform.Synchronized
+import org.codehaus.griffon.runtime.builder.CompositeBuilderHelper
 import org.codehaus.griffon.runtime.builder.UberBuilder
 import org.codehaus.griffon.runtime.core.DefaultGriffonAddon
 import org.codehaus.griffon.runtime.core.DefaultGriffonAddonDescriptor

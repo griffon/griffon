@@ -21,13 +21,12 @@ import griffon.core.GriffonClass
 import griffon.core.MVCGroup
 import griffon.core.MVCGroupConfiguration
 import griffon.exceptions.MVCGroupInstantiationException
-import org.codehaus.griffon.runtime.builder.UberBuilder
 import org.codehaus.groovy.runtime.InvokerHelper
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import static griffon.util.GriffonExceptionHandler.sanitize
 import static griffon.util.GriffonNameUtils.isBlank
-import static org.codehaus.griffon.runtime.util.CompositeBuilderHelper.createBuilder
+import static org.codehaus.griffon.runtime.builder.CompositeBuilderHelper.createBuilder
 
 /**
  * Base implementation of the {@code MVCGroupManager} interface.
@@ -80,7 +79,9 @@ class DefaultMVCGroupManager extends AbstractMVCGroupManager {
         Map<String, MetaClass> metaClassMap = [:]
         Map<String, Class> klassMap = [:]
         Map<String, GriffonClass> griffonClassMap = [:]
-        configuration.members.each {String memberType, String memberClassName ->
+        for (Map.Entry<String, String> memberEntry: configuration.members.entrySet()) {
+            String memberType = memberEntry.key
+            String memberClassName = memberEntry.value
             def (c, mc, gc) = selectClassesPerMember(memberType, memberClassName)
             klassMap[memberType] = c
             metaClassMap[memberType] = mc
@@ -88,8 +89,8 @@ class DefaultMVCGroupManager extends AbstractMVCGroupManager {
         }
 
         // create the builder
-        UberBuilder builder = createBuilder(app, metaClassMap)
-        argsCopy.each {k, v -> builder.setVariable k, v }
+        FactoryBuilderSupport builder = createBuilder(app, metaClassMap)
+        for (Map.Entry variable: argsCopy.entrySet()) {builder.setVariable variable.key, variable.value }
 
         Map<String, Object> instances = instantiateMembers(klassMap, argsCopy, griffonClassMap, builder)
         instances.builder = builder
@@ -161,10 +162,12 @@ class DefaultMVCGroupManager extends AbstractMVCGroupManager {
         }
     }
 
-    protected Map<String, Object> instantiateMembers(Map<String, Class> klassMap, Map<String, Object> args, Map<String, GriffonClass> griffonClassMap, UberBuilder builder) {
+    protected Map<String, Object> instantiateMembers(Map<String, Class> klassMap, Map<String, Object> args, Map<String, GriffonClass> griffonClassMap, FactoryBuilderSupport builder) {
         // instantiate the parts
         Map<String, Object> instanceMap = [:]
-        klassMap.each {memberType, memberClass ->
+        for (Map.Entry<String, Class> classEntry: klassMap.entrySet()) {
+            String memberType = classEntry.key
+            Class memberClass = classEntry.value
             if (args.containsKey(memberType)) {
                 // use provided value, even if null
                 instanceMap[memberType] = args[memberType]
@@ -193,7 +196,9 @@ class DefaultMVCGroupManager extends AbstractMVCGroupManager {
     protected void initializeMembers(MVCGroup group, Map<String, Object> args) {
         // initialize the classes and call scripts
         if (LOG.debugEnabled) LOG.debug("Initializing each MVC member of group '${group.mvcId}'")
-        group.members.each {String memberType, member ->
+        for (Map.Entry<String, Object> memberEntry: group.members.entrySet()) {
+            String memberType = memberEntry.key
+            Object member = memberEntry.value
             if (member instanceof Script) {
                 group.buildScriptMember(memberType)
             } else if (memberType != 'builder') {
@@ -211,13 +216,13 @@ class DefaultMVCGroupManager extends AbstractMVCGroupManager {
     }
 
     protected void fillReferencedProperties(MVCGroup group, Map<String, Object> args) {
-        group.members.each {k, v ->
+        for (Object member: group.members.values()) {
             // loop on the instance map to get just the instances
-            if (v instanceof Script) {
-                v.binding.variables.putAll(args)
+            if (member instanceof Script) {
+                member.binding.variables.putAll(args)
             } else {
                 // set the args and instances
-                InvokerHelper.setProperties(v, args)
+                InvokerHelper.setProperties(member, args)
             }
         }
     }
@@ -232,7 +237,9 @@ class DefaultMVCGroupManager extends AbstractMVCGroupManager {
         if (group == null) return
         if (LOG.infoEnabled) LOG.info("Destroying MVC group identified by '$mvcId'")
         app.removeApplicationEventListener(group.controller)
-        group.members.each { memberType, member ->
+        for (Map.Entry<String, Object> memberEntry: group.members.entrySet()) {
+            String memberType = memberEntry.key
+            Object member = memberEntry.value
             if (memberType != 'builder' && (member != null) && !(member instanceof Script)) {
                 try {
                     member.mvcGroupDestroy()

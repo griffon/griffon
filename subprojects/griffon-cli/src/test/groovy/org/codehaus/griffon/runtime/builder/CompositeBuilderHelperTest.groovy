@@ -1,6 +1,4 @@
-package org.codehaus.griffon.runtime.util
-
-import org.codehaus.griffon.runtime.builder.UberBuilder
+package org.codehaus.griffon.runtime.builder
 
 class CompositeBuilderHelperTest extends GroovyTestCase {
     void testSanityCheckOnSampleBuilder() {
@@ -21,7 +19,7 @@ class CompositeBuilderHelperTest extends GroovyTestCase {
         
         ConfigObject builderConfig = new ConfigSlurper().parse('''
             root {
-                'org.codehaus.griffon.runtime.util.SampleBuilder' {
+                'org.codehaus.griffon.runtime.builder.SampleBuilder' {
                     bean1 = ['foo']
                 }
             }
@@ -45,7 +43,7 @@ class CompositeBuilderHelperTest extends GroovyTestCase {
         
         ConfigObject builderConfig = new ConfigSlurper().parse('''
             root {
-                'org.codehaus.griffon.runtime.util.SampleBuilder' {
+                'org.codehaus.griffon.runtime.builder.SampleBuilder' {
                     bean2 = ['Collections']
                 }
             }
@@ -71,7 +69,7 @@ class CompositeBuilderHelperTest extends GroovyTestCase {
         
         ConfigObject builderConfig = new ConfigSlurper().parse('''
             root {
-                'org.codehaus.griffon.runtime.util.SampleBuilder' {
+                'org.codehaus.griffon.runtime.builder.SampleBuilder' {
                     bean3 = '*'
                 }
             }

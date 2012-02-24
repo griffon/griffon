@@ -32,6 +32,9 @@ import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
 import java.util.regex.Pattern;
 
+import static griffon.util.MethodUtils.invokeExactMethod;
+import static griffon.util.MethodUtils.invokeMethod;
+
 /**
  * Class containing utility methods for dealing with Griffon class artifacts.<p>
  * Contains utility methods copied from commons-lang and commons-beanutils in order
@@ -1778,13 +1781,17 @@ public final class GriffonClassUtils {
 
     public static Object invokeInstanceMethod(Object object, String methodName, Object... args) {
         try {
-            return MethodUtils.invokeMethod(object, methodName, args);
+            return invokeMethod(object, methodName, args);
         } catch (NoSuchMethodException e) {
             throw new RuntimeException(e);
         } catch (IllegalAccessException e) {
             throw new RuntimeException(e);
         } catch (InvocationTargetException e) {
-            throw new RuntimeException(e.getMessage(), e.getTargetException());
+            Throwable cause = e.getTargetException();
+            if (cause instanceof RuntimeException) {
+                throw (RuntimeException) cause;
+            }
+            throw new RuntimeException(e.getMessage(), cause);
         }
     }
 
@@ -1798,13 +1805,17 @@ public final class GriffonClassUtils {
 
     public static Object invokeExactInstanceMethod(Object object, String methodName, Object... args) {
         try {
-            return MethodUtils.invokeExactMethod(object, methodName, args);
+            return invokeExactMethod(object, methodName, args);
         } catch (NoSuchMethodException e) {
             throw new RuntimeException(e);
         } catch (IllegalAccessException e) {
             throw new RuntimeException(e);
         } catch (InvocationTargetException e) {
-            throw new RuntimeException(e.getMessage(), e.getTargetException());
+            Throwable cause = e.getTargetException();
+            if (cause instanceof RuntimeException) {
+                throw (RuntimeException) cause;
+            }
+            throw new RuntimeException(e.getMessage(), cause);
         }
     }
 
@@ -1824,7 +1835,11 @@ public final class GriffonClassUtils {
         } catch (IllegalAccessException e) {
             throw new RuntimeException(e);
         } catch (InvocationTargetException e) {
-            throw new RuntimeException(e.getMessage(), e.getTargetException());
+            Throwable cause = e.getTargetException();
+            if (cause instanceof RuntimeException) {
+                throw (RuntimeException) cause;
+            }
+            throw new RuntimeException(e.getMessage(), cause);
         }
     }
 
@@ -1844,7 +1859,11 @@ public final class GriffonClassUtils {
         } catch (IllegalAccessException e) {
             throw new RuntimeException(e);
         } catch (InvocationTargetException e) {
-            throw new RuntimeException(e.getMessage(), e.getTargetException());
+            Throwable cause = e.getTargetException();
+            if (cause instanceof RuntimeException) {
+                throw (RuntimeException) cause;
+            }
+            throw new RuntimeException(e.getMessage(), cause);
         }
     }
 

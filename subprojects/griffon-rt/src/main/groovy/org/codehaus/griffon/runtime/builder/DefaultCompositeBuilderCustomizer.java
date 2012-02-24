@@ -13,11 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.codehaus.griffon.runtime.util;
+package org.codehaus.griffon.runtime.builder;
 
 import groovy.lang.Closure;
 import groovy.util.Factory;
-import org.codehaus.griffon.runtime.builder.UberBuilder;
+import groovy.util.FactoryBuilderSupport;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -30,31 +30,31 @@ import org.slf4j.LoggerFactory;
 public class DefaultCompositeBuilderCustomizer implements CompositeBuilderCustomizer {
     private static final Logger LOG = LoggerFactory.getLogger(DefaultCompositeBuilderCustomizer.class);
 
-    public void registerFactory(UberBuilder uberBuilder, String name, String groupName, Factory factory) {
+    public void registerFactory(FactoryBuilderSupport builder, String name, String groupName, Factory factory) {
         if (LOG.isTraceEnabled()) {
             LOG.trace("Registering factory " + groupName + ":" + name + " with " + factory);
         }
-        uberBuilder.registerFactory(name, groupName, factory);
+        builder.registerFactory(name, groupName, factory);
     }
 
-    public void registerBeanFactory(UberBuilder uberBuilder, String name, String groupName, Class<?> beanClass) {
+    public void registerBeanFactory(FactoryBuilderSupport builder, String name, String groupName, Class<?> beanClass) {
         if (LOG.isTraceEnabled()) {
             LOG.trace("Registering factory " + groupName + ":" + name + " with " + beanClass.getName());
         }
-        uberBuilder.registerBeanFactory(name, groupName, beanClass);
+        builder.registerBeanFactory(name, groupName, beanClass);
     }
 
-    public void registerExplicitMethod(UberBuilder uberBuilder, String name, String groupName, Closure method) {
+    public void registerExplicitMethod(FactoryBuilderSupport builder, String name, String groupName, Closure method) {
         if (LOG.isTraceEnabled()) {
             LOG.trace("Registering method " + groupName + ":" + name);
         }
-        uberBuilder.registerExplicitMethod(name, groupName, method);
+        builder.registerExplicitMethod(name, groupName, method);
     }
 
-    public void registerExplicitProperty(UberBuilder uberBuilder, String name, String groupName, Closure getter, Closure setter) {
+    public void registerExplicitProperty(FactoryBuilderSupport builder, String name, String groupName, Closure getter, Closure setter) {
         if (LOG.isTraceEnabled()) {
             LOG.trace("Registering property " + groupName + ":" + name);
         }
-        uberBuilder.registerExplicitProperty(name, groupName, getter, setter);
+        builder.registerExplicitProperty(name, groupName, getter, setter);
     }
 }
