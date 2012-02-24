@@ -139,7 +139,9 @@ public class DefaultMVCGroupManager extends AbstractMVCGroupManager {
         // special case --
         // controllers are added as application listeners
         // addApplicationListener method is null safe
-        registerApplicationEventListeners(group);
+        if (isConfigFlagEnabled(group.getConfiguration(), CONFIG_KEY_EVENTS_LISTENER)) {
+            getApp().addApplicationEventListener(group.getController());
+        }
 
         // mutually set each other to the available fields and inject args
         fillReferencedProperties(group, argsCopy);
@@ -151,11 +153,6 @@ public class DefaultMVCGroupManager extends AbstractMVCGroupManager {
         if (fireEvents) getApp().event(GriffonApplication.Event.CREATE_MVC_GROUP.getName(), asList(group));
 
         return group;
-    }
-
-    protected void registerApplicationEventListeners(MVCGroup group) {
-
-        getApp().addApplicationEventListener(group.getController());
     }
 
     protected void selectClassesPerMember(String memberType, String memberClassName, Map<String, Class> klassMap, Map<String, MetaClass> metaClassMap, Map<String, GriffonClass> griffonClassMap) {
@@ -268,7 +265,11 @@ public class DefaultMVCGroupManager extends AbstractMVCGroupManager {
         if (LOG.isDebugEnabled()) LOG.trace("Group '" + mvcId + "' points to " + group);
         if (group == null) return;
         if (LOG.isInfoEnabled()) LOG.info("Destroying MVC group identified by '" + mvcId + "'");
-        getApp().removeApplicationEventListener(group.getController());
+
+        if (isConfigFlagEnabled(group.getConfiguration(), CONFIG_KEY_EVENTS_LISTENER)) {
+            getApp().removeApplicationEventListener(group.getController());
+        }
+
         for (Map.Entry<String, Object> memberEntry : group.getMembers().entrySet()) {
             String memberType = memberEntry.getKey();
             Object member = memberEntry.getValue();
@@ -315,7 +316,6 @@ public class DefaultMVCGroupManager extends AbstractMVCGroupManager {
     }
 
     protected boolean isConfigFlagEnabled(MVCGroupConfiguration configuration, String key) {
-        System.err.println(configuration.getConfig());
         return getConfigValueAsBoolean(configuration.getConfig(), key, true);
     }
 }
