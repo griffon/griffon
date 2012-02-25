@@ -12,7 +12,7 @@ class WindowController {
     def onWindowHidden = { window ->
         if(groupId == window.getClientProperty('groupId')) {
             app.windowManager.detach(window)
-            execOutside { destroyMVCGroup(groupId) }
+            execOutsideUI { destroyMVCGroup(groupId) }
         }
     }
 }

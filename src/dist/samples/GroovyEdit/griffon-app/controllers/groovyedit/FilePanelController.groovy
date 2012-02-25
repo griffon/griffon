@@ -7,11 +7,11 @@ class FilePanelController {
    void mvcGroupInit(Map args) {
       model.document = args.document
       model.mvcId = args.mvcId
-      execOutside {
+      execOutsideUI {
          // load the file's text, outside the EDT
          String text = model.document.file.text
          // update the model inside the EDT
-         execAsync { model.document.contents = text }
+         execInsideUIAsync { model.document.contents = text }
       }
    }
 
@@ -19,7 +19,7 @@ class FilePanelController {
       // write text to file, outside the EDT
       model.document.file.text = view.editor.text
       // update model.text, inside EDT
-      execAsync { model.document.contents = view.editor.text }
+      execInsideUIAsync { model.document.contents = view.editor.text }
    }
 
    def closeFile = {

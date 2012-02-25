@@ -10,7 +10,7 @@ class MdiController {
     def newAction = {
         String id = 'window-' + System.currentTimeMillis()
         def (m, v, c) = createMVCGroup('window', id, title: "Window ${model.count++}")
-        execAsync {
+        execInsideUIAsync {
             builder.desktopPane(view.desktop) {
                 widget(v.window)
             }

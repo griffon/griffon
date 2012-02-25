@@ -21,7 +21,7 @@ import griffon.samples.swingpad.SwingPadUtils
 import org.jdesktop.swingx.JXTipOfTheDay
 
 onReadyEnd = { app ->
-    app.execAsync {
+    app.execInsideUIAsync {
         JXTipOfTheDay totd = new JXTipOfTheDay(app.config.tipsModel)
         totd.showDialog(app.windowManager.startingWindow, SwingPadUtils.PREFERENCES)
     }

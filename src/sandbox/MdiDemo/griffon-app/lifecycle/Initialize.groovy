@@ -3,13 +3,13 @@
  * long running code in another thread.
  *
  * You have the following options
- * - execOutside { // your code }
+ * - execOutsideUI { // your code }
  * - execFuture { // your code }
  * - Thread.start { // your code }
  *
  * You have the following options to run code again inside the UI thread
- * - execAsync { // your code }
- * - execSync { // your code }
+ * - execInsideUIAsync { // your code }
+ * - execInsideUISync { // your code }
  */
 
 import groovy.swing.SwingBuilder

@@ -23,7 +23,7 @@ import static griffon.util.GriffonApplicationUtils.isMacOSX
 
 SwingBuilder.lookAndFeel((isMacOSX ? 'system' : 'nimbus'), 'gtk', ['metal', [boldFonts: false]])
 
-execOutside {
+execOutsideUI {
     Properties tips = new Properties()
     tips.load(Thread.currentThread().contextClassLoader.getResourceAsStream('tips.properties'))
     app.config.tipsModel = TipLoader.load(tips)

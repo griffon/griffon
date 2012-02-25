@@ -72,12 +72,12 @@ class SwingPadController {
 
     @Threading(Threading.Policy.SKIP)
     void openFile(File file) {
-        execOutside {
+        execOutsideUI {
             String code = file.readLines().join('\n')
             if(isBlank(code)) return
             model.scriptFile = file
             model.addRecentScript(file, SwingPadUtils.PREFERENCES)
-            execAsync {
+            execInsideUIAsync {
                 model.code = code
                 model.dirty = false
                 view.codeEditor.caretPosition = 0
@@ -171,14 +171,14 @@ class SwingPadController {
     def runScriptAction = {
         if(isBlank(model.code)) return
         evalThread = Thread.start {
-            execAsync {
+            execInsideUIAsync {
                 model.status = 'Running script...'
                 model.errors = ''
             }
             try {
                 executeScript(model.code)
             } catch(Exception e) {
-                execAsync { finishWithException(e) }
+                execInsideUIAsync { finishWithException(e) }
             } finally {
                 evalThread = null
             }
@@ -285,9 +285,9 @@ class SwingPadController {
             def b = app.builders.script
             def component = null
             b.edt { component = b.build(script) }
-            execAsync { finishNormal(component) }
+            execInsideUIAsync { finishNormal(component) }
         } catch(Exception e) {
-            execAsync { finishWithException(e) }
+            execInsideUIAsync { finishWithException(e) }
         }
     }
 
@@ -297,7 +297,7 @@ class SwingPadController {
 
     private void finishNormal(component) {
         model.success = true
-        execAsync {
+        execInsideUIAsync {
             model.status = 'Execution complete.'
             view.canvas.removeAll()
             view.canvas.repaint()
@@ -320,7 +320,7 @@ class SwingPadController {
         model.success = false
         model.status = 'Execution terminated with exception.'
         displayErrorMessages(e)
-        execAsync {
+        execInsideUIAsync {
             view.canvas.removeAll()
             view.canvas.repaint()
         }
@@ -331,7 +331,7 @@ class SwingPadController {
         e.printStackTrace()
         def baos = new ByteArrayOutputStream()
         e.printStackTrace(new PrintStream(baos))
-        execAsync {
+        execInsideUIAsync {
             view.tabs.selectedIndex = 2 // errorsTab
             model.errors = baos.toString()
         }
