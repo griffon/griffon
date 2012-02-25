@@ -277,7 +277,10 @@ public class DefaultMVCGroupManager extends AbstractMVCGroupManager {
         }
 
         try {
-            if (group.getBuilder() != null) group.getBuilder().dispose();
+            if (group.getBuilder() != null) {
+                group.getBuilder().dispose();
+                group.getBuilder().getVariables().clear();
+            }
         } catch (MissingMethodException mme) {
             // TODO find out why this call breaks applet mode on shutdown
             if (LOG.isErrorEnabled())
