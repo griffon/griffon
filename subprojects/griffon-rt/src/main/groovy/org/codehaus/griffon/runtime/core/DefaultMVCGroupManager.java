@@ -52,7 +52,7 @@ import static org.codehaus.groovy.runtime.typehandling.DefaultTypeTransformation
 public class DefaultMVCGroupManager extends AbstractMVCGroupManager {
     private static final Logger LOG = LoggerFactory.getLogger(DefaultMVCGroupManager.class);
     private static final String CONFIG_KEY_COMPONENT = "component";
-    private static final String CONFIG_KEY_EVENTS_FIRE = "events.fire";
+    private static final String CONFIG_KEY_EVENTS_LIFECYCLE = "events.lifecycle";
     private static final String CONFIG_KEY_EVENTS_LISTENER = "events.listener";
 
     public DefaultMVCGroupManager(GriffonApplication app) {
@@ -105,19 +105,8 @@ public class DefaultMVCGroupManager extends AbstractMVCGroupManager {
 
         // create the builder
         FactoryBuilderSupport builder = createBuilder(getApp(), metaClassMap);
-        boolean fireEvents = isConfigFlagEnabled(configuration, CONFIG_KEY_EVENTS_FIRE);
 
-        boolean isEventPublishingEnabled = getApp().isEventPublishingEnabled();
-        if (!fireEvents && fireEvents != isEventPublishingEnabled) getApp().setEventPublishingEnabled(false);
-
-        Map<String, Object> instances = null;
-        try {
-            instances = instantiateMembers(klassMap, argsCopy, griffonClassMap, builder);
-        } finally {
-            if (!fireEvents && fireEvents != isEventPublishingEnabled) {
-                getApp().setEventPublishingEnabled(isEventPublishingEnabled);
-            }
-        }
+        Map<String, Object> instances = instantiateMembers(klassMap, argsCopy, griffonClassMap, builder);
 
         instances.put("builder", builder);
         argsCopy.put("builder", builder);
@@ -132,6 +121,7 @@ public class DefaultMVCGroupManager extends AbstractMVCGroupManager {
             builder.setVariable(variable.getKey(), variable.getValue());
         }
 
+        boolean fireEvents = isConfigFlagEnabled(configuration, CONFIG_KEY_EVENTS_LIFECYCLE);
         if (fireEvents) {
             getApp().event(GriffonApplication.Event.INITIALIZE_MVC_GROUP.getName(), asList(configuration, group));
         }
@@ -297,7 +287,7 @@ public class DefaultMVCGroupManager extends AbstractMVCGroupManager {
         doRemoveGroup(group);
         group.destroy();
 
-        if (isConfigFlagEnabled(group.getConfiguration(), CONFIG_KEY_EVENTS_FIRE)) {
+        if (isConfigFlagEnabled(group.getConfiguration(), CONFIG_KEY_EVENTS_LIFECYCLE)) {
             getApp().event(GriffonApplication.Event.DESTROY_MVC_GROUP.getName(), asList(group));
         }
     }
