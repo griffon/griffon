@@ -45,11 +45,11 @@ keyStrokeAction(timelinePanel, condition:"WHEN_IN_FOCUSED_WINDOW", action: contr
 tweetLinePanels = [:]
 
 tweetLineScript = new TweetLine()
-dmLineScript = new DMLine()
-replyAction = action(greetController.&selectReplyToTweet, icon:imageIcon(resource:"/sound_grey.png"))
+dmLineScript = new DirectMessageLine()
+replyAction = action(greetController.&selectReplyToTweet, icon: imageIcon(resource:"/sound_grey.png"))
 hyperlinkAction = action(greetController.&showHyperlink)
 showTweetAction = action(greetController.&showUser)
-tweetLineGBC = gbc(gridwidth:GridBagConstraints.REMAINDER, fill:GridBagConstraints.HORIZONTAL, weightx:1.0, insets:[3,3,3,3])
+tweetLineGBC = gbc(gridwidth: GridBagConstraints.REMAINDER, fill: GridBagConstraints.HORIZONTAL, weightx: 1.0, insets: [3, 3, 3, 3])
 
 def updateTweets() {
     edt {

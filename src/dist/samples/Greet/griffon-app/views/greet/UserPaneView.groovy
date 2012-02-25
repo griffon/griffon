@@ -24,34 +24,34 @@ import java.awt.Cursor
 import java.awt.Font
 import javax.swing.UIManager
 
-Font buttonFont = UIManager.getDefaults().getFont("ToggleButton.font")
+Font buttonFont = UIManager.defaults.getFont("ToggleButton.font")
 buttonFont = buttonFont.deriveFont((buttonFont.getSize2D() - 2f) as float)
 
 userPane = panel() {
     gridBagLayout()
-    panel(anchor:NORTHWEST, gridheight:4) {
+    panel(anchor: NORTHWEST, gridheight: 4) {
         gridBagLayout()
         label(icon: imageIcon(model.user.profileImageURL),
-            anchor: NORTHWEST, gridwidth: REMAINDER, insets: [6,6,6,3]
+            anchor: NORTHWEST, gridwidth: REMAINDER, insets: [6, 6, 6, 3]
         )
         toggleButton("Tweets",
             contentMargin: [2,2,2,2], font: buttonFont, focusable: false,
             selected: bind(target:model, targetProperty: 'showTweets', value: true),
-            fill: HORIZONTAL, gridwidth: REMAINDER, insets: [1,6,1,3],
+            fill: HORIZONTAL, gridwidth: REMAINDER, insets: [1, 6, 1, 3],
         )
         toggleButton("Replies",
-            contentMargin:[2,2,2,2], font:buttonFont, focusable:false,
-            selected:bind(target:model, targetProperty:'showReplies', value:true),
-            fill:HORIZONTAL, gridwidth:REMAINDER, insets:[1,6,1,3],
+            contentMargin: [2,2,2,2], font:buttonFont, focusable: false,
+            selected: bind(target: model, targetProperty: 'showReplies', value: true),
+            fill: HORIZONTAL, gridwidth: REMAINDER, insets: [1, 6, 1, 3],
         )
-        toggleButton("DMs",
-            contentMargin:[2,2,2,2], font:buttonFont, focusable:false,
+        toggleButton("Messages",
+            contentMargin: [2, 2, 2, 2], font: buttonFont, focusable: false,
             selected:bind(target:model, targetProperty:'showDirectMessages', value:true), 
             fill:HORIZONTAL, gridwidth:REMAINDER, insets:[1,6,1,3],
         )
     }
 
-    vbox(insets:[6,3,6,3], anchor:NORTHWEST, weightx:1.0, gridheight:4, fill:HORIZONTAL) {
+    vbox(insets: [6, 3, 6, 3], anchor: NORTHWEST, weightx: 1.0, gridheight: 4, fill: HORIZONTAL) {
         //label(model.user.screenName)
         label(model.user.name)
         if(model.user.location) {
@@ -59,11 +59,11 @@ userPane = panel() {
         }
         if(model.user.url) {
             label(mouseClicked: { app.controllers.Greet.displayURL(new URL(model.user.url)) },
-                text:"<html><a href='$model.user.url'>$model.user.url</a>" as String,
-                cursor:Cursor.getPredefinedCursor(Cursor.HAND_CURSOR))
+                text: "<html><a href='${model.user.url}'>${model.user.url}</a>" as String,
+                cursor: Cursor.getPredefinedCursor(Cursor.HAND_CURSOR))
         }
         if(model.user.description) {
-            label("<html>$model.user.description")
+            label("<html>${model.user.description}")
         }
     }
 
@@ -86,11 +86,10 @@ userPane = panel() {
             margin:[0,0,0,0], actionPerformed:controller.&directMessage, 
             fill:HORIZONTAL, gridwidth:REMAINDER, insets:[0,3,0,6])
     }
-    panel(fill:HORIZONTAL, gridheight:3 + (closable?0:1), gridwidth:REMAINDER,
-        preferredSize:[0,0], minimumSize:[0,0], maximumSize:[0,0])
+    panel(fill: HORIZONTAL, gridheight: 3 + ((closable) ? 0 : 1), gridwidth: REMAINDER,
+        preferredSize: [0, 0], minimumSize: [0, 0], maximumSize: [0, 0])
 
-    container(timelinePane, 
-        fill:BOTH, gridwidth:3, weighty:1.0)
+    container(timelinePane, fill: BOTH, gridwidth: 3, weighty: 1.0)
 }
 
 //...

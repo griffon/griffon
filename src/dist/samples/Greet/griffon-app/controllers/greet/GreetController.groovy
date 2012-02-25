@@ -23,6 +23,7 @@ import javax.swing.Timer
 import javax.swing.UIManager
 import javax.swing.border.EmptyBorder
 import javax.swing.event.HyperlinkEvent
+import java.awt.Desktop
 
 /**
  * @author Danno Ferrin
@@ -59,9 +60,7 @@ class GreetController {
                 boolean forceRefresh = !(evt.source instanceof Timer)
 
                 // friends timeline
-                if (forceRefresh
-                    || (time > nextTimelineUpdate)
-                ) {
+                if (forceRefresh || (time > nextTimelineUpdate)) {
                     def lastID = friendsTimelineModel.tweets.collect { it as long }.max() ?: '0'
                     def newTweets = microblogService.getFriendsTimeline(lastID as String, lastID == '0' ? 100 : 200).collect {it.id}
                     def cachedIDs = microblogService.tweetCache.keySet()
@@ -75,9 +74,9 @@ class GreetController {
                 if (forceRefresh
                     || (time > nextRepliesUpdate)
                 ) {
-                    microblogService.getReplies()
-                    microblogService.getDirectMessages()
-                    microblogService.getDirectMessagesSent()
+                    microblogService.replies
+                    microblogService.directMessages
+                    microblogService.directMessagesSent
                     nextRepliesUpdate = time + 360000 // 6 minutes
                 }
 
@@ -135,8 +134,7 @@ class GreetController {
             if (url.toExternalForm() =~ 'http://twitter.com/\\w+') {
                 selectUser(url.file.substring(1))
             } else {
-                // TODO wire in the jnlp libs into the build
-                ("javax.jnlp.ServiceManager" as Class).lookup('javax.jnlp.BasicService').showDocument(url)
+                Desktop.desktop.browse(url.toURI())
             }
         }
     }

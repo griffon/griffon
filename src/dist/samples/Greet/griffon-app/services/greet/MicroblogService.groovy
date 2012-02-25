@@ -36,48 +36,37 @@ import twitter4j.DirectMessage
  * @author Danno Ferrin
  */
 class MicroblogService {
-    static Twitter twitter;
+    private static Twitter twitter;
+    private static final CONSUMER_KEY = 'lv6TOd1CUAtSoHd9WsQ'
+    private static final CONSUMER_SECRET = 'UybvJwlVbvrd9i2VwbXWeDMEgdXqyMp2XVB107U'
 
     def instantiateTwitter = { String login ->
-        ConfigObject config = new ConfigSlurper().parse(new File('twitter4j.properties').toURL())
         ConfigurationBuilder configurationBuilder = new ConfigurationBuilder()
         configurationBuilder.with {
-            if (config?.debug) {
-                debugEnabled = config.debug
-            }
-            if (config?.oauth?.consumerKey) {
-                OAuthConsumerKey = config.oauth.consumerKey
-            }
-            if (config?.oauth?.consumerSecret) {
-                OAuthConsumerSecret = config.oauth.consumerSecret
-            }
-            if (config?.oauth?.accessToken) {
-                OAuthAccessToken = config.oauth.accessToken
-            }
-            if (config?.oauth?.accessTokenSecret) {
-                OAuthAccessTokenSecret = config.oauth.accessTokenSecret
-            }
+            debugEnabled = true
+            OAuthConsumerKey = CONSUMER_KEY
+            OAuthConsumerSecret = CONSUMER_SECRET
         }
-        twitter = new TwitterFactory(configurationBuilder.build()).getInstance()
+        twitter = new TwitterFactory(configurationBuilder.build()).instance
         Long userId = twitter.showUser(login).id
         if (!accessTokens.containsKey(userId)) {
-            RequestToken requestToken = twitter.getOAuthRequestToken();
+            RequestToken requestToken = twitter.OAuthRequestToken;
             AccessToken accessToken = null;
             while (null == accessToken) {
-                if (Desktop.isDesktopSupported()) {
-                    Desktop.getDesktop().browse(new URI(requestToken.getAuthorizationURL()))
+                if (Desktop.desktopSupported) {
+                    Desktop.desktop.browse(new URI(requestToken.authorizationURL))
                 }
                 String pin = (String) JOptionPane.showInputDialog(null,
-                        'Please provide a PIN from the application authorization page.',
-                        'Application authorization', JOptionPane.QUESTION_MESSAGE)
+                    'Please provide a PIN from the application authorization page.',
+                    'Application authorization', JOptionPane.QUESTION_MESSAGE)
                 try {
-                    if (pin.length() > 0) {
+                    if (pin && pin.length() > 0) {
                         accessToken = twitter.getOAuthAccessToken(requestToken, pin);
                     } else {
-                        accessToken = twitter.getOAuthAccessToken();
+                        accessToken = twitter.OAuthAccessToken;
                     }
                 } catch (TwitterException e) {
-                    if (401 == e?.getStatusCode()) {
+                    if (401 == e?.statusCode) {
                         System.out.println("Unable to get the access token.");
                     } else {
                         e?.printStackTrace();
@@ -87,7 +76,7 @@ class MicroblogService {
             twitter.setOAuthAccessToken(accessToken)
             accessTokens.put(userId, accessToken)
             //persist to the accessToken for future reference.
-            storeAccessToken(twitter.verifyCredentials().getId(), accessToken);
+            storeAccessToken(twitter.verifyCredentials().id, accessToken);
         } else {
             twitter.setOAuthAccessToken(accessTokens.get(userId))
         }
@@ -419,14 +408,18 @@ class MicroblogService {
     private Map<Long, AccessToken> accessTokens = new HashMap<Long, AccessToken>() {
         {
             File storage = new File('accessToken.storage')
-            storage.withReader('UTF-8') {
-                String string
-                while ((string = it.readLine())) {
-                    if (string ==~ /.*,.*,.*/) {
-                        def (userId, accessToken, accessTokenSecret) = string.split(',')
-                        put(userId as Long, new AccessToken(accessToken, accessTokenSecret))
+            if(storage.exists()) {
+                storage.withReader('UTF-8') {
+                    String string
+                    while ((string = it.readLine())) {
+                        if (string ==~ /.*,.*,.*/) {
+                            def (userId, accessToken, accessTokenSecret) = string.split(',')
+                            put(userId as Long, new AccessToken(accessToken, accessTokenSecret))
+                        }
                     }
                 }
+            } else {
+                storage.createNewFile()
             }
         }
     }
