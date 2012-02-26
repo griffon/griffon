@@ -20,7 +20,6 @@ import groovy.lang.ExpandoMetaClass;
 import groovy.lang.MetaClass;
 import groovy.lang.MissingMethodException;
 import groovy.lang.Script;
-import org.codehaus.groovy.runtime.MethodClosure;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -231,8 +230,12 @@ public final class UIThreadManager {
      *
      * @param script a code block to be executed
      */
-    public void executeAsync(Script script) {
-        getUIThreadHandler().executeAsync(new MethodClosure(script, "run"));
+    public void executeAsync(final Script script) {
+        getUIThreadHandler().executeAsync(new Runnable() {
+            public void run() {
+                script.run();
+            }
+        });
     }
 
     /**
@@ -249,8 +252,12 @@ public final class UIThreadManager {
      *
      * @param script a code block to be executed
      */
-    public void executeSync(Script script) {
-        getUIThreadHandler().executeSync(new MethodClosure(script, "run"));
+    public void executeSync(final Script script) {
+        getUIThreadHandler().executeSync(new Runnable() {
+            public void run() {
+                script.run();
+            }
+        });
     }
 
     /**
@@ -267,8 +274,12 @@ public final class UIThreadManager {
      *
      * @param script a code block to be executed
      */
-    public void executeOutside(Script script) {
-        getUIThreadHandler().executeOutside(new MethodClosure(script, "run"));
+    public void executeOutside(final Script script) {
+        getUIThreadHandler().executeOutside(new Runnable() {
+            public void run() {
+                script.run();
+            }
+        });
     }
 
     /**
