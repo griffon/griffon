@@ -15,9 +15,10 @@
  */
 package griffon.core;
 
-import griffon.util.UIThreadHandler;
+import griffon.util.*;
 import groovy.lang.ExpandoMetaClass;
 import groovy.lang.MetaClass;
+import groovy.lang.MissingMethodException;
 import groovy.lang.Script;
 import org.codehaus.groovy.runtime.MethodClosure;
 import org.slf4j.Logger;
@@ -52,21 +53,114 @@ public final class UIThreadManager {
         }
     }
 
+    private static abstract class ScriptOrRunnableRunner extends RunnableWithArgs {
+        public void run(Object[] args) {
+            if (args != null && args.length == 1) {
+                if (args[0] instanceof Script) {
+                    withScript((Script) args[0]);
+                    return;
+                } else if (args[0] instanceof Runnable) {
+                    withRunnable((Runnable) args[0]);
+                    return;
+                }
+            }
+            throw new MissingMethodException(getMethodName(), UIThreadManager.class, args);
+        }
+
+        protected abstract String getMethodName();
+
+        protected abstract void withScript(Script script);
+
+        protected abstract void withRunnable(Runnable runnable);
+    }
+
+    private static final String EXECUTE_INSIDE_UI_SYNC = "execInsideUISync";
+    private static final RunnableWithArgsClosure EXECUTE_INSIDE_UI_SYNC_RUNNER = new RunnableWithArgsClosure(INSTANCE,
+            new ScriptOrRunnableRunner() {
+                protected String getMethodName() {
+                    return EXECUTE_INSIDE_UI_SYNC;
+                }
+
+                protected void withScript(Script script) {
+                    INSTANCE.executeSync(script);
+                }
+
+                protected void withRunnable(Runnable runnable) {
+                    INSTANCE.executeSync(runnable);
+                }
+            });
+
+    private static final String EXECUTE_INSIDE_UI_ASYNC = "execInsideUIAsync";
+    private static final RunnableWithArgsClosure EXECUTE_INSIDE_UI_ASYNC_RUNNER = new RunnableWithArgsClosure(INSTANCE,
+            new ScriptOrRunnableRunner() {
+                protected String getMethodName() {
+                    return EXECUTE_INSIDE_UI_ASYNC;
+                }
+
+                protected void withScript(Script script) {
+                    INSTANCE.executeAsync(script);
+                }
+
+                protected void withRunnable(Runnable runnable) {
+                    INSTANCE.executeAsync(runnable);
+                }
+            });
+
+    private static final String EXECUTE_OUTSIDE_UI = "execOutsideUI";
+    private static final RunnableWithArgsClosure EXECUTE_OUTSIDE_UI_RUNNER = new RunnableWithArgsClosure(INSTANCE,
+            new ScriptOrRunnableRunner() {
+                protected String getMethodName() {
+                    return EXECUTE_OUTSIDE_UI;
+                }
+
+                protected void withScript(Script script) {
+                    INSTANCE.executeOutside(script);
+                }
+
+                protected void withRunnable(Runnable runnable) {
+                    INSTANCE.executeOutside(runnable);
+                }
+            });
+
+    private static final String IS_UITHREAD = "isUIThread";
+    private static final CallableWithArgsClosure IS_UITHREAD_RUNNER = new CallableWithArgsClosure(INSTANCE,
+            new CallableWithArgs<Boolean>() {
+                public Boolean call(Object[] args) {
+                    if (args.length == 0) {
+                        return INSTANCE.isUIThread();
+                    }
+                    throw new MissingMethodException(IS_UITHREAD, UIThreadManager.class, args);
+                }
+            });
+
+    private static final String EXECUTE_FUTURE = "executeFuture";
+    private static final CallableWithArgsClosure EXECUTE_FUTURE_RUNNER = new CallableWithArgsClosure(INSTANCE,
+            new CallableWithArgs<Future>() {
+                public Future call(Object[] args) {
+                    if (args.length == 1 && args[0] instanceof Callable) {
+                        return INSTANCE.executeFuture((Callable) args[0]);
+                    } else if (args.length == 2 && args[0] instanceof ExecutorService && args[1] instanceof Callable) {
+                        return INSTANCE.executeFuture((ExecutorService) args[0], (Callable) args[1]);
+                    }
+                    throw new MissingMethodException(EXECUTE_FUTURE, UIThreadManager.class, args);
+                }
+            });
+
     public static void enhance(Script script) {
         if (script instanceof ThreadingHandler) return;
         if (LOG.isTraceEnabled()) {
             LOG.trace("Enhancing script " + script);
         }
         // TODO @deprecated - remove before 1.0
-        script.getBinding().setVariable("execSync", new MethodClosure(INSTANCE, "executeSync"));
-        script.getBinding().setVariable("execAsync", new MethodClosure(INSTANCE, "executeAsync"));
-        script.getBinding().setVariable("execOutside", new MethodClosure(INSTANCE, "executeOutside"));
+        script.getBinding().setVariable("execSync", EXECUTE_INSIDE_UI_SYNC_RUNNER);
+        script.getBinding().setVariable("execAsync", EXECUTE_INSIDE_UI_ASYNC_RUNNER);
+        script.getBinding().setVariable("execOutside", EXECUTE_OUTSIDE_UI_RUNNER);
 
-        script.getBinding().setVariable("execInsideUISync", new MethodClosure(INSTANCE, "executeSync"));
-        script.getBinding().setVariable("execInsideUIAsync", new MethodClosure(INSTANCE, "executeAsync"));
-        script.getBinding().setVariable("execOutsideUI", new MethodClosure(INSTANCE, "executeOutside"));
-        script.getBinding().setVariable("isUIThread", new MethodClosure(INSTANCE, "isUIThread"));
-        script.getBinding().setVariable("execFuture", new MethodClosure(INSTANCE, "executeFuture"));
+        script.getBinding().setVariable(EXECUTE_INSIDE_UI_SYNC, EXECUTE_INSIDE_UI_SYNC_RUNNER);
+        script.getBinding().setVariable(EXECUTE_INSIDE_UI_SYNC, EXECUTE_INSIDE_UI_ASYNC_RUNNER);
+        script.getBinding().setVariable(EXECUTE_OUTSIDE_UI, EXECUTE_OUTSIDE_UI_RUNNER);
+        script.getBinding().setVariable(IS_UITHREAD, IS_UITHREAD_RUNNER);
+        script.getBinding().setVariable(EXECUTE_FUTURE, EXECUTE_FUTURE_RUNNER);
     }
 
     public static void enhance(MetaClass metaClass) {
@@ -76,15 +170,15 @@ public final class UIThreadManager {
                 LOG.trace("Enhancing metaClass " + metaClass);
             }
             // TODO @deprecated - remove before 1.0
-            mc.registerInstanceMethod("execSync", new MethodClosure(INSTANCE, "executeSync"));
-            mc.registerInstanceMethod("execAsync", new MethodClosure(INSTANCE, "executeAsync"));
-            mc.registerInstanceMethod("execOutside", new MethodClosure(INSTANCE, "executeOutside"));
+            mc.registerInstanceMethod("execSync", EXECUTE_INSIDE_UI_SYNC_RUNNER);
+            mc.registerInstanceMethod("execAsync", EXECUTE_INSIDE_UI_ASYNC_RUNNER);
+            mc.registerInstanceMethod("execOutside", EXECUTE_OUTSIDE_UI_RUNNER);
 
-            mc.registerInstanceMethod("execInsideUISync", new MethodClosure(INSTANCE, "executeSync"));
-            mc.registerInstanceMethod("execInsideUIAsync", new MethodClosure(INSTANCE, "executeAsync"));
-            mc.registerInstanceMethod("execOutsideUI", new MethodClosure(INSTANCE, "executeOutside"));
-            mc.registerInstanceMethod("isUIThread", new MethodClosure(INSTANCE, "isUIThread"));
-            mc.registerInstanceMethod("execFuture", new MethodClosure(INSTANCE, "executeFuture"));
+            mc.registerInstanceMethod(EXECUTE_INSIDE_UI_SYNC, EXECUTE_INSIDE_UI_SYNC_RUNNER);
+            mc.registerInstanceMethod(EXECUTE_INSIDE_UI_ASYNC, EXECUTE_INSIDE_UI_ASYNC_RUNNER);
+            mc.registerInstanceMethod(EXECUTE_OUTSIDE_UI, EXECUTE_OUTSIDE_UI_RUNNER);
+            mc.registerInstanceMethod(IS_UITHREAD, IS_UITHREAD_RUNNER);
+            mc.registerInstanceMethod(EXECUTE_FUTURE, EXECUTE_FUTURE_RUNNER);
         }
     }
 
