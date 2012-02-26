@@ -255,18 +255,20 @@ public abstract class AbstractGriffonApplication extends AbstractObservable impl
         // with stage #2 if and only if the current thread is
         // the ui thread
         log.debug("Shutdown stage 1: notify all event listeners");
-        final CountDownLatch latch = new CountDownLatch(isUIThread() ? 1 : 0);
-        addApplicationEventListener(GriffonApplication.Event.SHUTDOWN_START.getName(), new RunnableWithArgs() {
-            @Override
-            public void run(Object[] args) {
-                latch.countDown();
+        if (isEventPublishingEnabled()) {
+            final CountDownLatch latch = new CountDownLatch(isUIThread() ? 1 : 0);
+            addApplicationEventListener(GriffonApplication.Event.SHUTDOWN_START.getName(), new RunnableWithArgs() {
+                @Override
+                public void run(Object[] args) {
+                    latch.countDown();
+                }
+            });
+            event(GriffonApplication.Event.SHUTDOWN_START.getName(), asList(this));
+            try {
+                latch.await();
+            } catch (InterruptedException e) {
+                // ignore
             }
-        });
-        event(GriffonApplication.Event.SHUTDOWN_START.getName(), asList(this));
-        try {
-            latch.await();
-        } catch (InterruptedException e) {
-            // ignore
         }
 
         // stage 2 - alert all shutdown handlers
