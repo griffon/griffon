@@ -53,6 +53,7 @@ public class DefaultMVCGroupManager extends AbstractMVCGroupManager {
     private static final Logger LOG = LoggerFactory.getLogger(DefaultMVCGroupManager.class);
     private static final String CONFIG_KEY_COMPONENT = "component";
     private static final String CONFIG_KEY_EVENTS_LIFECYCLE = "events.lifecycle";
+    private static final String CONFIG_KEY_EVENTS_INSTANTIATION = "events.instantiation";
     private static final String CONFIG_KEY_EVENTS_LISTENER = "events.listener";
 
     public DefaultMVCGroupManager(GriffonApplication app) {
@@ -106,7 +107,14 @@ public class DefaultMVCGroupManager extends AbstractMVCGroupManager {
         // create the builder
         FactoryBuilderSupport builder = createBuilder(getApp(), metaClassMap);
 
-        Map<String, Object> instances = instantiateMembers(klassMap, argsCopy, griffonClassMap, builder);
+        boolean isEventPublishingEnabled = getApp().isEventPublishingEnabled();
+        getApp().setEventPublishingEnabled(isConfigFlagEnabled(configuration, CONFIG_KEY_EVENTS_INSTANTIATION));
+        Map<String, Object> instances = null;
+        try {
+            instances = instantiateMembers(klassMap, argsCopy, griffonClassMap, builder);
+        } finally {
+            getApp().setEventPublishingEnabled(isEventPublishingEnabled);
+        }
 
         instances.put("builder", builder);
         argsCopy.put("builder", builder);
