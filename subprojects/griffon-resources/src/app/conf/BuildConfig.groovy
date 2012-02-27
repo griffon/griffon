@@ -110,14 +110,14 @@ griffon {
 
 deploy {
     application {
-        title = '@griffonAppName@ @griffonAppVersion@'
+        title = "${appName} ${appVersion}"
         vendor = System.properties['user.name']
-        homepage = 'http://localhost/@griffonAppName@'
+        homepage = "http://localhost/${appName}"
         description {
-            complete = '@griffonAppName@ @griffonAppVersion@'
-            oneline  = '@griffonAppName@ @griffonAppVersion@'
-            minimal  = '@griffonAppName@ @griffonAppVersion@'
-            tooltip  = '@griffonAppName@ @griffonAppVersion@'
+            complete = "${appName} ${appVersion}"
+            oneline  = "${appName} ${appVersion}"
+            minimal  = "${appName} ${appVersion}"
+            tooltip  = "${appName} ${appVersion}"
         }
         icon {
             'default' {
