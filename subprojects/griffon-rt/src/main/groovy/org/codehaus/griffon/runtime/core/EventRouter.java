@@ -503,7 +503,7 @@ public class EventRouter {
      * @param eventName the name of the event
      * @param listener  the event listener
      */
-    void removeEventListener(String eventName, RunnableWithArgs listener) {
+    public void removeEventListener(String eventName, RunnableWithArgs listener) {
         if (isBlank(eventName) || listener == null) return;
         synchronized (closureListeners) {
             List list = closureListeners.get(capitalize(eventName));
