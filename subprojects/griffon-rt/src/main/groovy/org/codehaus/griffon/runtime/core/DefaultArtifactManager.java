@@ -20,7 +20,6 @@ import griffon.core.ArtifactInfo;
 import griffon.core.GriffonApplication;
 import groovy.util.ConfigObject;
 import groovy.util.ConfigSlurper;
-import org.codehaus.griffon.runtime.util.GriffonApplicationHelper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -28,6 +27,8 @@ import java.io.IOException;
 import java.lang.reflect.Modifier;
 import java.net.URL;
 import java.util.*;
+
+import static org.codehaus.griffon.runtime.util.GriffonApplicationHelper.loadClass;
 
 /**
  * Default implementation of {@code ArtifactManager}.
@@ -89,7 +90,7 @@ public class DefaultArtifactManager extends AbstractArtifactManager {
 
             for (String className : classNames) {
                 try {
-                    Class clazz = GriffonApplicationHelper.loadClass(getApp(), className);
+                    Class clazz = loadClass(className);
                     if (Modifier.isAbstract(clazz.getModifiers())) continue;
                     ArtifactInfo info = new ArtifactInfo(clazz, type);
                     if (!list.contains(info)) list.add(info);
