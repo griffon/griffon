@@ -29,7 +29,7 @@ The manager will log a warning and destroy the previously existing group before 
 
 Now, even though you can create group instances based on their configurations the preferred way is to call any of [createMVCGroup|MVC], [buildMVCGroup|MVC] or [withMVCGroup|MVC] methods. These methods are available to the [app|MVC] property every [GriffonArtifact|api:griffon.core.GriffonArtifact] has, which points to the currently running application. Griffon artifacts also inherit these methods as part of their default contract. Finally, any class annotated with the [MVCAware|api:griffon.transform.MVCAware] AST transformation will also gain access to these methods.
 
-Groups will be available by id regardless of how they were instantiated. You can ask the mvcGroupManager for a particular group at any time, for exmaple
+Groups will be available by id regardless of how they were instantiated. You can ask the mvcGroupManager for a particular group at any time, for example
 
 {code}
 def g1 = app.mvcGroupManager.groups.foo1
