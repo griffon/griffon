@@ -66,7 +66,6 @@ distBinSpec = copySpec {
     }
     
     into('guide'){
-        from(project(':griffon-guide').buildGuide.outputs.files)
         from(project(':griffon-guide').pdfGuide.outputs.files)
         filter(ReplaceTokens, tokens: ['griffon.version': version, 'groovy.version': groovyVersion])    
     }
