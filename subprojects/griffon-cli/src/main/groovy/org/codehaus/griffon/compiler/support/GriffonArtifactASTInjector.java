@@ -21,6 +21,7 @@ import griffon.core.GriffonClass;
 import groovy.lang.ExpandoMetaClass;
 import groovy.lang.GroovySystem;
 import org.codehaus.griffon.ast.MVCAwareASTTransformation;
+import org.codehaus.griffon.ast.ResourcesAwareASTTransformation;
 import org.codehaus.griffon.ast.ThreadingAwareASTTransformation;
 import org.codehaus.griffon.runtime.core.AbstractGriffonArtifact;
 import org.codehaus.griffon.runtime.util.GriffonApplicationHelper;
@@ -47,8 +48,6 @@ public class GriffonArtifactASTInjector extends AbstractASTInjector {
     private static final ClassNode GROOVY_SYSTEM_CLASS = ClassHelper.makeWithoutCaching(GroovySystem.class);
     private static final ClassNode ABSTRACT_GRIFFON_ARTIFACT_CLASS = ClassHelper.makeWithoutCaching(AbstractGriffonArtifact.class);
     private static final ClassNode EXPANDO_METACLASS_CLASS = ClassHelper.makeWithoutCaching(ExpandoMetaClass.class);
-    private static final ClassNode URL_CLASS = ClassHelper.makeWithoutCaching(URL.class);
-    private static final ClassNode INPUTSTREAM_CLASS = ClassHelper.makeWithoutCaching(InputStream.class);
     public static final String APP = "app";
 
     public void inject(ClassNode classNode, String artifactType) {
@@ -164,25 +163,6 @@ public class GriffonArtifactASTInjector extends AbstractASTInjector {
 
         ThreadingAwareASTTransformation.apply(classNode);
         MVCAwareASTTransformation.apply(classNode);
-
-        // URL getResourceAsURL(String name)
-        classNode.addMethod(new MethodNode(
-                "getResourceAsURL",
-                ACC_PUBLIC,
-                URL_CLASS,
-                params(param(ClassHelper.STRING_TYPE, "name")),
-                ClassNode.EMPTY_ARRAY,
-                returns(call(myClassLoader(), "getResource", vars("name")))
-        ));
-
-        // InputStream getResourceAsStream(String name)
-        classNode.addMethod(new MethodNode(
-                "getResourceAsStream",
-                ACC_PUBLIC,
-                INPUTSTREAM_CLASS,
-                params(param(ClassHelper.STRING_TYPE, "name")),
-                ClassNode.EMPTY_ARRAY,
-                returns(call(myClassLoader(), "getResourceAsStream", vars("name")))
-        ));
+        ResourcesAwareASTTransformation.apply(classNode);
     }
 }

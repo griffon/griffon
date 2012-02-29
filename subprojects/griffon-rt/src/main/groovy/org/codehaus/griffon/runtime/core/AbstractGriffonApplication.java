@@ -62,6 +62,7 @@ public abstract class AbstractGriffonApplication extends AbstractObservable impl
     private ApplicationPhase phase = ApplicationPhase.INITIALIZE;
 
     private final EventRouter eventRouter = new EventRouter();
+    private final ResourceLocator resourceLocator = new ResourceLocator();
     private final List<ShutdownHandler> shutdownHandlers = new ArrayList<ShutdownHandler>();
     private final String[] startupArgs;
     private final Object shutdownLock = new Object();
@@ -580,10 +581,14 @@ public abstract class AbstractGriffonApplication extends AbstractObservable impl
     }
 
     public InputStream getResourceAsStream(String name) {
-        return this.getClass().getClassLoader().getResourceAsStream(name);
+        return resourceLocator.getResourceAsStream(name);
     }
 
     public URL getResourceAsURL(String name) {
-        return this.getClass().getClassLoader().getResource(name);
+        return resourceLocator.getResourceAsURL(name);
+    }
+
+    public List<URL> getResources(String name) {
+        return resourceLocator.getResources(name);
     }
 }

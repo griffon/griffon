@@ -13,6 +13,7 @@ In order to reduce visual clutter, also to provide an abstraction over resource 
 
  * @URL getResourceAsURL(String resourceName)@
  * @InputStream getResourceAsStream(String resourceName)@
+ * @List<URL> getResources(String resourceName)@
 
 Thus, the previous example can be rewritten this way
 
@@ -24,3 +25,5 @@ scrollPane {
 {code}
 
 In the future Griffon may switch to a modularized runtime, this abstraction will shield you from any problems when the underlying mechanism changes.
+
+These methods can be attached to any non-artifact class at compile time if you apply the \@griffon.transform.ResourcesAware AST transformation.

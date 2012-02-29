@@ -18,6 +18,7 @@ package org.codehaus.griffon.compiler.support;
 
 import griffon.core.GriffonApplication;
 import org.codehaus.griffon.ast.AbstractASTTransformation;
+import org.codehaus.griffon.ast.ResourcesAwareASTTransformation;
 import org.codehaus.griffon.ast.ThreadingAwareASTTransformation;
 import org.codehaus.griffon.runtime.util.GriffonApplicationHelper;
 import org.codehaus.groovy.ast.*;
@@ -38,8 +39,6 @@ public class GriffonAddonASTInjector extends AbstractASTInjector {
     private static final ClassNode GAH_CLASS = ClassHelper.makeWithoutCaching(GriffonApplicationHelper.class);
     private static final ClassNode LOGGER_CLASS = ClassHelper.makeWithoutCaching(Logger.class);
     private static final ClassNode LOGGER_FACTORY_CLASS = ClassHelper.makeWithoutCaching(LoggerFactory.class);
-    private static final ClassNode URL_CLASS = ClassHelper.makeWithoutCaching(URL.class);
-    private static final ClassNode INPUTSTREAM_CLASS = ClassHelper.makeWithoutCaching(InputStream.class);
     public static final String APP = "app";
 
     public void inject(ClassNode classNode, String artifactType) {
@@ -86,26 +85,7 @@ public class GriffonAddonASTInjector extends AbstractASTInjector {
         ));
 
         ThreadingAwareASTTransformation.apply(classNode);
-
-        // URL getResourceAsURL(String name)
-        classNode.addMethod(new MethodNode(
-                "getResourceAsURL",
-                ACC_PUBLIC,
-                URL_CLASS,
-                params(param(ClassHelper.STRING_TYPE, "name")),
-                ClassNode.EMPTY_ARRAY,
-                returns(call(myClassLoader(), "getResource", vars("name")))
-        ));
-
-        // InputStream getResourceAsStream(String name)
-        classNode.addMethod(new MethodNode(
-                "getResourceAsStream",
-                ACC_PUBLIC,
-                INPUTSTREAM_CLASS,
-                params(param(ClassHelper.STRING_TYPE, "name")),
-                ClassNode.EMPTY_ARRAY,
-                returns(call(myClassLoader(), "getResourceAsStream", vars("name")))
-        ));
+        ResourcesAwareASTTransformation.apply(classNode);
     }
 
     public static void addDefaultConstructor(ClassNode classNode) {

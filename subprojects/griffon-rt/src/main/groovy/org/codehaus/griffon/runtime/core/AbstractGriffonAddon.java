@@ -46,6 +46,7 @@ import java.util.concurrent.Future;
 public abstract class AbstractGriffonAddon extends GroovyObjectSupport implements GriffonAddon {
     private final GriffonApplication app;
     private final Logger log;
+    private final ResourceLocator resourceLocator = new ResourceLocator();
 
     protected final Map<String, Object> factories = new LinkedHashMap<String, Object>();
     protected final Map<String, Closure> methods = new LinkedHashMap<String, Closure>();
@@ -197,10 +198,14 @@ public abstract class AbstractGriffonAddon extends GroovyObjectSupport implement
     }
 
     public InputStream getResourceAsStream(String name) {
-        return this.getClass().getClassLoader().getResourceAsStream(name);
+        return resourceLocator.getResourceAsStream(name);
     }
 
     public URL getResourceAsURL(String name) {
-        return this.getClass().getClassLoader().getResource(name);
+        return resourceLocator.getResourceAsURL(name);
+    }
+
+    public List<URL> getResources(String name) {
+        return resourceLocator.getResources(name);
     }
 }

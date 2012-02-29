@@ -18,6 +18,7 @@ package griffon.core;
 
 import java.io.InputStream;
 import java.net.URL;
+import java.util.List;
 
 /**
  * Indicates a type that knows how to load resources from the classpath.
@@ -48,4 +49,20 @@ public interface ResourceHandler {
      *         if the resource could not be found
      */
     InputStream getResourceAsStream(String name);
+
+    /**
+     * Finds all the resources with the given name. A resource is some data
+     * (images, audio, text, etc) that can be accessed by class code in a way
+     * that is independent of the location of the code.
+     * <p/>
+     * <p>The name of a resource is a <tt>/</tt>-separated path name that
+     * identifies the resource.
+     *
+     * @param name The resource name
+     * @return An java.util.List of {@link java.net.URL <tt>URL</tt>} objects for
+     *         the resource.  If no resources could  be found, the list
+     *         will be empty.  Resources that the class loader doesn't have
+     *         access to will not be in the list.
+     */
+    List<URL> getResources(String name);
 }

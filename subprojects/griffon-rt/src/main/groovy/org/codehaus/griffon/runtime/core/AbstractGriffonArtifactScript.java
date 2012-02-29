@@ -42,6 +42,7 @@ public abstract class AbstractGriffonArtifactScript extends Script implements Gr
     private GriffonApplication app;
     private final Logger log;
     private MetaClass myMetaClass;
+    private final ResourceLocator resourceLocator = new ResourceLocator();
 
     public AbstractGriffonArtifactScript(String type) {
         log = LoggerFactory.getLogger("griffon.app." + type + "." + getClass().getName());
@@ -234,10 +235,14 @@ public abstract class AbstractGriffonArtifactScript extends Script implements Gr
     }
 
     public InputStream getResourceAsStream(String name) {
-        return this.getClass().getClassLoader().getResourceAsStream(name);
+        return resourceLocator.getResourceAsStream(name);
     }
 
     public URL getResourceAsURL(String name) {
-        return this.getClass().getClassLoader().getResource(name);
+        return resourceLocator.getResourceAsURL(name);
+    }
+
+    public List<URL> getResources(String name) {
+        return resourceLocator.getResources(name);
     }
 }

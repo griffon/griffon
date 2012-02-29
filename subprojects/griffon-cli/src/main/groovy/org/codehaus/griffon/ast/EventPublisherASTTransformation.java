@@ -33,7 +33,7 @@ import static org.codehaus.griffon.ast.GriffonASTUtils.*;
 /**
  * Handles generation of code for the {@code @EventPublisher} annotation.
  * <p/>
- * Generally, it adds (if needed) a EventRouter field and
+ * Generally, it adds (if needed) an EventRouter field and
  * the needed add/removeEventListener methods to support the
  * listeners.
  * <p/>

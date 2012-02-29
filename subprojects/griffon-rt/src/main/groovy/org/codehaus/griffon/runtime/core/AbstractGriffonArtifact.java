@@ -44,6 +44,7 @@ import java.util.concurrent.Future;
 public abstract class AbstractGriffonArtifact extends GroovyObjectSupport implements GriffonArtifact {
     private GriffonApplication app;
     private final Logger log;
+    private final ResourceLocator resourceLocator = new ResourceLocator();
 
     public static MetaClass metaClassOf(GriffonArtifact artifact) {
         if (artifact == null) return null;
@@ -233,10 +234,14 @@ public abstract class AbstractGriffonArtifact extends GroovyObjectSupport implem
     }
 
     public InputStream getResourceAsStream(String name) {
-        return this.getClass().getClassLoader().getResourceAsStream(name);
+        return resourceLocator.getResourceAsStream(name);
     }
 
     public URL getResourceAsURL(String name) {
-        return this.getClass().getClassLoader().getResource(name);
+        return resourceLocator.getResourceAsURL(name);
+    }
+
+    public List<URL> getResources(String name) {
+        return resourceLocator.getResources(name);
     }
 }
