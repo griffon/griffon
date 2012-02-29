@@ -571,20 +571,16 @@ target(name: 'generateJNLP', description: "Generates the JNLP File",
 // XXX -- NATIVE
 
     memOptions = []
-    def permOptions = []
     if (buildConfig.griffon.memory?.min) {
         memOptions << "initial-heap-size='$buildConfig.griffon.memory.min'"
     }
     if (buildConfig.griffon.memory?.max) {
         memOptions << "max-heap-size='$buildConfig.griffon.memory.max'"
     }
-    if (buildConfig.griffon.memory?.minPermSize) {
-        permOptions << "-XX:PermSize=$buildConfig.griffon.memory.minPermSize"
-    }
-    if (buildConfig.griffon.memory?.maxPermSize) {
+    if (buildConfig.griffon.memory?.minPermSize && buildConfig.griffon.memory?.maxPermSize) {
+        def permOptions = []
         permOptions << "-XX:MaxPermSize=$buildConfig.griffon.memory.maxPermSize"
-    }
-    if (permOptions) {
+        permOptions << "-XX:PermSize=$buildConfig.griffon.memory.minPermSize"
         memOptions << "java-vm-args='${permOptions.join(' ')}'"
     }
 

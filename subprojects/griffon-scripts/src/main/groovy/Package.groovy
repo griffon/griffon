@@ -32,11 +32,11 @@ includeTargets << griffonScript('_GriffonPackage')
 ant.taskdef(name: 'fileMerge', classname: 'org.codehaus.griffon.ant.taskdefs.FileMergeTask')
 
 target('package': 'Packages a Griffon project according to its type') {
-    if(griffonSettings.isPluginProject()) {
+    if (griffonSettings.isPluginProject()) {
         includeTargets << griffonScript('PackagePlugin')
         depends(checkVersion, packagePlugin)
         return
-    } else if(griffonSettings.isArchetypeProject()) {
+    } else if (griffonSettings.isArchetypeProject()) {
         includeTargets << griffonScript('PackageArchetype')
         depends(checkVersion, packageArchetype)
         return
@@ -66,7 +66,7 @@ target(packageApplication: 'Packages a GriffonApplication') {
         } catch (Exception x) {
             ant.echo(message: "Could not handle package type '${type}'")
             ant.echo(message: x.message)
-            if(getPropertyValue('griffon.package.abort.onfailure', false)) {
+            if (getPropertyValue('griffon.package.abort.onfailure', false)) {
                 exit(1)
             }
         }
@@ -267,14 +267,12 @@ target(_copyLaunchScripts: "") {
     if (buildConfig.griffon.memory?.max) {
         javaOpts << "-Xmx$buildConfig.griffon.memory.max"
     }
-    if (buildConfig.griffon.memory?.minPermSize) {
+    if (buildConfig.griffon.memory?.minPermSize && buildConfig.griffon.memory?.maxPermSize) {
+        javaOpts << "-XX:MaxPermSize=$buildConfig.griffon.memory.maxPermSize"
         javaOpts << "-XX:PermSize=$buildConfig.griffon.memory.minPermSize"
     }
-    if (buildConfig.griffon.memory?.maxPermSize) {
-        javaOpts << "-XX:MaxPermSize=$buildConfig.griffon.memory.maxPermSize"
-    }
     if (buildConfig.griffon.app?.javaOpts) {
-        buildConfig.griffon.app?.javaOpts.each { javaOpts << it }
+        buildConfig.griffon.app.javaOpts.each { javaOpts << it }
     }
     javaOpts = javaOpts ? javaOpts.join(' ') : ""
 
