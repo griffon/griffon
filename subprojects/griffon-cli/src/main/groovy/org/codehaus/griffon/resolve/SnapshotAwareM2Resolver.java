@@ -27,8 +27,9 @@ import org.apache.ivy.plugins.repository.Resource;
 import org.apache.ivy.plugins.resolver.IBiblioResolver;
 import org.apache.ivy.plugins.resolver.util.ResolvedResource;
 import org.apache.ivy.util.ContextualSAXHandler;
-import org.apache.ivy.util.Message;
 import org.apache.ivy.util.XMLHelper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.xml.sax.SAXException;
 
 import javax.xml.parsers.ParserConfigurationException;
@@ -43,6 +44,7 @@ import java.util.TimeZone;
  * Fixes the broken snapshot support in IBiblioResolver.
  */
 public class SnapshotAwareM2Resolver extends IBiblioResolver {
+    private static final Logger LOG = LoggerFactory.getLogger(SnapshotAwareM2Resolver.class);
     private static final String M2_PER_MODULE_PATTERN = "[revision]/[artifact]-[revision](-[classifier]).[ext]";
     private static final String M2_PATTERN = "[organisation]/[module]/" + M2_PER_MODULE_PATTERN;
 
@@ -118,12 +120,12 @@ public class SnapshotAwareM2Resolver extends IBiblioResolver {
     private ResolvedResource findSnapshotDescriptor(DependencyDescriptor dd, ResolveData data,
                                                     ModuleRevisionId mrid) {
         SnapshotRevision rev = findSnapshotRevision(mrid);
-        Message.verbose("[" + rev + "] " + mrid);
+        LOG.debug("[" + rev + "] " + mrid);
         if (rev != null) {
             // here it would be nice to be able to store the resolved snapshot version, to avoid
             // having to follow the same process to download artifacts
 
-            Message.verbose("[" + rev + "] " + mrid);
+            LOG.debug("[" + rev + "] " + mrid);
 
             // replace the revision token in file name with the resolved revision
             String pattern = getWholePattern().replaceFirst("\\-\\[revision\\]", "-" + rev);
@@ -184,17 +186,14 @@ public class SnapshotAwareM2Resolver extends IBiblioResolver {
                         return new SnapshotRevision(baseRevision, uniqueRevisionSuffix, lastUpdated.toString());
                     }
                 } else {
-                    Message.verbose("\tmaven-metadata not available: " + metadata);
+                    LOG.debug("\tmaven-metadata not available: " + metadata);
                 }
             } catch (IOException e) {
-                Message.verbose(
-                        "impossible to access maven metadata file, ignored: " + e.getMessage());
+                LOG.debug("impossible to access maven metadata file, ignored: " + e.getMessage());
             } catch (SAXException e) {
-                Message.verbose(
-                        "impossible to parse maven metadata file, ignored: " + e.getMessage());
+                LOG.debug("impossible to parse maven metadata file, ignored: " + e.getMessage());
             } catch (ParserConfigurationException e) {
-                Message.verbose(
-                        "impossible to parse maven metadata file, ignored: " + e.getMessage());
+                LOG.debug("impossible to parse maven metadata file, ignored: " + e.getMessage());
             } finally {
                 if (metadataStream != null) {
                     try {
