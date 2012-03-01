@@ -43,7 +43,7 @@ target(name: 'packageAddon', description: 'Packages a Griffon addon',
     addonJarDir = "${artifactPackageDirPath}/dist"
     ant.mkdir(dir: addonJarDir)
 
-    cliJarName = "griffon-${pluginName}-cli-${pluginVersion}.jar"
+    cliJarName = "griffon-${pluginName}-compile-${pluginVersion}.jar"
     if (cliSourceDir.exists()) {
         ant.jar(destfile: "$addonJarDir/$cliJarName") {
             fileset(dir: projectCliClassesDir)
@@ -59,7 +59,7 @@ target(name: 'packageAddon', description: 'Packages a Griffon addon',
     packageResources()
 
     File metainfDirPath = new File("${basedir}/griffon-app/conf/metainf")
-    addonJarName = "griffon-${pluginName}-${pluginVersion}-runtime.jar"
+    addonJarName = "griffon-${pluginName}-runtime-${pluginVersion}.jar"
     ant.jar(destfile: "$addonJarDir/$addonJarName") {
         fileset(dir: projectMainClassesDir) {
             exclude(name: 'Config*.class')

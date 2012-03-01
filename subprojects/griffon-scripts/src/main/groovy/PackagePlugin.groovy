@@ -75,16 +75,16 @@ target(name: 'package_plugin', description: '',
                 tofile: "$artifactPackageDirPath/dependencies.groovy", failonerror: false)
     }
 
-    File runtimeJar = new File("${artifactPackageDirPath}/dist/griffon-${pluginName}-${pluginVersion}-runtime.jar")
-    File compileJar = new File("${artifactPackageDirPath}/dist/griffon-${pluginName}-cli-${pluginVersion}.jar")
+    File runtimeJar = new File("${artifactPackageDirPath}/dist/griffon-${pluginName}-runtime-${pluginVersion}.jar")
+    File compileJar = new File("${artifactPackageDirPath}/dist/griffon-${pluginName}-compile-${pluginVersion}.jar")
     File testJar = new File("${artifactPackageDirPath}/dist/griffon-${pluginName}-test-${pluginVersion}.jar")
 
     String compile = ''
     if (runtimeJar.exists()) {
-        compile = "compile(group: 'org.codehaus.griffon.plugins', name: 'griffon-${pluginName}', version: '${pluginVersion}', classifier: 'runtime')"
+        compile = "compile(group: 'org.codehaus.griffon.plugins', name: 'griffon-${pluginName}-runtime', version: '${pluginVersion}')"
     }
     if (compileJar.exists()) {
-        compile += "\n\tbuild(group: 'org.codehaus.griffon.plugins', name: 'griffon-${pluginName}-cli', version: '${pluginVersion}')"
+        compile += "\n\tbuild(group: 'org.codehaus.griffon.plugins', name: 'griffon-${pluginName}-compile', version: '${pluginVersion}')"
     }
     String test = ''
     if (testJar.exists()) {
