@@ -610,7 +610,7 @@ class ArtifactInstallEngine {
 
         try {
             if (!doUninstall(type, name, version)) {
-                errorHandler "No ${type} [$name${version ? '-' + version : ''}] installed, cannot uninstall."
+                eventHandler 'StatusFinal', "No ${type} [$name${version ? '-' + version : ''}] installed, cannot uninstall."
             }
         } catch (e) {
             sanitize(e)
