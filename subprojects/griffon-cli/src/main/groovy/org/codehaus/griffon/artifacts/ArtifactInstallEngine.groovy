@@ -262,10 +262,10 @@ class ArtifactInstallEngine {
         List<ArtifactDependency> failedDependencies = []
         List<ArtifactDependency> retryDependencies = []
 
-        _installDependencies(installPlan, failedDependencies, retryDependencies, true)
+        doInstallDependencies(installPlan, failedDependencies, retryDependencies, true)
 
         if (retryDependencies) {
-            _installDependencies(retryDependencies, failedDependencies, [], false)
+            doInstallDependencies(retryDependencies, failedDependencies, [], false)
         }
 
         if (failedDependencies) {
@@ -278,7 +278,7 @@ class ArtifactInstallEngine {
         true
     }
 
-    private void _installDependencies(List<ArtifactDependency> dependencies, List<ArtifactDependency> failedDependencies, List<ArtifactDependency> retryDependencies, boolean retryAllowed) {
+    private void doInstallDependencies(List<ArtifactDependency> dependencies, List<ArtifactDependency> failedDependencies, List<ArtifactDependency> retryDependencies, boolean retryAllowed) {
         String type = Plugin.TYPE
         for (ArtifactDependency dependency: dependencies) {
             try {
@@ -291,8 +291,9 @@ class ArtifactInstallEngine {
                             if (LOG.debugEnabled) {
                                 LOG.debug("${dependency.name}-${dependency.version} installed=[checksum: ${installedRelease.checksum}, date: ${installedRelease.date}] download=[checksum: ${dependency.release.checksum}, date: ${dependency.release.date}] ")
                             }
+
                             if (installedRelease.checksum == dependency.release.checksum ||
-                                    installedRelease.date >= dependency.release.date) continue
+                                    installedRelease.date.after(dependency.release.date)) continue
                         }
                     }
 
