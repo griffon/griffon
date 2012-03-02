@@ -185,7 +185,7 @@ collectArtifactMetadata = {
 collectAddonMetadata = {
     Map addons = [:]
     pluginSettings.sortedPluginDirectories.each { String name, Resource dir ->
-        if (resolveResources("file://${dir.file}/dist/griffon-${name}-*-runtime.jar") ||
+        if (resolveResources("file://${dir.file}/dist/griffon-${name}-runtime-*.jar") ||
                 resolveResources("file://${dir.file}/addon/griffon-${name}-addon-*.jar")) {
             String pluginDirName = dir.file.name
             String pluginVersion = pluginDirName[(name.size() + 1)..-1]
