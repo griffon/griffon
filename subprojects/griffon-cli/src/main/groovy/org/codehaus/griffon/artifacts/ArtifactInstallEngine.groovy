@@ -292,7 +292,10 @@ class ArtifactInstallEngine {
                                 LOG.debug("${dependency.name}-${dependency.version} installed=[checksum: ${installedRelease.checksum}, date: ${installedRelease.date}] download=[checksum: ${dependency.release.checksum}, date: ${dependency.release.date}] ")
                             }
 
-                            if (installedRelease.checksum == dependency.release.checksum ||
+                            // must check tat both checksum && date exist as these properties
+                            // are not present if the plugin was insatlled directly from zip
+                            if ( (installedRelease.checksum && installedRelease.date) &&
+                                    installedRelease.checksum == dependency.release.checksum ||
                                     installedRelease.date.after(dependency.release.date)) continue
                         }
                     }

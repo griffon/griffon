@@ -21,6 +21,7 @@ import org.apache.ivy.plugins.resolver.IBiblioResolver
 import org.apache.ivy.plugins.resolver.RepositoryResolver
 import org.apache.ivy.util.Message
 import org.codehaus.griffon.resolve.SnapshotAwareM2Resolver
+import org.apache.ivy.plugins.latest.LatestTimeStrategy
 
 class RepositoriesConfigurer extends AbstractDependencyManagementConfigurer {
     RepositoriesConfigurer(DependencyConfigurationContext context) {
@@ -41,6 +42,9 @@ class RepositoriesConfigurer extends AbstractDependencyManagementConfigurer {
             def fileSystemResolver = new FileSystemResolver()
             fileSystemResolver.local = true
             fileSystemResolver.name = name
+            fileSystemResolver.latestStrategy = new LatestTimeStrategy()
+            fileSystemResolver.changingPattern = ".*SNAPSHOT"
+            fileSystemResolver.setCheckmodified(true)
 
             def dirs = args.dirs instanceof Collection ? args.dirs : [args.dirs]
 
