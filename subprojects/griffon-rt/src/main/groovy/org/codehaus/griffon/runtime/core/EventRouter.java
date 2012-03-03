@@ -333,7 +333,7 @@ public class EventRouter {
             return;
         }
         synchronized (listeners) {
-            if (listeners.contains(listener)) ;
+            if (listeners.contains(listener)) return;
             try {
                 LOG.debug("Adding listener " + listener);
             } catch (UnsupportedOperationException uoe) {

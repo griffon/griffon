@@ -25,9 +25,6 @@ import org.codehaus.groovy.ast.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.InputStream;
-import java.net.URL;
-
 import static org.codehaus.griffon.ast.GriffonASTUtils.*;
 
 /**

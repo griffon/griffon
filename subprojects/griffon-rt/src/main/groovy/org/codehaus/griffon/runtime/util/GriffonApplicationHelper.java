@@ -321,13 +321,13 @@ public class GriffonApplicationHelper {
         }
 
         if (Script.class.isAssignableFrom(handlerClass)) {
-            _runScript(handlerName, handlerClass, app);
+            doRunScript(handlerName, handlerClass, app);
         } else if (LifecycleHandler.class.isAssignableFrom(handlerClass)) {
-            _runLifecycleHandler(handlerName, handlerClass, app);
+            doRunLifecycleHandler(handlerName, handlerClass, app);
         }
     }
 
-    private static void _runScript(String scriptName, Class handlerClass, GriffonApplication app) {
+    private static void doRunScript(String scriptName, Class handlerClass, GriffonApplication app) {
         Script script = (Script) safeNewInstance(handlerClass);
         script.setBinding(app.getBindings());
         UIThreadManager.enhance(script);
@@ -337,7 +337,7 @@ public class GriffonApplicationHelper {
         UIThreadManager.getInstance().executeSync(script);
     }
 
-    private static void _runLifecycleHandler(String handlerName, Class handlerClass, GriffonApplication app) {
+    private static void doRunLifecycleHandler(String handlerName, Class handlerClass, GriffonApplication app) {
         LifecycleHandler handler = (LifecycleHandler) safeNewInstance(handlerClass);
         if (LOG.isInfoEnabled()) {
             LOG.info("Running lifecycle handler (class) '" + handlerName + "'");
