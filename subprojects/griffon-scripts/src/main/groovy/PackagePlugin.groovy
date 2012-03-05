@@ -88,7 +88,7 @@ target(name: 'package_plugin', description: '',
     }
     String test = ''
     if (testJar.exists()) {
-        test = "test(group: 'org.codehaus.griffon.plugins', name: 'griffon-${pluginName}-test', version: ${pluginVersion}')"
+        test = "test(group: 'org.codehaus.griffon.plugins', name: 'griffon-${pluginName}-test', version: '${pluginVersion}')"
     }
 
     if (compile || test) {
