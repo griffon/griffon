@@ -57,7 +57,6 @@ createdPdf = false
 ant.taskdef(name: "groovydoc", classname: "org.codehaus.groovy.ant.Groovydoc")
 
 target(docs: "Produces documentation for a Griffon project") {
-    parseArguments()
     if (argsMap.init) {
         ant.mkdir(dir: "${basedir}/src/docs/img")
         ant.copy(todir: "${basedir}/src/docs/img") {
@@ -128,7 +127,7 @@ target(setupDoc: "Sets up the doc directories") {
 }
 
 target(groovydoc: "Produces groovydoc documentation") {
-    depends(parseArguments, setupDoc)
+    depends(setupDoc)
 
     if (docsDisabled()) {
         event("DocSkip", ['groovydoc'])
@@ -152,7 +151,7 @@ target(groovydoc: "Produces groovydoc documentation") {
 }
 
 target(javadoc: "Produces javadoc documentation") {
-    depends(parseArguments, setupDoc)
+    depends(setupDoc)
 
     if (docsDisabled()) {
         event("DocSkip", ['javadoc'])
@@ -265,8 +264,6 @@ ${m.arguments?.collect { '* @' + GriffonUtil.getPropertyName(it) + '@\n' }}
 }
 
 target(pdf: "Produces PDF documentation") {
-    depends(parseArguments)
-
     File refDocsDir = new File("${griffonSettings.docsOutputDir}/manual")
     File singleHtml = new File(refDocsDir, 'guide/single.html')
 
@@ -359,7 +356,7 @@ private loadBasePlugin() {
 }
 
 // target(docs: "Produces documentation for a Griffon project") {
-//    depends(compile, parseArguments)
+//    depends(compile)
 //
 //    if(!argsMap.nodoc) {
 //        invokeGroovydoc(

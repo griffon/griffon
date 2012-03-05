@@ -28,7 +28,7 @@ import static org.codehaus.griffon.cli.CommandLineConstants.KEY_INTERACTIVE_MODE
  * @author Peter Ledbrook (Grails 1.1)
  */
 
-args = System.getProperty('griffon.cli.args')
+// args = System.getProperty('griffon.cli.args')
 
 // Set up the Griffon environment for this script.
 if (!System.getProperty('griffon.env.set')) {
@@ -250,8 +250,6 @@ askAndDo = { message, yesCallback = null, noCallback = null ->
 }
 
 askAndDoNoNag = { message, yesCallback = null, noCallback = null ->
-    parseArguments()
-
     nonagYes = 'y'.equalsIgnoreCase(argsMap.nonag) ?: false
     nonagNo = 'n'.equalsIgnoreCase(argsMap.nonag) ?: false
 

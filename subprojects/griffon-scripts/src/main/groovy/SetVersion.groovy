@@ -30,8 +30,8 @@ target(setVersion: "Sets the current application version") {
         exit(1)
     }
 
-    if (args != null) {
-        ant.property(name: "app.version.new", value: args)
+    if (argsMap.params) {
+        ant.property(name: "app.version.new", value: argsMap.params[0])
     } else {
         def oldVersion = metadata.'app.version'
         ant.input(addProperty: "app.version.new", message: "Enter the new version", defaultvalue: oldVersion)

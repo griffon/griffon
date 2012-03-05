@@ -36,7 +36,7 @@ import java.util.Map;
 import static griffon.util.GriffonExceptionHandler.sanitize;
 import static org.codehaus.griffon.cli.GriffonScriptRunner.*;
 import static org.codehaus.griffon.cli.shell.GriffonShellContext.*;
-import static org.codehaus.groovy.runtime.DefaultGroovyMethods.join;
+import static org.codehaus.groovy.runtime.DefaultGroovyMethods.flatten;
 
 /**
  * @author Andres Almiray
@@ -71,19 +71,21 @@ public class GantAwareAction extends AbstractGriffonShellCommand {
         GriffonScriptRunner runner = getGriffonScriptRunner();
         GantBinding binding = getGantBinding();
         //if (binding == null) {
-            binding = new GantBinding();
-            setGantBinding(binding);
+        binding = new GantBinding();
+        setGantBinding(binding);
         //}
 
+        Map<String, Object> argsMap = new LinkedHashMap<String, Object>();
         List<String> arguments = new ArrayList<String>();
-        populateOptions(arguments, args.options, args.subject);
-        populateArguments(arguments, args.orderedArguments, args.subject);
+        populateOptions(argsMap, args.options, args.subject);
+        populateArguments(argsMap, args.orderedArguments, args.subject);
 
-        System.setProperty(GriffonScriptRunner.KEY_SCRIPT_ARGS, join(arguments, " "));
+        // System.setProperty(GriffonScriptRunner.KEY_SCRIPT_ARGS, join(arguments, " "));
 
         binding.setVariable(VAR_SCRIPT_ENV, System.getProperty(Environment.KEY));
         binding.setVariable(VAR_SCRIPT_NAME, scriptName);
         binding.setVariable(VAR_SCRIPT_FILE, scriptFile);
+        binding.setVariable(VAR_SCRIPT_ARGS_MAP, argsMap);
         Gant gant = runner.createGantInstance(binding);
         gant.loadScript(scriptFile);
 
@@ -102,8 +104,8 @@ public class GantAwareAction extends AbstractGriffonShellCommand {
             }
         } finally {
             // perform some cleanup in the binding
-            System.setProperty(GriffonScriptRunner.KEY_SCRIPT_ARGS, "");
-            binding.setVariable("argsMap", emptyArgsMap());
+            // System.setProperty(GriffonScriptRunner.KEY_SCRIPT_ARGS, "");
+            binding.setVariable(VAR_SCRIPT_ARGS_MAP, emptyArgsMap());
         }
 
         return null;
@@ -115,7 +117,8 @@ public class GantAwareAction extends AbstractGriffonShellCommand {
         return argsMap;
     }
 
-    private void populateArguments(List<String> arguments, List<Argument> orderedArguments, Object subject) throws CommandException {
+    private void populateArguments(Map<String, Object> argsMap, List<Argument> orderedArguments, Object subject) throws CommandException {
+        List<Object> arguments = new ArrayList<Object>();
         for (Argument arg : orderedArguments) {
             String argName = arg.name();
             try {
@@ -123,7 +126,7 @@ public class GantAwareAction extends AbstractGriffonShellCommand {
                 field.setAccessible(true);
                 Object value = field.get(subject);
                 if (value != null) {
-                    arguments.add(value.toString());
+                    arguments.add(value);
                 }
             } catch (IllegalAccessException e) {
                 throw new CommandException("Could not read argument " + argName + " due to " + e.getMessage());
@@ -131,9 +134,10 @@ public class GantAwareAction extends AbstractGriffonShellCommand {
                 throw new CommandException("Could not read argument " + argName + " due to " + e.getMessage());
             }
         }
+        argsMap.put("params", flatten(arguments));
     }
 
-    private void populateOptions(List<String> arguments, Map<Option, Field> options, Object subject) throws CommandException {
+    private void populateOptions(Map<String, Object> argsMap, Map<Option, Field> options, Object subject) throws CommandException {
         for (Map.Entry<Option, Field> option : options.entrySet()) {
             String optionName = option.getKey().name();
             if ("--env".equals(optionName) || "--non-interactive".equals(optionName)) continue;
@@ -144,7 +148,7 @@ public class GantAwareAction extends AbstractGriffonShellCommand {
                 if (value != null) {
                     String val = value.toString();
                     if ("false".equalsIgnoreCase(val)) continue;
-                    arguments.add(optionName + "=" + quote(val));
+                    argsMap.put(optionName, quote(val));
                 }
             } catch (IllegalAccessException e) {
                 throw new CommandException("Could not read option " + optionName + " due to " + e.getMessage());

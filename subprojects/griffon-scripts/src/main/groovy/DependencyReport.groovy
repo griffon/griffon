@@ -37,7 +37,7 @@ target(dependencyReport: "Produces a dependency report for the current Griffon p
         dependencyManager.resolveDependencies(conf)
     }
 
-    def conf = args.trim() ?: 'build, compile, runtime, test'
+    def conf = argsMap.params.join(', ').trim() ?: 'build, compile, runtime, test'
     ivy.report(organisation: 'org.codehaus.griffon.internal', module: griffonAppName, todir: targetDir, conf: conf)
 
     // Copy the runtime dependency report to 'index.html' for easy opening.

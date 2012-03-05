@@ -21,8 +21,8 @@ import org.apache.commons.lang.WordUtils;
 import org.apache.felix.gogo.commands.Action;
 import org.apache.felix.gogo.commands.CommandException;
 import org.apache.felix.gogo.commands.basic.DefaultActionPreparator;
-import org.apache.felix.gogo.commands.converter.DefaultConverter;
 import org.apache.felix.gogo.commands.converter.GenericType;
+import org.apache.felix.gogo.commands.converter.GriffonDefaultConverter;
 import org.apache.felix.service.command.CommandSession;
 import org.apache.karaf.shell.console.NameScoping;
 import org.codehaus.griffon.cli.shell.Argument;
@@ -541,6 +541,6 @@ public class GriffonCommandPreparator extends DefaultActionPreparator {
         if (toType == String.class) {
             return value != null ? value.toString() : null;
         }
-        return new DefaultConverter(action.getClass().getClassLoader()).convert(value, toType);
+        return new GriffonDefaultConverter(action.getClass().getClassLoader()).convert(value, toType);
     }
 }

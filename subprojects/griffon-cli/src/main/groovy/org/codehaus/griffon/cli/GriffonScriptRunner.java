@@ -29,6 +29,10 @@ import org.codehaus.gant.GantBinding;
 import org.codehaus.griffon.artifacts.ArtifactRepositoryRegistry;
 import org.codehaus.griffon.artifacts.ArtifactUtils;
 import org.codehaus.griffon.artifacts.model.Plugin;
+import org.codehaus.griffon.cli.parsing.CommandLine;
+import org.codehaus.griffon.cli.parsing.CommandLineParser;
+import org.codehaus.griffon.cli.parsing.DefaultCommandLine;
+import org.codehaus.griffon.cli.parsing.ParseException;
 import org.codehaus.griffon.runtime.logging.Log4jConfig;
 import org.codehaus.groovy.runtime.DefaultGroovyMethods;
 import org.springframework.core.io.Resource;
@@ -39,7 +43,6 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.util.*;
-import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import static griffon.util.GriffonExceptionHandler.sanitize;
@@ -73,6 +76,7 @@ public class GriffonScriptRunner {
     public static final String VAR_SCRIPT_NAME = "scriptName";
     public static final String VAR_SCRIPT_FILE = "scriptFile";
     public static final String VAR_SCRIPT_ENV = "scriptEnv";
+    public static final String VAR_SCRIPT_ARGS_MAP = "argsMap";
     public static final String KEY_SCRIPT_ARGS = "griffon.cli.args";
 
     /**
@@ -84,14 +88,18 @@ public class GriffonScriptRunner {
      */
     public static void main(String[] args) {
         GriffonExceptionHandler.registerExceptionHandler();
-        StringBuilder allArgs = new StringBuilder("");
-        for (String arg : args) {
-            allArgs.append(" ").append(arg);
-        }
+
+        CommandLine commandLine = getCommandLine(args);
 
         // Get hold of the Griffon_HOME environment variable if it is
         // available.
         String griffonHome = System.getProperty("griffon.home");
+        ScriptAndArgs script = processArgumentsAndReturnScriptName(commandLine);
+
+        if (commandLine.hasOption(CommandLine.HELP_ARGUMENT)) {
+            System.out.println(getCommandLineParser().getHelpMessage());
+            System.exit(0);
+        }
 
         BuildSettings build = null;
         try {
@@ -102,13 +110,10 @@ public class GriffonScriptRunner {
             System.exit(1);
         }
 
-        String rawArgs = allArgs.toString().trim();
-        if ("--version".equals(rawArgs) || "-version".equals(rawArgs) ||"-v".equals(rawArgs)) {
+        if (commandLine.hasOption(CommandLine.VERSION_ARGUMENT) || commandLine.hasOption(CommandLine.VERSION_ARGUMENT_ALIAS)) {
             System.out.println(GriffonEnvironment.prettyPrint());
             System.exit(0);
         }
-
-        ScriptAndArgs script = processArgumentsAndReturnScriptName(rawArgs);
 
         // Check that Griffon' home actually exists.
         final File griffonHomeInSettings = build.getGriffonHome();
@@ -147,69 +152,62 @@ public class GriffonScriptRunner {
         }
     }
 
+    public static CommandLineParser getCommandLineParser() {
+        CommandLineParser parser = new CommandLineParser();
+        parser.addOption(CommandLine.NON_INTERACTIVE_ARGUMENT, "Whether to allow the command line to request input");
+        parser.addOption(CommandLine.HELP_ARGUMENT, "Command line help");
+        parser.addOption(CommandLine.VERSION_ARGUMENT, "Current Griffon version");
+        return parser;
+    }
+
+    public static CommandLine getCommandLine(String[] args) {
+        CommandLineParser parser = getCommandLineParser();
+
+        try {
+            if (args.length == 0) {
+                return new DefaultCommandLine();
+            } else {
+                return parser.parseString(args[0]);
+            }
+        } catch (ParseException e) {
+            System.err.println("Error processing command line arguments: " + sanitize(e).getMessage());
+            System.exit(1);
+        }
+
+        return null;
+    }
+
     private static void exitWithError(String error) {
         System.out.println(error);
         System.exit(1);
     }
 
-    private static ScriptAndArgs processArgumentsAndReturnScriptName(String allArgs) {
+    private static ScriptAndArgs processArgumentsAndReturnScriptName(CommandLine commandLine) {
+        processSystemArguments(commandLine);
+        return processAndReturnArguments(commandLine);
+    }
+
+    private static ScriptAndArgs processAndReturnArguments(CommandLine commandLine) {
         ScriptAndArgs info = new ScriptAndArgs();
-
-        // Check that we actually have some arguments to process.
-        if (allArgs == null || allArgs.length() == 0) return info;
-
-        String[] splitArgs = processSystemArguments(allArgs).trim().split(" ");
-        int currentParamIndex = 0;
         if (Environment.isSystemSet()) {
             info.env = Environment.getCurrent().getName();
-        } else if (isEnvironmentArgs(splitArgs[currentParamIndex])) {
-            // use first argument as environment name and step further
-            String env = splitArgs[currentParamIndex++];
-            info.env = ENV_ARGS.get(env);
+        } else if (commandLine.getEnvironment() != null) {
+            info.env = commandLine.getEnvironment();
         }
 
-        if (currentParamIndex >= splitArgs.length) {
-            System.out.println("You should specify a script to run. Run 'griffon help' for a complete list of available scripts.");
-            System.exit(0);
-        }
-
-        // use current argument as script name and step further
-        String paramName = splitArgs[currentParamIndex++];
-        if (paramName.charAt(0) == '-') {
-            paramName = paramName.substring(1);
-        }
-        info.name = GriffonUtil.getNameFromScript(paramName);
-
-        if (currentParamIndex < splitArgs.length) {
-            // if we have additional params provided - store it in system property
-            StringBuilder b = new StringBuilder(splitArgs[currentParamIndex]);
-            for (int i = currentParamIndex + 1; i < splitArgs.length; i++) {
-                b.append(' ').append(splitArgs[i]);
-            }
-            info.args = b.toString();
-        }
+        info.name = GriffonUtil.getNameFromScript(commandLine.getCommandName());
+        info.params.addAll(commandLine.getRemainingArgs());
+        info.options.putAll(commandLine.getOptions());
         return info;
     }
 
-    private static final Map<String, String> SYSTEM_PROPERTIES = new LinkedHashMap<String, String>();
-
-    private static String processSystemArguments(String allArgs) {
-        String lastMatch = null;
-        Pattern sysPropPattern = Pattern.compile("-D(.+?)=(['\"].+?['\"]|.+?)\\s+?");
-        Matcher m = sysPropPattern.matcher(allArgs);
-        while (m.find()) {
-            String key = m.group(1).trim();
-            String value = unquote(m.group(2).trim());
-            SYSTEM_PROPERTIES.put(key, value);
-            System.setProperty(key, value);
-            lastMatch = m.group();
+    private static void processSystemArguments(CommandLine allArgs) {
+        Properties systemProps = allArgs.getSystemProperties();
+        if (systemProps != null) {
+            for (Map.Entry<Object, Object> entry : systemProps.entrySet()) {
+                System.setProperty(entry.getKey().toString(), entry.getValue().toString());
+            }
         }
-
-        if (lastMatch != null) {
-            int i = allArgs.lastIndexOf(lastMatch) + lastMatch.length();
-            allArgs = allArgs.substring(i);
-        }
-        return allArgs;
     }
 
     public static String unquote(String s) {
@@ -218,10 +216,6 @@ public class GriffonScriptRunner {
             return s.substring(1, s.length() - 1);
         }
         return s;
-    }
-
-    private static boolean isEnvironmentArgs(String env) {
-        return ENV_ARGS.containsKey(env);
     }
 
     private BuildSettings settings;
@@ -255,17 +249,18 @@ public class GriffonScriptRunner {
     }
 
     public int executeCommand(String name, String args) {
-        ScriptAndArgs script = new ScriptAndArgs();
-        script.name = name;
-        script.args = args;
+        String cmd = name;
+        if (!isBlank(args)) cmd += " " + args;
+        String[] newArgs = cmd.split(" ");
+        ScriptAndArgs script = processAndReturnArguments(getCommandLine(newArgs));
         return doExecuteCommand(script);
     }
 
     public int executeCommand(String name, String args, String env) {
-        ScriptAndArgs script = new ScriptAndArgs();
-        script.name = name;
-        script.args = args;
-        script.env = env;
+        String cmd = env + " " + name;
+        if (!isBlank(args)) cmd += " " + args;
+        String[] newArgs = cmd.split(" ");
+        ScriptAndArgs script = processAndReturnArguments(getCommandLine(newArgs));
         return doExecuteCommand(script);
     }
 
@@ -278,8 +273,6 @@ public class GriffonScriptRunner {
     }
 
     public void setup() {
-        settings.getSystemProperties().putAll(SYSTEM_PROPERTIES);
-
         // Populate the root loader with all libraries that this app
         // depends on. If a root loader doesn't exist yet, create it now.
         if (settings.getRootLoader() == null) {
@@ -298,28 +291,9 @@ public class GriffonScriptRunner {
     private int doExecuteCommand(ScriptAndArgs script) {
         setup();
 
-        settings.debug("Executing script name: " + script.name + " env: " + script.env + " args: " + script.args);
+        settings.debug("Executing script name: " + script.name + " env: " + script.env + " options: " + script.options + " params: " + script.params);
 
-        if (script.args != null) {
-            // Check whether we are running in non-interactive mode
-            // by looking for a "non-interactive" argument.
-            String[] argArray = script.args.split("\\s+");
-            Pattern pattern = Pattern.compile("^(?:-)?-non-interactive$");
-            for (String arg : argArray) {
-                if (pattern.matcher(arg).matches()) {
-                    isInteractive = false;
-                    break;
-                }
-            }
-
-            System.setProperty(KEY_SCRIPT_ARGS, script.args.replace(' ', '\n'));
-        } else {
-            // If GriffonScriptRunner is executed more than once in a
-            // single JVM, we have to make sure that the CLI args are
-            // reset.
-            System.setProperty(KEY_SCRIPT_ARGS, "");
-        }
-
+        script.options.put("params", script.params);
         return callPluginOrGriffonScript(script);
     }
 
@@ -401,6 +375,7 @@ public class GriffonScriptRunner {
                 setRunningEnvironment(scriptFileName, script.env);
                 binding.setVariable(VAR_SCRIPT_NAME, scriptFileName);
                 binding.setVariable(VAR_SCRIPT_FILE, scriptFile);
+                binding.setVariable(VAR_SCRIPT_ARGS_MAP, script.options);
                 script.name = scriptFileName;
 
                 // Setup the script to call.
@@ -436,6 +411,7 @@ public class GriffonScriptRunner {
             setRunningEnvironment(scriptFileName, script.env);
             binding.setVariable(VAR_SCRIPT_NAME, scriptFileName);
             binding.setVariable(VAR_SCRIPT_FILE, scriptFile);
+            binding.setVariable(VAR_SCRIPT_ARGS_MAP, script.options);
             script.name = scriptFileName;
 
             // Set up the script to call.
@@ -457,6 +433,7 @@ public class GriffonScriptRunner {
         Gant gant = createGantInstance(binding);
         String scriptName = script.name;
         binding.setVariable(VAR_SCRIPT_NAME, scriptName);
+        binding.setVariable(VAR_SCRIPT_ARGS_MAP, script.options);
 
         try {
             loadScriptClass(gant, scriptName);
@@ -879,7 +856,8 @@ public class GriffonScriptRunner {
     private static class ScriptAndArgs {
         public String name;
         public String env;
-        public String args;
+        public List<String> params = new ArrayList<String>();
+        public Map<String, Object> options = new LinkedHashMap<String, Object>();
     }
 
     private GantCustomizer gantCustomizer;
@@ -914,7 +892,6 @@ public class GriffonScriptRunner {
             if (!prepared) {
                 // preload basic stuff that should always be there
                 setupScript("_GriffonSettings");
-                setupScript("_GriffonArgParsing");
                 setupScript("_GriffonEvents");
                 setupScript("_GriffonProxy");
                 setupScript("_GriffonResolveDependencies");
@@ -935,7 +912,6 @@ public class GriffonScriptRunner {
                 }
 
                 List<String> targets = new ArrayList<String>();
-                targets.add("parseArguments");
                 if (binarySearch(CONFIGURE_PROXY_EXCLUSIONS, scriptName) < 0) targets.add("configureProxy");
                 if (!isContextlessScriptName(scriptName)) {
                     if (binarySearch(CHECK_VERSION_EXCLUSIONS, scriptName) < 0) {
