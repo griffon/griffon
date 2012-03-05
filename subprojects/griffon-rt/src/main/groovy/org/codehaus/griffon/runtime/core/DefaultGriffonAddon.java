@@ -77,9 +77,9 @@ public class DefaultGriffonAddon extends AbstractGriffonAddon {
         }
     }
 
-    public Map<String, Map<String, String>> getMvcGroups() {
+    public Map<String, Map<String, Object>> getMvcGroups() {
         try {
-            return (Map<String, Map<String, String>>) InvokerHelper.getProperty(addonDelegate, "mvcGroups");
+            return (Map<String, Map<String, Object>>) InvokerHelper.getProperty(addonDelegate, "mvcGroups");
         } catch (MissingPropertyException mpe) {
             return Collections.emptyMap();
         }

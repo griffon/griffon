@@ -288,35 +288,51 @@ class AddonHelper {
         }
     }
 
-    static void addMVCGroups(GriffonApplication app, Map<String, Map<String, String>> groups) {
-        groups.each {String type, Map<String, String> members ->
-            if (LOG.debugEnabled) LOG.debug("Adding MVC group $type")
-            Map membersCopy = members.inject([:]) {m, e -> m[e.key as String] = e.value as String; m}
-            app.mvcGroupManager.addConfiguration(app.mvcGroupManager.newMVCGroupConfiguration(app, type, membersCopy))
+    static void addMVCGroups(GriffonApplication app, Map<String, Map<String, Object>> groups) {
+        Map<String, ConfigObject> mvcGroups = (Map<String, ConfigObject>) groups;
+        for (Map.Entry<String, ConfigObject> groupEntry: mvcGroups.entrySet()) {
+            String type = groupEntry.getKey();
+            if (LOG.isDebugEnabled()) {
+                LOG.debug("Adding MVC group " + type);
+            }
+            ConfigObject members = groupEntry.getValue();
+            Map<String, Object> configMap = new LinkedHashMap<String, Object>();
+            Map<String, String> membersCopy = new LinkedHashMap<String, String>();
+            for (Object o: members.entrySet()) {
+                Map.Entry entry = (Map.Entry) o;
+                String key = String.valueOf(entry.getKey());
+                if ("config".equals(key) && entry.getValue() instanceof Map) {
+                    configMap = (Map<String, Object>) entry.getValue();
+                } else {
+                    membersCopy.put(key, String.valueOf(entry.getValue()));
+                }
+            }
+            MVCGroupConfiguration configuration = app.getMvcGroupManager().newMVCGroupConfiguration(type, membersCopy, configMap);
+            app.getMvcGroupManager().addConfiguration(configuration);
         }
     }
 
     static void addFactories(UberBuilder builder, Map<String, Object> factories, String addonName, String prefix) {
-        factories.each {String name, factoryOrBean ->
-            CompositeBuilderHelper.addFactory(builder, addonName, prefix + name, factoryOrBean)
+        for (Map.Entry<String, Object> entry: factories.entrySet()) {
+            CompositeBuilderHelper.addFactory(builder, addonName, prefix + entry.getKey(), entry.getValue());
         }
     }
 
     static void addMethods(UberBuilder builder, Map<String, Closure> methods, String addonName, String prefix) {
-        methods.each {String name, Closure closure ->
-            CompositeBuilderHelper.addMethod(builder, addonName, prefix + name, closure)
+        for (Map.Entry<String, Closure> entry: methods.entrySet()) {
+            CompositeBuilderHelper.addMethod(builder, addonName, prefix + entry.getKey(), entry.getValue());
         }
     }
 
-    static void addProperties(UberBuilder builder, Map<String, List<Closure>> props, String addonName, String prefix) {
-        props.each {String name, Map<String, Closure> closures ->
-            CompositeBuilderHelper.addProperty(builder, addonName, prefix + name, closures.get, closures.set)
+    static void addProperties(UberBuilder builder, Map<String, Map<String, Closure>> props, String addonName, String prefix) {
+        for (Map.Entry<String, Map<String, Closure>> entry: props.entrySet()) {
+            CompositeBuilderHelper.addProperty(builder, addonName, prefix + entry.getKey(), entry.getValue().get("get"), entry.getValue().get("set"));
         }
     }
 
     static void addEvents(GriffonApplication app, Map<String, Closure> events) {
-        events.each {String name, Closure event ->
-            app.addApplicationEventListener(name, event)
+        for (Map.Entry<String, Closure> entry: events.entrySet()) {
+            app.addApplicationEventListener(entry.getKey(), entry.getValue());
         }
     }
 }

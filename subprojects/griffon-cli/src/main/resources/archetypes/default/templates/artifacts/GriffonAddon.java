@@ -8,8 +8,8 @@ public class @artifact.name@ extends AbstractGriffonAddon {
         super(ApplicationHolder.getApplication());
     }
 
-    public Map<String, Map<String, String>> getMvcGroups() {
-        Map<String, Map<String, String>> groups = new LinkedHashMap<String, Map<String, String>>();
+    public Map<String, Map<String, Object>> getMvcGroups() {
+        Map<String, Map<String, Object>> groups = new LinkedHashMap<String, Map<String, Object>>();
         return groups;
     }
 }

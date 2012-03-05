@@ -54,7 +54,7 @@ public interface GriffonAddon extends ApplicationHandler, ThreadingHandler, Reso
 
     Map<String, Closure> getEvents();
 
-    Map<String, Map<String, String>> getMvcGroups();
+    Map<String, Map<String, Object>> getMvcGroups();
 
     List<Closure> getAttributeDelegates();
 

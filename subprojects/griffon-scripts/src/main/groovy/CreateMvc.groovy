@@ -101,8 +101,8 @@ Type in griffon create-addon then execute this command again."""
         if (isJava) {
             if (!(addonText =~ /\s*public Map<String, Map<String, String>>\s*getMvcGroups\(\)\s*\{/)) {
                 addonText = addonText.replaceAll(/\}\s*\z/, """
-                public Map<String, Map<String, String>> getMvcGroups() {
-                    Map<String, Map<String, String>> groups = new LinkedHashMap<String, Map<String, String>>();
+                public Map<String, Map<String, Object>> getMvcGroups() {
+                    Map<String, Map<String, Object>> groups = new LinkedHashMap<String, Map<String, Object>>();
                     return groups;
                 }
             }
@@ -116,7 +116,7 @@ Type in griffon create-addon then execute this command again."""
 
             addonFile.withWriter {
                 it.write addonText.replaceAll(/\s*Map<String, Map<String, String>> groups = new LinkedHashMap<String, Map<String, String>>\(\);/, """
-                    Map<String, Map<String, String>> groups = new LinkedHashMap<String, Map<String, String>>();
+                    Map<String, Map<String, Object>> groups = new LinkedHashMap<String, Map<String, Object>>();
                     // MVC Group for "$name"
                     groups.put("$name", groupDef(new String[][]{
             ${parts.join(',\n')}

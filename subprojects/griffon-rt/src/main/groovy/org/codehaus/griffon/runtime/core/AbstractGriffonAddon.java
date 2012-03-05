@@ -52,7 +52,7 @@ public abstract class AbstractGriffonAddon extends GroovyObjectSupport implement
     protected final Map<String, Closure> methods = new LinkedHashMap<String, Closure>();
     protected final Map<String, Map<String, Closure>> props = new LinkedHashMap<String, Map<String, Closure>>();
     protected final Map<String, Closure> events = new LinkedHashMap<String, Closure>();
-    protected final Map<String, Map<String, String>> mvcGroups = new LinkedHashMap<String, Map<String, String>>();
+    protected final Map<String, Map<String, Object>> mvcGroups = new LinkedHashMap<String, Map<String, Object>>();
     protected final List<Closure> attributeDelegates = new ArrayList<Closure>();
     protected final List<Closure> preInstantiateDelegates = new ArrayList<Closure>();
     protected final List<Closure> postInstantiateDelegates = new ArrayList<Closure>();
@@ -122,7 +122,7 @@ public abstract class AbstractGriffonAddon extends GroovyObjectSupport implement
         return events;
     }
 
-    public Map<String, Map<String, String>> getMvcGroups() {
+    public Map<String, Map<String, Object>> getMvcGroups() {
         return mvcGroups;
     }
 
