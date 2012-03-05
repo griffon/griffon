@@ -89,29 +89,28 @@ target(name: 'packageResources', description: "Presp app/plugin resources for pa
     resourcesDir = new File("${resourcesDirPath}/griffon-app/resources")
     ant.mkdir(dir: resourcesDir)
 
-    if (!isPluginProject || isAddonPlugin) {
+    if ((!isPluginProject && !isArchetypeProject) || isAddonPlugin) {
         collectArtifactMetadata()
-        collectAddonMetadata()
+        if (!isAddonPlugin) collectAddonMetadata()
     }
 
     if (buildConfig.griffon.enable.native2ascii) {
         profile("converting native message bundles to ascii") {
             ant.native2ascii(src: "${basedir}/griffon-app/i18n",
                     dest: i18nDir,
-                    includes: "*.properties",
+                    includes: "**/*.properties",
                     encoding: "UTF-8")
             ant.native2ascii(src: "${basedir}/griffon-app/resources",
                     dest: resourcesDir,
-                    includes: "*.properties",
+                    includes: "**/*.properties",
                     encoding: "UTF-8")
         }
-    }
-    else {
+    } else {
         ant.copy(todir: i18nDir) {
-            fileset(dir: "${basedir}/griffon-app/i18n", includes: "*.properties")
+            fileset(dir: "${basedir}/griffon-app/i18n", includes: "**/*.properties")
         }
         ant.copy(todir: resourcesDir) {
-            fileset(dir: "${basedir}/griffon-app/resources", includes: "*.properties")
+            fileset(dir: "${basedir}/griffon-app/resources", includes: "**/*.properties")
         }
     }
     ant.copy(todir: i18nDir) {
