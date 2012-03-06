@@ -167,6 +167,23 @@ runtimeClasspath = {
     }
 }
 
+buildClasspath = {
+    debug "=== Build Classpath ==="
+
+    def dependencies = griffonSettings.buildDependencies
+    if (dependencies) {
+        for (File f in dependencies) {
+            if (f) {
+                debug "  ${f.absolutePath}"
+                pathelement(location: f.absolutePath)
+            }
+        }
+    }
+
+    commonClasspath.delegate = delegate
+    commonClasspath.call()
+}
+
 /**
  * Converts an Ant path into a list of URLs.
  */
@@ -184,6 +201,7 @@ void setClasspath() {
     ant.path(id: 'griffon.compile.classpath', compileClasspath)
     ant.path(id: 'griffon.test.classpath', testClasspath)
     ant.path(id: 'griffon.runtime.classpath', runtimeClasspath)
+    ant.path(id: 'griffon.build.classpath', buildClasspath)
 
     classpathSet = true
 }
