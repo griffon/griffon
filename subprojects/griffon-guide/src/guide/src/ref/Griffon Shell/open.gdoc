@@ -1,0 +1,27 @@
+h1. open
+
+h2. Purpose
+
+Opens a file using the platform's default editor or viewer.
+
+h2. Examples
+
+{code}
+griffon> open griffon-app/conf/Config.groovy
+griffon> open test-report
+{code}
+
+h2. Description
+
+There are two special filenames that can be used with this command
+ * @test-report* - opens the default test reports in HTML format if they exist.
+ * @dependency-report* - opens the Ivy dependency report in HTML format if it exists.
+
+Usage: 
+{code}
+open \[options\] \[filename\]
+{code}
+
+Arguments:
+* @filename@ -  The file to open
+
