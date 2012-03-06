@@ -30,7 +30,7 @@ target(name: 'help', description: 'Displays this help or help about a command',
         prehook: null, posthook: null) {
     depends(resolveDependencies)
 
-    String command = argsMap.command ?: args
+    String command = argsMap.command ?: argsMap.params[0]
     if (command) {
         int maxwidth = 72i
         String prefix = '        '
