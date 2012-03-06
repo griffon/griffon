@@ -120,8 +120,8 @@ target(name: 'post_package_plugin', description: '',
             }
         }
 
-        if (pluginDescriptor.metaClass.hasProperty(pluginDescriptor, 'pluginIncludes')) {
-            def additionalIncludes = pluginDescriptor.pluginIncludes
+        if (descriptorInstance.metaClass.hasProperty(descriptorInstance, 'pluginIncludes')) {
+            def additionalIncludes = descriptorInstance.pluginIncludes
             if (additionalIncludes) {
                 zipfileset(dir: basedir) {
                     additionalIncludes.each { f ->

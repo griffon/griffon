@@ -37,7 +37,7 @@ includeTargets << griffonScript('_GriffonArtifacts')
 packageForRelease = false
 
 loadArtifactInfo = { String type, Resource artifactDescriptor ->
-    def descriptorInstance = loadArtifactDescriptorClass(artifactDescriptor.file.name)
+    descriptorInstance = loadArtifactDescriptorClass(artifactDescriptor.file.name)
 
     String name = artifactDescriptor.file.name - "Griffon${GriffonNameUtils.capitalize(type)}.groovy"
     name = GriffonNameUtils.getShortName(name)
