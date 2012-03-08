@@ -17,8 +17,43 @@ There's a local repository available to you at all times. It's name is '@griffon
 
 h4. Remote Artifact Repositories
 
-TBD
+This type of repository allows developers to publish releases via SCP or web. The repository is handled by a "Grails":http://grails.org application whose code is freely available at "https://github.com/griffon/griffon-artifact-portal":https://github.com/griffon/griffon-artifact-portal .
+
+This code has been released under Apache Software License 2.0. Follow the instructions found in the README to run your own artifact portal. Configuring a remote repository requires a different set of properties than those exposed by local repositories. For example, if your organization is running a remote artifact repository located at @http://acme.com:8080/portal@ then use the following configuration
+
+{code}
+griffon.artifact.repositories = [
+    'acme': [
+        type: 'remote',
+        url: 'http://acme.com:8080/portal'
+    ]
+]
+{code}
+
+You may specify additional properties such as 
+
+{code}
+griffon.artifact.repositories = [
+    'acme': [
+        type: 'remote',
+        url: 'http://acme.com:8080/portal',
+        username: 'wallace',
+        password: 'gromit',
+        port: 2345,
+        timeout: 60
+    ]
+]
+{code}
+
+Where the following defaults apply
+
+ * port = 2222
+ * timeout = 30 (in seconds)
+
+You may leave both @username@ and @password@ out however you will be asked for this credentials when publishing a release to this particular repository. Adding your credentials in the configuration avoids typing them when releasing artifacts.
 
 h4. Legacy Artifact Repository
 
-This is a very special type of repository that exists only for backward compatibility during the migration of the old Griffon plugin repository to the new infrastructure in "http://artifacts.griffon-framework.org":http://artifacts.griffon-framework.org There are no configuration options for this repository, neither you can publish a release to it; it's effectively read-only.
+This is a very special type of repository that exists only for backward compatibility during the migration of the old Griffon plugin repository to the new infrastructure in "http://artifacts.griffon-framework.org":http://artifacts.griffon-framework.org .
+
+There are no configuration options for this repository, neither you can publish a release to it; it's effectively read-only.

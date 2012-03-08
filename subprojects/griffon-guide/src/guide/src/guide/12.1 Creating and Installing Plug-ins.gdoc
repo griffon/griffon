@@ -36,7 +36,7 @@ You can also provide additional information about your plugin using several spec
 * @documentation@ - URL where plugin's documentation can be found
 * @source@ - URL where plugin's source can be found
 
-Here is an example from "Swing Griffon plugin":http://artifacts.griffon-framework.org/plugins/swing:
+Here is an example from "Swing plugin":http://artifacts.griffon-framework.org/plugin/swing :
 
 {code:java}
 class SwingGriffonPlugin {
@@ -63,20 +63,6 @@ Enables the usage of Swing based components in Views.
 Usage
 ----
 This plugin enables the usage of the following nodes inside a View.
-
-### Swing Nodes
-
-All nodes from [SwingBuilder][1]. All nodes follow a naming convention that makes it easy to
-determine the type of object the create. Take for example *JButton*. Remove the first character
-from the name (J) then uncapitalize the next one. You end up with *button*. That's the name
-of the node you must use if what you want is to create an instance of a *JButton*. Apply the
-same rule for every Swing class that begins with a capital J. For all other classes you only
-need to uncapitalize the first character, for example *GridLayout* becomes *gridLayout*.
-
-### Groovy Nodes
-
-The following nodes are provided by [SwingBuilder][1] too, however they have no direct relationship
-with a particualr Swing/AWT class.
 
 ...
 
@@ -111,7 +97,28 @@ If the plugin is hosted on a remote HTTP server you can also do:
 griffon install-plugin http://myserver.com/plugins/griffon-example-0.1.zip
 {code}
 
-h4. Distributing Plugins in Griffon Plugins Repository
+h4. Releasing Plugins into a Griffon Artifact Repository
 
-TBD
+To release a plugin call the @release-plugin@ command while inside the plugin project. If no @repository@ flag is specified then the default artifact repository (@griffon-central@) will be used. For quick testing purposes you can publish a release to @griffon-local@ (which is always available) by issuing the following command
 
+{code}
+griffon install-plugin --repository=griffon-local
+{code}
+
+The aforementioned steps can be applied to archetypes too, you just need to change the command names from @package-plugin@ to @package-archetype@; from @install-plugin@ to @install-archetype@; from @release-plugin@ to @release-archetype@. 
+
+Should you decide to become a plugin/archetype author and wish to publish your artifacts to the Griffon Central repository then you must follow these steps:
+
+ * Create an account at "http://artifacts.griffon-framework.org":http://artifacts.griffon-framework.org
+ * After confirming your email, log into your profile and click the button for membership request.
+ * Ping us at the developer mailing list or at "@theaviary":http://twitter.com/#!/theaviary
+ * Once approved configure your credentials in @$USER_HOME/.griffon/settings.groovy@ like this
+
+{code}
+griffon.artifact.repositories = [
+    'griffon-central': [
+        username: 'yourUsername',
+        password: 'yourPassword'
+    ]
+]
+{code}

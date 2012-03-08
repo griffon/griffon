@@ -25,13 +25,13 @@ Addons are created using a template that suggests all of the properties and meth
 
 h4. Configuring Addons
 
-This task is done automatically for you when you package an addon inside a plugin. The plugin's @_Install@ and @_Uninstall@ scripts will make sure that @griffon-app/conf/Builder.groovy@ stays up to date. When you install a plugin that contains an addon you'll notice that @Builder.groovy@ gets updated with a similar line
+This task is done automatically for you when you package an addon inside a plugin. The plugin's @_Install@ and @_Uninstall@ scripts will make sure that @griffon-app/conf/Builder.groovy@ stays up to date. When you install a plugin that contains an addon you'll notice that @Builder.groovy@ may get updated with a line similar to the next one
 
 {code}
 root.'CustomGriffonAddon'.addon=true
 {code}
 
-This means that all factories, methods and props defined on the Addon will be available to View scripts. However you need to explicitly specify which contributions should be made to other MVC members. You can list them one by one, or use a special group qualified by '\*'
+This means that all factories, methods and props defined on the Addon will be available to View scripts. However you need to explicitly specify which contributions should be made to other MVC members. You can list them one by one, or use a special group qualified by '\*'. In recent releases of Griffon the default configuration is assumed meaning you won't see any changes in the @Builder.groovy@ file. You can still apply modifications as explained below.
 
 The following snippet shows how to configure an Addon to contribute all of its methods to Controllers, and all of its contributions to Models.
 
