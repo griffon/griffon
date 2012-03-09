@@ -44,7 +44,7 @@ class RemoteArtifactRepository extends AbstractArtifactRepository {
     String username
     String password
     int port
-    int timeout = 30i
+    int timeout = 30000i
     final String type = REMOTE
 
     final boolean local = false

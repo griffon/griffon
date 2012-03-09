@@ -39,7 +39,7 @@ artifactRepository = null
 
 selectArtifactRepository = {
     artifactRepository = null
-    repositoryName = argsMap.repository ?: getPropertyValue(KEY_DEFAULT_ARTIFACT_REPOSITORY, 'griffon-legacy') //ArtifactRepository.DEFAULT_REMOTE_NAME)
+    repositoryName = argsMap.repository ?: getPropertyValue(KEY_DEFAULT_ARTIFACT_REPOSITORY, 'griffon-central') //ArtifactRepository.DEFAULT_REMOTE_NAME)
     artifactRepository = ArtifactRepositoryRegistry.instance.findRepository(repositoryName)
     if (artifactRepository == null) {
         event('StatusError', ["Artifact repository ${repositoryName} is not configured."])
@@ -66,7 +66,7 @@ resolveArtifactRepository = {
 
 doWithSelectedRepository = { callback ->
     String defaultInstallRepository = getPropertyValue(KEY_DEFAULT_INSTALL_ARTIFACT_REPOSITORY, ArtifactRepository.DEFAULT_LOCAL_NAME)
-    String defaultSearchRepository = getPropertyValue(KEY_DEFAULT_ARTIFACT_REPOSITORY, 'griffon-legacy') // ArtifactRepository.DEFAULT_REMOTE_NAME)
+    String defaultSearchRepository = getPropertyValue(KEY_DEFAULT_ARTIFACT_REPOSITORY, 'griffon-central') // ArtifactRepository.DEFAULT_REMOTE_NAME)
     String customRepository = argsMap.repository
 
     List<String> repositories = []
