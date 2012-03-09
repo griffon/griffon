@@ -77,6 +77,7 @@ final class ArtifactRepositoryRegistry {
                 if (repoConfig.username) griffonCentral.username = repoConfig.username
                 if (repoConfig.password) griffonCentral.password = repoConfig.password
                 if (repoConfig.port) griffonCentral.port = repoConfig.port
+                if (repoConfig.timeout) griffonCentral.timeout = repoConfig.timeout
                 return
             }
 
