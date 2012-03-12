@@ -75,8 +75,8 @@ commonClasspath = {
         }
         resolveResources("file:${artifactBase(Plugin.TYPE)}/*/lib/${platformId}/native").each { dir ->
             if (dir.exists()) {
-                debug "  ${dir.absolutePath}"
-                fileset(dir: dir.absolutePath)
+                debug "  ${dir.file.absolutePath}"
+                fileset(dir: dir.file.absolutePath)
             }
         }
     }
