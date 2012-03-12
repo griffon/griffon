@@ -678,7 +678,7 @@ class ArtifactInstallEngine {
                 LOG.debug("Plugin ${artifactNameAndVersion} requires platforms: ${requiredPlatforms}")
             }
             if (requiredPlatforms) {
-                if (!(PlatformUtils.isCompatible(requiredPlatforms*.lowercaseName))) {
+                if (!(PlatformUtils.isCompatible(requiredPlatforms))) {
                     eventHandler 'StatusError', "Required platforms are [${requiredPlatforms}], current one is ${PlatformUtils.platform}"
                     throw new InstallArtifactException("Installation of ${type} ${artifactNameAndVersion} aborted.")
                 }
