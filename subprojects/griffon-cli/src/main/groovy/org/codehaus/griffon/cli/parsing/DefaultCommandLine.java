@@ -61,6 +61,7 @@ public class DefaultCommandLine implements CommandLine {
     }
 
     public String getEnvironment() {
+        /*
         boolean useDefaultEnv = environment == null;
         String env;
         if (useDefaultEnv && commandName != null) {
@@ -74,6 +75,8 @@ public class DefaultCommandLine implements CommandLine {
         System.setProperty(Environment.DEFAULT, String.valueOf(useDefaultEnv));
 
         return env;
+        */
+        return environment;
     }
 
     public String lookupEnvironmentForCommand() {
