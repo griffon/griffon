@@ -29,6 +29,15 @@ ant.taskdef(name: 'griffonc', classname: 'org.codehaus.griffon.compiler.GriffonC
 
 additionalSources = []
 
+compilerOptions = { Map options ->
+    if (griffonSettings.sourceEncoding != null) options.encoding = griffonSettings.sourceEncoding
+    if (griffonSettings.compilerDebug != null) options.debug = griffonSettings.compilerDebug
+    if (griffonSettings.compilerSourceLevel != null) options.source = griffonSettings.compilerSourceLevel
+    if (griffonSettings.compilerTargetLevel != null) options.target = griffonSettings.compilerTargetLevel
+    debug "Javac options $options"
+    options
+}
+
 compilerPaths = { String classpathId ->
     def excludedPaths = ["resources", "i18n", "conf"] // conf gets special handling
 
@@ -45,11 +54,7 @@ compilerPaths = { String classpathId ->
         if (new File(srcPath).exists()) src(path: srcPath)
     }
 
-    javac(classpathref: classpathId,
-            encoding: griffonSettings.sourceEncoding,
-            debug: 'yes',
-            source: griffonSettings.compilerSourceLevel,
-            target: griffonSettings.compilerTargetLevel)
+    javac(compilerOptions(classpathref: classpathId))
 }
 
 compileSources = { destinationDir, classpathId, sources ->
@@ -116,11 +121,7 @@ target(name: 'compile', description: "Implementation of compilation phase",
             src(path: "${basedir}/griffon-app/conf")
             include(name: '*.groovy')
             include(name: '*.java')
-            javac(classpathref: classpathId,
-                    encoding: griffonSettings.sourceEncoding,
-                    debug: 'yes',
-                    source: griffonSettings.compilerSourceLevel,
-                    target: griffonSettings.compilerTargetLevel)
+            javac(compilerOptions(classpathref: classpathId))
         }
         ant.copy(todir: projectMainClassesDir) {
             fileset(dir: "${basedir}/griffon-app/conf") {
@@ -139,11 +140,7 @@ target(name: 'compile', description: "Implementation of compilation phase",
                 }
                 compileSources(projectCliClassesDir, 'plugin.cli.compile.classpath') {
                     src(path: cliSourceDir)
-                    javac(classpathref: 'plugin.cli.compile.classpath',
-                            encoding: griffonSettings.sourceEncoding,
-                            debug: 'yes',
-                            source: griffonSettings.compilerSourceLevel,
-                            target: griffonSettings.compilerTargetLevel)
+                    javac(compilerOptions(classpathref: 'plugin.cli.compile.classpath'))
                 }
                 ant.copy(todir: projectCliClassesDir) {
                     fileset(dir: "${basedir}/src/cli") {
@@ -164,11 +161,7 @@ target(name: 'compile', description: "Implementation of compilation phase",
                 src(path: basedir)
                 include(name: '*GriffonAddon.groovy')
                 include(name: '*GriffonAddon.java')
-                javac(classpathref: 'addon.classpath',
-                        encoding: griffonSettings.sourceEncoding,
-                        debug: 'yes',
-                        source: griffonSettings.compilerSourceLevel,
-                        target: griffonSettings.compilerTargetLevel)
+                javac(compilerOptions(classpathref: 'addon.classpath'))
             }
         }
     }
@@ -203,11 +196,7 @@ compileProjectTestSrc = { rootDir ->
             }
             compileSources(projectTestClassesDir, 'projectTest.classpath') {
                 src(path: projectTest)
-                javac(classpathref: 'projectTest.classpath',
-                        encoding: griffonSettings.sourceEncoding,
-                        debug: 'yes',
-                        source: griffonSettings.compilerSourceLevel,
-                        target: griffonSettings.compilerTargetLevel)
+                javac(compilerOptions(classpathref: 'projectTest.classpath'))
             }
         }
     }

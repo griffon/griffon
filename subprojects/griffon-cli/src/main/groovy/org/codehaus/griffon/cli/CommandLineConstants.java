@@ -120,6 +120,12 @@ public interface CommandLineConstants {
      */
     String KEY_SOURCE_ENCODING = "griffon.source.encoding";
 
+    /**
+     * Add debug information to compiled classes.
+     * Defaults to <tt>'yes'</tt>
+     */
+    String KEY_COMPILER_DEBUG = "griffon.project.compiler.debug";
+
     String[] KEYS = {
             KEY_INTERACTIVE_MODE,
             KEY_NON_INTERACTIVE_DEFAULT_ANSWER,
@@ -136,6 +142,7 @@ public interface CommandLineConstants {
             KEY_OFFLINE_MODE,
             KEY_COMPILER_SOURCE_LEVEL,
             KEY_COMPILER_TARGET_LEVEL,
-            KEY_SOURCE_ENCODING
+            KEY_SOURCE_ENCODING,
+            KEY_COMPILER_DEBUG
     };
 }

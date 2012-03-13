@@ -154,12 +154,14 @@ class BuildSettings extends AbstractBuildSettings {
     /**
      * The compiler source level to use
      */
-    String compilerSourceLevel = '1.6'
+    String compilerSourceLevel = null
 
     /**
      * The compiler target level to use
      */
-    String compilerTargetLevel = '1.6'
+    String compilerTargetLevel = null
+    
+    String compilerDebug = 'yes'
 
     /** <code>true</code> if the default environment for a script should be used.  */
     boolean defaultEnv
@@ -925,8 +927,9 @@ class BuildSettings extends AbstractBuildSettings {
         // null, a default value. This ensures that we don't override
         // settings provided by, for example, the Maven plugin.
         def props = config.toProperties()
-        compilerSourceLevel = getPropertyValue(KEY_COMPILER_SOURCE_LEVEL, props, '1.6')
-        compilerTargetLevel = getPropertyValue(KEY_COMPILER_TARGET_LEVEL, props, '1.6')
+        compilerSourceLevel = getPropertyValue(KEY_COMPILER_SOURCE_LEVEL, props, null)
+        compilerTargetLevel = getPropertyValue(KEY_COMPILER_TARGET_LEVEL, props, null)
+        compilerDebug = getPropertyValue(KEY_COMPILER_DEBUG, props, 'yes')
 
         // read metadata file
         Metadata.current
