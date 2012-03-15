@@ -47,7 +47,6 @@ import static griffon.util.MethodUtils.invokeMethod;
 public final class GriffonClassUtils {
     public static final Class[] EMPTY_CLASS_ARRAY = new Class[0];
     public static final Object[] EMPTY_OBJECT_ARRAY = new Object[0];
-    public static final Class[] EMPTY_TYPES = EMPTY_CLASS_ARRAY;
     public static final Object[] EMPTY_ARGS = EMPTY_OBJECT_ARRAY;
 
     private static final String PROPERTY_GET_PREFIX = "get";
@@ -147,12 +146,20 @@ public final class GriffonClassUtils {
         MVC_METHODS.add(new MethodDescriptor("setBuilder", new Class[]{FactoryBuilderSupport.class}));
 
         THREADING_METHODS.add(new MethodDescriptor("isUIThread"));
+        // TODO @deprecated - remove before 1.0
         THREADING_METHODS.add(new MethodDescriptor("execAsync", new Class[]{Runnable.class}));
         THREADING_METHODS.add(new MethodDescriptor("execAsync", new Class[]{Script.class}));
         THREADING_METHODS.add(new MethodDescriptor("execSync", new Class[]{Runnable.class}));
         THREADING_METHODS.add(new MethodDescriptor("execSync", new Class[]{Script.class}));
         THREADING_METHODS.add(new MethodDescriptor("execOutside", new Class[]{Runnable.class}));
         THREADING_METHODS.add(new MethodDescriptor("execOutside", new Class[]{Script.class}));
+        // TODO @deprecated - remove before 1.0
+        THREADING_METHODS.add(new MethodDescriptor("execInsideUIAsync", new Class[]{Runnable.class}));
+        THREADING_METHODS.add(new MethodDescriptor("execInsideUIAsync", new Class[]{Script.class}));
+        THREADING_METHODS.add(new MethodDescriptor("execInsideUISync", new Class[]{Runnable.class}));
+        THREADING_METHODS.add(new MethodDescriptor("execInsideUISync", new Class[]{Script.class}));
+        THREADING_METHODS.add(new MethodDescriptor("execOutsideUI", new Class[]{Runnable.class}));
+        THREADING_METHODS.add(new MethodDescriptor("execOutsideUI", new Class[]{Script.class}));
         THREADING_METHODS.add(new MethodDescriptor("execFuture", new Class[]{Closure.class}));
         THREADING_METHODS.add(new MethodDescriptor("execFuture", new Class[]{Callable.class}));
         THREADING_METHODS.add(new MethodDescriptor("execFuture", new Class[]{ExecutorService.class, Closure.class}));
@@ -176,8 +183,12 @@ public final class GriffonClassUtils {
         EVENT_PUBLISHER_METHODS.add(new MethodDescriptor("publishEvent", new Class[]{String.class, List.class}));
         EVENT_PUBLISHER_METHODS.add(new MethodDescriptor("publishEventAsync", new Class[]{String.class}));
         EVENT_PUBLISHER_METHODS.add(new MethodDescriptor("publishEventAsync", new Class[]{String.class, List.class}));
+        // TODO @deprecated - remove before 1.0
         EVENT_PUBLISHER_METHODS.add(new MethodDescriptor("publishEventOutside", new Class[]{String.class}));
         EVENT_PUBLISHER_METHODS.add(new MethodDescriptor("publishEventOutside", new Class[]{String.class, List.class}));
+        // TODO @deprecated - remove before 1.0
+        EVENT_PUBLISHER_METHODS.add(new MethodDescriptor("publishEventOutsideUI", new Class[]{String.class}));
+        EVENT_PUBLISHER_METHODS.add(new MethodDescriptor("publishEventOutsideUI", new Class[]{String.class, List.class}));
 
         OBSERVABLE_METHODS.add(new MethodDescriptor("addPropertyChangeListener", new Class[]{PropertyChangeListener.class}));
         OBSERVABLE_METHODS.add(new MethodDescriptor("addPropertyChangeListener", new Class[]{String.class, PropertyChangeListener.class}));
@@ -512,9 +523,9 @@ public final class GriffonClassUtils {
      * <p/>
      * <pre>
      * // assuming getMethod() returns an appropriate Method reference
-     * isThreadingMethod(getMethod("execOutside"))    = true
-     * isThreadingMethod(getMethod("doLater"))        = true
-     * isThreadingMethod(getMethod("foo"))            = false
+     * isThreadingMethod(getMethod("execOutsideUI"))    = true
+     * isThreadingMethod(getMethod("doLater"))          = true
+     * isThreadingMethod(getMethod("foo"))              = false
      * </pre>
      *
      * @param method a Method reference
@@ -530,9 +541,9 @@ public final class GriffonClassUtils {
      * <p/>
      * <pre>
      * // assuming getMethod() returns an appropriate MetaMethod reference
-     * isThreadingMethod(getMethod("execOutside"))    = true
-     * isThreadingMethod(getMethod("doLater"))        = true
-     * isThreadingMethod(getMethod("foo"))            = false
+     * isThreadingMethod(getMethod("execOutsideUI"))    = true
+     * isThreadingMethod(getMethod("doLater"))          = true
+     * isThreadingMethod(getMethod("foo"))              = false
      * </pre>
      *
      * @param method a Method reference
@@ -548,9 +559,9 @@ public final class GriffonClassUtils {
      * <p/>
      * <pre>
      * // assuming getMethod() returns an appropriate MethodDescriptor reference
-     * isThreadingMethod(getMethod("execOutside"))    = true
-     * isThreadingMethod(getMethod("doLater"))        = true
-     * isThreadingMethod(getMethod("foo"))            = false
+     * isThreadingMethod(getMethod("execOutsideUI"))    = true
+     * isThreadingMethod(getMethod("doLater"))          = true
+     * isThreadingMethod(getMethod("foo"))              = false
      * </pre>
      *
      * @param method a Method reference
