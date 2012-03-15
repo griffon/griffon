@@ -232,6 +232,7 @@ doListArtifactUpdates = { String type ->
 
     boolean headerDisplayed = false
     if (installedArtifacts) {
+        installedArtifacts = installedArtifacts.sort()
         installedArtifacts.each {name, version ->
             if (version instanceof Release) version = version.version
             String availableVersion = availableArtifacts.get(name)?.version
@@ -260,12 +261,12 @@ ${('<' + capitalize(type) + '>').padRight(20, ' ')}${'<Current>'.padRight(20, ' 
             if (confirmInput("Proceed with ${type} upgrades?", "artifact.upgrade")) {
                 System.setProperty(ArtifactDependencyResolver.KEY_FORCE_UPGRADE, 'true')
                 if (type == Plugin.TYPE) {
-                    Map<String, String> plugins = [:]
+                    uninstalledPlugins.clear()
                     outdatedArtifacts.each { name, data ->
-                        plugins[name] = data.newVersion
+                        uninstalledPlugins[name] = data.newVersion
                         doUninstallArtifact Plugin.TYPE, name, data.oldVersion, false
                     }
-                    installPlugins(Metadata.current, plugins)
+                    installPlugins(Metadata.current, uninstalledPlugins)
                 } else {
                     outdatedArtifacts.each { name, data ->
                         doInstallArtifact(data.repository, type, name, data.version, Metadata.current)

@@ -13,13 +13,6 @@ log4j = {
            'griffon.app'
 }
 
-import griffon.swing.SwingUtils
 
-swing {
-    windowManager {
-        defaultShow = { w, app ->
-            SwingUtils.centerOnScreen(w)
-            w.visible = true
-        }
-    }
-}
+i18n.provider = 'i18n' 
+i18n.basenames = ['messages'] 
