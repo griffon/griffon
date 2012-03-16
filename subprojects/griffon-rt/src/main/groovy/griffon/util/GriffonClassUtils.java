@@ -63,6 +63,7 @@ public final class GriffonClassUtils {
     private static final Set<MethodDescriptor> THREADING_METHODS = new TreeSet<MethodDescriptor>();
     private static final Set<MethodDescriptor> EVENT_PUBLISHER_METHODS = new TreeSet<MethodDescriptor>();
     private static final Set<MethodDescriptor> OBSERVABLE_METHODS = new TreeSet<MethodDescriptor>();
+    private static final Set<MethodDescriptor> RESOURCES_METHODS = new TreeSet<MethodDescriptor>();
 
     /**
      * Just add two entries to the class compatibility map
@@ -142,6 +143,8 @@ public final class GriffonClassUtils {
         MVC_METHODS.add(new MethodDescriptor("getApp"));
         MVC_METHODS.add(new MethodDescriptor("getLog"));
         MVC_METHODS.add(new MethodDescriptor("getArtifactManager"));
+        MVC_METHODS.add(new MethodDescriptor("getAddonManager"));
+        MVC_METHODS.add(new MethodDescriptor("getMVCGroupManager"));
         MVC_METHODS.add(new MethodDescriptor("getGriffonClass"));
         MVC_METHODS.add(new MethodDescriptor("setBuilder", new Class[]{FactoryBuilderSupport.class}));
 
@@ -196,6 +199,10 @@ public final class GriffonClassUtils {
         OBSERVABLE_METHODS.add(new MethodDescriptor("removePropertyChangeListener", new Class[]{String.class, PropertyChangeListener.class}));
         OBSERVABLE_METHODS.add(new MethodDescriptor("getPropertyChangeListeners", new Class[0]));
         OBSERVABLE_METHODS.add(new MethodDescriptor("getPropertyChangeListeners", new Class[]{String.class}));
+
+        RESOURCES_METHODS.add(new MethodDescriptor("getResourceAsURL", new Class[]{String.class}));
+        RESOURCES_METHODS.add(new MethodDescriptor("getResourceAsStream", new Class[]{String.class}));
+        RESOURCES_METHODS.add(new MethodDescriptor("getResources", new Class[]{String.class}));
     }
 
     /**
@@ -204,9 +211,9 @@ public final class GriffonClassUtils {
      * "^on[A-Z][\\w]*$"<p>
      * <p/>
      * <pre>
-     * GriffonClassUtils.isEventHandler("onBootstrapEnd") = true
-     * GriffonClassUtils.isEventHandler("mvcGroupInit")   = false
-     * GriffonClassUtils.isEventHandler("online")         = false
+     * isEventHandler("onBootstrapEnd") = true
+     * isEventHandler("mvcGroupInit")   = false
+     * isEventHandler("online")         = false
      * </pre>
      *
      * @param name the name of a possible event handler
@@ -223,9 +230,10 @@ public final class GriffonClassUtils {
      * by matching its name against the following pattern:
      * "^on[A-Z][\\w]*$"<p>
      * <pre>
-     * GriffonClassUtils.isEventHandler("onBootstrapEnd") = true
-     * GriffonClassUtils.isEventHandler("mvcGroupInit")   = false
-     * GriffonClassUtils.isEventHandler("online")         = false
+     * // assuming getMethod() returns an appropriate Method reference
+     * isEventHandler(getMethod("onBootstrapEnd")) = true
+     * isEventHandler(getMethod("mvcGroupInit"))   = false
+     * isEventHandler(getMethod("online"))         = false
      * </pre>
      *
      * @param method a Method reference
@@ -241,9 +249,10 @@ public final class GriffonClassUtils {
      * by matching its name against the following pattern:
      * "^on[A-Z][\\w]*$"<p>
      * <pre>
-     * GriffonClassUtils.isEventHandler("onBootstrapEnd") = true
-     * GriffonClassUtils.isEventHandler("mvcGroupInit")   = false
-     * GriffonClassUtils.isEventHandler("online")         = false
+     * // assuming getMethod() returns an appropriate MetaMethod reference
+     * isEventHandler(getMethod("onBootstrapEnd")) = true
+     * isEventHandler(getMethod("mvcGroupInit"))   = false
+     * isEventHandler(getMethod("online"))         = false
      * </pre>
      *
      * @param method a MetaMethod reference
@@ -259,9 +268,10 @@ public final class GriffonClassUtils {
      * by matching its name against the following pattern:
      * "^on[A-Z][\\w]*$"<p>
      * <pre>
-     * GriffonClassUtils.isEventHandler("onBootstrapEnd") = true
-     * GriffonClassUtils.isEventHandler("mvcGroupInit")   = false
-     * GriffonClassUtils.isEventHandler("online")         = false
+     * // assuming getMethod() returns an appropriate MethodDescriptor reference
+     * isEventHandler(getMethod("onBootstrapEnd")) = true
+     * isEventHandler(getMethod("mvcGroupInit"))   = false
+     * isEventHandler(getMethod("online"))         = false
      * </pre>
      *
      * @param method a MethodDescriptor reference
@@ -491,7 +501,7 @@ public final class GriffonClassUtils {
      * isMvcMethod(getMethod("foo"))             = false
      * </pre>
      *
-     * @param method a Method reference
+     * @param method a MetaMethod reference
      * @return true if the method is an MVC method, false otherwise.
      */
     public static boolean isMvcMethod(MetaMethod method) {
@@ -509,7 +519,7 @@ public final class GriffonClassUtils {
      * isMvcMethod(getMethod("foo"))             = false
      * </pre>
      *
-     * @param method a Method reference
+     * @param method a MethodDescriptor reference
      * @return true if the method is an MVC method, false otherwise.
      */
     public static boolean isMvcMethod(MethodDescriptor method) {
@@ -546,7 +556,7 @@ public final class GriffonClassUtils {
      * isThreadingMethod(getMethod("foo"))              = false
      * </pre>
      *
-     * @param method a Method reference
+     * @param method a MetaMethod reference
      * @return true if the method is a threading method, false otherwise.
      */
     public static boolean isThreadingMethod(MetaMethod method) {
@@ -564,7 +574,7 @@ public final class GriffonClassUtils {
      * isThreadingMethod(getMethod("foo"))              = false
      * </pre>
      *
-     * @param method a Method reference
+     * @param method a MethodDescriptor reference
      * @return true if the method is a threading method, false otherwise.
      */
     public static boolean isThreadingMethod(MethodDescriptor method) {
@@ -601,7 +611,7 @@ public final class GriffonClassUtils {
      * isEventPublisherMethod(getMethod("foo"))                = false
      * </pre>
      *
-     * @param method a Method reference
+     * @param method a MetaMethod reference
      * @return true if the method is an @EventPublisher method, false otherwise.
      */
     public static boolean isEventPublisherMethod(MetaMethod method) {
@@ -619,7 +629,7 @@ public final class GriffonClassUtils {
      * isEventPublisherMethod(getMethod("foo"))                = false
      * </pre>
      *
-     * @param method a Method reference
+     * @param method a MethodDescriptor reference
      * @return true if the method is an @EventPublisher method, false otherwise.
      */
     public static boolean isEventPublisherMethod(MethodDescriptor method) {
@@ -656,7 +666,7 @@ public final class GriffonClassUtils {
      * isObservableMethod(getMethod("foo"))                        = false
      * </pre>
      *
-     * @param method a Method reference
+     * @param method a MetaMethod reference
      * @return true if the method is an Observable method, false otherwise.
      */
     public static boolean isObservableMethod(MetaMethod method) {
@@ -674,12 +684,67 @@ public final class GriffonClassUtils {
      * isObservableMethod(getMethod("foo"))                        = false
      * </pre>
      *
-     * @param method a Method reference
+     * @param method a MethodDescriptor reference
      * @return true if the method is an Observable method, false otherwise.
      */
     public static boolean isObservableMethod(MethodDescriptor method) {
         if (method == null || !isInstanceMethod(method)) return false;
         return OBSERVABLE_METHODS.contains(method);
+    }
+
+    /**
+     * Finds out if the given {@code Method} belongs to the set of
+     * predefined RESOURCES methods by convention.
+     * <p/>
+     * <pre>
+     * // assuming getMethod() returns an appropriate Method reference
+     * isResourceHandlerMethod(getMethod("getResourceAsURL"))    = true
+     * isResourceHandlerMethod(getMethod("getResourceAsStream")) = true
+     * isResourceHandlerMethod(getMethod("foo"))                 = false
+     * </pre>
+     *
+     * @param method a Method reference
+     * @return true if the method is an Observable method, false otherwise.
+     */
+    public static boolean isResourceHandlerMethod(Method method) {
+        return isResourceHandlerMethod(MethodDescriptor.forMethod(method));
+    }
+
+    /**
+     * Finds out if the given {@code MetaMethod} belongs to the set of
+     * predefined RESOURCES methods by convention.
+     * <p/>
+     * <pre>
+     * // assuming getMethod() returns an appropriate MetaMethod reference
+     * isResourceHandlerMethod(getMethod("getResourceAsURL"))    = true
+     * isResourceHandlerMethod(getMethod("getResourceAsStream")) = true
+     * isResourceHandlerMethod(getMethod("foo"))                 = false
+     * </pre>
+     *
+     * @param method a MetaMethod reference
+     * @return true if the method is an Observable method, false otherwise.
+     */
+    public static boolean isResourceHandlerMethod(MetaMethod method) {
+        return isResourceHandlerMethod(MethodDescriptor.forMethod(method));
+    }
+
+    /**
+     * Finds out if the given {@code MethodDescriptor} belongs to the set of
+     * predefined RESOURCES methods by convention.
+     * <p/>
+     * <pre>
+     * // assuming getMethod() returns an appropriate MethodDescriptor reference
+     * isResourceHandlerMethod(getMethod("getResourceAsURL"))    = true
+     * isResourceHandlerMethod(getMethod("getResourceAsStream")) = true
+     * isResourceHandlerMethod(getMethod("foo"))                 = false
+     * </pre>
+     *
+     * @param method a MethodDescriptor reference
+     * @return true if the method is an Observable method, false otherwise.
+     */
+    public static boolean isResourceHandlerMethod(MethodDescriptor method) {
+        if (method == null || !isInstanceMethod(method)) return false;
+        return RESOURCES_METHODS.contains(method);
     }
 
     /**
@@ -727,6 +792,7 @@ public final class GriffonClassUtils {
      * <li>! isMvcMethod(method)</li>
      * <li>! isEventPublisherMethod(method)</li>
      * <li>! isObservableMethod(method)</li>
+     * <li>! isResourceHandlerMethod(method)</li>
      * <li>! isGetterMethod(method)</li>
      * <li>! isSetterMethod(method)</li>
      * </ul>
@@ -747,11 +813,12 @@ public final class GriffonClassUtils {
      * <li>! isMvcMethod(method)</li>
      * <li>! isEventPublisherMethod(method)</li>
      * <li>! isObservableMethod(method)</li>
+     * <li>! isResourceHandlerMethod(method)</li>
      * <li>! isGetterMethod(method)</li>
      * <li>! isSetterMethod(method)</li>
      * </ul>
      *
-     * @param method a Method reference
+     * @param method a MetaMethod reference
      * @return true if the method matches the given criteria, false otherwise.
      */
     public static boolean isPlainMethod(MetaMethod method) {
@@ -767,6 +834,7 @@ public final class GriffonClassUtils {
      * <li>! isMvcMethod(method)</li>
      * <li>! isEventPublisherMethod(method)</li>
      * <li>! isObservableMethod(method)</li>
+     * <li>! isResourceHandlerMethod(method)</li>
      * <li>! isGetterMethod(method)</li>
      * <li>! isSetterMethod(method)</li>
      * </ul>
@@ -782,6 +850,7 @@ public final class GriffonClassUtils {
                 !isMvcMethod(method) &&
                 !isEventPublisherMethod(method) &&
                 !isObservableMethod(method) &&
+                !isResourceHandlerMethod(method) &&
                 !isGetterMethod(method) &&
                 !isSetterMethod(method);
     }

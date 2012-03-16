@@ -14,7 +14,6 @@
  * limitations under the License.
  */
 
-import griffon.util.GriffonUtil
 import org.codehaus.griffon.test.GriffonTestTargetPattern
 import org.codehaus.griffon.test.GriffonTestType
 import org.codehaus.griffon.test.event.GriffonTestEventConsoleReporter
