@@ -217,14 +217,14 @@ public class GriffonApplicationHelper {
         }
 
         Map<String, MVCGroupConfiguration> configurations = new LinkedHashMap<String, MVCGroupConfiguration>();
-        Map<String, ConfigObject> mvcGroups = (Map<String, ConfigObject>) app.getConfig().get("mvcGroups");
+        Map<String, Map<String, Object>> mvcGroups = (Map<String, Map<String, Object>>) app.getConfig().get("mvcGroups");
         if (mvcGroups != null) {
-            for (Map.Entry<String, ConfigObject> groupEntry : mvcGroups.entrySet()) {
+            for (Map.Entry<String, Map<String, Object>> groupEntry : mvcGroups.entrySet()) {
                 String type = groupEntry.getKey();
                 if (LOG.isDebugEnabled()) {
                     LOG.debug("Adding MVC group " + type);
                 }
-                ConfigObject members = groupEntry.getValue();
+                Map<String, Object> members = groupEntry.getValue();
                 Map<String, Object> configMap = new LinkedHashMap<String, Object>();
                 Map<String, String> membersCopy = new LinkedHashMap<String, String>();
                 for (Object o : members.entrySet()) {
