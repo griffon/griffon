@@ -10,7 +10,7 @@ class @plugin.name@GriffonPlugin {
     // the plugin license
     String license = '<UNKNOWN>'
     // Toolkit compatibility. No value means compatible with all
-    // Valid values are: swing, javafx, swt, pivot, gtk
+    // Valid values are: swing, javafx, swt, pivot, qt
     List toolkits = []
     // Platform compatibility. No value means compatible with all
     // Valid values are:

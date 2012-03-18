@@ -17,7 +17,6 @@
 package org.codehaus.griffon.artifacts
 
 import griffon.util.BuildSettingsHolder
-import static org.codehaus.griffon.cli.CommandLineConstants.KEY_OFFLINE_MODE
 
 /**
  * @author Andres Almiray

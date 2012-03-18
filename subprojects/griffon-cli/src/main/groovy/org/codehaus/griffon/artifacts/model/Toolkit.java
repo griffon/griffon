@@ -28,7 +28,9 @@ import static griffon.util.GriffonNameUtils.isBlank;
 public enum Toolkit {
     SWING("Swing"),
     JAVAFX("JavaFX"),
-    SWT("SWT");
+    SWT("SWT"),
+    QT("Qt"),
+    PIVOT("Pivot");
 
     private final String name;
 

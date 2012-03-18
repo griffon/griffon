@@ -189,8 +189,8 @@ public abstract class AbstractGriffonAddon extends GroovyObjectSupport implement
         return UIThreadManager.getInstance().executeFuture(callable);
     }
 
-    protected Map<String, String> groupDef(String[][] parts) {
-        Map<String, String> map = new LinkedHashMap<String, String>();
+    protected Map<String, Object> groupDef(String[][] parts) {
+        Map<String, Object> map = new LinkedHashMap<String, Object>();
         for (int i = 0; i < parts.length; i++) {
             map.put(parts[i][0], parts[i][1]);
         }

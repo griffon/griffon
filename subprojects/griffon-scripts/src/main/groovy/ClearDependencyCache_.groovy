@@ -34,8 +34,8 @@ target(name: 'clearDependencyCache',
         targetDirPath += 'org.codehaus.griffon.plugins'
     } else if (argsMap.griffon) {
         targetDirPath += 'org.codehaus.griffon'
-    } else if (argsMap.all) {
-        // nothing
+    } else if (!argsMap.all) {
+        event 'StatusError', ["Missing arguments. Call 'griffon help clear-dependency-cache' to see the usage of this command"]
     }
 
     File targetDir = new File(targetDirPath)

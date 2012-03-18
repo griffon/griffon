@@ -18,7 +18,6 @@ import griffon.util.GriffonNameUtils
 import griffon.util.GriffonUtil
 import griffon.util.MD5
 import groovy.json.JsonBuilder
-import org.codehaus.griffon.artifacts.ArtifactRepository
 import org.codehaus.griffon.artifacts.model.Plugin
 import org.codehaus.griffon.artifacts.model.Release
 import org.springframework.core.io.Resource

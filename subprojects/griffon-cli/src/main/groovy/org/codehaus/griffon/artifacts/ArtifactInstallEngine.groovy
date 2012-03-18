@@ -87,6 +87,7 @@ class ArtifactInstallEngine {
         File pluginDescriptor = settings.isPluginProject()
         if (pluginDescriptor) {
             GroovyClassLoader gcl = new GroovyClassLoader(getClass().classLoader)
+            gcl.addURL(settings.baseDir.toURI().toURL())
             String artifactClassName = pluginDescriptor.name[0..-8]
             def plugin = gcl.loadClass(artifactClassName).newInstance()
             plugin.dependsOn.each { name, version ->
@@ -677,7 +678,7 @@ class ArtifactInstallEngine {
                 LOG.debug("Plugin ${artifactNameAndVersion} requires platforms: ${requiredPlatforms}")
             }
             if (requiredPlatforms) {
-                if (!(PlatformUtils.isCompatible(requiredPlatforms*.lowercaseName))) {
+                if (!(PlatformUtils.isCompatible(requiredPlatforms))) {
                     eventHandler 'StatusError', "Required platforms are [${requiredPlatforms}], current one is ${PlatformUtils.platform}"
                     throw new InstallArtifactException("Installation of ${type} ${artifactNameAndVersion} aborted.")
                 }

@@ -14,7 +14,6 @@
  * limitations under the License.
  */
 
-import griffon.util.GriffonUtil
 import org.codehaus.griffon.test.GriffonTestTargetPattern
 import org.codehaus.griffon.test.GriffonTestType
 import org.codehaus.griffon.test.event.GriffonTestEventConsoleReporter
@@ -273,11 +272,7 @@ compileTests = { GriffonTestType type, File source, File dest ->
 
     compileSources(destDir, 'griffon.test.classpath') {
         src(path: source)
-        javac(classpathref: 'griffon.test.classpath',
-                encoding: griffonSettings.sourceEncoding,
-                debug: 'yes',
-                source: griffonSettings.compilerSourceLevel,
-                target: griffonSettings.compilerTargetLevel)
+        javac(compilerOptions(classpathref: 'griffon.test.classpath'))
     }
     addUrlIfNotPresent rootLoader, projectMainClassesDir
     addUrlIfNotPresent rootLoader, destDir

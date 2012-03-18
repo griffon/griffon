@@ -277,6 +277,7 @@ doInstallFromFile = { type, file, md ->
     }
 }
 
+uninstalledPlugins = [:]
 createArtifactInstallEngine = { Metadata md = metadata ->
     ArtifactInstallEngine artifactInstallEngine = new ArtifactInstallEngine(griffonSettings, md, ant)
     artifactInstallEngine.pluginScriptRunner = runPluginScript
@@ -287,6 +288,10 @@ createArtifactInstallEngine = { Metadata md = metadata ->
         for (dir in artifactInstallEngine.installedArtifacts) {
             ant.delete(dir: dir, failonerror: false)
         }
+        for(plugin in uninstalledPlugins) {
+            if(!md[plugin.key]) md[plugin.key] = plugin.value
+        }
+        md.persist()
         exit(1)
     }
 

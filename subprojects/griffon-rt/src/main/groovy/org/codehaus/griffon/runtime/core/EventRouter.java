@@ -270,12 +270,10 @@ public class EventRouter {
             scriptBindings.put(script, binding);
         }
 
-        invokeHandler(binding.getVariable(eventHandler), params);
-    }
-
-    private void fireEvent(Map map, String eventHandler, List params) {
-        eventHandler = eventHandler.substring(2);
-        invokeHandler(map.get(eventHandler), params);
+        Object handler = binding.getVariables().get(eventHandler);
+        if (handler != null) {
+            invokeHandler(handler, params);
+        }
     }
 
     private void fireEvent(Closure closure, String eventHandler, List params) {
