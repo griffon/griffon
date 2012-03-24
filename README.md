@@ -1,11 +1,19 @@
 ![Griffon][logo]
 ===============================
 
-[Griffon](http://griffon.codehaus.org) is a [Grails](http://grails.org) inspired 
-development platform for developing desktop applications in the JVM.
+[Griffon][1] is dekstop application development platform for the JVM. Inspired
+by [Grails][2], Griffon leverages the use of of the Groovy[3] language and
+concepts like Convention over Configuration. The Swing toolkit is the default
+UI toolkit of choice however others may be used, principaly SWT and JavaFX.
 
-Griffon follows the Convention over Configuration paradigm, paired with an 
-intuitive MVC architecture and a command line interface. Griffon also follows 
+Griffon also allows developers to use a combination of the Groovy and Java
+languages to write their applications. If this were not enough, Griffon allows
+the usage of other JVM languages such as Scala, Clojure, Mirah and Jython too.
+
+The capabilities of the platform can be extended by installing plugins; there
+are many options to choose from as appreciated at the [Griffon Central Repository][4]
+
+Griffon encourages the use of the MVC pattern. Griffon also follows in
 the spirit of the Swing Application Framework (JSR 296), it defines a simple 
 yet powerful application life cycle and event publishing mechanism. Another 
 interesting feature comes from the Groovy language itself: automatic property 
@@ -29,7 +37,7 @@ Directory Structure
 The Griffon installation structure is defined as follows
 
    * INSTALL - install instructions
-   * LICENSE - project license (ASL 2.0)
+   * LICENSE - project license (Apache Software License 2.0)
    * README.md - this file
    * bash - griffon command autocompletion script
    * bin - griffon launchers
@@ -52,11 +60,18 @@ The Griffon installation structure is defined as follows
 Links
 -----
 
-* [Home](http://griffon.codehaus.org)
-* [Documentation](http://griffon.codehaus.org/Documentation)
-* [Issue Tracker](http://jira.codehaus.org/browse/griffon)
-* [Source](https://github.com/griffon/griffon)
-* [Mailing Lists](http://griffon.codehaus.org/)
+* [Home][1]
+* [Documentation][5]
+* [Issue Tracker][6]
+* [Source][7]
+* [Mailing Lists][1]
 
 
 [logo]: http://media.xircles.codehaus.org/_projects/griffon/_logos/medium.png
+[1]: http://griffon.codehaus.org
+[2]: http://grails.org
+[3]: http://groovy.codehaus.org
+[4]: http://artifacts.griffon-framework.org
+[5]: http://griffon.codehaus.org/Documentation
+[6]: http://jira.codehaus.org/browse/griffon
+[7]: https://github.com/griffon/griffon
