@@ -167,7 +167,7 @@ public class GriffonScriptRunner {
             if (args.length == 0) {
                 return new DefaultCommandLine();
             } else {
-                return parser.parseString(args[0]);
+                return parser.parseString(DefaultGroovyMethods.join(args, " "));
             }
         } catch (ParseException e) {
             System.err.println("Error processing command line arguments: " + sanitize(e).getMessage());
