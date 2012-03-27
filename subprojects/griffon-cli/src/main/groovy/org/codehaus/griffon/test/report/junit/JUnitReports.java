@@ -28,11 +28,11 @@ import java.io.OutputStream;
  */
 public class JUnitReports implements JUnitResultFormatter {
     protected JUnitResultFormatter[] reports;
-    
+
     public JUnitReports(JUnitResultFormatter[] reports) {
         this.reports = reports;
     }
-    
+
     public void setOutput(OutputStream out) {
         throw new IllegalStateException("This should not be reached");
     }

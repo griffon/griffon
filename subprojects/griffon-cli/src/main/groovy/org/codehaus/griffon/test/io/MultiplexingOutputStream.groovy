@@ -18,11 +18,11 @@ package org.codehaus.griffon.test.io
 
 class MultiplexingOutputStream extends OutputStream {
     List<OutputStream> streams
-    
+
     MultiplexingOutputStream(OutputStream[] streams = [] as OutputStream[]) {
         this.streams = streams.toList()
     }
-    
+
     void write(int b) {
         streams*.write(b)
     }

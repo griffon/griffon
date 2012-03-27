@@ -25,7 +25,8 @@ class ControllerNameExtractor {
         def matchingTail
         testClassSuffixes.find {
             def tail = "Controller$it"
-            if (testClassName.endsWith(tail)) matchingTail = tail }
+            if (testClassName.endsWith(tail)) matchingTail = tail
+        }
 
         if (matchingTail) {
             GriffonUtil.getPropertyName(testClassName[0..(testClassName.size() - matchingTail.size() - 1)])

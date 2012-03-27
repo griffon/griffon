@@ -46,9 +46,9 @@ class GriffonTestCaseRunnerBuilder extends RunnerBuilder {
 
     Runner runnerForClass(Class testClass) {
         if (mode) {
-            new GriffonTestCaseRunner(testClass, mode, app, *testTargetPatterns)
+            new GriffonTestCaseRunner(testClass, mode, app, * testTargetPatterns)
         } else {
-            new GriffonTestCaseRunner(testClass, *testTargetPatterns)
+            new GriffonTestCaseRunner(testClass, * testTargetPatterns)
         }
     }
 }

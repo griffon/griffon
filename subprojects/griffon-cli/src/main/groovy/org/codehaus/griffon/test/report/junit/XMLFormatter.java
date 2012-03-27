@@ -14,8 +14,7 @@ public class XMLFormatter extends XMLJUnitResultFormatter {
     public XMLFormatter(File file) {
         try {
             super.setOutput(new BufferedOutputStream(new FileOutputStream(file)));
-        }
-        catch (FileNotFoundException e) {
+        } catch (FileNotFoundException e) {
             throw new RuntimeException(e);
         }
     }
@@ -26,7 +25,7 @@ public class XMLFormatter extends XMLJUnitResultFormatter {
 
     public void addFailure(Test test, Throwable throwable) {
         TestStacktraceSanitizer.sanitize(throwable);
-        super.addFailure(test, (Throwable)throwable);
+        super.addFailure(test, (Throwable) throwable);
     }
 
     public void addError(Test test, Throwable throwable) {

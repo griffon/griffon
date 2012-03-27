@@ -24,6 +24,7 @@ import org.codehaus.griffon.test.support.GriffonTestMode
 import org.junit.internal.runners.statements.Fail
 import org.junit.internal.runners.statements.RunAfters
 import org.junit.internal.runners.statements.RunBefores
+import org.junit.rules.MethodRule
 import org.junit.runners.BlockJUnit4ClassRunner
 import org.junit.runners.model.FrameworkMethod
 import org.junit.runners.model.Statement
@@ -75,13 +76,22 @@ class GriffonTestCaseRunner extends BlockJUnit4ClassRunner {
             statement = withPotentialTimeout(method, test, statement)
             statement = withBefores(method, test, statement)
             statement = withAfters(method, test, statement)
-            // statement = withRules(method, test, statement)
+
+            statement = withRules(method, test, statement)
 
             withGriffonTestEnvironment(statement, test)
         } else {
             // fast lane for unit tests
             super.methodBlock(method)
         }
+    }
+
+    private Statement withRules(FrameworkMethod method, Object target,
+                                Statement statement) {
+        Statement result = statement;
+        for (MethodRule each: rules(target))
+            result = each.apply(result, method, target);
+        return result;
     }
 
     protected withGriffonTestEnvironment(Statement statement, Object test) {
@@ -103,11 +113,11 @@ class GriffonTestCaseRunner extends BlockJUnit4ClassRunner {
                 }
             }
         }
-        
+
         def methodMatchingTargetPatterns = testTargetPatterns?.findAll { it.methodTargeting }
         if (methodMatchingTargetPatterns) { // slow lane, filter methods
-            def patternsForThisClass = testTargetPatterns.findAll { 
-                it.matchesClass(testClass.javaClass.name, JUnit4GriffonTestType.SUFFIXES as String[]) 
+            def patternsForThisClass = testTargetPatterns.findAll {
+                it.matchesClass(testClass.javaClass.name, JUnit4GriffonTestType.SUFFIXES as String[])
             }
             if (patternsForThisClass) {
                 annotated.findAll { frameworkMethod ->
@@ -125,7 +135,7 @@ class GriffonTestCaseRunner extends BlockJUnit4ClassRunner {
         def superResult = super.withBefores(method, target, statement)
         if (superResult.is(statement)) {
             def setupMethod = ReflectionUtils.findMethod(testClass.javaClass, 'setUp')
-            if(setupMethod) {
+            if (setupMethod) {
                 setupMethod.accessible = true
                 def setUp = new FrameworkMethod(setupMethod)
                 new RunBefores(statement, [setUp], target)
@@ -142,7 +152,7 @@ class GriffonTestCaseRunner extends BlockJUnit4ClassRunner {
         def superResult = super.withAfters(method, target, statement)
         if (superResult.is(statement)) {
             def tearDownMethod = ReflectionUtils.findMethod(testClass.javaClass, 'tearDown')
-            if(tearDownMethod) {
+            if (tearDownMethod) {
                 tearDownMethod.accessible = true
                 def tearDown = new FrameworkMethod(tearDownMethod)
                 new RunAfters(statement, [tearDown], target)

@@ -23,7 +23,7 @@ import griffon.core.GriffonApplication
  */
 class GriffonTestAutowirer {
     GriffonApplication app
-    
+
     GriffonTestAutowirer(GriffonApplication app) {
         this.app = app
     }
@@ -33,9 +33,9 @@ class GriffonTestAutowirer {
      */
     void autowire(bean) {
         try {
-	        bean.app = app
-        } catch(MissingPropertyException mpe) {
-	        bean.metaClass.app = app
+            bean.app = app
+        } catch (MissingPropertyException mpe) {
+            bean.metaClass.app = app
         }
     }
 }

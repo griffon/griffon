@@ -22,7 +22,7 @@ class JUnitReportProcessor implements GriffonBuildListener {
     void receiveGriffonBuildEvent(String name, Object[] args) {
         if (name == "TestProduceReports") {
             def buildBinding = args[0]
-            buildBinding.with { 
+            buildBinding.with {
                 ant.junitreport(todir: "${testReportsDir}") {
                     fileset(dir: testReportsDir) {
                         include(name: "TEST-*.xml")

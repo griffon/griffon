@@ -19,6 +19,7 @@ package org.codehaus.griffon.test.junit4
 import java.lang.reflect.Modifier
 import org.codehaus.griffon.test.GriffonTestTypeResult
 import org.codehaus.griffon.test.event.GriffonTestEventPublisher
+import org.codehaus.griffon.test.event.GriffonTestRunNotifier
 import org.codehaus.griffon.test.junit4.listener.SuiteRunListener
 import org.codehaus.griffon.test.junit4.result.JUnit4ResultGriffonTestTypeResultAdapter
 import org.codehaus.griffon.test.junit4.runner.GriffonTestCaseRunnerBuilder
@@ -26,30 +27,28 @@ import org.codehaus.griffon.test.report.junit.JUnitReportsFactory
 import org.codehaus.griffon.test.support.GriffonTestMode
 import org.codehaus.griffon.test.support.GriffonTestTypeSupport
 import org.junit.runner.Result
-import org.junit.runner.notification.RunNotifier
 import org.junit.runners.Suite
 
 /**
  * An {@code GriffonTestType} for JUnit4 tests.
  */
-public class JUnit4GriffonTestType extends GriffonTestTypeSupport {
-    public static final SUFFIXES = ["Test", "Tests"].asImmutable()
+class JUnit4GriffonTestType extends GriffonTestTypeSupport {
+
+    static final SUFFIXES = ["Test", "Tests"].asImmutable()
 
     protected suite
     protected mode
 
-    public JUnit4GriffonTestType(String name, String sourceDirectory) {
+    JUnit4GriffonTestType(String name, String sourceDirectory) {
         this(name, sourceDirectory, null)
     }
 
-    public JUnit4GriffonTestType(String name, String sourceDirectory, GriffonTestMode mode) {
+    JUnit4GriffonTestType(String name, String sourceDirectory, GriffonTestMode mode) {
         super(name, sourceDirectory)
         this.mode = mode
     }
 
-    protected List<String> getTestSuffixes() {
-        SUFFIXES
-    }
+    protected List<String> getTestSuffixes() { SUFFIXES }
 
     protected int doPrepare() {
         def testClasses = getTestClasses()
@@ -93,7 +92,13 @@ public class JUnit4GriffonTestType extends GriffonTestTypeSupport {
     }
 
     protected createNotifier(eventPublisher) {
-        def notifier = new RunNotifier()
+        int total = 0
+        if (suite.hasProperty("children")) {
+            total = suite.children.collect {
+                it.hasProperty("children") ? it.children.size() : 0
+            }.sum()
+        }
+        def notifier = new GriffonTestRunNotifier(total)
         notifier.addListener(createListener(eventPublisher))
         notifier
     }
