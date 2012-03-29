@@ -112,8 +112,7 @@ installArtifact = { String type ->
         } else {
             event('StatusError', [installArtifactErrorMessage(Archetype.TYPE)])
         }
-    }
-    catch (Exception e) {
+    } catch (Exception e) {
         logError("Error installing ${type}: ${e.message}", e)
         exit(1)
     }
