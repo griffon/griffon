@@ -45,6 +45,7 @@ import java.net.URLClassLoader;
 import java.util.*;
 import java.util.regex.Pattern;
 
+import static griffon.util.ConfigUtils.getConfigValue;
 import static griffon.util.GriffonExceptionHandler.sanitize;
 import static griffon.util.GriffonNameUtils.isBlank;
 import static java.util.Arrays.binarySearch;
@@ -917,7 +918,7 @@ public class GriffonScriptRunner {
                     if (binarySearch(CHECK_VERSION_EXCLUSIONS, scriptName) < 0) {
                         targets.add("checkVersion");
                     }
-                    if (binarySearch(RESOLVE_DEPENDENCIES_EXCLUSIONS, scriptName) < 0) {
+                    if (!isExcludedFromDependencyResolution(scriptName)) {
                         targets.add("resolveDependencies");
                     }
                     targets.add("loadEventHooks");
@@ -935,6 +936,14 @@ public class GriffonScriptRunner {
             gant.prepareTargets();
             gant.setAllPerTargetPreHooks(DO_NOTHING_CLOSURE);
             gant.setAllPerTargetPostHooks(DO_NOTHING_CLOSURE);
+        }
+
+        private boolean isExcludedFromDependencyResolution(String scriptName) {
+            if (binarySearch(RESOLVE_DEPENDENCIES_EXCLUSIONS, scriptName) >= 0) {
+                return true;
+            }
+            List<String> exclusions = (List<String>) getConfigValue(settings.getConfig(), "griffon.dependency.resolution.command.exclusions", new ArrayList<String>());
+            return exclusions.contains(scriptName);
         }
 
         private static String[] CONFIGURE_PROXY_EXCLUSIONS = {
