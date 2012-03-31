@@ -59,6 +59,7 @@ Type in griffon create-addon then execute this command again."""
         controllerTemplate = argsMap.group + controllerTemplate
     }
 
+    String modelClassName = ''
     if (!argsMap['skip-model'] && !argsMap['with-model']) {
         createArtifact(
                 name:     mvcFullQualifiedClassName,
@@ -66,8 +67,10 @@ Type in griffon create-addon then execute this command again."""
                 type:     'Model',
                 template: modelTemplate,
                 path:     'griffon-app/models')
+        modelClassName = fullyQualifiedClassName
     }
 
+    String viewClassName = ''
     if (!argsMap['skip-view'] && !argsMap['with-view']) {
         createArtifact(
                 name:     mvcFullQualifiedClassName,
@@ -75,8 +78,10 @@ Type in griffon create-addon then execute this command again."""
                 type:     'View',
                 template: viewTemplate,
                 path:     'griffon-app/views')
+        viewClassName = fullyQualifiedClassName
     }
 
+    String controllerClassName = ''
     if (!argsMap['skip-controller'] && !argsMap['with-controller']) {
         createArtifact(
                 name:     mvcFullQualifiedClassName,
@@ -84,6 +89,7 @@ Type in griffon create-addon then execute this command again."""
                 type:     'Controller',
                 template: controllerTemplate,
                 path:     'griffon-app/controllers')
+        controllerClassName = fullyQualifiedClassName
 
         doCreateIntegrationTest(
                 name:   mvcFullQualifiedClassName,
@@ -110,9 +116,9 @@ Type in griffon create-addon then execute this command again."""
             }
 
             List parts = []
-            if (!argsMap['skip-model'])      parts << """            {"model",      "${(argsMap['with-model'] ?: mvcFullQualifiedClassName + 'Model')}"}"""
-            if (!argsMap['skip-view'])       parts << """            {"view",       "${(argsMap['with-view'] ?: mvcFullQualifiedClassName + 'View')}"}"""
-            if (!argsMap['skip-controller']) parts << """            {"controller", "${(argsMap['with-controller'] ?: mvcFullQualifiedClassName + 'Controller')}"}"""
+            if (!argsMap['skip-model'])      parts << """            {"model",      "${(argsMap['with-model'] ?: modelClassName)}"}"""
+            if (!argsMap['skip-view'])       parts << """            {"view",       "${(argsMap['with-view'] ?: viewClassName)}"}"""
+            if (!argsMap['skip-controller']) parts << """            {"controller", "${(argsMap['with-controller'] ?: controllerClassName)}"}"""
 
             addonFile.withWriter {
                 it.write addonText.replaceAll(/\s*Map<String, Map<String, String>> groups = new LinkedHashMap<String, Map<String, String>>\(\);/, """
@@ -133,9 +139,9 @@ Type in griffon create-addon then execute this command again."""
 """)
             }
             List parts = []
-            if (!argsMap['skip-model'])      parts << "            model     : '${(argsMap['with-model'] ?: mvcFullQualifiedClassName + 'Model')}'"
-            if (!argsMap['skip-view'])       parts << "            view      : '${(argsMap['with-view'] ?: mvcFullQualifiedClassName + 'View')}'"
-            if (!argsMap['skip-controller']) parts << "            controller: '${(argsMap['with-controller'] ?: mvcFullQualifiedClassName + 'Controller')}'"
+            if (!argsMap['skip-model'])      parts << "            model     : '${(argsMap['with-model'] ?: modelClassName)}'"
+            if (!argsMap['skip-view'])       parts << "            view      : '${(argsMap['with-view'] ?: viewClassName)}'"
+            if (!argsMap['skip-controller']) parts << "            controller: '${(argsMap['with-controller'] ?: controllerClassName)}'"
 
             addonFile.withWriter {
                 it.write addonText.replaceAll(/\s*def\s*mvcGroups\s*=\s*\[/, """
@@ -159,9 +165,9 @@ mvcGroups {
         }
 
         List parts = []
-        if (!argsMap['skip-model'])      parts << "        model      = '${(argsMap['with-model'] ?: mvcFullQualifiedClassName + 'Model')}'"
-        if (!argsMap['skip-view'])       parts << "        view       = '${(argsMap['with-view'] ?: mvcFullQualifiedClassName + 'View')}'"
-        if (!argsMap['skip-controller']) parts << "        controller = '${(argsMap['with-controller'] ?: mvcFullQualifiedClassName + 'Controller')}'"
+        if (!argsMap['skip-model'])      parts << "        model      = '${(argsMap['with-model'] ?: modelClassName)}'"
+        if (!argsMap['skip-view'])       parts << "        view       = '${(argsMap['with-view'] ?: viewClassName)}'"
+        if (!argsMap['skip-controller']) parts << "        controller = '${(argsMap['with-controller'] ?: controllerClassName)}'"
 
         applicationConfigFile.withWriter {
             it.write configText.replaceAll(/\s*mvcGroups\s*\{/, """
