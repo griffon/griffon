@@ -88,7 +88,12 @@ compileSources = { destinationDir, classpathId, sources ->
 
 target(name: 'compile', description: "Implementation of compilation phase",
         prehook: null, posthook: null) {
-    depends(classpath)
+    def compileDependencies = [classpath]
+    if (argsMap.clean) {
+        includeTargets << griffonScript('_GriffonClean')
+        compileDependencies = [clean] + compileDependencies
+    }
+    depends(* compileDependencies)
 
     if (isApplicationProject || isPluginProject) {
         [

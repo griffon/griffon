@@ -26,16 +26,16 @@ _griffon_clean_called = true
 
 // includeTargets << griffonScript("_GriffonEvents")
 
-target(cleanAll: "Cleans a Griffon project") {
+target(name: 'cleanAll', description: "Cleans a Griffon project", prehook: null, posthook: null) {
     clean()
     cleanTestReports()
 }
 
-target(clean: "Implementation of clean") {
+target(name: 'clean', description: "Implementation of clean", prehook: null, posthook: null) {
     depends(cleanCompiledSources, cleanPackaging)
 }
 
-target(cleanCompiledSources: "Cleans compiled Java and Groovy sources") {
+target(name: 'cleanCompiledSources', description: "Cleans compiled Java and Groovy sources", prehook: null, posthook: null) {
     [
             projectCliClassesDir,
             projectMainClassesDir,
@@ -48,7 +48,7 @@ target(cleanCompiledSources: "Cleans compiled Java and Groovy sources") {
     }
 }
 
-target(cleanTestReports: "Cleans the test reports") {
+target(name: 'cleanTestReports', description: "Cleans the test reports", prehook: null, posthook: null) {
     // Delete all reports *except* TEST-TestSuites.xml which we need
     // for the "--rerun" option to work.
     ant.delete(failonerror: false, includeemptydirs: true) {
@@ -59,7 +59,7 @@ target(cleanTestReports: "Cleans the test reports") {
     }
 }
 
-target(cleanPackaging: "Cleans the distribtion directories") {
+target(name: 'cleanPackaging', description: "Cleans the distribtion directories", prehook: null, posthook: null) {
     if (buildConfigFile.exists()) {
         def cfg = configSlurper.parse(buildConfigFile.toURL())
         cfg.setConfigFile(buildConfigFile.toURL())
