@@ -41,8 +41,8 @@ import org.slf4j.LoggerFactory;
 public class GriffonModelASTTransformation extends GriffonArtifactASTTransformation {
     private static final Logger LOG = LoggerFactory.getLogger(GriffonModelASTTransformation.class);
     private static final String ARTIFACT_PATH = "models";
-    private static final ClassNode GRIFFON_MODEL_CLASS = ClassHelper.makeWithoutCaching(GriffonModel.class);
-    private static final ClassNode ABSTRACT_GRIFFON_MODEL_CLASS = ClassHelper.makeWithoutCaching(AbstractGriffonModel.class);
+    private static final ClassNode GRIFFON_MODEL_CLASS = makeClassSafe(GriffonModel.class);
+    private static final ClassNode ABSTRACT_GRIFFON_MODEL_CLASS = makeClassSafe(AbstractGriffonModel.class);
 
     public static boolean isModelArtifact(ClassNode classNode, SourceUnit source) {
         if (classNode == null || source == null) return false;

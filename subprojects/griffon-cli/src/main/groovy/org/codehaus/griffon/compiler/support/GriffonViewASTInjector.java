@@ -27,7 +27,7 @@ import static org.codehaus.griffon.ast.GriffonASTUtils.injectProperty;
  * @since 0.9.1
  */
 public class GriffonViewASTInjector extends GriffonMvcArtifactASTInjector {
-    private static final ClassNode FBS_CLASS = ClassHelper.makeWithoutCaching(FactoryBuilderSupport.class);
+    private static final ClassNode FBS_CLASS = makeClassSafe(FactoryBuilderSupport.class);
 
     public void inject(ClassNode classNode, String artifactType) {
         super.inject(classNode, artifactType);

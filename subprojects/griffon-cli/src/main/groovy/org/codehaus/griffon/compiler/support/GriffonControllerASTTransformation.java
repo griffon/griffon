@@ -41,8 +41,8 @@ import org.slf4j.LoggerFactory;
 public class GriffonControllerASTTransformation extends GriffonArtifactASTTransformation {
     private static final Logger LOG = LoggerFactory.getLogger(GriffonControllerASTTransformation.class);
     private static final String ARTIFACT_PATH = "controllers";
-    private static final ClassNode GRIFFON_CONTROLLER_CLASS = ClassHelper.makeWithoutCaching(GriffonController.class);
-    private static final ClassNode ABSTRACT_GRIFFON_CONTROLLER_CLASS = ClassHelper.makeWithoutCaching(AbstractGriffonController.class);
+    private static final ClassNode GRIFFON_CONTROLLER_CLASS = makeClassSafe(GriffonController.class);
+    private static final ClassNode ABSTRACT_GRIFFON_CONTROLLER_CLASS = makeClassSafe(AbstractGriffonController.class);
 
     public static boolean isControllerArtifact(ClassNode classNode, SourceUnit source) {
         if (classNode == null || source == null) return false;

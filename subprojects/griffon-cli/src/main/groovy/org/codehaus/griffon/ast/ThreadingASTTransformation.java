@@ -52,8 +52,8 @@ import static org.codehaus.griffon.ast.GriffonASTUtils.*;
 public class ThreadingASTTransformation extends AbstractASTTransformation {
     private static final Logger LOG = LoggerFactory.getLogger(ThreadingASTTransformation.class);
 
-    private static ClassNode MY_TYPE = ClassHelper.makeWithoutCaching(Threading.class);
-    private static ClassNode UITHREAD_MANAGER_CLASS = ClassHelper.makeWithoutCaching(UIThreadManager.class);
+    private static ClassNode MY_TYPE = makeClassSafe(Threading.class);
+    private static ClassNode UITHREAD_MANAGER_CLASS = makeClassSafe(UIThreadManager.class);
     private static final String COMPILER_THREADING_KEY = "compiler.threading";
 
     public static final String EXECUTE_OUTSIDE = "executeOutside";
@@ -197,9 +197,9 @@ public class ThreadingASTTransformation extends AbstractASTTransformation {
     private static MethodDescriptor methodDescriptorFor(MethodNode method) {
         if (method == null) return null;
         Parameter[] types = method.getParameters();
-        Class[] parameterTypes = new Class[types.length];
+        String[] parameterTypes = new String[types.length];
         for (int i = 0; i < types.length; i++) {
-            parameterTypes[i] = types[i].getType().getTypeClass();
+            parameterTypes[i] = types[i].getType().getPlainNodeReference().getName();
         }
         return new MethodDescriptor(method.getName(), parameterTypes, method.getModifiers());
     }

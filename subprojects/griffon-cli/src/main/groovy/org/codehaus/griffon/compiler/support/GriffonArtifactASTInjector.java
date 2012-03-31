@@ -37,14 +37,14 @@ import static org.codehaus.griffon.ast.GriffonASTUtils.*;
  * @since 0.9.1
  */
 public class GriffonArtifactASTInjector extends AbstractASTInjector {
-    private static final ClassNode GRIFFON_APPLICATION_CLASS = ClassHelper.makeWithoutCaching(GriffonApplication.class);
-    private static final ClassNode GRIFFON_CLASS_CLASS = ClassHelper.makeWithoutCaching(GriffonClass.class);
-    private static final ClassNode GAH_CLASS = ClassHelper.makeWithoutCaching(GriffonApplicationHelper.class);
-    private static final ClassNode LOGGER_CLASS = ClassHelper.makeWithoutCaching(Logger.class);
-    private static final ClassNode LOGGER_FACTORY_CLASS = ClassHelper.makeWithoutCaching(LoggerFactory.class);
-    private static final ClassNode GROOVY_SYSTEM_CLASS = ClassHelper.makeWithoutCaching(GroovySystem.class);
-    private static final ClassNode ABSTRACT_GRIFFON_ARTIFACT_CLASS = ClassHelper.makeWithoutCaching(AbstractGriffonArtifact.class);
-    private static final ClassNode EXPANDO_METACLASS_CLASS = ClassHelper.makeWithoutCaching(ExpandoMetaClass.class);
+    private static final ClassNode GRIFFON_APPLICATION_CLASS = makeClassSafe(GriffonApplication.class);
+    private static final ClassNode GRIFFON_CLASS_CLASS = makeClassSafe(GriffonClass.class);
+    private static final ClassNode GAH_CLASS = makeClassSafe(GriffonApplicationHelper.class);
+    private static final ClassNode LOGGER_CLASS = makeClassSafe(Logger.class);
+    private static final ClassNode LOGGER_FACTORY_CLASS = makeClassSafe(LoggerFactory.class);
+    private static final ClassNode GROOVY_SYSTEM_CLASS = makeClassSafe(GroovySystem.class);
+    private static final ClassNode ABSTRACT_GRIFFON_ARTIFACT_CLASS = makeClassSafe(AbstractGriffonArtifact.class);
+    private static final ClassNode EXPANDO_METACLASS_CLASS = makeClassSafe(ExpandoMetaClass.class);
     public static final String APP = "app";
 
     public void inject(ClassNode classNode, String artifactType) {
@@ -126,9 +126,9 @@ public class GriffonArtifactASTInjector extends AbstractASTInjector {
         injectMethod(classNode, new MethodNode(
                 "newInstance",
                 ACC_PUBLIC,
-                newClass(ClassHelper.OBJECT_TYPE),
+                makeClassSafe(ClassHelper.OBJECT_TYPE),
                 params(
-                        param(newClass(ClassHelper.CLASS_Type), "clazz"),
+                        param(makeClassSafe(ClassHelper.CLASS_Type), "clazz"),
                         param(ClassHelper.STRING_TYPE, "type")),
                 ClassNode.EMPTY_ARRAY,
                 returns(call(

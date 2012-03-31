@@ -43,10 +43,10 @@ import static org.codehaus.griffon.ast.GriffonASTUtils.*;
 @GroovyASTTransformation(phase = CompilePhase.CANONICALIZATION)
 public class EventPublisherASTTransformation extends AbstractASTTransformation {
     private static final Logger LOG = LoggerFactory.getLogger(EventPublisherASTTransformation.class);
-    private static final ClassNode RUNNABLE_WITH_ARGS_CLASS = ClassHelper.makeWithoutCaching(RunnableWithArgs.class);
-    private static final ClassNode EVENT_HANDLER_CLASS = ClassHelper.makeWithoutCaching(EventPublisher.class);
-    private static final ClassNode EVENT_PUBLISHER_CLASS = ClassHelper.makeWithoutCaching(griffon.transform.EventPublisher.class);
-    private static final ClassNode EVENT_ROUTER_CLASS = ClassHelper.makeWithoutCaching(EventRouter.class);
+    private static final ClassNode RUNNABLE_WITH_ARGS_CLASS = makeClassSafe(RunnableWithArgs.class);
+    private static final ClassNode EVENT_HANDLER_CLASS = makeClassSafe(EventPublisher.class);
+    private static final ClassNode EVENT_PUBLISHER_CLASS = makeClassSafe(griffon.transform.EventPublisher.class);
+    private static final ClassNode EVENT_ROUTER_CLASS = makeClassSafe(EventRouter.class);
 
     private static final String LISTENER = "listener";
     private static final String NAME = "name";
@@ -202,7 +202,7 @@ public class EventPublisherASTTransformation extends AbstractASTTransformation {
                 ClassHelper.VOID_TYPE,
                 params(
                         param(ClassHelper.STRING_TYPE, NAME),
-                        param(newClass(ClassHelper.CLOSURE_TYPE), LISTENER)),
+                        param(makeClassSafe(ClassHelper.CLOSURE_TYPE), LISTENER)),
                 ClassNode.EMPTY_ARRAY,
                 stmnt(call(
                         field(erField),
@@ -254,7 +254,7 @@ public class EventPublisherASTTransformation extends AbstractASTTransformation {
                 ClassHelper.VOID_TYPE,
                 params(
                         param(ClassHelper.STRING_TYPE, NAME),
-                        param(newClass(ClassHelper.CLOSURE_TYPE), LISTENER)),
+                        param(makeClassSafe(ClassHelper.CLOSURE_TYPE), LISTENER)),
                 ClassNode.EMPTY_ARRAY,
                 stmnt(call(
                         field(erField),
@@ -290,7 +290,7 @@ public class EventPublisherASTTransformation extends AbstractASTTransformation {
                 ClassHelper.VOID_TYPE,
                 params(
                         param(ClassHelper.STRING_TYPE, NAME),
-                        param(newClass(ClassHelper.LIST_TYPE), ARGS, new ListExpression())),
+                        param(makeClassSafe(ClassHelper.LIST_TYPE), ARGS, new ListExpression())),
                 ClassNode.EMPTY_ARRAY,
                 stmnt(call(
                         field(erField),
@@ -309,7 +309,7 @@ public class EventPublisherASTTransformation extends AbstractASTTransformation {
                 ClassHelper.VOID_TYPE,
                 params(
                         param(ClassHelper.STRING_TYPE, NAME),
-                        param(newClass(ClassHelper.LIST_TYPE), ARGS, new ListExpression())),
+                        param(makeClassSafe(ClassHelper.LIST_TYPE), ARGS, new ListExpression())),
                 ClassNode.EMPTY_ARRAY,
                 stmnt(call(
                         field(erField),
@@ -327,7 +327,7 @@ public class EventPublisherASTTransformation extends AbstractASTTransformation {
                 ClassHelper.VOID_TYPE,
                 params(
                         param(ClassHelper.STRING_TYPE, NAME),
-                        param(newClass(ClassHelper.LIST_TYPE), ARGS, new ListExpression())),
+                        param(makeClassSafe(ClassHelper.LIST_TYPE), ARGS, new ListExpression())),
                 ClassNode.EMPTY_ARRAY,
                 stmnt(call(
                         field(erField),
@@ -345,7 +345,7 @@ public class EventPublisherASTTransformation extends AbstractASTTransformation {
                 ClassHelper.VOID_TYPE,
                 params(
                         param(ClassHelper.STRING_TYPE, NAME),
-                        param(newClass(ClassHelper.LIST_TYPE), ARGS, new ListExpression())),
+                        param(makeClassSafe(ClassHelper.LIST_TYPE), ARGS, new ListExpression())),
                 ClassNode.EMPTY_ARRAY,
                 stmnt(call(
                         field(erField),
