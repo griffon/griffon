@@ -45,15 +45,15 @@ import static org.codehaus.griffon.cli.CommandLineConstants.KEY_DISABLE_LOCAL_RE
  */
 class ArtifactInstallEngine {
     private static final Logger LOG = LoggerFactory.getLogger(ArtifactInstallEngine)
-    private static final String INSTALL_FAILURE_KEY = 'griffon.install.failure'
-    private static final String INSTALL_FAILURE_ABORT = 'abort'
-    private static final String INSTALL_FAILURE_CONTINUE = 'continue'
-    private static final String INSTALL_FAILURE_RETRY = 'retry'
+    protected static final String INSTALL_FAILURE_KEY = 'griffon.install.failure'
+    protected static final String INSTALL_FAILURE_ABORT = 'abort'
+    protected static final String INSTALL_FAILURE_CONTINUE = 'continue'
+    protected static final String INSTALL_FAILURE_RETRY = 'retry'
 
-    private final BuildSettings settings
-    private final Metadata metadata
-    private final AntBuilder ant
-    private CommandLineHelper commandLineHelper = new CommandLineHelper(System.out)
+    protected final BuildSettings settings
+    protected final Metadata metadata
+    protected final AntBuilder ant
+    protected CommandLineHelper commandLineHelper = new CommandLineHelper(System.out)
 
     final List installedArtifacts = []
     final List uninstalledArtifacts = []
@@ -251,7 +251,7 @@ class ArtifactInstallEngine {
         }
     }
 
-    private boolean _installPlugins(List<ArtifactDependency> dependencies, ArtifactDependencyResolver resolver) {
+    protected boolean _installPlugins(List<ArtifactDependency> dependencies, ArtifactDependencyResolver resolver) {
         installedArtifacts.clear()
         uninstalledArtifacts.clear()
 
@@ -259,7 +259,7 @@ class ArtifactInstallEngine {
         installPluginsInternal(installPlan)
     }
 
-    private boolean installPluginsInternal(List<ArtifactDependency> installPlan) {
+    protected boolean installPluginsInternal(List<ArtifactDependency> installPlan) {
         List<ArtifactDependency> failedDependencies = []
         List<ArtifactDependency> retryDependencies = []
 
@@ -279,7 +279,7 @@ class ArtifactInstallEngine {
         true
     }
 
-    private void doInstallDependencies(List<ArtifactDependency> dependencies, List<ArtifactDependency> failedDependencies, List<ArtifactDependency> retryDependencies, boolean retryAllowed) {
+    protected void doInstallDependencies(List<ArtifactDependency> dependencies, List<ArtifactDependency> failedDependencies, List<ArtifactDependency> retryDependencies, boolean retryAllowed) {
         String type = Plugin.TYPE
         for (ArtifactDependency dependency: dependencies) {
             try {
@@ -343,7 +343,7 @@ class ArtifactInstallEngine {
         }
     }
 
-    private void _publishReleaseToGriffonLocal(String type, String name, String version, File file) {
+    protected void _publishReleaseToGriffonLocal(String type, String name, String version, File file) {
         String repositoryName = settings.getConfigValue(KEY_DEFAULT_INSTALL_ARTIFACT_REPOSITORY, DEFAULT_LOCAL_NAME)
         ArtifactRepository griffonLocal = ArtifactRepositoryRegistry.instance.findRepository(repositoryName)
 
@@ -394,7 +394,7 @@ class ArtifactInstallEngine {
         }
     }
 
-    private List resolveDependenciesFor(ArtifactDependencyResolver resolver, String type, String name, String version) {
+    protected List resolveDependenciesFor(ArtifactDependencyResolver resolver, String type, String name, String version) {
         List<ArtifactDependency> dependencies = []
         try {
             dependencies << resolver.resolveDependencyTree(type, name, version)
@@ -410,7 +410,7 @@ class ArtifactInstallEngine {
         dependencies
     }
 
-    private List<ArtifactDependency> resolveDependenciesFor(List<ArtifactDependency> dependencies, ArtifactDependencyResolver resolver) {
+    protected List<ArtifactDependency> resolveDependenciesFor(List<ArtifactDependency> dependencies, ArtifactDependencyResolver resolver) {
         Map<String, Release> installedReleases = getInstalledReleases(Plugin.TYPE)
 
         Map<String, ArtifactDependency> installedDependencies = [:]
@@ -465,7 +465,7 @@ class ArtifactInstallEngine {
         installPlan
     }
 
-    private String printDependencyTree(ArtifactDependency artifactDependency, boolean trim = false) {
+    protected String printDependencyTree(ArtifactDependency artifactDependency, boolean trim = false) {
         ByteArrayOutputStream baos = new ByteArrayOutputStream()
         PrintStream out = new PrintStream(baos)
         artifactDependency.printout(0i, out, true)
@@ -546,7 +546,7 @@ class ArtifactInstallEngine {
     }
 
     // TODO LEGACY - remove before 1.0
-    private void generateDependencyDescriptorFor(String pluginDirPath, String name, String version) {
+    protected void generateDependencyDescriptorFor(String pluginDirPath, String name, String version) {
         File addonJar = new File(pluginDirPath, "addon/griffon-${name}-addon-${version}.jar")
         File cliJar = new File(pluginDirPath, "addon/griffon-${name}-cli-${version}.jar")
         File testJar = new File(pluginDirPath, "dist/griffon-${name}-${version}-test.jar")
@@ -582,7 +582,7 @@ class ArtifactInstallEngine {
         }
     }
 
-    private void resolvePluginJarDependencies(String pluginInstallPath, String pluginName, String pluginVersion) {
+    protected void resolvePluginJarDependencies(String pluginInstallPath, String pluginName, String pluginVersion) {
         List<File> dependencyDescriptors = [
                 new File("$pluginInstallPath/dependencies.groovy"),
                 new File("$pluginInstallPath/plugin-dependencies.groovy")
@@ -622,7 +622,7 @@ class ArtifactInstallEngine {
         }
     }
 
-    private boolean doUninstall(String type, String name, String version = null) {
+    protected boolean doUninstall(String type, String name, String version = null) {
         String metadataKey = ''
         File artifactDir = null
 
@@ -661,7 +661,7 @@ class ArtifactInstallEngine {
         false
     }
 
-    private Release inspectArtifactRelease(String type, File file) {
+    protected Release inspectArtifactRelease(String type, File file) {
         Release release = createReleaseFromMetadata(type, file)
         String artifactNameAndVersion = "${release.artifact.name}-${release.version}"
 
@@ -706,7 +706,7 @@ class ArtifactInstallEngine {
         release
     }
 
-    private Release createReleaseFromMetadata(String type, File file) {
+    protected Release createReleaseFromMetadata(String type, File file) {
         try {
             ArtifactUtils.createReleaseFromMetadata(type, file)
         } catch (IllegalArgumentException iae) {
@@ -714,7 +714,7 @@ class ArtifactInstallEngine {
         }
     }
 
-    private void displayNewScripts(String pluginName, installPath) {
+    protected void displayNewScripts(String pluginName, installPath) {
         def providedScripts = new File("${installPath}/scripts").listFiles().findAll { !it.name.startsWith('_') && it.name.endsWith('.groovy')}
         if (providedScripts) {
             String legend = "Plugin ${pluginName} provides the following new scripts:"
@@ -726,7 +726,7 @@ class ArtifactInstallEngine {
         }
     }
 
-    private void runPluginScript(File scriptFile, fullPluginName, msg) {
+    protected void runPluginScript(File scriptFile, fullPluginName, msg) {
         if (pluginScriptRunner != null) {
             if (pluginScriptRunner.maximumNumberOfParameters < 3) {
                 throw new IllegalStateException("The [pluginScriptRunner] closure property must accept at least 3 arguments")
