@@ -18,7 +18,7 @@ package griffon.samples.swingpad
 import com.bric.image.transition.Transition2D
 import com.bric.image.transition.spunk.*
 import com.bric.image.transition.vanilla.*
-import griffon.transitions.FadeTransition2D
+import griffon.plugins.transitions.FadeTransition2D
 import java.awt.Color
 
 /**
