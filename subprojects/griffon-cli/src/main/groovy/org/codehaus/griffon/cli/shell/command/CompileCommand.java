@@ -18,6 +18,7 @@ package org.codehaus.griffon.cli.shell.command;
 
 import org.codehaus.griffon.cli.shell.AbstractGriffonCommand;
 import org.codehaus.griffon.cli.shell.Command;
+import org.codehaus.griffon.cli.shell.Option;
 
 /**
  * @author Andres Almiray
@@ -27,4 +28,8 @@ import org.codehaus.griffon.cli.shell.Command;
         name = "compile",
         description = "Compiles project sources")
 public class CompileCommand extends AbstractGriffonCommand {
+    @Option(name = "--clean",
+            description = "Clean project before compiling.",
+            required = false)
+    private boolean clean;
 }

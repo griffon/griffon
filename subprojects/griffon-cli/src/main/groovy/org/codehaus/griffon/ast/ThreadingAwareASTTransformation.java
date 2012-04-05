@@ -43,12 +43,12 @@ public class ThreadingAwareASTTransformation extends AbstractASTTransformation {
     private static final Logger LOG = LoggerFactory.getLogger(ThreadingAwareASTTransformation.class);
 
     private static ClassNode MY_TYPE = new ClassNode(ThreadingAware.class);
-    private static ClassNode THREADING_HANDLER_TYPE = ClassHelper.makeWithoutCaching(ThreadingHandler.class);
-    private static final ClassNode CALLABLE_CLASS = ClassHelper.makeWithoutCaching(Callable.class);
-    private static final ClassNode FUTURE_CLASS = ClassHelper.makeWithoutCaching(Future.class);
-    private static final ClassNode EXECUTOR_SERVICE_CLASS = ClassHelper.makeWithoutCaching(ExecutorService.class);
-    private static final ClassNode UITHREAD_MANAGER_CLASS = ClassHelper.makeWithoutCaching(UIThreadManager.class);
-    private static final ClassNode RUNNABLE_CLASS = ClassHelper.makeWithoutCaching(Runnable.class);
+    private static ClassNode THREADING_HANDLER_TYPE = makeClassSafe(ThreadingHandler.class);
+    private static final ClassNode CALLABLE_CLASS = makeClassSafe(Callable.class);
+    private static final ClassNode FUTURE_CLASS = makeClassSafe(Future.class);
+    private static final ClassNode EXECUTOR_SERVICE_CLASS = makeClassSafe(ExecutorService.class);
+    private static final ClassNode UITHREAD_MANAGER_CLASS = makeClassSafe(UIThreadManager.class);
+    private static final ClassNode RUNNABLE_CLASS = makeClassSafe(Runnable.class);
 
     private static final String RUNNABLE = "runnable";
     private static final String CALLABLE = "callable";
@@ -188,8 +188,8 @@ public class ThreadingAwareASTTransformation extends AbstractASTTransformation {
         injectMethod(classNode, new MethodNode(
                 "execFuture",
                 ACC_PUBLIC,
-                newClass(FUTURE_CLASS),
-                params(param(newClass(ClassHelper.CLOSURE_TYPE), CLOSURE)),
+                makeClassSafe(FUTURE_CLASS),
+                params(param(makeClassSafe(ClassHelper.CLOSURE_TYPE), CLOSURE)),
                 ClassNode.EMPTY_ARRAY,
                 returns(call(
                         uiThreadManagerInstance(),
@@ -201,10 +201,10 @@ public class ThreadingAwareASTTransformation extends AbstractASTTransformation {
         injectMethod(classNode, new MethodNode(
                 "execFuture",
                 ACC_PUBLIC,
-                newClass(FUTURE_CLASS),
+                makeClassSafe(FUTURE_CLASS),
                 params(
                         param(EXECUTOR_SERVICE_CLASS, "executorService"),
-                        param(newClass(ClassHelper.CLOSURE_TYPE), CLOSURE)),
+                        param(makeClassSafe(ClassHelper.CLOSURE_TYPE), CLOSURE)),
                 ClassNode.EMPTY_ARRAY,
                 returns(call(
                         uiThreadManagerInstance(),
@@ -216,8 +216,8 @@ public class ThreadingAwareASTTransformation extends AbstractASTTransformation {
         injectMethod(classNode, new MethodNode(
                 "execFuture",
                 ACC_PUBLIC,
-                newClass(FUTURE_CLASS),
-                params(param(newClass(CALLABLE_CLASS), CALLABLE)),
+                makeClassSafe(FUTURE_CLASS),
+                params(param(makeClassSafe(CALLABLE_CLASS), CALLABLE)),
                 ClassNode.EMPTY_ARRAY,
                 returns(call(
                         uiThreadManagerInstance(),
@@ -229,10 +229,10 @@ public class ThreadingAwareASTTransformation extends AbstractASTTransformation {
         injectMethod(classNode, new MethodNode(
                 "execFuture",
                 ACC_PUBLIC,
-                newClass(FUTURE_CLASS),
+                makeClassSafe(FUTURE_CLASS),
                 params(
                         param(EXECUTOR_SERVICE_CLASS, "executorService"),
-                        param(newClass(CALLABLE_CLASS), CALLABLE)),
+                        param(makeClassSafe(CALLABLE_CLASS), CALLABLE)),
                 ClassNode.EMPTY_ARRAY,
                 returns(call(
                         uiThreadManagerInstance(),

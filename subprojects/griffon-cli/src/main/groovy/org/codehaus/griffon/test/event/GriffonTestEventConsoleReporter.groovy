@@ -20,20 +20,20 @@ import griffon.build.GriffonBuildListener
 
 class GriffonTestEventConsoleReporter implements GriffonBuildListener {
     private final static EVENTS = ['TestCaseStart', 'TestFailure', 'TestCaseEnd']
-        
+
     protected PrintStream out
     protected int failureCount
-    
+
     GriffonTestEventConsoleReporter(PrintStream out) {
         this.out = out
     }
-    
+
     void receiveGriffonBuildEvent(String name, Object[] args) {
         if (name in EVENTS) {
-            this."do$name"(*args)
+            this."do$name"(* args)
         }
     }
-    
+
     protected doTestCaseStart(String name) {
         out.print("Running test ${name}...")
         failureCount = 0

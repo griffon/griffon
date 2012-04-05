@@ -32,10 +32,10 @@ import static org.codehaus.griffon.ast.GriffonASTUtils.*;
  * @since 0.9.1
  */
 public class GriffonAddonASTInjector extends AbstractASTInjector {
-    private static final ClassNode GRIFFON_APPLICATION_CLASS = ClassHelper.makeWithoutCaching(GriffonApplication.class);
-    private static final ClassNode GAH_CLASS = ClassHelper.makeWithoutCaching(GriffonApplicationHelper.class);
-    private static final ClassNode LOGGER_CLASS = ClassHelper.makeWithoutCaching(Logger.class);
-    private static final ClassNode LOGGER_FACTORY_CLASS = ClassHelper.makeWithoutCaching(LoggerFactory.class);
+    private static final ClassNode GRIFFON_APPLICATION_CLASS = makeClassSafe(GriffonApplication.class);
+    private static final ClassNode GAH_CLASS = makeClassSafe(GriffonApplicationHelper.class);
+    private static final ClassNode LOGGER_CLASS = makeClassSafe(Logger.class);
+    private static final ClassNode LOGGER_FACTORY_CLASS = makeClassSafe(LoggerFactory.class);
     public static final String APP = "app";
 
     public void inject(ClassNode classNode, String artifactType) {
@@ -49,9 +49,9 @@ public class GriffonAddonASTInjector extends AbstractASTInjector {
         classNode.addMethod(new MethodNode(
                 "newInstance",
                 ACC_PUBLIC,
-                newClass(ClassHelper.OBJECT_TYPE),
+                makeClassSafe(ClassHelper.OBJECT_TYPE),
                 params(
-                        param(ClassHelper.CLASS_Type, "clazz"),
+                        param(makeClassSafe(ClassHelper.CLASS_Type), "clazz"),
                         param(ClassHelper.STRING_TYPE, "type")),
                 ClassNode.EMPTY_ARRAY,
                 returns(call(

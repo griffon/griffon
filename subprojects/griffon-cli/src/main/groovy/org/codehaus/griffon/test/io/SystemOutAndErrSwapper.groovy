@@ -21,10 +21,10 @@ package org.codehaus.griffon.test.io
  * for standard error and standard out.
  */
 class SystemOutAndErrSwapper {
-    
+
     final boolean echoOut
     final boolean echoErr
-    
+
     protected PrintStream swappedOutOut
     protected PrintStream swappedOutErr
 
@@ -33,7 +33,7 @@ class SystemOutAndErrSwapper {
 
     protected OutputStream swappedInOutStream
     protected OutputStream swappedInErrStream
-    
+
     protected boolean swapped = false
 
     SystemOutAndErrSwapper(boolean echoOut = false, boolean echoErr = false) {
@@ -44,7 +44,7 @@ class SystemOutAndErrSwapper {
     /**
      * Replaces System.out and System.err with PrintStream's wrapping outStream and errStream
      *
-     * @return [outStream, errStream]
+     * @return [outStream , errStream]
      * @throws IllegalStateException if a swap is already on
      */
     List<OutputStream> swapIn() {
@@ -53,39 +53,39 @@ class SystemOutAndErrSwapper {
 
     /**
      * Replaces System.out and System.err with PrintStream's wrapping outStream and errStream
-     * 
-     * @return [outStream, errStream]
+     *
+     * @return [outStream , errStream]
      * @throws IllegalStateException if a swap is already on
      */
     List<OutputStream> swapIn(OutputStream outStream, OutputStream errStream) {
         if (swapped) throw new IllegalStateException("swapIn() called during a swap")
-        
+
         swappedOutOut = System.out
         swappedOutErr = System.err
 
         swappedInOutStream = echoOut ? new MultiplexingOutputStream(swappedOutOut, outStream) : outStream
         swappedInErrStream = echoErr ? new MultiplexingOutputStream(swappedOutErr, errStream) : errStream
-        
+
         swappedInOut = new PrintStream(swappedInOutStream)
         swappedInErr = new PrintStream(swappedInErrStream)
-        
+
         System.out = swappedInOut
         System.err = swappedInErr
-        
+
         swapped = true
 
         [swappedInOutStream, swappedInErrStream]
     }
-    
+
     /**
      * Restores System.out and System.err to what they were before swappedIn() was called.
-     * 
+     *
      * @return the underlying output streams for the swap ([out, err])
      * @throws IllegalStateException if not in a swap
      */
     List<OutputStream> swapOut() {
         if (!swapped) throw new IllegalStateException("swapOut() called while not during a swap")
-        
+
         System.out = swappedOutOut
         System.err = swappedOutErr
 
@@ -101,9 +101,9 @@ class SystemOutAndErrSwapper {
 
         swappedInOutStream = null
         swappedInErrStream = null
-        
+
         swapped = false
-        
+
         streams
     }
 }

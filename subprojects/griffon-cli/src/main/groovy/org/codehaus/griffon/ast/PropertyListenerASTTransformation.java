@@ -41,8 +41,8 @@ import java.util.Map;
  */
 @GroovyASTTransformation(phase= CompilePhase.CANONICALIZATION)
 public class PropertyListenerASTTransformation extends AbstractASTTransformation {
-    private static final ClassNode PROPERTY_LISTENER_CLASS = ClassHelper.makeWithoutCaching(PropertyListener.class);
-    private static final ClassNode PROPERTY_CHANGE_LISTENER_CLASS = ClassHelper.makeWithoutCaching(PropertyChangeListener.class);
+    private static final ClassNode PROPERTY_LISTENER_CLASS = makeClassSafe(PropertyListener.class);
+    private static final ClassNode PROPERTY_CHANGE_LISTENER_CLASS = makeClassSafe(PropertyChangeListener.class);
     private static final String EMPTY_STRING = "";
 
     /**

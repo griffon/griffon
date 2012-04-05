@@ -42,9 +42,9 @@ import org.slf4j.LoggerFactory;
 public class GriffonViewASTTransformation extends GriffonArtifactASTTransformation {
     private static final Logger LOG = LoggerFactory.getLogger(GriffonViewASTTransformation.class);
     private static final String ARTIFACT_PATH = "views";
-    private static final ClassNode GRIFFON_VIEW_CLASS = ClassHelper.makeWithoutCaching(GriffonView.class);
-    private static final ClassNode ABSTRACT_GRIFFON_VIEW_CLASS = ClassHelper.makeWithoutCaching(AbstractGriffonView.class);
-    private static final ClassNode ABSTRACT_GRIFFON_VIEW_SCRIPT_CLASS = ClassHelper.makeWithoutCaching(AbstractGriffonViewScript.class);
+    private static final ClassNode GRIFFON_VIEW_CLASS = makeClassSafe(GriffonView.class);
+    private static final ClassNode ABSTRACT_GRIFFON_VIEW_CLASS = makeClassSafe(AbstractGriffonView.class);
+    private static final ClassNode ABSTRACT_GRIFFON_VIEW_SCRIPT_CLASS = makeClassSafe(AbstractGriffonViewScript.class);
 
     public static boolean isViewArtifact(ClassNode classNode, SourceUnit source) {
         if (classNode == null || source == null) return false;

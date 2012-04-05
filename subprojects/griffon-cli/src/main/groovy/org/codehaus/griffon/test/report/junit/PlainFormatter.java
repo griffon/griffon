@@ -14,25 +14,24 @@ import java.io.*;
 public class PlainFormatter extends PlainJUnitResultFormatter {
     protected String name;
     protected File file;
-    
+
     protected String systemOutput;
     protected String systemError;
-    
+
     public PlainFormatter(String name, File file) {
         this.name = name;
         this.file = file;
         try {
             super.setOutput(new BufferedOutputStream(new FileOutputStream(file)));
-        }
-        catch (FileNotFoundException e) {
+        } catch (FileNotFoundException e) {
             throw new RuntimeException(e);
         }
     }
-    
+
     public void setOutput(OutputStream out) {
         throw new IllegalStateException("This should not be called");
     }
-    
+
     public void setSystemError(String out) {
         systemError = out;
         super.setSystemError(out);
@@ -52,27 +51,27 @@ public class PlainFormatter extends PlainJUnitResultFormatter {
         TestStacktraceSanitizer.sanitize(throwable);
         super.addError(test, throwable);
     }
-    
+
     public void endTestSuite(JUnitTest suite) {
         super.endTestSuite(suite);
         File parentFile = file.getParentFile();
         writeToFile(new File(parentFile, name + "-out.txt"), systemOutput);
         writeToFile(new File(parentFile, name + "-err.txt"), systemError);
     }
-    
+
     protected void writeToFile(File file, String text) {
         FileWriter writer = null;
         try {
             writer = new FileWriter(file);
             writer.write(text);
             writer.close();
-        }
-        catch (IOException ex) {
+        } catch (IOException ex) {
             throw new RuntimeException(ex);
-        }
-        finally {
+        } finally {
             if (writer != null) {
-                try { writer.close(); } catch (IOException ignore) {
+                try {
+                    writer.close();
+                } catch (IOException ignore) {
                     //IGNORE
                 }
             }

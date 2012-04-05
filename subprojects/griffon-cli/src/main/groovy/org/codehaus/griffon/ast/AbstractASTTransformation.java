@@ -53,10 +53,10 @@ public abstract class AbstractASTTransformation implements ASTTransformation, Op
 
     protected void checkNodesForAnnotationAndType(ASTNode node1, ASTNode node2) {
         if (!(node1 instanceof AnnotationNode) || !(node2 instanceof ClassNode)) {
-            throw new RuntimeException("Internal error: wrong types: "+ node1.getClass() +" / "+ node2.getClass());
+            throw new RuntimeException("Internal error: wrong types: " + node1.getClass() + " / " + node2.getClass());
         }
     }
-    
+
     public static Expression emptyMap() {
         return call(COLLECTIONS_CLASS, "emptyMap", NO_ARGS);
     }
@@ -66,6 +66,14 @@ public abstract class AbstractASTTransformation implements ASTTransformation, Op
     }
 
     protected static ClassNode newClass(ClassNode classNode) {
+        return classNode.getPlainNodeReference();
+    }
+
+    public static ClassNode makeClassSafe(Class klass) {
+        return makeClassSafe(ClassHelper.makeWithoutCaching(klass));
+    }
+
+    public static ClassNode makeClassSafe(ClassNode classNode) {
         return classNode.getPlainNodeReference();
     }
 }

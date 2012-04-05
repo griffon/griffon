@@ -40,10 +40,10 @@ import static org.codehaus.griffon.ast.GriffonASTUtils.*;
 public class MVCAwareASTTransformation extends AbstractASTTransformation {
     private static final Logger LOG = LoggerFactory.getLogger(MVCAwareASTTransformation.class);
 
-    private static ClassNode MY_TYPE = ClassHelper.makeWithoutCaching(MVCAware.class);
-    private static ClassNode MVC_HANDLER_TYPE = ClassHelper.makeWithoutCaching(MVCHandler.class);
-    private static final ClassNode MVCCLOSURE_CLASS = ClassHelper.makeWithoutCaching(MVCClosure.class);
-    private static final ClassNode MVCGROUP_CLASS = ClassHelper.makeWithoutCaching(MVCGroup.class);
+    private static ClassNode MY_TYPE = makeClassSafe(MVCAware.class);
+    private static ClassNode MVC_HANDLER_TYPE = makeClassSafe(MVCHandler.class);
+    private static final ClassNode MVCCLOSURE_CLASS = makeClassSafe(MVCClosure.class);
+    private static final ClassNode MVCGROUP_CLASS = makeClassSafe(MVCGroup.class);
 
     private static final String CREATE_MVC_GROUP = "createMVCGroup";
     private static final String DESTROY_MVC_GROUP = "destroyMVCGroup";
@@ -124,7 +124,7 @@ public class MVCAwareASTTransformation extends AbstractASTTransformation {
                 ACC_PUBLIC,
                 MVCGROUP_CLASS,
                 params(
-                        param(newClass(ClassHelper.MAP_TYPE), ARGS),
+                        param(makeClassSafe(ClassHelper.MAP_TYPE), ARGS),
                         param(ClassHelper.STRING_TYPE, MVC_TYPE)),
                 ClassNode.EMPTY_ARRAY,
                 returns(call(
@@ -140,7 +140,7 @@ public class MVCAwareASTTransformation extends AbstractASTTransformation {
                 MVCGROUP_CLASS,
                 params(
                         param(ClassHelper.STRING_TYPE, MVC_TYPE),
-                        param(newClass(ClassHelper.MAP_TYPE), ARGS)),
+                        param(makeClassSafe(ClassHelper.MAP_TYPE), ARGS)),
                 ClassNode.EMPTY_ARRAY,
                 returns(call(
                         mvcGroupManagerInstance(),
@@ -154,7 +154,7 @@ public class MVCAwareASTTransformation extends AbstractASTTransformation {
                 ACC_PUBLIC,
                 MVCGROUP_CLASS,
                 params(
-                        param(newClass(ClassHelper.MAP_TYPE), ARGS),
+                        param(makeClassSafe(ClassHelper.MAP_TYPE), ARGS),
                         param(ClassHelper.STRING_TYPE, MVC_TYPE),
                         param(ClassHelper.STRING_TYPE, MVC_NAME)),
                 ClassNode.EMPTY_ARRAY,
@@ -172,7 +172,7 @@ public class MVCAwareASTTransformation extends AbstractASTTransformation {
                 params(
                         param(ClassHelper.STRING_TYPE, MVC_TYPE),
                         param(ClassHelper.STRING_TYPE, MVC_NAME),
-                        param(newClass(ClassHelper.MAP_TYPE), ARGS)),
+                        param(makeClassSafe(ClassHelper.MAP_TYPE), ARGS)),
                 ClassNode.EMPTY_ARRAY,
                 returns(call(
                         mvcGroupManagerInstance(),
@@ -184,7 +184,7 @@ public class MVCAwareASTTransformation extends AbstractASTTransformation {
         injectMethod(classNode, new MethodNode(
                 CREATE_MVC_GROUP,
                 ACC_PUBLIC,
-                newClass(ClassHelper.LIST_TYPE),
+                makeClassSafe(ClassHelper.LIST_TYPE),
                 params(param(ClassHelper.STRING_TYPE, MVC_TYPE)),
                 ClassNode.EMPTY_ARRAY,
                 returns(call(
@@ -197,7 +197,7 @@ public class MVCAwareASTTransformation extends AbstractASTTransformation {
         injectMethod(classNode, new MethodNode(
                 CREATE_MVC_GROUP,
                 ACC_PUBLIC,
-                newClass(ClassHelper.LIST_TYPE),
+                makeClassSafe(ClassHelper.LIST_TYPE),
                 params(
                         param(ClassHelper.STRING_TYPE, MVC_TYPE),
                         param(ClassHelper.STRING_TYPE, MVC_NAME)),
@@ -212,9 +212,9 @@ public class MVCAwareASTTransformation extends AbstractASTTransformation {
         injectMethod(classNode, new MethodNode(
                 CREATE_MVC_GROUP,
                 ACC_PUBLIC,
-                newClass(ClassHelper.LIST_TYPE),
+                makeClassSafe(ClassHelper.LIST_TYPE),
                 params(
-                        param(newClass(ClassHelper.MAP_TYPE), ARGS),
+                        param(makeClassSafe(ClassHelper.MAP_TYPE), ARGS),
                         param(ClassHelper.STRING_TYPE, MVC_TYPE)),
                 ClassNode.EMPTY_ARRAY,
                 returns(call(
@@ -227,10 +227,10 @@ public class MVCAwareASTTransformation extends AbstractASTTransformation {
         injectMethod(classNode, new MethodNode(
                 CREATE_MVC_GROUP,
                 ACC_PUBLIC,
-                newClass(ClassHelper.LIST_TYPE),
+                makeClassSafe(ClassHelper.LIST_TYPE),
                 params(
                         param(ClassHelper.STRING_TYPE, MVC_TYPE),
-                        param(newClass(ClassHelper.MAP_TYPE), ARGS)),
+                        param(makeClassSafe(ClassHelper.MAP_TYPE), ARGS)),
                 ClassNode.EMPTY_ARRAY,
                 returns(call(
                         mvcGroupManagerInstance(),
@@ -242,9 +242,9 @@ public class MVCAwareASTTransformation extends AbstractASTTransformation {
         injectMethod(classNode, new MethodNode(
                 CREATE_MVC_GROUP,
                 ACC_PUBLIC,
-                newClass(ClassHelper.LIST_TYPE),
+                makeClassSafe(ClassHelper.LIST_TYPE),
                 params(
-                        param(newClass(ClassHelper.MAP_TYPE), ARGS),
+                        param(makeClassSafe(ClassHelper.MAP_TYPE), ARGS),
                         param(ClassHelper.STRING_TYPE, MVC_TYPE),
                         param(ClassHelper.STRING_TYPE, MVC_NAME)),
                 ClassNode.EMPTY_ARRAY,
@@ -258,11 +258,11 @@ public class MVCAwareASTTransformation extends AbstractASTTransformation {
         injectMethod(classNode, new MethodNode(
                 CREATE_MVC_GROUP,
                 ACC_PUBLIC,
-                newClass(ClassHelper.LIST_TYPE),
+                makeClassSafe(ClassHelper.LIST_TYPE),
                 params(
                         param(ClassHelper.STRING_TYPE, MVC_TYPE),
                         param(ClassHelper.STRING_TYPE, MVC_NAME),
-                        param(newClass(ClassHelper.MAP_TYPE), ARGS)),
+                        param(makeClassSafe(ClassHelper.MAP_TYPE), ARGS)),
                 ClassNode.EMPTY_ARRAY,
                 returns(call(
                         mvcGroupManagerInstance(),
@@ -290,7 +290,7 @@ public class MVCAwareASTTransformation extends AbstractASTTransformation {
                 ClassHelper.VOID_TYPE,
                 params(
                         param(ClassHelper.STRING_TYPE, MVC_TYPE),
-                        param(newClass(ClassHelper.CLOSURE_TYPE), HANDLER)),
+                        param(makeClassSafe(ClassHelper.CLOSURE_TYPE), HANDLER)),
                 ClassNode.EMPTY_ARRAY,
                 stmnt(call(
                         mvcGroupManagerInstance(),
@@ -306,7 +306,7 @@ public class MVCAwareASTTransformation extends AbstractASTTransformation {
                 params(
                         param(ClassHelper.STRING_TYPE, MVC_TYPE),
                         param(ClassHelper.STRING_TYPE, MVC_NAME),
-                        param(newClass(ClassHelper.CLOSURE_TYPE), HANDLER)),
+                        param(makeClassSafe(ClassHelper.CLOSURE_TYPE), HANDLER)),
                 ClassNode.EMPTY_ARRAY,
                 stmnt(call(
                         mvcGroupManagerInstance(),
@@ -321,8 +321,8 @@ public class MVCAwareASTTransformation extends AbstractASTTransformation {
                 ClassHelper.VOID_TYPE,
                 params(
                         param(ClassHelper.STRING_TYPE, MVC_TYPE),
-                        param(newClass(ClassHelper.MAP_TYPE), ARGS),
-                        param(newClass(ClassHelper.CLOSURE_TYPE), HANDLER)),
+                        param(makeClassSafe(ClassHelper.MAP_TYPE), ARGS),
+                        param(makeClassSafe(ClassHelper.CLOSURE_TYPE), HANDLER)),
                 ClassNode.EMPTY_ARRAY,
                 stmnt(call(
                         mvcGroupManagerInstance(),
@@ -336,9 +336,9 @@ public class MVCAwareASTTransformation extends AbstractASTTransformation {
                 ACC_PUBLIC,
                 ClassHelper.VOID_TYPE,
                 params(
-                        param(newClass(ClassHelper.MAP_TYPE), ARGS),
+                        param(makeClassSafe(ClassHelper.MAP_TYPE), ARGS),
                         param(ClassHelper.STRING_TYPE, MVC_TYPE),
-                        param(newClass(ClassHelper.CLOSURE_TYPE), HANDLER)),
+                        param(makeClassSafe(ClassHelper.CLOSURE_TYPE), HANDLER)),
                 ClassNode.EMPTY_ARRAY,
                 stmnt(call(
                         mvcGroupManagerInstance(),
@@ -354,8 +354,8 @@ public class MVCAwareASTTransformation extends AbstractASTTransformation {
                 params(
                         param(ClassHelper.STRING_TYPE, MVC_TYPE),
                         param(ClassHelper.STRING_TYPE, MVC_NAME),
-                        param(newClass(ClassHelper.MAP_TYPE), ARGS),
-                        param(newClass(ClassHelper.CLOSURE_TYPE), HANDLER)),
+                        param(makeClassSafe(ClassHelper.MAP_TYPE), ARGS),
+                        param(makeClassSafe(ClassHelper.CLOSURE_TYPE), HANDLER)),
                 ClassNode.EMPTY_ARRAY,
                 stmnt(call(
                         mvcGroupManagerInstance(),
@@ -370,10 +370,10 @@ public class MVCAwareASTTransformation extends AbstractASTTransformation {
                 ACC_PUBLIC,
                 ClassHelper.VOID_TYPE,
                 params(
-                        param(newClass(ClassHelper.MAP_TYPE), ARGS),
+                        param(makeClassSafe(ClassHelper.MAP_TYPE), ARGS),
                         param(ClassHelper.STRING_TYPE, MVC_TYPE),
                         param(ClassHelper.STRING_TYPE, MVC_NAME),
-                        param(newClass(ClassHelper.CLOSURE_TYPE), HANDLER)),
+                        param(makeClassSafe(ClassHelper.CLOSURE_TYPE), HANDLER)),
                 ClassNode.EMPTY_ARRAY,
                 stmnt(call(
                         mvcGroupManagerInstance(),
@@ -389,7 +389,7 @@ public class MVCAwareASTTransformation extends AbstractASTTransformation {
                 ClassHelper.VOID_TYPE,
                 params(
                         param(ClassHelper.STRING_TYPE, MVC_TYPE),
-                        param(newClass(MVCCLOSURE_CLASS), HANDLER)),
+                        param(makeClassSafe(MVCCLOSURE_CLASS), HANDLER)),
                 ClassNode.EMPTY_ARRAY,
                 stmnt(call(
                         mvcGroupManagerInstance(),
@@ -405,7 +405,7 @@ public class MVCAwareASTTransformation extends AbstractASTTransformation {
                 params(
                         param(ClassHelper.STRING_TYPE, MVC_TYPE),
                         param(ClassHelper.STRING_TYPE, MVC_NAME),
-                        param(newClass(MVCCLOSURE_CLASS), HANDLER)),
+                        param(makeClassSafe(MVCCLOSURE_CLASS), HANDLER)),
                 ClassNode.EMPTY_ARRAY,
                 stmnt(call(
                         mvcGroupManagerInstance(),
@@ -420,8 +420,8 @@ public class MVCAwareASTTransformation extends AbstractASTTransformation {
                 ClassHelper.VOID_TYPE,
                 params(
                         param(ClassHelper.STRING_TYPE, MVC_TYPE),
-                        param(newClass(ClassHelper.MAP_TYPE), ARGS),
-                        param(newClass(MVCCLOSURE_CLASS), HANDLER)),
+                        param(makeClassSafe(ClassHelper.MAP_TYPE), ARGS),
+                        param(makeClassSafe(MVCCLOSURE_CLASS), HANDLER)),
                 ClassNode.EMPTY_ARRAY,
                 stmnt(call(
                         mvcGroupManagerInstance(),
@@ -435,9 +435,9 @@ public class MVCAwareASTTransformation extends AbstractASTTransformation {
                 ACC_PUBLIC,
                 ClassHelper.VOID_TYPE,
                 params(
-                        param(newClass(ClassHelper.MAP_TYPE), ARGS),
+                        param(makeClassSafe(ClassHelper.MAP_TYPE), ARGS),
                         param(ClassHelper.STRING_TYPE, MVC_TYPE),
-                        param(newClass(MVCCLOSURE_CLASS), HANDLER)),
+                        param(makeClassSafe(MVCCLOSURE_CLASS), HANDLER)),
                 ClassNode.EMPTY_ARRAY,
                 stmnt(call(
                         mvcGroupManagerInstance(),
@@ -453,8 +453,8 @@ public class MVCAwareASTTransformation extends AbstractASTTransformation {
                 params(
                         param(ClassHelper.STRING_TYPE, MVC_TYPE),
                         param(ClassHelper.STRING_TYPE, MVC_NAME),
-                        param(newClass(ClassHelper.MAP_TYPE), ARGS),
-                        param(newClass(MVCCLOSURE_CLASS), HANDLER)),
+                        param(makeClassSafe(ClassHelper.MAP_TYPE), ARGS),
+                        param(makeClassSafe(MVCCLOSURE_CLASS), HANDLER)),
                 ClassNode.EMPTY_ARRAY,
                 stmnt(call(
                         mvcGroupManagerInstance(),
@@ -468,10 +468,10 @@ public class MVCAwareASTTransformation extends AbstractASTTransformation {
                 ACC_PUBLIC,
                 ClassHelper.VOID_TYPE,
                 params(
-                        param(newClass(ClassHelper.MAP_TYPE), ARGS),
+                        param(makeClassSafe(ClassHelper.MAP_TYPE), ARGS),
                         param(ClassHelper.STRING_TYPE, MVC_TYPE),
                         param(ClassHelper.STRING_TYPE, MVC_NAME),
-                        param(newClass(MVCCLOSURE_CLASS), HANDLER)),
+                        param(makeClassSafe(MVCCLOSURE_CLASS), HANDLER)),
                 ClassNode.EMPTY_ARRAY,
                 stmnt(call(
                         mvcGroupManagerInstance(),

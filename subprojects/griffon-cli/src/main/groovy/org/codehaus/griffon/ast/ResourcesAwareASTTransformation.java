@@ -44,11 +44,11 @@ import static org.codehaus.griffon.ast.GriffonASTUtils.*;
 @GroovyASTTransformation(phase = CompilePhase.CANONICALIZATION)
 public class ResourcesAwareASTTransformation extends AbstractASTTransformation {
     private static final Logger LOG = LoggerFactory.getLogger(ResourcesAwareASTTransformation.class);
-    private static final ClassNode RESOURCE_HANDLER_CLASS = ClassHelper.makeWithoutCaching(ResourceHandler.class);
-    private static final ClassNode RESOURCES_AWARE_CLASS = ClassHelper.makeWithoutCaching(ResourcesAware.class);
-    private static final ClassNode RESOURCE_LOCATOR_CLASS = ClassHelper.makeWithoutCaching(ResourceLocator.class);
-    private static final ClassNode URL_CLASS = ClassHelper.makeWithoutCaching(URL.class);
-    private static final ClassNode INPUT_STREAM_CLASS = ClassHelper.makeWithoutCaching(InputStream.class);
+    private static final ClassNode RESOURCE_HANDLER_CLASS = makeClassSafe(ResourceHandler.class);
+    private static final ClassNode RESOURCES_AWARE_CLASS = makeClassSafe(ResourcesAware.class);
+    private static final ClassNode RESOURCE_LOCATOR_CLASS = makeClassSafe(ResourceLocator.class);
+    private static final ClassNode URL_CLASS = makeClassSafe(URL.class);
+    private static final ClassNode INPUT_STREAM_CLASS = makeClassSafe(InputStream.class);
 
     private static final String NAME = "name";
     private static final String METHOD_GET_RESOURCE_AS_URL = "getResourceAsURL";
@@ -192,7 +192,7 @@ public class ResourcesAwareASTTransformation extends AbstractASTTransformation {
         injectMethod(declaringClass, new MethodNode(
                 METHOD_GET_RESOURCES,
                 ACC_PUBLIC,
-                newClass(ClassHelper.LIST_TYPE),
+                makeClassSafe(ClassHelper.LIST_TYPE),
                 params(param(ClassHelper.STRING_TYPE, NAME)),
                 ClassNode.EMPTY_ARRAY,
                 returns(call(

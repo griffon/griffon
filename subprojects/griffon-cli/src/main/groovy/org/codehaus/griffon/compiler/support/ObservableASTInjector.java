@@ -36,7 +36,7 @@ import static org.codehaus.griffon.ast.GriffonASTUtils.*;
  */
 public class ObservableASTInjector extends AbstractASTInjector {
     private static final Logger LOG = LoggerFactory.getLogger(ObservableASTInjector.class);
-    private static final ClassNode OBSERVABLE_CLASS = ClassHelper.makeWithoutCaching(Observable.class);
+    private static final ClassNode OBSERVABLE_CLASS = makeClassSafe(Observable.class);
 
     private static final String LISTENER = "listener";
     private static final String NAME = "name";
@@ -55,9 +55,9 @@ public class ObservableASTInjector extends AbstractASTInjector {
         if (LOG.isDebugEnabled())
             LOG.debug("Injecting " + OBSERVABLE_CLASS.getName() + " behavior to " + classNode.getName());
 
-        ClassNode pcsClassNode = ClassHelper.makeWithoutCaching(PropertyChangeSupport.class);
-        ClassNode pclClassNode = ClassHelper.makeWithoutCaching(PropertyChangeListener.class);
-        ClassNode pceClassNode = ClassHelper.makeWithoutCaching(PropertyChangeEvent.class);
+        ClassNode pcsClassNode = makeClassSafe(PropertyChangeSupport.class);
+        ClassNode pclClassNode = makeClassSafe(PropertyChangeListener.class);
+        ClassNode pceClassNode = makeClassSafe(PropertyChangeEvent.class);
 
         //String pcsFieldName = "this$propertyChangeSupport";
 
@@ -147,7 +147,7 @@ public class ObservableASTInjector extends AbstractASTInjector {
                         ClassHelper.VOID_TYPE,
                         params(
                                 param(ClassHelper.STRING_TYPE, NAME),
-                                param(newClass(ClassHelper.OBJECT_TYPE), "oldValue"),
+                                param(makeClassSafe(ClassHelper.OBJECT_TYPE), "oldValue"),
                                 param(ClassHelper.OBJECT_TYPE, "newValue")),
                         ClassNode.EMPTY_ARRAY,
                         stmnt(call(

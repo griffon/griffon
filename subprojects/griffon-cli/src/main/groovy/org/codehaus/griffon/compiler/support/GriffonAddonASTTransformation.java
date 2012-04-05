@@ -41,8 +41,8 @@ import org.slf4j.LoggerFactory;
 @GroovyASTTransformation(phase = CompilePhase.CANONICALIZATION)
 public class GriffonAddonASTTransformation extends AbstractASTTransformation {
     private static final Logger LOG = LoggerFactory.getLogger(GriffonAddonASTTransformation.class);
-    private static final ClassNode GRIFFON_ADDON_CLASS = ClassHelper.makeWithoutCaching(GriffonAddon.class);
-    private static final ClassNode ABSTRACT_GRIFFON_ADDON_CLASS = ClassHelper.makeWithoutCaching(AbstractGriffonAddon.class);
+    private static final ClassNode GRIFFON_ADDON_CLASS = makeClassSafe(GriffonAddon.class);
+    private static final ClassNode ABSTRACT_GRIFFON_ADDON_CLASS = makeClassSafe(AbstractGriffonAddon.class);
 
     public void visit(ASTNode[] nodes, SourceUnit source) {
         if (GriffonCompilerContext.getConfigOption(CommandLineConstants.KEY_DISABLE_AST_INJECTION) || !GriffonCompilerContext.isGriffonAddon(source))

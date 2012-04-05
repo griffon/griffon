@@ -38,7 +38,7 @@ The type of the service class is optional as basic injection is done by name alo
 Service injection is trivial, it does not provide a full blown DI, in other words further service dependencies will not be resolved. You will need a richer DI solution in order to achieve this, fortunately there is a [Spring plugin|http://griffon.codehaus.org/Spring+Plugin] that does this and more.
 {note}
 
-Given that services are inherently treated as singletons they are also automatically registered as application event listeners. Be aware that services will be instantiated lazily which means that some events might not reach a particular service if it has not been instantiated by the framework by the time of event publication. It also discouraged to use the \@Singleton annotation on a Service class as it will cause trouble with the automatic singleton management Griffon has in place.
+Given that services are inherently treated as singletons they are also automatically registered as application event listeners. Be aware that services will be instantiated lazily which means that some events might not reach a particular service if it has not been instantiated by the framework by the time of event publication. It's also discouraged to use the \@Singleton annotation on a Service class as it will cause trouble with the automatic singleton management Griffon has in place.
 
 Lastly, all services instances will become available through an instance of type @griffon.core.ServiceManager@. This helper class exposes available services via a Map. You can query all currently available services in the following manner
 
