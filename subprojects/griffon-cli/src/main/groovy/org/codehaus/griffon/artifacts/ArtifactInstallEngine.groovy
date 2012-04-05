@@ -427,6 +427,7 @@ class ArtifactInstallEngine {
 
         installedReleases.each { key, installed ->
             ArtifactDependency dependency = installedDependencies[key]
+            if (!dependency) return
             installed.dependencies.each { entry ->
                 ArtifactDependency dep = installedDependencies[entry.name]
                 if (dep) dependency.dependencies << dep
