@@ -13,3 +13,5 @@ log4j = {
            'griffon.app'
 }
 
+i18n.provider = 'i18n-support'
+i18n.basename = 'messages'
