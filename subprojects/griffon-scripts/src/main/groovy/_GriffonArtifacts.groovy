@@ -112,7 +112,8 @@ installArtifact = { String type ->
         } else {
             event('StatusError', [installArtifactErrorMessage(Archetype.TYPE)])
         }
-    } catch (Exception e) {
+    }
+    catch (Exception e) {
         logError("Error installing ${type}: ${e.message}", e)
         exit(1)
     }
@@ -276,7 +277,7 @@ doInstallFromFile = { type, file, md ->
     }
 }
 
-uninstalledPlugins = [:]
+
 createArtifactInstallEngine = { Metadata md = metadata ->
     ArtifactInstallEngine artifactInstallEngine = new ArtifactInstallEngine(griffonSettings, md, ant)
     artifactInstallEngine.pluginScriptRunner = runPluginScript
@@ -287,10 +288,6 @@ createArtifactInstallEngine = { Metadata md = metadata ->
         for (dir in artifactInstallEngine.installedArtifacts) {
             ant.delete(dir: dir, failonerror: false)
         }
-        for(plugin in uninstalledPlugins) {
-            if(!md[plugin.key]) md[plugin.key] = plugin.value
-        }
-        md.persist()
         exit(1)
     }
 
@@ -299,6 +296,27 @@ createArtifactInstallEngine = { Metadata md = metadata ->
 
     artifactInstallEngine
 }
+
+createDpndcyUnrslvdArtifactInstallEngine = { Metadata md = metadata ->
+    DependencyUnrslvdArtifactInstallEngine artifactInstallEngine = new DependencyUnrslvdArtifactInstallEngine(griffonSettings, md, ant)
+    artifactInstallEngine.pluginScriptRunner = runPluginScript
+    artifactInstallEngine.eventHandler = { eventName, msg -> event(eventName, [msg]) }
+    artifactInstallEngine.errorHandler = { msg ->
+        event('StatusError', [msg])
+        // install or uninstalled too
+        for (dir in artifactInstallEngine.installedArtifacts) {
+            ant.delete(dir: dir, failonerror: false)
+        }
+
+        exit(1)
+    }
+
+    artifactInstallEngine.interactive = isInteractive
+    artifactInstallEngine.variableStore = binding
+
+    artifactInstallEngine
+}
+
 
 runPluginScript = { File scriptFile, fullPluginName, msg ->
     if (scriptFile.exists()) {

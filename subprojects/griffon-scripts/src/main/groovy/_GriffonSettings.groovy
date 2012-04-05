@@ -368,7 +368,6 @@ loadArtifactDescriptorClass = { String artifactFile ->
         // directory to the class loader in case it didn't exist before
         // the associated descriptor's sources were compiled.
         def gcl = new GroovyClassLoader(classLoader)
-        gcl.addURL(griffonSettings.baseDir.toURI().toURL())
         String artifactClassName = artifactFile.endsWith('.groovy') ? artifactFile[0..-8] : artifactFile
         return gcl.loadClass(artifactClassName).newInstance()
     }
@@ -444,7 +443,7 @@ target(updateAppProperties: "Updates default application.properties") {
     appGriffonVersion = griffonVersion
 }
 
-buildConfig.griffon.application.mainClass = buildConfig.griffon.application.mainClass ?: 'griffon.test.mock.MockGriffonApplication'
+buildConfig.griffon.application.mainClass = buildConfig.griffon.application.mainClass ?: 'griffon.swing.SwingApplication'
 
 resetDependencyResolution = {
     pluginSettings.clearCaches()

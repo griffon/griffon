@@ -31,10 +31,28 @@ includeTargets << griffonScript('_GriffonArtifacts')
 
 runDependencyResolution = true
 target(name: 'resolveDependencies', description: 'Resolves project and plugin dependencies',
-    prehook: null, posthook: null) {
+        prehook: null, posthook: null) {
+
+
     if(!griffonSettings.isGriffonProject()) return
 
     if (runDependencyResolution) {
+        long start = System.currentTimeMillis()
+        event 'StatusUpdate', ['Resolving plugin dependencies']
+        ArtifactInstallEngine artifactInstallEngine = createDpndcyUnrslvdArtifactInstallEngine()
+        artifactInstallEngine.installPluginWithoutDependency()
+//XXX -- NATIVE
+        runDependencyResolution = false
+//
+    }
+}
+
+runDependencyResolution = true
+target(name: 'resolveDependenciesAtCompile', description: 'Resolves project and plugin dependencies at compile time',
+        prehook: null, posthook: null) {
+      if(!griffonSettings.isGriffonProject()) return
+
+      if (runDependencyResolution) {
         long start = System.currentTimeMillis()
         event 'StatusUpdate', ['Resolving plugin dependencies']
         ArtifactInstallEngine artifactInstallEngine = createArtifactInstallEngine()
@@ -47,7 +65,7 @@ target(name: 'resolveDependencies', description: 'Resolves project and plugin de
         long end = System.currentTimeMillis()
         event 'StatusFinal', ["Plugin dependencies resolved in ${end - start} ms."]
 
-// XXX -- NATIVE
+    //XXX -- NATIVE
         Map<String, List<File>> jars = [:]
         processPlatformLibraries(jars, platform)
         if (is64Bit) {
@@ -60,11 +78,11 @@ target(name: 'resolveDependencies', description: 'Resolves project and plugin de
             griffonSettings.updateDependenciesFor 'runtime', files
             griffonSettings.updateDependenciesFor 'test', files
         }
-// XXX -- NATIVE
+    //XXX -- NATIVE
         runDependencyResolution = false
-        // reset appName
+    //        reset appName
         if(metadata) griffonAppName = metadata.getApplicationName()
-    }
+       }
 }
 
 // XXX -- NATIVE

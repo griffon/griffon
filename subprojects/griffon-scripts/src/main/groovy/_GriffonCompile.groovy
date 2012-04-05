@@ -23,20 +23,12 @@ import org.codehaus.groovy.runtime.StackTraceUtils
  */
 
 includeTargets << griffonScript('_GriffonClasspath')
+includeTargets << griffonScript('_GriffonResolveDependencies')
 
 ant.taskdef(name: 'groovyc', classname: 'org.codehaus.groovy.ant.Groovyc')
 ant.taskdef(name: 'griffonc', classname: 'org.codehaus.griffon.compiler.GriffonCompiler')
 
 additionalSources = []
-
-compilerOptions = { Map options ->
-    if (griffonSettings.sourceEncoding != null) options.encoding = griffonSettings.sourceEncoding
-    if (griffonSettings.compilerDebug != null) options.debug = griffonSettings.compilerDebug
-    if (griffonSettings.compilerSourceLevel != null) options.source = griffonSettings.compilerSourceLevel
-    if (griffonSettings.compilerTargetLevel != null) options.target = griffonSettings.compilerTargetLevel
-    debug "Javac options $options"
-    options
-}
 
 compilerPaths = { String classpathId ->
     def excludedPaths = ["resources", "i18n", "conf"] // conf gets special handling
@@ -54,7 +46,11 @@ compilerPaths = { String classpathId ->
         if (new File(srcPath).exists()) src(path: srcPath)
     }
 
-    javac(compilerOptions(classpathref: classpathId))
+    javac(classpathref: classpathId,
+            encoding: griffonSettings.sourceEncoding,
+            debug: 'yes',
+            source: griffonSettings.compilerSourceLevel,
+            target: griffonSettings.compilerTargetLevel)
 }
 
 compileSources = { destinationDir, classpathId, sources ->
@@ -88,12 +84,7 @@ compileSources = { destinationDir, classpathId, sources ->
 
 target(name: 'compile', description: "Implementation of compilation phase",
         prehook: null, posthook: null) {
-    def compileDependencies = [classpath]
-    if (argsMap.clean) {
-        includeTargets << griffonScript('_GriffonClean')
-        compileDependencies = [clean] + compileDependencies
-    }
-    depends(* compileDependencies)
+    depends(classpath, resolveDependenciesAtCompile)
 
     if (isApplicationProject || isPluginProject) {
         [
@@ -126,7 +117,11 @@ target(name: 'compile', description: "Implementation of compilation phase",
             src(path: "${basedir}/griffon-app/conf")
             include(name: '*.groovy')
             include(name: '*.java')
-            javac(compilerOptions(classpathref: classpathId))
+            javac(classpathref: classpathId,
+                    encoding: griffonSettings.sourceEncoding,
+                    debug: 'yes',
+                    source: griffonSettings.compilerSourceLevel,
+                    target: griffonSettings.compilerTargetLevel)
         }
         ant.copy(todir: projectMainClassesDir) {
             fileset(dir: "${basedir}/griffon-app/conf") {
@@ -145,7 +140,11 @@ target(name: 'compile', description: "Implementation of compilation phase",
                 }
                 compileSources(projectCliClassesDir, 'plugin.cli.compile.classpath') {
                     src(path: cliSourceDir)
-                    javac(compilerOptions(classpathref: 'plugin.cli.compile.classpath'))
+                    javac(classpathref: 'plugin.cli.compile.classpath',
+                            encoding: griffonSettings.sourceEncoding,
+                            debug: 'yes',
+                            source: griffonSettings.compilerSourceLevel,
+                            target: griffonSettings.compilerTargetLevel)
                 }
                 ant.copy(todir: projectCliClassesDir) {
                     fileset(dir: "${basedir}/src/cli") {
@@ -166,7 +165,11 @@ target(name: 'compile', description: "Implementation of compilation phase",
                 src(path: basedir)
                 include(name: '*GriffonAddon.groovy')
                 include(name: '*GriffonAddon.java')
-                javac(compilerOptions(classpathref: 'addon.classpath'))
+                javac(classpathref: 'addon.classpath',
+                        encoding: griffonSettings.sourceEncoding,
+                        debug: 'yes',
+                        source: griffonSettings.compilerSourceLevel,
+                        target: griffonSettings.compilerTargetLevel)
             }
         }
     }
@@ -201,7 +204,11 @@ compileProjectTestSrc = { rootDir ->
             }
             compileSources(projectTestClassesDir, 'projectTest.classpath') {
                 src(path: projectTest)
-                javac(compilerOptions(classpathref: 'projectTest.classpath'))
+                javac(classpathref: 'projectTest.classpath',
+                        encoding: griffonSettings.sourceEncoding,
+                        debug: 'yes',
+                        source: griffonSettings.compilerSourceLevel,
+                        target: griffonSettings.compilerTargetLevel)
             }
         }
     }
