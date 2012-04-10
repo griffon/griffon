@@ -56,5 +56,5 @@ public class TestAppCommand extends AbstractGriffonCommand {
             description = "Specifies type:phase and/or test selection.",
             required = false,
             multiValued = true)
-    private List<String> args;
+    private List<String> arguments;
 }
