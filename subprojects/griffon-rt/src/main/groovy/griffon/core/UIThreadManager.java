@@ -182,13 +182,7 @@ public final class UIThreadManager {
     }
 
     public void setUIThreadHandler(UIThreadHandler threadHandler) {
-        if (this.uiThreadHandler != null) {
-            if (LOG.isWarnEnabled()) {
-                LOG.warn("UIThreadHandler is already set, it can't be changed!");
-            }
-        } else {
-            this.uiThreadHandler = threadHandler;
-        }
+        this.uiThreadHandler = threadHandler;
     }
 
     public UIThreadHandler getUIThreadHandler() {
