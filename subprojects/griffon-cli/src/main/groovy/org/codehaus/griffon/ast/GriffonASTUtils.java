@@ -337,11 +337,6 @@ public class GriffonASTUtils {
     public static final Token CMP = Token.newSymbol(Types.COMPARE_TO, -1, -1);
     public static final Token INSTANCEOF = Token.newSymbol(Types.KEYWORD_INSTANCEOF, -1, -1);
 
-    @Deprecated
-    public static Statement returnExpr(Expression expr) {
-        return returns(expr);
-    }
-
     public static Statement returns(Expression expr) {
         return new ReturnStatement(new ExpressionStatement(expr));
     }

@@ -138,33 +138,6 @@ public class EventRouter {
      * outside of the UI thread always.
      *
      * @param eventName the name of the event
-     * @deprecated use #eventOutsideUI() instead
-     */
-    @Deprecated
-    public void publishOutside(String eventName) {
-        publishOutside(eventName, EMPTY_LIST);
-    }
-
-    /**
-     * Publishes an event with optional arguments.</p>
-     * Event listeners are guaranteed to be notified
-     * outside of the UI thread always.
-     *
-     * @param eventName the name of the event
-     * @param params    the event's arguments
-     * @deprecated use #eventOutsideUI() instead
-     */
-    @Deprecated
-    public void publishOutside(String eventName, List params) {
-        publishOutsideUI(eventName, params);
-    }
-
-    /**
-     * Publishes an event with optional arguments.</p>
-     * Event listeners are guaranteed to be notified
-     * outside of the UI thread always.
-     *
-     * @param eventName the name of the event
      */
     public void publishOutsideUI(String eventName) {
         publishOutsideUI(eventName, EMPTY_LIST);

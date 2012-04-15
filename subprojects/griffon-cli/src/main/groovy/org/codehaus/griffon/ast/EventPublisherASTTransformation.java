@@ -298,25 +298,6 @@ public class EventPublisherASTTransformation extends AbstractASTTransformation {
                         vars(NAME, ARGS)))
         ));
 
-        // TODO @deprecated - remove before 1.0
-        // add method:
-        // void publishEventOutside(String name, List args = []) {
-        //     this$eventRouter.publishEventOutside(name, args)
-        //  }
-        injectMethod(declaringClass, new MethodNode(
-                "publishEventOutside",
-                ACC_PUBLIC,
-                ClassHelper.VOID_TYPE,
-                params(
-                        param(ClassHelper.STRING_TYPE, NAME),
-                        param(makeClassSafe(ClassHelper.LIST_TYPE), ARGS, new ListExpression())),
-                ClassNode.EMPTY_ARRAY,
-                stmnt(call(
-                        field(erField),
-                        "publishOutside",
-                        vars(NAME, ARGS)))
-        ));
-
         // add method:
         // void publishEventOutsideUI(String name, List args = []) {
         //     this$eventRouter.publishEventOutsideUI(name, args)

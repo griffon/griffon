@@ -359,25 +359,6 @@ public interface GriffonApplication extends ThreadingHandler, MVCHandler, Resour
      * Publishes an application event asynchronously off the UI thread.<p>
      *
      * @param eventName the name of the event
-     * @deprecated use #eventOutsideUI() instead
-     */
-    @Deprecated
-    void eventOutside(String eventName);
-
-    /**
-     * Publishes an application event asynchronously off the UI thread.<p>
-     *
-     * @param eventName the name of the event
-     * @param params    event arguments sent to listeners
-     * @deprecated use #eventOutsideUI() instead
-     */
-    @Deprecated
-    void eventOutside(String eventName, List params);
-
-    /**
-     * Publishes an application event asynchronously off the UI thread.<p>
-     *
-     * @param eventName the name of the event
      */
     void eventOutsideUI(String eventName);
 
