@@ -15,23 +15,25 @@
 
 package griffon.samples.swingpad
 
+import griffon.transform.Threading
+
+import javax.swing.SwingUtilities
+
 /**
  * @author Andres Almiray
  */
-class FinderModel extends AbstractDialogModel {
-    @Bindable String toFind = ''
-    @Bindable String replaceWith = ''
-    @Bindable boolean matchCase
-    @Bindable boolean regex
-    @Bindable boolean wholeWord
-    @Bindable String replaced
+class AboutController extends DialogController {
+    def view
 
-    protected String getDialogKey() { 'Find' }
-    protected String getDialogTitle() { 'Find' }
+    @Threading(Threading.Policy.INSIDE_UITHREAD_SYNC)
+    def credits = {
+        def window = SwingUtilities.windowForComponent(view.content)
+        withMVCGroup('credits') { m, v, c -> c.show(window) }
+    }
 
-    void mvcGroupInit(Map<String, Object> args) {
-        super.mvcGroupInit(args)
-        resizable = false
-        modal = false
+    @Threading(Threading.Policy.INSIDE_UITHREAD_SYNC)
+    def license = {
+        def window = SwingUtilities.windowForComponent(view.content)
+        withMVCGroup('license') { m, v, c -> c.show(window) }
     }
 }

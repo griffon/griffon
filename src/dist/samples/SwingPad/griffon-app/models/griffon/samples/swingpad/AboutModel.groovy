@@ -15,8 +15,8 @@
 
 package griffon.samples.swingpad
 
-import ca.odell.glazedlists.EventList
 import ca.odell.glazedlists.BasicEventList
+import ca.odell.glazedlists.EventList
 import ca.odell.glazedlists.SortedList
 
 /**
@@ -24,12 +24,13 @@ import ca.odell.glazedlists.SortedList
  */
 class AboutModel extends AbstractDialogModel {
     EventList plugins = new SortedList(new BasicEventList(),
-                 {a, b -> a.name <=> b.name} as Comparator)
+            {a, b -> a.name <=> b.name} as Comparator)
     @Bindable String description
     boolean includeCredits = true
     boolean includeLicense = true
 
     protected String getDialogKey() { 'About' }
+
     protected String getDialogTitle() { 'About' }
 
     void mvcGroupInit(Map<String, Object> args) {
@@ -42,9 +43,9 @@ class AboutModel extends AbstractDialogModel {
             <br/>
             <p>Installed plugins:<br/><br/></p></html>
         '''.stripIndent(12).trim()
- 
+
         List tmp = []
-        for(String addonName : app.addonManager.addonDescriptors.keySet().sort()) {
+        for (String addonName : app.addonManager.addonDescriptors.keySet().sort()) {
             GriffonAddonDescriptor gad = app.addonManager.findAddonDescriptor(addonName)
             tmp << [name: gad.pluginName, version: gad.version]
         }

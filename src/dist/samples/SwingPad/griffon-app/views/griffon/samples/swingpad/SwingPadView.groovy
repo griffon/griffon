@@ -22,16 +22,16 @@ package griffon.samples.swingpad
 build(SwingPadActions)
 
 application(title: GriffonNameUtils.capitalize(app.getMessage('application.title', app.config.application.title)),
-    preferredSize: [800, 600],
-    pack: true,
-    locationByPlatform:true,
-    iconImage: imageIcon('/griffon-icon-48x48.png').image,
-    iconImages: [imageIcon('/griffon-icon-48x48.png').image,
-               imageIcon('/griffon-icon-32x32.png').image,
-               imageIcon('/griffon-icon-16x16.png').image]) {
-   widget(build(SwingPadMenuBar))
-   migLayout(layoutConstraints: 'fill')
-   toolBar(build(SwingPadToolBar), constraints: 'north')
-   widget(build(SwingPadContent), constraints: 'center, grow')
-   widget(build(SwingPadStatusBar), constraints: 'south, grow')
+        preferredSize: [800, 600],
+        pack: true,
+        locationByPlatform: true,
+        iconImage: imageIcon('/griffon-icon-48x48.png').image,
+        iconImages: [imageIcon('/griffon-icon-48x48.png').image,
+                imageIcon('/griffon-icon-32x32.png').image,
+                imageIcon('/griffon-icon-16x16.png').image]) {
+    widget(build(SwingPadMenuBar))
+    migLayout(layoutConstraints: 'fill')
+    toolBar(build(SwingPadToolBar), constraints: 'north')
+    widget(build(SwingPadContent), constraints: 'center, grow')
+    widget(build(SwingPadStatusBar), constraints: 'south, grow')
 }

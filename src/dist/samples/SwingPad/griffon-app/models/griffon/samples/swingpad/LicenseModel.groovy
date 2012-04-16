@@ -20,7 +20,7 @@ package griffon.samples.swingpad
  */
 class LicenseModel extends AbstractDialogModel {
     @Bindable String license
-    
+
     private static String LICENSE = null
 
     void mvcGroupInit(Map<String, Object> args) {
@@ -32,14 +32,15 @@ class LicenseModel extends AbstractDialogModel {
     }
 
     protected String getDialogKey() { 'License' }
+
     protected String getDialogTitle() { 'License' }
-    
+
     @groovy.transform.Synchronized
     static fetchLicenseText() {
-        if(LICENSE == null) {
+        if (LICENSE == null) {
             try {
                 LICENSE = getClass().getResource('/license.txt').text
-            } catch(x) {
+            } catch (x) {
                 LICENSE = ''
             }
         }

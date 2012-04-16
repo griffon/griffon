@@ -2,26 +2,31 @@
         "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
-  <title></title>
+    <title></title>
 </head>
 <body>
 
 <script src="http://java.com/js/deployJava.js"></script>
 <script>
-    var attributes = {id: '@griffonAppName@',
-                      codebase:'@griffonAppCodebase@',
-                      code:'@griffonAppletClass@',
-                      archive:'@appletJars@',
-                      width:'@applet.width@', height:'@applet.height@'} ;
+    var attributes = {id:'@griffonAppName@',
+        codebase:'@griffonAppCodebase@',
+        code:'@griffonAppletClass@',
+        archive:'@appletJars@',
+        width:'@applet.width@', height:'@applet.height@'};
     var parameters = {fontSize:16,
-                      java_arguments: "-Djnlp.packEnabled=true",
-                      jnlp_href:'@griffonAppCodebase@/applet.jnlp',
-                      draggable:'true',
-                      image:'griffon.png',
-                      boxmessage:'Loading @griffonAppName@',
-                      boxbgcolor:'#FFFFFF', boxfgcolor:'#000000',
-                      codebase_lookup: 'false'@applet.script.params@} ;
-    var version = '1.5.0' ;
+        java_arguments:"-Djnlp.packEnabled=true",
+        jnlp_href:'@griffonAppCodebase@/applet.jnlp',
+        draggable:'true',
+        image:'griffon.png',
+        boxmessage:'Loading @griffonAppName@',
+        boxbgcolor:'#FFFFFF', boxfgcolor:'#000000',
+        codebase_lookup:'false'
+    @
+    applet.script.params
+    @
+    }
+    ;
+    var version = '1.5.0';
     deployJava.runApplet(attributes, parameters, version);
 </script>
 <!--

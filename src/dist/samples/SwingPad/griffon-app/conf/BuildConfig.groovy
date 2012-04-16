@@ -7,8 +7,8 @@ environments {
                 keystore = "${basedir}/griffon-app/conf/keys/devKeystore"
                 alias = 'development'
                 storepass = 'BadStorePassword'
-                keypass   = 'BadKeyPassword'
-                lazy      = true // only sign when unsigned
+                keypass = 'BadKeyPassword'
+                lazy = true // only sign when unsigned
             }
         }
 
@@ -96,12 +96,12 @@ signingkey {
         alias = env
         // storepass = 'BadStorePassword'
         // keypass   = 'BadKeyPassword'
-        lazy      = true // only sign when unsigned
+        lazy = true // only sign when unsigned
     }
 }
 
 griffon.project.dependency.resolution = {
-    inherits"global"
+    inherits "global"
     log "warn"
     repositories {
         griffonPlugins()
@@ -121,10 +121,10 @@ log4j = {
     }
 
     error 'org.codehaus.griffon',
-          'org.springframework',
-          'org.apache.karaf',
-          'groovyx.net'
-    warn  'griffon'
+            'org.springframework',
+            'org.apache.karaf',
+            'groovyx.net'
+    warn 'griffon'
 }
 
 griffon {

@@ -19,7 +19,7 @@
 
 package griffon.samples.swingpad
 
-import org.fife.ui.autocomplete.*
+import org.fife.ui.autocomplete.AutoCompletion
 import org.fife.ui.rsyntaxtextarea.SyntaxConstants
 
 rowHeader = new ScrollPaneRuler(ScrollPaneRuler.VERTICAL)
@@ -28,25 +28,25 @@ emptyRowHeader = label('')
 emptyColumnHeader = label('')
 
 splitPane(id: 'mainContent', resizeWeight: 0.45f, border: emptyBorder(0),
-    orientation: bind('layout', source: model, converter: {it ? JSplitPane.HORIZONTAL_SPLIT : JSplitPane.VERTICAL_SPLIT})) {
+        orientation: bind('layout', source: model, converter: {it ? JSplitPane.HORIZONTAL_SPLIT : JSplitPane.VERTICAL_SPLIT})) {
     tabbedPane(id: 'tabs') {
         panel(title: 'Source ', id: 'sourceTab', tabIcon: silkIcon('script_code')) {
             borderLayout()
             rtextScrollPane(id: 'codeEditorContainer') {
                 rsyntaxTextArea(id: 'codeEditor',
-                    syntaxEditingStyle: SyntaxConstants.SYNTAX_STYLE_GROOVY,
-                    tabSize: 4,
-                    text: bind('code', source: model, mutual: true),
-                    cssClass: 'codeEditor') {
-                        action(runScriptAction)
+                        syntaxEditingStyle: SyntaxConstants.SYNTAX_STYLE_GROOVY,
+                        tabSize: 4,
+                        text: bind('code', source: model, mutual: true),
+                        cssClass: 'codeEditor') {
+                    action(runScriptAction)
                 }
                 noparent {
                     model.font = codeEditor.font
                     bean(codeEditor, font: bind {model.font})
                     bean(new AutoCompletion(model.codeCompletionProvider),
-                        triggerKey: shortcut('shift SPACE'),
-                        showDescWindow: false,
-                        autoCompleteSingleChoices: true
+                            triggerKey: shortcut('shift SPACE'),
+                            showDescWindow: false,
+                            autoCompleteSingleChoices: true
                     ).install(codeEditor)
                 }
             }
@@ -55,12 +55,12 @@ splitPane(id: 'mainContent', resizeWeight: 0.45f, border: emptyBorder(0),
             borderLayout()
             rtextScrollPane(id: 'cssEditorContainer') {
                 rsyntaxTextArea(id: 'cssEditor',
-                    syntaxEditingStyle: SyntaxConstants.SYNTAX_STYLE_CSS,
-                    tabSize: 4,
-                    font: bind {model.font},
-                    text: bind('stylesheet', source: model, mutual: true),
-                    cssClass: 'cssEditor') {
-                        action(runScriptAction)
+                        syntaxEditingStyle: SyntaxConstants.SYNTAX_STYLE_CSS,
+                        tabSize: 4,
+                        font: bind {model.font},
+                        text: bind('stylesheet', source: model, mutual: true),
+                        cssClass: 'cssEditor') {
+                    action(runScriptAction)
                 }
             }
         }
@@ -68,15 +68,15 @@ splitPane(id: 'mainContent', resizeWeight: 0.45f, border: emptyBorder(0),
             borderLayout()
             scrollPane(border: emptyBorder(0)) {
                 textArea(id: 'errors', border: emptyBorder(0),
-                         background: Color.WHITE, editable: false,
-                         font: bind {model.font},
-                         caretPosition: bind('errors', source: model, converter: {0i}),
-                         text: bind {model.errors})
+                        background: Color.WHITE, editable: false,
+                        font: bind {model.font},
+                        caretPosition: bind('errors', source: model, converter: {0i}),
+                        text: bind {model.errors})
             }
         }
     }
     scrollPane(id: 'scroller',
-               rowHeaderView: rowHeader, columnHeaderView: columnHeader) {
+            rowHeaderView: rowHeader, columnHeaderView: columnHeader) {
         panel(id: 'canvas', border: emptyBorder(0)) {
             flowLayout(alignment: FlowLayout.LEFT, hgap: 0, vgap: 0)
         }

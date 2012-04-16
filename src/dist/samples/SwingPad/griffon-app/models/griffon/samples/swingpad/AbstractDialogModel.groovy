@@ -26,9 +26,10 @@ abstract class AbstractDialogModel {
     @Bindable boolean modal = true
 
     protected abstract String getDialogKey()
+
     protected abstract String getDialogTitle()
 
     void mvcGroupInit(Map<String, Object> args) {
-        title = GriffonNameUtils.capitalize(app.getMessage('application.dialog.'+dialogKey+'.title', dialogTitle))
+        title = GriffonNameUtils.capitalize(app.getMessage('application.dialog.' + dialogKey + '.title', dialogTitle))
     }
 }

@@ -25,8 +25,8 @@ import java.awt.event.KeyEvent
 String keyMask = KeyEvent.getKeyModifiersText(Toolkit.defaultToolkit.menuShortcutKeyMask).toUpperCase()
 
 app.config.tipsModel.add(
-    new DefaultTip('', "<html>You can invoke code completion for Groovy keywords and DSL nodes just by striking <b>${keyMask} + SHIFT + SPACE</b></html>.")
+        new DefaultTip('', "<html>You can invoke code completion for Groovy keywords and DSL nodes just by striking <b>${keyMask} + SHIFT + SPACE</b></html>.")
 )
 app.config.tipsModel.add(
-    new DefaultTip('', "<html>A list of all available nodes can be seen if you strike <b>${keyMask} + I</b> or select the Nodes option from the Help menu</html>.")
+        new DefaultTip('', "<html>A list of all available nodes can be seen if you strike <b>${keyMask} + I</b> or select the Nodes option from the Help menu</html>.")
 )

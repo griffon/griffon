@@ -16,9 +16,9 @@
 package griffon.samples.swingpad
 
 import griffon.builder.css.CSSDecorator
-
+import griffon.plugins.dialogs.Finder
 import griffon.transform.Threading
-import griffon.util.GriffonExceptionHandler
+
 import java.awt.Rectangle
 import java.awt.Robot
 import java.awt.image.BufferedImage
@@ -26,6 +26,7 @@ import javax.imageio.ImageIO
 import javax.swing.JComponent
 import javax.swing.JFileChooser
 import javax.swing.JOptionPane
+
 import static griffon.util.GriffonNameUtils.capitalize
 import static griffon.util.GriffonNameUtils.isBlank
 
@@ -44,19 +45,19 @@ class SwingPadController {
         groovyClassLoader = new GroovyClassLoader(this.class.classLoader)
         int recentScriptsListSize = SwingPadUtils.PREFERENCES.get('recentScripts.list.size', '0') as int
         (0..<recentScriptsListSize).each { i ->
-            File file = new File(SwingPadUtils.PREFERENCES.get("recentScripts.${i}.file",''))
-            if(file.exists()) model.addRecentScript(file, SwingPadUtils.PREFERENCES)
+            File file = new File(SwingPadUtils.PREFERENCES.get("recentScripts.${i}.file", ''))
+            if (file.exists()) model.addRecentScript(file, SwingPadUtils.PREFERENCES)
         }
     }
 
     @Threading(Threading.Policy.INSIDE_UITHREAD_ASYNC)
-    def clearRecentScriptsAction = { 
+    def clearRecentScriptsAction = {
         model.recentScripts.clear()
         SwingPadUtils.PREFERENCES.put('recentScripts.list.size', '0')
     }
 
     def newAction = {
-        if(!model.dirty || askToSaveScript()) {
+        if (!model.dirty || askToSaveScript()) {
             model.scriptFile = null
             model.code = ''
             model.dirty = false
@@ -67,14 +68,13 @@ class SwingPadController {
     @Threading(Threading.Policy.INSIDE_UITHREAD_ASYNC)
     def openAction = {
         File file = SwingPadUtils.selectFileOrDir(SwingPadUtils.FILE_CHOOSER_DIR, 'FILE_CHOOSER_DIR')
-        if(file != null) openFile(file)
+        if (file != null) openFile(file)
     }
 
-    @Threading(Threading.Policy.SKIP)
-    void openFile(File file) {
+    private void openFile(File file) {
         execOutsideUI {
             String code = file.readLines().join('\n')
-            if(isBlank(code)) return
+            if (isBlank(code)) return
             model.scriptFile = file
             model.addRecentScript(file, SwingPadUtils.PREFERENCES)
             execInsideUIAsync {
@@ -87,7 +87,7 @@ class SwingPadController {
     }
 
     def saveAction = {
-        if(model.scriptFile) {
+        if (model.scriptFile) {
             model.scriptFile.write(model.code)
             model.dirty = false
         } else {
@@ -98,7 +98,7 @@ class SwingPadController {
     def saveAsAction = {
         String name = app.getMessage('application.dialog.Save.title', 'Save Script')
         model.scriptFile = SwingPadUtils.selectFileOrDir(SwingPadUtils.FILE_CHOOSER_DIR, 'FILE_CHOOSER_DIR', JFileChooser.FILES_ONLY, name)
-        if(model.scriptFile) {
+        if (model.scriptFile) {
             model.scriptFile.write(model.code)
             model.addRecentScript(model.scriptFile, SwingPadUtils.PREFERENCES)
             model.dirty = false
@@ -124,52 +124,31 @@ class SwingPadController {
     }
 
     def quitAction = {
-        if(!model.dirty || askToSaveScript()) app.shutdown()
+        if (!model.dirty || askToSaveScript()) app.shutdown()
     }
 
     def findAction = {
-        if(!app.groups.finder) createMVCGroup('finder')
-        app.controllers.finder.show()
+        Finder.instance.findIt(view.codeEditor)
     }
 
     def findPreviousAction = {
-        if(!app.groups.finder) createMVCGroup('finder')
-        if(isBlank(app.models.finder.toFind)) {
-            app.controllers.finder.show()
-        } else {
-            app.controllers.finder.findPreviousAction()
-        }
+        Finder.instance.findPrevious(view.codeEditor)
     }
 
     def findNextAction = {
-        if(!app.groups.finder) createMVCGroup('finder')
-        if(isBlank(app.models.finder.toFind)) {
-            app.controllers.finder.show()
-        } else {
-            app.controllers.finder.findNextAction()
-        }
+        Finder.instance.findNext(view.codeEditor)
     }
 
     def replaceAction = {
-        if(!app.groups.finder) createMVCGroup('finder')
-        if(isBlank(app.models.finder.replaceWith)) {
-            app.controllers.finder.show()
-        } else {
-            app.controllers.finder.replaceAction()
-        }
+        Finder.instance.replace(view.codeEditor)
     }
 
     def replaceAllAction = {
-        if(!app.groups.finder) createMVCGroup('finder')
-        if(isBlank(app.models.finder.replaceWith)) {
-            app.controllers.finder.show()
-        } else {
-            app.controllers.finder.replaceAllAction()
-        }
+        Finder.instance.replaceAll(view.codeEditor)
     }
 
     def runScriptAction = {
-        if(isBlank(model.code)) return
+        if (isBlank(model.code)) return
         evalThread = Thread.start {
             execInsideUIAsync {
                 model.status = 'Running script...'
@@ -177,7 +156,7 @@ class SwingPadController {
             }
             try {
                 executeScript(model.code)
-            } catch(Exception e) {
+            } catch (Exception e) {
                 execInsideUIAsync { finishWithException(e) }
             } finally {
                 evalThread = null
@@ -186,7 +165,7 @@ class SwingPadController {
     }
 
     def runSampleScriptAction = {
-        if(model.currentSampleId) {
+        if (model.currentSampleId) {
             model.status = 'Loading Script ...'
             model.code = model.samples[model.currentSampleId]
             // view.runAction.enabled = true
@@ -197,51 +176,51 @@ class SwingPadController {
     @Threading(Threading.Policy.INSIDE_UITHREAD_ASYNC)
     def addJarToClasspathAction = {
         String name = app.getMessage('application.dialog.AddJarToClasspath.title', 'Add JAR')
-        File file = SwingPadUtils.selectFileOrDir(SwingPadUtils.CLASSPATH_JAR_DIR, 
-                                                  'CLASSPATH_JAR_DIR',
-                                                  JFileChooser.FILES_ONLY,
-                                                  name)
-        if(file != null) groovyClassLoader.addURL(file.toURL())
+        File file = SwingPadUtils.selectFileOrDir(SwingPadUtils.CLASSPATH_JAR_DIR,
+                'CLASSPATH_JAR_DIR',
+                JFileChooser.FILES_ONLY,
+                name)
+        if (file != null) groovyClassLoader.addURL(file.toURL())
     }
 
     @Threading(Threading.Policy.INSIDE_UITHREAD_ASYNC)
     def addDirToClasspathAction = {
         String name = app.getMessage('application.dialog.AddDirToClasspath.title', 'Add Directory')
         SwingPadUtils.CLASSPATH_DIR = SwingPadUtils.selectFileOrDir(SwingPadUtils.CLASSPATH_DIR,
-                                                                    'CLASSPATH_DIR',
-                                                                    JFileChooser.DIRECTORIES_ONLY,
-                                                                    name)
-        if(SwingPadUtils.CLASSPATH_DIR != null) groovyClassLoader.addURL(SwingPadUtils.CLASSPATH_DIR.toURL())
+                'CLASSPATH_DIR',
+                JFileChooser.DIRECTORIES_ONLY,
+                name)
+        if (SwingPadUtils.CLASSPATH_DIR != null) groovyClassLoader.addURL(SwingPadUtils.CLASSPATH_DIR.toURL())
     }
 
     def snapshotAction = {
         String name = app.getMessage('application.dialog.Snapshot.title', 'Take a Snapshot')
         File file = SwingPadUtils.selectFileOrDir(SwingPadUtils.SNAPSHOT_DIR,
-                                                  'SNAPSHOT_DIR',
-                                                  JFileChooser.FILES_ONLY,
-                                                  name)
-        if(file != null) {
+                'SNAPSHOT_DIR',
+                JFileChooser.FILES_ONLY,
+                name)
+        if (file != null) {
             Rectangle frameBounds = app.windowManager.startingWindow.bounds
             BufferedImage capture = new Robot().createScreenCapture(frameBounds)
             String filename = file.name
             int dot = filename.lastIndexOf('.')
             String ext = 'png'
-            if(dot > 0)  {
-                ext = filename[dot+1..-1]
+            if (dot > 0) {
+                ext = filename[dot + 1..-1]
             } else {
                 filename += '.' + ext
             }
             File target = new File(SwingPadUtils.SNAPSHOT_DIR, filename)
             ImageIO.write(capture, ext, target)
-            
+
             String message = app.getMessage('application.dialog.Snapshot.message',
-                [target.absolutePath],
-                "Successfully saved snapshot to\n\n${target.absolutePath}".toString())
+                    [target.canonicalPath],
+                    "Successfully saved snapshot to ${target.canonicalPath}".toString())
             JOptionPane.showMessageDialog(
-                app.windowManager.startingWindow,
-                message,
-                app.getMessage('application.dialog.Snapshot.title', 'Take a Snapshot'),
-                JOptionPane.INFORMATION_MESSAGE
+                    app.windowManager.startingWindow,
+                    message,
+                    app.getMessage('application.dialog.Snapshot.title', 'Take a Snapshot'),
+                    JOptionPane.INFORMATION_MESSAGE
             )
         }
     }
@@ -253,7 +232,7 @@ class SwingPadController {
     }
 
     def onOSXQuit = { app ->
-        if(!model.dirty || askToSaveScript()) app.shutdown()
+        if (!model.dirty || askToSaveScript()) app.shutdown()
     }
 
     def onOSXPrefs = { app ->
@@ -264,15 +243,15 @@ class SwingPadController {
 
     private boolean askToSaveScript() {
         String message = app.getMessage('application.dialog.AskToSave.noscript.message', 'Save script to file?')
-        if(model.scriptFile) {
-            message = app.getMessage('application.dialog.AskToSave.script.message', [model.scriptFile.name], 'Save changes to '+ model.scriptFile.name +'?')
+        if (model.scriptFile) {
+            message = app.getMessage('application.dialog.AskToSave.script.message', [model.scriptFile.name], 'Save changes to ' + model.scriptFile.name + '?')
         }
-        
-        switch(JOptionPane.showConfirmDialog(
-            app.windowManager.startingWindow,
-            message,
-            capitalize(app.getMessage('application.title')),
-            JOptionPane.YES_NO_CANCEL_OPTION)) {
+
+        switch (JOptionPane.showConfirmDialog(
+                app.windowManager.startingWindow,
+                message,
+                capitalize(app.getMessage('application.title')),
+                JOptionPane.YES_NO_CANCEL_OPTION)) {
             case JOptionPane.YES_OPTION: saveAction()
             case JOptionPane.NO_OPTION: return true
         }
@@ -286,7 +265,7 @@ class SwingPadController {
             def component = null
             b.edt { component = b.build(script) }
             execInsideUIAsync { finishNormal(component) }
-        } catch(Exception e) {
+        } catch (Exception e) {
             execInsideUIAsync { finishWithException(e) }
         }
     }
@@ -301,12 +280,12 @@ class SwingPadController {
             model.status = 'Execution complete.'
             view.canvas.removeAll()
             view.canvas.repaint()
-            if(component instanceof JComponent) {
+            if (component instanceof JComponent) {
                 view.canvas.add(component)
-                if(model.stylesheet) {
+                if (model.stylesheet) {
                     try {
                         CSSDecorator.applyStyle(model.stylesheet, view.canvas)
-                    } catch(Exception e) {
+                    } catch (Exception e) {
                         displayErrorMessages(e)
                     }
                 }
@@ -329,7 +308,7 @@ class SwingPadController {
     private void displayErrorMessages(Exception e) {
         GriffonExceptionHandler.sanitize(e)
         e.printStackTrace()
-        def baos = new ByteArrayOutputStream()
+        ByteArrayOutputStream baos = new ByteArrayOutputStream()
         e.printStackTrace(new PrintStream(baos))
         execInsideUIAsync {
             view.tabs.selectedIndex = 2 // errorsTab

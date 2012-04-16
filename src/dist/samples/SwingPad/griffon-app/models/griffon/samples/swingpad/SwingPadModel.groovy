@@ -15,10 +15,13 @@
 
 package griffon.samples.swingpad
 
-import ca.odell.glazedlists.EventList
 import ca.odell.glazedlists.BasicEventList
+import ca.odell.glazedlists.EventList
 import ca.odell.glazedlists.SortedList
-import org.fife.ui.autocomplete.*
+import org.fife.ui.autocomplete.BasicCompletion
+import org.fife.ui.autocomplete.CompletionProvider
+import org.fife.ui.autocomplete.DefaultCompletionProvider
+
 import java.awt.Font
 
 /**
@@ -42,7 +45,7 @@ class SwingPadModel {
     final List recentScripts = [] as LinkedList
     final CompletionProvider codeCompletionProvider = createCompletionProvider()
     EventList nodes = new SortedList(new BasicEventList(),
-        {a, b -> a.node <=> b.node} as Comparator)
+            {a, b -> a.node <=> b.node} as Comparator)
 
     void mvcGroupInit(Map args) {
         status = "Welcome to ${GriffonNameUtils.capitalize(app.getMessage('application.title'))}"
@@ -50,10 +53,10 @@ class SwingPadModel {
     }
 
     synchronized void addRecentScript(script, prefs) {
-        def scriptCopy = recentScripts.find{ it.absolutePath == script.absolutePath }
-        if(scriptCopy) recentScripts.remove(scriptCopy)
+        def scriptCopy = recentScripts.find { it.absolutePath == script.absolutePath }
+        if (scriptCopy) recentScripts.remove(scriptCopy)
         recentScripts.addFirst(script)
-        if(recentScripts.size() > 10) recentScripts.removeLast()
+        if (recentScripts.size() > 10) recentScripts.removeLast()
 
         prefs.put('recentScripts.list.size', recentScripts.size().toString())
         recentScripts.eachWithIndex { file, i ->
@@ -71,33 +74,33 @@ class SwingPadModel {
             try {
                 builder.proxyBuilder = builder
                 def builderName = builder.getClass().name
-                builderName = builderName.substring(builderName.lastIndexOf('.')+1)
+                builderName = builderName.substring(builderName.lastIndexOf('.') + 1)
                 builder.getRegistrationGroups().each { group ->
                     def groupSet = builder.getRegistrationGroupItems(group)
-                    if(group && groupSet) {
+                    if (group && groupSet) {
                         try {
-                            builder.getClass().getDeclaredMethod("register$group",[] as Class[])
+                            builder.getClass().getDeclaredMethod("register$group", [] as Class[])
                             groupSet.each { node ->
                                 groups << [
-                                    builder: builderName,
-                                    group: group,
-                                    node: node
+                                        builder: builderName,
+                                        group: group,
+                                        node: node
                                 ]
                                 method(codeCompletionProvider, node)
                             }
-                        } catch(NoSuchMethodException nsme) {
+                        } catch (NoSuchMethodException nsme) {
                             // ignore
                         }
-                    } else if(!group && groupSet) {
+                    } else if (!group && groupSet) {
                         groupSet.each { node ->
-                            if(node.startsWith('classicSwing:') || groups.find{it.node == node}) return
+                            if (node.startsWith('classicSwing:') || groups.find {it.node == node}) return
                             groups << [
-                                builder: builderName,
-                                group: builderName,
-                                node: ubr.prefixString + node
+                                    builder: builderName,
+                                    group: builderName,
+                                    node: ubr.prefixString + node
                             ]
                             method(codeCompletionProvider, ubr.prefixString + node)
-                        }                        
+                        }
                     }
                 }
             } finally {
@@ -106,22 +109,22 @@ class SwingPadModel {
         }
 
         app.addonManager.addons.each { addonName, addon ->
-	        try {
-	            addon.factories?.each { node, factory ->
-		           addonName -= 'GriffonAddon'
-		           groups << [
-                        builder: addonName,
-                        group: 'Addon',
-                        node: node
+            try {
+                addon.factories?.each { node, factory ->
+                    addonName -= 'GriffonAddon'
+                    groups << [
+                            builder: addonName,
+                            group: 'Addon',
+                            node: node
                     ]
                     method(codeCompletionProvider, node)
                 }
-		    } catch(MissingPropertyException mpe) {
-			   // ignore
-		    }
-	    }
+            } catch (MissingPropertyException mpe) {
+                // ignore
+            }
+        }
 
-        synchronized(nodes) {
+        synchronized (nodes) {
             nodes.clear()
             nodes.addAll(groups)
         }
@@ -201,7 +204,7 @@ class SwingPadModel {
         String getReplacementText() {
             super.getReplacementText() + ' '
         }
-        
+
         String getInputText() {
             getReplacementText()[0..-2]
         }

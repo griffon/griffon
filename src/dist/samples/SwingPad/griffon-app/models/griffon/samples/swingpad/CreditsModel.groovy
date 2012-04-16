@@ -20,7 +20,7 @@ package griffon.samples.swingpad
  */
 class CreditsModel extends AbstractDialogModel {
     @Bindable String credits
-    
+
     private static String CREDITS = null
 
     void mvcGroupInit(Map<String, Object> args) {
@@ -30,14 +30,15 @@ class CreditsModel extends AbstractDialogModel {
     }
 
     protected String getDialogKey() { 'Credits' }
+
     protected String getDialogTitle() { 'Credits' }
 
     @groovy.transform.Synchronized
     static fetchCreditsText() {
-        if(CREDITS == null) {
+        if (CREDITS == null) {
             try {
                 CREDITS = getClass().getResource('/credits.txt').text
-            } catch(x) {
+            } catch (x) {
                 CREDITS = ''
             }
         }

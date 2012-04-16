@@ -16,13 +16,6 @@ mvcGroups {
         controller = 'griffon.samples.swingpad.DialogController'
     }
 
-    // MVC Group for "finder"
-    'finder' {
-        model      = 'griffon.samples.swingpad.FinderModel'
-        view       = 'griffon.samples.swingpad.FinderView'
-        controller = 'griffon.samples.swingpad.FinderController'
-    }
-
     // MVC Group for "script"
     'script' {
         model      = 'griffon.samples.swingpad.ScriptModel'
@@ -55,13 +48,13 @@ mvcGroups {
     'about' {
         model      = 'griffon.samples.swingpad.AboutModel'
         view       = 'griffon.samples.swingpad.AboutView'
-        controller = 'griffon.samples.swingpad.DialogController'
+        controller = 'griffon.samples.swingpad.AboutController'
     }
 
     // MVC Group for "SwingPad"
     'SwingPad' {
         model      = 'griffon.samples.swingpad.SwingPadModel'
-        controller = 'griffon.samples.swingpad.SwingPadController'
         view       = 'griffon.samples.swingpad.SwingPadView'
+        controller = 'griffon.samples.swingpad.SwingPadController'
     }
 }

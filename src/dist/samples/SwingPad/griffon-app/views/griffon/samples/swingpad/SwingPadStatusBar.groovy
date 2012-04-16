@@ -19,22 +19,19 @@
 
 package griffon.samples.swingpad
 
-import java.awt.GridBagConstraints
-import javax.swing.SwingConstants
-
 vbox {
     separator()
     panel {
         gridBagLayout()
         label(id: 'status', text: bind { model.status },
-            constraints:gbc(weightx: 1.0,
-               anchor: GridBagConstraints.WEST,
-               fill: GridBagConstraints.HORIZONTAL,
-               insets: [1,3,1,3])
+                constraints: gbc(weightx: 1.0,
+                        anchor: GridBagConstraints.WEST,
+                        fill: GridBagConstraints.HORIZONTAL,
+                        insets: [1, 3, 1, 3])
         )
-        separator(orientation:SwingConstants.VERTICAL, constraints: gbc(fill:GridBagConstraints.VERTICAL))
-        label(text: bind{ model.rowAndCol },
-         constraints: gbc(insets: [1,3,1,3])
+        separator(orientation: SwingConstants.VERTICAL, constraints: gbc(fill: GridBagConstraints.VERTICAL))
+        label(text: bind { model.rowAndCol },
+                constraints: gbc(insets: [1, 3, 1, 3])
         )
     }
 }

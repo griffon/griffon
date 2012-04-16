@@ -18,11 +18,11 @@
  * @author Andres Almiray
  */
 
-eventPrepareIzpackInstallerEnd = { ->
-    ant.copy( todir: "${basedir}/installer/izpack/resources", overwrite: true ) {
-        fileset( dir: "${basedir}/src/installer/izpack/resources", includes: "**" )
+eventPrepareIzpackInstallerEnd = {->
+    ant.copy(todir: "${basedir}/installer/izpack/resources", overwrite: true) {
+        fileset(dir: "${basedir}/src/installer/izpack/resources", includes: "**")
     }
-    ant.replace( dir: "${basedir}/installer/izpack/resources" ) {
+    ant.replace(dir: "${basedir}/installer/izpack/resources") {
         replacefilter(token: "@app.name@", value: griffonAppName)
         replacefilter(token: "@app.version@", value: griffonAppVersion)
     }

@@ -26,7 +26,7 @@ import javax.swing.Action
  */
 class WrappingAction extends AbstractAction {
     private final Action delegateAction
-    
+
     WrappingAction(final Action delegateAction, final List<String> skip = []) {
         this.delegateAction = delegateAction
         copyProperty(Action.NAME)
@@ -38,7 +38,7 @@ class WrappingAction extends AbstractAction {
         copyProperty(Action.SHORT_DESCRIPTION)
         delegateAction.addPropertyChangeListener(new PropertyChangeListener() {
             public void propertyChange(PropertyChangeEvent event) {
-                if(!skip.contains(event.propertyName)) putValue(event.propertyName, event.newValue)
+                if (!skip.contains(event.propertyName)) putValue(event.propertyName, event.newValue)
             }
         })
     }

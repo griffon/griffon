@@ -20,8 +20,6 @@
 package griffon.samples.swingpad
 
 import org.fife.ui.rtextarea.RTextArea
-import javax.swing.Action
-import javax.swing.SwingConstants
 
 wrapToolbarAction = { int actionId, String id, Map params = [:] ->
     bean(new WrappingAction(RTextArea.getAction(actionId), [Action.NAME, Action.SHORT_DESCRIPTION]), id: id)
@@ -35,9 +33,9 @@ wrapToolbarAction = { int actionId, String id, Map params = [:] ->
 
 noparent {
     wrapToolbarAction(RTextArea.UNDO_ACTION, 'undoToolbarAction', [
-       (Action.SMALL_ICON): silkIcon('arrow_undo')])
+            (Action.SMALL_ICON): silkIcon('arrow_undo')])
     wrapToolbarAction(RTextArea.REDO_ACTION, 'redoToolbarAction', [
-       (Action.SMALL_ICON): silkIcon('arrow_redo')])
+            (Action.SMALL_ICON): silkIcon('arrow_redo')])
 }
 
 toolBar(id: 'toolbar', rollover: true) {

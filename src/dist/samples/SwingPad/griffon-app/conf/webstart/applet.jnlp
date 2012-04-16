@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE jnlp SYSTEM "http://java.sun.com/dtd/JNLP-1.5.dtd">
 <jnlp
-    version="@griffonAppVersion@"
-    codebase="@griffonAppCodebase@"
-    href="@jnlpFileName@"
->
+        version="@griffonAppVersion@"
+        codebase="@griffonAppCodebase@"
+        href="@jnlpFileName@"
+        >
     <information>
         <title>@griffonAppName@</title>
         <vendor>@griffonAppName@</vendor>
@@ -22,12 +22,12 @@
         <icon href="griffon-icon-16x16.png" kind="shortcut" width="16" height="16"/>
         <!-- icon used on desktop -->
         <icon href="griffon-icon-32x32.png" kind="shortcut" width="32" height="32"/>
-<!-- to create shortcuts, uncomment this
-        <shortcut online="true">
-            <desktop/>
-            <menu submenu="@griffonAppName@"/>
-        </shortcut>
--->
+        <!-- to create shortcuts, uncomment this
+                <shortcut online="true">
+                    <desktop/>
+                    <menu submenu="@griffonAppName@"/>
+                </shortcut>
+        -->
         <offline-allowed/>
     </information>
     <security>
@@ -37,23 +37,24 @@
     <resources>
         <property name="griffon.runmode" value="applet"/>
         <property name="jnlp.packEnabled" value="true"/>
-        <j2se version="1.5+" @memoryOptions@/>
+        <j2se version="1.5+"
+        @memoryOptions@/>
         <!-- auto-added jars follow, griffon-rt, app, and groovy -->
-@jnlpJars@
+        @jnlpJars@
         <!-- Add all extra jars below here, or the app may break -->
-@jnlpExtensions@
-@jnlpProperties@
+        @jnlpExtensions@
+        @jnlpProperties@
     </resources>
-@jnlpResources@
-  <applet-desc
-      documentbase="@griffonAppCodebase@"
-      name="@griffonAppName@Applet"
-      main-class="@griffonAppletClass@"
-      width="@applet.width@"
-      height="@applet.height@">
-      <!-- params are ignored when referenced from web page for 6u10 -->
-    <!--<param name="key1" value="value1"/>-->
-    <!--<param name="key2" value="value2"/>-->
-@applet.tag.params@
-  </applet-desc>
+    @jnlpResources@
+    <applet-desc
+            documentbase="@griffonAppCodebase@"
+            name="@griffonAppName@Applet"
+            main-class="@griffonAppletClass@"
+            width="@applet.width@"
+            height="@applet.height@">
+        <!-- params are ignored when referenced from web page for 6u10 -->
+        <!--<param name="key1" value="value1"/>-->
+        <!--<param name="key2" value="value2"/>-->
+        @applet.tag.params@
+    </applet-desc>
 </jnlp>

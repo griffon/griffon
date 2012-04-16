@@ -17,8 +17,9 @@
  * @author Andres Almiray
  */
 
-import org.jdesktop.swingx.tips.*
 import groovy.swing.SwingBuilder
+import org.jdesktop.swingx.tips.TipLoader
+
 import static griffon.util.GriffonApplicationUtils.isMacOSX
 
 SwingBuilder.lookAndFeel((isMacOSX ? 'system' : 'nimbus'), 'gtk', ['metal', [boldFonts: false]])

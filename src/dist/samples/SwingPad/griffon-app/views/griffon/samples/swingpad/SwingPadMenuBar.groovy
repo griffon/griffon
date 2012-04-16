@@ -19,7 +19,6 @@
 
 package griffon.samples.swingpad
 
-import javax.swing.event.PopupMenuListener
 import static griffon.util.GriffonApplicationUtils.isMacOSX
 
 groovy.swing.SwingBuilder.metaClass.'_delegateProperty:id' = 'id'
@@ -28,36 +27,36 @@ setVariable('_delegateProperty:id', 'id')
 def makeSampleScriptAction = { identifier, name ->
     menuItem {
         action(id: "${identifier}Action",
-            name: name,
-            closure: { sampleId, evt -> model.currentSampleId = sampleId; controller.runSampleScriptAction() }.curry(identifier),
-            smallIcon: silkIcon('script_gear')
+                name: name,
+                closure: { sampleId, evt -> model.currentSampleId = sampleId; controller.runSampleScriptAction() }.curry(identifier),
+                smallIcon: silkIcon('script_gear')
         )
     }
-   doOutside {
-      model.samples[identifier] = Thread.currentThread().contextClassLoader.
-                   getResourceAsStream("samples/${identifier}.txt").text
-   }
+    doOutside {
+        model.samples[identifier] = Thread.currentThread().contextClassLoader.
+                getResourceAsStream("samples/${identifier}.txt").text
+    }
 }
 
 menuBar = menuBar {
-    menu(text: app.getMessage('application.menu.File.name',' File'), 
-         mnemonic: app.getMessage('application.menu.File.mnemonic', 'F')) {
+    menu(text: app.getMessage('application.menu.File.name', ' File'),
+            mnemonic: app.getMessage('application.menu.File.mnemonic', 'F')) {
         menuItem(newAction)
         menuItem(openAction)
         menu(id: 'openRecentMenu', enabled: false,
-            text: app.getMessage('application.menu.OpenRecent.name',' Open Recent...'),
-            mnemonic: app.getMessage('application.menu.OpenRecent.mnemonic', 'E'))
+                text: app.getMessage('application.menu.OpenRecent.name', ' Open Recent...'),
+                mnemonic: app.getMessage('application.menu.OpenRecent.mnemonic', 'E'))
         separator()
         menuItem(saveAction)
         menuItem(saveAsAction)
-        if(!isMacOSX) {
+        if (!isMacOSX) {
             separator()
             menuItem(quitAction)
         }
     }
- 
-    menu(text: app.getMessage('application.menu.Edit.name', 'Edit'), 
-         mnemonic: app.getMessage('application.menu.Edit.mnemonic', 'E')) {   
+
+    menu(text: app.getMessage('application.menu.Edit.name', 'Edit'),
+            mnemonic: app.getMessage('application.menu.Edit.mnemonic', 'E')) {
         menuItem(undoAction)
         menuItem(redoAction)
         separator()
@@ -68,7 +67,7 @@ menuBar = menuBar {
         separator()
         menuItem(selectAllAction)
         separator()
-        menu(text: app.getMessage('application.menu.Find.name',' Find')) {
+        menu(text: app.getMessage('application.menu.Find.name', ' Find')) {
             menuItem(findAction)
             separator()
             menuItem(findNextAction)
@@ -78,9 +77,9 @@ menuBar = menuBar {
             menuItem(replaceAllAction)
         }
     }
- 
-    menu(text: app.getMessage('application.menu.View.name', 'View'), 
-         mnemonic: app.getMessage('application.menu.View.mnemonic', 'V')) {
+
+    menu(text: app.getMessage('application.menu.View.name', 'View'),
+            mnemonic: app.getMessage('application.menu.View.mnemonic', 'V')) {
         menuItem(largerFontAction)
         menuItem(smallerFontAction)
         separator()
@@ -91,56 +90,58 @@ menuBar = menuBar {
         menuItem(toggleLayoutAction)
         menuItem(snapshotAction)
     }
- 
-    menu(text: app.getMessage('application.menu.Script.name', 'Script'), 
-         mnemonic: app.getMessage('application.menu.Script.mnemonic', 'S')) {
+
+    menu(text: app.getMessage('application.menu.Script.name', 'Script'),
+            mnemonic: app.getMessage('application.menu.Script.mnemonic', 'S')) {
         menuItem(runScriptAction)
         separator()
         menuItem(addJarToClasspathAction)
         menuItem(addDirToClasspathAction)
+        /*
         separator()
         menu(text: app.getMessage('application.menu.Samples.name', 'Samples')) {
             menu(text: app.getMessage('application.menu.Builders.name', 'Builders')) {
                 [jide1: "Jide - Flair",
-                 jide2: "Jide - MeterProgressBar",
-                 swingx1: "SwingX - Flair",
-                 tray1: "Tray - Flair",
-                 macwidgets1: "MacWidgets - Flair"].each { identifier, name ->
-                 //swingxtras1: "Swingxtras - Flair"].each { identifier, name ->
-                    makeSampleScriptAction(identifier,name)
+                        jide2: "Jide - MeterProgressBar",
+                        swingx1: "SwingX - Flair",
+                        tray1: "Tray - Flair",
+                        macwidgets1: "MacWidgets - Flair"].each { identifier, name ->
+                    //swingxtras1: "Swingxtras - Flair"].each { identifier, name ->
+                    makeSampleScriptAction(identifier, name)
                 }
             }
             menu(text: app.getMessage('application.menu.Layouts.name', 'Layouts')) {
-                 [desinggridlayout1: "DesignGridLayout",
-                  jgoodiesforms1: "FormLayout",
-                  miglayout1: "MigLayout",
-                  riverlayout1: "RiverLayout",
-                  zonelayout1: "ZoneLayout"].each { identifier, name ->
-                     makeSampleScriptAction(identifier,name)
-                 }
+                [desinggridlayout1: "DesignGridLayout",
+                        jgoodiesforms1: "FormLayout",
+                        miglayout1: "MigLayout",
+                        riverlayout1: "RiverLayout",
+                        zonelayout1: "ZoneLayout"].each { identifier, name ->
+                    makeSampleScriptAction(identifier, name)
+                }
             }
             menu(text: app.getMessage('application.menu.Custom.name', 'Custom')) {
                 [coverflow1: "Coverflow"].each { identifier, name ->
-                    makeSampleScriptAction(identifier,name)
+                    makeSampleScriptAction(identifier, name)
                 }
             }
             menu(text: app.getMessage('application.menu.Effects.name', 'Effect')) {
                 [trident1: "Trident - ButtonFG",
-                trident2: "Trident - Snake",
-                //gfx1: "Gfx - Sphere",
-                jexplose1: "JExplose",
-                transitions1: "Transitions - Picker",
-                gfx2: "Gfx - Animation"].each { identifier, name ->
-                    makeSampleScriptAction(identifier,name)
+                        trident2: "Trident - Snake",
+                        //gfx1: "Gfx - Sphere",
+                        jexplose1: "JExplose",
+                        transitions1: "Transitions - Picker",
+                        gfx2: "Gfx - Animation"].each { identifier, name ->
+                    makeSampleScriptAction(identifier, name)
                 }
             }
         }
-    } 
- 
-    if(!isMacOSX) glue()  
-    menu(text: app.getMessage('application.menu.Help.name', 'Help'), 
-         mnemonic: app.getMessage('application.menu.Help.mnemonic', 'H')) {
-        if(!isMacOSX) {
+        */
+    }
+
+    if (!isMacOSX) glue()
+    menu(text: app.getMessage('application.menu.Help.name', 'Help'),
+            mnemonic: app.getMessage('application.menu.Help.mnemonic', 'H')) {
+        if (!isMacOSX) {
             menuItem(aboutAction)
             menuItem(preferencesAction)
         }
@@ -150,23 +151,23 @@ menuBar = menuBar {
 }
 
 openRecentMenu.popupMenu.addPopupMenuListener([
-    popupMenuWillBecomeVisible: {
-        println openRecentMenu
-        openRecentMenu.removeAll()
-        model.recentScripts.eachWithIndex { file, int i ->
-            openRecentMenu.add(action(
-                name: "${i+1}. ${file.name}".toString(),
-                mnemonic: 1 + i,
-                closure: { controller.openFile(file) }
-            ))
-        }
-        if(model.recentScripts.size()) {
-            openRecentMenu.add(separator())
-            openRecentMenu.add(clearRecentScriptsAction)
-        }
-    },
-    popupMenuWillBecomeInvisible: {/*empty*/},
-    popupMenuCanceled: {/*empty*/}
+        popupMenuWillBecomeVisible: {
+            println openRecentMenu
+            openRecentMenu.removeAll()
+            model.recentScripts.eachWithIndex { file, int i ->
+                openRecentMenu.add(action(
+                        name: "${i + 1}. ${file.name}".toString(),
+                        mnemonic: 1 + i,
+                        closure: { controller.openFile(file) }
+                ))
+            }
+            if (model.recentScripts.size()) {
+                openRecentMenu.add(separator())
+                openRecentMenu.add(clearRecentScriptsAction)
+            }
+        },
+        popupMenuWillBecomeInvisible: {/*empty*/},
+        popupMenuCanceled: {/*empty*/}
 ] as PopupMenuListener)
 
 return menuBar

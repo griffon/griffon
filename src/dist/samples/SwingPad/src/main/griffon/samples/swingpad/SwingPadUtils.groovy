@@ -19,6 +19,7 @@ import griffon.core.GriffonApplication
 import griffon.util.ApplicationHolder
 import java.util.prefs.Preferences
 import javax.swing.JFileChooser
+
 import static griffon.util.GriffonNameUtils.isBlank
 
 /**
@@ -26,14 +27,14 @@ import static griffon.util.GriffonNameUtils.isBlank
  */
 final class SwingPadUtils {
     static final Preferences PREFERENCES = Preferences.userNodeForPackage(SwingPadUtils)
-    static File FILE_CHOOSER_DIR  = new File(PREFERENCES.get('FILE_CHOOSER_DIR',  '.'))
+    static File FILE_CHOOSER_DIR = new File(PREFERENCES.get('FILE_CHOOSER_DIR', '.'))
     static File CLASSPATH_JAR_DIR = new File(PREFERENCES.get('CLASSPATH_JAR_DIR', '.'))
-    static File CLASSPATH_DIR     = new File(PREFERENCES.get('CLASSPATH_DIR',     '.'))
-    static File SNAPSHOT_DIR      = new File(PREFERENCES.get('SNAPSHOT_DIR',      '.'))
-    
+    static File CLASSPATH_DIR = new File(PREFERENCES.get('CLASSPATH_DIR', '.'))
+    static File SNAPSHOT_DIR = new File(PREFERENCES.get('SNAPSHOT_DIR', '.'))
+
     static File selectFileOrDir(File location, String locationPrefs, int selectionMode = JFileChooser.FILES_ONLY, String name = null) {
         GriffonApplication app = ApplicationHolder.application
-        if(isBlank(name)) name = app.getMessage('application.dialog.Open.title', 'Open')
+        if (isBlank(name)) name = app.getMessage('application.dialog.Open.title', 'Open')
         JFileChooser fc = new JFileChooser(location)
         fc.fileSelectionMode = selectionMode
         fc.acceptAllFileFilterUsed = true

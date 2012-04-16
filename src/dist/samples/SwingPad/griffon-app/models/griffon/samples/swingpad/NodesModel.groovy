@@ -20,6 +20,7 @@ package griffon.samples.swingpad
  */
 class NodesModel extends AbstractDialogModel {
     protected String getDialogKey() { 'NodeList' }
+
     protected String getDialogTitle() { 'Nodes' }
 
     void mvcGroupInit(Map<String, Object> args) {
