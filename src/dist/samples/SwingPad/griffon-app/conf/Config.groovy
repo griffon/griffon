@@ -12,7 +12,8 @@ log4j = {
             'griffon.swing',
             'griffon.app'
 
-    warn  'griffon.plugins.i18n'
+    warn  'griffon.plugins.i18n',
+          'org.springframework'
 }
 
 i18n.provider = 'i18n-support'

@@ -104,13 +104,20 @@ griffon.project.dependency.resolution = {
     inherits "global"
     log "warn"
     repositories {
-        griffonPlugins()
-        griffonHome()
-        griffonCentral()
         mavenCentral()
+        griffonHome()
+        mavenRepo 'http://repository.springsource.com/maven/bundles/release'
         mavenRepo "https://repository.jboss.org/nexus/content/groups/public-jboss"
+
+        // pluginDirPath is only available when installed
+        // String basePath = pluginDirPath? "${pluginDirPath}/" : ''
+        // flatDir name: "${pluginName}LibDir", dirs: ["${basePath}lib"]
     }
-    dependencies { }
+    dependencies {
+        compile("org.springframework:org.springframework.core:$springVersion") {
+            transitive = false
+        }
+    }
 }
 
 log4j = {

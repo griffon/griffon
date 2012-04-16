@@ -24,15 +24,17 @@ import static griffon.util.GriffonApplicationUtils.isMacOSX
 groovy.swing.SwingBuilder.metaClass.'_delegateProperty:id' = 'id'
 setVariable('_delegateProperty:id', 'id')
 
-def makeSampleScriptAction = { identifier, name ->
-    menuItem {
-        action(id: "${identifier}Action",
-                name: name,
-                closure: { sampleId, evt -> model.currentSampleId = sampleId; controller.runSampleScriptAction() }.curry(identifier),
-                smallIcon: silkIcon('script_gear')
-        )
+makeSampleScriptAction = { identifier, name, mn ->
+    doLater {
+        mn.add(menuItem {
+            action(id: "${identifier}Action",
+                    name: name,
+                    closure: { sampleId, evt -> model.currentSampleId = sampleId; controller.runSampleScriptAction() }.curry(identifier),
+                    smallIcon: silkIcon('script_gear')
+            )
+        })
     }
-    doOutside {
+    execOutsideUI {
         model.samples[identifier] = Thread.currentThread().contextClassLoader.
                 getResourceAsStream("samples/${identifier}.txt").text
     }
@@ -97,7 +99,6 @@ menuBar = menuBar {
         separator()
         menuItem(addJarToClasspathAction)
         menuItem(addDirToClasspathAction)
-        /*
         separator()
         menu(text: app.getMessage('application.menu.Samples.name', 'Samples')) {
             menu(text: app.getMessage('application.menu.Builders.name', 'Builders')) {
@@ -107,7 +108,7 @@ menuBar = menuBar {
                         tray1: "Tray - Flair",
                         macwidgets1: "MacWidgets - Flair"].each { identifier, name ->
                     //swingxtras1: "Swingxtras - Flair"].each { identifier, name ->
-                    makeSampleScriptAction(identifier, name)
+                    makeSampleScriptAction(identifier, name, current)
                 }
             }
             menu(text: app.getMessage('application.menu.Layouts.name', 'Layouts')) {
@@ -116,12 +117,12 @@ menuBar = menuBar {
                         miglayout1: "MigLayout",
                         riverlayout1: "RiverLayout",
                         zonelayout1: "ZoneLayout"].each { identifier, name ->
-                    makeSampleScriptAction(identifier, name)
+                    makeSampleScriptAction(identifier, name, current)
                 }
             }
             menu(text: app.getMessage('application.menu.Custom.name', 'Custom')) {
                 [coverflow1: "Coverflow"].each { identifier, name ->
-                    makeSampleScriptAction(identifier, name)
+                    makeSampleScriptAction(identifier, name, current)
                 }
             }
             menu(text: app.getMessage('application.menu.Effects.name', 'Effect')) {
@@ -131,11 +132,10 @@ menuBar = menuBar {
                         jexplose1: "JExplose",
                         transitions1: "Transitions - Picker",
                         gfx2: "Gfx - Animation"].each { identifier, name ->
-                    makeSampleScriptAction(identifier, name)
+                    makeSampleScriptAction(identifier, name, current)
                 }
             }
         }
-        */
     }
 
     if (!isMacOSX) glue()
