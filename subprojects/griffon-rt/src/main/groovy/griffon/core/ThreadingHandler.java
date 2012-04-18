@@ -36,30 +36,6 @@ public interface ThreadingHandler {
 
     /**
      * Executes a code block asynchronously on the UI thread.
-     *
-     * @deprecated use #execInsideUIAsync() instead
-     */
-    @Deprecated
-    void execAsync(Runnable runnable);
-
-    /**
-     * Executes a code block synchronously on the UI thread.
-     *
-     * @deprecated use #execInsideUIsync() instead
-     */
-    @Deprecated
-    void execSync(Runnable runnable);
-
-    /**
-     * Executes a code block outside of the UI thread.
-     *
-     * @deprecated use #execOutsideUI() instead
-     */
-    @Deprecated
-    void execOutside(Runnable runnable);
-
-    /**
-     * Executes a code block asynchronously on the UI thread.
      */
     void execInsideUIAsync(Runnable runnable);
 

@@ -98,27 +98,6 @@ public interface EventPublisher {
      * Listeners will be notified outside of the UI thread.
      *
      * @param eventName the name of the event
-     * @deprecated use #publishEventOutsideUI() instead
-     */
-    @Deprecated
-    void publishEventOutside(String eventName);
-
-    /**
-     * Publishes an event.<p>
-     * Listeners will be notified outside of the UI thread.
-     *
-     * @param eventName the name of the event
-     * @param args      event arguments sent to listeners
-     * @deprecated use #publishEventOutsideUI() instead
-     */
-    @Deprecated
-    void publishEventOutside(String eventName, List args);
-
-    /**
-     * Publishes an event.<p>
-     * Listeners will be notified outside of the UI thread.
-     *
-     * @param eventName the name of the event
      */
     void publishEventOutsideUI(String eventName);
 

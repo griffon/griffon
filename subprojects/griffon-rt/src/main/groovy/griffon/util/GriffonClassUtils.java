@@ -149,14 +149,6 @@ public final class GriffonClassUtils {
         MVC_METHODS.add(new MethodDescriptor("setBuilder", new Class[]{FactoryBuilderSupport.class}));
 
         THREADING_METHODS.add(new MethodDescriptor("isUIThread"));
-        // TODO @deprecated - remove before 1.0
-        THREADING_METHODS.add(new MethodDescriptor("execAsync", new Class[]{Runnable.class}));
-        THREADING_METHODS.add(new MethodDescriptor("execAsync", new Class[]{Script.class}));
-        THREADING_METHODS.add(new MethodDescriptor("execSync", new Class[]{Runnable.class}));
-        THREADING_METHODS.add(new MethodDescriptor("execSync", new Class[]{Script.class}));
-        THREADING_METHODS.add(new MethodDescriptor("execOutside", new Class[]{Runnable.class}));
-        THREADING_METHODS.add(new MethodDescriptor("execOutside", new Class[]{Script.class}));
-        // TODO @deprecated - remove before 1.0
         THREADING_METHODS.add(new MethodDescriptor("execInsideUIAsync", new Class[]{Runnable.class}));
         THREADING_METHODS.add(new MethodDescriptor("execInsideUIAsync", new Class[]{Script.class}));
         THREADING_METHODS.add(new MethodDescriptor("execInsideUISync", new Class[]{Runnable.class}));
@@ -186,10 +178,6 @@ public final class GriffonClassUtils {
         EVENT_PUBLISHER_METHODS.add(new MethodDescriptor("publishEvent", new Class[]{String.class, List.class}));
         EVENT_PUBLISHER_METHODS.add(new MethodDescriptor("publishEventAsync", new Class[]{String.class}));
         EVENT_PUBLISHER_METHODS.add(new MethodDescriptor("publishEventAsync", new Class[]{String.class, List.class}));
-        // TODO @deprecated - remove before 1.0
-        EVENT_PUBLISHER_METHODS.add(new MethodDescriptor("publishEventOutside", new Class[]{String.class}));
-        EVENT_PUBLISHER_METHODS.add(new MethodDescriptor("publishEventOutside", new Class[]{String.class, List.class}));
-        // TODO @deprecated - remove before 1.0
         EVENT_PUBLISHER_METHODS.add(new MethodDescriptor("publishEventOutsideUI", new Class[]{String.class}));
         EVENT_PUBLISHER_METHODS.add(new MethodDescriptor("publishEventOutsideUI", new Class[]{String.class, List.class}));
 

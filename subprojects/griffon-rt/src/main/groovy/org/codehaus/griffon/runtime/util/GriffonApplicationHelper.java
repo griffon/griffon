@@ -294,17 +294,6 @@ public class GriffonApplicationHelper {
     /**
      * Executes a script inside the UI Thread.<p>
      * On Swing this would be the Event Dispatch Thread.
-     *
-     * @deprecated use runLifecycleHandler instead
-     */
-    @Deprecated
-    public static void runScriptInsideUIThread(String scriptName, GriffonApplication app) {
-        runLifecycleHandler(scriptName, app);
-    }
-
-    /**
-     * Executes a script inside the UI Thread.<p>
-     * On Swing this would be the Event Dispatch Thread.
      */
     public static void runLifecycleHandler(String handlerName, GriffonApplication app) {
         Class<?> handlerClass = null;

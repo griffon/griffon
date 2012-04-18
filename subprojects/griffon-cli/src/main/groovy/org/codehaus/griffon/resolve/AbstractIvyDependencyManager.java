@@ -344,30 +344,6 @@ public abstract class AbstractIvyDependencyManager {
     }
 
     /**
-     * @deprecated use registerDependency(String, EnhancedDefaultDependencyDescriptor)
-     */
-    /*
-    @Deprecated
-    public void configureDependencyDescriptor(EnhancedDefaultDependencyDescriptor dependencyDescriptor, String scope) {
-        configureDependencyDescriptor(dependencyDescriptor, scope, false);
-    }
-    */
-
-    /**
-     * @deprecated use registerDependency(String, EnhancedDefaultDependencyDescriptor) or registerPluginDependency(String EnhancedDefaultDependencyDescriptor)
-     */
-    /*
-    @Deprecated
-    public void configureDependencyDescriptor(EnhancedDefaultDependencyDescriptor dependencyDescriptor, String scope, boolean pluginMode) {
-        if (pluginMode) {
-            registerPluginDependency(scope, dependencyDescriptor);
-        } else {
-            registerDependency(scope, dependencyDescriptor);
-        }
-    }
-    */
-
-    /**
      * Registers a JAR dependency with the dependency manager.
      *
      * @see #registerPluginDependency(String, EnhancedDefaultDependencyDescriptor)

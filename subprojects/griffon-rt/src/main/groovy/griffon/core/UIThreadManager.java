@@ -150,10 +150,6 @@ public final class UIThreadManager {
         if (LOG.isTraceEnabled()) {
             LOG.trace("Enhancing script " + script);
         }
-        // TODO @deprecated - remove before 1.0
-        script.getBinding().setVariable("execSync", EXECUTE_INSIDE_UI_SYNC_RUNNER);
-        script.getBinding().setVariable("execAsync", EXECUTE_INSIDE_UI_ASYNC_RUNNER);
-        script.getBinding().setVariable("execOutside", EXECUTE_OUTSIDE_UI_RUNNER);
 
         script.getBinding().setVariable(EXECUTE_INSIDE_UI_SYNC, EXECUTE_INSIDE_UI_SYNC_RUNNER);
         script.getBinding().setVariable(EXECUTE_INSIDE_UI_SYNC, EXECUTE_INSIDE_UI_ASYNC_RUNNER);
@@ -168,10 +164,6 @@ public final class UIThreadManager {
             if (LOG.isTraceEnabled()) {
                 LOG.trace("Enhancing metaClass " + metaClass);
             }
-            // TODO @deprecated - remove before 1.0
-            mc.registerInstanceMethod("execSync", EXECUTE_INSIDE_UI_SYNC_RUNNER);
-            mc.registerInstanceMethod("execAsync", EXECUTE_INSIDE_UI_ASYNC_RUNNER);
-            mc.registerInstanceMethod("execOutside", EXECUTE_OUTSIDE_UI_RUNNER);
 
             mc.registerInstanceMethod(EXECUTE_INSIDE_UI_SYNC, EXECUTE_INSIDE_UI_SYNC_RUNNER);
             mc.registerInstanceMethod(EXECUTE_INSIDE_UI_ASYNC, EXECUTE_INSIDE_UI_ASYNC_RUNNER);

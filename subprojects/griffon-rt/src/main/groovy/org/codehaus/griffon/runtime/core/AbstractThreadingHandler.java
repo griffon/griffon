@@ -35,27 +35,13 @@ public abstract class AbstractThreadingHandler implements ThreadingHandler {
         return UIThreadManager.getInstance().isUIThread();
     }
 
-    // TODO @deprecated - remove before 1.0
-    public void execAsync(Runnable runnable) {
-        execInsideUIAsync(runnable);
-    }
-
     public void execInsideUIAsync(Runnable runnable) {
         UIThreadManager.getInstance().executeAsync(runnable);
     }
 
-    // TODO @deprecated - remove before 1.0
-    public void execSync(Runnable runnable) {
-        execInsideUISync(runnable);
-    }
 
     public void execInsideUISync(Runnable runnable) {
         UIThreadManager.getInstance().executeSync(runnable);
-    }
-
-    // TODO @deprecated - remove before 1.0
-    public void execOutside(Runnable runnable) {
-        execOutsideUI(runnable);
     }
 
     public void execOutsideUI(Runnable runnable) {
