@@ -1,0 +1,35 @@
+gridPane {
+    group(row: 0, column: 0) {
+        //simple
+        rectangle(x:10, y:10, width:100, height:100, fill:Color.WHITE) {
+            effect dropShadow(color: Color.RED, input: innerShadow(color: Color.BLUE))
+        }
+    }
+    group(row: 0, column: 1) {
+        // changing the sequence leads to different results
+        rectangle(x:120, y:10, width:100, height:100, fill:Color.WHITE) {
+            effect innerShadow(color: Color.BLUE, input: dropShadow(color: Color.RED))
+        }
+    }
+    group(row: 1, column: 0) {
+        // chaining by using groups
+        group {
+            rectangle(x:230, y:10, width:100, height:100, fill:Color.WHITE) {
+                effect innerShadow(color: Color.BLUE)
+            }
+            effect dropShadow(color: Color.RED)
+        }
+    }
+    group(row: 1, column: 1) {
+        // changing the effects at runtime
+        def inner = innerShadow(color: Color.BLUE)
+        def outer = dropShadow(color:Color.RED)
+        rectangle(id: 'interactive', x:340, y:10, width:100, height:100, fill:Color.WHITE) {
+            effect outer
+            onMouseEntered { outer.input = inner }
+            onMouseExited  { outer.input = null  }
+            onMouseClicked { interactive.effect = reflection(input: outer) }
+        }
+    }
+}
+

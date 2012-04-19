@@ -1,0 +1,100 @@
+import groovyx.javafx.beans.FXBindable
+
+/**
+ * @author jimclarke
+ */
+
+@FXBindable
+class Time {
+    Integer hours
+    Integer minutes
+    Integer seconds
+
+    Double hourAngle
+    Double minuteAngle
+    Double secondAngle
+
+    public Time() {
+        // bind the angle properties to the clock time
+        hourAngleProperty.bind((hoursProperty * 30.0) + (minutesProperty * 0.5))
+        minuteAngleProperty.bind(minutesProperty * 6.0)
+        secondAngleProperty.bind(secondsProperty * 6.0)
+
+        // Set the initial clock time
+        def calendar = Calendar.instance
+        hours = calendar.get(Calendar.HOUR)
+        minutes = calendar.get(Calendar.MINUTE)
+        seconds = calendar.get(Calendar.SECOND)
+    }
+
+    /**
+     * Add a second to the time
+     */
+    public void addOneSecond() {
+        seconds = (seconds + 1) % 60
+        if (seconds == 0) {
+            minutes = (minutes + 1)  % 60
+            if (minutes == 0) {
+                hours = (hours + 1) % 12
+            }
+        }
+    }
+}
+
+time = new Time()
+
+width = 240.0
+height = 240.0
+radius = width / 3.0
+centerX = width / 2.0
+centerY = height / 2.0
+
+def hourDots = []
+for (i in 0..11) {
+    def y = -Math.cos(Math.PI / 6.0 * i) * radius
+    def x = ((i > 5) ? -1 : 1) * Math.sqrt(radius * radius - y * y)
+    def r = i % 3 ? 2.0 : 4.0
+
+    hourDots << circle(fill: Color.BLACK, layoutX: x, layoutY: y, radius: r)
+}
+
+clock = group(layoutX: centerX, layoutY: centerY) {
+    // outer rim
+    circle(radius: radius + 20) {
+        fill(radialGradient(radius: 1.0, center: [0.0, 0.0], focusDistance: 0.5, focusAngle: 0,
+                            stops: [[0.9, Color.SILVER], [1.0, Color.BLACK]]))
+    }
+    // clock face
+    circle(radius: radius + 10, stroke: Color.BLACK) {
+        fill(radialGradient(radius: 1.0, center: [0.0, 0.0], focusDistance: 4.0, focusAngle: 90,
+                            stops: [[0.0, Color.WHITE], [1.0, Color.BLUE]]))
+    }
+    // dots around the clock for the hours
+    nodes(hourDots)
+    // center
+    circle(radius: 5, fill: Color.BLACK)
+    // hour hand
+    path(fill: Color.BLACK) {
+        rotate(angle: bind(time.hourAngleProperty))
+        moveTo(x: 4, y: -4)
+        arcTo(radiusX: -1, radiusY: -1, x: -4, y: -4)
+        lineTo(x: 0, y: -radius / 4 * 3)
+    }
+    // minute hand
+    path(fill: Color.BLACK) {
+        rotate(angle: bind(time.minuteAngleProperty))
+        moveTo(x: 4, y: -4)
+        arcTo(radiusX: -1, radiusY: -1, x: -4, y: -4)
+        lineTo(x: 0, y: -radius)
+    }
+    // second hand
+    line(endY: -radius - 3, strokeWidth: 2, stroke: Color.RED) {
+        rotate(angle: bind(time.secondAngleProperty))
+    }
+}
+
+sequentialTransition(cycleCount: "indefinite") {
+    pauseTransition(1.s, onFinished: {time.addOneSecond()})
+}.playFromStart()
+
+clock

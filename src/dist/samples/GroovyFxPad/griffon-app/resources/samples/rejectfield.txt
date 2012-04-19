@@ -1,0 +1,30 @@
+class RejectField extends TextField {
+    Closure onReject
+    String  allow = ".*"
+
+    void replaceText(int start, int end, String text) {
+        if (text.matches(allow)) {
+            super.replaceText start, end, text
+        } else {
+            onReject?.call this
+        }
+    }
+
+    void replaceSelection(String text) {
+        if (text.matches(allow)) {
+            super.replaceSelection text
+        } else {
+            onReject?.call this
+        }
+    }
+}
+
+registerBeanFactory "rejectField", RejectField
+
+rejectField(text:'only a-z allowed', allow: '[a-z]*',
+            onReject: { shake.playFromStart() }) {
+    shake = sequentialTransition {
+        rotateTransition to: 3, cycleCount: 3, cycleDuration: 0.1.s
+        rotateTransition 0.1.s, to: 0
+    }
+}

@@ -1,0 +1,71 @@
+import javafx.animation.AnimationTimer
+
+RND = new Random()
+DATA_PERIOD = 2500000000l
+lastDataCall = 0
+
+TIMER = [
+    handle: {long l ->
+        long currentNanoTime = System.nanoTime()
+        if (currentNanoTime > lastDataCall + DATA_PERIOD) {
+            radial1.setValue(RND.nextDouble() * 100)
+            radial2.setValue(RND.nextDouble() * 100)
+            radial3.setValue(RND.nextDouble() * 100)
+            radial4.setValue(RND.nextDouble() * 100)
+            lastDataCall = System.nanoTime()
+        }
+    }
+] as AnimationTimer
+
+radial1 = radial(threshold: 30, prefSize: 200) {
+	styleModel (
+        frameDesign: Gauge.FrameDesign.STEEL,
+        tickLabelOrientation: Gauge.TicklabelOrientation.HORIZONTAL,
+        pointerType: Gauge.PointerType.TYPE14,
+        thresholdVisible: true,
+        lcdDesign: LcdDesign.STANDARD_GREEN
+	)
+}
+
+radial2 = radial(threshold: 50, prefSize: 200) {
+    styleModel(
+        frameDesign: Gauge.FrameDesign.GOLD,
+        backgroundDesign: Gauge.BackgroundDesign.BLACK,
+        tickLabelOrientation: Gauge.TicklabelOrientation.NORMAL,
+        bargraph: true,
+        thresholdColor: Gauge.ThresholdColor.RED,
+        thresholdVisible: true,
+        valueColor: ColorDef.BLUE,
+        ledColor: LedColor.CYAN
+    )
+}
+
+styleModel3 = styleModel(
+    frameDesign: Gauge.FrameDesign.BRASS,
+    backgroundDesign: Gauge.BackgroundDesign.WHITE,
+    knobColor: Gauge.KnobColor.BRASS,
+    knobDesign: Gauge.KnobDesign.METAL,
+    tickLabelOrientation: Gauge.TicklabelOrientation.NORMAL,
+    pointerType: Gauge.PointerType.TYPE9,
+    thresholdColor: Gauge.ThresholdColor.ORANGE,
+    thresholdVisible: true,
+    valueColor: ColorDef.ORANGE,
+    ledColor: LedColor.ORANGE,
+    lcdDesign: LcdDesign.DARK_AMBER,
+    lcdDecimals: 3,
+    lcdDigitalFontEnabled: true
+)
+
+radial3 = radial(threshold: 40, prefSize: 200,
+    styleModel: styleModel3)
+radial4 = radial(prefSize: 200,
+    styleModel: styleModel3)
+
+TIMER.start()
+
+gridPane(hgap: 5, vgap: 5) {
+    node(radial1, row: 0, column: 0)
+    node(radial2, row: 0, column: 1)
+    node(radial3, row: 1, column: 0)
+    node(radial4, row: 1, column: 1)
+}
