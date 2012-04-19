@@ -187,7 +187,6 @@ class ArtifactUtils {
     }
 
     static File getInstallPathFor(String type, String name, String version) {
-        // name = getHyphenatedName(name)
         new File("${artifactBase(type)}/${name}-${version}")
     }
 
@@ -196,7 +195,6 @@ class ArtifactUtils {
     }
 
     static Release getReleaseFromMetadata(String type, String name, String version = null) {
-        // name = getHyphenatedName(name)
         File file = null
         if (version) {
             file = new File("${artifactBase(type)}/${name}-${version}/${type}.json")

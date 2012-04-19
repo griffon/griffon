@@ -25,6 +25,7 @@ import org.springframework.core.io.Resource
 import static griffon.util.GriffonApplicationUtils.is64Bit
 import static griffon.util.GriffonApplicationUtils.osArch
 import static griffon.util.GriffonNameUtils.capitalize
+import org.codehaus.griffon.plugins.PluginInfo
 
 /**
  * Gant script that packages a Griffon application (note: does not create WAR)
@@ -183,12 +184,11 @@ collectArtifactMetadata = {
 
 collectAddonMetadata = {
     Map addons = [:]
-    pluginSettings.sortedPluginDirectories.each { String name, Resource dir ->
-        if (resolveResources("file://${dir.file}/dist/griffon-${name}-runtime-*.jar") ||
-                resolveResources("file://${dir.file}/addon/griffon-${name}-addon-*.jar")) {
-            String pluginDirName = dir.file.name
-            String pluginVersion = pluginDirName[(name.size() + 1)..-1]
-            addons[name] = pluginVersion
+    pluginSettings.getSortedProjectPluginDirectories.each { String name, PluginInfo pluginInfo ->
+        // TODO legacy
+        if (resolveResources("file://${pluginInfo.directory.file}/dist/griffon-${name}-runtime-*.jar") ||
+                resolveResources("file://${pluginInfo.directory.file}/addon/griffon-${name}-addon-*.jar")) {
+            addons[name] = pluginInfo.version
         }
     }
     if (addons) {

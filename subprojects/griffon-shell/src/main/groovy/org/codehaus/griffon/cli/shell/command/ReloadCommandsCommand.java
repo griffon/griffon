@@ -72,7 +72,7 @@ public class ReloadCommandsCommand implements Action {
 
         addCommandScripts(scope, new File(buildSettings.getBaseDir(), "scripts"), commandProcessor);
 
-        for (Map.Entry<String, Release> plugin : buildSettings.pluginSettings.getPlugins().entrySet()) {
+        for (Map.Entry<String, Release> plugin : buildSettings.pluginSettings.getPluginReleases().entrySet()) {
             String name = plugin.getKey();
             String version = plugin.getValue().getVersion();
             File path = ArtifactUtils.getInstallPathFor(Plugin.TYPE, name, version);

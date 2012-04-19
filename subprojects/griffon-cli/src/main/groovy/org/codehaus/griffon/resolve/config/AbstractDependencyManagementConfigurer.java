@@ -18,8 +18,6 @@ package org.codehaus.griffon.resolve.config;
 import groovy.lang.GroovyObjectSupport;
 import org.codehaus.griffon.resolve.IvyDependencyManager;
 
-import static griffon.util.BuildSettingsHolder.getSettings;
-
 abstract class AbstractDependencyManagementConfigurer extends GroovyObjectSupport {
 
     protected final DependencyConfigurationContext context;
@@ -37,22 +35,22 @@ abstract class AbstractDependencyManagementConfigurer extends GroovyObjectSuppor
     }
 
     public String getGriffonVersion() {
-        return getSettings().getGriffonVersion();
+        return getDependencyManager().getBuildSettings().getGriffonVersion();
     }
 
     public String getGroovyVersion() {
-        return getSettings().getGroovyVersion();
+        return getDependencyManager().getBuildSettings().getGroovyVersion();
     }
 
     public String getAntVersion() {
-        return getSettings().getAntVersion();
+        return getDependencyManager().getBuildSettings().getAntVersion();
     }
 
     public String getSlf4jVersion() {
-        return getSettings().getSlf4jVersion();
+        return getDependencyManager().getBuildSettings().getSlf4jVersion();
     }
 
     public String getSpringVersion() {
-        return getSettings().getSpringVersion();
+        return getDependencyManager().getBuildSettings().getSpringVersion();
     }
 }

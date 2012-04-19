@@ -31,6 +31,7 @@ import org.codehaus.griffon.cli.ScriptExitException
 import org.codehaus.griffon.resolve.IvyDependencyManager
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
+
 import static griffon.util.GriffonExceptionHandler.sanitize
 import static griffon.util.GriffonNameUtils.*
 import static griffon.util.GriffonUtil.getScriptName
@@ -104,14 +105,18 @@ class ArtifactInstallEngine {
 
         Map<String, String> pluginsToDelete = [:]
         Map<String, String> missingPlugins = [:]
-        registeredPlugins.each { name, version ->
+        for (Map.Entry<String, String> pluginEntry : registeredPlugins.entrySet()) {
+            String name = pluginEntry.key
+            String version = pluginEntry.value
             String v = installedPlugins[name]
             if (version.endsWith('-SNAPSHOT') || v != version) {
                 missingPlugins[name] = version
             }
         }
 
-        installedPlugins.each { name, version ->
+        for (Map.Entry<String, String> pluginEntry : installedPlugins.entrySet()) {
+            String name = pluginEntry.key
+            String version = pluginEntry.value
             String v = registeredPlugins[name]
             if (v != version) {
                 pluginsToDelete[name] = version
@@ -119,7 +124,9 @@ class ArtifactInstallEngine {
         }
 
         if (installedPlugins) {
-            installedPlugins.each { name, version ->
+            for (Map.Entry<String, String> pluginEntry : installedPlugins.entrySet()) {
+                String name = pluginEntry.key
+                String version = pluginEntry.value
                 metadata["plugins.${name}"] = version
             }
             metadata.persist()
@@ -281,7 +288,7 @@ class ArtifactInstallEngine {
 
     private void doInstallDependencies(List<ArtifactDependency> dependencies, List<ArtifactDependency> failedDependencies, List<ArtifactDependency> retryDependencies, boolean retryAllowed) {
         String type = Plugin.TYPE
-        for (ArtifactDependency dependency: dependencies) {
+        for (ArtifactDependency dependency : dependencies) {
             try {
                 if (dependency.evicted) {
                     doUninstall(type, dependency.name, dependency.version)
@@ -295,7 +302,7 @@ class ArtifactInstallEngine {
 
                             // must check tat both checksum && date exist as these properties
                             // are not present if the plugin was insatlled directly from zip
-                            if ( (installedRelease.checksum && installedRelease.date) &&
+                            if ((installedRelease.checksum && installedRelease.date) &&
                                     installedRelease.checksum == dependency.release.checksum ||
                                     installedRelease.date.after(dependency.release.date)) continue
                         }
@@ -597,7 +604,7 @@ class ArtifactInstallEngine {
             def callable = settings.pluginDependencyHandler(dependencyManager)
             int result = callable.call(new File(pluginInstallPath), pluginName, pluginVersion)
             if (result == BuildSettings.RESOLUTION_OK) {
-                for (String conf: ['runtime', 'compile', 'test', 'build']) {
+                for (String conf : ['runtime', 'compile', 'test', 'build']) {
                     def resolveReport = dependencyManager.resolveDependencies(conf)
                     if (resolveReport.hasError()) {
                         throw new InstallArtifactException("Plugin ${pluginName}-${pluginVersion} has missing JAR dependencies.")
