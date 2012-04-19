@@ -139,7 +139,7 @@ public abstract class AbstractMVCGroupManager implements MVCGroupManager {
     protected abstract void doInitialize(Map<String, MVCGroupConfiguration> configurations);
 
     public MVCGroup buildMVCGroup(String mvcType) {
-        return buildMVCGroup(findConfiguration(mvcType), mvcType, Collections.<String, Object>emptyMap());
+        return buildMVCGroup(findConfiguration(mvcType), null, Collections.<String, Object>emptyMap());
     }
 
     public MVCGroup buildMVCGroup(String mvcType, String mvcName) {
@@ -147,11 +147,11 @@ public abstract class AbstractMVCGroupManager implements MVCGroupManager {
     }
 
     public MVCGroup buildMVCGroup(Map<String, Object> args, String mvcType) {
-        return buildMVCGroup(findConfiguration(mvcType), mvcType, args);
+        return buildMVCGroup(findConfiguration(mvcType), null, args);
     }
 
     public MVCGroup buildMVCGroup(String mvcType, Map<String, Object> args) {
-        return buildMVCGroup(findConfiguration(mvcType), mvcType, args);
+        return buildMVCGroup(findConfiguration(mvcType), null, args);
     }
 
     public MVCGroup buildMVCGroup(Map<String, Object> args, String mvcType, String mvcName) {
@@ -163,15 +163,15 @@ public abstract class AbstractMVCGroupManager implements MVCGroupManager {
     }
 
     public List<? extends GriffonMvcArtifact> createMVCGroup(String mvcType) {
-        return createMVCGroup(findConfiguration(mvcType), mvcType, Collections.<String, Object>emptyMap());
+        return createMVCGroup(findConfiguration(mvcType), null, Collections.<String, Object>emptyMap());
     }
 
     public List<? extends GriffonMvcArtifact> createMVCGroup(Map<String, Object> args, String mvcType) {
-        return createMVCGroup(findConfiguration(mvcType), mvcType, args);
+        return createMVCGroup(findConfiguration(mvcType), null, args);
     }
 
     public List<? extends GriffonMvcArtifact> createMVCGroup(String mvcType, Map<String, Object> args) {
-        return createMVCGroup(findConfiguration(mvcType), mvcType, args);
+        return createMVCGroup(findConfiguration(mvcType), null, args);
     }
 
     public List<? extends GriffonMvcArtifact> createMVCGroup(String mvcType, String mvcName) {
@@ -187,7 +187,7 @@ public abstract class AbstractMVCGroupManager implements MVCGroupManager {
     }
 
     public void withMVCGroup(String mvcType, Closure handler) {
-        withMVCGroup(findConfiguration(mvcType), mvcType, Collections.<String, Object>emptyMap(), handler);
+        withMVCGroup(findConfiguration(mvcType), null, Collections.<String, Object>emptyMap(), handler);
     }
 
     public void withMVCGroup(String mvcType, String mvcName, Closure handler) {
@@ -195,11 +195,11 @@ public abstract class AbstractMVCGroupManager implements MVCGroupManager {
     }
 
     public void withMVCGroup(String mvcType, Map<String, Object> args, Closure handler) {
-        withMVCGroup(findConfiguration(mvcType), mvcType, args, handler);
+        withMVCGroup(findConfiguration(mvcType), null, args, handler);
     }
 
     public void withMVCGroup(Map<String, Object> args, String mvcType, Closure handler) {
-        withMVCGroup(findConfiguration(mvcType), mvcType, args, handler);
+        withMVCGroup(findConfiguration(mvcType), null, args, handler);
     }
 
     public void withMVCGroup(Map<String, Object> args, String mvcType, String mvcName, Closure handler) {
@@ -211,7 +211,7 @@ public abstract class AbstractMVCGroupManager implements MVCGroupManager {
     }
 
     public <M extends GriffonModel, V extends GriffonView, C extends GriffonController> void withMVCGroup(String mvcType, MVCClosure<M, V, C> handler) {
-        withMVCGroup(findConfiguration(mvcType), mvcType, Collections.<String, Object>emptyMap(), handler);
+        withMVCGroup(findConfiguration(mvcType), null, Collections.<String, Object>emptyMap(), handler);
     }
 
     public <M extends GriffonModel, V extends GriffonView, C extends GriffonController> void withMVCGroup(String mvcType, String mvcName, MVCClosure<M, V, C> handler) {
@@ -219,11 +219,11 @@ public abstract class AbstractMVCGroupManager implements MVCGroupManager {
     }
 
     public <M extends GriffonModel, V extends GriffonView, C extends GriffonController> void withMVCGroup(String mvcType, Map<String, Object> args, MVCClosure<M, V, C> handler) {
-        withMVCGroup(findConfiguration(mvcType), mvcType, args, handler);
+        withMVCGroup(findConfiguration(mvcType), null, args, handler);
     }
 
     public <M extends GriffonModel, V extends GriffonView, C extends GriffonController> void withMVCGroup(Map<String, Object> args, String mvcType, MVCClosure<M, V, C> handler) {
-        withMVCGroup(findConfiguration(mvcType), mvcType, args, handler);
+        withMVCGroup(findConfiguration(mvcType), null, args, handler);
     }
 
     public <M extends GriffonModel, V extends GriffonView, C extends GriffonController> void withMVCGroup(Map<String, Object> args, String mvcType, String mvcName, MVCClosure<M, V, C> handler) {
