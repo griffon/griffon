@@ -155,7 +155,7 @@ public abstract class AbstractGriffonView extends AbstractGriffonMvcArtifact imp
             script.getBinding().setVariable(arg.getKey(), arg.getValue());
         }
 
-        getApp().execSync(new Runnable() {
+        getApp().execInsideUISync(new Runnable() {
             public void run() {
                 getBuilder().build(script);
             }

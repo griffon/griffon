@@ -16,6 +16,7 @@
 
 package griffon.util;
 
+import groovy.util.ConfigObject;
 import org.codehaus.groovy.runtime.typehandling.DefaultTypeTransformation;
 
 import java.util.Map;
@@ -71,7 +72,7 @@ public abstract class ConfigUtils {
         for (int i = 0; i < keys.length - 1; i++) {
             if (config != null) {
                 Object node = config.get(keys[i]);
-                if(node instanceof Map) {
+                if (node instanceof Map) {
                     config = (Map) node;
                 } else {
                     return defaultValue;
@@ -155,5 +156,20 @@ public abstract class ConfigUtils {
     public static String getConfigValueAsString(Map config, String key, String defaultValue) {
         Object value = getConfigValue(config, key, defaultValue);
         return String.valueOf(value);
+    }
+
+    /**
+     * Merges two maps using <tt>ConfigObject.merge()</tt>.
+     *
+     * @param defaults  configuration values available by default
+     * @param overrides configuration values that override defaults
+     * @return the result of merging both maps
+     */
+    public static Map merge(Map defaults, Map overrides) {
+        ConfigObject configDefaults = new ConfigObject();
+        ConfigObject configOverrides = new ConfigObject();
+        configDefaults.putAll(defaults);
+        configOverrides.putAll(overrides);
+        return configDefaults.merge(configOverrides);
     }
 }
