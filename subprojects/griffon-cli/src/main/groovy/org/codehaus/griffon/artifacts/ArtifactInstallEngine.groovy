@@ -479,7 +479,7 @@ class ArtifactInstallEngine {
     }
 
     void installFromFile(String type, File file, boolean resolveDependencies = false, boolean framework = false) {
-        Release release = inspectArtifactRelease(type, file)
+        Release release = inspectArtifactRelease(type, file, framework)
 
         String artifactName = release.artifact.name
         String releaseVersion = release.version
@@ -668,9 +668,14 @@ class ArtifactInstallEngine {
         false
     }
 
-    private Release inspectArtifactRelease(String type, File file) {
+    private Release inspectArtifactRelease(String type, File file, boolean framework) {
         Release release = createReleaseFromMetadata(type, file)
         String artifactNameAndVersion = "${release.artifact.name}-${release.version}"
+
+        if (type == Plugin.TYPE && framework && !release.artifact.framework) {
+            eventHandler 'StatusError', "${release.artifact.capitalizedType} ${artifactNameAndVersion} could not be installed as a framework plugin because it's not configured as such."
+            throw new InstallArtifactException("Installation of ${type} ${artifactNameAndVersion} aborted.")
+        }
 
         // check against release.griffonVersion
         if (!isValidVersion(GriffonUtil.griffonVersion, release.griffonVersion)) {

@@ -21,7 +21,6 @@ import org.codehaus.griffon.artifacts.model.Plugin
  */
 
 target(uninstallPlugin: "Uninstalls a Griffon application plugin") {
-    resolveFrameworkFlag()
     uninstallArtifact(Plugin.TYPE)
     resetDependencyResolution()
 }

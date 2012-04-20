@@ -37,4 +37,9 @@ public class ListPluginUpdatesCommand extends AbstractGriffonCommand {
             description = "Install all matching upgrades.",
             required = false)
     private boolean install;
+
+    @Option(name = "--framework",
+            description = "Forces checking for available updates of framework plugins.",
+            required = false)
+    private boolean framework;
 }

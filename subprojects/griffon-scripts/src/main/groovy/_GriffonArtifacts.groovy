@@ -205,7 +205,6 @@ doInstallArtifactFromZip = { String type, File file, Metadata md = metadata ->
 }
 
 doInstallArtifact = { ArtifactRepository artifactRepository, String type, String name, String version = null, Metadata md = metadata ->
-    resolveFrameworkFlag()
     return withArtifactInstall(type) {
         def release = null
 
@@ -234,6 +233,12 @@ doInstallArtifact = { ArtifactRepository artifactRepository, String type, String
         }
 
         if (!release) return false
+
+        if(type == Plugin.TYPE && framework && !release.artifact.framework) {
+            if (!failOnError) return false
+            event('StatusError', ["Plugin ${name}-${release.version} cannot be installed as a framework plugin"])
+            exit 1
+        }
 
         File file = artifactRepository.downloadFile(type, name, version, null)
         doInstallFromFile(type, file, md)
@@ -269,9 +274,9 @@ installArtifactForName = { Metadata md, String type, String name, String version
 }
 
 doInstallFromFile = { type, file, md ->
+    resolveFrameworkFlag()
     ArtifactInstallEngine artifactInstallEngine = createArtifactInstallEngine(md)
     try {
-        resolveFrameworkFlag()
         artifactInstallEngine.installFromFile(type, file, true, framework)
     } catch (InstallArtifactException iae) {
         artifactInstallEngine.errorHandler "Installation of ${file} aborted."
@@ -320,9 +325,10 @@ runPluginScript = { File scriptFile, fullPluginName, msg ->
     }
 }
 
+framework = false
 resolveFrameworkFlag = {
-    if(argsMap.framework != null) {
-        if(argsMap.framework instanceof CharSequence) {
+    if (argsMap.framework != null) {
+        if (argsMap.framework instanceof CharSequence) {
             framework = Boolean.parseBoolean(argsMap.framework)
         } else {
             framework = argsMap.framework as boolean

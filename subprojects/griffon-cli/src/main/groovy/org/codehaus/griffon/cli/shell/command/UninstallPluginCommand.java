@@ -19,6 +19,7 @@ package org.codehaus.griffon.cli.shell.command;
 import org.codehaus.griffon.cli.shell.AbstractGriffonCommand;
 import org.codehaus.griffon.cli.shell.Argument;
 import org.codehaus.griffon.cli.shell.Command;
+import org.codehaus.griffon.cli.shell.Option;
 
 /**
  * @author Andres Almiray
@@ -39,4 +40,9 @@ public class UninstallPluginCommand extends AbstractGriffonCommand {
             description = "The version of the archetype to install.",
             required = false)
     private String version;
+
+    @Option(name = "--framework",
+            description = "Uninstalls the plugin only if installed as a framework plugin.",
+            required = false)
+    private boolean framework;
 }

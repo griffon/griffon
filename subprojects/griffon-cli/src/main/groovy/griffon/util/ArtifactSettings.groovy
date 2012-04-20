@@ -361,7 +361,8 @@ class ArtifactSettings {
                 },
                 platforms: json.platforms.collect([]) { platform ->
                     Platform.findByName(platform)
-                }
+                },
+                framework: json.framework ?: false
         )
         if (json.release) {
             if (!plugin.releases) plugin.releases = []
@@ -380,7 +381,7 @@ class ArtifactSettings {
                 date: json.date ? Date.parse(TIMESTAMP_FORMAT, json.date) : null,
                 dependencies: json.dependencies.collect([]) { dep ->
                     [name: dep.name, version: dep.version]
-                },
+                }
         )
     }
 
@@ -426,7 +427,8 @@ class ArtifactSettings {
                 platforms: (xml.platforms?.text()?.split(',') ?: []).inject([]) { l, platform ->
                     if (!isBlank(platform)) l << Platform.findByName(platform)
                     l
-                }
+                },
+                framework: false
         )
     }
 

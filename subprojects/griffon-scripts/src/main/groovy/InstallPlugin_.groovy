@@ -24,7 +24,7 @@ includeTargets << griffonScript('_GriffonArtifacts')
 
 target(installPlugin: "Installs a plugin for the given URL or name and version") {
     resolveFrameworkFlag()
-    ant.mkdir(dir: artifactSettings.artifactBase(Plugin.TYPE, argsMap.framework))
+    ant.mkdir(dir: artifactSettings.artifactBase(Plugin.TYPE, framework))
     installArtifact(Plugin.TYPE)
     resetDependencyResolution()
 }

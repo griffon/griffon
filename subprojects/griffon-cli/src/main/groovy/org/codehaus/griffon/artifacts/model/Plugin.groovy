@@ -27,11 +27,13 @@ class Plugin extends Artifact {
 
     List<Toolkit> toolkits = []
     List<Platform> platforms = []
+    boolean framework
 
     String toString() {
         super.toString() + [
                 toolkits: toolkits,
-                platforms: platforms
+                platforms: platforms,
+                framework: framework
         ]
     }
 
@@ -52,6 +54,7 @@ class Plugin extends Artifact {
                 toolkits: toolkits*.getLowercaseName(),
                 platforms: platforms*.getLowercaseName(),
                 authors: authors*.asMap(),
+                framework:  framework,
                 description: description
         ]
         if (includeReleases) {

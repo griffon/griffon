@@ -39,6 +39,11 @@ public class InstallPluginCommand extends AbstractGriffonCommand {
             required = false)
     private String forceUpgrade;
 
+    @Option(name = "--framework",
+            description = "Installs the plugin as a framework plugin.",
+            required = false)
+    private boolean framework;
+
     @Argument(index = 0,
             name = "name",
             description = "The name of the plugin to install. You may specify an URL, a zip file or a regular name.",
