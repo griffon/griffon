@@ -20,8 +20,13 @@ import org.codehaus.griffon.artifacts.model.Plugin
  * @author Andres Almiray
  */
 
-target(uninstallPlugin: "Uninstalls a Griffon application plugin") {
-    uninstallArtifact(Plugin.TYPE)
+includeTargets << griffonScript('_GriffonArtifacts')
+
+target(installPlugin: "Installs a plugin for the given URL or name and version") {
+    resolveFrameworkFlag()
+    ant.mkdir(dir: artifactSettings.artifactBase(Plugin.TYPE, argsMap.framework))
+    installArtifact(Plugin.TYPE)
     resetDependencyResolution()
 }
-setDefaultTarget(uninstallPlugin)
+
+setDefaultTarget(installPlugin)

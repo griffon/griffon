@@ -21,6 +21,7 @@ import groovy.json.JsonBuilder
 import org.codehaus.griffon.artifacts.model.Plugin
 import org.codehaus.griffon.artifacts.model.Release
 import org.springframework.core.io.Resource
+
 import static griffon.util.GriffonNameUtils.isBlank
 
 /**

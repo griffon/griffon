@@ -17,6 +17,7 @@
 import griffon.util.ApplicationHolder
 import griffon.util.Environment
 import griffon.util.RunMode
+
 import static griffon.util.GriffonApplicationUtils.is64Bit
 import static griffon.util.GriffonExceptionHandler.GRIFFON_EXCEPTION_OUTPUT
 import static griffon.util.GriffonExceptionHandler.GRIFFON_FULL_STACKTRACE

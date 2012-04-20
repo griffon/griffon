@@ -14,7 +14,7 @@
 * limitations under the License.
 */
 
-import org.codehaus.griffon.artifacts.ArtifactUtils
+import griffon.util.ArtifactSettings
 import org.codehaus.griffon.artifacts.model.Archetype
 
 /**
@@ -29,7 +29,7 @@ includeTargets << griffonScript('_GriffonPackageArtifact')
 target(name: 'packageArchetype',
        description: 'Packages a Griffon archetype',
        prehook: null, posthook: null) {
-    archetypeDescriptor = ArtifactUtils.getArchetypeDescriptor(basedir)
+    archetypeDescriptor = ArtifactSettings.getArchetypeDescriptor(basedir)
     if (!archetypeDescriptor?.exists()) {
         event('StatusFinal', ['Current directory does not appear to be a Griffon archetype project.'])
         exit(1)

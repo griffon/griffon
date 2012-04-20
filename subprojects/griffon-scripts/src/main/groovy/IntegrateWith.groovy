@@ -15,6 +15,7 @@
  */
 
 import griffon.util.GriffonUtil
+
 import static griffon.util.GriffonApplicationUtils.isWindows
 
 /**
@@ -236,7 +237,7 @@ pluginPaths = {
     visitDependencies(griffonSettings.compileDependencies)
     visitDependencies(griffonSettings.buildDependencies)
 
-    pluginSettings.doWithPlugins {String name, String version, String path ->
+    pluginSettings.doWithProjectPlugins {String name, String version, String path ->
         def pluginDir = new File(path, 'dist')
         def javadoc = new File(pluginDir, "griffon-$name-$version-javadoc.jar")
         if (javadoc.exists()) plugins.javadoc << normalizeFilePath(javadoc)

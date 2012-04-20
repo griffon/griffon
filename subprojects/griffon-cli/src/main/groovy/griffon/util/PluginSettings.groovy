@@ -25,9 +25,9 @@ import org.springframework.core.io.Resource
 
 import java.util.concurrent.ConcurrentHashMap
 
+import static ArtifactSettings.getArtifactRelease
 import static griffon.util.GriffonNameUtils.getHyphenatedName
 import static org.apache.commons.lang.ArrayUtils.addAll
-import static org.codehaus.griffon.artifacts.ArtifactUtils.getArtifactRelease
 
 /**
  * Common utilities for dealing with plugins.
@@ -229,8 +229,8 @@ class PluginSettings {
         pluginDir
     }
 
-    void doWithPlugins(Closure closure) {
-        for (Map.Entry<String, PluginInfo> pluginEntry : getPlugins()) {
+    void doWithProjectPlugins(Closure closure) {
+        for (Map.Entry<String, PluginInfo> pluginEntry : getProjectPlugins()) {
             String pluginName = pluginEntry.key
             PluginInfo pluginInfo = pluginEntry.value
             String pluginVersion = pluginInfo.release.version
@@ -240,10 +240,27 @@ class PluginSettings {
         }
     }
 
-    void resolveAndAddAllPluginDependencies() {
+    void doWithFrameworkPlugins(Closure closure) {
+        for (Map.Entry<String, PluginInfo> pluginEntry : getFrameworkPlugins()) {
+            String pluginName = pluginEntry.key
+            PluginInfo pluginInfo = pluginEntry.value
+            String pluginVersion = pluginInfo.release.version
+            File pluginInstallDir = pluginInfo.directory.file
+            if (!pluginInstallDir.exists()) return
+            closure(pluginName, pluginVersion, pluginInstallDir.canonicalPath)
+        }
+    }
+
+    void resolveAndAddAllPluginDependencies(boolean framework) {
         Map<String, List<File>> configurations = [:]
 
-        doWithPlugins { String pluginName, String pluginVersion, String pluginInstallPath ->
+        // Metadata metadata = Metadata.getInstance(new File("${settings.baseDir}/application.properties"))
+        // String projectName = metadata.getApplicationName()
+        // if (isBlank(projectName)) projectName = settings.baseDir.name
+
+        // boolean parsedDependencies = false
+        def pluginProcessor = { String pluginName, String pluginVersion, String pluginInstallPath ->
+            // if (pluginName == projectName) return
             List<File> dependencyDescriptors = [
                     new File("$pluginInstallPath/dependencies.groovy"),
                     new File("$pluginInstallPath/plugin-dependencies.groovy")
@@ -252,9 +269,17 @@ class PluginSettings {
             if (dependencyDescriptors.any {it.exists()}) {
                 def callable = settings.pluginDependencyHandler()
                 callable.call(new File(pluginInstallPath), pluginName, pluginVersion)
+                // parsedDependencies = true
             }
         }
 
+        if (framework) {
+            doWithFrameworkPlugins pluginProcessor
+        } else {
+            doWithProjectPlugins pluginProcessor
+        }
+
+        // if (parsedDependencies) {
         IvyDependencyManager dependencyManager = settings.dependencyManager
         for (conf in ['runtime', 'compile', 'test', 'build']) {
             def resolveReport = dependencyManager.resolveDependencies(IvyDependencyManager."${conf.toUpperCase()}_CONFIGURATION")
@@ -268,6 +293,7 @@ class PluginSettings {
         configurations.each { String conf, List<File> dependencies ->
             settings.updateDependenciesFor conf, dependencies
         }
+        // }
     }
 
     private Resource[] resolveForEachPlugin(String key, Closure closure) {

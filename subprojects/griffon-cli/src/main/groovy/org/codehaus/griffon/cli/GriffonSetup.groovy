@@ -24,12 +24,13 @@ import org.codehaus.griffon.artifacts.LocalArtifactRepository
 import org.codehaus.griffon.artifacts.model.Archetype
 import org.codehaus.griffon.artifacts.model.Plugin
 import org.codehaus.griffon.artifacts.model.Release
+
+import static griffon.util.ArtifactSettings.TIMESTAMP_FORMAT
+import static griffon.util.ArtifactSettings.createReleaseFromMetadata
 import static java.lang.System.out
 import static java.util.Collections.emptyMap
 import static org.codehaus.griffon.artifacts.ArtifactRepository.DEFAULT_LOCAL_LOCATION
 import static org.codehaus.griffon.artifacts.ArtifactRepository.DEFAULT_LOCAL_NAME
-import static org.codehaus.griffon.artifacts.ArtifactUtils.TIMESTAMP_FORMAT
-import static org.codehaus.griffon.artifacts.ArtifactUtils.createReleaseFromMetadata
 import static org.codehaus.griffon.cli.CommandLineConstants.KEY_NON_INTERACTIVE_DEFAULT_ANSWER
 
 /**
@@ -147,7 +148,7 @@ public final class GriffonSetup {
         for (Map.Entry<String, String> release: archetypes.entrySet()) {
             out.println("Installing archetype " + release.getKey() + "-" + release.getValue())
             File file = griffonLocal.downloadFile(Archetype.TYPE, release.getKey(), release.getValue(), null)
-            artifactInstallEngine.installFromFile(Archetype.TYPE, file)
+            artifactInstallEngine.installFromFile(Archetype.TYPE, file, false, false)
         }
     }
 

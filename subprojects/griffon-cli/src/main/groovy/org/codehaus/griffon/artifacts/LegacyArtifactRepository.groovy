@@ -23,9 +23,10 @@ import org.codehaus.griffon.artifacts.model.Artifact
 import org.codehaus.griffon.artifacts.model.Release
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
+
+import static griffon.util.ArtifactSettings.parseArtifactFromJSON
+import static griffon.util.ArtifactSettings.parseReleaseFromJSON
 import static groovyx.net.http.ContentType.JSON
-import static org.codehaus.griffon.artifacts.ArtifactUtils.parseArtifactFromJSON
-import static org.codehaus.griffon.artifacts.ArtifactUtils.parseReleaseFromJSON
 
 /**
  * @author Andres Almiray

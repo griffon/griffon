@@ -16,6 +16,7 @@
 
 import griffon.util.GriffonUtil
 import org.springframework.core.io.Resource
+
 import static org.apache.commons.lang.WordUtils.wrap
 
 /**

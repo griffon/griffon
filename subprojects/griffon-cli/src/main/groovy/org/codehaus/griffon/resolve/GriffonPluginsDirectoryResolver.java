@@ -16,11 +16,10 @@
 package org.codehaus.griffon.resolve;
 
 import griffon.util.BuildSettings;
-
-import java.io.File;
-
 import org.apache.ivy.core.settings.IvySettings;
 import org.apache.ivy.plugins.resolver.FileSystemResolver;
+
+import java.io.File;
 
 /**
  * A resolver that resolves JAR files from plugin lib directories.

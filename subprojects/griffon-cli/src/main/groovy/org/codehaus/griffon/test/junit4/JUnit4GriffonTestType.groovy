@@ -16,7 +16,6 @@
 
 package org.codehaus.griffon.test.junit4
 
-import java.lang.reflect.Modifier
 import org.codehaus.griffon.test.GriffonTestTypeResult
 import org.codehaus.griffon.test.event.GriffonTestEventPublisher
 import org.codehaus.griffon.test.event.GriffonTestRunNotifier
@@ -28,6 +27,8 @@ import org.codehaus.griffon.test.support.GriffonTestMode
 import org.codehaus.griffon.test.support.GriffonTestTypeSupport
 import org.junit.runner.Result
 import org.junit.runners.Suite
+
+import java.lang.reflect.Modifier
 
 /**
  * An {@code GriffonTestType} for JUnit4 tests.

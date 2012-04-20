@@ -28,10 +28,11 @@ import org.codehaus.griffon.artifacts.model.Artifact
 import org.codehaus.griffon.artifacts.model.Release
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
+
+import static griffon.util.ArtifactSettings.parseArtifactFromJSON
 import static griffon.util.GriffonExceptionHandler.sanitize
 import static griffon.util.GriffonNameUtils.isBlank
 import static groovyx.net.http.ContentType.JSON
-import static org.codehaus.griffon.artifacts.ArtifactUtils.parseArtifactFromJSON
 
 /**
  * @author Andres Almiray

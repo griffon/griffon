@@ -20,8 +20,8 @@
  * @author Graeme Rocher (Grails 0.4)
  */
 
-import griffon.util.GriffonUtil
 import griffon.util.GriffonNameUtils
+import griffon.util.GriffonUtil
 
 includeTargets << griffonScript('_GriffonCreateArtifacts')
 

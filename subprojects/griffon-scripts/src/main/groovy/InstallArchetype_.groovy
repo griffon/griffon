@@ -15,7 +15,6 @@
 */
 
 import org.codehaus.griffon.artifacts.model.Archetype
-import static org.codehaus.griffon.artifacts.ArtifactUtils.artifactBase
 
 /**
  * @author Andres Almiray
@@ -24,7 +23,7 @@ import static org.codehaus.griffon.artifacts.ArtifactUtils.artifactBase
 includeTargets << griffonScript('_GriffonArtifacts')
 
 target(installArchetype: "Installs an archetype for the given URL or name and version") {
-    ant.mkdir(dir: artifactBase(Archetype.TYPE))
+    ant.mkdir(dir: artifactSettings.artifactBase(Archetype.TYPE))
     installArtifact(Archetype.TYPE)
     resetDependencyResolution()
 }

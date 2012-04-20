@@ -17,7 +17,6 @@
 package org.codehaus.griffon.test.junit4.runner
 
 import griffon.core.GriffonApplication
-import java.lang.reflect.InvocationTargetException
 import org.codehaus.griffon.test.GriffonTestTargetPattern
 import org.codehaus.griffon.test.junit4.JUnit4GriffonTestType
 import org.codehaus.griffon.test.support.GriffonTestMode
@@ -29,6 +28,8 @@ import org.junit.runners.BlockJUnit4ClassRunner
 import org.junit.runners.model.FrameworkMethod
 import org.junit.runners.model.Statement
 import org.springframework.util.ReflectionUtils
+
+import java.lang.reflect.InvocationTargetException
 
 class GriffonTestCaseRunner extends BlockJUnit4ClassRunner {
 

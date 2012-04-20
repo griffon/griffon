@@ -23,6 +23,7 @@ import org.codehaus.griffon.artifacts.model.Plugin
 includeTargets << griffonScript('_GriffonListArtifacts')
 
 target(listPluginUpdates: "Lists all available plugin updates that match the project's configuration") {
+    resolveFrameworkFlag()
     doListArtifactUpdates(Plugin.TYPE)
 }
 setDefaultTarget(listPluginUpdates)

@@ -16,11 +16,12 @@
 
 package org.codehaus.griffon.artifacts.model
 
+import griffon.util.ArtifactSettings
 import groovy.json.JsonBuilder
 import groovy.json.JsonSlurper
-import org.codehaus.griffon.artifacts.ArtifactUtils
 import org.codehaus.griffon.artifacts.VersionComparator
-import static org.codehaus.griffon.artifacts.ArtifactUtils.*
+
+import static griffon.util.ArtifactSettings.*
 
 /**
  * @author Andres Almiray
@@ -64,7 +65,7 @@ class Release implements Comparable<Release> {
                 griffonVersion: griffonVersion,
                 comment: comment,
                 checksum: checksum,
-                date: date.format(ArtifactUtils.TIMESTAMP_FORMAT),
+                date: date.format(ArtifactSettings.TIMESTAMP_FORMAT),
                 dependencies: dependencies
         ]
     }

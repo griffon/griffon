@@ -14,25 +14,26 @@
  * limitations under the License.
  */
 
-package org.codehaus.griffon.artifacts
+package griffon.util
 
-import griffon.util.BuildSettingsHolder
-import griffon.util.GriffonUtil
-import griffon.util.Metadata
 import groovy.json.JsonException
 import groovy.json.JsonSlurper
-import java.util.regex.Matcher
-import java.util.regex.Pattern
-import java.util.zip.ZipEntry
-import java.util.zip.ZipFile
+import org.codehaus.griffon.artifacts.VersionComparator
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import org.springframework.core.io.FileSystemResource
 import org.springframework.core.io.Resource
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver
+
+import java.util.regex.Matcher
+import java.util.regex.Pattern
+import java.util.zip.ZipEntry
+import java.util.zip.ZipFile
+
+import org.codehaus.griffon.artifacts.model.*
+
 import static griffon.util.GriffonNameUtils.capitalize
 import static griffon.util.GriffonNameUtils.isBlank
-import org.codehaus.griffon.artifacts.model.*
 
 /**
  * Common utilities for dealing with artifacts such as plugins and archetypes.
@@ -40,8 +41,8 @@ import org.codehaus.griffon.artifacts.model.*
  * @author Andres Almiray
  * @since 0.9.5
  */
-class ArtifactUtils {
-    private static final Logger LOG = LoggerFactory.getLogger(ArtifactUtils)
+class ArtifactSettings {
+    private static final Logger LOG = LoggerFactory.getLogger(ArtifactSettings)
     static final String PLUGIN_DESCRIPTOR_SUFFIX = 'GriffonPlugin.groovy'
     static final String ARCHETYPE_DESCRIPTOR_SUFFIX = 'GriffonArchetype.groovy'
     static final String ADDON_DESCRIPTOR_SUFFIX = 'GriffonAddon.groovy'
@@ -59,16 +60,21 @@ class ArtifactUtils {
         }
     }
 
-    /**
-     * Finds all artifacts of the given type that are installed.
-     *
-     * @param type one of <tt>Archetype.TYPE</tt> or <tt>Plugin.TYPE</tt>.
-     * @return
-     */
-    static Map<String, String> getInstalledArtifacts(String type) {
+    final BuildSettings settings
+
+    ArtifactSettings(BuildSettings settings) {
+        this.settings = settings
+    }
+/**
+ * Finds all artifacts of the given type that are installed.
+ *
+ * @param type one of <tt>Archetype.TYPE</tt> or <tt>Plugin.TYPE</tt>.
+ * @return
+ */
+    Map<String, String> getInstalledArtifacts(String type, boolean framework = false) {
         Map artifacts = [:]
 
-        for (resource in resolveResources("file://${artifactBase(type)}/*/${type}.json")) {
+        for (resource in resolveResources("file://${artifactBase(type, framework)}/*/${type}.json")) {
             Release release = Release.makeFromFile(type, resource.file)
             artifacts[release.artifact.name] = release.version
         }
@@ -76,7 +82,7 @@ class ArtifactUtils {
         // TODO LEGACY - remove this code before 1.0
         // legacy plugins
         if (type == Plugin.TYPE) {
-            for (resource in resolveResources("file://${artifactBase(type)}/*/plugin.xml")) {
+            for (resource in resolveResources("file://${artifactBase(type, framework)}/*/plugin.xml")) {
                 Release release = Release.makeFromFile(type, resource.file)
                 if (artifacts[release.artifact.name]) continue
                 artifacts[release.artifact.name] = release.version
@@ -86,10 +92,10 @@ class ArtifactUtils {
         artifacts
     }
 
-    static Map<String, Release> getInstalledReleases(String type) {
+    Map<String, Release> getInstalledReleases(String type, boolean framework = false) {
         Map<String, Release> artifacts = [:]
 
-        for (resource in resolveResources("file://${artifactBase(type)}/*/${type}.json")) {
+        for (resource in resolveResources("file://${artifactBase(type, framework)}/*/${type}.json")) {
             Release release = Release.makeFromFile(type, resource.file)
             artifacts[release.artifact.name] = release
         }
@@ -97,7 +103,7 @@ class ArtifactUtils {
         // TODO LEGACY - remove this code before 1.0
         // legacy plugins
         if (type == Plugin.TYPE) {
-            for (resource in resolveResources("file://${artifactBase(type)}/*/plugin.xml")) {
+            for (resource in resolveResources("file://${artifactBase(type, framework)}/*/plugin.xml")) {
                 Release release = Release.makeFromFile(type, resource.file)
                 if (artifacts[release.artifact.name]) continue
                 artifacts[release.artifact.name] = release
@@ -107,8 +113,8 @@ class ArtifactUtils {
         artifacts
     }
 
-    static Release getInstalledRelease(String type, String name) {
-        Resource[] resources = resolveResources("file://${artifactBase(type)}/${name}-*/${type}.json")
+    Release getInstalledRelease(String type, String name, boolean framework = false) {
+        Resource[] resources = resolveResources("file://${artifactBase(type, framework)}/${name}-*/${type}.json")
         for (resource in resources) {
             Matcher matcher = ARTIFACT_NAME_VERSION_PATTERN.matcher(resource.file.name)
             if (matcher[0][1] == name) return Release.makeFromFile(type, resource.file)
@@ -116,8 +122,8 @@ class ArtifactUtils {
         return null
     }
 
-    static Release getInstalledRelease(String type, String name, String version) {
-        Resource[] resources = resolveResources("file://${artifactBase(type)}/${name}-${version}/${type}.json")
+    Release getInstalledRelease(String type, String name, String version, boolean framework = false) {
+        Resource[] resources = resolveResources("file://${artifactBase(type, framework)}/${name}-${version}/${type}.json")
         if (resources[0]?.file?.exists()) {
             return Release.makeFromFile(type, resources[0].file)
         }
@@ -154,11 +160,11 @@ class ArtifactUtils {
         artifacts
     }
 
-    static File findArtifactDirForName(String type, String name) {
+    File findArtifactDirForName(String type, String name, boolean framework = false) {
         if (LOG.debugEnabled) {
-            LOG.debug("Searching dir matching file://${artifactBase(type)}/${name}-*")
+            LOG.debug("Searching dir matching file://${artifactBase(type, framework)}/${name}-*")
         }
-        Resource[] resources = resolveResources("file://${artifactBase(type)}/${name}-*")
+        Resource[] resources = resolveResources("file://${artifactBase(type, framework)}/${name}-*")
         for (resource in resources) {
             Matcher matcher = ARTIFACT_NAME_VERSION_PATTERN.matcher(resource.file.name)
             if (matcher[0][1] == name) return resource.file
@@ -166,11 +172,11 @@ class ArtifactUtils {
         return null
     }
 
-    static File[] findAllArtifactDirsForName(String type, String name) {
+    File[] findAllArtifactDirsForName(String type, String name, boolean framework = false) {
         if (LOG.debugEnabled) {
-            LOG.debug("Searching all dirs matching file://${artifactBase(type)}/${name}-*")
+            LOG.debug("Searching all dirs matching file://${artifactBase(type, framework)}/${name}-*")
         }
-        Resource[] resources = resolveResources("file://${artifactBase(type)}/${name}-*")
+        Resource[] resources = resolveResources("file://${artifactBase(type, framework)}/${name}-*")
         if (resources) {
             List<File> files = []
             for (resource in resources) {
@@ -182,27 +188,27 @@ class ArtifactUtils {
         return new File[0]
     }
 
-    static Resource[] findAllArtifactDirsForType(String type) {
-        resolveResources("file://${artifactBase(type)}/*")
+    Resource[] findAllArtifactDirsForType(String type, boolean framework = false) {
+        resolveResources("file://${artifactBase(type, framework)}/*")
     }
 
-    static File getInstallPathFor(String type, String name, String version) {
-        new File("${artifactBase(type)}/${name}-${version}")
+    File getInstallPathFor(String type, String name, String version, boolean framework = false) {
+        new File("${artifactBase(type, framework)}/${name}-${version}")
     }
 
-    static boolean isArtifactInstalled(String type, String name, String version) {
-        getInstallPathFor(type, name, version).exists()
+    boolean isArtifactInstalled(String type, String name, String version, boolean framework = false) {
+        getInstallPathFor(type, name, version, framework).exists()
     }
 
-    static Release getReleaseFromMetadata(String type, String name, String version = null) {
+    Release getReleaseFromMetadata(String type, String name, String version = null, boolean framework = false) {
         File file = null
         if (version) {
-            file = new File("${artifactBase(type)}/${name}-${version}/${type}.json")
+            file = new File("${artifactBase(type, framework)}/${name}-${version}/${type}.json")
             if (!file.exists()) {
                 throw new IllegalArgumentException("${capitalize(type)} ${name}-${version} is not installed.")
             }
         } else {
-            file = findArtifactDirForName(type, name)
+            file = findArtifactDirForName(type, name, framework)
             if (!file || !file.exists()) {
                 throw new IllegalArgumentException("${capitalize(type)} ${name}-${version} is not installed.")
             }
@@ -210,21 +216,21 @@ class ArtifactUtils {
         Release.makeFromJSON(type, new JsonSlurper().parseText(file.text))
     }
 
-    static String artifactBase(String type) {
+    String artifactBase(String type, boolean framework = false) {
         switch (type) {
             case Plugin.TYPE:
-                return pluginsBase()
+                return pluginsBase(framework)
             case Archetype.TYPE:
                 return archetypesBase()
         }
     }
 
-    static String pluginsBase() {
-        BuildSettingsHolder.settings.projectPluginsDir.absolutePath
+    private String pluginsBase(boolean framework) {
+        framework ? new File("${settings.griffonHome}/plugins") : settings.projectPluginsDir.absolutePath
     }
 
-    static String archetypesBase() {
-        new File("${BuildSettingsHolder.settings.griffonWorkDir}/archetypes/").absolutePath
+    private String archetypesBase() {
+        new File("${settings.griffonWorkDir}/archetypes/").absolutePath
     }
 
     static Resource getArtifactDescriptor(String type, String dir) {

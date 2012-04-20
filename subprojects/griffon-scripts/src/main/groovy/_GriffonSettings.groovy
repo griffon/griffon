@@ -20,6 +20,7 @@ import org.springframework.core.io.FileSystemResource
 import org.springframework.core.io.Resource
 import org.springframework.util.FileCopyUtils
 import griffon.util.*
+
 import static org.codehaus.griffon.cli.CommandLineConstants.KEY_INTERACTIVE_MODE
 
 /**
@@ -449,5 +450,6 @@ buildConfig.griffon.application.mainClass = buildConfig.griffon.application.main
 resetDependencyResolution = {
     pluginSettings.clearCaches()
     runDependencyResolution = true
+    runFrameworkDependencyResolution = true
     classpathSet = false
 }

@@ -17,7 +17,6 @@ package org.codehaus.griffon.resolve
 
 import griffon.util.BuildSettings
 import griffon.util.Metadata
-import java.util.concurrent.ConcurrentLinkedQueue
 import org.apache.ivy.core.event.EventManager
 import org.apache.ivy.core.module.id.ModuleRevisionId
 import org.apache.ivy.core.resolve.IvyNode
@@ -30,9 +29,13 @@ import org.apache.ivy.plugins.resolver.ChainResolver
 import org.apache.ivy.util.Message
 import org.apache.ivy.util.MessageLogger
 import org.codehaus.griffon.artifacts.VersionComparator
-import static griffon.util.GriffonNameUtils.getPropertyNameForLowerCaseHyphenSeparatedName
+
+import java.util.concurrent.ConcurrentLinkedQueue
+
 import org.apache.ivy.core.module.descriptor.*
 import org.apache.ivy.core.report.*
+
+import static griffon.util.GriffonNameUtils.getPropertyNameForLowerCaseHyphenSeparatedName
 
 /**
  * Implementation that uses Apache Ivy under the hood.

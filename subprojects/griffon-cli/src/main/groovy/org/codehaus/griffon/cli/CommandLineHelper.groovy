@@ -17,6 +17,7 @@ package org.codehaus.griffon.cli
 
 import griffon.util.BuildSettingsHolder
 import org.codehaus.groovy.runtime.DefaultGroovyMethods
+
 import static griffon.util.ConfigUtils.getConfigValueAsString
 import static org.codehaus.griffon.cli.CommandLineConstants.KEY_INTERACTIVE_MODE
 import static org.codehaus.griffon.cli.CommandLineConstants.KEY_NON_INTERACTIVE_DEFAULT_ANSWER

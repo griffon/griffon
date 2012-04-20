@@ -22,6 +22,7 @@
  */
 
 import griffon.util.GriffonNameUtils
+
 import static griffon.util.GriffonApplicationUtils.isMacOSX
 
 includeTargets << griffonScript('Package')

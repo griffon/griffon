@@ -16,19 +16,22 @@
 
 package org.codehaus.griffon.artifacts
 
+import griffon.util.ArtifactSettings
 import griffon.util.GriffonExceptionHandler
 import griffon.util.MD5
 import groovy.json.JsonBuilder
 import groovy.json.JsonSlurper
-import java.util.zip.ZipEntry
-import java.util.zip.ZipFile
 import org.apache.commons.io.FileUtils
 import org.codehaus.griffon.artifacts.model.Artifact
 import org.codehaus.griffon.artifacts.model.Release
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
+
+import java.util.zip.ZipEntry
+import java.util.zip.ZipFile
+
+import static griffon.util.ArtifactSettings.parseArtifactFromJSON
 import static griffon.util.GriffonNameUtils.isBlank
-import static org.codehaus.griffon.artifacts.ArtifactUtils.parseArtifactFromJSON
 
 /**
  * @author Andres Almiray
@@ -160,7 +163,7 @@ class LocalArtifactRepository extends AbstractArtifactRepository {
                 def json = new JsonSlurper().parseText(out.text)
                 json.releases?.each { rel ->
                     if (rel.version == release.version) return
-                    artifactAsMap.releases << ArtifactUtils.parseReleaseFromJSON(rel).asMap()
+                    artifactAsMap.releases << ArtifactSettings.parseReleaseFromJSON(rel).asMap()
                 }
                 artifactAsMap.releases.sort {a, b -> b.version <=> a.version}
             }
