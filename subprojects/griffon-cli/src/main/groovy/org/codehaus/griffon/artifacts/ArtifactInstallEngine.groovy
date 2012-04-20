@@ -164,7 +164,7 @@ class ArtifactInstallEngine {
         }
 
         try {
-            return _installPlugins(dependencies, resolver)
+            return _installPlugins(dependencies, resolver, false)
         } catch (InstallArtifactException iae) {
             errorHandler "Could not resolve plugin dependencies."
         }
@@ -537,7 +537,7 @@ class ArtifactInstallEngine {
                 break
         }
 
-        if (settings.isGriffonProject() && !settings.isArchetypeProject() && type == Plugin.TYPE) {
+        if (settings.isGriffonProject() && !settings.isArchetypeProject() && type == Plugin.TYPE && !framework) {
             // Metadata.reload()
             metadata["${type}s." + artifactName] = releaseVersion
             metadata.persist()

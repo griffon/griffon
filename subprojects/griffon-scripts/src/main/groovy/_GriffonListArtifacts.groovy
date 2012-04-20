@@ -175,6 +175,7 @@ displayArtifactInfo = { String type, String name, String version, ArtifactReposi
         [
                 'Toolkits': artifact.toolkits*.getLowercaseName().join(', ') ?: 'works with all toolkits',
                 'Platforms': artifact.platforms*.getLowercaseName().join(', ') ?: 'works in all platforms',
+                'Framework': artifact.framework ? 'yes' : 'no'
         ].each { label, value ->
             println "${label.padRight(padding, ' ')}: ${value}"
         }
@@ -250,7 +251,7 @@ doListArtifactUpdates = { String type ->
         installedArtifacts.each {name, version ->
             if (version instanceof Release) version = version.version
             String availableVersion = availableArtifacts.get(name)?.version
-            if (availableVersion != version && availableVersion != null && versionComparator.compare(availableVersion, version) > 0 ) {
+            if (availableVersion != version && availableVersion != null && versionComparator.compare(availableVersion, version) > 0) {
                 String repositoryName = availableArtifacts.get(name).repository.name
                 if (!headerDisplayed) {
                     println """
