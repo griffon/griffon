@@ -14,12 +14,18 @@
  * limitations under the License.
  */
 
-apply plugin: 'code-quality'
+apply plugin: 'checkstyle'
+apply plugin: 'codenarc'
 
-def configDir = project(':').file('config')
+def configDir = new File(buildscript.sourceFile.parentFile.parentFile, 'config')
+ext.checkstyleConfigDir = "$configDir/checkstyle"
 
-checkstyleConfigDir = "$configDir/checkstyle"
-checkstyleConfigFileName = new File(checkstyleConfigDir, 'checkstyle.xml')
-checkstyleProperties.checkstyleConfigDir = checkstyleConfigDir
-codeNarcConfigFileName = "$configDir/codenarc/codenarc.groovy"
-tasks.withType(CodeNarc).each{ codenarcTask -> codenarcTask.ignoreFailures = true }
+checkstyle {
+    configFile = new File(checkstyleConfigDir, "checkstyle.xml")
+    configProperties.checkstyleConfigDir = checkstyleConfigDir
+}
+
+codenarc {
+	ignoreFailures = true
+    configFile = file("$configDir/codenarc/codenarc.groovy")
+}

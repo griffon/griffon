@@ -17,7 +17,6 @@
 package org.codehaus.griffon.compiler.support;
 
 import groovy.util.FactoryBuilderSupport;
-import org.codehaus.groovy.ast.ClassHelper;
 import org.codehaus.groovy.ast.ClassNode;
 
 import static org.codehaus.griffon.ast.GriffonASTUtils.injectProperty;

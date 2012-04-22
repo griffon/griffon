@@ -14,9 +14,18 @@
  * limitations under the License.
  */
 
-cobSerFile = project.file('build/cobertura.ser')
-mainOriginal = "${sourceSets.main.output.classesDir}"
-mainCopy = "${mainOriginal}-copy"
+ext{
+	cobSerFile = project.file('build/cobertura.ser')
+	mainOriginal = "${sourceSets.main.output.classesDir}"
+	mainCopy = "${mainOriginal}-copy"
+	coberturaEnabled = project.hasProperty('withCobertura')
+	cloverEnabled = project.hasProperty('withClover')
+	doWithSourceDirs = { sourceSet, callback ->
+	    sourceSet.allSource.srcDirs.each { srcdir ->
+	        if(srcdir.exists() && !srcdir.name.endsWith('resources')) callback(srcdir)
+	    }
+	}
+}
 
 configurations {
     cobertura
@@ -29,8 +38,6 @@ dependencies {
     clover 'com.cenqua.clover:clover:3.1.2'
 }
 
-coberturaEnabled = project.hasProperty('withCobertura')
-cloverEnabled = project.hasProperty('withClover')
 
 test.doFirst  {
     if(coberturaEnabled && cloverEnabled) {
@@ -139,11 +146,5 @@ test.doLast {
             current(outfile:"${reportsDir}/clover/clover.xml")
         }
         ant."clover-html-report"(outdir:"${reportsDir}/clover/html")
-    }
-}
-
-doWithSourceDirs = { sourceSet, callback ->
-    sourceSet.allSource.srcDirs.each { srcdir ->
-        if(srcdir.exists() && !srcdir.name.endsWith('resources')) callback(srcdir)
     }
 }
