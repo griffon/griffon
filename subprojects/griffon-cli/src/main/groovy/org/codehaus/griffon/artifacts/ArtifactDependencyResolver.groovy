@@ -22,7 +22,8 @@ import org.codehaus.griffon.artifacts.model.Plugin
 import org.codehaus.griffon.artifacts.model.Release
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
-import static org.codehaus.griffon.artifacts.ArtifactUtils.isValidVersion
+
+import static griffon.util.ArtifactSettings.isValidVersion
 
 /**
  * @author Andres Almiray
@@ -117,44 +118,6 @@ class ArtifactDependencyResolver {
             processedDependencies[key] = artifactDependency
             return resolveDependenciesOf(artifactDependency)
         }
-
-        /*
-        if (artifact) {
-            if (version) {
-                Release release = artifact.releases.find {it.version == version}
-                if (release) {
-                    if (LOG.debugEnabled) {
-                        LOG.debug("Resolved ${type}:${name}:${version} with repository ${artifactDependency.repository.name}")
-                    }
-
-                    artifactDependency.release = release
-
-                    ArtifactDependency.Key key = new ArtifactDependency.Key(name, version)
-                    processedDependencies[key] = artifactDependency
-
-                    return resolveDependenciesOf(artifactDependency)
-                }
-            } else {
-                for (release in artifact.releases) {
-                    if (isValidVersion(GriffonUtil.griffonVersion, release.griffonVersion)) {
-                        if (LOG.debugEnabled) {
-                            LOG.debug("Resolved ${type}:${name}:${release.version} with repository ${artifactDependency.repository.name}")
-                        }
-
-                        artifactDependency.release = release
-                        artifactDependency.version = release.version
-
-                        ArtifactDependency.Key key = new ArtifactDependency.Key(name, release.version)
-                        ArtifactDependency processed = processedDependencies.get(key)
-                        if (processed) return processed
-
-                        processedDependencies[key] = artifactDependency
-                        return resolveDependenciesOf(artifactDependency)
-                    }
-                }
-            }
-        }
-        */
 
         if (LOG.debugEnabled) {
             LOG.debug("Could not resolve ${type}:${name}:${version ? version : '<noversion>'}")

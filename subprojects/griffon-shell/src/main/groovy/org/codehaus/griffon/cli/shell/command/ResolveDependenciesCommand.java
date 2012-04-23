@@ -63,9 +63,11 @@ public class ResolveDependenciesCommand extends AbstractAction {
         binding.setVariable(VAR_SCRIPT_ENV, Environment.DEVELOPMENT.getName());
         binding.setVariable(VAR_SCRIPT_NAME, scriptName);
         binding.setVariable(VAR_SCRIPT_FILE, scriptFile);
+        binding.setVariable("runFrameworkDependencyResolution", Boolean.TRUE);
         binding.setVariable("runDependencyResolution", Boolean.TRUE);
         Gant gant = runner.createGantInstance(binding);
         List<String> targets = new ArrayList<String>();
+        targets.add("resolveFrameworkDependencies");
         targets.add("resolveDependencies");
 
         try {

@@ -23,15 +23,13 @@ import org.apache.felix.gogo.commands.Command;
 import org.apache.felix.gogo.runtime.CommandProcessorImpl;
 import org.apache.felix.service.command.CommandSession;
 import org.apache.felix.service.command.Function;
-import org.codehaus.griffon.artifacts.ArtifactUtils;
-import org.codehaus.griffon.artifacts.model.Plugin;
-import org.codehaus.griffon.artifacts.model.Release;
 import org.codehaus.griffon.cli.GriffonScriptRunner;
 import org.codehaus.griffon.cli.shell.support.GriffonCommandFactory;
+import org.codehaus.griffon.plugins.PluginInfo;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.LinkedHashSet;
-import java.util.Map;
 import java.util.Set;
 
 import static griffon.util.BuildSettingsHolder.getSettings;
@@ -72,11 +70,14 @@ public class ReloadCommandsCommand implements Action {
 
         addCommandScripts(scope, new File(buildSettings.getBaseDir(), "scripts"), commandProcessor);
 
-        for (Map.Entry<String, Release> plugin : buildSettings.pluginSettings.getPlugins().entrySet()) {
-            String name = plugin.getKey();
-            String version = plugin.getValue().getVersion();
-            File path = ArtifactUtils.getInstallPathFor(Plugin.TYPE, name, version);
-            addCommandScripts(name, new File(path, "scripts"), commandProcessor);
+        for (PluginInfo pluginInfo : buildSettings.pluginSettings.getPlugins().values()) {
+            String name = pluginInfo.getName();
+            try {
+                File path = pluginInfo.getDirectory().getFile();
+                addCommandScripts(name, new File(path, "scripts"), commandProcessor);
+            } catch (IOException e) {
+                // ignore ??
+            }
         }
     }
 

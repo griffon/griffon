@@ -15,8 +15,6 @@
  */
 package griffon.util
 
-import java.util.concurrent.ConcurrentHashMap
-import java.util.regex.Pattern
 import org.apache.ivy.core.report.ResolveReport
 import org.apache.ivy.plugins.repository.TransferEvent
 import org.apache.ivy.plugins.repository.TransferListener
@@ -30,9 +28,13 @@ import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import org.springframework.core.io.Resource
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver
+
+import java.util.concurrent.ConcurrentHashMap
+import java.util.regex.Pattern
+
+import static griffon.util.ArtifactSettings.*
 import static griffon.util.GriffonExceptionHandler.sanitize
 import static griffon.util.GriffonNameUtils.capitalize
-import static org.codehaus.griffon.artifacts.ArtifactUtils.*
 import static org.codehaus.griffon.cli.CommandLineConstants.*
 
 /**
@@ -452,6 +454,7 @@ class BuildSettings extends AbstractBuildSettings {
 
     final Map<String, String> systemProperties = [:]
     public final PluginSettings pluginSettings
+    public final ArtifactSettings artifactSettings
 
     BuildSettings() {
         this(null, null)
@@ -468,6 +471,7 @@ class BuildSettings extends AbstractBuildSettings {
     BuildSettings(File griffonHome, File baseDir) {
         userHome = new File(System.getProperty("user.home"))
         pluginSettings = new PluginSettings(this)
+        artifactSettings = new ArtifactSettings(this)
 
         if (griffonHome) this.griffonHome = griffonHome
 
@@ -537,7 +541,8 @@ class BuildSettings extends AbstractBuildSettings {
         }
 
         includePluginScriptClosure = {String pluginName, String scriptName ->
-            File pluginHome = findArtifactDirForName(Plugin.TYPE, pluginName)
+            File pluginHome = artifactSettings.findArtifactDirForName(Plugin.TYPE, pluginName)
+            if (!pluginHome) pluginHome = artifactSettings.findArtifactDirForName(Plugin.TYPE, pluginName, true)
             if (!pluginHome) return
             File scriptFile = new File(pluginHome, "/scripts/${scriptName}.groovy")
             if (scriptFile.exists()) includeTargets << scriptFile

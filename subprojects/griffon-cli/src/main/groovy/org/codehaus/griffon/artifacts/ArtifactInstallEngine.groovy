@@ -16,10 +16,6 @@
 
 package org.codehaus.griffon.artifacts
 
-import griffon.util.BuildSettings
-import griffon.util.GriffonUtil
-import griffon.util.Metadata
-import griffon.util.PlatformUtils
 import groovy.json.JsonBuilder
 import org.apache.commons.io.FileUtils
 import org.codehaus.griffon.artifacts.model.Archetype
@@ -31,11 +27,14 @@ import org.codehaus.griffon.cli.ScriptExitException
 import org.codehaus.griffon.resolve.IvyDependencyManager
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
+import griffon.util.*
+
+import static griffon.util.ArtifactSettings.getRegisteredArtifacts
+import static griffon.util.ArtifactSettings.isValidVersion
 import static griffon.util.GriffonExceptionHandler.sanitize
 import static griffon.util.GriffonNameUtils.*
 import static griffon.util.GriffonUtil.getScriptName
 import static org.codehaus.griffon.artifacts.ArtifactRepository.DEFAULT_LOCAL_NAME
-import static org.codehaus.griffon.artifacts.ArtifactUtils.*
 import static org.codehaus.griffon.cli.CommandLineConstants.KEY_DEFAULT_INSTALL_ARTIFACT_REPOSITORY
 import static org.codehaus.griffon.cli.CommandLineConstants.KEY_DISABLE_LOCAL_REPOSITORY_SYNC
 
@@ -82,7 +81,7 @@ class ArtifactInstallEngine {
 
     boolean resolvePluginDependencies() {
         Map<String, String> registeredPlugins = getRegisteredArtifacts(Plugin.TYPE, metadata)
-        Map<String, String> installedPlugins = getInstalledArtifacts(Plugin.TYPE)
+        Map<String, String> installedPlugins = settings.artifactSettings.getInstalledArtifacts(Plugin.TYPE)
 
         File pluginDescriptor = settings.isPluginProject()
         if (pluginDescriptor) {
@@ -104,14 +103,18 @@ class ArtifactInstallEngine {
 
         Map<String, String> pluginsToDelete = [:]
         Map<String, String> missingPlugins = [:]
-        registeredPlugins.each { name, version ->
+        for (Map.Entry<String, String> pluginEntry : registeredPlugins.entrySet()) {
+            String name = pluginEntry.key
+            String version = pluginEntry.value
             String v = installedPlugins[name]
             if (version.endsWith('-SNAPSHOT') || v != version) {
                 missingPlugins[name] = version
             }
         }
 
-        installedPlugins.each { name, version ->
+        for (Map.Entry<String, String> pluginEntry : installedPlugins.entrySet()) {
+            String name = pluginEntry.key
+            String version = pluginEntry.value
             String v = registeredPlugins[name]
             if (v != version) {
                 pluginsToDelete[name] = version
@@ -119,7 +122,9 @@ class ArtifactInstallEngine {
         }
 
         if (installedPlugins) {
-            installedPlugins.each { name, version ->
+            for (Map.Entry<String, String> pluginEntry : installedPlugins.entrySet()) {
+                String name = pluginEntry.key
+                String version = pluginEntry.value
                 metadata["plugins.${name}"] = version
             }
             metadata.persist()
@@ -136,7 +141,7 @@ class ArtifactInstallEngine {
 
         pluginsToDelete.each { name, version ->
             if (!version.endsWith('-SNAPSHOT')) eventHandler 'StatusUpdate', "Plugin ${name}-${version} is installed, but was not found in the application's metadata. Removing this plugin from the application's plugin base"
-            ant.delete(dir: getInstallPathFor(Plugin.TYPE, name, version), failonerror: false)
+            ant.delete(dir: settings.artifactSettings.getInstallPathFor(Plugin.TYPE, name, version), failonerror: false)
             installedPlugins.remove(name)
         }
 
@@ -159,7 +164,7 @@ class ArtifactInstallEngine {
         }
 
         try {
-            return _installPlugins(dependencies, resolver)
+            return _installPlugins(dependencies, resolver, false)
         } catch (InstallArtifactException iae) {
             errorHandler "Could not resolve plugin dependencies."
         }
@@ -212,24 +217,24 @@ class ArtifactInstallEngine {
         }
 
         File file = artifactRepository.downloadFile(type, name, release.version, null)
-        installFromFile(type, file)
+        installFromFile(type, file, false, false)
         true
     }
 
-    boolean installPlugin(String name, String version = null) {
+    boolean installPlugin(String name, String version = null, boolean framework = false) {
         String type = Plugin.TYPE
 
         ArtifactDependencyResolver resolver = new ArtifactDependencyResolver()
         List<ArtifactDependency> dependencies = resolveDependenciesFor(resolver, type, name, version)
 
         try {
-            return _installPlugins(dependencies, resolver)
+            return _installPlugins(dependencies, resolver, framework)
         } catch (InstallArtifactException iae) {
             errorHandler "Installation of ${type} ${name}${version ? '-' + version : ''} aborted."
         }
     }
 
-    boolean installPlugins(Map<String, String> plugins) {
+    boolean installPlugins(Map<String, String> plugins, boolean framework = false) {
         ArtifactDependencyResolver resolver = new ArtifactDependencyResolver()
         List<ArtifactDependency> dependencies = []
         try {
@@ -245,28 +250,28 @@ class ArtifactInstallEngine {
         }
 
         try {
-            return _installPlugins(dependencies, resolver)
+            return _installPlugins(dependencies, resolver, framework)
         } catch (InstallArtifactException iae) {
             errorHandler "Could not resolve plugin dependencies."
         }
     }
 
-    private boolean _installPlugins(List<ArtifactDependency> dependencies, ArtifactDependencyResolver resolver) {
+    private boolean _installPlugins(List<ArtifactDependency> dependencies, ArtifactDependencyResolver resolver, boolean framework) {
         installedArtifacts.clear()
         uninstalledArtifacts.clear()
 
-        List<ArtifactDependency> installPlan = resolveDependenciesFor(dependencies, resolver)
-        installPluginsInternal(installPlan)
+        List<ArtifactDependency> installPlan = resolveDependenciesFor(dependencies, resolver, framework)
+        installPluginsInternal(installPlan, framework)
     }
 
-    private boolean installPluginsInternal(List<ArtifactDependency> installPlan) {
+    private boolean installPluginsInternal(List<ArtifactDependency> installPlan, boolean framework) {
         List<ArtifactDependency> failedDependencies = []
         List<ArtifactDependency> retryDependencies = []
 
-        doInstallDependencies(installPlan, failedDependencies, retryDependencies, true)
+        doInstallDependencies(installPlan, failedDependencies, retryDependencies, true, framework)
 
         if (retryDependencies) {
-            doInstallDependencies(retryDependencies, failedDependencies, [], false)
+            doInstallDependencies(retryDependencies, failedDependencies, [], false, framework)
         }
 
         if (failedDependencies) {
@@ -279,15 +284,15 @@ class ArtifactInstallEngine {
         true
     }
 
-    private void doInstallDependencies(List<ArtifactDependency> dependencies, List<ArtifactDependency> failedDependencies, List<ArtifactDependency> retryDependencies, boolean retryAllowed) {
+    private void doInstallDependencies(List<ArtifactDependency> dependencies, List<ArtifactDependency> failedDependencies, List<ArtifactDependency> retryDependencies, boolean retryAllowed, boolean framework) {
         String type = Plugin.TYPE
-        for (ArtifactDependency dependency: dependencies) {
+        for (ArtifactDependency dependency : dependencies) {
             try {
                 if (dependency.evicted) {
-                    doUninstall(type, dependency.name, dependency.version)
+                    doUninstall(type, dependency.name, dependency.version, framework)
                 } else {
                     if (dependency.snapshot) {
-                        Release installedRelease = getInstalledRelease(type, dependency.name, dependency.version)
+                        Release installedRelease = settings.artifactSettings.getInstalledRelease(type, dependency.name, dependency.version, framework)
                         if (installedRelease) {
                             if (LOG.debugEnabled) {
                                 LOG.debug("${dependency.name}-${dependency.version} installed=[checksum: ${installedRelease.checksum}, date: ${installedRelease.date}] download=[checksum: ${dependency.release.checksum}, date: ${dependency.release.date}] ")
@@ -295,17 +300,17 @@ class ArtifactInstallEngine {
 
                             // must check tat both checksum && date exist as these properties
                             // are not present if the plugin was insatlled directly from zip
-                            if ( (installedRelease.checksum && installedRelease.date) &&
+                            if ((installedRelease.checksum && installedRelease.date) &&
                                     installedRelease.checksum == dependency.release.checksum ||
                                     installedRelease.date.after(dependency.release.date)) continue
                         }
                     }
 
                     File file = dependency.repository.downloadFile(type, dependency.name, dependency.version, null)
-                    installFromFile(type, file)
+                    installFromFile(type, file, false, framework)
 
-                    updateLocalReleaseMetadata(type, dependency.release)
-                    publishReleaseToGriffonLocal(dependency.release, file)
+                    updateLocalReleaseMetadata(type, dependency.release, framework)
+                    publishReleaseToGriffonLocal(dependency.release, file, framework)
                 }
             } catch (Exception e) {
                 failedDependencies << dependency
@@ -314,7 +319,7 @@ class ArtifactInstallEngine {
                 eventHandler 'StatusError', e.message
                 switch (getInstallFailureStrategy()) {
                     case INSTALL_FAILURE_CONTINUE:
-                        ant.delete(dir: getInstallPathFor(type, dependency.name, dependency.version), failonerror: false)
+                        ant.delete(dir: settings.artifactSettings.getInstallPathFor(type, dependency.name, dependency.version, framework), failonerror: false)
                         // try next dependency
                         break
                     case INSTALL_FAILURE_RETRY:
@@ -331,19 +336,19 @@ class ArtifactInstallEngine {
         }
     }
 
-    void updateLocalReleaseMetadata(String type, Release release) {
-        String artifactInstallPath = getInstallPathFor(type, release.artifact.name, release.version)
+    void updateLocalReleaseMetadata(String type, Release release, boolean framework = false) {
+        String artifactInstallPath = settings.artifactSettings.getInstallPathFor(type, release.artifact.name, release.version, framework)
         File releaseFile = new File(artifactInstallPath, "${type}.json")
         releaseFile.text = release.toJSON().toString()
     }
 
-    void publishReleaseToGriffonLocal(Release release, File file) {
+    void publishReleaseToGriffonLocal(Release release, File file, boolean framework = false) {
         if (!release.snapshot && !settings.getConfigValue(KEY_DISABLE_LOCAL_REPOSITORY_SYNC, false)) {
-            _publishReleaseToGriffonLocal(release.artifact.type, release.artifact.name, release.version, file)
+            _publishReleaseToGriffonLocal(release.artifact.type, release.artifact.name, release.version, file, framework)
         }
     }
 
-    private void _publishReleaseToGriffonLocal(String type, String name, String version, File file) {
+    private void _publishReleaseToGriffonLocal(String type, String name, String version, File file, boolean framework) {
         String repositoryName = settings.getConfigValue(KEY_DEFAULT_INSTALL_ARTIFACT_REPOSITORY, DEFAULT_LOCAL_NAME)
         ArtifactRepository griffonLocal = ArtifactRepositoryRegistry.instance.findRepository(repositoryName)
 
@@ -362,7 +367,7 @@ class ArtifactInstallEngine {
         try {
             tmpdir.mkdirs()
 
-            Release release = getInstalledRelease(type, name, version)
+            Release release = settings.artifactSettings.getInstalledRelease(type, name, version, framework)
 
             Map map = release.artifact.asMap(false)
             map.release = release.asMap()
@@ -410,8 +415,8 @@ class ArtifactInstallEngine {
         dependencies
     }
 
-    private List<ArtifactDependency> resolveDependenciesFor(List<ArtifactDependency> dependencies, ArtifactDependencyResolver resolver) {
-        Map<String, Release> installedReleases = getInstalledReleases(Plugin.TYPE)
+    private List<ArtifactDependency> resolveDependenciesFor(List<ArtifactDependency> dependencies, ArtifactDependencyResolver resolver, boolean framework) {
+        Map<String, Release> installedReleases = settings.artifactSettings.getInstalledReleases(Plugin.TYPE, framework)
 
         Map<String, ArtifactDependency> installedDependencies = [:]
         installedReleases.each { String key, release ->
@@ -473,13 +478,13 @@ class ArtifactInstallEngine {
         trim ? baos.toString().trim() : baos.toString()
     }
 
-    void installFromFile(String type, File file, boolean resolveDependencies = false) {
-        Release release = inspectArtifactRelease(type, file)
+    void installFromFile(String type, File file, boolean resolveDependencies = false, boolean framework = false) {
+        Release release = inspectArtifactRelease(type, file, framework)
 
         String artifactName = release.artifact.name
         String releaseVersion = release.version
         String releaseName = "${artifactName}-${releaseVersion}"
-        String artifactInstallPath = "${artifactBase(type)}/${releaseName}"
+        String artifactInstallPath = "${settings.artifactSettings.artifactBase(type, framework)}/${releaseName}"
 
         if (resolveDependencies && type == Plugin.TYPE) {
             if (release.dependencies) {
@@ -487,7 +492,7 @@ class ArtifactInstallEngine {
                 release.dependencies.each { entry ->
                     plugins[entry.name] = entry.version
                 }
-                if (!installPlugins(plugins)) {
+                if (!installPlugins(plugins, framework)) {
                     throw new InstallArtifactException("Could not install plugin ${releaseName}")
                 }
             }
@@ -501,7 +506,7 @@ class ArtifactInstallEngine {
 
         eventHandler 'StatusUpdate', "Software license of ${releaseName} is '${release.artifact.license}'"
 
-        for (dir in findAllArtifactDirsForName(type, artifactName)) {
+        for (dir in settings.artifactSettings.findAllArtifactDirsForName(type, artifactName, framework)) {
             ant.delete(dir: dir, failonerror: false)
         }
         ant.mkdir(dir: artifactInstallPath)
@@ -509,8 +514,9 @@ class ArtifactInstallEngine {
 
         switch (type) {
             case Plugin.TYPE:
-                variableStore["${getPropertyNameForLowerCaseHyphenSeparatedName(artifactName)}PluginDir"] = new File(artifactInstallPath).absoluteFile
-                variableStore["${getPropertyNameForLowerCaseHyphenSeparatedName(artifactName)}PluginVersion"] = releaseVersion
+                String pluginName = getPropertyNameForLowerCaseHyphenSeparatedName(artifactName)
+                variableStore["${pluginName}PluginDir"] = new File(artifactInstallPath).canonicalFile
+                variableStore["${pluginName}PluginVersion"] = releaseVersion
                 // TODO LEGACY - remove before 1.0
                 if (new File(artifactInstallPath, 'plugin.xml').exists()) {
                     generateDependencyDescriptorFor(artifactInstallPath, artifactName, releaseVersion)
@@ -521,7 +527,7 @@ class ArtifactInstallEngine {
                     ant.mkdir(dir: artifactInstallPath)
                     throw iae
                 }
-                if (!settings.isPluginProject()) {
+                if (!settings.isPluginProject() && !framework) {
                     def installScript = new File("${artifactInstallPath}/scripts/_Install.groovy")
                     runPluginScript(installScript, releaseName, 'post-install script')
                 }
@@ -531,7 +537,7 @@ class ArtifactInstallEngine {
                 break
         }
 
-        if (settings.isGriffonProject() && !settings.isArchetypeProject() && type == Plugin.TYPE) {
+        if (settings.isGriffonProject() && !settings.isArchetypeProject() && type == Plugin.TYPE && !framework) {
             // Metadata.reload()
             metadata["${type}s." + artifactName] = releaseVersion
             metadata.persist()
@@ -597,7 +603,7 @@ class ArtifactInstallEngine {
             def callable = settings.pluginDependencyHandler(dependencyManager)
             int result = callable.call(new File(pluginInstallPath), pluginName, pluginVersion)
             if (result == BuildSettings.RESOLUTION_OK) {
-                for (String conf: ['runtime', 'compile', 'test', 'build']) {
+                for (String conf : ['runtime', 'compile', 'test', 'build']) {
                     def resolveReport = dependencyManager.resolveDependencies(conf)
                     if (resolveReport.hasError()) {
                         throw new InstallArtifactException("Plugin ${pluginName}-${pluginVersion} has missing JAR dependencies.")
@@ -609,12 +615,12 @@ class ArtifactInstallEngine {
         }
     }
 
-    void uninstall(String type, String name, String version = null) {
+    void uninstall(String type, String name, String version = null, boolean framework = false) {
         installedArtifacts.clear()
         uninstalledArtifacts.clear()
 
         try {
-            if (!doUninstall(type, name, version)) {
+            if (!doUninstall(type, name, version, framework)) {
                 eventHandler 'StatusFinal', "No ${type} [$name${version ? '-' + version : ''}] installed, cannot uninstall."
             }
         } catch (e) {
@@ -623,14 +629,14 @@ class ArtifactInstallEngine {
         }
     }
 
-    private boolean doUninstall(String type, String name, String version = null) {
+    private boolean doUninstall(String type, String name, String version = null, boolean framework) {
         String metadataKey = ''
         File artifactDir = null
 
         if (name && version) {
-            artifactDir = getInstallPathFor(type, name, version)
+            artifactDir = settings.artifactSettings.getInstallPathFor(type, name, version, framework)
         } else {
-            artifactDir = findArtifactDirForName(type, name)
+            artifactDir = settings.artifactSettings.findArtifactDirForName(type, name, framework)
         }
 
         switch (type) {
@@ -644,9 +650,9 @@ class ArtifactInstallEngine {
 
         if (artifactDir?.exists()) {
             version = metadata.remove(metadataKey)
-            metadata.persist()
+            if (!framework) metadata.persist()
             if (type == Plugin.TYPE) {
-                if (!settings.isPluginProject()) {
+                if (!settings.isPluginProject() && !framework) {
                     def uninstallScript = new File("${artifactDir}/scripts/_Uninstall.groovy")
                     runPluginScript(uninstallScript, artifactDir.name, 'uninstall script')
                 }
@@ -662,9 +668,14 @@ class ArtifactInstallEngine {
         false
     }
 
-    private Release inspectArtifactRelease(String type, File file) {
+    private Release inspectArtifactRelease(String type, File file, boolean framework) {
         Release release = createReleaseFromMetadata(type, file)
         String artifactNameAndVersion = "${release.artifact.name}-${release.version}"
+
+        if (type == Plugin.TYPE && framework && !release.artifact.framework) {
+            eventHandler 'StatusError', "${release.artifact.capitalizedType} ${artifactNameAndVersion} could not be installed as a framework plugin because it's not configured as such."
+            throw new InstallArtifactException("Installation of ${type} ${artifactNameAndVersion} aborted.")
+        }
 
         // check against release.griffonVersion
         if (!isValidVersion(GriffonUtil.griffonVersion, release.griffonVersion)) {
@@ -709,7 +720,7 @@ class ArtifactInstallEngine {
 
     private Release createReleaseFromMetadata(String type, File file) {
         try {
-            ArtifactUtils.createReleaseFromMetadata(type, file)
+            ArtifactSettings.createReleaseFromMetadata(type, file)
         } catch (IllegalArgumentException iae) {
             throw new InstallArtifactException(iae.message)
         }

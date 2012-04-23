@@ -15,13 +15,13 @@
  */
 package org.codehaus.griffon.resolve.config
 
+import org.apache.ivy.plugins.latest.LatestTimeStrategy
 import org.apache.ivy.plugins.resolver.DependencyResolver
 import org.apache.ivy.plugins.resolver.FileSystemResolver
 import org.apache.ivy.plugins.resolver.IBiblioResolver
 import org.apache.ivy.plugins.resolver.RepositoryResolver
 import org.apache.ivy.util.Message
 import org.codehaus.griffon.resolve.SnapshotAwareM2Resolver
-import org.apache.ivy.plugins.latest.LatestTimeStrategy
 
 class RepositoriesConfigurer extends AbstractDependencyManagementConfigurer {
     RepositoriesConfigurer(DependencyConfigurationContext context) {

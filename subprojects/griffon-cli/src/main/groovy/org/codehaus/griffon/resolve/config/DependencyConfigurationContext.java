@@ -15,7 +15,6 @@
  */
 package org.codehaus.griffon.resolve.config;
 
-import griffon.util.BuildSettingsHolder;
 import griffon.util.Metadata;
 import org.apache.ivy.core.module.descriptor.DependencyDescriptor;
 import org.codehaus.griffon.resolve.EnhancedDefaultDependencyDescriptor;
@@ -43,7 +42,7 @@ public class DependencyConfigurationContext {
     }
 
     public boolean isOffline() {
-        return BuildSettingsHolder.getSettings().isOfflineMode();
+        return dependencyManager.getBuildSettings().isOfflineMode();
     }
 
     static public DependencyConfigurationContext forApplication(IvyDependencyManager dependencyManager) {

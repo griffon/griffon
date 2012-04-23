@@ -24,8 +24,10 @@ import org.codehaus.griffon.artifacts.model.Archetype
 import org.codehaus.griffon.artifacts.model.Artifact
 import org.codehaus.griffon.artifacts.model.Plugin
 import org.codehaus.griffon.artifacts.model.Release
+
+import static griffon.util.ArtifactSettings.getRegisteredArtifacts
+import static griffon.util.ArtifactSettings.isValidVersion
 import static griffon.util.GriffonNameUtils.capitalize
-import static org.codehaus.griffon.artifacts.ArtifactUtils.*
 
 /**
  * @author Andres Almiray
@@ -60,13 +62,24 @@ listArtifacts = { String type ->
         }
     }
 
-    listInstalledArtifacts(type)
+    if (type == Plugin.TYPE) {
+        if (griffonSettings.isGriffonProject() && !griffonSettings.isArchetypeProject()) {
+            println '\n<Project>'
+            listInstalledArtifacts(type, artifactSettings.getInstalledReleases(type))
+        }
+        Map<String, Release> frameworkPlugins = pluginSettings.getFrameworkPluginReleases()
+        if (frameworkPlugins) {
+            println '\n<Framework>'
+            listInstalledArtifacts(type, frameworkPlugins)
+        }
+    } else {
+        listInstalledArtifacts(type, artifactSettings.getInstalledReleases(type))
+    }
     listArtifactsFooter(type)
 }
 
 listArtifactsHeader = { repository, type ->
-    println """
-${capitalize(type)}s available in the ${repository.name} repository are listed below:
+    println """${capitalize(type)}s available in the ${repository.name} repository are listed below:
 ${'-' * 80}
 ${'Name'.padRight(30, ' ')}${'Releases'.padRight(20, ' ')} Title
 """
@@ -86,8 +99,7 @@ For further info visit http://griffon.codehaus.org/${capitalize(type)}s
 """
 }
 
-listInstalledArtifacts = { String type ->
-    Map installedArtifacts = getInstalledReleases(type)
+listInstalledArtifacts = { String type, Map<String, Release> installedArtifacts ->
     if (type == Archetype.TYPE) {
         installedArtifacts['default'] = [
                 version: GriffonUtil.getGriffonVersion(),
@@ -163,6 +175,7 @@ displayArtifactInfo = { String type, String name, String version, ArtifactReposi
         [
                 'Toolkits': artifact.toolkits*.getLowercaseName().join(', ') ?: 'works with all toolkits',
                 'Platforms': artifact.platforms*.getLowercaseName().join(', ') ?: 'works in all platforms',
+                'Framework': artifact.framework ? 'yes' : 'no'
         ].each { label, value ->
             println "${label.padRight(padding, ' ')}: ${value}"
         }
@@ -221,8 +234,9 @@ For further info visit http://griffon.codehaus.org/${capitalize(type)}s
 }
 
 doListArtifactUpdates = { String type ->
+    resolveFrameworkFlag()
     Map availableArtifacts = getAvailableArtifacts(type)
-    Map installedArtifacts = type == Plugin.TYPE ? getRegisteredArtifacts(type) : getInstalledReleases(type)
+    Map installedArtifacts = type == Archetype.TYPE || framework ? artifactSettings.getInstalledReleases(type, framework) : getRegisteredArtifacts(type)
     Map outdatedArtifacts = [:]
 
     if (!availableArtifacts) {
@@ -233,10 +247,11 @@ doListArtifactUpdates = { String type ->
     boolean headerDisplayed = false
     if (installedArtifacts) {
         installedArtifacts = installedArtifacts.sort()
+        VersionComparator versionComparator = new VersionComparator()
         installedArtifacts.each {name, version ->
             if (version instanceof Release) version = version.version
             String availableVersion = availableArtifacts.get(name)?.version
-            if (availableVersion != version && availableVersion != null) {
+            if (availableVersion != version && availableVersion != null && versionComparator.compare(availableVersion, version) > 0) {
                 String repositoryName = availableArtifacts.get(name).repository.name
                 if (!headerDisplayed) {
                     println """

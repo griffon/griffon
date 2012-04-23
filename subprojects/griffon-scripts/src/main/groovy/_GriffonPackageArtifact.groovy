@@ -21,6 +21,7 @@ import groovy.json.JsonBuilder
 import org.codehaus.griffon.artifacts.model.Plugin
 import org.codehaus.griffon.artifacts.model.Release
 import org.springframework.core.io.Resource
+
 import static griffon.util.GriffonNameUtils.isBlank
 
 /**
@@ -105,8 +106,14 @@ Lorem ipsum
                 platforms: descriptorInstance.platforms,
                 dependencies: descriptorInstance.dependsOn.collect([]) { entry ->
                     [name: entry.key, version: entry.value]
-                }
+                },
+                framework: false
         ]
+        try {
+            map.framework = descriptorInstance.framework
+        } catch(MissingPropertyException mpe) {
+            // ignore
+        }
     }
 
     map

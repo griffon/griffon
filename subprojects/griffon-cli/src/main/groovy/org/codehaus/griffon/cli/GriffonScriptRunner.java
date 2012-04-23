@@ -27,12 +27,11 @@ import org.apache.log4j.LogManager;
 import org.apache.tools.ant.Project;
 import org.codehaus.gant.GantBinding;
 import org.codehaus.griffon.artifacts.ArtifactRepositoryRegistry;
-import org.codehaus.griffon.artifacts.ArtifactUtils;
-import org.codehaus.griffon.artifacts.model.Plugin;
 import org.codehaus.griffon.cli.parsing.CommandLine;
 import org.codehaus.griffon.cli.parsing.CommandLineParser;
 import org.codehaus.griffon.cli.parsing.DefaultCommandLine;
 import org.codehaus.griffon.cli.parsing.ParseException;
+import org.codehaus.griffon.plugins.PluginInfo;
 import org.codehaus.griffon.runtime.logging.Log4jConfig;
 import org.codehaus.groovy.runtime.DefaultGroovyMethods;
 import org.springframework.core.io.Resource;
@@ -50,7 +49,6 @@ import static griffon.util.GriffonExceptionHandler.sanitize;
 import static griffon.util.GriffonNameUtils.isBlank;
 import static java.util.Arrays.binarySearch;
 import static java.util.Arrays.sort;
-import static org.codehaus.griffon.artifacts.ArtifactUtils.getInstalledArtifacts;
 
 /**
  * Class that handles Griffon command line interface for running scripts
@@ -713,6 +711,7 @@ public class GriffonScriptRunner {
         binding.setVariable("resolveResources", c);
         binding.setVariable("griffonSettings", settings);
         binding.setVariable("pluginSettings", settings.pluginSettings);
+        binding.setVariable("artifactSettings", settings.artifactSettings);
         settings.pluginSettings.initBinding(binding);
 
         // Add other binding variables, such as Griffon version and environment.
@@ -748,13 +747,12 @@ public class GriffonScriptRunner {
         // plugins loaded by the application. The name of each variable is of
         // the form <pluginName>PluginDir.
 
-        Map<String, String> installedArtifacts = getInstalledArtifacts(Plugin.TYPE);
-        for (Map.Entry<String, String> plugin : installedArtifacts.entrySet()) {
-            String pluginName = GriffonUtil.getPropertyNameForLowerCaseHyphenSeparatedName(plugin.getKey());
-
-            String version = plugin.getValue();
+        Map<String, PluginInfo> installedArtifacts = settings.pluginSettings.getPlugins();
+        for (PluginInfo pluginInfo : installedArtifacts.values()) {
+            String pluginName = GriffonUtil.getPropertyNameForLowerCaseHyphenSeparatedName(pluginInfo.getName());
+            String version = pluginInfo.getVersion();
             binding.setVariable(pluginName + "PluginVersion", version);
-            binding.setVariable(pluginName + "PluginDir", ArtifactUtils.getInstallPathFor(Plugin.TYPE, plugin.getKey(), version));
+            binding.setVariable(pluginName + "PluginDir", pluginInfo.getDirectory());
         }
 
         return binding;
@@ -919,10 +917,15 @@ public class GriffonScriptRunner {
                         targets.add("checkVersion");
                     }
                     if (!isExcludedFromDependencyResolution(scriptName)) {
+                        targets.add("resolveFrameworkDependencies");
                         targets.add("resolveDependencies");
                     }
                     targets.add("loadEventHooks");
+                } else if (binarySearch(FRAMEWORK_PLUGIN_INCLUSIONS, scriptName) >= 0) {
+                    targets.add("resolveFrameworkDependencies");
+                    targets.add("loadEventHooks");
                 }
+
                 settings.debug("** " + targets + " **");
                 gant.setAllPerTargetPreHooks(DO_NOTHING_CLOSURE);
                 gant.setAllPerTargetPostHooks(DO_NOTHING_CLOSURE);
@@ -955,18 +958,22 @@ public class GriffonScriptRunner {
 
         private static String[] RESOLVE_DEPENDENCIES_EXCLUSIONS = {
                 "SetVersion", "Stats", "Upgrade",
-                "CreateCommandAlias", "Doc", "UninstallPlugin",
-                "ListPluginUpdates", "_GriffonResolveDependencies"
+                "CreateCommandAlias", "Doc", "_GriffonResolveDependencies"
         };
 
         private static String[] CHECK_VERSION_EXCLUSIONS = {
                 "Upgrade"
         };
 
+        private static String[] FRAMEWORK_PLUGIN_INCLUSIONS = {
+                "CreateApp_", "CreateAddon_", "CreatePlugin_", "CreateArchetype_"
+        };
+
         static {
             sort(CONFIGURE_PROXY_EXCLUSIONS);
             sort(RESOLVE_DEPENDENCIES_EXCLUSIONS);
             sort(CHECK_VERSION_EXCLUSIONS);
+            sort(FRAMEWORK_PLUGIN_INCLUSIONS);
         }
     }
 }

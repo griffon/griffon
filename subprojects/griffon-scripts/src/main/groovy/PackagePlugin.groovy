@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import org.codehaus.griffon.artifacts.ArtifactUtils
+import griffon.util.ArtifactSettings
 import org.codehaus.griffon.artifacts.model.Plugin
 
 /**
@@ -52,7 +52,7 @@ PLUGIN_RESOURCES = [
 
 target(name: 'packagePlugin', description: 'Packages a Griffon plugin',
         prehook: null, posthook: null) {
-    pluginDescriptor = ArtifactUtils.getPluginDescriptor(basedir)
+    pluginDescriptor = ArtifactSettings.getPluginDescriptor(basedir)
     if (!pluginDescriptor?.exists()) {
         event('StatusFinal', ['Current directory does not appear to be a Griffon plugin project.'])
         exit(1)

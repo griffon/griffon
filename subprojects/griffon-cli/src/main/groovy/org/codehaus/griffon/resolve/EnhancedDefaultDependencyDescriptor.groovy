@@ -15,13 +15,14 @@
  */
 package org.codehaus.griffon.resolve
 
-import java.lang.reflect.Field
 import org.apache.ivy.core.module.descriptor.DefaultDependencyDescriptor
 import org.apache.ivy.core.module.descriptor.DefaultExcludeRule
 import org.apache.ivy.core.module.id.ArtifactId
 import org.apache.ivy.core.module.id.ModuleId
 import org.apache.ivy.core.module.id.ModuleRevisionId
 import org.apache.ivy.plugins.matcher.ExactPatternMatcher
+
+import java.lang.reflect.Field
 
 /**
  * Adds new methods to make access to this class Groovier

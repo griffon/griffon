@@ -20,10 +20,10 @@ import griffon.util.Metadata
 import org.codehaus.griffon.artifacts.model.Archetype
 import org.codehaus.griffon.artifacts.model.Artifact
 import org.codehaus.griffon.artifacts.model.Plugin
-import static griffon.util.GriffonNameUtils.capitalize
 import org.codehaus.griffon.artifacts.*
-import static org.codehaus.griffon.artifacts.ArtifactUtils.artifactBase
-import static org.codehaus.griffon.artifacts.ArtifactUtils.isValidVersion
+
+import static griffon.util.ArtifactSettings.isValidVersion
+import static griffon.util.GriffonNameUtils.capitalize
 import static org.codehaus.griffon.cli.CommandLineConstants.KEY_DEFAULT_ARTIFACT_REPOSITORY
 import static org.codehaus.griffon.cli.CommandLineConstants.KEY_DEFAULT_INSTALL_ARTIFACT_REPOSITORY
 
@@ -76,10 +76,10 @@ doWithSelectedRepository = { callback ->
     if (!repositories.contains(defaultInstallRepository)) repositories << defaultInstallRepository
     if (!repositories.contains(defaultSearchRepository)) repositories << defaultSearchRepository
 
-    for (String repositoryName: repositories) {
+    for (String repositoryName : repositories) {
         artifactRepository = ArtifactRepositoryRegistry.instance.findRepository(repositoryName)
         if (artifactRepository) {
-            if(griffonSettings.offlineMode && !artifactRepository.local) return
+            if (griffonSettings.offlineMode && !artifactRepository.local) return
             if (callback(artifactRepository)) break
         }
     }
@@ -131,8 +131,9 @@ uninstallArtifact = { String type ->
 
 doUninstallArtifact = { String type, String name, String version = null, boolean failOnError = true ->
     try {
+        resolveFrameworkFlag()
         ArtifactInstallEngine artifactInstallEngine = createArtifactInstallEngine(metadata)
-        artifactInstallEngine.uninstall(type, name, version)
+        artifactInstallEngine.uninstall(type, name, version, framework)
     } catch (Exception e) {
         logError("Error uninstalling ${type}: ${e.message}", e)
         if (failOnError) exit(1)
@@ -140,8 +141,9 @@ doUninstallArtifact = { String type, String name, String version = null, boolean
 }
 
 installPlugins = { Metadata md, Map<String, String> plugins ->
+    resolveFrameworkFlag()
     ArtifactInstallEngine artifactInstallEngine = createArtifactInstallEngine(md)
-    artifactInstallEngine.installPlugins(plugins)
+    artifactInstallEngine.installPlugins(plugins, framework)
     md.reload()
     resetDependencyResolution()
 }
@@ -232,12 +234,18 @@ doInstallArtifact = { ArtifactRepository artifactRepository, String type, String
 
         if (!release) return false
 
+        if(type == Plugin.TYPE && framework && !release.artifact.framework) {
+            if (!failOnError) return false
+            event('StatusError', ["Plugin ${name}-${release.version} cannot be installed as a framework plugin"])
+            exit 1
+        }
+
         File file = artifactRepository.downloadFile(type, name, version, null)
         doInstallFromFile(type, file, md)
 
         ArtifactInstallEngine artifactInstallEngine = createArtifactInstallEngine(md)
-        artifactInstallEngine.updateLocalReleaseMetadata(type, release)
-        artifactInstallEngine.publishReleaseToGriffonLocal(release, file)
+        artifactInstallEngine.updateLocalReleaseMetadata(type, release, framework)
+        artifactInstallEngine.publishReleaseToGriffonLocal(release, file, framework)
 
         return true
     }
@@ -266,9 +274,10 @@ installArtifactForName = { Metadata md, String type, String name, String version
 }
 
 doInstallFromFile = { type, file, md ->
+    resolveFrameworkFlag()
     ArtifactInstallEngine artifactInstallEngine = createArtifactInstallEngine(md)
     try {
-        artifactInstallEngine.installFromFile(type, file, true)
+        artifactInstallEngine.installFromFile(type, file, true, framework)
     } catch (InstallArtifactException iae) {
         artifactInstallEngine.errorHandler "Installation of ${file} aborted."
     } catch (UninstallArtifactException uae) {
@@ -287,8 +296,8 @@ createArtifactInstallEngine = { Metadata md = metadata ->
         for (dir in artifactInstallEngine.installedArtifacts) {
             ant.delete(dir: dir, failonerror: false)
         }
-        for(plugin in uninstalledPlugins) {
-            if(!md[plugin.key]) md[plugin.key] = plugin.value
+        for (plugin in uninstalledPlugins) {
+            if (!md[plugin.key]) md[plugin.key] = plugin.value
         }
         md.persist()
         exit(1)
@@ -304,7 +313,7 @@ runPluginScript = { File scriptFile, fullPluginName, msg ->
     if (scriptFile.exists()) {
         event 'StatusUpdate', ["Executing ${fullPluginName} plugin $msg"]
         // instrumenting plugin scripts adding 'pluginBasedir' variable
-        def instrumentedInstallScript = "def pluginBasedir = '${artifactBase(Plugin.TYPE)}/${fullPluginName}'\n".toString().replaceAll('\\\\', '/') + scriptFile.text
+        def instrumentedInstallScript = "def pluginBasedir = '${artifactSettings.artifactBase(Plugin.TYPE)}/${fullPluginName}'\n".toString().replaceAll('\\\\', '/') + scriptFile.text
         // we are using text form of script here to prevent Gant caching
 
         // temporary crutch --- REMOVE BEFORE 1.0!!
@@ -313,5 +322,18 @@ runPluginScript = { File scriptFile, fullPluginName, msg ->
         // temporary crutch --- REMOVE BEFORE 1.0!!
 
         includeTargets << instrumentedInstallScript
+    }
+}
+
+framework = false
+resolveFrameworkFlag = {
+    if (argsMap.framework != null) {
+        if (argsMap.framework instanceof CharSequence) {
+            framework = Boolean.parseBoolean(argsMap.framework)
+        } else {
+            framework = argsMap.framework as boolean
+        }
+    } else {
+        framework = !griffonSettings.isGriffonProject()
     }
 }

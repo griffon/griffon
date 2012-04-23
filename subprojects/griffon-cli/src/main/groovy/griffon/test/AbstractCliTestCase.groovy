@@ -17,6 +17,7 @@
 package griffon.test
 
 import griffon.util.BuildSettingsHolder
+
 import java.util.concurrent.TimeUnit
 import java.util.concurrent.locks.Condition
 import java.util.concurrent.locks.Lock

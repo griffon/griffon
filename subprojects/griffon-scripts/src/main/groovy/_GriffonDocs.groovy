@@ -15,8 +15,8 @@
  */
 
 import grails.doc.DocPublisher
+import griffon.util.ArtifactSettings
 import griffon.util.GriffonNameUtils
-import org.codehaus.griffon.artifacts.ArtifactUtils
 import org.codehaus.griffon.artifacts.model.Plugin
 import org.codehaus.griffon.documentation.PdfBuilder
 import org.codehaus.griffon.resolve.IvyDependencyManager
@@ -313,7 +313,7 @@ private readIfSet(DocPublisher publisher, String prop) {
 }
 
 private loadBasePlugin() {
-    pluginDescriptor = ArtifactUtils.getPluginDescriptor(basedir)
+    pluginDescriptor = ArtifactSettings.getPluginDescriptor(basedir)
     pluginDescriptor?.exists() ? loadArtifactInfo(Plugin.TYPE, pluginDescriptor) : null
 }
 

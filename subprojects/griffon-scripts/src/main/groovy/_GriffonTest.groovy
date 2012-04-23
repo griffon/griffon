@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+import griffon.util.GriffonExceptionHandler
 import org.codehaus.griffon.test.GriffonTestTargetPattern
 import org.codehaus.griffon.test.GriffonTestType
 import org.codehaus.griffon.test.event.GriffonTestEventConsoleReporter
@@ -21,7 +22,6 @@ import org.codehaus.griffon.test.event.GriffonTestEventPublisher
 import org.codehaus.griffon.test.junit4.JUnit4GriffonTestType
 import org.codehaus.griffon.test.report.junit.JUnitReportProcessor
 import org.codehaus.griffon.test.support.GriffonTestMode
-import griffon.util.GriffonExceptionHandler
 
 /**
  * Gant script that runs the Griffon unit tests
@@ -270,7 +270,7 @@ compileTests = { GriffonTestType type, File source, File dest ->
     def destDir = new File(griffonSettings.testClassesDir.absolutePath, type.name)
     ant.mkdir(dir: destDir.path)
 
-    compileSources(destDir, 'griffon.test.classpath') {
+    compileProjectSources(destDir, 'griffon.test.classpath') {
         src(path: source)
         javac(compilerOptions(classpathref: 'griffon.test.classpath'))
     }

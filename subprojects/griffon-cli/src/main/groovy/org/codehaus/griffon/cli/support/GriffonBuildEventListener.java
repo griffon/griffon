@@ -19,12 +19,11 @@ import griffon.build.GriffonBuildListener;
 import griffon.util.BuildSettings;
 import griffon.util.GriffonUtil;
 import griffon.util.Metadata;
-import griffon.util.PluginSettings;
 import groovy.lang.*;
 import org.apache.tools.ant.BuildEvent;
+import org.codehaus.griffon.plugins.PluginInfo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.core.io.Resource;
 
 import java.io.File;
 import java.io.IOException;
@@ -83,17 +82,22 @@ public class GriffonBuildEventListener extends BuildListenerAdapter {
             }
             loadEventsScript(findEventsScript(new File(buildSettings.getBaseDir(), "scripts")));
 
-            for (Map.Entry<String, Resource> plugin : PluginSettings.getSortedPluginDirectories().entrySet()) {
-                try {
-                    if (!castToBoolean(binding.getVariables().get("events_loaded_" + plugin.getKey()))) {
-                        String pluginName = getPropertyNameForLowerCaseHyphenSeparatedName(plugin.getKey());
-                        binding.setVariable(pluginName + "PluginDir", plugin.getValue().getFile());
-                        loadEventsScript(findEventsScript(new File(plugin.getValue().getFile(), "scripts")));
-                        binding.setVariable("events_loaded_" + plugin.getKey(), true);
-                    }
-                } catch (IOException ex) {
-                    throw new RuntimeException(ex);
+            loadEventsFromPlugins(buildSettings.pluginSettings.getSortedProjectPluginDirectories());
+            loadEventsFromPlugins(buildSettings.pluginSettings.getSortedFrameworkPluginDirectories());
+        }
+    }
+
+    private void loadEventsFromPlugins(Map<String, PluginInfo> projectPlugins) {
+        for (Map.Entry<String, PluginInfo> plugin : projectPlugins.entrySet()) {
+            try {
+                if (!castToBoolean(binding.getVariables().get("events_loaded_" + plugin.getKey()))) {
+                    String pluginName = getPropertyNameForLowerCaseHyphenSeparatedName(plugin.getKey());
+                    binding.setVariable(pluginName + "PluginDir", plugin.getValue().getDirectory().getFile());
+                    loadEventsScript(findEventsScript(new File(plugin.getValue().getDirectory().getFile(), "scripts")));
+                    binding.setVariable("events_loaded_" + plugin.getKey(), true);
                 }
+            } catch (IOException ex) {
+                throw new RuntimeException(ex);
             }
         }
     }

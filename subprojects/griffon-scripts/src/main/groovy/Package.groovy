@@ -304,7 +304,7 @@ _copyFiles = { srcdir, path ->
 _copySharedFiles = { targetDistDir ->
     def sharedFilesPath = 'griffon-app/conf/dist/shared'
     _copyFiles(basedir, sharedFilesPath)
-    pluginSettings.doWithPlugins { pluginName, pluginVersion, pluginDir ->
+    pluginSettings.doWithProjectPlugins { pluginName, pluginVersion, pluginDir ->
         _copyFiles(pluginDir, sharedFilesPath)
     }
 }
@@ -312,7 +312,7 @@ _copySharedFiles = { targetDistDir ->
 _copyPackageFiles = { targetDistDir ->
     def packageFilesPath = 'griffon-app/conf/dist/' + packageType
     _copyFiles(basedir, packageFilesPath)
-    pluginSettings.doWithPlugins { pluginName, pluginVersion, pluginDir ->
+    pluginSettings.doWithProjectPlugins { pluginName, pluginVersion, pluginDir ->
         _copyFiles(pluginDir, packageFilesPath)
     }
 }

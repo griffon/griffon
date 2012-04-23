@@ -23,7 +23,6 @@
 import griffon.util.GriffonNameUtils
 import griffon.util.GriffonUtil
 import griffon.util.Metadata
-import org.codehaus.griffon.artifacts.ArtifactUtils
 import org.codehaus.griffon.artifacts.model.Archetype
 import org.codehaus.griffon.artifacts.model.Plugin
 import org.springframework.core.io.ClassPathResource
@@ -31,8 +30,6 @@ import org.springframework.core.io.FileSystemResource
 
 import java.util.regex.Matcher
 import java.util.regex.Pattern
-
-import static org.codehaus.griffon.artifacts.ArtifactUtils.artifactBase
 
 includeTargets << griffonScript('_GriffonPackage')
 
@@ -156,7 +153,7 @@ resolveTemplate = { template, fileSuffix ->
     def templateFile = new FileSystemResource("${basedir}/src/templates/artifacts/${template}${fileSuffix}")
     if (!templateFile.exists()) {
         // now check for template provided by plugins
-        def pluginTemplateFiles = resolveResources("file:${artifactBase(Plugin.TYPE)}/*/src/templates/artifacts/${template}${fileSuffix}")
+        def pluginTemplateFiles = resolveResources("file:${artifactSettings.artifactBase(Plugin.TYPE)}/*/src/templates/artifacts/${template}${fileSuffix}")
         if (pluginTemplateFiles) {
             templateFile = pluginTemplateFiles[0]
         }
@@ -264,7 +261,7 @@ target(name: 'resolveArchetype', description: '', prehook: null, posthook: null)
                 archetypeProps.version = archetypeVersion
             } else {
                 archetypeProps.name = archetype
-                File file = ArtifactUtils.findArtifactDirForName(Archetype.TYPE, archetype)
+                File file = artifactSettings.findArtifactDirForName(Archetype.TYPE, archetype)
                 if (file) {
                     matcher = artifactNameVersionPattern.matcher(file.name)
                     matcher.find()

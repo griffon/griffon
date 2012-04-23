@@ -16,16 +16,18 @@
 
 package griffon.util
 
-import java.util.concurrent.ConcurrentHashMap
 import org.codehaus.gant.GantBinding
 import org.codehaus.griffon.artifacts.model.Plugin
 import org.codehaus.griffon.artifacts.model.Release
+import org.codehaus.griffon.plugins.PluginInfo
 import org.codehaus.griffon.resolve.IvyDependencyManager
-import org.springframework.core.io.FileSystemResource
 import org.springframework.core.io.Resource
+
+import java.util.concurrent.ConcurrentHashMap
+
+import static ArtifactSettings.getArtifactRelease
 import static griffon.util.GriffonNameUtils.getHyphenatedName
 import static org.apache.commons.lang.ArrayUtils.addAll
-import static org.codehaus.griffon.artifacts.ArtifactUtils.*
 
 /**
  * Common utilities for dealing with plugins.
@@ -54,25 +56,107 @@ class PluginSettings {
         nameToPluginDirMap.clear()
     }
 
-    Resource[] getPluginDirectories() {
-        Resource[] pluginDirectories = cache['pluginDirectories']
-        if (!pluginDirectories) {
-            pluginDirectories = findAllArtifactDirsForType(Plugin.TYPE)
-            cache['pluginDirectories'] = pluginDirectories
+    Resource[] getProjectPluginDirectories() {
+        Resource[] projectPluginDirectories = cache['projectPluginDirectories']
+        if (!projectPluginDirectories) {
+            projectPluginDirectories = resolveResources("file://${settings.projectPluginsDir.absolutePath}/*")
+            cache['projectPluginDirectories'] = projectPluginDirectories
         }
-        pluginDirectories
+        projectPluginDirectories
     }
 
-    Map<String, Release> getPlugins() {
-        Map<String, Release> plugins = cache['plugins']
-        if (!plugins) {
-            plugins = [:]
-            getPluginDirectories().each { Resource pluginDir ->
+    Resource[] getFrameworkPluginDirectories() {
+        Resource[] frameworkPluginDirectories = cache['frameworkPluginDirectories']
+        if (!frameworkPluginDirectories) {
+            frameworkPluginDirectories = resolveResources("file:${settings.griffonHome}/plugins/*")
+            cache['frameworkPluginDirectories'] = frameworkPluginDirectories
+        }
+        frameworkPluginDirectories
+    }
+
+    Map<String, Release> getProjectPluginReleases() {
+        Map<String, Release> projectPluginReleases = cache['projectPluginReleases']
+        if (!projectPluginReleases) {
+            projectPluginReleases = [:]
+            for (Resource pluginDir : getProjectPluginDirectories()) {
                 if (pluginDir.exists()) {
                     Release release = getArtifactRelease(Plugin.TYPE, pluginDir.file)
-                    plugins[release.artifact.name] = release
+                    projectPluginReleases[release.artifact.name] = release
                 }
             }
+            cache['projectPluginReleases'] = projectPluginReleases
+        }
+        projectPluginReleases
+    }
+
+    Map<String, Release> getFrameworkPluginReleases() {
+        Map<String, Release> frameworkPluginReleases = cache['frameworkPluginReleases']
+        if (!frameworkPluginReleases) {
+            frameworkPluginReleases = [:]
+            for (Resource pluginDir : getFrameworkPluginDirectories()) {
+                if (pluginDir.exists()) {
+                    Release release = getArtifactRelease(Plugin.TYPE, pluginDir.file)
+                    frameworkPluginReleases[release.artifact.name] = release
+                }
+            }
+            cache['frameworkPluginReleases'] = frameworkPluginReleases
+        }
+        frameworkPluginReleases
+    }
+
+    Map<String, Release> getPluginReleases() {
+        Map<String, Release> pluginReleases = cache['pluginReleases']
+        if (!pluginReleases) {
+            pluginReleases = getFrameworkPluginReleases()
+            pluginReleases += getProjectPluginReleases()
+            cache['pluginReleases'] = pluginReleases
+        }
+        pluginReleases
+    }
+
+    Map<String, PluginInfo> getProjectPlugins() {
+        Map<String, PluginInfo> projectPlugins = cache['projectPlugins']
+        if (!projectPlugins) {
+            projectPlugins = [:]
+            for (Resource pluginDir : getProjectPluginDirectories()) {
+                if (pluginDir.exists()) {
+                    Release release = getArtifactRelease(Plugin.TYPE, pluginDir.file)
+                    projectPlugins[release.artifact.name] = new PluginInfo(
+                            release.artifact.name,
+                            pluginDir,
+                            release
+                    )
+                }
+            }
+            cache['projectPluginReleases'] = projectPlugins
+        }
+        projectPlugins
+    }
+
+    Map<String, PluginInfo> getFrameworkPlugins() {
+        Map<String, PluginInfo> frameworkPlugins = cache['frameworkPlugins']
+        if (!frameworkPlugins) {
+            frameworkPlugins = [:]
+            for (Resource pluginDir : getFrameworkPluginDirectories()) {
+                if (pluginDir.exists()) {
+                    Release release = getArtifactRelease(Plugin.TYPE, pluginDir.file)
+                    frameworkPlugins[release.artifact.name] = new PluginInfo(
+                            release.artifact.name,
+                            pluginDir,
+                            release
+                    )
+                }
+            }
+            cache['frameworkPlugins'] = frameworkPlugins
+        }
+        frameworkPlugins
+    }
+
+    Map<String, PluginInfo> getPlugins() {
+        Map<String, PluginInfo> plugins = cache['plugins']
+        if (!plugins) {
+            plugins = getFrameworkPlugins()
+            plugins += getProjectPlugins()
             cache['plugins'] = plugins
         }
         plugins
@@ -116,14 +200,12 @@ class PluginSettings {
         String userHome = System.getProperty("user.home")
         String griffonHome = settings.griffonHome?.absolutePath
         String basedir = settings.baseDir.absolutePath
-        String pluginHome = settings.projectPluginsDir.absolutePath
 
         def addScripts = {if (!it.file.name.startsWith('_')) scripts << it}
 
         if (griffonHome) resolveResources("file:${griffonHome}/scripts/${scriptName}.groovy").each addScripts
         resolveResources("file:${basedir}/scripts/${scriptName}.groovy").each addScripts
         resolveResources("file:${userHome}/.griffon/scripts/${scriptName}.groovy").each addScripts
-        resolveResources("file:${pluginHome}/scripts/${scriptName}.groovy").each addScripts
 
         scripts as Resource[]
     }
@@ -132,28 +214,53 @@ class PluginSettings {
         String key = getHyphenatedName(name)
         Resource pluginDir = nameToPluginDirMap[key]
         if (!pluginDir) {
-            File file = findArtifactDirForName(Plugin.TYPE, name)
-            if (file) {
-                pluginDir = new FileSystemResource(file)
+            // project plugin
+            Resource[] resources = resolveResources("file://${settings.projectPluginsDir.absolutePath}/${name}-*")
+            if (resources) pluginDir = resources[0]
+            if (!pluginDir.exists()) {
+                //framework plugin
+                resources = resolveResources("file://${settings.griffonHome}/plugins/${name}-*")
+                if (resources) pluginDir = resources[0]
+            }
+            if (pluginDir) {
                 nameToPluginDirMap[key] = pluginDir
             }
         }
         pluginDir
     }
 
-    void doWithPlugins(Closure closure) {
-        getPlugins().each { pluginName, release ->
-            String pluginVersion = release.version
-            String pluginInstallPath = getInstallPathFor(Plugin.TYPE, pluginName, pluginVersion)
-            if (!new File(pluginInstallPath).exists()) return
-            closure(pluginName, pluginVersion, pluginInstallPath)
+    void doWithProjectPlugins(Closure closure) {
+        for (Map.Entry<String, PluginInfo> pluginEntry : getProjectPlugins()) {
+            String pluginName = pluginEntry.key
+            PluginInfo pluginInfo = pluginEntry.value
+            String pluginVersion = pluginInfo.release.version
+            File pluginInstallDir = pluginInfo.directory.file
+            if (!pluginInstallDir.exists()) return
+            closure(pluginName, pluginVersion, pluginInstallDir.canonicalPath)
         }
     }
 
-    void resolveAndAddAllPluginDependencies() {
+    void doWithFrameworkPlugins(Closure closure) {
+        for (Map.Entry<String, PluginInfo> pluginEntry : getFrameworkPlugins()) {
+            String pluginName = pluginEntry.key
+            PluginInfo pluginInfo = pluginEntry.value
+            String pluginVersion = pluginInfo.release.version
+            File pluginInstallDir = pluginInfo.directory.file
+            if (!pluginInstallDir.exists()) return
+            closure(pluginName, pluginVersion, pluginInstallDir.canonicalPath)
+        }
+    }
+
+    void resolveAndAddAllPluginDependencies(boolean framework) {
         Map<String, List<File>> configurations = [:]
 
-        doWithPlugins { String pluginName, String pluginVersion, String pluginInstallPath ->
+        // Metadata metadata = Metadata.getInstance(new File("${settings.baseDir}/application.properties"))
+        // String projectName = metadata.getApplicationName()
+        // if (isBlank(projectName)) projectName = settings.baseDir.name
+
+        // boolean parsedDependencies = false
+        def pluginProcessor = { String pluginName, String pluginVersion, String pluginInstallPath ->
+            // if (pluginName == projectName) return
             List<File> dependencyDescriptors = [
                     new File("$pluginInstallPath/dependencies.groovy"),
                     new File("$pluginInstallPath/plugin-dependencies.groovy")
@@ -162,9 +269,17 @@ class PluginSettings {
             if (dependencyDescriptors.any {it.exists()}) {
                 def callable = settings.pluginDependencyHandler()
                 callable.call(new File(pluginInstallPath), pluginName, pluginVersion)
+                // parsedDependencies = true
             }
         }
 
+        if (framework) {
+            doWithFrameworkPlugins pluginProcessor
+        } else {
+            doWithProjectPlugins pluginProcessor
+        }
+
+        // if (parsedDependencies) {
         IvyDependencyManager dependencyManager = settings.dependencyManager
         for (conf in ['runtime', 'compile', 'test', 'build']) {
             def resolveReport = dependencyManager.resolveDependencies(IvyDependencyManager."${conf.toUpperCase()}_CONFIGURATION")
@@ -178,12 +293,13 @@ class PluginSettings {
         configurations.each { String conf, List<File> dependencies ->
             settings.updateDependenciesFor conf, dependencies
         }
+        // }
     }
 
     private Resource[] resolveForEachPlugin(String key, Closure closure) {
         Resource[] allResources = new Resource[0]
-        getPluginDirectories().each { pluginDir ->
-            Resource[] resources = closure(pluginDir.file.absolutePath)
+        for (Map.Entry<String, PluginInfo> pluginEntry : getPlugins().entrySet()) {
+            Resource[] resources = closure(pluginEntry.value.directory.file.absolutePath)
             if (resources) {
                 allResources = addAll(allResources, resources) as Resource[]
             }
@@ -204,17 +320,25 @@ class PluginSettings {
         resources
     }
 
-    static Map<String, Resource> getSortedPluginDirectories() {
+    Map<String, PluginInfo> getSortedProjectPluginDirectories() {
+        getSortedPlugins(getProjectPlugins())
+    }
+
+    Map<String, PluginInfo> getSortedFrameworkPluginDirectories() {
+        getSortedPlugins(getFrameworkPlugins())
+    }
+
+    private Map<String, PluginInfo> getSortedPlugins(Map<String, PluginInfo> plugins) {
         Map noDependencies = [:]
         Map withDependencies = [:]
         List sorted = []
-        findAllArtifactDirsForType(Plugin.TYPE).each { Resource r ->
-            Release release = getArtifactRelease(Plugin.TYPE, r.file)
+        for (PluginInfo pluginInfo : plugins.values()) {
+            Release release = pluginInfo.release
             if (release.dependencies) {
-                withDependencies[release.artifact.name] = [deps: release.dependencies, dir: r]
+                withDependencies[pluginInfo.name] = [deps: release.dependencies, pluginInfo: pluginInfo]
             } else {
-                noDependencies[release.artifact.name] = r
-                sorted << [name: release.artifact.name, dir: r]
+                noDependencies[release.artifact.name] = pluginInfo
+                sorted << [name: release.artifact.name, pluginInfo: pluginInfo]
             }
         }
 
@@ -228,12 +352,12 @@ class PluginSettings {
             values.deps.each { entry ->
                 index = Math.max(index, sorted.indexOf(sorted.find {it.name == entry.name}))
             }
-            sorted = insert(sorted, [name: name, dir: values.dir], index + 1)
+            sorted = insert(sorted, [name: name, pluginInfo: values.pluginInfo], index + 1)
         }
 
         withDependencies.each(resolveDependencies)
         sorted.inject([:]) { map, element ->
-            map[element.name] = element.dir
+            map[element.name] = element.pluginInfo
             map
         }
     }

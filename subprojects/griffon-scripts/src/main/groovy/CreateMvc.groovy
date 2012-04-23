@@ -21,8 +21,8 @@
  *
  */
 
-import griffon.util.GriffonUtil
 import griffon.util.GriffonNameUtils
+import griffon.util.GriffonUtil
 
 includeTargets << griffonScript('CreateIntegrationTest')
 

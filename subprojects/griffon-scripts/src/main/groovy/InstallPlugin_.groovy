@@ -15,7 +15,6 @@
  */
 
 import org.codehaus.griffon.artifacts.model.Plugin
-import static org.codehaus.griffon.artifacts.ArtifactUtils.artifactBase
 
 /**
  * @author Andres Almiray
@@ -24,7 +23,8 @@ import static org.codehaus.griffon.artifacts.ArtifactUtils.artifactBase
 includeTargets << griffonScript('_GriffonArtifacts')
 
 target(installPlugin: "Installs a plugin for the given URL or name and version") {
-    ant.mkdir(dir: artifactBase(Plugin.TYPE))
+    resolveFrameworkFlag()
+    ant.mkdir(dir: artifactSettings.artifactBase(Plugin.TYPE, framework))
     installArtifact(Plugin.TYPE)
     resetDependencyResolution()
 }

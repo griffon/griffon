@@ -18,10 +18,12 @@ import griffon.util.Environment
 import griffon.util.Metadata
 import griffon.util.PlatformUtils
 import griffon.util.RunMode
+import org.codehaus.griffon.plugins.PluginInfo
+
 import java.text.SimpleDateFormat
 import java.util.zip.ZipEntry
 import java.util.zip.ZipFile
-import org.springframework.core.io.Resource
+
 import static griffon.util.GriffonApplicationUtils.is64Bit
 import static griffon.util.GriffonApplicationUtils.osArch
 import static griffon.util.GriffonNameUtils.capitalize
@@ -183,12 +185,11 @@ collectArtifactMetadata = {
 
 collectAddonMetadata = {
     Map addons = [:]
-    pluginSettings.sortedPluginDirectories.each { String name, Resource dir ->
-        if (resolveResources("file://${dir.file}/dist/griffon-${name}-runtime-*.jar") ||
-                resolveResources("file://${dir.file}/addon/griffon-${name}-addon-*.jar")) {
-            String pluginDirName = dir.file.name
-            String pluginVersion = pluginDirName[(name.size() + 1)..-1]
-            addons[name] = pluginVersion
+    pluginSettings.getSortedProjectPluginDirectories().each { String name, PluginInfo pluginInfo ->
+        // TODO legacy
+        if (resolveResources("file://${pluginInfo.directory.file}/dist/griffon-${name}-runtime-*.jar") ||
+                resolveResources("file://${pluginInfo.directory.file}/addon/griffon-${name}-addon-*.jar")) {
+            addons[name] = pluginInfo.version
         }
     }
     if (addons) {
@@ -300,7 +301,7 @@ _copyLibs = {
 // XXX -- NATIVE 
     copyPlatformJars("${basedir}/lib", new File(jardir).absolutePath)
     copyNativeLibs("${basedir}/lib", new File(jardir).absolutePath)
-    pluginSettings.doWithPlugins { pluginName, pluginVersion, pluginDir ->
+    pluginSettings.doWithProjectPlugins { pluginName, pluginVersion, pluginDir ->
         copyPlatformJars("${pluginDir}/lib", new File(jardir).absolutePath)
         copyNativeLibs("${pluginDir}/lib", new File(jardir).absolutePath)
     }

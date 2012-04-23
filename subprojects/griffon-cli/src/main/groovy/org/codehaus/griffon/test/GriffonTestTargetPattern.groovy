@@ -16,8 +16,9 @@
 
 package org.codehaus.griffon.test
 
-import java.util.regex.Pattern
 import org.springframework.util.AntPathMatcher
+
+import java.util.regex.Pattern
 
 /**
  * A pattern passed to `griffon test-app` that targets one or more tests and potentially a single method
