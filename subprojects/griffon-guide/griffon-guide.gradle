@@ -90,9 +90,10 @@ task apiDocs(type: Groovydoc, dependsOn: copyDocs) {
     }
 }
 
-task java2html(dependsOn: apiDocs) << {
-    java2htmlConvertCode.execute()
-    java2htmlGenerateOverview.execute()
+task java2html(){
+   dependsOn apiDocs
+   dependsOn "java2htmlGenerateOverview"
+   dependsOn java2htmlConvertCode
 }
 
 task jarApi(type: Jar, dependsOn: apiDocs) {
