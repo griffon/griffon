@@ -57,7 +57,7 @@ compilerPaths = { String classpathId ->
     javac(compilerOptions(classpathref: classpathId))
 }
 
-compileSources = { destinationDir, classpathId, sources ->
+compileProjectSources = { destinationDir, classpathId, sources ->
     if (argsMap.compileTrace) {
         println('-' * 80)
         println "[GRIFFON] compiling to ${destinationDir}"
@@ -119,10 +119,9 @@ target(name: 'compile', description: "Implementation of compilation phase",
 
         String classpathId = 'griffon.compile.classpath'
 
-        compileSrc = compileSources.curry(projectMainClassesDir)
         event('CompileSourcesStart', [])
-        compileSrc(classpathId, compilerPaths.curry(classpathId))
-        compileSrc(classpathId) {
+        compileProjectSources(projectMainClassesDir, classpathId, compilerPaths.curry(classpathId))
+        compileProjectSources(projectMainClassesDir, classpathId) {
             src(path: "${basedir}/griffon-app/conf")
             include(name: '*.groovy')
             include(name: '*.java')
@@ -143,7 +142,7 @@ target(name: 'compile', description: "Implementation of compilation phase",
                     path(refid: 'griffon.compile.classpath')
                     pathElement(location: projectMainClassesDir)
                 }
-                compileSources(projectCliClassesDir, 'plugin.cli.compile.classpath') {
+                compileProjectSources(projectCliClassesDir, 'plugin.cli.compile.classpath') {
                     src(path: cliSourceDir)
                     javac(compilerOptions(classpathref: 'plugin.cli.compile.classpath'))
                 }
@@ -162,7 +161,7 @@ target(name: 'compile', description: "Implementation of compilation phase",
                 path(refid: "griffon.compile.classpath")
                 pathElement(location: projectMainClassesDir)
             }
-            compileSrc('addon.classpath') {
+            compileProjectSources(projectMainClassesDir, 'addon.classpath') {
                 src(path: basedir)
                 include(name: '*GriffonAddon.groovy')
                 include(name: '*GriffonAddon.java')
@@ -199,7 +198,7 @@ compileProjectTestSrc = { rootDir ->
                 pathElement(location: projectMainClassesDir)
                 pathElement(location: projectTestClassesDir)
             }
-            compileSources(projectTestClassesDir, 'projectTest.classpath') {
+            compileProjectSources(projectTestClassesDir, 'projectTest.classpath') {
                 src(path: projectTest)
                 javac(compilerOptions(classpathref: 'projectTest.classpath'))
             }

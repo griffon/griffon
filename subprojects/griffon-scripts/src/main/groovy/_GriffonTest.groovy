@@ -270,7 +270,7 @@ compileTests = { GriffonTestType type, File source, File dest ->
     def destDir = new File(griffonSettings.testClassesDir.absolutePath, type.name)
     ant.mkdir(dir: destDir.path)
 
-    compileSources(destDir, 'griffon.test.classpath') {
+    compileProjectSources(destDir, 'griffon.test.classpath') {
         src(path: source)
         javac(compilerOptions(classpathref: 'griffon.test.classpath'))
     }
