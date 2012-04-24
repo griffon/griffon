@@ -162,7 +162,7 @@ class BuildSettings extends AbstractBuildSettings {
      * The compiler target level to use
      */
     String compilerTargetLevel = null
-    
+
     String compilerDebug = 'yes'
 
     /** <code>true</code> if the default environment for a script should be used.  */
@@ -501,9 +501,18 @@ class BuildSettings extends AbstractBuildSettings {
 
         resolveResourcesClosure = {String pattern ->
             try {
-                return RESOLVER.getResources(pattern)
-            }
-            catch (Throwable e) {
+                Resource[] resources = RESOLVER.getResources(pattern)
+                // Filter hidden folders from OSX
+                if (resources) {
+                    List<Resource> tmp = []
+                    for (Resource r : resources) {
+                        if (r.URL.toString().contains('.DS_Store')) continue
+                        tmp.add(r)
+                    }
+                    resources = tmp.toArray(new Resource[tmp.size()])
+                }
+                return resources
+            } catch (Throwable e) {
                 return [] as Resource[]
             }
         }
@@ -1030,7 +1039,7 @@ class BuildSettings extends AbstractBuildSettings {
                 LOG.debug("Adding the following dependencies to $conf: ${newDependencies.name.join(', ')}")
             }
             this."get${capitalize(conf)}Dependencies"().addAll(newDependencies)
-            for (File jar: newDependencies) {
+            for (File jar : newDependencies) {
                 getClass().classLoader.rootLoader.addURL(jar.toURI().toURL())
             }
         }

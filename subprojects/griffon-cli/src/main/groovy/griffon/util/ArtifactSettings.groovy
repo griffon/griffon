@@ -23,7 +23,6 @@ import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import org.springframework.core.io.FileSystemResource
 import org.springframework.core.io.Resource
-import org.springframework.core.io.support.PathMatchingResourcePatternResolver
 
 import java.util.regex.Matcher
 import java.util.regex.Pattern
@@ -48,29 +47,29 @@ class ArtifactSettings {
     static final String ADDON_DESCRIPTOR_SUFFIX = 'GriffonAddon.groovy'
     static final String ADDON_DESCRIPTOR_SUFFIX_JAVA = 'GriffonAddon.java'
     public static final String TIMESTAMP_FORMAT = "yyyy-MM-dd'T'HH:mm:ssZ"
-    private static final PathMatchingResourcePatternResolver RESOLVER = new PathMatchingResourcePatternResolver()
     private static final Pattern ARTIFACT_NAME_VERSION_PATTERN = Pattern.compile('([a-zA-Z0-9\\-/\\._+=]+?)-([0-9][a-zA-Z0-9\\-/\\.,\\]\\[\\(\\)_+=]+)')
-
-    static Resource[] resolveResources(String pattern) {
-        try {
-            return RESOLVER.getResources(pattern)
-        }
-        catch (Throwable e) {
-            return [] as Resource[]
-        }
-    }
 
     final BuildSettings settings
 
     ArtifactSettings(BuildSettings settings) {
         this.settings = settings
     }
-/**
- * Finds all artifacts of the given type that are installed.
- *
- * @param type one of <tt>Archetype.TYPE</tt> or <tt>Plugin.TYPE</tt>.
- * @return
- */
+
+    Resource[] resolveResources(String pattern) {
+        try {
+            return settings.resolveResourcesClosure(pattern)
+        }
+        catch (Throwable e) {
+            return [] as Resource[]
+        }
+    }
+
+    /**
+     * Finds all artifacts of the given type that are installed.
+     *
+     * @param type one of <tt>Archetype.TYPE</tt> or <tt>Plugin.TYPE</tt>.
+     * @return
+     */
     Map<String, String> getInstalledArtifacts(String type, boolean framework = false) {
         Map artifacts = [:]
 
