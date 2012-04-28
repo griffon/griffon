@@ -1,6 +1,6 @@
 // Include core griffon scripts with the following call
 //
-//     includeTargets << griffonScript('_GriffonCompile)
+//     includeTargets << griffonScript('_GriffonCompile')
 //
 // Include plugin scripts with the following call
 //
