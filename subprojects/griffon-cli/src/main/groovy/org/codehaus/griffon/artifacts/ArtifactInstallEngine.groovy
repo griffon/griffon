@@ -139,7 +139,9 @@ class ArtifactInstallEngine {
             if (todelete) LOG.debug("Plugins to be deleted:\n\t${todelete}")
         }
 
-        pluginsToDelete.each { name, version ->
+        for (Map.Entry<String, String> pluginEntry : pluginsToDelete.entrySet()) {
+            String name = pluginEntry.key
+            String version = pluginEntry.value
             if (!version.endsWith('-SNAPSHOT')) eventHandler 'StatusUpdate', "Plugin ${name}-${version} is installed, but was not found in the application's metadata. Removing this plugin from the application's plugin base"
             ant.delete(dir: settings.artifactSettings.getInstallPathFor(Plugin.TYPE, name, version), failonerror: false)
             installedPlugins.remove(name)
@@ -419,7 +421,9 @@ class ArtifactInstallEngine {
         Map<String, Release> installedReleases = settings.artifactSettings.getInstalledReleases(Plugin.TYPE, framework)
 
         Map<String, ArtifactDependency> installedDependencies = [:]
-        installedReleases.each { String key, release ->
+        for (Map.Entry<String, Release> releaseEntry : installedReleases.entrySet()) {
+            String key = releaseEntry.key
+            Release release = releaseEntry.value
             ArtifactDependency dep = installedDependencies[key]
             if (!dep && !release.version.endsWith('-SNAPSHOT')) {
                 dep = new ArtifactDependency(key)
@@ -430,10 +434,12 @@ class ArtifactInstallEngine {
             }
         }
 
-        installedReleases.each { key, installed ->
+        for (Map.Entry<String, Release> releaseEntry : installedReleases.entrySet()) {
+            String key = releaseEntry.key
+            Release installed = releaseEntry.value
             ArtifactDependency dependency = installedDependencies[key]
             if (!dependency) return
-            installed.dependencies.each { entry ->
+            for (entry in installed.dependencies) {
                 ArtifactDependency dep = installedDependencies[entry.name]
                 if (dep) dependency.dependencies << dep
             }
@@ -489,7 +495,7 @@ class ArtifactInstallEngine {
         if (resolveDependencies && type == Plugin.TYPE) {
             if (release.dependencies) {
                 Map<String, String> plugins = [:]
-                release.dependencies.each { entry ->
+                for (entry in release.dependencies) {
                     plugins[entry.name] = entry.version
                 }
                 if (!installPlugins(plugins, framework)) {
@@ -727,12 +733,12 @@ class ArtifactInstallEngine {
     }
 
     private void displayNewScripts(String pluginName, installPath) {
-        def providedScripts = new File("${installPath}/scripts").listFiles().findAll { !it.name.startsWith('_') && it.name.endsWith('.groovy')}
+        List<File> providedScripts = new File("${installPath}/scripts").listFiles().findAll { !it.name.startsWith('_') && it.name.endsWith('.groovy')}
         if (providedScripts) {
             String legend = "Plugin ${pluginName} provides the following new scripts:"
             println legend
             println('-' * legend.length())
-            providedScripts.each { File file ->
+            for (File file : providedScripts) {
                 println "griffon ${getScriptName(file.name)}"
             }
         }
