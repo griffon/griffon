@@ -76,6 +76,7 @@ public class GriffonScriptRunner {
     public static final String VAR_SCRIPT_FILE = "scriptFile";
     public static final String VAR_SCRIPT_ENV = "scriptEnv";
     public static final String VAR_SCRIPT_ARGS_MAP = "argsMap";
+    public static final String VAR_SCRIPT_UNPARSED_ARGS = "unparsedArgs";
     public static final String KEY_SCRIPT_ARGS = "griffon.cli.args";
 
     /**
@@ -94,6 +95,9 @@ public class GriffonScriptRunner {
         // available.
         String griffonHome = System.getProperty("griffon.home");
         ScriptAndArgs script = processArgumentsAndReturnScriptName(commandLine);
+
+        // Remember unparsed commandline args for the benefit of scripts that want to process them
+        script.unparsedArgs = args;
 
         if (commandLine.hasOption(CommandLine.HELP_ARGUMENT)) {
             System.out.println(getCommandLineParser().getHelpMessage());
@@ -375,6 +379,7 @@ public class GriffonScriptRunner {
                 binding.setVariable(VAR_SCRIPT_NAME, scriptFileName);
                 binding.setVariable(VAR_SCRIPT_FILE, scriptFile);
                 binding.setVariable(VAR_SCRIPT_ARGS_MAP, script.options);
+                binding.setVariable(VAR_SCRIPT_UNPARSED_ARGS, script.unparsedArgs);
                 script.name = scriptFileName;
 
                 // Setup the script to call.
@@ -411,6 +416,7 @@ public class GriffonScriptRunner {
             binding.setVariable(VAR_SCRIPT_NAME, scriptFileName);
             binding.setVariable(VAR_SCRIPT_FILE, scriptFile);
             binding.setVariable(VAR_SCRIPT_ARGS_MAP, script.options);
+            binding.setVariable(VAR_SCRIPT_UNPARSED_ARGS, script.unparsedArgs);
             script.name = scriptFileName;
 
             // Set up the script to call.
@@ -433,6 +439,7 @@ public class GriffonScriptRunner {
         String scriptName = script.name;
         binding.setVariable(VAR_SCRIPT_NAME, scriptName);
         binding.setVariable(VAR_SCRIPT_ARGS_MAP, script.options);
+        binding.setVariable(VAR_SCRIPT_UNPARSED_ARGS, script.unparsedArgs);
 
         try {
             loadScriptClass(gant, scriptName);
@@ -855,6 +862,7 @@ public class GriffonScriptRunner {
     private static class ScriptAndArgs {
         public String name;
         public String env;
+        public String[] unparsedArgs;
         public List<String> params = new ArrayList<String>();
         public Map<String, Object> options = new LinkedHashMap<String, Object>();
     }
