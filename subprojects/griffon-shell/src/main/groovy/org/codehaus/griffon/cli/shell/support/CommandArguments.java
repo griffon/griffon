@@ -26,6 +26,7 @@ import java.util.*;
  * @author Andres Almiray
  */
 public class CommandArguments {
+    public final List<Object> params = new ArrayList<Object>();
     public final Map<Option, Field> options = new TreeMap<Option, Field>(OPTION_COMPARATOR);
     public final Map<Argument, Field> arguments = new LinkedHashMap<Argument, Field>();
     public final List<Argument> orderedArguments = new ArrayList<Argument>();

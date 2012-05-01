@@ -37,6 +37,7 @@ import static griffon.util.GriffonExceptionHandler.sanitize;
 import static org.codehaus.griffon.cli.GriffonScriptRunner.*;
 import static org.codehaus.griffon.cli.shell.GriffonShellContext.*;
 import static org.codehaus.groovy.runtime.DefaultGroovyMethods.flatten;
+import static org.codehaus.groovy.runtime.DefaultGroovyMethods.join;
 
 /**
  * @author Andres Almiray
@@ -80,8 +81,7 @@ public class GantAwareAction extends AbstractGriffonShellCommand {
         populateOptions(argsMap, args.options, args.subject);
         populateArguments(argsMap, args.orderedArguments, args.subject);
 
-        // System.setProperty(GriffonScriptRunner.KEY_SCRIPT_ARGS, join(arguments, " "));
-
+        binding.setVariable(VAR_SCRIPT_UNPARSED_ARGS, join(args.params, " "));
         binding.setVariable(VAR_SCRIPT_ENV, System.getProperty(Environment.KEY));
         binding.setVariable(VAR_SCRIPT_NAME, scriptName);
         binding.setVariable(VAR_SCRIPT_FILE, scriptFile);

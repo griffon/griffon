@@ -94,6 +94,8 @@ public class GriffonCommandPreparator extends DefaultActionPreparator {
 
     public boolean prepareDelegate(Object subject, CommandSession session, List<Object> params, CommandArguments args) throws Exception {
         args.subject = subject;
+        args.params.clear();
+        args.params.addAll(params);
         // Introspect
         for (Class type = subject.getClass(); type != null; type = type.getSuperclass()) {
             for (Field field : type.getDeclaredFields()) {
