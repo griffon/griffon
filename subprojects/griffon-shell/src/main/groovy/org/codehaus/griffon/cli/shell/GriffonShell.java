@@ -41,7 +41,7 @@ import java.util.regex.Pattern;
 
 import static griffon.util.BuildSettingsHolder.getSettings;
 import static griffon.util.GriffonExceptionHandler.sanitize;
-import static org.codehaus.griffon.cli.GriffonScriptRunner.unquote;
+import static griffon.util.GriffonNameUtils.unquote;
 import static org.codehaus.griffon.cli.shell.GriffonShellContext.*;
 import static org.codehaus.griffon.cli.shell.command.ReloadCommandsCommand.reload;
 

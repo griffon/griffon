@@ -34,6 +34,7 @@ import java.util.List;
 import java.util.Map;
 
 import static griffon.util.GriffonExceptionHandler.sanitize;
+import static griffon.util.GriffonNameUtils.quote;
 import static org.codehaus.griffon.cli.GriffonScriptRunner.*;
 import static org.codehaus.griffon.cli.shell.GriffonShellContext.*;
 import static org.codehaus.groovy.runtime.DefaultGroovyMethods.flatten;
@@ -77,7 +78,6 @@ public class GantAwareAction extends AbstractGriffonShellCommand {
         //}
 
         Map<String, Object> argsMap = new LinkedHashMap<String, Object>();
-        List<String> arguments = new ArrayList<String>();
         populateOptions(argsMap, args.options, args.subject);
         populateArguments(argsMap, args.orderedArguments, args.subject);
 
@@ -106,6 +106,7 @@ public class GantAwareAction extends AbstractGriffonShellCommand {
             // perform some cleanup in the binding
             // System.setProperty(GriffonScriptRunner.KEY_SCRIPT_ARGS, "");
             binding.setVariable(VAR_SCRIPT_ARGS_MAP, emptyArgsMap());
+            binding.setVariable(VAR_SCRIPT_UNPARSED_ARGS, "");
         }
 
         return null;
@@ -154,90 +155,5 @@ public class GantAwareAction extends AbstractGriffonShellCommand {
                 throw new CommandException("Could not read option " + optionName + " due to " + e.getMessage());
             }
         }
-    }
-
-    private String quote(Object value) {
-        String val = value.toString();
-        if (val.contains(" ")) {
-            val = applyQuotes(val);
-        }
-        return val;
-    }
-
-    private String applyQuotes(String string) {
-        if (string == null || string.length() == 0) {
-            return "\"\"";
-        }
-
-        char b;
-        char c = 0;
-        int i;
-        int len = string.length();
-        StringBuffer sb = new StringBuffer(len * 2);
-        String t;
-        char[] chars = string.toCharArray();
-        char[] buffer = new char[1030];
-        int bufferIndex = 0;
-        sb.append('"');
-        for (i = 0; i < len; i += 1) {
-            if (bufferIndex > 1024) {
-                sb.append(buffer, 0, bufferIndex);
-                bufferIndex = 0;
-            }
-            b = c;
-            c = chars[i];
-            switch (c) {
-                case '\\':
-                case '"':
-                    buffer[bufferIndex++] = '\\';
-                    buffer[bufferIndex++] = c;
-                    break;
-                case '/':
-                    if (b == '<') {
-                        buffer[bufferIndex++] = '\\';
-                    }
-                    buffer[bufferIndex++] = c;
-                    break;
-                default:
-                    if (c < ' ') {
-                        switch (c) {
-                            case '\b':
-                                buffer[bufferIndex++] = '\\';
-                                buffer[bufferIndex++] = 'b';
-                                break;
-                            case '\t':
-                                buffer[bufferIndex++] = '\\';
-                                buffer[bufferIndex++] = 't';
-                                break;
-                            case '\n':
-                                buffer[bufferIndex++] = '\\';
-                                buffer[bufferIndex++] = 'n';
-                                break;
-                            case '\f':
-                                buffer[bufferIndex++] = '\\';
-                                buffer[bufferIndex++] = 'f';
-                                break;
-                            case '\r':
-                                buffer[bufferIndex++] = '\\';
-                                buffer[bufferIndex++] = 'r';
-                                break;
-                            default:
-                                t = "000" + Integer.toHexString(c);
-                                int tLength = t.length();
-                                buffer[bufferIndex++] = '\\';
-                                buffer[bufferIndex++] = 'u';
-                                buffer[bufferIndex++] = t.charAt(tLength - 4);
-                                buffer[bufferIndex++] = t.charAt(tLength - 3);
-                                buffer[bufferIndex++] = t.charAt(tLength - 2);
-                                buffer[bufferIndex++] = t.charAt(tLength - 1);
-                        }
-                    } else {
-                        buffer[bufferIndex++] = c;
-                    }
-            }
-        }
-        sb.append(buffer, 0, bufferIndex);
-        sb.append('"');
-        return sb.toString();
     }
 }

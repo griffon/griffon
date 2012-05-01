@@ -14,6 +14,8 @@
  * limitations under the License.
  */
 
+import static griffon.util.GriffonNameUtils.quote
+
 /**
  * Created by IntelliJ IDEA.
  * @author Danno.Ferrin
@@ -47,12 +49,24 @@ target('doRunApplet': "Runs the applet from Java WebStart") {
     if (!binding.variables.webstartVM) {
         webstartVM = [System.properties['java.home'], 'bin', 'javaws'].join(File.separator)
     }
+
     def javaOpts = setupJavaOpts(false)
+    debug("Running JVM options:")
+    javaOpts.each { debug("  $it") }
     javaOpts = "-J" + javaOpts.join(" -J")
+
+    def sysprops = []
+    debug("System properties:")
+    sysProperties.each { key, value ->
+        debug("$key = $value")
+        sysprops << "-D${key}=${quote(value)}"
+    }
+    sysprops = "-J" + sysprops.join(" -J")
 
     // TODO set proxy settings
     // start the processess
-    Process p = "$webstartVM $javaOpts ${buildConfig.griffon.applet.jnlp}".execute(null as String[], jardir)
+    $webstartVM $javaOpts $sysprops ${buildConfig.griffon.applet.jnlp}
+    Process p = "$webstartVM $javaOpts $sysprops ${buildConfig.griffon.applet.jnlp}".execute(null as String[], jardir)
 
     // pipe the output
     p.consumeProcessOutput(System.out, System.err)

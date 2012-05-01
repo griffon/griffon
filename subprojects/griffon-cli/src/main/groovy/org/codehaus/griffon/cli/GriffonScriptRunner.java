@@ -77,6 +77,7 @@ public class GriffonScriptRunner {
     public static final String VAR_SCRIPT_ENV = "scriptEnv";
     public static final String VAR_SCRIPT_ARGS_MAP = "argsMap";
     public static final String VAR_SCRIPT_UNPARSED_ARGS = "unparsedArgs";
+    public static final String VAR_SYS_PROPERTIES = "sysProperties";
     public static final String KEY_SCRIPT_ARGS = "griffon.cli.args";
 
     /**
@@ -186,12 +187,12 @@ public class GriffonScriptRunner {
     }
 
     private static ScriptAndArgs processArgumentsAndReturnScriptName(CommandLine commandLine) {
-        processSystemArguments(commandLine);
-        return processAndReturnArguments(commandLine);
+        ScriptAndArgs info = new ScriptAndArgs();
+        processSystemArguments(commandLine, info);
+        return processAndReturnArguments(commandLine, info);
     }
 
-    private static ScriptAndArgs processAndReturnArguments(CommandLine commandLine) {
-        ScriptAndArgs info = new ScriptAndArgs();
+    private static ScriptAndArgs processAndReturnArguments(CommandLine commandLine, ScriptAndArgs info) {
         if (Environment.isSystemSet()) {
             info.env = Environment.getCurrent().getName();
         } else if (commandLine.getEnvironment() != null) {
@@ -204,11 +205,12 @@ public class GriffonScriptRunner {
         return info;
     }
 
-    private static void processSystemArguments(CommandLine allArgs) {
+    private static void processSystemArguments(CommandLine allArgs, ScriptAndArgs info) {
         Properties systemProps = allArgs.getSystemProperties();
         if (systemProps != null) {
             for (Map.Entry<Object, Object> entry : systemProps.entrySet()) {
                 System.setProperty(entry.getKey().toString(), entry.getValue().toString());
+                info.sysProperties.put(entry.getKey().toString(), entry.getValue().toString());
             }
         }
     }
@@ -255,7 +257,8 @@ public class GriffonScriptRunner {
         String cmd = name;
         if (!isBlank(args)) cmd += " " + args;
         String[] newArgs = cmd.split(" ");
-        ScriptAndArgs script = processAndReturnArguments(getCommandLine(newArgs));
+        ScriptAndArgs script = new ScriptAndArgs();
+        processAndReturnArguments(getCommandLine(newArgs), script);
         return doExecuteCommand(script);
     }
 
@@ -263,7 +266,8 @@ public class GriffonScriptRunner {
         String cmd = env + " " + name;
         if (!isBlank(args)) cmd += " " + args;
         String[] newArgs = cmd.split(" ");
-        ScriptAndArgs script = processAndReturnArguments(getCommandLine(newArgs));
+        ScriptAndArgs script = new ScriptAndArgs();
+        processAndReturnArguments(getCommandLine(newArgs), script);
         return doExecuteCommand(script);
     }
 
@@ -380,6 +384,7 @@ public class GriffonScriptRunner {
                 binding.setVariable(VAR_SCRIPT_FILE, scriptFile);
                 binding.setVariable(VAR_SCRIPT_ARGS_MAP, script.options);
                 binding.setVariable(VAR_SCRIPT_UNPARSED_ARGS, script.unparsedArgs);
+                binding.setVariable(VAR_SYS_PROPERTIES, script.sysProperties);
                 script.name = scriptFileName;
 
                 // Setup the script to call.
@@ -417,6 +422,7 @@ public class GriffonScriptRunner {
             binding.setVariable(VAR_SCRIPT_FILE, scriptFile);
             binding.setVariable(VAR_SCRIPT_ARGS_MAP, script.options);
             binding.setVariable(VAR_SCRIPT_UNPARSED_ARGS, script.unparsedArgs);
+            binding.setVariable(VAR_SYS_PROPERTIES, script.sysProperties);
             script.name = scriptFileName;
 
             // Set up the script to call.
@@ -440,6 +446,7 @@ public class GriffonScriptRunner {
         binding.setVariable(VAR_SCRIPT_NAME, scriptName);
         binding.setVariable(VAR_SCRIPT_ARGS_MAP, script.options);
         binding.setVariable(VAR_SCRIPT_UNPARSED_ARGS, script.unparsedArgs);
+        binding.setVariable(VAR_SYS_PROPERTIES, script.sysProperties);
 
         try {
             loadScriptClass(gant, scriptName);
@@ -865,6 +872,7 @@ public class GriffonScriptRunner {
         public String[] unparsedArgs;
         public List<String> params = new ArrayList<String>();
         public Map<String, Object> options = new LinkedHashMap<String, Object>();
+        public Map<String, String> sysProperties = new LinkedHashMap<String, String>();
     }
 
     private GantCustomizer gantCustomizer;
