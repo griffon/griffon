@@ -46,8 +46,6 @@ target(name: 'resolveDependencies', description: 'Resolves project and plugin de
 
         pluginSettings.clearCaches()
         pluginSettings.resolveAndAddAllPluginDependencies(false)
-        long end = System.currentTimeMillis()
-        event 'StatusFinal', ["Plugin dependencies resolved in ${end - start} ms."]
 
 // XXX -- NATIVE
         Map<String, List<File>> jars = [:]
@@ -63,6 +61,14 @@ target(name: 'resolveDependencies', description: 'Resolves project and plugin de
             griffonSettings.updateDependenciesFor 'test', files
         }
 // XXX -- NATIVE
+        if(projectCliClassesDir.exists()) {
+            addUrlIfNotPresent classLoader, projectCliClassesDir
+            addUrlIfNotPresent rootLoader, projectCliClassesDir
+        }
+
+        long end = System.currentTimeMillis()
+        event 'StatusFinal', ["Plugin dependencies resolved in ${end - start} ms."]
+
         runDependencyResolution = false
         // reset appName
         if (metadata) griffonAppName = metadata.getApplicationName()

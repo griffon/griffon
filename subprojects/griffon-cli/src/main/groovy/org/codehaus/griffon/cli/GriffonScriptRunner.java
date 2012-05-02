@@ -939,6 +939,9 @@ public class GriffonScriptRunner {
                     targets.add("loadEventHooks");
                 } else if (binarySearch(FRAMEWORK_PLUGIN_INCLUSIONS, scriptName) >= 0) {
                     targets.add("resolveFrameworkDependencies");
+                    if (settings.isGriffonProject() && !isExcludedFromDependencyResolution(scriptName)) {
+                        targets.add("resolveDependencies");
+                    }
                     targets.add("loadEventHooks");
                 }
 
@@ -967,7 +970,7 @@ public class GriffonScriptRunner {
 
         private static String[] CONFIGURE_PROXY_EXCLUSIONS = {
                 "AddProxy", "ClearProxy", "RemoveProxy", "SetProxy", "ConfigureProxy",
-                "Help", "SetVersion", "Stats",
+                "SetVersion", "Stats",
                 "CreateAddon", "CreatePlugin", "Upgrade",
                 "CreateCommandAlias", "Doc", "ClearDependencyCache"
         };
@@ -982,7 +985,7 @@ public class GriffonScriptRunner {
         };
 
         private static String[] FRAMEWORK_PLUGIN_INCLUSIONS = {
-                "CreateApp_", "CreateAddon_", "CreatePlugin_", "CreateArchetype_"
+                "CreateApp_", "CreateAddon_", "CreatePlugin_", "CreateArchetype_", "Help_"
         };
 
         static {

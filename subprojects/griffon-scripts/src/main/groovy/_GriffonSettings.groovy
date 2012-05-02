@@ -75,6 +75,10 @@ configSlurper.setBinding(
 if (getBinding().variables.containsKey("_settings_called")) return true
 _settings_called = true
 
+projectCliClassesDir = new File("${classesDir.absolutePath}/cli")
+projectMainClassesDir = new File("${classesDir.absolutePath}/main")
+projectTestClassesDir = new File("${classesDir.absolutePath}/test")
+
 /**
  * Resolves the value for a given property name. It first looks for a
  * system property, then in the BuildSettings configuration, and finally

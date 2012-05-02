@@ -30,10 +30,6 @@ _griffon_classpath_called = true
 
 classpathSet = false
 
-projectCliClassesDir = new File("${classesDir.absolutePath}/cli")
-projectMainClassesDir = new File("${classesDir.absolutePath}/main")
-projectTestClassesDir = new File("${classesDir.absolutePath}/test")
-
 target(name: 'classpath', description: "Sets the Griffon classpath", prehook: null, posthook: null) {
     setClasspath()
 }
@@ -49,8 +45,6 @@ commonClasspath = {
         pathelement(location: "${projectMainClassesDir.absolutePath}")
         debug "  ${projectMainClassesDir.absolutePath}"
     }
-
-    def pluginLibDirs = pluginSettings.pluginLibDirectories.findAll {it.exists()}
 
 // XXX -- NATIVE
     def processPlatformDir = { platformId ->

@@ -29,8 +29,6 @@ includeTargets << griffonScript('_GriffonResolveDependencies')
 
 target(name: 'help', description: 'Displays this help or help about a command',
         prehook: null, posthook: null) {
-    depends(resolveDependencies)
-
     String command = argsMap.command ?: argsMap.params[0]
     if (command) {
         int maxwidth = 72i
@@ -74,7 +72,7 @@ target(name: 'help', description: 'Displays this help or help about a command',
 
 setDefaultTarget(help)
 
-def getMainDescription(String command) {
+getMainDescription = { String command ->
     Resource[] commandInfo = resolveResources("classpath*:/org/codehaus/griffon/cli/shell/help/${command}.txt")
     if (commandInfo) {
         try {
@@ -86,7 +84,7 @@ def getMainDescription(String command) {
     return null
 }
 
-def getDetailedDescription(String command) {
+getDetailedDescription = { String command ->
     Resource[] commandInfo = resolveResources("classpath*:/org/codehaus/griffon/cli/shell/command/${command}.txt")
     if (commandInfo) {
         try {

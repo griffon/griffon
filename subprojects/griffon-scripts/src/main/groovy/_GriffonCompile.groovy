@@ -125,6 +125,7 @@ target(name: 'compile', description: "Implementation of compilation phase",
             src(path: "${basedir}/griffon-app/conf")
             include(name: '*.groovy')
             include(name: '*.java')
+            exclude(name: 'BuildConfig.groovy')
             javac(compilerOptions(classpathref: classpathId))
         }
         ant.copy(todir: projectMainClassesDir) {
@@ -135,26 +136,26 @@ target(name: 'compile', description: "Implementation of compilation phase",
         }
         event('CompileSourcesEnd', [])
 
-        if (isPluginProject) {
-            if (cliSourceDir.exists()) {
-                ant.mkdir(dir: projectCliClassesDir)
-                ant.path(id: 'plugin.cli.compile.classpath') {
-                    path(refid: 'griffon.compile.classpath')
-                    pathElement(location: projectMainClassesDir)
-                }
-                compileProjectSources(projectCliClassesDir, 'plugin.cli.compile.classpath') {
-                    src(path: cliSourceDir)
-                    javac(compilerOptions(classpathref: 'plugin.cli.compile.classpath'))
-                }
-                ant.copy(todir: projectCliClassesDir) {
-                    fileset(dir: "${basedir}/src/cli") {
-                        exclude(name: '**/*.java')
-                        exclude(name: '**/*.groovy')
-                        exclude(name: '**/.svn')
-                    }
+        // if (isPluginProject) {
+        if (cliSourceDir.exists()) {
+            ant.mkdir(dir: projectCliClassesDir)
+            ant.path(id: 'plugin.cli.compile.classpath') {
+                path(refid: 'griffon.compile.classpath')
+                pathElement(location: projectMainClassesDir)
+            }
+            compileProjectSources(projectCliClassesDir, 'plugin.cli.compile.classpath') {
+                src(path: cliSourceDir)
+                javac(compilerOptions(classpathref: 'plugin.cli.compile.classpath'))
+            }
+            ant.copy(todir: projectCliClassesDir) {
+                fileset(dir: "${basedir}/src/cli") {
+                    exclude(name: '**/*.java')
+                    exclude(name: '**/*.groovy')
+                    exclude(name: '**/.svn')
                 }
             }
         }
+        // }
 
         if (griffonSettings.isAddonPlugin()) {
             ant.path(id: 'addon.classpath') {
