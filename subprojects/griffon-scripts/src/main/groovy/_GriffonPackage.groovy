@@ -298,18 +298,24 @@ _copyLibs = {
     // jardir = ant.antProject.replaceProperties(buildConfig.griffon.jars.destDir)
     event("CopyLibsStart", [jardir])
 
-// XXX -- NATIVE 
+    griffonSettings.runtimeDependencies?.each { File f ->
+        griffonCopyDist(f.absolutePath, jardir)
+    }
+
+// XXX -- NATIVE
     copyPlatformJars("${basedir}/lib", new File(jardir).absolutePath)
     copyNativeLibs("${basedir}/lib", new File(jardir).absolutePath)
     pluginSettings.doWithProjectPlugins { pluginName, pluginVersion, pluginDir ->
         copyPlatformJars("${pluginDir}/lib", new File(jardir).absolutePath)
         copyNativeLibs("${pluginDir}/lib", new File(jardir).absolutePath)
     }
-// XXX -- NATIVE 
-
-    griffonSettings.runtimeDependencies?.each { File f ->
-        griffonCopyDist(f.absolutePath, jardir)
+    doForAllPlatforms { pdir, value ->
+        pdir.eachFileMatch(~/.*\.jar/) { jarfile ->
+            File duplicate = new File("${jardir}/${jarfile.name}")
+            if(duplicate.exists()) duplicate.delete()
+        }
     }
+// XXX -- NATIVE
 
     event("CopyLibsEnd", [jardir])
 }

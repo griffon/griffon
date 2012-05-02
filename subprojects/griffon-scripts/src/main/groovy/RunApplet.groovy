@@ -15,6 +15,7 @@
  */
 
 import static griffon.util.GriffonNameUtils.quote
+import static griffon.util.GriffonNameUtils.getNaturalName
 
 /**
  * Created by IntelliJ IDEA.
@@ -56,6 +57,7 @@ target('doRunApplet': "Runs the applet from Java WebStart") {
     javaOpts = "-J" + javaOpts.join(" -J")
 
     def sysprops = []
+    sysProperties.'griffon.application.name' = getNaturalName(griffonAppName)
     debug("System properties:")
     sysProperties.each { key, value ->
         debug("$key = $value")
