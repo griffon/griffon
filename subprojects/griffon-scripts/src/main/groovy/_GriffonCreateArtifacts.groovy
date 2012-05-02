@@ -85,13 +85,13 @@ createArtifact = { Map args = [:] ->
         lineTerminator = ''
     }
 
+    artifactFile = new File("${basedir}/${artifactPath}/${pkgPath}${className}${suffix}${fileType}")
+    defaultArtifactFile = new File("${basedir}/${artifactPath}/${pkgPath}${className}${suffix}.groovy")
+
     if (!templateFile?.exists()) {
         event('StatusFinal', ["Could not locate a suitable template for $artifactFile"])
         exit(1)
     }
-
-    artifactFile = new File("${basedir}/${artifactPath}/${pkgPath}${className}${suffix}${fileType}")
-    defaultArtifactFile = new File("${basedir}/${artifactPath}/${pkgPath}${className}${suffix}.groovy")
 
     def similarFiles = resolveResources("file:${basedir}/${artifactPath}/${pkgPath}${className}${suffix}.*")
     if (similarFiles) {
