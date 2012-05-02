@@ -65,7 +65,26 @@ target('doRunApp': "Runs the application from the command line") {
                 debugSocket = ",address=$addr:$portNum"
             }
         }
-        javaOpts << "-Xrunjdwp:transport=dt_socket$debugSocket,suspend=n,server=y"
+		def debugSuspend = 'n'
+		if (argsMap.containsKey('debugSuspend')) {
+			argsMap['debug-suspend'] = argsMap.debugSuspend
+            debugSuspend = argsMap.debugSuspend
+			if (argsMap.debugSuspend instanceof Boolean) {
+				debugSuspend = argsMap.debugSuspend ? 'y' : 'n'
+			} else if (argsMap.debugSuspend == "true") {
+				debugSuspend = 'y'
+			} else if (argsMap.debugSuspend == "false") {
+				debugSuspend = 'n'
+			} else {
+				if (! (argsMap.debugSuspend ==~ /(?i)[yn]/)) {
+					println("Unrecognized value in '--debugSuspend=${argsMap.debugSuspend}' : must be 'y' or 'n'.")
+					println("   Forcing to 'n', debugged process will not suspend waiting for a connection at start.")
+				    debugSuspend = 'n'
+				} 
+			}
+            debugSuspend = debugSuspend.toLowerCase()
+        }
+       javaOpts << "-Xrunjdwp:transport=dt_socket$debugSocket,suspend=$debugSuspend,server=y"
     }
     if (buildConfig.griffon.memory?.min) {
         javaOpts << "-Xms$buildConfig.griffon.memory.min"
