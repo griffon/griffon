@@ -79,10 +79,16 @@ public interface CommandLineConstants {
     String KEY_INSTALL_FAILURE_KEY = "griffon.install.failure";
 
     /**
-     * Defines the name of the default search/publish repository to use.
+     * Defines the name of the default search repository to use.
      * <p>Defaults to <tt>ArtifactRepository.DEFAULT_REMOTE_NAME</tt>.</p>
      */
     String KEY_DEFAULT_ARTIFACT_REPOSITORY = "griffon.artifact.repository.default.search";
+
+    /**
+     * Defines the name of the default publish repository to use.
+     * <p>Defaults to <tt>ArtifactRepository.DEFAULT_REMOTE_NAME</tt>.</p>
+     */
+    String KEY_DEFAULT_RELEASE_ARTIFACT_REPOSITORY = "griffon.artifact.repository.default.release";
 
     /**
      * Defines the name of the default local install repository to use.
@@ -137,6 +143,7 @@ public interface CommandLineConstants {
             KEY_DISABLE_THREADING_INJECTION,
             KEY_INSTALL_FAILURE_KEY,
             KEY_DEFAULT_ARTIFACT_REPOSITORY,
+            KEY_DEFAULT_RELEASE_ARTIFACT_REPOSITORY,
             KEY_DEFAULT_INSTALL_ARTIFACT_REPOSITORY,
             KEY_DISABLE_LOCAL_REPOSITORY_SYNC,
             KEY_OFFLINE_MODE,

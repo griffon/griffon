@@ -1,0 +1,9 @@
+The Griffon build assumes @griffon-central@ to be the default Artifact Repository to be used when releasing for artifacts. This setting can be altered by specifying a value for @griffon.artifact.repository.default.release@. The value must be a valid repository name available in the configuration files.
+
+For example, a local repository identified by the name '@my-local-repo@' can be set as the default publish repository like so
+
+{code}
+griffon -Dgriffon.artifact.repository.default.release='my-local-repo' release-plugin
+{code}
+
+Note that specifying this value at the command line has the same effect as defining a value for @\-\-repository@. This flag is best used in any of the configuration files available at build time.

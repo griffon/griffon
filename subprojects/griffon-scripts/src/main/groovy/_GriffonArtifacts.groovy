@@ -24,6 +24,7 @@ import org.codehaus.griffon.artifacts.*
 
 import static griffon.util.ArtifactSettings.isValidVersion
 import static griffon.util.GriffonNameUtils.capitalize
+import static org.codehaus.griffon.cli.CommandLineConstants.KEY_DEFAULT_RELEASE_ARTIFACT_REPOSITORY
 import static org.codehaus.griffon.cli.CommandLineConstants.KEY_DEFAULT_ARTIFACT_REPOSITORY
 import static org.codehaus.griffon.cli.CommandLineConstants.KEY_DEFAULT_INSTALL_ARTIFACT_REPOSITORY
 
@@ -39,7 +40,7 @@ artifactRepository = null
 
 selectArtifactRepository = {
     artifactRepository = null
-    repositoryName = argsMap.repository ?: getPropertyValue(KEY_DEFAULT_ARTIFACT_REPOSITORY, 'griffon-central') //ArtifactRepository.DEFAULT_REMOTE_NAME)
+    repositoryName = argsMap.repository ?: getPropertyValue(KEY_DEFAULT_RELEASE_ARTIFACT_REPOSITORY, ArtifactRepository.DEFAULT_REMOTE_NAME)
     artifactRepository = ArtifactRepositoryRegistry.instance.findRepository(repositoryName)
     if (artifactRepository == null) {
         event('StatusError', ["Artifact repository ${repositoryName} is not configured."])
@@ -66,7 +67,7 @@ resolveArtifactRepository = {
 
 doWithSelectedRepository = { callback ->
     String defaultInstallRepository = getPropertyValue(KEY_DEFAULT_INSTALL_ARTIFACT_REPOSITORY, ArtifactRepository.DEFAULT_LOCAL_NAME)
-    String defaultSearchRepository = getPropertyValue(KEY_DEFAULT_ARTIFACT_REPOSITORY, 'griffon-central') // ArtifactRepository.DEFAULT_REMOTE_NAME)
+    String defaultSearchRepository = getPropertyValue(KEY_DEFAULT_ARTIFACT_REPOSITORY, ArtifactRepository.DEFAULT_REMOTE_NAME)
     String customRepository = argsMap.repository
 
     List<String> repositories = []
