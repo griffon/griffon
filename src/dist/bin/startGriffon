@@ -50,8 +50,6 @@ if [ "$1" = "-cp" ] || [ "$1" = "-classpath" ]; then
   shift 2
 fi
 
-ARGUMENTS=$@
-
 # Attempt to set JAVA_HOME if it's not already set
 if [ -z "$JAVA_HOME" ]; then
 
@@ -251,6 +249,7 @@ startGriffon() {
           --conf "$GROOVY_CONF" \
           --classpath "$CP"
   	else
+      if $cygwin ; then            # @ have been preprocessed into ARGUMENTS
          exec "$JAVACMD" $JAVA_OPTS \
           -classpath "$STARTER_CLASSPATH" \
           -Dprogram.name="$PROGNAME" \
@@ -264,6 +263,21 @@ startGriffon() {
           --conf "$GROOVY_CONF" \
           --classpath "$CP" \
           "${ARGUMENTS}"
+      else                         # we need @ to be expanded into separte words
+         exec "$JAVACMD" $JAVA_OPTS \
+          -classpath "$STARTER_CLASSPATH" \
+          -Dprogram.name="$PROGNAME" \
+          -Dgroovy.starter.conf="$GROOVY_CONF" \
+          -Dgriffon.home="$GRIFFON_HOME" \
+          -Dbase.dir="." \
+          -Dtools.jar="$TOOLS_JAR" \
+          -Dgroovy.sanitized.stacktraces="$STACKTRACE_FILTERS" \
+          $STARTER_MAIN_CLASS \
+          --main $CLASS \
+          --conf "$GROOVY_CONF" \
+          --classpath "$CP" \
+          "$@"
+      fi
   	fi
   fi
 }
