@@ -3,7 +3,7 @@ Griffon can package applications in several modes. There are 4 modes supported b
 To package an application use the [package|commandLine] command. All modes will be used when calling the [package|commandLine] command with no arguments. You can specify one or more packaging modes when executing the command. Packages will be place in their respective directory inside the @dist@ directory located at the root of the application. You can configure a different default set of deployment targets that will be used when invoking this command without arguments. Simply add a configuration flag to @BuildConfig.groovy@ like this
 
 bc.
-griffon.packaging = ['zip']
+griffon.packaging = \['zip'\]
 
 Now, any time you call the package command without arguments only the @zip@ target will be executed.
 
