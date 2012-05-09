@@ -142,6 +142,20 @@ setupJavaOpts = { includeNative = true ->
     return javaOpts
 }
 
+setupJvmOpts = {
+    def jvmOpts = []
+
+    if (buildConfig.griffon.app?.jvmOpts) {
+        buildConfig.griffon.app?.jvmOpts.each { jvmOpts << it }
+    }
+    argsMap['jvm-opts'] = argsMap.jvmOpts
+    if (argsMap['jvm-opts']) {
+        jvmOpts << argsMap['jvm-opts']
+    }
+
+    return jvmOpts
+}
+
 normalizePathQuotes = { s ->
     s.split(File.pathSeparator).collect { String path ->
         (path.startsWith('"') && path.endsWith('"')) || (path.startsWith("'") && path.endsWith("'")) ? path[1..-2] : path

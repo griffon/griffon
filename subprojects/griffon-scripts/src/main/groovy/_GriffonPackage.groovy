@@ -682,8 +682,8 @@ copyPlatformJars = { srcdir, destdir ->
         if (!platformDir.exists() && is64Bit) plf -= '64'
         _copyPlatformJars(srcdir.toString(), destdir.toString(), plf)
     } else {
-        doForAllPlatforms { key, value ->
-            _copyPlatformJars(srcdir.toString(), destdir.toString(), key)
+        doForAllPlatforms { osdir, osname ->
+            _copyPlatformJars(srcdir.toString(), destdir.toString(),osname)
         }
     }
 }
@@ -709,8 +709,8 @@ copyNativeLibs = { srcdir, destdir ->
         if (!platformDir.exists() && is64Bit) plf -= '64'
         _copyNativeLibs(srcdir.toString(), destdir.toString(), plf)
     } else {
-        doForAllPlatforms { key, value ->
-            _copyNativeLibs(srcdir.toString(), destdir.toString(), key)
+        doForAllPlatforms { osdir, osname ->
+            _copyNativeLibs(srcdir.toString(), destdir.toString(), osname)
         }
     }
 }

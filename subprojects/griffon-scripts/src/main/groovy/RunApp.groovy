@@ -53,6 +53,7 @@ target('doRunApp': "Runs the application from the command line") {
         javaVM = [javaHome, 'bin', 'java'].join(File.separator)
     }
 
+    def jvmOpts = setupJvmOpts()
     def javaOpts = setupJavaOpts(true)
     if (argsMap.containsKey('debug')) {
         argsMap['debug-port'] = argsMap.debugPort
@@ -85,6 +86,7 @@ target('doRunApp': "Runs the application from the command line") {
     }
 
     debug("Running JVM options:")
+    jvmOpts.each { debug("  $it") }
     javaOpts.each { debug("  $it") }
 
     sysProperties.'griffon.application.name' = getNaturalName(griffonAppName)
@@ -106,6 +108,7 @@ target('doRunApp': "Runs the application from the command line") {
     try {
         def cmd = [javaVM]
         // let's make sure no empty/null String is added
+        jvmOpts.each { s -> if (s) cmd << s }
         javaOpts.each { s -> if (s) cmd << s }
         sysprops.each { s -> if (s) cmd << s }
         [proxySettings, '-classpath', runtimeClasspath, griffonApplicationClass].each { s -> if (s) cmd << s }
