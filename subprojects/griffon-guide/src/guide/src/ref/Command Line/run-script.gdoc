@@ -1,0 +1,32 @@
+h1. run-script
+
+h2. Purpose
+
+Runs a Groovy script with full classpath
+
+h2. Examples
+
+{code:java}
+griffon run-script /path/to/some/script.groovy
+{code}
+
+h2. Description
+
+Usage: 
+{code:java}
+griffon [env]* run-script \[scripts\]
+{code}
+
+Arguments:
+At least one argument must be specified. Arguments must be names of scripts that shouldbe executed.
+
+The following variables wil be available in the script's binding
+* @applicationName@
+* @applicationVersion@
+* @griffonVersion@
+
+If the @bootstrap@ flag is set to true the binding will have an additional variable
+* @griffonApplication@
+
+Options:
+* @bootstrap@  - Whether to boostrap an application instance or not.

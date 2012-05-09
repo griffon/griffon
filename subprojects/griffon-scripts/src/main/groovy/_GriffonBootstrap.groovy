@@ -34,13 +34,13 @@ _bootstrap_called = true
 
 includeTargets << griffonScript('Package')
 
-target(bootstrap: 'Loads and configures a Griffon instance') {
+target(name: 'bootstrap', description: 'Loads and configures a Griffon instance', prehook: null, posthook: null) {
+    setupApp()
     loadApp()
 }
 
-target(loadApp: 'Loads the Griffon application object') {
+target(name: 'setupApp', description: 'Setups paths and JVM options for running a Griffon application', prehook: null, posthook: null) {
     depends(prepackage)
-    event('AppLoadStart', ['Loading Griffon Application'])
 
     [projectMainClassesDir, i18nDir, resourcesDir].each { d ->
         addUrlIfNotPresent rootLoader, d
@@ -54,11 +54,12 @@ target(loadApp: 'Loads the Griffon application object') {
             System.setProperty(nameValueSwitch[0][1], nameValueSwitch[0][2])
         }
     }
+}
 
+target(name: 'loadApp', description: 'Loads the Griffon application object', prehook: null, posthook: null) {
     griffonApp = rootLoader.loadClass(griffonApplicationClass, false).newInstance()
     griffonApp.bootstrap()
     ApplicationHolder.application = griffonApp
-    event('AppLoadEnd', ['Loading Griffon Application'])
 }
 
 setupRuntimeJars = {
@@ -66,7 +67,7 @@ setupRuntimeJars = {
 
     File jardir = new File(ant.antProject.replaceProperties(buildConfig.griffon.jars.destDir))
     // list all jars
-    debug("Runtime libraries:")
+    debug('Runtime libraries:')
     jardir.eachFileMatch(~/.*\.jar/) {f ->
         runtimeJars += f
         debug("  $f.name")

@@ -33,7 +33,6 @@ target(shell: "Runs an embedded application in a Groovy Shell") {
 
     if (!isPluginProject && !isArchetypeProject) {
         bootstrap()
-        loadApp()
     }
 
     def b = new Binding()
