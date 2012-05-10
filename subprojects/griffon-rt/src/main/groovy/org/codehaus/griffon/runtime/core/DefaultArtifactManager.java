@@ -46,7 +46,7 @@ public class DefaultArtifactManager extends AbstractArtifactManager {
     protected Map<String, List<ArtifactInfo>> doLoadArtifactMetadata() {
         Map<String, List<ArtifactInfo>> artifacts = new LinkedHashMap<String, List<ArtifactInfo>>();
         try {
-            Enumeration<URL> urls = getApp().getClass().getClassLoader().getResources("META-INF/griffon-artifacts.properties");
+            Enumeration<URL> urls = getArtifactResourceLocations();
             ConfigSlurper slurper = new ConfigSlurper();
             while (urls.hasMoreElements()) {
                 processURL(urls.nextElement(), slurper, artifacts);
@@ -56,6 +56,10 @@ public class DefaultArtifactManager extends AbstractArtifactManager {
         }
 
         return artifacts;
+    }
+
+    protected Enumeration<URL> getArtifactResourceLocations() throws IOException {
+        return getApp().getClass().getClassLoader().getResources("META-INF/griffon-artifacts.properties");
     }
 
     private void processURL(URL url, ConfigSlurper slurper, Map<String, List<ArtifactInfo>> artifacts) {
