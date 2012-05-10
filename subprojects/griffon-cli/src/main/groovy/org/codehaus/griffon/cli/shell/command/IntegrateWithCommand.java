@@ -49,6 +49,11 @@ public class IntegrateWithCommand extends AbstractGriffonCommand {
             required = false)
     private String idea;
 
+    @Option(name = "--sublimetext2",
+            description = "Generates Sublime Text 2 project files.",
+            required = false)
+    private String sublimetext2;
+
     @Option(name = "--textmate",
             description = "Generates TextMate project files.",
             required = false)
