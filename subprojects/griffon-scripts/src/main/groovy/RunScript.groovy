@@ -38,14 +38,17 @@ target(name: 'runScript', description: 'Execute the specified script(s) after st
         System.exit 1
     }
 
-    for (scriptFile in argsMap.params) {
-        event('StatusUpdate', ["Running script $scriptFile ..."])
-        executeScript scriptFile, classLoader, doBootstrap
-        event('StatusUpdate', ["Script $scriptFile complete!"])
+    def scriptFile = argsMap.params[0]
+    String[] scriptArgs = new String[0]
+    if (argsMap.params.size() > 1) {
+        scriptArgs = argsMap.params[1..-1] as String[]
     }
+    event('StatusUpdate', ["Running script $scriptFile ..."])
+    executeScript scriptFile, scriptArgs, classLoader, doBootstrap
+    event('StatusUpdate', ["Script $scriptFile complete!"])
 }
 
-def executeScript(String scriptFile, ClassLoader classLoader, boolean doBootstrap) {
+def executeScript(String scriptFile, String[] scriptArgs, ClassLoader classLoader, boolean doBootstrap) {
     File script = new File(scriptFile)
     if (!script.exists()) {
         event('StatusError', ["Designated script doesn't exist: $scriptFile"])
@@ -60,7 +63,7 @@ def executeScript(String scriptFile, ClassLoader classLoader, boolean doBootstra
     if (doBootstrap) shellBinding.griffonApplication = griffonApp
     GroovyShell shell = new GroovyShell(classLoader, shellBinding)
     try {
-        shell.evaluate script.text
+        shell.run(script.text, scriptFile, scriptArgs)
     } catch (x) {
         sanitize(x).printStackTrace()
     }

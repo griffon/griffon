@@ -14,11 +14,11 @@ h2. Description
 
 Usage: 
 {code:java}
-griffon [env]* run-script \[scripts\]
+griffon [env]* run-script \[script\] \[args\]
 {code}
 
 Arguments:
-At least one argument must be specified. Arguments must be names of scripts that shouldbe executed.
+At least one argument must be specified which should be the path to a Groovy script. Remaining arguments will be send to the running script.
 
 The following variables wil be available in the script's binding
 * @applicationName@
@@ -29,4 +29,4 @@ If the @bootstrap@ flag is set to true the binding will have an additional varia
 * @griffonApplication@
 
 Options:
-* @bootstrap@  - Whether to boostrap an application instance or not.
+* @bootstrap@  - Whether to bootstrap an application instance or not.

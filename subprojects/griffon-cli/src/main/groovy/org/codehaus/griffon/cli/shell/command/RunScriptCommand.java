@@ -32,14 +32,21 @@ import java.util.List;
         description = "Runs a Groovy script with full classpath")
 public class RunScriptCommand extends AbstractGriffonCommand {
     @Option(name = "--bootstrap",
-            description = "Whether to boostrap an application instance or not.",
+            description = "Whether to bootstrap an application instance or not.",
             required = false)
     private boolean debug = false;
 
     @Argument(index = 0,
-            name = "scripts",
-            description = "Names of the scripts to be executed.",
+            name = "script",
+            description = "Name of the script to be executed.",
             required = true,
+            multiValued = false)
+    private String script;
+
+    @Argument(index = 1,
+            name = "arguments",
+            description = "Optional arguments to be passed to the running script.",
+            required = false,
             multiValued = true)
-    private List<String> scripts;
+    private List<String> arguments;
 }
