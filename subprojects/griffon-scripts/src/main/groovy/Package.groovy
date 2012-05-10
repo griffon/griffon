@@ -180,13 +180,15 @@ target(package_jar: "Creates a single jar distribution and zips it.") {
     createJarFile(destFile, libjars)
 
 // XXX -- NATIVE
-    doForAllPlatforms { platformDir, platformOs ->
-        def destfile = new File(destFile.absolutePath - '.jar' + "-${platformOs}.jar")
+    doForAllPlatforms { platformOs ->
+        File platformDir = new File("${basedir}/lib/${platformOs}")
+        if (!platformDir.exists()) return
+        File destfile = new File(destFile.absolutePath - '.jar' + "-${platformOs}.jar")
         createJarFile(destfile, libjars) {
             platformDir.eachFileMatch(~/.*\.jar/) {f ->
                 zipfileset(src: it.toString(), excludes: signaturesPattern)
             }
-            File nativeLibDir = new File(platformDir.absolutePath + File.separator + 'native')
+            File nativeLibDir = new File(platformDir.canonicalPath + File.separator + 'native')
             if (nativeLibDir.exists()) fileset(dir: nativeLibDir)
         }
     }

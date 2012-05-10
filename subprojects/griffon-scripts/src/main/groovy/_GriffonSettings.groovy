@@ -294,10 +294,7 @@ updateMetadata = { Map entries, File file = null ->
 
 doForAllPlatforms = { callback ->
     PlatformUtils.PLATFORMS.each { platformKey, platformValue ->
-        File platformDir = new File(jardir, platformKey)
-        if (callback && platformDir.exists()) {
-            callback(platformDir, platformKey)
-        }
+        if (callback) callback(platformKey)
     }
 }
 
@@ -386,7 +383,7 @@ loadArtifactDescriptorClass = { String artifactFile ->
 
 projectType = 'app'
 
-target(createStructure: "Creates the application directory structure") {
+target(name: 'createStructure', description: "Creates the application directory structure", prehook: null, posthook: null) {
     ant.sequential {
         mkdir(dir: "${basedir}/griffon-app")
         mkdir(dir: "${basedir}/griffon-app/conf")
@@ -419,7 +416,7 @@ target(createStructure: "Creates the application directory structure") {
     }
 }
 
-target(checkVersion: "Stops build if app expects different Griffon version") {
+target(name: 'checkVersion', description: "Stops build if app expects different Griffon version", prehook: null, posthook: null) {
     if (metadataFile?.exists()) {
         if (appGriffonVersion != griffonVersion) {
             println "Application expects griffon version [$appGriffonVersion], but GRIFFON_HOME is version " +
@@ -435,7 +432,7 @@ target(checkVersion: "Stops build if app expects different Griffon version") {
 }
 
 
-target(updateAppProperties: "Updates default application.properties") {
+target(name: 'updateAppProperties', description: "Updates default application.properties", prehook: null, posthook: null) {
     def entries = [
             'app.name': GriffonNameUtils.getPropertyName(griffonAppName),
             'app.griffon.version': griffonVersion

@@ -288,7 +288,6 @@ public class GriffonScriptRunner {
 
         // Load the BuildSettings file for this project if it exists. Note
         // that this does not load any environment-specific settings.
-        BuildSettingsHolder.setSettings(settings);
         settings.loadConfig();
         BuildSettingsHolder.setSettings(settings);
         setLoggingOptions();

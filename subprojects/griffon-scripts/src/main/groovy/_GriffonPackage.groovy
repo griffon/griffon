@@ -309,10 +309,12 @@ _copyLibs = {
         copyPlatformJars("${pluginDir}/lib", new File(jardir).absolutePath)
         copyNativeLibs("${pluginDir}/lib", new File(jardir).absolutePath)
     }
-    doForAllPlatforms { pdir, value ->
-        pdir.eachFileMatch(~/.*\.jar/) { jarfile ->
+    doForAllPlatforms { osname ->
+        File osdir = new File("${basedir}/lib/${osname}")
+        if (!osdir.exists()) return
+        osdir.eachFileMatch(~/.*\.jar/) { jarfile ->
             File duplicate = new File("${jardir}/${jarfile.name}")
-            if(duplicate.exists()) duplicate.delete()
+            if (duplicate.exists()) duplicate.delete()
         }
     }
 // XXX -- NATIVE
@@ -558,8 +560,9 @@ target(name: 'generateJNLP', description: "Generates the JNLP File",
     }
 
 // XXX -- NATIVE
-    doForAllPlatforms { platformDir, platformOs ->
-        if (platformDir.list()) {
+    doForAllPlatforms { platformOs ->
+        File platformDir = new File("${basedir}/lib/${platformOs}")
+        if (platformDir.exists() && platformDir.list()) {
             jnlpResources << "<resources os='${PlatformUtils.PLATFORMS[platformOs].webstartName}' arch='${osArch}'>"
             platformDir.eachFileMatch(~/.*\.jar/) { f ->
                 jnlpResources << "    <jar href='${platformOs}/${f.name}' />"
@@ -682,8 +685,11 @@ copyPlatformJars = { srcdir, destdir ->
         if (!platformDir.exists() && is64Bit) plf -= '64'
         _copyPlatformJars(srcdir.toString(), destdir.toString(), plf)
     } else {
-        doForAllPlatforms { osdir, osname ->
-            _copyPlatformJars(srcdir.toString(), destdir.toString(),osname)
+        doForAllPlatforms { osname ->
+            File osdir = new File("${basedir}/lib/${osname}")
+            if (osdir.exists()) {
+                _copyPlatformJars(srcdir.toString(), destdir.toString(), osname)
+            }
         }
     }
 }
@@ -709,8 +715,11 @@ copyNativeLibs = { srcdir, destdir ->
         if (!platformDir.exists() && is64Bit) plf -= '64'
         _copyNativeLibs(srcdir.toString(), destdir.toString(), plf)
     } else {
-        doForAllPlatforms { osdir, osname ->
-            _copyNativeLibs(srcdir.toString(), destdir.toString(), osname)
+        doForAllPlatforms { osname ->
+            File osdir = new File("${basedir}/lib/${osname}")
+            if (osdir.exists()) {
+                _copyNativeLibs(srcdir.toString(), destdir.toString(), osname)
+            }
         }
     }
 }
