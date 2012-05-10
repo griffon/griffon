@@ -2,7 +2,7 @@
 ===============================
 
 [Griffon][1] is dekstop application development platform for the JVM. Inspired
-by [Grails][2], Griffon leverages the use of of the Groovy[3] language and
+by [Grails][2], Griffon leverages the use of of the [Groovy][3] language and
 concepts like Convention over Configuration. The Swing toolkit is the default
 UI toolkit of choice however others may be used, principaly SWT and JavaFX.
 
