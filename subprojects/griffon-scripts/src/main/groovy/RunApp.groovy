@@ -21,10 +21,9 @@
  * Time: 10:35:06 PM
  */
 
-
 import static griffon.util.GriffonApplicationUtils.isMacOSX
-import static griffon.util.GriffonNameUtils.quote
 import static griffon.util.GriffonNameUtils.getNaturalName
+import static griffon.util.GriffonNameUtils.quote
 
 includeTargets << griffonScript('Package')
 includeTargets << griffonScript('_GriffonBootstrap')
@@ -58,9 +57,12 @@ target('doRunApp': "Runs the application from the command line") {
     if (argsMap.containsKey('debug')) {
         argsMap['debug-port'] = argsMap.debugPort
         argsMap['debug-addr'] = argsMap.debugAddr
-        def portNum = argsMap['debug-port'] ?: '18290'  //default is 'Gr' in ASCII
-        def addr = argsMap['debug-addr'] ?: '127.0.0.1'
-        def debugSocket = ''
+        argsMap['debug-suspend'] = argsMap.debugSuspend
+
+        String portNum = argsMap['debug-port'] ?: '18290'  //default is 'Gr' in ASCII
+        String addr = argsMap['debug-addr'] ?: '127.0.0.1'
+        String debugSocket = ''
+
         if (portNum =~ /\d+/) {
             if (addr == '127.0.0.1') {
                 debugSocket = ",address=$portNum"
@@ -68,26 +70,27 @@ target('doRunApp': "Runs the application from the command line") {
                 debugSocket = ",address=$addr:$portNum"
             }
         }
-		def debugSuspend = 'n'
-		if (argsMap.containsKey('debugSuspend')) {
-			argsMap['debug-suspend'] = argsMap.debugSuspend
-            debugSuspend = argsMap.debugSuspend
-			if (argsMap.debugSuspend instanceof Boolean) {
-				debugSuspend = argsMap.debugSuspend ? 'y' : 'n'
-			} else if (argsMap.debugSuspend == "true") {
-				debugSuspend = 'y'
-			} else if (argsMap.debugSuspend == "false") {
-				debugSuspend = 'n'
-			} else {
-				if (! (argsMap.debugSuspend ==~ /(?i)[yn]/)) {
-					println("Unrecognized value in '--debugSuspend=${argsMap.debugSuspend}' : must be 'y' or 'n'.")
-					println("   Forcing to 'n', debugged process will not suspend waiting for a connection at start.")
-				    debugSuspend = 'n'
-				} 
-			}
-            debugSuspend = debugSuspend.toLowerCase()
+
+        String debugSuspend = (argsMap['debug-suspend'] ?: 'n').toLowerCase()
+        switch (debugSuspend) {
+            case 'true':
+            case 'y':
+            case 'on':
+            case 'yes':
+                debugSuspend = 'y'
+                break
+            case 'false':
+            case 'n':
+            case 'off':
+            case 'no':
+                debugSuspend = 'n'
+                break
+            default:
+                println("Unrecognized value in '--debug-suspend=${argsMap.debugSuspend}' : must be 'y' or 'n'.")
+                println("   Forcing to 'n', debugged process will not suspend waiting for a connection at start.")
+                debugSuspend = 'n'
         }
-       javaOpts << "-Xrunjdwp:transport=dt_socket$debugSocket,suspend=$debugSuspend,server=y"
+        javaOpts << "-Xrunjdwp:transport=dt_socket$debugSocket,suspend=$debugSuspend,server=y"
     }
     if (buildConfig.griffon.memory?.min) {
         javaOpts << "-Xms$buildConfig.griffon.memory.min"

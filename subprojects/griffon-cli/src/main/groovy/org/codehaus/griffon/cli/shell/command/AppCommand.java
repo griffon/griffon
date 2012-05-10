@@ -36,6 +36,11 @@ public class AppCommand extends AbstractGriffonCommand {
             required = false)
     private boolean debug = false;
 
+    @Option(name = "--debug-suspend",
+            description = "Whether to start the debug process in suspend mode or not.",
+            required = false)
+    private String debugSuspend = "n";
+
     @Option(name = "--debug-port",
             description = "Debugging port connection.",
             required = false)
@@ -50,6 +55,11 @@ public class AppCommand extends AbstractGriffonCommand {
             description = "Additional JVM options.",
             required = false)
     private String javaOpts;
+
+    @Option(name = "--jvm-opts",
+            description = "Additional JVM options such as --javaagent.",
+            required = false)
+    private String jvmOpts;
 
     @Argument(index = 0,
             name = "arguments",
