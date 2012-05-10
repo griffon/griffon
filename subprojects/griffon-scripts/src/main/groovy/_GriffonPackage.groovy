@@ -311,6 +311,7 @@ _copyLibs = {
     }
     doForAllPlatforms { osname ->
         File osdir = new File("${basedir}/lib/${osname}")
+        if (!osdir.exists()) osdir = new File("${jardir}/${osname}")
         if (!osdir.exists()) return
         osdir.eachFileMatch(~/.*\.jar/) { jarfile ->
             File duplicate = new File("${jardir}/${jarfile.name}")
