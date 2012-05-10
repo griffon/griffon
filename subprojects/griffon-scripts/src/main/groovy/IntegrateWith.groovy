@@ -79,6 +79,18 @@ target(name: 'integrateTextmate', description: "Integrates Textmate with Griffon
     println "Created Textmate project files."
 }
 
+target(name: 'integrateSublimetext2', description: "Integrates Sublime Text 2 with Griffon", prehook: null, posthook: null) {
+    depends unpackSupportFiles
+    ant.copy(todir: basedir) {
+        fileset(dir: "${integrationFiles}/sublime")
+    }
+
+    ant.move(file: "${basedir}/project.sublime-project.txt", tofile: "${basedir}/${griffonAppName}.sublime-project", overwrite: true)
+
+    replaceTokens()
+    println "Created Sublime Text 2 project files."
+}
+
 target(name: 'integrateEclipse', description: "Integrates Eclipse STS with Griffon", prehook: null, posthook: null) {
     depends unpackSupportFiles
 
