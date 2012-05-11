@@ -255,7 +255,7 @@ doInstallArtifact = { ArtifactRepository artifactRepository, String type, String
 installArtifactForName = { Metadata md, String type, String name, String version = null ->
     resolveArtifactRepository()
     failOnError = false
-    installed = false
+    boolean installed = false
 
     if (artifactRepository) {
         doInstallArtifact(artifactRepository, type, name, version, md)

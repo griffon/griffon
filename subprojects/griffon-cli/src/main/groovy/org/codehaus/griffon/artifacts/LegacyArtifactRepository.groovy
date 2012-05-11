@@ -73,7 +73,7 @@ class LegacyArtifactRepository extends AbstractArtifactRepository {
 
     Artifact findArtifact(String type, String name) {
         if (LOG.debugEnabled) {
-            LOG.debug("${name}: searching for ${type}:${name}")
+            LOG.debug("${this.name}: searching for ${type}:${name}")
         }
         Artifact artifact = null
         if (type == Archetype.TYPE) return artifact
@@ -92,7 +92,7 @@ class LegacyArtifactRepository extends AbstractArtifactRepository {
 
     Artifact findArtifact(String type, String name, String version) {
         if (LOG.debugEnabled) {
-            LOG.debug("${name}: searching for ${type}:${name}:${version}")
+            LOG.debug("${this.name}: searching for ${type}:${name}:${version}")
         }
         Artifact artifact = null
         if (type == Archetype.TYPE) return artifact

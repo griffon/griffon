@@ -76,10 +76,19 @@ class LocalArtifactRepository extends AbstractArtifactRepository {
     }
 
     Artifact findArtifact(String type, String name) {
+        if (LOG.debugEnabled) {
+            LOG.debug("${this.name}: searching for ${type}:${name}")
+        }
+
         File releasePath = new File(path, "${type}s/${name}")
         String fileName = "${type}.json"
 
         File artifactFile = new File(releasePath, fileName)
+
+        if (LOG.debugEnabled) {
+            LOG.debug("${this.name}: path for ${type}:${name} is ${artifactFile}")
+        }
+
         if (artifactFile.exists()) {
             def json = new JsonSlurper().parseText(artifactFile.text)
             return parseArtifactFromJSON(type, json)
@@ -88,10 +97,18 @@ class LocalArtifactRepository extends AbstractArtifactRepository {
     }
 
     Artifact findArtifact(String type, String name, String version) {
+        if (LOG.debugEnabled) {
+            LOG.debug("${this.name}: searching for ${type}:${name}:${version}")
+        }
+
         File releasePath = new File(path, "${type}s/${name}/${version}")
         String fileName = "${type}.json"
-
         File artifactFile = new File(releasePath, fileName)
+
+        if (LOG.debugEnabled) {
+            LOG.debug("${this.name}: path for ${type}:${name}:${version} is ${artifactFile}")
+        }
+
         if (artifactFile.exists()) {
             def json = new JsonSlurper().parseText(artifactFile.text)
             return parseArtifactFromJSON(type, json)

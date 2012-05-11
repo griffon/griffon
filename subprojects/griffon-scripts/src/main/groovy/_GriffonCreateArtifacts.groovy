@@ -309,10 +309,16 @@ checkArchetype = { Map archetypeProps ->
         argsMap.params = [archetypeProps.name, archetypeProps.version]
         installArtifact(Archetype.TYPE)
         argsMap.params = paramsCopy
-        if (!archetypeDir.exists()) {
+        def archetypeRelease = artifactSettings.getInstalledRelease(Archetype.TYPE, archetypeProps.name)
+        if (null == archetypeRelease) {
             def v = archetypeProps.version
             event 'StatusError', ["Archetype ${archetypeProps.name}${v ? '-' + v : ''} could not be resolved."]
             exit(1)
+        } else {
+            archetypeName = archetypeRelease.artifact.name
+            archetypeVersion = archetypeRelease.version
+            artifactRepository = null
+            framework = false
         }
     }
 }

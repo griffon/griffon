@@ -115,8 +115,8 @@ class ArtifactSettings {
     Release getInstalledRelease(String type, String name, boolean framework = false) {
         Resource[] resources = resolveResources("file://${artifactBase(type, framework)}/${name}-*/${type}.json")
         for (resource in resources) {
-            Matcher matcher = ARTIFACT_NAME_VERSION_PATTERN.matcher(resource.file.name)
-            if (matcher[0][1] == name) return Release.makeFromFile(type, resource.file)
+            Matcher matcher = ARTIFACT_NAME_VERSION_PATTERN.matcher(resource.file.parentFile.name)
+            if (matcher.matches() && matcher[0][1] == name) return Release.makeFromFile(type, resource.file)
         }
         return null
     }
@@ -166,7 +166,7 @@ class ArtifactSettings {
         Resource[] resources = resolveResources("file://${artifactBase(type, framework)}/${name}-*")
         for (resource in resources) {
             Matcher matcher = ARTIFACT_NAME_VERSION_PATTERN.matcher(resource.file.name)
-            if (matcher[0][1] == name) return resource.file
+            if (matcher.matches() && matcher[0][1] == name) return resource.file
         }
         return null
     }
@@ -180,7 +180,7 @@ class ArtifactSettings {
             List<File> files = []
             for (resource in resources) {
                 Matcher matcher = ARTIFACT_NAME_VERSION_PATTERN.matcher(resource.file.name)
-                if (matcher[0][1] == name) files << resource.file
+                if (matcher.matches() && matcher[0][1] == name) files << resource.file
             }
             return files as File[]
         }
