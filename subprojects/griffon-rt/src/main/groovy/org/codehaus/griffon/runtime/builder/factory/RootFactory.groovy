@@ -22,13 +22,25 @@ package org.codehaus.griffon.runtime.builder.factory
  * @author Andres Almiray
  */
 class RootFactory extends AbstractFactory {
+    final boolean leaf = true
+
     Object newInstance(FactoryBuilderSupport builder, Object name, Object value, Map attributes) {
         String rootName = attributes.remove('name') ?: 'root'
         attributes.clear()
-        if (value instanceof Class) {
+        if (null == value) {
+            String scriptName = builder.variables[FactoryBuilderSupport.SCRIPT_CLASS_NAME]
+            if (!scriptName) return null
+            String varName = scriptName + '-' + rootName
+            value = builder.variables[varName]
+        } else if(value instanceof CharSequence) {
+            String scriptName = builder.variables[FactoryBuilderSupport.SCRIPT_CLASS_NAME]
+            if (!scriptName) return null
+            String varName = scriptName + '-' + value.toString()
+            value = builder.variables[varName]q
+        } else if (value instanceof Class) {
             String varName = value.name + '-' + rootName
             return builder.variables[varName]
-        } else {
+        }  else {
             String scriptName = builder.variables[FactoryBuilderSupport.SCRIPT_CLASS_NAME]
             if (!scriptName) return null
             String varName = scriptName + '-' + rootName
@@ -37,6 +49,4 @@ class RootFactory extends AbstractFactory {
         }
         value
     }
-
-    boolean isLeaf() { true }
 }
