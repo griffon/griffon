@@ -22,7 +22,7 @@
  */
 
 import static griffon.util.GriffonApplicationUtils.isMacOSX
-import static griffon.util.GriffonNameUtils.getNaturalName
+import static griffon.util.GriffonNameUtils.capitalize
 import static griffon.util.GriffonNameUtils.quote
 
 includeTargets << griffonScript('Package')
@@ -103,7 +103,7 @@ target('doRunApp': "Runs the application from the command line") {
         javaOpts << "-XX:PermSize=$buildConfig.griffon.memory.minPermSize"
     }
     if (isMacOSX) {
-        javaOpts << "-Xdock:name=${getNaturalName(griffonAppName)}"
+        javaOpts << "-Xdock:name=${capitalize(griffonAppName)}"
         javaOpts << "-Xdock:icon=${resolveApplicationIcnsFile().absolutePath}"
     }
 
@@ -111,7 +111,7 @@ target('doRunApp': "Runs the application from the command line") {
     jvmOpts.each { debug("  $it") }
     javaOpts.each { debug("  $it") }
 
-    sysProperties.'griffon.application.name' = getNaturalName(griffonAppName)
+    sysProperties.'griffon.application.name' = capitalize(griffonAppName)
     List sysprops = []
     debug("System properties:")
     sysProperties.each { key, value ->
