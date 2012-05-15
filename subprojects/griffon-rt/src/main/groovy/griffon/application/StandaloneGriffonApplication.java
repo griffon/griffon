@@ -16,10 +16,12 @@
 package griffon.application;
 
 
+import griffon.core.GriffonApplication;
+
 /**
  * @author Andres Almiray
  */
-public interface StandaloneGriffonApplication {
+public interface StandaloneGriffonApplication extends GriffonApplication {
     void bootstrap();
 
     void realize();

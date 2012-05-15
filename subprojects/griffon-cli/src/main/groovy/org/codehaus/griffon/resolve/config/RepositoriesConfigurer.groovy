@@ -42,7 +42,7 @@ class RepositoriesConfigurer extends AbstractDependencyManagementConfigurer {
             def fileSystemResolver = new FileSystemResolver()
             fileSystemResolver.local = true
             fileSystemResolver.name = name
-            fileSystemResolver.latestStrategy = new LatestTimeStrategy()
+            //fileSystemResolver.latestStrategy = new LatestTimeStrategy()
             fileSystemResolver.changingPattern = ".*SNAPSHOT"
             fileSystemResolver.setCheckmodified(true)
 

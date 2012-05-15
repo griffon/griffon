@@ -132,7 +132,7 @@ public final class UIThreadManager {
                 }
             });
 
-    private static final String EXECUTE_FUTURE = "executeFuture";
+    private static final String EXECUTE_FUTURE = "execFuture";
     private static final CallableWithArgsClosure EXECUTE_FUTURE_RUNNER = new CallableWithArgsClosure(INSTANCE,
             new CallableWithArgs<Future>() {
                 public Future call(Object[] args) {
@@ -144,6 +144,14 @@ public final class UIThreadManager {
                     throw new MissingMethodException(EXECUTE_FUTURE, UIThreadManager.class, args);
                 }
             });
+
+    public static final String[] THREADING_METHOD_NAMES = new String[] {
+            EXECUTE_INSIDE_UI_SYNC,
+            EXECUTE_INSIDE_UI_SYNC,
+            EXECUTE_OUTSIDE_UI,
+            IS_UITHREAD,
+            EXECUTE_FUTURE
+    };
 
     public static void enhance(Script script) {
         if (script instanceof ThreadingHandler) return;

@@ -31,4 +31,8 @@ public class DefaultMVCGroup extends AbstractMVCGroup {
     public DefaultMVCGroup(GriffonApplication app, MVCGroupConfiguration configuration, String mvcId, Map<String, Object> members) {
         super(app, configuration, mvcId, members);
     }
+
+    public String toString() {
+        return super.toString() + "[" + getMvcType() + ":" + getMvcId() + "]";
+    }
 }

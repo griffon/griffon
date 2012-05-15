@@ -16,10 +16,7 @@
 
 package org.codehaus.griffon.runtime.core;
 
-import griffon.core.GriffonApplication;
-import griffon.core.GriffonClass;
-import griffon.core.MVCGroup;
-import griffon.core.MVCGroupConfiguration;
+import griffon.core.*;
 import griffon.exceptions.MVCGroupInstantiationException;
 import griffon.util.CollectionUtils;
 import groovy.lang.GroovySystem;
@@ -172,6 +169,9 @@ public class DefaultMVCGroupManager extends AbstractMVCGroupManager {
 
         argsCopy.putAll(getApp().getBindings().getVariables());
         argsCopy.putAll(args);
+        for (String methodName : UIThreadManager.THREADING_METHOD_NAMES) {
+            argsCopy.remove(methodName);
+        }
         return argsCopy;
     }
 
