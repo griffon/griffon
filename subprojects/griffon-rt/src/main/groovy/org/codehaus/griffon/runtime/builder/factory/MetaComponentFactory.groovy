@@ -20,7 +20,7 @@ import griffon.core.MVCGroup
 import griffon.util.ApplicationHolder
 
 /**
- * Identifies the top level node of a script
+ * Enables MVC groups to be used as component nodes
  *
  * @author Andres Almiray
  */

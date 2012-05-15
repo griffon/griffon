@@ -14,6 +14,7 @@ application(title: "Some app", package: true) {
 There are also a few helpful methods on this class
 * @getApplicationName()@ - same result as @meta\['app.name'\]@
 * @getApplicationVersion()@ - same result as @meta\['app.version'\]@
+* @getApplicationToolkit()@ - same result as @meta\['app.toolkit'\]@
 * @getGriffonVersion()@ - same result as @meta\['app.griffon.version'\]@
 * @getGriffonStartDir()@ - returns the value of @'griffon.start.dir'@ from the System properties
 * @getGriffonWorkingDir()@ - returns a File that points to @'griffon.start.dir'@ if the value is set and the file is writable, otherwise returns a File pointing to the current location if it is writable; if that fails then attempts to return a File pointing to @'user.dir'@; if all fail it will return the location to a temporal file, typically @'/tmp/${griffonAppName}'@.

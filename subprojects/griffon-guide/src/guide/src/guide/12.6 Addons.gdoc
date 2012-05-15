@@ -23,6 +23,8 @@ Addons are created using a template that suggests all of the properties and meth
 * @[postInstantiateDelegates|addons]@ - List of postInstantiateDelegates (as Closures), added to CompositeBuilder
 * @[postNodeCompletionDelegates|addons]@ - List of postNodeCompletionDelegates (as Closures), added to CompositeBuilder
 
+You may also contribute MVC groups inside an addon (by calling the [create-mvc|commandLine] command line for example) however you must define first a dependency on any UI toolkit plugin from [this list|http://artifacts.griffon-framework.org/tags/plugin/toolkit].
+
 h4. Configuring Addons
 
 This task is done automatically for you when you package an addon inside a plugin. The plugin's @_Install@ and @_Uninstall@ scripts will make sure that @griffon-app/conf/Builder.groovy@ stays up to date. When you install a plugin that contains an addon you'll notice that @Builder.groovy@ may get updated with a line similar to the next one

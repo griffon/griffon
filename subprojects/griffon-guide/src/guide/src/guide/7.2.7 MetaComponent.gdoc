@@ -1,0 +1,23 @@
+Provided by: *Griffon*
+
+Enables the usage of a meta-component as a View node. Meta-components are MVC groups that contain additional configuration, for example
+
+{code}
+mvcGroups {
+    'custom' {
+        model      = 'sample.CustomModel'
+        view       = 'sample.CustomView'
+        controller = 'sample.CustomController'
+        config {
+            component = true
+            title = 'My Default Title'
+        }
+    }
+}
+{code}
+
+The @metaComponent()@ node instantiates the MVC group and attaches the top node from the groups' View member into the current hierarchy. Using the previous group definition in  a View script is straight forward
+
+{code}
+metaComponent('custom', title: 'Another Title')
+{code}

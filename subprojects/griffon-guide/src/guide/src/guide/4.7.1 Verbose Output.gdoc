@@ -3,12 +3,22 @@
 All scripts inherit a @debug()@ closure that will print its argument to stdout if an only if the following flag is enabled: @griffon.cli.verbose@. As an example, the following script has two print outs
 
 {code}
-includeTargets << griffonScript("Init")
-target(main: "The description of the script goes here!") {
+// Include core griffon scripts with the following call
+//
+//     includeTargets << griffonScript('_GriffonCompile')
+//
+// Include plugin scripts with the following call
+//
+//    includeTargets << griffonPluginScript('some-plugin-name', 'ScriptName')
+//
+
+target(name: 'hello',
+        description: "The description of the script goes here!",
+        prehook: null, posthook: null) {
     println 'Hello world!'
     debug 'Hello World (debug)'
 }
-setDefaultTarget(main)
+setDefaultTarget('hello')
 {code}
 
 Running the script without the flag will print out 'Hello World!' all the time but never the second one
@@ -33,5 +43,5 @@ Griffon home is set to: /usr/local/griffon
 ...
 Environment set to development
 Hello world!
-[11/11/10 4:43:04 PM] Hello World (debug)
+[5/15/12 11:39:12 AM] Hello World (debug)
 {code}

@@ -1,11 +1,11 @@
-Failures may occur during plugin installation. It may be the case that a plugin could not be found in the configured repositories, or a JAR dependency failed to be resolved. When this happens the build will try its best cope with the error, usually by continuing installing remainder plugin dependencies (if any).
+Failures may occur during plugin installation. It may be the case that a plugin could not be found in the configured repositories, or a JAR dependency failed to be resolved. When this happens the build will try its best to cope with the error, usually by continuing installing remaining plugin dependencies (if any).
 
 This behavior can be altered by specifying a value for @griffon.install.failure@. Accepted values are:
 
 {table}
  *Value* | *Description*
- abort   | Aborts the installation sequence, even if there are other plugins left to be installed. It will also delete all installed plugins in the current session.
- continue| Continues with the next plugin in the list. this is the default behavior.
+ abort   | Aborts the installation sequence, even if there are other plugins left to be installed. It will also delete all installed plugins in the current session. This is the old behavior prior to Griffon 0.9.5.
+ continue| Continues with the next plugin in the list. This is the default behavior.
  retry   | Retries failed plugins a second time. A second failure skips the plugin from being installed but does not affect any other plugins that have been successfully installed or are yet to be installed. 
 {table}
 

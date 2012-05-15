@@ -13,23 +13,3 @@ compile('org.hibernate:hibernate-core:3.3.1.GA') {
 
 In this can the @hibernate-core@ dependency will be available only to the plugin and not resolved as an application dependency.
 
-
-h4. Overriding Plugin JAR Dependencies in Your Application
-
-If a plugin is using a JAR which conflicts with another plugin, or an application dependency then you can override how a plugin resolves its dependencies inside an application using exclusions. For example:
-
-{code}
-plugins {
-    compile("org.codehaus.griffon.plugins:miglayout:0.3" ) {
-        excludes "miglayout"
-    }
-}
-
-dependencies {
-    String miglayoutVersion = '4.2'
-    compile "com.miglayout:miglayout-core:$miglayoutVersion",
-            "com.miglayout:miglayout-swing:$miglayoutVersion"
-}
-{code}
-
-In this case the application explicitly declares a dependency on the "miglayout" plugin and specifies an exclusion using the @excludes@ method, effectively excluding the miglayout library as a dependency. 

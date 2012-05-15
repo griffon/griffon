@@ -4,7 +4,7 @@ h3. IntelliJ IDEA
 
 h4. Integrating an existing Griffon project
 
-To integrate Griffon with IntelliJ run the following command to generate appropriate project files:
+IntelliJ 10 and newer supports Griffon form the get go. You can open existing projects as well as create new ones. However you can also create the required IntelliJ project files by running the following command:
 
 {code}
 griffon integrate-with --intellij
@@ -89,7 +89,7 @@ griffon integrate-with --eclipse
 
 Then follow these steps to fully integrate and run the application
 
-*#1* Install the [Eclipse Support|http://griffon.codehaus.org/EclipseSupport+Plugin] plugin
+*#1* Install the [Eclipse Support|http://artifacts.griffon-framework.org/plugin/eclipse-support] plugin
 {code}
 griffon install-plugin eclipse-support
 {code}
@@ -187,3 +187,15 @@ The Griffon bundle provides new commands under the "Bundles" menu. Search for th
 Selecting "Run App" will execute the [run-app|commandLine] command on the currently open project
 
 !griffon-tm.4.png!
+
+h3. Sublime Text 2
+
+To integrate Griffon with Sublime Text 2 run the following command to generate appropriate project files:
+
+{code}
+griffon integrate-with --sublimetext2
+{code}
+
+Now go the @Project@ menu, locate the generated project file and open it. You should get a screen similar to the next one
+
+!griffon-st2.1.png!

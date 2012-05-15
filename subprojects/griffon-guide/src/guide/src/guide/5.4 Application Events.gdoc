@@ -15,7 +15,7 @@ app.event('MyEventName', ['arg0', 'arg1'])
 Whereas the following snippet guarantees that all event handlers that are interested in an event of type @MyEventName@ will be called outside of the UI thread
 
 {code}
-app.eventOutside('MyEventName', ['arg0', 'arg1'])
+app.eventOutsideUI('MyEventName', ['arg0', 'arg1'])
 {code}
 
 Finally, if you'd want event notification to be handed in a thread that is not the current one (regardless if the current one is the UI thread or not) then use the following method

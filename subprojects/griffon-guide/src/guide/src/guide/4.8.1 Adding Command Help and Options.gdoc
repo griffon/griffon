@@ -1,0 +1,79 @@
+All commands from the standard Griffon distribution are supported in @griffonsh@. Should you choose to integrate your own commands (currently restricted to those delivered by a plugin) then you must generate an additional set of files. The [create-script|commandLine] explained at section [4.1|guide:scripts] has an on option for doing just that.
+
+Say for example you'd want to provide support for a command called @create-page@, this is how it can be done
+
+{code}
+griffon create-script create-page --with-command-support=true
+{code}
+
+The following files will be created by the previous command:
+
+{code}
+scripts/CreatePage.groovy
+{code}
+
+This is the command itself. It contains the code that makes the script work.
+
+{code}
+test/cli/CreatePageTests.groovy
+{code}
+
+No Griffon artifact is complete without a test harness.
+
+{code}
+src/cli/org/codehaus/griffon/cli/shell/help/create-page.txt
+{code}
+
+This file contains the help text that should be presented to the user when the @griffon help@ command is issued, like this
+
+{code}
+griffon help create-page
+{code}
+
+This file typically contains the formatted text obtained by running @griffonsh help@ on the script itself.
+
+{code}
+src/cli/org/codehaus/griffon/cli/shell/command/CreatePageCommand.java
+src/cli/org/codehaus/griffon/cli/shell/command/create-page.txt
+{code}
+
+These two files contain the shell hints (@CreatePageCommand.java@) and an optional extended detail section (@create-page.txt@). The Java class supports both options and arguments. It's important to note that argument names must match their field names, as suggested by the defualt template shown here
+
+{code}
+package org.codehaus.griffon.cli.shell.command;
+
+import org.codehaus.griffon.cli.shell.AbstractGriffonCommand;
+import org.codehaus.griffon.cli.shell.Command;
+import org.codehaus.griffon.cli.shell.Argument;
+import org.codehaus.griffon.cli.shell.Option;
+
+@Command(scope = "myplugin",
+        name = "create-page",
+        description = "Single line description goes here",
+        detailedDescription = "classpath:create-page.txt")
+public class CreatePageCommand extends AbstractGriffonCommand {
+    /*
+    @Option(name = "--foo",
+            description = "Description of foo option.",
+            required = false)
+    private String foo;
+
+    @Argument(index = 0,
+            name = "bar",
+            description = "Description of first argument.",
+            required = false)
+    private String bar;
+    */
+}
+{code}
+
+Multiple values may be specified as arguments, here's how the @run-app@ command does it
+
+{code}
+@Argument(index = 0,
+        name = "arguments",
+        description = "Optional arguments to be passed to the application.",
+        required = false,
+        multiValued = true)
+private List<String> arguments;
+{code}

@@ -35,7 +35,7 @@ class MyController {
 The type of the service class is optional as basic injection is done by name alone.
 
 {note}
-Service injection is trivial, it does not provide a full blown DI, in other words further service dependencies will not be resolved. You will need a richer DI solution in order to achieve this, fortunately there is a [Spring plugin|http://griffon.codehaus.org/Spring+Plugin] that does this and more.
+Service injection is trivial, it does not provide a full blown DI, in other words further service dependencies will not be resolved. You will need a richer DI solution in order to achieve this, fortunately there are [Spring|http://artifacts.griffon-framework.org/plugin/spring] and [Weld|http://artifacts.griffon-framework.org/plugin/weld] plugins that do this and more.
 {note}
 
 Given that services are inherently treated as singletons they are also automatically registered as application event listeners. Be aware that services will be instantiated lazily which means that some events might not reach a particular service if it has not been instantiated by the framework by the time of event publication. It's also discouraged to use the \@Singleton annotation on a Service class as it will cause trouble with the automatic singleton management Griffon has in place.
