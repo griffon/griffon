@@ -149,6 +149,8 @@ public class GantAwareAction extends AbstractGriffonShellCommand {
                 if (value != null) {
                     String val = value.toString();
                     if ("false".equalsIgnoreCase(val)) continue;
+                    if (optionName.startsWith("--")) optionName = optionName.substring(2);
+                    if (optionName.startsWith("-")) optionName = optionName.substring(1);
                     argsMap.put(optionName, quote(val));
                 }
             } catch (IllegalAccessException e) {
