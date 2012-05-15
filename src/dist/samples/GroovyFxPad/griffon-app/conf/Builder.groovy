@@ -16,6 +16,4 @@ fx.'groovyx.javafx.SceneGraphBuilder'.view = '*'
 
 root.'GlazedlistsGriffonAddon'.addon=true
 
-root.'griffon.builder.trident.TridentBuilder'.view = '*'
-
 root.'griffon.builder.jide.JideBuilder'.view = '*'

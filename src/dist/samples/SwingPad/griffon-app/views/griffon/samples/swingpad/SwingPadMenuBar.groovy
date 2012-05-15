@@ -25,7 +25,7 @@ groovy.swing.SwingBuilder.metaClass.'_delegateProperty:id' = 'id'
 setVariable('_delegateProperty:id', 'id')
 
 makeSampleScriptAction = { identifier, name, mn ->
-    doLater {
+    app.execInsideUIAsync {
         mn.add(menuItem {
             action(id: "${identifier}Action",
                     name: name,
@@ -33,10 +33,10 @@ makeSampleScriptAction = { identifier, name, mn ->
                     smallIcon: silkIcon('script_gear')
             )
         })
-    }
-    execOutsideUI {
-        model.samples[identifier] = Thread.currentThread().contextClassLoader.
-                getResourceAsStream("samples/${identifier}.txt").text
+        app.execOutsideUI {
+            model.samples[identifier] = Thread.currentThread().contextClassLoader.
+                    getResourceAsStream("samples/${identifier}.txt").text
+        }
     }
 }
 
