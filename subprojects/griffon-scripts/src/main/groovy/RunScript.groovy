@@ -40,8 +40,14 @@ target(name: 'runScript', description: 'Execute the specified script(s) after st
 
     def scriptFile = argsMap.params[0]
     String[] scriptArgs = new String[0]
-    if (argsMap.params.size() > 1) {
-        scriptArgs = argsMap.params[1..-1] as String[]
+    def scriptArgsStartIndex = 0
+    unparsedArgs.eachWithIndex { arg, argIndex ->
+        if (arg.equals(scriptFile)) {
+            scriptArgsStartIndex = argIndex + 1
+        }
+    }
+    if (scriptArgsStartIndex > 0) {
+        scriptArgs = unparsedArgs[scriptArgsStartIndex..-1] as String[]
     }
 
     event('StatusUpdate', ["Running script $scriptFile ..."])
