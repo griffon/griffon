@@ -114,7 +114,7 @@ setupJavaOpts = { includeNative = true ->
     if (buildConfig.griffon.app?.javaOpts) {
         buildConfig.griffon.app?.javaOpts.each { javaOpts << it }
     }
-    argsMap['java-opts'] = argsMap.javaOpts
+    if (argsMap.javaOpts) argsMap['java-opts'] = argsMap.remove('javaOpts')
     if (argsMap['java-opts']) {
         javaOpts << argsMap['java-opts']
     }
@@ -149,7 +149,7 @@ setupJvmOpts = {
     if (buildConfig.griffon.app?.jvmOpts) {
         buildConfig.griffon.app?.jvmOpts.each { jvmOpts << it }
     }
-    argsMap['jvm-opts'] = argsMap.jvmOpts
+    if (argsMap.jvmOpts) argsMap['jvm-opts'] = argsMap.remove('jvmOpts')
     if (argsMap['jvm-opts']) {
         jvmOpts << argsMap['jvm-opts']
     }
