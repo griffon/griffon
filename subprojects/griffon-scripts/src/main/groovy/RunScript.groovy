@@ -17,7 +17,6 @@
 import griffon.util.GriffonUtil
 
 import static griffon.util.GriffonExceptionHandler.sanitize
-import static griffon.util.GriffonNameUtils.quote
 
 includeTargets << griffonScript('_GriffonBootstrap')
 
@@ -40,18 +39,9 @@ target(name: 'runScript', description: 'Execute the specified script(s) after st
     }
 
     def scriptFile = argsMap.params[0]
-    List<String> scriptArgs = []
+    String[] scriptArgs = new String[0]
     if (argsMap.params.size() > 1) {
-        scriptArgs = argsMap.params[1..-1]
-    }
-    for (option in argsMap) {
-        if (option.key == 'params') continue
-        def value = option.value
-        if (value != null) {
-            scriptArgs << '--' + option.key + '=' + (value instanceof CharSequence? quote(value) : value)
-        } else {
-            scriptArgs << '--' + option.key
-        }
+        scriptArgs = argsMap.params[1..-1] as String[]
     }
 
     event('StatusUpdate', ["Running script $scriptFile ..."])
@@ -59,7 +49,7 @@ target(name: 'runScript', description: 'Execute the specified script(s) after st
     event('StatusUpdate', ["Script $scriptFile complete!"])
 }
 
-def executeScript(String scriptFile, List<String> scriptArgs, ClassLoader classLoader, boolean doBootstrap) {
+def executeScript(String scriptFile, String[] scriptArgs, ClassLoader classLoader, boolean doBootstrap) {
     File script = new File(scriptFile)
     if (!script.exists()) {
         event('StatusError', ["Designated script doesn't exist: $scriptFile"])
@@ -74,7 +64,7 @@ def executeScript(String scriptFile, List<String> scriptArgs, ClassLoader classL
     if (doBootstrap) shellBinding.griffonApplication = griffonApp
     GroovyShell shell = new GroovyShell(classLoader, shellBinding)
     try {
-        shell.run(script.text, scriptFile, scriptArgs as String[])
+        shell.run(script.text, scriptFile, scriptArgs)
     } catch (x) {
         sanitize(x).printStackTrace()
     }
