@@ -26,7 +26,7 @@ includeTargets << griffonScript('_GriffonBootstrap')
 
 target(name: 'runScript', description: 'Execute the specified script(s) after starting up the application environment',
         prehook: null, posthook: null) {
-    boolean doBootstrap = argsMap.bootstrap && Boolean.parseBoolean(argsMap.bootstrap)
+    boolean doBootstrap = argsMap.bootstrap && (argsMap.bootstrap instanceof Boolean ?: Boolean.parseBoolean(argsMap.bootstrap))
     if (doBootstrap) {
         depends(bootstrap)
     } else {
