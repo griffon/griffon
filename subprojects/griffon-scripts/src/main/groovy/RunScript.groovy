@@ -46,7 +46,7 @@ target(name: 'runScript', description: 'Execute the specified script(s) after st
             scriptArgsStartIndex = argIndex + 1
         }
     }
-    if (scriptArgsStartIndex > 0) {
+    if (scriptArgsStartIndex > 0 && scriptArgsStartIndex < unparsedArgs.length) {
         scriptArgs = unparsedArgs[scriptArgsStartIndex..-1] as String[]
     }
 
