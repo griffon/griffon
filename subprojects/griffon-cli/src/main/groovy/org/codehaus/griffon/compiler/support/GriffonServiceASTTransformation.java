@@ -77,7 +77,7 @@ public class GriffonServiceASTTransformation extends GriffonArtifactASTTransform
             // 1. add interface
             GriffonASTUtils.injectInterface(classNode, GRIFFON_SERVICE_CLASS);
             // 2. add methods
-            ASTInjector injector = new GriffonMvcArtifactASTInjector();
+            ASTInjector injector = new GriffonArtifactASTInjector();
             injector.inject(classNode, GriffonServiceClass.TYPE);
         } else {
             doTransform(superClass);
