@@ -22,7 +22,7 @@
 
 includeTargets << griffonScript('_GriffonCreateArtifacts')
 
-target('createScript': "Creates a new service class") {
+target('createService': "Creates a new service class") {
     ant.mkdir(dir: "${basedir}/griffon-app/services")
 
     String type = 'Service'
@@ -38,4 +38,4 @@ target('createScript': "Creates a new service class") {
     doCreateUnitTest(name: name, suffix: type)
 }
 
-setDefaultTarget(createScript)
+setDefaultTarget(createService)

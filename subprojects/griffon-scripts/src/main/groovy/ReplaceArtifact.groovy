@@ -40,16 +40,17 @@ target(replaceArtifact: "Replaces an artifact file using another template") {
 
     def name = argsMap["params"][0]
 
-    if (!argsMap.fileType) {
+    argsMap['file-type'] = argsMap['file-type'] ?: argsMap.fileType
+    if (!argsMap['file-type']) {
         ant.input(addProperty: "artifact.fileType", message: "Artifact file type not specified. Please enter:")
-        argsMap.fileType = GriffonNameUtils.uncapitalize(ant.antProject.properties."artifact.fileType")
+        argsMap['file-type'] = GriffonNameUtils.uncapitalize(ant.antProject.properties."artifact.fileType")
     }
 
     replaceNonag = true
     createArtifact(name: name,
             suffix: type,
-            type: type,
-            path: "griffon-app/${path}")
+            type:   type,
+            path:   "griffon-app/${path}")
 }
 
 setDefaultTarget(replaceArtifact)
