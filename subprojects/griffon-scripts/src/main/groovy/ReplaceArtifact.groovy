@@ -15,7 +15,7 @@
  */
 
 /**
- * Gant script that replaces one artifact with anothee template
+ * Gant script that replaces one artifact with another template
  *
  * @author Andres Almiray
  * @since 0.9.1
@@ -25,7 +25,8 @@ import griffon.util.GriffonNameUtils
 
 includeTargets << griffonScript('_GriffonCreateArtifacts')
 
-target(replaceArtifact: "Replaces an artifact file using another template") {
+target(name: 'replaceArtifact', description: "Replaces an artifact file using another template",
+    prehook: null, posthook, null) {
     if (!argsMap.type) {
         ant.input(addProperty: "artifact.type", message: "Artifact type not specified. Please enter:")
         argsMap.type = ant.antProject.properties."artifact.type"

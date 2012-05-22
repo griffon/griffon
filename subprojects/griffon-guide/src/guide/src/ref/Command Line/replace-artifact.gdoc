@@ -7,7 +7,7 @@ The @replace-artifact@ command will overwrite or rename the artifact with the gi
 h2. Examples
 
 {code:java}
-griffon replace-artifact book -type=Service -fileType=java
+griffon replace-artifact book --type=Service --file-type=java
 {code}
 
 h2. Description         
@@ -21,14 +21,14 @@ This command does not prompt you to confirm if the operation should proceed or n
 Usage: 
 
 {code:java}
-griffon replace-artifact [name] [-type=type] [-fileType=fileType]
+griffon replace-artifact [name] [--type=type] [--file-type=fileType]
 {code}
 
 Arguments
 * @archetype@ - The name of an archetype, defaults to 'default'
 * @name@ - The name of the artifact, i.e, book
-* @type@ - The type of the artifact, i.e, Service
-* @fileType@ - The file type of the artifact, i.e, groovy|java|etc
+* @type@ - The type of the artifact, i.e, service
+* @file-type@ - The file type of the artifact, i.e, groovy|java|etc
 
 Fired Events: 
 
