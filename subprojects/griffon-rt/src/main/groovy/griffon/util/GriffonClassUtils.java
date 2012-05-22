@@ -1747,14 +1747,67 @@ public final class GriffonClassUtils {
                 }
                 return (readMethod != null);
             } else {
-                return (false);
+                return false;
             }
         } catch (IllegalAccessException e) {
-            return (false);
+            return false;
         } catch (InvocationTargetException e) {
-            return (false);
+            return false;
         } catch (NoSuchMethodException e) {
-            return (false);
+            return false;
+        }
+    }
+
+    /**
+     * <p>Return an accessible property setter method for this property,
+     * if there is one; otherwise return <code>null</code>.</p>
+     *
+     * @param descriptor Property descriptor to return a setter for
+     * @return The write method
+     */
+    public static Method getWriteMethod(PropertyDescriptor descriptor) {
+        return (MethodUtils.getAccessibleMethod(descriptor.getWriteMethod()));
+    }
+
+    /**
+     * <p>Return <code>true</code> if the specified property name identifies
+     * a writable property on the specified bean; otherwise, return
+     * <code>false</code>.
+     *
+     * @param bean Bean to be examined
+     * @param name Property name to be evaluated
+     * @return <code>true</code> if the property is writable,
+     *         otherwise <code>false</code>
+     * @throws IllegalArgumentException if <code>bean</code>
+     *                                  or <code>name</code> is <code>null</code>
+     */
+    public static boolean isWritableProperty(Object bean, String name) {
+        // Validate method parameters
+        if (bean == null) {
+            throw new IllegalArgumentException("No bean specified");
+        }
+        if (name == null) {
+            throw new IllegalArgumentException("No name specified for bean class '" +
+                    bean.getClass() + "'");
+        }
+
+        try {
+            PropertyDescriptor desc = getPropertyDescriptor(bean, name);
+            if (desc != null) {
+                Method writeMethod = getWriteMethod(bean.getClass(), desc);
+                if (writeMethod == null) {
+                    writeMethod = MethodUtils.getAccessibleMethod(bean.getClass(), writeMethod);
+                }
+                return (writeMethod != null);
+            } else {
+                return false;
+            }
+        } catch (IllegalAccessException e) {
+            return false;
+        } catch (InvocationTargetException e) {
+            return false;
+        } catch (NoSuchMethodException e) {
+            return false;
         }
     }
 
@@ -1814,6 +1867,18 @@ public final class GriffonClassUtils {
      */
     public static Method getReadMethod(Class<?> clazz, PropertyDescriptor descriptor) {
         return (MethodUtils.getAccessibleMethod(clazz, descriptor.getReadMethod()));
+    }
+
+    /**
+     * <p>Return an accessible property setter method for this property,
+     * if there is one; otherwise return <code>null</code>.</p>
+     *
+     * @param clazz      The class of the write method will be invoked on
+     * @param descriptor Property descriptor to return a setter for
+     * @return The write method
+     */
+    public static Method getWriteMethod(Class<?> clazz, PropertyDescriptor descriptor) {
+        return (MethodUtils.getAccessibleMethod(clazz, descriptor.getWriteMethod()));
     }
 
     // -- The following methods and properties were copied from commons-lang
