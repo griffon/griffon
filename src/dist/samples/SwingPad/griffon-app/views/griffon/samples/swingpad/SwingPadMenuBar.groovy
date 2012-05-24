@@ -26,6 +26,7 @@ setVariable('_delegateProperty:id', 'id')
 
 makeSampleScriptAction = { identifier, name, mn ->
     app.execInsideUIAsync {
+        sleep 250
         mn.add(menuItem {
             action(id: "${identifier}Action",
                     name: name,
