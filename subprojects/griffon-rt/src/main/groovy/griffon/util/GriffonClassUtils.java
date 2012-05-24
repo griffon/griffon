@@ -1781,7 +1781,7 @@ public final class GriffonClassUtils {
      * @throws IllegalArgumentException if <code>bean</code>
      *                                  or <code>name</code> is <code>null</code>
      */
-    public static boolean isWritableProperty(Object bean, String name) {
+    public static boolean isWritable(Object bean, String name) {
         // Validate method parameters
         if (bean == null) {
             throw new IllegalArgumentException("No bean specified");
