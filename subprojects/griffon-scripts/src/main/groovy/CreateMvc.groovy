@@ -91,9 +91,9 @@ Type in griffon create-addon then execute this command again."""
                 path:     'griffon-app/controllers')
         controllerClassName = fullyQualifiedClassName
 
-        doCreateIntegrationTest(
+        doCreateUnitTest(
                 name:   mvcFullQualifiedClassName,
-                suffix: '')
+                suffix: 'Controller')
     }
 
     name = GriffonNameUtils.getPropertyName(name)
