@@ -39,11 +39,9 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.Constructor;
 import java.net.URL;
-import java.util.Enumeration;
-import java.util.LinkedHashMap;
-import java.util.Map;
-import java.util.Properties;
+import java.util.*;
 
+import static griffon.util.ConfigUtils.getConfigValue;
 import static griffon.util.ConfigUtils.getConfigValueAsString;
 import static griffon.util.GriffonExceptionHandler.sanitize;
 import static griffon.util.GriffonNameUtils.isBlank;
@@ -136,7 +134,9 @@ public class GriffonApplicationHelper {
 
     private static void readAndSetConfiguration(GriffonApplication app) {
         ConfigSlurper configSlurper = new ConfigSlurper(Environment.getCurrent().getName());
-        app.setConfig(loadConfig(configSlurper, app.getAppConfigClass(), GriffonApplication.Configuration.APPLICATION.getName()));
+        final ConfigObject appConfig = loadConfig(configSlurper, app.getAppConfigClass(), GriffonApplication.Configuration.APPLICATION.getName());
+        setApplicationLocale(app, getConfigValue(appConfig, "application.locale", Locale.getDefault()));
+        app.setConfig(appConfig);
         app.getConfig().merge(loadConfig(configSlurper, app.getConfigClass(), GriffonApplication.Configuration.CONFIG.getName()));
         GriffonExceptionHandler.configure(app.getConfig().flatten(new LinkedHashMap()));
 
@@ -153,6 +153,28 @@ public class GriffonApplicationHelper {
             app.event(GriffonApplication.Event.LOG4J_CONFIG_START.getName(), asList(log4jConfig));
             LogManager.resetConfiguration();
             new Log4jConfig().configure((Closure) log4jConfig);
+        }
+    }
+
+    private static void setApplicationLocale(GriffonApplication app, Object localeValue) {
+        if(localeValue instanceof Locale) {
+            app.setLocale((Locale) localeValue);
+        } else if(localeValue instanceof CharSequence) {
+            app.setLocale(parseLocale(String.valueOf(localeValue)));
+        }
+    }
+
+    private static Locale parseLocale(String locale) {
+        String[] parts = locale.split("_");
+        switch(parts.length) {
+            case 1:
+                return new Locale(parts[0]);
+            case 2:
+                return new Locale(parts[0], parts[1]);
+            case 3:
+                return new Locale(parts[0], parts[1], parts[2]);
+            default:
+                return Locale.getDefault();
         }
     }
 

@@ -181,7 +181,10 @@ public abstract class AbstractGriffonApplication extends AbstractObservable impl
     }
 
     public void setLocale(Locale locale) {
-        firePropertyChange("locale", this.locale, this.locale = locale);
+        Locale oldValue = this.locale;
+        this.locale = locale;
+        Locale.setDefault(locale);
+        firePropertyChange("locale", oldValue, locale);
     }
 
     public Metadata getMetadata() {
