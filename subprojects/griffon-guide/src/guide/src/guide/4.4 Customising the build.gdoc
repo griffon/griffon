@@ -51,3 +51,24 @@ h3. Available build settings
  Name | Description
  griffon.testing.patterns | A list of Ant path patterns that allow you to control which files are included in the tests. The patterns should not include the test case suffix, which is set by the next property.
 {table}
+
+h3. Additional Sources
+
+The Griffon build automatically compiles all Java & Groovy sources found under @src/main@. Follow these steps should you require additional sources to be compiled during the same compilation step
+
+ * Create a file named @_Events.groovy@ under the @scripts@ directory.
+
+ * Create a build event handler that configures the new path. The handler must react to a particular build event. Either @CompileStart@ or @CompileSourcesStart@ will do the trick.
+
+{code}
+eventCompileSourcesStart = {
+    [
+        'src/legacy', // relative path
+        new File('/development/projects/sample/src').canonicalPath // absolute path
+    ].each { dir ->
+        if (!(dir in additionalSources)) additionalSources << dir
+    }
+}
+{code}
+
+Note that you can define relative and absolute paths. This tip works in both plugin and application projects.
