@@ -1,8 +1,14 @@
 @if "%DEBUG%" == "" @echo off
+@rem ##########################################################################
+@rem                                                                         ##
+@rem  Griffon JVM Bootstrap for Windowz                                      ##
+@rem                                                                         ##
+@rem ##########################################################################
 
-setlocal enabledelayedexpansion
+@rem Set local scope for the variables with windows NT shell
+if "%OS%"=="Windows_NT" setlocal enabledelayedexpansion
 
-set DIRNAME=%~s1
+set DIRNAME=%~1
 shift
 
 set CLASS=%~1
@@ -21,7 +27,24 @@ if exist "%SystemRoot%\command\find.exe" set FIND_EXE="%SystemRoot%\command\find
 :check_JAVA_HOME
 @rem Make sure we have a valid JAVA_HOME
 if not "%JAVA_HOME%" == "" goto have_JAVA_HOME
-for %%P in (%PATH%) do if exist %%P\..\bin\java.exe set JAVA_HOME=%%P\..
+set PATHTMP=%PATH%
+:loop
+for /f "delims=; tokens=1*" %%i in ("!PATHTMP!") do (
+    if exist "%%i\..\bin\java.exe" (
+        set "JAVA_HOME=%%i\.."
+        goto found_JAVA_HOME
+    )
+    set PATHTMP=%%j
+    goto loop
+)
+goto check_default_JAVA_EXE
+
+:found_JAVA_HOME
+@rem Remove trailing \bin\.. from JAVA_HOME
+if "%JAVA_HOME:~-7%"=="\bin\.." SET "JAVA_HOME=%JAVA_HOME:~0,-7%"
+set JAVA_EXE=%JAVA_HOME%\bin\java.exe
+
+:check_default_JAVA_EXE
 if not "%JAVA_HOME%" == "" goto valid_JAVA_HOME
 java -version 2>NUL
 if not ERRORLEVEL 1 goto default_JAVA_EXE
@@ -49,6 +72,7 @@ goto end
 
 :default_JAVA_EXE
 set JAVA_EXE=java.exe
+goto check_CLASSPATH
 
 :valid_JAVA_HOME_DIR
 set JAVA_EXE=%JAVA_HOME%\bin\java.exe
@@ -61,6 +85,7 @@ goto common_error
 :valid_JAVA_HOME
 if exist "%JAVA_HOME%\lib\tools.jar" set TOOLS_JAR=%JAVA_HOME%\lib\tools.jar
 
+:check_CLASSPATH
 @rem classpath handling
 set _SKIP=2
 set CP=
@@ -110,6 +135,7 @@ set _ARGS=%_ARGS:9*=9-s%
 rem prequote all args for 'for' statement
 set _ARGS="%_ARGS%"
 
+set _ARG=
 :win9xME_args_loop
 rem split args by spaces into first and rest
 for /f "tokens=1,*" %%i in (%_ARGS%) do call :get_arg "%%i" "%%j"
@@ -117,23 +143,33 @@ goto process_arg
 
 :get_arg
 rem remove quotes around first arg
-for %%i in (%1) do set _ARG=%%~i
+for %%i in (%1) do set _ARG=%_ARG% %%~i
 rem set the remaining args
 set _ARGS=%2
+rem remove the leading space we'll add the first time
+if "x%_ARG:~0,1%" == "x " set _ARG=%_ARG:~1%
 rem return
 goto :EOF
 
 :process_arg
 if "%_ARG%" == "" goto execute
 
+rem collect all parts of a quoted argument containing spaces
+if not "%_ARG:~0,2%" == "-q" goto :argIsComplete
+if "%_ARG:~-2%" == "-q" goto :argIsComplete
+rem _ARG starts with a quote but does not end with one:
+rem  add the next part to _ARG until the matching quote is found
+goto :win9xME_args_loop
+
+:argIsComplete
 if "x4" == "x%_SKIP%" goto skip_4
 if "x3" == "x%_SKIP%" goto skip_3
 if "x2" == "x%_SKIP%" goto skip_2
 if "x1" == "x%_SKIP%" goto skip_1
 
 rem now unescape -q, -s, -d
-set _ARG=%_ARG:-q="%
 set _ARG=%_ARG:-s=*%
+set _ARG=%_ARG:-q="%
 set _ARG=%_ARG:-d=-%
 
 set CMD_LINE_ARGS=%CMD_LINE_ARGS% %_ARG%
@@ -170,13 +206,20 @@ set LIBDIR="%DIRNAME%..\lib"
 set CLASSPATH=
 for %%i in (%LIBDIR%\*.jar) do set CLASSPATH=!CLASSPATH!;%%i
 
-set NATIVE_LIBRARY_PATH="%PATH%"
+set NATIVE_LIBRARY_PATH=%PATH%
+set NATIVE64_LIBDIR="%DIRNAME%..\lib\windows64"
 set NATIVE_LIBDIR="%DIRNAME%..\lib\windows"
+if not exist "%NATIVE64_LIBDIR%" goto no_native64
+for %%i in (%NATIVE64_LIBDIR%\*.jar) do set CLASSPATH=!CLASSPATH!;%%i
+set NATIVE_LIBRARY_PATH=%NATIVE_LIBRARY_PATH%;%DIRNAME%..\lib\windows64\native
+
+:no_native64
 if not exist "%NATIVE_LIBDIR%" goto no_native
 for %%i in (%NATIVE_LIBDIR%\*.jar) do set CLASSPATH=!CLASSPATH!;%%i
-set NATIVE_LIBRARY_PATH="%PATH%;%DIRNAME%..\lib\windows\native"
+set NATIVE_LIBRARY_PATH=%NATIVE_LIBRARY_PATH%;%DIRNAME%..\lib\windows\native
 
 :no_native
+set NATIVE_LIBRARY_PATH="%NATIVE_LIBRARY_PATH%;"
 @rem Setting a classpath using the -cp or -classpath option means not to use
 @rem the global classpath. Groovy behaves then the same as the java
 @rem interpreter

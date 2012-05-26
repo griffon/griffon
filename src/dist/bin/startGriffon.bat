@@ -1,16 +1,16 @@
 @if "%DEBUG%" == "" @echo off
 @rem ##########################################################################
 @rem                                                                         ##
-@rem  Griffon JVM Bootstrap for Windowz                                      ##
+@rem  Groovy JVM Bootstrap for Windowz                                       ##
 @rem                                                                         ##
 @rem ##########################################################################
 
-@rem 
-@rem $Revision: 4170 $ $Date: 2006-10-26 12:11:12 +0000 (Thu, 26 Oct 2006) $
-@rem 
+@rem
+@rem $Revision$ $Date$
+@rem
 
 @rem Set local scope for the variables with windows NT shell
-if "%OS%"=="Windows_NT" setlocal
+if "%OS%"=="Windows_NT" setlocal enabledelayedexpansion
 
 set DIRNAME=%~1
 shift
@@ -31,33 +31,71 @@ if exist "%SystemRoot%\command\find.exe" set FIND_EXE="%SystemRoot%\command\find
 :check_JAVA_HOME
 @rem Make sure we have a valid JAVA_HOME
 if not "%JAVA_HOME%" == "" goto have_JAVA_HOME
+set PATHTMP=%PATH%
+:loop
+for /f "delims=; tokens=1*" %%i in ("!PATHTMP!") do (
+    if exist "%%i\..\bin\java.exe" (
+        set "JAVA_HOME=%%i\.."
+        goto found_JAVA_HOME
+    )
+    set PATHTMP=%%j
+    goto loop
+)
+goto check_default_JAVA_EXE
+
+:found_JAVA_HOME
+@rem Remove trailing \bin\.. from JAVA_HOME
+if "%JAVA_HOME:~-7%"=="\bin\.." SET "JAVA_HOME=%JAVA_HOME:~0,-7%"
+set JAVA_EXE=%JAVA_HOME%\bin\java.exe
+
+:check_default_JAVA_EXE
+if not "%JAVA_HOME%" == "" goto valid_JAVA_HOME
+java -version 2>NUL
+if not ERRORLEVEL 1 goto default_JAVA_EXE
 
 echo.
 echo ERROR: Environment variable JAVA_HOME has not been set.
-echo.
-echo Please set the JAVA_HOME variable in your environment to match the
-echo location of your Java installation.
-echo.
-goto end
+echo Attempting to find JAVA_HOME from PATH also failed.
+goto common_error
 
 :have_JAVA_HOME
+@rem Remove trailing slash from JAVA_HOME if found
+if "%JAVA_HOME:~-1%"=="\" SET JAVA_HOME=%JAVA_HOME:~0,-1%
+
 @rem Validate JAVA_HOME
 %COMMAND_COM% /C DIR "%JAVA_HOME%" 2>&1 | %FIND_EXE% /I /C "%JAVA_HOME%" >nul
-if not errorlevel 1 goto check_GRIFFON_HOME
+if not errorlevel 1 goto valid_JAVA_HOME_DIR
 
 echo.
 echo ERROR: JAVA_HOME is set to an invalid directory: %JAVA_HOME%
+
+:common_error
 echo.
-echo Please set the JAVA_HOME variable in your environment to match the
-echo location of your Java installation.
+echo Please set the JAVA_HOME variable in your environment
+echo to match the location of your Java installation.
 echo.
 goto end
+
+:default_JAVA_EXE
+set JAVA_EXE=java.exe
+goto check_GRIFFON_HOME
+
+:valid_JAVA_HOME_DIR
+set JAVA_EXE=%JAVA_HOME%\bin\java.exe
+if exist "%JAVA_EXE%" goto valid_JAVA_HOME
+
+echo.
+echo ERROR: No java.exe found at: %JAVA_EXE%
+goto common_error
+
+:valid_JAVA_HOME
+if exist "%JAVA_HOME%\lib\tools.jar" set TOOLS_JAR=%JAVA_HOME%\lib\tools.jar
 
 :check_GRIFFON_HOME
 @rem Define GRIFFON_HOME if not set
 if "%GRIFFON_HOME%" == "" set GRIFFON_HOME=%DIRNAME%..
 
-@rem remove trailing slash from GRIFFON_HOME
+@rem Remove trailing slash from GRIFFON_HOME if found
 if "%GRIFFON_HOME:~-1%"=="\" SET GRIFFON_HOME=%GRIFFON_HOME:~0,-1%
 
 @rem classpath handling
@@ -70,13 +108,14 @@ if "x" == "x%CP%" goto init
 set _SKIP=4
 shift
 shift
- 
+
 :init
 @rem Get command-line arguments, handling Windowz variants
 if not "%OS%" == "Windows_NT" goto win9xME_args
 if "%eval[2+2]" == "4" goto 4NT_args
 
-@rem Slurp the command line arguments.  
+:win9xME_args
+@rem Slurp the command line arguments.
 set CMD_LINE_ARGS=
 
 :win9xME_args_slurp
@@ -175,8 +214,9 @@ goto win9xME_args_loop
 set CMD_LINE_ARGS=%$
 
 :execute
+@rem Setup the command line
 @rem Setting a classpath using the -cp or -classpath option means not to use
-@rem the global classpath. Groovy behaves then the same as the java 
+@rem the global classpath. Groovy behaves then the same as the java
 @rem interpreter
 if "x" == "x%CP%" goto empty_cp
 :non_empty_cp
@@ -184,11 +224,9 @@ set CP=%CP%;.
 goto after_cp
 :empty_cp
 set CP=.
+if "x" == "x%CLASSPATH%" goto after_cp
+set CP=%CLASSPATH%;%CP%
 :after_cp
-
-if "x" == "x%CLASSPATH%" goto after_classpath
-set CP=%CP%;%CLASSPATH%
-:after_classpath
 
 set STARTER_MAIN_CLASS=org.codehaus.griffon.cli.support.GriffonStarter
 
