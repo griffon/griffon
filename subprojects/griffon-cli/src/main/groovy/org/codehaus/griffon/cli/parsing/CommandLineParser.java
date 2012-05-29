@@ -176,7 +176,7 @@ public class CommandLineParser {
             String[] split = arg.split("=");
             String name = split[0].trim();
             validateOptionName(name);
-            String value = split[1].trim();
+            String value = arg.substring(name.length() + 1);
             if (declaredOptions.containsKey(name)) {
                 cl.addDeclaredOption(name, declaredOptions.get(name), value);
             } else {
