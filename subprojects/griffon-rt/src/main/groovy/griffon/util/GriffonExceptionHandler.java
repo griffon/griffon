@@ -76,6 +76,20 @@ public class GriffonExceptionHandler implements Thread.UncaughtExceptionHandler 
         return throwable;
     }
 
+    public static StackTraceElement[] sanitize(StackTraceElement[] stackTrace) {
+        try {
+            if (!Boolean.getBoolean(GRIFFON_FULL_STACKTRACE)) {
+                Throwable t = new Throwable();
+                t.setStackTrace(stackTrace);
+                sanitize(t);
+                stackTrace = t.getStackTrace();
+            }
+        } catch (Throwable o) {
+            // don't let the exception get thrown out, will cause infinite looping!
+        }
+        return stackTrace;
+    }
+
     public static boolean isOutputEnabled() {
         return Boolean.getBoolean(GRIFFON_EXCEPTION_OUTPUT);
     }
