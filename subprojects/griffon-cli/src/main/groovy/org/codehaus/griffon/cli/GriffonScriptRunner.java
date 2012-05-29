@@ -926,11 +926,11 @@ public class GriffonScriptRunner {
                 }
 
                 List<String> targets = new ArrayList<String>();
+                if (settings.isGriffonProject() && binarySearch(CHECK_VERSION_EXCLUSIONS, scriptName) < 0) {
+                    targets.add("checkVersion");
+                }
                 if (binarySearch(CONFIGURE_PROXY_EXCLUSIONS, scriptName) < 0) targets.add("configureProxy");
                 if (!isContextlessScriptName(scriptName)) {
-                    if (binarySearch(CHECK_VERSION_EXCLUSIONS, scriptName) < 0) {
-                        targets.add("checkVersion");
-                    }
                     if (!isExcludedFromDependencyResolution(scriptName)) {
                         targets.add("resolveFrameworkDependencies");
                         targets.add("resolveDependencies");
