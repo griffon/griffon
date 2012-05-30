@@ -42,6 +42,7 @@ public class Metadata extends Properties {
 
     private boolean initialized;
     private File metadataFile;
+    private boolean dirty;
 
     private Metadata() {
         super();
@@ -59,6 +60,7 @@ public class Metadata extends Properties {
         if (m != null) {
             m.clear();
             m.initialized = false;
+            m.dirty = false;
         }
     }
 
@@ -308,14 +310,13 @@ public class Metadata extends Properties {
      * Saves the current state of the Metadata object
      */
     public void persist() {
-        // if (propertiesHaveNotChanged()) return;
-
-        if (metadataFile != null) {
+        if (dirty && metadataFile != null) {
             FileOutputStream out = null;
 
             try {
                 out = new FileOutputStream(metadataFile);
                 store(out, "Griffon Metadata file");
+                dirty = false;
             } catch (Exception e) {
                 throw new RuntimeException("Error persisting metadata to file [" + metadataFile + "]: " + e.getMessage(), e);
             } finally {
@@ -328,20 +329,35 @@ public class Metadata extends Properties {
      * @return Returns true if these properties have not changed since they were loaded
      */
     public boolean propertiesHaveNotChanged() {
-        Metadata transientMetadata = getCurrent();
+        return dirty;
+    }
 
-        Metadata allStringValuesMetadata = new Metadata();
-        Map<Object, Object> transientMap = (Map<Object, Object>) transientMetadata;
-        for (Map.Entry<Object, Object> entry : transientMap.entrySet()) {
-            if (entry.getValue() != null) {
-                allStringValuesMetadata.put(entry.getKey().toString(), entry.getValue().toString());
-            }
+    @Override
+    public synchronized Object setProperty(String name, String value) {
+        if(containsKey(name)) {
+            Object oldValue = getProperty(name);
+            dirty = oldValue != null && !oldValue.equals(value);
+        } else {
+            dirty = true;
         }
+        return super.setProperty(name, value);
+    }
 
-        Metadata persistedMetadata = Metadata.reload();
-        boolean result = allStringValuesMetadata.equals(persistedMetadata);
-        metadata = new SoftReference<Metadata>(transientMetadata);
-        return result;
+    @Override
+    public synchronized Object put(Object key, Object value) {
+        if(containsKey(key)) {
+            Object oldValue = get(key);
+            dirty = oldValue != null && !oldValue.equals(value);
+        } else {
+            dirty = true;
+        }
+        return super.put(key, value);
+    }
+
+    @Override
+    public synchronized void putAll(Map<? extends Object, ? extends Object> map) {
+        dirty = true;
+        super.putAll(map);
     }
 
     /**
