@@ -1325,6 +1325,34 @@ public final class GriffonClassUtils {
     }
 
     /**
+     * Get the a declared field on an object
+     *
+     * @param obj
+     * @param name
+     * @return The field or null if there is no such field or access problems
+     */
+    public static Field getField(Object obj, String name) {
+        return getField(obj.getClass(), name);
+    }
+
+    /**
+     * Get the a declared field on a class
+     *
+     * @param clazz
+     * @param name
+     * @return The field or null if there is no such field or access problems
+     */
+    public static Field getField(Class clazz, String name) {
+        Field f = null;
+        try {
+            f = clazz.getDeclaredField(name);
+            return f;
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
+    /**
      * Work out if the specified object has a public field with the name supplied.
      *
      * @param obj

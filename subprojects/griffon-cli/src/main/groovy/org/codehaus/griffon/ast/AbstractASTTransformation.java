@@ -40,8 +40,8 @@ import static org.codehaus.griffon.ast.GriffonASTUtils.call;
  * @since 0.9.3
  */
 public abstract class AbstractASTTransformation implements ASTTransformation, Opcodes {
-    private static final ClassNode APPLICATION_HOLDER_TYPE = ClassHelper.makeWithoutCaching(ApplicationHolder.class);
-    private static final ClassNode COLLECTIONS_CLASS = ClassHelper.makeWithoutCaching(Collections.class);
+    private static final ClassNode APPLICATION_HOLDER_TYPE = makeClassSafe(ApplicationHolder.class);
+    private static final ClassNode COLLECTIONS_CLASS = makeClassSafe(Collections.class);
 
     public void addError(String msg, ASTNode expr, SourceUnit source) {
         int line = expr.getLineNumber();
