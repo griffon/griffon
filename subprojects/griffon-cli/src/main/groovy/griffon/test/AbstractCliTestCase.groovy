@@ -216,7 +216,7 @@ abstract class AbstractCliTestCase extends GroovyTestCase {
      * location of GRIFFON_HOME.
      */
     protected final void verifyHeader() {
-        assertTrue output.startsWith("""Welcome to Griffon ${griffonVersion} - http://griffon.codehaus.org/
+        assertTrue output.startsWith("""Welcome to Griffon ${griffonVersion} - http://griffon-framework.org/
 Licensed under Apache Standard License 2.0
 Griffon home is set to: ${griffonHome}
 """)

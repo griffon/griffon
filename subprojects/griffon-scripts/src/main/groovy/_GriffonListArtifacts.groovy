@@ -95,7 +95,7 @@ To find more info about ${type} type 'griffon ${type}-info [NAME]'
 
 To install type 'griffon install-${type} [NAME] [VERSION]'
 
-For further info visit http://griffon.codehaus.org/${capitalize(type)}s
+For further info visit http://artifacts.griffon-framework.org/${type}s
 """
 }
 
@@ -229,7 +229,7 @@ To install latest version of ${type} type 'griffon install-${type} [NAME]'
 
 To install specific version of ${type} type 'griffon install-${type} [NAME] [VERSION]'
 
-For further info visit http://griffon.codehaus.org/${capitalize(type)}s
+For further info visit http://artifacts.griffon-framework.org/${type}s
 """
 }
 

@@ -143,7 +143,7 @@ public class GriffonShell extends KarafMain implements Action {
                 BuildSettings buildSettings = getSettings();
                 File griffonHome = buildSettings.getGriffonHome();
                 session.getConsole().println(
-                        "Welcome to Griffon " + buildSettings.getGriffonVersion() + " - http://griffon.codehaus.org/" + '\n' +
+                        "Welcome to Griffon " + buildSettings.getGriffonVersion() + " - http://griffon-framework.org/" + '\n' +
                                 "Licensed under Apache Standard License 2.0" + '\n' +
                                 "Griffon home is " + (griffonHome == null ? "not set" : "set to: " + griffonHome) + '\n' + '\n' +
                                 "Type 'exit' or ^D to terminate this interactive shell" + '\n' + '\n');

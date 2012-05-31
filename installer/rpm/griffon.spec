@@ -41,10 +41,10 @@ Group:          Development/Frameworks/Griffon
 Summary:        Griffon is an agile development framework for Java Swing applications
 Source:         griffon-@griffon.version@-bin.zip
 BuildArch:      noarch
-Packager: 	The Griffon team <dev@griffon.codehaus.org>
+Packager: 	    The Griffon team <dev@griffon.codehaus.org>
 
 %description
-Griffon is a Grails like application framework for developing desktop applications in Groovy.
+Griffon is an application framework for developing desktop applications in the JVM.
 
 %prep
 %setup -n griffon-@griffon.version@

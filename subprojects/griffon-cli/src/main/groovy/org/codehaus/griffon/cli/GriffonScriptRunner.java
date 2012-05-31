@@ -127,7 +127,7 @@ public class GriffonScriptRunner {
 
         // Show a nice header in the console when running commands.
         System.out.println(
-                "Welcome to Griffon " + build.getGriffonVersion() + " - http://griffon.codehaus.org/" + '\n' +
+                "Welcome to Griffon " + build.getGriffonVersion() + " - http://griffon-framework.org/" + '\n' +
                         "Licensed under Apache Standard License 2.0" + '\n' +
                         "Griffon home is " + (griffonHome == null ? "not set" : "set to: " + griffonHome) + '\n');
 

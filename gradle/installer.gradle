@@ -163,9 +163,12 @@ task deb(dependsOn: prepareDeb) {
             version(upstream: version)
             maintainer(name: 'Griffon Team',
                        email: 'dev@griffon.codehaus.org')
-            description(synopsis: 'Grails-like framework for desktop Java applications', '''
-Griffon is a Grails inspired application framework for developing desktop applications in Groovy
-Home page: http://griffon.codehaus.org/
+            description(synopsis: 'Griffon is an application framework for developing desktop applications in the JVM', '''
+Griffon is an application framework for developing desktop applications in the JVM, with Groovy being
+the primary language of choice. Inspired by Grails, Griffon follows the Convention over Configuration
+paradigm, paired with an intuitive MVC architecture and a command line interface.
+
+http://griffon-framework.org/
 ''')
             tarfileset(dir: destinationDir, prefix: "./usr/share/griffon-${version}")
             tarfileset(dir: "$destinationDir/bin", prefix: "./usr/share/griffon-${version}/bin", filemode: '755')

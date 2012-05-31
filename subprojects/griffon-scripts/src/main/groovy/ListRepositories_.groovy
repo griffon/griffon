@@ -50,6 +50,6 @@ To find more info about available artifacts type
     'griffon list-plugins'
     'griffon list-archetypes'
 
-For further info visit http://griffon.codehaus.org/
+For further info visit http://artifacts.griffon-framework.org/
 """
 }

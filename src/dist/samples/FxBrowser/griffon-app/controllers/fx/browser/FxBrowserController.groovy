@@ -27,7 +27,7 @@ class FxBrowserController {
 
     void mvcGroupInit(Map<String, Object> args) {
         execInsideUIAsync {
-            view.urlField.text = 'http://griffon.codehaus.org'
+            view.urlField.text = 'http://griffon-framework.org'
             openUrl()
         }
     }

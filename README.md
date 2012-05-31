@@ -68,7 +68,7 @@ Links
 
 
 [logo]: http://media.xircles.codehaus.org/_projects/griffon/_logos/medium.png
-[1]: http://griffon.codehaus.org
+[1]: http://griffon-framework.org
 [2]: http://grails.org
 [3]: http://groovy.codehaus.org
 [4]: http://artifacts.griffon-framework.org
