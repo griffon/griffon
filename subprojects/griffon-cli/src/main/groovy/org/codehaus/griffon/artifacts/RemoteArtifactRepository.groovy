@@ -41,6 +41,10 @@ import static groovyx.net.http.ContentType.JSON
 class RemoteArtifactRepository extends AbstractArtifactRepository {
     private static final Logger LOG = LoggerFactory.getLogger(RemoteArtifactRepository)
 
+    public static final String NO_EMAIL_KEY = 'griffon.release.email.disable'
+    public static final String NO_TWITTER_KEY = 'griffon.release.twitter.disable'
+    public static final String NO_NOTIFICATIONS_KEY = 'griffon.release.notifications.disable'
+
     String url
     String username
     String password
@@ -176,9 +180,15 @@ class RemoteArtifactRepository extends AbstractArtifactRepository {
             session.userInfo = new SimpleUserInfo(username, password)
             session.connect()
 
-            String command = 'scp -p -t /tmp/' + file.name
+            StringBuilder command = new StringBuilder('scp -p -t ')
+            if (Boolean.getBoolean(NO_EMAIL_KEY)) command.append('-no-email ')
+            if (Boolean.getBoolean(NO_TWITTER_KEY)) command.append('-no-twitter ')
+            if (Boolean.getBoolean(NO_NOTIFICATIONS_KEY)) command.append('-no-notifications ')
+            command.append('/tmp/')
+                    .append(file.name)
+            // String command = 'scp -p -t /tmp/' + file.name
             Channel channel = session.openChannel('exec')
-            channel.command = command
+            channel.command = command.toString()
 
             // get I/O streams for remote scp
             OutputStream out = channel.outputStream
@@ -192,15 +202,15 @@ class RemoteArtifactRepository extends AbstractArtifactRepository {
 
             // send "C0644 filesize filename", where filename should not include '/'
             long filesize = file.length()
-            command = "C0644 " + filesize + " "
+            String cmd = "C0644 " + filesize + " "
             if (file.name.lastIndexOf('/') > 0) {
-                command += file.name.substring(file.name.lastIndexOf('/') + 1)
+                cmd += file.name.substring(file.name.lastIndexOf('/') + 1)
             }
             else {
-                command += file.name
+                cmd += file.name
             }
-            command += "\n"
-            out.write(command.bytes)
+            cmd += "\n"
+            out.write(cmd.bytes)
             out.flush()
             if (checkAck(is) != 0) {
                 return false
