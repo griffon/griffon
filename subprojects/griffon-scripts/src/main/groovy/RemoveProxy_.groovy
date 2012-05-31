@@ -18,7 +18,7 @@
  * @author Graeme Rocher (Grails 1.2.3)
  */
 
-target(removeProxy: "Removes a proxy configuration") {
+target(name: 'removeProxy', description: "Removes a proxy configuration", prehook: null, posthook: null) {
     if (!argsMap.params) {
         println msg()
         exit 1

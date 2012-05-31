@@ -18,9 +18,7 @@
  * @author Graeme Rocher (Grails 1.2.3)
  */
 
-// includeTargets << griffonScript("_GriffonArgParsing")
-
-target(addProxy: "Adds a proxy configuration") {
+target(name: 'addProxy', description: "Adds a proxy configuration", prehook: null, posthook: null) {
     if (!argsMap.params) {
         println msg()
         exit 1

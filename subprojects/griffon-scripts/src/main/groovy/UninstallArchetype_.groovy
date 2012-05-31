@@ -20,7 +20,7 @@ import org.codehaus.griffon.artifacts.model.Archetype
  * @author Andres Almiray
  */
 
-target(uninstallArchetype: "Uninstalls a Griffon application archetype") {
+target(name: 'uninstallArchetype', description: "Uninstalls a Griffon application archetype", prehook: null, posthook: null) {
     uninstallArtifact(Archetype.TYPE)
 }
 setDefaultTarget(uninstallArchetype)

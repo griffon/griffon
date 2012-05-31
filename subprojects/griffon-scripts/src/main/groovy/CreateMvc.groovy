@@ -27,7 +27,7 @@ import griffon.util.GriffonUtil
 includeTargets << griffonScript('CreateIntegrationTest')
 
 
-target(createMVC: "Creates a new MVC Group") {
+target(name: 'createMVC', description: "Creates a new MVC Group", prehook: null, posthook: null) {
     if (isPluginProject && !isAddonPlugin) {
         println """You must create an Addon descriptor first.
 Type in griffon create-addon then execute this command again."""

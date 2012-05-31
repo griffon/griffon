@@ -22,7 +22,7 @@
 
 includeTargets << griffonScript('_GriffonCreateArtifacts')
 
-target(createIntegrationTest: "Creates a new Griffon integration test which loads the whole Griffon environment when run") {
+target(name: 'createIntegrationTest', description: "Creates a new Griffon integration test which loads the whole Griffon environment when run", prehook: null, posthook: null) {
     promptForName(type: "Integration test")
 
     def name = argsMap["params"][0]

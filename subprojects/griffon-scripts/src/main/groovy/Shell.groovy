@@ -25,7 +25,7 @@ import org.codehaus.groovy.tools.shell.IO
 
 includeTargets << griffonScript('_GriffonBootstrap')
 
-target(shell: "Runs an embedded application in a Groovy Shell") {
+target(name: 'shell', description: "Runs an embedded application in a Groovy Shell", prehook: null, posthook: null) {
     depends(createConfig)
 
     jardir = ant.antProject.replaceProperties(buildConfig.griffon.jars.destDir)

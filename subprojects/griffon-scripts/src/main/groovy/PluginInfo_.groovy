@@ -22,7 +22,7 @@ import org.codehaus.griffon.artifacts.model.Plugin
 
 includeTargets << griffonScript('_GriffonListArtifacts')
 
-target(pluginInfo: 'Displays information on a Griffon plugin') {
+target(name: 'pluginInfo', description: 'Displays information on a Griffon plugin', prehook: null, posthook: null) {
     if (argsMap.params) {
         def name = argsMap.params[0]
         def version = argsMap.params.size() > 1 ? argsMap.params[1] : null

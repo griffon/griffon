@@ -20,7 +20,7 @@ import org.codehaus.griffon.artifacts.model.Plugin
  * @author Andres Almiray
  */
 
-target(uninstallPlugin: "Uninstalls a Griffon application plugin") {
+target(name: 'uninstallPlugin', description: "Uninstalls a Griffon application plugin", prehook: null, posthook: null) {
     uninstallArtifact(Plugin.TYPE)
     resetDependencyResolution()
 }

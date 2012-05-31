@@ -31,7 +31,7 @@ includeTargets << griffonScript('_GriffonPackage')
 
 ant.taskdef(name: 'fileMerge', classname: 'org.codehaus.griffon.ant.taskdefs.FileMergeTask')
 
-target('package': 'Packages a Griffon project according to its type') {
+target(name: 'package', description: 'Packages a Griffon project according to its type', prehook: null, posthook: null) {
     if (griffonSettings.isPluginProject()) {
         includeTargets << griffonScript('PackagePlugin')
         depends(checkVersion, packagePlugin)
@@ -45,7 +45,7 @@ target('package': 'Packages a Griffon project according to its type') {
     }
 }
 
-target(packageApplication: 'Packages a GriffonApplication') {
+target(name: 'packageApplication', description: 'Packages a GriffonApplication', prehook: null, posthook: null) {
     depends(createConfig)
 
     // create general dist dir
@@ -84,7 +84,7 @@ target(packageApplication: 'Packages a GriffonApplication') {
 }
 setDefaultTarget('package')
 
-target(prepackage: "packaging steps all standard packaging options do") {
+target(name: 'prepackage', description: "packaging steps all standard packaging options do", prehook: null, posthook: null) {
     createConfig()
 
     griffonAppletClass = buildConfig.griffon.applet.mainClass
@@ -100,7 +100,7 @@ target(prepackage: "packaging steps all standard packaging options do") {
 /*
  * make sure targetDistDir is set before calling this target
  */
-target(create_binary_package: "Creates a binary distribution") {
+target(name: 'create_binary_package', description: "Creates a binary distribution", prehook: null, posthook: null) {
     event("CreateBinaryPackageStart", [packageType])
 
     ant.delete(dir: targetDistDir, quiet: true, failOnError: false)
@@ -119,7 +119,7 @@ target(create_binary_package: "Creates a binary distribution") {
     event("CreateBinaryPackageEnd", [packageType])
 }
 
-target(package_zip: "Creates a binary distribution and zips it.") {
+target(name: 'package_zip', description: "Creates a binary distribution and zips it.", prehook: null, posthook: null) {
     System.setProperty(RunMode.KEY, RunMode.CUSTOM.name)
     packageType = 'zip'
     event("PackageStart", [packageType])
@@ -132,7 +132,7 @@ target(package_zip: "Creates a binary distribution and zips it.") {
     event("PackageEnd", [packageType])
 }
 
-target(package_jar: "Creates a single jar distribution and zips it.") {
+target(name: 'package_jar', description: "Creates a single jar distribution and zips it.", prehook: null, posthook: null) {
     System.setProperty(RunMode.KEY, RunMode.CUSTOM.name)
     packageType = 'jar'
     event("PackageStart", [packageType])
@@ -201,7 +201,7 @@ target(package_jar: "Creates a single jar distribution and zips it.") {
     event("PackageEnd", [packageType])
 }
 
-target(package_applet: "Creates an applet distribution and zips it.") {
+target(name: 'package_applet', description: "Creates an applet distribution and zips it.", prehook: null, posthook: null) {
     System.setProperty(RunMode.KEY, RunMode.APPLET.name)
     packageType = 'applet'
     event("PackageStart", [packageType])
@@ -225,7 +225,7 @@ target(package_applet: "Creates an applet distribution and zips it.") {
     event("PackageEnd", [packageType])
 }
 
-target(package_webstart: "Creates a webstart distribution and zips it.") {
+target(name: 'package_webstart', description: "Creates a webstart distribution and zips it.", prehook: null, posthook: null) {
     System.setProperty(RunMode.KEY, RunMode.WEBSTART.name)
     packageType = 'webstart'
     event("PackageStart", [packageType])
@@ -249,19 +249,19 @@ target(package_webstart: "Creates a webstart distribution and zips it.") {
     event("PackageEnd", [packageType])
 }
 
-target(_copyAppLibs: "") {
+target(name: '_copyAppLibs', description: "", prehook: null, posthook: null) {
     ant.mkdir(dir: "${targetDistDir}/lib")
     ant.copy(todir: "${targetDistDir}/lib") {
         fileset(dir: buildConfig.griffon.jars.destDir, includes: "**/*.jar")
     }
 }
 
-target(_copyNativeFiles: "") {
+target(name: '_copyNativeFiles', description: "", prehook: null, posthook: null) {
     ant.mkdir(dir: "${targetDistDir}/lib")
     copyNativeLibs(buildConfig.griffon.jars.destDir, "${targetDistDir}/lib".toString())
 }
 
-target(_copyLaunchScripts: "") {
+target(name: '_copyLaunchScripts', description: "", prehook: null, posthook: null) {
     def javaOpts = []
     if (buildConfig.griffon.memory?.min) {
         javaOpts << "-Xms$buildConfig.griffon.memory.min"

@@ -25,7 +25,7 @@ import static griffon.util.GriffonNameUtils.capitalize
 
 includeTargets << griffonScript('_GriffonClean')
 
-target(upgrade: "Upgrades a Griffon application from a previous version of Griffon") {
+target(name: 'upgrade', description: "Upgrades a Griffon application from a previous version of Griffon", prehook: null, posthook: null) {
     boolean force = argsMap.force || !isInteractive ?: false
 
     if (appGriffonVersion != griffonVersion) {

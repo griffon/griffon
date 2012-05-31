@@ -33,7 +33,7 @@ includeTargets << griffonScript('CreateIntegrationTest')
  * * tweaks griffon-app/conf/BuildConfig.groovy to have griffon.jars.jarName set (don't change)
  * * Adds copy libs events for the destDir
  */
-target(createAddon: "Creates an Addon for a plugin") {
+target(name: 'createAddon', description: "Creates an Addon for a plugin", prehook: null, posthook: null) {
     if (metadataFile.exists()) {
         if (!isPluginProject) {
             event('StatusFinal', ['Cannot create an Addon in a non-plugin project.'])

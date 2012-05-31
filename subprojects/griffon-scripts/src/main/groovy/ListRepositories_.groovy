@@ -21,7 +21,7 @@ import org.codehaus.griffon.artifacts.ArtifactRepositoryRegistry
  * @author Andres Almiray
  */
 
-target(listRepositories: 'Lists all configured repositories') {
+target(name: 'listRepositories', description: 'Lists all configured repositories', prehook: null, posthook: null) {
     listRepositoriesHeader()
     ArtifactRepositoryRegistry.instance.withRepositories { String name, ArtifactRepository artifactRepository ->
         println formatRepositoryForPrint(artifactRepository)

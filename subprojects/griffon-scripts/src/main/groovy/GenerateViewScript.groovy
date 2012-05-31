@@ -25,7 +25,7 @@ includeTargets << griffonScript('_GriffonCreateArtifacts')
 includeTargets << griffonScript('_GriffonCompile')
 
 
-target('generateViewScript': "Generates a view script from an existing class") {
+target(name: 'generateViewScript', description: "Generates a view script from an existing class", prehook: null, posthook: null) {
     depends(compile)
 
     promptForName(type: "Class to Proxy View for:")

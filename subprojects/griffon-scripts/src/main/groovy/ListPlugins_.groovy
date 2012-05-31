@@ -22,7 +22,7 @@ import org.codehaus.griffon.artifacts.model.Plugin
 
 includeTargets << griffonScript('_GriffonListArtifacts')
 
-target(listPlugins: 'Lists all plugins available in an artifact repository') {
+target(name: 'listPlugins', description: 'Lists all plugins available in an artifact repository', prehook: null, posthook: null) {
     listArtifacts(Plugin.TYPE)
 }
 

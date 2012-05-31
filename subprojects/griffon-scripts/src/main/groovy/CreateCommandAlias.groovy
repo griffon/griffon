@@ -23,7 +23,7 @@ import griffon.util.GriffonUtil
  * @author Kiyotaka Oku (@kiy0taka)
  */
 
-target('createCommandAlias': 'Create Griffon command alias') {
+target(name: 'createCommandAlias', description: 'Create Griffon command alias', prehook: null, posthook: null) {
     def params = argsMap["params"]
     if (params.size() < 2) {
         println """\

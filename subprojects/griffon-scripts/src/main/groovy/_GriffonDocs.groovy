@@ -53,7 +53,7 @@ createdPdf = false
 
 ant.taskdef(name: "groovydoc", classname: "org.codehaus.groovy.ant.Groovydoc")
 
-target(docs: "Produces documentation for a Griffon project") {
+target(name: 'docs', description: "Produces documentation for a Griffon project", prehook: null, posthook: null) {
     if (argsMap.init) {
         ant.mkdir(dir: "${basedir}/src/docs/img")
         ant.copy(todir: "${basedir}/src/docs/img") {

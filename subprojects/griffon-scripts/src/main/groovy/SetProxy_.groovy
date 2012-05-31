@@ -22,7 +22,7 @@ import griffon.util.BuildSettings
  * @author Graeme Rocher (Grials 1.2.3)
  */
 
-target(setProxy: "Sets HTTP proxy configuration for Griffon") {
+target(name: 'setProxy', description: "Sets HTTP proxy configuration for Griffon", prehook: null, posthook: null) {
     if (argsMap.params) {
         def name = argsMap.params[0]
 

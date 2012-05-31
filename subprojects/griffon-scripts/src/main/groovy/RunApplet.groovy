@@ -27,10 +27,10 @@ import static griffon.util.GriffonNameUtils.getNaturalName
 includeTargets << griffonScript('Package')
 includeTargets << griffonScript('_GriffonBootstrap')
 
-target(tweakConfig: ' tweaks for webstart') {
+target(name: 'tweakConfig', description: ' tweaks for webstart', prehook: null, posthook: null) {
     configTweaks << { buildConfig.griffon.jars.sign = true }
 }
-target('runApplet': "Runs the applet from Java WebStart") {
+target(name: 'runApplet', description: "Runs the applet from Java WebStart", prehook: null, posthook: null) {
     if (isPluginProject) {
         println "Cannot run application: project is a plugin!"
         exit(1)
@@ -38,7 +38,7 @@ target('runApplet': "Runs the applet from Java WebStart") {
     doRunApplet()
 }
 
-target('doRunApplet': "Runs the applet from Java WebStart") {
+target(name: 'doRunApplet', description: "Runs the applet from Java WebStart", prehook: null, posthook: null) {
     depends(tweakConfig, createConfig, package_applet)
 
     // calculate the needed jars

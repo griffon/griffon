@@ -27,11 +27,11 @@ import static griffon.util.GriffonNameUtils.getNaturalName
 includeTargets << griffonScript('Package')
 includeTargets << griffonScript('_GriffonBootstrap')
 
-target(tweakConfig: ' tweaks for webstart') {
+target(name: 'tweakConfig', description: ' tweaks for webstart', prehook: null, posthook: null) {
     configTweaks << { buildConfig.griffon.jars.sign = true }
 }
 
-target('runWebstart': "Runs the application with Java Webstart") {
+target(name: 'runWebstart', description: "Runs the application with Java Webstart", prehook: null, posthook: null) {
     if (isPluginProject) {
         println "Cannot run application: project is a plugin!"
         exit(1)
@@ -39,7 +39,7 @@ target('runWebstart': "Runs the application with Java Webstart") {
     doRunWebstart()
 }
 
-target('doRunWebstart': "Runs the application with Java Webstart") {
+target(name: 'doRunWebstart', description: "Runs the application with Java Webstart", prehook: null, posthook: null) {
     depends(tweakConfig, createConfig, package_webstart)
 
     if ((buildConfig.griffon.jars.sign != [:]) && !buildConfig.griffon.jars.sign) {

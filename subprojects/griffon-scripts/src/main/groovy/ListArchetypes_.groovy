@@ -22,7 +22,7 @@ import org.codehaus.griffon.artifacts.model.Archetype
 
 includeTargets << griffonScript('_GriffonListArtifacts')
 
-target(listArchetypes: 'Lists all archetypes available in an artifact repository') {
+target(name: 'listArchetypes', description: 'Lists all archetypes available in an artifact repository', prehook: null, posthook: null) {
     listArtifacts(Archetype.TYPE)
 }
 

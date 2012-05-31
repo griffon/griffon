@@ -25,7 +25,7 @@ includeTargets << griffonScript('_GriffonTest')
 
 TEST_PHASE_AND_TYPE_SEPARATOR = ':'
 
-target(testApp: "Run a Griffon applications unit tests") {
+target(name: 'testApp', description: "Run a Griffon applications unit tests", prehook: null, posthook: null) {
     depends(cleanTestReports)
 
     // The test targeting patterns

@@ -28,7 +28,7 @@ import static griffon.util.GriffonNameUtils.quote
 includeTargets << griffonScript('Package')
 includeTargets << griffonScript('_GriffonBootstrap')
 
-target('runApp': "Runs the application from the command line") {
+target(name: 'runApp', description: "Runs the application from the command line", prehook: null, posthook: null) {
     if (isPluginProject) {
         println "Cannot run application: project is a plugin!"
         exit(1)
@@ -36,7 +36,7 @@ target('runApp': "Runs the application from the command line") {
     doRunApp()
 }
 
-target('doRunApp': "Runs the application from the command line") {
+target(name: 'doRunApp', description: "Runs the application from the command line", prehook: null, posthook: null) {
     depends(prepackage)
 
     // calculate the needed jars

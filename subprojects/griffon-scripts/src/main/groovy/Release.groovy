@@ -18,7 +18,7 @@
  * @author Andres Almiray
  */
 
-target('release': 'Releases a Griffon project according to its type') {
+target(name: 'release', description: 'Releases a Griffon project according to its type', prehook: null, posthook: null) {
     if(griffonSettings.isPluginProject()) {
         includeTargets << griffonScript('ReleasePlugin')
         depends(checkVersion, releasePlugin)

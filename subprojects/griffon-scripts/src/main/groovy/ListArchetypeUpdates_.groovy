@@ -22,7 +22,7 @@ import org.codehaus.griffon.artifacts.model.Archetype
 
 includeTargets << griffonScript('_GriffonListArtifacts')
 
-target(listArchetypeUpdates: 'Lists all available archetype updates') {
+target(name: 'listArchetypeUpdates', description: 'Lists all available archetype updates', prehook: null, posthook: null) {
     doListArtifactUpdates(Archetype.TYPE)
 }
 setDefaultTarget(listArchetypeUpdates)

@@ -117,7 +117,7 @@ packageFiles = { String from ->
     }
 }
 
-target(allTests: "Runs the project's tests.") {
+target(name: 'allTests', description: "Runs the project's tests.", prehook: null, posthook: null) {
     def dependencies = [compile]
     if (testOptions.clean) dependencies = [clean] + dependencies
     depends(* dependencies)
@@ -345,7 +345,7 @@ integrationTestPhaseCleanUp = {
 otherTestPhasePreparation = {}
 otherTestPhaseCleanUp = {}
 
-target(packageTests: "Puts some useful things on the classpath for integration tests.") {
+target(name: 'packageTests', description: "Puts some useful things on the classpath for integration tests.", prehook: null, posthook: null) {
     ant.copy(todir: new File(griffonSettings.testClassesDir, "integration").path) {
         fileset(dir: "${basedir}", includes: metadataFile.name)
     }

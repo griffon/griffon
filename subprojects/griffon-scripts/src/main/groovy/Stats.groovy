@@ -23,7 +23,7 @@ import groovy.xml.MarkupBuilder
  * @author Andres Almiray
  */
 
-target(stats: "Generates basic stats for a Griffon project") {
+target(name: 'stats', description: "Generates basic stats for a Griffon project", prehook: null, posthook: null) {
     EMPTY = /^\s*$/
     SLASH_SLASH = /^\s*\/\/.*/
     SLASH_STAR_STAR_SLASH = /^(.*)\/\*(.*)\*\/(.*)$/

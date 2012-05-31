@@ -22,7 +22,7 @@ import org.codehaus.griffon.artifacts.model.Archetype
 
 includeTargets << griffonScript('_GriffonListArtifacts')
 
-target(archetypeInfo: 'Displays information on a Griffon archetype') {
+target(name: 'archetypeInfo', description: 'Displays information on a Griffon archetype', prehook: null, posthook: null) {
     if (argsMap.params) {
         def name = argsMap.params[0]
         def version = argsMap.params.size() > 1 ? argsMap.params[1] : null
