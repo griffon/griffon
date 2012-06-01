@@ -16,6 +16,7 @@
 
 package org.codehaus.griffon.runtime.util
 
+import griffon.util.ApplicationClassLoader
 import griffon.util.GriffonNameUtils
 import groovy.transform.Synchronized
 import org.codehaus.griffon.runtime.builder.CompositeBuilderHelper
@@ -25,8 +26,10 @@ import org.codehaus.griffon.runtime.core.DefaultGriffonAddonDescriptor
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import griffon.core.*
+
+import static griffon.util.GriffonClassUtils.getGetterName
 import static griffon.util.GriffonNameUtils.getClassNameForLowerCaseHyphenSeparatedName
-import griffon.util.ApplicationClassLoader
+import static griffon.util.GriffonClassUtils.getSetterName
 
 /**
  * Helper class for dealing with addon initialization.
@@ -149,8 +152,8 @@ class AddonHelper {
         app.event(GriffonApplication.Event.LOAD_ADDON_START.name, [config.name, addon, app])
 
         addon.addonInit(app)
-        addMVCGroups(app, addon.mvcGroups)
-        addEvents(app, addon.events)
+        addMVCGroups(app, getAddonPropertyAsMap(addon, 'mvcGroups'))
+        addEvents(app, getAddonPropertyAsMap(addon, 'events'))
     }
 
     static void handleAddonsForBuilders(GriffonApplication app, UberBuilder builder, Map<String, MetaClass> targets) {
@@ -189,20 +192,20 @@ class AddonHelper {
         addon.addonBuilderInit(app, builder)
 
         DELEGATE_TYPES.each { String delegateType ->
-            List<Closure> delegates = addon."$delegateType"
+            List<Closure> delegates = getAddonPropertyAsList(addon, delegateType)
             delegateType = delegateType[0].toUpperCase() + delegateType[1..-2]
             delegates.each { Closure delegateValue ->
                 builder."add$delegateType"(delegateValue)
             }
         }
 
-        Map factories = addon.factories
+        Map factories = getAddonPropertyAsMap(addon, 'factories')
         addFactories(builder, factories, addonName, prefix)
 
-        Map methods = addon.methods
+        Map methods = getAddonPropertyAsMap(addon, 'methods')
         addMethods(builder, methods, addonName, prefix)
 
-        Map props = addon.props
+        Map props = getAddonPropertyAsMap(addon, 'props')
         addProperties(builder, props, addonName, prefix)
 
         for (partialTarget in addonConfig.node?.value) {
@@ -277,21 +280,15 @@ class AddonHelper {
     }
 
     private static void _addProps(MetaClass mc, Map props, String prefix) {
-        props.each { pk, accessors ->
-            String beanName
-            if (pk.length() > 1) {
-                beanName = pk[0].toUpperCase() + pk.substring(1)
-            } else {
-                beanName = pk[0].toUpperCase()
-            }
-            if (accessors.containsKey('get')) mc."get$beanName" = accessors['get']
-            if (accessors.containsKey('set')) mc."set$beanName" = accessors['set']
+        props.each { beanName, accessors ->
+            if (accessors.containsKey('get')) mc."${getGetterName(beanName)}" = accessors['get']
+            if (accessors.containsKey('set')) mc."s${getSetterName(beanName)}" = accessors['set']
         }
     }
 
     static void addMVCGroups(GriffonApplication app, Map<String, Map<String, Object>> groups) {
         Map<String, Map<String, Object>> mvcGroups = (Map<String, Map<String, Object>>) groups;
-        for (Map.Entry<String, Map<String, Object>> groupEntry: mvcGroups.entrySet()) {
+        for (Map.Entry<String, Map<String, Object>> groupEntry : mvcGroups.entrySet()) {
             String type = groupEntry.getKey();
             if (LOG.isDebugEnabled()) {
                 LOG.debug("Adding MVC group " + type);
@@ -299,7 +296,7 @@ class AddonHelper {
             Map<String, Object> members = groupEntry.getValue();
             Map<String, Object> configMap = new LinkedHashMap<String, Object>();
             Map<String, String> membersCopy = new LinkedHashMap<String, String>();
-            for (Object o: members.entrySet()) {
+            for (Object o : members.entrySet()) {
                 Map.Entry entry = (Map.Entry) o;
                 String key = String.valueOf(entry.getKey());
                 if ("config".equals(key) && entry.getValue() instanceof Map) {
@@ -314,26 +311,86 @@ class AddonHelper {
     }
 
     static void addFactories(UberBuilder builder, Map<String, Object> factories, String addonName, String prefix) {
-        for (Map.Entry<String, Object> entry: factories.entrySet()) {
+        for (Map.Entry<String, Object> entry : factories.entrySet()) {
             CompositeBuilderHelper.addFactory(builder, addonName, prefix + entry.getKey(), entry.getValue());
         }
     }
 
     static void addMethods(UberBuilder builder, Map<String, Closure> methods, String addonName, String prefix) {
-        for (Map.Entry<String, Closure> entry: methods.entrySet()) {
+        for (Map.Entry<String, Closure> entry : methods.entrySet()) {
             CompositeBuilderHelper.addMethod(builder, addonName, prefix + entry.getKey(), entry.getValue());
         }
     }
 
     static void addProperties(UberBuilder builder, Map<String, Map<String, Closure>> props, String addonName, String prefix) {
-        for (Map.Entry<String, Map<String, Closure>> entry: props.entrySet()) {
+        for (Map.Entry<String, Map<String, Closure>> entry : props.entrySet()) {
             CompositeBuilderHelper.addProperty(builder, addonName, prefix + entry.getKey(), entry.getValue().get("get"), entry.getValue().get("set"));
         }
     }
 
     static void addEvents(GriffonApplication app, Map<String, Closure> events) {
-        for (Map.Entry<String, Closure> entry: events.entrySet()) {
+        for (Map.Entry<String, Closure> entry : events.entrySet()) {
             app.addApplicationEventListener(entry.getKey(), entry.getValue());
         }
+    }
+
+    private static Map getAddonPropertyAsMap(GriffonAddon addon, String propertyName) {
+        Map property = [:]
+
+        try {
+            // property access
+            property = addon[propertyName]
+            if (property != null && !property.isEmpty()) return property
+        } catch (Exception e) {
+            // ignore
+        }
+
+        try {
+            // invoke getter
+            property = addon."${getGetterName(propertyName)}"()
+            if (property != null && !property.isEmpty()) return property
+        } catch (Exception e) {
+            // ignore
+        }
+
+        try {
+            // direct field access
+            property = addon.@"$propertyName"
+            if (property != null && !property.isEmpty()) return property
+        } catch (Exception e) {
+            // ignore
+        }
+
+        return [:]
+    }
+
+    private static List getAddonPropertyAsList(GriffonAddon addon, String propertyName) {
+        List property = []
+
+        try {
+            // property access
+            property = addon[propertyName]
+            if (property != null && !property.isEmpty()) return property
+        } catch (Exception e) {
+            // ignore
+        }
+
+        try {
+            // invoke getter
+            property = addon."${getGetterName(propertyName)}"()
+            if (property != null && !property.isEmpty()) return property
+        } catch (Exception e) {
+            // ignore
+        }
+
+        try {
+            // direct field access
+            property = addon.@"$propertyName"
+            if (property != null && !property.isEmpty()) return property
+        } catch (Exception e) {
+            // ignore
+        }
+
+        return []
     }
 }

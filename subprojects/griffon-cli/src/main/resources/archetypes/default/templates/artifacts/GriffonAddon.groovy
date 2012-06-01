@@ -29,12 +29,12 @@ class @artifact.name@ {
     // or they can be method closures: this.&method
 
     // adds methods to all builders
-    //def methods = [
+    //Map methods = [
     //    methodName: { /*Closure*/ }
     //]
 
     // adds properties to all builders
-    //def props = [
+    //Map props = [
     //    propertyName: [
     //        get: { /* optional getter closure */ },
     //        set: {val-> /* optional setter closure */ },
@@ -42,34 +42,34 @@ class @artifact.name@ {
     //]
 
     // adds new factories to all builders
-    //def factories = [
+    //Map factories = [
     //    factory : /*instance that extends Factory*/
     //]
 
     // adds application event handlers
-    //def events = [
+    //Map events = [
     //    "StartupStart": {app -> /* event hadler code */ }
     //]
 
     // handle synthetic node properties or
     // intercept existing ones
-    //def attributeDelegates = [
+    //List attributeDelegates = [
     //    {builder, node, attributes -> /*handler code*/ }
     //]
 
     // called before a node is instantiated
-    //def preInstantiateDelegates = [
+    //List preInstantiateDelegates = [
     //    {builder, attributes, value -> /*handler code*/ }
     //]
 
     // called after the node was instantiated
-    //def postInstantiateDelegates = [
+    //List postInstantiateDelegates = [
     //    {builder, attributes, node -> /*handler code*/ }
     //]
 
     // called after the node has been fully
     // processed, including child content
-    //def postNodeCompletionDelegates = [
+    //List postNodeCompletionDelegates = [
     //    {builder, parent, node -> /*handler code*/ }
     //]
 }
