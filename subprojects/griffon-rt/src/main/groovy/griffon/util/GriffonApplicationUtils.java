@@ -58,6 +58,7 @@ public final class GriffonApplicationUtils {
     private static final boolean isJdk15;
     private static final boolean isJdk16;
     private static final boolean isJdk17;
+    private static final boolean isJdk18;
 
     public static final String platform;
 
@@ -211,20 +212,28 @@ public final class GriffonApplicationUtils {
         javaVersion = System.getProperty("java.version");
         String version = javaVersion.substring(0, 3);
         isJdk14 = true;
-        if (version.equals("1.7")) {
+        if (version.equals("1.8")) {
+            isJdk18 = true;
+            isJdk17 = true;
+            isJdk16 = true;
+            isJdk15 = true;
+        } else if (version.equals("1.7")) {
+            isJdk18 = false;
             isJdk17 = true;
             isJdk16 = true;
             isJdk15 = true;
         } else if (version.equals("1.6")) {
+            isJdk18 = false;
             isJdk17 = false;
             isJdk16 = true;
             isJdk15 = true;
         } else if (version.equals("1.5")) {
+            isJdk18 = false;
             isJdk17 = false;
             isJdk16 = false;
             isJdk15 = true;
         } else {
-
+            isJdk18 = false;
             isJdk17 = false;
             isJdk16 = false;
             isJdk15 = false;
@@ -321,6 +330,10 @@ public final class GriffonApplicationUtils {
         return isJdk17;
     }
 
+    public static boolean isJdk18() {
+        return isJdk18;
+    }
+
     public static String getPlatform() {
         return platform;
     }
@@ -395,6 +408,10 @@ public final class GriffonApplicationUtils {
 
     public static boolean getIsJdk17() {
         return isJdk17;
+    }
+
+    public static boolean getIsJdk18() {
+        return isJdk18;
     }
 
     public static MetaClass metaClassOf(Object obj) {
