@@ -17,6 +17,7 @@
 package org.codehaus.griffon.runtime.util;
 
 import griffon.core.GriffonApplication;
+import griffon.util.ApplicationClassLoader;
 import griffon.util.PlatformHandler;
 import groovy.lang.Binding;
 import groovy.lang.GroovyShell;
@@ -55,9 +56,9 @@ public class DefaultMacOSXPlatformHandler implements PlatformHandler {
                 bindings.setVariable("skipPrefs", getConfigValueAsBoolean(app.getConfig(), "osx.noprefs", false));
                 bindings.setVariable("skipQuit", getConfigValueAsBoolean(app.getConfig(), "osx.noquit", false));
 
-                GroovyShell shell = new GroovyShell(DefaultMacOSXPlatformHandler.class.getClassLoader(), bindings);
+                GroovyShell shell = new GroovyShell(ApplicationClassLoader.get(), bindings);
                 String resourceName = "META-INF/" + DefaultMacOSXPlatformHandler.class.getName() + ".txt";
-                URL scriptUrl = Thread.currentThread().getContextClassLoader().getResource(resourceName);
+                URL scriptUrl = ApplicationClassLoader.get().getResource(resourceName);
                 macOSXHandler = shell.evaluate(DefaultGroovyMethods.getText(scriptUrl));
             } catch (Throwable t) {
                 t.printStackTrace(System.out);

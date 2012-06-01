@@ -19,6 +19,7 @@ import griffon.core.GriffonApplication
 import org.codehaus.griffon.runtime.util.AddonHelper
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
+import griffon.util.ApplicationClassLoader
 
 /**
  * Helper class that initializes a CompositeBuilder with the builder configuration read from the application.
@@ -31,7 +32,7 @@ class CompositeBuilderHelper {
     private final static CompositeBuilderCustomizer builderCustomizer
 
     static {
-        ClassLoader classLoader = CompositeBuilderHelper.class.classLoader
+        ClassLoader classLoader = ApplicationClassLoader.get()
         try {
             URL url = classLoader.getResource('META-INF/services/' + CompositeBuilderCustomizer.class.name)
             String className = url.text.trim()
@@ -90,7 +91,7 @@ class CompositeBuilderHelper {
     }
 
     static handleLocalBuilder(UberBuilder uberBuilder, Map<String, MetaClass> targets, String prefixName, builderClassName) {
-        Class builderClass = Thread.currentThread().contextClassLoader.loadClass(builderClassName.key) //FIXME get correct classloader
+        Class builderClass = ApplicationClassLoader.get().loadClass(builderClassName.key) //FIXME get correct classloader
         if (!FactoryBuilderSupport.isAssignableFrom(builderClass)) {
             return;
         }

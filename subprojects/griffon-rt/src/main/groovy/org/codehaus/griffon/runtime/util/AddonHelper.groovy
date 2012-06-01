@@ -26,6 +26,7 @@ import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import griffon.core.*
 import static griffon.util.GriffonNameUtils.getClassNameForLowerCaseHyphenSeparatedName
+import griffon.util.ApplicationClassLoader
 
 /**
  * Helper class for dealing with addon initialization.
@@ -55,7 +56,7 @@ class AddonHelper {
         if (!ADDON_CACHE.isEmpty()) return
 
         // Load addons in order
-        URL addonMetadata = AddonHelper.classLoader.getResource('META-INF/griffon-addons.properties')
+        URL addonMetadata = ApplicationClassLoader.get().getResource('META-INF/griffon-addons.properties')
         if (addonMetadata) {
             addonMetadata.text.eachLine { line ->
                 String[] parts = line.split('=')
@@ -116,7 +117,7 @@ class AddonHelper {
 
     private static void handleAddon(GriffonApplication app, Map config) {
         try {
-            config.addonClass = Class.forName(config.className)
+            config.addonClass = ApplicationClassLoader.get().loadClass(config.className)
         } catch (ClassNotFoundException cnfe) {
             if (config.node) {
                 throw cnfe
@@ -169,7 +170,7 @@ class AddonHelper {
 
     static void handleAddonForBuilder(GriffonApplication app, UberBuilder builder, Map<String, MetaClass> targets, Map addonConfig) {
         try {
-            addonConfig.addonClass = Class.forName(addonConfig.className)
+            addonConfig.addonClass = ApplicationClassLoader.get().loadClass(addonConfig.className)
         } catch (ClassNotFoundException cnfe) {
             if (addonConfig.node) {
                 throw cnfe

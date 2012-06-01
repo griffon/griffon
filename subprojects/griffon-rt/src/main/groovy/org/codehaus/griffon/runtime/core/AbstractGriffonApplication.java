@@ -17,10 +17,7 @@
 package org.codehaus.griffon.runtime.core;
 
 import griffon.core.*;
-import griffon.util.ApplicationHolder;
-import griffon.util.ConfigUtils;
-import griffon.util.Metadata;
-import griffon.util.RunnableWithArgs;
+import griffon.util.*;
 import groovy.lang.Binding;
 import groovy.lang.Closure;
 import groovy.util.ConfigObject;
@@ -551,7 +548,7 @@ public abstract class AbstractGriffonApplication extends AbstractObservable impl
 
     private Class loadClass(String className) {
         try {
-            return getClass().getClassLoader().loadClass(className);
+            return ApplicationClassLoader.get().loadClass(className);
         } catch (ClassNotFoundException e) {
             // ignored
         }

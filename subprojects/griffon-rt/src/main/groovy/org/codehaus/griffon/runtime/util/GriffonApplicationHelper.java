@@ -90,7 +90,7 @@ public class GriffonApplicationHelper {
             if (configClass != null) {
                 config.merge(configSlurper.parse(configClass));
             }
-            InputStream is = Thread.currentThread().getContextClassLoader().getResourceAsStream(configFileName + ".properties");
+            InputStream is = ApplicationClassLoader.get().getResourceAsStream(configFileName + ".properties");
             if (is != null) {
                 Properties p = new Properties();
                 p.load(is);
@@ -269,7 +269,7 @@ public class GriffonApplicationHelper {
         Enumeration<URL> urls = null;
 
         try {
-            urls = app.getClass().getClassLoader().getResources("META-INF/services/" + ArtifactHandler.class.getName());
+            urls = ApplicationClassLoader.get().getResources("META-INF/services/" + ArtifactHandler.class.getName());
         } catch (IOException ioe) {
             return;
         }

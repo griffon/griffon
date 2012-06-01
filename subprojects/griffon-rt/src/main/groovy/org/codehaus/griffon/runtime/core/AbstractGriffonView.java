@@ -18,6 +18,7 @@ package org.codehaus.griffon.runtime.core;
 
 import griffon.core.GriffonView;
 import griffon.core.GriffonViewClass;
+import griffon.util.ApplicationClassLoader;
 import griffon.util.Xml2Groovy;
 import groovy.lang.GroovyShell;
 import groovy.lang.Script;
@@ -137,7 +138,7 @@ public abstract class AbstractGriffonView extends AbstractGriffonMvcArtifact imp
             throw new IllegalArgumentException("Invalid file name for externalized view.");
         }
 
-        InputStream is = getClass().getClassLoader().getResourceAsStream(fileName);
+        InputStream is = ApplicationClassLoader.get().getResourceAsStream(fileName);
         if (is == null) {
             throw new IllegalArgumentException("Could not read file " + fileName);
         }

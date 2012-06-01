@@ -145,7 +145,7 @@ public final class UIThreadManager {
                 }
             });
 
-    public static final String[] THREADING_METHOD_NAMES = new String[] {
+    public static final String[] THREADING_METHOD_NAMES = new String[]{
             EXECUTE_INSIDE_UI_SYNC,
             EXECUTE_INSIDE_UI_SYNC,
             EXECUTE_OUTSIDE_UI,
@@ -189,7 +189,7 @@ public final class UIThreadManager {
         if (this.uiThreadHandler == null) {
             try {
                 // attempt loading of default UIThreadHandler -> Swing
-                setUIThreadHandler((UIThreadHandler) getClass().getClassLoader().loadClass("griffon.swing.SwingUIThreadHandler").newInstance());
+                setUIThreadHandler((UIThreadHandler) ApplicationClassLoader.get().loadClass("griffon.swing.SwingUIThreadHandler").newInstance());
             } catch (ClassNotFoundException e) {
                 throw new IllegalStateException("Can't locate a suitable UIThreadHandler.", e);
             } catch (InstantiationException e) {

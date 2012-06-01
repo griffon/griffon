@@ -16,6 +16,7 @@
 package org.codehaus.griffon.runtime.core;
 
 import griffon.core.ResourceHandler;
+import griffon.util.ApplicationClassLoader;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -53,6 +54,6 @@ public class ResourceLocator implements ResourceHandler {
     }
 
     private ClassLoader classLoader() {
-        return this.getClass().getClassLoader();
+        return ApplicationClassLoader.get();
     }
 }

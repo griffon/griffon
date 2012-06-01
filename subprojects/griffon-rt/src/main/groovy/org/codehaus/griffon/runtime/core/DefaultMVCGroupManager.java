@@ -18,6 +18,7 @@ package org.codehaus.griffon.runtime.core;
 
 import griffon.core.*;
 import griffon.exceptions.MVCGroupInstantiationException;
+import griffon.util.ApplicationClassLoader;
 import griffon.util.CollectionUtils;
 import groovy.lang.GroovySystem;
 import groovy.lang.MetaClass;
@@ -309,7 +310,7 @@ public class DefaultMVCGroupManager extends AbstractMVCGroupManager {
 
     protected Class loadClass(String className) {
         try {
-            return getClass().getClassLoader().loadClass(className);
+            return ApplicationClassLoader.get().loadClass(className);
         } catch (ClassNotFoundException e) {
             // ignored
         }
