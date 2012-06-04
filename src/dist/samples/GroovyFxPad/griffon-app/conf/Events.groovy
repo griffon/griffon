@@ -17,9 +17,27 @@
  * @author Andres Almiray
  */
 
-import griffon.samples.groovyfxpad.GroovFXPadUtils
 import org.jdesktop.swingx.JXTipOfTheDay
 import griffon.samples.groovyfxpad.GroovFXPadUtils
+
+onBootstrapStart = { app ->
+    app.builderConfig = new ConfigSlurper().parse('''
+root {
+    'groovy.swing.SwingBuilder' {
+        controller = ['Threading']
+        view = '*'
+    }
+}
+
+jx {
+    'groovy.swing.SwingXBuilder' {
+        view = '*'
+    }
+}
+
+root.'griffon.builder.jide.JideBuilder'.view = '*'
+''')
+}
 
 onReadyEnd = { app ->
     app.execInsideUIAsync {

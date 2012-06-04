@@ -158,6 +158,7 @@ task deb(dependsOn: prepareDeb) {
         ant.deb(todir: "$buildDir/distributions",
                 'package': 'griffon',
                 section: 'contrib/devel',
+                priority: 'extra',
                 postinst: "$debDir/postinst",
                 prerm: "$debDir/prerm") {
             version(upstream: version)

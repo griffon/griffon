@@ -17,8 +17,8 @@ package griffon.samples.groovyfxpad
 
 import griffon.plugins.dialogs.Finder
 import griffon.plugins.jfxtras.factory.GaugeFactory
-import griffon.plugins.jfxtras.factory.GroovyFXBeanFactory
 import griffon.transform.Threading
+import groovyx.javafx.factory.AbstractFXBeanFactory
 import groovyx.javafx.SceneGraphBuilder
 import javafx.application.Platform
 import javafx.scene.Node
@@ -358,8 +358,8 @@ class IdeController {
         SceneGraphBuilder builder = new SceneGraphBuilder()
         builder.setVariable('_delegateProperty:id', 'id')
         builder.registerFactory('radial', new GaugeFactory(Radial))
-        builder.registerFactory('gaugeModel', new GroovyFXBeanFactory(GaugeModel))
-        builder.registerFactory('styleModel', new GroovyFXBeanFactory(StyleModel))
+        builder.registerFactory('gaugeModel', new AbstractFXBeanFactory(GaugeModel))
+        builder.registerFactory('styleModel', new AbstractFXBeanFactory(StyleModel))
         Color.NamedColors.namedColors.each { namedColor, color ->
             builder.setVariable(namedColor, color)
         }

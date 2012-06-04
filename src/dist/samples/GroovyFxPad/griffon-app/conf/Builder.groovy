@@ -12,8 +12,4 @@ jx {
     }
 }
 
-fx.'groovyx.javafx.SceneGraphBuilder'.view = '*'
-
-root.'GlazedlistsGriffonAddon'.addon=true
-
 root.'griffon.builder.jide.JideBuilder'.view = '*'
