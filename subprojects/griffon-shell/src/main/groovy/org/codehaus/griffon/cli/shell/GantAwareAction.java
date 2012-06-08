@@ -86,6 +86,11 @@ public class GantAwareAction extends AbstractGriffonShellCommand {
         binding.setVariable(VAR_SCRIPT_NAME, scriptName);
         binding.setVariable(VAR_SCRIPT_FILE, scriptFile);
         binding.setVariable(VAR_SCRIPT_ARGS_MAP, argsMap);
+        Map<String, Object> sysProperties = new LinkedHashMap<String, Object>();
+        sysProperties.putAll(getInitialSystemProperties());
+        sysProperties.putAll(getSystemProperties());
+        binding.setVariable(VAR_SYS_PROPERTIES, sysProperties);
+
         Gant gant = runner.createGantInstance(binding);
         gant.loadScript(scriptFile);
 

@@ -30,7 +30,9 @@ import org.fusesource.jansi.Ansi;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 import static griffon.util.GriffonExceptionHandler.sanitize;
 import static org.codehaus.griffon.cli.GriffonScriptRunner.*;
@@ -63,6 +65,11 @@ public class ResolveDependenciesCommand extends AbstractAction {
         binding.setVariable(VAR_SCRIPT_ENV, Environment.DEVELOPMENT.getName());
         binding.setVariable(VAR_SCRIPT_NAME, scriptName);
         binding.setVariable(VAR_SCRIPT_FILE, scriptFile);
+        binding.setVariable(VAR_SCRIPT_ARGS_MAP, new LinkedHashMap<String, Object>());
+        Map<String, Object> sysProperties = new LinkedHashMap<String, Object>();
+        sysProperties.putAll(getInitialSystemProperties());
+        sysProperties.putAll(getSystemProperties());
+        binding.setVariable(VAR_SYS_PROPERTIES, sysProperties);
         binding.setVariable("runFrameworkDependencyResolution", Boolean.TRUE);
         binding.setVariable("runDependencyResolution", Boolean.TRUE);
         Gant gant = runner.createGantInstance(binding);
