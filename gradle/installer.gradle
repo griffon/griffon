@@ -161,7 +161,7 @@ task deb(dependsOn: prepareDeb) {
                 priority: 'extra',
                 postinst: "$debDir/postinst",
                 prerm: "$debDir/prerm") {
-            version(upstream: version)
+            delegate.version(upstream: version)
             maintainer(name: 'Griffon Team',
                        email: 'dev@griffon.codehaus.org')
             description(synopsis: 'Griffon is an application framework for developing desktop applications in the JVM', '''
