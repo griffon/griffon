@@ -60,6 +60,7 @@ target(name: 'doRunApplet', description: "Runs the applet from Java WebStart", p
     sysProperties.'griffon.application.name' = getNaturalName(griffonAppName)
     debug("System properties:")
     sysProperties.each { key, value ->
+        if (null == value) return
         debug("$key = $value")
         sysprops << "-D${key}=${quote(value)}"
     }

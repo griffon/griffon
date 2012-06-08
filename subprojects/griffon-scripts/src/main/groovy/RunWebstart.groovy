@@ -66,6 +66,7 @@ target(name: 'doRunWebstart', description: "Runs the application with Java Webst
     sysProperties.'griffon.application.name' = getNaturalName(griffonAppName)
     debug("System properties:")
     sysProperties.each { key, value ->
+        if (null == value) return
         debug("$key = $value")
         sysprops << "-D${key}=${quote(value)}"
     }

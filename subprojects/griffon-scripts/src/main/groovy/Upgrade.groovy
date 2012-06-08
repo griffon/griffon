@@ -64,7 +64,9 @@ target(name: 'upgrade', description: "Upgrades a Griffon application from a prev
     if (isArchetypeProject) projectType = 'archetype'
     createStructure()
 
-    if (appGriffonVersion == '0.9.5') {
+    if (appGriffonVersion == '1.0.0') {
+        // no upgrade tasks at the moment
+    } else if (appGriffonVersion == '0.9.5') {
         event("StatusUpdate", ["Updating application.properties"])
         def props = new Properties()
         props.load(new File("${basedir}/application.properties").newReader())

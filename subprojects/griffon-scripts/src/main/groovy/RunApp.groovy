@@ -115,6 +115,7 @@ target(name: 'doRunApp', description: "Runs the application from the command lin
     List sysprops = []
     debug("System properties:")
     sysProperties.each { key, value ->
+        if (null == value) return
         debug("$key = $value")
         sysprops << "-D${key}=${quote(value)}"
     }

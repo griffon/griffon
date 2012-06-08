@@ -154,7 +154,6 @@ task deb(dependsOn: prepareDeb) {
     doLast {
         ant.taskdef(resource: 'ant_deb_task.properties',
                     classpath: fileTree(dir: debSrcDir, includes: ['*.jar']).asPath)
-    
         ant.deb(todir: "$buildDir/distributions",
                 'package': 'griffon',
                 section: 'contrib/devel',

@@ -213,6 +213,7 @@ public class GriffonNameUtils {
      * @return The property name representation
      */
     public static String getPropertyNameRepresentation(String name) {
+        if (isBlank(name)) return name;
         // Strip any package from the name.
         int pos = name.lastIndexOf('.');
         if (pos != -1) {
@@ -259,6 +260,7 @@ public class GriffonNameUtils {
      * @return The short name of the class
      */
     public static String getShortName(String className) {
+        if (isBlank(className)) return className;
         int i = className.lastIndexOf(".");
         if (i > -1) {
             className = className.substring(i + 1, className.length());
@@ -274,6 +276,7 @@ public class GriffonNameUtils {
      */
     public static String getNaturalName(String name) {
         name = getShortName(name);
+        if (isBlank(name)) return name;
         List<String> words = new ArrayList<String>();
         int i = 0;
         char[] chars = name.toCharArray();
@@ -355,9 +358,7 @@ public class GriffonNameUtils {
      * @return The hyphenated name representation.
      */
     public static String getHyphenatedName(String name) {
-        if (name == null) {
-            return null;
-        }
+        if (isBlank(name)) return name;
         if (name.endsWith(".groovy")) {
             name = name.substring(0, name.length() - 7);
         }
@@ -372,6 +373,7 @@ public class GriffonNameUtils {
      * @return a copy of the original String, surrounded by quotes
      */
     public static String quote(String str) {
+        if (isBlank(str)) return str;
         if (str.contains("\\s")) {
             str = applyQuotes(str);
         }
@@ -385,6 +387,7 @@ public class GriffonNameUtils {
      * @return the unquoted String
      */
     public static String unquote(String str) {
+        if (isBlank(str)) return str;
         if ((str.startsWith("'") && str.endsWith("'")) ||
                 (str.startsWith("\"") && str.endsWith("\""))) {
             return str.substring(1, str.length() - 1);
