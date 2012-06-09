@@ -197,7 +197,7 @@ target(name: 'upgrade', description: "Upgrades a Griffon application from a prev
             |
             | Griffon ${griffonVersion} brings substantial changes to logging
             | and packaging configuration. The upgrade process has taken the
-            | precuation of making copies of your configuration files and placed
+            | precaution of making copies of your configuration files and placed
             | them inside
             |
             |   ${upgradeDir.absolutePath}
