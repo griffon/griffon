@@ -11,21 +11,21 @@ class GroovyEditController {
       if(JFileChooser.APPROVE_OPTION == openResult) {
          File file = new File(view.fileChooserWindow.selectedFile.toString())
          // let's calculate an unique id for the next mvc group
-         String mvcId = file.path + '-' + System.currentTimeMillis()
-         createMVCGroup('FilePanel', mvcId, [
+         String mvcIdentifier = file.path + '-' + System.currentTimeMillis()
+         createMVCGroup('filePanel', mvcIdentifier, [
              document: new Document(file: file, title: file.name),
              tabGroup: view.tabGroup,
              tabName: file.name,
-             mvcId: mvcId])
+             mvcIdentifier: mvcIdentifier])
       }
    }
 
    def saveFile = {
-      app.controllers[model.mvcId].saveFile()
+      app.controllers[model.mvcIdentifier].saveFile()
    }
 
    def closeFile = {
-      app.controllers[model.mvcId].closeFile()
+      app.controllers[model.mvcIdentifier].closeFile()
    }
 
    def quit = {

@@ -1,6 +1,6 @@
 application {
     title = 'GroovyEdit'
-    startupGroups = ['GroovyEdit']
+    startupGroups = ['groovyEdit']
 
     // Should Griffon exit when no Griffon created frames are showing?
     autoShutdown = true
@@ -9,12 +9,12 @@ application {
     //frameClass = 'javax.swing.JFrame'
 }
 mvcGroups {
-    'GroovyEdit' {
+    'groovyEdit' {
         model      = 'groovyedit.GroovyEditModel'
         view       = 'groovyedit.GroovyEditView'
         controller = 'groovyedit.GroovyEditController'
     }
-    'FilePanel' {
+    'filePanel' {
         model      = 'groovyedit.FilePanelModel'
         view       = 'groovyedit.FilePanelView'
         controller = 'groovyedit.FilePanelController'

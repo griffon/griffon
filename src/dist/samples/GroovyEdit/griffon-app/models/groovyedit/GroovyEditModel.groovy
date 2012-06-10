@@ -13,7 +13,7 @@ class GroovyEditModel implements ChangeListener {
     final DocumentProxy documentProxy = new DocumentProxy()
 
     @Bindable @PropertyListener(mvcUpdater)
-    String mvcId
+    String mvcIdentifier
 
     // listens to changes on the mvcId property
     private mvcUpdater = { e ->
@@ -33,7 +33,7 @@ class GroovyEditModel implements ChangeListener {
             setMvcId(null) 
         } else {
             def tab = e.source[selectedIndex]
-            setMvcId(tab.getClientProperty('mvcId'))
+            setMvcIdentifier(tab.getClientProperty('mvcIdentifier'))
         }
     }
 }

@@ -6,7 +6,6 @@ class FilePanelController {
 
    void mvcGroupInit(Map args) {
       model.document = args.document
-      model.mvcId = args.mvcId
       execOutsideUI {
          // load the file's text, outside the EDT
          String text = model.document.file.text

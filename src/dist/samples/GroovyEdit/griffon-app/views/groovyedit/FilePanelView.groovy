@@ -1,7 +1,7 @@
 package groovyedit
 
 tabbedPane(tabGroup, selectedIndex: tabGroup.tabCount) {
-   scrollPane(title: tabName, id: 'tab', clientProperties: [mvcId: mvcId]) {
+   scrollPane(title: tabName, id: 'tab', clientProperties: [mvcIdentifier: mvcIdentifier]) {
       textArea(id: 'editor', text: bind {model.document.contents})
    }
 }
