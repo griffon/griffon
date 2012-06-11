@@ -55,10 +55,6 @@ target(name: 'doRunApp', description: "Runs the application from the command lin
     def jvmOpts = setupJvmOpts()
     def javaOpts = setupJavaOpts(true)
     if (argsMap.containsKey('debug')) {
-        argsMap['debug-port'] = argsMap.debugPort
-        argsMap['debug-addr'] = argsMap.debugAddr
-        argsMap['debug-suspend'] = argsMap.debugSuspend
-
         String portNum = argsMap['debug-port'] ?: '18290'  //default is 'Gr' in ASCII
         String addr = argsMap['debug-addr'] ?: '127.0.0.1'
         String debugSocket = ''
@@ -78,6 +74,8 @@ target(name: 'doRunApp', description: "Runs the application from the command lin
             case 'on':
             case 'yes':
                 debugSuspend = 'y'
+                println("Debugged process will start suspended :")
+                println("   connect with a debugger compatible with the java debug wire protocol (jdwp) at address $addr:$portNum to resume it.");
                 break
             case 'false':
             case 'n':
