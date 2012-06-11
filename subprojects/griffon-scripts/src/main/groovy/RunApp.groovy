@@ -55,6 +55,9 @@ target(name: 'doRunApp', description: "Runs the application from the command lin
     def jvmOpts = setupJvmOpts()
     def javaOpts = setupJavaOpts(true)
     if (argsMap.containsKey('debug')) {
+        if (argsMap.debugPort != null) argsMap['debug-port'] = argsMap.debugPort
+        if (argsMap.debugAddr != null) argsMap['debug-addr'] = argsMap.debugAddr
+        if (argsMap.debugSuspend != null) argsMap['debug-suspend'] = argsMap.debugSuspend
         String portNum = argsMap['debug-port'] ?: '18290'  //default is 'Gr' in ASCII
         String addr = argsMap['debug-addr'] ?: '127.0.0.1'
         String debugSocket = ''
