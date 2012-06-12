@@ -64,7 +64,7 @@ target(name: 'upgrade', description: "Upgrades a Griffon application from a prev
     if (isArchetypeProject) projectType = 'archetype'
     createStructure()
 
-    if (appGriffonVersion == '1.0.0') {
+    if (appGriffonVersion == '1.0.0' || appGriffonVersion == '1.0.1') {
         // no upgrade tasks at the moment
     } else if (appGriffonVersion == '0.9.5') {
         event("StatusUpdate", ["Updating application.properties"])
@@ -79,7 +79,7 @@ target(name: 'upgrade', description: "Upgrades a Griffon application from a prev
                 entry(key: "archetype.default", value: griffonVersion)
             }
             if (props['plugins.swing'] == '0.9.5') {
-                entry(key: "plugins.swing", value: '1.0.0')
+                entry(key: "plugins.swing", value: '1.0.1')
             }
         }
 
@@ -170,7 +170,7 @@ target(name: 'upgrade', description: "Upgrades a Griffon application from a prev
                 entry(key: "app.name", value: griffonAppName)
                 entry(key: "app.griffon.version", value: griffonVersion)
                 if (!isPluginProject) {
-                    entry(key: "plugins.swing", value: '1.0.0')
+                    entry(key: "plugins.swing", value: '1.0.1')
                     entry(key: "archetype.default", value: griffonVersion)
                     entry(key: "app.toolkit", value: 'swing')
                 }
