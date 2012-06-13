@@ -67,11 +67,13 @@ app.defaultPackageName = '$defaultPackageName'
 createProjectWithDefaults = {
     metadataFile = new File("${basedir}/application.properties")
     initProject()
+    def (defaultMvcPkg, defaultMvcName) = extractArtifactName(argsMap['params'][0])
     ant.replace(dir: "${basedir}/griffon-app/conf", includes: '*') {
         replacefilter(token: "@griffon.app.class.name@", value: appClassName)
         replacefilter(token: "@griffon.version@", value: griffonVersion)
         replacefilter(token: "@griffon.project.name@", value: griffonAppName)
         replacefilter(token: "@griffon.application.name@", value: GriffonNameUtils.getPropertyName(appClassName))
+        replacefilter(token: "@griffon.default.mvc@", value: GriffonNameUtils.getPropertyName(defaultMvcName))
         replacefilter(token: "@griffon.project.key@", value: griffonAppName.replaceAll(/\s/, '.').toLowerCase())
     }
 
