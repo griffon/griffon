@@ -68,6 +68,7 @@ target(name: 'doRunApplet', description: "Runs the applet from Java WebStart", p
 
     // TODO set proxy settings
     // start the processess
+    debug("Executing $webstartVM $javaOpts $sysprops ${buildConfig.griffon.webstart.jnlp}")
     Process p = "$webstartVM $javaOpts $sysprops ${buildConfig.griffon.applet.jnlp}".execute(null as String[], jardir)
 
     // pipe the output
