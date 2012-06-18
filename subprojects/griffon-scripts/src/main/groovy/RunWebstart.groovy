@@ -67,10 +67,9 @@ target(name: 'doRunWebstart', description: "Runs the application with Java Webst
     debug("System properties:")
     sysProperties.each { key, value ->
         if (null == value) return
-        debug("$key = ${quote(value)}")
-        sysprops << "-D${key}=${quote(value)}"
+        debug("  -D$key=${quote(value)}")
+        sysprops << "-J-D${key}=${quote(value)}"
     }
-    sysprops = sysprops.collect { debug("  $it"); "-J$it" }
 
     List<String> cmd = [webstartVM] + javaOpts + sysprops + buildConfig.griffon.webstart.jnlp
 
