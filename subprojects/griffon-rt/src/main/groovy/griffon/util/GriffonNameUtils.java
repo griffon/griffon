@@ -374,8 +374,11 @@ public class GriffonNameUtils {
      */
     public static String quote(String str) {
         if (isBlank(str)) return str;
-        if (str.contains("\\s")) {
-            str = applyQuotes(str);
+        for (int i = 0; i < str.length(); i++) {
+            if (Character.isWhitespace(str.charAt(i))) {
+                str = applyQuotes(str);
+                break;
+            }
         }
         return str;
     }

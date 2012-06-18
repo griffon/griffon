@@ -16,6 +16,7 @@
 
 import static griffon.util.GriffonNameUtils.quote
 import static griffon.util.GriffonNameUtils.getNaturalName
+import static griffon.util.GriffonNameUtils.getClassNameForLowerCaseHyphenSeparatedName
 
 /**
  * Created by IntelliJ IDEA.
@@ -59,23 +60,26 @@ target(name: 'doRunWebstart', description: "Runs the application with Java Webst
 
     def javaOpts = setupJavaOpts(false)
     debug("Running JVM options:")
-    javaOpts.each { debug("  $it") }
-    javaOpts = "-J" + javaOpts.join(" -J")
+    javaOpts = javaOpts.collect { debug("  $it"); "-J$it" }
 
     def sysprops = []
-    sysProperties.'griffon.application.name' = getNaturalName(griffonAppName)
+    sysProperties.'griffon.application.name' = getNaturalName(getClassNameForLowerCaseHyphenSeparatedName(griffonAppName))
     debug("System properties:")
     sysProperties.each { key, value ->
         if (null == value) return
-        debug("$key = $value")
+        debug("$key = ${quote(value)}")
         sysprops << "-D${key}=${quote(value)}"
     }
-    sysprops = "-J" + sysprops.join(" -J")
+    sysprops = sysprops.collect { debug("  $it"); "-J$it" }
+
+    List<String> cmd = [webstartVM] + javaOpts + sysprops + buildConfig.griffon.webstart.jnlp
 
     // TODO set proxy settings
     // start the processess
-    debug("Executing $webstartVM $javaOpts $sysprops ${buildConfig.griffon.webstart.jnlp}")
-    Process p = "$webstartVM $javaOpts $sysprops ${buildConfig.griffon.webstart.jnlp}".execute(null as String[], jardir)
+    debug("Executing ${cmd.join(' ')}")
+    ProcessBuilder pb = new ProcessBuilder(* cmd)
+    pb.directory(jardir)
+    Process p = pb.start()
 
     // pipe the output
     p.consumeProcessOutput(System.out, System.err)

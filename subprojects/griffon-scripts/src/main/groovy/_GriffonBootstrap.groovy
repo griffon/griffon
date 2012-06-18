@@ -19,6 +19,7 @@ import griffon.util.Environment
 import griffon.util.RunMode
 
 import static griffon.util.GriffonApplicationUtils.is64Bit
+import static griffon.util.GriffonNameUtils.quote
 import static griffon.util.GriffonExceptionHandler.GRIFFON_EXCEPTION_OUTPUT
 import static griffon.util.GriffonExceptionHandler.GRIFFON_FULL_STACKTRACE
 
@@ -103,7 +104,7 @@ setupJavaOpts = { includeNative = true ->
     def env = System.getProperty(Environment.KEY)
     javaOpts << "-D${Environment.KEY}=${env}"
     javaOpts << "-D${RunMode.KEY}=${RunMode.current}"
-    javaOpts << "-Dgriffon.start.dir='" + jardir.parentFile.absolutePath + "'"
+    javaOpts << "-Dgriffon.start.dir=${quote(jardir.parentFile.canonicalPath)}"
     if (System.getProperty(GRIFFON_FULL_STACKTRACE)) {
         javaOpts << "-D${GRIFFON_FULL_STACKTRACE}=${System.properties[GRIFFON_FULL_STACKTRACE]}"
     }
@@ -119,7 +120,7 @@ setupJavaOpts = { includeNative = true ->
         javaOpts << argsMap['java-opts']
     }
     griffonSettings.systemProperties.each { key, value ->
-        javaOpts << "-D${key}=${value}"
+        javaOpts << "-D${key}=${quote(value)}"
     }
 
 // XXX -- NATIVE

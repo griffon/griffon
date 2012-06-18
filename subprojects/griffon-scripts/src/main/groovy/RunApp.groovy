@@ -22,8 +22,7 @@
  */
 
 import static griffon.util.GriffonApplicationUtils.isMacOSX
-import static griffon.util.GriffonNameUtils.capitalize
-import static griffon.util.GriffonNameUtils.quote
+import static griffon.util.GriffonNameUtils.*
 
 includeTargets << griffonScript('Package')
 includeTargets << griffonScript('_GriffonBootstrap')
@@ -104,20 +103,20 @@ target(name: 'doRunApp', description: "Runs the application from the command lin
         javaOpts << "-XX:PermSize=$buildConfig.griffon.memory.minPermSize"
     }
     if (isMacOSX) {
-        javaOpts << "-Xdock:name=${capitalize(griffonAppName)}"
-        javaOpts << "-Xdock:icon=${resolveApplicationIcnsFile().absolutePath}"
+        javaOpts << "-Xdock:name=${getNaturalName(getClassNameForLowerCaseHyphenSeparatedName(griffonAppName))}"
+        javaOpts << "-Xdock:icon=${resolveApplicationIcnsFile().canonicalPath}"
     }
 
     debug("Running JVM options:")
     jvmOpts.each { debug("  $it") }
     javaOpts.each { debug("  $it") }
 
-    sysProperties.'griffon.application.name' = capitalize(griffonAppName)
+    sysProperties.'griffon.application.name' = getNaturalName(getClassNameForLowerCaseHyphenSeparatedName(griffonAppName))
     List sysprops = []
     debug("System properties:")
     sysProperties.each { key, value ->
         if (null == value) return
-        debug("$key = $value")
+        debug("$key = ${quote(value)}")
         sysprops << "-D${key}=${quote(value)}"
     }
 
