@@ -21,21 +21,25 @@ import org.codehaus.griffon.ast.AbstractASTTransformation;
 import org.codehaus.griffon.ast.ResourcesAwareASTTransformation;
 import org.codehaus.griffon.ast.ThreadingAwareASTTransformation;
 import org.codehaus.griffon.runtime.util.GriffonApplicationHelper;
-import org.codehaus.groovy.ast.*;
+import org.codehaus.groovy.ast.ClassNode;
+import org.codehaus.groovy.ast.ConstructorNode;
+import org.codehaus.groovy.ast.FieldNode;
+import org.codehaus.groovy.ast.MethodNode;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import static org.codehaus.griffon.ast.GriffonASTUtils.*;
+import static org.codehaus.groovy.ast.ClassHelper.*;
 
 /**
  * @author Andres Almiray
  * @since 0.9.1
  */
 public class GriffonAddonASTInjector extends AbstractASTInjector {
-    private static final ClassNode GRIFFON_APPLICATION_CLASS = makeClassSafe(GriffonApplication.class);
-    private static final ClassNode GAH_CLASS = makeClassSafe(GriffonApplicationHelper.class);
-    private static final ClassNode LOGGER_CLASS = makeClassSafe(Logger.class);
-    private static final ClassNode LOGGER_FACTORY_CLASS = makeClassSafe(LoggerFactory.class);
+    private static final ClassNode GRIFFON_APPLICATION_TYPE = makeClassSafe(GriffonApplication.class);
+    private static final ClassNode GAH_TYPE = makeClassSafe(GriffonApplicationHelper.class);
+    private static final ClassNode LOGGER_TYPE = makeClassSafe(Logger.class);
+    private static final ClassNode LOGGER_FACTORY_TYPE = makeClassSafe(LoggerFactory.class);
     public static final String APP = "app";
 
     public void inject(ClassNode classNode, String artifactType) {
@@ -43,19 +47,19 @@ public class GriffonAddonASTInjector extends AbstractASTInjector {
 
         // GriffonApplication getApp()
         // void setApp(GriffonApplication app)
-        classNode.addProperty(APP, ACC_PUBLIC, GRIFFON_APPLICATION_CLASS, null, null, null);
+        classNode.addProperty(APP, ACC_PUBLIC, GRIFFON_APPLICATION_TYPE, null, null, null);
 
         // Object newInstance()
         classNode.addMethod(new MethodNode(
                 "newInstance",
                 ACC_PUBLIC,
-                makeClassSafe(ClassHelper.OBJECT_TYPE),
+                makeClassSafe(OBJECT_TYPE),
                 params(
-                        param(makeClassSafe(ClassHelper.CLASS_Type), "clazz"),
-                        param(ClassHelper.STRING_TYPE, "type")),
-                ClassNode.EMPTY_ARRAY,
+                        param(makeClassSafe(CLASS_Type), "clazz"),
+                        param(STRING_TYPE, "type")),
+                NO_EXCEPTIONS,
                 returns(call(
-                        GAH_CLASS,
+                        GAH_TYPE,
                         "newInstance",
                         vars(APP, "clazz", "type")))
         ));
@@ -64,9 +68,9 @@ public class GriffonAddonASTInjector extends AbstractASTInjector {
         FieldNode loggerField = classNode.addField(
                 "this$logger",
                 ACC_FINAL | ACC_PRIVATE | ACC_SYNTHETIC,
-                LOGGER_CLASS,
+                LOGGER_TYPE,
                 call(
-                        LOGGER_FACTORY_CLASS,
+                        LOGGER_FACTORY_TYPE,
                         "getLogger",
                         args(constx(loggerCategory)))
         );
@@ -75,9 +79,9 @@ public class GriffonAddonASTInjector extends AbstractASTInjector {
         classNode.addMethod(new MethodNode(
                 "getLog",
                 ACC_PUBLIC,
-                LOGGER_CLASS,
-                Parameter.EMPTY_ARRAY,
-                ClassNode.EMPTY_ARRAY,
+                LOGGER_TYPE,
+                NO_PARAMS,
+                NO_EXCEPTIONS,
                 returns(field(loggerField))
         ));
 

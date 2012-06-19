@@ -29,6 +29,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import static org.codehaus.griffon.ast.GriffonASTUtils.*;
+import static org.codehaus.groovy.ast.ClassHelper.*;
 
 /**
  * Handles generation of code for the {@code @EventPublisher} annotation.
@@ -43,10 +44,10 @@ import static org.codehaus.griffon.ast.GriffonASTUtils.*;
 @GroovyASTTransformation(phase = CompilePhase.CANONICALIZATION)
 public class EventPublisherASTTransformation extends AbstractASTTransformation {
     private static final Logger LOG = LoggerFactory.getLogger(EventPublisherASTTransformation.class);
-    private static final ClassNode RUNNABLE_WITH_ARGS_CLASS = makeClassSafe(RunnableWithArgs.class);
-    private static final ClassNode EVENT_HANDLER_CLASS = makeClassSafe(EventPublisher.class);
-    private static final ClassNode EVENT_PUBLISHER_CLASS = makeClassSafe(griffon.transform.EventPublisher.class);
-    private static final ClassNode EVENT_ROUTER_CLASS = makeClassSafe(EventRouter.class);
+    private static final ClassNode RUNNABLE_WITH_ARGS_TYPE = makeClassSafe(RunnableWithArgs.class);
+    private static final ClassNode EVENT_HANDLER_TYPE = makeClassSafe(EventPublisher.class);
+    private static final ClassNode EVENT_PUBLISHER_TYPE = makeClassSafe(griffon.transform.EventPublisher.class);
+    private static final ClassNode EVENT_ROUTER_TYPE = makeClassSafe(EventRouter.class);
 
     private static final String LISTENER = "listener";
     private static final String NAME = "name";
@@ -61,7 +62,7 @@ public class EventPublisherASTTransformation extends AbstractASTTransformation {
      */
     public static boolean hasEventPublisherAnnotation(AnnotatedNode node) {
         for (AnnotationNode annotation : node.getAnnotations()) {
-            if (EVENT_PUBLISHER_CLASS.equals(annotation.getClassNode())) {
+            if (EVENT_PUBLISHER_TYPE.equals(annotation.getClassNode())) {
                 return true;
             }
         }
@@ -166,15 +167,15 @@ public class EventPublisherASTTransformation extends AbstractASTTransformation {
      * @param declaringClass the class to which we add the support field and methods
      */
     protected static void addEventRouter(ClassNode declaringClass) {
-        injectInterface(declaringClass, EVENT_HANDLER_CLASS);
+        injectInterface(declaringClass, EVENT_HANDLER_TYPE);
 
         // add field:
         // protected final EventRouter this$eventRouter = new org.codehaus.griffon.runtime.core.EventRouter()
         FieldNode erField = declaringClass.addField(
                 "this$eventRouter",
                 ACC_FINAL | ACC_PRIVATE | ACC_SYNTHETIC,
-                EVENT_ROUTER_CLASS,
-                ctor(EVENT_ROUTER_CLASS, NO_ARGS));
+                EVENT_ROUTER_TYPE,
+                ctor(EVENT_ROUTER_TYPE, NO_ARGS));
 
         // add method:
         // void addEventListener(listener) {
@@ -183,9 +184,9 @@ public class EventPublisherASTTransformation extends AbstractASTTransformation {
         injectMethod(declaringClass, new MethodNode(
                 "addEventListener",
                 ACC_PUBLIC,
-                ClassHelper.VOID_TYPE,
-                params(param(ClassHelper.DYNAMIC_TYPE, LISTENER)),
-                ClassNode.EMPTY_ARRAY,
+                VOID_TYPE,
+                params(param(DYNAMIC_TYPE, LISTENER)),
+                NO_EXCEPTIONS,
                 stmnt(call(
                         field(erField),
                         "addEventListener",
@@ -199,11 +200,11 @@ public class EventPublisherASTTransformation extends AbstractASTTransformation {
         injectMethod(declaringClass, new MethodNode(
                 "addEventListener",
                 ACC_PUBLIC,
-                ClassHelper.VOID_TYPE,
+                VOID_TYPE,
                 params(
-                        param(ClassHelper.STRING_TYPE, NAME),
-                        param(makeClassSafe(ClassHelper.CLOSURE_TYPE), LISTENER)),
-                ClassNode.EMPTY_ARRAY,
+                        param(STRING_TYPE, NAME),
+                        param(makeClassSafe(CLOSURE_TYPE), LISTENER)),
+                NO_EXCEPTIONS,
                 stmnt(call(
                         field(erField),
                         "addEventListener",
@@ -217,11 +218,11 @@ public class EventPublisherASTTransformation extends AbstractASTTransformation {
         injectMethod(declaringClass, new MethodNode(
                 "addEventListener",
                 ACC_PUBLIC,
-                ClassHelper.VOID_TYPE,
+                VOID_TYPE,
                 params(
-                        param(ClassHelper.STRING_TYPE, NAME),
-                        param(RUNNABLE_WITH_ARGS_CLASS, LISTENER)),
-                ClassNode.EMPTY_ARRAY,
+                        param(STRING_TYPE, NAME),
+                        param(RUNNABLE_WITH_ARGS_TYPE, LISTENER)),
+                NO_EXCEPTIONS,
                 stmnt(call(
                         field(erField),
                         "addEventListener",
@@ -235,9 +236,9 @@ public class EventPublisherASTTransformation extends AbstractASTTransformation {
         injectMethod(declaringClass, new MethodNode(
                 "removeEventListener",
                 ACC_PUBLIC,
-                ClassHelper.VOID_TYPE,
-                params(param(ClassHelper.DYNAMIC_TYPE, LISTENER)),
-                ClassNode.EMPTY_ARRAY,
+                VOID_TYPE,
+                params(param(DYNAMIC_TYPE, LISTENER)),
+                NO_EXCEPTIONS,
                 stmnt(call(
                         field(erField),
                         "removeEventListener",
@@ -251,11 +252,11 @@ public class EventPublisherASTTransformation extends AbstractASTTransformation {
         injectMethod(declaringClass, new MethodNode(
                 "removeEventListener",
                 ACC_PUBLIC,
-                ClassHelper.VOID_TYPE,
+                VOID_TYPE,
                 params(
-                        param(ClassHelper.STRING_TYPE, NAME),
-                        param(makeClassSafe(ClassHelper.CLOSURE_TYPE), LISTENER)),
-                ClassNode.EMPTY_ARRAY,
+                        param(STRING_TYPE, NAME),
+                        param(makeClassSafe(CLOSURE_TYPE), LISTENER)),
+                NO_EXCEPTIONS,
                 stmnt(call(
                         field(erField),
                         "removeEventListener",
@@ -269,11 +270,11 @@ public class EventPublisherASTTransformation extends AbstractASTTransformation {
         injectMethod(declaringClass, new MethodNode(
                 "removeEventListener",
                 ACC_PUBLIC,
-                ClassHelper.VOID_TYPE,
+                VOID_TYPE,
                 params(
-                        param(ClassHelper.STRING_TYPE, NAME),
-                        param(RUNNABLE_WITH_ARGS_CLASS, LISTENER)),
-                ClassNode.EMPTY_ARRAY,
+                        param(STRING_TYPE, NAME),
+                        param(RUNNABLE_WITH_ARGS_TYPE, LISTENER)),
+                NO_EXCEPTIONS,
                 stmnt(call(
                         field(erField),
                         "removeEventListener",
@@ -287,11 +288,11 @@ public class EventPublisherASTTransformation extends AbstractASTTransformation {
         injectMethod(declaringClass, new MethodNode(
                 "publishEvent",
                 ACC_PUBLIC,
-                ClassHelper.VOID_TYPE,
+                VOID_TYPE,
                 params(
-                        param(ClassHelper.STRING_TYPE, NAME),
-                        param(makeClassSafe(ClassHelper.LIST_TYPE), ARGS, new ListExpression())),
-                ClassNode.EMPTY_ARRAY,
+                        param(STRING_TYPE, NAME),
+                        param(makeClassSafe(LIST_TYPE), ARGS, new ListExpression())),
+                NO_EXCEPTIONS,
                 stmnt(call(
                         field(erField),
                         "publish",
@@ -305,11 +306,11 @@ public class EventPublisherASTTransformation extends AbstractASTTransformation {
         injectMethod(declaringClass, new MethodNode(
                 "publishEventOutsideUI",
                 ACC_PUBLIC,
-                ClassHelper.VOID_TYPE,
+                VOID_TYPE,
                 params(
-                        param(ClassHelper.STRING_TYPE, NAME),
-                        param(makeClassSafe(ClassHelper.LIST_TYPE), ARGS, new ListExpression())),
-                ClassNode.EMPTY_ARRAY,
+                        param(STRING_TYPE, NAME),
+                        param(makeClassSafe(LIST_TYPE), ARGS, new ListExpression())),
+                NO_EXCEPTIONS,
                 stmnt(call(
                         field(erField),
                         "publishOutsideUI",
@@ -323,11 +324,11 @@ public class EventPublisherASTTransformation extends AbstractASTTransformation {
         injectMethod(declaringClass, new MethodNode(
                 "publishEventAsync",
                 ACC_PUBLIC,
-                ClassHelper.VOID_TYPE,
+                VOID_TYPE,
                 params(
-                        param(ClassHelper.STRING_TYPE, NAME),
-                        param(makeClassSafe(ClassHelper.LIST_TYPE), ARGS, new ListExpression())),
-                ClassNode.EMPTY_ARRAY,
+                        param(STRING_TYPE, NAME),
+                        param(makeClassSafe(LIST_TYPE), ARGS, new ListExpression())),
+                NO_EXCEPTIONS,
                 stmnt(call(
                         field(erField),
                         "publishAsync",
@@ -341,9 +342,9 @@ public class EventPublisherASTTransformation extends AbstractASTTransformation {
         injectMethod(declaringClass, new MethodNode(
                 "isEventPublishingEnabled",
                 ACC_PUBLIC,
-                ClassHelper.boolean_TYPE,
+                boolean_TYPE,
                 params(),
-                ClassNode.EMPTY_ARRAY,
+                NO_EXCEPTIONS,
                 returns(call(
                         field(erField),
                         "isEnabled",
@@ -358,9 +359,9 @@ public class EventPublisherASTTransformation extends AbstractASTTransformation {
         injectMethod(declaringClass, new MethodNode(
                 "setEventPublishingEnabled",
                 ACC_PUBLIC,
-                ClassHelper.VOID_TYPE,
-                params(param(ClassHelper.boolean_TYPE, ENABLED)),
-                ClassNode.EMPTY_ARRAY,
+                VOID_TYPE,
+                params(param(boolean_TYPE, ENABLED)),
+                NO_EXCEPTIONS,
                 stmnt(call(
                         field(erField),
                         "setEnabled",

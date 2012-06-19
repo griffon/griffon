@@ -29,7 +29,7 @@ import static org.codehaus.groovy.ast.expr.VariableExpression.THIS_EXPRESSION;
  * @since 0.9.5
  */
 public abstract class AbstractASTInjector implements ASTInjector {
-    private static final ClassNode THREAD_CLASS = ClassHelper.makeWithoutCaching(Thread.class).getPlainNodeReference();
+    private static final ClassNode THREAD_TYPE = ClassHelper.makeWithoutCaching(Thread.class).getPlainNodeReference();
 
     public static ClassNode makeClassSafe(ClassNode classNode) {
         return classNode.getPlainNodeReference();
@@ -40,7 +40,7 @@ public abstract class AbstractASTInjector implements ASTInjector {
     }
 
     public static Expression currentThread() {
-        return call(THREAD_CLASS, "currentThread", NO_ARGS);
+        return call(THREAD_TYPE, "currentThread", NO_ARGS);
     }
 
     public static Expression myClass() {

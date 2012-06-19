@@ -19,7 +19,10 @@ package org.codehaus.griffon.compiler.support;
 import griffon.core.Observable;
 import groovy.beans.BindableASTTransformation;
 import groovy.beans.VetoableASTTransformation;
-import org.codehaus.groovy.ast.*;
+import org.codehaus.groovy.ast.AnnotatedNode;
+import org.codehaus.groovy.ast.ClassNode;
+import org.codehaus.groovy.ast.FieldNode;
+import org.codehaus.groovy.ast.MethodNode;
 import org.codehaus.groovy.ast.expr.VariableExpression;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -29,6 +32,7 @@ import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 
 import static org.codehaus.griffon.ast.GriffonASTUtils.*;
+import static org.codehaus.groovy.ast.ClassHelper.*;
 
 /**
  * @author Andres Almiray
@@ -36,14 +40,14 @@ import static org.codehaus.griffon.ast.GriffonASTUtils.*;
  */
 public class ObservableASTInjector extends AbstractASTInjector {
     private static final Logger LOG = LoggerFactory.getLogger(ObservableASTInjector.class);
-    private static final ClassNode OBSERVABLE_CLASS = makeClassSafe(Observable.class);
+    private static final ClassNode OBSERVABLE_TYPE = makeClassSafe(Observable.class);
 
     private static final String LISTENER = "listener";
     private static final String NAME = "name";
 
     public void inject(ClassNode classNode, String artifactType) {
-        if (!classNode.implementsInterface(OBSERVABLE_CLASS)) {
-            classNode.addInterface(OBSERVABLE_CLASS);
+        if (!classNode.implementsInterface(OBSERVABLE_TYPE)) {
+            classNode.addInterface(OBSERVABLE_TYPE);
         }
 
         if (isBindableOrVetoable(classNode)) return;
@@ -53,7 +57,7 @@ public class ObservableASTInjector extends AbstractASTInjector {
         }
 
         if (LOG.isDebugEnabled())
-            LOG.debug("Injecting " + OBSERVABLE_CLASS.getName() + " behavior to " + classNode.getName());
+            LOG.debug("Injecting " + OBSERVABLE_TYPE.getName() + " behavior to " + classNode.getName());
 
         ClassNode pcsClassNode = makeClassSafe(PropertyChangeSupport.class);
         ClassNode pclClassNode = makeClassSafe(PropertyChangeListener.class);
@@ -77,9 +81,9 @@ public class ObservableASTInjector extends AbstractASTInjector {
                 new MethodNode(
                         "addPropertyChangeListener",
                         ACC_PUBLIC,
-                        ClassHelper.VOID_TYPE,
+                        VOID_TYPE,
                         params(param(pclClassNode, LISTENER)),
-                        ClassNode.EMPTY_ARRAY,
+                        NO_EXCEPTIONS,
                         stmnt(call(
                                 field(pcsField),
                                 "addPropertyChangeListener",
@@ -93,11 +97,11 @@ public class ObservableASTInjector extends AbstractASTInjector {
                 new MethodNode(
                         "addPropertyChangeListener",
                         ACC_PUBLIC,
-                        ClassHelper.VOID_TYPE,
+                        VOID_TYPE,
                         params(
-                                param(ClassHelper.STRING_TYPE, NAME),
+                                param(STRING_TYPE, NAME),
                                 param(pclClassNode, LISTENER)),
-                        ClassNode.EMPTY_ARRAY,
+                        NO_EXCEPTIONS,
                         stmnt(call(
                                 field(pcsField),
                                 "addPropertyChangeListener",
@@ -111,9 +115,9 @@ public class ObservableASTInjector extends AbstractASTInjector {
                 new MethodNode(
                         "removePropertyChangeListener",
                         ACC_PUBLIC,
-                        ClassHelper.VOID_TYPE,
+                        VOID_TYPE,
                         params(param(pclClassNode, LISTENER)),
-                        ClassNode.EMPTY_ARRAY,
+                        NO_EXCEPTIONS,
                         stmnt(call(
                                 field(pcsField),
                                 "removePropertyChangeListener",
@@ -127,10 +131,10 @@ public class ObservableASTInjector extends AbstractASTInjector {
                 new MethodNode(
                         "removePropertyChangeListener",
                         ACC_PUBLIC,
-                        ClassHelper.VOID_TYPE,
+                        VOID_TYPE,
                         params(
-                                param(ClassHelper.STRING_TYPE, NAME),
-                                param(pclClassNode, LISTENER)), ClassNode.EMPTY_ARRAY,
+                                param(STRING_TYPE, NAME),
+                                param(pclClassNode, LISTENER)), NO_EXCEPTIONS,
                         stmnt(call(
                                 field(pcsField),
                                 "removePropertyChangeListener",
@@ -144,12 +148,12 @@ public class ObservableASTInjector extends AbstractASTInjector {
                 new MethodNode(
                         "firePropertyChange",
                         ACC_PROTECTED,
-                        ClassHelper.VOID_TYPE,
+                        VOID_TYPE,
                         params(
-                                param(ClassHelper.STRING_TYPE, NAME),
-                                param(makeClassSafe(ClassHelper.OBJECT_TYPE), "oldValue"),
-                                param(ClassHelper.OBJECT_TYPE, "newValue")),
-                        ClassNode.EMPTY_ARRAY,
+                                param(STRING_TYPE, NAME),
+                                param(makeClassSafe(OBJECT_TYPE), "oldValue"),
+                                param(OBJECT_TYPE, "newValue")),
+                        NO_EXCEPTIONS,
                         stmnt(call(
                                 field(pcsField),
                                 "firePropertyChange",
@@ -163,9 +167,9 @@ public class ObservableASTInjector extends AbstractASTInjector {
                 new MethodNode(
                         "firePropertyChange",
                         ACC_PROTECTED,
-                        ClassHelper.VOID_TYPE,
+                        VOID_TYPE,
                         params(param(pceClassNode, "event")),
-                        ClassNode.EMPTY_ARRAY,
+                        NO_EXCEPTIONS,
                         stmnt(call(
                                 field(pcsField),
                                 "firePropertyChange",
@@ -180,8 +184,8 @@ public class ObservableASTInjector extends AbstractASTInjector {
                         "getPropertyChangeListeners",
                         ACC_PUBLIC,
                         pclClassNode.makeArray(),
-                        Parameter.EMPTY_ARRAY,
-                        ClassNode.EMPTY_ARRAY,
+                        NO_PARAMS,
+                        NO_EXCEPTIONS,
                         returns(call(
                                 field(pcsField),
                                 "getPropertyChangeListeners",
@@ -196,8 +200,8 @@ public class ObservableASTInjector extends AbstractASTInjector {
                         "getPropertyChangeListeners",
                         ACC_PUBLIC,
                         pclClassNode.makeArray(),
-                        params(param(ClassHelper.STRING_TYPE, NAME)),
-                        ClassNode.EMPTY_ARRAY,
+                        params(param(STRING_TYPE, NAME)),
+                        NO_EXCEPTIONS,
                         returns(call(
                                 field(pcsField),
                                 "getPropertyChangeListeners",
