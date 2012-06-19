@@ -62,8 +62,8 @@ import java.lang.annotation.Target;
  * &nbsp;&nbsp;&nbsp;&nbsp;if events will be published or not</li>
  * <li><code>public void setEventPublishingEnabled(boolean enabled)</code><br/>
  * &nbsp;&nbsp;&nbsp;&nbsp;if events will be published or not</li>
- * <p/>
  * </ul>
+ * <p/>
  *
  * @author Andres Almiray
  * @see org.codehaus.griffon.ast.EventPublisherASTTransformation

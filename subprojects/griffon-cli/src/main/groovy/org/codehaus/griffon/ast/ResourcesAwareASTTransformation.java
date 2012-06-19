@@ -31,6 +31,8 @@ import java.io.InputStream;
 import java.net.URL;
 
 import static org.codehaus.griffon.ast.GriffonASTUtils.*;
+import static org.codehaus.groovy.ast.ClassHelper.LIST_TYPE;
+import static org.codehaus.groovy.ast.ClassHelper.STRING_TYPE;
 
 /**
  * Handles generation of code for the {@code @ResourcesAware} annotation.
@@ -44,11 +46,11 @@ import static org.codehaus.griffon.ast.GriffonASTUtils.*;
 @GroovyASTTransformation(phase = CompilePhase.CANONICALIZATION)
 public class ResourcesAwareASTTransformation extends AbstractASTTransformation {
     private static final Logger LOG = LoggerFactory.getLogger(ResourcesAwareASTTransformation.class);
-    private static final ClassNode RESOURCE_HANDLER_CLASS = makeClassSafe(ResourceHandler.class);
-    private static final ClassNode RESOURCES_AWARE_CLASS = makeClassSafe(ResourcesAware.class);
-    private static final ClassNode RESOURCE_LOCATOR_CLASS = makeClassSafe(ResourceLocator.class);
-    private static final ClassNode URL_CLASS = makeClassSafe(URL.class);
-    private static final ClassNode INPUT_STREAM_CLASS = makeClassSafe(InputStream.class);
+    private static final ClassNode RESOURCE_HANDLER_TYPE = makeClassSafe(ResourceHandler.class);
+    private static final ClassNode RESOURCES_AWARE_TYPE = makeClassSafe(ResourcesAware.class);
+    private static final ClassNode RESOURCE_LOCATOR_TYPE = makeClassSafe(ResourceLocator.class);
+    private static final ClassNode URL_TYPE = makeClassSafe(URL.class);
+    private static final ClassNode INPUT_STREAM_TYPE = makeClassSafe(InputStream.class);
 
     private static final String NAME = "name";
     private static final String METHOD_GET_RESOURCE_AS_URL = "getResourceAsURL";
@@ -63,7 +65,7 @@ public class ResourcesAwareASTTransformation extends AbstractASTTransformation {
      */
     public static boolean hasResourcesAwareAnnotation(AnnotatedNode node) {
         for (AnnotationNode annotation : node.getAnnotations()) {
-            if (RESOURCES_AWARE_CLASS.equals(annotation.getClassNode())) {
+            if (RESOURCES_AWARE_TYPE.equals(annotation.getClassNode())) {
                 return true;
             }
         }
@@ -130,7 +132,7 @@ public class ResourcesAwareASTTransformation extends AbstractASTTransformation {
     }
 
     /**
-     * Adds the necessary field and methods to support resource locading.
+     * Adds the necessary field and methods to support resource locating.
      * <p/>
      * Adds a new field:
      * <code>protected final org.codehaus.griffon.runtime.core.ResourceLocator this$resourceLocator = new org.codehaus.griffon.runtime.core.ResourceLocator()</code>
@@ -143,15 +145,15 @@ public class ResourcesAwareASTTransformation extends AbstractASTTransformation {
      * @param declaringClass the class to which we add the support field and methods
      */
     public static void apply(ClassNode declaringClass) {
-        injectInterface(declaringClass, RESOURCE_HANDLER_CLASS);
+        injectInterface(declaringClass, RESOURCE_HANDLER_TYPE);
 
         // add field:
         // protected final ResourceLocator this$resourceLocator = new org.codehaus.griffon.runtime.core.ResourceLocator()
         FieldNode rlField = declaringClass.addField(
                 "this$resourceLocator",
                 ACC_FINAL | ACC_PRIVATE | ACC_SYNTHETIC,
-                RESOURCE_LOCATOR_CLASS,
-                ctor(RESOURCE_LOCATOR_CLASS, NO_ARGS));
+                RESOURCE_LOCATOR_TYPE,
+                ctor(RESOURCE_LOCATOR_TYPE, NO_ARGS));
 
         // add method:
         // URL getResourceAsURL(String name) {
@@ -160,9 +162,9 @@ public class ResourcesAwareASTTransformation extends AbstractASTTransformation {
         injectMethod(declaringClass, new MethodNode(
                 METHOD_GET_RESOURCE_AS_URL,
                 ACC_PUBLIC,
-                newClass(URL_CLASS),
-                params(param(ClassHelper.STRING_TYPE, NAME)),
-                ClassNode.EMPTY_ARRAY,
+                makeClassSafe(URL_TYPE),
+                params(param(STRING_TYPE, NAME)),
+                NO_EXCEPTIONS,
                 returns(call(
                         field(rlField),
                         METHOD_GET_RESOURCE_AS_URL,
@@ -176,9 +178,9 @@ public class ResourcesAwareASTTransformation extends AbstractASTTransformation {
         injectMethod(declaringClass, new MethodNode(
                 METHOD_GET_RESOURCE_AS_STREAM,
                 ACC_PUBLIC,
-                newClass(INPUT_STREAM_CLASS),
-                params(param(ClassHelper.STRING_TYPE, NAME)),
-                ClassNode.EMPTY_ARRAY,
+                makeClassSafe(INPUT_STREAM_TYPE),
+                params(param(STRING_TYPE, NAME)),
+                NO_EXCEPTIONS,
                 returns(call(
                         field(rlField),
                         METHOD_GET_RESOURCE_AS_STREAM,
@@ -192,9 +194,9 @@ public class ResourcesAwareASTTransformation extends AbstractASTTransformation {
         injectMethod(declaringClass, new MethodNode(
                 METHOD_GET_RESOURCES,
                 ACC_PUBLIC,
-                makeClassSafe(ClassHelper.LIST_TYPE),
-                params(param(ClassHelper.STRING_TYPE, NAME)),
-                ClassNode.EMPTY_ARRAY,
+                makeClassSafe(LIST_TYPE),
+                params(param(STRING_TYPE, NAME)),
+                NO_EXCEPTIONS,
                 returns(call(
                         field(rlField),
                         METHOD_GET_RESOURCES,

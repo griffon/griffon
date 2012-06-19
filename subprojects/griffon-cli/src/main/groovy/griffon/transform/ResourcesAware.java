@@ -27,7 +27,7 @@ import java.lang.annotation.Target;
  * <p>Annotates a class.</p>
  *
  * <p>When annotating a class it indicates that it will be able to locate
- * resozrces using Griffon's standard resource loading mechanism.</p>
+ * resources using Griffon's standard resource loading mechanism.</p>
  *
  * The following methods will be added to classes annotated with &#064;ResourcesAware
  * <ul>
@@ -37,8 +37,8 @@ import java.lang.annotation.Target;
  * &nbsp;&nbsp;&nbsp;&nbsp;opens a stream to the resource if found</li>
  *  <li><code>public List&gt;URL&lt; getResources(java.lang.String)</code><br/>
  * &nbsp;&nbsp;&nbsp;&nbsp;returns all matching resources for the specified name</li>
- * <p/>
  * </ul>
+ * <p/>
  *
  * @author Andres Almiray
  * @see org.codehaus.griffon.ast.ResourcesAwareASTTransformation
