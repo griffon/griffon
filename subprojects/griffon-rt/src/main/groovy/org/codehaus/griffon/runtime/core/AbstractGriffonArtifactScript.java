@@ -17,6 +17,8 @@
 package org.codehaus.griffon.runtime.core;
 
 import griffon.core.*;
+import griffon.core.i18n.MessageSourceHolder;
+import griffon.core.i18n.NoSuchMessageException;
 import groovy.lang.*;
 import org.codehaus.griffon.runtime.builder.UberInterceptorMetaClass;
 import org.codehaus.griffon.runtime.util.GriffonApplicationHelper;
@@ -27,6 +29,7 @@ import java.io.InputStream;
 import java.net.URL;
 import java.util.Collections;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
@@ -229,5 +232,53 @@ public abstract class AbstractGriffonArtifactScript extends Script implements Gr
 
     public List<URL> getResources(String name) {
         return resourceLocator.getResources(name);
+    }
+
+    public String getMessage(String key) throws NoSuchMessageException {
+        return MessageSourceHolder.getInstance().getMessageSource().getMessage(key);
+    }
+
+    public String getMessage(String key, Locale locale) throws NoSuchMessageException {
+        return MessageSourceHolder.getInstance().getMessageSource().getMessage(key, locale);
+    }
+
+    public String getMessage(String key, Object[] args) throws NoSuchMessageException {
+        return MessageSourceHolder.getInstance().getMessageSource().getMessage(key, args);
+    }
+
+    public String getMessage(String key, Object[] args, Locale locale) throws NoSuchMessageException {
+        return MessageSourceHolder.getInstance().getMessageSource().getMessage(key, args, locale);
+    }
+
+    public String getMessage(String key, List args) throws NoSuchMessageException {
+        return MessageSourceHolder.getInstance().getMessageSource().getMessage(key, args);
+    }
+
+    public String getMessage(String key, List args, Locale locale) throws NoSuchMessageException {
+        return MessageSourceHolder.getInstance().getMessageSource().getMessage(key, args, locale);
+    }
+
+    public String getMessage(String key, String defaultMessage) {
+        return MessageSourceHolder.getInstance().getMessageSource().getMessage(key, defaultMessage);
+    }
+
+    public String getMessage(String key, String defaultMessage, Locale locale) {
+        return MessageSourceHolder.getInstance().getMessageSource().getMessage(key, defaultMessage, locale);
+    }
+
+    public String getMessage(String key, Object[] args, String defaultMessage) {
+        return MessageSourceHolder.getInstance().getMessageSource().getMessage(key, args, defaultMessage);
+    }
+
+    public String getMessage(String key, Object[] args, String defaultMessage, Locale locale) {
+        return MessageSourceHolder.getInstance().getMessageSource().getMessage(key, args, defaultMessage, locale);
+    }
+
+    public String getMessage(String key, List args, String defaultMessage) {
+        return MessageSourceHolder.getInstance().getMessageSource().getMessage(key, args, defaultMessage);
+    }
+
+    public String getMessage(String key, List args, String defaultMessage, Locale locale) {
+        return MessageSourceHolder.getInstance().getMessageSource().getMessage(key, args, defaultMessage, locale);
     }
 }

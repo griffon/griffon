@@ -16,13 +16,13 @@
 
 package org.codehaus.griffon.compiler.support;
 
-import org.codehaus.groovy.ast.ClassHelper;
 import org.codehaus.groovy.ast.ClassNode;
 import org.codehaus.groovy.ast.MethodNode;
-import org.codehaus.groovy.ast.Parameter;
 import org.codehaus.groovy.ast.stmt.EmptyStatement;
 
 import static org.codehaus.griffon.ast.GriffonASTUtils.*;
+import static org.codehaus.groovy.ast.ClassHelper.MAP_TYPE;
+import static org.codehaus.groovy.ast.ClassHelper.VOID_TYPE;
 
 /**
  * @author Andres Almiray
@@ -36,9 +36,9 @@ public class GriffonMvcArtifactASTInjector extends GriffonArtifactASTInjector {
         injectMethod(classNode, new MethodNode(
                 "mvcGroupInit",
                 ACC_PUBLIC,
-                ClassHelper.VOID_TYPE,
-                params(param(makeClassSafe(ClassHelper.MAP_TYPE), "args")),
-                ClassNode.EMPTY_ARRAY,
+                VOID_TYPE,
+                params(param(makeClassSafe(MAP_TYPE), "args")),
+                NO_EXCEPTIONS,
                 new EmptyStatement()
         ));
 
@@ -46,9 +46,9 @@ public class GriffonMvcArtifactASTInjector extends GriffonArtifactASTInjector {
         injectMethod(classNode, new MethodNode(
                 "mvcGroupDestroy",
                 ACC_PUBLIC,
-                ClassHelper.VOID_TYPE,
-                Parameter.EMPTY_ARRAY,
-                ClassNode.EMPTY_ARRAY,
+                VOID_TYPE,
+                NO_PARAMS,
+                NO_EXCEPTIONS,
                 new EmptyStatement()
         ));
     }

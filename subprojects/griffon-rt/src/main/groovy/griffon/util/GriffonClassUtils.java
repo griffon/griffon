@@ -65,6 +65,7 @@ public final class GriffonClassUtils {
     private static final Set<MethodDescriptor> EVENT_PUBLISHER_METHODS = new TreeSet<MethodDescriptor>();
     private static final Set<MethodDescriptor> OBSERVABLE_METHODS = new TreeSet<MethodDescriptor>();
     private static final Set<MethodDescriptor> RESOURCES_METHODS = new TreeSet<MethodDescriptor>();
+    private static final Set<MethodDescriptor> I18N_METHODS = new TreeSet<MethodDescriptor>();
 
     /**
      * Just add two entries to the class compatibility map
@@ -194,6 +195,19 @@ public final class GriffonClassUtils {
         RESOURCES_METHODS.add(new MethodDescriptor("getResourceAsURL", new Class[]{String.class}));
         RESOURCES_METHODS.add(new MethodDescriptor("getResourceAsStream", new Class[]{String.class}));
         RESOURCES_METHODS.add(new MethodDescriptor("getResources", new Class[]{String.class}));
+
+        I18N_METHODS.add(new MethodDescriptor("getMessage", new Class[]{String.class}));
+        I18N_METHODS.add(new MethodDescriptor("getMessage", new Class[]{String.class, Object[].class}));
+        I18N_METHODS.add(new MethodDescriptor("getMessage", new Class[]{String.class, Locale.class}));
+        I18N_METHODS.add(new MethodDescriptor("getMessage", new Class[]{String.class, Object[].class, Locale.class}));
+        I18N_METHODS.add(new MethodDescriptor("getMessage", new Class[]{String.class, String.class}));
+        I18N_METHODS.add(new MethodDescriptor("getMessage", new Class[]{String.class, Object[].class, String.class}));
+        I18N_METHODS.add(new MethodDescriptor("getMessage", new Class[]{String.class, String.class, Locale.class}));
+        I18N_METHODS.add(new MethodDescriptor("getMessage", new Class[]{String.class, Object[].class, String.class, Locale.class}));
+        I18N_METHODS.add(new MethodDescriptor("getMessage", new Class[]{String.class, List.class}));
+        I18N_METHODS.add(new MethodDescriptor("getMessage", new Class[]{String.class, List.class, Locale.class}));
+        I18N_METHODS.add(new MethodDescriptor("getMessage", new Class[]{String.class, List.class, String.class}));
+        I18N_METHODS.add(new MethodDescriptor("getMessage", new Class[]{String.class, List.class, String.class, Locale.class}));
     }
 
     /**
@@ -630,7 +644,7 @@ public final class GriffonClassUtils {
 
     /**
      * Finds out if the given {@code Method} belongs to the set of
-     * predefined EVENT_PUBLISHER methods by convention.
+     * predefined event publisher methods by convention.
      * <p/>
      * <pre>
      * // assuming getMethod() returns an appropriate Method reference
@@ -648,7 +662,7 @@ public final class GriffonClassUtils {
 
     /**
      * Finds out if the given {@code MetaMethod} belongs to the set of
-     * predefined EVENT_PUBLISHER methods by convention.
+     * predefined event publisher methods by convention.
      * <p/>
      * <pre>
      * // assuming getMethod() returns an appropriate MetaMethod reference
@@ -666,7 +680,7 @@ public final class GriffonClassUtils {
 
     /**
      * Finds out if the given {@code MethodDescriptor} belongs to the set of
-     * predefined EVENT_PUBLISHER methods by convention.
+     * predefined event publisher methods by convention.
      * <p/>
      * <pre>
      * // assuming getMethod() returns an appropriate MethodDescriptor reference
@@ -685,7 +699,7 @@ public final class GriffonClassUtils {
 
     /**
      * Finds out if the given {@code Method} belongs to the set of
-     * predefined OBSERVABLE methods by convention.
+     * predefined observable methods by convention.
      * <p/>
      * <pre>
      * // assuming getMethod() returns an appropriate Method reference
@@ -703,7 +717,7 @@ public final class GriffonClassUtils {
 
     /**
      * Finds out if the given {@code MetaMethod} belongs to the set of
-     * predefined OBSERVABLE methods by convention.
+     * predefined observable methods by convention.
      * <p/>
      * <pre>
      * // assuming getMethod() returns an appropriate MetaMethod reference
@@ -721,7 +735,7 @@ public final class GriffonClassUtils {
 
     /**
      * Finds out if the given {@code MethodDescriptor} belongs to the set of
-     * predefined OBSERVABLE methods by convention.
+     * predefined observable methods by convention.
      * <p/>
      * <pre>
      * // assuming getMethod() returns an appropriate MethodDescriptor reference
@@ -740,7 +754,7 @@ public final class GriffonClassUtils {
 
     /**
      * Finds out if the given {@code Method} belongs to the set of
-     * predefined RESOURCES methods by convention.
+     * predefined resources methods by convention.
      * <p/>
      * <pre>
      * // assuming getMethod() returns an appropriate Method reference
@@ -758,7 +772,7 @@ public final class GriffonClassUtils {
 
     /**
      * Finds out if the given {@code MetaMethod} belongs to the set of
-     * predefined RESOURCES methods by convention.
+     * predefined resources methods by convention.
      * <p/>
      * <pre>
      * // assuming getMethod() returns an appropriate MetaMethod reference
@@ -776,7 +790,7 @@ public final class GriffonClassUtils {
 
     /**
      * Finds out if the given {@code MethodDescriptor} belongs to the set of
-     * predefined RESOURCES methods by convention.
+     * predefined resources methods by convention.
      * <p/>
      * <pre>
      * // assuming getMethod() returns an appropriate MethodDescriptor reference
@@ -791,6 +805,58 @@ public final class GriffonClassUtils {
     public static boolean isResourceHandlerMethod(MethodDescriptor method) {
         if (method == null || !isInstanceMethod(method)) return false;
         return RESOURCES_METHODS.contains(method);
+    }
+
+    /**
+     * Finds out if the given {@code Method} belongs to the set of
+     * predefined message source methods by convention.
+     * <p/>
+     * <pre>
+     * // assuming getMethod() returns an appropriate Method reference
+     * isMessageSourceMethod(getMethod("getMessage"))    = true
+     * isMessageSourceMethod(getMethod("foo"))           = false
+     * </pre>
+     *
+     * @param method a Method reference
+     * @return true if the method is an Observable method, false otherwise.
+     */
+    public static boolean isMessageSourceMethod(Method method) {
+        return isMessageSourceMethod(MethodDescriptor.forMethod(method));
+    }
+
+    /**
+     * Finds out if the given {@code MetaMethod} belongs to the set of
+     * predefined message source methods by convention.
+     * <p/>
+     * <pre>
+     * // assuming getMethod() returns an appropriate MetaMethod reference
+     * isMessageSourceMethod(getMethod("getMessage"))    = true
+     * isMessageSourceMethod(getMethod("foo"))           = false
+     * </pre>
+     *
+     * @param method a MetaMethod reference
+     * @return true if the method is an Observable method, false otherwise.
+     */
+    public static boolean isMessageSourceMethod(MetaMethod method) {
+        return isMessageSourceMethod(MethodDescriptor.forMethod(method));
+    }
+
+    /**
+     * Finds out if the given {@code MethodDescriptor} belongs to the set of
+     * predefined message source methods by convention.
+     * <p/>
+     * <pre>
+     * // assuming getMethod() returns an appropriate MethodDescriptor reference
+     * isMessageSourceMethod(getMethod("getMessage"))    = true
+     * isMessageSourceMethod(getMethod("foo"))           = false
+     * </pre>
+     *
+     * @param method a MethodDescriptor reference
+     * @return true if the method is an Observable method, false otherwise.
+     */
+    public static boolean isMessageSourceMethod(MethodDescriptor method) {
+        if (method == null || !isInstanceMethod(method)) return false;
+        return I18N_METHODS.contains(method);
     }
 
     /**
@@ -840,6 +906,7 @@ public final class GriffonClassUtils {
      * <li>! isEventPublisherMethod(method)</li>
      * <li>! isObservableMethod(method)</li>
      * <li>! isResourceHandlerMethod(method)</li>
+     * <li>! isMessageSourceMethod(method)</li>
      * <li>! isGetterMethod(method)</li>
      * <li>! isSetterMethod(method)</li>
      * </ul>
@@ -862,6 +929,7 @@ public final class GriffonClassUtils {
      * <li>! isEventPublisherMethod(method)</li>
      * <li>! isObservableMethod(method)</li>
      * <li>! isResourceHandlerMethod(method)</li>
+     * <li>! isMessageSourceMethod(method)</li>
      * <li>! isGetterMethod(method)</li>
      * <li>! isSetterMethod(method)</li>
      * </ul>
@@ -884,6 +952,7 @@ public final class GriffonClassUtils {
      * <li>! isEventPublisherMethod(method)</li>
      * <li>! isObservableMethod(method)</li>
      * <li>! isResourceHandlerMethod(method)</li>
+     * <li>! isMessageSourceMethod(method)</li>
      * <li>! isGetterMethod(method)</li>
      * <li>! isSetterMethod(method)</li>
      * </ul>
@@ -901,6 +970,7 @@ public final class GriffonClassUtils {
                 !isEventPublisherMethod(method) &&
                 !isObservableMethod(method) &&
                 !isResourceHandlerMethod(method) &&
+                !isMessageSourceMethod(method) &&
                 !isGetterMethod(method) &&
                 !isSetterMethod(method);
     }

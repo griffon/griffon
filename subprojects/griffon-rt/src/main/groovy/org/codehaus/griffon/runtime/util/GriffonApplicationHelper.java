@@ -19,6 +19,10 @@ import griffon.core.*;
 import griffon.core.factories.AddonManagerFactory;
 import griffon.core.factories.ArtifactManagerFactory;
 import griffon.core.factories.MVCGroupManagerFactory;
+import griffon.core.i18n.CompositeMessageSource;
+import griffon.core.i18n.DefaultMessageSource;
+import griffon.core.i18n.MessageSource;
+import griffon.core.i18n.MessageSourceHolder;
 import griffon.exceptions.GriffonException;
 import griffon.util.*;
 import groovy.lang.*;
@@ -194,6 +198,13 @@ public class GriffonApplicationHelper {
         app.setConfig(appConfig);
         app.getConfig().merge(loadConfigWithI18n(app.getLocale(), configReader, app.getConfigClass(), GriffonApplication.Configuration.CONFIG.getName()));
         GriffonExceptionHandler.configure(app.getConfig().flatten(new LinkedHashMap()));
+
+        List<String> i18nBasenames = (List<String>) getConfigValue(app.getConfig(), "griffon.i18n.basenames", asList("messages"));
+        List<MessageSource> messageSources = new ArrayList<MessageSource>();
+        for (String basename : i18nBasenames) {
+            messageSources.add(new DefaultMessageSource(basename));
+        }
+        MessageSourceHolder.getInstance().setMessageSource(new CompositeMessageSource(messageSources));
 
         app.setBuilderConfig(loadConfigWithI18n(app.getLocale(), configReader, app.getBuilderClass(), GriffonApplication.Configuration.BUILDER.getName()));
 
