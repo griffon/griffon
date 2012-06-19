@@ -58,7 +58,7 @@ public class DefaultMVCGroupManager extends AbstractMVCGroupManager {
     private static final String KEY_BUILDER = "builder";
     private static final String KEY_MVC_GROUP_INIT = "mvcGroupInit";
     private static final String KEY_MVC_GROUP_DESTROY = "mvcGroupDestroy";
-    private static final String KEY_GRIFFON_DESTROY = "griffonDestroy";
+    // private static final String KEY_GRIFFON_DESTROY = "griffonDestroy";
 
     public DefaultMVCGroupManager(GriffonApplication app) {
         super(app);
@@ -282,10 +282,10 @@ public class DefaultMVCGroupManager extends AbstractMVCGroupManager {
             Object member = memberEntry.getValue();
             if (member instanceof GriffonMvcArtifact) {
                 ((GriffonMvcArtifact) member).mvcGroupDestroy();
-                ((GriffonMvcArtifact) member).griffonDestroy();
+                /*((GriffonMvcArtifact) member).griffonDestroy();
             } else if (member instanceof GriffonArtifact) {
                 ((GriffonArtifact) member).griffonDestroy();
-            } else if (member != null && !(member instanceof Script)) {
+            } */else if (member != null && !(member instanceof Script)) {
                 try {
                     InvokerHelper.invokeMethod(member, KEY_MVC_GROUP_DESTROY, EMPTY_ARGS);
                 } catch (MissingMethodException mme) {
@@ -295,6 +295,7 @@ public class DefaultMVCGroupManager extends AbstractMVCGroupManager {
                     // MME on mvcGroupDestroy means they didn't define
                     // a destroy method.  This is not an error.
                 }
+                /*
                 try {
                     InvokerHelper.invokeMethod(member, KEY_GRIFFON_DESTROY, EMPTY_ARGS);
                 } catch (MissingMethodException mme) {
@@ -304,6 +305,7 @@ public class DefaultMVCGroupManager extends AbstractMVCGroupManager {
                     // MME on griffonDestroy means they didn't define
                     // a destroy method.  This is not an error.
                 }
+                */
             }
         }
 
