@@ -696,13 +696,13 @@ class BuildSettings extends AbstractBuildSettings {
                 // the root loader as its parent. Otherwise we get something
                 // like NoClassDefFoundError for Script.
                 GroovyClassLoader gcl = obtainGroovyClassLoader()
-                ConfigSlurper slurper = createConfigSlurper()
+                ConfigReader configReader = createConfigReader()
 
                 URL configUrl = configFile.toURI().toURL()
                 Script script = gcl.parseClass(configFile)?.newInstance()
 
                 config.setConfigFile(configUrl)
-                loadConfig(slurper.parse(script))
+                loadConfig(configReader.parse(script))
             } else {
                 postLoadConfig()
             }
@@ -734,23 +734,23 @@ class BuildSettings extends AbstractBuildSettings {
 
     protected ConfigObject loadSettingsFile() {
         if (!settingsFileLoaded) {
-            def settingsFile = new File("$userHome/.griffon/settings.groovy")
-            def gcl = obtainGroovyClassLoader()
-            def slurper = createConfigSlurper()
+            File settingsFile = new File("$userHome/.griffon/settings.groovy")
+            ClassLoader gcl = obtainGroovyClassLoader()
+            ConfigReader configReader = createConfigReader()
             if (settingsFile.exists()) {
                 Script script = gcl.parseClass(settingsFile)?.newInstance()
                 if (script) {
-                    config = slurper.parse(script)
+                    config = configReader.parse(script)
                 }
             }
 
             this.proxySettingsFile = new File("$userHome/.griffon/ProxySettings.groovy")
             if (proxySettingsFile.exists()) {
-                slurper = createConfigSlurper()
+                configReader = createConfigReader()
                 try {
                     Script script = gcl.parseClass(proxySettingsFile)?.newInstance()
                     if (script) {
-                        proxySettings = slurper.parse(script)
+                        proxySettings = configReader.parse(script)
                         def current = proxySettings.currentProxy
                         if (current) {
                             proxySettings[current]?.each { key, value ->
@@ -850,7 +850,7 @@ class BuildSettings extends AbstractBuildSettings {
     public static final int RESOLUTION_ERROR = 2i
 
     Closure pluginDependencyHandler(IvyDependencyManager dependencyManager) {
-        ConfigSlurper pluginSlurper = createConfigSlurper()
+        ConfigReader pluginSlurper = createConfigReader()
 
         return { File dir, String pluginName, String pluginVersion ->
             String path = dir.absolutePath
@@ -896,9 +896,9 @@ class BuildSettings extends AbstractBuildSettings {
         }
     }
 
-    ConfigSlurper createConfigSlurper() {
-        ConfigSlurper slurper = new ConfigSlurper(Environment.current.name)
-        slurper.setBinding(
+    ConfigReader createConfigReader() {
+        ConfigReader reader = new ConfigReader()
+        reader.setBinding(
                 basedir: baseDir.path,
                 baseFile: baseDir,
                 baseName: baseDir.name,
@@ -908,7 +908,9 @@ class BuildSettings extends AbstractBuildSettings {
                 griffonSettings: this,
                 appName: Metadata.current.getApplicationName(),
                 appVersion: Metadata.current.getApplicationVersion())
-        return slurper
+        reader.registerConditionalBlock('environments', Environment.current.name)
+        reader.registerConditionalBlock('projects', Metadata.current.getApplicationName())
+        return reader
     }
 
     File isPluginProject() {

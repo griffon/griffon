@@ -285,7 +285,7 @@ public class DefaultMVCGroupManager extends AbstractMVCGroupManager {
                 /*((GriffonMvcArtifact) member).griffonDestroy();
             } else if (member instanceof GriffonArtifact) {
                 ((GriffonArtifact) member).griffonDestroy();
-            } */else if (member != null && !(member instanceof Script)) {
+            */} else if (member != null && !(member instanceof Script)) {
                 try {
                     InvokerHelper.invokeMethod(member, KEY_MVC_GROUP_DESTROY, EMPTY_ARGS);
                 } catch (MissingMethodException mme) {

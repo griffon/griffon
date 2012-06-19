@@ -63,13 +63,14 @@ if (griffonAppName.indexOf('/') > -1) {
 }
 
 // Prepare a configuration file parser based on the current environment.
-configSlurper = new ConfigSlurper(griffonEnv)
+configSlurper = new ConfigReader(griffonEnv)
 configSlurper.setBinding(
         griffonHome: griffonHome,
         appName: griffonAppName,
         appVersion: griffonAppVersion,
         userHome: userHome,
         basedir: basedir)
+configSlurper.registerConditionalBlock('projects', griffonAppName)
 
 if (!buildConfig.griffon.jars.destDir) buildConfig.griffon.jars.destDir = "${basedir}/staging"
 if (!buildConfig.griffon.jars.jarName) buildConfig.griffon.jars.jarName = "${griffonAppName}.jar"
