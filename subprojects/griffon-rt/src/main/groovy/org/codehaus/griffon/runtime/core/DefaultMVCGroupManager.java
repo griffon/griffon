@@ -53,6 +53,12 @@ public class DefaultMVCGroupManager extends AbstractMVCGroupManager {
     private static final String CONFIG_KEY_EVENTS_LIFECYCLE = "events.lifecycle";
     private static final String CONFIG_KEY_EVENTS_INSTANTIATION = "events.instantiation";
     private static final String CONFIG_KEY_EVENTS_LISTENER = "events.listener";
+    private static final Object[] EMPTY_ARGS = new Object[0];
+
+    private static final String KEY_BUILDER = "builder";
+    private static final String KEY_MVC_GROUP_INIT = "mvcGroupInit";
+    private static final String KEY_MVC_GROUP_DESTROY = "mvcGroupDestroy";
+    private static final String KEY_GRIFFON_DESTROY = "griffonDestroy";
 
     public DefaultMVCGroupManager(GriffonApplication app) {
         super(app);
@@ -114,8 +120,8 @@ public class DefaultMVCGroupManager extends AbstractMVCGroupManager {
             getApp().setEventPublishingEnabled(isEventPublishingEnabled);
         }
 
-        instances.put("builder", builder);
-        argsCopy.put("builder", builder);
+        instances.put(KEY_BUILDER, builder);
+        argsCopy.put(KEY_BUILDER, builder);
 
         MVCGroup group = newMVCGroup(configuration, mvcId, instances);
         // must set it again because mvcId might have been initialized internally
@@ -229,11 +235,11 @@ public class DefaultMVCGroupManager extends AbstractMVCGroupManager {
             Object member = memberEntry.getValue();
             if (member instanceof Script) {
                 group.buildScriptMember(memberType);
-            } else if (!"builder".equalsIgnoreCase(memberType)) {
+            } else if (!KEY_BUILDER.equalsIgnoreCase(memberType)) {
                 try {
-                    InvokerHelper.invokeMethod(member, "mvcGroupInit", new Object[]{args});
+                    InvokerHelper.invokeMethod(member, KEY_MVC_GROUP_INIT, new Object[]{args});
                 } catch (MissingMethodException mme) {
-                    if ("mvcGroupInit".equals(mme.getMethod())) {
+                    if (!KEY_MVC_GROUP_INIT.equals(mme.getMethod())) {
                         throw mme;
                     }
                     // MME on mvcGroupInit means they didn't define
@@ -271,15 +277,31 @@ public class DefaultMVCGroupManager extends AbstractMVCGroupManager {
 
         for (Map.Entry<String, Object> memberEntry : group.getMembers().entrySet()) {
             String memberType = memberEntry.getKey();
+            if(KEY_BUILDER.equalsIgnoreCase(memberType)) continue;
+
             Object member = memberEntry.getValue();
-            if (!"builder".equalsIgnoreCase(memberType) && (member != null) && !(member instanceof Script)) {
+            if (member instanceof GriffonMvcArtifact) {
+                ((GriffonMvcArtifact) member).mvcGroupDestroy();
+                ((GriffonMvcArtifact) member).griffonDestroy();
+            } else if (member instanceof GriffonArtifact) {
+                ((GriffonArtifact) member).griffonDestroy();
+            } else if (member != null && !(member instanceof Script)) {
                 try {
-                    InvokerHelper.invokeMethod(member, "mvcGroupDestroy", new Object[0]);
+                    InvokerHelper.invokeMethod(member, KEY_MVC_GROUP_DESTROY, EMPTY_ARGS);
                 } catch (MissingMethodException mme) {
-                    if ("mvcGroupDestroy".equals(mme.getMethod())) {
+                    if (!KEY_MVC_GROUP_DESTROY.equals(mme.getMethod())) {
                         throw mme;
                     }
                     // MME on mvcGroupDestroy means they didn't define
+                    // a destroy method.  This is not an error.
+                }
+                try {
+                    InvokerHelper.invokeMethod(member, KEY_GRIFFON_DESTROY, EMPTY_ARGS);
+                } catch (MissingMethodException mme) {
+                    if (!KEY_GRIFFON_DESTROY.equals(mme.getMethod())) {
+                        throw mme;
+                    }
+                    // MME on griffonDestroy means they didn't define
                     // a destroy method.  This is not an error.
                 }
             }
