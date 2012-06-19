@@ -230,7 +230,8 @@ public class GriffonApplicationHelper {
         }
     }
 
-    private static Locale parseLocale(String locale) {
+    public static Locale parseLocale(String locale) {
+        if (isBlank(locale)) return Locale.getDefault();
         String[] parts = locale.split("_");
         switch (parts.length) {
             case 1:

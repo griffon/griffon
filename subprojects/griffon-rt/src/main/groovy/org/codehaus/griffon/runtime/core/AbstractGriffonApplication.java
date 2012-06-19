@@ -179,6 +179,10 @@ public abstract class AbstractGriffonApplication extends AbstractObservable impl
         return log;
     }
 
+    public void setLocaleAsString(String locale) {
+        setLocale(GriffonApplicationHelper.parseLocale(locale));
+    }
+
     public void setLocale(Locale locale) {
         Locale oldValue = this.locale;
         this.locale = locale;
