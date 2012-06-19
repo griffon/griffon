@@ -63,13 +63,14 @@ if (griffonAppName.indexOf('/') > -1) {
 }
 
 // Prepare a configuration file parser based on the current environment.
-configSlurper = new ConfigSlurper(griffonEnv)
+configSlurper = new ConfigReader(griffonEnv)
 configSlurper.setBinding(
         griffonHome: griffonHome,
         appName: griffonAppName,
         appVersion: griffonAppVersion,
         userHome: userHome,
         basedir: basedir)
+configSlurper.registerConditionalBlock('projects', griffonAppName)
 
 // No point doing this stuff more than once.
 if (getBinding().variables.containsKey("_settings_called")) return true

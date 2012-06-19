@@ -23,7 +23,6 @@ import griffon.exceptions.GriffonException;
 import griffon.util.*;
 import groovy.lang.*;
 import groovy.util.ConfigObject;
-import groovy.util.ConfigSlurper;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.helpers.LogLog;
 import org.codehaus.griffon.runtime.core.ControllerArtifactHandler;
@@ -84,21 +83,76 @@ public class GriffonApplicationHelper {
         return mc;
     }
 
-    private static ConfigObject loadConfig(ConfigSlurper configSlurper, Class configClass, String configFileName) {
+    /**
+     * Loads configuration settings defined in a Groovy script and a properties file as fallback.
+     *
+     * @param configReader   a ConfigReader instance already configured
+     * @param configClass    the script's class, may be null
+     * @param configFileName the alternate configuration file
+     * @return a merged configuration between the script and the alternate file. The file has precedence over the script.
+     */
+    public static ConfigObject loadConfig(ConfigReader configReader, Class configClass, String configFileName) {
         ConfigObject config = new ConfigObject();
         try {
             if (configClass != null) {
-                config.merge(configSlurper.parse(configClass));
+                config.merge(configReader.parse(configClass));
             }
             InputStream is = ApplicationClassLoader.get().getResourceAsStream(configFileName + ".properties");
             if (is != null) {
                 Properties p = new Properties();
                 p.load(is);
-                config.merge(configSlurper.parse(p));
+                config.merge(configReader.parse(p));
             }
         } catch (Exception x) {
             LogLog.warn("Cannot read configuration [class: " + configClass + ", file: " + configFileName + "]", sanitize(x));
         }
+        return config;
+    }
+
+    /**
+     * Loads configuration settings defined in a Groovy script and a properties file. The script and file names
+     * are Locale aware.<p>
+     * The following suffixes will be used besides the base names for script and file
+     * <ul>
+     * <li>locale.getLanguage()</li>
+     * <li>locale.getLanguage() + "_" + locale.getCountry()</li>
+     * <li>locale.getLanguage() + "_" + locale.getCountry() + "_" + locale.getVariant()</li>
+     * </ul>
+     *
+     * @param locale             the locale to sue
+     * @param configReader       a ConfigReader instance already configured
+     * @param baseConfigClass    the script's class, may be null
+     * @param baseConfigFileName the alternate configuration file
+     * @return a merged configuration between the script and the alternate file. The file has precedence over the script.
+     */
+    public static ConfigObject loadConfigWithI18n(Locale locale, ConfigReader configReader, Class baseConfigClass, String baseConfigFileName) {
+        ConfigObject config = loadConfig(configReader, baseConfigClass, baseConfigFileName);
+        String[] combinations = {
+                locale.getLanguage(),
+                locale.getLanguage() + "_" + locale.getCountry(),
+                locale.getLanguage() + "_" + locale.getCountry() + "_" + locale.getVariant()
+        };
+
+        String baseClassName = baseConfigClass != null ? baseConfigClass.getName() : null;
+        for (String suffix : combinations) {
+            if (isBlank(suffix) || suffix.endsWith("_")) continue;
+            if (baseClassName != null) {
+                Class configClass = safeLoadClass(baseClassName + "_" + suffix);
+                if (configClass != null) config.merge(configReader.parse(configClass));
+                String configFileName = baseConfigFileName + "_" + suffix + ".properties";
+                InputStream is = ApplicationClassLoader.get().getResourceAsStream(configFileName);
+                if (is != null) {
+                    try {
+                        Properties p = new Properties();
+                        p.load(is);
+                        config.merge(configReader.parse(p));
+                    } catch (Exception x) {
+                        LogLog.warn("Cannot read configuration [class: " + configClass + ", file: " + configFileName + "]", sanitize(x));
+                    }
+                }
+            }
+        }
+
         return config;
     }
 
@@ -133,14 +187,15 @@ public class GriffonApplicationHelper {
     }
 
     private static void readAndSetConfiguration(GriffonApplication app) {
-        ConfigSlurper configSlurper = new ConfigSlurper(Environment.getCurrent().getName());
-        final ConfigObject appConfig = loadConfig(configSlurper, app.getAppConfigClass(), GriffonApplication.Configuration.APPLICATION.getName());
+        ConfigReader configReader = new ConfigReader(Environment.getCurrent().getName());
+        ConfigObject appConfig = loadConfig(configReader, app.getAppConfigClass(), GriffonApplication.Configuration.APPLICATION.getName());
         setApplicationLocale(app, getConfigValue(appConfig, "application.locale", Locale.getDefault()));
+        appConfig = loadConfigWithI18n(app.getLocale(), configReader, app.getAppConfigClass(), GriffonApplication.Configuration.APPLICATION.getName());
         app.setConfig(appConfig);
-        app.getConfig().merge(loadConfig(configSlurper, app.getConfigClass(), GriffonApplication.Configuration.CONFIG.getName()));
+        app.getConfig().merge(loadConfigWithI18n(app.getLocale(), configReader, app.getConfigClass(), GriffonApplication.Configuration.CONFIG.getName()));
         GriffonExceptionHandler.configure(app.getConfig().flatten(new LinkedHashMap()));
 
-        app.setBuilderConfig(loadConfig(configSlurper, app.getBuilderClass(), GriffonApplication.Configuration.BUILDER.getName()));
+        app.setBuilderConfig(loadConfigWithI18n(app.getLocale(), configReader, app.getBuilderClass(), GriffonApplication.Configuration.BUILDER.getName()));
 
         Object events = safeNewInstance(app.getEventsClass());
         if (events != null) {
@@ -157,16 +212,16 @@ public class GriffonApplicationHelper {
     }
 
     private static void setApplicationLocale(GriffonApplication app, Object localeValue) {
-        if(localeValue instanceof Locale) {
+        if (localeValue instanceof Locale) {
             app.setLocale((Locale) localeValue);
-        } else if(localeValue instanceof CharSequence) {
+        } else if (localeValue instanceof CharSequence) {
             app.setLocale(parseLocale(String.valueOf(localeValue)));
         }
     }
 
     private static Locale parseLocale(String locale) {
         String[] parts = locale.split("_");
-        switch(parts.length) {
+        switch (parts.length) {
             case 1:
                 return new Locale(parts[0]);
             case 2:
@@ -455,6 +510,14 @@ public class GriffonApplicationHelper {
 
         if (cnfe != null) throw cnfe;
         return null;
+    }
+
+    public static Class safeLoadClass(String className) {
+        try {
+            return loadClass(className);
+        } catch (ClassNotFoundException e) {
+            return null;
+        }
     }
 
     private static Object safeNewInstance(String className) {
