@@ -21,50 +21,54 @@ import griffon.core.GriffonClass;
 import groovy.lang.ExpandoMetaClass;
 import groovy.lang.GroovySystem;
 import org.codehaus.griffon.ast.MVCAwareASTTransformation;
+import org.codehaus.griffon.ast.MessageSourceAwareASTTransformation;
 import org.codehaus.griffon.ast.ResourcesAwareASTTransformation;
 import org.codehaus.griffon.ast.ThreadingAwareASTTransformation;
 import org.codehaus.griffon.runtime.core.AbstractGriffonArtifact;
 import org.codehaus.griffon.runtime.util.GriffonApplicationHelper;
-import org.codehaus.groovy.ast.*;
+import org.codehaus.groovy.ast.ClassNode;
+import org.codehaus.groovy.ast.FieldNode;
+import org.codehaus.groovy.ast.MethodNode;
 import org.codehaus.groovy.ast.expr.ConstantExpression;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import static org.codehaus.griffon.ast.GriffonASTUtils.*;
+import static org.codehaus.groovy.ast.ClassHelper.*;
 
 /**
  * @author Andres Almiray
  * @since 0.9.1
  */
 public class GriffonArtifactASTInjector extends AbstractASTInjector {
-    private static final ClassNode GRIFFON_APPLICATION_CLASS = makeClassSafe(GriffonApplication.class);
-    private static final ClassNode GRIFFON_CLASS_CLASS = makeClassSafe(GriffonClass.class);
-    private static final ClassNode GAH_CLASS = makeClassSafe(GriffonApplicationHelper.class);
-    private static final ClassNode LOGGER_CLASS = makeClassSafe(Logger.class);
-    private static final ClassNode LOGGER_FACTORY_CLASS = makeClassSafe(LoggerFactory.class);
-    private static final ClassNode GROOVY_SYSTEM_CLASS = makeClassSafe(GroovySystem.class);
-    private static final ClassNode ABSTRACT_GRIFFON_ARTIFACT_CLASS = makeClassSafe(AbstractGriffonArtifact.class);
-    private static final ClassNode EXPANDO_METACLASS_CLASS = makeClassSafe(ExpandoMetaClass.class);
+    private static final ClassNode GRIFFON_APPLICATION_TYPE = makeClassSafe(GriffonApplication.class);
+    private static final ClassNode GRIFFON_CLASS_TYPE = makeClassSafe(GriffonClass.class);
+    private static final ClassNode GAH_TYPE = makeClassSafe(GriffonApplicationHelper.class);
+    private static final ClassNode LOGGER_TYPE = makeClassSafe(Logger.class);
+    private static final ClassNode LOGGER_FACTORY_TYPE = makeClassSafe(LoggerFactory.class);
+    private static final ClassNode GROOVY_SYSTEM_TYPE = makeClassSafe(GroovySystem.class);
+    private static final ClassNode ABSTRACT_GRIFFON_ARTIFACT_TYPE = makeClassSafe(AbstractGriffonArtifact.class);
+    private static final ClassNode EXPANDO_METACLASS_TYPE = makeClassSafe(ExpandoMetaClass.class);
     public static final String APP = "app";
 
     public void inject(ClassNode classNode, String artifactType) {
         // GriffonApplication getApp()
         // void setApp(GriffonApplication app)
-        injectProperty(classNode, APP, ACC_PUBLIC, GRIFFON_APPLICATION_CLASS);
+        injectProperty(classNode, APP, ACC_PUBLIC, GRIFFON_APPLICATION_TYPE);
 
         FieldNode _metaClass = injectField(classNode,
                 "_metaClass",
                 ACC_PRIVATE | ACC_SYNTHETIC,
-                ClassHelper.METACLASS_TYPE,
+                METACLASS_TYPE,
                 ConstantExpression.NULL);
 
         // MetaClass getMetaClass()
         injectMethod(classNode, new MethodNode(
                 "getMetaClass",
                 ACC_PUBLIC,
-                ClassHelper.METACLASS_TYPE,
-                Parameter.EMPTY_ARRAY,
-                ClassNode.EMPTY_ARRAY,
+                METACLASS_TYPE,
+                NO_PARAMS,
+                NO_EXCEPTIONS,
 
                 /*
                 if(_metaClass != null) return _metaClass
@@ -79,11 +83,11 @@ public class GriffonArtifactASTInjector extends AbstractASTInjector {
                                 ne(field(_metaClass), ConstantExpression.NULL),
                                 field(_metaClass)
                         ),
-                        decls(var("mc", ClassHelper.METACLASS_TYPE), ConstantExpression.NULL),
+                        decls(var("mc", METACLASS_TYPE), ConstantExpression.NULL),
                         ifs_no_return(
-                                iof(THIS, EXPANDO_METACLASS_CLASS),
+                                iof(THIS, EXPANDO_METACLASS_TYPE),
                                 assigns(field(_metaClass), var("mc")),
-                                assigns(field(_metaClass), call(ABSTRACT_GRIFFON_ARTIFACT_CLASS, "metaClassOf", args(THIS)))
+                                assigns(field(_metaClass), call(ABSTRACT_GRIFFON_ARTIFACT_TYPE, "metaClassOf", args(THIS)))
                         ),
                         returns(field(_metaClass))
                 )
@@ -93,13 +97,13 @@ public class GriffonArtifactASTInjector extends AbstractASTInjector {
         injectMethod(classNode, new MethodNode(
                 "setMetaClass",
                 ACC_PUBLIC,
-                ClassHelper.VOID_TYPE,
-                params(param(ClassHelper.METACLASS_TYPE, "mc")),
-                ClassNode.EMPTY_ARRAY,
+                VOID_TYPE,
+                params(param(METACLASS_TYPE, "mc")),
+                NO_EXCEPTIONS,
                 block(
                         assigns(field(_metaClass), var("mc")),
                         stmnt(call(
-                                call(GROOVY_SYSTEM_CLASS, "getMetaClassRegistry", NO_ARGS),
+                                call(GROOVY_SYSTEM_TYPE, "getMetaClassRegistry", NO_ARGS),
                                 "setMetaClass",
                                 args(call(THIS, "getClass", NO_ARGS), var("mc"))
                         ))
@@ -110,9 +114,9 @@ public class GriffonArtifactASTInjector extends AbstractASTInjector {
         injectMethod(classNode, new MethodNode(
                 "getGriffonClass",
                 ACC_PUBLIC,
-                GRIFFON_CLASS_CLASS,
-                Parameter.EMPTY_ARRAY,
-                ClassNode.EMPTY_ARRAY,
+                GRIFFON_CLASS_TYPE,
+                NO_PARAMS,
+                NO_EXCEPTIONS,
                 returns(call(
                         call(
                                 call(THIS, "getApp", NO_ARGS),
@@ -126,13 +130,13 @@ public class GriffonArtifactASTInjector extends AbstractASTInjector {
         injectMethod(classNode, new MethodNode(
                 "newInstance",
                 ACC_PUBLIC,
-                makeClassSafe(ClassHelper.OBJECT_TYPE),
+                makeClassSafe(OBJECT_TYPE),
                 params(
-                        param(makeClassSafe(ClassHelper.CLASS_Type), "clazz"),
-                        param(ClassHelper.STRING_TYPE, "type")),
-                ClassNode.EMPTY_ARRAY,
+                        param(makeClassSafe(CLASS_Type), "clazz"),
+                        param(STRING_TYPE, "type")),
+                NO_EXCEPTIONS,
                 returns(call(
-                        GAH_CLASS,
+                        GAH_TYPE,
                         "newInstance",
                         vars(APP, "clazz", "type")))
         ));
@@ -141,9 +145,9 @@ public class GriffonArtifactASTInjector extends AbstractASTInjector {
         FieldNode loggerField = injectField(classNode,
                 "this$logger",
                 ACC_FINAL | ACC_PRIVATE | ACC_SYNTHETIC,
-                LOGGER_CLASS,
+                LOGGER_TYPE,
                 call(
-                        LOGGER_FACTORY_CLASS,
+                        LOGGER_FACTORY_TYPE,
                         "getLogger",
                         args(constx(loggerCategory)))
         );
@@ -152,14 +156,15 @@ public class GriffonArtifactASTInjector extends AbstractASTInjector {
         injectMethod(classNode, new MethodNode(
                 "getLog",
                 ACC_PUBLIC,
-                LOGGER_CLASS,
-                Parameter.EMPTY_ARRAY,
-                ClassNode.EMPTY_ARRAY,
+                LOGGER_TYPE,
+                NO_PARAMS,
+                NO_EXCEPTIONS,
                 returns(field(loggerField))
         ));
 
         ThreadingAwareASTTransformation.apply(classNode);
         MVCAwareASTTransformation.apply(classNode);
         ResourcesAwareASTTransformation.apply(classNode);
+        MessageSourceAwareASTTransformation.apply(classNode);
     }
 }

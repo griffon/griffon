@@ -15,6 +15,7 @@
  */
 package griffon.core;
 
+import griffon.core.i18n.MessageSource;
 import groovy.lang.MetaClass;
 import org.slf4j.Logger;
 
@@ -30,7 +31,7 @@ import org.slf4j.Logger;
  * @author Andres Almiray
  * @since 0.9.1
  */
-public interface GriffonArtifact extends ApplicationHandler, ThreadingHandler, MVCHandler, ResourceHandler {
+public interface GriffonArtifact extends ApplicationHandler, ThreadingHandler, MVCHandler, ResourceHandler, MessageSource {
     /**
      * Creates a new instance of the specified class and type.
      *

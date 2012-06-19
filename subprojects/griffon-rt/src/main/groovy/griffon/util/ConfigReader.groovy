@@ -13,6 +13,7 @@ import static griffon.util.GriffonNameUtils.isBlank
  *
  * @author Graeme Rocher (Groovy 1.5)
  * @author Andres Almiray
+ * @since 1.1.0
  */
 class ConfigReader {
     private static final ENVIRONMENTS_METHOD = 'environments'

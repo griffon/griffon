@@ -326,6 +326,8 @@ public class GriffonASTUtils {
         }
     }
 
+    public static final ClassNode[] NO_EXCEPTIONS = ClassNode.EMPTY_ARRAY;
+    public static final Parameter[] NO_PARAMS = Parameter.EMPTY_ARRAY;
     public static final Expression THIS = VariableExpression.THIS_EXPRESSION;
     public static final Expression SUPER = VariableExpression.SUPER_EXPRESSION;
     public static final ArgumentListExpression NO_ARGS = ArgumentListExpression.EMPTY_ARGUMENTS;
@@ -375,6 +377,10 @@ public class GriffonASTUtils {
             param.setInitialExpression(initialExpression);
         }
         return param;
+    }
+
+    public static ClassNode[] throwing(ClassNode... exceptions) {
+        return exceptions;
     }
 
     public static Parameter[] params(Parameter... params) {
