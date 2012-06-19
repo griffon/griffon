@@ -59,6 +59,7 @@ public final class GriffonClassUtils {
     private static final Pattern GETTER_PATTERN_2 = Pattern.compile("^is[A-Z][\\w]*$");
     private static final Pattern SETTER_PATTERN = Pattern.compile("^set[A-Z][\\w]*$");
     private static final Set<MethodDescriptor> BASIC_METHODS = new TreeSet<MethodDescriptor>();
+    private static final Set<MethodDescriptor> ARTIFACT_METHODS = new TreeSet<MethodDescriptor>();
     private static final Set<MethodDescriptor> MVC_METHODS = new TreeSet<MethodDescriptor>();
     private static final Set<MethodDescriptor> THREADING_METHODS = new TreeSet<MethodDescriptor>();
     private static final Set<MethodDescriptor> EVENT_PUBLISHER_METHODS = new TreeSet<MethodDescriptor>();
@@ -105,9 +106,15 @@ public final class GriffonClassUtils {
             }
         }
 
+        ARTIFACT_METHODS.add(new MethodDescriptor("newInstance", new Class[]{Class.class, String.class}));
+        ARTIFACT_METHODS.add(new MethodDescriptor("newInstance", new Class[]{Object[].class}));
+        ARTIFACT_METHODS.add(new MethodDescriptor("getApp"));
+        ARTIFACT_METHODS.add(new MethodDescriptor("getLog"));
+        ARTIFACT_METHODS.add(new MethodDescriptor("getGriffonClass"));
+        // ARTIFACT_METHODS.add(new MethodDescriptor("griffonDestroy"));
+
         MVC_METHODS.add(new MethodDescriptor("mvcGroupInit", new Class[]{Map.class}));
         MVC_METHODS.add(new MethodDescriptor("mvcGroupDestroy"));
-        MVC_METHODS.add(new MethodDescriptor("newInstance", new Class[]{Class.class, String.class}));
         MVC_METHODS.add(new MethodDescriptor("buildMVCGroup", new Class[]{String.class}));
         MVC_METHODS.add(new MethodDescriptor("buildMVCGroup", new Class[]{String.class, Map.class}));
         MVC_METHODS.add(new MethodDescriptor("buildMVCGroup", new Class[]{Map.class, String.class}));
@@ -135,17 +142,13 @@ public final class GriffonClassUtils {
         MVC_METHODS.add(new MethodDescriptor("withMVCGroup", new Class[]{Map.class, String.class, String.class, MVCClosure.class}));
 
         // Special cases due to the usage of varargs
-        MVC_METHODS.add(new MethodDescriptor("newInstance", new Class[]{Object[].class}));
         MVC_METHODS.add(new MethodDescriptor("buildMVCGroup", new Class[]{Object[].class}));
         MVC_METHODS.add(new MethodDescriptor("createMVCGroup", new Class[]{Object[].class}));
         MVC_METHODS.add(new MethodDescriptor("withMVCGroup", new Class[]{Object[].class}));
 
-        MVC_METHODS.add(new MethodDescriptor("getApp"));
-        MVC_METHODS.add(new MethodDescriptor("getLog"));
         MVC_METHODS.add(new MethodDescriptor("getArtifactManager"));
         MVC_METHODS.add(new MethodDescriptor("getAddonManager"));
         MVC_METHODS.add(new MethodDescriptor("getMVCGroupManager"));
-        MVC_METHODS.add(new MethodDescriptor("getGriffonClass"));
         MVC_METHODS.add(new MethodDescriptor("setBuilder", new Class[]{FactoryBuilderSupport.class}));
 
         THREADING_METHODS.add(new MethodDescriptor("isUIThread"));
@@ -458,6 +461,61 @@ public final class GriffonClassUtils {
     public static boolean isSetterMethod(MethodDescriptor method) {
         if (method == null || !isInstanceMethod(method)) return false;
         return SETTER_PATTERN.matcher(method.getName()).matches();
+    }
+
+    /**
+     * Finds out if the given {@code Method} belongs to the set of
+     * predefined Artifact methods by convention.
+     * <p/>
+     * <pre>
+     * // assuming getMethod() returns an appropriate Method reference
+     * isArtifactMethod(getMethod("newInstance"))    = true
+     * isArtifactMethod(getMethod("griffonDestroy")) = false
+     * isArtifactMethod(getMethod("foo"))            = false
+     * </pre>
+     *
+     * @param method a Method reference
+     * @return true if the method is an Artifact method, false otherwise.
+     */
+    public static boolean isArtifactMethod(Method method) {
+        return isArtifactMethod(MethodDescriptor.forMethod(method));
+    }
+
+    /**
+     * Finds out if the given {@code MetaMethod} belongs to the set of
+     * predefined Artifact methods by convention.
+     * <p/>
+     * <pre>
+     * // assuming getMethod() returns an appropriate MetaMethod reference
+     * isArtifactMethod(getMethod("newInstance"))    = true
+     * isArtifactMethod(getMethod("griffonDestroy")) = false
+     * isArtifactMethod(getMethod("foo"))            = false
+     * </pre>
+     *
+     * @param method a MetaMethod reference
+     * @return true if the method is an Artifact method, false otherwise.
+     */
+    public static boolean isArtifactMethod(MetaMethod method) {
+        return isArtifactMethod(MethodDescriptor.forMethod(method));
+    }
+
+    /**
+     * Finds out if the given {@code MethodDescriptor} belongs to the set of
+     * predefined Artifact methods by convention.
+     * <p/>
+     * <pre>
+     * // assuming getMethod() returns an appropriate MethodDescriptor reference
+     * isArtifactMethod(getMethod("newInstance"))    = true
+     * isArtifactMethod(getMethod("griffonDestroy")) = false
+     * isArtifactMethod(getMethod("foo"))            = false
+     * </pre>
+     *
+     * @param method a MethodDescriptor reference
+     * @return true if the method is an Artifact method, false otherwise.
+     */
+    public static boolean isArtifactMethod(MethodDescriptor method) {
+        if (method == null || !isInstanceMethod(method)) return false;
+        return ARTIFACT_METHODS.contains(method);
     }
 
     /**
@@ -777,6 +835,7 @@ public final class GriffonClassUtils {
      * <li>! isBasicMethod(method)</li>
      * <li>! isGroovyInjectedMethod(method)</li>
      * <li>! isThreadingMethod(method)</li>
+     * <li>! isArtifactMethod(method)</li>
      * <li>! isMvcMethod(method)</li>
      * <li>! isEventPublisherMethod(method)</li>
      * <li>! isObservableMethod(method)</li>
@@ -798,6 +857,7 @@ public final class GriffonClassUtils {
      * <li>! isBasicMethod(method)</li>
      * <li>! isGroovyInjectedMethod(method)</li>
      * <li>! isThreadingMethod(method)</li>
+     * <li>! isArtifactMethod(method)</li>
      * <li>! isMvcMethod(method)</li>
      * <li>! isEventPublisherMethod(method)</li>
      * <li>! isObservableMethod(method)</li>
@@ -819,6 +879,7 @@ public final class GriffonClassUtils {
      * <li>! isBasicMethod(method)</li>
      * <li>! isGroovyInjectedMethod(method)</li>
      * <li>! isThreadingMethod(method)</li>
+     * <li>! isArtifactMethod(method)</li>
      * <li>! isMvcMethod(method)</li>
      * <li>! isEventPublisherMethod(method)</li>
      * <li>! isObservableMethod(method)</li>
@@ -835,6 +896,7 @@ public final class GriffonClassUtils {
                 !isBasicMethod(method) &&
                 !isGroovyInjectedMethod(method) &&
                 !isThreadingMethod(method) &&
+                !isArtifactMethod(method) &&
                 !isMvcMethod(method) &&
                 !isEventPublisherMethod(method) &&
                 !isObservableMethod(method) &&
