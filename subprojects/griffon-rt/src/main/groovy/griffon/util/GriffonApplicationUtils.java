@@ -338,6 +338,10 @@ public final class GriffonApplicationUtils {
         return platform;
     }
 
+    public static String getFullPlatform() {
+        return platform + (is64Bit() ? "64" : "");
+    }
+
     public static boolean getIsWindows() {
         return isWindows;
     }

@@ -53,21 +53,33 @@ public class CompositeResourceBundle extends ResourceBundle {
         List<ResourceBundle> bundles = new ArrayList<ResourceBundle>();
         for (String suffix : combinations) {
             if (suffix.endsWith("_")) continue;
-            bundles.addAll(loadBundleForProperties(basename + "_" + suffix));
+            bundles.addAll(loadBundleFromProperties(basename + "_" + suffix));
+            bundles.addAll(loadBundleFromScript(basename + "_" + suffix));
         }
-        bundles.addAll(loadBundleForProperties(basename));
+        bundles.addAll(loadBundleFromProperties(basename));
+        bundles.addAll(loadBundleFromScript(basename));
 
         return new CompositeResourceBundle(bundles.toArray(new ResourceBundle[bundles.size()]));
     }
 
-    private static Collection<ResourceBundle> loadBundleForProperties(String fileName) {
+    private static Collection<ResourceBundle> loadBundleFromProperties(String fileName) {
         List<ResourceBundle> bundles = new ArrayList<ResourceBundle>();
         for (URL resource : ApplicationHolder.getApplication().getResources(fileName + ".properties")) {
+            if (null == resource) continue;
             try {
                 bundles.add(new PropertyResourceBundle(resource.openStream()));
             } catch (IOException e) {
                 // ignore
             }
+        }
+        return bundles;
+    }
+
+    private static Collection<ResourceBundle> loadBundleFromScript(String fileName) {
+        List<ResourceBundle> bundles = new ArrayList<ResourceBundle>();
+        for (URL resource : ApplicationHolder.getApplication().getResources(fileName + ".groovy")) {
+            if (null == resource) continue;
+            bundles.add(new GroovyScriptResourceBundle(resource));
         }
         return bundles;
     }
