@@ -208,6 +208,10 @@ public final class GriffonClassUtils {
         I18N_METHODS.add(new MethodDescriptor("getMessage", new Class[]{String.class, List.class, Locale.class}));
         I18N_METHODS.add(new MethodDescriptor("getMessage", new Class[]{String.class, List.class, String.class}));
         I18N_METHODS.add(new MethodDescriptor("getMessage", new Class[]{String.class, List.class, String.class, Locale.class}));
+        I18N_METHODS.add(new MethodDescriptor("getMessage", new Class[]{String.class, Map.class}));
+        I18N_METHODS.add(new MethodDescriptor("getMessage", new Class[]{String.class, Map.class, Locale.class}));
+        I18N_METHODS.add(new MethodDescriptor("getMessage", new Class[]{String.class, Map.class, String.class}));
+        I18N_METHODS.add(new MethodDescriptor("getMessage", new Class[]{String.class, Map.class, String.class, Locale.class}));
     }
 
     /**
