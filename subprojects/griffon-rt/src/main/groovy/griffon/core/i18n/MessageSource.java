@@ -18,6 +18,7 @@ package griffon.core.i18n;
 
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 
 /**
  * Interface for resolving messages, with support for the parameterization and internationalization of such messages.
@@ -148,4 +149,46 @@ public interface MessageSource {
      * @return The resolved message at the given key for the given locale
      */
     String getMessage(String key, List args, String defaultMessage, Locale locale);
+
+    /**
+     * Try to resolve the message.
+     *
+     * @param key  Key to lookup, such as 'log4j.appenders.console'
+     * @param args Arguments that will be filled in for params within the message (params look like "{:key}" within a message, but this might differ between implementations), or null if none.
+     * @return The resolved message at the given key for the default locale
+     * @throws NoSuchMessageException if no message is found
+     */
+    String getMessage(String key, Map<String, Object> args) throws NoSuchMessageException;
+
+    /**
+     * Try to resolve the message.
+     *
+     * @param key    Key to lookup, such as 'log4j.appenders.console'
+     * @param args   Arguments that will be filled in for params within the message (params look like "{:key}" within a message, but this might differ between implementations), or null if none.
+     * @param locale Locale in which to lookup
+     * @return The resolved message at the given key for the given locale
+     * @throws NoSuchMessageException if no message is found
+     */
+    String getMessage(String key, Map<String, Object> args, Locale locale) throws NoSuchMessageException;
+
+    /**
+     * Try to resolve the message. Return default message if no message was found.
+     *
+     * @param key            Key to lookup, such as 'log4j.appenders.console'
+     * @param args           Arguments that will be filled in for params within the message (params look like "{:key}" within a message, but this might differ between implementations), or null if none.
+     * @param defaultMessage Message to return if the lookup fails
+     * @return The resolved message at the given key for the default locale
+     */
+    String getMessage(String key, Map<String, Object> args, String defaultMessage);
+
+    /**
+     * Try to resolve the message. Return default message if no message was found.
+     *
+     * @param key            Key to lookup, such as 'log4j.appenders.console'
+     * @param args           Arguments that will be filled in for params within the message (params look like "{:key}" within a message, but this might differ between implementations), or null if none.
+     * @param defaultMessage Message to return if the lookup fails
+     * @param locale         Locale in which to lookup
+     * @return The resolved message at the given key for the given locale
+     */
+    String getMessage(String key, Map<String, Object> args, String defaultMessage, Locale locale);
 }

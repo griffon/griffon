@@ -33,8 +33,7 @@ import org.slf4j.LoggerFactory;
 import java.util.Locale;
 
 import static org.codehaus.griffon.ast.GriffonASTUtils.*;
-import static org.codehaus.groovy.ast.ClassHelper.LIST_TYPE;
-import static org.codehaus.groovy.ast.ClassHelper.STRING_TYPE;
+import static org.codehaus.groovy.ast.ClassHelper.*;
 
 /**
  * Handles generation of code for the {@code @MessageSourceAware} annotation.
@@ -102,12 +101,16 @@ public class MessageSourceAwareASTTransformation extends AbstractASTTransformati
      * <li><code>public String getMessage(java.lang.String, java.lang.Object[], java.util.Locale)</code></li>
      * <li><code>public String getMessage(java.lang.String, java.util.List)</code></li>
      * <li><code>public String getMessage(java.lang.String, java.util.List, java.util.Locale)</code></li>
+     * <li><code>public String getMessage(java.lang.String, java.util.Map)</code></li>
+     * <li><code>public String getMessage(java.lang.String, java.util.Map, java.util.Locale)</code></li>
      * <li><code>public String getMessage(java.lang.String, java.lang.String)</code></li>
      * <li><code>public String getMessage(java.lang.String, java.lang.String, java.util.Locale)</code></li>
      * <li><code>public String getMessage(java.lang.String, java.lang.Object[], java.lang.String)</code></li>
      * <li><code>public String getMessage(java.lang.String, java.lang.Object[], java.lang.String, java.util.Locale)</code></li>
      * <li><code>public String getMessage(java.lang.String, java.util.List, java.lang.String)</code></li>
      * <li><code>public String getMessage(java.lang.String, java.util.List, java.lang.String, java.util.Locale)</code></li>
+     * <li><code>public String getMessage(java.lang.String, java.util.Map, java.lang.String)</code></li>
+     * <li><code>public String getMessage(java.lang.String, java.util.Map, java.lang.String, java.util.Locale)</code></li>
      * </ul>If any are defined all
      * must be defined or a compilation error results.
      *
@@ -251,6 +254,35 @@ public class MessageSourceAwareASTTransformation extends AbstractASTTransformati
                 STRING_TYPE,
                 params(
                         param(STRING_TYPE, KEY),
+                        param(makeClassSafe(MAP_TYPE), ARGS)),
+                throwing(NO_SUCH_MESSAGE_EXCEPTION_TYPE),
+                returns(call(
+                        messageSource(),
+                        METHOD_GET_MESSAGE,
+                        vars(KEY, ARGS)))
+        ));
+
+        injectMethod(declaringClass, new MethodNode(
+                METHOD_GET_MESSAGE,
+                ACC_PUBLIC,
+                STRING_TYPE,
+                params(
+                        param(STRING_TYPE, KEY),
+                        param(makeClassSafe(MAP_TYPE), ARGS),
+                        param(LOCALE_TYPE, LOCALE)),
+                throwing(NO_SUCH_MESSAGE_EXCEPTION_TYPE),
+                returns(call(
+                        messageSource(),
+                        METHOD_GET_MESSAGE,
+                        vars(KEY, ARGS, LOCALE)))
+        ));
+
+        injectMethod(declaringClass, new MethodNode(
+                METHOD_GET_MESSAGE,
+                ACC_PUBLIC,
+                STRING_TYPE,
+                params(
+                        param(STRING_TYPE, KEY),
                         param(STRING_TYPE, DEFAULT_MESSAGE)),
                 NO_EXCEPTIONS,
                 returns(call(
@@ -336,6 +368,36 @@ public class MessageSourceAwareASTTransformation extends AbstractASTTransformati
                         vars(KEY, ARGS, DEFAULT_MESSAGE, LOCALE)))
         ));
 
+        injectMethod(declaringClass, new MethodNode(
+                METHOD_GET_MESSAGE,
+                ACC_PUBLIC,
+                STRING_TYPE,
+                params(
+                        param(STRING_TYPE, KEY),
+                        param(makeClassSafe(MAP_TYPE), ARGS),
+                        param(STRING_TYPE, DEFAULT_MESSAGE)),
+                NO_EXCEPTIONS,
+                returns(call(
+                        messageSource(),
+                        METHOD_GET_MESSAGE,
+                        vars(KEY, ARGS, DEFAULT_MESSAGE)))
+        ));
+
+        injectMethod(declaringClass, new MethodNode(
+                METHOD_GET_MESSAGE,
+                ACC_PUBLIC,
+                STRING_TYPE,
+                params(
+                        param(STRING_TYPE, KEY),
+                        param(makeClassSafe(MAP_TYPE), ARGS),
+                        param(STRING_TYPE, DEFAULT_MESSAGE),
+                        param(LOCALE_TYPE, LOCALE)),
+                NO_EXCEPTIONS,
+                returns(call(
+                        messageSource(),
+                        METHOD_GET_MESSAGE,
+                        vars(KEY, ARGS, DEFAULT_MESSAGE, LOCALE)))
+        ));
     }
 
     private static Expression messageSource() {

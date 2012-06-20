@@ -16,8 +16,10 @@
 
 package griffon.core.i18n;
 
-import java.text.MessageFormat;
-import java.util.*;
+import java.util.LinkedHashMap;
+import java.util.Locale;
+import java.util.Map;
+import java.util.ResourceBundle;
 
 /**
  * @author Andres Almiray
@@ -35,15 +37,8 @@ public class DefaultMessageSource extends AbstractMessageSource {
         return basename;
     }
 
-    public String getMessage(String key, Object[] args, Locale locale) throws NoSuchMessageException {
-        if (null == args) args = EMPTY_OBJECT_ARGS;
-        if (null == locale) locale = Locale.getDefault();
-        try {
-            String message = getBundle(locale).getString(key);
-            return MessageFormat.format(message, args);
-        } catch (MissingResourceException e) {
-            throw new NoSuchMessageException(key, locale);
-        }
+    protected String resolveMessage(String key, Locale locale) throws NoSuchMessageException {
+        return getBundle(locale).getString(key);
     }
 
     protected ResourceBundle getBundle(Locale locale) {

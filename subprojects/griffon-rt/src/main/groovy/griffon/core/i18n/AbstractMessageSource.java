@@ -16,8 +16,11 @@
 
 package griffon.core.i18n;
 
+import java.text.MessageFormat;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
+import java.util.MissingResourceException;
 
 import static griffon.util.GriffonNameUtils.isBlank;
 
@@ -69,12 +72,55 @@ public abstract class AbstractMessageSource implements MessageSource {
         }
     }
 
+    public String getMessage(String key, Map<String, Object> args) throws NoSuchMessageException {
+        return getMessage(key, args, Locale.getDefault());
+    }
+
+    public String getMessage(String key, Map<String, Object> args, String defaultMessage) {
+        return getMessage(key, args, defaultMessage, Locale.getDefault());
+    }
+
+    public String getMessage(String key, Map<String, Object> args, String defaultMessage, Locale locale) {
+        try {
+            return getMessage(key, args, locale);
+        } catch (NoSuchMessageException nsme) {
+            return isBlank(defaultMessage) ? key : defaultMessage;
+        }
+    }
+
+    public String getMessage(String key, Map<String, Object> args, Locale locale) throws NoSuchMessageException {
+        String message = resolveMessage(key, locale);
+        for (Map.Entry<String, Object> variable : args.entrySet()) {
+            String var = variable.getKey();
+            String value = variable.getValue() != null ? variable.getValue().toString() : null;
+            if (value != null) message = message.replace("{:" + var + "}", value);
+        }
+        return message;
+    }
+
     public String getMessage(String key, List args, String defaultMessage) {
         return getMessage(key, toObjectArray(args), defaultMessage, Locale.getDefault());
     }
 
     public String getMessage(String key, List args, String defaultMessage, Locale locale) {
         return getMessage(key, toObjectArray(args), defaultMessage, locale);
+    }
+
+    public String getMessage(String key, Object[] args, Locale locale) throws NoSuchMessageException {
+        if (null == args) args = EMPTY_OBJECT_ARGS;
+        if (null == locale) locale = Locale.getDefault();
+        try {
+            String message = resolveMessage(key, locale);
+            return formatMessage(message, args);
+        } catch (MissingResourceException e) {
+            throw new NoSuchMessageException(key, locale);
+        }
+    }
+
+    protected abstract String resolveMessage(String key, Locale locale) throws NoSuchMessageException;
+
+    protected String formatMessage(String message, Object[] args) {
+        return MessageFormat.format(message, args);
     }
 
     protected Object[] toObjectArray(List args) {

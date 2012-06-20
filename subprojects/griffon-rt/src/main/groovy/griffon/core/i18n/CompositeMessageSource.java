@@ -43,30 +43,6 @@ public class CompositeMessageSource extends AbstractMessageSource {
         return messageSources.toArray(new MessageSource[messageSources.size()]);
     }
 
-    public String getMessage(String key) throws NoSuchMessageException {
-        return getMessageInternal(key, EMPTY_OBJECT_ARGS, Locale.getDefault());
-    }
-
-    public String getMessage(String key, Locale locale) throws NoSuchMessageException {
-        return getMessageInternal(key, EMPTY_OBJECT_ARGS, locale);
-    }
-
-    public String getMessage(String key, Object[] args) throws NoSuchMessageException {
-        return getMessageInternal(key, args, Locale.getDefault());
-    }
-
-    public String getMessage(String key, Object[] args, Locale locale) throws NoSuchMessageException {
-        return getMessageInternal(key, args, locale);
-    }
-
-    public String getMessage(String key, List args) throws NoSuchMessageException {
-        return getMessageInternal(key, toObjectArray(args), Locale.getDefault());
-    }
-
-    public String getMessage(String key, List args, Locale locale) throws NoSuchMessageException {
-        return getMessageInternal(key, toObjectArray(args), locale);
-    }
-
     public String getMessage(String key, String defaultMessage) {
         return getMessageInternal(key, EMPTY_OBJECT_ARGS, defaultMessage, Locale.getDefault());
     }
@@ -89,6 +65,21 @@ public class CompositeMessageSource extends AbstractMessageSource {
 
     public String getMessage(String key, List args, String defaultMessage, Locale locale) {
         return getMessageInternal(key, toObjectArray(args), defaultMessage, locale);
+    }
+
+    public String resolveMessage(String key, Locale locale) {
+        if (null == locale) locale = Locale.getDefault();
+        for (MessageSource messageSource : messageSources) {
+            try {
+                if (messageSource instanceof AbstractMessageSource) {
+                    return ((AbstractMessageSource) messageSource).resolveMessage(key, locale);
+                }
+                return messageSource.getMessage(key, locale);
+            } catch (NoSuchMessageException nsme) {
+                // ignore
+            }
+        }
+        throw new NoSuchMessageException(key, locale);
     }
 
     private String getMessageInternal(String key, Object[] args, Locale locale) throws NoSuchMessageException {

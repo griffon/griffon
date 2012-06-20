@@ -282,6 +282,22 @@ public abstract class AbstractGriffonArtifact extends GroovyObjectSupport implem
         return resolveMessageSource().getMessage(key, args, defaultMessage, locale);
     }
 
+    public String getMessage(String key, Map<String, Object> args) throws NoSuchMessageException {
+        return resolveMessageSource().getMessage(key, args);
+    }
+
+    public String getMessage(String key, Map<String, Object> args, Locale locale) throws NoSuchMessageException {
+        return resolveMessageSource().getMessage(key, args, locale);
+    }
+
+    public String getMessage(String key, Map<String, Object> args, String defaultMessage) {
+        return resolveMessageSource().getMessage(key, args, defaultMessage);
+    }
+
+    public String getMessage(String key, Map<String, Object> args, String defaultMessage, Locale locale) {
+        return resolveMessageSource().getMessage(key, args, defaultMessage, locale);
+    }
+
     protected MessageSource resolveMessageSource() {
         return MessageSourceHolder.getInstance().getMessageSource();
     }
