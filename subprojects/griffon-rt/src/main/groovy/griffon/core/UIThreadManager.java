@@ -19,6 +19,7 @@ import griffon.util.*;
 import groovy.lang.*;
 import org.codehaus.griffon.runtime.util.CallableWithArgsMetaMethod;
 import org.codehaus.griffon.runtime.util.RunnableWithArgsMetaMethod;
+import org.codehaus.groovy.runtime.HandleMetaClass;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -195,20 +196,28 @@ public final class UIThreadManager {
         script.getBinding().setVariable(EXECUTE_FUTURE, EXECUTE_FUTURE_CLOSURE);
     }
 
-    public static void enhance(MetaClass metaClass) {
-        if (metaClass instanceof ExpandoMetaClass) {
-            ExpandoMetaClass mc = (ExpandoMetaClass) metaClass;
-            if (LOG.isTraceEnabled()) {
-                LOG.trace("Enhancing metaClass " + metaClass);
-            }
+    public static void enhance(MetaClass mc) {
+        if (null == mc) return;
 
-            mc.registerInstanceMethod(EXECUTE_INSIDE_UI_SYNC_METHOD);
-            mc.registerInstanceMethod(EXECUTE_INSIDE_UI_ASYNC_METHOD);
-            mc.registerInstanceMethod(EXECUTE_OUTSIDE_UI_METHOD);
-            mc.registerInstanceMethod(IS_UITHREAD_METHOD);
-            mc.registerInstanceMethod(EXECUTE_FUTURE_METHOD1);
-            mc.registerInstanceMethod(EXECUTE_FUTURE_METHOD2);
+        ExpandoMetaClass emc = null;
+        if (mc instanceof DelegatingMetaClass) {
+            mc = ((DelegatingMetaClass) mc).getAdaptee();
         }
+        if (mc instanceof ExpandoMetaClass) {
+            emc = (ExpandoMetaClass) mc;
+        }
+        if (null == emc) return;
+
+        if (LOG.isTraceEnabled()) {
+            LOG.trace("Enhancing metaClass " + emc);
+        }
+
+        emc.registerInstanceMethod(EXECUTE_INSIDE_UI_SYNC_METHOD);
+        emc.registerInstanceMethod(EXECUTE_INSIDE_UI_ASYNC_METHOD);
+        emc.registerInstanceMethod(EXECUTE_OUTSIDE_UI_METHOD);
+        emc.registerInstanceMethod(IS_UITHREAD_METHOD);
+        emc.registerInstanceMethod(EXECUTE_FUTURE_METHOD1);
+        emc.registerInstanceMethod(EXECUTE_FUTURE_METHOD2);
     }
 
     public void setUIThreadHandler(UIThreadHandler threadHandler) {
