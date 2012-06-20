@@ -199,7 +199,7 @@ public class GriffonApplicationHelper {
         app.getConfig().merge(loadConfigWithI18n(app.getLocale(), configReader, app.getConfigClass(), GriffonApplication.Configuration.CONFIG.getName()));
         GriffonExceptionHandler.configure(app.getConfig().flatten(new LinkedHashMap()));
 
-        List<String> i18nBasenames = (List<String>) getConfigValue(app.getConfig(), "griffon.i18n.basenames", asList("messages"));
+        List<String> i18nBasenames = (List<String>) getConfigValue(app.getConfig(), "i18n.basenames", asList("messages"));
         List<MessageSource> messageSources = new ArrayList<MessageSource>();
         for (String basename : i18nBasenames) {
             messageSources.add(new DefaultMessageSource(basename));
