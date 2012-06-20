@@ -910,6 +910,7 @@ class BuildSettings extends AbstractBuildSettings {
                 appVersion: Metadata.current.getApplicationVersion())
         reader.registerConditionalBlock('environments', Environment.current.name)
         reader.registerConditionalBlock('projects', Metadata.current.getApplicationName())
+        reader.registerConditionalBlock("platforms", GriffonApplicationUtils.getFullPlatform())
         return reader
     }
 
