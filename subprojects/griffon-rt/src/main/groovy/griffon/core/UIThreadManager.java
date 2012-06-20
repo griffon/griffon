@@ -16,10 +16,9 @@
 package griffon.core;
 
 import griffon.util.*;
-import groovy.lang.ExpandoMetaClass;
-import groovy.lang.MetaClass;
-import groovy.lang.MissingMethodException;
-import groovy.lang.Script;
+import groovy.lang.*;
+import org.codehaus.griffon.runtime.util.CallableWithArgsMetaMethod;
+import org.codehaus.griffon.runtime.util.RunnableWithArgsMetaMethod;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -52,88 +51,93 @@ public final class UIThreadManager {
         }
     }
 
-    private static abstract class ScriptOrRunnableRunner extends RunnableWithArgs {
+    private static abstract class RunnableRunner extends RunnableWithArgs {
+        private final String methodName;
+
+        protected RunnableRunner(String methodName) {
+            this.methodName = methodName;
+        }
+
         public void run(Object[] args) {
             if (args != null && args.length == 1) {
-                if (args[0] instanceof Script) {
-                    withScript((Script) args[0]);
-                    return;
-                } else if (args[0] instanceof Runnable) {
+                if (args[0] instanceof Runnable) {
                     withRunnable((Runnable) args[0]);
                     return;
                 }
             }
-            throw new MissingMethodException(getMethodName(), UIThreadManager.class, args);
+            throw new MissingMethodException(methodName, UIThreadManager.class, args);
         }
-
-        protected abstract String getMethodName();
-
-        protected abstract void withScript(Script script);
 
         protected abstract void withRunnable(Runnable runnable);
     }
 
+    private static Class[] EXEC_METHOD_ARGS = new Class[]{Runnable.class};
+
     private static final String EXECUTE_INSIDE_UI_SYNC = "execInsideUISync";
-    private static final RunnableWithArgsClosure EXECUTE_INSIDE_UI_SYNC_RUNNER = new RunnableWithArgsClosure(INSTANCE,
-            new ScriptOrRunnableRunner() {
-                protected String getMethodName() {
-                    return EXECUTE_INSIDE_UI_SYNC;
-                }
-
-                protected void withScript(Script script) {
-                    INSTANCE.executeSync(script);
-                }
-
-                protected void withRunnable(Runnable runnable) {
-                    INSTANCE.executeSync(runnable);
-                }
-            });
+    private static final RunnableWithArgs EXECUTE_INSIDE_UI_SYNC_RUNNER = new RunnableRunner(EXECUTE_INSIDE_UI_SYNC) {
+        protected void withRunnable(Runnable runnable) {
+            INSTANCE.executeSync(runnable);
+        }
+    };
+    private static final Closure EXECUTE_INSIDE_UI_SYNC_CLOSURE = new RunnableWithArgsClosure(
+            INSTANCE,
+            EXECUTE_INSIDE_UI_SYNC_RUNNER);
+    private static final MetaMethod EXECUTE_INSIDE_UI_SYNC_METHOD = new RunnableWithArgsMetaMethod(
+            EXECUTE_INSIDE_UI_SYNC,
+            UIThreadManager.class,
+            EXECUTE_INSIDE_UI_SYNC_RUNNER,
+            EXEC_METHOD_ARGS);
 
     private static final String EXECUTE_INSIDE_UI_ASYNC = "execInsideUIAsync";
-    private static final RunnableWithArgsClosure EXECUTE_INSIDE_UI_ASYNC_RUNNER = new RunnableWithArgsClosure(INSTANCE,
-            new ScriptOrRunnableRunner() {
-                protected String getMethodName() {
-                    return EXECUTE_INSIDE_UI_ASYNC;
-                }
-
-                protected void withScript(Script script) {
-                    INSTANCE.executeAsync(script);
-                }
-
-                protected void withRunnable(Runnable runnable) {
-                    INSTANCE.executeAsync(runnable);
-                }
-            });
+    private static final RunnableWithArgs EXECUTE_INSIDE_UI_ASYNC_RUNNER = new RunnableRunner(EXECUTE_INSIDE_UI_ASYNC) {
+        protected void withRunnable(Runnable runnable) {
+            INSTANCE.executeAsync(runnable);
+        }
+    };
+    private static final Closure EXECUTE_INSIDE_UI_ASYNC_CLOSURE = new RunnableWithArgsClosure(
+            INSTANCE,
+            EXECUTE_INSIDE_UI_ASYNC_RUNNER);
+    private static final MetaMethod EXECUTE_INSIDE_UI_ASYNC_METHOD = new RunnableWithArgsMetaMethod(
+            EXECUTE_INSIDE_UI_ASYNC,
+            UIThreadManager.class,
+            EXECUTE_INSIDE_UI_ASYNC_RUNNER,
+            EXEC_METHOD_ARGS);
 
     private static final String EXECUTE_OUTSIDE_UI = "execOutsideUI";
-    private static final RunnableWithArgsClosure EXECUTE_OUTSIDE_UI_RUNNER = new RunnableWithArgsClosure(INSTANCE,
-            new ScriptOrRunnableRunner() {
-                protected String getMethodName() {
-                    return EXECUTE_OUTSIDE_UI;
-                }
-
-                protected void withScript(Script script) {
-                    INSTANCE.executeOutside(script);
-                }
-
-                protected void withRunnable(Runnable runnable) {
-                    INSTANCE.executeOutside(runnable);
-                }
-            });
+    private static final RunnableWithArgs EXECUTE_OUTSIDE_UI_RUNNER = new RunnableRunner(EXECUTE_OUTSIDE_UI) {
+        protected void withRunnable(Runnable runnable) {
+            INSTANCE.executeOutside(runnable);
+        }
+    };
+    private static final Closure EXECUTE_OUTSIDE_UI_CLOSURE = new RunnableWithArgsClosure(
+            INSTANCE,
+            EXECUTE_OUTSIDE_UI_RUNNER);
+    private static final MetaMethod EXECUTE_OUTSIDE_UI_METHOD = new RunnableWithArgsMetaMethod(
+            EXECUTE_OUTSIDE_UI,
+            UIThreadManager.class,
+            EXECUTE_OUTSIDE_UI_RUNNER,
+            EXEC_METHOD_ARGS);
 
     private static final String IS_UITHREAD = "isUIThread";
-    private static final CallableWithArgsClosure IS_UITHREAD_RUNNER = new CallableWithArgsClosure(INSTANCE,
-            new CallableWithArgs<Boolean>() {
-                public Boolean call(Object[] args) {
-                    if (args.length == 0) {
-                        return INSTANCE.isUIThread();
-                    }
-                    throw new MissingMethodException(IS_UITHREAD, UIThreadManager.class, args);
-                }
-            });
+    private static final CallableWithArgs IS_UITHREAD_CALLABLE = new CallableWithArgs<Boolean>() {
+        public Boolean call(Object[] args) {
+            if (args.length == 0) {
+                return INSTANCE.isUIThread();
+            }
+            throw new MissingMethodException(IS_UITHREAD, UIThreadManager.class, args);
+        }
+    };
+    private static final Closure IS_UITHREAD_CLOSURE = new CallableWithArgsClosure(
+            INSTANCE,
+            IS_UITHREAD_CALLABLE);
+    private static final MetaMethod IS_UITHREAD_METHOD = new CallableWithArgsMetaMethod(
+            IS_UITHREAD,
+            UIThreadManager.class,
+            IS_UITHREAD_CALLABLE,
+            new Class[0]);
 
     private static final String EXECUTE_FUTURE = "execFuture";
-    private static final CallableWithArgsClosure EXECUTE_FUTURE_RUNNER = new CallableWithArgsClosure(INSTANCE,
+    private static final Closure EXECUTE_FUTURE_CLOSURE = new CallableWithArgsClosure(
             new CallableWithArgs<Future>() {
                 public Future call(Object[] args) {
                     if (args.length == 1 && args[0] instanceof Callable) {
@@ -143,7 +147,32 @@ public final class UIThreadManager {
                     }
                     throw new MissingMethodException(EXECUTE_FUTURE, UIThreadManager.class, args);
                 }
-            });
+            }
+    );
+    private static final MetaMethod EXECUTE_FUTURE_METHOD1 = new CallableWithArgsMetaMethod(
+            EXECUTE_FUTURE,
+            UIThreadManager.class,
+            new CallableWithArgs<Future>() {
+                public Future call(Object[] args) {
+                    if (args.length == 1 && args[0] instanceof Callable) {
+                        return INSTANCE.executeFuture((Callable) args[0]);
+                    }
+                    throw new MissingMethodException(EXECUTE_FUTURE, UIThreadManager.class, args);
+                }
+            },
+            new Class[]{Callable.class});
+    private static final MetaMethod EXECUTE_FUTURE_METHOD2 = new CallableWithArgsMetaMethod(
+            EXECUTE_FUTURE,
+            UIThreadManager.class,
+            new CallableWithArgs<Future>() {
+                public Future call(Object[] args) {
+                    if (args.length == 2 && args[0] instanceof ExecutorService && args[1] instanceof Callable) {
+                        return INSTANCE.executeFuture((ExecutorService) args[0], (Callable) args[1]);
+                    }
+                    throw new MissingMethodException(EXECUTE_FUTURE, UIThreadManager.class, args);
+                }
+            },
+            new Class[]{ExecutorService.class, Callable.class});
 
     public static final String[] THREADING_METHOD_NAMES = new String[]{
             EXECUTE_INSIDE_UI_SYNC,
@@ -159,11 +188,11 @@ public final class UIThreadManager {
             LOG.trace("Enhancing script " + script);
         }
 
-        script.getBinding().setVariable(EXECUTE_INSIDE_UI_SYNC, EXECUTE_INSIDE_UI_SYNC_RUNNER);
-        script.getBinding().setVariable(EXECUTE_INSIDE_UI_SYNC, EXECUTE_INSIDE_UI_ASYNC_RUNNER);
-        script.getBinding().setVariable(EXECUTE_OUTSIDE_UI, EXECUTE_OUTSIDE_UI_RUNNER);
-        script.getBinding().setVariable(IS_UITHREAD, IS_UITHREAD_RUNNER);
-        script.getBinding().setVariable(EXECUTE_FUTURE, EXECUTE_FUTURE_RUNNER);
+        script.getBinding().setVariable(EXECUTE_INSIDE_UI_SYNC, EXECUTE_INSIDE_UI_SYNC_CLOSURE);
+        script.getBinding().setVariable(EXECUTE_INSIDE_UI_ASYNC, EXECUTE_INSIDE_UI_ASYNC_CLOSURE);
+        script.getBinding().setVariable(EXECUTE_OUTSIDE_UI, EXECUTE_OUTSIDE_UI_CLOSURE);
+        script.getBinding().setVariable(IS_UITHREAD, IS_UITHREAD_CLOSURE);
+        script.getBinding().setVariable(EXECUTE_FUTURE, EXECUTE_FUTURE_CLOSURE);
     }
 
     public static void enhance(MetaClass metaClass) {
@@ -173,11 +202,12 @@ public final class UIThreadManager {
                 LOG.trace("Enhancing metaClass " + metaClass);
             }
 
-            mc.registerInstanceMethod(EXECUTE_INSIDE_UI_SYNC, EXECUTE_INSIDE_UI_SYNC_RUNNER);
-            mc.registerInstanceMethod(EXECUTE_INSIDE_UI_ASYNC, EXECUTE_INSIDE_UI_ASYNC_RUNNER);
-            mc.registerInstanceMethod(EXECUTE_OUTSIDE_UI, EXECUTE_OUTSIDE_UI_RUNNER);
-            mc.registerInstanceMethod(IS_UITHREAD, IS_UITHREAD_RUNNER);
-            mc.registerInstanceMethod(EXECUTE_FUTURE, EXECUTE_FUTURE_RUNNER);
+            mc.registerInstanceMethod(EXECUTE_INSIDE_UI_SYNC_METHOD);
+            mc.registerInstanceMethod(EXECUTE_INSIDE_UI_ASYNC_METHOD);
+            mc.registerInstanceMethod(EXECUTE_OUTSIDE_UI_METHOD);
+            mc.registerInstanceMethod(IS_UITHREAD_METHOD);
+            mc.registerInstanceMethod(EXECUTE_FUTURE_METHOD1);
+            mc.registerInstanceMethod(EXECUTE_FUTURE_METHOD2);
         }
     }
 
