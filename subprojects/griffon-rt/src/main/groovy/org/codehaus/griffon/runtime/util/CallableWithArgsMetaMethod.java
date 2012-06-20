@@ -17,7 +17,6 @@
 package org.codehaus.griffon.runtime.util;
 
 import griffon.util.CallableWithArgs;
-import griffon.util.RunnableWithArgs;
 import groovy.lang.MetaMethod;
 import org.codehaus.groovy.reflection.CachedClass;
 import org.codehaus.groovy.reflection.ReflectionCache;
