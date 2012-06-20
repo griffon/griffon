@@ -48,7 +48,7 @@ public class RunnableWithArgsMetaMethod extends MetaMethod {
     }
 
     public Class getReturnType() {
-        return Object.class;
+        return Void.TYPE;
     }
 
     public CachedClass getDeclaringClass() {

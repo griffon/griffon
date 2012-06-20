@@ -57,6 +57,7 @@ public class MessageSourceAwareASTTransformation extends AbstractASTTransformati
     private static final String LOCALE = "locale";
     private static final String DEFAULT_MESSAGE = "defaultMessage";
     private static final String METHOD_GET_MESSAGE = "getMessage";
+    private static final String METHOD_GET_MESSAGE_SOURCE = "getMessageSource";
 
     /**
      * Convenience method to see if an annotated node is {@code @MessageSourceAware}.
@@ -148,6 +149,17 @@ public class MessageSourceAwareASTTransformation extends AbstractASTTransformati
      */
     public static void apply(ClassNode declaringClass) {
         injectInterface(declaringClass, MESSAGE_SOURCE_TYPE);
+
+        injectMethod(declaringClass, new MethodNode(
+                METHOD_GET_MESSAGE_SOURCE,
+                ACC_PROTECTED,
+                MESSAGE_SOURCE_TYPE,
+                NO_PARAMS,
+                NO_EXCEPTIONS,
+                returns(call(
+                        call(MESSAGE_SOURCE_HOLDER_TYPE, "getInstance", NO_ARGS),
+                        METHOD_GET_MESSAGE_SOURCE, NO_ARGS))
+        ));
 
         injectMethod(declaringClass, new MethodNode(
                 METHOD_GET_MESSAGE,
@@ -326,11 +338,7 @@ public class MessageSourceAwareASTTransformation extends AbstractASTTransformati
 
     }
 
-    private static Expression messageSourceHolderInstance() {
-        return call(MESSAGE_SOURCE_HOLDER_TYPE, "getInstance", NO_ARGS);
-    }
-
     private static Expression messageSource() {
-        return call(messageSourceHolderInstance(), "getMessageSource", NO_ARGS);
+        return call(THIS, METHOD_GET_MESSAGE_SOURCE, NO_ARGS);
     }
 }

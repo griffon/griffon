@@ -17,6 +17,7 @@
 package org.codehaus.griffon.runtime.core;
 
 import griffon.core.*;
+import griffon.core.i18n.MessageSource;
 import griffon.core.i18n.MessageSourceHolder;
 import griffon.core.i18n.NoSuchMessageException;
 import griffon.util.*;
@@ -574,50 +575,54 @@ public abstract class AbstractGriffonApplication extends AbstractObservable impl
     }
 
     public String getMessage(String key) throws NoSuchMessageException {
-        return MessageSourceHolder.getInstance().getMessageSource().getMessage(key);
+        return resolveMessageSource().getMessage(key);
     }
 
     public String getMessage(String key, Locale locale) throws NoSuchMessageException {
-        return MessageSourceHolder.getInstance().getMessageSource().getMessage(key, locale);
+        return resolveMessageSource().getMessage(key, locale);
     }
 
     public String getMessage(String key, Object[] args) throws NoSuchMessageException {
-        return MessageSourceHolder.getInstance().getMessageSource().getMessage(key, args);
+        return resolveMessageSource().getMessage(key, args);
     }
 
     public String getMessage(String key, Object[] args, Locale locale) throws NoSuchMessageException {
-        return MessageSourceHolder.getInstance().getMessageSource().getMessage(key, args, locale);
+        return resolveMessageSource().getMessage(key, args, locale);
     }
 
     public String getMessage(String key, List args) throws NoSuchMessageException {
-        return MessageSourceHolder.getInstance().getMessageSource().getMessage(key, args);
+        return resolveMessageSource().getMessage(key, args);
     }
 
     public String getMessage(String key, List args, Locale locale) throws NoSuchMessageException {
-        return MessageSourceHolder.getInstance().getMessageSource().getMessage(key, args, locale);
+        return resolveMessageSource().getMessage(key, args, locale);
     }
 
     public String getMessage(String key, String defaultMessage) {
-        return MessageSourceHolder.getInstance().getMessageSource().getMessage(key, defaultMessage);
+        return resolveMessageSource().getMessage(key, defaultMessage);
     }
 
     public String getMessage(String key, String defaultMessage, Locale locale) {
-        return MessageSourceHolder.getInstance().getMessageSource().getMessage(key, defaultMessage, locale);
+        return resolveMessageSource().getMessage(key, defaultMessage, locale);
     }
 
     public String getMessage(String key, Object[] args, String defaultMessage) {
-        return MessageSourceHolder.getInstance().getMessageSource().getMessage(key, args, defaultMessage);
+        return resolveMessageSource().getMessage(key, args, defaultMessage);
     }
 
     public String getMessage(String key, Object[] args, String defaultMessage, Locale locale) {
-        return MessageSourceHolder.getInstance().getMessageSource().getMessage(key, args, defaultMessage, locale);
+        return resolveMessageSource().getMessage(key, args, defaultMessage, locale);
     }
 
     public String getMessage(String key, List args, String defaultMessage) {
-        return MessageSourceHolder.getInstance().getMessageSource().getMessage(key, args, defaultMessage);
+        return resolveMessageSource().getMessage(key, args, defaultMessage);
     }
 
     public String getMessage(String key, List args, String defaultMessage, Locale locale) {
-        return MessageSourceHolder.getInstance().getMessageSource().getMessage(key, args, defaultMessage, locale);
+        return resolveMessageSource().getMessage(key, args, defaultMessage, locale);
+    }
+
+    protected MessageSource resolveMessageSource() {
+        return MessageSourceHolder.getInstance().getMessageSource();
     }
 }
