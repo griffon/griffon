@@ -23,6 +23,7 @@ import griffon.core.i18n.CompositeMessageSource;
 import griffon.core.i18n.DefaultMessageSource;
 import griffon.core.i18n.MessageSource;
 import griffon.core.i18n.MessageSourceHolder;
+import griffon.core.resources.ResourcesInjector;
 import griffon.exceptions.GriffonException;
 import griffon.util.*;
 import groovy.lang.*;
@@ -192,7 +193,11 @@ public class GriffonApplicationHelper {
     }
 
     private static void readAndSetConfiguration(GriffonApplication app) {
-        ConfigReader configReader = new ConfigReader(Environment.getCurrent().getName());
+        ConfigReader configReader = new ConfigReader();
+        configReader.registerConditionalBlock("environments", Environment.getCurrent().getName());
+        configReader.registerConditionalBlock("projects", Metadata.getCurrent().getApplicationName());
+        configReader.registerConditionalBlock("platforms", GriffonApplicationUtils.getFullPlatform());
+
         ConfigObject appConfig = loadConfig(configReader, app.getAppConfigClass(), GriffonApplication.Configuration.APPLICATION.getName());
         setApplicationLocale(app, getConfigValue(appConfig, "application.locale", Locale.getDefault()));
         appConfig = loadConfigWithI18n(app.getLocale(), configReader, app.getAppConfigClass(), GriffonApplication.Configuration.APPLICATION.getName());
@@ -209,12 +214,12 @@ public class GriffonApplicationHelper {
 
         app.setBuilderConfig(loadConfigWithI18n(app.getLocale(), configReader, app.getBuilderClass(), GriffonApplication.Configuration.BUILDER.getName()));
 
-        if (app.getEventsClass() != null) {
-            Object events = safeNewInstance(app.getEventsClass());
-            if (events != null) {
-                app.setEventsConfig(events);
-                app.addApplicationEventListener(app.getEventsConfig());
-            }
+        app.addApplicationEventListener(GriffonApplication.Event.NEW_INSTANCE.getName(), ResourcesInjector.getEventHandler(app));
+
+        Object events = safeNewInstance(app.getEventsClass());
+        if (events != null) {
+            app.setEventsConfig(events);
+            app.addApplicationEventListener(app.getEventsConfig());
         }
 
         Object log4jConfig = app.getConfig().get("log4j");
