@@ -64,8 +64,9 @@ public final class GriffonClassUtils {
     private static final Set<MethodDescriptor> THREADING_METHODS = new TreeSet<MethodDescriptor>();
     private static final Set<MethodDescriptor> EVENT_PUBLISHER_METHODS = new TreeSet<MethodDescriptor>();
     private static final Set<MethodDescriptor> OBSERVABLE_METHODS = new TreeSet<MethodDescriptor>();
-    private static final Set<MethodDescriptor> RESOURCES_METHODS = new TreeSet<MethodDescriptor>();
-    private static final Set<MethodDescriptor> I18N_METHODS = new TreeSet<MethodDescriptor>();
+    private static final Set<MethodDescriptor> RESOURCE_HANDLER_METHODS = new TreeSet<MethodDescriptor>();
+    private static final Set<MethodDescriptor> MESSAGE_SOURCE_METHODS = new TreeSet<MethodDescriptor>();
+    private static final Set<MethodDescriptor> RESOURCE_RESOLVER_METHODS = new TreeSet<MethodDescriptor>();
 
     /**
      * Just add two entries to the class compatibility map
@@ -192,26 +193,43 @@ public final class GriffonClassUtils {
         OBSERVABLE_METHODS.add(new MethodDescriptor("getPropertyChangeListeners", new Class[0]));
         OBSERVABLE_METHODS.add(new MethodDescriptor("getPropertyChangeListeners", new Class[]{String.class}));
 
-        RESOURCES_METHODS.add(new MethodDescriptor("getResourceAsURL", new Class[]{String.class}));
-        RESOURCES_METHODS.add(new MethodDescriptor("getResourceAsStream", new Class[]{String.class}));
-        RESOURCES_METHODS.add(new MethodDescriptor("getResources", new Class[]{String.class}));
+        RESOURCE_HANDLER_METHODS.add(new MethodDescriptor("getResourceAsURL", new Class[]{String.class}));
+        RESOURCE_HANDLER_METHODS.add(new MethodDescriptor("getResourceAsStream", new Class[]{String.class}));
+        RESOURCE_HANDLER_METHODS.add(new MethodDescriptor("getResources", new Class[]{String.class}));
 
-        I18N_METHODS.add(new MethodDescriptor("getMessage", new Class[]{String.class}));
-        I18N_METHODS.add(new MethodDescriptor("getMessage", new Class[]{String.class, Object[].class}));
-        I18N_METHODS.add(new MethodDescriptor("getMessage", new Class[]{String.class, Locale.class}));
-        I18N_METHODS.add(new MethodDescriptor("getMessage", new Class[]{String.class, Object[].class, Locale.class}));
-        I18N_METHODS.add(new MethodDescriptor("getMessage", new Class[]{String.class, String.class}));
-        I18N_METHODS.add(new MethodDescriptor("getMessage", new Class[]{String.class, Object[].class, String.class}));
-        I18N_METHODS.add(new MethodDescriptor("getMessage", new Class[]{String.class, String.class, Locale.class}));
-        I18N_METHODS.add(new MethodDescriptor("getMessage", new Class[]{String.class, Object[].class, String.class, Locale.class}));
-        I18N_METHODS.add(new MethodDescriptor("getMessage", new Class[]{String.class, List.class}));
-        I18N_METHODS.add(new MethodDescriptor("getMessage", new Class[]{String.class, List.class, Locale.class}));
-        I18N_METHODS.add(new MethodDescriptor("getMessage", new Class[]{String.class, List.class, String.class}));
-        I18N_METHODS.add(new MethodDescriptor("getMessage", new Class[]{String.class, List.class, String.class, Locale.class}));
-        I18N_METHODS.add(new MethodDescriptor("getMessage", new Class[]{String.class, Map.class}));
-        I18N_METHODS.add(new MethodDescriptor("getMessage", new Class[]{String.class, Map.class, Locale.class}));
-        I18N_METHODS.add(new MethodDescriptor("getMessage", new Class[]{String.class, Map.class, String.class}));
-        I18N_METHODS.add(new MethodDescriptor("getMessage", new Class[]{String.class, Map.class, String.class, Locale.class}));
+        MESSAGE_SOURCE_METHODS.add(new MethodDescriptor("getMessage", new Class[]{String.class}));
+        MESSAGE_SOURCE_METHODS.add(new MethodDescriptor("getMessage", new Class[]{String.class, Object[].class}));
+        MESSAGE_SOURCE_METHODS.add(new MethodDescriptor("getMessage", new Class[]{String.class, Locale.class}));
+        MESSAGE_SOURCE_METHODS.add(new MethodDescriptor("getMessage", new Class[]{String.class, Object[].class, Locale.class}));
+        MESSAGE_SOURCE_METHODS.add(new MethodDescriptor("getMessage", new Class[]{String.class, String.class}));
+        MESSAGE_SOURCE_METHODS.add(new MethodDescriptor("getMessage", new Class[]{String.class, Object[].class, String.class}));
+        MESSAGE_SOURCE_METHODS.add(new MethodDescriptor("getMessage", new Class[]{String.class, String.class, Locale.class}));
+        MESSAGE_SOURCE_METHODS.add(new MethodDescriptor("getMessage", new Class[]{String.class, Object[].class, String.class, Locale.class}));
+        MESSAGE_SOURCE_METHODS.add(new MethodDescriptor("getMessage", new Class[]{String.class, List.class}));
+        MESSAGE_SOURCE_METHODS.add(new MethodDescriptor("getMessage", new Class[]{String.class, List.class, Locale.class}));
+        MESSAGE_SOURCE_METHODS.add(new MethodDescriptor("getMessage", new Class[]{String.class, List.class, String.class}));
+        MESSAGE_SOURCE_METHODS.add(new MethodDescriptor("getMessage", new Class[]{String.class, List.class, String.class, Locale.class}));
+        MESSAGE_SOURCE_METHODS.add(new MethodDescriptor("getMessage", new Class[]{String.class, Map.class}));
+        MESSAGE_SOURCE_METHODS.add(new MethodDescriptor("getMessage", new Class[]{String.class, Map.class, Locale.class}));
+        MESSAGE_SOURCE_METHODS.add(new MethodDescriptor("getMessage", new Class[]{String.class, Map.class, String.class}));
+        MESSAGE_SOURCE_METHODS.add(new MethodDescriptor("getMessage", new Class[]{String.class, Map.class, String.class, Locale.class}));
+
+        RESOURCE_RESOLVER_METHODS.add(new MethodDescriptor("resolveResource", new Class[]{String.class}));
+        RESOURCE_RESOLVER_METHODS.add(new MethodDescriptor("resolveResource", new Class[]{String.class, Object[].class}));
+        RESOURCE_RESOLVER_METHODS.add(new MethodDescriptor("resolveResource", new Class[]{String.class, Locale.class}));
+        RESOURCE_RESOLVER_METHODS.add(new MethodDescriptor("resolveResource", new Class[]{String.class, Object[].class, Locale.class}));
+        RESOURCE_RESOLVER_METHODS.add(new MethodDescriptor("resolveResource", new Class[]{String.class, Object.class}));
+        RESOURCE_RESOLVER_METHODS.add(new MethodDescriptor("resolveResource", new Class[]{String.class, Object[].class, Object.class}));
+        RESOURCE_RESOLVER_METHODS.add(new MethodDescriptor("resolveResource", new Class[]{String.class, Object.class, Locale.class}));
+        RESOURCE_RESOLVER_METHODS.add(new MethodDescriptor("resolveResource", new Class[]{String.class, Object[].class, Object.class, Locale.class}));
+        RESOURCE_RESOLVER_METHODS.add(new MethodDescriptor("resolveResource", new Class[]{String.class, List.class}));
+        RESOURCE_RESOLVER_METHODS.add(new MethodDescriptor("resolveResource", new Class[]{String.class, List.class, Locale.class}));
+        RESOURCE_RESOLVER_METHODS.add(new MethodDescriptor("resolveResource", new Class[]{String.class, List.class, Object.class}));
+        RESOURCE_RESOLVER_METHODS.add(new MethodDescriptor("resolveResource", new Class[]{String.class, List.class, Object.class, Locale.class}));
+        RESOURCE_RESOLVER_METHODS.add(new MethodDescriptor("resolveResource", new Class[]{String.class, Map.class}));
+        RESOURCE_RESOLVER_METHODS.add(new MethodDescriptor("resolveResource", new Class[]{String.class, Map.class, Locale.class}));
+        RESOURCE_RESOLVER_METHODS.add(new MethodDescriptor("resolveResource", new Class[]{String.class, Map.class, Object.class}));
+        RESOURCE_RESOLVER_METHODS.add(new MethodDescriptor("resolveResource", new Class[]{String.class, Map.class, Object.class, Locale.class}));
     }
 
     /**
@@ -808,7 +826,7 @@ public final class GriffonClassUtils {
      */
     public static boolean isResourceHandlerMethod(MethodDescriptor method) {
         if (method == null || !isInstanceMethod(method)) return false;
-        return RESOURCES_METHODS.contains(method);
+        return RESOURCE_HANDLER_METHODS.contains(method);
     }
 
     /**
@@ -860,7 +878,59 @@ public final class GriffonClassUtils {
      */
     public static boolean isMessageSourceMethod(MethodDescriptor method) {
         if (method == null || !isInstanceMethod(method)) return false;
-        return I18N_METHODS.contains(method);
+        return MESSAGE_SOURCE_METHODS.contains(method);
+    }
+
+    /**
+     * Finds out if the given {@code Method} belongs to the set of
+     * predefined resource resolver methods by convention.
+     * <p/>
+     * <pre>
+     * // assuming getMethod() returns an appropriate Method reference
+     * isResourceResolverMethod(getMethod("resolveResource")) = true
+     * isResourceResolverMethod(getMethod("foo"))             = false
+     * </pre>
+     *
+     * @param method a Method reference
+     * @return true if the method is an Observable method, false otherwise.
+     */
+    public static boolean isResourceResolverMethod(Method method) {
+        return isResourceResolverMethod(MethodDescriptor.forMethod(method));
+    }
+
+    /**
+     * Finds out if the given {@code MetaMethod} belongs to the set of
+     * predefined resource resolver methods by convention.
+     * <p/>
+     * <pre>
+     * // assuming getMethod() returns an appropriate MetaMethod reference
+     * isResourceResolverMethod(getMethod("resolveResource")) = true
+     * isResourceResolverMethod(getMethod("foo"))             = false
+     * </pre>
+     *
+     * @param method a MetaMethod reference
+     * @return true if the method is an Observable method, false otherwise.
+     */
+    public static boolean isResourceResolverMethod(MetaMethod method) {
+        return isResourceResolverMethod(MethodDescriptor.forMethod(method));
+    }
+
+    /**
+     * Finds out if the given {@code MethodDescriptor} belongs to the set of
+     * predefined resource resolver methods by convention.
+     * <p/>
+     * <pre>
+     * // assuming getMethod() returns an appropriate MethodDescriptor reference
+     * isResourceResolverMethod(getMethod("resolveResource")) = true
+     * isResourceResolverMethod(getMethod("foo"))             = false
+     * </pre>
+     *
+     * @param method a MethodDescriptor reference
+     * @return true if the method is an Observable method, false otherwise.
+     */
+    public static boolean isResourceResolverMethod(MethodDescriptor method) {
+        if (method == null || !isInstanceMethod(method)) return false;
+        return RESOURCE_RESOLVER_METHODS.contains(method);
     }
 
     /**
@@ -910,7 +980,6 @@ public final class GriffonClassUtils {
      * <li>! isEventPublisherMethod(method)</li>
      * <li>! isObservableMethod(method)</li>
      * <li>! isResourceHandlerMethod(method)</li>
-     * <li>! isMessageSourceMethod(method)</li>
      * <li>! isGetterMethod(method)</li>
      * <li>! isSetterMethod(method)</li>
      * </ul>
@@ -933,7 +1002,6 @@ public final class GriffonClassUtils {
      * <li>! isEventPublisherMethod(method)</li>
      * <li>! isObservableMethod(method)</li>
      * <li>! isResourceHandlerMethod(method)</li>
-     * <li>! isMessageSourceMethod(method)</li>
      * <li>! isGetterMethod(method)</li>
      * <li>! isSetterMethod(method)</li>
      * </ul>
@@ -956,7 +1024,6 @@ public final class GriffonClassUtils {
      * <li>! isEventPublisherMethod(method)</li>
      * <li>! isObservableMethod(method)</li>
      * <li>! isResourceHandlerMethod(method)</li>
-     * <li>! isMessageSourceMethod(method)</li>
      * <li>! isGetterMethod(method)</li>
      * <li>! isSetterMethod(method)</li>
      * </ul>
@@ -974,7 +1041,6 @@ public final class GriffonClassUtils {
                 !isEventPublisherMethod(method) &&
                 !isObservableMethod(method) &&
                 !isResourceHandlerMethod(method) &&
-                !isMessageSourceMethod(method) &&
                 !isGetterMethod(method) &&
                 !isSetterMethod(method);
     }

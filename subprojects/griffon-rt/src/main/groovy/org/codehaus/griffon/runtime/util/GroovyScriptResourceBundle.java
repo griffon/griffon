@@ -14,12 +14,9 @@
  * limitations under the License.
  */
 
-package griffon.core.i18n;
+package org.codehaus.griffon.runtime.util;
 
 import griffon.util.ConfigReader;
-import griffon.util.Environment;
-import griffon.util.GriffonApplicationUtils;
-import griffon.util.Metadata;
 import groovy.lang.Script;
 import groovy.util.ConfigObject;
 
@@ -27,6 +24,7 @@ import java.net.URL;
 import java.util.*;
 
 import static griffon.util.ConfigUtils.getConfigValue;
+import static org.codehaus.griffon.runtime.util.GriffonApplicationHelper.createConfigReader;
 
 /**
  * @author Andres Almiray
@@ -70,12 +68,7 @@ public class GroovyScriptResourceBundle extends ResourceBundle {
     }
 
     private static ConfigReader resolveConfigReader(ConfigReader reader) {
-        if (null != reader) return reader;
-        reader = new ConfigReader();
-        reader.registerConditionalBlock("environments", Environment.getCurrent().getName());
-        reader.registerConditionalBlock("projects", Metadata.getCurrent().getApplicationName());
-        reader.registerConditionalBlock("platforms", GriffonApplicationUtils.getFullPlatform());
-        return reader;
+        return null != reader ? reader : createConfigReader();
     }
 
     private GroovyScriptResourceBundle(ConfigObject config) {

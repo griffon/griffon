@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package griffon.core.i18n;
+package org.codehaus.griffon.runtime.util;
 
 import griffon.util.ApplicationHolder;
 import org.slf4j.Logger;
@@ -102,11 +102,11 @@ public class CompositeResourceBundle extends ResourceBundle {
     }
 
     protected Object handleGetObject(String key) {
-        LOG.trace("Searching key = " + key + ";");
+        LOG.trace("Searching key=" + key);
         for (ResourceBundle bundle : bundles) {
             try {
                 Object value = bundle.getObject(key);
-                LOG.trace("Bundle " + bundle + "; key = " + key + "; value='" + value + "'");
+                LOG.trace("Bundle " + bundle + "; key=" + key + "; value='" + value + "'");
                 if (value != null) {
                     return value;
                 }

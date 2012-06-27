@@ -81,6 +81,8 @@ createProjectWithDefaults = {
 
     // Create a message bundle to get the user started.
     ant.touch(file: "${basedir}/griffon-app/i18n/messages.properties")
+    // Create a resources bundle to get the user started.
+    ant.touch(file: "${basedir}/griffon-app/i18n/resources.properties")
 }
 
 resetBaseDirectory = { String basedir ->

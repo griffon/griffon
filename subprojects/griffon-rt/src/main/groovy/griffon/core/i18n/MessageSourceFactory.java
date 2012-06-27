@@ -13,15 +13,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+package griffon.core.i18n;
 
-package griffon.core.resources;
-
-import griffon.core.ApplicationHandler;
+import griffon.core.GriffonApplication;
 
 /**
+ * Creates instances of {@code MessageSource}.
+ *
  * @author Andres Almiray
  * @since 1.1.0
  */
-public interface ResourcesInjector extends ApplicationHandler {
-    void injectResources(Object instance);
+public interface MessageSourceFactory {
+    MessageSource create(GriffonApplication app);
 }

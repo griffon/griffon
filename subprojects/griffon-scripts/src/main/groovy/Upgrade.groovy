@@ -64,8 +64,18 @@ target(name: 'upgrade', description: "Upgrades a Griffon application from a prev
     if (isArchetypeProject) projectType = 'archetype'
     createStructure()
 
-    if (appGriffonVersion == '1.0.0' || appGriffonVersion == '1.0.1') {
+    if (appGriffonVersion == '1.1.0') {
         // no upgrade tasks at the moment
+    } else if (appGriffonVersion == '1.0.0' || appGriffonVersion == '1.0.1') {
+        touch(file: "${basedir}/griffon-app/i18n/resources.properties")
+        event("StatusUpdate", ["Updating application.properties"])
+        def props = new Properties()
+        props.load(new File("${basedir}/application.properties").newReader())
+        propertyfile(file: "${basedir}/application.properties",
+                comment: "Do not edit app.griffon.* properties, they may change automatically. " +
+                        "DO NOT put application configuration in here, it is not the right place!") {
+            entry(key: "plugins.swing", value: '1.1.0')
+        }
     } else if (appGriffonVersion == '0.9.5') {
         event("StatusUpdate", ["Updating application.properties"])
         def props = new Properties()
@@ -79,9 +89,11 @@ target(name: 'upgrade', description: "Upgrades a Griffon application from a prev
                 entry(key: "archetype.default", value: griffonVersion)
             }
             if (props['plugins.swing'] == '0.9.5') {
-                entry(key: "plugins.swing", value: '1.0.1')
+                entry(key: "plugins.swing", value: '1.1.0')
             }
         }
+
+        touch(file: "${basedir}/griffon-app/i18n/resources.properties")
 
         def wrapperConfig = new File(basedir, '/wrapper/griffon-wrapper.properties')
         if (wrapperConfig.exists()) {
@@ -162,6 +174,7 @@ target(name: 'upgrade', description: "Upgrades a Griffon application from a prev
             }
 
             touch(file: "${basedir}/griffon-app/i18n/messages.properties")
+            touch(file: "${basedir}/griffon-app/i18n/resources.properties")
 
             event("StatusUpdate", ["Updating application.properties"])
             propertyfile(file: "${basedir}/application.properties",

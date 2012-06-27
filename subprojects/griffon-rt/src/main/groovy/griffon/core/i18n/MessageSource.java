@@ -51,7 +51,8 @@ public interface MessageSource {
      * Try to resolve the message.
      *
      * @param key  Key to lookup, such as 'log4j.appenders.console'
-     * @param args Arguments that will be filled in for params within the message (params look like "{0}" within a message, but this might differ between implementations), or null if none.
+     * @param args Arguments that will be filled in for params within the message (params look like "{0}" within a
+     *             message, but this might differ between implementations), or null if none.
      * @return The resolved message at the given key for the default locale
      * @throws NoSuchMessageException if no message is found
      */
@@ -61,7 +62,8 @@ public interface MessageSource {
      * Try to resolve the message.
      *
      * @param key    Key to lookup, such as 'log4j.appenders.console'
-     * @param args   Arguments that will be filled in for params within the message (params look like "{0}" within a message, but this might differ between implementations), or null if none.
+     * @param args   Arguments that will be filled in for params within the message (params look like "{0}" within a
+     *               message, but this might differ between implementations), or null if none.
      * @param locale Locale in which to lookup
      * @return The resolved message at the given key for the given locale
      * @throws NoSuchMessageException if no message is found
@@ -72,7 +74,8 @@ public interface MessageSource {
      * Try to resolve the message.
      *
      * @param key  Key to lookup, such as 'log4j.appenders.console'
-     * @param args Arguments that will be filled in for params within the message (params look like "{0}" within a message, but this might differ between implementations), or null if none.
+     * @param args Arguments that will be filled in for params within the message (params look like "{0}" within a
+     *             message, but this might differ between implementations), or null if none.
      * @return The resolved message at the given key for the default locale
      * @throws NoSuchMessageException if no message is found
      */
@@ -82,7 +85,8 @@ public interface MessageSource {
      * Try to resolve the message.
      *
      * @param key    Key to lookup, such as 'log4j.appenders.console'
-     * @param args   Arguments that will be filled in for params within the message (params look like "{0}" within a message, but this might differ between implementations), or null if none.
+     * @param args   Arguments that will be filled in for params within the message (params look like "{0}" within a
+     *               message, but this might differ between implementations), or null if none.
      * @param locale Locale in which to lookup
      * @return The resolved message at the given key for the given locale
      * @throws NoSuchMessageException if no message is found
@@ -112,7 +116,8 @@ public interface MessageSource {
      * Try to resolve the message. Return default message if no message was found.
      *
      * @param key            Key to lookup, such as 'log4j.appenders.console'
-     * @param args           Arguments that will be filled in for params within the message (params look like "{0}" within a message, but this might differ between implementations), or null if none.
+     * @param args           Arguments that will be filled in for params within the message (params look like "{0}"
+     *                       within a message, but this might differ between implementations), or null if none.
      * @param defaultMessage Message to return if the lookup fails
      * @return The resolved message at the given key for the default locale
      */
@@ -122,7 +127,8 @@ public interface MessageSource {
      * Try to resolve the message. Return default message if no message was found.
      *
      * @param key            Key to lookup, such as 'log4j.appenders.console'
-     * @param args           Arguments that will be filled in for params within the message (params look like "{0}" within a message, but this might differ between implementations), or null if none.
+     * @param args           Arguments that will be filled in for params within the message (params look like "{0}"
+     *                       within a message, but this might differ between implementations), or null if none.
      * @param defaultMessage Message to return if the lookup fails
      * @param locale         Locale in which to lookup
      * @return The resolved message at the given key for the given locale
@@ -133,7 +139,8 @@ public interface MessageSource {
      * Try to resolve the message. Return default message if no message was found.
      *
      * @param key            Key to lookup, such as 'log4j.appenders.console'
-     * @param args           Arguments that will be filled in for params within the message (params look like "{0}" within a message, but this might differ between implementations), or null if none.
+     * @param args           Arguments that will be filled in for params within the message (params look like "{0}"
+     *                       within a message, but this might differ between implementations), or null if none.
      * @param defaultMessage Message to return if the lookup fails
      * @return The resolved message at the given key for the default locale
      */
@@ -143,7 +150,8 @@ public interface MessageSource {
      * Try to resolve the message. Return default message if no message was found.
      *
      * @param key            Key to lookup, such as 'log4j.appenders.console'
-     * @param args           Arguments that will be filled in for params within the message (params look like "{0}" within a message, but this might differ between implementations), or null if none.
+     * @param args           Arguments that will be filled in for params within the message (params look like "{0}"
+     *                       within a message, but this might differ between implementations), or null if none.
      * @param defaultMessage Message to return if the lookup fails
      * @param locale         Locale in which to lookup
      * @return The resolved message at the given key for the given locale
@@ -154,7 +162,8 @@ public interface MessageSource {
      * Try to resolve the message.
      *
      * @param key  Key to lookup, such as 'log4j.appenders.console'
-     * @param args Arguments that will be filled in for params within the message (params look like "{:key}" within a message, but this might differ between implementations), or null if none.
+     * @param args Arguments that will be filled in for params within the message (params look like "{:key}"
+     *             within a message, but this might differ between implementations), or null if none.
      * @return The resolved message at the given key for the default locale
      * @throws NoSuchMessageException if no message is found
      */
@@ -164,7 +173,8 @@ public interface MessageSource {
      * Try to resolve the message.
      *
      * @param key    Key to lookup, such as 'log4j.appenders.console'
-     * @param args   Arguments that will be filled in for params within the message (params look like "{:key}" within a message, but this might differ between implementations), or null if none.
+     * @param args   Arguments that will be filled in for params within the message (params look like "{:key}"
+     *               within a message, but this might differ between implementations), or null if none.
      * @param locale Locale in which to lookup
      * @return The resolved message at the given key for the given locale
      * @throws NoSuchMessageException if no message is found
@@ -175,7 +185,8 @@ public interface MessageSource {
      * Try to resolve the message. Return default message if no message was found.
      *
      * @param key            Key to lookup, such as 'log4j.appenders.console'
-     * @param args           Arguments that will be filled in for params within the message (params look like "{:key}" within a message, but this might differ between implementations), or null if none.
+     * @param args           Arguments that will be filled in for params within the message (params look like "{:key}"
+     *                       within a message, but this might differ between implementations), or null if none.
      * @param defaultMessage Message to return if the lookup fails
      * @return The resolved message at the given key for the default locale
      */
@@ -185,7 +196,8 @@ public interface MessageSource {
      * Try to resolve the message. Return default message if no message was found.
      *
      * @param key            Key to lookup, such as 'log4j.appenders.console'
-     * @param args           Arguments that will be filled in for params within the message (params look like "{:key}" within a message, but this might differ between implementations), or null if none.
+     * @param args           Arguments that will be filled in for params within the message (params look like "{:key}"
+     *                       within a message, but this might differ between implementations), or null if none.
      * @param defaultMessage Message to return if the lookup fails
      * @param locale         Locale in which to lookup
      * @return The resolved message at the given key for the given locale

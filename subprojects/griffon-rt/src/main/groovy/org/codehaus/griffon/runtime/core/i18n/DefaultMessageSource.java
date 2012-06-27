@@ -14,7 +14,10 @@
  * limitations under the License.
  */
 
-package griffon.core.i18n;
+package org.codehaus.griffon.runtime.core.i18n;
+
+import griffon.core.i18n.NoSuchMessageException;
+import org.codehaus.griffon.runtime.util.CompositeResourceBundle;
 
 import java.util.LinkedHashMap;
 import java.util.Locale;
