@@ -17,12 +17,10 @@
 package org.codehaus.griffon.ast;
 
 import griffon.core.i18n.MessageSource;
-import griffon.core.i18n.MessageSourceHolder;
 import griffon.core.i18n.NoSuchMessageException;
 import griffon.transform.MessageSourceAware;
 import org.codehaus.griffon.runtime.core.ResourceLocator;
 import org.codehaus.groovy.ast.*;
-import org.codehaus.groovy.ast.expr.Expression;
 import org.codehaus.groovy.control.CompilePhase;
 import org.codehaus.groovy.control.SourceUnit;
 import org.codehaus.groovy.control.messages.SimpleMessage;
@@ -46,7 +44,6 @@ public class MessageSourceAwareASTTransformation extends AbstractASTTransformati
     private static final Logger LOG = LoggerFactory.getLogger(MessageSourceAwareASTTransformation.class);
     private static final ClassNode MESSAGE_SOURCE_TYPE = makeClassSafe(MessageSource.class);
     private static final ClassNode MESSAGE_SOURCE_AWARE_TYPE = makeClassSafe(MessageSourceAware.class);
-    private static final ClassNode MESSAGE_SOURCE_HOLDER_TYPE = makeClassSafe(MessageSourceHolder.class);
     private static final ClassNode NO_SUCH_MESSAGE_EXCEPTION_TYPE = makeClassSafe(NoSuchMessageException.class);
     private static final ClassNode OBJECT_ARRAY_TYPE = makeClassSafe(Object[].class);
     private static final ClassNode LOCALE_TYPE = makeClassSafe(Locale.class);
@@ -56,7 +53,6 @@ public class MessageSourceAwareASTTransformation extends AbstractASTTransformati
     private static final String LOCALE = "locale";
     private static final String DEFAULT_MESSAGE = "defaultMessage";
     private static final String METHOD_GET_MESSAGE = "getMessage";
-    private static final String METHOD_GET_MESSAGE_SOURCE = "getMessageSource";
 
     /**
      * Convenience method to see if an annotated node is {@code @MessageSourceAware}.
@@ -154,24 +150,13 @@ public class MessageSourceAwareASTTransformation extends AbstractASTTransformati
         injectInterface(declaringClass, MESSAGE_SOURCE_TYPE);
 
         injectMethod(declaringClass, new MethodNode(
-                METHOD_GET_MESSAGE_SOURCE,
-                ACC_PROTECTED,
-                MESSAGE_SOURCE_TYPE,
-                NO_PARAMS,
-                NO_EXCEPTIONS,
-                returns(call(
-                        call(MESSAGE_SOURCE_HOLDER_TYPE, "getInstance", NO_ARGS),
-                        METHOD_GET_MESSAGE_SOURCE, NO_ARGS))
-        ));
-
-        injectMethod(declaringClass, new MethodNode(
                 METHOD_GET_MESSAGE,
                 ACC_PUBLIC,
                 STRING_TYPE,
                 params(param(STRING_TYPE, KEY)),
                 throwing(NO_SUCH_MESSAGE_EXCEPTION_TYPE),
                 returns(call(
-                        messageSource(),
+                        applicationInstance(),
                         METHOD_GET_MESSAGE,
                         vars(KEY)))
         ));
@@ -185,7 +170,7 @@ public class MessageSourceAwareASTTransformation extends AbstractASTTransformati
                         param(OBJECT_ARRAY_TYPE, ARGS)),
                 throwing(NO_SUCH_MESSAGE_EXCEPTION_TYPE),
                 returns(call(
-                        messageSource(),
+                        applicationInstance(),
                         METHOD_GET_MESSAGE,
                         vars(KEY, ARGS)))
         ));
@@ -199,7 +184,7 @@ public class MessageSourceAwareASTTransformation extends AbstractASTTransformati
                         param(LOCALE_TYPE, LOCALE)),
                 throwing(NO_SUCH_MESSAGE_EXCEPTION_TYPE),
                 returns(call(
-                        messageSource(),
+                        applicationInstance(),
                         METHOD_GET_MESSAGE,
                         vars(KEY, LOCALE)))
         ));
@@ -214,7 +199,7 @@ public class MessageSourceAwareASTTransformation extends AbstractASTTransformati
                         param(LOCALE_TYPE, LOCALE)),
                 throwing(NO_SUCH_MESSAGE_EXCEPTION_TYPE),
                 returns(call(
-                        messageSource(),
+                        applicationInstance(),
                         METHOD_GET_MESSAGE,
                         vars(KEY, ARGS, LOCALE)))
         ));
@@ -228,7 +213,7 @@ public class MessageSourceAwareASTTransformation extends AbstractASTTransformati
                         param(makeClassSafe(LIST_TYPE), ARGS)),
                 throwing(NO_SUCH_MESSAGE_EXCEPTION_TYPE),
                 returns(call(
-                        messageSource(),
+                        applicationInstance(),
                         METHOD_GET_MESSAGE,
                         vars(KEY, ARGS)))
         ));
@@ -243,7 +228,7 @@ public class MessageSourceAwareASTTransformation extends AbstractASTTransformati
                         param(LOCALE_TYPE, LOCALE)),
                 throwing(NO_SUCH_MESSAGE_EXCEPTION_TYPE),
                 returns(call(
-                        messageSource(),
+                        applicationInstance(),
                         METHOD_GET_MESSAGE,
                         vars(KEY, ARGS, LOCALE)))
         ));
@@ -257,7 +242,7 @@ public class MessageSourceAwareASTTransformation extends AbstractASTTransformati
                         param(makeClassSafe(MAP_TYPE), ARGS)),
                 throwing(NO_SUCH_MESSAGE_EXCEPTION_TYPE),
                 returns(call(
-                        messageSource(),
+                        applicationInstance(),
                         METHOD_GET_MESSAGE,
                         vars(KEY, ARGS)))
         ));
@@ -272,7 +257,7 @@ public class MessageSourceAwareASTTransformation extends AbstractASTTransformati
                         param(LOCALE_TYPE, LOCALE)),
                 throwing(NO_SUCH_MESSAGE_EXCEPTION_TYPE),
                 returns(call(
-                        messageSource(),
+                        applicationInstance(),
                         METHOD_GET_MESSAGE,
                         vars(KEY, ARGS, LOCALE)))
         ));
@@ -286,7 +271,7 @@ public class MessageSourceAwareASTTransformation extends AbstractASTTransformati
                         param(STRING_TYPE, DEFAULT_MESSAGE)),
                 NO_EXCEPTIONS,
                 returns(call(
-                        messageSource(),
+                        applicationInstance(),
                         METHOD_GET_MESSAGE,
                         vars(KEY, DEFAULT_MESSAGE)))
         ));
@@ -301,7 +286,7 @@ public class MessageSourceAwareASTTransformation extends AbstractASTTransformati
                         param(STRING_TYPE, DEFAULT_MESSAGE)),
                 NO_EXCEPTIONS,
                 returns(call(
-                        messageSource(),
+                        applicationInstance(),
                         METHOD_GET_MESSAGE,
                         vars(KEY, ARGS, DEFAULT_MESSAGE)))
         ));
@@ -316,7 +301,7 @@ public class MessageSourceAwareASTTransformation extends AbstractASTTransformati
                         param(LOCALE_TYPE, LOCALE)),
                 NO_EXCEPTIONS,
                 returns(call(
-                        messageSource(),
+                        applicationInstance(),
                         METHOD_GET_MESSAGE,
                         vars(KEY, DEFAULT_MESSAGE, LOCALE)))
         ));
@@ -332,7 +317,7 @@ public class MessageSourceAwareASTTransformation extends AbstractASTTransformati
                         param(LOCALE_TYPE, LOCALE)),
                 NO_EXCEPTIONS,
                 returns(call(
-                        messageSource(),
+                        applicationInstance(),
                         METHOD_GET_MESSAGE,
                         vars(KEY, ARGS, DEFAULT_MESSAGE, LOCALE)))
         ));
@@ -347,7 +332,7 @@ public class MessageSourceAwareASTTransformation extends AbstractASTTransformati
                         param(STRING_TYPE, DEFAULT_MESSAGE)),
                 NO_EXCEPTIONS,
                 returns(call(
-                        messageSource(),
+                        applicationInstance(),
                         METHOD_GET_MESSAGE,
                         vars(KEY, ARGS, DEFAULT_MESSAGE)))
         ));
@@ -363,7 +348,7 @@ public class MessageSourceAwareASTTransformation extends AbstractASTTransformati
                         param(LOCALE_TYPE, LOCALE)),
                 NO_EXCEPTIONS,
                 returns(call(
-                        messageSource(),
+                        applicationInstance(),
                         METHOD_GET_MESSAGE,
                         vars(KEY, ARGS, DEFAULT_MESSAGE, LOCALE)))
         ));
@@ -378,7 +363,7 @@ public class MessageSourceAwareASTTransformation extends AbstractASTTransformati
                         param(STRING_TYPE, DEFAULT_MESSAGE)),
                 NO_EXCEPTIONS,
                 returns(call(
-                        messageSource(),
+                        applicationInstance(),
                         METHOD_GET_MESSAGE,
                         vars(KEY, ARGS, DEFAULT_MESSAGE)))
         ));
@@ -394,13 +379,9 @@ public class MessageSourceAwareASTTransformation extends AbstractASTTransformati
                         param(LOCALE_TYPE, LOCALE)),
                 NO_EXCEPTIONS,
                 returns(call(
-                        messageSource(),
+                        applicationInstance(),
                         METHOD_GET_MESSAGE,
                         vars(KEY, ARGS, DEFAULT_MESSAGE, LOCALE)))
         ));
-    }
-
-    private static Expression messageSource() {
-        return call(THIS, METHOD_GET_MESSAGE_SOURCE, NO_ARGS);
     }
 }

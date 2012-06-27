@@ -165,6 +165,5 @@ public class GriffonArtifactASTInjector extends AbstractASTInjector {
         ThreadingAwareASTTransformation.apply(classNode);
         MVCAwareASTTransformation.apply(classNode);
         ResourcesAwareASTTransformation.apply(classNode);
-        MessageSourceAwareASTTransformation.apply(classNode);
     }
 }

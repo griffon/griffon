@@ -14,31 +14,19 @@
  * limitations under the License.
  */
 
-package griffon.core.i18n;
+package griffon.core.resources.editors;
 
 /**
  * @author Andres Almiray
- * @author Alexander Klein
  * @since 1.1.0
  */
-public final class MessageSourceHolder implements MessageSourceProvider {
-    private MessageSource messageSource;
-
-    private static MessageSourceHolder INSTANCE;
-
-    static {
-        INSTANCE = new MessageSourceHolder();
+public class StringPropertyEditor extends AbstractPropertyEditor {
+    public void setAsText(String value) throws IllegalArgumentException {
+        setValue(value);
     }
 
-    public static MessageSourceHolder getInstance() {
-        return INSTANCE;
-    }
-
-    public MessageSource getMessageSource() {
-        return messageSource;
-    }
-
-    public void setMessageSource(MessageSource messageSource) {
-        this.messageSource = messageSource;
+    public void setValue(Object value) {
+        if (null == value) return;
+        super.setValue(String.valueOf(value));
     }
 }

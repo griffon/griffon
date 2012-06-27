@@ -16,6 +16,7 @@
 package griffon.core;
 
 import griffon.core.i18n.MessageSource;
+import griffon.core.resources.ResourceResolver;
 import griffon.util.GriffonNameUtils;
 import griffon.util.Metadata;
 import griffon.util.RunnableWithArgs;
@@ -35,7 +36,7 @@ import java.util.Map;
  * @author Danno Ferrin
  * @author Andres Almiray
  */
-public interface GriffonApplication extends ThreadingHandler, MVCHandler, ResourceHandler, MessageSource {
+public interface GriffonApplication extends ThreadingHandler, MVCHandler, ResourceHandler, MessageSource, ResourceResolver {
     /**
      * Defines the names of the configuration scripts.
      *

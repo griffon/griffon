@@ -1,5 +1,5 @@
 /*
- * Copyright 2012 the original author or authors.
+ * Copyright 2010-2012 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,13 +13,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+package griffon.core.resources;
 
-package griffon.core.i18n;
+import griffon.core.GriffonApplication;
 
 /**
+ * Creates instances of {@code ResourcesInjector}.
+ *
  * @author Andres Almiray
  * @since 1.1.0
  */
-public interface MessageSourceProvider {
-    MessageSource getMessageSource();
+public interface ResourcesInjectorFactory {
+    ResourcesInjector create(GriffonApplication app);
 }

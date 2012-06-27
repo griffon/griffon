@@ -14,14 +14,31 @@
  * limitations under the License.
  */
 
-package griffon.core.resources;
+package griffon.core.resources.editors;
 
-import griffon.core.ApplicationHandler;
+import java.io.File;
 
 /**
  * @author Andres Almiray
  * @since 1.1.0
  */
-public interface ResourcesInjector extends ApplicationHandler {
-    void injectResources(Object instance);
+public class FilePropertyEditor extends AbstractPropertyEditor {
+    public void setAsText(String value) throws IllegalArgumentException {
+        setValue(value);
+    }
+
+    public void setValue(Object value) {
+        if (null == value) return;
+        if (value instanceof CharSequence) {
+            handleAsString(String.valueOf(value));
+        } else if (value instanceof File) {
+            super.setValue(value);
+        } else {
+            throw illegalValue(value, File.class);
+        }
+    }
+
+    private void handleAsString(String str) {
+        super.setValue(new File(str));
+    }
 }

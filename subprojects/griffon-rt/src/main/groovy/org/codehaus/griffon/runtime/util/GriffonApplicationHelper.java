@@ -19,11 +19,10 @@ import griffon.core.*;
 import griffon.core.factories.AddonManagerFactory;
 import griffon.core.factories.ArtifactManagerFactory;
 import griffon.core.factories.MVCGroupManagerFactory;
-import griffon.core.i18n.CompositeMessageSource;
-import griffon.core.i18n.DefaultMessageSource;
-import griffon.core.i18n.MessageSource;
-import griffon.core.i18n.MessageSourceHolder;
+import griffon.core.i18n.MessageSourceFactory;
+import griffon.core.resources.ResourceResolverFactory;
 import griffon.core.resources.ResourcesInjector;
+import griffon.core.resources.ResourcesInjectorFactory;
 import griffon.exceptions.GriffonException;
 import griffon.util.*;
 import groovy.lang.*;
@@ -39,6 +38,8 @@ import org.codehaus.groovy.runtime.InvokerHelper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.beans.PropertyEditor;
+import java.beans.PropertyEditorManager;
 import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.Constructor;
@@ -182,6 +183,11 @@ public class GriffonApplicationHelper {
         readAndSetConfiguration(app);
         app.event(GriffonApplication.Event.BOOTSTRAP_START.getName(), asList(app));
 
+        initializeMessageSource(app);
+        initializeResourceResolver(app);
+        initializeResourcesInjector(app);
+        initializePropertyEditors(app);
+
         applyPlatformTweaks(app);
         runLifecycleHandler(GriffonApplication.Lifecycle.INITIALIZE.getName(), app);
         initializeArtifactManager(app);
@@ -191,11 +197,8 @@ public class GriffonApplicationHelper {
         app.event(GriffonApplication.Event.BOOTSTRAP_END.getName(), asList(app));
     }
 
-    private static void readAndSetConfiguration(GriffonApplication app) {
-        ConfigReader configReader = new ConfigReader();
-        configReader.registerConditionalBlock("environments", Environment.getCurrent().getName());
-        configReader.registerConditionalBlock("projects", Metadata.getCurrent().getApplicationName());
-        configReader.registerConditionalBlock("platforms", GriffonApplicationUtils.getFullPlatform());
+    private static void readAndSetConfiguration(final GriffonApplication app) {
+        ConfigReader configReader = createConfigReader();
 
         ConfigObject appConfig = loadConfig(configReader, app.getAppConfigClass(), GriffonApplication.Configuration.APPLICATION.getName());
         setApplicationLocale(app, getConfigValue(appConfig, "application.locale", Locale.getDefault()));
@@ -204,16 +207,7 @@ public class GriffonApplicationHelper {
         app.getConfig().merge(loadConfigWithI18n(app.getLocale(), configReader, app.getConfigClass(), GriffonApplication.Configuration.CONFIG.getName()));
         GriffonExceptionHandler.configure(app.getConfig().flatten(new LinkedHashMap()));
 
-        List<String> i18nBasenames = (List<String>) getConfigValue(app.getConfig(), "i18n.basenames", asList("messages"));
-        List<MessageSource> messageSources = new ArrayList<MessageSource>();
-        for (String basename : i18nBasenames) {
-            messageSources.add(new DefaultMessageSource(basename));
-        }
-        MessageSourceHolder.getInstance().setMessageSource(new CompositeMessageSource(messageSources));
-
         app.setBuilderConfig(loadConfigWithI18n(app.getLocale(), configReader, app.getBuilderClass(), GriffonApplication.Configuration.BUILDER.getName()));
-
-        app.addApplicationEventListener(GriffonApplication.Event.NEW_INSTANCE.getName(), ResourcesInjector.getEventHandler(app));
 
         Object events = safeNewInstance(app.getEventsClass());
         if (events != null) {
@@ -227,6 +221,102 @@ public class GriffonApplicationHelper {
             LogManager.resetConfiguration();
             new Log4jConfig().configure((Closure) log4jConfig);
         }
+    }
+
+    private static final String KEY_MESSAGE_SOURCE_FACTORY = "app.messageSource.factory";
+    private static final String DEFAULT_MESSAGE_SOURCE_FACTORY = "org.codehaus.griffon.runtime.core.factories.DefaultMessageSourceFactory";
+
+    private static void initializeMessageSource(GriffonApplication app) {
+        String className = getConfigValueAsString(app.getConfig(), KEY_MESSAGE_SOURCE_FACTORY, DEFAULT_MESSAGE_SOURCE_FACTORY);
+        if (LOG.isDebugEnabled()) {
+            LOG.debug("Using " + className + " as MessageSourceFactory");
+        }
+        MessageSourceFactory factory = (MessageSourceFactory) safeNewInstance(className);
+        InvokerHelper.setProperty(app, "messageSource", factory.create(app));
+    }
+
+    private static final String KEY_RESOURCE_RESOLVER_FACTORY = "app.resourceResolver.factory";
+    private static final String DEFAULT_RESOURCE_RESOLVER_FACTORY = "org.codehaus.griffon.runtime.core.factories.DefaultResourceResolverFactory";
+
+    private static void initializeResourceResolver(GriffonApplication app) {
+        String className = getConfigValueAsString(app.getConfig(), KEY_RESOURCE_RESOLVER_FACTORY, DEFAULT_RESOURCE_RESOLVER_FACTORY);
+        if (LOG.isDebugEnabled()) {
+            LOG.debug("Using " + className + " as ResourceResolverFactory");
+        }
+        ResourceResolverFactory factory = (ResourceResolverFactory) safeNewInstance(className);
+        InvokerHelper.setProperty(app, "resourceResolver", factory.create(app));
+    }
+
+    private static final String KEY_RESOURCES_INJECTOR_FACTORY = "app.resourceInjector.factory";
+    private static final String DEFAULT_RESOURCES_INJECTOR_FACTORY = "org.codehaus.griffon.runtime.core.factories.DefaultResourcesInjectorFactory";
+
+    private static void initializeResourcesInjector(GriffonApplication app) {
+        String className = getConfigValueAsString(app.getConfig(), KEY_RESOURCES_INJECTOR_FACTORY, DEFAULT_RESOURCES_INJECTOR_FACTORY);
+        if (LOG.isDebugEnabled()) {
+            LOG.debug("Using " + className + " as ResourcesInjectorFactory");
+        }
+        ResourcesInjectorFactory factory = (ResourcesInjectorFactory) safeNewInstance(className);
+        final ResourcesInjector injector = factory.create(app);
+        app.addApplicationEventListener(GriffonApplication.Event.NEW_INSTANCE.getName(), new RunnableWithArgs() {
+            public void run(Object[] args) {
+                Object instance = args[2];
+                injector.injectResources(instance);
+            }
+        });
+    }
+
+    private static void initializePropertyEditors(GriffonApplication app) {
+        Enumeration<URL> urls = null;
+
+        try {
+            urls = ApplicationClassLoader.get().getResources("META-INF/services/" + PropertyEditor.class.getName());
+        } catch (IOException ioe) {
+            return;
+        }
+
+        if (urls == null) return;
+
+        while (urls.hasMoreElements()) {
+            URL url = urls.nextElement();
+            if (LOG.isDebugEnabled()) {
+                LOG.debug("Reading " + PropertyEditor.class.getName() + " definitions from " + url);
+            }
+
+            try {
+                eachLine(url, new RunnableWithArgsClosure(new RunnableWithArgs() {
+                    @Override
+                    public void run(Object[] args) {
+                        String line = (String) args[0];
+                        if (line.startsWith("#") || isBlank(line)) return;
+                        try {
+                            String[] parts = line.trim().split("=");
+                            Class targetType = loadClass(parts[0].trim());
+                            Class editorClass = loadClass(parts[1].trim());
+                            if (LOG.isDebugEnabled()) {
+                                LOG.debug("Registering " + editorClass.getName() + " as editor for " + targetType.getName());
+                            }
+                            PropertyEditorManager.registerEditor(targetType, editorClass);
+                        } catch (Exception e) {
+                            if (LOG.isWarnEnabled()) {
+                                LOG.warn("Could not load PropertyEditor with " + line, sanitize(e));
+                            }
+                        }
+                    }
+                }));
+            } catch (IOException e) {
+                if (LOG.isWarnEnabled()) {
+                    LOG.warn("Could not load PropertyEditor definitions from " + url, sanitize(e));
+                }
+            }
+        }
+    }
+
+    public static ConfigReader createConfigReader() {
+        ConfigReader configReader = new ConfigReader();
+        configReader.registerConditionalBlock("environments", Environment.getCurrent().getName());
+        configReader.registerConditionalBlock("projects", Metadata.getCurrent().getApplicationName());
+        configReader.registerConditionalBlock("platforms", GriffonApplicationUtils.getFullPlatform());
+        return configReader;
     }
 
     private static void setApplicationLocale(GriffonApplication app, Object localeValue) {
@@ -489,23 +579,6 @@ public class GriffonApplicationHelper {
         }
 
         if (!GriffonArtifact.class.isAssignableFrom(klass)) {
-            /*
-            mc.createMVCGroup = {Object...args - >
-                    app.mvcGroupManager.createMVCGroup( * args)
-            }
-            mc.buildMVCGroup = {Object...args - >
-                    app.mvcGroupManager.buildMVCGroup( * args)
-            }
-            mc.destroyMVCGroup = {String mvcName - >
-                    app.mvcGroupManager.destroyMVCGroup(mvcName)
-            }
-            mc.withMVCGroup = {Object...args - >
-                    app.mvcGroupManager.withMVCGroup( * args)
-            }
-            mc.newInstance = {Object...args - >
-                    GriffonApplicationHelper.newInstance(app, * args)
-            }
-            */
             UIThreadManager.enhance(mc);
         }
     }
