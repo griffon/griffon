@@ -16,6 +16,9 @@
 package org.codehaus.griffon.runtime.util;
 
 import griffon.core.*;
+import griffon.core.controller.GriffonControllerAction;
+import griffon.core.controller.GriffonControllerActionManager;
+import griffon.core.controller.GriffonControllerActionManagerFactory;
 import griffon.core.factories.AddonManagerFactory;
 import griffon.core.factories.ArtifactManagerFactory;
 import griffon.core.factories.MVCGroupManagerFactory;
@@ -27,6 +30,7 @@ import griffon.exceptions.GriffonException;
 import griffon.util.*;
 import groovy.lang.*;
 import groovy.util.ConfigObject;
+import groovy.util.FactoryBuilderSupport;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.helpers.LogLog;
 import org.codehaus.griffon.runtime.core.ControllerArtifactHandler;
@@ -34,6 +38,7 @@ import org.codehaus.griffon.runtime.core.ModelArtifactHandler;
 import org.codehaus.griffon.runtime.core.ServiceArtifactHandler;
 import org.codehaus.griffon.runtime.core.ViewArtifactHandler;
 import org.codehaus.griffon.runtime.logging.Log4jConfig;
+import org.codehaus.groovy.runtime.DefaultGroovyMethods;
 import org.codehaus.groovy.runtime.InvokerHelper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -46,8 +51,7 @@ import java.lang.reflect.Constructor;
 import java.net.URL;
 import java.util.*;
 
-import static griffon.util.ConfigUtils.getConfigValue;
-import static griffon.util.ConfigUtils.getConfigValueAsString;
+import static griffon.util.ConfigUtils.*;
 import static griffon.util.GriffonExceptionHandler.handleThrowable;
 import static griffon.util.GriffonExceptionHandler.sanitize;
 import static griffon.util.GriffonNameUtils.isBlank;
@@ -194,6 +198,7 @@ public class GriffonApplicationHelper {
         initializeArtifactManager(app);
         initializeMvcManager(app);
         initializeAddonManager(app);
+        initializeActionManager(app);
 
         app.event(GriffonApplication.Event.BOOTSTRAP_END.getName(), asList(app));
     }
@@ -388,6 +393,79 @@ public class GriffonApplicationHelper {
             InvokerHelper.setProperty(app, "addonManager", factory.create(app));
         }
         app.getAddonManager().initialize();
+    }
+
+    private static final String KEY_GRIFFON_ACTION_MANAGER_DISABLE = "griffon.action.manager.disable";
+    private static final String KEY_ACTION_MANAGER_FACTORY = "app.actionManager.factory";
+
+    private static void initializeActionManager(GriffonApplication app) {
+        boolean disableActionManager = getConfigValueAsBoolean(app.getConfig(), KEY_GRIFFON_ACTION_MANAGER_DISABLE, false);
+        if (disableActionManager) {
+            if (LOG.isInfoEnabled()) {
+                LOG.info("GriffonControllerActionManager is disabled.");
+            }
+            return;
+        }
+
+        String className = getConfigValueAsString(app.getConfig(), KEY_ACTION_MANAGER_FACTORY, null);
+        if (isBlank(className) || "null".equals(className)) {
+            URL url = ApplicationClassLoader.get().getResource("META-INF/services/" + GriffonControllerActionManagerFactory.class.getName());
+            if (null == url) {
+                if (LOG.isInfoEnabled()) {
+                    LOG.info("GriffonControllerActionManager is disabled.");
+                }
+                return;
+            }
+            try {
+                className = DefaultGroovyMethods.getText(url).trim();
+            } catch (IOException e) {
+                if (LOG.isDebugEnabled()) {
+                    LOG.debug("Cannot read GriffonControllerActionManagerDefinition from " + url, sanitize(e));
+                    className = null;
+                }
+            }
+        }
+
+        if (isBlank(className)) {
+            if (LOG.isInfoEnabled()) {
+                LOG.info("GriffonControllerActionManager is disabled.");
+            }
+            return;
+        }
+
+        if (LOG.isDebugEnabled()) {
+            LOG.debug("Using " + className + " as GriffonControllerActionManagerFactory");
+        }
+        GriffonControllerActionManagerFactory factory = (GriffonControllerActionManagerFactory) safeNewInstance(className);
+        final GriffonControllerActionManager actionManager = factory.create(app);
+
+        app.addApplicationEventListener(GriffonApplication.Event.NEW_INSTANCE.getName(), new RunnableWithArgs() {
+            public void run(Object[] args) {
+                String type = (String) args[1];
+                if (GriffonControllerClass.TYPE.equals(type)) {
+                    GriffonController controller = (GriffonController) args[2];
+                    actionManager.createActions(controller);
+                }
+            }
+        });
+
+        app.addApplicationEventListener(GriffonApplication.Event.INITIALIZE_MVC_GROUP.getName(), new RunnableWithArgs() {
+            public void run(Object[] args) {
+                MVCGroupConfiguration groupConfig = (MVCGroupConfiguration) args[0];
+                MVCGroup group = (MVCGroup) args[1];
+                GriffonController controller = group.getController();
+                if (controller == null) return;
+                FactoryBuilderSupport builder = group.getBuilder();
+                Map<String, GriffonControllerAction> actions = actionManager.actionsFor(controller);
+                for (Map.Entry<String, GriffonControllerAction> action : actions.entrySet()) {
+                    String actionKey = actionManager.normalizeName(action.getKey()) + GriffonControllerActionManager.ACTION;
+                    if (LOG.isTraceEnabled()) {
+                        LOG.trace("Adding action " + actionKey + " to " + groupConfig.getMvcType() + ":" + group.getMvcId() + ":builder");
+                    }
+                    builder.setVariable(actionKey, action.getValue().getToolkitAction());
+                }
+            }
+        });
     }
 
     private static final String KEY_MVCGROUP_MANAGER_FACTORY = "app.mvcGroupManager.factory";
