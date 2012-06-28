@@ -13,16 +13,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package griffon.core.resources;
+package griffon.core.factories;
 
 import griffon.core.GriffonApplication;
+import griffon.core.i18n.MessageSource;
 
 /**
- * Creates instances of {@code ResourceResolver}.
+ * Creates instances of {@code MessageSource}.
  *
  * @author Andres Almiray
  * @since 1.1.0
  */
-public interface ResourceResolverFactory {
-    ResourceResolver create(GriffonApplication app);
+public interface MessageSourceFactory {
+    MessageSource create(GriffonApplication app);
 }

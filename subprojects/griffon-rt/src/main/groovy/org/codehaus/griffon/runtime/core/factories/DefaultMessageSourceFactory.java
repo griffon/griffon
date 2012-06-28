@@ -20,7 +20,7 @@ import griffon.core.GriffonApplication;
 import org.codehaus.griffon.runtime.core.i18n.CompositeMessageSource;
 import org.codehaus.griffon.runtime.core.i18n.DefaultMessageSource;
 import griffon.core.i18n.MessageSource;
-import griffon.core.i18n.MessageSourceFactory;
+import griffon.core.factories.MessageSourceFactory;
 
 import java.util.ArrayList;
 import java.util.List;

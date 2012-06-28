@@ -13,16 +13,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package griffon.core.resources;
+package griffon.core.factories;
 
 import griffon.core.GriffonApplication;
+import griffon.core.resources.ResourceResolver;
 
 /**
- * Creates instances of {@code ResourcesInjector}.
+ * Creates instances of {@code ResourceResolver}.
  *
  * @author Andres Almiray
  * @since 1.1.0
  */
-public interface ResourcesInjectorFactory {
-    ResourcesInjector create(GriffonApplication app);
+public interface ResourceResolverFactory {
+    ResourceResolver create(GriffonApplication app);
 }

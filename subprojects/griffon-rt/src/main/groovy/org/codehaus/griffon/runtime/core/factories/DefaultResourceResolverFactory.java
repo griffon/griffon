@@ -20,7 +20,7 @@ import griffon.core.GriffonApplication;
 import org.codehaus.griffon.runtime.core.resources.CompositeResourceResolver;
 import org.codehaus.griffon.runtime.core.resources.DefaultResourceResolver;
 import griffon.core.resources.ResourceResolver;
-import griffon.core.resources.ResourceResolverFactory;
+import griffon.core.factories.ResourceResolverFactory;
 
 import java.util.ArrayList;
 import java.util.List;
