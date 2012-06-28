@@ -103,6 +103,6 @@ public class CompositeMessageSource extends AbstractMessageSource {
         } catch (NoSuchMessageException nsme) {
             // ignore
         }
-        return isBlank(defaultMessage) ? key : defaultMessage;
+        return null == defaultMessage ? key : defaultMessage;
     }
 }

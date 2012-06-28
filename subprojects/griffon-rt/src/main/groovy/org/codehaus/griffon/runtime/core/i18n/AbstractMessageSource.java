@@ -71,7 +71,7 @@ public abstract class AbstractMessageSource implements MessageSource {
         try {
             return getMessage(key, args, locale);
         } catch (NoSuchMessageException nsme) {
-            return isBlank(defaultMessage) ? key : defaultMessage;
+            return null == defaultMessage ? key : defaultMessage;
         }
     }
 
@@ -87,7 +87,7 @@ public abstract class AbstractMessageSource implements MessageSource {
         try {
             return getMessage(key, args, locale);
         } catch (NoSuchMessageException nsme) {
-            return isBlank(defaultMessage) ? key : defaultMessage;
+            return null == defaultMessage ? key : defaultMessage;
         }
     }
 
