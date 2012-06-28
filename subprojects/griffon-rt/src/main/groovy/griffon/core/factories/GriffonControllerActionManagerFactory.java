@@ -13,9 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package griffon.core.controller;
+package griffon.core.factories;
 
 import griffon.core.GriffonApplication;
+import griffon.core.controller.GriffonControllerActionManager;
 
 /**
  * Creates instances of {@code GriffonControllerActionManager}.

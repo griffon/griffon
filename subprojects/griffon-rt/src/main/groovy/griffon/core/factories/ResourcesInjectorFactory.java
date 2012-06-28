@@ -13,16 +13,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package griffon.core.i18n;
+package griffon.core.factories;
 
 import griffon.core.GriffonApplication;
+import griffon.core.resources.ResourcesInjector;
 
 /**
- * Creates instances of {@code MessageSource}.
+ * Creates instances of {@code ResourcesInjector}.
  *
  * @author Andres Almiray
  * @since 1.1.0
  */
-public interface MessageSourceFactory {
-    MessageSource create(GriffonApplication app);
+public interface ResourcesInjectorFactory {
+    ResourcesInjector create(GriffonApplication app);
 }
