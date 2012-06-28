@@ -18,6 +18,8 @@ package griffon.core.resources.editors;
 
 import java.io.File;
 
+import static griffon.util.GriffonNameUtils.isBlank;
+
 /**
  * @author Andres Almiray
  * @since 1.1.0
@@ -39,6 +41,9 @@ public class FilePropertyEditor extends AbstractPropertyEditor {
     }
 
     private void handleAsString(String str) {
+        if (isBlank(str)) {
+            throw illegalValue(str, File.class);
+        }
         super.setValue(new File(str));
     }
 }
