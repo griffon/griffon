@@ -51,6 +51,9 @@ public class ServiceArtifactHandler extends ArtifactHandlerAdapter {
         }
 
         public GriffonService findService(String name) {
+            if (!name.endsWith(getTrailing())) {
+                name += getTrailing();
+            }
             GriffonService serviceInstance = serviceInstances.get(name);
             if (serviceInstance == null) {
                 GriffonClass griffonClass = findClassFor(name);
