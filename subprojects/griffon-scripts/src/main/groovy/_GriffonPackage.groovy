@@ -624,19 +624,19 @@ doPackageTextReplacement = {dir, fileFilters ->
 
             String appTitle = capitalize(griffonAppName) + ' ' + griffonAppVersion
             replacefilter(token: "@griffon.application.title@",
-                    value: ant.antProject.replaceProperties(buildConfig.deploy.application.title) ?: appTitle)
+                    value: ant.antProject.replaceProperties(buildConfig.deploy.application.title ?: appTitle))
             replacefilter(token: "@griffon.application.vendor@",
                     value: buildConfig.deploy.application.vendor ?: System.properties['user.name'])
             replacefilter(token: "@griffon.application.homepage@",
-                    value: ant.antProject.replaceProperties(buildConfig.deploy.application.homepage) ?: "http://localhost/$griffonAppName")
+                    value: ant.antProject.replaceProperties(buildConfig.deploy.application.homepage ?: "http://localhost/$griffonAppName"))
             replacefilter(token: "@griffon.application.description.complete@",
-                    value: ant.antProject.replaceProperties(buildConfig.deploy.application.description.complete) ?: appTitle)
+                    value: ant.antProject.replaceProperties(buildConfig.deploy.application.description.complete ?: appTitle))
             replacefilter(token: "@griffon.application.description.oneline@",
-                    value: ant.antProject.replaceProperties(buildConfig.deploy.application.description.oneline) ?: appTitle)
+                    value: ant.antProject.replaceProperties(buildConfig.deploy.application.description.oneline ?: appTitle))
             replacefilter(token: "@griffon.application.description.minimal@",
-                    value: ant.antProject.replaceProperties(buildConfig.deploy.application.description.minimal) ?: appTitle)
+                    value: ant.antProject.replaceProperties(buildConfig.deploy.application.description.minimal ?: appTitle))
             replacefilter(token: "@griffon.application.description.tooltip@",
-                    value: ant.antProject.replaceProperties(buildConfig.deploy.application.description.tooltip) ?: appTitle)
+                    value: ant.antProject.replaceProperties(buildConfig.deploy.application.description.tooltip ?: appTitle))
             replacefilter(token: "@griffon.application.icon.default@",
                     value: buildConfig.deploy.application.icon.default.name ?: 'griffon-icon-64x64.png')
             replacefilter(token: "@griffon.application.icon.default.width@",
