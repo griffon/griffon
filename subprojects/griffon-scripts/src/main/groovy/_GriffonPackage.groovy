@@ -482,7 +482,7 @@ maybePackAndSign = {srcFile, targetFile = srcFile, boolean force = false ->
 
         //TODO? versioning
         // check for version number
-        //   copy to version numbeerd file if version # available
+        //   copy to version numbered file if version # available
 
     }
 
