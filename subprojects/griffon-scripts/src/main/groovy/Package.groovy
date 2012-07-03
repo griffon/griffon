@@ -258,7 +258,9 @@ target(name: 'package_webstart', description: "Creates a webstart distribution a
 signJNLP = {
     if (!buildConfig.griffon.jnlp.sign) return
 
-    File jnlpFile = new File((packageType == 'webstart' ? 'application' : 'applet') + '.jnlp')
+    File jnlpFile = packageType == 'webstart' ?
+        new File(buildConfig.griffon.webstart.jnlp ?: 'application.jnlp') :
+        new File(buildConfig.griffon.applet.jnlp ?: 'applet.jnlp')
     File jnlpUpdateDir = new File("${projectTargetDir}/jnlp")
     File jnlpInf = new File(jnlpUpdateDir, 'JNLP-INF')
 
