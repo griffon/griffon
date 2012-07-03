@@ -508,9 +508,10 @@ target(name: 'generateJNLP', description: "Generates the JNLP File",
         def filename = new File(it).getName()
         remoteJars << filename
     }
-    // griffon-rt has to come first, it's got the launch classes
-    def appJarIsMain = buildConfig.griffon.jars.application.main == true
-    new File(jardir).eachFileMatch(~/griffon-rt-.*.jar/) { f ->
+    // griffon-<toolkit>-runtime has to come first, it's got the launch classes
+    String toolkitJarName = 'griffon-'+ Metadata.current.getApplicationToolkit() +'-runtime'
+    boolean appJarIsMain = buildConfig.griffon.jars.application.main == true
+    new File(jardir).eachFileMatch(~/${toolkitJarName}-.*.jar/) { f ->
         jnlpJars << "        <jar href='$f.name' main='${!appJarIsMain}'/>"
         appletJars << "$f.name"
     }
@@ -523,7 +524,7 @@ target(name: 'generateJNLP', description: "Generates the JNLP File",
         }
     }
     new File(jardir).eachFileMatch(~/.*\.jar/) { f ->
-        if (!(f.name =~ /griffon-rt-.*/) && !remoteJars.contains(f.name)) {
+        if (!(f.name =~ /${toolkitJarName}-.*/) && !remoteJars.contains(f.name)) {
             if (buildConfig.griffon.jars.jarName == f.name) {
                 jnlpJars << "        <jar href='$f.name' main='${appJarIsMain}' />"
             } else {
