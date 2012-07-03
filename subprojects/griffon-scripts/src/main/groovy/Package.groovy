@@ -211,7 +211,8 @@ target(name: 'package_applet', description: "Creates an applet distribution and 
     ant.delete(dir: targetDistDir, quiet: true, failOnError: false)
     ant.mkdir(dir: targetDistDir)
 
-    depends(prepackage, generateJNLP)
+    depends(prepackage)
+    generateJNLP()
 
     ant.copy(todir: targetDistDir) {
         fileset(dir: buildConfig.griffon.jars.destDir, excludes: buildConfig.griffon.webstart.jnlp)
@@ -219,6 +220,8 @@ target(name: 'package_applet', description: "Creates an applet distribution and 
     _copySharedFiles(targetDistDir)
 
     doPackageTextReplacement(targetDistDir, "*.jnlp,*.html")
+
+    signJNLP()
 
     if (!buildConfig.griffon.dist.applet.nozip) _zipDist(targetDistDir)
 
@@ -235,7 +238,8 @@ target(name: 'package_webstart', description: "Creates a webstart distribution a
     ant.delete(dir: targetDistDir, quiet: true, failOnError: false)
     ant.mkdir(dir: targetDistDir)
 
-    depends(prepackage, generateJNLP)
+    depends(prepackage)
+    generateJNLP()
 
     ant.copy(todir: targetDistDir) {
         fileset(dir: buildConfig.griffon.jars.destDir, excludes: "${buildConfig.griffon.applet.jnlp}, ${buildConfig.griffon.applet.html}")
@@ -244,9 +248,33 @@ target(name: 'package_webstart', description: "Creates a webstart distribution a
 
     doPackageTextReplacement(targetDistDir, "*.jnlp,*.html")
 
+    signJNLP()
+
     if (!buildConfig.griffon.dist.webstart.nozip) _zipDist(targetDistDir)
 
     event("PackageEnd", [packageType])
+}
+
+signJNLP = {
+    if (!buildConfig.griffon.jnlp.sign) return
+
+    File jnlpFile = new File((packageType == 'webstart' ? 'application' : 'applet') + '.jnlp')
+    File jnlpUpdateDir = new File("${projectTargetDir}/jnlp")
+    File jnlpInf = new File(jnlpUpdateDir, 'JNLP-INF')
+
+    File tmpDir = new File(System.getProperty('java.io.tmpdir'))
+
+    ant.delete(dir: jnlpInf, quiet: true, failonerror: false)
+    ant.mkdir(dir: jnlpInf)
+    ant.copy(file: mainJarFile,
+            todir: tmpDir)
+    ant.copy(file: "${targetDistDir}/${jnlpFile}",
+            tofile: "${jnlpInf}/APPLICATION.JNLP")
+    ant.jar(destfile: "${tmpDir}/${mainJarFile.name}", update: true, filesonly: true) {
+        fileset(dir: jnlpUpdateDir)
+    }
+    griffonCopyDist("${tmpDir}/${mainJarFile.name}".toString(), targetDistDir, true)
+    ant.delete(file: "${tmpDir}/${mainJarFile.name}", quiet: true, failonerror: false)
 }
 
 target(name: '_copyAppLibs', description: "", prehook: null, posthook: null) {

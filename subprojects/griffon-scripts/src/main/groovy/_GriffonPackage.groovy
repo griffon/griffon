@@ -482,7 +482,7 @@ maybePackAndSign = {srcFile, targetFile = srcFile, boolean force = false ->
 
         //TODO? versioning
         // check for version number
-        //   copy to version numberd file if version # available
+        //   copy to version numbeerd file if version # available
 
     }
 
@@ -508,12 +508,15 @@ target(name: 'generateJNLP', description: "Generates the JNLP File",
         def filename = new File(it).getName()
         remoteJars << filename
     }
+
+    mainJarFile = null
     // griffon-<toolkit>-runtime has to come first, it's got the launch classes
     String toolkitJarName = 'griffon-'+ Metadata.current.getApplicationToolkit() +'-runtime'
     boolean appJarIsMain = buildConfig.griffon.jars.application.main == true
     new File(jardir).eachFileMatch(~/${toolkitJarName}-.*.jar/) { f ->
         jnlpJars << "        <jar href='$f.name' main='${!appJarIsMain}'/>"
         appletJars << "$f.name"
+        if (!appJarIsMain) mainJarFile = f
     }
     buildConfig.griffon.extensions?.jarUrls.each {
         appletJars << it
@@ -527,6 +530,7 @@ target(name: 'generateJNLP', description: "Generates the JNLP File",
         if (!(f.name =~ /${toolkitJarName}-.*/) && !remoteJars.contains(f.name)) {
             if (buildConfig.griffon.jars.jarName == f.name) {
                 jnlpJars << "        <jar href='$f.name' main='${appJarIsMain}' />"
+                if (appJarIsMain) mainJarFile = f
             } else {
                 jnlpJars << "        <jar href='$f.name'/>"
             }
