@@ -482,7 +482,7 @@ maybePackAndSign = {srcFile, targetFile = srcFile, boolean force = false ->
 
         //TODO? versioning
         // check for version number
-        //   copy to version numberd file if version # available
+        //   copy to version numbered file if version # available
 
     }
 
@@ -508,11 +508,15 @@ target(name: 'generateJNLP', description: "Generates the JNLP File",
         def filename = new File(it).getName()
         remoteJars << filename
     }
-    // griffon-rt has to come first, it's got the launch classes
-    def appJarIsMain = buildConfig.griffon.jars.application.main == true
-    new File(jardir).eachFileMatch(~/griffon-rt-.*.jar/) { f ->
+
+    mainJarFile = null
+    // griffon-<toolkit>-runtime has to come first, it's got the launch classes
+    String toolkitJarName = 'griffon-'+ Metadata.current.getApplicationToolkit() +'-runtime'
+    boolean appJarIsMain = buildConfig.griffon.jars.application.main == true
+    new File(jardir).eachFileMatch(~/${toolkitJarName}-.*.jar/) { f ->
         jnlpJars << "        <jar href='$f.name' main='${!appJarIsMain}'/>"
         appletJars << "$f.name"
+        if (!appJarIsMain) mainJarFile = f
     }
     buildConfig.griffon.extensions?.jarUrls.each {
         appletJars << it
@@ -523,9 +527,10 @@ target(name: 'generateJNLP', description: "Generates the JNLP File",
         }
     }
     new File(jardir).eachFileMatch(~/.*\.jar/) { f ->
-        if (!(f.name =~ /griffon-rt-.*/) && !remoteJars.contains(f.name)) {
+        if (!(f.name =~ /${toolkitJarName}-.*/) && !remoteJars.contains(f.name)) {
             if (buildConfig.griffon.jars.jarName == f.name) {
                 jnlpJars << "        <jar href='$f.name' main='${appJarIsMain}' />"
+                if (appJarIsMain) mainJarFile = f
             } else {
                 jnlpJars << "        <jar href='$f.name'/>"
             }
@@ -624,19 +629,19 @@ doPackageTextReplacement = {dir, fileFilters ->
 
             String appTitle = capitalize(griffonAppName) + ' ' + griffonAppVersion
             replacefilter(token: "@griffon.application.title@",
-                    value: ant.antProject.replaceProperties(buildConfig.deploy.application.title) ?: appTitle)
+                    value: ant.antProject.replaceProperties(buildConfig.deploy.application.title ?: appTitle))
             replacefilter(token: "@griffon.application.vendor@",
                     value: buildConfig.deploy.application.vendor ?: System.properties['user.name'])
             replacefilter(token: "@griffon.application.homepage@",
-                    value: ant.antProject.replaceProperties(buildConfig.deploy.application.homepage) ?: "http://localhost/$griffonAppName")
+                    value: ant.antProject.replaceProperties(buildConfig.deploy.application.homepage ?: "http://localhost/$griffonAppName"))
             replacefilter(token: "@griffon.application.description.complete@",
-                    value: ant.antProject.replaceProperties(buildConfig.deploy.application.description.complete) ?: appTitle)
+                    value: ant.antProject.replaceProperties(buildConfig.deploy.application.description.complete ?: appTitle))
             replacefilter(token: "@griffon.application.description.oneline@",
-                    value: ant.antProject.replaceProperties(buildConfig.deploy.application.description.oneline) ?: appTitle)
+                    value: ant.antProject.replaceProperties(buildConfig.deploy.application.description.oneline ?: appTitle))
             replacefilter(token: "@griffon.application.description.minimal@",
-                    value: ant.antProject.replaceProperties(buildConfig.deploy.application.description.minimal) ?: appTitle)
+                    value: ant.antProject.replaceProperties(buildConfig.deploy.application.description.minimal ?: appTitle))
             replacefilter(token: "@griffon.application.description.tooltip@",
-                    value: ant.antProject.replaceProperties(buildConfig.deploy.application.description.tooltip) ?: appTitle)
+                    value: ant.antProject.replaceProperties(buildConfig.deploy.application.description.tooltip ?: appTitle))
             replacefilter(token: "@griffon.application.icon.default@",
                     value: buildConfig.deploy.application.icon.default.name ?: 'griffon-icon-64x64.png')
             replacefilter(token: "@griffon.application.icon.default.width@",

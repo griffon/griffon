@@ -741,15 +741,6 @@ class BuildSettings extends AbstractBuildSettings {
                 Script script = gcl.parseClass(settingsFile)?.newInstance()
                 if (script) {
                     config = configReader.parse(script)
-                    /*
-                    if (config.containsKey('projects')) {
-                        ConfigObject projects = config.remove('projects')
-                        String projectName = Metadata.current.getApplicationName()
-                        if (projects.containsKey(projectName)) {
-                            config.merge(projects.get(projectName))
-                        }
-                    }
-                    */
                 }
             }
 
