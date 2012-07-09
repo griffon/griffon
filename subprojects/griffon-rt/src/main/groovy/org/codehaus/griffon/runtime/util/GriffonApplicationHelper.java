@@ -31,6 +31,7 @@ import org.codehaus.griffon.runtime.core.ControllerArtifactHandler;
 import org.codehaus.griffon.runtime.core.ModelArtifactHandler;
 import org.codehaus.griffon.runtime.core.ServiceArtifactHandler;
 import org.codehaus.griffon.runtime.core.ViewArtifactHandler;
+import org.codehaus.griffon.runtime.core.controller.NoopGriffonControllerActionManager;
 import org.codehaus.griffon.runtime.logging.Log4jConfig;
 import org.codehaus.groovy.runtime.DefaultGroovyMethods;
 import org.codehaus.groovy.runtime.InvokerHelper;
@@ -393,6 +394,8 @@ public class GriffonApplicationHelper {
     private static final String KEY_ACTION_MANAGER_FACTORY = "app.actionManager.factory";
 
     private static void initializeActionManager(GriffonApplication app) {
+        InvokerHelper.setProperty(app, "actionManager", new NoopGriffonControllerActionManager(app));
+
         boolean disableActionManager = getConfigValueAsBoolean(app.getConfig(), KEY_GRIFFON_ACTION_MANAGER_DISABLE, false);
         if (disableActionManager) {
             if (LOG.isInfoEnabled()) {
@@ -432,6 +435,7 @@ public class GriffonApplicationHelper {
         }
         GriffonControllerActionManagerFactory factory = (GriffonControllerActionManagerFactory) safeNewInstance(className);
         final GriffonControllerActionManager actionManager = factory.create(app);
+        InvokerHelper.setProperty(app, "actionManager", actionManager);
 
         app.addApplicationEventListener(GriffonApplication.Event.NEW_INSTANCE.getName(), new RunnableWithArgs() {
             public void run(Object[] args) {

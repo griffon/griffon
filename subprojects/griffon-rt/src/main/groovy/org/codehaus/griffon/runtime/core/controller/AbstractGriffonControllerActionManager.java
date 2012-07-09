@@ -35,6 +35,7 @@ import static org.codehaus.groovy.runtime.typehandling.DefaultTypeTransformation
 
 /**
  * @author Andres Almiray
+ * @since 1.1.0
  */
 public abstract class AbstractGriffonControllerActionManager implements GriffonControllerActionManager {
     private static final Logger LOG = LoggerFactory.getLogger(AbstractGriffonControllerActionManager.class);

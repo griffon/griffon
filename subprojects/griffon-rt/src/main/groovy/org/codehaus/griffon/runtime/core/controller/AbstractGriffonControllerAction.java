@@ -126,4 +126,13 @@ public abstract class AbstractGriffonControllerAction extends AbstractObservable
     public void setSmallIcon(String smallIcon) {
         firePropertyChange(KEY_SMALL_ICON, this.smallIcon, this.smallIcon = smallIcon);
     }
+
+    @Override
+    public final void execute(Object... args) {
+        if (isEnabled()) {
+            doExecute(args);
+        }
+    }
+
+    protected abstract void doExecute(Object[] args);
 }
