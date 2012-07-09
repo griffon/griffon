@@ -15,6 +15,7 @@
  */
 package griffon.core;
 
+import griffon.core.controller.GriffonControllerActionManager;
 import griffon.core.i18n.MessageSource;
 import griffon.core.resources.ResourceResolver;
 import griffon.util.GriffonNameUtils;
@@ -465,4 +466,11 @@ public interface GriffonApplication extends ThreadingHandler, MVCHandler, Resour
      * @since 0.9.2
      */
     Logger getLog();
+
+    /**
+     * Returns the application's GriffonControllerActionManager instance.
+     *
+     * @return the application's GriffonControllerActionManager
+     */
+    GriffonControllerActionManager getActionManager();
 }
