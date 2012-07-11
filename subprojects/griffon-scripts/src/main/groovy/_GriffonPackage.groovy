@@ -335,7 +335,7 @@ boolean isJarSigned(File jarFile, File targetFile) {
         Enumeration<ZipEntry> entriesEnum = zf.entries()
         while (entriesEnum.hasMoreElements()) {
             ZipEntry ze = entriesEnum.nextElement()
-            if (ze.name ==~ 'META-INF/\\w{1,8}\\.(SF|RSA|DSA)') {
+            if (ze.name ==~ 'META-INF/[\\w-]{1,8}\\.(SF|RSA|DSA)') {
                 // found a signature file
                 return true
             }
