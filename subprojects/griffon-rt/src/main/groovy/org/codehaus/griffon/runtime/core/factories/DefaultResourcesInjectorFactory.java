@@ -17,8 +17,8 @@
 package org.codehaus.griffon.runtime.core.factories;
 
 import griffon.core.GriffonApplication;
-import griffon.core.resources.ResourcesInjector;
 import griffon.core.factories.ResourcesInjectorFactory;
+import griffon.core.resources.ResourcesInjector;
 import org.codehaus.griffon.runtime.core.resources.DefaultResourcesInjector;
 
 /**

@@ -15,11 +15,12 @@
  */
 package org.codehaus.griffon.runtime.builder
 
-import griffon.core.GriffonApplication
-import org.codehaus.griffon.runtime.util.AddonHelper
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
+
+import griffon.core.GriffonApplication
 import griffon.util.ApplicationClassLoader
+import org.codehaus.griffon.runtime.util.AddonHelper
 
 /**
  * Helper class that initializes a CompositeBuilder with the builder configuration read from the application.

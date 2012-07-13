@@ -16,12 +16,13 @@
 
 package org.codehaus.griffon.runtime.builder
 
-import griffon.core.GriffonArtifact
-import griffon.util.GriffonExceptionHandler
-import org.codehaus.griffon.runtime.builder.factory.RootFactory
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
+
+import griffon.core.GriffonArtifact
+import griffon.util.GriffonExceptionHandler
 import org.codehaus.griffon.runtime.builder.factory.MetaComponentFactory
+import org.codehaus.griffon.runtime.builder.factory.RootFactory
 
 /**
  * @author Danno.Ferrin

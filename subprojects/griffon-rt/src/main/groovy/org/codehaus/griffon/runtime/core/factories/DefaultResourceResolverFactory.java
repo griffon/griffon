@@ -17,10 +17,10 @@
 package org.codehaus.griffon.runtime.core.factories;
 
 import griffon.core.GriffonApplication;
+import griffon.core.factories.ResourceResolverFactory;
+import griffon.core.resources.ResourceResolver;
 import org.codehaus.griffon.runtime.core.resources.CompositeResourceResolver;
 import org.codehaus.griffon.runtime.core.resources.DefaultResourceResolver;
-import griffon.core.resources.ResourceResolver;
-import griffon.core.factories.ResourceResolverFactory;
 
 import java.util.ArrayList;
 import java.util.List;

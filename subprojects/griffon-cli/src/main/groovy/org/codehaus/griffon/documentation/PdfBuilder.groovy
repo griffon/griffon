@@ -15,8 +15,9 @@
  */
 package org.codehaus.griffon.documentation
 
-import org.w3c.dom.Document
 import org.xhtmlrenderer.pdf.ITextRenderer
+
+import org.w3c.dom.Document
 
 import javax.xml.parsers.DocumentBuilder
 import javax.xml.parsers.DocumentBuilderFactory

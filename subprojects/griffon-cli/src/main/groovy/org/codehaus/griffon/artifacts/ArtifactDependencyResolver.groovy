@@ -16,12 +16,13 @@
 
 package org.codehaus.griffon.artifacts
 
+import org.slf4j.Logger
+import org.slf4j.LoggerFactory
+
 import griffon.util.GriffonUtil
 import org.codehaus.griffon.artifacts.model.Artifact
 import org.codehaus.griffon.artifacts.model.Plugin
 import org.codehaus.griffon.artifacts.model.Release
-import org.slf4j.Logger
-import org.slf4j.LoggerFactory
 
 import static griffon.util.ArtifactSettings.isValidVersion
 

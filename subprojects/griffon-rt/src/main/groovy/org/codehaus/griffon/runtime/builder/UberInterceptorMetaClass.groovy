@@ -15,11 +15,12 @@
  */
 package org.codehaus.griffon.runtime.builder
 
-import griffon.util.MethodUtils
-import java.lang.reflect.InvocationTargetException
-import org.codehaus.groovy.runtime.InvokerHelper
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
+import griffon.util.MethodUtils
+import org.codehaus.groovy.runtime.InvokerHelper
+
+import java.lang.reflect.InvocationTargetException
 
 /**
  * @author Danno Ferrin

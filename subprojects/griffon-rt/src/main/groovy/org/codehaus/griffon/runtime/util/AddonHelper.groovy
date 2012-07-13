@@ -16,6 +16,9 @@
 
 package org.codehaus.griffon.runtime.util
 
+import org.slf4j.Logger
+import org.slf4j.LoggerFactory
+
 import griffon.util.ApplicationClassLoader
 import griffon.util.GriffonNameUtils
 import groovy.transform.Synchronized
@@ -23,13 +26,11 @@ import org.codehaus.griffon.runtime.builder.CompositeBuilderHelper
 import org.codehaus.griffon.runtime.builder.UberBuilder
 import org.codehaus.griffon.runtime.core.DefaultGriffonAddon
 import org.codehaus.griffon.runtime.core.DefaultGriffonAddonDescriptor
-import org.slf4j.Logger
-import org.slf4j.LoggerFactory
 import griffon.core.*
 
 import static griffon.util.GriffonClassUtils.getGetterName
-import static griffon.util.GriffonNameUtils.getClassNameForLowerCaseHyphenSeparatedName
 import static griffon.util.GriffonClassUtils.getSetterName
+import static griffon.util.GriffonNameUtils.getClassNameForLowerCaseHyphenSeparatedName
 
 /**
  * Helper class for dealing with addon initialization.
