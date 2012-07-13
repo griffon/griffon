@@ -15,7 +15,6 @@
  */
 package griffon.core;
 
-import griffon.core.i18n.MessageSource;
 import groovy.lang.MetaClass;
 import org.slf4j.Logger;
 

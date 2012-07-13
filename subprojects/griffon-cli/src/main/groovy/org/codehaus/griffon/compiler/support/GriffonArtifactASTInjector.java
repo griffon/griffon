@@ -21,7 +21,6 @@ import griffon.core.GriffonClass;
 import groovy.lang.ExpandoMetaClass;
 import groovy.lang.GroovySystem;
 import org.codehaus.griffon.ast.MVCAwareASTTransformation;
-import org.codehaus.griffon.ast.MessageSourceAwareASTTransformation;
 import org.codehaus.griffon.ast.ResourcesAwareASTTransformation;
 import org.codehaus.griffon.ast.ThreadingAwareASTTransformation;
 import org.codehaus.griffon.runtime.core.AbstractGriffonArtifact;

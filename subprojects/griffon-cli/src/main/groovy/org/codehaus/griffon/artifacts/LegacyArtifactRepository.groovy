@@ -16,13 +16,14 @@
 
 package org.codehaus.griffon.artifacts
 
+import org.slf4j.Logger
+import org.slf4j.LoggerFactory
+
 import griffon.util.GriffonExceptionHandler
 import groovyx.net.http.HttpURLClient
 import org.codehaus.griffon.artifacts.model.Archetype
 import org.codehaus.griffon.artifacts.model.Artifact
 import org.codehaus.griffon.artifacts.model.Release
-import org.slf4j.Logger
-import org.slf4j.LoggerFactory
 
 import static griffon.util.ArtifactSettings.parseArtifactFromJSON
 import static griffon.util.ArtifactSettings.parseReleaseFromJSON

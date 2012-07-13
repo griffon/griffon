@@ -25,8 +25,6 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.MissingResourceException;
 
-import static griffon.util.GriffonNameUtils.isBlank;
-
 /**
  * @author Andres Almiray
  * @author Alexander Klein

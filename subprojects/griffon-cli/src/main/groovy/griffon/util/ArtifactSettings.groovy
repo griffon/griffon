@@ -16,11 +16,12 @@
 
 package griffon.util
 
+import org.slf4j.Logger
+import org.slf4j.LoggerFactory
+
 import groovy.json.JsonException
 import groovy.json.JsonSlurper
 import org.codehaus.griffon.artifacts.VersionComparator
-import org.slf4j.Logger
-import org.slf4j.LoggerFactory
 import org.springframework.core.io.FileSystemResource
 import org.springframework.core.io.Resource
 

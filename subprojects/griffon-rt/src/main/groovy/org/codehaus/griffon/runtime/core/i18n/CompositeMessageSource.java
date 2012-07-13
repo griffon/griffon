@@ -22,8 +22,6 @@ import griffon.core.i18n.NoSuchMessageException;
 import java.util.List;
 import java.util.Locale;
 
-import static griffon.util.GriffonNameUtils.isBlank;
-
 /**
  * @author Andres Almiray
  * @since 1.1.0

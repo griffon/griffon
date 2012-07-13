@@ -16,6 +16,9 @@
 
 package org.codehaus.griffon.artifacts
 
+import org.slf4j.Logger
+import org.slf4j.LoggerFactory
+
 import com.jcraft.jsch.Channel
 import com.jcraft.jsch.JSch
 import com.jcraft.jsch.Session
@@ -26,8 +29,6 @@ import groovyx.net.http.HttpURLClient
 import groovyx.net.http.Status
 import org.codehaus.griffon.artifacts.model.Artifact
 import org.codehaus.griffon.artifacts.model.Release
-import org.slf4j.Logger
-import org.slf4j.LoggerFactory
 
 import static griffon.util.ArtifactSettings.parseArtifactFromJSON
 import static griffon.util.GriffonExceptionHandler.sanitize

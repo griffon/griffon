@@ -16,6 +16,9 @@
 
 package org.codehaus.griffon.artifacts
 
+import org.slf4j.Logger
+import org.slf4j.LoggerFactory
+
 import griffon.util.ArtifactSettings
 import griffon.util.GriffonExceptionHandler
 import griffon.util.MD5
@@ -24,8 +27,6 @@ import groovy.json.JsonSlurper
 import org.apache.commons.io.FileUtils
 import org.codehaus.griffon.artifacts.model.Artifact
 import org.codehaus.griffon.artifacts.model.Release
-import org.slf4j.Logger
-import org.slf4j.LoggerFactory
 
 import java.util.zip.ZipEntry
 import java.util.zip.ZipFile

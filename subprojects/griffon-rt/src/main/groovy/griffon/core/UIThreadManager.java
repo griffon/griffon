@@ -19,7 +19,6 @@ import griffon.util.*;
 import groovy.lang.*;
 import org.codehaus.griffon.runtime.util.CallableWithArgsMetaMethod;
 import org.codehaus.griffon.runtime.util.RunnableWithArgsMetaMethod;
-import org.codehaus.groovy.runtime.HandleMetaClass;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

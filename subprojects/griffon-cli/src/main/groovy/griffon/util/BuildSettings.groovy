@@ -15,6 +15,9 @@
  */
 package griffon.util
 
+import org.slf4j.Logger
+import org.slf4j.LoggerFactory
+
 import org.apache.ivy.core.report.ResolveReport
 import org.apache.ivy.plugins.repository.TransferEvent
 import org.apache.ivy.plugins.repository.TransferListener
@@ -24,8 +27,6 @@ import org.codehaus.griffon.artifacts.model.Plugin
 import org.codehaus.griffon.resolve.GriffonCoreDependencies
 import org.codehaus.griffon.resolve.IvyDependencyManager
 import org.codehaus.groovy.runtime.StackTraceUtils
-import org.slf4j.Logger
-import org.slf4j.LoggerFactory
 import org.springframework.core.io.Resource
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver
 

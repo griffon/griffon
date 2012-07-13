@@ -16,6 +16,9 @@
 
 package org.codehaus.griffon.artifacts
 
+import org.slf4j.Logger
+import org.slf4j.LoggerFactory
+
 import groovy.json.JsonBuilder
 import org.apache.commons.io.FileUtils
 import org.codehaus.griffon.artifacts.model.Archetype
@@ -25,8 +28,6 @@ import org.codehaus.griffon.artifacts.model.Release
 import org.codehaus.griffon.cli.CommandLineHelper
 import org.codehaus.griffon.cli.ScriptExitException
 import org.codehaus.griffon.resolve.IvyDependencyManager
-import org.slf4j.Logger
-import org.slf4j.LoggerFactory
 import griffon.util.*
 
 import static griffon.util.ArtifactSettings.getRegisteredArtifacts

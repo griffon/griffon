@@ -17,10 +17,10 @@
 package org.codehaus.griffon.runtime.core.factories;
 
 import griffon.core.GriffonApplication;
+import griffon.core.factories.MessageSourceFactory;
+import griffon.core.i18n.MessageSource;
 import org.codehaus.griffon.runtime.core.i18n.CompositeMessageSource;
 import org.codehaus.griffon.runtime.core.i18n.DefaultMessageSource;
-import griffon.core.i18n.MessageSource;
-import griffon.core.factories.MessageSourceFactory;
 
 import java.util.ArrayList;
 import java.util.List;
