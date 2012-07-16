@@ -106,4 +106,11 @@ public class GriffonExceptionHandler implements Thread.UncaughtExceptionHandler 
         Thread.setDefaultUncaughtExceptionHandler(new GriffonExceptionHandler());
         System.setProperty("sun.awt.exception.handler", GriffonExceptionHandler.class.getName());
     }
+
+    public static void handleThrowable(Throwable t) {
+        Thread.getDefaultUncaughtExceptionHandler().uncaughtException(
+                Thread.currentThread(),
+                t
+        );
+    }
 }
