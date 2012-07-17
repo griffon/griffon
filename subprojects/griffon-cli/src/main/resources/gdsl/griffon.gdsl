@@ -46,3 +46,15 @@ contributor(scope: annotatedScope(ctype: 'griffon.transform.MVCAware')) {
 contributor(scope: annotatedScope(ctype: 'griffon.transform.ThreadingAware')) {
     delegatesTo(findClass('griffon.core.ThreadingHandler'))
 }
+
+contributor(scope: annotatedScope(ctype: 'griffon.transform.ResourcesAware')) {
+    delegatesTo(findClass('griffon.core.ResourceHandler'))
+}
+
+contributor(scope: annotatedScope(ctype: 'griffon.transform.MessageSourceAware')) {
+    delegatesTo(findClass('griffon.core.i18n.MessageSource'))
+}
+
+contributor(scope: annotatedScope(ctype: 'griffon.transform.ResourceRrsolverAware')) {
+    delegatesTo(findClass('griffon.core.resources.ResourceResolver'))
+}

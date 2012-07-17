@@ -41,6 +41,7 @@ def viewClass = griffonArtifact("views") & isScript()
 	delegatesTo "griffon.core.GriffonArtifact"
 	delegatesTo "griffon.core.MVCHandler"
 	delegatesTo "griffon.core.ThreadingHandler"
+	delegatesTo "griffon.core.ResourceHandler"
 }
 	
 viewClass.accept {
@@ -60,4 +61,19 @@ enclosingClass(annotatedBy('griffon.transform.MVCAware')).accept {
 enclosingClass(annotatedBy('griffon.transform.ThreadingAware')).accept {
     provider = "Griffon DSL"
 	delegatesTo "griffon.core.ThreadingHandler"
+}
+
+enclosingClass(annotatedBy('griffon.transform.ResourcesAware')).accept {
+    provider = "Griffon DSL"
+	delegatesTo "griffon.core.ResourceHandler"
+}
+
+enclosingClass(annotatedBy('griffon.transform.MessageSourceAware')).accept {
+    provider = "Griffon DSL"
+	delegatesTo "griffon.core.i18n.MessageSource"
+}
+
+enclosingClass(annotatedBy('griffon.transform.ResourceResolverAware')).accept {
+    provider = "Griffon DSL"
+	delegatesTo "griffon.core.resources.ResourceResolver"
 }
