@@ -71,6 +71,9 @@ configSlurper.setBinding(
         userHome: userHome,
         basedir: basedir)
 
+if (!buildConfig.griffon.jars.destDir) buildConfig.griffon.jars.destDir = "${basedir}/staging"
+if (!buildConfig.griffon.jars.jarName) buildConfig.griffon.jars.jarName = "${griffonAppName}.jar"
+
 // No point doing this stuff more than once.
 if (getBinding().variables.containsKey("_settings_called")) return true
 _settings_called = true
