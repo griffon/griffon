@@ -16,16 +16,11 @@
 
 package org.codehaus.griffon.cli.shell;
 
-import griffon.util.Environment;
+import org.apache.felix.gogo.commands.Action;
 
 /**
  * @author Andres Almiray
  * @since 0.9.5
  */
-public abstract class AbstractGriffonCommand implements GriffonCommand {
-    @Option(name = "--env", description = "Sets the environment to use.")
-    public String env = Environment.DEVELOPMENT.getName();
-
-    @Option(name = "--non-interactive", description = "Controls if the shell can ask for input or not.")
-    public boolean nonInteractive = false;
+public interface GriffonShellCommand extends Action {
 }

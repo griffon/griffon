@@ -26,7 +26,7 @@ import org.apache.felix.gogo.commands.basic.DefaultActionPreparator;
 import org.apache.felix.service.command.Function;
 import org.apache.karaf.shell.console.AbstractAction;
 import org.apache.karaf.shell.console.NameScoping;
-import org.codehaus.griffon.cli.shell.GriffonCommand;
+import org.codehaus.griffon.cli.shell.GriffonShellCommand;
 import org.codehaus.griffon.cli.shell.support.CommandUtils;
 import org.fusesource.jansi.Ansi;
 import org.osgi.framework.BundleContext;
@@ -73,7 +73,7 @@ public class HelpCommand extends AbstractAction {
                             mth.setAccessible(true);
                             Object action = mth.invoke(function);
                             Class<?> clazz = action.getClass();
-                            if (GriffonCommand.class.isAssignableFrom(clazz)) {
+                            if (GriffonShellCommand.class.isAssignableFrom(clazz)) {
                                 action = CommandUtils.getDelegateAction(name);
                                 if (action != null) {
                                     org.codehaus.griffon.cli.shell.Command ann = action.getClass().getAnnotation(org.codehaus.griffon.cli.shell.Command.class);

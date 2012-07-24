@@ -25,10 +25,7 @@ import org.apache.felix.gogo.commands.converter.GenericType;
 import org.apache.felix.gogo.commands.converter.GriffonDefaultConverter;
 import org.apache.felix.service.command.CommandSession;
 import org.apache.karaf.shell.console.NameScoping;
-import org.codehaus.griffon.cli.shell.Argument;
-import org.codehaus.griffon.cli.shell.Command;
-import org.codehaus.griffon.cli.shell.GantAwareAction;
-import org.codehaus.griffon.cli.shell.Option;
+import org.codehaus.griffon.cli.shell.*;
 import org.fusesource.jansi.Ansi;
 
 import java.io.*;
@@ -85,8 +82,9 @@ public class GriffonCommandPreparator extends DefaultActionPreparator {
 
     public boolean prepare(Action action, CommandSession session, List<Object> params, CommandArguments args) throws Exception {
         GantAwareAction gantAction = (GantAwareAction) action;
-        Object delegateAction = CommandUtils.getDelegateAction(gantAction.getScope() + ":" + gantAction.getName());
+        GriffonCommand delegateAction = CommandUtils.getDelegateAction(gantAction.getScope() + ":" + gantAction.getName());
         if (delegateAction != null) {
+            gantAction.setDelegateCommand(delegateAction);
             return prepareDelegate(delegateAction, session, params, args);
         }
         return prepareDelegate(gantAction, session, params, args);

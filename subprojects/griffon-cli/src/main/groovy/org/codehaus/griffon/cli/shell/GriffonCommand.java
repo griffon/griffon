@@ -16,11 +16,9 @@
 
 package org.codehaus.griffon.cli.shell;
 
-import org.apache.felix.gogo.commands.Action;
-
 /**
  * @author Andres Almiray
- * @since 0.9.5
+ * @since 1.0.2
  */
-public interface GriffonCommand extends Action {
+public interface GriffonCommand {
 }
