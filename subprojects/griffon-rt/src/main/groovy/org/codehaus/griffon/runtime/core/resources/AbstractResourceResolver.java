@@ -92,7 +92,7 @@ public abstract class AbstractResourceResolver implements ResourceResolver {
 
     public Object resolveResource(String key, Map<String, Object> args, Locale locale) throws NoSuchResourceException {
         Object resource = resolveResourceInternal(key, locale);
-        return evalResourceWithArguments(key, args, resource);
+        return evalResourceWithArguments(resource, args);
     }
 
     public Object resolveResource(String key, List args, Object defaultValue) {
@@ -108,13 +108,13 @@ public abstract class AbstractResourceResolver implements ResourceResolver {
         if (null == locale) locale = Locale.getDefault();
         try {
             Object resource = resolveResourceInternal(key, locale);
-            return evalResourceWithArguments(key, args, resource);
+            return evalResourceWithArguments(resource, args);
         } catch (MissingResourceException e) {
             throw new NoSuchResourceException(key, locale);
         }
     }
 
-    protected Object evalResourceWithArguments(String key, Object[] args, Object resource) {
+    protected Object evalResourceWithArguments(Object resource, Object[] args) {
         if (resource instanceof Closure) {
             Closure closure = (Closure) resource;
             return closure.call(args);
@@ -122,12 +122,12 @@ public abstract class AbstractResourceResolver implements ResourceResolver {
             CallableWithArgs callable = (CallableWithArgs) resource;
             return callable.call(args);
         } else if (resource instanceof CharSequence) {
-            return MessageFormat.format(String.valueOf(resource), args);
+            return formatResource(String.valueOf(resource), args);
         }
         return resource;
     }
 
-    protected Object evalResourceWithArguments(String key, Map<String, Object> args, Object resource) {
+    protected Object evalResourceWithArguments(Object resource, Map<String, Object> args) {
         if (resource instanceof Closure) {
             Closure closure = (Closure) resource;
             return closure.call(args);
@@ -135,13 +135,20 @@ public abstract class AbstractResourceResolver implements ResourceResolver {
             CallableWithArgs callable = (CallableWithArgs) resource;
             return callable.call(new Object[]{args});
         } else if (resource instanceof CharSequence) {
-            String res = String.valueOf(resource);
-            for (Map.Entry<String, Object> variable : args.entrySet()) {
-                String var = variable.getKey();
-                String value = variable.getValue() != null ? variable.getValue().toString() : null;
-                if (value != null) res = res.replace("{:" + var + "}", value);
-                return res;
-            }
+            return formatResource(String.valueOf(resource), args);
+        }
+        return resource;
+    }
+
+    protected String formatResource(String resource, Object[] args) {
+        return MessageFormat.format(resource, args);
+    }
+
+    protected String formatResource(String resource, Map<String, Object> args) {
+        for (Map.Entry<String, Object> variable : args.entrySet()) {
+            String var = variable.getKey();
+            String value = variable.getValue() != null ? variable.getValue().toString() : null;
+            if (value != null) resource = resource.replace("{:" + var + "}", value);
         }
         return resource;
     }

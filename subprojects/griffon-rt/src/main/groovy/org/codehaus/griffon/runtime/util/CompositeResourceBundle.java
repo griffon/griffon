@@ -59,7 +59,7 @@ public class CompositeResourceBundle extends ResourceBundle {
         bundles.addAll(loadBundleFromProperties(basename));
         bundles.addAll(loadBundleFromScript(basename));
 
-        return new CompositeResourceBundle(bundles.toArray(new ResourceBundle[bundles.size()]));
+        return new CompositeResourceBundle(bundles);
     }
 
     private static Collection<ResourceBundle> loadBundleFromProperties(String fileName) {
@@ -102,11 +102,15 @@ public class CompositeResourceBundle extends ResourceBundle {
     }
 
     protected Object handleGetObject(String key) {
-        LOG.trace("Searching key=" + key);
+        if(LOG.isTraceEnabled()){
+            LOG.trace("Searching key=" + key);
+        }
         for (ResourceBundle bundle : bundles) {
             try {
                 Object value = bundle.getObject(key);
-                LOG.trace("Bundle " + bundle + "; key=" + key + "; value='" + value + "'");
+                if(LOG.isTraceEnabled()) {
+                    LOG.trace("Bundle " + bundle + "; key=" + key + "; value='" + value + "'");
+                }
                 if (value != null) {
                     return value;
                 }

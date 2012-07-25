@@ -19,10 +19,10 @@ package org.codehaus.griffon.runtime.core.resources;
 import griffon.core.resources.NoSuchResourceException;
 import org.codehaus.griffon.runtime.util.CompositeResourceBundle;
 
-import java.util.LinkedHashMap;
 import java.util.Locale;
 import java.util.Map;
 import java.util.ResourceBundle;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * @author Andres Almiray
@@ -30,7 +30,7 @@ import java.util.ResourceBundle;
  */
 public class DefaultResourceResolver extends AbstractResourceResolver {
     private final String basename;
-    private final Map<Locale, ResourceBundle> bundles = new LinkedHashMap<Locale, ResourceBundle>();
+    private final Map<Locale, ResourceBundle> bundles = new ConcurrentHashMap<Locale, ResourceBundle>();
 
     public DefaultResourceResolver(String basename) {
         this.basename = basename;
