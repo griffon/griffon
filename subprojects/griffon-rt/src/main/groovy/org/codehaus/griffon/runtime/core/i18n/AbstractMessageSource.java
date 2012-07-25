@@ -91,12 +91,7 @@ public abstract class AbstractMessageSource implements MessageSource {
 
     public String getMessage(String key, Map<String, Object> args, Locale locale) throws NoSuchMessageException {
         String message = resolveMessage(key, locale);
-        for (Map.Entry<String, Object> variable : args.entrySet()) {
-            String var = variable.getKey();
-            String value = variable.getValue() != null ? variable.getValue().toString() : null;
-            if (value != null) message = message.replace("{:" + var + "}", value);
-        }
-        return message;
+        return formatMessage(message, args);
     }
 
     public String getMessage(String key, List args, String defaultMessage) {
@@ -122,6 +117,15 @@ public abstract class AbstractMessageSource implements MessageSource {
 
     protected String formatMessage(String message, Object[] args) {
         return MessageFormat.format(message, args);
+    }
+
+    protected String formatMessage(String message, Map<String, Object> args) {
+        for (Map.Entry<String, Object> variable : args.entrySet()) {
+            String var = variable.getKey();
+            String value = variable.getValue() != null ? variable.getValue().toString() : null;
+            if (value != null) message = message.replace("{:" + var + "}", value);
+        }
+        return message;
     }
 
     protected Object[] toObjectArray(List args) {

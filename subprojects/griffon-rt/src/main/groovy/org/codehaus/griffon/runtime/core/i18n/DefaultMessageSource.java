@@ -19,10 +19,10 @@ package org.codehaus.griffon.runtime.core.i18n;
 import griffon.core.i18n.NoSuchMessageException;
 import org.codehaus.griffon.runtime.util.CompositeResourceBundle;
 
-import java.util.LinkedHashMap;
 import java.util.Locale;
 import java.util.Map;
 import java.util.ResourceBundle;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * @author Andres Almiray
@@ -30,7 +30,7 @@ import java.util.ResourceBundle;
  */
 public class DefaultMessageSource extends AbstractMessageSource {
     private final String basename;
-    private final Map<Locale, ResourceBundle> bundles = new LinkedHashMap<Locale, ResourceBundle>();
+    private final Map<Locale, ResourceBundle> bundles = new ConcurrentHashMap<Locale, ResourceBundle>();
 
     public DefaultMessageSource(String basename) {
         this.basename = basename;

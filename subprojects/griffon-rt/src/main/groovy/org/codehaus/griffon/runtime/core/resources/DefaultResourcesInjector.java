@@ -62,14 +62,14 @@ public class DefaultResourcesInjector implements ResourcesInjector {
             final InjectedResource annotation = field.getAnnotation(InjectedResource.class);
             if (null == annotation) continue;
 
-            String fieldNameKey = field.getDeclaringClass().getName().replace('$', '.') + "." + field.getName();
+            String fqFieldName = field.getDeclaringClass().getName().replace('$', '.') + "." + field.getName();
             String key = annotation.key();
             String[] args = annotation.args();
             String defaultValue = annotation.defaultValue();
-            if (isBlank(key)) key = fieldNameKey;
+            if (isBlank(key)) key = fqFieldName;
 
             if (LOG.isDebugEnabled()) {
-                LOG.debug("Field " + fieldNameKey +
+                LOG.debug("Field " + fqFieldName +
                         " of instance " + instance +
                         " [key='" + key +
                         "', args='" + Arrays.toString(args) +
@@ -88,7 +88,7 @@ public class DefaultResourcesInjector implements ResourcesInjector {
                 if (!field.getType().isAssignableFrom(value.getClass())) {
                     value = convertValue(field.getType(), value);
                 }
-                setFieldValue(instance, field, value, fieldNameKey);
+                setFieldValue(instance, field, value, fqFieldName);
             }
         }
     }
@@ -104,13 +104,13 @@ public class DefaultResourcesInjector implements ResourcesInjector {
         return propertyEditor.getValue();
     }
 
-    private void setFieldValue(Object instance, Field field, Object value, String fieldName) {
+    private void setFieldValue(Object instance, Field field, Object value, String fqFieldName) {
         try {
             field.setAccessible(true);
             field.set(instance, value);
         } catch (IllegalAccessException e) {
             if (LOG.isWarnEnabled()) {
-                LOG.warn("Cannot set value on field " + fieldName + " of instance " + instance, sanitize(e));
+                LOG.warn("Cannot set value on field " + fqFieldName + " of instance " + instance, sanitize(e));
             }
         }
     }
