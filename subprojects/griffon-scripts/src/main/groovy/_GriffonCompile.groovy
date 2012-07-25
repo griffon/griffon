@@ -27,8 +27,6 @@ includeTargets << griffonScript('_GriffonClasspath')
 ant.taskdef(name: 'groovyc', classname: 'org.codehaus.groovy.ant.Groovyc')
 ant.taskdef(name: 'griffonc', classname: 'org.codehaus.griffon.compiler.GriffonCompiler')
 
-additionalSources = []
-
 compilerOptions = { Map options ->
     if (griffonSettings.sourceEncoding != null) options.encoding = griffonSettings.sourceEncoding
     if (griffonSettings.compilerDebug != null) options.debug = griffonSettings.compilerDebug
@@ -50,8 +48,9 @@ compilerPaths = { String classpathId ->
 
     src(path: new File("${griffonSettings.sourceDir}/main"))
 
-    additionalSources.each { srcPath ->
-        if (new File(srcPath).exists()) src(path: srcPath)
+    buildConfig.griffon.compiler.additional.sources.each { path ->
+        if (!(path instanceof File)) path = new File(path.toString())
+        if (path.exists()) src(path: path)
     }
 
     javac(compilerOptions(classpathref: classpathId))
