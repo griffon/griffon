@@ -140,7 +140,7 @@ target(name: 'doRunApp', description: "Runs the application from the command lin
         argsMap.params.each { s -> cmd << s.trim() }
         cmd = cmd.join(' ')
         if (isWindows) cmd = cmd.replace('\\\\', '\\')
-        debug("Executing $cmd}")
+        debug("Executing $cmd")
         Process p = Runtime.runtime.exec(cmd, null, jardir)
 
         // pipe the output
