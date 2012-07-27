@@ -138,10 +138,9 @@ target(name: 'doRunApp', description: "Runs the application from the command lin
         sysprops.each { s -> if (s) cmd << s }
         [proxySettings, '-classpath', runtimeClasspath, griffonApplicationClass].each { s -> if (s) cmd << s }
         argsMap.params.each { s -> cmd << s.trim() }
-        cmd = cmd.join(' ')
-        if (isWindows) cmd = cmd.replace('\\\\', '\\')
-        debug("Executing $cmd")
-        Process p = Runtime.runtime.exec(cmd, null, jardir)
+        if (isWindows) cmd = cmd.collect { it.replace('\\\\', '\\') }
+        debug("Executing ${cmd.join(' ')}")
+        Process p = Runtime.runtime.exec(isWindows? cmd.join(' ') : cmd as String[], null, jardir)
 
         // pipe the output
         p.consumeProcessOutput(System.out, System.err)
