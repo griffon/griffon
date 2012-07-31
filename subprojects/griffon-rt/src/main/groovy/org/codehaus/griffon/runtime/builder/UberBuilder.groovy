@@ -115,7 +115,7 @@ class UberBuilder extends FactoryBuilderSupport {
 
     Factory resolveFactory(Object name, Map attributes, Object value) {
         for (UberBuilderRegistration ubr in builderRegistration) {
-            Factory factory = ubr.nominateFactory(name)
+            Factory factory = ubr.nominateFactory(name, attributes, value)
             if (factory) {
                 if (ubr.builder) {
                     getProxyBuilder().getContext().put(CHILD_BUILDER, ubr.builder)
