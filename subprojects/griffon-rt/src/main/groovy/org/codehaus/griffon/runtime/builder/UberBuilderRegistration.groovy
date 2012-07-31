@@ -36,22 +36,30 @@ class UberBuilderRegistration {
         this.@factory = factory
     }
 
-    Factory nominateFactory(String name) {
+    Factory nominateFactory(String name, Map attributes, Object value) {
         if (builder) {
             // need to turn off proxy to get at class durring lookup
-            def oldProxy = builder.proxyBuilder
+            def continuationData = builder.getContinuationData()
+            boolean needToPopContext = false;
             try {
-                builder.proxyBuilder = builder
+                builder.restoreFromContinuationData( [
+                        "proxyBuilder": builder,
+                        "contexts": builder.contexts
+                        ] )
+                if (builder.context == null) {
+                    builder.pushContext();
+                }
                 String localName = name
                 if (prefixString && name.startsWith(prefixString)) {
                     localName = name.substring(prefixString.length())
                 }
                 localName = builder.getName(localName)
-                if (builder.factories.containsKey(localName)) {
-                    return builder.factories[localName]
-                }
+                return builder.resolveFactory(localName, attributes, value)
             } finally {
-                builder.proxyBuilder = oldProxy
+                if (needToPopContext) {
+                    builder.popContext()
+                }
+                builder.restoreFromContinuationData(continuationData)
             }
         }
         if (factory) {
