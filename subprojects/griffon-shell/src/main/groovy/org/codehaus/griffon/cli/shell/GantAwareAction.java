@@ -48,12 +48,17 @@ public class GantAwareAction extends AbstractGriffonShellCommand {
     private final String name;
     private final File scriptFile;
     private final String scriptName;
+    private GriffonCommand delegateCommand;
 
     public GantAwareAction(String scope, String name, File scriptFile) {
         this.scope = scope;
         this.name = name;
         this.scriptFile = scriptFile;
         this.scriptName = getScriptNameFromFile(scriptFile);
+    }
+
+    public void setDelegateCommand(GriffonCommand delegateCommand) {
+        this.delegateCommand = delegateCommand;
     }
 
     public String getScope() {
@@ -68,6 +73,42 @@ public class GantAwareAction extends AbstractGriffonShellCommand {
         return scriptName;
     }
 
+    protected String getEnvironment() {
+        String environment = env;
+        if (delegateCommand != null) {
+            Field field = null;
+            try {
+                field = delegateCommand.getClass().getField("env");
+                field.setAccessible(true);
+                environment = (String) field.get(delegateCommand);
+            } catch (NoSuchFieldException e) {
+                e.printStackTrace();
+                environment = env;
+            } catch (IllegalAccessException e) {
+                e.printStackTrace();
+                environment = env;
+            }
+        }
+        return environment;
+    }
+
+    protected boolean getNonInteractive() {
+        boolean ni = nonInteractive;
+        if (delegateCommand != null) {
+            Field field = null;
+            try {
+                field = delegateCommand.getClass().getField("nonInteractive");
+                field.setAccessible(true);
+                ni = (Boolean) field.get(delegateCommand);
+            } catch (NoSuchFieldException e) {
+                ni = nonInteractive;
+            } catch (IllegalAccessException e) {
+                ni = nonInteractive;
+            }
+        }
+        return ni;
+    }
+
     @Override
     protected Object doExecute(CommandSession session, CommandArguments args) throws Exception {
         GriffonScriptRunner runner = getGriffonScriptRunner();
@@ -80,6 +121,7 @@ public class GantAwareAction extends AbstractGriffonShellCommand {
         Map<String, Object> argsMap = new LinkedHashMap<String, Object>();
         populateOptions(argsMap, args.options, args.subject);
         populateArguments(argsMap, args.orderedArguments, args.subject);
+        setEnvironment(runner);
 
         binding.setVariable(VAR_SCRIPT_UNPARSED_ARGS, join(args.params, " "));
         binding.setVariable(VAR_SCRIPT_ENV, System.getProperty(Environment.KEY));

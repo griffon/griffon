@@ -25,13 +25,14 @@ import org.codehaus.griffon.cli.GriffonScriptRunner;
 import org.codehaus.griffon.cli.shell.support.CommandArguments;
 
 import static griffon.util.GriffonNameUtils.getShortName;
+import static org.codehaus.griffon.cli.parsing.CommandLineParser.getExtendedEnvironmnentName;
 import static org.codehaus.griffon.cli.shell.GriffonShellContext.*;
 
 /**
  * @author Andres Almiray
  * @since 0.9.5
  */
-public abstract class AbstractGriffonShellCommand implements GriffonCommand {
+public abstract class AbstractGriffonShellCommand implements GriffonShellCommand {
     @Option(name = "--env", description = "Sets the environment to use.")
     protected String env = Environment.DEVELOPMENT.getName();
 
@@ -55,16 +56,23 @@ public abstract class AbstractGriffonShellCommand implements GriffonCommand {
         return doExecute(session, commandArguments);
     }
 
-
-    private void setEnvironment(GriffonScriptRunner runner) {
+    protected void setEnvironment(GriffonScriptRunner runner) {
         System.clearProperty(Environment.KEY);
-        runner.setRunningEnvironment(getScriptName(), env);
-        runner.setInteractive(!nonInteractive);
+        runner.setRunningEnvironment(getScriptName(), getExtendedEnvironmnentName(getEnvironment()));
+        runner.setInteractive(!getNonInteractive());
         String currentEnvironment = BuildSettingsHolder.getSettings().getGriffonEnv();
         if (!currentEnvironment.equalsIgnoreCase(getLastEnvironment())) {
             System.clearProperty("griffon.env.set");
         }
         setLastEnvironment(currentEnvironment);
+    }
+
+    protected String getEnvironment() {
+        return env;
+    }
+
+    protected boolean getNonInteractive() {
+        return nonInteractive;
     }
 
     protected String getScriptName() {

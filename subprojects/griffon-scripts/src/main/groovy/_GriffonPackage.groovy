@@ -96,36 +96,37 @@ target(name: 'packageResources', description: "Presp app/plugin resources for pa
         if (!isAddonPlugin) collectAddonMetadata()
     }
 
-    if (buildConfig.griffon.enable.native2ascii) {
-        profile("converting native message bundles to ascii") {
-            ant.native2ascii(src: "${basedir}/griffon-app/i18n",
-                    dest: i18nDir,
-                    includes: "**/*.properties",
-                    encoding: "UTF-8")
-            ant.native2ascii(src: "${basedir}/griffon-app/resources",
-                    dest: resourcesDir,
-                    includes: "**/*.properties",
-                    encoding: "UTF-8")
-        }
-    } else {
-        ant.copy(todir: i18nDir) {
-            fileset(dir: "${basedir}/griffon-app/i18n", includes: "**/*.properties")
-        }
-        ant.copy(todir: resourcesDir) {
-            fileset(dir: "${basedir}/griffon-app/resources", includes: "**/*.properties")
-        }
-    }
-    ant.copy(todir: i18nDir) {
-        fileset(dir: "${basedir}/griffon-app/i18n", includes: "*.groovy")
-    }
     ant.copy(todir: resourcesDir) {
-        fileset(dir: "${basedir}/griffon-app/resources", includes: "**/*.*", excludes: "**/*.properties")
         fileset(dir: "${basedir}/src/main") {
             include(name: "**/*")
             exclude(name: "**/*.java")
             exclude(name: "**/*.groovy")
         }
     }
+
+    def copyResourceFiles = { sourceDir, targetDir ->
+        ant.copy(todir: targetDir) {
+            fileset(dir: sourceDir, excludes: "**/*.properties")
+        }
+        if (buildConfig.griffon.enable.native2ascii) {
+            ant.native2ascii(src: sourceDir,
+                    dest: targetDir,
+                    includes: "**/*.properties",
+                    encoding: "UTF-8")
+        } else {
+            ant.copy(todir: targetDir) {
+                fileset(dir: sourceDir, includes: "**/*.properties")
+            }
+        }
+    }
+
+    copyResourceFiles("${basedir}/griffon-app/i18n", i18nDir)
+    copyResourceFiles("${basedir}/griffon-app/resources", resourcesDir)
+    buildConfig.griffon.compiler.additional.resources.each { path ->
+        if (!(path instanceof File)) path = new File(path.toString())
+        if (path.exists()) copyResourceFiles("${basedir}/${path}", resourcesDir)
+    }
+
     ant.copy(todir: projectMainClassesDir) {
         fileset(dir: "${basedir}", includes: metadataFile.name)
     }
@@ -335,7 +336,7 @@ boolean isJarSigned(File jarFile, File targetFile) {
         Enumeration<ZipEntry> entriesEnum = zf.entries()
         while (entriesEnum.hasMoreElements()) {
             ZipEntry ze = entriesEnum.nextElement()
-            if (ze.name ==~ 'META-INF/\\w{1,8}\\.(SF|RSA|DSA)') {
+            if (ze.name ==~ 'META-INF/[\\w-]{1,8}\\.(SF|RSA|DSA)') {
                 // found a signature file
                 return true
             }

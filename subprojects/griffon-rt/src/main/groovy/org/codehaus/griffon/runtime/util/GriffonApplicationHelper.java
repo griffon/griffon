@@ -43,6 +43,7 @@ import java.util.*;
 
 import static griffon.util.ConfigUtils.getConfigValue;
 import static griffon.util.ConfigUtils.getConfigValueAsString;
+import static griffon.util.GriffonExceptionHandler.handleThrowable;
 import static griffon.util.GriffonExceptionHandler.sanitize;
 import static griffon.util.GriffonNameUtils.isBlank;
 import static java.util.Arrays.asList;
@@ -142,10 +143,12 @@ public class GriffonApplicationHelper {
 
         app.setBuilderConfig(loadConfig(configSlurper, app.getBuilderClass(), GriffonApplication.Configuration.BUILDER.getName()));
 
-        Object events = safeNewInstance(app.getEventsClass());
-        if (events != null) {
-            app.setEventsConfig(events);
-            app.addApplicationEventListener(app.getEventsConfig());
+        if (app.getEventsClass() != null) {
+            Object events = safeNewInstance(app.getEventsClass());
+            if (events != null) {
+                app.setEventsConfig(events);
+                app.addApplicationEventListener(app.getEventsConfig());
+            }
         }
 
         Object log4jConfig = app.getConfig().get("log4j");
@@ -391,13 +394,22 @@ public class GriffonApplicationHelper {
             LOG.debug("Instantiating " + klass.getName() + " with type '" + type + "'");
         }
 
-        Object instance = safeNewInstance(klass);
+        Object instance = null;
+        try {
+            instance = klass.newInstance();
+        } catch (InstantiationException e) {
+            throw new GriffonException(e);
+        } catch (IllegalAccessException e) {
+            throw new GriffonException(e);
+        }
 
-        GriffonClass griffonClass = app.getArtifactManager().findGriffonClass(klass);
-        MetaClass mc = griffonClass != null ? griffonClass.getMetaClass() : expandoMetaClassFor(klass);
-        enhance(app, klass, mc, instance);
-
-        app.event(GriffonApplication.Event.NEW_INSTANCE.getName(), asList(klass, type, instance));
+        // GRIFFON-535
+        if (instance != null) {
+            GriffonClass griffonClass = app.getArtifactManager().findGriffonClass(klass);
+            MetaClass mc = griffonClass != null ? griffonClass.getMetaClass() : expandoMetaClassFor(klass);
+            enhance(app, klass, mc, instance);
+            app.event(GriffonApplication.Event.NEW_INSTANCE.getName(), asList(klass, type, instance));
+        }
         return instance;
     }
 
@@ -461,6 +473,7 @@ public class GriffonApplicationHelper {
         try {
             return loadClass(className).newInstance();
         } catch (Exception e) {
+            handleThrowable(e);
             return null;
         }
     }
@@ -469,6 +482,7 @@ public class GriffonApplicationHelper {
         try {
             return clazz.newInstance();
         } catch (Exception e) {
+            handleThrowable(e);
             return null;
         }
     }

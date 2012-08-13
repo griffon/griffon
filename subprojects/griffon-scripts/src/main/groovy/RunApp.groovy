@@ -22,6 +22,7 @@
  */
 
 import static griffon.util.GriffonApplicationUtils.isMacOSX
+import static griffon.util.GriffonApplicationUtils.isWindows
 import static griffon.util.GriffonNameUtils.*
 
 includeTargets << griffonScript('Package')
@@ -125,6 +126,7 @@ target(name: 'doRunApp', description: "Runs the application from the command lin
     }.join(File.pathSeparator)
 
     runtimeClasspath = [i18nDir, resourcesDir, runtimeClasspath, projectMainClassesDir].join(File.pathSeparator)
+    runtimeClasspath = quote(runtimeClasspath)
 
     event 'StatusUpdate', ['Launching application']
     // start the process
@@ -136,8 +138,9 @@ target(name: 'doRunApp', description: "Runs the application from the command lin
         sysprops.each { s -> if (s) cmd << s }
         [proxySettings, '-classpath', runtimeClasspath, griffonApplicationClass].each { s -> if (s) cmd << s }
         argsMap.params.each { s -> cmd << s.trim() }
+        if (isWindows) cmd = cmd.collect { it.replace('\\\\', '\\') }
         debug("Executing ${cmd.join(' ')}")
-        Process p = Runtime.runtime.exec(cmd as String[], null, jardir)
+        Process p = Runtime.runtime.exec(isWindows? cmd.join(' ') : cmd as String[], null, jardir)
 
         // pipe the output
         p.consumeProcessOutput(System.out, System.err)

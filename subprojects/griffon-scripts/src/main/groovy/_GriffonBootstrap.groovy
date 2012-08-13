@@ -18,6 +18,7 @@ import griffon.util.ApplicationHolder
 import griffon.util.Environment
 import griffon.util.RunMode
 
+import static griffon.util.GriffonApplicationUtils.isWindows
 import static griffon.util.GriffonApplicationUtils.is64Bit
 import static griffon.util.GriffonNameUtils.quote
 import static griffon.util.GriffonExceptionHandler.GRIFFON_EXCEPTION_OUTPUT
@@ -136,7 +137,9 @@ setupJavaOpts = { includeNative = true ->
         if (is64Bit && nativeLibDir2.exists()) {
             libraryPath = libraryPath + File.pathSeparator + normalizePathQuotes(nativeLibDir2.absolutePath)
         }
+        if (isWindows) libraryPath = libraryPath.replace('\\\\', '\\')
         System.setProperty('java.library.path', libraryPath)
+        libraryPath = quote(libraryPath)
         javaOpts << "-Djava.library.path=$libraryPath".toString()
     }
 // XXX -- NATIVE

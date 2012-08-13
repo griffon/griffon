@@ -56,18 +56,7 @@ import static java.util.Arrays.sort;
  * @author Graeme Rocher (Grails 0.4)
  */
 public class GriffonScriptRunner {
-    private static Map<String, String> ENV_ARGS = new HashMap<String, String>();
-    // this map contains default environments for several scripts in form 'script-name':'env-code'
-    private static Map<String, String> DEFAULT_ENVS = new HashMap<String, String>();
-
     static {
-        ENV_ARGS.put("dev", Environment.DEVELOPMENT.getName());
-        ENV_ARGS.put("prod", Environment.PRODUCTION.getName());
-        ENV_ARGS.put("test", Environment.TEST.getName());
-        DEFAULT_ENVS.put("Console", Environment.TEST.getName());
-        DEFAULT_ENVS.put("Shell", Environment.TEST.getName());
-        DEFAULT_ENVS.put("Package", Environment.PRODUCTION.getName());
-        DEFAULT_ENVS.put("TestApp", Environment.TEST.getName());
         ExpandoMetaClass.enableGlobally();
     }
 
@@ -315,13 +304,13 @@ public class GriffonScriptRunner {
         // Get the default environment if one hasn't been set.
         boolean useDefaultEnv = env == null;
         if (useDefaultEnv) {
-            env = DEFAULT_ENVS.get(scriptName);
-            env = !isBlank(env) ? env : Environment.DEVELOPMENT.getName();
+            String defaultEnv = CommandLineParser.getDefaultEnvironmentForScript(scriptName);
+            env = !isBlank(defaultEnv) ? defaultEnv : (!isBlank(env) ? env : Environment.DEVELOPMENT.getName());
         }
 
         System.setProperty("base.dir", settings.getBaseDir().getPath());
         System.setProperty(Environment.KEY, env);
-        System.setProperty(Environment.DEFAULT, "true");
+        System.setProperty(Environment.DEFAULT, String.valueOf(useDefaultEnv));
 
         // Add some extra binding variables that are now available.
         settings.setGriffonEnv(env);

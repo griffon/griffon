@@ -16,6 +16,8 @@
 
 package org.codehaus.griffon.cli.shell.support;
 
+import org.codehaus.griffon.cli.shell.GriffonCommand;
+
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -27,15 +29,15 @@ public class CommandUtils {
     private static final String PREFIX = "org.codehaus.griffon.cli.shell.command.";
     private static final String SUFFIX = "Command";
 
-    public static Object newAction(String scriptName) throws Exception {
-        return Class.forName(scriptName, true, CommandUtils.class.getClassLoader()).newInstance();
+    public static GriffonCommand newAction(String scriptName) throws Exception {
+        return (GriffonCommand) Class.forName(scriptName, true, CommandUtils.class.getClassLoader()).newInstance();
     }
 
     public static void registerCommand(String scope, String commandName, String scriptName) {
         COMMAND_TO_ACTION_MAP.put(scope + ":" + commandName, PREFIX + scriptName + SUFFIX);
     }
 
-    public static Object getDelegateAction(String commandName) {
+    public static GriffonCommand getDelegateAction(String commandName) {
         String className = COMMAND_TO_ACTION_MAP.get(commandName);
         if (className != null) {
             try {

@@ -23,7 +23,7 @@ import static griffon.util.GriffonNameUtils.capitalize
 /**
  * Gant script that handles the creation of Griffon applications
  *
- * @author Graeme Rocher (Griffon 0.4)
+ * @author Graeme Rocher (Grails 0.4)
  */
 
 includeTargets << griffonScript('_GriffonCreateArtifacts')
@@ -67,7 +67,7 @@ app.defaultPackageName = '$defaultPackageName'
 createProjectWithDefaults = {
     metadataFile = new File("${basedir}/application.properties")
     initProject()
-    def (defaultMvcPkg, defaultMvcName) = extractArtifactName(argsMap['params'][0])
+    def (defaultMvcPkg, defaultMvcName) = extractArtifactName(griffonAppName)
     ant.replace(dir: "${basedir}/griffon-app/conf", includes: '*') {
         replacefilter(token: "@griffon.app.class.name@", value: appClassName)
         replacefilter(token: "@griffon.version@", value: griffonVersion)
@@ -81,8 +81,6 @@ createProjectWithDefaults = {
 
     // Create a message bundle to get the user started.
     ant.touch(file: "${basedir}/griffon-app/i18n/messages.properties")
-
-    argsMap["params"][0] = griffonAppName
 }
 
 resetBaseDirectory = { String basedir ->
@@ -205,12 +203,15 @@ target(name: 'appName', description: "Evaluates the application name",
         prehook: null, posthook: null) {
     if (argsMap["params"]) {
         griffonAppName = argsMap["params"].join(" ")
+        argsMap["params"].clear()
     } else {
         String type = projectType == 'plugin' ? 'Plugin' : 'Application'
         ant.input(message: "$type name not specified. Please enter:",
                 addProperty: "griffon.app.name")
         griffonAppName = ant.antProject.properties."griffon.app.name"
     }
+
+    argsMap["params"][0] = griffonAppName
 
     createDefaultPackage()
 

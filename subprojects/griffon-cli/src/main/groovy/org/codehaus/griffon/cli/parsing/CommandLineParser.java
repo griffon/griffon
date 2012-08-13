@@ -50,6 +50,14 @@ public class CommandLineParser {
     private Map<String, Option> declaredOptions = new HashMap<String, Option>();
     private int longestOptionNameLength = 0;
 
+    public static String getExtendedEnvironmnentName(String env) {
+        return ENV_ARGS.containsKey(env) ? ENV_ARGS.get(env) : env;
+    }
+
+    public static String getDefaultEnvironmentForScript(String scriptName) {
+        return DEFAULT_ENVS.get(scriptName);
+    }
+
     /**
      * Adds a declared option
      *
