@@ -210,7 +210,7 @@ public class GriffonApplicationHelper {
 
         app.setBuilderConfig(loadConfigWithI18n(app.getLocale(), configReader, app.getBuilderClass(), GriffonApplication.Configuration.BUILDER.getName()));
 
-        Object events = safeNewInstance(app.getEventsClass());
+        Object events = safeNewInstance(app.getEventsClass(), false);
         if (events != null) {
             app.setEventsConfig(events);
             app.addApplicationEventListener(app.getEventsConfig());
@@ -417,7 +417,7 @@ public class GriffonApplicationHelper {
                 className = DefaultGroovyMethods.getText(url).trim();
             } catch (IOException e) {
                 if (LOG.isDebugEnabled()) {
-                    LOG.debug("Cannot read GriffonControllerActionManagerDefinition from " + url, sanitize(e));
+                    LOG.debug("Cannot read GriffonControllerActionManager definition from " + url, sanitize(e));
                     className = null;
                 }
             }
@@ -708,10 +708,14 @@ public class GriffonApplicationHelper {
     }
 
     private static Object safeNewInstance(Class clazz) {
+        return safeNewInstance(clazz, true);
+    }
+
+    private static Object safeNewInstance(Class clazz, boolean logException) {
         try {
             return clazz.newInstance();
         } catch (Exception e) {
-            handleThrowable(e);
+            if (logException) handleThrowable(e);
             return null;
         }
     }
