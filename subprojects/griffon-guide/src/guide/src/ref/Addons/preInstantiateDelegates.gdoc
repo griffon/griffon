@@ -6,14 +6,15 @@ Update node attributes before node is built.
 
 h2. Examples
 
-bc.
+{code}
 class SampleGriffonAddon {
-    def preInstantiateDelegates = \[
+    List preInstantiateDelegates = \[
         {builder, attributes, value -> 
             attributes.colour = attributes.remove('color')
         }
     \]
 }
+{code}
 
 h2. Description
 

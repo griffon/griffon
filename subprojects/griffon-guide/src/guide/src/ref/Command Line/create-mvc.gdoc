@@ -6,22 +6,24 @@ The @create-mvc@ command will create a new MVC triad and configure it at @Applic
 
 h2. Examples
 
-bc.
+{code}
 griffon create-mvc foo
+{code}
 
 h2. Description
 
-MVC groups are the basis for Griffon's MVC implementation. Refer to the [MVC Pattern Overview|guide:mvcpattern] to know more about MVC groups and their features. Calling @griffon create-mvc foo@ results in the following files being created
+MVC groups are the basis for Griffon's MVC implementation. Refer to the [MVC Pattern Overview|guide:theMvcPattern] to know more about MVC groups and their features. Calling @griffon create-mvc foo@ results in the following files being created
 
-bc.
+{code}
 griffon-app/controllers/FooController.groovy
 griffon-app/models/FooModel.groovy
 griffon-app/views/FooView.groovy
 test/integration/FooTests.groovy
+{code}
 
 @Application.groovy@ will be updated with a new group definition
 
-bc.
+{code}
 mvcGroups {
     // MVC Group for "foo"
     'foo' {
@@ -31,10 +33,12 @@ mvcGroups {
     }
     ...
 }
+{code}
 
 Usage:
-bc.
+{code}
 griffon create-mvc \[name\]
+{code}
 
 Arguments:
 * @name@ - The name of the group to create.
@@ -56,22 +60,25 @@ Options:
 
 More Examples:
 
-bc.
+{code}
 griffon create-mvc foo -group=Custom
+{code}
 
 Creates a new group definition where MVC member templates are assumed to be @CustomModel@, @CustomView@ and @CustomController@. Will use the default template when there's no match.
 
-bc.
+{code}
 griffon create-mvc foo -view=Dialog
+{code}
 
 Creates a new group definition overriding the default template for the View only.
 
-bc.
+{code}
 griffon create-mvc foo -skip-controller=true
+{code}
 
 Creates a new group definition without a Controller. The configuration will look like this
 
-bc.
+{code}
 mvcGroups {
     // MVC Group for "foo"
     'foo' {
@@ -80,13 +87,15 @@ mvcGroups {
     }
     ...
 }
+{code}
 
-bc.
+{code}
 griffon create-mvc foo -with-controller=foor.BarController
+{code}
 
 Creates a new group definition with another Controller class. The Controller is assumed to exist, a file will not be created for it. The configuration will look like this
 
-bc.
+{code}
 mvcGroups {
     // MVC Group for "foo"
     'foo' {
@@ -96,3 +105,4 @@ mvcGroups {
     }
     ...
 }
+{code}

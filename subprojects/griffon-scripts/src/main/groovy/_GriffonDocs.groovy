@@ -40,9 +40,9 @@ docSourceLevel = "1.5"
 links = [
         [packages: "java.,org.xml.,javax.,org.xml.", href: "http://java.sun.com/j2se/1.5.0/docs/api"],
         [packages: "org.apache.ant.,org.apache.tools.ant.", href: "http://www.dpml.net/api/ant/1.7.0"],
-        [packages: "org.junit.,junit.framework.", href: "http://junit.sourceforge.net/junit3.8.1/javadoc/"],
+        [packages: "org.junit.,junit.framework.", href: "http://kentbeck.github.com/junit/javadoc/latest/"],
         [packages: "groovy.,org.codehaus.groovy.", href: "http://groovy.codehaus.org/api/"],
-        [packages: 'griffon.,org.codehaus.griffon.', href: 'http://dist.codehaus.org/griffon/guide/api/']
+        [packages: 'griffon.,org.codehaus.griffon.', href: 'http://griffon.codehaus.org/guide/latest/api/']
 ]
 
 docsDisabled = { argsMap.nodoc == true }

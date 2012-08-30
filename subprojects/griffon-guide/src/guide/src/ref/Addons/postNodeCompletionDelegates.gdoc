@@ -6,14 +6,15 @@ Execute code before the node goes out of scope.
 
 h2. Examples
 
-bc.
+{code}
 class SampleGriffonAddon {
-    def postNodeCompletionDelegates = \[
+    List postNodeCompletionDelegates = \[
         {builder, parent, node -> 
             if(builder.context.lazyInit) node.initialize()
         }
     \]
 }
+{code}
 
 h2. Description
 

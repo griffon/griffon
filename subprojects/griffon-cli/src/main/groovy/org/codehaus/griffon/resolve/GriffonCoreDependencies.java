@@ -164,12 +164,16 @@ public class GriffonCoreDependencies {
 
                         // dependencies needed when creating docs
                         ModuleRevisionId[] docDependencies = {
-                                ModuleRevisionId.newInstance("org.xhtmlrenderer", "core-renderer", "R8pre2"),
+                                ModuleRevisionId.newInstance("org.xhtmlrenderer", "core-renderer", "R8"),
                                 ModuleRevisionId.newInstance("com.lowagie", "itext", "2.0.8"),
-                                ModuleRevisionId.newInstance("org.grails", "grails-docs", "1.3.6"),
+                                ModuleRevisionId.newInstance("org.grails", "grails-docs", "2.1.0"),
+                                ModuleRevisionId.newInstance("org.grails", "grails-gdoc-engine", "1.0.1"),
+                                ModuleRevisionId.newInstance("org.yaml", "snakeyaml", "1.9"),
+                                ModuleRevisionId.newInstance("commons-lang", "commons-lang", "2.6"),
                                 ModuleRevisionId.newInstance("radeox", "radeox", "1.0-b2")
                         };
                         registerDependencies(dependencyManager, "docs", docDependencies);
+                        registerDependencies(dependencyManager, "docs", loggingDependencies, "mail", "jms", "jmxtools", "jmxri");
 
                         // dependencies needed at compile time
                         registerDependencies(dependencyManager, "compile", groovyDependencies, false);

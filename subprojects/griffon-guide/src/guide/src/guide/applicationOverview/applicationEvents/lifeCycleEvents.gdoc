@@ -1,0 +1,12 @@
+The following events will be triggered by the application during each one of its phases
+
+* @Log4jConfigStart\[config\]@ - during the [Initialize|guide:initialize] phase.
+* @BootstrapStart\[app\]@ - after logging configuration has been setup, during the [Initialize|guide:initialize] phase.
+* @BootstrapEnd\[app\]@ - at the end of the [Initialize|guide:initialize] phase.
+* @StartupStart\[app\]@ - at the beginning of the [Startup|guide:startup] phase.
+* @StartupEnd\[app\]@ - at the end of the [Startup|guide:startup] phase.
+* @ReadyStart\[app\]@ - at the beginning of the [Startup|guide:ready] phase.
+* @ReadyEnd\[app\]@ - at the end of the [Startup|guide:ready] phase.
+* @ShutdownRequested\[app\]@ - before the [Shutdown|guide:shutdown] begins.
+* @ShutdownAborted\[app\]@ - if a [Shutdown Handler|guide:shutdownHandlers] prevented the application from entering the [Shutdown|guide:shutdown] phase.
+* @ShutdownStart\[app\]@ - at the beginning of the [Shutdown|guide:shutdown] phase.

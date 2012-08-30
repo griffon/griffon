@@ -6,9 +6,9 @@ Provide application event handlers.
 
 h2. Examples
 
-bc.
+{code}
 class SampleGriffonAddon {
-    def events = \[
+    Map events = \[
         NewInstance: { klass, type, instance ->
             if(type != "controller") return
             instance.metaClass.doit = { evt = null ->
@@ -17,6 +17,7 @@ class SampleGriffonAddon {
         }
     \]
 }
+{code}
 
 h2. Description
 

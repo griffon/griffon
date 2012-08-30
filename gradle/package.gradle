@@ -62,12 +62,11 @@ ext.distBinSpec = copySpec {
         from(project(':griffon-guide').jarSource.outputs.files)
         from(project(':griffon-guide').jarSourceHtml.outputs.files)
         from('src/dist/doc')
-        filter(ReplaceTokens, tokens: ['griffon.version': version, 'groovy.version': groovyVersion])    
+        filter(ReplaceTokens, tokens: ['griffon.version': version, 'groovy.version': groovyVersion])
     }
     
     into('guide'){
-        from(project(':griffon-guide').pdfGuide.outputs.files)
-        filter(ReplaceTokens, tokens: ['griffon.version': version, 'groovy.version': groovyVersion])    
+        from(project(':griffon-guide').buildGuide.outputs.files)
     }
 }
 

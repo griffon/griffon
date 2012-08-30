@@ -6,14 +6,15 @@ Update node attributes _after_ the node has been instantiated.
 
 h2. Examples
 
-bc.
+{code}
 class SampleGriffonAddon {
-    def postInstantiateDelegates = \[
+    List postInstantiateDelegates = \[
         {builder, attributes, node -> 
             node.initialize()
         }
     \]
 }
+{code}
 
 h2. Description
 

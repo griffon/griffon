@@ -1,0 +1,160 @@
+Bindings are an effective way to keep two properties in sync. Unfortunately Java does not provide a mechanism nor an API to make bindings, but Griffon does.
+
+As shown in the [Binding|guide:binding] section, Griffon relies on @PropertyChangeEvent@ and @PropertyChangeListener@ to keep track of property changes and notify observers. Swing components are already observable by default. You can build your own observable classes by following a convention, or implement the [Observable|api:griffon.core.Observable] interface (there's a handy partial implementation in [AbstractObservable|api:org.codehaus.griffon.runtime.core.AbstractObservable] that you can subclass).
+
+Bindings can be created by using [BindUtils.binding()|api:griffon.swing.BindUtils], like the following example shows
+
+{code}
+package sample;
+
+import java.util.Map;
+import groovy.util.FactoryBuilderSupport;
+import griffon.swing.BindUtils;
+import org.codehaus.griffon.runtime.core.AbstractGriffonView;
+
+public class SampleView extends AbstractGriffonView {
+    private SampleController controller;
+    private SampleModel model;
+
+    public void setController(SampleController controller) {
+        this.controller = controller;
+    }
+
+    public void setModel(SampleModel model) {
+        this.model = model;
+    }
+
+    public void mvcGroupInit(Map<String, Object> args) {
+        buildViewFromXml(args);
+
+        FactoryBuilderSupport builder = getBuilder();
+
+        /*
+         * Equivalent Groovy code
+         * bind(source: input, sourceProperty: 'text',
+         *      target: model, targetProperty: 'value')
+         */
+        BindUtils.binding()
+                 .withSource(builder.getVariable("input"))
+                 .withSourceProperty("text")
+                 .withTarget(model))
+                 .withTargetProperty("value")
+                 .make(builder);
+
+        /*
+         * Equivalent Groovy code
+         * bind(source: model, sourceProperty: 'value',
+         *      target: input, targetProperty: 'text')
+         */
+        BindUtils.binding()
+                 .withSource(model)
+                 .withSourceProperty("value")
+                 .withTarget(builder.getVariable("output"))
+                 .withTargetProperty("text")
+                 .make(builder);
+    }
+}
+{code}
+
+The following rules apply:
+* both @source@ and @target@ values must be specified. An @IllegalArgumentException@ will be thrown if that's not the case.
+* both @source@ and @target@ instances must be observable. This does not imply that both must implement [Observable|api:griffon.core.Observable] per se, as Swing components do not.
+* either @sourceProperty@ or @targetProperty@ can be omitted but not both. The missing value will be taken from the other property.
+* the @builder@ instance must be able to resolve the @bind()@ node. This is typically the case for the default builder supplied to Views (because Swingbuilder is included).
+
+Bindings created in this way also support the following attributes: @mutual@, @converter@ and @validator@. The next snippet improves on the previous example by setting a converter and a validator, only numeric values will be accepted.
+
+{code}
+package sample;
+
+import java.util.Map;
+import groovy.util.FactoryBuilderSupport;
+import griffon.swing.BindUtils;
+import griffon.util.CallableWithArgs;
+import org.codehaus.griffon.runtime.core.AbstractGriffonView;
+
+public class SampleView extends AbstractGriffonView {
+    private SampleController controller;
+    private SampleModel model;
+
+    public void setController(SampleController controller) {
+        this.controller = controller;
+    }
+
+    public void setModel(SampleModel model) {
+        this.model = model;
+    }
+
+    public void mvcGroupInit(Map<String, Object> args) {
+        buildViewFromXml(args);
+
+        FactoryBuilderSupport builder = getBuilder();
+
+        /*
+         * Equivalent Groovy code
+         * bind(source: input, sourceProperty: 'text',
+         *      target: model, targetProperty: 'value',
+         *      converter: {v -> v? "FOO $v" : 'BAR'},
+         *      validator: {v -> 
+         *          if(v == null) true
+         *          try { Integer.parseInt(String.valueOf(v)); true }
+         *          catch(NumberFormatException e) { false }
+         *      })
+         */
+        BindUtils.binding()
+                 .withSource(builder.getVariable("input"))
+                 .withSourceProperty("text")
+                 .withTarget(model)
+                 .withTargetProperty("value")
+                 .withConverter(new CallableWithArgs<String>() {
+                      public String call(Object[] args) {
+                          return args.length > 0 ? "FOO "+ args[0] : "BAR";
+                      }
+                  })
+                 .withValidator(new CallableWithArgs<Boolean>() {
+                      public Boolean call(Object[] args) {
+                          if(args.length == 0) return Boolean.TRUE;
+                          try {
+                              Integer.parseInt(String.valueOf(args[0]));
+                              return Boolean.TRUE;
+                          } catch(NumberFormatException e) {
+                              return Boolean.FALSE;
+                          }
+                      }
+                  })
+                 .make(builder);
+
+        /*
+         * Equivalent Groovy code
+         * bind(source: model, sourceProperty: 'value',
+         *      target: input, targetProperty: 'text')
+         */
+        BindUtils.binding()
+                 .withSource(model)
+                 .withSourceProperty("value")
+                 .withTarget(builder.getVariable("output"))
+                 .withTargetProperty("text")
+                 .make(builder);
+    }
+}
+{code}
+
+
+The View for these examples is defined in XML format (as described in the previous section)
+
+{code}
+<application title="app.config.application.title"
+             pack="true">
+    <actions>
+        <action id="'clickAction'"
+                name="'Click'"
+                closure="{controller.click(it)}"/>
+    </actions>
+    <gridLayout cols="1" rows="3"/>
+    <textField id="'input'" columns="20"/>
+    <textField id="'output'" columns="20" editable="false"/>
+    <button action="clickAction"
+</application>
+{code}
+
+However you can build the View in any way, bindings do not require an specific View construction mechanism in order to work.

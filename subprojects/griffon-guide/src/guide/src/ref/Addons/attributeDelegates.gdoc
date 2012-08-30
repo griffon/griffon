@@ -6,9 +6,9 @@ Provide attributeDelegates to builders.
 
 h2. Examples
 
-bc.
+{code}
 class SampleGriffonAddon {
-    def attributeDelegates = \[
+    List attributeDelegates = \[
         {builder, node, attributes -> 
            if(attributes.remove('important')) {
                node.foreground = java.awt.Color.RED
@@ -16,6 +16,7 @@ class SampleGriffonAddon {
         }
     \]
 }
+{code}
 
 h2. Description
 

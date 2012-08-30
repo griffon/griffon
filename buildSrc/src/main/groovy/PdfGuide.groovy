@@ -13,29 +13,27 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
- 
-import org.gradle.api.file.FileCollection
+
 import org.gradle.api.DefaultTask
-import org.gradle.api.tasks.InputFiles
 import org.gradle.api.tasks.Input
 import org.gradle.api.tasks.OutputDirectory
 import org.gradle.api.tasks.TaskAction
 import grails.doc.PdfBuilder
 
 class PdfGuide extends DefaultTask {
-    @OutputDirectory File outputFile
-	@Input String pdfName
-	@Input String home
-	
-	public PdfGuide(){
-		super()
-		outputFile = new File("${project.buildDir}/manual")
-		home = project.file('.').absolutePath
-	}
-	
-	@TaskAction
+    @OutputDirectory @Input File outputFile
+    @Input String pdfName
+    @Input String home
+
+    public PdfGuide() {
+        super()
+        outputFile = new File("${project.buildDir}/manual")
+        home = project.file('.').absolutePath
+    }
+
+    @TaskAction
     def publish() {
-		try {
+        try {
             PdfBuilder.build(
                     basedir: project.buildDir.absolutePath,
                     home: home,
@@ -46,8 +44,7 @@ class PdfGuide extends DefaultTask {
             // the renderer 'finishes' but it actually does
             // ignore for now
         }
-    	
-		project.file("${project.buildDir}/manual/guide/single.pdf")
-			   .renameTo(new File(outputFile.absolutePath, pdfName).absolutePath)
-	}
+        project.file("${project.buildDir}/manual/guide/single.pdf")
+                .renameTo(new File(outputFile.absolutePath, pdfName).absolutePath)
+    }
 }
