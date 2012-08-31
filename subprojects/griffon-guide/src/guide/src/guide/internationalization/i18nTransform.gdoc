@@ -1,0 +1,23 @@
+Any component may gain the ability to resolve messages through the application's MessageSource. You only need annotate the class with @[griffon.transform.MessageSourceAware|api:griffon.transform.MessageSourceAware]@ and it will automatically gain all methods exposed by @[MessageSource|guide:griffon.core.i18n.MessageSource]@.
+
+This feature is just a shortcut to avoid reaching for the application instance from objects that do not hold a reference to it.
+
+Here's an example of a custom Java bean that's able to resolve messages
+
+{code}
+@griffon.transform.MessageSourceAware
+class Bean {
+    String name
+}
+{code}
+
+This class could be used in the following way
+
+{code}
+class SampleService {
+    String lookupValues(String arg) {
+        Bean bean = new Bean(name: arg)
+        bean.getMessage('some.message.key', [bean.name])
+    }
+}
+{code}

@@ -1,0 +1,104 @@
+Parameterized resources may be resolved by an application by leveraging the behavior exposed by @[griffon.core.resources.ResourceResolver|api:griffon.core.resources.ResourceResolver]@ which every single @[griffon.core.GriffonApplication|api:griffon.core.GriffonApplication]@ implements. This interface exposes the following methods:
+
+  * Object resolveResource(String key)
+  * Object resolveResource(String key, Locale locale)
+  * Object resolveResource(String key, Object\[\] args)
+  * Object resolveResource(String key, Object\[\] args, Locale locale)
+  * Object resolveResource(String key, List args)
+  * Object resolveResource(String key, List args, Locale locale)
+  * Object resolveResource(String key, Map args)
+  * Object resolveResource(String key, Map args, Locale locale)
+
+The first set throws @NoSuchResourceException@ if a resource could not be resolved given the key sent as argument. The following methods take and additional @defaultValue@ parameter that may be used if no configured resource is found. If this optional parameter were to be null then the @key@ is used as the literal value of the resource; in other words, these methods never throw @NoSuchResourceException@ nor return @null@ unless the passed in @key@ is null.
+
+  * Object resolveResource(String key, Object defaultValue)
+  * Object resolveResource(String key, Object defaultValue, Locale locale)
+  * Object resolveResource(String key, Object\[\] args, Object defaultValue)
+  * Object resolveResource(String key, Object\[\] args, Object defaultValue, Locale locale)
+  * Object resolveResource(String key, List args, Object defaultValue)
+  * Object resolveResource(String key, List args, Object defaultValue, Locale locale)
+  * Object resolveResource(String key, Map args, Object defaultValue)
+  * Object resolveResource(String key, Map args, Object defaultValue, Locale locale)
+
+The simplest way to resolve a resource thus results like this
+
+{code}
+app.resolveResource('menu.icon')
+{code}
+
+The set of methods that take a @List@ as arguments are meant to be used from Groovy code whereas those that take an @Object\[\]@ are meant for Java code; this leads to better idiomatic code as the following examples reveal
+
+{code}
+app.resolveResource('groovy.icon.resource', ['small'])
+app.resolveResource("java.icon.resource", new Object[]{"large"});
+{code}
+
+Of course you may also use @List@ versions in Java, like this
+
+{code}
+import static java.util.Arrays.asList;
+...
+app.resolveResource("hybrid.icon.resource", asList("medium"));
+{code}
+
+h4. Resource Formats
+
+There are three types of resource formats supported by default. Additional formats may be supported if the right plugins are installed. Resources may be configured using either properties files or Groovy scripts, please refer to the [configuration|guide:resourceConfiguration] section.
+
+*Standard Format*
+
+The first set of resource formats are those supported by the JDK's @[MessageFormat|http://docs.oracle.com/javase/6/docs/api/java/text/MessageFormat.html]@ facilities. These formats work with all versions of the @resolveResource()@ method that take a @List@ or an @Object\[\]@ as arguments. Examples follow. First the resource definitions stored in a properties file
+
+{code}
+menu.icon = /img/icons/menu-{0}.png
+{code}
+
+Assuming there are three icon files stored at @griffon-app/resources/img/icons@ whose filenames are @menu-small.png@, @menu-medium.png@ and @menu-large.png@ a component may resolve any of them with
+
+{code}
+Object largeIcon = app.resolveResource('menu.icon', ['large'])
+{code}
+
+*Map Format*
+
+The following format is non-standard (i.e, not supported by @MessageFormat@) and can only be resolved by Griffon. This format uses symbols instead of numbers as placeholders for arguments. Thus the previous messages can be rewritten as follows
+
+{code}
+menu.icon = /img/icons/menu-{:size}.png
+{code}
+
+Which may be resolved in this manner
+
+{code}
+Object largeIcon = app.resolveResource('menu.icon', [size: 'large'])
+{code}
+
+*Groovy format*
+
+Groovy scripts have one advantage over properties files as you can embed custom logic that may conditionally resolve a resource based on environmental values, generate a resource on the fly or simply define the resource instance in place. In order to accomplish this feat resources must be defined as closures. The following example shows two ways to compute @java.awt.Rectangle@ resources
+
+{code}
+import java.awt.Rectangle
+
+direct.instance = new Rectangle(10i, 20i, 30i, 40i)
+computed.instance = { x, y, w, h ->
+    new Rectangle(x, y, w, h)
+}
+{code}
+
+h4. 
+
+Note that the return value of @resolveResource@ is marked as @Object@ but you'll get a @String@ from the first two formats. You'll have to make use of [property editors|guide:propertyEditors] in order to transform the value into the correct type. [Injected resources|guide:injectedResources] are automatically transformed to the expected type.
+
+Here's how it can be done
+
+{code}
+import javax.swing.Icon
+import java.beans.PropertyEditor
+import java.beans.PropertyEditorManager
+...
+Object iconValue = app.resolveResource('menu.icon', ['large'])
+PropertyEditor propertyEditor = PropertyEditorManager.findEditor(Icon)
+propertyEditor.setAsText(String.valueOf(iconValue))
+Icon icon = propertyEditor.getValue()
+{code}

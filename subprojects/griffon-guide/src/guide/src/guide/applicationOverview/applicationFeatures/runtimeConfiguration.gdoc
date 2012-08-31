@@ -1,12 +1,14 @@
-The application's runtime configuration is available through the @config@ property of the application instance. This is a @ConfigObject@ whose contents are obtained by merging @Application.groovy@ and @Config.groovy@. Builder configuration is available through the @builderConfig@ property and reflects the contents of @Builder.groovy@.
+The application's runtime configuration is available through the @config@ property of the application instance. This is a @ConfigObject@ whose contents are obtained by merging @Application.groovy@ and @Config.groovy@. Builder configuration is available through the @builderConfig@ property and reflects the contents of @Builder.groovy@. Configuration files may also be provided as properties files; settings on the matching script will be overridden by those set in the properties file.
 
-However starting with Griffon 0.9.2 there's an alternative for defining the application's configuration. You can now use properties files instead of Groovy scripts. If both properties files and Groovy scripts are available in the classpath then the settings of the scripts will be overriden by those set in the properties file. Each properties file must match the name of the configuration script. The following table shows the conventions
+Configuration files are i18n aware which means you can append locale specific strings to a configuration file, for example @Config_de_CH.groovy@. Locale suffixes are resolved from least to most specific; for a locale with language = 'de', country = 'CH' and variant = 'Basel' the following files are loaded in order
 
-{table}
-Script File | Properties File
-Application.groovy | Application.properties
-Config.groovy | Config.properties
-Builder.groovy | Builder.properties
-{table}
+  * @Config.groovy@
+  * @Config.properties@
+  * @Config_de.groovy@
+  * @Config_de.properties@
+  * @Config_de_CH.groovy@
+  * @Config_de_CH.properties@
+  * @Config_de_CH_Basel.groovy@
+  * @Config_de_CH_Basel.properties@
 
-An application can change the name of the configuration script but it *can not* change the name of the configuration properties file.
+By default the current Locale is used to determine values for language, country and variant; you can change this value by tweaking the [application's locale|guide:applicationLocale].

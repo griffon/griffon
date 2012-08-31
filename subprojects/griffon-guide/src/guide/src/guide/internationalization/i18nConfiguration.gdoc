@@ -1,0 +1,22 @@
+Messages may be configured in either properties files or Groovy scripts. Properties files have precedence over Groovy scripts should there be two files that match the same basename. The default configured basename is "@messages@", thus the application will search for the following resources in the classpath
+
+  * messages.groovy
+  * messages.properties
+
+The default basename may be changed to some other value, or additional basenames may be specified too; it's just a matter of configuring a flag in @Config.groovy@
+
+bc.
+i18n.basenames = \['messages', 'menus', 'labels'\]
+
+Both properties files and Groovy scripts are subject to the same locale aware loading mechanism described in [Runtime Configuration|guide:runtimeConfiguration], that is, the following resources will be searched for and loaded for a Locate set to @de_CH_Basel@
+
+  * messages.groovy
+  * messages.properties
+  * messages_de.groovy
+  * messages_de.properties
+  * messages_de_CH.groovy
+  * messages_de_CH.properties
+  * messages_de_CH_Basel.groovy
+  * messages_de_CH_Basel.properties
+
+Properties files and Groovy scripts used for internationalization purposes are usually placed under @griffon-app/i18n@ as these files are automatically processed with native2ascii when packaging is executed. The default @messages.properties@ file is placed in this directory upon creating an application with [create-app|commandLine].

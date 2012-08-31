@@ -1,3 +1,5 @@
+Although the following API directly refers to Swing in all examples it's possible to use @WindowManager@ with other toolkits such as [javafx|http://artifacts.griffon-framework.org/plugin/javafx] and [SWT|http://artifacts.griffon-framework.org/plugin/swt] as these plugins provide their own @WindowManager@ implementation plus helper classes. 
+
 The @WindowManager@ class is responsible for keeping track of all the windows managed by the application. It also controls how these windows are displayed (via a pair of methods: show, hide). WindowManager relies on an instance of @WindowDisplayHandler@ to actually show or hide a window. The default implementation simple shows and hide windows directly, however you can change this behavior by setting a different implementation of @WindowDisplayHandler@ on the application instance.
 
 h4. WindowManager DSL
