@@ -17,26 +17,38 @@
 import org.apache.tools.ant.filters.ReplaceTokens
 
 ext.distBinSpec = copySpec {
-    from('.'){
+    from('.') {
         include 'README.md'
         include 'INSTALL'
         include 'LICENSE'
     }
-    from('src/dist'){
+    from('src/dist') {
         exclude 'bin'
-        exclude 'bundles'
+        exclude 'samples'
+        exclude 'media'
         filter(ReplaceTokens, tokens: ['griffon.version': version, 'groovy.version': groovyVersion])
     }
-    from(project(':griffon-guide').file('src/griffon')){
-        into 'src/griffon'
-        filter(ReplaceTokens, tokens: ['griffon.version': version, 'groovy.version': groovyVersion])    
-    }
-    from('src/dist/bin'){
+    from('src/dist/bin') {
         into 'bin'
-        filter(ReplaceTokens, tokens: ['griffon.version': version, 'groovy.version': groovyVersion])    
-        fileMode = 0755    
+        filter(ReplaceTokens, tokens: ['griffon.version': version, 'groovy.version': groovyVersion])
+        fileMode = 0755
     }
-    into('lib') { 
+    from('src/dist/media') {
+        into 'media'
+    }
+    from('src/dist/samples') {
+        into 'samples'
+    }
+    from('src/dist/samples') {
+        into 'samples'
+        include '**/*.groovy', '**/*.java', '**/*.properties', '**/*.xml', '**/*.txt', '**/html'
+        filter(ReplaceTokens, tokens: ['griffon.version': version, 'groovy.version': groovyVersion])
+    }
+    from(project(':griffon-guide').file('src/griffon')) {
+        into 'src/griffon'
+        filter(ReplaceTokens, tokens: ['griffon.version': version, 'groovy.version': groovyVersion])
+    }
+    into('lib') {
         from(project(':griffon-cli').configurations.runtime) {
             exclude 'griffon*'
         }
@@ -46,31 +58,33 @@ ext.distBinSpec = copySpec {
             exclude 'griffon*'
         }
     }
-    
+
     ['rt', 'cli', 'scripts', 'resources', 'shell'].each { subproj ->
-        from(project(':griffon-' + subproj).jar.outputs.files){
+        from(project(':griffon-' + subproj).jar.outputs.files) {
             into('dist')
         }
     }
-    
-    into('scripts'){
+
+    into('scripts') {
         from(project(":griffon-scripts").sourceSets.main.allSource)
     }
-    
-    into('doc'){
+
+    into('doc') {
         from(project(':griffon-guide').jarApi.outputs.files)
         from(project(':griffon-guide').jarSource.outputs.files)
         from(project(':griffon-guide').jarSourceHtml.outputs.files)
+    }
+    into('doc') {
         from('src/dist/doc')
         filter(ReplaceTokens, tokens: ['griffon.version': version, 'groovy.version': groovyVersion])
     }
-    
-    into('guide'){
+
+    into('guide') {
         from(project(':griffon-guide').buildGuide.outputs.files)
     }
 }
 
-task zipBinary(type: Zip, dependsOn: ':griffon-guide:dist'){
+task zipBinary(type: Zip, dependsOn: ':griffon-guide:dist') {
     description = "Zips the binary distribution."
     classifier = 'bin'
     into "griffon-$version"
@@ -111,7 +125,7 @@ distSourceSpec = copySpec {
     }
 }
 
-task zipSource(type: Zip){
+task zipSource(type: Zip) {
     description = "Zips the source distribution."
     with distSourceSpec
     classifier = 'src'
@@ -122,7 +136,7 @@ task tarSource(type: Tar) {
     description = "Tars the source distribution."
     with distSourceSpec
     classifier = 'src'
-    into "griffon-$version"  
+    into "griffon-$version"
     compression = Compression.GZIP
 }
 
@@ -132,7 +146,7 @@ task griffonHome {
 
 task checkGriffonHome << {
     griffonHome.dir = System.getProperty('griffon.home') ?: System.env['GRIFFON_HOME']
-    assert griffonHome.dir : 'You must define a value for $GRIFFON_HOME first!'
+    assert griffonHome.dir: 'You must define a value for $GRIFFON_HOME first!'
     println "===> \$GRIFFON_HOME is set to $griffonHome.dir"
 }
 
