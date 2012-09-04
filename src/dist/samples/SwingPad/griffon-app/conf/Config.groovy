@@ -15,6 +15,3 @@ log4j = {
     warn  'griffon.plugins.i18n',
           'org.springframework'
 }
-
-i18n.provider = 'i18n-support'
-i18n.basename = 'messages'
