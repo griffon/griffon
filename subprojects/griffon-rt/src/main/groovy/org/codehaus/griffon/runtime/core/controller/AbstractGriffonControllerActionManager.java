@@ -55,8 +55,7 @@ public abstract class AbstractGriffonControllerActionManager implements GriffonC
             throw new IllegalArgumentException("controller parameter is null!");
         }
         Map<String, GriffonControllerAction> actions = actionCache.get(controller);
-        if (actions == null) {
-            actions = Collections.emptyMap();
+        if (actions.isEmpty()) {
             if (LOG.isTraceEnabled()) {
                 LOG.trace("No actions defined for controller " + controller);
             }
@@ -80,7 +79,7 @@ public abstract class AbstractGriffonControllerActionManager implements GriffonC
         for (String actionName : griffonClass.getActionNames()) {
             GriffonControllerAction action = createAndConfigureAction(controller, actionName);
             Map<String, GriffonControllerAction> actions = actionCache.get(controller);
-            if (actions == null) {
+            if (actions.isEmpty()) {
                 actions = new LinkedHashMap<String, GriffonControllerAction>();
                 actionCache.set(controller, actions);
             }
@@ -215,7 +214,7 @@ public abstract class AbstractGriffonControllerActionManager implements GriffonC
                     }
                 }
             }
-            return null;
+            return Collections.emptyMap();
         }
 
         public void set(GriffonController controller, Map<String, GriffonControllerAction> actions) {
