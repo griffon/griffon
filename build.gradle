@@ -42,11 +42,7 @@ evaluationDependsOn(':griffon-shell')
 evaluationDependsOn(':griffon-wrapper')
 evaluationDependsOn(':griffon-guide')
 
-dependsOnChildren()
-
-configure(mavenizedProjects()) {
-    apply from: "${rootDir}/gradle/maven.gradle"
-}
+// dependsOnChildren()
 
 subprojects { subproj ->
     apply plugin: 'idea'
@@ -67,24 +63,36 @@ subprojects { subproj ->
         mavenRepo name: 'Sonatype',       url: 'http://repository.sonatype.org/content/groups/public'
         mavenRepo name: 'Grails Central', url: 'http://repo.grails.org/grails/core/'
     }
+}
 
-    tasks.withType(Jar).each{ jarTask ->
-        jarTask.manifest {
-            Date buildTime = new Date()
-            attributes(
-                'Built-By': System.properties['user.name'],
-                'Created-By': System.properties['java.vm.version'] + " (" + System.properties['java.vm.vendor'] + ")",
-                'Build-Date': new SimpleDateFormat('dd-MMM-yyyy').format(buildTime),
-                'Build-Time': new SimpleDateFormat('hh:mm aa').format(buildTime),
-                'Specification-Title': subproj.name,
-                'Specification-Version': project.version,
-                'Specification-Vendor': 'griffon.codehaus.org',
-                'Implementation-Title': subproj.name,
-                'Implementation-Version': project.version,
-                'Implementation-Vendor': 'griffon.codehaus.org'
-            )
+Date buildTimeAndDate = new Date()
+ext {
+    buildTime = new SimpleDateFormat('dd-MMM-yyyy').format(buildTimeAndDate)
+    buildDate = new SimpleDateFormat('hh:mm aa').format(buildTimeAndDate)
+}
+
+configure(mavenizedProjects()) { proj ->
+    proj.apply from: "${rootDir}/gradle/maven.gradle"
+    proj.task('checkManifest') {
+        dependsOn proj.classes
+        doLast {
+            proj.jar.manifest {
+                attributes(
+                    'Built-By': System.properties['user.name'],
+                    'Created-By': System.properties['java.version'] + " (" + System.properties['java.vendor'] + " "+ System.getProperty("java.vm.version") + ")",
+                    'Build-Date': buildTime,
+                    'Build-Time': buildDate,
+                    'Specification-Title': proj.name,
+                    'Specification-Version': project.version,
+                    'Specification-Vendor': 'griffon.codehaus.org',
+                    'Implementation-Title': proj.name,
+                    'Implementation-Version': project.version,
+                    'Implementation-Vendor': 'griffon.codehaus.org'
+                )
+            }
         }
     }
+    proj.jar.dependsOn proj.checkManifest
 }
 
 // @todo move apply statements to the top of the build script
@@ -108,7 +116,7 @@ task bambooStage2(dependsOn: [bambooStage1, fullDist, rpm]) {
 }
 
 task wrapper(type: Wrapper) {
-    gradleVersion = '1.0-rc-3'
+    gradleVersion = '1.1'
     jarFile = 'gradle/wrapper/gradle-wrapper.jar'
 }
 

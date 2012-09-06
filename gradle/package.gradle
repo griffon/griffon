@@ -99,7 +99,7 @@ task tarBinary(type: Tar) {
     compression = Compression.GZIP
 }
 
-distSourceSpec = copySpec {
+ext.distSourceSpec = copySpec {
     from('.') {
         exclude 'build'
         exclude '.git*'
@@ -140,21 +140,19 @@ task tarSource(type: Tar) {
     compression = Compression.GZIP
 }
 
-task griffonHome {
-    dir = System.getProperty('griffon.home') ?: System.env['GRIFFON_HOME']
-}
+ext.griffonHomeDir = System.getProperty('griffon.home') ?: System.env['GRIFFON_HOME']
 
 task checkGriffonHome << {
-    griffonHome.dir = System.getProperty('griffon.home') ?: System.env['GRIFFON_HOME']
-    assert griffonHome.dir: 'You must define a value for $GRIFFON_HOME first!'
-    println "===> \$GRIFFON_HOME is set to $griffonHome.dir"
+    griffonHomeDir = System.getProperty('griffon.home') ?: System.env['GRIFFON_HOME']
+    assert griffonHomeDir: 'You must define a value for $GRIFFON_HOME first!'
+    println "===> \$GRIFFON_HOME is set to $griffonHomeDir"
 }
 
 task installBinary(type: Sync, dependsOn: checkGriffonHome) {
     description = 'Installs the binary distribution at $GRIFFON_HOME.'
-    destinationDir = griffonHome.dir as File
+    destinationDir = griffonHomeDir as File
     with distBinSpec
     doLast {
-        ant.chmod(dir: "${griffonHome.dir}/bin", excludes: '*.bat', perm: 'ugo+x')
+        ant.chmod(dir: "${griffonHomeDir}/bin", excludes: '*.bat', perm: 'ugo+x')
     }
 }

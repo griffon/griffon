@@ -73,10 +73,10 @@ task jarDefaultBundles(type: Jar) {
     from 'src/bundles'
 }
 
-resourceFilesJars = tasks.withType(Jar).matching({ task -> task.appFileJar } as Spec)
+ext.resourceFilesJars = tasks.withType(Jar).matching({ task -> task.appFileJar } as Spec)
 
 jar {
-    dependsOn: resourceFilesJars
+    dependsOn resourceFilesJars
     resourceFilesJars.each { task ->
         from task.outputs.files
     }

@@ -28,20 +28,21 @@ dependencies {
     compile 'junit:junit:4.10',
             'asm:asm:3.2',
             'commons-cli:commons-cli:1.2',
-            'commons-io:commons-io:2.1',
+            'commons-io:commons-io:2.4',
             'commons-lang:commons-lang:2.6',
             'commons-collections:commons-collections:3.2.1',
             'commons-codec:commons-codec:1.6',
             'org.apache.httpcomponents:httpcore:4.1.2',
-            'com.jcraft:jzlib:1.0.7',
+            'com.jcraft:jzlib:1.1.1',
             'xml-resolver:xml-resolver:1.2',
-            'org.fusesource.jansi:jansi:1.7',
+            'org.fusesource.jansi:jansi:1.9',
             'jline:jline:0.9.94',
-            'org.yaml:snakeyaml:1.9'
+            'org.yaml:snakeyaml:1.9',
+            'radeox:radeox:1.0-b2',
+            "org.apache.ant:ant-launcher:$antVersion"
     compile("org.apache.ant:ant:$antVersion") {
         exclude group: 'org.apache.ant', module: 'ant-launcher'
     }
-    compile "org.apache.ant:ant-launcher:$antVersion"
     compile("org.apache.ant:ant-junit:$antVersion") {
         exclude group: 'org.apache.ant', module: 'ant'
         exclude group: 'junit',          module: 'junit'
@@ -112,7 +113,6 @@ dependencies {
         exclude group: 'bouncycastle', module: 'bcmail-jdk14'
         exclude group: 'bouncycastle', module: 'bcprov-jdk14'
     }
-    compile 'radeox:radeox:1.0-b2'
     compile("org.grails:grails-docs:$grailsDocsVersion") {
         exclude group: 'radeox',              module: 'radeox'
         exclude group: 'org.codehaus.groovy', module: 'groovy-all'
@@ -165,7 +165,7 @@ dependencies {
         exclude group: 'commons-logging',     module: 'commons-logging'
         exclude group: 'log4j',               module: 'log4j'
     }
-    compile('commons-beanutils:commons-beanutils:1.8.0') {
+    compile('commons-beanutils:commons-beanutils:1.8.3') {
         exclude group: 'commons-logging',     module: 'commons-logging'
         exclude group: 'commons-collections', module: 'commons-collections'
     }
@@ -174,7 +174,7 @@ dependencies {
         exclude group: 'commons-logging',           module: 'commons-logging'
         exclude group: 'commons-codec',             module: 'commons-codec'
     }
-    compile('com.jcraft:jsch:0.1.45') {
+    compile('com.jcraft:jsch:0.1.48') {
         exclude group: 'com.jcraft', module: 'jzlib'
     }
     compile('xerces:xercesImpl:2.9.1') {
@@ -182,7 +182,7 @@ dependencies {
         exclude group: 'xml-resolver', module: 'xml-resolver'
     }
 
-    testCompile('org.spockframework:spock-core:0.5-groovy-1.8') {
+    testCompile('org.spockframework:spock-core:0.6-groovy-1.8') {
         exclude group: 'org.codehaus.groovy', module: 'groovy-all'
     }
 }

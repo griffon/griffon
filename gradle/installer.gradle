@@ -149,7 +149,7 @@ task deb(dependsOn: prepareDeb) {
 
     File debSrcDir = project.file('installer/deb')
     File debDir = "$buildDir/assemble/deb" as File
-    destinationDir = new File(debDir.absolutePath, 'dist')
+    File destinationDir = new File(debDir.absolutePath, 'dist')
 
     doLast {
         ant.taskdef(resource: 'ant_deb_task.properties',
