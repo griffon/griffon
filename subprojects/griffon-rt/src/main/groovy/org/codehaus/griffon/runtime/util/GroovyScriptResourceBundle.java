@@ -24,7 +24,7 @@ import java.net.URL;
 import java.util.*;
 
 import static griffon.util.ConfigUtils.getConfigValue;
-import static org.codehaus.griffon.runtime.util.GriffonApplicationHelper.createConfigReader;
+import static griffon.util.ConfigUtils.createConfigReader;
 
 /**
  * @author Andres Almiray

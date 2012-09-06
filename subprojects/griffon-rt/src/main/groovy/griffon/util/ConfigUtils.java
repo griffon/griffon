@@ -17,16 +17,28 @@
 package griffon.util;
 
 import groovy.util.ConfigObject;
+import org.apache.log4j.helpers.LogLog;
 import org.codehaus.groovy.runtime.typehandling.DefaultTypeTransformation;
 
+import java.io.InputStream;
+import java.util.Locale;
 import java.util.Map;
+import java.util.Properties;
+
+import static griffon.util.ApplicationHolder.getApplication;
+import static griffon.util.GriffonExceptionHandler.sanitize;
+import static griffon.util.GriffonNameUtils.isBlank;
 
 /**
  * Utility class for reading configuration properties.
  *
  * @author Andres Almiray
  */
-public abstract class ConfigUtils {
+public final class ConfigUtils {
+    private ConfigUtils() {
+        // prevent instantiation
+    }
+
     /**
      * Returns true if there's a on-null value for the specified key.
      *
@@ -171,5 +183,222 @@ public abstract class ConfigUtils {
         configDefaults.putAll(defaults);
         configOverrides.putAll(overrides);
         return configDefaults.merge(configOverrides);
+    }
+
+    /**
+     * Creates a new {@code ConfigReader} instance configured with default conditional blocks.<br/>
+     * The following list enumerates the conditional blocks that get registered automatically:
+     * <ul>
+     * <li><strong>environments</strong> = <tt>Environment.getCurrent().getName()</tt></strong></li>
+     * <li><strong>projects</strong> = <tt>Metadata.getCurrent().getApplicationName()</tt></strong></li>
+     * <li><strong>platforms</strong> = <tt>GriffonApplicationUtils.getFullPlatform()</tt></strong></li>
+     * </ul>
+     *
+     * @return a newly instantiated {@code ConfigReader}.
+     * @since 1.1.0
+     */
+    public static ConfigReader createConfigReader() {
+        ConfigReader configReader = new ConfigReader();
+        configReader.registerConditionalBlock("environments", Environment.getCurrent().getName());
+        configReader.registerConditionalBlock("projects", Metadata.getCurrent().getApplicationName());
+        configReader.registerConditionalBlock("platforms", GriffonApplicationUtils.getFullPlatform());
+        return configReader;
+    }
+
+    /**
+     * Loads configuration settings defined in a Groovy script and a properties file as fallback.<br/>
+     * The name of the script matches the name of the file.
+     *
+     * @param configFileName the configuration file
+     * @return a merged configuration between the script and the alternate file. The file has precedence over the script.
+     * @since 1.1.0
+     */
+    public static ConfigObject loadConfig(String configFileName) {
+        return loadConfig(createConfigReader(), safeLoadClass(configFileName), configFileName);
+    }
+
+    /**
+     * Loads configuration settings defined in a Groovy script and a properties file as fallback.<br/>
+     * The alternate properties file matches the simple name of the script.
+     *
+     * @param configClass the script's class, may be null
+     * @return a merged configuration between the script and the alternate file. The file has precedence over the script.
+     * @since 1.1.0
+     */
+    public static ConfigObject loadConfig(Class configClass) {
+        return loadConfig(createConfigReader(), configClass, configClass.getSimpleName());
+    }
+
+    /**
+     * Loads configuration settings defined in a Groovy script and a properties file as fallback.
+     *
+     * @param configClass    the script's class, may be null
+     * @param configFileName the alternate configuration file
+     * @return a merged configuration between the script and the alternate file. The file has precedence over the script.
+     * @since 1.1.0
+     */
+    public static ConfigObject loadConfig(Class configClass, String configFileName) {
+        return loadConfig(createConfigReader(), configClass, configFileName);
+    }
+
+    /**
+     * Loads configuration settings defined in a Groovy script and a properties file as fallback.
+     *
+     * @param configReader   a ConfigReader instance already configured
+     * @param configClass    the script's class, may be null
+     * @param configFileName the alternate configuration file
+     * @return a merged configuration between the script and the alternate file. The file has precedence over the script.
+     * @since 1.1.0
+     */
+    public static ConfigObject loadConfig(ConfigReader configReader, Class configClass, String configFileName) {
+        ConfigObject config = new ConfigObject();
+        try {
+            if (configClass != null) {
+                config.merge(configReader.parse(configClass));
+            }
+            InputStream is = ApplicationClassLoader.get().getResourceAsStream(configFileName + ".properties");
+            if (is != null) {
+                Properties p = new Properties();
+                p.load(is);
+                config.merge(configReader.parse(p));
+            }
+        } catch (Exception x) {
+            LogLog.warn("Cannot read configuration [class: " + configClass + ", file: " + configFileName + "]", sanitize(x));
+        }
+        return config;
+    }
+
+    /**
+     * Loads configuration settings defined in a Groovy script and a properties file. The script and file names
+     * are Locale aware.<p>
+     * The name of the script matches the name of the file.<br/>
+     * The following suffixes will be used besides the base names for script and file
+     * <ul>
+     * <li>locale.getLanguage()</li>
+     * <li>locale.getLanguage() + "_" + locale.getCountry()</li>
+     * <li>locale.getLanguage() + "_" + locale.getCountry() + "_" + locale.getVariant()</li>
+     * </ul>
+     *
+     * @param baseConfigFileName the configuration file
+     * @return a merged configuration between the script and the alternate file. The file has precedence over the script.
+     * @since 1.1.0
+     */
+    public static ConfigObject loadConfigWithI18n(String baseConfigFileName) {
+        return loadConfigWithI18n(getApplication().getLocale(), createConfigReader(), safeLoadClass(baseConfigFileName), baseConfigFileName);
+    }
+
+    /**
+     * Loads configuration settings defined in a Groovy script and a properties file. The script and file names
+     * are Locale aware.<p>
+     * The alternate properties file matches the simple name of the script.<br/>
+     * The following suffixes will be used besides the base names for script and file
+     * <ul>
+     * <li>locale.getLanguage()</li>
+     * <li>locale.getLanguage() + "_" + locale.getCountry()</li>
+     * <li>locale.getLanguage() + "_" + locale.getCountry() + "_" + locale.getVariant()</li>
+     * </ul>
+     *
+     * @param baseConfigClass the script's class
+     * @return a merged configuration between the script and the alternate file. The file has precedence over the script.
+     * @since 1.1.0
+     */
+    public static ConfigObject loadConfigWithI18n(Class baseConfigClass) {
+        return loadConfigWithI18n(getApplication().getLocale(), createConfigReader(), baseConfigClass, baseConfigClass.getSimpleName());
+    }
+
+    /**
+     * Loads configuration settings defined in a Groovy script and a properties file. The script and file names
+     * are Locale aware.<p>
+     * The following suffixes will be used besides the base names for script and file
+     * <ul>
+     * <li>locale.getLanguage()</li>
+     * <li>locale.getLanguage() + "_" + locale.getCountry()</li>
+     * <li>locale.getLanguage() + "_" + locale.getCountry() + "_" + locale.getVariant()</li>
+     * </ul>
+     *
+     * @param baseConfigClass    the script's class, may be null
+     * @param baseConfigFileName the alternate configuration file
+     * @return a merged configuration between the script and the alternate file. The file has precedence over the script.
+     * @since 1.1.0
+     */
+    public static ConfigObject loadConfigWithI18n(Class baseConfigClass, String baseConfigFileName) {
+        return loadConfigWithI18n(getApplication().getLocale(), createConfigReader(), baseConfigClass, baseConfigFileName);
+    }
+
+    /**
+     * Loads configuration settings defined in a Groovy script and a properties file. The script and file names
+     * are Locale aware.<p>
+     * The following suffixes will be used besides the base names for script and file
+     * <ul>
+     * <li>locale.getLanguage()</li>
+     * <li>locale.getLanguage() + "_" + locale.getCountry()</li>
+     * <li>locale.getLanguage() + "_" + locale.getCountry() + "_" + locale.getVariant()</li>
+     * </ul>
+     *
+     * @param locale             the locale to use
+     * @param configReader       a ConfigReader instance already configured
+     * @param baseConfigClass    the script's class, may be null
+     * @param baseConfigFileName the alternate configuration file
+     * @return a merged configuration between the script and the alternate file. The file has precedence over the script.
+     * @since 1.1.0
+     */
+    public static ConfigObject loadConfigWithI18n(Locale locale, ConfigReader configReader, Class baseConfigClass, String baseConfigFileName) {
+        ConfigObject config = loadConfig(configReader, baseConfigClass, baseConfigFileName);
+        String[] combinations = {
+                locale.getLanguage(),
+                locale.getLanguage() + "_" + locale.getCountry(),
+                locale.getLanguage() + "_" + locale.getCountry() + "_" + locale.getVariant()
+        };
+
+        String baseClassName = baseConfigClass != null ? baseConfigClass.getName() : null;
+        for (String suffix : combinations) {
+            if (isBlank(suffix) || suffix.endsWith("_")) continue;
+            if (baseClassName != null) {
+                Class configClass = safeLoadClass(baseClassName + "_" + suffix);
+                if (configClass != null) config.merge(configReader.parse(configClass));
+                String configFileName = baseConfigFileName + "_" + suffix + ".properties";
+                InputStream is = ApplicationClassLoader.get().getResourceAsStream(configFileName);
+                if (is != null) {
+                    try {
+                        Properties p = new Properties();
+                        p.load(is);
+                        config.merge(configReader.parse(p));
+                    } catch (Exception x) {
+                        LogLog.warn("Cannot read configuration [class: " + configClass + ", file: " + configFileName + "]", sanitize(x));
+                    }
+                }
+            }
+        }
+
+        return config;
+    }
+
+    public static Class loadClass(String className) throws ClassNotFoundException {
+        ClassNotFoundException cnfe = null;
+
+        ClassLoader cl = ApplicationClassLoader.get();
+        try {
+            return cl.loadClass(className);
+        } catch (ClassNotFoundException e) {
+            cnfe = e;
+        }
+
+        cl = Thread.currentThread().getContextClassLoader();
+        try {
+            return cl.loadClass(className);
+        } catch (ClassNotFoundException e) {
+            cnfe = e;
+        }
+
+        if (cnfe != null) throw cnfe;
+        return null;
+    }
+
+    public static Class safeLoadClass(String className) {
+        try {
+            return loadClass(className);
+        } catch (ClassNotFoundException e) {
+            return null;
+        }
     }
 }
