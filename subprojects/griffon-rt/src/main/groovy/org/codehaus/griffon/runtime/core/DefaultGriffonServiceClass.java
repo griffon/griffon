@@ -18,10 +18,7 @@ package org.codehaus.griffon.runtime.core;
 import griffon.core.GriffonApplication;
 import griffon.core.GriffonServiceClass;
 import griffon.util.GriffonClassUtils;
-import griffon.util.GriffonNameUtils;
 import groovy.lang.Closure;
-import groovy.lang.MetaMethod;
-import groovy.lang.MetaProperty;
 
 import java.lang.reflect.Method;
 import java.util.LinkedHashSet;
@@ -54,26 +51,6 @@ public class DefaultGriffonServiceClass extends DefaultGriffonClass implements G
                 }
             }
             for (Method method : getClazz().getMethods()) {
-                String methodName = method.getName();
-                if (!serviceCache.contains(methodName) &&
-                        GriffonClassUtils.isPlainMethod(method) &&
-                        !GriffonClassUtils.isEventHandler(methodName)) {
-                    serviceCache.add(methodName);
-                }
-            }
-            for (MetaProperty p : getMetaProperties()) {
-                String propertyName = p.getName();
-                if (GriffonClassUtils.isGetter(p, true)) {
-                    propertyName = GriffonNameUtils.uncapitalize(propertyName.substring(3));
-                }
-                if (!STANDARD_PROPERTIES.contains(propertyName) &&
-                        !serviceCache.contains(propertyName) &&
-                        !GriffonClassUtils.isEventHandler(propertyName) &&
-                        isClosureMetaProperty(p)) {
-                    serviceCache.add(propertyName);
-                }
-            }
-            for (MetaMethod method : getMetaClass().getMethods()) {
                 String methodName = method.getName();
                 if (!serviceCache.contains(methodName) &&
                         GriffonClassUtils.isPlainMethod(method) &&

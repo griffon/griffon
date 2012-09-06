@@ -382,25 +382,6 @@ public abstract class AbstractGriffonClass implements GriffonClass {
                     eventsCache.add(methodName.substring(2));
                 }
             }
-            for (MetaProperty p : getMetaProperties()) {
-                String propertyName = p.getName();
-                if (GriffonClassUtils.isGetter(p, true)) {
-                    propertyName = GriffonNameUtils.uncapitalize(propertyName.substring(3));
-                }
-                if (!eventsCache.contains(propertyName) &&
-                        GriffonClassUtils.isEventHandler(propertyName) &&
-                        isClosureMetaProperty(p)) {
-                    eventsCache.add(propertyName.substring(2));
-                }
-            }
-            for (MetaMethod method : getMetaClass().getMethods()) {
-                String methodName = method.getName();
-                if (!eventsCache.contains(methodName) &&
-                        GriffonClassUtils.isPlainMethod(method) &&
-                        GriffonClassUtils.isEventHandler(methodName)) {
-                    eventsCache.add(methodName.substring(2));
-                }
-            }
         }
 
         return eventsCache.toArray(new String[eventsCache.size()]);

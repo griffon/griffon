@@ -19,9 +19,7 @@ import griffon.core.GriffonApplication;
 import griffon.core.GriffonModel;
 import griffon.core.GriffonModelClass;
 import griffon.util.GriffonClassUtils;
-import griffon.util.GriffonNameUtils;
 import groovy.lang.Closure;
-import groovy.lang.MetaProperty;
 
 import java.util.Arrays;
 import java.util.LinkedHashSet;
@@ -51,19 +49,6 @@ public class DefaultGriffonModelClass extends DefaultGriffonClass implements Gri
                 if (!propertiesCache.contains(propertyName) &&
                         !GriffonClassUtils.isEventHandler(propertyName) &&
                         getPropertyValue(propertyName, Closure.class) == null &&
-                        !STANDARD_PROPERTIES.contains(propertyName) &&
-                        !BINDABLE_PROPERTIES.contains(propertyName)) {
-                    propertiesCache.add(propertyName);
-                }
-            }
-            for (MetaProperty p : getMetaProperties()) {
-                String propertyName = p.getName();
-                if (GriffonClassUtils.isGetter(p, true)) {
-                    propertyName = GriffonNameUtils.uncapitalize(propertyName.substring(3));
-                }
-                if (!propertiesCache.contains(propertyName) &&
-                        !GriffonClassUtils.isEventHandler(propertyName) &&
-                        !isClosureMetaProperty(p) &&
                         !STANDARD_PROPERTIES.contains(propertyName) &&
                         !BINDABLE_PROPERTIES.contains(propertyName)) {
                     propertiesCache.add(propertyName);
