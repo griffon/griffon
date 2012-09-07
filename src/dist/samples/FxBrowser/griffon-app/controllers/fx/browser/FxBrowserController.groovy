@@ -34,20 +34,14 @@ class FxBrowserController {
 
     @Threading(Threading.Policy.SKIP)
     def backAction = {
-        String url = model.getPreviousUrl()
-        if (url) {
-            view.browser.engine.load(url)
-            view.urlField.text = url
-        }
+        view.browser.engine.history.go(-1)
+        view.urlField.text = getUrlFromHistory()
     }
 
     @Threading(Threading.Policy.SKIP)
     def forwardAction = {
-        String url = model.getNextUrl()
-        if (url) {
-            view.browser.engine.load(url)
-            view.urlField.text = url
-        }
+        view.browser.engine.history.go(1)
+        view.urlField.text = getUrlFromHistory()
     }
 
     @Threading(Threading.Policy.SKIP)
@@ -61,6 +55,9 @@ class FxBrowserController {
         if (url.indexOf('://') < 0) url = 'http://' + url
         if (view.browser.engine.location == url) return
         view.browser.engine.load(url)
-        model.addToHistory(url)
+    }
+
+    private String getUrlFromHistory() {
+        view.browser.engine.history.entries[view.browser.engine.history.currentIndex].url
     }
 }

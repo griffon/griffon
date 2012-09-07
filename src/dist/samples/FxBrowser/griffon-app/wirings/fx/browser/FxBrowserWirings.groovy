@@ -40,7 +40,6 @@ app.execInsideUIAsync {
         if (newValue.startsWith('Loading http')) {
             String url = newValue[8..-1]
             view.urlField.text = url
-            model.addToHistory(url)
         }
     } as ChangeListener)
 
