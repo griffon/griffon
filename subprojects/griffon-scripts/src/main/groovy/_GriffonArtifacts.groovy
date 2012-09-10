@@ -27,6 +27,7 @@ import static griffon.util.GriffonNameUtils.capitalize
 import static org.codehaus.griffon.cli.CommandLineConstants.KEY_DEFAULT_RELEASE_ARTIFACT_REPOSITORY
 import static org.codehaus.griffon.cli.CommandLineConstants.KEY_DEFAULT_ARTIFACT_REPOSITORY
 import static org.codehaus.griffon.cli.CommandLineConstants.KEY_DEFAULT_INSTALL_ARTIFACT_REPOSITORY
+import static org.codehaus.griffon.cli.CommandLineConstants.KEY_FORCE_ARTIFACT_UPGRADE
 
 /**
  * @author Andres Almiray
@@ -94,7 +95,7 @@ installArtifact = { String type ->
 
         if (artifactArgs) {
             if (argsMap['force-upgrade']) {
-                System.setProperty(ArtifactDependencyResolver.KEY_FORCE_UPGRADE, 'true')
+                System.setProperty(KEY_FORCE_ARTIFACT_UPGRADE, 'true')
             }
 
             File artifactFile = new File(artifactArgs[0])

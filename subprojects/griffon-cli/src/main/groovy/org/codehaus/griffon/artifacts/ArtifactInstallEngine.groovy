@@ -16,9 +16,6 @@
 
 package org.codehaus.griffon.artifacts
 
-import org.slf4j.Logger
-import org.slf4j.LoggerFactory
-
 import groovy.json.JsonBuilder
 import org.apache.commons.io.FileUtils
 import org.codehaus.griffon.artifacts.model.Archetype
@@ -28,16 +25,18 @@ import org.codehaus.griffon.artifacts.model.Release
 import org.codehaus.griffon.cli.CommandLineHelper
 import org.codehaus.griffon.cli.ScriptExitException
 import org.codehaus.griffon.resolve.IvyDependencyManager
+import org.slf4j.Logger
+import org.slf4j.LoggerFactory
 import griffon.util.*
 
 import static griffon.util.ArtifactSettings.getRegisteredArtifacts
 import static griffon.util.ArtifactSettings.isValidVersion
 import static griffon.util.GriffonExceptionHandler.sanitize
-import static griffon.util.GriffonNameUtils.*
+import static griffon.util.GriffonNameUtils.capitalize
+import static griffon.util.GriffonNameUtils.getPropertyNameForLowerCaseHyphenSeparatedName
 import static griffon.util.GriffonUtil.getScriptName
 import static org.codehaus.griffon.artifacts.ArtifactRepository.DEFAULT_LOCAL_NAME
-import static org.codehaus.griffon.cli.CommandLineConstants.KEY_DEFAULT_INSTALL_ARTIFACT_REPOSITORY
-import static org.codehaus.griffon.cli.CommandLineConstants.KEY_DISABLE_LOCAL_REPOSITORY_SYNC
+import static org.codehaus.griffon.cli.CommandLineConstants.*
 
 /**
  * @author Andres Almiray
@@ -45,7 +44,6 @@ import static org.codehaus.griffon.cli.CommandLineConstants.KEY_DISABLE_LOCAL_RE
  */
 class ArtifactInstallEngine {
     private static final Logger LOG = LoggerFactory.getLogger(ArtifactInstallEngine)
-    private static final String INSTALL_FAILURE_KEY = 'griffon.install.failure'
     private static final String INSTALL_FAILURE_ABORT = 'abort'
     private static final String INSTALL_FAILURE_CONTINUE = 'continue'
     private static final String INSTALL_FAILURE_RETRY = 'retry'
@@ -71,10 +69,7 @@ class ArtifactInstallEngine {
     }
 
     String getInstallFailureStrategy() {
-        String value = System.getProperty(INSTALL_FAILURE_KEY)
-        if (isBlank(value)) {
-            value = settings.config[INSTALL_FAILURE_KEY]
-        }
+        String value = settings.getPropertyValue(KEY_INSTALL_FAILURE_STRATEGY, INSTALL_FAILURE_ABORT)
 
         value = value ? value.toString().toLowerCase() : INSTALL_FAILURE_CONTINUE
         value in [INSTALL_FAILURE_ABORT, INSTALL_FAILURE_CONTINUE] ? value : INSTALL_FAILURE_CONTINUE
@@ -152,7 +147,7 @@ class ArtifactInstallEngine {
             return true
         }
 
-        ArtifactDependencyResolver resolver = new ArtifactDependencyResolver()
+        ArtifactDependencyResolver resolver = new ArtifactDependencyResolver(settings)
         List<ArtifactDependency> dependencies = []
         try {
             dependencies = resolver.resolveDependencyTree(Plugin.TYPE, missingPlugins)
@@ -227,7 +222,7 @@ class ArtifactInstallEngine {
     boolean installPlugin(String name, String version = null, boolean framework = false) {
         String type = Plugin.TYPE
 
-        ArtifactDependencyResolver resolver = new ArtifactDependencyResolver()
+        ArtifactDependencyResolver resolver = new ArtifactDependencyResolver(settings)
         List<ArtifactDependency> dependencies = resolveDependenciesFor(resolver, type, name, version)
 
         try {
@@ -238,7 +233,7 @@ class ArtifactInstallEngine {
     }
 
     boolean installPlugins(Map<String, String> plugins, boolean framework = false) {
-        ArtifactDependencyResolver resolver = new ArtifactDependencyResolver()
+        ArtifactDependencyResolver resolver = new ArtifactDependencyResolver(settings)
         List<ArtifactDependency> dependencies = []
         try {
             dependencies = resolver.resolveDependencyTree(Plugin.TYPE, plugins)

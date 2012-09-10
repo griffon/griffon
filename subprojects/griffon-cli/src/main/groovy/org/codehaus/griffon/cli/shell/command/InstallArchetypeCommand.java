@@ -35,7 +35,7 @@ public class InstallArchetypeCommand extends AbstractGriffonCommand {
     private String repository;
 
     @Option(name = "--force-upgrade",
-            description = "Forces upgrade if the archetype to be installed ahs a bigger major version than the currently installed (if there's one archetype installed that matches the same name).",
+            description = "Forces upgrade if the archetype to be installed has a bigger major version than the currently installed (if there's one archetype installed that matches the same name).",
             required = false)
     private String forceUpgrade;
 

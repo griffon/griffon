@@ -110,13 +110,13 @@ public interface CommandLineConstants {
 
     /**
      * The compiler source level to use.
-     * Defaults to <tt>1.6</tt>
+     * Defaults to <tt>'1.6'</tt>
      */
     String KEY_COMPILER_SOURCE_LEVEL = "griffon.project.source.level";
 
     /**
      * The compiler target level to use.
-     * Defaults to <tt>1.6</tt>
+     * Defaults to <tt>'1.6'</tt>
      */
     String KEY_COMPILER_TARGET_LEVEL = "griffon.project.target.level";
 
@@ -131,6 +131,18 @@ public interface CommandLineConstants {
      * Defaults to <tt>'yes'</tt>
      */
     String KEY_COMPILER_DEBUG = "griffon.project.compiler.debug";
+
+    /**
+     * Forces artifact upgrades even if versions are not compatible.
+     * <p>Valid values are <tt>'true'</tt> or <tt>'false'</tt>. Default is <tt>'false'</tt>.</p>
+     */
+    String KEY_FORCE_ARTIFACT_UPGRADE = "griffon.artifact.force.upgrade";
+
+    /**
+     * Strategy to follow when plugin installation fails for the 1st time.
+     * <p>Valid values are <tt>'abort'</tt>, <tt>'continue'</tt>, <tt>'retry'</tt>. Default is <tt>'abort'</tt>.</p>
+     */
+    String KEY_INSTALL_FAILURE_STRATEGY = "griffon.install.failure";
 
     String[] KEYS = {
             KEY_INTERACTIVE_MODE,
@@ -150,6 +162,8 @@ public interface CommandLineConstants {
             KEY_COMPILER_SOURCE_LEVEL,
             KEY_COMPILER_TARGET_LEVEL,
             KEY_SOURCE_ENCODING,
-            KEY_COMPILER_DEBUG
+            KEY_COMPILER_DEBUG,
+            KEY_FORCE_ARTIFACT_UPGRADE,
+            KEY_INSTALL_FAILURE_STRATEGY
     };
 }

@@ -986,7 +986,11 @@ class BuildSettings extends AbstractBuildSettings {
         }
     }
 
-    private getPropertyValue(String propertyName, Properties props, String defaultValue) {
+    Object getPropertyValue(String propertyName, Object defaultValue) {
+        getPropertyValue(propertyName, config.toProperties(), defaultValue)
+    }
+
+    private getPropertyValue(String propertyName, Properties props, Object defaultValue) {
         // First check whether we have a system property with the given name.
         def value = getValueFromSystemOrBuild(propertyName, props)
 

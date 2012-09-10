@@ -16,15 +16,17 @@
 
 package org.codehaus.griffon.artifacts
 
-import org.slf4j.Logger
-import org.slf4j.LoggerFactory
-
+import griffon.util.BuildSettings
 import griffon.util.GriffonUtil
 import org.codehaus.griffon.artifacts.model.Artifact
 import org.codehaus.griffon.artifacts.model.Plugin
 import org.codehaus.griffon.artifacts.model.Release
+import org.slf4j.Logger
+import org.slf4j.LoggerFactory
 
 import static griffon.util.ArtifactSettings.isValidVersion
+import static org.codehaus.griffon.cli.CommandLineConstants.KEY_FORCE_ARTIFACT_UPGRADE
+import static org.codehaus.groovy.runtime.typehandling.DefaultTypeTransformation.castToBoolean
 
 /**
  * @author Andres Almiray
@@ -33,9 +35,12 @@ import static griffon.util.ArtifactSettings.isValidVersion
 class ArtifactDependencyResolver {
     private static final Logger LOG = LoggerFactory.getLogger(ArtifactDependencyResolver)
 
-    static final String KEY_FORCE_UPGRADE = 'griffon.artifact.force.upgrade'
-
     private final Map<ArtifactDependency.Key, ArtifactDependency> processedDependencies = [:]
+    final BuildSettings settings
+
+    ArtifactDependencyResolver(BuildSettings settings) {
+        this.settings = settings
+    }
 
     List<ArtifactDependency> resolveDependencyTree(String type, Map<String, String> dependencies) {
         processedDependencies.clear()
@@ -97,7 +102,7 @@ class ArtifactDependencyResolver {
             }
         }
 
-        if(snapshots) {
+        if (snapshots) {
             snapshots.sort { a, b ->
                 b.release.date <=> a.release.date
             }
@@ -105,7 +110,7 @@ class ArtifactDependencyResolver {
             artifactDependency.repository = snapshots[0].repository
         }
 
-        if(release) {
+        if (release) {
             if (LOG.debugEnabled) {
                 LOG.debug("Resolved ${type}:${name}:${version} with repository ${artifactDependency.repository.name}")
             }
@@ -170,7 +175,7 @@ class ArtifactDependencyResolver {
                 matches.sort {a, b -> b.dependency.major <=> a.dependency.major}
                 def winner = matches[0]
                 if (matches.find {it.dependency.major != element.dependency.major}) {
-                    if (winner.dependency.installed || System.getProperty(KEY_FORCE_UPGRADE) == 'true') {
+                    if (winner.dependency.installed || castToBoolean(settings.getPropertyValue(KEY_FORCE_ARTIFACT_UPGRADE, false))) {
                         matches.each {
                             if (it.version != winner.version) it.dependency.evicted = true
                             it.processed = true

@@ -5,6 +5,9 @@ import org.codehaus.griffon.artifacts.model.Artifact
 import org.codehaus.griffon.artifacts.model.Plugin
 import org.codehaus.griffon.artifacts.model.Release
 
+import static org.codehaus.griffon.cli.CommandLineConstants.KEY_FORCE_ARTIFACT_UPGRADE
+import griffon.util.BuildSettings
+
 class ArtifactDependencyResolverTests extends GroovyTestCase {
     private MockArtifactRepository repository = new MockArtifactRepository()
     private Map<String, Artifact> artifacts = [:]
@@ -20,8 +23,13 @@ class ArtifactDependencyResolverTests extends GroovyTestCase {
         ArtifactRepositoryRegistry.instance.registerRepository(repository)
     }
 
+    private ArtifactDependencyResolver createArtifactDependencyResolver() {
+        BuildSettings settings = new BuildSettings()
+        new ArtifactDependencyResolver(settings)
+    }
+
     void testResolveReleaseNotFound() {
-        ArtifactDependencyResolver resolver = new ArtifactDependencyResolver()
+        ArtifactDependencyResolver resolver = createArtifactDependencyResolver()
         ArtifactDependency dependency = resolver.resolveDependencyTree(Plugin.TYPE, 'four')
         assert dependency
         assert !dependency.resolved
@@ -31,7 +39,7 @@ class ArtifactDependencyResolverTests extends GroovyTestCase {
         artifacts.one.releases[0].dependencies = [
                 [name: 'four', version: '1.0.0']
         ]
-        ArtifactDependencyResolver resolver = new ArtifactDependencyResolver()
+        ArtifactDependencyResolver resolver = createArtifactDependencyResolver()
         ArtifactDependency dependency = resolver.resolveDependencyTree(Plugin.TYPE, 'one')
         assert dependency
         assert !dependency.resolved
@@ -42,7 +50,7 @@ class ArtifactDependencyResolverTests extends GroovyTestCase {
     }
 
     void testResolveReleaseWithNoDependencies() {
-        ArtifactDependencyResolver resolver = new ArtifactDependencyResolver()
+        ArtifactDependencyResolver resolver = createArtifactDependencyResolver()
         ArtifactDependency dependency = resolver.resolveDependencyTree(Plugin.TYPE, 'one')
         assert dependency
         assert dependency.resolved
@@ -54,7 +62,7 @@ class ArtifactDependencyResolverTests extends GroovyTestCase {
         artifacts.one.releases[0].dependencies = [
                 [name: 'two', version: '1.0.0']
         ]
-        ArtifactDependencyResolver resolver = new ArtifactDependencyResolver()
+        ArtifactDependencyResolver resolver = createArtifactDependencyResolver()
         ArtifactDependency dependency = resolver.resolveDependencyTree(Plugin.TYPE, 'one')
         assert dependency
         assert dependency.resolved
@@ -65,7 +73,7 @@ class ArtifactDependencyResolverTests extends GroovyTestCase {
     }
 
     void testResolveSetWithSingleReleaseWithNoDependencies() {
-        ArtifactDependencyResolver resolver = new ArtifactDependencyResolver()
+        ArtifactDependencyResolver resolver = createArtifactDependencyResolver()
         Map<String, String> target = [one: '2.2.2']
         List<ArtifactDependency> dependencies = resolver.resolveDependencyTree(Plugin.TYPE, target)
         assert dependencies
@@ -75,7 +83,7 @@ class ArtifactDependencyResolverTests extends GroovyTestCase {
     }
 
     void testResolveSetWithTwoReleasesWithNoDependencies() {
-        ArtifactDependencyResolver resolver = new ArtifactDependencyResolver()
+        ArtifactDependencyResolver resolver = createArtifactDependencyResolver()
         Map<String, String> target = [one: '2.2.2', three: '0.0.1']
         List<ArtifactDependency> dependencies = resolver.resolveDependencyTree(Plugin.TYPE, target)
         assert dependencies
@@ -86,7 +94,7 @@ class ArtifactDependencyResolverTests extends GroovyTestCase {
     }
 
     void testResolveEvictionsWithNoInstalledReleases_withOneTarget() {
-        ArtifactDependencyResolver resolver = new ArtifactDependencyResolver()
+        ArtifactDependencyResolver resolver = createArtifactDependencyResolver()
         ArtifactDependency dependency = resolver.resolveDependencyTree(Plugin.TYPE, 'one')
         List<ArtifactDependency> installPlan = resolver.resolveEvictions([], [dependency])
         assert installPlan
@@ -96,7 +104,7 @@ class ArtifactDependencyResolverTests extends GroovyTestCase {
     }
 
     void testResolveEvictionsWithNoInstalledReleases_withTwoTargets() {
-        ArtifactDependencyResolver resolver = new ArtifactDependencyResolver()
+        ArtifactDependencyResolver resolver = createArtifactDependencyResolver()
         Map<String, String> target = [one: '2.2.2', three: '0.0.1']
         List<ArtifactDependency> dependencies = resolver.resolveDependencyTree(Plugin.TYPE, target)
         List<ArtifactDependency> installPlan = resolver.resolveEvictions([], dependencies)
@@ -113,7 +121,7 @@ class ArtifactDependencyResolverTests extends GroovyTestCase {
         installed[0].version = '2.2.2'
         installed[0].installed = true
         installed[0].resolved = true
-        ArtifactDependencyResolver resolver = new ArtifactDependencyResolver()
+        ArtifactDependencyResolver resolver = createArtifactDependencyResolver()
         ArtifactDependency dependency = resolver.resolveDependencyTree(Plugin.TYPE, 'one')
         assert dependency.resolved
         List<ArtifactDependency> installPlan = resolver.resolveEvictions(installed, [dependency])
@@ -125,7 +133,7 @@ class ArtifactDependencyResolverTests extends GroovyTestCase {
         installed[0].version = '2.2.2'
         installed[0].installed = true
         installed[0].resolved = true
-        ArtifactDependencyResolver resolver = new ArtifactDependencyResolver()
+        ArtifactDependencyResolver resolver = createArtifactDependencyResolver()
         ArtifactDependency dependency = resolver.resolveDependencyTree(Plugin.TYPE, 'one', '2.0.0')
         assert dependency.resolved
         List<ArtifactDependency> installPlan = resolver.resolveEvictions(installed, [dependency])
@@ -137,7 +145,7 @@ class ArtifactDependencyResolverTests extends GroovyTestCase {
         installed[0].version = '2.0.0'
         installed[0].installed = true
         installed[0].resolved = true
-        ArtifactDependencyResolver resolver = new ArtifactDependencyResolver()
+        ArtifactDependencyResolver resolver = createArtifactDependencyResolver()
         ArtifactDependency dependency = resolver.resolveDependencyTree(Plugin.TYPE, 'one', '2.1.0')
         assert dependency.resolved
         List<ArtifactDependency> installPlan = resolver.resolveEvictions(installed, [dependency])
@@ -152,7 +160,7 @@ class ArtifactDependencyResolverTests extends GroovyTestCase {
         installed[0].version = '1.0.0'
         installed[0].installed = true
         installed[0].resolved = true
-        ArtifactDependencyResolver resolver = new ArtifactDependencyResolver()
+        ArtifactDependencyResolver resolver = createArtifactDependencyResolver()
         ArtifactDependency dependency = resolver.resolveDependencyTree(Plugin.TYPE, 'one', '2.0.0')
         assert dependency.resolved
         List<ArtifactDependency> installPlan = resolver.resolveEvictions(installed, [dependency])
@@ -166,9 +174,9 @@ class ArtifactDependencyResolverTests extends GroovyTestCase {
         installed[0].version = '1.0.0'
         installed[0].installed = true
         installed[0].resolved = true
-        System.setProperty(ArtifactDependencyResolver.KEY_FORCE_UPGRADE, 'true')
+        System.setProperty(KEY_FORCE_ARTIFACT_UPGRADE, 'true')
         try {
-            ArtifactDependencyResolver resolver = new ArtifactDependencyResolver()
+            ArtifactDependencyResolver resolver = createArtifactDependencyResolver()
             ArtifactDependency dependency = resolver.resolveDependencyTree(Plugin.TYPE, 'one', '2.0.0')
             assert dependency.resolved
             List<ArtifactDependency> installPlan = resolver.resolveEvictions(installed, [dependency])
@@ -177,7 +185,7 @@ class ArtifactDependencyResolverTests extends GroovyTestCase {
             assert installed[0].evicted
             assert installPlan[1] == dependency
         } finally {
-            System.setProperty(ArtifactDependencyResolver.KEY_FORCE_UPGRADE, 'false')
+            System.setProperty(KEY_FORCE_ARTIFACT_UPGRADE, 'false')
         }
     }
 
@@ -186,7 +194,7 @@ class ArtifactDependencyResolverTests extends GroovyTestCase {
         installed[0].version = '2.0.0'
         installed[0].installed = true
         installed[0].resolved = true
-        ArtifactDependencyResolver resolver = new ArtifactDependencyResolver()
+        ArtifactDependencyResolver resolver = createArtifactDependencyResolver()
         ArtifactDependency dependency = resolver.resolveDependencyTree(Plugin.TYPE, 'one', '1.0.0')
         assert dependency.resolved
         List<ArtifactDependency> installPlan = resolver.resolveEvictions(installed, [dependency])
@@ -203,7 +211,7 @@ class ArtifactDependencyResolverTests extends GroovyTestCase {
         installed[1].version = '2.0.0'
         installed[1].installed = true
         installed[1].resolved = true
-        ArtifactDependencyResolver resolver = new ArtifactDependencyResolver()
+        ArtifactDependencyResolver resolver = createArtifactDependencyResolver()
         Map<String, String> target = [one: '2.2.2', two: '2.0.0']
         List<ArtifactDependency> dependencies = resolver.resolveDependencyTree(Plugin.TYPE, target)
         assert dependencies
@@ -221,7 +229,7 @@ class ArtifactDependencyResolverTests extends GroovyTestCase {
         installed[1].version = '2.1.0'
         installed[1].installed = true
         installed[1].resolved = true
-        ArtifactDependencyResolver resolver = new ArtifactDependencyResolver()
+        ArtifactDependencyResolver resolver = createArtifactDependencyResolver()
         Map<String, String> target = [one: '2.1.0', two: '2.1.0']
         List<ArtifactDependency> dependencies = resolver.resolveDependencyTree(Plugin.TYPE, target)
         assert dependencies
@@ -236,7 +244,7 @@ class ArtifactDependencyResolverTests extends GroovyTestCase {
                 [name: 'two', version: '1.0.0']
         ]
 
-        ArtifactDependencyResolver resolver = new ArtifactDependencyResolver()
+        ArtifactDependencyResolver resolver = createArtifactDependencyResolver()
         Map<String, String> target = [one: '2.2.2', two: '1.0.0']
         List<ArtifactDependency> dependencies = resolver.resolveDependencyTree(Plugin.TYPE, target)
         List<ArtifactDependency> installPlan = resolver.resolveEvictions([], dependencies)

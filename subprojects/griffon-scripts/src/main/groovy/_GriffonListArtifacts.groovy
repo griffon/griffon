@@ -16,7 +16,6 @@
 
 import griffon.util.GriffonUtil
 import griffon.util.Metadata
-import org.codehaus.griffon.artifacts.ArtifactDependencyResolver
 import org.codehaus.griffon.artifacts.ArtifactRepository
 import org.codehaus.griffon.artifacts.ArtifactRepositoryRegistry
 import org.codehaus.griffon.artifacts.VersionComparator
@@ -28,6 +27,7 @@ import org.codehaus.griffon.artifacts.model.Release
 import static griffon.util.ArtifactSettings.getRegisteredArtifacts
 import static griffon.util.ArtifactSettings.isValidVersion
 import static griffon.util.GriffonNameUtils.capitalize
+import static org.codehaus.griffon.cli.CommandLineConstants.KEY_FORCE_ARTIFACT_UPGRADE
 
 /**
  * @author Andres Almiray
@@ -274,7 +274,7 @@ ${('<' + capitalize(type) + '>').padRight(20, ' ')}${'<Current>'.padRight(20, ' 
         if (argsMap.install && outdatedArtifacts) {
             println ''
             if (confirmInput("Proceed with ${type} upgrades?", "artifact.upgrade")) {
-                System.setProperty(ArtifactDependencyResolver.KEY_FORCE_UPGRADE, 'true')
+                System.setProperty(KEY_FORCE_ARTIFACT_UPGRADE, 'true')
                 if (type == Plugin.TYPE) {
                     uninstalledPlugins.clear()
                     outdatedArtifacts.each { name, data ->

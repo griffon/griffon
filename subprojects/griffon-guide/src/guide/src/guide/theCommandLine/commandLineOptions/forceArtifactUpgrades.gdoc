@@ -1,0 +1,38 @@
+Griffon follows a convention for version numbers when applied to artifacts (such as [plugins|guide:plugins] and [archetypes|guide:archetypes]). This convention splits the version number into the following parts
+
+    <major>.<minor>.<revision>-<tag>
+
+where @revision@ and @tag@ may be omitted. When artifacts get upgraded Griffon will check for number compatibility and pick the version whose numbers are greatest that the rest. However in the case of @major@ it will throw an error if two version numbers differ, as the convention is that if there are at least two different values for @major@ there's bound to be a compatibility conflict.
+
+Developers can inspect the conflicts report and consult the release notes for each marked dependency and decided if the upgrade should proceed or not. If the decision is to continue with the upgrade then the developer must inform the build that a forced upgrade must occur. This can be accomplished by setting the @griffon.artifact.force.upgrade@ to true, like this
+
+{code}
+griffon -Dgriffon.artifact.force.upgrade=true clean
+{code}
+
+Both [install-plugin|commandLine] and [install-archetype|commandLine] commands have a shortcut option (@force-upgrade@) that can set the value of this flag. Here's an example report showing two different versions of the @swing@ plugin
+
+{code}
+! swing-1.1.0 from griffon-local
+! glazedlists-0.9 from griffon-local
+   ! swing-0.9.5 from griffon-local
+Could not resolve plugin dependencies.
+{code}
+
+The character @!@ next to each artifact name/version means there's a conflict in that artifact or any of its dependencies. Additional characters may be present (one per line)
+
+  * . the artifact is installed
+  * + the artifact will be installed
+  * - the artifact will be removed
+  * ? the artifact could not be resolved
+
+For example, adding a plugin dependency on @bogus-0.0.0@ results in the following output
+
+{code}
+-= INSTALLED =-
+. glazedlists-0.9
+   . swing-1.1.0
+. swing-1.1.0
+-= MISSING =-
+? bogus-0.0.0 not found in any repository
+{code}

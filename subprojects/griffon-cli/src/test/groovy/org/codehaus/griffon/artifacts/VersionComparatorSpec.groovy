@@ -4,7 +4,7 @@ import spock.lang.Specification
 import spock.lang.Unroll
 
 class VersionComparatorSpec extends Specification {
-    @Unroll({"With forward comparison ${version1} compareTo ${version2} yields ${result}"})
+    @Unroll("With forward comparison #version1 compareTo #version2 yields #result")
     void testCompareForward() {
         setup:
         VersionComparator comparator = new VersionComparator()
@@ -29,7 +29,7 @@ class VersionComparatorSpec extends Specification {
         '1.0-SNAPSHOT' | '1.0-SNAPSHOT' | 0
     }
 
-    @Unroll({"With reverse comparison ${version1} compareTo ${version2} yields ${result}"})
+    @Unroll("With reverse comparison #version1 compareTo #version2 yields #result")
 
     void testCompareReverse() {
         setup:
