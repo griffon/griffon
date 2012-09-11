@@ -68,7 +68,7 @@ public class EventRouter {
     }
 
     public EventRouter() {
-        new Thread(new Runnable() {
+        Thread t = new Thread(new Runnable() {
             public void run() {
                 while (true) {
                     try {
@@ -78,7 +78,9 @@ public class EventRouter {
                     }
                 }
             }
-        }, "EventRouter-" + identifier()).start();
+        }, "EventRouter-" + identifier());
+        t.setDaemon(true);
+        t.start();
     }
 
     /**
