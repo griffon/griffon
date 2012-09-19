@@ -41,7 +41,7 @@ ext.distBinSpec = copySpec {
     }
     from('src/dist/samples') {
         into 'samples'
-        include '**/*.groovy', '**/*.java', '**/*.properties', '**/*.xml', '**/*.txt', '**/html'
+        include '**/*.groovy', '**/*.java', '**/*.properties', '**/*.xml', '**/*.txt', '**/html', '**/*.md'
         filter(ReplaceTokens, tokens: ['griffon.version': version, 'groovy.version': groovyVersion])
     }
     from(project(':griffon-guide').file('src/griffon')) {
