@@ -137,7 +137,7 @@ if [ -z "$JAVACMD" ]; then
             JAVACMD="$JAVA_HOME/jre/sh/java"
         else
             regex=".*/bin/java"
-            if [ `echo ${JAVA_HOME} | grep -c ${regex}` == 0 ]; then
+            if [ `echo ${JAVA_HOME} | grep -c ${regex}` = "0" ]; then
                 JAVACMD="$JAVA_HOME/bin/java"
             else
                 JAVACMD=$JAVA_HOME
