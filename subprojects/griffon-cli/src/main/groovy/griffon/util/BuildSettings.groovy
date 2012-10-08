@@ -940,30 +940,30 @@ class BuildSettings extends AbstractBuildSettings {
     }
 
     private void establishProjectStructure() {
-        // The third argument to "getPropertyValue()" is either the
+        // The third argument to "getValueOf()" is either the
         // existing value of the corresponding field, or if that's
         // null, a default value. This ensures that we don't override
         // settings provided by, for example, the Maven plugin.
         def props = config.toProperties()
-        compilerSourceLevel = getPropertyValue(KEY_COMPILER_SOURCE_LEVEL, props, null)
-        compilerTargetLevel = getPropertyValue(KEY_COMPILER_TARGET_LEVEL, props, null)
-        compilerDebug = getPropertyValue(KEY_COMPILER_DEBUG, props, 'yes')
+        compilerSourceLevel = getValueOf(KEY_COMPILER_SOURCE_LEVEL, props, null)
+        compilerTargetLevel = getValueOf(KEY_COMPILER_TARGET_LEVEL, props, null)
+        compilerDebug = getValueOf(KEY_COMPILER_DEBUG, props, 'yes')
 
         // read metadata file
         Metadata.current
-        if (!griffonWorkDirSet) griffonWorkDir = new File(getPropertyValue(WORK_DIR, props, "${userHome}/.griffon/${griffonVersion}"))
-        if (!projectWorkDirSet) projectWorkDir = new File(getPropertyValue(PROJECT_WORK_DIR, props, "$griffonWorkDir/projects/${baseDir.name}"))
-        if (!projectTargetDirSet) projectTargetDir = new File(getPropertyValue(PROJECT_TARGET_DIR, props, "$baseDir/target"))
-        if (!classesDirSet) classesDir = new File(getPropertyValue(PROJECT_CLASSES_DIR, props, "$projectWorkDir/classes"))
-        if (!testClassesDirSet) testClassesDir = new File(getPropertyValue(PROJECT_TEST_CLASSES_DIR, props, "$projectWorkDir/test-classes"))
-        if (!resourcesDirSet) resourcesDir = new File(getPropertyValue(PROJECT_RESOURCES_DIR, props, "$projectWorkDir/resources"))
-        if (!testResourcesDirSet) testResourcesDir = new File(getPropertyValue(PROJECT_TEST_RESOURCES_DIR, props, "$projectWorkDir/test-resources"))
-        if (!sourceDirSet) sourceDir = new File(getPropertyValue(PROJECT_SOURCE_DIR, props, "$baseDir/src"))
-        if (!projectPluginsDirSet) this.@projectPluginsDir = new File(getPropertyValue(PLUGINS_DIR, props, "$projectWorkDir/plugins"))
-        if (!testReportsDirSet) testReportsDir = new File(getPropertyValue(PROJECT_TEST_REPORTS_DIR, props, "${projectTargetDir}/test-reports"))
-        if (!docsOutputDirSet) docsOutputDir = new File(getPropertyValue(PROJECT_DOCS_OUTPUT_DIR, props, "${projectTargetDir}/docs"))
-        if (!testSourceDirSet) testSourceDir = new File(getPropertyValue(PROJECT_TEST_SOURCE_DIR, props, "${baseDir}/test"))
-        if (!sourceEncodingSet) sourceEncoding = getPropertyValue(KEY_SOURCE_ENCODING, props, "UTF-8")
+        if (!griffonWorkDirSet) griffonWorkDir = new File(getValueOf(WORK_DIR, props, "${userHome}/.griffon/${griffonVersion}"))
+        if (!projectWorkDirSet) projectWorkDir = new File(getValueOf(PROJECT_WORK_DIR, props, "$griffonWorkDir/projects/${baseDir.name}"))
+        if (!projectTargetDirSet) projectTargetDir = new File(getValueOf(PROJECT_TARGET_DIR, props, "$baseDir/target"))
+        if (!classesDirSet) classesDir = new File(getValueOf(PROJECT_CLASSES_DIR, props, "$projectWorkDir/classes"))
+        if (!testClassesDirSet) testClassesDir = new File(getValueOf(PROJECT_TEST_CLASSES_DIR, props, "$projectWorkDir/test-classes"))
+        if (!resourcesDirSet) resourcesDir = new File(getValueOf(PROJECT_RESOURCES_DIR, props, "$projectWorkDir/resources"))
+        if (!testResourcesDirSet) testResourcesDir = new File(getValueOf(PROJECT_TEST_RESOURCES_DIR, props, "$projectWorkDir/test-resources"))
+        if (!sourceDirSet) sourceDir = new File(getValueOf(PROJECT_SOURCE_DIR, props, "$baseDir/src"))
+        if (!projectPluginsDirSet) this.@projectPluginsDir = new File(getValueOf(PLUGINS_DIR, props, "$projectWorkDir/plugins"))
+        if (!testReportsDirSet) testReportsDir = new File(getValueOf(PROJECT_TEST_REPORTS_DIR, props, "${projectTargetDir}/test-reports"))
+        if (!docsOutputDirSet) docsOutputDir = new File(getValueOf(PROJECT_DOCS_OUTPUT_DIR, props, "${projectTargetDir}/docs"))
+        if (!testSourceDirSet) testSourceDir = new File(getValueOf(PROJECT_TEST_SOURCE_DIR, props, "${baseDir}/test"))
+        if (!sourceEncodingSet) sourceEncoding = getValueOf(KEY_SOURCE_ENCODING, props, "UTF-8")
     }
 
     protected void parseGriffonBuildListeners() {
@@ -987,10 +987,10 @@ class BuildSettings extends AbstractBuildSettings {
     }
 
     Object getPropertyValue(String propertyName, Object defaultValue) {
-        getPropertyValue(propertyName, config.toProperties(), defaultValue)
+        getValueOf(propertyName, config.toProperties(), defaultValue)
     }
 
-    private getPropertyValue(String propertyName, Properties props, Object defaultValue) {
+    private Object getValueOf(String propertyName, Properties props, Object defaultValue) {
         // First check whether we have a system property with the given name.
         def value = getValueFromSystemOrBuild(propertyName, props)
 
@@ -999,7 +999,7 @@ class BuildSettings extends AbstractBuildSettings {
         return value != null ? value : defaultValue
     }
 
-    private getValueFromSystemOrBuild(String propertyName, Properties props) {
+    private Object getValueFromSystemOrBuild(String propertyName, Properties props) {
         def value = System.getProperty(propertyName)
         if (value != null) return value
 
