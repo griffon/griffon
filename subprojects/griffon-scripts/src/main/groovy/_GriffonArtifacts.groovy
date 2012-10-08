@@ -38,9 +38,11 @@ if (getBinding().variables.containsKey('_griffon_artifacts_called')) return
 _griffon_artifacts_called = true
 
 artifactRepository = null
+repositoryName = null
 
 selectArtifactRepository = {
     artifactRepository = null
+    repositoryName = null
     repositoryName = argsMap.repository ?: getPropertyValue(KEY_DEFAULT_RELEASE_ARTIFACT_REPOSITORY, ArtifactRepository.DEFAULT_REMOTE_NAME)
     artifactRepository = ArtifactRepositoryRegistry.instance.findRepository(repositoryName)
     if (artifactRepository == null) {
@@ -55,8 +57,10 @@ selectArtifactRepository = {
 
 resolveArtifactRepository = {
     artifactRepository = null
+    repositoryName = null
     if (argsMap.repository) {
-        artifactRepository = ArtifactRepositoryRegistry.instance.findRepository(argsMap.repository)
+        repositoryName = argsMap.repository
+        artifactRepository = ArtifactRepositoryRegistry.instance.findRepository(repositoryName)
         if (griffonSettings.offlineMode && !artifactRepository.local) {
             event('StatusError', ["Repository ${repositoryName} cannot be used while offline mode is enabled."])
             exit 1
