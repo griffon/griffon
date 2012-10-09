@@ -38,6 +38,7 @@ if (getBinding().variables.containsKey('_griffon_list_artifacts_called')) return
 _griffon_list_artifacts_called = true
 
 includeTargets << griffonScript('_GriffonArtifacts')
+includeTargets << griffonScript('_GriffonClean')
 
 listArtifacts = { String type ->
     resolveArtifactRepository()
@@ -282,6 +283,7 @@ ${('<' + capitalize(type) + '>').padRight(20, ' ')}${'<Current>'.padRight(20, ' 
                         doUninstallArtifact Plugin.TYPE, name, data.oldVersion, false
                     }
                     installPlugins(Metadata.current, uninstalledPlugins)
+                    if (isApplicationProject) cleanAll()
                 } else {
                     outdatedArtifacts.each { name, data ->
                         doInstallArtifact(data.repository, type, name, data.version, Metadata.current)

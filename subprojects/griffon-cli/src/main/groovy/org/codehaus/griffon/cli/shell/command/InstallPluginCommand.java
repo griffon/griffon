@@ -55,4 +55,9 @@ public class InstallPluginCommand extends AbstractGriffonCommand {
             description = "The version of the plugin to install. May only be specified if an plugin name is supplied.",
             required = false)
     private String version;
+
+    @Option(name = "--noclean",
+        description = "Do not clean project after plugin has been installed.",
+        required = false)
+    private boolean noclean;
 }

@@ -21,12 +21,14 @@ import org.codehaus.griffon.artifacts.model.Plugin
  */
 
 includeTargets << griffonScript('_GriffonArtifacts')
+includeTargets << griffonScript('_GriffonClean')
 
 target(name: 'installPlugin', description: "Installs a plugin for the given URL or name and version", prehook: null, posthook: null) {
     resolveFrameworkFlag()
     ant.mkdir(dir: artifactSettings.artifactBase(Plugin.TYPE, framework))
     installArtifact(Plugin.TYPE)
     resetDependencyResolution()
+    if (isApplicationProject && !argsMap.noclean) cleanAll()
 }
 
 setDefaultTarget(installPlugin)
