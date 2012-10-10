@@ -684,18 +684,26 @@ doPackageTextReplacement = {dir, fileFilters ->
 }
 
 copyPlatformJars = { srcdir, destdir ->
-    def env = Environment.current
-    if (env == Environment.DEVELOPMENT || env == Environment.TEST) {
-        String plf = platform
-        File platformDir = new File(srcdir.toString() + File.separator + plf)
-        _copyPlatformJars(srcdir.toString(), destdir.toString(), plf)
-        if (!platformDir.exists() && is64Bit) plf -= '64'
-        _copyPlatformJars(srcdir.toString(), destdir.toString(), plf)
+    def userPlatform = argsMap.platform
+    if (userPlatform && PlatformUtils.PLATFORMS[userPlatform]) {
+        _copyPlatformJars(srcdir.toString(), destdir.toString(), userPlatform)
+        if (userPlatform.endsWith('64')) {
+            _copyPlatformJars(srcdir.toString(), destdir.toString(), userPlatform[0..-3])
+        }
     } else {
-        doForAllPlatforms { osname ->
-            File osdir = new File("${basedir}/lib/${osname}")
-            if (osdir.exists()) {
-                _copyPlatformJars(srcdir.toString(), destdir.toString(), osname)
+        def env = Environment.current
+        if (env == Environment.DEVELOPMENT || env == Environment.TEST) {
+            String plf = platform
+            File platformDir = new File(srcdir.toString() + File.separator + plf)
+            _copyPlatformJars(srcdir.toString(), destdir.toString(), plf)
+            if (!platformDir.exists() && is64Bit) plf -= '64'
+            _copyPlatformJars(srcdir.toString(), destdir.toString(), plf)
+        } else {
+            doForAllPlatforms { osname ->
+                File osdir = new File("${basedir}/lib/${osname}")
+                if (osdir.exists()) {
+                    _copyPlatformJars(srcdir.toString(), destdir.toString(), osname)
+                }
             }
         }
     }
@@ -714,18 +722,26 @@ _copyPlatformJars = { srcdir, destdir, os ->
 }
 
 copyNativeLibs = { srcdir, destdir ->
-    def env = Environment.current
-    if (env == Environment.DEVELOPMENT || env == Environment.TEST) {
-        String plf = platform
-        File platformDir = new File(srcdir.toString() + File.separator + plf)
-        _copyNativeLibs(srcdir.toString(), destdir.toString(), plf)
-        if (!platformDir.exists() && is64Bit) plf -= '64'
-        _copyNativeLibs(srcdir.toString(), destdir.toString(), plf)
+    def userPlatform = argsMap.platform
+    if (userPlatform && PlatformUtils.PLATFORMS[userPlatform]) {
+        _copyNativeLibs(srcdir.toString(), destdir.toString(), userPlatform)
+        if (userPlatform.endsWith('64')) {
+            _copyNativeLibs(srcdir.toString(), destdir.toString(), userPlatform[0..-3])
+        }
     } else {
-        doForAllPlatforms { osname ->
-            File osdir = new File("${basedir}/lib/${osname}")
-            if (osdir.exists()) {
-                _copyNativeLibs(srcdir.toString(), destdir.toString(), osname)
+        def env = Environment.current
+        if (env == Environment.DEVELOPMENT || env == Environment.TEST) {
+            String plf = platform
+            File platformDir = new File(srcdir.toString() + File.separator + plf)
+            _copyNativeLibs(srcdir.toString(), destdir.toString(), plf)
+            if (!platformDir.exists() && is64Bit) plf -= '64'
+            _copyNativeLibs(srcdir.toString(), destdir.toString(), plf)
+        } else {
+            doForAllPlatforms { osname ->
+                File osdir = new File("${basedir}/lib/${osname}")
+                if (osdir.exists()) {
+                    _copyNativeLibs(srcdir.toString(), destdir.toString(), osname)
+                }
             }
         }
     }

@@ -40,12 +40,17 @@ public class PackageCommand extends AbstractGriffonCommand {
     private List<String> packages = CollectionUtils.newList("applet", "jar", "webstart", "zip");
 
     @Option(name = "--name",
-            description = "Name of the application jar to create. USed when 'jar' package is in effect.",
+            description = "Name of the application jar to create. Used when 'jar' package is in effect.",
             required = false)
     private String name;
 
     @Option(name = "--codebase",
-            description = "Codebase to be set in the JNLP file. USed when 'applet' or 'webstart' packages are in effect.",
+            description = "Codebase to be set in the JNLP file. Used when 'applet' or 'webstart' packages are in effect.",
             required = false)
     private String codebase;
+
+    @Option(name = "--platform",
+        description = "Target platform to use other than the default one.",
+        required = false)
+    private String platform;
 }

@@ -18,6 +18,7 @@ import org.codehaus.griffon.artifacts.ArtifactInstallEngine
 import org.codehaus.griffon.artifacts.model.Plugin
 
 import static griffon.util.GriffonApplicationUtils.is64Bit
+import griffon.util.PlatformUtils
 
 /**
  * @author Andres Almiray
@@ -49,9 +50,17 @@ target(name: 'resolveDependencies', description: 'Resolves project and plugin de
 
 // XXX -- NATIVE
         Map<String, List<File>> jars = [:]
-        processPlatformLibraries(jars, platform)
-        if (is64Bit) {
-            processPlatformLibraries(jars, platform[0..-3], false)
+        def userPlatform = argsMap.platform
+        if (userPlatform && PlatformUtils.PLATFORMS[userPlatform]) {
+            processPlatformLibraries(jars, userPlatform)
+            if (userPlatform.endsWith('64')) {
+                processPlatformLibraries(jars, userPlatform[0..-3], false)
+            }
+        } else {
+            processPlatformLibraries(jars, platform)
+            if (is64Bit) {
+                processPlatformLibraries(jars, platform[0..-3], false)
+            }
         }
 
         if (jars) {

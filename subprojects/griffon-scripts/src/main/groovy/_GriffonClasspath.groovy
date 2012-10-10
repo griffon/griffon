@@ -17,6 +17,8 @@
 import org.codehaus.griffon.artifacts.model.Plugin
 
 import static griffon.util.GriffonApplicationUtils.is64Bit
+import static griffon.util.GriffonApplicationUtils.platform
+import griffon.util.PlatformUtils
 
 /**
  * Gant script containing the Griffon classpath setup.
@@ -75,17 +77,29 @@ commonClasspath = {
         }
     }
 
-    processPlatformDir platform
-    processNativeDir platform
-    if (is64Bit) {
-        processPlatformDir platform[0..-3]
-        processNativeDir platform[0..-3]
-    }
-
     Map<String, List<File>> jars = [:]
-    processPlatformLibraries(jars, platform)
-    if (is64Bit) {
-        processPlatformLibraries(jars, platform[0..-3], false)
+    def userPlatform = argsMap.platform
+    if (userPlatform && PlatformUtils.PLATFORMS[userPlatform]) {
+        processPlatformDir userPlatform
+        processNativeDir userPlatform
+        processPlatformLibraries(jars, userPlatform)
+        if (userPlatform.endsWith('64')) {
+            processPlatformDir userPlatform[0..-3]
+            processNativeDir userPlatform[0..-3]
+            processPlatformLibraries(jars, userPlatform[0..-3], false)
+        }
+    } else {
+        processPlatformDir platform
+        processNativeDir platform
+        if (is64Bit) {
+            processPlatformDir platform[0..-3]
+            processNativeDir platform[0..-3]
+        }
+
+        processPlatformLibraries(jars, platform)
+        if (is64Bit) {
+            processPlatformLibraries(jars, platform[0..-3], false)
+        }
     }
 
     if (jars) {

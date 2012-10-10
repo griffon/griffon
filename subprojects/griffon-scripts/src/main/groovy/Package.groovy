@@ -22,6 +22,7 @@
 
 import griffon.util.GriffonNameUtils
 import griffon.util.RunMode
+import griffon.util.PlatformUtils
 
 // No point doing this stuff more than once.
 if (getBinding().variables.containsKey('_package_called')) return
@@ -180,7 +181,7 @@ target(name: 'package_jar', description: "Creates a single jar distribution and 
     createJarFile(destFile, libjars)
 
 // XXX -- NATIVE
-    doForAllPlatforms { platformOs ->
+    def processPlatform = { platformOs ->
         File platformDir = new File("${basedir}/lib/${platformOs}")
         if (!platformDir.exists()) return
         File destfile = new File(destFile.absolutePath - '.jar' + "-${platformOs}.jar")
@@ -191,6 +192,12 @@ target(name: 'package_jar', description: "Creates a single jar distribution and 
             File nativeLibDir = new File(platformDir.canonicalPath + File.separator + 'native')
             if (nativeLibDir.exists()) fileset(dir: nativeLibDir)
         }
+    }
+    def userPlatform = argsMap.platform
+    if (userPlatform && PlatformUtils.PLATFORMS[userPlatform]) {
+        processPlatform(userPlatform)
+    } else {
+        doForAllPlatforms(processPlatform)
     }
 // XXX -- NATIVE
 
