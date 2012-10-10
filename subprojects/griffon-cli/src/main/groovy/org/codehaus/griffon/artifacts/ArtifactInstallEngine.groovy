@@ -164,7 +164,7 @@ class ArtifactInstallEngine {
         try {
             return _installPlugins(dependencies, resolver, false)
         } catch (InstallArtifactException iae) {
-            errorHandler "Could not resolve plugin dependencies."
+            errorHandler "Could not resolve plugin dependencies. Review all dependencies marked with ! and try again with -Dgriffon.artifact.force.upgrade=true"
         }
     }
 
@@ -250,7 +250,7 @@ class ArtifactInstallEngine {
         try {
             return _installPlugins(dependencies, resolver, framework)
         } catch (InstallArtifactException iae) {
-            errorHandler "Could not resolve plugin dependencies."
+            errorHandler "Could not resolve plugin dependencies. Review all dependencies marked with ! and try again with -Dgriffon.artifact.force.upgrade=true"
         }
     }
 
