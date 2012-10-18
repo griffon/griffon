@@ -1,0 +1,12 @@
+Services participate in a lifecycle as they are automatically managed by the application. The @[GriffonService|api:griffon.core.GriffonService]@ interface defines a pair of methods that every service may override.
+
+{code}
+public interface GriffonService extends GriffonArtifact {
+    void serviceInit();
+    void serviceDestroy();
+}
+{code}
+
+The first one is called immediately after the service has been instantiated by the @[ServiceManager|api:griffon.core.ServiceManager]@. This is the right place to put initialization code. The @app@ instance should be already set on the service instance, giving you direct access to the application's configuration and i18n facilities.
+
+The second method is also called by @[ServiceManager|api:griffon.core.ServiceManager]@ when the application is shutting down. Be aware that this method will be called before MVC groups are destroyed.

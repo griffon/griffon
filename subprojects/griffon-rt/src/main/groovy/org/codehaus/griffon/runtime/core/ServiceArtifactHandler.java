@@ -44,6 +44,20 @@ public class ServiceArtifactHandler extends ArtifactHandlerAdapter {
 
         public DefaultServiceManager(GriffonApplication app) {
             super(app);
+            app.addShutdownHandler(new ShutdownHandler() {
+                @Override
+                public boolean canShutdown(GriffonApplication application) {
+                    return true;
+                }
+
+                @Override
+                public void onShutdown(GriffonApplication application) {
+                    for (Map.Entry<String, GriffonService> entry : serviceInstances.entrySet()) {
+                        if (LOG.isInfoEnabled()) LOG.info("Destroying service identified by '" + entry.getKey() + "'");
+                        entry.getValue().serviceDestroy();
+                    }
+                }
+            });
         }
 
         public Map<String, GriffonService> getServices() {
@@ -58,17 +72,19 @@ public class ServiceArtifactHandler extends ArtifactHandlerAdapter {
             if (serviceInstance == null) {
                 GriffonClass griffonClass = findClassFor(name);
                 if (griffonClass != null) {
-                    serviceInstance = instantiateService(griffonClass);
+                    serviceInstance = instantiateService(name, griffonClass);
                     serviceInstances.put(name, serviceInstance);
                 }
             }
             return serviceInstance;
         }
 
-        private GriffonService instantiateService(GriffonClass griffonClass) {
+        private GriffonService instantiateService(String serviceName, GriffonClass griffonClass) {
             GriffonService serviceInstance = (GriffonService) griffonClass.newInstance();
             InvokerHelper.setProperty(serviceInstance, "app", getApp());
             getApp().addApplicationEventListener(serviceInstance);
+            if (LOG.isInfoEnabled()) LOG.info("Initializing service identified by '" + serviceName + "'");
+            serviceInstance.serviceInit();
             return serviceInstance;
         }
     }

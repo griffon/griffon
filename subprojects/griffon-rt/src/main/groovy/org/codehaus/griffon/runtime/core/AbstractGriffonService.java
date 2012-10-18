@@ -29,4 +29,14 @@ public abstract class AbstractGriffonService extends AbstractGriffonArtifact imp
     protected String getArtifactType() {
         return GriffonServiceClass.TYPE;
     }
+
+    @Override
+    public void serviceInit() {
+
+    }
+
+    @Override
+    public void serviceDestroy() {
+
+    }
 }

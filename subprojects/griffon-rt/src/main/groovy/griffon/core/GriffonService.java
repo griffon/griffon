@@ -22,4 +22,19 @@ package griffon.core;
  * @since 0.9.1
  */
 public interface GriffonService extends GriffonArtifact {
+    /**
+     * Post initialization callback.<p>
+     * Called by the {@code ServiceManager} right after the Service has been instantiated
+     *
+     * @since 1.2.0
+     */
+    void serviceInit();
+
+    /**
+     * Cleanup callback.<p>
+     * Called by the {@code ServiceManager} when the application is shutting down.
+     *
+     * @since 1.2.0
+     */
+    void serviceDestroy();
 }

@@ -61,6 +61,7 @@ public final class GriffonClassUtils {
     private static final Set<MethodDescriptor> BASIC_METHODS = new TreeSet<MethodDescriptor>();
     private static final Set<MethodDescriptor> ARTIFACT_METHODS = new TreeSet<MethodDescriptor>();
     private static final Set<MethodDescriptor> MVC_METHODS = new TreeSet<MethodDescriptor>();
+    private static final Set<MethodDescriptor> SERVICE_METHODS = new TreeSet<MethodDescriptor>();
     private static final Set<MethodDescriptor> THREADING_METHODS = new TreeSet<MethodDescriptor>();
     private static final Set<MethodDescriptor> EVENT_PUBLISHER_METHODS = new TreeSet<MethodDescriptor>();
     private static final Set<MethodDescriptor> OBSERVABLE_METHODS = new TreeSet<MethodDescriptor>();
@@ -152,6 +153,9 @@ public final class GriffonClassUtils {
         MVC_METHODS.add(new MethodDescriptor("getAddonManager"));
         MVC_METHODS.add(new MethodDescriptor("getMVCGroupManager"));
         MVC_METHODS.add(new MethodDescriptor("setBuilder", new Class[]{FactoryBuilderSupport.class}));
+
+        SERVICE_METHODS.add(new MethodDescriptor("serviceInit"));
+        SERVICE_METHODS.add(new MethodDescriptor("serviceDestroy"));
 
         THREADING_METHODS.add(new MethodDescriptor("isUIThread"));
         THREADING_METHODS.add(new MethodDescriptor("execInsideUIAsync", new Class[]{Runnable.class}));
@@ -611,6 +615,61 @@ public final class GriffonClassUtils {
 
     /**
      * Finds out if the given {@code Method} belongs to the set of
+     * predefined {@code GriffonService} methods by convention.
+     * <p/>
+     * <pre>
+     * // assuming getMethod() returns an appropriate Method reference
+     * isServiceMethod(getMethod("serviceInit"))    = true
+     * isServiceMethod(getMethod("serviceDestroy")) = true
+     * isServiceMethod(getMethod("foo"))            = false
+     * </pre>
+     *
+     * @param method a Method reference
+     * @return true if the method is an {@code GriffonService} method, false otherwise.
+     */
+    public static boolean isServiceMethod(Method method) {
+        return isServiceMethod(MethodDescriptor.forMethod(method));
+    }
+
+    /**
+     * Finds out if the given {@code MetaMethod} belongs to the set of
+     * predefined {@code GriffonService} methods by convention.
+     * <p/>
+     * <pre>
+     * // assuming getMethod() returns an appropriate MetaMethod reference
+     * isServiceMethod(getMethod("serviceInit"))    = true
+     * isServiceMethod(getMethod("serviceDestroy")) = true
+     * isServiceMethod(getMethod("foo"))            = false
+     * </pre>
+     *
+     * @param method a MetaMethod reference
+     * @return true if the method is an {@code GriffonService} method, false otherwise.
+     */
+    public static boolean isServiceMethod(MetaMethod method) {
+        return isServiceMethod(MethodDescriptor.forMethod(method));
+    }
+
+    /**
+     * Finds out if the given {@code MethodDescriptor} belongs to the set of
+     * predefined {@code GriffonService} methods by convention.
+     * <p/>
+     * <pre>
+     * // assuming getMethod() returns an appropriate MethodDescriptor reference
+     * isServiceMethod(getMethod("serviceInit"))    = true
+     * isServiceMethod(getMethod("serviceDestroy")) = true
+     * isServiceMethod(getMethod("foo"))            = false
+     * </pre>
+     *
+     * @param method a MethodDescriptor reference
+     * @return true if the method is an {@code GriffonService} method, false otherwise.
+     */
+    public static boolean isServiceMethod(MethodDescriptor method) {
+        if (method == null || !isInstanceMethod(method)) return false;
+        return SERVICE_METHODS.contains(method);
+    }
+
+    /**
+     * Finds out if the given {@code Method} belongs to the set of
      * predefined threading methods by convention.
      * <p/>
      * <pre>
@@ -977,6 +1036,7 @@ public final class GriffonClassUtils {
      * <li>! isThreadingMethod(method)</li>
      * <li>! isArtifactMethod(method)</li>
      * <li>! isMvcMethod(method)</li>
+     * <li>! isServiceMethod(method)</li>
      * <li>! isEventPublisherMethod(method)</li>
      * <li>! isObservableMethod(method)</li>
      * <li>! isResourceHandlerMethod(method)</li>
@@ -999,6 +1059,7 @@ public final class GriffonClassUtils {
      * <li>! isThreadingMethod(method)</li>
      * <li>! isArtifactMethod(method)</li>
      * <li>! isMvcMethod(method)</li>
+     * <li>! isServiceMethod(method)</li>
      * <li>! isEventPublisherMethod(method)</li>
      * <li>! isObservableMethod(method)</li>
      * <li>! isResourceHandlerMethod(method)</li>
@@ -1021,6 +1082,7 @@ public final class GriffonClassUtils {
      * <li>! isThreadingMethod(method)</li>
      * <li>! isArtifactMethod(method)</li>
      * <li>! isMvcMethod(method)</li>
+     * <li>! isServiceMethod(method)</li>
      * <li>! isEventPublisherMethod(method)</li>
      * <li>! isObservableMethod(method)</li>
      * <li>! isResourceHandlerMethod(method)</li>
@@ -1038,6 +1100,7 @@ public final class GriffonClassUtils {
                 !isThreadingMethod(method) &&
                 !isArtifactMethod(method) &&
                 !isMvcMethod(method) &&
+                !isServiceMethod(method) &&
                 !isEventPublisherMethod(method) &&
                 !isObservableMethod(method) &&
                 !isResourceHandlerMethod(method) &&
