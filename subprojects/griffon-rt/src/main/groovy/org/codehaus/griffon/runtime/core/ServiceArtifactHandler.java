@@ -44,47 +44,29 @@ public class ServiceArtifactHandler extends ArtifactHandlerAdapter {
 
         public DefaultServiceManager(GriffonApplication app) {
             super(app);
-            app.addShutdownHandler(new ShutdownHandler() {
-                @Override
-                public boolean canShutdown(GriffonApplication application) {
-                    return true;
-                }
-
-                @Override
-                public void onShutdown(GriffonApplication application) {
-                    for (Map.Entry<String, GriffonService> entry : serviceInstances.entrySet()) {
-                        if (LOG.isInfoEnabled()) LOG.info("Destroying service identified by '" + entry.getKey() + "'");
-                        entry.getValue().serviceDestroy();
-                    }
-                }
-            });
         }
 
         public Map<String, GriffonService> getServices() {
             return Collections.unmodifiableMap(serviceInstances);
         }
 
-        public GriffonService findService(String name) {
-            if (!name.endsWith(getTrailing())) {
-                name += getTrailing();
-            }
-            GriffonService serviceInstance = serviceInstances.get(name);
-            if (serviceInstance == null) {
-                GriffonClass griffonClass = findClassFor(name);
-                if (griffonClass != null) {
-                    serviceInstance = instantiateService(name, griffonClass);
-                    serviceInstances.put(name, serviceInstance);
-                }
+        protected GriffonService doFindService(String name) {
+            return serviceInstances.get(name);
+        }
+
+        protected GriffonService doInstantiateService(String name) {
+            GriffonService serviceInstance = null;
+            GriffonClass griffonClass = findClassFor(name);
+            if (griffonClass != null) {
+                serviceInstance = instantiateServiceInternal(griffonClass);
+                serviceInstances.put(name, serviceInstance);
             }
             return serviceInstance;
         }
 
-        private GriffonService instantiateService(String serviceName, GriffonClass griffonClass) {
+        private GriffonService instantiateServiceInternal(GriffonClass griffonClass) {
             GriffonService serviceInstance = (GriffonService) griffonClass.newInstance();
-            InvokerHelper.setProperty(serviceInstance, "app", getApp());
             getApp().addApplicationEventListener(serviceInstance);
-            if (LOG.isInfoEnabled()) LOG.info("Initializing service identified by '" + serviceName + "'");
-            serviceInstance.serviceInit();
             return serviceInstance;
         }
     }

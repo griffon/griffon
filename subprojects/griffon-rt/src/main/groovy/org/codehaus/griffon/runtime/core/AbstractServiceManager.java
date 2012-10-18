@@ -17,7 +17,16 @@
 package org.codehaus.griffon.runtime.core;
 
 import griffon.core.GriffonApplication;
+import griffon.core.GriffonService;
 import griffon.core.ServiceManager;
+import griffon.core.ShutdownHandler;
+import org.codehaus.groovy.runtime.InvokerHelper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.util.Map;
+
+import static griffon.core.GriffonServiceClass.TRAILING;
 
 /**
  * Base implementation of the {@code ServiceManager} interface.
@@ -27,12 +36,53 @@ import griffon.core.ServiceManager;
  */
 public abstract class AbstractServiceManager implements ServiceManager {
     private final GriffonApplication app;
+    private static final Logger LOG = LoggerFactory.getLogger(AbstractServiceManager.class);
 
     public AbstractServiceManager(GriffonApplication app) {
         this.app = app;
+        app.addShutdownHandler(new ShutdownHandler() {
+            @Override
+            public boolean canShutdown(GriffonApplication application) {
+                return true;
+            }
+
+            @Override
+            public void onShutdown(GriffonApplication application) {
+                for (Map.Entry<String, GriffonService> entry : getServices().entrySet()) {
+                    if (LOG.isInfoEnabled()) {
+                        LOG.info("Destroying service identified by '" + entry.getKey() + "'");
+                    }
+                    entry.getValue().serviceDestroy();
+                }
+            }
+        });
     }
 
     public GriffonApplication getApp() {
         return app;
     }
+
+    @Override
+    public GriffonService findService(String name) {
+        if (!name.endsWith(TRAILING)) {
+            name += TRAILING;
+        }
+
+        GriffonService service = doFindService(name);
+        if (null == service) {
+            service = doInstantiateService(name);
+            if (null != service) {
+                InvokerHelper.setProperty(service, "app", getApp());
+                if (LOG.isInfoEnabled()) {
+                    LOG.info("Initializing service identified by '" + name + "'");
+                }
+                service.serviceInit();
+            }
+        }
+        return service;
+    }
+
+    protected abstract GriffonService doFindService(String name);
+
+    protected abstract GriffonService doInstantiateService(String name);
 }
