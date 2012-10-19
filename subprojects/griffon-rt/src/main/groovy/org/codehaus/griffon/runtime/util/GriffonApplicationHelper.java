@@ -297,7 +297,9 @@ public class GriffonApplicationHelper {
         app.getArtifactManager().registerArtifactHandler(new ModelArtifactHandler(app));
         app.getArtifactManager().registerArtifactHandler(new ViewArtifactHandler(app));
         app.getArtifactManager().registerArtifactHandler(new ControllerArtifactHandler(app));
-        app.getArtifactManager().registerArtifactHandler(new ServiceArtifactHandler(app));
+        if (!ServiceArtifactHandler.isBasicInjectionDisabled()) {
+            app.getArtifactManager().registerArtifactHandler(new ServiceArtifactHandler(app));
+        }
 
         // load additional handlers
         loadArtifactHandlers(app);

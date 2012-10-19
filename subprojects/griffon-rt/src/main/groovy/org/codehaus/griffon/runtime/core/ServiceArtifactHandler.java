@@ -17,6 +17,7 @@
 package org.codehaus.griffon.runtime.core;
 
 import griffon.core.*;
+import griffon.util.ApplicationHolder;
 import groovy.lang.MetaClass;
 import groovy.lang.MetaProperty;
 import org.codehaus.groovy.runtime.InvokerHelper;
@@ -121,8 +122,8 @@ public class ServiceArtifactHandler extends ArtifactHandlerAdapter {
         }
     }
 
-    private boolean isBasicInjectionDisabled() {
-        return getConfigValueAsBoolean(getApp().getConfig(), "griffon.basic_injection.disable", false);
+    public static boolean isBasicInjectionDisabled() {
+        return getConfigValueAsBoolean(ApplicationHolder.getApplication().getConfig(), "griffon.services.basic.disabled", false);
     }
 
     private boolean isEagerInstantiationEnabled() {
