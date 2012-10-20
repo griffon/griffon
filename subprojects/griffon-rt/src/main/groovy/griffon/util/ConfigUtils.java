@@ -17,9 +17,14 @@
 package griffon.util;
 
 import groovy.util.ConfigObject;
-import org.apache.log4j.helpers.LogLog;
+import org.codehaus.groovy.runtime.DefaultGroovyMethods;
 import org.codehaus.groovy.runtime.typehandling.DefaultTypeTransformation;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.io.InputStream;
 import java.util.Locale;
 import java.util.Map;
@@ -35,6 +40,10 @@ import static griffon.util.GriffonNameUtils.isBlank;
  * @author Andres Almiray
  */
 public final class ConfigUtils {
+    private static final Logger LOG = LoggerFactory.getLogger(ConfigUtils.class);
+    private static final String PROPERTIES_SUFFIX = "properties";
+    private static final String GROOVY_SUFFIX = "groovy";
+
     private ConfigUtils() {
         // prevent instantiation
     }
@@ -256,15 +265,60 @@ public final class ConfigUtils {
             if (configClass != null) {
                 config.merge(configReader.parse(configClass));
             }
-            InputStream is = ApplicationClassLoader.get().getResourceAsStream(configFileName + ".properties");
+            config.merge(loadConfigFile(configReader, configFileName));
+        } catch (FileNotFoundException fnfe) {
+            // ignore
+        } catch (Exception x) {
+            if (LOG.isWarnEnabled()) {
+                LOG.warn("Cannot read configuration [class: " + configClass + ", file: " + configFileName + "]", sanitize(x));
+            }
+        }
+        return config;
+    }
+
+    private static ConfigObject loadConfigFile(ConfigReader configReader, String configFileName) throws IOException {
+        ConfigObject config = new ConfigObject();
+
+        if (isBlank(configFileName)) return config;
+
+        String fileNameExtension = getFilenameExtension(configFileName);
+        if (isBlank(fileNameExtension)) {
+            configFileName += "." + PROPERTIES_SUFFIX;
+            fileNameExtension = PROPERTIES_SUFFIX;
+        }
+
+        if (PROPERTIES_SUFFIX.equals(fileNameExtension)) {
+            InputStream is = null;
+            if (configFileName.startsWith("/")) {
+                is = new FileInputStream(configFileName);
+            } else {
+                is = ApplicationClassLoader.get().getResourceAsStream(configFileName);
+            }
             if (is != null) {
                 Properties p = new Properties();
                 p.load(is);
-                config.merge(configReader.parse(p));
+                config = configReader.parse(p);
+                is.close();
             }
-        } catch (Exception x) {
-            LogLog.warn("Cannot read configuration [class: " + configClass + ", file: " + configFileName + "]", sanitize(x));
+        } else if (GROOVY_SUFFIX.equals(fileNameExtension)) {
+            InputStream is = null;
+            if (configFileName.startsWith("/")) {
+                is = new FileInputStream(configFileName);
+            } else {
+                is = ApplicationClassLoader.get().getResourceAsStream(configFileName);
+            }
+            if (is != null) {
+                String scriptText = DefaultGroovyMethods.getText(is);
+                if (!isBlank(scriptText)) {
+                    config = configReader.parse(scriptText);
+                }
+            }
+        } else {
+            if (LOG.isInfoEnabled()) {
+                LOG.info("Invalid configuration [file: " + configFileName + "]. Skipping");
+            }
         }
+
         return config;
     }
 
@@ -345,27 +399,29 @@ public final class ConfigUtils {
     public static ConfigObject loadConfigWithI18n(Locale locale, ConfigReader configReader, Class baseConfigClass, String baseConfigFileName) {
         ConfigObject config = loadConfig(configReader, baseConfigClass, baseConfigFileName);
         String[] combinations = {
-                locale.getLanguage(),
-                locale.getLanguage() + "_" + locale.getCountry(),
-                locale.getLanguage() + "_" + locale.getCountry() + "_" + locale.getVariant()
+            locale.getLanguage(),
+            locale.getLanguage() + "_" + locale.getCountry(),
+            locale.getLanguage() + "_" + locale.getCountry() + "_" + locale.getVariant()
         };
 
         String baseClassName = baseConfigClass != null ? baseConfigClass.getName() : null;
+        String fileExtension = !isBlank(baseConfigFileName) ? getFilenameExtension(baseConfigFileName) : null;
         for (String suffix : combinations) {
             if (isBlank(suffix) || suffix.endsWith("_")) continue;
             if (baseClassName != null) {
                 Class configClass = safeLoadClass(baseClassName + "_" + suffix);
                 if (configClass != null) config.merge(configReader.parse(configClass));
-                String configFileName = baseConfigFileName + "_" + suffix + ".properties";
-                InputStream is = ApplicationClassLoader.get().getResourceAsStream(configFileName);
-                if (is != null) {
-                    try {
-                        Properties p = new Properties();
-                        p.load(is);
-                        config.merge(configReader.parse(p));
-                    } catch (Exception x) {
-                        LogLog.warn("Cannot read configuration [class: " + configClass + ", file: " + configFileName + "]", sanitize(x));
-                    }
+            }
+
+            if (fileExtension == null) continue;
+            String configFileName = stripFilenameExtension(baseConfigFileName) + "_" + suffix + "." + fileExtension;
+            try {
+                config.merge(loadConfigFile(configReader, configFileName));
+            } catch (FileNotFoundException fne) {
+                // ignore
+            } catch (IOException e) {
+                if (LOG.isWarnEnabled()) {
+                    LOG.warn("Cannot read configuration [file: " + configFileName + "]", sanitize(e));
                 }
             }
         }
@@ -400,5 +456,52 @@ public final class ConfigUtils {
         } catch (ClassNotFoundException e) {
             return null;
         }
+    }
+
+    // the following taken from SpringFramework::org.springframework.util.StringUtils
+
+    /**
+     * Extract the filename extension from the given path,
+     * e.g. "mypath/myfile.txt" -> "txt".
+     *
+     * @param path the file path (may be <code>null</code>)
+     * @return the extracted filename extension, or <code>null</code> if none
+     */
+    public static String getFilenameExtension(String path) {
+        if (path == null) {
+            return null;
+        }
+        int extIndex = path.lastIndexOf(".");
+        if (extIndex == -1) {
+            return null;
+        }
+        int folderIndex = path.lastIndexOf("/");
+        if (folderIndex > extIndex) {
+            return null;
+        }
+        return path.substring(extIndex + 1);
+    }
+
+    /**
+     * Strip the filename extension from the given path,
+     * e.g. "mypath/myfile.txt" -> "mypath/myfile".
+     *
+     * @param path the file path (may be <code>null</code>)
+     * @return the path with stripped filename extension,
+     *         or <code>null</code> if none
+     */
+    public static String stripFilenameExtension(String path) {
+        if (path == null) {
+            return null;
+        }
+        int extIndex = path.lastIndexOf(".");
+        if (extIndex == -1) {
+            return path;
+        }
+        int folderIndex = path.lastIndexOf("/");
+        if (folderIndex > extIndex) {
+            return path;
+        }
+        return path.substring(0, extIndex);
     }
 }

@@ -42,10 +42,7 @@ import java.beans.PropertyEditorManager;
 import java.io.IOException;
 import java.lang.reflect.Constructor;
 import java.net.URL;
-import java.util.Enumeration;
-import java.util.LinkedHashMap;
-import java.util.Locale;
-import java.util.Map;
+import java.util.*;
 
 import static griffon.util.ConfigUtils.*;
 import static griffon.util.GriffonExceptionHandler.handleThrowable;
@@ -64,10 +61,10 @@ public class GriffonApplicationHelper {
     private static final Logger LOG = LoggerFactory.getLogger(GriffonApplicationHelper.class);
 
     private static final Map<String, String> DEFAULT_PLATFORM_HANDLERS = CollectionUtils.<String, String>map()
-            .e("linux", "org.codehaus.griffon.runtime.util.DefaultLinuxPlatformHandler")
-            .e("macosx", "org.codehaus.griffon.runtime.util.DefaultMacOSXPlatformHandler")
-            .e("solaris", "org.codehaus.griffon.runtime.util.DefaultSolarisPlatformHandler")
-            .e("windows", "org.codehaus.griffon.runtime.util.DefaultWindowsPlatformHandler");
+        .e("linux", "org.codehaus.griffon.runtime.util.DefaultLinuxPlatformHandler")
+        .e("macosx", "org.codehaus.griffon.runtime.util.DefaultMacOSXPlatformHandler")
+        .e("solaris", "org.codehaus.griffon.runtime.util.DefaultSolarisPlatformHandler")
+        .e("windows", "org.codehaus.griffon.runtime.util.DefaultWindowsPlatformHandler");
 
     static {
         ExpandoMetaClassCreationHandle.enable();
@@ -127,12 +124,12 @@ public class GriffonApplicationHelper {
     }
 
     private static ConfigObject doLoadConfig(ConfigReader configReader, Class configClass, String configFileName) {
-        if(configClass != null) configFileName = configClass.getSimpleName();
+        if (configClass != null) configFileName = configClass.getSimpleName();
         return loadConfig(configReader, configClass, configFileName);
     }
 
     private static ConfigObject doLoadConfigWithI18n(Locale locale, ConfigReader configReader, Class configClass, String configFileName) {
-        if(configClass != null) configFileName = configClass.getSimpleName();
+        if (configClass != null) configFileName = configClass.getSimpleName();
         return loadConfigWithI18n(locale, configReader, configClass, configFileName);
     }
 
@@ -144,6 +141,14 @@ public class GriffonApplicationHelper {
         appConfig = doLoadConfigWithI18n(app.getLocale(), configReader, app.getAppConfigClass(), GriffonApplication.Configuration.APPLICATION.getName());
         app.setConfig(appConfig);
         app.getConfig().merge(doLoadConfigWithI18n(app.getLocale(), configReader, app.getConfigClass(), GriffonApplication.Configuration.CONFIG.getName()));
+
+        Object log4jConfig = app.getConfig().get("log4j");
+        if (log4jConfig instanceof Closure) {
+            LogManager.resetConfiguration();
+            new Log4jConfig().configure((Closure) log4jConfig);
+        }
+
+        loadExternalConfig(app, configReader);
         GriffonExceptionHandler.configure(app.getConfig().flatten(new LinkedHashMap()));
 
         app.setBuilderConfig(doLoadConfigWithI18n(app.getLocale(), configReader, app.getBuilderClass(), GriffonApplication.Configuration.BUILDER.getName()));
@@ -154,11 +159,58 @@ public class GriffonApplicationHelper {
             app.addApplicationEventListener(app.getEventsConfig());
         }
 
-        Object log4jConfig = app.getConfig().get("log4j");
+        log4jConfig = app.getConfig().get("log4j");
         if (log4jConfig instanceof Closure) {
             app.event(GriffonApplication.Event.LOG4J_CONFIG_START.getName(), asList(log4jConfig));
             LogManager.resetConfiguration();
             new Log4jConfig().configure((Closure) log4jConfig);
+        }
+    }
+
+    private static final String LOCATION_CLASSPATH = "classpath:";
+    private static final String LOCATION_FILE = "file:";
+    private static final String PROPERTIES_SUFFIX = ".properties";
+    private static final String GROOVY_SUFFIX = ".groovy";
+
+    private static void loadExternalConfig(GriffonApplication app, ConfigReader configReader) {
+        List<String> locations = (List<String>) getConfigValue(app.getConfig(), "griffon.config.locations", Collections.emptyList());
+        for (String location : locations) {
+            boolean groovyScriptAllowed = false;
+
+            String parsedLocation = location;
+            if (location.startsWith(LOCATION_CLASSPATH)) {
+                parsedLocation = location.substring(LOCATION_CLASSPATH.length()).trim();
+            } else if (location.startsWith(LOCATION_FILE)) {
+                parsedLocation = location.substring(LOCATION_FILE.length()).trim();
+            } else {
+                // assume it's a class definition
+                groovyScriptAllowed = true;
+            }
+
+            if (groovyScriptAllowed) {
+                Class locationScriptClass = safeLoadClass(parsedLocation);
+                if (locationScriptClass != null) {
+                    if (LOG.isDebugEnabled()) {
+                        LOG.debug("Loading external configuration location '" + location + "'.");
+                    }
+                    app.getConfig().merge(loadConfigWithI18n(app.getLocale(), configReader, locationScriptClass, null));
+                } else {
+                    // invalid location. Log & skip
+                    if (LOG.isWarnEnabled()) {
+                        LOG.warn("Skipping invalid external configuration location '" + location + "'.");
+                    }
+                }
+            } else if (parsedLocation.endsWith(PROPERTIES_SUFFIX) || parsedLocation.endsWith(GROOVY_SUFFIX)) {
+                if (LOG.isDebugEnabled()) {
+                    LOG.debug("Loading external configuration location '" + location + "'.");
+                }
+                app.getConfig().merge(loadConfigWithI18n(app.getLocale(), configReader, null, parsedLocation));
+            } else {
+                // invalid location. Log & skip
+                if (LOG.isWarnEnabled()) {
+                    LOG.warn("Skipping invalid external configuration location '" + location + "'.");
+                }
+            }
         }
     }
 
