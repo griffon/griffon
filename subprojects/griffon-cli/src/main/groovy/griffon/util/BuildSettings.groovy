@@ -898,7 +898,7 @@ class BuildSettings extends AbstractBuildSettings {
     }
 
     ConfigReader createConfigReader() {
-        ConfigReader reader = new ConfigReader()
+        ConfigReader reader = ConfigUtils.createConfigReader()
         reader.setBinding(
                 basedir: baseDir.path,
                 baseFile: baseDir,
@@ -909,9 +909,6 @@ class BuildSettings extends AbstractBuildSettings {
                 griffonSettings: this,
                 appName: Metadata.current.getApplicationName(),
                 appVersion: Metadata.current.getApplicationVersion())
-        reader.registerConditionalBlock('environments', Environment.current.name)
-        reader.registerConditionalBlock('projects', Metadata.current.getApplicationName())
-        reader.registerConditionalBlock("platforms", GriffonApplicationUtils.getFullPlatform())
         return reader
     }
 

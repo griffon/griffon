@@ -196,6 +196,8 @@ class ConfigReader {
             }
             result
         }
+
+        ConfigObject overrides = new ConfigObject()
         mc.invokeMethod = { String name, args ->
             def result
             if (args.length == 1 && args[0] instanceof Closure) {
@@ -207,7 +209,8 @@ class ConfigReader {
                     } finally {
                         currentConditionalBlock.pop()
                         for (entry in conditionalBlocks.pop().entrySet()) {
-                            stack.last.config.merge(entry.value)
+                            def c = stack.last.config
+                            (c != config? c : overrides).merge(entry.value)
                         }
                     }
                 } else if (currentConditionalBlock.size() > 0) {
@@ -266,6 +269,8 @@ class ConfigReader {
         script.binding = binding
 
         script.run()
+
+        config.merge(overrides)
 
         return config
     }
