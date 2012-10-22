@@ -26,10 +26,6 @@ target(name: 'wrapper', description: 'Creates or updates the Griffon wrapper fil
         griffonUnpack(dest: basedir, src: "griffon-shared-files.jar")
         ant.unzip(src: "${basedir}/griffon-wrapper-files.zip", dest: basedir)
         ant.delete(file: "${basedir}/griffon-wrapper-files.zip", quiet: true)
-        ant.replace(dir: "${basedir}/griffon-app/conf", includes: "**/*.*") {
-            replacefilter(token: "@griffonAppName@", value: capitalize(griffonAppName))
-            replacefilter(token: "@griffonAppVersion@", value: griffonAppVersion ?: "0.1")
-        }
     } else {
         event 'StatusError', ['Cannot create wrapper files in a non Griffon project']
         exit 1
