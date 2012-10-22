@@ -31,7 +31,7 @@ target(name: 'wrapper', description: 'Creates or updates the Griffon wrapper fil
             replacefilter(token: "@griffonAppVersion@", value: griffonAppVersion ?: "0.1")
         }
     } else {
-        event 'StatusError', ['Cannot create wroaoer files in a non Griffon project']
+        event 'StatusError', ['Cannot create wrapper files in a non Griffon project']
         exit 1
     }
 }
