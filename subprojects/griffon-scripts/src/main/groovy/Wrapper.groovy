@@ -14,8 +14,6 @@
 * limitations under the License.
 */
 
-import static griffon.util.GriffonNameUtils.capitalize
-
 /**
  * @author Andres Almiray
  * @since 1.2.0
