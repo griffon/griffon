@@ -20,13 +20,17 @@ import griffon.util.BuildSettings;
 import griffon.util.CollectionUtils;
 import griffon.util.GriffonUtil;
 import griffon.util.MD5;
-import groovy.json.JsonBuilder;
 import groovy.lang.Binding;
+import groovyx.net.http.ContentType;
+import groovyx.net.http.HttpURLClient;
 import org.codehaus.groovy.runtime.DefaultGroovyMethods;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.URL;
+import java.util.Map;
 
+import static griffon.util.CollectionUtils.map;
 import static griffon.util.GriffonNameUtils.isBlank;
 
 /**
@@ -60,8 +64,7 @@ public class GriffonUsageStats {
             System.setProperty(KEY_GRIFFON_COMMAND_LAUNCHER, "griffon");
         }
         String scriptName = (String) binding.getVariable(GriffonScriptRunner.VAR_SCRIPT_NAME);
-        final JsonBuilder json = new JsonBuilder();
-        json.call(CollectionUtils.map()
+        final Map stats = map()
             .e("gv", GriffonEnvironment.getGriffonVersion())
             .e("jv", System.getProperty("java.version"))
             .e("ve", System.getProperty("java.vendor"))
@@ -71,15 +74,33 @@ public class GriffonUsageStats {
             .e("oa", System.getProperty("os.arch"))
             .e("cn", System.getProperty(KEY_GRIFFON_COMMAND_LAUNCHER))
             .e("sn", GriffonUtil.getHyphenatedName(scriptName))
-            .e("un", MD5.encode(System.getProperty("user.name"))));
+            .e("un", MD5.encode(System.getProperty("user.name")));
+
         Thread t = new Thread(new Runnable() {
             @Override
             public void run() {
-                System.out.println(json.toString());
+                try {
+                    send(stats);
+                } catch (Exception e) {
+                    // ignore. Any errors thrown can be safely discarded
+                    // as we don't provide any recovery if sending stats
+                    // fails
+                }
             }
         });
         t.setDaemon(true);
         t.start();
+    }
+
+    private static void send(Map stats) throws Exception {
+        HttpURLClient http = new HttpURLClient();
+        http.setUrl(new URL("http://artifacts.griffon-framework.org/usage"));
+        http.setContentType(ContentType.JSON);
+        http.setRequestContentType(ContentType.URLENC);
+        http.setHeaders(map().e("X-Griffon-Usage-Stats", "V1"));
+        http.request(CollectionUtils.<String, Object>map()
+            .e("method", "POST")
+            .e("body", stats));
     }
 
     public static boolean isEnabled(BuildSettings settings) {
@@ -91,7 +112,6 @@ public class GriffonUsageStats {
             try {
                 text = DefaultGroovyMethods.getText(usageStatsFile);
             } catch (IOException e) {
-                e.printStackTrace();
                 // ignore
             }
             return Boolean.parseBoolean(text.trim());
@@ -104,7 +124,6 @@ public class GriffonUsageStats {
         try {
             DefaultGroovyMethods.setText(usageStatsFile, String.valueOf(enabled));
         } catch (IOException e) {
-            e.printStackTrace();
             // ignore
         }
     }
