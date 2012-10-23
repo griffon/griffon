@@ -101,11 +101,11 @@ public class GriffonWrapperMain {
     }
 
     private static File griffonUserHome() {
-        String gradleUserHome = System.getProperty(GRIFFON_USER_HOME_PROPERTY_KEY);
-        if (gradleUserHome != null) {
-            return new File(gradleUserHome);
-        } else if ((gradleUserHome = System.getenv(GRIFFON_USER_HOME_ENV_KEY)) != null) {
-            return new File(gradleUserHome);
+        String griffonUserHome = System.getProperty(GRIFFON_USER_HOME_PROPERTY_KEY);
+        if (griffonUserHome != null) {
+            return new File(griffonUserHome);
+        } else if ((griffonUserHome = System.getenv(GRIFFON_USER_HOME_ENV_KEY)) != null) {
+            return new File(griffonUserHome);
         } else {
             return new File(DEFAULT_GRIFFON_USER_HOME);
         }

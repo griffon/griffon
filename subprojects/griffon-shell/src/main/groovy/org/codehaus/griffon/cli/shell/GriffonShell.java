@@ -26,6 +26,7 @@ import org.apache.felix.service.command.CommandSession;
 import org.apache.karaf.shell.console.jline.Console;
 import org.codehaus.griffon.cli.GriffonScriptRunner;
 import org.codehaus.griffon.cli.GriffonSetup;
+import org.codehaus.griffon.cli.GriffonUsageStats;
 import org.fusesource.jansi.Ansi;
 
 import java.io.File;
@@ -88,6 +89,7 @@ public class GriffonShell extends KarafMain implements Action {
             exitWithError("Griffon' installation directory not found: " + buildSettings.getGriffonHome());
         }
 
+        System.setProperty(GriffonUsageStats.KEY_GRIFFON_COMMAND_LAUNCHER, "griffonsh");
         System.setProperty("griffon.disable.exit", "true");
         GriffonScriptRunner runner = new GriffonScriptRunner(buildSettings);
         setGriffonScriptRunner(runner);

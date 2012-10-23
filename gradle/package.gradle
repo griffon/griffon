@@ -156,7 +156,7 @@ task tarSource(type: Tar) {
 ext.griffonHomeDir = System.getProperty('griffon.home') ?: System.env['GRIFFON_HOME']
 
 task checkGriffonHome << {
-    griffonHomeDir = System.getProperty('griffon.home') ?: System.env['GRIFFON_HOME']
+    ext.griffonHomeDir = System.getProperty('griffon.home') ?: System.env['GRIFFON_HOME']
     assert griffonHomeDir: 'You must define a value for $GRIFFON_HOME first!'
     println "===> \$GRIFFON_HOME is set to $griffonHomeDir"
 }

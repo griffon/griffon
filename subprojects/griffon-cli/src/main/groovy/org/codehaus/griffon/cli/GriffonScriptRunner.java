@@ -632,6 +632,7 @@ public class GriffonScriptRunner {
 
     public int executeWithGantInstance(Gant gant, GantBinding binding) {
         try {
+            GriffonUsageStats.ping(settings, binding);
             gantCustomizer.prepareTargets();
             return gant.executeTargets();
         } catch (RuntimeException e) {
@@ -964,12 +965,12 @@ public class GriffonScriptRunner {
         };
 
         private static String[] RESOLVE_DEPENDENCIES_EXCLUSIONS = {
-                "SetVersion", "Stats", "Upgrade", "Wrapper",
+                "SetVersion", "Stats", "Upgrade", "Wrapper", "UsageStats",
                 "CreateCommandAlias", "Doc", "_GriffonResolveDependencies"
         };
 
         private static String[] CHECK_VERSION_EXCLUSIONS = {
-                "Upgrade"
+                "Upgrade", "UsageStats"
         };
 
         private static String[] FRAMEWORK_PLUGIN_INCLUSIONS = {

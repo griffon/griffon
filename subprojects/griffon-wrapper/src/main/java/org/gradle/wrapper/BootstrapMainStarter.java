@@ -55,6 +55,7 @@ public class BootstrapMainStarter {
         }
 
         String griffonHomeDirPath = griffonHome.getCanonicalPath();
+        System.setProperty("griffon.command.launcher", "griffonw");
         System.setProperty("griffon.home", griffonHome.getCanonicalPath());
         System.setProperty("program.name", "Griffon");
         System.setProperty("base.dir", ".");

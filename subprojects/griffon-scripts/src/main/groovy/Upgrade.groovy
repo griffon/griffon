@@ -16,6 +16,8 @@
 
 import static griffon.util.GriffonNameUtils.capitalize
 
+import static org.codehaus.griffon.cli.GriffonUsageStats.banner
+
 /**
  * Gant script that handles upgrading of a Griffon applications
  *
@@ -222,6 +224,8 @@ target(name: 'upgrade', description: "Upgrades a Griffon application from a prev
             | Also, review that the values of 'application.properties' are
             | appropriate for the current project.
             |""".stripMargin())
+
+        println banner()
     }
 
     event("StatusFinal", ["Project upgraded"])
