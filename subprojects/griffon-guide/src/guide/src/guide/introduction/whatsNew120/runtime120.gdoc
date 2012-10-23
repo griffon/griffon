@@ -1,0 +1,21 @@
+h4. Service LifeCycle
+
+Services now have their own life-cycle methods, similarly to their MVC counterparts. See the section [Service LifeCycle|guide:serviceLifecycle] for more information.
+
+h4. Service Configuration DSL
+
+Services properties may now be configured externally to the service class, using a simple DSL. Refer to the [Service Configuration DSL|guide:serviceConfiguration] section to learn more.
+
+h4. External Configuration
+
+Applications now have the ability to specify alternate locations for configuration files and scripts. Simply configure @griffon.config.locations@ in @Config.groovy@, for example
+
+{code:java}
+griffon.config.locations = [
+    "classpath:${appName}-config.properties",
+    "classpath:${appName}-config.groovy",
+    "file:${userHome}/.griffon/${appName}-config.properties",
+    "file:${userHome}/.griffon/${appName}-config.groovy"]
+{code}
+
+Section [External Configuration Support|guide:externalConfiguration] covers this feature with more detail.

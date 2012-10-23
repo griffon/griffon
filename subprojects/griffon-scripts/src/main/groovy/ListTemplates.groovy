@@ -64,7 +64,9 @@ ${'-' * 80}
 ${'Location'.padRight(25, ' ')}${'Name'.padRight(30, ' ')}FileType
 ${'-' * 80}"""
         if (templates.application) {
-            printTemplateInfo('Application', templates.application)
+            printTemplateInfo('application', templates.application)
+        } else {
+            println "${'application'.padRight(25, ' ')}<none>"
         }
         println '-- Plugins '.padRight(80, '-')
         templates.plugins.sort().each { String plugin, Map templateInfo ->
