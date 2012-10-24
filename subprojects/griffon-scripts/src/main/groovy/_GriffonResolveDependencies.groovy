@@ -14,13 +14,11 @@
 * limitations under the License.
 */
 
+import griffon.util.PlatformUtils
 import org.codehaus.griffon.artifacts.ArtifactInstallEngine
 import org.codehaus.griffon.artifacts.model.Plugin
 
-import static griffon.util.GriffonApplicationUtils.is64Bit
-import griffon.util.PlatformUtils
-
-import static griffon.util.GriffonApplicationUtils.platform
+import static griffon.util.PlatformUtils.getPlatform
 
 /**
  * @author Andres Almiray
@@ -36,7 +34,7 @@ runDependencyResolution = true
 runFrameworkDependencyResolution = true
 
 target(name: 'resolveDependencies', description: 'Resolves project and plugin dependencies',
-        prehook: null, posthook: null) {
+    prehook: null, posthook: null) {
     if (!griffonSettings.isGriffonProject()) return
 
     if (runDependencyResolution) {
@@ -54,12 +52,9 @@ target(name: 'resolveDependencies', description: 'Resolves project and plugin de
         Map<String, List<File>> jars = [:]
         String targetPlatform = argsMap.platform && PlatformUtils.PLATFORMS[argsMap.platform] ? argsMap.platform : platform
         processPlatformLibraries(jars, targetPlatform)
-        if (targetPlatform.endsWith('64')) {
-            processPlatformLibraries(jars, targetPlatform[0..-3], false)
-        }
 // XXX -- NATIVE
 
-        if(projectCliClassesDir.exists()) {
+        if (projectCliClassesDir.exists()) {
             addUrlIfNotPresent classLoader, projectCliClassesDir
             addUrlIfNotPresent rootLoader, projectCliClassesDir
         }
@@ -81,7 +76,7 @@ target(name: 'resolveDependencies', description: 'Resolves project and plugin de
 }
 
 target(name: 'resolveFrameworkDependencies', description: 'Resolves framework plugin dependencies',
-        prehook: null, posthook: null) {
+    prehook: null, posthook: null) {
     // if (griffonSettings.isGriffonProject()) return
 
     if (runFrameworkDependencyResolution) {

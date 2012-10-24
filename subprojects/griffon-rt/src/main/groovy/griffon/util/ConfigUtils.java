@@ -210,7 +210,7 @@ public final class ConfigUtils {
         ConfigReader configReader = new ConfigReader();
         configReader.registerConditionalBlock("environments", Environment.getCurrent().getName());
         configReader.registerConditionalBlock("projects", Metadata.getCurrent().getApplicationName());
-        configReader.registerConditionalBlock("platforms", GriffonApplicationUtils.getFullPlatform());
+        configReader.registerConditionalBlock("platforms", GriffonApplicationUtils.getPlatform());
         return configReader;
     }
 

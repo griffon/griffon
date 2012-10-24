@@ -14,11 +14,10 @@
  * limitations under the License.
  */
 
+import griffon.util.PlatformUtils
 import org.codehaus.griffon.artifacts.model.Plugin
 
-import static griffon.util.GriffonApplicationUtils.is64Bit
-import static griffon.util.GriffonApplicationUtils.platform
-import griffon.util.PlatformUtils
+import static griffon.util.PlatformUtils.getPlatform
 
 /**
  * Gant script containing the Griffon classpath setup.
@@ -79,17 +78,9 @@ commonClasspath = {
 
     Map<String, List<File>> jars = [:]
     String targetPlatform = argsMap.platform && PlatformUtils.PLATFORMS[argsMap.platform] ? argsMap.platform : platform
-    processPlatformDir targetPlatform
-    processNativeDir targetPlatform
-    if (targetPlatform.endsWith('64')) {
-        processPlatformDir targetPlatform[0..-3]
-        processNativeDir targetPlatform[0..-3]
-    }
-
+    processPlatformDir(targetPlatform)
+    processNativeDir(targetPlatform)
     processPlatformLibraries(jars, targetPlatform)
-    if (targetPlatform.endsWith('64')) {
-        processPlatformLibraries(jars, targetPlatform[0..-3], false)
-    }
 
     if (jars) {
         List<File> files = []

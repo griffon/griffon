@@ -61,13 +61,15 @@ public final class GriffonApplicationUtils {
     private static final boolean isJdk18;
 
     public static final String platform;
+    public static final String basePlatform;
 
     static {
         osArch = System.getProperty("os.arch");
         osName = System.getProperty("os.name");
+        is64Bit = osArch.contains("64");
 
         if (osName.contains("Windows")) {
-            platform = "windows";
+            basePlatform = "windows";
             isWindows = true;
             isLinux = false;
             isUnix = false;
@@ -147,7 +149,7 @@ public final class GriffonApplicationUtils {
                 isWindows7 = false;
             }
         } else if (osName.contains("Linux")) {
-            platform = "linux";
+            basePlatform = "linux";
             isWindows = false;
             isLinux = true;
             isUnix = true;
@@ -162,7 +164,7 @@ public final class GriffonApplicationUtils {
             isWindowsVista = false;
             isWindows7 = false;
         } else if (osName.contains("Solaris") || osName.contains("SunOS")) {
-            platform = "solaris";
+            basePlatform = "solaris";
             isWindows = false;
             isLinux = false;
             isUnix = true;
@@ -177,7 +179,7 @@ public final class GriffonApplicationUtils {
             isWindowsVista = false;
             isWindows7 = false;
         } else if (osName.contains("Mac OS")) {
-            platform = "macosx";
+            basePlatform = "macosx";
             isWindows = false;
             isLinux = false;
             isUnix = true;
@@ -192,7 +194,7 @@ public final class GriffonApplicationUtils {
             isWindowsVista = false;
             isWindows7 = false;
         } else {
-            platform = "unknown";
+            basePlatform = "unknown";
             isWindows = false;
             isLinux = false;
             isUnix = false;
@@ -239,7 +241,7 @@ public final class GriffonApplicationUtils {
             isJdk15 = false;
         }
 
-        is64Bit = osArch.contains("64");
+        platform = basePlatform + (is64Bit && !isSolaris ? "64" : "");
     }
 
     public static boolean isWindows() {
@@ -338,8 +340,8 @@ public final class GriffonApplicationUtils {
         return platform;
     }
 
-    public static String getFullPlatform() {
-        return platform + (is64Bit() ? "64" : "");
+    public static String getBasePlatform() {
+        return basePlatform;
     }
 
     public static boolean getIsWindows() {

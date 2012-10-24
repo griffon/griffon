@@ -152,9 +152,6 @@ target(name: 'doRunApp', description: "Runs the application from the command lin
         if (platformDir.exists()) {
             ant.delete(dir: platformDir)
         }
-        if (platformDir2.exists()) {
-            ant.delete(dir: platformDir2)
-        }
 // XXX -- NATIVE
     }
 }
