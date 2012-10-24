@@ -20,6 +20,8 @@ import org.codehaus.griffon.artifacts.model.Plugin
 import static griffon.util.GriffonApplicationUtils.is64Bit
 import griffon.util.PlatformUtils
 
+import static griffon.util.GriffonApplicationUtils.platform
+
 /**
  * @author Andres Almiray
  */
@@ -50,17 +52,16 @@ target(name: 'resolveDependencies', description: 'Resolves project and plugin de
 
 // XXX -- NATIVE
         Map<String, List<File>> jars = [:]
-        def userPlatform = argsMap.platform
-        if (userPlatform && PlatformUtils.PLATFORMS[userPlatform]) {
-            processPlatformLibraries(jars, userPlatform)
-            if (userPlatform.endsWith('64')) {
-                processPlatformLibraries(jars, userPlatform[0..-3], false)
-            }
-        } else {
-            processPlatformLibraries(jars, platform)
-            if (is64Bit) {
-                processPlatformLibraries(jars, platform[0..-3], false)
-            }
+        String targetPlatform = argsMap.platform && PlatformUtils.PLATFORMS[argsMap.platform] ? argsMap.platform : platform
+        processPlatformLibraries(jars, targetPlatform)
+        if (targetPlatform.endsWith('64')) {
+            processPlatformLibraries(jars, targetPlatform[0..-3], false)
+        }
+// XXX -- NATIVE
+
+        if(projectCliClassesDir.exists()) {
+            addUrlIfNotPresent classLoader, projectCliClassesDir
+            addUrlIfNotPresent rootLoader, projectCliClassesDir
         }
 
         if (jars) {
@@ -68,11 +69,6 @@ target(name: 'resolveDependencies', description: 'Resolves project and plugin de
             jars.values().each { files.addAll it }
             griffonSettings.updateDependenciesFor 'runtime', files
             griffonSettings.updateDependenciesFor 'test', files
-        }
-// XXX -- NATIVE
-        if(projectCliClassesDir.exists()) {
-            addUrlIfNotPresent classLoader, projectCliClassesDir
-            addUrlIfNotPresent rootLoader, projectCliClassesDir
         }
 
         long end = System.currentTimeMillis()

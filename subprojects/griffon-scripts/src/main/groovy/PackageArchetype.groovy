@@ -25,10 +25,12 @@ if (getBinding().variables.containsKey('_griffon_package_archetype_called')) ret
 _griffon_package_archetype_called = true
 
 includeTargets << griffonScript('_GriffonPackageArtifact')
+includeTargets << griffonScript('_GriffonClean')
 
 target(name: 'packageArchetype',
        description: 'Packages a Griffon archetype',
        prehook: null, posthook: null) {
+    depends(cleanAll)
     archetypeDescriptor = ArtifactSettings.getArchetypeDescriptor(basedir)
     if (!archetypeDescriptor?.exists()) {
         event('StatusFinal', ['Current directory does not appear to be a Griffon archetype project.'])

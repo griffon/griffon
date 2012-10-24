@@ -27,6 +27,7 @@ import java.util.zip.ZipFile
 import static griffon.util.GriffonApplicationUtils.is64Bit
 import static griffon.util.GriffonApplicationUtils.osArch
 import static griffon.util.GriffonNameUtils.capitalize
+import static griffon.util.GriffonApplicationUtils.platform
 
 /**
  * Gant script that packages a Griffon application (note: does not create WAR)
@@ -310,10 +311,10 @@ _copyLibs = {
         copyPlatformJars("${pluginDir}/lib", new File(jardir).absolutePath)
         copyNativeLibs("${pluginDir}/lib", new File(jardir).absolutePath)
     }
-    doForAllPlatforms { osname ->
-        File osdir = new File("${basedir}/lib/${osname}")
-        if (!osdir.exists()) osdir = new File("${jardir}/${osname}")
-        if (!osdir.exists()) return
+    String targetPlatform = argsMap.platform && PlatformUtils.PLATFORMS[argsMap.platform] ? argsMap.platform : platform
+    File osdir = new File("${basedir}/lib/${targetPlatform}")
+    if (!osdir.exists()) osdir = new File("${jardir}/${targetPlatform}")
+    if (osdir.exists()) {
         osdir.eachFileMatch(~/.*\.jar/) { jarfile ->
             File duplicate = new File("${jardir}/${jarfile.name}")
             if (duplicate.exists()) duplicate.delete()
@@ -684,7 +685,7 @@ doPackageTextReplacement = {dir, fileFilters ->
 }
 
 copyPlatformJars = { srcdir, destdir ->
-    def userPlatform = argsMap.platform
+    String userPlatform = argsMap.platform
     if (userPlatform && PlatformUtils.PLATFORMS[userPlatform]) {
         _copyPlatformJars(srcdir.toString(), destdir.toString(), userPlatform)
         if (userPlatform.endsWith('64')) {
@@ -722,7 +723,7 @@ _copyPlatformJars = { srcdir, destdir, os ->
 }
 
 copyNativeLibs = { srcdir, destdir ->
-    def userPlatform = argsMap.platform
+    String userPlatform = argsMap.platform
     if (userPlatform && PlatformUtils.PLATFORMS[userPlatform]) {
         _copyNativeLibs(srcdir.toString(), destdir.toString(), userPlatform)
         if (userPlatform.endsWith('64')) {

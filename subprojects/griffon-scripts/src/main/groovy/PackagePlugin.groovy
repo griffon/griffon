@@ -28,6 +28,7 @@ includeTargets << griffonScript('_GriffonPackageArtifact')
 includeTargets << griffonScript('_GriffonPackage')
 includeTargets << griffonScript('_GriffonPackageAddon')
 includeTargets << griffonScript('_GriffonDocs')
+includeTargets << griffonScript('_GriffonClean')
 
 PLUGIN_RESOURCES = [
         INCLUSIONS: [
@@ -52,6 +53,7 @@ PLUGIN_RESOURCES = [
 
 target(name: 'packagePlugin', description: 'Packages a Griffon plugin',
         prehook: null, posthook: null) {
+    depends(cleanAll)
     pluginDescriptor = ArtifactSettings.getPluginDescriptor(basedir)
     if (!pluginDescriptor?.exists()) {
         event('StatusFinal', ['Current directory does not appear to be a Griffon plugin project.'])

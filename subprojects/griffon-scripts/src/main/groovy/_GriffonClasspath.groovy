@@ -78,28 +78,17 @@ commonClasspath = {
     }
 
     Map<String, List<File>> jars = [:]
-    def userPlatform = argsMap.platform
-    if (userPlatform && PlatformUtils.PLATFORMS[userPlatform]) {
-        processPlatformDir userPlatform
-        processNativeDir userPlatform
-        processPlatformLibraries(jars, userPlatform)
-        if (userPlatform.endsWith('64')) {
-            processPlatformDir userPlatform[0..-3]
-            processNativeDir userPlatform[0..-3]
-            processPlatformLibraries(jars, userPlatform[0..-3], false)
-        }
-    } else {
-        processPlatformDir platform
-        processNativeDir platform
-        if (is64Bit) {
-            processPlatformDir platform[0..-3]
-            processNativeDir platform[0..-3]
-        }
+    String targetPlatform = argsMap.platform && PlatformUtils.PLATFORMS[argsMap.platform] ? argsMap.platform : platform
+    processPlatformDir targetPlatform
+    processNativeDir targetPlatform
+    if (targetPlatform.endsWith('64')) {
+        processPlatformDir targetPlatform[0..-3]
+        processNativeDir targetPlatform[0..-3]
+    }
 
-        processPlatformLibraries(jars, platform)
-        if (is64Bit) {
-            processPlatformLibraries(jars, platform[0..-3], false)
-        }
+    processPlatformLibraries(jars, targetPlatform)
+    if (targetPlatform.endsWith('64')) {
+        processPlatformLibraries(jars, targetPlatform[0..-3], false)
     }
 
     if (jars) {
