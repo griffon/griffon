@@ -32,6 +32,16 @@ h5. wrapper
 
 This command generates or updates the files required by the [Griffon wrapper|guide:theGriffonWrapper] in order to run. These files were previously created during the initialization of a project or an upgrade sequence.
 
+h4. Toolkit Aware Plugin Install
+
+Griffon supports several UI toolkits for which many plugins may exist. Some of these plugins provide the same behavior but targeting a different UI toolkit, for example [miglayout|http://artifacts.griffon-framework.org/plugin/miglayout] (@swing@) vs. [miglayout-javafx|http://artifacts.griffon-framework.org/plugin/miglayout-javafx] (@javafx@). Now, every Griffon application has a default UI toolkit specified in its metadata; this fact makes it possible to simplify plugin installation by only specifying the common plugin name, that is, the following command
+
+{code}
+griffon install-plugin miglayout
+{code}
+
+will install @miglayout-javafx@ if the application has @javafx@ defined as its UI toolkit. On the other hand, it will install @miglayout@ if the UI toolkit is @swing@.
+
 h4. Griffon Usage Tracking
 
 An opt-in usage tracking system has been put into place in order to monitor the development of the Griffon community and help drive the roadmap for future features. There's no personal information being recorded; usage tracking can be disabled/enabled at any time.

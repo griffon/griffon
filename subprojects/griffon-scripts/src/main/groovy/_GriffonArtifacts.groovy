@@ -262,16 +262,41 @@ installArtifactForName = { Metadata md, String type, String name, String version
     failOnError = false
     boolean installed = false
 
+    String fixedName = name
+    if (type == Plugin.TYPE && isApplicationProject && !framework) {
+        String toolkit = Metadata.current.getApplicationToolkit()
+        if (!name.endsWith('-' + toolkit)) {
+            fixedName = name + '-' +toolkit
+        }
+    }
     if (artifactRepository) {
-        doInstallArtifact(artifactRepository, type, name, version, md)
+        if (fixedName != name) {
+            installed = doInstallArtifact(artifactRepository, type, fixedName, version, md)
+        }
+        if (!installed) {
+            installed = doInstallArtifact(artifactRepository, type, name, version, md)
+        }
     } else {
-        ArtifactRepositoryRegistry.instance.withRepositories { aname, artifactRepository ->
-            if (installed) return
-            if (doInstallArtifact(artifactRepository, type, name, version, md)) {
-                installed = true
-                return
+        if (fixedName != name) {
+            ArtifactRepositoryRegistry.instance.withRepositories { aname, artifactRepository ->
+                if (installed) return
+                if (doInstallArtifact(artifactRepository, type, fixedName, version, md)) {
+                    installed = true
+                    return
+                }
             }
         }
+
+        if (!installed) {
+            ArtifactRepositoryRegistry.instance.withRepositories { aname, artifactRepository ->
+                if (installed) return
+                if (doInstallArtifact(artifactRepository, type, name, version, md)) {
+                    installed = true
+                    return
+                }
+            }
+        }
+
         if (!installed) {
             event('StatusError', ["Failed to install ${type} ${name}${version ? '-' + version : ''} [offline: ${griffonSettings.offlineMode}]"])
             exit 1
