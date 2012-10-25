@@ -198,8 +198,7 @@ class ArtifactDependencyResolver {
                     List alreadyInstalled = matches.findAll {it.dependency.installed}
                     if (matches.size() == alreadyInstalled.size()) continue
                     winner = matches[0]
-                    winner.dependency.evicted = false
-                    matches.each {it.dependency.evicted = it != winner}
+                    matches.each {it.dependency.evicted = winner.dependency.evicted}
                 }
             }
         }

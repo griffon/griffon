@@ -434,7 +434,7 @@ class ArtifactInstallEngine {
             String key = releaseEntry.key
             Release installed = releaseEntry.value
             ArtifactDependency dependency = installedDependencies[key]
-            if (!dependency) return
+            if (!dependency) continue
             for (entry in installed.dependencies) {
                 ArtifactDependency dep = installedDependencies[entry.name]
                 if (dep) dependency.dependencies << dep
