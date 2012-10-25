@@ -62,9 +62,12 @@ public class GriffonApplicationHelper {
 
     private static final Map<String, String> DEFAULT_PLATFORM_HANDLERS = CollectionUtils.<String, String>map()
         .e("linux", "org.codehaus.griffon.runtime.util.DefaultLinuxPlatformHandler")
+        .e("linux64", "org.codehaus.griffon.runtime.util.DefaultLinuxPlatformHandler")
         .e("macosx", "org.codehaus.griffon.runtime.util.DefaultMacOSXPlatformHandler")
+        .e("macosx64", "org.codehaus.griffon.runtime.util.DefaultMacOSXPlatformHandler")
         .e("solaris", "org.codehaus.griffon.runtime.util.DefaultSolarisPlatformHandler")
-        .e("windows", "org.codehaus.griffon.runtime.util.DefaultWindowsPlatformHandler");
+        .e("windows", "org.codehaus.griffon.runtime.util.DefaultWindowsPlatformHandler")
+        .e("windows64", "org.codehaus.griffon.runtime.util.DefaultWindowsPlatformHandler");
 
     static {
         ExpandoMetaClassCreationHandle.enable();
