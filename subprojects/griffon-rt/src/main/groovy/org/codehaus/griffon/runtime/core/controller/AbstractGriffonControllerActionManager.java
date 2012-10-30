@@ -194,7 +194,7 @@ public abstract class AbstractGriffonControllerActionManager implements GriffonC
         return uncapitalize(actionName);
     }
 
-    private String msg(String key, String actionName, String subkey, String defaultValue) {
+    protected String msg(String key, String actionName, String subkey, String defaultValue) {
         try {
             return app.getMessage(key + actionName + "." + subkey);
         } catch (NoSuchMessageException nsme) {
