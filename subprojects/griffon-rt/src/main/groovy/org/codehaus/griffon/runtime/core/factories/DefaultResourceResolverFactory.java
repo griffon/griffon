@@ -37,11 +37,11 @@ import static java.util.Arrays.asList;
 public class DefaultResourceResolverFactory implements ResourceResolverFactory {
     public ResourceResolver create(GriffonApplication app) {
         List<String> basenames = (List<String>) getConfigValue(app.getConfig(), "resources.basenames", asList("resources"));
-        List<ResourceResolver> messageSources = new ArrayList<ResourceResolver>();
+        List<ResourceResolver> resourceResolvers = new ArrayList<ResourceResolver>();
         for (String basename : basenames) {
-            messageSources.add(new DefaultResourceResolver(basename));
+            resourceResolvers.add(new DefaultResourceResolver(basename));
         }
 
-        return new CompositeResourceResolver(messageSources);
+        return new CompositeResourceResolver(resourceResolvers);
     }
 }
