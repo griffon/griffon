@@ -79,7 +79,7 @@ public abstract class AbstractServiceManager implements ServiceManager {
         }
         name = name.substring(0, name.length() - TRAILING.length());
         ConfigObject config = (ConfigObject) ConfigUtils.getConfigValue(getApp().getConfig(), "services." + name);
-        InvokerHelper.setProperties(service, config);
+        if (config != null && !config.isEmpty()) InvokerHelper.setProperties(service, config);
     }
 
     protected abstract GriffonService doFindService(String name);
