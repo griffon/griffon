@@ -52,6 +52,7 @@ public class DefaultMVCGroupManager extends AbstractMVCGroupManager {
     private static final String CONFIG_KEY_COMPONENT = "component";
     private static final String CONFIG_KEY_EVENTS_LIFECYCLE = "events.lifecycle";
     private static final String CONFIG_KEY_EVENTS_INSTANTIATION = "events.instantiation";
+    private static final String CONFIG_KEY_EVENTS_DESTRUCTION = "events.destruction";
     private static final String CONFIG_KEY_EVENTS_LISTENER = "events.listener";
     private static final Object[] EMPTY_ARGS = new Object[0];
 
@@ -275,13 +276,19 @@ public class DefaultMVCGroupManager extends AbstractMVCGroupManager {
             getApp().removeApplicationEventListener(group.getController());
         }
 
+        boolean fireDestructionEvents = isConfigFlagEnabled(group.getConfiguration(), CONFIG_KEY_EVENTS_DESTRUCTION);
+
         for (Map.Entry<String, Object> memberEntry : group.getMembers().entrySet()) {
             String memberType = memberEntry.getKey();
             if(KEY_BUILDER.equalsIgnoreCase(memberType)) continue;
 
             Object member = memberEntry.getValue();
             if (member instanceof GriffonMvcArtifact) {
-                ((GriffonMvcArtifact) member).mvcGroupDestroy();
+                GriffonMvcArtifact artifact = (GriffonMvcArtifact) member;
+                if(fireDestructionEvents) {
+                    getApp().event(GriffonApplication.Event.DESTROY_INSTANCE.getName(), asList(member.getClass(), artifact.getGriffonClass().getArtifactType(), artifact));
+                }
+                artifact.mvcGroupDestroy();
                 /*((GriffonMvcArtifact) member).griffonDestroy();
             } else if (member instanceof GriffonArtifact) {
                 ((GriffonArtifact) member).griffonDestroy();

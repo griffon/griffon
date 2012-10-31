@@ -29,6 +29,7 @@ import org.slf4j.LoggerFactory;
 import java.util.Map;
 
 import static griffon.core.GriffonServiceClass.TRAILING;
+import static java.util.Arrays.asList;
 
 /**
  * Base implementation of the {@code ServiceManager} interface.
@@ -98,7 +99,10 @@ public abstract class AbstractServiceManager implements ServiceManager {
                 if (LOG.isInfoEnabled()) {
                     LOG.info("Destroying service identified by '" + entry.getKey() + "'");
                 }
-                entry.getValue().serviceDestroy();
+                GriffonService service = entry.getValue();
+                application.removeApplicationEventListener(service);
+                application.event(GriffonApplication.Event.DESTROY_INSTANCE.getName(), asList(service.getClass(), service.getGriffonClass().getArtifactType(), service));
+                service.serviceDestroy();
             }
         }
     }
