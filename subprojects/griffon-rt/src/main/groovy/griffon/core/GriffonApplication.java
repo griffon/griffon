@@ -37,7 +37,7 @@ import java.util.Map;
  * @author Danno Ferrin
  * @author Andres Almiray
  */
-public interface GriffonApplication extends ThreadingHandler, MVCHandler, ResourceHandler, MessageSource, ResourceResolver {
+public interface GriffonApplication extends Observable, ThreadingHandler, MVCHandler, ResourceHandler, MessageSource, ResourceResolver {
     /**
      * Defines the names of the configuration scripts.
      *
