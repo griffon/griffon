@@ -26,8 +26,8 @@ import java.util.*;
  */
 public class DefaultCommandLine implements CommandLine {
     Properties systemProperties = new Properties();
-    Map<String, Object> undeclaredOptions = new HashMap<String, Object>();
-    Map<String, SpecifiedOption> declaredOptions = new HashMap<String, SpecifiedOption>();
+    Map<String, Object> undeclaredOptions = new LinkedHashMap<String, Object>();
+    Map<String, SpecifiedOption> declaredOptions = new LinkedHashMap<String, SpecifiedOption>();
     List<String> remainingArgs = new ArrayList<String>();
     private String environment;
     private String commandName;
