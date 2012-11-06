@@ -441,6 +441,14 @@ class ArtifactInstallEngine {
             }
         }
 
+        for(ArtifactDependency dep : dependencies) {
+            ArtifactDependency installed = installedDependencies[dep.name]
+            if (!installed || installed.snapshot || installed.version != dep.version) continue
+            dep.installed = true
+            dep.resolved = true
+            dep.conflicted = false
+        }
+
         if (LOG.debugEnabled && installedDependencies) {
             LOG.debug("Installed dependencies:\n${installedDependencies.values().collect([]) {printDependencyTree(it, true)}.join('\n')}")
         }

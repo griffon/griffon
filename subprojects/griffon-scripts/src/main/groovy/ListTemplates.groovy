@@ -59,7 +59,8 @@ target(name: 'listTemplates', description: 'Lists all artifacts templates availa
             }
         }
 
-        println """Available Templates are listed below:
+        println """
+Available Templates are listed below:
 ${'-' * 80}
 ${'Location'.padRight(25, ' ')}${'Name'.padRight(30, ' ')}FileType
 ${'-' * 80}"""
