@@ -4,7 +4,7 @@ Griffon plugins can do post-install configuration and participate in application
 
 @_Install.groovy@ is executed after the plugin has been installed and @_Upgrade.groovy@ is executed each time the user upgrades his application with [upgrade|commandLine] command.
 
-These scripts are normal [Gant|guide:commandLine] scripts so you can use the full power of Gant. An addition to the standard Gant variables is the @pluginBasedir@ variable which points at the plugin installation basedir.
+These scripts are normal [Gant|guide:theCommandLine] scripts so you can use the full power of Gant. An addition to the standard Gant variables is the @pluginBasedir@ variable which points at the plugin installation basedir.
 
 As an example the below @_Install.groovy@  script will create a new directory type under the @griffon-app@ directory and install a configuration template:
 
