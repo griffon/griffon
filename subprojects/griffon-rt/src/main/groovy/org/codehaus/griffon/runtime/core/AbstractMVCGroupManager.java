@@ -26,6 +26,7 @@ import org.slf4j.LoggerFactory;
 import java.util.*;
 
 import static griffon.util.GriffonExceptionHandler.sanitize;
+import static griffon.util.GriffonNameUtils.isBlank;
 
 /**
  * Base implementation of the {@code MVCGroupManager} interface.
@@ -103,6 +104,20 @@ public abstract class AbstractMVCGroupManager implements MVCGroupManager {
                 return;
             }
             configurations.put(configuration.getMvcType(), configuration);
+        }
+    }
+
+    public void removeConfiguration(MVCGroupConfiguration configuration) {
+        if (configuration != null) {
+            removeConfiguration(configuration.getMvcType());
+        }
+    }
+
+    public void removeConfiguration(String name) {
+        if (!isBlank(name)) {
+            synchronized (lock) {
+                configurations.remove(name);
+            }
         }
     }
 

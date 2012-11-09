@@ -65,6 +65,10 @@ public interface MVCGroupManager extends MVCHandler, ApplicationHandler {
 
     void addConfiguration(MVCGroupConfiguration configuration);
 
+    void removeConfiguration(MVCGroupConfiguration configuration);
+
+    void removeConfiguration(String name);
+
     Map<String, MVCGroupConfiguration> getConfigurations();
 
     Map<String, MVCGroup> getGroups();
