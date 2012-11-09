@@ -63,10 +63,10 @@ public abstract class AbstractGriffonApplication extends AbstractObservable impl
 
     private Locale locale = Locale.getDefault();
     public static final String[] EMPTY_ARGS = new String[0];
-    protected final Object lock = new Object();
+    protected final Object[] lock = new Object[0];
     private ApplicationPhase phase = ApplicationPhase.INITIALIZE;
 
-    private final EventRouter eventRouter = new EventRouter();
+    private EventRouter eventRouter = new NoopEventRouter();
     private final ResourceLocator resourceLocator = new ResourceLocator();
     private final List<ShutdownHandler> shutdownHandlers = new ArrayList<ShutdownHandler>();
     private final String[] startupArgs;
@@ -83,6 +83,14 @@ public abstract class AbstractGriffonApplication extends AbstractObservable impl
         ApplicationHolder.setApplication(this);
         log = LoggerFactory.getLogger(getClass());
         MVCGroupExceptionHandler.registerWith(this);
+    }
+
+    public EventRouter getEventRouter() {
+        return eventRouter;
+    }
+
+    public void setEventRouter(EventRouter eventRouter) {
+        this.eventRouter = eventRouter;
     }
 
     public Binding getBindings() {

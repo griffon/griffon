@@ -162,6 +162,8 @@ public class GriffonApplicationHelper {
             app.addApplicationEventListener(app.getEventsConfig());
         }
 
+        initializeEventRouter(app);
+
         log4jConfig = app.getConfig().get("log4j");
         if (log4jConfig instanceof Closure) {
             app.event(GriffonApplication.Event.LOG4J_CONFIG_START.getName(), asList(log4jConfig));
@@ -303,6 +305,22 @@ public class GriffonApplicationHelper {
                 }
             }
         }
+    }
+
+    private static void initializeEventRouter(GriffonApplication app) {
+        InvokerHelper.setProperty(app, "eventRouter", createEventRouter(app));
+    }
+
+    private static final String KEY_EVENT_ROUTER_FACTORY = "app.eventRouter.factory";
+    private static final String DEFAULT_EVENT_ROUTER_FACTORY = "org.codehaus.griffon.runtime.core.factories.DefaultEventRouterFactory";
+
+    public static EventRouter createEventRouter(GriffonApplication app) {
+        String className = getConfigValueAsString(app.getConfig(), KEY_EVENT_ROUTER_FACTORY, DEFAULT_EVENT_ROUTER_FACTORY);
+        if (LOG.isDebugEnabled()) {
+            LOG.debug("Using " + className + " as EventRouterFactory");
+        }
+        EventRouterFactory factory = (EventRouterFactory) safeNewInstance(className);
+        return factory.create(app);
     }
 
     private static void setApplicationLocale(GriffonApplication app, Object localeValue) {

@@ -17,9 +17,11 @@
 package org.codehaus.griffon.ast;
 
 import griffon.core.EventPublisher;
+import griffon.core.EventRouter;
 import griffon.util.RunnableWithArgs;
-import org.codehaus.griffon.runtime.core.EventRouter;
+import org.codehaus.griffon.runtime.util.GriffonApplicationHelper;
 import org.codehaus.groovy.ast.*;
+import org.codehaus.groovy.ast.expr.Expression;
 import org.codehaus.groovy.ast.expr.ListExpression;
 import org.codehaus.groovy.control.CompilePhase;
 import org.codehaus.groovy.control.SourceUnit;
@@ -48,6 +50,7 @@ public class EventPublisherASTTransformation extends AbstractASTTransformation {
     private static final ClassNode EVENT_HANDLER_TYPE = makeClassSafe(EventPublisher.class);
     private static final ClassNode EVENT_PUBLISHER_TYPE = makeClassSafe(griffon.transform.EventPublisher.class);
     private static final ClassNode EVENT_ROUTER_TYPE = makeClassSafe(EventRouter.class);
+    private static final ClassNode GAH_TYPE = makeClassSafe(GriffonApplicationHelper.class);
 
     private static final String LISTENER = "listener";
     private static final String NAME = "name";
@@ -135,10 +138,10 @@ public class EventPublisherASTTransformation extends AbstractASTTransformation {
         }
         if (foundAdd || foundRemove || foundPublish || foundEnabled) {
             sourceUnit.getErrorCollector().addErrorAndContinue(
-                    new SimpleMessage("@EventPublisher cannot be processed on "
-                            + declaringClass.getName()
-                            + " because some but not all of addEventListener, removeEventListener, publishEvent, publishEventAsync and publishEventOutsideUI were declared in the current class or super classes.",
-                            sourceUnit)
+                new SimpleMessage("@EventPublisher cannot be processed on "
+                    + declaringClass.getName()
+                    + " because some but not all of addEventListener, removeEventListener, publishEvent, publishEventAsync and publishEventOutsideUI were declared in the current class or super classes.",
+                    sourceUnit)
             );
             return false;
         }
@@ -170,27 +173,28 @@ public class EventPublisherASTTransformation extends AbstractASTTransformation {
         injectInterface(declaringClass, EVENT_HANDLER_TYPE);
 
         // add field:
-        // protected final EventRouter this$eventRouter = new org.codehaus.griffon.runtime.core.EventRouter()
+        // protected final EventRouter this$eventRouter = GriffonApplicationHelper
+        //                                                    .createEventRouter(ApplicationHolder.getApplication())
         FieldNode erField = declaringClass.addField(
-                "this$eventRouter",
-                ACC_FINAL | ACC_PRIVATE | ACC_SYNTHETIC,
-                EVENT_ROUTER_TYPE,
-                ctor(EVENT_ROUTER_TYPE, NO_ARGS));
+            "this$eventRouter",
+            ACC_FINAL | ACC_PRIVATE | ACC_SYNTHETIC,
+            EVENT_ROUTER_TYPE,
+            eventRouterInstance());
 
         // add method:
         // void addEventListener(listener) {
         //     this$eventRouter.addEventListener(listener)
         //  }
         injectMethod(declaringClass, new MethodNode(
+            "addEventListener",
+            ACC_PUBLIC,
+            VOID_TYPE,
+            params(param(DYNAMIC_TYPE, LISTENER)),
+            NO_EXCEPTIONS,
+            stmnt(call(
+                field(erField),
                 "addEventListener",
-                ACC_PUBLIC,
-                VOID_TYPE,
-                params(param(DYNAMIC_TYPE, LISTENER)),
-                NO_EXCEPTIONS,
-                stmnt(call(
-                        field(erField),
-                        "addEventListener",
-                        vars(LISTENER)))
+                vars(LISTENER)))
         ));
 
         // add method:
@@ -198,17 +202,17 @@ public class EventPublisherASTTransformation extends AbstractASTTransformation {
         //     this$eventRouter.addEventListener(name, listener)
         //  }
         injectMethod(declaringClass, new MethodNode(
+            "addEventListener",
+            ACC_PUBLIC,
+            VOID_TYPE,
+            params(
+                param(STRING_TYPE, NAME),
+                param(makeClassSafe(CLOSURE_TYPE), LISTENER)),
+            NO_EXCEPTIONS,
+            stmnt(call(
+                field(erField),
                 "addEventListener",
-                ACC_PUBLIC,
-                VOID_TYPE,
-                params(
-                        param(STRING_TYPE, NAME),
-                        param(makeClassSafe(CLOSURE_TYPE), LISTENER)),
-                NO_EXCEPTIONS,
-                stmnt(call(
-                        field(erField),
-                        "addEventListener",
-                        vars(NAME, LISTENER)))
+                vars(NAME, LISTENER)))
         ));
 
         // add method:
@@ -216,17 +220,17 @@ public class EventPublisherASTTransformation extends AbstractASTTransformation {
         //     this$eventRouter.addEventListener(name, listener)
         //  }
         injectMethod(declaringClass, new MethodNode(
+            "addEventListener",
+            ACC_PUBLIC,
+            VOID_TYPE,
+            params(
+                param(STRING_TYPE, NAME),
+                param(RUNNABLE_WITH_ARGS_TYPE, LISTENER)),
+            NO_EXCEPTIONS,
+            stmnt(call(
+                field(erField),
                 "addEventListener",
-                ACC_PUBLIC,
-                VOID_TYPE,
-                params(
-                        param(STRING_TYPE, NAME),
-                        param(RUNNABLE_WITH_ARGS_TYPE, LISTENER)),
-                NO_EXCEPTIONS,
-                stmnt(call(
-                        field(erField),
-                        "addEventListener",
-                        vars(NAME, LISTENER)))
+                vars(NAME, LISTENER)))
         ));
 
         // add method:
@@ -234,15 +238,15 @@ public class EventPublisherASTTransformation extends AbstractASTTransformation {
         //    return this$eventRouter.removeEventListener(listener);
         // }
         injectMethod(declaringClass, new MethodNode(
+            "removeEventListener",
+            ACC_PUBLIC,
+            VOID_TYPE,
+            params(param(DYNAMIC_TYPE, LISTENER)),
+            NO_EXCEPTIONS,
+            stmnt(call(
+                field(erField),
                 "removeEventListener",
-                ACC_PUBLIC,
-                VOID_TYPE,
-                params(param(DYNAMIC_TYPE, LISTENER)),
-                NO_EXCEPTIONS,
-                stmnt(call(
-                        field(erField),
-                        "removeEventListener",
-                        vars(LISTENER)))
+                vars(LISTENER)))
         ));
 
         // add method:
@@ -250,17 +254,17 @@ public class EventPublisherASTTransformation extends AbstractASTTransformation {
         //    return this$eventRouter.removeEventListener(name, listener);
         // }
         injectMethod(declaringClass, new MethodNode(
+            "removeEventListener",
+            ACC_PUBLIC,
+            VOID_TYPE,
+            params(
+                param(STRING_TYPE, NAME),
+                param(makeClassSafe(CLOSURE_TYPE), LISTENER)),
+            NO_EXCEPTIONS,
+            stmnt(call(
+                field(erField),
                 "removeEventListener",
-                ACC_PUBLIC,
-                VOID_TYPE,
-                params(
-                        param(STRING_TYPE, NAME),
-                        param(makeClassSafe(CLOSURE_TYPE), LISTENER)),
-                NO_EXCEPTIONS,
-                stmnt(call(
-                        field(erField),
-                        "removeEventListener",
-                        vars(NAME, LISTENER)))
+                vars(NAME, LISTENER)))
         ));
 
         // add method:
@@ -268,17 +272,17 @@ public class EventPublisherASTTransformation extends AbstractASTTransformation {
         //    return this$eventRouter.removeEventListener(name, listener);
         // }
         injectMethod(declaringClass, new MethodNode(
+            "removeEventListener",
+            ACC_PUBLIC,
+            VOID_TYPE,
+            params(
+                param(STRING_TYPE, NAME),
+                param(RUNNABLE_WITH_ARGS_TYPE, LISTENER)),
+            NO_EXCEPTIONS,
+            stmnt(call(
+                field(erField),
                 "removeEventListener",
-                ACC_PUBLIC,
-                VOID_TYPE,
-                params(
-                        param(STRING_TYPE, NAME),
-                        param(RUNNABLE_WITH_ARGS_TYPE, LISTENER)),
-                NO_EXCEPTIONS,
-                stmnt(call(
-                        field(erField),
-                        "removeEventListener",
-                        vars(NAME, LISTENER)))
+                vars(NAME, LISTENER)))
         ));
 
         // add method:
@@ -286,17 +290,17 @@ public class EventPublisherASTTransformation extends AbstractASTTransformation {
         //     this$eventRouter.publishEvent(name, args)
         //  }
         injectMethod(declaringClass, new MethodNode(
-                "publishEvent",
-                ACC_PUBLIC,
-                VOID_TYPE,
-                params(
-                        param(STRING_TYPE, NAME),
-                        param(makeClassSafe(LIST_TYPE), ARGS, new ListExpression())),
-                NO_EXCEPTIONS,
-                stmnt(call(
-                        field(erField),
-                        "publish",
-                        vars(NAME, ARGS)))
+            "publishEvent",
+            ACC_PUBLIC,
+            VOID_TYPE,
+            params(
+                param(STRING_TYPE, NAME),
+                param(makeClassSafe(LIST_TYPE), ARGS, new ListExpression())),
+            NO_EXCEPTIONS,
+            stmnt(call(
+                field(erField),
+                "publish",
+                vars(NAME, ARGS)))
         ));
 
         // add method:
@@ -304,17 +308,17 @@ public class EventPublisherASTTransformation extends AbstractASTTransformation {
         //     this$eventRouter.publishEventOutsideUI(name, args)
         //  }
         injectMethod(declaringClass, new MethodNode(
-                "publishEventOutsideUI",
-                ACC_PUBLIC,
-                VOID_TYPE,
-                params(
-                        param(STRING_TYPE, NAME),
-                        param(makeClassSafe(LIST_TYPE), ARGS, new ListExpression())),
-                NO_EXCEPTIONS,
-                stmnt(call(
-                        field(erField),
-                        "publishOutsideUI",
-                        vars(NAME, ARGS)))
+            "publishEventOutsideUI",
+            ACC_PUBLIC,
+            VOID_TYPE,
+            params(
+                param(STRING_TYPE, NAME),
+                param(makeClassSafe(LIST_TYPE), ARGS, new ListExpression())),
+            NO_EXCEPTIONS,
+            stmnt(call(
+                field(erField),
+                "publishOutsideUI",
+                vars(NAME, ARGS)))
         ));
 
         // add method:
@@ -322,17 +326,17 @@ public class EventPublisherASTTransformation extends AbstractASTTransformation {
         //     this$eventRouter.publishEventAsync(name, args)
         //  }
         injectMethod(declaringClass, new MethodNode(
-                "publishEventAsync",
-                ACC_PUBLIC,
-                VOID_TYPE,
-                params(
-                        param(STRING_TYPE, NAME),
-                        param(makeClassSafe(LIST_TYPE), ARGS, new ListExpression())),
-                NO_EXCEPTIONS,
-                stmnt(call(
-                        field(erField),
-                        "publishAsync",
-                        vars(NAME, ARGS)))
+            "publishEventAsync",
+            ACC_PUBLIC,
+            VOID_TYPE,
+            params(
+                param(STRING_TYPE, NAME),
+                param(makeClassSafe(LIST_TYPE), ARGS, new ListExpression())),
+            NO_EXCEPTIONS,
+            stmnt(call(
+                field(erField),
+                "publishAsync",
+                vars(NAME, ARGS)))
         ));
 
         // add method:
@@ -340,16 +344,16 @@ public class EventPublisherASTTransformation extends AbstractASTTransformation {
         //      $this.eventRouter.isEnabled()
         // }
         injectMethod(declaringClass, new MethodNode(
-                "isEventPublishingEnabled",
-                ACC_PUBLIC,
-                boolean_TYPE,
-                params(),
-                NO_EXCEPTIONS,
-                returns(call(
-                        field(erField),
-                        "isEnabled",
-                        NO_ARGS
-                ))
+            "isEventPublishingEnabled",
+            ACC_PUBLIC,
+            boolean_TYPE,
+            params(),
+            NO_EXCEPTIONS,
+            returns(call(
+                field(erField),
+                "isEnabled",
+                NO_ARGS
+            ))
         ));
 
         // add method:
@@ -357,16 +361,20 @@ public class EventPublisherASTTransformation extends AbstractASTTransformation {
         //      $this.eventRouter.setEnabled(enabled)
         // }
         injectMethod(declaringClass, new MethodNode(
-                "setEventPublishingEnabled",
-                ACC_PUBLIC,
-                VOID_TYPE,
-                params(param(boolean_TYPE, ENABLED)),
-                NO_EXCEPTIONS,
-                stmnt(call(
-                        field(erField),
-                        "setEnabled",
-                        vars(ENABLED)
-                ))
+            "setEventPublishingEnabled",
+            ACC_PUBLIC,
+            VOID_TYPE,
+            params(param(boolean_TYPE, ENABLED)),
+            NO_EXCEPTIONS,
+            stmnt(call(
+                field(erField),
+                "setEnabled",
+                vars(ENABLED)
+            ))
         ));
+    }
+
+    public static Expression eventRouterInstance() {
+        return call(GAH_TYPE, "createEventRouter", args(applicationInstance()));
     }
 }

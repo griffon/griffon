@@ -2,6 +2,18 @@ There are several components in a Griffon application that perform specific chor
 
 The following paragraphs enumerate the different managers and helpers that may be configured at booting time. Configuration is performed by adding the appropriate flag and value to @Config.groovy@.
 
+h4. EventRouter
+
+Discussed in: [Application Events|guide:applicationEvents].
+
+Responsibility: publish events.
+
+Configuration flag: @app.eventRouter.factory@
+
+Type: @[griffon.core.factories.EventRouterFactory|api:griffon.core.factories.EventRouterFactory]@
+
+Default implementation: @org.codehaus.griffon.runtime.core.factories.DefaultEventRouterFactory@
+
 h4. ArtifactManager
 
 Discussed in: [Artifact API|guide:artifactApi].
