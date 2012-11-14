@@ -192,7 +192,7 @@ class PluginSettings {
             availableScripts = scripts as Resource[]
             cache['availableScripts'] = availableScripts
         }
-        availableScripts
+        availableScripts.sort { r1, r2 -> r1.file.name <=> r2.file.name }
     }
 
     Resource[] getAvailableScripts(String scriptName) {
@@ -207,7 +207,7 @@ class PluginSettings {
         resolveResources("file:${basedir}/scripts/${scriptName}.groovy").each addScripts
         resolveResources("file:${userHome}/.griffon/scripts/${scriptName}.groovy").each addScripts
 
-        scripts as Resource[]
+        (scripts as Resource[]).sort { r1, r2 -> r1.file.name <=> r2.file.name }
     }
 
     Resource getPluginDirForName(String name) {
