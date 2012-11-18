@@ -156,13 +156,13 @@ public class GriffonApplicationHelper {
 
         app.setBuilderConfig(doLoadConfigWithI18n(app.getLocale(), configReader, app.getBuilderClass(), GriffonApplication.Configuration.BUILDER.getName()));
 
+        initializeEventRouter(app);
+
         Object events = safeNewInstance(app.getEventsClass(), false);
         if (events != null) {
             app.setEventsConfig(events);
             app.addApplicationEventListener(app.getEventsConfig());
         }
-
-        initializeEventRouter(app);
 
         log4jConfig = app.getConfig().get("log4j");
         if (log4jConfig instanceof Closure) {
@@ -703,7 +703,7 @@ public class GriffonApplicationHelper {
         }
     }
 
-    private static Object safeNewInstance(String className) {
+    public static Object safeNewInstance(String className) {
         try {
             return loadClass(className).newInstance();
         } catch (Exception e) {
@@ -712,11 +712,11 @@ public class GriffonApplicationHelper {
         }
     }
 
-    private static Object safeNewInstance(Class clazz) {
+    public static Object safeNewInstance(Class clazz) {
         return safeNewInstance(clazz, true);
     }
 
-    private static Object safeNewInstance(Class clazz, boolean logException) {
+    public static Object safeNewInstance(Class clazz, boolean logException) {
         try {
             return clazz.newInstance();
         } catch (Exception e) {
