@@ -36,6 +36,7 @@ target(name: 'clearDependencyCache',
         targetDirPath += 'org.codehaus.griffon'
     } else if (!argsMap.all) {
         event 'StatusError', ["Missing arguments. Call 'griffon help clear-dependency-cache' to see the usage of this command"]
+        exit(1)
     }
 
     File targetDir = new File(targetDirPath)
