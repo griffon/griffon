@@ -17,11 +17,9 @@
 package org.codehaus.griffon.cli;
 
 import gant.Gant;
+import griffon.build.GriffonBuildListener;
 import griffon.util.*;
-import groovy.lang.Binding;
-import groovy.lang.Closure;
-import groovy.lang.ExpandoMetaClass;
-import groovy.lang.MissingPropertyException;
+import groovy.lang.*;
 import groovy.util.AntBuilder;
 import org.apache.log4j.LogManager;
 import org.apache.tools.ant.Project;
@@ -31,6 +29,7 @@ import org.codehaus.griffon.cli.parsing.CommandLine;
 import org.codehaus.griffon.cli.parsing.CommandLineParser;
 import org.codehaus.griffon.cli.parsing.DefaultCommandLine;
 import org.codehaus.griffon.cli.parsing.ParseException;
+import org.codehaus.griffon.cli.support.GriffonBuildEventListener;
 import org.codehaus.griffon.plugins.PluginInfo;
 import org.codehaus.griffon.runtime.logging.Log4jConfig;
 import org.codehaus.groovy.runtime.DefaultGroovyMethods;
@@ -116,9 +115,9 @@ public class GriffonScriptRunner {
 
         // Show a nice header in the console when running commands.
         System.out.println(
-                "Welcome to Griffon " + build.getGriffonVersion() + " - http://griffon-framework.org/" + '\n' +
-                        "Licensed under Apache Standard License 2.0" + '\n' +
-                        "Griffon home is " + (griffonHome == null ? "not set" : "set to: " + griffonHome) + '\n');
+            "Welcome to Griffon " + build.getGriffonVersion() + " - http://griffon-framework.org/" + '\n' +
+                "Licensed under Apache Standard License 2.0" + '\n' +
+                "Griffon home is " + (griffonHome == null ? "not set" : "set to: " + griffonHome) + '\n');
 
         GriffonSetup.run();
 
@@ -206,7 +205,7 @@ public class GriffonScriptRunner {
 
     public static String unquote(String s) {
         if ((s.startsWith("'") && s.endsWith("'")) ||
-                (s.startsWith("\"") && s.endsWith("\""))) {
+            (s.startsWith("\"") && s.endsWith("\""))) {
             return s.substring(1, s.length() - 1);
         }
         return s;
@@ -216,6 +215,7 @@ public class GriffonScriptRunner {
     private PrintStream out = System.out;
     private CommandLineHelper helper = new CommandLineHelper(out);
     private boolean isInteractive = true;
+    private List<GriffonBuildListener> buildListeners = new ArrayList<GriffonBuildListener>();
 
     public GriffonScriptRunner() {
         this(new BuildSettings());
@@ -227,6 +227,10 @@ public class GriffonScriptRunner {
 
     public GriffonScriptRunner(BuildSettings settings) {
         this.settings = settings;
+    }
+
+    public void addBuildEventListener(GriffonBuildListener listener) {
+        if (listener != null && !buildListeners.contains(listener)) buildListeners.add(listener);
     }
 
     public BuildSettings getSettings() {
@@ -386,7 +390,7 @@ public class GriffonScriptRunner {
             // code. Otherwise the code will enter an infinite loop.
             if (!isInteractive) {
                 out.println("More than one script with the given name is available - " +
-                        "cannot continue in non-interactive mode.");
+                    "cannot continue in non-interactive mode.");
                 return 1;
             }
 
@@ -549,7 +553,7 @@ public class GriffonScriptRunner {
             // note - the only approach that works is to loop through the public methods
             for (Method m : p.getClass().getMethods()) {
                 if ("setDefaultInputStream".equals(m.getName()) && m.getParameterTypes().length == 1 &&
-                        InputStream.class.equals(m.getParameterTypes()[0])) {
+                    InputStream.class.equals(m.getParameterTypes()[0])) {
                     try {
                         m.invoke(p, System.in);
                         break;
@@ -572,8 +576,8 @@ public class GriffonScriptRunner {
                 gant.loadScriptClass(scriptName);
             } catch (Exception ex) {
                 if (ex instanceof ClassNotFoundException &&
-                        ex.getMessage() != null &&
-                        ex.getMessage().contains(scriptName)) {
+                    ex.getMessage() != null &&
+                    ex.getMessage().contains(scriptName)) {
                     throw new ScriptNotFoundException(scriptName);
                 }
             }
@@ -844,9 +848,9 @@ public class GriffonScriptRunner {
             }
         } catch (Exception ex) {
             throw new RuntimeException(
-                    "Cannot dynamically add URLs to GriffonScriptRunner's" +
-                            " class loader - make sure that it is loaded by Groovy's" +
-                            " RootLoader or a sub-class.");
+                "Cannot dynamically add URLs to GriffonScriptRunner's" +
+                    " class loader - make sure that it is loaded by Groovy's" +
+                    " RootLoader or a sub-class.");
         }
     }
 
@@ -866,7 +870,7 @@ public class GriffonScriptRunner {
 
     private GantCustomizer gantCustomizer;
 
-    public static class GantCustomizer {
+    public class GantCustomizer {
         private final BuildSettings settings;
         private final Binding binding;
         private final Gant gant;
@@ -894,6 +898,14 @@ public class GriffonScriptRunner {
 
         public void prepareTargets() {
             if (!prepared) {
+
+                GroovyClassLoader eventsClassLoader = new GroovyClassLoader(settings.obtainGroovyClassLoader());
+                GriffonBuildEventListener eventListener = new GriffonBuildEventListener(eventsClassLoader, binding, settings);
+                binding.setVariable("eventListener", eventListener);
+                for (GriffonBuildListener listener : buildListeners) {
+                    eventListener.addGriffonBuildListener(listener);
+                }
+
                 // preload basic stuff that should always be there
                 setupScript("_GriffonSettings");
                 setupScript("_GriffonEvents");
@@ -957,27 +969,27 @@ public class GriffonScriptRunner {
             return exclusions.contains(scriptName);
         }
 
-        private static String[] CONFIGURE_PROXY_EXCLUSIONS = {
-                "AddProxy", "ClearProxy", "RemoveProxy", "SetProxy", "ConfigureProxy",
-                "SetVersion", "Stats", "Wrapper",
-                "CreateAddon", "CreatePlugin", "Upgrade",
-                "CreateCommandAlias", "Doc", "ClearDependencyCache"
+        private String[] CONFIGURE_PROXY_EXCLUSIONS = {
+            "AddProxy", "ClearProxy", "RemoveProxy", "SetProxy", "ConfigureProxy",
+            "SetVersion", "Stats", "Wrapper",
+            "CreateAddon", "CreatePlugin", "Upgrade",
+            "CreateCommandAlias", "Doc", "ClearDependencyCache"
         };
 
-        private static String[] RESOLVE_DEPENDENCIES_EXCLUSIONS = {
-                "SetVersion", "Stats", "Upgrade", "Wrapper", "UsageStats",
-                "CreateCommandAlias", "Doc", "_GriffonResolveDependencies"
+        private String[] RESOLVE_DEPENDENCIES_EXCLUSIONS = {
+            "SetVersion", "Stats", "Upgrade", "Wrapper", "UsageStats",
+            "CreateCommandAlias", "Doc", "_GriffonResolveDependencies"
         };
 
-        private static String[] CHECK_VERSION_EXCLUSIONS = {
-                "Upgrade", "UsageStats"
+        private String[] CHECK_VERSION_EXCLUSIONS = {
+            "Upgrade", "UsageStats"
         };
 
-        private static String[] FRAMEWORK_PLUGIN_INCLUSIONS = {
-                "CreateApp_", "CreateAddon_", "CreatePlugin_", "CreateArchetype_", "Help_"
+        private String[] FRAMEWORK_PLUGIN_INCLUSIONS = {
+            "CreateApp_", "CreateAddon_", "CreatePlugin_", "CreateArchetype_", "Help_"
         };
 
-        static {
+        {
             sort(CONFIGURE_PROXY_EXCLUSIONS);
             sort(RESOLVE_DEPENDENCIES_EXCLUSIONS);
             sort(CHECK_VERSION_EXCLUSIONS);

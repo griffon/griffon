@@ -9,6 +9,8 @@ class EventPublisherTests extends GroovyTestCase {
             import griffon.transform.EventPublisher
             import griffon.core.UIThreadManager
             import griffon.test.mock.MockUIThreadHandler
+            import griffon.test.mock.MockGriffonApplication
+            import griffon.util.ApplicationHolder
 
             @EventPublisher
             class Publisher {
@@ -28,6 +30,7 @@ class EventPublisherTests extends GroovyTestCase {
                void onEmpty() { value = "empty" }
             }
 
+            ApplicationHolder.application = new MockGriffonApplication()
             UIThreadManager.instance.setUIThreadHandler(new MockUIThreadHandler())
 
             p = new Publisher()
