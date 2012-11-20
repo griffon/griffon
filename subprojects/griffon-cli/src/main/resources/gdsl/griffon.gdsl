@@ -28,8 +28,8 @@ import com.intellij.openapi.diagnostic.*
 ['Controller', 'Model', 'View', 'Service'].each { type ->
     String artifactPath = type.toLowerCase() + 's'
     contributor(ctype: PsiJavaPatterns.psiClass().withName(PlatformPatterns.string().matches(/.*${type}/))) {
-        def path = psiClass.containingFile.originalFile.virtualFile.path
-        if (path =~ ".*/*griffon-app/${artifactPath}/.*") {
+        def path = psiClass?.containingFile?.originalFile?.virtualFile?.path
+        if (path && path =~ ".*/*griffon-app/${artifactPath}/.*") {
             delegatesTo(findClass("griffon.core.Griffon${type}"))
         }
     }
@@ -55,6 +55,6 @@ contributor(scope: annotatedScope(ctype: 'griffon.transform.MessageSourceAware')
     delegatesTo(findClass('griffon.core.i18n.MessageSource'))
 }
 
-contributor(scope: annotatedScope(ctype: 'griffon.transform.ResourceRrsolverAware')) {
+contributor(scope: annotatedScope(ctype: 'griffon.transform.ResourceResolverAware')) {
     delegatesTo(findClass('griffon.core.resources.ResourceResolver'))
 }
