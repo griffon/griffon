@@ -133,7 +133,7 @@ Type in griffon create-addon then execute this command again."""
 
             if (!(addonText =~ /\s*def\s*mvcGroups\s*=\s*\[/)) {
                 addonText = addonText.replaceAll(/\}\s*\z/, """
-    def mvcGroups = [
+    Map mvcGroups = [
     ]
 }
 """)
@@ -145,7 +145,7 @@ Type in griffon create-addon then execute this command again."""
 
             addonFile.withWriter {
                 it.write addonText.replaceAll(/\s*def\s*mvcGroups\s*=\s*\[/, """
-    def mvcGroups = [
+    Map mvcGroups = [
         // MVC Group for "$name"
         '$name': [
 ${parts.join(',\n')}
