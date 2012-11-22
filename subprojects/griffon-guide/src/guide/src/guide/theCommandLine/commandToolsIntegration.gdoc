@@ -68,6 +68,13 @@ griffon integrate-with --gradle
 Griffon creates a "Gradle":http://gradle.org/ @build.gradle@ file for you. From here you can call the standard Gradle commands such as @clean@, @assemble@ and @build@ to build your application. You can also use @griffon@ as a command prefix to execute any of the regular Griffon command targets such as
 
 {code}
-gradle griffon-run-app
+gradle griffon-run-webstart
 {code}
 
+The following tasks are enabled by default
+
+* @clean@ - Cleans the Griffon application
+* @compile@ - Equivalent to "griffon compile"
+* @test@ - Runs all application tests
+* @run-app@ - Equivalent to "griffon run-app"
+* @assemble@ - Equivalent to "griffon package"

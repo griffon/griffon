@@ -19,3 +19,23 @@ griffon.config.locations = [
 {code}
 
 Section [External Configuration Support|guide:externalConfiguration] covers this feature with more detail.
+
+h4. New Application Events
+
+Instances managed by the application (such as MVC members) will now trigger a @DestroyInstance@ event when the instance is no longer needed. This event is the counterpart of @NewInstance@.
+
+h4. EventRouter Factory
+
+It's now possible to instantiate custom instances of `EventRouter` by defining a custom `EventRouterFactory`.
+
+h4. Externalized Configuration
+
+Some deployments require that configuration be sourced from more than one place and be changeable without requiring a rebuild of the application. In order to support deployment scenarios such as these the configuration can be externalized. To do so, point Griffon at the locations of the configuration files that should be used by adding a @griffon.config.locations@ setting in @Config.groovy@, for example:
+
+{code:java}
+griffon.config.locations = [
+    "classpath:${appName}-config.properties",
+    "classpath:${appName}-config.groovy",
+    "file:${userHome}/.griffon/${appName}-config.properties",
+    "file:${userHome}/.griffon/${appName}-config.groovy"]
+{code}
