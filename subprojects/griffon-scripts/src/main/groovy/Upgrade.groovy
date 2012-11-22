@@ -157,10 +157,12 @@ target(name: 'upgrade', description: "Upgrades a Griffon application from a prev
                     ant.copy(todir: "${basedir}/griffon-app/conf", file: "${tmpdir}/griffon-app/conf/Config.groovy")
                     ant.copy(todir: "${basedir}/griffon-app/conf", file: "${tmpdir}/griffon-app/conf/Builder.groovy")
 
-                    def value = outBuildConfigFile.text =~ /.*app.fileType = (.*)/
-                    if (value) inBuildConfigFile.append("""\n${value[0][0]}\n""")
-                    value = outBuildConfigFile.text =~ /.*app.defaultPackageName = (.*)/
-                    if (value) inBuildConfigFile.append("""\n${value[0][0]}\n""")
+                    if (outBuildConfigFile.exists()) {
+                        def value = outBuildConfigFile.text =~ /.*app.fileType = (.*)/
+                        if (value) inBuildConfigFile.append("""\n${value[0][0]}\n""")
+                        value = outBuildConfigFile.text =~ /.*app.defaultPackageName = (.*)/
+                        if (value) inBuildConfigFile.append("""\n${value[0][0]}\n""")
+                    }
 
                     // copy new icons to griffon-app/conf/webstart
                     // copy new icons to griffon-app/resources
