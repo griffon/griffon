@@ -32,4 +32,14 @@ public class UpgradeCommand extends AbstractGriffonCommand {
             description = "Forces the upgrade even if the application is up-to-date.",
             required = false)
     private boolean force = false;
+
+    @Option(name = "--repository",
+        description = "Name of an specific repository where plugin search will be performed.",
+        required = false)
+    private String repository;
+
+    @Option(name = "--install",
+        description = "Install all matching upgrades.",
+        required = false)
+    private boolean install;
 }
