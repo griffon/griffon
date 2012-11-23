@@ -78,6 +78,7 @@ target(name: 'upgrade', description: "Upgrades a Griffon application from a prev
             updateMetadata(appMetadataFile, 'plugins.swing': currentSwingVersion)
         }
         updateMetadata(appMetadataFile, 'app.griffon.version': griffonVersion)
+        printFramed(" Project ${griffonAppName} has been upgraded.")
     } else if (appGriffonVersion == '1.0.0' || appGriffonVersion == '1.0.1') {
         touch(file: "${basedir}/griffon-app/i18n/resources.properties")
         event("StatusUpdate", ["Updating application.properties"])
@@ -85,6 +86,7 @@ target(name: 'upgrade', description: "Upgrades a Griffon application from a prev
             updateMetadata(appMetadataFile, 'plugins.swing': currentSwingVersion)
         }
         updateMetadata(appMetadataFile, 'app.griffon.version': griffonVersion)
+        printFramed(" Project ${griffonAppName} has been upgraded.")
     } else if (appGriffonVersion == '0.9.5') {
         event("StatusUpdate", ["Updating application.properties"])
         propertyfile(file: "${basedir}/application.properties",

@@ -83,7 +83,9 @@ public class GriffonBuildEventListener extends BuildListenerAdapter {
             loadEventsScript(findEventsScript(new File(buildSettings.getBaseDir(), "scripts")));
 
             loadEventsFromPlugins(buildSettings.pluginSettings.getSortedProjectPluginDirectories());
-            loadEventsFromPlugins(buildSettings.pluginSettings.getSortedFrameworkPluginDirectories());
+            if (!Boolean.getBoolean("griffon.skip.frameworkplugin.events")) {
+                loadEventsFromPlugins(buildSettings.pluginSettings.getSortedFrameworkPluginDirectories());
+            }
         }
     }
 

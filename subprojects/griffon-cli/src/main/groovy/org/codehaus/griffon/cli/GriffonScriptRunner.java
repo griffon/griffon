@@ -946,6 +946,10 @@ public class GriffonScriptRunner {
                     targets.add("loadEventHooks");
                 }
 
+                System.setProperty(
+                    "griffon.skip.frameworkplugin.events",
+                    String.valueOf(!targets.contains("resolveFrameworkDependencies")));
+
                 settings.debug("** " + targets + " **");
                 gant.setAllPerTargetPreHooks(DO_NOTHING_CLOSURE);
                 gant.setAllPerTargetPostHooks(DO_NOTHING_CLOSURE);
