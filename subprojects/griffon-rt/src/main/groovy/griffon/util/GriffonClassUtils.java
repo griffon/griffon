@@ -55,6 +55,7 @@ public final class GriffonClassUtils {
     public static final Map<Class, Class> PRIMITIVE_TYPE_COMPATIBLE_CLASSES = new HashMap<Class, Class>();
 
     private static final Pattern EVENT_HANDLER_PATTERN = Pattern.compile("^on[A-Z][\\w]*$");
+    private static final Pattern CONTRIBUTION_PATTERN = Pattern.compile("^with[A-Z][a-z0-9_]*[\\w]*$");
     private static final Pattern GETTER_PATTERN_1 = Pattern.compile("^get[A-Z][\\w]*$");
     private static final Pattern GETTER_PATTERN_2 = Pattern.compile("^is[A-Z][\\w]*$");
     private static final Pattern SETTER_PATTERN = Pattern.compile("^set[A-Z][\\w]*$");
@@ -324,6 +325,84 @@ public final class GriffonClassUtils {
      */
     public static boolean isBasicMethod(Method method) {
         return isBasicMethod(MethodDescriptor.forMethod(method));
+    }
+
+    /**
+     * Finds out if the given string represents the name of a
+     * contribution method by matching against the following pattern:
+     * "^with[A-Z][a-z0-9_]*[\w]*$"<p>
+     * <p/>
+     * <pre>
+     * isContributionMethod("withRest")     = true
+     * isContributionMethod("withMVCGroup") = false
+     * isContributionMethod("without")      = false
+     * </pre>
+     *
+     * @param name the name of a possible contribution method
+     * @return true if the name matches the given contribution method
+     *         pattern, false otherwise.
+     */
+    public static boolean isContributionMethod(String name) {
+        if (GriffonNameUtils.isBlank(name)) return false;
+        return CONTRIBUTION_PATTERN.matcher(name).matches();
+    }
+
+    /**
+     * Finds out if the given Method represents a contribution method
+     * by matching its name against the following pattern:
+     * "^with[A-Z][a-z0-9_]*[\w]*$"<p>
+     * <pre>
+     * // assuming getMethod() returns an appropriate Method reference
+     * isContributionMethod(getMethod("withRest"))     = true
+     * isContributionMethod(getMethod("withMVCGroup")) = false
+     * isContributionMethod(getMethod("without"))      = false
+     * </pre>
+     *
+     * @param method a Method reference
+     * @return true if the method name matches the given contribution method
+     *         pattern, false otherwise.
+     */
+    public static boolean isContributionMethod(Method method) {
+        return isContributionMethod(MethodDescriptor.forMethod(method));
+    }
+
+    /**
+     * Finds out if the given Method represents a contribution method
+     * by matching its name against the following pattern:
+     * "^with[A-Z][a-z0-9_]*[\w]*$"<p>
+     * <pre>
+     * // assuming getMethod() returns an appropriate MetaMethod reference
+     * isContributionMethod(getMethod("withRest"))     = true
+     * isContributionMethod(getMethod("withMVCGroup")) = false
+     * isContributionMethod(getMethod("without"))      = false
+     * </pre>
+     *
+     * @param method a MetaMethod reference
+     * @return true if the method name matches the given contribution method
+     *         pattern, false otherwise.
+     */
+    public static boolean isContributionMethod(MetaMethod method) {
+        return isContributionMethod(MethodDescriptor.forMethod(method));
+    }
+
+    /**
+     * Finds out if the given Method represents a contribution method
+     * by matching its name against the following pattern:
+     * "^with[A-Z][a-z0-9_]*[\w]*$"<p>
+     * <pre>
+     * // assuming getMethod() returns an appropriate MethodDescriptor reference
+     * isContributionMethod(getMethod("withRest"))     = true
+     * isContributionMethod(getMethod("withMVCGroup")) = false
+     * isContributionMethod(getMethod("without"))      = false
+     * </pre>
+     *
+     * @param method a MethodDescriptor reference
+     * @return true if the method name matches the given contribution method
+     *         pattern, false otherwise.
+     */
+    public static boolean isContributionMethod(MethodDescriptor method) {
+        if (method == null || method.getModifiers() - Modifier.PUBLIC != 0) return false;
+        return CONTRIBUTION_PATTERN.matcher(method.getName()).matches();
     }
 
     /**
@@ -1042,6 +1121,7 @@ public final class GriffonClassUtils {
      * <li>! isResourceHandlerMethod(method)</li>
      * <li>! isGetterMethod(method)</li>
      * <li>! isSetterMethod(method)</li>
+     * <li>! isContributionMethod(method)</li>
      * </ul>
      *
      * @param method a Method reference
@@ -1065,6 +1145,7 @@ public final class GriffonClassUtils {
      * <li>! isResourceHandlerMethod(method)</li>
      * <li>! isGetterMethod(method)</li>
      * <li>! isSetterMethod(method)</li>
+     * <li>! isContributionMethod(method)</li>
      * </ul>
      *
      * @param method a MetaMethod reference
@@ -1088,6 +1169,7 @@ public final class GriffonClassUtils {
      * <li>! isResourceHandlerMethod(method)</li>
      * <li>! isGetterMethod(method)</li>
      * <li>! isSetterMethod(method)</li>
+     * <li>! isContributionMethod(method)</li>
      * </ul>
      *
      * @param method a MethodDescriptor reference
@@ -1105,7 +1187,8 @@ public final class GriffonClassUtils {
                 !isObservableMethod(method) &&
                 !isResourceHandlerMethod(method) &&
                 !isGetterMethod(method) &&
-                !isSetterMethod(method);
+                !isSetterMethod(method) &&
+                !isContributionMethod(method);
     }
 
     public static boolean isGetter(MetaProperty property) {
