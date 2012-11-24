@@ -167,7 +167,17 @@ setDefaultTarget("integrateWith")
 eclipseGriffonJars = {args ->
     def jars = []
     new File("${griffonHome}/dist").eachFileMatch(~/^griffon-.*\.jar/) {file ->
-        jars << "<classpathentry kind=\"var\" path=\"GRIFFON_HOME/dist/${file.name}\" />"
+        if (file.name =~ /griffon-rt.*/) {
+            jars << """
+            <classpathentry kind="var" path="GRIFFON_HOME/dist/${file.name}" sourcepath="GRIFFON_HOME/doc/griffon-${griffonVersion}-sources.jar">
+                <attributes>
+                    <attribute name="javadoc_location" value="http://griffon.codehaus.org/guide/latest/api/" />
+                </attributes>
+            </classpathentry>
+            """.stripIndent(12).trim()
+        } else {
+            jars << "<classpathentry kind=\"var\" path=\"GRIFFON_HOME/dist/${file.name}\" />"
+        }
     }
     new File("${griffonHome}/lib").eachFileMatch(~/.*\.jar/) {file ->
         if (!file.name.startsWith("gant")) {
