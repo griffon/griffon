@@ -509,8 +509,12 @@ class ArtifactInstallEngine {
         }
 
         if (!release.snapshot && new File(artifactInstallPath).exists()) {
-            if (!commandLineHelper.confirmInput("${capitalize(type)} '${releaseName}' is already installed. Overwrite?")) {
-                return
+            String defaultNonInteractiveAnswer = settings.getConfigValue(KEY_NON_INTERACTIVE_DEFAULT_ANSWER, '')
+            if (!'y'.equalsIgnoreCase(defaultNonInteractiveAnswer)) {
+                if ('n'.equalsIgnoreCase(defaultNonInteractiveAnswer) ||
+                    !commandLineHelper.confirmInput("${capitalize(type)} '${releaseName}' is already installed. Overwrite?")) {
+                    return
+                }
             }
         }
 

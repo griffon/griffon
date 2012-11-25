@@ -31,6 +31,8 @@ import org.springframework.core.io.FileSystemResource
 import java.util.regex.Matcher
 import java.util.regex.Pattern
 
+import static org.codehaus.griffon.cli.CommandLineConstants.KEY_NON_INTERACTIVE_DEFAULT_ANSWER
+
 includeTargets << griffonScript('_GriffonPackage')
 
 defaultPackageName = ''
@@ -93,15 +95,23 @@ createArtifact = { Map args = [:] ->
         exit(1)
     }
 
+    String defaultNonInteractiveAnswer = getPropertyValue(KEY_NON_INTERACTIVE_DEFAULT_ANSWER, '')
+    def handleConfirmInput = { msg, answerProp ->
+        if (replaceNonag) return false
+        if (defaultNonInteractiveAnswer.equalsIgnoreCase('y')) return false
+        if (defaultNonInteractiveAnswer.equalsIgnoreCase('n')) return true
+        return confirmInput(msg, answerProp)
+    }
+
     def similarFiles = resolveResources("file:${basedir}/${artifactPath}/${pkgPath}${className}${suffix}.*")
     if (similarFiles) {
         def fileSuffix = similarFiles[0].file.name.substring(similarFiles[0].file.name.lastIndexOf('.'))
         if (fileSuffix == fileType) {
-            if (!replaceNonag && !confirmInput("${type} ${className}${suffix}${fileType} already exists. Overwrite?", "${artifactName}.${suffix}.overwrite")) {
+            if (!handleConfirmInput("${type} ${className}${suffix}${fileType} already exists. Overwrite?", "${artifactName}.${suffix}.overwrite")) {
                 return
             }
         } else if (!allowDuplicate) {
-            if (!replaceNonag && !confirmInput("${type} ${className}${suffix} already exists with type ${fileSuffix}. Rename?", "${artifactName}.${suffix}.rename")) {
+            if (!handleConfirmInput("${type} ${className}${suffix} already exists with type ${fileSuffix}. Rename?", "${artifactName}.${suffix}.rename")) {
                 return
             }
             // WATCH OUT!! can cause problems with VCS systems
