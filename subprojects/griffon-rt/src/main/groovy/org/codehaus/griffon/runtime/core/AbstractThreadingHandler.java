@@ -48,19 +48,19 @@ public abstract class AbstractThreadingHandler implements ThreadingHandler {
         UIThreadManager.getInstance().executeOutside(runnable);
     }
 
-    public Future execFuture(ExecutorService executorService, Closure closure) {
+    public <R> Future<R> execFuture(ExecutorService executorService, Closure<R> closure) {
         return UIThreadManager.getInstance().executeFuture(executorService, closure);
     }
 
-    public Future execFuture(Closure closure) {
+    public <R> Future<R> execFuture(Closure<R> closure) {
         return UIThreadManager.getInstance().executeFuture(closure);
     }
 
-    public Future execFuture(ExecutorService executorService, Callable callable) {
+    public <R> Future<R> execFuture(ExecutorService executorService, Callable<R> callable) {
         return UIThreadManager.getInstance().executeFuture(executorService, callable);
     }
 
-    public Future execFuture(Callable callable) {
+    public <R> Future<R> execFuture(Callable<R> callable) {
         return UIThreadManager.getInstance().executeFuture(callable);
     }
 }

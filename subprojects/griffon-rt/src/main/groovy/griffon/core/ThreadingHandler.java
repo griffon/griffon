@@ -52,20 +52,20 @@ public interface ThreadingHandler {
     /**
      * Executes a code block as a Future on an ExecutorService.
      */
-    Future execFuture(ExecutorService executorService, Closure closure);
+    <R> Future<R> execFuture(ExecutorService executorService, Closure<R> closure);
 
     /**
      * Executes a code block as a Future on a default ExecutorService.
      */
-    Future execFuture(Closure closure);
+    <R> Future<R> execFuture(Closure<R> closure);
 
     /**
      * Executes a code block as a Future on an ExecutorService.
      */
-    Future execFuture(ExecutorService executorService, Callable callable);
+    <R> Future<R> execFuture(ExecutorService executorService, Callable<R> callable);
 
     /**
      * Executes a code block as a Future on a default ExecutorService.
      */
-    Future execFuture(Callable callable);
+    <R> Future<R> execFuture(Callable<R> callable);
 }

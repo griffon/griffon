@@ -320,7 +320,7 @@ public final class UIThreadManager {
      * @param callable a code block to be executed
      * @return a Future that contains the result of the execution
      */
-    public Future executeFuture(Callable<?> callable) {
+    public <R> Future<R> executeFuture(Callable<R> callable) {
         return executeFuture(DEFAULT_EXECUTOR_SERVICE, callable);
     }
 
@@ -331,7 +331,7 @@ public final class UIThreadManager {
      * @param callable        a code block to be executed
      * @return a Future that contains the result of the execution
      */
-    public Future executeFuture(ExecutorService executorService, Callable<?> callable) {
+    public <R> Future<R> executeFuture(ExecutorService executorService, Callable<R> callable) {
         executorService = executorService != null ? executorService : DEFAULT_EXECUTOR_SERVICE;
         return executorService.submit(callable);
     }
