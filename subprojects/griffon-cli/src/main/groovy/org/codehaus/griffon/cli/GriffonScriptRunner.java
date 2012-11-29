@@ -113,6 +113,13 @@ public class GriffonScriptRunner {
             exitWithError("Griffon' installation directory not found: " + build.getGriffonHome());
         }
 
+        if (commandLine.hasOption("include-source")) {
+            build.setIncludeSource(true);
+        }
+        if (commandLine.hasOption("include-javadoc")) {
+            build.setIncludeJavadoc(true);
+        }
+
         // Show a nice header in the console when running commands.
         System.out.println(
             "Welcome to Griffon " + build.getGriffonVersion() + " - http://griffon-framework.org/" + '\n' +
