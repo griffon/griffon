@@ -21,6 +21,7 @@ import org.apache.ivy.plugins.resolver.IBiblioResolver
 import org.apache.ivy.plugins.resolver.RepositoryResolver
 import org.apache.ivy.util.Message
 import org.codehaus.griffon.resolve.SnapshotAwareM2Resolver
+import org.apache.ivy.plugins.resolver.IvyRepResolver
 
 class RepositoriesConfigurer extends AbstractDependencyManagementConfigurer {
     RepositoriesConfigurer(DependencyConfigurationContext context) {
@@ -96,6 +97,26 @@ class RepositoriesConfigurer extends AbstractDependencyManagementConfigurer {
         }
         else {
             Message.warn("A mavenRepo specified doesn't have a name argument. Please specify one!")
+        }
+    }
+
+    void ivyRepo(Map args) {
+        if (args && args.name) {
+            if (isResolverNotAlreadyDefined(args.name)) {
+                if (context.offline && !args.ivyroot.toString().startsWith('file://')) return
+                dependencyManager.repositoryData << ['type': 'ivyRepo', name: args.name]
+                def resolver = new IvyRepResolver(
+                    iviyroot: args.ivyroot,
+                    ivypattern: args.ivypattern ?: IvyRepResolver.DEFAULT_IVYPATTERN,
+                    artroot: args.artroot ?: args.ivyroot,
+                    artpattern: args.artpattern ?: '/[organization]-[module]-[revision].xml'
+                )
+                resolver.settings = dependencyManager.ivySettings
+                addToChainResolver(resolver)
+            }
+        }
+        else {
+            Message.warn("An ivyRepo specified doesn't have a name argument. Please specify one!")
         }
     }
 
