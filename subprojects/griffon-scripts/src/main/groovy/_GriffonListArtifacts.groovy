@@ -218,6 +218,13 @@ displayArtifactInfo = { String type, String name, String version, ArtifactReposi
         println "No releases found for this ${type}"
         println('-' * 80)
     }
+
+    if (artifact.description) {
+        println('-' * 80)
+        println 'Description:\n'
+        println artifact.description
+        println('-' * 80)
+    }
 }
 
 displayArtifactFooter = { type ->
