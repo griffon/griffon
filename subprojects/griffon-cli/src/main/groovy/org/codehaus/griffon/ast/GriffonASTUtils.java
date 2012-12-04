@@ -27,6 +27,7 @@ import org.codehaus.groovy.syntax.Types;
 
 import java.lang.reflect.Modifier;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -353,10 +354,12 @@ public class GriffonASTUtils {
 
     public static ArgumentListExpression args(Expression... expressions) {
         List<Expression> args = new ArrayList<Expression>();
-        for (Expression expression : expressions) {
-            args.add(expression);
-        }
+        Collections.addAll(args, expressions);
         return new ArgumentListExpression(args);
+    }
+
+    public static ArgumentListExpression args(List<Expression> expressions) {
+        return new ArgumentListExpression(expressions);
     }
 
     public static VariableExpression var(String name) {
