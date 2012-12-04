@@ -69,6 +69,8 @@ public class GriffonApplicationHelper {
         .e("windows", "org.codehaus.griffon.runtime.util.DefaultWindowsPlatformHandler")
         .e("windows64", "org.codehaus.griffon.runtime.util.DefaultWindowsPlatformHandler");
 
+    private static final String KEY_APP_LIFECYCLE_HANDLER_DISABLE = "app.lifecycle.handler.disable";
+
     static {
         ExpandoMetaClassCreationHandle.enable();
     }
@@ -564,6 +566,12 @@ public class GriffonApplicationHelper {
      * On Swing this would be the Event Dispatch Thread.
      */
     public static void runLifecycleHandler(String handlerName, GriffonApplication app) {
+        boolean skipHandler = getConfigValueAsBoolean(app.getConfig(), KEY_APP_LIFECYCLE_HANDLER_DISABLE, false);
+        if(skipHandler && LOG.isDebugEnabled()) {
+            LOG.info("Lifecycle handler '" + handlerName + "' has been disabled. SKIPPING.");
+            return;
+        }
+
         Class<?> handlerClass = null;
         try {
             handlerClass = loadClass(handlerName);
