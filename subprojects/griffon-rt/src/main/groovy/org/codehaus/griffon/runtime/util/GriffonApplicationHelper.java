@@ -69,7 +69,29 @@ public class GriffonApplicationHelper {
         .e("windows", "org.codehaus.griffon.runtime.util.DefaultWindowsPlatformHandler")
         .e("windows64", "org.codehaus.griffon.runtime.util.DefaultWindowsPlatformHandler");
 
+    private static final String LOCATION_CLASSPATH = "classpath:";
+    private static final String LOCATION_FILE = "file:";
+    private static final String PROPERTIES_SUFFIX = ".properties";
+    private static final String GROOVY_SUFFIX = ".groovy";
+
+    private static final String KEY_MESSAGE_SOURCE_FACTORY = "app.messageSource.factory";
+    private static final String KEY_RESOURCES_INJECTOR_FACTORY = "app.resourceInjector.factory";
+    private static final String KEY_EVENT_ROUTER_FACTORY = "app.eventRouter.factory";
+    private static final String KEY_ADDON_MANAGER_FACTORY = "app.addonManager.factory";
+    private static final String KEY_ARTIFACT_MANAGER_FACTORY = "app.artifactManager.factory";
+    private static final String KEY_ACTION_MANAGER_FACTORY = "app.actionManager.factory";
+    private static final String KEY_MVCGROUP_MANAGER_FACTORY = "app.mvcGroupManager.factory";
+    
     private static final String KEY_APP_LIFECYCLE_HANDLER_DISABLE = "app.lifecycle.handler.disable";
+    private static final String KEY_GRIFFON_ACTION_MANAGER_DISABLE = "griffon.action.manager.disable";
+
+    private static final String DEFAULT_MESSAGE_SOURCE_FACTORY = "org.codehaus.griffon.runtime.core.factories.DefaultMessageSourceFactory";
+    private static final String DEFAULT_RESOURCES_INJECTOR_FACTORY = "org.codehaus.griffon.runtime.core.factories.DefaultResourcesInjectorFactory";
+    private static final String DEFAULT_EVENT_ROUTER_FACTORY = "org.codehaus.griffon.runtime.core.factories.DefaultEventRouterFactory";
+    private static final String DEFAULT_ADDON_MANAGER_FACTORY = "org.codehaus.griffon.runtime.core.factories.DefaultAddonManagerFactory";
+    private static final String DEFAULT_ARTIFACT_MANAGER_FACTORY = "org.codehaus.griffon.runtime.core.factories.DefaultArtifactManagerFactory";
+    private static final String DEFAULT_MVCGROUP_MANAGER_FACTORY = "org.codehaus.griffon.runtime.core.factories.DefaultMVCGroupManagerFactory";
+
 
     static {
         ExpandoMetaClassCreationHandle.enable();
@@ -174,11 +196,6 @@ public class GriffonApplicationHelper {
         }
     }
 
-    private static final String LOCATION_CLASSPATH = "classpath:";
-    private static final String LOCATION_FILE = "file:";
-    private static final String PROPERTIES_SUFFIX = ".properties";
-    private static final String GROOVY_SUFFIX = ".groovy";
-
     private static void loadExternalConfig(GriffonApplication app, ConfigReader configReader) {
         List<String> locations = (List<String>) getConfigValue(app.getConfig(), "griffon.config.locations", Collections.emptyList());
         for (String location : locations) {
@@ -221,9 +238,6 @@ public class GriffonApplicationHelper {
         }
     }
 
-    private static final String KEY_MESSAGE_SOURCE_FACTORY = "app.messageSource.factory";
-    private static final String DEFAULT_MESSAGE_SOURCE_FACTORY = "org.codehaus.griffon.runtime.core.factories.DefaultMessageSourceFactory";
-
     private static void initializeMessageSource(GriffonApplication app) {
         String className = getConfigValueAsString(app.getConfig(), KEY_MESSAGE_SOURCE_FACTORY, DEFAULT_MESSAGE_SOURCE_FACTORY);
         if (LOG.isDebugEnabled()) {
@@ -244,9 +258,6 @@ public class GriffonApplicationHelper {
         ResourceResolverFactory factory = (ResourceResolverFactory) safeNewInstance(className);
         InvokerHelper.setProperty(app, "resourceResolver", factory.create(app));
     }
-
-    private static final String KEY_RESOURCES_INJECTOR_FACTORY = "app.resourceInjector.factory";
-    private static final String DEFAULT_RESOURCES_INJECTOR_FACTORY = "org.codehaus.griffon.runtime.core.factories.DefaultResourcesInjectorFactory";
 
     private static void initializeResourcesInjector(GriffonApplication app) {
         String className = getConfigValueAsString(app.getConfig(), KEY_RESOURCES_INJECTOR_FACTORY, DEFAULT_RESOURCES_INJECTOR_FACTORY);
@@ -313,9 +324,6 @@ public class GriffonApplicationHelper {
         InvokerHelper.setProperty(app, "eventRouter", createEventRouter(app));
     }
 
-    private static final String KEY_EVENT_ROUTER_FACTORY = "app.eventRouter.factory";
-    private static final String DEFAULT_EVENT_ROUTER_FACTORY = "org.codehaus.griffon.runtime.core.factories.DefaultEventRouterFactory";
-
     public static EventRouter createEventRouter(GriffonApplication app) {
         String className = getConfigValueAsString(app.getConfig(), KEY_EVENT_ROUTER_FACTORY, DEFAULT_EVENT_ROUTER_FACTORY);
         if (LOG.isDebugEnabled()) {
@@ -355,9 +363,6 @@ public class GriffonApplicationHelper {
         platformHandler.handle(app);
     }
 
-    private static final String KEY_ARTIFACT_MANAGER_FACTORY = "app.artifactManager.factory";
-    private static final String DEFAULT_ARTIFACT_MANAGER_FACTORY = "org.codehaus.griffon.runtime.core.factories.DefaultArtifactManagerFactory";
-
     private static void initializeArtifactManager(GriffonApplication app) {
         if (app.getArtifactManager() == null) {
             String className = getConfigValueAsString(app.getConfig(), KEY_ARTIFACT_MANAGER_FACTORY, DEFAULT_ARTIFACT_MANAGER_FACTORY);
@@ -382,9 +387,6 @@ public class GriffonApplicationHelper {
         app.getArtifactManager().loadArtifactMetadata();
     }
 
-    private static final String KEY_ADDON_MANAGER_FACTORY = "app.addonManager.factory";
-    private static final String DEFAULT_ADDON_MANAGER_FACTORY = "org.codehaus.griffon.runtime.core.factories.DefaultAddonManagerFactory";
-
     private static void initializeAddonManager(GriffonApplication app) {
         if (app.getAddonManager() == null) {
             String className = getConfigValueAsString(app.getConfig(), KEY_ADDON_MANAGER_FACTORY, DEFAULT_ADDON_MANAGER_FACTORY);
@@ -396,9 +398,6 @@ public class GriffonApplicationHelper {
         }
         app.getAddonManager().initialize();
     }
-
-    private static final String KEY_GRIFFON_ACTION_MANAGER_DISABLE = "griffon.action.manager.disable";
-    private static final String KEY_ACTION_MANAGER_FACTORY = "app.actionManager.factory";
 
     private static void initializeActionManager(GriffonApplication app) {
         InvokerHelper.setProperty(app, "actionManager", new NoopGriffonControllerActionManager(app));
@@ -473,8 +472,6 @@ public class GriffonApplicationHelper {
         });
     }
 
-    private static final String KEY_MVCGROUP_MANAGER_FACTORY = "app.mvcGroupManager.factory";
-    private static final String DEFAULT_MVCGROUP_MANAGER_FACTORY = "org.codehaus.griffon.runtime.core.factories.DefaultMVCGroupManagerFactory";
 
     private static void initializeMvcManager(GriffonApplication app) {
         if (app.getMvcGroupManager() == null) {
