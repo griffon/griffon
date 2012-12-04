@@ -34,6 +34,11 @@ public class ArchetypeInfoCommand extends AbstractGriffonCommand {
             required = false)
     private String repository = "griffon-central";
 
+    @Option(name = "--skip-description",
+        description = "Do not display the archetype's description.",
+        required = false)
+    private boolean skipDescription = false;
+
     @Argument(index = 0,
             name = "name",
             description = "The name of the archetype to look for.",

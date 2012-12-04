@@ -81,7 +81,7 @@ public class GriffonApplicationHelper {
     private static final String KEY_ARTIFACT_MANAGER_FACTORY = "app.artifactManager.factory";
     private static final String KEY_ACTION_MANAGER_FACTORY = "app.actionManager.factory";
     private static final String KEY_MVCGROUP_MANAGER_FACTORY = "app.mvcGroupManager.factory";
-    
+
     private static final String KEY_APP_LIFECYCLE_HANDLER_DISABLE = "app.lifecycle.handler.disable";
     private static final String KEY_GRIFFON_ACTION_MANAGER_DISABLE = "griffon.action.manager.disable";
 

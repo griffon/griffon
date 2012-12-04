@@ -34,6 +34,11 @@ public class PluginInfoCommand extends AbstractGriffonCommand {
             required = false)
     private String repository = "griffon-central";
 
+    @Option(name = "--skip-description",
+        description = "Do not display the plugin's description.",
+        required = false)
+    private boolean skipDescription = false;
+
     @Argument(index = 0,
             name = "name",
             description = "The name of the plugin to look for.",

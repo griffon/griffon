@@ -214,13 +214,13 @@ displayArtifactInfo = { String type, String name, String version, ArtifactReposi
         artifact.releases.each { r ->
             println "${r.version.padRight(20, ' ')}${r.griffonVersion.padRight(25, ' ')}${r.date}"
         }
+        println('-' * 80)
     } else {
         println "No releases found for this ${type}"
         println('-' * 80)
     }
 
-    if (artifact.description) {
-        println('-' * 80)
+    if (artifact.description && !argsMap['skip-description']) {
         println 'Description:\n'
         println artifact.description
         println('-' * 80)
