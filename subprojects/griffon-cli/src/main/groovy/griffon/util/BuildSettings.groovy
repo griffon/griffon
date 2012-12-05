@@ -37,6 +37,7 @@ import static griffon.util.ArtifactSettings.*
 import static griffon.util.GriffonExceptionHandler.sanitize
 import static griffon.util.GriffonNameUtils.capitalize
 import static org.codehaus.griffon.cli.CommandLineConstants.*
+import org.apache.ivy.core.report.ArtifactDownloadReport
 
 /**
  * <p>Represents the project paths and other build settings
@@ -294,6 +295,10 @@ class BuildSettings extends AbstractBuildSettings {
     ResolveReport testResolveReport
     ResolveReport runtimeResolveReport
 
+    static final Closure ARTIFACT_FILTER = { ArtifactDownloadReport r ->
+        r.downloadStatus.toString() != 'failed' && !r.name.contains('-sources') && !r.name.contains('-javadoc')
+    }
+
     /** List containing the default (resolved via the dependencyManager) compile-time dependencies of the app as File instances.  */
     private List<File> internalCompileDependencies
     @Lazy List<File> defaultCompileDependencies = {
@@ -302,7 +307,7 @@ class BuildSettings extends AbstractBuildSettings {
         List<File> jarFiles
         if (shouldResolve()) {
             compileResolveReport = dependencyManager.resolveDependencies(IvyDependencyManager.COMPILE_CONFIGURATION)
-            jarFiles = compileResolveReport.getArtifactsReports(null, false).findAll {it.downloadStatus.toString() != 'failed'}.localFile + applicationJars
+            jarFiles = compileResolveReport.getArtifactsReports(null, false).findAll(ARTIFACT_FILTER).localFile + applicationJars
             LOG.debug("Resolved jars for [compile]: ${{-> jarFiles.join('\n')}}")
         } else {
             jarFiles = []
@@ -336,7 +341,7 @@ class BuildSettings extends AbstractBuildSettings {
         if (internalTestDependencies) return internalTestDependencies
         if (shouldResolve()) {
             testResolveReport = dependencyManager.resolveDependencies(IvyDependencyManager.TEST_CONFIGURATION)
-            def jarFiles = testResolveReport.getArtifactsReports(null, false).findAll {it.downloadStatus.toString() != 'failed'}.localFile + applicationJars
+            def jarFiles = testResolveReport.getArtifactsReports(null, false).findAll(ARTIFACT_FILTER).localFile + applicationJars
             LOG.debug("Resolved jars for [test]: ${{-> jarFiles.join('\n')}}")
             return jarFiles
         } else {
@@ -370,7 +375,7 @@ class BuildSettings extends AbstractBuildSettings {
         if (internalRuntimeDependencies) return internalRuntimeDependencies
         if (shouldResolve()) {
             runtimeResolveReport = dependencyManager.resolveDependencies(IvyDependencyManager.RUNTIME_CONFIGURATION)
-            def jarFiles = runtimeResolveReport.getArtifactsReports(null, false).findAll {it.downloadStatus.toString() != 'failed'}.localFile + applicationJars
+            def jarFiles = runtimeResolveReport.getArtifactsReports(null, false).findAll(ARTIFACT_FILTER).localFile + applicationJars
             LOG.debug("Resolved jars for [runtime]: ${{-> jarFiles.join('\n')}}")
             return jarFiles
         }
@@ -408,7 +413,7 @@ class BuildSettings extends AbstractBuildSettings {
         if (internalBuildDependencies) return internalBuildDependencies
         if (shouldResolve()) {
             buildResolveReport = dependencyManager.resolveDependencies(IvyDependencyManager.BUILD_CONFIGURATION)
-            def jarFiles = buildResolveReport.getArtifactsReports(null, false).findAll {it.downloadStatus.toString() != 'failed'}.localFile + applicationJars
+            def jarFiles = buildResolveReport.getArtifactsReports(null, false).findAll(ARTIFACT_FILTER).localFile + applicationJars
             LOG.debug("Resolved jars for [build]: ${{-> jarFiles.join('\n')}}")
             return jarFiles
         }

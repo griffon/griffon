@@ -28,6 +28,7 @@ import java.util.concurrent.ConcurrentHashMap
 import static ArtifactSettings.getArtifactRelease
 import static griffon.util.GriffonNameUtils.getHyphenatedName
 import static org.apache.commons.lang.ArrayUtils.addAll
+import org.apache.ivy.core.report.ResolveReport
 
 /**
  * Common utilities for dealing with plugins.
@@ -282,11 +283,11 @@ class PluginSettings {
         // if (parsedDependencies) {
         IvyDependencyManager dependencyManager = settings.dependencyManager
         for (conf in ['runtime', 'compile', 'test', 'build']) {
-            def resolveReport = dependencyManager.resolveDependencies(IvyDependencyManager."${conf.toUpperCase()}_CONFIGURATION")
+            ResolveReport resolveReport = dependencyManager.resolveDependencies(IvyDependencyManager."${conf.toUpperCase()}_CONFIGURATION")
             if (resolveReport.hasError()) {
                 throw new IllegalStateException("Some dependencies failed to be resolved.")
             } else {
-                configurations.get(conf, []).addAll(resolveReport.allArtifactsReports.localFile)
+                configurations.get(conf, []).addAll(resolveReport.allArtifactsReports.findAll(BuildSettings.ARTIFACT_FILTER).localFile)
             }
         }
 
