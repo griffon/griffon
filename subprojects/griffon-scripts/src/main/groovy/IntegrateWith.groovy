@@ -169,11 +169,15 @@ eclipseGriffonJars = {args ->
     new File("${griffonHome}/dist").eachFileMatch(~/^griffon-.*\.jar/) {file ->
         if (file.name =~ /griffon-rt.*/) {
             jars << """
-            <classpathentry kind="var" path="GRIFFON_HOME/dist/${file.name}" sourcepath="GRIFFON_HOME/doc/griffon-${griffonVersion}-sources.jar">
+            <classpathentry kind="var" path="GRIFFON_HOME/dist/${file.name}" sourcepath="GRIFFON_HOME/doc/griffon-rt-${griffonVersion}-sources.jar">
                 <attributes>
                     <attribute name="javadoc_location" value="http://griffon.codehaus.org/guide/latest/api/" />
                 </attributes>
             </classpathentry>
+            """.stripIndent(12).trim()
+        } else if (file.name =~ /griffon-cli.*/) {
+            jars << """
+            <classpathentry kind="var" path="GRIFFON_HOME/dist/${file.name}" sourcepath="GRIFFON_HOME/doc/griffon-cli-${griffonVersion}-sources.jar"/>
             """.stripIndent(12).trim()
         } else {
             jars << "<classpathentry kind=\"var\" path=\"GRIFFON_HOME/dist/${file.name}\" />"
@@ -261,9 +265,14 @@ pluginPaths = {
 
     pluginSettings.doWithProjectPlugins {String name, String version, String path ->
         def pluginDir = new File(path, 'dist')
-        def javadoc = new File(pluginDir, "griffon-$name-$version-javadoc.jar")
+        def javadoc = new File(pluginDir, "griffon-$name-runtime-$version-javadoc.jar")
         if (javadoc.exists()) plugins.javadoc << normalizeFilePath(javadoc)
-        def sources = new File(pluginDir, "griffon-$name-$version-sources.jar")
+        def sources = new File(pluginDir, "griffon-$name-runtime-$version-sources.jar")
+        if (sources.exists()) plugins.sources << normalizeFilePath(sources)
+        // pre 1.2.0 compatibility
+        javadoc = new File(pluginDir, "griffon-$name-$version-javadoc.jar")
+        if (javadoc.exists()) plugins.javadoc << normalizeFilePath(javadoc)
+        sources = new File(pluginDir, "griffon-$name-$version-sources.jar")
         if (sources.exists()) plugins.sources << normalizeFilePath(sources)
     }
 

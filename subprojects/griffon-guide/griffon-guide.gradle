@@ -64,7 +64,7 @@ task apiDocs(type: Groovydoc, dependsOn: copyDocs) {
     windowTitle     = "Griffon $version"
     groovyClasspath = configurations.groovy
     classpath       = project(":griffon-rt").sourceSets.main.output +
-            project(":griffon-rt").configurations.compile
+                      project(":griffon-rt").configurations.compile
 
     includePrivate = true
     use = true
@@ -78,7 +78,7 @@ task apiDocs(type: Groovydoc, dependsOn: copyDocs) {
         copy {
             into task.destinationDir
             from project(':').file('src/dist/media/griffon.ico'),
-                    'src/guide/resources/css/stylesheet.css'
+                 'src/guide/resources/css/stylesheet.css'
             // from('src/resources/javadoc') {
             //     into 'resources'
             // }
@@ -93,32 +93,82 @@ task apiDocs(type: Groovydoc, dependsOn: copyDocs) {
     }
 }
 
-task java2html(){
+task java2html {
    dependsOn apiDocs
    dependsOn "java2htmlGenerateOverview"
    dependsOn java2htmlConvertCode
 }
 
 task jarApi(type: Jar, dependsOn: apiDocs) {
-    archiveName    = "griffon-${project.version}-javadoc.jar"
+    archiveName    = "griffon-rt-${project.version}-javadoc.jar"
     destinationDir = "$buildDir/assemble/jars" as File
     from "$buildDir/api"
 }
 
 task jarSource(type: Jar, dependsOn: copyDocs) {
-    archiveName    = "griffon-${project.version}-sources.jar"
+    archiveName    = "griffon-rt-${project.version}-sources.jar"
     destinationDir = "$buildDir/assemble/jars" as File
     from "$buildDir/sources"
     exclude '**/*.html'
 }
 
 task jarSourceHtml(type: Jar, dependsOn: java2html) {
-    archiveName    = "griffon-${project.version}-sources-html.jar"
+    archiveName    = "griffon-rt-${project.version}-sources-html.jar"
     destinationDir = "$buildDir/assemble/jars" as File
     from "$buildDir/java2html"
 }
 
-task jarDocs(dependsOn: [jarApi, jarSource, jarSourceHtml]) {}
+task cliApiDocs(type: Groovydoc) {
+    source          = project(":griffon-cli").file('src/main/groovy')
+    destinationDir  = "$buildDir/cli-api" as File
+    docTitle        = "Griffon $version"
+    header          = "Griffon $version"
+    windowTitle     = "Griffon $version"
+    groovyClasspath = configurations.groovy
+    classpath       = project(":griffon-cli").sourceSets.main.output +
+                      project(":griffon-cli").configurations.compile
+
+    includePrivate = true
+    use = true
+
+    link('http://java.sun.com/j2se/1.5.0/docs/api', 'java.,org.xml.,javax.,org.xml.')
+    link('http://www.dpml.net/api/ant/1.7.0', 'org.apache.ant.,org.apache.tools.ant.')
+    link('http://kentbeck.github.com/junit/javadoc/latest/', 'org.junit.,junit.framework.')
+    link('http://groovy.codehaus.org/api/', 'groovy.,org.codehaus.groovy.')
+
+    doLast { task ->
+        copy {
+            into task.destinationDir
+            from project(':').file('src/dist/media/griffon.ico'),
+                'src/guide/resources/css/stylesheet.css'
+            // from('src/resources/javadoc') {
+            //     into 'resources'
+            // }
+        }
+        ant {
+            replace(dir: task.destinationDir,
+                token: 'groovy.ico',
+                value: 'griffon.ico') {
+                include(name: '**/*.html')
+            }
+        }
+    }
+}
+
+task jarCliApi(type: Jar, dependsOn: cliApiDocs) {
+    archiveName    = "griffon-cli-${project.version}-javadoc.jar"
+    destinationDir = "$buildDir/assemble/jars" as File
+    from "$buildDir/cli-api"
+}
+
+task jarCliSource(type: Jar) {
+    archiveName    = "griffon-cli-${project.version}-sources.jar"
+    destinationDir = "$buildDir/assemble/jars" as File
+    from project(":griffon-cli").file('src/main/groovy')
+    exclude '**/*.html'
+}
+
+task jarDocs(dependsOn: [jarApi, jarSource, jarSourceHtml, jarCliApi, jarCliSource]) {}
 
 task prepareGuide(type: Copy) {
     destinationDir = "$buildDir/guide" as File

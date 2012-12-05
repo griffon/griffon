@@ -86,6 +86,8 @@ ext.distBinSpec = copySpec {
         from(project(':griffon-guide').jarApi.outputs.files)
         from(project(':griffon-guide').jarSource.outputs.files)
         from(project(':griffon-guide').jarSourceHtml.outputs.files)
+        from(project(':griffon-guide').jarCliApi.outputs.files)
+        from(project(':griffon-guide').jarCliSource.outputs.files)
     }
     into('doc') {
         from('src/dist/doc')

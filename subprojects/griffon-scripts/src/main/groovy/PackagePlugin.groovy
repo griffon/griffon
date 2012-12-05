@@ -171,7 +171,7 @@ target(name: 'pluginDocs', description: 'Generates and packages plugin documenta
     }
 
     if (isAddonPlugin || hasSrcMain || hasTestSources || sources) {
-        String jarFileName = "${artifactPackageDirPath}/dist/griffon-${pluginName}-${pluginVersion}-sources.jar"
+        String jarFileName = "${artifactPackageDirPath}/dist/griffon-${pluginName}-runtime-${pluginVersion}-sources.jar"
 
         ant.uptodate(property: 'pluginSourceJarUpToDate', targetfile: jarFileName) {
             sources.each { d ->
@@ -184,12 +184,16 @@ target(name: 'pluginDocs', description: 'Generates and packages plugin documenta
             if (hasTestSources) srcfiles(dir: projectTestDirPath, includes: '**/*')
         }
         boolean uptodate = ant.antProject.properties.pluginSourceJarUpToDate
+        File metainfDir = new File("${basedir}/griffon-app/conf/metainf")
         if (!uptodate) {
             ant.jar(destfile: jarFileName) {
                 sources.each { d -> fileset(dir: d, excludes: '**/CVS/**, **/.svn/**') }
                 fileset(dir: basedir, includes: '*GriffonAddon*')
                 if (hasSrcMain) fileset(dir: srcMainDir, includes: '**/*.groovy, **/*.java')
                 if (hasTestSources) fileset(dir: projectTestDir, includes: '**/*.groovy, **/*.java')
+                if (metainfDir.list()) {
+                    metainf(dir: metainfDir)
+                }
             }
         }
 
@@ -208,7 +212,29 @@ target(name: 'pluginDocs', description: 'Generates and packages plugin documenta
                     windowtitle: "${pluginName} ${pluginVersion}",
                     doctitle: "${pluginName} ${pluginVersion}")
             if (javadocDir.list()) {
-                jarFileName = "${artifactPackageDirPath}/dist/griffon-${pluginName}-${pluginVersion}-javadoc.jar"
+                jarFileName = "${artifactPackageDirPath}/dist/griffon-${pluginName}-runtime-${pluginVersion}-javadoc.jar"
+                ant.jar(destfile: jarFileName) {
+                    fileset(dir: javadocDir)
+                }
+                ant.delete(dir: javadocDir, quiet: true)
+            }
+        }
+    }
+
+    if (cliSourceDir.exists() && hasJavaOrGroovySources(cliSourceDir)) {
+        String jarFileName = "${artifactPackageDirPath}/dist/griffon-${pluginName}-compile-${pluginVersion}-sources.jar"
+        ant.jar(destfile: jarFileName) {
+            fileset(dir: cliSourceDir)
+        }
+
+        if (!argsMap.nodoc) {
+            File javadocDir = new File("${projectTargetDir}/docs/cli-api")
+            invokeGroovydoc(destdir: javadocDir,
+                sourcepath: [cliSourceDir],
+                windowtitle: "${pluginName} CLI ${pluginVersion}",
+                doctitle: "${pluginName} CLI ${pluginVersion}")
+            if (javadocDir.list()) {
+                jarFileName = "${artifactPackageDirPath}/dist/griffon-${pluginName}-compile-${pluginVersion}-javadoc.jar"
                 ant.jar(destfile: jarFileName) {
                     fileset(dir: javadocDir)
                 }
