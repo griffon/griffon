@@ -2,9 +2,9 @@ Griffon follows a convention for version numbers when applied to artifacts (such
 
     <major>.<minor>.<revision>-<tag>
 
-where @revision@ and @tag@ may be omitted. When artifacts get upgraded Griffon will check for number compatibility and pick the version whose numbers are greatest that the rest. However in the case of @major@ it will throw an error if two version numbers differ, as the convention is that if there are at least two different values for @major@ there's bound to be a compatibility conflict.
+where @revision@ and @tag@ may be omitted. When artifacts get upgraded Griffon will check for number compatibility and pick the version whose numbers are greatest than the rest. However in the case of @major@ it will throw an error if two version numbers differ, as the convention is that there's bound to be a compatibility conflict if there are at least two different values for @major@ .
 
-Developers can inspect the conflicts report and consult the release notes for each marked dependency and decided if the upgrade should proceed or not. If the decision is to continue with the upgrade then the developer must inform the build that a forced upgrade must occur. This can be accomplished by setting the @griffon.artifact.force.upgrade@ to true, like this
+Developers can inspect the conflicts report and consult the release notes for each marked dependency and decide if the upgrade should proceed or not. If the decision is to continue with the upgrade then the developer must inform the build that a forced upgrade must occur. This can be accomplished by setting the @griffon.artifact.force.upgrade@ flag to true, like this
 
 {code}
 griffon -Dgriffon.artifact.force.upgrade=true clean

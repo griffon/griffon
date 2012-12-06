@@ -164,7 +164,6 @@ target(name: 'package_jar', description: "Creates a single jar distribution and 
 
 // XXX -- NATIVE
     File platformDir = new File("${jardir}/${targetPlatform}")
-    println platformDir.absolutePath
 // XXX -- NATIVE
 
     def jarfileAggregator = {
