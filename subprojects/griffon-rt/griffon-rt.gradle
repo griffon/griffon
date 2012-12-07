@@ -15,6 +15,7 @@
  */
 
 apply plugin: 'groovy'
+apply plugin: 'osgi'
 
 ext.pomDescription = 'Griffon runtime'
 
@@ -39,4 +40,11 @@ dependencies {
         exclude group: 'org.slf4j', module: 'slf4j-api'
     }
     testCompile 'junit:junit:4.10'
+}
+
+jar {
+    manifest {
+        instruction 'Bundle-Vendor', 'griffon-framework.org'
+        instruction 'Bundle-RequiredExecutionEnvironment', 'JavaSE-1.6'
+    }
 }
