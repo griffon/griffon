@@ -20,6 +20,11 @@ class @plugin.name@GriffonPlugin {
     String documentation = ''
     // URL where source can be found
     String source = ''
+    // Map of Bnd directives and/or Manifest entries
+    // see http://www.aqute.biz/Bnd/Bnd for reference
+    Map osgiManifest = [
+        'Bundle-Description': 'Plugin summary/headline'
+    ]
 
     List authors = [
         [

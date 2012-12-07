@@ -14,6 +14,10 @@
  * limitations under the License.
  */
 
+import aQute.lib.osgi.Analyzer
+import java.util.jar.Manifest
+import java.text.SimpleDateFormat
+
 /**
  * Gant script that packages a Griffon addon inside of a plugin
  *
@@ -60,6 +64,54 @@ target(name: 'packageAddon', description: 'Packages a Griffon addon',
 
     File metainfDirPath = new File("${basedir}/griffon-app/conf/metainf")
     addonJarName = "griffon-${pluginName}-runtime-${pluginVersion}.jar"
+
+    Date buildTimeAndDate = new Date()
+    String buildTime = new SimpleDateFormat('dd-MMM-yyyy').format(buildTimeAndDate)
+    String buildDate = new SimpleDateFormat('hh:mm aa').format(buildTimeAndDate)
+    String bundleName = "griffon-${pluginName}-runtime".toString()
+
+    Map defaultManifestAttributes = [
+        'Built-By': System.properties['user.name'],
+        'Created-By': System.properties['java.version'] + " (" + System.properties['java.vendor'] + " "+ System.getProperty("java.vm.version") + ")",
+        'Build-Date': buildTime,
+        'Build-Time': buildDate,
+        'Specification-Title': bundleName,
+        'Specification-Version': pluginVersion,
+        'Specification-Vendor': 'griffon-framework.org',
+        'Implementation-Title': bundleName,
+        'Implementation-Version': pluginVersion,
+        'Implementation-Vendor': 'griffon-framework.org'
+    ]
+    Map osgiManifestAttributes = [
+        (Analyzer.BUNDLE_NAME): bundleName,
+        (Analyzer.BUNDLE_VERSION): pluginVersion,
+        (Analyzer.BUNDLE_SYMBOLICNAME): bundleName,
+        (Analyzer.BND_LASTMODIFIED): projectMainClassesDir.lastModified(),
+        (Analyzer.BUNDLE_LICENSE): descriptorInstance.license,
+        (Analyzer.BUNDLE_VENDOR): 'griffon-framework.org',
+        (Analyzer.EXPORT_PACKAGE): "*;-noimport:=false;version=${pluginVersion}"
+    ]
+
+    try {
+        osgiManifestAttributes.putAll(descriptorInstance.osgiManifest)
+    } catch(MissingPropertyException mpe) {
+        if (mpe.property != 'osgiManifest') {
+            event('StatusError', ["An error occured when processing OSGi manifest entries: ${mpe}"])
+            exit 1
+        }
+    }
+
+    Analyzer analyzer = new Analyzer()
+    osgiManifestAttributes.each { k, v -> analyzer.setProperty(k, v.toString()) }
+    analyzer.setJar(projectMainClassesDir)
+    analyzer.setClasspath(griffonSettings.runtimeDependencies.toArray(
+        new File[griffonSettings.runtimeDependencies.size()]
+    ))
+    Manifest osgiManifest = analyzer.calcManifest()
+    Map mergedAttributes = [:]
+    osgiManifest.mainAttributes.each { k, v -> mergedAttributes[k.toString()] = v }
+    mergedAttributes.putAll(defaultManifestAttributes)
+
     ant.jar(destfile: "$addonJarDir/$addonJarName") {
         fileset(dir: projectMainClassesDir) {
             exclude(name: 'Config*.class')
@@ -69,6 +121,12 @@ target(name: 'packageAddon', description: 'Packages a Griffon addon',
         }
         fileset(dir: i18nDir)
         fileset(dir: resourcesDir)
+
+        manifest {
+            mergedAttributes.sort().each { key, value ->
+                attribute(name: key, value: value)
+            }
+        }
 
         if (metainfDirPath.list()) {
             metainf(dir: metainfDirPath)

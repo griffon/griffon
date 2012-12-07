@@ -27,6 +27,8 @@ import java.util.zip.ZipFile
 import static griffon.util.GriffonApplicationUtils.osArch
 import static griffon.util.GriffonNameUtils.capitalize
 import static griffon.util.PlatformUtils.getPlatform
+import aQute.lib.osgi.Analyzer
+import java.util.jar.Manifest
 
 /**
  * Gant script that packages a Griffon application (note: does not create WAR)
@@ -253,6 +255,7 @@ target(name: 'jarFiles', description: "Jar up the package files",
 
     if (!upToDate) {
         mergeManifest()
+        Map osgiManifestMap = createOsgiManifest()
         ant.jar(destfile: destFileName) {
             fileset(dir: projectMainClassesDir) {
                 exclude(name: 'BuildConfig*.class')
@@ -264,7 +267,7 @@ target(name: 'jarFiles', description: "Jar up the package files",
                 metainf(dir: metainfDirPath)
             }
             manifest {
-                manifestMap.each { k, v ->
+                osgiManifestMap.sort().each { k, v ->
                     attribute(name: k, value: v)
                 }
             }
@@ -293,6 +296,29 @@ target(name: 'mergeManifest', description: 'Generates a Manifest with default an
     buildConfig.griffon.jars.manifest?.each { k, v ->
         manifestMap[k] = v
     }
+}
+
+createOsgiManifest = {
+    Map osgiManifestAttributes = [
+        (Analyzer.BUNDLE_NAME): griffonAppName,
+        (Analyzer.BUNDLE_VERSION): griffonAppVersion,
+        (Analyzer.BUNDLE_SYMBOLICNAME): griffonAppName,
+        (Analyzer.BND_LASTMODIFIED): projectMainClassesDir.lastModified(),
+        (Analyzer.EXPORT_PACKAGE): "*;-noimport:=false;version=${griffonAppVersion}"
+    ]
+
+    osgiManifestAttributes.putAll(manifestMap)
+
+    Analyzer analyzer = new Analyzer()
+    osgiManifestAttributes.each { k, v -> analyzer.setProperty(k, v.toString()) }
+    analyzer.setJar(projectMainClassesDir)
+    analyzer.setClasspath(griffonSettings.runtimeDependencies.toArray(
+        new File[griffonSettings.runtimeDependencies.size()]
+    ))
+    Manifest osgiManifest = analyzer.calcManifest()
+    Map mergedAttributes = [:]
+    osgiManifest.mainAttributes.each { k, v -> mergedAttributes[k.toString()] = v }
+    return mergedAttributes
 }
 
 _copyLibs = {

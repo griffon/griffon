@@ -144,7 +144,8 @@ public class GriffonCoreDependencies {
                                 ModuleRevisionId.newInstance("org.springframework", "org.springframework.beans", springVersion),
                                 ModuleRevisionId.newInstance("org.springframework", "org.springframework.context", springVersion),
                                 ModuleRevisionId.newInstance("org.springframework", "org.springframework.context.support", springVersion),
-                                ModuleRevisionId.newInstance("net.sf.json-lib", "json-lib", "2.4", classifier("jdk15"))
+                                ModuleRevisionId.newInstance("net.sf.json-lib", "json-lib", "2.4", classifier("jdk15")),
+                                ModuleRevisionId.newInstance("biz.aQute", "bndlib", "1.50.0")
                         };
                         registerDependencies(dependencyManager, "build", buildDependencies);
 
