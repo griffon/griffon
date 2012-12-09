@@ -304,7 +304,8 @@ createOsgiManifest = {
         (Analyzer.BUNDLE_VERSION): griffonAppVersion,
         (Analyzer.BUNDLE_SYMBOLICNAME): griffonAppName,
         (Analyzer.BND_LASTMODIFIED): projectMainClassesDir.lastModified(),
-        (Analyzer.EXPORT_PACKAGE): "*;-noimport:=false;version=${griffonAppVersion}"
+        (Analyzer.EXPORT_PACKAGE): "*;-noimport:=false;version=${griffonAppVersion}",
+        (Analyzer.IMPORT_PACKAGE): '*'
     ]
 
     osgiManifestAttributes.putAll(manifestMap)

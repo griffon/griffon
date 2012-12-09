@@ -78,6 +78,13 @@ ext.distBinSpec = copySpec {
         }
     }
 
+    from(project(':griffon-rt').osgiBundleSingle.outputs.files) {
+        into('dist/osgi')
+    }
+    from(project(':griffon-rt').osgiBundleFull.outputs.files) {
+        into('dist/osgi')
+    }
+
     into('scripts') {
         from(project(":griffon-scripts").sourceSets.main.allSource)
     }

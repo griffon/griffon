@@ -23,7 +23,7 @@ dependencies {
     groovy "org.codehaus.groovy:groovy-all:$groovyVersion"
 
     compile("org.codehaus.groovy:groovy-all:$groovyVersion")
-    compile('log4j:log4j:1.2.17') {
+    compile("log4j:log4j:$log4jVersion") {
         exclude group: 'ant',         module: 'ant-nodeps'
         exclude group: 'ant',         module: 'ant-junit'
         exclude group: 'ant-contrib', module: 'ant-contrib'
@@ -42,9 +42,51 @@ dependencies {
     testCompile 'junit:junit:4.10'
 }
 
-jar {
-    manifest {
+task osgiBundleSingle(type: Jar, dependsOn: jar) {
+    archiveName    = "org.codehaus.griffon.rt-${project.version}.SINGLE.jar"
+    from sourceSets.main.output
+
+    manifest = osgiManifest {
+        classesDir = sourceSets.main.output.classesDir
+        classpath  = configurations.runtime
+
         instruction 'Bundle-Vendor', 'griffon-framework.org'
         instruction 'Bundle-RequiredExecutionEnvironment', 'JavaSE-1.6'
     }
 }
+
+task copyDependencies(type: Copy, dependsOn: jar) {
+    destinationDir = "${buildDir}/bundle" as File
+    from(configurations.compile) {
+        exclude 'groovy*'
+    }
+}
+
+task osgiBundleFull(type: Jar, dependsOn: copyDependencies) {
+    archiveName    = "org.codehaus.griffon.rt-${project.version}.FULL.jar"
+    from sourceSets.main.output
+    from copyDependencies.destinationDir
+
+    manifest = osgiManifest {
+        classesDir = sourceSets.main.output.classesDir
+        classpath  = configurations.runtime
+
+        instruction 'Bundle-ActivationPolicy', 'lazy'
+        instruction 'Bundle-Vendor', 'griffon-framework.org'
+        instruction 'Bundle-RequiredExecutionEnvironment', 'JavaSE-1.6'
+        instruction 'Export-Package', "org.apache.log4j;version=\"${log4jVersion}\","+
+                                      "org.apache.log4j.*;version=\"${log4jVersion}\","+
+                                      "org.slf4j;version=\"${slf4jVersion}\"," +
+                                      "*;-noimport:=true;version=${version}"
+        instruction 'Export-Package', "org.apache.log4j.helpers;version=\"${log4jVersion}\""
+        instruction 'Export-Package', "org.apache.log4j.xml;version=\"${log4jVersion}\""
+        instruction 'Export-Package', "org.apache.log4j.varia;version=\"${log4jVersion}\""
+        instruction 'Export-Package', "org.apache.log4j.spi;version=\"${log4jVersion}\""
+        instruction 'Export-Package', "org.apache.log4j;version=\"${log4jVersion}\""
+        instruction 'Export-Package', "org.slf4j;version=\"${slf4jVersion}\""
+        instruction 'Import-Package', '!org.apache.log4j.*,!org.slf4j,*'
+        instruction 'Bundle-ClassPath', ".,${copyDependencies.destinationDir.listFiles().collect([]){ it.name }.join(',')}"
+    }
+}
+
+task osgiBundle(dependsOn: [osgiBundleSingle, osgiBundleFull]) {}

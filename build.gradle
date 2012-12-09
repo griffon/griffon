@@ -76,19 +76,21 @@ configure(mavenizedProjects()) { proj ->
     proj.task('checkManifest') {
         dependsOn proj.classes
         doLast {
-            proj.jar.manifest {
-                attributes(
-                    'Built-By': System.properties['user.name'],
-                    'Created-By': System.properties['java.version'] + " (" + System.properties['java.vendor'] + " "+ System.getProperty("java.vm.version") + ")",
-                    'Build-Date': buildTime,
-                    'Build-Time': buildDate,
-                    'Specification-Title': proj.name,
-                    'Specification-Version': project.version,
-                    'Specification-Vendor': 'griffon-framework.org',
-                    'Implementation-Title': proj.name,
-                    'Implementation-Version': project.version,
-                    'Implementation-Vendor': 'griffon-framework.org'
-                )
+            proj.tasks.withType(Jar).each { jarfile ->
+                jarfile.manifest {
+                    attributes(
+                        'Built-By': System.properties['user.name'],
+                        'Created-By': System.properties['java.version'] + " (" + System.properties['java.vendor'] + " " + System.getProperty("java.vm.version") + ")",
+                        'Build-Date': buildTime,
+                        'Build-Time': buildDate,
+                        'Specification-Title': proj.name,
+                        'Specification-Version': project.version,
+                        'Specification-Vendor': 'griffon-framework.org',
+                        'Implementation-Title': proj.name,
+                        'Implementation-Version': project.version,
+                        'Implementation-Vendor': 'griffon-framework.org'
+                    )
+                }
             }
         }
     }
