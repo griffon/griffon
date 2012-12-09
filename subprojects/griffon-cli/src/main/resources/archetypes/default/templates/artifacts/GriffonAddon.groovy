@@ -1,4 +1,6 @@
-@artifact.package@import griffon.core.GriffonApplication
+package addon
+
+import griffon.core.GriffonApplication
 
 class @artifact.name@ {
     // lifecycle methods

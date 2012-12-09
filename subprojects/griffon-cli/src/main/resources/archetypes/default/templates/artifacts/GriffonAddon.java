@@ -1,4 +1,6 @@
-@artifact.package@import java.util.Map;
+package addon;
+
+import java.util.Map;
 import java.util.LinkedHashMap;
 import griffon.util.ApplicationHolder;
 import org.codehaus.griffon.runtime.core.AbstractGriffonAddon;
