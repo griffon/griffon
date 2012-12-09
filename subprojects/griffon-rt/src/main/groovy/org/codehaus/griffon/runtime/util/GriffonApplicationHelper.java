@@ -571,7 +571,7 @@ public class GriffonApplicationHelper {
 
         Class<?> handlerClass = null;
         try {
-            handlerClass = loadClass(handlerName);
+            handlerClass = loadConfigurationalClass(handlerName);
         } catch (ClassNotFoundException cnfe) {
             if (cnfe.getMessage().equals(handlerName)) {
                 // the script must not exist, do nothing
@@ -679,7 +679,23 @@ public class GriffonApplicationHelper {
         }
     }
 
-    public static Class loadClass(String className) throws ClassNotFoundException {
+    public static Class<?> loadConfigurationalClass(String className) throws ClassNotFoundException {
+        if (!className.contains(".")) {
+            String fixedClassName = "config." + className;
+            try {
+                return loadClass(fixedClassName);
+            } catch (ClassNotFoundException cnfe) {
+                if (cnfe.getMessage().equals(fixedClassName)) {
+                    return loadClass(className);
+                } else {
+                    throw new GriffonException(cnfe);
+                }
+            }
+        }
+        return loadClass(className);
+    }
+
+    public static Class<?> loadClass(String className) throws ClassNotFoundException {
         ClassNotFoundException cnfe = null;
 
         ClassLoader cl = GriffonApplicationHelper.class.getClassLoader();
@@ -689,7 +705,7 @@ public class GriffonApplicationHelper {
             cnfe = e;
         }
 
-        cl = Thread.currentThread().getContextClassLoader();
+        cl = ApplicationClassLoader.get();
         try {
             return cl.loadClass(className);
         } catch (ClassNotFoundException e) {
@@ -700,7 +716,7 @@ public class GriffonApplicationHelper {
         return null;
     }
 
-    public static Class safeLoadClass(String className) {
+    public static Class<?> safeLoadClass(String className) {
         try {
             return loadClass(className);
         } catch (ClassNotFoundException e) {
@@ -717,11 +733,11 @@ public class GriffonApplicationHelper {
         }
     }
 
-    public static Object safeNewInstance(Class clazz) {
+    public static Object safeNewInstance(Class<?> clazz) {
         return safeNewInstance(clazz, true);
     }
 
-    public static Object safeNewInstance(Class clazz, boolean logException) {
+    public static Object safeNewInstance(Class<?> clazz, boolean logException) {
         try {
             return clazz.newInstance();
         } catch (Exception e) {

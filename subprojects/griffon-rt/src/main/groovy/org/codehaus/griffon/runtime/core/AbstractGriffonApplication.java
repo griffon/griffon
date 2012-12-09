@@ -22,6 +22,7 @@ import griffon.core.i18n.MessageSource;
 import griffon.core.i18n.NoSuchMessageException;
 import griffon.core.resources.NoSuchResourceException;
 import griffon.core.resources.ResourceResolver;
+import griffon.exceptions.GriffonException;
 import griffon.util.*;
 import groovy.lang.Binding;
 import groovy.lang.Closure;
@@ -209,19 +210,19 @@ public abstract class AbstractGriffonApplication extends AbstractObservable impl
     }
 
     public Class getAppConfigClass() {
-        return loadClass(GriffonApplication.Configuration.APPLICATION.getName());
+        return loadConfigurationalClass(GriffonApplication.Configuration.APPLICATION.getName());
     }
 
     public Class getConfigClass() {
-        return loadClass(GriffonApplication.Configuration.CONFIG.getName());
+        return loadConfigurationalClass(GriffonApplication.Configuration.CONFIG.getName());
     }
 
     public Class getBuilderClass() {
-        return loadClass(GriffonApplication.Configuration.BUILDER.getName());
+        return loadConfigurationalClass(GriffonApplication.Configuration.BUILDER.getName());
     }
 
     public Class getEventsClass() {
-        return loadClass(GriffonApplication.Configuration.EVENTS.getName());
+        return loadConfigurationalClass(GriffonApplication.Configuration.EVENTS.getName());
     }
 
     public void initialize() {
@@ -566,13 +567,29 @@ public abstract class AbstractGriffonApplication extends AbstractObservable impl
         getMvcGroupManager().withMVCGroup(mvcType, mvcName, args, handler);
     }
 
-    private Class loadClass(String className) {
+    private Class<?> loadClass(String className) {
         try {
             return ApplicationClassLoader.get().loadClass(className);
         } catch (ClassNotFoundException e) {
             // ignored
         }
         return null;
+    }
+
+    private Class<?> loadConfigurationalClass(String className) {
+        if (!className.contains(".")) {
+            String fixedClassName = "config." + className;
+            try {
+                return ApplicationClassLoader.get().loadClass(fixedClassName);
+            } catch (ClassNotFoundException cnfe) {
+                if (cnfe.getMessage().equals(fixedClassName)) {
+                    return loadClass(className);
+                } else {
+                    throw new GriffonException(cnfe);
+                }
+            }
+        }
+        return loadClass(className);
     }
 
     public InputStream getResourceAsStream(String name) {

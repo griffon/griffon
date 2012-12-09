@@ -17,7 +17,7 @@ import static griffon.util.GriffonNameUtils.isBlank
  */
 class ConfigReader {
     private static final ENVIRONMENTS_METHOD = 'environments'
-    GroovyClassLoader classLoader = new GroovyClassLoader()
+    GroovyClassLoader classLoader
     private Map bindingVars = [:]
 
     private Stack<String> currentConditionalBlock = new Stack<String>()
@@ -34,6 +34,7 @@ class ConfigReader {
      */
     ConfigReader(String env) {
         conditionValues[ENVIRONMENTS_METHOD] = env
+        classLoader = new GroovyClassLoader(ApplicationClassLoader.get())
     }
 
     void registerConditionalBlock(String blockName, String blockValue) {

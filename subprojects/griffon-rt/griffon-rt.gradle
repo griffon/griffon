@@ -84,7 +84,7 @@ task osgiBundleFull(type: Jar, dependsOn: copyDependencies) {
         instruction 'Export-Package', "org.apache.log4j.spi;version=\"${log4jVersion}\""
         instruction 'Export-Package', "org.apache.log4j;version=\"${log4jVersion}\""
         instruction 'Export-Package', "org.slf4j;version=\"${slf4jVersion}\""
-        instruction 'Import-Package', '!org.apache.log4j.*,!org.slf4j,*'
+        instruction 'Import-Package', '!org.apache.log4j.*,!org.slf4j,config,addon,*'
         instruction 'Bundle-ClassPath', ".,${copyDependencies.destinationDir.listFiles().collect([]){ it.name }.join(',')}"
     }
 }

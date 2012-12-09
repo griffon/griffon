@@ -171,7 +171,7 @@ target(name: 'pluginDocs', description: 'Generates and packages plugin documenta
     }
 
     if (isAddonPlugin || hasSrcMain || hasTestSources || sources) {
-        String jarFileName = "${artifactPackageDirPath}/dist/griffon-${pluginName}-runtime-${pluginVersion}-sources.jar"
+        String jarFileName = "${artifactPackageDirPath}/docs/griffon-${pluginName}-runtime-${pluginVersion}-sources.jar"
 
         ant.uptodate(property: 'pluginSourceJarUpToDate', targetfile: jarFileName) {
             sources.each { d ->
@@ -212,7 +212,7 @@ target(name: 'pluginDocs', description: 'Generates and packages plugin documenta
                     windowtitle: "${pluginName} ${pluginVersion}",
                     doctitle: "${pluginName} ${pluginVersion}")
             if (javadocDir.list()) {
-                jarFileName = "${artifactPackageDirPath}/dist/griffon-${pluginName}-runtime-${pluginVersion}-javadoc.jar"
+                jarFileName = "${artifactPackageDirPath}/docs/griffon-${pluginName}-runtime-${pluginVersion}-javadoc.jar"
                 ant.jar(destfile: jarFileName) {
                     fileset(dir: javadocDir)
                 }
@@ -222,7 +222,7 @@ target(name: 'pluginDocs', description: 'Generates and packages plugin documenta
     }
 
     if (cliSourceDir.exists() && hasJavaOrGroovySources(cliSourceDir)) {
-        String jarFileName = "${artifactPackageDirPath}/dist/griffon-${pluginName}-compile-${pluginVersion}-sources.jar"
+        String jarFileName = "${artifactPackageDirPath}/docs/griffon-${pluginName}-compile-${pluginVersion}-sources.jar"
         ant.jar(destfile: jarFileName) {
             fileset(dir: cliSourceDir)
         }
@@ -234,7 +234,7 @@ target(name: 'pluginDocs', description: 'Generates and packages plugin documenta
                 windowtitle: "${pluginName} CLI ${pluginVersion}",
                 doctitle: "${pluginName} CLI ${pluginVersion}")
             if (javadocDir.list()) {
-                jarFileName = "${artifactPackageDirPath}/dist/griffon-${pluginName}-compile-${pluginVersion}-javadoc.jar"
+                jarFileName = "${artifactPackageDirPath}/docs/griffon-${pluginName}-compile-${pluginVersion}-javadoc.jar"
                 ant.jar(destfile: jarFileName) {
                     fileset(dir: javadocDir)
                 }

@@ -89,7 +89,7 @@ target(name: 'packageAddon', description: 'Packages a Griffon addon',
         (Analyzer.BND_LASTMODIFIED): projectMainClassesDir.lastModified(),
         (Analyzer.BUNDLE_LICENSE): descriptorInstance.license,
         (Analyzer.BUNDLE_VENDOR): 'griffon-framework.org',
-        (Analyzer.EXPORT_PACKAGE): "*;-noimport:=false;version=${pluginVersion}",
+        (Analyzer.EXPORT_PACKAGE): "config,addon,*;-noimport:=false;version=${pluginVersion}",
         (Analyzer.IMPORT_PACKAGE): "*",
         (Analyzer.BUNDLE_ACTIVATIONPOLICY): "lazy"
     ]

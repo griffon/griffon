@@ -189,11 +189,14 @@ dependencies {
 }
 
 processResources {
-    filter(ReplaceTokens, tokens: [version:version, 
-                                   groovyVersion:groovyVersion,
-                                   antVersion:antVersion,
-                                   slf4jVersion:slf4jVersion,
-                                   springVersion:springVersion])
+    filter(ReplaceTokens, tokens: [
+        version: version,
+        groovyVersion: groovyVersion,
+        antVersion: antVersion,
+        slf4jVersion: slf4jVersion,
+        log4jVersion: log4jVersion,
+        springVersion: springVersion
+    ])
 }
 
 test {

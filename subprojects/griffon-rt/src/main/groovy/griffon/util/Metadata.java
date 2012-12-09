@@ -86,7 +86,7 @@ public class Metadata extends Properties {
 
                 // GRIFFON-255 there may be multiple versions of "application.properties" in the classpath
                 // due to addon packaging. Avoid any URLS that look like plugin dirs or addon jars
-                input = fetchApplicationProperties(Thread.currentThread().getContextClassLoader());
+                input = fetchApplicationProperties(ApplicationClassLoader.get());
                 if (input == null) input = fetchApplicationProperties(Metadata.class.getClassLoader());
 
                 if (input != null) {

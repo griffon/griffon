@@ -264,12 +264,13 @@ pluginPaths = {
     visitDependencies(griffonSettings.buildDependencies)
 
     pluginSettings.doWithProjectPlugins {String name, String version, String path ->
-        def pluginDir = new File(path, 'dist')
+        def pluginDir = new File(path, 'docs')
         def javadoc = new File(pluginDir, "griffon-$name-runtime-$version-javadoc.jar")
         if (javadoc.exists()) plugins.javadoc << normalizeFilePath(javadoc)
         def sources = new File(pluginDir, "griffon-$name-runtime-$version-sources.jar")
         if (sources.exists()) plugins.sources << normalizeFilePath(sources)
         // pre 1.2.0 compatibility
+        pluginDir = new File(path, 'dist')
         javadoc = new File(pluginDir, "griffon-$name-$version-javadoc.jar")
         if (javadoc.exists()) plugins.javadoc << normalizeFilePath(javadoc)
         sources = new File(pluginDir, "griffon-$name-$version-sources.jar")

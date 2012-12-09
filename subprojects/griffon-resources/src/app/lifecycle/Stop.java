@@ -1,3 +1,5 @@
+package config;
+
 /*
  * This class is executed inside the UI thread, so be sure to  call 
  * long running code in another thread.

@@ -1,3 +1,5 @@
+package config
+
 application {
     title = '@griffon.app.class.name@'
     startupGroups = ['@griffon.default.mvc@']
