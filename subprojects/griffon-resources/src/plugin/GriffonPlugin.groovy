@@ -22,7 +22,7 @@ class @plugin.name@GriffonPlugin {
     String source = ''
     // Map of Bnd directives and/or Manifest entries
     // see http://www.aqute.biz/Bnd/Bnd for reference
-    Map osgiManifest = [
+    Map manifest = [
         'Bundle-Description': 'Plugin summary/headline'
     ]
 
