@@ -17,7 +17,7 @@
 package org.codehaus.griffon.runtime.core;
 
 import griffon.core.*;
-import griffon.exceptions.BeanInstantiationException;
+import griffon.exceptions.NewInstanceCreationException;
 import griffon.util.ApplicationHolder;
 import groovy.lang.MetaClass;
 import groovy.lang.MetaProperty;
@@ -25,11 +25,13 @@ import org.codehaus.groovy.runtime.InvokerHelper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.Collections;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 import static griffon.util.ConfigUtils.getConfigValueAsBoolean;
+import static griffon.util.GriffonExceptionHandler.sanitize;
 import static java.util.Arrays.asList;
 
 /**
@@ -78,11 +80,17 @@ public class ServiceArtifactHandler extends ArtifactHandlerAdapter {
 
         private GriffonService instantiateService(GriffonClass griffonClass) {
             try {
-                return (GriffonService) griffonClass.getClazz().newInstance();
-            } catch (InstantiationException e) {
-                throw new BeanInstantiationException(e);
-            } catch (IllegalAccessException e) {
-                throw new BeanInstantiationException(e);
+                GriffonService serviceInstance = (GriffonService) griffonClass.getClazz().newInstance();
+                InvokerHelper.setProperty(serviceInstance, "app", getApp());
+                return serviceInstance;
+            } catch (Exception e) {
+                Throwable targetException = null;
+                if (e instanceof InvocationTargetException) {
+                    targetException = ((InvocationTargetException) e).getTargetException();
+                } else {
+                    targetException = e;
+                }
+                throw new NewInstanceCreationException("Could not create a new instance of class " + griffonClass.getClazz().getName(), sanitize(targetException));
             }
         }
     }

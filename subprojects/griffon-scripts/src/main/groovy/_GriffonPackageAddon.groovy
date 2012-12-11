@@ -97,7 +97,7 @@ target(name: 'packageAddon', description: 'Packages a Griffon addon',
     try {
         osgiManifestAttributes.putAll(descriptorInstance.manifest)
     } catch(MissingPropertyException mpe) {
-        if (mpe.property != 'osgiManifest') {
+        if (mpe.property != 'manifest') {
             event('StatusError', ["An error occured when processing OSGi manifest entries: ${mpe}"])
             exit 1
         }
