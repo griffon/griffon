@@ -1,5 +1,3 @@
-package config
-
 /*
  * This script is executed inside the UI thread, so be sure to  call 
  * long running code in another thread.

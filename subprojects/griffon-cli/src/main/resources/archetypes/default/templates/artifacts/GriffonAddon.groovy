@@ -1,5 +1,3 @@
-package addon
-
 import griffon.core.GriffonApplication
 
 class @artifact.name@ {

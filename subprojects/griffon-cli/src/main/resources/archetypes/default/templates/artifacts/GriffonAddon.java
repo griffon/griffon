@@ -1,5 +1,3 @@
-package addon;
-
 import java.util.Map;
 import java.util.LinkedHashMap;
 import griffon.util.ApplicationHolder;
