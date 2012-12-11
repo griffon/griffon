@@ -17,6 +17,7 @@
 package org.codehaus.griffon.runtime.core;
 
 import griffon.core.*;
+import griffon.exceptions.BeanInstantiationException;
 import griffon.util.ApplicationHolder;
 import groovy.lang.MetaClass;
 import groovy.lang.MetaProperty;
@@ -29,6 +30,7 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 import static griffon.util.ConfigUtils.getConfigValueAsBoolean;
+import static java.util.Arrays.asList;
 
 /**
  * Handler for 'Service' artifacts.
@@ -38,7 +40,7 @@ import static griffon.util.ConfigUtils.getConfigValueAsBoolean;
  */
 public class ServiceArtifactHandler extends ArtifactHandlerAdapter {
     private static final Logger LOG = LoggerFactory.getLogger(ServiceArtifactHandler.class);
-    private final ServiceManager serviceManager;
+    private final DefaultServiceManager serviceManager;
 
     private class DefaultServiceManager extends AbstractServiceManager {
         private final Map<String, GriffonService> serviceInstances = new ConcurrentHashMap<String, GriffonService>();
@@ -56,19 +58,32 @@ public class ServiceArtifactHandler extends ArtifactHandlerAdapter {
         }
 
         protected GriffonService doInstantiateService(String name) {
+            return doInstantiateService0(name, true);
+        }
+
+        private GriffonService doInstantiateService0(String name, boolean triggerEvent) {
             GriffonService serviceInstance = null;
             GriffonClass griffonClass = findClassFor(name);
             if (griffonClass != null) {
-                serviceInstance = instantiateServiceInternal(griffonClass);
+                serviceInstance = instantiateService(griffonClass);
                 serviceInstances.put(name, serviceInstance);
+                getApp().addApplicationEventListener(serviceInstance);
+                if (triggerEvent) {
+                    getApp().event(GriffonApplication.Event.NEW_INSTANCE.getName(),
+                        asList(griffonClass.getClazz(), GriffonServiceClass.TYPE, serviceInstance));
+                }
             }
             return serviceInstance;
         }
 
-        private GriffonService instantiateServiceInternal(GriffonClass griffonClass) {
-            GriffonService serviceInstance = (GriffonService) griffonClass.newInstance();
-            getApp().addApplicationEventListener(serviceInstance);
-            return serviceInstance;
+        private GriffonService instantiateService(GriffonClass griffonClass) {
+            try {
+                return (GriffonService) griffonClass.getClazz().newInstance();
+            } catch (InstantiationException e) {
+                throw new BeanInstantiationException(e);
+            } catch (IllegalAccessException e) {
+                throw new BeanInstantiationException(e);
+            }
         }
     }
 
@@ -88,16 +103,22 @@ public class ServiceArtifactHandler extends ArtifactHandlerAdapter {
     public void initialize(ArtifactInfo[] artifacts) {
         super.initialize(artifacts);
         if (isBasicInjectionDisabled()) return;
+        getApp().addApplicationEventListener(this);
         if (isEagerInstantiationEnabled()) {
             if (LOG.isDebugEnabled()) {
                 LOG.debug("Instantiating service instances eagerly");
             }
             for (ArtifactInfo artifactInfo : artifacts) {
                 GriffonClass griffonClass = getClassFor(artifactInfo.getClazz());
-                serviceManager.findService(griffonClass.getPropertyName());
+                serviceManager.doInstantiateService0(griffonClass.getPropertyName(), false);
+            }
+            for (ArtifactInfo artifactInfo : artifacts) {
+                GriffonClass griffonClass = getClassFor(artifactInfo.getClazz());
+                GriffonService serviceInstance = serviceManager.findService(griffonClass.getPropertyName());
+                getApp().event(GriffonApplication.Event.NEW_INSTANCE.getName(),
+                    asList(griffonClass.getClazz(), GriffonServiceClass.TYPE, serviceInstance));
             }
         }
-        getApp().addApplicationEventListener(this);
     }
 
     /**
