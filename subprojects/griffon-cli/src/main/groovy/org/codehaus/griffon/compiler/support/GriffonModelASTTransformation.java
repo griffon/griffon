@@ -79,7 +79,7 @@ public class GriffonModelASTTransformation extends GriffonArtifactASTTransformat
             // 2. add methods
             ASTInjector injector = new GriffonMvcArtifactASTInjector();
             injector.inject(classNode, GriffonModelClass.TYPE);
-            injector = new ObservableASTInjector();
+            injector = new VetoableASTInjector();
             injector.inject(classNode, GriffonModelClass.TYPE);
         } else {
             doTransform(superClass);

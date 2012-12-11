@@ -22,5 +22,5 @@ package griffon.core;
  * @author Andres Almiray
  * @since 0.9.1
  */
-public interface GriffonModel extends GriffonMvcArtifact, Observable {
+public interface GriffonModel extends GriffonMvcArtifact, Vetoable {
 }
