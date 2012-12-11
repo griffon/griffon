@@ -28,6 +28,7 @@ import groovy.lang.Binding;
 import groovy.lang.Closure;
 import groovy.util.ConfigObject;
 import groovy.util.FactoryBuilderSupport;
+import org.codehaus.griffon.runtime.util.ExecutorServiceHolder;
 import org.codehaus.griffon.runtime.util.GriffonApplicationHelper;
 import org.codehaus.griffon.runtime.util.MVCGroupExceptionHandler;
 import org.slf4j.Logger;
@@ -314,6 +315,8 @@ public abstract class AbstractGriffonApplication extends AbstractObservable impl
         // stage 4 - call shutdown script
         log.debug("Shutdown stage 4: execute Shutdown script");
         GriffonApplicationHelper.runLifecycleHandler(GriffonApplication.Lifecycle.SHUTDOWN.getName(), this);
+
+        ExecutorServiceHolder.shutdownAll();
 
         return true;
     }

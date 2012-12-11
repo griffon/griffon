@@ -18,6 +18,7 @@ package griffon.core;
 import griffon.util.*;
 import groovy.lang.*;
 import org.codehaus.griffon.runtime.util.CallableWithArgsMetaMethod;
+import org.codehaus.griffon.runtime.util.ExecutorServiceHolder;
 import org.codehaus.griffon.runtime.util.RunnableWithArgsMetaMethod;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -36,7 +37,7 @@ public final class UIThreadManager {
     // Shouldn't need to synchronize access to this field as setting its value
     // should be done at boot time
     private UIThreadHandler uiThreadHandler;
-    private static final ExecutorService DEFAULT_EXECUTOR_SERVICE = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
+    private static final ExecutorService DEFAULT_EXECUTOR_SERVICE = ExecutorServiceHolder.add(Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors()));
     private static final Logger LOG = LoggerFactory.getLogger(UIThreadManager.class);
 
     private static final UIThreadManager INSTANCE = new UIThreadManager();

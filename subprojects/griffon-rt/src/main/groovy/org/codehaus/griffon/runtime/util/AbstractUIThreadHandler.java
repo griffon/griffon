@@ -28,7 +28,7 @@ import java.util.concurrent.Executors;
  * @author Andres Almiray
  */
 public abstract class AbstractUIThreadHandler implements UIThreadHandler {
-    protected static final ExecutorService DEFAULT_EXECUTOR_SERVICE = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
+    protected static final ExecutorService DEFAULT_EXECUTOR_SERVICE = ExecutorServiceHolder.add(Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors()));
     private static final Thread.UncaughtExceptionHandler UNCAUGHT_EXCEPTION_HANDLER = new GriffonExceptionHandler();
 
     public void executeOutside(final Runnable runnable) {
