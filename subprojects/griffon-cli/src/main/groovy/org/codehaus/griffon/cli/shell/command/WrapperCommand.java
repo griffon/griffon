@@ -18,7 +18,6 @@ package org.codehaus.griffon.cli.shell.command;
 
 import org.codehaus.griffon.cli.shell.AbstractGriffonCommand;
 import org.codehaus.griffon.cli.shell.Command;
-import org.codehaus.griffon.cli.shell.Option;
 
 /**
  * @author Andres Almiray

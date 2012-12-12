@@ -980,23 +980,23 @@ public class GriffonScriptRunner {
             return exclusions.contains(scriptName);
         }
 
-        private String[] CONFIGURE_PROXY_EXCLUSIONS = {
+        private final String[] CONFIGURE_PROXY_EXCLUSIONS = {
             "AddProxy", "ClearProxy", "RemoveProxy", "SetProxy", "ConfigureProxy",
             "SetVersion", "Stats", "Wrapper",
             "CreateAddon", "CreatePlugin", "Upgrade",
             "CreateCommandAlias", "Doc", "ClearDependencyCache"
         };
 
-        private String[] RESOLVE_DEPENDENCIES_EXCLUSIONS = {
+        private final String[] RESOLVE_DEPENDENCIES_EXCLUSIONS = {
             "SetVersion", "Stats", "Upgrade", "Wrapper", "UsageStats",
             "CreateCommandAlias", "Doc", "_GriffonResolveDependencies"
         };
 
-        private String[] CHECK_VERSION_EXCLUSIONS = {
+        private final String[] CHECK_VERSION_EXCLUSIONS = {
             "Upgrade", "UsageStats"
         };
 
-        private String[] FRAMEWORK_PLUGIN_INCLUSIONS = {
+        private final String[] FRAMEWORK_PLUGIN_INCLUSIONS = {
             "CreateApp_", "CreateAddon_", "CreatePlugin_", "CreateArchetype_", "Help_"
         };
 
