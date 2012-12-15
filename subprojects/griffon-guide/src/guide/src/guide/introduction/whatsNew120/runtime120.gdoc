@@ -18,7 +18,7 @@ griffon.config.locations = [
     "file:${userHome}/.griffon/${appName}-config.groovy"]
 {code}
 
-Section [External Configuration Support|guide:externalConfiguration] covers this feature with more detail.
+Section [External Configuration Support|guide:externalConfiguration] covers this feature in more detail.
 
 h4. New Application Events
 
@@ -26,16 +26,20 @@ Instances managed by the application (such as MVC members) will now trigger a @D
 
 h4. EventRouter Factory
 
-It's now possible to instantiate custom instances of `EventRouter` by defining a custom `EventRouterFactory`.
+It's now possible to instantiate custom instances of @EventRouter@ by defining a custom @EventRouterFactory@.
 
-h4. Externalized Configuration
+h4. Remove MVC Configurations
 
-Some deployments require that configuration be sourced from more than one place and be changeable without requiring a rebuild of the application. In order to support deployment scenarios such as these the configuration can be externalized. To do so, point Griffon at the locations of the configuration files that should be used by adding a @griffon.config.locations@ setting in @Config.groovy@, for example:
+MVC Configurations can now be removed from the application's MVCGroupManager. This paves the way for application plugins that may be turned on/off at runtime.
 
-{code:java}
-griffon.config.locations = [
-    "classpath:${appName}-config.properties",
-    "classpath:${appName}-config.groovy",
-    "file:${userHome}/.griffon/${appName}-config.properties",
-    "file:${userHome}/.griffon/${appName}-config.groovy"]
+h4. Vetoable Models
+
+In the past @GriffonModel@ implemented the @[griffon.core.Observable|api:griffon.core.Observable]@. With this release they got upgraded to @[griffon.core.Vetoable|api:griffon.core.Vetoable]@.
+
+h4. Skip Lifecycle Script/Handlers
+
+Applications now have the choice of skipping the execution of lifecycle scripts at their discretion. Specify the following flag in @Config.groovy@ to skip them
+
+{code}
+app.lifecycle.handler.disable = true
 {code}

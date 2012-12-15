@@ -63,6 +63,10 @@ h4. Intellij IDEA DSL Support
 
 The Swing GDSL provided by the [swing|http://artifacts.griffon-framework.org/plugin/swing] plugin has been updated to support named parameters for all nodes.
 
+h4. Eclipse STS DSLD Support
+
+The Swing DSLD provided by the [swing|http://artifacts.griffon-framework.org/plugin/swing] plugin has been upgraded and is now compatible with the latest definitions provided by STS.
+
 h4. Platform Specific Packaging
 
 Until now, calling `griffon package` create platform specific packages depending on the currently running platform. Thus, if additional packages were needed developers had to run Griffon on different platforms. The `package` command accepts a new flag that defines the target platform to use. For example, packaging for Windows64 when running on OSX is done by invoking the following command
@@ -72,3 +76,7 @@ griffon package --platform=windows64
 {code}
 
 Be advised that previously built packages will be cleared when this command is issued. This is to assert no artifacts leak from previous builds.
+
+h4. Enhanced Plugin/Archetype info command
+
+Both @plugin-info@ and @archetype-info@ will display full plugin/archetype description by default. You may specify a @--skip-description@ flag if you do not want to see the artifact's description.
