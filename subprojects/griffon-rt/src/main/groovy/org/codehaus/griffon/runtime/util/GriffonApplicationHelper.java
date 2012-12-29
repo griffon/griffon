@@ -559,8 +559,10 @@ public class GriffonApplicationHelper {
      */
     public static void runLifecycleHandler(String handlerName, GriffonApplication app) {
         boolean skipHandler = getConfigValueAsBoolean(app.getConfig(), KEY_APP_LIFECYCLE_HANDLER_DISABLE, false);
-        if(skipHandler && LOG.isDebugEnabled()) {
-            LOG.info("Lifecycle handler '" + handlerName + "' has been disabled. SKIPPING.");
+        if(skipHandler) {
+            if (LOG.isDebugEnabled()) {
+                LOG.info("Lifecycle handler '" + handlerName + "' has been disabled. SKIPPING.");
+            }
             return;
         }
 
