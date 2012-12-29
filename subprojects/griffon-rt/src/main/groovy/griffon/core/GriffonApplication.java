@@ -99,7 +99,7 @@ public interface GriffonApplication extends Observable, ThreadingHandler, MVCHan
      * @since 0.9.2
      */
     public enum Event {
-        LOG4J_CONFIG_START("Log4jConfigStart"), UNCAUGHT_EXCEPTION_THROWN,
+        UNCAUGHT_EXCEPTION_THROWN,
         LOAD_ADDONS_START, LOAD_ADDONS_END, LOAD_ADDON_START, LOAD_ADDON_END,
         BOOTSTRAP_START, BOOTSTRAP_END,
         STARTUP_START, STARTUP_END,

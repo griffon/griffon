@@ -10,3 +10,7 @@ Griffon has upgraded some of its dependencies. The following list specify which 
  * slf4j-log4j12 1.7.2
  * jcl-over-slf4j 1.7.2
  * jul-to-slf4j 1.7.2
+
+h4. Removals
+
+Applications no longer trigger an @Log4jConfigStart@ event when bootstrapping. The @GriffonApplication.Event.LOG4J_CONFIG_START@ constant value has been removed@.
