@@ -15,6 +15,7 @@
  *  limitations under the License.
  *
  */
+
 package org.codehaus.griffon.resolve;
 
 import org.apache.ivy.plugins.repository.Resource;
