@@ -48,7 +48,7 @@ import static griffon.util.GriffonExceptionHandler.handleThrowable;
 import static griffon.util.GriffonExceptionHandler.sanitize;
 import static griffon.util.GriffonNameUtils.isBlank;
 import static java.util.Arrays.asList;
-import static org.codehaus.groovy.runtime.DefaultGroovyMethods.eachLine;
+import static org.codehaus.groovy.runtime.ResourceGroovyMethods.eachLine;
 
 /**
  * Utility class for bootstrapping an application and handling of MVC groups.</p>
