@@ -82,8 +82,8 @@ doWithSelectedRepository = { callback ->
     if (!repositories.contains(defaultInstallRepository)) repositories << defaultInstallRepository
     if (!repositories.contains(defaultSearchRepository)) repositories << defaultSearchRepository
 
-    for (String repositoryName : repositories) {
-        artifactRepository = ArtifactRepositoryRegistry.instance.findRepository(repositoryName)
+    for (String repositoryname : repositories) {
+        artifactRepository = ArtifactRepositoryRegistry.instance.findRepository(repositoryname)
         if (artifactRepository) {
             if (griffonSettings.offlineMode && !artifactRepository.local) return
             if (callback(artifactRepository)) break
@@ -210,15 +210,15 @@ doInstallArtifactFromZip = { String type, File file, Metadata md = metadata ->
     }
 }
 
-doInstallArtifact = { ArtifactRepository artifactRepository, String type, String name, String version = null, Metadata md = metadata ->
+doInstallArtifact = { ArtifactRepository repository, String type, String name, String version = null, Metadata md = metadata ->
     return withArtifactInstall(type) {
         def release = null
 
         if (!version) {
-            Artifact artifact = artifactRepository.findArtifact(type, name)
+            Artifact artifact = repository.findArtifact(type, name)
             if (!artifact) {
                 if (!failOnError) return false
-                event('StatusError', ["${capitalize(type)} ${name} was not found in repository ${artifactRepository.name}."])
+                event('StatusError', ["${capitalize(type)} ${name} was not found in repository ${repository.name}."])
                 exit 1
             }
             for (r in artifact.releases) {
@@ -230,11 +230,11 @@ doInstallArtifact = { ArtifactRepository artifactRepository, String type, String
             }
             if (!version) {
                 if (!failOnError) return false
-                event('StatusError', ["Repository ${artifactRepository.name} does not contain a suitable release for ${type} ${name}."])
+                event('StatusError', ["Repository ${repository.name} does not contain a suitable release for ${type} ${name}."])
                 exit 1
             }
         } else {
-            Artifact artifact = artifactRepository.findArtifact(type, name, version)
+            Artifact artifact = repository.findArtifact(type, name, version)
             if (artifact?.releases) release = artifact.releases[0]
         }
 
@@ -246,7 +246,7 @@ doInstallArtifact = { ArtifactRepository artifactRepository, String type, String
             exit 1
         }
 
-        File file = artifactRepository.downloadFile(type, name, version, null)
+        File file = repository.downloadFile(type, name, version, null)
         doInstallFromFile(type, file, md)
 
         ArtifactInstallEngine artifactInstallEngine = createArtifactInstallEngine(md)
@@ -278,9 +278,9 @@ installArtifactForName = { Metadata md, String type, String name, String version
         }
     } else {
         if (fixedName != name) {
-            ArtifactRepositoryRegistry.instance.withRepositories { aname, artifactRepository ->
+            ArtifactRepositoryRegistry.instance.withRepositories { aname, repository ->
                 if (installed) return
-                if (doInstallArtifact(artifactRepository, type, fixedName, version, md)) {
+                if (doInstallArtifact(repository, type, fixedName, version, md)) {
                     installed = true
                     return
                 }
@@ -288,9 +288,9 @@ installArtifactForName = { Metadata md, String type, String name, String version
         }
 
         if (!installed) {
-            ArtifactRepositoryRegistry.instance.withRepositories { aname, artifactRepository ->
+            ArtifactRepositoryRegistry.instance.withRepositories { aname, repository ->
                 if (installed) return
-                if (doInstallArtifact(artifactRepository, type, name, version, md)) {
+                if (doInstallArtifact(repository, type, name, version, md)) {
                     installed = true
                     return
                 }
