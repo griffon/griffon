@@ -47,9 +47,6 @@ public final class UIThreadManager {
     }
 
     private UIThreadManager() {
-        if (LOG.isDebugEnabled()) {
-            LOG.debug("Default Executor set to run with " + Runtime.getRuntime().availableProcessors() + " processors");
-        }
     }
 
     private static abstract class RunnableRunner extends RunnableWithArgs {
