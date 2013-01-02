@@ -17,41 +17,22 @@
 package org.codehaus.griffon.cli.shell.command;
 
 import org.codehaus.griffon.cli.shell.AbstractGriffonCommand;
+import org.codehaus.griffon.cli.shell.Argument;
 import org.codehaus.griffon.cli.shell.Command;
 import org.codehaus.griffon.cli.shell.Option;
 
 /**
  * @author Andres Almiray
- * @since 0.9.5
+ * @since 1.2.0
  */
 @Command(scope = "griffon",
-        name = "release",
-        description = "Publishes a Griffon project according to its type")
-public class ReleaseCommand extends AbstractGriffonCommand {
-    @Option(name = "--nodoc",
-            description = "Skips generation of Javadoc and guide documentation.",
-            required = false)
-    private boolean nodoc = false;
-
+        name = "upload-release",
+        description = "Uploads a release to an artifact repository")
+public class UploadReleaseCommand extends AbstractGriffonCommand {
     @Option(name = "--repository",
             description = "Name of an specific repository where the release will be published.",
             required = false)
     private String repository;
-
-    @Option(name = "--message",
-            description = "Commit message that identifies this release.",
-            required = false)
-    private String message;
-
-    @Option(name = "--no-release-notes",
-            description = "Do not ask for missing release notes.",
-            required = false)
-    private boolean releaseNotes;
-
-    @Option(name = "--package-only",
-            description = "Create a release package but do not publish it.",
-            required = false)
-    private boolean packageOnly;
 
     @Option(name = "--username",
         description = "Username credentials.",
@@ -62,4 +43,10 @@ public class ReleaseCommand extends AbstractGriffonCommand {
         description = "Password credentials.",
         required = false)
     private String password;
+
+    @Argument(index = 0,
+        name = "filename",
+        description = "Filename of the release package",
+        required = true)
+    private String filename;
 }

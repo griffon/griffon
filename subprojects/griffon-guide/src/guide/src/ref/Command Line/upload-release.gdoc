@@ -1,0 +1,28 @@
+h1. upload-release
+
+h2. Purpose
+
+Publishes a Griffon release to a particular repository.
+
+h2. Examples
+
+{code:java}
+griffon upload-release
+{code}
+
+h2. Description
+
+Usage: 
+{code:java}
+griffon upload-release griffon-foo-0.1-release.zip
+griffon upload-release griffon-foo-0.1-release.zip --repository=myRepository
+{code}
+
+Options:
+* @repository@ - The name of the repository to publish to. See the section on [Artifact repositories|guide:artifactRepositories] in the user guide.
+* @username@ - The username to use.
+* @password@ - The password to use.
+
+If you require access to the Griffon Central Repository and wish to release your plugin/archetype there contact a member of the Griffon development team. 
+
+Once published, the artifact will automatically be available via the [list-plugins|commandLine] or [list-archetypes|commandLine] command.

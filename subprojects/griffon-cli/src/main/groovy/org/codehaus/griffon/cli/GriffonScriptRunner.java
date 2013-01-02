@@ -935,17 +935,17 @@ public class GriffonScriptRunner {
                 }
 
                 List<String> targets = new ArrayList<String>();
-                if (settings.isGriffonProject() && binarySearch(CHECK_VERSION_EXCLUSIONS, scriptName) < 0) {
+                if (settings.isGriffonProject() && !isExcluded(scriptName, CHECK_VERSION_EXCLUSIONS)) {
                     targets.add("checkVersion");
                 }
-                if (binarySearch(CONFIGURE_PROXY_EXCLUSIONS, scriptName) < 0) targets.add("configureProxy");
+                if (!isExcluded(scriptName, CONFIGURE_PROXY_EXCLUSIONS)) targets.add("configureProxy");
                 if (!isContextlessScriptName(scriptName)) {
                     if (!isExcludedFromDependencyResolution(scriptName)) {
                         targets.add("resolveFrameworkDependencies");
                         targets.add("resolveDependencies");
                     }
                     targets.add("loadEventHooks");
-                } else if (binarySearch(FRAMEWORK_PLUGIN_INCLUSIONS, scriptName) >= 0) {
+                } else if (!isExcluded(scriptName, FRAMEWORK_PLUGIN_INCLUSIONS)) {
                     targets.add("resolveFrameworkDependencies");
                     if (settings.isGriffonProject() && !isExcludedFromDependencyResolution(scriptName)) {
                         targets.add("resolveDependencies");
@@ -973,11 +973,14 @@ public class GriffonScriptRunner {
         }
 
         private boolean isExcludedFromDependencyResolution(String scriptName) {
-            if (binarySearch(RESOLVE_DEPENDENCIES_EXCLUSIONS, scriptName) >= 0) {
-                return true;
-            }
+            if (isExcluded(scriptName, RESOLVE_DEPENDENCIES_EXCLUSIONS)) return true;
             List<String> exclusions = (List<String>) getConfigValue(settings.getConfig(), "griffon.dependency.resolution.command.exclusions", new ArrayList<String>());
             return exclusions.contains(scriptName);
+        }
+
+        private boolean isExcluded(String str, String[] exclusions) {
+            return binarySearch(exclusions, str) >= 0 ||
+                (str.endsWith("_") && binarySearch(exclusions, str.substring(0, str.length() - 1)) >= 0);
         }
 
         private final String[] CONFIGURE_PROXY_EXCLUSIONS = {
@@ -989,7 +992,8 @@ public class GriffonScriptRunner {
 
         private final String[] RESOLVE_DEPENDENCIES_EXCLUSIONS = {
             "SetVersion", "Stats", "Upgrade", "Wrapper", "UsageStats",
-            "CreateCommandAlias", "Doc", "_GriffonResolveDependencies"
+            "CreateCommandAlias", "Doc", "_GriffonResolveDependencies",
+            "ClearDependencyCache", "UploadRelease"
         };
 
         private final String[] CHECK_VERSION_EXCLUSIONS = {
@@ -997,7 +1001,8 @@ public class GriffonScriptRunner {
         };
 
         private final String[] FRAMEWORK_PLUGIN_INCLUSIONS = {
-            "CreateApp_", "CreateAddon_", "CreatePlugin_", "CreateArchetype_", "Help_"
+            "CreateApp", "CreateAddon", "CreatePlugin", "CreateArchetype", "Help",
+            "CreateCommandAlias", "ClearDependencyCache", "UploadRelease"
         };
 
         {

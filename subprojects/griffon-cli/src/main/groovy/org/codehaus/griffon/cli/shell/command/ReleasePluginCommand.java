@@ -52,4 +52,14 @@ public class ReleasePluginCommand extends AbstractGriffonCommand {
             description = "Create a release package but do not publish it.",
             required = false)
     private boolean packageOnly;
+
+    @Option(name = "--username",
+        description = "Username credentials.",
+        required = false)
+    private String username;
+
+    @Option(name = "--password",
+        description = "Password credentials.",
+        required = false)
+    private String password;
 }
