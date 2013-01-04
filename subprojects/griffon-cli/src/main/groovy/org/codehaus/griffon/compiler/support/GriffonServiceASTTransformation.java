@@ -16,7 +16,6 @@
 
 package org.codehaus.griffon.compiler.support;
 
-import griffon.core.GriffonControllerClass;
 import griffon.core.GriffonService;
 import griffon.core.GriffonServiceClass;
 import org.codehaus.griffon.ast.GriffonASTUtils;
@@ -79,7 +78,7 @@ public class GriffonServiceASTTransformation extends GriffonArtifactASTTransform
             GriffonASTUtils.injectInterface(classNode, GRIFFON_SERVICE_CLASS);
             // 2. add methods
             ASTInjector injector = new GriffonServiceASTInjector();
-            injector.inject(classNode, GriffonControllerClass.TYPE);
+            injector.inject(classNode, GriffonServiceClass.TYPE);
         } else {
             doTransform(superClass);
         }
