@@ -985,8 +985,7 @@ public class GriffonScriptRunner {
 
         private final String[] CONFIGURE_PROXY_EXCLUSIONS = {
             "AddProxy", "ClearProxy", "RemoveProxy", "SetProxy", "ConfigureProxy",
-            "SetVersion", "Stats", "Wrapper",
-            "CreateAddon", "CreatePlugin", "Upgrade",
+            "SetVersion", "Stats", "Wrapper", "Upgrade",
             "CreateCommandAlias", "Doc", "ClearDependencyCache"
         };
 
