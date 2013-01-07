@@ -1,5 +1,5 @@
 /*
-* Copyright 2010-2012 the original author or authors.
+* Copyright 2010-2013 the original author or authors.
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
@@ -25,10 +25,12 @@ if (getBinding().variables.containsKey('_griffon_package_archetype_called')) ret
 _griffon_package_archetype_called = true
 
 includeTargets << griffonScript('_GriffonPackageArtifact')
+includeTargets << griffonScript('_GriffonClean')
 
 target(name: 'packageArchetype',
        description: 'Packages a Griffon archetype',
        prehook: null, posthook: null) {
+    depends(cleanAll)
     archetypeDescriptor = ArtifactSettings.getArchetypeDescriptor(basedir)
     if (!archetypeDescriptor?.exists()) {
         event('StatusFinal', ['Current directory does not appear to be a Griffon archetype project.'])

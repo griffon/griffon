@@ -1,5 +1,5 @@
 /*
- * Copyright 2012 the original author or authors.
+ * Copyright 2012-2013 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -52,4 +52,14 @@ public class ReleaseCommand extends AbstractGriffonCommand {
             description = "Create a release package but do not publish it.",
             required = false)
     private boolean packageOnly;
+
+    @Option(name = "--username",
+        description = "Username credentials.",
+        required = false)
+    private String username;
+
+    @Option(name = "--password",
+        description = "Password credentials.",
+        required = false)
+    private String password;
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright 2010-2012 the original author or authors.
+ * Copyright 2010-2013 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -78,6 +78,15 @@ ext.distBinSpec = copySpec {
         }
     }
 
+    /*
+    from(project(':griffon-rt').osgiBundleSingle.outputs.files) {
+        into('dist/osgi')
+    }
+    from(project(':griffon-rt').osgiBundleFull.outputs.files) {
+        into('dist/osgi')
+    }
+    */
+
     into('scripts') {
         from(project(":griffon-scripts").sourceSets.main.allSource)
     }
@@ -86,6 +95,8 @@ ext.distBinSpec = copySpec {
         from(project(':griffon-guide').jarApi.outputs.files)
         from(project(':griffon-guide').jarSource.outputs.files)
         from(project(':griffon-guide').jarSourceHtml.outputs.files)
+        from(project(':griffon-guide').jarCliApi.outputs.files)
+        from(project(':griffon-guide').jarCliSource.outputs.files)
     }
     into('doc') {
         from('src/dist/doc')
@@ -156,7 +167,7 @@ task tarSource(type: Tar) {
 ext.griffonHomeDir = System.getProperty('griffon.home') ?: System.env['GRIFFON_HOME']
 
 task checkGriffonHome << {
-    griffonHomeDir = System.getProperty('griffon.home') ?: System.env['GRIFFON_HOME']
+    ext.griffonHomeDir = System.getProperty('griffon.home') ?: System.env['GRIFFON_HOME']
     assert griffonHomeDir: 'You must define a value for $GRIFFON_HOME first!'
     println "===> \$GRIFFON_HOME is set to $griffonHomeDir"
 }

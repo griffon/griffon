@@ -1,5 +1,5 @@
 /*
- * Copyright 2010-2012 the original author or authors.
+ * Copyright 2010-2013 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -52,20 +52,20 @@ public interface ThreadingHandler {
     /**
      * Executes a code block as a Future on an ExecutorService.
      */
-    Future execFuture(ExecutorService executorService, Closure closure);
+    <R> Future<R> execFuture(ExecutorService executorService, Closure<R> closure);
 
     /**
      * Executes a code block as a Future on a default ExecutorService.
      */
-    Future execFuture(Closure closure);
+    <R> Future<R> execFuture(Closure<R> closure);
 
     /**
      * Executes a code block as a Future on an ExecutorService.
      */
-    Future execFuture(ExecutorService executorService, Callable callable);
+    <R> Future<R> execFuture(ExecutorService executorService, Callable<R> callable);
 
     /**
      * Executes a code block as a Future on a default ExecutorService.
      */
-    Future execFuture(Callable callable);
+    <R> Future<R> execFuture(Callable<R> callable);
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright 2010-2012 the original author or authors.
+ * Copyright 2010-2013 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,8 +14,10 @@
  * limitations under the License.
  */
 
-import org.codehaus.groovy.ast.ClassNode;
-import org.codehaus.groovy.ast.expr.MethodCallExpression;
+package dsld
+
+import org.codehaus.groovy.ast.ClassNode
+import org.codehaus.groovy.ast.expr.MethodCallExpression
 
 /**
  * @author Andrew Eisenberg
@@ -25,55 +27,66 @@ import org.codehaus.groovy.ast.expr.MethodCallExpression;
 supportsVersion(groovyEclipse: '2.5.1')
 
 def griffonArtifact = { String folder ->
-	sourceFolderOfCurrentType("griffon-app/" + folder)
+    sourceFolderOfCurrentType("griffon-app/" + folder)
 }
 
-def modelClass = griffonArtifact("models")
-def controllerClass = griffonArtifact("controllers")
-def serviceClass = griffonArtifact("services")
-def viewClass = griffonArtifact("views") & isScript()
-
-(modelClass | controllerClass | 
-	serviceClass | viewClass).accept {
-	
-	provider = "Griffon DSL"
-	delegatesTo "griffon.core.GriffonMvcArtifact"
-	delegatesTo "griffon.core.GriffonArtifact"
-	delegatesTo "griffon.core.MVCHandler"
-	delegatesTo "griffon.core.ThreadingHandler"
-	delegatesTo "griffon.core.ResourceHandler"
+[
+    [
+        pointcut: griffonArtifact('controllers'),
+        suffix: 'Controller'
+    ],
+    [
+        pointcut: griffonArtifact('models'),
+        suffix: 'Model'
+    ],
+    [
+        pointcut: griffonArtifact('services'),
+        suffix: 'Service'
+    ],
+    [
+        pointcut: griffonArtifact('views') & isScript(),
+        suffix: 'View'
+    ],
+].each { desc ->
+    contribute(desc.pointcut) {
+        if (currentType?.name?.endsWith(desc.suffix)) {
+            provider = "Griffon DSL"
+            delegatesTo "griffon.core.GriffonMvcArtifact"
+            delegatesTo "griffon.core.GriffonArtifact"
+            delegatesTo "griffon.core.MVCHandler"
+            delegatesTo "griffon.core.ThreadingHandler"
+            delegatesTo "griffon.core.ResourceHandler"
+            delegatesTo "griffon.core.Griffon${desc.suffix}".toString() 
+        }
+    }
 }
-	
-viewClass.accept {
-	delegatesTo "griffon.core.GriffonView"
-}
 
-enclosingClass(annotatedBy('griffon.transform.EventPublisher')).accept {
+contribute(enclosingClass(annotatedBy('griffon.transform.EventPublisher'))) {
     provider = "Griffon DSL"
-	delegatesTo "griffon.util.EventPublisher"
+    delegatesTo "griffon.util.EventPublisher"
 }
 
-enclosingClass(annotatedBy('griffon.transform.MVCAware')).accept {
+contribute(enclosingClass(annotatedBy('griffon.transform.MVCAware'))) {
     provider = "Griffon DSL"
-	delegatesTo "griffon.core.MVCHandler"
+    delegatesTo "griffon.core.MVCHandler"
 }
 
-enclosingClass(annotatedBy('griffon.transform.ThreadingAware')).accept {
+contribute(enclosingClass(annotatedBy('griffon.transform.ThreadingAware'))) {
     provider = "Griffon DSL"
-	delegatesTo "griffon.core.ThreadingHandler"
+    delegatesTo "griffon.core.ThreadingHandler"
 }
 
-enclosingClass(annotatedBy('griffon.transform.ResourcesAware')).accept {
+contribute(enclosingClass(annotatedBy('griffon.transform.ResourcesAware'))) {
     provider = "Griffon DSL"
-	delegatesTo "griffon.core.ResourceHandler"
+    delegatesTo "griffon.core.ResourceHandler"
 }
 
-enclosingClass(annotatedBy('griffon.transform.MessageSourceAware')).accept {
+contribute(enclosingClass(annotatedBy('griffon.transform.MessageSourceAware'))) {
     provider = "Griffon DSL"
-	delegatesTo "griffon.core.i18n.MessageSource"
+    delegatesTo "griffon.core.i18n.MessageSource"
 }
 
-enclosingClass(annotatedBy('griffon.transform.ResourceResolverAware')).accept {
+contribute(enclosingClass(annotatedBy('griffon.transform.ResourceResolverAware'))) {
     provider = "Griffon DSL"
-	delegatesTo "griffon.core.resources.ResourceResolver"
+    delegatesTo "griffon.core.resources.ResourceResolver"
 }

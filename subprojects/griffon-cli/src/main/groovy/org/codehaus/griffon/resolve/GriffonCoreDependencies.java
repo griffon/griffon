@@ -1,5 +1,5 @@
 /*
- * Copyright 2004-2012 the original author or authors.
+ * Copyright 2004-2013 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -116,6 +116,7 @@ public class GriffonCoreDependencies {
                         String springVersion = buildSettings.getSpringVersion();
                         String antVersion = buildSettings.getAntVersion();
                         String slf4jVersion = buildSettings.getSlf4jVersion();
+                        String log4jVersion = buildSettings.getLog4jVersion();
                         String groovyVersion = buildSettings.getGroovyVersion();
 
                         ModuleRevisionId[] buildDependencies = {
@@ -144,12 +145,13 @@ public class GriffonCoreDependencies {
                                 ModuleRevisionId.newInstance("org.springframework", "org.springframework.beans", springVersion),
                                 ModuleRevisionId.newInstance("org.springframework", "org.springframework.context", springVersion),
                                 ModuleRevisionId.newInstance("org.springframework", "org.springframework.context.support", springVersion),
-                                ModuleRevisionId.newInstance("net.sf.json-lib", "json-lib", "2.4", classifier("jdk15"))
+                                ModuleRevisionId.newInstance("net.sf.json-lib", "json-lib", "2.4", classifier("jdk15")),
+                                ModuleRevisionId.newInstance("biz.aQute", "bndlib", "1.50.0")
                         };
                         registerDependencies(dependencyManager, "build", buildDependencies);
 
                         ModuleRevisionId[] loggingDependencies = {
-                                ModuleRevisionId.newInstance("log4j", "log4j", "1.2.17"),
+                                ModuleRevisionId.newInstance("log4j", "log4j", log4jVersion),
                                 ModuleRevisionId.newInstance("org.slf4j", "slf4j-api", slf4jVersion),
                                 ModuleRevisionId.newInstance("org.slf4j", "slf4j-log4j12", slf4jVersion),
                                 ModuleRevisionId.newInstance("org.slf4j", "jcl-over-slf4j", slf4jVersion),

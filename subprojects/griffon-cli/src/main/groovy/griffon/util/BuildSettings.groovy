@@ -1,5 +1,5 @@
 /*
- * Copyright 2008-2012 the original author or authors.
+ * Copyright 2008-2013 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -37,6 +37,7 @@ import static griffon.util.ArtifactSettings.*
 import static griffon.util.GriffonExceptionHandler.sanitize
 import static griffon.util.GriffonNameUtils.capitalize
 import static org.codehaus.griffon.cli.CommandLineConstants.*
+import org.apache.ivy.core.report.ArtifactDownloadReport
 
 /**
  * <p>Represents the project paths and other build settings
@@ -149,6 +150,7 @@ class BuildSettings extends AbstractBuildSettings {
     final String groovyVersion
     final String antVersion
     final String slf4jVersion
+    final String log4jVersion
     final String springVersion
 
     /** The environment for the current script. */
@@ -294,6 +296,10 @@ class BuildSettings extends AbstractBuildSettings {
     ResolveReport testResolveReport
     ResolveReport runtimeResolveReport
 
+    static final Closure ARTIFACT_FILTER = { ArtifactDownloadReport r ->
+        r.downloadStatus.toString() != 'failed' && !r.name.contains('-sources') && !r.name.contains('-javadoc')
+    }
+
     /** List containing the default (resolved via the dependencyManager) compile-time dependencies of the app as File instances.  */
     private List<File> internalCompileDependencies
     @Lazy List<File> defaultCompileDependencies = {
@@ -302,7 +308,7 @@ class BuildSettings extends AbstractBuildSettings {
         List<File> jarFiles
         if (shouldResolve()) {
             compileResolveReport = dependencyManager.resolveDependencies(IvyDependencyManager.COMPILE_CONFIGURATION)
-            jarFiles = compileResolveReport.getArtifactsReports(null, false).findAll {it.downloadStatus.toString() != 'failed'}.localFile + applicationJars
+            jarFiles = compileResolveReport.getArtifactsReports(null, false).findAll(ARTIFACT_FILTER).localFile + applicationJars
             LOG.debug("Resolved jars for [compile]: ${{-> jarFiles.join('\n')}}")
         } else {
             jarFiles = []
@@ -336,7 +342,7 @@ class BuildSettings extends AbstractBuildSettings {
         if (internalTestDependencies) return internalTestDependencies
         if (shouldResolve()) {
             testResolveReport = dependencyManager.resolveDependencies(IvyDependencyManager.TEST_CONFIGURATION)
-            def jarFiles = testResolveReport.getArtifactsReports(null, false).findAll {it.downloadStatus.toString() != 'failed'}.localFile + applicationJars
+            def jarFiles = testResolveReport.getArtifactsReports(null, false).findAll(ARTIFACT_FILTER).localFile + applicationJars
             LOG.debug("Resolved jars for [test]: ${{-> jarFiles.join('\n')}}")
             return jarFiles
         } else {
@@ -370,7 +376,7 @@ class BuildSettings extends AbstractBuildSettings {
         if (internalRuntimeDependencies) return internalRuntimeDependencies
         if (shouldResolve()) {
             runtimeResolveReport = dependencyManager.resolveDependencies(IvyDependencyManager.RUNTIME_CONFIGURATION)
-            def jarFiles = runtimeResolveReport.getArtifactsReports(null, false).findAll {it.downloadStatus.toString() != 'failed'}.localFile + applicationJars
+            def jarFiles = runtimeResolveReport.getArtifactsReports(null, false).findAll(ARTIFACT_FILTER).localFile + applicationJars
             LOG.debug("Resolved jars for [runtime]: ${{-> jarFiles.join('\n')}}")
             return jarFiles
         }
@@ -408,7 +414,7 @@ class BuildSettings extends AbstractBuildSettings {
         if (internalBuildDependencies) return internalBuildDependencies
         if (shouldResolve()) {
             buildResolveReport = dependencyManager.resolveDependencies(IvyDependencyManager.BUILD_CONFIGURATION)
-            def jarFiles = buildResolveReport.getArtifactsReports(null, false).findAll {it.downloadStatus.toString() != 'failed'}.localFile + applicationJars
+            def jarFiles = buildResolveReport.getArtifactsReports(null, false).findAll(ARTIFACT_FILTER).localFile + applicationJars
             LOG.debug("Resolved jars for [build]: ${{-> jarFiles.join('\n')}}")
             return jarFiles
         }
@@ -485,6 +491,7 @@ class BuildSettings extends AbstractBuildSettings {
             groovyVersion = buildProps.'groovy.version'
             antVersion = buildProps.'ant.version'
             slf4jVersion = buildProps.'slf4j.version'
+            log4jVersion = buildProps.'log4j.version'
             springVersion = buildProps.'spring.version'
         }
         catch (IOException ex) {
@@ -878,7 +885,8 @@ class BuildSettings extends AbstractBuildSettings {
                                     groovyVersion: this.groovyVersion,
                                     springVersion: this.springVersion,
                                     antVersion: this.antVersion,
-                                    slf4jVersion: this.slf4jVersion
+                                    slf4jVersion: this.slf4jVersion,
+                                    log4jVersion: this.log4jVersion
                             ]
                             def pluginConfig = pluginSlurper.parse(script)
                             def pluginDependencyConfig = pluginConfig.griffon.project.dependency.resolution
@@ -898,7 +906,7 @@ class BuildSettings extends AbstractBuildSettings {
     }
 
     ConfigReader createConfigReader() {
-        ConfigReader reader = new ConfigReader()
+        ConfigReader reader = ConfigUtils.createConfigReader()
         reader.setBinding(
                 basedir: baseDir.path,
                 baseFile: baseDir,
@@ -909,9 +917,6 @@ class BuildSettings extends AbstractBuildSettings {
                 griffonSettings: this,
                 appName: Metadata.current.getApplicationName(),
                 appVersion: Metadata.current.getApplicationVersion())
-        reader.registerConditionalBlock('environments', Environment.current.name)
-        reader.registerConditionalBlock('projects', Metadata.current.getApplicationName())
-        reader.registerConditionalBlock("platforms", GriffonApplicationUtils.getFullPlatform())
         return reader
     }
 
@@ -940,30 +945,30 @@ class BuildSettings extends AbstractBuildSettings {
     }
 
     private void establishProjectStructure() {
-        // The third argument to "getPropertyValue()" is either the
+        // The third argument to "getValueOf()" is either the
         // existing value of the corresponding field, or if that's
         // null, a default value. This ensures that we don't override
         // settings provided by, for example, the Maven plugin.
         def props = config.toProperties()
-        compilerSourceLevel = getPropertyValue(KEY_COMPILER_SOURCE_LEVEL, props, null)
-        compilerTargetLevel = getPropertyValue(KEY_COMPILER_TARGET_LEVEL, props, null)
-        compilerDebug = getPropertyValue(KEY_COMPILER_DEBUG, props, 'yes')
+        compilerSourceLevel = getValueOf(KEY_COMPILER_SOURCE_LEVEL, props, null)
+        compilerTargetLevel = getValueOf(KEY_COMPILER_TARGET_LEVEL, props, null)
+        compilerDebug = getValueOf(KEY_COMPILER_DEBUG, props, 'yes')
 
         // read metadata file
         Metadata.current
-        if (!griffonWorkDirSet) griffonWorkDir = new File(getPropertyValue(WORK_DIR, props, "${userHome}/.griffon/${griffonVersion}"))
-        if (!projectWorkDirSet) projectWorkDir = new File(getPropertyValue(PROJECT_WORK_DIR, props, "$griffonWorkDir/projects/${baseDir.name}"))
-        if (!projectTargetDirSet) projectTargetDir = new File(getPropertyValue(PROJECT_TARGET_DIR, props, "$baseDir/target"))
-        if (!classesDirSet) classesDir = new File(getPropertyValue(PROJECT_CLASSES_DIR, props, "$projectWorkDir/classes"))
-        if (!testClassesDirSet) testClassesDir = new File(getPropertyValue(PROJECT_TEST_CLASSES_DIR, props, "$projectWorkDir/test-classes"))
-        if (!resourcesDirSet) resourcesDir = new File(getPropertyValue(PROJECT_RESOURCES_DIR, props, "$projectWorkDir/resources"))
-        if (!testResourcesDirSet) testResourcesDir = new File(getPropertyValue(PROJECT_TEST_RESOURCES_DIR, props, "$projectWorkDir/test-resources"))
-        if (!sourceDirSet) sourceDir = new File(getPropertyValue(PROJECT_SOURCE_DIR, props, "$baseDir/src"))
-        if (!projectPluginsDirSet) this.@projectPluginsDir = new File(getPropertyValue(PLUGINS_DIR, props, "$projectWorkDir/plugins"))
-        if (!testReportsDirSet) testReportsDir = new File(getPropertyValue(PROJECT_TEST_REPORTS_DIR, props, "${projectTargetDir}/test-reports"))
-        if (!docsOutputDirSet) docsOutputDir = new File(getPropertyValue(PROJECT_DOCS_OUTPUT_DIR, props, "${projectTargetDir}/docs"))
-        if (!testSourceDirSet) testSourceDir = new File(getPropertyValue(PROJECT_TEST_SOURCE_DIR, props, "${baseDir}/test"))
-        if (!sourceEncodingSet) sourceEncoding = getPropertyValue(KEY_SOURCE_ENCODING, props, "UTF-8")
+        if (!griffonWorkDirSet) griffonWorkDir = new File(getValueOf(WORK_DIR, props, "${userHome}/.griffon/${griffonVersion}"))
+        if (!projectWorkDirSet) projectWorkDir = new File(getValueOf(PROJECT_WORK_DIR, props, "$griffonWorkDir/projects/${baseDir.name}"))
+        if (!projectTargetDirSet) projectTargetDir = new File(getValueOf(PROJECT_TARGET_DIR, props, "$baseDir/target"))
+        if (!classesDirSet) classesDir = new File(getValueOf(PROJECT_CLASSES_DIR, props, "$projectWorkDir/classes"))
+        if (!testClassesDirSet) testClassesDir = new File(getValueOf(PROJECT_TEST_CLASSES_DIR, props, "$projectWorkDir/test-classes"))
+        if (!resourcesDirSet) resourcesDir = new File(getValueOf(PROJECT_RESOURCES_DIR, props, "$projectWorkDir/resources"))
+        if (!testResourcesDirSet) testResourcesDir = new File(getValueOf(PROJECT_TEST_RESOURCES_DIR, props, "$projectWorkDir/test-resources"))
+        if (!sourceDirSet) sourceDir = new File(getValueOf(PROJECT_SOURCE_DIR, props, "$baseDir/src"))
+        if (!projectPluginsDirSet) this.@projectPluginsDir = new File(getValueOf(PLUGINS_DIR, props, "$projectWorkDir/plugins"))
+        if (!testReportsDirSet) testReportsDir = new File(getValueOf(PROJECT_TEST_REPORTS_DIR, props, "${projectTargetDir}/test-reports"))
+        if (!docsOutputDirSet) docsOutputDir = new File(getValueOf(PROJECT_DOCS_OUTPUT_DIR, props, "${projectTargetDir}/docs"))
+        if (!testSourceDirSet) testSourceDir = new File(getValueOf(PROJECT_TEST_SOURCE_DIR, props, "${baseDir}/test"))
+        if (!sourceEncodingSet) sourceEncoding = getValueOf(KEY_SOURCE_ENCODING, props, "UTF-8")
     }
 
     protected void parseGriffonBuildListeners() {
@@ -987,10 +992,10 @@ class BuildSettings extends AbstractBuildSettings {
     }
 
     Object getPropertyValue(String propertyName, Object defaultValue) {
-        getPropertyValue(propertyName, config.toProperties(), defaultValue)
+        getValueOf(propertyName, config.toProperties(), defaultValue)
     }
 
-    private getPropertyValue(String propertyName, Properties props, Object defaultValue) {
+    private Object getValueOf(String propertyName, Properties props, Object defaultValue) {
         // First check whether we have a system property with the given name.
         def value = getValueFromSystemOrBuild(propertyName, props)
 
@@ -999,7 +1004,7 @@ class BuildSettings extends AbstractBuildSettings {
         return value != null ? value : defaultValue
     }
 
-    private getValueFromSystemOrBuild(String propertyName, Properties props) {
+    private Object getValueFromSystemOrBuild(String propertyName, Properties props) {
         def value = System.getProperty(propertyName)
         if (value != null) return value
 

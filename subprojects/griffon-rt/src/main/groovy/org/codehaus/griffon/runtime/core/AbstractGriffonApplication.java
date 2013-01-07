@@ -1,5 +1,5 @@
 /*
- * Copyright 2008-2012 the original author or authors.
+ * Copyright 2008-2013 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,11 +22,13 @@ import griffon.core.i18n.MessageSource;
 import griffon.core.i18n.NoSuchMessageException;
 import griffon.core.resources.NoSuchResourceException;
 import griffon.core.resources.ResourceResolver;
+import griffon.exceptions.GriffonException;
 import griffon.util.*;
 import groovy.lang.Binding;
 import groovy.lang.Closure;
 import groovy.util.ConfigObject;
 import groovy.util.FactoryBuilderSupport;
+import org.codehaus.griffon.runtime.util.ExecutorServiceHolder;
 import org.codehaus.griffon.runtime.util.GriffonApplicationHelper;
 import org.codehaus.griffon.runtime.util.MVCGroupExceptionHandler;
 import org.slf4j.Logger;
@@ -63,10 +65,10 @@ public abstract class AbstractGriffonApplication extends AbstractObservable impl
 
     private Locale locale = Locale.getDefault();
     public static final String[] EMPTY_ARGS = new String[0];
-    protected final Object lock = new Object();
+    protected final Object[] lock = new Object[0];
     private ApplicationPhase phase = ApplicationPhase.INITIALIZE;
 
-    private final EventRouter eventRouter = new EventRouter();
+    private EventRouter eventRouter = new NoopEventRouter();
     private final ResourceLocator resourceLocator = new ResourceLocator();
     private final List<ShutdownHandler> shutdownHandlers = new ArrayList<ShutdownHandler>();
     private final String[] startupArgs;
@@ -83,6 +85,14 @@ public abstract class AbstractGriffonApplication extends AbstractObservable impl
         ApplicationHolder.setApplication(this);
         log = LoggerFactory.getLogger(getClass());
         MVCGroupExceptionHandler.registerWith(this);
+    }
+
+    public EventRouter getEventRouter() {
+        return eventRouter;
+    }
+
+    public void setEventRouter(EventRouter eventRouter) {
+        this.eventRouter = eventRouter;
     }
 
     public Binding getBindings() {
@@ -201,19 +211,19 @@ public abstract class AbstractGriffonApplication extends AbstractObservable impl
     }
 
     public Class getAppConfigClass() {
-        return loadClass(GriffonApplication.Configuration.APPLICATION.getName());
+        return loadConfigurationalClass(GriffonApplication.Configuration.APPLICATION.getName());
     }
 
     public Class getConfigClass() {
-        return loadClass(GriffonApplication.Configuration.CONFIG.getName());
+        return loadConfigurationalClass(GriffonApplication.Configuration.CONFIG.getName());
     }
 
     public Class getBuilderClass() {
-        return loadClass(GriffonApplication.Configuration.BUILDER.getName());
+        return loadConfigurationalClass(GriffonApplication.Configuration.BUILDER.getName());
     }
 
     public Class getEventsClass() {
-        return loadClass(GriffonApplication.Configuration.EVENTS.getName());
+        return loadConfigurationalClass(GriffonApplication.Configuration.EVENTS.getName());
     }
 
     public void initialize() {
@@ -305,6 +315,8 @@ public abstract class AbstractGriffonApplication extends AbstractObservable impl
         // stage 4 - call shutdown script
         log.debug("Shutdown stage 4: execute Shutdown script");
         GriffonApplicationHelper.runLifecycleHandler(GriffonApplication.Lifecycle.SHUTDOWN.getName(), this);
+
+        ExecutorServiceHolder.shutdownAll();
 
         return true;
     }
@@ -438,19 +450,19 @@ public abstract class AbstractGriffonApplication extends AbstractObservable impl
         UIThreadManager.getInstance().executeOutside(runnable);
     }
 
-    public Future execFuture(ExecutorService executorService, Closure closure) {
+    public <R> Future<R> execFuture(ExecutorService executorService, Closure<R> closure) {
         return UIThreadManager.getInstance().executeFuture(executorService, closure);
     }
 
-    public Future execFuture(Closure closure) {
+    public <R> Future<R> execFuture(Closure<R> closure) {
         return UIThreadManager.getInstance().executeFuture(closure);
     }
 
-    public Future execFuture(ExecutorService executorService, Callable callable) {
+    public <R> Future<R> execFuture(ExecutorService executorService, Callable<R> callable) {
         return UIThreadManager.getInstance().executeFuture(executorService, callable);
     }
 
-    public Future execFuture(Callable callable) {
+    public <R> Future<R> execFuture(Callable<R> callable) {
         return UIThreadManager.getInstance().executeFuture(callable);
     }
 
@@ -558,13 +570,29 @@ public abstract class AbstractGriffonApplication extends AbstractObservable impl
         getMvcGroupManager().withMVCGroup(mvcType, mvcName, args, handler);
     }
 
-    private Class loadClass(String className) {
+    private Class<?> loadClass(String className) {
         try {
             return ApplicationClassLoader.get().loadClass(className);
         } catch (ClassNotFoundException e) {
             // ignored
         }
         return null;
+    }
+
+    private Class<?> loadConfigurationalClass(String className) {
+        if (!className.contains(".")) {
+            String fixedClassName = "config." + className;
+            try {
+                return ApplicationClassLoader.get().loadClass(fixedClassName);
+            } catch (ClassNotFoundException cnfe) {
+                if (cnfe.getMessage().equals(fixedClassName)) {
+                    return loadClass(className);
+                } else {
+                    throw new GriffonException(cnfe);
+                }
+            }
+        }
+        return loadClass(className);
     }
 
     public InputStream getResourceAsStream(String name) {

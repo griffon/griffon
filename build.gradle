@@ -1,5 +1,5 @@
 /*
- * Copyright 2010-2012 the original author or authors.
+ * Copyright 2010-2013 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -29,7 +29,7 @@ buildscript {
         }
     }
     dependencies {
-        classpath 'bmuschko:gradle-izpack-plugin:0.1'
+        classpath 'bmuschko:gradle-izpack-plugin:0.2'
         classpath 'bmuschko:gradle-java2html-plugin:0.3'
     }
 }
@@ -76,19 +76,21 @@ configure(mavenizedProjects()) { proj ->
     proj.task('checkManifest') {
         dependsOn proj.classes
         doLast {
-            proj.jar.manifest {
-                attributes(
-                    'Built-By': System.properties['user.name'],
-                    'Created-By': System.properties['java.version'] + " (" + System.properties['java.vendor'] + " "+ System.getProperty("java.vm.version") + ")",
-                    'Build-Date': buildTime,
-                    'Build-Time': buildDate,
-                    'Specification-Title': proj.name,
-                    'Specification-Version': project.version,
-                    'Specification-Vendor': 'griffon.codehaus.org',
-                    'Implementation-Title': proj.name,
-                    'Implementation-Version': project.version,
-                    'Implementation-Vendor': 'griffon.codehaus.org'
-                )
+            proj.tasks.withType(Jar).each { jarfile ->
+                jarfile.manifest {
+                    attributes(
+                        'Built-By': System.properties['user.name'],
+                        'Created-By': System.properties['java.version'] + " (" + System.properties['java.vendor'] + " " + System.getProperty("java.vm.version") + ")",
+                        'Build-Date': buildTime,
+                        'Build-Time': buildDate,
+                        'Specification-Title': proj.name,
+                        'Specification-Version': project.version,
+                        'Specification-Vendor': 'griffon-framework.org',
+                        'Implementation-Title': proj.name,
+                        'Implementation-Version': project.version,
+                        'Implementation-Vendor': 'griffon-framework.org'
+                    )
+                }
             }
         }
     }
@@ -116,7 +118,7 @@ task bambooStage2(dependsOn: [bambooStage1, fullDist, rpm]) {
 }
 
 task wrapper(type: Wrapper) {
-    gradleVersion = '1.1'
+    gradleVersion = '1.3'
     jarFile = 'gradle/wrapper/gradle-wrapper.jar'
 }
 

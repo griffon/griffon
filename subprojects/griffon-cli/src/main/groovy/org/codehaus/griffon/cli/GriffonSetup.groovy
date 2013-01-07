@@ -1,5 +1,5 @@
 /*
- * Copyright 2012 the original author or authors.
+ * Copyright 2012-2013 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License")
  * you may not use this file except in compliance with the License.
@@ -32,6 +32,7 @@ import static java.util.Collections.emptyMap
 import static org.codehaus.griffon.artifacts.ArtifactRepository.DEFAULT_LOCAL_LOCATION
 import static org.codehaus.griffon.artifacts.ArtifactRepository.DEFAULT_LOCAL_NAME
 import static org.codehaus.griffon.cli.CommandLineConstants.KEY_NON_INTERACTIVE_DEFAULT_ANSWER
+import static org.codehaus.griffon.cli.GriffonUsageStats.banner
 
 /**
  * @author Andres Almiray
@@ -52,6 +53,7 @@ public final class GriffonSetup {
                 uploadBundles(settings)
                 configured(settings)
                 printSetupFooter()
+                println banner()
             } finally {
                 if (defaultAnswerNonInteractive != null) {
                     System.setProperty(KEY_NON_INTERACTIVE_DEFAULT_ANSWER, defaultAnswerNonInteractive)

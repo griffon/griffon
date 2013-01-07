@@ -1,5 +1,5 @@
 /* 
- * Copyright 2004-2012 the original author or authors.
+ * Copyright 2004-2013 the original author or authors.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -55,12 +55,14 @@ public final class GriffonClassUtils {
     public static final Map<Class, Class> PRIMITIVE_TYPE_COMPATIBLE_CLASSES = new HashMap<Class, Class>();
 
     private static final Pattern EVENT_HANDLER_PATTERN = Pattern.compile("^on[A-Z][\\w]*$");
+    private static final Pattern CONTRIBUTION_PATTERN = Pattern.compile("^with[A-Z][a-z0-9_]*[\\w]*$");
     private static final Pattern GETTER_PATTERN_1 = Pattern.compile("^get[A-Z][\\w]*$");
     private static final Pattern GETTER_PATTERN_2 = Pattern.compile("^is[A-Z][\\w]*$");
     private static final Pattern SETTER_PATTERN = Pattern.compile("^set[A-Z][\\w]*$");
     private static final Set<MethodDescriptor> BASIC_METHODS = new TreeSet<MethodDescriptor>();
     private static final Set<MethodDescriptor> ARTIFACT_METHODS = new TreeSet<MethodDescriptor>();
     private static final Set<MethodDescriptor> MVC_METHODS = new TreeSet<MethodDescriptor>();
+    private static final Set<MethodDescriptor> SERVICE_METHODS = new TreeSet<MethodDescriptor>();
     private static final Set<MethodDescriptor> THREADING_METHODS = new TreeSet<MethodDescriptor>();
     private static final Set<MethodDescriptor> EVENT_PUBLISHER_METHODS = new TreeSet<MethodDescriptor>();
     private static final Set<MethodDescriptor> OBSERVABLE_METHODS = new TreeSet<MethodDescriptor>();
@@ -152,6 +154,9 @@ public final class GriffonClassUtils {
         MVC_METHODS.add(new MethodDescriptor("getAddonManager"));
         MVC_METHODS.add(new MethodDescriptor("getMVCGroupManager"));
         MVC_METHODS.add(new MethodDescriptor("setBuilder", new Class[]{FactoryBuilderSupport.class}));
+
+        SERVICE_METHODS.add(new MethodDescriptor("serviceInit"));
+        SERVICE_METHODS.add(new MethodDescriptor("serviceDestroy"));
 
         THREADING_METHODS.add(new MethodDescriptor("isUIThread"));
         THREADING_METHODS.add(new MethodDescriptor("execInsideUIAsync", new Class[]{Runnable.class}));
@@ -320,6 +325,84 @@ public final class GriffonClassUtils {
      */
     public static boolean isBasicMethod(Method method) {
         return isBasicMethod(MethodDescriptor.forMethod(method));
+    }
+
+    /**
+     * Finds out if the given string represents the name of a
+     * contribution method by matching against the following pattern:
+     * "^with[A-Z][a-z0-9_]*[\w]*$"<p>
+     * <p/>
+     * <pre>
+     * isContributionMethod("withRest")     = true
+     * isContributionMethod("withMVCGroup") = false
+     * isContributionMethod("without")      = false
+     * </pre>
+     *
+     * @param name the name of a possible contribution method
+     * @return true if the name matches the given contribution method
+     *         pattern, false otherwise.
+     */
+    public static boolean isContributionMethod(String name) {
+        if (GriffonNameUtils.isBlank(name)) return false;
+        return CONTRIBUTION_PATTERN.matcher(name).matches();
+    }
+
+    /**
+     * Finds out if the given Method represents a contribution method
+     * by matching its name against the following pattern:
+     * "^with[A-Z][a-z0-9_]*[\w]*$"<p>
+     * <pre>
+     * // assuming getMethod() returns an appropriate Method reference
+     * isContributionMethod(getMethod("withRest"))     = true
+     * isContributionMethod(getMethod("withMVCGroup")) = false
+     * isContributionMethod(getMethod("without"))      = false
+     * </pre>
+     *
+     * @param method a Method reference
+     * @return true if the method name matches the given contribution method
+     *         pattern, false otherwise.
+     */
+    public static boolean isContributionMethod(Method method) {
+        return isContributionMethod(MethodDescriptor.forMethod(method));
+    }
+
+    /**
+     * Finds out if the given Method represents a contribution method
+     * by matching its name against the following pattern:
+     * "^with[A-Z][a-z0-9_]*[\w]*$"<p>
+     * <pre>
+     * // assuming getMethod() returns an appropriate MetaMethod reference
+     * isContributionMethod(getMethod("withRest"))     = true
+     * isContributionMethod(getMethod("withMVCGroup")) = false
+     * isContributionMethod(getMethod("without"))      = false
+     * </pre>
+     *
+     * @param method a MetaMethod reference
+     * @return true if the method name matches the given contribution method
+     *         pattern, false otherwise.
+     */
+    public static boolean isContributionMethod(MetaMethod method) {
+        return isContributionMethod(MethodDescriptor.forMethod(method));
+    }
+
+    /**
+     * Finds out if the given Method represents a contribution method
+     * by matching its name against the following pattern:
+     * "^with[A-Z][a-z0-9_]*[\w]*$"<p>
+     * <pre>
+     * // assuming getMethod() returns an appropriate MethodDescriptor reference
+     * isContributionMethod(getMethod("withRest"))     = true
+     * isContributionMethod(getMethod("withMVCGroup")) = false
+     * isContributionMethod(getMethod("without"))      = false
+     * </pre>
+     *
+     * @param method a MethodDescriptor reference
+     * @return true if the method name matches the given contribution method
+     *         pattern, false otherwise.
+     */
+    public static boolean isContributionMethod(MethodDescriptor method) {
+        if (method == null || method.getModifiers() - Modifier.PUBLIC != 0) return false;
+        return CONTRIBUTION_PATTERN.matcher(method.getName()).matches();
     }
 
     /**
@@ -607,6 +690,61 @@ public final class GriffonClassUtils {
     public static boolean isMvcMethod(MethodDescriptor method) {
         if (method == null || !isInstanceMethod(method)) return false;
         return MVC_METHODS.contains(method);
+    }
+
+    /**
+     * Finds out if the given {@code Method} belongs to the set of
+     * predefined {@code GriffonService} methods by convention.
+     * <p/>
+     * <pre>
+     * // assuming getMethod() returns an appropriate Method reference
+     * isServiceMethod(getMethod("serviceInit"))    = true
+     * isServiceMethod(getMethod("serviceDestroy")) = true
+     * isServiceMethod(getMethod("foo"))            = false
+     * </pre>
+     *
+     * @param method a Method reference
+     * @return true if the method is an {@code GriffonService} method, false otherwise.
+     */
+    public static boolean isServiceMethod(Method method) {
+        return isServiceMethod(MethodDescriptor.forMethod(method));
+    }
+
+    /**
+     * Finds out if the given {@code MetaMethod} belongs to the set of
+     * predefined {@code GriffonService} methods by convention.
+     * <p/>
+     * <pre>
+     * // assuming getMethod() returns an appropriate MetaMethod reference
+     * isServiceMethod(getMethod("serviceInit"))    = true
+     * isServiceMethod(getMethod("serviceDestroy")) = true
+     * isServiceMethod(getMethod("foo"))            = false
+     * </pre>
+     *
+     * @param method a MetaMethod reference
+     * @return true if the method is an {@code GriffonService} method, false otherwise.
+     */
+    public static boolean isServiceMethod(MetaMethod method) {
+        return isServiceMethod(MethodDescriptor.forMethod(method));
+    }
+
+    /**
+     * Finds out if the given {@code MethodDescriptor} belongs to the set of
+     * predefined {@code GriffonService} methods by convention.
+     * <p/>
+     * <pre>
+     * // assuming getMethod() returns an appropriate MethodDescriptor reference
+     * isServiceMethod(getMethod("serviceInit"))    = true
+     * isServiceMethod(getMethod("serviceDestroy")) = true
+     * isServiceMethod(getMethod("foo"))            = false
+     * </pre>
+     *
+     * @param method a MethodDescriptor reference
+     * @return true if the method is an {@code GriffonService} method, false otherwise.
+     */
+    public static boolean isServiceMethod(MethodDescriptor method) {
+        if (method == null || !isInstanceMethod(method)) return false;
+        return SERVICE_METHODS.contains(method);
     }
 
     /**
@@ -977,11 +1115,13 @@ public final class GriffonClassUtils {
      * <li>! isThreadingMethod(method)</li>
      * <li>! isArtifactMethod(method)</li>
      * <li>! isMvcMethod(method)</li>
+     * <li>! isServiceMethod(method)</li>
      * <li>! isEventPublisherMethod(method)</li>
      * <li>! isObservableMethod(method)</li>
      * <li>! isResourceHandlerMethod(method)</li>
      * <li>! isGetterMethod(method)</li>
      * <li>! isSetterMethod(method)</li>
+     * <li>! isContributionMethod(method)</li>
      * </ul>
      *
      * @param method a Method reference
@@ -999,11 +1139,13 @@ public final class GriffonClassUtils {
      * <li>! isThreadingMethod(method)</li>
      * <li>! isArtifactMethod(method)</li>
      * <li>! isMvcMethod(method)</li>
+     * <li>! isServiceMethod(method)</li>
      * <li>! isEventPublisherMethod(method)</li>
      * <li>! isObservableMethod(method)</li>
      * <li>! isResourceHandlerMethod(method)</li>
      * <li>! isGetterMethod(method)</li>
      * <li>! isSetterMethod(method)</li>
+     * <li>! isContributionMethod(method)</li>
      * </ul>
      *
      * @param method a MetaMethod reference
@@ -1021,11 +1163,13 @@ public final class GriffonClassUtils {
      * <li>! isThreadingMethod(method)</li>
      * <li>! isArtifactMethod(method)</li>
      * <li>! isMvcMethod(method)</li>
+     * <li>! isServiceMethod(method)</li>
      * <li>! isEventPublisherMethod(method)</li>
      * <li>! isObservableMethod(method)</li>
      * <li>! isResourceHandlerMethod(method)</li>
      * <li>! isGetterMethod(method)</li>
      * <li>! isSetterMethod(method)</li>
+     * <li>! isContributionMethod(method)</li>
      * </ul>
      *
      * @param method a MethodDescriptor reference
@@ -1038,11 +1182,13 @@ public final class GriffonClassUtils {
                 !isThreadingMethod(method) &&
                 !isArtifactMethod(method) &&
                 !isMvcMethod(method) &&
+                !isServiceMethod(method) &&
                 !isEventPublisherMethod(method) &&
                 !isObservableMethod(method) &&
                 !isResourceHandlerMethod(method) &&
                 !isGetterMethod(method) &&
-                !isSetterMethod(method);
+                !isSetterMethod(method) &&
+                !isContributionMethod(method);
     }
 
     public static boolean isGetter(MetaProperty property) {

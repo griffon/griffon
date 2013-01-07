@@ -1,5 +1,5 @@
 /*
- * Copyright 2004-2012 the original author or authors.
+ * Copyright 2004-2013 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -28,6 +28,7 @@ import java.util.concurrent.ConcurrentHashMap
 import static ArtifactSettings.getArtifactRelease
 import static griffon.util.GriffonNameUtils.getHyphenatedName
 import static org.apache.commons.lang.ArrayUtils.addAll
+import org.apache.ivy.core.report.ResolveReport
 
 /**
  * Common utilities for dealing with plugins.
@@ -192,7 +193,7 @@ class PluginSettings {
             availableScripts = scripts as Resource[]
             cache['availableScripts'] = availableScripts
         }
-        availableScripts
+        availableScripts.sort { r1, r2 -> r1.file.name <=> r2.file.name }
     }
 
     Resource[] getAvailableScripts(String scriptName) {
@@ -207,7 +208,7 @@ class PluginSettings {
         resolveResources("file:${basedir}/scripts/${scriptName}.groovy").each addScripts
         resolveResources("file:${userHome}/.griffon/scripts/${scriptName}.groovy").each addScripts
 
-        scripts as Resource[]
+        (scripts as Resource[]).sort { r1, r2 -> r1.file.name <=> r2.file.name }
     }
 
     Resource getPluginDirForName(String name) {
@@ -282,11 +283,11 @@ class PluginSettings {
         // if (parsedDependencies) {
         IvyDependencyManager dependencyManager = settings.dependencyManager
         for (conf in ['runtime', 'compile', 'test', 'build']) {
-            def resolveReport = dependencyManager.resolveDependencies(IvyDependencyManager."${conf.toUpperCase()}_CONFIGURATION")
+            ResolveReport resolveReport = dependencyManager.resolveDependencies(IvyDependencyManager."${conf.toUpperCase()}_CONFIGURATION")
             if (resolveReport.hasError()) {
                 throw new IllegalStateException("Some dependencies failed to be resolved.")
             } else {
-                configurations.get(conf, []).addAll(resolveReport.allArtifactsReports.localFile)
+                configurations.get(conf, []).addAll(resolveReport.allArtifactsReports.findAll(BuildSettings.ARTIFACT_FILTER).localFile)
             }
         }
 

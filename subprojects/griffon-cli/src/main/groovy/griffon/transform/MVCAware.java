@@ -1,5 +1,5 @@
 /*
- * Copyright 2009-2012 the original author or authors.
+ * Copyright 2009-2013 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -34,12 +34,12 @@ import java.lang.annotation.Target;
  * The following methods will be added to classes annotated with &#064;MVCAware
  * <ul>
  * <p/>
- * <li><code>public Map&lt;String, Object&gt; buildMVCGroup(String mvcType)</code></li>
- * <li><code>public Map&lt;String, Object&gt; buildMVCGroup(String mvcType, String mvcName)</code></li>
- * <li><code>public Map&lt;String, Object&gt; buildMVCGroup(Map&lt;String, Object&gt; args, String mvcType)</code></li>
- * <li><code>public Map&lt;String, Object&gt; buildMVCGroup(String mvcType, Map&lt;String, Object&gt; args)</code></li>
- * <li><code>public Map&lt;String, Object&gt; buildMVCGroup(Map&lt;String, Object&gt; args, String mvcType, String mvcName)</code></li>
- * <li><code>public Map&lt;String, Object&gt; buildMVCGroup(String mvcType, String mvcName, Map&lt;String, Object&gt; args)</code></li>
+ * <li><code>public MVCGroup buildMVCGroup(String mvcType)</code></li>
+ * <li><code>public MVCGroup buildMVCGroup(String mvcType, String mvcName)</code></li>
+ * <li><code>public MVCGroup buildMVCGroup(Map&lt;String, Object&gt; args, String mvcType)</code></li>
+ * <li><code>public MVCGroup buildMVCGroup(String mvcType, Map&lt;String, Object&gt; args)</code></li>
+ * <li><code>public MVCGroup buildMVCGroup(Map&lt;String, Object&gt; args, String mvcType, String mvcName)</code></li>
+ * <li><code>public MVCGroup buildMVCGroup(String mvcType, String mvcName, Map&lt;String, Object&gt; args)</code></li>
  * <li><code>public List&lt;? extends GriffonMvcArtifact&gt; createMVCGroup(String mvcType)</code></li>
  * <li><code>public List&lt;? extends GriffonMvcArtifact&gt; createMVCGroup(Map&lt;String, Object&gt; args, String mvcType)</code></li>
  * <li><code>public List&lt;? extends GriffonMvcArtifact&gt; createMVCGroup(String mvcType, Map&lt;String, Object&gt; args)</code></li>

@@ -1,5 +1,5 @@
 /*
- * Copyright 2011-2012 the original author or authors.
+ * Copyright 2011-2013 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -164,7 +164,7 @@ class ArtifactInstallEngine {
         try {
             return _installPlugins(dependencies, resolver, false)
         } catch (InstallArtifactException iae) {
-            errorHandler "Could not resolve plugin dependencies."
+            errorHandler "Could not resolve plugin dependencies. Review all dependencies marked with ! and try again with -Dgriffon.artifact.force.upgrade=true"
         }
     }
 
@@ -250,7 +250,7 @@ class ArtifactInstallEngine {
         try {
             return _installPlugins(dependencies, resolver, framework)
         } catch (InstallArtifactException iae) {
-            errorHandler "Could not resolve plugin dependencies."
+            errorHandler "Could not resolve plugin dependencies. Review all dependencies marked with ! and try again with -Dgriffon.artifact.force.upgrade=true"
         }
     }
 
@@ -434,11 +434,19 @@ class ArtifactInstallEngine {
             String key = releaseEntry.key
             Release installed = releaseEntry.value
             ArtifactDependency dependency = installedDependencies[key]
-            if (!dependency) return
+            if (!dependency) continue
             for (entry in installed.dependencies) {
                 ArtifactDependency dep = installedDependencies[entry.name]
                 if (dep) dependency.dependencies << dep
             }
+        }
+
+        for(ArtifactDependency dep : dependencies) {
+            ArtifactDependency installed = installedDependencies[dep.name]
+            if (!installed || installed.snapshot || installed.version != dep.version) continue
+            dep.installed = true
+            dep.resolved = true
+            dep.conflicted = false
         }
 
         if (LOG.debugEnabled && installedDependencies) {
@@ -501,8 +509,12 @@ class ArtifactInstallEngine {
         }
 
         if (!release.snapshot && new File(artifactInstallPath).exists()) {
-            if (!commandLineHelper.confirmInput("${capitalize(type)} '${releaseName}' is already installed. Overwrite?")) {
-                return
+            String defaultNonInteractiveAnswer = settings.getConfigValue(KEY_NON_INTERACTIVE_DEFAULT_ANSWER, '')
+            if (!'y'.equalsIgnoreCase(defaultNonInteractiveAnswer)) {
+                if ('n'.equalsIgnoreCase(defaultNonInteractiveAnswer) ||
+                    !commandLineHelper.confirmInput("${capitalize(type)} '${releaseName}' is already installed. Overwrite?")) {
+                    return
+                }
             }
         }
 

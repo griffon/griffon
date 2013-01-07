@@ -1,5 +1,5 @@
 /*
- * Copyright 2010-2012 the original author or authors.
+ * Copyright 2010-2013 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -39,7 +39,8 @@ dependencies {
             'jline:jline:0.9.94',
             'org.yaml:snakeyaml:1.9',
             'radeox:radeox:1.0-b2',
-            "org.apache.ant:ant-launcher:$antVersion"
+            "org.apache.ant:ant-launcher:$antVersion",
+            'biz.aQute:bndlib:1.50.0'
     compile("org.apache.ant:ant:$antVersion") {
         exclude group: 'org.apache.ant', module: 'ant-launcher'
     }
@@ -133,7 +134,7 @@ dependencies {
         exclude group: 'org.bouncycastle',   module: 'bcpg-jdk14'
         exclude group: 'org.bouncycastle',   module: 'bcprov-jdk14'
     }
-    compile('org.codehaus.gant:gant_groovy1.8:1.9.7') {
+    compile('org.codehaus.gant:gant_groovy2.0:1.9.8') {
         exclude group: 'org.apache.ant', module: 'ant'
         exclude group: 'commons-cli',    module: 'commons-cli'
     }
@@ -182,17 +183,20 @@ dependencies {
         exclude group: 'xml-resolver', module: 'xml-resolver'
     }
 
-    testCompile('org.spockframework:spock-core:0.6-groovy-1.8') {
+    testCompile('org.spockframework:spock-core:0.7-groovy-2.0') {
         exclude group: 'org.codehaus.groovy', module: 'groovy-all'
     }
 }
 
 processResources {
-    filter(ReplaceTokens, tokens: [version:version, 
-                                   groovyVersion:groovyVersion,
-                                   antVersion:antVersion,
-                                   slf4jVersion:slf4jVersion,
-                                   springVersion:springVersion])
+    filter(ReplaceTokens, tokens: [
+        version: version,
+        groovyVersion: groovyVersion,
+        antVersion: antVersion,
+        slf4jVersion: slf4jVersion,
+        log4jVersion: log4jVersion,
+        springVersion: springVersion
+    ])
 }
 
 test {

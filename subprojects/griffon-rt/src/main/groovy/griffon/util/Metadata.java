@@ -1,5 +1,5 @@
 /*
- * Copyright 2004-2012 the original author or authors.
+ * Copyright 2004-2013 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -86,7 +86,7 @@ public class Metadata extends Properties {
 
                 // GRIFFON-255 there may be multiple versions of "application.properties" in the classpath
                 // due to addon packaging. Avoid any URLS that look like plugin dirs or addon jars
-                input = fetchApplicationProperties(Thread.currentThread().getContextClassLoader());
+                input = fetchApplicationProperties(ApplicationClassLoader.get());
                 if (input == null) input = fetchApplicationProperties(Metadata.class.getClassLoader());
 
                 if (input != null) {

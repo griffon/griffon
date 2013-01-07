@@ -1,5 +1,5 @@
 /*
- * Copyright 2004-2012 the original author or authors.
+ * Copyright 2004-2013 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,32 +21,36 @@
  */
 
 import griffon.util.GriffonNameUtils
+import griffon.util.PlatformUtils
 import griffon.util.RunMode
+
+import static griffon.util.GriffonApplicationUtils.platform
 
 // No point doing this stuff more than once.
 if (getBinding().variables.containsKey('_package_called')) return
 _package_called = true
 
 includeTargets << griffonScript('_GriffonPackage')
+includeTargets << griffonScript('_GriffonClean')
 
 ant.taskdef(name: 'fileMerge', classname: 'org.codehaus.griffon.ant.taskdefs.FileMergeTask')
 
 target(name: 'package', description: 'Packages a Griffon project according to its type', prehook: null, posthook: null) {
     if (griffonSettings.isPluginProject()) {
         includeTargets << griffonScript('PackagePlugin')
-        depends(checkVersion, packagePlugin)
+        depends(packagePlugin)
         return
     } else if (griffonSettings.isArchetypeProject()) {
         includeTargets << griffonScript('PackageArchetype')
-        depends(checkVersion, packageArchetype)
+        depends(packageArchetype)
         return
     } else {
-        depends(checkVersion, packageApplication)
+        depends(packageApplication)
     }
 }
 
 target(name: 'packageApplication', description: 'Packages a GriffonApplication', prehook: null, posthook: null) {
-    depends(createConfig)
+    depends(cleanAll, createConfig)
 
     // create general dist dir
     distDir = buildConfig.griffon.dist.dir ?: "${basedir}/dist"
@@ -146,53 +150,53 @@ target(name: 'package_jar', description: "Creates a single jar distribution and 
     depends(prepackage)
     _skipSigning = false
 
+    String targetPlatform = argsMap.platform && PlatformUtils.PLATFORMS[argsMap.platform] ? argsMap.platform : platform
+
     String destFileName = argsMap.name ?: buildConfig.griffon.jars.jarName
-    if (!destFileName.endsWith(".jar")) destFile += ".jar"
+    if (destFileName.endsWith('.jar')) destFileName -= '.jar'
+    if (!destFileName.endsWith('-' + targetPlatform)) destFileName += '-' + targetPlatform
+    destFileName += '.jar'
     File destFile = new File(destFileName)
     if (!destFile.isAbsolute()) destFile = new File("${targetDistDir}/${destFile}")
     def libjars = ant.fileset(dir: jardir, includes: '*.jar')
     File mergeDir = new File("${projectWorkDir}/merge")
     String signaturesPattern = 'META-INF/*.MF,META-INF/*.SF,META-INF/*.RSA,META-INF/*.DSA'
 
-    def createJarFile = { jarfile, jars, extra = {} ->
-        ant.fileMerge(dir: mergeDir, applicationName: griffonAppName) {
-            jars.each {
-                zipfileset(src: it.toString(), excludes: signaturesPattern)
-            }
-            extra()
-        }
-        mergeManifest()
-        ant.jar(destfile: jarfile, duplicate: 'preserve') {
-            manifest {
-                manifestMap.each { k, v ->
-                    attribute(name: k, value: v)
-                }
-            }
-            fileset(dir: mergeDir)
-            jars.each {
-                zipfileset(src: it.toString(), excludes: signaturesPattern)
-            }
-            extra()
-        }
-        maybePackAndSign(jarfile)
-    }
-
-    createJarFile(destFile, libjars)
-
 // XXX -- NATIVE
-    doForAllPlatforms { platformOs ->
-        File platformDir = new File("${basedir}/lib/${platformOs}")
-        if (!platformDir.exists()) return
-        File destfile = new File(destFile.absolutePath - '.jar' + "-${platformOs}.jar")
-        createJarFile(destfile, libjars) {
+    File platformDir = new File("${jardir}/${targetPlatform}")
+// XXX -- NATIVE
+
+    def jarfileAggregator = {
+        libjars.each { jar ->
+            zipfileset(src: jar.toString(), excludes: signaturesPattern)
+        }
+// XXX -- NATIVE
+        if (platformDir.exists()) {
             platformDir.eachFileMatch(~/.*\.jar/) {f ->
-                zipfileset(src: it.toString(), excludes: signaturesPattern)
+                zipfileset(src: f.toString(), excludes: signaturesPattern)
             }
-            File nativeLibDir = new File(platformDir.canonicalPath + File.separator + 'native')
-            if (nativeLibDir.exists()) fileset(dir: nativeLibDir)
         }
-    }
 // XXX -- NATIVE
+    }
+
+    ant.fileMerge(dir: mergeDir, applicationName: griffonAppName, jarfileAggregator)
+
+    mergeManifest()
+    ant.jar(destfile: destFile, duplicate: 'preserve') {
+        manifest {
+            manifestMap.each { k, v ->
+                attribute(name: k, value: v)
+            }
+        }
+        fileset(dir: mergeDir)
+        jarfileAggregator()
+// XXX -- NATIVE
+        File nativeLibDir = new File(platformDir.canonicalPath + File.separator + 'native')
+        if (nativeLibDir.exists()) fileset(dir: nativeLibDir)
+// XXX -- NATIVE
+    }
+    ant.delete(dir: mergeDir)
+    maybePackAndSign(destFile)
 
     _copySharedFiles(targetDistDir)
     _copyPackageFiles(targetDistDir)
@@ -269,9 +273,9 @@ signJNLP = {
     ant.delete(dir: jnlpInf, quiet: true, failonerror: false)
     ant.mkdir(dir: jnlpInf)
     ant.copy(file: mainJarFile,
-            todir: tmpDir)
+        todir: tmpDir)
     ant.copy(file: "${targetDistDir}/${jnlpFile}",
-            tofile: "${jnlpInf}/APPLICATION.JNLP")
+        tofile: "${jnlpInf}/APPLICATION.JNLP")
     ant.jar(destfile: "${tmpDir}/${mainJarFile.name}", update: true, filesonly: true) {
         fileset(dir: jnlpUpdateDir)
     }

@@ -1,5 +1,5 @@
 /*
- * Copyright 2010-2012 the original author or authors.
+ * Copyright 2010-2013 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,9 +19,7 @@ package org.codehaus.griffon.runtime.core;
 import griffon.core.GriffonModel;
 import griffon.core.GriffonModelClass;
 
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
-import java.beans.PropertyChangeSupport;
+import java.beans.*;
 
 /**
  * Base implementation of the GriffonModel interface.
@@ -31,6 +29,7 @@ import java.beans.PropertyChangeSupport;
  */
 public abstract class AbstractGriffonModel extends AbstractGriffonMvcArtifact implements GriffonModel {
     protected PropertyChangeSupport pcs;
+    protected VetoableChangeSupport vcs;
 
     protected String getArtifactType() {
         return GriffonModelClass.TYPE;
@@ -38,6 +37,7 @@ public abstract class AbstractGriffonModel extends AbstractGriffonMvcArtifact im
 
     public AbstractGriffonModel() {
         pcs = new PropertyChangeSupport(this);
+        vcs = new VetoableChangeSupport(this);
     }
 
     public void addPropertyChangeListener(PropertyChangeListener listener) {
@@ -70,5 +70,37 @@ public abstract class AbstractGriffonModel extends AbstractGriffonMvcArtifact im
 
     protected void firePropertyChange(String propertyName, Object oldValue, Object newValue) {
         pcs.firePropertyChange(propertyName, oldValue, newValue);
+    }
+
+    public void addVetoableChangeListener(VetoableChangeListener listener) {
+        vcs.addVetoableChangeListener(listener);
+    }
+
+    public void removeVetoableChangeListener(VetoableChangeListener listener) {
+        vcs.removeVetoableChangeListener(listener);
+    }
+
+    public VetoableChangeListener[] getVetoableChangeListeners() {
+        return vcs.getVetoableChangeListeners();
+    }
+
+    public void addVetoableChangeListener(String propertyName, VetoableChangeListener listener) {
+        vcs.addVetoableChangeListener(propertyName, listener);
+    }
+
+    public void removeVetoableChangeListener(String propertyName, VetoableChangeListener listener) {
+        vcs.removeVetoableChangeListener(propertyName, listener);
+    }
+
+    public VetoableChangeListener[] getVetoableChangeListeners(String propertyName) {
+        return vcs.getVetoableChangeListeners(propertyName);
+    }
+
+    protected void fireVetoableChange(PropertyChangeEvent event) throws PropertyVetoException {
+        vcs.fireVetoableChange(event);
+    }
+
+    protected void fireVetoableChange(String propertyName, Object oldValue, Object newValue) throws PropertyVetoException {
+        vcs.fireVetoableChange(propertyName, oldValue, newValue);
     }
 }

@@ -1,5 +1,5 @@
 /*
-* Copyright 2010-2012 the original author or authors.
+* Copyright 2010-2013 the original author or authors.
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
@@ -38,9 +38,11 @@ if (getBinding().variables.containsKey('_griffon_artifacts_called')) return
 _griffon_artifacts_called = true
 
 artifactRepository = null
+repositoryName = null
 
 selectArtifactRepository = {
     artifactRepository = null
+    repositoryName = null
     repositoryName = argsMap.repository ?: getPropertyValue(KEY_DEFAULT_RELEASE_ARTIFACT_REPOSITORY, ArtifactRepository.DEFAULT_REMOTE_NAME)
     artifactRepository = ArtifactRepositoryRegistry.instance.findRepository(repositoryName)
     if (artifactRepository == null) {
@@ -55,8 +57,10 @@ selectArtifactRepository = {
 
 resolveArtifactRepository = {
     artifactRepository = null
+    repositoryName = null
     if (argsMap.repository) {
-        artifactRepository = ArtifactRepositoryRegistry.instance.findRepository(argsMap.repository)
+        repositoryName = argsMap.repository
+        artifactRepository = ArtifactRepositoryRegistry.instance.findRepository(repositoryName)
         if (griffonSettings.offlineMode && !artifactRepository.local) {
             event('StatusError', ["Repository ${repositoryName} cannot be used while offline mode is enabled."])
             exit 1
@@ -78,8 +82,8 @@ doWithSelectedRepository = { callback ->
     if (!repositories.contains(defaultInstallRepository)) repositories << defaultInstallRepository
     if (!repositories.contains(defaultSearchRepository)) repositories << defaultSearchRepository
 
-    for (String repositoryName : repositories) {
-        artifactRepository = ArtifactRepositoryRegistry.instance.findRepository(repositoryName)
+    for (String repositoryname : repositories) {
+        artifactRepository = ArtifactRepositoryRegistry.instance.findRepository(repositoryname)
         if (artifactRepository) {
             if (griffonSettings.offlineMode && !artifactRepository.local) return
             if (callback(artifactRepository)) break
@@ -206,15 +210,15 @@ doInstallArtifactFromZip = { String type, File file, Metadata md = metadata ->
     }
 }
 
-doInstallArtifact = { ArtifactRepository artifactRepository, String type, String name, String version = null, Metadata md = metadata ->
+doInstallArtifact = { ArtifactRepository repository, String type, String name, String version = null, Metadata md = metadata ->
     return withArtifactInstall(type) {
         def release = null
 
         if (!version) {
-            Artifact artifact = artifactRepository.findArtifact(type, name)
+            Artifact artifact = repository.findArtifact(type, name)
             if (!artifact) {
                 if (!failOnError) return false
-                event('StatusError', ["${capitalize(type)} ${name} was not found in repository ${artifactRepository.name}."])
+                event('StatusError', ["${capitalize(type)} ${name} was not found in repository ${repository.name}."])
                 exit 1
             }
             for (r in artifact.releases) {
@@ -226,11 +230,11 @@ doInstallArtifact = { ArtifactRepository artifactRepository, String type, String
             }
             if (!version) {
                 if (!failOnError) return false
-                event('StatusError', ["Repository ${artifactRepository.name} does not contain a suitable release for ${type} ${name}."])
+                event('StatusError', ["Repository ${repository.name} does not contain a suitable release for ${type} ${name}."])
                 exit 1
             }
         } else {
-            Artifact artifact = artifactRepository.findArtifact(type, name, version)
+            Artifact artifact = repository.findArtifact(type, name, version)
             if (artifact?.releases) release = artifact.releases[0]
         }
 
@@ -242,7 +246,7 @@ doInstallArtifact = { ArtifactRepository artifactRepository, String type, String
             exit 1
         }
 
-        File file = artifactRepository.downloadFile(type, name, version, null)
+        File file = repository.downloadFile(type, name, version, null)
         doInstallFromFile(type, file, md)
 
         ArtifactInstallEngine artifactInstallEngine = createArtifactInstallEngine(md)
@@ -258,16 +262,41 @@ installArtifactForName = { Metadata md, String type, String name, String version
     failOnError = false
     boolean installed = false
 
+    String fixedName = name
+    if (type == Plugin.TYPE && isApplicationProject && !framework) {
+        String toolkit = Metadata.current.getApplicationToolkit()
+        if (!name.endsWith('-' + toolkit)) {
+            fixedName = name + '-' +toolkit
+        }
+    }
     if (artifactRepository) {
-        doInstallArtifact(artifactRepository, type, name, version, md)
+        if (fixedName != name) {
+            installed = doInstallArtifact(artifactRepository, type, fixedName, version, md)
+        }
+        if (!installed) {
+            installed = doInstallArtifact(artifactRepository, type, name, version, md)
+        }
     } else {
-        ArtifactRepositoryRegistry.instance.withRepositories { aname, artifactRepository ->
-            if (installed) return
-            if (doInstallArtifact(artifactRepository, type, name, version, md)) {
-                installed = true
-                return
+        if (fixedName != name) {
+            ArtifactRepositoryRegistry.instance.withRepositories { aname, repository ->
+                if (installed) return
+                if (doInstallArtifact(repository, type, fixedName, version, md)) {
+                    installed = true
+                    return
+                }
             }
         }
+
+        if (!installed) {
+            ArtifactRepositoryRegistry.instance.withRepositories { aname, repository ->
+                if (installed) return
+                if (doInstallArtifact(repository, type, name, version, md)) {
+                    installed = true
+                    return
+                }
+            }
+        }
+
         if (!installed) {
             event('StatusError', ["Failed to install ${type} ${name}${version ? '-' + version : ''} [offline: ${griffonSettings.offlineMode}]"])
             exit 1

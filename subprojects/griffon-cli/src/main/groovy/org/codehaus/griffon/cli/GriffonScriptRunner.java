@@ -1,5 +1,5 @@
 /*
- * Copyright 2004-2012 the original author or authors.
+ * Copyright 2004-2013 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,11 +17,9 @@
 package org.codehaus.griffon.cli;
 
 import gant.Gant;
+import griffon.build.GriffonBuildListener;
 import griffon.util.*;
-import groovy.lang.Binding;
-import groovy.lang.Closure;
-import groovy.lang.ExpandoMetaClass;
-import groovy.lang.MissingPropertyException;
+import groovy.lang.*;
 import groovy.util.AntBuilder;
 import org.apache.log4j.LogManager;
 import org.apache.tools.ant.Project;
@@ -31,6 +29,7 @@ import org.codehaus.griffon.cli.parsing.CommandLine;
 import org.codehaus.griffon.cli.parsing.CommandLineParser;
 import org.codehaus.griffon.cli.parsing.DefaultCommandLine;
 import org.codehaus.griffon.cli.parsing.ParseException;
+import org.codehaus.griffon.cli.support.GriffonBuildEventListener;
 import org.codehaus.griffon.plugins.PluginInfo;
 import org.codehaus.griffon.runtime.logging.Log4jConfig;
 import org.codehaus.groovy.runtime.DefaultGroovyMethods;
@@ -114,11 +113,18 @@ public class GriffonScriptRunner {
             exitWithError("Griffon' installation directory not found: " + build.getGriffonHome());
         }
 
+        if (commandLine.hasOption("include-source")) {
+            build.setIncludeSource(true);
+        }
+        if (commandLine.hasOption("include-javadoc")) {
+            build.setIncludeJavadoc(true);
+        }
+
         // Show a nice header in the console when running commands.
         System.out.println(
-                "Welcome to Griffon " + build.getGriffonVersion() + " - http://griffon-framework.org/" + '\n' +
-                        "Licensed under Apache Standard License 2.0" + '\n' +
-                        "Griffon home is " + (griffonHome == null ? "not set" : "set to: " + griffonHome) + '\n');
+            "Welcome to Griffon " + build.getGriffonVersion() + " - http://griffon-framework.org/" + '\n' +
+                "Licensed under Apache Standard License 2.0" + '\n' +
+                "Griffon home is " + (griffonHome == null ? "not set" : "set to: " + griffonHome) + '\n');
 
         GriffonSetup.run();
 
@@ -206,7 +212,7 @@ public class GriffonScriptRunner {
 
     public static String unquote(String s) {
         if ((s.startsWith("'") && s.endsWith("'")) ||
-                (s.startsWith("\"") && s.endsWith("\""))) {
+            (s.startsWith("\"") && s.endsWith("\""))) {
             return s.substring(1, s.length() - 1);
         }
         return s;
@@ -216,6 +222,7 @@ public class GriffonScriptRunner {
     private PrintStream out = System.out;
     private CommandLineHelper helper = new CommandLineHelper(out);
     private boolean isInteractive = true;
+    private List<GriffonBuildListener> buildListeners = new ArrayList<GriffonBuildListener>();
 
     public GriffonScriptRunner() {
         this(new BuildSettings());
@@ -227,6 +234,10 @@ public class GriffonScriptRunner {
 
     public GriffonScriptRunner(BuildSettings settings) {
         this.settings = settings;
+    }
+
+    public void addBuildEventListener(GriffonBuildListener listener) {
+        if (listener != null && !buildListeners.contains(listener)) buildListeners.add(listener);
     }
 
     public BuildSettings getSettings() {
@@ -386,7 +397,7 @@ public class GriffonScriptRunner {
             // code. Otherwise the code will enter an infinite loop.
             if (!isInteractive) {
                 out.println("More than one script with the given name is available - " +
-                        "cannot continue in non-interactive mode.");
+                    "cannot continue in non-interactive mode.");
                 return 1;
             }
 
@@ -549,7 +560,7 @@ public class GriffonScriptRunner {
             // note - the only approach that works is to loop through the public methods
             for (Method m : p.getClass().getMethods()) {
                 if ("setDefaultInputStream".equals(m.getName()) && m.getParameterTypes().length == 1 &&
-                        InputStream.class.equals(m.getParameterTypes()[0])) {
+                    InputStream.class.equals(m.getParameterTypes()[0])) {
                     try {
                         m.invoke(p, System.in);
                         break;
@@ -572,8 +583,8 @@ public class GriffonScriptRunner {
                 gant.loadScriptClass(scriptName);
             } catch (Exception ex) {
                 if (ex instanceof ClassNotFoundException &&
-                        ex.getMessage() != null &&
-                        ex.getMessage().contains(scriptName)) {
+                    ex.getMessage() != null &&
+                    ex.getMessage().contains(scriptName)) {
                     throw new ScriptNotFoundException(scriptName);
                 }
             }
@@ -632,6 +643,7 @@ public class GriffonScriptRunner {
 
     public int executeWithGantInstance(Gant gant, GantBinding binding) {
         try {
+            GriffonUsageStats.ping(settings, binding);
             gantCustomizer.prepareTargets();
             return gant.executeTargets();
         } catch (RuntimeException e) {
@@ -843,9 +855,9 @@ public class GriffonScriptRunner {
             }
         } catch (Exception ex) {
             throw new RuntimeException(
-                    "Cannot dynamically add URLs to GriffonScriptRunner's" +
-                            " class loader - make sure that it is loaded by Groovy's" +
-                            " RootLoader or a sub-class.");
+                "Cannot dynamically add URLs to GriffonScriptRunner's" +
+                    " class loader - make sure that it is loaded by Groovy's" +
+                    " RootLoader or a sub-class.");
         }
     }
 
@@ -865,7 +877,7 @@ public class GriffonScriptRunner {
 
     private GantCustomizer gantCustomizer;
 
-    public static class GantCustomizer {
+    public class GantCustomizer {
         private final BuildSettings settings;
         private final Binding binding;
         private final Gant gant;
@@ -893,6 +905,14 @@ public class GriffonScriptRunner {
 
         public void prepareTargets() {
             if (!prepared) {
+
+                GroovyClassLoader eventsClassLoader = new GroovyClassLoader(settings.obtainGroovyClassLoader());
+                GriffonBuildEventListener eventListener = new GriffonBuildEventListener(eventsClassLoader, binding, settings);
+                binding.setVariable("eventListener", eventListener);
+                for (GriffonBuildListener listener : buildListeners) {
+                    eventListener.addGriffonBuildListener(listener);
+                }
+
                 // preload basic stuff that should always be there
                 setupScript("_GriffonSettings");
                 setupScript("_GriffonEvents");
@@ -915,23 +935,27 @@ public class GriffonScriptRunner {
                 }
 
                 List<String> targets = new ArrayList<String>();
-                if (settings.isGriffonProject() && binarySearch(CHECK_VERSION_EXCLUSIONS, scriptName) < 0) {
+                if (settings.isGriffonProject() && !isExcluded(scriptName, CHECK_VERSION_EXCLUSIONS)) {
                     targets.add("checkVersion");
                 }
-                if (binarySearch(CONFIGURE_PROXY_EXCLUSIONS, scriptName) < 0) targets.add("configureProxy");
+                if (!isExcluded(scriptName, CONFIGURE_PROXY_EXCLUSIONS)) targets.add("configureProxy");
                 if (!isContextlessScriptName(scriptName)) {
                     if (!isExcludedFromDependencyResolution(scriptName)) {
                         targets.add("resolveFrameworkDependencies");
                         targets.add("resolveDependencies");
                     }
                     targets.add("loadEventHooks");
-                } else if (binarySearch(FRAMEWORK_PLUGIN_INCLUSIONS, scriptName) >= 0) {
+                } else if (!isExcluded(scriptName, FRAMEWORK_PLUGIN_INCLUSIONS)) {
                     targets.add("resolveFrameworkDependencies");
                     if (settings.isGriffonProject() && !isExcludedFromDependencyResolution(scriptName)) {
                         targets.add("resolveDependencies");
                     }
                     targets.add("loadEventHooks");
                 }
+
+                System.setProperty(
+                    "griffon.skip.frameworkplugin.events",
+                    String.valueOf(!targets.contains("resolveFrameworkDependencies")));
 
                 settings.debug("** " + targets + " **");
                 gant.setAllPerTargetPreHooks(DO_NOTHING_CLOSURE);
@@ -949,34 +973,38 @@ public class GriffonScriptRunner {
         }
 
         private boolean isExcludedFromDependencyResolution(String scriptName) {
-            if (binarySearch(RESOLVE_DEPENDENCIES_EXCLUSIONS, scriptName) >= 0) {
-                return true;
-            }
+            if (isExcluded(scriptName, RESOLVE_DEPENDENCIES_EXCLUSIONS)) return true;
             List<String> exclusions = (List<String>) getConfigValue(settings.getConfig(), "griffon.dependency.resolution.command.exclusions", new ArrayList<String>());
             return exclusions.contains(scriptName);
         }
 
-        private static String[] CONFIGURE_PROXY_EXCLUSIONS = {
-                "AddProxy", "ClearProxy", "RemoveProxy", "SetProxy", "ConfigureProxy",
-                "SetVersion", "Stats",
-                "CreateAddon", "CreatePlugin", "Upgrade",
-                "CreateCommandAlias", "Doc", "ClearDependencyCache"
+        private boolean isExcluded(String str, String[] exclusions) {
+            return binarySearch(exclusions, str) >= 0 ||
+                (str.endsWith("_") && binarySearch(exclusions, str.substring(0, str.length() - 1)) >= 0);
+        }
+
+        private final String[] CONFIGURE_PROXY_EXCLUSIONS = {
+            "AddProxy", "ClearProxy", "RemoveProxy", "SetProxy", "ConfigureProxy",
+            "SetVersion", "Stats", "Wrapper", "Upgrade",
+            "CreateCommandAlias", "Doc", "ClearDependencyCache"
         };
 
-        private static String[] RESOLVE_DEPENDENCIES_EXCLUSIONS = {
-                "SetVersion", "Stats", "Upgrade",
-                "CreateCommandAlias", "Doc", "_GriffonResolveDependencies"
+        private final String[] RESOLVE_DEPENDENCIES_EXCLUSIONS = {
+            "SetVersion", "Stats", "Upgrade", "Wrapper", "UsageStats",
+            "CreateCommandAlias", "Doc", "_GriffonResolveDependencies",
+            "ClearDependencyCache", "UploadRelease"
         };
 
-        private static String[] CHECK_VERSION_EXCLUSIONS = {
-                "Upgrade"
+        private final String[] CHECK_VERSION_EXCLUSIONS = {
+            "Upgrade", "UsageStats"
         };
 
-        private static String[] FRAMEWORK_PLUGIN_INCLUSIONS = {
-                "CreateApp_", "CreateAddon_", "CreatePlugin_", "CreateArchetype_", "Help_"
+        private final String[] FRAMEWORK_PLUGIN_INCLUSIONS = {
+            "CreateApp", "CreateAddon", "CreatePlugin", "CreateArchetype", "Help",
+            "CreateCommandAlias", "ClearDependencyCache", "UploadRelease"
         };
 
-        static {
+        {
             sort(CONFIGURE_PROXY_EXCLUSIONS);
             sort(RESOLVE_DEPENDENCIES_EXCLUSIONS);
             sort(CHECK_VERSION_EXCLUSIONS);

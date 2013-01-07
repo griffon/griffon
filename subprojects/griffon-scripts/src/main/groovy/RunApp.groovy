@@ -1,5 +1,5 @@
 /*
- * Copyright 2008-2012 the original author or authors.
+ * Copyright 2008-2013 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -120,6 +120,12 @@ target(name: 'doRunApp', description: "Runs the application from the command lin
         debug("  -D$key=${quote(value)}")
         sysprops << "-D${key}=${quote(value)}"
     }
+    debug("Application arguments:")
+    argsMap.each { k, v ->
+        if (k == 'params' || k == 'clean') return
+        debug('  --' + k + '=' + quote(String.valueOf(v)))
+    }
+    argsMap.params.each { debug("  ${it}") }
 
     def runtimeClasspath = runtimeJars.collect { f ->
         f.absolutePath.startsWith(jardir.absolutePath) ? f.absolutePath - jardir.absolutePath - File.separator : f
@@ -137,6 +143,11 @@ target(name: 'doRunApp', description: "Runs the application from the command lin
         javaOpts.each { s -> if (s) cmd << s }
         sysprops.each { s -> if (s) cmd << s }
         [proxySettings, '-classpath', runtimeClasspath, griffonApplicationClass].each { s -> if (s) cmd << s }
+        // GRIFFON-574 - add all named params first
+        argsMap.each { k, v ->
+            if (k == 'params' || k == 'clean') return
+            cmd << '--' + k + '=' + quote(String.valueOf(v))
+        }
         argsMap.params.each { s -> cmd << s.trim() }
         if (isWindows) cmd = cmd.collect { it.replace('\\\\', '\\') }
         debug("Executing ${cmd.join(' ')}")
@@ -151,9 +162,6 @@ target(name: 'doRunApp', description: "Runs the application from the command lin
 // XXX -- NATIVE
         if (platformDir.exists()) {
             ant.delete(dir: platformDir)
-        }
-        if (platformDir2.exists()) {
-            ant.delete(dir: platformDir2)
         }
 // XXX -- NATIVE
     }

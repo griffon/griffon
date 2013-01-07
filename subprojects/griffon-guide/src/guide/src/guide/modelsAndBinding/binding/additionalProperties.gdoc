@@ -17,7 +17,7 @@ swing.edt {
   frame(title: 'Binding', pack: true, visible: true) {
     gridLayout(cols: 2, rows: 3)
     label 'Normal'
-    textField(columns: 20, text: bind('value', target: model)) 
+    textField(columns: 20, text: bind('value', target: model))
     label 'Bidirectional'
     textField(columns: 20, text: bind('value', target: model, mutual: true))
     label 'Model'
@@ -49,16 +49,19 @@ swing.edt {
   frame(title: 'Binding', pack: true, visible: true) {
     gridLayout(cols: 2, rows: 3)
     label 'Normal'
-    textField(columns: 20, text: bind('value', target: model)) 
+    textField(columns: 20, text: bind('value', target: model))
     label 'Converter'
     textField(columns: 20, text: bind('value', target: model, converter: convertValue))
     label 'Model'
-    textField(columns: 20, text:  bind('value', source: model))  
+    textField(columns: 20, text:  bind('value', source: model))
   }
 }
 {code}
 
 Typing text on textfield #1 pushes the value to the model as expected, which you can inspect by looking at textfield #3. Typing text on textfield #2 however transform's every keystroke into an '*' character.
+
+- *reverseConverter:*
+Transforms the value from the target to the source.
 
 - *validator:*
 Guards the trigger. Prevents the event from being sent if the return value is @false@ or @null@.
@@ -86,7 +89,7 @@ swing.edt {
   frame(title: 'Binding', pack: true, visible: true) {
     gridLayout(cols: 2, rows: 3)
     label 'Normal'
-    textField(columns: 20, text: bind('value', target: model)) 
+    textField(columns: 20, text: bind('value', target: model))
     label 'Converter'
     textField(columns: 20, text: bind('value', target: model, validator: isNumber))
     label 'Model'

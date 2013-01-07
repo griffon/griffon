@@ -1,0 +1,23 @@
+Some deployments require that configuration be sourced from more than one place and be changeable without requiring a rebuild of the application. In order to support deployment scenarios such as these the configuration can be externalized. To do so, point Griffon at the locations of the configuration files that should be used by adding a @griffon.config.locations@ setting in @Config.groovy@, for example:
+
+{code:java}
+griffon.config.locations = [
+    "classpath:${appName}-config.properties",
+    "classpath:${appName}-config.groovy",
+    "file:${userHome}/.griffon/${appName}-config.properties",
+    "file:${userHome}/.griffon/${appName}-config.groovy"]
+{code}
+
+In the above example we're loading configuration files (both Java Properties files and [ConfigReader|api:griffon.util.ConfigReader] configurations) from different places on the classpath and files located in @USER_HOME@.
+
+It is also possible to load config by specifying a class that is a config script.
+
+{code:java}
+griffon.config.locations = [com.my.app.MyConfig]
+{code}
+
+This can be useful in situations where the config is either coming from a plugin or some other part of your application. A typical use for this is re-using configuration provided by plugins across multiple applications.
+
+Ultimately all configuration files get merged into the @config@ property of the [GriffonApplication|api:griffon.core.GriffonApplication] object and are hence obtainable from there.
+
+Values that have the same name as previously defined values will overwrite the existing values, and the pointed to configuration sources are loaded in the order in which they are defined.

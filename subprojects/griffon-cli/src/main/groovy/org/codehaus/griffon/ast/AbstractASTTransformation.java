@@ -1,5 +1,5 @@
 /*
- * Copyright 2009-2012 the original author or authors.
+ * Copyright 2009-2013 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,12 +16,13 @@
 
 package org.codehaus.griffon.ast;
 
-import griffon.util.ApplicationHolder;
 import org.codehaus.groovy.ast.ASTNode;
 import org.codehaus.groovy.ast.AnnotationNode;
 import org.codehaus.groovy.ast.ClassHelper;
 import org.codehaus.groovy.ast.ClassNode;
+import org.codehaus.groovy.ast.expr.ArgumentListExpression;
 import org.codehaus.groovy.ast.expr.Expression;
+import org.codehaus.groovy.ast.expr.StaticMethodCallExpression;
 import org.codehaus.groovy.control.SourceUnit;
 import org.codehaus.groovy.control.messages.SyntaxErrorMessage;
 import org.codehaus.groovy.syntax.SyntaxException;
@@ -30,9 +31,6 @@ import org.objectweb.asm.Opcodes;
 
 import java.util.Collections;
 
-import static org.codehaus.griffon.ast.GriffonASTUtils.NO_ARGS;
-import static org.codehaus.griffon.ast.GriffonASTUtils.call;
-
 /**
  * Base class for all of Griffon's ASTTransformation implementations.
  *
@@ -40,14 +38,14 @@ import static org.codehaus.griffon.ast.GriffonASTUtils.call;
  * @since 0.9.3
  */
 public abstract class AbstractASTTransformation implements ASTTransformation, Opcodes {
-    private static final ClassNode APPLICATION_HOLDER_TYPE = makeClassSafe(ApplicationHolder.class);
+    private static final ClassNode APPLICATION_HOLDER_TYPE = makeClassSafe("griffon.util.ApplicationHolder");
     private static final ClassNode COLLECTIONS_CLASS = makeClassSafe(Collections.class);
 
     public void addError(String msg, ASTNode expr, SourceUnit source) {
         int line = expr.getLineNumber();
         int col = expr.getColumnNumber();
         source.getErrorCollector().addErrorAndContinue(
-                new SyntaxErrorMessage(new SyntaxException(msg + '\n', line, col), source)
+            new SyntaxErrorMessage(new SyntaxException(msg + '\n', line, col), source)
         );
     }
 
@@ -58,15 +56,20 @@ public abstract class AbstractASTTransformation implements ASTTransformation, Op
     }
 
     public static Expression emptyMap() {
-        return call(COLLECTIONS_CLASS, "emptyMap", NO_ARGS);
+        return new StaticMethodCallExpression
+            (COLLECTIONS_CLASS, "emptyMap", ArgumentListExpression.EMPTY_ARGUMENTS);
     }
 
     public static Expression applicationInstance() {
-        return call(APPLICATION_HOLDER_TYPE, "getApplication", NO_ARGS);
+        return new StaticMethodCallExpression(APPLICATION_HOLDER_TYPE, "getApplication", ArgumentListExpression.EMPTY_ARGUMENTS);
     }
 
     protected static ClassNode newClass(ClassNode classNode) {
         return classNode.getPlainNodeReference();
+    }
+
+    public static ClassNode makeClassSafe(String className) {
+        return makeClassSafe(ClassHelper.makeWithoutCaching(className));
     }
 
     public static ClassNode makeClassSafe(Class klass) {

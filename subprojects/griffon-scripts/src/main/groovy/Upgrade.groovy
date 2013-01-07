@@ -1,5 +1,5 @@
 /*
-* Copyright 2004-2012 the original author or authors.
+* Copyright 2004-2013 the original author or authors.
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
@@ -16,6 +16,8 @@
 
 import static griffon.util.GriffonNameUtils.capitalize
 
+import static org.codehaus.griffon.cli.GriffonUsageStats.banner
+
 /**
  * Gant script that handles upgrading of a Griffon applications
  *
@@ -24,6 +26,7 @@ import static griffon.util.GriffonNameUtils.capitalize
  */
 
 includeTargets << griffonScript('_GriffonClean')
+includeTargets << griffonScript('ListPluginUpdates_')
 
 target(name: 'upgrade', description: "Upgrades a Griffon application from a previous version of Griffon", prehook: null, posthook: null) {
     boolean force = argsMap.force || !isInteractive ?: false
@@ -64,22 +67,28 @@ target(name: 'upgrade', description: "Upgrades a Griffon application from a prev
     if (isArchetypeProject) projectType = 'archetype'
     createStructure()
 
+    def props = new Properties()
+    def appMetadataFile = new File("${basedir}/application.properties")
+    props.load(appMetadataFile.newReader())
+    String currentSwingVersion = '1.2.0'
+
     if (appGriffonVersion == '1.1.0') {
-        // no upgrade tasks at the moment
+        event("StatusUpdate", ["Updating application.properties"])
+        if (props.getProperty('plugins.swing')) {
+            updateMetadata(appMetadataFile, 'plugins.swing': currentSwingVersion)
+        }
+        updateMetadata(appMetadataFile, 'app.griffon.version': griffonVersion)
+        printFramed(" Project ${griffonAppName} has been upgraded.")
     } else if (appGriffonVersion == '1.0.0' || appGriffonVersion == '1.0.1') {
         touch(file: "${basedir}/griffon-app/i18n/resources.properties")
         event("StatusUpdate", ["Updating application.properties"])
-        def props = new Properties()
-        props.load(new File("${basedir}/application.properties").newReader())
-        propertyfile(file: "${basedir}/application.properties",
-                comment: "Do not edit app.griffon.* properties, they may change automatically. " +
-                        "DO NOT put application configuration in here, it is not the right place!") {
-            entry(key: "plugins.swing", value: '1.1.0')
+        if (props.getProperty('plugins.swing')) {
+            updateMetadata(appMetadataFile, 'plugins.swing': currentSwingVersion)
         }
+        updateMetadata(appMetadataFile, 'app.griffon.version': griffonVersion)
+        printFramed(" Project ${griffonAppName} has been upgraded.")
     } else if (appGriffonVersion == '0.9.5') {
         event("StatusUpdate", ["Updating application.properties"])
-        def props = new Properties()
-        props.load(new File("${basedir}/application.properties").newReader())
         propertyfile(file: "${basedir}/application.properties",
                 comment: "Do not edit app.griffon.* properties, they may change automatically. " +
                         "DO NOT put application configuration in here, it is not the right place!") {
@@ -89,9 +98,20 @@ target(name: 'upgrade', description: "Upgrades a Griffon application from a prev
                 entry(key: "archetype.default", value: griffonVersion)
             }
             if (props['plugins.swing'] == '0.9.5') {
-                entry(key: "plugins.swing", value: '1.1.0')
+                entry(key: "plugins.swing", value: currentSwingVersion)
             }
         }
+        Map metaProps = [
+            "app.name": griffonAppName,
+            "app.griffon.version": griffonVersion
+        ]
+        if (!isArchetypeProject && !isPluginProject) {
+            metaProps["archetype.default"] = griffonVersion
+        }
+        if (props['plugins.swing'] == '0.9.5') {
+            metaProps["plugins.swing"] = currentSwingVersion
+        }
+        updateMetadata(metaProps, appMetadataFile)
 
         touch(file: "${basedir}/griffon-app/i18n/resources.properties")
 
@@ -139,10 +159,12 @@ target(name: 'upgrade', description: "Upgrades a Griffon application from a prev
                     ant.copy(todir: "${basedir}/griffon-app/conf", file: "${tmpdir}/griffon-app/conf/Config.groovy")
                     ant.copy(todir: "${basedir}/griffon-app/conf", file: "${tmpdir}/griffon-app/conf/Builder.groovy")
 
-                    def value = outBuildConfigFile.text =~ /.*app.fileType = (.*)/
-                    if (value) inBuildConfigFile.append("""\n${value[0][0]}\n""")
-                    value = outBuildConfigFile.text =~ /.*app.defaultPackageName = (.*)/
-                    if (value) inBuildConfigFile.append("""\n${value[0][0]}\n""")
+                    if (outBuildConfigFile.exists()) {
+                        def value = outBuildConfigFile.text =~ /.*app.fileType = (.*)/
+                        if (value) inBuildConfigFile.append("""\n${value[0][0]}\n""")
+                        value = outBuildConfigFile.text =~ /.*app.defaultPackageName = (.*)/
+                        if (value) inBuildConfigFile.append("""\n${value[0][0]}\n""")
+                    }
 
                     // copy new icons to griffon-app/conf/webstart
                     // copy new icons to griffon-app/resources
@@ -183,7 +205,7 @@ target(name: 'upgrade', description: "Upgrades a Griffon application from a prev
                 entry(key: "app.name", value: griffonAppName)
                 entry(key: "app.griffon.version", value: griffonVersion)
                 if (!isPluginProject) {
-                    entry(key: "plugins.swing", value: '1.0.1')
+                    entry(key: "plugins.swing", value: currentSwingVersion)
                     entry(key: "archetype.default", value: griffonVersion)
                     entry(key: "app.toolkit", value: 'swing')
                 }
@@ -222,6 +244,16 @@ target(name: 'upgrade', description: "Upgrades a Griffon application from a prev
             | Also, review that the values of 'application.properties' are
             | appropriate for the current project.
             |""".stripMargin())
+
+    }
+
+    println ' '
+    println banner()
+
+    if (projectType == 'app') {
+        if (!argsMap.repository) argsMap.repository = 'griffon-central'
+        println "Searching for plugin updates"
+        listPluginUpdates()
     }
 
     event("StatusFinal", ["Project upgraded"])

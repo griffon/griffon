@@ -1,5 +1,5 @@
 /*
- * Copyright 2010-2012 the original author or authors.
+ * Copyright 2010-2013 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,4 +22,19 @@ package griffon.core;
  * @since 0.9.1
  */
 public interface GriffonService extends GriffonArtifact {
+    /**
+     * Post initialization callback.<p>
+     * Called by the {@code ServiceManager} right after the Service has been instantiated
+     *
+     * @since 1.2.0
+     */
+    void serviceInit();
+
+    /**
+     * Cleanup callback.<p>
+     * Called by the {@code ServiceManager} when the application is shutting down.
+     *
+     * @since 1.2.0
+     */
+    void serviceDestroy();
 }

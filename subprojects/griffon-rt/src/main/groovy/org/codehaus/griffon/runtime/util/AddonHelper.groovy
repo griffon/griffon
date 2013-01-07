@@ -1,5 +1,5 @@
 /*
- * Copyright 2009-2012 the original author or authors.
+ * Copyright 2009-2013 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -120,16 +120,8 @@ class AddonHelper {
     }
 
     private static void handleAddon(GriffonApplication app, Map config) {
-        try {
-            config.addonClass = ApplicationClassLoader.get().loadClass(config.className)
-        } catch (ClassNotFoundException cnfe) {
-            if (config.node) {
-                throw cnfe
-            } else {
-                // skip
-                return
-            }
-        }
+        resolveAddonClass(config)
+        if (!config.addonClass) return
 
         if (FactoryBuilderSupport.isAssignableFrom(config.addonClass)) return
 
@@ -172,17 +164,38 @@ class AddonHelper {
         }
     }
 
-    static void handleAddonForBuilder(GriffonApplication app, UberBuilder builder, Map<String, MetaClass> targets, Map addonConfig) {
-        try {
-            addonConfig.addonClass = ApplicationClassLoader.get().loadClass(addonConfig.className)
-        } catch (ClassNotFoundException cnfe) {
-            if (addonConfig.node) {
-                throw cnfe
-            } else {
-                // skip
-                return
+    private static void resolveAddonClass(Map config) {
+        String className = config.className
+
+        if (!className.contains(".")) {
+            String fixedClassName = 'addon.' + className
+            try {
+                config.addonClass = ApplicationClassLoader.get().loadClass(fixedClassName)
+                config.className = fixedClassName
+            } catch (ClassNotFoundException cnfe) {
+                try {
+                    config.addonClass = ApplicationClassLoader.get().loadClass(className)
+                } catch (ClassNotFoundException cnfe2) {
+                    if (config.node) {
+                        throw cnfe2
+                    }
+                }
+
+            }
+        } else {
+            try {
+                config.addonClass = ApplicationClassLoader.get().loadClass(className)
+            } catch (ClassNotFoundException cnfe) {
+                if (config.node) {
+                    throw cnfe
+                }
             }
         }
+    }
+
+    static void handleAddonForBuilder(GriffonApplication app, UberBuilder builder, Map<String, MetaClass> targets, Map addonConfig) {
+        resolveAddonClass(addonConfig)
+        if (!addonConfig.addonClass) return
 
         if (FactoryBuilderSupport.isAssignableFrom(addonConfig.addonClass)) return
 

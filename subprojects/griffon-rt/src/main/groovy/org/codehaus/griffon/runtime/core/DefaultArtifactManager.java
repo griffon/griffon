@@ -1,5 +1,5 @@
 /*
- * Copyright 2009-2012 the original author or authors.
+ * Copyright 2009-2013 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,6 +18,7 @@ package org.codehaus.griffon.runtime.core;
 
 import griffon.core.ArtifactInfo;
 import griffon.core.GriffonApplication;
+import griffon.util.ApplicationClassLoader;
 import groovy.util.ConfigObject;
 import groovy.util.ConfigSlurper;
 import org.slf4j.Logger;
@@ -59,7 +60,7 @@ public class DefaultArtifactManager extends AbstractArtifactManager {
     }
 
     protected Enumeration<URL> getArtifactResourceLocations() throws IOException {
-        return getApp().getClass().getClassLoader().getResources("META-INF/griffon-artifacts.properties");
+        return ApplicationClassLoader.get().getResources("META-INF/griffon-artifacts.properties");
     }
 
     private void processURL(URL url, ConfigSlurper slurper, Map<String, List<ArtifactInfo>> artifacts) {

@@ -1,5 +1,5 @@
 /*
- * Copyright 2007-2010 the original author or authors.
+ * Copyright 2007-2013 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -101,11 +101,11 @@ public class GriffonWrapperMain {
     }
 
     private static File griffonUserHome() {
-        String gradleUserHome = System.getProperty(GRIFFON_USER_HOME_PROPERTY_KEY);
-        if (gradleUserHome != null) {
-            return new File(gradleUserHome);
-        } else if ((gradleUserHome = System.getenv(GRIFFON_USER_HOME_ENV_KEY)) != null) {
-            return new File(gradleUserHome);
+        String griffonUserHome = System.getProperty(GRIFFON_USER_HOME_PROPERTY_KEY);
+        if (griffonUserHome != null) {
+            return new File(griffonUserHome);
+        } else if ((griffonUserHome = System.getenv(GRIFFON_USER_HOME_ENV_KEY)) != null) {
+            return new File(griffonUserHome);
         } else {
             return new File(DEFAULT_GRIFFON_USER_HOME);
         }

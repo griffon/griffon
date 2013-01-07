@@ -1,5 +1,5 @@
 /*
- * Copyright 2004-2012 the original author or authors.
+ * Copyright 2004-2013 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,9 +24,11 @@ import java.text.SimpleDateFormat
 import java.util.zip.ZipEntry
 import java.util.zip.ZipFile
 
-import static griffon.util.GriffonApplicationUtils.is64Bit
 import static griffon.util.GriffonApplicationUtils.osArch
 import static griffon.util.GriffonNameUtils.capitalize
+import static griffon.util.PlatformUtils.getPlatform
+import aQute.lib.osgi.Analyzer
+import java.util.jar.Manifest
 
 /**
  * Gant script that packages a Griffon application (note: does not create WAR)
@@ -45,13 +47,13 @@ includeTargets << griffonScript('_GriffonCompile')
 configTweaks = []
 
 target(name: 'createConfig', description: 'Creates the configuration object',
-        prehook: null, posthook: null) {
+    prehook: null, posthook: null) {
     depends(compile)
     configTweaks.each {tweak -> tweak() }
 }
 
 target(name: 'packageApp', description: '',
-        prehook: null, posthook: null) {
+    prehook: null, posthook: null) {
     depends(createStructure)
 
     try {
@@ -84,7 +86,7 @@ target(name: 'packageApp', description: '',
 }
 
 target(name: 'packageResources', description: "Presp app/plugin resources for packaging",
-        prehook: null, posthook: null) {
+    prehook: null, posthook: null) {
     i18nDir = new File("${resourcesDirPath}/griffon-app/i18n")
     ant.mkdir(dir: i18nDir)
 
@@ -110,9 +112,9 @@ target(name: 'packageResources', description: "Presp app/plugin resources for pa
         }
         if (buildConfig.griffon.enable.native2ascii) {
             ant.native2ascii(src: sourceDir,
-                    dest: targetDir,
-                    includes: "**/*.properties",
-                    encoding: "UTF-8")
+                dest: targetDir,
+                includes: "**/*.properties",
+                encoding: "UTF-8")
         } else {
             ant.copy(todir: targetDir) {
                 fileset(dir: sourceDir, includes: "**/*.properties")
@@ -147,10 +149,10 @@ target(name: 'packageResources', description: "Presp app/plugin resources for pa
 
 collectArtifactMetadata = {
     def artifactPaths = [
-            [type: "model", path: "models", suffix: "Model"],
-            [type: "view", path: "views", suffix: "View"],
-            [type: "controller", path: "controllers", suffix: "Controller"],
-            [type: "service", path: "services", suffix: "Service"]
+        [type: "model", path: "models", suffix: "Model"],
+        [type: "view", path: "views", suffix: "View"],
+        [type: "controller", path: "controllers", suffix: "Controller"],
+        [type: "service", path: "services", suffix: "Service"]
     ]
 
     event("CollectArtifacts", [artifactPaths])
@@ -189,7 +191,7 @@ collectAddonMetadata = {
     pluginSettings.getSortedProjectPluginDirectories().each { String name, PluginInfo pluginInfo ->
         // TODO legacy
         if (resolveResources("file://${pluginInfo.directory.file}/dist/griffon-${name}-runtime-*.jar") ||
-                resolveResources("file://${pluginInfo.directory.file}/addon/griffon-${name}-addon-*.jar")) {
+            resolveResources("file://${pluginInfo.directory.file}/addon/griffon-${name}-addon-*.jar")) {
             addons[name] = pluginInfo.version
         }
     }
@@ -210,7 +212,7 @@ collectAddonMetadata = {
 }
 
 target(name: 'checkKey', description: "Check to see if the keystore exists",
-        prehook: null, posthook: null) {
+    prehook: null, posthook: null) {
     if (buildConfig.griffon.jars.sign) {
         // check for passwords
         // pw is echoed, but jarsigner does that too...
@@ -239,7 +241,7 @@ target(name: 'checkKey', description: "Check to see if the keystore exists",
 }
 
 target(name: 'jarFiles', description: "Jar up the package files",
-        prehook: null, posthook: null) {
+    prehook: null, posthook: null) {
     if (argsMap['jar']) return
     boolean upToDate = ant.antProject.properties.appJarUpToDate
     ant.mkdir(dir: jardir)
@@ -253,6 +255,7 @@ target(name: 'jarFiles', description: "Jar up the package files",
 
     if (!upToDate) {
         mergeManifest()
+        Map osgiManifestMap = createOsgiManifest()
         ant.jar(destfile: destFileName) {
             fileset(dir: projectMainClassesDir) {
                 exclude(name: 'BuildConfig*.class')
@@ -264,7 +267,7 @@ target(name: 'jarFiles', description: "Jar up the package files",
                 metainf(dir: metainfDirPath)
             }
             manifest {
-                manifestMap.each { k, v ->
+                osgiManifestMap.sort().each { k, v ->
                     attribute(name: k, value: v)
                 }
             }
@@ -278,21 +281,45 @@ target(name: 'jarFiles', description: "Jar up the package files",
 }
 
 target(name: 'mergeManifest', description: 'Generates a Manifest with default and custom settings',
-        prehook: null, posthook: null) {
+    prehook: null, posthook: null) {
     String mainClass = RunMode.current == RunMode.APPLET ? griffonAppletClass : griffonApplicationClass
     manifestMap = [
-            'Main-Class': mainClass,
-            'Built-By': System.properties['user.name'],
-            'Build-Date': new SimpleDateFormat('dd-MM-yyyy HH:mm:ss', Locale.default).format(new Date()),
-            'Created-By': System.properties['java.vm.version'] + ' (' + System.properties['java.vm.vendor'] + ')',
-            'Griffon-Version': Metadata.current.getGriffonVersion(),
-            'Implementation-Title': capitalize(Metadata.current.getApplicationName()),
-            'Implementation-Version': Metadata.current.getApplicationVersion(),
-            'Implementation-Vendor': capitalize(Metadata.current.getApplicationName())
+        'Main-Class': mainClass,
+        'Built-By': System.properties['user.name'],
+        'Build-Date': new SimpleDateFormat('dd-MM-yyyy HH:mm:ss', Locale.default).format(new Date()),
+        'Created-By': System.properties['java.vm.version'] + ' (' + System.properties['java.vm.vendor'] + ')',
+        'Griffon-Version': Metadata.current.getGriffonVersion(),
+        'Implementation-Title': capitalize(Metadata.current.getApplicationName()),
+        'Implementation-Version': Metadata.current.getApplicationVersion(),
+        'Implementation-Vendor': capitalize(Metadata.current.getApplicationName())
     ]
     buildConfig.griffon.jars.manifest?.each { k, v ->
         manifestMap[k] = v
     }
+}
+
+createOsgiManifest = {
+    Map osgiManifestAttributes = [
+        (Analyzer.BUNDLE_NAME): griffonAppName,
+        (Analyzer.BUNDLE_VERSION): griffonAppVersion,
+        (Analyzer.BUNDLE_SYMBOLICNAME): griffonAppName,
+        (Analyzer.BND_LASTMODIFIED): projectMainClassesDir.lastModified(),
+        (Analyzer.EXPORT_PACKAGE): "*;-noimport:=false;version=${griffonAppVersion}",
+        (Analyzer.IMPORT_PACKAGE): '*'
+    ]
+
+    osgiManifestAttributes.putAll(manifestMap)
+
+    Analyzer analyzer = new Analyzer()
+    osgiManifestAttributes.each { k, v -> analyzer.setProperty(k, v.toString()) }
+    analyzer.setJar(projectMainClassesDir)
+    analyzer.setClasspath(griffonSettings.runtimeDependencies.toArray(
+        new File[griffonSettings.runtimeDependencies.size()]
+    ))
+    Manifest osgiManifest = analyzer.calcManifest()
+    Map mergedAttributes = [:]
+    osgiManifest.mainAttributes.each { k, v -> mergedAttributes[k.toString()] = v }
+    return mergedAttributes
 }
 
 _copyLibs = {
@@ -310,10 +337,10 @@ _copyLibs = {
         copyPlatformJars("${pluginDir}/lib", new File(jardir).absolutePath)
         copyNativeLibs("${pluginDir}/lib", new File(jardir).absolutePath)
     }
-    doForAllPlatforms { osname ->
-        File osdir = new File("${basedir}/lib/${osname}")
-        if (!osdir.exists()) osdir = new File("${jardir}/${osname}")
-        if (!osdir.exists()) return
+    String targetPlatform = argsMap.platform && PlatformUtils.PLATFORMS[argsMap.platform] ? argsMap.platform : platform
+    File osdir = new File("${basedir}/lib/${targetPlatform}")
+    if (!osdir.exists()) osdir = new File("${jardir}/${targetPlatform}")
+    if (osdir.exists()) {
         osdir.eachFileMatch(~/.*\.jar/) { jarfile ->
             File duplicate = new File("${jardir}/${jarfile.name}")
             if (duplicate.exists()) duplicate.delete()
@@ -402,9 +429,9 @@ maybePackAndSign = {srcFile, targetFile = srcFile, boolean force = false ->
     //TODO strip old signatures?
 
     def packOptions = [
-            '-mlatest', // smaller files, set modification time on the files to latest
-            '-Htrue', // smaller files, always use DEFLATE hint
-            '--segment-limit=-1', // unlimited segmenting
+        '-mlatest', // smaller files, set modification time on the files to latest
+        '-Htrue', // smaller files, always use DEFLATE hint
+        '--segment-limit=-1', // unlimited segmenting
     ]
 
     debug("Jar $targetFile")
@@ -491,7 +518,7 @@ maybePackAndSign = {srcFile, targetFile = srcFile, boolean force = false ->
 }
 
 target(name: 'generateJNLP', description: "Generates the JNLP File",
-        prehook: null, posthook: null) {
+    prehook: null, posthook: null) {
     ant.copy(todir: jardir, overwrite: true) {
         fileset(dir: "${basedir}/griffon-app/conf/webstart")
     }
@@ -512,7 +539,7 @@ target(name: 'generateJNLP', description: "Generates the JNLP File",
 
     mainJarFile = null
     // griffon-<toolkit>-runtime has to come first, it's got the launch classes
-    String toolkitJarName = 'griffon-'+ Metadata.current.getApplicationToolkit() +'-runtime'
+    String toolkitJarName = 'griffon-' + Metadata.current.getApplicationToolkit() + '-runtime'
     boolean appJarIsMain = buildConfig.griffon.jars.application.main == true
     new File(jardir).eachFileMatch(~/${toolkitJarName}-.*.jar/) { f ->
         jnlpJars << "        <jar href='$f.name' main='${!appJarIsMain}'/>"
@@ -630,72 +657,75 @@ doPackageTextReplacement = {dir, fileFilters ->
 
             String appTitle = capitalize(griffonAppName) + ' ' + griffonAppVersion
             replacefilter(token: "@griffon.application.title@",
-                    value: ant.antProject.replaceProperties(buildConfig.deploy.application.title ?: appTitle))
+                value: ant.antProject.replaceProperties(buildConfig.deploy.application.title ?: appTitle))
             replacefilter(token: "@griffon.application.vendor@",
-                    value: buildConfig.deploy.application.vendor ?: System.properties['user.name'])
+                value: buildConfig.deploy.application.vendor ?: System.properties['user.name'])
             replacefilter(token: "@griffon.application.homepage@",
-                    value: ant.antProject.replaceProperties(buildConfig.deploy.application.homepage ?: "http://localhost/$griffonAppName"))
+                value: ant.antProject.replaceProperties(buildConfig.deploy.application.homepage ?: "http://localhost/$griffonAppName"))
             replacefilter(token: "@griffon.application.description.complete@",
-                    value: ant.antProject.replaceProperties(buildConfig.deploy.application.description.complete ?: appTitle))
+                value: ant.antProject.replaceProperties(buildConfig.deploy.application.description.complete ?: appTitle))
             replacefilter(token: "@griffon.application.description.oneline@",
-                    value: ant.antProject.replaceProperties(buildConfig.deploy.application.description.oneline ?: appTitle))
+                value: ant.antProject.replaceProperties(buildConfig.deploy.application.description.oneline ?: appTitle))
             replacefilter(token: "@griffon.application.description.minimal@",
-                    value: ant.antProject.replaceProperties(buildConfig.deploy.application.description.minimal ?: appTitle))
+                value: ant.antProject.replaceProperties(buildConfig.deploy.application.description.minimal ?: appTitle))
             replacefilter(token: "@griffon.application.description.tooltip@",
-                    value: ant.antProject.replaceProperties(buildConfig.deploy.application.description.tooltip ?: appTitle))
+                value: ant.antProject.replaceProperties(buildConfig.deploy.application.description.tooltip ?: appTitle))
             replacefilter(token: "@griffon.application.icon.default@",
-                    value: buildConfig.deploy.application.icon.default.name ?: 'griffon-icon-64x64.png')
+                value: buildConfig.deploy.application.icon.default.name ?: 'griffon-icon-64x64.png')
             replacefilter(token: "@griffon.application.icon.default.width@",
-                    value: buildConfig.deploy.application.icon.default.width ?: '64')
+                value: buildConfig.deploy.application.icon.default.width ?: '64')
             replacefilter(token: "@griffon.application.icon.default.height@",
-                    value: buildConfig.deploy.application.icon.default.height ?: '64')
+                value: buildConfig.deploy.application.icon.default.height ?: '64')
             replacefilter(token: "@griffon.application.icon.splash@",
-                    value: buildConfig.deploy.application.icon.splash.name ?: 'griffon.png')
+                value: buildConfig.deploy.application.icon.splash.name ?: 'griffon.png')
             replacefilter(token: "@griffon.application.icon.splash.width@",
-                    value: buildConfig.deploy.application.icon.splash.width ?: '381')
+                value: buildConfig.deploy.application.icon.splash.width ?: '381')
             replacefilter(token: "@griffon.application.icon.splash.height@",
-                    value: buildConfig.deploy.application.icon.splash.height ?: '123')
+                value: buildConfig.deploy.application.icon.splash.height ?: '123')
             replacefilter(token: "@griffon.application.icon.selected@",
-                    value: buildConfig.deploy.application.icon.selected.name ?: 'griffon-icon-64x64.png')
+                value: buildConfig.deploy.application.icon.selected.name ?: 'griffon-icon-64x64.png')
             replacefilter(token: "@griffon.application.icon.selected.width@",
-                    value: buildConfig.deploy.application.icon.selected.width ?: '64')
+                value: buildConfig.deploy.application.icon.selected.width ?: '64')
             replacefilter(token: "@griffon.application.icon.selected.height@",
-                    value: buildConfig.deploy.application.icon.selected.height ?: '64')
+                value: buildConfig.deploy.application.icon.selected.height ?: '64')
             replacefilter(token: "@griffon.application.icon.disabled@",
-                    value: buildConfig.deploy.application.icon.disabled.name ?: 'griffon-icon-64x64.png')
+                value: buildConfig.deploy.application.icon.disabled.name ?: 'griffon-icon-64x64.png')
             replacefilter(token: "@griffon.application.icon.disabled.width@",
-                    value: buildConfig.deploy.application.icon.disabled.width ?: '64')
+                value: buildConfig.deploy.application.icon.disabled.width ?: '64')
             replacefilter(token: "@griffon.application.icon.disabled.height@",
-                    value: buildConfig.deploy.application.icon.disabled.height ?: '64')
+                value: buildConfig.deploy.application.icon.disabled.height ?: '64')
             replacefilter(token: "@griffon.application.icon.rollover@",
-                    value: buildConfig.deploy.application.icon.rollover.name ?: 'griffon-icon-64x64.png')
+                value: buildConfig.deploy.application.icon.rollover.name ?: 'griffon-icon-64x64.png')
             replacefilter(token: "@griffon.application.icon.rollover.width@",
-                    value: buildConfig.deploy.application.icon.rollover.width ?: '64')
+                value: buildConfig.deploy.application.icon.rollover.width ?: '64')
             replacefilter(token: "@griffon.application.icon.rollover.height@",
-                    value: buildConfig.deploy.application.icon.rollover.height ?: '64')
+                value: buildConfig.deploy.application.icon.rollover.height ?: '64')
             replacefilter(token: "@griffon.application.icon.shortcut@",
-                    value: buildConfig.deploy.application.icon.shortcut.name ?: 'griffon-icon-64x64.png')
+                value: buildConfig.deploy.application.icon.shortcut.name ?: 'griffon-icon-64x64.png')
             replacefilter(token: "@griffon.application.icon.shortcut.width@",
-                    value: buildConfig.deploy.application.icon.shortcut.width ?: '64')
+                value: buildConfig.deploy.application.icon.shortcut.width ?: '64')
             replacefilter(token: "@griffon.application.icon.shortcut.height@",
-                    value: buildConfig.deploy.application.icon.shortcut.height ?: '64')
+                value: buildConfig.deploy.application.icon.shortcut.height ?: '64')
         }
     }
 }
 
 copyPlatformJars = { srcdir, destdir ->
-    def env = Environment.current
-    if (env == Environment.DEVELOPMENT || env == Environment.TEST) {
-        String plf = platform
-        File platformDir = new File(srcdir.toString() + File.separator + plf)
-        _copyPlatformJars(srcdir.toString(), destdir.toString(), plf)
-        if (!platformDir.exists() && is64Bit) plf -= '64'
-        _copyPlatformJars(srcdir.toString(), destdir.toString(), plf)
+    String userPlatform = argsMap.platform
+    if (userPlatform && PlatformUtils.PLATFORMS[userPlatform]) {
+        _copyPlatformJars(srcdir.toString(), destdir.toString(), userPlatform)
     } else {
-        doForAllPlatforms { osname ->
-            File osdir = new File("${basedir}/lib/${osname}")
-            if (osdir.exists()) {
-                _copyPlatformJars(srcdir.toString(), destdir.toString(), osname)
+        def env = Environment.current
+        if (env == Environment.DEVELOPMENT || env == Environment.TEST) {
+            String plf = platform
+            File platformDir = new File(srcdir.toString() + File.separator + plf)
+            _copyPlatformJars(srcdir.toString(), destdir.toString(), plf)
+        } else {
+            doForAllPlatforms { osname ->
+                File osdir = new File("${basedir}/lib/${osname}")
+                if (osdir.exists()) {
+                    _copyPlatformJars(srcdir.toString(), destdir.toString(), osname)
+                }
             }
         }
     }
@@ -714,18 +744,21 @@ _copyPlatformJars = { srcdir, destdir, os ->
 }
 
 copyNativeLibs = { srcdir, destdir ->
-    def env = Environment.current
-    if (env == Environment.DEVELOPMENT || env == Environment.TEST) {
-        String plf = platform
-        File platformDir = new File(srcdir.toString() + File.separator + plf)
-        _copyNativeLibs(srcdir.toString(), destdir.toString(), plf)
-        if (!platformDir.exists() && is64Bit) plf -= '64'
-        _copyNativeLibs(srcdir.toString(), destdir.toString(), plf)
+    String userPlatform = argsMap.platform
+    if (userPlatform && PlatformUtils.PLATFORMS[userPlatform]) {
+        _copyNativeLibs(srcdir.toString(), destdir.toString(), userPlatform)
     } else {
-        doForAllPlatforms { osname ->
-            File osdir = new File("${basedir}/lib/${osname}")
-            if (osdir.exists()) {
-                _copyNativeLibs(srcdir.toString(), destdir.toString(), osname)
+        def env = Environment.current
+        if (env == Environment.DEVELOPMENT || env == Environment.TEST) {
+            String plf = platform
+            File platformDir = new File(srcdir.toString() + File.separator + plf)
+            _copyNativeLibs(srcdir.toString(), destdir.toString(), plf)
+        } else {
+            doForAllPlatforms { osname ->
+                File osdir = new File("${basedir}/lib/${osname}")
+                if (osdir.exists()) {
+                    _copyNativeLibs(srcdir.toString(), destdir.toString(), osname)
+                }
             }
         }
     }

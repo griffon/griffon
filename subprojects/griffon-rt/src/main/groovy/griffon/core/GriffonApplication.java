@@ -1,5 +1,5 @@
 /*
- * Copyright 2009-2012 the original author or authors.
+ * Copyright 2009-2013 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -37,7 +37,7 @@ import java.util.Map;
  * @author Danno Ferrin
  * @author Andres Almiray
  */
-public interface GriffonApplication extends ThreadingHandler, MVCHandler, ResourceHandler, MessageSource, ResourceResolver {
+public interface GriffonApplication extends Observable, ThreadingHandler, MVCHandler, ResourceHandler, MessageSource, ResourceResolver {
     /**
      * Defines the names of the configuration scripts.
      *
@@ -99,14 +99,14 @@ public interface GriffonApplication extends ThreadingHandler, MVCHandler, Resour
      * @since 0.9.2
      */
     public enum Event {
-        LOG4J_CONFIG_START("Log4jConfigStart"), UNCAUGHT_EXCEPTION_THROWN,
+        UNCAUGHT_EXCEPTION_THROWN,
         LOAD_ADDONS_START, LOAD_ADDONS_END, LOAD_ADDON_START, LOAD_ADDON_END,
         BOOTSTRAP_START, BOOTSTRAP_END,
         STARTUP_START, STARTUP_END,
         READY_START, READY_END,
         STOP_START, STOP_END,
         SHUTDOWN_REQUESTED, SHUTDOWN_ABORTED, SHUTDOWN_START,
-        NEW_INSTANCE,
+        NEW_INSTANCE, DESTROY_INSTANCE,
         INITIALIZE_MVC_GROUP("InitializeMVCGroup"), CREATE_MVC_GROUP("CreateMVCGroup"), DESTROY_MVC_GROUP("DestroyMVCGroup"),
         WINDOW_SHOWN, WINDOW_HIDDEN;
 

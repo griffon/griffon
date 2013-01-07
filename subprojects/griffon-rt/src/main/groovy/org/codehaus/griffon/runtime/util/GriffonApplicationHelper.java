@@ -1,5 +1,5 @@
 /*
- * Copyright 2008-2012 the original author or authors.
+ * Copyright 2008-2013 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,16 +22,15 @@ import griffon.core.factories.*;
 import griffon.core.resources.ResourcesInjector;
 import griffon.exceptions.GriffonException;
 import griffon.util.*;
+import griffon.util.logging.LogManager;
 import groovy.lang.*;
 import groovy.util.ConfigObject;
 import groovy.util.FactoryBuilderSupport;
-import org.apache.log4j.LogManager;
 import org.codehaus.griffon.runtime.core.ControllerArtifactHandler;
 import org.codehaus.griffon.runtime.core.ModelArtifactHandler;
 import org.codehaus.griffon.runtime.core.ServiceArtifactHandler;
 import org.codehaus.griffon.runtime.core.ViewArtifactHandler;
 import org.codehaus.griffon.runtime.core.controller.NoopGriffonControllerActionManager;
-import org.codehaus.griffon.runtime.logging.Log4jConfig;
 import org.codehaus.groovy.runtime.DefaultGroovyMethods;
 import org.codehaus.groovy.runtime.InvokerHelper;
 import org.slf4j.Logger;
@@ -42,17 +41,14 @@ import java.beans.PropertyEditorManager;
 import java.io.IOException;
 import java.lang.reflect.Constructor;
 import java.net.URL;
-import java.util.Enumeration;
-import java.util.LinkedHashMap;
-import java.util.Locale;
-import java.util.Map;
+import java.util.*;
 
 import static griffon.util.ConfigUtils.*;
 import static griffon.util.GriffonExceptionHandler.handleThrowable;
 import static griffon.util.GriffonExceptionHandler.sanitize;
 import static griffon.util.GriffonNameUtils.isBlank;
 import static java.util.Arrays.asList;
-import static org.codehaus.groovy.runtime.DefaultGroovyMethods.eachLine;
+import static org.codehaus.groovy.runtime.ResourceGroovyMethods.eachLine;
 
 /**
  * Utility class for bootstrapping an application and handling of MVC groups.</p>
@@ -64,10 +60,40 @@ public class GriffonApplicationHelper {
     private static final Logger LOG = LoggerFactory.getLogger(GriffonApplicationHelper.class);
 
     private static final Map<String, String> DEFAULT_PLATFORM_HANDLERS = CollectionUtils.<String, String>map()
-            .e("linux", "org.codehaus.griffon.runtime.util.DefaultLinuxPlatformHandler")
-            .e("macosx", "org.codehaus.griffon.runtime.util.DefaultMacOSXPlatformHandler")
-            .e("solaris", "org.codehaus.griffon.runtime.util.DefaultSolarisPlatformHandler")
-            .e("windows", "org.codehaus.griffon.runtime.util.DefaultWindowsPlatformHandler");
+        .e("linux", "org.codehaus.griffon.runtime.util.DefaultLinuxPlatformHandler")
+        .e("linux64", "org.codehaus.griffon.runtime.util.DefaultLinuxPlatformHandler")
+        .e("macosx", "org.codehaus.griffon.runtime.util.DefaultMacOSXPlatformHandler")
+        .e("macosx64", "org.codehaus.griffon.runtime.util.DefaultMacOSXPlatformHandler")
+        .e("solaris", "org.codehaus.griffon.runtime.util.DefaultSolarisPlatformHandler")
+        .e("windows", "org.codehaus.griffon.runtime.util.DefaultWindowsPlatformHandler")
+        .e("windows64", "org.codehaus.griffon.runtime.util.DefaultWindowsPlatformHandler");
+
+    private static final String LOCATION_CLASSPATH = "classpath:";
+    private static final String LOCATION_FILE = "file:";
+    private static final String PROPERTIES_SUFFIX = ".properties";
+    private static final String GROOVY_SUFFIX = ".groovy";
+
+    private static final String KEY_MESSAGE_SOURCE_FACTORY = "app.messageSource.factory";
+    private static final String KEY_RESOURCES_INJECTOR_FACTORY = "app.resourceInjector.factory";
+    private static final String KEY_EVENT_ROUTER_FACTORY = "app.eventRouter.factory";
+    private static final String KEY_ADDON_MANAGER_FACTORY = "app.addonManager.factory";
+    private static final String KEY_ARTIFACT_MANAGER_FACTORY = "app.artifactManager.factory";
+    private static final String KEY_ACTION_MANAGER_FACTORY = "app.actionManager.factory";
+    private static final String KEY_MVCGROUP_MANAGER_FACTORY = "app.mvcGroupManager.factory";
+    private static final String KEY_RESOURCE_RESOLVER_FACTORY = "app.resourceResolver.factory";
+    private static final String KEY_LOG_MANAGER_FACTORY = "app.logManager.factory";
+
+    private static final String KEY_APP_LIFECYCLE_HANDLER_DISABLE = "app.lifecycle.handler.disable";
+    private static final String KEY_GRIFFON_ACTION_MANAGER_DISABLE = "griffon.action.manager.disable";
+
+    private static final String DEFAULT_MESSAGE_SOURCE_FACTORY = "org.codehaus.griffon.runtime.core.factories.DefaultMessageSourceFactory";
+    private static final String DEFAULT_RESOURCES_INJECTOR_FACTORY = "org.codehaus.griffon.runtime.core.factories.DefaultResourcesInjectorFactory";
+    private static final String DEFAULT_EVENT_ROUTER_FACTORY = "org.codehaus.griffon.runtime.core.factories.DefaultEventRouterFactory";
+    private static final String DEFAULT_ADDON_MANAGER_FACTORY = "org.codehaus.griffon.runtime.core.factories.DefaultAddonManagerFactory";
+    private static final String DEFAULT_ARTIFACT_MANAGER_FACTORY = "org.codehaus.griffon.runtime.core.factories.DefaultArtifactManagerFactory";
+    private static final String DEFAULT_MVCGROUP_MANAGER_FACTORY = "org.codehaus.griffon.runtime.core.factories.DefaultMVCGroupManagerFactory";
+    private static final String DEFAULT_RESOURCE_RESOLVER_FACTORY = "org.codehaus.griffon.runtime.core.factories.DefaultResourceResolverFactory";
+    private static final String DEFAULT_LOG_MANAGER_FACTORY = "org.codehaus.griffon.runtime.core.factories.DefaultLogManagerFactory";
 
     static {
         ExpandoMetaClassCreationHandle.enable();
@@ -127,12 +153,12 @@ public class GriffonApplicationHelper {
     }
 
     private static ConfigObject doLoadConfig(ConfigReader configReader, Class configClass, String configFileName) {
-        if(configClass != null) configFileName = configClass.getSimpleName();
+        if (configClass != null) configFileName = configClass.getSimpleName();
         return loadConfig(configReader, configClass, configFileName);
     }
 
     private static ConfigObject doLoadConfigWithI18n(Locale locale, ConfigReader configReader, Class configClass, String configFileName) {
-        if(configClass != null) configFileName = configClass.getSimpleName();
+        if (configClass != null) configFileName = configClass.getSimpleName();
         return loadConfigWithI18n(locale, configReader, configClass, configFileName);
     }
 
@@ -144,26 +170,71 @@ public class GriffonApplicationHelper {
         appConfig = doLoadConfigWithI18n(app.getLocale(), configReader, app.getAppConfigClass(), GriffonApplication.Configuration.APPLICATION.getName());
         app.setConfig(appConfig);
         app.getConfig().merge(doLoadConfigWithI18n(app.getLocale(), configReader, app.getConfigClass(), GriffonApplication.Configuration.CONFIG.getName()));
+
+        initializeLogManager(app);
+
+        loadExternalConfig(app, configReader);
         GriffonExceptionHandler.configure(app.getConfig().flatten(new LinkedHashMap()));
 
         app.setBuilderConfig(doLoadConfigWithI18n(app.getLocale(), configReader, app.getBuilderClass(), GriffonApplication.Configuration.BUILDER.getName()));
+
+        initializeEventRouter(app);
 
         Object events = safeNewInstance(app.getEventsClass(), false);
         if (events != null) {
             app.setEventsConfig(events);
             app.addApplicationEventListener(app.getEventsConfig());
         }
+    }
 
-        Object log4jConfig = app.getConfig().get("log4j");
-        if (log4jConfig instanceof Closure) {
-            app.event(GriffonApplication.Event.LOG4J_CONFIG_START.getName(), asList(log4jConfig));
-            LogManager.resetConfiguration();
-            new Log4jConfig().configure((Closure) log4jConfig);
+    private static void loadExternalConfig(GriffonApplication app, ConfigReader configReader) {
+        List<String> locations = (List<String>) getConfigValue(app.getConfig(), "griffon.config.locations", Collections.emptyList());
+        for (String location : locations) {
+            boolean groovyScriptAllowed = false;
+
+            String parsedLocation = location;
+            if (location.startsWith(LOCATION_CLASSPATH)) {
+                parsedLocation = location.substring(LOCATION_CLASSPATH.length()).trim();
+            } else if (location.startsWith(LOCATION_FILE)) {
+                parsedLocation = location.substring(LOCATION_FILE.length()).trim();
+            } else {
+                // assume it's a class definition
+                groovyScriptAllowed = true;
+            }
+
+            if (groovyScriptAllowed) {
+                Class locationScriptClass = safeLoadClass(parsedLocation);
+                if (locationScriptClass != null) {
+                    if (LOG.isDebugEnabled()) {
+                        LOG.debug("Loading external configuration location '" + location + "'.");
+                    }
+                    app.getConfig().merge(loadConfigWithI18n(app.getLocale(), configReader, locationScriptClass, null));
+                } else {
+                    // invalid location. Log & skip
+                    if (LOG.isWarnEnabled()) {
+                        LOG.warn("Skipping invalid external configuration location '" + location + "'.");
+                    }
+                }
+            } else if (parsedLocation.endsWith(PROPERTIES_SUFFIX) || parsedLocation.endsWith(GROOVY_SUFFIX)) {
+                if (LOG.isDebugEnabled()) {
+                    LOG.debug("Loading external configuration location '" + location + "'.");
+                }
+                app.getConfig().merge(loadConfigWithI18n(app.getLocale(), configReader, null, parsedLocation));
+            } else {
+                // invalid location. Log & skip
+                if (LOG.isWarnEnabled()) {
+                    LOG.warn("Skipping invalid external configuration location '" + location + "'.");
+                }
+            }
         }
     }
 
-    private static final String KEY_MESSAGE_SOURCE_FACTORY = "app.messageSource.factory";
-    private static final String DEFAULT_MESSAGE_SOURCE_FACTORY = "org.codehaus.griffon.runtime.core.factories.DefaultMessageSourceFactory";
+    private static void initializeLogManager(GriffonApplication app) {
+        String className = getConfigValueAsString(app.getConfig(), KEY_LOG_MANAGER_FACTORY, DEFAULT_LOG_MANAGER_FACTORY);
+        LogManagerFactory factory = (LogManagerFactory) safeNewInstance(className);
+        LogManager logManager = factory.create(app);
+        logManager.configure(app.getConfig());
+    }
 
     private static void initializeMessageSource(GriffonApplication app) {
         String className = getConfigValueAsString(app.getConfig(), KEY_MESSAGE_SOURCE_FACTORY, DEFAULT_MESSAGE_SOURCE_FACTORY);
@@ -174,9 +245,6 @@ public class GriffonApplicationHelper {
         InvokerHelper.setProperty(app, "messageSource", factory.create(app));
     }
 
-    private static final String KEY_RESOURCE_RESOLVER_FACTORY = "app.resourceResolver.factory";
-    private static final String DEFAULT_RESOURCE_RESOLVER_FACTORY = "org.codehaus.griffon.runtime.core.factories.DefaultResourceResolverFactory";
-
     private static void initializeResourceResolver(GriffonApplication app) {
         String className = getConfigValueAsString(app.getConfig(), KEY_RESOURCE_RESOLVER_FACTORY, DEFAULT_RESOURCE_RESOLVER_FACTORY);
         if (LOG.isDebugEnabled()) {
@@ -185,9 +253,6 @@ public class GriffonApplicationHelper {
         ResourceResolverFactory factory = (ResourceResolverFactory) safeNewInstance(className);
         InvokerHelper.setProperty(app, "resourceResolver", factory.create(app));
     }
-
-    private static final String KEY_RESOURCES_INJECTOR_FACTORY = "app.resourceInjector.factory";
-    private static final String DEFAULT_RESOURCES_INJECTOR_FACTORY = "org.codehaus.griffon.runtime.core.factories.DefaultResourcesInjectorFactory";
 
     private static void initializeResourcesInjector(GriffonApplication app) {
         String className = getConfigValueAsString(app.getConfig(), KEY_RESOURCES_INJECTOR_FACTORY, DEFAULT_RESOURCES_INJECTOR_FACTORY);
@@ -250,6 +315,19 @@ public class GriffonApplicationHelper {
         }
     }
 
+    private static void initializeEventRouter(GriffonApplication app) {
+        InvokerHelper.setProperty(app, "eventRouter", createEventRouter(app));
+    }
+
+    public static EventRouter createEventRouter(GriffonApplication app) {
+        String className = getConfigValueAsString(app.getConfig(), KEY_EVENT_ROUTER_FACTORY, DEFAULT_EVENT_ROUTER_FACTORY);
+        if (LOG.isDebugEnabled()) {
+            LOG.debug("Using " + className + " as EventRouterFactory");
+        }
+        EventRouterFactory factory = (EventRouterFactory) safeNewInstance(className);
+        return factory.create(app);
+    }
+
     private static void setApplicationLocale(GriffonApplication app, Object localeValue) {
         if (localeValue instanceof Locale) {
             app.setLocale((Locale) localeValue);
@@ -280,9 +358,6 @@ public class GriffonApplicationHelper {
         platformHandler.handle(app);
     }
 
-    private static final String KEY_ARTIFACT_MANAGER_FACTORY = "app.artifactManager.factory";
-    private static final String DEFAULT_ARTIFACT_MANAGER_FACTORY = "org.codehaus.griffon.runtime.core.factories.DefaultArtifactManagerFactory";
-
     private static void initializeArtifactManager(GriffonApplication app) {
         if (app.getArtifactManager() == null) {
             String className = getConfigValueAsString(app.getConfig(), KEY_ARTIFACT_MANAGER_FACTORY, DEFAULT_ARTIFACT_MANAGER_FACTORY);
@@ -297,16 +372,15 @@ public class GriffonApplicationHelper {
         app.getArtifactManager().registerArtifactHandler(new ModelArtifactHandler(app));
         app.getArtifactManager().registerArtifactHandler(new ViewArtifactHandler(app));
         app.getArtifactManager().registerArtifactHandler(new ControllerArtifactHandler(app));
-        app.getArtifactManager().registerArtifactHandler(new ServiceArtifactHandler(app));
+        if (!ServiceArtifactHandler.isBasicInjectionDisabled()) {
+            app.getArtifactManager().registerArtifactHandler(new ServiceArtifactHandler(app));
+        }
 
         // load additional handlers
         loadArtifactHandlers(app);
 
         app.getArtifactManager().loadArtifactMetadata();
     }
-
-    private static final String KEY_ADDON_MANAGER_FACTORY = "app.addonManager.factory";
-    private static final String DEFAULT_ADDON_MANAGER_FACTORY = "org.codehaus.griffon.runtime.core.factories.DefaultAddonManagerFactory";
 
     private static void initializeAddonManager(GriffonApplication app) {
         if (app.getAddonManager() == null) {
@@ -319,9 +393,6 @@ public class GriffonApplicationHelper {
         }
         app.getAddonManager().initialize();
     }
-
-    private static final String KEY_GRIFFON_ACTION_MANAGER_DISABLE = "griffon.action.manager.disable";
-    private static final String KEY_ACTION_MANAGER_FACTORY = "app.actionManager.factory";
 
     private static void initializeActionManager(GriffonApplication app) {
         InvokerHelper.setProperty(app, "actionManager", new NoopGriffonControllerActionManager(app));
@@ -396,8 +467,6 @@ public class GriffonApplicationHelper {
         });
     }
 
-    private static final String KEY_MVCGROUP_MANAGER_FACTORY = "app.mvcGroupManager.factory";
-    private static final String DEFAULT_MVCGROUP_MANAGER_FACTORY = "org.codehaus.griffon.runtime.core.factories.DefaultMVCGroupManagerFactory";
 
     private static void initializeMvcManager(GriffonApplication app) {
         if (app.getMvcGroupManager() == null) {
@@ -489,9 +558,17 @@ public class GriffonApplicationHelper {
      * On Swing this would be the Event Dispatch Thread.
      */
     public static void runLifecycleHandler(String handlerName, GriffonApplication app) {
+        boolean skipHandler = getConfigValueAsBoolean(app.getConfig(), KEY_APP_LIFECYCLE_HANDLER_DISABLE, false);
+        if(skipHandler) {
+            if (LOG.isDebugEnabled()) {
+                LOG.info("Lifecycle handler '" + handlerName + "' has been disabled. SKIPPING.");
+            }
+            return;
+        }
+
         Class<?> handlerClass = null;
         try {
-            handlerClass = loadClass(handlerName);
+            handlerClass = loadConfigurationalClass(handlerName);
         } catch (ClassNotFoundException cnfe) {
             if (cnfe.getMessage().equals(handlerName)) {
                 // the script must not exist, do nothing
@@ -599,7 +676,23 @@ public class GriffonApplicationHelper {
         }
     }
 
-    public static Class loadClass(String className) throws ClassNotFoundException {
+    public static Class<?> loadConfigurationalClass(String className) throws ClassNotFoundException {
+        if (!className.contains(".")) {
+            String fixedClassName = "config." + className;
+            try {
+                return loadClass(fixedClassName);
+            } catch (ClassNotFoundException cnfe) {
+                if (cnfe.getMessage().equals(fixedClassName)) {
+                    return loadClass(className);
+                } else {
+                    throw new GriffonException(cnfe);
+                }
+            }
+        }
+        return loadClass(className);
+    }
+
+    public static Class<?> loadClass(String className) throws ClassNotFoundException {
         ClassNotFoundException cnfe = null;
 
         ClassLoader cl = GriffonApplicationHelper.class.getClassLoader();
@@ -609,7 +702,7 @@ public class GriffonApplicationHelper {
             cnfe = e;
         }
 
-        cl = Thread.currentThread().getContextClassLoader();
+        cl = ApplicationClassLoader.get();
         try {
             return cl.loadClass(className);
         } catch (ClassNotFoundException e) {
@@ -620,7 +713,7 @@ public class GriffonApplicationHelper {
         return null;
     }
 
-    public static Class safeLoadClass(String className) {
+    public static Class<?> safeLoadClass(String className) {
         try {
             return loadClass(className);
         } catch (ClassNotFoundException e) {
@@ -628,7 +721,7 @@ public class GriffonApplicationHelper {
         }
     }
 
-    private static Object safeNewInstance(String className) {
+    public static Object safeNewInstance(String className) {
         try {
             return loadClass(className).newInstance();
         } catch (Exception e) {
@@ -637,11 +730,11 @@ public class GriffonApplicationHelper {
         }
     }
 
-    private static Object safeNewInstance(Class clazz) {
+    public static Object safeNewInstance(Class<?> clazz) {
         return safeNewInstance(clazz, true);
     }
 
-    private static Object safeNewInstance(Class clazz, boolean logException) {
+    public static Object safeNewInstance(Class<?> clazz, boolean logException) {
         try {
             return clazz.newInstance();
         } catch (Exception e) {

@@ -1,5 +1,5 @@
 /*
- * Copyright 2004-2012 the original author or authors.
+ * Copyright 2004-2013 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,10 +19,10 @@ import griffon.util.Environment
 import griffon.util.RunMode
 
 import static griffon.util.GriffonApplicationUtils.isWindows
-import static griffon.util.GriffonApplicationUtils.is64Bit
-import static griffon.util.GriffonNameUtils.quote
 import static griffon.util.GriffonExceptionHandler.GRIFFON_EXCEPTION_OUTPUT
 import static griffon.util.GriffonExceptionHandler.GRIFFON_FULL_STACKTRACE
+import static griffon.util.GriffonNameUtils.quote
+import static griffon.util.PlatformUtils.getPlatform
 
 /**
  * Gant script that bootstraps a Griffon application
@@ -84,15 +84,6 @@ setupRuntimeJars = {
             debug("  $f.name")
         }
     }
-
-    platformDir2 = new File(jardir.absolutePath, platform[0..-3])
-    if (is64Bit && platformDir2.exists()) {
-        debug("Platform specific jars (${platform[0..-3]}):")
-        platformDir2.eachFileMatch(~/.*\.jar/) {f ->
-            runtimeJars += f
-            debug("  $f.name")
-        }
-    }
 // XXX -- NATIVE
 
     return runtimeJars
@@ -127,15 +118,10 @@ setupJavaOpts = { includeNative = true ->
 // XXX -- NATIVE
     platformDir = new File(jardir.absolutePath, platform)
     File nativeLibDir = new File(platformDir.absolutePath, 'native')
-    platformDir2 = new File(jardir.absolutePath, platform[0..-3])
-    File nativeLibDir2 = new File(platformDir2.absolutePath, 'native')
     if (includeNative) {
         String libraryPath = normalizePathQuotes(System.getProperty('java.library.path'))
         if (nativeLibDir.exists()) {
             libraryPath = libraryPath + File.pathSeparator + normalizePathQuotes(nativeLibDir.absolutePath)
-        }
-        if (is64Bit && nativeLibDir2.exists()) {
-            libraryPath = libraryPath + File.pathSeparator + normalizePathQuotes(nativeLibDir2.absolutePath)
         }
         if (isWindows) libraryPath = libraryPath.replace('\\\\', '\\')
         System.setProperty('java.library.path', libraryPath)

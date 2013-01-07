@@ -1,5 +1,5 @@
 /*
-* Copyright 2010-2012 the original author or authors.
+* Copyright 2010-2013 the original author or authors.
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
@@ -38,6 +38,7 @@ if (getBinding().variables.containsKey('_griffon_list_artifacts_called')) return
 _griffon_list_artifacts_called = true
 
 includeTargets << griffonScript('_GriffonArtifacts')
+includeTargets << griffonScript('_GriffonClean')
 
 listArtifacts = { String type ->
     resolveArtifactRepository()
@@ -213,8 +214,15 @@ displayArtifactInfo = { String type, String name, String version, ArtifactReposi
         artifact.releases.each { r ->
             println "${r.version.padRight(20, ' ')}${r.griffonVersion.padRight(25, ' ')}${r.date}"
         }
+        println('-' * 80)
     } else {
         println "No releases found for this ${type}"
+        println('-' * 80)
+    }
+
+    if (artifact.description && !argsMap['skip-description']) {
+        println 'Description:\n'
+        println artifact.description
         println('-' * 80)
     }
 }
@@ -282,6 +290,7 @@ ${('<' + capitalize(type) + '>').padRight(20, ' ')}${'<Current>'.padRight(20, ' 
                         doUninstallArtifact Plugin.TYPE, name, data.oldVersion, false
                     }
                     installPlugins(Metadata.current, uninstalledPlugins)
+                    if (isApplicationProject) cleanAll()
                 } else {
                     outdatedArtifacts.each { name, data ->
                         doInstallArtifact(data.repository, type, name, data.version, Metadata.current)

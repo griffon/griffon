@@ -1,5 +1,5 @@
 /*
- * Copyright 2009-2012 the original author or authors.
+ * Copyright 2009-2013 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,6 +18,7 @@ package griffon.core;
 import griffon.util.*;
 import groovy.lang.*;
 import org.codehaus.griffon.runtime.util.CallableWithArgsMetaMethod;
+import org.codehaus.griffon.runtime.util.ExecutorServiceHolder;
 import org.codehaus.griffon.runtime.util.RunnableWithArgsMetaMethod;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -36,7 +37,7 @@ public final class UIThreadManager {
     // Shouldn't need to synchronize access to this field as setting its value
     // should be done at boot time
     private UIThreadHandler uiThreadHandler;
-    private static final ExecutorService DEFAULT_EXECUTOR_SERVICE = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
+    private static final ExecutorService DEFAULT_EXECUTOR_SERVICE = ExecutorServiceHolder.add(Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors()));
     private static final Logger LOG = LoggerFactory.getLogger(UIThreadManager.class);
 
     private static final UIThreadManager INSTANCE = new UIThreadManager();
@@ -46,9 +47,6 @@ public final class UIThreadManager {
     }
 
     private UIThreadManager() {
-        if (LOG.isDebugEnabled()) {
-            LOG.debug("Default Executor set to run with " + Runtime.getRuntime().availableProcessors() + " processors");
-        }
     }
 
     private static abstract class RunnableRunner extends RunnableWithArgs {
@@ -320,7 +318,7 @@ public final class UIThreadManager {
      * @param callable a code block to be executed
      * @return a Future that contains the result of the execution
      */
-    public Future executeFuture(Callable<?> callable) {
+    public <R> Future<R> executeFuture(Callable<R> callable) {
         return executeFuture(DEFAULT_EXECUTOR_SERVICE, callable);
     }
 
@@ -331,7 +329,7 @@ public final class UIThreadManager {
      * @param callable        a code block to be executed
      * @return a Future that contains the result of the execution
      */
-    public Future executeFuture(ExecutorService executorService, Callable<?> callable) {
+    public <R> Future<R> executeFuture(ExecutorService executorService, Callable<R> callable) {
         executorService = executorService != null ? executorService : DEFAULT_EXECUTOR_SERVICE;
         return executorService.submit(callable);
     }

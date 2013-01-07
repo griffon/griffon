@@ -1,5 +1,5 @@
 /*
- * Copyright 2010-2012 the original author or authors.
+ * Copyright 2010-2013 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -77,7 +77,7 @@ public class GriffonServiceASTTransformation extends GriffonArtifactASTTransform
             // 1. add interface
             GriffonASTUtils.injectInterface(classNode, GRIFFON_SERVICE_CLASS);
             // 2. add methods
-            ASTInjector injector = new GriffonArtifactASTInjector();
+            ASTInjector injector = new GriffonServiceASTInjector();
             injector.inject(classNode, GriffonServiceClass.TYPE);
         } else {
             doTransform(superClass);

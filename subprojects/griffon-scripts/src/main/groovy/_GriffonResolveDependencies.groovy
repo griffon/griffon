@@ -1,5 +1,5 @@
 /*
-* Copyright 2011-2012 the original author or authors.
+* Copyright 2011-2013 the original author or authors.
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
@@ -14,10 +14,11 @@
 * limitations under the License.
 */
 
+import griffon.util.PlatformUtils
 import org.codehaus.griffon.artifacts.ArtifactInstallEngine
 import org.codehaus.griffon.artifacts.model.Plugin
 
-import static griffon.util.GriffonApplicationUtils.is64Bit
+import static griffon.util.PlatformUtils.getPlatform
 
 /**
  * @author Andres Almiray
@@ -33,7 +34,7 @@ runDependencyResolution = true
 runFrameworkDependencyResolution = true
 
 target(name: 'resolveDependencies', description: 'Resolves project and plugin dependencies',
-        prehook: null, posthook: null) {
+    prehook: null, posthook: null) {
     if (!griffonSettings.isGriffonProject()) return
 
     if (runDependencyResolution) {
@@ -49,9 +50,13 @@ target(name: 'resolveDependencies', description: 'Resolves project and plugin de
 
 // XXX -- NATIVE
         Map<String, List<File>> jars = [:]
-        processPlatformLibraries(jars, platform)
-        if (is64Bit) {
-            processPlatformLibraries(jars, platform[0..-3], false)
+        String targetPlatform = argsMap.platform && PlatformUtils.PLATFORMS[argsMap.platform] ? argsMap.platform : platform
+        processPlatformLibraries(jars, targetPlatform)
+// XXX -- NATIVE
+
+        if (projectCliClassesDir.exists()) {
+            addUrlIfNotPresent classLoader, projectCliClassesDir
+            addUrlIfNotPresent rootLoader, projectCliClassesDir
         }
 
         if (jars) {
@@ -59,11 +64,6 @@ target(name: 'resolveDependencies', description: 'Resolves project and plugin de
             jars.values().each { files.addAll it }
             griffonSettings.updateDependenciesFor 'runtime', files
             griffonSettings.updateDependenciesFor 'test', files
-        }
-// XXX -- NATIVE
-        if(projectCliClassesDir.exists()) {
-            addUrlIfNotPresent classLoader, projectCliClassesDir
-            addUrlIfNotPresent rootLoader, projectCliClassesDir
         }
 
         long end = System.currentTimeMillis()
@@ -76,7 +76,7 @@ target(name: 'resolveDependencies', description: 'Resolves project and plugin de
 }
 
 target(name: 'resolveFrameworkDependencies', description: 'Resolves framework plugin dependencies',
-        prehook: null, posthook: null) {
+    prehook: null, posthook: null) {
     // if (griffonSettings.isGriffonProject()) return
 
     if (runFrameworkDependencyResolution) {

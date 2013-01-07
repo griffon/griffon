@@ -1,5 +1,5 @@
 /*
- * Copyright 2004-2012 the original author or authors.
+ * Copyright 2004-2013 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,9 +14,10 @@
  * limitations under the License.
  */
 
+import griffon.util.PlatformUtils
 import org.codehaus.griffon.artifacts.model.Plugin
 
-import static griffon.util.GriffonApplicationUtils.is64Bit
+import static griffon.util.PlatformUtils.getPlatform
 
 /**
  * Gant script containing the Griffon classpath setup.
@@ -75,18 +76,11 @@ commonClasspath = {
         }
     }
 
-    processPlatformDir platform
-    processNativeDir platform
-    if (is64Bit) {
-        processPlatformDir platform[0..-3]
-        processNativeDir platform[0..-3]
-    }
-
     Map<String, List<File>> jars = [:]
-    processPlatformLibraries(jars, platform)
-    if (is64Bit) {
-        processPlatformLibraries(jars, platform[0..-3], false)
-    }
+    String targetPlatform = argsMap.platform && PlatformUtils.PLATFORMS[argsMap.platform] ? argsMap.platform : platform
+    processPlatformDir(targetPlatform)
+    processNativeDir(targetPlatform)
+    processPlatformLibraries(jars, targetPlatform)
 
     if (jars) {
         List<File> files = []

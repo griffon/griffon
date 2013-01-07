@@ -120,7 +120,8 @@ public class SimpleView extends AbstractGriffonView {
     }
 
     private Image getImage(String path) {
-        return Toolkit.getDefaultToolkit().getImage(SimpleView.class.getResource(path));
+        return Toolkit.getDefaultToolkit()
+                      .getImage(SimpleView.class.getResource(path));
     }
 }
 {code}

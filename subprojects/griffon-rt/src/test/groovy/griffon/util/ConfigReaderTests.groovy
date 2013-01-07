@@ -1,5 +1,5 @@
 /*
- * Copyright 2003-2012 the original author or authors.
+ * Copyright 2003-2013 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -604,5 +604,33 @@ log4j {
         reader.registerConditionalBlock('projects', 'bogus')
         config = reader.parse(conf)
         assert config.var == 1
+    }
+
+    void testConditionalOverrides() {
+        def conf = '''
+          environments {
+               development {
+                   var1 = 1
+                   var2 = 2
+               }
+               production {
+                   var1 = 3
+                   var2 = 4
+               }
+           }
+           var1 = 5
+           var2 = 6
+        '''
+
+        ConfigReader reader = new ConfigReader()
+        reader.binding = [reader:reader]
+        def config = reader.parse(conf)
+        assert config.var1 == 5
+        assert config.var2 == 6
+
+        reader.registerConditionalBlock('environments', 'development')
+        config = reader.parse(conf)
+        assert config.var1 == 1
+        assert config.var2 == 2
     }
 }

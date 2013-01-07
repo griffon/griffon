@@ -1,5 +1,5 @@
 /*
- * Copyright 2012 the original author or authors.
+ * Copyright 2012-2013 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -33,6 +33,11 @@ public class PluginInfoCommand extends AbstractGriffonCommand {
             description = "Name of an specific repository where the search will be performed.",
             required = false)
     private String repository = "griffon-central";
+
+    @Option(name = "--skip-description",
+        description = "Do not display the plugin's description.",
+        required = false)
+    private boolean skipDescription = false;
 
     @Argument(index = 0,
             name = "name",

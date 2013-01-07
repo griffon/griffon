@@ -129,7 +129,7 @@ menuBar = menuBar {
             menu(text: app.getMessage('application.menu.Effects.name', 'Effect')) {
                 [trident1: "Trident - ButtonFG",
                         trident2: "Trident - Snake",
-                        //gfx1: "Gfx - Sphere",
+                        gfx1: "Gfx - Sphere",
                         jexplose1: "JExplose",
                         transitions1: "Transitions - Picker",
                         gfx2: "Gfx - Animation"].each { identifier, name ->

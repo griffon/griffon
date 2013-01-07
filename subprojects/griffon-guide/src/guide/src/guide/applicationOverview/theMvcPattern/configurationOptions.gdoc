@@ -50,6 +50,30 @@ The following events will be disabled with this setting:
 
  * @[NewInstance|guide:artifactEvents]@
 
+h4. Disabling Destruction Events
+
+This is the counterpart of the @NewInstance@ event. Skipping publication of this event may result in a slight increase of speed when a group or any artifact instance is destroyed. Use the following configuration to gain this effect:
+
+{code}
+mvcGroups {
+    // MVC Group for "sample"
+    'sample' {
+        model      = 'sample.SampleModel'
+        view       = 'sample.SampleView'
+        controller = 'sample.SampleController'
+        config {
+            events {
+                destruction = false
+            }
+        }
+    }
+}
+{code}
+
+The following events will be disabled with this setting:
+
+ * @[DestroyInstance|guide:artifactEvents]@
+
 h4. Disabling Controllers as Application Event Listeners
 
 Controllers are registered as application event handlers by default when a group in instantiated. This makes it very convenient to have them react to events placed in the application's event bus. However you may want to avoid this automatic registration altogether, as it can lead to performance improvements. You can disable this feature with the following configuration:

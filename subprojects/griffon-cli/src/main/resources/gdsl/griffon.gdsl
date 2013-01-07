@@ -1,5 +1,5 @@
 /*
- * Copyright 2010-2012 the original author or authors.
+ * Copyright 2010-2013 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -28,8 +28,8 @@ import com.intellij.openapi.diagnostic.*
 ['Controller', 'Model', 'View', 'Service'].each { type ->
     String artifactPath = type.toLowerCase() + 's'
     contributor(ctype: PsiJavaPatterns.psiClass().withName(PlatformPatterns.string().matches(/.*${type}/))) {
-        def path = psiClass.containingFile.originalFile.virtualFile.path
-        if (path =~ ".*/*griffon-app/${artifactPath}/.*") {
+        def path = psiClass?.containingFile?.originalFile?.virtualFile?.path
+        if (path && path =~ ".*/*griffon-app/${artifactPath}/.*") {
             delegatesTo(findClass("griffon.core.Griffon${type}"))
         }
     }
@@ -55,6 +55,6 @@ contributor(scope: annotatedScope(ctype: 'griffon.transform.MessageSourceAware')
     delegatesTo(findClass('griffon.core.i18n.MessageSource'))
 }
 
-contributor(scope: annotatedScope(ctype: 'griffon.transform.ResourceRrsolverAware')) {
+contributor(scope: annotatedScope(ctype: 'griffon.transform.ResourceResolverAware')) {
     delegatesTo(findClass('griffon.core.resources.ResourceResolver'))
 }

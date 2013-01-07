@@ -1,5 +1,5 @@
 /*
- * Copyright 2009-2012 the original author or authors.
+ * Copyright 2009-2013 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -37,11 +37,11 @@ import static java.util.Arrays.asList;
 public class DefaultResourceResolverFactory implements ResourceResolverFactory {
     public ResourceResolver create(GriffonApplication app) {
         List<String> basenames = (List<String>) getConfigValue(app.getConfig(), "resources.basenames", asList("resources"));
-        List<ResourceResolver> messageSources = new ArrayList<ResourceResolver>();
+        List<ResourceResolver> resourceResolvers = new ArrayList<ResourceResolver>();
         for (String basename : basenames) {
-            messageSources.add(new DefaultResourceResolver(basename));
+            resourceResolvers.add(new DefaultResourceResolver(basename));
         }
 
-        return new CompositeResourceResolver(messageSources);
+        return new CompositeResourceResolver(resourceResolvers);
     }
 }
