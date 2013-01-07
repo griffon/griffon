@@ -24,7 +24,15 @@ import org.codehaus.griffon.cli.GriffonUsageStats
 target(name: 'usageStats', description: 'Queries or updates the status of usage stats gathering',
     prehook: null, posthook: null) {
     if (argsMap.containsKey('enabled')) {
-        GriffonUsageStats.setEnabled(griffonSettings, argsMap.enabled as boolean)
+        def enabled = argsMap.enabled
+        if (enabled instanceof Boolean) {
+            enabled = enabled.booleanValue()
+        } else if (enabled instanceof CharSequence) {
+            enabled = Boolean.parseBoolean(enabled.toString().toLowerCase())
+        } else {
+            enabled = false
+        }
+        GriffonUsageStats.setEnabled(griffonSettings, enabled)
     }
     println """
 Gathering of usage stats is currently ${GriffonUsageStats.isEnabled(griffonSettings) ? 'ENABLED' : 'DISABLED'}
