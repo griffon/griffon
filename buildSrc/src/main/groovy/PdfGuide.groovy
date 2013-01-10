@@ -35,7 +35,7 @@ class PdfGuide extends DefaultTask {
     def publish() {
         try {
             PdfBuilder.build(
-                    basedir: project.buildDir.absolutePath,
+                    basedir: "${project.buildDir.absolutePath}/manual",
                     home: home,
                     tool: 'griffon'
             )
