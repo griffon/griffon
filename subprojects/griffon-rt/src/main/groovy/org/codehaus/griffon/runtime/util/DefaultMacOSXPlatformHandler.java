@@ -21,7 +21,7 @@ import griffon.util.ApplicationClassLoader;
 import griffon.util.PlatformHandler;
 import groovy.lang.Binding;
 import groovy.lang.GroovyShell;
-import org.codehaus.groovy.runtime.DefaultGroovyMethods;
+import org.codehaus.groovy.runtime.ResourceGroovyMethods;
 
 import java.net.URL;
 
@@ -59,7 +59,7 @@ public class DefaultMacOSXPlatformHandler implements PlatformHandler {
                 GroovyShell shell = new GroovyShell(ApplicationClassLoader.get(), bindings);
                 String resourceName = "META-INF/" + DefaultMacOSXPlatformHandler.class.getName() + ".txt";
                 URL scriptUrl = ApplicationClassLoader.get().getResource(resourceName);
-                macOSXHandler = shell.evaluate(DefaultGroovyMethods.getText(scriptUrl));
+                macOSXHandler = shell.evaluate(ResourceGroovyMethods.getText(scriptUrl));
             } catch (Throwable t) {
                 t.printStackTrace(System.out);
             }

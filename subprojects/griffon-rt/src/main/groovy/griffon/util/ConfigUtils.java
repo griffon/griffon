@@ -17,7 +17,7 @@
 package griffon.util;
 
 import groovy.util.ConfigObject;
-import org.codehaus.groovy.runtime.DefaultGroovyMethods;
+import org.codehaus.groovy.runtime.IOGroovyMethods;
 import org.codehaus.groovy.runtime.typehandling.DefaultTypeTransformation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -308,7 +308,7 @@ public final class ConfigUtils {
                 is = ApplicationClassLoader.get().getResourceAsStream(configFileName);
             }
             if (is != null) {
-                String scriptText = DefaultGroovyMethods.getText(is);
+                String scriptText = IOGroovyMethods.getText(is);
                 if (!isBlank(scriptText)) {
                     config = configReader.parse(scriptText);
                 }

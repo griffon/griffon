@@ -31,8 +31,8 @@ import org.codehaus.griffon.runtime.core.ModelArtifactHandler;
 import org.codehaus.griffon.runtime.core.ServiceArtifactHandler;
 import org.codehaus.griffon.runtime.core.ViewArtifactHandler;
 import org.codehaus.griffon.runtime.core.controller.NoopGriffonControllerActionManager;
-import org.codehaus.groovy.runtime.DefaultGroovyMethods;
 import org.codehaus.groovy.runtime.InvokerHelper;
+import org.codehaus.groovy.runtime.ResourceGroovyMethods;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -415,7 +415,7 @@ public class GriffonApplicationHelper {
                 return;
             }
             try {
-                className = DefaultGroovyMethods.getText(url).trim();
+                className = ResourceGroovyMethods.getText(url).trim();
             } catch (IOException e) {
                 if (LOG.isDebugEnabled()) {
                     LOG.debug("Cannot read GriffonControllerActionManager definition from " + url, sanitize(e));
