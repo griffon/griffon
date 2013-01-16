@@ -53,6 +53,7 @@ public class ResourceResolverAwareASTTransformation extends AbstractASTTransform
     private static final String LOCALE = "locale";
     private static final String DEFAULT_VALUE = "defaultValue";
     private static final String METHOD_RESOLVE_RESOURCE = "resolveResource";
+    private static final String METHOD_RESOLVE_RESOURCE_VALUE = "resolveResourceValue";
 
     /**
      * Convenience method to see if an annotated node is {@code @ResourceResolverAware}.
@@ -91,6 +92,7 @@ public class ResourceResolverAwareASTTransformation extends AbstractASTTransform
 
     /**
      * Snoops through the declaring class and all parents looking for methods<ul>
+     * <li><code>public Object resolveResourceValue(java.lang.String, java.util.Locale)</code></li>
      * <li><code>public Object resolveResource(java.lang.String)</code></li>
      * <li><code>public Object resolveResource(java.lang.String, java.util.Locale)</code></li>
      * <li><code>public Object resolveResource(java.lang.String, java.lang.Object[])</code></li>
@@ -124,6 +126,7 @@ public class ResourceResolverAwareASTTransformation extends AbstractASTTransform
                 found |= method.getName().equals(METHOD_RESOLVE_RESOURCE) && method.getParameters().length == 2;
                 found |= method.getName().equals(METHOD_RESOLVE_RESOURCE) && method.getParameters().length == 3;
                 found |= method.getName().equals(METHOD_RESOLVE_RESOURCE) && method.getParameters().length == 4;
+                found |= method.getName().equals(METHOD_RESOLVE_RESOURCE_VALUE) && method.getParameters().length == 2;
                 if (found) return false;
             }
             consideredClass = consideredClass.getSuperClass();
@@ -148,6 +151,20 @@ public class ResourceResolverAwareASTTransformation extends AbstractASTTransform
      */
     public static void apply(ClassNode declaringClass) {
         injectInterface(declaringClass, RESOURCE_RESOLVER_TYPE);
+
+        injectMethod(declaringClass, new MethodNode(
+            METHOD_RESOLVE_RESOURCE_VALUE,
+            ACC_PUBLIC,
+            OBJECT_TYPE,
+            params(
+                param(STRING_TYPE, KEY),
+                param(LOCALE_TYPE, LOCALE)),
+            throwing(NO_SUCH_RESOURCE_EXCEPTION_TYPE),
+            returns(call(
+                applicationInstance(),
+                METHOD_RESOLVE_RESOURCE_VALUE,
+                vars(KEY, LOCALE)))
+        ));
 
         injectMethod(declaringClass, new MethodNode(
                 METHOD_RESOLVE_RESOURCE,

@@ -18,12 +18,11 @@ package org.codehaus.griffon.runtime.core.i18n;
 
 import griffon.core.i18n.MessageSource;
 import griffon.core.i18n.NoSuchMessageException;
+import griffon.util.CallableWithArgs;
+import groovy.lang.Closure;
 
 import java.text.MessageFormat;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
-import java.util.MissingResourceException;
+import java.util.*;
 
 /**
  * @author Andres Almiray
@@ -90,8 +89,14 @@ public abstract class AbstractMessageSource implements MessageSource {
     }
 
     public String getMessage(String key, Map<String, Object> args, Locale locale) throws NoSuchMessageException {
-        String message = resolveMessage(key, locale);
-        return formatMessage(message, args);
+        if (null == args) args = Collections.emptyMap();
+        if (null == locale) locale = Locale.getDefault();
+        Object message = resolveMessageValue(key, locale);
+        Object result = evalMessageWithArguments(message, args);
+        if (result != null) {
+            return result.toString();
+        }
+        throw new NoSuchMessageException(key, locale);
     }
 
     public String getMessage(String key, List args, String defaultMessage) {
@@ -105,15 +110,57 @@ public abstract class AbstractMessageSource implements MessageSource {
     public String getMessage(String key, Object[] args, Locale locale) throws NoSuchMessageException {
         if (null == args) args = EMPTY_OBJECT_ARGS;
         if (null == locale) locale = Locale.getDefault();
+        Object message = resolveMessageValue(key, locale);
+        Object result = evalMessageWithArguments(message, args);
+        if (result != null) {
+            return result.toString();
+        }
+        throw new NoSuchMessageException(key, locale);
+    }
+
+    public Object resolveMessageValue(String key, Locale locale) throws NoSuchMessageException {
         try {
-            String message = resolveMessage(key, locale);
-            return formatMessage(message, args);
-        } catch (MissingResourceException e) {
+            Object message = doResolveMessageValue(key, locale);
+            if (message instanceof CharSequence) {
+                String msg = message.toString();
+                if (msg.length() >= 4 && msg.startsWith(REF_KEY_START) && msg.endsWith(REF_KEY_END)) {
+                    String refKey = msg.substring(2, msg.length() - 1);
+                    message = resolveMessageValue(refKey, locale);
+                }
+            }
+            return message;
+        } catch (MissingResourceException mre) {
             throw new NoSuchMessageException(key, locale);
         }
     }
 
-    protected abstract String resolveMessage(String key, Locale locale) throws NoSuchMessageException;
+    protected abstract Object doResolveMessageValue(String key, Locale locale) throws NoSuchMessageException;
+
+    protected Object evalMessageWithArguments(Object message, Object[] args) {
+        if (message instanceof Closure) {
+            Closure closure = (Closure) message;
+            return closure.call(args);
+        } else if (message instanceof CallableWithArgs) {
+            CallableWithArgs callable = (CallableWithArgs) message;
+            return callable.call(args);
+        } else if (message instanceof CharSequence) {
+            return formatMessage(String.valueOf(message), args);
+        }
+        return null;
+    }
+
+    protected Object evalMessageWithArguments(Object message, Map<String, Object> args) {
+        if (message instanceof Closure) {
+            Closure closure = (Closure) message;
+            return closure.call(args);
+        } else if (message instanceof CallableWithArgs) {
+            CallableWithArgs callable = (CallableWithArgs) message;
+            return callable.call(new Object[]{args});
+        } else if (message instanceof CharSequence) {
+            return formatMessage(String.valueOf(message), args);
+        }
+        return null;
+    }
 
     protected String formatMessage(String message, Object[] args) {
         return MessageFormat.format(message, args);
@@ -123,7 +170,9 @@ public abstract class AbstractMessageSource implements MessageSource {
         for (Map.Entry<String, Object> variable : args.entrySet()) {
             String var = variable.getKey();
             String value = variable.getValue() != null ? variable.getValue().toString() : null;
-            if (value != null) message = message.replace("{:" + var + "}", value);
+            if (value != null) {
+                message = message.replace("{:" + var + "}", value);
+            }
         }
         return message;
     }

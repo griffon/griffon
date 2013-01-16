@@ -16,7 +16,8 @@
 
 package org.codehaus.griffon.runtime.util;
 
-import griffon.util.ApplicationHolder;
+import griffon.util.ApplicationClassLoader;
+import org.codehaus.griffon.runtime.core.ResourceLocator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -34,6 +35,7 @@ public class CompositeResourceBundle extends ResourceBundle {
     private static final Logger LOG = LoggerFactory.getLogger(CompositeResourceBundle.class);
     private final ResourceBundle[] bundles;
     private final List<String> keys = new ArrayList<String>();
+    private static final ResourceLocator RESOURCE_LOCATOR = new ResourceLocator();
 
     public static ResourceBundle create(String basename) {
         return create(basename, Locale.getDefault());
@@ -45,11 +47,12 @@ public class CompositeResourceBundle extends ResourceBundle {
         }
 
         String[] combinations = {
-                locale.getLanguage() + "_" + locale.getCountry() + "_" + locale.getVariant(),
-                locale.getLanguage() + "_" + locale.getCountry(),
-                locale.getLanguage()
+            locale.getLanguage() + "_" + locale.getCountry() + "_" + locale.getVariant(),
+            locale.getLanguage() + "_" + locale.getCountry(),
+            locale.getLanguage()
         };
 
+        basename = basename.replace('.', '/');
         List<ResourceBundle> bundles = new ArrayList<ResourceBundle>();
         for (String suffix : combinations) {
             if (suffix.endsWith("_")) continue;
@@ -64,7 +67,7 @@ public class CompositeResourceBundle extends ResourceBundle {
 
     private static Collection<ResourceBundle> loadBundleFromProperties(String fileName) {
         List<ResourceBundle> bundles = new ArrayList<ResourceBundle>();
-        for (URL resource : ApplicationHolder.getApplication().getResources(fileName + ".properties")) {
+        for (URL resource : RESOURCE_LOCATOR.getResources(fileName + ".properties")) {
             if (null == resource) continue;
             try {
                 bundles.add(new PropertyResourceBundle(resource.openStream()));
@@ -77,9 +80,24 @@ public class CompositeResourceBundle extends ResourceBundle {
 
     private static Collection<ResourceBundle> loadBundleFromScript(String fileName) {
         List<ResourceBundle> bundles = new ArrayList<ResourceBundle>();
-        for (URL resource : ApplicationHolder.getApplication().getResources(fileName + ".groovy")) {
+        List<String> visitedUrls = new ArrayList<String>();
+        for (URL resource : RESOURCE_LOCATOR.getResources(fileName + ".groovy")) {
             if (null == resource) continue;
             bundles.add(new GroovyScriptResourceBundle(resource));
+            visitedUrls.add(resource.toString());
+        }
+        URL resource = RESOURCE_LOCATOR.getResourceAsURL(fileName + ".class");
+        if (null != resource) {
+            String url = resource.toString().replace(".class", ".groovy");
+            if (!visitedUrls.contains((url))) {
+                String className = fileName.replace('/', '.');
+                try {
+                    Class klass = ApplicationClassLoader.get().loadClass(className);
+                    bundles.add(new GroovyScriptResourceBundle(klass));
+                } catch (ClassNotFoundException cnfe) {
+                    // should not happen!
+                }
+            }
         }
         return bundles;
     }
@@ -102,13 +120,13 @@ public class CompositeResourceBundle extends ResourceBundle {
     }
 
     protected Object handleGetObject(String key) {
-        if(LOG.isTraceEnabled()){
+        if (LOG.isTraceEnabled()) {
             LOG.trace("Searching key=" + key);
         }
         for (ResourceBundle bundle : bundles) {
             try {
                 Object value = bundle.getObject(key);
-                if(LOG.isTraceEnabled()) {
+                if (LOG.isTraceEnabled()) {
                     LOG.trace("Bundle " + bundle + "; key=" + key + "; value='" + value + "'");
                 }
                 if (value != null) {

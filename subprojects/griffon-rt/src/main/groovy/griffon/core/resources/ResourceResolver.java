@@ -29,6 +29,16 @@ import java.util.Map;
  */
 public interface ResourceResolver {
     /**
+     * "@["
+     */
+    String REF_KEY_START = "@[";
+
+    /**
+     * "]"
+     */
+    String REF_KEY_END = "]";
+
+    /**
      * Try to resolve the resource.
      *
      * @param key Key to lookup, such as 'sample.SampleModel.icon'
@@ -203,4 +213,33 @@ public interface ResourceResolver {
      * @return The resolved resource at the given key for the given locale
      */
     Object resolveResource(String key, Map<String, Object> args, Object defaultValue, Locale locale);
+
+    /**
+     * <p>Resolve a resource given a key and a Locale.</p>
+     * <p>
+     * This method should use the default Locale if the locale argument is null. The {@code key} argument may refer to
+     * another key if the resolved value results in a {@code CharSequence} that begins with "@[" and ends with "]". In this
+     * case the method will use the enclosed value as the next key to be resolved. For example, given the following key/value
+     * definitions
+     * <p/>
+     * <pre>
+     *     some.key = Hello {0}
+     *     other.key = @[some.key]
+     * </pre>
+     * <p/>
+     * Evaluating the keys results in
+     * <p/>
+     * <pre>
+     *    assert resolveResourceValue('some.key', Locale.default) == 'Hello {0}'
+     *    assert resolveResourceValue('other.key', Locale.default) == 'Hello {0}'
+     * </pre>
+     * <p/>
+     * </p>
+     *
+     * @param key    Key to lookup, such as 'sample.SampleModel.icon'
+     * @param locale Locale in which to lookup
+     * @return the resolved resource value at the given key for the given locale
+     * @throws NoSuchResourceException if no message is found
+     */
+    Object resolveResourceValue(String key, Locale locale) throws NoSuchResourceException;
 }

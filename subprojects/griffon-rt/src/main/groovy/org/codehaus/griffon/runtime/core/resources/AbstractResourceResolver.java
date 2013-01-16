@@ -22,10 +22,7 @@ import griffon.util.CallableWithArgs;
 import groovy.lang.Closure;
 
 import java.text.MessageFormat;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
-import java.util.MissingResourceException;
+import java.util.*;
 
 /**
  * @author Andres Almiray
@@ -69,8 +66,8 @@ public abstract class AbstractResourceResolver implements ResourceResolver {
     public Object resolveResource(String key, Object[] args, Object defaultValue, Locale locale) {
         try {
             return resolveResource(key, args, locale);
-        } catch (NoSuchResourceException nsme) {
-            return defaultValue;
+        } catch (NoSuchResourceException nsre) {
+            return null == defaultValue ? key : defaultValue;
         }
     }
 
@@ -85,14 +82,20 @@ public abstract class AbstractResourceResolver implements ResourceResolver {
     public Object resolveResource(String key, Map<String, Object> args, Object defaultValue, Locale locale) {
         try {
             return resolveResource(key, args, locale);
-        } catch (NoSuchResourceException nsme) {
-            return defaultValue;
+        } catch (NoSuchResourceException nsre) {
+            return null == defaultValue ? key : defaultValue;
         }
     }
 
     public Object resolveResource(String key, Map<String, Object> args, Locale locale) throws NoSuchResourceException {
-        Object resource = resolveResourceInternal(key, locale);
-        return evalResourceWithArguments(resource, args);
+        if (null == args) args = Collections.emptyMap();
+        if (null == locale) locale = Locale.getDefault();
+        Object resource = resolveResourceValue(key, locale);
+        Object result = evalResourceWithArguments(resource, args);
+        if (result != null) {
+            return result.toString();
+        }
+        throw new NoSuchResourceException(key, locale);
     }
 
     public Object resolveResource(String key, List args, Object defaultValue) {
@@ -106,13 +109,31 @@ public abstract class AbstractResourceResolver implements ResourceResolver {
     public Object resolveResource(String key, Object[] args, Locale locale) throws NoSuchResourceException {
         if (null == args) args = EMPTY_OBJECT_ARGS;
         if (null == locale) locale = Locale.getDefault();
+        Object resource = resolveResourceValue(key, locale);
+        Object result = evalResourceWithArguments(resource, args);
+        if (result != null) {
+            return result.toString();
+        }
+        throw new NoSuchResourceException(key, locale);
+    }
+
+    public Object resolveResourceValue(String key, Locale locale) throws NoSuchResourceException {
         try {
-            Object resource = resolveResourceInternal(key, locale);
-            return evalResourceWithArguments(resource, args);
-        } catch (MissingResourceException e) {
+            Object resource = doResolveResourceValue(key, locale);
+            if (resource instanceof CharSequence) {
+                String msg = resource.toString();
+                if (msg.length() >= 4 && msg.startsWith(REF_KEY_START) && msg.endsWith(REF_KEY_END)) {
+                    String refKey = msg.substring(2, msg.length() - 1);
+                    resource = resolveResourceValue(refKey, locale);
+                }
+            }
+            return resource;
+        } catch (MissingResourceException mre) {
             throw new NoSuchResourceException(key, locale);
         }
     }
+
+    protected abstract Object doResolveResourceValue(String key, Locale locale) throws NoSuchResourceException;
 
     protected Object evalResourceWithArguments(Object resource, Object[] args) {
         if (resource instanceof Closure) {
@@ -124,7 +145,7 @@ public abstract class AbstractResourceResolver implements ResourceResolver {
         } else if (resource instanceof CharSequence) {
             return formatResource(String.valueOf(resource), args);
         }
-        return resource;
+        return null;
     }
 
     protected Object evalResourceWithArguments(Object resource, Map<String, Object> args) {
@@ -137,7 +158,7 @@ public abstract class AbstractResourceResolver implements ResourceResolver {
         } else if (resource instanceof CharSequence) {
             return formatResource(String.valueOf(resource), args);
         }
-        return resource;
+        return null;
     }
 
     protected String formatResource(String resource, Object[] args) {
@@ -148,12 +169,12 @@ public abstract class AbstractResourceResolver implements ResourceResolver {
         for (Map.Entry<String, Object> variable : args.entrySet()) {
             String var = variable.getKey();
             String value = variable.getValue() != null ? variable.getValue().toString() : null;
-            if (value != null) resource = resource.replace("{:" + var + "}", value);
+            if (value != null) {
+                resource = resource.replace("{:" + var + "}", value);
+            }
         }
         return resource;
     }
-
-    protected abstract Object resolveResourceInternal(String key, Locale locale) throws NoSuchResourceException;
 
     protected Object[] toObjectArray(List args) {
         if (null == args || args.isEmpty()) {

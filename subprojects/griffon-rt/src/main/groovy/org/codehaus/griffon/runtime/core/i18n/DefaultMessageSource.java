@@ -40,8 +40,8 @@ public class DefaultMessageSource extends AbstractMessageSource {
         return basename;
     }
 
-    protected String resolveMessage(String key, Locale locale) throws NoSuchMessageException {
-        return getBundle(locale).getString(key);
+    protected Object doResolveMessageValue(String key, Locale locale) throws NoSuchMessageException {
+        return getBundle(locale).getObject(key);
     }
 
     protected ResourceBundle getBundle(Locale locale) {
