@@ -18,3 +18,36 @@ Griffon has upgraded some of its dependencies. The following list specify which 
 h4. Removals
 
 Applications no longer trigger an @Log4jConfigStart@ event when bootstrapping. The @GriffonApplication.Event.LOG4J_CONFIG_START@ constant value has been removed@.
+
+h4. API Changes
+
+An explanation of message codes can be found at the [Clirr project website|http://clirr.sourceforge.net/clirr-core/exegesis.html].
+
+* ERROR: 6001: [griffon.core.GriffonApplication$Event|api:griffon.core.GriffonApplication]: Removed field LOG4J_CONFIG_START
+* ERROR: 7002: [griffon.util.GriffonApplicationUtils|api:griffon.util.GriffonApplicationUtils]: Method 'public java.lang.String getFullPlatform()' has been removed
+* ERROR: 7012: [griffon.core.GriffonService|api:griffon.core.GriffonService]: Method 'public void serviceDestroy()' has been added to an interface
+* ERROR: 7012: [griffon.core.GriffonService|api:griffon.core.GriffonService]: Method 'public void serviceInit()' has been added to an interface
+* ERROR: 7012: [griffon.core.MVCGroupManager|api:griffon.core.MVCGroupManager]: Method 'public void removeConfiguration(griffon.core.MVCGroupConfiguration)' has been added to an interface
+* ERROR: 7012: [griffon.core.MVCGroupManager|api:griffon.core.MVCGroupManager]: Method 'public void removeConfiguration(java.lang.String)' has been added to an interface
+* INFO: 4000: [griffon.application.StandaloneGriffonApplication|api:griffon.application.StandaloneGriffonApplication]: Added griffon.core.Observable to the set of implemented interfaces
+* INFO: 4000: [griffon.core.GriffonApplication|api:griffon.core.GriffonApplication]: Added griffon.core.Observable to the set of implemented interfaces
+* INFO: 4000: [griffon.core.GriffonModel|api:griffon.core.GriffonModel]: Added griffon.core.Vetoable to the set of implemented interfaces
+* INFO: 6000: [griffon.core.GriffonApplication$Event|api:griffon.core.GriffonApplication]: Added public field DESTROY_INSTANCE
+* INFO: 6000: [griffon.util.GriffonApplicationUtils|api:griffon.util.GriffonApplicationUtils]: Added public field basePlatform
+* INFO: 7011: [griffon.util.ConfigUtils|api:griffon.util.ConfigUtils]: Method 'public java.lang.String getFilenameExtension(java.lang.String)' has been added
+* INFO: 7011: [griffon.util.ConfigUtils|api:griffon.util.ConfigUtils]: Method 'public java.lang.String stripFilenameExtension(java.lang.String)' has been added
+* INFO: 7011: [griffon.util.GriffonApplicationUtils|api:griffon.util.GriffonApplicationUtils]: Method 'public boolean getIsWindows8()' has been added
+* INFO: 7011: [griffon.util.GriffonApplicationUtils|api:griffon.util.GriffonApplicationUtils]: Method 'public boolean isWindows8()' has been added
+* INFO: 7011: [griffon.util.GriffonApplicationUtils|api:griffon.util.GriffonApplicationUtils]: Method 'public java.lang.String getBasePlatform()' has been added
+* INFO: 7011: [griffon.util.GriffonClassUtils|api:griffon.util.GriffonClassUtils]: Method 'public boolean isContributionMethod(griffon.util.GriffonClassUtils$MethodDescriptor)' has been added
+* INFO: 7011: [griffon.util.GriffonClassUtils|api:griffon.util.GriffonClassUtils]: Method 'public boolean isContributionMethod(groovy.lang.MetaMethod)' has been added
+* INFO: 7011: [griffon.util.GriffonClassUtils|api:griffon.util.GriffonClassUtils]: Method 'public boolean isContributionMethod(java.lang.String)' has been added
+* INFO: 7011: [griffon.util.GriffonClassUtils|api:griffon.util.GriffonClassUtils]: Method 'public boolean isContributionMethod(java.lang.reflect.Method)' has been added
+* INFO: 7011: [griffon.util.GriffonClassUtils|api:griffon.util.GriffonClassUtils]: Method 'public boolean isServiceMethod(griffon.util.GriffonClassUtils$MethodDescriptor)' has been added
+* INFO: 7011: [griffon.util.GriffonClassUtils|api:griffon.util.GriffonClassUtils]: Method 'public boolean isServiceMethod(groovy.lang.MetaMethod)' has been added
+* INFO: 7011: [griffon.util.GriffonClassUtils|api:griffon.util.GriffonClassUtils]: Method 'public boolean isServiceMethod(java.lang.reflect.Method)' has been added
+* INFO: 8000: [griffon.core.EventRouter|api:griffon.core.EventRouter]: Class griffon.core.EventRouter added
+* INFO: 8000: [griffon.core.Vetoable|api:griffon.core.Vetoable]: Class griffon.core.Vetoable added
+* INFO: 8000: [griffon.core.factories.EventRouterFactory|api:griffon.core.factories.EventRouterFactory]: Class griffon.core.factories.EventRouterFactory added
+* INFO: 8000: [griffon.core.factories.LogManagerFactory|api:griffon.core.factories.LogManagerFactory]: Class griffon.core.factories.LogManagerFactory added
+* INFO: 8000: [griffon.util.logging.LogManager|api:griffon.util.logging.LogManager]: Class griffon.util.logging.LogManager added
