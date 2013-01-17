@@ -218,7 +218,7 @@ class PluginSettings {
             // project plugin
             Resource[] resources = resolveResources("file://${settings.projectPluginsDir.absolutePath}/${name}-*")
             if (resources) pluginDir = resources[0]
-            if (!pluginDir.exists()) {
+            if (!pluginDir?.exists()) {
                 //framework plugin
                 resources = resolveResources("file://${settings.griffonHome}/plugins/${name}-*")
                 if (resources) pluginDir = resources[0]

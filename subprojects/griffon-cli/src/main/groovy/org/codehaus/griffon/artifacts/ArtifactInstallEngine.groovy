@@ -639,7 +639,7 @@ class ArtifactInstallEngine {
             }
         } catch (e) {
             sanitize(e)
-            errorHandler "An error occured uninstalling the ${type} [$name${version ? '-' + version : ''}]: ${e.message}"
+            errorHandler "An error occurred uninstalling the ${type} [$name${version ? '-' + version : ''}]: ${e.message}"
         }
     }
 
