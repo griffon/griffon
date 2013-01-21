@@ -27,11 +27,11 @@ repositories {
 }
 
 dependencies {
-    groovy localGroovy() //for api docs generation needed (groovydoc)
+    groovy "org.codehaus.groovy:groovy-all:$groovyVersion" //for api docs generation needed (groovydoc)
 
     // problems with ant classloader makes it necessary to duplicate the deps
     // in buildSrc/ and the docs configurations
-    docs(localGroovy(),
+    docs("org.codehaus.groovy:groovy-all:$groovyVersion",
             "org.grails:grails-docs:$grailsDocsVersion",
             'org.grails:grails-gdoc-engine:1.0.1',
             'radeox:radeox:1.0-b2',

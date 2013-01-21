@@ -20,8 +20,6 @@ apply plugin: 'osgi'
 ext.pomDescription = 'Griffon runtime'
 
 dependencies {
-    groovy "org.codehaus.groovy:groovy-all:$groovyVersion"
-
     compile("org.codehaus.groovy:groovy-all:$groovyVersion")
     compile("log4j:log4j:$log4jVersion") {
         exclude group: 'ant',         module: 'ant-nodeps'
