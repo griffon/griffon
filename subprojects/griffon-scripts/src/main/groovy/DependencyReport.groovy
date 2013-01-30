@@ -40,9 +40,14 @@ target(name: 'dependencyReport', description: "Produces a dependency report for 
     def conf = argsMap.params.join(', ').trim() ?: 'build, compile, runtime, test'
     ivy.report(organisation: 'org.codehaus.griffon.internal', module: griffonAppName, todir: targetDir, conf: conf)
 
-    // Copy the runtime dependency report to 'index.html' for easy opening.
-    ant.copy file: "${targetDir}/org.codehaus.griffon.internal-${griffonAppName}-runtime.html",
-             tofile: "${targetDir}/index.html"
+    File runtimeReport = new File("${targetDir}/org.codehaus.griffon.internal-${griffonAppName}-runtime.html")
+    if (runtimeReport.exists()) {
+        // Copy the runtime dependency report to 'index.html' for easy opening.
+        ant.copy file: runtimeReport,
+                 tofile: "${targetDir}/index.html"
+    }
+
+    griffonSettings.dependencyManager.produceReport(argsMap.params[0] ?: null)
 
     event 'StatusFinal', ["Dependency report output to [${targetDir}/index.html"]
 }
