@@ -992,7 +992,7 @@ public class GriffonScriptRunner {
         private final String[] RESOLVE_DEPENDENCIES_EXCLUSIONS = {
             "SetVersion", "Stats", "Upgrade", "Wrapper", "UsageStats",
             "CreateCommandAlias", "Doc", "_GriffonResolveDependencies",
-            "ClearDependencyCache", "UploadRelease"
+            "ClearDependencyCache", "UploadRelease", "PluginDependenciesReport"
         };
 
         private final String[] CHECK_VERSION_EXCLUSIONS = {
@@ -1001,7 +1001,8 @@ public class GriffonScriptRunner {
 
         private final String[] FRAMEWORK_PLUGIN_INCLUSIONS = {
             "CreateApp", "CreateAddon", "CreatePlugin", "CreateArchetype", "Help",
-            "CreateCommandAlias", "ClearDependencyCache", "UploadRelease"
+            "CreateCommandAlias", "ClearDependencyCache", "UploadRelease",
+            "PluginDependenciesReport"
         };
 
         {

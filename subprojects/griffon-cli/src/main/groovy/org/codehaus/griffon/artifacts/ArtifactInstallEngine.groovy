@@ -75,7 +75,7 @@ class ArtifactInstallEngine {
         value in [INSTALL_FAILURE_ABORT, INSTALL_FAILURE_CONTINUE] ? value : INSTALL_FAILURE_CONTINUE
     }
 
-    boolean resolvePluginDependencies() {
+    boolean resolvePluginDependencies(boolean install = true) {
         Map<String, String> registeredPlugins = getRegisteredArtifacts(Plugin.TYPE, metadata)
         Map<String, String> installedPlugins = settings.artifactSettings.getInstalledArtifacts(Plugin.TYPE)
 
@@ -143,14 +143,14 @@ class ArtifactInstallEngine {
             installedPlugins.remove(name)
         }
 
-        if (!missingPlugins) {
+        if (install && !missingPlugins) {
             return true
         }
 
         ArtifactDependencyResolver resolver = new ArtifactDependencyResolver(settings)
         List<ArtifactDependency> dependencies = []
         try {
-            dependencies = resolver.resolveDependencyTree(Plugin.TYPE, missingPlugins)
+            dependencies = resolver.resolveDependencyTree(Plugin.TYPE, install ? missingPlugins : installedPlugins + missingPlugins)
         } catch (Exception e) {
             sanitize(e)
             eventHandler 'StatusError', "Some missing plugins failed to resolve => $e"
@@ -161,11 +161,19 @@ class ArtifactInstallEngine {
             LOG.debug("Dependency resolution outcome:\n${dependencies.collect([]) {printDependencyTree(it, true)}.join('\n')}")
         }
 
-        try {
-            return _installPlugins(dependencies, resolver, false)
-        } catch (InstallArtifactException iae) {
-            errorHandler "Could not resolve plugin dependencies. Review all dependencies marked with ! and try again with -Dgriffon.artifact.force.upgrade=true"
+        if (install) {
+            try {
+                return _installPlugins(dependencies, resolver, false)
+            } catch (InstallArtifactException iae) {
+                errorHandler "Could not resolve plugin dependencies. Review all dependencies marked with ! and try again with -Dgriffon.artifact.force.upgrade=true"
+            }
+        } else {
+            resolveDependenciesFor(dependencies, resolver, false, false)
+            ArtifactDependencyGraphRenderer renderer = new ArtifactDependencyGraphRenderer(settings)
+            renderer.render(dependencies)
         }
+
+        true
     }
 
     boolean installArtifact(String type, String name, String version = null) {
@@ -258,7 +266,7 @@ class ArtifactInstallEngine {
         installedArtifacts.clear()
         uninstalledArtifacts.clear()
 
-        List<ArtifactDependency> installPlan = resolveDependenciesFor(dependencies, resolver, framework)
+        List<ArtifactDependency> installPlan = resolveDependenciesFor(dependencies, resolver, framework, true)
         installPluginsInternal(installPlan, framework)
     }
 
@@ -413,7 +421,7 @@ class ArtifactInstallEngine {
         dependencies
     }
 
-    private List<ArtifactDependency> resolveDependenciesFor(List<ArtifactDependency> dependencies, ArtifactDependencyResolver resolver, boolean framework) {
+    private List<ArtifactDependency> resolveDependenciesFor(List<ArtifactDependency> dependencies, ArtifactDependencyResolver resolver, boolean framework, boolean resolve) {
         Map<String, Release> installedReleases = settings.artifactSettings.getInstalledReleases(Plugin.TYPE, framework)
 
         Map<String, ArtifactDependency> installedDependencies = [:]
@@ -453,7 +461,7 @@ class ArtifactInstallEngine {
             LOG.debug("Installed dependencies:\n${installedDependencies.values().collect([]) {printDependencyTree(it, true)}.join('\n')}")
         }
 
-        if (dependencies.grep {!it.resolved}) {
+        if (resolve && dependencies.grep {!it.resolved}) {
             String installed = installedDependencies.values().collect([]) {printDependencyTree(it, true)}.join('\n')
             String target = dependencies.collect([]) {printDependencyTree(it, true)}.join('\n')
             eventHandler 'StatusError', "Some dependencies could not be resolved.\n-= INSTALLED =-\n${installed}\n-= MISSING =-\n${target}"
@@ -467,7 +475,7 @@ class ArtifactInstallEngine {
             if (installed || target) LOG.debug("Dependency evictions & conflicts outcome:\n-= INSTALLED =-\n${installed}\n-= MISSING =-\n${target}")
         }
 
-        if (dependencies.grep {it.conflicted}) {
+        if (resolve && dependencies.grep {it.conflicted}) {
             String installed = installedDependencies.values().collect([]) {printDependencyTree(it, true)}.join('\n')
             String target = dependencies.collect([]) {printDependencyTree(it, true)}.join('\n')
             eventHandler 'StatusError', "Some dependencies have conflicts.\n-= INSTALLED =-\n${installed}\n-= MISSING =-\n${target}"
@@ -477,6 +485,15 @@ class ArtifactInstallEngine {
         if (LOG.debugEnabled && installPlan) {
             LOG.debug("Dependency install plan:\n${installPlan.collect([]) {it.toString().trim()}.join('\n')}")
         }
+
+        List<ArtifactDependency> list = []
+        list.addAll(dependencies)
+        installedDependencies.values().each { ArtifactDependency dep ->
+            if (list.find { it.name == dep.name && it.version == dep.version }) return
+            list.add(dep)
+        }
+        dependencies.clear()
+        dependencies.addAll(list)
 
         installPlan
     }
