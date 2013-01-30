@@ -92,9 +92,7 @@ public abstract class AbstractResourceResolver implements ResourceResolver {
         if (null == locale) locale = Locale.getDefault();
         Object resource = resolveResourceValue(key, locale);
         Object result = evalResourceWithArguments(resource, args);
-        if (result != null) {
-            return result.toString();
-        }
+        if (result != null) return result;
         throw new NoSuchResourceException(key, locale);
     }
 
@@ -111,9 +109,7 @@ public abstract class AbstractResourceResolver implements ResourceResolver {
         if (null == locale) locale = Locale.getDefault();
         Object resource = resolveResourceValue(key, locale);
         Object result = evalResourceWithArguments(resource, args);
-        if (result != null) {
-            return result.toString();
-        }
+        if (result != null) return result;
         throw new NoSuchResourceException(key, locale);
     }
 
@@ -145,7 +141,7 @@ public abstract class AbstractResourceResolver implements ResourceResolver {
         } else if (resource instanceof CharSequence) {
             return formatResource(String.valueOf(resource), args);
         }
-        return null;
+        return resource;
     }
 
     protected Object evalResourceWithArguments(Object resource, Map<String, Object> args) {
@@ -158,7 +154,7 @@ public abstract class AbstractResourceResolver implements ResourceResolver {
         } else if (resource instanceof CharSequence) {
             return formatResource(String.valueOf(resource), args);
         }
-        return null;
+        return resource;
     }
 
     protected String formatResource(String resource, Object[] args) {

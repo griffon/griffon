@@ -93,9 +93,7 @@ public abstract class AbstractMessageSource implements MessageSource {
         if (null == locale) locale = Locale.getDefault();
         Object message = resolveMessageValue(key, locale);
         Object result = evalMessageWithArguments(message, args);
-        if (result != null) {
-            return result.toString();
-        }
+        if (result != null) return result.toString();
         throw new NoSuchMessageException(key, locale);
     }
 
@@ -112,9 +110,7 @@ public abstract class AbstractMessageSource implements MessageSource {
         if (null == locale) locale = Locale.getDefault();
         Object message = resolveMessageValue(key, locale);
         Object result = evalMessageWithArguments(message, args);
-        if (result != null) {
-            return result.toString();
-        }
+        if (result != null) return result.toString();
         throw new NoSuchMessageException(key, locale);
     }
 
