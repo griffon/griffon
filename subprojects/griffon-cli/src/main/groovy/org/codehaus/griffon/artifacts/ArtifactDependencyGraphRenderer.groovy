@@ -56,7 +56,7 @@ class ArtifactDependencyGraphRenderer {
             pw.println(Metadata.current.getApplicationName());
         }
         for (ArtifactDependency dependency : dependencies) {
-            renderGraph(dependency, dependency.version, pw, 0, dependencies, installedReleases)
+            renderGraph(dependency, dependency.version, pw, 0, installedReleases)
         }
         if (ansiEnabled) {
             pw.print(new Ansi().a(Ansi.Attribute.INTENSITY_BOLD_OFF).fg(DEFAULT))
@@ -65,7 +65,7 @@ class ArtifactDependencyGraphRenderer {
         pw.flush()
     }
 
-    private renderGraph(ArtifactDependency dependency, String version, PrintWriter writer, int depth, List<ArtifactDependency> dependencies, Map<String, Release> installedReleases) {
+    private renderGraph(ArtifactDependency dependency, String version, PrintWriter writer, int depth, Map<String, Release> installedReleases) {
         if (depth == 0) {
             def prefix = TOP_LEVEL_PREFIX
             writeDependency(writer, prefix, dependency, version)
@@ -86,14 +86,13 @@ class ArtifactDependencyGraphRenderer {
         }
         Release release = installedReleases[dependency.name]
         for (ArtifactDependency child : dependency.dependencies) {
-            ArtifactDependency listedDependency = dependencies.find { it.name == child.name }
             String v = '<unknown>'
             if (release) {
-                v = release.dependencies.find { it.name = child.name }.version
-            } else if (listedDependency) {
-                v = dependency.version != listedDependency.version ? dependency.version : listedDependency.version
+                v = release.dependencies.find{ it.name == child.name }?.version ?: child.version
+            } else {
+                v = child.version
             }
-            renderGraph(child, v, writer, depth + 1, dependencies, installedReleases)
+            renderGraph(child, v, writer, depth + 1, installedReleases)
         }
     }
 
