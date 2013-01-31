@@ -333,10 +333,18 @@ public class Metadata extends Properties {
     }
 
     @Override
+    public synchronized Object remove(Object o) {
+        boolean hasKey = containsKey(o);
+        Object value = super.remove(o);
+        dirty = dirty || hasKey;
+        return value;
+    }
+
+    @Override
     public synchronized Object setProperty(String name, String value) {
         if(containsKey(name)) {
             Object oldValue = getProperty(name);
-            dirty = oldValue != null && !oldValue.equals(value);
+            dirty = dirty || (oldValue != null && !oldValue.equals(value));
         } else {
             dirty = true;
         }
@@ -347,7 +355,7 @@ public class Metadata extends Properties {
     public synchronized Object put(Object key, Object value) {
         if(containsKey(key)) {
             Object oldValue = get(key);
-            dirty = oldValue != null && !oldValue.equals(value);
+            dirty = dirty || (oldValue != null && !oldValue.equals(value));
         } else {
             dirty = true;
         }

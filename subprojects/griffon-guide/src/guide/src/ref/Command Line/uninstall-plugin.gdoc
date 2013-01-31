@@ -23,4 +23,6 @@ Arguments:
 This target will perform a clean and then uninstall the plugin for the given name if it is already installed. The command will remove any metadata referring to the plugin from the @application.properties@ file and executed the @scripts/_Uninstall.groovy@ file contained within the plugin.
 
 Options:
+* @dry-run@ - Display the uninstall plan but do not execute it.
+* @force@ - Forces dependent plugins to be uninstalled, even if required by other plugins.
 * @framework@ - Uninstalls the plugin only if installed as a framework plugin
