@@ -24,6 +24,7 @@ target(name: 'wrapper', description: 'Creates or updates the Griffon wrapper fil
         griffonUnpack(dest: basedir, src: "griffon-shared-files.jar")
         ant.unzip(src: "${basedir}/griffon-wrapper-files.zip", dest: basedir)
         ant.delete(file: "${basedir}/griffon-wrapper-files.zip", quiet: true)
+        ant.chmod(dir: basedir, includes: 'griffonw', perm: 'ugo+x')
     } else {
         event 'StatusError', ['Cannot create wrapper files in a non Griffon project']
         exit 1
