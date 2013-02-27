@@ -354,6 +354,9 @@ public class GriffonApplicationHelper {
     public static void applyPlatformTweaks(GriffonApplication app) {
         String platform = GriffonApplicationUtils.platform;
         String handlerClassName = getConfigValueAsString(app.getConfig(), "platform.handler." + platform, DEFAULT_PLATFORM_HANDLERS.get(platform));
+        if (LOG.isDebugEnabled()) {
+            LOG.debug("Using " + handlerClassName + " as PlatformHandler");
+        }
         PlatformHandler platformHandler = (PlatformHandler) safeNewInstance(handlerClassName);
         platformHandler.handle(app);
     }
