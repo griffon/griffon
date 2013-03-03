@@ -156,6 +156,102 @@ public final class ConfigUtils {
     }
 
     /**
+     * Returns the value for the specified key coerced to a long.
+     *
+     * @param config the configuration object to be searched upon
+     * @param key    the key to be searched
+     * @return the value of the key. Returns {@code 0L} if no match.
+     */
+    public static long getConfigValueAsLong(Map config, String key) {
+        return getConfigValueAsLong(config, key, 0L);
+    }
+
+    /**
+     * Returns the value for the specified key with an optional default value if no match is found.
+     *
+     * @param config       the configuration object to be searched upon
+     * @param key          the key to be searched
+     * @param defaultValue the value to send back if no match is found
+     * @return the value of the key or the default value if no match is found
+     */
+    public static long getConfigValueAsLong(Map config, String key, long defaultValue) {
+        Object value = getConfigValue(config, key, defaultValue);
+        return DefaultTypeTransformation.castToNumber(value).longValue();
+    }
+
+    /**
+     * Returns the value for the specified key coerced to a double.
+     *
+     * @param config the configuration object to be searched upon
+     * @param key    the key to be searched
+     * @return the value of the key. Returns {@code 0d} if no match.
+     */
+    public static double getConfigValueAsDouble(Map config, String key) {
+        return getConfigValueAsDouble(config, key, 0d);
+    }
+
+    /**
+     * Returns the value for the specified key with an optional default value if no match is found.
+     *
+     * @param config       the configuration object to be searched upon
+     * @param key          the key to be searched
+     * @param defaultValue the value to send back if no match is found
+     * @return the value of the key or the default value if no match is found
+     */
+    public static double getConfigValueAsDouble(Map config, String key, double defaultValue) {
+        Object value = getConfigValue(config, key, defaultValue);
+        return DefaultTypeTransformation.castToNumber(value).doubleValue();
+    }
+
+    /**
+     * Returns the value for the specified key coerced to a float.
+     *
+     * @param config the configuration object to be searched upon
+     * @param key    the key to be searched
+     * @return the value of the key. Returns {@code 0f} if no match.
+     */
+    public static float getConfigValueAsFloat(Map config, String key) {
+        return getConfigValueAsFloat(config, key, 0f);
+    }
+
+    /**
+     * Returns the value for the specified key with an optional default value if no match is found.
+     *
+     * @param config       the configuration object to be searched upon
+     * @param key          the key to be searched
+     * @param defaultValue the value to send back if no match is found
+     * @return the value of the key or the default value if no match is found
+     */
+    public static float getConfigValueAsFloat(Map config, String key, float defaultValue) {
+        Object value = getConfigValue(config, key, defaultValue);
+        return DefaultTypeTransformation.castToNumber(value).floatValue();
+    }
+
+    /**
+     * Returns the value for the specified key coerced to a Number.
+     *
+     * @param config the configuration object to be searched upon
+     * @param key    the key to be searched
+     * @return the value of the key. Returns {@code null} if no match.
+     */
+    public static Number getConfigValueAsNumber(Map config, String key) {
+        return getConfigValueAsNumber(config, key, null);
+    }
+
+    /**
+     * Returns the value for the specified key with an optional default value if no match is found.
+     *
+     * @param config       the configuration object to be searched upon
+     * @param key          the key to be searched
+     * @param defaultValue the value to send back if no match is found
+     * @return the value of the key or the default value if no match is found
+     */
+    public static Number getConfigValueAsNumber(Map config, String key, Number defaultValue) {
+        Object value = getConfigValue(config, key, defaultValue);
+        return DefaultTypeTransformation.castToNumber(value);
+    }
+
+    /**
      * Returns the value for the specified key converted to a String.
      *
      * @param config the configuration object to be searched upon
@@ -176,7 +272,7 @@ public final class ConfigUtils {
      */
     public static String getConfigValueAsString(Map config, String key, String defaultValue) {
         Object value = getConfigValue(config, key, defaultValue);
-        return String.valueOf(value);
+        return value != null ? String.valueOf(value) : null;
     }
 
     /**
