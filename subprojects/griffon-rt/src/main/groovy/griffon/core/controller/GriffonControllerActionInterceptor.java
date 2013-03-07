@@ -19,24 +19,21 @@ package griffon.core.controller;
 import griffon.core.ApplicationHandler;
 import griffon.core.GriffonController;
 
-import java.util.Map;
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
 
 /**
  * @author Andres Almiray
- * @since 1.1.0
+ * @since 1.3.0
  */
-public interface GriffonControllerActionManager extends ApplicationHandler {
-    String ACTION = "Action";
+public interface GriffonControllerActionInterceptor extends ApplicationHandler {
+    void configure(GriffonController controller, String actionName, Method method);
 
-    Map<String, GriffonControllerAction> actionsFor(GriffonController controller);
+    void configure(GriffonController controller, String actionName, Field closure);
 
-    GriffonControllerAction actionFor(GriffonController controller, String actionName);
+    Object[] before(GriffonController controller, String actionName, Object[] args);
 
-    void createActions(GriffonController controller);
+    void after(GriffonController controller, String actionName, Object[] args);
 
-    String normalizeName(String actionName);
-
-    void invokeAction(GriffonController controller, String actionName, Object[] args);
-
-    void addActionInterceptor(GriffonControllerActionInterceptor actionInterceptor);
+    boolean exception(Exception exception, GriffonController controller, String actionName, Object[] args);
 }

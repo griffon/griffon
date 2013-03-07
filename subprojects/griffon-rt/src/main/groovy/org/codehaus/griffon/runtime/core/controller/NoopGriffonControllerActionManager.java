@@ -18,6 +18,7 @@ package org.codehaus.griffon.runtime.core.controller;
 import griffon.core.GriffonApplication;
 import griffon.core.GriffonController;
 import griffon.core.controller.GriffonControllerAction;
+import griffon.core.controller.GriffonControllerActionInterceptor;
 import griffon.core.controller.GriffonControllerActionManager;
 
 import java.util.Collections;
@@ -57,6 +58,16 @@ public class NoopGriffonControllerActionManager implements GriffonControllerActi
             actionName = actionName.substring(0, actionName.length() - ACTION.length());
         }
         return uncapitalize(actionName);
+    }
+
+    @Override
+    public void invokeAction(GriffonController controller, String actionName, Object[] args) {
+        // empty
+    }
+
+    @Override
+    public void addActionInterceptor(GriffonControllerActionInterceptor actionInterceptor) {
+        // empty
     }
 
     @Override

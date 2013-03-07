@@ -18,19 +18,33 @@ package org.codehaus.griffon.runtime.core.controller;
 import griffon.core.GriffonApplication;
 import griffon.core.GriffonController;
 import griffon.core.GriffonControllerClass;
+import griffon.core.controller.AbortActionExecution;
 import griffon.core.controller.GriffonControllerAction;
+import griffon.core.controller.GriffonControllerActionInterceptor;
 import griffon.core.controller.GriffonControllerActionManager;
 import griffon.core.i18n.NoSuchMessageException;
+import griffon.transform.Threading;
+import griffon.util.GriffonClassUtils;
+import groovy.lang.Closure;
+import org.codehaus.groovy.runtime.InvokerHelper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.lang.ref.WeakReference;
-import java.util.Collections;
-import java.util.LinkedHashMap;
-import java.util.Map;
+import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 import static griffon.util.GriffonApplicationUtils.isMacOSX;
+import static griffon.util.GriffonExceptionHandler.sanitize;
 import static griffon.util.GriffonNameUtils.*;
+import static java.lang.reflect.Modifier.isPublic;
+import static java.lang.reflect.Modifier.isStatic;
+import static org.codehaus.griffon.runtime.core.DefaultGriffonControllerClass.hasVoidOrDefAsReturnType;
+import static org.codehaus.groovy.runtime.DefaultGroovyMethods.reverse;
 import static org.codehaus.groovy.runtime.typehandling.DefaultTypeTransformation.castToBoolean;
 
 /**
@@ -39,7 +53,10 @@ import static org.codehaus.groovy.runtime.typehandling.DefaultTypeTransformation
  */
 public abstract class AbstractGriffonControllerActionManager implements GriffonControllerActionManager {
     private static final Logger LOG = LoggerFactory.getLogger(AbstractGriffonControllerActionManager.class);
+    private static final String KEY_THREADING = "controller.threading";
     private final ActionCache actionCache = new ActionCache();
+    private final Map<String, Threading.Policy> threadingPolicies = new ConcurrentHashMap<String, Threading.Policy>();
+    private final List<GriffonControllerActionInterceptor> interceptors = new CopyOnWriteArrayList<GriffonControllerActionInterceptor>();
     private GriffonApplication app;
 
     protected AbstractGriffonControllerActionManager(GriffonApplication app) {
@@ -78,6 +95,25 @@ public abstract class AbstractGriffonControllerActionManager implements GriffonC
         GriffonControllerClass griffonClass = (GriffonControllerClass) controller.getGriffonClass();
         for (String actionName : griffonClass.getActionNames()) {
             GriffonControllerAction action = createAndConfigureAction(controller, actionName);
+
+            Method method = findActionAsMethod(controller, actionName);
+            Field field = method == null ? findActionAsClosureField(controller, actionName) : null;
+            for (GriffonControllerActionInterceptor interceptor : interceptors) {
+                // try method first
+                if (method != null) {
+                    if (LOG.isDebugEnabled()) {
+                        LOG.debug("Configuring action " + controller.getClass().getName() + "." + actionName + " with " + interceptor);
+                    }
+                    interceptor.configure(controller, actionName, method);
+                } else if (field != null) {
+                    // try closure property next
+                    if (LOG.isDebugEnabled()) {
+                        LOG.debug("Configuring action " + controller.getClass().getName() + "." + actionName + " with " + interceptor);
+                    }
+                    interceptor.configure(controller, actionName, field);
+                }
+            }
+
             Map<String, GriffonControllerAction> actions = actionCache.get(controller);
             if (actions.isEmpty()) {
                 actions = new LinkedHashMap<String, GriffonControllerAction>();
@@ -89,6 +125,152 @@ public abstract class AbstractGriffonControllerActionManager implements GriffonC
             }
             actions.put(actionKey, action);
         }
+    }
+
+    public void invokeAction(final GriffonController controller, final String actionName, final Object[] args) {
+        Runnable runnable = new Runnable() {
+            public void run() {
+                Object[] updatedArgs = args;
+                List<GriffonControllerActionInterceptor> copy = new ArrayList<GriffonControllerActionInterceptor>(interceptors);
+
+                if (LOG.isDebugEnabled()) {
+                    LOG.debug("Invoking " + copy.size() + " interceptors for " + controller.getClass().getName() + "." + actionName);
+                }
+
+                for (GriffonControllerActionInterceptor interceptor : copy) {
+                    try {
+                        updatedArgs = interceptor.before(controller, actionName, updatedArgs);
+                    } catch (AbortActionExecution aae) {
+                        if (LOG.isInfoEnabled()) {
+                            LOG.info("Execution of " + controller.getClass().getName() + "." + actionName + " was aborted by " + interceptor);
+                        }
+                        return;
+                    }
+                }
+
+                RuntimeException exception = null;
+                try {
+                    InvokerHelper.invokeMethod(controller, actionName, updatedArgs);
+                } catch (RuntimeException e) {
+                    exception = (RuntimeException) sanitize(e);
+                    if (LOG.isDebugEnabled()) {
+                        LOG.debug("An exception occurred when executing " + controller.getClass().getName() + "." + actionName, exception);
+                    }
+                }
+
+                boolean exceptionWasHandled = false;
+                for (GriffonControllerActionInterceptor interceptor : reverse(copy)) {
+                    if (exception == null) {
+                        interceptor.after(controller, actionName, updatedArgs);
+                    } else if (!exceptionWasHandled) {
+                        exceptionWasHandled = interceptor.exception(exception, controller, actionName, updatedArgs);
+                    }
+                }
+
+                if (exception != null && !exceptionWasHandled) {
+                    // throw it again
+                    throw exception;
+                }
+            }
+        };
+        invokeAction(controller, actionName, runnable);
+    }
+
+    private void invokeAction(GriffonController controller, String actionName, Runnable runnable) {
+        String fullQualifiedActionName = controller.getClass().getName() + "." + actionName;
+        Threading.Policy policy = threadingPolicies.get(fullQualifiedActionName);
+        if (policy == null) {
+            if (isThreadingDisabled(fullQualifiedActionName)) {
+                policy = Threading.Policy.SKIP;
+            } else {
+                policy = resolveThreadingPolicy(controller, actionName);
+            }
+            threadingPolicies.put(fullQualifiedActionName, policy);
+        }
+
+        if (LOG.isDebugEnabled()) {
+            LOG.debug("Executing " + controller.getClass().getName() + "." + actionName + " with policy " + policy);
+        }
+
+        switch (policy) {
+            case OUTSIDE_UITHREAD:
+                getApp().execOutsideUI(runnable);
+                break;
+            case INSIDE_UITHREAD_SYNC:
+                getApp().execInsideUISync(runnable);
+                break;
+            case INSIDE_UITHREAD_ASYNC:
+                getApp().execInsideUIAsync(runnable);
+                break;
+            case SKIP:
+            default:
+                runnable.run();
+        }
+    }
+
+    private static Method findActionAsMethod(GriffonController controller, String actionName) {
+        for (Method method : controller.getClass().getMethods()) {
+            if (actionName.equals(method.getName()) &&
+                isPublic(method.getModifiers()) &&
+                !isStatic(method.getModifiers()) &&
+                hasVoidOrDefAsReturnType(method)) {
+                return method;
+            }
+        }
+        return null;
+    }
+
+    private static Field findActionAsClosureField(GriffonController controller, String actionName) {
+        try {
+            Object propertyValue = GriffonClassUtils.getProperty(controller, actionName);
+            if (!(propertyValue instanceof Closure)) return null;
+            return GriffonClassUtils.getField(controller, actionName);
+        } catch (IllegalAccessException e) {
+            // ignore
+        } catch (InvocationTargetException e) {
+            // ignore
+        } catch (NoSuchMethodException e) {
+            // ignore
+        }
+        return null;
+    }
+
+    private Threading.Policy resolveThreadingPolicy(GriffonController controller, String actionName) {
+        // try method first
+        Method method = findActionAsMethod(controller, actionName);
+        if (method != null) {
+            Threading annotation = method.getAnnotation(Threading.class);
+            return annotation == null ? Threading.Policy.OUTSIDE_UITHREAD : annotation.value();
+        }
+
+        // try closure property next
+        Field field = findActionAsClosureField(controller, actionName);
+        if (field != null) {
+            Threading annotation = field.getAnnotation(Threading.class);
+            return annotation == null ? Threading.Policy.OUTSIDE_UITHREAD : annotation.value();
+        }
+
+        return Threading.Policy.OUTSIDE_UITHREAD;
+    }
+
+    private boolean isThreadingDisabled(String actionName) {
+        Map settings = getApp().getConfig().flatten(new LinkedHashMap());
+
+        String keyName = KEY_THREADING + "." + actionName;
+        while (!KEY_THREADING.equals(keyName)) {
+            Object value = settings.get(keyName);
+            keyName = keyName.substring(0, keyName.lastIndexOf("."));
+            if (value != null && !castToBoolean(value)) return true;
+        }
+
+        return false;
+    }
+
+    public void addActionInterceptor(GriffonControllerActionInterceptor actionInterceptor) {
+        if (actionInterceptor == null || interceptors.contains(actionInterceptor)) {
+            return;
+        }
+        interceptors.add(actionInterceptor);
     }
 
     protected GriffonControllerAction createAndConfigureAction(GriffonController controller, String actionName) {

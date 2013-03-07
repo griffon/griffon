@@ -64,12 +64,13 @@ public class GriffonCompiler extends Groovyc {
         } else {
             log("Conditional logging feature disabled.");
         }
-
+        /*
         if (!GriffonCompilerContext.getConfigOption(CommandLineConstants.KEY_DISABLE_THREADING_INJECTION)) {
             compilationUnit.addPhaseOperation(new ThreadingInjectionOperation(), Phases.CANONICALIZATION);
         } else {
             log("Threading injection feature disabled.");
         }
+        */
 
         if (GriffonCompilerContext.getConfigOption(CommandLineConstants.KEY_DISABLE_AST_INJECTION)) {
             log("Artifact AST injection feature disabled.");

@@ -72,4 +72,12 @@ class @artifact.name@ {
     //List postNodeCompletionDelegates = [
     //    {builder, parent, node -> /*handler code*/ }
     //]
+
+    // adds action interceptors to controllers
+    // Map actionInterceptors = [
+    //     myInterceptorName: [
+    //         dependsOn: [/* interceptor names*/], // may be left empty
+    //         interceptor: 'fully.qualified.class.name.of.MyGriffonControllerActionInterceptor'
+    //     ]
+    // ]
 }

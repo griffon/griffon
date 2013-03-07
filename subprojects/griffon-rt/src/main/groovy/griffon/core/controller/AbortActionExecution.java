@@ -16,27 +16,12 @@
 
 package griffon.core.controller;
 
-import griffon.core.ApplicationHandler;
-import griffon.core.GriffonController;
-
-import java.util.Map;
-
 /**
+ * Marker Exception used to abort execution of a controller action during the
+ * BEFORE phase of a GriffonControllerActionInterceptor.
+ *
  * @author Andres Almiray
- * @since 1.1.0
+ * @since 1.3.0
  */
-public interface GriffonControllerActionManager extends ApplicationHandler {
-    String ACTION = "Action";
-
-    Map<String, GriffonControllerAction> actionsFor(GriffonController controller);
-
-    GriffonControllerAction actionFor(GriffonController controller, String actionName);
-
-    void createActions(GriffonController controller);
-
-    String normalizeName(String actionName);
-
-    void invokeAction(GriffonController controller, String actionName, Object[] args);
-
-    void addActionInterceptor(GriffonControllerActionInterceptor actionInterceptor);
+public class AbortActionExecution extends RuntimeException {
 }

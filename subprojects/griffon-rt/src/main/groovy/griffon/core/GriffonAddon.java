@@ -63,4 +63,6 @@ public interface GriffonAddon extends ApplicationHandler, ThreadingHandler, Reso
     List<Closure> getPostInstantiateDelegates();
 
     List<Closure> getPostNodeCompletionDelegates();
+
+    Map<String,Map<String, Object>> getActionInterceptors();
 }

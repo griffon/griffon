@@ -57,6 +57,7 @@ public abstract class AbstractGriffonAddon extends GroovyObjectSupport implement
     protected final List<Closure> preInstantiateDelegates = new ArrayList<Closure>();
     protected final List<Closure> postInstantiateDelegates = new ArrayList<Closure>();
     protected final List<Closure> postNodeCompletionDelegates = new ArrayList<Closure>();
+    protected final Map<String,Map<String, Object>> actionInterceptors = new LinkedHashMap<String, Map<String, Object>>();
 
     public AbstractGriffonAddon(GriffonApplication app) {
         this(app, null);
@@ -140,6 +141,10 @@ public abstract class AbstractGriffonAddon extends GroovyObjectSupport implement
 
     public List<Closure> getPostNodeCompletionDelegates() {
         return postNodeCompletionDelegates;
+    }
+
+    public Map<String,Map<String, Object>> getActionInterceptors() {
+        return actionInterceptors;
     }
 
     public boolean isUIThread() {
