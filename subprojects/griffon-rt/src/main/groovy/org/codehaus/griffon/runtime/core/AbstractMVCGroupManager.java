@@ -77,6 +77,7 @@ public abstract class AbstractMVCGroupManager implements MVCGroupManager {
     }
 
     public MVCGroup findGroup(String mvcId) {
+        if (isBlank(mvcId)) return null;
         synchronized (lock) {
             if (LOG.isDebugEnabled()) {
                 LOG.debug("Searching group " + mvcId);
@@ -90,6 +91,7 @@ public abstract class AbstractMVCGroupManager implements MVCGroupManager {
     }
 
     public final void initialize(Map<String, MVCGroupConfiguration> configurations) {
+        if (configurations == null || configurations.isEmpty()) return;
         synchronized (lock) {
             if (!initialized) {
                 doInitialize(configurations);
@@ -99,6 +101,7 @@ public abstract class AbstractMVCGroupManager implements MVCGroupManager {
     }
 
     public void addConfiguration(MVCGroupConfiguration configuration) {
+        if (configuration == null) return;
         synchronized (lock) {
             if (initialized && configurations.get(configuration.getMvcType()) != null) {
                 return;
@@ -122,8 +125,8 @@ public abstract class AbstractMVCGroupManager implements MVCGroupManager {
     }
 
     protected void addGroup(MVCGroup group) {
-        synchronized (lock) {
-            if (group != null) {
+        if (group != null) {
+            synchronized (lock) {
                 if (LOG.isDebugEnabled()) {
                     LOG.debug("Adding group " + group.getMvcId() + ":" + group);
                 }
@@ -133,8 +136,8 @@ public abstract class AbstractMVCGroupManager implements MVCGroupManager {
     }
 
     protected void removeGroup(MVCGroup group) {
-        synchronized (lock) {
-            if (group != null) {
+        if (group != null) {
+            synchronized (lock) {
                 if (LOG.isDebugEnabled()) {
                     LOG.debug("Removing group " + group.getMvcId() + ":" + group);
                 }

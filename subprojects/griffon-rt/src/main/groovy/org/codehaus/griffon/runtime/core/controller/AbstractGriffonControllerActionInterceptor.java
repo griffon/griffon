@@ -77,4 +77,8 @@ public abstract class AbstractGriffonControllerActionInterceptor implements Grif
     protected AbortActionExecution abortActionExecution() throws AbortActionExecution {
         throw new AbortActionExecution();
     }
+
+    protected String qualifyActionName(GriffonController controller, String actionName) {
+        return controller.getClass().getName() + "." + actionName;
+    }
 }
