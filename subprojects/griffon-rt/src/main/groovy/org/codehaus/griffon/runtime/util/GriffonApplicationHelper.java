@@ -86,6 +86,7 @@ public class GriffonApplicationHelper {
 
     private static final String KEY_APP_LIFECYCLE_HANDLER_DISABLE = "app.lifecycle.handler.disable";
     private static final String KEY_GRIFFON_ACTION_MANAGER_DISABLE = "griffon.action.manager.disable";
+    private static final String KEY_GRIFFON_CONTROLLER_ACTION_INTERCEPTOR_ORDER = "griffon.controller.action.interceptor.order";
 
     private static final String DEFAULT_MESSAGE_SOURCE_FACTORY = "org.codehaus.griffon.runtime.core.factories.DefaultMessageSourceFactory";
     private static final String DEFAULT_RESOURCES_INJECTOR_FACTORY = "org.codehaus.griffon.runtime.core.factories.DefaultResourcesInjectorFactory";
@@ -478,8 +479,23 @@ public class GriffonApplicationHelper {
             }
         }
 
+        // grab application specific order
+        List<String> interceptorOrder = (List<String>) getConfigValue(app.getConfig(), KEY_GRIFFON_CONTROLLER_ACTION_INTERCEPTOR_ORDER, Collections.emptyList());
+        Map<String, Map<String, Object>> tmp = new LinkedHashMap<String, Map<String, Object>>(actionInterceptors);
+        Map<String, Map<String, Object>> map = new LinkedHashMap<String, Map<String, Object>>();
+        for(String interceptorName: interceptorOrder) {
+            if(tmp.containsKey(interceptorName)) {
+                map.put(interceptorName, tmp.remove(interceptorName));
+            }
+        }
+        map.putAll(tmp);
+        actionInterceptors.clear();
+        actionInterceptors.putAll(map);
+        if (LOG.isDebugEnabled()) {
+            LOG.debug("Chosen interceptor order is " + map.keySet());
+        }
+
         List<GriffonControllerActionInterceptor> sortedInterceptors = new ArrayList<GriffonControllerActionInterceptor>();
-        Map<String, Map<String, Object>> map = new LinkedHashMap<String, Map<String, Object>>(actionInterceptors);
         Set<String> addedDeps = new LinkedHashSet<String>();
 
         while (!map.isEmpty()) {
