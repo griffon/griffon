@@ -35,7 +35,7 @@ public abstract class AbstractGriffonControllerAction extends AbstractObservable
     private String largeIcon;
     private String accelerator;
     private String mnemonic;
-    private boolean enabled;
+    private boolean enabled = true;
     private boolean selected;
     private WeakReference<GriffonController> controller;
     private final GriffonControllerActionManager actionManager;

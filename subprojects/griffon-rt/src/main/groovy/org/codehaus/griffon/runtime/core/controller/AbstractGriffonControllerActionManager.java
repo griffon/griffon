@@ -260,7 +260,7 @@ public abstract class AbstractGriffonControllerActionManager implements GriffonC
         while (!KEY_THREADING.equals(keyName)) {
             Object value = settings.get(keyName);
             keyName = keyName.substring(0, keyName.lastIndexOf("."));
-            if (value != null && !castToBoolean(value)) return true;
+            if (value != null && !toBoolean(value)) return true;
         }
 
         return false;
@@ -353,7 +353,7 @@ public abstract class AbstractGriffonControllerActionManager implements GriffonC
             if (LOG.isTraceEnabled()) {
                 LOG.trace(keyPrefix + normalizeNamed + ".enabled = " + rsEnabled);
             }
-            action.setEnabled(castToBoolean(rsEnabled));
+            action.setEnabled(toBoolean(rsEnabled));
         }
 
         String rsSelected = msg(keyPrefix, normalizeNamed, "selected", "false");
@@ -361,7 +361,7 @@ public abstract class AbstractGriffonControllerActionManager implements GriffonC
             if (LOG.isTraceEnabled()) {
                 LOG.trace(keyPrefix + normalizeNamed + ".selected = " + rsSelected);
             }
-            action.setSelected(castToBoolean(rsSelected));
+            action.setSelected(toBoolean(rsSelected));
         }
 
         return action;
@@ -382,6 +382,15 @@ public abstract class AbstractGriffonControllerActionManager implements GriffonC
         } catch (NoSuchMessageException nsme) {
             return app.getMessage("application.action." + actionName + "." + subkey, defaultValue);
         }
+    }
+
+    private boolean toBoolean(Object value) {
+        if (value instanceof Boolean) {
+            return ((Boolean) value).booleanValue();
+        } else if (value instanceof CharSequence) {
+            return "true".equalsIgnoreCase(String.valueOf(value));
+        }
+        return castToBoolean(value);
     }
 
     private static class ActionCache {
