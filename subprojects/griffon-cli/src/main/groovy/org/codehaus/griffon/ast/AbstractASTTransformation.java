@@ -51,7 +51,7 @@ public abstract class AbstractASTTransformation implements ASTTransformation, Op
 
     protected void checkNodesForAnnotationAndType(ASTNode node1, ASTNode node2) {
         if (!(node1 instanceof AnnotationNode) || !(node2 instanceof ClassNode)) {
-            throw new RuntimeException("Internal error: wrong types: " + node1.getClass() + " / " + node2.getClass());
+            throw new IllegalArgumentException("Internal error: wrong types: " + node1.getClass() + " / " + node2.getClass());
         }
     }
 

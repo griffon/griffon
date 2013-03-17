@@ -134,7 +134,7 @@ public class GriffonCoreDependencies {
                                 ModuleRevisionId.newInstance("org.apache.httpcomponents", "httpclient", "4.1.2"),
                                 ModuleRevisionId.newInstance("com.jcraft", "jsch", "0.1.48"),
                                 ModuleRevisionId.newInstance("com.jcraft", "jzlib", "1.1.1"),
-                                ModuleRevisionId.newInstance("org.codehaus.groovy.modules.http-builder", "http-builder", "0.5.2"),
+                                ModuleRevisionId.newInstance("org.codehaus.groovy.modules.http-builder", "http-builder", "0.6"),
                                 ModuleRevisionId.newInstance("xerces", "xercesImpl", "2.9.1"),
                                 ModuleRevisionId.newInstance("net.sf.ezmorph", "ezmorph", "1.0.6"),
                                 ModuleRevisionId.newInstance("xml-resolver", "xml-resolver", "1.2"),

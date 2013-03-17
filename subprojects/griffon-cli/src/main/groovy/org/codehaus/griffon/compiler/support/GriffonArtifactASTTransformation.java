@@ -19,7 +19,6 @@ package org.codehaus.griffon.compiler.support;
 import org.codehaus.griffon.ast.AbstractASTTransformation;
 import org.codehaus.griffon.ast.GriffonASTUtils;
 import org.codehaus.griffon.cli.CommandLineConstants;
-import org.codehaus.griffon.compiler.GriffonCompilerContext;
 import org.codehaus.griffon.compiler.SourceUnitCollector;
 import org.codehaus.groovy.ast.ASTNode;
 import org.codehaus.groovy.ast.ClassHelper;
