@@ -301,6 +301,9 @@ public class GriffonApplicationHelper {
                             if (LOG.isDebugEnabled()) {
                                 LOG.debug("Registering " + editorClass.getName() + " as editor for " + targetType.getName());
                             }
+                            // Editor must have a no-args constructor
+                            // CCE means the class can not be used
+                            PropertyEditor editor = (PropertyEditor) editorClass.newInstance();
                             PropertyEditorManager.registerEditor(targetType, editorClass);
                         } catch (Exception e) {
                             if (LOG.isWarnEnabled()) {
@@ -314,6 +317,24 @@ public class GriffonApplicationHelper {
                     LOG.warn("Could not load PropertyEditor definitions from " + url, sanitize(e));
                 }
             }
+        }
+
+        Class[][] pairs = new Class[][]{
+            new Class[]{Boolean.class, Boolean.TYPE},
+            new Class[]{Byte.class, Byte.TYPE},
+            new Class[]{Short.class, Short.TYPE},
+            new Class[]{Integer.class, Integer.TYPE},
+            new Class[]{Long.class, Long.TYPE},
+            new Class[]{Float.class, Float.TYPE},
+            new Class[]{Double.class, Double.TYPE}
+        };
+
+        for (Class[] pair : pairs) {
+            PropertyEditor editor = PropertyEditorManager.findEditor(pair[0]);
+            if (LOG.isDebugEnabled()) {
+                LOG.debug("Registering " + editor.getClass().getName() + " as editor for " + pair[1].getName());
+            }
+            PropertyEditorManager.registerEditor(pair[1], editor.getClass());
         }
     }
 
@@ -483,8 +504,8 @@ public class GriffonApplicationHelper {
         List<String> interceptorOrder = (List<String>) getConfigValue(app.getConfig(), KEY_GRIFFON_CONTROLLER_ACTION_INTERCEPTOR_ORDER, Collections.emptyList());
         Map<String, Map<String, Object>> tmp = new LinkedHashMap<String, Map<String, Object>>(actionInterceptors);
         Map<String, Map<String, Object>> map = new LinkedHashMap<String, Map<String, Object>>();
-        for(String interceptorName: interceptorOrder) {
-            if(tmp.containsKey(interceptorName)) {
+        for (String interceptorName : interceptorOrder) {
+            if (tmp.containsKey(interceptorName)) {
                 map.put(interceptorName, tmp.remove(interceptorName));
             }
         }
