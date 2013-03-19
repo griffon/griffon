@@ -27,5 +27,5 @@ public interface ExtendedPropertyEditor {
 
     String getFormattedValue();
 
-    void setValueWithFormat(String value);
+    void setFormattedValue(String value);
 }

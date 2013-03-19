@@ -18,6 +18,8 @@ package griffon.core.resources.formatters;
 
 import java.util.Arrays;
 
+import static griffon.util.GriffonNameUtils.isBlank;
+
 /**
  * @author Andres Almiray
  * @since 1.3.0
@@ -61,6 +63,8 @@ public class BooleanFormatter extends AbstractFormatter {
             delegate = new QueryBooleanFormatterDelegate();
         } else if (PATTERN_SWITCH.equals(pattern)) {
             delegate = new SwitchBooleanFormatterDelegate();
+        } else if (isBlank(pattern)) {
+            delegate = new BoolBooleanFormatterDelegate();
         } else {
             throw new IllegalArgumentException("Invalid pattern '" + pattern + "'. Valid patterns are " + Arrays.toString(PATTERNS));
         }
@@ -124,6 +128,7 @@ public class BooleanFormatter extends AbstractFormatter {
         }
 
         public Boolean parse(String str) throws ParseException {
+            if (isBlank(str)) return null;
             if (tokens[0].equalsIgnoreCase(str)) {
                 return Boolean.FALSE;
             } else if (tokens[1].equalsIgnoreCase(str)) {

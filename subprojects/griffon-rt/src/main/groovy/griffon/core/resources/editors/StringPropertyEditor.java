@@ -21,12 +21,11 @@ package griffon.core.resources.editors;
  * @since 1.1.0
  */
 public class StringPropertyEditor extends AbstractPropertyEditor {
-    public void setAsText(String value) throws IllegalArgumentException {
-        setValue(value);
-    }
-
-    public void setValue(Object value) {
-        if (null == value) return;
-        super.setValue(String.valueOf(value));
+    protected void setValueInternal(Object value) {
+        if (null == value) {
+            super.setValueInternal(null);
+        } else {
+            super.setValueInternal(value.toString());
+        }
     }
 }

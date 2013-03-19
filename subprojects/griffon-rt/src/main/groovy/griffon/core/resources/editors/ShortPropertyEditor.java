@@ -26,9 +26,10 @@ import static griffon.util.GriffonNameUtils.isBlank;
  * @since 1.3.0
  */
 public class ShortPropertyEditor extends AbstractPropertyEditor {
-    public void setValue(Object value) {
-        if (null == value) return;
-        if (value instanceof CharSequence) {
+    protected void setValueInternal(Object value) {
+        if (null == value) {
+            super.setValueInternal(null);
+        } else if (value instanceof CharSequence) {
             handleAsString(String.valueOf(value));
         } else if (value instanceof Number) {
             handleAsNumber((Number) value);
@@ -39,14 +40,14 @@ public class ShortPropertyEditor extends AbstractPropertyEditor {
 
     private void handleAsString(String str) {
         try {
-            super.setValue(isBlank(str) ? null : Short.parseShort(str));
+            super.setValueInternal(isBlank(str) ? null : Short.parseShort(str));
         } catch (NumberFormatException e) {
             throw illegalValue(str, Short.class, e);
         }
     }
 
     private void handleAsNumber(Number number) {
-        super.setValue(number.shortValue());
+        super.setValueInternal(number.shortValue());
     }
 
     protected Formatter resolveFormatter() {

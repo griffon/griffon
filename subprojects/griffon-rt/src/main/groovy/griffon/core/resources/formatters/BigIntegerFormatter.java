@@ -65,6 +65,7 @@ public class BigIntegerFormatter extends AbstractFormatter {
 
     @Override
     public Object parse(String str) throws ParseException {
+        if (isBlank(str)) return null;
         try {
             BigDecimal bd = (BigDecimal) numberFormat.parse(str);
             return bd.toBigInteger();

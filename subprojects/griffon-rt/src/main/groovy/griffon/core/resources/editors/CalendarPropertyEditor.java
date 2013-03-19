@@ -31,16 +31,17 @@ import static griffon.util.GriffonNameUtils.isBlank;
  * @since 1.3.0
  */
 public class CalendarPropertyEditor extends AbstractPropertyEditor {
-    public void setValue(Object value) {
-        if (null == value) return;
-        if (value instanceof CharSequence) {
+    protected void setValueInternal(Object value) {
+        if (null == value) {
+            super.setValueInternal(null);
+        } else if (value instanceof CharSequence) {
             handleAsString(String.valueOf(value));
         } else if (value instanceof Calendar) {
-            super.setValue((Calendar) value);
+            super.setValueInternal((Calendar) value);
         } else if (value instanceof Date) {
             Calendar c = Calendar.getInstance();
             c.setTime((Date) value);
-            super.setValue(c);
+            super.setValueInternal(c);
         } else {
             throw illegalValue(value, Date.class);
         }
@@ -55,7 +56,7 @@ public class CalendarPropertyEditor extends AbstractPropertyEditor {
                 c.setTime((Date) value);
                 value = c;
             }
-            super.setValue(value);
+            super.setValueInternal(value);
         } catch (ParseException e) {
             throw illegalValue(str, Date.class, e);
         }

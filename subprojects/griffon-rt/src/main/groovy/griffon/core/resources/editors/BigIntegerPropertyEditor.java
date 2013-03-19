@@ -29,9 +29,10 @@ import static griffon.util.GriffonNameUtils.isBlank;
  * @since 1.3.0
  */
 public class BigIntegerPropertyEditor extends AbstractPropertyEditor {
-    public void setValue(Object value) {
-        if (null == value) return;
-        if (value instanceof CharSequence) {
+    protected void setValueInternal(Object value) {
+        if (null == value) {
+            super.setValueInternal(null);
+        } else if (value instanceof CharSequence) {
             handleAsString(String.valueOf(value));
         } else if (value instanceof Number) {
             handleAsNumber((Number) value);
@@ -42,7 +43,7 @@ public class BigIntegerPropertyEditor extends AbstractPropertyEditor {
 
     private void handleAsString(String str) {
         try {
-            super.setValue(isBlank(str) ? null : new BigInteger(str));
+            super.setValueInternal(isBlank(str) ? null : new BigInteger(str));
         } catch (NumberFormatException e) {
             throw illegalValue(str, BigInteger.class, e);
         }
@@ -50,11 +51,11 @@ public class BigIntegerPropertyEditor extends AbstractPropertyEditor {
 
     private void handleAsNumber(Number number) {
         if (number instanceof BigDecimal) {
-            super.setValue(((BigDecimal) number).toBigInteger());
+            super.setValueInternal(((BigDecimal) number).toBigInteger());
         } else if (number instanceof BigInteger) {
-            super.setValue(number);
+            super.setValueInternal(number);
         } else {
-            super.setValue(number.longValue());
+            super.setValueInternal(number.longValue());
         }
     }
 

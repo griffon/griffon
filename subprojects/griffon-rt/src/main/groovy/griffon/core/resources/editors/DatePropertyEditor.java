@@ -31,14 +31,15 @@ import static griffon.util.GriffonNameUtils.isBlank;
  * @since 1.3.0
  */
 public class DatePropertyEditor extends AbstractPropertyEditor {
-    public void setValue(Object value) {
-        if (null == value) return;
-        if (value instanceof CharSequence) {
+    protected void setValueInternal(Object value) {
+        if (null == value) {
+            super.setValueInternal(null);
+        } else if (value instanceof CharSequence) {
             handleAsString(String.valueOf(value));
         } else if (value instanceof Date) {
-            super.setValue((Date) value);
+            super.setValueInternal((Date) value);
         } else if (value instanceof Calendar) {
-            super.setValue(((Calendar) value).getTime());
+            super.setValueInternal(((Calendar) value).getTime());
         } else {
             throw illegalValue(value, Date.class);
         }
@@ -46,7 +47,7 @@ public class DatePropertyEditor extends AbstractPropertyEditor {
 
     private void handleAsString(String str) {
         try {
-            super.setValue(isBlank(str) ? null : new SimpleDateFormat().parse(str));
+            super.setValueInternal(isBlank(str) ? null : new SimpleDateFormat().parse(str));
         } catch (ParseException e) {
             throw illegalValue(str, Date.class, e);
         }

@@ -26,9 +26,10 @@ import static griffon.util.GriffonNameUtils.isBlank;
  * @since 1.3.0
  */
 public class BooleanPropertyEditor extends AbstractPropertyEditor {
-    public void setValue(Object value) {
-        if (null == value) return;
-        if (value instanceof CharSequence) {
+    protected void setValueInternal(Object value) {
+        if (null == value) {
+            super.setValueInternal(null);
+        } else if (value instanceof CharSequence) {
             handleAsString(String.valueOf(value));
         } else if (value instanceof Boolean) {
             handleAsBoolean((Boolean) value);
@@ -39,14 +40,14 @@ public class BooleanPropertyEditor extends AbstractPropertyEditor {
 
     private void handleAsString(String str) {
         try {
-            super.setValue(isBlank(str) ? null : Boolean.parseBoolean(str));
+            super.setValueInternal(isBlank(str) ? null : Boolean.parseBoolean(str));
         } catch (NumberFormatException e) {
             throw illegalValue(str, Boolean.class, e);
         }
     }
 
     private void handleAsBoolean(Boolean bool) {
-        super.setValue(bool.booleanValue());
+        super.setValueInternal(bool.booleanValue());
     }
 
     protected Formatter resolveFormatter() {

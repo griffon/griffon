@@ -22,7 +22,11 @@ package griffon.core.resources.editors;
  */
 public class ValueConversionException extends IllegalArgumentException {
     private Object value;
-    private final Class<?> type;
+    private Class<?> type;
+
+    public ValueConversionException(Object value) {
+        this(value, (Exception) null);
+    }
 
     public ValueConversionException(Object value, Class<?> type) {
         this(value, type, null);
@@ -32,6 +36,11 @@ public class ValueConversionException extends IllegalArgumentException {
         super("Can't convert '" + value + "' into " + type.getName(), cause);
         this.value = value;
         this.type = type;
+    }
+
+    public ValueConversionException(Object value, Exception cause) {
+        super("Can't convert '" + value + "'", cause);
+        this.value = value;
     }
 
     public Object getValue() {

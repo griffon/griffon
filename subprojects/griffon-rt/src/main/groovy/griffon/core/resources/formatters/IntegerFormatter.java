@@ -62,6 +62,7 @@ public class IntegerFormatter extends AbstractFormatter {
 
     @Override
     public Object parse(String str) throws ParseException {
+        if (isBlank(str)) return null;
         try {
             return numberFormat.parse(str).intValue();
         } catch (java.text.ParseException e) {

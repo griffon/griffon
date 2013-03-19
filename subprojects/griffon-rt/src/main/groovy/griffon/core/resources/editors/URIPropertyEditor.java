@@ -25,18 +25,15 @@ import java.net.URISyntaxException;
  * @since 1.1.0
  */
 public class URIPropertyEditor extends AbstractPropertyEditor {
-    public void setAsText(String value) throws IllegalArgumentException {
-        setValue(value);
-    }
-
-    public void setValue(Object value) {
-        if (null == value) return;
-        if (value instanceof CharSequence) {
+    protected void setValueInternal(Object value) {
+        if (null == value) {
+            super.setValueInternal(null);
+        } else if (value instanceof CharSequence) {
             handleAsString(String.valueOf(value));
         } else if (value instanceof File) {
             handleAsFile((File) value);
         } else if (value instanceof URI) {
-            super.setValue(value);
+            super.setValueInternal(value);
         } else {
             throw illegalValue(value, URI.class);
         }
@@ -44,13 +41,13 @@ public class URIPropertyEditor extends AbstractPropertyEditor {
 
     private void handleAsString(String str) {
         try {
-            super.setValue(new URI(str));
+            super.setValueInternal(new URI(str));
         } catch (URISyntaxException e) {
             throw illegalValue(str, URI.class, e);
         }
     }
 
     private void handleAsFile(File file) {
-        super.setValue(file.toURI());
+        super.setValueInternal(file.toURI());
     }
 }

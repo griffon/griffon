@@ -26,9 +26,10 @@ import static griffon.util.GriffonNameUtils.isBlank;
  * @since 1.3.0
  */
 public class IntegerPropertyEditor extends AbstractPropertyEditor {
-    public void setValue(Object value) {
-        if (null == value) return;
-        if (value instanceof CharSequence) {
+    protected void setValueInternal(Object value) {
+        if (null == value) {
+            super.setValueInternal(null);
+        } else if (value instanceof CharSequence) {
             handleAsString(String.valueOf(value));
         } else if (value instanceof Number) {
             handleAsNumber((Number) value);
@@ -39,14 +40,14 @@ public class IntegerPropertyEditor extends AbstractPropertyEditor {
 
     private void handleAsString(String str) {
         try {
-            super.setValue(isBlank(str) ? null : Integer.parseInt(str));
+            super.setValueInternal(isBlank(str) ? null : Integer.parseInt(str));
         } catch (NumberFormatException e) {
             throw illegalValue(str, Integer.class, e);
         }
     }
 
     private void handleAsNumber(Number number) {
-        super.setValue(number.intValue());
+        super.setValueInternal(number.intValue());
     }
 
     protected Formatter resolveFormatter() {

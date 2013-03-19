@@ -20,7 +20,7 @@ package griffon.core.resources.formatters;
  * @author Andres Almiray
  * @since 1.3.0
  */
-public class ParseException extends Exception {
+public class ParseException extends RuntimeException {
     public ParseException() {
     }
 

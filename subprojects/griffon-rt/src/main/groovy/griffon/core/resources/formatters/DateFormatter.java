@@ -55,6 +55,7 @@ public class DateFormatter extends AbstractFormatter {
 
     @Override
     public Object parse(String str) throws ParseException {
+        if (isBlank(str)) return null;
         try {
             return dateFormat.parse(str);
         } catch (java.text.ParseException e) {

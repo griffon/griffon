@@ -18,7 +18,6 @@ package griffon.core.resources.editors;
 
 import griffon.core.resources.formatters.Formatter;
 import griffon.core.resources.formatters.ParseException;
-import griffon.exceptions.GriffonException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -46,50 +45,67 @@ public abstract class AbstractPropertyEditor extends PropertyEditorSupport imple
 
     @Override
     public String getAsText() {
-        return isBlank(getFormat()) ? super.getAsText() : getFormattedValue();
+        return isBlank(getFormat()) ? getAsTextInternal() : getFormattedValue();
     }
 
     @Override
     public void setAsText(String str) throws IllegalArgumentException {
         if (isBlank(getFormat())) {
-            super.setValue(str);
+            setAsTextInternal(str);
         } else {
-            setValueWithFormat(str);
+            setFormattedValue(str);
         }
     }
 
     @Override
     public void setValue(Object value) {
         if (value instanceof CharSequence) {
-            setValueWithFormat(String.valueOf(value));
+            setFormattedValue(String.valueOf(value));
         } else {
-            super.setValue(value);
+            setValueInternal(value);
         }
     }
 
+    protected void setValueInternal(Object value) {
+        super.setValue(value);
+    }
+
+    protected Object getValueInternal() {
+        return super.getValue();
+    }
+
+    protected void setAsTextInternal(String str) throws IllegalArgumentException {
+        setValueInternal(str);
+    }
+
+    protected String getAsTextInternal() {
+        return super.getAsText();
+    }
+
     public String getFormattedValue() {
-        Object value = getValue();
+        Object value = getValueInternal();
         Formatter formatter = resolveFormatter();
         if (formatter != null) {
             return formatter.format(value);
         }
-        return value != null ? String.valueOf(value) : null;
+        return value != null ? value.toString() : null;
     }
 
-    public void setValueWithFormat(String value) {
+    public void setFormattedValue(String value) {
         Formatter formatter = resolveFormatter();
         if (formatter != null) {
             try {
-                setValue(formatter.parse(value));
+                setValueInternal(formatter.parse(value));
             } catch (ParseException e) {
-                Throwable t = sanitize(e);
+                e = (ParseException) sanitize(e);
                 if (LOG.isWarnEnabled()) {
-                    LOG.warn("Cannot parse value " + value, t);
+                    LOG.warn("Cannot parse value " + value, e);
                 }
-                throw new GriffonException(t);
+
+                throw new ValueConversionException(value, e);
             }
         } else {
-            super.setValue(value);
+            setValueInternal(value);
         }
     }
 
