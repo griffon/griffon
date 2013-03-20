@@ -242,4 +242,34 @@ public interface ResourceResolver {
      * @throws NoSuchResourceException if no message is found
      */
     Object resolveResourceValue(String key, Locale locale) throws NoSuchResourceException;
+
+    /**
+     * Formats the given resource using supplied args to substitute placeholders.
+     *
+     * @param resource The resource following a predefined format.
+     * @param args    Arguments that will be filled in for params within the resource (params look like "{0}"
+     *                within a resource, but this might differ between implementations), or null if none.
+     * @return the formatted resource with all matching placeholders with their substituted values.
+     */
+    String formatResource(String resource, List args);
+
+    /**
+     * Formats the given resource using supplied args to substitute placeholders.
+     *
+     * @param resource The resource following a predefined format.
+     * @param args    Arguments that will be filled in for params within the resource (params look like "{0}"
+     *                within a resource, but this might differ between implementations), or null if none.
+     * @return the formatted resource with all matching placeholders with their substituted values.
+     */
+    String formatResource(String resource, Object[] args);
+
+    /**
+     * Formats the given resource using supplied args to substitute placeholders.
+     *
+     * @param resource The resource following a predefined format.
+     * @param args    Arguments that will be filled in for params within the resource (params look like "{:key}"
+     *                within a resource, but this might differ between implementations), or null if none.
+     * @return the formatted resource with all matching placeholders with their substituted values.
+     */
+    String formatResource(String resource, Map<String, Object> args);
 }

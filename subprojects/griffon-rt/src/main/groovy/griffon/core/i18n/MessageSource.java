@@ -242,4 +242,34 @@ public interface MessageSource {
      * @throws NoSuchMessageException if no message is found
      */
     Object resolveMessageValue(String key, Locale locale) throws NoSuchMessageException;
+
+    /**
+     * Formats the given message using supplied args to substitute placeholders.
+     *
+     * @param message The message following a predefined format.
+     * @param args    Arguments that will be filled in for params within the message (params look like "{0}"
+     *                within a message, but this might differ between implementations), or null if none.
+     * @return the formatted message with all matching placeholders with their substituted values.
+     */
+    String formatMessage(String message, List args);
+
+    /**
+     * Formats the given message using supplied args to substitute placeholders.
+     *
+     * @param message The message following a predefined format.
+     * @param args    Arguments that will be filled in for params within the message (params look like "{0}"
+     *                within a message, but this might differ between implementations), or null if none.
+     * @return the formatted message with all matching placeholders with their substituted values.
+     */
+    String formatMessage(String message, Object[] args);
+
+    /**
+     * Formats the given message using supplied args to substitute placeholders.
+     *
+     * @param message The message following a predefined format.
+     * @param args    Arguments that will be filled in for params within the message (params look like "{:key}"
+     *                within a message, but this might differ between implementations), or null if none.
+     * @return the formatted message with all matching placeholders with their substituted values.
+     */
+    String formatMessage(String message, Map<String, Object> args);
 }

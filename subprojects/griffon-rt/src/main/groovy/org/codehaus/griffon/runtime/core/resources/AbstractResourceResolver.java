@@ -157,11 +157,15 @@ public abstract class AbstractResourceResolver implements ResourceResolver {
         return resource;
     }
 
-    protected String formatResource(String resource, Object[] args) {
+    public String formatResource(String resource, List args) {
+        return formatResource(resource, args == null ? EMPTY_OBJECT_ARGS : args.toArray(new Object[args.size()]));
+    }
+
+    public String formatResource(String resource, Object[] args) {
         return MessageFormat.format(resource, args);
     }
 
-    protected String formatResource(String resource, Map<String, Object> args) {
+    public String formatResource(String resource, Map<String, Object> args) {
         for (Map.Entry<String, Object> variable : args.entrySet()) {
             String var = variable.getKey();
             String value = variable.getValue() != null ? variable.getValue().toString() : null;

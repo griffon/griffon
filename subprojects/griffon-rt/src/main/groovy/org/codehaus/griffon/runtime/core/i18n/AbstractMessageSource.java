@@ -158,11 +158,15 @@ public abstract class AbstractMessageSource implements MessageSource {
         return null;
     }
 
-    protected String formatMessage(String message, Object[] args) {
+    public String formatMessage(String message, List args) {
+        return formatMessage(message, args == null ? EMPTY_OBJECT_ARGS : args.toArray(new Object[args.size()]));
+    }
+
+    public String formatMessage(String message, Object[] args) {
         return MessageFormat.format(message, args);
     }
 
-    protected String formatMessage(String message, Map<String, Object> args) {
+    public String formatMessage(String message, Map<String, Object> args) {
         for (Map.Entry<String, Object> variable : args.entrySet()) {
             String var = variable.getKey();
             String value = variable.getValue() != null ? variable.getValue().toString() : null;

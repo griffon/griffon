@@ -219,6 +219,9 @@ public final class GriffonClassUtils {
         MESSAGE_SOURCE_METHODS.add(new MethodDescriptor("getMessage", new Class[]{String.class, Map.class, Locale.class}));
         MESSAGE_SOURCE_METHODS.add(new MethodDescriptor("getMessage", new Class[]{String.class, Map.class, String.class}));
         MESSAGE_SOURCE_METHODS.add(new MethodDescriptor("getMessage", new Class[]{String.class, Map.class, String.class, Locale.class}));
+        MESSAGE_SOURCE_METHODS.add(new MethodDescriptor("formatMessage", new Class[]{String.class, Object[].class}));
+        MESSAGE_SOURCE_METHODS.add(new MethodDescriptor("formatMessage", new Class[]{String.class, List.class}));
+        MESSAGE_SOURCE_METHODS.add(new MethodDescriptor("formatMessage", new Class[]{String.class, Map.class}));
 
         RESOURCE_RESOLVER_METHODS.add(new MethodDescriptor("resolveResourceValue", new Class[]{String.class, Locale.class}));
         RESOURCE_RESOLVER_METHODS.add(new MethodDescriptor("resolveResource", new Class[]{String.class}));
@@ -237,6 +240,9 @@ public final class GriffonClassUtils {
         RESOURCE_RESOLVER_METHODS.add(new MethodDescriptor("resolveResource", new Class[]{String.class, Map.class, Locale.class}));
         RESOURCE_RESOLVER_METHODS.add(new MethodDescriptor("resolveResource", new Class[]{String.class, Map.class, Object.class}));
         RESOURCE_RESOLVER_METHODS.add(new MethodDescriptor("resolveResource", new Class[]{String.class, Map.class, Object.class, Locale.class}));
+        RESOURCE_RESOLVER_METHODS.add(new MethodDescriptor("formatResource", new Class[]{String.class, Object[].class}));
+        RESOURCE_RESOLVER_METHODS.add(new MethodDescriptor("formatResource", new Class[]{String.class, List.class}));
+        RESOURCE_RESOLVER_METHODS.add(new MethodDescriptor("formatResource", new Class[]{String.class, Map.class}));
     }
 
     /**

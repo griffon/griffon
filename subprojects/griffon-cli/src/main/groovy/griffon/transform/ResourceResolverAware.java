@@ -48,6 +48,9 @@ import java.lang.annotation.Target;
  * <li><code>public Object resolveResource(java.lang.String, java.util.List, java.lang.Object, java.util.Locale)</code></li>
  * <li><code>public Object resolveResource(java.lang.String, java.util.Map, java.lang.Object)</code></li>
  * <li><code>public Object resolveResource(java.lang.String, java.util.Map, java.lang.Object, java.util.Locale)</code></li>
+ * <li><code>public String formatResource(java.lang.String, java.lang.Object[])</code></li>
+ * <li><code>public String formatResource(java.lang.String, java.util.List)</code></li>
+ * <li><code>public String formatResource(java.lang.String, java.util.Map)</code></li>
  * <p/>
  * </ul>
  *

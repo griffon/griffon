@@ -98,8 +98,8 @@ public abstract class AbstractPropertyEditor extends PropertyEditorSupport imple
                 setValueInternal(formatter.parse(value));
             } catch (ParseException e) {
                 e = (ParseException) sanitize(e);
-                if (LOG.isWarnEnabled()) {
-                    LOG.warn("Cannot parse value " + value, e);
+                if (LOG.isDebugEnabled()) {
+                    LOG.debug("Cannot parse value " + value, e);
                 }
 
                 throw new ValueConversionException(value, e);

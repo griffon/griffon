@@ -54,6 +54,7 @@ public class MessageSourceAwareASTTransformation extends AbstractASTTransformati
     private static final String DEFAULT_MESSAGE = "defaultMessage";
     private static final String METHOD_GET_MESSAGE = "getMessage";
     private static final String METHOD_RESOLVE_MESSAGE_VALUE = "resolveMessageValue";
+    private static final String METHOD_FORMAT_MESSAGE = "formatMessage";
 
     /**
      * Convenience method to see if an annotated node is {@code @MessageSourceAware}.
@@ -109,6 +110,9 @@ public class MessageSourceAwareASTTransformation extends AbstractASTTransformati
      * <li><code>public String getMessage(java.lang.String, java.util.List, java.lang.String, java.util.Locale)</code></li>
      * <li><code>public String getMessage(java.lang.String, java.util.Map, java.lang.String)</code></li>
      * <li><code>public String getMessage(java.lang.String, java.util.Map, java.lang.String, java.util.Locale)</code></li>
+     * <li><code>public String formatMessage(java.lang.String, java.lang.Object[])</code></li>
+     * <li><code>public String formatMessage(java.lang.String, java.util.List)</code></li>
+     * <li><code>public String formatMessage(java.lang.String, java.util.Map)</code></li>
      * </ul>If any are defined all
      * must be defined or a compilation error results.
      *
@@ -127,16 +131,17 @@ public class MessageSourceAwareASTTransformation extends AbstractASTTransformati
                 found |= method.getName().equals(METHOD_GET_MESSAGE) && method.getParameters().length == 3;
                 found |= method.getName().equals(METHOD_GET_MESSAGE) && method.getParameters().length == 4;
                 found |= method.getName().equals(METHOD_RESOLVE_MESSAGE_VALUE) && method.getParameters().length == 2;
+                found |= method.getName().equals(METHOD_FORMAT_MESSAGE) && method.getParameters().length == 2;
                 if (found) return false;
             }
             consideredClass = consideredClass.getSuperClass();
         }
         if (found) {
             sourceUnit.getErrorCollector().addErrorAndContinue(
-                    new SimpleMessage("@MessageSourceAware cannot be processed on "
-                            + declaringClass.getName()
-                            + " because some but not all of variants of getMessage() were declared in the current class or super classes.",
-                            sourceUnit)
+                new SimpleMessage("@MessageSourceAware cannot be processed on "
+                    + declaringClass.getName()
+                    + " because some but not all of variants of getMessage() were declared in the current class or super classes.",
+                    sourceUnit)
             );
             return false;
         }
@@ -167,238 +172,280 @@ public class MessageSourceAwareASTTransformation extends AbstractASTTransformati
         ));
 
         injectMethod(declaringClass, new MethodNode(
+            METHOD_GET_MESSAGE,
+            ACC_PUBLIC,
+            STRING_TYPE,
+            params(param(STRING_TYPE, KEY)),
+            throwing(NO_SUCH_MESSAGE_EXCEPTION_TYPE),
+            returns(call(
+                applicationInstance(),
                 METHOD_GET_MESSAGE,
-                ACC_PUBLIC,
-                STRING_TYPE,
-                params(param(STRING_TYPE, KEY)),
-                throwing(NO_SUCH_MESSAGE_EXCEPTION_TYPE),
-                returns(call(
-                        applicationInstance(),
-                        METHOD_GET_MESSAGE,
-                        vars(KEY)))
+                vars(KEY)))
         ));
 
         injectMethod(declaringClass, new MethodNode(
+            METHOD_GET_MESSAGE,
+            ACC_PUBLIC,
+            STRING_TYPE,
+            params(
+                param(STRING_TYPE, KEY),
+                param(OBJECT_ARRAY_TYPE, ARGS)),
+            throwing(NO_SUCH_MESSAGE_EXCEPTION_TYPE),
+            returns(call(
+                applicationInstance(),
                 METHOD_GET_MESSAGE,
-                ACC_PUBLIC,
-                STRING_TYPE,
-                params(
-                        param(STRING_TYPE, KEY),
-                        param(OBJECT_ARRAY_TYPE, ARGS)),
-                throwing(NO_SUCH_MESSAGE_EXCEPTION_TYPE),
-                returns(call(
-                        applicationInstance(),
-                        METHOD_GET_MESSAGE,
-                        vars(KEY, ARGS)))
+                vars(KEY, ARGS)))
         ));
 
         injectMethod(declaringClass, new MethodNode(
+            METHOD_GET_MESSAGE,
+            ACC_PUBLIC,
+            STRING_TYPE,
+            params(
+                param(STRING_TYPE, KEY),
+                param(LOCALE_TYPE, LOCALE)),
+            throwing(NO_SUCH_MESSAGE_EXCEPTION_TYPE),
+            returns(call(
+                applicationInstance(),
                 METHOD_GET_MESSAGE,
-                ACC_PUBLIC,
-                STRING_TYPE,
-                params(
-                        param(STRING_TYPE, KEY),
-                        param(LOCALE_TYPE, LOCALE)),
-                throwing(NO_SUCH_MESSAGE_EXCEPTION_TYPE),
-                returns(call(
-                        applicationInstance(),
-                        METHOD_GET_MESSAGE,
-                        vars(KEY, LOCALE)))
+                vars(KEY, LOCALE)))
         ));
 
         injectMethod(declaringClass, new MethodNode(
+            METHOD_GET_MESSAGE,
+            ACC_PUBLIC,
+            STRING_TYPE,
+            params(
+                param(STRING_TYPE, KEY),
+                param(OBJECT_ARRAY_TYPE, ARGS),
+                param(LOCALE_TYPE, LOCALE)),
+            throwing(NO_SUCH_MESSAGE_EXCEPTION_TYPE),
+            returns(call(
+                applicationInstance(),
                 METHOD_GET_MESSAGE,
-                ACC_PUBLIC,
-                STRING_TYPE,
-                params(
-                        param(STRING_TYPE, KEY),
-                        param(OBJECT_ARRAY_TYPE, ARGS),
-                        param(LOCALE_TYPE, LOCALE)),
-                throwing(NO_SUCH_MESSAGE_EXCEPTION_TYPE),
-                returns(call(
-                        applicationInstance(),
-                        METHOD_GET_MESSAGE,
-                        vars(KEY, ARGS, LOCALE)))
+                vars(KEY, ARGS, LOCALE)))
         ));
 
         injectMethod(declaringClass, new MethodNode(
+            METHOD_GET_MESSAGE,
+            ACC_PUBLIC,
+            STRING_TYPE,
+            params(
+                param(STRING_TYPE, KEY),
+                param(makeClassSafe(LIST_TYPE), ARGS)),
+            throwing(NO_SUCH_MESSAGE_EXCEPTION_TYPE),
+            returns(call(
+                applicationInstance(),
                 METHOD_GET_MESSAGE,
-                ACC_PUBLIC,
-                STRING_TYPE,
-                params(
-                        param(STRING_TYPE, KEY),
-                        param(makeClassSafe(LIST_TYPE), ARGS)),
-                throwing(NO_SUCH_MESSAGE_EXCEPTION_TYPE),
-                returns(call(
-                        applicationInstance(),
-                        METHOD_GET_MESSAGE,
-                        vars(KEY, ARGS)))
+                vars(KEY, ARGS)))
         ));
 
         injectMethod(declaringClass, new MethodNode(
+            METHOD_GET_MESSAGE,
+            ACC_PUBLIC,
+            STRING_TYPE,
+            params(
+                param(STRING_TYPE, KEY),
+                param(makeClassSafe(LIST_TYPE), ARGS),
+                param(LOCALE_TYPE, LOCALE)),
+            throwing(NO_SUCH_MESSAGE_EXCEPTION_TYPE),
+            returns(call(
+                applicationInstance(),
                 METHOD_GET_MESSAGE,
-                ACC_PUBLIC,
-                STRING_TYPE,
-                params(
-                        param(STRING_TYPE, KEY),
-                        param(makeClassSafe(LIST_TYPE), ARGS),
-                        param(LOCALE_TYPE, LOCALE)),
-                throwing(NO_SUCH_MESSAGE_EXCEPTION_TYPE),
-                returns(call(
-                        applicationInstance(),
-                        METHOD_GET_MESSAGE,
-                        vars(KEY, ARGS, LOCALE)))
+                vars(KEY, ARGS, LOCALE)))
         ));
 
         injectMethod(declaringClass, new MethodNode(
+            METHOD_GET_MESSAGE,
+            ACC_PUBLIC,
+            STRING_TYPE,
+            params(
+                param(STRING_TYPE, KEY),
+                param(makeClassSafe(MAP_TYPE), ARGS)),
+            throwing(NO_SUCH_MESSAGE_EXCEPTION_TYPE),
+            returns(call(
+                applicationInstance(),
                 METHOD_GET_MESSAGE,
-                ACC_PUBLIC,
-                STRING_TYPE,
-                params(
-                        param(STRING_TYPE, KEY),
-                        param(makeClassSafe(MAP_TYPE), ARGS)),
-                throwing(NO_SUCH_MESSAGE_EXCEPTION_TYPE),
-                returns(call(
-                        applicationInstance(),
-                        METHOD_GET_MESSAGE,
-                        vars(KEY, ARGS)))
+                vars(KEY, ARGS)))
         ));
 
         injectMethod(declaringClass, new MethodNode(
+            METHOD_GET_MESSAGE,
+            ACC_PUBLIC,
+            STRING_TYPE,
+            params(
+                param(STRING_TYPE, KEY),
+                param(makeClassSafe(MAP_TYPE), ARGS),
+                param(LOCALE_TYPE, LOCALE)),
+            throwing(NO_SUCH_MESSAGE_EXCEPTION_TYPE),
+            returns(call(
+                applicationInstance(),
                 METHOD_GET_MESSAGE,
-                ACC_PUBLIC,
-                STRING_TYPE,
-                params(
-                        param(STRING_TYPE, KEY),
-                        param(makeClassSafe(MAP_TYPE), ARGS),
-                        param(LOCALE_TYPE, LOCALE)),
-                throwing(NO_SUCH_MESSAGE_EXCEPTION_TYPE),
-                returns(call(
-                        applicationInstance(),
-                        METHOD_GET_MESSAGE,
-                        vars(KEY, ARGS, LOCALE)))
+                vars(KEY, ARGS, LOCALE)))
         ));
 
         injectMethod(declaringClass, new MethodNode(
+            METHOD_GET_MESSAGE,
+            ACC_PUBLIC,
+            STRING_TYPE,
+            params(
+                param(STRING_TYPE, KEY),
+                param(STRING_TYPE, DEFAULT_MESSAGE)),
+            NO_EXCEPTIONS,
+            returns(call(
+                applicationInstance(),
                 METHOD_GET_MESSAGE,
-                ACC_PUBLIC,
-                STRING_TYPE,
-                params(
-                        param(STRING_TYPE, KEY),
-                        param(STRING_TYPE, DEFAULT_MESSAGE)),
-                NO_EXCEPTIONS,
-                returns(call(
-                        applicationInstance(),
-                        METHOD_GET_MESSAGE,
-                        vars(KEY, DEFAULT_MESSAGE)))
+                vars(KEY, DEFAULT_MESSAGE)))
         ));
 
         injectMethod(declaringClass, new MethodNode(
+            METHOD_GET_MESSAGE,
+            ACC_PUBLIC,
+            STRING_TYPE,
+            params(
+                param(STRING_TYPE, KEY),
+                param(OBJECT_ARRAY_TYPE, ARGS),
+                param(STRING_TYPE, DEFAULT_MESSAGE)),
+            NO_EXCEPTIONS,
+            returns(call(
+                applicationInstance(),
                 METHOD_GET_MESSAGE,
-                ACC_PUBLIC,
-                STRING_TYPE,
-                params(
-                        param(STRING_TYPE, KEY),
-                        param(OBJECT_ARRAY_TYPE, ARGS),
-                        param(STRING_TYPE, DEFAULT_MESSAGE)),
-                NO_EXCEPTIONS,
-                returns(call(
-                        applicationInstance(),
-                        METHOD_GET_MESSAGE,
-                        vars(KEY, ARGS, DEFAULT_MESSAGE)))
+                vars(KEY, ARGS, DEFAULT_MESSAGE)))
         ));
 
         injectMethod(declaringClass, new MethodNode(
+            METHOD_GET_MESSAGE,
+            ACC_PUBLIC,
+            STRING_TYPE,
+            params(
+                param(STRING_TYPE, KEY),
+                param(STRING_TYPE, DEFAULT_MESSAGE),
+                param(LOCALE_TYPE, LOCALE)),
+            NO_EXCEPTIONS,
+            returns(call(
+                applicationInstance(),
                 METHOD_GET_MESSAGE,
-                ACC_PUBLIC,
-                STRING_TYPE,
-                params(
-                        param(STRING_TYPE, KEY),
-                        param(STRING_TYPE, DEFAULT_MESSAGE),
-                        param(LOCALE_TYPE, LOCALE)),
-                NO_EXCEPTIONS,
-                returns(call(
-                        applicationInstance(),
-                        METHOD_GET_MESSAGE,
-                        vars(KEY, DEFAULT_MESSAGE, LOCALE)))
+                vars(KEY, DEFAULT_MESSAGE, LOCALE)))
         ));
 
         injectMethod(declaringClass, new MethodNode(
+            METHOD_GET_MESSAGE,
+            ACC_PUBLIC,
+            STRING_TYPE,
+            params(
+                param(STRING_TYPE, KEY),
+                param(OBJECT_ARRAY_TYPE, ARGS),
+                param(STRING_TYPE, DEFAULT_MESSAGE),
+                param(LOCALE_TYPE, LOCALE)),
+            NO_EXCEPTIONS,
+            returns(call(
+                applicationInstance(),
                 METHOD_GET_MESSAGE,
-                ACC_PUBLIC,
-                STRING_TYPE,
-                params(
-                        param(STRING_TYPE, KEY),
-                        param(OBJECT_ARRAY_TYPE, ARGS),
-                        param(STRING_TYPE, DEFAULT_MESSAGE),
-                        param(LOCALE_TYPE, LOCALE)),
-                NO_EXCEPTIONS,
-                returns(call(
-                        applicationInstance(),
-                        METHOD_GET_MESSAGE,
-                        vars(KEY, ARGS, DEFAULT_MESSAGE, LOCALE)))
+                vars(KEY, ARGS, DEFAULT_MESSAGE, LOCALE)))
         ));
 
         injectMethod(declaringClass, new MethodNode(
+            METHOD_GET_MESSAGE,
+            ACC_PUBLIC,
+            STRING_TYPE,
+            params(
+                param(STRING_TYPE, KEY),
+                param(makeClassSafe(LIST_TYPE), ARGS),
+                param(STRING_TYPE, DEFAULT_MESSAGE)),
+            NO_EXCEPTIONS,
+            returns(call(
+                applicationInstance(),
                 METHOD_GET_MESSAGE,
-                ACC_PUBLIC,
-                STRING_TYPE,
-                params(
-                        param(STRING_TYPE, KEY),
-                        param(makeClassSafe(LIST_TYPE), ARGS),
-                        param(STRING_TYPE, DEFAULT_MESSAGE)),
-                NO_EXCEPTIONS,
-                returns(call(
-                        applicationInstance(),
-                        METHOD_GET_MESSAGE,
-                        vars(KEY, ARGS, DEFAULT_MESSAGE)))
+                vars(KEY, ARGS, DEFAULT_MESSAGE)))
         ));
 
         injectMethod(declaringClass, new MethodNode(
+            METHOD_GET_MESSAGE,
+            ACC_PUBLIC,
+            STRING_TYPE,
+            params(
+                param(STRING_TYPE, KEY),
+                param(makeClassSafe(LIST_TYPE), ARGS),
+                param(STRING_TYPE, DEFAULT_MESSAGE),
+                param(LOCALE_TYPE, LOCALE)),
+            NO_EXCEPTIONS,
+            returns(call(
+                applicationInstance(),
                 METHOD_GET_MESSAGE,
-                ACC_PUBLIC,
-                STRING_TYPE,
-                params(
-                        param(STRING_TYPE, KEY),
-                        param(makeClassSafe(LIST_TYPE), ARGS),
-                        param(STRING_TYPE, DEFAULT_MESSAGE),
-                        param(LOCALE_TYPE, LOCALE)),
-                NO_EXCEPTIONS,
-                returns(call(
-                        applicationInstance(),
-                        METHOD_GET_MESSAGE,
-                        vars(KEY, ARGS, DEFAULT_MESSAGE, LOCALE)))
+                vars(KEY, ARGS, DEFAULT_MESSAGE, LOCALE)))
         ));
 
         injectMethod(declaringClass, new MethodNode(
+            METHOD_GET_MESSAGE,
+            ACC_PUBLIC,
+            STRING_TYPE,
+            params(
+                param(STRING_TYPE, KEY),
+                param(makeClassSafe(MAP_TYPE), ARGS),
+                param(STRING_TYPE, DEFAULT_MESSAGE)),
+            NO_EXCEPTIONS,
+            returns(call(
+                applicationInstance(),
                 METHOD_GET_MESSAGE,
-                ACC_PUBLIC,
-                STRING_TYPE,
-                params(
-                        param(STRING_TYPE, KEY),
-                        param(makeClassSafe(MAP_TYPE), ARGS),
-                        param(STRING_TYPE, DEFAULT_MESSAGE)),
-                NO_EXCEPTIONS,
-                returns(call(
-                        applicationInstance(),
-                        METHOD_GET_MESSAGE,
-                        vars(KEY, ARGS, DEFAULT_MESSAGE)))
+                vars(KEY, ARGS, DEFAULT_MESSAGE)))
         ));
 
         injectMethod(declaringClass, new MethodNode(
+            METHOD_GET_MESSAGE,
+            ACC_PUBLIC,
+            STRING_TYPE,
+            params(
+                param(STRING_TYPE, KEY),
+                param(makeClassSafe(MAP_TYPE), ARGS),
+                param(STRING_TYPE, DEFAULT_MESSAGE),
+                param(LOCALE_TYPE, LOCALE)),
+            NO_EXCEPTIONS,
+            returns(call(
+                applicationInstance(),
                 METHOD_GET_MESSAGE,
-                ACC_PUBLIC,
-                STRING_TYPE,
-                params(
-                        param(STRING_TYPE, KEY),
-                        param(makeClassSafe(MAP_TYPE), ARGS),
-                        param(STRING_TYPE, DEFAULT_MESSAGE),
-                        param(LOCALE_TYPE, LOCALE)),
-                NO_EXCEPTIONS,
-                returns(call(
-                        applicationInstance(),
-                        METHOD_GET_MESSAGE,
-                        vars(KEY, ARGS, DEFAULT_MESSAGE, LOCALE)))
+                vars(KEY, ARGS, DEFAULT_MESSAGE, LOCALE)))
+        ));
+
+        injectMethod(declaringClass, new MethodNode(
+            METHOD_FORMAT_MESSAGE,
+            ACC_PUBLIC,
+            STRING_TYPE,
+            params(
+                param(STRING_TYPE, KEY),
+                param(OBJECT_ARRAY_TYPE, ARGS)),
+            NO_EXCEPTIONS,
+            returns(call(
+                applicationInstance(),
+                METHOD_FORMAT_MESSAGE,
+                vars(KEY, ARGS)))
+        ));
+
+        injectMethod(declaringClass, new MethodNode(
+            METHOD_FORMAT_MESSAGE,
+            ACC_PUBLIC,
+            STRING_TYPE,
+            params(
+                param(STRING_TYPE, KEY),
+                param(makeClassSafe(LIST_TYPE), ARGS)),
+            NO_EXCEPTIONS,
+            returns(call(
+                applicationInstance(),
+                METHOD_FORMAT_MESSAGE,
+                vars(KEY, ARGS)))
+        ));
+
+        injectMethod(declaringClass, new MethodNode(
+            METHOD_FORMAT_MESSAGE,
+            ACC_PUBLIC,
+            STRING_TYPE,
+            params(
+                param(STRING_TYPE, KEY),
+                param(makeClassSafe(MAP_TYPE), ARGS)),
+            NO_EXCEPTIONS,
+            returns(call(
+                applicationInstance(),
+                METHOD_FORMAT_MESSAGE,
+                vars(KEY, ARGS)))
         ));
     }
 }

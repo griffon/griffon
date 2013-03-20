@@ -48,6 +48,9 @@ import java.lang.annotation.Target;
  * <li><code>public String getMessage(java.lang.String, java.util.List, java.lang.String, java.util.Locale)</code></li>
  * <li><code>public String getMessage(java.lang.String, java.util.Map, java.lang.String)</code></li>
  * <li><code>public String getMessage(java.lang.String, java.util.Map, java.lang.String, java.util.Locale)</code></li>
+ * <li><code>public String formatMessage(java.lang.String, java.lang.Object[])</code></li>
+ * <li><code>public String formatMessage(java.lang.String, java.util.List)</code></li>
+ * <li><code>public String formatMessage(java.lang.String, java.util.Map)</code></li>
  * <p/>
  * </ul>
  *

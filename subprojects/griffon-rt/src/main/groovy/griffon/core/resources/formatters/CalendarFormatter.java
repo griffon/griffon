@@ -55,6 +55,7 @@ public class CalendarFormatter extends AbstractFormatter {
 
     @Override
     public Object parse(String str) throws ParseException {
+        if (isBlank(str)) return null;
         try {
             Calendar c = Calendar.getInstance();
             c.setTime(dateFormat.parse(str));
