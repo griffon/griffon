@@ -44,15 +44,15 @@ class IvyDependencyReport implements DependencyReport {
         this.jarFiles = findAndRemovePluginDependencies(this.allArtifacts)
     }
 
-    private List<File> findAndRemovePluginDependencies(Collection<File> jarFiles) {
-        jarFiles = jarFiles?.findAll { File it -> it != null } ?: new ArrayList<File>()
+    private List<File> findAndRemovePluginDependencies(List<File> jarFiles) {
+        jarFiles = (List<File>) (jarFiles?.findAll { File it -> it != null } ?: new ArrayList<File>())
         def zips = jarFiles.findAll { File it -> it.name.endsWith(".zip") }
         for (z in zips) {
             if (!pluginZips.contains(z)) {
                 pluginZips.add(z)
             }
         }
-        jarFiles = jarFiles.findAll { File it -> it.name.endsWith(".jar") }
+        jarFiles = (List<File>) (jarFiles.findAll { File it -> it.name.endsWith(".jar") })
         return jarFiles
     }
 

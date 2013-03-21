@@ -76,7 +76,7 @@ public class GriffonNameUtils {
     /**
      * Finds out if the given String is a Java/Groovy keyword.
      *
-     * @param str The Stirng to test
+     * @param str The String to test
      * @return <tt>true</tt> if the given String is a keyword, false otherwise
      */
     public static boolean isKeyword(String str) {
