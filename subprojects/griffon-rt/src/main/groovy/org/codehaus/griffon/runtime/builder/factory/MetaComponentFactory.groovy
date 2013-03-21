@@ -23,6 +23,7 @@ import griffon.util.ApplicationHolder
  * Enables MVC groups to be used as component nodes
  *
  * @author Andres Almiray
+ * @author Alexander Klein
  */
 class MetaComponentFactory extends AbstractFactory {
     Object newInstance(FactoryBuilderSupport builder, Object name, Object value, Map attributes) {
@@ -44,6 +45,11 @@ class MetaComponentFactory extends AbstractFactory {
     }
 
     boolean onHandleNodeAttributes(FactoryBuilderSupport builder, Object node, Map attributes) {
+        try {
+            return builder.context.mvcGroup.controller.metaClass.invokeMethod(builder.context.mvcGroup.controller, 'onHandleNodeAttributes', builder, node, attributes)
+        } catch (MissingMethodException e) {
+            return false
+        }
         false
     }
 
@@ -61,5 +67,28 @@ class MetaComponentFactory extends AbstractFactory {
 
     boolean isHandlesNodeChildren() {
         false
+    }
+
+    @Override
+    void setChild(FactoryBuilderSupport builder, Object parent, Object child) {
+        safeInvoke(builder.parentContext.mvcGroup.controller, 'setChild', builder, parent, child)
+    }
+
+    @Override
+    void setParent(FactoryBuilderSupport builder, Object parent, Object child) {
+        safeInvoke(builder.context.mvcGroup.controller, 'setParent', builder, parent, child)
+    }
+
+    @Override
+    void onNodeCompleted(FactoryBuilderSupport builder, Object parent, Object node) {
+        safeInvoke(builder.context.mvcGroup.controller, 'onNodeCompleted', builder, parent, node)
+    }
+
+    static protected def safeInvoke(Object obj, String method, Object... args) {
+        try {
+            return obj.metaClass.invokeMethod(obj, method, args)
+        } catch (MissingMethodException e) {
+            return null
+        }
     }
 }
