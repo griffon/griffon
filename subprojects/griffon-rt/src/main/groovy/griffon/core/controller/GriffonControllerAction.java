@@ -76,4 +76,6 @@ public interface GriffonControllerAction {
     void setShortDescription(String shortDescription);
 
     void setSmallIcon(String smallIcon);
+
+    void initialize();
 }

@@ -39,6 +39,8 @@ public abstract class AbstractGriffonControllerAction extends AbstractObservable
     private boolean selected;
     private WeakReference<GriffonController> controller;
     private final GriffonControllerActionManager actionManager;
+    private boolean initialized;
+    private final Object lock = new Object[0];
 
     public AbstractGriffonControllerAction(GriffonControllerActionManager actionManager, GriffonController controller, String actionName) {
         this.actionManager = actionManager;
@@ -142,4 +144,14 @@ public abstract class AbstractGriffonControllerAction extends AbstractObservable
     }
 
     protected abstract void doExecute(Object... args);
+
+    public final void initialize() {
+        synchronized (lock) {
+            if (initialized) return;
+            doInitialize();
+            initialized = true;
+        }
+    }
+
+    protected abstract void doInitialize();
 }

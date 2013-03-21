@@ -364,6 +364,8 @@ public abstract class AbstractGriffonControllerActionManager implements GriffonC
             action.setSelected(toBoolean(rsSelected));
         }
 
+        action.initialize();
+
         return action;
     }
 
