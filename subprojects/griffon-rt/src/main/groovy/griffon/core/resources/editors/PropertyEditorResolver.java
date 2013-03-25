@@ -16,6 +16,9 @@
 
 package griffon.core.resources.editors;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.beans.PropertyEditor;
 import java.beans.PropertyEditorManager;
 
@@ -24,17 +27,31 @@ import java.beans.PropertyEditorManager;
  * @since 1.3.0
  */
 public final class PropertyEditorResolver {
+    private static final Logger LOG = LoggerFactory.getLogger(PropertyEditorResolver.class);
+
     private PropertyEditorResolver() {
 
     }
 
     public static PropertyEditor findEditor(Class<?> type) {
         if (type == null) return null;
-        if (Enum.class.isAssignableFrom(type)) {
-            EnumPropertyEditor editor = new EnumPropertyEditor();
-            editor.setEnumType((Class<? extends Enum>) type);
-            return editor;
+        if (LOG.isTraceEnabled()) {
+            LOG.trace("Searching PropertyEditor for " + type.getName());
         }
-        return PropertyEditorManager.findEditor(type);
+
+        PropertyEditor editor = null;
+        if (Enum.class.isAssignableFrom(type)) {
+            editor = new EnumPropertyEditor();
+            ((EnumPropertyEditor) editor).setEnumType((Class<? extends Enum>) type);
+        } else {
+            editor = PropertyEditorManager.findEditor(type);
+        }
+
+        if (editor != null) {
+            if (LOG.isTraceEnabled()) {
+                LOG.trace("PropertyEditor for " + type.getName() + " is " + editor.getClass().getName());
+            }
+        }
+        return editor;
     }
 }
