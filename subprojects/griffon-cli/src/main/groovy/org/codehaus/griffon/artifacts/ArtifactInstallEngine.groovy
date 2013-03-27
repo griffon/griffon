@@ -37,6 +37,7 @@ import static griffon.util.GriffonNameUtils.getPropertyNameForLowerCaseHyphenSep
 import static griffon.util.GriffonUtil.getScriptName
 import static org.codehaus.griffon.artifacts.ArtifactRepository.DEFAULT_LOCAL_NAME
 import static org.codehaus.griffon.cli.CommandLineConstants.*
+import static org.codehaus.groovy.runtime.typehandling.DefaultTypeTransformation.castToBoolean
 
 /**
  * @author Andres Almiray
@@ -449,9 +450,20 @@ class ArtifactInstallEngine {
             }
         }
 
+        boolean forceUpgrade = castToBoolean(settings.getPropertyValue(KEY_FORCE_ARTIFACT_UPGRADE, false))
+
         for (ArtifactDependency dep : dependencies) {
             ArtifactDependency installed = installedDependencies[dep.name]
-            if (!installed || installed.snapshot || installed.version != dep.version) continue
+            if (!installed || installed.snapshot) continue
+            if (installed.version != dep.version) {
+                if (forceUpgrade) {
+                    eventHandler 'StatusUpdate', "Dependency version mismatch but allowed: ${dep.name} (required: ${dep.version}, found: ${installed.version})"
+                    dep.evicted = true
+                    dep.resolved = true
+                    dep.conflicted = false
+                }
+                continue
+            }
             dep.installed = true
             dep.resolved = true
             dep.conflicted = false
