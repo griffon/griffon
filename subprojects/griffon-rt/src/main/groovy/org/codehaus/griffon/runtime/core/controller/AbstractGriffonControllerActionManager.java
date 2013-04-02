@@ -18,10 +18,7 @@ package org.codehaus.griffon.runtime.core.controller;
 import griffon.core.GriffonApplication;
 import griffon.core.GriffonController;
 import griffon.core.GriffonControllerClass;
-import griffon.core.controller.AbortActionExecution;
-import griffon.core.controller.GriffonControllerAction;
-import griffon.core.controller.GriffonControllerActionInterceptor;
-import griffon.core.controller.GriffonControllerActionManager;
+import griffon.core.controller.*;
 import griffon.core.i18n.NoSuchMessageException;
 import griffon.transform.Threading;
 import griffon.util.GriffonClassUtils;
@@ -132,39 +129,49 @@ public abstract class AbstractGriffonControllerActionManager implements GriffonC
             public void run() {
                 Object[] updatedArgs = args;
                 List<GriffonControllerActionInterceptor> copy = new ArrayList<GriffonControllerActionInterceptor>(interceptors);
+                List<GriffonControllerActionInterceptor> invokedInterceptors = new ArrayList<GriffonControllerActionInterceptor>(interceptors);
+
+                ActionExecutionStatus status = ActionExecutionStatus.OK;
 
                 if (LOG.isDebugEnabled()) {
                     LOG.debug("Invoking " + copy.size() + " interceptors for " + controller.getClass().getName() + "." + actionName);
                 }
 
                 for (GriffonControllerActionInterceptor interceptor : copy) {
+                    invokedInterceptors.add(interceptor);
                     try {
                         updatedArgs = interceptor.before(controller, actionName, updatedArgs);
                     } catch (AbortActionExecution aae) {
+                        status = ActionExecutionStatus.ABORTED;
                         if (LOG.isInfoEnabled()) {
                             LOG.info("Execution of " + controller.getClass().getName() + "." + actionName + " was aborted by " + interceptor);
                         }
-                        return;
+                        break;
                     }
                 }
 
                 RuntimeException exception = null;
-                try {
-                    InvokerHelper.invokeMethod(controller, actionName, updatedArgs);
-                } catch (RuntimeException e) {
-                    exception = (RuntimeException) sanitize(e);
-                    if (LOG.isDebugEnabled()) {
-                        LOG.debug("An exception occurred when executing " + controller.getClass().getName() + "." + actionName, exception);
+                if (status == ActionExecutionStatus.OK) {
+                    try {
+                        InvokerHelper.invokeMethod(controller, actionName, updatedArgs);
+                    } catch (RuntimeException e) {
+                        status = ActionExecutionStatus.EXCEPTION;
+                        exception = (RuntimeException) sanitize(e);
+                        if (LOG.isDebugEnabled()) {
+                            LOG.debug("An exception occurred when executing " + controller.getClass().getName() + "." + actionName, exception);
+                        }
                     }
                 }
 
                 boolean exceptionWasHandled = false;
-                for (GriffonControllerActionInterceptor interceptor : reverse(copy)) {
-                    if (exception == null) {
-                        interceptor.after(controller, actionName, updatedArgs);
-                    } else if (!exceptionWasHandled) {
+                if (exception != null) {
+                    for (GriffonControllerActionInterceptor interceptor : reverse(invokedInterceptors)) {
                         exceptionWasHandled = interceptor.exception(exception, controller, actionName, updatedArgs);
                     }
+                }
+
+                for (GriffonControllerActionInterceptor interceptor : reverse(invokedInterceptors)) {
+                    interceptor.after(status, controller, actionName, updatedArgs);
                 }
 
                 if (exception != null && !exceptionWasHandled) {

@@ -19,6 +19,7 @@ package org.codehaus.griffon.runtime.core.controller;
 import griffon.core.GriffonApplication;
 import griffon.core.GriffonController;
 import griffon.core.controller.AbortActionExecution;
+import griffon.core.controller.ActionExecutionStatus;
 import griffon.core.controller.GriffonControllerActionInterceptor;
 import griffon.util.ApplicationHolder;
 
@@ -64,7 +65,7 @@ public abstract class AbstractGriffonControllerActionInterceptor implements Grif
     }
 
     @Override
-    public void after(GriffonController controller, String actionName, Object[] args) {
+    public void after(ActionExecutionStatus status, GriffonController controller, String actionName, Object[] args) {
         // empty
     }
 

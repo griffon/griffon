@@ -16,24 +16,23 @@
 
 package griffon.core.controller;
 
-import griffon.core.ApplicationHandler;
-import griffon.core.GriffonController;
-
-import java.lang.reflect.Field;
-import java.lang.reflect.Method;
-
 /**
  * @author Andres Almiray
  * @since 1.3.0
  */
-public interface GriffonControllerActionInterceptor extends ApplicationHandler {
-    void configure(GriffonController controller, String actionName, Method method);
+public enum ActionExecutionStatus {
+    /**
+     * The Action was successfully executed
+     */
+    OK,
 
-    void configure(GriffonController controller, String actionName, Field closure);
+    /**
+     * An actionInterceptor aborted execution during before()
+     */
+    ABORTED,
 
-    Object[] before(GriffonController controller, String actionName, Object[] args);
-
-    void after(ActionExecutionStatus status, GriffonController controller, String actionName, Object[] args);
-
-    boolean exception(Exception exception, GriffonController controller, String actionName, Object[] args);
+    /**
+     * The Action threw an exception during its execution
+     */
+    EXCEPTION;
 }
