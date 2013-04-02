@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+import static griffon.util.GriffonApplicationUtils.isWindows
 import static griffon.util.GriffonNameUtils.quote
 import static griffon.util.GriffonNameUtils.getNaturalName
 import static griffon.util.GriffonNameUtils.getClassNameForLowerCaseHyphenSeparatedName
@@ -58,6 +59,9 @@ target(name: 'doRunWebstart', description: "Runs the application with Java Webst
         webstartVM = [System.properties['java.home'], 'bin', 'javaws'].join(File.separator)
     }
 
+    if (!(webstartVM instanceof File)) webstartVM = new File(webstartVM.toString())
+    if (!webstartVM.exists() && !isWindows) webstartVM = new File(['', 'usr', 'bin', 'javaws'].join(File.separator))
+
     def javaOpts = setupJavaOpts(false)
     debug("Running JVM options:")
     javaOpts = javaOpts.collect { debug("  $it"); "-J$it" }
@@ -71,7 +75,7 @@ target(name: 'doRunWebstart', description: "Runs the application with Java Webst
         sysprops << "-J-D${key}=${quote(value)}"
     }
 
-    List<String> cmd = [webstartVM] + javaOpts + sysprops + buildConfig.griffon.webstart.jnlp
+    List<String> cmd = [webstartVM.toString()] + javaOpts + sysprops + buildConfig.griffon.webstart.jnlp
 
     // TODO set proxy settings
     // start the processess
