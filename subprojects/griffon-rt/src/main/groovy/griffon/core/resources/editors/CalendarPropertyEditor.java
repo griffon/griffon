@@ -42,23 +42,35 @@ public class CalendarPropertyEditor extends AbstractPropertyEditor {
             Calendar c = Calendar.getInstance();
             c.setTime((Date) value);
             super.setValueInternal(c);
+        } else if (value instanceof Number) {
+            Calendar c = Calendar.getInstance();
+            c.setTime(new Date(((Number) value).longValue()));
+            super.setValueInternal(c);
         } else {
-            throw illegalValue(value, Date.class);
+            throw illegalValue(value, Calendar.class);
         }
     }
 
     private void handleAsString(String str) {
+        if (isBlank(str)) {
+            super.setValueInternal(null);
+            return;
+        }
+
+        Calendar c = Calendar.getInstance();
         try {
-            Object value = null;
-            if (!isBlank(str)) {
-                value = new SimpleDateFormat().parse(str);
-                Calendar c = Calendar.getInstance();
-                c.setTime((Date) value);
-                value = c;
-            }
-            super.setValueInternal(value);
+            c.setTime(new Date(Long.parseLong(str)));
+            super.setValueInternal(c);
+            return;
+        } catch (NumberFormatException nfe) {
+            // ignore, let's try parsing the date in a locale specific format
+        }
+
+        try {
+            c.setTime(new SimpleDateFormat().parse(str));
+            super.setValueInternal(c);
         } catch (ParseException e) {
-            throw illegalValue(str, Date.class, e);
+            throw illegalValue(str, Calendar.class, e);
         }
     }
 

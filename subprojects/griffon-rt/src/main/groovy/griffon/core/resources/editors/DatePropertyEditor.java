@@ -40,14 +40,28 @@ public class DatePropertyEditor extends AbstractPropertyEditor {
             super.setValueInternal((Date) value);
         } else if (value instanceof Calendar) {
             super.setValueInternal(((Calendar) value).getTime());
+        } else if (value instanceof Number) {
+            super.setValueInternal(new Date(((Number) value).longValue()));
         } else {
             throw illegalValue(value, Date.class);
         }
     }
 
     private void handleAsString(String str) {
+        if (isBlank(str)) {
+            super.setValueInternal(null);
+            return;
+        }
+
         try {
-            super.setValueInternal(isBlank(str) ? null : new SimpleDateFormat().parse(str));
+            super.setValueInternal(new Date(Long.parseLong(str)));
+            return;
+        } catch (NumberFormatException nfe) {
+            // ignore, let's try parsing the date in a locale specific format
+        }
+
+        try {
+            super.setValueInternal(new SimpleDateFormat().parse(str));
         } catch (ParseException e) {
             throw illegalValue(str, Date.class, e);
         }
