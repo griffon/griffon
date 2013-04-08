@@ -33,4 +33,6 @@ public @interface InjectedResource {
     String[] args() default {};
 
     String defaultValue() default "";
+
+    String format() default "";
 }

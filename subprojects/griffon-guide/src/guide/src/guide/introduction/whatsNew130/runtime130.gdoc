@@ -34,6 +34,10 @@ The list of default @PropertyEditor@s that Griffon can handle has grown to the f
  * java.util.Calendar -> @griffon.core.resources.editors.CalendarPropertyEditor@
  * java.util.Date -> @griffon.core.resources.editors.DatePropertyEditor@
 
+h4. Optional Format in @InjectedResource
+
+The @[\@griffon.core.resources.InjectedResource|api:griffon.core.resources.InjectedResource]@ annotation supports an optional @format@ property that can be used as a hint for PropertyEditors when value conversion is performed.
+
 h4. Action Interceptors
 
 Plugin authors now have the chance to define a new type of component: action interceptors. [Action interceptors|guide:actionInterceptors] are executed @before@ and @after@ a controller action, thus allowing plugin authors to configure the execution environment. Examples of such configuration can be seen in the [shiro|http://artifacts.griffon-framework.org/plugi/shiro] and [scaffolding|http://artifacts.griffon-framework.org/plugi/scaffolding] plugins.
