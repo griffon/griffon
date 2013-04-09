@@ -23,6 +23,11 @@ import java.beans.PropertyEditor;
 import java.beans.PropertyEditorManager;
 
 /**
+ * The PropertyEditorResolver can be used to locate a property editor for
+ * any given type name. This property editor must support the
+ * java.beans.PropertyEditor interface for editing a given object.
+ * <p/>
+ *
  * @author Andres Almiray
  * @since 1.3.0
  */
@@ -33,6 +38,17 @@ public final class PropertyEditorResolver {
 
     }
 
+    /**
+     * Locate a value editor for a given target type.
+     * <p/>
+     * If the input {@code type} is an Enum then an instance of {@code EnumPropertyEditor}
+     * is returned with the {@code type} set as {@code enumType}.
+     *
+     * @param type The Class object for the type to be edited
+     * @return An editor object for the given target class.
+     *         The result is null if no suitable editor can be found.
+     * @see  griffon.core.resources.editors.EnumPropertyEditor
+     */
     public static PropertyEditor findEditor(Class<?> type) {
         if (type == null) return null;
         if (LOG.isTraceEnabled()) {

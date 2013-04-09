@@ -34,5 +34,5 @@ public enum ActionExecutionStatus {
     /**
      * The Action threw an exception during its execution
      */
-    EXCEPTION;
+    EXCEPTION
 }

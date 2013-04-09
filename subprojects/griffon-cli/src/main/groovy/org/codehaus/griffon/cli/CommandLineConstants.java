@@ -69,7 +69,9 @@ public interface CommandLineConstants {
     /**
      * Controls threading management code inject to controllers by the compiler.
      * <p>Valid values are <tt>'true'</tt> or <tt>'false'</tt>. Default is <tt>'false'</tt>.</p>
+     * @deprecated Threading injection for Controller actions no longer happens at compile time.
      */
+    @Deprecated
     String KEY_DISABLE_THREADING_INJECTION = "griffon.disable.threading.injection";
 
     /**

@@ -34,7 +34,9 @@ The list of default @PropertyEditor@s that Griffon can handle has grown to the f
  * java.util.Calendar -> @griffon.core.resources.editors.CalendarPropertyEditor@
  * java.util.Date -> @griffon.core.resources.editors.DatePropertyEditor@
 
-h4. Optional Format in @InjectedResource
+There's an additional @griffon.core.resources.editors.EnumPropertyEditor@ that knows how to handle any Enum subclass. Please use @griffon.core.resources.editors.PropertyEditorResolver@ instead of @java.beans.PropertyEditorManager@ for locating a suitable @PropertyEditor@ given a particular type.
+
+h4. Optional Format in \@InjectedResource
 
 The @[\@griffon.core.resources.InjectedResource|api:griffon.core.resources.InjectedResource]@ annotation supports an optional @format@ property that can be used as a hint for PropertyEditors when value conversion is performed.
 

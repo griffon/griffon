@@ -18,7 +18,9 @@ package griffon.app
 /**
  * @author Danno Ferrin
  * @author Andres Almiray
+ * @deprecated Use groovy module extensions instead
  */
+@Deprecated
 class AbstractSyntheticMetaMethods {
     private static final String ENHANCED = "_ENHANCED_METACLASS_"
 

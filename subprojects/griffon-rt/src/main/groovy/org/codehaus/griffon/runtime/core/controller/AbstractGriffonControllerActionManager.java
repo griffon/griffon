@@ -21,6 +21,7 @@ import griffon.core.GriffonControllerClass;
 import griffon.core.controller.*;
 import griffon.core.i18n.NoSuchMessageException;
 import griffon.transform.Threading;
+import griffon.util.ConfigUtils;
 import griffon.util.GriffonClassUtils;
 import groovy.lang.Closure;
 import org.codehaus.groovy.runtime.InvokerHelper;
@@ -35,6 +36,7 @@ import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArrayList;
 
+import static griffon.util.ConfigUtils.getConfigValueAsBoolean;
 import static griffon.util.GriffonApplicationUtils.isMacOSX;
 import static griffon.util.GriffonExceptionHandler.sanitize;
 import static griffon.util.GriffonNameUtils.*;
@@ -51,6 +53,7 @@ import static org.codehaus.groovy.runtime.typehandling.DefaultTypeTransformation
 public abstract class AbstractGriffonControllerActionManager implements GriffonControllerActionManager {
     private static final Logger LOG = LoggerFactory.getLogger(AbstractGriffonControllerActionManager.class);
     private static final String KEY_THREADING = "controller.threading";
+    private static final String KEY_DISABLE_THREADING_INJECTION = "griffon.disable.threading.injection";
     private final ActionCache actionCache = new ActionCache();
     private final Map<String, Threading.Policy> threadingPolicies = new ConcurrentHashMap<String, Threading.Policy>();
     private final List<GriffonControllerActionInterceptor> interceptors = new CopyOnWriteArrayList<GriffonControllerActionInterceptor>();
@@ -261,6 +264,10 @@ public abstract class AbstractGriffonControllerActionManager implements GriffonC
     }
 
     private boolean isThreadingDisabled(String actionName) {
+        if (getConfigValueAsBoolean(getApp().getConfig(), KEY_DISABLE_THREADING_INJECTION, false)) {
+            return true;
+        }
+
         Map settings = getApp().getConfig().flatten(new LinkedHashMap());
 
         String keyName = KEY_THREADING + "." + actionName;

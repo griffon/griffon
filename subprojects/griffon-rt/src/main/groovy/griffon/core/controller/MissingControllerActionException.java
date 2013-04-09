@@ -19,6 +19,9 @@ import griffon.core.GriffonController;
 import griffon.exceptions.GriffonException;
 
 /**
+ * Exception thrown when {@code GriffonControllerActionManager} can't find an action
+ * for a particular controller.
+ *
  * @author Andres Almiray
  * @since 1.3.0
  */
