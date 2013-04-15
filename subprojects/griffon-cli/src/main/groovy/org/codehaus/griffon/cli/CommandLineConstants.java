@@ -69,7 +69,10 @@ public interface CommandLineConstants {
     /**
      * Controls threading management code inject to controllers by the compiler.
      * <p>Valid values are <tt>'true'</tt> or <tt>'false'</tt>. Default is <tt>'false'</tt>.</p>
-     * @deprecated Threading injection for Controller actions no longer happens at compile time.
+     *
+     * @deprecated Threading injection for Controller actions at compile time is no longer
+     *             the preferred way to deal with threading concerns. Consider setting
+     *             threading options at runtime.
      */
     @Deprecated
     String KEY_DISABLE_THREADING_INJECTION = "griffon.disable.threading.injection";
@@ -147,25 +150,25 @@ public interface CommandLineConstants {
     String KEY_INSTALL_FAILURE_STRATEGY = "griffon.install.failure";
 
     String[] KEYS = {
-            KEY_INTERACTIVE_MODE,
-            KEY_NON_INTERACTIVE_DEFAULT_ANSWER,
-            KEY_FULL_STACKTRACE,
-            KEY_CLI_VERBOSE,
-            KEY_DISABLE_AST_INJECTION,
-            KEY_DISABLE_AUTO_IMPORTS,
-            KEY_DISABLE_LOGGING_INJECTION,
-            KEY_DISABLE_THREADING_INJECTION,
-            KEY_INSTALL_FAILURE_KEY,
-            KEY_DEFAULT_ARTIFACT_REPOSITORY,
-            KEY_DEFAULT_RELEASE_ARTIFACT_REPOSITORY,
-            KEY_DEFAULT_INSTALL_ARTIFACT_REPOSITORY,
-            KEY_DISABLE_LOCAL_REPOSITORY_SYNC,
-            KEY_OFFLINE_MODE,
-            KEY_COMPILER_SOURCE_LEVEL,
-            KEY_COMPILER_TARGET_LEVEL,
-            KEY_SOURCE_ENCODING,
-            KEY_COMPILER_DEBUG,
-            KEY_FORCE_ARTIFACT_UPGRADE,
-            KEY_INSTALL_FAILURE_STRATEGY
+        KEY_INTERACTIVE_MODE,
+        KEY_NON_INTERACTIVE_DEFAULT_ANSWER,
+        KEY_FULL_STACKTRACE,
+        KEY_CLI_VERBOSE,
+        KEY_DISABLE_AST_INJECTION,
+        KEY_DISABLE_AUTO_IMPORTS,
+        KEY_DISABLE_LOGGING_INJECTION,
+        KEY_DISABLE_THREADING_INJECTION,
+        KEY_INSTALL_FAILURE_KEY,
+        KEY_DEFAULT_ARTIFACT_REPOSITORY,
+        KEY_DEFAULT_RELEASE_ARTIFACT_REPOSITORY,
+        KEY_DEFAULT_INSTALL_ARTIFACT_REPOSITORY,
+        KEY_DISABLE_LOCAL_REPOSITORY_SYNC,
+        KEY_OFFLINE_MODE,
+        KEY_COMPILER_SOURCE_LEVEL,
+        KEY_COMPILER_TARGET_LEVEL,
+        KEY_SOURCE_ENCODING,
+        KEY_COMPILER_DEBUG,
+        KEY_FORCE_ARTIFACT_UPGRADE,
+        KEY_INSTALL_FAILURE_STRATEGY
     };
 }

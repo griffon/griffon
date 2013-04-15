@@ -36,7 +36,7 @@ public interface GriffonControllerActionManager extends ApplicationHandler {
 
     String normalizeName(String actionName);
 
-    void invokeAction(GriffonController controller, String actionName, Object[] args);
+    void invokeAction(GriffonController controller, String actionName, Object... args);
 
     void addActionInterceptor(GriffonControllerActionInterceptor actionInterceptor);
 }

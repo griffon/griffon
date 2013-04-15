@@ -127,7 +127,7 @@ public abstract class AbstractGriffonControllerActionManager implements GriffonC
         }
     }
 
-    public void invokeAction(final GriffonController controller, final String actionName, final Object[] args) {
+    public void invokeAction(final GriffonController controller, final String actionName, final Object... args) {
         Runnable runnable = new Runnable() {
             public void run() {
                 Object[] updatedArgs = args;
