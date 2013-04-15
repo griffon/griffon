@@ -40,7 +40,7 @@ docSourceLevel = "1.5"
 links = [
     [packages: "java.,org.xml.,javax.,org.xml.", href: "http://java.sun.com/j2se/1.5.0/docs/api"],
     [packages: "org.apache.ant.,org.apache.tools.ant.", href: "http://www.dpml.net/api/ant/1.7.0"],
-    [packages: "org.junit.,junit.framework.", href: "http://junit.org/javadoc/latest/"],
+    [packages: "org.junit.,junit.framework.", href: "http://kentbeck.github.com/junit/javadoc/latest/"],
     [packages: "groovy.,org.codehaus.groovy.", href: "http://groovy.codehaus.org/api/"],
     [packages: 'griffon.,org.codehaus.griffon.', href: 'http://griffon.codehaus.org/guide/latest/api/']
 ]
@@ -193,21 +193,54 @@ target(refdocs: "Generates Griffon style reference documentation") {
 
     if (docsDisabled()) return
 
-    def srcDocs = new File("${basedir}/src/docs")
-    def srcDocsGuide = new File("${srcDocs}/guide")
-    def srcDocsRef = new File("${srcDocs}/ref")
-    def srcDocsImg = new File("${srcDocs}/img")
-    def srcDocsCss = new File("${srcDocs}/css")
+    File srcDocs = new File("${basedir}/src/docs")
+    File srcDocsGuide = new File("${srcDocs}/guide")
+    File srcDocsRef = new File("${srcDocs}/ref")
+    File srcDocsImg = new File("${srcDocs}/img")
+    File srcDocsCss = new File("${srcDocs}/css")
 
     if (srcDocsGuide.exists() || srcDocsRef.exists()) {
-        File refDocsDir = new File("${griffonSettings.docsOutputDir}/manual")
-        ant.mkdir(dir: "${refDocsDir}/img")
+        File manualDir = new File("${griffonSettings.docsOutputDir}/manual")
+        ant.delete(dir: manualDir, quiet: true)
+        ant.mkdir(dir: manualDir)
+
+        File manualApiDir = new File("${manualDir}/api")
+        ant.copy(todir: manualApiDir) {
+            fileset(dir: groovydocDir)
+        }
+        ant.copy(todir: manualApiDir, overwrite: true) {
+            fileset(dir: "${griffonHome}/guide/css", includes: "stylesheet.css")
+        }
+        ant.copy(todir: manualApiDir, overwrite: true) {
+            fileset(dir: "${griffonHome}/media", includes: "griffon.ico")
+        }
+        ant.replace(dir: manualApiDir) {
+            include(name: '**/*.html')
+            replacefilter(token: 'groovy.ico', value: 'griffon.ico')
+        }
+
+        ant.mkdir(dir: "${manualDir}/img")
         if (srcDocsImg.exists()) {
-            ant.copy(todir: "${refDocsDir}/img") {
+            ant.copy(todir: "${manualDir}/img") {
                 fileset(dir: srcDocsImg, includes: "*.png")
             }
         }
-        def publisher = new DocPublisher(srcDocs, refDocsDir)
+
+        File manualSrcdir = new File("${griffonSettings.docsOutputDir}/manual-src")
+        ant.mkdir(dir: manualSrcdir)
+        ant.copy(todir: manualSrcdir) {
+            fileset(dir: srcDocs)
+        }
+        ant.copy(todir: "${manualSrcdir}/api") {
+            fileset(dir: manualApiDir)
+        }
+        srcDocs = manualSrcdir
+        srcDocsGuide = new File("${srcDocs}/guide")
+        srcDocsRef = new File("${srcDocs}/ref")
+        srcDocsImg = new File("${srcDocs}/img")
+        srcDocsCss = new File("${srcDocs}/css")
+
+        def publisher = new DocPublisher(srcDocs, manualDir)
         publisher.ant = ant
         publisher.title = griffonAppName
         publisher.subtitle = griffonAppName
@@ -224,22 +257,22 @@ target(refdocs: "Generates Griffon style reference documentation") {
 
         publisher.publish()
 
-        ant.mkdir(dir: "${refDocsDir}/css")
+        ant.mkdir(dir: "${manualDir}/css")
         if (srcDocsCss.exists()) {
-            ant.copy(todir: "${refDocsDir}/css", overwrite: true) {
+            ant.copy(todir: "${manualDir}/css", overwrite: true) {
                 fileset(dir: srcDocsCss, includes: "*.css")
             }
         }
 
         createdManual = true
 
-        println "Built user manual at ${refDocsDir}/index.html"
+        println "Built user manual at ${manualDir}/index.html"
     }
 }
 
 target(pdf: "Produces PDF documentation") {
-    File refDocsDir = new File("${griffonSettings.docsOutputDir}/manual")
-    File singleHtml = new File(refDocsDir, 'guide/single.html')
+    File manualDir = new File("${griffonSettings.docsOutputDir}/manual")
+    File singleHtml = new File(manualDir, 'guide/single.html')
 
     if (docsDisabled() || !pdfEnabled() || !singleHtml.exists()) {
         event("DocSkip", ['pdf'])
@@ -252,7 +285,7 @@ target(pdf: "Produces PDF documentation") {
 
     createdPdf = true
 
-    println "Built user manual PDF at ${refDocsDir}/guide/single.pdf"
+    println "Built user manual PDF at ${manualDir}/guide/single.pdf"
 
     event("DocEnd", ['pdf'])
 }
