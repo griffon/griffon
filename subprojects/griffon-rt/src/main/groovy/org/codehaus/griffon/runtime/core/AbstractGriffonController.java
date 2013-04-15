@@ -29,4 +29,8 @@ public abstract class AbstractGriffonController extends AbstractGriffonMvcArtifa
     protected String getArtifactType() {
         return GriffonControllerClass.TYPE;
     }
+
+    public void invokeAction(String name, Object... args) {
+        getApp().getActionManager().invokeAction(this, name, args);
+    }
 }

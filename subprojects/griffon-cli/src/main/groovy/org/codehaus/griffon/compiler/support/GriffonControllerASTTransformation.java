@@ -61,7 +61,8 @@ public class GriffonControllerASTTransformation extends GriffonArtifactASTTransf
 
     protected ASTInjector[] getASTInjectors() {
         return new ASTInjector[]{
-            new GriffonMvcArtifactASTInjector()
+            new GriffonMvcArtifactASTInjector(),
+            new GriffonControllerASTInjector()
         };
     }
 }

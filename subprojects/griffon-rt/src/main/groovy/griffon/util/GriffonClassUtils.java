@@ -154,6 +154,7 @@ public final class GriffonClassUtils {
         MVC_METHODS.add(new MethodDescriptor("getAddonManager"));
         MVC_METHODS.add(new MethodDescriptor("getMVCGroupManager"));
         MVC_METHODS.add(new MethodDescriptor("setBuilder", new Class[]{FactoryBuilderSupport.class}));
+        MVC_METHODS.add(new MethodDescriptor("invokeAction", new Class[]{String.class, Object[].class}));
 
         SERVICE_METHODS.add(new MethodDescriptor("serviceInit"));
         SERVICE_METHODS.add(new MethodDescriptor("serviceDestroy"));
