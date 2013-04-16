@@ -144,6 +144,9 @@ target(groovydoc: "Produces groovydoc documentation") {
             doctitle: "${griffonAppName} ${griffonAppVersion}",
             sourcepath: "src/main, griffon-app/controllers, griffon-app/models, griffon-app/services"
         )
+        ant.copy(todir: groovydocDir, overwrite: true) {
+            fileset(dir: "${griffonHome}/guide/css", includes: "stylesheet.css")
+        }
     }
     catch (Exception e) {
         event("StatusError", ["Error generating groovydoc: ${e.message}"])
@@ -179,6 +182,9 @@ target(javadoc: "Produces javadoc documentation") {
                 failonerror: false,
                 sourcepath: javaDir.absolutePath) {
             }
+            ant.copy(todir: javadocDir, overwrite: true) {
+                fileset(dir: "${griffonHome}/guide/css", includes: "stylesheet.css")
+            }
         }
         catch (Exception e) {
             event("StatusError", ["Error generating javadoc: ${e.message}"])
@@ -207,9 +213,6 @@ target(refdocs: "Generates Griffon style reference documentation") {
         File manualApiDir = new File("${manualDir}/api")
         ant.copy(todir: manualApiDir) {
             fileset(dir: groovydocDir)
-        }
-        ant.copy(todir: manualApiDir, overwrite: true) {
-            fileset(dir: "${griffonHome}/guide/css", includes: "stylesheet.css")
         }
         ant.copy(todir: manualApiDir, overwrite: true) {
             fileset(dir: "${griffonHome}/media", includes: "griffon.ico")
@@ -265,6 +268,8 @@ target(refdocs: "Generates Griffon style reference documentation") {
         }
 
         createdManual = true
+
+        ant.delete(dir: manualSrcdir, quiet: true)
 
         println "Built user manual at ${manualDir}/index.html"
     }
