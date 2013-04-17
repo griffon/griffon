@@ -51,6 +51,6 @@ public class FloatPropertyEditor extends AbstractPropertyEditor {
     }
 
     protected Formatter resolveFormatter() {
-        return new FloatFormatter(getFormat());
+        return isBlank(getFormat()) ? null : new FloatFormatter(getFormat());
     }
 }

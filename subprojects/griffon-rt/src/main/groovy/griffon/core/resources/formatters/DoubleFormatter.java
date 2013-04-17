@@ -25,7 +25,7 @@ import static griffon.util.GriffonNameUtils.isBlank;
  * @author Andres Almiray
  * @since 1.3.0
  */
-public class DoubleFormatter extends AbstractFormatter {
+public class DoubleFormatter extends AbstractFormatter<Double> {
     private static final String PATTERN_CURRENCY = "currency";
     private static final String PATTERN_PERCENT = "percent";
 
@@ -47,20 +47,12 @@ public class DoubleFormatter extends AbstractFormatter {
         }
     }
 
-    @Override
-    public String format(Object obj) {
-        if (obj instanceof Double) {
-            return format((Double) obj);
-        }
-        throw new IllegalArgumentException("Can't format given Object as a Double");
-    }
-
     public String format(Double number) {
         return numberFormat.format(number);
     }
 
     @Override
-    public Object parse(String str) throws ParseException {
+    public Double parse(String str) throws ParseException {
         if (isBlank(str)) return null;
         try {
             return numberFormat.parse(str).doubleValue();

@@ -60,6 +60,6 @@ public class BigIntegerPropertyEditor extends AbstractPropertyEditor {
     }
 
     protected Formatter resolveFormatter() {
-        return new BigIntegerFormatter(getFormat());
+        return isBlank(getFormat()) ? null : new BigIntegerFormatter(getFormat());
     }
 }

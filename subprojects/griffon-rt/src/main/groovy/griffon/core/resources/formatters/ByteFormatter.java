@@ -25,7 +25,7 @@ import static griffon.util.GriffonNameUtils.isBlank;
  * @author Andres Almiray
  * @since 1.3.0
  */
-public class ByteFormatter extends AbstractFormatter {
+public class ByteFormatter extends AbstractFormatter<Byte> {
     private static final String PATTERN_CURRENCY = "currency";
     private static final String PATTERN_PERCENT = "percent";
 
@@ -48,20 +48,12 @@ public class ByteFormatter extends AbstractFormatter {
         }
     }
 
-    @Override
-    public String format(Object obj) {
-        if (obj instanceof Byte) {
-            return format((Byte) obj);
-        }
-        throw new IllegalArgumentException("Can't format given Object as a Byte");
-    }
-
     public String format(Byte number) {
         return numberFormat.format(number);
     }
 
     @Override
-    public Object parse(String str) throws ParseException {
+    public Byte parse(String str) throws ParseException {
         if (isBlank(str)) return null;
         try {
             return numberFormat.parse(str).byteValue();

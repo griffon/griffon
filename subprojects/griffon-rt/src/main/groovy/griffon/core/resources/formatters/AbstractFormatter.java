@@ -20,7 +20,7 @@ package griffon.core.resources.formatters;
  * @author Andres Almiray
  * @since 1.3.0
  */
-public abstract class AbstractFormatter implements Formatter {
+public abstract class AbstractFormatter<T> implements Formatter<T> {
     protected static int parseHexInt(String val, Class klass) throws ParseException {
         try {
             return Integer.parseInt(String.valueOf(val).trim(), 16) & 0xFF;

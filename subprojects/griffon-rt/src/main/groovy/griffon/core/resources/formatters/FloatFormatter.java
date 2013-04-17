@@ -25,7 +25,7 @@ import static griffon.util.GriffonNameUtils.isBlank;
  * @author Andres Almiray
  * @since 1.3.0
  */
-public class FloatFormatter extends AbstractFormatter {
+public class FloatFormatter extends AbstractFormatter<Float> {
     private static final String PATTERN_CURRENCY = "currency";
     private static final String PATTERN_PERCENT = "percent";
 
@@ -47,20 +47,12 @@ public class FloatFormatter extends AbstractFormatter {
         }
     }
 
-    @Override
-    public String format(Object obj) {
-        if (obj instanceof Float) {
-            return format((Float) obj);
-        }
-        throw new IllegalArgumentException("Can't format given Object as a Float");
-    }
-
     public String format(Float number) {
         return numberFormat.format(number);
     }
 
     @Override
-    public Object parse(String str) throws ParseException {
+    public Float parse(String str) throws ParseException {
         if (isBlank(str)) return null;
         try {
             return numberFormat.parse(str).floatValue();

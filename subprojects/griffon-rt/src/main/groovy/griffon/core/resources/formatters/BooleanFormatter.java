@@ -24,7 +24,7 @@ import static griffon.util.GriffonNameUtils.isBlank;
  * @author Andres Almiray
  * @since 1.3.0
  */
-public class BooleanFormatter extends AbstractFormatter {
+public class BooleanFormatter extends AbstractFormatter<Boolean> {
     private static final String PATTERN_BOOL = "boolean";
     private static final String PATTERN_QUERY = "query";
     private static final String PATTERN_SWITCH = "switch";
@@ -81,20 +81,12 @@ public class BooleanFormatter extends AbstractFormatter {
         throw parseError(str, Boolean.class);
     }
 
-    @Override
-    public String format(Object obj) {
-        if (obj instanceof Boolean) {
-            return format((Boolean) obj);
-        }
-        throw new IllegalArgumentException("Can't format given Object as a Boolean");
-    }
-
     public String format(Boolean value) {
         return delegate.format(value);
     }
 
     @Override
-    public Object parse(String str) throws ParseException {
+    public Boolean parse(String str) throws ParseException {
         return delegate.parse(str);
     }
 

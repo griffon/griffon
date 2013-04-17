@@ -25,7 +25,7 @@ import static griffon.util.GriffonNameUtils.isBlank;
  * @author Andres Almiray
  * @since 1.3.0
  */
-public class ShortFormatter extends AbstractFormatter {
+public class ShortFormatter extends AbstractFormatter<Short> {
     private static final String PATTERN_CURRENCY = "currency";
     private static final String PATTERN_PERCENT = "percent";
 
@@ -48,20 +48,12 @@ public class ShortFormatter extends AbstractFormatter {
         }
     }
 
-    @Override
-    public String format(Object obj) {
-        if (obj instanceof Short) {
-            return format((Short) obj);
-        }
-        throw new IllegalArgumentException("Can't format given Object as a Short");
-    }
-
     public String format(Short number) {
         return numberFormat.format(number);
     }
 
     @Override
-    public Object parse(String str) throws ParseException {
+    public Short parse(String str) throws ParseException {
         if (isBlank(str)) return null;
         try {
             return numberFormat.parse(str).shortValue();

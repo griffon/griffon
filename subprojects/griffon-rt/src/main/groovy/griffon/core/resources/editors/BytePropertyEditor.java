@@ -51,6 +51,6 @@ public class BytePropertyEditor extends AbstractPropertyEditor {
     }
 
     protected Formatter resolveFormatter() {
-        return new ByteFormatter(getFormat());
+        return isBlank(getFormat()) ? null : new ByteFormatter(getFormat());
     }
 }

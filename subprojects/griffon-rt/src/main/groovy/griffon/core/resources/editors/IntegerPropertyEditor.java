@@ -51,6 +51,6 @@ public class IntegerPropertyEditor extends AbstractPropertyEditor {
     }
 
     protected Formatter resolveFormatter() {
-        return new IntegerFormatter(getFormat());
+        return isBlank(getFormat()) ? null : new IntegerFormatter(getFormat());
     }
 }

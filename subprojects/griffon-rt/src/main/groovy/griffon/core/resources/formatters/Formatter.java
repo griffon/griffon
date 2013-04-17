@@ -20,8 +20,8 @@ package griffon.core.resources.formatters;
  * @author Andres Almiray
  * @since 1.3.0
  */
-public interface Formatter {
-    String format(Object obj);
+public interface Formatter<T> {
+    String format(T obj);
 
-    Object parse(String str) throws ParseException;
+    T parse(String str) throws ParseException;
 }

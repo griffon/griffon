@@ -60,6 +60,6 @@ public class BigDecimalPropertyEditor extends AbstractPropertyEditor {
     }
 
     protected Formatter resolveFormatter() {
-        return new BigDecimalFormatter(getFormat());
+        return isBlank(getFormat()) ? null : new BigDecimalFormatter(getFormat());
     }
 }

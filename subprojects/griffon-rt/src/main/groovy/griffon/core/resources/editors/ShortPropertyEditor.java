@@ -51,6 +51,6 @@ public class ShortPropertyEditor extends AbstractPropertyEditor {
     }
 
     protected Formatter resolveFormatter() {
-        return new ShortFormatter(getFormat());
+        return isBlank(getFormat()) ? null : new ShortFormatter(getFormat());
     }
 }

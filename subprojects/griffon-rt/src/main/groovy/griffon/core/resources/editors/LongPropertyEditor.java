@@ -51,6 +51,6 @@ public class LongPropertyEditor extends AbstractPropertyEditor {
     }
 
     protected Formatter resolveFormatter() {
-        return new LongFormatter(getFormat());
+        return isBlank(getFormat()) ? null : new LongFormatter(getFormat());
     }
 }

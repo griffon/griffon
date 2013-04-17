@@ -26,7 +26,7 @@ import static griffon.util.GriffonNameUtils.isBlank;
  * @author Andres Almiray
  * @since 1.3.0
  */
-public class DateFormatter extends AbstractFormatter {
+public class DateFormatter extends AbstractFormatter<Date> {
     private final DateFormat dateFormat;
 
     public DateFormatter() {
@@ -41,20 +41,12 @@ public class DateFormatter extends AbstractFormatter {
         }
     }
 
-    @Override
-    public String format(Object obj) {
-        if (obj instanceof Date) {
-            return format((Date) obj);
-        }
-        throw new IllegalArgumentException("Can't format given Object as a Date");
-    }
-
     public String format(Date date) {
         return dateFormat.format(date);
     }
 
     @Override
-    public Object parse(String str) throws ParseException {
+    public Date parse(String str) throws ParseException {
         if (isBlank(str)) return null;
         try {
             return dateFormat.parse(str);

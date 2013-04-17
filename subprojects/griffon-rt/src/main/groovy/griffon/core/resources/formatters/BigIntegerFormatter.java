@@ -27,7 +27,7 @@ import static griffon.util.GriffonNameUtils.isBlank;
  * @author Andres Almiray
  * @since 1.3.0
  */
-public class BigIntegerFormatter extends AbstractFormatter {
+public class BigIntegerFormatter extends AbstractFormatter<BigInteger> {
     private static final String PATTERN_CURRENCY = "currency";
     private static final String PATTERN_PERCENT = "percent";
 
@@ -51,20 +51,12 @@ public class BigIntegerFormatter extends AbstractFormatter {
         }
     }
 
-    @Override
-    public String format(Object obj) {
-        if (obj instanceof BigInteger) {
-            return format((BigInteger) obj);
-        }
-        throw new IllegalArgumentException("Can't format given Object as a BigInteger");
-    }
-
     public String format(BigInteger number) {
         return numberFormat.format(number);
     }
 
     @Override
-    public Object parse(String str) throws ParseException {
+    public BigInteger parse(String str) throws ParseException {
         if (isBlank(str)) return null;
         try {
             BigDecimal bd = (BigDecimal) numberFormat.parse(str);

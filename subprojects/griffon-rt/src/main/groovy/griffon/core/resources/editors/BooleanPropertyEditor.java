@@ -51,6 +51,6 @@ public class BooleanPropertyEditor extends AbstractPropertyEditor {
     }
 
     protected Formatter resolveFormatter() {
-        return BooleanFormatter.getInstance(getFormat());
+        return isBlank(getFormat()) ? null : BooleanFormatter.getInstance(getFormat());
     }
 }

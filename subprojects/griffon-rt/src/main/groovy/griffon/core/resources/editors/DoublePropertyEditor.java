@@ -51,6 +51,6 @@ public class DoublePropertyEditor extends AbstractPropertyEditor {
     }
 
     protected Formatter resolveFormatter() {
-        return new DoubleFormatter(getFormat());
+        return isBlank(getFormat()) ? null : new DoubleFormatter(getFormat());
     }
 }

@@ -26,7 +26,7 @@ import static griffon.util.GriffonNameUtils.isBlank;
  * @author Andres Almiray
  * @since 1.3.0
  */
-public class CalendarFormatter extends AbstractFormatter {
+public class CalendarFormatter extends AbstractFormatter<Calendar> {
     private final DateFormat dateFormat;
 
     public CalendarFormatter() {
@@ -41,20 +41,12 @@ public class CalendarFormatter extends AbstractFormatter {
         }
     }
 
-    @Override
-    public String format(Object obj) {
-        if (obj instanceof Calendar) {
-            return format((Calendar) obj);
-        }
-        throw new IllegalArgumentException("Can't format given Object as a Calendar");
-    }
-
     public String format(Calendar date) {
         return dateFormat.format(date.getTime());
     }
 
     @Override
-    public Object parse(String str) throws ParseException {
+    public Calendar parse(String str) throws ParseException {
         if (isBlank(str)) return null;
         try {
             Calendar c = Calendar.getInstance();
