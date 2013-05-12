@@ -19,11 +19,15 @@ package org.codehaus.griffon.runtime.core.resources;
 import griffon.core.GriffonApplication;
 import griffon.core.resources.InjectedResource;
 import griffon.core.resources.ResourcesInjector;
+import griffon.core.resources.editors.ExtendedPropertyEditor;
+import griffon.core.resources.editors.PropertyEditorResolver;
+import griffon.util.GriffonNameUtils;
+import groovy.lang.MissingMethodException;
+import org.codehaus.groovy.runtime.InvokerHelper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.beans.PropertyEditor;
-import java.beans.PropertyEditorManager;
 import java.lang.reflect.Field;
 import java.util.Arrays;
 
@@ -67,6 +71,7 @@ public abstract class AbstractResourcesInjector implements ResourcesInjector {
             String key = annotation.key();
             String[] args = annotation.args();
             String defaultValue = annotation.defaultValue();
+            String format = annotation.format();
             if (isBlank(key)) key = fqFieldName;
 
             if (LOG.isDebugEnabled()) {
@@ -75,6 +80,7 @@ public abstract class AbstractResourcesInjector implements ResourcesInjector {
                     " [key='" + key +
                     "', args='" + Arrays.toString(args) +
                     "', defaultValue='" + defaultValue +
+                    "', format='" + format +
                     "'] is marked for resource injection.");
             }
 
@@ -87,7 +93,7 @@ public abstract class AbstractResourcesInjector implements ResourcesInjector {
 
             if (null != value) {
                 if (!field.getType().isAssignableFrom(value.getClass())) {
-                    value = convertValue(field.getType(), value);
+                    value = convertValue(field.getType(), value, format);
                 }
                 setFieldValue(instance, field, value, fqFieldName);
             }
@@ -100,8 +106,8 @@ public abstract class AbstractResourcesInjector implements ResourcesInjector {
 
     protected abstract Object resolveResource(String key, String[] args, String defaultValue);
 
-    protected Object convertValue(Class<?> type, Object value) {
-        final PropertyEditor propertyEditor = PropertyEditorManager.findEditor(type);
+    protected Object convertValue(Class<?> type, Object value, String format) {
+        PropertyEditor propertyEditor = resolvePropertyEditor(type, format);
         if (null == propertyEditor) return value;
         if (value instanceof CharSequence) {
             propertyEditor.setAsText(String.valueOf(value));
@@ -111,13 +117,26 @@ public abstract class AbstractResourcesInjector implements ResourcesInjector {
         return propertyEditor.getValue();
     }
 
+    protected PropertyEditor resolvePropertyEditor(Class<?> type, String format) {
+        PropertyEditor propertyEditor = PropertyEditorResolver.findEditor(type);
+        if (propertyEditor instanceof ExtendedPropertyEditor) {
+            ((ExtendedPropertyEditor) propertyEditor).setFormat(format);
+        }
+        return propertyEditor;
+    }
+
     protected void setFieldValue(Object instance, Field field, Object value, String fqFieldName) {
+        String setter = GriffonNameUtils.getSetterName(field.getName());
         try {
-            field.setAccessible(true);
-            field.set(instance, value);
-        } catch (IllegalAccessException e) {
-            if (LOG.isWarnEnabled()) {
-                LOG.warn("Cannot set value on field " + fqFieldName + " of instance " + instance, sanitize(e));
+            InvokerHelper.invokeMethod(instance, setter, value);
+        } catch (MissingMethodException mme) {
+            try {
+                field.setAccessible(true);
+                field.set(instance, value);
+            } catch (IllegalAccessException e) {
+                if (LOG.isWarnEnabled()) {
+                    LOG.warn("Cannot set value on field " + fqFieldName + " of instance " + instance, sanitize(e));
+                }
             }
         }
     }

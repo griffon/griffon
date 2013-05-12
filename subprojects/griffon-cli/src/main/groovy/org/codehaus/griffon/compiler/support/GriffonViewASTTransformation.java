@@ -18,18 +18,13 @@ package org.codehaus.griffon.compiler.support;
 
 import griffon.core.GriffonView;
 import griffon.core.GriffonViewClass;
-import org.codehaus.griffon.ast.GriffonASTUtils;
 import org.codehaus.griffon.compiler.GriffonCompilerContext;
-import org.codehaus.griffon.compiler.SourceUnitCollector;
 import org.codehaus.griffon.runtime.core.AbstractGriffonView;
 import org.codehaus.griffon.runtime.core.AbstractGriffonViewScript;
-import org.codehaus.groovy.ast.ClassHelper;
 import org.codehaus.groovy.ast.ClassNode;
 import org.codehaus.groovy.control.CompilePhase;
 import org.codehaus.groovy.control.SourceUnit;
 import org.codehaus.groovy.transform.GroovyASTTransformation;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * Handles generation of code for Griffon views.
@@ -40,7 +35,6 @@ import org.slf4j.LoggerFactory;
  */
 @GroovyASTTransformation(phase = CompilePhase.CANONICALIZATION)
 public class GriffonViewASTTransformation extends GriffonArtifactASTTransformation {
-    private static final Logger LOG = LoggerFactory.getLogger(GriffonViewASTTransformation.class);
     private static final String ARTIFACT_PATH = "views";
     private static final ClassNode GRIFFON_VIEW_CLASS = makeClassSafe(GriffonView.class);
     private static final ClassNode ABSTRACT_GRIFFON_VIEW_CLASS = makeClassSafe(AbstractGriffonView.class);
@@ -51,48 +45,34 @@ public class GriffonViewASTTransformation extends GriffonArtifactASTTransformati
         return ARTIFACT_PATH.equals(GriffonCompilerContext.getArtifactPath(source)) && classNode.getName().endsWith(GriffonViewClass.TRAILING);
     }
 
-
     protected boolean allowsScriptAsArtifact() {
         return true;
     }
 
-    protected void transform(ClassNode classNode, SourceUnit source, String artifactPath) {
-        if (!isViewArtifact(classNode, source)) return;
-        doTransform(classNode);
+    protected String getArtifactType() {
+        return GriffonViewClass.TYPE;
     }
 
-    private void doTransform(ClassNode classNode) {
-        ClassNode superClass = classNode.getSuperClass();
-        if (classNode.isDerivedFrom(ClassHelper.SCRIPT_TYPE)) {
-            if (LOG.isDebugEnabled()) {
-                LOG.debug("Setting " + ABSTRACT_GRIFFON_VIEW_SCRIPT_CLASS.getName() + " as the superclass of " + classNode.getName());
-            }
-            classNode.setSuperClass(ABSTRACT_GRIFFON_VIEW_SCRIPT_CLASS);
-        } else if (ClassHelper.OBJECT_TYPE.equals(classNode.getSuperClass())) {
-            if (LOG.isDebugEnabled()) {
-                LOG.debug("Setting " + ABSTRACT_GRIFFON_VIEW_CLASS.getName() + " as the superclass of " + classNode.getName());
-            }
-            classNode.setSuperClass(ABSTRACT_GRIFFON_VIEW_CLASS);
-        } else if (!classNode.implementsInterface(GRIFFON_VIEW_CLASS)) {
-            inject(classNode, superClass);
-        }
+    protected ClassNode getSuperScriptClassNode(ClassNode classNode) {
+        return ABSTRACT_GRIFFON_VIEW_SCRIPT_CLASS;
     }
 
-    private void inject(ClassNode classNode, ClassNode superClass) {
-        SourceUnit superSource = SourceUnitCollector.getInstance().getSourceUnit(superClass);
-        if (isViewArtifact(superClass, superSource)) return;
+    protected ClassNode getSuperClassNode(ClassNode classNode) {
+        return ABSTRACT_GRIFFON_VIEW_CLASS;
+    }
 
-        if (superSource == null) {
-            if (LOG.isDebugEnabled()) {
-                LOG.debug("Injecting " + GRIFFON_VIEW_CLASS.getName() + " behavior to " + classNode.getName());
-            }
-            // 1. add interface
-            GriffonASTUtils.injectInterface(classNode, GRIFFON_VIEW_CLASS);
-            // 2. add methods
-            ASTInjector injector = new GriffonMvcArtifactASTInjector();
-            injector.inject(classNode, GriffonViewClass.TYPE);
-        } else {
-            doTransform(superClass);
-        }
+    protected ClassNode getInterfaceNode() {
+        return GRIFFON_VIEW_CLASS;
+    }
+
+    protected boolean matches(ClassNode classNode, SourceUnit source) {
+        return isViewArtifact(classNode, source);
+    }
+
+    protected ASTInjector[] getASTInjectors() {
+        return new ASTInjector[]{
+            new GriffonMvcArtifactASTInjector(),
+            new GriffonViewASTInjector()
+        };
     }
 }

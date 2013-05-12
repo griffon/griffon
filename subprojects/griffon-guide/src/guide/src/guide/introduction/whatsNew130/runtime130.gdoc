@@ -1,0 +1,45 @@
+h4. Reference Keys for Messages and Resources
+
+There may be times where you would want to have a 2 keys reference the same value, as if one key were an alias for the other. @MessageSource@ and @ResourceResolver@ support the notion of referenced keys for this matter. In order to achieve this, the value of the alias key must define the aliased key with a special format, for example
+
+{code}
+famous.quote = This is {0}!
+hello.world = @[famous.quote]
+{code}
+
+Resolving those keys results in
+
+{code}
+assert app.getMessage('famous.quote', ['Sparta']) == 'This is Sparta!'
+assert app.getMessage('hello.world', ['Griffon']) == 'This is Griffon!'
+{code}
+
+h4. Property Editors for Basic Types
+
+The list of default @PropertyEditor@s that Griffon can handle has grown to the following
+
+ * java.lang.String -> @griffon.core.resources.editors.StringPropertyEditor@
+ * java.io.File -> @griffon.core.resources.editors.FilePropertyEditor@
+ * java.net.URL -> @griffon.core.resources.editors.URLPropertyEditor@
+ * java.net.URI -> @griffon.core.resources.editors.URIPropertyEditor@
+ * java.math.BigDecimal -> @griffon.core.resources.editors.BigDecimalPropertyEditor@
+ * java.math.BigInteger -> @griffon.core.resources.editors.BigIntegerPropertyEditor@
+ * java.lang.Boolean -> @griffon.core.resources.editors.BooleanPropertyEditor@
+ * java.lang.Byte -> @griffon.core.resources.editors.BytePropertyEditor@
+ * java.lang.Short -> @griffon.core.resources.editors.ShortPropertyEditor@
+ * java.lang.Integer -> @griffon.core.resources.editors.IntegerPropertyEditor@
+ * java.lang.Long -> @griffon.core.resources.editors.LongPropertyEditor@
+ * java.lang.Float -> @griffon.core.resources.editors.FloatPropertyEditor@
+ * java.lang.Double -> @griffon.core.resources.editors.DoublePropertyEditor@
+ * java.util.Calendar -> @griffon.core.resources.editors.CalendarPropertyEditor@
+ * java.util.Date -> @griffon.core.resources.editors.DatePropertyEditor@
+
+There's an additional @griffon.core.resources.editors.EnumPropertyEditor@ that knows how to handle any Enum subclass. Please use @griffon.core.resources.editors.PropertyEditorResolver@ instead of @java.beans.PropertyEditorManager@ for locating a suitable @PropertyEditor@ given a particular type.
+
+h4. Optional Format in \@InjectedResource
+
+The @[\@griffon.core.resources.InjectedResource|api:griffon.core.resources.InjectedResource]@ annotation supports an optional @format@ property that can be used as a hint for PropertyEditors when value conversion is performed.
+
+h4. Action Interceptors
+
+Plugin authors now have the chance to define a new type of component: action interceptors. [Action interceptors|guide:actionInterceptors] are executed @before@ and @after@ a controller action, thus allowing plugin authors to configure the execution environment. Examples of such configuration can be seen in the [shiro|http://artifacts.griffon-framework.org/plugi/shiro] and [scaffolding|http://artifacts.griffon-framework.org/plugi/scaffolding] plugins.

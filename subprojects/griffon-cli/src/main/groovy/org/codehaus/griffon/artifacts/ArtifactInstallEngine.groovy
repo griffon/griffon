@@ -16,6 +16,7 @@
 
 package org.codehaus.griffon.artifacts
 
+import griffon.util.*
 import groovy.json.JsonBuilder
 import org.apache.commons.io.FileUtils
 import org.codehaus.griffon.artifacts.model.Archetype
@@ -27,7 +28,6 @@ import org.codehaus.griffon.cli.ScriptExitException
 import org.codehaus.griffon.resolve.IvyDependencyManager
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
-import griffon.util.*
 
 import static griffon.util.ArtifactSettings.getRegisteredArtifacts
 import static griffon.util.ArtifactSettings.isValidVersion
@@ -37,6 +37,7 @@ import static griffon.util.GriffonNameUtils.getPropertyNameForLowerCaseHyphenSep
 import static griffon.util.GriffonUtil.getScriptName
 import static org.codehaus.griffon.artifacts.ArtifactRepository.DEFAULT_LOCAL_NAME
 import static org.codehaus.griffon.cli.CommandLineConstants.*
+import static org.codehaus.groovy.runtime.typehandling.DefaultTypeTransformation.castToBoolean
 
 /**
  * @author Andres Almiray
@@ -58,7 +59,7 @@ class ArtifactInstallEngine {
     def variableStore = [:]
 
     Closure errorHandler = { msg -> throw new ScriptExitException(1, msg) }
-    Closure eventHandler = { name, msg -> if (msg instanceof CharSequence) println msg}
+    Closure eventHandler = { name, msg -> if (msg instanceof CharSequence) println msg }
     Closure pluginScriptRunner
     boolean interactive
 
@@ -75,7 +76,7 @@ class ArtifactInstallEngine {
         value in [INSTALL_FAILURE_ABORT, INSTALL_FAILURE_CONTINUE] ? value : INSTALL_FAILURE_CONTINUE
     }
 
-    boolean resolvePluginDependencies() {
+    boolean resolvePluginDependencies(boolean install = true) {
         Map<String, String> registeredPlugins = getRegisteredArtifacts(Plugin.TYPE, metadata)
         Map<String, String> installedPlugins = settings.artifactSettings.getInstalledArtifacts(Plugin.TYPE)
 
@@ -91,9 +92,9 @@ class ArtifactInstallEngine {
         }
 
         if (LOG.debugEnabled) {
-            String registered = registeredPlugins.collect([]) {k, v -> "${k}-${v}"}.join('\n\t')
+            String registered = registeredPlugins.collect([]) { k, v -> "${k}-${v}" }.join('\n\t')
             if (registered) LOG.debug("Registered plugins:\n\t${registered}")
-            String installed = installedPlugins.collect([]) {k, v -> "${k}-${v}"}.join('\n\t')
+            String installed = installedPlugins.collect([]) { k, v -> "${k}-${v}" }.join('\n\t')
             if (installed) LOG.debug("Installed plugins:\n\t${installed}")
         }
 
@@ -127,11 +128,11 @@ class ArtifactInstallEngine {
         }
 
         if (LOG.debugEnabled) {
-            String installed = installedPlugins.collect([]) {k, v -> "${k}-${v}"}.join('\n\t')
+            String installed = installedPlugins.collect([]) { k, v -> "${k}-${v}" }.join('\n\t')
             if (installed) LOG.debug("Installed plugins (confirmed):\n\t${installed}")
-            String missing = missingPlugins.collect([]) {k, v -> "${k}-${v}"}.join('\n\t')
+            String missing = missingPlugins.collect([]) { k, v -> "${k}-${v}" }.join('\n\t')
             if (missing) LOG.debug("Missing plugins:\n\t${missing}")
-            String todelete = pluginsToDelete.collect([]) {k, v -> "${k}-${v}"}.join('\n\t')
+            String todelete = pluginsToDelete.collect([]) { k, v -> "${k}-${v}" }.join('\n\t')
             if (todelete) LOG.debug("Plugins to be deleted:\n\t${todelete}")
         }
 
@@ -143,14 +144,14 @@ class ArtifactInstallEngine {
             installedPlugins.remove(name)
         }
 
-        if (!missingPlugins) {
+        if (install && !missingPlugins) {
             return true
         }
 
         ArtifactDependencyResolver resolver = new ArtifactDependencyResolver(settings)
         List<ArtifactDependency> dependencies = []
         try {
-            dependencies = resolver.resolveDependencyTree(Plugin.TYPE, missingPlugins)
+            dependencies = resolver.resolveDependencyTree(Plugin.TYPE, install ? missingPlugins : installedPlugins + missingPlugins)
         } catch (Exception e) {
             sanitize(e)
             eventHandler 'StatusError', "Some missing plugins failed to resolve => $e"
@@ -158,14 +159,22 @@ class ArtifactInstallEngine {
         }
 
         if (LOG.debugEnabled && dependencies) {
-            LOG.debug("Dependency resolution outcome:\n${dependencies.collect([]) {printDependencyTree(it, true)}.join('\n')}")
+            LOG.debug("Dependency resolution outcome:\n${dependencies.collect([]) { printDependencyTree(it, true) }.join('\n')}")
         }
 
-        try {
-            return _installPlugins(dependencies, resolver, false)
-        } catch (InstallArtifactException iae) {
-            errorHandler "Could not resolve plugin dependencies. Review all dependencies marked with ! and try again with -Dgriffon.artifact.force.upgrade=true"
+        if (install) {
+            try {
+                return _installPlugins(dependencies, resolver, false)
+            } catch (InstallArtifactException iae) {
+                errorHandler "Could not resolve plugin dependencies. Review all dependencies marked with ! and try again with -Dgriffon.artifact.force.upgrade=true"
+            }
+        } else {
+            resolveDependenciesFor(dependencies, resolver, false, false)
+            ArtifactDependencyGraphRenderer renderer = new ArtifactDependencyGraphRenderer(settings)
+            renderer.render(dependencies)
         }
+
+        true
     }
 
     boolean installArtifact(String type, String name, String version = null) {
@@ -182,7 +191,7 @@ class ArtifactInstallEngine {
         Artifact artifact = null
         ArtifactRepository artifactRepository = null
 
-        ArtifactRepositoryRegistry.instance.withRepositories {String repoName, ArtifactRepository repository ->
+        ArtifactRepositoryRegistry.instance.withRepositories { String repoName, ArtifactRepository repository ->
             if (artifact) return
             artifact = repository.findArtifact(type, name)
             if (artifact) {
@@ -196,7 +205,7 @@ class ArtifactInstallEngine {
         Release release = null
         if (artifact != null) {
             if (version != null) {
-                release = artifact.releases.find {it.version == version}
+                release = artifact.releases.find { it.version == version }
             } else {
                 for (r in artifact.releases) {
                     if (isValidVersion(GriffonUtil.griffonVersion, r.griffonVersion)) {
@@ -244,7 +253,7 @@ class ArtifactInstallEngine {
         }
 
         if (LOG.debugEnabled && dependencies) {
-            LOG.debug("Dependency resolution outcome:\n${dependencies.collect([]) {printDependencyTree(it, true)}.join('\n')}")
+            LOG.debug("Dependency resolution outcome:\n${dependencies.collect([]) { printDependencyTree(it, true) }.join('\n')}")
         }
 
         try {
@@ -258,7 +267,7 @@ class ArtifactInstallEngine {
         installedArtifacts.clear()
         uninstalledArtifacts.clear()
 
-        List<ArtifactDependency> installPlan = resolveDependenciesFor(dependencies, resolver, framework)
+        List<ArtifactDependency> installPlan = resolveDependenciesFor(dependencies, resolver, framework, true)
         installPluginsInternal(installPlan, framework)
     }
 
@@ -274,7 +283,7 @@ class ArtifactInstallEngine {
 
         if (failedDependencies) {
             String failed = ''
-            failedDependencies.each {failed += it.toString() }
+            failedDependencies.each { failed += it.toString() }
             eventHandler 'StatusFinal', "The following plugins failed to be installed due to missing dependencies or a postinstall error:\n${failed}"
             return false
         }
@@ -299,8 +308,8 @@ class ArtifactInstallEngine {
                             // must check tat both checksum && date exist as these properties
                             // are not present if the plugin was insatlled directly from zip
                             if ((installedRelease.checksum && installedRelease.date) &&
-                                    installedRelease.checksum == dependency.release.checksum ||
-                                    installedRelease.date.after(dependency.release.date)) continue
+                                installedRelease.checksum == dependency.release.checksum ||
+                                installedRelease.date.after(dependency.release.date)) continue
                         }
                     }
 
@@ -408,12 +417,12 @@ class ArtifactInstallEngine {
         }
 
         if (LOG.debugEnabled && dependencies) {
-            LOG.debug("Dependency resolution outcome:\n${dependencies.collect([]) {printDependencyTree(it, true)}.join('\n')}")
+            LOG.debug("Dependency resolution outcome:\n${dependencies.collect([]) { printDependencyTree(it, true) }.join('\n')}")
         }
         dependencies
     }
 
-    private List<ArtifactDependency> resolveDependenciesFor(List<ArtifactDependency> dependencies, ArtifactDependencyResolver resolver, boolean framework) {
+    private List<ArtifactDependency> resolveDependenciesFor(List<ArtifactDependency> dependencies, ArtifactDependencyResolver resolver, boolean framework, boolean resolve) {
         Map<String, Release> installedReleases = settings.artifactSettings.getInstalledReleases(Plugin.TYPE, framework)
 
         Map<String, ArtifactDependency> installedDependencies = [:]
@@ -441,42 +450,62 @@ class ArtifactInstallEngine {
             }
         }
 
-        for(ArtifactDependency dep : dependencies) {
+        boolean forceUpgrade = castToBoolean(settings.getPropertyValue(KEY_FORCE_ARTIFACT_UPGRADE, false))
+
+        for (ArtifactDependency dep : dependencies) {
             ArtifactDependency installed = installedDependencies[dep.name]
-            if (!installed || installed.snapshot || installed.version != dep.version) continue
+            if (!installed || installed.snapshot) continue
+            if (installed.version != dep.version) {
+                if (forceUpgrade) {
+                    eventHandler 'StatusUpdate', "Dependency version mismatch but allowed: ${dep.name} (required: ${dep.version}, found: ${installed.version})"
+                    dep.evicted = true
+                    dep.resolved = true
+                    dep.conflicted = false
+                }
+                continue
+            }
             dep.installed = true
             dep.resolved = true
             dep.conflicted = false
         }
 
         if (LOG.debugEnabled && installedDependencies) {
-            LOG.debug("Installed dependencies:\n${installedDependencies.values().collect([]) {printDependencyTree(it, true)}.join('\n')}")
+            LOG.debug("Installed dependencies:\n${installedDependencies.values().collect([]) { printDependencyTree(it, true) }.join('\n')}")
         }
 
-        if (dependencies.grep {!it.resolved}) {
-            String installed = installedDependencies.values().collect([]) {printDependencyTree(it, true)}.join('\n')
-            String target = dependencies.collect([]) {printDependencyTree(it, true)}.join('\n')
+        if (resolve && dependencies.grep { !it.resolved }) {
+            String installed = installedDependencies.values().collect([]) { printDependencyTree(it, true) }.join('\n')
+            String target = dependencies.collect([]) { printDependencyTree(it, true) }.join('\n')
             eventHandler 'StatusError', "Some dependencies could not be resolved.\n-= INSTALLED =-\n${installed}\n-= MISSING =-\n${target}"
             throw new InstallArtifactException('There are unresolved plugin dependencies.')
         }
 
         List<ArtifactDependency> installPlan = resolver.resolveEvictions(installedDependencies.values(), dependencies)
         if (LOG.debugEnabled) {
-            String installed = installedDependencies.values().collect([]) {printDependencyTree(it, true)}.join('\n')
-            String target = dependencies.collect([]) {printDependencyTree(it, true)}.join('\n')
+            String installed = installedDependencies.values().collect([]) { printDependencyTree(it, true) }.join('\n')
+            String target = dependencies.collect([]) { printDependencyTree(it, true) }.join('\n')
             if (installed || target) LOG.debug("Dependency evictions & conflicts outcome:\n-= INSTALLED =-\n${installed}\n-= MISSING =-\n${target}")
         }
 
-        if (dependencies.grep {it.conflicted}) {
-            String installed = installedDependencies.values().collect([]) {printDependencyTree(it, true)}.join('\n')
-            String target = dependencies.collect([]) {printDependencyTree(it, true)}.join('\n')
+        if (resolve && dependencies.grep { it.conflicted }) {
+            String installed = installedDependencies.values().collect([]) { printDependencyTree(it, true) }.join('\n')
+            String target = dependencies.collect([]) { printDependencyTree(it, true) }.join('\n')
             eventHandler 'StatusError', "Some dependencies have conflicts.\n-= INSTALLED =-\n${installed}\n-= MISSING =-\n${target}"
             throw new InstallArtifactException('There are plugin dependencies with unresolved conflicts.')
         }
 
         if (LOG.debugEnabled && installPlan) {
-            LOG.debug("Dependency install plan:\n${installPlan.collect([]) {it.toString().trim()}.join('\n')}")
+            LOG.debug("Dependency install plan:\n${installPlan.collect([]) { it.toString().trim() }.join('\n')}")
         }
+
+        List<ArtifactDependency> list = []
+        list.addAll(dependencies)
+        installedDependencies.values().each { ArtifactDependency dep ->
+            if (list.find { it.name == dep.name && it.version == dep.version }) return
+            list.add(dep)
+        }
+        dependencies.clear()
+        dependencies.addAll(list)
 
         installPlan
     }
@@ -605,11 +634,11 @@ class ArtifactInstallEngine {
 
     private void resolvePluginJarDependencies(String pluginInstallPath, String pluginName, String pluginVersion) {
         List<File> dependencyDescriptors = [
-                new File("$pluginInstallPath/dependencies.groovy"),
-                new File("$pluginInstallPath/plugin-dependencies.groovy")
+            new File("$pluginInstallPath/dependencies.groovy"),
+            new File("$pluginInstallPath/plugin-dependencies.groovy")
         ]
 
-        if (dependencyDescriptors.any {it.exists()}) {
+        if (dependencyDescriptors.any { it.exists() }) {
             eventHandler 'StatusUpdate', "Resolving plugin ${pluginName}-${pluginVersion} JAR dependencies"
             // create a local dependency manager to avoid conflicts with other plugins
             // this enables isolated resolution of dependencies at the cost of time
@@ -629,18 +658,92 @@ class ArtifactInstallEngine {
         }
     }
 
-    void uninstall(String type, String name, String version = null, boolean framework = false) {
+    void uninstall(String type, String name, String version = null, Map options) {
         installedArtifacts.clear()
         uninstalledArtifacts.clear()
 
-        try {
-            if (!doUninstall(type, name, version, framework)) {
+        List<Map<String, String>> toUninstall = []
+
+        if (options.dryRun || options.force) {
+            Map<String, Release> installedReleases = settings.artifactSettings.getInstalledReleases(Plugin.TYPE, options.framework)
+            Release release = installedReleases[name]
+
+            if (!release) {
                 eventHandler 'StatusFinal', "No ${type} [$name${version ? '-' + version : ''}] installed, cannot uninstall."
+                return
+            }
+
+            Map<String, Map<String, String>> flattenedDependencies = flattenDependencies(installedReleases)
+            List<Release> dependencies = gatherDependencies(release, installedReleases, [])
+
+            dependencies.each { Release r ->
+                if (r.artifact.name == Metadata.current.getApplicationToolkit()) return
+                if (options.force || flattenedDependencies[r.artifact.name].count == 1) {
+                    toUninstall << [name: r.artifact.name, version: r.version]
+                }
+            }
+
+        } else {
+            toUninstall << [name: name, version: version]
+        }
+
+        if (options.dryRun || toUninstall.size() > 1) {
+            println "\nPlugin${toUninstall.size() > 1 ? 's' : ''} to be uninstalled:"
+            for (desc in toUninstall) {
+                println "\t ${desc.name}-${desc.version}"
+            }
+        }
+
+        if (options.dryRun) return
+
+        try {
+            for (desc in toUninstall) {
+                if (!doUninstall(type, desc.name, desc.version, options.framework)) {
+                    eventHandler 'StatusFinal', "No ${type} [${desc.name}${desc.version ? '-' + desc.version : ''}] installed, cannot uninstall."
+                }
             }
         } catch (e) {
             sanitize(e)
-            errorHandler "An error occured uninstalling the ${type} [$name${version ? '-' + version : ''}]: ${e.message}"
+            errorHandler "An error occurred uninstalling the ${type} [$name${version ? '-' + version : ''}]: ${e.message}"
         }
+    }
+
+    private List<Release> gatherDependencies(Release release, Map<String, Release> installedReleases, List<Release> releases) {
+        if (release?.dependencies) {
+            for (Map<String, String> dependency : release.dependencies) {
+                gatherDependencies(installedReleases[dependency.name], installedReleases, releases)
+            }
+        }
+        if (release) releases << release
+        releases
+    }
+
+    private Map<String, Map<String, String>> flattenDependencies(Map<String, Release> installedReleases) {
+        Map<String, Map<String, String>> releases = [:]
+        for (Release release : installedReleases.values()) {
+            if (!releases[release.artifact.name]) {
+                releases[release.artifact.name] = [count: 1, version: release.version]
+            }
+            flattenDependencies(release, installedReleases, releases)
+        }
+        releases
+    }
+
+    private Map<String, Map<String, String>> flattenDependencies(Release release, Map<String, Release> installedReleases, Map<String, Map<String, String>> releases) {
+        if (release?.dependencies) {
+            for (Map<String, String> dependency : release.dependencies) {
+                Release depRelease = installedReleases[dependency.name]
+                if (depRelease) {
+                    if (releases[depRelease.artifact.name]) {
+                        releases[depRelease.artifact.name].count += 1
+                    } else {
+                        releases[depRelease.artifact.name] = [count: 1, version: depRelease.version]
+                    }
+                    flattenDependencies(depRelease, installedReleases, releases)
+                }
+            }
+        }
+        releases
     }
 
     private boolean doUninstall(String type, String name, String version = null, boolean framework) {
@@ -741,7 +844,7 @@ class ArtifactInstallEngine {
     }
 
     private void displayNewScripts(String pluginName, installPath) {
-        List<File> providedScripts = new File("${installPath}/scripts").listFiles().findAll { !it.name.startsWith('_') && it.name.endsWith('.groovy')}
+        List<File> providedScripts = new File("${installPath}/scripts").listFiles().findAll { !it.name.startsWith('_') && it.name.endsWith('.groovy') }
         if (providedScripts) {
             String legend = "Plugin ${pluginName} provides the following new scripts:"
             println legend

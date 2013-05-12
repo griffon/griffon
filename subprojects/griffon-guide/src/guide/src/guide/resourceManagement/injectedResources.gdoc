@@ -25,4 +25,13 @@ class SampleModel {
   * If a value is specified for the @key@ argument then use it as is
   * otherwise construct a key based in the field name prefixed with the full qualified class name of the field's owner
 
-You may also specify a default value if the resource definition is not found, however be aware that this value must be set as a String thus guaranteeing a type conversion.
+You may also specify a default value if the resource definition is not found, however be aware that this value must be set as a String thus guaranteeing a type conversion. An optional @format@ value may be specified as a hint to the PropertyEditor used during value conversion, for example
+
+{code}
+package sample
+
+import griffon.core.resources.InjectedResource
+class SampleModel {
+    @InjectedResource(defaultValue='10.04.2013 2:30 PM', format='dd.MM.yyyy h:mm a') Date date
+}
+{code}

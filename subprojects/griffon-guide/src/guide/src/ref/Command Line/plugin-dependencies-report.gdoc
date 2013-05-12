@@ -1,0 +1,51 @@
+h1. plugin-dependencies-report
+
+h2. Purpose
+
+The @dependency-report@ produces a report of plugin dependencies required by the application or plugin project.
+
+h2. Examples
+
+{code}
+griffon plugin-dependencies-report
+{code}
+
+h2. Description
+
+Usage: 
+{code:java}
+griffon plugin-dependencies-report
+{code}
+
+Plugin dependencies use the following prefix characters to identify their state
+
+ * @.@ the artifact is installed
+ * @+@ the artifact will be installed
+ * @-@ the artifact will be removed or was evicted in favor of a more recent version
+ * @?@ the artifact could not be resolved
+ * @!@ the artifact has conflicting versions
+
+For example given the following plugins definitions in @application.properties@
+
+{code}
+plugins.dialogs=0.5
+plugins.miglayout=1.0.0
+plugins.swing=1.3.0
+plugins.foo=0.1
+{code}
+
+The generated report would be
+
+{code}
+sample
+sample
++--- . dialogs-0.5 [griffon-local]
+|    \\--- + glazedlists-1.0.0 [griffon-local]
+|         \\--- - swing-1.0.0 [griffon-local]
+|    \\--- . miglayout-1.0.0 [griffon-local]
+|         \\--- - swing-1.0.0 [griffon-local]
++--- . swing-1.3.0 [griffon-local]
++--- ? foo-0.1
++--- . miglayout-1.0.0 [griffon-local]
+|    \\--- - swing-1.0.0 [griffon-local]
+{code}

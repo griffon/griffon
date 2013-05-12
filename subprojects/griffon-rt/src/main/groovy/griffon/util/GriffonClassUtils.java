@@ -154,6 +154,7 @@ public final class GriffonClassUtils {
         MVC_METHODS.add(new MethodDescriptor("getAddonManager"));
         MVC_METHODS.add(new MethodDescriptor("getMVCGroupManager"));
         MVC_METHODS.add(new MethodDescriptor("setBuilder", new Class[]{FactoryBuilderSupport.class}));
+        MVC_METHODS.add(new MethodDescriptor("invokeAction", new Class[]{String.class, Object[].class}));
 
         SERVICE_METHODS.add(new MethodDescriptor("serviceInit"));
         SERVICE_METHODS.add(new MethodDescriptor("serviceDestroy"));
@@ -202,6 +203,7 @@ public final class GriffonClassUtils {
         RESOURCE_HANDLER_METHODS.add(new MethodDescriptor("getResourceAsStream", new Class[]{String.class}));
         RESOURCE_HANDLER_METHODS.add(new MethodDescriptor("getResources", new Class[]{String.class}));
 
+        MESSAGE_SOURCE_METHODS.add(new MethodDescriptor("resolveMessageValue", new Class[]{String.class, Locale.class}));
         MESSAGE_SOURCE_METHODS.add(new MethodDescriptor("getMessage", new Class[]{String.class}));
         MESSAGE_SOURCE_METHODS.add(new MethodDescriptor("getMessage", new Class[]{String.class, Object[].class}));
         MESSAGE_SOURCE_METHODS.add(new MethodDescriptor("getMessage", new Class[]{String.class, Locale.class}));
@@ -218,7 +220,11 @@ public final class GriffonClassUtils {
         MESSAGE_SOURCE_METHODS.add(new MethodDescriptor("getMessage", new Class[]{String.class, Map.class, Locale.class}));
         MESSAGE_SOURCE_METHODS.add(new MethodDescriptor("getMessage", new Class[]{String.class, Map.class, String.class}));
         MESSAGE_SOURCE_METHODS.add(new MethodDescriptor("getMessage", new Class[]{String.class, Map.class, String.class, Locale.class}));
+        MESSAGE_SOURCE_METHODS.add(new MethodDescriptor("formatMessage", new Class[]{String.class, Object[].class}));
+        MESSAGE_SOURCE_METHODS.add(new MethodDescriptor("formatMessage", new Class[]{String.class, List.class}));
+        MESSAGE_SOURCE_METHODS.add(new MethodDescriptor("formatMessage", new Class[]{String.class, Map.class}));
 
+        RESOURCE_RESOLVER_METHODS.add(new MethodDescriptor("resolveResourceValue", new Class[]{String.class, Locale.class}));
         RESOURCE_RESOLVER_METHODS.add(new MethodDescriptor("resolveResource", new Class[]{String.class}));
         RESOURCE_RESOLVER_METHODS.add(new MethodDescriptor("resolveResource", new Class[]{String.class, Object[].class}));
         RESOURCE_RESOLVER_METHODS.add(new MethodDescriptor("resolveResource", new Class[]{String.class, Locale.class}));
@@ -235,6 +241,9 @@ public final class GriffonClassUtils {
         RESOURCE_RESOLVER_METHODS.add(new MethodDescriptor("resolveResource", new Class[]{String.class, Map.class, Locale.class}));
         RESOURCE_RESOLVER_METHODS.add(new MethodDescriptor("resolveResource", new Class[]{String.class, Map.class, Object.class}));
         RESOURCE_RESOLVER_METHODS.add(new MethodDescriptor("resolveResource", new Class[]{String.class, Map.class, Object.class, Locale.class}));
+        RESOURCE_RESOLVER_METHODS.add(new MethodDescriptor("formatResource", new Class[]{String.class, Object[].class}));
+        RESOURCE_RESOLVER_METHODS.add(new MethodDescriptor("formatResource", new Class[]{String.class, List.class}));
+        RESOURCE_RESOLVER_METHODS.add(new MethodDescriptor("formatResource", new Class[]{String.class, Map.class}));
     }
 
     /**
@@ -311,7 +320,8 @@ public final class GriffonClassUtils {
      *         pattern, false otherwise.
      */
     public static boolean isEventHandler(MethodDescriptor method) {
-        if (method == null || method.getModifiers() - Modifier.PUBLIC != 0) return false;
+        if (method == null || method.getModifiers() - Modifier.PUBLIC != 0)
+            return false;
         return EVENT_HANDLER_PATTERN.matcher(method.getName()).matches();
     }
 
@@ -401,7 +411,8 @@ public final class GriffonClassUtils {
      *         pattern, false otherwise.
      */
     public static boolean isContributionMethod(MethodDescriptor method) {
-        if (method == null || method.getModifiers() - Modifier.PUBLIC != 0) return false;
+        if (method == null || method.getModifiers() - Modifier.PUBLIC != 0)
+            return false;
         return CONTRIBUTION_PATTERN.matcher(method.getName()).matches();
     }
 
@@ -468,7 +479,7 @@ public final class GriffonClassUtils {
     public static boolean isGroovyInjectedMethod(MethodDescriptor method) {
         if (method == null || !isInstanceMethod(method)) return false;
         return method.getName().startsWith("super$") ||
-                method.getName().startsWith("this$");
+            method.getName().startsWith("this$");
     }
 
     /**
@@ -527,7 +538,7 @@ public final class GriffonClassUtils {
     public static boolean isGetterMethod(MethodDescriptor method) {
         if (method == null || !isInstanceMethod(method)) return false;
         return GETTER_PATTERN_1.matcher(method.getName()).matches() ||
-                GETTER_PATTERN_2.matcher(method.getName()).matches();
+            GETTER_PATTERN_2.matcher(method.getName()).matches();
     }
 
     /**
@@ -1104,7 +1115,7 @@ public final class GriffonClassUtils {
         if (method == null) return false;
         int modifiers = method.getModifiers();
         return Modifier.isPublic(modifiers) &&
-                !Modifier.isStatic(modifiers);
+            !Modifier.isStatic(modifiers);
     }
 
     /**
@@ -1177,18 +1188,18 @@ public final class GriffonClassUtils {
      */
     public static boolean isPlainMethod(MethodDescriptor method) {
         return isInstanceMethod(method) &&
-                !isBasicMethod(method) &&
-                !isGroovyInjectedMethod(method) &&
-                !isThreadingMethod(method) &&
-                !isArtifactMethod(method) &&
-                !isMvcMethod(method) &&
-                !isServiceMethod(method) &&
-                !isEventPublisherMethod(method) &&
-                !isObservableMethod(method) &&
-                !isResourceHandlerMethod(method) &&
-                !isGetterMethod(method) &&
-                !isSetterMethod(method) &&
-                !isContributionMethod(method);
+            !isBasicMethod(method) &&
+            !isGroovyInjectedMethod(method) &&
+            !isThreadingMethod(method) &&
+            !isArtifactMethod(method) &&
+            !isMvcMethod(method) &&
+            !isServiceMethod(method) &&
+            !isEventPublisherMethod(method) &&
+            !isObservableMethod(method) &&
+            !isResourceHandlerMethod(method) &&
+            !isGetterMethod(method) &&
+            !isSetterMethod(method) &&
+            !isContributionMethod(method);
     }
 
     public static boolean isGetter(MetaProperty property) {
@@ -1198,7 +1209,7 @@ public final class GriffonClassUtils {
     public static boolean isGetter(MetaProperty property, boolean strict) {
         if (property == null) return false;
         return GETTER_PATTERN_1.matcher(property.getName()).matches() ||
-                (strict && GETTER_PATTERN_2.matcher(property.getName()).matches());
+            (strict && GETTER_PATTERN_2.matcher(property.getName()).matches());
     }
 
     public static boolean isSetter(MetaProperty property) {
@@ -1398,7 +1409,8 @@ public final class GriffonClassUtils {
      * @return An array of PropertyDescriptor instances
      */
     public static PropertyDescriptor[] getPropertiesAssignableToType(Class<?> clazz, Class<?> propertySuperType) {
-        if (clazz == null || propertySuperType == null) return new PropertyDescriptor[0];
+        if (clazz == null || propertySuperType == null)
+            return new PropertyDescriptor[0];
 
         Set properties = new HashSet();
         try {
@@ -1591,7 +1603,7 @@ public final class GriffonClassUtils {
      */
     public static String getGetterName(String propertyName) {
         return PROPERTY_GET_PREFIX + Character.toUpperCase(propertyName.charAt(0))
-                + propertyName.substring(1);
+            + propertyName.substring(1);
     }
 
     /**
@@ -1785,10 +1797,12 @@ public final class GriffonClassUtils {
 
         if (name.startsWith(PROPERTY_GET_PREFIX)) {
             name = name.substring(3);
-            if (name.length() > 0 && Character.isUpperCase(name.charAt(0))) return true;
+            if (name.length() > 0 && Character.isUpperCase(name.charAt(0)))
+                return true;
         } else if (name.startsWith(PROPERTY_IS_PREFIX)) {
             name = name.substring(2);
-            if (name.length() > 0 && Character.isUpperCase(name.charAt(0))) return true;
+            if (name.length() > 0 && Character.isUpperCase(name.charAt(0)))
+                return true;
         }
         return false;
     }
@@ -1844,7 +1858,8 @@ public final class GriffonClassUtils {
         if (name.startsWith(PROPERTY_SET_PREFIX)) {
             if (args.length != 1) return false;
             name = name.substring(3);
-            if (name.length() > 0 && Character.isUpperCase(name.charAt(0))) return true;
+            if (name.length() > 0 && Character.isUpperCase(name.charAt(0)))
+                return true;
         }
 
         return false;
@@ -1987,14 +2002,14 @@ public final class GriffonClassUtils {
      */
     public static PropertyDescriptor getPropertyDescriptor(Object bean,
                                                            String name)
-            throws IllegalAccessException, InvocationTargetException,
-            NoSuchMethodException {
+        throws IllegalAccessException, InvocationTargetException,
+        NoSuchMethodException {
         if (bean == null) {
             throw new IllegalArgumentException("No bean specified");
         }
         if (name == null) {
             throw new IllegalArgumentException("No name specified for bean class '" +
-                    bean.getClass() + "'");
+                bean.getClass() + "'");
         }
 
         return getPropertyDescriptor(bean instanceof Class ? (Class<?>) bean : bean.getClass(), name);
@@ -2022,8 +2037,8 @@ public final class GriffonClassUtils {
      */
     public static PropertyDescriptor getPropertyDescriptor(Class<?> clazz,
                                                            String name)
-            throws IllegalAccessException, InvocationTargetException,
-            NoSuchMethodException {
+        throws IllegalAccessException, InvocationTargetException,
+        NoSuchMethodException {
         if (clazz == null) {
             throw new IllegalArgumentException("No class specified");
         }
@@ -2111,7 +2126,7 @@ public final class GriffonClassUtils {
         }
         if (name == null) {
             throw new IllegalArgumentException("No name specified for bean class '" +
-                    bean.getClass() + "'");
+                bean.getClass() + "'");
         }
 
         try {
@@ -2164,7 +2179,7 @@ public final class GriffonClassUtils {
         }
         if (name == null) {
             throw new IllegalArgumentException("No name specified for bean class '" +
-                    bean.getClass() + "'");
+                bean.getClass() + "'");
         }
 
         try {
@@ -2188,6 +2203,51 @@ public final class GriffonClassUtils {
     }
 
     /**
+     * Sets the value of the specified property of the specified bean,
+     * no matter which property reference format is used, with no
+     * type conversions.
+     *
+     * @param bean  Bean whose property is to be mutated
+     * @param name  Possibly indexed and/or nested name of the property
+     *              to be mutated
+     * @param value The value to be set on the property
+     * @throws IllegalAccessException    if the caller does not have
+     *                                   access to the property accessor method
+     * @throws IllegalArgumentException  if <code>bean</code> or
+     *                                   <code>name</code> is null
+     * @throws InvocationTargetException if the property accessor method
+     *                                   throws an exception
+     * @throws NoSuchMethodException     if an accessor method for this
+     *                                   property cannot be found
+     */
+    public static void setProperty(Object bean, String name, Object value)
+        throws IllegalAccessException, InvocationTargetException,
+        NoSuchMethodException {
+        if (bean == null) {
+            throw new IllegalArgumentException("No bean specified");
+        }
+        if (name == null) {
+            throw new IllegalArgumentException("No name specified for bean class '" +
+                bean.getClass() + "'");
+        }
+
+        // Retrieve the property setter method for the specified property
+        PropertyDescriptor descriptor = getPropertyDescriptor(bean, name);
+        if (descriptor == null) {
+            throw new NoSuchMethodException("Unknown property '" +
+                name + "' on class '" + bean.getClass() + "'");
+        }
+        Method writeMethod = getWriteMethod(bean.getClass(), descriptor);
+        if (writeMethod == null) {
+            throw new NoSuchMethodException("Property '" + name +
+                "' has no setter method in class '" + bean.getClass() + "'");
+        }
+
+        // Call the property setter
+        writeMethod.invoke(bean, value);
+    }
+
+    /**
      * Return the value of the specified property of the specified bean,
      * no matter which property reference format is used, with no
      * type conversions.
@@ -2206,26 +2266,26 @@ public final class GriffonClassUtils {
      *                                   property cannot be found
      */
     public static Object getProperty(Object bean, String name)
-            throws IllegalAccessException, InvocationTargetException,
-            NoSuchMethodException {
+        throws IllegalAccessException, InvocationTargetException,
+        NoSuchMethodException {
         if (bean == null) {
             throw new IllegalArgumentException("No bean specified");
         }
         if (name == null) {
             throw new IllegalArgumentException("No name specified for bean class '" +
-                    bean.getClass() + "'");
+                bean.getClass() + "'");
         }
 
         // Retrieve the property getter method for the specified property
         PropertyDescriptor descriptor = getPropertyDescriptor(bean, name);
         if (descriptor == null) {
             throw new NoSuchMethodException("Unknown property '" +
-                    name + "' on class '" + bean.getClass() + "'");
+                name + "' on class '" + bean.getClass() + "'");
         }
         Method readMethod = getReadMethod(bean.getClass(), descriptor);
         if (readMethod == null) {
             throw new NoSuchMethodException("Property '" + name +
-                    "' has no getter method in class '" + bean.getClass() + "'");
+                "' has no getter method in class '" + bean.getClass() + "'");
         }
 
         // Call the property getter and return the value
@@ -2498,7 +2558,7 @@ public final class GriffonClassUtils {
 
         int lastDotIdx = className.lastIndexOf(PACKAGE_SEPARATOR_CHAR);
         int innerIdx = className.indexOf(
-                INNER_CLASS_SEPARATOR_CHAR, lastDotIdx == -1 ? 0 : lastDotIdx + 1);
+            INNER_CLASS_SEPARATOR_CHAR, lastDotIdx == -1 ? 0 : lastDotIdx + 1);
         String out = className.substring(lastDotIdx + 1);
         if (innerIdx != -1) {
             out = out.replace(INNER_CLASS_SEPARATOR_CHAR, PACKAGE_SEPARATOR_CHAR);
@@ -2647,8 +2707,8 @@ public final class GriffonClassUtils {
             MethodDescriptor md = (MethodDescriptor) obj;
 
             return methodName.equals(md.methodName) &&
-                    modifiers == md.modifiers &&
-                    java.util.Arrays.equals(paramTypes, md.paramTypes);
+                modifiers == md.modifiers &&
+                java.util.Arrays.equals(paramTypes, md.paramTypes);
         }
 
         public int hashCode() {

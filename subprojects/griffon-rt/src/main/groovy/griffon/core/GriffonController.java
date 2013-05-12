@@ -22,4 +22,5 @@ package griffon.core;
  * @since 0.9.1
  */
 public interface GriffonController extends GriffonMvcArtifact {
+    void invokeAction(String name, Object... args);
 }

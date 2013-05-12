@@ -147,6 +147,7 @@ target(name: 'createArchetype', description: '',
     griffonUnpack(dest: basedir, src: "griffon-archetype-files.jar")
     ant.unzip(src: "${basedir}/griffon-wrapper-files.zip", dest: basedir)
     ant.delete(file: "${basedir}/griffon-wrapper-files.zip", quiet: true)
+    ant.chmod(dir: basedir, includes: 'griffonw', perm: 'ugo+x')
 
     // Rename the archetype descriptor.
     archetypeName = GriffonUtil.getNameFromScript(griffonAppName)
@@ -184,6 +185,7 @@ target(name: 'initProject', description: "Initialise an application or plugin pr
     griffonUnpack(dest: basedir, src: "griffon-$projectType-files.jar")
     ant.unzip(src: "${basedir}/griffon-wrapper-files.zip", dest: basedir)
     ant.delete(file: "${basedir}/griffon-wrapper-files.zip", quiet: true)
+    ant.chmod(dir: basedir, includes: 'griffonw', perm: 'ugo+x')
 
     ant.delete(quiet: true, failonerror: false) {
         if (fileType == '.java') {

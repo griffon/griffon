@@ -59,7 +59,6 @@ public class DefaultMVCGroupManager extends AbstractMVCGroupManager {
     private static final String KEY_BUILDER = "builder";
     private static final String KEY_MVC_GROUP_INIT = "mvcGroupInit";
     private static final String KEY_MVC_GROUP_DESTROY = "mvcGroupDestroy";
-    // private static final String KEY_GRIFFON_DESTROY = "griffonDestroy";
 
     public DefaultMVCGroupManager(GriffonApplication app) {
         super(app);
@@ -83,17 +82,16 @@ public class DefaultMVCGroupManager extends AbstractMVCGroupManager {
         if (args == null) args = Collections.EMPTY_MAP;
 
         boolean component = castToBoolean(configuration.getConfig().get(CONFIG_KEY_COMPONENT));
-        boolean checkId = true;
 
         if (isBlank(mvcId)) {
             if (component) {
-                checkId = false;
+                mvcId = configuration.getMvcType() + "-" + System.nanoTime();
             } else {
                 mvcId = configuration.getMvcType();
             }
         }
 
-        if (checkId) checkIdIsUnique(mvcId, configuration);
+        checkIdIsUnique(mvcId, configuration);
 
         if (LOG.isInfoEnabled())
             LOG.info("Building MVC group '" + configuration.getMvcType() + "' with name '" + mvcId + "'");
@@ -149,7 +147,7 @@ public class DefaultMVCGroupManager extends AbstractMVCGroupManager {
         // mutually set each other to the available fields and inject args
         fillReferencedProperties(group, argsCopy);
 
-        if (checkId) doAddGroup(group);
+        doAddGroup(group);
 
         initializeMembers(group, argsCopy);
 
@@ -289,10 +287,7 @@ public class DefaultMVCGroupManager extends AbstractMVCGroupManager {
                     getApp().event(GriffonApplication.Event.DESTROY_INSTANCE.getName(), asList(member.getClass(), artifact.getGriffonClass().getArtifactType(), artifact));
                 }
                 artifact.mvcGroupDestroy();
-                /*((GriffonMvcArtifact) member).griffonDestroy();
-            } else if (member instanceof GriffonArtifact) {
-                ((GriffonArtifact) member).griffonDestroy();
-            */} else if (member != null && !(member instanceof Script)) {
+            } else if (member != null && !(member instanceof Script)) {
                 try {
                     InvokerHelper.invokeMethod(member, KEY_MVC_GROUP_DESTROY, EMPTY_ARGS);
                 } catch (MissingMethodException mme) {
@@ -302,17 +297,6 @@ public class DefaultMVCGroupManager extends AbstractMVCGroupManager {
                     // MME on mvcGroupDestroy means they didn't define
                     // a destroy method.  This is not an error.
                 }
-                /*
-                try {
-                    InvokerHelper.invokeMethod(member, KEY_GRIFFON_DESTROY, EMPTY_ARGS);
-                } catch (MissingMethodException mme) {
-                    if (!KEY_GRIFFON_DESTROY.equals(mme.getMethod())) {
-                        throw mme;
-                    }
-                    // MME on griffonDestroy means they didn't define
-                    // a destroy method.  This is not an error.
-                }
-                */
             }
         }
 

@@ -53,6 +53,8 @@ public class ResourceResolverAwareASTTransformation extends AbstractASTTransform
     private static final String LOCALE = "locale";
     private static final String DEFAULT_VALUE = "defaultValue";
     private static final String METHOD_RESOLVE_RESOURCE = "resolveResource";
+    private static final String METHOD_RESOLVE_RESOURCE_VALUE = "resolveResourceValue";
+    private static final String METHOD_FORMAT_RESOURCE = "formatResource";
 
     /**
      * Convenience method to see if an annotated node is {@code @ResourceResolverAware}.
@@ -91,6 +93,7 @@ public class ResourceResolverAwareASTTransformation extends AbstractASTTransform
 
     /**
      * Snoops through the declaring class and all parents looking for methods<ul>
+     * <li><code>public Object resolveResourceValue(java.lang.String, java.util.Locale)</code></li>
      * <li><code>public Object resolveResource(java.lang.String)</code></li>
      * <li><code>public Object resolveResource(java.lang.String, java.util.Locale)</code></li>
      * <li><code>public Object resolveResource(java.lang.String, java.lang.Object[])</code></li>
@@ -107,6 +110,9 @@ public class ResourceResolverAwareASTTransformation extends AbstractASTTransform
      * <li><code>public Object resolveResource(java.lang.String, java.util.List, java.lang.Object, java.util.Locale)</code></li>
      * <li><code>public Object resolveResource(java.lang.String, java.util.Map, java.lang.Object)</code></li>
      * <li><code>public Object resolveResource(java.lang.String, java.util.Map, java.lang.Object, java.util.Locale)</code></li>
+     * <li><code>public String formatResource(java.lang.String, java.lang.Object[])</code></li>
+     * <li><code>public String formatResource(java.lang.String, java.util.List)</code></li>
+     * <li><code>public String formatResource(java.lang.String, java.util.Map)</code></li>
      * </ul>If any are defined all
      * must be defined or a compilation error results.
      *
@@ -124,16 +130,18 @@ public class ResourceResolverAwareASTTransformation extends AbstractASTTransform
                 found |= method.getName().equals(METHOD_RESOLVE_RESOURCE) && method.getParameters().length == 2;
                 found |= method.getName().equals(METHOD_RESOLVE_RESOURCE) && method.getParameters().length == 3;
                 found |= method.getName().equals(METHOD_RESOLVE_RESOURCE) && method.getParameters().length == 4;
+                found |= method.getName().equals(METHOD_RESOLVE_RESOURCE_VALUE) && method.getParameters().length == 2;
+                found |= method.getName().equals(METHOD_FORMAT_RESOURCE) && method.getParameters().length == 2;
                 if (found) return false;
             }
             consideredClass = consideredClass.getSuperClass();
         }
         if (found) {
             sourceUnit.getErrorCollector().addErrorAndContinue(
-                    new SimpleMessage("@ResourceResolverAware cannot be processed on "
-                            + declaringClass.getName()
-                            + " because some but not all of variants of getMessage() were declared in the current class or super classes.",
-                            sourceUnit)
+                new SimpleMessage("@ResourceResolverAware cannot be processed on "
+                    + declaringClass.getName()
+                    + " because some but not all of variants of getMessage() were declared in the current class or super classes.",
+                    sourceUnit)
             );
             return false;
         }
@@ -150,238 +158,294 @@ public class ResourceResolverAwareASTTransformation extends AbstractASTTransform
         injectInterface(declaringClass, RESOURCE_RESOLVER_TYPE);
 
         injectMethod(declaringClass, new MethodNode(
-                METHOD_RESOLVE_RESOURCE,
-                ACC_PUBLIC,
-                OBJECT_TYPE,
-                params(param(STRING_TYPE, KEY)),
-                throwing(NO_SUCH_RESOURCE_EXCEPTION_TYPE),
-                returns(call(
-                        applicationInstance(),
-                        METHOD_RESOLVE_RESOURCE,
-                        vars(KEY)))
+            METHOD_RESOLVE_RESOURCE_VALUE,
+            ACC_PUBLIC,
+            OBJECT_TYPE,
+            params(
+                param(STRING_TYPE, KEY),
+                param(LOCALE_TYPE, LOCALE)),
+            throwing(NO_SUCH_RESOURCE_EXCEPTION_TYPE),
+            returns(call(
+                applicationInstance(),
+                METHOD_RESOLVE_RESOURCE_VALUE,
+                vars(KEY, LOCALE)))
         ));
 
         injectMethod(declaringClass, new MethodNode(
+            METHOD_RESOLVE_RESOURCE,
+            ACC_PUBLIC,
+            OBJECT_TYPE,
+            params(param(STRING_TYPE, KEY)),
+            throwing(NO_SUCH_RESOURCE_EXCEPTION_TYPE),
+            returns(call(
+                applicationInstance(),
                 METHOD_RESOLVE_RESOURCE,
-                ACC_PUBLIC,
-                OBJECT_TYPE,
-                params(
-                        param(STRING_TYPE, KEY),
-                        param(OBJECT_ARRAY_TYPE, ARGS)),
-                throwing(NO_SUCH_RESOURCE_EXCEPTION_TYPE),
-                returns(call(
-                        applicationInstance(),
-                        METHOD_RESOLVE_RESOURCE,
-                        vars(KEY, ARGS)))
+                vars(KEY)))
         ));
 
         injectMethod(declaringClass, new MethodNode(
+            METHOD_RESOLVE_RESOURCE,
+            ACC_PUBLIC,
+            OBJECT_TYPE,
+            params(
+                param(STRING_TYPE, KEY),
+                param(OBJECT_ARRAY_TYPE, ARGS)),
+            throwing(NO_SUCH_RESOURCE_EXCEPTION_TYPE),
+            returns(call(
+                applicationInstance(),
                 METHOD_RESOLVE_RESOURCE,
-                ACC_PUBLIC,
-                OBJECT_TYPE,
-                params(
-                        param(STRING_TYPE, KEY),
-                        param(LOCALE_TYPE, LOCALE)),
-                throwing(NO_SUCH_RESOURCE_EXCEPTION_TYPE),
-                returns(call(
-                        applicationInstance(),
-                        METHOD_RESOLVE_RESOURCE,
-                        vars(KEY, LOCALE)))
+                vars(KEY, ARGS)))
         ));
 
         injectMethod(declaringClass, new MethodNode(
+            METHOD_RESOLVE_RESOURCE,
+            ACC_PUBLIC,
+            OBJECT_TYPE,
+            params(
+                param(STRING_TYPE, KEY),
+                param(LOCALE_TYPE, LOCALE)),
+            throwing(NO_SUCH_RESOURCE_EXCEPTION_TYPE),
+            returns(call(
+                applicationInstance(),
                 METHOD_RESOLVE_RESOURCE,
-                ACC_PUBLIC,
-                OBJECT_TYPE,
-                params(
-                        param(STRING_TYPE, KEY),
-                        param(OBJECT_ARRAY_TYPE, ARGS),
-                        param(LOCALE_TYPE, LOCALE)),
-                throwing(NO_SUCH_RESOURCE_EXCEPTION_TYPE),
-                returns(call(
-                        applicationInstance(),
-                        METHOD_RESOLVE_RESOURCE,
-                        vars(KEY, ARGS, LOCALE)))
+                vars(KEY, LOCALE)))
         ));
 
         injectMethod(declaringClass, new MethodNode(
+            METHOD_RESOLVE_RESOURCE,
+            ACC_PUBLIC,
+            OBJECT_TYPE,
+            params(
+                param(STRING_TYPE, KEY),
+                param(OBJECT_ARRAY_TYPE, ARGS),
+                param(LOCALE_TYPE, LOCALE)),
+            throwing(NO_SUCH_RESOURCE_EXCEPTION_TYPE),
+            returns(call(
+                applicationInstance(),
                 METHOD_RESOLVE_RESOURCE,
-                ACC_PUBLIC,
-                OBJECT_TYPE,
-                params(
-                        param(STRING_TYPE, KEY),
-                        param(makeClassSafe(LIST_TYPE), ARGS)),
-                throwing(NO_SUCH_RESOURCE_EXCEPTION_TYPE),
-                returns(call(
-                        applicationInstance(),
-                        METHOD_RESOLVE_RESOURCE,
-                        vars(KEY, ARGS)))
+                vars(KEY, ARGS, LOCALE)))
         ));
 
         injectMethod(declaringClass, new MethodNode(
+            METHOD_RESOLVE_RESOURCE,
+            ACC_PUBLIC,
+            OBJECT_TYPE,
+            params(
+                param(STRING_TYPE, KEY),
+                param(makeClassSafe(LIST_TYPE), ARGS)),
+            throwing(NO_SUCH_RESOURCE_EXCEPTION_TYPE),
+            returns(call(
+                applicationInstance(),
                 METHOD_RESOLVE_RESOURCE,
-                ACC_PUBLIC,
-                OBJECT_TYPE,
-                params(
-                        param(STRING_TYPE, KEY),
-                        param(makeClassSafe(LIST_TYPE), ARGS),
-                        param(LOCALE_TYPE, LOCALE)),
-                throwing(NO_SUCH_RESOURCE_EXCEPTION_TYPE),
-                returns(call(
-                        applicationInstance(),
-                        METHOD_RESOLVE_RESOURCE,
-                        vars(KEY, ARGS, LOCALE)))
+                vars(KEY, ARGS)))
         ));
 
         injectMethod(declaringClass, new MethodNode(
+            METHOD_RESOLVE_RESOURCE,
+            ACC_PUBLIC,
+            OBJECT_TYPE,
+            params(
+                param(STRING_TYPE, KEY),
+                param(makeClassSafe(LIST_TYPE), ARGS),
+                param(LOCALE_TYPE, LOCALE)),
+            throwing(NO_SUCH_RESOURCE_EXCEPTION_TYPE),
+            returns(call(
+                applicationInstance(),
                 METHOD_RESOLVE_RESOURCE,
-                ACC_PUBLIC,
-                OBJECT_TYPE,
-                params(
-                        param(STRING_TYPE, KEY),
-                        param(makeClassSafe(MAP_TYPE), ARGS)),
-                throwing(NO_SUCH_RESOURCE_EXCEPTION_TYPE),
-                returns(call(
-                        applicationInstance(),
-                        METHOD_RESOLVE_RESOURCE,
-                        vars(KEY, ARGS)))
+                vars(KEY, ARGS, LOCALE)))
         ));
 
         injectMethod(declaringClass, new MethodNode(
+            METHOD_RESOLVE_RESOURCE,
+            ACC_PUBLIC,
+            OBJECT_TYPE,
+            params(
+                param(STRING_TYPE, KEY),
+                param(makeClassSafe(MAP_TYPE), ARGS)),
+            throwing(NO_SUCH_RESOURCE_EXCEPTION_TYPE),
+            returns(call(
+                applicationInstance(),
                 METHOD_RESOLVE_RESOURCE,
-                ACC_PUBLIC,
-                OBJECT_TYPE,
-                params(
-                        param(STRING_TYPE, KEY),
-                        param(makeClassSafe(MAP_TYPE), ARGS),
-                        param(LOCALE_TYPE, LOCALE)),
-                throwing(NO_SUCH_RESOURCE_EXCEPTION_TYPE),
-                returns(call(
-                        applicationInstance(),
-                        METHOD_RESOLVE_RESOURCE,
-                        vars(KEY, ARGS, LOCALE)))
+                vars(KEY, ARGS)))
         ));
 
         injectMethod(declaringClass, new MethodNode(
+            METHOD_RESOLVE_RESOURCE,
+            ACC_PUBLIC,
+            OBJECT_TYPE,
+            params(
+                param(STRING_TYPE, KEY),
+                param(makeClassSafe(MAP_TYPE), ARGS),
+                param(LOCALE_TYPE, LOCALE)),
+            throwing(NO_SUCH_RESOURCE_EXCEPTION_TYPE),
+            returns(call(
+                applicationInstance(),
                 METHOD_RESOLVE_RESOURCE,
-                ACC_PUBLIC,
-                OBJECT_TYPE,
-                params(
-                        param(STRING_TYPE, KEY),
-                        param(OBJECT_TYPE, DEFAULT_VALUE)),
-                NO_EXCEPTIONS,
-                returns(call(
-                        applicationInstance(),
-                        METHOD_RESOLVE_RESOURCE,
-                        vars(KEY, DEFAULT_VALUE)))
+                vars(KEY, ARGS, LOCALE)))
         ));
 
         injectMethod(declaringClass, new MethodNode(
+            METHOD_RESOLVE_RESOURCE,
+            ACC_PUBLIC,
+            OBJECT_TYPE,
+            params(
+                param(STRING_TYPE, KEY),
+                param(OBJECT_TYPE, DEFAULT_VALUE)),
+            NO_EXCEPTIONS,
+            returns(call(
+                applicationInstance(),
                 METHOD_RESOLVE_RESOURCE,
-                ACC_PUBLIC,
-                OBJECT_TYPE,
-                params(
-                        param(STRING_TYPE, KEY),
-                        param(OBJECT_ARRAY_TYPE, ARGS),
-                        param(OBJECT_TYPE, DEFAULT_VALUE)),
-                NO_EXCEPTIONS,
-                returns(call(
-                        applicationInstance(),
-                        METHOD_RESOLVE_RESOURCE,
-                        vars(KEY, ARGS, DEFAULT_VALUE)))
+                vars(KEY, DEFAULT_VALUE)))
         ));
 
         injectMethod(declaringClass, new MethodNode(
+            METHOD_RESOLVE_RESOURCE,
+            ACC_PUBLIC,
+            OBJECT_TYPE,
+            params(
+                param(STRING_TYPE, KEY),
+                param(OBJECT_ARRAY_TYPE, ARGS),
+                param(OBJECT_TYPE, DEFAULT_VALUE)),
+            NO_EXCEPTIONS,
+            returns(call(
+                applicationInstance(),
                 METHOD_RESOLVE_RESOURCE,
-                ACC_PUBLIC,
-                OBJECT_TYPE,
-                params(
-                        param(STRING_TYPE, KEY),
-                        param(OBJECT_TYPE, DEFAULT_VALUE),
-                        param(LOCALE_TYPE, LOCALE)),
-                NO_EXCEPTIONS,
-                returns(call(
-                        applicationInstance(),
-                        METHOD_RESOLVE_RESOURCE,
-                        vars(KEY, DEFAULT_VALUE, LOCALE)))
+                vars(KEY, ARGS, DEFAULT_VALUE)))
         ));
 
         injectMethod(declaringClass, new MethodNode(
+            METHOD_RESOLVE_RESOURCE,
+            ACC_PUBLIC,
+            OBJECT_TYPE,
+            params(
+                param(STRING_TYPE, KEY),
+                param(OBJECT_TYPE, DEFAULT_VALUE),
+                param(LOCALE_TYPE, LOCALE)),
+            NO_EXCEPTIONS,
+            returns(call(
+                applicationInstance(),
                 METHOD_RESOLVE_RESOURCE,
-                ACC_PUBLIC,
-                OBJECT_TYPE,
-                params(
-                        param(STRING_TYPE, KEY),
-                        param(OBJECT_ARRAY_TYPE, ARGS),
-                        param(OBJECT_TYPE, DEFAULT_VALUE),
-                        param(LOCALE_TYPE, LOCALE)),
-                NO_EXCEPTIONS,
-                returns(call(
-                        applicationInstance(),
-                        METHOD_RESOLVE_RESOURCE,
-                        vars(KEY, ARGS, DEFAULT_VALUE, LOCALE)))
+                vars(KEY, DEFAULT_VALUE, LOCALE)))
         ));
 
         injectMethod(declaringClass, new MethodNode(
+            METHOD_RESOLVE_RESOURCE,
+            ACC_PUBLIC,
+            OBJECT_TYPE,
+            params(
+                param(STRING_TYPE, KEY),
+                param(OBJECT_ARRAY_TYPE, ARGS),
+                param(OBJECT_TYPE, DEFAULT_VALUE),
+                param(LOCALE_TYPE, LOCALE)),
+            NO_EXCEPTIONS,
+            returns(call(
+                applicationInstance(),
                 METHOD_RESOLVE_RESOURCE,
-                ACC_PUBLIC,
-                OBJECT_TYPE,
-                params(
-                        param(STRING_TYPE, KEY),
-                        param(makeClassSafe(LIST_TYPE), ARGS),
-                        param(OBJECT_TYPE, DEFAULT_VALUE)),
-                NO_EXCEPTIONS,
-                returns(call(
-                        applicationInstance(),
-                        METHOD_RESOLVE_RESOURCE,
-                        vars(KEY, ARGS, DEFAULT_VALUE)))
+                vars(KEY, ARGS, DEFAULT_VALUE, LOCALE)))
         ));
 
         injectMethod(declaringClass, new MethodNode(
+            METHOD_RESOLVE_RESOURCE,
+            ACC_PUBLIC,
+            OBJECT_TYPE,
+            params(
+                param(STRING_TYPE, KEY),
+                param(makeClassSafe(LIST_TYPE), ARGS),
+                param(OBJECT_TYPE, DEFAULT_VALUE)),
+            NO_EXCEPTIONS,
+            returns(call(
+                applicationInstance(),
                 METHOD_RESOLVE_RESOURCE,
-                ACC_PUBLIC,
-                OBJECT_TYPE,
-                params(
-                        param(STRING_TYPE, KEY),
-                        param(makeClassSafe(LIST_TYPE), ARGS),
-                        param(OBJECT_TYPE, DEFAULT_VALUE),
-                        param(LOCALE_TYPE, LOCALE)),
-                NO_EXCEPTIONS,
-                returns(call(
-                        applicationInstance(),
-                        METHOD_RESOLVE_RESOURCE,
-                        vars(KEY, ARGS, DEFAULT_VALUE, LOCALE)))
+                vars(KEY, ARGS, DEFAULT_VALUE)))
         ));
 
         injectMethod(declaringClass, new MethodNode(
+            METHOD_RESOLVE_RESOURCE,
+            ACC_PUBLIC,
+            OBJECT_TYPE,
+            params(
+                param(STRING_TYPE, KEY),
+                param(makeClassSafe(LIST_TYPE), ARGS),
+                param(OBJECT_TYPE, DEFAULT_VALUE),
+                param(LOCALE_TYPE, LOCALE)),
+            NO_EXCEPTIONS,
+            returns(call(
+                applicationInstance(),
                 METHOD_RESOLVE_RESOURCE,
-                ACC_PUBLIC,
-                OBJECT_TYPE,
-                params(
-                        param(STRING_TYPE, KEY),
-                        param(makeClassSafe(MAP_TYPE), ARGS),
-                        param(OBJECT_TYPE, DEFAULT_VALUE)),
-                NO_EXCEPTIONS,
-                returns(call(
-                        applicationInstance(),
-                        METHOD_RESOLVE_RESOURCE,
-                        vars(KEY, ARGS, DEFAULT_VALUE)))
+                vars(KEY, ARGS, DEFAULT_VALUE, LOCALE)))
         ));
 
         injectMethod(declaringClass, new MethodNode(
+            METHOD_RESOLVE_RESOURCE,
+            ACC_PUBLIC,
+            OBJECT_TYPE,
+            params(
+                param(STRING_TYPE, KEY),
+                param(makeClassSafe(MAP_TYPE), ARGS),
+                param(OBJECT_TYPE, DEFAULT_VALUE)),
+            NO_EXCEPTIONS,
+            returns(call(
+                applicationInstance(),
                 METHOD_RESOLVE_RESOURCE,
-                ACC_PUBLIC,
-                OBJECT_TYPE,
-                params(
-                        param(STRING_TYPE, KEY),
-                        param(makeClassSafe(MAP_TYPE), ARGS),
-                        param(OBJECT_TYPE, DEFAULT_VALUE),
-                        param(LOCALE_TYPE, LOCALE)),
-                NO_EXCEPTIONS,
-                returns(call(
-                        applicationInstance(),
-                        METHOD_RESOLVE_RESOURCE,
-                        vars(KEY, ARGS, DEFAULT_VALUE, LOCALE)))
+                vars(KEY, ARGS, DEFAULT_VALUE)))
+        ));
+
+        injectMethod(declaringClass, new MethodNode(
+            METHOD_RESOLVE_RESOURCE,
+            ACC_PUBLIC,
+            OBJECT_TYPE,
+            params(
+                param(STRING_TYPE, KEY),
+                param(makeClassSafe(MAP_TYPE), ARGS),
+                param(OBJECT_TYPE, DEFAULT_VALUE),
+                param(LOCALE_TYPE, LOCALE)),
+            NO_EXCEPTIONS,
+            returns(call(
+                applicationInstance(),
+                METHOD_RESOLVE_RESOURCE,
+                vars(KEY, ARGS, DEFAULT_VALUE, LOCALE)))
+        ));
+
+        injectMethod(declaringClass, new MethodNode(
+            METHOD_FORMAT_RESOURCE,
+            ACC_PUBLIC,
+            STRING_TYPE,
+            params(
+                param(STRING_TYPE, KEY),
+                param(OBJECT_ARRAY_TYPE, ARGS)),
+            NO_EXCEPTIONS,
+            returns(call(
+                applicationInstance(),
+                METHOD_FORMAT_RESOURCE,
+                vars(KEY, ARGS)))
+        ));
+
+        injectMethod(declaringClass, new MethodNode(
+            METHOD_FORMAT_RESOURCE,
+            ACC_PUBLIC,
+            STRING_TYPE,
+            params(
+                param(STRING_TYPE, KEY),
+                param(makeClassSafe(LIST_TYPE), ARGS)),
+            NO_EXCEPTIONS,
+            returns(call(
+                applicationInstance(),
+                METHOD_FORMAT_RESOURCE,
+                vars(KEY, ARGS)))
+        ));
+
+        injectMethod(declaringClass, new MethodNode(
+            METHOD_FORMAT_RESOURCE,
+            ACC_PUBLIC,
+            STRING_TYPE,
+            params(
+                param(STRING_TYPE, KEY),
+                param(makeClassSafe(MAP_TYPE), ARGS)),
+            NO_EXCEPTIONS,
+            returns(call(
+                applicationInstance(),
+                METHOD_FORMAT_RESOURCE,
+                vars(KEY, ARGS)))
         ));
     }
 }

@@ -679,6 +679,22 @@ public abstract class AbstractGriffonApplication extends AbstractObservable impl
         return messageSource.getMessage(key, args, defaultMessage, locale);
     }
 
+    public Object resolveMessageValue(String key, Locale locale) throws NoSuchMessageException {
+        return messageSource.resolveMessageValue(key, locale);
+    }
+
+    public String formatMessage(String message, Map<String, Object> args) {
+        return messageSource.formatMessage(message, args);
+    }
+
+    public String formatMessage(String message, List args) {
+        return messageSource.formatMessage(message, args);
+    }
+
+    public String formatMessage(String message, Object[] args) {
+        return messageSource.formatMessage(message, args);
+    }
+
     public ResourceResolver resolveResourceResolver() {
         return resourceResolver;
     }
@@ -749,6 +765,22 @@ public abstract class AbstractGriffonApplication extends AbstractObservable impl
 
     public Object resolveResource(String key, Map<String, Object> args, Object defaultValue, Locale locale) {
         return resourceResolver.resolveResource(key, args, defaultValue, locale);
+    }
+
+    public Object resolveResourceValue(String key, Locale locale) throws NoSuchResourceException {
+        return resourceResolver.resolveResourceValue(key, locale);
+    }
+
+    public String formatResource(String resource, List args) {
+        return resourceResolver.formatResource(resource, args);
+    }
+
+    public String formatResource(String resource, Object[] args) {
+        return resourceResolver.formatResource(resource, args);
+    }
+
+    public String formatResource(String resource, Map<String, Object> args) {
+        return resourceResolver.formatResource(resource, args);
     }
 
     public GriffonControllerActionManager getActionManager() {

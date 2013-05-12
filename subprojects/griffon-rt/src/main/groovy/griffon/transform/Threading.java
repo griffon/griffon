@@ -76,7 +76,7 @@ import java.lang.annotation.Target;
  * @see org.codehaus.griffon.ast.ThreadingASTTransformation
  * @since 0.9.2
  */
-@Retention(RetentionPolicy.SOURCE)
+@Retention(RetentionPolicy.RUNTIME)
 @Target({ElementType.METHOD, ElementType.FIELD})
 @GroovyASTTransformationClass("org.codehaus.griffon.ast.ThreadingASTTransformation")
 public @interface Threading {

@@ -65,7 +65,7 @@ public class DefaultGriffonControllerClass extends DefaultGriffonClass implement
         return actionsCache.toArray(new String[actionsCache.size()]);
     }
 
-    private boolean hasVoidOrDefAsReturnType(Method method) {
+    public static boolean hasVoidOrDefAsReturnType(Method method) {
         Class<?> returnType = method.getReturnType();
         return returnType == ClassHelper.DYNAMIC_TYPE.getTypeClass() ||
                 returnType == ClassHelper.VOID_TYPE.getTypeClass();

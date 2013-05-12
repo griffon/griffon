@@ -17,6 +17,7 @@ package org.codehaus.griffon.runtime.util;
 
 import griffon.core.*;
 import griffon.core.controller.GriffonControllerAction;
+import griffon.core.controller.GriffonControllerActionInterceptor;
 import griffon.core.controller.GriffonControllerActionManager;
 import griffon.core.factories.*;
 import griffon.core.resources.ResourcesInjector;
@@ -31,8 +32,8 @@ import org.codehaus.griffon.runtime.core.ModelArtifactHandler;
 import org.codehaus.griffon.runtime.core.ServiceArtifactHandler;
 import org.codehaus.griffon.runtime.core.ViewArtifactHandler;
 import org.codehaus.griffon.runtime.core.controller.NoopGriffonControllerActionManager;
-import org.codehaus.groovy.runtime.DefaultGroovyMethods;
 import org.codehaus.groovy.runtime.InvokerHelper;
+import org.codehaus.groovy.runtime.ResourceGroovyMethods;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -85,6 +86,7 @@ public class GriffonApplicationHelper {
 
     private static final String KEY_APP_LIFECYCLE_HANDLER_DISABLE = "app.lifecycle.handler.disable";
     private static final String KEY_GRIFFON_ACTION_MANAGER_DISABLE = "griffon.action.manager.disable";
+    private static final String KEY_GRIFFON_CONTROLLER_ACTION_INTERCEPTOR_ORDER = "griffon.controller.action.interceptor.order";
 
     private static final String DEFAULT_MESSAGE_SOURCE_FACTORY = "org.codehaus.griffon.runtime.core.factories.DefaultMessageSourceFactory";
     private static final String DEFAULT_RESOURCES_INJECTOR_FACTORY = "org.codehaus.griffon.runtime.core.factories.DefaultResourcesInjectorFactory";
@@ -299,6 +301,9 @@ public class GriffonApplicationHelper {
                             if (LOG.isDebugEnabled()) {
                                 LOG.debug("Registering " + editorClass.getName() + " as editor for " + targetType.getName());
                             }
+                            // Editor must have a no-args constructor
+                            // CCE means the class can not be used
+                            PropertyEditor editor = (PropertyEditor) editorClass.newInstance();
                             PropertyEditorManager.registerEditor(targetType, editorClass);
                         } catch (Exception e) {
                             if (LOG.isWarnEnabled()) {
@@ -312,6 +317,24 @@ public class GriffonApplicationHelper {
                     LOG.warn("Could not load PropertyEditor definitions from " + url, sanitize(e));
                 }
             }
+        }
+
+        Class[][] pairs = new Class[][]{
+            new Class[]{Boolean.class, Boolean.TYPE},
+            new Class[]{Byte.class, Byte.TYPE},
+            new Class[]{Short.class, Short.TYPE},
+            new Class[]{Integer.class, Integer.TYPE},
+            new Class[]{Long.class, Long.TYPE},
+            new Class[]{Float.class, Float.TYPE},
+            new Class[]{Double.class, Double.TYPE}
+        };
+
+        for (Class[] pair : pairs) {
+            PropertyEditor editor = PropertyEditorManager.findEditor(pair[0]);
+            if (LOG.isDebugEnabled()) {
+                LOG.debug("Registering " + editor.getClass().getName() + " as editor for " + pair[1].getName());
+            }
+            PropertyEditorManager.registerEditor(pair[1], editor.getClass());
         }
     }
 
@@ -354,6 +377,9 @@ public class GriffonApplicationHelper {
     public static void applyPlatformTweaks(GriffonApplication app) {
         String platform = GriffonApplicationUtils.platform;
         String handlerClassName = getConfigValueAsString(app.getConfig(), "platform.handler." + platform, DEFAULT_PLATFORM_HANDLERS.get(platform));
+        if (LOG.isDebugEnabled()) {
+            LOG.debug("Using " + handlerClassName + " as PlatformHandler");
+        }
         PlatformHandler platformHandler = (PlatformHandler) safeNewInstance(handlerClassName);
         platformHandler.handle(app);
     }
@@ -415,7 +441,7 @@ public class GriffonApplicationHelper {
                 return;
             }
             try {
-                className = DefaultGroovyMethods.getText(url).trim();
+                className = ResourceGroovyMethods.getText(url).trim();
             } catch (IOException e) {
                 if (LOG.isDebugEnabled()) {
                     LOG.debug("Cannot read GriffonControllerActionManager definition from " + url, sanitize(e));
@@ -465,8 +491,148 @@ public class GriffonApplicationHelper {
                 }
             }
         });
-    }
 
+        Map<String, Map<String, Object>> actionInterceptors = new LinkedHashMap<String, Map<String, Object>>();
+        for (GriffonAddon addon : app.getAddonManager().getAddons().values()) {
+            Map<String, Map<String, Object>> interceptors = addon.getActionInterceptors();
+            if (interceptors != null && !interceptors.isEmpty()) {
+                actionInterceptors.putAll(interceptors);
+            }
+        }
+
+        // grab application specific order
+        List<String> interceptorOrder = (List<String>) getConfigValue(app.getConfig(), KEY_GRIFFON_CONTROLLER_ACTION_INTERCEPTOR_ORDER, Collections.emptyList());
+        Map<String, Map<String, Object>> tmp = new LinkedHashMap<String, Map<String, Object>>(actionInterceptors);
+        Map<String, Map<String, Object>> map = new LinkedHashMap<String, Map<String, Object>>();
+        for (String interceptorName : interceptorOrder) {
+            if (tmp.containsKey(interceptorName)) {
+                map.put(interceptorName, tmp.remove(interceptorName));
+            }
+        }
+        map.putAll(tmp);
+        actionInterceptors.clear();
+        actionInterceptors.putAll(map);
+        if (LOG.isDebugEnabled()) {
+            LOG.debug("Chosen interceptor order is " + map.keySet());
+        }
+
+        List<GriffonControllerActionInterceptor> sortedInterceptors = new ArrayList<GriffonControllerActionInterceptor>();
+        Set<String> addedDeps = new LinkedHashSet<String>();
+
+        while (!map.isEmpty()) {
+            int filtersAdded = 0;
+
+            if (LOG.isDebugEnabled()) {
+                LOG.debug("Current interceptor order is " + actionInterceptors.keySet());
+            }
+
+            for (Iterator<Map.Entry<String, Map<String, Object>>> iter = map.entrySet().iterator(); iter.hasNext(); ) {
+                Map.Entry<String, Map<String, Object>> entry = iter.next();
+                String interceptorName = entry.getKey();
+                List<String> dependsOn = (List<String>) getConfigValue(entry.getValue(), "dependsOn", Collections.emptyList());
+                String interceptorClassName = (String) getConfigValue(entry.getValue(), "interceptor", null);
+
+                if (LOG.isDebugEnabled()) {
+                    LOG.debug("Processing interceptor '" + interceptorName + "'");
+                    LOG.debug("    depends on '" + dependsOn + "'");
+                }
+
+                if (isBlank(interceptorClassName)) {
+                    if (LOG.isDebugEnabled()) {
+                        LOG.debug("  Skipped interceptor '" + interceptorName + "', since it does not define an interceptor class");
+                    }
+                    iter.remove();
+                    continue;
+                }
+
+
+                if (!dependsOn.isEmpty()) {
+                    if (LOG.isDebugEnabled()) {
+                        LOG.debug("  Checking interceptor '" + interceptorName + "' dependencies (" + dependsOn.size() + ")");
+                    }
+
+                    boolean failedDep = false;
+                    for (String dep : dependsOn) {
+                        if (LOG.isDebugEnabled()) {
+                            LOG.debug("  Checking interceptor '" + interceptorName + "' dependencies: " + dep);
+                        }
+                        if (!addedDeps.contains(dep)) {
+                            // dep not in the list yet, we need to skip adding this to the list for now
+                            if (LOG.isDebugEnabled()) {
+                                LOG.debug("  Skipped interceptor '" + interceptorName + "', since dependency '" + dep + "' not yet added");
+                            }
+                            failedDep = true;
+                            break;
+                        } else {
+                            if (LOG.isDebugEnabled()) {
+                                LOG.debug("  Interceptor '" + interceptorName + "' dependency '" + dep + "' already added");
+                            }
+                        }
+                    }
+
+                    if (failedDep) {
+                        // move on to next dependency
+                        continue;
+                    }
+                }
+
+                if (LOG.isDebugEnabled()) {
+                    LOG.debug("  Adding interceptor '" + interceptorName + "', since all dependencies have been added");
+                }
+                sortedInterceptors.add((GriffonControllerActionInterceptor) newInstance(app, safeLoadClass(interceptorClassName)));
+                addedDeps.add(interceptorName);
+                iter.remove();
+                filtersAdded++;
+            }
+
+            if (filtersAdded == 0) {
+                // we have a cyclical dependency, warn the user and load in the order they appeared originally
+                if (LOG.isWarnEnabled()) {
+                    LOG.warn("::::::::::::::::::::::::::::::::::::::::::::::::::::::");
+                    LOG.warn("::   Unresolved interceptor dependencies detected   ::");
+                    LOG.warn("::   Continuing with original interceptor order     ::");
+                    LOG.warn("::::::::::::::::::::::::::::::::::::::::::::::::::::::");
+                }
+                for (Map.Entry<String, Map<String, Object>> entry : map.entrySet()) {
+                    String interceptorName = entry.getKey();
+                    List<String> dependsOn = (List<String>) getConfigValue(entry.getValue(), "dependsOn", Collections.emptyList());
+
+                    // display this as a cyclical dep
+                    if (LOG.isWarnEnabled()) {
+                        LOG.warn("::   Interceptor " + interceptorName);
+                    }
+                    if (!dependsOn.isEmpty()) {
+                        for (String dep : dependsOn) {
+                            if (LOG.isWarnEnabled()) {
+                                LOG.warn("::     depends on " + dep);
+                            }
+                        }
+                    } else {
+                        // we should only have items left in the list with deps, so this should never happen
+                        // but a wise man once said...check for true, false and otherwise...just in case
+                        if (LOG.isWarnEnabled()) {
+                            LOG.warn("::   Problem while resolving dependencies.");
+                            LOG.warn("::   Unable to resolve dependency hierarchy.");
+                        }
+                    }
+                    if (LOG.isWarnEnabled()) {
+                        LOG.warn("::::::::::::::::::::::::::::::::::::::::::::::::::::::");
+                    }
+                }
+                break;
+                // if we have processed all the interceptors, we are done
+            } else if (sortedInterceptors.size() == actionInterceptors.size()) {
+                if (LOG.isDebugEnabled()) {
+                    LOG.debug("Interceptor dependency ordering complete");
+                }
+                break;
+            }
+        }
+
+        for (GriffonControllerActionInterceptor interceptor : sortedInterceptors) {
+            actionManager.addActionInterceptor(interceptor);
+        }
+    }
 
     private static void initializeMvcManager(GriffonApplication app) {
         if (app.getMvcGroupManager() == null) {
@@ -559,7 +725,7 @@ public class GriffonApplicationHelper {
      */
     public static void runLifecycleHandler(String handlerName, GriffonApplication app) {
         boolean skipHandler = getConfigValueAsBoolean(app.getConfig(), KEY_APP_LIFECYCLE_HANDLER_DISABLE, false);
-        if(skipHandler) {
+        if (skipHandler) {
             if (LOG.isDebugEnabled()) {
                 LOG.info("Lifecycle handler '" + handlerName + "' has been disabled. SKIPPING.");
             }

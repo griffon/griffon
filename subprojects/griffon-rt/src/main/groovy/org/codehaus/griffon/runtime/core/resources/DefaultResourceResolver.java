@@ -40,7 +40,7 @@ public class DefaultResourceResolver extends AbstractResourceResolver {
         return basename;
     }
 
-    protected Object resolveResourceInternal(String key, Locale locale) throws NoSuchResourceException {
+    protected Object doResolveResourceValue(String key, Locale locale) throws NoSuchResourceException {
         return getBundle(locale).getObject(key);
     }
 

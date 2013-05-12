@@ -18,6 +18,7 @@ package org.codehaus.griffon.runtime.core.controller;
 
 import griffon.core.GriffonController;
 import griffon.core.controller.GriffonControllerAction;
+import griffon.core.controller.GriffonControllerActionManager;
 import org.codehaus.griffon.runtime.core.AbstractObservable;
 
 import java.lang.ref.WeakReference;
@@ -34,12 +35,20 @@ public abstract class AbstractGriffonControllerAction extends AbstractObservable
     private String largeIcon;
     private String accelerator;
     private String mnemonic;
-    private boolean enabled;
+    private boolean enabled = true;
     private boolean selected;
     private WeakReference<GriffonController> controller;
+    private final GriffonControllerActionManager actionManager;
+    private boolean initialized;
+    private final Object lock = new Object[0];
 
-    public AbstractGriffonControllerAction(GriffonController controller, String actionName) {
+    public AbstractGriffonControllerAction(GriffonControllerActionManager actionManager, GriffonController controller, String actionName) {
+        this.actionManager = actionManager;
         this.controller = new WeakReference<GriffonController>(controller);
+    }
+
+    public GriffonControllerActionManager getActionManager() {
+        return actionManager;
     }
 
     public GriffonController getController() {
@@ -134,5 +143,15 @@ public abstract class AbstractGriffonControllerAction extends AbstractObservable
         }
     }
 
-    protected abstract void doExecute(Object[] args);
+    protected abstract void doExecute(Object... args);
+
+    public final void initialize() {
+        synchronized (lock) {
+            if (initialized) return;
+            doInitialize();
+            initialized = true;
+        }
+    }
+
+    protected abstract void doInitialize();
 }

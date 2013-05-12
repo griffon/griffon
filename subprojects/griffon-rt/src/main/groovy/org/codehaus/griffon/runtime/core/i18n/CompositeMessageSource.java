@@ -44,63 +44,16 @@ public class CompositeMessageSource extends AbstractMessageSource {
         return messageSources.toArray(new MessageSource[messageSources.size()]);
     }
 
-    public String getMessage(String key, String defaultMessage) {
-        return getMessageInternal(key, EMPTY_OBJECT_ARGS, defaultMessage, Locale.getDefault());
-    }
-
-    public String getMessage(String key, String defaultMessage, Locale locale) {
-        return getMessageInternal(key, EMPTY_OBJECT_ARGS, defaultMessage, locale);
-    }
-
-    public String getMessage(String key, Object[] args, String defaultMessage) {
-        return getMessageInternal(key, args, defaultMessage, Locale.getDefault());
-    }
-
-    public String getMessage(String key, Object[] args, String defaultMessage, Locale locale) {
-        return getMessageInternal(key, args, defaultMessage, locale);
-    }
-
-    public String getMessage(String key, List args, String defaultMessage) {
-        return getMessageInternal(key, toObjectArray(args), defaultMessage, Locale.getDefault());
-    }
-
-    public String getMessage(String key, List args, String defaultMessage, Locale locale) {
-        return getMessageInternal(key, toObjectArray(args), defaultMessage, locale);
-    }
-
-    public String resolveMessage(String key, Locale locale) {
+    @Override
+    protected Object doResolveMessageValue(String key, Locale locale) throws NoSuchMessageException {
         if (null == locale) locale = Locale.getDefault();
         for (MessageSource messageSource : messageSources) {
             try {
-                if (messageSource instanceof AbstractMessageSource) {
-                    return ((AbstractMessageSource) messageSource).resolveMessage(key, locale);
-                }
-                return messageSource.getMessage(key, locale);
+                return messageSource.resolveMessageValue(key, locale);
             } catch (NoSuchMessageException nsme) {
                 // ignore
             }
         }
         throw new NoSuchMessageException(key, locale);
-    }
-
-    private String getMessageInternal(String key, Object[] args, Locale locale) throws NoSuchMessageException {
-        if (null == locale) locale = Locale.getDefault();
-        for (MessageSource messageSource : messageSources) {
-            try {
-                return messageSource.getMessage(key, args, locale);
-            } catch (NoSuchMessageException nsme) {
-                // ignore
-            }
-        }
-        throw new NoSuchMessageException(key, locale);
-    }
-
-    private String getMessageInternal(String key, Object[] args, String defaultMessage, Locale locale) {
-        try {
-            return getMessageInternal(key, args, locale);
-        } catch (NoSuchMessageException nsme) {
-            // ignore
-        }
-        return null == defaultMessage ? key : defaultMessage;
     }
 }

@@ -22,7 +22,6 @@ import static griffon.util.GriffonApplicationUtils.isWindows
 import static griffon.util.GriffonExceptionHandler.GRIFFON_EXCEPTION_OUTPUT
 import static griffon.util.GriffonExceptionHandler.GRIFFON_FULL_STACKTRACE
 import static griffon.util.GriffonNameUtils.quote
-import static griffon.util.PlatformUtils.getPlatform
 
 /**
  * Gant script that bootstraps a Griffon application

@@ -15,10 +15,7 @@
  */
 package griffon.util;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Locale;
+import java.util.*;
 
 /**
  * Contains utility methods for converting between different name types,
@@ -28,6 +25,64 @@ import java.util.Locale;
  */
 public class GriffonNameUtils {
     private static final String PROPERTY_SET_PREFIX = "set";
+
+    private static final String[] KEYWORDS = new String[]{
+        "abstract",
+        "assert",
+        "as",
+        "break",
+        "case",
+        "catch",
+        "class",
+        "const",
+        "continue",
+        "default",
+        "do",
+        "else",
+        "enum",
+        "extends",
+        "final",
+        "finally",
+        "for",
+        "goto",
+        "if",
+        "implements",
+        "import",
+        "in",
+        "instanceof",
+        "interface",
+        "native",
+        "new",
+        "package",
+        "private",
+        "protected",
+        "public",
+        "return",
+        "static",
+        "strictfp",
+        "super",
+        "switch",
+        "synchronized",
+        "this",
+        "throw",
+        "throws",
+        "transient",
+        "try",
+        "void",
+        "volatile",
+        "while"
+    };
+
+    /**
+     * Finds out if the given String is a Java/Groovy keyword.
+     *
+     * @param str The String to test
+     * @return <tt>true</tt> if the given String is a keyword, false otherwise
+     */
+    public static boolean isKeyword(String str) {
+        if (isBlank(str)) return false;
+        return Arrays.binarySearch(KEYWORDS, str.toLowerCase(Locale.ENGLISH)) > -1;
+    }
 
     /**
      * Capitalizes a String (makes the first char uppercase) taking care
@@ -392,7 +447,7 @@ public class GriffonNameUtils {
     public static String unquote(String str) {
         if (isBlank(str)) return str;
         if ((str.startsWith("'") && str.endsWith("'")) ||
-                (str.startsWith("\"") && str.endsWith("\""))) {
+            (str.startsWith("\"") && str.endsWith("\""))) {
             return str.substring(1, str.length() - 1);
         }
         return str;

@@ -25,18 +25,15 @@ import java.net.URL;
  * @since 1.1.0
  */
 public class URLPropertyEditor extends AbstractPropertyEditor {
-    public void setAsText(String value) throws IllegalArgumentException {
-        setValue(value);
-    }
-
-    public void setValue(Object value) {
-        if (null == value) return;
-        if (value instanceof CharSequence) {
+    protected void setValueInternal(Object value) {
+        if (null == value) {
+            super.setValueInternal(null);
+        } else if (value instanceof CharSequence) {
             handleAsString(String.valueOf(value));
         } else if (value instanceof File) {
             handleAsFile((File) value);
         } else if (value instanceof URL) {
-            super.setValue(value);
+            super.setValueInternal(value);
         } else {
             throw illegalValue(value, URL.class);
         }
@@ -44,7 +41,7 @@ public class URLPropertyEditor extends AbstractPropertyEditor {
 
     private void handleAsString(String str) {
         try {
-            super.setValue(new URL(str));
+            super.setValueInternal(new URL(str));
         } catch (MalformedURLException e) {
             throw illegalValue(str, URL.class, e);
         }
@@ -52,7 +49,7 @@ public class URLPropertyEditor extends AbstractPropertyEditor {
 
     private void handleAsFile(File file) {
         try {
-            super.setValue(file.toURI().toURL());
+            super.setValueInternal(file.toURI().toURL());
         } catch (MalformedURLException e) {
             throw illegalValue(file, URL.class);
         }

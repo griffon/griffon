@@ -18,17 +18,12 @@ package org.codehaus.griffon.compiler.support;
 
 import griffon.core.GriffonController;
 import griffon.core.GriffonControllerClass;
-import org.codehaus.griffon.ast.GriffonASTUtils;
 import org.codehaus.griffon.compiler.GriffonCompilerContext;
-import org.codehaus.griffon.compiler.SourceUnitCollector;
 import org.codehaus.griffon.runtime.core.AbstractGriffonController;
-import org.codehaus.groovy.ast.ClassHelper;
 import org.codehaus.groovy.ast.ClassNode;
 import org.codehaus.groovy.control.CompilePhase;
 import org.codehaus.groovy.control.SourceUnit;
 import org.codehaus.groovy.transform.GroovyASTTransformation;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * Handles generation of code for Griffon controllers.
@@ -39,7 +34,6 @@ import org.slf4j.LoggerFactory;
  */
 @GroovyASTTransformation(phase = CompilePhase.CANONICALIZATION)
 public class GriffonControllerASTTransformation extends GriffonArtifactASTTransformation {
-    private static final Logger LOG = LoggerFactory.getLogger(GriffonControllerASTTransformation.class);
     private static final String ARTIFACT_PATH = "controllers";
     private static final ClassNode GRIFFON_CONTROLLER_CLASS = makeClassSafe(GriffonController.class);
     private static final ClassNode ABSTRACT_GRIFFON_CONTROLLER_CLASS = makeClassSafe(AbstractGriffonController.class);
@@ -49,38 +43,26 @@ public class GriffonControllerASTTransformation extends GriffonArtifactASTTransf
         return ARTIFACT_PATH.equals(GriffonCompilerContext.getArtifactPath(source)) && classNode.getName().endsWith(GriffonControllerClass.TRAILING);
     }
 
-    protected void transform(ClassNode classNode, SourceUnit source, String artifactPath) {
-        if (!isControllerArtifact(classNode, source)) return;
-        doTransform(classNode);
+    protected String getArtifactType() {
+        return GriffonControllerClass.TYPE;
     }
 
-    private void doTransform(ClassNode classNode) {
-        ClassNode superClass = classNode.getSuperClass();
-        if (ClassHelper.OBJECT_TYPE.equals(superClass)) {
-            if (LOG.isDebugEnabled()) {
-                LOG.debug("Setting " + ABSTRACT_GRIFFON_CONTROLLER_CLASS.getName() + " as the superclass of " + classNode.getName());
-            }
-            classNode.setSuperClass(ABSTRACT_GRIFFON_CONTROLLER_CLASS);
-        } else if (!classNode.implementsInterface(GRIFFON_CONTROLLER_CLASS)) {
-            inject(classNode, superClass);
-        }
+    protected ClassNode getSuperClassNode(ClassNode classNode) {
+        return ABSTRACT_GRIFFON_CONTROLLER_CLASS;
     }
 
-    private void inject(ClassNode classNode, ClassNode superClass) {
-        SourceUnit superSource = SourceUnitCollector.getInstance().getSourceUnit(superClass);
-        if (isControllerArtifact(superClass, superSource)) return;
+    protected ClassNode getInterfaceNode() {
+        return GRIFFON_CONTROLLER_CLASS;
+    }
 
-        if (superSource == null) {
-            if (LOG.isDebugEnabled()) {
-                LOG.debug("Injecting " + GRIFFON_CONTROLLER_CLASS.getName() + " behavior to " + classNode.getName());
-            }
-            // 1. add interface
-            GriffonASTUtils.injectInterface(classNode, GRIFFON_CONTROLLER_CLASS);
-            // 2. add methods
-            ASTInjector injector = new GriffonMvcArtifactASTInjector();
-            injector.inject(classNode, GriffonControllerClass.TYPE);
-        } else {
-            doTransform(superClass);
-        }
+    protected boolean matches(ClassNode classNode, SourceUnit source) {
+        return isControllerArtifact(classNode, source);
+    }
+
+    protected ASTInjector[] getASTInjectors() {
+        return new ASTInjector[]{
+            new GriffonMvcArtifactASTInjector(),
+            new GriffonControllerASTInjector()
+        };
     }
 }

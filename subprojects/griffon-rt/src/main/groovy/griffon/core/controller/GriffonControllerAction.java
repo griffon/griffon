@@ -33,6 +33,8 @@ public interface GriffonControllerAction {
     String KEY_ACCELERATOR = "accelerator";
     String KEY_MNEMONIC = "mnemonic";
 
+    GriffonControllerActionManager getActionManager();
+
     String getName();
 
     String getShortDescription();
@@ -74,4 +76,6 @@ public interface GriffonControllerAction {
     void setShortDescription(String shortDescription);
 
     void setSmallIcon(String smallIcon);
+
+    void initialize();
 }

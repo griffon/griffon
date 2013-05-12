@@ -23,8 +23,8 @@ import groovy.util.ConfigObject;
 import java.net.URL;
 import java.util.*;
 
-import static griffon.util.ConfigUtils.getConfigValue;
 import static griffon.util.ConfigUtils.createConfigReader;
+import static griffon.util.ConfigUtils.getConfigValue;
 
 /**
  * @author Andres Almiray
@@ -54,7 +54,6 @@ public class GroovyScriptResourceBundle extends ResourceBundle {
         this(resolveConfigReader(reader).parse(location));
     }
 
-
     public GroovyScriptResourceBundle(ConfigReader reader, Script script) {
         this(resolveConfigReader(reader).parse(script));
     }
@@ -78,7 +77,7 @@ public class GroovyScriptResourceBundle extends ResourceBundle {
 
     protected Object handleGetObject(String key) {
         Object value = getConfigValue(config, key, null);
-        return null == value ? null : String.valueOf(value);
+        return null == value ? null : value;
     }
 
     public Enumeration<String> getKeys() {

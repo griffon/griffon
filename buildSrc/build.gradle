@@ -21,7 +21,7 @@ configurations {
 }
 
 repositories {
-	mavenCentral()
+    mavenCentral()
     mavenRepo name: 'Codehaus', url: 'http://repository.codehaus.org/'
     mavenRepo name: 'Grails Central', url: 'http://repo.grails.org/grails/core/'
     mavenRepo name: 'SpringSource', url: 'http://repository.springsource.com/maven/bundles/release'
@@ -29,9 +29,9 @@ repositories {
 }
 
 dependencies {
-	groovy localGroovy()
     compile gradleApi()
     compile("org.grails:grails-docs:$grailsDocsVersion",
+         "org.codehaus.groovy:groovy-all:$groovyVersion",
          'radeox:radeox:1.0-b2',
          'com.lowagie:itext:2.0.8',
          'org.xhtmlrenderer:core-renderer:R8',

@@ -193,6 +193,7 @@ public class GriffonASTUtils {
     }
 
     public static void injectInterface(ClassNode classNode, ClassNode type, boolean deep) {
+        if (classNode.implementsInterface(type)) return;
         if (deep) {
             getFurthestParent(classNode).addInterface(type);
         } else {

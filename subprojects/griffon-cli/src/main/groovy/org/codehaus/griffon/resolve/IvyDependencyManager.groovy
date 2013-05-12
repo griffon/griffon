@@ -13,12 +13,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package org.codehaus.griffon.resolve
 
 import griffon.util.BuildSettings
 import griffon.util.Metadata
+import groovy.transform.CompileStatic
 import org.apache.ivy.core.event.EventManager
+import org.apache.ivy.core.module.descriptor.*
 import org.apache.ivy.core.module.id.ModuleRevisionId
+import org.apache.ivy.core.report.*
 import org.apache.ivy.core.resolve.IvyNode
 import org.apache.ivy.core.resolve.ResolveEngine
 import org.apache.ivy.core.resolve.ResolveOptions
@@ -29,11 +33,10 @@ import org.apache.ivy.plugins.resolver.ChainResolver
 import org.apache.ivy.util.Message
 import org.apache.ivy.util.MessageLogger
 import org.codehaus.griffon.artifacts.VersionComparator
+import org.codehaus.griffon.resolve.ivy.IvyGraphNode
+import org.codehaus.griffon.resolve.reporting.SimpleGraphRenderer
 
 import java.util.concurrent.ConcurrentLinkedQueue
-
-import org.apache.ivy.core.module.descriptor.*
-import org.apache.ivy.core.report.*
 
 import static griffon.util.GriffonNameUtils.getPropertyNameForLowerCaseHyphenSeparatedName
 
@@ -42,7 +45,7 @@ import static griffon.util.GriffonNameUtils.getPropertyNameForLowerCaseHyphenSep
  *
  * @author Graeme Rocher (Grails 1.2)
  */
-class IvyDependencyManager extends AbstractIvyDependencyManager implements DependencyResolver, DependencyDefinitionParser {
+class IvyDependencyManager extends AbstractIvyDependencyManager implements DependencyResolver, DependencyDefinitionParser, DependencyManager {
     ResolveEngine resolveEngine
     MessageLogger logger
 
@@ -139,8 +142,7 @@ class IvyDependencyManager extends AbstractIvyDependencyManager implements Depen
                 serializeResolvers(builder)
                 serializeDependencies(builder)
             }
-        }
-        else {
+        } else {
             serializeResolvers(builder)
             serializeDependencies(builder)
         }
@@ -328,8 +330,7 @@ class IvyDependencyManager extends AbstractIvyDependencyManager implements Depen
                     rootLoader.addURL(url)
                 }
             }
-        }
-        else {
+        } else {
             throw new IllegalStateException("No root loader found. Could not load dependencies. Note this method cannot be called when running in a WAR.")
         }
     }
@@ -343,7 +344,7 @@ class IvyDependencyManager extends AbstractIvyDependencyManager implements Depen
         def descriptors = getApplicationDependencyDescriptors(conf)
         report.allArtifactsReports.findAll { ArtifactDownloadReport downloadReport ->
             def mrid = downloadReport.artifact.moduleRevisionId
-            descriptors.any { DependencyDescriptor dd -> mrid == dd.dependencyRevisionId}
+            descriptors.any { DependencyDescriptor dd -> mrid == dd.dependencyRevisionId }
         }
     }
 
@@ -354,7 +355,7 @@ class IvyDependencyManager extends AbstractIvyDependencyManager implements Depen
         def descriptors = getExportedDependencyDescriptors(conf)
         resolveApplicationDependencies(conf)?.findAll { ArtifactDownloadReport downloadReport ->
             def mrid = downloadReport.artifact.moduleRevisionId
-            descriptors.any { DependencyDescriptor dd -> mrid == dd.dependencyRevisionId}
+            descriptors.any { DependencyDescriptor dd -> mrid == dd.dependencyRevisionId }
         }
     }
 
@@ -432,5 +433,97 @@ class IvyDependencyManager extends AbstractIvyDependencyManager implements Depen
                 versionComparison ?: (rhs.plugin <=> lhs.plugin)
             }
         }
+    }
+
+    @Override
+    DependencyReport resolve(String scope) {
+        final resolveReport = resolveDependencies(scope)
+        return new IvyDependencyReport(scope, resolveReport)
+    }
+
+    @Override
+    DependencyReport resolve() {
+        final resolveReport = resolveDependencies()
+        return new IvyDependencyReport("compile", resolveReport)
+
+    }
+
+    @Override
+    @CompileStatic
+    Collection<Dependency> getPluginDependencies() {
+        final descriptors = getEffectivePluginDependencyDescriptors()
+        convertToGriffonDependencies(descriptors)
+    }
+
+    @Override
+    Collection<Dependency> getApplicationDependencies() {
+        Set<DependencyDescriptor> descriptors = this.getApplicationDependencyDescriptors()
+        return convertToGriffonDependencies(descriptors)
+    }
+
+    @CompileStatic
+    public Set<Dependency> convertToGriffonDependencies(Set<DependencyDescriptor> descriptors) {
+        Set<Dependency> dependencies = []
+        for (DependencyDescriptor dd in descriptors) {
+            final drid = dd.dependencyRevisionId
+            def d = new Dependency(drid.organisation, drid.name, drid.revision)
+            d.transitive = dd.transitive
+
+            dependencies << d
+        }
+        dependencies
+    }
+
+    @Override
+    Collection<Dependency> getAllDependencies() {
+        return convertToGriffonDependencies(dependencyDescriptors)
+    }
+
+    @Override
+    Collection<Dependency> getApplicationDependencies(String scope) {
+        convertToGriffonDependencies(getApplicationDependencyDescriptors().findAll { it.scope == scope })
+    }
+
+    Collection<Dependency> getPluginDependencies(String scope) {
+        convertToGriffonDependencies(effectivePluginDependencyDescriptors.findAll { EnhancedDefaultDependencyDescriptor dd -> dd.scope == scope })
+    }
+
+    @Override
+    Collection<Dependency> getAllDependencies(String scope) {
+        convertToGriffonDependencies(dependencyDescriptors.findAll { it.scope == scope })
+    }
+
+    void produceReport(String scope) {
+        if (scope) {
+            final desc = BuildSettings.SCOPE_TO_DESC[scope]
+            if (desc) {
+                reportOnScope(scope, desc)
+            } else {
+                produceReport()
+            }
+        } else {
+            produceReport()
+        }
+    }
+
+    @Override
+    @CompileStatic
+    void produceReport() {
+        // build scope
+        reportOnScope(BuildSettings.BUILD_SCOPE, BuildSettings.BUILD_SCOPE_DESC)
+        // compile scope
+        reportOnScope(BuildSettings.COMPILE_SCOPE, BuildSettings.COMPILE_SCOPE_DESC)
+        // runtime scope
+        reportOnScope(BuildSettings.RUNTIME_SCOPE, BuildSettings.RUNTIME_SCOPE_DESC)
+        // test scope
+        reportOnScope(BuildSettings.TEST_SCOPE, BuildSettings.TEST_SCOPE_DESC)
+    }
+
+    void reportOnScope(String scope, String desc) {
+        ResolveReport resolveReport = resolveDependencies(scope)
+
+        IvyGraphNode node = new IvyGraphNode(resolveReport)
+        def renderer = new SimpleGraphRenderer(scope, "$desc (total: ${resolveReport.artifacts.size()})")
+        renderer.render(node)
     }
 }

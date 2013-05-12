@@ -25,16 +25,13 @@ import static griffon.util.GriffonNameUtils.isBlank;
  * @since 1.1.0
  */
 public class FilePropertyEditor extends AbstractPropertyEditor {
-    public void setAsText(String value) throws IllegalArgumentException {
-        setValue(value);
-    }
-
-    public void setValue(Object value) {
-        if (null == value) return;
-        if (value instanceof CharSequence) {
+    protected void setValueInternal(Object value) {
+        if (null == value) {
+            super.setValueInternal(null);
+        } else if (value instanceof CharSequence) {
             handleAsString(String.valueOf(value));
         } else if (value instanceof File) {
-            super.setValue(value);
+            super.setValueInternal(value);
         } else {
             throw illegalValue(value, File.class);
         }
@@ -44,6 +41,6 @@ public class FilePropertyEditor extends AbstractPropertyEditor {
         if (isBlank(str)) {
             throw illegalValue(str, File.class);
         }
-        super.setValue(new File(str));
+        super.setValueInternal(new File(str));
     }
 }

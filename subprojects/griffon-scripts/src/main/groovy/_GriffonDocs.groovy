@@ -38,11 +38,11 @@ groovydocDir = "${griffonSettings.docsOutputDir}/api"
 docEncoding = "UTF-8"
 docSourceLevel = "1.5"
 links = [
-        [packages: "java.,org.xml.,javax.,org.xml.", href: "http://java.sun.com/j2se/1.5.0/docs/api"],
-        [packages: "org.apache.ant.,org.apache.tools.ant.", href: "http://www.dpml.net/api/ant/1.7.0"],
-        [packages: "org.junit.,junit.framework.", href: "http://kentbeck.github.com/junit/javadoc/latest/"],
-        [packages: "groovy.,org.codehaus.groovy.", href: "http://groovy.codehaus.org/api/"],
-        [packages: 'griffon.,org.codehaus.griffon.', href: 'http://griffon.codehaus.org/guide/latest/api/']
+    [packages: "java.,org.xml.,javax.,org.xml.", href: "http://java.sun.com/j2se/1.5.0/docs/api"],
+    [packages: "org.apache.ant.,org.apache.tools.ant.", href: "http://www.dpml.net/api/ant/1.7.0"],
+    [packages: "org.junit.,junit.framework.", href: "http://kentbeck.github.com/junit/javadoc/latest/"],
+    [packages: "groovy.,org.codehaus.groovy.", href: "http://groovy.codehaus.org/api/"],
+    [packages: 'griffon.,org.codehaus.griffon.', href: 'http://griffon.codehaus.org/guide/latest/api/']
 ]
 
 docsDisabled = { argsMap.nodoc == true }
@@ -59,6 +59,10 @@ target(name: 'docs', description: "Produces documentation for a Griffon project"
         ant.copy(todir: "${basedir}/src/docs/img") {
             fileset(dir: "${griffonHome}/media/", includes: "*.png")
         }
+        ant.mkdir(dir: "${basedir}/src/docs/css")
+        ant.copy(todir: "${basedir}/src/docs/css") {
+            fileset(dir: "${griffonHome}/guide/css", includes: "*.css")
+        }
         ant.mkdir(dir: "${basedir}/src/docs/guide")
         ant.mkdir(dir: "${basedir}/src/docs/ref/Items")
         new File("${basedir}/src/docs/guide/1. Introduction.gdoc").write '''
@@ -74,7 +78,7 @@ As well as numbered lists:
 # Number 1
 # Number 2
         
-The documentation also handles links to [guide items|guide:1. Introduction] as well as [reference|items]        
+The documentation also handles links to [guide items|guide:1. Introduction] as well as [reference|items]
         '''
 
         new File("${basedir}/src/docs/ref/Items/reference.gdoc").write '''
@@ -82,7 +86,7 @@ h1. example
 
 h2. Purpose
 
-This is an example reference item. 
+This is an example reference item.
 
 h2. Examples
 
@@ -94,7 +98,7 @@ def example = new Example()
         
 h2. Description
 
-And provide a detailed description        
+And provide a detailed description
         '''
 
         println "Example documentation created in ${basedir}/src/docs. Use 'griffon doc' to publish."
@@ -135,11 +139,14 @@ target(groovydoc: "Produces groovydoc documentation") {
     event("DocStart", ['groovydoc'])
     try {
         invokeGroovydoc(
-                destdir: groovydocDir,
-                windowtitle: "${griffonAppName} ${griffonAppVersion}",
-                doctitle: "${griffonAppName} ${griffonAppVersion}",
-                sourcepath: "src/main, griffon-app/controllers, griffon-app/models, griffon-app/services"
+            destdir: groovydocDir,
+            windowtitle: "${griffonAppName} ${griffonAppVersion}",
+            doctitle: "${griffonAppName} ${griffonAppVersion}",
+            sourcepath: "src/main, griffon-app/controllers, griffon-app/models, griffon-app/services"
         )
+        ant.copy(todir: groovydocDir, overwrite: true) {
+            fileset(dir: "${griffonHome}/guide/css", includes: "stylesheet.css")
+        }
     }
     catch (Exception e) {
         event("StatusError", ["Error generating groovydoc: ${e.message}"])
@@ -160,20 +167,23 @@ target(javadoc: "Produces javadoc documentation") {
     if (javaDir.listFiles().find { !it.name.startsWith(".")}) {
         try {
             invokeJavadoc(access: "protected",
-                    destdir: javadocDir,
-                    encoding: docEncoding,
-                    classpathref: "griffon.compile.classpath",
-                    use: "yes",
-                    windowtitle: griffonAppName,
-                    docencoding: docEncoding,
-                    charset: docEncoding,
-                    source: docSourceLevel,
-                    useexternalfile: "yes",
-                    breakiterator: "true",
-                    linksource: "yes",
-                    maxmemory: "128m",
-                    failonerror: false,
-                    sourcepath: javaDir.absolutePath) {
+                destdir: javadocDir,
+                encoding: docEncoding,
+                classpathref: "griffon.compile.classpath",
+                use: "yes",
+                windowtitle: griffonAppName,
+                docencoding: docEncoding,
+                charset: docEncoding,
+                source: docSourceLevel,
+                useexternalfile: "yes",
+                breakiterator: "true",
+                linksource: "yes",
+                maxmemory: "128m",
+                failonerror: false,
+                sourcepath: javaDir.absolutePath) {
+            }
+            ant.copy(todir: javadocDir, overwrite: true) {
+                fileset(dir: "${griffonHome}/guide/css", includes: "stylesheet.css")
             }
         }
         catch (Exception e) {
@@ -189,20 +199,51 @@ target(refdocs: "Generates Griffon style reference documentation") {
 
     if (docsDisabled()) return
 
-    def srcDocs = new File("${basedir}/src/docs")
-    def srcDocsGuide = new File("${basedir}/src/docs/guide")
-    def srcDocsRef = new File("${basedir}/src/docs/ref")
-    def srcDocsImg = new File("${basedir}/src/docs/img")
+    File srcDocs = new File("${basedir}/src/docs")
+    File srcDocsGuide = new File("${srcDocs}/guide")
+    File srcDocsRef = new File("${srcDocs}/ref")
+    File srcDocsImg = new File("${srcDocs}/img")
+    File srcDocsCss = new File("${srcDocs}/css")
 
     if (srcDocsGuide.exists() || srcDocsRef.exists()) {
-        File refDocsDir = new File("${griffonSettings.docsOutputDir}/manual")
-        ant.mkdir(dir: "${refDocsDir}/img")
+        File manualDir = new File("${griffonSettings.docsOutputDir}/manual")
+        ant.delete(dir: manualDir, quiet: true)
+        ant.mkdir(dir: manualDir)
+
+        File manualApiDir = new File("${manualDir}/api")
+        ant.copy(todir: manualApiDir) {
+            fileset(dir: groovydocDir)
+        }
+        ant.copy(todir: manualApiDir, overwrite: true) {
+            fileset(dir: "${griffonHome}/media", includes: "griffon.ico")
+        }
+        ant.replace(dir: manualApiDir) {
+            include(name: '**/*.html')
+            replacefilter(token: 'groovy.ico', value: 'griffon.ico')
+        }
+
+        ant.mkdir(dir: "${manualDir}/img")
         if (srcDocsImg.exists()) {
-            ant.copy(todir: "${refDocsDir}/img") {
+            ant.copy(todir: "${manualDir}/img") {
                 fileset(dir: srcDocsImg, includes: "*.png")
             }
         }
-        def publisher = new DocPublisher(srcDocs, refDocsDir)
+
+        File manualSrcdir = new File("${griffonSettings.docsOutputDir}/manual-src")
+        ant.mkdir(dir: manualSrcdir)
+        ant.copy(todir: manualSrcdir) {
+            fileset(dir: srcDocs)
+        }
+        ant.copy(todir: "${manualSrcdir}/api") {
+            fileset(dir: manualApiDir)
+        }
+        srcDocs = manualSrcdir
+        srcDocsGuide = new File("${srcDocs}/guide")
+        srcDocsRef = new File("${srcDocs}/ref")
+        srcDocsImg = new File("${srcDocs}/img")
+        srcDocsCss = new File("${srcDocs}/css")
+
+        def publisher = new DocPublisher(srcDocs, manualDir)
         publisher.ant = ant
         publisher.title = griffonAppName
         publisher.subtitle = griffonAppName
@@ -219,15 +260,24 @@ target(refdocs: "Generates Griffon style reference documentation") {
 
         publisher.publish()
 
+        ant.mkdir(dir: "${manualDir}/css")
+        if (srcDocsCss.exists()) {
+            ant.copy(todir: "${manualDir}/css", overwrite: true) {
+                fileset(dir: srcDocsCss, includes: "*.css")
+            }
+        }
+
         createdManual = true
 
-        println "Built user manual at ${refDocsDir}/index.html"
+        ant.delete(dir: manualSrcdir, quiet: true)
+
+        println "Built user manual at ${manualDir}/index.html"
     }
 }
 
 target(pdf: "Produces PDF documentation") {
-    File refDocsDir = new File("${griffonSettings.docsOutputDir}/manual")
-    File singleHtml = new File(refDocsDir, 'guide/single.html')
+    File manualDir = new File("${griffonSettings.docsOutputDir}/manual")
+    File singleHtml = new File(manualDir, 'guide/single.html')
 
     if (docsDisabled() || !pdfEnabled() || !singleHtml.exists()) {
         event("DocSkip", ['pdf'])
@@ -240,7 +290,7 @@ target(pdf: "Produces PDF documentation") {
 
     createdPdf = true
 
-    println "Built user manual PDF at ${refDocsDir}/guide/single.pdf"
+    println "Built user manual PDF at ${manualDir}/guide/single.pdf"
 
     event("DocEnd", ['pdf'])
 }
@@ -292,7 +342,7 @@ def readPluginMetadataForDocs(DocPublisher publisher) {
 
 def readDocProperties(DocPublisher publisher) {
     ['copyright', 'license', 'authors', 'footer', 'images',
-            'css', 'style', 'encoding', 'logo', 'sponsorLogo'].each { readIfSet publisher, it }
+        'css', 'style', 'encoding', 'logo', 'sponsorLogo'].each { readIfSet publisher, it }
 }
 
 def configureAliases() {
@@ -334,9 +384,9 @@ invokeGroovydoc = { Map args ->
     ant.mkdir(dir: args.destdir)
 
     Map groovydocProps = [
-            use: 'true',
-            'private': 'true',
-            packagenames: '**.*'
+        use: 'true',
+        'private': 'true',
+        packagenames: '**.*'
     ]
 
     def additionalLinks = args.remove('links') ?: []
@@ -361,18 +411,18 @@ invokeGroovydoc = { Map args ->
 
 invokeJavadoc = { Map args ->
     Map javadocProps = [
-            access: "protected",
-            encoding: docEncoding,
-            classpathref: "griffon.compile.classpath",
-            use: "yes",
-            windowtitle: griffonAppName,
-            docencoding: docEncoding,
-            charset: docEncoding,
-            source: docSourceLevel,
-            useexternalfile: "yes",
-            breakiterator: "true",
-            linksource: "yes",
-            maxmemory: "128m"
+        access: "protected",
+        encoding: docEncoding,
+        classpathref: "griffon.compile.classpath",
+        use: "yes",
+        windowtitle: griffonAppName,
+        docencoding: docEncoding,
+        charset: docEncoding,
+        source: docSourceLevel,
+        useexternalfile: "yes",
+        breakiterator: "true",
+        linksource: "yes",
+        maxmemory: "128m"
     ]
 
     def additionalLinks = args.remove('links') ?: []

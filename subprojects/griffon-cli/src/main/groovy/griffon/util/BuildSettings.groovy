@@ -51,6 +51,24 @@ import org.apache.ivy.core.report.ArtifactDownloadReport
  * to ensure consistent behaviour.</p>
  */
 class BuildSettings extends AbstractBuildSettings {
+    static final String BUILD_SCOPE = "build"
+    static final String COMPILE_SCOPE = "compile"
+    static final String RUNTIME_SCOPE = "runtime"
+    static final String TEST_SCOPE = "test"
+
+    static final String BUILD_SCOPE_DESC = "Dependencies for the build system only"
+    static final String COMPILE_SCOPE_DESC = "Dependencies placed on the classpath for compilation"
+    static final String RUNTIME_SCOPE_DESC = "Dependencies needed at runtime but not for compilation"
+    static final String TEST_SCOPE_DESC = "Dependencies needed for test compilation and execution but not at runtime"
+
+
+    static final Map<String, String> SCOPE_TO_DESC = [
+        (BuildSettings.BUILD_SCOPE): BuildSettings.BUILD_SCOPE_DESC,
+        (BuildSettings.COMPILE_SCOPE): BuildSettings.COMPILE_SCOPE_DESC,
+        (BuildSettings.RUNTIME_SCOPE): BuildSettings.RUNTIME_SCOPE_DESC,
+        (BuildSettings.TEST_SCOPE): BuildSettings.TEST_SCOPE_DESC
+    ]
+
     private static final Logger LOG = LoggerFactory.getLogger(BuildSettings)
     private static final String GRIFFON_APP = "griffon-app"
 

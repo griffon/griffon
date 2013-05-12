@@ -117,6 +117,14 @@ public class DefaultGriffonAddon extends AbstractGriffonAddon {
         }
     }
 
+    public Map<String,Map<String, Object>> getActionInterceptors() {
+        try {
+            return (Map<String, Map<String, Object>>) InvokerHelper.getProperty(addonDelegate, "actionInterceptors");
+        } catch (MissingPropertyException mpe) {
+            return Collections.emptyMap();
+        }
+    }
+
     public void addonInit(GriffonApplication app) {
         try {
             InvokerHelper.invokeMethod(addonDelegate, "addonInit", app);

@@ -44,63 +44,16 @@ public class CompositeResourceResolver extends AbstractResourceResolver {
         return resourceResolvers.toArray(new ResourceResolver[resourceResolvers.size()]);
     }
 
-    public Object resolveResource(String key, Object defaultValue) {
-        return resolveResourceInternal(key, EMPTY_OBJECT_ARGS, defaultValue, Locale.getDefault());
-    }
-
-    public Object resolveResource(String key, Object defaultValue, Locale locale) {
-        return resolveResourceInternal(key, EMPTY_OBJECT_ARGS, defaultValue, locale);
-    }
-
-    public Object resolveResource(String key, Object[] args, Object defaultValue) {
-        return resolveResourceInternal(key, args, defaultValue, Locale.getDefault());
-    }
-
-    public Object resolveResource(String key, Object[] args, Object defaultValue, Locale locale) {
-        return resolveResourceInternal(key, args, defaultValue, locale);
-    }
-
-    public Object resolveResource(String key, List args, Object defaultValue) {
-        return resolveResourceInternal(key, toObjectArray(args), defaultValue, Locale.getDefault());
-    }
-
-    public Object resolveResource(String key, List args, Object defaultValue, Locale locale) {
-        return resolveResourceInternal(key, toObjectArray(args), defaultValue, locale);
-    }
-
-    public Object resolveResourceInternal(String key, Locale locale) {
+    @Override
+    protected Object doResolveResourceValue(String key, Locale locale) throws NoSuchResourceException {
         if (null == locale) locale = Locale.getDefault();
         for (ResourceResolver resourceResolver : resourceResolvers) {
             try {
-                if (resourceResolver instanceof AbstractResourceResolver) {
-                    return ((AbstractResourceResolver) resourceResolver).resolveResourceInternal(key, locale);
-                }
-                return resourceResolver.resolveResource(key, locale);
-            } catch (NoSuchResourceException nsme) {
+                return resourceResolver.resolveResourceValue(key, locale);
+            } catch (NoSuchResourceException nsre) {
                 // ignore
             }
         }
         throw new NoSuchResourceException(key, locale);
-    }
-
-    private Object resolveResourceInternal(String key, Object[] args, Locale locale) throws NoSuchResourceException {
-        if (null == locale) locale = Locale.getDefault();
-        for (ResourceResolver resourceResolver : resourceResolvers) {
-            try {
-                return resourceResolver.resolveResource(key, args, locale);
-            } catch (NoSuchResourceException nsme) {
-                // ignore
-            }
-        }
-        throw new NoSuchResourceException(key, locale);
-    }
-
-    private Object resolveResourceInternal(String key, Object[] args, Object defaultValue, Locale locale) {
-        try {
-            return resolveResourceInternal(key, args, locale);
-        } catch (NoSuchResourceException nsme) {
-            // ignore
-        }
-        return defaultValue;
     }
 }

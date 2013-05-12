@@ -41,6 +41,16 @@ public class UninstallPluginCommand extends AbstractGriffonCommand {
             required = false)
     private String version;
 
+    @Option(name = "--dry-run",
+        description = "Display the uninstall plan but do not execute it.",
+        required = false)
+    private boolean dryRun;
+
+    @Option(name = "--force",
+        description = "Forces dependent plugins to be uninstalled, even if required by other plugins.",
+        required = false)
+    private boolean force;
+
     @Option(name = "--framework",
             description = "Uninstalls the plugin only if installed as a framework plugin.",
             required = false)

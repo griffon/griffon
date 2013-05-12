@@ -18,17 +18,12 @@ package org.codehaus.griffon.compiler.support;
 
 import griffon.core.GriffonService;
 import griffon.core.GriffonServiceClass;
-import org.codehaus.griffon.ast.GriffonASTUtils;
 import org.codehaus.griffon.compiler.GriffonCompilerContext;
-import org.codehaus.griffon.compiler.SourceUnitCollector;
 import org.codehaus.griffon.runtime.core.AbstractGriffonService;
-import org.codehaus.groovy.ast.ClassHelper;
 import org.codehaus.groovy.ast.ClassNode;
 import org.codehaus.groovy.control.CompilePhase;
 import org.codehaus.groovy.control.SourceUnit;
 import org.codehaus.groovy.transform.GroovyASTTransformation;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * Handles generation of code for Griffon services.
@@ -39,7 +34,6 @@ import org.slf4j.LoggerFactory;
  */
 @GroovyASTTransformation(phase = CompilePhase.CANONICALIZATION)
 public class GriffonServiceASTTransformation extends GriffonArtifactASTTransformation {
-    private static final Logger LOG = LoggerFactory.getLogger(GriffonServiceASTTransformation.class);
     private static final String ARTIFACT_PATH = "services";
     private static final ClassNode GRIFFON_SERVICE_CLASS = makeClassSafe(GriffonService.class);
     private static final ClassNode ABSTRACT_GRIFFON_SERVICE_CLASS = makeClassSafe(AbstractGriffonService.class);
@@ -49,38 +43,25 @@ public class GriffonServiceASTTransformation extends GriffonArtifactASTTransform
         return ARTIFACT_PATH.equals(GriffonCompilerContext.getArtifactPath(source)) && classNode.getName().endsWith(GriffonServiceClass.TRAILING);
     }
 
-    protected void transform(ClassNode classNode, SourceUnit source, String artifactPath) {
-        if (!isServiceArtifact(classNode, source)) return;
-        doTransform(classNode);
+    protected String getArtifactType() {
+        return GriffonServiceClass.TYPE;
     }
 
-    private void doTransform(ClassNode classNode) {
-        ClassNode superClass = classNode.getSuperClass();
-        if (ClassHelper.OBJECT_TYPE.equals(superClass)) {
-            if (LOG.isDebugEnabled()) {
-                LOG.debug("Setting " + ABSTRACT_GRIFFON_SERVICE_CLASS.getName() + " as the superclass of " + classNode.getName());
-            }
-            classNode.setSuperClass(ABSTRACT_GRIFFON_SERVICE_CLASS);
-        } else if (!classNode.implementsInterface(GRIFFON_SERVICE_CLASS)) {
-            inject(classNode, superClass);
-        }
+    protected ClassNode getSuperClassNode(ClassNode classNode) {
+        return ABSTRACT_GRIFFON_SERVICE_CLASS;
     }
 
-    private void inject(ClassNode classNode, ClassNode superClass) {
-        SourceUnit superSource = SourceUnitCollector.getInstance().getSourceUnit(superClass);
-        if (isServiceArtifact(superClass, superSource)) return;
+    protected ClassNode getInterfaceNode() {
+        return GRIFFON_SERVICE_CLASS;
+    }
 
-        if (superSource == null) {
-            if (LOG.isDebugEnabled()) {
-                LOG.debug("Injecting " + GRIFFON_SERVICE_CLASS.getName() + " behavior to " + classNode.getName());
-            }
-            // 1. add interface
-            GriffonASTUtils.injectInterface(classNode, GRIFFON_SERVICE_CLASS);
-            // 2. add methods
-            ASTInjector injector = new GriffonServiceASTInjector();
-            injector.inject(classNode, GriffonServiceClass.TYPE);
-        } else {
-            doTransform(superClass);
-        }
+    protected boolean matches(ClassNode classNode, SourceUnit source) {
+        return isServiceArtifact(classNode, source);
+    }
+
+    protected ASTInjector[] getASTInjectors() {
+        return new ASTInjector[]{
+            new GriffonServiceASTInjector()
+        };
     }
 }

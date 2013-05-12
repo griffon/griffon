@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+import static griffon.util.GriffonApplicationUtils.isWindows
 import static griffon.util.GriffonNameUtils.quote
 import static griffon.util.GriffonNameUtils.getNaturalName
 import static griffon.util.GriffonNameUtils.getClassNameForLowerCaseHyphenSeparatedName
@@ -31,6 +32,7 @@ includeTargets << griffonScript('_GriffonBootstrap')
 target(name: 'tweakConfig', description: ' tweaks for webstart', prehook: null, posthook: null) {
     configTweaks << { buildConfig.griffon.jars.sign = true }
 }
+
 target(name: 'runApplet', description: "Runs the applet from Java WebStart", prehook: null, posthook: null) {
     if (isPluginProject) {
         println "Cannot run application: project is a plugin!"
@@ -52,6 +54,9 @@ target(name: 'doRunApplet', description: "Runs the applet from Java WebStart", p
         webstartVM = [System.properties['java.home'], 'bin', 'javaws'].join(File.separator)
     }
 
+    if (!(webstartVM instanceof File)) webstartVM = new File(webstartVM.toString())
+    if (!webstartVM.exists() && !isWindows) webstartVM = new File(['', 'usr', 'bin', 'javaws'].join(File.separator))
+
     def javaOpts = setupJavaOpts(false)
     debug("Running JVM options:")
     javaOpts = javaOpts.collect { debug("  $it"); "-J$it" }
@@ -65,7 +70,7 @@ target(name: 'doRunApplet', description: "Runs the applet from Java WebStart", p
         sysprops << "-J-D${key}=${quote(value)}"
     }
 
-    List<String> cmd = [webstartVM] + javaOpts + sysprops + buildConfig.griffon.webstart.jnlp
+    List<String> cmd = [webstartVM.toString()] + javaOpts + sysprops + buildConfig.griffon.webstart.jnlp
 
     // TODO set proxy settings
     // start the processess

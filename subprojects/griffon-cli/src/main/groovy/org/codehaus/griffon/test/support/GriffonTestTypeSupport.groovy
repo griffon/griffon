@@ -138,7 +138,7 @@ abstract class GriffonTestTypeSupport implements GriffonTestType {
      */
     protected File getSourceDir() {
         if (!sourceDir) {
-            sourceDir = new File("test/$relativeSourcePath") // TODO: remove this hardcoding of 'test/'
+            sourceDir = new File("${buildBinding.griffonSettings.baseDir}/test/$relativeSourcePath")
         }
         sourceDir
     }

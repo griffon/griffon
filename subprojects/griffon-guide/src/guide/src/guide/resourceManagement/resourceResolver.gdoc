@@ -8,6 +8,7 @@ Parameterized resources may be resolved by an application by leveraging the beha
   * Object resolveResource(String key, List args, Locale locale)
   * Object resolveResource(String key, Map args)
   * Object resolveResource(String key, Map args, Locale locale)
+  * Object resolveResourceValue(String key, Locale locale)
 
 The first set throws @NoSuchResourceException@ if a resource could not be resolved given the key sent as argument. The following methods take and additional @defaultValue@ parameter that may be used if no configured resource is found. If this optional parameter were to be null then the @key@ is used as the literal value of the resource; in other words, these methods never throw @NoSuchResourceException@ nor return @null@ unless the passed in @key@ is null.
 
@@ -101,4 +102,20 @@ Object iconValue = app.resolveResource('menu.icon', ['large'])
 PropertyEditor propertyEditor = PropertyEditorManager.findEditor(Icon)
 propertyEditor.setAsText(String.valueOf(iconValue))
 Icon icon = propertyEditor.getValue()
+{code}
+
+h4. Reference Keys
+
+There may be times where you would want to have a 2 keys reference the same value, as if one key were an alias for the other. @ResourceResolver@ supports the notion of referenced keys for this matter. In order to achieve this, the value of the alias key must define the aliased key with a special format, for example
+
+{code}
+action.icon = /img/icons/action-{0}.png
+hello.icon = @[action.icon]
+{code}
+
+Resolving those keys results in
+
+{code}
+assert app.resolveResource('action.icon', ['copy']) == '/img/icons/action-copy.png'
+assert app.resolveResource('hello.icon', ['paste']) == '/img/icons/action-paste.png'
 {code}

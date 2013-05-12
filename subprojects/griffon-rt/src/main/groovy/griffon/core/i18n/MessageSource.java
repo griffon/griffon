@@ -29,6 +29,16 @@ import java.util.Map;
  */
 public interface MessageSource {
     /**
+     * "@["
+     */
+    String REF_KEY_START = "@[";
+
+    /**
+     * "]"
+     */
+    String REF_KEY_END = "]";
+
+    /**
      * Try to resolve the message.
      *
      * @param key Key to lookup, such as 'log4j.appenders.console'
@@ -203,4 +213,63 @@ public interface MessageSource {
      * @return The resolved message at the given key for the given locale
      */
     String getMessage(String key, Map<String, Object> args, String defaultMessage, Locale locale);
+
+    /**
+     * <p>Resolve a message given a key and a Locale.</p>
+     * <p>
+     * This method should use the default Locale if the locale argument is null. The {@code key} argument may refer to
+     * another key if the resolved value results in a {@code CharSequence} that begins with "@[" and ends with "]". In this
+     * case the method will use the enclosed value as the next key to be resolved. For example, given the following key/value
+     * definitions
+     * <p/>
+     * <pre>
+     *     some.key = Hello {0}
+     *     other.key = @[some.key]
+     * </pre>
+     * <p/>
+     * Evaluating the keys results in
+     * <p/>
+     * <pre>
+     *    assert resolveMessageValue('some.key', Locale.default) == 'Hello {0}'
+     *    assert resolveMessageValue('other.key', Locale.default) == 'Hello {0}'
+     * </pre>
+     * <p/>
+     * </p>
+     *
+     * @param key    Key to lookup, such as 'log4j.appenders.console'
+     * @param locale Locale in which to lookup
+     * @return the resolved message value at the given key for the given locale
+     * @throws NoSuchMessageException if no message is found
+     */
+    Object resolveMessageValue(String key, Locale locale) throws NoSuchMessageException;
+
+    /**
+     * Formats the given message using supplied args to substitute placeholders.
+     *
+     * @param message The message following a predefined format.
+     * @param args    Arguments that will be filled in for params within the message (params look like "{0}"
+     *                within a message, but this might differ between implementations), or null if none.
+     * @return the formatted message with all matching placeholders with their substituted values.
+     */
+    String formatMessage(String message, List args);
+
+    /**
+     * Formats the given message using supplied args to substitute placeholders.
+     *
+     * @param message The message following a predefined format.
+     * @param args    Arguments that will be filled in for params within the message (params look like "{0}"
+     *                within a message, but this might differ between implementations), or null if none.
+     * @return the formatted message with all matching placeholders with their substituted values.
+     */
+    String formatMessage(String message, Object[] args);
+
+    /**
+     * Formats the given message using supplied args to substitute placeholders.
+     *
+     * @param message The message following a predefined format.
+     * @param args    Arguments that will be filled in for params within the message (params look like "{:key}"
+     *                within a message, but this might differ between implementations), or null if none.
+     * @return the formatted message with all matching placeholders with their substituted values.
+     */
+    String formatMessage(String message, Map<String, Object> args);
 }

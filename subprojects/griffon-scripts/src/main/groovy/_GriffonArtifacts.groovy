@@ -136,10 +136,32 @@ uninstallArtifact = { String type ->
 }
 
 doUninstallArtifact = { String type, String name, String version = null, boolean failOnError = true ->
+    def dryRun = argsMap['dry-run']
+    if (dryRun instanceof Boolean) {
+        dryRun = dryRun.booleanValue()
+    } else if (dryRun instanceof CharSequence) {
+        dryRun = Boolean.parseBoolean(dryRun.toString().toLowerCase())
+    } else {
+        dryRun = false
+    }
+
+    def force = argsMap.force
+    if (force instanceof Boolean) {
+        force = force.booleanValue()
+    } else if (force instanceof CharSequence) {
+        force = Boolean.parseBoolean(force.toString().toLowerCase())
+    } else {
+        force = false
+    }
+
     try {
         resolveFrameworkFlag()
         ArtifactInstallEngine artifactInstallEngine = createArtifactInstallEngine(metadata)
-        artifactInstallEngine.uninstall(type, name, version, framework)
+        artifactInstallEngine.uninstall(type, name, version, [
+            framework: framework,
+            dryRun: dryRun,
+            force: force
+        ])
     } catch (Exception e) {
         logError("Error uninstalling ${type}: ${e.message}", e)
         if (failOnError) exit(1)

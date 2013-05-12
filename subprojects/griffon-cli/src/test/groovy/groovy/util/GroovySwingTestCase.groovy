@@ -45,7 +45,7 @@ abstract class GroovySwingTestCase extends GroovyTestCase {
 
     static {
         try {
-            final Class jframe = Class.forName("javax.swing.JFrame")
+            final Class jframe = GroovySwingTestCase.classLoader.loadClass('javax.swing.JFrame')
             final Constructor constructor = jframe.getConstructor([String] as Class[])
             constructor.newInstance(["testing"] as String[])
             headless = false
