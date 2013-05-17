@@ -43,9 +43,15 @@ public abstract class AbstractGriffonArtifactScript extends Script implements Gr
     private final Logger log;
     private MetaClass myMetaClass;
     private final ResourceLocator resourceLocator = new ResourceLocator();
+    private String artifactType;
 
     public AbstractGriffonArtifactScript(String type) {
         log = LoggerFactory.getLogger("griffon.app." + type + "." + getClass().getName());
+        artifactType = type;
+    }
+
+    protected String getArtifactType() {
+        return artifactType;
     }
 
     public GriffonApplication getApp() {
