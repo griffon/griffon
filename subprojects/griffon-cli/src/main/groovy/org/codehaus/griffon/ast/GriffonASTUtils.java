@@ -404,7 +404,7 @@ public class GriffonASTUtils {
     }
 
     public static ClassExpression classx(Class clazz) {
-        return classx(ClassHelper.makeWithoutCaching(clazz).getPlainNodeReference());
+        return classx(ClassHelper.make(clazz).getPlainNodeReference());
     }
 
     public static BlockStatement block(Statement... stms) {

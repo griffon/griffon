@@ -69,11 +69,11 @@ public abstract class AbstractASTTransformation implements ASTTransformation, Op
     }
 
     public static ClassNode makeClassSafe(String className) {
-        return makeClassSafe(ClassHelper.makeWithoutCaching(className));
+        return makeClassSafe(ClassHelper.make(className));
     }
 
     public static ClassNode makeClassSafe(Class klass) {
-        return makeClassSafe(ClassHelper.makeWithoutCaching(klass));
+        return makeClassSafe(ClassHelper.make(klass));
     }
 
     public static ClassNode makeClassSafe(ClassNode classNode) {
