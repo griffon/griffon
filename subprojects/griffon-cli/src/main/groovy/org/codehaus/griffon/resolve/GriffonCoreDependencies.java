@@ -188,8 +188,8 @@ public class GriffonCoreDependencies {
 
                         // dependencies needed for running tests
                         ModuleRevisionId[] testDependencies = {
-                                ModuleRevisionId.newInstance("junit", "junit", "4.10"),
-                                ModuleRevisionId.newInstance("org.hamcrest", "hamcrest-core", "1.1")
+                                ModuleRevisionId.newInstance("junit", "junit", "4.11"),
+                                ModuleRevisionId.newInstance("org.hamcrest", "hamcrest-core", "1.3")
 
                         };
                         registerDependencies(dependencyManager, "test", testDependencies);
