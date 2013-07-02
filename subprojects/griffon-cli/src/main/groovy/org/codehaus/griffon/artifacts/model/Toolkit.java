@@ -30,7 +30,8 @@ public enum Toolkit {
     JAVAFX("JavaFX"),
     SWT("SWT"),
     QT("Qt"),
-    PIVOT("Pivot");
+    PIVOT("Pivot"),
+    LANTERNA("Lanterna");
 
     private final String name;
 
