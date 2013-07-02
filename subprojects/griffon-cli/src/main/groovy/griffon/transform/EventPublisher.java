@@ -40,23 +40,37 @@ import java.lang.annotation.Target;
  * &nbsp;&nbsp;&nbsp;&nbsp;registers a Closure as event listener</li>
  * <li><code>public void addEventListener(java.lang.String, griffon.util.RunnableWithArgs)</code><br/>
  * &nbsp;&nbsp;&nbsp;&nbsp;registers a Runnable as event listener</li>
+ * <li><code>public void addEventListener(Class&lt;? extends griffon.core.Event&gt;, groovy.lang.Closure)</code><br/>
+ * &nbsp;&nbsp;&nbsp;&nbsp;registers a Closure as event listener</li>
+ * <li><code>public void addEventListener(Class&lt;? extends griffon.core.Event&gt;, griffon.util.RunnableWithArgs)</code><br/>
+ * &nbsp;&nbsp;&nbsp;&nbsp;registers a Runnable as event listener</li>
  * <li><code>public void removeEventListener(java.lang.Object)</code><br/>
  * &nbsp;&nbsp;&nbsp;&nbsp;unregisters an event listener of type, Map, Script or bean</li>
  * <li><code>public void removeEventListener(java.lang.String, groovy.lang.Closure)</code><br/>
  * &nbsp;&nbsp;&nbsp;&nbsp;unregisters a Closure as event listener</li>
- * <li><code>public void removeEventListener(java.lang.String,griffon.util.RunnableWithArgs)</code><br/>
+ * <li><code>public void removeEventListener(java.lang.String, griffon.util.RunnableWithArgs)</code><br/>
+ * &nbsp;&nbsp;&nbsp;&nbsp;unregisters an event listener of type, Map, Script or bean</li>
+ * <li><code>public void removeEventListener(Class&lt;? extends griffon.core.Event&gt;, groovy.lang.Closure)</code><br/>
+ * &nbsp;&nbsp;&nbsp;&nbsp;unregisters a Closure as event listener</li>
+ * <li><code>public void removeEventListener(Class&lt;? extends griffon.core.Event&gt;, griffon.util.RunnableWithArgs)</code><br/>
  * &nbsp;&nbsp;&nbsp;&nbsp;unregisters a Runnable as event listener</li>
  * <li><code>public void publishEvent(java.lang.String)</code><br/>
  * &nbsp;&nbsp;&nbsp;&nbsp;publishes an event in the current thread</li>
  * <li><code>public void publishEvent(java.lang.String, java.util.List)</code><br/>
  * &nbsp;&nbsp;&nbsp;&nbsp;publishes an event in the current thread</li>
+ * <li><code>public void publishEvent(griffon.core.Event)</code><br/>
+ * &nbsp;&nbsp;&nbsp;&nbsp;publishes an event in the current thread</li>
  * <li><code>public void publishEventOutsideUI(java.lang.String)</code><br/>
  * &nbsp;&nbsp;&nbsp;&nbsp;publishes an event outside of the UI thread</li>
  * <li><code>public void publishEventOutsideUI(java.lang.String, java.util.List)</code><br/>
  * &nbsp;&nbsp;&nbsp;&nbsp;publishes an event outside of the UI thread</li>
+ * <li><code>public void publishEventOutsideUI(griffon.core.Event)</code><br/>
+ * &nbsp;&nbsp;&nbsp;&nbsp;publishes an event outside of the UI thread</li>
  * <li><code>public void publishEventAsync(java.lang.String)</code><br/>
  * &nbsp;&nbsp;&nbsp;&nbsp;publishes an event outside of the publisher's thread</li>
  * <li><code>public void publishEventAsync(java.lang.String, java.util.List)</code><br/>
+ * &nbsp;&nbsp;&nbsp;&nbsp;publishes an event outside of the publisher's thread</li>
+ * <li><code>public void publishEventAsync(griffon.core.Event)</code><br/>
  * &nbsp;&nbsp;&nbsp;&nbsp;publishes an event outside of the publisher's thread</li>
  * <li><code>public boolean isEventPublishingEnabled()</code><br/>
  * &nbsp;&nbsp;&nbsp;&nbsp;if events will be published or not</li>

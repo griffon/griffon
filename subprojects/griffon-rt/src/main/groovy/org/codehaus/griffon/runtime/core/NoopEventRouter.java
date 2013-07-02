@@ -16,6 +16,7 @@
 
 package org.codehaus.griffon.runtime.core;
 
+import griffon.core.Event;
 import griffon.core.EventRouter;
 import griffon.util.RunnableWithArgs;
 import groovy.lang.Closure;
@@ -38,16 +39,18 @@ public class NoopEventRouter implements EventRouter {
 
     @Override
     public void setEnabled(boolean enabled) {
-
     }
 
     @Override
     public void publish(String eventName) {
-
     }
 
     @Override
     public void publish(String eventName, List params) {
+    }
+
+    @Override
+    public void publish(Event event) {
     }
 
     @Override
@@ -59,11 +62,19 @@ public class NoopEventRouter implements EventRouter {
     }
 
     @Override
+    public void publishOutsideUI(Event event) {
+    }
+
+    @Override
     public void publishAsync(String eventName) {
     }
 
     @Override
     public void publishAsync(String eventName, List params) {
+    }
+
+    @Override
+    public void publishAsync(Event event) {
     }
 
     @Override
@@ -91,10 +102,26 @@ public class NoopEventRouter implements EventRouter {
     }
 
     @Override
+    public void addEventListener(Class<? extends Event> eventClass, Closure listener) {
+    }
+
+    @Override
+    public void addEventListener(Class<? extends Event> eventClass, RunnableWithArgs listener) {
+    }
+
+    @Override
     public void removeEventListener(String eventName, Closure listener) {
     }
 
     @Override
     public void removeEventListener(String eventName, RunnableWithArgs listener) {
+    }
+
+    @Override
+    public void removeEventListener(Class<? extends Event> eventClass, Closure listener) {
+    }
+
+    @Override
+    public void removeEventListener(Class<? extends Event> eventClass, RunnableWithArgs listener) {
     }
 }

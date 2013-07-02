@@ -305,6 +305,22 @@ public interface GriffonApplication extends Observable, ThreadingHandler, MVCHan
     void addApplicationEventListener(String eventName, RunnableWithArgs listener);
 
     /**
+     * Adds a closure as an application event listener.<p>
+     *
+     * @param eventClass the type of the event
+     * @param listener  an application event listener
+     */
+    void addApplicationEventListener(Class<? extends griffon.core.Event> eventClass, Closure listener);
+
+    /**
+     * Adds a runnable as an application event listener.<p>
+     *
+     * @param eventClass the type of the event
+     * @param listener  an application event listener
+     */
+    void addApplicationEventListener(Class<? extends griffon.core.Event> eventClass, RunnableWithArgs listener);
+
+    /**
      * Removes an application event listener.<p>
      * Accepted types are: Script, Map and Object.
      *
@@ -327,6 +343,22 @@ public interface GriffonApplication extends Observable, ThreadingHandler, MVCHan
      * @param listener  an application event listener
      */
     void removeApplicationEventListener(String eventName, RunnableWithArgs listener);
+
+    /**
+     * Removes a closure as an application event listener.<p>
+     *
+     * @param eventClass the type of the event
+     * @param listener  an application event listener
+     */
+    void removeApplicationEventListener(Class<? extends griffon.core.Event> eventClass, Closure listener);
+
+    /**
+     * Removes a runnable as an application event listener.<p>
+     *
+     * @param eventClass the type of the event
+     * @param listener  an application event listener
+     */
+    void removeApplicationEventListener(Class<? extends griffon.core.Event> eventClass, RunnableWithArgs listener);
 
     /**
      * Returns whether events will be published by the application's event bus or not.
@@ -359,6 +391,13 @@ public interface GriffonApplication extends Observable, ThreadingHandler, MVCHan
     void event(String eventName, List params);
 
     /**
+     * Publishes an application event.<p>
+     *
+     * @param event the event to be published
+     */
+    void event(griffon.core.Event event);
+
+    /**
      * Publishes an application event asynchronously off the UI thread.<p>
      *
      * @param eventName the name of the event
@@ -374,6 +413,13 @@ public interface GriffonApplication extends Observable, ThreadingHandler, MVCHan
     void eventOutsideUI(String eventName, List params);
 
     /**
+     * Publishes an application event asynchronously off the UI thread.<p>
+     *
+     * @param event the event to be published
+     */
+    void eventOutsideUI(griffon.core.Event event);
+
+    /**
      * Publishes an application event asynchronously off the publisher's thread.<p>
      *
      * @param eventName the name of the event
@@ -387,6 +433,13 @@ public interface GriffonApplication extends Observable, ThreadingHandler, MVCHan
      * @param params    event arguments sent to listeners
      */
     void eventAsync(String eventName, List params);
+
+    /**
+     * Publishes an application event asynchronously off the publisher's thread.<p>
+     *
+     * @param event the event to be published
+     */
+    void eventAsync(griffon.core.Event event);
 
     /**
      * Registers a ShutdownHandler on this application

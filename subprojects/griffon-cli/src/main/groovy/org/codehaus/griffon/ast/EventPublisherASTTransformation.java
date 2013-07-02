@@ -16,6 +16,7 @@
 
 package org.codehaus.griffon.ast;
 
+import griffon.core.Event;
 import griffon.core.EventPublisher;
 import griffon.core.EventRouter;
 import griffon.util.RunnableWithArgs;
@@ -50,12 +51,30 @@ public class EventPublisherASTTransformation extends AbstractASTTransformation {
     private static final ClassNode EVENT_HANDLER_TYPE = makeClassSafe(EventPublisher.class);
     private static final ClassNode EVENT_PUBLISHER_TYPE = makeClassSafe(griffon.transform.EventPublisher.class);
     private static final ClassNode EVENT_ROUTER_TYPE = makeClassSafe(EventRouter.class);
+    private static final ClassNode EVENT_TYPE = makeClassSafe(Event.class);
+    private static final ClassNode EVENT_CLASS_TYPE = makeClassSafe0(
+        makeClassSafe(Class.class),
+        makeGenericsType(
+            makeClassSafe(Class.class),
+            new ClassNode[]{makeClassSafe(Event.class)},
+            null, true));
     private static final ClassNode GAH_TYPE = makeClassSafe(GriffonApplicationHelper.class);
 
     private static final String LISTENER = "listener";
     private static final String NAME = "name";
     private static final String ARGS = "args";
     private static final String ENABLED = "enabled";
+    private static final String EVENT = "event";
+    private static final String EVENT_CLASS = "eventClass";
+
+    private static final String METHOD_ADD_EVENT_LISTENER = "addEventListener";
+    private static final String METHOD_REMOVE_EVENT_LISTENER = "removeEventListener";
+    private static final String METHOD_PUBLISH = "publish";
+    private static final String METHOD_PUBLISH_OUTSIDE_UI = "publishOutsideUI";
+    private static final String METHOD_PUBLISH_ASYNC = "publishAsync";
+    private static final String METHOD_PUBLISH_EVENT = "publishEvent";
+    private static final String METHOD_PUBLISH_EVENT_OUTSIDE_UI = "publishEventOutsideUI";
+    private static final String METHOD_PUBLISH_EVENT_ASYNC = "publishEventAsync";
 
     /**
      * Convenience method to see if an annotated node is {@code @EventPublisher}.
@@ -97,12 +116,19 @@ public class EventPublisherASTTransformation extends AbstractASTTransformation {
      * <li>void addEventListener(Object)</li>
      * <li>void addEventListener(String, Closure)</li>
      * <li>void addEventListener(String, RunnableWithArgs)</li>
+     * <li>void addEventListener(Event, Closure)</li>
+     * <li>void addEventListener(Event, RunnableWithArgs)</li>
      * <li>void removeEventListener(Object)</li>
      * <li>void removeEventListener(String, Closure)</li>
      * <li>void removeEventListener(String, RunnableWithArgs)</li>
+     * <li>void removeEventListener(Event, Closure)</li>
+     * <li>void removeEventListener(Event, RunnableWithArgs)</li>
      * <li>void publishEvent(String, List = [])</li>
      * <li>void publishEventOutsideUI(String, List = [])</li>
      * <li>void publishEventAsync(String, List = [])</li>
+     * <li>void publishEvent(Event)</li>
+     * <li>void publishEventOutsideUI(Event)</li>
+     * <li>void publishEventAsync(Event)</li>
      * <li>boolean isEventPublishingEnabled()</li>
      * <li>void setEventPublishingEnabled(boolean)</li>
      * </ul>If any are defined all
@@ -118,16 +144,16 @@ public class EventPublisherASTTransformation extends AbstractASTTransformation {
         while (consideredClass != null) {
             for (MethodNode method : consideredClass.getMethods()) {
                 // just check length, MOP will match it up
-                foundAdd = foundAdd || method.getName().equals("addEventListener") && method.getParameters().length == 1;
-                foundAdd = foundAdd || method.getName().equals("addEventListener") && method.getParameters().length == 2;
-                foundRemove = foundRemove || method.getName().equals("removeEventListener") && method.getParameters().length == 1;
-                foundRemove = foundRemove || method.getName().equals("removeEventListener") && method.getParameters().length == 2;
-                foundPublish = foundPublish || method.getName().equals("publishEvent") && method.getParameters().length == 1;
-                foundPublish = foundPublish || method.getName().equals("publishEvent") && method.getParameters().length == 2;
-                foundPublish = foundPublish || method.getName().equals("publishEventOutsideUI") && method.getParameters().length == 1;
-                foundPublish = foundPublish || method.getName().equals("publishEventOutsideUI") && method.getParameters().length == 2;
-                foundPublish = foundPublish || method.getName().equals("publishEventAsync") && method.getParameters().length == 1;
-                foundPublish = foundPublish || method.getName().equals("publishEventAsync") && method.getParameters().length == 2;
+                foundAdd = foundAdd || method.getName().equals(METHOD_ADD_EVENT_LISTENER) && method.getParameters().length == 1;
+                foundAdd = foundAdd || method.getName().equals(METHOD_ADD_EVENT_LISTENER) && method.getParameters().length == 2;
+                foundRemove = foundRemove || method.getName().equals(METHOD_REMOVE_EVENT_LISTENER) && method.getParameters().length == 1;
+                foundRemove = foundRemove || method.getName().equals(METHOD_REMOVE_EVENT_LISTENER) && method.getParameters().length == 2;
+                foundPublish = foundPublish || method.getName().equals(METHOD_PUBLISH_EVENT) && method.getParameters().length == 1;
+                foundPublish = foundPublish || method.getName().equals(METHOD_PUBLISH_EVENT) && method.getParameters().length == 2;
+                foundPublish = foundPublish || method.getName().equals(METHOD_PUBLISH_EVENT_OUTSIDE_UI) && method.getParameters().length == 1;
+                foundPublish = foundPublish || method.getName().equals(METHOD_PUBLISH_EVENT_OUTSIDE_UI) && method.getParameters().length == 2;
+                foundPublish = foundPublish || method.getName().equals(METHOD_PUBLISH_EVENT_ASYNC) && method.getParameters().length == 1;
+                foundPublish = foundPublish || method.getName().equals(METHOD_PUBLISH_EVENT_ASYNC) && method.getParameters().length == 2;
                 foundEnabled = foundEnabled || method.getName().equals("isEventPublishingEnabled") && method.getParameters().length == 0;
                 foundEnabled = foundEnabled || method.getName().equals("setEventPublishingEnabled") && method.getParameters().length == 1;
                 if (foundAdd && foundRemove && foundPublish && foundEnabled) {
@@ -158,12 +184,19 @@ public class EventPublisherASTTransformation extends AbstractASTTransformation {
      * <code>public void addEventListener(Object)</code><br/>
      * <code>public void addEventListener(String, Closure)</code><br/>
      * <code>public void addEventListener(String, RunnableWithArgs)</code><br/>
+     * <code>public void addEventListener(Event, Closure)</code><br/>
+     * <code>public void addEventListener(Event, RunnableWithArgs)</code><br/>
      * <code>public void removeEventListener(Object)</code><br/>
      * <code>public void removeEventListener(String, Closure)</code><br/>
      * <code>public void removeEventListener(String, RunnableWithArgs)</code><br/>
+     * <code>public void removeEventListener(Event, Closure)</code><br/>
+     * <code>public void removeEventListener(Event, RunnableWithArgs)</code><br/>
      * <code>public void publishEvent(String,List = [])</code><br/>
      * <code>public void publishEventOutsideUI(String,List = [])</code><br/>
      * <code>public void publishEventAsync(String,List = [])</code><br/>
+     * <code>public void publishEvent(Event)</code><br/>
+     * <code>public void publishEventOutsideUI(Event)</code><br/>
+     * <code>public void publishEventAsync(Event)</code><br/>
      * <code>public boolean isEventPublishingEnabled()</code><br/>
      * <code>public void setEventPublishingEnabled(boolean)</code><br/>
      *
@@ -186,14 +219,14 @@ public class EventPublisherASTTransformation extends AbstractASTTransformation {
         //     this$eventRouter.addEventListener(listener)
         //  }
         injectMethod(declaringClass, new MethodNode(
-            "addEventListener",
+            METHOD_ADD_EVENT_LISTENER,
             ACC_PUBLIC,
             VOID_TYPE,
             params(param(DYNAMIC_TYPE, LISTENER)),
             NO_EXCEPTIONS,
             stmnt(call(
                 field(erField),
-                "addEventListener",
+                METHOD_ADD_EVENT_LISTENER,
                 vars(LISTENER)))
         ));
 
@@ -202,7 +235,7 @@ public class EventPublisherASTTransformation extends AbstractASTTransformation {
         //     this$eventRouter.addEventListener(name, listener)
         //  }
         injectMethod(declaringClass, new MethodNode(
-            "addEventListener",
+            METHOD_ADD_EVENT_LISTENER,
             ACC_PUBLIC,
             VOID_TYPE,
             params(
@@ -211,7 +244,7 @@ public class EventPublisherASTTransformation extends AbstractASTTransformation {
             NO_EXCEPTIONS,
             stmnt(call(
                 field(erField),
-                "addEventListener",
+                METHOD_ADD_EVENT_LISTENER,
                 vars(NAME, LISTENER)))
         ));
 
@@ -220,7 +253,7 @@ public class EventPublisherASTTransformation extends AbstractASTTransformation {
         //     this$eventRouter.addEventListener(name, listener)
         //  }
         injectMethod(declaringClass, new MethodNode(
-            "addEventListener",
+            METHOD_ADD_EVENT_LISTENER,
             ACC_PUBLIC,
             VOID_TYPE,
             params(
@@ -229,7 +262,7 @@ public class EventPublisherASTTransformation extends AbstractASTTransformation {
             NO_EXCEPTIONS,
             stmnt(call(
                 field(erField),
-                "addEventListener",
+                METHOD_ADD_EVENT_LISTENER,
                 vars(NAME, LISTENER)))
         ));
 
@@ -238,14 +271,14 @@ public class EventPublisherASTTransformation extends AbstractASTTransformation {
         //    return this$eventRouter.removeEventListener(listener);
         // }
         injectMethod(declaringClass, new MethodNode(
-            "removeEventListener",
+            METHOD_REMOVE_EVENT_LISTENER,
             ACC_PUBLIC,
             VOID_TYPE,
             params(param(DYNAMIC_TYPE, LISTENER)),
             NO_EXCEPTIONS,
             stmnt(call(
                 field(erField),
-                "removeEventListener",
+                METHOD_REMOVE_EVENT_LISTENER,
                 vars(LISTENER)))
         ));
 
@@ -254,7 +287,7 @@ public class EventPublisherASTTransformation extends AbstractASTTransformation {
         //    return this$eventRouter.removeEventListener(name, listener);
         // }
         injectMethod(declaringClass, new MethodNode(
-            "removeEventListener",
+            METHOD_REMOVE_EVENT_LISTENER,
             ACC_PUBLIC,
             VOID_TYPE,
             params(
@@ -263,7 +296,7 @@ public class EventPublisherASTTransformation extends AbstractASTTransformation {
             NO_EXCEPTIONS,
             stmnt(call(
                 field(erField),
-                "removeEventListener",
+                METHOD_REMOVE_EVENT_LISTENER,
                 vars(NAME, LISTENER)))
         ));
 
@@ -272,7 +305,7 @@ public class EventPublisherASTTransformation extends AbstractASTTransformation {
         //    return this$eventRouter.removeEventListener(name, listener);
         // }
         injectMethod(declaringClass, new MethodNode(
-            "removeEventListener",
+            METHOD_REMOVE_EVENT_LISTENER,
             ACC_PUBLIC,
             VOID_TYPE,
             params(
@@ -281,7 +314,7 @@ public class EventPublisherASTTransformation extends AbstractASTTransformation {
             NO_EXCEPTIONS,
             stmnt(call(
                 field(erField),
-                "removeEventListener",
+                METHOD_REMOVE_EVENT_LISTENER,
                 vars(NAME, LISTENER)))
         ));
 
@@ -290,7 +323,7 @@ public class EventPublisherASTTransformation extends AbstractASTTransformation {
         //     this$eventRouter.publishEvent(name, args)
         //  }
         injectMethod(declaringClass, new MethodNode(
-            "publishEvent",
+            METHOD_PUBLISH_EVENT,
             ACC_PUBLIC,
             VOID_TYPE,
             params(
@@ -299,7 +332,7 @@ public class EventPublisherASTTransformation extends AbstractASTTransformation {
             NO_EXCEPTIONS,
             stmnt(call(
                 field(erField),
-                "publish",
+                METHOD_PUBLISH,
                 vars(NAME, ARGS)))
         ));
 
@@ -308,7 +341,7 @@ public class EventPublisherASTTransformation extends AbstractASTTransformation {
         //     this$eventRouter.publishEventOutsideUI(name, args)
         //  }
         injectMethod(declaringClass, new MethodNode(
-            "publishEventOutsideUI",
+            METHOD_PUBLISH_EVENT_OUTSIDE_UI,
             ACC_PUBLIC,
             VOID_TYPE,
             params(
@@ -317,7 +350,7 @@ public class EventPublisherASTTransformation extends AbstractASTTransformation {
             NO_EXCEPTIONS,
             stmnt(call(
                 field(erField),
-                "publishOutsideUI",
+                METHOD_PUBLISH_OUTSIDE_UI,
                 vars(NAME, ARGS)))
         ));
 
@@ -326,7 +359,7 @@ public class EventPublisherASTTransformation extends AbstractASTTransformation {
         //     this$eventRouter.publishEventAsync(name, args)
         //  }
         injectMethod(declaringClass, new MethodNode(
-            "publishEventAsync",
+            METHOD_PUBLISH_EVENT_ASYNC,
             ACC_PUBLIC,
             VOID_TYPE,
             params(
@@ -335,7 +368,7 @@ public class EventPublisherASTTransformation extends AbstractASTTransformation {
             NO_EXCEPTIONS,
             stmnt(call(
                 field(erField),
-                "publishAsync",
+                METHOD_PUBLISH_ASYNC,
                 vars(NAME, ARGS)))
         ));
 
@@ -371,6 +404,126 @@ public class EventPublisherASTTransformation extends AbstractASTTransformation {
                 "setEnabled",
                 vars(ENABLED)
             ))
+        ));
+
+        // add method:
+        // void addEventListener(Class<? extends Event> eventClass, Closure listener) {
+        //     this$eventRouter.addEventListener(event, listener)
+        //  }
+        injectMethod(declaringClass, new MethodNode(
+            METHOD_ADD_EVENT_LISTENER,
+            ACC_PUBLIC,
+            VOID_TYPE,
+            params(
+                param(EVENT_CLASS_TYPE, EVENT_CLASS),
+                param(makeClassSafe(CLOSURE_TYPE), LISTENER)),
+            NO_EXCEPTIONS,
+            stmnt(call(
+                field(erField),
+                METHOD_ADD_EVENT_LISTENER,
+                vars(EVENT_CLASS, LISTENER)))
+        ));
+
+        // add method:
+        // void addEventListener(Class<? extends Event> eventClass, RunnableWithArgs listener) {
+        //     this$eventRouter.addEventListener(event, listener)
+        //  }
+        injectMethod(declaringClass, new MethodNode(
+            METHOD_ADD_EVENT_LISTENER,
+            ACC_PUBLIC,
+            VOID_TYPE,
+            params(
+                param(EVENT_CLASS_TYPE, EVENT_CLASS),
+                param(RUNNABLE_WITH_ARGS_TYPE, LISTENER)),
+            NO_EXCEPTIONS,
+            stmnt(call(
+                field(erField),
+                METHOD_ADD_EVENT_LISTENER,
+                vars(EVENT_CLASS, LISTENER)))
+        ));
+
+        // remove method:
+        // void removeEventListener(Class<? extends Event> eventClass, Closure listener) {
+        //     this$eventRouter.removeEventListener(event, listener)
+        //  }
+        injectMethod(declaringClass, new MethodNode(
+            METHOD_REMOVE_EVENT_LISTENER,
+            ACC_PUBLIC,
+            VOID_TYPE,
+            params(
+                param(EVENT_CLASS_TYPE, EVENT_CLASS),
+                param(makeClassSafe(CLOSURE_TYPE), LISTENER)),
+            NO_EXCEPTIONS,
+            stmnt(call(
+                field(erField),
+                METHOD_REMOVE_EVENT_LISTENER,
+                vars(EVENT_CLASS, LISTENER)))
+        ));
+
+        // remove method:
+        // void removeEventListener(Class<? extends Event> eventClass, RunnableWithArgs listener) {
+        //     this$eventRouter.removeEventListener(event, listener)
+        //  }
+        injectMethod(declaringClass, new MethodNode(
+            METHOD_REMOVE_EVENT_LISTENER,
+            ACC_PUBLIC,
+            VOID_TYPE,
+            params(
+                param(EVENT_CLASS_TYPE, EVENT_CLASS),
+                param(RUNNABLE_WITH_ARGS_TYPE, LISTENER)),
+            NO_EXCEPTIONS,
+            stmnt(call(
+                field(erField),
+                METHOD_REMOVE_EVENT_LISTENER,
+                vars(EVENT_CLASS, LISTENER)))
+        ));
+
+        // add method:
+        // void publishEvent(Event event) {
+        //     this$eventRouter.publishEvent(event)
+        //  }
+        injectMethod(declaringClass, new MethodNode(
+            METHOD_PUBLISH_EVENT,
+            ACC_PUBLIC,
+            VOID_TYPE,
+            params(param(EVENT_TYPE, EVENT)),
+            NO_EXCEPTIONS,
+            stmnt(call(
+                field(erField),
+                METHOD_PUBLISH,
+                vars(EVENT)))
+        ));
+
+        // add method:
+        // void publishEventOutsideUI(Event event) {
+        //     this$eventRouter.publishEventOutsideUI(event)
+        //  }
+        injectMethod(declaringClass, new MethodNode(
+            METHOD_PUBLISH_EVENT_OUTSIDE_UI,
+            ACC_PUBLIC,
+            VOID_TYPE,
+            params(param(EVENT_TYPE, EVENT)),
+            NO_EXCEPTIONS,
+            stmnt(call(
+                field(erField),
+                METHOD_PUBLISH_OUTSIDE_UI,
+                vars(EVENT)))
+        ));
+
+        // add method:
+        // void publishEventAsync(Event event) {
+        //     this$eventRouter.publishEventAsync(event)
+        //  }
+        injectMethod(declaringClass, new MethodNode(
+            METHOD_PUBLISH_EVENT_ASYNC,
+            ACC_PUBLIC,
+            VOID_TYPE,
+            params(param(EVENT_TYPE, EVENT)),
+            NO_EXCEPTIONS,
+            stmnt(call(
+                field(erField),
+                METHOD_PUBLISH_ASYNC,
+                vars(EVENT)))
         ));
     }
 

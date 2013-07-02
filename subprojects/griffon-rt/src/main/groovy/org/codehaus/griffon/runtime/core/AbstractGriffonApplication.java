@@ -400,6 +400,34 @@ public abstract class AbstractGriffonApplication extends AbstractObservable impl
         eventRouter.removeEventListener(eventName, listener);
     }
 
+    public void eventOutsideUI(griffon.core.Event event) {
+        eventRouter.publishOutsideUI(event);
+    }
+
+    public void eventAsync(griffon.core.Event event) {
+        eventRouter.publishAsync(event);
+    }
+
+    public void event(griffon.core.Event event) {
+        eventRouter.publish(event);
+    }
+
+    public void addApplicationEventListener(Class<? extends griffon.core.Event> eventClass, Closure listener) {
+        eventRouter.addEventListener(eventClass, listener);
+    }
+
+    public void addApplicationEventListener(Class<? extends griffon.core.Event> eventClass, RunnableWithArgs listener) {
+        eventRouter.addEventListener(eventClass, listener);
+    }
+
+    public void removeApplicationEventListener(Class<? extends griffon.core.Event> eventClass, Closure listener) {
+        eventRouter.removeEventListener(eventClass, listener);
+    }
+
+    public void removeApplicationEventListener(Class<? extends griffon.core.Event> eventClass, RunnableWithArgs listener) {
+        eventRouter.removeEventListener(eventClass, listener);
+    }
+
     public boolean isEventPublishingEnabled() {
         return eventRouter.isEnabled();
     }

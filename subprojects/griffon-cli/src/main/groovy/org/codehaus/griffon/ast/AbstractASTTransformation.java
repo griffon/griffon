@@ -16,10 +16,7 @@
 
 package org.codehaus.griffon.ast;
 
-import org.codehaus.groovy.ast.ASTNode;
-import org.codehaus.groovy.ast.AnnotationNode;
-import org.codehaus.groovy.ast.ClassHelper;
-import org.codehaus.groovy.ast.ClassNode;
+import org.codehaus.groovy.ast.*;
 import org.codehaus.groovy.ast.expr.ArgumentListExpression;
 import org.codehaus.groovy.ast.expr.Expression;
 import org.codehaus.groovy.ast.expr.StaticMethodCallExpression;
@@ -68,15 +65,69 @@ public abstract class AbstractASTTransformation implements ASTTransformation, Op
         return classNode.getPlainNodeReference();
     }
 
-    public static ClassNode makeClassSafe(String className) {
-        return makeClassSafe(ClassHelper.make(className));
+    public static ClassNode makeClassSafe(String className, String... genericTypes) {
+        GenericsType[] gtypes = new GenericsType[0];
+        if (genericTypes != null) {
+            gtypes = new GenericsType[genericTypes.length];
+            for (int i = 0; i < gtypes.length; i++) {
+                gtypes[i] = new GenericsType(makeClassSafe(ClassHelper.make(genericTypes[i])));
+            }
+        }
+        return makeClassSafe0(ClassHelper.make(className), gtypes);
     }
 
-    public static ClassNode makeClassSafe(Class klass) {
-        return makeClassSafe(ClassHelper.make(klass));
+    public static ClassNode makeClassSafe(Class klass, Class... genericTypes) {
+        GenericsType[] gtypes = new GenericsType[0];
+        if (genericTypes != null) {
+            gtypes = new GenericsType[genericTypes.length];
+            for (int i = 0; i < gtypes.length; i++) {
+                gtypes[i] = new GenericsType(makeClassSafe(ClassHelper.make(genericTypes[i])));
+            }
+        }
+        return makeClassSafe0(ClassHelper.make(klass), gtypes);
     }
 
-    public static ClassNode makeClassSafe(ClassNode classNode) {
-        return classNode.getPlainNodeReference();
+    public static ClassNode makeClassSafe(ClassNode classNode, ClassNode... genericTypes) {
+        GenericsType[] gtypes = new GenericsType[0];
+        if (genericTypes != null) {
+            gtypes = new GenericsType[genericTypes.length];
+            for (int i = 0; i < gtypes.length; i++) {
+                gtypes[i] = new GenericsType(genericTypes[i].getPlainNodeReference());
+            }
+        }
+        return makeClassSafe0(classNode, gtypes);
+    }
+
+    public static GenericsType makeGenericsType(String className, String[] upperBounds, String lowerBound, boolean placeHolder) {
+        ClassNode[] up = new ClassNode[0];
+        if (upperBounds != null) {
+            up = new ClassNode[upperBounds.length];
+            for (int i = 0; i < up.length; i++) {
+                up[i] = makeClassSafe(upperBounds[i]);
+            }
+        }
+        return makeGenericsType(makeClassSafe(className), up, makeClassSafe(lowerBound), placeHolder);
+    }
+
+    public static GenericsType makeGenericsType(Class klass, Class[] upperBounds, Class lowerBound, boolean placeHolder) {
+        ClassNode[] up = new ClassNode[0];
+        if (upperBounds != null) {
+            up = new ClassNode[upperBounds.length];
+            for (int i = 0; i < up.length; i++) {
+                up[i] = makeClassSafe(upperBounds[i]);
+            }
+        }
+        return makeGenericsType(makeClassSafe(klass), up, makeClassSafe(lowerBound), placeHolder);
+    }
+
+    public static GenericsType makeGenericsType(ClassNode classNode, ClassNode[] upperBounds, ClassNode lowerBound, boolean placeHolder) {
+        classNode.setGenericsPlaceHolder(placeHolder);
+        return new GenericsType(classNode, upperBounds, lowerBound);
+    }
+
+    public static ClassNode makeClassSafe0(ClassNode classNode, GenericsType... genericTypes) {
+        ClassNode plainNodeReference = classNode.getPlainNodeReference();
+        if (genericTypes != null && genericTypes.length > 0) plainNodeReference.setGenericsTypes(genericTypes);
+        return plainNodeReference;
     }
 }

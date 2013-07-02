@@ -78,6 +78,15 @@ public interface EventRouter {
 
     /**
      * Publishes an event with optional arguments.</p>
+     * Event listeners will be notified in the same thread
+     * that originated the event.
+     *
+     * @param event the event to be published
+     */
+    void publish(Event event);
+
+    /**
+     * Publishes an event with optional arguments.</p>
      * Event listeners are guaranteed to be notified
      * outside of the UI thread always.
      *
@@ -98,6 +107,15 @@ public interface EventRouter {
     /**
      * Publishes an event with optional arguments.</p>
      * Event listeners are guaranteed to be notified
+     * outside of the UI thread always.
+     *
+     * @param event the event to be published
+     */
+    void publishOutsideUI(Event event);
+
+    /**
+     * Publishes an event with optional arguments.</p>
+     * Event listeners are guaranteed to be notified
      * in a different thread than the publisher's, always.
      *
      * @param eventName the name of the event
@@ -113,6 +131,15 @@ public interface EventRouter {
      * @param params    the event's arguments
      */
     void publishAsync(String eventName, List params);
+
+    /**
+     * Publishes an event with optional arguments.</p>
+     * Event listeners are guaranteed to be notified
+     * in a different thread than the publisher's, always.
+     *
+     * @param event the event to be published
+     */
+    void publishAsync(Event event);
 
     /**
      * Adds an event listener.<p>
@@ -201,6 +228,24 @@ public interface EventRouter {
     void addEventListener(String eventName, RunnableWithArgs listener);
 
     /**
+     * Adds a Closure as an event listener.<p>
+     * Event names must follow the camelCase naming convention.
+     *
+     * @param eventClass the type of the event
+     * @param listener  the event listener
+     */
+    void addEventListener(Class<? extends Event> eventClass, Closure listener);
+
+    /**
+     * Adds a Runnable as an event listener.<p>
+     * Event names must follow the camelCase naming convention.
+     *
+     * @param eventClass the type of the event
+     * @param listener  the event listener
+     */
+    void addEventListener(Class<? extends Event> eventClass, RunnableWithArgs listener);
+
+    /**
      * Removes a Closure as an event listener.<p>
      * Event names must follow the camelCase naming convention.
      *
@@ -217,4 +262,22 @@ public interface EventRouter {
      * @param listener  the event listener
      */
     void removeEventListener(String eventName, RunnableWithArgs listener);
+
+    /**
+     * Removes a Closure as an event listener.<p>
+     * Event names must follow the camelCase naming convention.
+     *
+     * @param eventClass the type of the event
+     * @param listener  the event listener
+     */
+    void removeEventListener(Class<? extends Event> eventClass, Closure listener);
+
+    /**
+     * Removes a Runnable as an event listener.<p>
+     * Event names must follow the camelCase naming convention.
+     *
+     * @param eventClass the type of the event
+     * @param listener  the event listener
+     */
+    void removeEventListener(Class<? extends Event> eventClass, RunnableWithArgs listener);
 }

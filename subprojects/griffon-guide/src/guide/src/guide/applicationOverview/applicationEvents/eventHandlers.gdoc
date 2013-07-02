@@ -63,7 +63,7 @@ class MyController {
 {code}
 class MyController {
   void mvcGroupInit(Map args) {
-    app.addApplicationListener('Foo'){-> println 'got foo!' }
+    app.addApplicationListener('Foo') {-> println 'got foo!' }
   }
 
   def fooAction = { evt = null ->
@@ -94,4 +94,21 @@ public class MyController extends AbstractGriffonController {
   }
 }
 {code}
+- A third alternative to the previous example using a custom event class
+@File: griffon-app/controller/MyController.groovy@
+{code}
+class MyController {
+  void mvcGroupInit(Map args) {
+    app.addApplicationListener(Foo) { e -> assert e instanceof Foo }
+  }
 
+  def fooAction = { evt = null ->
+    // do something
+    app.event(new MyController.Foo(this))
+  }
+
+  static class Foo extends griffon.core.Event {
+    Foo(Object source) { super(source) }
+  }
+}
+{code}

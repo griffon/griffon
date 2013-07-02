@@ -24,6 +24,7 @@ Finally, if you'd want event notification to be handed in a thread that is not t
 app.eventAsync('MyEventName', ['arg0', 'arg1'])
 {code}
 
+Alternatively, you may specify an instance of a subclass of [griffon.core.Event|api:griffon.core.Event] as the sole argument to any of these methods. The event instance will be the single argument sent to the event handlers when the @event@ methods are invoked in this way.
 
 There may be times when event publishing must be stopped for a while. If that's the case then you can instruct the application to stop delivering events by invoking the following code
 

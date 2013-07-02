@@ -53,6 +53,22 @@ public interface EventPublisher {
     void addEventListener(String eventName, RunnableWithArgs listener);
 
     /**
+     * Adds a closure as an event listener.<p>
+     *
+     * @param eventClass the type of the event
+     * @param listener  an event listener
+     */
+    void addEventListener(Class<? extends Event> eventClass, Closure listener);
+
+    /**
+     * Adds a runnable as an event listener.<p>
+     *
+     * @param eventClass the type of the event
+     * @param listener  an event listener
+     */
+    void addEventListener(Class<? extends Event> eventClass, RunnableWithArgs listener);
+
+    /**
      * Removes an event listener.<p>
      * Accepted types are: Script, Map and Object.
      *
@@ -76,6 +92,23 @@ public interface EventPublisher {
      */
     void removeEventListener(String eventName, RunnableWithArgs listener);
 
+
+    /**
+     * Removes a closure as an event listener.<p>
+     *
+     * @param eventClass the type of the event
+     * @param listener  an event listener
+     */
+    void removeEventListener(Class<? extends Event> eventClass, Closure listener);
+
+    /**
+     * Removes a runnable as an event listener.<p>
+     *
+     * @param eventClass the type of the event
+     * @param listener  an event listener
+     */
+    void removeEventListener(Class<? extends Event> eventClass, RunnableWithArgs listener);
+
     /**
      * Publishes an event.<p>
      * Listeners will be notified in the same thread as the publisher.
@@ -92,6 +125,14 @@ public interface EventPublisher {
      * @param args      event arguments sent to listeners
      */
     void publishEvent(String eventName, List args);
+
+    /**
+     * Publishes an event.<p>
+     * Listeners will be notified in the same thread as the publisher.
+     *
+     * @param event the event to be published
+     */
+    void publishEvent(Event event);
 
     /**
      * Publishes an event.<p>
@@ -112,6 +153,14 @@ public interface EventPublisher {
 
     /**
      * Publishes an event.<p>
+     * Listeners will be notified outside of the UI thread.
+     *
+     * @param event the event to be published
+     */
+    void publishEventOutsideUI(Event event);
+
+    /**
+     * Publishes an event.<p>
      * Listeners will be notified in a different thread.
      *
      * @param eventName the name of the event
@@ -126,6 +175,14 @@ public interface EventPublisher {
      * @param args      event arguments sent to listeners
      */
     void publishEventAsync(String eventName, List args);
+
+    /**
+     * Publishes an event.<p>
+     * Listeners will be notified in a different thread.
+     *
+     * @param event the event to be published
+     */
+    void publishEventAsync(Event event);
 
     /**
      * Returns whether events will be published by the event bus or not.

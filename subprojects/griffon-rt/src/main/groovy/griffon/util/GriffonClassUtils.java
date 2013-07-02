@@ -15,6 +15,7 @@
  */
 package griffon.util;
 
+import griffon.core.Event;
 import griffon.core.MVCClosure;
 import griffon.exceptions.BeanException;
 import griffon.exceptions.BeanInstantiationException;
@@ -182,15 +183,22 @@ public final class GriffonClassUtils {
         EVENT_PUBLISHER_METHODS.add(new MethodDescriptor("addEventListener", new Class[]{Object.class}));
         EVENT_PUBLISHER_METHODS.add(new MethodDescriptor("addEventListener", new Class[]{String.class, Closure.class}));
         EVENT_PUBLISHER_METHODS.add(new MethodDescriptor("addEventListener", new Class[]{String.class, RunnableWithArgs.class}));
+        EVENT_PUBLISHER_METHODS.add(new MethodDescriptor("addEventListener", new Class[]{Event.class, Closure.class}));
+        EVENT_PUBLISHER_METHODS.add(new MethodDescriptor("addEventListener", new Class[]{Event.class, RunnableWithArgs.class}));
         EVENT_PUBLISHER_METHODS.add(new MethodDescriptor("removeEventListener", new Class[]{Object.class}));
         EVENT_PUBLISHER_METHODS.add(new MethodDescriptor("removeEventListener", new Class[]{String.class, Closure.class}));
         EVENT_PUBLISHER_METHODS.add(new MethodDescriptor("removeEventListener", new Class[]{String.class, RunnableWithArgs.class}));
+        EVENT_PUBLISHER_METHODS.add(new MethodDescriptor("removeEventListener", new Class[]{Event.class, Closure.class}));
+        EVENT_PUBLISHER_METHODS.add(new MethodDescriptor("removeEventListener", new Class[]{Event.class, RunnableWithArgs.class}));
         EVENT_PUBLISHER_METHODS.add(new MethodDescriptor("publishEvent", new Class[]{String.class}));
         EVENT_PUBLISHER_METHODS.add(new MethodDescriptor("publishEvent", new Class[]{String.class, List.class}));
+        EVENT_PUBLISHER_METHODS.add(new MethodDescriptor("publishEvent", new Class[]{Event.class}));
         EVENT_PUBLISHER_METHODS.add(new MethodDescriptor("publishEventAsync", new Class[]{String.class}));
         EVENT_PUBLISHER_METHODS.add(new MethodDescriptor("publishEventAsync", new Class[]{String.class, List.class}));
+        EVENT_PUBLISHER_METHODS.add(new MethodDescriptor("publishEventAsync", new Class[]{Event.class}));
         EVENT_PUBLISHER_METHODS.add(new MethodDescriptor("publishEventOutsideUI", new Class[]{String.class}));
         EVENT_PUBLISHER_METHODS.add(new MethodDescriptor("publishEventOutsideUI", new Class[]{String.class, List.class}));
+        EVENT_PUBLISHER_METHODS.add(new MethodDescriptor("publishEventOutsideUI", new Class[]{Event.class}));
 
         OBSERVABLE_METHODS.add(new MethodDescriptor("addPropertyChangeListener", new Class[]{PropertyChangeListener.class}));
         OBSERVABLE_METHODS.add(new MethodDescriptor("addPropertyChangeListener", new Class[]{String.class, PropertyChangeListener.class}));

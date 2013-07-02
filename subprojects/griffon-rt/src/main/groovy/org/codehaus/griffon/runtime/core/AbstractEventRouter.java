@@ -16,6 +16,7 @@
 
 package org.codehaus.griffon.runtime.core;
 
+import griffon.core.Event;
 import griffon.core.EventRouter;
 import griffon.core.GriffonArtifact;
 import griffon.util.RunnableWithArgs;
@@ -28,6 +29,7 @@ import java.util.*;
 
 import static griffon.util.GriffonNameUtils.capitalize;
 import static griffon.util.GriffonNameUtils.isBlank;
+import static java.util.Arrays.asList;
 import static java.util.Collections.EMPTY_LIST;
 import static java.util.Collections.synchronizedList;
 import static org.codehaus.groovy.runtime.MetaClassHelper.convertToTypeArray;
@@ -101,6 +103,41 @@ public abstract class AbstractEventRouter implements EventRouter {
     }
 
     protected abstract void doPublishAsync(Runnable publisher);
+
+    @Override
+    public void publish(Event event) {
+        publish(event.getClass().getSimpleName(), asList(event));
+    }
+
+    @Override
+    public void publishOutsideUI(Event event) {
+        publishOutsideUI(event.getClass().getSimpleName(), asList(event));
+    }
+
+    @Override
+    public void publishAsync(Event event) {
+        publishAsync(event.getClass().getSimpleName(), asList(event));
+    }
+
+    @Override
+    public void addEventListener(Class<? extends Event> eventClass, Closure listener) {
+        addEventListener(eventClass.getSimpleName(), listener);
+    }
+
+    @Override
+    public void addEventListener(Class<? extends Event> eventClass, RunnableWithArgs listener) {
+        addEventListener(eventClass.getSimpleName(), listener);
+    }
+
+    @Override
+    public void removeEventListener(Class<? extends Event> eventClass, Closure listener) {
+        removeEventListener(eventClass.getSimpleName(), listener);
+    }
+
+    @Override
+    public void removeEventListener(Class<? extends Event> eventClass, RunnableWithArgs listener) {
+        removeEventListener(eventClass.getSimpleName(), listener);
+    }
 
     private void invokeHandler(Object handler, List params) {
         if (handler instanceof Closure) {
