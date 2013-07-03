@@ -156,6 +156,7 @@ public final class GriffonClassUtils {
         MVC_METHODS.add(new MethodDescriptor("getMVCGroupManager"));
         MVC_METHODS.add(new MethodDescriptor("setBuilder", new Class[]{FactoryBuilderSupport.class}));
         MVC_METHODS.add(new MethodDescriptor("invokeAction", new Class[]{String.class, Object[].class}));
+        MVC_METHODS.add(new MethodDescriptor("invokeAction", new Class[]{String.class, Object[].class}, Modifier.PUBLIC | Modifier.TRANSIENT));
 
         SERVICE_METHODS.add(new MethodDescriptor("serviceInit"));
         SERVICE_METHODS.add(new MethodDescriptor("serviceDestroy"));
@@ -2684,16 +2685,14 @@ public final class GriffonClassUtils {
                 }
             }
             this.modifiers = modifiers;
-
-            this.hashCode = methodName.length() + modifiers;
+            this.hashCode = 31 * methodName.hashCode() + modifiers;
         }
 
         public MethodDescriptor(String methodName, String[] paramTypes, int modifiers) {
             this.methodName = methodName;
             this.paramTypes = paramTypes == null ? EMPTY_CLASS_PARAMETERS : paramTypes;
             this.modifiers = modifiers;
-
-            this.hashCode = methodName.length() + modifiers;
+            this.hashCode = 31 * methodName.hashCode() + modifiers;
         }
 
         public String getName() {
