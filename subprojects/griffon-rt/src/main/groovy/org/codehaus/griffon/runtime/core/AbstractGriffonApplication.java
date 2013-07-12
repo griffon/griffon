@@ -723,7 +723,7 @@ public abstract class AbstractGriffonApplication extends AbstractObservable impl
         return messageSource.formatMessage(message, args);
     }
 
-    public ResourceResolver resolveResourceResolver() {
+    public ResourceResolver getResourceResolver() {
         return resourceResolver;
     }
 
