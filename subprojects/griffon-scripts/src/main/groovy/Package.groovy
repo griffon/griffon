@@ -97,7 +97,9 @@ target(name: 'prepackage', description: "packaging steps all standard packaging 
     packageApp()
 
     // use absolute path to current dir if codebase is not specified
-    if (buildConfig.griffon.webstart.codebase == "CHANGE ME") buildConfig.griffon.webstart.codebase = new File('.').canonicalFile.absolutePath
+    if (buildConfig.griffon.webstart.codebase == "CHANGE ME") {
+        buildConfig.griffon.webstart.codebase = 'file://' + new File('dist/applet').canonicalFile.absolutePath
+    }
     if (argsMap.codebase) buildConfig.griffon.webstart.codebase = argsMap.codebase
 }
 
