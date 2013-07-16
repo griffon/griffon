@@ -65,7 +65,19 @@ public abstract class AbstractASTTransformation implements ASTTransformation, Op
         return classNode.getPlainNodeReference();
     }
 
-    public static ClassNode makeClassSafe(String className, String... genericTypes) {
+    public static ClassNode makeClassSafe(String className) {
+        return makeClassSafeWithGenerics(className);
+    }
+
+    public static ClassNode makeClassSafe(Class klass) {
+        return makeClassSafeWithGenerics(klass);
+    }
+
+    public static ClassNode makeClassSafe(ClassNode classNode) {
+        return makeClassSafeWithGenerics(classNode);
+    }
+
+    public static ClassNode makeClassSafeWithGenerics(String className, String... genericTypes) {
         GenericsType[] gtypes = new GenericsType[0];
         if (genericTypes != null) {
             gtypes = new GenericsType[genericTypes.length];
@@ -76,7 +88,7 @@ public abstract class AbstractASTTransformation implements ASTTransformation, Op
         return makeClassSafe0(ClassHelper.make(className), gtypes);
     }
 
-    public static ClassNode makeClassSafe(Class klass, Class... genericTypes) {
+    public static ClassNode makeClassSafeWithGenerics(Class klass, Class... genericTypes) {
         GenericsType[] gtypes = new GenericsType[0];
         if (genericTypes != null) {
             gtypes = new GenericsType[genericTypes.length];
@@ -87,7 +99,7 @@ public abstract class AbstractASTTransformation implements ASTTransformation, Op
         return makeClassSafe0(ClassHelper.make(klass), gtypes);
     }
 
-    public static ClassNode makeClassSafe(ClassNode classNode, ClassNode... genericTypes) {
+    public static ClassNode makeClassSafeWithGenerics(ClassNode classNode, ClassNode... genericTypes) {
         GenericsType[] gtypes = new GenericsType[0];
         if (genericTypes != null) {
             gtypes = new GenericsType[genericTypes.length];
