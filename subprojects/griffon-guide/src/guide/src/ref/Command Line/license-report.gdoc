@@ -1,12 +1,11 @@
-h4. License Report
+h1. license-report
 
-This command collects and displays all available licenses of runtime dependencies required by the application. The command creates both simple text and XML output reports, simply invoke it as follows
+h2. Purpose
 
-{code}
-griffon license-report
-{code}
+The @license-report@ command will output a license report of the project's runtime dependencies.
+Both XMl and simple text versions will be saved in @$projectTargetDir/license-report@
 
-Here's the output from a simple application that requires [glazedlists|http://artifacts.griffon-framework.org/plugin/glazedlists] and [miglayout|http://artifacts.griffon-framework.org/plugin/miglayout] plugins. Notice that a placeholder (**UNKNOWN**) will be used if a license cannot be resolved
+h2. Examples
 
 {code}
 $ griffon license-report
@@ -32,4 +31,11 @@ miglayout-core              4.2     **UNKNOWN**
 miglayout-swing             4.2     **UNKNOWN**
 slf4j-api                   1.7.3   MIT License
 slf4j-log4j12               1.7.3   MIT License
+{code}
+
+h2. Description
+
+Usage: 
+{code:java}
+griffon license-report
 {code}
