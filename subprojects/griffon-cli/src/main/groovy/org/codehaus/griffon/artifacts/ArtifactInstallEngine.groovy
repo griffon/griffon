@@ -31,13 +31,13 @@ import org.slf4j.LoggerFactory
 
 import static griffon.util.ArtifactSettings.getRegisteredArtifacts
 import static griffon.util.ArtifactSettings.isValidVersion
+import static griffon.util.ConfigUtils.castToBoolean
 import static griffon.util.GriffonExceptionHandler.sanitize
 import static griffon.util.GriffonNameUtils.capitalize
 import static griffon.util.GriffonNameUtils.getPropertyNameForLowerCaseHyphenSeparatedName
 import static griffon.util.GriffonUtil.getScriptName
 import static org.codehaus.griffon.artifacts.ArtifactRepository.DEFAULT_LOCAL_NAME
 import static org.codehaus.griffon.cli.CommandLineConstants.*
-import static org.codehaus.groovy.runtime.typehandling.DefaultTypeTransformation.castToBoolean
 
 /**
  * @author Andres Almiray

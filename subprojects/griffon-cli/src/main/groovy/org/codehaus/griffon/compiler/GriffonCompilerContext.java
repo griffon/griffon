@@ -18,9 +18,9 @@ package org.codehaus.griffon.compiler;
 
 import griffon.util.BuildSettings;
 import griffon.util.BuildSettingsHolder;
+import griffon.util.ConfigUtils;
 import groovy.util.ConfigObject;
 import org.codehaus.groovy.control.SourceUnit;
-import org.codehaus.groovy.runtime.typehandling.DefaultTypeTransformation;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -171,7 +171,7 @@ public class GriffonCompilerContext {
     public static boolean getConfigOption(String key) {
         if (System.getProperty(key) != null) return Boolean.getBoolean(key);
         Object value = getFlattenedBuildSettings().get(key);
-        if (value != null) return DefaultTypeTransformation.castToBoolean(value);
+        if (value != null) return ConfigUtils.castToBoolean(value);
         return false;
     }
 }

@@ -35,6 +35,7 @@ import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArrayList;
 
+import static griffon.util.ConfigUtils.castToBoolean;
 import static griffon.util.ConfigUtils.getConfigValueAsBoolean;
 import static griffon.util.GriffonApplicationUtils.isMacOSX;
 import static griffon.util.GriffonExceptionHandler.sanitize;
@@ -43,7 +44,6 @@ import static java.lang.reflect.Modifier.isPublic;
 import static java.lang.reflect.Modifier.isStatic;
 import static org.codehaus.griffon.runtime.core.DefaultGriffonControllerClass.hasVoidOrDefAsReturnType;
 import static org.codehaus.groovy.runtime.DefaultGroovyMethods.reverse;
-import static org.codehaus.groovy.runtime.typehandling.DefaultTypeTransformation.castToBoolean;
 
 /**
  * @author Andres Almiray

@@ -128,7 +128,7 @@ public final class ConfigUtils {
      */
     public static boolean getConfigValueAsBoolean(Map config, String key, boolean defaultValue) {
         Object value = getConfigValue(config, key, defaultValue);
-        return DefaultTypeTransformation.castToBoolean(value);
+        return castToBoolean(value);
     }
 
     /**
@@ -599,5 +599,12 @@ public final class ConfigUtils {
             return path;
         }
         return path.substring(0, extIndex);
+    }
+
+    public static boolean castToBoolean(Object value) {
+        if( value instanceof CharSequence) {
+            return "true".equalsIgnoreCase(value.toString());
+        }
+        return DefaultTypeTransformation.castToBoolean(value);
     }
 }

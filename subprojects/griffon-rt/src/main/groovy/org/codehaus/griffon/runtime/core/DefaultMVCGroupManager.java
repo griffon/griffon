@@ -33,13 +33,13 @@ import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
+import static griffon.util.ConfigUtils.castToBoolean;
 import static griffon.util.ConfigUtils.getConfigValueAsBoolean;
 import static griffon.util.ConfigUtils.getConfigValueAsString;
 import static griffon.util.GriffonExceptionHandler.sanitize;
 import static griffon.util.GriffonNameUtils.isBlank;
 import static java.util.Arrays.asList;
 import static org.codehaus.griffon.runtime.builder.CompositeBuilderHelper.createBuilder;
-import static org.codehaus.groovy.runtime.typehandling.DefaultTypeTransformation.castToBoolean;
 
 /**
  * Base implementation of the {@code MVCGroupManager} interface.

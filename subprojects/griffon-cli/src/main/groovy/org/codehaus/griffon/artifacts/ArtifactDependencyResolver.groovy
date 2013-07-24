@@ -25,8 +25,8 @@ import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 
 import static griffon.util.ArtifactSettings.isValidVersion
+import static griffon.util.ConfigUtils.castToBoolean
 import static org.codehaus.griffon.cli.CommandLineConstants.KEY_FORCE_ARTIFACT_UPGRADE
-import static org.codehaus.groovy.runtime.typehandling.DefaultTypeTransformation.castToBoolean
 
 /**
  * @author Andres Almiray

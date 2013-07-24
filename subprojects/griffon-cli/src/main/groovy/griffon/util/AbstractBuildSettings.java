@@ -17,7 +17,6 @@ package griffon.util;
 
 import groovy.util.ConfigObject;
 import org.codehaus.groovy.runtime.DateGroovyMethods;
-import org.codehaus.groovy.runtime.typehandling.DefaultTypeTransformation;
 
 import java.io.File;
 import java.util.Collections;
@@ -83,7 +82,7 @@ public abstract class AbstractBuildSettings {
 
     public boolean isDebugEnabled() {
         if (System.getProperty(KEY_CLI_VERBOSE) != null) return Boolean.getBoolean(KEY_CLI_VERBOSE);
-        return DefaultTypeTransformation.castToBoolean(getConfig().flatten().get(KEY_CLI_VERBOSE));
+        return ConfigUtils.castToBoolean(getConfig().flatten().get(KEY_CLI_VERBOSE));
     }
 
     public String getDefaultAnswerNonInteractive() {

@@ -21,6 +21,7 @@ class ArtifactDependencyResolverTests extends GroovyTestCase {
 
         repository.artifacts.plugin = artifacts
         ArtifactRepositoryRegistry.instance.registerRepository(repository)
+        System.setProperty(KEY_FORCE_ARTIFACT_UPGRADE, 'false')
     }
 
     private ArtifactDependencyResolver createArtifactDependencyResolver() {

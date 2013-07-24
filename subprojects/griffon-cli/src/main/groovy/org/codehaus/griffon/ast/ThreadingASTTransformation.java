@@ -18,6 +18,7 @@ package org.codehaus.griffon.ast;
 
 import griffon.core.UIThreadManager;
 import griffon.transform.Threading;
+import griffon.util.ConfigUtils;
 import griffon.util.GriffonClassUtils;
 import griffon.util.GriffonClassUtils.MethodDescriptor;
 import org.codehaus.griffon.compiler.GriffonCompilerContext;
@@ -28,7 +29,6 @@ import org.codehaus.groovy.ast.stmt.ExpressionStatement;
 import org.codehaus.groovy.ast.stmt.Statement;
 import org.codehaus.groovy.control.CompilePhase;
 import org.codehaus.groovy.control.SourceUnit;
-import org.codehaus.groovy.runtime.typehandling.DefaultTypeTransformation;
 import org.codehaus.groovy.transform.GroovyASTTransformation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -267,7 +267,7 @@ public class ThreadingASTTransformation extends AbstractASTTransformation {
         while (!COMPILER_THREADING_KEY.equals(keyName)) {
             Object value = settings.get(keyName);
             keyName = keyName.substring(0, keyName.lastIndexOf("."));
-            if (value != null && !DefaultTypeTransformation.castToBoolean(value)) return true;
+            if (value != null && !ConfigUtils.castToBoolean(value)) return true;
         }
 
         return false;

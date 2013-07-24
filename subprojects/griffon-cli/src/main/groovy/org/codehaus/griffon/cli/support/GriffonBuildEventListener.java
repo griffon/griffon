@@ -31,9 +31,9 @@ import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import static griffon.util.ConfigUtils.castToBoolean;
 import static griffon.util.GriffonExceptionHandler.sanitize;
 import static griffon.util.GriffonNameUtils.getPropertyNameForLowerCaseHyphenSeparatedName;
-import static org.codehaus.groovy.runtime.typehandling.DefaultTypeTransformation.castToBoolean;
 
 /**
  * @author Graeme Rocher (Grails 1.1)
