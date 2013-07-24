@@ -199,7 +199,7 @@ public class ThreadingASTTransformation extends AbstractASTTransformation {
         Parameter[] types = method.getParameters();
         String[] parameterTypes = new String[types.length];
         for (int i = 0; i < types.length; i++) {
-            parameterTypes[i] = types[i].getType().getPlainNodeReference().getName();
+            parameterTypes[i] = newClass(types[i].getType()).getName();
         }
         return new MethodDescriptor(method.getName(), parameterTypes, method.getModifiers());
     }

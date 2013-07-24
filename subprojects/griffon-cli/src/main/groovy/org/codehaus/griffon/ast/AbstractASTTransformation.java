@@ -82,7 +82,7 @@ public abstract class AbstractASTTransformation implements ASTTransformation, Op
         if (genericTypes != null) {
             gtypes = new GenericsType[genericTypes.length];
             for (int i = 0; i < gtypes.length; i++) {
-                gtypes[i] = new GenericsType(makeClassSafe(ClassHelper.make(genericTypes[i])));
+                gtypes[i] = new GenericsType(makeClassSafe(genericTypes[i]));
             }
         }
         return makeClassSafe0(ClassHelper.make(className), gtypes);
@@ -93,7 +93,7 @@ public abstract class AbstractASTTransformation implements ASTTransformation, Op
         if (genericTypes != null) {
             gtypes = new GenericsType[genericTypes.length];
             for (int i = 0; i < gtypes.length; i++) {
-                gtypes[i] = new GenericsType(makeClassSafe(ClassHelper.make(genericTypes[i])));
+                gtypes[i] = new GenericsType(makeClassSafe(genericTypes[i]));
             }
         }
         return makeClassSafe0(ClassHelper.make(klass), gtypes);
@@ -104,7 +104,7 @@ public abstract class AbstractASTTransformation implements ASTTransformation, Op
         if (genericTypes != null) {
             gtypes = new GenericsType[genericTypes.length];
             for (int i = 0; i < gtypes.length; i++) {
-                gtypes[i] = new GenericsType(genericTypes[i].getPlainNodeReference());
+                gtypes[i] = new GenericsType(newClass(genericTypes[i]));
             }
         }
         return makeClassSafe0(classNode, gtypes);
@@ -133,12 +133,13 @@ public abstract class AbstractASTTransformation implements ASTTransformation, Op
     }
 
     public static GenericsType makeGenericsType(ClassNode classNode, ClassNode[] upperBounds, ClassNode lowerBound, boolean placeHolder) {
+        classNode = newClass(classNode);
         classNode.setGenericsPlaceHolder(placeHolder);
         return new GenericsType(classNode, upperBounds, lowerBound);
     }
 
     public static ClassNode makeClassSafe0(ClassNode classNode, GenericsType... genericTypes) {
-        ClassNode plainNodeReference = classNode.getPlainNodeReference();
+        ClassNode plainNodeReference = newClass(classNode);
         if (genericTypes != null && genericTypes.length > 0) plainNodeReference.setGenericsTypes(genericTypes);
         return plainNodeReference;
     }
