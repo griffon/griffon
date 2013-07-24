@@ -254,7 +254,7 @@ doListArtifactUpdates = { String type ->
 
     boolean headerDisplayed = false
     if (installedArtifacts) {
-        installedArtifacts = installedArtifacts.sort()
+        installedArtifacts.sort()
         VersionComparator versionComparator = new VersionComparator()
         installedArtifacts.each {name, version ->
             if (version instanceof Release) version = version.version

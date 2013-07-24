@@ -462,7 +462,7 @@ class ArtifactSettings {
             def tokens = requiredVersion.split('>')*.trim()
             tokens = tokens.collect { trimTag(it) }
             tokens << artifactVersion
-            tokens = tokens.sort(vc)
+            tokens.sort(vc)
 
             if (tokens[1] == artifactVersion) return true
         }
@@ -485,7 +485,7 @@ class ArtifactSettings {
             def tokens = requiredVersion.split('>')*.trim()
             tokens = tokens.collect { trimTag(it) }
             tokens << artifactVersion
-            tokens = tokens.sort(vc)
+            tokens.sort(vc)
 
             return artifactVersion <=> tokens[1]
         }
