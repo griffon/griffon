@@ -163,6 +163,7 @@ public abstract class AbstractMessageSource implements MessageSource {
     }
 
     public String formatMessage(String message, Object[] args) {
+        if (args == null || args.length == 0) return message;
         return MessageFormat.format(message, args);
     }
 

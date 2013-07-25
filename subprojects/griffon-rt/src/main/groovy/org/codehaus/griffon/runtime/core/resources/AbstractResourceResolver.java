@@ -162,6 +162,7 @@ public abstract class AbstractResourceResolver implements ResourceResolver {
     }
 
     public String formatResource(String resource, Object[] args) {
+        if (args == null || args.length == 0) return resource;
         return MessageFormat.format(resource, args);
     }
 
