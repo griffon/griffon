@@ -105,15 +105,16 @@ Type in griffon create-addon then execute this command again."""
         def addonText = addonFile.text
 
         if (isJava) {
-            if (!(addonText =~ /\s*public Map<String, Map<String, String>>\s*getMvcGroups\(\)\s*\{/)) {
+            if (!(addonText =~ /public Map<String, Map<String, Object>> getMvcGroups\(\)/)) {
                 addonText = addonText.replaceAll(/\}\s*\z/, """
-                public Map<String, Map<String, Object>> getMvcGroups() {
-                    Map<String, Map<String, Object>> groups = new LinkedHashMap<String, Map<String, Object>>();
-                    return groups;
-                }
+                    public Map<String, Map<String, Object>> getMvcGroups() {
+                        Map<String, Map<String, Object>> groups = new LinkedHashMap<String, Map<String, Object>>();
+                        return groups;
+                    }
+                }""".stripIndent(16))
             }
-            """)
-            }
+
+            if (addonText =~ /"$name"/) return
 
             List parts = []
             if (!argsMap['skip-model'])      parts << """            {"model",      "${(argsMap['with-model'] ?: modelClassName)}"}"""
@@ -121,30 +122,33 @@ Type in griffon create-addon then execute this command again."""
             if (!argsMap['skip-controller']) parts << """            {"controller", "${(argsMap['with-controller'] ?: controllerClassName)}"}"""
 
             addonFile.withWriter {
-                it.write addonText.replaceAll(/\s*Map<String, Map<String, String>> groups = new LinkedHashMap<String, Map<String, String>>\(\);/, """
-                    Map<String, Map<String, Object>> groups = new LinkedHashMap<String, Map<String, Object>>();
-                    // MVC Group for "$name"
-                    groups.put("$name", groupDef(new String[][]{
-            ${parts.join(',\n')}
-                    }));""")
+                it.write addonText.replaceAll(/Map<String, Map<String, Object>> groups = new LinkedHashMap<String, Map<String, Object>>\(\);/, """
+        Map<String, Map<String, Object>> groups = new LinkedHashMap<String, Map<String, Object>>();
+        // MVC Group for "$name"
+        groups.put("$name", groupDef(new String[][]{
+${parts.join(',\n')}
+        }));""".trim())
             }
 
         } else {
-
-            if (!(addonText =~ /\s*def\s*mvcGroups\s*=\s*\[/)) {
+            addonText = addonText.replaceAll(/def\s*mvcGroups/, 'Map mvcGroups')
+            if (!(addonText =~ /\s*Map\s*mvcGroups\s*=\s*\[/)) {
                 addonText = addonText.replaceAll(/\}\s*\z/, """
     Map mvcGroups = [
     ]
 }
 """)
             }
+
+            if (addonText =~ /'$name'/) return
+
             List parts = []
             if (!argsMap['skip-model'])      parts << "            model     : '${(argsMap['with-model'] ?: modelClassName)}'"
             if (!argsMap['skip-view'])       parts << "            view      : '${(argsMap['with-view'] ?: viewClassName)}'"
             if (!argsMap['skip-controller']) parts << "            controller: '${(argsMap['with-controller'] ?: controllerClassName)}'"
 
             addonFile.withWriter {
-                it.write addonText.replaceAll(/\s*def\s*mvcGroups\s*=\s*\[/, """
+                it.write addonText.replaceAll(/\s*Map\s*mvcGroups\s*=\s*\[/, """
     Map mvcGroups = [
         // MVC Group for "$name"
         '$name': [
@@ -163,6 +167,8 @@ mvcGroups {
 }
 """
         }
+
+        if (configText =~ /'$name'/) return
 
         List parts = []
         if (!argsMap['skip-model'])      parts << "        model      = '${(argsMap['with-model'] ?: modelClassName)}'"
