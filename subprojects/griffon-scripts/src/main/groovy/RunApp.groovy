@@ -14,16 +14,16 @@
  * limitations under the License.
  */
 
+import static griffon.util.GriffonApplicationUtils.isMacOSX
+import static griffon.util.GriffonApplicationUtils.isWindows
+import static griffon.util.GriffonNameUtils.*
+
 /**
  * Created by IntelliJ IDEA.
  * @author Danno.Ferrin
  * Date: Aug 5, 2008
  * Time: 10:35:06 PM
  */
-
-import static griffon.util.GriffonApplicationUtils.isMacOSX
-import static griffon.util.GriffonApplicationUtils.isWindows
-import static griffon.util.GriffonNameUtils.*
 
 includeTargets << griffonScript('Package')
 includeTargets << griffonScript('_GriffonBootstrap')
@@ -104,7 +104,7 @@ target(name: 'doRunApp', description: "Runs the application from the command lin
         javaOpts << "-XX:PermSize=$buildConfig.griffon.memory.minPermSize"
     }
     if (isMacOSX) {
-        javaOpts << "-Xdock:name=${getNaturalName(getClassNameForLowerCaseHyphenSeparatedName(griffonAppName))}"
+        javaOpts << "-Xdock:name=${griffonAppName}"
         javaOpts << "-Xdock:icon=${resolveApplicationIcnsFile().canonicalPath}"
     }
 
@@ -112,7 +112,7 @@ target(name: 'doRunApp', description: "Runs the application from the command lin
     jvmOpts.each { debug("  $it") }
     javaOpts.each { debug("  $it") }
 
-    sysProperties.'griffon.application.name' = getNaturalName(getClassNameForLowerCaseHyphenSeparatedName(griffonAppName))
+    sysProperties.'griffon.application.name' = griffonAppName
     List sysprops = []
     debug("System properties:")
     sysProperties.each { key, value ->

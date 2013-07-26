@@ -16,8 +16,6 @@
 
 import static griffon.util.GriffonApplicationUtils.isWindows
 import static griffon.util.GriffonNameUtils.quote
-import static griffon.util.GriffonNameUtils.getNaturalName
-import static griffon.util.GriffonNameUtils.getClassNameForLowerCaseHyphenSeparatedName
 
 /**
  * Created by IntelliJ IDEA.
@@ -62,7 +60,7 @@ target(name: 'doRunApplet', description: "Runs the applet from Java WebStart", p
     javaOpts = javaOpts.collect { debug("  $it"); "-J$it" }
 
     def sysprops = []
-    sysProperties.'griffon.application.name' = getNaturalName(getClassNameForLowerCaseHyphenSeparatedName(griffonAppName))
+    sysProperties.'griffon.application.name' = griffonAppName
     debug("System properties:")
     sysProperties.each { key, value ->
         if (null == value) return
