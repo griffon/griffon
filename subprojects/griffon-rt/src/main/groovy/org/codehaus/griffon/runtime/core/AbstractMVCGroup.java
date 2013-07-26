@@ -93,11 +93,12 @@ public abstract class AbstractMVCGroup implements MVCGroup {
     }
 
     public void destroy() {
-        checkIfAlive();
-        app.getMvcGroupManager().destroyMVCGroup(mvcId);
-        members.clear();
-        synchronized (lock) {
-            alive = false;
+        if (isAlive()) {
+            app.getMvcGroupManager().destroyMVCGroup(mvcId);
+            members.clear();
+            synchronized (lock) {
+                alive = false;
+            }
         }
     }
 

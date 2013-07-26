@@ -16,6 +16,7 @@
 
 package org.codehaus.griffon.runtime.builder.factory
 
+import griffon.core.GriffonApplication
 import griffon.core.MVCGroup
 import griffon.util.ApplicationHolder
 
@@ -35,10 +36,17 @@ class MetaComponentFactory extends AbstractFactory {
         }
 
         String mvcName = attributes.remove('mvcName')
-        mvcName = attributes.remove('mvcId')
+        mvcName = attributes.containsKey('mvcId') ? attributes.remove('mvcId') : mvcName
 
         MVCGroup mvcGroup = ApplicationHolder.application.buildMVCGroup(mvcType, mvcName, attributes)
         def root = mvcGroup.getScriptResult('view')
+
+        ApplicationHolder.application.addApplicationEventListener(GriffonApplication.Event.DESTROY_MVC_GROUP.name, { String parentId, MVCGroup childGroup, MVCGroup destroyedGroup ->
+            if (destroyedGroup.mvcId == parentId) {
+                childGroup.destroy()
+            }
+        }.curry(builder.mvcName, mvcGroup))
+
         builder.context.root = root
         builder.context.mvcGroup = mvcGroup
         root
@@ -71,17 +79,17 @@ class MetaComponentFactory extends AbstractFactory {
 
     @Override
     void setChild(FactoryBuilderSupport builder, Object parent, Object child) {
-        safeInvoke(builder.parentContext.mvcGroup.controller, 'setChild', builder, parent, child)
+        safeInvoke(builder.parentContext.mvcGroup.builder, 'setChild', builder, parent, child)
     }
 
     @Override
     void setParent(FactoryBuilderSupport builder, Object parent, Object child) {
-        safeInvoke(builder.context.mvcGroup.controller, 'setParent', builder, parent, child)
+        safeInvoke(builder.context.mvcGroup.builder, 'setParent', builder, parent, child)
     }
 
     @Override
     void onNodeCompleted(FactoryBuilderSupport builder, Object parent, Object node) {
-        safeInvoke(builder.context.mvcGroup.controller, 'onNodeCompleted', builder, parent, node)
+        safeInvoke(builder.context.mvcGroup.builder, 'onNodeCompleted', builder, parent, node)
     }
 
     static protected def safeInvoke(Object obj, String method, Object... args) {
