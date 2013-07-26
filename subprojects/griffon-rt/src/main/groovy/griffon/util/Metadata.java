@@ -87,7 +87,9 @@ public class Metadata extends Properties {
                 // GRIFFON-255 there may be multiple versions of "application.properties" in the classpath
                 // due to addon packaging. Avoid any URLS that look like plugin dirs or addon jars
                 input = fetchApplicationProperties(ApplicationClassLoader.get());
-                if (input == null) input = fetchApplicationProperties(Metadata.class.getClassLoader());
+                if (input == null) {
+                    input = fetchApplicationProperties(Metadata.class.getClassLoader());
+                }
 
                 if (input != null) {
                     m.load(input);
@@ -241,13 +243,13 @@ public class Metadata extends Properties {
         if (griffonStartDir == null) {
             griffonStartDir = System.getProperty(GRIFFON_START_DIR);
             if (griffonStartDir != null && griffonStartDir.length() > 1 &&
-                    griffonStartDir.startsWith("\"") && griffonStartDir.endsWith("\"")) {
+                griffonStartDir.startsWith("\"") && griffonStartDir.endsWith("\"")) {
                 // normalize without double quotes
                 griffonStartDir = griffonStartDir.substring(1, griffonStartDir.length() - 1);
                 System.setProperty(GRIFFON_START_DIR, griffonStartDir);
             }
             if (griffonStartDir != null && griffonStartDir.length() > 1 &&
-                    griffonStartDir.startsWith("'") && griffonStartDir.endsWith("'")) {
+                griffonStartDir.startsWith("'") && griffonStartDir.endsWith("'")) {
                 // normalize without single quotes
                 griffonStartDir = griffonStartDir.substring(1, griffonStartDir.length() - 1);
                 System.setProperty(GRIFFON_START_DIR, griffonStartDir);
@@ -311,6 +313,11 @@ public class Metadata extends Properties {
      */
     public void persist() {
         if (dirty && metadataFile != null) {
+            if (!isFileDirty(metadataFile)) {
+                dirty = false;
+                return;
+            }
+
             FileOutputStream out = null;
 
             try {
@@ -323,6 +330,33 @@ public class Metadata extends Properties {
                 closeQuietly(out);
             }
         }
+    }
+
+    private boolean isFileDirty(File file) {
+        InputStream in = null;
+
+        try {
+            Properties other = new Properties();
+            in = new FileInputStream(metadataFile);
+            other.load(in);
+
+            for (Map.Entry<Object, Object> entry : other.entrySet()) {
+                if (!containsKey(entry.getKey()) || !get(entry.getKey()).equals(entry.getValue())) {
+                    return true;
+                }
+            }
+
+            for (Map.Entry<Object, Object> entry : entrySet()) {
+                if (!other.containsKey(entry.getKey()) || !other.get(entry.getKey()).equals(entry.getValue())) {
+                    return true;
+                }
+            }
+        } catch (Exception e) {
+            throw new RuntimeException("Error reading metadata to file [" + file + "]: " + e.getMessage(), e);
+        } finally {
+            closeQuietly(in);
+        }
+        return false;
     }
 
     /**
@@ -342,19 +376,18 @@ public class Metadata extends Properties {
 
     @Override
     public synchronized Object setProperty(String name, String value) {
-        if(containsKey(name)) {
-            Object oldValue = getProperty(name);
-            dirty = dirty || (oldValue != null && !oldValue.equals(value));
-        } else {
-            dirty = true;
-        }
-        return super.setProperty(name, value);
+        return put(name, value);
     }
 
     @Override
     public synchronized Object put(Object key, Object value) {
-        if(containsKey(key)) {
+        if (key instanceof CharSequence) key = key.toString();
+        if (value instanceof CharSequence) value = value.toString();
+        if (containsKey(key)) {
             Object oldValue = get(key);
+            if (oldValue instanceof CharSequence) {
+                oldValue = oldValue.toString();
+            }
             dirty = dirty || (oldValue != null && !oldValue.equals(value));
         } else {
             dirty = true;
@@ -364,8 +397,9 @@ public class Metadata extends Properties {
 
     @Override
     public synchronized void putAll(Map<? extends Object, ? extends Object> map) {
-        dirty = true;
-        super.putAll(map);
+        for (Map.Entry<? extends Object, ? extends Object> entry : map.entrySet()) {
+            put(entry.getKey(), entry.getValue());
+        }
     }
 
     /**
