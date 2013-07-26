@@ -168,7 +168,7 @@ mvcGroups {
 """
         }
 
-        if (configText =~ /'$name'/) return
+        if (configText =~ /'$name' \{/) return
 
         List parts = []
         if (!argsMap['skip-model'])      parts << "        model      = '${(argsMap['with-model'] ?: modelClassName)}'"
