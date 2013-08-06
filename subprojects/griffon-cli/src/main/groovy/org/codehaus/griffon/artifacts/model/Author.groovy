@@ -23,13 +23,15 @@ import groovy.json.JsonBuilder
  * @since 0.9.5
  */
 class Author {
+    String id
     String name
     String email
 
     String toString() {
         [
-                name: name,
-                email: email
+            id: id,
+            name: name,
+            email: email
         ]
     }
 
@@ -41,8 +43,9 @@ class Author {
 
     Map asMap() {
         [
-                name: name,
-                email: email
+            id: id,
+            name: name,
+            email: email
         ]
     }
 }

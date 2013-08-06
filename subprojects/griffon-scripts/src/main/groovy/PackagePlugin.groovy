@@ -14,8 +14,13 @@
  * limitations under the License.
  */
 
+
 import griffon.util.ArtifactSettings
+import org.codehaus.griffon.artifacts.maven.PluginDependenciesParser
+import org.codehaus.griffon.artifacts.maven.PomGenerator
 import org.codehaus.griffon.artifacts.model.Plugin
+
+import static org.codehaus.griffon.artifacts.maven.PluginDependenciesParser.traversePluginDependencies
 
 /**
  * @author Andres Almiray
@@ -31,28 +36,28 @@ includeTargets << griffonScript('_GriffonDocs')
 includeTargets << griffonScript('_GriffonClean')
 
 PLUGIN_RESOURCES = [
-        INCLUSIONS: [
-                'griffon-app/conf/**',
-                'lib/**',
-                'scripts/**',
-                'src/templates/**',
-                'LICENSE*',
-                'README*'
-        ],
-        EXCLUSIONS: [
-                'griffon-app/conf/Application.groovy',
-                'griffon-app/conf/Builder.groovy',
-                'griffon-app/conf/Config.groovy',
-                'griffon-app/conf/BuildConfig.groovy',
-                'griffon-app/conf/metainf/**',
-                '**/.svn/**',
-                'test/**',
-                '**/CVS/**'
-        ]
+    INCLUSIONS: [
+        'griffon-app/conf/**',
+        'lib/**',
+        'scripts/**',
+        'src/templates/**',
+        'LICENSE*',
+        'README*'
+    ],
+    EXCLUSIONS: [
+        'griffon-app/conf/Application.groovy',
+        'griffon-app/conf/Builder.groovy',
+        'griffon-app/conf/Config.groovy',
+        'griffon-app/conf/BuildConfig.groovy',
+        'griffon-app/conf/metainf/**',
+        '**/.svn/**',
+        'test/**',
+        '**/CVS/**'
+    ]
 ]
 
 target(name: 'packagePlugin', description: 'Packages a Griffon plugin',
-        prehook: null, posthook: null) {
+    prehook: null, posthook: null) {
     depends(cleanAll)
     pluginDescriptor = ArtifactSettings.getPluginDescriptor(basedir)
     if (!pluginDescriptor?.exists()) {
@@ -69,28 +74,42 @@ target(name: 'packagePlugin', description: 'Packages a Griffon plugin',
 setDefaultTarget(packagePlugin)
 
 target(name: 'package_plugin', description: '',
-        prehook: null, posthook: null) {
+    prehook: null, posthook: null) {
     depends(compile, packageAddon, pluginDocs, pluginTest)
 
+    Map<String, List<PluginDependenciesParser.Dependency>> dependencies = [:]
     if (griffonSettings.dependencyManager.hasApplicationDependencies()) {
         ant.copy(file: "$basedir/griffon-app/conf/BuildConfig.groovy",
-                tofile: "$artifactPackageDirPath/dependencies.groovy", failonerror: false)
+            tofile: "$artifactPackageDirPath/dependencies.groovy", failonerror: false)
+        dependencies = traversePluginDependencies(new File("$artifactPackageDirPath/dependencies.groovy"))
     }
 
     File runtimeJar = new File("${artifactPackageDirPath}/dist/griffon-${pluginName}-runtime-${pluginVersion}.jar")
     File compileJar = new File("${artifactPackageDirPath}/dist/griffon-${pluginName}-compile-${pluginVersion}.jar")
     File testJar = new File("${artifactPackageDirPath}/dist/griffon-${pluginName}-test-${pluginVersion}.jar")
 
+    List modules = []
     String compile = ''
+    PomGenerator pomGenerator = new PomGenerator(griffonSettings, artifactInfo, artifactPackageDirPath)
     if (runtimeJar.exists()) {
-        compile = "compile(group: 'org.codehaus.griffon.plugins', name: 'griffon-${pluginName}-runtime', version: '${pluginVersion}')"
+        compile = "compile(group: '${artifactInfo.group}', name: 'griffon-${pluginName}-runtime', version: '${pluginVersion}')"
+        pomGenerator.generatePluginPom('runtime', dependencies.runtime + dependencies.compile)
+        modules << 'runtime'
     }
     if (compileJar.exists()) {
-        compile += "\n\tbuild(group: 'org.codehaus.griffon.plugins', name: 'griffon-${pluginName}-compile', version: '${pluginVersion}')"
+        compile += "\n\tbuild(group: '${artifactInfo.group}', name: 'griffon-${pluginName}-compile', version: '${pluginVersion}')"
+        pomGenerator.generatePluginPom('compile', dependencies.build)
+        modules << 'compile'
     }
     String test = ''
     if (testJar.exists()) {
-        test = "test(group: 'org.codehaus.griffon.plugins', name: 'griffon-${pluginName}-test', version: '${pluginVersion}')"
+        test = "test(group: '${artifactInfo.group}', name: 'griffon-${pluginName}-test', version: '${pluginVersion}')"
+        pomGenerator.generatePluginPom('test', dependencies.test)
+        modules << 'test'
+    }
+    if (modules) {
+        pomGenerator.generatePluginParentPom(modules)
+        pomGenerator.generatePluginBom(modules)
     }
 
     if (compile || test) {
@@ -111,7 +130,7 @@ target(name: 'package_plugin', description: '',
 }
 
 target(name: 'post_package_plugin', description: '',
-        prehook: null, posthook: null) {
+    prehook: null, posthook: null) {
     ant.zip(destfile: "${artifactPackageDirPath}/${artifactZipFileName}", update: true, filesonly: true) {
         fileset(dir: basedir) {
             PLUGIN_RESOURCES.INCLUSIONS.each {
@@ -136,7 +155,7 @@ target(name: 'post_package_plugin', description: '',
 }
 
 target(name: 'pluginDocs', description: 'Generates and packages plugin documentation',
-        prehook: null, posthook: null) {
+    prehook: null, posthook: null) {
     pluginDocDir = "${artifactPackageDirPath}/docs"
     ant.mkdir(dir: pluginDocDir)
 
@@ -159,7 +178,7 @@ target(name: 'pluginDocs', description: 'Generates and packages plugin documenta
     List excludedPaths = ['resources', 'i18n', 'conf']
     for (dir in new File("${basedir}/griffon-app").listFiles()) {
         if (!excludedPaths.contains(dir.name) && dir.isDirectory() &&
-                ant.fileset(dir: dir, includes: '**/*.groovy, **/*.java').size() > 0) {
+            ant.fileset(dir: dir, includes: '**/*.groovy, **/*.java').size() > 0) {
             sources << dir.absolutePath
         }
     }
@@ -208,9 +227,9 @@ target(name: 'pluginDocs', description: 'Generates and packages plugin documenta
         if (!argsMap.nodoc && (hasSrcMain || hasTestSources || groovydocSources)) {
             File javadocDir = new File("${projectTargetDir}/docs/api")
             invokeGroovydoc(destdir: javadocDir,
-                    sourcepath: [srcMainDir, projectTestDir] + groovydocSources,
-                    windowtitle: "${pluginName} ${pluginVersion}",
-                    doctitle: "${pluginName} ${pluginVersion}")
+                sourcepath: [srcMainDir, projectTestDir] + groovydocSources,
+                windowtitle: "${pluginName} ${pluginVersion}",
+                doctitle: "${pluginName} ${pluginVersion}")
             if (javadocDir.list()) {
                 jarFileName = "${artifactPackageDirPath}/docs/griffon-${pluginName}-runtime-${pluginVersion}-javadoc.jar"
                 ant.jar(destfile: jarFileName) {
@@ -245,7 +264,7 @@ target(name: 'pluginDocs', description: 'Generates and packages plugin documenta
 }
 
 target(name: 'pluginTest', description: '',
-        prehook: null, posthook: null) {
+    prehook: null, posthook: null) {
     def projectTestDir = new File("${basedir}/src/test")
     def testResourcesDir = new File("${basedir}/test/resources")
 
