@@ -77,7 +77,12 @@ target(name: 'package_plugin', description: '',
     prehook: null, posthook: null) {
     depends(compile, packageAddon, pluginDocs, pluginTest)
 
-    Map<String, List<PluginDependenciesParser.Dependency>> dependencies = [:]
+    Map<String, List<PluginDependenciesParser.Dependency>> dependencies = [
+        runtime: [],
+        compile: [],
+        build: [],
+        test: []
+    ]
     if (griffonSettings.dependencyManager.hasApplicationDependencies()) {
         ant.copy(file: "$basedir/griffon-app/conf/BuildConfig.groovy",
             tofile: "$artifactPackageDirPath/dependencies.groovy", failonerror: false)

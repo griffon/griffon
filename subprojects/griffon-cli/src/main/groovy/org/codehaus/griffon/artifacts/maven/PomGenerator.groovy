@@ -49,8 +49,10 @@ class PomGenerator {
         this.targetDirPath = targetDirPath
 
         settings.pluginSettings.getPlugins().values().each { PluginInfo pluginInfo ->
-            traversePluginDependencies(new File("${pluginInfo.directory.file}/plugin-dependencies.groovy")).each { k, deps ->
-                pluginDependencies[k] += deps
+            if (artifactInfo.dependencies.find { it.name == pluginInfo.name && it.version == pluginInfo.version }) {
+                traversePluginDependencies(new File("${pluginInfo.directory.file}/plugin-dependencies.groovy")).each { k, deps ->
+                    pluginDependencies[k] += deps
+                }
             }
         }
     }
@@ -69,13 +71,14 @@ class PomGenerator {
         return sw.toString()
     }
 
-    void generatePluginPom(String scp, List<PluginDependenciesParser.Dependency> deps) {
+    void generatePluginPom(String scp, Collection<PluginDependenciesParser.Dependency> deps) {
         def pom = pomBuilder {
             parent {
                 groupId(artifactInfo.group)
                 artifactId("griffon-${artifactInfo.name}-parent")
                 version(artifactInfo.version)
             }
+            groupId(artifactInfo.group)
             artifactId("griffon-${artifactInfo.name}-${scp}")
             version(artifactInfo.version)
             packaging('jar')
@@ -161,6 +164,7 @@ class PomGenerator {
 
     void generatePluginParentPom(List mods) {
         def pom = pomBuilder {
+            groupId(artifactInfo.group)
             artifactId("griffon-${artifactInfo.name}-parent")
             version(artifactInfo.version)
             packaging('pom')
@@ -201,6 +205,7 @@ class PomGenerator {
 
     void generatePluginBom(List mods) {
         def pom = pomBuilder {
+            groupId(artifactInfo.group)
             artifactId("griffon-${artifactInfo.name}-bom")
             version(artifactInfo.version)
             packaging('pom')

@@ -39,7 +39,7 @@ class PluginDependenciesParser {
         test: []
     ]
 
-    PluginDependenciesParser() {
+    private PluginDependenciesParser() {
         this.dependencies = dependencies
     }
 
