@@ -16,12 +16,28 @@ repositories {
 }
 {code}
 
-
-You can also specify a specific Maven repository to use by URL:
+You can also specify a particular Maven repository to use by URL:
 
 {code}
 repositories {
     mavenRepo "http://repository.codehaus.org"
+}
+{code}
+
+Starting with Griffon 1.4.0 you may specify Bintray's JCenter repository with
+
+{code}
+repositories {
+    jcenter()
+}
+{code}
+
+even a custom Bintray repository by defining username/repository combinations like the following ones
+
+{code}
+repositories {
+    bintray(username: 'aalmiray', repository: 'kordamp')
+    bintray('aalmiray/griffon')
 }
 {code}
 

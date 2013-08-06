@@ -15,15 +15,15 @@
  */
 package org.codehaus.griffon.resolve.config
 
-import org.apache.ivy.plugins.resolver.DependencyResolver
-import org.apache.ivy.plugins.resolver.FileSystemResolver
-import org.apache.ivy.plugins.resolver.IBiblioResolver
-import org.apache.ivy.plugins.resolver.RepositoryResolver
+import org.apache.ivy.plugins.resolver.*
 import org.apache.ivy.util.Message
 import org.codehaus.griffon.resolve.SnapshotAwareM2Resolver
-import org.apache.ivy.plugins.resolver.IvyRepResolver
 
 class RepositoriesConfigurer extends AbstractDependencyManagementConfigurer {
+    private static final String DEFAULT_BINTRAY_JCENTER_REPO_NAME = 'BintrayJCenter'
+    private static final String BINTRAY_JCENTER_URL = 'http://jcenter.bintray.com/'
+    private static final String DEFAULT_BINTRAY_URL = 'http://dl.bintray.com/content/'
+
     RepositoriesConfigurer(DependencyConfigurationContext context) {
         super(context)
     }
@@ -78,6 +78,38 @@ class RepositoriesConfigurer extends AbstractDependencyManagementConfigurer {
         flatDir(name: "griffonHome", dirs: ["${griffonHome}/dist", "${griffonHome}/lib"])
     }
 
+    void bintray(String path) {
+        String url = DEFAULT_BINTRAY_URL + path
+        String name = 'Bintray - ' + path.split('/')[0]
+        if (!context.offline && isResolverNotAlreadyDefined(url)) {
+            dependencyManager.repositoryData << ['type': 'mavenRepo', root: url, name: name, m2compatbile: true]
+            def resolver = new SnapshotAwareM2Resolver(name: name, root: url, m2compatible: true, settings: dependencyManager.ivySettings, changingPattern: ".*SNAPSHOT")
+            addToChainResolver(resolver)
+        }
+    }
+
+    void bintray(Map args) {
+        if (args && args.username && args.repository) {
+            String url = DEFAULT_BINTRAY_URL + args.username + '/' + args.repository
+            String name = 'Bintray - ' + args.username
+            if (!context.offline && isResolverNotAlreadyDefined(url)) {
+                dependencyManager.repositoryData << ['type': 'mavenRepo', root: url, name: name, m2compatbile: true]
+                def resolver = new SnapshotAwareM2Resolver(name: name, root: url, m2compatible: true, settings: dependencyManager.ivySettings, changingPattern: ".*SNAPSHOT")
+                addToChainResolver(resolver)
+            }
+        } else {
+            Message.warn("A bintray specified doesn't have a username or repository argument. Please specify one!")
+        }
+    }
+
+    void jcenter() {
+        if (!context.offline && isResolverNotAlreadyDefined(BINTRAY_JCENTER_URL)) {
+            dependencyManager.repositoryData << ['type': 'mavenRepo', root: BINTRAY_JCENTER_URL, name: DEFAULT_BINTRAY_JCENTER_REPO_NAME, m2compatbile: true]
+            def resolver = new SnapshotAwareM2Resolver(name: DEFAULT_BINTRAY_JCENTER_REPO_NAME, root: BINTRAY_JCENTER_URL, m2compatible: true, settings: dependencyManager.ivySettings, changingPattern: ".*SNAPSHOT")
+            addToChainResolver(resolver)
+        }
+    }
+
     void mavenRepo(String url) {
         if (!context.offline && isResolverNotAlreadyDefined(url)) {
             dependencyManager.repositoryData << ['type': 'mavenRepo', root: url, name: url, m2compatbile: true]
@@ -94,8 +126,7 @@ class RepositoriesConfigurer extends AbstractDependencyManagementConfigurer {
                 def resolver = new SnapshotAwareM2Resolver(args)
                 addToChainResolver(resolver)
             }
-        }
-        else {
+        } else {
             Message.warn("A mavenRepo specified doesn't have a name argument. Please specify one!")
         }
     }
@@ -114,8 +145,7 @@ class RepositoriesConfigurer extends AbstractDependencyManagementConfigurer {
                 resolver.settings = dependencyManager.ivySettings
                 addToChainResolver(resolver)
             }
-        }
-        else {
+        } else {
             Message.warn("An ivyRepo specified doesn't have a name argument. Please specify one!")
         }
     }
@@ -131,15 +161,15 @@ class RepositoriesConfigurer extends AbstractDependencyManagementConfigurer {
         if (!context.offline && isResolverNotAlreadyDefined('ebr')) {
             dependencyManager.repositoryData << ['type': 'ebr']
             IBiblioResolver ebrReleaseResolver = new SnapshotAwareM2Resolver(name: "ebrRelease",
-                    root: "http://repository.springsource.com/maven/bundles/release",
-                    m2compatible: true,
-                    settings: dependencyManager.ivySettings)
+                root: "http://repository.springsource.com/maven/bundles/release",
+                m2compatible: true,
+                settings: dependencyManager.ivySettings)
             addToChainResolver(ebrReleaseResolver)
 
             IBiblioResolver ebrExternalResolver = new SnapshotAwareM2Resolver(name: "ebrExternal",
-                    root: "http://repository.springsource.com/maven/bundles/external",
-                    m2compatible: true,
-                    settings: dependencyManager.ivySettings)
+                root: "http://repository.springsource.com/maven/bundles/external",
+                m2compatible: true,
+                settings: dependencyManager.ivySettings)
 
             addToChainResolver(ebrExternalResolver)
         }
@@ -197,10 +227,10 @@ class RepositoriesConfigurer extends AbstractDependencyManagementConfigurer {
             }
 
             localMavenResolver.addIvyPattern(
-                    "${repositoryPath}/[organisation]/[module]/[revision]/[module]-[revision](-[classifier]).pom")
+                "${repositoryPath}/[organisation]/[module]/[revision]/[module]-[revision](-[classifier]).pom")
 
             localMavenResolver.addArtifactPattern(
-                    "${repositoryPath}/[organisation]/[module]/[revision]/[module]-[revision](-[classifier]).[ext]")
+                "${repositoryPath}/[organisation]/[module]/[revision]/[module]-[revision](-[classifier]).[ext]")
 
             localMavenResolver.settings = dependencyManager.ivySettings
             addToChainResolver(localMavenResolver)

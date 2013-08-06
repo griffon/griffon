@@ -33,3 +33,22 @@ miglayout-swing             4.2     **UNKNOWN**
 slf4j-api                   1.7.3   MIT License
 slf4j-log4j12               1.7.3   MIT License
 {code}
+
+h4. Support for Bintray's repositories
+
+Bintray's JCenter repository can now be defined for dependency resolution, simply specify the following
+
+{code}
+repositories {
+    jcenter()
+}
+{code}
+
+You may even define custom Bintray repositories by adding username/repository combinations like the following ones
+
+{code}
+repositories {
+    bintray(username: 'aalmiray', repository: 'kordamp')
+    bintray('aalmiray/griffon')
+}
+{code}
