@@ -23,6 +23,8 @@ import griffon.util.GriffonNameUtils
  * @since 0.9.5
  */
 abstract class Artifact {
+    static final String DEFAULT_LICENSE = '<UNKNOWN>'
+
     String name = ''
     String title = ''
     String description = ''
@@ -50,14 +52,14 @@ abstract class Artifact {
 
     String toString() {
         [
-                type: type,
-                name: name,
-                title: title,
-                license: license,
-                authors: authors*.toString(),
-                releases: releases,
-                source: source,
-                documentation: documentation
+            type: type,
+            name: name,
+            title: title,
+            license: license,
+            authors: authors*.toString(),
+            releases: releases,
+            source: source,
+            documentation: documentation
         ]
     }
 

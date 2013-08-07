@@ -331,7 +331,7 @@ class ArtifactSettings {
                 source: json.source,
                 documentation: json.documentation,
                 authors: json.authors.collect([]) { author ->
-                    new Author(name: author.name, email: author.email)
+                    new Author(id: author.id ?: MD5.encode(author.name), name: author.name, email: author.email)
                 },
                 releases: json.releases ? json.releases.collect([]) {parseReleaseFromJSON(it)} : []
         )
@@ -350,10 +350,11 @@ class ArtifactSettings {
                 title: json.title,
                 description: json.description,
                 license: json.license,
+                group: json.group ?: Plugin.DEFAULT_GROUP,
                 source: json.source,
                 documentation: json.documentation,
                 authors: json.authors.collect([]) { author ->
-                    new Author(name: author.name, email: author.email)
+                    new Author(id: author.id ?: MD5.encode(author.name), name: author.name, email: author.email)
                 },
                 releases: json.releases ? json.releases.collect([]) {parseReleaseFromJSON(it)} : [],
                 toolkits: json.toolkits.collect([]) { toolkit ->
@@ -408,27 +409,29 @@ class ArtifactSettings {
 
     static Plugin parsePluginFromXML(xml) {
         new Plugin(
-                name: xml.@name.text(),
-                title: xml.title.text(),
-                description: xml.description?.text() ?: '',
-                license: xml.license?.text() ?: '<UNKNOWN>',
-                source: '',
-                documentation: '',
-                authors: [
-                        new Author(
-                                name: xml.author?.text() ?: '',
-                                email: xml.authorEmail?.text() ?: ''
-                        )
-                ],
-                toolkits: (xml.toolkits?.text()?.split(',') ?: []).inject([]) { l, toolkit ->
-                    if (!isBlank(toolkit)) l << Toolkit.findByName(toolkit)
-                    l
-                },
-                platforms: (xml.platforms?.text()?.split(',') ?: []).inject([]) { l, platform ->
-                    if (!isBlank(platform)) l << Platform.findByName(platform)
-                    l
-                },
-                framework: false
+            name: xml.@name.text(),
+            title: xml.title.text(),
+            description: xml.description?.text() ?: '',
+            license: xml.license?.text() ?: Artifact.DEFAULT_LICENSE,
+            group: xml.group?.text() ?: Plugin.DEFAULT_GROUP,
+            source: '',
+            documentation: '',
+            authors: [
+                new Author(
+                    id: MD5.encode(xml.author?.text() ?: xml.@name.text()),
+                    name: xml.author?.text() ?: '',
+                    email: xml.authorEmail?.text() ?: ''
+                )
+            ],
+            toolkits: (xml.toolkits?.text()?.split(',') ?: []).inject([]) { l, toolkit ->
+                if (!isBlank(toolkit)) l << Toolkit.findByName(toolkit)
+                l
+            },
+            platforms: (xml.platforms?.text()?.split(',') ?: []).inject([]) { l, platform ->
+                if (!isBlank(platform)) l << Platform.findByName(platform)
+                l
+            },
+            framework: false
         )
     }
 

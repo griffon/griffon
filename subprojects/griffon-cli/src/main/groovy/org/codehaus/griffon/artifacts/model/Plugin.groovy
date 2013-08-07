@@ -23,17 +23,19 @@ import groovy.json.JsonBuilder
  * @since 0.9.5
  */
 class Plugin extends Artifact {
-    public static final String TYPE = 'plugin'
+    static final String TYPE = 'plugin'
+    static final String DEFAULT_GROUP = 'org.codehaus.griffon.plugins'
 
+    String group = DEFAULT_GROUP
     List<Toolkit> toolkits = []
     List<Platform> platforms = []
     boolean framework
 
     String toString() {
         super.toString() + [
-                toolkits: toolkits,
-                platforms: platforms,
-                framework: framework
+            toolkits: toolkits,
+            platforms: platforms,
+            framework: framework
         ]
     }
 
@@ -45,17 +47,18 @@ class Plugin extends Artifact {
 
     Map asMap(boolean includeReleases = true) {
         Map map = [
-                type: type,
-                name: name,
-                title: title,
-                license: license,
-                source: source ?: '',
-                documentation: documentation ?: '',
-                toolkits: toolkits*.getLowercaseName(),
-                platforms: platforms*.getLowercaseName(),
-                authors: authors*.asMap(),
-                framework:  framework,
-                description: description
+            type: type,
+            name: name,
+            group: group,
+            title: title,
+            license: license,
+            source: source ?: '',
+            documentation: documentation ?: '',
+            toolkits: toolkits*.getLowercaseName(),
+            platforms: platforms*.getLowercaseName(),
+            authors: authors*.asMap(),
+            framework: framework,
+            description: description
         ]
         if (includeReleases) {
             map.releases = releases*.asMap()

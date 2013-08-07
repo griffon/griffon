@@ -53,14 +53,15 @@ loadArtifactInfo = { String type, Resource artifactDescriptor ->
             exit(1)
         }
         List authors = [
-                [
-                        name: 'Your Name',
-                        email: 'your@email.com'
-                ]
+            [
+                id: 'yourDeveloperId',
+                name: 'Your Name',
+                email: 'your@email.com'
+            ]
         ]
 
         if (descriptorInstance.authors == authors) {
-            println "Please update the artifact's autorship information before releasing."
+            println "Please update the artifact's authorship information before releasing."
             exit(1)
         }
 
@@ -109,6 +110,11 @@ Lorem ipsum
                 },
                 framework: false
         ]
+        try {
+            map.group = descriptorInstance.group
+        } catch(MissingPropertyException mpe) {
+            map.group = Plugin.DEFAULT_GROUP
+        }
         try {
             map.framework = descriptorInstance.framework
         } catch(MissingPropertyException mpe) {

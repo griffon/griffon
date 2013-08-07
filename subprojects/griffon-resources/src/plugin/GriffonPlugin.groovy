@@ -3,6 +3,8 @@ class @plugin.name@GriffonPlugin {
     String version = '@plugin.version@'
     // the version or versions of Griffon the plugin is designed for
     String griffonVersion = '@griffon.version@ > *'
+    // group id used for publishing to a maven repository
+    String group = ''
     // the other plugins this plugin depends on
     Map dependsOn = [:]
     // resources that are included in plugin packaging
@@ -10,7 +12,7 @@ class @plugin.name@GriffonPlugin {
     // the plugin license
     String license = '<UNKNOWN>'
     // Toolkit compatibility. No value means compatible with all
-    // Valid values are: swing, javafx, swt, pivot, qt
+    // Valid values are: swing, javafx, swt, pivot, qt, lanterna
     List toolkits = []
     // Platform compatibility. No value means compatible with all
     // Valid values are:
@@ -28,6 +30,7 @@ class @plugin.name@GriffonPlugin {
 
     List authors = [
         [
+            id: 'yourDeveloperId',
             name: 'Your Name',
             email: 'your@email.com'
         ]

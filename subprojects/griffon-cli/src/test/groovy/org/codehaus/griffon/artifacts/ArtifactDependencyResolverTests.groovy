@@ -271,6 +271,7 @@ class ArtifactDependencyResolverTests extends GroovyTestCase {
                 title: name,
                 description: name,
                 license: name,
+                group: name
         )
 
         def n = [0, 1, 2]
