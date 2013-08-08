@@ -117,11 +117,6 @@ task bambooStage2(dependsOn: [bambooStage1, fullDist, rpm]) {
     description = "Makes a full test run and assembles all packages."
 }
 
-task wrapper(type: Wrapper) {
-    gradleVersion = '1.6'
-    jarFile = 'gradle/wrapper/gradle-wrapper.jar'
-}
-
 def mavenizedProjects() {
     [
         project(':griffon-rt'),
