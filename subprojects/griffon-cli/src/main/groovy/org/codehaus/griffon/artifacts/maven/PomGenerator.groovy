@@ -68,7 +68,7 @@ class PomGenerator {
             modelVersion('4.0.0')
             cls()
         }
-        return '<?xml version="1.0"?>\n'+ sw.toString()
+        return '<?xml version="1.0"?>\n' + sw.toString()
     }
 
     void generatePluginPom(String scp, Collection<PluginDependenciesParser.Dependency> deps) {
@@ -91,7 +91,7 @@ class PomGenerator {
                         artifactId('griffon-rt')
                         version(settings.griffonVersion)
                     }
-                } else if (scp == 'compile') {
+                } else if (scp == 'compile' && artifactInfo.runtime) {
                     dependency {
                         groupId(artifactInfo.group)
                         artifactId("griffon-${artifactInfo.name}-runtime")
@@ -99,11 +99,20 @@ class PomGenerator {
                         scope(scp)
                     }
                 } else {
-                    dependency {
-                        groupId(artifactInfo.group)
-                        artifactId("griffon-${artifactInfo.name}-compile")
-                        version(artifactInfo.version)
-                        scope(scp)
+                    if (artifactInfo.commpile) {
+                        dependency {
+                            groupId(artifactInfo.group)
+                            artifactId("griffon-${artifactInfo.name}-compile")
+                            version(artifactInfo.version)
+                            scope(scp)
+                        }
+                    } else if (artifactInfo.runtime) {
+                        dependency {
+                            groupId(artifactInfo.group)
+                            artifactId("griffon-${artifactInfo.name}-runtime")
+                            version(artifactInfo.version)
+                            scope(scp)
+                        }
                     }
                 }
                 if (scp == 'runtime') {

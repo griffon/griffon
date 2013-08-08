@@ -93,9 +93,15 @@ target(name: 'package_plugin', description: '',
     File compileJar = new File("${artifactPackageDirPath}/dist/griffon-${pluginName}-compile-${pluginVersion}.jar")
     File testJar = new File("${artifactPackageDirPath}/dist/griffon-${pluginName}-test-${pluginVersion}.jar")
 
+    Map pomParams = [:]
+    pomParams.putAll(artifactInfo)
+    pomParams.runtime = runtimeJar.exists()
+    pomParams.compile = compileJar.exists()
+    pomParams.test = testJar.exists()
+
     List modules = []
     String compile = ''
-    PomGenerator pomGenerator = new PomGenerator(griffonSettings, artifactInfo, artifactPackageDirPath)
+    PomGenerator pomGenerator = new PomGenerator(griffonSettings, pomParams, artifactPackageDirPath)
     if (runtimeJar.exists()) {
         compile = "compile(group: '${artifactInfo.group}', name: 'griffon-${pluginName}-runtime', version: '${pluginVersion}')"
         pomGenerator.generatePluginPom('runtime', dependencies.runtime + dependencies.compile)
