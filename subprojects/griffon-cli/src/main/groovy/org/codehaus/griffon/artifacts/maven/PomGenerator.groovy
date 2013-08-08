@@ -78,7 +78,6 @@ class PomGenerator {
                 artifactId("griffon-${artifactInfo.name}-parent")
                 version(artifactInfo.version)
             }
-            groupId(artifactInfo.group)
             artifactId("griffon-${artifactInfo.name}-${scp}")
             version(artifactInfo.version)
             packaging('jar')
