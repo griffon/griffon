@@ -68,7 +68,7 @@ class PomGenerator {
             modelVersion('4.0.0')
             cls()
         }
-        return sw.toString()
+        return '<?xml version="1.0"?>\n'+ sw.toString()
     }
 
     void generatePluginPom(String scp, Collection<PluginDependenciesParser.Dependency> deps) {
