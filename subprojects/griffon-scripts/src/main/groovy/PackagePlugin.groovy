@@ -93,6 +93,7 @@ target(name: 'package_plugin', description: '',
     File compileJar = new File("${artifactPackageDirPath}/dist/griffon-${pluginName}-compile-${pluginVersion}.jar")
     File testJar = new File("${artifactPackageDirPath}/dist/griffon-${pluginName}-test-${pluginVersion}.jar")
 
+    /*
     Map pomParams = [:]
     pomParams.putAll(artifactInfo)
     pomParams.runtime = runtimeJar.exists()
@@ -100,28 +101,31 @@ target(name: 'package_plugin', description: '',
     pomParams.test = testJar.exists()
 
     List modules = []
+    */
     String compile = ''
-    PomGenerator pomGenerator = new PomGenerator(griffonSettings, pomParams, artifactPackageDirPath)
+    // PomGenerator pomGenerator = new PomGenerator(griffonSettings, pomParams, artifactPackageDirPath)
     if (runtimeJar.exists()) {
         compile = "compile(group: '${artifactInfo.group}', name: 'griffon-${pluginName}-runtime', version: '${pluginVersion}')"
-        pomGenerator.generatePluginPom('runtime', dependencies.runtime + dependencies.compile)
-        modules << 'runtime'
+        // pomGenerator.generatePluginPom('runtime', dependencies.runtime + dependencies.compile)
+        // modules << 'runtime'
     }
     if (compileJar.exists()) {
         compile += "\n\tbuild(group: '${artifactInfo.group}', name: 'griffon-${pluginName}-compile', version: '${pluginVersion}')"
-        pomGenerator.generatePluginPom('compile', dependencies.build)
-        modules << 'compile'
+        // pomGenerator.generatePluginPom('compile', dependencies.build)
+        // modules << 'compile'
     }
     String test = ''
     if (testJar.exists()) {
         test = "test(group: '${artifactInfo.group}', name: 'griffon-${pluginName}-test', version: '${pluginVersion}')"
-        pomGenerator.generatePluginPom('test', dependencies.test)
-        modules << 'test'
+        // pomGenerator.generatePluginPom('test', dependencies.test)
+        // modules << 'test'
     }
+    /*
     if (modules) {
         pomGenerator.generatePluginParentPom(modules)
         pomGenerator.generatePluginBom(modules)
     }
+    */
 
     if (compile || test) {
         File dependencyDescriptor = new File("${artifactPackageDirPath}/plugin-dependencies.groovy")

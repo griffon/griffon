@@ -167,7 +167,9 @@ class PomGenerator {
             }
         }
 
-        new File("${targetDirPath}/pom-${scp}.xml").text = pom
+        File parentDir = new File("${targetDirPath}/poms")
+        parentDir.mkdirs()
+        new File("${parentDir}/${scp}.xml").text = pom
     }
 
     void generatePluginParentPom(List mods) {
@@ -208,7 +210,9 @@ class PomGenerator {
             }
         }
 
-        new File("${targetDirPath}/pom-parent.xml").text = pom
+        File parentDir = new File("${targetDirPath}/poms")
+        parentDir.mkdirs()
+        new File("${parentDir}/parent.xml").text = pom
     }
 
     void generatePluginBom(List mods) {
@@ -255,6 +259,8 @@ class PomGenerator {
             }
         }
 
-        new File("${targetDirPath}/pom-bom.xml").text = pom
+        File parentDir = new File("${targetDirPath}/poms")
+        parentDir.mkdirs()
+        new File("${parentDir}/bom.xml").text = pom
     }
 }
