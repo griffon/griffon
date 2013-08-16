@@ -72,7 +72,8 @@ target(name: 'upgrade', description: "Upgrades a Griffon application from a prev
     props.load(appMetadataFile.newReader())
     String currentSwingVersion = '1.3.0'
 
-    if (appGriffonVersion == '1.1.0' || appGriffonVersion == '1.2.0' || appGriffonVersion == '1.3.0') {
+    if (appGriffonVersion == '1.1.0' || appGriffonVersion == '1.2.0' ||
+        appGriffonVersion == '1.3.0' || appGriffonVersion == '1.4.0') {
         event("StatusUpdate", ["Updating application.properties"])
         if (props.getProperty('plugins.swing')) {
             updateMetadata(appMetadataFile, 'plugins.swing': currentSwingVersion)
