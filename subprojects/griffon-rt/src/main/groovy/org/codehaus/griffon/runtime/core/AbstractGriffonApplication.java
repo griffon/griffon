@@ -227,19 +227,19 @@ public abstract class AbstractGriffonApplication extends AbstractObservable impl
     }
 
     public void initialize() {
-        if (phase == ApplicationPhase.INITIALIZE) {
+        if (getPhase() == ApplicationPhase.INITIALIZE) {
             GriffonApplicationHelper.prepare(this);
         }
     }
 
     public void ready() {
-        if (phase != ApplicationPhase.STARTUP) return;
+        if (getPhase() != ApplicationPhase.STARTUP) return;
 
-        phase = ApplicationPhase.READY;
+        setPhase(ApplicationPhase.READY);
         event(GriffonApplication.Event.READY_START.getName(), asList(this));
         GriffonApplicationHelper.runLifecycleHandler(GriffonApplication.Lifecycle.READY.getName(), this);
         event(GriffonApplication.Event.READY_END.getName(), asList(this));
-        phase = ApplicationPhase.MAIN;
+        setPhase(ApplicationPhase.MAIN);
     }
 
     public boolean canShutdown() {
@@ -265,13 +265,13 @@ public abstract class AbstractGriffonApplication extends AbstractObservable impl
     public boolean shutdown() {
         // avoids reentrant calls to shutdown()
         // once permission to quit has been granted
-        if (phase == ApplicationPhase.SHUTDOWN) return false;
+        if (getPhase() == ApplicationPhase.SHUTDOWN) return false;
 
         if (!canShutdown()) return false;
         log.info("Shutdown is in process");
 
         // signal that shutdown is in process
-        phase = ApplicationPhase.SHUTDOWN;
+        setPhase(ApplicationPhase.SHUTDOWN);
 
         // stage 1 - alert all app event handlers
         // wait for all handlers to complete before proceeding
@@ -322,9 +322,9 @@ public abstract class AbstractGriffonApplication extends AbstractObservable impl
     }
 
     public void startup() {
-        if (phase != ApplicationPhase.INITIALIZE) return;
+        if (getPhase() != ApplicationPhase.INITIALIZE) return;
 
-        phase = ApplicationPhase.STARTUP;
+        setPhase(ApplicationPhase.STARTUP);
         event(GriffonApplication.Event.STARTUP_START.getName(), asList(this));
 
         Object startupGroups = ConfigUtils.getConfigValue(getConfig(), "application.startupGroups");
@@ -456,7 +456,7 @@ public abstract class AbstractGriffonApplication extends AbstractObservable impl
 
     protected void setPhase(ApplicationPhase phase) {
         synchronized (lock) {
-            this.phase = phase;
+            firePropertyChange("phase", this.phase, this.phase = phase);
         }
     }
 
