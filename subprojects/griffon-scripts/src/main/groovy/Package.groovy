@@ -220,7 +220,7 @@ target(name: 'package_applet', description: "Creates an applet distribution and 
     depends(prepackage)
     generateJNLP()
 
-    ant.copy(todir: targetDistDir) {
+    ant.copy(todir: targetDistDir, overwrite: true) {
         fileset(dir: buildConfig.griffon.jars.destDir, excludes: buildConfig.griffon.webstart.jnlp)
     }
     _copySharedFiles(targetDistDir)
@@ -247,7 +247,7 @@ target(name: 'package_webstart', description: "Creates a webstart distribution a
     depends(prepackage)
     generateJNLP()
 
-    ant.copy(todir: targetDistDir) {
+    ant.copy(todir: targetDistDir, overwrite: true) {
         fileset(dir: buildConfig.griffon.jars.destDir, excludes: "${buildConfig.griffon.applet.jnlp}, ${buildConfig.griffon.applet.html}")
     }
     _copySharedFiles(targetDistDir)
@@ -287,7 +287,7 @@ signJNLP = {
 
 target(name: '_copyAppLibs', description: "", prehook: null, posthook: null) {
     ant.mkdir(dir: "${targetDistDir}/lib")
-    ant.copy(todir: "${targetDistDir}/lib") {
+    ant.copy(todir: "${targetDistDir}/lib", overwrite: true) {
         fileset(dir: buildConfig.griffon.jars.destDir, includes: "**/*.jar")
     }
 }
@@ -333,7 +333,7 @@ target(name: '_copyLaunchScripts', description: "", prehook: null, posthook: nul
 _copyFiles = { srcdir, path ->
     def files = new File(srcdir in File ? srcdir.absolutePath : srcdir, path)
     if (files.exists()) {
-        ant.copy(todir: targetDistDir) {
+        ant.copy(todir: targetDistDir, overwrite: true) {
             fileset(dir: files)
         }
     }

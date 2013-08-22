@@ -98,7 +98,7 @@ target(name: 'packageResources', description: "Presp app/plugin resources for pa
         if (!isAddonPlugin) collectAddonMetadata()
     }
 
-    ant.copy(todir: resourcesDir) {
+    ant.copy(todir: resourcesDir, overwrite: true) {
         fileset(dir: "${basedir}/src/main") {
             include(name: "**/*")
             exclude(name: "**/*.java")
@@ -107,7 +107,7 @@ target(name: 'packageResources', description: "Presp app/plugin resources for pa
     }
 
     def copyResourceFiles = { sourceDir, targetDir ->
-        ant.copy(todir: targetDir) {
+        ant.copy(todir: targetDir, overwrite: true) {
             fileset(dir: sourceDir, excludes: "**/*.properties")
         }
         if (buildConfig.griffon.enable.native2ascii) {
@@ -116,7 +116,7 @@ target(name: 'packageResources', description: "Presp app/plugin resources for pa
                 includes: "**/*.properties",
                 encoding: "UTF-8")
         } else {
-            ant.copy(todir: targetDir) {
+            ant.copy(todir: targetDir, overwrite: true) {
                 fileset(dir: sourceDir, includes: "**/*.properties")
             }
         }
@@ -129,7 +129,7 @@ target(name: 'packageResources', description: "Presp app/plugin resources for pa
         if (path.exists()) copyResourceFiles("${basedir}/${path}", resourcesDir)
     }
 
-    ant.copy(todir: projectMainClassesDir) {
+    ant.copy(todir: projectMainClassesDir, overwrite: true) {
         fileset(dir: "${basedir}", includes: metadataFile.name)
     }
 
@@ -137,7 +137,7 @@ target(name: 'packageResources', description: "Presp app/plugin resources for pa
     File metaFile = new File(projectMainClassesDir, metadataFile.name)
     updateMetadata(metaFile, (Environment.KEY): Environment.current.name)
 
-    ant.copy(todir: resourcesDirPath, failonerror: false) {
+    ant.copy(todir: resourcesDirPath, failonerror: false, overwrite: true) {
         fileset(dir: "${basedir}/griffon-app/conf", includes: "**", excludes: "*.groovy, log4j*, webstart")
         fileset(dir: "${basedir}/src/main") {
             include(name: "**/**")

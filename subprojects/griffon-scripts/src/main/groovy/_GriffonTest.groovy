@@ -98,7 +98,7 @@ packageFiles = { String from ->
     def targetPath = griffonSettings.resourcesDir.path
     def dir = new File(from, "griffon-app/conf")
     if (dir.exists()) {
-        ant.copy(todir: targetPath, failonerror: false) {
+        ant.copy(todir: targetPath, failonerror: false, overwrite: true) {
             fileset(dir: dir.path) {
                 exclude(name: "**/*.groovy")
                 exclude(name: "**/log4j*")
@@ -108,7 +108,7 @@ packageFiles = { String from ->
 
     dir = new File(from, "src/main")
     if (dir.exists()) {
-        ant.copy(todir: targetPath, failonerror: false) {
+        ant.copy(todir: targetPath, failonerror: false, overwrite: true) {
             fileset(dir: dir.path) {
                 exclude(name: "**/*.groovy")
                 exclude(name: "**/*.java")
