@@ -127,7 +127,7 @@ target(name: 'compile', description: "Implementation of compilation phase",
             exclude(name: 'BuildConfig.groovy')
             javac(compilerOptions(classpathref: classpathId))
         }
-        ant.copy(todir: projectMainClassesDir) {
+        ant.copy(todir: projectMainClassesDir, overwrite: true) {
             fileset(dir: "${basedir}/griffon-app/conf") {
                 include(name: '*.properties')
                 include(name: '*.xml')
@@ -146,7 +146,7 @@ target(name: 'compile', description: "Implementation of compilation phase",
                 src(path: cliSourceDir)
                 javac(compilerOptions(classpathref: 'plugin.cli.compile.classpath'))
             }
-            ant.copy(todir: projectCliClassesDir) {
+            ant.copy(todir: projectCliClassesDir, overwrite: true) {
                 fileset(dir: "${basedir}/src/cli") {
                     exclude(name: '**/*.java')
                     exclude(name: '**/*.groovy')
@@ -180,7 +180,7 @@ target(name: 'compileProjectTests', description: "Compiles shared test sources",
     boolean hasMetainf = hasFiles(dir: metainfDir, excludes: '**/*.svn/**, **/CVS/**')
     if (hasMetainf) {
         def metaResourcesDir = new File("${testResourcesDirPath}/META-INF")
-        ant.copy(todir: metaResourcesDir) {
+        ant.copy(todir: metaResourcesDir, overwrite: true) {
             fileset(dir: metainfDir)
         }
         addUrlIfNotPresent classLoader, testResourcesDirPath
@@ -208,7 +208,7 @@ compileProjectTestSrc = { rootDir ->
     boolean hasTestResources = hasFiles(dir: testResources, excludes: '**/*.svn/**, **/CVS/**')
     if (hasTestResources) {
         ant.mkdir(dir: testResourcesDirPath)
-        ant.copy(todir: testResourcesDirPath) {
+        ant.copy(todir: testResourcesDirPath, overwrite: true) {
             fileset(dir: testResources)
         }
         addUrlIfNotPresent classLoader, testResourcesDirPath
