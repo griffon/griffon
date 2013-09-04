@@ -27,12 +27,19 @@ import org.codehaus.groovy.runtime.InvokerHelper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.beans.PropertyDescriptor;
 import java.beans.PropertyEditor;
 import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
+import static griffon.util.GriffonClassUtils.getPropertyDescriptors;
 import static griffon.util.GriffonExceptionHandler.sanitize;
 import static griffon.util.GriffonNameUtils.isBlank;
+import static java.lang.reflect.Modifier.isStatic;
 
 /**
  * @author Andres Almiray
@@ -62,20 +69,69 @@ public abstract class AbstractResourcesInjector implements ResourcesInjector {
 
     protected boolean doResourceInjection(Class klass, Object instance) {
         boolean injected = false;
-        for (Field field : klass.getDeclaredFields()) {
-            if (field.isSynthetic()) continue;
-            final InjectedResource annotation = field.getAnnotation(InjectedResource.class);
+        List<String> names = new ArrayList<String>();
+
+        PropertyDescriptor[] propertyDescriptors = getPropertyDescriptors(klass);
+        for (PropertyDescriptor pd : propertyDescriptors) {
+            Method method = pd.getWriteMethod();
+            if (null == method || isStatic(method.getModifiers())) {
+                continue;
+            }
+
+            final InjectedResource annotation = method.getAnnotation(InjectedResource.class);
             if (null == annotation) continue;
 
-            String fqFieldName = field.getDeclaringClass().getName().replace('$', '.') + "." + field.getName();
+            String propertyName = pd.getName();
+            String fqName = method.getDeclaringClass().getName().replace('$', '.') + "." + propertyName;
             String key = annotation.key();
             String[] args = annotation.args();
             String defaultValue = annotation.defaultValue();
             String format = annotation.format();
-            if (isBlank(key)) key = fqFieldName;
+            if (isBlank(key)) key = fqName;
 
             if (LOG.isDebugEnabled()) {
-                LOG.debug("Field " + fqFieldName +
+                LOG.debug("Property " + propertyName +
+                    " of instance " + instance +
+                    " [key='" + key +
+                    "', args='" + Arrays.toString(args) +
+                    "', defaultValue='" + defaultValue +
+                    "', format='" + format +
+                    "'] is marked for resource injection.");
+            }
+
+            Object value = null;
+            if (isBlank(defaultValue)) {
+                value = resolveResource(key, args);
+            } else {
+                value = resolveResource(key, args, defaultValue);
+            }
+
+            if (null != value) {
+                Class<?> propertyTpye = method.getParameterTypes()[0];
+                if (!propertyTpye.isAssignableFrom(value.getClass())) {
+                    value = convertValue(propertyTpye, value, format);
+                }
+                setPropertyValue(instance, method, value, fqName);
+            }
+            names.add(propertyName);
+            injected = true;
+        }
+
+        for (Field field : klass.getDeclaredFields()) {
+            if (field.isSynthetic() || names.contains(field.getName()))
+                continue;
+            final InjectedResource annotation = field.getAnnotation(InjectedResource.class);
+            if (null == annotation) continue;
+
+            String fqName = field.getDeclaringClass().getName().replace('$', '.') + "." + field.getName();
+            String key = annotation.key();
+            String[] args = annotation.args();
+            String defaultValue = annotation.defaultValue();
+            String format = annotation.format();
+            if (isBlank(key)) key = fqName;
+
+            if (LOG.isDebugEnabled()) {
+                LOG.debug("Field " + fqName +
                     " of instance " + instance +
                     " [key='" + key +
                     "', args='" + Arrays.toString(args) +
@@ -95,7 +151,7 @@ public abstract class AbstractResourcesInjector implements ResourcesInjector {
                 if (!field.getType().isAssignableFrom(value.getClass())) {
                     value = convertValue(field.getType(), value, format);
                 }
-                setFieldValue(instance, field, value, fqFieldName);
+                setFieldValue(instance, field, value, fqName);
             }
             injected = true;
         }
@@ -123,6 +179,20 @@ public abstract class AbstractResourcesInjector implements ResourcesInjector {
             ((ExtendedPropertyEditor) propertyEditor).setFormat(format);
         }
         return propertyEditor;
+    }
+
+    protected void setPropertyValue(Object instance, Method method, Object value, String fqName) {
+        try {
+            method.invoke(instance, value);
+        } catch (IllegalAccessException e) {
+            if (LOG.isWarnEnabled()) {
+                LOG.warn("Cannot set value on property " + fqName + " of instance " + instance, sanitize(e));
+            }
+        } catch (InvocationTargetException e) {
+            if (LOG.isWarnEnabled()) {
+                LOG.warn("Cannot set value on property " + fqName + " of instance " + instance, sanitize(e));
+            }
+        }
     }
 
     protected void setFieldValue(Object instance, Field field, Object value, String fqFieldName) {
