@@ -41,11 +41,14 @@ class MetaComponentFactory extends AbstractFactory {
         MVCGroup mvcGroup = ApplicationHolder.application.buildMVCGroup(mvcType, mvcName, attributes)
         def root = mvcGroup.getScriptResult('view')
 
-        ApplicationHolder.application.addApplicationEventListener(GriffonApplication.Event.DESTROY_MVC_GROUP.name, { String parentId, MVCGroup childGroup, MVCGroup destroyedGroup ->
+        Closure destroyEventHandler
+        destroyEventHandler = { String parentId, MVCGroup childGroup, MVCGroup destroyedGroup ->
             if (destroyedGroup.mvcId == parentId) {
                 childGroup.destroy()
+                ApplicationHolder.application.removeApplicationEventListener(GriffonApplication.Event.DESTROY_MVC_GROUP.name, destroyEventHandler)
             }
-        }.curry(builder.mvcName, mvcGroup))
+        }.curry(builder.mvcName, mvcGroup)
+        ApplicationHolder.application.addApplicationEventListener(GriffonApplication.Event.DESTROY_MVC_GROUP.name, destroyEventHandler)
 
         builder.context.root = root
         builder.context.mvcGroup = mvcGroup
