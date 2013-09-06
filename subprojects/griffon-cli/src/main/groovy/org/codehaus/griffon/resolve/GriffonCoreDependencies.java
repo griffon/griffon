@@ -168,7 +168,7 @@ public class GriffonCoreDependencies {
                         ModuleRevisionId[] docDependencies = {
                                 ModuleRevisionId.newInstance("org.xhtmlrenderer", "core-renderer", "R8"),
                                 ModuleRevisionId.newInstance("com.lowagie", "itext", "2.0.8"),
-                                ModuleRevisionId.newInstance("org.grails", "grails-docs", "2.2.3"),
+                                ModuleRevisionId.newInstance("org.grails", "grails-docs", "2.2.4"),
                                 ModuleRevisionId.newInstance("org.grails", "grails-gdoc-engine", "1.0.1"),
                                 ModuleRevisionId.newInstance("org.yaml", "snakeyaml", "1.9"),
                                 ModuleRevisionId.newInstance("commons-lang", "commons-lang", "2.6"),
