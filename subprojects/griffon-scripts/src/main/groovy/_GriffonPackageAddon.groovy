@@ -121,7 +121,6 @@ target(name: 'packageAddon', description: 'Packages a Griffon addon',
             exclude(name: '*GriffonPlugin*.class')
             exclude(name: 'application.properties')
         }
-        fileset(dir: i18nDir)
         fileset(dir: resourcesDir)
 
         manifest {

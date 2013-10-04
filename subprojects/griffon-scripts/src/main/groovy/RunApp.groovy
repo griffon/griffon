@@ -131,7 +131,7 @@ target(name: 'doRunApp', description: "Runs the application from the command lin
         f.absolutePath.startsWith(jardir.absolutePath) ? f.absolutePath - jardir.absolutePath - File.separator : f
     }.join(File.pathSeparator)
 
-    runtimeClasspath = [i18nDir, resourcesDir, runtimeClasspath, projectMainClassesDir].join(File.pathSeparator)
+    runtimeClasspath = [resourcesDir, runtimeClasspath, projectMainClassesDir].join(File.pathSeparator)
     runtimeClasspath = quote(runtimeClasspath)
 
     event 'StatusUpdate', ['Launching application']

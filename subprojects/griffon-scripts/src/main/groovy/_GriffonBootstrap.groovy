@@ -43,7 +43,7 @@ target(name: 'bootstrap', description: 'Loads and configures a Griffon instance'
 target(name: 'setupApp', description: 'Setups paths and JVM options for running a Griffon application', prehook: null, posthook: null) {
     depends(prepackage)
 
-    [projectMainClassesDir, i18nDir, resourcesDir].each { d ->
+    [projectMainClassesDir, resourcesDir].each { d ->
         addUrlIfNotPresent rootLoader, d
     }
     setupRuntimeJars().each { j ->
