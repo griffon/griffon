@@ -164,7 +164,7 @@ collectArtifactMetadata = {
     }
 
     if (artifacts) {
-        File artifactMetadataDir = new File("${resourcesDirPath}/META-INF")// new File("${resourcesDirPath}/griffon-app/resources/META-INF")
+        File artifactMetadataDir = new File("${resourcesDirPath}/META-INF")
         artifactMetadataDir.mkdirs()
         File artifactMetadataFile = new File(artifactMetadataDir, '/griffon-artifacts.properties')
         artifactMetadataFile.withPrintWriter { writer ->
@@ -189,7 +189,7 @@ collectAddonMetadata = {
         String toolkit = Metadata.current.getApplicationToolkit()
         String toolkitVersion = addons.remove(toolkit)
         addons = [(toolkit): toolkitVersion] + addons
-        File addonMetadataDir = new File("${resourcesDirPath}/META-INF") // new File("${resourcesDirPath}/griffon-app/resources/META-INF")
+        File addonMetadataDir = new File("${resourcesDirPath}/META-INF")
         addonMetadataDir.mkdirs()
         File addonMetadataFile = new File(addonMetadataDir, '/griffon-addons.properties')
         addonMetadataFile.withPrintWriter { writer ->

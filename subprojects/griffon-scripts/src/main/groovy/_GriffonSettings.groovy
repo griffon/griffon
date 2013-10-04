@@ -73,7 +73,7 @@ configSlurper.setBinding(
 configSlurper.registerConditionalBlock('projects', griffonAppName)
 
 if (!buildConfig.griffon.jars.destDir) buildConfig.griffon.jars.destDir = "${basedir}/staging"
-if (!buildConfig.griffon.jars.jarName) buildConfig.griffon.jars.jarName = "${griffonAppName}.jar"
+if (!buildConfig.griffon.jars.jarName) buildConfig.griffon.jars.jarName = "${griffonAppName}-${griffonAppVersion}.jar"
 
 // No point doing this stuff more than once.
 if (getBinding().variables.containsKey("_settings_called")) return true
