@@ -146,7 +146,7 @@ createArtifact = { Map args = [:] ->
     }
 
     event('CreatedFile', [artifactFile])
-    event('CreatedArtefact', [type, className])
+    event('CreatedArtefact', [type, className + suffix])
     fileType = originalFileType
 }
 
@@ -200,12 +200,22 @@ createDefaultPackage = {
 
 doCreateIntegrationTest = { Map args = [:] ->
     def superClass = args["superClass"] ?: "GriffonUnitTestCase"
-    createArtifact(name: args["name"], suffix: "${args['suffix']}Tests", type: "IntegrationTests", path: "test/integration", superClass: superClass)
+    createArtifact(name: args["name"],
+        suffix: "${args['suffix']}Tests",
+        type: "IntegrationTests",
+        template: args.template ?: 'IntegrationTests',
+        path: "test/integration",
+        superClass: superClass)
 }
 
 doCreateUnitTest = { Map args = [:] ->
     def superClass = args["superClass"] ?: "GriffonUnitTestCase"
-    createArtifact(name: args["name"], suffix: "${args['suffix']}Tests", type: "Tests", path: "test/unit", superClass: superClass)
+    createArtifact(name: args["name"],
+        suffix: "${args['suffix']}Tests",
+        type: "Tests",
+        template: args.template ?: 'Tests',
+        path: "test/unit",
+        superClass: superClass)
 }
 
 promptForName = { Map args = [:] ->

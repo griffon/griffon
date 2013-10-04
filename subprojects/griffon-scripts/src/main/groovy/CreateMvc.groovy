@@ -62,38 +62,43 @@ Type in griffon create-addon then execute this command again."""
     String modelClassName = ''
     if (!argsMap['skip-model'] && !argsMap['with-model']) {
         createArtifact(
-                name:     mvcFullQualifiedClassName,
-                suffix:   'Model',
-                type:     'Model',
-                template: modelTemplate,
-                path:     'griffon-app/models')
+            name: mvcFullQualifiedClassName,
+            suffix: 'Model',
+            type: 'Model',
+            template: modelTemplate,
+            path: 'griffon-app/models')
         modelClassName = fullyQualifiedClassName
+        doCreateUnitTest(
+            name: mvcFullQualifiedClassName,
+            template: 'ArtifactTests',
+            suffix: 'Model')
     }
 
     String viewClassName = ''
     if (!argsMap['skip-view'] && !argsMap['with-view']) {
         createArtifact(
-                name:     mvcFullQualifiedClassName,
-                suffix:   'View',
-                type:     'View',
-                template: viewTemplate,
-                path:     'griffon-app/views')
+            name: mvcFullQualifiedClassName,
+            suffix: 'View',
+            type: 'View',
+            template: viewTemplate,
+            path: 'griffon-app/views')
         viewClassName = fullyQualifiedClassName
     }
 
     String controllerClassName = ''
     if (!argsMap['skip-controller'] && !argsMap['with-controller']) {
         createArtifact(
-                name:     mvcFullQualifiedClassName,
-                suffix:   'Controller',
-                type:     'Controller',
-                template: controllerTemplate,
-                path:     'griffon-app/controllers')
+            name: mvcFullQualifiedClassName,
+            suffix: 'Controller',
+            type: 'Controller',
+            template: controllerTemplate,
+            path: 'griffon-app/controllers')
         controllerClassName = fullyQualifiedClassName
 
         doCreateUnitTest(
-                name:   mvcFullQualifiedClassName,
-                suffix: 'Controller')
+            name: mvcFullQualifiedClassName,
+            template: 'ArtifactTests',
+            suffix: 'Controller')
     }
 
     name = GriffonNameUtils.getPropertyName(name)

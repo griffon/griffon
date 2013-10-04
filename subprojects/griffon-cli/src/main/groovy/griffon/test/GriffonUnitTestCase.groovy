@@ -27,12 +27,12 @@ import griffon.core.UIThreadManager
 class GriffonUnitTestCase extends GroovyTestCase {
     Map savedMetaClasses
 
-    protected void setUp() {
+    protected void setUp() throws Exception {
         super.setUp()
         savedMetaClasses = [:]
     }
 
-    protected void tearDown() {
+    protected void tearDown() throws Exception {
         super.tearDown()
 
         // Restore all the saved meta classes.

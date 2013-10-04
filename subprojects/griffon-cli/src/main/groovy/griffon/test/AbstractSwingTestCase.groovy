@@ -22,7 +22,7 @@ import java.lang.reflect.Constructor
 import java.lang.reflect.InvocationTargetException
 
 /**
- * Base classe for Swing relatedt test.
+ * Base classe for Swing related test.
  *
  * @author Danno Ferrin
  * @author Andres Almiray
