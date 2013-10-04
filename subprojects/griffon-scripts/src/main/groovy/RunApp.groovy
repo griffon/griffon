@@ -149,9 +149,9 @@ target(name: 'doRunApp', description: "Runs the application from the command lin
             cmd << '--' + k + '=' + quote(String.valueOf(v))
         }
         argsMap.params.each { s -> cmd << s.trim() }
-        if (isWindows) cmd = cmd.collect { it.replace('\\\\', '\\') }
+        if (isWindows) cmd = cmd.collect { it.replace('\\\\', '\\').replace('"','') }
         debug("Executing ${cmd.join(' ')}")
-        Process p = Runtime.runtime.exec(isWindows? cmd.join(' ') : cmd as String[], null, jardir)
+        Process p = Runtime.runtime.exec(cmd as String[], null, jardir)
 
         // pipe the output
         p.consumeProcessOutput(System.out, System.err)
