@@ -408,6 +408,7 @@ target(name: 'createStructure', description: "Creates the application directory 
             mkdir(dir: "${basedir}/griffon-app/lifecycle")
             mkdir(dir: "${basedir}/griffon-app/models")
             mkdir(dir: "${basedir}/griffon-app/resources")
+            mkdir(dir: "${basedir}/griffon-app/resources-external")
             mkdir(dir: "${basedir}/griffon-app/views")
             mkdir(dir: "${basedir}/lib")
             mkdir(dir: "${basedir}/scripts")
