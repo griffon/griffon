@@ -100,6 +100,11 @@ class BuildSettings extends AbstractBuildSettings {
     public static final String PROJECT_RESOURCES_DIR = "griffon.project.resource.dir"
 
     /**
+     * The name of the system property for {@link #resourcesExternalDir}.
+     */
+    public static final String PROJECT_RESOURCES_EXTERNAL_DIR = "griffon.project.resource.external.dir"
+
+    /**
      * The name of the system property for {@link #sourceDir}.
      */
     public static final String PROJECT_SOURCE_DIR = "griffon.project.source.dir"
@@ -228,6 +233,9 @@ class BuildSettings extends AbstractBuildSettings {
 
     /** The location where Griffon keeps temporary copies of a project's resources. */
     File resourcesDir
+
+    /** The location where Griffon keeps temporary copies of a project's external resources. */
+    File resourcesExternalDir
 
     /** The location of the plain source. */
     File sourceDir
@@ -465,6 +473,7 @@ class BuildSettings extends AbstractBuildSettings {
     private boolean classesDirSet
     private boolean testClassesDirSet
     private boolean resourcesDirSet
+    private boolean resourcesExternalDirSet
     private boolean testResourcesDirSet
     private boolean sourceDirSet
     private boolean testReportsDirSet
@@ -658,6 +667,11 @@ class BuildSettings extends AbstractBuildSettings {
     void setResourcesDir(File dir) {
         resourcesDir = dir
         resourcesDirSet = true
+    }
+
+    void setResourcesExternalDir(File dir) {
+        resourcesExternalDir = dir
+        resourcesExternalDirSet = true
     }
 
     void setTestResourcesDir(File dir) {
@@ -980,6 +994,7 @@ class BuildSettings extends AbstractBuildSettings {
         if (!classesDirSet) classesDir = new File(getValueOf(PROJECT_CLASSES_DIR, props, "$projectWorkDir/classes"))
         if (!testClassesDirSet) testClassesDir = new File(getValueOf(PROJECT_TEST_CLASSES_DIR, props, "$projectWorkDir/test-classes"))
         if (!resourcesDirSet) resourcesDir = new File(getValueOf(PROJECT_RESOURCES_DIR, props, "$projectWorkDir/resources"))
+        if (!resourcesExternalDirSet) resourcesExternalDir = new File(getValueOf(PROJECT_RESOURCES_EXTERNAL_DIR, props, "$projectWorkDir/resources-external"))
         if (!testResourcesDirSet) testResourcesDir = new File(getValueOf(PROJECT_TEST_RESOURCES_DIR, props, "$projectWorkDir/test-resources"))
         if (!sourceDirSet) sourceDir = new File(getValueOf(PROJECT_SOURCE_DIR, props, "$baseDir/src"))
         if (!projectPluginsDirSet) this.@projectPluginsDir = new File(getValueOf(PLUGINS_DIR, props, "$projectWorkDir/plugins"))

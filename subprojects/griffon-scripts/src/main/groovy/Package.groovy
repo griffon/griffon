@@ -121,6 +121,7 @@ target(name: 'create_binary_package', description: "Creates a binary distributio
 // XXX -- NATIVE
     _copySharedFiles(targetDistDir)
     _copyPackageFiles(targetDistDir)
+    _copyExternalResources(targetDistDir)
 
     event("CreateBinaryPackageEnd", [packageType])
 }
@@ -352,6 +353,27 @@ _copyPackageFiles = { targetDistDir ->
     _copyFiles(basedir, packageFilesPath)
     pluginSettings.doWithProjectPlugins { pluginName, pluginVersion, pluginDir ->
         _copyFiles(pluginDir, packageFilesPath)
+    }
+}
+
+_copyExternalResources = { targetDistDir ->
+    File targetResourcesDir = new File("${targetDistDir}/resources")
+    targetResourcesDir.mkdirs()
+    File sourceResourcesDir = new File("${basedir}/griffon-app/resources-external")
+    if (sourceResourcesDir.exists()) {
+        ant.copy(todir: targetResourcesDir, overwrite: true) {
+            fileset(dir: sourceResourcesDir, excludes: '**/*.properties')
+        }
+        if (buildConfig.griffon.enable.native2ascii) {
+            ant.native2ascii(src: sourceResourcesDir,
+                dest: targetResourcesDir,
+                includes: '**/*.properties',
+                encoding: 'UTF-8')
+        } else {
+            ant.copy(todir: targetResourcesDir, overwrite: true) {
+                fileset(dir: sourceResourcesDir, includes: '**/*.properties')
+            }
+        }
     }
 }
 

@@ -88,22 +88,6 @@ target(name: 'packageApp', description: '',
 target(name: 'packageResources', description: "Preps app/plugin resources for packaging",
     prehook: null, posthook: null) {
 
-    resourcesDir = new File(resourcesDirPath)
-    ant.mkdir(dir: resourcesDir)
-
-    if ((!isPluginProject && !isArchetypeProject) || isAddonPlugin) {
-        collectArtifactMetadata()
-        if (!isAddonPlugin) collectAddonMetadata()
-    }
-
-    ant.copy(todir: resourcesDir, overwrite: true) {
-        fileset(dir: "${basedir}/src/main") {
-            include(name: "**/*")
-            exclude(name: "**/*.java")
-            exclude(name: "**/*.groovy")
-        }
-    }
-
     def copyResourceFiles = { sourceDir, targetDir ->
         ant.copy(todir: targetDir, overwrite: true) {
             fileset(dir: sourceDir, excludes: "**/*.properties")
@@ -117,6 +101,28 @@ target(name: 'packageResources', description: "Preps app/plugin resources for pa
             ant.copy(todir: targetDir, overwrite: true) {
                 fileset(dir: sourceDir, includes: "**/*.properties")
             }
+        }
+    }
+
+    resourcesExternalDir = new File(resourcesExternalDirPath)
+    ant.mkdir(dir: resourcesExternalDir)
+    if (!isPluginProject && !isArchetypeProject) {
+        copyResourceFiles("${basedir}/griffon-app/resources-external", resourcesExternalDir)
+    }
+
+    resourcesDir = new File(resourcesDirPath)
+    ant.mkdir(dir: resourcesDir)
+
+    if ((!isPluginProject && !isArchetypeProject) || isAddonPlugin) {
+        collectArtifactMetadata()
+        if (!isAddonPlugin) collectAddonMetadata()
+    }
+
+    ant.copy(todir: resourcesDir, overwrite: true) {
+        fileset(dir: "${basedir}/src/main") {
+            include(name: "**/*")
+            exclude(name: "**/*.java")
+            exclude(name: "**/*.groovy")
         }
     }
 

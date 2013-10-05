@@ -40,6 +40,7 @@ target(name: 'createApp', description: "Creates a Griffon application for the gi
     loadArchetypeFor 'application'
     createApplicationProject()
     resolveFileType()
+    ant.mkdir(dir: "${basedir}/griffon-app/resources-external")
 
     // Set the default version number for the application
     updateMetadata('app.version': griffonAppVersion ?: '0.1',

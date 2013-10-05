@@ -37,12 +37,13 @@ target(name: 'clean', description: "Implementation of clean", prehook: null, pos
 
 target(name: 'cleanCompiledSources', description: "Cleans compiled Java and Groovy sources", prehook: null, posthook: null) {
     [
-            projectCliClassesDir,
-            projectMainClassesDir,
-            projectTestClassesDir,
-            griffonSettings.testClassesDir,
-            griffonSettings.testResourcesDir,
-            griffonSettings.resourcesDir
+        projectCliClassesDir,
+        projectMainClassesDir,
+        projectTestClassesDir,
+        griffonSettings.testClassesDir,
+        griffonSettings.testResourcesDir,
+        griffonSettings.resourcesDir,
+        griffonSettings.resourcesExternalDir
     ].each { dir ->
         ant.delete(dir: dir, failonerror: false)
     }

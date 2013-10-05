@@ -96,12 +96,13 @@ target(name: 'compile', description: "Implementation of compilation phase",
 
     if (isApplicationProject || isPluginProject) {
         [
-                projectCliClassesDir,
-                projectMainClassesDir,
-                projectTestClassesDir,
-                griffonSettings.testClassesDir,
-                griffonSettings.testResourcesDir,
-                griffonSettings.resourcesDir
+            projectCliClassesDir,
+            projectMainClassesDir,
+            projectTestClassesDir,
+            griffonSettings.testClassesDir,
+            griffonSettings.testResourcesDir,
+            griffonSettings.resourcesDir,
+            griffonSettings.resourcesExternalDir
         ].each { dir ->
             if (!dir.exists()) ant.mkdir(dir: dir)
             addUrlIfNotPresent rootLoader, dir
