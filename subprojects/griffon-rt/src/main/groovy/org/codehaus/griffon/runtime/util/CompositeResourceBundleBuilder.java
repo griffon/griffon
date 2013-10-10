@@ -30,7 +30,7 @@ import static griffon.util.GriffonNameUtils.isBlank;
  * @since 1.5.0
  */
 public class CompositeResourceBundleBuilder {
-    private final ResourceLocator RESOURCE_LOCATOR = new ResourceLocator();
+    private final ResourceLocator resourceLocator = new ResourceLocator();
 
     private static final String PROPERTIES_SUFFIX = ".properties";
     private static final String GROOVY_SUFFIX = ".groovy";
@@ -65,11 +65,11 @@ public class CompositeResourceBundleBuilder {
     }
 
     protected List<URL> getResources(String fileName, String suffix) {
-        return RESOURCE_LOCATOR.getResources(fileName + suffix);
+        return resourceLocator.getResources(fileName + suffix);
     }
 
     protected URL getResourceAsURL(String fileName, String suffix) {
-        return RESOURCE_LOCATOR.getResourceAsURL(fileName + suffix);
+        return resourceLocator.getResourceAsURL(fileName + suffix);
     }
 
     protected Class<?> loadClass(String className) throws ClassNotFoundException {
