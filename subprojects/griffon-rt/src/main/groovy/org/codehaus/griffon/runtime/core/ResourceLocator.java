@@ -21,11 +21,10 @@ import griffon.util.ApplicationClassLoader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Enumeration;
 import java.util.List;
-
-import static org.codehaus.groovy.runtime.DefaultGroovyMethods.toList;
 
 /**
  * Base implementation of the {@link ResourceHandler} interface.
@@ -55,5 +54,13 @@ public class ResourceLocator implements ResourceHandler {
 
     private ClassLoader classLoader() {
         return ApplicationClassLoader.get();
+    }
+
+    private static <T> List<T> toList(Enumeration<T> self) {
+        List<T> answer = new ArrayList<T>();
+        while (self.hasMoreElements()) {
+            answer.add(self.nextElement());
+        }
+        return answer;
     }
 }
