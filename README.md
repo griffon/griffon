@@ -75,3 +75,7 @@ Links
 [5]: http://griffon.codehaus.org/Documentation
 [6]: http://jira.codehaus.org/browse/griffon
 [7]: https://github.com/griffon/griffon
+
+
+[![Bitdeli Badge](https://d2weczhvl823v0.cloudfront.net/griffon/griffon/trend.png)](https://bitdeli.com/free "Bitdeli Badge")
+
