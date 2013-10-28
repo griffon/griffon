@@ -23,6 +23,8 @@ import java.util.concurrent.locks.Condition
 import java.util.concurrent.locks.Lock
 import java.util.concurrent.locks.ReentrantLock
 
+import static griffon.util.GriffonApplicationUtils.isWindows
+
 /**
 * This abstract test case makes it easy to run a Griffon command and
 * query its output. It's currently configured via a set of system
@@ -66,7 +68,7 @@ abstract class AbstractCliTestCase extends GroovyTestCase {
         // Add the path to the Griffon script as the first element of
         // the command. Note that we use an absolute path.
         def cmd = [] // new ArrayList<String>(command.size() + 2)
-        cmd.add "${griffonHome}/bin/griffon".toString()
+        cmd.add "${griffonHome}/bin/griffon" + (isWindows ? '.bat' : '')
         if (System.getProperty('griffon.work.dir')) {
             cmd.add "-Dgriffon.work.dir=${System.getProperty('griffon.work.dir')}".toString()
         }
