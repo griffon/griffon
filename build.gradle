@@ -23,14 +23,19 @@ apply plugin: 'eclipse'
 
 buildscript {
     repositories {
-        add(new URLResolver()) {
-            name = 'GitHub'
-            addArtifactPattern 'http://cloud.github.com/downloads/[organisation]/[module]/[module]-[revision].[ext]'
+        jcenter()
+        maven {
+            name "Ben's Maven repo"
+            url 'http://dl.bintray.com/content/bmuschko/maven'
+        }
+        maven {
+            name "Ben's Gradle Plugins repo"
+            url 'http://dl.bintray.com/content/bmuschko/gradle-plugins'
         }
     }
     dependencies {
-        classpath 'bmuschko:gradle-izpack-plugin:0.2'
-        classpath 'bmuschko:gradle-java2html-plugin:0.3'
+        classpath 'org.gradle.api.plugins:gradle-izpack-plugin:0.2.2'
+        classpath 'org.gradle.api.plugins:gradle-java2html-plugin:0.4'
     }
 }
 
