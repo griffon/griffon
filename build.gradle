@@ -1,0 +1,122 @@
+/*
+ * Copyright 2010-2013 the original author or authors.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+import java.text.SimpleDateFormat
+import org.apache.ivy.plugins.resolver.URLResolver
+
+apply plugin: 'base'
+apply plugin: 'idea'
+apply from: 'gradle/idea.gradle'
+
+evaluationDependsOn(':griffon-core')
+evaluationDependsOn(':griffon-guice')
+evaluationDependsOn(':griffon-groovy')
+evaluationDependsOn(':griffon-swing')
+evaluationDependsOn(':griffon-javafx')
+evaluationDependsOn(':griffon-integration')
+
+subprojects { subproj ->
+    apply plugin: 'idea'
+
+    if (plugins.hasPlugin('java')) {
+        sourceCompatibility = 1.7
+        targetCompatibility = 1.7
+        group = 'org.codehaus.griffon'
+
+        apply from: "${rootDir}/gradle/coverage.gradle"
+        apply from: "${rootDir}/gradle/codeQuality.gradle"
+    }
+
+    repositories {
+        jcenter()
+        mavenCentral()
+    }
+
+    dependencies {
+        testCompile 'junit:junit:4.11'
+        testCompile 'com.google.guiceberry:guiceberry:3.3.1'
+        testCompile("com.google.inject:guice:$guiceVersion") {
+            exclude group: 'org.sonatype.sisu.inject'
+        }
+        testCompile "org.codehaus.groovy:groovy-all:$groovyVersion"
+        testCompile 'org.spockframework:spock-core:0.7-groovy-2.0'
+        testCompile "org.slf4j:slf4j-simple:$slf4jVersion"
+    }
+}
+
+Date buildTimeAndDate = new Date()
+ext {
+    buildTime = new SimpleDateFormat('dd-MMM-yyyy').format(buildTimeAndDate)
+    buildDate = new SimpleDateFormat('hh:mm aa').format(buildTimeAndDate)
+}
+
+configure(mavenizedProjects()) { proj ->
+    // proj.apply from: "${rootDir}/gradle/maven.gradle"
+    proj.task('checkManifest') {
+        dependsOn proj.classes
+        doLast {
+            proj.tasks.withType(Jar).each { jarfile ->
+                jarfile.manifest {
+                    attributes(
+                        'Built-By': System.properties['user.name'],
+                        'Created-By': System.properties['java.version'] + " (" + System.properties['java.vendor'] + " " + System.getProperty("java.vm.version") + ")",
+                        'Build-Date': buildTime,
+                        'Build-Time': buildDate,
+                        'Specification-Title': proj.name,
+                        'Specification-Version': project.version,
+                        'Specification-Vendor': 'griffon-framework.org',
+                        'Implementation-Title': proj.name,
+                        'Implementation-Version': project.version,
+                        'Implementation-Vendor': 'griffon-framework.org'
+                    )
+                }
+            }
+        }
+    }
+    proj.jar.dependsOn proj.checkManifest
+}
+
+// @todo move apply statements to the top of the build script
+// apply from: "${rootDir}/gradle/package.gradle"
+// apply from: "${rootDir}/gradle/installer.gradle"
+
+/*
+task allTests(dependsOn: [clean, project(':griffon-rt').test, project(':griffon-cli').test]) {
+    description = "Runs all tests."
+}
+
+task fullDist(dependsOn: [zipBinary, zipSource, tarBinary, tarSource, izPackCreateInstaller, deb]) {
+    description = "Assembles all packages."
+}
+
+task bambooStage1(dependsOn: allTests) {
+    description = "Makes a full test run and assembles all packages."
+}
+
+task bambooStage2(dependsOn: [bambooStage1, fullDist, rpm]) {
+    description = "Makes a full test run and assembles all packages."
+}
+*/
+
+def mavenizedProjects() {
+    [
+        project(':griffon-core'),
+        project(':griffon-groovy'),
+        project(':griffon-guice'),
+        project(':griffon-swing'),
+        project(':griffon-javafx')
+    ]
+}

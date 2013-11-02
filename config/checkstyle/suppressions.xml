@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+
+<!DOCTYPE suppressions PUBLIC
+    "-//Puppy Crawl//DTD Suppressions 1.1//EN"
+    "http://www.puppycrawl.com/dtds/suppressions_1_1.dtd">
+
+<suppressions>
+    <!-- These packages are duplicated in core, don't require a package-info.java in each place -->
+    <suppress checks="NeedBraces"
+              files=".*[/\\]src[/\\]main[/\\]groovy[/\\]org[/\\]codehaus[/\\]griffon[/\\]ast[/\\][^/\\]+"/>
+    <suppress checks="MethodNameCheck"
+              files=".*[/\\]src[/\\]main[/\\]groovy[/\\]org[/\\]codehaus[/\\]griffon[/\\]ast[/\\][^/\\]+"/>
+	<suppress checks="EmptyBlockCheck" files=".*[/\\]src[/\\]main[/\\]groovy[/\\]org[/\\]codehaus[/\\]griffon[/\\]test[/\\]report[/\\]junit[/\\]PlainFormatter.java"/>
+	<suppress checks="MemberNameCheck" files=".*[/\\]src[/\\]main[/\\]groovy[/\\]org[/\\]codehaus[/\\]griffon[/\\]runtime[/\\]core[/\\]AbstractGriffonViewScript.java"/>
+    <suppress checks="MemberNameCheck" files=".*[/\\]src[/\\]main[/\\]groovy[/\\]org[/\\]codehaus[/\\]griffon[/\\]cli[/\\]GriffonScriptRunner.java"/>
+	<suppress checks="EmptyBlockCheck" files=".*[/\\]src[/\\]main[/\\]groovy[/\\]griffon[/\\]util[/\\][^/\\]+"/>
+	<!-- strange error on my mac. unable to remove the tab use error in the following file-->
+	<suppress checks="FileTabCharacter" files=".*[/\\]src[/\\]main[/\\]groovy[/\\]griffon[/\\]core[/\\]GriffonClass.java"/>
+	<suppress checks="EqualsHashCode" files=".*[/\\]src[/\\]test[/\\]groovy[/\\]org[/\\]codehaus[/\\]groovy[/\\]runtime[/\\]DummyBean.java"/>
+	
+</suppressions>

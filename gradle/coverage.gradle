@@ -1,0 +1,150 @@
+/*
+ * Copyright 2010-2013 the original author or authors.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+ext{
+    cobSerFile = project.file('build/cobertura.ser')
+    mainOriginal = "${sourceSets.main.output.classesDir}"
+    mainCopy = "${mainOriginal}-copy"
+    coberturaEnabled = project.hasProperty('withCobertura')
+    cloverEnabled = project.hasProperty('withClover')
+    doWithSourceDirs = { sourceSet, callback ->
+        sourceSet.allSource.srcDirs.each { srcdir ->
+            if(srcdir.exists() && !srcdir.name.endsWith('resources')) callback(srcdir)
+        }
+    }
+}
+
+configurations {
+    cobertura
+    clover
+}
+
+dependencies {
+    cobertura 'net.sourceforge.cobertura:cobertura:1.9.4.1',
+              'junit:junit:4.10'
+    clover 'com.cenqua.clover:clover:3.1.2'
+}
+
+
+test.doFirst  {
+    if(coberturaEnabled && cloverEnabled) {
+        throw new RuntimeException('You can enable either cobertura or clover but not both')
+    }
+
+    if(coberturaEnabled) {
+        ant {
+            // delete data file for cobertura, otherwise coverage would be added
+            delete(file: cobSerFile, failonerror:false)
+            // delete copy of original classes
+            delete(dir: mainCopy, failonerror:false)
+            // import cobertura task, so it is available in the script
+            taskdef(resource:'tasks.properties', classpath: configurations.cobertura.asPath)
+            // create copy (backup) of original class files
+            copy(todir: mainCopy) {
+                fileset(dir: mainOriginal)
+            }
+            // instrument the relevant classes in-place
+            'cobertura-instrument'(datafile: cobSerFile) {
+                fileset(dir: mainOriginal, includes: '**/*.class')
+            }
+        }
+    }
+
+    if(cloverEnabled) {
+        ant.taskdef(name: 'groovyc', classname: 'org.codehaus.groovy.ant.Groovyc', classpath: configurations.groovy.asPath)
+        ant.taskdef(resource: 'cloverlib.xml', classpath: configurations.clover.asPath)
+        ant.property(name: 'clover.license.path', value: project(':').file('clover.license').absolutePath)
+
+        ant."clover-clean"()
+        ant.'clover-setup'(initString: "${buildDir}/clover/clover.db", tmpDir: "${buildDir}/clover/tmp") {
+            doWithSourceDirs(sourceSets.main) { srcdir ->
+                fileset(dir: srcdir) {
+                    include(name: '**/*.groovy')
+                    include(name: '**/*.java')
+                }
+            }
+        }
+        
+        //move original classes
+        ant.move(file: mainOriginal, tofile: mainCopy)
+
+        //compile instrumented classes
+        sourceSets.main.output.classesDir.mkdirs()
+        ant.groovyc(
+            destdir: sourceSets.main.output.classesDir,
+            fork: true,
+            verbose: true) {
+            classpath {
+                pathElement path: configurations.default.asPath
+                pathElement path: configurations.clover.asPath
+            }
+            javac(source:sourceCompatibility, target: targetCompatibility) {
+                classpath {
+                    pathElement location: mainOriginal
+                    pathElement path: configurations.default.asPath
+                    pathElement path: configurations.clover.asPath
+                }
+            }
+
+            doWithSourceDirs(sourceSets.main) { srcdir ->
+                src(path: srcdir)
+            }
+        }
+        
+        //copy resources
+        ant.copy(todir: mainOriginal) {
+            fileset(dir: mainCopy, excludes: "**/*.class")
+        }                        
+    }
+}
+
+test {
+    systemProperties = ['net.sourceforge.cobertura.datafile': cobSerFile]
+    if(coberturaEnabled) classpath += configurations.cobertura
+    if(cloverEnabled) classpath += configurations.clover
+}
+
+test.doLast {
+    if(coberturaEnabled && cloverEnabled) {
+        throw new RuntimeException('You can enable either cobertura or clover but not both')
+    }
+
+    if(coberturaEnabled && new File(mainCopy).exists()) {
+        // replace instrumented classes with backup copy again
+        ant {
+            delete(file: mainOriginal)
+            move(file: mainCopy, tofile: mainOriginal)
+        }
+        // create cobertura reports
+        ant.'cobertura-report'(destdir:"${reportsDir}/coverage",
+             format: 'html', datafile: cobSerFile) {
+            doWithSourceDirs(sourceSets.main) { srcdir ->
+                fileset(dir: srcdir)
+            }
+        }
+    }
+
+    if(cloverEnabled && new File(mainCopy).exists()) {
+        // restore original classes
+        ant.delete(file: mainOriginal)
+        ant.move(file: mainCopy, tofile: mainOriginal)
+
+        ant."clover-report" {
+            current(outfile:"${reportsDir}/clover/clover.xml")
+        }
+        ant."clover-html-report"(outdir:"${reportsDir}/clover/html")
+    }
+}

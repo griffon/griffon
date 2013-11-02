@@ -1,0 +1,16 @@
+include 'griffon-core'
+include 'griffon-guice'
+include 'griffon-groovy'
+include 'griffon-swing'
+include 'griffon-javafx'
+include 'griffon-integration'
+
+rootProject.name = 'griffon2'
+rootProject.children.each {project ->
+    String fileBaseName = project.name
+    String projectDirName = "subprojects/$fileBaseName"
+    project.projectDir = new File(settingsDir, projectDirName)
+    project.buildFileName = "${fileBaseName}.gradle"
+    assert project.projectDir.isDirectory()
+    assert project.buildFile.isFile()
+}

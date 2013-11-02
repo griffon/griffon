@@ -1,0 +1,10 @@
+apply plugin: 'java'
+
+ext.pomDescription = 'Griffon Guice module'
+
+dependencies {
+    compile project(':griffon-core')
+    compile("com.google.inject:guice:$guiceVersion"){
+        exclude group: 'org.sonatype.sisu.inject'
+    }
+}

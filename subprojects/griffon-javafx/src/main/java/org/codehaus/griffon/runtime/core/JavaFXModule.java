@@ -1,0 +1,60 @@
+/*
+ * Copyright 2013 the original author or authors.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+package org.codehaus.griffon.runtime.core;
+
+import griffon.core.controller.ActionManager;
+import griffon.core.threading.UIThreadManager;
+import griffon.core.view.WindowManager;
+import griffon.javafx.JavaFXWindowDisplayHandler;
+import org.codehaus.griffon.runtime.core.controller.JavaFXActionManager;
+import org.codehaus.griffon.runtime.core.injection.AbstractModule;
+import org.codehaus.griffon.runtime.core.injection.NamedImpl;
+import org.codehaus.griffon.runtime.javafx.ConfigurableJavaFXWindowDisplayHandler;
+import org.codehaus.griffon.runtime.javafx.DefaultJavaFXWindowDisplayHandler;
+import org.codehaus.griffon.runtime.javafx.DefaultJavaFXWindowManager;
+import org.codehaus.griffon.runtime.javafx.JavaFXUIThreadManager;
+
+/**
+ * @author Andres Almiray
+ * @since 2.0.0
+ */
+public class JavaFXModule extends AbstractModule {
+    @Override
+    protected void doConfigure() {
+        bind(JavaFXWindowDisplayHandler.class)
+            .withClassifier(new NamedImpl("defaultWindowDisplayHandler"))
+            .to(DefaultJavaFXWindowDisplayHandler.class)
+            .asSingleton();
+
+        bind(JavaFXWindowDisplayHandler.class)
+            .withClassifier(new NamedImpl("windowDisplayHandler"))
+            .to(ConfigurableJavaFXWindowDisplayHandler.class)
+            .asSingleton();
+
+        bind(WindowManager.class)
+            .to(DefaultJavaFXWindowManager.class)
+            .asSingleton();
+
+        bind(UIThreadManager.class)
+            .to(JavaFXUIThreadManager.class)
+            .asSingleton();
+
+        bind(ActionManager.class)
+            .to(JavaFXActionManager.class)
+            .asSingleton();
+    }
+}

@@ -1,0 +1,177 @@
+/*
+ * Copyright 2010-2013 the original author or authors.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+import org.apache.tools.ant.filters.ReplaceTokens
+
+apply plugin: 'izpack'
+
+dependencies {
+    izpack files('installer/izpack/lib/izpack-standalone-compiler-4.3.3.jar')
+}
+
+task prepareIzpack(type: Copy) {
+    destinationDir = "$buildDir/assemble/izpack" as File
+    from('installer/izpack/resources') {
+        into 'resources'
+        filter(ReplaceTokens, tokens: ['griffon.version': version])
+    }
+    into('binary') {
+        with distBinSpec
+    }
+    into('source'){
+        with distSourceSpec
+    }
+}
+
+izPackCreateInstaller.dependsOn prepareIzpack
+izPackCreateInstaller.doFirst {
+    ant.chmod(dir: "$buildDir/assemble/izpack/binary/bin", excludes: '*.bat', perm: 'ugo+x')
+}
+
+izpack {
+    baseDir = file("$buildDir/assemble/izpack")
+    installFile = file('installer/izpack/installer.xml')
+    outputFile = file("$buildDir/distributions/griffon-${version}-installer.jar")
+    compression = 'deflate'
+    compressionLevel = 9
+    appProperties = ['app.group': 'Griffon', 'app.name': 'griffon', 'app.title': 'Griffon',
+                     'app.version': version, 'app.subpath': "Griffon-$version"]
+}
+
+task prepareRpm(type: Copy) {
+    def rpmDir = "$buildDir/assemble/rpm" as File
+    into rpmDir    
+    doFirst {
+        mkdir("${rpmDir}/BUILD")
+        mkdir("${rpmDir}/SOURCES")
+        mkdir("${rpmDir}/SPECS")
+        mkdir("${rpmDir}/SRPMS")
+        mkdir("${rpmDir}/RPMS/noarch")
+    }
+    from('installer/rpm') {
+        into 'SPECS'
+        include '*.spec'
+        filter(ReplaceTokens, tokens: ['griffon.version': version, 'griffon.version.rpm': version.replace('-','_')])
+    }
+    into("griffon-$version") {
+        with distBinSpec
+    }
+}
+
+task rpm(dependsOn: prepareRpm) {
+    description = "Creates an RPM package from the binary distribution."
+    inputs.dir prepareRpm.outputs.files
+    outputs.files "$buildDir/distributions/griffon-${version.replace('-','_')}-1.noarch.rpm"
+    def rpmDir = "$buildDir/assemble/rpm" as File
+    doLast {
+        ant.chmod(dir: "$rpmDir/griffon-${version}/bin", excludes: '*.bat', perm: 'ugo+x')
+        ant.zip(
+            destfile: "$rpmDir/SOURCES/griffon-${version}-bin.zip",
+            basedir: rpmDir,
+            includes: "griffon-${version}/**/*")
+        ant.rpm(specFile: 'griffon.spec',
+                topDir: rpmDir,
+                cleanBuildDir: false,
+                failOnError: true)
+        copy {
+            into "$buildDir/distributions"
+            from "$rpmDir/RPMS/noarch/"
+            include '*.rpm'
+        }
+    }
+}
+
+task prepareDmg(type: Copy) {
+    destinationDir = "$buildDir/assemble/dmg" as File
+    from('installer/dmg/resources') {
+        filter(ReplaceTokens, tokens: ['griffon.version': version])
+    }
+    into("griffon-${version}") {
+        with distBinSpec
+    }
+}
+
+task dmg(dependsOn: prepareDmg) {
+    description = "Creates a DMG package from the binary distribution."
+    inputs.dir prepareDmg.outputs.files
+    outputs.files "$buildDir/distributions/griffon-${version}-bin.dmg"
+
+    def destinationDir = "$buildDir/distributions" as File
+    def dmgDir = "$buildDir/assemble/dmg" as File
+
+    doLast {
+        ant.chmod(dir: "$dmgDir/griffon-${version}/bin", excludes: '*.bat', perm: 'ugo+x')
+
+        def assemblerDir = project.file('installer/dmg/assembler')
+        def output = "$buildDir/distributions/griffon-${version}-bin.dmg"
+        ant.exec(executable: "$assemblerDir/create-dmg") {
+            arg(line: "--window-size 380 260 "+
+                      "--background ${assemblerDir}/background.png "+
+                      "--icon-size 128 "+
+                      "--volname \"Griffon $version\" "+
+                      "$output $dmgDir")
+        }
+    }
+}
+
+task prepareDeb(type: Copy) {
+    destinationDir = "$buildDir/assemble/deb" as File
+    from('installer/deb') {
+        filter(ReplaceTokens, tokens: ['griffon.version': version])
+    }
+    into('dist') {
+        with distBinSpec
+    }
+
+    doLast {
+        ant.chmod(dir: "${destinationDir}/dist/bin", perm: 'ugo+x')
+        file("$buildDir/distributions").mkdirs()
+    }
+}
+
+task deb(dependsOn: prepareDeb) {
+    description = "Creates a Debian package from the binary distribution."
+    inputs.dir prepareDeb.outputs.files
+    outputs.file "$buildDir/distributions/griffon-${version}-1_all.deb"
+
+    File debSrcDir = project.file('installer/deb')
+    File debDir = "$buildDir/assemble/deb" as File
+    File destinationDir = new File(debDir.absolutePath, 'dist')
+
+    doLast {
+        ant.taskdef(resource: 'ant_deb_task.properties',
+                    classpath: fileTree(dir: debSrcDir, includes: ['*.jar']).asPath)
+        ant.deb(todir: "$buildDir/distributions",
+                'package': 'griffon',
+                section: 'contrib/devel',
+                priority: 'extra',
+                postinst: "$debDir/postinst",
+                prerm: "$debDir/prerm") {
+            delegate.version(upstream: version)
+            maintainer(name: 'Griffon Team',
+                       email: 'dev@griffon.codehaus.org')
+            description(synopsis: 'Griffon is an application framework for developing desktop applications in the JVM', '''
+Griffon is an application framework for developing desktop applications in the JVM, with Groovy being
+the primary language of choice. Inspired by Grails, Griffon follows the Convention over Configuration
+paradigm, paired with an intuitive MVC architecture and a command line interface.
+
+http://griffon-framework.org/
+''')
+            tarfileset(dir: destinationDir, prefix: "./usr/share/griffon-${version}")
+            tarfileset(dir: "$destinationDir/bin", prefix: "./usr/share/griffon-${version}/bin", filemode: '755')
+        }
+    }
+}

@@ -1,0 +1,34 @@
+apply plugin: 'groovy'
+apply from: 'gradle/javafx.plugin'
+
+ext.pomDescription = 'Griffon JavaFX module'
+
+/*
+javafx {
+    profiles {
+        // not every possible platform override, but ones that have a known impact
+        windows {
+            id = 'c533f663-1efd-489f-b910-4c7ec20c7fd0'
+            category = 'JavaFX Apps'
+            javaRuntime = project.windowsJavaFXRuntime
+        }
+
+        macosx {
+            id = 'net.java.openjdk.openjfx.Ensemble2'
+            category = 'public.app-category.developer-tools'
+            javaRuntime = project.macosxJavaFXRuntime
+        }
+
+        linux {
+            // linux doesn't care about id, it goes un-used at the moment
+            category = 'Development'
+            // good luck finding a standard location for the JDK
+            javaRuntime = project.linuxJavaFXRuntime
+        }
+    }
+}
+*/
+
+dependencies {
+    compile project(':griffon-core')
+}
