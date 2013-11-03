@@ -62,7 +62,7 @@ public class LifecycleHandlerProvider implements Provider<LifecycleHandler> {
         try {
             handlerClass = (Class<LifecycleHandler>) applicationClassLoader.get().loadClass(basename);
         } catch (ClassNotFoundException e) {
-            throw new TypeNotFoundException(basename, new NamedImpl(basename), e);
+            throw new TypeNotFoundException(LifecycleHandler.class.getName(), new NamedImpl(basename), e);
         }
 
         try {

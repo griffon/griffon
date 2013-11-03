@@ -18,6 +18,9 @@ package org.codehaus.griffon.runtime.util;
 
 import griffon.core.resources.ResourceHandler;
 import griffon.util.ConfigReader;
+import groovy.lang.Script;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
@@ -34,6 +37,8 @@ import static java.util.Objects.requireNonNull;
  * @since 2.0.0
  */
 public class GroovyAwareCompositeResourceBundleBuilder extends DefaultCompositeResourceBundleBuilder {
+    private static final Logger LOG = LoggerFactory.getLogger(GroovyAwareCompositeResourceBundleBuilder.class);
+
     protected static final String GROOVY_SUFFIX = ".groovy";
     private final ConfigReader configReader;
 
@@ -52,6 +57,21 @@ public class GroovyAwareCompositeResourceBundleBuilder extends DefaultCompositeR
             bundles.add(new GroovyScriptResourceBundle(configReader, resource));
             return bundles;
         }
+
+        resource = getResourceAsURL(fileName, CLASS_SUFFIX);
+        if (null != resource) {
+            String className = fileName.replace('/', '.');
+            try {
+                Class klass = loadClass(className);
+                if (Script.class.isAssignableFrom(klass)) {
+                    bundles.add(new GroovyScriptResourceBundle(configReader, klass));
+                    return bundles;
+                }
+            } catch (ClassNotFoundException e) {
+                // ignore
+            }
+        }
+
         return super.loadBundleFromClass(fileName);
     }
 }

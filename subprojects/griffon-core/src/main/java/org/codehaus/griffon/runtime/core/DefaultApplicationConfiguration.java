@@ -16,8 +16,6 @@
 
 package org.codehaus.griffon.runtime.core;
 
-import griffon.core.ApplicationConfiguration;
-
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.inject.Inject;
@@ -25,7 +23,6 @@ import javax.inject.Named;
 import java.util.*;
 
 import static griffon.util.GriffonNameUtils.requireNonBlank;
-import static griffon.util.TypeUtils.*;
 import static java.util.Collections.unmodifiableMap;
 import static java.util.Objects.requireNonNull;
 
@@ -33,7 +30,7 @@ import static java.util.Objects.requireNonNull;
  * @author Andres Almiray
  * @since 2.0.0
  */
-public class DefaultApplicationConfiguration implements ApplicationConfiguration {
+public class DefaultApplicationConfiguration extends AbstractApplicationConfiguration {
     private static final String ERROR_KEY_BLANK = "Argument 'key' cannot be blank";
     private final ResourceBundle resourceBundle;
     private final Map<String, Object> flatMap = new LinkedHashMap<>();
@@ -66,87 +63,5 @@ public class DefaultApplicationConfiguration implements ApplicationConfiguration
         } catch (MissingResourceException mre) {
             return null;
         }
-    }
-
-    @Nullable
-    @Override
-    public <T> T get(@Nonnull String key, @Nullable T defaultValue) {
-        T value = (T) get(key);
-        return value != null ? value : defaultValue;
-    }
-
-    @Nullable
-    @Override
-    public Object getAt(@Nonnull String key) {
-        return get(key);
-    }
-
-    @Nullable
-    @Override
-    public <T> T getAt(@Nonnull String key, @Nullable T defaultValue) {
-        return get(key, defaultValue);
-    }
-
-    @Override
-    public boolean getAsBoolean(@Nonnull String key) {
-        return getAsBoolean(key, false);
-    }
-
-    @Override
-    public boolean getAsBoolean(@Nonnull String key, boolean defaultValue) {
-        return castToBoolean(get(key), defaultValue);
-    }
-
-    @Override
-    public int getAsInt(@Nonnull String key) {
-        return getAsInt(key, 0);
-    }
-
-    @Override
-    public int getAsInt(@Nonnull String key, int defaultValue) {
-        return castToInt(get(key), defaultValue);
-    }
-
-    @Override
-    public long getAsLong(@Nonnull String key) {
-        return getAsLong(key, 0);
-    }
-
-    @Override
-    public long getAsLong(@Nonnull String key, long defaultValue) {
-        return castToLong(get(key), defaultValue);
-    }
-
-    @Override
-    public float getAsFloat(@Nonnull String key) {
-        return getAsFloat(key, 0f);
-    }
-
-    @Override
-    public float getAsFloat(@Nonnull String key, float defaultValue) {
-        return castToFloat(get(key), defaultValue);
-    }
-
-    @Override
-    public double getAsDouble(@Nonnull String key) {
-        return getAsDouble(key, 0d);
-    }
-
-    @Override
-    public double getAsDouble(@Nonnull String key, double defaultValue) {
-        return castToDouble(get(key), defaultValue);
-    }
-
-    @Nullable
-    @Override
-    public String getAsString(@Nonnull String key) {
-        return getAsString(key, null);
-    }
-
-    @Nullable
-    @Override
-    public String getAsString(@Nonnull String key, @Nullable String defaultValue) {
-        Object value = get(key);
-        return value != null ? String.valueOf(value) : defaultValue;
     }
 }

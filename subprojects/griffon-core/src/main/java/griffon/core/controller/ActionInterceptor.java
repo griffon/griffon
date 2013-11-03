@@ -20,12 +20,16 @@ import griffon.core.artifact.GriffonController;
 
 import javax.annotation.Nonnull;
 import java.lang.reflect.Method;
+import java.util.List;
 
 /**
  * @author Andres Almiray
  * @since 1.3.0
  */
 public interface ActionInterceptor {
+    @Nonnull
+    List<String> dependsOn();
+
     /**
      * Inspect the action during the applicationConfiguration phase.
      * <p/>

@@ -65,7 +65,7 @@ public class GriffonClassUtils {
     private static final Set<MethodDescriptor> BASIC_METHODS = new TreeSet<MethodDescriptor>();
     private static final Set<MethodDescriptor> ARTIFACT_METHODS = new TreeSet<MethodDescriptor>();
     private static final Set<MethodDescriptor> MVC_METHODS = new TreeSet<MethodDescriptor>();
-    private static final Set<MethodDescriptor> SERVICE_METHODS = new TreeSet<MethodDescriptor>();
+    // private static final Set<MethodDescriptor> SERVICE_METHODS = new TreeSet<MethodDescriptor>();
     private static final Set<MethodDescriptor> THREADING_METHODS = new TreeSet<MethodDescriptor>();
     private static final Set<MethodDescriptor> EVENT_PUBLISHER_METHODS = new TreeSet<MethodDescriptor>();
     private static final Set<MethodDescriptor> OBSERVABLE_METHODS = new TreeSet<MethodDescriptor>();
@@ -151,15 +151,16 @@ public class GriffonClassUtils {
         MVC_METHODS.add(new MethodDescriptor("createMVCGroup", new Class[]{Object[].class}));
         MVC_METHODS.add(new MethodDescriptor("withMVCGroup", new Class[]{Object[].class}));
 
-        MVC_METHODS.add(new MethodDescriptor("getArtifactManager"));
-        MVC_METHODS.add(new MethodDescriptor("getAddonManager"));
-        MVC_METHODS.add(new MethodDescriptor("getMvcGroupManager"));
-        //MVC_METHODS.add(new MethodDescriptor("setBuilder", new Class[]{FactoryBuilderSupport.class}));
+        MVC_METHODS.add(new MethodDescriptor("initUI"));
+        // MVC_METHODS.add(new MethodDescriptor("getArtifactManager"));
+        // MVC_METHODS.add(new MethodDescriptor("getAddonManager"));
+        // MVC_METHODS.add(new MethodDescriptor("getMvcGroupManager"));
+        // MVC_METHODS.add(new MethodDescriptor("setBuilder", new Class[]{FactoryBuilderSupport.class}));
         MVC_METHODS.add(new MethodDescriptor("invokeAction", new Class[]{String.class, Object[].class}));
         MVC_METHODS.add(new MethodDescriptor("invokeAction", new Class[]{String.class, Object[].class}, Modifier.PUBLIC | Modifier.TRANSIENT));
 
-        SERVICE_METHODS.add(new MethodDescriptor("serviceInit"));
-        SERVICE_METHODS.add(new MethodDescriptor("serviceDestroy"));
+        // SERVICE_METHODS.add(new MethodDescriptor("serviceInit"));
+        // SERVICE_METHODS.add(new MethodDescriptor("serviceDestroy"));
 
         THREADING_METHODS.add(new MethodDescriptor("isUIThread"));
         THREADING_METHODS.add(new MethodDescriptor("execInsideUIAsync", new Class[]{Runnable.class}));
@@ -707,9 +708,11 @@ public class GriffonClassUtils {
      * @param method a Method reference
      * @return true if the method is an {@code GriffonService} method, false otherwise.
      */
+    /*
     public static boolean isServiceMethod(Method method) {
         return isServiceMethod(MethodDescriptor.forMethod(method));
     }
+    */
 
     /**
      * Finds out if the given {@code MetaMethod} belongs to the set of
@@ -743,10 +746,12 @@ public class GriffonClassUtils {
      * @param method a MethodDescriptor reference
      * @return true if the method is an {@code GriffonService} method, false otherwise.
      */
+    /*
     public static boolean isServiceMethod(MethodDescriptor method) {
         return !(method == null || !isInstanceMethod(method)) &&
             SERVICE_METHODS.contains(method);
     }
+    */
 
     /**
      * Finds out if the given {@code Method} belongs to the set of
@@ -1183,7 +1188,7 @@ public class GriffonClassUtils {
             !isThreadingMethod(method) &&
             !isArtifactMethod(method) &&
             !isMvcMethod(method) &&
-            !isServiceMethod(method) &&
+            //!isServiceMethod(method) &&
             !isEventPublisherMethod(method) &&
             !isObservableMethod(method) &&
             !isResourceHandlerMethod(method) &&
@@ -1499,48 +1504,6 @@ public class GriffonClassUtils {
         }
     }
 
-    /**
-     * <p>Tests whether or not the left hand type is compatible with the right hand type in Groovy
-     * terms, i.e. can the left type be assigned a value of the right hand type in Groovy.</p>
-     * <p>This handles Java primitive type equivalence and uses isAssignableFrom for all other types,
-     * with a bit of magic for native types and polymorphism i.e. Number assigned an int.
-     * If either parameter is null an exception is thrown</p>
-     *
-     * @param leftType  The type of the left hand part of a notional assignment
-     * @param rightType The type of the right hand part of a notional assignment
-     * @return True if values of the right hand type can be assigned in Groovy to variables of the left hand type.
-     */
-    /*public static boolean isGroovyAssignableFrom(Class<?> leftType, Class<?> rightType) {
-        if (leftType == null) {
-            throw new NullPointerException("Left type is null!");
-        } else if (rightType == null) {
-            throw new NullPointerException("Right type is null!");
-        } else if (leftType == Object.class) {
-            return true;
-        } else if (leftType == rightType) {
-            return true;
-        } else {
-            // check for primitive type equivalence
-            Class<?> r = (Class<?>) PRIMITIVE_TYPE_COMPATIBLE_CLASSES.get(leftType);
-            boolean result = r == rightType;
-
-            if (!result) {
-                // If no primitive <-> wrapper match, it may still be assignable
-                // from polymorphic primitives i.e. Number -> int (AKA Integer)
-                if (rightType.isPrimitive()) {
-                    // see if incompatible
-                    r = (Class<?>) PRIMITIVE_TYPE_COMPATIBLE_CLASSES.get(rightType);
-                    if (r != null) {
-                        result = leftType.isAssignableFrom(r);
-                    }
-                } else {
-                    // Otherwise it may just be assignable using normal Java polymorphism
-                    result = leftType.isAssignableFrom(rightType);
-                }
-            }
-            return result;
-        }
-    }*/
     private static Method findDeclaredMethod(Class<?> clazz, String methodName, Class[] parameterTypes) {
         while (clazz != null) {
             try {

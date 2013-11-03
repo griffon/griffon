@@ -19,10 +19,7 @@ package org.codehaus.griffon.runtime.core.mvc;
 import griffon.core.ApplicationClassLoader;
 import griffon.core.ApplicationEvent;
 import griffon.core.GriffonApplication;
-import griffon.core.artifact.GriffonArtifact;
-import griffon.core.artifact.GriffonClass;
-import griffon.core.artifact.GriffonController;
-import griffon.core.artifact.GriffonMvcArtifact;
+import griffon.core.artifact.*;
 import griffon.core.mvc.MVCGroup;
 import griffon.core.mvc.MVCGroupConfiguration;
 import griffon.exceptions.MVCGroupInstantiationException;
@@ -146,8 +143,9 @@ public class DefaultMVCGroupManager extends AbstractMVCGroupManager {
 
         initializeMembers(group, argsCopy);
 
-        if (fireEvents)
+        if (fireEvents) {
             getApplication().getEventRouter().publish(ApplicationEvent.CREATE_MVC_GROUP.getName(), asList(group));
+        }
 
         return group;
     }
@@ -209,13 +207,23 @@ public class DefaultMVCGroupManager extends AbstractMVCGroupManager {
             LOG.debug("Initializing each MVC member of group '" + group.getMvcId() + "'");
         }
         for (Map.Entry<String, GriffonArtifact> memberEntry : group.getMembers().entrySet()) {
-            GriffonArtifact member = memberEntry.getValue();
+            final GriffonArtifact member = memberEntry.getValue();
             initializeMember(member, args);
+
         }
     }
 
-    protected void initializeMember(@Nonnull GriffonArtifact member, @Nonnull Map<String, Object> args) {
-        if (member instanceof GriffonMvcArtifact) {
+    protected void initializeMember(final @Nonnull GriffonArtifact member, final @Nonnull Map<String, Object> args) {
+        if (member instanceof GriffonView) {
+            getApplication().getUIThreadManager().runInsideUISync(new Runnable() {
+                @Override
+                public void run() {
+                    GriffonView view = (GriffonView) member;
+                    view.initUI();
+                    view.mvcGroupInit(args);
+                }
+            });
+        } else if (member instanceof GriffonMvcArtifact) {
             ((GriffonMvcArtifact) member).mvcGroupInit(args);
         }
     }

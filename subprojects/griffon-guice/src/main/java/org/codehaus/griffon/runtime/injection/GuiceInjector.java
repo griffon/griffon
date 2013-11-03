@@ -19,6 +19,7 @@ package org.codehaus.griffon.runtime.injection;
 import com.google.inject.AbstractModule;
 import com.google.inject.Key;
 import com.google.inject.Module;
+import com.google.inject.TypeLiteral;
 import com.google.inject.binder.AnnotatedBindingBuilder;
 import com.google.inject.binder.LinkedBindingBuilder;
 import com.google.inject.binder.ScopedBindingBuilder;
@@ -31,6 +32,9 @@ import org.codehaus.griffon.runtime.core.injection.NamedImpl;
 import javax.annotation.Nonnull;
 import javax.inject.Singleton;
 import java.lang.annotation.Annotation;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 
 import static com.google.inject.util.Providers.guicify;
 import static griffon.util.GriffonNameUtils.requireNonBlank;
@@ -68,6 +72,34 @@ public class GuiceInjector implements Injector<com.google.inject.Injector> {
         } catch (RuntimeException e) {
             throw new InstanceNotFoundException(type, qualifier, e);
         }
+    }
+
+    @Nonnull
+    @Override
+    public <T> Collection<T> getInstances(@Nonnull Class<T> type) throws InstanceNotFoundException {
+        requireNonNull(type, "Argument 'type' cannot be null");
+
+        List<T> instances = new ArrayList<>();
+
+        List<com.google.inject.Binding<T>> bindings = null;
+        try {
+            bindings = delegate.findBindingsByType(TypeLiteral.get(type));
+        } catch (RuntimeException e) {
+            throw new InstanceNotFoundException(type, e);
+        }
+        if (bindings == null) {
+            throw new InstanceNotFoundException(type);
+        }
+
+        for (com.google.inject.Binding<T> binding : bindings) {
+            try {
+                instances.add(delegate.getInstance(binding.getKey()));
+            } catch (RuntimeException e) {
+                throw new InstanceNotFoundException(type, e);
+            }
+        }
+
+        return instances;
     }
 
     @Override

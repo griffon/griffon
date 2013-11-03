@@ -29,7 +29,6 @@ import java.util.List;
  * @author Andres Almiray
  */
 public interface ArtifactManager {
-    GriffonClass[] EMPTY_GRIFFON_CLASS_ARRAY = new GriffonClass[0];
     List<GriffonClass> EMPTY_GRIFFON_CLASS_LIST = Collections.<GriffonClass>emptyList();
 
     /**
@@ -76,7 +75,7 @@ public interface ArtifactManager {
      * @return the GriffonClass associated with the artifact is there's a match, null otherwise.
      */
     @Nullable
-    GriffonClass findGriffonClass(@Nonnull Class clazz, @Nonnull String type);
+    GriffonClass findGriffonClass(@Nonnull Class<? extends GriffonArtifact> clazz, @Nonnull String type);
 
     /**
      * Finds an artifact by class.<p>
@@ -87,7 +86,7 @@ public interface ArtifactManager {
      * @return the GriffonClass associated with the artifact is there's a match, null otherwise.
      */
     @Nullable
-    GriffonClass findGriffonClass(@Nonnull Object artifact);
+    <A extends GriffonArtifact> GriffonClass findGriffonClass(@Nonnull A artifact);
 
     /**
      * Finds an artifact by class.<p>
@@ -98,7 +97,7 @@ public interface ArtifactManager {
      * @return the GriffonClass associated with the artifact is there's a match, null otherwise.
      */
     @Nullable
-    GriffonClass findGriffonClass(@Nonnull Class clazz);
+    GriffonClass findGriffonClass(@Nonnull Class<? extends GriffonArtifact> clazz);
 
     /**
      * Finds an artifact by name.<p>
@@ -148,5 +147,5 @@ public interface ArtifactManager {
      *          matching the given criteria
      */
     @Nonnull
-    <T> T newInstance(@Nonnull Class<T> clazz, @Nonnull String type);
+    <A extends GriffonArtifact> A newInstance(@Nonnull Class<A> clazz, @Nonnull String type);
 }

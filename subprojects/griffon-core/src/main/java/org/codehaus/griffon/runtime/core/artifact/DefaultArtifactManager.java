@@ -18,6 +18,7 @@ package org.codehaus.griffon.runtime.core.artifact;
 
 import griffon.core.ApplicationClassLoader;
 import griffon.core.artifact.ArtifactInfo;
+import griffon.core.artifact.GriffonArtifact;
 import griffon.core.event.EventRouter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -68,6 +69,7 @@ public class DefaultArtifactManager extends AbstractArtifactManager {
         return applicationClassLoader.get().getResources("META-INF/griffon/artifacts.properties");
     }
 
+    @SuppressWarnings("unchecked")
     private void processURL(URL url, Map<String, List<ArtifactInfo>> artifacts) {
         Properties p = new Properties();
         try {
@@ -99,9 +101,9 @@ public class DefaultArtifactManager extends AbstractArtifactManager {
 
             for (String className : classNames) {
                 try {
-                    Class clazz = loadClass(className, applicationClassLoader.get());
+                    Class<? extends GriffonArtifact> clazz = (Class<? extends GriffonArtifact>) loadClass(className, applicationClassLoader.get());
                     if (Modifier.isAbstract(clazz.getModifiers())) continue;
-                    ArtifactInfo info = new ArtifactInfo(clazz, type);
+                    ArtifactInfo<? extends GriffonArtifact> info = new ArtifactInfo<>(clazz, type);
                     if (!list.contains(info)) list.add(info);
                 } catch (ClassNotFoundException e) {
                     throw new IllegalArgumentException(e);

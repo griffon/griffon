@@ -21,6 +21,7 @@ import griffon.core.addon.AddonManager;
 import griffon.core.artifact.ArtifactManager;
 import griffon.core.controller.ActionManager;
 import griffon.core.env.ApplicationPhase;
+import griffon.core.env.Lifecycle;
 import griffon.core.event.EventRouter;
 import griffon.core.i18n.MessageSource;
 import griffon.core.injection.Injector;
@@ -45,6 +46,7 @@ import java.util.concurrent.CountDownLatch;
 import static griffon.util.GriffonApplicationUtils.parseLocale;
 import static java.util.Arrays.asList;
 import static java.util.Objects.requireNonNull;
+import static org.codehaus.griffon.runtime.core.GriffonApplicationSupport.runLifecycleHandler;
 
 /**
  * Implements the basics for a skeleton GriffonApplication.<p>
@@ -236,8 +238,7 @@ public abstract class AbstractGriffonApplication extends AbstractObservable impl
 
         setPhase(ApplicationPhase.READY);
         event(ApplicationEvent.READY_START, asList(this));
-
-        // TODO GriffonApplicationHelper.runLifecycleHandler(Lifecycle.READY, this);
+        runLifecycleHandler(Lifecycle.READY, this);
         event(ApplicationEvent.READY_END, asList(this));
         setPhase(ApplicationPhase.MAIN);
     }
@@ -322,7 +323,7 @@ public abstract class AbstractGriffonApplication extends AbstractObservable impl
 
         // stage 4 - call shutdown script
         log.debug("Shutdown stage 4: execute Shutdown script");
-        // TODO GriffonApplicationHelper.runLifecycleHandler(Lifecycle.SHUTDOWN, this);
+        runLifecycleHandler(Lifecycle.SHUTDOWN, this);
 
         injector.getInstance(ExecutorServiceManager.class).shutdownAll();
         injector.close();
@@ -337,6 +338,7 @@ public abstract class AbstractGriffonApplication extends AbstractObservable impl
         event(ApplicationEvent.STARTUP_START, asList(this));
 
         Object startupGroups = getApplicationConfiguration().get("application.startupGroups", null);
+        System.out.println(startupGroups);
         if (startupGroups instanceof List) {
             if (log.isInfoEnabled()) {
                 log.info("Initializing all startup groups: " + startupGroups);
@@ -356,7 +358,7 @@ public abstract class AbstractGriffonApplication extends AbstractObservable impl
             }
         }
 
-        // TODO GriffonApplicationHelper.runLifecycleHandler(Lifecycle.STARTUP, this);
+        runLifecycleHandler(Lifecycle.STARTUP, this);
 
         event(ApplicationEvent.STARTUP_END, asList(this));
     }

@@ -1,5 +1,5 @@
 /*
- * Copyright 2010-2013 the original author or authors.
+ * Copyright 2009-2013 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,14 +14,23 @@
  * limitations under the License.
  */
 
-package griffon.core.artifact;
+package org.codehaus.griffon.runtime.core;
+
+import griffon.core.GriffonApplication;
+import griffon.core.PlatformHandler;
+
+import javax.annotation.Nonnull;
+
+import static java.util.Objects.requireNonNull;
 
 /**
- * Identifies a View artifact.
+ * Handles Linux integration.
  *
  * @author Andres Almiray
- * @since 0.9.1
+ * @since 0.9.3
  */
-public interface GriffonView extends GriffonMvcArtifact {
-    void initUI();
+public class DefaultPlatformHandler implements PlatformHandler {
+    public void handle(@Nonnull GriffonApplication application) {
+        requireNonNull(application, "Argument 'application' cannot be null");
+    }
 }

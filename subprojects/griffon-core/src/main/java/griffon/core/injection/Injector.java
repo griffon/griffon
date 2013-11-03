@@ -21,6 +21,7 @@ import griffon.exceptions.MembersInjectionException;
 
 import javax.annotation.Nonnull;
 import java.lang.annotation.Annotation;
+import java.util.Collection;
 
 /**
  * @author Andres Almiray
@@ -32,6 +33,9 @@ public interface Injector<I> {
 
     @Nonnull
     <T> T getInstance(@Nonnull Class<T> type, @Nonnull Annotation qualifier) throws InstanceNotFoundException;
+
+    @Nonnull
+    <T> Collection<T> getInstances(@Nonnull Class<T> type) throws InstanceNotFoundException;
 
     void injectMembers(@Nonnull Object instance) throws MembersInjectionException;
 

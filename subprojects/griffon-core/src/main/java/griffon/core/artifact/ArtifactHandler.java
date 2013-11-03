@@ -16,8 +16,11 @@
 
 package griffon.core.artifact;
 
+import griffon.core.injection.Binding;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.util.Collection;
 
 /**
  * The ArtifactHandler interface's purpose is to allow the analysis of conventions within a Griffon application.<p>
@@ -73,7 +76,8 @@ public interface ArtifactHandler<A extends GriffonArtifact> {
      *
      * @param artifacts an array of all artifacts this handler should manage
      */
-    void initialize(@Nonnull ArtifactInfo[] artifacts);
+    @Nonnull
+    Collection<Binding<?>> initialize(@Nonnull ArtifactInfo<A>[] artifacts);
 
     /**
      * Returns the set of all artifact classes this handler manages.

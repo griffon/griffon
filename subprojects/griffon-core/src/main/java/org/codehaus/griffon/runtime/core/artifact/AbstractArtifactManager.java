@@ -21,9 +21,8 @@ import griffon.core.artifact.*;
 import griffon.core.event.EventRouter;
 import griffon.core.injection.Binding;
 import griffon.core.injection.Injector;
-import griffon.core.injection.binder.LinkedBindingBuilder;
+import griffon.exceptions.ArtifactHandlerNotFoundException;
 import griffon.exceptions.ArtifactNotFoundException;
-import org.codehaus.griffon.runtime.core.injection.Bindings;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -83,25 +82,13 @@ public abstract class AbstractArtifactManager implements ArtifactManager {
                 String type = artifactsEntry.getKey();
                 ArtifactHandler handler = artifactHandlers.get(type);
                 if (handler == null) {
-                    // TODO No handler was registered for this type
-                    return;
+                    throw new ArtifactHandlerNotFoundException(type);
                 }
                 List<ArtifactInfo> list = artifactsEntry.getValue();
                 artifacts.put(type, list.toArray(new ArtifactInfo[list.size()]));
-                handler.initialize(artifacts.get(type));
-                for (ArtifactInfo artifactInfo : list) {
-                    Class<GriffonArtifact> clazz = artifactInfo.getClazz();
-                    LinkedBindingBuilder<GriffonClass> builder = Bindings.bind(GriffonClass.class)
-                        .withClassifier(new ArtifactImpl(clazz));
-                    builder.toInstance(handler.newGriffonClassInstance(clazz));
-                    bindings.add(builder.getBinding());
-                    bindings.add(Bindings.bind(clazz).getBinding());
-                }
+                //noinspection unchecked
+                bindings.addAll(handler.initialize(artifacts.get(type)));
             }
-        }
-
-        for (Binding<?> b : bindings) {
-            System.out.println(b);
         }
 
         artifactInjector = injector.createNestedInjector("artifactInjector", bindings);
@@ -109,13 +96,13 @@ public abstract class AbstractArtifactManager implements ArtifactManager {
 
     @Override
     @Nonnull
-    public <T> T newInstance(@Nonnull Class<T> clazz, @Nonnull String type) {
+    public <A extends GriffonArtifact> A newInstance(@Nonnull Class<A> clazz, @Nonnull String type) {
         GriffonClass griffonClass = findGriffonClass(clazz, type);
         if (griffonClass == null) {
             throw new ArtifactNotFoundException(clazz, type);
         }
 
-        T instance = artifactInjector.getInstance(clazz);
+        A instance = artifactInjector.getInstance(clazz);
         eventRouter.publish(ApplicationEvent.NEW_INSTANCE.getName(), asList(clazz, type, instance));
         return instance;
     }
@@ -130,8 +117,6 @@ public abstract class AbstractArtifactManager implements ArtifactManager {
         }
         synchronized (lock) {
             artifactHandlers.put(artifactHandler.getType(), artifactHandler);
-            if (artifacts.get(artifactHandler.getType()) != null)
-                artifactHandler.initialize(artifacts.get(artifactHandler.getType()));
         }
     }
 
@@ -159,7 +144,7 @@ public abstract class AbstractArtifactManager implements ArtifactManager {
     }
 
     @Nullable
-    public GriffonClass findGriffonClass(@Nonnull Class clazz, @Nonnull String type) {
+    public GriffonClass findGriffonClass(@Nonnull Class<? extends GriffonArtifact> clazz, @Nonnull String type) {
         requireNonNull(clazz, ERROR_CLASS_NULL);
         requireNonBlank(type, ERROR_TYPE_BLANK);
         if (LOG.isDebugEnabled()) {
@@ -167,12 +152,13 @@ public abstract class AbstractArtifactManager implements ArtifactManager {
         }
         synchronized (lock) {
             ArtifactHandler handler = artifactHandlers.get(type);
+            //noinspection unchecked
             return handler != null ? handler.getClassFor(clazz) : null;
         }
     }
 
     @Nullable
-    public GriffonClass findGriffonClass(@Nonnull Object artifact) {
+    public <A extends GriffonArtifact> GriffonClass findGriffonClass(@Nonnull A artifact) {
         requireNonNull(artifact, ERROR_ARTIFACT_NULL);
         if (LOG.isDebugEnabled()) {
             LOG.debug("Searching for griffonClass of " + artifact);
@@ -183,13 +169,14 @@ public abstract class AbstractArtifactManager implements ArtifactManager {
     }
 
     @Nullable
-    public GriffonClass findGriffonClass(@Nonnull Class clazz) {
+    public GriffonClass findGriffonClass(@Nonnull Class<? extends GriffonArtifact> clazz) {
         requireNonNull(clazz, ERROR_CLASS_NULL);
         if (LOG.isDebugEnabled()) {
             LOG.debug("Searching for griffonClass of " + clazz.getName());
         }
         synchronized (lock) {
             for (ArtifactHandler handler : artifactHandlers.values()) {
+                //noinspection unchecked
                 GriffonClass griffonClass = handler.getClassFor(clazz);
                 if (griffonClass != null) return griffonClass;
             }
@@ -225,7 +212,7 @@ public abstract class AbstractArtifactManager implements ArtifactManager {
 
     @Nonnull
     public List<GriffonClass> getAllClasses() {
-        List<GriffonClass> all = new ArrayList<GriffonClass>();
+        List<GriffonClass> all = new ArrayList<>();
         synchronized (lock) {
             for (ArtifactHandler handler : artifactHandlers.values()) {
                 all.addAll(asList(handler.getClasses()));
@@ -234,7 +221,7 @@ public abstract class AbstractArtifactManager implements ArtifactManager {
         return Collections.unmodifiableList(all);
     }
 
-    protected boolean isClassOfType(String type, Class clazz) {
+    protected <A extends GriffonArtifact> boolean isClassOfType(@Nonnull String type, @Nonnull Class<A> clazz) {
         for (ArtifactInfo artifactInfo : artifacts.get(type)) {
             if (artifactInfo.getClazz().getName().equals(clazz.getName())) {
                 return true;

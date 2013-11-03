@@ -21,13 +21,14 @@ import griffon.core.artifact.ArtifactHandler;
 import griffon.core.artifact.ArtifactInfo;
 import griffon.core.artifact.GriffonArtifact;
 import griffon.core.artifact.GriffonClass;
+import griffon.core.injection.Binding;
+import griffon.core.injection.binder.LinkedBindingBuilder;
+import org.codehaus.griffon.runtime.core.injection.Bindings;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.inject.Inject;
-import java.util.Collections;
-import java.util.Map;
-import java.util.TreeMap;
+import java.util.*;
 
 import static griffon.util.GriffonNameUtils.requireNonBlank;
 import static java.util.Objects.requireNonNull;
@@ -72,15 +73,36 @@ public abstract class AbstractArtifactHandler<A extends GriffonArtifact> impleme
         return trailing;
     }
 
-    public void initialize(@Nonnull ArtifactInfo[] artifacts) {
+    @Nonnull
+    public Collection<Binding<?>> initialize(@Nonnull ArtifactInfo<A>[] artifacts) {
         this.artifacts = new ArtifactInfo[artifacts.length];
         System.arraycopy(artifacts, 0, this.artifacts, 0, artifacts.length);
         classes = new GriffonClass[artifacts.length];
+        List<Binding<?>> bindings = new ArrayList<>();
         for (int i = 0; i < artifacts.length; i++) {
-            Class clazz = artifacts[i].getClazz();
-            classes[i] = newGriffonClassInstance(clazz);
-            classesByName.put(clazz.getName(), classes[i]);
+            Class<A> clazz = artifacts[i].getClazz();
+            GriffonClass griffonClass = newGriffonClassInstance(clazz);
+            classes[i] = griffonClass;
+            classesByName.put(clazz.getName(), griffonClass);
+            createBindings(bindings, clazz, griffonClass);
         }
+        return bindings;
+    }
+
+    protected void createBindings(@Nonnull List<Binding<?>> bindings, @Nonnull Class<A> clazz, @Nonnull GriffonClass griffonClass) {
+        LinkedBindingBuilder<GriffonClass> builder = Bindings.bind(GriffonClass.class)
+            .withClassifier(new ArtifactImpl(clazz));
+        builder.toInstance(griffonClass);
+        bindings.add(builder.getBinding());
+        bindings.add(Bindings.bind(clazz).getBinding());
+        /*
+        bindings.add(Bindings.bind(GriffonArtifact.class)
+            .withClassifier(new ArtifactImpl(clazz))
+            .getBinding());
+        bindings.add(Bindings.bind(clazz)
+            .toProvider(new GriffonArtifactProvider(clazz))
+            .getBinding());
+        */
     }
 
     @Nonnull
@@ -112,7 +134,8 @@ public abstract class AbstractArtifactHandler<A extends GriffonArtifact> impleme
     }
 
     @Nonnull
-    public ArtifactInfo[] getArtifacts() {
+    @SuppressWarnings("unchecked")
+    public ArtifactInfo<A>[] getArtifacts() {
         return artifacts;
     }
 
@@ -157,6 +180,7 @@ public abstract class AbstractArtifactHandler<A extends GriffonArtifact> impleme
         return null;
     }
 
+    @Nonnull
     protected GriffonApplication getApplication() {
         return application;
     }

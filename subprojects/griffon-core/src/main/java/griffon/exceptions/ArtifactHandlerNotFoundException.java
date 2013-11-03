@@ -14,14 +14,24 @@
  * limitations under the License.
  */
 
-package griffon.core.artifact;
+package griffon.exceptions;
+
+import javax.annotation.Nonnull;
 
 /**
- * Identifies a View artifact.
- *
  * @author Andres Almiray
- * @since 0.9.1
+ * @since 2.0.0
  */
-public interface GriffonView extends GriffonMvcArtifact {
-    void initUI();
+public class ArtifactHandlerNotFoundException extends GriffonException {
+    public ArtifactHandlerNotFoundException(@Nonnull String type) {
+        super(format(type));
+    }
+
+    public ArtifactHandlerNotFoundException(@Nonnull String type, @Nonnull Throwable cause) {
+        super(format(type), checkNonNull(cause, "cause"));
+    }
+
+    private static String format(String type) {
+        return "Could not find an ArtifactHandler for type " + checkNonNull(type, "type");
+    }
 }

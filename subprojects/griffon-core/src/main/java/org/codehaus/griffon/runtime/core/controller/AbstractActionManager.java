@@ -140,12 +140,13 @@ public abstract class AbstractActionManager implements ActionManager {
             public void run() {
                 Object[] updatedArgs = args;
                 List<ActionInterceptor> copy = new ArrayList<>(interceptors);
-                List<ActionInterceptor> invokedInterceptors = new ArrayList<>(interceptors);
+                List<ActionInterceptor> invokedInterceptors = new ArrayList<>();
 
                 ActionExecutionStatus status = ActionExecutionStatus.OK;
 
                 if (LOG.isDebugEnabled()) {
-                    LOG.debug("Invoking " + copy.size() + " interceptors for " + controller.getClass().getName() + "." + actionName);
+                    int size = copy.size();
+                    LOG.debug("Invoking " + size + " interceptor" + (size > 1 ? "s" : "") + " for " + controller.getClass().getName() + "." + actionName);
                 }
 
                 for (ActionInterceptor interceptor : copy) {
@@ -195,12 +196,8 @@ public abstract class AbstractActionManager implements ActionManager {
     }
 
     protected static <T> List<T> reverse(List<T> input) {
-        int size = input.size();
-        List<T> output = new ArrayList<>(size);
-        ListIterator<T> iterator = input.listIterator(size);
-        while (iterator.hasPrevious()) {
-            output.add(iterator.previous());
-        }
+        List<T> output = new ArrayList<>(input);
+        Collections.reverse(output);
         return output;
     }
 

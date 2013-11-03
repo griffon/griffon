@@ -17,11 +17,15 @@
 package org.codehaus.griffon.runtime.core;
 
 import griffon.core.*;
-import griffon.core.artifact.*;
+import griffon.core.artifact.ArtifactHandler;
+import griffon.core.artifact.ArtifactManager;
+import griffon.core.artifact.GriffonController;
+import griffon.core.artifact.GriffonControllerClass;
+import griffon.core.controller.ActionInterceptor;
 import griffon.core.env.Lifecycle;
 import griffon.core.injection.Injector;
+import griffon.core.mvc.MVCGroupConfiguration;
 import griffon.core.resources.ResourcesInjector;
-import org.codehaus.griffon.runtime.core.artifact.ArtifactImpl;
 import org.codehaus.griffon.runtime.core.controller.NoopActionManager;
 import org.codehaus.griffon.runtime.core.injection.NamedImpl;
 import org.slf4j.Logger;
@@ -29,15 +33,15 @@ import org.slf4j.LoggerFactory;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import javax.inject.Named;
 import java.beans.PropertyEditor;
 import java.beans.PropertyEditorManager;
 import java.io.IOException;
 import java.net.URL;
-import java.util.Enumeration;
-import java.util.List;
-import java.util.Scanner;
+import java.util.*;
 
 import static griffon.core.GriffonExceptionHandler.sanitize;
+import static griffon.util.GriffonNameUtils.getLogicalPropertyName;
 import static griffon.util.GriffonNameUtils.isBlank;
 import static java.util.Arrays.asList;
 import static java.util.Objects.requireNonNull;
@@ -63,12 +67,11 @@ public final class GriffonApplicationSupport {
         initializeResourcesInjector(application);
         runLifecycleHandler(Lifecycle.INITIALIZE, application);
         initializeArtifactManager(application);
+        applyPlatformTweaks(application);
         /*
-
-        applyPlatformTweaks(app);
-        initializeMvcManager(app);
         initializeAddonManager(app);
         */
+        initializeMvcManager(application);
         initializeActionManager(application);
 
         event(application, ApplicationEvent.BOOTSTRAP_END, asList(application));
@@ -156,11 +159,44 @@ public final class GriffonApplicationSupport {
     private static void initializeArtifactManager(@Nonnull GriffonApplication application) {
         Injector<?> injector = application.getInjector();
         ArtifactManager artifactManager = application.getArtifactManager();
-        artifactManager.registerArtifactHandler(injector.getInstance(ArtifactHandler.class, new ArtifactImpl(GriffonModel.class)));
-        artifactManager.registerArtifactHandler(injector.getInstance(ArtifactHandler.class, new ArtifactImpl(GriffonView.class)));
-        artifactManager.registerArtifactHandler(injector.getInstance(ArtifactHandler.class, new ArtifactImpl(GriffonController.class)));
-        // TODO finish me!!
+        for (ArtifactHandler artifactHandler : injector.getInstances(ArtifactHandler.class)) {
+            artifactManager.registerArtifactHandler(artifactHandler);
+        }
         artifactManager.loadArtifactMetadata(injector);
+    }
+
+    private static void applyPlatformTweaks(@Nonnull GriffonApplication application) {
+        PlatformHandler platformHandler = application.getInjector().getInstance(PlatformHandler.class);
+        platformHandler.handle(application);
+    }
+
+    private static void initializeMvcManager(@Nonnull GriffonApplication application) {
+        Map<String, MVCGroupConfiguration> configurations = new LinkedHashMap<>();
+        Map<String, Map<String, Object>> mvcGroups = application.getApplicationConfiguration().get("mvcGroups", Collections.<String, Map<String, Object>>emptyMap());
+        if (mvcGroups != null) {
+            for (Map.Entry<String, Map<String, Object>> groupEntry : mvcGroups.entrySet()) {
+                String type = groupEntry.getKey();
+                if (LOG.isDebugEnabled()) {
+                    LOG.debug("Adding MVC group " + type);
+                }
+                Map<String, Object> members = groupEntry.getValue();
+                Map<String, Object> configMap = new LinkedHashMap<String, Object>();
+                Map<String, String> membersCopy = new LinkedHashMap<String, String>();
+                for (Object o : members.entrySet()) {
+                    Map.Entry entry = (Map.Entry) o;
+                    String key = String.valueOf(entry.getKey());
+                    if ("config".equals(key) && entry.getValue() instanceof Map) {
+                        //noinspection unchecked
+                        configMap = (Map<String, Object>) entry.getValue();
+                    } else {
+                        membersCopy.put(key, String.valueOf(entry.getValue()));
+                    }
+                }
+                configurations.put(type, application.getMvcGroupManager().newMVCGroupConfiguration(type, membersCopy, configMap));
+            }
+        }
+
+        application.getMvcGroupManager().initialize(configurations);
     }
 
     private static void initializeActionManager(final @Nonnull GriffonApplication application) {
@@ -179,41 +215,16 @@ public final class GriffonApplicationSupport {
             }
         });
 
-        /*
-        TODO finish me!!
-        application.getEventRouter().addEventListener(ApplicationEvent.INITIALIZE_MVC_GROUP.getName(), new CallableWithArgs<Void>() {
-            public Void call(@Nonnull Object[] args) {
-                MVCGroupConfiguration groupConfig = (MVCGroupConfiguration) args[0];
-                MVCGroup group = (MVCGroup) args[1];
-                GriffonController controller = group.getController();
-                if (controller == null) return null;
-                FactoryBuilderSupport builder = group.getBuilder();
-                Map<String, Action> actions = application.getActionManager().actionsFor(controller);
-                for (Map.Entry<String, Action> action : actions.entrySet()) {
-                    String actionKey = application.getActionManager().normalizeName(action.getKey()) + ActionManager.ACTION;
-                    if (LOG.isTraceEnabled()) {
-                        LOG.trace("Adding action " + actionKey + " to " + groupConfig.getMvcType() + ":" + group.getMvcId() + ":builder");
-                    }
-                    builder.setVariable(actionKey, action.getValue().getToolkitAction());
-                }
-                return null;
-            }
-        });
-        */
-
-        /*
-        Map<String, Map<String, Object>> actionInterceptors = new LinkedHashMap<>();
-        for (GriffonAddon addon : application.getAddonManager().getAddons().values()) {
-            Map<String, Map<String, Object>> interceptors = addon.getActionInterceptors();
-            if (!interceptors.isEmpty()) {
-                actionInterceptors.putAll(interceptors);
-            }
+        Injector<?> injector = application.getInjector();
+        Map<String, ActionInterceptor> actionInterceptors = new LinkedHashMap<>();
+        for (ActionInterceptor actionInterceptor : injector.getInstances(ActionInterceptor.class)) {
+            actionInterceptors.put(nameFor(actionInterceptor), actionInterceptor);
         }
 
         // grab application specific order
         List<String> interceptorOrder = application.getApplicationConfiguration().get(KEY_GRIFFON_CONTROLLER_ACTION_INTERCEPTOR_ORDER, Collections.<String>emptyList());
-        Map<String, Map<String, Object>> tmp = new LinkedHashMap<>(actionInterceptors);
-        Map<String, Map<String, Object>> map = new LinkedHashMap<>();
+        Map<String, ActionInterceptor> tmp = new LinkedHashMap<>(actionInterceptors);
+        Map<String, ActionInterceptor> map = new LinkedHashMap<>();
         //noinspection ConstantConditions
         for (String interceptorName : interceptorOrder) {
             if (tmp.containsKey(interceptorName)) {
@@ -237,23 +248,14 @@ public final class GriffonApplicationSupport {
                 LOG.debug("Current interceptor order is " + actionInterceptors.keySet());
             }
 
-            for (Iterator<Map.Entry<String, Map<String, Object>>> iter = map.entrySet().iterator(); iter.hasNext(); ) {
-                Map.Entry<String, Map<String, Object>> entry = iter.next();
+            for (Iterator<Map.Entry<String, ActionInterceptor>> iter = map.entrySet().iterator(); iter.hasNext(); ) {
+                Map.Entry<String, ActionInterceptor> entry = iter.next();
                 String interceptorName = entry.getKey();
-                List<String> dependsOn = getConfigValue(entry.getValue(), "dependsOn", Collections.<String>emptyList());
-                String interceptorClassName = getConfigValueAsString(entry.getValue(), "interceptor", null);
+                List<String> dependsOn = entry.getValue().dependsOn();
 
                 if (LOG.isDebugEnabled()) {
                     LOG.debug("Processing interceptor '" + interceptorName + "'");
                     LOG.debug("    depends on '" + dependsOn + "'");
-                }
-
-                if (isBlank(interceptorClassName)) {
-                    if (LOG.isDebugEnabled()) {
-                        LOG.debug("  Skipped interceptor '" + interceptorName + "', since it does not define an interceptor class");
-                    }
-                    iter.remove();
-                    continue;
                 }
 
                 if (!dependsOn.isEmpty()) {
@@ -289,7 +291,7 @@ public final class GriffonApplicationSupport {
                 if (LOG.isDebugEnabled()) {
                     LOG.debug("  Adding interceptor '" + interceptorName + "', since all dependencies have been added");
                 }
-                sortedInterceptors.add((ActionInterceptor) newInstance(app, safeLoadClass(interceptorClassName)));
+                sortedInterceptors.add(entry.getValue());
                 addedDeps.add(interceptorName);
                 iter.remove();
                 filtersAdded++;
@@ -303,9 +305,9 @@ public final class GriffonApplicationSupport {
                     LOG.warn("::   Continuing with original interceptor order     ::");
                     LOG.warn("::::::::::::::::::::::::::::::::::::::::::::::::::::::");
                 }
-                for (Map.Entry<String, Map<String, Object>> entry : map.entrySet()) {
+                for (Map.Entry<String, ActionInterceptor> entry : map.entrySet()) {
                     String interceptorName = entry.getKey();
-                    List<String> dependsOn = getConfigValue(entry.getValue(), "dependsOn", Collections.<String>emptyList());
+                    List<String> dependsOn = entry.getValue().dependsOn();
 
                     // display this as a cyclical dep
                     if (LOG.isWarnEnabled()) {
@@ -342,7 +344,37 @@ public final class GriffonApplicationSupport {
         for (ActionInterceptor interceptor : sortedInterceptors) {
             application.getActionManager().addActionInterceptor(interceptor);
         }
+
+        /*
+        TODO finish me!!
+        application.getEventRouter().addEventListener(ApplicationEvent.INITIALIZE_MVC_GROUP.getName(), new CallableWithArgs<Void>() {
+            public Void call(@Nonnull Object[] args) {
+                MVCGroupConfiguration groupConfig = (MVCGroupConfiguration) args[0];
+                MVCGroup group = (MVCGroup) args[1];
+                GriffonController controller = group.getController();
+                if (controller == null) return null;
+                FactoryBuilderSupport builder = group.getBuilder();
+                Map<String, Action> actions = application.getActionManager().actionsFor(controller);
+                for (Map.Entry<String, Action> action : actions.entrySet()) {
+                    String actionKey = application.getActionManager().normalizeName(action.getKey()) + ActionManager.ACTION;
+                    if (LOG.isTraceEnabled()) {
+                        LOG.trace("Adding action " + actionKey + " to " + groupConfig.getMvcType() + ":" + group.getMvcId() + ":builder");
+                    }
+                    builder.setVariable(actionKey, action.getValue().getToolkitAction());
+                }
+                return null;
+            }
+        });
         */
+    }
+
+    @Nonnull
+    private static String nameFor(@Nonnull ActionInterceptor actionInterceptor) {
+        Named named = actionInterceptor.getClass().getAnnotation(Named.class);
+        if (named != null && !isBlank(named.value())) {
+            return named.value();
+        }
+        return getLogicalPropertyName(actionInterceptor.getClass().getName(), "ActionInterceptor");
     }
 
     public static void runLifecycleHandler(@Nonnull Lifecycle lifecycle, @Nonnull GriffonApplication application) {
@@ -361,11 +393,9 @@ public final class GriffonApplicationSupport {
         try {
             handler = application.getInjector().getInstance(LifecycleHandler.class, new NamedImpl(lifecycle.getName()));
         } catch (Exception e) {
-            e.printStackTrace();
             // the script must not exist, do nothing
             //LOGME - may be because of chained failures
             return;
-
         }
 
         handler.execute();

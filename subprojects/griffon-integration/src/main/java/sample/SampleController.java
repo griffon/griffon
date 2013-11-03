@@ -1,29 +1,25 @@
 package sample;
 
 import griffon.core.GriffonApplication;
-import griffon.transform.Threading;
 import org.codehaus.griffon.runtime.core.artifact.AbstractGriffonController;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
+import java.awt.event.ActionEvent;
 
 public class SampleController extends AbstractGriffonController {
+    private SampleModel model;
+
     @Inject
     public SampleController(@Nonnull GriffonApplication application) {
         super(application);
     }
 
-    @Threading(Threading.Policy.INSIDE_UITHREAD_SYNC)
-    public void click() {
-        System.out.println(getApplication().getUIThreadManager());
-        System.out.println("isUIThread? " + isUIThread());
-        System.out.println("FOO");
-        runInsideUIAsync(new Runnable() {
-            @Override
-            public void run() {
-                System.out.println("isUIThread? " + isUIThread());
-                System.out.println("BAR");
-            }
-        });
+    public void setModel(SampleModel model) {
+        this.model = model;
+    }
+
+    public void click(ActionEvent event) {
+        System.out.println("click " + event);
     }
 }
