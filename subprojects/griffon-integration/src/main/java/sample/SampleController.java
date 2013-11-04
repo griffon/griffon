@@ -11,6 +11,9 @@ public class SampleController extends AbstractGriffonController {
     private SampleModel model;
 
     @Inject
+    private SampleService sampleService;
+
+    @Inject
     public SampleController(@Nonnull GriffonApplication application) {
         super(application);
     }

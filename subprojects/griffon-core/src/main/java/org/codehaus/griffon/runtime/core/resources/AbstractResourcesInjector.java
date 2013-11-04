@@ -219,9 +219,8 @@ public abstract class AbstractResourcesInjector implements ResourcesInjector {
                 field.setAccessible(true);
                 field.set(instance, value);
             } catch (IllegalAccessException e) {
-                if (LOG.isWarnEnabled()) {
-                    LOG.warn("Cannot set value on field " + fqFieldName + " of instance " + instance, sanitize(e));
-                }
+                LOG.warn("Cannot set value on field {} of instance {}", fqFieldName, instance, sanitize(e));
+
             }
         }
     }

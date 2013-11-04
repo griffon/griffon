@@ -19,9 +19,15 @@ package griffon.util;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.Map;
+import java.util.MissingResourceException;
+import java.util.ResourceBundle;
 
+import static griffon.util.GriffonNameUtils.requireNonBlank;
 import static griffon.util.TypeUtils.*;
+import static java.util.Objects.requireNonNull;
 
 /**
  * Utility class for reading applicationConfiguration properties.
@@ -29,9 +35,9 @@ import static griffon.util.TypeUtils.*;
  * @author Andres Almiray
  */
 public final class ConfigUtils {
+    protected static final String ERROR_CONFIG_NULL = "Argument 'config' cannot be null";
+    protected static final String ERROR_KEY_BLANK = "Argument 'key' cannot be blank";
     private static final Logger LOG = LoggerFactory.getLogger(ConfigUtils.class);
-    private static final String PROPERTIES_SUFFIX = "properties";
-    private static final String GROOVY_SUFFIX = "groovy";
 
     private ConfigUtils() {
         // prevent instantiation
@@ -59,25 +65,18 @@ public final class ConfigUtils {
     }
 
     /**
-     * Returns the value for the specified key.
-     *
-     * @param config the applicationConfiguration object to be searched upon
-     * @param key    the key to be searched
-     * @return the value of the key. May return null
-     */
-    public static Object getConfigValue(Map config, String key) {
-        return getConfigValue(config, key, null);
-    }
-
-    /**
      * Returns the value for the specified key with an optional default value if no match is found.
      *
-     * @param config       the applicationConfiguration object to be searched upon
+     * @param config       the configuration object to be searched upon
      * @param key          the key to be searched
      * @param defaultValue the value to send back if no match is found
      * @return the value of the key or the default value if no match is found
      */
-    public static <T> T getConfigValue(Map config, String key, T defaultValue) {
+    @Nullable
+    public static <T> T getConfigValue(@Nonnull Map config, @Nonnull String key, @Nullable T defaultValue) {
+        requireNonNull(config, "Argument 'config' cannot be null");
+        requireNonBlank(key, ERROR_KEY_BLANK);
+
         String[] keys = key.split("\\.");
         for (int i = 0; i < keys.length - 1; i++) {
             if (config != null) {
@@ -92,8 +91,151 @@ public final class ConfigUtils {
             }
         }
         if (config == null) return defaultValue;
-        T value = (T) config.get(keys[keys.length - 1]);
-        return value != null ? value : defaultValue;
+        Object value = config.get(keys[keys.length - 1]);
+        return value != null ? (T) value : defaultValue;
+    }
+
+    /**
+     * Returns the value for the specified key with an optional default value if no match is found.
+     *
+     * @param config       the configuration object to be searched upon
+     * @param key          the key to be searched
+     * @param defaultValue the value to send back if no match is found
+     * @return the value of the key or the default value if no match is found
+     */
+    @Nullable
+    public static <T> T getConfigValue(@Nonnull ResourceBundle config, @Nonnull String key, @Nullable T defaultValue) {
+        requireNonNull(config, ERROR_CONFIG_NULL);
+        requireNonBlank(key, ERROR_KEY_BLANK);
+
+        String[] keys = key.split("\\.");
+
+        if (!config.containsKey(keys[0])) {
+            return defaultValue;
+        }
+
+        if (keys.length == 1) {
+            Object node = config.getObject(keys[0]);
+            return node != null ? (T) node : defaultValue;
+        }
+
+        Object node = config.getObject(keys[0]);
+        if (!(node instanceof Map)) {
+            return defaultValue;
+        }
+
+        Map map = (Map) node;
+        for (int i = 1; i < keys.length - 1; i++) {
+            if (map != null) {
+                node = map.get(keys[i]);
+                if (node instanceof Map) {
+                    map = (Map) node;
+                } else {
+                    return defaultValue;
+                }
+            } else {
+                return defaultValue;
+            }
+        }
+        if (map == null) return defaultValue;
+        Object value = map.get(keys[keys.length - 1]);
+        return value != null ? (T) value : defaultValue;
+    }
+
+    /**
+     * Returns the value for the specified key with an optional default value if no match is found.
+     *
+     * @param config the configuration object to be searched upon
+     * @param key    the key to be searched
+     * @return the value of the key or the default value if no match is found
+     */
+    @Nullable
+    public static <T> T getConfigValue(@Nonnull Map config, @Nonnull String key) throws MissingResourceException {
+        requireNonNull(config, "Argument 'config' cannot be null");
+        requireNonBlank(key, ERROR_KEY_BLANK);
+        String type = config.getClass().getName();
+
+        String[] keys = key.split("\\.");
+        for (int i = 0; i < keys.length - 1; i++) {
+            if (config != null) {
+                Object node = config.get(keys[i]);
+                if (node instanceof Map) {
+                    config = (Map) node;
+                } else {
+                    throw missingResource(type, key);
+                }
+            } else {
+                throw missingResource(type, key);
+            }
+        }
+        if (config == null) {
+            throw missingResource(type, key);
+        }
+        Object value = config.get(keys[keys.length - 1]);
+        if (value != null) {
+            return (T) value;
+        }
+        throw missingResource(type, key);
+    }
+
+    /**
+     * Returns the value for the specified key with an optional default value if no match is found.
+     *
+     * @param config the configuration object to be searched upon
+     * @param key    the key to be searched
+     * @return the value of the key or the default value if no match is found
+     */
+    @Nullable
+    public static <T> T getConfigValue(@Nonnull ResourceBundle config, @Nonnull String key) throws MissingResourceException {
+        requireNonNull(config, ERROR_CONFIG_NULL);
+        requireNonBlank(key, ERROR_KEY_BLANK);
+        String type = config.getClass().getName();
+
+        String[] keys = key.split("\\.");
+
+        if (!config.containsKey(keys[0])) {
+            throw missingResource(type, key);
+        }
+
+        if (keys.length == 1) {
+            Object node = config.getObject(keys[0]);
+            if (node != null) {
+                return (T) node;
+            }
+            throw missingResource(type, key);
+        }
+
+        Object node = config.getObject(keys[0]);
+        if (!(node instanceof Map)) {
+            throw missingResource(type, key);
+        }
+
+        Map map = (Map) node;
+        for (int i = 1; i < keys.length - 1; i++) {
+            if (map != null) {
+                node = map.get(keys[i]);
+                if (node instanceof Map) {
+                    map = (Map) node;
+                } else {
+                    throw missingResource(type, key);
+                }
+            } else {
+                throw missingResource(type, key);
+            }
+        }
+        if (map == null) {
+            throw missingResource(type, key);
+        }
+
+        Object value = map.get(keys[keys.length - 1]);
+        if (value != null) {
+            return (T) value;
+        }
+        throw missingResource(type, key);
+    }
+
+    private static MissingResourceException missingResource(String classname, String key) throws MissingResourceException {
+        return new MissingResourceException("Can't find resource for bundle " + classname + ", key " + key, classname, key);
     }
 
     /**

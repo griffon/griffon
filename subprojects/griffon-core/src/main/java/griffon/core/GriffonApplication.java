@@ -27,7 +27,6 @@ import griffon.core.mvc.MVCGroupManager;
 import griffon.core.resources.ResourceHandler;
 import griffon.core.resources.ResourceResolver;
 import griffon.core.resources.ResourcesInjector;
-import griffon.core.service.ServiceManager;
 import griffon.core.threading.UIThreadManager;
 import griffon.core.view.WindowManager;
 import org.slf4j.Logger;
@@ -58,8 +57,6 @@ public interface GriffonApplication extends Observable {
     AddonManager getAddonManager();
 
     MVCGroupManager getMvcGroupManager();
-
-    ServiceManager getServiceManager();
 
     MessageSource getMessageSource();
 

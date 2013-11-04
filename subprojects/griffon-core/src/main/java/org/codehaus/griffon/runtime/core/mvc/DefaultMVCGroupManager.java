@@ -96,9 +96,7 @@ public class DefaultMVCGroupManager extends AbstractMVCGroupManager {
         //noinspection ConstantConditions
         checkIdIsUnique(mvcId, configuration);
 
-        if (LOG.isInfoEnabled()) {
-            LOG.info("Building MVC group '" + configuration.getMvcType() + "' with name '" + mvcId + "'");
-        }
+        LOG.info("Building MVC group '{}' with name '{}'", configuration.getMvcType(), mvcId);
         Map<String, Object> argsCopy = copyAndConfigureArguments(args, configuration, mvcId);
 
         // figure out what the classes are
@@ -172,10 +170,8 @@ public class DefaultMVCGroupManager extends AbstractMVCGroupManager {
         if (findGroup(mvcId) != null) {
             String action = getApplication().getApplicationConfiguration().getAsString("griffon.mvcid.collision", "exception");
             if ("warning".equalsIgnoreCase(action)) {
-                if (LOG.isWarnEnabled()) {
-                    LOG.warn("A previous instance of MVC group '" + configuration.getMvcType() + "' with name '" + mvcId + "' exists. Destroying the old instance first.");
-                    destroyMVCGroup(mvcId);
-                }
+                LOG.warn("A previous instance of MVC group '{}' with name '{}' exists. Destroying the old instance first.", configuration.getMvcType(), mvcId);
+                destroyMVCGroup(mvcId);
             } else {
                 throw new MVCGroupInstantiationException("Can not instantiate MVC group '" + configuration.getMvcType() + "' with name '" + mvcId + "' because a previous instance with that name exists and was not disposed off properly.", configuration.getMvcType(), mvcId);
             }
@@ -203,9 +199,7 @@ public class DefaultMVCGroupManager extends AbstractMVCGroupManager {
     }
 
     protected void initializeMembers(@Nonnull MVCGroup group, @Nonnull Map<String, Object> args) {
-        if (LOG.isDebugEnabled()) {
-            LOG.debug("Initializing each MVC member of group '" + group.getMvcId() + "'");
-        }
+        LOG.debug("Initializing each MVC member of group '{}'", group.getMvcId());
         for (Map.Entry<String, GriffonArtifact> memberEntry : group.getMembers().entrySet()) {
             final GriffonArtifact member = memberEntry.getValue();
             initializeMember(member, args);
@@ -241,15 +235,12 @@ public class DefaultMVCGroupManager extends AbstractMVCGroupManager {
 
     public void destroyMVCGroup(@Nonnull String mvcId) {
         MVCGroup group = findGroup(mvcId);
-        if (LOG.isDebugEnabled()) {
-            LOG.trace("Group '" + mvcId + "' points to " + group);
-        }
+        LOG.trace("Group '{}' points to {}", mvcId, group);
+
 
         if (group == null) return;
 
-        if (LOG.isInfoEnabled()) {
-            LOG.info("Destroying MVC group identified by '" + mvcId + "'");
-        }
+        LOG.info("Destroying MVC group identified by '{}'", mvcId);
 
         if (isConfigFlagEnabled(group.getConfiguration(), CONFIG_KEY_EVENTS_LISTENER)) {
             GriffonController controller = group.getController();

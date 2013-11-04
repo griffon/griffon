@@ -16,8 +16,7 @@
 
 package org.codehaus.griffon.runtime.core.addon;
 
-import griffon.core.ApplicationConfiguration;
-import griffon.core.addon.GriffonAddonDescriptor;
+import griffon.core.GriffonApplication;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
@@ -27,22 +26,8 @@ import javax.inject.Inject;
  * @since 0.9.2
  */
 public class DefaultAddonManager extends AbstractAddonManager {
-    private final ApplicationConfiguration applicationConfiguration;
-
     @Inject
-    public DefaultAddonManager(ApplicationConfiguration applicationConfiguration) {
-        this.applicationConfiguration = applicationConfiguration;
-    }
-
-    protected ApplicationConfiguration getApplicationConfiguration() {
-        return applicationConfiguration;
-    }
-
-    protected void doInitialize() {
-        // TODO read from applicationConfiguration
-    }
-
-    protected void doRegisterAddon(@Nonnull GriffonAddonDescriptor addonDescriptor) {
-        getAddonsInternal().put(addonDescriptor.getPluginName(), addonDescriptor);
+    public DefaultAddonManager(@Nonnull GriffonApplication application) {
+        super(application);
     }
 }

@@ -38,6 +38,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 import static griffon.core.GriffonExceptionHandler.sanitize;
+import static griffon.util.CollectionUtils.reverse;
 import static griffon.util.GriffonNameUtils.*;
 import static griffon.util.TypeUtils.castToBoolean;
 import static java.lang.reflect.Modifier.isPublic;
@@ -91,9 +92,7 @@ public abstract class AbstractActionManager implements ActionManager {
         requireNonNull(controller, ERROR_CONTROLLER_NULL);
         Map<String, Action> actions = actionCache.get(controller);
         if (actions.isEmpty()) {
-            if (LOG.isTraceEnabled()) {
-                LOG.trace("No actions defined for controller " + controller);
-            }
+            LOG.trace("No actions defined for controller {}", controller);
         }
         return actions;
     }
@@ -113,9 +112,7 @@ public abstract class AbstractActionManager implements ActionManager {
             Method method = findActionAsMethod(controller, actionName);
             for (ActionInterceptor interceptor : interceptors) {
                 if (method != null) {
-                    if (LOG.isDebugEnabled()) {
-                        LOG.debug("Configuring action " + controller.getClass().getName() + "." + actionName + " with " + interceptor);
-                    }
+                    LOG.debug("Configuring action {}.{} with {}", controller.getClass().getName(), actionName, interceptor);
                     interceptor.configure(controller, actionName, method);
                 }
             }
@@ -126,9 +123,7 @@ public abstract class AbstractActionManager implements ActionManager {
                 actionCache.set(controller, actions);
             }
             String actionKey = normalizeName(actionName);
-            if (LOG.isTraceEnabled()) {
-                LOG.trace("Action for " + controller.getClass().getName() + "." + actionName + " stored as " + actionKey);
-            }
+            LOG.trace("Action for {}.{}  stored as {}", controller.getClass().getName(), actionName + actionKey);
             actions.put(actionKey, action);
         }
     }
@@ -155,9 +150,7 @@ public abstract class AbstractActionManager implements ActionManager {
                         updatedArgs = interceptor.before(controller, actionName, updatedArgs);
                     } catch (AbortActionExecution aae) {
                         status = ActionExecutionStatus.ABORTED;
-                        if (LOG.isInfoEnabled()) {
-                            LOG.info("Execution of " + controller.getClass().getName() + "." + actionName + " was aborted by " + interceptor);
-                        }
+                        LOG.info("Execution of {}.{} was aborted by ", controller.getClass().getName(), actionName, interceptor);
                         break;
                     }
                 }
@@ -169,9 +162,7 @@ public abstract class AbstractActionManager implements ActionManager {
                     } catch (InstanceMethodInvocationException e) {
                         status = ActionExecutionStatus.EXCEPTION;
                         exception = (InstanceMethodInvocationException) sanitize(e);
-                        if (LOG.isDebugEnabled()) {
-                            LOG.debug("An exception occurred when executing " + controller.getClass().getName() + "." + actionName, exception);
-                        }
+                        LOG.debug("An exception occurred when executing {}.{}", controller.getClass().getName(), actionName, exception);
                     }
                 }
 
@@ -195,12 +186,6 @@ public abstract class AbstractActionManager implements ActionManager {
         invokeAction(controller, actionName, runnable);
     }
 
-    protected static <T> List<T> reverse(List<T> input) {
-        List<T> output = new ArrayList<>(input);
-        Collections.reverse(output);
-        return output;
-    }
-
     private void invokeAction(@Nonnull GriffonController controller, @Nonnull String actionName, @Nonnull Runnable runnable) {
         String fullQualifiedActionName = controller.getClass().getName() + "." + actionName;
         Threading.Policy policy = threadingPolicies.get(fullQualifiedActionName);
@@ -213,9 +198,7 @@ public abstract class AbstractActionManager implements ActionManager {
             threadingPolicies.put(fullQualifiedActionName, policy);
         }
 
-        if (LOG.isDebugEnabled()) {
-            LOG.debug("Executing " + controller.getClass().getName() + "." + actionName + " with policy " + policy);
-        }
+        LOG.debug("Executing {}.{} with policy {}", controller.getClass().getName(), actionName, policy);
 
         switch (policy) {
             case OUTSIDE_UITHREAD:

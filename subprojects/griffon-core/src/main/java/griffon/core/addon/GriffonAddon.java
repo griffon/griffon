@@ -16,8 +16,8 @@
 
 package griffon.core.addon;
 
-import griffon.core.CallableWithArgs;
 import griffon.core.GriffonApplication;
+import griffon.core.ShutdownHandler;
 import org.slf4j.Logger;
 
 import javax.annotation.Nonnull;
@@ -29,7 +29,7 @@ import java.util.Map;
  * @author Andres Almiray
  * @since 0.9.2
  */
-public interface GriffonAddon {
+public interface GriffonAddon extends ShutdownHandler {
     @Nonnull
     Logger getLog();
 
@@ -38,11 +38,5 @@ public interface GriffonAddon {
     void addonPostInit(@Nonnull GriffonApplication app);
 
     @Nonnull
-    Map<String, CallableWithArgs> getEvents();
-
-    @Nonnull
     Map<String, Map<String, Object>> getMvcGroups();
-
-    @Nonnull
-    Map<String, Map<String, Object>> getActionInterceptors();
 }

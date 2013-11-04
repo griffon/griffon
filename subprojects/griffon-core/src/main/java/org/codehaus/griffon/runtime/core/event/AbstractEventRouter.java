@@ -163,7 +163,7 @@ public abstract class AbstractEventRouter implements EventRouter {
                 continue;
             }
             GriffonClassUtils.MethodDescriptor candidate = GriffonClassUtils.MethodDescriptor.forMethod(method);
-            if (!candidate.equals(target)) {
+            if (!candidate.matches(target)) {
                 continue;
             }
             MethodUtils.invokeSafe(method, instance, asArray(params));
@@ -188,9 +188,9 @@ public abstract class AbstractEventRouter implements EventRouter {
         synchronized (listeners) {
             if (listeners.contains(listener)) return;
             try {
-                LOG.debug("Adding listener " + listener);
+                LOG.debug("Adding listener {}", listener);
             } catch (UnsupportedOperationException uoe) {
-                LOG.debug("Adding listener " + listener.getClass().getName());
+                LOG.debug("Adding listener {}", listener.getClass().getName());
             }
             listeners.add(listener);
         }
@@ -213,12 +213,10 @@ public abstract class AbstractEventRouter implements EventRouter {
             return;
         }
         synchronized (listeners) {
-            if (LOG.isDebugEnabled()) {
-                try {
-                    LOG.debug("Removing listener " + listener);
-                } catch (UnsupportedOperationException uoe) {
-                    LOG.debug("Removing listener " + listener.getClass().getName());
-                }
+            try {
+                LOG.debug("Removing listener {}", listener);
+            } catch (UnsupportedOperationException uoe) {
+                LOG.debug("Removing listener {}", listener.getClass().getName());
             }
             listeners.remove(listener);
             removeNestedListeners(listener);
@@ -245,9 +243,7 @@ public abstract class AbstractEventRouter implements EventRouter {
                 callableListeners.put(capitalize(eventName), list);
             }
             if (list.contains(listener)) return;
-            if (LOG.isDebugEnabled()) {
-                LOG.debug("Adding listener " + listener.getClass().getName() + " on " + capitalize(eventName));
-            }
+            LOG.debug("Adding listener {} on {}", listener.getClass().getName(), capitalize(eventName));
             list.add(listener);
         }
     }
@@ -259,9 +255,7 @@ public abstract class AbstractEventRouter implements EventRouter {
         synchronized (callableListeners) {
             List list = callableListeners.get(capitalize(eventName));
             if (list != null) {
-                if (LOG.isDebugEnabled()) {
-                    LOG.debug("Removing listener " + listener.getClass().getName() + " on " + capitalize(eventName));
-                }
+                LOG.debug("Removing listener {} on {}", listener.getClass().getName(), capitalize(eventName));
                 list.remove(listener);
             }
         }
@@ -274,9 +268,7 @@ public abstract class AbstractEventRouter implements EventRouter {
         return new Runnable() {
             public void run() {
                 String eventName = capitalize(event);
-                if (LOG.isTraceEnabled()) {
-                    LOG.trace("Triggering event '" + eventName + "' " + mode);
-                }
+                LOG.trace("Triggering event '{}' {}", eventName, mode);
                 String eventHandler = "on" + eventName;
                 // defensive copying to avoid CME during event dispatching
                 // GRIFFON-224
@@ -317,9 +309,7 @@ public abstract class AbstractEventRouter implements EventRouter {
                     }
                 }
                 for (CallableWithArgs listener : toRemove) {
-                    if (LOG.isDebugEnabled()) {
-                        LOG.debug("Removing listener " + listener.getClass().getName() + " on " + capitalize(eventName));
-                    }
+                    LOG.debug("Removing listener {} on {}", listener.getClass().getName(), capitalize(eventName));
                     listenerList.remove(listener);
                 }
             }

@@ -20,7 +20,6 @@ import griffon.core.*;
 import griffon.core.artifact.ArtifactHandler;
 import griffon.core.artifact.ArtifactManager;
 import griffon.core.artifact.GriffonController;
-import griffon.core.artifact.GriffonControllerClass;
 import griffon.core.controller.ActionInterceptor;
 import griffon.core.env.Lifecycle;
 import griffon.core.injection.Injector;
@@ -54,8 +53,8 @@ import static java.util.Objects.requireNonNull;
  */
 public final class GriffonApplicationSupport {
     private static final Logger LOG = LoggerFactory.getLogger(GriffonApplicationSupport.class);
-    private static final String ERROR_APPLICATION_NULL = "Argument 'application' cannot be null";
 
+    private static final String ERROR_APPLICATION_NULL = "Argument 'application' cannot be null";
     private static final String KEY_APP_LIFECYCLE_HANDLER_DISABLE = "app.lifecycle.handler.disable";
     private static final String KEY_GRIFFON_CONTROLLER_ACTION_INTERCEPTOR_ORDER = "griffon.controller.action.interceptor.order";
 
@@ -68,9 +67,7 @@ public final class GriffonApplicationSupport {
         runLifecycleHandler(Lifecycle.INITIALIZE, application);
         initializeArtifactManager(application);
         applyPlatformTweaks(application);
-        /*
-        initializeAddonManager(app);
-        */
+        initializeAddonManager(application);
         initializeMvcManager(application);
         initializeActionManager(application);
 
@@ -149,7 +146,7 @@ public final class GriffonApplicationSupport {
         final ResourcesInjector injector = application.getInjector().getInstance(ResourcesInjector.class);
         application.getEventRouter().addEventListener(ApplicationEvent.NEW_INSTANCE.getName(), new CallableWithArgs<Void>() {
             public Void call(@Nonnull Object[] args) {
-                Object instance = args[2];
+                Object instance = args[1];
                 injector.injectResources(instance);
                 return null;
             }
@@ -163,11 +160,16 @@ public final class GriffonApplicationSupport {
             artifactManager.registerArtifactHandler(artifactHandler);
         }
         artifactManager.loadArtifactMetadata(injector);
+        application.addShutdownHandler(artifactManager);
     }
 
     private static void applyPlatformTweaks(@Nonnull GriffonApplication application) {
         PlatformHandler platformHandler = application.getInjector().getInstance(PlatformHandler.class);
         platformHandler.handle(application);
+    }
+
+    private static void initializeAddonManager(@Nonnull GriffonApplication application) {
+        application.getAddonManager().initialize();
     }
 
     private static void initializeMvcManager(@Nonnull GriffonApplication application) {
@@ -206,9 +208,9 @@ public final class GriffonApplicationSupport {
 
         application.getEventRouter().addEventListener(ApplicationEvent.NEW_INSTANCE.getName(), new CallableWithArgs<Void>() {
             public Void call(@Nonnull Object[] args) {
-                String type = (String) args[1];
-                if (GriffonControllerClass.TYPE.equals(type)) {
-                    GriffonController controller = (GriffonController) args[2];
+                Class klass = (Class) args[0];
+                if (GriffonController.class.isAssignableFrom(klass)) {
+                    GriffonController controller = (GriffonController) args[1];
                     application.getActionManager().createActions(controller);
                 }
                 return null;

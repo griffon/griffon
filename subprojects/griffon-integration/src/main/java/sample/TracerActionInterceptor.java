@@ -5,6 +5,8 @@ import griffon.core.controller.ActionExecutionStatus;
 import org.codehaus.griffon.runtime.core.controller.AbstractActionInterceptor;
 
 import javax.annotation.Nonnull;
+import javax.annotation.PostConstruct;
+import javax.annotation.PreDestroy;
 
 public class TracerActionInterceptor extends AbstractActionInterceptor {
     @Nonnull
@@ -17,5 +19,15 @@ public class TracerActionInterceptor extends AbstractActionInterceptor {
     @Override
     public void after(@Nonnull ActionExecutionStatus status, @Nonnull GriffonController controller, @Nonnull String actionName, @Nonnull Object[] args) {
         System.out.println("[END] " + qualifyActionName(controller, actionName));
+    }
+
+    @PostConstruct
+    public void init() {
+        System.out.println("<<< FOR GREAT JUSTICE! >>>");
+    }
+
+    @PreDestroy
+    public void destroy() {
+        System.out.println("=== FUBAR ===");
     }
 }

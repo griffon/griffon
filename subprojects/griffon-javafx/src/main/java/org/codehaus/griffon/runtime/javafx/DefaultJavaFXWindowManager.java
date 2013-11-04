@@ -3,6 +3,8 @@ package org.codehaus.griffon.runtime.javafx;
 import griffon.core.ApplicationEvent;
 import griffon.core.GriffonApplication;
 import griffon.core.env.ApplicationPhase;
+import griffon.core.event.EventRouter;
+import griffon.exceptions.InstanceNotFoundException;
 import griffon.javafx.JavaFXWindowDisplayHandler;
 import griffon.javafx.JavaFXWindowManager;
 import javafx.event.EventHandler;
@@ -16,6 +18,7 @@ import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import javax.inject.Named;
 import java.util.Arrays;
+import java.util.List;
 
 import static java.util.Objects.requireNonNull;
 
@@ -102,7 +105,7 @@ public class DefaultJavaFXWindowManager extends AbstractWindowManager<Window> im
          * Triggers a <tt>WindowShown</tt> event with the window as sole argument
          */
         public void handle(WindowEvent windowEvent) {
-            getApplication().getEventRouter().publish(ApplicationEvent.WINDOW_SHOWN.getName(), Arrays.asList(windowEvent.getSource()));
+            event(ApplicationEvent.WINDOW_SHOWN, Arrays.asList(windowEvent.getSource()));
         }
     }
 
@@ -116,7 +119,18 @@ public class DefaultJavaFXWindowManager extends AbstractWindowManager<Window> im
          * Triggers a <tt>WindowHidden</tt> event with the window as sole argument
          */
         public void handle(WindowEvent windowEvent) {
-            getApplication().getEventRouter().publish(ApplicationEvent.WINDOW_HIDDEN.getName(), Arrays.asList(windowEvent.getSource()));
+            event(ApplicationEvent.WINDOW_HIDDEN, Arrays.asList(windowEvent.getSource()));
+        }
+    }
+
+    private void event(@Nonnull ApplicationEvent evt, List<Object> args) {
+        try {
+            EventRouter eventRouter = getApplication().getEventRouter();
+            eventRouter.publish(evt.getName(), args);
+        } catch (InstanceNotFoundException infe) {
+            if (getApplication().getPhase() != ApplicationPhase.SHUTDOWN) {
+                throw infe;
+            }
         }
     }
 }

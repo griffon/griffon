@@ -17,6 +17,7 @@
 package org.codehaus.griffon.runtime.core;
 
 import griffon.core.*;
+import griffon.core.addon.AddonManager;
 import griffon.core.artifact.*;
 import griffon.core.controller.ActionManager;
 import griffon.core.env.Lifecycle;
@@ -29,6 +30,7 @@ import griffon.core.resources.ResourcesInjector;
 import griffon.core.threading.UIThreadManager;
 import griffon.core.view.WindowManager;
 import griffon.util.CompositeResourceBundleBuilder;
+import org.codehaus.griffon.runtime.core.addon.DefaultAddonManager;
 import org.codehaus.griffon.runtime.core.artifact.*;
 import org.codehaus.griffon.runtime.core.controller.NoopActionManager;
 import org.codehaus.griffon.runtime.core.event.DefaultEventRouter;
@@ -70,6 +72,7 @@ public class DefaultApplicationModule extends AbstractModule {
         controllerArtifactHandler();
         serviceArtifactHandler();
         platformHandler();
+        addonManager();
     }
 
     protected void classloader() {
@@ -201,6 +204,12 @@ public class DefaultApplicationModule extends AbstractModule {
     private void platformHandler() {
         bind(PlatformHandler.class)
             .to(DefaultPlatformHandler.class)
+            .asSingleton();
+    }
+
+    private void addonManager() {
+        bind(AddonManager.class)
+            .to(DefaultAddonManager.class)
             .asSingleton();
     }
 }

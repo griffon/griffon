@@ -16,6 +16,8 @@
 
 package griffon.core.injection;
 
+import griffon.core.GriffonApplication;
+
 import javax.annotation.Nonnull;
 import java.util.Collection;
 
@@ -25,5 +27,5 @@ import java.util.Collection;
  */
 public interface InjectorFactory {
     @Nonnull
-    Injector createInjector(@Nonnull Iterable<Binding<?>> bindings);
+    Injector createInjector(@Nonnull GriffonApplication application, @Nonnull Iterable<Binding<?>> bindings);
 }

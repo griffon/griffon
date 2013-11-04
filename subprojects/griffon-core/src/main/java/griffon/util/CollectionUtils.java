@@ -45,6 +45,18 @@ import java.util.*;
  * @since 0.9.4
  */
 public final class CollectionUtils {
+    public static <T> List<T> reverse(List<T> input) {
+        List<T> output = new ArrayList<>(input);
+        Collections.reverse(output);
+        return output;
+    }
+
+    public static <T> List<T> reverse(Collection<T> input) {
+        List<T> output = new ArrayList<>(input);
+        Collections.reverse(output);
+        return output;
+    }
+
     @SuppressWarnings({"rawtypes", "unchecked"})
     public static <K, V> Map newMap(Object... keysAndValues) {
         if (keysAndValues == null) {

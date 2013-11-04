@@ -16,27 +16,35 @@
 
 package org.codehaus.griffon.runtime.injection;
 
-import com.google.inject.AbstractModule;
-import com.google.inject.Key;
+import com.google.inject.*;
 import com.google.inject.Module;
-import com.google.inject.TypeLiteral;
 import com.google.inject.binder.AnnotatedBindingBuilder;
 import com.google.inject.binder.LinkedBindingBuilder;
 import com.google.inject.binder.ScopedBindingBuilder;
+import griffon.core.injection.Binding;
+import griffon.core.injection.Injector;
 import griffon.core.injection.*;
+import griffon.exceptions.ClosedInjectorException;
 import griffon.exceptions.InstanceNotFoundException;
 import griffon.exceptions.MembersInjectionException;
+import griffon.exceptions.TypeNotFoundException;
 import org.codehaus.griffon.runtime.core.injection.InjectorProvider;
 import org.codehaus.griffon.runtime.core.injection.NamedImpl;
 
 import javax.annotation.Nonnull;
+import javax.annotation.PreDestroy;
+import javax.annotation.concurrent.GuardedBy;
 import javax.inject.Singleton;
 import java.lang.annotation.Annotation;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
 import static com.google.inject.util.Providers.guicify;
+import static griffon.core.GriffonExceptionHandler.sanitize;
 import static griffon.util.GriffonNameUtils.requireNonBlank;
 import static java.util.Objects.requireNonNull;
 
@@ -46,6 +54,10 @@ import static java.util.Objects.requireNonNull;
  */
 public class GuiceInjector implements Injector<com.google.inject.Injector> {
     private final com.google.inject.Injector delegate;
+    private final Object lock = new Object[0];
+    @GuardedBy("lock")
+    private boolean closed;
+
 
     public GuiceInjector(@Nonnull com.google.inject.Injector delegate) {
         this.delegate = requireNonNull(delegate, "Argument 'delegate' cannot be null");
@@ -55,6 +67,11 @@ public class GuiceInjector implements Injector<com.google.inject.Injector> {
     @Override
     public <T> T getInstance(@Nonnull Class<T> type) throws InstanceNotFoundException {
         requireNonNull(type, "Argument 'type' cannot be null");
+
+        if (isClosed()) {
+            throw new InstanceNotFoundException(type, new ClosedInjectorException(this));
+        }
+
         try {
             return delegate.getInstance(type);
         } catch (RuntimeException e) {
@@ -67,6 +84,11 @@ public class GuiceInjector implements Injector<com.google.inject.Injector> {
     public <T> T getInstance(@Nonnull Class<T> type, @Nonnull Annotation qualifier) throws InstanceNotFoundException {
         requireNonNull(type, "Argument 'type' cannot be null");
         requireNonNull(qualifier, "Argument 'qualifier' cannot be null");
+
+        if (isClosed()) {
+            throw new InstanceNotFoundException(type, qualifier, new ClosedInjectorException(this));
+        }
+
         try {
             return delegate.getInstance(Key.get(type, qualifier));
         } catch (RuntimeException e) {
@@ -78,6 +100,10 @@ public class GuiceInjector implements Injector<com.google.inject.Injector> {
     @Override
     public <T> Collection<T> getInstances(@Nonnull Class<T> type) throws InstanceNotFoundException {
         requireNonNull(type, "Argument 'type' cannot be null");
+
+        if (isClosed()) {
+            throw new InstanceNotFoundException(type, new ClosedInjectorException(this));
+        }
 
         List<T> instances = new ArrayList<>();
 
@@ -105,6 +131,11 @@ public class GuiceInjector implements Injector<com.google.inject.Injector> {
     @Override
     public void injectMembers(@Nonnull Object instance) throws MembersInjectionException {
         requireNonNull(instance, "Argument 'instance' cannot be null");
+
+        if (isClosed()) {
+            throw new MembersInjectionException(instance, new ClosedInjectorException(this));
+        }
+
         try {
             delegate.injectMembers(instance);
         } catch (RuntimeException e) {
@@ -122,6 +153,11 @@ public class GuiceInjector implements Injector<com.google.inject.Injector> {
     @Override
     public Injector<com.google.inject.Injector> createNestedInjector(@Nonnull Iterable<Binding<?>> bindings) {
         requireNonNull(bindings, "Argument 'bindings' cannot be null");
+
+        if (isClosed()) {
+            throw new ClosedInjectorException(this);
+        }
+
         return new GuiceInjector(delegate.createChildInjector(moduleFromBindings(bindings)));
     }
 
@@ -130,6 +166,11 @@ public class GuiceInjector implements Injector<com.google.inject.Injector> {
     public Injector<com.google.inject.Injector> createNestedInjector(final @Nonnull String name, @Nonnull Iterable<Binding<?>> bindings) {
         requireNonBlank(name, "Argument 'name' cannot be blank");
         requireNonNull(bindings, "Argument 'bindings' cannot be null");
+
+        if (isClosed()) {
+            throw new ClosedInjectorException(this);
+        }
+
         final InjectorProvider injectorProvider = new InjectorProvider();
         GuiceInjector injector = new GuiceInjector(delegate.createChildInjector(moduleFromBindings(bindings), new AbstractModule() {
             @Override
@@ -145,7 +186,59 @@ public class GuiceInjector implements Injector<com.google.inject.Injector> {
 
     @Override
     public void close() {
+        if (isClosed()) {
+            throw new ClosedInjectorException(this);
+        }
 
+        for (Key<?> key : delegate.getAllBindings().keySet()) {
+            try {
+                com.google.inject.Binding<?> binding = delegate.getExistingBinding(key);
+                if (!Scopes.isSingleton(binding)) {
+                    continue;
+                }
+                invokePreDestroy(binding.getProvider().get());
+            } catch (ProvisionException pe) {
+                if (!(pe.getCause() instanceof TypeNotFoundException)) {
+                    pe.printStackTrace();
+                }
+            }
+        }
+
+        synchronized (lock) {
+            closed = true;
+        }
+    }
+
+    private boolean isClosed() {
+        synchronized (lock) {
+            return closed;
+        }
+    }
+
+    private void invokePreDestroy(Object instance) {
+        List<Method> preDestroyMethods = new ArrayList<>();
+        Class klass = instance.getClass();
+        while (klass != null) {
+            for (Method method : klass.getDeclaredMethods()) {
+                if (method.getAnnotation(PreDestroy.class) != null &&
+                    method.getParameterTypes().length == 0 &&
+                    Modifier.isPublic(method.getModifiers())) {
+                    preDestroyMethods.add(method);
+                }
+            }
+
+            klass = klass.getSuperclass();
+        }
+
+        for (Method method : preDestroyMethods) {
+            try {
+                method.invoke(instance);
+            } catch (IllegalAccessException e) {
+                sanitize(e).printStackTrace();
+            } catch (InvocationTargetException e) {
+                sanitize(e.getTargetException()).printStackTrace();
+            }
+        }
     }
 
     static Module moduleFromBindings(final @Nonnull Iterable<Binding<?>> bindings) {

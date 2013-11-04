@@ -107,9 +107,7 @@ public abstract class AbstractMVCGroupManager implements MVCGroupManager {
     public MVCGroup findGroup(@Nonnull String mvcId) {
         requireNonBlank(mvcId, ERROR_MVCID_BLANK);
         synchronized (lock) {
-            if (LOG.isDebugEnabled()) {
-                LOG.debug("Searching group " + mvcId);
-            }
+            LOG.debug("Searching group {}", mvcId);
             return groups.get(mvcId);
         }
     }
@@ -157,9 +155,7 @@ public abstract class AbstractMVCGroupManager implements MVCGroupManager {
     protected void addGroup(@Nonnull MVCGroup group) {
         requireNonNull(group, ERROR_GROUP_NULL);
         synchronized (lock) {
-            if (LOG.isDebugEnabled()) {
-                LOG.debug("Adding group " + group.getMvcId() + ":" + group);
-            }
+            LOG.debug("Adding group {}:{}", group.getMvcId(), group);
             groups.put(group.getMvcId(), group);
         }
     }
@@ -167,9 +163,7 @@ public abstract class AbstractMVCGroupManager implements MVCGroupManager {
     protected void removeGroup(@Nonnull MVCGroup group) {
         requireNonNull(group, ERROR_GROUP_NULL);
         synchronized (lock) {
-            if (LOG.isDebugEnabled()) {
-                LOG.debug("Removing group " + group.getMvcId() + ":" + group);
-            }
+            LOG.debug("Removing group {}:{}", group.getMvcId(), group);
             groups.remove(group.getMvcId());
         }
     }
@@ -245,9 +239,8 @@ public abstract class AbstractMVCGroupManager implements MVCGroupManager {
                     destroyMVCGroup(group.getMvcId());
                 }
             } catch (Exception x) {
-                if (LOG.isWarnEnabled()) {
-                    LOG.warn("Could not destroy group [" + mvcId + "] of type " + configuration.getMvcType() + ".", sanitize(x));
-                }
+                LOG.warn("Could not destroy group [{}] of type {}", mvcId, configuration.getMvcType(), sanitize(x));
+
             }
         }
     }

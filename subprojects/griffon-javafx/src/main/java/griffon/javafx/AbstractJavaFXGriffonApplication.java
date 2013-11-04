@@ -28,7 +28,6 @@ import griffon.core.mvc.MVCGroupManager;
 import griffon.core.resources.ResourceHandler;
 import griffon.core.resources.ResourceResolver;
 import griffon.core.resources.ResourcesInjector;
-import griffon.core.service.ServiceManager;
 import griffon.core.threading.UIThreadManager;
 import griffon.core.view.WindowManager;
 import javafx.application.Application;
@@ -235,12 +234,6 @@ public abstract class AbstractJavaFXGriffonApplication extends Application imple
     @Override
     public MVCGroupManager getMvcGroupManager() {
         return injector.getInstance(MVCGroupManager.class);
-    }
-
-    @Nonnull
-    @Override
-    public ServiceManager getServiceManager() {
-        return injector.getInstance(ServiceManager.class);
     }
 
     @Nonnull

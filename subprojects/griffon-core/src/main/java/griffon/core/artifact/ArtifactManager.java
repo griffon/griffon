@@ -16,6 +16,7 @@
 
 package griffon.core.artifact;
 
+import griffon.core.ShutdownHandler;
 import griffon.core.injection.Injector;
 
 import javax.annotation.Nonnull;
@@ -28,7 +29,7 @@ import java.util.List;
  *
  * @author Andres Almiray
  */
-public interface ArtifactManager {
+public interface ArtifactManager extends ShutdownHandler {
     List<GriffonClass> EMPTY_GRIFFON_CLASS_LIST = Collections.<GriffonClass>emptyList();
 
     /**

@@ -173,8 +173,9 @@ public abstract class AbstractArtifactHandler<A extends GriffonArtifact> impleme
         }
 
         for (GriffonClass griffonClass : classes) {
-            if (griffonClass.getClazz().getSimpleName().equals(simpleName))
+            if (griffonClass.getClazz().getSimpleName().equals(simpleName)) {
                 return griffonClass;
+            }
         }
 
         return null;

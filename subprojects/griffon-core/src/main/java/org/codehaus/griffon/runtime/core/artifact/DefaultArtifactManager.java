@@ -19,7 +19,6 @@ package org.codehaus.griffon.runtime.core.artifact;
 import griffon.core.ApplicationClassLoader;
 import griffon.core.artifact.ArtifactInfo;
 import griffon.core.artifact.GriffonArtifact;
-import griffon.core.event.EventRouter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -45,8 +44,7 @@ public class DefaultArtifactManager extends AbstractArtifactManager {
     private final ApplicationClassLoader applicationClassLoader;
 
     @Inject
-    public DefaultArtifactManager(@Nonnull EventRouter eventRouter, @Nonnull ApplicationClassLoader applicationClassLoader) {
-        super(eventRouter);
+    public DefaultArtifactManager(@Nonnull ApplicationClassLoader applicationClassLoader) {
         this.applicationClassLoader = requireNonNull(applicationClassLoader, "Argument 'applicationClassLoader' cannot be null");
     }
 
@@ -78,9 +76,7 @@ public class DefaultArtifactManager extends AbstractArtifactManager {
             return;
         }
 
-        if (LOG.isDebugEnabled()) {
-            LOG.debug("Loading artifact definitions from " + url);
-        }
+        LOG.debug("Loading artifact definitions from {}", url);
 
         for (Object key : p.keySet()) {
             String type = key.toString();
@@ -89,9 +85,8 @@ public class DefaultArtifactManager extends AbstractArtifactManager {
                 classes = classes.substring(1, classes.length() - 1);
             }
             String[] classNames = classes.split(",");
-            if (LOG.isDebugEnabled()) {
-                LOG.debug("Artifacts of type '" + type + "' = " + classNames.length);
-            }
+            LOG.debug("Artifacts of type '{}' = {}", type, classNames.length);
+
 
             List<ArtifactInfo> list = artifacts.get(type);
             if (list == null) {

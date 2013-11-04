@@ -16,9 +16,8 @@
 
 package org.codehaus.griffon.runtime.core.artifact;
 
-import griffon.core.ApplicationEvent;
+import griffon.core.GriffonApplication;
 import griffon.core.artifact.*;
-import griffon.core.event.EventRouter;
 import griffon.core.injection.Binding;
 import griffon.core.injection.Injector;
 import griffon.exceptions.ArtifactHandlerNotFoundException;
@@ -28,7 +27,6 @@ import org.slf4j.LoggerFactory;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import javax.inject.Inject;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -52,15 +50,9 @@ public abstract class AbstractArtifactManager implements ArtifactManager {
     private final Map<String, ArtifactInfo[]> artifacts = new ConcurrentHashMap<>();
     private final Map<String, ArtifactHandler> artifactHandlers = new ConcurrentHashMap<>();
     private final Object lock = new Object[0];
-    private final EventRouter eventRouter;
     private Injector<?> artifactInjector;
 
     private static final Logger LOG = LoggerFactory.getLogger(AbstractArtifactManager.class);
-
-    @Inject
-    public AbstractArtifactManager(@Nonnull EventRouter eventRouter) {
-        this.eventRouter = requireNonNull(eventRouter, "Argument 'eventRouter' cannot be null");
-    }
 
     @Nonnull
     protected Map<String, ArtifactInfo[]> getArtifacts() {
@@ -91,6 +83,12 @@ public abstract class AbstractArtifactManager implements ArtifactManager {
             }
         }
 
+        if (LOG.isTraceEnabled()) {
+            for (Binding<?> binding : bindings) {
+                LOG.trace(binding.toString());
+            }
+        }
+
         artifactInjector = injector.createNestedInjector("artifactInjector", bindings);
     }
 
@@ -102,9 +100,7 @@ public abstract class AbstractArtifactManager implements ArtifactManager {
             throw new ArtifactNotFoundException(clazz, type);
         }
 
-        A instance = artifactInjector.getInstance(clazz);
-        eventRouter.publish(ApplicationEvent.NEW_INSTANCE.getName(), asList(clazz, type, instance));
-        return instance;
+        return artifactInjector.getInstance(clazz);
     }
 
     @Nonnull
@@ -219,6 +215,16 @@ public abstract class AbstractArtifactManager implements ArtifactManager {
             }
         }
         return Collections.unmodifiableList(all);
+    }
+
+    @Override
+    public boolean canShutdown(@Nonnull GriffonApplication application) {
+        return true;
+    }
+
+    @Override
+    public void onShutdown(@Nonnull GriffonApplication application) {
+        artifactInjector.close();
     }
 
     protected <A extends GriffonArtifact> boolean isClassOfType(@Nonnull String type, @Nonnull Class<A> clazz) {

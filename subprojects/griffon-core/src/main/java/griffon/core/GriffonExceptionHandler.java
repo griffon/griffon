@@ -53,6 +53,12 @@ public class GriffonExceptionHandler implements Thread.UncaughtExceptionHandler 
                 "sun.,"
         ).split("(\\s|,)+");
 
+    private static final List<CallableWithArgs<Boolean>> TESTS = new ArrayList<>();
+
+    public static void addClassTest(CallableWithArgs<Boolean> test) {
+        TESTS.add(test);
+    }
+
     public void uncaughtException(Thread t, Throwable e) {
         handle(e);
     }
@@ -154,6 +160,12 @@ public class GriffonExceptionHandler implements Thread.UncaughtExceptionHandler 
     }
 
     private static boolean isApplicationClass(String className) {
+        for (CallableWithArgs<Boolean> test : TESTS) {
+            if (test.call(new Object[]{className})) {
+                return false;
+            }
+        }
+
         for (String excludedPackage : GRIFFON_PACKAGES) {
             if (className.startsWith(excludedPackage)) {
                 return false;

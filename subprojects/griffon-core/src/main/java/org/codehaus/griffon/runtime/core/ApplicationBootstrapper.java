@@ -60,8 +60,10 @@ public class ApplicationBootstrapper {
         }
         Iterable<Binding<?>> bindings = createBindings();
 
-        for (Binding<?> binding : bindings) {
-            System.out.println(binding);
+        if (LOG.isTraceEnabled()) {
+            for (Binding<?> binding : bindings) {
+                LOG.trace(binding.toString());
+            }
         }
 
         // 3 create injector
@@ -110,7 +112,7 @@ public class ApplicationBootstrapper {
     private void createInjector(Iterable<Binding<?>> bindings) throws Exception {
         ServiceLoader<InjectorFactory> serviceLoader = ServiceLoader.load(InjectorFactory.class);
         InjectorFactory injectorFactory = serviceLoader.iterator().next();
-        Injector<?> injector = injectorFactory.createInjector(bindings);
+        Injector<?> injector = injectorFactory.createInjector(application, bindings);
         try {
             GriffonClassUtils.setProperty(application, INJECTOR, injector);
         } catch (IllegalAccessException | NoSuchMethodException | InvocationTargetException e) {

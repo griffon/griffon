@@ -16,9 +16,11 @@
 
 package org.codehaus.griffon.runtime.core;
 
+import griffon.core.addon.GriffonAddon;
 import griffon.core.controller.ActionManager;
 import griffon.core.threading.UIThreadManager;
 import griffon.core.view.WindowManager;
+import griffon.swing.SwingAddon;
 import griffon.swing.SwingWindowDisplayHandler;
 import org.codehaus.griffon.runtime.core.controller.SwingActionManager;
 import org.codehaus.griffon.runtime.core.injection.AbstractModule;
@@ -55,6 +57,11 @@ public class SwingModule extends AbstractModule {
 
         bind(ActionManager.class)
             .to(SwingActionManager.class)
+            .asSingleton();
+
+        bind(GriffonAddon.class)
+            .withClassifier(new NamedImpl("swing"))
+            .to(SwingAddon.class)
             .asSingleton();
     }
 }

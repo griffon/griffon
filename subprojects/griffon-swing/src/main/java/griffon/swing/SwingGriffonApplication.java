@@ -54,6 +54,18 @@ public class SwingGriffonApplication extends AbstractGriffonApplication {
         }
     }
 
+    @Override
+    public boolean shutdown() {
+        if (super.shutdown()) {
+            exit();
+        }
+        return false;
+    }
+
+    public void exit() {
+        System.exit(0);
+    }
+
     @Nonnull
     @Override
     public Object createApplicationContainer() {

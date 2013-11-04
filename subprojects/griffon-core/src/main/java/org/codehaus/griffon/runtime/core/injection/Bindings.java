@@ -191,6 +191,7 @@ public class Bindings {
                 sb.append(", classifierType=").append(classifierType.getName());
             }
             sb.append(", target=").append(target.getName());
+            sb.append(", singleton=").append(singleton);
             sb.append(']');
             return sb.toString();
         }
@@ -225,6 +226,7 @@ public class Bindings {
                 sb.append(", classifierType=").append(classifierType.getName());
             }
             sb.append(", instance=").append(instance);
+            sb.append(", singleton=").append(singleton);
             sb.append(']');
             return sb.toString();
         }
@@ -260,6 +262,7 @@ public class Bindings {
                 sb.append(", classifierType=").append(classifierType.getName());
             }
             sb.append(", provider=").append(provider);
+            sb.append(", singleton=").append(singleton);
             sb.append(']');
             return sb.toString();
         }

@@ -13,7 +13,7 @@ public class Config extends AbstractMapResourceBundle {
     @Override
     protected void initialize(@Nonnull Map<String, Object> entries) {
         CollectionUtils.map(entries)
-            .e("application.startupGroups", asList("sample"))
+            //.e("application.startupGroups", asList("sample"))
             .e("application", CollectionUtils.map()
                 .e("startupGroups", asList("sample"))
             )

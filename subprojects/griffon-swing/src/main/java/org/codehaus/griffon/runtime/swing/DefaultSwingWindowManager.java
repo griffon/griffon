@@ -3,6 +3,8 @@ package org.codehaus.griffon.runtime.swing;
 import griffon.core.ApplicationEvent;
 import griffon.core.GriffonApplication;
 import griffon.core.env.ApplicationPhase;
+import griffon.core.event.EventRouter;
+import griffon.exceptions.InstanceNotFoundException;
 import griffon.swing.SwingWindowDisplayHandler;
 import griffon.swing.SwingWindowManager;
 import griffon.util.GriffonNameUtils;
@@ -22,10 +24,7 @@ import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.LinkedHashMap;
-import java.util.Map;
+import java.util.*;
 
 import static griffon.util.GriffonNameUtils.requireNonBlank;
 import static java.util.Arrays.asList;
@@ -271,9 +270,7 @@ public class DefaultSwingWindowManager extends AbstractWindowManager<Window> imp
             }
 
             if (visibleWindows <= 1 && isAutoShutdown()) {
-                if (LOG.isDebugEnabled()) {
-                    LOG.debug("Attempting to shutdown application");
-                }
+                LOG.debug("Attempting to shutdown application");
                 if (!getApplication().shutdown()) show(event.getWindow());
             }
         }
@@ -289,14 +286,14 @@ public class DefaultSwingWindowManager extends AbstractWindowManager<Window> imp
          * Triggers a <tt>WindowShown</tt> event with the window as sole argument
          */
         public void componentShown(ComponentEvent event) {
-            getApplication().getEventRouter().publish(ApplicationEvent.WINDOW_SHOWN.getName(), asList(event.getSource()));
+            event(ApplicationEvent.WINDOW_SHOWN, asList(event.getSource()));
         }
 
         /**
          * Triggers a <tt>WindowHidden</tt> event with the window as sole argument
          */
         public void componentHidden(ComponentEvent event) {
-            getApplication().getEventRouter().publish(ApplicationEvent.WINDOW_HIDDEN.getName(), asList(event.getSource()));
+            event(ApplicationEvent.WINDOW_HIDDEN, asList(event.getSource()));
         }
     }
 
@@ -315,7 +312,7 @@ public class DefaultSwingWindowManager extends AbstractWindowManager<Window> imp
          * Triggers a <tt>WindowShown</tt> event with the internal frame as sole argument
          */
         public void internalFrameOpened(InternalFrameEvent event) {
-            getApplication().getEventRouter().publish(ApplicationEvent.WINDOW_SHOWN.getName(), asList(event.getSource()));
+            event(ApplicationEvent.WINDOW_SHOWN, asList(event.getSource()));
 
         }
 
@@ -323,7 +320,18 @@ public class DefaultSwingWindowManager extends AbstractWindowManager<Window> imp
          * Triggers a <tt>WindowHidden</tt> event with the internal frame as sole argument
          */
         public void internalFrameClosed(InternalFrameEvent event) {
-            getApplication().getEventRouter().publish(ApplicationEvent.WINDOW_HIDDEN.getName(), asList(event.getSource()));
+            event(ApplicationEvent.WINDOW_HIDDEN, asList(event.getSource()));
+        }
+    }
+
+    private void event(@Nonnull ApplicationEvent evt, List<Object> args) {
+        try {
+            EventRouter eventRouter = getApplication().getEventRouter();
+            eventRouter.publish(evt.getName(), args);
+        } catch (InstanceNotFoundException infe) {
+            if (getApplication().getPhase() != ApplicationPhase.SHUTDOWN) {
+                throw infe;
+            }
         }
     }
 }

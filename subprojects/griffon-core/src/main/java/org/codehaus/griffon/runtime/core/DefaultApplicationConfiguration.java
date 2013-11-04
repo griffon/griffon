@@ -22,6 +22,7 @@ import javax.inject.Inject;
 import javax.inject.Named;
 import java.util.*;
 
+import static griffon.util.ConfigUtils.getConfigValue;
 import static griffon.util.GriffonNameUtils.requireNonBlank;
 import static java.util.Collections.unmodifiableMap;
 import static java.util.Objects.requireNonNull;
@@ -31,7 +32,7 @@ import static java.util.Objects.requireNonNull;
  * @since 2.0.0
  */
 public class DefaultApplicationConfiguration extends AbstractApplicationConfiguration {
-    private static final String ERROR_KEY_BLANK = "Argument 'key' cannot be blank";
+    protected static final String ERROR_KEY_BLANK = "Argument 'key' cannot be blank";
     private final ResourceBundle resourceBundle;
     private final Map<String, Object> flatMap = new LinkedHashMap<>();
 
@@ -59,7 +60,7 @@ public class DefaultApplicationConfiguration extends AbstractApplicationConfigur
     @Override
     public Object get(@Nonnull String key) {
         try {
-            return resourceBundle.getObject(requireNonBlank(key, ERROR_KEY_BLANK));
+            return getConfigValue(resourceBundle, key);
         } catch (MissingResourceException mre) {
             return null;
         }

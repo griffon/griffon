@@ -54,8 +54,8 @@ public class GriffonClassUtils {
     private static final String PROPERTY_GET_PREFIX = "get";
     private static final String PROPERTY_IS_PREFIX = "is";
     private static final String PROPERTY_SET_PREFIX = "set";
-    public static final Map<Class, Class> PRIMITIVE_TYPE_COMPATIBLE_CLASSES = new LinkedHashMap<Class, Class>();
-    public static final Map<String, String> PRIMITIVE_TYPE_COMPATIBLE_TYPES = new LinkedHashMap<String, String>();
+    public static final Map<Class, Class> PRIMITIVE_TYPE_COMPATIBLE_CLASSES = new LinkedHashMap<>();
+    public static final Map<String, String> PRIMITIVE_TYPE_COMPATIBLE_TYPES = new LinkedHashMap<>();
 
     private static final Pattern EVENT_HANDLER_PATTERN = Pattern.compile("^on[A-Z][\\w]*$");
     private static final Pattern CONTRIBUTION_PATTERN = Pattern.compile("^with[A-Z][a-z0-9_]*[\\w]*$");
@@ -2807,6 +2807,41 @@ public class GriffonClassUtils {
             }
 
             return 0;
+        }
+
+        public boolean matches(MethodDescriptor md) {
+            if (!methodName.equals(md.methodName) ||
+                modifiers != md.modifiers ||
+                paramTypes.length != md.paramTypes.length) {
+                return false;
+            }
+
+            for (int i = 0; i < paramTypes.length; i++) {
+                Class<?> param1 = loadClass(paramTypes[i]);
+                Class<?> param2 = loadClass(md.paramTypes[i]);
+                if (param1 != null && param2 != null && !isAssignableOrConvertibleFrom(param1, param2)) {
+                    return false;
+                }
+            }
+
+            return true;
+        }
+
+        @Nullable
+        private Class<?> loadClass(@Nonnull String classname) {
+            try {
+                return Class.forName(classname, true, getClass().getClassLoader());
+            } catch (ClassNotFoundException e) {
+                if (PRIMITIVE_TYPE_COMPATIBLE_TYPES.containsKey(classname)) {
+                    try {
+                        return Class.forName(PRIMITIVE_TYPE_COMPATIBLE_TYPES.get(classname), true, getClass().getClassLoader());
+                    } catch (ClassNotFoundException e1) {
+                        return null;
+                    }
+                } else {
+                    return null;
+                }
+            }
         }
     }
 }
