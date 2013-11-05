@@ -24,5 +24,8 @@ public class SampleController extends AbstractGriffonController {
 
     public void click(ActionEvent event) {
         System.out.println("click " + event);
+        System.out.println(model.getColor());
+        System.out.println(model.getColor2());
+        System.out.println(getApplication().getMessageSource().getMessage("sample.key"));
     }
 }

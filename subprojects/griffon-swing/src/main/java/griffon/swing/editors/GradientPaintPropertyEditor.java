@@ -18,7 +18,8 @@ package griffon.swing.editors;
 
 import griffon.core.resources.editors.AbstractPropertyEditor;
 
-import java.awt.*;
+import java.awt.Color;
+import java.awt.GradientPaint;
 import java.util.List;
 import java.util.Map;
 

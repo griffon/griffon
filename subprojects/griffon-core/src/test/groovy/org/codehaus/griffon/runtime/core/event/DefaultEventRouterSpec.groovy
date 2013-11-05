@@ -3,7 +3,8 @@ package org.codehaus.griffon.runtime.core.event
 import com.google.guiceberry.GuiceBerryModule
 import com.google.guiceberry.junit4.GuiceBerryRule
 import com.google.inject.AbstractModule
-import griffon.core.*
+import griffon.core.CallableWithArgs
+import griffon.core.ExecutorServiceManager
 import griffon.core.event.Event
 import griffon.core.event.EventRouter
 import griffon.core.threading.UIThreadManager

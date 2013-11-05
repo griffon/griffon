@@ -30,6 +30,7 @@ import static griffon.util.TypeUtils.*;
 public abstract class AbstractApplicationConfiguration implements ApplicationConfiguration {
     @Nullable
     @Override
+    @SuppressWarnings("unchecked")
     public <T> T get(@Nonnull String key, @Nullable T defaultValue) {
         T value = (T) get(key);
         return value != null ? value : defaultValue;

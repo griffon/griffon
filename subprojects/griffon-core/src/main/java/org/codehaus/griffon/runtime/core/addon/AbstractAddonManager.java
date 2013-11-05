@@ -139,6 +139,7 @@ public abstract class AbstractAddonManager implements AddonManager {
         return map;
     }
 
+    @SuppressWarnings("unchecked")
     protected void addMVCGroups(@Nonnull GriffonAddon addon) {
         for (Map.Entry<String, Map<String, Object>> groupEntry : addon.getMvcGroups().entrySet()) {
             String type = groupEntry.getKey();
@@ -167,19 +168,15 @@ public abstract class AbstractAddonManager implements AddonManager {
 
     @Nonnull
     protected String[] loadAddonMetadata() {
-        try {
-            URL url = getAddonMetadataResource();
-            if (url != null) {
-                return processURL(url);
-            }
-        } catch (IOException e) {
-            throw new IllegalArgumentException(e);
+        URL url = getAddonMetadataResource();
+        if (url != null) {
+            return processURL(url);
         }
 
         return new String[0];
     }
 
-    protected URL getAddonMetadataResource() throws IOException {
+    protected URL getAddonMetadataResource() {
         return application.getInjector().getInstance(ApplicationClassLoader.class).get().getResource("META-INF/griffon/addons.properties");
     }
 

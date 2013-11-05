@@ -51,7 +51,7 @@ public interface EventPublisher {
      * Adds a Map containing event listeners.<p>
      * <p/>
      * An event listener may be a<ul>
-     * <li>a <tt>RunnableWithArgs</tt></li>
+     * <li>a <tt>CallableWithArgs</tt></li>
      * </ul>
      * <p/>
      * Maps require handlers to be named as eventName only.<p>
@@ -90,7 +90,7 @@ public interface EventPublisher {
      * Removes a Map containing event listeners.<p>
      * <p/>
      * An event listener may be a<ul>
-     * <li>a <tt>RunnableWithArgs</tt></li>
+     * <li>a <tt>CallableWithArgs</tt></li>
      * </ul>
      * <p/>
      * Maps require handlers to be named as eventName only.<p>

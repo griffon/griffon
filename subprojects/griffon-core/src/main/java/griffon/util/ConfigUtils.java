@@ -16,17 +16,13 @@
 
 package griffon.util;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.util.Map;
-import java.util.MissingResourceException;
-import java.util.ResourceBundle;
+import java.util.*;
 
 import static griffon.util.GriffonNameUtils.requireNonBlank;
 import static griffon.util.TypeUtils.*;
+import static java.util.Collections.unmodifiableSortedSet;
 import static java.util.Objects.requireNonNull;
 
 /**
@@ -37,7 +33,6 @@ import static java.util.Objects.requireNonNull;
 public final class ConfigUtils {
     protected static final String ERROR_CONFIG_NULL = "Argument 'config' cannot be null";
     protected static final String ERROR_KEY_BLANK = "Argument 'key' cannot be blank";
-    private static final Logger LOG = LoggerFactory.getLogger(ConfigUtils.class);
 
     private ConfigUtils() {
         // prevent instantiation
@@ -73,6 +68,7 @@ public final class ConfigUtils {
      * @return the value of the key or the default value if no match is found
      */
     @Nullable
+    @SuppressWarnings({"unchecked", "ConstantConditions"})
     public static <T> T getConfigValue(@Nonnull Map config, @Nonnull String key, @Nullable T defaultValue) {
         requireNonNull(config, "Argument 'config' cannot be null");
         requireNonBlank(key, ERROR_KEY_BLANK);
@@ -104,14 +100,15 @@ public final class ConfigUtils {
      * @return the value of the key or the default value if no match is found
      */
     @Nullable
+    @SuppressWarnings({"unchecked", "ConstantConditions"})
     public static <T> T getConfigValue(@Nonnull ResourceBundle config, @Nonnull String key, @Nullable T defaultValue) {
         requireNonNull(config, ERROR_CONFIG_NULL);
         requireNonBlank(key, ERROR_KEY_BLANK);
 
         String[] keys = key.split("\\.");
 
-        if (!config.containsKey(keys[0])) {
-            return defaultValue;
+        if (config.containsKey(key)) {
+            return (T) config.getObject(key);
         }
 
         if (keys.length == 1) {
@@ -150,6 +147,7 @@ public final class ConfigUtils {
      * @return the value of the key or the default value if no match is found
      */
     @Nullable
+    @SuppressWarnings({"unchecked", "ConstantConditions"})
     public static <T> T getConfigValue(@Nonnull Map config, @Nonnull String key) throws MissingResourceException {
         requireNonNull(config, "Argument 'config' cannot be null");
         requireNonBlank(key, ERROR_KEY_BLANK);
@@ -186,6 +184,7 @@ public final class ConfigUtils {
      * @return the value of the key or the default value if no match is found
      */
     @Nullable
+    @SuppressWarnings({"unchecked", "ConstantConditions"})
     public static <T> T getConfigValue(@Nonnull ResourceBundle config, @Nonnull String key) throws MissingResourceException {
         requireNonNull(config, ERROR_CONFIG_NULL);
         requireNonBlank(key, ERROR_KEY_BLANK);
@@ -193,8 +192,8 @@ public final class ConfigUtils {
 
         String[] keys = key.split("\\.");
 
-        if (!config.containsKey(keys[0])) {
-            throw missingResource(type, key);
+        if (config.containsKey(key)) {
+            return (T) config.getObject(key);
         }
 
         if (keys.length == 1) {
@@ -406,290 +405,6 @@ public final class ConfigUtils {
         return value != null ? String.valueOf(value) : null;
     }
 
-    /**
-     * Merges two maps using <tt>ConfigObject.merge()</tt>.
-     *
-     * @param defaults  applicationConfiguration values available by default
-     * @param overrides applicationConfiguration values that override defaults
-     * @return the result of merging both maps
-     */
-    /*public static Map merge(Map defaults, Map overrides) {
-        ConfigObject configDefaults = new ConfigObject();
-        ConfigObject configOverrides = new ConfigObject();
-        configDefaults.putAll(defaults);
-        configOverrides.putAll(overrides);
-        return configDefaults.merge(configOverrides);
-    }*/
-
-    /**
-     * Creates a new {@code ConfigReader} instance configured with default conditional blocks.<br/>
-     * The following list enumerates the conditional blocks that get registered automatically:
-     * <ul>
-     * <li><strong>environments</strong> = <tt>Environment.getCurrent().getName()</tt></strong></li>
-     * <li><strong>projects</strong> = <tt>Metadata.getCurrent().getApplicationName()</tt></strong></li>
-     * <li><strong>platforms</strong> = <tt>GriffonApplicationUtils.getFullPlatform()</tt></strong></li>
-     * </ul>
-     *
-     * @return a newly instantiated {@code ConfigReader}.
-     * @since 1.1.0
-     */
-    /*public static ConfigReader createConfigReader() {
-        ConfigReader configReader = new ConfigReader();
-        configReader.registerConditionalBlock("environments", Environment.getCurrent().getName());
-        configReader.registerConditionalBlock("projects", Metadata.getCurrent().getApplicationName());
-        configReader.registerConditionalBlock("platforms", GriffonApplicationUtils.getPlatform());
-        return configReader;
-    }*/
-
-    /**
-     * Loads applicationConfiguration settings defined in a Groovy script and a properties file as fallback.<br/>
-     * The name of the script matches the name of the file.
-     *
-     * @param configFileName the applicationConfiguration file
-     * @return a merged applicationConfiguration between the script and the alternate file. The file has precedence over the script.
-     * @since 1.1.0
-     */
-    /*public static ConfigObject loadConfig(String configFileName) {
-        return loadConfig(createConfigReader(), safeLoadClass(configFileName), configFileName);
-    }*/
-
-    /**
-     * Loads applicationConfiguration settings defined in a Groovy script and a properties file as fallback.<br/>
-     * The alternate properties file matches the simple name of the script.
-     *
-     * @param configClass the script's class, may be null
-     * @return a merged applicationConfiguration between the script and the alternate file. The file has precedence over the script.
-     * @since 1.1.0
-     */
-    /*public static ConfigObject loadConfig(Class configClass) {
-        return loadConfig(createConfigReader(), configClass, configClass.getSimpleName());
-    }*/
-
-    /**
-     * Loads applicationConfiguration settings defined in a Groovy script and a properties file as fallback.
-     *
-     * @param configClass    the script's class, may be null
-     * @param configFileName the alternate applicationConfiguration file
-     * @return a merged applicationConfiguration between the script and the alternate file. The file has precedence over the script.
-     * @since 1.1.0
-     */
-    /*public static ConfigObject loadConfig(Class configClass, String configFileName) {
-        return loadConfig(createConfigReader(), configClass, configFileName);
-    }*/
-
-    /**
-     * Loads applicationConfiguration settings defined in a Groovy script and a properties file as fallback.
-     *
-     * @param configReader   a ConfigReader instance already configured
-     * @param configClass    the script's class, may be null
-     * @param configFileName the alternate applicationConfiguration file
-     * @return a merged applicationConfiguration between the script and the alternate file. The file has precedence over the script.
-     * @since 1.1.0
-     */
-    /*public static ConfigObject loadConfig(ConfigReader configReader, Class configClass, String configFileName) {
-        ConfigObject config = new ConfigObject();
-        try {
-            if (configClass != null) {
-                config.merge(configReader.parse(configClass));
-            }
-            config.merge(loadConfigFile(configReader, configFileName));
-        } catch (FileNotFoundException fnfe) {
-            // ignore
-        } catch (Exception x) {
-            if (LOG.isWarnEnabled()) {
-                LOG.warn("Cannot read applicationConfiguration [class: " + configClass + ", file: " + configFileName + "]", sanitize(x));
-            }
-        }
-        return config;
-    }
-
-    private static ConfigObject loadConfigFile(ConfigReader configReader, String configFileName) throws IOException {
-        ConfigObject config = new ConfigObject();
-
-        if (isBlank(configFileName)) return config;
-
-        String fileNameExtension = getFilenameExtension(configFileName);
-        if (isBlank(fileNameExtension)) {
-            configFileName += "." + PROPERTIES_SUFFIX;
-            fileNameExtension = PROPERTIES_SUFFIX;
-        }
-
-        if (PROPERTIES_SUFFIX.equals(fileNameExtension)) {
-            InputStream is = null;
-            if (configFileName.startsWith("/")) {
-                is = new FileInputStream(configFileName);
-            } else {
-                is = DefaultApplicationClassLoader.get().getResourceAsStream(configFileName);
-            }
-            if (is != null) {
-                Properties p = new Properties();
-                p.load(is);
-                config = configReader.parse(p);
-                is.close();
-            }
-        } else if (GROOVY_SUFFIX.equals(fileNameExtension)) {
-            InputStream is = null;
-            if (configFileName.startsWith("/")) {
-                is = new FileInputStream(configFileName);
-            } else {
-                is = DefaultApplicationClassLoader.get().getResourceAsStream(configFileName);
-            }
-            if (is != null) {
-                String scriptText = IOGroovyMethods.getText(is);
-                if (!isBlank(scriptText)) {
-                    config = configReader.parse(scriptText);
-                }
-            }
-        } else {
-            if (LOG.isInfoEnabled()) {
-                LOG.info("Invalid applicationConfiguration [file: " + configFileName + "]. Skipping");
-            }
-        }
-
-        return config;
-    }*/
-
-    /**
-     * Loads applicationConfiguration settings defined in a Groovy script and a properties file. The script and file names
-     * are Locale aware.<p>
-     * The name of the script matches the name of the file.<br/>
-     * The following suffixes will be used besides the base names for script and file
-     * <ul>
-     * <li>locale.getLanguage()</li>
-     * <li>locale.getLanguage() + "_" + locale.getCountry()</li>
-     * <li>locale.getLanguage() + "_" + locale.getCountry() + "_" + locale.getVariant()</li>
-     * </ul>
-     *
-     * @param baseConfigFileName the applicationConfiguration file
-     * @return a merged applicationConfiguration between the script and the alternate file. The file has precedence over the script.
-     * @since 1.1.0
-     */
-    /*public static ConfigObject loadConfigWithI18n(String baseConfigFileName) {
-        return loadConfigWithI18n(Locale.getDefault(), createConfigReader(), safeLoadClass(baseConfigFileName), baseConfigFileName);
-    }*/
-
-    /**
-     * Loads applicationConfiguration settings defined in a Groovy script and a properties file. The script and file names
-     * are Locale aware.<p>
-     * The alternate properties file matches the simple name of the script.<br/>
-     * The following suffixes will be used besides the base names for script and file
-     * <ul>
-     * <li>locale.getLanguage()</li>
-     * <li>locale.getLanguage() + "_" + locale.getCountry()</li>
-     * <li>locale.getLanguage() + "_" + locale.getCountry() + "_" + locale.getVariant()</li>
-     * </ul>
-     *
-     * @param baseConfigClass the script's class
-     * @return a merged applicationConfiguration between the script and the alternate file. The file has precedence over the script.
-     * @since 1.1.0
-     */
-    /*public static ConfigObject loadConfigWithI18n(Class baseConfigClass) {
-        return loadConfigWithI18n(Locale.getDefault(), createConfigReader(), baseConfigClass, baseConfigClass.getSimpleName());
-    }*/
-
-    /**
-     * Loads applicationConfiguration settings defined in a Groovy script and a properties file. The script and file names
-     * are Locale aware.<p>
-     * The following suffixes will be used besides the base names for script and file
-     * <ul>
-     * <li>locale.getLanguage()</li>
-     * <li>locale.getLanguage() + "_" + locale.getCountry()</li>
-     * <li>locale.getLanguage() + "_" + locale.getCountry() + "_" + locale.getVariant()</li>
-     * </ul>
-     *
-     * @param baseConfigClass    the script's class, may be null
-     * @param baseConfigFileName the alternate applicationConfiguration file
-     * @return a merged applicationConfiguration between the script and the alternate file. The file has precedence over the script.
-     * @since 1.1.0
-     */
-    /*public static ConfigObject loadConfigWithI18n(Class baseConfigClass, String baseConfigFileName) {
-        return loadConfigWithI18n(Locale.getDefault(), createConfigReader(), baseConfigClass, baseConfigFileName);
-    }*/
-
-    /**
-     * Loads applicationConfiguration settings defined in a Groovy script and a properties file. The script and file names
-     * are Locale aware.<p>
-     * The following suffixes will be used besides the base names for script and file
-     * <ul>
-     * <li>locale.getLanguage()</li>
-     * <li>locale.getLanguage() + "_" + locale.getCountry()</li>
-     * <li>locale.getLanguage() + "_" + locale.getCountry() + "_" + locale.getVariant()</li>
-     * </ul>
-     *
-     * @param locale             the locale to use
-     * @param configReader       a ConfigReader instance already configured
-     * @param baseConfigClass    the script's class, may be null
-     * @param baseConfigFileName the alternate applicationConfiguration file
-     * @return a merged applicationConfiguration between the script and the alternate file. The file has precedence over the script.
-     * @since 1.1.0
-     */
-    /*public static ConfigObject loadConfigWithI18n(Locale locale, ConfigReader configReader, Class baseConfigClass, String baseConfigFileName) {
-        ConfigObject config = loadConfig(configReader, baseConfigClass, baseConfigFileName);
-        String[] combinations = {
-            locale.getLanguage(),
-            locale.getLanguage() + "_" + locale.getCountry(),
-            locale.getLanguage() + "_" + locale.getCountry() + "_" + locale.getVariant()
-        };
-
-        String baseClassName = baseConfigClass != null ? baseConfigClass.getName() : null;
-        String fileExtension = !isBlank(baseConfigFileName) ? getFilenameExtension(baseConfigFileName) : null;
-        for (String suffix : combinations) {
-            if (isBlank(suffix) || suffix.endsWith("_")) continue;
-            if (baseClassName != null) {
-                Class configClass = safeLoadClass(baseClassName + "_" + suffix);
-                if (configClass != null)
-                    config.merge(configReader.parse(configClass));
-            }
-
-            if (fileExtension == null) continue;
-            String configFileName = stripFilenameExtension(baseConfigFileName) + "_" + suffix + "." + fileExtension;
-            try {
-                config.merge(loadConfigFile(configReader, configFileName));
-            } catch (FileNotFoundException fne) {
-                // ignore
-            } catch (IOException e) {
-                if (LOG.isWarnEnabled()) {
-                    LOG.warn("Cannot read applicationConfiguration [file: " + configFileName + "]", sanitize(e));
-                }
-            }
-        }
-
-        return config;
-    }*/
-
-    /*
-    public static Class loadClass(String className) throws ClassNotFoundException {
-        ClassNotFoundException cnfe = null;
-
-        ClassLoader cl = ApplicationClassLoader.get();
-        try {
-            return cl.loadClass(className);
-        } catch (ClassNotFoundException e) {
-            cnfe = e;
-        }
-
-        cl = Thread.currentThread().getContextClassLoader();
-        try {
-            return cl.loadClass(className);
-        } catch (ClassNotFoundException e) {
-            cnfe = e;
-        }
-
-        if (cnfe != null) throw cnfe;
-        return null;
-    }
-    */
-
-    /*
-    public static Class safeLoadClass(String className) {
-        try {
-            return loadClass(className);
-        } catch (ClassNotFoundException e) {
-            return null;
-        }
-    }
-    */
-
     // the following taken from SpringFramework::org.springframework.util.StringUtils
 
     /**
@@ -735,5 +450,28 @@ public final class ConfigUtils {
             return path;
         }
         return path.substring(0, extIndex);
+    }
+
+    @Nonnull
+    public static Set<String> explodeKeys(@Nonnull Collection<String> keys) {
+        requireNonNull(keys, "Argument 'keys' cannot be null");
+
+        SortedSet<String> exploded = new TreeSet<>();
+        for (String key : keys) {
+            String[] subkeys = key.split("\\.");
+            StringBuilder b = new StringBuilder(subkeys[0]);
+            String k = b.toString();
+            exploded.add(k);
+
+            for (int i = 1; i < subkeys.length; i++) {
+                b.append(".").append(subkeys[i]);
+                k = b.toString();
+
+                exploded.add(k);
+
+            }
+        }
+
+        return unmodifiableSortedSet(exploded);
     }
 }

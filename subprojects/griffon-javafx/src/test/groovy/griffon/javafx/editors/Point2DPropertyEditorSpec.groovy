@@ -1,9 +1,9 @@
 package griffon.javafx.editors
 
+import javafx.geometry.Point2D
 import spock.lang.Specification
 import spock.lang.Unroll
 
-import javafx.geometry.Point2D
 import java.beans.PropertyEditor
 
 @Unroll

@@ -92,7 +92,7 @@ public abstract class AbstractMVCGroupManager implements MVCGroupManager {
     @Nonnull
     public MVCGroupConfiguration findConfiguration(@Nonnull String mvcType) {
         requireNonBlank(mvcType, ERROR_MVCTYPE_BLANK);
-        MVCGroupConfiguration configuration = null;
+        MVCGroupConfiguration configuration;
         synchronized (lock) {
             configuration = configurations.get(mvcType);
         }
@@ -228,6 +228,7 @@ public abstract class AbstractMVCGroupManager implements MVCGroupManager {
         return asList(group.getModel(), group.getView(), group.getController());
     }
 
+    @SuppressWarnings("unchecked")
     protected <M extends GriffonModel, V extends GriffonView, C extends GriffonController> void withMVCGroup(@Nonnull MVCGroupConfiguration configuration, @Nullable String mvcId, @Nonnull Map<String, Object> args, @Nonnull MVCCallable<M, V, C> handler) {
         MVCGroup group = null;
         try {

@@ -81,8 +81,7 @@ public class GriffonNameUtils {
      * @return <tt>true</tt> if the given String is a keyword, false otherwise
      */
     public static boolean isKeyword(String str) {
-        if (isBlank(str)) return false;
-        return Arrays.binarySearch(KEYWORDS, str.toLowerCase(Locale.ENGLISH)) > -1;
+        return !isBlank(str) && Arrays.binarySearch(KEYWORDS, str.toLowerCase(Locale.ENGLISH)) > -1;
     }
 
     /**
@@ -216,7 +215,7 @@ public class GriffonNameUtils {
     public static String getLogicalName(String name, String trailingName) {
         if (!isBlank(trailingName)) {
             String shortName = getShortName(name);
-            if (shortName.indexOf(trailingName) > -1) {
+            if (shortName.endsWith(trailingName)) {
                 return shortName.substring(0, shortName.length() - trailingName.length());
             }
         }
@@ -334,11 +333,10 @@ public class GriffonNameUtils {
     public static String getNaturalName(String name) {
         name = getShortName(name);
         if (isBlank(name)) return name;
-        List<String> words = new ArrayList<String>();
+        List<String> words = new ArrayList<>();
         int i = 0;
         char[] chars = name.toCharArray();
-        for (int j = 0; j < chars.length; j++) {
-            char c = chars[j];
+        for (char c : chars) {
             String w;
             if (i >= words.size()) {
                 w = "";
@@ -518,7 +516,7 @@ public class GriffonNameUtils {
         char c = 0;
         int i;
         int len = string.length();
-        StringBuffer sb = new StringBuffer(len * 2);
+        StringBuilder sb = new StringBuilder(len * 2);
         String t;
         char[] chars = string.toCharArray();
         char[] buffer = new char[1030];

@@ -1,9 +1,9 @@
 package griffon.javafx.editors
 
+import javafx.scene.paint.Color
 import spock.lang.Specification
 import spock.lang.Unroll
 
-import javafx.scene.paint.Color
 import java.beans.PropertyEditor
 
 @Unroll

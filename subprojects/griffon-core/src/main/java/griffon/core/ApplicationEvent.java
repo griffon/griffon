@@ -39,7 +39,7 @@ public enum ApplicationEvent {
     /**
      * Display friendly name
      */
-    private String name;
+    private final String name;
 
     ApplicationEvent() {
         String name = name().toLowerCase().replaceAll("_", "-");

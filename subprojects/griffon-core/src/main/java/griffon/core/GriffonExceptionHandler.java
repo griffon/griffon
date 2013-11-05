@@ -63,6 +63,7 @@ public class GriffonExceptionHandler implements Thread.UncaughtExceptionHandler 
         handle(e);
     }
 
+    @SuppressWarnings("ThrowableResultOfMethodCallIgnored")
     public void handle(Throwable throwable) {
         try {
             sanitize(throwable);
@@ -80,16 +81,19 @@ public class GriffonExceptionHandler implements Thread.UncaughtExceptionHandler 
         }
     }
 
+    @SuppressWarnings("ThrowableResultOfMethodCallIgnored")
     public static Throwable sanitize(Throwable throwable) {
         try {
-            if (!Boolean.getBoolean(GRIFFON_FULL_STACKTRACE))
+            if (!Boolean.getBoolean(GRIFFON_FULL_STACKTRACE)) {
                 deepSanitize(throwable);
+            }
         } catch (Throwable t) {
             // don't let the exception get thrown out, will cause infinite looping!
         }
         return throwable;
     }
 
+    @SuppressWarnings("ThrowableResultOfMethodCallIgnored")
     public static StackTraceElement[] sanitize(StackTraceElement[] stackTrace) {
         try {
             if (!Boolean.getBoolean(GRIFFON_FULL_STACKTRACE)) {
@@ -136,6 +140,7 @@ public class GriffonExceptionHandler implements Thread.UncaughtExceptionHandler 
      * @param t a throwable
      * @return The root cause exception instances, with stack trace modified to filter out groovy runtime classes
      */
+    @SuppressWarnings("ThrowableResultOfMethodCallIgnored")
     public static Throwable deepSanitize(Throwable t) {
         Throwable current = t;
         while (current.getCause() != null) {
@@ -146,7 +151,7 @@ public class GriffonExceptionHandler implements Thread.UncaughtExceptionHandler 
 
     private static Throwable doSanitize(Throwable t) {
         StackTraceElement[] trace = t.getStackTrace();
-        List<StackTraceElement> newTrace = new ArrayList<StackTraceElement>();
+        List<StackTraceElement> newTrace = new ArrayList<>();
         for (StackTraceElement stackTraceElement : trace) {
             if (isApplicationClass(stackTraceElement.getClassName())) {
                 newTrace.add(stackTraceElement);

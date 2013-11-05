@@ -29,13 +29,14 @@ import static java.util.Objects.requireNonNull;
  * @author Andres Almiray
  */
 public class DefaultEventRouter extends AbstractEventRouter {
-    private final BlockingQueue<Runnable> deferredEvents = new LinkedBlockingQueue<Runnable>();
+    private final BlockingQueue<Runnable> deferredEvents = new LinkedBlockingQueue<>();
     protected static int count = 1;
     private UIThreadManager uiThreadManager;
 
     public DefaultEventRouter() {
         Thread t = new Thread(new Runnable() {
             public void run() {
+                //noinspection InfiniteLoopStatement
                 while (true) {
                     try {
                         deferredEvents.take().run();

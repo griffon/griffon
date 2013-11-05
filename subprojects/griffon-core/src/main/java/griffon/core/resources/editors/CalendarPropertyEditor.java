@@ -37,7 +37,7 @@ public class CalendarPropertyEditor extends AbstractPropertyEditor {
         } else if (value instanceof CharSequence) {
             handleAsString(String.valueOf(value));
         } else if (value instanceof Calendar) {
-            super.setValueInternal((Calendar) value);
+            super.setValueInternal(value);
         } else if (value instanceof Date) {
             Calendar c = Calendar.getInstance();
             c.setTime((Date) value);

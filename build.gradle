@@ -23,10 +23,12 @@ apply from: 'gradle/idea.gradle'
 
 evaluationDependsOn(':griffon-core')
 evaluationDependsOn(':griffon-guice')
+evaluationDependsOn(':griffon-weld')
 evaluationDependsOn(':griffon-groovy')
 evaluationDependsOn(':griffon-swing')
 evaluationDependsOn(':griffon-javafx')
 evaluationDependsOn(':griffon-integration')
+evaluationDependsOn(':griffon-integration-javafx')
 
 subprojects { subproj ->
     apply plugin: 'idea'
@@ -116,6 +118,7 @@ def mavenizedProjects() {
         project(':griffon-core'),
         project(':griffon-groovy'),
         project(':griffon-guice'),
+        project(':griffon-weld'),
         project(':griffon-swing'),
         project(':griffon-javafx')
     ]

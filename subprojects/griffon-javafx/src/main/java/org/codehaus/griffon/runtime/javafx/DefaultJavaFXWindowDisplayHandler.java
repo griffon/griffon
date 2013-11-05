@@ -48,7 +48,7 @@ public class DefaultJavaFXWindowDisplayHandler implements JavaFXWindowDisplayHan
         requireNonBlank(name, ERROR_NAME_BLANK);
         requireNonNull(window, ERROR_WINDOW_NULL);
         if (window instanceof Stage) {
-            ((Stage) window).hide();
+            window.hide();
         }
     }
 }

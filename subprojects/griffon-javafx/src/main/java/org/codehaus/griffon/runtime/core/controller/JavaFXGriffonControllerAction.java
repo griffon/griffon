@@ -55,7 +55,7 @@ public class JavaFXGriffonControllerAction extends AbstractAction {
         toolkitAction = new JavaFXAction();
         toolkitAction.setOnAction(new EventHandler<ActionEvent>() {
             public void handle(ActionEvent actionEvent) {
-                actionManager.invokeAction(controller, actionName, new Object[]{actionEvent});
+                actionManager.invokeAction(controller, actionName, actionEvent);
             }
         });
         addPropertyChangeListener(new PropertyChangeListener() {

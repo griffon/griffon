@@ -104,6 +104,7 @@ public class ConfigurableWindowDisplayHandler<W> implements WindowDisplayHandler
         this.delegateWindowsDisplayHandler = requireNonNull(delegateWindowsDisplayHandler, "Argument 'delegateWindowsDisplayHandler' cannot be null");
     }
 
+    @SuppressWarnings("unchecked")
     public void show(@Nonnull String name, @Nonnull W window) {
         requireNonBlank(name, ERROR_NAME_BLANK);
         requireNonNull(window, ERROR_WINDOW_NULL);
@@ -132,6 +133,7 @@ public class ConfigurableWindowDisplayHandler<W> implements WindowDisplayHandler
         fetchDefaultWindowDisplayHandler().show(name, window);
     }
 
+    @SuppressWarnings("unchecked")
     public void hide(@Nonnull String name, @Nonnull W window) {
         requireNonBlank(name, ERROR_NAME_BLANK);
         requireNonNull(window, ERROR_WINDOW_NULL);
@@ -181,6 +183,7 @@ public class ConfigurableWindowDisplayHandler<W> implements WindowDisplayHandler
     }
 
     @Nonnull
+    @SuppressWarnings("unchecked")
     protected WindowDisplayHandler<W> fetchDefaultWindowDisplayHandler() {
         Object handler = windowManagerBlock().get("defaultHandler");
         return handler instanceof WindowDisplayHandler ? (WindowDisplayHandler<W>) handler : delegateWindowsDisplayHandler;

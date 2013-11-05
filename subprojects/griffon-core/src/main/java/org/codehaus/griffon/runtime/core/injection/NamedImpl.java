@@ -25,6 +25,7 @@ import static java.util.Objects.requireNonNull;
 /**
  * Copied from Guice's {@code com.google.inject.name.NamedImpl}.
  */
+@SuppressWarnings("ClassExplicitlyAnnotation")
 public class NamedImpl implements Named, Serializable {
 
     private final String value;

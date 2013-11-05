@@ -28,6 +28,7 @@ import static java.util.Objects.requireNonNull;
  * @author Andres Almiray
  * @since 2.0.0
  */
+@SuppressWarnings("ClassExplicitlyAnnotation")
 public class ArtifactImpl implements Artifact, Serializable {
     private final Class<? extends GriffonArtifact> value;
 

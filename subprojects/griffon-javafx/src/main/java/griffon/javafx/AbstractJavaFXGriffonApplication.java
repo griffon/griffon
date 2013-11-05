@@ -21,6 +21,7 @@ import griffon.core.addon.AddonManager;
 import griffon.core.artifact.ArtifactManager;
 import griffon.core.controller.ActionManager;
 import griffon.core.env.ApplicationPhase;
+import griffon.core.env.Lifecycle;
 import griffon.core.event.EventRouter;
 import griffon.core.i18n.MessageSource;
 import griffon.core.injection.Injector;
@@ -54,6 +55,7 @@ import static griffon.util.GriffonApplicationUtils.parseLocale;
 import static griffon.util.GriffonNameUtils.requireNonBlank;
 import static java.util.Arrays.asList;
 import static java.util.Objects.requireNonNull;
+import static org.codehaus.griffon.runtime.core.GriffonApplicationSupport.runLifecycleHandler;
 
 /**
  * Base implementation of {@code GriffonApplication} that runs in applet mode.
@@ -73,7 +75,7 @@ public abstract class AbstractJavaFXGriffonApplication extends Application imple
     private final Object shutdownLock = new Object();
     private final Logger log;
     private Injector<?> injector;
-    protected PropertyChangeSupport pcs;
+    protected final PropertyChangeSupport pcs;
 
     public AbstractJavaFXGriffonApplication() {
         this(EMPTY_ARGS);
@@ -294,8 +296,9 @@ public abstract class AbstractJavaFXGriffonApplication extends Application imple
         setPhase(ApplicationPhase.READY);
         event(ApplicationEvent.READY_START, asList(this));
 
-        // TODO GriffonApplicationHelper.runLifecycleHandler(Lifecycle.READY, this);
+        runLifecycleHandler(Lifecycle.READY, this);
         event(ApplicationEvent.READY_END, asList(this));
+
         setPhase(ApplicationPhase.MAIN);
     }
 
@@ -369,7 +372,7 @@ public abstract class AbstractJavaFXGriffonApplication extends Application imple
 
         // stage 3 - destroy all mvc groups
         log.debug("Shutdown stage 3: destroy all MVC groups");
-        List<String> mvcNames = new ArrayList<String>();
+        List<String> mvcNames = new ArrayList<>();
         if (getMvcGroupManager() != null) {
             mvcNames.addAll(getMvcGroupManager().getGroups().keySet());
             for (String name : mvcNames) {
@@ -379,7 +382,7 @@ public abstract class AbstractJavaFXGriffonApplication extends Application imple
 
         // stage 4 - call shutdown script
         log.debug("Shutdown stage 4: execute Shutdown script");
-        // TODO GriffonApplicationHelper.runLifecycleHandler(Lifecycle.SHUTDOWN, this);
+        runLifecycleHandler(Lifecycle.SHUTDOWN, this);
 
         injector.getInstance(ExecutorServiceManager.class).shutdownAll();
         injector.close();
@@ -387,6 +390,7 @@ public abstract class AbstractJavaFXGriffonApplication extends Application imple
         return true;
     }
 
+    @SuppressWarnings("unchecked")
     public void startup() {
         if (getPhase() != ApplicationPhase.INITIALIZE) return;
 
@@ -413,7 +417,7 @@ public abstract class AbstractJavaFXGriffonApplication extends Application imple
             }
         }
 
-        // TODO GriffonApplicationHelper.runLifecycleHandler(Lifecycle.STARTUP, this);
+        runLifecycleHandler(Lifecycle.STARTUP, this);
 
         event(ApplicationEvent.STARTUP_END, asList(this));
     }

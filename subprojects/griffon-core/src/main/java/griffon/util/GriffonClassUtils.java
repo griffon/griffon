@@ -62,16 +62,16 @@ public class GriffonClassUtils {
     private static final Pattern GETTER_PATTERN_1 = Pattern.compile("^get[A-Z][\\w]*$");
     private static final Pattern GETTER_PATTERN_2 = Pattern.compile("^is[A-Z][\\w]*$");
     private static final Pattern SETTER_PATTERN = Pattern.compile("^set[A-Z][\\w]*$");
-    private static final Set<MethodDescriptor> BASIC_METHODS = new TreeSet<MethodDescriptor>();
-    private static final Set<MethodDescriptor> ARTIFACT_METHODS = new TreeSet<MethodDescriptor>();
-    private static final Set<MethodDescriptor> MVC_METHODS = new TreeSet<MethodDescriptor>();
+    private static final Set<MethodDescriptor> BASIC_METHODS = new TreeSet<>();
+    private static final Set<MethodDescriptor> ARTIFACT_METHODS = new TreeSet<>();
+    private static final Set<MethodDescriptor> MVC_METHODS = new TreeSet<>();
     // private static final Set<MethodDescriptor> SERVICE_METHODS = new TreeSet<MethodDescriptor>();
-    private static final Set<MethodDescriptor> THREADING_METHODS = new TreeSet<MethodDescriptor>();
-    private static final Set<MethodDescriptor> EVENT_PUBLISHER_METHODS = new TreeSet<MethodDescriptor>();
-    private static final Set<MethodDescriptor> OBSERVABLE_METHODS = new TreeSet<MethodDescriptor>();
-    private static final Set<MethodDescriptor> RESOURCE_HANDLER_METHODS = new TreeSet<MethodDescriptor>();
-    private static final Set<MethodDescriptor> MESSAGE_SOURCE_METHODS = new TreeSet<MethodDescriptor>();
-    private static final Set<MethodDescriptor> RESOURCE_RESOLVER_METHODS = new TreeSet<MethodDescriptor>();
+    private static final Set<MethodDescriptor> THREADING_METHODS = new TreeSet<>();
+    private static final Set<MethodDescriptor> EVENT_PUBLISHER_METHODS = new TreeSet<>();
+    private static final Set<MethodDescriptor> OBSERVABLE_METHODS = new TreeSet<>();
+    private static final Set<MethodDescriptor> RESOURCE_HANDLER_METHODS = new TreeSet<>();
+    private static final Set<MethodDescriptor> MESSAGE_SOURCE_METHODS = new TreeSet<>();
+    private static final Set<MethodDescriptor> RESOURCE_RESOLVER_METHODS = new TreeSet<>();
 
     /**
      * Just add two entries to the class compatibility map
@@ -163,16 +163,16 @@ public class GriffonClassUtils {
         // SERVICE_METHODS.add(new MethodDescriptor("serviceDestroy"));
 
         THREADING_METHODS.add(new MethodDescriptor("isUIThread"));
-        THREADING_METHODS.add(new MethodDescriptor("execInsideUIAsync", new Class[]{Runnable.class}));
-        THREADING_METHODS.add(new MethodDescriptor("execInsideUISync", new Class[]{Runnable.class}));
-        THREADING_METHODS.add(new MethodDescriptor("execOutsideUI", new Class[]{Runnable.class}));
-        THREADING_METHODS.add(new MethodDescriptor("execFuture", new Class[]{Callable.class}));
-        THREADING_METHODS.add(new MethodDescriptor("execFuture", new Class[]{ExecutorService.class, Callable.class}));
+        THREADING_METHODS.add(new MethodDescriptor("runInsideUIAsync", new Class[]{Runnable.class}));
+        THREADING_METHODS.add(new MethodDescriptor("runInsideUISync", new Class[]{Runnable.class}));
+        THREADING_METHODS.add(new MethodDescriptor("runOutsideUI", new Class[]{Runnable.class}));
+        THREADING_METHODS.add(new MethodDescriptor("runFuture", new Class[]{Callable.class}));
+        THREADING_METHODS.add(new MethodDescriptor("runFuture", new Class[]{ExecutorService.class, Callable.class}));
         THREADING_METHODS.add(new MethodDescriptor("edt", new Class[]{Runnable.class}));
         THREADING_METHODS.add(new MethodDescriptor("doLater", new Class[]{Runnable.class}));
         THREADING_METHODS.add(new MethodDescriptor("doOutside", new Class[]{Runnable.class}));
         // Special case due to the usage of varargs
-        THREADING_METHODS.add(new MethodDescriptor("execFuture", new Class[]{Object[].class}));
+        THREADING_METHODS.add(new MethodDescriptor("runFuture", new Class[]{Object[].class}));
 
         EVENT_PUBLISHER_METHODS.add(new MethodDescriptor("addEventListener", new Class[]{Object.class}));
         EVENT_PUBLISHER_METHODS.add(new MethodDescriptor("addEventListener", new Class[]{String.class, CallableWithArgs.class}));
@@ -580,8 +580,7 @@ public class GriffonClassUtils {
      * @return true if the method is a setter, false otherwise.
      */
     public static boolean isSetterMethod(MethodDescriptor method) {
-        if (method == null || !isInstanceMethod(method)) return false;
-        return SETTER_PATTERN.matcher(method.getName()).matches();
+        return !(method == null || !isInstanceMethod(method)) && SETTER_PATTERN.matcher(method.getName()).matches();
     }
 
     /**
@@ -1281,7 +1280,7 @@ public class GriffonClassUtils {
         if (clazz == null || GriffonNameUtils.isBlank(propertyName))
             return null;
 
-        Object instance = null;
+        Object instance;
         try {
             instance = instantiateClass(clazz);
         } catch (BeanInstantiationException e) {
@@ -1303,7 +1302,7 @@ public class GriffonClassUtils {
         if (clazz == null || GriffonNameUtils.isBlank(propertyName))
             return null;
 
-        Object instance = null;
+        Object instance;
         try {
             instance = instantiateClass(clazz);
         } catch (BeanInstantiationException e) {
@@ -1326,8 +1325,7 @@ public class GriffonClassUtils {
 
         PropertyDescriptor[] descriptors = getPropertyDescriptors(instance.getClass());
 
-        for (int i = 0; i < descriptors.length; i++) {
-            PropertyDescriptor pd = descriptors[i];
+        for (PropertyDescriptor pd : descriptors) {
             if (isAssignableOrConvertibleFrom(pd.getPropertyType(), propertyValue.getClass())) {
                 Object value;
                 try {
@@ -1647,7 +1645,7 @@ public class GriffonClassUtils {
      */
     public static Object getFieldValue(Object obj, String name) {
         Class<?> clazz = obj.getClass();
-        Field f = null;
+        Field f;
         try {
             f = clazz.getDeclaredField(name);
             return f.get(obj);
@@ -1675,7 +1673,7 @@ public class GriffonClassUtils {
      * @return The field or null if there is no such field or access problems
      */
     public static Field getField(Class clazz, String name) {
-        Field f = null;
+        Field f;
         try {
             f = clazz.getDeclaredField(name);
             return f;
@@ -1693,7 +1691,7 @@ public class GriffonClassUtils {
      */
     public static boolean isPublicField(Object obj, String name) {
         Class<?> clazz = obj.getClass();
-        Field f = null;
+        Field f;
         try {
             f = clazz.getDeclaredField(name);
             return Modifier.isPublic(f.getModifiers());
@@ -1716,16 +1714,13 @@ public class GriffonClassUtils {
 
         Class<?> superClass = clz.getSuperclass();
 
-        PropertyDescriptor pd = null;
+        PropertyDescriptor pd;
         try {
             pd = getPropertyDescriptor(superClass, propertyName);
         } catch (Exception e) {
             throw new BeanException("Could not read property descritptor for " + propertyName + " in " + superClass, e);
         }
-        if (pd != null && pd.getReadMethod() != null) {
-            return true;
-        }
-        return false;
+        return pd != null && pd.getReadMethod() != null;
     }
 
     /**
@@ -1876,12 +1871,7 @@ public class GriffonClassUtils {
         } else if (type.isPrimitive()) {
             // convert primitive type to compatible class 
             Class<?> primitiveClass = (Class<?>) PRIMITIVE_TYPE_COMPATIBLE_CLASSES.get(type);
-            if (primitiveClass == null) {
-                // no compatible class found for primitive type
-                return false;
-            } else {
-                return clazz.isAssignableFrom(primitiveClass);
-            }
+            return primitiveClass != null && clazz.isAssignableFrom(primitiveClass);
         } else {
             return clazz.isAssignableFrom(type);
         }
@@ -1995,6 +1985,7 @@ public class GriffonClassUtils {
         requireNonNull(clazz, "Argument 'class' cannot be null");
         requireNonNull(annotationType, "Argument 'annotationType' cannot be null");
 
+        //noinspection ConstantConditions
         while (clazz != null) {
             for (Annotation annotation : clazz.getAnnotations()) {
                 if (annotationType.equals(annotation.annotationType())) {
@@ -2100,9 +2091,9 @@ public class GriffonClassUtils {
 
         PropertyDescriptor[] descriptors = getPropertyDescriptors(clazz);
         if (descriptors != null) {
-            for (int i = 0; i < descriptors.length; i++) {
-                if (name.equals(descriptors[i].getName())) {
-                    return (descriptors[i]);
+            for (PropertyDescriptor descriptor : descriptors) {
+                if (name.equals(descriptor.getName())) {
+                    return (descriptor);
                 }
             }
         }
@@ -2125,14 +2116,14 @@ public class GriffonClassUtils {
         }
 
         // Look up any cached descriptors for this bean class
-        PropertyDescriptor[] descriptors = null;
-        descriptors = (PropertyDescriptor[]) descriptorsCache.get(beanClass.getName());
+        PropertyDescriptor[] descriptors;
+        descriptors = descriptorsCache.get(beanClass.getName());
         if (descriptors != null) {
             return (descriptors);
         }
 
         // Introspect the bean and cache the generated descriptors
-        BeanInfo beanInfo = null;
+        BeanInfo beanInfo;
         try {
             beanInfo = Introspector.getBeanInfo(beanClass);
         } catch (IntrospectionException e) {
@@ -2565,7 +2556,7 @@ public class GriffonClassUtils {
             return EMPTY_STRING;
         }
 
-        StringBuffer arrayPrefix = new StringBuffer();
+        StringBuilder arrayPrefix = new StringBuilder();
 
         // Handle array encoding
         if (className.startsWith("[")) {
@@ -2580,7 +2571,7 @@ public class GriffonClassUtils {
         }
 
         if (reverseAbbreviationMap.containsKey(className)) {
-            className = (String) reverseAbbreviationMap.get(className);
+            className = reverseAbbreviationMap.get(className);
         }
 
         int lastDotIdx = className.lastIndexOf(PACKAGE_SEPARATOR_CHAR);

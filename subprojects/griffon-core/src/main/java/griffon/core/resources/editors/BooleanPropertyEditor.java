@@ -47,7 +47,7 @@ public class BooleanPropertyEditor extends AbstractPropertyEditor {
     }
 
     private void handleAsBoolean(Boolean bool) {
-        super.setValueInternal(bool.booleanValue());
+        super.setValueInternal(bool);
     }
 
     protected Formatter resolveFormatter() {

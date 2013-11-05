@@ -58,7 +58,7 @@ public class LifecycleHandlerProvider implements Provider<LifecycleHandler> {
     @Override
     @SuppressWarnings("unchecked")
     public LifecycleHandler get() {
-        Class<LifecycleHandler> handlerClass = null;
+        Class<LifecycleHandler> handlerClass;
         try {
             handlerClass = (Class<LifecycleHandler>) applicationClassLoader.get().loadClass(basename);
         } catch (ClassNotFoundException e) {

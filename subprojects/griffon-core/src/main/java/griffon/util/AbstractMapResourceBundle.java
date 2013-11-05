@@ -20,6 +20,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.*;
 
+import static griffon.util.ConfigUtils.explodeKeys;
 import static griffon.util.GriffonNameUtils.requireNonBlank;
 
 /**
@@ -28,12 +29,19 @@ import static griffon.util.GriffonNameUtils.requireNonBlank;
  */
 public abstract class AbstractMapResourceBundle extends ResourceBundle {
     private final Map<String, Object> entries = new LinkedHashMap<>();
+    private final Set<String> explodedKeys;
 
     public AbstractMapResourceBundle() {
         initialize(entries);
+        explodedKeys = explodeKeys(entries.keySet());
     }
 
     protected abstract void initialize(@Nonnull Map<String, Object> entries);
+
+    @Nonnull
+    public Set<String> explodedKeySet() {
+        return explodedKeys;
+    }
 
     @Nullable
     @Override

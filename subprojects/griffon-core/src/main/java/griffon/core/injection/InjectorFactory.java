@@ -19,7 +19,6 @@ package griffon.core.injection;
 import griffon.core.GriffonApplication;
 
 import javax.annotation.Nonnull;
-import java.util.Collection;
 
 /**
  * @author Andres Almiray

@@ -105,7 +105,7 @@ public abstract class AbstractResourcesInjector implements ResourcesInjector {
                     "'] is marked for resource injection.");
             }
 
-            Object value = null;
+            Object value;
             if (isBlank(defaultValue)) {
                 value = resolveResource(key, args);
             } else {
@@ -146,7 +146,7 @@ public abstract class AbstractResourcesInjector implements ResourcesInjector {
                     "'] is marked for resource injection.");
             }
 
-            Object value = null;
+            Object value;
             if (isBlank(defaultValue)) {
                 value = resolveResource(key, args);
             } else {

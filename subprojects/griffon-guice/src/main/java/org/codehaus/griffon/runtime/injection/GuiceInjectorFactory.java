@@ -36,18 +36,14 @@ import org.codehaus.griffon.runtime.core.injection.InjectorProvider;
 import javax.annotation.Nonnull;
 import javax.annotation.PostConstruct;
 import javax.inject.Singleton;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
 
 import static com.google.inject.util.Providers.guicify;
-import static griffon.core.GriffonExceptionHandler.sanitize;
 import static java.util.Arrays.asList;
 import static java.util.Objects.requireNonNull;
 import static org.codehaus.griffon.runtime.injection.GuiceInjector.moduleFromBindings;
+import static org.codehaus.griffon.runtime.injection.MethodUtils.invokeAnnotatedMethod;
 
 /**
  * @author Andres Almiray
@@ -77,31 +73,10 @@ public class GuiceInjectorFactory implements InjectorFactory {
         };
 
         final InjectionListener<Object> postConstructorInjectorListener = new InjectionListener<Object>() {
+            @SuppressWarnings("ThrowableResultOfMethodCallIgnored")
             @Override
             public void afterInjection(Object injectee) {
-                List<Method> postConstructMethods = new ArrayList<>();
-                Class klass = injectee.getClass();
-                while (klass != null) {
-                    for (Method method : klass.getDeclaredMethods()) {
-                        if (method.getAnnotation(PostConstruct.class) != null &&
-                            method.getParameterTypes().length == 0 &&
-                            Modifier.isPublic(method.getModifiers())) {
-                            postConstructMethods.add(method);
-                        }
-                    }
-
-                    klass = klass.getSuperclass();
-                }
-
-                for (Method method : postConstructMethods) {
-                    try {
-                        method.invoke(injectee);
-                    } catch (IllegalAccessException e) {
-                        sanitize(e).printStackTrace();
-                    } catch (InvocationTargetException e) {
-                        sanitize(e.getTargetException()).printStackTrace();
-                    }
-                }
+                invokeAnnotatedMethod(injectee, PostConstruct.class);
             }
         };
 
@@ -117,6 +92,7 @@ public class GuiceInjectorFactory implements InjectorFactory {
                                      return GriffonArtifact.class.isAssignableFrom(typeLiteral.getRawType());
                                  }
                              }, new TypeListener() {
+                                 @SuppressWarnings("unchecked")
                                  @Override
                                  public <I> void hear(TypeLiteral<I> type, TypeEncounter<I> encounter) {
                                      if (GriffonArtifact.class.isAssignableFrom(type.getRawType())) {

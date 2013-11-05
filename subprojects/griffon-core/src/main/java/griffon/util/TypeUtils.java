@@ -112,6 +112,7 @@ public final class TypeUtils {
     }
 
     @Nonnull
+    @SuppressWarnings("unchecked")
     public static <T> T convertValue(@Nonnull Class<T> targetType, @Nonnull Object value, @Nullable String format) {
         requireNonNull(targetType, "Argument 'targetType' cannot be null");
         requireNonNull(value, "Argument 'value' cannot be null");

@@ -17,7 +17,7 @@
 package griffon.core.env;
 
 import javax.annotation.Nullable;
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Locale;
 import java.util.Map;
 
@@ -62,7 +62,7 @@ public enum Environment {
     private static final String DEVELOPMENT_ENVIRONMENT_SHORT_NAME = "dev";
 
     private static final String TEST_ENVIRONMENT_SHORT_NAME = "test";
-    private static Map<String, String> envNameMappings = new HashMap<String, String>() {{
+    private static final Map<String, String> ENV_NAME_MAPPINGS = new LinkedHashMap<String, String>() {{
         put(DEVELOPMENT_ENVIRONMENT_SHORT_NAME, Environment.DEVELOPMENT.getName());
         put(PRODUCTION_ENV_SHORT_NAME, Environment.PRODUCTION.getName());
         put(TEST_ENVIRONMENT_SHORT_NAME, Environment.TEST.getName());
@@ -114,7 +114,7 @@ public enum Environment {
      * @return The Environment or null if not known
      */
     public static Environment getEnvironment(@Nullable String shortName) {
-        final String envName = envNameMappings.get(shortName);
+        final String envName = ENV_NAME_MAPPINGS.get(shortName);
         if (envName != null) {
             return Environment.valueOf(envName.toUpperCase());
         }

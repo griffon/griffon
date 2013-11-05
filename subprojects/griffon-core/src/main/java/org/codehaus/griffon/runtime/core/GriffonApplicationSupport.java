@@ -79,7 +79,7 @@ public final class GriffonApplicationSupport {
     }
 
     private static void initializePropertyEditors(@Nonnull GriffonApplication application) {
-        Enumeration<URL> urls = null;
+        Enumeration<URL> urls;
 
         try {
             urls = applicationClassLoader(application).get().getResources("META-INF/editors/" + PropertyEditor.class.getName());
@@ -182,8 +182,8 @@ public final class GriffonApplicationSupport {
                     LOG.debug("Adding MVC group " + type);
                 }
                 Map<String, Object> members = groupEntry.getValue();
-                Map<String, Object> configMap = new LinkedHashMap<String, Object>();
-                Map<String, String> membersCopy = new LinkedHashMap<String, String>();
+                Map<String, Object> configMap = new LinkedHashMap<>();
+                Map<String, String> membersCopy = new LinkedHashMap<>();
                 for (Object o : members.entrySet()) {
                     Map.Entry entry = (Map.Entry) o;
                     String key = String.valueOf(entry.getKey());
@@ -391,7 +391,7 @@ public final class GriffonApplicationSupport {
             return;
         }
 
-        LifecycleHandler handler = null;
+        LifecycleHandler handler;
         try {
             handler = application.getInjector().getInstance(LifecycleHandler.class, new NamedImpl(lifecycle.getName()));
         } catch (Exception e) {
@@ -404,7 +404,7 @@ public final class GriffonApplicationSupport {
     }
 
     public static Class<?> loadClass(@Nonnull String className, @Nonnull ClassLoader classLoader) throws ClassNotFoundException {
-        ClassNotFoundException cnfe = null;
+        ClassNotFoundException cnfe;
 
         ClassLoader cl = GriffonApplicationSupport.class.getClassLoader();
         try {

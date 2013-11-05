@@ -42,7 +42,7 @@ public class DefaultApplicationConfiguration extends AbstractApplicationConfigur
         Enumeration<String> keys = resourceBundle.getKeys();
         while (keys.hasMoreElements()) {
             String key = keys.nextElement();
-            flatMap.put(key, resourceBundle.getObject(key));
+            flatMap.put(key, getConfigValue(resourceBundle, key));
         }
     }
 

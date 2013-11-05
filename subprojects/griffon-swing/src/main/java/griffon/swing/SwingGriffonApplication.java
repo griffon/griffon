@@ -71,4 +71,8 @@ public class SwingGriffonApplication extends AbstractGriffonApplication {
     public Object createApplicationContainer() {
         return SwingUtils.createApplicationFrame(this);
     }
+
+    public static void main(String[] args) throws Exception {
+        run(SwingGriffonApplication.class, args);
+    }
 }

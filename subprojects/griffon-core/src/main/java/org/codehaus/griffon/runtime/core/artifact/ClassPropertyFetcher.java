@@ -35,16 +35,16 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 public class ClassPropertyFetcher {
     private final Class<?> clazz;
-    final Map<String, PropertyFetcher> staticFetchers = new LinkedHashMap<String, PropertyFetcher>();
-    final Map<String, PropertyFetcher> instanceFetchers = new LinkedHashMap<String, PropertyFetcher>();
+    final Map<String, PropertyFetcher> staticFetchers = new LinkedHashMap<>();
+    final Map<String, PropertyFetcher> instanceFetchers = new LinkedHashMap<>();
     private final ReferenceInstanceCallback callback;
     private PropertyDescriptor[] propertyDescriptors;
     private String[] propertiesWithFields;
 
-    private static Map<Class<?>, ClassPropertyFetcher> cachedClassPropertyFetchers = new ConcurrentHashMap<Class<?>, ClassPropertyFetcher>();
+    private static final Map<Class<?>, ClassPropertyFetcher> CACHED_CLASS_PROPERTY_FETCHERS = new ConcurrentHashMap<>();
 
     public static void clearClassPropertyFetcherCache() {
-        cachedClassPropertyFetchers.clear();
+        CACHED_CLASS_PROPERTY_FETCHERS.clear();
     }
 
     public static ClassPropertyFetcher forClass(Class<?> c) {
@@ -52,7 +52,7 @@ public class ClassPropertyFetcher {
     }
 
     public static ClassPropertyFetcher forClass(final Class<?> c, ReferenceInstanceCallback callback) {
-        ClassPropertyFetcher cpf = cachedClassPropertyFetchers.get(c);
+        ClassPropertyFetcher cpf = CACHED_CLASS_PROPERTY_FETCHERS.get(c);
         if (cpf == null) {
             if (callback == null) {
                 callback = new ReferenceInstanceCallback() {
@@ -67,7 +67,7 @@ public class ClassPropertyFetcher {
                 };
             }
             cpf = new ClassPropertyFetcher(c, callback);
-            cachedClassPropertyFetchers.put(c, cpf);
+            CACHED_CLASS_PROPERTY_FETCHERS.put(c, cpf);
         }
         return cpf;
     }
@@ -195,9 +195,9 @@ public class ClassPropertyFetcher {
             }
         }
 
-        final List<String> properties = new ArrayList<String>();
+        final List<String> properties = new ArrayList<>();
         for (Class<?> c : allClasses) {
-            final List<String> props = new ArrayList<String>();
+            final List<String> props = new ArrayList<>();
             for (PropertyDescriptor p : GriffonClassUtils.getPropertyDescriptors(clazz)) {
                 props.add(p.getName());
             }
@@ -217,7 +217,7 @@ public class ClassPropertyFetcher {
     }
 
     private List<Class<?>> resolveAllClasses(Class<?> c) {
-        List<Class<?>> list = new ArrayList<Class<?>>();
+        List<Class<?>> list = new ArrayList<>();
         Class<?> currentClass = c;
         while (currentClass != null) {
             list.add(currentClass);

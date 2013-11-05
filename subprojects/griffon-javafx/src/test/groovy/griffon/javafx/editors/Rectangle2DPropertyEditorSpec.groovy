@@ -1,9 +1,9 @@
 package griffon.javafx.editors
 
+import javafx.geometry.Rectangle2D
 import spock.lang.Specification
 import spock.lang.Unroll
 
-import javafx.geometry.Rectangle2D
 import java.beans.PropertyEditor
 
 @Unroll

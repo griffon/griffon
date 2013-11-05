@@ -118,7 +118,7 @@ public class CheckThreadViolationRepaintManager extends RepaintManager {
             if (lastComponent != null && c == lastComponent.get()) {
                 return;
             }
-            lastComponent = new WeakReference<JComponent>(c);
+            lastComponent = new WeakReference<>(c);
             violationFound(c, stackTrace);
         }
     }
@@ -128,7 +128,7 @@ public class CheckThreadViolationRepaintManager extends RepaintManager {
         StringBuilder sb = new StringBuilder("EDT violation detected").append('\n');
         sb.append(c).append('\n');
         for (StackTraceElement st : stackTrace) {
-            sb.append("\tat " + st).append('\n');
+            sb.append("\tat ").append(st).append('\n');
         }
         if (LOG.isWarnEnabled()) {
             LOG.warn(sb.toString());

@@ -37,8 +37,8 @@ public class Metadata extends Properties {
     public static final String GRIFFON_WORKING_DIR = "griffon.working.dir";
     public static final String APPLICATION_TOOLKIT = "app.toolkit";
 
-    private static final Pattern SKIP_PATTERN = Pattern.compile("^.*\\/griffon-.*.jar!\\/application.properties$");
-    private static Reference<Metadata> metadata = new SoftReference<Metadata>(new Metadata());
+    private static final Pattern SKIP_PATTERN = Pattern.compile("^.*/griffon-.*.jar!/application.properties$");
+    private static Reference<Metadata> metadata = new SoftReference<>(new Metadata());
 
     private boolean initialized;
     private File metadataFile;
@@ -110,7 +110,7 @@ public class Metadata extends Properties {
      */
     public static Metadata getInstance(InputStream inputStream) {
         Metadata m = new Metadata();
-        metadata = new FinalReference<Metadata>(m);
+        metadata = new FinalReference<>(m);
 
         try {
             m.load(inputStream);
@@ -129,7 +129,7 @@ public class Metadata extends Properties {
      */
     public static Metadata getInstance(File file) {
         Metadata m = new Metadata(file);
-        metadata = new FinalReference<Metadata>(m);
+        metadata = new FinalReference<>(m);
 
         if (file != null && file.exists()) {
             FileInputStream input = null;
@@ -201,7 +201,7 @@ public class Metadata extends Properties {
      * @return A map of installed plugins
      */
     public Map<String, String> getInstalledPlugins() {
-        Map<String, String> newMap = new LinkedHashMap<String, String>();
+        Map<String, String> newMap = new LinkedHashMap<>();
 
         for (Map.Entry<Object, Object> entry : entrySet()) {
             String key = entry.getKey().toString();
@@ -214,7 +214,7 @@ public class Metadata extends Properties {
     }
 
     public Map<String, String> getArchetype() {
-        Map<String, String> newMap = new LinkedHashMap<String, String>();
+        Map<String, String> newMap = new LinkedHashMap<>();
 
         for (Map.Entry<Object, Object> entry : entrySet()) {
             String key = entry.getKey().toString();
@@ -393,8 +393,8 @@ public class Metadata extends Properties {
     }
 
     @Override
-    public synchronized void putAll(Map<? extends Object, ? extends Object> map) {
-        for (Map.Entry<? extends Object, ? extends Object> entry : map.entrySet()) {
+    public synchronized void putAll(Map<?, ?> map) {
+        for (Map.Entry<?, ?> entry : map.entrySet()) {
             put(entry.getKey(), entry.getValue());
         }
     }
@@ -438,7 +438,7 @@ public class Metadata extends Properties {
     }
 
     private static InputStream fetchApplicationProperties(ClassLoader classLoader) {
-        Enumeration<URL> urls = null;
+        Enumeration<URL> urls;
 
         try {
             urls = classLoader.getResources(FILE);

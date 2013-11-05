@@ -89,7 +89,7 @@ public abstract class AbstractWindowManager<W> implements WindowManager<W> {
     @Override
     @Nullable
     public W getStartingWindow() {
-        W window = null;
+        W window;
         Object value = application.getApplicationConfiguration().get("windowManager.startingWindow", null);
         if (LOG.isDebugEnabled()) {
             LOG.debug("windowManager.startingWindow configured to " + value);
@@ -179,9 +179,10 @@ public abstract class AbstractWindowManager<W> implements WindowManager<W> {
             for (Map.Entry<String, W> entry : windows.entrySet()) {
                 if (entry.getValue() == window) {
                     windowName = entry.getKey();
-                    windowIndex = i++;
+                    windowIndex = i;
                     break;
                 }
+                i++;
             }
         }
 
@@ -221,9 +222,10 @@ public abstract class AbstractWindowManager<W> implements WindowManager<W> {
             for (Map.Entry<String, W> entry : windows.entrySet()) {
                 if (entry.getValue() == window) {
                     windowName = entry.getKey();
-                    windowIndex = i++;
+                    windowIndex = i;
                     break;
                 }
+                i++;
             }
         }
 

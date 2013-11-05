@@ -29,7 +29,7 @@ public class PolygonPropertyEditor extends AbstractPropertyEditor {
     public String getAsText() {
         if (null == getValue()) return null;
         Polygon p = (Polygon) getValue();
-        StringBuffer b = new StringBuffer();
+        StringBuilder b = new StringBuilder();
         for (int i = 0; i < p.npoints; i++) {
             if (i != 0) {
                 b.append(" , ");

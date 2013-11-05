@@ -29,7 +29,7 @@ import java.util.Set;
  * @since 0.9.1
  */
 public class DefaultGriffonServiceClass extends DefaultGriffonClass implements GriffonServiceClass {
-    protected final Set<String> serviceCache = new LinkedHashSet<String>();
+    protected final Set<String> serviceCache = new LinkedHashSet<>();
 
     public DefaultGriffonServiceClass(@Nonnull Class<?> clazz) {
         super(clazz, TYPE, TRAILING);

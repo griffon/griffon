@@ -16,6 +16,7 @@
 
 package griffon.core.resources;
 
+import javax.annotation.Nonnull;
 import java.util.Locale;
 
 /**
@@ -24,8 +25,8 @@ import java.util.Locale;
  * @since 1.1.0
  */
 public class NoSuchResourceException extends RuntimeException {
-    private String key;
-    private Locale locale;
+    private final String key;
+    private final Locale locale;
 
     /**
      * Create a new exception.
@@ -33,7 +34,7 @@ public class NoSuchResourceException extends RuntimeException {
      * @param key    message that could not be resolved for given locale
      * @param locale locale that was used to search for the code within
      */
-    public NoSuchResourceException(String key, Locale locale) {
+    public NoSuchResourceException(@Nonnull String key, @Nonnull Locale locale) {
         super("No resorce found under key '" + key + "' for locale '" + locale + "'.");
         this.key = key;
         this.locale = locale;
@@ -44,7 +45,7 @@ public class NoSuchResourceException extends RuntimeException {
      *
      * @param key key that could not be resolved for given locale
      */
-    public NoSuchResourceException(String key) {
+    public NoSuchResourceException(@Nonnull String key) {
         this(key, Locale.getDefault());
     }
 
@@ -53,6 +54,7 @@ public class NoSuchResourceException extends RuntimeException {
      *
      * @return The key
      */
+    @Nonnull
     public String getKey() {
         return key;
     }
@@ -62,6 +64,7 @@ public class NoSuchResourceException extends RuntimeException {
      *
      * @return The locale
      */
+    @Nonnull
     public Locale getLocale() {
         return locale;
     }

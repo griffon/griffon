@@ -21,15 +21,23 @@ import griffon.core.artifact.GriffonController;
 import griffon.core.controller.Action;
 import griffon.core.i18n.MessageSource;
 import griffon.core.threading.UIThreadManager;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
+
+import static griffon.util.GriffonApplicationUtils.isMacOSX;
+import static griffon.util.GriffonNameUtils.isBlank;
+import static griffon.util.TypeUtils.castToBoolean;
 
 /**
  * @author Andres Almiray
  * @since 1.1.0
  */
 public class JavaFXActionManager extends AbstractActionManager {
+    private static final Logger LOG = LoggerFactory.getLogger(JavaFXActionManager.class);
+    
     @Inject
     public JavaFXActionManager(@Nonnull ApplicationConfiguration applicationConfiguration, @Nonnull UIThreadManager uiThreadManager, @Nonnull MessageSource messageSource) {
         super(applicationConfiguration, uiThreadManager, messageSource);
@@ -39,5 +47,53 @@ public class JavaFXActionManager extends AbstractActionManager {
     @Override
     protected Action createControllerAction(@Nonnull GriffonController controller, @Nonnull String actionName) {
         return new JavaFXGriffonControllerAction(getUiThreadManager(), this, controller, actionName);
+    }
+
+    @Override
+    protected void doConfigureAction(@Nonnull Action action, @Nonnull GriffonController controller, @Nonnull String normalizeNamed, @Nonnull String keyPrefix) {
+        JavaFXGriffonControllerAction javafxAction = (JavaFXGriffonControllerAction) action;
+
+        String rsAccelerator = msg(keyPrefix, normalizeNamed, "accelerator", "");
+        if (!isBlank(rsAccelerator)) {
+            if (!isMacOSX() && rsAccelerator.contains("meta") && !rsAccelerator.contains("ctrl")) {
+                rsAccelerator = rsAccelerator.replace("meta", "ctrl");
+            }
+            if (LOG.isTraceEnabled()) {
+                LOG.trace(keyPrefix + normalizeNamed + ".accelerator = " + rsAccelerator);
+            }
+            javafxAction.setAccelerator(rsAccelerator);
+        }
+
+        String rsDescription = msg(keyPrefix, normalizeNamed, "description", "");
+        if (!isBlank(rsDescription)) {
+            if (LOG.isTraceEnabled()) {
+                LOG.trace(keyPrefix + normalizeNamed + "._description = " + rsDescription);
+            }
+            javafxAction.setDescription(rsDescription);
+        }
+
+        String rsIcon = msg(keyPrefix, normalizeNamed, "icon", "");
+        if (!isBlank(rsIcon)) {
+            if (LOG.isTraceEnabled()) {
+                LOG.trace(keyPrefix + normalizeNamed + ".icon = " + rsIcon);
+            }
+            javafxAction.setIcon(rsIcon);
+        }
+
+        String rsEnabled = msg(keyPrefix, normalizeNamed, "enabled", "true");
+        if (!isBlank(rsEnabled)) {
+            if (LOG.isTraceEnabled()) {
+                LOG.trace(keyPrefix + normalizeNamed + ".enabled = " + rsEnabled);
+            }
+            javafxAction.setEnabled(castToBoolean(rsEnabled));
+        }
+
+        String rsSelected = msg(keyPrefix, normalizeNamed, "selected", "false");
+        if (!isBlank(rsSelected)) {
+            if (LOG.isTraceEnabled()) {
+                LOG.trace(keyPrefix + normalizeNamed + ".selected = " + rsSelected);
+            }
+            javafxAction.setSelected(castToBoolean(rsSelected));
+        }
     }
 }

@@ -30,7 +30,7 @@ import java.util.List;
  * @author Andres Almiray
  */
 public interface ArtifactManager extends ShutdownHandler {
-    List<GriffonClass> EMPTY_GRIFFON_CLASS_LIST = Collections.<GriffonClass>emptyList();
+    List<GriffonClass> EMPTY_GRIFFON_CLASS_LIST = Collections.emptyList();
 
     /**
      * Registers an ArtifactHandler by type.<p>

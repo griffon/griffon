@@ -238,31 +238,37 @@ public final class GriffonApplicationUtils {
         javaVersion = System.getProperty("java.version");
         String version = javaVersion.substring(0, 3);
         isJdk14 = true;
-        if (version.equals("1.8")) {
-            isJdk18 = true;
-            isJdk17 = true;
-            isJdk16 = true;
-            isJdk15 = true;
-        } else if (version.equals("1.7")) {
-            isJdk18 = false;
-            isJdk17 = true;
-            isJdk16 = true;
-            isJdk15 = true;
-        } else if (version.equals("1.6")) {
-            isJdk18 = false;
-            isJdk17 = false;
-            isJdk16 = true;
-            isJdk15 = true;
-        } else if (version.equals("1.5")) {
-            isJdk18 = false;
-            isJdk17 = false;
-            isJdk16 = false;
-            isJdk15 = true;
-        } else {
-            isJdk18 = false;
-            isJdk17 = false;
-            isJdk16 = false;
-            isJdk15 = false;
+        switch (version) {
+            case "1.8":
+                isJdk18 = true;
+                isJdk17 = true;
+                isJdk16 = true;
+                isJdk15 = true;
+                break;
+            case "1.7":
+                isJdk18 = false;
+                isJdk17 = true;
+                isJdk16 = true;
+                isJdk15 = true;
+                break;
+            case "1.6":
+                isJdk18 = false;
+                isJdk17 = false;
+                isJdk16 = true;
+                isJdk15 = true;
+                break;
+            case "1.5":
+                isJdk18 = false;
+                isJdk17 = false;
+                isJdk16 = false;
+                isJdk15 = true;
+                break;
+            default:
+                isJdk18 = false;
+                isJdk17 = false;
+                isJdk16 = false;
+                isJdk15 = false;
+                break;
         }
 
         platform = basePlatform + (is64Bit && !isSolaris ? "64" : "");

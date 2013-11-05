@@ -17,7 +17,6 @@
 package griffon.exceptions;
 
 import javax.annotation.Nonnull;
-import java.lang.annotation.Annotation;
 
 /**
  * @author Andres Almiray

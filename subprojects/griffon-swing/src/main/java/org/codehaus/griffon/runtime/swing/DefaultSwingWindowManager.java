@@ -152,9 +152,10 @@ public class DefaultSwingWindowManager extends AbstractWindowManager<Window> imp
             for (Map.Entry<String, JInternalFrame> entry : internalFrames.entrySet()) {
                 if (entry.getValue() == internalFrame) {
                     windowName = entry.getKey();
-                    windowIndex = i++;
+                    windowIndex = i;
                     break;
                 }
+                i++;
             }
         }
 
@@ -191,9 +192,10 @@ public class DefaultSwingWindowManager extends AbstractWindowManager<Window> imp
             for (Map.Entry<String, JInternalFrame> entry : internalFrames.entrySet()) {
                 if (entry.getValue() == internalFrame) {
                     windowName = entry.getKey();
-                    windowIndex = i++;
+                    windowIndex = i;
                     break;
                 }
+                i++;
             }
         }
 

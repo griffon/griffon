@@ -37,7 +37,7 @@ public class DatePropertyEditor extends AbstractPropertyEditor {
         } else if (value instanceof CharSequence) {
             handleAsString(String.valueOf(value));
         } else if (value instanceof Date) {
-            super.setValueInternal((Date) value);
+            super.setValueInternal(value);
         } else if (value instanceof Calendar) {
             super.setValueInternal(((Calendar) value).getTime());
         } else if (value instanceof Number) {

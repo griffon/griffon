@@ -48,7 +48,7 @@ public abstract class AbstractArtifactHandler<A extends GriffonArtifact> impleme
 
     private ArtifactInfo[] artifacts = new ArtifactInfo[0];
     private GriffonClass[] classes = new GriffonClass[0];
-    private Map<String, GriffonClass> classesByName = new TreeMap<>();
+    private final Map<String, GriffonClass> classesByName = new TreeMap<>();
 
     @Inject
     public AbstractArtifactHandler(@Nonnull GriffonApplication application, @Nonnull Class<A> artifactType, @Nonnull String type, @Nonnull String trailing) {

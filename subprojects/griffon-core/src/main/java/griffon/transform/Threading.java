@@ -108,6 +108,6 @@ public @interface Threading {
         /**
          * Inject execAsync wrapper
          */
-        INSIDE_UITHREAD_ASYNC;
+        INSIDE_UITHREAD_ASYNC
     }
 }

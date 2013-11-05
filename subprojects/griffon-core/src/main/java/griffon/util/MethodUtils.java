@@ -1079,7 +1079,7 @@ public class MethodUtils {
      * @param parameterization the type of parameter being tested
      * @return true if the assignement is compatible.
      */
-    public static final boolean isAssignmentCompatible(Class parameterType, Class parameterization) {
+    public static boolean isAssignmentCompatible(Class<?> parameterType, Class<?> parameterization) {
         // try plain assignment
         if (parameterType.isAssignableFrom(parameterization)) {
             return true;

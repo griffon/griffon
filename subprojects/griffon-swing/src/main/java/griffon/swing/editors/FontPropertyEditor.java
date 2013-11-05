@@ -18,7 +18,7 @@ package griffon.swing.editors;
 
 import griffon.core.resources.editors.AbstractPropertyEditor;
 
-import java.awt.*;
+import java.awt.Font;
 import java.util.List;
 import java.util.Map;
 

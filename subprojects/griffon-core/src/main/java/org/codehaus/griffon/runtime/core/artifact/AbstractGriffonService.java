@@ -17,7 +17,6 @@
 package org.codehaus.griffon.runtime.core.artifact;
 
 import griffon.core.GriffonApplication;
-import griffon.core.artifact.GriffonClass;
 import griffon.core.artifact.GriffonService;
 import griffon.core.artifact.GriffonServiceClass;
 
@@ -38,15 +37,5 @@ public abstract class AbstractGriffonService extends AbstractGriffonArtifact imp
     @Override
     protected String getArtifactType() {
         return GriffonServiceClass.TYPE;
-    }
-
-    @Override
-    public void serviceInit() {
-        // empty
-    }
-
-    @Override
-    public void serviceDestroy() {
-        // empty
     }
 }

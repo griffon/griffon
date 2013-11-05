@@ -1,8 +1,5 @@
 package griffon.core.env
 
-import griffon.core.env.Environment
-import griffon.core.env.Metadata
-
 public class EnvironmentTests extends GroovyTestCase{
 
     protected void tearDown() {

@@ -28,7 +28,7 @@ import java.util.concurrent.ExecutorService;
  * @since 2.0.0
  */
 public class DefaultExecutorServiceManager implements ExecutorServiceManager {
-    private final Set<ExecutorService> executorServices = new LinkedHashSet<ExecutorService>();
+    private final Set<ExecutorService> executorServices = new LinkedHashSet<>();
 
     @Override
     @Nullable

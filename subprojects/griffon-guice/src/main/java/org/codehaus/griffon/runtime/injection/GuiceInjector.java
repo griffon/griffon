@@ -36,17 +36,14 @@ import javax.annotation.PreDestroy;
 import javax.annotation.concurrent.GuardedBy;
 import javax.inject.Singleton;
 import java.lang.annotation.Annotation;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
 import static com.google.inject.util.Providers.guicify;
-import static griffon.core.GriffonExceptionHandler.sanitize;
 import static griffon.util.GriffonNameUtils.requireNonBlank;
 import static java.util.Objects.requireNonNull;
+import static org.codehaus.griffon.runtime.injection.MethodUtils.invokeAnnotatedMethod;
 
 /**
  * @author Andres Almiray
@@ -107,7 +104,7 @@ public class GuiceInjector implements Injector<com.google.inject.Injector> {
 
         List<T> instances = new ArrayList<>();
 
-        List<com.google.inject.Binding<T>> bindings = null;
+        List<com.google.inject.Binding<T>> bindings;
         try {
             bindings = delegate.findBindingsByType(TypeLiteral.get(type));
         } catch (RuntimeException e) {
@@ -196,7 +193,7 @@ public class GuiceInjector implements Injector<com.google.inject.Injector> {
                 if (!Scopes.isSingleton(binding)) {
                     continue;
                 }
-                invokePreDestroy(binding.getProvider().get());
+                invokeAnnotatedMethod(binding.getProvider().get(), PreDestroy.class);
             } catch (ProvisionException pe) {
                 if (!(pe.getCause() instanceof TypeNotFoundException)) {
                     pe.printStackTrace();
@@ -212,32 +209,6 @@ public class GuiceInjector implements Injector<com.google.inject.Injector> {
     private boolean isClosed() {
         synchronized (lock) {
             return closed;
-        }
-    }
-
-    private void invokePreDestroy(Object instance) {
-        List<Method> preDestroyMethods = new ArrayList<>();
-        Class klass = instance.getClass();
-        while (klass != null) {
-            for (Method method : klass.getDeclaredMethods()) {
-                if (method.getAnnotation(PreDestroy.class) != null &&
-                    method.getParameterTypes().length == 0 &&
-                    Modifier.isPublic(method.getModifiers())) {
-                    preDestroyMethods.add(method);
-                }
-            }
-
-            klass = klass.getSuperclass();
-        }
-
-        for (Method method : preDestroyMethods) {
-            try {
-                method.invoke(instance);
-            } catch (IllegalAccessException e) {
-                sanitize(e).printStackTrace();
-            } catch (InvocationTargetException e) {
-                sanitize(e.getTargetException()).printStackTrace();
-            }
         }
     }
 

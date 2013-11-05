@@ -16,8 +16,9 @@
 
 package griffon.core.env;
 
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Locale;
+import java.util.Map;
 
 
 /**
@@ -41,7 +42,7 @@ public enum RunMode {
     private static final String WEBSTART_RUNMODE_SHORT_NAME = "webstart";
     private static final String APPLET_RUNMODE_SHORT_NAME = "applet";
 
-    private static HashMap<String, String> modeNameMappings = new HashMap<String, String>() {{
+    private static final Map<String, String> MODE_NAME_MAPPINGS = new LinkedHashMap<String, String>() {{
         put(STANDALONE_RUNMODE_SHORT_NAME, RunMode.STANDALONE.getName());
         put(WEBSTART_RUNMODE_SHORT_NAME, RunMode.WEBSTART.getName());
         put(APPLET_RUNMODE_SHORT_NAME, RunMode.APPLET.getName());
@@ -89,7 +90,7 @@ public enum RunMode {
      * @return The RunMode or null if not known
      */
     public static RunMode getRunMode(String shortName) {
-        final String modeName = modeNameMappings.get(shortName);
+        final String modeName = MODE_NAME_MAPPINGS.get(shortName);
         if (modeName != null) {
             return RunMode.valueOf(modeName.toUpperCase());
         }

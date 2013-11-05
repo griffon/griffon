@@ -66,13 +66,14 @@ public final class CollectionUtils {
             throw new IllegalArgumentException("Must have an even number of keys and values");
         }
 
-        Map<K, V> map = new HashMap<K, V>();
+        Map<K, V> map = new HashMap<>();
         for (int i = 0; i < keysAndValues.length; i += 2) {
             map.put((K) keysAndValues[i], (V) keysAndValues[i + 1]);
         }
         return map;
     }
 
+    @SafeVarargs
     public static <T> Set<T> newSet(T... values) {
         if (values == null) {
             return Collections.emptySet();
@@ -81,12 +82,13 @@ public final class CollectionUtils {
         return new HashSet<T>(Arrays.asList(values));
     }
 
+    @SafeVarargs
     public static <T> List<T> newList(T... values) {
         if (values == null) {
             return Collections.emptyList();
         }
 
-        return new ArrayList<T>(Arrays.asList(values));
+        return new ArrayList<>(Arrays.asList(values));
     }
 
     public static <K, V> MapBuilder<K, V> map() {
@@ -94,7 +96,7 @@ public final class CollectionUtils {
     }
 
     public static <K, V> MapBuilder<K, V> map(Map<K, V> delegate) {
-        return new MapBuilder<K, V>(delegate);
+        return new MapBuilder<>(delegate);
     }
 
     public static <E> ListBuilder<E> list() {
@@ -102,7 +104,7 @@ public final class CollectionUtils {
     }
 
     public static <E> ListBuilder<E> list(List<E> delegate) {
-        return new ListBuilder<E>(delegate);
+        return new ListBuilder<>(delegate);
     }
 
     public static <E> SetBuilder<E> set() {
@@ -110,7 +112,7 @@ public final class CollectionUtils {
     }
 
     public static <E> SetBuilder<E> set(Set<E> delegate) {
-        return new SetBuilder<E>(delegate);
+        return new SetBuilder<>(delegate);
     }
 
     public static class MapBuilder<K, V> implements Map<K, V> {

@@ -19,8 +19,11 @@ package griffon.core.resources.editors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.annotation.Nonnull;
 import java.beans.PropertyEditor;
 import java.beans.PropertyEditorManager;
+
+import static java.util.Objects.requireNonNull;
 
 /**
  * The PropertyEditorResolver can be used to locate a property editor for
@@ -47,15 +50,14 @@ public final class PropertyEditorResolver {
      * @param type The Class object for the type to be edited
      * @return An editor object for the given target class.
      *         The result is null if no suitable editor can be found.
-     * @see  griffon.core.resources.editors.EnumPropertyEditor
+     * @see griffon.core.resources.editors.EnumPropertyEditor
      */
-    public static PropertyEditor findEditor(Class<?> type) {
-        if (type == null) return null;
-        if (LOG.isTraceEnabled()) {
-            LOG.trace("Searching PropertyEditor for " + type.getName());
-        }
+    @SuppressWarnings("unchecked")
+    public static PropertyEditor findEditor(@Nonnull Class<?> type) {
+        requireNonNull(type, "Argument 'type' cannot be  null");
+        LOG.trace("Searching PropertyEditor for {}", type.getName());
 
-        PropertyEditor editor = null;
+        PropertyEditor editor;
         if (Enum.class.isAssignableFrom(type)) {
             editor = new EnumPropertyEditor();
             ((EnumPropertyEditor) editor).setEnumType((Class<? extends Enum>) type);
@@ -64,9 +66,8 @@ public final class PropertyEditorResolver {
         }
 
         if (editor != null) {
-            if (LOG.isTraceEnabled()) {
-                LOG.trace("PropertyEditor for " + type.getName() + " is " + editor.getClass().getName());
-            }
+            LOG.trace("PropertyEditor for {} is {}", type.getName(), editor.getClass().getName());
+
         }
         return editor;
     }

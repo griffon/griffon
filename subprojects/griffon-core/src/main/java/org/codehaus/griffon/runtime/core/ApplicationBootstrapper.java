@@ -123,7 +123,7 @@ public class ApplicationBootstrapper {
 
     private static class Key {
         private final Class<?> source;
-        private Class<? extends Annotation> annotationType;
+        private final Class<? extends Annotation> annotationType;
         private Annotation annotation;
 
         private Key(@Nonnull Class<?> source, @Nonnull Annotation annotation) {

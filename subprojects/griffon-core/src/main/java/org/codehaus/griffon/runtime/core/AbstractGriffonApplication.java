@@ -57,6 +57,8 @@ public abstract class AbstractGriffonApplication extends AbstractObservable impl
     private static final String ERROR_SHUTDOWN_HANDLER_NULL = "Argument 'shutdownHandler' cannot be null";
     private Locale locale = Locale.getDefault();
     public static final String[] EMPTY_ARGS = new String[0];
+    private static final Class[] CTOR_ARGS = new Class[]{String[].class};
+
     protected final Object[] lock = new Object[0];
     private ApplicationPhase phase = ApplicationPhase.INITIALIZE;
 
@@ -306,12 +308,10 @@ public abstract class AbstractGriffonApplication extends AbstractObservable impl
 
         // stage 3 - destroy all mvc groups
         log.debug("Shutdown stage 3: destroy all MVC groups");
-        List<String> mvcNames = new ArrayList<String>();
-        if (getMvcGroupManager() != null) {
-            mvcNames.addAll(getMvcGroupManager().getGroups().keySet());
-            for (String name : mvcNames) {
-                getMvcGroupManager().destroyMVCGroup(name);
-            }
+        List<String> mvcNames = new ArrayList<>();
+        mvcNames.addAll(getMvcGroupManager().getGroups().keySet());
+        for (String name : mvcNames) {
+            getMvcGroupManager().destroyMVCGroup(name);
         }
 
         // stage 4 - call shutdown script
@@ -324,6 +324,7 @@ public abstract class AbstractGriffonApplication extends AbstractObservable impl
         return true;
     }
 
+    @SuppressWarnings("unchecked")
     public void startup() {
         if (getPhase() != ApplicationPhase.INITIALIZE) return;
 
@@ -357,5 +358,17 @@ public abstract class AbstractGriffonApplication extends AbstractObservable impl
 
     protected void event(@Nonnull ApplicationEvent event, @Nullable List<?> args) {
         getEventRouter().publish(event.getName(), args);
+    }
+
+    @Nonnull
+    public static GriffonApplication run(@Nonnull Class<? extends GriffonApplication> applicationClass, @Nonnull String[] args) throws Exception {
+        GriffonExceptionHandler.registerExceptionHandler();
+
+        GriffonApplication application = applicationClass.getDeclaredConstructor(CTOR_ARGS).newInstance(new Object[]{args});
+        ApplicationBootstrapper bootstrapper = new ApplicationBootstrapper(application);
+        bootstrapper.bootstrap();
+        bootstrapper.run();
+
+        return application;
     }
 }

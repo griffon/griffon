@@ -18,7 +18,9 @@ package griffon.swing.editors;
 
 import griffon.core.resources.editors.AbstractPropertyEditor;
 
-import java.awt.*;
+import java.awt.Color;
+import java.awt.LinearGradientPaint;
+import java.awt.MultipleGradientPaint;
 import java.lang.reflect.Field;
 import java.util.List;
 import java.util.Map;
@@ -251,9 +253,7 @@ public class LinearGradientPaintPropertyEditor extends AbstractPropertyEditor {
         try {
             Field cyclicMethodField = MultipleGradientPaint.CycleMethod.class.getDeclaredField(str.toUpperCase().trim());
             return (MultipleGradientPaint.CycleMethod) cyclicMethodField.get(null);
-        } catch (NoSuchFieldException e) {
-            throw illegalValue(source, LinearGradientPaint.class, e);
-        } catch (IllegalAccessException e) {
+        } catch (NoSuchFieldException | IllegalAccessException e) {
             throw illegalValue(source, LinearGradientPaint.class, e);
         }
     }

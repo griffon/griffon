@@ -32,7 +32,7 @@ import static java.util.Objects.requireNonNull;
  * @since 0.9.1
  */
 public abstract class AbstractObservable implements Observable {
-    protected PropertyChangeSupport pcs;
+    protected final PropertyChangeSupport pcs;
 
     public AbstractObservable() {
         pcs = new PropertyChangeSupport(this);

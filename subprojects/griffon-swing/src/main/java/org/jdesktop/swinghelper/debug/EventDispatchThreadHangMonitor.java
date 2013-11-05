@@ -81,7 +81,7 @@ public final class EventDispatchThreadHangMonitor extends EventQueue {
 
     // The currently outstanding event dispatches. The implementation of
     // modal dialogs is a common cause for multiple outstanding dispatches.
-    private final LinkedList<DispatchInfo> dispatches = new LinkedList<DispatchInfo>();
+    private final LinkedList<DispatchInfo> dispatches = new LinkedList<>();
 
     // Time to wait before warning of slow operation
     private long timeout = UNREASONABLE_DISPATCH_DURATION_MS;
@@ -159,7 +159,7 @@ public final class EventDispatchThreadHangMonitor extends EventQueue {
                 return false;
             }
             for (int i = 0; i < a.length; ++i) {
-                if (a[i].equals(b[i]) == false) {
+                if (!a[i].equals(b[i])) {
                     return false;
                 }
             }
@@ -290,9 +290,17 @@ public final class EventDispatchThreadHangMonitor extends EventQueue {
             StringBuilder b = new StringBuilder("Deadlock detected involving the following threads:");
             ThreadInfo[] threadInfos = threadBean.getThreadInfo(threadIds, Integer.MAX_VALUE);
             for (ThreadInfo info : threadInfos) {
-                b.append("Thread #" + info.getThreadId() + " " + info.getThreadName() +
-                    " (" + info.getThreadState() + ") waiting on " + info.getLockName() +
-                    " held by " + info.getLockOwnerName() + stackTraceToString(sanitize(info.getStackTrace())));
+                b.append("Thread #")
+                    .append(info.getThreadId())
+                    .append(" ")
+                    .append(info.getThreadName())
+                    .append(" (")
+                    .append(info.getThreadState()).
+                    append(") waiting on ")
+                    .append(info.getLockName())
+                    .append(" held by ")
+                    .append(info.getLockOwnerName())
+                    .append(stackTraceToString(sanitize(info.getStackTrace())));
             }
             LOG.warn(b.toString());
         }
@@ -306,7 +314,7 @@ public final class EventDispatchThreadHangMonitor extends EventQueue {
         // reinstate that, but search from the other end of the stack?
         for (StackTraceElement stackTraceElement : stackTrace) {
             String indentation = "    ";
-            result.append("\n" + indentation + stackTraceElement);
+            result.append("\n").append(indentation).append(stackTraceElement);
         }
         return result.toString();
     }

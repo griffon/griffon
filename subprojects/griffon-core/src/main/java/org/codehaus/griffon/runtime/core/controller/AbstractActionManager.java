@@ -51,6 +51,7 @@ import static java.util.Objects.requireNonNull;
  */
 public abstract class AbstractActionManager implements ActionManager {
     private static final Logger LOG = LoggerFactory.getLogger(AbstractActionManager.class);
+
     private static final String KEY_THREADING = "controller.threading";
     private static final String KEY_DISABLE_THREADING_INJECTION = "griffon.disable.threading.injection";
     private static final String ERROR_CONTROLLER_NULL = "Argument 'controller' cannot be null";
@@ -123,7 +124,7 @@ public abstract class AbstractActionManager implements ActionManager {
                 actionCache.set(controller, actions);
             }
             String actionKey = normalizeName(actionName);
-            LOG.trace("Action for {}.{}  stored as {}", controller.getClass().getName(), actionName + actionKey);
+            LOG.trace("Action for {}.{} stored as {}", controller.getClass().getName(), actionName, actionKey);
             actions.put(actionKey, action);
         }
     }
@@ -132,6 +133,7 @@ public abstract class AbstractActionManager implements ActionManager {
         requireNonNull(controller, ERROR_CONTROLLER_NULL);
         requireNonBlank(actionName, ERROR_ACTION_NAME_BLANK);
         Runnable runnable = new Runnable() {
+            @SuppressWarnings("ThrowableResultOfMethodCallIgnored")
             public void run() {
                 Object[] updatedArgs = args;
                 List<ActionInterceptor> copy = new ArrayList<>(interceptors);
@@ -282,10 +284,14 @@ public abstract class AbstractActionManager implements ActionManager {
             action.setName(rsActionName);
         }
 
+        doConfigureAction(action, controller, normalizeNamed, keyPrefix);
+
         action.initialize();
 
         return action;
     }
+
+    protected abstract void doConfigureAction(@Nonnull Action action, @Nonnull GriffonController controller, @Nonnull String normalizeNamed, @Nonnull String keyPrefix);
 
     @Nonnull
     protected abstract Action createControllerAction(@Nonnull GriffonController controller, @Nonnull String actionName);

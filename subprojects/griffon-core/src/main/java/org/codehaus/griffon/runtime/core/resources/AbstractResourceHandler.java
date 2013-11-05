@@ -58,7 +58,7 @@ public abstract class AbstractResourceHandler implements ResourceHandler {
     }
 
     private static <T> List<T> toList(Enumeration<T> self) {
-        List<T> answer = new ArrayList<T>();
+        List<T> answer = new ArrayList<>();
         while (self.hasMoreElements()) {
             answer.add(self.nextElement());
         }

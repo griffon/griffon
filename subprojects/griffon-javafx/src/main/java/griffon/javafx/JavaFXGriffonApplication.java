@@ -18,6 +18,7 @@ package griffon.javafx;
 
 import javafx.application.Application;
 import javafx.stage.Stage;
+import org.codehaus.griffon.runtime.core.ApplicationBootstrapper;
 
 import javax.annotation.Nonnull;
 
@@ -50,24 +51,24 @@ public class JavaFXGriffonApplication extends AbstractJavaFXGriffonApplication {
     }
 
     @Override
+    public void init() throws Exception {
+        ApplicationBootstrapper bootstrapper = new ApplicationBootstrapper(this);
+        bootstrapper.bootstrap();
+        initialize();
+    }
+
+    @Override
     public void start(Stage stage) throws Exception {
         super.start(stage);
         primaryStage = stage;
 
-        /*
-        TODO finish bootstrap
-        execOutsideUI(new Runnable() {
+        getUIThreadManager().runOutsideUI(new Runnable() {
+            @Override
             public void run() {
-                try {
-                    bootstrap();
-                    realize();
-                    show();
-                } catch (RuntimeException e) {
-                    sanitize(e).printStackTrace();
-                }
+                startup();
+                ready();
             }
         });
-        */
     }
 
     /*
