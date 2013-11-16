@@ -38,6 +38,7 @@ import javax.annotation.PostConstruct;
 import javax.inject.Singleton;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.ServiceLoader;
 
 import static com.google.inject.util.Providers.guicify;
 import static java.util.Arrays.asList;
@@ -66,8 +67,8 @@ public class GuiceInjectorFactory implements InjectorFactory {
             @Override
             public void afterInjection(GriffonArtifact injectee) {
                 application.getEventRouter().publish(
-                    ApplicationEvent.NEW_INSTANCE.getName(),
-                    asList(injectee.getClass(), injectee)
+                        ApplicationEvent.NEW_INSTANCE.getName(),
+                        asList(injectee.getClass(), injectee)
                 );
             }
         };
@@ -84,8 +85,8 @@ public class GuiceInjectorFactory implements InjectorFactory {
             @Override
             protected void configure() {
                 bind(Injector.class)
-                    .toProvider(guicify(injectorProvider))
-                    .in(Singleton.class);
+                        .toProvider(guicify(injectorProvider))
+                        .in(Singleton.class);
 
                 bindListener(new AbstractMatcher<TypeLiteral<?>>() {
                                  public boolean matches(TypeLiteral<?> typeLiteral) {
@@ -115,6 +116,11 @@ public class GuiceInjectorFactory implements InjectorFactory {
         Collection<Module> modules = new ArrayList<>();
         modules.add(injectorModule);
         modules.add(moduleFromBindings(bindings));
+
+        ServiceLoader<Module> moduleLoader = ServiceLoader.load(Module.class, getClass().getClassLoader());
+        for (Module module : moduleLoader) {
+            modules.add(module);
+        }
 
         com.google.inject.Injector injector = Guice.createInjector(modules);
         return new GuiceInjector(injector);
