@@ -1,0 +1,14 @@
+apply plugin: 'groovy'
+
+ext.pomDescription = 'Griffon Spring module'
+
+repositories {
+    maven {
+       url 'http://repository.springsource.com/maven/bundles/release'
+    }
+}
+
+dependencies {
+    compile project(':griffon-core')
+    compile("org.springframework:spring-context:$springVersion")
+}

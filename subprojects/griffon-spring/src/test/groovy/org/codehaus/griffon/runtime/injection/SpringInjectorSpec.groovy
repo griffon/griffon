@@ -7,7 +7,7 @@ import griffon.core.injection.Injector
 import griffon.exceptions.InstanceNotFoundException
 import griffon.exceptions.MembersInjectionException
 import org.codehaus.griffon.runtime.core.injection.NamedImpl
-import org.codehaus.griffon.runtime.injection.GuiceInjector
+import org.codehaus.griffon.runtime.injection.SpringInjector
 import spock.lang.Specification
 
 import javax.inject.Inject
@@ -25,7 +25,7 @@ class GuiceInjectorSpec extends Specification {
         com.google.inject.Injector gi = Guice.createInjector(module)
 
         when:
-        Injector injector = new GuiceInjector(gi)
+        Injector injector = new SpringInjector(gi)
         Car car = injector.getInstance(Car)
 
         then:
@@ -47,7 +47,7 @@ class GuiceInjectorSpec extends Specification {
         com.google.inject.Injector gi = Guice.createInjector(module)
 
         when:
-        Injector injector = new GuiceInjector(gi)
+        Injector injector = new SpringInjector(gi)
         Engine engine = injector.getInstance(Engine, new NamedImpl('efficient'))
 
         then:
@@ -66,7 +66,7 @@ class GuiceInjectorSpec extends Specification {
         com.google.inject.Injector gi = Guice.createInjector(module)
 
         when:
-        Injector injector = new GuiceInjector(gi)
+        Injector injector = new SpringInjector(gi)
         injector.getInstance(Vehicle)
 
         then:
@@ -85,7 +85,7 @@ class GuiceInjectorSpec extends Specification {
         com.google.inject.Injector gi = Guice.createInjector(module)
 
         when:
-        Injector injector = new GuiceInjector(gi)
+        Injector injector = new SpringInjector(gi)
         injector.getInstance(Car, new NamedImpl("foo"))
 
         then:
@@ -102,7 +102,7 @@ class GuiceInjectorSpec extends Specification {
         com.google.inject.Injector gi = Guice.createInjector(module)
 
         when:
-        Injector injector = new GuiceInjector(gi)
+        Injector injector = new SpringInjector(gi)
         injector.injectMembers(new Garage())
 
         then:
