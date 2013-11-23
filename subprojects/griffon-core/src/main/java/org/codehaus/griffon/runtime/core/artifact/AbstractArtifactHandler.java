@@ -18,12 +18,12 @@ package org.codehaus.griffon.runtime.core.artifact;
 
 import griffon.core.GriffonApplication;
 import griffon.core.artifact.ArtifactHandler;
-import griffon.core.artifact.ArtifactInfo;
 import griffon.core.artifact.GriffonArtifact;
 import griffon.core.artifact.GriffonClass;
 import griffon.core.injection.Binding;
 import griffon.core.injection.binder.LinkedBindingBuilder;
 import org.codehaus.griffon.runtime.core.injection.Bindings;
+import org.codehaus.griffon.runtime.core.injection.TypedImpl;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -46,8 +46,7 @@ public abstract class AbstractArtifactHandler<A extends GriffonArtifact> impleme
     private final String trailing;
     private final GriffonApplication application;
 
-    private ArtifactInfo[] artifacts = new ArtifactInfo[0];
-    private GriffonClass[] classes = new GriffonClass[0];
+    private GriffonClass[] griffonClasses = new GriffonClass[0];
     private final Map<String, GriffonClass> classesByName = new TreeMap<>();
 
     @Inject
@@ -74,30 +73,28 @@ public abstract class AbstractArtifactHandler<A extends GriffonArtifact> impleme
     }
 
     @Nonnull
-    public Collection<Binding<?>> initialize(@Nonnull ArtifactInfo<A>[] artifacts) {
-        this.artifacts = new ArtifactInfo[artifacts.length];
-        System.arraycopy(artifacts, 0, this.artifacts, 0, artifacts.length);
-        classes = new GriffonClass[artifacts.length];
+    public Collection<Binding<?>> initialize(@Nonnull Class<A>[] classes) {
+        griffonClasses = new GriffonClass[classes.length];
         List<Binding<?>> bindings = new ArrayList<>();
-        for (int i = 0; i < artifacts.length; i++) {
-            Class<A> clazz = artifacts[i].getClazz();
-            GriffonClass griffonClass = newGriffonClassInstance(clazz);
-            classes[i] = griffonClass;
-            classesByName.put(clazz.getName(), griffonClass);
-            createBindings(bindings, clazz, griffonClass);
+        for (int i = 0; i < classes.length; i++) {
+            Class<A> klass = classes[i];
+            GriffonClass griffonClass = newGriffonClassInstance(klass);
+            griffonClasses[i] = griffonClass;
+            classesByName.put(klass.getName(), griffonClass);
+            createBindings(bindings, klass, griffonClass);
         }
         return bindings;
     }
 
     protected void createBindings(@Nonnull List<Binding<?>> bindings, @Nonnull Class<A> clazz, @Nonnull GriffonClass griffonClass) {
         LinkedBindingBuilder<GriffonClass> builder = Bindings.bind(GriffonClass.class)
-            .withClassifier(new ArtifactImpl(clazz));
+            .withClassifier(new TypedImpl(clazz));
         builder.toInstance(griffonClass);
         bindings.add(builder.getBinding());
         bindings.add(Bindings.bind(clazz).getBinding());
         /*
         bindings.add(Bindings.bind(GriffonArtifact.class)
-            .withClassifier(new ArtifactImpl(clazz))
+            .withClassifier(new TypedImpl(clazz))
             .getBinding());
         bindings.add(Bindings.bind(clazz)
             .toProvider(new GriffonArtifactProvider(clazz))
@@ -122,7 +119,7 @@ public abstract class AbstractArtifactHandler<A extends GriffonArtifact> impleme
 
     public boolean isArtifact(@Nonnull GriffonClass clazz) {
         requireNonNull(clazz, ERROR_CLASS_NULL);
-        for (GriffonClass griffonClass : classes) {
+        for (GriffonClass griffonClass : griffonClasses) {
             if (griffonClass.equals(clazz)) return true;
         }
         return false;
@@ -130,13 +127,7 @@ public abstract class AbstractArtifactHandler<A extends GriffonArtifact> impleme
 
     @Nonnull
     public GriffonClass[] getClasses() {
-        return classes;
-    }
-
-    @Nonnull
-    @SuppressWarnings("unchecked")
-    public ArtifactInfo<A>[] getArtifacts() {
-        return artifacts;
+        return griffonClasses;
     }
 
     @Nullable
@@ -172,7 +163,7 @@ public abstract class AbstractArtifactHandler<A extends GriffonArtifact> impleme
             simpleName += trailing;
         }
 
-        for (GriffonClass griffonClass : classes) {
+        for (GriffonClass griffonClass : griffonClasses) {
             if (griffonClass.getClazz().getSimpleName().equals(simpleName)) {
                 return griffonClass;
             }

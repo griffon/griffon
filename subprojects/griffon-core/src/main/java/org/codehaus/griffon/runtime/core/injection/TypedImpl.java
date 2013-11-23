@@ -14,10 +14,9 @@
  * limitations under the License.
  */
 
-package org.codehaus.griffon.runtime.core.artifact;
+package org.codehaus.griffon.runtime.core.injection;
 
-import griffon.core.artifact.Artifact;
-import griffon.core.artifact.GriffonArtifact;
+import griffon.inject.Typed;
 
 import java.io.Serializable;
 import java.lang.annotation.Annotation;
@@ -29,14 +28,14 @@ import static java.util.Objects.requireNonNull;
  * @since 2.0.0
  */
 @SuppressWarnings("ClassExplicitlyAnnotation")
-public class ArtifactImpl implements Artifact, Serializable {
-    private final Class<? extends GriffonArtifact> value;
+public class TypedImpl implements Typed, Serializable {
+    private final Class<?> value;
 
-    public ArtifactImpl(Class<? extends GriffonArtifact> value) {
+    public TypedImpl(Class<?> value) {
         this.value = requireNonNull(value, "artifact");
     }
 
-    public Class<? extends GriffonArtifact> value() {
+    public Class<?> value() {
         return this.value;
     }
 
@@ -46,20 +45,20 @@ public class ArtifactImpl implements Artifact, Serializable {
     }
 
     public boolean equals(Object o) {
-        if (!(o instanceof Artifact)) {
+        if (!(o instanceof Typed)) {
             return false;
         }
 
-        Artifact other = (Artifact) o;
+        Typed other = (Typed) o;
         return value.equals(other.value());
     }
 
     public String toString() {
-        return "@" + Artifact.class.getName() + "(value=" + value + ")";
+        return "@" + Typed.class.getName() + "(value=" + value + ")";
     }
 
     public Class<? extends Annotation> annotationType() {
-        return Artifact.class;
+        return Typed.class;
     }
 
     private static final long serialVersionUID = 0;

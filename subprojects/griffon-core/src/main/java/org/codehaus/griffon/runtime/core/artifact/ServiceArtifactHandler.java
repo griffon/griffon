@@ -24,6 +24,7 @@ import griffon.core.injection.Binding;
 import griffon.core.injection.binder.AnnotatedBindingBuilder;
 import griffon.core.injection.binder.LinkedBindingBuilder;
 import org.codehaus.griffon.runtime.core.injection.Bindings;
+import org.codehaus.griffon.runtime.core.injection.TypedImpl;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
@@ -51,7 +52,7 @@ public class ServiceArtifactHandler extends AbstractArtifactHandler<GriffonServi
     @Override
     protected void createBindings(@Nonnull List<Binding<?>> bindings, @Nonnull Class<GriffonService> clazz, @Nonnull GriffonClass griffonClass) {
         LinkedBindingBuilder<GriffonClass> builder1 = Bindings.bind(GriffonClass.class)
-            .withClassifier(new ArtifactImpl(clazz));
+            .withClassifier(new TypedImpl(clazz));
         builder1.toInstance(griffonClass);
         bindings.add(builder1.getBinding());
         AnnotatedBindingBuilder<GriffonService> builder2 = Bindings.bind(clazz);

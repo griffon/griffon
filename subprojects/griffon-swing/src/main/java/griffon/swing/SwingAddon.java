@@ -54,7 +54,7 @@ public class SwingAddon extends AbstractGriffonAddon {
     }
 
     @Override
-    public void addonPostInit(@Nonnull GriffonApplication application) {
+    public void init(@Nonnull GriffonApplication application) {
         String value = System.getProperty(SWING_EDT_VIOLATIONS_KEY);
         if (value != null && Boolean.parseBoolean(value)) {
             if (getLog().isInfoEnabled()) {

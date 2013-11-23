@@ -53,12 +53,7 @@ public class AbstractGriffonAddon implements GriffonAddon {
     }
 
     @Override
-    public void addonInit(@Nonnull GriffonApplication app) {
-        // empty
-    }
-
-    @Override
-    public void addonPostInit(@Nonnull GriffonApplication app) {
+    public void init(@Nonnull GriffonApplication application) {
         // empty
     }
 

@@ -47,17 +47,12 @@ public abstract class AbstractArtifactManager implements ArtifactManager {
     private static final String ERROR_CLASS_NULL = "Argument 'clazz' cannot be null";
     private static final String ERROR_ARTIFACT_NULL = "Argument 'artifact' cannot be null";
     private static final String ERROR_FULLY_QUALIFIED_CLASSNAME_BLANK = "Argument 'fqClassName' cannot be blank";
-    private final Map<String, ArtifactInfo[]> artifacts = new ConcurrentHashMap<>();
+    private final Map<String, Class<? extends GriffonArtifact>[]> artifacts = new ConcurrentHashMap<>();
     private final Map<String, ArtifactHandler> artifactHandlers = new ConcurrentHashMap<>();
     private final Object lock = new Object[0];
     private Injector<?> artifactInjector;
 
     private static final Logger LOG = LoggerFactory.getLogger(AbstractArtifactManager.class);
-
-    @Nonnull
-    protected Map<String, ArtifactInfo[]> getArtifacts() {
-        return artifacts;
-    }
 
     @Nonnull
     protected Map<String, ArtifactHandler> getArtifactHandlers() {
@@ -66,18 +61,18 @@ public abstract class AbstractArtifactManager implements ArtifactManager {
 
     public final void loadArtifactMetadata(@Nonnull Injector<?> injector) {
         requireNonNull(injector, "Argument 'injector' cannot be null");
-        Map<String, List<ArtifactInfo>> loadedArtifacts = doLoadArtifactMetadata();
+        Map<String, List<Class<? extends GriffonArtifact>>> loadedArtifacts = doLoadArtifactMetadata();
 
         Collection<Binding<?>> bindings = new ArrayList<>();
         synchronized (lock) {
-            for (Map.Entry<String, List<ArtifactInfo>> artifactsEntry : loadedArtifacts.entrySet()) {
+            for (Map.Entry<String, List<Class<? extends GriffonArtifact>>> artifactsEntry : loadedArtifacts.entrySet()) {
                 String type = artifactsEntry.getKey();
                 ArtifactHandler handler = artifactHandlers.get(type);
                 if (handler == null) {
                     throw new ArtifactHandlerNotFoundException(type);
                 }
-                List<ArtifactInfo> list = artifactsEntry.getValue();
-                artifacts.put(type, list.toArray(new ArtifactInfo[list.size()]));
+                List<Class<? extends GriffonArtifact>> list = artifactsEntry.getValue();
+                artifacts.put(type, list.toArray(new Class[list.size()]));
                 //noinspection unchecked
                 bindings.addAll(handler.initialize(artifacts.get(type)));
             }
@@ -104,7 +99,7 @@ public abstract class AbstractArtifactManager implements ArtifactManager {
     }
 
     @Nonnull
-    protected abstract Map<String, List<ArtifactInfo>> doLoadArtifactMetadata();
+    protected abstract Map<String, List<Class<? extends GriffonArtifact>>> doLoadArtifactMetadata();
 
     public void registerArtifactHandler(@Nonnull ArtifactHandler artifactHandler) {
         requireNonNull(artifactHandler, ERROR_ARTIFACT_HANDLER_NULL);
@@ -124,6 +119,11 @@ public abstract class AbstractArtifactManager implements ArtifactManager {
         synchronized (lock) {
             artifactHandlers.remove(artifactHandler.getType());
         }
+    }
+
+    protected boolean supports(@Nonnull String type) {
+        requireNonBlank(type, ERROR_TYPE_BLANK);
+        return artifactHandlers.get(type) != null;
     }
 
     @Nullable
@@ -228,8 +228,8 @@ public abstract class AbstractArtifactManager implements ArtifactManager {
     }
 
     protected <A extends GriffonArtifact> boolean isClassOfType(@Nonnull String type, @Nonnull Class<A> clazz) {
-        for (ArtifactInfo artifactInfo : artifacts.get(type)) {
-            if (artifactInfo.getClazz().getName().equals(clazz.getName())) {
+        for (Class<? extends GriffonArtifact> klass : artifacts.get(type)) {
+            if (klass.getName().equals(clazz.getName())) {
                 return true;
             }
         }

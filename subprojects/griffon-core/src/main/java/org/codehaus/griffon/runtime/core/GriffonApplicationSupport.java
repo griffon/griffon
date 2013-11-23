@@ -65,11 +65,11 @@ public final class GriffonApplicationSupport {
         initializePropertyEditors(application);
         initializeResourcesInjector(application);
         runLifecycleHandler(Lifecycle.INITIALIZE, application);
-        initializeArtifactManager(application);
         applyPlatformTweaks(application);
         initializeAddonManager(application);
         initializeMvcManager(application);
         initializeActionManager(application);
+        initializeArtifactManager(application);
 
         event(application, ApplicationEvent.BOOTSTRAP_END, asList(application));
     }

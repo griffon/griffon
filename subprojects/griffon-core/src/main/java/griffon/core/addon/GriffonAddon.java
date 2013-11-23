@@ -33,9 +33,7 @@ public interface GriffonAddon extends ShutdownHandler {
     @Nonnull
     Logger getLog();
 
-    void addonInit(@Nonnull GriffonApplication app);
-
-    void addonPostInit(@Nonnull GriffonApplication app);
+    void init(@Nonnull GriffonApplication app);
 
     @Nonnull
     Map<String, Map<String, Object>> getMvcGroups();

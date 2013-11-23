@@ -70,14 +70,14 @@ public interface ArtifactHandler<A extends GriffonArtifact> {
 
     /**
      * Initializes the handler with a collection of all available
-     * artifacts this handler can process.<p>
+     * classes this handler can process.<p>
      * This is a good time to pre-emptively instantiate beans or
      * perform additional checks on artifacts.
      *
-     * @param artifacts an array of all artifacts this handler should manage
+     * @param classes an array of all classes this handler should manage
      */
     @Nonnull
-    Collection<Binding<?>> initialize(@Nonnull ArtifactInfo<A>[] artifacts);
+    Collection<Binding<?>> initialize(@Nonnull Class<A>[] classes);
 
     /**
      * Returns the set of all artifact classes this handler manages.

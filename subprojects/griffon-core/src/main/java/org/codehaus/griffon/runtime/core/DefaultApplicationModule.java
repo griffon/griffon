@@ -175,28 +175,28 @@ public class DefaultApplicationModule extends AbstractModule {
 
     private void modelArtifactHandler() {
         bind(ArtifactHandler.class)
-            .withClassifier(new ArtifactImpl(GriffonModel.class))
+            .withClassifier(new TypedImpl(GriffonModel.class))
             .to(ModelArtifactHandler.class)
             .asSingleton();
     }
 
     private void viewArtifactHandler() {
         bind(ArtifactHandler.class)
-            .withClassifier(new ArtifactImpl(GriffonView.class))
+            .withClassifier(new TypedImpl(GriffonView.class))
             .to(ViewArtifactHandler.class)
             .asSingleton();
     }
 
     private void controllerArtifactHandler() {
         bind(ArtifactHandler.class)
-            .withClassifier(new ArtifactImpl(GriffonController.class))
+            .withClassifier(new TypedImpl(GriffonController.class))
             .to(ControllerArtifactHandler.class)
             .asSingleton();
     }
 
     private void serviceArtifactHandler() {
         bind(ArtifactHandler.class)
-            .withClassifier(new ArtifactImpl(GriffonService.class))
+            .withClassifier(new TypedImpl(GriffonService.class))
             .to(ServiceArtifactHandler.class)
             .asSingleton();
     }

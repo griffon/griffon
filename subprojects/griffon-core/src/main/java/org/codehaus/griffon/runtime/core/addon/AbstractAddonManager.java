@@ -106,11 +106,9 @@ public abstract class AbstractAddonManager implements AddonManager {
             LOG.info("Loading addon {} with class {}", name, addon.getClass().getName());
             event(ApplicationEvent.LOAD_ADDON_START, asList(getApplication(), name, addon));
 
-            addon.addonInit(getApplication());
             getApplication().getEventRouter().addEventListener(addon);
-
             addMVCGroups(addon);
-            addon.addonPostInit(getApplication());
+            addon.init(getApplication());
 
             event(ApplicationEvent.LOAD_ADDON_END, asList(getApplication(), name, addon));
             LOG.info("Loaded addon {}", name);

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package griffon.core.artifact;
+package griffon.inject;
 
 import javax.inject.Qualifier;
 import java.lang.annotation.Retention;
@@ -26,6 +26,6 @@ import java.lang.annotation.RetentionPolicy;
  */
 @Qualifier
 @Retention(RetentionPolicy.RUNTIME)
-public @interface Artifact {
-    Class<? extends GriffonArtifact> value();
+public @interface Typed {
+    Class<?> value();
 }
