@@ -17,7 +17,10 @@
 package org.codehaus.griffon.runtime.core.artifact;
 
 import griffon.core.GriffonApplication;
-import griffon.core.artifact.*;
+import griffon.core.artifact.ArtifactHandler;
+import griffon.core.artifact.ArtifactManager;
+import griffon.core.artifact.GriffonArtifact;
+import griffon.core.artifact.GriffonClass;
 import griffon.core.injection.Binding;
 import griffon.core.injection.Injector;
 import griffon.exceptions.ArtifactHandlerNotFoundException;

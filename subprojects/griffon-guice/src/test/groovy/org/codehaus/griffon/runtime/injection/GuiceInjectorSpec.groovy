@@ -7,7 +7,6 @@ import griffon.core.injection.Injector
 import griffon.exceptions.InstanceNotFoundException
 import griffon.exceptions.MembersInjectionException
 import org.codehaus.griffon.runtime.core.injection.NamedImpl
-import org.codehaus.griffon.runtime.injection.GuiceInjector
 import spock.lang.Specification
 
 import javax.inject.Inject

@@ -21,7 +21,7 @@ class PointPropertyEditorSpec extends Specification {
         point == editor.value
 
         where:
-        point         | format
+        point             | format
         new Point(10, 20) | '10,20'
         new Point(10, 20) | '10, 20'
         new Point(10, 20) | ' 10, 20'
@@ -52,15 +52,15 @@ class PointPropertyEditorSpec extends Specification {
 
         where:
         format << [
-                '',
-                '   ',
-                'garbage',
-                '1, 2, 3',
-                [],
-                [1, 2, 3],
-                [x: 'a'],
-                [y: 'b'],
-                new Object()
+            '',
+            '   ',
+            'garbage',
+            '1, 2, 3',
+            [],
+            [1, 2, 3],
+            [x: 'a'],
+            [y: 'b'],
+            new Object()
         ]
     }
 }

@@ -32,6 +32,6 @@ public class ArtifactNotFoundException extends GriffonException {
     }
 
     private static String format(Class<?> clazz, String type) {
-        return "Could not find artifact with class " + checkNonNull(clazz, "clazz").getName() +" and type "+checkNonNull(type, "type");
+        return "Could not find artifact with class " + checkNonNull(clazz, "clazz").getName() + " and type " + checkNonNull(type, "type");
     }
 }

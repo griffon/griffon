@@ -1,6 +1,6 @@
 package griffon.core.env
 
-public class EnvironmentTests extends GroovyTestCase{
+public class EnvironmentTests extends GroovyTestCase {
 
     protected void tearDown() {
         System.setProperty(Environment.KEY, '')
@@ -20,7 +20,7 @@ public class EnvironmentTests extends GroovyTestCase{
         System.setProperty('griffon.env', 'soe')
 
         assert Environment.CUSTOM == Environment.getCurrent()
-        
+
     }
 
     void testGetEnvironment() {

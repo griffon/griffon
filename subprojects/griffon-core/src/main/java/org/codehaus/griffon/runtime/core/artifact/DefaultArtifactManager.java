@@ -24,7 +24,10 @@ import griffon.core.mvc.MVCGroupManager;
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import java.lang.reflect.Modifier;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 
 import static java.util.Objects.requireNonNull;
 import static org.codehaus.griffon.runtime.core.GriffonApplicationSupport.loadClass;

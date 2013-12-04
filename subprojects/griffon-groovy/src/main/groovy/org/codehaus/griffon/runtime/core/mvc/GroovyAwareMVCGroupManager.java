@@ -18,7 +18,6 @@ package org.codehaus.griffon.runtime.core.mvc;
 
 import griffon.core.ApplicationClassLoader;
 import griffon.core.GriffonApplication;
-import griffon.core.artifact.GriffonArtifact;
 import griffon.core.mvc.MVCGroup;
 import griffon.core.mvc.MVCGroupConfiguration;
 import groovy.lang.Script;
@@ -53,7 +52,7 @@ public class GroovyAwareMVCGroupManager extends DefaultMVCGroupManager {
 
     @Nonnull
     @Override
-    protected Map<String, Object> instantiateMembers(Map<String, Class<? extends GriffonArtifact>> classMap, Map<String, Object> args) {
+    protected Map<String, Object> instantiateMembers(@Nonnull Map<String, ClassHolder> classMap, @Nonnull Map<String, Object> args) {
         Map<String, Object> map = super.instantiateMembers(classMap, args);
         FactoryBuilderSupport builder = createBuilder(getApplication());
         map.put(BUILDER, builder);

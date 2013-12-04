@@ -192,7 +192,7 @@ public abstract class AbstractResourceResolver implements ResourceResolver {
     public String formatResource(@Nonnull String resource, @Nonnull Object[] args) {
         requireNonBlank(resource, ERROR_RESOURCE_BLANK);
         requireNonNull(args, ERROR_ARGS_NULL);
-        if(args.length == 0) return resource;
+        if (args.length == 0) return resource;
         return MessageFormat.format(resource, args);
     }
 

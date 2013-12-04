@@ -2,25 +2,13 @@ package sample;
 
 
 import griffon.core.GriffonApplication;
-import griffon.javafx.JavaFXAction;
-import griffon.javafx.JavaFXUtils;
 import javafx.fxml.FXML;
-import javafx.geometry.Insets;
 import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
-import javafx.scene.effect.DropShadow;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
-import javafx.scene.paint.LinearGradientBuilder;
-import javafx.scene.paint.Stop;
-import javafx.scene.text.Font;
-import javafx.scene.text.Text;
 import javafx.stage.Stage;
-import org.codehaus.griffon.runtime.core.artifact.AbstractGriffonView;
 import org.codehaus.griffon.runtime.core.artifact.AbstractJavaFXGriffonView;
 
 import javax.annotation.Nonnull;
@@ -30,7 +18,8 @@ public class SampleView extends AbstractJavaFXGriffonView {
     private SampleController controller;
     private SampleModel model;
 
-    @FXML private TextField name;
+    @FXML
+    private TextField name;
 
     @Inject
     public SampleView(@Nonnull GriffonApplication application) {

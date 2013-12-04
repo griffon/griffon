@@ -37,7 +37,7 @@ import static griffon.util.TypeUtils.castToBoolean;
  */
 public class JavaFXActionManager extends AbstractActionManager {
     private static final Logger LOG = LoggerFactory.getLogger(JavaFXActionManager.class);
-    
+
     @Inject
     public JavaFXActionManager(@Nonnull ApplicationConfiguration applicationConfiguration, @Nonnull UIThreadManager uiThreadManager, @Nonnull MessageSource messageSource) {
         super(applicationConfiguration, uiThreadManager, messageSource);

@@ -54,15 +54,15 @@ class Dimension2DPropertyEditorSpec extends Specification {
 
         where:
         format << [
-                '',
-                '   ',
-                'garbage',
-                '1, 2, 3',
-                [],
-                [1, 2, 3],
-                [width: 'a'],
-                [w: 'b'],
-                new Object()
+            '',
+            '   ',
+            'garbage',
+            '1, 2, 3',
+            [],
+            [1, 2, 3],
+            [width: 'a'],
+            [w: 'b'],
+            new Object()
         ]
     }
 }

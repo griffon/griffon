@@ -45,7 +45,7 @@ public interface EventPublisher {
      * @param eventName the name of the event
      * @param listener  an event listener
      */
-     void addEventListener(@Nonnull String eventName, @Nonnull CallableWithArgs listener);
+    void addEventListener(@Nonnull String eventName, @Nonnull CallableWithArgs listener);
 
     /**
      * Adds a Map containing event listeners.<p>
@@ -60,7 +60,7 @@ public interface EventPublisher {
      *
      * @param listener an event listener of type Map
      */
-     void addEventListener(@Nonnull Map<String, CallableWithArgs> listener);
+    void addEventListener(@Nonnull Map<String, CallableWithArgs> listener);
 
     /**
      * Adds a callable as an event listener.<p>
@@ -68,7 +68,7 @@ public interface EventPublisher {
      * @param eventClass the type of the event
      * @param listener   an event listener
      */
-     void addEventListener(@Nonnull Class<? extends Event> eventClass, @Nonnull CallableWithArgs listener);
+    void addEventListener(@Nonnull Class<? extends Event> eventClass, @Nonnull CallableWithArgs listener);
 
     /**
      * Removes an event listener.<p>
@@ -84,7 +84,7 @@ public interface EventPublisher {
      * @param eventName the name of the event
      * @param listener  an event listener
      */
-     void removeEventListener(@Nonnull String eventName, @Nonnull CallableWithArgs listener);
+    void removeEventListener(@Nonnull String eventName, @Nonnull CallableWithArgs listener);
 
     /**
      * Removes a Map containing event listeners.<p>
@@ -99,7 +99,7 @@ public interface EventPublisher {
      *
      * @param listener an event listener of type Map
      */
-     void removeEventListener(@Nonnull Map<String, CallableWithArgs> listener);
+    void removeEventListener(@Nonnull Map<String, CallableWithArgs> listener);
 
     /**
      * Removes a callable as an event listener.<p>
@@ -107,7 +107,7 @@ public interface EventPublisher {
      * @param eventClass the type of the event
      * @param listener   an event listener
      */
-     void removeEventListener(@Nonnull Class<? extends Event> eventClass, @Nonnull CallableWithArgs listener);
+    void removeEventListener(@Nonnull Class<? extends Event> eventClass, @Nonnull CallableWithArgs listener);
 
     /**
      * Publishes an event.<p>

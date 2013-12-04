@@ -64,18 +64,18 @@ class ColorPropertyEditorSpec extends Specification {
 
         where:
         format << [
-                '',
-                '   ',
-                'garbage',
-                [],
-                [1],
-                [1, 2],
-                [1, 2, 3, 4, 5],
-                'F00',
-                '#F0',
-                '#FF0000FF00',
-                ['HH', 'FF', '00'],
-                new Object()
+            '',
+            '   ',
+            'garbage',
+            [],
+            [1],
+            [1, 2],
+            [1, 2, 3, 4, 5],
+            'F00',
+            '#F0',
+            '#FF0000FF00',
+            ['HH', 'FF', '00'],
+            new Object()
         ]
     }
 }

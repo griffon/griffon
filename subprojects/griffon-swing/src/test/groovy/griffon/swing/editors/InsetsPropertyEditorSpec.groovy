@@ -56,16 +56,16 @@ class InsetsPropertyEditorSpec extends Specification {
 
         where:
         format << [
-                '',
-                '   ',
-                'garbage',
-                '1, 2, 3,4 ,5',
-                '1, a',
-                [],
-                [1, 2, 3, 4, 5],
-                [top: 'a'],
-                [t: 'b'],
-                new Object()
+            '',
+            '   ',
+            'garbage',
+            '1, 2, 3,4 ,5',
+            '1, a',
+            [],
+            [1, 2, 3, 4, 5],
+            [top: 'a'],
+            [t: 'b'],
+            new Object()
         ]
     }
 }

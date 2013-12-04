@@ -76,7 +76,7 @@ public class GradientPaintPropertyEditor extends AbstractPropertyEditor {
 
         if (str.contains("|")) {
             String[] parts = str.split("\\|");
-            switch(parts.length) {
+            switch (parts.length) {
                 case 4:
                     cyclic = parseBoolean(parts[3]);
                 case 3:

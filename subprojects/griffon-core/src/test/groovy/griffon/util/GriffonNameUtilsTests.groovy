@@ -43,14 +43,14 @@ class GriffonNameUtilsTests extends GroovyTestCase {
     }
 
     void testGetPropertyName() {
-        assert 'foo' == GriffonNameUtils.getPropertyName(Foo) 
+        assert 'foo' == GriffonNameUtils.getPropertyName(Foo)
     }
 
     void testGetPropertyNameRepresentation() {
-        assert 'foo' == GriffonNameUtils.getPropertyName('foo') 
-        assert 'foo' == GriffonNameUtils.getPropertyName('Foo') 
-        assert 'foo' == GriffonNameUtils.getPropertyName('griffon.util.Foo') 
-        assert 'fooBar' == GriffonNameUtils.getPropertyName('Foo Bar') 
+        assert 'foo' == GriffonNameUtils.getPropertyName('foo')
+        assert 'foo' == GriffonNameUtils.getPropertyName('Foo')
+        assert 'foo' == GriffonNameUtils.getPropertyName('griffon.util.Foo')
+        assert 'fooBar' == GriffonNameUtils.getPropertyName('Foo Bar')
     }
 
     void testGetShortName() {

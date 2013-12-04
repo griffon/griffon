@@ -52,15 +52,15 @@ class Point2DPropertyEditorSpec extends Specification {
 
         where:
         format << [
-                '',
-                '   ',
-                'garbage',
-                '1, 2, 3',
-                [],
-                [1, 2, 3],
-                [x: 'a'],
-                [y: 'b'],
-                new Object()
+            '',
+            '   ',
+            'garbage',
+            '1, 2, 3',
+            [],
+            [1, 2, 3],
+            [x: 'a'],
+            [y: 'b'],
+            new Object()
         ]
     }
 }

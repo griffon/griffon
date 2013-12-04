@@ -1,7 +1,6 @@
 package sample;
 
 import griffon.core.GriffonApplication;
-import javafx.event.ActionEvent;
 import org.codehaus.griffon.runtime.core.artifact.AbstractGriffonController;
 
 import javax.annotation.Nonnull;

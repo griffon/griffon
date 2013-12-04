@@ -16,7 +16,6 @@
 
 package org.codehaus.griffon.runtime.core.mvc;
 
-import griffon.core.artifact.GriffonArtifact;
 import griffon.core.mvc.MVCGroupConfiguration;
 import griffon.core.mvc.MVCGroupManager;
 

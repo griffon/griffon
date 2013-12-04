@@ -67,8 +67,8 @@ public class GuiceInjectorFactory implements InjectorFactory {
             @Override
             public void afterInjection(GriffonArtifact injectee) {
                 application.getEventRouter().publish(
-                        ApplicationEvent.NEW_INSTANCE.getName(),
-                        asList(injectee.getClass(), injectee)
+                    ApplicationEvent.NEW_INSTANCE.getName(),
+                    asList(injectee.getClass(), injectee)
                 );
             }
         };
@@ -85,8 +85,8 @@ public class GuiceInjectorFactory implements InjectorFactory {
             @Override
             protected void configure() {
                 bind(Injector.class)
-                        .toProvider(guicify(injectorProvider))
-                        .in(Singleton.class);
+                    .toProvider(guicify(injectorProvider))
+                    .in(Singleton.class);
 
                 bindListener(new AbstractMatcher<TypeLiteral<?>>() {
                                  public boolean matches(TypeLiteral<?> typeLiteral) {
