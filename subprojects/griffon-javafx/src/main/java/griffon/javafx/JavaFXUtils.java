@@ -92,6 +92,9 @@ public final class JavaFXUtils {
     }
 
     public static void setTooltip(@Nonnull Control control, @Nullable String text) {
+        if (isBlank(text)) {
+            return;
+        }
         requireNonNull(control, ERROR_CONTROL_NULL);
 
         Tooltip tooltip = control.tooltipProperty().get();

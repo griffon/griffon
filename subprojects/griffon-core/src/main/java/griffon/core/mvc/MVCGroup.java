@@ -16,7 +16,6 @@
 
 package griffon.core.mvc;
 
-import griffon.core.artifact.GriffonArtifact;
 import griffon.core.artifact.GriffonController;
 import griffon.core.artifact.GriffonModel;
 import griffon.core.artifact.GriffonView;

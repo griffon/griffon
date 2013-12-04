@@ -61,8 +61,7 @@ public class WeldInjector implements Injector<WeldContainer> {
         }
 
         try {
-            return null;
-            // return delegate.instance();
+            return delegate.instance().select(type).get();
         } catch (RuntimeException e) {
             throw new InstanceNotFoundException(type, e);
         }
@@ -79,8 +78,7 @@ public class WeldInjector implements Injector<WeldContainer> {
         }
 
         try {
-            //return delegate.getInstance(Key.get(type, qualifier));
-            return null;
+            return delegate.instance().select(type, qualifier).get();
         } catch (RuntimeException e) {
             throw new InstanceNotFoundException(type, qualifier, e);
         }

@@ -16,6 +16,7 @@
 
 package griffon.core.mvc;
 
+import griffon.core.GriffonApplication;
 import griffon.core.artifact.GriffonArtifact;
 import griffon.core.artifact.GriffonController;
 import griffon.core.artifact.GriffonModel;
@@ -116,4 +117,6 @@ public interface MVCGroupManager extends MVCHandler {
      */
     @Nonnull
     Map<String, ? extends GriffonController> getControllers();
+
+    GriffonApplication getApplication();
 }

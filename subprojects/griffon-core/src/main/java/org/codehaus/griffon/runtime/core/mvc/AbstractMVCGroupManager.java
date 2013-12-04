@@ -71,6 +71,7 @@ public abstract class AbstractMVCGroupManager implements MVCGroupManager {
         this.application = requireNonNull(application, "Argument 'application' cannot be null");
     }
 
+    @Override
     public GriffonApplication getApplication() {
         return application;
     }

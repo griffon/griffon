@@ -21,6 +21,7 @@ import griffon.core.addon.AddonManager;
 import griffon.core.artifact.ArtifactManager;
 import griffon.core.controller.ActionManager;
 import griffon.core.env.ApplicationPhase;
+import griffon.core.env.Lifecycle;
 import griffon.core.event.EventRouter;
 import griffon.core.i18n.MessageSource;
 import griffon.core.injection.Injector;
@@ -47,6 +48,7 @@ import java.util.concurrent.CountDownLatch;
 import static griffon.util.GriffonApplicationUtils.parseLocale;
 import static java.util.Arrays.asList;
 import static java.util.Objects.requireNonNull;
+import static org.codehaus.griffon.runtime.core.GriffonApplicationSupport.runLifecycleHandler;
 
 /**
  * Base implementation of {@code GriffonApplication} that runs in applet mode.
@@ -90,7 +92,7 @@ public abstract class AbstractGriffonApplet extends JApplet implements GriffonAp
 
     public void stop() {
         event(ApplicationEvent.STOP_START, asList(this));
-        // TODO GriffonApplicationHelper.runLifecycleHandler(Lifecycle.STOP.getName(), this);
+        runLifecycleHandler(Lifecycle.STOP, this);
         event(ApplicationEvent.STOP_END, asList(this));
     }
 
@@ -256,7 +258,7 @@ public abstract class AbstractGriffonApplet extends JApplet implements GriffonAp
         setPhase(ApplicationPhase.READY);
         event(ApplicationEvent.READY_START, asList(this));
 
-        // TODO GriffonApplicationHelper.runLifecycleHandler(Lifecycle.READY, this);
+        runLifecycleHandler(Lifecycle.READY, this);
         event(ApplicationEvent.READY_END, asList(this));
         setPhase(ApplicationPhase.MAIN);
     }
@@ -341,7 +343,7 @@ public abstract class AbstractGriffonApplet extends JApplet implements GriffonAp
 
         // stage 4 - call shutdown script
         log.debug("Shutdown stage 4: execute Shutdown script");
-        // TODO GriffonApplicationHelper.runLifecycleHandler(Lifecycle.SHUTDOWN, this);
+        runLifecycleHandler(Lifecycle.SHUTDOWN, this);
 
         injector.getInstance(ExecutorServiceManager.class).shutdownAll();
         injector.close();
@@ -376,7 +378,7 @@ public abstract class AbstractGriffonApplet extends JApplet implements GriffonAp
             }
         }
 
-        // TODO GriffonApplicationHelper.runLifecycleHandler(Lifecycle.STARTUP, this);
+        runLifecycleHandler(Lifecycle.STARTUP, this);
 
         event(ApplicationEvent.STARTUP_END, asList(this));
     }

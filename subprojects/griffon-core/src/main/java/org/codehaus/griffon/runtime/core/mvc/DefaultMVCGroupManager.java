@@ -22,8 +22,8 @@ import griffon.core.GriffonApplication;
 import griffon.core.artifact.*;
 import griffon.core.mvc.MVCGroup;
 import griffon.core.mvc.MVCGroupConfiguration;
-import griffon.exceptions.GriffonException;
 import griffon.exceptions.MVCGroupInstantiationException;
+import griffon.exceptions.NewInstanceException;
 import griffon.util.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -84,17 +84,7 @@ public class DefaultMVCGroupManager extends AbstractMVCGroupManager {
         requireNonNull(configuration, ERROR_CONFIGURATION_NULL);
         requireNonNull(args, ERROR_ARGS_NULL);
 
-        boolean component = getConfigValueAsBoolean(configuration.getConfig(), CONFIG_KEY_COMPONENT, false);
-
-        if (isBlank(mvcId)) {
-            if (component) {
-                mvcId = configuration.getMvcType() + "-" + System.nanoTime();
-            } else {
-                mvcId = configuration.getMvcType();
-            }
-        }
-
-        //noinspection ConstantConditions
+        mvcId = resolveMvcId(configuration, mvcId);
         checkIdIsUnique(mvcId, configuration);
 
         LOG.info("Building MVC group '{}' with name '{}'", configuration.getMvcType(), mvcId);
@@ -110,17 +100,15 @@ public class DefaultMVCGroupManager extends AbstractMVCGroupManager {
 
         boolean isEventPublishingEnabled = getApplication().getEventRouter().isEnabled();
         getApplication().getEventRouter().setEnabled(isConfigFlagEnabled(configuration, CONFIG_KEY_EVENTS_INSTANTIATION));
-        Map<String, Object> instances = null;
+        Map<String, Object> instances = new LinkedHashMap<>();
         try {
-            instances = instantiateMembers(classMap, argsCopy);
+            instances.putAll(instantiateMembers(classMap, argsCopy));
         } finally {
             getApplication().getEventRouter().setEnabled(isEventPublishingEnabled);
         }
 
         MVCGroup group = newMVCGroup(configuration, mvcId, instances);
-        // must set it again because mvcId might have been initialized internally
-        argsCopy.put("mvcId", group.getMvcId());
-        argsCopy.put("mvcGroup", group);
+        adjustMvcArguments(group, argsCopy);
 
         boolean fireEvents = isConfigFlagEnabled(configuration, CONFIG_KEY_EVENTS_LIFECYCLE);
         if (fireEvents) {
@@ -149,7 +137,29 @@ public class DefaultMVCGroupManager extends AbstractMVCGroupManager {
         return group;
     }
 
-    protected void selectClassesPerMember(@Nonnull String memberType, @Nonnull String memberClassName, @Nonnull Map<String, ClassHolder> classMap) {
+    protected void adjustMvcArguments(@Nonnull MVCGroup group, @Nonnull Map<String, Object> args) {
+        // must set it again because mvcId might have been initialized internally
+        args.put("mvcId", group.getMvcId());
+        args.put("mvcGroup", group);
+    }
+
+    @Nonnull
+    @SuppressWarnings("ConstantConditions")
+    protected String resolveMvcId(@Nonnull MVCGroupConfiguration configuration, @Nullable String mvcId) {
+        boolean component = getConfigValueAsBoolean(configuration.getConfig(), CONFIG_KEY_COMPONENT, false);
+
+        if (isBlank(mvcId)) {
+            if (component) {
+                mvcId = configuration.getMvcType() + "-" + System.nanoTime();
+            } else {
+                mvcId = configuration.getMvcType();
+            }
+        }
+        return mvcId;
+    }
+
+    @SuppressWarnings("unchecked")
+    protected void selectClassesPerMember(@Nonnull String memberType, @Nonnull String memberClassName, @Nonnull Map<String, Class<? extends GriffonArtifact>> classMap) {
         GriffonClass griffonClass = getApplication().getArtifactManager().findGriffonClass(memberClassName);
         ClassHolder classHolder = new ClassHolder();
         if (griffonClass != null) {
@@ -207,7 +217,8 @@ public class DefaultMVCGroupManager extends AbstractMVCGroupManager {
                         instanceMap.put(memberType, instance);
                         args.put(memberType, instance);
                     } catch (InstantiationException | IllegalAccessException e) {
-                        throw new GriffonException(e);
+                        LOG.error("Can't create member {} with {}", memberType, memberClass);
+                        throw new NewInstanceException(memberClass);
                     }
                 }
             }
@@ -218,16 +229,17 @@ public class DefaultMVCGroupManager extends AbstractMVCGroupManager {
     protected void initializeMembers(@Nonnull MVCGroup group, @Nonnull Map<String, Object> args) {
         LOG.debug("Initializing each MVC member of group '{}'", group.getMvcId());
         for (Map.Entry<String, Object> memberEntry : group.getMembers().entrySet()) {
+            String memberType = memberEntry.getKey()
             Object member = memberEntry.getValue();
             if (member instanceof GriffonArtifact) {
-                initializeArtifactMember((GriffonArtifact) member, args);
+                initializeArtifactMember(memberType, (GriffonArtifact) member, args);
             } else {
-                initializeNonArtifactMember(member, args);
+                initializeNonArtifactMember(memberType, member, args);
             }
         }
     }
 
-    protected void initializeArtifactMember(final @Nonnull GriffonArtifact member, final @Nonnull Map<String, Object> args) {
+    protected void initializeArtifactMember(@Nonnull String type, final @Nonnull GriffonArtifact member, final @Nonnull Map<String, Object> args) {
         if (member instanceof GriffonView) {
             getApplication().getUIThreadManager().runInsideUISync(new Runnable() {
                 @Override
@@ -242,15 +254,27 @@ public class DefaultMVCGroupManager extends AbstractMVCGroupManager {
         }
     }
 
-    protected void initializeNonArtifactMember(final @Nonnull Object member, final @Nonnull Map<String, Object> args) {
+    protected void initializeNonArtifactMember(@Nonnull String type, @Nonnull Object member, @Nonnull Map<String, Object> args) {
         // empty
     }
 
     protected void fillReferencedProperties(@Nonnull MVCGroup group, @Nonnull Map<String, Object> args) {
-        for (Object member : group.getMembers().values()) {
-            // set the args and instances
-            setPropertiesNoException(member, args);
+        for (Map.Entry<String, Object> memberEntry : group.getMembers().entrySet()) {
+            if (memberEntry.getValue() instanceof GriffonArtifact) {
+                fillArtifactMemberProperties(memberEntry.getKey(), (GriffonArtifact) memberEntry.getValue(), args);
+            } else {
+                fillNonArtifactMemberProperties(memberEntry.getKey(), memberEntry.getValue(), args);
+            }
         }
+    }
+
+    private void fillArtifactMemberProperties(@Nonnull String type, @Nonnull GriffonArtifact member, @Nonnull Map<String, Object> args) {
+        // set the args and instances
+        setPropertiesNoException(member, args);
+    }
+
+    protected void fillNonArtifactMemberProperties(@Nonnull String type, @Nonnull Object member, @Nonnull Map<String, Object> args) {
+        // empty
     }
 
     protected void doAddGroup(@Nonnull MVCGroup group) {
@@ -260,7 +284,6 @@ public class DefaultMVCGroupManager extends AbstractMVCGroupManager {
     public void destroyMVCGroup(@Nonnull String mvcId) {
         MVCGroup group = findGroup(mvcId);
         LOG.trace("Group '{}' points to {}", mvcId, group);
-
 
         if (group == null) return;
 
@@ -275,14 +298,7 @@ public class DefaultMVCGroupManager extends AbstractMVCGroupManager {
 
         boolean fireDestructionEvents = isConfigFlagEnabled(group.getConfiguration(), CONFIG_KEY_EVENTS_DESTRUCTION);
 
-        for (Map.Entry<String, Object> memberEntry : group.getMembers().entrySet()) {
-            Object member = memberEntry.getValue();
-            if (member instanceof GriffonArtifact) {
-               destroyArtifactMember((GriffonArtifact) member, fireDestructionEvents);
-            } else {
-                destroyNonArtifactMember(member, fireDestructionEvents);
-            }
-        }
+        destroyMembers(group, fireDestructionEvents);
 
         doRemoveGroup(group);
         group.destroy();
@@ -292,17 +308,27 @@ public class DefaultMVCGroupManager extends AbstractMVCGroupManager {
         }
     }
 
-    protected void destroyArtifactMember(@Nonnull GriffonArtifact member, boolean fireDestructionEvents) {
+    protected void destroyMembers(@Nonnull MVCGroup group, boolean fireDestructionEvents) {
+        for (Map.Entry<String, Object> memberEntry : group.getMembers().entrySet()) {
+            if (memberEntry.getValue() instanceof GriffonArtifact) {
+                destroyArtifactMember(memberEntry.getKey(), (GriffonArtifact) memberEntry.getValue(), fireDestructionEvents);
+            } else {
+                destroyNonArtifactMember(memberEntry.getKey(), memberEntry.getValue(), fireDestructionEvents);
+            }
+        }
+    }
+
+    protected void destroyArtifactMember(@Nonnull String type, @Nonnull GriffonArtifact member, boolean fireDestructionEvents) {
         if (member instanceof GriffonMvcArtifact) {
             GriffonMvcArtifact artifact = (GriffonMvcArtifact) member;
             if (fireDestructionEvents) {
-                getApplication().getEventRouter().publish(ApplicationEvent.DESTROY_INSTANCE.getName(), asList(member.getClass(), artifact.getGriffonClass().getArtifactType(), artifact));
+                getApplication().getEventRouter().publish(ApplicationEvent.DESTROY_INSTANCE.getName(), asList(member.getClass(), artifact));
             }
             artifact.mvcGroupDestroy();
         }
     }
 
-    protected void destroyNonArtifactMember(@Nonnull Object member, boolean fireDestructionEvents) {
+    protected void destroyNonArtifactMember(@Nonnull String type, @Nonnull Object member, boolean fireDestructionEvents) {
         // empty
     }
 

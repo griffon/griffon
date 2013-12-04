@@ -22,6 +22,7 @@ import griffon.core.artifact.ArtifactManager;
 import griffon.core.artifact.GriffonController;
 import griffon.core.controller.ActionInterceptor;
 import griffon.core.env.Lifecycle;
+import griffon.core.event.EventHandler;
 import griffon.core.injection.Injector;
 import griffon.core.mvc.MVCGroupConfiguration;
 import griffon.core.resources.ResourcesInjector;
@@ -60,12 +61,17 @@ public final class GriffonApplicationSupport {
 
     public static void init(@Nonnull GriffonApplication application) {
         requireNonNull(application, ERROR_APPLICATION_NULL);
+
+        EventHandler eventHandler = application.getInjector().getInstance(EventHandler.class);
+        application.getEventRouter().addEventListener(eventHandler);
+
         event(application, ApplicationEvent.BOOTSTRAP_START, asList(application));
 
         initializePropertyEditors(application);
         initializeResourcesInjector(application);
         runLifecycleHandler(Lifecycle.INITIALIZE, application);
         applyPlatformTweaks(application);
+        initializeArtifactManager(application);
         initializeAddonManager(application);
         initializeMvcManager(application);
         initializeActionManager(application);
@@ -346,28 +352,6 @@ public final class GriffonApplicationSupport {
         for (ActionInterceptor interceptor : sortedInterceptors) {
             application.getActionManager().addActionInterceptor(interceptor);
         }
-
-        /*
-        TODO finish me!!
-        application.getEventRouter().addEventListener(ApplicationEvent.INITIALIZE_MVC_GROUP.getName(), new CallableWithArgs<Void>() {
-            public Void call(@Nonnull Object[] args) {
-                MVCGroupConfiguration groupConfig = (MVCGroupConfiguration) args[0];
-                MVCGroup group = (MVCGroup) args[1];
-                GriffonController controller = group.getController();
-                if (controller == null) return null;
-                FactoryBuilderSupport builder = group.getBuilder();
-                Map<String, Action> actions = application.getActionManager().actionsFor(controller);
-                for (Map.Entry<String, Action> action : actions.entrySet()) {
-                    String actionKey = application.getActionManager().normalizeName(action.getKey()) + ActionManager.ACTION;
-                    if (LOG.isTraceEnabled()) {
-                        LOG.trace("Adding action " + actionKey + " to " + groupConfig.getMvcType() + ":" + group.getMvcId() + ":builder");
-                    }
-                    builder.setVariable(actionKey, action.getValue().getToolkitAction());
-                }
-                return null;
-            }
-        });
-        */
     }
 
     @Nonnull
