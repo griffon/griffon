@@ -34,8 +34,9 @@ import static griffon.util.GriffonNameUtils.requireNonBlank;
  */
 public abstract class AbstractGriffonController extends AbstractGriffonMvcArtifact implements GriffonController {
     @Inject
-    protected ActionManager actionManager;
+    private ActionManager actionManager;
 
+    @Inject
     public AbstractGriffonController(@Nonnull GriffonApplication application) {
         super(application);
     }
@@ -44,6 +45,10 @@ public abstract class AbstractGriffonController extends AbstractGriffonMvcArtifa
     @Override
     protected String getArtifactType() {
         return GriffonControllerClass.TYPE;
+    }
+
+    protected ActionManager getActionManager() {
+        return actionManager;
     }
 
     public void invokeAction(@Nonnull String name, Object... args) {

@@ -4,10 +4,13 @@ package sample;
 import griffon.core.GriffonApplication;
 import griffon.javafx.JavaFXAction;
 import griffon.javafx.JavaFXUtils;
+import javafx.fxml.FXML;
 import javafx.geometry.Insets;
 import javafx.scene.Group;
+import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.TextField;
 import javafx.scene.effect.DropShadow;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
@@ -18,13 +21,16 @@ import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import org.codehaus.griffon.runtime.core.artifact.AbstractGriffonView;
+import org.codehaus.griffon.runtime.core.artifact.AbstractJavaFXGriffonView;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
 
-public class SampleView extends AbstractGriffonView {
+public class SampleView extends AbstractJavaFXGriffonView {
     private SampleController controller;
     private SampleModel model;
+
+    @FXML private TextField name;
 
     @Inject
     public SampleView(@Nonnull GriffonApplication application) {
@@ -49,12 +55,16 @@ public class SampleView extends AbstractGriffonView {
         getApplication().getWindowManager().attach("mainWindow", stage);
     }
 
+    public void click() {
+        getApplication().getActionManager().invokeAction(controller, "click", null);
+    }
 
     // build the UI
     private Scene init() {
         Scene scene = new Scene(new Group());
-        scene.setFill(Color.BLACK);
+        scene.setFill(Color.WHITE);
 
+        /*
         Text javaText = new Text();
         javaText.setText("Java");
         javaText.setFont(new Font("Sanserif", 80));
@@ -85,12 +95,11 @@ public class SampleView extends AbstractGriffonView {
         hbox.setPadding(new Insets(80, 80, 80, 80));
 
         ((Group) scene.getRoot()).getChildren().addAll(vbox);
+        */
 
-        /*
-
-        JavaFXAction action = (JavaFXAction) getApplication().getActionManager().actionFor(controller, "click").getToolkitAction();
-        window.getContentPane().add(new JButton(action));
-         */
+        Node content = loadFromFXML();
+        model.inputProperty().bindBidirectional(name.textProperty());
+        ((Group) scene.getRoot()).getChildren().addAll(content);
 
         return scene;
     }

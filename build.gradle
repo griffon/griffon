@@ -35,8 +35,6 @@ subprojects { subproj ->
     apply plugin: 'idea'
 
     if (plugins.hasPlugin('java')) {
-        sourceCompatibility = 1.7
-        targetCompatibility = 1.7
         group = 'org.codehaus.griffon'
 
         apply from: "${rootDir}/gradle/coverage.gradle"
@@ -46,6 +44,10 @@ subprojects { subproj ->
     repositories {
         jcenter()
         mavenCentral()
+        maven {
+            name 'Codehaus'
+            url 'http://repository.codehaus.org'
+        }
     }
 
     dependencies {

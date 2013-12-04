@@ -21,6 +21,7 @@ import griffon.core.artifact.GriffonService;
 import griffon.core.artifact.GriffonServiceClass;
 
 import javax.annotation.Nonnull;
+import javax.inject.Inject;
 
 /**
  * Base implementation of the GriffonService interface.
@@ -29,6 +30,7 @@ import javax.annotation.Nonnull;
  * @since 0.9.1
  */
 public abstract class AbstractGriffonService extends AbstractGriffonArtifact implements GriffonService {
+    @Inject
     public AbstractGriffonService(@Nonnull GriffonApplication application) {
         super(application);
     }

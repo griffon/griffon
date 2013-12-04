@@ -92,7 +92,7 @@ public interface MVCGroup {
      * @throws IllegalStateException if the group has been destroyed already
      */
     @Nullable
-    GriffonArtifact getMember(@Nonnull String name);
+    Object getMember(@Nonnull String name);
 
     /**
      * Returns a read-only view of all instance members.
@@ -101,7 +101,7 @@ public interface MVCGroup {
      * @throws IllegalStateException if the group has been destroyed already
      */
     @Nonnull
-    Map<String, GriffonArtifact> getMembers();
+    Map<String, Object> getMembers();
 
     /**
      * Destroys the current group.

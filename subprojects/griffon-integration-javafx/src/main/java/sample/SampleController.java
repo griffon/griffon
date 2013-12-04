@@ -22,7 +22,7 @@ public class SampleController extends AbstractGriffonController {
         this.model = model;
     }
 
-    public void click(ActionEvent event) {
-        System.out.println("click " + event);
+    public void click() {
+        System.out.println("click " + model.getInput());
     }
 }

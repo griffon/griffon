@@ -63,7 +63,7 @@ public interface MVCGroupManager extends MVCHandler {
      * @return a ready-to-use MVCGroup instance
      */
     @Nonnull
-    MVCGroup newMVCGroup(@Nonnull MVCGroupConfiguration configuration, @Nullable String mvcId, @Nonnull Map<String, GriffonArtifact> members);
+    MVCGroup newMVCGroup(@Nonnull MVCGroupConfiguration configuration, @Nullable String mvcId, @Nonnull Map<String, Object> members);
 
     /**
      * Initializes this manager with the group configurations provided by the application and addons.

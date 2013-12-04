@@ -3,7 +3,9 @@ apply plugin: 'groovy'
 ext.pomDescription = 'Griffon JavaFX module'
 
 for (location in ['lib/jfxrt.jar', 'jre/lib/jfxrt.jar', 'jre/lib/ext/jfxrt.jar']) {
-    File file = new File("${System.properties['java.home']}/${location}")
+    File javaHome = new File(System.properties['java.home'])
+    javaHome = javaHome.name == 'jre' ? javaHome.parentFile : javaHome
+    File file = new File(javaHome, location)
     if (file.exists()) {
         ext.jfxrtLocation = file.absolutePath
         break

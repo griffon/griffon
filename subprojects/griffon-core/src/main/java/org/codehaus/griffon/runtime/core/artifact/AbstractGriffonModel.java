@@ -23,6 +23,7 @@ import griffon.core.artifact.GriffonModelClass;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import javax.inject.Inject;
 import java.beans.*;
 
 import static griffon.util.GriffonNameUtils.requireNonBlank;
@@ -40,6 +41,7 @@ public abstract class AbstractGriffonModel extends AbstractGriffonMvcArtifact im
     protected final PropertyChangeSupport pcs;
     protected final VetoableChangeSupport vcs;
 
+    @Inject
     public AbstractGriffonModel(@Nonnull GriffonApplication application) {
         super(application);
         pcs = new PropertyChangeSupport(this);

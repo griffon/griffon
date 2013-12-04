@@ -42,11 +42,11 @@ public abstract class AbstractMVCGroup implements MVCGroup {
     protected final MVCGroupManager mvcGroupManager;
     protected final MVCGroupConfiguration configuration;
     protected final String mvcId;
-    protected final Map<String, GriffonArtifact> members = new LinkedHashMap<>();
+    protected final Map<String, Object> members = new LinkedHashMap<>();
     private boolean alive;
     private final Object[] lock = new Object[0];
 
-    public AbstractMVCGroup(@Nonnull MVCGroupManager mvcGroupManager, @Nonnull MVCGroupConfiguration configuration, @Nullable String mvcId, @Nonnull Map<String, GriffonArtifact> members) {
+    public AbstractMVCGroup(@Nonnull MVCGroupManager mvcGroupManager, @Nonnull MVCGroupConfiguration configuration, @Nullable String mvcId, @Nonnull Map<String, Object> members) {
         this.mvcGroupManager = requireNonNull(mvcGroupManager, "Argument 'mvcGroupManager' cannot be null");
         this.configuration = requireNonNull(configuration, "Argument 'configuration' cannot be null");
         this.mvcId = isBlank(mvcId) ? configuration.getMvcType() + "-" + UUID.randomUUID().toString() : mvcId;
@@ -97,7 +97,7 @@ public abstract class AbstractMVCGroup implements MVCGroup {
 
     @Nullable
     @Override
-    public GriffonArtifact getMember(@Nonnull String name) {
+    public Object getMember(@Nonnull String name) {
         requireNonBlank(name, "Argument 'name' cannot be blank");
         checkIfAlive();
         return members.get(name);
@@ -105,7 +105,7 @@ public abstract class AbstractMVCGroup implements MVCGroup {
 
     @Nonnull
     @Override
-    public Map<String, GriffonArtifact> getMembers() {
+    public Map<String, Object> getMembers() {
         checkIfAlive();
         return unmodifiableMap(members);
     }

@@ -31,7 +31,7 @@ import java.util.Map;
  * @since 0.9.3
  */
 public class DefaultMVCGroup extends AbstractMVCGroup {
-    public DefaultMVCGroup(@Nonnull MVCGroupManager mvcGroupManager, @Nonnull MVCGroupConfiguration configuration, @Nullable String mvcId, @Nonnull Map<String, GriffonArtifact> members) {
+    public DefaultMVCGroup(@Nonnull MVCGroupManager mvcGroupManager, @Nonnull MVCGroupConfiguration configuration, @Nullable String mvcId, @Nonnull Map<String, Object> members) {
         super(mvcGroupManager, configuration, mvcId, members);
     }
 

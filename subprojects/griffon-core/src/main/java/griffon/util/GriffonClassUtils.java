@@ -18,6 +18,7 @@ package griffon.util;
 import griffon.core.CallableWithArgs;
 import griffon.core.event.Event;
 import griffon.core.mvc.MVCCallable;
+import griffon.core.mvc.MVCGroup;
 import griffon.exceptions.*;
 
 import javax.annotation.Nonnull;
@@ -124,6 +125,8 @@ public class GriffonClassUtils {
         ARTIFACT_METHODS.add(new MethodDescriptor("getGriffonClass"));
         // ARTIFACT_METHODS.add(new MethodDescriptor("griffonDestroy"));
 
+        MVC_METHODS.add(new MethodDescriptor("getMvcGroup"));
+        MVC_METHODS.add(new MethodDescriptor("setMvcGroup", new Class[]{MVCGroup.class}));
         MVC_METHODS.add(new MethodDescriptor("mvcGroupInit", new Class[]{Map.class}));
         MVC_METHODS.add(new MethodDescriptor("mvcGroupDestroy"));
         MVC_METHODS.add(new MethodDescriptor("buildMVCGroup", new Class[]{String.class}));

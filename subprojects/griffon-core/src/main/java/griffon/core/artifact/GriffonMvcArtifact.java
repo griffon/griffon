@@ -16,6 +16,8 @@
 
 package griffon.core.artifact;
 
+import griffon.core.mvc.MVCGroup;
+
 import javax.annotation.Nonnull;
 import java.util.Map;
 
@@ -48,4 +50,7 @@ public interface GriffonMvcArtifact extends GriffonArtifact {
      * will remove any references to the group on its cache.
      */
     void mvcGroupDestroy();
+
+    @Nonnull
+    MVCGroup getMvcGroup();
 }

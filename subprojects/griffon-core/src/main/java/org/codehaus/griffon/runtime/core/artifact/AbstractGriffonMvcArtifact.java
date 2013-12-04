@@ -18,9 +18,12 @@ package org.codehaus.griffon.runtime.core.artifact;
 
 import griffon.core.GriffonApplication;
 import griffon.core.artifact.GriffonMvcArtifact;
+import griffon.core.mvc.MVCGroup;
 
 import javax.annotation.Nonnull;
 import java.util.Map;
+
+import static java.util.Objects.requireNonNull;
 
 /**
  * Base implementation of the GriffonMvcArtifact interface.
@@ -29,8 +32,20 @@ import java.util.Map;
  * @since 0.9.1
  */
 public abstract class AbstractGriffonMvcArtifact extends AbstractGriffonArtifact implements GriffonMvcArtifact {
+    private MVCGroup group;
+
     public AbstractGriffonMvcArtifact(@Nonnull GriffonApplication application) {
         super(application);
+    }
+
+    public void setMvcGroup(@Nonnull MVCGroup group) {
+        this.group = requireNonNull(group, "Argument 'group' cannot be null");
+    }
+
+    @Nonnull
+    @Override
+    public MVCGroup getMvcGroup() {
+        return group;
     }
 
     public void mvcGroupInit(@Nonnull Map<String, Object> args) {

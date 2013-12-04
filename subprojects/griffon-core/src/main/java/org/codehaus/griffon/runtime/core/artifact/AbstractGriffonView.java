@@ -21,6 +21,7 @@ import griffon.core.artifact.GriffonView;
 import griffon.core.artifact.GriffonViewClass;
 
 import javax.annotation.Nonnull;
+import javax.inject.Inject;
 
 /**
  * Base implementation of the GriffonView interface.
@@ -29,6 +30,7 @@ import javax.annotation.Nonnull;
  * @since 0.9.1
  */
 public abstract class AbstractGriffonView extends AbstractGriffonMvcArtifact implements GriffonView {
+    @Inject
     public AbstractGriffonView(@Nonnull GriffonApplication application) {
         super(application);
     }

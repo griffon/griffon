@@ -30,7 +30,7 @@ import static java.util.Objects.requireNonNull;
  * @author Andres Almiray
  * @since 2.0.0
  */
-public class DefaultResourceHandler extends AbstractResourceHandler implements ResourceHandler {
+public class DefaultResourceHandler extends AbstractResourceHandler {
     private final ApplicationClassLoader applicationClassLoader;
 
     @Inject
