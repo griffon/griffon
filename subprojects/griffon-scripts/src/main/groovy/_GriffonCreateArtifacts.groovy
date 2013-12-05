@@ -306,6 +306,30 @@ target(name: 'resolveArchetype', description: '', prehook: null, posthook: null)
     }
 
     if (!archetypeName && !archetypeVersion) {
+        archetype = buildConfig.griffon.'default'.archetype
+        if (archetype) {
+            Matcher matcher = artifactNameVersionPattern.matcher(archetype)
+            if (matcher.find()) {
+                archetypeName = matcher.group(1)
+                archetypeVersion = matcher.group(2)
+                archetypeProps.name = archetypeName
+                archetypeProps.version = archetypeVersion
+            } else {
+                archetypeProps.name = archetype
+                File file = artifactSettings.findArtifactDirForName(Archetype.TYPE, archetype)
+                if (file) {
+                    matcher = artifactNameVersionPattern.matcher(file.name)
+                    matcher.find()
+                    archetypeName = matcher.group(1)
+                    archetypeVersion = matcher.group(2)
+                    archetypeProps.version = archetypeVersion
+                }
+            }
+            checkArchetype(archetypeProps)
+        }
+    }
+
+    if (!archetypeName && !archetypeVersion) {
         archetypeName = 'default'
         archetypeVersion = GriffonUtil.getGriffonVersion()
     }
