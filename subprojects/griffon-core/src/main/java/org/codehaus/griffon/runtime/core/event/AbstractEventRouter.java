@@ -20,6 +20,7 @@ import griffon.core.CallableWithArgs;
 import griffon.core.event.Event;
 import griffon.core.event.EventRouter;
 import griffon.util.GriffonClassUtils;
+import griffon.util.MethodDescriptor;
 import griffon.util.MethodUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -28,6 +29,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -60,6 +62,7 @@ public abstract class AbstractEventRouter implements EventRouter {
     private boolean enabled = true;
     protected final List<Object> listeners = synchronizedList(new ArrayList<>());
     protected final Map<String, List<CallableWithArgs>> callableListeners = new ConcurrentHashMap<>();
+    private final MethodCache methodCache = new MethodCache();
 
     @Override
     public boolean isEnabled() {
@@ -154,20 +157,13 @@ public abstract class AbstractEventRouter implements EventRouter {
         requireNonNull(instance, ERROR_INSTANCE_NULL);
         requireNonBlank(eventHandler, ERROR_EVENT_HANDLER_BLANK);
         requireNonNull(params, ERROR_PARAMS_NULL);
-        Class[] argTypes = convertToTypeArray(asArray(params));
-        GriffonClassUtils.MethodDescriptor target = new GriffonClassUtils.MethodDescriptor(eventHandler, argTypes);
 
-        Method[] methods = instance.getClass().getMethods();
-        for (Method method : methods) {
-            if (!method.getName().equals(eventHandler)) {
-                continue;
-            }
-            GriffonClassUtils.MethodDescriptor candidate = GriffonClassUtils.MethodDescriptor.forMethod(method);
-            if (!candidate.matches(target)) {
-                continue;
-            }
+        Class[] argTypes = convertToTypeArray(asArray(params));
+        MethodDescriptor target = new MethodDescriptor(eventHandler, argTypes);
+        Method method = methodCache.findMatchingMethodFor(instance.getClass(), target);
+
+        if (method != null) {
             MethodUtils.invokeSafe(method, instance, asArray(params));
-            break;
         }
     }
 
@@ -322,13 +318,73 @@ public abstract class AbstractEventRouter implements EventRouter {
         requireNonNull(listener, ERROR_LISTENER_NULL);
         requireNonNull(owner, ERROR_OWNER_NULL);
         Class listenerClass = listener.getClass();
-        if (listenerClass.isMemberClass() && listenerClass.getEnclosingClass().equals(owner.getClass())) {
-            return owner.equals(GriffonClassUtils.getFieldValue(listener, "this$0"));
-        }
-        return false;
+        return listenerClass.isMemberClass() &&
+            listenerClass.getEnclosingClass().equals(owner.getClass()) &&
+            owner.equals(GriffonClassUtils.getFieldValue(listener, "this$0"));
     }
 
     protected Object[] asArray(@Nonnull List<?> list) {
         return list.toArray(new Object[list.size()]);
+    }
+
+    protected static class MethodCache {
+        private final Map<Class<?>, Map<String, List<MethodInfo>>> methodMap = new ConcurrentHashMap<>();
+
+        @Nullable
+        public Method findMatchingMethodFor(@Nonnull Class<?> klass, @Nonnull MethodDescriptor target) {
+            Map<String, List<MethodInfo>> methodMetadata = methodMap.get(klass);
+            if (methodMetadata == null) {
+                methodMetadata = fetchMethodMetadata(klass);
+                methodMap.put(klass, methodMetadata);
+            }
+
+            List<MethodInfo> descriptors = methodMetadata.get(target.getName());
+            if (descriptors != null) {
+                for (MethodInfo info : descriptors) {
+                    if (info.descriptor.matches(target)) {
+                        return info.method;
+                    }
+                }
+            }
+
+            return null;
+        }
+
+        private Map<String, List<MethodInfo>> fetchMethodMetadata(Class<?> klass) {
+            Map<String, List<MethodInfo>> methodMetadata = new LinkedHashMap<>();
+
+            for (Method method : klass.getMethods()) {
+                MethodDescriptor descriptor = MethodDescriptor.forMethod(method);
+                if (GriffonClassUtils.isEventHandler(descriptor)) {
+                    String methodName = method.getName();
+                    List<MethodInfo> descriptors = methodMetadata.get(methodName);
+                    if (descriptors == null) {
+                        descriptors = new ArrayList<>();
+                        methodMetadata.put(methodName, descriptors);
+                    }
+                    descriptors.add(new MethodInfo(descriptor, method));
+                }
+            }
+
+            return methodMetadata;
+        }
+    }
+
+    protected static class MethodInfo {
+        private final MethodDescriptor descriptor;
+        private final Method method;
+
+        public MethodInfo(MethodDescriptor descriptor, Method method) {
+            this.descriptor = descriptor;
+            this.method = method;
+        }
+
+        public MethodDescriptor getDescriptor() {
+            return descriptor;
+        }
+
+        public Method getMethod() {
+            return method;
+        }
     }
 }
