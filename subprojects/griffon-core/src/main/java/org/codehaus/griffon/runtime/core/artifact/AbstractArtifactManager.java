@@ -124,7 +124,7 @@ public abstract class AbstractArtifactManager implements ArtifactManager {
         }
     }
 
-    protected boolean supports(@Nonnull String type) {
+    protected boolean isArtifactTypeSupported(@Nonnull String type) {
         requireNonBlank(type, ERROR_TYPE_BLANK);
         return artifactHandlers.get(type) != null;
     }

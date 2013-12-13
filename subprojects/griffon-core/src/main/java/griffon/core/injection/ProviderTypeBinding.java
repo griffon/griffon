@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package griffon.core.injection.binder;
+package griffon.core.injection;
 
 import javax.annotation.Nonnull;
 import javax.inject.Provider;
@@ -23,15 +23,7 @@ import javax.inject.Provider;
  * @author Andres Almiray
  * @since 2.0.0
  */
-public interface LinkedBindingBuilder<T> extends SingletonBindingBuilder<T> {
+public interface ProviderTypeBinding<T> extends Binding<T> {
     @Nonnull
-    SingletonBindingBuilder to(@Nonnull Class<? extends T> target);
-
-    void toInstance(@Nonnull T instance);
-
-    @Nonnull
-    SingletonBindingBuilder toProvider(@Nonnull Provider<? extends T> provider);
-
-    @Nonnull
-    SingletonBindingBuilder toProvider(@Nonnull Class<Provider<? extends T>> providerType);
+    Class<Provider<? extends T>> getProviderType();
 }

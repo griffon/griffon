@@ -16,21 +16,24 @@
 
 package org.codehaus.griffon.runtime.core.injection;
 
-import griffon.core.injection.Binding;
-import griffon.core.injection.InstanceBinding;
-import griffon.core.injection.ProviderBinding;
-import griffon.core.injection.TargetBinding;
+import griffon.core.injection.*;
 import griffon.core.injection.binder.AnnotatedBindingBuilder;
 import griffon.core.injection.binder.LinkedBindingBuilder;
 import griffon.core.injection.binder.SingletonBindingBuilder;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import javax.inject.Named;
 import javax.inject.Provider;
 import javax.inject.Qualifier;
 import java.lang.annotation.Annotation;
+import java.util.ArrayList;
+import java.util.List;
 
+import static griffon.util.GriffonClassUtils.isAnnotatedWith;
 import static griffon.util.GriffonClassUtils.requireAnnotation;
+import static griffon.util.GriffonNameUtils.getPropertyName;
+import static griffon.util.GriffonNameUtils.isBlank;
 import static java.util.Objects.requireNonNull;
 
 /**
@@ -56,6 +59,7 @@ public class Bindings {
         protected Class<? extends T> target;
         protected T instance;
         protected Provider<? extends T> provider;
+        protected Class<Provider<? extends T>> providerType;
 
         @Nonnull
         @Override
@@ -75,6 +79,13 @@ public class Bindings {
             this.provider = requireNonNull(provider, "Argument 'provider' cannot be null");
             return this;
         }
+
+        @Nonnull
+        @Override
+        public SingletonBindingBuilder toProvider(@Nonnull Class<Provider<? extends T>> providerType) {
+            this.providerType = requireNonNull(providerType, "Argument 'providerType' cannot be null");
+            return this;
+        }
     }
 
     private static class AnnotatedBindingBuilderImpl<T> extends LinkedBindingBuilderImpl<T> implements AnnotatedBindingBuilder<T> {
@@ -91,6 +102,8 @@ public class Bindings {
         public Binding<T> getBinding() {
             if (instance != null) {
                 return classifier != null ? new InstanceBindingImpl<>(source, classifier, instance) : new InstanceBindingImpl<>(source, classifierType, instance);
+            } else if (providerType != null) {
+                return classifier != null ? new ProviderTypeBindingImpl<>(source, providerType, classifier, singleton) : new ProviderTypeBindingImpl<>(source, providerType, classifierType, singleton);
             } else if (provider != null) {
                 return classifier != null ? new ProviderBindingImpl<>(source, provider, classifier, singleton) : new ProviderBindingImpl<>(source, provider, classifierType, singleton);
             } else if (target != null) {
@@ -160,6 +173,43 @@ public class Bindings {
         public boolean isSingleton() {
             return singleton;
         }
+
+        protected List<Annotation> harvestQualifiers(Class<?> klass) {
+            List<Annotation> list = new ArrayList<>();
+            Annotation[] annotations = klass.getAnnotations();
+            for (Annotation annotation : annotations) {
+                if (isAnnotatedWith(annotation, Qualifier.class)) {
+                    // special case for @Named
+                    if (Named.class.isAssignableFrom(annotation.getClass())) {
+                        Named named = (Named) annotation;
+                        if (isBlank(named.value())) {
+                            list.add(new NamedImpl(getPropertyName(klass)));
+                            continue;
+                        }
+                    }
+                    list.add(annotation);
+                }
+            }
+            return list;
+        }
+
+        protected void updateClassifier(Class<?> klass) {
+            if (this.classifier == null) {
+                List<Annotation> qualifiers = harvestQualifiers(klass);
+                if (!qualifiers.isEmpty()) {
+                    this.classifier = qualifiers.get(0);
+                }
+            }
+        }
+
+        protected void updateClassifierType(Class<?> klass) {
+            if (this.classifierType == null) {
+                List<Annotation> qualifiers = harvestQualifiers(klass);
+                if (!qualifiers.isEmpty()) {
+                    this.classifier = qualifiers.get(0);
+                }
+            }
+        }
     }
 
     private static class TargetBindingImpl<T> extends AbstractBindingImpl<T> implements TargetBinding<T> {
@@ -168,11 +218,13 @@ public class Bindings {
         private TargetBindingImpl(@Nonnull Class<T> source, @Nonnull Class<? extends T> target, @Nonnull Annotation classifier, boolean singleton) {
             super(source, classifier, singleton);
             this.target = target;
+            updateClassifier(target);
         }
 
         private TargetBindingImpl(@Nonnull Class<T> source, @Nonnull Class<? extends T> target, @Nonnull Class<? extends Annotation> classifierType, boolean singleton) {
             super(source, classifierType, singleton);
             this.target = target;
+            updateClassifierType(target);
         }
 
         @Nonnull
@@ -203,11 +255,13 @@ public class Bindings {
         protected InstanceBindingImpl(@Nonnull Class<T> source, @Nonnull Annotation classifier, @Nonnull T instance) {
             super(source, classifier, true);
             this.instance = instance;
+            updateClassifier(instance.getClass());
         }
 
         protected InstanceBindingImpl(@Nonnull Class<T> source, @Nonnull Class<? extends Annotation> classifierType, @Nonnull T instance) {
             super(source, classifierType, true);
             this.instance = instance;
+            updateClassifierType(instance.getClass());
         }
 
         @Nonnull
@@ -238,12 +292,14 @@ public class Bindings {
         private ProviderBindingImpl(@Nonnull Class<T> source, @Nonnull Provider<? extends T> provider, @Nonnull Annotation classifier, boolean singleton) {
             super(source, classifier, singleton);
             this.provider = provider;
+            updateClassifier(provider.getClass());
         }
 
 
         private ProviderBindingImpl(@Nonnull Class<T> source, @Nonnull Provider<? extends T> provider, @Nonnull Class<? extends Annotation> classifierType, boolean singleton) {
             super(source, classifierType, singleton);
             this.provider = provider;
+            updateClassifierType(provider.getClass());
         }
 
         @Nonnull
@@ -262,6 +318,44 @@ public class Bindings {
                 sb.append(", classifierType=").append(classifierType.getName());
             }
             sb.append(", provider=").append(provider);
+            sb.append(", singleton=").append(singleton);
+            sb.append(']');
+            return sb.toString();
+        }
+    }
+
+    private static class ProviderTypeBindingImpl<T> extends AbstractBindingImpl<T> implements ProviderTypeBinding<T> {
+        private final Class<Provider<? extends T>> providerType;
+
+        private ProviderTypeBindingImpl(@Nonnull Class<T> source, @Nonnull Class<Provider<? extends T>> providerType, @Nonnull Annotation classifier, boolean singleton) {
+            super(source, classifier, singleton);
+            this.providerType = providerType;
+            updateClassifier(providerType);
+        }
+
+
+        private ProviderTypeBindingImpl(@Nonnull Class<T> source, @Nonnull Class<Provider<? extends T>> providerType, @Nonnull Class<? extends Annotation> classifierType, boolean singleton) {
+            super(source, classifierType, singleton);
+            this.providerType = providerType;
+            updateClassifierType(providerType);
+        }
+
+        @Nonnull
+        @Override
+        public Class<Provider<? extends T>> getProviderType() {
+            return providerType;
+        }
+
+        @Override
+        public String toString() {
+            final StringBuilder sb = new StringBuilder("ProviderTypeBinding[");
+            sb.append("source=").append(source.getName());
+            if (classifier != null) {
+                sb.append(", classifier=").append(classifier);
+            } else if (classifierType != null) {
+                sb.append(", classifierType=").append(classifierType.getName());
+            }
+            sb.append(", providerType=").append(providerType);
             sb.append(", singleton=").append(singleton);
             sb.append(']');
             return sb.toString();

@@ -20,6 +20,7 @@ import griffon.core.GriffonApplication;
 import griffon.core.artifact.GriffonClass;
 import griffon.core.artifact.GriffonController;
 import griffon.core.artifact.GriffonControllerClass;
+import griffon.inject.Typed;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
@@ -31,6 +32,7 @@ import static java.util.Objects.requireNonNull;
  *
  * @author Andres Almiray
  */
+@Typed(GriffonController.class)
 public class ControllerArtifactHandler extends AbstractArtifactHandler<GriffonController> {
     @Inject
     public ControllerArtifactHandler(@Nonnull GriffonApplication application) {

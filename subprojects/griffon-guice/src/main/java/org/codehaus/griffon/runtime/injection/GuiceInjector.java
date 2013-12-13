@@ -221,6 +221,8 @@ public class GuiceInjector implements Injector<com.google.inject.Injector> {
                         handleTargetBinding((TargetBinding) binding);
                     } else if (binding instanceof InstanceBinding) {
                         handleInstanceBinding((InstanceBinding) binding);
+                    } else if (binding instanceof ProviderTypeBinding) {
+                        handleProviderTypeBinding((ProviderTypeBinding) binding);
                     } else if (binding instanceof ProviderBinding) {
                         handleProviderBinding((ProviderBinding) binding);
                     } else {
@@ -256,6 +258,14 @@ public class GuiceInjector implements Injector<com.google.inject.Injector> {
             @SuppressWarnings("unchecked")
             private void handleInstanceBinding(@Nonnull InstanceBinding<?> binding) {
                 handleBinding(binding).toInstance(binding.getInstance());
+            }
+
+            @SuppressWarnings("unchecked")
+            private void handleProviderTypeBinding(@Nonnull ProviderTypeBinding<?> binding) {
+                ScopedBindingBuilder builder = handleBinding(binding).toProvider(binding.getProviderType());
+                if (binding.isSingleton()) {
+                    builder.in(Singleton.class);
+                }
             }
 
             @SuppressWarnings("unchecked")

@@ -34,7 +34,7 @@ import java.util.Map;
  * @author Andres Almiray
  * @since 2.0.0
  */
-@Named
+@Named("groovy")
 public class GroovyAddon extends AbstractGriffonAddon {
     @Inject
     public GroovyAddon(@Nonnull GriffonApplication application) {

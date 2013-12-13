@@ -18,10 +18,12 @@ package org.codehaus.griffon.runtime.core.artifact;
 
 import griffon.core.GriffonApplication;
 import griffon.core.artifact.GriffonClass;
+import griffon.core.artifact.GriffonController;
 import griffon.exceptions.GriffonException;
-import griffon.javafx.fxml.FXMLLoader2;
+import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Parent;
+import javafx.util.Callback;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -45,12 +47,7 @@ public abstract class AbstractJavaFXGriffonView extends AbstractGriffonView {
 
     @Nullable
     protected Node loadFromFXML() {
-        GriffonClass griffonClass = getGriffonClass();
-        String packageName = griffonClass.getPackageName();
-        String baseName = griffonClass.getLogicalPropertyName();
-        if (!isBlank(packageName)) {
-            baseName = packageName + "." + baseName;
-        }
+        String baseName = resolveBasename();
         baseName = baseName.replace('.', '/');
         String viewName = baseName + ".fxml";
         String styleName = baseName + ".css";
@@ -60,8 +57,13 @@ public abstract class AbstractJavaFXGriffonView extends AbstractGriffonView {
             return null;
         }
 
-        FXMLLoader2 fxmlLoader = new FXMLLoader2(viewResource);
-        fxmlLoader.setControllerFactory((klass) -> getMvcGroup().getView());
+        FXMLLoader fxmlLoader = new FXMLLoader(viewResource);
+        fxmlLoader.setControllerFactory(new Callback<Class<?>, Object>() {
+            @Override
+            public Object call(Class<?> aClass) {
+                return getMvcGroup().getView();
+            }
+        });
 
         try {
             fxmlLoader.load();
@@ -78,5 +80,19 @@ public abstract class AbstractJavaFXGriffonView extends AbstractGriffonView {
         }
 
         return node;
+    }
+
+    protected String resolveBasename() {
+        GriffonClass griffonClass = getGriffonClass();
+        String packageName = griffonClass.getPackageName();
+        String baseName = griffonClass.getLogicalPropertyName();
+        if (!isBlank(packageName)) {
+            baseName = packageName + "." + baseName;
+        }
+        return baseName;
+    }
+
+    protected void invokeAction(@Nonnull GriffonController controller, @Nonnull String actionName, Object... args) {
+        getApplication().getActionManager().invokeAction(controller, actionName, args);
     }
 }

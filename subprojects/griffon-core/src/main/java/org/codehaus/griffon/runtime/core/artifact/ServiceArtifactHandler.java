@@ -23,6 +23,7 @@ import griffon.core.artifact.GriffonServiceClass;
 import griffon.core.injection.Binding;
 import griffon.core.injection.binder.AnnotatedBindingBuilder;
 import griffon.core.injection.binder.LinkedBindingBuilder;
+import griffon.inject.Typed;
 import org.codehaus.griffon.runtime.core.injection.Bindings;
 import org.codehaus.griffon.runtime.core.injection.TypedImpl;
 
@@ -37,6 +38,7 @@ import static java.util.Objects.requireNonNull;
  *
  * @author Andres Almiray
  */
+@Typed(GriffonService.class)
 public class ServiceArtifactHandler extends AbstractArtifactHandler<GriffonService> {
     @Inject
     public ServiceArtifactHandler(@Nonnull GriffonApplication application) {

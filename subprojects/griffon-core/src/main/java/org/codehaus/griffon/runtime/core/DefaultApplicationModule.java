@@ -18,7 +18,8 @@ package org.codehaus.griffon.runtime.core;
 
 import griffon.core.*;
 import griffon.core.addon.AddonManager;
-import griffon.core.artifact.*;
+import griffon.core.artifact.ArtifactHandler;
+import griffon.core.artifact.ArtifactManager;
 import griffon.core.controller.ActionManager;
 import griffon.core.env.Lifecycle;
 import griffon.core.event.EventHandler;
@@ -178,28 +179,24 @@ public class DefaultApplicationModule extends AbstractModule {
 
     private void modelArtifactHandler() {
         bind(ArtifactHandler.class)
-            .withClassifier(new TypedImpl(GriffonModel.class))
             .to(ModelArtifactHandler.class)
             .asSingleton();
     }
 
     private void viewArtifactHandler() {
         bind(ArtifactHandler.class)
-            .withClassifier(new TypedImpl(GriffonView.class))
             .to(ViewArtifactHandler.class)
             .asSingleton();
     }
 
     private void controllerArtifactHandler() {
         bind(ArtifactHandler.class)
-            .withClassifier(new TypedImpl(GriffonController.class))
             .to(ControllerArtifactHandler.class)
             .asSingleton();
     }
 
     private void serviceArtifactHandler() {
         bind(ArtifactHandler.class)
-            .withClassifier(new TypedImpl(GriffonService.class))
             .to(ServiceArtifactHandler.class)
             .asSingleton();
     }

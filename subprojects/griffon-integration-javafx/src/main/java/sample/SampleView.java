@@ -1,6 +1,5 @@
 package sample;
 
-
 import griffon.core.GriffonApplication;
 import javafx.fxml.FXML;
 import javafx.scene.Group;
@@ -45,7 +44,7 @@ public class SampleView extends AbstractJavaFXGriffonView {
     }
 
     public void click() {
-        getApplication().getActionManager().invokeAction(controller, "click", null);
+        invokeAction(controller, "click");
     }
 
     // build the UI

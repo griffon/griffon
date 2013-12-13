@@ -60,7 +60,6 @@ public class SwingModule extends AbstractModule {
             .asSingleton();
 
         bind(GriffonAddon.class)
-            .withClassifier(new NamedImpl("swing"))
             .to(SwingAddon.class)
             .asSingleton();
     }

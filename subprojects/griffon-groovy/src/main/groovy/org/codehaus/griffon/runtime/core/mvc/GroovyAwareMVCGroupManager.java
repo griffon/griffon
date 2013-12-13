@@ -52,6 +52,7 @@ public class GroovyAwareMVCGroupManager extends DefaultMVCGroupManager {
 
     @Nonnull
     @Override
+    @SuppressWarnings("unchecked")
     protected Map<String, Object> instantiateMembers(@Nonnull Map<String, ClassHolder> classMap, @Nonnull Map<String, Object> args) {
         Map<String, Object> map = super.instantiateMembers(classMap, args);
         FactoryBuilderSupport builder = createBuilder(getApplication());
@@ -74,6 +75,7 @@ public class GroovyAwareMVCGroupManager extends DefaultMVCGroupManager {
     }
 
     @Override
+    @SuppressWarnings("ConstantConditions")
     protected void adjustMvcArguments(@Nonnull MVCGroup group, @Nonnull Map<String, Object> args) {
         super.adjustMvcArguments(group, args);
         FactoryBuilderSupport builder = (FactoryBuilderSupport) group.getMember(BUILDER);
@@ -83,6 +85,7 @@ public class GroovyAwareMVCGroupManager extends DefaultMVCGroupManager {
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     protected void fillNonArtifactMemberProperties(@Nonnull String type, @Nonnull Object member, @Nonnull Map<String, Object> args) {
         if (member instanceof Script) {
             ((Script) member).getBinding().getVariables().putAll(args);
@@ -91,9 +94,7 @@ public class GroovyAwareMVCGroupManager extends DefaultMVCGroupManager {
 
     @Override
     protected void initializeNonArtifactMember(@Nonnull String type, @Nonnull Object member, @Nonnull Map<String, Object> args) {
-        if (member instanceof Script) {
 
-        }
     }
 
     @Override
