@@ -9,7 +9,7 @@ h2. Examples
 {code:java}
 class SampleController {
     def someProperty
-    def mvcGroupInit(Map args) {
+    void mvcGroupInit(Map<String, Object> args) {
         someProperty = args.random 
     }
 }
@@ -22,7 +22,7 @@ This method serves as an initialization hook for any MVC member that is not a Sc
 {code:java}
 class SampleController {
     def model
-    def mvcGroupInit(Map args) {
+    void mvcGroupInit(Map<String, Object> args) {
         assert model instanceof SampleModel
         createMMVCGroup('Other', [model, model, foo: 'FOO'])
     }
@@ -30,7 +30,7 @@ class SampleController {
 //
 class OtherController {
     def model
-    def mvcGroupInit(Map args) {
+    void mvcGroupInit(Map<String, Object> args) {
         assert model instanceof SampleModel
         assert args.foo == 'FOO'
     }
