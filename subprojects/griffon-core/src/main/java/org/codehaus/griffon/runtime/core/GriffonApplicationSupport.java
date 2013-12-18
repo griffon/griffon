@@ -250,7 +250,7 @@ public final class GriffonApplicationSupport {
         Set<String> addedDeps = new LinkedHashSet<>();
 
         while (!map.isEmpty()) {
-            int filtersAdded = 0;
+            int processed = 0;
 
             if (LOG.isDebugEnabled()) {
                 LOG.debug("Current interceptor order is " + actionInterceptors.keySet());
@@ -302,10 +302,10 @@ public final class GriffonApplicationSupport {
                 sortedInterceptors.add(entry.getValue());
                 addedDeps.add(interceptorName);
                 iter.remove();
-                filtersAdded++;
+                processed++;
             }
 
-            if (filtersAdded == 0) {
+            if (processed == 0) {
                 // we have a cyclical dependency, warn the user and load in the order they appeared originally
                 if (LOG.isWarnEnabled()) {
                     LOG.warn("::::::::::::::::::::::::::::::::::::::::::::::::::::::");
@@ -347,6 +347,14 @@ public final class GriffonApplicationSupport {
                 }
                 break;
             }
+        }
+
+        if (LOG.isDebugEnabled()) {
+            List<String> sortedInterceptorNames = new ArrayList<>();
+            for (ActionInterceptor interceptor : sortedInterceptors) {
+                sortedInterceptorNames.add(nameFor(interceptor));
+            }
+            LOG.debug("Computed interceptor order is " + sortedInterceptorNames);
         }
 
         for (ActionInterceptor interceptor : sortedInterceptors) {

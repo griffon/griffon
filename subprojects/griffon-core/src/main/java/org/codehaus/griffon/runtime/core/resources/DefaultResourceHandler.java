@@ -17,7 +17,6 @@
 package org.codehaus.griffon.runtime.core.resources;
 
 import griffon.core.ApplicationClassLoader;
-import griffon.core.resources.ResourceHandler;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
@@ -25,7 +24,7 @@ import javax.inject.Inject;
 import static java.util.Objects.requireNonNull;
 
 /**
- * Base implementation of the {@link ResourceHandler} interface.
+ * Base implementation of the {@link griffon.core.resources.ResourceHandler} interface.
  *
  * @author Andres Almiray
  * @since 2.0.0
