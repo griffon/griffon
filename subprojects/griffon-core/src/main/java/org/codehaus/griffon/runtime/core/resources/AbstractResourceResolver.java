@@ -237,7 +237,7 @@ public abstract class AbstractResourceResolver implements ResourceResolver {
     }
 
     @Nonnull
-    protected Object[] toObjectArray(@Nonnull List args) {
+    protected Object[] toObjectArray(@Nonnull List<?> args) {
         if (args.isEmpty()) {
             return EMPTY_OBJECT_ARGS;
         }

@@ -21,6 +21,8 @@ package griffon.core.resources.formatters;
  * @since 1.3.0
  */
 public class ParseException extends RuntimeException {
+    private static final long serialVersionUID = -4827147485351497115L;
+
     public ParseException() {
     }
 

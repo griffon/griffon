@@ -53,14 +53,14 @@ import static java.util.Objects.requireNonNull;
  * @author Graeme Rocher (Grails 0.1)
  */
 public class GriffonClassUtils {
-    public static final Class[] EMPTY_CLASS_ARRAY = new Class[0];
+    public static final Class<?>[] EMPTY_CLASS_ARRAY = new Class<?>[0];
     public static final Object[] EMPTY_OBJECT_ARRAY = new Object[0];
     public static final Object[] EMPTY_ARGS = EMPTY_OBJECT_ARRAY;
 
     private static final String PROPERTY_GET_PREFIX = "get";
     private static final String PROPERTY_IS_PREFIX = "is";
     private static final String PROPERTY_SET_PREFIX = "set";
-    public static final Map<Class, Class> PRIMITIVE_TYPE_COMPATIBLE_CLASSES = new LinkedHashMap<>();
+    public static final Map<Class<?>, Class<?>> PRIMITIVE_TYPE_COMPATIBLE_CLASSES = new LinkedHashMap<>();
     public static final Map<String, String> PRIMITIVE_TYPE_COMPATIBLE_TYPES = new LinkedHashMap<>();
 
     private static final Pattern EVENT_HANDLER_PATTERN = Pattern.compile("^on[A-Z][\\w]*$");
@@ -123,133 +123,133 @@ public class GriffonClassUtils {
             }
         }
 
-        ARTIFACT_METHODS.add(new MethodDescriptor("newInstance", new Class[]{Class.class, String.class}));
-        ARTIFACT_METHODS.add(new MethodDescriptor("newInstance", new Class[]{Object[].class}));
+        ARTIFACT_METHODS.add(new MethodDescriptor("newInstance", new Class<?>[]{Class.class, String.class}));
+        ARTIFACT_METHODS.add(new MethodDescriptor("newInstance", new Class<?>[]{Object[].class}));
         ARTIFACT_METHODS.add(new MethodDescriptor("getApp"));
         ARTIFACT_METHODS.add(new MethodDescriptor("getLog"));
         ARTIFACT_METHODS.add(new MethodDescriptor("getGriffonClass"));
         // ARTIFACT_METHODS.add(new MethodDescriptor("griffonDestroy"));
 
         MVC_METHODS.add(new MethodDescriptor("getMvcGroup"));
-        MVC_METHODS.add(new MethodDescriptor("setMvcGroup", new Class[]{MVCGroup.class}));
-        MVC_METHODS.add(new MethodDescriptor("mvcGroupInit", new Class[]{Map.class}));
+        MVC_METHODS.add(new MethodDescriptor("setMvcGroup", new Class<?>[]{MVCGroup.class}));
+        MVC_METHODS.add(new MethodDescriptor("mvcGroupInit", new Class<?>[]{Map.class}));
         MVC_METHODS.add(new MethodDescriptor("mvcGroupDestroy"));
-        MVC_METHODS.add(new MethodDescriptor("buildMVCGroup", new Class[]{String.class}));
-        MVC_METHODS.add(new MethodDescriptor("buildMVCGroup", new Class[]{String.class, Map.class}));
-        MVC_METHODS.add(new MethodDescriptor("buildMVCGroup", new Class[]{Map.class, String.class}));
-        MVC_METHODS.add(new MethodDescriptor("buildMVCGroup", new Class[]{String.class, String.class}));
-        MVC_METHODS.add(new MethodDescriptor("buildMVCGroup", new Class[]{String.class, String.class, Map.class}));
-        MVC_METHODS.add(new MethodDescriptor("buildMVCGroup", new Class[]{Map.class, String.class, String.class}));
-        MVC_METHODS.add(new MethodDescriptor("createMVCGroup", new Class[]{String.class}));
-        MVC_METHODS.add(new MethodDescriptor("createMVCGroup", new Class[]{String.class, Map.class}));
-        MVC_METHODS.add(new MethodDescriptor("createMVCGroup", new Class[]{Map.class, String.class}));
-        MVC_METHODS.add(new MethodDescriptor("createMVCGroup", new Class[]{String.class, String.class}));
-        MVC_METHODS.add(new MethodDescriptor("createMVCGroup", new Class[]{String.class, String.class, Map.class}));
-        MVC_METHODS.add(new MethodDescriptor("createMVCGroup", new Class[]{Map.class, String.class, String.class}));
-        MVC_METHODS.add(new MethodDescriptor("destroyMVCGroup", new Class[]{String.class}));
-        MVC_METHODS.add(new MethodDescriptor("withMVCGroup", new Class[]{String.class, MVCCallable.class}));
-        MVC_METHODS.add(new MethodDescriptor("withMVCGroup", new Class[]{String.class, Map.class, MVCCallable.class}));
-        MVC_METHODS.add(new MethodDescriptor("withMVCGroup", new Class[]{Map.class, String.class, MVCCallable.class}));
-        MVC_METHODS.add(new MethodDescriptor("withMVCGroup", new Class[]{String.class, String.class, MVCCallable.class}));
-        MVC_METHODS.add(new MethodDescriptor("withMVCGroup", new Class[]{String.class, String.class, Map.class, MVCCallable.class}));
-        MVC_METHODS.add(new MethodDescriptor("withMVCGroup", new Class[]{Map.class, String.class, String.class, MVCCallable.class}));
+        MVC_METHODS.add(new MethodDescriptor("buildMVCGroup", new Class<?>[]{String.class}));
+        MVC_METHODS.add(new MethodDescriptor("buildMVCGroup", new Class<?>[]{String.class, Map.class}));
+        MVC_METHODS.add(new MethodDescriptor("buildMVCGroup", new Class<?>[]{Map.class, String.class}));
+        MVC_METHODS.add(new MethodDescriptor("buildMVCGroup", new Class<?>[]{String.class, String.class}));
+        MVC_METHODS.add(new MethodDescriptor("buildMVCGroup", new Class<?>[]{String.class, String.class, Map.class}));
+        MVC_METHODS.add(new MethodDescriptor("buildMVCGroup", new Class<?>[]{Map.class, String.class, String.class}));
+        MVC_METHODS.add(new MethodDescriptor("createMVCGroup", new Class<?>[]{String.class}));
+        MVC_METHODS.add(new MethodDescriptor("createMVCGroup", new Class<?>[]{String.class, Map.class}));
+        MVC_METHODS.add(new MethodDescriptor("createMVCGroup", new Class<?>[]{Map.class, String.class}));
+        MVC_METHODS.add(new MethodDescriptor("createMVCGroup", new Class<?>[]{String.class, String.class}));
+        MVC_METHODS.add(new MethodDescriptor("createMVCGroup", new Class<?>[]{String.class, String.class, Map.class}));
+        MVC_METHODS.add(new MethodDescriptor("createMVCGroup", new Class<?>[]{Map.class, String.class, String.class}));
+        MVC_METHODS.add(new MethodDescriptor("destroyMVCGroup", new Class<?>[]{String.class}));
+        MVC_METHODS.add(new MethodDescriptor("withMVCGroup", new Class<?>[]{String.class, MVCCallable.class}));
+        MVC_METHODS.add(new MethodDescriptor("withMVCGroup", new Class<?>[]{String.class, Map.class, MVCCallable.class}));
+        MVC_METHODS.add(new MethodDescriptor("withMVCGroup", new Class<?>[]{Map.class, String.class, MVCCallable.class}));
+        MVC_METHODS.add(new MethodDescriptor("withMVCGroup", new Class<?>[]{String.class, String.class, MVCCallable.class}));
+        MVC_METHODS.add(new MethodDescriptor("withMVCGroup", new Class<?>[]{String.class, String.class, Map.class, MVCCallable.class}));
+        MVC_METHODS.add(new MethodDescriptor("withMVCGroup", new Class<?>[]{Map.class, String.class, String.class, MVCCallable.class}));
 
         // Special cases due to the usage of varargs
-        MVC_METHODS.add(new MethodDescriptor("buildMVCGroup", new Class[]{Object[].class}));
-        MVC_METHODS.add(new MethodDescriptor("createMVCGroup", new Class[]{Object[].class}));
-        MVC_METHODS.add(new MethodDescriptor("withMVCGroup", new Class[]{Object[].class}));
+        MVC_METHODS.add(new MethodDescriptor("buildMVCGroup", new Class<?>[]{Object[].class}));
+        MVC_METHODS.add(new MethodDescriptor("createMVCGroup", new Class<?>[]{Object[].class}));
+        MVC_METHODS.add(new MethodDescriptor("withMVCGroup", new Class<?>[]{Object[].class}));
 
         MVC_METHODS.add(new MethodDescriptor("initUI"));
         // MVC_METHODS.add(new MethodDescriptor("getArtifactManager"));
         // MVC_METHODS.add(new MethodDescriptor("getAddonManager"));
         // MVC_METHODS.add(new MethodDescriptor("getMvcGroupManager"));
-        // MVC_METHODS.add(new MethodDescriptor("setBuilder", new Class[]{FactoryBuilderSupport.class}));
-        MVC_METHODS.add(new MethodDescriptor("invokeAction", new Class[]{String.class, Object[].class}));
-        MVC_METHODS.add(new MethodDescriptor("invokeAction", new Class[]{String.class, Object[].class}, Modifier.PUBLIC | Modifier.TRANSIENT));
+        // MVC_METHODS.add(new MethodDescriptor("setBuilder", new Class<?>[]{FactoryBuilderSupport.class}));
+        MVC_METHODS.add(new MethodDescriptor("invokeAction", new Class<?>[]{String.class, Object[].class}));
+        MVC_METHODS.add(new MethodDescriptor("invokeAction", new Class<?>[]{String.class, Object[].class}, Modifier.PUBLIC | Modifier.TRANSIENT));
 
         // SERVICE_METHODS.add(new MethodDescriptor("serviceInit"));
         // SERVICE_METHODS.add(new MethodDescriptor("serviceDestroy"));
 
         THREADING_METHODS.add(new MethodDescriptor("isUIThread"));
-        THREADING_METHODS.add(new MethodDescriptor("runInsideUIAsync", new Class[]{Runnable.class}));
-        THREADING_METHODS.add(new MethodDescriptor("runInsideUISync", new Class[]{Runnable.class}));
-        THREADING_METHODS.add(new MethodDescriptor("runOutsideUI", new Class[]{Runnable.class}));
-        THREADING_METHODS.add(new MethodDescriptor("runFuture", new Class[]{Callable.class}));
-        THREADING_METHODS.add(new MethodDescriptor("runFuture", new Class[]{ExecutorService.class, Callable.class}));
-        THREADING_METHODS.add(new MethodDescriptor("edt", new Class[]{Runnable.class}));
-        THREADING_METHODS.add(new MethodDescriptor("doLater", new Class[]{Runnable.class}));
-        THREADING_METHODS.add(new MethodDescriptor("doOutside", new Class[]{Runnable.class}));
+        THREADING_METHODS.add(new MethodDescriptor("runInsideUIAsync", new Class<?>[]{Runnable.class}));
+        THREADING_METHODS.add(new MethodDescriptor("runInsideUISync", new Class<?>[]{Runnable.class}));
+        THREADING_METHODS.add(new MethodDescriptor("runOutsideUI", new Class<?>[]{Runnable.class}));
+        THREADING_METHODS.add(new MethodDescriptor("runFuture", new Class<?>[]{Callable.class}));
+        THREADING_METHODS.add(new MethodDescriptor("runFuture", new Class<?>[]{ExecutorService.class, Callable.class}));
+        THREADING_METHODS.add(new MethodDescriptor("edt", new Class<?>[]{Runnable.class}));
+        THREADING_METHODS.add(new MethodDescriptor("doLater", new Class<?>[]{Runnable.class}));
+        THREADING_METHODS.add(new MethodDescriptor("doOutside", new Class<?>[]{Runnable.class}));
         // Special case due to the usage of varargs
-        THREADING_METHODS.add(new MethodDescriptor("runFuture", new Class[]{Object[].class}));
+        THREADING_METHODS.add(new MethodDescriptor("runFuture", new Class<?>[]{Object[].class}));
 
-        EVENT_PUBLISHER_METHODS.add(new MethodDescriptor("addEventListener", new Class[]{Object.class}));
-        EVENT_PUBLISHER_METHODS.add(new MethodDescriptor("addEventListener", new Class[]{String.class, CallableWithArgs.class}));
-        EVENT_PUBLISHER_METHODS.add(new MethodDescriptor("addEventListener", new Class[]{Event.class, CallableWithArgs.class}));
-        EVENT_PUBLISHER_METHODS.add(new MethodDescriptor("removeEventListener", new Class[]{Object.class}));
-        EVENT_PUBLISHER_METHODS.add(new MethodDescriptor("removeEventListener", new Class[]{String.class, CallableWithArgs.class}));
-        EVENT_PUBLISHER_METHODS.add(new MethodDescriptor("removeEventListener", new Class[]{Event.class, CallableWithArgs.class}));
-        EVENT_PUBLISHER_METHODS.add(new MethodDescriptor("publishEvent", new Class[]{String.class}));
-        EVENT_PUBLISHER_METHODS.add(new MethodDescriptor("publishEvent", new Class[]{String.class, List.class}));
-        EVENT_PUBLISHER_METHODS.add(new MethodDescriptor("publishEvent", new Class[]{Event.class}));
-        EVENT_PUBLISHER_METHODS.add(new MethodDescriptor("publishEventAsync", new Class[]{String.class}));
-        EVENT_PUBLISHER_METHODS.add(new MethodDescriptor("publishEventAsync", new Class[]{String.class, List.class}));
-        EVENT_PUBLISHER_METHODS.add(new MethodDescriptor("publishEventAsync", new Class[]{Event.class}));
-        EVENT_PUBLISHER_METHODS.add(new MethodDescriptor("publishEventOutsideUI", new Class[]{String.class}));
-        EVENT_PUBLISHER_METHODS.add(new MethodDescriptor("publishEventOutsideUI", new Class[]{String.class, List.class}));
-        EVENT_PUBLISHER_METHODS.add(new MethodDescriptor("publishEventOutsideUI", new Class[]{Event.class}));
+        EVENT_PUBLISHER_METHODS.add(new MethodDescriptor("addEventListener", new Class<?>[]{Object.class}));
+        EVENT_PUBLISHER_METHODS.add(new MethodDescriptor("addEventListener", new Class<?>[]{String.class, CallableWithArgs.class}));
+        EVENT_PUBLISHER_METHODS.add(new MethodDescriptor("addEventListener", new Class<?>[]{Event.class, CallableWithArgs.class}));
+        EVENT_PUBLISHER_METHODS.add(new MethodDescriptor("removeEventListener", new Class<?>[]{Object.class}));
+        EVENT_PUBLISHER_METHODS.add(new MethodDescriptor("removeEventListener", new Class<?>[]{String.class, CallableWithArgs.class}));
+        EVENT_PUBLISHER_METHODS.add(new MethodDescriptor("removeEventListener", new Class<?>[]{Event.class, CallableWithArgs.class}));
+        EVENT_PUBLISHER_METHODS.add(new MethodDescriptor("publishEvent", new Class<?>[]{String.class}));
+        EVENT_PUBLISHER_METHODS.add(new MethodDescriptor("publishEvent", new Class<?>[]{String.class, List.class}));
+        EVENT_PUBLISHER_METHODS.add(new MethodDescriptor("publishEvent", new Class<?>[]{Event.class}));
+        EVENT_PUBLISHER_METHODS.add(new MethodDescriptor("publishEventAsync", new Class<?>[]{String.class}));
+        EVENT_PUBLISHER_METHODS.add(new MethodDescriptor("publishEventAsync", new Class<?>[]{String.class, List.class}));
+        EVENT_PUBLISHER_METHODS.add(new MethodDescriptor("publishEventAsync", new Class<?>[]{Event.class}));
+        EVENT_PUBLISHER_METHODS.add(new MethodDescriptor("publishEventOutsideUI", new Class<?>[]{String.class}));
+        EVENT_PUBLISHER_METHODS.add(new MethodDescriptor("publishEventOutsideUI", new Class<?>[]{String.class, List.class}));
+        EVENT_PUBLISHER_METHODS.add(new MethodDescriptor("publishEventOutsideUI", new Class<?>[]{Event.class}));
 
-        OBSERVABLE_METHODS.add(new MethodDescriptor("addPropertyChangeListener", new Class[]{PropertyChangeListener.class}));
-        OBSERVABLE_METHODS.add(new MethodDescriptor("addPropertyChangeListener", new Class[]{String.class, PropertyChangeListener.class}));
-        OBSERVABLE_METHODS.add(new MethodDescriptor("removePropertyChangeListener", new Class[]{PropertyChangeListener.class}));
-        OBSERVABLE_METHODS.add(new MethodDescriptor("removePropertyChangeListener", new Class[]{String.class, PropertyChangeListener.class}));
-        OBSERVABLE_METHODS.add(new MethodDescriptor("getPropertyChangeListeners", new Class[0]));
-        OBSERVABLE_METHODS.add(new MethodDescriptor("getPropertyChangeListeners", new Class[]{String.class}));
+        OBSERVABLE_METHODS.add(new MethodDescriptor("addPropertyChangeListener", new Class<?>[]{PropertyChangeListener.class}));
+        OBSERVABLE_METHODS.add(new MethodDescriptor("addPropertyChangeListener", new Class<?>[]{String.class, PropertyChangeListener.class}));
+        OBSERVABLE_METHODS.add(new MethodDescriptor("removePropertyChangeListener", new Class<?>[]{PropertyChangeListener.class}));
+        OBSERVABLE_METHODS.add(new MethodDescriptor("removePropertyChangeListener", new Class<?>[]{String.class, PropertyChangeListener.class}));
+        OBSERVABLE_METHODS.add(new MethodDescriptor("getPropertyChangeListeners", new Class<?>[0]));
+        OBSERVABLE_METHODS.add(new MethodDescriptor("getPropertyChangeListeners", new Class<?>[]{String.class}));
 
-        RESOURCE_HANDLER_METHODS.add(new MethodDescriptor("getResourceAsURL", new Class[]{String.class}));
-        RESOURCE_HANDLER_METHODS.add(new MethodDescriptor("getResourceAsStream", new Class[]{String.class}));
-        RESOURCE_HANDLER_METHODS.add(new MethodDescriptor("getResources", new Class[]{String.class}));
+        RESOURCE_HANDLER_METHODS.add(new MethodDescriptor("getResourceAsURL", new Class<?>[]{String.class}));
+        RESOURCE_HANDLER_METHODS.add(new MethodDescriptor("getResourceAsStream", new Class<?>[]{String.class}));
+        RESOURCE_HANDLER_METHODS.add(new MethodDescriptor("getResources", new Class<?>[]{String.class}));
 
-        MESSAGE_SOURCE_METHODS.add(new MethodDescriptor("resolveMessageValue", new Class[]{String.class, Locale.class}));
-        MESSAGE_SOURCE_METHODS.add(new MethodDescriptor("getMessage", new Class[]{String.class}));
-        MESSAGE_SOURCE_METHODS.add(new MethodDescriptor("getMessage", new Class[]{String.class, Object[].class}));
-        MESSAGE_SOURCE_METHODS.add(new MethodDescriptor("getMessage", new Class[]{String.class, Locale.class}));
-        MESSAGE_SOURCE_METHODS.add(new MethodDescriptor("getMessage", new Class[]{String.class, Object[].class, Locale.class}));
-        MESSAGE_SOURCE_METHODS.add(new MethodDescriptor("getMessage", new Class[]{String.class, String.class}));
-        MESSAGE_SOURCE_METHODS.add(new MethodDescriptor("getMessage", new Class[]{String.class, Object[].class, String.class}));
-        MESSAGE_SOURCE_METHODS.add(new MethodDescriptor("getMessage", new Class[]{String.class, String.class, Locale.class}));
-        MESSAGE_SOURCE_METHODS.add(new MethodDescriptor("getMessage", new Class[]{String.class, Object[].class, String.class, Locale.class}));
-        MESSAGE_SOURCE_METHODS.add(new MethodDescriptor("getMessage", new Class[]{String.class, List.class}));
-        MESSAGE_SOURCE_METHODS.add(new MethodDescriptor("getMessage", new Class[]{String.class, List.class, Locale.class}));
-        MESSAGE_SOURCE_METHODS.add(new MethodDescriptor("getMessage", new Class[]{String.class, List.class, String.class}));
-        MESSAGE_SOURCE_METHODS.add(new MethodDescriptor("getMessage", new Class[]{String.class, List.class, String.class, Locale.class}));
-        MESSAGE_SOURCE_METHODS.add(new MethodDescriptor("getMessage", new Class[]{String.class, Map.class}));
-        MESSAGE_SOURCE_METHODS.add(new MethodDescriptor("getMessage", new Class[]{String.class, Map.class, Locale.class}));
-        MESSAGE_SOURCE_METHODS.add(new MethodDescriptor("getMessage", new Class[]{String.class, Map.class, String.class}));
-        MESSAGE_SOURCE_METHODS.add(new MethodDescriptor("getMessage", new Class[]{String.class, Map.class, String.class, Locale.class}));
-        MESSAGE_SOURCE_METHODS.add(new MethodDescriptor("formatMessage", new Class[]{String.class, Object[].class}));
-        MESSAGE_SOURCE_METHODS.add(new MethodDescriptor("formatMessage", new Class[]{String.class, List.class}));
-        MESSAGE_SOURCE_METHODS.add(new MethodDescriptor("formatMessage", new Class[]{String.class, Map.class}));
+        MESSAGE_SOURCE_METHODS.add(new MethodDescriptor("resolveMessageValue", new Class<?>[]{String.class, Locale.class}));
+        MESSAGE_SOURCE_METHODS.add(new MethodDescriptor("getMessage", new Class<?>[]{String.class}));
+        MESSAGE_SOURCE_METHODS.add(new MethodDescriptor("getMessage", new Class<?>[]{String.class, Object[].class}));
+        MESSAGE_SOURCE_METHODS.add(new MethodDescriptor("getMessage", new Class<?>[]{String.class, Locale.class}));
+        MESSAGE_SOURCE_METHODS.add(new MethodDescriptor("getMessage", new Class<?>[]{String.class, Object[].class, Locale.class}));
+        MESSAGE_SOURCE_METHODS.add(new MethodDescriptor("getMessage", new Class<?>[]{String.class, String.class}));
+        MESSAGE_SOURCE_METHODS.add(new MethodDescriptor("getMessage", new Class<?>[]{String.class, Object[].class, String.class}));
+        MESSAGE_SOURCE_METHODS.add(new MethodDescriptor("getMessage", new Class<?>[]{String.class, String.class, Locale.class}));
+        MESSAGE_SOURCE_METHODS.add(new MethodDescriptor("getMessage", new Class<?>[]{String.class, Object[].class, String.class, Locale.class}));
+        MESSAGE_SOURCE_METHODS.add(new MethodDescriptor("getMessage", new Class<?>[]{String.class, List.class}));
+        MESSAGE_SOURCE_METHODS.add(new MethodDescriptor("getMessage", new Class<?>[]{String.class, List.class, Locale.class}));
+        MESSAGE_SOURCE_METHODS.add(new MethodDescriptor("getMessage", new Class<?>[]{String.class, List.class, String.class}));
+        MESSAGE_SOURCE_METHODS.add(new MethodDescriptor("getMessage", new Class<?>[]{String.class, List.class, String.class, Locale.class}));
+        MESSAGE_SOURCE_METHODS.add(new MethodDescriptor("getMessage", new Class<?>[]{String.class, Map.class}));
+        MESSAGE_SOURCE_METHODS.add(new MethodDescriptor("getMessage", new Class<?>[]{String.class, Map.class, Locale.class}));
+        MESSAGE_SOURCE_METHODS.add(new MethodDescriptor("getMessage", new Class<?>[]{String.class, Map.class, String.class}));
+        MESSAGE_SOURCE_METHODS.add(new MethodDescriptor("getMessage", new Class<?>[]{String.class, Map.class, String.class, Locale.class}));
+        MESSAGE_SOURCE_METHODS.add(new MethodDescriptor("formatMessage", new Class<?>[]{String.class, Object[].class}));
+        MESSAGE_SOURCE_METHODS.add(new MethodDescriptor("formatMessage", new Class<?>[]{String.class, List.class}));
+        MESSAGE_SOURCE_METHODS.add(new MethodDescriptor("formatMessage", new Class<?>[]{String.class, Map.class}));
 
-        RESOURCE_RESOLVER_METHODS.add(new MethodDescriptor("resolveResourceValue", new Class[]{String.class, Locale.class}));
-        RESOURCE_RESOLVER_METHODS.add(new MethodDescriptor("resolveResource", new Class[]{String.class}));
-        RESOURCE_RESOLVER_METHODS.add(new MethodDescriptor("resolveResource", new Class[]{String.class, Object[].class}));
-        RESOURCE_RESOLVER_METHODS.add(new MethodDescriptor("resolveResource", new Class[]{String.class, Locale.class}));
-        RESOURCE_RESOLVER_METHODS.add(new MethodDescriptor("resolveResource", new Class[]{String.class, Object[].class, Locale.class}));
-        RESOURCE_RESOLVER_METHODS.add(new MethodDescriptor("resolveResource", new Class[]{String.class, Object.class}));
-        RESOURCE_RESOLVER_METHODS.add(new MethodDescriptor("resolveResource", new Class[]{String.class, Object[].class, Object.class}));
-        RESOURCE_RESOLVER_METHODS.add(new MethodDescriptor("resolveResource", new Class[]{String.class, Object.class, Locale.class}));
-        RESOURCE_RESOLVER_METHODS.add(new MethodDescriptor("resolveResource", new Class[]{String.class, Object[].class, Object.class, Locale.class}));
-        RESOURCE_RESOLVER_METHODS.add(new MethodDescriptor("resolveResource", new Class[]{String.class, List.class}));
-        RESOURCE_RESOLVER_METHODS.add(new MethodDescriptor("resolveResource", new Class[]{String.class, List.class, Locale.class}));
-        RESOURCE_RESOLVER_METHODS.add(new MethodDescriptor("resolveResource", new Class[]{String.class, List.class, Object.class}));
-        RESOURCE_RESOLVER_METHODS.add(new MethodDescriptor("resolveResource", new Class[]{String.class, List.class, Object.class, Locale.class}));
-        RESOURCE_RESOLVER_METHODS.add(new MethodDescriptor("resolveResource", new Class[]{String.class, Map.class}));
-        RESOURCE_RESOLVER_METHODS.add(new MethodDescriptor("resolveResource", new Class[]{String.class, Map.class, Locale.class}));
-        RESOURCE_RESOLVER_METHODS.add(new MethodDescriptor("resolveResource", new Class[]{String.class, Map.class, Object.class}));
-        RESOURCE_RESOLVER_METHODS.add(new MethodDescriptor("resolveResource", new Class[]{String.class, Map.class, Object.class, Locale.class}));
-        RESOURCE_RESOLVER_METHODS.add(new MethodDescriptor("formatResource", new Class[]{String.class, Object[].class}));
-        RESOURCE_RESOLVER_METHODS.add(new MethodDescriptor("formatResource", new Class[]{String.class, List.class}));
-        RESOURCE_RESOLVER_METHODS.add(new MethodDescriptor("formatResource", new Class[]{String.class, Map.class}));
+        RESOURCE_RESOLVER_METHODS.add(new MethodDescriptor("resolveResourceValue", new Class<?>[]{String.class, Locale.class}));
+        RESOURCE_RESOLVER_METHODS.add(new MethodDescriptor("resolveResource", new Class<?>[]{String.class}));
+        RESOURCE_RESOLVER_METHODS.add(new MethodDescriptor("resolveResource", new Class<?>[]{String.class, Object[].class}));
+        RESOURCE_RESOLVER_METHODS.add(new MethodDescriptor("resolveResource", new Class<?>[]{String.class, Locale.class}));
+        RESOURCE_RESOLVER_METHODS.add(new MethodDescriptor("resolveResource", new Class<?>[]{String.class, Object[].class, Locale.class}));
+        RESOURCE_RESOLVER_METHODS.add(new MethodDescriptor("resolveResource", new Class<?>[]{String.class, Object.class}));
+        RESOURCE_RESOLVER_METHODS.add(new MethodDescriptor("resolveResource", new Class<?>[]{String.class, Object[].class, Object.class}));
+        RESOURCE_RESOLVER_METHODS.add(new MethodDescriptor("resolveResource", new Class<?>[]{String.class, Object.class, Locale.class}));
+        RESOURCE_RESOLVER_METHODS.add(new MethodDescriptor("resolveResource", new Class<?>[]{String.class, Object[].class, Object.class, Locale.class}));
+        RESOURCE_RESOLVER_METHODS.add(new MethodDescriptor("resolveResource", new Class<?>[]{String.class, List.class}));
+        RESOURCE_RESOLVER_METHODS.add(new MethodDescriptor("resolveResource", new Class<?>[]{String.class, List.class, Locale.class}));
+        RESOURCE_RESOLVER_METHODS.add(new MethodDescriptor("resolveResource", new Class<?>[]{String.class, List.class, Object.class}));
+        RESOURCE_RESOLVER_METHODS.add(new MethodDescriptor("resolveResource", new Class<?>[]{String.class, List.class, Object.class, Locale.class}));
+        RESOURCE_RESOLVER_METHODS.add(new MethodDescriptor("resolveResource", new Class<?>[]{String.class, Map.class}));
+        RESOURCE_RESOLVER_METHODS.add(new MethodDescriptor("resolveResource", new Class<?>[]{String.class, Map.class, Locale.class}));
+        RESOURCE_RESOLVER_METHODS.add(new MethodDescriptor("resolveResource", new Class<?>[]{String.class, Map.class, Object.class}));
+        RESOURCE_RESOLVER_METHODS.add(new MethodDescriptor("resolveResource", new Class<?>[]{String.class, Map.class, Object.class, Locale.class}));
+        RESOURCE_RESOLVER_METHODS.add(new MethodDescriptor("formatResource", new Class<?>[]{String.class, Object[].class}));
+        RESOURCE_RESOLVER_METHODS.add(new MethodDescriptor("formatResource", new Class<?>[]{String.class, List.class}));
+        RESOURCE_RESOLVER_METHODS.add(new MethodDescriptor("formatResource", new Class<?>[]{String.class, Map.class}));
     }
 
     /**
@@ -1231,7 +1231,7 @@ public class GriffonClassUtils {
      */
     public static boolean isPropertyOfType(Class<?> clazz, String propertyName, Class<?> type) {
         try {
-            Class propType = getPropertyType(clazz, propertyName);
+            Class<?> propType = getPropertyType(clazz, propertyName);
             return propType != null && propType.equals(type);
         } catch (Exception e) {
             return false;
@@ -1265,7 +1265,7 @@ public class GriffonClassUtils {
                 args = EMPTY_OBJECT_ARRAY;
             }
             int arguments = args.length;
-            Class[] parameterTypes = new Class[arguments];
+            Class<?>[] parameterTypes = new Class<?>[arguments];
             for (int i = 0; i < arguments; i++) {
                 parameterTypes[i] = args[i].getClass();
             }
@@ -1461,9 +1461,8 @@ public class GriffonClassUtils {
      * @param c The collection
      * @return An object array
      */
-    public static Object[] collectionToObjectArray(Collection c) {
+    public static Object[] collectionToObjectArray(Collection<?> c) {
         if (c == null) return EMPTY_OBJECT_ARRAY;
-
         return c.toArray(new Object[c.size()]);
     }
 
@@ -1680,7 +1679,7 @@ public class GriffonClassUtils {
      * @param name
      * @return The field or null if there is no such field or access problems
      */
-    public static Field getField(Class clazz, String name) {
+    public static Field getField(Class<?> clazz, String name) {
         Field f;
         try {
             f = clazz.getDeclaredField(name);
@@ -1737,14 +1736,14 @@ public class GriffonClassUtils {
      * @param interfaceType The interface
      * @return ArrayList for List, TreeSet for SortedSet, HashSet for Set etc.
      */
-    public static Collection createConcreteCollection(Class<?> interfaceType) {
-        Collection elements;
+    public static Collection<?> createConcreteCollection(Class<?> interfaceType) {
+        Collection<?> elements;
         if (interfaceType.equals(List.class)) {
-            elements = new ArrayList();
+            elements = new ArrayList<>();
         } else if (interfaceType.equals(SortedSet.class)) {
-            elements = new TreeSet();
+            elements = new TreeSet<>();
         } else {
-            elements = new HashSet();
+            elements = new HashSet<>();
         }
         return elements;
     }
@@ -1892,7 +1891,7 @@ public class GriffonClassUtils {
      * @param map The map to look in
      * @return A boolean value which will be false if the map is null, the map doesn't contain the key or the value is false
      */
-    public static boolean getBooleanFromMap(String key, Map map) {
+    public static boolean getBooleanFromMap(String key, Map<String, Object> map) {
         if (map == null) return false;
         if (map.containsKey(key)) {
             Object o = map.get(key);
@@ -1936,7 +1935,7 @@ public class GriffonClassUtils {
      * @param packageList The list of packages
      * @return True if it is within the list of specified packages
      */
-    public static boolean isClassBelowPackage(Class<?> theClass, List packageList) {
+    public static boolean isClassBelowPackage(Class<?> theClass, List<?> packageList) {
         String classPackage = theClass.getPackage().getName();
         for (Object packageName : packageList) {
             if (packageName != null) {
@@ -2453,15 +2452,15 @@ public class GriffonClassUtils {
         }
     }
 
-    public static Object invokeStaticMethod(Class type, String methodName) {
+    public static Object invokeStaticMethod(Class<?> type, String methodName) {
         return invokeStaticMethod(type, methodName, EMPTY_ARGS);
     }
 
-    public static Object invokeStaticMethod(Class type, String methodName, Object arg) {
+    public static Object invokeStaticMethod(Class<?> type, String methodName, Object arg) {
         return invokeStaticMethod(type, methodName, new Object[]{arg});
     }
 
-    public static Object invokeStaticMethod(Class type, String methodName, Object... args) {
+    public static Object invokeStaticMethod(Class<?> type, String methodName, Object... args) {
         try {
             return MethodUtils.invokeStaticMethod(type, methodName, args);
         } catch (NoSuchMethodException | IllegalAccessException e) {
@@ -2471,15 +2470,15 @@ public class GriffonClassUtils {
         }
     }
 
-    public static Object invokeExactStaticMethod(Class type, String methodName) {
+    public static Object invokeExactStaticMethod(Class<?> type, String methodName) {
         return invokeExactStaticMethod(type, methodName, EMPTY_ARGS);
     }
 
-    public static Object invokeExactStaticMethod(Class type, String methodName, Object arg) {
+    public static Object invokeExactStaticMethod(Class<?> type, String methodName, Object arg) {
         return invokeExactStaticMethod(type, methodName, new Object[]{arg});
     }
 
-    public static Object invokeExactStaticMethod(Class type, String methodName, Object... args) {
+    public static Object invokeExactStaticMethod(Class<?> type, String methodName, Object... args) {
         try {
             return MethodUtils.invokeExactStaticMethod(type, methodName, args);
         } catch (NoSuchMethodException | IllegalAccessException e) {
@@ -2685,12 +2684,12 @@ public class GriffonClassUtils {
      * @param args the arguments
      * @return the types of the arguments
      */
-    public static Class[] convertToTypeArray(Object[] args) {
+    public static Class<?>[] convertToTypeArray(Object[] args) {
         if (args == null) {
             return null;
         }
         int s = args.length;
-        Class[] ans = new Class[s];
+        Class<?>[] ans = new Class<?>[s];
         for (int i = 0; i < s; i++) {
             Object o = args[i];
             ans[i] = o != null ? o.getClass() : null;

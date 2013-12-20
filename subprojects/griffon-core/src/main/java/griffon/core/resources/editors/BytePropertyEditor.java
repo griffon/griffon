@@ -50,7 +50,7 @@ public class BytePropertyEditor extends AbstractPropertyEditor {
         super.setValueInternal(number.byteValue());
     }
 
-    protected Formatter resolveFormatter() {
+    protected Formatter<Byte> resolveFormatter() {
         return isBlank(getFormat()) ? null : new ByteFormatter(getFormat());
     }
 }

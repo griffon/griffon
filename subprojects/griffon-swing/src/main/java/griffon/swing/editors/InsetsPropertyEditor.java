@@ -74,7 +74,7 @@ public class InsetsPropertyEditor extends AbstractPropertyEditor {
         }
     }
 
-    private void handleAsList(List list) {
+    private void handleAsList(List<?> list) {
         int t = 0;
         int l = 0;
         int r = 0;
@@ -95,7 +95,7 @@ public class InsetsPropertyEditor extends AbstractPropertyEditor {
         }
     }
 
-    private void handleAsMap(Map map) {
+    private void handleAsMap(Map<?, ?> map) {
         int t = getMapValue(map, "top", 0);
         int l = getMapValue(map, "left", 0);
         int r = getMapValue(map, "right", 0);
@@ -124,7 +124,7 @@ public class InsetsPropertyEditor extends AbstractPropertyEditor {
         return val.intValue();
     }
 
-    private int getMapValue(Map map, String key, int defaultValue) {
+    private int getMapValue(Map<?, ?> map, String key, int defaultValue) {
         Object val = map.get(key);
         if (null == val) val = map.get(String.valueOf(key.charAt(0)));
         if (null == val) {

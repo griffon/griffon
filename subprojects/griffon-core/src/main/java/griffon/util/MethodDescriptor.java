@@ -24,7 +24,7 @@ import java.lang.reflect.Modifier;
 /**
  * @author Andres Almiray
  */
-public class MethodDescriptor implements Comparable {
+public class MethodDescriptor implements Comparable<MethodDescriptor> {
     private final String methodName;
     private final String[] paramTypes;
     private final int hashCode;
@@ -61,7 +61,7 @@ public class MethodDescriptor implements Comparable {
         this(methodName, EMPTY_CLASS_PARAMETERS, modifiers);
     }
 
-    public MethodDescriptor(String methodName, Class[] paramTypes) {
+    public MethodDescriptor(String methodName, Class<?>[] paramTypes) {
         this(methodName, paramTypes, Modifier.PUBLIC);
     }
 
@@ -69,7 +69,7 @@ public class MethodDescriptor implements Comparable {
         this(methodName, paramTypes, Modifier.PUBLIC);
     }
 
-    public MethodDescriptor(String methodName, Class[] paramTypes, int modifiers) {
+    public MethodDescriptor(String methodName, Class<?>[] paramTypes, int modifiers) {
         this.methodName = methodName;
         if (paramTypes == null) {
             this.paramTypes = EMPTY_CLASS_PARAMETERS;
@@ -129,12 +129,7 @@ public class MethodDescriptor implements Comparable {
         return b.toString();
     }
 
-    public int compareTo(Object obj) {
-        if (!(obj instanceof MethodDescriptor)) {
-            return -1;
-        }
-        MethodDescriptor md = (MethodDescriptor) obj;
-
+    public int compareTo(MethodDescriptor md) {
         int c = methodName.compareTo(md.methodName);
         if (c != 0) return c;
         c = modifiers - md.modifiers;

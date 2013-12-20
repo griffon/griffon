@@ -17,7 +17,7 @@
 package org.codehaus.griffon.runtime.core;
 
 import griffon.builder.swing.SwingBuilderCustomizer;
-import griffon.core.view.BuilderCustomizer;
+import griffon.util.BuilderCustomizer;
 import org.codehaus.griffon.runtime.core.injection.AbstractModule;
 
 /**

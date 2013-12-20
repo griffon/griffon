@@ -21,6 +21,8 @@ package griffon.exceptions;
  * @since 0.9.1
  */
 public class BeanException extends GriffonException {
+    private static final long serialVersionUID = -7818375218525839163L;
+
     public BeanException() {
         super();
     }

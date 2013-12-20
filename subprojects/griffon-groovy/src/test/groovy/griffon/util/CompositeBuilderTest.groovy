@@ -1,7 +1,4 @@
-package org.codehaus.griffon.runtime.core.view
-
-import griffon.core.view.BuilderCustomizer
-
+package griffon.util
 
 class CompositeBuilderTest extends GroovyTestCase {
     void testWithTwoBuilderCustomizers() {

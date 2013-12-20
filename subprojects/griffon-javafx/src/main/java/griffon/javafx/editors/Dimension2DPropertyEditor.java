@@ -61,7 +61,7 @@ public class Dimension2DPropertyEditor extends AbstractPropertyEditor {
         }
     }
 
-    private void handleAsList(List list) {
+    private void handleAsList(List<?> list) {
         switch (list.size()) {
             case 1:
                 double s = parseValue(list.get(0));
@@ -77,7 +77,7 @@ public class Dimension2DPropertyEditor extends AbstractPropertyEditor {
         }
     }
 
-    private void handleAsMap(Map map) {
+    private void handleAsMap(Map<?, ?> map) {
         double w = getMapValue(map, "width", 0);
         double h = getMapValue(map, "height", 0);
         super.setValueInternal(new Dimension2D(w, h));
@@ -104,7 +104,7 @@ public class Dimension2DPropertyEditor extends AbstractPropertyEditor {
         return val.doubleValue();
     }
 
-    private double getMapValue(Map map, String key, double defaultValue) {
+    private double getMapValue(Map<?, ?> map, String key, double defaultValue) {
         Object val = map.get(key);
         if (null == val) val = map.get(String.valueOf(key.charAt(0)));
         if (null == val) {

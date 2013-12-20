@@ -72,7 +72,7 @@ public class FontPropertyEditor extends AbstractPropertyEditor {
         super.setValueInternal(new Font(family, style, size));
     }
 
-    private void handleAsList(List list) {
+    private void handleAsList(List<?> list) {
         if (list.size() != 3) {
             throw illegalValue(list, Font.class);
         }
@@ -84,14 +84,14 @@ public class FontPropertyEditor extends AbstractPropertyEditor {
         super.setValueInternal(new Font(family, style, size));
     }
 
-    private void handleAsMap(Map map) {
+    private void handleAsMap(Map<?, ?> map) {
         String family = getMapValue(map, "family", "");
         String style = getMapValue(map, "style", "");
         String size = getMapValue(map, "size", "");
         super.setValueInternal(new Font(family, resolveStyle(map, style), parseSize(map, size)));
     }
 
-    private String getMapValue(Map map, String key, String defaultValue) {
+    private String getMapValue(Map<?, ?> map, String key, String defaultValue) {
         Object val = map.get(key);
         if (null == val) val = map.get(String.valueOf(key.charAt(0)));
         if (null == val) {

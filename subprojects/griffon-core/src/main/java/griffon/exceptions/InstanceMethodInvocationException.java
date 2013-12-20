@@ -24,6 +24,8 @@ import javax.annotation.Nullable;
  * @since 2.0.0
  */
 public class InstanceMethodInvocationException extends GriffonException {
+    private static final long serialVersionUID = -4328366864589401815L;
+
     public InstanceMethodInvocationException(@Nonnull Object instance, @Nonnull String methodName, @Nullable Object[] args) {
         super(formatArguments(instance, methodName, args));
     }
@@ -41,7 +43,7 @@ public class InstanceMethodInvocationException extends GriffonException {
             .append(".").append(methodName).append("(");
 
         boolean first = true;
-        for (Class type : convertToTypeArray(args)) {
+        for (Class<?> type : convertToTypeArray(args)) {
             if (first) {
                 first = false;
             } else {
@@ -55,12 +57,12 @@ public class InstanceMethodInvocationException extends GriffonException {
     }
 
     @Nonnull
-    private static Class[] convertToTypeArray(@Nullable Object[] args) {
+    private static Class<?>[] convertToTypeArray(@Nullable Object[] args) {
         if (args == null) {
-            return new Class[0];
+            return new Class<?>[0];
         }
         int s = args.length;
-        Class[] ans = new Class[s];
+        Class<?>[] ans = new Class<?>[s];
         for (int i = 0; i < s; i++) {
             Object o = args[i];
             ans[i] = o != null ? o.getClass() : null;

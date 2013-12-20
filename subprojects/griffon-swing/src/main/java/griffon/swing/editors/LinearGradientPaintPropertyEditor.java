@@ -125,7 +125,7 @@ public class LinearGradientPaintPropertyEditor extends AbstractPropertyEditor {
         }
     }
 
-    private void handleAsList(List list) {
+    private void handleAsList(List<?> list) {
         float x1 = 0;
         float y1 = 0;
         float x2 = 0;
@@ -153,7 +153,7 @@ public class LinearGradientPaintPropertyEditor extends AbstractPropertyEditor {
         }
     }
 
-    private void handleAsMap(Map map) {
+    private void handleAsMap(Map<?, ?> map) {
         float x1 = (Float) getMapValue(map, "x1", 0f);
         float y1 = (Float) getMapValue(map, "y1", 0f);
         float x2 = (Float) getMapValue(map, "x2", 0f);
@@ -196,7 +196,7 @@ public class LinearGradientPaintPropertyEditor extends AbstractPropertyEditor {
         return fractions;
     }
 
-    private float[] parseFractions(Object source, List list) {
+    private float[] parseFractions(Object source, List<?> list) {
         float[] fractions = new float[list.size()];
         for (int i = 0; i < list.size(); i++) {
             fractions[i] = parseValue(list.get(1));
@@ -234,7 +234,7 @@ public class LinearGradientPaintPropertyEditor extends AbstractPropertyEditor {
         return colors;
     }
 
-    private Color[] parseColors(Object source, List list) {
+    private Color[] parseColors(Object source, List<?> list) {
         Color[] colors = new Color[list.size()];
         ColorPropertyEditor colorEditor = new ColorPropertyEditor();
         for (int i = 0; i < list.size(); i++) {
@@ -279,7 +279,7 @@ public class LinearGradientPaintPropertyEditor extends AbstractPropertyEditor {
         return val.floatValue();
     }
 
-    private Object getMapValue(Map map, String key, Object defaultValue) {
+    private Object getMapValue(Map<?, ?> map, String key, Object defaultValue) {
         Object val = map.get(key);
         if (null == val) {
             return defaultValue;

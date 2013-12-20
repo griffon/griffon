@@ -20,6 +20,8 @@ package griffon.exceptions;
  * @since 0.9.4
  */
 public class MVCGroupException extends GriffonException {
+    private static final long serialVersionUID = 3911885131519171958L;
+
     public MVCGroupException() {
     }
 

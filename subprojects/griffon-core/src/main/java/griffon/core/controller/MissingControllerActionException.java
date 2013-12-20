@@ -26,6 +26,8 @@ import griffon.exceptions.GriffonException;
  * @since 1.3.0
  */
 public class MissingControllerActionException extends GriffonException {
+    private static final long serialVersionUID = -6650690378356878061L;
+
     private final Class<? extends GriffonController> controllerClass;
     private final String actionName;
 

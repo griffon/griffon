@@ -59,7 +59,7 @@ public class BigIntegerPropertyEditor extends AbstractPropertyEditor {
         }
     }
 
-    protected Formatter resolveFormatter() {
+    protected Formatter<BigInteger> resolveFormatter() {
         return isBlank(getFormat()) ? null : new BigIntegerFormatter(getFormat());
     }
 }

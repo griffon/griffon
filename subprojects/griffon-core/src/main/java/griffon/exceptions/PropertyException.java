@@ -24,6 +24,8 @@ import javax.annotation.Nullable;
  * @since 2.0.0
  */
 public class PropertyException extends GriffonException {
+    private static final long serialVersionUID = 8166388238366606204L;
+
     public PropertyException(@Nonnull Object bean, @Nonnull String propertyName, @Nullable Object value) {
         super(formatArgs(bean, propertyName, value));
     }

@@ -16,7 +16,7 @@
 
 package org.codehaus.griffon.runtime.core.view;
 
-import griffon.core.view.BuilderCustomizer;
+import griffon.util.BuilderCustomizer;
 import groovy.lang.Closure;
 import groovy.util.Factory;
 

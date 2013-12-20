@@ -68,7 +68,7 @@ public class Point2DPropertyEditor extends AbstractPropertyEditor {
         }
     }
 
-    private void handleAsList(List list) {
+    private void handleAsList(List<?> list) {
         switch (list.size()) {
             case 1:
                 double s = parseValue(list.get(0));
@@ -84,7 +84,7 @@ public class Point2DPropertyEditor extends AbstractPropertyEditor {
         }
     }
 
-    private void handleAsMap(Map map) {
+    private void handleAsMap(Map<?, ?> map) {
         double x = getMapValue(map, "x", 0);
         double y = getMapValue(map, "y", 0);
         super.setValueInternal(new Point2D.Double(x, y));
@@ -111,7 +111,7 @@ public class Point2DPropertyEditor extends AbstractPropertyEditor {
         return val.doubleValue();
     }
 
-    private double getMapValue(Map map, String key, int defaultValue) {
+    private double getMapValue(Map<?, ?> map, String key, int defaultValue) {
         Object val = map.get(key);
         if (null == val) {
             return defaultValue;

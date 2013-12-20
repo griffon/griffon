@@ -26,6 +26,8 @@ import javax.annotation.Nonnull;
  * @since 0.1
  */
 public class SwingGriffonApplet extends AbstractGriffonApplet {
+    private static final long serialVersionUID = -992561285851621751L;
+
     private boolean appletContainerDispensed = false;
 
     @Nonnull

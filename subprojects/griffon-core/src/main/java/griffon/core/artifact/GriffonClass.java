@@ -116,7 +116,7 @@ public interface GriffonClass {
      * @return the class
      */
     @Nonnull
-    Class getClazz();
+    Class<?> getClazz();
 
     /**
      * Returns the artifact type represented by the GriffonClass</p>

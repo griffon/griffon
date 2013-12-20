@@ -23,6 +23,8 @@ import javax.annotation.Nonnull;
  * @since 2.0.0
  */
 public class TypeConversionException extends GriffonException {
+    private static final long serialVersionUID = 1157963177529544281L;
+
     public TypeConversionException(@Nonnull Object value, @Nonnull Class<?> targetType) {
         super(formatArgs(value, targetType));
     }

@@ -72,7 +72,7 @@ public class PolygonPropertyEditor extends AbstractPropertyEditor {
         super.setValueInternal(new Polygon(xpoints, ypoints, npoints));
     }
 
-    private void handleAsList(List list) {
+    private void handleAsList(List<?> list) {
         if (list.isEmpty() || list.size() % 2 == 1) {
             throw illegalValue(list, Polygon.class);
         }

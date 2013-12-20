@@ -74,7 +74,7 @@ public class CalendarPropertyEditor extends AbstractPropertyEditor {
         }
     }
 
-    protected Formatter resolveFormatter() {
+    protected Formatter<Calendar> resolveFormatter() {
         return isBlank(getFormat()) ? null : new CalendarFormatter(getFormat());
     }
 }

@@ -77,7 +77,7 @@ public class DefaultCompositeResourceBundleBuilder extends AbstractCompositeReso
             String url = resource.toString();
             String className = fileName.replace('/', '.');
             try {
-                Class klass = loadClass(className);
+                Class<?> klass = loadClass(className);
                 if (ResourceBundle.class.isAssignableFrom(klass)) {
                     bundles.add(newInstance(klass));
                 }
@@ -92,11 +92,11 @@ public class DefaultCompositeResourceBundleBuilder extends AbstractCompositeReso
         return bundles;
     }
 
-    protected Class loadClass(String className) throws ClassNotFoundException {
+    protected Class<?> loadClass(String className) throws ClassNotFoundException {
         return getResourceHandler().classloader().loadClass(className);
     }
 
-    protected ResourceBundle newInstance(Class klass) throws IllegalAccessException, InstantiationException {
+    protected ResourceBundle newInstance(Class<?> klass) throws IllegalAccessException, InstantiationException {
         return (ResourceBundle) klass.newInstance();
     }
 }

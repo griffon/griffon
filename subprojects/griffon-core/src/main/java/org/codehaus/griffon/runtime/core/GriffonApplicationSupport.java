@@ -106,8 +106,8 @@ public final class GriffonApplicationSupport {
                     if (line.startsWith("#") || isBlank(line)) return;
                     try {
                         String[] parts = line.trim().split("=");
-                        Class targetType = loadClass(parts[0].trim(), applicationClassLoader(application).get());
-                        Class editorClass = loadClass(parts[1].trim(), applicationClassLoader(application).get());
+                        Class<?> targetType = loadClass(parts[0].trim(), applicationClassLoader(application).get());
+                        Class<?> editorClass = loadClass(parts[1].trim(), applicationClassLoader(application).get());
                         if (LOG.isDebugEnabled()) {
                             LOG.debug("Registering " + editorClass.getName() + " as editor for " + targetType.getName());
                         }
@@ -128,17 +128,17 @@ public final class GriffonApplicationSupport {
             }
         }
 
-        Class[][] pairs = new Class[][]{
-            new Class[]{Boolean.class, Boolean.TYPE},
-            new Class[]{Byte.class, Byte.TYPE},
-            new Class[]{Short.class, Short.TYPE},
-            new Class[]{Integer.class, Integer.TYPE},
-            new Class[]{Long.class, Long.TYPE},
-            new Class[]{Float.class, Float.TYPE},
-            new Class[]{Double.class, Double.TYPE}
+        Class<?>[][] pairs = new Class<?>[][]{
+            new Class<?>[]{Boolean.class, Boolean.TYPE},
+            new Class<?>[]{Byte.class, Byte.TYPE},
+            new Class<?>[]{Short.class, Short.TYPE},
+            new Class<?>[]{Integer.class, Integer.TYPE},
+            new Class<?>[]{Long.class, Long.TYPE},
+            new Class<?>[]{Float.class, Float.TYPE},
+            new Class<?>[]{Double.class, Double.TYPE}
         };
 
-        for (Class[] pair : pairs) {
+        for (Class<?>[] pair : pairs) {
             PropertyEditor editor = PropertyEditorManager.findEditor(pair[0]);
             if (LOG.isDebugEnabled()) {
                 LOG.debug("Registering " + editor.getClass().getName() + " as editor for " + pair[1].getName());
@@ -161,7 +161,7 @@ public final class GriffonApplicationSupport {
     private static void initializeArtifactManager(@Nonnull GriffonApplication application) {
         Injector<?> injector = application.getInjector();
         ArtifactManager artifactManager = application.getArtifactManager();
-        for (ArtifactHandler artifactHandler : injector.getInstances(ArtifactHandler.class)) {
+        for (ArtifactHandler<?> artifactHandler : injector.getInstances(ArtifactHandler.class)) {
             artifactManager.registerArtifactHandler(artifactHandler);
         }
         artifactManager.loadArtifactMetadata(injector);
@@ -189,8 +189,7 @@ public final class GriffonApplicationSupport {
                 Map<String, Object> members = groupEntry.getValue();
                 Map<String, Object> configMap = new LinkedHashMap<>();
                 Map<String, String> membersCopy = new LinkedHashMap<>();
-                for (Object o : members.entrySet()) {
-                    Map.Entry entry = (Map.Entry) o;
+                for (Map.Entry<String, Object> entry : members.entrySet()) {
                     String key = String.valueOf(entry.getKey());
                     if ("config".equals(key) && entry.getValue() instanceof Map) {
                         //noinspection unchecked

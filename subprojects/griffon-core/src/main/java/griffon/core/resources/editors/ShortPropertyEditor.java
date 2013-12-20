@@ -50,7 +50,7 @@ public class ShortPropertyEditor extends AbstractPropertyEditor {
         super.setValueInternal(number.shortValue());
     }
 
-    protected Formatter resolveFormatter() {
+    protected Formatter<Short> resolveFormatter() {
         return isBlank(getFormat()) ? null : new ShortFormatter(getFormat());
     }
 }

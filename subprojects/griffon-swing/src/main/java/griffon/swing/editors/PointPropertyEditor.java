@@ -69,7 +69,7 @@ public class PointPropertyEditor extends AbstractPropertyEditor {
         }
     }
 
-    private void handleAsList(List list) {
+    private void handleAsList(List<?> list) {
         switch (list.size()) {
             case 1:
                 int s = parseValue(list.get(0));
@@ -85,7 +85,7 @@ public class PointPropertyEditor extends AbstractPropertyEditor {
         }
     }
 
-    private void handleAsMap(Map map) {
+    private void handleAsMap(Map<?, ?> map) {
         int x = getMapValue(map, "x", 0);
         int y = getMapValue(map, "y", 0);
         super.setValueInternal(new Point(x, y));
@@ -112,7 +112,7 @@ public class PointPropertyEditor extends AbstractPropertyEditor {
         return val.intValue();
     }
 
-    private int getMapValue(Map map, String key, int defaultValue) {
+    private int getMapValue(Map<?, ?> map, String key, int defaultValue) {
         Object val = map.get(key);
         if (null == val) {
             return defaultValue;

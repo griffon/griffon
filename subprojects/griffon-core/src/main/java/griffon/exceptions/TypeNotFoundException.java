@@ -24,6 +24,8 @@ import java.lang.annotation.Annotation;
  * @since 2.0.0
  */
 public class TypeNotFoundException extends GriffonException {
+    private static final long serialVersionUID = -1200238376357824754L;
+
     public TypeNotFoundException(@Nonnull String type) {
         super("Could not find type " + checkNonBlank(type, "type"));
     }

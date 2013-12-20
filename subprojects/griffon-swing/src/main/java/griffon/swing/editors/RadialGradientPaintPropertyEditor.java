@@ -129,7 +129,7 @@ public class RadialGradientPaintPropertyEditor extends AbstractPropertyEditor {
         }
     }
 
-    private void handleAsList(List list) {
+    private void handleAsList(List<?> list) {
         float cx = 0;
         float cy = 0;
         float radius = 0;
@@ -159,7 +159,7 @@ public class RadialGradientPaintPropertyEditor extends AbstractPropertyEditor {
         }
     }
 
-    private void handleAsMap(Map map) {
+    private void handleAsMap(Map<?, ?> map) {
         float cx = (Float) getMapValue(map, "cx", 0f);
         float cy = (Float) getMapValue(map, "cy", 0f);
         float radius = (Float) getMapValue(map, "radius", 0f);
@@ -203,7 +203,7 @@ public class RadialGradientPaintPropertyEditor extends AbstractPropertyEditor {
         return fractions;
     }
 
-    private float[] parseFractions(Object source, List list) {
+    private float[] parseFractions(Object source, List<?> list) {
         float[] fractions = new float[list.size()];
         for (int i = 0; i < list.size(); i++) {
             fractions[i] = parseValue(list.get(1));
@@ -241,7 +241,7 @@ public class RadialGradientPaintPropertyEditor extends AbstractPropertyEditor {
         return colors;
     }
 
-    private Color[] parseColors(Object source, List list) {
+    private Color[] parseColors(Object source, List<?> list) {
         Color[] colors = new Color[list.size()];
         ColorPropertyEditor colorEditor = new ColorPropertyEditor();
         for (int i = 0; i < list.size(); i++) {
@@ -286,7 +286,7 @@ public class RadialGradientPaintPropertyEditor extends AbstractPropertyEditor {
         return val.floatValue();
     }
 
-    private Object getMapValue(Map map, String key, Object defaultValue) {
+    private Object getMapValue(Map<?, ?> map, String key, Object defaultValue) {
         Object val = map.get(key);
         if (null == val) {
             return defaultValue;

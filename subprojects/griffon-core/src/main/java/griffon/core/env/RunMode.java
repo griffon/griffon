@@ -46,7 +46,10 @@ public enum RunMode {
         put(STANDALONE_RUNMODE_SHORT_NAME, RunMode.STANDALONE.getName());
         put(WEBSTART_RUNMODE_SHORT_NAME, RunMode.WEBSTART.getName());
         put(APPLET_RUNMODE_SHORT_NAME, RunMode.APPLET.getName());
-    }};
+    }
+
+        private static final long serialVersionUID = -1551704296210703535L;
+    };
 
     /**
      * Returns the current RunMode which is typically either STANDALONE, WEBSTART or APPLET.

@@ -126,7 +126,9 @@ public class BindUtils {
             if (validator instanceof Closure) {
                 return (Closure) validator;
             }
-            return new Closure(builder) {
+            return new Closure<Object>(builder) {
+                private static final long serialVersionUID = -4108869890482462552L;
+
                 @Override
                 public Object call(Object... args) {
                     return validator.call(args);

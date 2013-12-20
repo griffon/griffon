@@ -221,9 +221,8 @@ public abstract class AbstractEventRouter implements EventRouter {
             } catch (UnsupportedOperationException uoe) {
                 LOG.debug("Removing listener {}", listener.getClass().getName());
             }
-            if (listeners.remove(listener)) {
-                removeNestedListeners(listener);
-            }
+            listeners.remove(listener);
+            removeNestedListeners(listener);
         }
     }
 
@@ -256,7 +255,7 @@ public abstract class AbstractEventRouter implements EventRouter {
         requireNonBlank(eventName, ERROR_EVENT_NAME_BLANK);
         requireNonNull(listener, ERROR_LISTENER_NULL);
         synchronized (callableListeners) {
-            List list = callableListeners.get(capitalize(eventName));
+            List<CallableWithArgs> list = callableListeners.get(capitalize(eventName));
             if (list != null) {
                 LOG.debug("Removing listener {} on {}", listener.getClass().getName(), capitalize(eventName));
                 list.remove(listener);
@@ -322,7 +321,7 @@ public abstract class AbstractEventRouter implements EventRouter {
     protected boolean isNestedListener(@Nonnull CallableWithArgs listener, @Nonnull Object owner) {
         requireNonNull(listener, ERROR_LISTENER_NULL);
         requireNonNull(owner, ERROR_OWNER_NULL);
-        Class listenerClass = listener.getClass();
+        Class<?> listenerClass = listener.getClass();
         return listenerClass.isMemberClass() &&
             listenerClass.getEnclosingClass().equals(owner.getClass()) &&
             owner.equals(GriffonClassUtils.getFieldValue(listener, "this$0"));

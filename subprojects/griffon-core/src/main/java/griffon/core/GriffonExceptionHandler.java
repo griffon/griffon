@@ -112,7 +112,7 @@ public class GriffonExceptionHandler implements Thread.UncaughtExceptionHandler 
         return Boolean.getBoolean(GRIFFON_EXCEPTION_OUTPUT);
     }
 
-    public static void configure(Map config) {
+    public static void configure(Map<String, Object> config) {
         for (String option : CONFIG_OPTIONS) {
             if (config.containsKey(option)) {
                 System.setProperty(option, String.valueOf(config.get(option)));

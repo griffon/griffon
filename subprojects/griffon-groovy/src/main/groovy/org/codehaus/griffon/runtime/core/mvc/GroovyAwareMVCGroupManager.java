@@ -21,10 +21,10 @@ import griffon.core.GriffonApplication;
 import griffon.core.artifact.GriffonArtifact;
 import griffon.core.mvc.MVCGroup;
 import griffon.core.mvc.MVCGroupConfiguration;
-import griffon.core.view.BuilderCustomizer;
+import griffon.util.BuilderCustomizer;
 import groovy.lang.Script;
 import groovy.util.FactoryBuilderSupport;
-import org.codehaus.griffon.runtime.core.view.CompositeBuilder;
+import griffon.util.CompositeBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

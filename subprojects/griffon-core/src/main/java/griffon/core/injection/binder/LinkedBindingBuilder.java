@@ -25,13 +25,13 @@ import javax.inject.Provider;
  */
 public interface LinkedBindingBuilder<T> extends SingletonBindingBuilder<T> {
     @Nonnull
-    SingletonBindingBuilder to(@Nonnull Class<? extends T> target);
+    SingletonBindingBuilder<T> to(@Nonnull Class<? extends T> target);
 
     void toInstance(@Nonnull T instance);
 
     @Nonnull
-    SingletonBindingBuilder toProvider(@Nonnull Provider<? extends T> provider);
+    SingletonBindingBuilder<T> toProvider(@Nonnull Provider<? extends T> provider);
 
     @Nonnull
-    SingletonBindingBuilder toProvider(@Nonnull Class<Provider<? extends T>> providerType);
+    SingletonBindingBuilder<T> toProvider(@Nonnull Class<Provider<? extends T>> providerType);
 }

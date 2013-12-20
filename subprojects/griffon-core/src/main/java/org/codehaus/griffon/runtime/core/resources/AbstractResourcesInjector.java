@@ -63,14 +63,14 @@ public abstract class AbstractResourcesInjector implements ResourcesInjector {
     @Override
     public void injectResources(@Nonnull Object instance) {
         requireNonNull(instance, ERROR_INSTANCE_NULL);
-        Class klass = instance.getClass();
+        Class<?> klass = instance.getClass();
         do {
             doResourceInjection(klass, instance);
             klass = klass.getSuperclass();
         } while (null != klass);
     }
 
-    protected boolean doResourceInjection(@Nonnull Class klass, @Nonnull Object instance) {
+    protected boolean doResourceInjection(@Nonnull Class<?> klass, @Nonnull Object instance) {
         requireNonNull(klass, ERROR_CLASS_NULL);
         requireNonNull(instance, ERROR_INSTANCE_NULL);
 

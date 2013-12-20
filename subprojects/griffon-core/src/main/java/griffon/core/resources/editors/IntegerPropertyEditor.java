@@ -50,7 +50,7 @@ public class IntegerPropertyEditor extends AbstractPropertyEditor {
         super.setValueInternal(number.intValue());
     }
 
-    protected Formatter resolveFormatter() {
+    protected Formatter<Integer> resolveFormatter() {
         return isBlank(getFormat()) ? null : new IntegerFormatter(getFormat());
     }
 }

@@ -15,7 +15,7 @@ import java.util.List;
 public final class MethodUtils {
     public static void invokeAnnotatedMethod(@Nonnull final Object instance, @Nonnull final Class<? extends Annotation> annotation) {
         List<Method> methods = new ArrayList<>();
-        Class klass = instance.getClass();
+        Class<?> klass = instance.getClass();
         while (klass != null) {
             for (Method method : klass.getDeclaredMethods()) {
                 if (method.isAnnotationPresent(annotation) &&
@@ -29,7 +29,7 @@ public final class MethodUtils {
         }
 
         for (final Method method : methods) {
-            AccessController.doPrivileged(new PrivilegedAction() {
+            AccessController.doPrivileged(new PrivilegedAction<Object>() {
                 @Override
                 public Object run() {
                     boolean wasAccessible = method.isAccessible();

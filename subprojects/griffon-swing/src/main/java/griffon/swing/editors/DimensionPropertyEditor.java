@@ -69,7 +69,7 @@ public class DimensionPropertyEditor extends AbstractPropertyEditor {
         }
     }
 
-    private void handleAsList(List list) {
+    private void handleAsList(List<?> list) {
         switch (list.size()) {
             case 1:
                 int s = parseValue(list.get(0));
@@ -85,7 +85,7 @@ public class DimensionPropertyEditor extends AbstractPropertyEditor {
         }
     }
 
-    private void handleAsMap(Map map) {
+    private void handleAsMap(Map<?, ?> map) {
         int w = getMapValue(map, "width", 0);
         int h = getMapValue(map, "height", 0);
         super.setValueInternal(new Dimension(w, h));
@@ -112,7 +112,7 @@ public class DimensionPropertyEditor extends AbstractPropertyEditor {
         return val.intValue();
     }
 
-    private int getMapValue(Map map, String key, int defaultValue) {
+    private int getMapValue(Map<?, ?> map, String key, int defaultValue) {
         Object val = map.get(key);
         if (null == val) val = map.get(String.valueOf(key.charAt(0)));
         if (null == val) {

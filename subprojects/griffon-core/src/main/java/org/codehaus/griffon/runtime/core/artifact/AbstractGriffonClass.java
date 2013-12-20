@@ -139,7 +139,7 @@ public abstract class AbstractGriffonClass implements GriffonClass {
 
     @Nonnull
     @Override
-    public Class getClazz() {
+    public Class<?> getClazz() {
         return clazz;
     }
 

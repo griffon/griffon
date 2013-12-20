@@ -36,37 +36,37 @@ import java.util.Map;
  * String literals must be escaped either using single or double quotes. <p>
  * This helper class is useful for translating an XML View definition into a Groovy
  * script that can be handled by an UberBuilder, for example this View
- * <p/>
+ *
  * <xmp>
- * <application title="app.config.application.title"
- * pack="true">
- * <actions>
- * <action id="'clickAction'"
- * name="'Click'"
- * closure="{controller.click(it)}"/>
- * </actions>
- * <p/>
- * <gridLayout cols="1" rows="3"/>
- * <textField id="'input'" columns="20"
- * text="bind('value', target: model)"/>
- * <textField id="'output'" columns="20"
- * text="bind{model.value}" editable="false"/>
- * <button action="clickAction"/>
- * </application>
+    <application title="app.config.application.title"
+                 pack="true">
+        <actions>
+            <action id="'clickAction'"
+                    name="'Click'"
+                    closure="{controller.click(it)}"/>
+        </actions>
+    
+        <gridLayout cols="1" rows="3"/>
+        <textField id="'input'" columns="20"
+            text="bind('value', target: model)"/>
+        <textField id="'output'" columns="20"
+            text="bind{model.value}" editable="false"/>
+        <button action="clickAction"/>
+    </application>
  * </xmp>
- * <p/>
+ *
  * results in the following script
- * <p/>
+ *
  * <pre>
- * application(title: app.config.application.title, pack: true) {
- * actions {
- * action(id: 'clickAction', name: 'Click', closure: {controller.click(it)})
- * }
- * gridLayout(cols: 1, rows: 3)
- * textField(id: 'input', text: bind('value', target: model), columns: 20)
- * textField(id: 'output', text: bind{model.value}, columns: 20, editable: false)
- * button(action: clickAction)
- * }
+application(title: app.config.application.title, pack: true) {
+  actions {
+    action(id: 'clickAction', name: 'Click', closure: {controller.click(it)})
+  }
+  gridLayout(cols: 1, rows: 3)
+  textField(id: 'input', text: bind('value', target: model), columns: 20)
+  textField(id: 'output', text: bind{model.value}, columns: 20, editable: false)
+  button(action: clickAction)
+}
  * </pre>
  *
  * @author Andres Almiray
@@ -89,9 +89,7 @@ public final class Xml2Groovy {
     public String parse(File file) {
         try {
             return translate(newXmlSlurper().parse(file));
-        } catch (IOException e) {
-            throw new IllegalArgumentException(e);
-        } catch (SAXException e) {
+        } catch (IOException | SAXException e) {
             throw new IllegalArgumentException(e);
         }
     }
@@ -99,9 +97,7 @@ public final class Xml2Groovy {
     public String parse(InputSource source) {
         try {
             return translate(newXmlSlurper().parse(source));
-        } catch (IOException e) {
-            throw new IllegalArgumentException(e);
-        } catch (SAXException e) {
+        } catch (IOException | SAXException e) {
             throw new IllegalArgumentException(e);
         }
     }
@@ -109,9 +105,7 @@ public final class Xml2Groovy {
     public String parse(InputStream stream) {
         try {
             return translate(newXmlSlurper().parse(stream));
-        } catch (IOException e) {
-            throw new IllegalArgumentException(e);
-        } catch (SAXException e) {
+        } catch (IOException | SAXException e) {
             throw new IllegalArgumentException(e);
         }
     }
@@ -119,9 +113,7 @@ public final class Xml2Groovy {
     public String parse(Reader reader) {
         try {
             return translate(newXmlSlurper().parse(reader));
-        } catch (IOException e) {
-            throw new IllegalArgumentException(e);
-        } catch (SAXException e) {
+        } catch (IOException | SAXException e) {
             throw new IllegalArgumentException(e);
         }
     }
@@ -129,9 +121,7 @@ public final class Xml2Groovy {
     public String parse(String uri) {
         try {
             return translate(newXmlSlurper().parse(uri));
-        } catch (IOException e) {
-            throw new IllegalArgumentException(e);
-        } catch (SAXException e) {
+        } catch (IOException | SAXException e) {
             throw new IllegalArgumentException(e);
         }
     }
@@ -143,9 +133,7 @@ public final class Xml2Groovy {
     public String parseText(String text) {
         try {
             return translate(newXmlSlurper().parseText(text));
-        } catch (IOException e) {
-            throw new IllegalArgumentException(e);
-        } catch (SAXException e) {
+        } catch (IOException | SAXException e) {
             throw new IllegalArgumentException(e);
         }
     }
@@ -153,9 +141,7 @@ public final class Xml2Groovy {
     private XmlSlurper newXmlSlurper() {
         try {
             return new XmlSlurper();
-        } catch (ParserConfigurationException e) {
-            throw new IllegalArgumentException(e);
-        } catch (SAXException e) {
+        } catch (ParserConfigurationException | SAXException e) {
             throw new IllegalArgumentException(e);
         }
     }
@@ -179,19 +165,19 @@ public final class Xml2Groovy {
         printer.print(node.name());
         if (!node.attributes().isEmpty()) {
             printer.print("(");
-            List<String> attrs = new ArrayList<String>();
+            List<String> attrs = new ArrayList<>();
             for (Object o : node.attributes().entrySet()) {
-                Map.Entry entry = (Map.Entry) o;
+                Map.Entry<?, ?> entry = (Map.Entry<?, ?>) o;
                 attrs.add(entry.getKey() + ": " + entry.getValue());
             }
-            printer.print(DefaultGroovyMethods.join(attrs, ","));
+            printer.print(DefaultGroovyMethods.join((Iterable) attrs, ","));
             printer.print(")");
         }
 
         if (node.children().size() > 0) {
             printer.println(" {");
             printer.incrementIndent();
-            for (Iterator iter = node.childNodes(); iter.hasNext(); ) {
+            for (Iterator<?> iter = node.childNodes(); iter.hasNext(); ) {
                 Object child = iter.next();
                 if (child instanceof NodeChild) {
                     walkXml(printer, (NodeChild) child);
@@ -214,19 +200,19 @@ public final class Xml2Groovy {
         printer.print(node.name());
         if (!node.attributes().isEmpty()) {
             printer.print("(");
-            List<String> attrs = new ArrayList<String>();
+            List<String> attrs = new ArrayList<>();
             for (Object o : node.attributes().entrySet()) {
-                Map.Entry entry = (Map.Entry) o;
+                Map.Entry<?, ?> entry = (Map.Entry<?, ?>) o;
                 attrs.add(entry.getKey() + ": " + entry.getValue());
             }
-            printer.print(DefaultGroovyMethods.join(attrs, ","));
+            printer.print(DefaultGroovyMethods.join((Iterable) attrs, ","));
             printer.print(")");
         }
 
         if (node.children().size() > 0) {
             printer.println(" {");
             printer.incrementIndent();
-            for (Iterator iter = node.childNodes(); iter.hasNext(); ) {
+            for (Iterator<?> iter = node.childNodes(); iter.hasNext(); ) {
                 Object child = iter.next();
                 if (child instanceof NodeChild) {
                     walkXml(printer, (NodeChild) child);

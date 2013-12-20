@@ -36,7 +36,7 @@ class ApplicationFactory extends AbstractFactory {
     static final String DEFAULT_DELEGATE_PROPERTY_CANCEL_BUTTON = "cancelButton";
 
     static boolean swingXPresent
-    static Class jxStatusBarClass
+    static Class<?> jxStatusBarClass
     static {
         try {
             ClassLoader cl = getClass().getClassLoader();

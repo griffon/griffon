@@ -24,7 +24,7 @@ import javax.annotation.Nullable;
  * @since 1.3.0
  */
 public abstract class AbstractFormatter<T> implements Formatter<T> {
-    protected static int parseHexInt(@Nonnull String val, @Nonnull Class klass) throws ParseException {
+    protected static int parseHexInt(@Nonnull String val, @Nonnull Class<?> klass) throws ParseException {
         try {
             return Integer.parseInt(String.valueOf(val).trim(), 16) & 0xFF;
         } catch (NumberFormatException e) {
@@ -36,11 +36,11 @@ public abstract class AbstractFormatter<T> implements Formatter<T> {
         return val.intValue() & 0xFF;
     }
 
-    protected static ParseException parseError(@Nullable Object value, @Nonnull Class klass) throws ParseException {
+    protected static ParseException parseError(@Nullable Object value, @Nonnull Class<?> klass) throws ParseException {
         throw new ParseException("Can't convert '" + value + "' into " + klass.getName());
     }
 
-    protected static ParseException parseError(@Nullable Object value, @Nonnull Class klass, @Nonnull Exception e) throws ParseException {
+    protected static ParseException parseError(@Nullable Object value, @Nonnull Class<?> klass, @Nonnull Exception e) throws ParseException {
         throw new ParseException("Can't convert '" + value + "' into " + klass.getName(), e);
     }
 }

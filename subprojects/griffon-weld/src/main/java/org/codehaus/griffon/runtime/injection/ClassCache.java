@@ -29,14 +29,14 @@ import java.util.WeakHashMap;
  * @param <T>
  */
 public class ClassCache<T> {
-    private final Map<Class<T>, Reference<NonContextual<T>>> CACHE = Collections.synchronizedMap(new WeakHashMap<Class<T>, Reference<NonContextual<T>>>());
+    private final Map<Class<T>, Reference<NonContextual<T>>> cache = Collections.synchronizedMap(new WeakHashMap<Class<T>, Reference<NonContextual<T>>>());
 
     public NonContextual<T> get(Class<T> clazz) {
-        Reference<NonContextual<T>> ref = CACHE.get(clazz);
+        Reference<NonContextual<T>> ref = cache.get(clazz);
         return ref != null? ref.get() : null;
     }
 
     public void put(Class<T> clazz, NonContextual<T> nc) {
-        CACHE.put(clazz, new WeakReference<>(nc));
+        cache.put(clazz, new WeakReference<>(nc));
     }
 }

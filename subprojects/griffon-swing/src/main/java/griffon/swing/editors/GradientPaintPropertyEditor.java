@@ -148,7 +148,7 @@ public class GradientPaintPropertyEditor extends AbstractPropertyEditor {
 
     }
 
-    private void handleAsList(List list) {
+    private void handleAsList(List<?> list) {
         float x1 = 0;
         float y1 = 0;
         float x2 = 0;
@@ -184,7 +184,7 @@ public class GradientPaintPropertyEditor extends AbstractPropertyEditor {
         }
     }
 
-    private void handleAsMap(Map map) {
+    private void handleAsMap(Map<?, ?> map) {
         float x1 = (Float) getMapValue(map, "x1", 0f);
         float y1 = (Float) getMapValue(map, "y1", 0f);
         float x2 = (Float) getMapValue(map, "x2", 0f);
@@ -253,7 +253,7 @@ public class GradientPaintPropertyEditor extends AbstractPropertyEditor {
         return val.floatValue();
     }
 
-    private Object getMapValue(Map map, String key, Object defaultValue) {
+    private Object getMapValue(Map<?, ?> map, String key, Object defaultValue) {
         Object val = map.get(key);
         if (null == val) {
             return defaultValue;

@@ -23,6 +23,8 @@ import javax.annotation.Nonnull;
  * @since 2.0.0
  */
 public class ArtifactNotFoundException extends GriffonException {
+    private static final long serialVersionUID = -4968803853294447329L;
+
     public ArtifactNotFoundException(@Nonnull Class<?> clazz, @Nonnull String type) {
         super(format(clazz, type));
     }

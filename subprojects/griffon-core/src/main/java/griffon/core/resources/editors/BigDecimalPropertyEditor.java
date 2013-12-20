@@ -59,7 +59,7 @@ public class BigDecimalPropertyEditor extends AbstractPropertyEditor {
         }
     }
 
-    protected Formatter resolveFormatter() {
+    protected Formatter<BigDecimal> resolveFormatter() {
         return isBlank(getFormat()) ? null : new BigDecimalFormatter(getFormat());
     }
 }

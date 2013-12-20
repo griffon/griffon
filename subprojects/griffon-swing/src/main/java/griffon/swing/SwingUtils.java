@@ -26,9 +26,6 @@ import javax.swing.WindowConstants;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 
-import static griffon.util.GriffonApplicationUtils.isJdk16;
-import static griffon.util.GriffonApplicationUtils.isJdk17;
-import static griffon.util.GriffonClassUtils.invokeStaticMethod;
 import static griffon.util.GriffonNameUtils.isBlank;
 import static griffon.util.GriffonNameUtils.requireNonBlank;
 import static java.util.Objects.requireNonNull;
@@ -95,22 +92,6 @@ public class SwingUtils {
         );
 
         internalFrame.setLocation(corner);
-    }
-
-    /**
-     * Finds out if translucency is supported by the current platform.
-     *
-     * @return true if Translucency.TRANSLUCENT is supported, false otherwise
-     */
-    public static boolean isTranslucencySupported() {
-        if (isJdk17()) {
-            return true;
-        } else if (isJdk16()) {
-            Class awtUtilities = loadClass("com.sun.awt.AWTUtilities");
-            Class translucency = loadClass("com.sun.awt.AWTUtilities$Translucency");
-            return (Boolean) invokeStaticMethod(awtUtilities, "isTranslucencySupported", Enum.valueOf(translucency, "TRANSLUCENT"));
-        }
-        return false;
     }
 
     /**
@@ -217,7 +198,7 @@ public class SwingUtils {
         return image;
     }
 
-    private static Class loadClass(String className) {
+    private static Class<?> loadClass(String className) {
         try {
             return Class.forName(className);
         } catch (ClassNotFoundException e) {

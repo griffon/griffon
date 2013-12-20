@@ -21,7 +21,6 @@ idea {
     project {
         jdkName "1.7"
         languageLevel "1.7"
-        wildcards.add 'ratpack.groovy'
         ipr {
             withXml { provider ->
                 def node = provider.asNode()
@@ -50,16 +49,14 @@ idea {
           """))
                 }
 
-/*
         def javacSettings = node.component.find { it.@name == 'JavacSettings' }
         if (!javacSettings) {
           node.append(new XmlParser().parseText("""
           <component name="JavacSettings">
-            <option name="ADDITIONAL_OPTIONS_STRING" value="-Werror -Xlint:all -Xlint:-options" />
+            <option name="ADDITIONAL_OPTIONS_STRING" value="-Xlint:all -Xlint:-options" />
           </component>
           """))
         }
-*/
             }
         }
     }

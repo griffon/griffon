@@ -14,9 +14,8 @@
  * limitations under the License.
  */
 
-package org.codehaus.griffon.runtime.core.view;
+package griffon.util;
 
-import griffon.core.view.BuilderCustomizer;
 import groovy.lang.Closure;
 import groovy.lang.MissingMethodException;
 import groovy.lang.MissingPropertyException;
@@ -62,13 +61,14 @@ public class CompositeBuilder extends FactoryBuilderSupport {
         }
 
         final Closure originalMethodMissingDelegate = getMethodMissingDelegate();
-        setMethodMissingDelegate(new Closure(this) {
-            protected Void doCall(Object[] args) {
+        setMethodMissingDelegate(new Closure<Object>(this) {
+            private static final long serialVersionUID = -6901410680736336645L;
+
+            protected Object doCall(Object[] args) {
                 String methodName = String.valueOf(args[0]);
                 for (Closure methodMissingDelegate : methodMissingDelegates) {
                     try {
-                        methodMissingDelegate.call(args);
-                        return null;
+                        return methodMissingDelegate.call(args);
                     } catch (MissingMethodException mme) {
                         if (!methodName.equals(mme.getMethod())) throw mme;
                     }
@@ -76,8 +76,7 @@ public class CompositeBuilder extends FactoryBuilderSupport {
 
                 if (originalMethodMissingDelegate != null) {
                     try {
-                        originalMethodMissingDelegate.call(args);
-                        return null;
+                        return originalMethodMissingDelegate.call(args);
                     } catch (MissingMethodException mme) {
                         if (!methodName.equals(mme.getMethod())) throw mme;
                     }
@@ -91,6 +90,8 @@ public class CompositeBuilder extends FactoryBuilderSupport {
 
         final Closure originalPropertyMissingDelegate = getMethodMissingDelegate();
         setPropertyMissingDelegate(new Closure<Object>(this) {
+            private static final long serialVersionUID = 1055591497264374109L;
+
             protected Object doCall(Object[] args) {
                 String propertyName = String.valueOf(args[0]);
                 for (Closure propertyMissingDelegate : propertyMissingDelegates) {

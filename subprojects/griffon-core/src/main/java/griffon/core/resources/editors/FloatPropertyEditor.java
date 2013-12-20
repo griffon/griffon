@@ -50,7 +50,7 @@ public class FloatPropertyEditor extends AbstractPropertyEditor {
         super.setValueInternal(number.floatValue());
     }
 
-    protected Formatter resolveFormatter() {
+    protected Formatter<Float> resolveFormatter() {
         return isBlank(getFormat()) ? null : new FloatFormatter(getFormat());
     }
 }

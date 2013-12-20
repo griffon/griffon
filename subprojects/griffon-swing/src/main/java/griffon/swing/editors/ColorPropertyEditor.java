@@ -63,7 +63,7 @@ public class ColorPropertyEditor extends AbstractPropertyEditor {
     }
 
     @Override
-    protected Formatter resolveFormatter() {
+    protected Formatter<Color> resolveFormatter() {
         return !isBlank(getFormat()) ? ColorFormatter.getInstance(getFormat()) : null;
     }
 
@@ -75,7 +75,7 @@ public class ColorPropertyEditor extends AbstractPropertyEditor {
         }
     }
 
-    private void handleAsList(List list) {
+    private void handleAsList(List<?> list) {
         List<Object> values = new ArrayList<>();
         values.addAll(list);
         switch (list.size()) {
@@ -106,7 +106,7 @@ public class ColorPropertyEditor extends AbstractPropertyEditor {
         );
     }
 
-    private void handleAsMap(Map map) {
+    private void handleAsMap(Map<?, ?> map) {
         int r = getMapValue(map, "red", 0);
         int g = getMapValue(map, "green", 0);
         int b = getMapValue(map, "blue", 0);
@@ -126,7 +126,7 @@ public class ColorPropertyEditor extends AbstractPropertyEditor {
         return val.intValue() & 0xFF;
     }
 
-    private int getMapValue(Map map, String key, int defaultValue) {
+    private int getMapValue(Map<?, ?> map, String key, int defaultValue) {
         Object val = map.get(key);
         if (null == val) val = map.get(String.valueOf(key.charAt(0)));
         if (null == val) {

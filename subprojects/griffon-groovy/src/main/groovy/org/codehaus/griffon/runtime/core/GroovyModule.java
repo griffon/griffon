@@ -19,7 +19,7 @@ package org.codehaus.griffon.runtime.core;
 import griffon.builder.core.CoreBuilderCustomizer;
 import griffon.core.addon.GriffonAddon;
 import griffon.core.mvc.MVCGroupManager;
-import griffon.core.view.BuilderCustomizer;
+import griffon.util.BuilderCustomizer;
 import griffon.groovy.GroovyAddon;
 import griffon.util.CompositeResourceBundleBuilder;
 import org.codehaus.griffon.runtime.core.injection.AbstractModule;

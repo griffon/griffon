@@ -20,6 +20,8 @@ package griffon.exceptions;
  * @since 0.9.3
  */
 public class MVCGroupInstantiationException extends MVCGroupException {
+    private static final long serialVersionUID = -3908214044662655669L;
+
     private final String mvcType;
     private final String mvcName;
 

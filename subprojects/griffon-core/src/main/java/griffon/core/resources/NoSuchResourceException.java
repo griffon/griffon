@@ -25,6 +25,8 @@ import java.util.Locale;
  * @since 1.1.0
  */
 public class NoSuchResourceException extends RuntimeException {
+    private static final long serialVersionUID = -8457840608859745331L;
+
     private final String key;
     private final Locale locale;
 

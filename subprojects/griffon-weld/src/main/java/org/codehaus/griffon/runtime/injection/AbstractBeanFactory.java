@@ -55,13 +55,13 @@ public abstract class AbstractBeanFactory<T> implements Bean<T> {
         collectTypes(clazz);
     }
 
-    private void collectTypes(Class c) {
+    private void collectTypes(Class<?> c) {
         if (c == null || types.contains(c)) {
             return;
         }
 
         types.add(c);
-        for (Class i : c.getInterfaces()) {
+        for (Class<?> i : c.getInterfaces()) {
             collectTypes(i);
         }
         collectTypes(c.getSuperclass());

@@ -126,11 +126,13 @@ public class WeldInjector implements Injector<WeldContainer> {
             throw new MembersInjectionException(instance, new ClosedInjectorException(this));
         }
 
+        /*
         try {
             // delegate.injectMembers(instance);
         } catch (RuntimeException e) {
             throw new MembersInjectionException(instance, e);
         }
+        */
     }
 
     @Nonnull

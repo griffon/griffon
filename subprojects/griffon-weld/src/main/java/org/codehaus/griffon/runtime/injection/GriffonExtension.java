@@ -20,10 +20,7 @@ import griffon.core.injection.Binding;
 
 import javax.annotation.Nonnull;
 import javax.enterprise.event.Observes;
-import javax.enterprise.inject.spi.AfterBeanDiscovery;
-import javax.enterprise.inject.spi.BeanManager;
-import javax.enterprise.inject.spi.Extension;
-import javax.enterprise.inject.spi.ProcessAnnotatedType;
+import javax.enterprise.inject.spi.*;
 
 /**
  * @author Andres Almiray
@@ -36,11 +33,12 @@ public class GriffonExtension implements Extension {
     }
 
     void afterBeanDiscovery(@Observes AfterBeanDiscovery abd, BeanManager bm) {
+        Binding binding;
+        /*
         for(Binding<?> binding: bindings) {
 
         }
 
-        /*
         GriffonApplication app = ApplicationHolder.getApplication();
         abd.addBean(new BeanFactory(bm, app.getClass(), "app", app));
         abd.addBean(new BeanFactory<ConfigObject>(bm, ConfigObject.class, "appConfig", app.getConfig()));
@@ -59,8 +57,8 @@ public class GriffonExtension implements Extension {
     }
 
     <X> void processAnnotatedType(@Observes final ProcessAnnotatedType<X> pat, BeanManager beanManager) {
-        /*
         AnnotatedType<X> annotatedType = pat.getAnnotatedType();
+        /*
         Class<X> clazz = annotatedType.getJavaClass();
 
         GriffonApplication app = ApplicationHolder.getApplication();

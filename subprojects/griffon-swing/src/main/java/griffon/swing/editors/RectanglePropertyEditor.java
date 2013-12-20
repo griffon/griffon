@@ -65,7 +65,7 @@ public class RectanglePropertyEditor extends AbstractPropertyEditor {
         }
     }
 
-    private void handleAsList(List list) {
+    private void handleAsList(List<?> list) {
         switch (list.size()) {
             case 4:
                 int x = parseValue(list.get(0));
@@ -79,7 +79,7 @@ public class RectanglePropertyEditor extends AbstractPropertyEditor {
         }
     }
 
-    private void handleAsMap(Map map) {
+    private void handleAsMap(Map<?, ?> map) {
         int x = getMapValue(map, "x", 0);
         int y = getMapValue(map, "y", 0);
         int w = getMapValue(map, "width", 0);
@@ -108,7 +108,7 @@ public class RectanglePropertyEditor extends AbstractPropertyEditor {
         return val.intValue();
     }
 
-    private int getMapValue(Map map, String key, int defaultValue) {
+    private int getMapValue(Map<?, ?> map, String key, int defaultValue) {
         Object val = map.get(key);
         if (null == val) val = map.get(String.valueOf(key.charAt(0)));
         if (null == val) {

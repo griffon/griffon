@@ -50,7 +50,7 @@ public class BooleanPropertyEditor extends AbstractPropertyEditor {
         super.setValueInternal(bool);
     }
 
-    protected Formatter resolveFormatter() {
+    protected Formatter<Boolean> resolveFormatter() {
         return isBlank(getFormat()) ? null : BooleanFormatter.getInstance(getFormat());
     }
 }

@@ -25,6 +25,8 @@ import static java.util.Objects.requireNonNull;
  * @since 0.9.1
  */
 public class NewInstanceException extends GriffonException {
+    private static final long serialVersionUID = -2311364344106926056L;
+
     public NewInstanceException(@Nonnull Class<?> klass) {
         super(format(klass));
     }

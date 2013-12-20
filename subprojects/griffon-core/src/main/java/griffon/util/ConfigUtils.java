@@ -45,7 +45,7 @@ public final class ConfigUtils {
      * @param key    the key to be searched
      * @return true if there's a value for the specified key, false otherwise
      */
-    public static boolean isValueDefined(Map config, String key) {
+    public static boolean isValueDefined(Map<?, ?> config, String key) {
         String[] keys = key.split("\\.");
         for (int i = 0; i < keys.length - 1; i++) {
             if (config != null) {
@@ -69,7 +69,7 @@ public final class ConfigUtils {
      */
     @Nullable
     @SuppressWarnings({"unchecked", "ConstantConditions"})
-    public static <T> T getConfigValue(@Nonnull Map config, @Nonnull String key, @Nullable T defaultValue) {
+    public static <T> T getConfigValue(@Nonnull Map<?, ?> config, @Nonnull String key, @Nullable T defaultValue) {
         requireNonNull(config, "Argument 'config' cannot be null");
         requireNonBlank(key, ERROR_KEY_BLANK);
 
@@ -121,7 +121,7 @@ public final class ConfigUtils {
             return defaultValue;
         }
 
-        Map map = (Map) node;
+        Map<?, ?> map = (Map) node;
         for (int i = 1; i < keys.length - 1; i++) {
             if (map != null) {
                 node = map.get(keys[i]);
@@ -148,7 +148,7 @@ public final class ConfigUtils {
      */
     @Nullable
     @SuppressWarnings({"unchecked", "ConstantConditions"})
-    public static <T> T getConfigValue(@Nonnull Map config, @Nonnull String key) throws MissingResourceException {
+    public static <T> T getConfigValue(@Nonnull Map<?, ?> config, @Nonnull String key) throws MissingResourceException {
         requireNonNull(config, "Argument 'config' cannot be null");
         requireNonBlank(key, ERROR_KEY_BLANK);
         String type = config.getClass().getName();
@@ -209,12 +209,12 @@ public final class ConfigUtils {
             throw missingResource(type, key);
         }
 
-        Map map = (Map) node;
+        Map<?, ?> map = (Map<?, ?>) node;
         for (int i = 1; i < keys.length - 1; i++) {
             if (map != null) {
                 node = map.get(keys[i]);
                 if (node instanceof Map) {
-                    map = (Map) node;
+                    map = (Map<?, ?>) node;
                 } else {
                     throw missingResource(type, key);
                 }
@@ -244,7 +244,7 @@ public final class ConfigUtils {
      * @param key    the key to be searched
      * @return the value of the key. Returns {@code false} if no match.
      */
-    public static boolean getConfigValueAsBoolean(Map config, String key) {
+    public static boolean getConfigValueAsBoolean(Map<?, ?> config, String key) {
         return getConfigValueAsBoolean(config, key, false);
     }
 
@@ -256,7 +256,7 @@ public final class ConfigUtils {
      * @param defaultValue the value to send back if no match is found
      * @return the value of the key or the default value if no match is found
      */
-    public static boolean getConfigValueAsBoolean(Map config, String key, boolean defaultValue) {
+    public static boolean getConfigValueAsBoolean(Map<?, ?> config, String key, boolean defaultValue) {
         Object value = getConfigValue(config, key, defaultValue);
         return castToBoolean(value);
     }
@@ -268,7 +268,7 @@ public final class ConfigUtils {
      * @param key    the key to be searched
      * @return the value of the key. Returns {@code 0} if no match.
      */
-    public static int getConfigValueAsInt(Map config, String key) {
+    public static int getConfigValueAsInt(Map<?, ?> config, String key) {
         return getConfigValueAsInt(config, key, 0);
     }
 
@@ -280,7 +280,7 @@ public final class ConfigUtils {
      * @param defaultValue the value to send back if no match is found
      * @return the value of the key or the default value if no match is found
      */
-    public static int getConfigValueAsInt(Map config, String key, int defaultValue) {
+    public static int getConfigValueAsInt(Map<?, ?> config, String key, int defaultValue) {
         Object value = getConfigValue(config, key, defaultValue);
         return castToInt(value);
     }
@@ -292,7 +292,7 @@ public final class ConfigUtils {
      * @param key    the key to be searched
      * @return the value of the key. Returns {@code 0L} if no match.
      */
-    public static long getConfigValueAsLong(Map config, String key) {
+    public static long getConfigValueAsLong(Map<?, ?> config, String key) {
         return getConfigValueAsLong(config, key, 0L);
     }
 
@@ -304,7 +304,7 @@ public final class ConfigUtils {
      * @param defaultValue the value to send back if no match is found
      * @return the value of the key or the default value if no match is found
      */
-    public static long getConfigValueAsLong(Map config, String key, long defaultValue) {
+    public static long getConfigValueAsLong(Map<?, ?> config, String key, long defaultValue) {
         Object value = getConfigValue(config, key, defaultValue);
         return castToLong(value);
     }
@@ -316,7 +316,7 @@ public final class ConfigUtils {
      * @param key    the key to be searched
      * @return the value of the key. Returns {@code 0d} if no match.
      */
-    public static double getConfigValueAsDouble(Map config, String key) {
+    public static double getConfigValueAsDouble(Map<?, ?> config, String key) {
         return getConfigValueAsDouble(config, key, 0d);
     }
 
@@ -328,7 +328,7 @@ public final class ConfigUtils {
      * @param defaultValue the value to send back if no match is found
      * @return the value of the key or the default value if no match is found
      */
-    public static double getConfigValueAsDouble(Map config, String key, double defaultValue) {
+    public static double getConfigValueAsDouble(Map<?, ?> config, String key, double defaultValue) {
         Object value = getConfigValue(config, key, defaultValue);
         return castToDouble(value);
     }
@@ -340,7 +340,7 @@ public final class ConfigUtils {
      * @param key    the key to be searched
      * @return the value of the key. Returns {@code 0f} if no match.
      */
-    public static float getConfigValueAsFloat(Map config, String key) {
+    public static float getConfigValueAsFloat(Map<?, ?> config, String key) {
         return getConfigValueAsFloat(config, key, 0f);
     }
 
@@ -352,7 +352,7 @@ public final class ConfigUtils {
      * @param defaultValue the value to send back if no match is found
      * @return the value of the key or the default value if no match is found
      */
-    public static float getConfigValueAsFloat(Map config, String key, float defaultValue) {
+    public static float getConfigValueAsFloat(Map<?, ?> config, String key, float defaultValue) {
         Object value = getConfigValue(config, key, defaultValue);
         return castToFloat(value);
     }
@@ -364,7 +364,7 @@ public final class ConfigUtils {
      * @param key    the key to be searched
      * @return the value of the key. Returns {@code null} if no match.
      */
-    public static Number getConfigValueAsNumber(Map config, String key) {
+    public static Number getConfigValueAsNumber(Map<?, ?> config, String key) {
         return getConfigValueAsNumber(config, key, null);
     }
 
@@ -376,7 +376,7 @@ public final class ConfigUtils {
      * @param defaultValue the value to send back if no match is found
      * @return the value of the key or the default value if no match is found
      */
-    public static Number getConfigValueAsNumber(Map config, String key, Number defaultValue) {
+    public static Number getConfigValueAsNumber(Map<?, ?> config, String key, Number defaultValue) {
         Object value = getConfigValue(config, key, defaultValue);
         return castToNumber(value);
     }
@@ -388,7 +388,7 @@ public final class ConfigUtils {
      * @param key    the key to be searched
      * @return the value of the key. Returns {@code ""} if no match.
      */
-    public static String getConfigValueAsString(Map config, String key) {
+    public static String getConfigValueAsString(Map<?, ?> config, String key) {
         return getConfigValueAsString(config, key, "");
     }
 
@@ -400,7 +400,7 @@ public final class ConfigUtils {
      * @param defaultValue the value to send back if no match is found
      * @return the value of the key or the default value if no match is found
      */
-    public static String getConfigValueAsString(Map config, String key, String defaultValue) {
+    public static String getConfigValueAsString(Map<?, ?> config, String key, String defaultValue) {
         Object value = getConfigValue(config, key, defaultValue);
         return value != null ? String.valueOf(value) : null;
     }

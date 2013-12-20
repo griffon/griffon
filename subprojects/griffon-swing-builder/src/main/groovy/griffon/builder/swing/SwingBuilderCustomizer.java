@@ -36,7 +36,7 @@ public class SwingBuilderCustomizer extends AbstractBuilderCustomizer {
     public SwingBuilderCustomizer() {
         SwingBuilder builder = new SwingBuilder();
 
-        Map<String, Factory> factories = new LinkedHashMap(builder.getFactories());
+        Map<String, Factory> factories = new LinkedHashMap<>(builder.getFactories());
         factories.put("application", new ApplicationFactory());
         setFactories(factories);
         setVariables(builder.getVariables());

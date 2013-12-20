@@ -50,7 +50,7 @@ public class DoublePropertyEditor extends AbstractPropertyEditor {
         super.setValueInternal(number.doubleValue());
     }
 
-    protected Formatter resolveFormatter() {
+    protected Formatter<Double> resolveFormatter() {
         return isBlank(getFormat()) ? null : new DoubleFormatter(getFormat());
     }
 }

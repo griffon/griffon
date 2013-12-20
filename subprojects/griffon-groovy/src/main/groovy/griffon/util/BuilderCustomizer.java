@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package griffon.core.view;
+package griffon.util;
 
 import groovy.lang.Closure;
 import groovy.util.Factory;

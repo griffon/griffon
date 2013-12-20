@@ -67,7 +67,7 @@ public class DatePropertyEditor extends AbstractPropertyEditor {
         }
     }
 
-    protected Formatter resolveFormatter() {
+    protected Formatter<Date> resolveFormatter() {
         return isBlank(getFormat()) ? null : new DateFormatter(getFormat());
     }
 }

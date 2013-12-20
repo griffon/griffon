@@ -50,7 +50,7 @@ public class LongPropertyEditor extends AbstractPropertyEditor {
         super.setValueInternal(number.longValue());
     }
 
-    protected Formatter resolveFormatter() {
+    protected Formatter<Long> resolveFormatter() {
         return isBlank(getFormat()) ? null : new LongFormatter(getFormat());
     }
 }

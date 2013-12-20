@@ -96,7 +96,7 @@ public abstract class AbstractPropertyEditor extends PropertyEditorSupport imple
 
     @SuppressWarnings("ThrowableResultOfMethodCallIgnored")
     public void setFormattedValue(String value) {
-        Formatter formatter = resolveFormatter();
+        Formatter<?> formatter = resolveFormatter();
         if (formatter != null) {
             try {
                 setValueInternal(formatter.parse(value));
@@ -113,15 +113,15 @@ public abstract class AbstractPropertyEditor extends PropertyEditorSupport imple
         }
     }
 
-    protected Formatter resolveFormatter() {
+    protected Formatter<?> resolveFormatter() {
         return null;
     }
 
-    protected ValueConversionException illegalValue(Object value, Class klass) {
+    protected ValueConversionException illegalValue(Object value, Class<?> klass) {
         throw new ValueConversionException(value, klass);
     }
 
-    protected ValueConversionException illegalValue(Object value, Class klass, Exception e) {
+    protected ValueConversionException illegalValue(Object value, Class<?> klass, Exception e) {
         throw new ValueConversionException(value, klass, e);
     }
 }

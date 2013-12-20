@@ -23,6 +23,8 @@ import javax.annotation.Nonnull;
  * @since 2.0.0
  */
 public class MembersInjectionException extends GriffonException {
+    private static final long serialVersionUID = 5180926740378298528L;
+
     public MembersInjectionException(@Nonnull Object instance, @Nonnull Throwable cause) {
         super("An error occurred while injecting members into " + checkNonNull(instance, "instance"), checkNonNull(cause, "cause"));
     }

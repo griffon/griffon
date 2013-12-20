@@ -62,7 +62,7 @@ public class GroovyAwareCompositeResourceBundleBuilder extends DefaultCompositeR
         if (null != resource) {
             String className = fileName.replace('/', '.');
             try {
-                Class klass = loadClass(className);
+                Class<?> klass = loadClass(className);
                 if (Script.class.isAssignableFrom(klass)) {
                     bundles.add(new GroovyScriptResourceBundle(configReader, klass));
                     return bundles;
