@@ -30,6 +30,7 @@ import java.util.regex.Pattern;
 
 public class Metadata extends Properties {
     private static final long serialVersionUID = 5403698530204420558L;
+
     public static final String FILE = "application.properties";
     public static final String APPLICATION_VERSION = "app.version";
     public static final String APPLICATION_NAME = "app.name";
@@ -406,7 +407,7 @@ public class Metadata extends Properties {
     @SuppressWarnings("unchecked")
     public synchronized Enumeration keys() {
         Enumeration keysEnum = super.keys();
-        Vector keyList = new Vector();
+        Vector keyList = new Vector<>();
         while (keysEnum.hasMoreElements()) {
             keyList.add(keysEnum.nextElement());
         }

@@ -51,7 +51,7 @@ public abstract class AbstractEventPublisher implements EventPublisher {
         return eventRouter.isEnabled();
     }
 
-    public void removeEventListener(@Nonnull Class<? extends Event> eventClass, @Nonnull CallableWithArgs listener) {
+    public void removeEventListener(@Nonnull Class<? extends Event> eventClass, @Nonnull CallableWithArgs<?> listener) {
         requireNonNull(eventClass, ERROR_EVENT_CLASS_NULL);
         requireNonNull(listener, ERROR_LISTENER_NULL);
         eventRouter.removeEventListener(eventClass, listener);
@@ -62,7 +62,7 @@ public abstract class AbstractEventPublisher implements EventPublisher {
         eventRouter.addEventListener(listener);
     }
 
-    public void addEventListener(@Nonnull String eventName, @Nonnull CallableWithArgs listener) {
+    public void addEventListener(@Nonnull String eventName, @Nonnull CallableWithArgs<?> listener) {
         requireNonBlank(eventName, ERROR_EVENT_NAME_BLANK);
         requireNonNull(listener, ERROR_LISTENER_NULL);
         eventRouter.addEventListener(eventName, listener);
@@ -78,12 +78,12 @@ public abstract class AbstractEventPublisher implements EventPublisher {
         eventRouter.publishOutsideUI(event);
     }
 
-    public void removeEventListener(@Nonnull Map<String, CallableWithArgs> listener) {
+    public void removeEventListener(@Nonnull Map<String, CallableWithArgs<?>> listener) {
         requireNonNull(listener, ERROR_LISTENER_NULL);
         eventRouter.removeEventListener(listener);
     }
 
-    public void addEventListener(@Nonnull Class<? extends Event> eventClass, @Nonnull CallableWithArgs listener) {
+    public void addEventListener(@Nonnull Class<? extends Event> eventClass, @Nonnull CallableWithArgs<?> listener) {
         requireNonNull(eventClass, ERROR_EVENT_CLASS_NULL);
         requireNonNull(listener, ERROR_LISTENER_NULL);
         eventRouter.addEventListener(eventClass, listener);
@@ -109,7 +109,7 @@ public abstract class AbstractEventPublisher implements EventPublisher {
         eventRouter.publishAsync(eventName, params);
     }
 
-    public void removeEventListener(@Nonnull String eventName, @Nonnull CallableWithArgs listener) {
+    public void removeEventListener(@Nonnull String eventName, @Nonnull CallableWithArgs<?> listener) {
         requireNonBlank(eventName, ERROR_EVENT_NAME_BLANK);
         requireNonNull(listener, ERROR_LISTENER_NULL);
         eventRouter.removeEventListener(eventName, listener);
@@ -120,7 +120,7 @@ public abstract class AbstractEventPublisher implements EventPublisher {
         eventRouter.removeEventListener(listener);
     }
 
-    public void addEventListener(@Nonnull Map<String, CallableWithArgs> listener) {
+    public void addEventListener(@Nonnull Map<String, CallableWithArgs<?>> listener) {
         requireNonNull(listener, ERROR_LISTENER_NULL);
         eventRouter.addEventListener(listener);
     }

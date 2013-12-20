@@ -33,7 +33,7 @@ public class ConfigurableSwingWindowDisplayHandler extends ConfigurableWindowDis
         if (!options.isEmpty()) {
             Object handler = options.get("show");
             if (canBeRun(handler)) {
-                run((CallableWithArgs) handler, window);
+                run((CallableWithArgs<?>) handler, window);
                 return;
             } else if (options.get("handler") instanceof SwingWindowDisplayHandler) {
                 ((SwingWindowDisplayHandler) options.get("handler")).show(name, window);
@@ -45,7 +45,7 @@ public class ConfigurableSwingWindowDisplayHandler extends ConfigurableWindowDis
         if (!options.isEmpty()) {
             Object handler = options.get("defaultShow");
             if (canBeRun(handler)) {
-                run((CallableWithArgs) handler, window);
+                run((CallableWithArgs<?>) handler, window);
                 return;
             }
         }
@@ -73,15 +73,15 @@ public class ConfigurableSwingWindowDisplayHandler extends ConfigurableWindowDis
         if (!options.isEmpty()) {
             Object handler = options.get("defaultHide");
             if (canBeRun(handler)) {
-                run((CallableWithArgs) handler, window);
+                run((CallableWithArgs<?>) handler, window);
                 return;
             }
         }
         fetchDefaultWindowDisplayHandler().hide(name, window);
     }
 
-    protected void run(CallableWithArgs handler, JInternalFrame window) {
-        handler.call(new Object[]{window});
+    protected void run(@Nonnull CallableWithArgs<?> handler, @Nonnull JInternalFrame window) {
+        handler.call(window);
     }
 
     @Nonnull

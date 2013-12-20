@@ -170,7 +170,7 @@ public interface EventRouter {
      *
      * @param listener an event listener of type Map
      */
-    void addEventListener(@Nonnull Map<String, CallableWithArgs> listener);
+    void addEventListener(@Nonnull Map<String, CallableWithArgs<?>> listener);
 
     /**
      * Adds a Runnable as an event listener.<p>
@@ -179,7 +179,7 @@ public interface EventRouter {
      * @param eventName the name of the event
      * @param listener  the event listener
      */
-    void addEventListener(@Nonnull String eventName, @Nonnull CallableWithArgs listener);
+    void addEventListener(@Nonnull String eventName, @Nonnull CallableWithArgs<?> listener);
 
     /**
      * Adds a Runnable as an event listener.<p>
@@ -188,7 +188,7 @@ public interface EventRouter {
      * @param eventClass the type of the event
      * @param listener   the event listener
      */
-    void addEventListener(@Nonnull Class<? extends Event> eventClass, @Nonnull CallableWithArgs listener);
+    void addEventListener(@Nonnull Class<? extends Event> eventClass, @Nonnull CallableWithArgs<?> listener);
 
     /**
      * Removes an event listener.<p>
@@ -220,7 +220,7 @@ public interface EventRouter {
      *
      * @param listener an event listener of type Map
      */
-    void removeEventListener(@Nonnull Map<String, CallableWithArgs> listener);
+    void removeEventListener(@Nonnull Map<String, CallableWithArgs<?>> listener);
 
     /**
      * Removes a Runnable as an event listener.<p>
@@ -229,7 +229,7 @@ public interface EventRouter {
      * @param eventName the name of the event
      * @param listener  the event listener
      */
-    void removeEventListener(@Nonnull String eventName, @Nonnull CallableWithArgs listener);
+    void removeEventListener(@Nonnull String eventName, @Nonnull CallableWithArgs<?> listener);
 
     /**
      * Removes a Runnable as an event listener.<p>
@@ -238,5 +238,5 @@ public interface EventRouter {
      * @param eventClass the type of the event
      * @param listener   the event listener
      */
-    void removeEventListener(@Nonnull Class<? extends Event> eventClass, @Nonnull CallableWithArgs listener);
+    void removeEventListener(@Nonnull Class<? extends Event> eventClass, @Nonnull CallableWithArgs<?> listener);
 }

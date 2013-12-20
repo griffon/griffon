@@ -145,7 +145,7 @@ class ConfigReader {
      *
      * @see ConfigReader#parse(groovy.lang.Script)
      */
-    ConfigObject parse(Class scriptClass) {
+    ConfigObject parse(Class<? extends Script> scriptClass) {
         return parse(scriptClass.newInstance())
     }
 

@@ -47,8 +47,8 @@ public class BindUtils {
         private Object target;
         private String sourceProperty;
         private String targetProperty;
-        private CallableWithArgs converter;
-        private CallableWithArgs validator;
+        private CallableWithArgs<?> converter;
+        private CallableWithArgs<?> validator;
         private boolean mutual;
 
         @Nonnull
@@ -76,13 +76,13 @@ public class BindUtils {
         }
 
         @Nonnull
-        public BindingBuilder withConverter(@Nullable CallableWithArgs converter) {
+        public BindingBuilder withConverter(@Nullable CallableWithArgs<?> converter) {
             this.converter = converter;
             return this;
         }
 
         @Nonnull
-        public BindingBuilder withValidator(@Nullable CallableWithArgs validator) {
+        public BindingBuilder withValidator(@Nullable CallableWithArgs<?> validator) {
             this.validator = validator;
             return this;
         }
@@ -122,21 +122,22 @@ public class BindUtils {
             builder.invokeMethod("bind", attributes);
         }
 
-        private Closure makeClosure(@Nonnull FactoryBuilderSupport builder, @Nonnull final CallableWithArgs validator) {
-            if (validator instanceof Closure) {
-                return (Closure) validator;
+        private Closure makeClosure(@Nonnull FactoryBuilderSupport builder, @Nonnull final CallableWithArgs<?> callback) {
+            if (callback instanceof Closure) {
+                return (Closure) callback;
             }
             return new Closure<Object>(builder) {
                 private static final long serialVersionUID = -4108869890482462552L;
 
                 @Override
                 public Object call(Object... args) {
-                    return validator.call(args);
+                    return callback.call(args);
                 }
 
                 @Override
-                public Object call(Object arguments) {
-                    return validator.call(arguments != null && arguments.getClass().isArray() ? (Object[]) arguments : new Object[]{arguments});
+                public Object call(Object args) {
+                    return callback.call(args);
+                    // return callback.call(arguments != null && arguments.getClass().isArray() ? (Object[]) arguments : new Object[]{arguments});
                 }
             };
         }

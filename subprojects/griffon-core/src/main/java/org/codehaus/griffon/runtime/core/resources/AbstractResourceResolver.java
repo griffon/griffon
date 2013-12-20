@@ -217,7 +217,7 @@ public abstract class AbstractResourceResolver implements ResourceResolver {
     @Nullable
     protected Object evalResourceWithArguments(@Nonnull Object resource, @Nonnull Object[] args) {
         if (resource instanceof CallableWithArgs) {
-            CallableWithArgs callable = (CallableWithArgs) resource;
+            CallableWithArgs<?> callable = (CallableWithArgs<?>) resource;
             return callable.call(args);
         } else if (resource instanceof CharSequence) {
             return formatResource(String.valueOf(resource), args);
@@ -228,8 +228,8 @@ public abstract class AbstractResourceResolver implements ResourceResolver {
     @Nullable
     protected Object evalResourceWithArguments(@Nonnull Object resource, @Nonnull Map<String, Object> args) {
         if (resource instanceof CallableWithArgs) {
-            CallableWithArgs callable = (CallableWithArgs) resource;
-            return callable.call(new Object[]{args});
+            CallableWithArgs<?> callable = (CallableWithArgs<?>) resource;
+            return callable.call(args);
         } else if (resource instanceof CharSequence) {
             return formatResource(String.valueOf(resource), args);
         }

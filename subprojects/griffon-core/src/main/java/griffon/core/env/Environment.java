@@ -66,7 +66,10 @@ public enum Environment {
         put(DEVELOPMENT_ENVIRONMENT_SHORT_NAME, Environment.DEVELOPMENT.getName());
         put(PRODUCTION_ENV_SHORT_NAME, Environment.PRODUCTION.getName());
         put(TEST_ENVIRONMENT_SHORT_NAME, Environment.TEST.getName());
-    }};
+    }
+
+        private static final long serialVersionUID = -8447299990856630300L;
+    };
 
     /**
      * Returns the current environment which is typcally either DEVELOPMENT, PRODUCTION or TEST.

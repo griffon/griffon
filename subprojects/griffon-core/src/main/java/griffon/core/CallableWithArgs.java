@@ -24,5 +24,5 @@ import javax.annotation.Nonnull;
  * @author Andres Almiray
  */
 public interface CallableWithArgs<V> {
-    V call(@Nonnull Object[] args);
+    V call(@Nonnull Object... args);
 }

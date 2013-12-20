@@ -170,7 +170,7 @@ public class ConfigurableWindowDisplayHandler<W> implements WindowDisplayHandler
     }
 
     protected void run(CallableWithArgs handler, W window) {
-        handler.call(new Object[]{window});
+        handler.call(window);
     }
 
     protected Map<String, Object> windowManagerBlock() {

@@ -245,8 +245,7 @@ public abstract class AbstractAddonManager implements AddonManager {
             Map<String, Object> members = groupEntry.getValue();
             Map<String, Object> configMap = new LinkedHashMap<>();
             Map<String, String> membersCopy = new LinkedHashMap<>();
-            for (Object o : members.entrySet()) {
-                Map.Entry entry = (Map.Entry) o;
+            for (Map.Entry<String, Object> entry: members.entrySet()) {
                 String key = String.valueOf(entry.getKey());
                 if ("config".equals(key) && entry.getValue() instanceof Map) {
                     configMap = (Map<String, Object>) entry.getValue();

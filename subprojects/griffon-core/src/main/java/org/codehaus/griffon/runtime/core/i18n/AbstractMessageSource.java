@@ -218,7 +218,7 @@ public abstract class AbstractMessageSource implements MessageSource {
     @Nullable
     protected Object evalMessageWithArguments(@Nonnull Object message, @Nonnull Object[] args) {
         if (message instanceof CallableWithArgs) {
-            CallableWithArgs callable = (CallableWithArgs) message;
+            CallableWithArgs<?> callable = (CallableWithArgs<?>) message;
             return callable.call(args);
         } else if (message instanceof CharSequence) {
             return formatMessage(String.valueOf(message), args);
@@ -229,8 +229,8 @@ public abstract class AbstractMessageSource implements MessageSource {
     @Nullable
     protected Object evalMessageWithArguments(@Nonnull Object message, @Nonnull Map<String, Object> args) {
         if (message instanceof CallableWithArgs) {
-            CallableWithArgs callable = (CallableWithArgs) message;
-            return callable.call(new Object[]{args});
+            CallableWithArgs<?> callable = (CallableWithArgs<?>) message;
+            return callable.call(args);
         } else if (message instanceof CharSequence) {
             return formatMessage(String.valueOf(message), args);
         }

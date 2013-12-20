@@ -166,7 +166,7 @@ public class GriffonExceptionHandler implements Thread.UncaughtExceptionHandler 
 
     private static boolean isApplicationClass(String className) {
         for (CallableWithArgs<Boolean> test : TESTS) {
-            if (test.call(new Object[]{className})) {
+            if (test.call(className)) {
                 return false;
             }
         }

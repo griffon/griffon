@@ -38,14 +38,14 @@ import static java.util.Objects.requireNonNull;
 public class SwingAction extends AbstractAction {
     private static final long serialVersionUID = 4598888514827528435L;
     private static final String ERROR_CALLABLE_NULL = "Argument 'callable' cannot be null";
-    private final CallableWithArgs callable;
+    private final CallableWithArgs<?> callable;
 
-    public SwingAction(@Nonnull CallableWithArgs callable) {
+    public SwingAction(@Nonnull CallableWithArgs<?> callable) {
         this.callable = requireNonNull(callable, ERROR_CALLABLE_NULL);
     }
 
     public final void actionPerformed(ActionEvent evt) {
-        callable.call(new Object[]{evt});
+        callable.call(evt);
     }
 
     @Nonnull
@@ -78,7 +78,7 @@ public class SwingAction extends AbstractAction {
         private String command;
         private Icon smallIcon;
         private Icon largeIcon;
-        private CallableWithArgs callable;
+        private CallableWithArgs<?> callable;
         private boolean enabled = true;
         private boolean selected = false;
 
@@ -163,7 +163,7 @@ public class SwingAction extends AbstractAction {
         }
 
         @Nonnull
-        public ActionBuilder withRunnable(@Nullable CallableWithArgs callable) {
+        public ActionBuilder withRunnable(@Nullable CallableWithArgs<?> callable) {
             this.callable = callable;
             return this;
         }

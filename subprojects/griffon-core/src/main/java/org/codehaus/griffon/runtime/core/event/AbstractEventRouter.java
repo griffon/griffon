@@ -61,7 +61,7 @@ public abstract class AbstractEventRouter implements EventRouter {
     protected static final Object[] LOCK = new Object[0];
     private boolean enabled = true;
     protected final List<Object> listeners = synchronizedList(new ArrayList<>());
-    protected final Map<String, List<CallableWithArgs>> callableListeners = new ConcurrentHashMap<>();
+    protected final Map<String, List<CallableWithArgs<?>>> callableListeners = new ConcurrentHashMap<>();
     private final MethodCache methodCache = new MethodCache();
 
     @Override
@@ -142,12 +142,12 @@ public abstract class AbstractEventRouter implements EventRouter {
     }
 
     @Override
-    public void removeEventListener(@Nonnull Class<? extends Event> eventClass, @Nonnull CallableWithArgs listener) {
+    public void removeEventListener(@Nonnull Class<? extends Event> eventClass, @Nonnull CallableWithArgs<?> listener) {
         requireNonNull(eventClass, ERROR_EVENT_CLASS_NULL);
         removeEventListener(eventClass.getSimpleName(), listener);
     }
 
-    protected void fireEvent(@Nonnull CallableWithArgs callable, @Nonnull List<?> params) {
+    protected void fireEvent(@Nonnull CallableWithArgs<?> callable, @Nonnull List<?> params) {
         requireNonNull(callable, ERROR_CALLABLE_NULL);
         requireNonNull(params, ERROR_PARAMS_NULL);
         callable.call(asArray(params));
@@ -168,7 +168,7 @@ public abstract class AbstractEventRouter implements EventRouter {
     }
 
     @Override
-    public void addEventListener(@Nonnull Class<? extends Event> eventClass, @Nonnull CallableWithArgs listener) {
+    public void addEventListener(@Nonnull Class<? extends Event> eventClass, @Nonnull CallableWithArgs<?> listener) {
         requireNonNull(eventClass, ERROR_EVENT_CLASS_NULL);
         addEventListener(eventClass.getSimpleName(), listener);
     }
@@ -199,9 +199,9 @@ public abstract class AbstractEventRouter implements EventRouter {
     }
 
     @Override
-    public void addEventListener(@Nonnull Map<String, CallableWithArgs> listener) {
+    public void addEventListener(@Nonnull Map<String, CallableWithArgs<?>> listener) {
         requireNonNull(listener, ERROR_LISTENER_NULL);
-        for (Map.Entry<String, CallableWithArgs> entry : listener.entrySet()) {
+        for (Map.Entry<String, CallableWithArgs<?>> entry : listener.entrySet()) {
             addEventListener(entry.getKey(), entry.getValue());
         }
     }
@@ -227,9 +227,9 @@ public abstract class AbstractEventRouter implements EventRouter {
     }
 
     @Override
-    public void removeEventListener(@Nonnull Map<String, CallableWithArgs> listener) {
+    public void removeEventListener(@Nonnull Map<String, CallableWithArgs<?>> listener) {
         requireNonNull(listener, ERROR_LISTENER_NULL);
-        for (Map.Entry<String, CallableWithArgs> entry : listener.entrySet()) {
+        for (Map.Entry<String, CallableWithArgs<?>> entry : listener.entrySet()) {
             removeEventListener(entry.getKey(), entry.getValue());
         }
     }
@@ -239,7 +239,7 @@ public abstract class AbstractEventRouter implements EventRouter {
         requireNonBlank(eventName, ERROR_EVENT_NAME_BLANK);
         requireNonNull(listener, ERROR_LISTENER_NULL);
         synchronized (callableListeners) {
-            List<CallableWithArgs> list = callableListeners.get(capitalize(eventName));
+            List<CallableWithArgs<?>> list = callableListeners.get(capitalize(eventName));
             if (list == null) {
                 list = new ArrayList<>();
                 callableListeners.put(capitalize(eventName), list);
@@ -251,11 +251,11 @@ public abstract class AbstractEventRouter implements EventRouter {
     }
 
     @Override
-    public void removeEventListener(@Nonnull String eventName, @Nonnull CallableWithArgs listener) {
+    public void removeEventListener(@Nonnull String eventName, @Nonnull CallableWithArgs<?> listener) {
         requireNonBlank(eventName, ERROR_EVENT_NAME_BLANK);
         requireNonNull(listener, ERROR_LISTENER_NULL);
         synchronized (callableListeners) {
-            List<CallableWithArgs> list = callableListeners.get(capitalize(eventName));
+            List<CallableWithArgs<?>> list = callableListeners.get(capitalize(eventName));
             if (list != null) {
                 LOG.debug("Removing listener {} on {}", listener.getClass().getName(), capitalize(eventName));
                 list.remove(listener);
@@ -289,7 +289,7 @@ public abstract class AbstractEventRouter implements EventRouter {
 
                 for (Object listener : listenersCopy) {
                     if (listener instanceof CallableWithArgs) {
-                        fireEvent((CallableWithArgs) listener, params);
+                        fireEvent((CallableWithArgs<?>) listener, params);
                     } else {
                         fireEvent(listener, eventHandler, params);
                     }
@@ -301,16 +301,16 @@ public abstract class AbstractEventRouter implements EventRouter {
     protected void removeNestedListeners(@Nonnull Object owner) {
         requireNonNull(owner, ERROR_OWNER_NULL);
         synchronized (callableListeners) {
-            for (Map.Entry<String, List<CallableWithArgs>> event : callableListeners.entrySet()) {
+            for (Map.Entry<String, List<CallableWithArgs<?>>> event : callableListeners.entrySet()) {
                 String eventName = event.getKey();
-                List<CallableWithArgs> listenerList = event.getValue();
-                List<CallableWithArgs> toRemove = new ArrayList<>();
-                for (CallableWithArgs listener : listenerList) {
+                List<CallableWithArgs<?>> listenerList = event.getValue();
+                List<CallableWithArgs<?>> toRemove = new ArrayList<>();
+                for (CallableWithArgs<?> listener : listenerList) {
                     if (isNestedListener(listener, owner)) {
                         toRemove.add(listener);
                     }
                 }
-                for (CallableWithArgs listener : toRemove) {
+                for (CallableWithArgs<?> listener : toRemove) {
                     LOG.debug("Removing listener {} on {}", listener.getClass().getName(), capitalize(eventName));
                     listenerList.remove(listener);
                 }
@@ -318,7 +318,7 @@ public abstract class AbstractEventRouter implements EventRouter {
         }
     }
 
-    protected boolean isNestedListener(@Nonnull CallableWithArgs listener, @Nonnull Object owner) {
+    protected boolean isNestedListener(@Nonnull CallableWithArgs<?> listener, @Nonnull Object owner) {
         requireNonNull(listener, ERROR_LISTENER_NULL);
         requireNonNull(owner, ERROR_OWNER_NULL);
         Class<?> listenerClass = listener.getClass();
