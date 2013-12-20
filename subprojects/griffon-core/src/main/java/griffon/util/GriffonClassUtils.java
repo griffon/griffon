@@ -1877,7 +1877,7 @@ public class GriffonClassUtils {
             return false;
         } else if (type.isPrimitive()) {
             // convert primitive type to compatible class 
-            Class<?> primitiveClass = (Class<?>) PRIMITIVE_TYPE_COMPATIBLE_CLASSES.get(type);
+            Class<?> primitiveClass = PRIMITIVE_TYPE_COMPATIBLE_CLASSES.get(type);
             return primitiveClass != null && clazz.isAssignableFrom(primitiveClass);
         } else {
             return clazz.isAssignableFrom(type);
@@ -2055,7 +2055,7 @@ public class GriffonClassUtils {
 
     // -- The following methods and properties were copied from commons-beanutils
 
-    private static final Map<String, PropertyDescriptor[]> descriptorsCache = new LinkedHashMap<String, PropertyDescriptor[]>();
+    private static final Map<String, PropertyDescriptor[]> descriptorsCache = new LinkedHashMap<>();
 
     /**
      * <p>Retrieve the property descriptor for the specified property of the

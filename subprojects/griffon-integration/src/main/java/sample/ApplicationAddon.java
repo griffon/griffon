@@ -1,11 +1,11 @@
 package sample;
 
-import com.google.inject.Inject;
 import griffon.core.GriffonApplication;
 import griffon.inject.DependsOn;
 import org.codehaus.griffon.runtime.core.addon.AbstractGriffonAddon;
 
 import javax.annotation.Nonnull;
+import javax.inject.Inject;
 import javax.inject.Named;
 
 @Named("application")

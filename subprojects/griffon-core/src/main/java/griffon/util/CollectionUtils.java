@@ -79,7 +79,7 @@ public final class CollectionUtils {
             return Collections.emptySet();
         }
 
-        return new HashSet<T>(Arrays.asList(values));
+        return new HashSet<>(Arrays.asList(values));
     }
 
     @SafeVarargs

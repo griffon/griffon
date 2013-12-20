@@ -55,6 +55,7 @@ public class JavaFXActionManager extends AbstractActionManager {
 
         String rsAccelerator = msg(keyPrefix, normalizeNamed, "accelerator", "");
         if (!isBlank(rsAccelerator)) {
+            //noinspection ConstantConditions
             if (!isMacOSX() && rsAccelerator.contains("meta") && !rsAccelerator.contains("ctrl")) {
                 rsAccelerator = rsAccelerator.replace("meta", "ctrl");
             }

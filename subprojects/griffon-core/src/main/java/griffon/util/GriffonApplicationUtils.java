@@ -471,6 +471,7 @@ public final class GriffonApplicationUtils {
     */
 
     @Nonnull
+    @SuppressWarnings("ConstantConditions")
     public static Locale parseLocale(@Nullable String locale) {
         if (isBlank(locale)) return Locale.getDefault();
         String[] parts = locale.split("_");

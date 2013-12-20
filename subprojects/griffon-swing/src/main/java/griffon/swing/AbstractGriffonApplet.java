@@ -57,6 +57,8 @@ import static org.codehaus.griffon.runtime.core.GriffonApplicationSupport.runLif
  * @since 0.9.3
  */
 public abstract class AbstractGriffonApplet extends JApplet implements GriffonApplication {
+    private static final long serialVersionUID = -3489610863053527695L;
+
     private static final String ERROR_SHUTDOWN_HANDLER_NULL = "Argument 'shutdownHandler' cannot be null";
     private Locale locale = Locale.getDefault();
     public static final String[] EMPTY_ARGS = new String[0];
@@ -334,11 +336,9 @@ public abstract class AbstractGriffonApplet extends JApplet implements GriffonAp
         // stage 3 - destroy all mvc groups
         log.debug("Shutdown stage 3: destroy all MVC groups");
         List<String> mvcNames = new ArrayList<>();
-        if (getMvcGroupManager() != null) {
-            mvcNames.addAll(getMvcGroupManager().getGroups().keySet());
-            for (String name : mvcNames) {
-                getMvcGroupManager().destroyMVCGroup(name);
-            }
+        mvcNames.addAll(getMvcGroupManager().getGroups().keySet());
+        for (String name : mvcNames) {
+            getMvcGroupManager().destroyMVCGroup(name);
         }
 
         // stage 4 - call shutdown script

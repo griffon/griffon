@@ -60,7 +60,6 @@ class MetaComponentFactory extends AbstractFactory {
         } catch (MissingMethodException e) {
             return false
         }
-        false
     }
 
     boolean onNodeChildren(FactoryBuilderSupport builder, Object node, Closure childContent) {

@@ -29,14 +29,15 @@ import java.util.regex.Pattern;
  */
 
 public class Metadata extends Properties {
+    private static final long serialVersionUID = 5403698530204420558L;
     public static final String FILE = "application.properties";
     public static final String APPLICATION_VERSION = "app.version";
     public static final String APPLICATION_NAME = "app.name";
     public static final String APPLICATION_GRIFFON_VERSION = "app.griffon.version";
     public static final String GRIFFON_START_DIR = "griffon.start.dir";
     public static final String GRIFFON_WORKING_DIR = "griffon.working.dir";
-    public static final String APPLICATION_TOOLKIT = "app.toolkit";
 
+    public static final String APPLICATION_TOOLKIT = "app.toolkit";
     private static final Pattern SKIP_PATTERN = Pattern.compile("^.*/griffon-.*.jar!/application.properties$");
     private static Reference<Metadata> metadata = new SoftReference<>(new Metadata());
 

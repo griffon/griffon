@@ -31,8 +31,8 @@ import static java.util.Objects.requireNonNull;
  * @author Andres Almiray
  */
 public final class ConfigUtils {
-    protected static final String ERROR_CONFIG_NULL = "Argument 'config' cannot be null";
-    protected static final String ERROR_KEY_BLANK = "Argument 'key' cannot be blank";
+    private static final String ERROR_CONFIG_NULL = "Argument 'config' cannot be null";
+    private static final String ERROR_KEY_BLANK = "Argument 'key' cannot be blank";
 
     private ConfigUtils() {
         // prevent instantiation

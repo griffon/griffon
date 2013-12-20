@@ -410,8 +410,7 @@ public final class GriffonApplicationSupport {
             cnfe = e;
         }
 
-        if (cnfe != null) throw cnfe;
-        return null;
+        throw cnfe;
     }
 
     private static ApplicationClassLoader applicationClassLoader(@Nonnull GriffonApplication application) {

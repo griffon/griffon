@@ -373,11 +373,9 @@ public abstract class AbstractJavaFXGriffonApplication extends Application imple
         // stage 3 - destroy all mvc groups
         log.debug("Shutdown stage 3: destroy all MVC groups");
         List<String> mvcNames = new ArrayList<>();
-        if (getMvcGroupManager() != null) {
-            mvcNames.addAll(getMvcGroupManager().getGroups().keySet());
-            for (String name : mvcNames) {
-                getMvcGroupManager().destroyMVCGroup(name);
-            }
+        mvcNames.addAll(getMvcGroupManager().getGroups().keySet());
+        for (String name : mvcNames) {
+            getMvcGroupManager().destroyMVCGroup(name);
         }
 
         // stage 4 - call shutdown script

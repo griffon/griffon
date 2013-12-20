@@ -63,7 +63,7 @@ public class Bindings {
 
         @Nonnull
         @Override
-        public SingletonBindingBuilder to(@Nonnull Class<? extends T> target) {
+        public SingletonBindingBuilder<T> to(@Nonnull Class<? extends T> target) {
             this.target = requireNonNull(target, "Argument 'target' cannot be null");
             return this;
         }
@@ -75,14 +75,14 @@ public class Bindings {
 
         @Nonnull
         @Override
-        public SingletonBindingBuilder toProvider(@Nonnull Provider<? extends T> provider) {
+        public SingletonBindingBuilder<T> toProvider(@Nonnull Provider<? extends T> provider) {
             this.provider = requireNonNull(provider, "Argument 'provider' cannot be null");
             return this;
         }
 
         @Nonnull
         @Override
-        public SingletonBindingBuilder toProvider(@Nonnull Class<Provider<? extends T>> providerType) {
+        public SingletonBindingBuilder<T> toProvider(@Nonnull Class<Provider<? extends T>> providerType) {
             this.providerType = requireNonNull(providerType, "Argument 'providerType' cannot be null");
             return this;
         }

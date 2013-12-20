@@ -62,6 +62,7 @@ public abstract class AbstractArtifactManager implements ArtifactManager {
         return artifactHandlers;
     }
 
+    @SuppressWarnings("unchecked")
     public final void loadArtifactMetadata(@Nonnull Injector<?> injector) {
         requireNonNull(injector, "Argument 'injector' cannot be null");
         Map<String, List<Class<? extends GriffonArtifact>>> loadedArtifacts = doLoadArtifactMetadata();

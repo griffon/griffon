@@ -23,6 +23,8 @@ import java.util.EventObject;
  * @author Andres Almiray
  */
 public abstract class Event extends EventObject {
+    private static final long serialVersionUID = -2080599710005680415L;
+
     /**
      * System time when the event happened
      */

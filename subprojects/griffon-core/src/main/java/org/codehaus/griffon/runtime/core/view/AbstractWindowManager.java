@@ -194,6 +194,7 @@ public abstract class AbstractWindowManager<W> implements WindowManager<W> {
                 if (LOG.isDebugEnabled()) {
                     LOG.debug("Showing window with name: '" + name + "' at index " + index + " " + window);
                 }
+                //noinspection ConstantConditions
                 resolveWindowDisplayHandler().show(name, window);
             }
         });
@@ -237,6 +238,7 @@ public abstract class AbstractWindowManager<W> implements WindowManager<W> {
                 if (LOG.isDebugEnabled()) {
                     LOG.debug("Hiding window with name: '" + name + "' at index " + index + " " + window);
                 }
+                //noinspection ConstantConditions
                 resolveWindowDisplayHandler().hide(name, window);
             }
         });
