@@ -1,6 +1,7 @@
 package sample;
 
 import griffon.core.GriffonApplication;
+import javafx.event.ActionEvent;
 import org.codehaus.griffon.runtime.core.artifact.AbstractGriffonController;
 
 import javax.annotation.Nonnull;
@@ -21,7 +22,7 @@ public class SampleController extends AbstractGriffonController {
         this.model = model;
     }
 
-    public void click() {
+    public void click(ActionEvent event) {
         System.out.println("click " + model.getInput());
     }
 }

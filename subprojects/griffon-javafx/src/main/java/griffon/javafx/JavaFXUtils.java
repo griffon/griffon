@@ -20,6 +20,8 @@ import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
+import javafx.scene.Node;
+import javafx.scene.Parent;
 import javafx.scene.control.ButtonBase;
 import javafx.scene.control.Control;
 import javafx.scene.control.Tooltip;
@@ -114,5 +116,23 @@ public final class JavaFXUtils {
             Image image = new Image(resource.toString());
             control.graphicProperty().set(new ImageView(image));
         }
+    }
+
+    @Nullable
+    public static Node findNode(@Nonnull Node root, @Nonnull String id) {
+        requireNonNull(root, "Argument 'root' cannot be null");
+        requireNonBlank(id, "Argument 'id' cannot be blank");
+
+        if (id.equals(root.getId())) return root;
+
+        if (root instanceof Parent) {
+            Parent parent = (Parent) root;
+            for (Node child : parent.getChildrenUnmodifiable()) {
+                Node found = findNode(child, id);
+                if (found != null) return found;
+            }
+        }
+
+        return null;
     }
 }

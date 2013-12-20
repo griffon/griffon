@@ -43,51 +43,15 @@ public class SampleView extends AbstractJavaFXGriffonView {
         getApplication().getWindowManager().attach("mainWindow", stage);
     }
 
-    public void click() {
-        invokeAction(controller, "click");
-    }
-
     // build the UI
     private Scene init() {
         Scene scene = new Scene(new Group());
         scene.setFill(Color.WHITE);
 
-        /*
-        Text javaText = new Text();
-        javaText.setText("Java");
-        javaText.setFont(new Font("Sanserif", 80));
-        javaText.setFill(LinearGradientBuilder.create().endX(0)
-            .stops(new Stop(0, Color.ORANGE), new Stop(1, Color.CHOCOLATE)).build());
-
-        Text fxText = new Text();
-        fxText.setText("FX");
-        fxText.setFont(new Font("Sanserif", 80));
-        fxText.setFill(LinearGradientBuilder.create().endX(0)
-            .stops(new Stop(0, Color.CYAN), new Stop(1, Color.DODGERBLUE)).build());
-        DropShadow dropShadow = new DropShadow();
-        dropShadow.setColor(Color.DODGERBLUE);
-        dropShadow.setRadius(25);
-        dropShadow.setSpread(0.25);
-        fxText.setEffect(dropShadow);
-
-        Button button = new Button();
-        JavaFXAction action = (JavaFXAction) getApplication().getActionManager().actionFor(controller, "click").getToolkitAction();
-        JavaFXUtils.configure(button, action);
-
-        HBox hbox = new HBox();
-        hbox.getChildren().addAll(javaText, fxText);
-        hbox.setPadding(new Insets(80, 80, 80, 80));
-
-        VBox vbox = new VBox();
-        vbox.getChildren().addAll(hbox, button);
-        hbox.setPadding(new Insets(80, 80, 80, 80));
-
-        ((Group) scene.getRoot()).getChildren().addAll(vbox);
-        */
-
-        Node content = loadFromFXML();
+        Node node = loadFromFXML();
         model.inputProperty().bindBidirectional(name.textProperty());
-        ((Group) scene.getRoot()).getChildren().addAll(content);
+        ((Group) scene.getRoot()).getChildren().addAll(node);
+        connectActions(node, controller);
 
         return scene;
     }

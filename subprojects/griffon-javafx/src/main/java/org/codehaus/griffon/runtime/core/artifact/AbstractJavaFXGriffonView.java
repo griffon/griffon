@@ -19,7 +19,11 @@ package org.codehaus.griffon.runtime.core.artifact;
 import griffon.core.GriffonApplication;
 import griffon.core.artifact.GriffonClass;
 import griffon.core.artifact.GriffonController;
+import griffon.core.controller.Action;
+import griffon.core.controller.ActionManager;
 import griffon.exceptions.GriffonException;
+import griffon.javafx.JavaFXAction;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Parent;
@@ -30,7 +34,9 @@ import javax.annotation.Nullable;
 import javax.inject.Inject;
 import java.io.IOException;
 import java.net.URL;
+import java.util.Map;
 
+import static griffon.javafx.JavaFXUtils.findNode;
 import static griffon.util.GriffonNameUtils.isBlank;
 
 /**
@@ -40,6 +46,8 @@ import static griffon.util.GriffonNameUtils.isBlank;
  * @since 2.0.0
  */
 public abstract class AbstractJavaFXGriffonView extends AbstractGriffonView {
+    private static final String ACTION_TARGET_SUFFIX = "ActionTarget";
+
     @Inject
     public AbstractJavaFXGriffonView(@Nonnull GriffonApplication application) {
         super(application);
@@ -92,7 +100,14 @@ public abstract class AbstractJavaFXGriffonView extends AbstractGriffonView {
         return baseName;
     }
 
-    protected void invokeAction(@Nonnull GriffonController controller, @Nonnull String actionName, Object... args) {
-        getApplication().getActionManager().invokeAction(controller, actionName, args);
+    protected void connectActions(@Nonnull Node node, @Nonnull GriffonController controller) {
+        ActionManager actionManager = getApplication().getActionManager();
+        for (Map.Entry<String, Action> e : actionManager.actionsFor(controller).entrySet()) {
+            String actionTargetName = actionManager.normalizeName(e.getKey()) + ACTION_TARGET_SUFFIX;
+            Node control = findNode(node, actionTargetName);
+            if (control == null) continue;
+            JavaFXAction action = (JavaFXAction) e.getValue().getToolkitAction();
+            control.addEventHandler(ActionEvent.ACTION, action.getOnAction());
+        }
     }
 }
