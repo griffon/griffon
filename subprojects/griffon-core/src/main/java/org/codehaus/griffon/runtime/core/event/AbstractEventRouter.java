@@ -182,6 +182,11 @@ public abstract class AbstractEventRouter implements EventRouter {
             addEventListener((Map) listener);
             return;
         }
+
+        if (!methodCache.isEventListener(listener.getClass())) {
+            return;
+        }
+
         synchronized (listeners) {
             if (listeners.contains(listener)) return;
             try {
@@ -216,8 +221,9 @@ public abstract class AbstractEventRouter implements EventRouter {
             } catch (UnsupportedOperationException uoe) {
                 LOG.debug("Removing listener {}", listener.getClass().getName());
             }
-            listeners.remove(listener);
-            removeNestedListeners(listener);
+            if (listeners.remove(listener)) {
+                removeNestedListeners(listener);
+            }
         }
     }
 
@@ -226,7 +232,6 @@ public abstract class AbstractEventRouter implements EventRouter {
         requireNonNull(listener, ERROR_LISTENER_NULL);
         for (Map.Entry<String, CallableWithArgs> entry : listener.entrySet()) {
             removeEventListener(entry.getKey(), entry.getValue());
-
         }
     }
 
@@ -330,13 +335,22 @@ public abstract class AbstractEventRouter implements EventRouter {
     protected static class MethodCache {
         private final Map<Class<?>, Map<String, List<MethodInfo>>> methodMap = new ConcurrentHashMap<>();
 
-        @Nullable
-        public Method findMatchingMethodFor(@Nonnull Class<?> klass, @Nonnull MethodDescriptor target) {
+        public boolean isEventListener(@Nonnull Class<?> klass) {
             Map<String, List<MethodInfo>> methodMetadata = methodMap.get(klass);
             if (methodMetadata == null) {
                 methodMetadata = fetchMethodMetadata(klass);
-                methodMap.put(klass, methodMetadata);
+                if (!methodMetadata.isEmpty()) {
+                    methodMap.put(klass, methodMetadata);
+                } else {
+                    methodMetadata = null;
+                }
             }
+            return methodMetadata != null;
+        }
+
+        @Nullable
+        public Method findMatchingMethodFor(@Nonnull Class<?> klass, @Nonnull MethodDescriptor target) {
+            Map<String, List<MethodInfo>> methodMetadata = methodMap.get(klass);
 
             List<MethodInfo> descriptors = methodMetadata.get(target.getName());
             if (descriptors != null) {

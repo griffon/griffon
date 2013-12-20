@@ -395,6 +395,17 @@ class DefaultEventRouterSpec extends Specification {
         !subject.args
     }
 
+    def 'Register and unregister an invalid bean listener'() {
+        given:
+
+        def eventHandler = new Object()
+
+        expect:
+
+        eventRouter.addEventListener(eventHandler)
+        eventRouter.removeEventListener(eventHandler)
+    }
+
     static final class TestModule extends AbstractModule {
         @Override
         protected void configure() {
