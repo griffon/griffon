@@ -24,7 +24,6 @@ import java.lang.annotation.RetentionPolicy;
  * @author Andres Almiray
  * @since 2.0.0
  */
-@Qualifier
 @Retention(RetentionPolicy.RUNTIME)
 public @interface DependsOn {
     String[] value();

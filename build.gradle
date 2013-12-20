@@ -27,8 +27,10 @@ evaluationDependsOn(':griffon-weld')
 evaluationDependsOn(':griffon-spring')
 evaluationDependsOn(':griffon-groovy')
 evaluationDependsOn(':griffon-swing')
+evaluationDependsOn(':griffon-swing-builder')
 evaluationDependsOn(':griffon-javafx')
 evaluationDependsOn(':griffon-integration')
+evaluationDependsOn(':griffon-integration-groovy')
 evaluationDependsOn(':griffon-integration-javafx')
 
 subprojects { subproj ->
@@ -124,6 +126,7 @@ def mavenizedProjects() {
         project(':griffon-weld'),
         project(':griffon-spring'),
         project(':griffon-swing'),
-        project(':griffon-javafx')
+        project(':griffon-javafx'),
+        project(':griffon-swing-builder')
     ]
 }

@@ -16,14 +16,11 @@
 
 package org.codehaus.griffon.runtime.core.addon;
 
-import griffon.core.ApplicationClassLoader;
 import griffon.core.ApplicationEvent;
 import griffon.core.GriffonApplication;
 import griffon.core.addon.AddonManager;
 import griffon.core.addon.GriffonAddon;
 import griffon.core.mvc.MVCGroupConfiguration;
-import griffon.exceptions.GriffonException;
-import griffon.inject.DependsOn;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -31,15 +28,12 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.annotation.concurrent.GuardedBy;
 import javax.inject.Inject;
-import javax.inject.Named;
-import java.io.IOException;
-import java.net.URL;
 import java.util.*;
 
 import static griffon.util.CollectionUtils.reverse;
-import static griffon.util.GriffonNameUtils.getLogicalPropertyName;
+import static griffon.util.GriffonClassUtils.getDependsOn;
+import static griffon.util.GriffonClassUtils.mapInstancesByName;
 import static griffon.util.GriffonNameUtils.getPropertyName;
-import static griffon.util.GriffonNameUtils.isBlank;
 import static griffon.util.GriffonNameUtils.requireNonBlank;
 import static java.util.Arrays.asList;
 import static java.util.Objects.requireNonNull;
@@ -126,16 +120,7 @@ public abstract class AbstractAddonManager implements AddonManager {
     @Nonnull
     protected Map<String, GriffonAddon> preloadAddons() {
         Collection<GriffonAddon> addonInstances = getApplication().getInjector().getInstances(GriffonAddon.class);
-        Map<String, GriffonAddon> addons = mapAddonsByName(addonInstances);
-
-        /*
-        String[] addonNamesByOrder = loadAddonMetadata();
-
-        for (String name : addonNamesByOrder) {
-            map.put(name, addonsByName.remove(name));
-        }
-        map.putAll(addonsByName);
-        */
+        Map<String, GriffonAddon> addons = mapInstancesByName(addonInstances, GRIFFON_ADDON_SUFFIX);
 
         Map<String, GriffonAddon> map = new LinkedHashMap<>();
         map.putAll(addons);
@@ -243,7 +228,7 @@ public abstract class AbstractAddonManager implements AddonManager {
             }
         }
 
-        addons = mapAddonsByName(sortedAddons);
+        addons = mapInstancesByName(sortedAddons, GRIFFON_ADDON_SUFFIX);
         if (LOG.isDebugEnabled()) {
             LOG.debug("Computed addon order is " + addons.keySet());
         }
@@ -251,11 +236,6 @@ public abstract class AbstractAddonManager implements AddonManager {
         return addons;
     }
 
-    @Nonnull
-    protected String[] getDependsOn(@Nonnull GriffonAddon addon) {
-        DependsOn dependsOn = addon.getClass().getAnnotation(DependsOn.class);
-        return dependsOn != null ? dependsOn.value() : new String[0];
-    }
 
     @SuppressWarnings("unchecked")
     protected void addMVCGroups(@Nonnull GriffonAddon addon) {
@@ -282,58 +262,6 @@ public abstract class AbstractAddonManager implements AddonManager {
     @Nonnull
     protected Map<String, GriffonAddon> getAddonsInternal() {
         return addons;
-    }
-
-    @Nonnull
-    protected String[] loadAddonMetadata() {
-        URL url = getAddonMetadataResource();
-        if (url != null) {
-            return processURL(url);
-        }
-
-        return new String[0];
-    }
-
-    protected URL getAddonMetadataResource() {
-        return application.getInjector().getInstance(ApplicationClassLoader.class).get().getResource("META-INF/griffon/addons.properties");
-    }
-
-    @SuppressWarnings("unchecked")
-    private String[] processURL(URL url) {
-        List<String> addons = new ArrayList<>();
-        try (Scanner scanner = new Scanner(url.openStream())) {
-            while (scanner.hasNextLine()) {
-                String line = scanner.nextLine().trim();
-                if (isBlank(line) || line.startsWith("#")) {
-                    continue;
-                }
-                addons.add(line);
-            }
-        } catch (IOException ioe) {
-            throw new GriffonException(ioe);
-        }
-        return addons.toArray(new String[addons.size()]);
-    }
-
-    @Nonnull
-    protected Map<String, GriffonAddon> mapAddonsByName(@Nonnull Collection<GriffonAddon> addons) {
-        Map<String, GriffonAddon> map = new LinkedHashMap<>();
-
-        for (GriffonAddon addon : addons) {
-            map.put(nameFor(addon), addon);
-        }
-
-        return map;
-    }
-
-    @Nonnull
-    protected String nameFor(@Nonnull GriffonAddon addon) {
-        Named annotation = addon.getClass().getAnnotation(Named.class);
-        if (annotation != null && !isBlank(annotation.value())) {
-            return annotation.value();
-        } else {
-            return getLogicalPropertyName(addon.getClass().getName(), GRIFFON_ADDON_SUFFIX);
-        }
     }
 
     protected void event(@Nonnull ApplicationEvent evt) {

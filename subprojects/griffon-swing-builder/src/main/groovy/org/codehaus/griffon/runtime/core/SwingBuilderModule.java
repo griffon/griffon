@@ -16,37 +16,18 @@
 
 package org.codehaus.griffon.runtime.core;
 
-import griffon.builder.core.CoreBuilderCustomizer;
-import griffon.core.addon.GriffonAddon;
-import griffon.core.mvc.MVCGroupManager;
+import griffon.builder.swing.SwingBuilderCustomizer;
 import griffon.core.view.BuilderCustomizer;
-import griffon.groovy.GroovyAddon;
-import griffon.util.CompositeResourceBundleBuilder;
 import org.codehaus.griffon.runtime.core.injection.AbstractModule;
-import org.codehaus.griffon.runtime.core.mvc.GroovyAwareMVCGroupManager;
-import org.codehaus.griffon.runtime.util.GroovyAwareCompositeResourceBundleBuilder;
 
 /**
  * @author Andres Almiray
- * @since 2.0.0
  */
-public class GroovyModule extends AbstractModule {
+public class SwingBuilderModule extends AbstractModule {
     @Override
     protected void doConfigure() {
-        bind(CompositeResourceBundleBuilder.class)
-            .to(GroovyAwareCompositeResourceBundleBuilder.class)
-            .asSingleton();
-
-        bind(GriffonAddon.class)
-            .to(GroovyAddon.class)
-            .asSingleton();
-
-        bind(MVCGroupManager.class)
-            .to(GroovyAwareMVCGroupManager.class)
-            .asSingleton();
-
         bind(BuilderCustomizer.class)
-            .to(CoreBuilderCustomizer.class)
+            .to(SwingBuilderCustomizer.class)
             .asSingleton();
     }
 }

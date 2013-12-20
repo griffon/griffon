@@ -141,6 +141,7 @@ public class DefaultMVCGroupManager extends AbstractMVCGroupManager {
         // must set it again because mvcId might have been initialized internally
         args.put("mvcId", group.getMvcId());
         args.put("mvcGroup", group);
+        args.put("application", getApplication());
     }
 
     @Nonnull
@@ -232,14 +233,14 @@ public class DefaultMVCGroupManager extends AbstractMVCGroupManager {
             String memberType = memberEntry.getKey();
             Object member = memberEntry.getValue();
             if (member instanceof GriffonArtifact) {
-                initializeArtifactMember(memberType, (GriffonArtifact) member, args);
+                initializeArtifactMember(group, memberType, (GriffonArtifact) member, args);
             } else {
-                initializeNonArtifactMember(memberType, member, args);
+                initializeNonArtifactMember(group, memberType, member, args);
             }
         }
     }
 
-    protected void initializeArtifactMember(@Nonnull String type, final @Nonnull GriffonArtifact member, final @Nonnull Map<String, Object> args) {
+    protected void initializeArtifactMember(@Nonnull MVCGroup group, @Nonnull String type, final @Nonnull GriffonArtifact member, final @Nonnull Map<String, Object> args) {
         if (member instanceof GriffonView) {
             getApplication().getUIThreadManager().runInsideUISync(new Runnable() {
                 @Override
@@ -254,16 +255,18 @@ public class DefaultMVCGroupManager extends AbstractMVCGroupManager {
         }
     }
 
-    protected void initializeNonArtifactMember(@Nonnull String type, @Nonnull Object member, @Nonnull Map<String, Object> args) {
+    protected void initializeNonArtifactMember(@Nonnull MVCGroup group, @Nonnull String type, @Nonnull Object member, @Nonnull Map<String, Object> args) {
         // empty
     }
 
     protected void fillReferencedProperties(@Nonnull MVCGroup group, @Nonnull Map<String, Object> args) {
         for (Map.Entry<String, Object> memberEntry : group.getMembers().entrySet()) {
-            if (memberEntry.getValue() instanceof GriffonArtifact) {
-                fillArtifactMemberProperties(memberEntry.getKey(), (GriffonArtifact) memberEntry.getValue(), args);
+            String memberType = memberEntry.getKey();
+            Object member = memberEntry.getValue();
+            if (member instanceof GriffonArtifact) {
+                fillArtifactMemberProperties(memberType, (GriffonArtifact) member, args);
             } else {
-                fillNonArtifactMemberProperties(memberEntry.getKey(), memberEntry.getValue(), args);
+                fillNonArtifactMemberProperties(memberType, member, args);
             }
         }
     }

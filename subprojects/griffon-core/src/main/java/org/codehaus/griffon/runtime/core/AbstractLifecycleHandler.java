@@ -18,7 +18,6 @@ package org.codehaus.griffon.runtime.core;
 
 import griffon.core.GriffonApplication;
 import griffon.core.LifecycleHandler;
-import org.codehaus.griffon.runtime.core.threading.AbstractThreadingHandler;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -35,7 +34,7 @@ import static java.util.Objects.requireNonNull;
  * @author Andres Almiray
  * @since 0.9.3
  */
-public abstract class AbstractLifecycleHandler extends AbstractThreadingHandler implements LifecycleHandler {
+public abstract class AbstractLifecycleHandler implements LifecycleHandler {
     private final GriffonApplication application;
 
     @Inject

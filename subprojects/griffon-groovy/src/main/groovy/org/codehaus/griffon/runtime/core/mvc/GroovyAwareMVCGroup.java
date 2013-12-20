@@ -16,6 +16,7 @@
 
 package org.codehaus.griffon.runtime.core.mvc;
 
+import griffon.core.artifact.GriffonViewClass;
 import griffon.core.mvc.MVCGroupConfiguration;
 import griffon.core.mvc.MVCGroupManager;
 import groovy.lang.Script;
@@ -51,7 +52,7 @@ public class GroovyAwareMVCGroup extends DefaultMVCGroup {
         final Script script = (Script) member;
 
         // special case: view gets executed in the UI thread always
-        if ("view".equals(name)) {
+        if (GriffonViewClass.TYPE.equals(name)) {
             getMvcGroupManager().getApplication().getUIThreadManager().runInsideUISync(new Runnable() {
                 @Override
                 public void run() {
