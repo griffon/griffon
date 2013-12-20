@@ -71,7 +71,6 @@ public final class GriffonApplicationSupport {
         initializeResourcesInjector(application);
         runLifecycleHandler(Lifecycle.INITIALIZE, application);
         applyPlatformTweaks(application);
-        initializeArtifactManager(application);
         initializeAddonManager(application);
         initializeMvcManager(application);
         initializeActionManager(application);
