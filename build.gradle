@@ -44,6 +44,10 @@ subprojects { subproj ->
         apply from: "${rootDir}/gradle/codeQuality.gradle"
     }
 
+    configurations {
+        provided
+    }
+
     repositories {
         jcenter()
         mavenCentral()
@@ -62,6 +66,22 @@ subprojects { subproj ->
         testCompile "org.codehaus.groovy:groovy-all:$groovyVersion"
         testCompile 'org.spockframework:spock-core:0.7-groovy-2.0'
         testCompile "org.slf4j:slf4j-simple:$slf4jVersion"
+    }
+
+    sourceSets {
+        main {
+            compileClasspath += configurations.provided
+        }
+    }
+
+    javadoc {
+        classpath += configurations.provided
+    }
+
+    idea {
+        module {
+            scopes.PROVIDED.plus += configurations.provided
+        }
     }
 }
 

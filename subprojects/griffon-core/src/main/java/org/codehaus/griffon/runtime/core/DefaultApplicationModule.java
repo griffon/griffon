@@ -203,7 +203,7 @@ public class DefaultApplicationModule extends AbstractModule {
 
     private void platformHandler() {
         bind(PlatformHandler.class)
-            .to(DefaultPlatformHandler.class)
+            .toProvider(PlatformHandlerProvider.class)
             .asSingleton();
     }
 
