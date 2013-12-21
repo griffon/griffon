@@ -61,7 +61,7 @@ public class SwingGriffonControllerAction extends AbstractAction {
         requireNonNull(uiThreadManager, "Argument 'uiThreadManager' cannot be null");
 
         toolkitAction = new SwingAction(new CallableWithArgs<Void>() {
-            public Void call(@Nonnull Object[] args) {
+            public Void call(@Nonnull Object... args) {
                 actionManager.invokeAction(controller, actionName, args);
                 return null;
             }

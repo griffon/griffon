@@ -41,7 +41,7 @@ public final class MVCGroupExceptionHandler implements CallableWithArgs<Void> {
         application.getEventRouter().addEventListener("UncaughtMVCGroupInstantiationException", this);
     }
 
-    public Void call(@Nonnull Object[] args) {
+    public Void call(@Nonnull Object... args) {
         Exception exception = (Exception) args[0];
         application.getLog().error("Unrecoverable error", exception);
         // exception.printStackTrace();

@@ -113,7 +113,7 @@ public class ConfigurableWindowDisplayHandler<W> implements WindowDisplayHandler
         if (!options.isEmpty()) {
             Object handler = options.get("show");
             if (canBeRun(handler)) {
-                run((CallableWithArgs) handler, window);
+                run((CallableWithArgs<?>) handler, window);
                 return;
             } else if (options.get("handler") instanceof WindowDisplayHandler) {
                 ((WindowDisplayHandler<W>) options.get("handler")).show(name, window);
@@ -125,7 +125,7 @@ public class ConfigurableWindowDisplayHandler<W> implements WindowDisplayHandler
         if (!options.isEmpty()) {
             Object handler = options.get("defaultShow");
             if (canBeRun(handler)) {
-                run((CallableWithArgs) handler, window);
+                run((CallableWithArgs<?>) handler, window);
                 return;
             }
         }
@@ -142,7 +142,7 @@ public class ConfigurableWindowDisplayHandler<W> implements WindowDisplayHandler
         if (!options.isEmpty()) {
             Object handler = options.get("hide");
             if (canBeRun(handler)) {
-                run((CallableWithArgs) handler, window);
+                run((CallableWithArgs<?>) handler, window);
                 return;
             } else if (options.get("handler") instanceof WindowDisplayHandler) {
                 ((WindowDisplayHandler<W>) options.get("handler")).hide(name, window);
@@ -154,7 +154,7 @@ public class ConfigurableWindowDisplayHandler<W> implements WindowDisplayHandler
         if (!options.isEmpty()) {
             Object handler = options.get("defaultHide");
             if (canBeRun(handler)) {
-                run((CallableWithArgs) handler, window);
+                run((CallableWithArgs<?>) handler, window);
                 return;
             }
         }
@@ -169,7 +169,7 @@ public class ConfigurableWindowDisplayHandler<W> implements WindowDisplayHandler
         return obj instanceof CallableWithArgs;
     }
 
-    protected void run(CallableWithArgs handler, W window) {
+    protected void run(CallableWithArgs<?> handler, W window) {
         handler.call(window);
     }
 

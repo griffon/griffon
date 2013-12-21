@@ -50,6 +50,7 @@ public class GroovyAwareCompositeResourceBundleBuilder extends DefaultCompositeR
 
     @Nonnull
     @Override
+    @SuppressWarnings("unchecked")
     protected Collection<ResourceBundle> loadBundleFromClass(@Nonnull String fileName) {
         List<ResourceBundle> bundles = new ArrayList<>();
         URL resource = getResourceAsURL(fileName, GROOVY_SUFFIX);
@@ -64,7 +65,7 @@ public class GroovyAwareCompositeResourceBundleBuilder extends DefaultCompositeR
             try {
                 Class<?> klass = loadClass(className);
                 if (Script.class.isAssignableFrom(klass)) {
-                    bundles.add(new GroovyScriptResourceBundle(configReader, klass));
+                    bundles.add(new GroovyScriptResourceBundle(configReader, (Class<? extends Script>)klass));
                     return bundles;
                 }
             } catch (ClassNotFoundException e) {

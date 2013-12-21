@@ -15,6 +15,7 @@ public class Config extends AbstractMapResourceBundle {
         CollectionUtils.map(entries)
             //.e("application.startupGroups", asList("sample"))
             .e("application", CollectionUtils.map()
+                .e("title", "Griffon Integration")
                 .e("startupGroups", asList("sample"))
             )
             .e("mvcGroups", CollectionUtils.map()

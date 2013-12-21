@@ -17,9 +17,7 @@
 package griffon.inject;
 
 import javax.inject.Scope;
-import java.lang.annotation.Documented;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.*;
 
 /**
  * @author Andres Almiray
@@ -28,5 +26,6 @@ import java.lang.annotation.RetentionPolicy;
 @Scope
 @Documented
 @Retention(RetentionPolicy.RUNTIME)
+@Target({ElementType.TYPE})
 public @interface Prototype {
 }

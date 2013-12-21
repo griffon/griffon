@@ -233,7 +233,7 @@ public class GuiceInjector implements Injector<com.google.inject.Injector> {
 
             @Nonnull
             private LinkedBindingBuilder handleBinding(@Nonnull Binding<?> binding) {
-                AnnotatedBindingBuilder builder = bind(binding.getSource());
+                AnnotatedBindingBuilder<?> builder = bind(binding.getSource());
                 if (binding.getClassifier() != null) {
                     return builder.annotatedWith(binding.getClassifier());
                 } else if (binding.getClassifierType() != null) {

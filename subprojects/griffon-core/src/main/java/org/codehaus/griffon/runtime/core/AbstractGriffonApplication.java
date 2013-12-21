@@ -57,7 +57,7 @@ public abstract class AbstractGriffonApplication extends AbstractObservable impl
     private static final String ERROR_SHUTDOWN_HANDLER_NULL = "Argument 'shutdownHandler' cannot be null";
     private Locale locale = Locale.getDefault();
     public static final String[] EMPTY_ARGS = new String[0];
-    private static final Class[] CTOR_ARGS = new Class[]{String[].class};
+    private static final Class<?>[] CTOR_ARGS = new Class<?>[]{String[].class};
 
     protected final Object[] lock = new Object[0];
     private ApplicationPhase phase = ApplicationPhase.INITIALIZE;
@@ -285,7 +285,7 @@ public abstract class AbstractGriffonApplication extends AbstractObservable impl
             final CountDownLatch latch = new CountDownLatch(getUIThreadManager().isUIThread() ? 1 : 0);
             getEventRouter().addEventListener(ApplicationEvent.SHUTDOWN_START.getName(), new CallableWithArgs<Void>() {
                 @Override
-                public Void call(@Nonnull Object[] args) {
+                public Void call(@Nonnull Object... args) {
                     latch.countDown();
                     return null;
                 }

@@ -69,7 +69,7 @@ public class SwingAddon extends AbstractGriffonAddon {
 
             GriffonExceptionHandler.addClassTest(new CallableWithArgs<Boolean>() {
                 @Override
-                public Boolean call(@Nonnull Object[] args) {
+                public Boolean call(@Nonnull Object... args) {
                     String className = (String) args[0];
                     for (String groovyPackage : EXCLUDED_PACKAGES) {
                         if (className.startsWith(groovyPackage)) {

@@ -56,7 +56,7 @@ public final class GriffonApplicationSupport {
     private static final Logger LOG = LoggerFactory.getLogger(GriffonApplicationSupport.class);
 
     private static final String ERROR_APPLICATION_NULL = "Argument 'application' cannot be null";
-    private static final String KEY_APP_LIFECYCLE_HANDLER_DISABLE = "app.lifecycle.handler.disable";
+    private static final String KEY_APP_LIFECYCLE_HANDLER_DISABLE = "application.lifecycle.handler.disable";
     private static final String KEY_GRIFFON_CONTROLLER_ACTION_INTERCEPTOR_ORDER = "griffon.controller.action.interceptor.order";
 
     public static void init(@Nonnull GriffonApplication application) {
@@ -150,7 +150,7 @@ public final class GriffonApplicationSupport {
     private static void initializeResourcesInjector(@Nonnull GriffonApplication application) {
         final ResourcesInjector injector = application.getInjector().getInstance(ResourcesInjector.class);
         application.getEventRouter().addEventListener(ApplicationEvent.NEW_INSTANCE.getName(), new CallableWithArgs<Void>() {
-            public Void call(@Nonnull Object[] args) {
+            public Void call(@Nonnull Object... args) {
                 Object instance = args[1];
                 injector.injectResources(instance);
                 return null;
@@ -211,8 +211,8 @@ public final class GriffonApplicationSupport {
         }
 
         application.getEventRouter().addEventListener(ApplicationEvent.NEW_INSTANCE.getName(), new CallableWithArgs<Void>() {
-            public Void call(@Nonnull Object[] args) {
-                Class klass = (Class) args[0];
+            public Void call(@Nonnull Object... args) {
+                Class<?> klass = (Class) args[0];
                 if (GriffonController.class.isAssignableFrom(klass)) {
                     GriffonController controller = (GriffonController) args[1];
                     application.getActionManager().createActions(controller);

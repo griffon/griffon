@@ -50,7 +50,7 @@ public class GroovyScriptResourceBundle extends ResourceBundle {
         this(requireNonNull(reader, ERROR_READER_NULL).parse(requireNonBlank(script, "Argument 'script' cannot ne blank")));
     }
 
-    public GroovyScriptResourceBundle(@Nonnull ConfigReader reader, @Nonnull Class<?> scriptClass) {
+    public GroovyScriptResourceBundle(@Nonnull ConfigReader reader, @Nonnull Class<? extends Script> scriptClass) {
         this(requireNonNull(reader, ERROR_READER_NULL).parse(requireNonNull(scriptClass, "Argument 'scriptClass' cannot ne null")));
     }
 

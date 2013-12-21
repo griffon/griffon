@@ -458,18 +458,6 @@ public final class GriffonApplicationUtils {
         return isJdk18;
     }
 
-    /*
-    public static MetaClass metaClassOf(Object obj) {
-        if (obj == null) return null;
-        if (GriffonArtifact.class.isAssignableFrom(obj.getClass())) {
-            return ((GriffonArtifact) obj).getGriffonClass().getMetaClass();
-        } else if (GroovyObject.class.isAssignableFrom(obj.getClass())) {
-            return ((GroovyObject) obj).getMetaClass();
-        }
-        return GroovySystem.getMetaClassRegistry().getMetaClass(obj.getClass());
-    }
-    */
-
     @Nonnull
     @SuppressWarnings("ConstantConditions")
     public static Locale parseLocale(@Nullable String locale) {

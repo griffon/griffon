@@ -235,7 +235,7 @@ public abstract class AbstractEventRouter implements EventRouter {
     }
 
     @Override
-    public void addEventListener(@Nonnull String eventName, @Nonnull CallableWithArgs listener) {
+    public void addEventListener(@Nonnull String eventName, @Nonnull CallableWithArgs<?> listener) {
         requireNonBlank(eventName, ERROR_EVENT_NAME_BLANK);
         requireNonNull(listener, ERROR_LISTENER_NULL);
         synchronized (callableListeners) {

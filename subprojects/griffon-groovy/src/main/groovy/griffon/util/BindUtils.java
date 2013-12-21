@@ -122,9 +122,9 @@ public class BindUtils {
             builder.invokeMethod("bind", attributes);
         }
 
-        private Closure makeClosure(@Nonnull FactoryBuilderSupport builder, @Nonnull final CallableWithArgs<?> callback) {
+        private Closure<?> makeClosure(@Nonnull FactoryBuilderSupport builder, @Nonnull final CallableWithArgs<?> callback) {
             if (callback instanceof Closure) {
-                return (Closure) callback;
+                return (Closure<?>) callback;
             }
             return new Closure<Object>(builder) {
                 private static final long serialVersionUID = -4108869890482462552L;
