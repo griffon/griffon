@@ -58,8 +58,8 @@ public class Bindings {
     private abstract static class LinkedBindingBuilderImpl<T> extends SingletonBindingBuilderImpl<T> implements LinkedBindingBuilder<T> {
         protected Class<? extends T> target;
         protected T instance;
-        protected Provider<? extends T> provider;
-        protected Class<Provider<? extends T>> providerType;
+        protected Provider<T> provider;
+        protected Class<? extends Provider<T>> providerType;
 
         @Nonnull
         @Override
@@ -75,14 +75,14 @@ public class Bindings {
 
         @Nonnull
         @Override
-        public SingletonBindingBuilder<T> toProvider(@Nonnull Provider<? extends T> provider) {
+        public SingletonBindingBuilder<T> toProvider(@Nonnull Provider<T> provider) {
             this.provider = requireNonNull(provider, "Argument 'provider' cannot be null");
             return this;
         }
 
         @Nonnull
         @Override
-        public SingletonBindingBuilder<T> toProvider(@Nonnull Class<Provider<? extends T>> providerType) {
+        public SingletonBindingBuilder<T> toProvider(@Nonnull Class<? extends Provider<T>> providerType) {
             this.providerType = requireNonNull(providerType, "Argument 'providerType' cannot be null");
             return this;
         }
@@ -287,16 +287,16 @@ public class Bindings {
     }
 
     private static class ProviderBindingImpl<T> extends AbstractBindingImpl<T> implements ProviderBinding<T> {
-        private final Provider<? extends T> provider;
+        private final Provider<T> provider;
 
-        private ProviderBindingImpl(@Nonnull Class<T> source, @Nonnull Provider<? extends T> provider, @Nonnull Annotation classifier, boolean singleton) {
+        private ProviderBindingImpl(@Nonnull Class<T> source, @Nonnull Provider<T> provider, @Nonnull Annotation classifier, boolean singleton) {
             super(source, classifier, singleton);
             this.provider = provider;
             updateClassifier(provider.getClass());
         }
 
 
-        private ProviderBindingImpl(@Nonnull Class<T> source, @Nonnull Provider<? extends T> provider, @Nonnull Class<? extends Annotation> classifierType, boolean singleton) {
+        private ProviderBindingImpl(@Nonnull Class<T> source, @Nonnull Provider<T> provider, @Nonnull Class<? extends Annotation> classifierType, boolean singleton) {
             super(source, classifierType, singleton);
             this.provider = provider;
             updateClassifierType(provider.getClass());
@@ -304,7 +304,7 @@ public class Bindings {
 
         @Nonnull
         @Override
-        public Provider<? extends T> getProvider() {
+        public Provider<T> getProvider() {
             return provider;
         }
 
@@ -325,16 +325,16 @@ public class Bindings {
     }
 
     private static class ProviderTypeBindingImpl<T> extends AbstractBindingImpl<T> implements ProviderTypeBinding<T> {
-        private final Class<Provider<? extends T>> providerType;
+        private final Class<? extends Provider<T>> providerType;
 
-        private ProviderTypeBindingImpl(@Nonnull Class<T> source, @Nonnull Class<Provider<? extends T>> providerType, @Nonnull Annotation classifier, boolean singleton) {
+        private ProviderTypeBindingImpl(@Nonnull Class<T> source, @Nonnull Class<? extends Provider<T>> providerType, @Nonnull Annotation classifier, boolean singleton) {
             super(source, classifier, singleton);
             this.providerType = providerType;
             updateClassifier(providerType);
         }
 
 
-        private ProviderTypeBindingImpl(@Nonnull Class<T> source, @Nonnull Class<Provider<? extends T>> providerType, @Nonnull Class<? extends Annotation> classifierType, boolean singleton) {
+        private ProviderTypeBindingImpl(@Nonnull Class<T> source, @Nonnull Class<? extends Provider<T>> providerType, @Nonnull Class<? extends Annotation> classifierType, boolean singleton) {
             super(source, classifierType, singleton);
             this.providerType = providerType;
             updateClassifierType(providerType);
@@ -342,7 +342,7 @@ public class Bindings {
 
         @Nonnull
         @Override
-        public Class<Provider<? extends T>> getProviderType() {
+        public Class<? extends Provider<T>> getProviderType() {
             return providerType;
         }
 

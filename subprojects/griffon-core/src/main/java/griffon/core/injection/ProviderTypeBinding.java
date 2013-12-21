@@ -25,5 +25,5 @@ import javax.inject.Provider;
  */
 public interface ProviderTypeBinding<T> extends Binding<T> {
     @Nonnull
-    Class<Provider<? extends T>> getProviderType();
+    Class<? extends Provider<T>> getProviderType();
 }

@@ -30,8 +30,8 @@ public interface LinkedBindingBuilder<T> extends SingletonBindingBuilder<T> {
     void toInstance(@Nonnull T instance);
 
     @Nonnull
-    SingletonBindingBuilder<T> toProvider(@Nonnull Provider<? extends T> provider);
+    SingletonBindingBuilder<T> toProvider(@Nonnull Provider<T> provider);
 
     @Nonnull
-    SingletonBindingBuilder<T> toProvider(@Nonnull Class<Provider<? extends T>> providerType);
+    SingletonBindingBuilder<T> toProvider(@Nonnull Class<? extends Provider<T>> providerType);
 }
