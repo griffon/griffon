@@ -34,6 +34,8 @@ evaluationDependsOn(':griffon-integration')
 evaluationDependsOn(':griffon-integration-groovy')
 evaluationDependsOn(':griffon-integration-javafx')
 
+// if (!project.hasProperty('lint')) project.ext.lint = false
+
 subprojects { subproj ->
     apply plugin: 'idea'
 
@@ -67,6 +69,18 @@ subprojects { subproj ->
         testCompile 'org.spockframework:spock-core:0.7-groovy-2.0'
         testCompile "org.slf4j:slf4j-simple:$slf4jVersion"
     }
+
+    /*
+    compileJava {
+        doFirst {
+            if (project.ext.lint) {
+                options.compilerArgs = [
+                    '-Xlint:all', '-Xlint:deprecation', '-Xlint:unchecked'
+                ]
+            }
+        }
+    }
+    */
 
     sourceSets {
         main {
