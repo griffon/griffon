@@ -55,4 +55,33 @@ class DefaultApplicationConfigurationSpec extends Specification {
             entries['key.double.string'] = '6.2832'
         }
     }
+
+    def 'Can resolved nested keys from sample application configuration'() {
+        given:
+        ResourceBundle bundle = new AppResourceBundle()
+        ApplicationConfiguration configuration = new DefaultApplicationConfiguration(bundle)
+
+        expect:
+
+        'Griffon' == configuration['application.title']
+        'sample.SampleView' == configuration['mvcGroups.sample.view']
+    }
+
+    class AppResourceBundle extends AbstractMapResourceBundle {
+        @Override
+        protected void initialize(@Nonnull Map<String, Object> entries) {
+            entries['application'] = [
+                title: 'Griffon',
+                autoShutdown: true,
+                startupGroups: ['sample']
+            ]
+            entries['mvcGroups'] = [
+                sample: [
+                    model: 'sample.SampleModel',
+                    view: 'sample.SampleView',
+                    controller: 'sample.SampleController'
+                ]
+            ]
+        }
+    }
 }

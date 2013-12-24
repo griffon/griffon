@@ -20,7 +20,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.*;
 
-import static griffon.util.ConfigUtils.explodeKeys;
+import static griffon.util.ConfigUtils.collectKeys;
 import static griffon.util.GriffonNameUtils.requireNonBlank;
 
 /**
@@ -29,19 +29,14 @@ import static griffon.util.GriffonNameUtils.requireNonBlank;
  */
 public abstract class AbstractMapResourceBundle extends ResourceBundle {
     private final Map<String, Object> entries = new LinkedHashMap<>();
-    private final Set<String> explodedKeys;
+    private volatile Set<String> keys;
 
     public AbstractMapResourceBundle() {
         initialize(entries);
-        explodedKeys = explodeKeys(entries.keySet());
+        keys = collectKeys(entries);
     }
 
     protected abstract void initialize(@Nonnull Map<String, Object> entries);
-
-    @Nonnull
-    public Set<String> explodedKeySet() {
-        return explodedKeys;
-    }
 
     @Nullable
     @Override
@@ -52,7 +47,7 @@ public abstract class AbstractMapResourceBundle extends ResourceBundle {
     @Nonnull
     @Override
     public final Enumeration<String> getKeys() {
-        return new IteratorAsEnumeration<>(entries.keySet().iterator());
+        return new IteratorAsEnumeration<>(keys.iterator());
     }
 
     private static class IteratorAsEnumeration<E> implements Enumeration<E> {
@@ -69,5 +64,10 @@ public abstract class AbstractMapResourceBundle extends ResourceBundle {
         public E nextElement() {
             return iterator.next();
         }
+    }
+
+    @Override
+    protected Set<String> handleKeySet() {
+        return keys;
     }
 }
