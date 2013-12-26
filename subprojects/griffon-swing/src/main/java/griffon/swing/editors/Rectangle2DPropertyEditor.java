@@ -17,6 +17,7 @@
 package griffon.swing.editors;
 
 import griffon.core.resources.editors.AbstractPropertyEditor;
+import org.codehaus.griffon.core.compile.PropertyEditorFor;
 
 import java.awt.geom.Rectangle2D;
 import java.util.List;
@@ -26,6 +27,7 @@ import java.util.Map;
  * @author Andres Almiray
  * @since 1.2.0
  */
+@PropertyEditorFor(Rectangle2D.class)
 public class Rectangle2DPropertyEditor extends AbstractPropertyEditor {
     public String getAsText() {
         if (null == getValue()) return null;

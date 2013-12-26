@@ -3,7 +3,13 @@ apply plugin: 'application'
 
 mainClassName = 'Main'
 
+configurations {
+    compileOnly
+}
+
 dependencies {
+    compileOnly project(':griffon-core-compile')
+
     compile project(':griffon-swing')
 
     runtime project(':griffon-guice')

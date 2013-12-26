@@ -1,13 +1,16 @@
 package sample;
 
 import griffon.core.GriffonApplication;
+import griffon.core.artifact.GriffonModel;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
+import org.codehaus.griffon.core.compile.ArtifactProviderFor;
 import org.codehaus.griffon.runtime.core.artifact.AbstractGriffonModel;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
 
+@ArtifactProviderFor(GriffonModel.class)
 public class SampleModel extends AbstractGriffonModel {
     private StringProperty input;
 

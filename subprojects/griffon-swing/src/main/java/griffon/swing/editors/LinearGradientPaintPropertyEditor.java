@@ -17,6 +17,7 @@
 package griffon.swing.editors;
 
 import griffon.core.resources.editors.AbstractPropertyEditor;
+import org.codehaus.griffon.core.compile.PropertyEditorFor;
 
 import java.awt.Color;
 import java.awt.LinearGradientPaint;
@@ -29,6 +30,7 @@ import java.util.Map;
  * @author Andres Almiray
  * @since 1.2.0
  */
+@PropertyEditorFor(LinearGradientPaint.class)
 public class LinearGradientPaintPropertyEditor extends AbstractPropertyEditor {
     public String getAsText() {
         if (null == getValue()) return null;

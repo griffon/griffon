@@ -4,7 +4,13 @@ apply from: 'gradle/javafx.plugin'
 
 mainClassName = 'Main'
 
+configurations {
+    compileOnly
+}
+
 dependencies {
+    compileOnly project(':griffon-core-compile')
+
     compile project(':griffon-javafx')
 
     runtime project(':griffon-guice')

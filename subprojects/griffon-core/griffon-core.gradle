@@ -3,7 +3,7 @@ apply plugin: 'groovy'
 ext.pomDescription = 'Griffon core'
 
 configurations {
-    provided
+    compileOnly
 }
 
 dependencies {
@@ -12,5 +12,5 @@ dependencies {
     compile 'com.google.code.findbugs:jsr305:2.0.2'
     compile "org.slf4j:slf4j-api:$slf4jVersion"
 
-    provided 'mrj:MRJToolkitStubs:1.0'
+    compileOnly 'mrj:MRJToolkitStubs:1.0'
 }

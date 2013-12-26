@@ -12,7 +12,13 @@ for (location in ['lib/jfxrt.jar', 'jre/lib/jfxrt.jar', 'jre/lib/ext/jfxrt.jar']
     }
 }
 
+configurations {
+    compileOnly
+}
+
 dependencies {
     compile project(':griffon-core')
     compile project.files(project.jfxrtLocation)
+
+    compileOnly project(':griffon-core-compile')
 }

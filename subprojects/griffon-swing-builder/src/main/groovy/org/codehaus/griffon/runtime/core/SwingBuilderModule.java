@@ -17,12 +17,15 @@
 package org.codehaus.griffon.runtime.core;
 
 import griffon.builder.swing.SwingBuilderCustomizer;
+import griffon.core.injection.Module;
 import griffon.util.BuilderCustomizer;
 import org.codehaus.griffon.runtime.core.injection.AbstractModule;
+import org.kordamp.jipsy.ServiceProviderFor;
 
 /**
  * @author Andres Almiray
  */
+@ServiceProviderFor(Module.class)
 public class SwingBuilderModule extends AbstractModule {
     @Override
     protected void doConfigure() {

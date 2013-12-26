@@ -3,6 +3,10 @@ apply plugin: 'application'
 
 mainClassName = 'Main'
 
+configurations {
+    compileOnly
+}
+
 dependencies {
     compile project(':griffon-groovy')
     compile project(':griffon-swing')
@@ -11,4 +15,6 @@ dependencies {
     runtime project(':griffon-swing-builder')
 
     runtime "org.slf4j:slf4j-simple:$slf4jVersion"
+
+    compileOnly project(':griffon-groovy-compile')
 }

@@ -23,10 +23,12 @@ apply plugin: 'build-dashboard'
 apply from: 'gradle/idea.gradle'
 
 evaluationDependsOn(':griffon-core')
+evaluationDependsOn(':griffon-core-compile')
 evaluationDependsOn(':griffon-guice')
 evaluationDependsOn(':griffon-weld')
 evaluationDependsOn(':griffon-spring')
 evaluationDependsOn(':griffon-groovy')
+evaluationDependsOn(':griffon-groovy-compile')
 evaluationDependsOn(':griffon-swing')
 evaluationDependsOn(':griffon-swing-builder')
 evaluationDependsOn(':griffon-javafx')
@@ -47,15 +49,15 @@ subprojects { subproj ->
     }
 
     configurations {
-        provided
+        compileOnly
     }
 
     repositories {
         jcenter()
         mavenCentral()
         maven {
-            name 'Codehaus'
-            url 'http://repository.codehaus.org'
+            name 'Kordamp'
+            url 'http://dl.bintray.com/content/aalmiray/kordamp'
         }
     }
 
@@ -84,25 +86,25 @@ subprojects { subproj ->
 
     sourceSets {
         main {
-            compileClasspath += configurations.provided
+            compileClasspath += configurations.compileOnly
         }
     }
 
     javadoc {
-        classpath += configurations.provided
+        classpath += configurations.compileOnly
     }
 
     idea {
         module {
-            scopes.PROVIDED.plus += configurations.provided
+            scopes.PROVIDED.plus += configurations.compileOnly
         }
     }
 }
 
 Date buildTimeAndDate = new Date()
 ext {
-    buildTime = new SimpleDateFormat('dd-MMM-yyyy').format(buildTimeAndDate)
-    buildDate = new SimpleDateFormat('hh:mm aa').format(buildTimeAndDate)
+    buildTime = new SimpleDateFormat('yyyy-MM-dd').format(buildTimeAndDate)
+    buildDate = new SimpleDateFormat('HH:mm:ss.SSSZ').format(buildTimeAndDate)
 }
 
 configure(mavenizedProjects()) { proj ->
@@ -156,7 +158,9 @@ task bambooStage2(dependsOn: [bambooStage1, fullDist, rpm]) {
 def mavenizedProjects() {
     [
         project(':griffon-core'),
+        project(':griffon-core-compile'),
         project(':griffon-groovy'),
+        project(':griffon-groovy-compile'),
         project(':griffon-guice'),
         project(':griffon-weld'),
         project(':griffon-spring'),

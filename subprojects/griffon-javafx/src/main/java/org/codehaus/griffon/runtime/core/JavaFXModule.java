@@ -17,6 +17,7 @@
 package org.codehaus.griffon.runtime.core;
 
 import griffon.core.controller.ActionManager;
+import griffon.core.injection.Module;
 import griffon.core.threading.UIThreadManager;
 import griffon.core.view.WindowManager;
 import griffon.javafx.JavaFXWindowDisplayHandler;
@@ -27,11 +28,13 @@ import org.codehaus.griffon.runtime.javafx.ConfigurableJavaFXWindowDisplayHandle
 import org.codehaus.griffon.runtime.javafx.DefaultJavaFXWindowDisplayHandler;
 import org.codehaus.griffon.runtime.javafx.DefaultJavaFXWindowManager;
 import org.codehaus.griffon.runtime.javafx.JavaFXUIThreadManager;
+import org.kordamp.jipsy.ServiceProviderFor;
 
 /**
  * @author Andres Almiray
  * @since 2.0.0
  */
+@ServiceProviderFor(Module.class)
 public class JavaFXModule extends AbstractModule {
     @Override
     protected void doConfigure() {

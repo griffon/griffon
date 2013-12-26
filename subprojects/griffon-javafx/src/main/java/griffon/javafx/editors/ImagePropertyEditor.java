@@ -18,6 +18,7 @@ package griffon.javafx.editors;
 
 import griffon.core.resources.editors.AbstractPropertyEditor;
 import javafx.scene.image.Image;
+import org.codehaus.griffon.core.compile.PropertyEditorFor;
 
 import java.io.File;
 import java.io.InputStream;
@@ -28,6 +29,7 @@ import java.net.URL;
 /**
  * @author Andres Almiray
  */
+@PropertyEditorFor(Image.class)
 public class ImagePropertyEditor extends AbstractPropertyEditor {
     protected void setValueInternal(Object value) {
         if (null == value) {

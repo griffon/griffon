@@ -17,6 +17,7 @@
 package griffon.swing.editors;
 
 import griffon.core.resources.editors.AbstractPropertyEditor;
+import org.codehaus.griffon.core.compile.PropertyEditorFor;
 
 import java.awt.Rectangle;
 import java.util.List;
@@ -27,6 +28,7 @@ import java.util.Map;
  * @author Alexander Klein
  * @since 1.1.0
  */
+@PropertyEditorFor(Rectangle.class)
 public class RectanglePropertyEditor extends AbstractPropertyEditor {
     public String getAsText() {
         if (null == getValue()) return null;

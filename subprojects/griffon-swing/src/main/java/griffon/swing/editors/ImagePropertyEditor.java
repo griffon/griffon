@@ -17,6 +17,7 @@
 package griffon.swing.editors;
 
 import griffon.core.resources.editors.AbstractPropertyEditor;
+import org.codehaus.griffon.core.compile.PropertyEditorFor;
 
 import javax.imageio.ImageIO;
 import javax.imageio.stream.ImageInputStream;
@@ -33,6 +34,7 @@ import java.net.URL;
  * @author Andres Almiray
  * @since 1.1.0
  */
+@PropertyEditorFor(Image.class)
 public class ImagePropertyEditor extends AbstractPropertyEditor {
     protected void setValueInternal(Object value) {
         if (null == value) {

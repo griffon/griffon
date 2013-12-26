@@ -21,6 +21,7 @@ import griffon.core.resources.formatters.Formatter;
 import griffon.core.resources.formatters.ParseException;
 import griffon.javafx.formatters.ColorFormatter;
 import javafx.scene.paint.Color;
+import org.codehaus.griffon.core.compile.PropertyEditorFor;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -32,6 +33,7 @@ import static griffon.util.GriffonNameUtils.isBlank;
 /**
  * @author Andres Almiray
  */
+@PropertyEditorFor(Color.class)
 public class ColorPropertyEditor extends AbstractPropertyEditor {
     public static String format(Color color) {
         return ColorFormatter.LONG.format(color);

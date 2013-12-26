@@ -2,7 +2,13 @@ apply plugin: 'groovy'
 
 ext.pomDescription = 'Griffon Groovy module'
 
+configurations {
+    compileOnly
+}
+
 dependencies {
     compile project(':griffon-core')
     compile "org.codehaus.groovy:groovy-all:$groovyVersion"
+
+    compileOnly project(':griffon-core-compile')
 }

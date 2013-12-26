@@ -18,18 +18,22 @@ package org.codehaus.griffon.runtime.core;
 
 import griffon.builder.core.CoreBuilderCustomizer;
 import griffon.core.addon.GriffonAddon;
+import griffon.core.injection.Module;
 import griffon.core.mvc.MVCGroupManager;
-import griffon.util.BuilderCustomizer;
 import griffon.groovy.GroovyAddon;
+import griffon.util.BuilderCustomizer;
 import griffon.util.CompositeResourceBundleBuilder;
 import org.codehaus.griffon.runtime.core.injection.AbstractModule;
 import org.codehaus.griffon.runtime.core.mvc.GroovyAwareMVCGroupManager;
 import org.codehaus.griffon.runtime.util.GroovyAwareCompositeResourceBundleBuilder;
+import org.codehaus.groovy.runtime.DefaultGroovyMethods;
+import org.kordamp.jipsy.ServiceProviderFor;
 
 /**
  * @author Andres Almiray
  * @since 2.0.0
  */
+@ServiceProviderFor(Module.class)
 public class GroovyModule extends AbstractModule {
     @Override
     protected void doConfigure() {

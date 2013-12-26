@@ -2,6 +2,11 @@ apply plugin: 'groovy'
 
 ext.pomDescription = 'Griffon Swing module'
 
+configurations {
+    compileOnly
+}
+
 dependencies {
     compile project(':griffon-core')
+    compileOnly project(':griffon-core-compile')
 }

@@ -17,6 +17,7 @@
 package griffon.swing.editors;
 
 import griffon.core.resources.editors.AbstractPropertyEditor;
+import org.codehaus.griffon.core.compile.PropertyEditorFor;
 
 import java.awt.Polygon;
 import java.util.List;
@@ -25,6 +26,7 @@ import java.util.List;
  * @author Andres Almiray
  * @since 1.3.0
  */
+@PropertyEditorFor(Polygon.class)
 public class PolygonPropertyEditor extends AbstractPropertyEditor {
     public String getAsText() {
         if (null == getValue()) return null;

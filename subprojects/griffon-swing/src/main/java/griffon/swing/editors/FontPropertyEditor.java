@@ -17,6 +17,7 @@
 package griffon.swing.editors;
 
 import griffon.core.resources.editors.AbstractPropertyEditor;
+import org.codehaus.griffon.core.compile.PropertyEditorFor;
 
 import java.awt.Font;
 import java.util.List;
@@ -25,6 +26,7 @@ import java.util.Map;
 /**
  * @author Andres Almiray
  */
+@PropertyEditorFor(Font.class)
 public class FontPropertyEditor extends AbstractPropertyEditor {
     public String getAsText() {
         if (null == getValue()) return null;

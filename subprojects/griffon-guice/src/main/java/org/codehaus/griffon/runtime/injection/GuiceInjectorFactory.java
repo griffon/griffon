@@ -32,6 +32,7 @@ import griffon.core.injection.Binding;
 import griffon.core.injection.Injector;
 import griffon.core.injection.InjectorFactory;
 import org.codehaus.griffon.runtime.core.injection.InjectorProvider;
+import org.kordamp.jipsy.ServiceProviderFor;
 
 import javax.annotation.Nonnull;
 import javax.annotation.PostConstruct;
@@ -50,6 +51,7 @@ import static org.codehaus.griffon.runtime.injection.MethodUtils.invokeAnnotated
  * @author Andres Almiray
  * @since 2.0.0
  */
+@ServiceProviderFor(InjectorFactory.class)
 public class GuiceInjectorFactory implements InjectorFactory {
     @Nonnull
     @Override

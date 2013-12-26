@@ -17,6 +17,7 @@
 package org.codehaus.griffon.runtime.core;
 
 import griffon.core.GriffonApplication;
+import griffon.core.env.GriffonEnvironment;
 import griffon.core.env.Metadata;
 import griffon.core.injection.Binding;
 import griffon.core.injection.Injector;
@@ -29,7 +30,6 @@ import org.slf4j.LoggerFactory;
 
 import javax.annotation.Nonnull;
 import java.lang.annotation.Annotation;
-import java.lang.reflect.InvocationTargetException;
 import java.util.*;
 
 import static griffon.core.GriffonExceptionHandler.sanitize;
@@ -51,13 +51,16 @@ public class ApplicationBootstrapper {
 
     public void bootstrap() throws Exception {
         // 1 initialize environment settings
-        Metadata.getCurrent().getGriffonStartDir();
-        Metadata.getCurrent().getGriffonWorkingDir();
+        Metadata metadata = Metadata.getCurrent();
+        metadata.getGriffonStartDir();
+        metadata.getGriffonWorkingDir();
+        LOG.info("Griffon {}", GriffonEnvironment.getGriffonVersion());
+        LOG.info("Build: {}", GriffonEnvironment.getBuildDateTime());
+        LOG.info("JVM: {}", GriffonEnvironment.getJvmVersion());
+        LOG.info("OS: {}", GriffonEnvironment.getOsVersion());
 
         // 2 create bindings
-        if (LOG.isDebugEnabled()) {
-            LOG.debug("Creating module bindings");
-        }
+        LOG.debug("Creating module bindings");
         Iterable<Binding<?>> bindings = createBindings();
 
         if (LOG.isTraceEnabled()) {
@@ -67,9 +70,7 @@ public class ApplicationBootstrapper {
         }
 
         // 3 create injector
-        if (LOG.isDebugEnabled()) {
-            LOG.debug("Creating application injector");
-        }
+        LOG.debug("Creating application injector");
         createInjector(bindings);
     }
 
@@ -105,17 +106,20 @@ public class ApplicationBootstrapper {
     protected void collectModuleBindings(Collection<Module> modules) {
         ServiceLoader<Module> serviceLoader = ServiceLoader.load(Module.class);
         for (Module module : serviceLoader) {
+            LOG.debug("Loading module bindings from {}", module);
             modules.add(module);
         }
     }
 
     private void createInjector(Iterable<Binding<?>> bindings) throws Exception {
         ServiceLoader<InjectorFactory> serviceLoader = ServiceLoader.load(InjectorFactory.class);
-        InjectorFactory injectorFactory = serviceLoader.iterator().next();
-        Injector<?> injector = injectorFactory.createInjector(application, bindings);
         try {
+            Iterator<InjectorFactory> iterator = serviceLoader.iterator();
+            InjectorFactory injectorFactory = iterator.next();
+            LOG.debug("Injector will be created by {}", injectorFactory);
+            Injector<?> injector = injectorFactory.createInjector(application, bindings);
             GriffonClassUtils.setProperty(application, INJECTOR, injector);
-        } catch (IllegalAccessException | NoSuchMethodException | InvocationTargetException e) {
+        } catch (Exception e) {
             LOG.error("An error occurred while initializing the injector", sanitize(e));
             throw e;
         }

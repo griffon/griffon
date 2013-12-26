@@ -17,6 +17,7 @@
 package griffon.swing.editors;
 
 import griffon.core.resources.editors.AbstractPropertyEditor;
+import org.codehaus.griffon.core.compile.PropertyEditorFor;
 
 import java.awt.Dimension;
 import java.util.List;
@@ -27,6 +28,7 @@ import java.util.Map;
  * @author Alexander Klein
  * @since 1.1.0
  */
+@PropertyEditorFor(Dimension.class)
 public class DimensionPropertyEditor extends AbstractPropertyEditor {
     public String getAsText() {
         if (null == getValue()) return null;

@@ -1,0 +1,9 @@
+apply plugin: 'java'
+
+ext.pomDescription = 'Griffon groovy (compile)'
+
+dependencies {
+    compile project(':griffon-core-compile')
+    compile 'org.kordamp.gipsy:gipsy:0.1.0'
+    compile "org.codehaus.groovy:groovy-all:${groovyVersion}"
+}

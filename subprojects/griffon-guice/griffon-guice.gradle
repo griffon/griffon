@@ -2,9 +2,15 @@ apply plugin: 'groovy'
 
 ext.pomDescription = 'Griffon Guice module'
 
+configurations {
+    compileOnly
+}
+
 dependencies {
     compile project(':griffon-core')
     compile("com.google.inject:guice:$guiceVersion") {
         exclude group: 'org.sonatype.sisu.inject'
     }
+
+    compileOnly project(':griffon-core-compile')
 }

@@ -2,6 +2,8 @@ package sample;
 
 
 import griffon.core.GriffonApplication;
+import griffon.core.artifact.GriffonView;
+import org.codehaus.griffon.core.compile.ArtifactProviderFor;
 import org.codehaus.griffon.runtime.core.artifact.AbstractGriffonView;
 
 import javax.annotation.Nonnull;
@@ -12,6 +14,7 @@ import javax.swing.JFrame;
 
 import static javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE;
 
+@ArtifactProviderFor(GriffonView.class)
 public class SampleView extends AbstractGriffonView {
     private SampleController controller;
     private SampleModel model;

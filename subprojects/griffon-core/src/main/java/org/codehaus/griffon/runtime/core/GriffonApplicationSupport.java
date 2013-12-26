@@ -26,6 +26,7 @@ import griffon.core.event.EventHandler;
 import griffon.core.injection.Injector;
 import griffon.core.mvc.MVCGroupConfiguration;
 import griffon.core.resources.ResourcesInjector;
+import griffon.util.ServiceLoaderUtils;
 import org.codehaus.griffon.runtime.core.controller.NoopActionManager;
 import org.codehaus.griffon.runtime.core.injection.NamedImpl;
 import org.slf4j.Logger;
@@ -36,8 +37,6 @@ import javax.annotation.Nullable;
 import javax.inject.Named;
 import java.beans.PropertyEditor;
 import java.beans.PropertyEditorManager;
-import java.io.IOException;
-import java.net.URL;
 import java.util.*;
 
 import static griffon.core.GriffonExceptionHandler.sanitize;
@@ -83,50 +82,28 @@ public final class GriffonApplicationSupport {
         application.getEventRouter().publish(event.getName(), args);
     }
 
-    private static void initializePropertyEditors(@Nonnull GriffonApplication application) {
-        Enumeration<URL> urls;
-
-        try {
-            urls = applicationClassLoader(application).get().getResources("META-INF/editors/" + PropertyEditor.class.getName());
-        } catch (IOException ioe) {
-            return;
-        }
-
-        if (urls == null) return;
-
-        while (urls.hasMoreElements()) {
-            URL url = urls.nextElement();
-            if (LOG.isDebugEnabled()) {
-                LOG.debug("Reading " + PropertyEditor.class.getName() + " definitions from " + url);
-            }
-
-            try (Scanner scanner = new Scanner(url.openStream())) {
-                while (scanner.hasNextLine()) {
-                    String line = scanner.nextLine();
-                    if (line.startsWith("#") || isBlank(line)) return;
-                    try {
-                        String[] parts = line.trim().split("=");
-                        Class<?> targetType = loadClass(parts[0].trim(), applicationClassLoader(application).get());
-                        Class<?> editorClass = loadClass(parts[1].trim(), applicationClassLoader(application).get());
-                        if (LOG.isDebugEnabled()) {
-                            LOG.debug("Registering " + editorClass.getName() + " as editor for " + targetType.getName());
-                        }
-                        // Editor must have a no-args constructor
-                        // CCE means the class can not be used
-                        editorClass.newInstance();
-                        PropertyEditorManager.registerEditor(targetType, editorClass);
-                    } catch (Exception e) {
-                        if (LOG.isWarnEnabled()) {
-                            LOG.warn("Could not load PropertyEditor with " + line, sanitize(e));
-                        }
+    private static void initializePropertyEditors(final @Nonnull GriffonApplication application) {
+        ServiceLoaderUtils.load(applicationClassLoader(application).get(), "META-INF/editors/", PropertyEditor.class, new ServiceLoaderUtils.LineProcessor() {
+            @Override
+            public void process(@Nonnull ClassLoader classLoader, @Nonnull Class<?> type, @Nonnull String line) {
+                try {
+                    String[] parts = line.trim().split("=");
+                    Class<?> targetType = loadClass(parts[0].trim(), classLoader);
+                    Class<?> editorClass = loadClass(parts[1].trim(), classLoader);
+                    if (LOG.isDebugEnabled()) {
+                        LOG.debug("Registering " + editorClass.getName() + " as editor for " + targetType.getName());
+                    }
+                    // Editor must have a no-args constructor
+                    // CCE means the class can not be used
+                    editorClass.newInstance();
+                    PropertyEditorManager.registerEditor(targetType, editorClass);
+                } catch (Exception e) {
+                    if (LOG.isWarnEnabled()) {
+                        LOG.warn("Could not load " + type.getName() + " with " + line, sanitize(e));
                     }
                 }
-            } catch (IOException e) {
-                if (LOG.isWarnEnabled()) {
-                    LOG.warn("Could not load PropertyEditor definitions from " + url, sanitize(e));
-                }
             }
-        }
+        });
 
         Class<?>[][] pairs = new Class<?>[][]{
             new Class<?>[]{Boolean.class, Boolean.TYPE},

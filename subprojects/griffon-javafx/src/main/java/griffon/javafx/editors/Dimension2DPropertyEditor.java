@@ -18,6 +18,7 @@ package griffon.javafx.editors;
 
 import griffon.core.resources.editors.AbstractPropertyEditor;
 import javafx.geometry.Dimension2D;
+import org.codehaus.griffon.core.compile.PropertyEditorFor;
 
 import java.util.List;
 import java.util.Map;
@@ -25,6 +26,7 @@ import java.util.Map;
 /**
  * @author Andres Almiray
  */
+@PropertyEditorFor(Dimension2D.class)
 public class Dimension2DPropertyEditor extends AbstractPropertyEditor {
     protected void setValueInternal(Object value) {
         if (null == value) {

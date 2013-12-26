@@ -18,6 +18,7 @@ package org.codehaus.griffon.runtime.core;
 
 import griffon.core.addon.GriffonAddon;
 import griffon.core.controller.ActionManager;
+import griffon.core.injection.Module;
 import griffon.core.threading.UIThreadManager;
 import griffon.core.view.WindowManager;
 import griffon.swing.SwingAddon;
@@ -29,11 +30,13 @@ import org.codehaus.griffon.runtime.swing.ConfigurableSwingWindowDisplayHandler;
 import org.codehaus.griffon.runtime.swing.DefaultSwingWindowDisplayHandler;
 import org.codehaus.griffon.runtime.swing.DefaultSwingWindowManager;
 import org.codehaus.griffon.runtime.swing.SwingUIThreadManager;
+import org.kordamp.jipsy.ServiceProviderFor;
 
 /**
  * @author Andres Almiray
  * @since 2.0.0
  */
+@ServiceProviderFor(Module.class)
 public class SwingModule extends AbstractModule {
     @Override
     protected void doConfigure() {

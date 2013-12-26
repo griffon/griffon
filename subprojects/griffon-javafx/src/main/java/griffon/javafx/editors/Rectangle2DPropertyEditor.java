@@ -18,6 +18,7 @@ package griffon.javafx.editors;
 
 import griffon.core.resources.editors.AbstractPropertyEditor;
 import javafx.geometry.Rectangle2D;
+import org.codehaus.griffon.core.compile.PropertyEditorFor;
 
 import java.util.List;
 import java.util.Map;
@@ -25,6 +26,7 @@ import java.util.Map;
 /**
  * @author Andres Almiray
  */
+@PropertyEditorFor(Rectangle2D.class)
 public class Rectangle2DPropertyEditor extends AbstractPropertyEditor {
     protected void setValueInternal(Object value) {
         if (null == value) {
