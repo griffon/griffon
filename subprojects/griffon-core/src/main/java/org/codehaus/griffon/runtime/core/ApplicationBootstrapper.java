@@ -33,6 +33,7 @@ import java.lang.annotation.Annotation;
 import java.util.*;
 
 import static griffon.core.GriffonExceptionHandler.sanitize;
+import static griffon.util.AnnotationUtils.sortByDependencies;
 import static java.util.Collections.unmodifiableCollection;
 
 /**
@@ -91,7 +92,6 @@ public class ApplicationBootstrapper {
                     .toInstance(application);
             }
         });
-        modules.add(new DefaultApplicationModule());
         collectModuleBindings(modules);
 
         for (Module module : modules) {
@@ -103,11 +103,18 @@ public class ApplicationBootstrapper {
         return unmodifiableCollection(map.values());
     }
 
-    protected void collectModuleBindings(Collection<Module> modules) {
+    protected void collectModuleBindings(@Nonnull Collection<Module> modules) {
         ServiceLoader<Module> serviceLoader = ServiceLoader.load(Module.class);
+        Collection<Module> moduleInstances = new ArrayList<>();
+        moduleInstances.add(new DefaultApplicationModule());
         for (Module module : serviceLoader) {
-            LOG.debug("Loading module bindings from {}", module);
-            modules.add(module);
+            moduleInstances.add(module);
+        }
+        Map<String, Module> sortedModules = sortByDependencies(moduleInstances, "Module", "module");
+        for (Map.Entry<String, Module> entry : sortedModules.entrySet()) {
+
+            LOG.debug("Loading module bindings from {}:{}", entry.getKey(), entry.getValue());
+            modules.add(entry.getValue());
         }
     }
 

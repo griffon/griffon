@@ -82,24 +82,4 @@ public class ServiceLoaderUtils {
 
         return true;
     }
-
-    private static Class<?> loadClass(@Nonnull String className, @Nonnull ClassLoader classLoader) throws ClassNotFoundException {
-        ClassNotFoundException cnfe;
-
-        ClassLoader cl = ServiceLoaderUtils.class.getClassLoader();
-        try {
-            return cl.loadClass(className);
-        } catch (ClassNotFoundException e) {
-            cnfe = e;
-        }
-
-        cl = classLoader;
-        try {
-            return cl.loadClass(className);
-        } catch (ClassNotFoundException e) {
-            cnfe = e;
-        }
-
-        throw cnfe;
-    }
 }

@@ -22,20 +22,20 @@ import griffon.core.artifact.GriffonArtifact;
 import griffon.core.mvc.MVCGroup;
 import griffon.core.mvc.MVCGroupConfiguration;
 import griffon.util.BuilderCustomizer;
+import griffon.util.CompositeBuilder;
 import groovy.lang.Script;
 import groovy.util.FactoryBuilderSupport;
-import griffon.util.CompositeBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.inject.Inject;
-import java.util.*;
+import java.util.Collection;
+import java.util.Map;
 
 import static griffon.core.GriffonExceptionHandler.sanitize;
-import static griffon.util.GriffonClassUtils.getDependsOn;
-import static griffon.util.GriffonClassUtils.mapInstancesByName;
+import static griffon.util.AnnotationUtils.sortByDependencies;
 import static org.codehaus.griffon.runtime.core.mvc.GroovyAwareMVCGroup.BUILDER;
 
 /**
@@ -137,119 +137,6 @@ public class GroovyAwareMVCGroupManager extends DefaultMVCGroupManager {
     @Nonnull
     protected Collection<BuilderCustomizer> resolveBuilderCustomizers(@Nonnull GriffonApplication application) {
         Collection<BuilderCustomizer> customizerInstances = getApplication().getInjector().getInstances(BuilderCustomizer.class);
-        Map<String, BuilderCustomizer> customizers = mapInstancesByName(customizerInstances, BUILDER_CUSTOMIZER);
-
-        Map<String, BuilderCustomizer> map = new LinkedHashMap<>();
-        map.putAll(customizers);
-
-        List<BuilderCustomizer> sortedCustomizers = new ArrayList<>();
-        Set<String> addedDeps = new LinkedHashSet<>();
-
-        while (!map.isEmpty()) {
-            int processed = 0;
-
-            if (LOG.isDebugEnabled()) {
-                LOG.debug("Current customizer order is " + customizers.keySet());
-            }
-
-            for (Iterator<Map.Entry<String, BuilderCustomizer>> iter = map.entrySet().iterator(); iter.hasNext(); ) {
-                Map.Entry<String, BuilderCustomizer> entry = iter.next();
-                String customizerName = entry.getKey();
-                String[] dependsOn = getDependsOn(entry.getValue());
-
-                if (LOG.isDebugEnabled()) {
-                    LOG.debug("Processing customizer '" + customizerName + "'");
-                    LOG.debug("    depends on '" + Arrays.toString(dependsOn) + "'");
-                }
-
-                if (dependsOn.length != 0) {
-                    if (LOG.isDebugEnabled()) {
-                        LOG.debug("  Checking customizer '" + customizerName + "' dependencies (" + dependsOn.length + ")");
-                    }
-
-                    boolean failedDep = false;
-                    for (String dep : dependsOn) {
-                        if (LOG.isDebugEnabled()) {
-                            LOG.debug("  Checking customizer '" + customizerName + "' dependencies: " + dep);
-                        }
-                        if (!addedDeps.contains(dep)) {
-                            // dep not in the list yet, we need to skip adding this to the list for now
-                            if (LOG.isDebugEnabled()) {
-                                LOG.debug("  Skipped customizer '" + customizerName + "', since dependency '" + dep + "' not yet added");
-                            }
-                            failedDep = true;
-                            break;
-                        } else {
-                            if (LOG.isDebugEnabled()) {
-                                LOG.debug("  Customizer '" + customizerName + "' dependency '" + dep + "' already added");
-                            }
-                        }
-                    }
-
-                    if (failedDep) {
-                        // move on to next dependency
-                        continue;
-                    }
-                }
-
-                if (LOG.isDebugEnabled()) {
-                    LOG.debug("  Adding customizer '" + customizerName + "', since all dependencies have been added");
-                }
-                sortedCustomizers.add(entry.getValue());
-                addedDeps.add(customizerName);
-                iter.remove();
-                processed++;
-            }
-
-            if (processed == 0) {
-                // we have a cyclical dependency, warn the user and load in the order they appeared originally
-                if (LOG.isWarnEnabled()) {
-                    LOG.warn(":::::::::::::::::::::::::::::::::::::::::::::::::::::::::");
-                    LOG.warn(":: Unresolved builder customizer dependencies detected ::");
-                    LOG.warn(":: Continuing with original customizer order           ::");
-                    LOG.warn(":::::::::::::::::::::::::::::::::::::::::::::::::::::::::");
-                }
-                for (Map.Entry<String, BuilderCustomizer> entry : map.entrySet()) {
-                    String customizerName = entry.getKey();
-                    String[] dependsOn = getDependsOn(entry.getValue());
-
-                    // display this as a cyclical dep
-                    if (LOG.isWarnEnabled()) {
-                        LOG.warn("::   Customizer " + customizerName);
-                    }
-                    if (dependsOn.length != 0) {
-                        for (String dep : dependsOn) {
-                            if (LOG.isWarnEnabled()) {
-                                LOG.warn("::     depends on " + dep);
-                            }
-                        }
-                    } else {
-                        // we should only have items left in the list with deps, so this should never happen
-                        // but a wise man once said...check for true, false and otherwise...just in case
-                        if (LOG.isWarnEnabled()) {
-                            LOG.warn(":: Problem while resolving dependencies.");
-                            LOG.warn(":: Unable to resolve dependency hierarchy.");
-                        }
-                    }
-                    if (LOG.isWarnEnabled()) {
-                        LOG.warn(":::::::::::::::::::::::::::::::::::::::::::::::::::::::::");
-                    }
-                }
-                break;
-                // if we have processed all the customizers, we are done
-            } else if (sortedCustomizers.size() == customizers.size()) {
-                if (LOG.isDebugEnabled()) {
-                    LOG.debug("Customizer dependency ordering complete");
-                }
-                break;
-            }
-        }
-
-        customizers = mapInstancesByName(customizerInstances, BUILDER_CUSTOMIZER);
-        if (LOG.isDebugEnabled()) {
-            LOG.debug("Computed builder customizer order is " + customizers.keySet());
-        }
-
-        return customizers.values();
+        return sortByDependencies(customizerInstances, BUILDER_CUSTOMIZER, "customizer").values();
     }
 }

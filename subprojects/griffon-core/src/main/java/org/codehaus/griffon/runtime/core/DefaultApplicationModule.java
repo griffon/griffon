@@ -46,12 +46,14 @@ import org.codehaus.griffon.runtime.core.threading.DefaultUIThreadManager;
 import org.codehaus.griffon.runtime.core.view.NoopWindowManager;
 import org.codehaus.griffon.runtime.util.DefaultCompositeResourceBundleBuilder;
 
+import javax.inject.Named;
 import java.util.ResourceBundle;
 
 /**
  * @author Andres Almiray
  * @since 2.0.0
  */
+@Named("default")
 public class DefaultApplicationModule extends AbstractModule {
     @Override
     protected void doConfigure() {

@@ -20,6 +20,7 @@ import griffon.core.injection.*;
 import griffon.core.injection.binder.AnnotatedBindingBuilder;
 import griffon.core.injection.binder.LinkedBindingBuilder;
 import griffon.core.injection.binder.SingletonBindingBuilder;
+import griffon.util.AnnotationUtils;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -30,8 +31,6 @@ import java.lang.annotation.Annotation;
 import java.util.ArrayList;
 import java.util.List;
 
-import static griffon.util.GriffonClassUtils.isAnnotatedWith;
-import static griffon.util.GriffonClassUtils.requireAnnotation;
 import static griffon.util.GriffonNameUtils.getPropertyName;
 import static griffon.util.GriffonNameUtils.isBlank;
 import static java.util.Objects.requireNonNull;
@@ -117,7 +116,7 @@ public class Bindings {
         @Override
         public LinkedBindingBuilder<T> withClassifier(@Nonnull Class<? extends Annotation> annotationType) {
             requireNonNull(annotationType, "Argument 'annotationType' cannot be null");
-            requireAnnotation(annotationType, Qualifier.class);
+            AnnotationUtils.requireAnnotation(annotationType, Qualifier.class);
             this.classifierType = annotationType;
             return this;
         }
@@ -178,7 +177,7 @@ public class Bindings {
             List<Annotation> list = new ArrayList<>();
             Annotation[] annotations = klass.getAnnotations();
             for (Annotation annotation : annotations) {
-                if (isAnnotatedWith(annotation, Qualifier.class)) {
+                if (AnnotationUtils.isAnnotatedWith(annotation, Qualifier.class)) {
                     // special case for @Named
                     if (Named.class.isAssignableFrom(annotation.getClass())) {
                         Named named = (Named) annotation;

@@ -26,7 +26,6 @@ import griffon.util.CompositeResourceBundleBuilder;
 import org.codehaus.griffon.runtime.core.injection.AbstractModule;
 import org.codehaus.griffon.runtime.core.mvc.GroovyAwareMVCGroupManager;
 import org.codehaus.griffon.runtime.util.GroovyAwareCompositeResourceBundleBuilder;
-import org.codehaus.groovy.runtime.DefaultGroovyMethods;
 import org.kordamp.jipsy.ServiceProviderFor;
 
 /**

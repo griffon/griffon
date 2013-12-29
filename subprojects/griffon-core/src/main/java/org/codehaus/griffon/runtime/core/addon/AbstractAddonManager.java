@@ -30,9 +30,8 @@ import javax.annotation.concurrent.GuardedBy;
 import javax.inject.Inject;
 import java.util.*;
 
+import static griffon.util.AnnotationUtils.sortByDependencies;
 import static griffon.util.CollectionUtils.reverse;
-import static griffon.util.GriffonClassUtils.getDependsOn;
-import static griffon.util.GriffonClassUtils.mapInstancesByName;
 import static griffon.util.GriffonNameUtils.getPropertyName;
 import static griffon.util.GriffonNameUtils.requireNonBlank;
 import static java.util.Arrays.asList;
@@ -120,122 +119,8 @@ public abstract class AbstractAddonManager implements AddonManager {
     @Nonnull
     protected Map<String, GriffonAddon> preloadAddons() {
         Collection<GriffonAddon> addonInstances = getApplication().getInjector().getInstances(GriffonAddon.class);
-        Map<String, GriffonAddon> addons = mapInstancesByName(addonInstances, GRIFFON_ADDON_SUFFIX);
-
-        Map<String, GriffonAddon> map = new LinkedHashMap<>();
-        map.putAll(addons);
-
-        List<GriffonAddon> sortedAddons = new ArrayList<>();
-        Set<String> addedDeps = new LinkedHashSet<>();
-
-        while (!map.isEmpty()) {
-            int processed = 0;
-
-            if (LOG.isDebugEnabled()) {
-                LOG.debug("Current addon order is " + addons.keySet());
-            }
-
-            for (Iterator<Map.Entry<String, GriffonAddon>> iter = map.entrySet().iterator(); iter.hasNext(); ) {
-                Map.Entry<String, GriffonAddon> entry = iter.next();
-                String addonName = entry.getKey();
-                String[] dependsOn = getDependsOn(entry.getValue());
-
-                if (LOG.isDebugEnabled()) {
-                    LOG.debug("Processing addon '" + addonName + "'");
-                    LOG.debug("    depends on '" + Arrays.toString(dependsOn) + "'");
-                }
-
-                if (dependsOn.length != 0) {
-                    if (LOG.isDebugEnabled()) {
-                        LOG.debug("  Checking addon '" + addonName + "' dependencies (" + dependsOn.length + ")");
-                    }
-
-                    boolean failedDep = false;
-                    for (String dep : dependsOn) {
-                        if (LOG.isDebugEnabled()) {
-                            LOG.debug("  Checking addon '" + addonName + "' dependencies: " + dep);
-                        }
-                        if (!addedDeps.contains(dep)) {
-                            // dep not in the list yet, we need to skip adding this to the list for now
-                            if (LOG.isDebugEnabled()) {
-                                LOG.debug("  Skipped addon '" + addonName + "', since dependency '" + dep + "' not yet added");
-                            }
-                            failedDep = true;
-                            break;
-                        } else {
-                            if (LOG.isDebugEnabled()) {
-                                LOG.debug("  Addon '" + addonName + "' dependency '" + dep + "' already added");
-                            }
-                        }
-                    }
-
-                    if (failedDep) {
-                        // move on to next dependency
-                        continue;
-                    }
-                }
-
-                if (LOG.isDebugEnabled()) {
-                    LOG.debug("  Adding addon '" + addonName + "', since all dependencies have been added");
-                }
-                sortedAddons.add(entry.getValue());
-                addedDeps.add(addonName);
-                iter.remove();
-                processed++;
-            }
-
-            if (processed == 0) {
-                // we have a cyclical dependency, warn the user and load in the order they appeared originally
-                if (LOG.isWarnEnabled()) {
-                    LOG.warn("::::::::::::::::::::::::::::::::::::::::::::::::::::::");
-                    LOG.warn("::   Unresolved addon dependencies detected         ::");
-                    LOG.warn("::   Continuing with original addon order           ::");
-                    LOG.warn("::::::::::::::::::::::::::::::::::::::::::::::::::::::");
-                }
-                for (Map.Entry<String, GriffonAddon> entry : map.entrySet()) {
-                    String addonName = entry.getKey();
-                    String[] dependsOn = getDependsOn(entry.getValue());
-
-                    // display this as a cyclical dep
-                    if (LOG.isWarnEnabled()) {
-                        LOG.warn("::   Addon " + addonName);
-                    }
-                    if (dependsOn.length != 0) {
-                        for (String dep : dependsOn) {
-                            if (LOG.isWarnEnabled()) {
-                                LOG.warn("::     depends on " + dep);
-                            }
-                        }
-                    } else {
-                        // we should only have items left in the list with deps, so this should never happen
-                        // but a wise man once said...check for true, false and otherwise...just in case
-                        if (LOG.isWarnEnabled()) {
-                            LOG.warn("::   Problem while resolving dependencies.");
-                            LOG.warn("::   Unable to resolve dependency hierarchy.");
-                        }
-                    }
-                    if (LOG.isWarnEnabled()) {
-                        LOG.warn("::::::::::::::::::::::::::::::::::::::::::::::::::::::");
-                    }
-                }
-                break;
-                // if we have processed all the addons, we are done
-            } else if (sortedAddons.size() == addons.size()) {
-                if (LOG.isDebugEnabled()) {
-                    LOG.debug("Addon dependency ordering complete");
-                }
-                break;
-            }
-        }
-
-        addons = mapInstancesByName(sortedAddons, GRIFFON_ADDON_SUFFIX);
-        if (LOG.isDebugEnabled()) {
-            LOG.debug("Computed addon order is " + addons.keySet());
-        }
-
-        return addons;
+        return sortByDependencies(addonInstances, GRIFFON_ADDON_SUFFIX, "addon");
     }
-
 
     @SuppressWarnings("unchecked")
     protected void addMVCGroups(@Nonnull GriffonAddon addon) {
@@ -245,7 +130,7 @@ public abstract class AbstractAddonManager implements AddonManager {
             Map<String, Object> members = groupEntry.getValue();
             Map<String, Object> configMap = new LinkedHashMap<>();
             Map<String, String> membersCopy = new LinkedHashMap<>();
-            for (Map.Entry<String, Object> entry: members.entrySet()) {
+            for (Map.Entry<String, Object> entry : members.entrySet()) {
                 String key = String.valueOf(entry.getKey());
                 if ("config".equals(key) && entry.getValue() instanceof Map) {
                     configMap = (Map<String, Object>) entry.getValue();

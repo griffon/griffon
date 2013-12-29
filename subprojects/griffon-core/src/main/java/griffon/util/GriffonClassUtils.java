@@ -21,13 +21,10 @@ import griffon.core.event.Event;
 import griffon.core.mvc.MVCCallable;
 import griffon.core.mvc.MVCGroup;
 import griffon.exceptions.*;
-import griffon.inject.DependsOn;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import javax.inject.Named;
 import java.beans.*;
-import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -37,11 +34,8 @@ import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
 import java.util.regex.Pattern;
 
-import static griffon.util.GriffonNameUtils.getLogicalPropertyName;
-import static griffon.util.GriffonNameUtils.isBlank;
 import static griffon.util.MethodUtils.invokeExactMethod;
 import static griffon.util.MethodUtils.invokeMethod;
-import static java.util.Objects.requireNonNull;
 
 /**
  * Class containing utility methods for dealing with Griffon class artifacts.<p>
@@ -1982,75 +1976,6 @@ public class GriffonClassUtils {
         } catch (InvocationTargetException e) {
             throw new PropertyException(bean, name, e.getTargetException());
         }
-    }
-
-    public static boolean isAnnotatedWith(@Nonnull Object instance, @Nonnull Class<? extends Annotation> annotationType) {
-        return isAnnotatedWith(requireNonNull(instance, "Argument 'instance' cannot be null").getClass(), annotationType);
-    }
-
-    public static boolean isAnnotatedWith(@Nonnull Class<?> clazz, @Nonnull Class<? extends Annotation> annotationType) {
-        requireNonNull(clazz, "Argument 'class' cannot be null");
-        requireNonNull(annotationType, "Argument 'annotationType' cannot be null");
-
-        //noinspection ConstantConditions
-        while (clazz != null) {
-            for (Annotation annotation : clazz.getAnnotations()) {
-                if (annotationType.equals(annotation.annotationType())) {
-                    return true;
-                }
-            }
-            for (Class<?> iface : clazz.getInterfaces()) {
-                if (isAnnotatedWith(iface, annotationType)) {
-                    return true;
-                }
-            }
-
-            clazz = clazz.getSuperclass();
-        }
-        return false;
-    }
-
-    @Nonnull
-    public static <T> T requireAnnotation(@Nonnull T instance, @Nonnull Class<? extends Annotation> annotationType) {
-        if (!isAnnotatedWith(instance, annotationType)) {
-            throw new IllegalArgumentException("Instance of " + instance.getClass() + " is not annotated with " + annotationType.getName());
-        }
-        return instance;
-    }
-
-    @Nonnull
-    public static <T> Class<T> requireAnnotation(@Nonnull Class<T> klass, @Nonnull Class<? extends Annotation> annotationType) {
-        if (!isAnnotatedWith(klass, annotationType)) {
-            throw new IllegalArgumentException("Class " + klass.getName() + " is not annotated with " + annotationType.getName());
-        }
-        return klass;
-    }
-
-    @Nonnull
-    public static String[] getDependsOn(@Nonnull Object instance) {
-        DependsOn dependsOn = instance.getClass().getAnnotation(DependsOn.class);
-        return dependsOn != null ? dependsOn.value() : new String[0];
-    }
-
-    @Nonnull
-    public static String nameFor(@Nonnull Object instance, @Nonnull String suffix) {
-        Named annotation = instance.getClass().getAnnotation(Named.class);
-        if (annotation != null && !isBlank(annotation.value())) {
-            return annotation.value();
-        } else {
-            return getLogicalPropertyName(instance.getClass().getName(), suffix);
-        }
-    }
-
-    @Nonnull
-    public static <T> Map<String, T> mapInstancesByName(@Nonnull Collection<T> instances, @Nonnull String suffix) {
-        Map<String, T> map = new LinkedHashMap<>();
-
-        for (T instance : instances) {
-            map.put(nameFor(instance, suffix), instance);
-        }
-
-        return map;
     }
 
     // -- The following methods and properties were copied from commons-beanutils
