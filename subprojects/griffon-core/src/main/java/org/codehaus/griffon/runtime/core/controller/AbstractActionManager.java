@@ -143,7 +143,7 @@ public abstract class AbstractActionManager implements ActionManager {
 
                 if (LOG.isDebugEnabled()) {
                     int size = copy.size();
-                    LOG.debug("Invoking " + size + " interceptor" + (size > 1 ? "s" : "") + " for " + controller.getClass().getName() + "." + actionName);
+                    LOG.debug("Invoking " + size + " interceptor" + (size != 1 ? "s" : "") + " for " + controller.getClass().getName() + "." + actionName);
                 }
 
                 for (ActionInterceptor interceptor : copy) {
