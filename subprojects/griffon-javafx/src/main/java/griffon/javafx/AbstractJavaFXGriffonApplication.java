@@ -37,6 +37,7 @@ import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 import org.codehaus.griffon.runtime.core.GriffonApplicationSupport;
 import org.codehaus.griffon.runtime.core.MVCGroupExceptionHandler;
+import org.codehaus.griffon.runtime.core.injection.NamedImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -211,7 +212,7 @@ public abstract class AbstractJavaFXGriffonApplication extends Application imple
     @Nonnull
     @Override
     public EventRouter getEventRouter() {
-        return injector.getInstance(EventRouter.class);
+        return injector.getInstance(EventRouter.class, new NamedImpl("applicationEventRouter"));
     }
 
     @Nonnull

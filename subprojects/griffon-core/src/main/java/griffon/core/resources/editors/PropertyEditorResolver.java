@@ -60,7 +60,7 @@ public final class PropertyEditorResolver {
         PropertyEditor editor;
         if (Enum.class.isAssignableFrom(type)) {
             editor = new EnumPropertyEditor();
-            ((EnumPropertyEditor) editor).setEnumType((Class<? extends Enum>) type);
+            ((EnumPropertyEditor) editor).setEnumType((Class<? extends Enum<?>>) type);
         } else {
             editor = PropertyEditorManager.findEditor(type);
         }

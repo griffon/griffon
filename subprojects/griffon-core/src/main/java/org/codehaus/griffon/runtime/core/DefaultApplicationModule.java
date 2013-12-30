@@ -118,8 +118,12 @@ public class DefaultApplicationModule extends AbstractModule {
 
     protected void eventRouter() {
         bind(EventRouter.class)
+            .withClassifier(new NamedImpl("applicationEventRouter"))
             .to(DefaultEventRouter.class)
             .asSingleton();
+
+        bind(EventRouter.class)
+            .to(DefaultEventRouter.class);
     }
 
     protected void resourceResolver() {

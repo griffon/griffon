@@ -1,25 +1,14 @@
 package sample
 
-import griffon.core.GriffonApplication
 import griffon.core.artifact.GriffonView
 import org.codehaus.griffon.core.compile.ArtifactProviderFor
-import org.codehaus.griffon.runtime.core.artifact.AbstractGriffonView
-
-import javax.annotation.Nonnull
-import javax.inject.Inject
 
 import static javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE
 
 @ArtifactProviderFor(GriffonView)
-class SampleView extends AbstractGriffonView {
+class SampleView {
     FactoryBuilderSupport builder
 
-    @Inject
-    SampleView(@Nonnull GriffonApplication application) {
-        super(application)
-    }
-
-    @Override
     void initUI() {
         builder.application(title: 'Main', id: 'mainWindow', size: [320, 240],
             defaultCloseOperation: DO_NOTHING_ON_CLOSE) {

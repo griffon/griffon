@@ -33,6 +33,7 @@ import griffon.core.threading.UIThreadManager;
 import griffon.core.view.WindowManager;
 import org.codehaus.griffon.runtime.core.GriffonApplicationSupport;
 import org.codehaus.griffon.runtime.core.MVCGroupExceptionHandler;
+import org.codehaus.griffon.runtime.core.injection.NamedImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -175,7 +176,7 @@ public abstract class AbstractGriffonApplet extends JApplet implements GriffonAp
     @Nonnull
     @Override
     public EventRouter getEventRouter() {
-        return injector.getInstance(EventRouter.class);
+        return injector.getInstance(EventRouter.class, new NamedImpl("applicationEventRouter"));
     }
 
     @Nonnull
