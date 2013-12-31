@@ -28,6 +28,7 @@ import java.util.Map;
  * @author Andres Almiray
  * @since 2.0.0
  */
+@SuppressWarnings("rawtypes")
 public interface BuilderCustomizer {
     @Nonnull
     Map<String, Object> getVariables();

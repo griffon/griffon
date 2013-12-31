@@ -16,7 +16,7 @@
 
 package org.codehaus.griffon.runtime.core;
 
-import griffon.builder.swing.SwingBuilderCustomizer;
+import griffon.builder.javafx.JavafxBuilderCustomizer;
 import griffon.core.injection.Module;
 import griffon.inject.DependsOn;
 import griffon.util.BuilderCustomizer;
@@ -27,12 +27,12 @@ import org.kordamp.jipsy.ServiceProviderFor;
  * @author Andres Almiray
  */
 @ServiceProviderFor(Module.class)
-@DependsOn("swing")
-public class SwingBuilderModule extends AbstractModule {
+@DependsOn("javafx")
+public class JavafxBuilderModule extends AbstractModule {
     @Override
     protected void doConfigure() {
         bind(BuilderCustomizer.class)
-            .to(SwingBuilderCustomizer.class)
+            .to(JavafxBuilderCustomizer.class)
             .asSingleton();
     }
 }

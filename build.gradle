@@ -24,16 +24,16 @@ apply from: 'gradle/idea.gradle'
 evaluationDependsOn(':griffon-core')
 evaluationDependsOn(':griffon-core-compile')
 evaluationDependsOn(':griffon-guice')
-evaluationDependsOn(':griffon-weld')
-evaluationDependsOn(':griffon-spring')
 evaluationDependsOn(':griffon-groovy')
 evaluationDependsOn(':griffon-groovy-compile')
 evaluationDependsOn(':griffon-swing')
 evaluationDependsOn(':griffon-swing-builder')
 evaluationDependsOn(':griffon-javafx')
-evaluationDependsOn(':griffon-integration')
-evaluationDependsOn(':griffon-integration-groovy')
-evaluationDependsOn(':griffon-integration-javafx')
+evaluationDependsOn(':griffon-javafx-builder')
+evaluationDependsOn(':integration-swing')
+evaluationDependsOn(':integration-swing-groovy')
+evaluationDependsOn(':integration-javafx')
+evaluationDependsOn(':integration-javafx-groovy')
 
 // if (!project.hasProperty('lint')) project.ext.lint = false
 
@@ -47,11 +47,10 @@ ext {
         project(':griffon-groovy'),
         project(':griffon-groovy-compile'),
         project(':griffon-guice'),
-        //project(':griffon-weld'),
-        //project(':griffon-spring'),
         project(':griffon-swing'),
         project(':griffon-javafx'),
-        project(':griffon-swing-builder')
+        project(':griffon-swing-builder'),
+        project(':griffon-javafx-builder')
     ]
 }
 

@@ -28,6 +28,7 @@ import java.awt.Window
  * Date: Sep 4, 2008
  * Time: 8:52:40 PM
  */
+@SuppressWarnings("rawtypes")
 class ApplicationFactory extends AbstractFactory {
     static final String DELEGATE_PROPERTY_DEFAULT_BUTTON = "_delegateProperty:defaultButton";
     static final String DEFAULT_DELEGATE_PROPERTY_DEFAULT_BUTTON = "defaultButton";

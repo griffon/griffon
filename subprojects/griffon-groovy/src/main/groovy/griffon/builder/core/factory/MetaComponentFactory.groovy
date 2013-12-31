@@ -25,6 +25,7 @@ import griffon.core.mvc.MVCGroup
  * @author Andres Almiray
  * @author Alexander Klein
  */
+@SuppressWarnings("rawtypes")
 class MetaComponentFactory extends AbstractFactory {
     Object newInstance(FactoryBuilderSupport builder, Object name, Object value, Map attributes) {
         String mvcType = ''

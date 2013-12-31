@@ -52,7 +52,7 @@ public class DefaultArtifactManager extends AbstractArtifactManager {
     }
 
     @Nonnull
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings({"unchecked", "rawtypes"})
     protected Map<String, List<Class<? extends GriffonArtifact>>> doLoadArtifactMetadata() {
         final Map<String, List<Class<? extends GriffonArtifact>>> artifacts = new LinkedHashMap<>();
 

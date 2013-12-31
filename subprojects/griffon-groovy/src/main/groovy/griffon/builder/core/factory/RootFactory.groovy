@@ -21,6 +21,7 @@ package griffon.builder.core.factory
  *
  * @author Andres Almiray
  */
+@SuppressWarnings("rawtypes")
 class RootFactory extends AbstractFactory {
     final boolean leaf = true
 

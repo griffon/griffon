@@ -32,6 +32,7 @@ import java.lang.reflect.InvocationTargetException;
  * @author Andres Almiray
  * @since 2.0.0
  */
+@SuppressWarnings("rawtypes")
 public class GriffonArtifactInjector<T extends GriffonArtifact> implements Provider<T> {
     private final Class<T> klass;
     private GriffonClass griffonClass;

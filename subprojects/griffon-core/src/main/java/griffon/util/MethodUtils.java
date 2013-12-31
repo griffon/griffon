@@ -53,6 +53,7 @@ import java.util.WeakHashMap;
  * @author Robert Burrell Donkin
  */
 
+@SuppressWarnings({"unchecked", "rawtypes"})
 public class MethodUtils {
 
     // --------------------------------------------------------- Private Methods

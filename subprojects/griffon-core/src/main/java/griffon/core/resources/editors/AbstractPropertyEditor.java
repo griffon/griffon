@@ -84,7 +84,7 @@ public abstract class AbstractPropertyEditor extends PropertyEditorSupport imple
         return super.getAsText();
     }
 
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings({"unchecked", "rawtypes"})
     public String getFormattedValue() {
         Object value = getValueInternal();
         Formatter formatter = resolveFormatter();

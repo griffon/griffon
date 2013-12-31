@@ -30,10 +30,13 @@ import org.codehaus.griffon.runtime.javafx.DefaultJavaFXWindowManager;
 import org.codehaus.griffon.runtime.javafx.JavaFXUIThreadManager;
 import org.kordamp.jipsy.ServiceProviderFor;
 
+import javax.inject.Named;
+
 /**
  * @author Andres Almiray
  * @since 2.0.0
  */
+@Named("javafx")
 @ServiceProviderFor(Module.class)
 public class JavaFXModule extends AbstractModule {
     @Override

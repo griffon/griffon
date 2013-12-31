@@ -37,6 +37,7 @@ import static griffon.util.GriffonNameUtils.isBlank
  * @author Andres Almiray
  * @since 1.1.0
  */
+@SuppressWarnings("rawtypes")
 class ConfigReader {
     private static final ENVIRONMENTS_METHOD = 'environments'
     GroovyClassLoader classLoader

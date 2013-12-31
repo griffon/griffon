@@ -24,6 +24,7 @@ import javax.annotation.Nonnull;
  * @author Andres Almiray
  * @since 2.0.0
  */
+@SuppressWarnings("rawtypes")
 public interface InjectorFactory {
     @Nonnull
     Injector createInjector(@Nonnull GriffonApplication application, @Nonnull Iterable<Binding<?>> bindings);

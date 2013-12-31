@@ -177,7 +177,7 @@ public class AnnotationUtils {
                     LOG.warn("  {} {} ", type, instanceName);
                     if (dependsOn.length != 0) {
                         for (String dep : dependsOn) {
-                            LOG.warn("::     depends on {}", dep);
+                            LOG.warn("    depends on {}", dep);
                         }
                     } else {
                         // we should only have items left in the list with deps, so this should never happen

@@ -35,6 +35,7 @@ import static java.util.Objects.requireNonNull;
  * @author Andres Almiray
  * @since 2.0.0
  */
+@SuppressWarnings("rawtypes")
 public class AbstractBuilderCustomizer implements BuilderCustomizer {
     private final Map<String, Object> variables = new LinkedHashMap<>();
     private final Map<String, Factory> factories = new LinkedHashMap<>();

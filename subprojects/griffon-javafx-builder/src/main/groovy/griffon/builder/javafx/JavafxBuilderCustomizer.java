@@ -14,12 +14,12 @@
  * limitations under the License.
  */
 
-package griffon.builder.swing;
+package griffon.builder.javafx;
 
-import griffon.builder.swing.factory.ApplicationFactory;
+import griffon.builder.javafx.factory.ApplicationFactory;
 import griffon.inject.DependsOn;
-import groovy.swing.SwingBuilder;
 import groovy.util.Factory;
+import groovyx.javafx.SceneGraphBuilder;
 import org.codehaus.griffon.runtime.core.view.AbstractBuilderCustomizer;
 
 import javax.inject.Named;
@@ -29,13 +29,13 @@ import java.util.Map;
 /**
  * @author Andres Almiray
  */
-@Named("swing")
+@Named("javafx")
 @DependsOn({"core"})
 @SuppressWarnings("rawtypes")
-public class SwingBuilderCustomizer extends AbstractBuilderCustomizer {
+public class JavafxBuilderCustomizer extends AbstractBuilderCustomizer {
     @SuppressWarnings("unchecked")
-    public SwingBuilderCustomizer() {
-        SwingBuilder builder = new SwingBuilder();
+    public JavafxBuilderCustomizer() {
+        SceneGraphBuilder builder = new SceneGraphBuilder();
 
         Map<String, Factory> factories = new LinkedHashMap<>(builder.getFactories());
         factories.put("application", new ApplicationFactory());

@@ -29,6 +29,7 @@ import java.util.List;
  *
  * @author Andres Almiray
  */
+@SuppressWarnings("rawtypes")
 public interface ArtifactManager extends ShutdownHandler {
     List<GriffonClass> EMPTY_GRIFFON_CLASS_LIST = Collections.emptyList();
 

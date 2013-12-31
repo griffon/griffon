@@ -62,6 +62,7 @@ public class GroovyScriptResourceBundle extends ResourceBundle {
 
     @Nullable
     @Override
+    @SuppressWarnings("unchecked")
     protected Object handleGetObject(@Nonnull String key) {
         Object value = getConfigValue(config, requireNonBlank(key, "Argument 'key' cannot be blank"), null);
         return null == value ? null : value;

@@ -33,6 +33,7 @@ import static java.util.Objects.requireNonNull;
  * @author Andres Almiray
  * @since 2.0.0
  */
+@SuppressWarnings("rawtypes")
 public class CompositeBuilder extends FactoryBuilderSupport {
     public CompositeBuilder(@Nonnull BuilderCustomizer[] customizers) {
         requireNonNull(customizers, "Argument 'customizers' cannot be null");

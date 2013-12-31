@@ -22,6 +22,7 @@ import static griffon.util.GriffonNameUtils.isBlank;
  * @author Andres Almiray
  * @since 1.3.0
  */
+@SuppressWarnings("rawtypes")
 public class EnumPropertyEditor extends AbstractPropertyEditor {
     private Class<? extends Enum> enumType;
 
@@ -45,6 +46,7 @@ public class EnumPropertyEditor extends AbstractPropertyEditor {
         }
     }
 
+    @SuppressWarnings("unchecked")
     private void handleAsString(String str) {
         try {
             super.setValueInternal(isBlank(str) ? null : Enum.valueOf(enumType, str));

@@ -43,6 +43,7 @@ import static java.util.Objects.requireNonNull;
  * @author Andres Almiray
  * @since 0.9.2
  */
+@SuppressWarnings("rawtypes")
 public abstract class AbstractArtifactManager implements ArtifactManager {
     protected static final String ERROR_ARTIFACT_HANDLER_NULL = "Argument 'artifactHandler' cannot be null";
     private static final String ERROR_NAME_BLANK = "Argument 'name' cannot be blank";
@@ -144,6 +145,7 @@ public abstract class AbstractArtifactManager implements ArtifactManager {
     }
 
     @Nullable
+    @SuppressWarnings({"unckeched", "rawtypes"})
     public GriffonClass findGriffonClass(@Nonnull Class<? extends GriffonArtifact> clazz, @Nonnull String type) {
         requireNonNull(clazz, ERROR_CLASS_NULL);
         requireNonBlank(type, ERROR_TYPE_BLANK);
@@ -152,7 +154,6 @@ public abstract class AbstractArtifactManager implements ArtifactManager {
         }
         synchronized (lock) {
             ArtifactHandler handler = artifactHandlers.get(type);
-            //noinspection unchecked
             return handler != null ? handler.getClassFor(clazz) : null;
         }
     }
@@ -169,6 +170,7 @@ public abstract class AbstractArtifactManager implements ArtifactManager {
     }
 
     @Nullable
+    @SuppressWarnings({"unchecked", "rawtypes"})
     public GriffonClass findGriffonClass(@Nonnull Class<? extends GriffonArtifact> clazz) {
         requireNonNull(clazz, ERROR_CLASS_NULL);
         if (LOG.isDebugEnabled()) {
@@ -176,7 +178,6 @@ public abstract class AbstractArtifactManager implements ArtifactManager {
         }
         synchronized (lock) {
             for (ArtifactHandler handler : artifactHandlers.values()) {
-                //noinspection unchecked
                 GriffonClass griffonClass = handler.getClassFor(clazz);
                 if (griffonClass != null) return griffonClass;
             }

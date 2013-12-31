@@ -154,6 +154,7 @@ public final class GriffonApplicationSupport {
         application.getAddonManager().initialize();
     }
 
+    @SuppressWarnings("unchecked")
     private static void initializeMvcManager(@Nonnull GriffonApplication application) {
         Map<String, MVCGroupConfiguration> configurations = new LinkedHashMap<>();
         Map<String, Map<String, Object>> mvcGroups = application.getApplicationConfiguration().get("mvcGroups", Collections.<String, Map<String, Object>>emptyMap());
@@ -169,7 +170,6 @@ public final class GriffonApplicationSupport {
                 for (Map.Entry<String, Object> entry : members.entrySet()) {
                     String key = String.valueOf(entry.getKey());
                     if ("config".equals(key) && entry.getValue() instanceof Map) {
-                        //noinspection unchecked
                         configMap = (Map<String, Object>) entry.getValue();
                     } else {
                         membersCopy.put(key, String.valueOf(entry.getValue()));

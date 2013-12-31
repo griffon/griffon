@@ -1,0 +1,15 @@
+apply plugin: 'groovy'
+
+ext.pomDescription = 'Griffon JavaFX Builder module'
+
+configurations {
+    compileOnly
+}
+
+dependencies {
+    compile project(':griffon-groovy')
+    compile project(':griffon-javafx')
+    compile 'org.codehaus.groovyfx:groovyfx:0.3.1'
+
+    compileOnly project(':griffon-core-compile')
+}
