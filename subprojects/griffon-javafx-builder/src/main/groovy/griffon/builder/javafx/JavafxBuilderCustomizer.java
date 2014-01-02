@@ -16,10 +16,11 @@
 
 package griffon.builder.javafx;
 
-import griffon.builder.javafx.factory.ApplicationFactory;
+import griffon.builder.javafx.factory.*;
 import griffon.inject.DependsOn;
 import groovy.util.Factory;
 import groovyx.javafx.SceneGraphBuilder;
+import javafx.scene.control.*;
 import org.codehaus.griffon.runtime.core.view.AbstractBuilderCustomizer;
 
 import javax.inject.Named;
@@ -39,6 +40,30 @@ public class JavafxBuilderCustomizer extends AbstractBuilderCustomizer {
 
         Map<String, Factory> factories = new LinkedHashMap<>(builder.getFactories());
         factories.put("application", new ApplicationFactory());
+        factories.remove("fxaction");
+        factories.put("action", new ActionFactory());
+
+        factories.put("menuBar", new MenuFactory(MenuBar.class));
+        factories.put("contextMenu", new MenuFactory(ContextMenu.class));
+        factories.put("menuButton", new MenuFactory(MenuButton.class));
+        factories.put("splitMenuButton", new MenuFactory(SplitMenuButton.class));
+
+        factories.put("menu", new MenuItemFactory(Menu.class));
+        factories.put("menuItem", new MenuItemFactory(MenuItem.class));
+        factories.put("checkMenuItem", new MenuItemFactory(CheckMenuItem.class));
+        factories.put("customMenuItem", new MenuItemFactory(CustomMenuItem.class));
+        factories.put("separatorMenuItem", new MenuItemFactory(SeparatorMenuItem.class));
+        factories.put("radioMenuItem", new MenuItemFactory(RadioMenuItem.class));
+
+        factories.put("button", new LabeledFactory(Button.class));
+        factories.put("checkBox", new LabeledFactory(CheckBox.class));
+        factories.put("label", new LabeledFactory(Label.class));
+        factories.put("choiceBox", new LabeledFactory(ChoiceBox.class));
+        factories.put("hyperlink", new LabeledFactory(Hyperlink.class));
+        factories.put("tooltip", new LabeledFactory(Tooltip.class));
+        factories.put("radioButton", new LabeledFactory(RadioButton.class));
+        factories.put("toggleButton", new LabeledFactory(ToggleButton.class));
+
         setFactories(factories);
         setVariables(builder.getVariables());
         setMethods(builder.getExplicitMethods());
