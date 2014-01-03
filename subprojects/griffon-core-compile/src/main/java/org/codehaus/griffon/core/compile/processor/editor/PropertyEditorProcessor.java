@@ -145,10 +145,10 @@ public class PropertyEditorProcessor extends AbstractSpiProcessor {
     }
 
     private List<TypeElement> findTypes(TypeElement classElement) {
-        List<TypeElement> types = new ArrayList<TypeElement>();
+        List<TypeElement> types = new ArrayList<>();
 
         for (AnnotationMirror annotation : findAnnotationMirrors(classElement, getAnnotationClass().getName())) {
-            for (AnnotationValue value : findValue(annotation)) {
+            for (AnnotationValue value : findCollectionValueMember(annotation, "value")) {
                 types.add(toElement(value));
             }
         }

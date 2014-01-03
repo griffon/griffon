@@ -31,7 +31,6 @@ import java.io.IOException;
 import java.lang.annotation.Annotation;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.regex.Matcher;
 
 /**
@@ -151,20 +150,10 @@ public class ArtifactProviderProcessor extends AbstractSpiProcessor {
         List<TypeElement> artifacts = new ArrayList<>();
 
         for (AnnotationMirror annotation : findAnnotationMirrors(classElement, getAnnotationClass().getName())) {
-            artifacts.add(toElement(findSingleValue(annotation)));
+            artifacts.add(toElement(findSingleValueMember(annotation, "value")));
         }
 
         return artifacts;
-    }
-
-    protected AnnotationValue findSingleValue(AnnotationMirror mirror) {
-        Map<? extends ExecutableElement, ? extends AnnotationValue> elementValues = mirror.getElementValues();
-        for (Map.Entry<? extends ExecutableElement, ? extends AnnotationValue> entry : elementValues.entrySet()) {
-            if (entry.getKey().getSimpleName().contentEquals("value")) {
-                return entry.getValue();
-            }
-        }
-        throw new IllegalStateException("No value found in element");
     }
 
     private void register(String artifactName, TypeElement provider) {
