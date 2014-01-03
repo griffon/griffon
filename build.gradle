@@ -117,11 +117,10 @@ subprojects { subproj ->
         }
     }
 
-    /*
-    task sourceJar(type: Jar) {
-        from sourceSets.main.allJava
+    task sourcesJar(type: Jar) {
+        classifier = 'sources'
+        from sourceSets.main.allSource
     }
-    */
 
     if (subproj in project.mavenizedProjects) {
         jar {
