@@ -56,14 +56,6 @@ ext {
 
 subprojects { subproj ->
     apply plugin: 'idea'
-    apply from: "${rootDir}/gradle/publish.gradle"
-
-    if (plugins.hasPlugin('java')) {
-        group = 'org.codehaus.griffon'
-
-        apply from: "${rootDir}/gradle/coverage.gradle"
-        apply from: "${rootDir}/gradle/codeQuality.gradle"
-    }
 
     configurations {
         compileOnly
@@ -123,6 +115,11 @@ subprojects { subproj ->
     }
 
     if (subproj in project.mavenizedProjects) {
+        apply from: "${rootDir}/gradle/maven.gradle"
+        apply from: "${rootDir}/gradle/publish.gradle"
+        apply from: "${rootDir}/gradle/coverage.gradle"
+        apply from: "${rootDir}/gradle/codeQuality.gradle"
+
         jar {
             manifest {
                 attributes(

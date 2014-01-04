@@ -16,40 +16,9 @@
 
 apply plugin: 'maven'
 
-configurations {
-    deployerJars
-}
-
-dependencies {
-    deployerJars 'org.apache.maven.wagon:wagon-webdav:1.0-beta-2',
-                 'org.apache.maven:maven-ant-tasks:2.1.0'
-}
-
 def installer = install.repositories.mavenInstaller
-def deployer = null
 
-// GRIFFON-291 these properties should be optional
-if(!project.hasProperty('codehausUsername')) codehausUsername = ''
-if(!project.hasProperty('codehausPassword')) codehausPassword = ''
-
-uploadArchives {
-    repositories {
-        deployer = mavenDeployer {
-            name = 'codehausDeployer'
-            configuration = configurations.deployerJars
-            uploadDescriptor = true
-            repository(url: codehausReleaseUrl) {
-                authentication(userName: codehausUsername, password: codehausPassword)
-            }
-            snapshotRepository(url: codehausSnapshotUrl) {
-                uniqueVersion = false
-                authentication(userName: codehausUsername, password: codehausPassword)
-            }
-        }
-    }
-}
-
-[installer, deployer].each { repo ->
+[installer].each { repo ->
     configure(repo) {
         pom.project {
             name(project.name)
