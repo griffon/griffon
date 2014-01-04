@@ -1,8 +1,5 @@
 import griffon.util.AbstractMapResourceBundle;
 import griffon.util.CollectionUtils;
-import sample.SampleController;
-import sample.SampleModel;
-import sample.SampleView;
 
 import javax.annotation.Nonnull;
 import java.util.Map;
@@ -20,9 +17,9 @@ public class Config extends AbstractMapResourceBundle {
             )
             .e("mvcGroups", CollectionUtils.map()
                 .e("sample", CollectionUtils.map()
-                    .e("model", SampleModel.class.getName())
-                    .e("view", SampleView.class.getName())
-                    .e("controller", SampleController.class.getName())
+                    .e("model", "sample.SampleModel")
+                    .e("view", "sample.SampleView")
+                    .e("controller", "sample.SampleController")
                 )
             );
     }

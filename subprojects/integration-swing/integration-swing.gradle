@@ -15,3 +15,25 @@ dependencies {
     runtime project(':griffon-guice')
     runtime "org.slf4j:slf4j-simple:$slf4jVersion"
 }
+
+sourceSets {
+    main {
+        java {
+            srcDirs = [
+                'griffon-app/conf',
+                'griffon-app/controllers',
+                'griffon-app/models',
+                'griffon-app/views',
+                'griffon-app/services',
+                'griffon-app/lifecycle',
+                'src/main/java'
+            ]
+        }
+        resources {
+            srcDirs = [
+                'griffon-app/resources',
+                'griffon-app/i18n'
+            ]
+        }
+    }
+}
