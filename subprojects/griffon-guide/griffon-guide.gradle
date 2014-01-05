@@ -1,0 +1,135 @@
+/*
+ * Copyright 2010-2014 the original author or authors.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+buildscript {
+    repositories {
+        jcenter()
+        maven {
+            name 'Bintray Asciidoctor repo'
+            url  'http://dl.bintray.com/content/aalmiray/asciidoctor'
+        }
+        maven {
+            name "Ben's Maven repo"
+            url 'http://dl.bintray.com/content/bmuschko/maven'
+        }
+        maven {
+            name "Ben's Gradle Plugins repo"
+            url 'http://dl.bintray.com/content/bmuschko/gradle-plugins'
+        }
+    }
+
+    dependencies {
+        classpath 'org.asciidoctor:asciidoctor-gradle-plugin:0.7.0'
+        classpath 'org.gradle.api.plugins:gradle-java2html-plugin:0.4'
+    }
+}
+
+apply plugin: 'asciidoctor'
+apply plugin: 'java2html'
+
+dependencies {
+    java2html 'de.java2html:java2html:5.0'
+}
+
+task copyDocs(type: Copy) {
+    destinationDir = "${buildDir}/sources" as File
+    from(project(":griffon-core-compile").sourceSets.main.allSource) {
+        include 'griffon/transform/**/*'
+    }
+    from(project(":griffon-core").sourceSets.main.allSource)
+}
+
+task apiDocs(type: Javadoc, dependsOn: copyDocs) {
+    source          = file("${buildDir}/sources")
+    destinationDir  = file("$buildDir/api")
+    title           = "Griffon $version"
+    classpath       = project(":griffon-core").sourceSets.main.output +
+                      project(":griffon-core").configurations.compile
+
+    excludes = ['**/*.html', 'META-INF/**']
+
+    options.use         = true
+    options.splitIndex  = true
+    options.windowTitle = "Griffon $version"
+    options.docTitle    = "Griffon $version"
+    options.links       = [
+                           'http://www.slf4j.org/apidocs/',
+                           'http://jsr-305.googlecode.com/svn/trunk/javadoc/',
+        'http://docs.oracle.com/javase/7/docs/api/']
+
+    doLast { task ->
+        copy {
+            into task.destinationDir
+            from 'src/resources/img/griffon.ico',
+                 'src/resources/css/stylesheet.css'
+        }
+        copy {
+            into file("${task.destinationDir}/resources")
+            from  'src/resources/javadoc/*'
+        }
+    }
+}
+
+task java2html {
+    dependsOn apiDocs
+    dependsOn "java2htmlGenerateOverview"
+    dependsOn java2htmlConvertCode
+}
+
+task jarApi(type: Jar, dependsOn: apiDocs) {
+    archiveName    = "griffon-core-${project.version}-javadoc.jar"
+    destinationDir = "$buildDir/assemble/jars" as File
+    from "$buildDir/api"
+}
+
+task jarSourceHtml(type: Jar, dependsOn: java2html) {
+    archiveName    = "griffon-core-${project.version}-sources-html.jar"
+    destinationDir = "$buildDir/assemble/jars" as File
+    from "$buildDir/java2html"
+}
+
+task jarDocs(dependsOn: [jarApi, jarSourceHtml]) { }
+
+java2html {
+    conversion {
+        srcDirs = files("${buildDir}/sources")
+        destDir = file("${buildDir}/java2html")
+        tabs = 4
+        style = 'eclipse'
+        outputFormat = 'html'
+        showLineNumbers = true
+        addLineAnchors = true
+        showFileName = true
+        useShortFileName = true
+        overwrite = true
+        showDefaultTitle = true
+        includeDocumentHeader = true
+        includeDocumentFooter = true
+    }
+
+    overview {
+        srcDirs = files("${buildDir}/java2html")
+        destDir = file("${buildDir}/java2html")
+        windowTitle = "Griffon $version"
+        docTitle = "Griffon $version"
+        docDescription = """Griffon is a Grails like application framework for developing desktop
+                            applications in Groovy. Inspired by Grails, Griffon follows the Convention over
+                            Configuration paradigm, paired with an intuitive MVC architecture and a command
+                            line interface."""
+        icon = file('src/resources/img/griffon.ico')
+        stylesheet = file('src/resources/css/stylesheet.css')
+    }
+}
