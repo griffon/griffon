@@ -21,11 +21,12 @@ configurations {
 }
 
 repositories {
+    jcenter()
+    maven { url 'http://repository.codehaus.org/' }
+    maven { url 'http://repo.grails.org/grails/core/' }
+    maven { url 'http://repository.springsource.com/maven/bundles/release' }
+    maven { url 'http://download.java.net/maven/2/' }
     mavenCentral()
-    mavenRepo name: 'Codehaus', url: 'http://repository.codehaus.org/'
-    mavenRepo name: 'Grails Central', url: 'http://repo.grails.org/grails/core/'
-    mavenRepo name: 'SpringSource', url: 'http://repository.springsource.com/maven/bundles/release'
-    mavenRepo name: 'JavaNet', url: 'http://download.java.net/maven/2/'
 }
 
 dependencies {
