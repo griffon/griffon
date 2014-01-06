@@ -37,9 +37,17 @@ buildscript {
     }
 }
 
-apply plugin: 'java'
 apply plugin: 'asciidoctor'
 apply plugin: 'java2html'
+
+ext.maven = false
+
+evaluationDependsOn(':griffon-core')
+evaluationDependsOn(':griffon-core-compile')
+
+repositories {
+    jcenter()
+}
 
 dependencies {
     java2html 'de.java2html:java2html:5.0'
@@ -66,20 +74,19 @@ task apiDocs(type: Javadoc, dependsOn: copyDocs) {
     options.splitIndex  = true
     options.windowTitle = "Griffon $version"
     options.docTitle    = "Griffon $version"
-    options.links       = [
-                           'http://www.slf4j.org/apidocs/',
+    options.links       = ['http://www.slf4j.org/apidocs/',
                            'http://jsr-305.googlecode.com/svn/trunk/javadoc/',
-        'http://docs.oracle.com/javase/7/docs/api/']
+                           'http://docs.oracle.com/javase/7/docs/api/']
 
     doLast { task ->
         copy {
             into task.destinationDir
-            from 'src/resources/img/griffon.ico',
-                 'src/resources/css/stylesheet.css'
+            from rootProject.file('src/javadoc/resources/img/griffon.ico'),
+                 rootProject.file('src/javadoc/resources/css/stylesheet.css')
         }
         copy {
             into file("${task.destinationDir}/resources")
-            from  'src/resources/javadoc/*'
+            from rootProject.file('src/javadoc/resources/img/')
         }
     }
 }
@@ -130,8 +137,8 @@ java2html {
                             applications in Groovy. Inspired by Grails, Griffon follows the Convention over
                             Configuration paradigm, paired with an intuitive MVC architecture and a command
                             line interface."""
-        icon = file('src/resources/img/griffon.ico')
-        stylesheet = file('src/resources/css/stylesheet.css')
+        icon = rootProject.file('src/javadoc/resources/img/griffon.ico')
+        stylesheet = rootProject.file('src/javadoc/resources/css/stylesheet.css')
     }
 }
 
@@ -139,9 +146,9 @@ asciidoctor {
     baseDir = project.file('src/asciidoc')
     options = [
         attributes: [
-            icons: 'font',
             toc                 : 'left',
             doctype             : 'book',
+            icons               : 'font',
             sectlink            : true,
             sectanchors         : true,
             numbered            : true,

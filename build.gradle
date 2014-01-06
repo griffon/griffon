@@ -21,74 +21,57 @@ apply plugin: 'idea'
 apply plugin: 'build-dashboard'
 apply from: 'gradle/idea.gradle'
 
-evaluationDependsOn(':griffon-core')
-evaluationDependsOn(':griffon-core-compile')
-evaluationDependsOn(':griffon-guice')
-evaluationDependsOn(':griffon-groovy')
-evaluationDependsOn(':griffon-groovy-compile')
-evaluationDependsOn(':griffon-swing')
-evaluationDependsOn(':griffon-swing-builder')
-evaluationDependsOn(':griffon-javafx')
-evaluationDependsOn(':griffon-javafx-builder')
-evaluationDependsOn(':integration-swing')
-evaluationDependsOn(':integration-swing-groovy')
-evaluationDependsOn(':integration-javafx')
-evaluationDependsOn(':integration-javafx-groovy')
-evaluationDependsOn(':griffon-guide')
-
-// if (!project.hasProperty('lint')) project.ext.lint = false
+allprojects {
+    ext.maven = false
+}
 
 Date buildTimeAndDate = new Date()
 ext {
     buildTime = new SimpleDateFormat('yyyy-MM-dd').format(buildTimeAndDate)
     buildDate = new SimpleDateFormat('HH:mm:ss.SSSZ').format(buildTimeAndDate)
-    mavenizedProjects = [
-        project(':griffon-core'),
-        project(':griffon-core-compile'),
-        project(':griffon-groovy'),
-        project(':griffon-groovy-compile'),
-        project(':griffon-guice'),
-        project(':griffon-swing'),
-        project(':griffon-javafx'),
-        project(':griffon-swing-builder'),
-        project(':griffon-javafx-builder')
-    ]
 }
 
 subprojects { subproj ->
+    apply plugin: 'base'
     apply plugin: 'idea'
+}
 
-    configurations {
-        compileOnly
-    }
+evaluationDependsOnChildren()
 
-    repositories {
-        jcenter()
-        mavenCentral()
-        maven {
-            name 'Kordamp'
-            url 'http://dl.bintray.com/content/aalmiray/kordamp'
+subprojects { subproj ->
+    if (subproj.plugins.hasPlugin('java')) {
+        configurations {
+            compileOnly
+        }
+
+        repositories {
+            jcenter()
+            mavenCentral()
+            maven {
+                name 'Kordamp'
+                url 'http://dl.bintray.com/content/aalmiray/kordamp'
+            }
+        }
+
+        sourceSets {
+            main {
+                compileClasspath += configurations.compileOnly
+            }
+        }
+
+        javadoc {
+            classpath += configurations.compileOnly
+        }
+
+        idea {
+            module {
+                scopes.PROVIDED.plus += configurations.compileOnly
+            }
         }
     }
 
-    sourceSets {
-        main {
-            compileClasspath += configurations.compileOnly
-        }
-    }
-
-    javadoc {
-        classpath += configurations.compileOnly
-    }
-
-    idea {
-        module {
-            scopes.PROVIDED.plus += configurations.compileOnly
-        }
-    }
-
-    if (subproj in project.mavenizedProjects) {
-        apply plugin: 'java'
+    if (subproj.ext.maven == true) {
+        // apply plugin: 'java'
         apply from: "${rootDir}/gradle/maven.gradle"
         apply from: "${rootDir}/gradle/publish.gradle"
         apply from: "${rootDir}/gradle/coverage.gradle"
@@ -105,22 +88,59 @@ subprojects { subproj ->
             testCompile "org.slf4j:slf4j-simple:$slf4jVersion"
         }
 
-        task sourcesJar(type: Jar) {
-            classifier = 'sources'
+        javadoc {
+            /*classpath = subproj.sourceSets.main.output +
+                        subproj.configurations.compile +
+                        subproj.configurations.compileOnly*/
+
+            excludes = ['**/*.html', 'META-INF/**']
+
+            options.use         = true
+            options.splitIndex  = true
+            options.windowTitle = "${subproj.ext.pomDescription} $version"
+            options.docTitle    = "${subproj.ext.pomDescription} $version"
+            options.links       = ['http://www.slf4j.org/apidocs/',
+                                   'http://jsr-305.googlecode.com/svn/trunk/javadoc/',
+                                   'http://docs.oracle.com/javase/7/docs/api/']
+
+            doLast { task ->
+                copy {
+                    into task.destinationDir
+                    from rootProject.file('src/javadoc/resources/img/griffon.ico'),
+                        rootProject.file('src/javadoc/resources/css/stylesheet.css')
+                }
+                copy {
+                    into file("${task.destinationDir}/resources")
+                    from rootProject.file('src/javadoc/resources/img/')
+                }
+            }
+        }
+
+        task sourceJar(type: Jar) {
+            description "An archive of the source code"
+            classifier "sources"
             from sourceSets.main.allSource
         }
 
-        /*
+        task javadocJar(type: Jar) {
+            description "An archive of the JavaDocs for"
+            classifier "javadoc"
+            from javadoc
+        }
+
+        artifacts {
+            archives jar, javadocJar, sourceJar
+        }
+
         compileJava {
             doFirst {
-                if (project.ext.lint) {
+                if (rootProject.hasProperty('lint') && rootProject.lint == true) {
                     options.compilerArgs = [
                         '-Xlint:all', '-Xlint:deprecation', '-Xlint:unchecked'
                     ]
                 }
             }
         }
-        */
 
         jar {
             manifest {
