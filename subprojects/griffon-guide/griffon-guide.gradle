@@ -37,6 +37,7 @@ buildscript {
     }
 }
 
+apply plugin: 'java'
 apply plugin: 'asciidoctor'
 apply plugin: 'java2html'
 
@@ -132,4 +133,21 @@ java2html {
         icon = file('src/resources/img/griffon.ico')
         stylesheet = file('src/resources/css/stylesheet.css')
     }
+}
+
+asciidoctor {
+    baseDir = project.file('src/asciidoc')
+    options = [
+        attributes: [
+            icons: 'font',
+            toc                 : 'left',
+            doctype             : 'book',
+            sectlink            : true,
+            sectanchors         : true,
+            numbered            : true,
+            'source-highlighter': 'coderay',
+            'griffon-version'   : project.version,
+            'griffon-group'     : project.group
+        ]
+    ]
 }

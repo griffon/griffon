@@ -34,6 +34,7 @@ evaluationDependsOn(':integration-swing')
 evaluationDependsOn(':integration-swing-groovy')
 evaluationDependsOn(':integration-javafx')
 evaluationDependsOn(':integration-javafx-groovy')
+evaluationDependsOn(':griffon-guide')
 
 // if (!project.hasProperty('lint')) project.ext.lint = false
 
@@ -56,7 +57,6 @@ ext {
 
 subprojects { subproj ->
     apply plugin: 'idea'
-    apply plugin: 'java'
 
     configurations {
         compileOnly
@@ -70,29 +70,6 @@ subprojects { subproj ->
             url 'http://dl.bintray.com/content/aalmiray/kordamp'
         }
     }
-
-    dependencies {
-        testCompile 'junit:junit:4.11'
-        testCompile 'com.google.guiceberry:guiceberry:3.3.1'
-        testCompile("com.google.inject:guice:$guiceVersion") {
-            exclude group: 'org.sonatype.sisu.inject'
-        }
-        testCompile "org.codehaus.groovy:groovy-all:$groovyVersion"
-        testCompile 'org.spockframework:spock-core:0.7-groovy-2.0'
-        testCompile "org.slf4j:slf4j-simple:$slf4jVersion"
-    }
-
-    /*
-    compileJava {
-        doFirst {
-            if (project.ext.lint) {
-                options.compilerArgs = [
-                    '-Xlint:all', '-Xlint:deprecation', '-Xlint:unchecked'
-                ]
-            }
-        }
-    }
-    */
 
     sourceSets {
         main {
@@ -110,16 +87,40 @@ subprojects { subproj ->
         }
     }
 
-    task sourcesJar(type: Jar) {
-        classifier = 'sources'
-        from sourceSets.main.allSource
-    }
-
     if (subproj in project.mavenizedProjects) {
+        apply plugin: 'java'
         apply from: "${rootDir}/gradle/maven.gradle"
         apply from: "${rootDir}/gradle/publish.gradle"
         apply from: "${rootDir}/gradle/coverage.gradle"
         apply from: "${rootDir}/gradle/codeQuality.gradle"
+
+        dependencies {
+            testCompile 'junit:junit:4.11'
+            testCompile 'com.google.guiceberry:guiceberry:3.3.1'
+            testCompile("com.google.inject:guice:$guiceVersion") {
+                exclude group: 'org.sonatype.sisu.inject'
+            }
+            testCompile "org.codehaus.groovy:groovy-all:$groovyVersion"
+            testCompile 'org.spockframework:spock-core:0.7-groovy-2.0'
+            testCompile "org.slf4j:slf4j-simple:$slf4jVersion"
+        }
+
+        task sourcesJar(type: Jar) {
+            classifier = 'sources'
+            from sourceSets.main.allSource
+        }
+
+        /*
+        compileJava {
+            doFirst {
+                if (project.ext.lint) {
+                    options.compilerArgs = [
+                        '-Xlint:all', '-Xlint:deprecation', '-Xlint:unchecked'
+                    ]
+                }
+            }
+        }
+        */
 
         jar {
             manifest {

@@ -1,6 +1,5 @@
 package sample;
 
-
 import griffon.core.GriffonApplication;
 import griffon.core.artifact.GriffonView;
 import org.codehaus.griffon.core.compile.ArtifactProviderFor;
@@ -8,16 +7,17 @@ import org.codehaus.griffon.runtime.core.artifact.AbstractGriffonView;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
-import javax.swing.Action;
-import javax.swing.JButton;
-import javax.swing.JFrame;
+import javax.swing.*;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
+import java.awt.GridLayout;
 
 import static javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE;
 
 @ArtifactProviderFor(GriffonView.class)
 public class SampleView extends AbstractGriffonView {
-    private SampleController controller;
-    private SampleModel model;
+    private SampleController controller;                                    // <1>
+    private SampleModel model;                                              // <1>
 
     @Inject
     public SampleView(@Nonnull GriffonApplication application) {
@@ -36,11 +36,37 @@ public class SampleView extends AbstractGriffonView {
     public void initUI() {
         JFrame window = (JFrame) getApplication().createApplicationContainer();
         window.setName("mainWindow");
-        window.setSize(320, 240);
+        window.setTitle(getApplication().getApplicationConfiguration().getAsString("application.title"));
+        window.setSize(320, 160);
         window.setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
-        getApplication().getWindowManager().attach("mainWindow", window);
+        getApplication().getWindowManager().attach("mainWindow", window);   // <2>
 
-        Action action = (Action) getApplication().getActionManager().actionFor(controller, "click").getToolkitAction();
+        window.getContentPane().setLayout(new GridLayout(3, 1));
+        window.getContentPane().add(
+            new JLabel(getApplication().getMessageSource().getMessage("name.label"))
+        );
+        final JTextField nameField = new JTextField();
+        nameField.getDocument().addDocumentListener(new DocumentListener() { // <3>
+            @Override
+            public void insertUpdate(DocumentEvent e) {
+                model.setInput(nameField.getText());
+            }
+
+            @Override
+            public void removeUpdate(DocumentEvent e) {
+                model.setInput(nameField.getText());
+            }
+
+            @Override
+            public void changedUpdate(DocumentEvent e) {
+                model.setInput(nameField.getText());
+            }
+        });
+        window.getContentPane().add(nameField);
+
+        Action action = (Action) getApplication().getActionManager()        // <4>
+                                 .actionFor(controller, "sayHello")
+                                 .getToolkitAction();
         window.getContentPane().add(new JButton(action));
     }
 }

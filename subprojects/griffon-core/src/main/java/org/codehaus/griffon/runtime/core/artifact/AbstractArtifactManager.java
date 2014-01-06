@@ -145,7 +145,7 @@ public abstract class AbstractArtifactManager implements ArtifactManager {
     }
 
     @Nullable
-    @SuppressWarnings({"unckeched", "rawtypes"})
+    @SuppressWarnings({"unchecked", "rawtypes"})
     public GriffonClass findGriffonClass(@Nonnull Class<? extends GriffonArtifact> clazz, @Nonnull String type) {
         requireNonNull(clazz, ERROR_CLASS_NULL);
         requireNonBlank(type, ERROR_TYPE_BLANK);

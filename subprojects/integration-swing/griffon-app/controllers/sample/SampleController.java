@@ -7,14 +7,16 @@ import org.codehaus.griffon.runtime.core.artifact.AbstractGriffonController;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
+import javax.swing.JOptionPane;
+import java.awt.Window;
 import java.awt.event.ActionEvent;
 
 @ArtifactProviderFor(GriffonController.class)
 public class SampleController extends AbstractGriffonController {
-    private SampleModel model;
+    private SampleModel model;                                          // <1>
 
     @Inject
-    private SampleService sampleService;
+    private SampleService sampleService;                                // <2>
 
     @Inject
     public SampleController(@Nonnull GriffonApplication application) {
@@ -25,11 +27,17 @@ public class SampleController extends AbstractGriffonController {
         this.model = model;
     }
 
-    public void click(ActionEvent event) {
-        System.out.println(sampleService);
-        System.out.println("click " + event);
-        System.out.println(model.getColor());
-        System.out.println(model.getColor2());
-        System.out.println(getApplication().getMessageSource().getMessage("sample.key"));
+    public void sayHello(ActionEvent event) {                           // <3>
+        final String result = sampleService.sayHello(model.getInput());
+        runInsideUIAsync(new Runnable() {                               // <4>
+            @Override
+            public void run() {
+                JOptionPane.showMessageDialog(
+                    (Window) getApplication().getWindowManager().getStartingWindow(),
+                    result,
+                    getApplication().getMessageSource().getMessage("dialog.title", "Hello"),
+                    JOptionPane.INFORMATION_MESSAGE);
+            }
+        });
     }
 }
