@@ -44,6 +44,7 @@ ext.maven = false
 
 evaluationDependsOn(':griffon-core')
 evaluationDependsOn(':griffon-core-compile')
+evaluationDependsOn(':griffon-groovy-compile')
 
 repositories {
     jcenter()
@@ -56,6 +57,9 @@ dependencies {
 task copyDocs(type: Copy) {
     destinationDir = "${buildDir}/sources" as File
     from(project(":griffon-core-compile").sourceSets.main.allSource) {
+        include 'griffon/transform/**/*'
+    }
+    from(project(":griffon-groovy-compile").sourceSets.main.allSource) {
         include 'griffon/transform/**/*'
     }
     from(project(":griffon-core").sourceSets.main.allSource)

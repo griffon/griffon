@@ -87,7 +87,7 @@ public class DefaultMVCGroupManager extends AbstractMVCGroupManager {
         mvcId = resolveMvcId(configuration, mvcId);
         checkIdIsUnique(mvcId, configuration);
 
-        LOG.info("Building MVC group '{}' with name '{}'", configuration.getMvcType(), mvcId);
+        LOG.debug("Building MVC group '{}' with name '{}'", configuration.getMvcType(), mvcId);
         Map<String, Object> argsCopy = copyAndConfigureArguments(args, configuration, mvcId);
 
         // figure out what the classes are
@@ -286,11 +286,11 @@ public class DefaultMVCGroupManager extends AbstractMVCGroupManager {
 
     public void destroyMVCGroup(@Nonnull String mvcId) {
         MVCGroup group = findGroup(mvcId);
-        LOG.trace("Group '{}' points to {}", mvcId, group);
+        LOG.debug("Group '{}' points to {}", mvcId, group);
 
         if (group == null) return;
 
-        LOG.info("Destroying MVC group identified by '{}'", mvcId);
+        LOG.debug("Destroying MVC group identified by '{}'", mvcId);
 
         if (isConfigFlagEnabled(group.getConfiguration(), CONFIG_KEY_EVENTS_LISTENER)) {
             GriffonController controller = group.getController();

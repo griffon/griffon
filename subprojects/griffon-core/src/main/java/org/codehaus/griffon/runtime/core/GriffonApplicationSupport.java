@@ -90,9 +90,8 @@ public final class GriffonApplicationSupport {
                     String[] parts = line.trim().split("=");
                     Class<?> targetType = loadClass(parts[0].trim(), classLoader);
                     Class<?> editorClass = loadClass(parts[1].trim(), classLoader);
-                    if (LOG.isDebugEnabled()) {
-                        LOG.debug("Registering " + editorClass.getName() + " as editor for " + targetType.getName());
-                    }
+                    LOG.debug("Registering {} as editor for {}", editorClass.getName(), targetType.getName());
+
                     // Editor must have a no-args constructor
                     // CCE means the class can not be used
                     editorClass.newInstance();
@@ -117,9 +116,7 @@ public final class GriffonApplicationSupport {
 
         for (Class<?>[] pair : pairs) {
             PropertyEditor editor = PropertyEditorManager.findEditor(pair[0]);
-            if (LOG.isDebugEnabled()) {
-                LOG.debug("Registering " + editor.getClass().getName() + " as editor for " + pair[1].getName());
-            }
+            LOG.debug("Registering {} as editor for {}", editor.getClass().getName(), pair[1].getName());
             PropertyEditorManager.registerEditor(pair[1], editor.getClass());
         }
     }
@@ -161,9 +158,7 @@ public final class GriffonApplicationSupport {
         if (mvcGroups != null) {
             for (Map.Entry<String, Map<String, Object>> groupEntry : mvcGroups.entrySet()) {
                 String type = groupEntry.getKey();
-                if (LOG.isDebugEnabled()) {
-                    LOG.debug("Adding MVC group " + type);
-                }
+                LOG.debug("Adding MVC group {}", type);
                 Map<String, Object> members = groupEntry.getValue();
                 Map<String, Object> configMap = new LinkedHashMap<>();
                 Map<String, String> membersCopy = new LinkedHashMap<>();
@@ -217,9 +212,7 @@ public final class GriffonApplicationSupport {
         map.putAll(tmp);
         actionInterceptors.clear();
         actionInterceptors.putAll(map);
-        if (LOG.isDebugEnabled()) {
-            LOG.debug("Chosen interceptor order is " + map.keySet());
-        }
+        LOG.debug("Chosen interceptor order is {}", map.keySet());
 
         List<ActionInterceptor> sortedInterceptors = new ArrayList<>();
         Set<String> addedDeps = new LinkedHashSet<>();
@@ -227,41 +220,29 @@ public final class GriffonApplicationSupport {
         while (!map.isEmpty()) {
             int processed = 0;
 
-            if (LOG.isDebugEnabled()) {
-                LOG.debug("Current interceptor order is " + actionInterceptors.keySet());
-            }
+            LOG.trace("Current interceptor order is {}", actionInterceptors.keySet());
 
             for (Iterator<Map.Entry<String, ActionInterceptor>> iter = map.entrySet().iterator(); iter.hasNext(); ) {
                 Map.Entry<String, ActionInterceptor> entry = iter.next();
                 String interceptorName = entry.getKey();
                 List<String> dependsOn = entry.getValue().dependsOn();
 
-                if (LOG.isDebugEnabled()) {
-                    LOG.debug("Processing interceptor '" + interceptorName + "'");
-                    LOG.debug("    depends on '" + dependsOn + "'");
-                }
+                LOG.trace("Processing interceptor '{}'", interceptorName);
+                LOG.trace("    depends on '{}'", dependsOn);
 
                 if (!dependsOn.isEmpty()) {
-                    if (LOG.isDebugEnabled()) {
-                        LOG.debug("  Checking interceptor '" + interceptorName + "' dependencies (" + dependsOn.size() + ")");
-                    }
+                    LOG.trace("  Checking interceptor '" + interceptorName + "' dependencies (" + dependsOn.size() + ")");
 
                     boolean failedDep = false;
                     for (String dep : dependsOn) {
-                        if (LOG.isDebugEnabled()) {
-                            LOG.debug("  Checking interceptor '" + interceptorName + "' dependencies: " + dep);
-                        }
+                        LOG.trace("  Checking interceptor '{}' dependencies: {}", interceptorName, dep);
                         if (!addedDeps.contains(dep)) {
                             // dep not in the list yet, we need to skip adding this to the list for now
-                            if (LOG.isDebugEnabled()) {
-                                LOG.debug("  Skipped interceptor '" + interceptorName + "', since dependency '" + dep + "' not yet added");
-                            }
+                            LOG.trace("  Skipped interceptor '{}', since dependency '{}' not yet added", interceptorName, dep);
                             failedDep = true;
                             break;
                         } else {
-                            if (LOG.isDebugEnabled()) {
-                                LOG.debug("  Interceptor '" + interceptorName + "' dependency '" + dep + "' already added");
-                            }
+                            LOG.trace("  Interceptor '{}' dependency '{}' already added", interceptorName, dep);
                         }
                     }
 
@@ -271,9 +252,7 @@ public final class GriffonApplicationSupport {
                     }
                 }
 
-                if (LOG.isDebugEnabled()) {
-                    LOG.debug("  Adding interceptor '" + interceptorName + "', since all dependencies have been added");
-                }
+                LOG.trace("  Adding interceptor '{}', since all dependencies have been added", interceptorName);
                 sortedInterceptors.add(entry.getValue());
                 addedDeps.add(interceptorName);
                 iter.remove();
@@ -293,33 +272,23 @@ public final class GriffonApplicationSupport {
                     List<String> dependsOn = entry.getValue().dependsOn();
 
                     // display this as a cyclical dep
-                    if (LOG.isWarnEnabled()) {
-                        LOG.warn("::   Interceptor " + interceptorName);
-                    }
+                    LOG.warn("::   Interceptor {}", interceptorName);
                     if (!dependsOn.isEmpty()) {
                         for (String dep : dependsOn) {
-                            if (LOG.isWarnEnabled()) {
-                                LOG.warn("::     depends on " + dep);
-                            }
+                            LOG.warn("::     depends on {}", dep);
                         }
                     } else {
                         // we should only have items left in the list with deps, so this should never happen
                         // but a wise man once said...check for true, false and otherwise...just in case
-                        if (LOG.isWarnEnabled()) {
-                            LOG.warn("::   Problem while resolving dependencies.");
-                            LOG.warn("::   Unable to resolve dependency hierarchy.");
-                        }
+                        LOG.warn("::   Problem while resolving dependencies.");
+                        LOG.warn("::   Unable to resolve dependency hierarchy.");
                     }
-                    if (LOG.isWarnEnabled()) {
-                        LOG.warn("::::::::::::::::::::::::::::::::::::::::::::::::::::::");
-                    }
+                    LOG.warn("::::::::::::::::::::::::::::::::::::::::::::::::::::::");
                 }
                 break;
                 // if we have processed all the interceptors, we are done
             } else if (sortedInterceptors.size() == actionInterceptors.size()) {
-                if (LOG.isDebugEnabled()) {
-                    LOG.debug("Interceptor dependency ordering complete");
-                }
+                LOG.trace("Interceptor dependency ordering complete");
                 break;
             }
         }
@@ -329,7 +298,7 @@ public final class GriffonApplicationSupport {
             for (ActionInterceptor interceptor : sortedInterceptors) {
                 sortedInterceptorNames.add(nameFor(interceptor));
             }
-            LOG.debug("Computed interceptor order is " + sortedInterceptorNames);
+            LOG.debug("Computed interceptor order is {}", sortedInterceptorNames);
         }
 
         for (ActionInterceptor interceptor : sortedInterceptors) {
@@ -352,9 +321,7 @@ public final class GriffonApplicationSupport {
 
         boolean skipHandler = application.getApplicationConfiguration().getAsBoolean(KEY_APP_LIFECYCLE_HANDLER_DISABLE, false);
         if (skipHandler) {
-            if (LOG.isDebugEnabled()) {
-                LOG.info("Lifecycle handler '" + lifecycle.getName() + "' has been disabled. SKIPPING.");
-            }
+            LOG.info("Lifecycle handler '{}' has been disabled. SKIPPING.", lifecycle.getName());
             return;
         }
 

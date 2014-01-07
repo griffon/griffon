@@ -63,9 +63,7 @@ public class ServiceLoaderUtils {
 
         while (urls.hasMoreElements()) {
             URL url = urls.nextElement();
-            if (LOG.isDebugEnabled()) {
-                LOG.debug("Reading " + type.getName() + " definitions from " + url);
-            }
+            LOG.debug("Reading {} definitions from {}", type.getName(), url);
 
             try (Scanner scanner = new Scanner(url.openStream())) {
                 while (scanner.hasNextLine()) {
@@ -74,9 +72,7 @@ public class ServiceLoaderUtils {
                     processor.process(classLoader, type, line);
                 }
             } catch (IOException e) {
-                if (LOG.isWarnEnabled()) {
-                    LOG.warn("Could not load " + type.getName() + " definitions from " + url, sanitize(e));
-                }
+                LOG.warn("Could not load " + type.getName() + " definitions from " + url, sanitize(e));
             }
         }
 

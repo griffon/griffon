@@ -26,7 +26,7 @@ configurations {
 dependencies {
     compile project(':griffon-core')
     compile("com.google.inject:guice:$guiceVersion") {
-        exclude group: 'org.sonatype.sisu.inject'
+        exclude group: 'org.sonatype.sisu.inject', module: 'cglib'
     }
 
     compileOnly project(':griffon-core-compile')

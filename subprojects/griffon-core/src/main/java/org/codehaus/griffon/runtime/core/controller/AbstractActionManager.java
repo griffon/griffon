@@ -24,7 +24,6 @@ import griffon.core.i18n.NoSuchMessageException;
 import griffon.core.threading.UIThreadManager;
 import griffon.exceptions.InstanceMethodInvocationException;
 import griffon.transform.Threading;
-import griffon.util.GriffonClassUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -39,6 +38,8 @@ import java.util.concurrent.CopyOnWriteArrayList;
 
 import static griffon.core.GriffonExceptionHandler.sanitize;
 import static griffon.util.CollectionUtils.reverse;
+import static griffon.util.GriffonClassUtils.EMPTY_ARGS;
+import static griffon.util.GriffonClassUtils.invokeExactInstanceMethod;
 import static griffon.util.GriffonNameUtils.*;
 import static griffon.util.TypeUtils.castToBoolean;
 import static java.lang.reflect.Modifier.isPublic;
@@ -157,14 +158,14 @@ public abstract class AbstractActionManager implements ActionManager {
                     }
                 }
 
-                InstanceMethodInvocationException exception = null;
+                RuntimeException exception = null;
                 if (status == ActionExecutionStatus.OK) {
                     try {
-                        GriffonClassUtils.invokeExactInstanceMethod(controller, actionName, updatedArgs);
-                    } catch (InstanceMethodInvocationException e) {
+                        doInvokeAction(controller, actionName, updatedArgs);
+                    } catch (RuntimeException e) {
                         status = ActionExecutionStatus.EXCEPTION;
-                        exception = (InstanceMethodInvocationException) sanitize(e);
-                        LOG.debug("An exception occurred when executing {}.{}", controller.getClass().getName(), actionName, exception);
+                        exception = (RuntimeException) sanitize(e);
+                        LOG.warn("An exception occurred when executing {}.{}", controller.getClass().getName(), actionName, exception);
                     }
                 }
 
@@ -186,6 +187,22 @@ public abstract class AbstractActionManager implements ActionManager {
             }
         };
         invokeAction(controller, actionName, runnable);
+    }
+
+    protected void doInvokeAction(@Nonnull GriffonController controller, @Nonnull String actionName, @Nonnull Object[] updatedArgs) {
+        try {
+            invokeExactInstanceMethod(controller, actionName, updatedArgs);
+        } catch (InstanceMethodInvocationException imie) {
+            if (imie.getCause() instanceof NoSuchMethodException) {
+                // try again but this time remove the 1st arg if it's
+                // descendant of java.util.EventObject
+                if (updatedArgs.length == 1 && updatedArgs[0] != null && EventObject.class.isAssignableFrom(updatedArgs[0].getClass())) {
+                    invokeExactInstanceMethod(controller, actionName, EMPTY_ARGS);
+                }
+            } else {
+                throw imie;
+            }
+        }
     }
 
     private void invokeAction(@Nonnull GriffonController controller, @Nonnull String actionName, @Nonnull Runnable runnable) {
@@ -278,9 +295,7 @@ public abstract class AbstractActionManager implements ActionManager {
 
         String rsActionName = msg(keyPrefix, normalizeNamed, "name", getNaturalName(normalizeNamed));
         if (!isBlank(rsActionName)) {
-            if (LOG.isTraceEnabled()) {
-                LOG.trace(keyPrefix + normalizeNamed + ".name = " + rsActionName);
-            }
+            LOG.trace("{}{}.name = {}", keyPrefix, normalizeNamed, rsActionName);
             action.setName(rsActionName);
         }
 

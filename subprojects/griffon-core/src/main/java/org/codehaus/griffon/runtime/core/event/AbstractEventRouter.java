@@ -270,7 +270,7 @@ public abstract class AbstractEventRouter implements EventRouter {
         return new Runnable() {
             public void run() {
                 String eventName = capitalize(event);
-                LOG.trace("Triggering event '{}' {}", eventName, mode);
+                LOG.debug("Triggering event '{}' {}", eventName, mode);
                 String eventHandler = "on" + eventName;
                 // defensive copying to avoid CME during event dispatching
                 // GRIFFON-224

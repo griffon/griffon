@@ -7,16 +7,21 @@ include 'griffon-swing'
 include 'griffon-swing-builder'
 include 'griffon-javafx'
 include 'griffon-javafx-builder'
-include 'integration-swing'
-include 'integration-swing-groovy'
-include 'integration-javafx'
-include 'integration-javafx-groovy'
 include 'griffon-guide'
+include 'samples/sample-swing-java'
+include 'samples/sample-swing-groovy'
+include 'samples/sample-javafx-java'
+include 'samples/sample-javafx-groovy'
+include 'samples/editor-swing-groovy'
+include 'samples/browser-javafx-groovy'
+include 'samples/console-swing-groovy'
 
 rootProject.name = 'griffon2'
-rootProject.children.each {project ->
-    String fileBaseName = project.name
-    String projectDirName = "subprojects/$fileBaseName"
+rootProject.children.each { project ->
+    String projectName = project.name - 'samples/'
+    String fileBaseName = projectName
+    String projectDirName = project.name.startsWith('samples') ? "samples/$fileBaseName" : "subprojects/$fileBaseName"
+    project.name = projectName
     project.projectDir = new File(settingsDir, projectDirName)
     project.buildFileName = "${fileBaseName}.gradle"
     assert project.projectDir.isDirectory()

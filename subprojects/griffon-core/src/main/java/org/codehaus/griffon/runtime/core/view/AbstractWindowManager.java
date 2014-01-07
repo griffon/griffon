@@ -91,32 +91,22 @@ public abstract class AbstractWindowManager<W> implements WindowManager<W> {
     public W getStartingWindow() {
         W window;
         Object value = application.getApplicationConfiguration().get("windowManager.startingWindow", null);
-        if (LOG.isDebugEnabled()) {
-            LOG.debug("windowManager.startingWindow configured to " + value);
-        }
+        LOG.debug("windowManager.startingWindow configured to {}", value);
 
         if (value instanceof String) {
             String windowName = (String) value;
-            if (LOG.isDebugEnabled()) {
-                LOG.debug("Selecting window " + windowName + " as starting window");
-            }
+            LOG.debug("Selecting window {} as starting window", windowName);
             window = findWindow(windowName);
         } else if (value instanceof Number) {
             int index = ((Number) value).intValue();
-            if (LOG.isDebugEnabled()) {
-                LOG.debug("Selecting window at index " + index + " as starting window");
-            }
+            LOG.debug("Selecting window at index {} as starting window", index);
             window = getAt(index);
         } else {
-            if (LOG.isDebugEnabled()) {
-                LOG.debug("No startingWindow configured, selecting the first one from the windows list");
-            }
+            LOG.debug("No startingWindow configured, selecting the first one from the windows list");
             window = getAt(0);
         }
 
-        if (LOG.isDebugEnabled()) {
-            LOG.debug("Starting Window is " + window);
-        }
+        LOG.debug("Starting Window is {}", window);
 
         return window;
     }
@@ -140,9 +130,7 @@ public abstract class AbstractWindowManager<W> implements WindowManager<W> {
 
         doAttach(window);
 
-        if (LOG.isDebugEnabled()) {
-            LOG.debug("Attaching window with name: '" + name + "' at index " + windows.size() + " " + window);
-        }
+        LOG.debug("Attaching window with name: '{}' at index {} {}", name, windows.size(), window);
         windows.put(name, window);
     }
 
@@ -156,9 +144,7 @@ public abstract class AbstractWindowManager<W> implements WindowManager<W> {
 
             doDetach(window);
 
-            if (LOG.isDebugEnabled()) {
-                LOG.debug("Detaching window with name: '" + name + "' " + window);
-            }
+            LOG.debug("Detaching window with name: '{}' {}", name, window);
             windows.remove(name);
         }
     }
@@ -191,9 +177,7 @@ public abstract class AbstractWindowManager<W> implements WindowManager<W> {
 
         application.getUIThreadManager().runInsideUIAsync(new Runnable() {
             public void run() {
-                if (LOG.isDebugEnabled()) {
-                    LOG.debug("Showing window with name: '" + name + "' at index " + index + " " + window);
-                }
+                LOG.debug("Showing window with name: '{}' at index {} {}", name, index, window);
                 //noinspection ConstantConditions
                 resolveWindowDisplayHandler().show(name, window);
             }
@@ -235,9 +219,7 @@ public abstract class AbstractWindowManager<W> implements WindowManager<W> {
 
         application.getUIThreadManager().runInsideUIAsync(new Runnable() {
             public void run() {
-                if (LOG.isDebugEnabled()) {
-                    LOG.debug("Hiding window with name: '" + name + "' at index " + index + " " + window);
-                }
+                LOG.debug("Hiding window with name: '{}' at index {} {}", name, index, window);
                 //noinspection ConstantConditions
                 resolveWindowDisplayHandler().hide(name, window);
             }

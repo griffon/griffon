@@ -89,7 +89,7 @@ public abstract class AbstractAddonManager implements AddonManager {
     }
 
     protected void doInitialize() {
-        LOG.info("Loading addons [START]");
+        LOG.debug("Loading addons [START]");
 
         Map<String, GriffonAddon> addons = preloadAddons();
         event(ApplicationEvent.LOAD_ADDONS_START);
@@ -97,7 +97,7 @@ public abstract class AbstractAddonManager implements AddonManager {
         for (Map.Entry<String, GriffonAddon> entry : addons.entrySet()) {
             String name = entry.getKey();
             GriffonAddon addon = entry.getValue();
-            LOG.info("Loading addon {} with class {}", name, addon.getClass().getName());
+            LOG.debug("Loading addon {} with class {}", name, addon.getClass().getName());
             event(ApplicationEvent.LOAD_ADDON_START, asList(getApplication(), name, addon));
 
             getApplication().getEventRouter().addEventListener(addon);
@@ -105,14 +105,14 @@ public abstract class AbstractAddonManager implements AddonManager {
             addon.init(getApplication());
 
             event(ApplicationEvent.LOAD_ADDON_END, asList(getApplication(), name, addon));
-            LOG.info("Loaded addon {}", name);
+            LOG.debug("Loaded addon {}", name);
         }
 
         for (GriffonAddon addon : reverse(addons.values())) {
             getApplication().addShutdownHandler(addon);
         }
 
-        LOG.info("Loading addons [END]");
+        LOG.debug("Loading addons [END]");
         event(ApplicationEvent.LOAD_ADDONS_END);
     }
 

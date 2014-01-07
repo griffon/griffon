@@ -56,15 +56,11 @@ public class CompositeResourceBundle extends ResourceBundle {
     protected Object handleGetObject(@Nonnull String key) {
         requireNonBlank(key, "Arguments 'key' cannot be blank");
 
-        if (LOG.isTraceEnabled()) {
-            LOG.trace("Searching key=" + key);
-        }
+        LOG.trace("Searching key={}", key);
         for (ResourceBundle bundle : bundles) {
             try {
                 Object value = bundle.getObject(key);
-                if (LOG.isTraceEnabled()) {
-                    LOG.trace("Bundle " + bundle + "; key=" + key + "; value='" + value + "'");
-                }
+                LOG.trace("Bundle {}; key={}; value='{}'", bundle, key, value);
                 if (value != null) {
                     return value;
                 }

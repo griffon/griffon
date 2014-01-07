@@ -1,51 +1,49 @@
 = Sample Applications
-:integration-swing: {rootdir}/subprojects/integration-swing
-:integration-swing-groovy: {rootdir}/subprojects/integration-swing-groovy
-:integration-javafx: {rootdir}/subprojects/integration-javafx
-:integration-javafx-groovy: {rootdir}/subprojects/integration-javafx-groovy
-:base-package: sample
-:base-name: Sample
+:sample-swing-java: {rootdir}/samples/sample-swing-java
+:sample-swing-groovy: {rootdir}/samples/sample-swing-groovy
+:sample-javafx-java: {rootdir}/samples/sample-javafx-java
+:sample-javafx-groovy: {rootdir}/samples/sample-javafx-groovy
 
 == Swing
 
 === Model
 
-.integration-swing/griffon-app/models/{base-package}/{base-name}Model.java
+.sample-swing-java/griffon-app/models/sample/SampleModel.java
 [source,java]
 [subs="verbatim,attributes"]
 ----
-include::{integration-swing}/griffon-app/models/{base-package}/{base-name}Model.java[]
+include::{sample-swing-java}/griffon-app/models/sample/SampleModel.java[]
 ----
 <1> Define a private field for the property
 <2> Property accessor
 <3> Property mutator must fire a +PropertyChangeEvent+
 
-.integration-swing-groovy/griffon-app/models/{base-package}/{base-name}Model.groovy
+.sample-swing-groovy/griffon-app/models/sample/SampleModel.groovy
 [source,groovy]
 [subs="verbatim,attributes"]
 ----
-include::{integration-swing-groovy}/griffon-app/models/{base-package}/{base-name}Model.groovy[]
+include::{sample-swing-groovy}/griffon-app/models/sample/SampleModel.groovy[]
 ----
 <1> Observable property
 
 === Controller
 
-.integration-swing/griffon-app/controllers/{base-package}/{base-name}Controller.java
+.sample-swing-java/griffon-app/controllers/sample/SampleController.java
 [source,java]
 [subs="verbatim,attributes"]
 ----
-include::{integration-swing}/griffon-app/controllers/{base-package}/{base-name}Controller.java[]
+include::{sample-swing-java}/griffon-app/controllers/sample/SampleController.java[]
 ----
 <1> MVC member injected by +link:api/griffon/core/mvc/MVCGroupManager.html[MVCGroupManager]+
 <2> Injected by JSR 330
 <3> Automatically run off the UI thread
 <4> Get back inside the UI thread
 
-.integration-swing-groovy/griffon-app/controllers/{base-package}/{base-name}Controller.groovy
+.sample-swing-groovy/griffon-app/controllers/sample/SampleController.groovy
 [source,groovy]
 [subs="verbatim,attributes"]
 ----
-include::{integration-swing-groovy}/griffon-app/controllers/{base-package}/{base-name}Controller.groovy[]
+include::{sample-swing-groovy}/griffon-app/controllers/sample/SampleController.groovy[]
 ----
 <1> MVC member injected by +link:api/griffon/core/mvc/MVCGroupManager.html[MVCGroupManager]+
 <2> Injected by JSR 330
@@ -54,38 +52,38 @@ include::{integration-swing-groovy}/griffon-app/controllers/{base-package}/{base
 
 === Service
 
-.integration-swing/griffon-app/services/{base-package}/{base-name}Service.java
+.sample-swing-java/griffon-app/services/sample/SampleService.java
 [source,java]
 [subs="verbatim,attributes"]
 ----
-include::{integration-swing}/griffon-app/services/{base-package}/{base-name}Service.java[]
+include::{sample-swing-java}/griffon-app/services/sample/SampleService.java[]
 ----
 
-.integration-swing-groovy/griffon-app/services/{base-package}/{base-name}Service.groovy
+.sample-swing-groovy/griffon-app/services/sample/SampleService.groovy
 [source,groovy]
 [subs="verbatim,attributes"]
 ----
-include::{integration-swing-groovy}/griffon-app/services/{base-package}/{base-name}Service.groovy[]
+include::{sample-swing-groovy}/griffon-app/services/sample/SampleService.groovy[]
 ----
 
 === View
 
-.integration-swing/griffon-app/views/{base-package}/{base-name}View.java
+.sample-swing-java/griffon-app/views/sample/SampleView.java
 [source,java]
 [subs="verbatim,attributes"]
 ----
-include::{integration-swing}/griffon-app/views/{base-package}/{base-name}View.java[]
+include::{sample-swing-java}/griffon-app/views/sample/SampleView.java[]
 ----
 <1> MVC member injected by +link:api/griffon/core/mvc/MVCGroupManager.html[MVCGroupManager]+
 <2> Attach window to +link:api/griffon/core/view/WindowManager.html[WindowManager]+
 <3> Apply component-to-model binding
 <4> Hook in controller action by name
 
-.integration-swing-groovy/griffon-app/views/{base-package}/{base-name}View.groovy
+.sample-swing-groovy/griffon-app/views/sample/SampleView.groovy
 [source,groovy]
 [subs="verbatim,attributes"]
 ----
-include::{integration-swing-groovy}/griffon-app/views/{base-package}/{base-name}View.groovy[]
+include::{sample-swing-groovy}/griffon-app/views/sample/SampleView.groovy[]
 ----
 <1> MVC member injected by +link:api/griffon/core/mvc/MVCGroupManager.html[MVCGroupManager]+
 <2> Create window and attach it to +link:api/griffon/core/view/WindowManager.html[WindowManager]+
@@ -94,92 +92,92 @@ include::{integration-swing-groovy}/griffon-app/views/{base-package}/{base-name}
 
 === Resources
 
-.integration-swing/griffon-app/i18n/messages.properties
+.sample-swing-java/griffon-app/i18n/messages.properties
 [source]
 ----
-include::{integration-swing}/griffon-app/i18n/messages.properties[]
+include::{sample-swing-java}/griffon-app/i18n/messages.properties[]
 ----
 
 == JavaFX
 
 === Model
 
-.integration-javafx/griffon-app/models/{base-package}/{base-name}Model.java
+.sample-javafx-java/griffon-app/models/sample/SampleModel.java
 [source,java]
 [subs="verbatim,attributes"]
 ----
-include::{integration-javafx}/griffon-app/models/{base-package}/{base-name}Model.java[]
+include::{sample-javafx-java}/griffon-app/models/sample/SampleModel.java[]
 ----
 <1> Define a private field for the property
 <2> Property accessor
 <3> Pass-thru values to +Property+
 
-.integration-javafx-groovy/griffon-app/models/{base-package}/{base-name}Model.groovy
+.sample-javafx-groovy/griffon-app/models/sample/SampleModel.groovy
 [source,groovy]
 [subs="verbatim,attributes"]
 ----
-include::{integration-javafx-groovy}/griffon-app/models/{base-package}/{base-name}Model.groovy[]
+include::{sample-javafx-groovy}/griffon-app/models/sample/SampleModel.groovy[]
 ----
 <1> Observable property
 
 === Controller
 
-.integration-javafx/griffon-app/controllers/{base-package}/{base-name}Controller.java
+.sample-javafx-java/griffon-app/controllers/sample/SampleController.java
 [source,java]
 [subs="verbatim,attributes"]
 ----
-include::{integration-javafx}/griffon-app/controllers/{base-package}/{base-name}Controller.java[]
+include::{sample-javafx-java}/griffon-app/controllers/sample/SampleController.java[]
 ----
 
-.integration-javafx-groovy/griffon-app/controllers/{base-package}/{base-name}Controller.groovy
+.sample-javafx-groovy/griffon-app/controllers/sample/SampleController.groovy
 [source,groovy]
 [subs="verbatim,attributes"]
 ----
-include::{integration-javafx-groovy}/griffon-app/controllers/{base-package}/{base-name}Controller.groovy[]
+include::{sample-javafx-groovy}/griffon-app/controllers/sample/SampleController.groovy[]
 ----
 
 === Service
 
-.integration-javafx/griffon-app/services/{base-package}/{base-name}Service.java
+.sample-javafx-java/griffon-app/services/sample/SampleService.java
 [source,java]
 [subs="verbatim,attributes"]
 ----
-include::{integration-javafx}/griffon-app/services/{base-package}/{base-name}Service.java[]
+include::{sample-javafx-java}/griffon-app/services/sample/SampleService.java[]
 ----
 
-.integration-javafx-groovy/griffon-app/services/{base-package}/{base-name}Service.groovy
+.sample-javafx-groovy/griffon-app/services/sample/SampleService.groovy
 [source,groovy]
 [subs="verbatim,attributes"]
 ----
-include::{integration-javafx-groovy}/griffon-app/services/{base-package}/{base-name}Service.groovy[]
+include::{sample-javafx-groovy}/griffon-app/services/sample/SampleService.groovy[]
 ----
 
 === View
 
-.integration-javafx/griffon-app/views/{base-package}/{base-name}View.java
+.sample-javafx-java/griffon-app/views/sample/SampleView.java
 [source,java]
 [subs="verbatim,attributes"]
 ----
-include::{integration-javafx}/griffon-app/views/{base-package}/{base-name}View.java[]
+include::{sample-javafx-java}/griffon-app/views/sample/SampleView.java[]
 ----
 <1> MVC member injected by +link:api/griffon/core/mvc/MVCGroupManager.html[MVCGroupManager]+
 <2> Create window and attach it to +link:api/griffon/core/view/WindowManager.html[WindowManager]+
 <3> Injected by FXMLLoader
 <4> Hook actions by convention
 
-.integration-javafx/griffon-app/resources/{base-package}/{base-package}.fxml
+.sample-javafx-java/griffon-app/resources/sample/sample.fxml
 [source,xml]
 [subs="verbatim,attributes"]
 ----
-include::{integration-javafx}/griffon-app/resources/{base-package}//{base-package}.fxml[]
+include::{sample-javafx-java}/griffon-app/resources/sample//sample.fxml[]
 ----
 <1> Naming convention for automatic action binding
 
-.integration-javafx-groovy/griffon-app/views/{base-package}/{base-name}View.groovy
+.sample-javafx-groovy/griffon-app/views/sample/SampleView.groovy
 [source,groovy]
 [subs="verbatim,attributes"]
 ----
-include::{integration-javafx-groovy}/griffon-app/views/{base-package}/{base-name}View.groovy[]
+include::{sample-javafx-groovy}/griffon-app/views/sample/SampleView.groovy[]
 ----
 <1> MVC member injected by +link:api/griffon/core/mvc/MVCGroupManager.html[MVCGroupManager]+
 <2> Create window and attach it to +link:api/griffon/core/view/WindowManager.html[WindowManager]+
@@ -188,8 +186,10 @@ include::{integration-javafx-groovy}/griffon-app/views/{base-package}/{base-name
 
 === Resources
 
-.integration-javafx/griffon-app/i18n/messages.properties
+.sample-javafx-java/griffon-app/i18n/messages.properties
 [source]
 ----
-include::{integration-javafx}/griffon-app/i18n/messages.properties[]
+include::{sample-javafx-java}/griffon-app/i18n/messages.properties[]
 ----
+
+[conum,data-value=2]_2_

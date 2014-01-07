@@ -47,10 +47,13 @@ public class GriffonExceptionHandler implements Thread.UncaughtExceptionHandler 
 
     private static final String[] GRIFFON_PACKAGES =
         System.getProperty("griffon.sanitized.stacktraces",
-            "org.codehaus.griffon.," +
+            "org.codehaus.groovy.," +
+                "org.codehaus.griffon.," +
+                "groovy.," +
                 "java.," +
                 "javax.," +
-                "sun.,"
+                "sun.," +
+                "com.sun.,"
         ).split("(\\s|,)+");
 
     private static final List<CallableWithArgs<Boolean>> TESTS = new ArrayList<>();

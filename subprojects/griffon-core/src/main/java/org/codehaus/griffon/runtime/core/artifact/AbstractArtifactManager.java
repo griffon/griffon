@@ -108,9 +108,7 @@ public abstract class AbstractArtifactManager implements ArtifactManager {
 
     public void registerArtifactHandler(@Nonnull ArtifactHandler artifactHandler) {
         requireNonNull(artifactHandler, ERROR_ARTIFACT_HANDLER_NULL);
-        if (LOG.isInfoEnabled()) {
-            LOG.info("Registering artifact handler for type '" + artifactHandler.getType() + "': " + artifactHandler);
-        }
+        LOG.debug("Registering artifact handler for type '{}': {}", artifactHandler.getType(), artifactHandler);
         synchronized (lock) {
             artifactHandlers.put(artifactHandler.getType(), artifactHandler);
         }
@@ -118,9 +116,7 @@ public abstract class AbstractArtifactManager implements ArtifactManager {
 
     public void unregisterArtifactHandler(@Nonnull ArtifactHandler artifactHandler) {
         requireNonNull(artifactHandler, ERROR_ARTIFACT_HANDLER_NULL);
-        if (LOG.isInfoEnabled()) {
-            LOG.info("Removing artifact handler for type '" + artifactHandler.getType() + "': " + artifactHandler);
-        }
+        LOG.debug("Removing artifact handler for type '{}': {}", artifactHandler.getType(), artifactHandler);
         synchronized (lock) {
             artifactHandlers.remove(artifactHandler.getType());
         }
@@ -135,9 +131,7 @@ public abstract class AbstractArtifactManager implements ArtifactManager {
     public GriffonClass findGriffonClass(@Nonnull String name, @Nonnull String type) {
         requireNonBlank(name, ERROR_NAME_BLANK);
         requireNonBlank(type, ERROR_TYPE_BLANK);
-        if (LOG.isDebugEnabled()) {
-            LOG.debug("Searching for griffonClass of " + type + ":" + name);
-        }
+        LOG.debug("Searching for griffonClass of {}:{}", type, name);
         synchronized (lock) {
             ArtifactHandler handler = artifactHandlers.get(type);
             return handler != null ? handler.findClassFor(name) : null;
@@ -149,9 +143,7 @@ public abstract class AbstractArtifactManager implements ArtifactManager {
     public GriffonClass findGriffonClass(@Nonnull Class<? extends GriffonArtifact> clazz, @Nonnull String type) {
         requireNonNull(clazz, ERROR_CLASS_NULL);
         requireNonBlank(type, ERROR_TYPE_BLANK);
-        if (LOG.isDebugEnabled()) {
-            LOG.debug("Searching for griffonClass of " + type + ":" + clazz.getName());
-        }
+        LOG.debug("Searching for griffonClass of {}:{}", type, clazz.getName());
         synchronized (lock) {
             ArtifactHandler handler = artifactHandlers.get(type);
             return handler != null ? handler.getClassFor(clazz) : null;
@@ -161,9 +153,7 @@ public abstract class AbstractArtifactManager implements ArtifactManager {
     @Nullable
     public <A extends GriffonArtifact> GriffonClass findGriffonClass(@Nonnull A artifact) {
         requireNonNull(artifact, ERROR_ARTIFACT_NULL);
-        if (LOG.isDebugEnabled()) {
-            LOG.debug("Searching for griffonClass of " + artifact);
-        }
+        LOG.debug("Searching for griffonClass of {}", artifact);
         synchronized (lock) {
             return findGriffonClass(artifact.getClass());
         }
@@ -173,9 +163,7 @@ public abstract class AbstractArtifactManager implements ArtifactManager {
     @SuppressWarnings({"unchecked", "rawtypes"})
     public GriffonClass findGriffonClass(@Nonnull Class<? extends GriffonArtifact> clazz) {
         requireNonNull(clazz, ERROR_CLASS_NULL);
-        if (LOG.isDebugEnabled()) {
-            LOG.debug("Searching for griffonClass of " + clazz.getName());
-        }
+        LOG.debug("Searching for griffonClass of {}", clazz.getName());
         synchronized (lock) {
             for (ArtifactHandler handler : artifactHandlers.values()) {
                 GriffonClass griffonClass = handler.getClassFor(clazz);
@@ -188,9 +176,7 @@ public abstract class AbstractArtifactManager implements ArtifactManager {
     @Nullable
     public GriffonClass findGriffonClass(@Nonnull String fqClassName) {
         requireNonBlank(fqClassName, ERROR_FULLY_QUALIFIED_CLASSNAME_BLANK);
-        if (LOG.isDebugEnabled()) {
-            LOG.debug("Searching for griffonClass of " + fqClassName);
-        }
+        LOG.debug("Searching for griffonClass of {}", fqClassName);
         synchronized (lock) {
             for (ArtifactHandler handler : artifactHandlers.values()) {
                 GriffonClass griffonClass = handler.getClassFor(fqClassName);

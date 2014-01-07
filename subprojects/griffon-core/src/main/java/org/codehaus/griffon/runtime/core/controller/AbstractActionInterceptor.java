@@ -61,10 +61,12 @@ public class AbstractActionInterceptor implements ActionInterceptor {
         return false;
     }
 
+    @Nonnull
     protected AbortActionExecution abortActionExecution() throws AbortActionExecution {
         throw new AbortActionExecution();
     }
 
+    @Nonnull
     protected String qualifyActionName(@Nonnull GriffonController controller, @Nonnull String actionName) {
         requireNonNull(controller, ERROR_CONTROLLER_NULL);
         requireNonBlank(actionName, ERROR_ACTION_NAME_BLANK);

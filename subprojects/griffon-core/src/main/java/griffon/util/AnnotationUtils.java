@@ -133,22 +133,22 @@ public class AnnotationUtils {
                 String instanceName = entry.getKey();
                 String[] dependsOn = getDependsOn(entry.getValue());
 
-                LOG.debug("Processing {} '{}'", type, instanceName);
-                LOG.debug("  depends on '{}'", Arrays.toString(dependsOn));
+                LOG.trace("Processing {} '{}'", type, instanceName);
+                LOG.trace("  depends on '{}'", Arrays.toString(dependsOn));
 
                 if (dependsOn.length != 0) {
-                    LOG.debug("  checking {} '{}' dependencies ({})", type, instanceName, dependsOn.length);
+                    LOG.trace("  checking {} '{}' dependencies ({})", type, instanceName, dependsOn.length);
 
                     boolean failedDep = false;
                     for (String dep : dependsOn) {
-                        LOG.debug("  checking {} '{}' dependencies: ", type, instanceName, dep);
+                        LOG.trace("  checking {} '{}' dependencies: ", type, instanceName, dep);
                         if (!instanceDeps.contains(dep)) {
                             // dep not in the list yet, we need to skip adding this to the list for now
-                            LOG.debug("  skipped {} '{}', since dependency '{}' not yet added", type, instanceName, dep);
+                            LOG.trace("  skipped {} '{}', since dependency '{}' not yet added", type, instanceName, dep);
                             failedDep = true;
                             break;
                         } else {
-                            LOG.debug("  {} '{}' dependency '{}' already added", type, instanceName, dep);
+                            LOG.trace("  {} '{}' dependency '{}' already added", type, instanceName, dep);
                         }
                     }
 
@@ -158,7 +158,7 @@ public class AnnotationUtils {
                     }
                 }
 
-                LOG.debug("  adding {} '{}', since all dependencies have been added", type, instanceName);
+                LOG.trace("  adding {} '{}', since all dependencies have been added", type, instanceName);
                 sorted.add(entry.getValue());
                 instanceDeps.add(instanceName);
                 iter.remove();
@@ -189,7 +189,7 @@ public class AnnotationUtils {
                 break;
                 // if we have processed all the instances, we are done
             } else if (sorted.size() == instancesByName.size()) {
-                LOG.debug("{} dependency ordering complete", type);
+                LOG.trace("{} dependency ordering complete", type);
                 break;
             }
         }

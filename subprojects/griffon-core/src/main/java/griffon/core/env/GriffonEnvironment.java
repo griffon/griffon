@@ -74,11 +74,11 @@ public class GriffonEnvironment {
             }
 
             if (isBlank(buildDate) || isBlank(buildTime) || isBlank(version)) {
-                LOG.error("Unable to read Griffon version from MANIFEST.MF. Are you sure the griffon-core jar is in the classpath?");
+                LOG.error("Unable to read Griffon version from MANIFEST.MF Are you sure the griffon-core jar is in the classpath?");
                 buildDate = buildTime = version = "";
             }
         } catch (Exception e) {
-            LOG.error("Unable to read Griffon version from MANIFEST.MF. Are you sure the griffon-core jar is in the classpath? " + e.getMessage(), e);
+            LOG.error("Unable to read Griffon version from MANIFEST.MF Are you sure the griffon-core jar is in the classpath? " + e.getMessage(), e);
             buildDate = buildTime = version = "";
         }
 

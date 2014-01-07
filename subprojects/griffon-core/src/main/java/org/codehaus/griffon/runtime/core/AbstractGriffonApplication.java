@@ -252,12 +252,10 @@ public abstract class AbstractGriffonApplication extends AbstractObservable impl
             for (ShutdownHandler handler : shutdownHandlers) {
                 if (!handler.canShutdown(this)) {
                     event(ApplicationEvent.SHUTDOWN_ABORTED, asList(this));
-                    if (log.isDebugEnabled()) {
-                        try {
-                            log.debug("Shutdown aborted by " + handler);
-                        } catch (UnsupportedOperationException uoe) {
-                            log.debug("Shutdown aborted by a handler");
-                        }
+                    try {
+                        log.debug("Shutdown aborted by {}", handler);
+                    } catch (UnsupportedOperationException uoe) {
+                        log.debug("Shutdown aborted by a handler");
                     }
                     return false;
                 }
@@ -334,18 +332,14 @@ public abstract class AbstractGriffonApplication extends AbstractObservable impl
 
         Object startupGroups = getApplicationConfiguration().get("application.startupGroups", null);
         if (startupGroups instanceof List) {
-            if (log.isInfoEnabled()) {
-                log.info("Initializing all startup groups: " + startupGroups);
-            }
+            log.info("Initializing all startup groups: {}", startupGroups);
 
             for (String groupName : (List<String>) startupGroups) {
                 getMvcGroupManager().createMVCGroup(groupName);
             }
         } else if (startupGroups != null && startupGroups.getClass().isArray()) {
             Object[] groups = (Object[]) startupGroups;
-            if (log.isInfoEnabled()) {
-                log.info("Initializing all startup groups: " + Arrays.toString(groups));
-            }
+            log.info("Initializing all startup groups: {}", Arrays.toString(groups));
 
             for (Object groupName : groups) {
                 getMvcGroupManager().createMVCGroup(String.valueOf(groupName));

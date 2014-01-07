@@ -46,11 +46,11 @@ subprojects { subproj ->
 
         repositories {
             jcenter()
-            mavenCentral()
             maven {
                 name 'Kordamp'
                 url 'http://dl.bintray.com/content/aalmiray/kordamp'
             }
+            mavenCentral()
         }
 
         sourceSets {
@@ -81,7 +81,7 @@ subprojects { subproj ->
             testCompile 'junit:junit:4.11'
             testCompile 'com.google.guiceberry:guiceberry:3.3.1'
             testCompile("com.google.inject:guice:$guiceVersion") {
-                exclude group: 'org.sonatype.sisu.inject'
+                exclude group: 'org.sonatype.sisu.inject', module: 'cglib'
             }
             testCompile "org.codehaus.groovy:groovy-all:$groovyVersion"
             testCompile 'org.spockframework:spock-core:0.7-groovy-2.0'
