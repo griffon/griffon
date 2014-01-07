@@ -12,25 +12,25 @@ import javax.inject.Inject;
 
 @ArtifactProviderFor(GriffonModel.class)
 public class SampleModel extends AbstractGriffonModel {
-    private StringProperty input;                                         // <1>
+    private StringProperty input;                                          //<1>
 
     @Inject
     public SampleModel(@Nonnull GriffonApplication application) {
         super(application);
     }
 
-    public final StringProperty inputProperty() {                         // <2>
+    public final StringProperty inputProperty() {                          //<2>
         if (input == null) {
             input = new SimpleStringProperty(this, "input");
         }
         return input;
     }
 
-    public void setInput(String input) {                                  // <3>
+    public void setInput(String input) {                                   //<3>
         inputProperty().set(input);
     }
 
-    public String getInput() {                                            // <3>
+    public String getInput() {                                             //<3>
         return input == null ? null : inputProperty().get();
     }
 }

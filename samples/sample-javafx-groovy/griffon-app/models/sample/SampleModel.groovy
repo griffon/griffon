@@ -6,5 +6,5 @@ import org.codehaus.griffon.core.compile.ArtifactProviderFor
 
 @ArtifactProviderFor(GriffonModel)
 class SampleModel {
-    @FXBindable String input                                            // <1>
+    @FXBindable String input                                             //<1>
 }

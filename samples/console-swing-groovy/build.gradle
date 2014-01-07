@@ -1,0 +1,78 @@
+apply plugin: 'idea'
+apply plugin: 'groovy'                                                        //<2>
+apply plugin: 'application'                                                  //<3> <4>
+
+mainClassName = 'editor.Launcher'                                             //<1>
+version = '0.1.0'
+group = 'com.acme'
+ext.griffonVersion = '{griffon-version}'
+
+configurations {
+    compileOnly
+}
+
+repositories {
+    jcenter()
+    maven {
+        name 'Kordamp'
+        url 'http://dl.bintray.com/content/aalmiray/kordamp'
+    }
+    mavenCentral()
+    mavenLocal()
+}
+
+dependencies {
+    compileOnly "org.codehaus.griffon:griffon-groovy-compile:$griffonVersion" //<6>
+
+    compile "org.codehaus.griffon:griffon-groovy:$griffonVersion"             //<7>
+    compile "org.codehaus.griffon:griffon-swing:$griffonVersion"              //<8>
+
+    runtime "org.codehaus.griffon:griffon-swing-builder:$griffonVersion"      //<9>
+    runtime "org.codehaus.griffon:griffon-guice:$griffonVersion"              //<10>
+
+    runtime('log4j:log4j:1.2.17') {                                           //<11>
+        exclude group: 'ant',         module: 'ant-nodeps'
+        exclude group: 'ant',         module: 'ant-junit'
+        exclude group: 'ant-contrib', module: 'ant-contrib'
+    }
+    runtime 'org.slf4j:slf4j-log4j12:1.7.5'                                   //<12>
+}
+
+sourceSets {
+    main {
+        compileClasspath += configurations.compileOnly
+        groovy {                                                              //<5>
+            srcDirs = [
+                'griffon-app/conf',
+                'griffon-app/controllers',
+                'griffon-app/models',
+                'griffon-app/views',
+                'griffon-app/services',
+                'griffon-app/lifecycle',
+                'src/main/groovy'
+            ]
+        }
+        resources {                                                           //<5>
+            srcDirs = [
+                'griffon-app/resources',
+                'griffon-app/i18n',
+                'src/main/resources'
+            ]
+        }
+    }
+}
+
+javadoc {
+    classpath += configurations.compileOnly
+}
+
+idea {
+    module {
+        scopes.PROVIDED.plus += configurations.compileOnly
+    }
+}
+
+gradle.taskGraph.whenReady {
+    sourceSets.main.groovy.srcDirs.each { it.mkdirs() }
+    sourceSets.main.resources.srcDirs.each { it.mkdirs() }
+}

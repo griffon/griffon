@@ -6,9 +6,7 @@ import org.codehaus.griffon.core.compile.ArtifactProviderFor
 
 @ArtifactProviderFor(GriffonModel)
 class ConsoleModel {
-    String scriptSource
-
-    @Bindable Object scriptResult
-
-    @Bindable boolean enabled = true
+    String scriptSource                  //<1>
+    @Bindable Object scriptResult        //<2>
+    @Bindable boolean enabled = true     //<3>
 }

@@ -174,7 +174,7 @@ public class AnnotationUtils {
                     String[] dependsOn = getDependsOn(entry.getValue());
 
                     // display this as a cyclical dep
-                    LOG.warn("  {} {} ", type, instanceName);
+                    LOG.warn("  {} {} ", type, instanceName);
                     if (dependsOn.length != 0) {
                         for (String dep : dependsOn) {
                             LOG.warn("    depends on {}", dep);

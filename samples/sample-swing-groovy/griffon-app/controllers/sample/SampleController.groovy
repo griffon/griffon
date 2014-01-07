@@ -8,14 +8,14 @@ import javax.swing.JOptionPane
 
 @ArtifactProviderFor(GriffonController)
 class SampleController {
-    SampleModel model                                                   // <1>
+    SampleModel model                                                    //<1>
 
     @Inject
-    private SampleService sampleService                                 // <2>
+    private SampleService sampleService                                  //<2>
 
-    void sayHello() {                                                   // <3>
+    void sayHello() {                                                    //<3>
         String result = sampleService.sayHello(model.input)
-        runInsideUIAsync {                                              // <4>
+        runInsideUIAsync {                                               //<4>
             JOptionPane.showMessageDialog(
                 application.windowManager.startingWindow,
                 result,

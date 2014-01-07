@@ -19,8 +19,8 @@ import static javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE;
 
 @ArtifactProviderFor(GriffonView.class)
 public class SampleView extends AbstractGriffonView {
-    private SampleController controller;                                     // <1>
-    private SampleModel model;                                               // <1>
+    private SampleController controller;                                      //<1>
+    private SampleModel model;                                                //<1>
 
     @Inject
     public SampleView(@Nonnull GriffonApplication application) {
@@ -48,14 +48,14 @@ public class SampleView extends AbstractGriffonView {
             getImage("/griffon-icon-32x32.png"),
             getImage("/griffon-icon-16x16.png")
         ));
-        getApplication().getWindowManager().attach("mainWindow", window);    // <2>
+        getApplication().getWindowManager().attach("mainWindow", window);     //<2>
 
         window.getContentPane().setLayout(new GridLayout(3, 1));
         window.getContentPane().add(
             new JLabel(getApplication().getMessageSource().getMessage("name.label"))
         );
         final JTextField nameField = new JTextField();
-        nameField.getDocument().addDocumentListener(new DocumentListener() { // <3>
+        nameField.getDocument().addDocumentListener(new DocumentListener() {  //<3>
             @Override
             public void insertUpdate(DocumentEvent e) {
                 model.setInput(nameField.getText());
@@ -73,7 +73,7 @@ public class SampleView extends AbstractGriffonView {
         });
         window.getContentPane().add(nameField);
 
-        Action action = (Action) getApplication().getActionManager()         // <4>
+        Action action = (Action) getApplication().getActionManager()          //<4>
             .actionFor(controller, "sayHello")
             .getToolkitAction();
         window.getContentPane().add(new JButton(action));

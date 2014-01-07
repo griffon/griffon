@@ -17,11 +17,11 @@ import javax.inject.Inject;
 
 @ArtifactProviderFor(GriffonView.class)
 public class SampleView extends AbstractJavaFXGriffonView {
-    private SampleController controller;                                 // <1>
-    private SampleModel model;                                           // <1>
+    private SampleController controller;                                  //<1>
+    private SampleModel model;                                            //<1>
 
     @FXML
-    private TextField name;                                              // <2>
+    private TextField name;                                               //<2>
 
     @Inject
     public SampleView(@Nonnull GriffonApplication application) {
@@ -43,7 +43,7 @@ public class SampleView extends AbstractJavaFXGriffonView {
         stage.setWidth(400);
         stage.setHeight(160);
         stage.setScene(init());
-        getApplication().getWindowManager().attach("mainWindow", stage); // <3>
+        getApplication().getWindowManager().attach("mainWindow", stage);  //<3>
     }
 
     // build the UI
@@ -54,7 +54,7 @@ public class SampleView extends AbstractJavaFXGriffonView {
         Node node = loadFromFXML();
         model.inputProperty().bindBidirectional(name.textProperty());
         ((Group) scene.getRoot()).getChildren().addAll(node);
-        connectActions(node, controller);                                // <4>
+        connectActions(node, controller);                                 //<4>
 
         return scene;
     }

@@ -5,20 +5,20 @@ import org.codehaus.griffon.core.compile.ArtifactProviderFor
 
 @ArtifactProviderFor(GriffonView)
 class SampleView {
-    FactoryBuilderSupport builder                                                             // <1>
-    SampleModel model                                                                         // <1>
+    FactoryBuilderSupport builder                                                              //<1>
+    SampleModel model                                                                          //<1>
 
     void initUI() {
         builder.application(title: application.applicationConfiguration['application.title'],
-            sizeToScene: true, centerOnScreen: true) {                                        // <2>
+            sizeToScene: true, centerOnScreen: true) {                                         //<2>
             scene(fill: WHITE, width: 400, height: 160) {
                 anchorPane {
                     label(leftAnchor: 14, topAnchor: 11,
                           text: application.messageSource.getMessage('name.label'))
                     textField(leftAnchor: 172, topAnchor: 11, prefWidth: 200,
-                              text: bind(model.inputProperty()))                              // <3>
+                              text: bind(model.inputProperty()))                               //<3>
                     button(leftAnchor: 172, topAnchor: 45, prefWidth: 200,
-                           sayHelloAction)                                                    // <4>
+                           sayHelloAction)                                                     //<4>
                 }
             }
         }

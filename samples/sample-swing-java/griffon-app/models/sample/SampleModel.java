@@ -10,18 +10,18 @@ import javax.inject.Inject;
 
 @ArtifactProviderFor(GriffonModel.class)
 public class SampleModel extends AbstractGriffonModel {
-    private String input;                                             // <1>
+    private String input;                                              //<1>
 
     @Inject
     public SampleModel(@Nonnull GriffonApplication application) {
         super(application);
     }
 
-    public String getInput() {                                        // <2>
+    public String getInput() {                                         //<2>
         return input;
     }
 
     public void setInput(String input) {
-        firePropertyChange("input", this.input, this.input = input);  // <3>
+        firePropertyChange("input", this.input, this.input = input);   //<3>
     }
 }

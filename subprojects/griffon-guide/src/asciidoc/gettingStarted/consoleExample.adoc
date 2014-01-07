@@ -1,0 +1,238 @@
+= Console Example
+:console-swing-groovy: {rootdir}/samples/console-swing-groovy
+
+== Create the Project
+
+The first task at hand is deciding which build tool to use. Both Gradle and Maven are popular choices.
+The Griffon team recommends using Gradle as it delivers a much better experience than Maven or even Ant+Ivy.
+The following sections show sample build files for Gradle and Maven with Groovy as the target language. You may
+use Java instead if you want of course, however Groovy is more expressive with less clutter, thus lending itself
+fir a better learning experience. This guide include further examples where Java is the main language.
+
+=== Gradle
+
+.build.gradle
+[source,groovy]
+[subs="verbatim,attributes"]
+----
+include::{console-swing-groovy}/build.gradle[]
+----
+<1> Project properties
+<2> Apply +groovy+ plugin for compiling Groovy sources
+<3> Apply +application+ plugin for running and packaging
+<4> APT will run automatically
+<5> Standard Griffon project layout
+<6> Needed for compile-time generation of metadata
+<7> Groovy specific support for Griffon
+<8> Toolkit specific support
+<9> Groovy SwingBuilder
+<10> An implementation of JSR 330 is required
+<11> Logging framework
+<12> Log4j to Slf4j connector
+
+=== Maven
+
+.pom.xml
+[source,xml]
+[subs="verbatim,attributes"]
+----
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <groupId>org.codehaus.griffon</groupId>                             <!--1-->
+    <artifactId>console-swing-groovy</artifactId>
+    <packaging>jar</packaging>
+    <version>0.1.0</version>
+    <name>console-swing-groovy</name>
+
+    <properties>                                                        <!--1-->
+        <griffon.version>{griffon-version}</griffon.version>
+        <application.main.class>console.Launcher</application.main.class>
+    </properties>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.codehaus.gmaven</groupId>
+                <artifactId>groovy-maven-plugin</artifactId>            <!--2-->
+                <version>2.0</version>
+                <dependencies>
+                    <dependency>
+                        <groupId>org.codehaus.groovy</groupId>
+                        <artifactId>groovy-all</artifactId>
+                        <version>2.2.1</version>
+                    </dependency>
+                </dependencies>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>compile</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>exec-maven-plugin</artifactId>              <!--3-->
+                <version>1.2.1</version>
+                <configuration>
+                    <mainClass>${application.main.class}</mainClass>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.bsc.maven</groupId>
+                <artifactId>maven-processor-plugin</artifactId>         <!--4-->
+                <version>2.2.4</version>
+                <executions>
+                    <execution>
+                        <phase>process-sources</phase>
+                        <goals>
+                            <goal>process</goal>
+                        </goals>
+                        <configuration>
+                            <addCompileSourceRoots>true</addCompileSourceRoots>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>build-helper-maven-plugin</artifactId>      <!--5-->
+                <version>1.8</version>
+                <executions>
+                    <execution>
+                        <phase>process-sources</phase>
+                        <goals>
+                            <goal>add-source</goal>
+                            <goal>add-resource</goal>
+                        </goals>
+                        <configuration>
+                            <sources>
+                                <source>griffon-app/conf</source>
+                                <source>griffon-app/controllers</source>
+                                <source>griffon-app/models</source>
+                                <source>griffon-app/services</source>
+                                <source>griffon-app/views</source>
+                                <source>griffon-app/lifecycle</source>
+                            </sources>
+                            <resources>
+                                <resource>
+                                    <directory>griffon-app/resources</directory>
+                                </resource>
+                                <resource>
+                                    <directory>griffon-app/i18n</directory>
+                                </resource>
+                            </resources>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
+
+    <dependencies>
+        <dependency>
+            <groupId>org.codehaus.griffon</groupId>
+            <artifactId>griffon-groovy-compile</artifactId>             <!--6-->
+            <version>${griffon.version}</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.codehaus.griffon</groupId>
+            <artifactId>griffon-groovy</artifactId>                     <!--7-->
+            <version>${griffon.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.codehaus.griffon</groupId>
+            <artifactId>griffon-swing</artifactId>                      <!--8-->
+            <version>${griffon.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.codehaus.griffon</groupId>
+            <artifactId>griffon-swing-builder</artifactId>              <!--9-->
+            <version>${griffon.version}</version>
+            <scope>runtime</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.codehaus.griffon</groupId>
+            <artifactId>griffon-guice</artifactId>                      <!--10-->
+            <version>${griffon.version}</version>
+            <scope>runtime</scope>
+        </dependency>
+        <dependency>
+            <groupId>log4j</groupId>                                    <!--11-->
+            <artifactId>log4j</artifactId>
+            <version>1.2.17</version>
+            <scope>runtime</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-log4j12</artifactId>                      <!--12-->
+            <version>1.7.5</version>
+            <scope>runtime</scope>
+        </dependency>
+    </dependencies>
+
+    <repositories>
+        <repository>
+            <id>Kordamp</id>
+            <url>http://dl.bintray.com/content/aalmiray/kordamp</url>
+        </repository>
+    </repositories>
+
+</project>
+----
+<1> Project properties
+<2> Apply +groovy+ plugin for compiling Groovy sources
+<3> Apply +application+ plugin for running and packaging
+<4> APT required for compile-time generation of metadata
+<5> Standard Griffon project layout
+<6> Needed for compile-time generation of metadata
+<7> Groovy specific support for Griffon
+<8> Toolkit specific support
+<9> Groovy SwingBuilder
+<10> An implementation of JSR 330 is required
+<11> Logging framework
+<12> Log4j to Slf4j connector
+
+== Layout
+
+Take a moment to familiarize yourself with the standard Griffon project layout. Every Griffon
+project shares the same layout, making it easy to dive in as artifacts are located in specific
+directories according to their responsibilities and behavior.
+
+[source]
+----
+console
++- griffon-app
+|  +- conf
+|  +- controllers
+|  +- i18n
+|  +- lifecycle
+|  +- models
+|  +- resources
+|  +- services
+|  +- views
+|
++- src
+   +- main
+      +- groovy
+      +- resources
+----
+
+== Model
+
+The model for this application is simple: it contains properties that hold the script to be
+evaluated and the results of the evaluation. Make sure you paste the following code into
++griffon-app/models/console/ConsoleModel.groovy+.
+
+.griffon-app/models/console/ConsoleModel.groovy
+[source,groovy]
+[subs="verbatim,attributes"]
+----
+include::{console-swing-groovy}/griffon-app/models/console/ConsoleModel.groovy[]
+----
+<1> Holds the script's text
+<2> Holds the result of the script's execution
+<3> Enable/disable flag
