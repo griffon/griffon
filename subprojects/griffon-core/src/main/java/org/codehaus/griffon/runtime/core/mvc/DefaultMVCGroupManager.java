@@ -219,7 +219,7 @@ public class DefaultMVCGroupManager extends AbstractMVCGroupManager {
                         args.put(memberType, instance);
                     } catch (InstantiationException | IllegalAccessException e) {
                         LOG.error("Can't create member {} with {}", memberType, memberClass);
-                        throw new NewInstanceException(memberClass);
+                        throw new NewInstanceException(memberClass, e);
                     }
                 }
             }

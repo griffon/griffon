@@ -5,13 +5,13 @@ import org.codehaus.griffon.core.compile.ArtifactProviderFor
 
 @ArtifactProviderFor(GriffonView)
 class ConsoleView {
-    def builder
-    def model
+    def builder                                                              //<1>
+    def model                                                                //<1>
 
     void initUI() {
         builder.with {
             actions {
-                action(executeScriptAction,
+                action(executeScriptAction,                                  //<2>
                     enabled: bind { model.enabled })
             }
 
@@ -25,17 +25,17 @@ class ConsoleView {
                     borderLayout()
 
                     scrollPane(constraints: CENTER) {
-                        textArea(text: bind(target: model, 'scriptSource'),
-                            enabled: bind { model.enabled },
+                        textArea(text: bind(target: model, 'scriptSource'),  //<3>
+                            enabled: bind { model.enabled },                 //<2>
                             columns: 40, rows: 10)
                     }
 
                     hbox(constraints: SOUTH) {
-                        button(executeScriptAction)
+                        button(executeScriptAction)                          //<4>
                         hstrut 5
                         label 'Result:'
                         hstrut 5
-                        label text: bind { model.scriptResult }
+                        label text: bind { model.scriptResult }              //<5>
                     }
                 }
             }

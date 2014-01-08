@@ -45,6 +45,9 @@ ext.maven = false
 evaluationDependsOn(':griffon-core')
 evaluationDependsOn(':griffon-core-compile')
 evaluationDependsOn(':griffon-groovy-compile')
+evaluationDependsOn(':griffon-groovy')
+evaluationDependsOn(':griffon-swing')
+evaluationDependsOn(':griffon-javafx')
 
 repositories {
     jcenter()
@@ -63,6 +66,9 @@ task copyDocs(type: Copy) {
         include 'griffon/transform/**/*'
     }
     from(project(":griffon-core").sourceSets.main.allSource)
+    from(project(":griffon-groovy").sourceSets.main.allSource)
+    from(project(":griffon-swing").sourceSets.main.allSource)
+    from(project(":griffon-javafx").sourceSets.main.allSource)
 }
 
 task apiDocs(type: Javadoc, dependsOn: copyDocs) {

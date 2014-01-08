@@ -1,5 +1,5 @@
 application {
-    title = 'Griffon Integration JavaFX Groovy'
+    title = 'JavaFX + Groovy'
     startupGroups = ['sample']
     autoShutdown = true
 }

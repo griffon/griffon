@@ -7,8 +7,6 @@ import org.codehaus.griffon.runtime.core.artifact.AbstractGriffonController;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
-import javax.swing.JOptionPane;
-import java.awt.Window;
 
 @ArtifactProviderFor(GriffonController.class)
 public class SampleController extends AbstractGriffonController {
@@ -31,11 +29,7 @@ public class SampleController extends AbstractGriffonController {
         runInsideUIAsync(new Runnable() {                                //<4>
             @Override
             public void run() {
-                JOptionPane.showMessageDialog(
-                    (Window) getApplication().getWindowManager().getStartingWindow(),
-                    result,
-                    getApplication().getMessageSource().getMessage("dialog.title", "Hello"),
-                    JOptionPane.INFORMATION_MESSAGE);
+                model.setOutput(result);
             }
         });
     }

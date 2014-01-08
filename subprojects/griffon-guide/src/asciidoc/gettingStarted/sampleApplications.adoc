@@ -4,9 +4,31 @@
 :sample-javafx-java: {rootdir}/samples/sample-javafx-java
 :sample-javafx-groovy: {rootdir}/samples/sample-javafx-groovy
 
+This section showcases the same application implemented with different languages
+and different UI toolkits. The application presents a very simple form where a user
+is asked for his or her name. Once a button is clicked a reply will appear within
+the same window. In order to achieve this Models hold 2 observable properties: the
+first to keep track of the +input+, the second to do the same for the +output+.
+Views are only concerned with values coming from the model and as such never
+interact directly with Controllers. Controllers in turn only interact with Models
+and a Service used to transform the input value into the output value. The single
+controller action observes the rules for invoking computations outside of the UI
+thread and updating UI components inside the UI thread.
+
+The goal of these applications is to showcase the similarities and differences of each
+one of them given their implementation language and UI toolkit.
+
 == Swing
 
+Let's begin with Swing, as it's probably the most well known Java UI toolkit. First
+we'll show the Java version of an artifact, then we'll show it's Groovy counterpart.
+
 === Model
+
+Instances of link:api/griffon/core/artifact/GriffonModel.html[GriffonModel] are
+also link:api/griffon/core/Observable.html[Observable], which means they know how
+to handle observable properties out of the box. We only need to be concerned in
+triggering a +java.beans.PropertyChangeEvent+ when a property changes value.
 
 .sample-swing-java/griffon-app/models/sample/SampleModel.java
 [source,java]
@@ -18,6 +40,10 @@ include::{sample-swing-java}/griffon-app/models/sample/SampleModel.java[]
 <2> Property accessor
 <3> Property mutator must fire a +PropertyChangeEvent+
 
+The code is quite straight forward, there's nothing much to see here other than making
+sure to follow the rules for creating observable properties. The Groovy version sports
+a short hand thanks to the usage of the @Bindable AST transformation.
+
 .sample-swing-groovy/griffon-app/models/sample/SampleModel.groovy
 [source,groovy]
 [subs="verbatim,attributes"]
@@ -26,7 +52,16 @@ include::{sample-swing-groovy}/griffon-app/models/sample/SampleModel.groovy[]
 ----
 <1> Observable property
 
+Properties become observable by simply annotating them with @Bindable. The Groovy compiler
+will generate the required boilerplate code, which so happens to be functionally equivalent
+to what we showed in the Java version.
+
 === Controller
+
+Controllers provide actions that are used to fill up the application's interaction.
+They usually manipulate values coming from Views via Model properties. Controllers may
+rely on additional components, such as Services, to do they work. This is exactly our
+case as there's a +SampleService+ instance injected into our controllers.
 
 .sample-swing-java/griffon-app/controllers/sample/SampleController.java
 [source,java]
@@ -39,6 +74,11 @@ include::{sample-swing-java}/griffon-app/controllers/sample/SampleController.jav
 <3> Automatically run off the UI thread
 <4> Get back inside the UI thread
 
+Of particular note is the fact that actions are always executed outside off the UI thread
+unless otherwise configured with an @Threading annotation. Once we have computed the right
+output we must inform the View of the new value. This is done by updating the model
+inside the UI thread [conum,data-value=4]_4_.
+
 .sample-swing-groovy/griffon-app/controllers/sample/SampleController.groovy
 [source,groovy]
 [subs="verbatim,attributes"]
@@ -50,7 +90,18 @@ include::{sample-swing-groovy}/griffon-app/controllers/sample/SampleController.g
 <3> Automatically run off the UI thread
 <4> Get back inside the UI thread
 
+The Groovy version of the Controller is much terser of course however there's a nice
+feature available to Groovy Swing: Model properties bound to UI components are _always_
+updated inside the UI thread.
+
 === Service
+
+Services are tasked to work with raw data and I/O, they should *_never_* interact with
+Views and Models directly, though you may have additional components injected to them.
+The following service shows another facility provide by the
++link:api/griffon/core/GriffonApplication.html[GriffonApplication]+ interface:
++link:api/griffon/core/i18n/MessageSource.html[MessageSource]+, capable of resolving i18n-able
+resources.
 
 .sample-swing-java/griffon-app/services/sample/SampleService.java
 [source,java]
@@ -68,6 +119,9 @@ include::{sample-swing-groovy}/griffon-app/services/sample/SampleService.groovy[
 
 === View
 
+We come to the final piece of the puzzle: the View. Components are arranged in a
+one column vertical grid
+
 .sample-swing-java/griffon-app/views/sample/SampleView.java
 [source,java]
 [subs="verbatim,attributes"]
@@ -78,6 +132,10 @@ include::{sample-swing-java}/griffon-app/views/sample/SampleView.java[]
 <2> Attach window to +link:api/griffon/core/view/WindowManager.html[WindowManager]+
 <3> Apply component-to-model binding
 <4> Hook in controller action by name
+
+Here we can appreciate at [conum,data-value=3]_3_ how Model properties are bound to
+View components, also how controller actions can be transformed into toolkit actions
+that may be applied to buttons for example.
 
 .sample-swing-groovy/griffon-app/views/sample/SampleView.groovy
 [source,groovy]
@@ -90,7 +148,16 @@ include::{sample-swing-groovy}/griffon-app/views/sample/SampleView.groovy[]
 <3> Apply component-to-model binding
 <4> Hook in controller action by name
 
+The Groovy version is again much terse thanks to the http://groovy.codehaus.org/Swing\+Builder[SwingBuilder DSL].
+Notice how easy is to bind [conum,data-value=3]_3_ model properties using the +bind+ node.
+The controller action is also transformed into an UI toolkit specific action however
+this time it's easier to grab: by convention all controller actions are exposed as variables
+to the corresponding +builder+.
+
 === Resources
+
+The last file we'll touch is the one that holds de i18n-able content. Griffon supports
+several formats. Here we're showing the standard one as found in many Java projects.
 
 .sample-swing-java/griffon-app/i18n/messages.properties
 [source]
@@ -128,6 +195,10 @@ include::{sample-javafx-groovy}/griffon-app/models/sample/SampleModel.groovy[]
 ----
 include::{sample-javafx-java}/griffon-app/controllers/sample/SampleController.java[]
 ----
+<1> MVC member injected by +link:api/griffon/core/mvc/MVCGroupManager.html[MVCGroupManager]+
+<2> Injected by JSR 330
+<3> Automatically run off the UI thread
+<4> Get back inside the UI thread
 
 .sample-javafx-groovy/griffon-app/controllers/sample/SampleController.groovy
 [source,groovy]
@@ -135,6 +206,10 @@ include::{sample-javafx-java}/griffon-app/controllers/sample/SampleController.ja
 ----
 include::{sample-javafx-groovy}/griffon-app/controllers/sample/SampleController.groovy[]
 ----
+<1> MVC member injected by +link:api/griffon/core/mvc/MVCGroupManager.html[MVCGroupManager]+
+<2> Injected by JSR 330
+<3> Automatically run off the UI thread
+<4> Get back inside the UI thread
 
 === Service
 
@@ -191,5 +266,3 @@ include::{sample-javafx-groovy}/griffon-app/views/sample/SampleView.groovy[]
 ----
 include::{sample-javafx-java}/griffon-app/i18n/messages.properties[]
 ----
-
-[conum,data-value=2]_2_

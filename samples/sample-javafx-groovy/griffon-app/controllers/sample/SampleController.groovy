@@ -14,6 +14,8 @@ class SampleController {
 
     void sayHello() {                                                      //<3>
         String result = sampleService.sayHello(model.input)
-        println(result)
+        runInsideUIAsync {                                                 //<4>
+            model.output = result
+        }
     }
 }

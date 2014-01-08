@@ -2,22 +2,58 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
-    <groupId>org.codehaus.griffon.samples</groupId>
-    <artifactId>sample-swing-java</artifactId>
+    <groupId>org.codehaus.griffon.samples</groupId>                     <!--1-->
+    <artifactId>console-swing-groovy</artifactId>
     <packaging>jar</packaging>
-    <version>2.0.0-SNAPSHOT</version>
-    <name>sample-swing-java</name>
+    <version>0.1.0</version>
+    <name>console-swing-groovy</name>
 
-    <properties>
-        <griffon.version>2.0.0-SNAPSHOT</griffon.version>
-        <application.main.class>sample.Launcher</application.main.class>
+    <properties>                                                        <!--1-->
+        <griffon.version>{griffon-version}</griffon.version>
+        <application.main.class>console.Launcher</application.main.class>
     </properties>
 
     <build>
         <plugins>
             <plugin>
+                <groupId>org.codehaus.gmavenplus</groupId>
+                <artifactId>gmavenplus-plugin</artifactId>              <!--2-->
+                <version>1.0-beta-3</version>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>compile</goal>
+                            <goal>testCompile</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <sources>                                           <!--5-->
+                        <source>
+                            <directory>${project.basedir}/griffon-app</directory>
+                            <includes>
+                                <include>conf/**/*.groovy</include>
+                                <include>controllers/**/*.groovy</include>
+                                <include>models/**/*.groovy</include>
+                                <include>services/**/*.groovy</include>
+                                <include>views/**/*.groovy</include>
+                                <include>lifecycle/**/*.groovy</include>
+                            </includes>
+                        </source>
+                        <source>
+                            <directory>${project.basedir}/src/main/groovy
+                            </directory>
+                            <includes>
+                                <include>**/*.groovy</include>
+                            </includes>
+                        </source>
+                    </sources>
+                    <sourceEncoding>UTF-8</sourceEncoding>
+                </configuration>
+            </plugin>
+            <plugin>
                 <groupId>org.codehaus.mojo</groupId>
-                <artifactId>exec-maven-plugin</artifactId>
+                <artifactId>exec-maven-plugin</artifactId>              <!--3-->
                 <version>1.2.1</version>
                 <configuration>
                     <mainClass>${application.main.class}</mainClass>
@@ -25,7 +61,7 @@
             </plugin>
             <plugin>
                 <groupId>org.bsc.maven</groupId>
-                <artifactId>maven-processor-plugin</artifactId>
+                <artifactId>maven-processor-plugin</artifactId>         <!--4-->
                 <version>2.2.4</version>
                 <executions>
                     <execution>
@@ -41,7 +77,7 @@
             </plugin>
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
-                <artifactId>build-helper-maven-plugin</artifactId>
+                <artifactId>build-helper-maven-plugin</artifactId>      <!--5-->
                 <version>1.8</version>
                 <executions>
                     <execution>
@@ -77,30 +113,46 @@
     <dependencies>
         <dependency>
             <groupId>org.codehaus.griffon.samples</groupId>
-            <artifactId>griffon-core-compile</artifactId>
+            <artifactId>griffon-groovy-compile</artifactId>             <!--6-->
             <version>${griffon.version}</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>org.codehaus.griffon.samples</groupId>
-            <artifactId>griffon-swing</artifactId>
+            <artifactId>griffon-groovy</artifactId>                     <!--7-->
             <version>${griffon.version}</version>
         </dependency>
         <dependency>
             <groupId>org.codehaus.griffon.samples</groupId>
-            <artifactId>griffon-guice</artifactId>
+            <artifactId>griffon-swing</artifactId>                      <!--8-->
+            <version>${griffon.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.codehaus.griffon.samples</groupId>
+            <artifactId>griffon-swing-builder</artifactId>              <!--9-->
             <version>${griffon.version}</version>
             <scope>runtime</scope>
         </dependency>
         <dependency>
+            <groupId>org.codehaus.griffon.samples</groupId>
+            <artifactId>griffon-guice</artifactId>                      <!--10-->
+            <version>${griffon.version}</version>
+            <scope>runtime</scope>
+        </dependency>
+        <dependency>
+            <groupId>log4j</groupId>                                    <!--11-->
+            <artifactId>log4j</artifactId>
+            <version>1.2.17</version>
+            <scope>runtime</scope>
+        </dependency>
+        <dependency>
             <groupId>org.slf4j</groupId>
-            <artifactId>slf4j-simple</artifactId>
+            <artifactId>slf4j-log4j12</artifactId>                      <!--12-->
             <version>1.7.5</version>
             <scope>runtime</scope>
         </dependency>
     </dependencies>
 
-<!--
     <repositories>
         <repository>
             <id>Griffon</id>
@@ -111,6 +163,5 @@
             <url>http://dl.bintray.com/content/aalmiray/kordamp</url>
         </repository>
     </repositories>
--->
 
 </project>

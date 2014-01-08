@@ -11,7 +11,7 @@ public class Config extends AbstractMapResourceBundle {
     protected void initialize(@Nonnull Map<String, Object> entries) {
         CollectionUtils.map(entries)
             .e("application", CollectionUtils.map()
-                .e("title", "Griffon Integration JavaFX")
+                .e("title", "JavaFX + Java")
                 .e("startupGroups", asList("sample"))
                 .e("autoShutdown", true)
             )

@@ -5,18 +5,18 @@ import org.codehaus.griffon.core.compile.ArtifactProviderFor
 
 @ArtifactProviderFor(GriffonController)
 class ConsoleController {
-    def model
+    def model                                            //<1>
 
     private GroovyShell shell = new GroovyShell()
 
-    void executeScript() {
+    void executeScript() {                               //<2>
         model.enabled = false
         def result
         try {
-            result = shell.evaluate(model.scriptSource)
+            result = shell.evaluate(model.scriptSource)  //<3>
         } finally {
             model.enabled = true
-            model.scriptResult = result
+            model.scriptResult = result                  //<4>
         }
     }
 }

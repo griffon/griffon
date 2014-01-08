@@ -1,5 +1,5 @@
 application {
-    title = 'Griffon Integration Groovy'
+    title = 'Swing + Groovy'
     startupGroups = ['sample']
     autoShutdown = true
 }

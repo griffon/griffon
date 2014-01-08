@@ -13,6 +13,8 @@ import javax.swing.event.DocumentListener;
 import java.awt.GridLayout;
 import java.awt.Image;
 import java.awt.Toolkit;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 
 import static java.util.Arrays.asList;
 import static javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE;
@@ -40,7 +42,7 @@ public class SampleView extends AbstractGriffonView {
         JFrame window = (JFrame) getApplication().createApplicationContainer();
         window.setName("mainWindow");
         window.setTitle(getApplication().getApplicationConfiguration().getAsString("application.title"));
-        window.setSize(320, 160);
+        window.setSize(320, 120);
         window.setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
         window.setIconImage(getImage("/griffon-icon-48x48.png"));
         window.setIconImages(asList(
@@ -50,7 +52,7 @@ public class SampleView extends AbstractGriffonView {
         ));
         getApplication().getWindowManager().attach("mainWindow", window);     //<2>
 
-        window.getContentPane().setLayout(new GridLayout(3, 1));
+        window.getContentPane().setLayout(new GridLayout(4, 1));
         window.getContentPane().add(
             new JLabel(getApplication().getMessageSource().getMessage("name.label"))
         );
@@ -77,6 +79,15 @@ public class SampleView extends AbstractGriffonView {
             .actionFor(controller, "sayHello")
             .getToolkitAction();
         window.getContentPane().add(new JButton(action));
+
+        final JLabel outputLabel = new JLabel();
+        model.addPropertyChangeListener("output", new PropertyChangeListener() {
+            @Override
+            public void propertyChange(PropertyChangeEvent evt) {
+                outputLabel.setText(String.valueOf(evt.getNewValue()));
+            }
+        });
+        window.getContentPane().add(outputLabel);
     }
 
     private Image getImage(String path) {
