@@ -17,6 +17,7 @@
 package griffon.swing;
 
 import javax.annotation.Nonnull;
+import java.util.Map;
 
 /**
  * Simple implementation of {@code GriffonApplication} that runs in applet mode.
@@ -32,9 +33,9 @@ public class SwingGriffonApplet extends AbstractGriffonApplet {
 
     @Nonnull
     @Override
-    public Object createApplicationContainer() {
+    public Object createApplicationContainer(@Nonnull Map<String, Object> attributes) {
         if (appletContainerDispensed) {
-            return SwingUtils.createApplicationFrame(this);
+            return SwingUtils.createApplicationFrame(this, attributes);
         } else {
             appletContainerDispensed = true;
             return this;

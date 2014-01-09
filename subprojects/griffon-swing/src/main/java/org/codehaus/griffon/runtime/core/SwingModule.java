@@ -32,10 +32,13 @@ import org.codehaus.griffon.runtime.swing.DefaultSwingWindowManager;
 import org.codehaus.griffon.runtime.swing.SwingUIThreadManager;
 import org.kordamp.jipsy.ServiceProviderFor;
 
+import javax.inject.Named;
+
 /**
  * @author Andres Almiray
  * @since 2.0.0
  */
+@Named("swing")
 @ServiceProviderFor(Module.class)
 public class SwingModule extends AbstractModule {
     @Override

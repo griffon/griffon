@@ -20,13 +20,15 @@ import org.codehaus.griffon.runtime.core.AbstractGriffonApplication;
 
 import javax.annotation.Nonnull;
 import java.awt.Toolkit;
+import java.util.Map;
 
 /**
- * @author Andres Almriay
+ * @author Andres Almiray
  * @since 2.0.0
  */
 public class SwingGriffonApplication extends AbstractGriffonApplication {
     public SwingGriffonApplication() {
+        this(EMPTY_ARGS);
     }
 
     public SwingGriffonApplication(@Nonnull String[] args) {
@@ -68,8 +70,8 @@ public class SwingGriffonApplication extends AbstractGriffonApplication {
 
     @Nonnull
     @Override
-    public Object createApplicationContainer() {
-        return SwingUtils.createApplicationFrame(this);
+    public Object createApplicationContainer(@Nonnull Map<String, Object> attributes) {
+        return SwingUtils.createApplicationFrame(this, attributes);
     }
 
     public static void main(String[] args) throws Exception {

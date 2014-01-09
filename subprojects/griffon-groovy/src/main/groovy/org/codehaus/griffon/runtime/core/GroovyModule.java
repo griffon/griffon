@@ -28,10 +28,13 @@ import org.codehaus.griffon.runtime.core.mvc.GroovyAwareMVCGroupManager;
 import org.codehaus.griffon.runtime.util.GroovyAwareCompositeResourceBundleBuilder;
 import org.kordamp.jipsy.ServiceProviderFor;
 
+import javax.inject.Named;
+
 /**
  * @author Andres Almiray
  * @since 2.0.0
  */
+@Named("groovy")
 @ServiceProviderFor(Module.class)
 public class GroovyModule extends AbstractModule {
     @Override

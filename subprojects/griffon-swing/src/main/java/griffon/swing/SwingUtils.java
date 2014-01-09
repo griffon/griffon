@@ -16,6 +16,7 @@
 package griffon.swing;
 
 import griffon.core.GriffonApplication;
+import griffon.util.GriffonClassUtils;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -25,7 +26,9 @@ import javax.swing.JInternalFrame;
 import javax.swing.WindowConstants;
 import java.awt.*;
 import java.awt.image.BufferedImage;
+import java.util.Map;
 
+import static griffon.util.GriffonClassUtils.setPropertiesNoException;
 import static griffon.util.GriffonNameUtils.isBlank;
 import static griffon.util.GriffonNameUtils.requireNonBlank;
 import static java.util.Objects.requireNonNull;
@@ -213,12 +216,14 @@ public class SwingUtils {
      * <li>'org.jdesktop.swingx.JXFrame' if SwingX is in the classpath</li>
      * <li>'javax.swing.JFrame'</li>
      *
+     *
      * @param application the current running application
+     * @param attributes window attributes
      * @return a newly instantiated window according to the application's
      *         preferences
      */
     @Nonnull
-    public static Window createApplicationFrame(@Nonnull GriffonApplication application) {
+    public static Window createApplicationFrame(@Nonnull GriffonApplication application, @Nonnull Map<String, Object> attributes) {
         requireNonNull(application, "Argument 'application' cannot be null");
         JFrame frame = null;
         // try config specified first
@@ -255,6 +260,9 @@ public class SwingUtils {
             // do some standard tweaking
             frame.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
         }
+
+        setPropertiesNoException(frame, attributes);
+
         return frame;
     }
 }

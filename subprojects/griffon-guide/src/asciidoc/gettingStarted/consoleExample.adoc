@@ -1,11 +1,11 @@
 = Console Example
 :console-swing-groovy: {rootdir}/samples/console-swing-groovy
 
-== Create the Project
+== Creating a Project
 
 The first task at hand is deciding which build tool to use. Both Gradle and Maven are popular choices.
 The Griffon team recommends using Gradle as it delivers a much better experience than Maven or even Ant+Ivy.
-The following sections show sample build files for Gradle and Maven with Groovy as the target language. You may
+The following sections show sample build files for Gradle, Maven and Ant with Groovy as the target language. You may
 use Java instead if you want of course, however Groovy is more expressive with less clutter, thus lending itself
 for a better learning experience. But don't worry if you're nor familiar with Groovy, this guide includes further
 examples where Java is the main language.
@@ -61,12 +61,41 @@ include::{console-swing-groovy}/pom.xml.txt[]
 Notice the similarities with the <<gradle-build-file,gradle>> build file as marked with each one
 of the 12 callouts.
 
-NOTE: you may use both Gradle and Maven in the same project but we aware that you will be forced
-to duplicate dependency management and other build tool specific plugins.
+=== Ant
+
+Ant build files are simple in nature however their complexity max grow exponentially as more
+behavior is needed. The following shows a very basic Ant build file that assumes all dependencies
+are located relative to the project
+
+.build.xml
+[source,xml]
+[subs="verbatim,attributes"]
+----
+include::{console-swing-groovy}/build.xml.txt[]
+----
+<1> Project properties
+<2> Classpath definitions
+<3> Load +groovy+ task for compiling Groovy sources
+<4> Standard Griffon project layout
+<5> Run the application
+
+These are the dependencies as required by this project
+
+.build
+include::{projectdir}/build/generated-dependencies/build.adoc[]
+
+.provided
+include::{projectdir}/build/generated-dependencies/provided.adoc[]
+
+.compile
+include::{projectdir}/build/generated-dependencies/compile.adoc[]
+
+.runtime
+include::{projectdir}/build/generated-dependencies/runtime.adoc[]
 
 TODO: insert section on Lazybones templates
 
-== Layout
+== Project Layout
 
 Take a moment to familiarize yourself with the standard Griffon project layout. Every Griffon
 project shares the same layout, making it easy to dive in as artifacts are located in specific
@@ -173,4 +202,10 @@ gradle run
 [source]
 ----
 mvn compile exec:java
+----
+
+.ant
+[source]
+----
+ant compile run
 ----

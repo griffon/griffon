@@ -33,6 +33,7 @@ import org.slf4j.Logger;
 
 import javax.annotation.Nonnull;
 import java.util.Locale;
+import java.util.Map;
 
 /**
  * Defines the basic contract of a Griffon application.<p>
@@ -42,7 +43,7 @@ import java.util.Locale;
  */
 public interface GriffonApplication extends Observable {
     @Nonnull
-    Object createApplicationContainer();
+    Object createApplicationContainer(@Nonnull Map<String, Object> attributes);
 
     ApplicationConfiguration getApplicationConfiguration();
 

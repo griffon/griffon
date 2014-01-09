@@ -15,6 +15,7 @@ import java.awt.Image;
 import java.awt.Toolkit;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.util.Collections;
 
 import static java.util.Arrays.asList;
 import static javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE;
@@ -39,7 +40,8 @@ public class SampleView extends AbstractGriffonView {
 
     @Override
     public void initUI() {
-        JFrame window = (JFrame) getApplication().createApplicationContainer();
+        JFrame window = (JFrame) getApplication()
+            .createApplicationContainer(Collections.<String,Object>emptyMap());
         window.setName("mainWindow");
         window.setTitle(getApplication().getApplicationConfiguration().getAsString("application.title"));
         window.setSize(320, 120);

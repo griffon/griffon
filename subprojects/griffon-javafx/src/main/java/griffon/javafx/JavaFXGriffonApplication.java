@@ -22,6 +22,8 @@ import org.codehaus.griffon.runtime.core.ApplicationBootstrapper;
 
 import javax.annotation.Nonnull;
 
+import java.util.Map;
+
 import static griffon.core.GriffonExceptionHandler.registerExceptionHandler;
 
 /**
@@ -41,7 +43,8 @@ public class JavaFXGriffonApplication extends AbstractJavaFXGriffonApplication {
     }
 
     @Nonnull
-    public Object createApplicationContainer() {
+    @Override
+    public Object createApplicationContainer(@Nonnull Map<String, Object> attributes) {
         if (primaryStageDispensed) {
             return new Stage();
         } else {
@@ -70,22 +73,6 @@ public class JavaFXGriffonApplication extends AbstractJavaFXGriffonApplication {
             }
         });
     }
-
-    /*
-    public void bootstrap() {
-        initialize();
-    }
-
-    public void realize() {
-        startup();
-    }
-
-    public void show() {
-        Window startingWindow = getWindowManager().getStartingWindow();
-        getWindowManager().show(startingWindow);
-        ready();
-    }
-    */
 
     public boolean shutdown() {
         if (super.shutdown()) {

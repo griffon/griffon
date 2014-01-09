@@ -3,6 +3,8 @@
 :sample-swing-groovy: {rootdir}/samples/sample-swing-groovy
 :sample-javafx-java: {rootdir}/samples/sample-javafx-java
 :sample-javafx-groovy: {rootdir}/samples/sample-javafx-groovy
+:sample-lanterna-java: {rootdir}/samples/sample-lanterna-java
+:sample-lanterna-groovy: {rootdir}/samples/sample-lanterna-groovy
 
 This section showcases the same application implemented with different languages
 and different UI toolkits. The application presents a very simple form where a user
@@ -265,4 +267,89 @@ include::{sample-javafx-groovy}/griffon-app/views/sample/SampleView.groovy[]
 [source]
 ----
 include::{sample-javafx-java}/griffon-app/i18n/messages.properties[]
+----
+
+== Lanterna
+
+=== Model
+
+.sample-lanterna-java/griffon-app/models/sample/SampleModel.java
+[source,java]
+[subs="verbatim,attributes"]
+----
+include::{sample-lanterna-java}/griffon-app/models/sample/SampleModel.java[]
+----
+<1> Define a private field for the property
+<2> Property accessor
+<3> Property mutator must fire a +PropertyChangeEvent+
+
+=== Controller
+
+.sample-lanterna-java/griffon-app/controllers/sample/SampleController.java
+[source,java]
+[subs="verbatim,attributes"]
+----
+include::{sample-lanterna-java}/griffon-app/controllers/sample/SampleController.java[]
+----
+<1> MVC member injected by +link:api/griffon/core/mvc/MVCGroupManager.html[MVCGroupManager]+
+<2> Injected by JSR 330
+<3> Automatically run off the UI thread
+<4> Get back inside the UI thread
+
+.sample-lanterna-groovy/griffon-app/controllers/sample/SampleController.groovy
+[source,groovy]
+[subs="verbatim,attributes"]
+----
+include::{sample-lanterna-groovy}/griffon-app/controllers/sample/SampleController.groovy[]
+----
+<1> MVC member injected by +link:api/griffon/core/mvc/MVCGroupManager.html[MVCGroupManager]+
+<2> Injected by JSR 330
+<3> Automatically run off the UI thread
+<4> Get back inside the UI thread
+
+=== Service
+
+.sample-lanterna-java/griffon-app/services/sample/SampleService.java
+[source,java]
+[subs="verbatim,attributes"]
+----
+include::{sample-lanterna-java}/griffon-app/services/sample/SampleService.java[]
+----
+
+.sample-lanterna-groovy/griffon-app/services/sample/SampleService.groovy
+[source,groovy]
+[subs="verbatim,attributes"]
+----
+include::{sample-lanterna-groovy}/griffon-app/services/sample/SampleService.groovy[]
+----
+
+=== View
+
+.sample-lanterna-java/griffon-app/views/sample/SampleView.java
+[source,java]
+[subs="verbatim,attributes"]
+----
+include::{sample-lanterna-java}/griffon-app/views/sample/SampleView.java[]
+----
+<1> MVC member injected by +link:api/griffon/core/mvc/MVCGroupManager.html[MVCGroupManager]+
+<2> Create window and attach it to +link:api/griffon/core/view/WindowManager.html[WindowManager]+
+<3> Apply component-to-model binding
+<4> Hook actions by convention
+
+.sample-lanterna-groovy/griffon-app/views/sample/SampleView.groovy
+[source,groovy]
+[subs="verbatim,attributes"]
+----
+include::{sample-lanterna-groovy}/griffon-app/views/sample/SampleView.groovy[]
+----
+<1> MVC member injected by +link:api/griffon/core/mvc/MVCGroupManager.html[MVCGroupManager]+
+<2> Create window and attach it to +link:api/griffon/core/view/WindowManager.html[WindowManager]+
+<3> Hook actions by convention
+
+=== Resources
+
+.sample-lanterna-java/griffon-app/i18n/messages.properties
+[source]
+----
+include::{sample-lanterna-java}/griffon-app/i18n/messages.properties[]
 ----

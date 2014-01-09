@@ -17,18 +17,9 @@
 buildscript {
     repositories {
         jcenter()
-        maven {
-            name 'Bintray Asciidoctor repo'
-            url  'http://dl.bintray.com/content/aalmiray/asciidoctor'
-        }
-        maven {
-            name "Ben's Maven repo"
-            url 'http://dl.bintray.com/content/bmuschko/maven'
-        }
-        maven {
-            name "Ben's Gradle Plugins repo"
-            url 'http://dl.bintray.com/content/bmuschko/gradle-plugins'
-        }
+        maven { url 'http://dl.bintray.com/content/aalmiray/asciidoctor' }
+        maven { url 'http://dl.bintray.com/content/bmuschko/maven' }
+        maven { url 'http://dl.bintray.com/content/bmuschko/gradle-plugins' }
     }
 
     dependencies {
@@ -42,12 +33,17 @@ apply plugin: 'java2html'
 
 ext.maven = false
 
-evaluationDependsOn(':griffon-core')
-evaluationDependsOn(':griffon-core-compile')
-evaluationDependsOn(':griffon-groovy-compile')
-evaluationDependsOn(':griffon-groovy')
-evaluationDependsOn(':griffon-swing')
-evaluationDependsOn(':griffon-javafx')
+ext.childProjects = [
+    ':griffon-core',
+    ':griffon-core-compile',
+    ':griffon-groovy-compile',
+    ':griffon-groovy',
+    ':griffon-swing',
+    ':griffon-javafx',
+    ':griffon-lanterna'
+]
+
+ext.childProjects.each { evaluationDependsOn it }
 
 repositories {
     jcenter()
@@ -59,26 +55,29 @@ dependencies {
 
 task copyDocs(type: Copy) {
     destinationDir = "${buildDir}/sources" as File
-    from(project(":griffon-core-compile").sourceSets.main.allSource) {
-        include 'griffon/transform/**/*'
+    project.ext.childProjects.each { projectName ->
+        if (projectName.endsWith('-compile')) {
+            from(project(projectName).sourceSets.main.allSource) {
+                include 'griffon/transform/**/*'
+            }
+        } else {
+            from(project(projectName).sourceSets.main.allSource)
+        }
     }
-    from(project(":griffon-groovy-compile").sourceSets.main.allSource) {
-        include 'griffon/transform/**/*'
-    }
-    from(project(":griffon-core").sourceSets.main.allSource)
-    from(project(":griffon-groovy").sourceSets.main.allSource)
-    from(project(":griffon-swing").sourceSets.main.allSource)
-    from(project(":griffon-javafx").sourceSets.main.allSource)
 }
+
+evaluationDependsOn(":console-swing-groovy")
 
 task apiDocs(type: Javadoc, dependsOn: copyDocs) {
     source          = file("${buildDir}/sources")
     destinationDir  = file("$buildDir/api")
     title           = "Griffon $version"
-    classpath       = project(":griffon-core").sourceSets.main.output +
-                      project(":griffon-core").configurations.compile
+    classpath       = project.ext.childProjects.collect { projectName ->
+                          [project(projectName).sourceSets.main.output,
+                           project(projectName).configurations.compile]
+                      }.flatten().sum() as FileCollection
 
-    excludes = ['**/*.html', 'META-INF/**']
+    excludes = ['**/*.html', 'META-INF/**', '**/*.groovy']
 
     options.use         = true
     options.splitIndex  = true
@@ -152,7 +151,30 @@ java2html {
     }
 }
 
+task computeConsoleDependencies << {
+    List provided = project(":console-swing-groovy").configurations.compileOnly.collect { it.name }.sort()
+    List compile = project(":console-swing-groovy").configurations.compile.collect { it.name }.sort()
+    provided -= compile
+    List runtime = project(":console-swing-groovy").configurations.runtime.collect { it.name }.sort()
+    runtime -= compile
+    List build = compile.grep { it =~ /groovy-all/ }
+
+    def writeFile = { String name, List contents ->
+        File file = new File("${buildDir}/generated-dependencies/${name}.adoc")
+        file.parentFile.mkdirs()
+        file.withPrintWriter { w ->
+            contents.each { dep -> w.println(" - $dep") }
+        }
+    }
+
+    writeFile('build', build)
+    writeFile('provided', provided)
+    writeFile('compile', compile)
+    writeFile('runtime', runtime)
+}
+
 asciidoctor {
+    dependsOn computeConsoleDependencies
     baseDir = project.file('src/asciidoc')
     options = [
         attributes: [

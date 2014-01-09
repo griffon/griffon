@@ -53,7 +53,7 @@ class ApplicationFactory extends AbstractFactory {
     }
 
     Object newInstance(FactoryBuilderSupport builder, Object name, Object value, Map attributes) {
-        def applicationWindow = builder.application.createApplicationContainer()
+        def applicationWindow = builder.application.createApplicationContainer([:])
         if (applicationWindow instanceof Window) {
             if (attributes.id) applicationWindow.name = attributes.id
             if (attributes.name) applicationWindow.name = attributes.name

@@ -15,6 +15,7 @@ import org.codehaus.griffon.runtime.core.artifact.AbstractJavaFXGriffonView;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
+import java.util.Collections;
 
 @ArtifactProviderFor(GriffonView.class)
 public class SampleView extends AbstractJavaFXGriffonView {
@@ -41,7 +42,8 @@ public class SampleView extends AbstractJavaFXGriffonView {
 
     @Override
     public void initUI() {
-        Stage stage = (Stage) getApplication().createApplicationContainer();
+        Stage stage = (Stage) getApplication()
+            .createApplicationContainer(Collections.<String,Object>emptyMap());
         stage.setTitle(getApplication().getApplicationConfiguration().getAsString("application.title"));
         stage.setWidth(400);
         stage.setHeight(120);

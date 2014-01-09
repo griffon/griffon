@@ -31,7 +31,7 @@ class ApplicationFactory extends StageFactory {
     }
 
     Object newInstance(FactoryBuilderSupport builder, Object name, Object value, Map attributes) {
-        Window window = builder.application.createApplicationContainer()
+        Window window = builder.application.createApplicationContainer([:])
         String windowName = (attributes.remove('name') ?: attributes.id) ?: computeWindowName()
         builder.application.windowManager.attach(windowName, window)
         window

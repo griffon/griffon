@@ -1,0 +1,73 @@
+<project name="console-swing-groovy" default="compile" basedir=".">
+    <property name="version" value="0.1.0"/>                            <!--1-->
+    <property name="group" value="org.codehaus.griffon.samples"/>
+    <property name="application.main.class" value="console.Launcher"/>
+    <property name="build.output" value="target/classes"/>
+    <property name="project.lib.dir" value="${basedir}/lib"/>
+
+    <path id="build.classpath">                                         <!--2-->
+        <fileset dir="${project.lib.dir}/build">
+            <include name="*.jar"/>
+        </fileset>
+    </path>
+
+    <path id="provided.classpath">                                      <!--2-->
+        <fileset dir="${project.lib.dir}/provided">
+            <include name="*.jar"/>
+        </fileset>
+    </path>
+
+    <path id="compile.classpath">                                       <!--2-->
+        <fileset dir="${project.lib.dir}/compile">
+            <include name="*.jar"/>
+        </fileset>
+    </path>
+
+    <path id="runtime.classpath">                                       <!--2-->
+        <fileset dir="${project.lib.dir}/runtime">
+            <include name="*.jar"/>
+        </fileset>
+    </path>
+
+    <taskdef name="groovyc"                                             <!--3-->
+             classname="org.codehaus.groovy.ant.Groovyc"
+             classpathref="build.classpath"/>
+
+    <target name="clean">
+        <delete dir="${build.directory}" />
+    </target>
+
+    <target name="compile">
+        <mkdir dir="${build.output}"/>
+        <groovyc destdir="${build.output}">                             <!--4-->
+            <src path="griffon-app/conf"/>
+            <src path="griffon-app/controllers"/>
+            <src path="griffon-app/models"/>
+            <src path="griffon-app/services"/>
+            <src path="griffon-app/views"/>
+            <src path="griffon-app/lifecycle"/>
+            <src path="src/main/groovy"/>
+            <classpath>
+                <path refid="provided.classpath"/>
+                <path refid="compile.classpath"/>
+                <pathelement location="${build.output}"/>
+            </classpath>
+        </groovyc>
+        <copy todir="${build.output}">
+            <fileset dir="griffon-app/i18n"/>
+            <fileset dir="griffon-app/resources"/>
+            <fileset dir="src/main/resources"/>
+        </copy>
+    </target>
+
+    <target name="run" depends="compile">                               <!--5-->
+        <java classname="${application.main.class}"
+              fork="true">
+            <classpath>
+                <path refid="compile.classpath"/>
+                <path refid="runtime.classpath"/>
+                <pathelement location="${build.output}"/>
+            </classpath>
+        </java>
+    </target>
+</project>
