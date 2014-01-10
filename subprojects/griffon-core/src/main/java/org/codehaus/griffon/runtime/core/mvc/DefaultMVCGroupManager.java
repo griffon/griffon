@@ -34,7 +34,7 @@ import javax.inject.Inject;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-import static griffon.core.GriffonExceptionHandler.deepSanitize;
+import static griffon.core.GriffonExceptionHandler.sanitize;
 import static griffon.util.ConfigUtils.getConfigValueAsBoolean;
 import static griffon.util.GriffonClassUtils.setPropertiesNoException;
 import static griffon.util.GriffonNameUtils.isBlank;
@@ -251,7 +251,7 @@ public class DefaultMVCGroupManager extends AbstractMVCGroupManager {
                         view.initUI();
                         view.mvcGroupInit(args);
                     } catch (RuntimeException e) {
-                        throw (RuntimeException) deepSanitize(e);
+                        throw (RuntimeException) sanitize(e);
                     }
                 }
             });
