@@ -72,9 +72,7 @@ public abstract class AbstractPivotGriffonApplication extends AbstractGriffonApp
     public void startup(Display display, org.apache.pivot.collections.Map<String, String> properties) throws Exception {
         ApplicationBootstrapper bootstrapper = new PivotApplicationBootstrapper(this, display);
         bootstrapper.bootstrap();
-        initialize();
-        startup();
-        ready();
+        bootstrapper.run();
     }
 
     @Override

@@ -32,6 +32,7 @@ import griffon.core.view.WindowManager;
 import org.slf4j.Logger;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.Locale;
 import java.util.Map;
 
@@ -40,6 +41,7 @@ import java.util.Map;
  *
  * @author Danno Ferrin
  * @author Andres Almiray
+ * @since 0.0.0
  */
 public interface GriffonApplication extends Observable {
     @Nonnull
@@ -72,8 +74,6 @@ public interface GriffonApplication extends Observable {
     <W> WindowManager<W> getWindowManager();
 
     // --== Lifecycle ==--
-
-    // void configure();
 
     /**
      * Executes the 'Initialize' life cycle phase.
@@ -139,6 +139,14 @@ public interface GriffonApplication extends Observable {
     void setLocale(@Nonnull Locale locale);
 
     /**
+     * Sets the application locale.<p>
+     * This is a bound property.
+     *
+     * @param locale a literal representation of a Locale
+     */
+    void setLocaleAsString(@Nullable String locale);
+
+    /**
      * Returns the current phase.
      *
      * @return returns the current ApplicationPhase. Never returns null.
@@ -162,22 +170,4 @@ public interface GriffonApplication extends Observable {
      * @since 0.9.2
      */
     Logger getLog();
-
-    // ----------------------------
-
-    /**
-     * Creates a new instance of the specified class and type.<br/>
-     * Triggers the Event.NEW_INSTANCE with the following parameters
-     * <ul>
-     * <li>clazz - the Class of the object</li>
-     * <li>type - the symbolical type of the object</li>
-     * <li>instance -> the object that was created</li>
-     * </ul>
-     *
-     * @param clazz the Class for which an instance must be created
-     * @param type  a symbolical type, for example 'controller' or 'service'. May be null.
-     * @return a newly instantiated object of type <tt>clazz</tt>. Implementations must be sure
-     *         to trigger an event of type Event.NEW_INSTANCE.
-     */
-    // Object newInstance(Class clazz, String type);
 }

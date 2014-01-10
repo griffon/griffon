@@ -18,7 +18,6 @@ package org.codehaus.griffon.runtime.core;
 
 import griffon.core.GriffonApplication;
 import griffon.core.env.GriffonEnvironment;
-import griffon.core.env.Metadata;
 import griffon.core.injection.Binding;
 import griffon.core.injection.Injector;
 import griffon.core.injection.InjectorFactory;
@@ -52,9 +51,9 @@ public class ApplicationBootstrapper {
 
     public void bootstrap() throws Exception {
         // 1 initialize environment settings
-        Metadata metadata = Metadata.getCurrent();
-        metadata.getGriffonStartDir();
-        metadata.getGriffonWorkingDir();
+        //Metadata metadata = Metadata.getCurrent();
+        //metadata.getGriffonStartDir();
+        //metadata.getGriffonWorkingDir();
         LOG.info("Griffon {}", GriffonEnvironment.getGriffonVersion());
         LOG.info("Build: {}", GriffonEnvironment.getBuildDateTime());
         LOG.info("JVM: {}", GriffonEnvironment.getJvmVersion());
@@ -104,17 +103,22 @@ public class ApplicationBootstrapper {
     }
 
     protected void collectModuleBindings(@Nonnull Collection<Module> modules) {
-        ServiceLoader<Module> serviceLoader = ServiceLoader.load(Module.class);
-        Collection<Module> moduleInstances = new ArrayList<>();
-        moduleInstances.add(new DefaultApplicationModule());
-        for (Module module : serviceLoader) {
-            moduleInstances.add(module);
-        }
+        Collection<Module> moduleInstances = loadModules();
         Map<String, Module> sortedModules = sortByDependencies(moduleInstances, "Module", "module");
         for (Map.Entry<String, Module> entry : sortedModules.entrySet()) {
             LOG.debug("Loading module bindings from {}:{}", entry.getKey(), entry.getValue());
             modules.add(entry.getValue());
         }
+    }
+
+    protected Collection<Module> loadModules() {
+        Collection<Module> moduleInstances = new ArrayList<>();
+        ServiceLoader<Module> serviceLoader = ServiceLoader.load(Module.class);
+        moduleInstances.add(new DefaultApplicationModule());
+        for (Module module : serviceLoader) {
+            moduleInstances.add(module);
+        }
+        return moduleInstances;
     }
 
     private void createInjector(Iterable<Binding<?>> bindings) throws Exception {
