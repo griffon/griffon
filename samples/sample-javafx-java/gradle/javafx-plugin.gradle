@@ -9,6 +9,17 @@
  */
 
 buildscript {
+    // JavaFX locations for JDK7, JDK7, JDK8
+    for (location in ['lib/jfxrt.jar', 'jre/lib/jfxrt.jar', 'jre/lib/ext/jfxrt.jar']) {
+        File javaHome = new File(System.properties['java.home'])
+        javaHome = javaHome.name == 'jre' ? javaHome.parentFile : javaHome
+        File file = new File(javaHome, location)
+        if (file.exists()) {
+            ext.jfxrtLocation = file.absolutePath
+            break
+        }
+    }
+
     repositories {
         mavenLocal()
         maven {
@@ -27,7 +38,7 @@ buildscript {
     dependencies {
         classpath 'org.bitbucket.shemnon.javafxplugin:gradle-javafx-plugin:0.4.0'
         classpath project.files("${System.properties['java.home']}/../lib/ant-javafx.jar")
-        classpath project.files("${System.properties['java.home']}/lib/jfxrt.jar")
+        classpath project.files(ext.jfxrtLocation)
     }
 }
 

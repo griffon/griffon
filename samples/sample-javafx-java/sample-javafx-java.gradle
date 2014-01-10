@@ -16,7 +16,7 @@
 
 apply plugin: 'java'
 apply plugin: 'application'
-apply from: 'gradle/javafx.plugin'
+apply from: 'gradle/javafx-plugin.gradle'
 
 mainClassName = 'sample.Launcher'
 
@@ -54,6 +54,10 @@ sourceSets {
             ]
         }
     }
+}
+
+run {
+    main = mainClassName
 }
 
 gradle.taskGraph.whenReady {

@@ -16,7 +16,7 @@
 
 apply plugin: 'groovy'
 apply plugin: 'application'
-apply from: '../sample-javafx-java/gradle/javafx.plugin'
+apply from: '../sample-javafx-java/gradle/javafx-plugin.gradle'
 
 mainClassName = 'browser.Launcher'
 
@@ -67,6 +67,10 @@ sourceSets {
             ]
         }
     }
+}
+
+run {
+    main = mainClassName
 }
 
 gradle.taskGraph.whenReady {
