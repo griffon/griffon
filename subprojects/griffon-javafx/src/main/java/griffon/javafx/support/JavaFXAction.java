@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package griffon.javafx;
+package griffon.javafx.support;
 
 import javafx.beans.property.*;
 import javafx.event.ActionEvent;

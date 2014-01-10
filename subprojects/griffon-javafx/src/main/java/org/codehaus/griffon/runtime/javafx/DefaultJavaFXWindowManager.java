@@ -31,9 +31,9 @@ import org.codehaus.griffon.runtime.core.view.AbstractWindowManager;
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import javax.inject.Named;
-import java.util.Arrays;
 import java.util.List;
 
+import static java.util.Arrays.asList;
 import static java.util.Objects.requireNonNull;
 
 /**
@@ -113,7 +113,7 @@ public class DefaultJavaFXWindowManager extends AbstractWindowManager<Window> im
          * Triggers a <tt>WindowShown</tt> event with the window as sole argument
          */
         public void handle(WindowEvent windowEvent) {
-            event(ApplicationEvent.WINDOW_SHOWN, Arrays.asList(windowEvent.getSource()));
+            event(ApplicationEvent.WINDOW_SHOWN, asList(windowEvent.getSource()));
         }
     }
 
@@ -127,11 +127,11 @@ public class DefaultJavaFXWindowManager extends AbstractWindowManager<Window> im
          * Triggers a <tt>WindowHidden</tt> event with the window as sole argument
          */
         public void handle(WindowEvent windowEvent) {
-            event(ApplicationEvent.WINDOW_HIDDEN, Arrays.asList(windowEvent.getSource()));
+            event(ApplicationEvent.WINDOW_HIDDEN, asList(windowEvent.getSource()));
         }
     }
 
-    private void event(@Nonnull ApplicationEvent evt, List<Object> args) {
+    private void event(@Nonnull ApplicationEvent evt, List<?> args) {
         try {
             EventRouter eventRouter = getApplication().getEventRouter();
             eventRouter.publish(evt.getName(), args);

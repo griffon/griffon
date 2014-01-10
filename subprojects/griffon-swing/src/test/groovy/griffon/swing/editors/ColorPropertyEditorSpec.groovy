@@ -1,6 +1,6 @@
 package griffon.swing.editors
 
-import griffon.swing.Colors
+import griffon.swing.support.Colors
 import spock.lang.Specification
 import spock.lang.Unroll
 

@@ -1,3 +1,19 @@
+/*
+ * Copyright 2012-2014 the original author or authors.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package org.codehaus.griffon.runtime.lanterna;
 
 import com.googlecode.lanterna.gui.Window;
@@ -5,6 +21,8 @@ import com.googlecode.lanterna.gui.listener.WindowAdapter;
 import griffon.core.ApplicationEvent;
 import griffon.core.GriffonApplication;
 import griffon.core.env.ApplicationPhase;
+import griffon.core.event.EventRouter;
+import griffon.exceptions.InstanceNotFoundException;
 import griffon.lanterna.LanternaWindowDisplayHandler;
 import griffon.lanterna.LanternaWindowManager;
 import org.codehaus.griffon.runtime.core.view.AbstractWindowManager;
@@ -12,6 +30,7 @@ import org.codehaus.griffon.runtime.core.view.AbstractWindowManager;
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import javax.inject.Named;
+import java.util.List;
 
 import static java.util.Arrays.asList;
 import static java.util.Objects.requireNonNull;
@@ -68,14 +87,25 @@ public class DefaultLanternaWindowManager extends AbstractWindowManager<Window> 
         @Override
         public void onWindowClosed(@Nonnull Window window) {
             super.onWindowClosed(window);
-            getApplication().getEventRouter().publish(ApplicationEvent.WINDOW_HIDDEN.getName(), asList(window));
+            event(ApplicationEvent.WINDOW_HIDDEN, asList(window));
             handleClose(window);
         }
 
         @Override
         public void onWindowShown(Window window) {
             super.onWindowShown(window);
-            getApplication().getEventRouter().publish(ApplicationEvent.WINDOW_SHOWN.getName(), asList(window));
+            event(ApplicationEvent.WINDOW_SHOWN, asList(window));
+        }
+    }
+
+    private void event(@Nonnull ApplicationEvent evt, List<?> args) {
+        try {
+            EventRouter eventRouter = getApplication().getEventRouter();
+            eventRouter.publish(evt.getName(), args);
+        } catch (InstanceNotFoundException infe) {
+            if (getApplication().getPhase() != ApplicationPhase.SHUTDOWN) {
+                throw infe;
+            }
         }
     }
 }

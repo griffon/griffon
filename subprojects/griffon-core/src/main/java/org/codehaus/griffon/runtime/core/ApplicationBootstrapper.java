@@ -112,7 +112,6 @@ public class ApplicationBootstrapper {
         }
         Map<String, Module> sortedModules = sortByDependencies(moduleInstances, "Module", "module");
         for (Map.Entry<String, Module> entry : sortedModules.entrySet()) {
-
             LOG.debug("Loading module bindings from {}:{}", entry.getKey(), entry.getValue());
             modules.add(entry.getValue());
         }

@@ -19,7 +19,7 @@ package org.codehaus.griffon.runtime.core.controller;
 import griffon.core.artifact.GriffonController;
 import griffon.core.controller.ActionManager;
 import griffon.core.threading.UIThreadManager;
-import griffon.javafx.JavaFXAction;
+import griffon.javafx.support.JavaFXAction;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 

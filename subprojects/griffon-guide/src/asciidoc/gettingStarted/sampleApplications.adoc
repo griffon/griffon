@@ -5,6 +5,8 @@
 :sample-javafx-groovy: {rootdir}/samples/sample-javafx-groovy
 :sample-lanterna-java: {rootdir}/samples/sample-lanterna-java
 :sample-lanterna-groovy: {rootdir}/samples/sample-lanterna-groovy
+:sample-pivot-java: {rootdir}/samples/sample-pivot-java
+:sample-pivot-groovy: {rootdir}/samples/sample-pivot-groovy
 
 This section showcases the same application implemented with different languages
 and different UI toolkits. The application presents a very simple form where a user
@@ -27,9 +29,9 @@ we'll show the Java version of an artifact, then we'll show it's Groovy counterp
 
 === Model
 
-Instances of link:api/griffon/core/artifact/GriffonModel.html[GriffonModel] are
-also link:api/griffon/core/Observable.html[Observable], which means they know how
-to handle observable properties out of the box. We only need to be concerned in
+Instances of link:api/griffon/core/artifact/GriffonModel.html[GriffonModel] implement
+the link:api/griffon/core/Observable.html[Observable], interface which means they know
+how to handle observable properties out of the box. We only need to be concerned in
 triggering a +java.beans.PropertyChangeEvent+ when a property changes value.
 
 .sample-swing-java/griffon-app/models/sample/SampleModel.java
@@ -352,4 +354,89 @@ include::{sample-lanterna-groovy}/griffon-app/views/sample/SampleView.groovy[]
 [source]
 ----
 include::{sample-lanterna-java}/griffon-app/i18n/messages.properties[]
+----
+
+== Pivot
+
+=== Model
+
+.sample-pivot-java/griffon-app/models/sample/SampleModel.java
+[source,java]
+[subs="verbatim,attributes"]
+----
+include::{sample-pivot-java}/griffon-app/models/sample/SampleModel.java[]
+----
+<1> Define a private field for the property
+<2> Property accessor
+<3> Property mutator must fire a +PropertyChangeEvent+
+
+=== Controller
+
+.sample-pivot-java/griffon-app/controllers/sample/SampleController.java
+[source,java]
+[subs="verbatim,attributes"]
+----
+include::{sample-pivot-java}/griffon-app/controllers/sample/SampleController.java[]
+----
+<1> MVC member injected by +link:api/griffon/core/mvc/MVCGroupManager.html[MVCGroupManager]+
+<2> Injected by JSR 330
+<3> Automatically run off the UI thread
+<4> Get back inside the UI thread
+
+.sample-pivot-groovy/griffon-app/controllers/sample/SampleController.groovy
+[source,groovy]
+[subs="verbatim,attributes"]
+----
+include::{sample-pivot-groovy}/griffon-app/controllers/sample/SampleController.groovy[]
+----
+<1> MVC member injected by +link:api/griffon/core/mvc/MVCGroupManager.html[MVCGroupManager]+
+<2> Injected by JSR 330
+<3> Automatically run off the UI thread
+<4> Get back inside the UI thread
+
+=== Service
+
+.sample-pivot-java/griffon-app/services/sample/SampleService.java
+[source,java]
+[subs="verbatim,attributes"]
+----
+include::{sample-pivot-java}/griffon-app/services/sample/SampleService.java[]
+----
+
+.sample-pivot-groovy/griffon-app/services/sample/SampleService.groovy
+[source,groovy]
+[subs="verbatim,attributes"]
+----
+include::{sample-pivot-groovy}/griffon-app/services/sample/SampleService.groovy[]
+----
+
+=== View
+
+.sample-pivot-java/griffon-app/views/sample/SampleView.java
+[source,java]
+[subs="verbatim,attributes"]
+----
+include::{sample-pivot-java}/griffon-app/views/sample/SampleView.java[]
+----
+<1> MVC member injected by +link:api/griffon/core/mvc/MVCGroupManager.html[MVCGroupManager]+
+<2> Create window and attach it to +link:api/griffon/core/view/WindowManager.html[WindowManager]+
+<3> Apply component-to-model binding
+<4> Hook actions by convention
+
+.sample-pivot-groovy/griffon-app/views/sample/SampleView.groovy
+[source,groovy]
+[subs="verbatim,attributes"]
+----
+include::{sample-pivot-groovy}/griffon-app/views/sample/SampleView.groovy[]
+----
+<1> MVC member injected by +link:api/griffon/core/mvc/MVCGroupManager.html[MVCGroupManager]+
+<2> Create window and attach it to +link:api/griffon/core/view/WindowManager.html[WindowManager]+
+<3> Hook actions by convention
+
+=== Resources
+
+.sample-pivot-java/griffon-app/i18n/messages.properties
+[source]
+----
+include::{sample-pivot-java}/griffon-app/i18n/messages.properties[]
 ----

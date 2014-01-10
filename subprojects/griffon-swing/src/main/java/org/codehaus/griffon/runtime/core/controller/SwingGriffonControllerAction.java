@@ -20,7 +20,7 @@ import griffon.core.CallableWithArgs;
 import griffon.core.artifact.GriffonController;
 import griffon.core.controller.ActionManager;
 import griffon.core.threading.UIThreadManager;
-import griffon.swing.SwingAction;
+import griffon.swing.support.SwingAction;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

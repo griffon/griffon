@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package griffon.swing;
+package griffon.swing.support;
 
 import griffon.core.CallableWithArgs;
 

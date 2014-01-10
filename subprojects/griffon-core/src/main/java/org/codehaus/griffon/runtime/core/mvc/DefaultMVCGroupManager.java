@@ -34,6 +34,7 @@ import javax.inject.Inject;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
+import static griffon.core.GriffonExceptionHandler.deepSanitize;
 import static griffon.util.ConfigUtils.getConfigValueAsBoolean;
 import static griffon.util.GriffonClassUtils.setPropertiesNoException;
 import static griffon.util.GriffonNameUtils.isBlank;
@@ -245,9 +246,13 @@ public class DefaultMVCGroupManager extends AbstractMVCGroupManager {
             getApplication().getUIThreadManager().runInsideUISync(new Runnable() {
                 @Override
                 public void run() {
-                    GriffonView view = (GriffonView) member;
-                    view.initUI();
-                    view.mvcGroupInit(args);
+                    try {
+                        GriffonView view = (GriffonView) member;
+                        view.initUI();
+                        view.mvcGroupInit(args);
+                    } catch (RuntimeException e) {
+                        throw (RuntimeException) deepSanitize(e);
+                    }
                 }
             });
         } else if (member instanceof GriffonMvcArtifact) {

@@ -79,6 +79,7 @@ public class DefaultApplicationModule extends AbstractModule {
         platformHandler();
         addonManager();
         applicationEventHandler();
+        exceptionHandler();
     }
 
     protected void classloader() {
@@ -222,6 +223,11 @@ public class DefaultApplicationModule extends AbstractModule {
     private void applicationEventHandler() {
         bind(EventHandler.class)
             .to(DefaultEventHandler.class)
+            .asSingleton();
+    }
+
+    private void exceptionHandler() {
+        bind(GriffonExceptionHandler.class)
             .asSingleton();
     }
 }

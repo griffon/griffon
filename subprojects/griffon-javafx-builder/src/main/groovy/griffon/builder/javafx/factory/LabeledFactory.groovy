@@ -16,7 +16,7 @@
 
 package griffon.builder.javafx.factory
 
-import griffon.javafx.JavaFXAction
+import griffon.javafx.support.JavaFXAction
 import groovyx.javafx.event.GroovyCallback
 import groovyx.javafx.factory.AbstractNodeFactory
 import javafx.beans.value.ChangeListener

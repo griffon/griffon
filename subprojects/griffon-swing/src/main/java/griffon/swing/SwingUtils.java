@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package griffon.swing;
 
 import griffon.core.GriffonApplication;
@@ -40,7 +41,6 @@ import static java.util.Objects.requireNonNull;
  * @since 0.3.1
  */
 public class SwingUtils {
-
     private static final String ERROR_WINDOW_NULL = "Argument 'window' cannot be null";
 
     /**

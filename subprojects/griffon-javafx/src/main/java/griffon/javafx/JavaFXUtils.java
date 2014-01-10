@@ -16,6 +16,7 @@
 
 package griffon.javafx;
 
+import griffon.javafx.support.JavaFXAction;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;

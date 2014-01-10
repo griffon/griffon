@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package griffon.swing;
+package griffon.pivot.support;
 
 import java.awt.Color;
 

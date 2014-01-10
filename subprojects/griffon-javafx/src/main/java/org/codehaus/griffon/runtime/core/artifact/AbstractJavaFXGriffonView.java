@@ -22,7 +22,7 @@ import griffon.core.artifact.GriffonController;
 import griffon.core.controller.Action;
 import griffon.core.controller.ActionManager;
 import griffon.exceptions.GriffonException;
-import griffon.javafx.JavaFXAction;
+import griffon.javafx.support.JavaFXAction;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;

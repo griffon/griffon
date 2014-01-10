@@ -32,7 +32,7 @@ import javax.inject.Named;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-import static org.codehaus.groovy.runtime.InvokerHelper.asList;
+import static griffon.util.CollectionUtils.newList;
 
 /**
  * @author Andres Almiray
@@ -71,7 +71,7 @@ public class LanternaBuilderCustomizer extends AbstractBuilderCustomizer {
         factories.put("widget", new ComponentFactory(Component.class, true));
         setFactories(factories);
 
-        setAttributeDelegates(asList(new Closure<Object>(this) {
+        Closure c = new Closure(this) {
             @Override
             public Object call(Object... args) {
                 return handleIdAttribute(args);
@@ -87,6 +87,7 @@ public class LanternaBuilderCustomizer extends AbstractBuilderCustomizer {
                 }
                 return null;
             }
-        }));
+        };
+        setAttributeDelegates(newList(c));
     }
 }

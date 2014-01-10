@@ -198,6 +198,8 @@ public abstract class AbstractActionManager implements ActionManager {
                 // descendant of java.util.EventObject
                 if (updatedArgs.length == 1 && updatedArgs[0] != null && EventObject.class.isAssignableFrom(updatedArgs[0].getClass())) {
                     invokeExactInstanceMethod(controller, actionName, EMPTY_ARGS);
+                } else {
+                    throw imie;
                 }
             } else {
                 throw imie;

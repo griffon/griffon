@@ -18,7 +18,7 @@ package griffon.swing.formatters;
 
 import griffon.core.resources.formatters.AbstractFormatter;
 import griffon.core.resources.formatters.ParseException;
-import griffon.swing.Colors;
+import griffon.swing.support.Colors;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
