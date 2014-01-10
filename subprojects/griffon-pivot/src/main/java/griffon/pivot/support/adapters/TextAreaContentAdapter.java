@@ -17,38 +17,39 @@
 package griffon.pivot.support.adapters;
 
 import griffon.core.CallableWithArgs;
+import org.apache.pivot.wtk.TextArea;
 
 /**
  * @author Andres Almiray
  * @since 2.0.0
  */
 public class TextAreaContentAdapter implements GriffonPivotAdapter, org.apache.pivot.wtk.TextAreaContentListener {
-    private CallableWithArgs<?> paragraphInserted;
-    private CallableWithArgs<?> paragraphsRemoved;
-    private CallableWithArgs<?> textChanged;
+    private CallableWithArgs<Void> paragraphInserted;
+    private CallableWithArgs<Void> paragraphsRemoved;
+    private CallableWithArgs<Void> textChanged;
 
-    public CallableWithArgs<?> getParagraphInserted() {
+    public CallableWithArgs<Void> getParagraphInserted() {
         return this.paragraphInserted;
     }
 
-    public CallableWithArgs<?> getParagraphsRemoved() {
+    public CallableWithArgs<Void> getParagraphsRemoved() {
         return this.paragraphsRemoved;
     }
 
-    public CallableWithArgs<?> getTextChanged() {
+    public CallableWithArgs<Void> getTextChanged() {
         return this.textChanged;
     }
 
 
-    public void setParagraphInserted(CallableWithArgs<?> paragraphInserted) {
+    public void setParagraphInserted(CallableWithArgs<Void> paragraphInserted) {
         this.paragraphInserted = paragraphInserted;
     }
 
-    public void setParagraphsRemoved(CallableWithArgs<?> paragraphsRemoved) {
+    public void setParagraphsRemoved(CallableWithArgs<Void> paragraphsRemoved) {
         this.paragraphsRemoved = paragraphsRemoved;
     }
 
-    public void setTextChanged(CallableWithArgs<?> textChanged) {
+    public void setTextChanged(CallableWithArgs<Void> textChanged) {
         this.textChanged = textChanged;
     }
 
@@ -59,7 +60,7 @@ public class TextAreaContentAdapter implements GriffonPivotAdapter, org.apache.p
         }
     }
 
-    public void paragraphsRemoved(org.apache.pivot.wtk.TextArea arg0, int arg1, org.apache.pivot.collections.Sequence arg2) {
+    public void paragraphsRemoved(org.apache.pivot.wtk.TextArea arg0, int arg1, org.apache.pivot.collections.Sequence<TextArea.Paragraph> arg2) {
         if (paragraphsRemoved != null) {
             paragraphsRemoved.call(arg0, arg1, arg2);
         }

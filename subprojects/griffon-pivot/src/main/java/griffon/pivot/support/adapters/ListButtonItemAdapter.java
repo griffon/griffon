@@ -23,50 +23,50 @@ import griffon.core.CallableWithArgs;
  * @since 2.0.0
  */
 public class ListButtonItemAdapter implements GriffonPivotAdapter, org.apache.pivot.wtk.ListButtonItemListener {
-    private CallableWithArgs<?> itemsCleared;
-    private CallableWithArgs<?> itemsSorted;
-    private CallableWithArgs<?> itemInserted;
-    private CallableWithArgs<?> itemUpdated;
-    private CallableWithArgs<?> itemsRemoved;
+    private CallableWithArgs<Void> itemsCleared;
+    private CallableWithArgs<Void> itemsSorted;
+    private CallableWithArgs<Void> itemInserted;
+    private CallableWithArgs<Void> itemUpdated;
+    private CallableWithArgs<Void> itemsRemoved;
 
-    public CallableWithArgs<?> getItemsCleared() {
+    public CallableWithArgs<Void> getItemsCleared() {
         return this.itemsCleared;
     }
 
-    public CallableWithArgs<?> getItemsSorted() {
+    public CallableWithArgs<Void> getItemsSorted() {
         return this.itemsSorted;
     }
 
-    public CallableWithArgs<?> getItemInserted() {
+    public CallableWithArgs<Void> getItemInserted() {
         return this.itemInserted;
     }
 
-    public CallableWithArgs<?> getItemUpdated() {
+    public CallableWithArgs<Void> getItemUpdated() {
         return this.itemUpdated;
     }
 
-    public CallableWithArgs<?> getItemsRemoved() {
+    public CallableWithArgs<Void> getItemsRemoved() {
         return this.itemsRemoved;
     }
 
 
-    public void setItemsCleared(CallableWithArgs<?> itemsCleared) {
+    public void setItemsCleared(CallableWithArgs<Void> itemsCleared) {
         this.itemsCleared = itemsCleared;
     }
 
-    public void setItemsSorted(CallableWithArgs<?> itemsSorted) {
+    public void setItemsSorted(CallableWithArgs<Void> itemsSorted) {
         this.itemsSorted = itemsSorted;
     }
 
-    public void setItemInserted(CallableWithArgs<?> itemInserted) {
+    public void setItemInserted(CallableWithArgs<Void> itemInserted) {
         this.itemInserted = itemInserted;
     }
 
-    public void setItemUpdated(CallableWithArgs<?> itemUpdated) {
+    public void setItemUpdated(CallableWithArgs<Void> itemUpdated) {
         this.itemUpdated = itemUpdated;
     }
 
-    public void setItemsRemoved(CallableWithArgs<?> itemsRemoved) {
+    public void setItemsRemoved(CallableWithArgs<Void> itemsRemoved) {
         this.itemsRemoved = itemsRemoved;
     }
 

@@ -23,41 +23,41 @@ import griffon.core.CallableWithArgs;
  * @since 2.0.0
  */
 public class ScrollBarAdapter implements GriffonPivotAdapter, org.apache.pivot.wtk.ScrollBarListener {
-    private CallableWithArgs<?> orientationChanged;
-    private CallableWithArgs<?> scopeChanged;
-    private CallableWithArgs<?> unitIncrementChanged;
-    private CallableWithArgs<?> blockIncrementChanged;
+    private CallableWithArgs<Void> orientationChanged;
+    private CallableWithArgs<Void> scopeChanged;
+    private CallableWithArgs<Void> unitIncrementChanged;
+    private CallableWithArgs<Void> blockIncrementChanged;
 
-    public CallableWithArgs<?> getOrientationChanged() {
+    public CallableWithArgs<Void> getOrientationChanged() {
         return this.orientationChanged;
     }
 
-    public CallableWithArgs<?> getScopeChanged() {
+    public CallableWithArgs<Void> getScopeChanged() {
         return this.scopeChanged;
     }
 
-    public CallableWithArgs<?> getUnitIncrementChanged() {
+    public CallableWithArgs<Void> getUnitIncrementChanged() {
         return this.unitIncrementChanged;
     }
 
-    public CallableWithArgs<?> getBlockIncrementChanged() {
+    public CallableWithArgs<Void> getBlockIncrementChanged() {
         return this.blockIncrementChanged;
     }
 
 
-    public void setOrientationChanged(CallableWithArgs<?> orientationChanged) {
+    public void setOrientationChanged(CallableWithArgs<Void> orientationChanged) {
         this.orientationChanged = orientationChanged;
     }
 
-    public void setScopeChanged(CallableWithArgs<?> scopeChanged) {
+    public void setScopeChanged(CallableWithArgs<Void> scopeChanged) {
         this.scopeChanged = scopeChanged;
     }
 
-    public void setUnitIncrementChanged(CallableWithArgs<?> unitIncrementChanged) {
+    public void setUnitIncrementChanged(CallableWithArgs<Void> unitIncrementChanged) {
         this.unitIncrementChanged = unitIncrementChanged;
     }
 
-    public void setBlockIncrementChanged(CallableWithArgs<?> blockIncrementChanged) {
+    public void setBlockIncrementChanged(CallableWithArgs<Void> blockIncrementChanged) {
         this.blockIncrementChanged = blockIncrementChanged;
     }
 

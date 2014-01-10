@@ -18,64 +18,66 @@ package griffon.pivot.support.adapters;
 
 import griffon.core.CallableWithArgs;
 
+import java.io.File;
+
 /**
  * @author Andres Almiray
  * @since 2.0.0
  */
 public class FileBrowserAdapter implements GriffonPivotAdapter, org.apache.pivot.wtk.FileBrowserListener {
-    private CallableWithArgs<?> rootDirectoryChanged;
-    private CallableWithArgs<?> selectedFileAdded;
-    private CallableWithArgs<?> selectedFileRemoved;
-    private CallableWithArgs<?> selectedFilesChanged;
-    private CallableWithArgs<?> multiSelectChanged;
-    private CallableWithArgs<?> disabledFileFilterChanged;
+    private CallableWithArgs<Void> rootDirectoryChanged;
+    private CallableWithArgs<Void> selectedFileAdded;
+    private CallableWithArgs<Void> selectedFileRemoved;
+    private CallableWithArgs<Void> selectedFilesChanged;
+    private CallableWithArgs<Void> multiSelectChanged;
+    private CallableWithArgs<Void> disabledFileFilterChanged;
 
-    public CallableWithArgs<?> getRootDirectoryChanged() {
+    public CallableWithArgs<Void> getRootDirectoryChanged() {
         return this.rootDirectoryChanged;
     }
 
-    public CallableWithArgs<?> getSelectedFileAdded() {
+    public CallableWithArgs<Void> getSelectedFileAdded() {
         return this.selectedFileAdded;
     }
 
-    public CallableWithArgs<?> getSelectedFileRemoved() {
+    public CallableWithArgs<Void> getSelectedFileRemoved() {
         return this.selectedFileRemoved;
     }
 
-    public CallableWithArgs<?> getSelectedFilesChanged() {
+    public CallableWithArgs<Void> getSelectedFilesChanged() {
         return this.selectedFilesChanged;
     }
 
-    public CallableWithArgs<?> getMultiSelectChanged() {
+    public CallableWithArgs<Void> getMultiSelectChanged() {
         return this.multiSelectChanged;
     }
 
-    public CallableWithArgs<?> getDisabledFileFilterChanged() {
+    public CallableWithArgs<Void> getDisabledFileFilterChanged() {
         return this.disabledFileFilterChanged;
     }
 
 
-    public void setRootDirectoryChanged(CallableWithArgs<?> rootDirectoryChanged) {
+    public void setRootDirectoryChanged(CallableWithArgs<Void> rootDirectoryChanged) {
         this.rootDirectoryChanged = rootDirectoryChanged;
     }
 
-    public void setSelectedFileAdded(CallableWithArgs<?> selectedFileAdded) {
+    public void setSelectedFileAdded(CallableWithArgs<Void> selectedFileAdded) {
         this.selectedFileAdded = selectedFileAdded;
     }
 
-    public void setSelectedFileRemoved(CallableWithArgs<?> selectedFileRemoved) {
+    public void setSelectedFileRemoved(CallableWithArgs<Void> selectedFileRemoved) {
         this.selectedFileRemoved = selectedFileRemoved;
     }
 
-    public void setSelectedFilesChanged(CallableWithArgs<?> selectedFilesChanged) {
+    public void setSelectedFilesChanged(CallableWithArgs<Void> selectedFilesChanged) {
         this.selectedFilesChanged = selectedFilesChanged;
     }
 
-    public void setMultiSelectChanged(CallableWithArgs<?> multiSelectChanged) {
+    public void setMultiSelectChanged(CallableWithArgs<Void> multiSelectChanged) {
         this.multiSelectChanged = multiSelectChanged;
     }
 
-    public void setDisabledFileFilterChanged(CallableWithArgs<?> disabledFileFilterChanged) {
+    public void setDisabledFileFilterChanged(CallableWithArgs<Void> disabledFileFilterChanged) {
         this.disabledFileFilterChanged = disabledFileFilterChanged;
     }
 
@@ -98,7 +100,7 @@ public class FileBrowserAdapter implements GriffonPivotAdapter, org.apache.pivot
         }
     }
 
-    public void selectedFilesChanged(org.apache.pivot.wtk.FileBrowser arg0, org.apache.pivot.collections.Sequence arg1) {
+    public void selectedFilesChanged(org.apache.pivot.wtk.FileBrowser arg0, org.apache.pivot.collections.Sequence<File> arg1) {
         if (selectedFilesChanged != null) {
             selectedFilesChanged.call(arg0, arg1);
         }
@@ -110,7 +112,7 @@ public class FileBrowserAdapter implements GriffonPivotAdapter, org.apache.pivot
         }
     }
 
-    public void disabledFileFilterChanged(org.apache.pivot.wtk.FileBrowser arg0, org.apache.pivot.util.Filter arg1) {
+    public void disabledFileFilterChanged(org.apache.pivot.wtk.FileBrowser arg0, org.apache.pivot.util.Filter<File> arg1) {
         if (disabledFileFilterChanged != null) {
             disabledFileFilterChanged.call(arg0, arg1);
         }

@@ -17,92 +17,93 @@
 package griffon.pivot.support.adapters;
 
 import griffon.core.CallableWithArgs;
+import org.apache.pivot.wtk.TableView;
 
 /**
  * @author Andres Almiray
  * @since 2.0.0
  */
 public class TableViewColumnAdapter implements GriffonPivotAdapter, org.apache.pivot.wtk.TableViewColumnListener {
-    private CallableWithArgs<?> columnInserted;
-    private CallableWithArgs<?> columnsRemoved;
-    private CallableWithArgs<?> columnWidthChanged;
-    private CallableWithArgs<?> columnNameChanged;
-    private CallableWithArgs<?> columnHeaderDataChanged;
-    private CallableWithArgs<?> columnHeaderDataRendererChanged;
-    private CallableWithArgs<?> columnWidthLimitsChanged;
-    private CallableWithArgs<?> columnFilterChanged;
-    private CallableWithArgs<?> columnCellRendererChanged;
+    private CallableWithArgs<Void> columnInserted;
+    private CallableWithArgs<Void> columnsRemoved;
+    private CallableWithArgs<Void> columnWidthChanged;
+    private CallableWithArgs<Void> columnNameChanged;
+    private CallableWithArgs<Void> columnHeaderDataChanged;
+    private CallableWithArgs<Void> columnHeaderDataRendererChanged;
+    private CallableWithArgs<Void> columnWidthLimitsChanged;
+    private CallableWithArgs<Void> columnFilterChanged;
+    private CallableWithArgs<Void> columnCellRendererChanged;
 
-    public CallableWithArgs<?> getColumnInserted() {
+    public CallableWithArgs<Void> getColumnInserted() {
         return this.columnInserted;
     }
 
-    public CallableWithArgs<?> getColumnsRemoved() {
+    public CallableWithArgs<Void> getColumnsRemoved() {
         return this.columnsRemoved;
     }
 
-    public CallableWithArgs<?> getColumnWidthChanged() {
+    public CallableWithArgs<Void> getColumnWidthChanged() {
         return this.columnWidthChanged;
     }
 
-    public CallableWithArgs<?> getColumnNameChanged() {
+    public CallableWithArgs<Void> getColumnNameChanged() {
         return this.columnNameChanged;
     }
 
-    public CallableWithArgs<?> getColumnHeaderDataChanged() {
+    public CallableWithArgs<Void> getColumnHeaderDataChanged() {
         return this.columnHeaderDataChanged;
     }
 
-    public CallableWithArgs<?> getColumnHeaderDataRendererChanged() {
+    public CallableWithArgs<Void> getColumnHeaderDataRendererChanged() {
         return this.columnHeaderDataRendererChanged;
     }
 
-    public CallableWithArgs<?> getColumnWidthLimitsChanged() {
+    public CallableWithArgs<Void> getColumnWidthLimitsChanged() {
         return this.columnWidthLimitsChanged;
     }
 
-    public CallableWithArgs<?> getColumnFilterChanged() {
+    public CallableWithArgs<Void> getColumnFilterChanged() {
         return this.columnFilterChanged;
     }
 
-    public CallableWithArgs<?> getColumnCellRendererChanged() {
+    public CallableWithArgs<Void> getColumnCellRendererChanged() {
         return this.columnCellRendererChanged;
     }
 
 
-    public void setColumnInserted(CallableWithArgs<?> columnInserted) {
+    public void setColumnInserted(CallableWithArgs<Void> columnInserted) {
         this.columnInserted = columnInserted;
     }
 
-    public void setColumnsRemoved(CallableWithArgs<?> columnsRemoved) {
+    public void setColumnsRemoved(CallableWithArgs<Void> columnsRemoved) {
         this.columnsRemoved = columnsRemoved;
     }
 
-    public void setColumnWidthChanged(CallableWithArgs<?> columnWidthChanged) {
+    public void setColumnWidthChanged(CallableWithArgs<Void> columnWidthChanged) {
         this.columnWidthChanged = columnWidthChanged;
     }
 
-    public void setColumnNameChanged(CallableWithArgs<?> columnNameChanged) {
+    public void setColumnNameChanged(CallableWithArgs<Void> columnNameChanged) {
         this.columnNameChanged = columnNameChanged;
     }
 
-    public void setColumnHeaderDataChanged(CallableWithArgs<?> columnHeaderDataChanged) {
+    public void setColumnHeaderDataChanged(CallableWithArgs<Void> columnHeaderDataChanged) {
         this.columnHeaderDataChanged = columnHeaderDataChanged;
     }
 
-    public void setColumnHeaderDataRendererChanged(CallableWithArgs<?> columnHeaderDataRendererChanged) {
+    public void setColumnHeaderDataRendererChanged(CallableWithArgs<Void> columnHeaderDataRendererChanged) {
         this.columnHeaderDataRendererChanged = columnHeaderDataRendererChanged;
     }
 
-    public void setColumnWidthLimitsChanged(CallableWithArgs<?> columnWidthLimitsChanged) {
+    public void setColumnWidthLimitsChanged(CallableWithArgs<Void> columnWidthLimitsChanged) {
         this.columnWidthLimitsChanged = columnWidthLimitsChanged;
     }
 
-    public void setColumnFilterChanged(CallableWithArgs<?> columnFilterChanged) {
+    public void setColumnFilterChanged(CallableWithArgs<Void> columnFilterChanged) {
         this.columnFilterChanged = columnFilterChanged;
     }
 
-    public void setColumnCellRendererChanged(CallableWithArgs<?> columnCellRendererChanged) {
+    public void setColumnCellRendererChanged(CallableWithArgs<Void> columnCellRendererChanged) {
         this.columnCellRendererChanged = columnCellRendererChanged;
     }
 
@@ -113,7 +114,7 @@ public class TableViewColumnAdapter implements GriffonPivotAdapter, org.apache.p
         }
     }
 
-    public void columnsRemoved(org.apache.pivot.wtk.TableView arg0, int arg1, org.apache.pivot.collections.Sequence arg2) {
+    public void columnsRemoved(org.apache.pivot.wtk.TableView arg0, int arg1, org.apache.pivot.collections.Sequence<TableView.Column> arg2) {
         if (columnsRemoved != null) {
             columnsRemoved.call(arg0, arg1, arg2);
         }

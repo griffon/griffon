@@ -23,50 +23,50 @@ import griffon.core.CallableWithArgs;
  * @since 2.0.0
  */
 public class TreeViewNodeAdapter implements GriffonPivotAdapter, org.apache.pivot.wtk.TreeViewNodeListener {
-    private CallableWithArgs<?> nodeInserted;
-    private CallableWithArgs<?> nodesRemoved;
-    private CallableWithArgs<?> nodeUpdated;
-    private CallableWithArgs<?> nodesSorted;
-    private CallableWithArgs<?> nodesCleared;
+    private CallableWithArgs<Void> nodeInserted;
+    private CallableWithArgs<Void> nodesRemoved;
+    private CallableWithArgs<Void> nodeUpdated;
+    private CallableWithArgs<Void> nodesSorted;
+    private CallableWithArgs<Void> nodesCleared;
 
-    public CallableWithArgs<?> getNodeInserted() {
+    public CallableWithArgs<Void> getNodeInserted() {
         return this.nodeInserted;
     }
 
-    public CallableWithArgs<?> getNodesRemoved() {
+    public CallableWithArgs<Void> getNodesRemoved() {
         return this.nodesRemoved;
     }
 
-    public CallableWithArgs<?> getNodeUpdated() {
+    public CallableWithArgs<Void> getNodeUpdated() {
         return this.nodeUpdated;
     }
 
-    public CallableWithArgs<?> getNodesSorted() {
+    public CallableWithArgs<Void> getNodesSorted() {
         return this.nodesSorted;
     }
 
-    public CallableWithArgs<?> getNodesCleared() {
+    public CallableWithArgs<Void> getNodesCleared() {
         return this.nodesCleared;
     }
 
 
-    public void setNodeInserted(CallableWithArgs<?> nodeInserted) {
+    public void setNodeInserted(CallableWithArgs<Void> nodeInserted) {
         this.nodeInserted = nodeInserted;
     }
 
-    public void setNodesRemoved(CallableWithArgs<?> nodesRemoved) {
+    public void setNodesRemoved(CallableWithArgs<Void> nodesRemoved) {
         this.nodesRemoved = nodesRemoved;
     }
 
-    public void setNodeUpdated(CallableWithArgs<?> nodeUpdated) {
+    public void setNodeUpdated(CallableWithArgs<Void> nodeUpdated) {
         this.nodeUpdated = nodeUpdated;
     }
 
-    public void setNodesSorted(CallableWithArgs<?> nodesSorted) {
+    public void setNodesSorted(CallableWithArgs<Void> nodesSorted) {
         this.nodesSorted = nodesSorted;
     }
 
-    public void setNodesCleared(CallableWithArgs<?> nodesCleared) {
+    public void setNodesCleared(CallableWithArgs<Void> nodesCleared) {
         this.nodesCleared = nodesCleared;
     }
 

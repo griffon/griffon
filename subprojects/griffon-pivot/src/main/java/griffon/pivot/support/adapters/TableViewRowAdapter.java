@@ -23,50 +23,50 @@ import griffon.core.CallableWithArgs;
  * @since 2.0.0
  */
 public class TableViewRowAdapter implements GriffonPivotAdapter, org.apache.pivot.wtk.TableViewRowListener {
-    private CallableWithArgs<?> rowsCleared;
-    private CallableWithArgs<?> rowsSorted;
-    private CallableWithArgs<?> rowsRemoved;
-    private CallableWithArgs<?> rowUpdated;
-    private CallableWithArgs<?> rowInserted;
+    private CallableWithArgs<Void> rowsCleared;
+    private CallableWithArgs<Void> rowsSorted;
+    private CallableWithArgs<Void> rowsRemoved;
+    private CallableWithArgs<Void> rowUpdated;
+    private CallableWithArgs<Void> rowInserted;
 
-    public CallableWithArgs<?> getRowsCleared() {
+    public CallableWithArgs<Void> getRowsCleared() {
         return this.rowsCleared;
     }
 
-    public CallableWithArgs<?> getRowsSorted() {
+    public CallableWithArgs<Void> getRowsSorted() {
         return this.rowsSorted;
     }
 
-    public CallableWithArgs<?> getRowsRemoved() {
+    public CallableWithArgs<Void> getRowsRemoved() {
         return this.rowsRemoved;
     }
 
-    public CallableWithArgs<?> getRowUpdated() {
+    public CallableWithArgs<Void> getRowUpdated() {
         return this.rowUpdated;
     }
 
-    public CallableWithArgs<?> getRowInserted() {
+    public CallableWithArgs<Void> getRowInserted() {
         return this.rowInserted;
     }
 
 
-    public void setRowsCleared(CallableWithArgs<?> rowsCleared) {
+    public void setRowsCleared(CallableWithArgs<Void> rowsCleared) {
         this.rowsCleared = rowsCleared;
     }
 
-    public void setRowsSorted(CallableWithArgs<?> rowsSorted) {
+    public void setRowsSorted(CallableWithArgs<Void> rowsSorted) {
         this.rowsSorted = rowsSorted;
     }
 
-    public void setRowsRemoved(CallableWithArgs<?> rowsRemoved) {
+    public void setRowsRemoved(CallableWithArgs<Void> rowsRemoved) {
         this.rowsRemoved = rowsRemoved;
     }
 
-    public void setRowUpdated(CallableWithArgs<?> rowUpdated) {
+    public void setRowUpdated(CallableWithArgs<Void> rowUpdated) {
         this.rowUpdated = rowUpdated;
     }
 
-    public void setRowInserted(CallableWithArgs<?> rowInserted) {
+    public void setRowInserted(CallableWithArgs<Void> rowInserted) {
         this.rowInserted = rowInserted;
     }
 

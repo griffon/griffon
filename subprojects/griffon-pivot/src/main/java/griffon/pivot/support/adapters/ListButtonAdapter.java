@@ -23,55 +23,55 @@ import griffon.core.CallableWithArgs;
  * @since 2.0.0
  */
 public class ListButtonAdapter implements GriffonPivotAdapter, org.apache.pivot.wtk.ListButtonListener {
-    private CallableWithArgs<?> listDataChanged;
-    private CallableWithArgs<?> itemRendererChanged;
-    private CallableWithArgs<?> repeatableChanged;
-    private CallableWithArgs<?> disabledItemFilterChanged;
-    private CallableWithArgs<?> listSizeChanged;
+    private CallableWithArgs<Void> listDataChanged;
+    private CallableWithArgs<Void> itemRendererChanged;
+    private CallableWithArgs<Void> repeatableChanged;
+    private CallableWithArgs<Void> disabledItemFilterChanged;
+    private CallableWithArgs<Void> listSizeChanged;
 
-    public CallableWithArgs<?> getListDataChanged() {
+    public CallableWithArgs<Void> getListDataChanged() {
         return this.listDataChanged;
     }
 
-    public CallableWithArgs<?> getItemRendererChanged() {
+    public CallableWithArgs<Void> getItemRendererChanged() {
         return this.itemRendererChanged;
     }
 
-    public CallableWithArgs<?> getRepeatableChanged() {
+    public CallableWithArgs<Void> getRepeatableChanged() {
         return this.repeatableChanged;
     }
 
-    public CallableWithArgs<?> getDisabledItemFilterChanged() {
+    public CallableWithArgs<Void> getDisabledItemFilterChanged() {
         return this.disabledItemFilterChanged;
     }
 
-    public CallableWithArgs<?> getListSizeChanged() {
+    public CallableWithArgs<Void> getListSizeChanged() {
         return this.listSizeChanged;
     }
 
 
-    public void setListDataChanged(CallableWithArgs<?> listDataChanged) {
+    public void setListDataChanged(CallableWithArgs<Void> listDataChanged) {
         this.listDataChanged = listDataChanged;
     }
 
-    public void setItemRendererChanged(CallableWithArgs<?> itemRendererChanged) {
+    public void setItemRendererChanged(CallableWithArgs<Void> itemRendererChanged) {
         this.itemRendererChanged = itemRendererChanged;
     }
 
-    public void setRepeatableChanged(CallableWithArgs<?> repeatableChanged) {
+    public void setRepeatableChanged(CallableWithArgs<Void> repeatableChanged) {
         this.repeatableChanged = repeatableChanged;
     }
 
-    public void setDisabledItemFilterChanged(CallableWithArgs<?> disabledItemFilterChanged) {
+    public void setDisabledItemFilterChanged(CallableWithArgs<Void> disabledItemFilterChanged) {
         this.disabledItemFilterChanged = disabledItemFilterChanged;
     }
 
-    public void setListSizeChanged(CallableWithArgs<?> listSizeChanged) {
+    public void setListSizeChanged(CallableWithArgs<Void> listSizeChanged) {
         this.listSizeChanged = listSizeChanged;
     }
 
 
-    public void listDataChanged(org.apache.pivot.wtk.ListButton arg0, org.apache.pivot.collections.List arg1) {
+    public void listDataChanged(org.apache.pivot.wtk.ListButton arg0, org.apache.pivot.collections.List<?> arg1) {
         if (listDataChanged != null) {
             listDataChanged.call(arg0, arg1);
         }
@@ -89,7 +89,7 @@ public class ListButtonAdapter implements GriffonPivotAdapter, org.apache.pivot.
         }
     }
 
-    public void disabledItemFilterChanged(org.apache.pivot.wtk.ListButton arg0, org.apache.pivot.util.Filter arg1) {
+    public void disabledItemFilterChanged(org.apache.pivot.wtk.ListButton arg0, org.apache.pivot.util.Filter<?> arg1) {
         if (disabledItemFilterChanged != null) {
             disabledItemFilterChanged.call(arg0, arg1);
         }

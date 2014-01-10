@@ -23,23 +23,23 @@ import griffon.core.CallableWithArgs;
  * @since 2.0.0
  */
 public class TextAreaAdapter implements GriffonPivotAdapter, org.apache.pivot.wtk.TextAreaListener {
-    private CallableWithArgs<?> maximumLengthChanged;
-    private CallableWithArgs<?> editableChanged;
+    private CallableWithArgs<Void> maximumLengthChanged;
+    private CallableWithArgs<Void> editableChanged;
 
-    public CallableWithArgs<?> getMaximumLengthChanged() {
+    public CallableWithArgs<Void> getMaximumLengthChanged() {
         return this.maximumLengthChanged;
     }
 
-    public CallableWithArgs<?> getEditableChanged() {
+    public CallableWithArgs<Void> getEditableChanged() {
         return this.editableChanged;
     }
 
 
-    public void setMaximumLengthChanged(CallableWithArgs<?> maximumLengthChanged) {
+    public void setMaximumLengthChanged(CallableWithArgs<Void> maximumLengthChanged) {
         this.maximumLengthChanged = maximumLengthChanged;
     }
 
-    public void setEditableChanged(CallableWithArgs<?> editableChanged) {
+    public void setEditableChanged(CallableWithArgs<Void> editableChanged) {
         this.editableChanged = editableChanged;
     }
 

@@ -23,14 +23,14 @@ import griffon.core.CallableWithArgs;
  * @since 2.0.0
  */
 public class SeparatorAdapter implements GriffonPivotAdapter, org.apache.pivot.wtk.SeparatorListener {
-    private CallableWithArgs<?> headingChanged;
+    private CallableWithArgs<Void> headingChanged;
 
-    public CallableWithArgs<?> getHeadingChanged() {
+    public CallableWithArgs<Void> getHeadingChanged() {
         return this.headingChanged;
     }
 
 
-    public void setHeadingChanged(CallableWithArgs<?> headingChanged) {
+    public void setHeadingChanged(CallableWithArgs<Void> headingChanged) {
         this.headingChanged = headingChanged;
     }
 

@@ -23,14 +23,14 @@ import griffon.core.CallableWithArgs;
  * @since 2.0.0
  */
 public class BulletedListAdapter implements GriffonPivotAdapter, org.apache.pivot.wtk.text.BulletedListListener {
-    private CallableWithArgs<?> styleChanged;
+    private CallableWithArgs<Void> styleChanged;
 
-    public CallableWithArgs<?> getStyleChanged() {
+    public CallableWithArgs<Void> getStyleChanged() {
         return this.styleChanged;
     }
 
 
-    public void setStyleChanged(CallableWithArgs<?> styleChanged) {
+    public void setStyleChanged(CallableWithArgs<Void> styleChanged) {
         this.styleChanged = styleChanged;
     }
 

@@ -23,68 +23,68 @@ import griffon.core.CallableWithArgs;
  * @since 2.0.0
  */
 public class SplitPaneAdapter implements GriffonPivotAdapter, org.apache.pivot.wtk.SplitPaneListener {
-    private CallableWithArgs<?> topLeftChanged;
-    private CallableWithArgs<?> bottomRightChanged;
-    private CallableWithArgs<?> primaryRegionChanged;
-    private CallableWithArgs<?> splitRatioChanged;
-    private CallableWithArgs<?> lockedChanged;
-    private CallableWithArgs<?> resizeModeChanged;
-    private CallableWithArgs<?> orientationChanged;
+    private CallableWithArgs<Void> topLeftChanged;
+    private CallableWithArgs<Void> bottomRightChanged;
+    private CallableWithArgs<Void> primaryRegionChanged;
+    private CallableWithArgs<Void> splitRatioChanged;
+    private CallableWithArgs<Void> lockedChanged;
+    private CallableWithArgs<Void> resizeModeChanged;
+    private CallableWithArgs<Void> orientationChanged;
 
-    public CallableWithArgs<?> getTopLeftChanged() {
+    public CallableWithArgs<Void> getTopLeftChanged() {
         return this.topLeftChanged;
     }
 
-    public CallableWithArgs<?> getBottomRightChanged() {
+    public CallableWithArgs<Void> getBottomRightChanged() {
         return this.bottomRightChanged;
     }
 
-    public CallableWithArgs<?> getPrimaryRegionChanged() {
+    public CallableWithArgs<Void> getPrimaryRegionChanged() {
         return this.primaryRegionChanged;
     }
 
-    public CallableWithArgs<?> getSplitRatioChanged() {
+    public CallableWithArgs<Void> getSplitRatioChanged() {
         return this.splitRatioChanged;
     }
 
-    public CallableWithArgs<?> getLockedChanged() {
+    public CallableWithArgs<Void> getLockedChanged() {
         return this.lockedChanged;
     }
 
-    public CallableWithArgs<?> getResizeModeChanged() {
+    public CallableWithArgs<Void> getResizeModeChanged() {
         return this.resizeModeChanged;
     }
 
-    public CallableWithArgs<?> getOrientationChanged() {
+    public CallableWithArgs<Void> getOrientationChanged() {
         return this.orientationChanged;
     }
 
 
-    public void setTopLeftChanged(CallableWithArgs<?> topLeftChanged) {
+    public void setTopLeftChanged(CallableWithArgs<Void> topLeftChanged) {
         this.topLeftChanged = topLeftChanged;
     }
 
-    public void setBottomRightChanged(CallableWithArgs<?> bottomRightChanged) {
+    public void setBottomRightChanged(CallableWithArgs<Void> bottomRightChanged) {
         this.bottomRightChanged = bottomRightChanged;
     }
 
-    public void setPrimaryRegionChanged(CallableWithArgs<?> primaryRegionChanged) {
+    public void setPrimaryRegionChanged(CallableWithArgs<Void> primaryRegionChanged) {
         this.primaryRegionChanged = primaryRegionChanged;
     }
 
-    public void setSplitRatioChanged(CallableWithArgs<?> splitRatioChanged) {
+    public void setSplitRatioChanged(CallableWithArgs<Void> splitRatioChanged) {
         this.splitRatioChanged = splitRatioChanged;
     }
 
-    public void setLockedChanged(CallableWithArgs<?> lockedChanged) {
+    public void setLockedChanged(CallableWithArgs<Void> lockedChanged) {
         this.lockedChanged = lockedChanged;
     }
 
-    public void setResizeModeChanged(CallableWithArgs<?> resizeModeChanged) {
+    public void setResizeModeChanged(CallableWithArgs<Void> resizeModeChanged) {
         this.resizeModeChanged = resizeModeChanged;
     }
 
-    public void setOrientationChanged(CallableWithArgs<?> orientationChanged) {
+    public void setOrientationChanged(CallableWithArgs<Void> orientationChanged) {
         this.orientationChanged = orientationChanged;
     }
 

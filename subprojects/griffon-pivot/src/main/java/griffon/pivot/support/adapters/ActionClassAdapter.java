@@ -23,32 +23,32 @@ import griffon.core.CallableWithArgs;
  * @since 2.0.0
  */
 public class ActionClassAdapter implements GriffonPivotAdapter, org.apache.pivot.wtk.ActionClassListener {
-    private CallableWithArgs<?> actionAdded;
-    private CallableWithArgs<?> actionUpdated;
-    private CallableWithArgs<?> actionRemoved;
+    private CallableWithArgs<Void> actionAdded;
+    private CallableWithArgs<Void> actionUpdated;
+    private CallableWithArgs<Void> actionRemoved;
 
-    public CallableWithArgs<?> getActionAdded() {
+    public CallableWithArgs<Void> getActionAdded() {
         return this.actionAdded;
     }
 
-    public CallableWithArgs<?> getActionUpdated() {
+    public CallableWithArgs<Void> getActionUpdated() {
         return this.actionUpdated;
     }
 
-    public CallableWithArgs<?> getActionRemoved() {
+    public CallableWithArgs<Void> getActionRemoved() {
         return this.actionRemoved;
     }
 
 
-    public void setActionAdded(CallableWithArgs<?> actionAdded) {
+    public void setActionAdded(CallableWithArgs<Void> actionAdded) {
         this.actionAdded = actionAdded;
     }
 
-    public void setActionUpdated(CallableWithArgs<?> actionUpdated) {
+    public void setActionUpdated(CallableWithArgs<Void> actionUpdated) {
         this.actionUpdated = actionUpdated;
     }
 
-    public void setActionRemoved(CallableWithArgs<?> actionRemoved) {
+    public void setActionRemoved(CallableWithArgs<Void> actionRemoved) {
         this.actionRemoved = actionRemoved;
     }
 

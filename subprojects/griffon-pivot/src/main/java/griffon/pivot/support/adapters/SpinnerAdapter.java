@@ -23,32 +23,32 @@ import griffon.core.CallableWithArgs;
  * @since 2.0.0
  */
 public class SpinnerAdapter implements GriffonPivotAdapter, org.apache.pivot.wtk.SpinnerListener {
-    private CallableWithArgs<?> itemRendererChanged;
-    private CallableWithArgs<?> spinnerDataChanged;
-    private CallableWithArgs<?> circularChanged;
+    private CallableWithArgs<Void> itemRendererChanged;
+    private CallableWithArgs<Void> spinnerDataChanged;
+    private CallableWithArgs<Void> circularChanged;
 
-    public CallableWithArgs<?> getItemRendererChanged() {
+    public CallableWithArgs<Void> getItemRendererChanged() {
         return this.itemRendererChanged;
     }
 
-    public CallableWithArgs<?> getSpinnerDataChanged() {
+    public CallableWithArgs<Void> getSpinnerDataChanged() {
         return this.spinnerDataChanged;
     }
 
-    public CallableWithArgs<?> getCircularChanged() {
+    public CallableWithArgs<Void> getCircularChanged() {
         return this.circularChanged;
     }
 
 
-    public void setItemRendererChanged(CallableWithArgs<?> itemRendererChanged) {
+    public void setItemRendererChanged(CallableWithArgs<Void> itemRendererChanged) {
         this.itemRendererChanged = itemRendererChanged;
     }
 
-    public void setSpinnerDataChanged(CallableWithArgs<?> spinnerDataChanged) {
+    public void setSpinnerDataChanged(CallableWithArgs<Void> spinnerDataChanged) {
         this.spinnerDataChanged = spinnerDataChanged;
     }
 
-    public void setCircularChanged(CallableWithArgs<?> circularChanged) {
+    public void setCircularChanged(CallableWithArgs<Void> circularChanged) {
         this.circularChanged = circularChanged;
     }
 
@@ -59,7 +59,7 @@ public class SpinnerAdapter implements GriffonPivotAdapter, org.apache.pivot.wtk
         }
     }
 
-    public void spinnerDataChanged(org.apache.pivot.wtk.Spinner arg0, org.apache.pivot.collections.List arg1) {
+    public void spinnerDataChanged(org.apache.pivot.wtk.Spinner arg0, org.apache.pivot.collections.List<?> arg1) {
         if (spinnerDataChanged != null) {
             spinnerDataChanged.call(arg0, arg1);
         }

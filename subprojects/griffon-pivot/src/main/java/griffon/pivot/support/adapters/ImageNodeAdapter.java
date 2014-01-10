@@ -23,14 +23,14 @@ import griffon.core.CallableWithArgs;
  * @since 2.0.0
  */
 public class ImageNodeAdapter implements GriffonPivotAdapter, org.apache.pivot.wtk.text.ImageNodeListener {
-    private CallableWithArgs<?> imageChanged;
+    private CallableWithArgs<Void> imageChanged;
 
-    public CallableWithArgs<?> getImageChanged() {
+    public CallableWithArgs<Void> getImageChanged() {
         return this.imageChanged;
     }
 
 
-    public void setImageChanged(CallableWithArgs<?> imageChanged) {
+    public void setImageChanged(CallableWithArgs<Void> imageChanged) {
         this.imageChanged = imageChanged;
     }
 

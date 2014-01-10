@@ -23,59 +23,59 @@ import griffon.core.CallableWithArgs;
  * @since 2.0.0
  */
 public class ListButtonBindingAdapter implements GriffonPivotAdapter, org.apache.pivot.wtk.ListButtonBindingListener {
-    private CallableWithArgs<?> listDataKeyChanged;
-    private CallableWithArgs<?> listDataBindTypeChanged;
-    private CallableWithArgs<?> listDataBindMappingChanged;
-    private CallableWithArgs<?> selectedItemKeyChanged;
-    private CallableWithArgs<?> selectedItemBindTypeChanged;
-    private CallableWithArgs<?> selectedItemBindMappingChanged;
+    private CallableWithArgs<Void> listDataKeyChanged;
+    private CallableWithArgs<Void> listDataBindTypeChanged;
+    private CallableWithArgs<Void> listDataBindMappingChanged;
+    private CallableWithArgs<Void> selectedItemKeyChanged;
+    private CallableWithArgs<Void> selectedItemBindTypeChanged;
+    private CallableWithArgs<Void> selectedItemBindMappingChanged;
 
-    public CallableWithArgs<?> getListDataKeyChanged() {
+    public CallableWithArgs<Void> getListDataKeyChanged() {
         return this.listDataKeyChanged;
     }
 
-    public CallableWithArgs<?> getListDataBindTypeChanged() {
+    public CallableWithArgs<Void> getListDataBindTypeChanged() {
         return this.listDataBindTypeChanged;
     }
 
-    public CallableWithArgs<?> getListDataBindMappingChanged() {
+    public CallableWithArgs<Void> getListDataBindMappingChanged() {
         return this.listDataBindMappingChanged;
     }
 
-    public CallableWithArgs<?> getSelectedItemKeyChanged() {
+    public CallableWithArgs<Void> getSelectedItemKeyChanged() {
         return this.selectedItemKeyChanged;
     }
 
-    public CallableWithArgs<?> getSelectedItemBindTypeChanged() {
+    public CallableWithArgs<Void> getSelectedItemBindTypeChanged() {
         return this.selectedItemBindTypeChanged;
     }
 
-    public CallableWithArgs<?> getSelectedItemBindMappingChanged() {
+    public CallableWithArgs<Void> getSelectedItemBindMappingChanged() {
         return this.selectedItemBindMappingChanged;
     }
 
 
-    public void setListDataKeyChanged(CallableWithArgs<?> listDataKeyChanged) {
+    public void setListDataKeyChanged(CallableWithArgs<Void> listDataKeyChanged) {
         this.listDataKeyChanged = listDataKeyChanged;
     }
 
-    public void setListDataBindTypeChanged(CallableWithArgs<?> listDataBindTypeChanged) {
+    public void setListDataBindTypeChanged(CallableWithArgs<Void> listDataBindTypeChanged) {
         this.listDataBindTypeChanged = listDataBindTypeChanged;
     }
 
-    public void setListDataBindMappingChanged(CallableWithArgs<?> listDataBindMappingChanged) {
+    public void setListDataBindMappingChanged(CallableWithArgs<Void> listDataBindMappingChanged) {
         this.listDataBindMappingChanged = listDataBindMappingChanged;
     }
 
-    public void setSelectedItemKeyChanged(CallableWithArgs<?> selectedItemKeyChanged) {
+    public void setSelectedItemKeyChanged(CallableWithArgs<Void> selectedItemKeyChanged) {
         this.selectedItemKeyChanged = selectedItemKeyChanged;
     }
 
-    public void setSelectedItemBindTypeChanged(CallableWithArgs<?> selectedItemBindTypeChanged) {
+    public void setSelectedItemBindTypeChanged(CallableWithArgs<Void> selectedItemBindTypeChanged) {
         this.selectedItemBindTypeChanged = selectedItemBindTypeChanged;
     }
 
-    public void setSelectedItemBindMappingChanged(CallableWithArgs<?> selectedItemBindMappingChanged) {
+    public void setSelectedItemBindMappingChanged(CallableWithArgs<Void> selectedItemBindMappingChanged) {
         this.selectedItemBindMappingChanged = selectedItemBindMappingChanged;
     }
 

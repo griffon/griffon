@@ -25,18 +25,18 @@ import org.apache.pivot.util.Vote;
  */
 public class SheetStateAdapter implements GriffonPivotAdapter, org.apache.pivot.wtk.SheetStateListener {
     private CallableWithArgs<Vote> previewSheetClose;
-    private CallableWithArgs<?> sheetCloseVetoed;
-    private CallableWithArgs<?> sheetClosed;
+    private CallableWithArgs<Void> sheetCloseVetoed;
+    private CallableWithArgs<Void> sheetClosed;
 
-    public CallableWithArgs<?> getPreviewSheetClose() {
+    public CallableWithArgs<Vote> getPreviewSheetClose() {
         return this.previewSheetClose;
     }
 
-    public CallableWithArgs<?> getSheetCloseVetoed() {
+    public CallableWithArgs<Void> getSheetCloseVetoed() {
         return this.sheetCloseVetoed;
     }
 
-    public CallableWithArgs<?> getSheetClosed() {
+    public CallableWithArgs<Void> getSheetClosed() {
         return this.sheetClosed;
     }
 
@@ -45,11 +45,11 @@ public class SheetStateAdapter implements GriffonPivotAdapter, org.apache.pivot.
         this.previewSheetClose = previewSheetClose;
     }
 
-    public void setSheetCloseVetoed(CallableWithArgs<?> sheetCloseVetoed) {
+    public void setSheetCloseVetoed(CallableWithArgs<Void> sheetCloseVetoed) {
         this.sheetCloseVetoed = sheetCloseVetoed;
     }
 
-    public void setSheetClosed(CallableWithArgs<?> sheetClosed) {
+    public void setSheetClosed(CallableWithArgs<Void> sheetClosed) {
         this.sheetClosed = sheetClosed;
     }
 

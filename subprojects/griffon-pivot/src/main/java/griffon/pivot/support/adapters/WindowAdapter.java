@@ -17,74 +17,75 @@
 package griffon.pivot.support.adapters;
 
 import griffon.core.CallableWithArgs;
+import org.apache.pivot.wtk.media.Image;
 
 /**
  * @author Andres Almiray
  * @since 2.0.0
  */
 public class WindowAdapter implements GriffonPivotAdapter, org.apache.pivot.wtk.WindowListener {
-    private CallableWithArgs<?> iconAdded;
-    private CallableWithArgs<?> iconInserted;
-    private CallableWithArgs<?> iconsRemoved;
-    private CallableWithArgs<?> titleChanged;
-    private CallableWithArgs<?> contentChanged;
-    private CallableWithArgs<?> activeChanged;
-    private CallableWithArgs<?> maximizedChanged;
+    private CallableWithArgs<Void> iconAdded;
+    private CallableWithArgs<Void> iconInserted;
+    private CallableWithArgs<Void> iconsRemoved;
+    private CallableWithArgs<Void> titleChanged;
+    private CallableWithArgs<Void> contentChanged;
+    private CallableWithArgs<Void> activeChanged;
+    private CallableWithArgs<Void> maximizedChanged;
 
-    public CallableWithArgs<?> getIconAdded() {
+    public CallableWithArgs<Void> getIconAdded() {
         return this.iconAdded;
     }
 
-    public CallableWithArgs<?> getIconInserted() {
+    public CallableWithArgs<Void> getIconInserted() {
         return this.iconInserted;
     }
 
-    public CallableWithArgs<?> getIconsRemoved() {
+    public CallableWithArgs<Void> getIconsRemoved() {
         return this.iconsRemoved;
     }
 
-    public CallableWithArgs<?> getTitleChanged() {
+    public CallableWithArgs<Void> getTitleChanged() {
         return this.titleChanged;
     }
 
-    public CallableWithArgs<?> getContentChanged() {
+    public CallableWithArgs<Void> getContentChanged() {
         return this.contentChanged;
     }
 
-    public CallableWithArgs<?> getActiveChanged() {
+    public CallableWithArgs<Void> getActiveChanged() {
         return this.activeChanged;
     }
 
-    public CallableWithArgs<?> getMaximizedChanged() {
+    public CallableWithArgs<Void> getMaximizedChanged() {
         return this.maximizedChanged;
     }
 
 
-    public void setIconAdded(CallableWithArgs<?> iconAdded) {
+    public void setIconAdded(CallableWithArgs<Void> iconAdded) {
         this.iconAdded = iconAdded;
     }
 
-    public void setIconInserted(CallableWithArgs<?> iconInserted) {
+    public void setIconInserted(CallableWithArgs<Void> iconInserted) {
         this.iconInserted = iconInserted;
     }
 
-    public void setIconsRemoved(CallableWithArgs<?> iconsRemoved) {
+    public void setIconsRemoved(CallableWithArgs<Void> iconsRemoved) {
         this.iconsRemoved = iconsRemoved;
     }
 
-    public void setTitleChanged(CallableWithArgs<?> titleChanged) {
+    public void setTitleChanged(CallableWithArgs<Void> titleChanged) {
         this.titleChanged = titleChanged;
     }
 
-    public void setContentChanged(CallableWithArgs<?> contentChanged) {
+    public void setContentChanged(CallableWithArgs<Void> contentChanged) {
         this.contentChanged = contentChanged;
     }
 
-    public void setActiveChanged(CallableWithArgs<?> activeChanged) {
+    public void setActiveChanged(CallableWithArgs<Void> activeChanged) {
         this.activeChanged = activeChanged;
     }
 
-    public void setMaximizedChanged(CallableWithArgs<?> maximizedChanged) {
+    public void setMaximizedChanged(CallableWithArgs<Void> maximizedChanged) {
         this.maximizedChanged = maximizedChanged;
     }
 
@@ -101,7 +102,7 @@ public class WindowAdapter implements GriffonPivotAdapter, org.apache.pivot.wtk.
         }
     }
 
-    public void iconsRemoved(org.apache.pivot.wtk.Window arg0, int arg1, org.apache.pivot.collections.Sequence arg2) {
+    public void iconsRemoved(org.apache.pivot.wtk.Window arg0, int arg1, org.apache.pivot.collections.Sequence<Image> arg2) {
         if (iconsRemoved != null) {
             iconsRemoved.call(arg0, arg1, arg2);
         }

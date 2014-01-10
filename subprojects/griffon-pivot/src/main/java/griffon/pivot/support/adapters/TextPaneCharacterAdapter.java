@@ -23,23 +23,23 @@ import griffon.core.CallableWithArgs;
  * @since 2.0.0
  */
 public class TextPaneCharacterAdapter implements GriffonPivotAdapter, org.apache.pivot.wtk.TextPaneCharacterListener {
-    private CallableWithArgs<?> charactersInserted;
-    private CallableWithArgs<?> charactersRemoved;
+    private CallableWithArgs<Void> charactersInserted;
+    private CallableWithArgs<Void> charactersRemoved;
 
-    public CallableWithArgs<?> getCharactersInserted() {
+    public CallableWithArgs<Void> getCharactersInserted() {
         return this.charactersInserted;
     }
 
-    public CallableWithArgs<?> getCharactersRemoved() {
+    public CallableWithArgs<Void> getCharactersRemoved() {
         return this.charactersRemoved;
     }
 
 
-    public void setCharactersInserted(CallableWithArgs<?> charactersInserted) {
+    public void setCharactersInserted(CallableWithArgs<Void> charactersInserted) {
         this.charactersInserted = charactersInserted;
     }
 
-    public void setCharactersRemoved(CallableWithArgs<?> charactersRemoved) {
+    public void setCharactersRemoved(CallableWithArgs<Void> charactersRemoved) {
         this.charactersRemoved = charactersRemoved;
     }
 

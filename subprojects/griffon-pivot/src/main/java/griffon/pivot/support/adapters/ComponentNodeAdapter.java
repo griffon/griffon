@@ -23,14 +23,14 @@ import griffon.core.CallableWithArgs;
  * @since 2.0.0
  */
 public class ComponentNodeAdapter implements GriffonPivotAdapter, org.apache.pivot.wtk.text.ComponentNodeListener {
-    private CallableWithArgs<?> componentChanged;
+    private CallableWithArgs<Void> componentChanged;
 
-    public CallableWithArgs<?> getComponentChanged() {
+    public CallableWithArgs<Void> getComponentChanged() {
         return this.componentChanged;
     }
 
 
-    public void setComponentChanged(CallableWithArgs<?> componentChanged) {
+    public void setComponentChanged(CallableWithArgs<Void> componentChanged) {
         this.componentChanged = componentChanged;
     }
 

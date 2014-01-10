@@ -23,14 +23,14 @@ import griffon.core.CallableWithArgs;
  * @since 2.0.0
  */
 public class DialogAdapter implements GriffonPivotAdapter, org.apache.pivot.wtk.DialogListener {
-    private CallableWithArgs<?> modalChanged;
+    private CallableWithArgs<Void> modalChanged;
 
-    public CallableWithArgs<?> getModalChanged() {
+    public CallableWithArgs<Void> getModalChanged() {
         return this.modalChanged;
     }
 
 
-    public void setModalChanged(CallableWithArgs<?> modalChanged) {
+    public void setModalChanged(CallableWithArgs<Void> modalChanged) {
         this.modalChanged = modalChanged;
     }
 

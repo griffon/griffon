@@ -23,14 +23,14 @@ import griffon.core.CallableWithArgs;
  * @since 2.0.0
  */
 public class ScrollBarValueAdapter implements GriffonPivotAdapter, org.apache.pivot.wtk.ScrollBarValueListener {
-    private CallableWithArgs<?> valueChanged;
+    private CallableWithArgs<Void> valueChanged;
 
-    public CallableWithArgs<?> getValueChanged() {
+    public CallableWithArgs<Void> getValueChanged() {
         return this.valueChanged;
     }
 
 
-    public void setValueChanged(CallableWithArgs<?> valueChanged) {
+    public void setValueChanged(CallableWithArgs<Void> valueChanged) {
         this.valueChanged = valueChanged;
     }
 

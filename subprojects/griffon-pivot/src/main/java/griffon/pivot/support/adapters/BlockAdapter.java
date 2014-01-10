@@ -23,14 +23,14 @@ import griffon.core.CallableWithArgs;
  * @since 2.0.0
  */
 public class BlockAdapter implements GriffonPivotAdapter, org.apache.pivot.wtk.text.BlockListener {
-    private CallableWithArgs<?> horizontalAlignmentChanged;
+    private CallableWithArgs<Void> horizontalAlignmentChanged;
 
-    public CallableWithArgs<?> getHorizontalAlignmentChanged() {
+    public CallableWithArgs<Void> getHorizontalAlignmentChanged() {
         return this.horizontalAlignmentChanged;
     }
 
 
-    public void setHorizontalAlignmentChanged(CallableWithArgs<?> horizontalAlignmentChanged) {
+    public void setHorizontalAlignmentChanged(CallableWithArgs<Void> horizontalAlignmentChanged) {
         this.horizontalAlignmentChanged = horizontalAlignmentChanged;
     }
 

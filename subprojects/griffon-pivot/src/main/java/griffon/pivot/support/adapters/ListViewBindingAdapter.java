@@ -23,113 +23,113 @@ import griffon.core.CallableWithArgs;
  * @since 2.0.0
  */
 public class ListViewBindingAdapter implements GriffonPivotAdapter, org.apache.pivot.wtk.ListViewBindingListener {
-    private CallableWithArgs<?> listDataKeyChanged;
-    private CallableWithArgs<?> listDataBindTypeChanged;
-    private CallableWithArgs<?> listDataBindMappingChanged;
-    private CallableWithArgs<?> selectedItemKeyChanged;
-    private CallableWithArgs<?> selectedItemBindTypeChanged;
-    private CallableWithArgs<?> selectedItemBindMappingChanged;
-    private CallableWithArgs<?> selectedItemsKeyChanged;
-    private CallableWithArgs<?> selectedItemsBindTypeChanged;
-    private CallableWithArgs<?> selectedItemsBindMappingChanged;
-    private CallableWithArgs<?> checkedItemsKeyChanged;
-    private CallableWithArgs<?> checkedItemsBindTypeChanged;
-    private CallableWithArgs<?> checkedItemsBindMappingChanged;
+    private CallableWithArgs<Void> listDataKeyChanged;
+    private CallableWithArgs<Void> listDataBindTypeChanged;
+    private CallableWithArgs<Void> listDataBindMappingChanged;
+    private CallableWithArgs<Void> selectedItemKeyChanged;
+    private CallableWithArgs<Void> selectedItemBindTypeChanged;
+    private CallableWithArgs<Void> selectedItemBindMappingChanged;
+    private CallableWithArgs<Void> selectedItemsKeyChanged;
+    private CallableWithArgs<Void> selectedItemsBindTypeChanged;
+    private CallableWithArgs<Void> selectedItemsBindMappingChanged;
+    private CallableWithArgs<Void> checkedItemsKeyChanged;
+    private CallableWithArgs<Void> checkedItemsBindTypeChanged;
+    private CallableWithArgs<Void> checkedItemsBindMappingChanged;
 
-    public CallableWithArgs<?> getListDataKeyChanged() {
+    public CallableWithArgs<Void> getListDataKeyChanged() {
         return this.listDataKeyChanged;
     }
 
-    public CallableWithArgs<?> getListDataBindTypeChanged() {
+    public CallableWithArgs<Void> getListDataBindTypeChanged() {
         return this.listDataBindTypeChanged;
     }
 
-    public CallableWithArgs<?> getListDataBindMappingChanged() {
+    public CallableWithArgs<Void> getListDataBindMappingChanged() {
         return this.listDataBindMappingChanged;
     }
 
-    public CallableWithArgs<?> getSelectedItemKeyChanged() {
+    public CallableWithArgs<Void> getSelectedItemKeyChanged() {
         return this.selectedItemKeyChanged;
     }
 
-    public CallableWithArgs<?> getSelectedItemBindTypeChanged() {
+    public CallableWithArgs<Void> getSelectedItemBindTypeChanged() {
         return this.selectedItemBindTypeChanged;
     }
 
-    public CallableWithArgs<?> getSelectedItemBindMappingChanged() {
+    public CallableWithArgs<Void> getSelectedItemBindMappingChanged() {
         return this.selectedItemBindMappingChanged;
     }
 
-    public CallableWithArgs<?> getSelectedItemsKeyChanged() {
+    public CallableWithArgs<Void> getSelectedItemsKeyChanged() {
         return this.selectedItemsKeyChanged;
     }
 
-    public CallableWithArgs<?> getSelectedItemsBindTypeChanged() {
+    public CallableWithArgs<Void> getSelectedItemsBindTypeChanged() {
         return this.selectedItemsBindTypeChanged;
     }
 
-    public CallableWithArgs<?> getSelectedItemsBindMappingChanged() {
+    public CallableWithArgs<Void> getSelectedItemsBindMappingChanged() {
         return this.selectedItemsBindMappingChanged;
     }
 
-    public CallableWithArgs<?> getCheckedItemsKeyChanged() {
+    public CallableWithArgs<Void> getCheckedItemsKeyChanged() {
         return this.checkedItemsKeyChanged;
     }
 
-    public CallableWithArgs<?> getCheckedItemsBindTypeChanged() {
+    public CallableWithArgs<Void> getCheckedItemsBindTypeChanged() {
         return this.checkedItemsBindTypeChanged;
     }
 
-    public CallableWithArgs<?> getCheckedItemsBindMappingChanged() {
+    public CallableWithArgs<Void> getCheckedItemsBindMappingChanged() {
         return this.checkedItemsBindMappingChanged;
     }
 
 
-    public void setListDataKeyChanged(CallableWithArgs<?> listDataKeyChanged) {
+    public void setListDataKeyChanged(CallableWithArgs<Void> listDataKeyChanged) {
         this.listDataKeyChanged = listDataKeyChanged;
     }
 
-    public void setListDataBindTypeChanged(CallableWithArgs<?> listDataBindTypeChanged) {
+    public void setListDataBindTypeChanged(CallableWithArgs<Void> listDataBindTypeChanged) {
         this.listDataBindTypeChanged = listDataBindTypeChanged;
     }
 
-    public void setListDataBindMappingChanged(CallableWithArgs<?> listDataBindMappingChanged) {
+    public void setListDataBindMappingChanged(CallableWithArgs<Void> listDataBindMappingChanged) {
         this.listDataBindMappingChanged = listDataBindMappingChanged;
     }
 
-    public void setSelectedItemKeyChanged(CallableWithArgs<?> selectedItemKeyChanged) {
+    public void setSelectedItemKeyChanged(CallableWithArgs<Void> selectedItemKeyChanged) {
         this.selectedItemKeyChanged = selectedItemKeyChanged;
     }
 
-    public void setSelectedItemBindTypeChanged(CallableWithArgs<?> selectedItemBindTypeChanged) {
+    public void setSelectedItemBindTypeChanged(CallableWithArgs<Void> selectedItemBindTypeChanged) {
         this.selectedItemBindTypeChanged = selectedItemBindTypeChanged;
     }
 
-    public void setSelectedItemBindMappingChanged(CallableWithArgs<?> selectedItemBindMappingChanged) {
+    public void setSelectedItemBindMappingChanged(CallableWithArgs<Void> selectedItemBindMappingChanged) {
         this.selectedItemBindMappingChanged = selectedItemBindMappingChanged;
     }
 
-    public void setSelectedItemsKeyChanged(CallableWithArgs<?> selectedItemsKeyChanged) {
+    public void setSelectedItemsKeyChanged(CallableWithArgs<Void> selectedItemsKeyChanged) {
         this.selectedItemsKeyChanged = selectedItemsKeyChanged;
     }
 
-    public void setSelectedItemsBindTypeChanged(CallableWithArgs<?> selectedItemsBindTypeChanged) {
+    public void setSelectedItemsBindTypeChanged(CallableWithArgs<Void> selectedItemsBindTypeChanged) {
         this.selectedItemsBindTypeChanged = selectedItemsBindTypeChanged;
     }
 
-    public void setSelectedItemsBindMappingChanged(CallableWithArgs<?> selectedItemsBindMappingChanged) {
+    public void setSelectedItemsBindMappingChanged(CallableWithArgs<Void> selectedItemsBindMappingChanged) {
         this.selectedItemsBindMappingChanged = selectedItemsBindMappingChanged;
     }
 
-    public void setCheckedItemsKeyChanged(CallableWithArgs<?> checkedItemsKeyChanged) {
+    public void setCheckedItemsKeyChanged(CallableWithArgs<Void> checkedItemsKeyChanged) {
         this.checkedItemsKeyChanged = checkedItemsKeyChanged;
     }
 
-    public void setCheckedItemsBindTypeChanged(CallableWithArgs<?> checkedItemsBindTypeChanged) {
+    public void setCheckedItemsBindTypeChanged(CallableWithArgs<Void> checkedItemsBindTypeChanged) {
         this.checkedItemsBindTypeChanged = checkedItemsBindTypeChanged;
     }
 
-    public void setCheckedItemsBindMappingChanged(CallableWithArgs<?> checkedItemsBindMappingChanged) {
+    public void setCheckedItemsBindMappingChanged(CallableWithArgs<Void> checkedItemsBindMappingChanged) {
         this.checkedItemsBindMappingChanged = checkedItemsBindMappingChanged;
     }
 

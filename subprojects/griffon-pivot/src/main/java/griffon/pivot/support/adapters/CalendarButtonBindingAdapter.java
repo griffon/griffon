@@ -23,32 +23,32 @@ import griffon.core.CallableWithArgs;
  * @since 2.0.0
  */
 public class CalendarButtonBindingAdapter implements GriffonPivotAdapter, org.apache.pivot.wtk.CalendarButtonBindingListener {
-    private CallableWithArgs<?> selectedDateKeyChanged;
-    private CallableWithArgs<?> selectedDateBindTypeChanged;
-    private CallableWithArgs<?> selectedDateBindMappingChanged;
+    private CallableWithArgs<Void> selectedDateKeyChanged;
+    private CallableWithArgs<Void> selectedDateBindTypeChanged;
+    private CallableWithArgs<Void> selectedDateBindMappingChanged;
 
-    public CallableWithArgs<?> getSelectedDateKeyChanged() {
+    public CallableWithArgs<Void> getSelectedDateKeyChanged() {
         return this.selectedDateKeyChanged;
     }
 
-    public CallableWithArgs<?> getSelectedDateBindTypeChanged() {
+    public CallableWithArgs<Void> getSelectedDateBindTypeChanged() {
         return this.selectedDateBindTypeChanged;
     }
 
-    public CallableWithArgs<?> getSelectedDateBindMappingChanged() {
+    public CallableWithArgs<Void> getSelectedDateBindMappingChanged() {
         return this.selectedDateBindMappingChanged;
     }
 
 
-    public void setSelectedDateKeyChanged(CallableWithArgs<?> selectedDateKeyChanged) {
+    public void setSelectedDateKeyChanged(CallableWithArgs<Void> selectedDateKeyChanged) {
         this.selectedDateKeyChanged = selectedDateKeyChanged;
     }
 
-    public void setSelectedDateBindTypeChanged(CallableWithArgs<?> selectedDateBindTypeChanged) {
+    public void setSelectedDateBindTypeChanged(CallableWithArgs<Void> selectedDateBindTypeChanged) {
         this.selectedDateBindTypeChanged = selectedDateBindTypeChanged;
     }
 
-    public void setSelectedDateBindMappingChanged(CallableWithArgs<?> selectedDateBindMappingChanged) {
+    public void setSelectedDateBindMappingChanged(CallableWithArgs<Void> selectedDateBindMappingChanged) {
         this.selectedDateBindMappingChanged = selectedDateBindMappingChanged;
     }
 

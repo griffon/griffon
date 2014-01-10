@@ -23,23 +23,23 @@ import griffon.core.CallableWithArgs;
  * @since 2.0.0
  */
 public class SuggestionPopupSelectionAdapter implements GriffonPivotAdapter, org.apache.pivot.wtk.SuggestionPopupSelectionListener {
-    private CallableWithArgs<?> selectedSuggestionChanged;
-    private CallableWithArgs<?> selectedIndexChanged;
+    private CallableWithArgs<Void> selectedSuggestionChanged;
+    private CallableWithArgs<Void> selectedIndexChanged;
 
-    public CallableWithArgs<?> getSelectedSuggestionChanged() {
+    public CallableWithArgs<Void> getSelectedSuggestionChanged() {
         return this.selectedSuggestionChanged;
     }
 
-    public CallableWithArgs<?> getSelectedIndexChanged() {
+    public CallableWithArgs<Void> getSelectedIndexChanged() {
         return this.selectedIndexChanged;
     }
 
 
-    public void setSelectedSuggestionChanged(CallableWithArgs<?> selectedSuggestionChanged) {
+    public void setSelectedSuggestionChanged(CallableWithArgs<Void> selectedSuggestionChanged) {
         this.selectedSuggestionChanged = selectedSuggestionChanged;
     }
 
-    public void setSelectedIndexChanged(CallableWithArgs<?> selectedIndexChanged) {
+    public void setSelectedIndexChanged(CallableWithArgs<Void> selectedIndexChanged) {
         this.selectedIndexChanged = selectedIndexChanged;
     }
 

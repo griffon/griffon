@@ -17,38 +17,39 @@
 package griffon.pivot.support.adapters;
 
 import griffon.core.CallableWithArgs;
+import org.apache.pivot.wtk.Menu;
 
 /**
  * @author Andres Almiray
  * @since 2.0.0
  */
 public class MenuAdapter implements GriffonPivotAdapter, org.apache.pivot.wtk.MenuListener {
-    private CallableWithArgs<?> sectionInserted;
-    private CallableWithArgs<?> sectionsRemoved;
-    private CallableWithArgs<?> activeItemChanged;
+    private CallableWithArgs<Void> sectionInserted;
+    private CallableWithArgs<Void> sectionsRemoved;
+    private CallableWithArgs<Void> activeItemChanged;
 
-    public CallableWithArgs<?> getSectionInserted() {
+    public CallableWithArgs<Void> getSectionInserted() {
         return this.sectionInserted;
     }
 
-    public CallableWithArgs<?> getSectionsRemoved() {
+    public CallableWithArgs<Void> getSectionsRemoved() {
         return this.sectionsRemoved;
     }
 
-    public CallableWithArgs<?> getActiveItemChanged() {
+    public CallableWithArgs<Void> getActiveItemChanged() {
         return this.activeItemChanged;
     }
 
 
-    public void setSectionInserted(CallableWithArgs<?> sectionInserted) {
+    public void setSectionInserted(CallableWithArgs<Void> sectionInserted) {
         this.sectionInserted = sectionInserted;
     }
 
-    public void setSectionsRemoved(CallableWithArgs<?> sectionsRemoved) {
+    public void setSectionsRemoved(CallableWithArgs<Void> sectionsRemoved) {
         this.sectionsRemoved = sectionsRemoved;
     }
 
-    public void setActiveItemChanged(CallableWithArgs<?> activeItemChanged) {
+    public void setActiveItemChanged(CallableWithArgs<Void> activeItemChanged) {
         this.activeItemChanged = activeItemChanged;
     }
 
@@ -59,7 +60,7 @@ public class MenuAdapter implements GriffonPivotAdapter, org.apache.pivot.wtk.Me
         }
     }
 
-    public void sectionsRemoved(org.apache.pivot.wtk.Menu arg0, int arg1, org.apache.pivot.collections.Sequence arg2) {
+    public void sectionsRemoved(org.apache.pivot.wtk.Menu arg0, int arg1, org.apache.pivot.collections.Sequence<Menu.Section> arg2) {
         if (sectionsRemoved != null) {
             sectionsRemoved.call(arg0, arg1, arg2);
         }

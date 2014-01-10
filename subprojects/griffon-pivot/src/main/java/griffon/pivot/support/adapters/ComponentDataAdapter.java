@@ -23,32 +23,32 @@ import griffon.core.CallableWithArgs;
  * @since 2.0.0
  */
 public class ComponentDataAdapter implements GriffonPivotAdapter, org.apache.pivot.wtk.ComponentDataListener {
-    private CallableWithArgs<?> valueAdded;
-    private CallableWithArgs<?> valueUpdated;
-    private CallableWithArgs<?> valueRemoved;
+    private CallableWithArgs<Void> valueAdded;
+    private CallableWithArgs<Void> valueUpdated;
+    private CallableWithArgs<Void> valueRemoved;
 
-    public CallableWithArgs<?> getValueAdded() {
+    public CallableWithArgs<Void> getValueAdded() {
         return this.valueAdded;
     }
 
-    public CallableWithArgs<?> getValueUpdated() {
+    public CallableWithArgs<Void> getValueUpdated() {
         return this.valueUpdated;
     }
 
-    public CallableWithArgs<?> getValueRemoved() {
+    public CallableWithArgs<Void> getValueRemoved() {
         return this.valueRemoved;
     }
 
 
-    public void setValueAdded(CallableWithArgs<?> valueAdded) {
+    public void setValueAdded(CallableWithArgs<Void> valueAdded) {
         this.valueAdded = valueAdded;
     }
 
-    public void setValueUpdated(CallableWithArgs<?> valueUpdated) {
+    public void setValueUpdated(CallableWithArgs<Void> valueUpdated) {
         this.valueUpdated = valueUpdated;
     }
 
-    public void setValueRemoved(CallableWithArgs<?> valueRemoved) {
+    public void setValueRemoved(CallableWithArgs<Void> valueRemoved) {
         this.valueRemoved = valueRemoved;
     }
 

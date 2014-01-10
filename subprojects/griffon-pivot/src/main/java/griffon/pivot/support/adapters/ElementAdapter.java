@@ -17,74 +17,75 @@
 package griffon.pivot.support.adapters;
 
 import griffon.core.CallableWithArgs;
+import org.apache.pivot.wtk.text.Node;
 
 /**
  * @author Andres Almiray
  * @since 2.0.0
  */
 public class ElementAdapter implements GriffonPivotAdapter, org.apache.pivot.wtk.text.ElementListener {
-    private CallableWithArgs<?> nodeInserted;
-    private CallableWithArgs<?> nodesRemoved;
-    private CallableWithArgs<?> fontChanged;
-    private CallableWithArgs<?> foregroundColorChanged;
-    private CallableWithArgs<?> backgroundColorChanged;
-    private CallableWithArgs<?> underlineChanged;
-    private CallableWithArgs<?> strikethroughChanged;
+    private CallableWithArgs<Void> nodeInserted;
+    private CallableWithArgs<Void> nodesRemoved;
+    private CallableWithArgs<Void> fontChanged;
+    private CallableWithArgs<Void> foregroundColorChanged;
+    private CallableWithArgs<Void> backgroundColorChanged;
+    private CallableWithArgs<Void> underlineChanged;
+    private CallableWithArgs<Void> strikethroughChanged;
 
-    public CallableWithArgs<?> getNodeInserted() {
+    public CallableWithArgs<Void> getNodeInserted() {
         return this.nodeInserted;
     }
 
-    public CallableWithArgs<?> getNodesRemoved() {
+    public CallableWithArgs<Void> getNodesRemoved() {
         return this.nodesRemoved;
     }
 
-    public CallableWithArgs<?> getFontChanged() {
+    public CallableWithArgs<Void> getFontChanged() {
         return this.fontChanged;
     }
 
-    public CallableWithArgs<?> getForegroundColorChanged() {
+    public CallableWithArgs<Void> getForegroundColorChanged() {
         return this.foregroundColorChanged;
     }
 
-    public CallableWithArgs<?> getBackgroundColorChanged() {
+    public CallableWithArgs<Void> getBackgroundColorChanged() {
         return this.backgroundColorChanged;
     }
 
-    public CallableWithArgs<?> getUnderlineChanged() {
+    public CallableWithArgs<Void> getUnderlineChanged() {
         return this.underlineChanged;
     }
 
-    public CallableWithArgs<?> getStrikethroughChanged() {
+    public CallableWithArgs<Void> getStrikethroughChanged() {
         return this.strikethroughChanged;
     }
 
 
-    public void setNodeInserted(CallableWithArgs<?> nodeInserted) {
+    public void setNodeInserted(CallableWithArgs<Void> nodeInserted) {
         this.nodeInserted = nodeInserted;
     }
 
-    public void setNodesRemoved(CallableWithArgs<?> nodesRemoved) {
+    public void setNodesRemoved(CallableWithArgs<Void> nodesRemoved) {
         this.nodesRemoved = nodesRemoved;
     }
 
-    public void setFontChanged(CallableWithArgs<?> fontChanged) {
+    public void setFontChanged(CallableWithArgs<Void> fontChanged) {
         this.fontChanged = fontChanged;
     }
 
-    public void setForegroundColorChanged(CallableWithArgs<?> foregroundColorChanged) {
+    public void setForegroundColorChanged(CallableWithArgs<Void> foregroundColorChanged) {
         this.foregroundColorChanged = foregroundColorChanged;
     }
 
-    public void setBackgroundColorChanged(CallableWithArgs<?> backgroundColorChanged) {
+    public void setBackgroundColorChanged(CallableWithArgs<Void> backgroundColorChanged) {
         this.backgroundColorChanged = backgroundColorChanged;
     }
 
-    public void setUnderlineChanged(CallableWithArgs<?> underlineChanged) {
+    public void setUnderlineChanged(CallableWithArgs<Void> underlineChanged) {
         this.underlineChanged = underlineChanged;
     }
 
-    public void setStrikethroughChanged(CallableWithArgs<?> strikethroughChanged) {
+    public void setStrikethroughChanged(CallableWithArgs<Void> strikethroughChanged) {
         this.strikethroughChanged = strikethroughChanged;
     }
 
@@ -95,7 +96,7 @@ public class ElementAdapter implements GriffonPivotAdapter, org.apache.pivot.wtk
         }
     }
 
-    public void nodesRemoved(org.apache.pivot.wtk.text.Element arg0, int arg1, org.apache.pivot.collections.Sequence arg2) {
+    public void nodesRemoved(org.apache.pivot.wtk.text.Element arg0, int arg1, org.apache.pivot.collections.Sequence<Node> arg2) {
         if (nodesRemoved != null) {
             nodesRemoved.call(arg0, arg1, arg2);
         }

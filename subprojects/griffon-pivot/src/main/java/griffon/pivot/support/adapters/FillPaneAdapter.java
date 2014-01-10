@@ -23,14 +23,14 @@ import griffon.core.CallableWithArgs;
  * @since 2.0.0
  */
 public class FillPaneAdapter implements GriffonPivotAdapter, org.apache.pivot.wtk.FillPaneListener {
-    private CallableWithArgs<?> orientationChanged;
+    private CallableWithArgs<Void> orientationChanged;
 
-    public CallableWithArgs<?> getOrientationChanged() {
+    public CallableWithArgs<Void> getOrientationChanged() {
         return this.orientationChanged;
     }
 
 
-    public void setOrientationChanged(CallableWithArgs<?> orientationChanged) {
+    public void setOrientationChanged(CallableWithArgs<Void> orientationChanged) {
         this.orientationChanged = orientationChanged;
     }
 

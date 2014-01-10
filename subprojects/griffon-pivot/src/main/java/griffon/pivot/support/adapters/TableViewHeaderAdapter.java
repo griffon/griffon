@@ -23,23 +23,23 @@ import griffon.core.CallableWithArgs;
  * @since 2.0.0
  */
 public class TableViewHeaderAdapter implements GriffonPivotAdapter, org.apache.pivot.wtk.TableViewHeaderListener {
-    private CallableWithArgs<?> tableViewChanged;
-    private CallableWithArgs<?> sortModeChanged;
+    private CallableWithArgs<Void> tableViewChanged;
+    private CallableWithArgs<Void> sortModeChanged;
 
-    public CallableWithArgs<?> getTableViewChanged() {
+    public CallableWithArgs<Void> getTableViewChanged() {
         return this.tableViewChanged;
     }
 
-    public CallableWithArgs<?> getSortModeChanged() {
+    public CallableWithArgs<Void> getSortModeChanged() {
         return this.sortModeChanged;
     }
 
 
-    public void setTableViewChanged(CallableWithArgs<?> tableViewChanged) {
+    public void setTableViewChanged(CallableWithArgs<Void> tableViewChanged) {
         this.tableViewChanged = tableViewChanged;
     }
 
-    public void setSortModeChanged(CallableWithArgs<?> sortModeChanged) {
+    public void setSortModeChanged(CallableWithArgs<Void> sortModeChanged) {
         this.sortModeChanged = sortModeChanged;
     }
 

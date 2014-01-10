@@ -23,23 +23,23 @@ import griffon.core.CallableWithArgs;
  * @since 2.0.0
  */
 public class SpinnerSelectionAdapter implements GriffonPivotAdapter, org.apache.pivot.wtk.SpinnerSelectionListener {
-    private CallableWithArgs<?> selectedIndexChanged;
-    private CallableWithArgs<?> selectedItemChanged;
+    private CallableWithArgs<Void> selectedIndexChanged;
+    private CallableWithArgs<Void> selectedItemChanged;
 
-    public CallableWithArgs<?> getSelectedIndexChanged() {
+    public CallableWithArgs<Void> getSelectedIndexChanged() {
         return this.selectedIndexChanged;
     }
 
-    public CallableWithArgs<?> getSelectedItemChanged() {
+    public CallableWithArgs<Void> getSelectedItemChanged() {
         return this.selectedItemChanged;
     }
 
 
-    public void setSelectedIndexChanged(CallableWithArgs<?> selectedIndexChanged) {
+    public void setSelectedIndexChanged(CallableWithArgs<Void> selectedIndexChanged) {
         this.selectedIndexChanged = selectedIndexChanged;
     }
 
-    public void setSelectedItemChanged(CallableWithArgs<?> selectedItemChanged) {
+    public void setSelectedItemChanged(CallableWithArgs<Void> selectedItemChanged) {
         this.selectedItemChanged = selectedItemChanged;
     }
 

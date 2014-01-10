@@ -17,52 +17,53 @@
 package griffon.pivot.support.adapters;
 
 import griffon.core.CallableWithArgs;
+import org.apache.pivot.collections.Sequence;
 
 /**
  * @author Andres Almiray
  * @since 2.0.0
  */
 public class TreeViewSelectionAdapter implements GriffonPivotAdapter, org.apache.pivot.wtk.TreeViewSelectionListener {
-    private CallableWithArgs<?> selectedPathsChanged;
-    private CallableWithArgs<?> selectedNodeChanged;
-    private CallableWithArgs<?> selectedPathAdded;
-    private CallableWithArgs<?> selectedPathRemoved;
+    private CallableWithArgs<Void> selectedPathsChanged;
+    private CallableWithArgs<Void> selectedNodeChanged;
+    private CallableWithArgs<Void> selectedPathAdded;
+    private CallableWithArgs<Void> selectedPathRemoved;
 
-    public CallableWithArgs<?> getSelectedPathsChanged() {
+    public CallableWithArgs<Void> getSelectedPathsChanged() {
         return this.selectedPathsChanged;
     }
 
-    public CallableWithArgs<?> getSelectedNodeChanged() {
+    public CallableWithArgs<Void> getSelectedNodeChanged() {
         return this.selectedNodeChanged;
     }
 
-    public CallableWithArgs<?> getSelectedPathAdded() {
+    public CallableWithArgs<Void> getSelectedPathAdded() {
         return this.selectedPathAdded;
     }
 
-    public CallableWithArgs<?> getSelectedPathRemoved() {
+    public CallableWithArgs<Void> getSelectedPathRemoved() {
         return this.selectedPathRemoved;
     }
 
 
-    public void setSelectedPathsChanged(CallableWithArgs<?> selectedPathsChanged) {
+    public void setSelectedPathsChanged(CallableWithArgs<Void> selectedPathsChanged) {
         this.selectedPathsChanged = selectedPathsChanged;
     }
 
-    public void setSelectedNodeChanged(CallableWithArgs<?> selectedNodeChanged) {
+    public void setSelectedNodeChanged(CallableWithArgs<Void> selectedNodeChanged) {
         this.selectedNodeChanged = selectedNodeChanged;
     }
 
-    public void setSelectedPathAdded(CallableWithArgs<?> selectedPathAdded) {
+    public void setSelectedPathAdded(CallableWithArgs<Void> selectedPathAdded) {
         this.selectedPathAdded = selectedPathAdded;
     }
 
-    public void setSelectedPathRemoved(CallableWithArgs<?> selectedPathRemoved) {
+    public void setSelectedPathRemoved(CallableWithArgs<Void> selectedPathRemoved) {
         this.selectedPathRemoved = selectedPathRemoved;
     }
 
 
-    public void selectedPathsChanged(org.apache.pivot.wtk.TreeView arg0, org.apache.pivot.collections.Sequence arg1) {
+    public void selectedPathsChanged(org.apache.pivot.wtk.TreeView arg0, org.apache.pivot.collections.Sequence<Sequence.Tree.Path> arg1) {
         if (selectedPathsChanged != null) {
             selectedPathsChanged.call(arg0, arg1);
         }

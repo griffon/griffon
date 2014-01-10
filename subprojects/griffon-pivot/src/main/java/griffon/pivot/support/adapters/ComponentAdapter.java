@@ -23,131 +23,131 @@ import griffon.core.CallableWithArgs;
  * @since 2.0.0
  */
 public class ComponentAdapter implements GriffonPivotAdapter, org.apache.pivot.wtk.ComponentListener {
-    private CallableWithArgs<?> tooltipTextChanged;
-    private CallableWithArgs<?> parentChanged;
-    private CallableWithArgs<?> sizeChanged;
-    private CallableWithArgs<?> preferredSizeChanged;
-    private CallableWithArgs<?> widthLimitsChanged;
-    private CallableWithArgs<?> heightLimitsChanged;
-    private CallableWithArgs<?> locationChanged;
-    private CallableWithArgs<?> visibleChanged;
-    private CallableWithArgs<?> cursorChanged;
-    private CallableWithArgs<?> tooltipDelayChanged;
-    private CallableWithArgs<?> dragSourceChanged;
-    private CallableWithArgs<?> dropTargetChanged;
-    private CallableWithArgs<?> menuHandlerChanged;
-    private CallableWithArgs<?> nameChanged;
+    private CallableWithArgs<Void> tooltipTextChanged;
+    private CallableWithArgs<Void> parentChanged;
+    private CallableWithArgs<Void> sizeChanged;
+    private CallableWithArgs<Void> preferredSizeChanged;
+    private CallableWithArgs<Void> widthLimitsChanged;
+    private CallableWithArgs<Void> heightLimitsChanged;
+    private CallableWithArgs<Void> locationChanged;
+    private CallableWithArgs<Void> visibleChanged;
+    private CallableWithArgs<Void> cursorChanged;
+    private CallableWithArgs<Void> tooltipDelayChanged;
+    private CallableWithArgs<Void> dragSourceChanged;
+    private CallableWithArgs<Void> dropTargetChanged;
+    private CallableWithArgs<Void> menuHandlerChanged;
+    private CallableWithArgs<Void> nameChanged;
 
-    public CallableWithArgs<?> getTooltipTextChanged() {
+    public CallableWithArgs<Void> getTooltipTextChanged() {
         return this.tooltipTextChanged;
     }
 
-    public CallableWithArgs<?> getParentChanged() {
+    public CallableWithArgs<Void> getParentChanged() {
         return this.parentChanged;
     }
 
-    public CallableWithArgs<?> getSizeChanged() {
+    public CallableWithArgs<Void> getSizeChanged() {
         return this.sizeChanged;
     }
 
-    public CallableWithArgs<?> getPreferredSizeChanged() {
+    public CallableWithArgs<Void> getPreferredSizeChanged() {
         return this.preferredSizeChanged;
     }
 
-    public CallableWithArgs<?> getWidthLimitsChanged() {
+    public CallableWithArgs<Void> getWidthLimitsChanged() {
         return this.widthLimitsChanged;
     }
 
-    public CallableWithArgs<?> getHeightLimitsChanged() {
+    public CallableWithArgs<Void> getHeightLimitsChanged() {
         return this.heightLimitsChanged;
     }
 
-    public CallableWithArgs<?> getLocationChanged() {
+    public CallableWithArgs<Void> getLocationChanged() {
         return this.locationChanged;
     }
 
-    public CallableWithArgs<?> getVisibleChanged() {
+    public CallableWithArgs<Void> getVisibleChanged() {
         return this.visibleChanged;
     }
 
-    public CallableWithArgs<?> getCursorChanged() {
+    public CallableWithArgs<Void> getCursorChanged() {
         return this.cursorChanged;
     }
 
-    public CallableWithArgs<?> getTooltipDelayChanged() {
+    public CallableWithArgs<Void> getTooltipDelayChanged() {
         return this.tooltipDelayChanged;
     }
 
-    public CallableWithArgs<?> getDragSourceChanged() {
+    public CallableWithArgs<Void> getDragSourceChanged() {
         return this.dragSourceChanged;
     }
 
-    public CallableWithArgs<?> getDropTargetChanged() {
+    public CallableWithArgs<Void> getDropTargetChanged() {
         return this.dropTargetChanged;
     }
 
-    public CallableWithArgs<?> getMenuHandlerChanged() {
+    public CallableWithArgs<Void> getMenuHandlerChanged() {
         return this.menuHandlerChanged;
     }
 
-    public CallableWithArgs<?> getNameChanged() {
+    public CallableWithArgs<Void> getNameChanged() {
         return this.nameChanged;
     }
 
 
-    public void setTooltipTextChanged(CallableWithArgs<?> tooltipTextChanged) {
+    public void setTooltipTextChanged(CallableWithArgs<Void> tooltipTextChanged) {
         this.tooltipTextChanged = tooltipTextChanged;
     }
 
-    public void setParentChanged(CallableWithArgs<?> parentChanged) {
+    public void setParentChanged(CallableWithArgs<Void> parentChanged) {
         this.parentChanged = parentChanged;
     }
 
-    public void setSizeChanged(CallableWithArgs<?> sizeChanged) {
+    public void setSizeChanged(CallableWithArgs<Void> sizeChanged) {
         this.sizeChanged = sizeChanged;
     }
 
-    public void setPreferredSizeChanged(CallableWithArgs<?> preferredSizeChanged) {
+    public void setPreferredSizeChanged(CallableWithArgs<Void> preferredSizeChanged) {
         this.preferredSizeChanged = preferredSizeChanged;
     }
 
-    public void setWidthLimitsChanged(CallableWithArgs<?> widthLimitsChanged) {
+    public void setWidthLimitsChanged(CallableWithArgs<Void> widthLimitsChanged) {
         this.widthLimitsChanged = widthLimitsChanged;
     }
 
-    public void setHeightLimitsChanged(CallableWithArgs<?> heightLimitsChanged) {
+    public void setHeightLimitsChanged(CallableWithArgs<Void> heightLimitsChanged) {
         this.heightLimitsChanged = heightLimitsChanged;
     }
 
-    public void setLocationChanged(CallableWithArgs<?> locationChanged) {
+    public void setLocationChanged(CallableWithArgs<Void> locationChanged) {
         this.locationChanged = locationChanged;
     }
 
-    public void setVisibleChanged(CallableWithArgs<?> visibleChanged) {
+    public void setVisibleChanged(CallableWithArgs<Void> visibleChanged) {
         this.visibleChanged = visibleChanged;
     }
 
-    public void setCursorChanged(CallableWithArgs<?> cursorChanged) {
+    public void setCursorChanged(CallableWithArgs<Void> cursorChanged) {
         this.cursorChanged = cursorChanged;
     }
 
-    public void setTooltipDelayChanged(CallableWithArgs<?> tooltipDelayChanged) {
+    public void setTooltipDelayChanged(CallableWithArgs<Void> tooltipDelayChanged) {
         this.tooltipDelayChanged = tooltipDelayChanged;
     }
 
-    public void setDragSourceChanged(CallableWithArgs<?> dragSourceChanged) {
+    public void setDragSourceChanged(CallableWithArgs<Void> dragSourceChanged) {
         this.dragSourceChanged = dragSourceChanged;
     }
 
-    public void setDropTargetChanged(CallableWithArgs<?> dropTargetChanged) {
+    public void setDropTargetChanged(CallableWithArgs<Void> dropTargetChanged) {
         this.dropTargetChanged = dropTargetChanged;
     }
 
-    public void setMenuHandlerChanged(CallableWithArgs<?> menuHandlerChanged) {
+    public void setMenuHandlerChanged(CallableWithArgs<Void> menuHandlerChanged) {
         this.menuHandlerChanged = menuHandlerChanged;
     }
 
-    public void setNameChanged(CallableWithArgs<?> nameChanged) {
+    public void setNameChanged(CallableWithArgs<Void> nameChanged) {
         this.nameChanged = nameChanged;
     }
 

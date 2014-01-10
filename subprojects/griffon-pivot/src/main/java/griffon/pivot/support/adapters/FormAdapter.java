@@ -17,56 +17,58 @@
 package griffon.pivot.support.adapters;
 
 import griffon.core.CallableWithArgs;
+import org.apache.pivot.wtk.Component;
+import org.apache.pivot.wtk.Form;
 
 /**
  * @author Andres Almiray
  * @since 2.0.0
  */
 public class FormAdapter implements GriffonPivotAdapter, org.apache.pivot.wtk.FormListener {
-    private CallableWithArgs<?> sectionInserted;
-    private CallableWithArgs<?> sectionsRemoved;
-    private CallableWithArgs<?> sectionHeadingChanged;
-    private CallableWithArgs<?> fieldInserted;
-    private CallableWithArgs<?> fieldsRemoved;
+    private CallableWithArgs<Void> sectionInserted;
+    private CallableWithArgs<Void> sectionsRemoved;
+    private CallableWithArgs<Void> sectionHeadingChanged;
+    private CallableWithArgs<Void> fieldInserted;
+    private CallableWithArgs<Void> fieldsRemoved;
 
-    public CallableWithArgs<?> getSectionInserted() {
+    public CallableWithArgs<Void> getSectionInserted() {
         return this.sectionInserted;
     }
 
-    public CallableWithArgs<?> getSectionsRemoved() {
+    public CallableWithArgs<Void> getSectionsRemoved() {
         return this.sectionsRemoved;
     }
 
-    public CallableWithArgs<?> getSectionHeadingChanged() {
+    public CallableWithArgs<Void> getSectionHeadingChanged() {
         return this.sectionHeadingChanged;
     }
 
-    public CallableWithArgs<?> getFieldInserted() {
+    public CallableWithArgs<Void> getFieldInserted() {
         return this.fieldInserted;
     }
 
-    public CallableWithArgs<?> getFieldsRemoved() {
+    public CallableWithArgs<Void> getFieldsRemoved() {
         return this.fieldsRemoved;
     }
 
 
-    public void setSectionInserted(CallableWithArgs<?> sectionInserted) {
+    public void setSectionInserted(CallableWithArgs<Void> sectionInserted) {
         this.sectionInserted = sectionInserted;
     }
 
-    public void setSectionsRemoved(CallableWithArgs<?> sectionsRemoved) {
+    public void setSectionsRemoved(CallableWithArgs<Void> sectionsRemoved) {
         this.sectionsRemoved = sectionsRemoved;
     }
 
-    public void setSectionHeadingChanged(CallableWithArgs<?> sectionHeadingChanged) {
+    public void setSectionHeadingChanged(CallableWithArgs<Void> sectionHeadingChanged) {
         this.sectionHeadingChanged = sectionHeadingChanged;
     }
 
-    public void setFieldInserted(CallableWithArgs<?> fieldInserted) {
+    public void setFieldInserted(CallableWithArgs<Void> fieldInserted) {
         this.fieldInserted = fieldInserted;
     }
 
-    public void setFieldsRemoved(CallableWithArgs<?> fieldsRemoved) {
+    public void setFieldsRemoved(CallableWithArgs<Void> fieldsRemoved) {
         this.fieldsRemoved = fieldsRemoved;
     }
 
@@ -77,7 +79,7 @@ public class FormAdapter implements GriffonPivotAdapter, org.apache.pivot.wtk.Fo
         }
     }
 
-    public void sectionsRemoved(org.apache.pivot.wtk.Form arg0, int arg1, org.apache.pivot.collections.Sequence arg2) {
+    public void sectionsRemoved(org.apache.pivot.wtk.Form arg0, int arg1, org.apache.pivot.collections.Sequence<Form.Section> arg2) {
         if (sectionsRemoved != null) {
             sectionsRemoved.call(arg0, arg1, arg2);
         }
@@ -95,7 +97,7 @@ public class FormAdapter implements GriffonPivotAdapter, org.apache.pivot.wtk.Fo
         }
     }
 
-    public void fieldsRemoved(org.apache.pivot.wtk.Form.Section arg0, int arg1, org.apache.pivot.collections.Sequence arg2) {
+    public void fieldsRemoved(org.apache.pivot.wtk.Form.Section arg0, int arg1, org.apache.pivot.collections.Sequence<Component> arg2) {
         if (fieldsRemoved != null) {
             fieldsRemoved.call(arg0, arg1, arg2);
         }

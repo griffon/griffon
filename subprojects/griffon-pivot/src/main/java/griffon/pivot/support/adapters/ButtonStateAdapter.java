@@ -23,14 +23,14 @@ import griffon.core.CallableWithArgs;
  * @since 2.0.0
  */
 public class ButtonStateAdapter implements GriffonPivotAdapter, org.apache.pivot.wtk.ButtonStateListener {
-    private CallableWithArgs<?> stateChanged;
+    private CallableWithArgs<Void> stateChanged;
 
-    public CallableWithArgs<?> getStateChanged() {
+    public CallableWithArgs<Void> getStateChanged() {
         return this.stateChanged;
     }
 
 
-    public void setStateChanged(CallableWithArgs<?> stateChanged) {
+    public void setStateChanged(CallableWithArgs<Void> stateChanged) {
         this.stateChanged = stateChanged;
     }
 

@@ -23,59 +23,59 @@ import griffon.core.CallableWithArgs;
  * @since 2.0.0
  */
 public class SpinnerBindingAdapter implements GriffonPivotAdapter, org.apache.pivot.wtk.SpinnerBindingListener {
-    private CallableWithArgs<?> selectedItemKeyChanged;
-    private CallableWithArgs<?> selectedItemBindTypeChanged;
-    private CallableWithArgs<?> selectedItemBindMappingChanged;
-    private CallableWithArgs<?> spinnerDataKeyChanged;
-    private CallableWithArgs<?> spinnerDataBindTypeChanged;
-    private CallableWithArgs<?> spinnerDataBindMappingChanged;
+    private CallableWithArgs<Void> selectedItemKeyChanged;
+    private CallableWithArgs<Void> selectedItemBindTypeChanged;
+    private CallableWithArgs<Void> selectedItemBindMappingChanged;
+    private CallableWithArgs<Void> spinnerDataKeyChanged;
+    private CallableWithArgs<Void> spinnerDataBindTypeChanged;
+    private CallableWithArgs<Void> spinnerDataBindMappingChanged;
 
-    public CallableWithArgs<?> getSelectedItemKeyChanged() {
+    public CallableWithArgs<Void> getSelectedItemKeyChanged() {
         return this.selectedItemKeyChanged;
     }
 
-    public CallableWithArgs<?> getSelectedItemBindTypeChanged() {
+    public CallableWithArgs<Void> getSelectedItemBindTypeChanged() {
         return this.selectedItemBindTypeChanged;
     }
 
-    public CallableWithArgs<?> getSelectedItemBindMappingChanged() {
+    public CallableWithArgs<Void> getSelectedItemBindMappingChanged() {
         return this.selectedItemBindMappingChanged;
     }
 
-    public CallableWithArgs<?> getSpinnerDataKeyChanged() {
+    public CallableWithArgs<Void> getSpinnerDataKeyChanged() {
         return this.spinnerDataKeyChanged;
     }
 
-    public CallableWithArgs<?> getSpinnerDataBindTypeChanged() {
+    public CallableWithArgs<Void> getSpinnerDataBindTypeChanged() {
         return this.spinnerDataBindTypeChanged;
     }
 
-    public CallableWithArgs<?> getSpinnerDataBindMappingChanged() {
+    public CallableWithArgs<Void> getSpinnerDataBindMappingChanged() {
         return this.spinnerDataBindMappingChanged;
     }
 
 
-    public void setSelectedItemKeyChanged(CallableWithArgs<?> selectedItemKeyChanged) {
+    public void setSelectedItemKeyChanged(CallableWithArgs<Void> selectedItemKeyChanged) {
         this.selectedItemKeyChanged = selectedItemKeyChanged;
     }
 
-    public void setSelectedItemBindTypeChanged(CallableWithArgs<?> selectedItemBindTypeChanged) {
+    public void setSelectedItemBindTypeChanged(CallableWithArgs<Void> selectedItemBindTypeChanged) {
         this.selectedItemBindTypeChanged = selectedItemBindTypeChanged;
     }
 
-    public void setSelectedItemBindMappingChanged(CallableWithArgs<?> selectedItemBindMappingChanged) {
+    public void setSelectedItemBindMappingChanged(CallableWithArgs<Void> selectedItemBindMappingChanged) {
         this.selectedItemBindMappingChanged = selectedItemBindMappingChanged;
     }
 
-    public void setSpinnerDataKeyChanged(CallableWithArgs<?> spinnerDataKeyChanged) {
+    public void setSpinnerDataKeyChanged(CallableWithArgs<Void> spinnerDataKeyChanged) {
         this.spinnerDataKeyChanged = spinnerDataKeyChanged;
     }
 
-    public void setSpinnerDataBindTypeChanged(CallableWithArgs<?> spinnerDataBindTypeChanged) {
+    public void setSpinnerDataBindTypeChanged(CallableWithArgs<Void> spinnerDataBindTypeChanged) {
         this.spinnerDataBindTypeChanged = spinnerDataBindTypeChanged;
     }
 
-    public void setSpinnerDataBindMappingChanged(CallableWithArgs<?> spinnerDataBindMappingChanged) {
+    public void setSpinnerDataBindMappingChanged(CallableWithArgs<Void> spinnerDataBindMappingChanged) {
         this.spinnerDataBindMappingChanged = spinnerDataBindMappingChanged;
     }
 

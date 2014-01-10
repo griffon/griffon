@@ -25,18 +25,18 @@ import org.apache.pivot.util.Vote;
  */
 public class TabPaneSelectionAdapter implements GriffonPivotAdapter, org.apache.pivot.wtk.TabPaneSelectionListener {
     private CallableWithArgs<Vote> previewSelectedIndexChange;
-    private CallableWithArgs<?> selectedIndexChanged;
-    private CallableWithArgs<?> selectedIndexChangeVetoed;
+    private CallableWithArgs<Void> selectedIndexChanged;
+    private CallableWithArgs<Void> selectedIndexChangeVetoed;
 
     public CallableWithArgs<Vote> getPreviewSelectedIndexChange() {
         return this.previewSelectedIndexChange;
     }
 
-    public CallableWithArgs<?> getSelectedIndexChanged() {
+    public CallableWithArgs<Void> getSelectedIndexChanged() {
         return this.selectedIndexChanged;
     }
 
-    public CallableWithArgs<?> getSelectedIndexChangeVetoed() {
+    public CallableWithArgs<Void> getSelectedIndexChangeVetoed() {
         return this.selectedIndexChangeVetoed;
     }
 
@@ -45,11 +45,11 @@ public class TabPaneSelectionAdapter implements GriffonPivotAdapter, org.apache.
         this.previewSelectedIndexChange = previewSelectedIndexChange;
     }
 
-    public void setSelectedIndexChanged(CallableWithArgs<?> selectedIndexChanged) {
+    public void setSelectedIndexChanged(CallableWithArgs<Void> selectedIndexChanged) {
         this.selectedIndexChanged = selectedIndexChanged;
     }
 
-    public void setSelectedIndexChangeVetoed(CallableWithArgs<?> selectedIndexChangeVetoed) {
+    public void setSelectedIndexChangeVetoed(CallableWithArgs<Void> selectedIndexChangeVetoed) {
         this.selectedIndexChangeVetoed = selectedIndexChangeVetoed;
     }
 

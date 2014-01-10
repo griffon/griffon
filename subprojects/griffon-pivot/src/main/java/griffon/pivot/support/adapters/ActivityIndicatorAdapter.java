@@ -23,14 +23,14 @@ import griffon.core.CallableWithArgs;
  * @since 2.0.0
  */
 public class ActivityIndicatorAdapter implements GriffonPivotAdapter, org.apache.pivot.wtk.ActivityIndicatorListener {
-    private CallableWithArgs<?> activeChanged;
+    private CallableWithArgs<Void> activeChanged;
 
-    public CallableWithArgs<?> getActiveChanged() {
+    public CallableWithArgs<Void> getActiveChanged() {
         return this.activeChanged;
     }
 
 
-    public void setActiveChanged(CallableWithArgs<?> activeChanged) {
+    public void setActiveChanged(CallableWithArgs<Void> activeChanged) {
         this.activeChanged = activeChanged;
     }
 

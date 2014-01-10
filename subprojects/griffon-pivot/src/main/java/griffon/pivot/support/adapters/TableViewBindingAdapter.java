@@ -23,86 +23,86 @@ import griffon.core.CallableWithArgs;
  * @since 2.0.0
  */
 public class TableViewBindingAdapter implements GriffonPivotAdapter, org.apache.pivot.wtk.TableViewBindingListener {
-    private CallableWithArgs<?> tableDataKeyChanged;
-    private CallableWithArgs<?> tableDataBindTypeChanged;
-    private CallableWithArgs<?> tableDataBindMappingChanged;
-    private CallableWithArgs<?> selectedRowKeyChanged;
-    private CallableWithArgs<?> selectedRowBindTypeChanged;
-    private CallableWithArgs<?> selectedRowBindMappingChanged;
-    private CallableWithArgs<?> selectedRowsKeyChanged;
-    private CallableWithArgs<?> selectedRowsBindTypeChanged;
-    private CallableWithArgs<?> selectedRowsBindMappingChanged;
+    private CallableWithArgs<Void> tableDataKeyChanged;
+    private CallableWithArgs<Void> tableDataBindTypeChanged;
+    private CallableWithArgs<Void> tableDataBindMappingChanged;
+    private CallableWithArgs<Void> selectedRowKeyChanged;
+    private CallableWithArgs<Void> selectedRowBindTypeChanged;
+    private CallableWithArgs<Void> selectedRowBindMappingChanged;
+    private CallableWithArgs<Void> selectedRowsKeyChanged;
+    private CallableWithArgs<Void> selectedRowsBindTypeChanged;
+    private CallableWithArgs<Void> selectedRowsBindMappingChanged;
 
-    public CallableWithArgs<?> getTableDataKeyChanged() {
+    public CallableWithArgs<Void> getTableDataKeyChanged() {
         return this.tableDataKeyChanged;
     }
 
-    public CallableWithArgs<?> getTableDataBindTypeChanged() {
+    public CallableWithArgs<Void> getTableDataBindTypeChanged() {
         return this.tableDataBindTypeChanged;
     }
 
-    public CallableWithArgs<?> getTableDataBindMappingChanged() {
+    public CallableWithArgs<Void> getTableDataBindMappingChanged() {
         return this.tableDataBindMappingChanged;
     }
 
-    public CallableWithArgs<?> getSelectedRowKeyChanged() {
+    public CallableWithArgs<Void> getSelectedRowKeyChanged() {
         return this.selectedRowKeyChanged;
     }
 
-    public CallableWithArgs<?> getSelectedRowBindTypeChanged() {
+    public CallableWithArgs<Void> getSelectedRowBindTypeChanged() {
         return this.selectedRowBindTypeChanged;
     }
 
-    public CallableWithArgs<?> getSelectedRowBindMappingChanged() {
+    public CallableWithArgs<Void> getSelectedRowBindMappingChanged() {
         return this.selectedRowBindMappingChanged;
     }
 
-    public CallableWithArgs<?> getSelectedRowsKeyChanged() {
+    public CallableWithArgs<Void> getSelectedRowsKeyChanged() {
         return this.selectedRowsKeyChanged;
     }
 
-    public CallableWithArgs<?> getSelectedRowsBindTypeChanged() {
+    public CallableWithArgs<Void> getSelectedRowsBindTypeChanged() {
         return this.selectedRowsBindTypeChanged;
     }
 
-    public CallableWithArgs<?> getSelectedRowsBindMappingChanged() {
+    public CallableWithArgs<Void> getSelectedRowsBindMappingChanged() {
         return this.selectedRowsBindMappingChanged;
     }
 
 
-    public void setTableDataKeyChanged(CallableWithArgs<?> tableDataKeyChanged) {
+    public void setTableDataKeyChanged(CallableWithArgs<Void> tableDataKeyChanged) {
         this.tableDataKeyChanged = tableDataKeyChanged;
     }
 
-    public void setTableDataBindTypeChanged(CallableWithArgs<?> tableDataBindTypeChanged) {
+    public void setTableDataBindTypeChanged(CallableWithArgs<Void> tableDataBindTypeChanged) {
         this.tableDataBindTypeChanged = tableDataBindTypeChanged;
     }
 
-    public void setTableDataBindMappingChanged(CallableWithArgs<?> tableDataBindMappingChanged) {
+    public void setTableDataBindMappingChanged(CallableWithArgs<Void> tableDataBindMappingChanged) {
         this.tableDataBindMappingChanged = tableDataBindMappingChanged;
     }
 
-    public void setSelectedRowKeyChanged(CallableWithArgs<?> selectedRowKeyChanged) {
+    public void setSelectedRowKeyChanged(CallableWithArgs<Void> selectedRowKeyChanged) {
         this.selectedRowKeyChanged = selectedRowKeyChanged;
     }
 
-    public void setSelectedRowBindTypeChanged(CallableWithArgs<?> selectedRowBindTypeChanged) {
+    public void setSelectedRowBindTypeChanged(CallableWithArgs<Void> selectedRowBindTypeChanged) {
         this.selectedRowBindTypeChanged = selectedRowBindTypeChanged;
     }
 
-    public void setSelectedRowBindMappingChanged(CallableWithArgs<?> selectedRowBindMappingChanged) {
+    public void setSelectedRowBindMappingChanged(CallableWithArgs<Void> selectedRowBindMappingChanged) {
         this.selectedRowBindMappingChanged = selectedRowBindMappingChanged;
     }
 
-    public void setSelectedRowsKeyChanged(CallableWithArgs<?> selectedRowsKeyChanged) {
+    public void setSelectedRowsKeyChanged(CallableWithArgs<Void> selectedRowsKeyChanged) {
         this.selectedRowsKeyChanged = selectedRowsKeyChanged;
     }
 
-    public void setSelectedRowsBindTypeChanged(CallableWithArgs<?> selectedRowsBindTypeChanged) {
+    public void setSelectedRowsBindTypeChanged(CallableWithArgs<Void> selectedRowsBindTypeChanged) {
         this.selectedRowsBindTypeChanged = selectedRowsBindTypeChanged;
     }
 
-    public void setSelectedRowsBindMappingChanged(CallableWithArgs<?> selectedRowsBindMappingChanged) {
+    public void setSelectedRowsBindMappingChanged(CallableWithArgs<Void> selectedRowsBindMappingChanged) {
         this.selectedRowsBindMappingChanged = selectedRowsBindMappingChanged;
     }
 

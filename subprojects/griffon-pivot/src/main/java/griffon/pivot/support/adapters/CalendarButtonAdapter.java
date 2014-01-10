@@ -17,47 +17,48 @@
 package griffon.pivot.support.adapters;
 
 import griffon.core.CallableWithArgs;
+import org.apache.pivot.util.CalendarDate;
 
 /**
  * @author Andres Almiray
  * @since 2.0.0
  */
 public class CalendarButtonAdapter implements GriffonPivotAdapter, org.apache.pivot.wtk.CalendarButtonListener {
-    private CallableWithArgs<?> monthChanged;
-    private CallableWithArgs<?> localeChanged;
-    private CallableWithArgs<?> disabledDateFilterChanged;
-    private CallableWithArgs<?> yearChanged;
+    private CallableWithArgs<Void> monthChanged;
+    private CallableWithArgs<Void> localeChanged;
+    private CallableWithArgs<Void> disabledDateFilterChanged;
+    private CallableWithArgs<Void> yearChanged;
 
-    public CallableWithArgs<?> getMonthChanged() {
+    public CallableWithArgs<Void> getMonthChanged() {
         return this.monthChanged;
     }
 
-    public CallableWithArgs<?> getLocaleChanged() {
+    public CallableWithArgs<Void> getLocaleChanged() {
         return this.localeChanged;
     }
 
-    public CallableWithArgs<?> getDisabledDateFilterChanged() {
+    public CallableWithArgs<Void> getDisabledDateFilterChanged() {
         return this.disabledDateFilterChanged;
     }
 
-    public CallableWithArgs<?> getYearChanged() {
+    public CallableWithArgs<Void> getYearChanged() {
         return this.yearChanged;
     }
 
 
-    public void setMonthChanged(CallableWithArgs<?> monthChanged) {
+    public void setMonthChanged(CallableWithArgs<Void> monthChanged) {
         this.monthChanged = monthChanged;
     }
 
-    public void setLocaleChanged(CallableWithArgs<?> localeChanged) {
+    public void setLocaleChanged(CallableWithArgs<Void> localeChanged) {
         this.localeChanged = localeChanged;
     }
 
-    public void setDisabledDateFilterChanged(CallableWithArgs<?> disabledDateFilterChanged) {
+    public void setDisabledDateFilterChanged(CallableWithArgs<Void> disabledDateFilterChanged) {
         this.disabledDateFilterChanged = disabledDateFilterChanged;
     }
 
-    public void setYearChanged(CallableWithArgs<?> yearChanged) {
+    public void setYearChanged(CallableWithArgs<Void> yearChanged) {
         this.yearChanged = yearChanged;
     }
 
@@ -74,7 +75,7 @@ public class CalendarButtonAdapter implements GriffonPivotAdapter, org.apache.pi
         }
     }
 
-    public void disabledDateFilterChanged(org.apache.pivot.wtk.CalendarButton arg0, org.apache.pivot.util.Filter arg1) {
+    public void disabledDateFilterChanged(org.apache.pivot.wtk.CalendarButton arg0, org.apache.pivot.util.Filter<CalendarDate> arg1) {
         if (disabledDateFilterChanged != null) {
             disabledDateFilterChanged.call(arg0, arg1);
         }

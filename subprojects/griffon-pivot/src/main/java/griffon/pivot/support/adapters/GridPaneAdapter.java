@@ -17,65 +17,67 @@
 package griffon.pivot.support.adapters;
 
 import griffon.core.CallableWithArgs;
+import org.apache.pivot.wtk.Component;
+import org.apache.pivot.wtk.GridPane;
 
 /**
  * @author Andres Almiray
  * @since 2.0.0
  */
 public class GridPaneAdapter implements GriffonPivotAdapter, org.apache.pivot.wtk.GridPaneListener {
-    private CallableWithArgs<?> columnCountChanged;
-    private CallableWithArgs<?> cellInserted;
-    private CallableWithArgs<?> cellsRemoved;
-    private CallableWithArgs<?> cellUpdated;
-    private CallableWithArgs<?> rowsRemoved;
-    private CallableWithArgs<?> rowInserted;
+    private CallableWithArgs<Void> columnCountChanged;
+    private CallableWithArgs<Void> cellInserted;
+    private CallableWithArgs<Void> cellsRemoved;
+    private CallableWithArgs<Void> cellUpdated;
+    private CallableWithArgs<Void> rowsRemoved;
+    private CallableWithArgs<Void> rowInserted;
 
-    public CallableWithArgs<?> getColumnCountChanged() {
+    public CallableWithArgs<Void> getColumnCountChanged() {
         return this.columnCountChanged;
     }
 
-    public CallableWithArgs<?> getCellInserted() {
+    public CallableWithArgs<Void> getCellInserted() {
         return this.cellInserted;
     }
 
-    public CallableWithArgs<?> getCellsRemoved() {
+    public CallableWithArgs<Void> getCellsRemoved() {
         return this.cellsRemoved;
     }
 
-    public CallableWithArgs<?> getCellUpdated() {
+    public CallableWithArgs<Void> getCellUpdated() {
         return this.cellUpdated;
     }
 
-    public CallableWithArgs<?> getRowsRemoved() {
+    public CallableWithArgs<Void> getRowsRemoved() {
         return this.rowsRemoved;
     }
 
-    public CallableWithArgs<?> getRowInserted() {
+    public CallableWithArgs<Void> getRowInserted() {
         return this.rowInserted;
     }
 
 
-    public void setColumnCountChanged(CallableWithArgs<?> columnCountChanged) {
+    public void setColumnCountChanged(CallableWithArgs<Void> columnCountChanged) {
         this.columnCountChanged = columnCountChanged;
     }
 
-    public void setCellInserted(CallableWithArgs<?> cellInserted) {
+    public void setCellInserted(CallableWithArgs<Void> cellInserted) {
         this.cellInserted = cellInserted;
     }
 
-    public void setCellsRemoved(CallableWithArgs<?> cellsRemoved) {
+    public void setCellsRemoved(CallableWithArgs<Void> cellsRemoved) {
         this.cellsRemoved = cellsRemoved;
     }
 
-    public void setCellUpdated(CallableWithArgs<?> cellUpdated) {
+    public void setCellUpdated(CallableWithArgs<Void> cellUpdated) {
         this.cellUpdated = cellUpdated;
     }
 
-    public void setRowsRemoved(CallableWithArgs<?> rowsRemoved) {
+    public void setRowsRemoved(CallableWithArgs<Void> rowsRemoved) {
         this.rowsRemoved = rowsRemoved;
     }
 
-    public void setRowInserted(CallableWithArgs<?> rowInserted) {
+    public void setRowInserted(CallableWithArgs<Void> rowInserted) {
         this.rowInserted = rowInserted;
     }
 
@@ -92,7 +94,7 @@ public class GridPaneAdapter implements GriffonPivotAdapter, org.apache.pivot.wt
         }
     }
 
-    public void cellsRemoved(org.apache.pivot.wtk.GridPane.Row arg0, int arg1, org.apache.pivot.collections.Sequence arg2) {
+    public void cellsRemoved(org.apache.pivot.wtk.GridPane.Row arg0, int arg1, org.apache.pivot.collections.Sequence<Component> arg2) {
         if (cellsRemoved != null) {
             cellsRemoved.call(arg0, arg1, arg2);
         }
@@ -104,7 +106,7 @@ public class GridPaneAdapter implements GriffonPivotAdapter, org.apache.pivot.wt
         }
     }
 
-    public void rowsRemoved(org.apache.pivot.wtk.GridPane arg0, int arg1, org.apache.pivot.collections.Sequence arg2) {
+    public void rowsRemoved(org.apache.pivot.wtk.GridPane arg0, int arg1, org.apache.pivot.collections.Sequence<GridPane.Row> arg2) {
         if (rowsRemoved != null) {
             rowsRemoved.call(arg0, arg1, arg2);
         }

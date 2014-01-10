@@ -23,32 +23,32 @@ import griffon.core.CallableWithArgs;
  * @since 2.0.0
  */
 public class ButtonGroupAdapter implements GriffonPivotAdapter, org.apache.pivot.wtk.ButtonGroupListener {
-    private CallableWithArgs<?> buttonAdded;
-    private CallableWithArgs<?> buttonRemoved;
-    private CallableWithArgs<?> selectionChanged;
+    private CallableWithArgs<Void> buttonAdded;
+    private CallableWithArgs<Void> buttonRemoved;
+    private CallableWithArgs<Void> selectionChanged;
 
-    public CallableWithArgs<?> getButtonAdded() {
+    public CallableWithArgs<Void> getButtonAdded() {
         return this.buttonAdded;
     }
 
-    public CallableWithArgs<?> getButtonRemoved() {
+    public CallableWithArgs<Void> getButtonRemoved() {
         return this.buttonRemoved;
     }
 
-    public CallableWithArgs<?> getSelectionChanged() {
+    public CallableWithArgs<Void> getSelectionChanged() {
         return this.selectionChanged;
     }
 
 
-    public void setButtonAdded(CallableWithArgs<?> buttonAdded) {
+    public void setButtonAdded(CallableWithArgs<Void> buttonAdded) {
         this.buttonAdded = buttonAdded;
     }
 
-    public void setButtonRemoved(CallableWithArgs<?> buttonRemoved) {
+    public void setButtonRemoved(CallableWithArgs<Void> buttonRemoved) {
         this.buttonRemoved = buttonRemoved;
     }
 
-    public void setSelectionChanged(CallableWithArgs<?> selectionChanged) {
+    public void setSelectionChanged(CallableWithArgs<Void> selectionChanged) {
         this.selectionChanged = selectionChanged;
     }
 

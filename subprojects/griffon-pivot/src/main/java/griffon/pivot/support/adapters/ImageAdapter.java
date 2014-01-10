@@ -23,32 +23,32 @@ import griffon.core.CallableWithArgs;
  * @since 2.0.0
  */
 public class ImageAdapter implements GriffonPivotAdapter, org.apache.pivot.wtk.media.ImageListener {
-    private CallableWithArgs<?> regionUpdated;
-    private CallableWithArgs<?> baselineChanged;
-    private CallableWithArgs<?> sizeChanged;
+    private CallableWithArgs<Void> regionUpdated;
+    private CallableWithArgs<Void> baselineChanged;
+    private CallableWithArgs<Void> sizeChanged;
 
-    public CallableWithArgs<?> getRegionUpdated() {
+    public CallableWithArgs<Void> getRegionUpdated() {
         return this.regionUpdated;
     }
 
-    public CallableWithArgs<?> getBaselineChanged() {
+    public CallableWithArgs<Void> getBaselineChanged() {
         return this.baselineChanged;
     }
 
-    public CallableWithArgs<?> getSizeChanged() {
+    public CallableWithArgs<Void> getSizeChanged() {
         return this.sizeChanged;
     }
 
 
-    public void setRegionUpdated(CallableWithArgs<?> regionUpdated) {
+    public void setRegionUpdated(CallableWithArgs<Void> regionUpdated) {
         this.regionUpdated = regionUpdated;
     }
 
-    public void setBaselineChanged(CallableWithArgs<?> baselineChanged) {
+    public void setBaselineChanged(CallableWithArgs<Void> baselineChanged) {
         this.baselineChanged = baselineChanged;
     }
 
-    public void setSizeChanged(CallableWithArgs<?> sizeChanged) {
+    public void setSizeChanged(CallableWithArgs<Void> sizeChanged) {
         this.sizeChanged = sizeChanged;
     }
 

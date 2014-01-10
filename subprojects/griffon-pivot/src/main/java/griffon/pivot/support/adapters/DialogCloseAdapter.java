@@ -23,14 +23,14 @@ import griffon.core.CallableWithArgs;
  * @since 2.0.0
  */
 public class DialogCloseAdapter implements GriffonPivotAdapter, org.apache.pivot.wtk.DialogCloseListener {
-    private CallableWithArgs<?> dialogClosed;
+    private CallableWithArgs<Void> dialogClosed;
 
-    public CallableWithArgs<?> getDialogClosed() {
+    public CallableWithArgs<Void> getDialogClosed() {
         return this.dialogClosed;
     }
 
 
-    public void setDialogClosed(CallableWithArgs<?> dialogClosed) {
+    public void setDialogClosed(CallableWithArgs<Void> dialogClosed) {
         this.dialogClosed = dialogClosed;
     }
 

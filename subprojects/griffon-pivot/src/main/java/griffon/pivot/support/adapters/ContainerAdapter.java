@@ -17,47 +17,48 @@
 package griffon.pivot.support.adapters;
 
 import griffon.core.CallableWithArgs;
+import org.apache.pivot.wtk.Component;
 
 /**
  * @author Andres Almiray
  * @since 2.0.0
  */
 public class ContainerAdapter implements GriffonPivotAdapter, org.apache.pivot.wtk.ContainerListener {
-    private CallableWithArgs<?> componentInserted;
-    private CallableWithArgs<?> componentsRemoved;
-    private CallableWithArgs<?> focusTraversalPolicyChanged;
-    private CallableWithArgs<?> componentMoved;
+    private CallableWithArgs<Void> componentInserted;
+    private CallableWithArgs<Void> componentsRemoved;
+    private CallableWithArgs<Void> focusTraversalPolicyChanged;
+    private CallableWithArgs<Void> componentMoved;
 
-    public CallableWithArgs<?> getComponentInserted() {
+    public CallableWithArgs<Void> getComponentInserted() {
         return this.componentInserted;
     }
 
-    public CallableWithArgs<?> getComponentsRemoved() {
+    public CallableWithArgs<Void> getComponentsRemoved() {
         return this.componentsRemoved;
     }
 
-    public CallableWithArgs<?> getFocusTraversalPolicyChanged() {
+    public CallableWithArgs<Void> getFocusTraversalPolicyChanged() {
         return this.focusTraversalPolicyChanged;
     }
 
-    public CallableWithArgs<?> getComponentMoved() {
+    public CallableWithArgs<Void> getComponentMoved() {
         return this.componentMoved;
     }
 
 
-    public void setComponentInserted(CallableWithArgs<?> componentInserted) {
+    public void setComponentInserted(CallableWithArgs<Void> componentInserted) {
         this.componentInserted = componentInserted;
     }
 
-    public void setComponentsRemoved(CallableWithArgs<?> componentsRemoved) {
+    public void setComponentsRemoved(CallableWithArgs<Void> componentsRemoved) {
         this.componentsRemoved = componentsRemoved;
     }
 
-    public void setFocusTraversalPolicyChanged(CallableWithArgs<?> focusTraversalPolicyChanged) {
+    public void setFocusTraversalPolicyChanged(CallableWithArgs<Void> focusTraversalPolicyChanged) {
         this.focusTraversalPolicyChanged = focusTraversalPolicyChanged;
     }
 
-    public void setComponentMoved(CallableWithArgs<?> componentMoved) {
+    public void setComponentMoved(CallableWithArgs<Void> componentMoved) {
         this.componentMoved = componentMoved;
     }
 
@@ -68,7 +69,7 @@ public class ContainerAdapter implements GriffonPivotAdapter, org.apache.pivot.w
         }
     }
 
-    public void componentsRemoved(org.apache.pivot.wtk.Container arg0, int arg1, org.apache.pivot.collections.Sequence arg2) {
+    public void componentsRemoved(org.apache.pivot.wtk.Container arg0, int arg1, org.apache.pivot.collections.Sequence<Component> arg2) {
         if (componentsRemoved != null) {
             componentsRemoved.call(arg0, arg1, arg2);
         }

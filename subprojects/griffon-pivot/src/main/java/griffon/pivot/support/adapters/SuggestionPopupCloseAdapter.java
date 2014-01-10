@@ -23,14 +23,14 @@ import griffon.core.CallableWithArgs;
  * @since 2.0.0
  */
 public class SuggestionPopupCloseAdapter implements GriffonPivotAdapter, org.apache.pivot.wtk.SuggestionPopupCloseListener {
-    private CallableWithArgs<?> suggestionPopupClosed;
+    private CallableWithArgs<Void> suggestionPopupClosed;
 
-    public CallableWithArgs<?> getSuggestionPopupClosed() {
+    public CallableWithArgs<Void> getSuggestionPopupClosed() {
         return this.suggestionPopupClosed;
     }
 
 
-    public void setSuggestionPopupClosed(CallableWithArgs<?> suggestionPopupClosed) {
+    public void setSuggestionPopupClosed(CallableWithArgs<Void> suggestionPopupClosed) {
         this.suggestionPopupClosed = suggestionPopupClosed;
     }
 

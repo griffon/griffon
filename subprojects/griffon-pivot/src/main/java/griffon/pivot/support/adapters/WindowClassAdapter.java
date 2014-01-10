@@ -23,14 +23,14 @@ import griffon.core.CallableWithArgs;
  * @since 2.0.0
  */
 public class WindowClassAdapter implements GriffonPivotAdapter, org.apache.pivot.wtk.WindowClassListener {
-    private CallableWithArgs<?> activeWindowChanged;
+    private CallableWithArgs<Void> activeWindowChanged;
 
-    public CallableWithArgs<?> getActiveWindowChanged() {
+    public CallableWithArgs<Void> getActiveWindowChanged() {
         return this.activeWindowChanged;
     }
 
 
-    public void setActiveWindowChanged(CallableWithArgs<?> activeWindowChanged) {
+    public void setActiveWindowChanged(CallableWithArgs<Void> activeWindowChanged) {
         this.activeWindowChanged = activeWindowChanged;
     }
 

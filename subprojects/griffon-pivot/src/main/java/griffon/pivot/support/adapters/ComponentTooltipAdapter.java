@@ -23,14 +23,14 @@ import griffon.core.CallableWithArgs;
  * @since 2.0.0
  */
 public class ComponentTooltipAdapter implements GriffonPivotAdapter, org.apache.pivot.wtk.ComponentTooltipListener {
-    private CallableWithArgs<?> tooltipTriggered;
+    private CallableWithArgs<Void> tooltipTriggered;
 
-    public CallableWithArgs<?> getTooltipTriggered() {
+    public CallableWithArgs<Void> getTooltipTriggered() {
         return this.tooltipTriggered;
     }
 
 
-    public void setTooltipTriggered(CallableWithArgs<?> tooltipTriggered) {
+    public void setTooltipTriggered(CallableWithArgs<Void> tooltipTriggered) {
         this.tooltipTriggered = tooltipTriggered;
     }
 

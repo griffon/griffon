@@ -23,23 +23,23 @@ import griffon.core.CallableWithArgs;
  * @since 2.0.0
  */
 public class TablePaneAttributeAdapter implements GriffonPivotAdapter, org.apache.pivot.wtk.TablePaneAttributeListener {
-    private CallableWithArgs<?> rowSpanChanged;
-    private CallableWithArgs<?> columnSpanChanged;
+    private CallableWithArgs<Void> rowSpanChanged;
+    private CallableWithArgs<Void> columnSpanChanged;
 
-    public CallableWithArgs<?> getRowSpanChanged() {
+    public CallableWithArgs<Void> getRowSpanChanged() {
         return this.rowSpanChanged;
     }
 
-    public CallableWithArgs<?> getColumnSpanChanged() {
+    public CallableWithArgs<Void> getColumnSpanChanged() {
         return this.columnSpanChanged;
     }
 
 
-    public void setRowSpanChanged(CallableWithArgs<?> rowSpanChanged) {
+    public void setRowSpanChanged(CallableWithArgs<Void> rowSpanChanged) {
         this.rowSpanChanged = rowSpanChanged;
     }
 
-    public void setColumnSpanChanged(CallableWithArgs<?> columnSpanChanged) {
+    public void setColumnSpanChanged(CallableWithArgs<Void> columnSpanChanged) {
         this.columnSpanChanged = columnSpanChanged;
     }
 

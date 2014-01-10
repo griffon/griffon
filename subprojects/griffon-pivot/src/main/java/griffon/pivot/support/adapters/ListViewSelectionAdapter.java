@@ -17,52 +17,53 @@
 package griffon.pivot.support.adapters;
 
 import griffon.core.CallableWithArgs;
+import org.apache.pivot.wtk.Span;
 
 /**
  * @author Andres Almiray
  * @since 2.0.0
  */
 public class ListViewSelectionAdapter implements GriffonPivotAdapter, org.apache.pivot.wtk.ListViewSelectionListener {
-    private CallableWithArgs<?> selectedRangesChanged;
-    private CallableWithArgs<?> selectedRangeAdded;
-    private CallableWithArgs<?> selectedRangeRemoved;
-    private CallableWithArgs<?> selectedItemChanged;
+    private CallableWithArgs<Void> selectedRangesChanged;
+    private CallableWithArgs<Void> selectedRangeAdded;
+    private CallableWithArgs<Void> selectedRangeRemoved;
+    private CallableWithArgs<Void> selectedItemChanged;
 
-    public CallableWithArgs<?> getSelectedRangesChanged() {
+    public CallableWithArgs<Void> getSelectedRangesChanged() {
         return this.selectedRangesChanged;
     }
 
-    public CallableWithArgs<?> getSelectedRangeAdded() {
+    public CallableWithArgs<Void> getSelectedRangeAdded() {
         return this.selectedRangeAdded;
     }
 
-    public CallableWithArgs<?> getSelectedRangeRemoved() {
+    public CallableWithArgs<Void> getSelectedRangeRemoved() {
         return this.selectedRangeRemoved;
     }
 
-    public CallableWithArgs<?> getSelectedItemChanged() {
+    public CallableWithArgs<Void> getSelectedItemChanged() {
         return this.selectedItemChanged;
     }
 
 
-    public void setSelectedRangesChanged(CallableWithArgs<?> selectedRangesChanged) {
+    public void setSelectedRangesChanged(CallableWithArgs<Void> selectedRangesChanged) {
         this.selectedRangesChanged = selectedRangesChanged;
     }
 
-    public void setSelectedRangeAdded(CallableWithArgs<?> selectedRangeAdded) {
+    public void setSelectedRangeAdded(CallableWithArgs<Void> selectedRangeAdded) {
         this.selectedRangeAdded = selectedRangeAdded;
     }
 
-    public void setSelectedRangeRemoved(CallableWithArgs<?> selectedRangeRemoved) {
+    public void setSelectedRangeRemoved(CallableWithArgs<Void> selectedRangeRemoved) {
         this.selectedRangeRemoved = selectedRangeRemoved;
     }
 
-    public void setSelectedItemChanged(CallableWithArgs<?> selectedItemChanged) {
+    public void setSelectedItemChanged(CallableWithArgs<Void> selectedItemChanged) {
         this.selectedItemChanged = selectedItemChanged;
     }
 
 
-    public void selectedRangesChanged(org.apache.pivot.wtk.ListView arg0, org.apache.pivot.collections.Sequence arg1) {
+    public void selectedRangesChanged(org.apache.pivot.wtk.ListView arg0, org.apache.pivot.collections.Sequence<Span> arg1) {
         if (selectedRangesChanged != null) {
             selectedRangesChanged.call(arg0, arg1);
         }

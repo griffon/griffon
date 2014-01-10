@@ -23,14 +23,14 @@ import griffon.core.CallableWithArgs;
  * @since 2.0.0
  */
 public class ListViewItemStateAdapter implements GriffonPivotAdapter, org.apache.pivot.wtk.ListViewItemStateListener {
-    private CallableWithArgs<?> itemCheckedChanged;
+    private CallableWithArgs<Void> itemCheckedChanged;
 
-    public CallableWithArgs<?> getItemCheckedChanged() {
+    public CallableWithArgs<Void> getItemCheckedChanged() {
         return this.itemCheckedChanged;
     }
 
 
-    public void setItemCheckedChanged(CallableWithArgs<?> itemCheckedChanged) {
+    public void setItemCheckedChanged(CallableWithArgs<Void> itemCheckedChanged) {
         this.itemCheckedChanged = itemCheckedChanged;
     }
 

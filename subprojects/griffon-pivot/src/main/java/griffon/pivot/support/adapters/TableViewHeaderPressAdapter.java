@@ -23,14 +23,14 @@ import griffon.core.CallableWithArgs;
  * @since 2.0.0
  */
 public class TableViewHeaderPressAdapter implements GriffonPivotAdapter, org.apache.pivot.wtk.TableViewHeaderPressListener {
-    private CallableWithArgs<?> headerPressed;
+    private CallableWithArgs<Void> headerPressed;
 
-    public CallableWithArgs<?> getHeaderPressed() {
+    public CallableWithArgs<Void> getHeaderPressed() {
         return this.headerPressed;
     }
 
 
-    public void setHeaderPressed(CallableWithArgs<?> headerPressed) {
+    public void setHeaderPressed(CallableWithArgs<Void> headerPressed) {
         this.headerPressed = headerPressed;
     }
 

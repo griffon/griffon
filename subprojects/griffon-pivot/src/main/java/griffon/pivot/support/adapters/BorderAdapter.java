@@ -23,23 +23,23 @@ import griffon.core.CallableWithArgs;
  * @since 2.0.0
  */
 public class BorderAdapter implements GriffonPivotAdapter, org.apache.pivot.wtk.BorderListener {
-    private CallableWithArgs<?> titleChanged;
-    private CallableWithArgs<?> contentChanged;
+    private CallableWithArgs<Void> titleChanged;
+    private CallableWithArgs<Void> contentChanged;
 
-    public CallableWithArgs<?> getTitleChanged() {
+    public CallableWithArgs<Void> getTitleChanged() {
         return this.titleChanged;
     }
 
-    public CallableWithArgs<?> getContentChanged() {
+    public CallableWithArgs<Void> getContentChanged() {
         return this.contentChanged;
     }
 
 
-    public void setTitleChanged(CallableWithArgs<?> titleChanged) {
+    public void setTitleChanged(CallableWithArgs<Void> titleChanged) {
         this.titleChanged = titleChanged;
     }
 
-    public void setContentChanged(CallableWithArgs<?> contentChanged) {
+    public void setContentChanged(CallableWithArgs<Void> contentChanged) {
         this.contentChanged = contentChanged;
     }
 

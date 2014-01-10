@@ -23,32 +23,32 @@ import griffon.core.CallableWithArgs;
  * @since 2.0.0
  */
 public class FormAttributeAdapter implements GriffonPivotAdapter, org.apache.pivot.wtk.FormAttributeListener {
-    private CallableWithArgs<?> labelChanged;
-    private CallableWithArgs<?> requiredChanged;
-    private CallableWithArgs<?> flagChanged;
+    private CallableWithArgs<Void> labelChanged;
+    private CallableWithArgs<Void> requiredChanged;
+    private CallableWithArgs<Void> flagChanged;
 
-    public CallableWithArgs<?> getLabelChanged() {
+    public CallableWithArgs<Void> getLabelChanged() {
         return this.labelChanged;
     }
 
-    public CallableWithArgs<?> getRequiredChanged() {
+    public CallableWithArgs<Void> getRequiredChanged() {
         return this.requiredChanged;
     }
 
-    public CallableWithArgs<?> getFlagChanged() {
+    public CallableWithArgs<Void> getFlagChanged() {
         return this.flagChanged;
     }
 
 
-    public void setLabelChanged(CallableWithArgs<?> labelChanged) {
+    public void setLabelChanged(CallableWithArgs<Void> labelChanged) {
         this.labelChanged = labelChanged;
     }
 
-    public void setRequiredChanged(CallableWithArgs<?> requiredChanged) {
+    public void setRequiredChanged(CallableWithArgs<Void> requiredChanged) {
         this.requiredChanged = requiredChanged;
     }
 
-    public void setFlagChanged(CallableWithArgs<?> flagChanged) {
+    public void setFlagChanged(CallableWithArgs<Void> flagChanged) {
         this.flagChanged = flagChanged;
     }
 

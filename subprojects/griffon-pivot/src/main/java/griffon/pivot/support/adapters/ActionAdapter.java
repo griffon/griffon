@@ -23,14 +23,14 @@ import griffon.core.CallableWithArgs;
  * @since 2.0.0
  */
 public class ActionAdapter implements GriffonPivotAdapter, org.apache.pivot.wtk.ActionListener {
-    private CallableWithArgs<?> enabledChanged;
+    private CallableWithArgs<Void> enabledChanged;
 
-    public CallableWithArgs<?> getEnabledChanged() {
+    public CallableWithArgs<Void> getEnabledChanged() {
         return this.enabledChanged;
     }
 
 
-    public void setEnabledChanged(CallableWithArgs<?> enabledChanged) {
+    public void setEnabledChanged(CallableWithArgs<Void> enabledChanged) {
         this.enabledChanged = enabledChanged;
     }
 

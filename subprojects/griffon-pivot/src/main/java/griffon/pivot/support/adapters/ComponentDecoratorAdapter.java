@@ -17,38 +17,39 @@
 package griffon.pivot.support.adapters;
 
 import griffon.core.CallableWithArgs;
+import org.apache.pivot.wtk.effects.Decorator;
 
 /**
  * @author Andres Almiray
  * @since 2.0.0
  */
 public class ComponentDecoratorAdapter implements GriffonPivotAdapter, org.apache.pivot.wtk.ComponentDecoratorListener {
-    private CallableWithArgs<?> decoratorInserted;
-    private CallableWithArgs<?> decoratorUpdated;
-    private CallableWithArgs<?> decoratorsRemoved;
+    private CallableWithArgs<Void> decoratorInserted;
+    private CallableWithArgs<Void> decoratorUpdated;
+    private CallableWithArgs<Void> decoratorsRemoved;
 
-    public CallableWithArgs<?> getDecoratorInserted() {
+    public CallableWithArgs<Void> getDecoratorInserted() {
         return this.decoratorInserted;
     }
 
-    public CallableWithArgs<?> getDecoratorUpdated() {
+    public CallableWithArgs<Void> getDecoratorUpdated() {
         return this.decoratorUpdated;
     }
 
-    public CallableWithArgs<?> getDecoratorsRemoved() {
+    public CallableWithArgs<Void> getDecoratorsRemoved() {
         return this.decoratorsRemoved;
     }
 
 
-    public void setDecoratorInserted(CallableWithArgs<?> decoratorInserted) {
+    public void setDecoratorInserted(CallableWithArgs<Void> decoratorInserted) {
         this.decoratorInserted = decoratorInserted;
     }
 
-    public void setDecoratorUpdated(CallableWithArgs<?> decoratorUpdated) {
+    public void setDecoratorUpdated(CallableWithArgs<Void> decoratorUpdated) {
         this.decoratorUpdated = decoratorUpdated;
     }
 
-    public void setDecoratorsRemoved(CallableWithArgs<?> decoratorsRemoved) {
+    public void setDecoratorsRemoved(CallableWithArgs<Void> decoratorsRemoved) {
         this.decoratorsRemoved = decoratorsRemoved;
     }
 
@@ -65,7 +66,7 @@ public class ComponentDecoratorAdapter implements GriffonPivotAdapter, org.apach
         }
     }
 
-    public void decoratorsRemoved(org.apache.pivot.wtk.Component arg0, int arg1, org.apache.pivot.collections.Sequence arg2) {
+    public void decoratorsRemoved(org.apache.pivot.wtk.Component arg0, int arg1, org.apache.pivot.collections.Sequence<Decorator> arg2) {
         if (decoratorsRemoved != null) {
             decoratorsRemoved.call(arg0, arg1, arg2);
         }

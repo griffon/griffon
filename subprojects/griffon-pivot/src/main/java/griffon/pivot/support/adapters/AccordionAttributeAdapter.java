@@ -23,23 +23,23 @@ import griffon.core.CallableWithArgs;
  * @since 2.0.0
  */
 public class AccordionAttributeAdapter implements GriffonPivotAdapter, org.apache.pivot.wtk.AccordionAttributeListener {
-    private CallableWithArgs<?> headerDataChanged;
-    private CallableWithArgs<?> tooltipTextChanged;
+    private CallableWithArgs<Void> headerDataChanged;
+    private CallableWithArgs<Void> tooltipTextChanged;
 
-    public CallableWithArgs<?> getHeaderDataChanged() {
+    public CallableWithArgs<Void> getHeaderDataChanged() {
         return this.headerDataChanged;
     }
 
-    public CallableWithArgs<?> getTooltipTextChanged() {
+    public CallableWithArgs<Void> getTooltipTextChanged() {
         return this.tooltipTextChanged;
     }
 
 
-    public void setHeaderDataChanged(CallableWithArgs<?> headerDataChanged) {
+    public void setHeaderDataChanged(CallableWithArgs<Void> headerDataChanged) {
         this.headerDataChanged = headerDataChanged;
     }
 
-    public void setTooltipTextChanged(CallableWithArgs<?> tooltipTextChanged) {
+    public void setTooltipTextChanged(CallableWithArgs<Void> tooltipTextChanged) {
         this.tooltipTextChanged = tooltipTextChanged;
     }
 

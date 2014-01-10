@@ -23,77 +23,77 @@ import griffon.core.CallableWithArgs;
  * @since 2.0.0
  */
 public class TextInputAdapter implements GriffonPivotAdapter, org.apache.pivot.wtk.TextInputListener {
-    private CallableWithArgs<?> textValidChanged;
-    private CallableWithArgs<?> textSizeChanged;
-    private CallableWithArgs<?> maximumLengthChanged;
-    private CallableWithArgs<?> passwordChanged;
-    private CallableWithArgs<?> promptChanged;
-    private CallableWithArgs<?> textValidatorChanged;
-    private CallableWithArgs<?> strictValidationChanged;
-    private CallableWithArgs<?> editableChanged;
+    private CallableWithArgs<Void> textValidChanged;
+    private CallableWithArgs<Void> textSizeChanged;
+    private CallableWithArgs<Void> maximumLengthChanged;
+    private CallableWithArgs<Void> passwordChanged;
+    private CallableWithArgs<Void> promptChanged;
+    private CallableWithArgs<Void> textValidatorChanged;
+    private CallableWithArgs<Void> strictValidationChanged;
+    private CallableWithArgs<Void> editableChanged;
 
-    public CallableWithArgs<?> getTextValidChanged() {
+    public CallableWithArgs<Void> getTextValidChanged() {
         return this.textValidChanged;
     }
 
-    public CallableWithArgs<?> getTextSizeChanged() {
+    public CallableWithArgs<Void> getTextSizeChanged() {
         return this.textSizeChanged;
     }
 
-    public CallableWithArgs<?> getMaximumLengthChanged() {
+    public CallableWithArgs<Void> getMaximumLengthChanged() {
         return this.maximumLengthChanged;
     }
 
-    public CallableWithArgs<?> getPasswordChanged() {
+    public CallableWithArgs<Void> getPasswordChanged() {
         return this.passwordChanged;
     }
 
-    public CallableWithArgs<?> getPromptChanged() {
+    public CallableWithArgs<Void> getPromptChanged() {
         return this.promptChanged;
     }
 
-    public CallableWithArgs<?> getTextValidatorChanged() {
+    public CallableWithArgs<Void> getTextValidatorChanged() {
         return this.textValidatorChanged;
     }
 
-    public CallableWithArgs<?> getStrictValidationChanged() {
+    public CallableWithArgs<Void> getStrictValidationChanged() {
         return this.strictValidationChanged;
     }
 
-    public CallableWithArgs<?> getEditableChanged() {
+    public CallableWithArgs<Void> getEditableChanged() {
         return this.editableChanged;
     }
 
 
-    public void setTextValidChanged(CallableWithArgs<?> textValidChanged) {
+    public void setTextValidChanged(CallableWithArgs<Void> textValidChanged) {
         this.textValidChanged = textValidChanged;
     }
 
-    public void setTextSizeChanged(CallableWithArgs<?> textSizeChanged) {
+    public void setTextSizeChanged(CallableWithArgs<Void> textSizeChanged) {
         this.textSizeChanged = textSizeChanged;
     }
 
-    public void setMaximumLengthChanged(CallableWithArgs<?> maximumLengthChanged) {
+    public void setMaximumLengthChanged(CallableWithArgs<Void> maximumLengthChanged) {
         this.maximumLengthChanged = maximumLengthChanged;
     }
 
-    public void setPasswordChanged(CallableWithArgs<?> passwordChanged) {
+    public void setPasswordChanged(CallableWithArgs<Void> passwordChanged) {
         this.passwordChanged = passwordChanged;
     }
 
-    public void setPromptChanged(CallableWithArgs<?> promptChanged) {
+    public void setPromptChanged(CallableWithArgs<Void> promptChanged) {
         this.promptChanged = promptChanged;
     }
 
-    public void setTextValidatorChanged(CallableWithArgs<?> textValidatorChanged) {
+    public void setTextValidatorChanged(CallableWithArgs<Void> textValidatorChanged) {
         this.textValidatorChanged = textValidatorChanged;
     }
 
-    public void setStrictValidationChanged(CallableWithArgs<?> strictValidationChanged) {
+    public void setStrictValidationChanged(CallableWithArgs<Void> strictValidationChanged) {
         this.strictValidationChanged = strictValidationChanged;
     }
 
-    public void setEditableChanged(CallableWithArgs<?> editableChanged) {
+    public void setEditableChanged(CallableWithArgs<Void> editableChanged) {
         this.editableChanged = editableChanged;
     }
 

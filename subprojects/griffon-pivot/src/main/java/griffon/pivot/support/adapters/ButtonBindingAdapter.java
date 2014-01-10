@@ -23,86 +23,86 @@ import griffon.core.CallableWithArgs;
  * @since 2.0.0
  */
 public class ButtonBindingAdapter implements GriffonPivotAdapter, org.apache.pivot.wtk.ButtonBindingListener {
-    private CallableWithArgs<?> buttonDataKeyChanged;
-    private CallableWithArgs<?> buttonDataBindTypeChanged;
-    private CallableWithArgs<?> buttonDataBindMappingChanged;
-    private CallableWithArgs<?> selectedKeyChanged;
-    private CallableWithArgs<?> selectedBindTypeChanged;
-    private CallableWithArgs<?> selectedBindMappingChanged;
-    private CallableWithArgs<?> stateKeyChanged;
-    private CallableWithArgs<?> stateBindTypeChanged;
-    private CallableWithArgs<?> stateBindMappingChanged;
+    private CallableWithArgs<Void> buttonDataKeyChanged;
+    private CallableWithArgs<Void> buttonDataBindTypeChanged;
+    private CallableWithArgs<Void> buttonDataBindMappingChanged;
+    private CallableWithArgs<Void> selectedKeyChanged;
+    private CallableWithArgs<Void> selectedBindTypeChanged;
+    private CallableWithArgs<Void> selectedBindMappingChanged;
+    private CallableWithArgs<Void> stateKeyChanged;
+    private CallableWithArgs<Void> stateBindTypeChanged;
+    private CallableWithArgs<Void> stateBindMappingChanged;
 
-    public CallableWithArgs<?> getButtonDataKeyChanged() {
+    public CallableWithArgs<Void> getButtonDataKeyChanged() {
         return this.buttonDataKeyChanged;
     }
 
-    public CallableWithArgs<?> getButtonDataBindTypeChanged() {
+    public CallableWithArgs<Void> getButtonDataBindTypeChanged() {
         return this.buttonDataBindTypeChanged;
     }
 
-    public CallableWithArgs<?> getButtonDataBindMappingChanged() {
+    public CallableWithArgs<Void> getButtonDataBindMappingChanged() {
         return this.buttonDataBindMappingChanged;
     }
 
-    public CallableWithArgs<?> getSelectedKeyChanged() {
+    public CallableWithArgs<Void> getSelectedKeyChanged() {
         return this.selectedKeyChanged;
     }
 
-    public CallableWithArgs<?> getSelectedBindTypeChanged() {
+    public CallableWithArgs<Void> getSelectedBindTypeChanged() {
         return this.selectedBindTypeChanged;
     }
 
-    public CallableWithArgs<?> getSelectedBindMappingChanged() {
+    public CallableWithArgs<Void> getSelectedBindMappingChanged() {
         return this.selectedBindMappingChanged;
     }
 
-    public CallableWithArgs<?> getStateKeyChanged() {
+    public CallableWithArgs<Void> getStateKeyChanged() {
         return this.stateKeyChanged;
     }
 
-    public CallableWithArgs<?> getStateBindTypeChanged() {
+    public CallableWithArgs<Void> getStateBindTypeChanged() {
         return this.stateBindTypeChanged;
     }
 
-    public CallableWithArgs<?> getStateBindMappingChanged() {
+    public CallableWithArgs<Void> getStateBindMappingChanged() {
         return this.stateBindMappingChanged;
     }
 
 
-    public void setButtonDataKeyChanged(CallableWithArgs<?> buttonDataKeyChanged) {
+    public void setButtonDataKeyChanged(CallableWithArgs<Void> buttonDataKeyChanged) {
         this.buttonDataKeyChanged = buttonDataKeyChanged;
     }
 
-    public void setButtonDataBindTypeChanged(CallableWithArgs<?> buttonDataBindTypeChanged) {
+    public void setButtonDataBindTypeChanged(CallableWithArgs<Void> buttonDataBindTypeChanged) {
         this.buttonDataBindTypeChanged = buttonDataBindTypeChanged;
     }
 
-    public void setButtonDataBindMappingChanged(CallableWithArgs<?> buttonDataBindMappingChanged) {
+    public void setButtonDataBindMappingChanged(CallableWithArgs<Void> buttonDataBindMappingChanged) {
         this.buttonDataBindMappingChanged = buttonDataBindMappingChanged;
     }
 
-    public void setSelectedKeyChanged(CallableWithArgs<?> selectedKeyChanged) {
+    public void setSelectedKeyChanged(CallableWithArgs<Void> selectedKeyChanged) {
         this.selectedKeyChanged = selectedKeyChanged;
     }
 
-    public void setSelectedBindTypeChanged(CallableWithArgs<?> selectedBindTypeChanged) {
+    public void setSelectedBindTypeChanged(CallableWithArgs<Void> selectedBindTypeChanged) {
         this.selectedBindTypeChanged = selectedBindTypeChanged;
     }
 
-    public void setSelectedBindMappingChanged(CallableWithArgs<?> selectedBindMappingChanged) {
+    public void setSelectedBindMappingChanged(CallableWithArgs<Void> selectedBindMappingChanged) {
         this.selectedBindMappingChanged = selectedBindMappingChanged;
     }
 
-    public void setStateKeyChanged(CallableWithArgs<?> stateKeyChanged) {
+    public void setStateKeyChanged(CallableWithArgs<Void> stateKeyChanged) {
         this.stateKeyChanged = stateKeyChanged;
     }
 
-    public void setStateBindTypeChanged(CallableWithArgs<?> stateBindTypeChanged) {
+    public void setStateBindTypeChanged(CallableWithArgs<Void> stateBindTypeChanged) {
         this.stateBindTypeChanged = stateBindTypeChanged;
     }
 
-    public void setStateBindMappingChanged(CallableWithArgs<?> stateBindMappingChanged) {
+    public void setStateBindMappingChanged(CallableWithArgs<Void> stateBindMappingChanged) {
         this.stateBindMappingChanged = stateBindMappingChanged;
     }
 

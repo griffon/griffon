@@ -17,43 +17,44 @@
 package griffon.pivot.support.adapters;
 
 import griffon.core.CallableWithArgs;
+import org.apache.pivot.wtk.Component;
 
 /**
  * @author Andres Almiray
  * @since 2.0.0
  */
 public class AccordionAdapter implements GriffonPivotAdapter, org.apache.pivot.wtk.AccordionListener {
-    private CallableWithArgs<?> panelsRemoved;
-    private CallableWithArgs<?> panelInserted;
-    private CallableWithArgs<?> headerDataRendererChanged;
+    private CallableWithArgs<Void> panelsRemoved;
+    private CallableWithArgs<Void> panelInserted;
+    private CallableWithArgs<Void> headerDataRendererChanged;
 
-    public CallableWithArgs<?> getPanelsRemoved() {
+    public CallableWithArgs<Void> getPanelsRemoved() {
         return this.panelsRemoved;
     }
 
-    public CallableWithArgs<?> getPanelInserted() {
+    public CallableWithArgs<Void> getPanelInserted() {
         return this.panelInserted;
     }
 
-    public CallableWithArgs<?> getHeaderDataRendererChanged() {
+    public CallableWithArgs<Void> getHeaderDataRendererChanged() {
         return this.headerDataRendererChanged;
     }
 
 
-    public void setPanelsRemoved(CallableWithArgs<?> panelsRemoved) {
+    public void setPanelsRemoved(CallableWithArgs<Void> panelsRemoved) {
         this.panelsRemoved = panelsRemoved;
     }
 
-    public void setPanelInserted(CallableWithArgs<?> panelInserted) {
+    public void setPanelInserted(CallableWithArgs<Void> panelInserted) {
         this.panelInserted = panelInserted;
     }
 
-    public void setHeaderDataRendererChanged(CallableWithArgs<?> headerDataRendererChanged) {
+    public void setHeaderDataRendererChanged(CallableWithArgs<Void> headerDataRendererChanged) {
         this.headerDataRendererChanged = headerDataRendererChanged;
     }
 
 
-    public void panelsRemoved(org.apache.pivot.wtk.Accordion arg0, int arg1, org.apache.pivot.collections.Sequence arg2) {
+    public void panelsRemoved(org.apache.pivot.wtk.Accordion arg0, int arg1, org.apache.pivot.collections.Sequence<Component> arg2) {
         if (panelsRemoved != null) {
             panelsRemoved.call(arg0, arg1, arg2);
         }

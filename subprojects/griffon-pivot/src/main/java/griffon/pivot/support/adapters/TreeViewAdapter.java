@@ -23,77 +23,77 @@ import griffon.core.CallableWithArgs;
  * @since 2.0.0
  */
 public class TreeViewAdapter implements GriffonPivotAdapter, org.apache.pivot.wtk.TreeViewListener {
-    private CallableWithArgs<?> selectModeChanged;
-    private CallableWithArgs<?> checkmarksEnabledChanged;
-    private CallableWithArgs<?> disabledCheckmarkFilterChanged;
-    private CallableWithArgs<?> nodeRendererChanged;
-    private CallableWithArgs<?> treeDataChanged;
-    private CallableWithArgs<?> nodeEditorChanged;
-    private CallableWithArgs<?> showMixedCheckmarkStateChanged;
-    private CallableWithArgs<?> disabledNodeFilterChanged;
+    private CallableWithArgs<Void> selectModeChanged;
+    private CallableWithArgs<Void> checkmarksEnabledChanged;
+    private CallableWithArgs<Void> disabledCheckmarkFilterChanged;
+    private CallableWithArgs<Void> nodeRendererChanged;
+    private CallableWithArgs<Void> treeDataChanged;
+    private CallableWithArgs<Void> nodeEditorChanged;
+    private CallableWithArgs<Void> showMixedCheckmarkStateChanged;
+    private CallableWithArgs<Void> disabledNodeFilterChanged;
 
-    public CallableWithArgs<?> getSelectModeChanged() {
+    public CallableWithArgs<Void> getSelectModeChanged() {
         return this.selectModeChanged;
     }
 
-    public CallableWithArgs<?> getCheckmarksEnabledChanged() {
+    public CallableWithArgs<Void> getCheckmarksEnabledChanged() {
         return this.checkmarksEnabledChanged;
     }
 
-    public CallableWithArgs<?> getDisabledCheckmarkFilterChanged() {
+    public CallableWithArgs<Void> getDisabledCheckmarkFilterChanged() {
         return this.disabledCheckmarkFilterChanged;
     }
 
-    public CallableWithArgs<?> getNodeRendererChanged() {
+    public CallableWithArgs<Void> getNodeRendererChanged() {
         return this.nodeRendererChanged;
     }
 
-    public CallableWithArgs<?> getTreeDataChanged() {
+    public CallableWithArgs<Void> getTreeDataChanged() {
         return this.treeDataChanged;
     }
 
-    public CallableWithArgs<?> getNodeEditorChanged() {
+    public CallableWithArgs<Void> getNodeEditorChanged() {
         return this.nodeEditorChanged;
     }
 
-    public CallableWithArgs<?> getShowMixedCheckmarkStateChanged() {
+    public CallableWithArgs<Void> getShowMixedCheckmarkStateChanged() {
         return this.showMixedCheckmarkStateChanged;
     }
 
-    public CallableWithArgs<?> getDisabledNodeFilterChanged() {
+    public CallableWithArgs<Void> getDisabledNodeFilterChanged() {
         return this.disabledNodeFilterChanged;
     }
 
 
-    public void setSelectModeChanged(CallableWithArgs<?> selectModeChanged) {
+    public void setSelectModeChanged(CallableWithArgs<Void> selectModeChanged) {
         this.selectModeChanged = selectModeChanged;
     }
 
-    public void setCheckmarksEnabledChanged(CallableWithArgs<?> checkmarksEnabledChanged) {
+    public void setCheckmarksEnabledChanged(CallableWithArgs<Void> checkmarksEnabledChanged) {
         this.checkmarksEnabledChanged = checkmarksEnabledChanged;
     }
 
-    public void setDisabledCheckmarkFilterChanged(CallableWithArgs<?> disabledCheckmarkFilterChanged) {
+    public void setDisabledCheckmarkFilterChanged(CallableWithArgs<Void> disabledCheckmarkFilterChanged) {
         this.disabledCheckmarkFilterChanged = disabledCheckmarkFilterChanged;
     }
 
-    public void setNodeRendererChanged(CallableWithArgs<?> nodeRendererChanged) {
+    public void setNodeRendererChanged(CallableWithArgs<Void> nodeRendererChanged) {
         this.nodeRendererChanged = nodeRendererChanged;
     }
 
-    public void setTreeDataChanged(CallableWithArgs<?> treeDataChanged) {
+    public void setTreeDataChanged(CallableWithArgs<Void> treeDataChanged) {
         this.treeDataChanged = treeDataChanged;
     }
 
-    public void setNodeEditorChanged(CallableWithArgs<?> nodeEditorChanged) {
+    public void setNodeEditorChanged(CallableWithArgs<Void> nodeEditorChanged) {
         this.nodeEditorChanged = nodeEditorChanged;
     }
 
-    public void setShowMixedCheckmarkStateChanged(CallableWithArgs<?> showMixedCheckmarkStateChanged) {
+    public void setShowMixedCheckmarkStateChanged(CallableWithArgs<Void> showMixedCheckmarkStateChanged) {
         this.showMixedCheckmarkStateChanged = showMixedCheckmarkStateChanged;
     }
 
-    public void setDisabledNodeFilterChanged(CallableWithArgs<?> disabledNodeFilterChanged) {
+    public void setDisabledNodeFilterChanged(CallableWithArgs<Void> disabledNodeFilterChanged) {
         this.disabledNodeFilterChanged = disabledNodeFilterChanged;
     }
 
@@ -110,7 +110,7 @@ public class TreeViewAdapter implements GriffonPivotAdapter, org.apache.pivot.wt
         }
     }
 
-    public void disabledCheckmarkFilterChanged(org.apache.pivot.wtk.TreeView arg0, org.apache.pivot.util.Filter arg1) {
+    public void disabledCheckmarkFilterChanged(org.apache.pivot.wtk.TreeView arg0, org.apache.pivot.util.Filter<?> arg1) {
         if (disabledCheckmarkFilterChanged != null) {
             disabledCheckmarkFilterChanged.call(arg0, arg1);
         }
@@ -122,7 +122,7 @@ public class TreeViewAdapter implements GriffonPivotAdapter, org.apache.pivot.wt
         }
     }
 
-    public void treeDataChanged(org.apache.pivot.wtk.TreeView arg0, org.apache.pivot.collections.List arg1) {
+    public void treeDataChanged(org.apache.pivot.wtk.TreeView arg0, org.apache.pivot.collections.List<?> arg1) {
         if (treeDataChanged != null) {
             treeDataChanged.call(arg0, arg1);
         }
@@ -140,7 +140,7 @@ public class TreeViewAdapter implements GriffonPivotAdapter, org.apache.pivot.wt
         }
     }
 
-    public void disabledNodeFilterChanged(org.apache.pivot.wtk.TreeView arg0, org.apache.pivot.util.Filter arg1) {
+    public void disabledNodeFilterChanged(org.apache.pivot.wtk.TreeView arg0, org.apache.pivot.util.Filter<?> arg1) {
         if (disabledNodeFilterChanged != null) {
             disabledNodeFilterChanged.call(arg0, arg1);
         }

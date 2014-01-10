@@ -23,23 +23,23 @@ import griffon.core.CallableWithArgs;
  * @since 2.0.0
  */
 public class ImageViewAdapter implements GriffonPivotAdapter, org.apache.pivot.wtk.ImageViewListener {
-    private CallableWithArgs<?> imageChanged;
-    private CallableWithArgs<?> asynchronousChanged;
+    private CallableWithArgs<Void> imageChanged;
+    private CallableWithArgs<Void> asynchronousChanged;
 
-    public CallableWithArgs<?> getImageChanged() {
+    public CallableWithArgs<Void> getImageChanged() {
         return this.imageChanged;
     }
 
-    public CallableWithArgs<?> getAsynchronousChanged() {
+    public CallableWithArgs<Void> getAsynchronousChanged() {
         return this.asynchronousChanged;
     }
 
 
-    public void setImageChanged(CallableWithArgs<?> imageChanged) {
+    public void setImageChanged(CallableWithArgs<Void> imageChanged) {
         this.imageChanged = imageChanged;
     }
 
-    public void setAsynchronousChanged(CallableWithArgs<?> asynchronousChanged) {
+    public void setAsynchronousChanged(CallableWithArgs<Void> asynchronousChanged) {
         this.asynchronousChanged = asynchronousChanged;
     }
 

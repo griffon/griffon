@@ -23,14 +23,14 @@ import griffon.core.CallableWithArgs;
  * @since 2.0.0
  */
 public class LabelAdapter implements GriffonPivotAdapter, org.apache.pivot.wtk.LabelListener {
-    private CallableWithArgs<?> textChanged;
+    private CallableWithArgs<Void> textChanged;
 
-    public CallableWithArgs<?> getTextChanged() {
+    public CallableWithArgs<Void> getTextChanged() {
         return this.textChanged;
     }
 
 
-    public void setTextChanged(CallableWithArgs<?> textChanged) {
+    public void setTextChanged(CallableWithArgs<Void> textChanged) {
         this.textChanged = textChanged;
     }
 

@@ -23,14 +23,14 @@ import griffon.core.CallableWithArgs;
  * @since 2.0.0
  */
 public class SheetCloseAdapter implements GriffonPivotAdapter, org.apache.pivot.wtk.SheetCloseListener {
-    private CallableWithArgs<?> sheetClosed;
+    private CallableWithArgs<Void> sheetClosed;
 
-    public CallableWithArgs<?> getSheetClosed() {
+    public CallableWithArgs<Void> getSheetClosed() {
         return this.sheetClosed;
     }
 
 
-    public void setSheetClosed(CallableWithArgs<?> sheetClosed) {
+    public void setSheetClosed(CallableWithArgs<Void> sheetClosed) {
         this.sheetClosed = sheetClosed;
     }
 

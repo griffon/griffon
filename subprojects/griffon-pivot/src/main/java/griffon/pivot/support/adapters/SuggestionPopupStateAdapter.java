@@ -25,18 +25,18 @@ import org.apache.pivot.util.Vote;
  */
 public class SuggestionPopupStateAdapter implements GriffonPivotAdapter, org.apache.pivot.wtk.SuggestionPopupStateListener {
     private CallableWithArgs<Vote> previewSuggestionPopupClose;
-    private CallableWithArgs<?> suggestionPopupCloseVetoed;
-    private CallableWithArgs<?> suggestionPopupClosed;
+    private CallableWithArgs<Void> suggestionPopupCloseVetoed;
+    private CallableWithArgs<Void> suggestionPopupClosed;
 
     public CallableWithArgs<Vote> getPreviewSuggestionPopupClose() {
         return this.previewSuggestionPopupClose;
     }
 
-    public CallableWithArgs<?> getSuggestionPopupCloseVetoed() {
+    public CallableWithArgs<Void> getSuggestionPopupCloseVetoed() {
         return this.suggestionPopupCloseVetoed;
     }
 
-    public CallableWithArgs<?> getSuggestionPopupClosed() {
+    public CallableWithArgs<Void> getSuggestionPopupClosed() {
         return this.suggestionPopupClosed;
     }
 
@@ -45,18 +45,18 @@ public class SuggestionPopupStateAdapter implements GriffonPivotAdapter, org.apa
         this.previewSuggestionPopupClose = previewSuggestionPopupClose;
     }
 
-    public void setSuggestionPopupCloseVetoed(CallableWithArgs<?> suggestionPopupCloseVetoed) {
+    public void setSuggestionPopupCloseVetoed(CallableWithArgs<Void> suggestionPopupCloseVetoed) {
         this.suggestionPopupCloseVetoed = suggestionPopupCloseVetoed;
     }
 
-    public void setSuggestionPopupClosed(CallableWithArgs<?> suggestionPopupClosed) {
+    public void setSuggestionPopupClosed(CallableWithArgs<Void> suggestionPopupClosed) {
         this.suggestionPopupClosed = suggestionPopupClosed;
     }
 
 
     public org.apache.pivot.util.Vote previewSuggestionPopupClose(org.apache.pivot.wtk.SuggestionPopup arg0, boolean arg1) {
         if (previewSuggestionPopupClose != null) {
-            return  previewSuggestionPopupClose.call(arg0, arg1);
+            return previewSuggestionPopupClose.call(arg0, arg1);
         }
         return Vote.APPROVE;
     }

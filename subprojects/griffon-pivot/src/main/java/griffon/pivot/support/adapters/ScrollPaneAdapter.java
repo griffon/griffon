@@ -23,50 +23,50 @@ import griffon.core.CallableWithArgs;
  * @since 2.0.0
  */
 public class ScrollPaneAdapter implements GriffonPivotAdapter, org.apache.pivot.wtk.ScrollPaneListener {
-    private CallableWithArgs<?> horizontalScrollBarPolicyChanged;
-    private CallableWithArgs<?> rowHeaderChanged;
-    private CallableWithArgs<?> verticalScrollBarPolicyChanged;
-    private CallableWithArgs<?> columnHeaderChanged;
-    private CallableWithArgs<?> cornerChanged;
+    private CallableWithArgs<Void> horizontalScrollBarPolicyChanged;
+    private CallableWithArgs<Void> rowHeaderChanged;
+    private CallableWithArgs<Void> verticalScrollBarPolicyChanged;
+    private CallableWithArgs<Void> columnHeaderChanged;
+    private CallableWithArgs<Void> cornerChanged;
 
-    public CallableWithArgs<?> getHorizontalScrollBarPolicyChanged() {
+    public CallableWithArgs<Void> getHorizontalScrollBarPolicyChanged() {
         return this.horizontalScrollBarPolicyChanged;
     }
 
-    public CallableWithArgs<?> getRowHeaderChanged() {
+    public CallableWithArgs<Void> getRowHeaderChanged() {
         return this.rowHeaderChanged;
     }
 
-    public CallableWithArgs<?> getVerticalScrollBarPolicyChanged() {
+    public CallableWithArgs<Void> getVerticalScrollBarPolicyChanged() {
         return this.verticalScrollBarPolicyChanged;
     }
 
-    public CallableWithArgs<?> getColumnHeaderChanged() {
+    public CallableWithArgs<Void> getColumnHeaderChanged() {
         return this.columnHeaderChanged;
     }
 
-    public CallableWithArgs<?> getCornerChanged() {
+    public CallableWithArgs<Void> getCornerChanged() {
         return this.cornerChanged;
     }
 
 
-    public void setHorizontalScrollBarPolicyChanged(CallableWithArgs<?> horizontalScrollBarPolicyChanged) {
+    public void setHorizontalScrollBarPolicyChanged(CallableWithArgs<Void> horizontalScrollBarPolicyChanged) {
         this.horizontalScrollBarPolicyChanged = horizontalScrollBarPolicyChanged;
     }
 
-    public void setRowHeaderChanged(CallableWithArgs<?> rowHeaderChanged) {
+    public void setRowHeaderChanged(CallableWithArgs<Void> rowHeaderChanged) {
         this.rowHeaderChanged = rowHeaderChanged;
     }
 
-    public void setVerticalScrollBarPolicyChanged(CallableWithArgs<?> verticalScrollBarPolicyChanged) {
+    public void setVerticalScrollBarPolicyChanged(CallableWithArgs<Void> verticalScrollBarPolicyChanged) {
         this.verticalScrollBarPolicyChanged = verticalScrollBarPolicyChanged;
     }
 
-    public void setColumnHeaderChanged(CallableWithArgs<?> columnHeaderChanged) {
+    public void setColumnHeaderChanged(CallableWithArgs<Void> columnHeaderChanged) {
         this.columnHeaderChanged = columnHeaderChanged;
     }
 
-    public void setCornerChanged(CallableWithArgs<?> cornerChanged) {
+    public void setCornerChanged(CallableWithArgs<Void> cornerChanged) {
         this.cornerChanged = cornerChanged;
     }
 

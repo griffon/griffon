@@ -23,14 +23,14 @@ import griffon.core.CallableWithArgs;
  * @since 2.0.0
  */
 public class ClipboardContentAdapter implements GriffonPivotAdapter, org.apache.pivot.wtk.ClipboardContentListener {
-    private CallableWithArgs<?> contentChanged;
+    private CallableWithArgs<Void> contentChanged;
 
-    public CallableWithArgs<?> getContentChanged() {
+    public CallableWithArgs<Void> getContentChanged() {
         return this.contentChanged;
     }
 
 
-    public void setContentChanged(CallableWithArgs<?> contentChanged) {
+    public void setContentChanged(CallableWithArgs<Void> contentChanged) {
         this.contentChanged = contentChanged;
     }
 

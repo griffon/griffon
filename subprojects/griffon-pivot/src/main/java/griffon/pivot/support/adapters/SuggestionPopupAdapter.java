@@ -23,32 +23,32 @@ import griffon.core.CallableWithArgs;
  * @since 2.0.0
  */
 public class SuggestionPopupAdapter implements GriffonPivotAdapter, org.apache.pivot.wtk.SuggestionPopupListener {
-    private CallableWithArgs<?> listSizeChanged;
-    private CallableWithArgs<?> suggestionDataChanged;
-    private CallableWithArgs<?> suggestionRendererChanged;
+    private CallableWithArgs<Void> listSizeChanged;
+    private CallableWithArgs<Void> suggestionDataChanged;
+    private CallableWithArgs<Void> suggestionRendererChanged;
 
-    public CallableWithArgs<?> getListSizeChanged() {
+    public CallableWithArgs<Void> getListSizeChanged() {
         return this.listSizeChanged;
     }
 
-    public CallableWithArgs<?> getSuggestionDataChanged() {
+    public CallableWithArgs<Void> getSuggestionDataChanged() {
         return this.suggestionDataChanged;
     }
 
-    public CallableWithArgs<?> getSuggestionRendererChanged() {
+    public CallableWithArgs<Void> getSuggestionRendererChanged() {
         return this.suggestionRendererChanged;
     }
 
 
-    public void setListSizeChanged(CallableWithArgs<?> listSizeChanged) {
+    public void setListSizeChanged(CallableWithArgs<Void> listSizeChanged) {
         this.listSizeChanged = listSizeChanged;
     }
 
-    public void setSuggestionDataChanged(CallableWithArgs<?> suggestionDataChanged) {
+    public void setSuggestionDataChanged(CallableWithArgs<Void> suggestionDataChanged) {
         this.suggestionDataChanged = suggestionDataChanged;
     }
 
-    public void setSuggestionRendererChanged(CallableWithArgs<?> suggestionRendererChanged) {
+    public void setSuggestionRendererChanged(CallableWithArgs<Void> suggestionRendererChanged) {
         this.suggestionRendererChanged = suggestionRendererChanged;
     }
 
@@ -59,7 +59,7 @@ public class SuggestionPopupAdapter implements GriffonPivotAdapter, org.apache.p
         }
     }
 
-    public void suggestionDataChanged(org.apache.pivot.wtk.SuggestionPopup arg0, org.apache.pivot.collections.List arg1) {
+    public void suggestionDataChanged(org.apache.pivot.wtk.SuggestionPopup arg0, org.apache.pivot.collections.List<?> arg1) {
         if (suggestionDataChanged != null) {
             suggestionDataChanged.call(arg0, arg1);
         }

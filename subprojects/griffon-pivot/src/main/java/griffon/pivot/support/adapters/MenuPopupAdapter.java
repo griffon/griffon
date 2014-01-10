@@ -23,14 +23,14 @@ import griffon.core.CallableWithArgs;
  * @since 2.0.0
  */
 public class MenuPopupAdapter implements GriffonPivotAdapter, org.apache.pivot.wtk.MenuPopupListener {
-    private CallableWithArgs<?> menuChanged;
+    private CallableWithArgs<Void> menuChanged;
 
-    public CallableWithArgs<?> getMenuChanged() {
+    public CallableWithArgs<Void> getMenuChanged() {
         return this.menuChanged;
     }
 
 
-    public void setMenuChanged(CallableWithArgs<?> menuChanged) {
+    public void setMenuChanged(CallableWithArgs<Void> menuChanged) {
         this.menuChanged = menuChanged;
     }
 

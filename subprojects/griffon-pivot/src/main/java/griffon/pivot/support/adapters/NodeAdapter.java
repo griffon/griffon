@@ -17,65 +17,66 @@
 package griffon.pivot.support.adapters;
 
 import griffon.core.CallableWithArgs;
+import org.apache.pivot.wtk.text.Node;
 
 /**
  * @author Andres Almiray
  * @since 2.0.0
  */
 public class NodeAdapter implements GriffonPivotAdapter, org.apache.pivot.wtk.text.NodeListener {
-    private CallableWithArgs<?> rangeInserted;
-    private CallableWithArgs<?> rangeRemoved;
-    private CallableWithArgs<?> nodeInserted;
-    private CallableWithArgs<?> nodesRemoved;
-    private CallableWithArgs<?> offsetChanged;
-    private CallableWithArgs<?> parentChanged;
+    private CallableWithArgs<Void> rangeInserted;
+    private CallableWithArgs<Void> rangeRemoved;
+    private CallableWithArgs<Void> nodeInserted;
+    private CallableWithArgs<Void> nodesRemoved;
+    private CallableWithArgs<Void> offsetChanged;
+    private CallableWithArgs<Void> parentChanged;
 
-    public CallableWithArgs<?> getRangeInserted() {
+    public CallableWithArgs<Void> getRangeInserted() {
         return this.rangeInserted;
     }
 
-    public CallableWithArgs<?> getRangeRemoved() {
+    public CallableWithArgs<Void> getRangeRemoved() {
         return this.rangeRemoved;
     }
 
-    public CallableWithArgs<?> getNodeInserted() {
+    public CallableWithArgs<Void> getNodeInserted() {
         return this.nodeInserted;
     }
 
-    public CallableWithArgs<?> getNodesRemoved() {
+    public CallableWithArgs<Void> getNodesRemoved() {
         return this.nodesRemoved;
     }
 
-    public CallableWithArgs<?> getOffsetChanged() {
+    public CallableWithArgs<Void> getOffsetChanged() {
         return this.offsetChanged;
     }
 
-    public CallableWithArgs<?> getParentChanged() {
+    public CallableWithArgs<Void> getParentChanged() {
         return this.parentChanged;
     }
 
 
-    public void setRangeInserted(CallableWithArgs<?> rangeInserted) {
+    public void setRangeInserted(CallableWithArgs<Void> rangeInserted) {
         this.rangeInserted = rangeInserted;
     }
 
-    public void setRangeRemoved(CallableWithArgs<?> rangeRemoved) {
+    public void setRangeRemoved(CallableWithArgs<Void> rangeRemoved) {
         this.rangeRemoved = rangeRemoved;
     }
 
-    public void setNodeInserted(CallableWithArgs<?> nodeInserted) {
+    public void setNodeInserted(CallableWithArgs<Void> nodeInserted) {
         this.nodeInserted = nodeInserted;
     }
 
-    public void setNodesRemoved(CallableWithArgs<?> nodesRemoved) {
+    public void setNodesRemoved(CallableWithArgs<Void> nodesRemoved) {
         this.nodesRemoved = nodesRemoved;
     }
 
-    public void setOffsetChanged(CallableWithArgs<?> offsetChanged) {
+    public void setOffsetChanged(CallableWithArgs<Void> offsetChanged) {
         this.offsetChanged = offsetChanged;
     }
 
-    public void setParentChanged(CallableWithArgs<?> parentChanged) {
+    public void setParentChanged(CallableWithArgs<Void> parentChanged) {
         this.parentChanged = parentChanged;
     }
 
@@ -98,7 +99,7 @@ public class NodeAdapter implements GriffonPivotAdapter, org.apache.pivot.wtk.te
         }
     }
 
-    public void nodesRemoved(org.apache.pivot.wtk.text.Node arg0, org.apache.pivot.collections.Sequence arg1, int arg2) {
+    public void nodesRemoved(org.apache.pivot.wtk.text.Node arg0, org.apache.pivot.collections.Sequence<Node> arg1, int arg2) {
         if (nodesRemoved != null) {
             nodesRemoved.call(arg0, arg1, arg2);
         }

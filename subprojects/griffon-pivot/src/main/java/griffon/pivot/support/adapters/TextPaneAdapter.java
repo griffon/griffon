@@ -23,23 +23,23 @@ import griffon.core.CallableWithArgs;
  * @since 2.0.0
  */
 public class TextPaneAdapter implements GriffonPivotAdapter, org.apache.pivot.wtk.TextPaneListener {
-    private CallableWithArgs<?> documentChanged;
-    private CallableWithArgs<?> editableChanged;
+    private CallableWithArgs<Void> documentChanged;
+    private CallableWithArgs<Void> editableChanged;
 
-    public CallableWithArgs<?> getDocumentChanged() {
+    public CallableWithArgs<Void> getDocumentChanged() {
         return this.documentChanged;
     }
 
-    public CallableWithArgs<?> getEditableChanged() {
+    public CallableWithArgs<Void> getEditableChanged() {
         return this.editableChanged;
     }
 
 
-    public void setDocumentChanged(CallableWithArgs<?> documentChanged) {
+    public void setDocumentChanged(CallableWithArgs<Void> documentChanged) {
         this.documentChanged = documentChanged;
     }
 
-    public void setEditableChanged(CallableWithArgs<?> editableChanged) {
+    public void setEditableChanged(CallableWithArgs<Void> editableChanged) {
         this.editableChanged = editableChanged;
     }
 

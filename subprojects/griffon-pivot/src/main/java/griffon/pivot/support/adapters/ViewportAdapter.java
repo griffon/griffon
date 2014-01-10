@@ -23,32 +23,32 @@ import griffon.core.CallableWithArgs;
  * @since 2.0.0
  */
 public class ViewportAdapter implements GriffonPivotAdapter, org.apache.pivot.wtk.ViewportListener {
-    private CallableWithArgs<?> scrollTopChanged;
-    private CallableWithArgs<?> scrollLeftChanged;
-    private CallableWithArgs<?> viewChanged;
+    private CallableWithArgs<Void> scrollTopChanged;
+    private CallableWithArgs<Void> scrollLeftChanged;
+    private CallableWithArgs<Void> viewChanged;
 
-    public CallableWithArgs<?> getScrollTopChanged() {
+    public CallableWithArgs<Void> getScrollTopChanged() {
         return this.scrollTopChanged;
     }
 
-    public CallableWithArgs<?> getScrollLeftChanged() {
+    public CallableWithArgs<Void> getScrollLeftChanged() {
         return this.scrollLeftChanged;
     }
 
-    public CallableWithArgs<?> getViewChanged() {
+    public CallableWithArgs<Void> getViewChanged() {
         return this.viewChanged;
     }
 
 
-    public void setScrollTopChanged(CallableWithArgs<?> scrollTopChanged) {
+    public void setScrollTopChanged(CallableWithArgs<Void> scrollTopChanged) {
         this.scrollTopChanged = scrollTopChanged;
     }
 
-    public void setScrollLeftChanged(CallableWithArgs<?> scrollLeftChanged) {
+    public void setScrollLeftChanged(CallableWithArgs<Void> scrollLeftChanged) {
         this.scrollLeftChanged = scrollLeftChanged;
     }
 
-    public void setViewChanged(CallableWithArgs<?> viewChanged) {
+    public void setViewChanged(CallableWithArgs<Void> viewChanged) {
         this.viewChanged = viewChanged;
     }
 

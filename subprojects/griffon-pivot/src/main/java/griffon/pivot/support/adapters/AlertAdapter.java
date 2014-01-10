@@ -23,59 +23,59 @@ import griffon.core.CallableWithArgs;
  * @since 2.0.0
  */
 public class AlertAdapter implements GriffonPivotAdapter, org.apache.pivot.wtk.AlertListener {
-    private CallableWithArgs<?> messageTypeChanged;
-    private CallableWithArgs<?> messageChanged;
-    private CallableWithArgs<?> bodyChanged;
-    private CallableWithArgs<?> optionInserted;
-    private CallableWithArgs<?> optionsRemoved;
-    private CallableWithArgs<?> selectedOptionChanged;
+    private CallableWithArgs<Void> messageTypeChanged;
+    private CallableWithArgs<Void> messageChanged;
+    private CallableWithArgs<Void> bodyChanged;
+    private CallableWithArgs<Void> optionInserted;
+    private CallableWithArgs<Void> optionsRemoved;
+    private CallableWithArgs<Void> selectedOptionChanged;
 
-    public CallableWithArgs<?> getMessageTypeChanged() {
+    public CallableWithArgs<Void> getMessageTypeChanged() {
         return this.messageTypeChanged;
     }
 
-    public CallableWithArgs<?> getMessageChanged() {
+    public CallableWithArgs<Void> getMessageChanged() {
         return this.messageChanged;
     }
 
-    public CallableWithArgs<?> getBodyChanged() {
+    public CallableWithArgs<Void> getBodyChanged() {
         return this.bodyChanged;
     }
 
-    public CallableWithArgs<?> getOptionInserted() {
+    public CallableWithArgs<Void> getOptionInserted() {
         return this.optionInserted;
     }
 
-    public CallableWithArgs<?> getOptionsRemoved() {
+    public CallableWithArgs<Void> getOptionsRemoved() {
         return this.optionsRemoved;
     }
 
-    public CallableWithArgs<?> getSelectedOptionChanged() {
+    public CallableWithArgs<Void> getSelectedOptionChanged() {
         return this.selectedOptionChanged;
     }
 
 
-    public void setMessageTypeChanged(CallableWithArgs<?> messageTypeChanged) {
+    public void setMessageTypeChanged(CallableWithArgs<Void> messageTypeChanged) {
         this.messageTypeChanged = messageTypeChanged;
     }
 
-    public void setMessageChanged(CallableWithArgs<?> messageChanged) {
+    public void setMessageChanged(CallableWithArgs<Void> messageChanged) {
         this.messageChanged = messageChanged;
     }
 
-    public void setBodyChanged(CallableWithArgs<?> bodyChanged) {
+    public void setBodyChanged(CallableWithArgs<Void> bodyChanged) {
         this.bodyChanged = bodyChanged;
     }
 
-    public void setOptionInserted(CallableWithArgs<?> optionInserted) {
+    public void setOptionInserted(CallableWithArgs<Void> optionInserted) {
         this.optionInserted = optionInserted;
     }
 
-    public void setOptionsRemoved(CallableWithArgs<?> optionsRemoved) {
+    public void setOptionsRemoved(CallableWithArgs<Void> optionsRemoved) {
         this.optionsRemoved = optionsRemoved;
     }
 
-    public void setSelectedOptionChanged(CallableWithArgs<?> selectedOptionChanged) {
+    public void setSelectedOptionChanged(CallableWithArgs<Void> selectedOptionChanged) {
         this.selectedOptionChanged = selectedOptionChanged;
     }
 
@@ -104,7 +104,7 @@ public class AlertAdapter implements GriffonPivotAdapter, org.apache.pivot.wtk.A
         }
     }
 
-    public void optionsRemoved(org.apache.pivot.wtk.Alert arg0, int arg1, org.apache.pivot.collections.Sequence arg2) {
+    public void optionsRemoved(org.apache.pivot.wtk.Alert arg0, int arg1, org.apache.pivot.collections.Sequence<?> arg2) {
         if (optionsRemoved != null) {
             optionsRemoved.call(arg0, arg1, arg2);
         }

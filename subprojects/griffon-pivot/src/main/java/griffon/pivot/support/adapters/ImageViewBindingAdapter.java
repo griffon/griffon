@@ -23,32 +23,32 @@ import griffon.core.CallableWithArgs;
  * @since 2.0.0
  */
 public class ImageViewBindingAdapter implements GriffonPivotAdapter, org.apache.pivot.wtk.ImageViewBindingListener {
-    private CallableWithArgs<?> imageKeyChanged;
-    private CallableWithArgs<?> imageBindTypeChanged;
-    private CallableWithArgs<?> imageBindMappingChanged;
+    private CallableWithArgs<Void> imageKeyChanged;
+    private CallableWithArgs<Void> imageBindTypeChanged;
+    private CallableWithArgs<Void> imageBindMappingChanged;
 
-    public CallableWithArgs<?> getImageKeyChanged() {
+    public CallableWithArgs<Void> getImageKeyChanged() {
         return this.imageKeyChanged;
     }
 
-    public CallableWithArgs<?> getImageBindTypeChanged() {
+    public CallableWithArgs<Void> getImageBindTypeChanged() {
         return this.imageBindTypeChanged;
     }
 
-    public CallableWithArgs<?> getImageBindMappingChanged() {
+    public CallableWithArgs<Void> getImageBindMappingChanged() {
         return this.imageBindMappingChanged;
     }
 
 
-    public void setImageKeyChanged(CallableWithArgs<?> imageKeyChanged) {
+    public void setImageKeyChanged(CallableWithArgs<Void> imageKeyChanged) {
         this.imageKeyChanged = imageKeyChanged;
     }
 
-    public void setImageBindTypeChanged(CallableWithArgs<?> imageBindTypeChanged) {
+    public void setImageBindTypeChanged(CallableWithArgs<Void> imageBindTypeChanged) {
         this.imageBindTypeChanged = imageBindTypeChanged;
     }
 
-    public void setImageBindMappingChanged(CallableWithArgs<?> imageBindMappingChanged) {
+    public void setImageBindMappingChanged(CallableWithArgs<Void> imageBindMappingChanged) {
         this.imageBindMappingChanged = imageBindMappingChanged;
     }
 

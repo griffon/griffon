@@ -23,14 +23,14 @@ import griffon.core.CallableWithArgs;
  * @since 2.0.0
  */
 public class ColorChooserButtonSelectionAdapter implements GriffonPivotAdapter, org.apache.pivot.wtk.ColorChooserButtonSelectionListener {
-    private CallableWithArgs<?> selectedColorChanged;
+    private CallableWithArgs<Void> selectedColorChanged;
 
-    public CallableWithArgs<?> getSelectedColorChanged() {
+    public CallableWithArgs<Void> getSelectedColorChanged() {
         return this.selectedColorChanged;
     }
 
 
-    public void setSelectedColorChanged(CallableWithArgs<?> selectedColorChanged) {
+    public void setSelectedColorChanged(CallableWithArgs<Void> selectedColorChanged) {
         this.selectedColorChanged = selectedColorChanged;
     }
 

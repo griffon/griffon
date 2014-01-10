@@ -23,32 +23,32 @@ import griffon.core.CallableWithArgs;
  * @since 2.0.0
  */
 public class RollupAdapter implements GriffonPivotAdapter, org.apache.pivot.wtk.RollupListener {
-    private CallableWithArgs<?> contentChanged;
-    private CallableWithArgs<?> collapsibleChanged;
-    private CallableWithArgs<?> headingChanged;
+    private CallableWithArgs<Void> contentChanged;
+    private CallableWithArgs<Void> collapsibleChanged;
+    private CallableWithArgs<Void> headingChanged;
 
-    public CallableWithArgs<?> getContentChanged() {
+    public CallableWithArgs<Void> getContentChanged() {
         return this.contentChanged;
     }
 
-    public CallableWithArgs<?> getCollapsibleChanged() {
+    public CallableWithArgs<Void> getCollapsibleChanged() {
         return this.collapsibleChanged;
     }
 
-    public CallableWithArgs<?> getHeadingChanged() {
+    public CallableWithArgs<Void> getHeadingChanged() {
         return this.headingChanged;
     }
 
 
-    public void setContentChanged(CallableWithArgs<?> contentChanged) {
+    public void setContentChanged(CallableWithArgs<Void> contentChanged) {
         this.contentChanged = contentChanged;
     }
 
-    public void setCollapsibleChanged(CallableWithArgs<?> collapsibleChanged) {
+    public void setCollapsibleChanged(CallableWithArgs<Void> collapsibleChanged) {
         this.collapsibleChanged = collapsibleChanged;
     }
 
-    public void setHeadingChanged(CallableWithArgs<?> headingChanged) {
+    public void setHeadingChanged(CallableWithArgs<Void> headingChanged) {
         this.headingChanged = headingChanged;
     }
 

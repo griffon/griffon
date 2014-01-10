@@ -23,32 +23,32 @@ import griffon.core.CallableWithArgs;
  * @since 2.0.0
  */
 public class ColorChooserButtonBindingAdapter implements GriffonPivotAdapter, org.apache.pivot.wtk.ColorChooserButtonBindingListener {
-    private CallableWithArgs<?> selectedColorBindMappingChanged;
-    private CallableWithArgs<?> selectedColorKeyChanged;
-    private CallableWithArgs<?> selectedColorBindTypeChanged;
+    private CallableWithArgs<Void> selectedColorBindMappingChanged;
+    private CallableWithArgs<Void> selectedColorKeyChanged;
+    private CallableWithArgs<Void> selectedColorBindTypeChanged;
 
-    public CallableWithArgs<?> getSelectedColorBindMappingChanged() {
+    public CallableWithArgs<Void> getSelectedColorBindMappingChanged() {
         return this.selectedColorBindMappingChanged;
     }
 
-    public CallableWithArgs<?> getSelectedColorKeyChanged() {
+    public CallableWithArgs<Void> getSelectedColorKeyChanged() {
         return this.selectedColorKeyChanged;
     }
 
-    public CallableWithArgs<?> getSelectedColorBindTypeChanged() {
+    public CallableWithArgs<Void> getSelectedColorBindTypeChanged() {
         return this.selectedColorBindTypeChanged;
     }
 
 
-    public void setSelectedColorBindMappingChanged(CallableWithArgs<?> selectedColorBindMappingChanged) {
+    public void setSelectedColorBindMappingChanged(CallableWithArgs<Void> selectedColorBindMappingChanged) {
         this.selectedColorBindMappingChanged = selectedColorBindMappingChanged;
     }
 
-    public void setSelectedColorKeyChanged(CallableWithArgs<?> selectedColorKeyChanged) {
+    public void setSelectedColorKeyChanged(CallableWithArgs<Void> selectedColorKeyChanged) {
         this.selectedColorKeyChanged = selectedColorKeyChanged;
     }
 
-    public void setSelectedColorBindTypeChanged(CallableWithArgs<?> selectedColorBindTypeChanged) {
+    public void setSelectedColorBindTypeChanged(CallableWithArgs<Void> selectedColorBindTypeChanged) {
         this.selectedColorBindTypeChanged = selectedColorBindTypeChanged;
     }
 

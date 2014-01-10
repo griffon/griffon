@@ -23,50 +23,50 @@ import griffon.core.CallableWithArgs;
  * @since 2.0.0
  */
 public class TableViewAdapter implements GriffonPivotAdapter, org.apache.pivot.wtk.TableViewListener {
-    private CallableWithArgs<?> selectModeChanged;
-    private CallableWithArgs<?> columnSourceChanged;
-    private CallableWithArgs<?> rowEditorChanged;
-    private CallableWithArgs<?> tableDataChanged;
-    private CallableWithArgs<?> disabledRowFilterChanged;
+    private CallableWithArgs<Void> selectModeChanged;
+    private CallableWithArgs<Void> columnSourceChanged;
+    private CallableWithArgs<Void> rowEditorChanged;
+    private CallableWithArgs<Void> tableDataChanged;
+    private CallableWithArgs<Void> disabledRowFilterChanged;
 
-    public CallableWithArgs<?> getSelectModeChanged() {
+    public CallableWithArgs<Void> getSelectModeChanged() {
         return this.selectModeChanged;
     }
 
-    public CallableWithArgs<?> getColumnSourceChanged() {
+    public CallableWithArgs<Void> getColumnSourceChanged() {
         return this.columnSourceChanged;
     }
 
-    public CallableWithArgs<?> getRowEditorChanged() {
+    public CallableWithArgs<Void> getRowEditorChanged() {
         return this.rowEditorChanged;
     }
 
-    public CallableWithArgs<?> getTableDataChanged() {
+    public CallableWithArgs<Void> getTableDataChanged() {
         return this.tableDataChanged;
     }
 
-    public CallableWithArgs<?> getDisabledRowFilterChanged() {
+    public CallableWithArgs<Void> getDisabledRowFilterChanged() {
         return this.disabledRowFilterChanged;
     }
 
 
-    public void setSelectModeChanged(CallableWithArgs<?> selectModeChanged) {
+    public void setSelectModeChanged(CallableWithArgs<Void> selectModeChanged) {
         this.selectModeChanged = selectModeChanged;
     }
 
-    public void setColumnSourceChanged(CallableWithArgs<?> columnSourceChanged) {
+    public void setColumnSourceChanged(CallableWithArgs<Void> columnSourceChanged) {
         this.columnSourceChanged = columnSourceChanged;
     }
 
-    public void setRowEditorChanged(CallableWithArgs<?> rowEditorChanged) {
+    public void setRowEditorChanged(CallableWithArgs<Void> rowEditorChanged) {
         this.rowEditorChanged = rowEditorChanged;
     }
 
-    public void setTableDataChanged(CallableWithArgs<?> tableDataChanged) {
+    public void setTableDataChanged(CallableWithArgs<Void> tableDataChanged) {
         this.tableDataChanged = tableDataChanged;
     }
 
-    public void setDisabledRowFilterChanged(CallableWithArgs<?> disabledRowFilterChanged) {
+    public void setDisabledRowFilterChanged(CallableWithArgs<Void> disabledRowFilterChanged) {
         this.disabledRowFilterChanged = disabledRowFilterChanged;
     }
 
@@ -89,13 +89,13 @@ public class TableViewAdapter implements GriffonPivotAdapter, org.apache.pivot.w
         }
     }
 
-    public void tableDataChanged(org.apache.pivot.wtk.TableView arg0, org.apache.pivot.collections.List arg1) {
+    public void tableDataChanged(org.apache.pivot.wtk.TableView arg0, org.apache.pivot.collections.List<?> arg1) {
         if (tableDataChanged != null) {
             tableDataChanged.call(arg0, arg1);
         }
     }
 
-    public void disabledRowFilterChanged(org.apache.pivot.wtk.TableView arg0, org.apache.pivot.util.Filter arg1) {
+    public void disabledRowFilterChanged(org.apache.pivot.wtk.TableView arg0, org.apache.pivot.util.Filter<?> arg1) {
         if (disabledRowFilterChanged != null) {
             disabledRowFilterChanged.call(arg0, arg1);
         }

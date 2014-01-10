@@ -23,14 +23,14 @@ import griffon.core.CallableWithArgs;
  * @since 2.0.0
  */
 public class MenuItemSelectionAdapter implements GriffonPivotAdapter, org.apache.pivot.wtk.MenuItemSelectionListener {
-    private CallableWithArgs<?> itemSelected;
+    private CallableWithArgs<Void> itemSelected;
 
-    public CallableWithArgs<?> getItemSelected() {
+    public CallableWithArgs<Void> getItemSelected() {
         return this.itemSelected;
     }
 
 
-    public void setItemSelected(CallableWithArgs<?> itemSelected) {
+    public void setItemSelected(CallableWithArgs<Void> itemSelected) {
         this.itemSelected = itemSelected;
     }
 

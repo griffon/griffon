@@ -23,32 +23,32 @@ import griffon.core.CallableWithArgs;
  * @since 2.0.0
  */
 public class LabelBindingAdapter implements GriffonPivotAdapter, org.apache.pivot.wtk.LabelBindingListener {
-    private CallableWithArgs<?> textKeyChanged;
-    private CallableWithArgs<?> textBindTypeChanged;
-    private CallableWithArgs<?> textBindMappingChanged;
+    private CallableWithArgs<Void> textKeyChanged;
+    private CallableWithArgs<Void> textBindTypeChanged;
+    private CallableWithArgs<Void> textBindMappingChanged;
 
-    public CallableWithArgs<?> getTextKeyChanged() {
+    public CallableWithArgs<Void> getTextKeyChanged() {
         return this.textKeyChanged;
     }
 
-    public CallableWithArgs<?> getTextBindTypeChanged() {
+    public CallableWithArgs<Void> getTextBindTypeChanged() {
         return this.textBindTypeChanged;
     }
 
-    public CallableWithArgs<?> getTextBindMappingChanged() {
+    public CallableWithArgs<Void> getTextBindMappingChanged() {
         return this.textBindMappingChanged;
     }
 
 
-    public void setTextKeyChanged(CallableWithArgs<?> textKeyChanged) {
+    public void setTextKeyChanged(CallableWithArgs<Void> textKeyChanged) {
         this.textKeyChanged = textKeyChanged;
     }
 
-    public void setTextBindTypeChanged(CallableWithArgs<?> textBindTypeChanged) {
+    public void setTextBindTypeChanged(CallableWithArgs<Void> textBindTypeChanged) {
         this.textBindTypeChanged = textBindTypeChanged;
     }
 
-    public void setTextBindMappingChanged(CallableWithArgs<?> textBindMappingChanged) {
+    public void setTextBindMappingChanged(CallableWithArgs<Void> textBindMappingChanged) {
         this.textBindMappingChanged = textBindMappingChanged;
     }
 

@@ -23,14 +23,14 @@ import griffon.core.CallableWithArgs;
  * @since 2.0.0
  */
 public class ButtonPressAdapter implements GriffonPivotAdapter, org.apache.pivot.wtk.ButtonPressListener {
-    private CallableWithArgs<?> buttonPressed;
+    private CallableWithArgs<Void> buttonPressed;
 
-    public CallableWithArgs<?> getButtonPressed() {
+    public CallableWithArgs<Void> getButtonPressed() {
         return this.buttonPressed;
     }
 
 
-    public void setButtonPressed(CallableWithArgs<?> buttonPressed) {
+    public void setButtonPressed(CallableWithArgs<Void> buttonPressed) {
         this.buttonPressed = buttonPressed;
     }
 

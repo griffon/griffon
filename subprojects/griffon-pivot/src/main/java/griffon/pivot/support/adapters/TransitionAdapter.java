@@ -23,14 +23,14 @@ import griffon.core.CallableWithArgs;
  * @since 2.0.0
  */
 public class TransitionAdapter implements GriffonPivotAdapter, org.apache.pivot.wtk.effects.TransitionListener {
-    private CallableWithArgs<?> transitionCompleted;
+    private CallableWithArgs<Void> transitionCompleted;
 
-    public CallableWithArgs<?> getTransitionCompleted() {
+    public CallableWithArgs<Void> getTransitionCompleted() {
         return this.transitionCompleted;
     }
 
 
-    public void setTransitionCompleted(CallableWithArgs<?> transitionCompleted) {
+    public void setTransitionCompleted(CallableWithArgs<Void> transitionCompleted) {
         this.transitionCompleted = transitionCompleted;
     }
 

@@ -24,15 +24,15 @@ import org.apache.pivot.util.Vote;
  * @since 2.0.0
  */
 public class TextInputContentAdapter implements GriffonPivotAdapter, org.apache.pivot.wtk.TextInputContentListener {
-    private CallableWithArgs<?> textChanged;
+    private CallableWithArgs<Void> textChanged;
     private CallableWithArgs<Vote> previewInsertText;
-    private CallableWithArgs<?> textInserted;
-    private CallableWithArgs<?> insertTextVetoed;
+    private CallableWithArgs<Void> textInserted;
+    private CallableWithArgs<Void> insertTextVetoed;
     private CallableWithArgs<Vote> previewRemoveText;
-    private CallableWithArgs<?> textRemoved;
-    private CallableWithArgs<?> removeTextVetoed;
+    private CallableWithArgs<Void> textRemoved;
+    private CallableWithArgs<Void> removeTextVetoed;
 
-    public CallableWithArgs<?> getTextChanged() {
+    public CallableWithArgs<Void> getTextChanged() {
         return this.textChanged;
     }
 
@@ -40,11 +40,11 @@ public class TextInputContentAdapter implements GriffonPivotAdapter, org.apache.
         return this.previewInsertText;
     }
 
-    public CallableWithArgs<?> getTextInserted() {
+    public CallableWithArgs<Void> getTextInserted() {
         return this.textInserted;
     }
 
-    public CallableWithArgs<?> getInsertTextVetoed() {
+    public CallableWithArgs<Void> getInsertTextVetoed() {
         return this.insertTextVetoed;
     }
 
@@ -52,16 +52,16 @@ public class TextInputContentAdapter implements GriffonPivotAdapter, org.apache.
         return this.previewRemoveText;
     }
 
-    public CallableWithArgs<?> getTextRemoved() {
+    public CallableWithArgs<Void> getTextRemoved() {
         return this.textRemoved;
     }
 
-    public CallableWithArgs<?> getRemoveTextVetoed() {
+    public CallableWithArgs<Void> getRemoveTextVetoed() {
         return this.removeTextVetoed;
     }
 
 
-    public void setTextChanged(CallableWithArgs<?> textChanged) {
+    public void setTextChanged(CallableWithArgs<Void> textChanged) {
         this.textChanged = textChanged;
     }
 
@@ -69,11 +69,11 @@ public class TextInputContentAdapter implements GriffonPivotAdapter, org.apache.
         this.previewInsertText = previewInsertText;
     }
 
-    public void setTextInserted(CallableWithArgs<?> textInserted) {
+    public void setTextInserted(CallableWithArgs<Void> textInserted) {
         this.textInserted = textInserted;
     }
 
-    public void setInsertTextVetoed(CallableWithArgs<?> insertTextVetoed) {
+    public void setInsertTextVetoed(CallableWithArgs<Void> insertTextVetoed) {
         this.insertTextVetoed = insertTextVetoed;
     }
 
@@ -81,11 +81,11 @@ public class TextInputContentAdapter implements GriffonPivotAdapter, org.apache.
         this.previewRemoveText = previewRemoveText;
     }
 
-    public void setTextRemoved(CallableWithArgs<?> textRemoved) {
+    public void setTextRemoved(CallableWithArgs<Void> textRemoved) {
         this.textRemoved = textRemoved;
     }
 
-    public void setRemoveTextVetoed(CallableWithArgs<?> removeTextVetoed) {
+    public void setRemoveTextVetoed(CallableWithArgs<Void> removeTextVetoed) {
         this.removeTextVetoed = removeTextVetoed;
     }
 

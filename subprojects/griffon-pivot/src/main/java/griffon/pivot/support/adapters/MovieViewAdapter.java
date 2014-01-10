@@ -23,14 +23,14 @@ import griffon.core.CallableWithArgs;
  * @since 2.0.0
  */
 public class MovieViewAdapter implements GriffonPivotAdapter, org.apache.pivot.wtk.MovieViewListener {
-    private CallableWithArgs<?> movieChanged;
+    private CallableWithArgs<Void> movieChanged;
 
-    public CallableWithArgs<?> getMovieChanged() {
+    public CallableWithArgs<Void> getMovieChanged() {
         return this.movieChanged;
     }
 
 
-    public void setMovieChanged(CallableWithArgs<?> movieChanged) {
+    public void setMovieChanged(CallableWithArgs<Void> movieChanged) {
         this.movieChanged = movieChanged;
     }
 

@@ -23,14 +23,14 @@ import griffon.core.CallableWithArgs;
  * @since 2.0.0
  */
 public class CalendarSelectionAdapter implements GriffonPivotAdapter, org.apache.pivot.wtk.CalendarSelectionListener {
-    private CallableWithArgs<?> selectedDateChanged;
+    private CallableWithArgs<Void> selectedDateChanged;
 
-    public CallableWithArgs<?> getSelectedDateChanged() {
+    public CallableWithArgs<Void> getSelectedDateChanged() {
         return this.selectedDateChanged;
     }
 
 
-    public void setSelectedDateChanged(CallableWithArgs<?> selectedDateChanged) {
+    public void setSelectedDateChanged(CallableWithArgs<Void> selectedDateChanged) {
         this.selectedDateChanged = selectedDateChanged;
     }
 

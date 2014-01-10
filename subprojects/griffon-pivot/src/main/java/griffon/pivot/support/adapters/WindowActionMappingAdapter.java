@@ -17,47 +17,48 @@
 package griffon.pivot.support.adapters;
 
 import griffon.core.CallableWithArgs;
+import org.apache.pivot.wtk.Window;
 
 /**
  * @author Andres Almiray
  * @since 2.0.0
  */
 public class WindowActionMappingAdapter implements GriffonPivotAdapter, org.apache.pivot.wtk.WindowActionMappingListener {
-    private CallableWithArgs<?> actionMappingAdded;
-    private CallableWithArgs<?> actionMappingsRemoved;
-    private CallableWithArgs<?> keyStrokeChanged;
-    private CallableWithArgs<?> actionChanged;
+    private CallableWithArgs<Void> actionMappingAdded;
+    private CallableWithArgs<Void> actionMappingsRemoved;
+    private CallableWithArgs<Void> keyStrokeChanged;
+    private CallableWithArgs<Void> actionChanged;
 
-    public CallableWithArgs<?> getActionMappingAdded() {
+    public CallableWithArgs<Void> getActionMappingAdded() {
         return this.actionMappingAdded;
     }
 
-    public CallableWithArgs<?> getActionMappingsRemoved() {
+    public CallableWithArgs<Void> getActionMappingsRemoved() {
         return this.actionMappingsRemoved;
     }
 
-    public CallableWithArgs<?> getKeyStrokeChanged() {
+    public CallableWithArgs<Void> getKeyStrokeChanged() {
         return this.keyStrokeChanged;
     }
 
-    public CallableWithArgs<?> getActionChanged() {
+    public CallableWithArgs<Void> getActionChanged() {
         return this.actionChanged;
     }
 
 
-    public void setActionMappingAdded(CallableWithArgs<?> actionMappingAdded) {
+    public void setActionMappingAdded(CallableWithArgs<Void> actionMappingAdded) {
         this.actionMappingAdded = actionMappingAdded;
     }
 
-    public void setActionMappingsRemoved(CallableWithArgs<?> actionMappingsRemoved) {
+    public void setActionMappingsRemoved(CallableWithArgs<Void> actionMappingsRemoved) {
         this.actionMappingsRemoved = actionMappingsRemoved;
     }
 
-    public void setKeyStrokeChanged(CallableWithArgs<?> keyStrokeChanged) {
+    public void setKeyStrokeChanged(CallableWithArgs<Void> keyStrokeChanged) {
         this.keyStrokeChanged = keyStrokeChanged;
     }
 
-    public void setActionChanged(CallableWithArgs<?> actionChanged) {
+    public void setActionChanged(CallableWithArgs<Void> actionChanged) {
         this.actionChanged = actionChanged;
     }
 
@@ -68,7 +69,7 @@ public class WindowActionMappingAdapter implements GriffonPivotAdapter, org.apac
         }
     }
 
-    public void actionMappingsRemoved(org.apache.pivot.wtk.Window arg0, int arg1, org.apache.pivot.collections.Sequence arg2) {
+    public void actionMappingsRemoved(org.apache.pivot.wtk.Window arg0, int arg1, org.apache.pivot.collections.Sequence<Window.ActionMapping> arg2) {
         if (actionMappingsRemoved != null) {
             actionMappingsRemoved.call(arg0, arg1, arg2);
         }

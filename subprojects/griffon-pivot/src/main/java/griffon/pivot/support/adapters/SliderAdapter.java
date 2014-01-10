@@ -23,23 +23,23 @@ import griffon.core.CallableWithArgs;
  * @since 2.0.0
  */
 public class SliderAdapter implements GriffonPivotAdapter, org.apache.pivot.wtk.SliderListener {
-    private CallableWithArgs<?> orientationChanged;
-    private CallableWithArgs<?> rangeChanged;
+    private CallableWithArgs<Void> orientationChanged;
+    private CallableWithArgs<Void> rangeChanged;
 
-    public CallableWithArgs<?> getOrientationChanged() {
+    public CallableWithArgs<Void> getOrientationChanged() {
         return this.orientationChanged;
     }
 
-    public CallableWithArgs<?> getRangeChanged() {
+    public CallableWithArgs<Void> getRangeChanged() {
         return this.rangeChanged;
     }
 
 
-    public void setOrientationChanged(CallableWithArgs<?> orientationChanged) {
+    public void setOrientationChanged(CallableWithArgs<Void> orientationChanged) {
         this.orientationChanged = orientationChanged;
     }
 
-    public void setRangeChanged(CallableWithArgs<?> rangeChanged) {
+    public void setRangeChanged(CallableWithArgs<Void> rangeChanged) {
         this.rangeChanged = rangeChanged;
     }
 

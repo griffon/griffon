@@ -23,14 +23,14 @@ import griffon.core.CallableWithArgs;
  * @since 2.0.0
  */
 public class FrameAdapter implements GriffonPivotAdapter, org.apache.pivot.wtk.FrameListener {
-    private CallableWithArgs<?> menuBarChanged;
+    private CallableWithArgs<Void> menuBarChanged;
 
-    public CallableWithArgs<?> getMenuBarChanged() {
+    public CallableWithArgs<Void> getMenuBarChanged() {
         return this.menuBarChanged;
     }
 
 
-    public void setMenuBarChanged(CallableWithArgs<?> menuBarChanged) {
+    public void setMenuBarChanged(CallableWithArgs<Void> menuBarChanged) {
         this.menuBarChanged = menuBarChanged;
     }
 

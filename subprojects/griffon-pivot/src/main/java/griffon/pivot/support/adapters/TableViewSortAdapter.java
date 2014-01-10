@@ -23,41 +23,41 @@ import griffon.core.CallableWithArgs;
  * @since 2.0.0
  */
 public class TableViewSortAdapter implements GriffonPivotAdapter, org.apache.pivot.wtk.TableViewSortListener {
-    private CallableWithArgs<?> sortChanged;
-    private CallableWithArgs<?> sortAdded;
-    private CallableWithArgs<?> sortUpdated;
-    private CallableWithArgs<?> sortRemoved;
+    private CallableWithArgs<Void> sortChanged;
+    private CallableWithArgs<Void> sortAdded;
+    private CallableWithArgs<Void> sortUpdated;
+    private CallableWithArgs<Void> sortRemoved;
 
-    public CallableWithArgs<?> getSortChanged() {
+    public CallableWithArgs<Void> getSortChanged() {
         return this.sortChanged;
     }
 
-    public CallableWithArgs<?> getSortAdded() {
+    public CallableWithArgs<Void> getSortAdded() {
         return this.sortAdded;
     }
 
-    public CallableWithArgs<?> getSortUpdated() {
+    public CallableWithArgs<Void> getSortUpdated() {
         return this.sortUpdated;
     }
 
-    public CallableWithArgs<?> getSortRemoved() {
+    public CallableWithArgs<Void> getSortRemoved() {
         return this.sortRemoved;
     }
 
 
-    public void setSortChanged(CallableWithArgs<?> sortChanged) {
+    public void setSortChanged(CallableWithArgs<Void> sortChanged) {
         this.sortChanged = sortChanged;
     }
 
-    public void setSortAdded(CallableWithArgs<?> sortAdded) {
+    public void setSortAdded(CallableWithArgs<Void> sortAdded) {
         this.sortAdded = sortAdded;
     }
 
-    public void setSortUpdated(CallableWithArgs<?> sortUpdated) {
+    public void setSortUpdated(CallableWithArgs<Void> sortUpdated) {
         this.sortUpdated = sortUpdated;
     }
 
-    public void setSortRemoved(CallableWithArgs<?> sortRemoved) {
+    public void setSortRemoved(CallableWithArgs<Void> sortRemoved) {
         this.sortRemoved = sortRemoved;
     }
 

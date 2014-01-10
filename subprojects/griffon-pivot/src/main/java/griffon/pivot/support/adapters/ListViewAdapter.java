@@ -23,73 +23,73 @@ import griffon.core.CallableWithArgs;
  * @since 2.0.0
  */
 public class ListViewAdapter implements GriffonPivotAdapter, org.apache.pivot.wtk.ListViewListener {
-    private CallableWithArgs<?> listDataChanged;
-    private CallableWithArgs<?> itemRendererChanged;
-    private CallableWithArgs<?> disabledItemFilterChanged;
-    private CallableWithArgs<?> itemEditorChanged;
-    private CallableWithArgs<?> selectModeChanged;
-    private CallableWithArgs<?> checkmarksEnabledChanged;
-    private CallableWithArgs<?> disabledCheckmarkFilterChanged;
+    private CallableWithArgs<Void> listDataChanged;
+    private CallableWithArgs<Void> itemRendererChanged;
+    private CallableWithArgs<Void> disabledItemFilterChanged;
+    private CallableWithArgs<Void> itemEditorChanged;
+    private CallableWithArgs<Void> selectModeChanged;
+    private CallableWithArgs<Void> checkmarksEnabledChanged;
+    private CallableWithArgs<Void> disabledCheckmarkFilterChanged;
 
-    public CallableWithArgs<?> getListDataChanged() {
+    public CallableWithArgs<Void> getListDataChanged() {
         return this.listDataChanged;
     }
 
-    public CallableWithArgs<?> getItemRendererChanged() {
+    public CallableWithArgs<Void> getItemRendererChanged() {
         return this.itemRendererChanged;
     }
 
-    public CallableWithArgs<?> getDisabledItemFilterChanged() {
+    public CallableWithArgs<Void> getDisabledItemFilterChanged() {
         return this.disabledItemFilterChanged;
     }
 
-    public CallableWithArgs<?> getItemEditorChanged() {
+    public CallableWithArgs<Void> getItemEditorChanged() {
         return this.itemEditorChanged;
     }
 
-    public CallableWithArgs<?> getSelectModeChanged() {
+    public CallableWithArgs<Void> getSelectModeChanged() {
         return this.selectModeChanged;
     }
 
-    public CallableWithArgs<?> getCheckmarksEnabledChanged() {
+    public CallableWithArgs<Void> getCheckmarksEnabledChanged() {
         return this.checkmarksEnabledChanged;
     }
 
-    public CallableWithArgs<?> getDisabledCheckmarkFilterChanged() {
+    public CallableWithArgs<Void> getDisabledCheckmarkFilterChanged() {
         return this.disabledCheckmarkFilterChanged;
     }
 
 
-    public void setListDataChanged(CallableWithArgs<?> listDataChanged) {
+    public void setListDataChanged(CallableWithArgs<Void> listDataChanged) {
         this.listDataChanged = listDataChanged;
     }
 
-    public void setItemRendererChanged(CallableWithArgs<?> itemRendererChanged) {
+    public void setItemRendererChanged(CallableWithArgs<Void> itemRendererChanged) {
         this.itemRendererChanged = itemRendererChanged;
     }
 
-    public void setDisabledItemFilterChanged(CallableWithArgs<?> disabledItemFilterChanged) {
+    public void setDisabledItemFilterChanged(CallableWithArgs<Void> disabledItemFilterChanged) {
         this.disabledItemFilterChanged = disabledItemFilterChanged;
     }
 
-    public void setItemEditorChanged(CallableWithArgs<?> itemEditorChanged) {
+    public void setItemEditorChanged(CallableWithArgs<Void> itemEditorChanged) {
         this.itemEditorChanged = itemEditorChanged;
     }
 
-    public void setSelectModeChanged(CallableWithArgs<?> selectModeChanged) {
+    public void setSelectModeChanged(CallableWithArgs<Void> selectModeChanged) {
         this.selectModeChanged = selectModeChanged;
     }
 
-    public void setCheckmarksEnabledChanged(CallableWithArgs<?> checkmarksEnabledChanged) {
+    public void setCheckmarksEnabledChanged(CallableWithArgs<Void> checkmarksEnabledChanged) {
         this.checkmarksEnabledChanged = checkmarksEnabledChanged;
     }
 
-    public void setDisabledCheckmarkFilterChanged(CallableWithArgs<?> disabledCheckmarkFilterChanged) {
+    public void setDisabledCheckmarkFilterChanged(CallableWithArgs<Void> disabledCheckmarkFilterChanged) {
         this.disabledCheckmarkFilterChanged = disabledCheckmarkFilterChanged;
     }
 
 
-    public void listDataChanged(org.apache.pivot.wtk.ListView arg0, org.apache.pivot.collections.List arg1) {
+    public void listDataChanged(org.apache.pivot.wtk.ListView arg0, org.apache.pivot.collections.List<?> arg1) {
         if (listDataChanged != null) {
             listDataChanged.call(arg0, arg1);
         }
@@ -101,7 +101,7 @@ public class ListViewAdapter implements GriffonPivotAdapter, org.apache.pivot.wt
         }
     }
 
-    public void disabledItemFilterChanged(org.apache.pivot.wtk.ListView arg0, org.apache.pivot.util.Filter arg1) {
+    public void disabledItemFilterChanged(org.apache.pivot.wtk.ListView arg0, org.apache.pivot.util.Filter<?> arg1) {
         if (disabledItemFilterChanged != null) {
             disabledItemFilterChanged.call(arg0, arg1);
         }
@@ -125,7 +125,7 @@ public class ListViewAdapter implements GriffonPivotAdapter, org.apache.pivot.wt
         }
     }
 
-    public void disabledCheckmarkFilterChanged(org.apache.pivot.wtk.ListView arg0, org.apache.pivot.util.Filter arg1) {
+    public void disabledCheckmarkFilterChanged(org.apache.pivot.wtk.ListView arg0, org.apache.pivot.util.Filter<?> arg1) {
         if (disabledCheckmarkFilterChanged != null) {
             disabledCheckmarkFilterChanged.call(arg0, arg1);
         }

@@ -23,23 +23,23 @@ import griffon.core.CallableWithArgs;
  * @since 2.0.0
  */
 public class TabPaneAttributeAdapter implements GriffonPivotAdapter, org.apache.pivot.wtk.TabPaneAttributeListener {
-    private CallableWithArgs<?> tabDataChanged;
-    private CallableWithArgs<?> tooltipTextChanged;
+    private CallableWithArgs<Void> tabDataChanged;
+    private CallableWithArgs<Void> tooltipTextChanged;
 
-    public CallableWithArgs<?> getTabDataChanged() {
+    public CallableWithArgs<Void> getTabDataChanged() {
         return this.tabDataChanged;
     }
 
-    public CallableWithArgs<?> getTooltipTextChanged() {
+    public CallableWithArgs<Void> getTooltipTextChanged() {
         return this.tooltipTextChanged;
     }
 
 
-    public void setTabDataChanged(CallableWithArgs<?> tabDataChanged) {
+    public void setTabDataChanged(CallableWithArgs<Void> tabDataChanged) {
         this.tabDataChanged = tabDataChanged;
     }
 
-    public void setTooltipTextChanged(CallableWithArgs<?> tooltipTextChanged) {
+    public void setTooltipTextChanged(CallableWithArgs<Void> tooltipTextChanged) {
         this.tooltipTextChanged = tooltipTextChanged;
     }
 

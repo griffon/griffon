@@ -23,14 +23,14 @@ import griffon.core.CallableWithArgs;
  * @since 2.0.0
  */
 public class TreeViewNodeStateAdapter implements GriffonPivotAdapter, org.apache.pivot.wtk.TreeViewNodeStateListener {
-    private CallableWithArgs<?> nodeCheckStateChanged;
+    private CallableWithArgs<Void> nodeCheckStateChanged;
 
-    public CallableWithArgs<?> getNodeCheckStateChanged() {
+    public CallableWithArgs<Void> getNodeCheckStateChanged() {
         return this.nodeCheckStateChanged;
     }
 
 
-    public void setNodeCheckStateChanged(CallableWithArgs<?> nodeCheckStateChanged) {
+    public void setNodeCheckStateChanged(CallableWithArgs<Void> nodeCheckStateChanged) {
         this.nodeCheckStateChanged = nodeCheckStateChanged;
     }
 

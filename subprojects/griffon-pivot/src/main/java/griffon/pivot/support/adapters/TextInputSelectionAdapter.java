@@ -23,14 +23,14 @@ import griffon.core.CallableWithArgs;
  * @since 2.0.0
  */
 public class TextInputSelectionAdapter implements GriffonPivotAdapter, org.apache.pivot.wtk.TextInputSelectionListener {
-    private CallableWithArgs<?> selectionChanged;
+    private CallableWithArgs<Void> selectionChanged;
 
-    public CallableWithArgs<?> getSelectionChanged() {
+    public CallableWithArgs<Void> getSelectionChanged() {
         return this.selectionChanged;
     }
 
 
-    public void setSelectionChanged(CallableWithArgs<?> selectionChanged) {
+    public void setSelectionChanged(CallableWithArgs<Void> selectionChanged) {
         this.selectionChanged = selectionChanged;
     }
 

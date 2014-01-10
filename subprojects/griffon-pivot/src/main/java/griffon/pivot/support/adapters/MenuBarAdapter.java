@@ -17,38 +17,39 @@
 package griffon.pivot.support.adapters;
 
 import griffon.core.CallableWithArgs;
+import org.apache.pivot.wtk.MenuBar;
 
 /**
  * @author Andres Almiray
  * @since 2.0.0
  */
 public class MenuBarAdapter implements GriffonPivotAdapter, org.apache.pivot.wtk.MenuBarListener {
-    private CallableWithArgs<?> activeItemChanged;
-    private CallableWithArgs<?> itemInserted;
-    private CallableWithArgs<?> itemsRemoved;
+    private CallableWithArgs<Void> activeItemChanged;
+    private CallableWithArgs<Void> itemInserted;
+    private CallableWithArgs<Void> itemsRemoved;
 
-    public CallableWithArgs<?> getActiveItemChanged() {
+    public CallableWithArgs<Void> getActiveItemChanged() {
         return this.activeItemChanged;
     }
 
-    public CallableWithArgs<?> getItemInserted() {
+    public CallableWithArgs<Void> getItemInserted() {
         return this.itemInserted;
     }
 
-    public CallableWithArgs<?> getItemsRemoved() {
+    public CallableWithArgs<Void> getItemsRemoved() {
         return this.itemsRemoved;
     }
 
 
-    public void setActiveItemChanged(CallableWithArgs<?> activeItemChanged) {
+    public void setActiveItemChanged(CallableWithArgs<Void> activeItemChanged) {
         this.activeItemChanged = activeItemChanged;
     }
 
-    public void setItemInserted(CallableWithArgs<?> itemInserted) {
+    public void setItemInserted(CallableWithArgs<Void> itemInserted) {
         this.itemInserted = itemInserted;
     }
 
-    public void setItemsRemoved(CallableWithArgs<?> itemsRemoved) {
+    public void setItemsRemoved(CallableWithArgs<Void> itemsRemoved) {
         this.itemsRemoved = itemsRemoved;
     }
 
@@ -65,7 +66,7 @@ public class MenuBarAdapter implements GriffonPivotAdapter, org.apache.pivot.wtk
         }
     }
 
-    public void itemsRemoved(org.apache.pivot.wtk.MenuBar arg0, int arg1, org.apache.pivot.collections.Sequence arg2) {
+    public void itemsRemoved(org.apache.pivot.wtk.MenuBar arg0, int arg1, org.apache.pivot.collections.Sequence<MenuBar.Item> arg2) {
         if (itemsRemoved != null) {
             itemsRemoved.call(arg0, arg1, arg2);
         }

@@ -18,22 +18,23 @@ package griffon.pivot.support.adapters;
 
 import griffon.core.CallableWithArgs;
 import org.apache.pivot.util.Vote;
+import org.apache.pivot.wtk.Component;
 
 /**
  * @author Andres Almiray
  * @since 2.0.0
  */
 public class TabPaneAdapter implements GriffonPivotAdapter, org.apache.pivot.wtk.TabPaneListener {
-    private CallableWithArgs<?> tabInserted;
+    private CallableWithArgs<Void> tabInserted;
     private CallableWithArgs<Vote> previewRemoveTabs;
-    private CallableWithArgs<?> removeTabsVetoed;
-    private CallableWithArgs<?> tabsRemoved;
-    private CallableWithArgs<?> tabDataRendererChanged;
-    private CallableWithArgs<?> closeableChanged;
-    private CallableWithArgs<?> collapsibleChanged;
-    private CallableWithArgs<?> cornerChanged;
+    private CallableWithArgs<Void> removeTabsVetoed;
+    private CallableWithArgs<Void> tabsRemoved;
+    private CallableWithArgs<Void> tabDataRendererChanged;
+    private CallableWithArgs<Void> closeableChanged;
+    private CallableWithArgs<Void> collapsibleChanged;
+    private CallableWithArgs<Void> cornerChanged;
 
-    public CallableWithArgs<?> getTabInserted() {
+    public CallableWithArgs<Void> getTabInserted() {
         return this.tabInserted;
     }
 
@@ -41,32 +42,32 @@ public class TabPaneAdapter implements GriffonPivotAdapter, org.apache.pivot.wtk
         return this.previewRemoveTabs;
     }
 
-    public CallableWithArgs<?> getRemoveTabsVetoed() {
+    public CallableWithArgs<Void> getRemoveTabsVetoed() {
         return this.removeTabsVetoed;
     }
 
-    public CallableWithArgs<?> getTabsRemoved() {
+    public CallableWithArgs<Void> getTabsRemoved() {
         return this.tabsRemoved;
     }
 
-    public CallableWithArgs<?> getTabDataRendererChanged() {
+    public CallableWithArgs<Void> getTabDataRendererChanged() {
         return this.tabDataRendererChanged;
     }
 
-    public CallableWithArgs<?> getCloseableChanged() {
+    public CallableWithArgs<Void> getCloseableChanged() {
         return this.closeableChanged;
     }
 
-    public CallableWithArgs<?> getCollapsibleChanged() {
+    public CallableWithArgs<Void> getCollapsibleChanged() {
         return this.collapsibleChanged;
     }
 
-    public CallableWithArgs<?> getCornerChanged() {
+    public CallableWithArgs<Void> getCornerChanged() {
         return this.cornerChanged;
     }
 
 
-    public void setTabInserted(CallableWithArgs<?> tabInserted) {
+    public void setTabInserted(CallableWithArgs<Void> tabInserted) {
         this.tabInserted = tabInserted;
     }
 
@@ -74,27 +75,27 @@ public class TabPaneAdapter implements GriffonPivotAdapter, org.apache.pivot.wtk
         this.previewRemoveTabs = previewRemoveTabs;
     }
 
-    public void setRemoveTabsVetoed(CallableWithArgs<?> removeTabsVetoed) {
+    public void setRemoveTabsVetoed(CallableWithArgs<Void> removeTabsVetoed) {
         this.removeTabsVetoed = removeTabsVetoed;
     }
 
-    public void setTabsRemoved(CallableWithArgs<?> tabsRemoved) {
+    public void setTabsRemoved(CallableWithArgs<Void> tabsRemoved) {
         this.tabsRemoved = tabsRemoved;
     }
 
-    public void setTabDataRendererChanged(CallableWithArgs<?> tabDataRendererChanged) {
+    public void setTabDataRendererChanged(CallableWithArgs<Void> tabDataRendererChanged) {
         this.tabDataRendererChanged = tabDataRendererChanged;
     }
 
-    public void setCloseableChanged(CallableWithArgs<?> closeableChanged) {
+    public void setCloseableChanged(CallableWithArgs<Void> closeableChanged) {
         this.closeableChanged = closeableChanged;
     }
 
-    public void setCollapsibleChanged(CallableWithArgs<?> collapsibleChanged) {
+    public void setCollapsibleChanged(CallableWithArgs<Void> collapsibleChanged) {
         this.collapsibleChanged = collapsibleChanged;
     }
 
-    public void setCornerChanged(CallableWithArgs<?> cornerChanged) {
+    public void setCornerChanged(CallableWithArgs<Void> cornerChanged) {
         this.cornerChanged = cornerChanged;
     }
 
@@ -118,7 +119,7 @@ public class TabPaneAdapter implements GriffonPivotAdapter, org.apache.pivot.wtk
         }
     }
 
-    public void tabsRemoved(org.apache.pivot.wtk.TabPane arg0, int arg1, org.apache.pivot.collections.Sequence arg2) {
+    public void tabsRemoved(org.apache.pivot.wtk.TabPane arg0, int arg1, org.apache.pivot.collections.Sequence<Component> arg2) {
         if (tabsRemoved != null) {
             tabsRemoved.call(arg0, arg1, arg2);
         }

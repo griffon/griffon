@@ -23,23 +23,23 @@ import griffon.core.CallableWithArgs;
  * @since 2.0.0
  */
 public class TreeViewBranchAdapter implements GriffonPivotAdapter, org.apache.pivot.wtk.TreeViewBranchListener {
-    private CallableWithArgs<?> branchExpanded;
-    private CallableWithArgs<?> branchCollapsed;
+    private CallableWithArgs<Void> branchExpanded;
+    private CallableWithArgs<Void> branchCollapsed;
 
-    public CallableWithArgs<?> getBranchExpanded() {
+    public CallableWithArgs<Void> getBranchExpanded() {
         return this.branchExpanded;
     }
 
-    public CallableWithArgs<?> getBranchCollapsed() {
+    public CallableWithArgs<Void> getBranchCollapsed() {
         return this.branchCollapsed;
     }
 
 
-    public void setBranchExpanded(CallableWithArgs<?> branchExpanded) {
+    public void setBranchExpanded(CallableWithArgs<Void> branchExpanded) {
         this.branchExpanded = branchExpanded;
     }
 
-    public void setBranchCollapsed(CallableWithArgs<?> branchCollapsed) {
+    public void setBranchCollapsed(CallableWithArgs<Void> branchCollapsed) {
         this.branchCollapsed = branchCollapsed;
     }
 

@@ -24,66 +24,66 @@ import org.apache.pivot.util.Vote;
  * @since 2.0.0
  */
 public class WindowStateAdapter implements GriffonPivotAdapter, org.apache.pivot.wtk.WindowStateListener {
-    private CallableWithArgs<?> previewWindowOpen;
-    private CallableWithArgs<?> windowOpenVetoed;
-    private CallableWithArgs<?> previewWindowClose;
-    private CallableWithArgs<?> windowCloseVetoed;
-    private CallableWithArgs<?> windowOpened;
-    private CallableWithArgs<?> windowClosed;
+    private CallableWithArgs<Vote> previewWindowOpen;
+    private CallableWithArgs<Void> windowOpenVetoed;
+    private CallableWithArgs<Vote> previewWindowClose;
+    private CallableWithArgs<Void> windowCloseVetoed;
+    private CallableWithArgs<Void> windowOpened;
+    private CallableWithArgs<Void> windowClosed;
 
-    public CallableWithArgs<?> getPreviewWindowOpen() {
+    public CallableWithArgs<Vote> getPreviewWindowOpen() {
         return this.previewWindowOpen;
     }
 
-    public CallableWithArgs<?> getWindowOpenVetoed() {
+    public CallableWithArgs<Void> getWindowOpenVetoed() {
         return this.windowOpenVetoed;
     }
 
-    public CallableWithArgs<?> getPreviewWindowClose() {
+    public CallableWithArgs<Vote> getPreviewWindowClose() {
         return this.previewWindowClose;
     }
 
-    public CallableWithArgs<?> getWindowCloseVetoed() {
+    public CallableWithArgs<Void> getWindowCloseVetoed() {
         return this.windowCloseVetoed;
     }
 
-    public CallableWithArgs<?> getWindowOpened() {
+    public CallableWithArgs<Void> getWindowOpened() {
         return this.windowOpened;
     }
 
-    public CallableWithArgs<?> getWindowClosed() {
+    public CallableWithArgs<Void> getWindowClosed() {
         return this.windowClosed;
     }
 
 
-    public void setPreviewWindowOpen(CallableWithArgs<?> previewWindowOpen) {
+    public void setPreviewWindowOpen(CallableWithArgs<Vote> previewWindowOpen) {
         this.previewWindowOpen = previewWindowOpen;
     }
 
-    public void setWindowOpenVetoed(CallableWithArgs<?> windowOpenVetoed) {
+    public void setWindowOpenVetoed(CallableWithArgs<Void> windowOpenVetoed) {
         this.windowOpenVetoed = windowOpenVetoed;
     }
 
-    public void setPreviewWindowClose(CallableWithArgs<?> previewWindowClose) {
+    public void setPreviewWindowClose(CallableWithArgs<Vote> previewWindowClose) {
         this.previewWindowClose = previewWindowClose;
     }
 
-    public void setWindowCloseVetoed(CallableWithArgs<?> windowCloseVetoed) {
+    public void setWindowCloseVetoed(CallableWithArgs<Void> windowCloseVetoed) {
         this.windowCloseVetoed = windowCloseVetoed;
     }
 
-    public void setWindowOpened(CallableWithArgs<?> windowOpened) {
+    public void setWindowOpened(CallableWithArgs<Void> windowOpened) {
         this.windowOpened = windowOpened;
     }
 
-    public void setWindowClosed(CallableWithArgs<?> windowClosed) {
+    public void setWindowClosed(CallableWithArgs<Void> windowClosed) {
         this.windowClosed = windowClosed;
     }
 
 
     public org.apache.pivot.util.Vote previewWindowOpen(org.apache.pivot.wtk.Window arg0) {
         if (previewWindowOpen != null) {
-            return (org.apache.pivot.util.Vote) previewWindowOpen.call(arg0);
+            return previewWindowOpen.call(arg0);
         }
         return Vote.APPROVE;
     }
@@ -96,7 +96,7 @@ public class WindowStateAdapter implements GriffonPivotAdapter, org.apache.pivot
 
     public org.apache.pivot.util.Vote previewWindowClose(org.apache.pivot.wtk.Window arg0) {
         if (previewWindowClose != null) {
-            return (org.apache.pivot.util.Vote) previewWindowClose.call(arg0);
+            return previewWindowClose.call(arg0);
         }
         return Vote.APPROVE;
     }

@@ -23,14 +23,14 @@ import griffon.core.CallableWithArgs;
  * @since 2.0.0
  */
 public class ComponentStyleAdapter implements GriffonPivotAdapter, org.apache.pivot.wtk.ComponentStyleListener {
-    private CallableWithArgs<?> styleUpdated;
+    private CallableWithArgs<Void> styleUpdated;
 
-    public CallableWithArgs<?> getStyleUpdated() {
+    public CallableWithArgs<Void> getStyleUpdated() {
         return this.styleUpdated;
     }
 
 
-    public void setStyleUpdated(CallableWithArgs<?> styleUpdated) {
+    public void setStyleUpdated(CallableWithArgs<Void> styleUpdated) {
         this.styleUpdated = styleUpdated;
     }
 

@@ -23,59 +23,59 @@ import griffon.core.CallableWithArgs;
  * @since 2.0.0
  */
 public class ButtonAdapter implements GriffonPivotAdapter, org.apache.pivot.wtk.ButtonListener {
-    private CallableWithArgs<?> buttonDataChanged;
-    private CallableWithArgs<?> dataRendererChanged;
-    private CallableWithArgs<?> actionChanged;
-    private CallableWithArgs<?> toggleButtonChanged;
-    private CallableWithArgs<?> triStateChanged;
-    private CallableWithArgs<?> buttonGroupChanged;
+    private CallableWithArgs<Void> buttonDataChanged;
+    private CallableWithArgs<Void> dataRendererChanged;
+    private CallableWithArgs<Void> actionChanged;
+    private CallableWithArgs<Void> toggleButtonChanged;
+    private CallableWithArgs<Void> triStateChanged;
+    private CallableWithArgs<Void> buttonGroupChanged;
 
-    public CallableWithArgs<?> getButtonDataChanged() {
+    public CallableWithArgs<Void> getButtonDataChanged() {
         return this.buttonDataChanged;
     }
 
-    public CallableWithArgs<?> getDataRendererChanged() {
+    public CallableWithArgs<Void> getDataRendererChanged() {
         return this.dataRendererChanged;
     }
 
-    public CallableWithArgs<?> getActionChanged() {
+    public CallableWithArgs<Void> getActionChanged() {
         return this.actionChanged;
     }
 
-    public CallableWithArgs<?> getToggleButtonChanged() {
+    public CallableWithArgs<Void> getToggleButtonChanged() {
         return this.toggleButtonChanged;
     }
 
-    public CallableWithArgs<?> getTriStateChanged() {
+    public CallableWithArgs<Void> getTriStateChanged() {
         return this.triStateChanged;
     }
 
-    public CallableWithArgs<?> getButtonGroupChanged() {
+    public CallableWithArgs<Void> getButtonGroupChanged() {
         return this.buttonGroupChanged;
     }
 
 
-    public void setButtonDataChanged(CallableWithArgs<?> buttonDataChanged) {
+    public void setButtonDataChanged(CallableWithArgs<Void> buttonDataChanged) {
         this.buttonDataChanged = buttonDataChanged;
     }
 
-    public void setDataRendererChanged(CallableWithArgs<?> dataRendererChanged) {
+    public void setDataRendererChanged(CallableWithArgs<Void> dataRendererChanged) {
         this.dataRendererChanged = dataRendererChanged;
     }
 
-    public void setActionChanged(CallableWithArgs<?> actionChanged) {
+    public void setActionChanged(CallableWithArgs<Void> actionChanged) {
         this.actionChanged = actionChanged;
     }
 
-    public void setToggleButtonChanged(CallableWithArgs<?> toggleButtonChanged) {
+    public void setToggleButtonChanged(CallableWithArgs<Void> toggleButtonChanged) {
         this.toggleButtonChanged = toggleButtonChanged;
     }
 
-    public void setTriStateChanged(CallableWithArgs<?> triStateChanged) {
+    public void setTriStateChanged(CallableWithArgs<Void> triStateChanged) {
         this.triStateChanged = triStateChanged;
     }
 
-    public void setButtonGroupChanged(CallableWithArgs<?> buttonGroupChanged) {
+    public void setButtonGroupChanged(CallableWithArgs<Void> buttonGroupChanged) {
         this.buttonGroupChanged = buttonGroupChanged;
     }
 

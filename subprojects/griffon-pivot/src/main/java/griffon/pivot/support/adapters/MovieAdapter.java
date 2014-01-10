@@ -23,68 +23,68 @@ import griffon.core.CallableWithArgs;
  * @since 2.0.0
  */
 public class MovieAdapter implements GriffonPivotAdapter, org.apache.pivot.wtk.media.MovieListener {
-    private CallableWithArgs<?> regionUpdated;
-    private CallableWithArgs<?> baselineChanged;
-    private CallableWithArgs<?> sizeChanged;
-    private CallableWithArgs<?> currentFrameChanged;
-    private CallableWithArgs<?> loopingChanged;
-    private CallableWithArgs<?> movieStarted;
-    private CallableWithArgs<?> movieStopped;
+    private CallableWithArgs<Void> regionUpdated;
+    private CallableWithArgs<Void> baselineChanged;
+    private CallableWithArgs<Void> sizeChanged;
+    private CallableWithArgs<Void> currentFrameChanged;
+    private CallableWithArgs<Void> loopingChanged;
+    private CallableWithArgs<Void> movieStarted;
+    private CallableWithArgs<Void> movieStopped;
 
-    public CallableWithArgs<?> getRegionUpdated() {
+    public CallableWithArgs<Void> getRegionUpdated() {
         return this.regionUpdated;
     }
 
-    public CallableWithArgs<?> getBaselineChanged() {
+    public CallableWithArgs<Void> getBaselineChanged() {
         return this.baselineChanged;
     }
 
-    public CallableWithArgs<?> getSizeChanged() {
+    public CallableWithArgs<Void> getSizeChanged() {
         return this.sizeChanged;
     }
 
-    public CallableWithArgs<?> getCurrentFrameChanged() {
+    public CallableWithArgs<Void> getCurrentFrameChanged() {
         return this.currentFrameChanged;
     }
 
-    public CallableWithArgs<?> getLoopingChanged() {
+    public CallableWithArgs<Void> getLoopingChanged() {
         return this.loopingChanged;
     }
 
-    public CallableWithArgs<?> getMovieStarted() {
+    public CallableWithArgs<Void> getMovieStarted() {
         return this.movieStarted;
     }
 
-    public CallableWithArgs<?> getMovieStopped() {
+    public CallableWithArgs<Void> getMovieStopped() {
         return this.movieStopped;
     }
 
 
-    public void setRegionUpdated(CallableWithArgs<?> regionUpdated) {
+    public void setRegionUpdated(CallableWithArgs<Void> regionUpdated) {
         this.regionUpdated = regionUpdated;
     }
 
-    public void setBaselineChanged(CallableWithArgs<?> baselineChanged) {
+    public void setBaselineChanged(CallableWithArgs<Void> baselineChanged) {
         this.baselineChanged = baselineChanged;
     }
 
-    public void setSizeChanged(CallableWithArgs<?> sizeChanged) {
+    public void setSizeChanged(CallableWithArgs<Void> sizeChanged) {
         this.sizeChanged = sizeChanged;
     }
 
-    public void setCurrentFrameChanged(CallableWithArgs<?> currentFrameChanged) {
+    public void setCurrentFrameChanged(CallableWithArgs<Void> currentFrameChanged) {
         this.currentFrameChanged = currentFrameChanged;
     }
 
-    public void setLoopingChanged(CallableWithArgs<?> loopingChanged) {
+    public void setLoopingChanged(CallableWithArgs<Void> loopingChanged) {
         this.loopingChanged = loopingChanged;
     }
 
-    public void setMovieStarted(CallableWithArgs<?> movieStarted) {
+    public void setMovieStarted(CallableWithArgs<Void> movieStarted) {
         this.movieStarted = movieStarted;
     }
 
-    public void setMovieStopped(CallableWithArgs<?> movieStopped) {
+    public void setMovieStopped(CallableWithArgs<Void> movieStopped) {
         this.movieStopped = movieStopped;
     }
 

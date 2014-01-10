@@ -23,32 +23,32 @@ import griffon.core.CallableWithArgs;
  * @since 2.0.0
  */
 public class MeterAdapter implements GriffonPivotAdapter, org.apache.pivot.wtk.MeterListener {
-    private CallableWithArgs<?> textChanged;
-    private CallableWithArgs<?> orientationChanged;
-    private CallableWithArgs<?> percentageChanged;
+    private CallableWithArgs<Void> textChanged;
+    private CallableWithArgs<Void> orientationChanged;
+    private CallableWithArgs<Void> percentageChanged;
 
-    public CallableWithArgs<?> getTextChanged() {
+    public CallableWithArgs<Void> getTextChanged() {
         return this.textChanged;
     }
 
-    public CallableWithArgs<?> getOrientationChanged() {
+    public CallableWithArgs<Void> getOrientationChanged() {
         return this.orientationChanged;
     }
 
-    public CallableWithArgs<?> getPercentageChanged() {
+    public CallableWithArgs<Void> getPercentageChanged() {
         return this.percentageChanged;
     }
 
 
-    public void setTextChanged(CallableWithArgs<?> textChanged) {
+    public void setTextChanged(CallableWithArgs<Void> textChanged) {
         this.textChanged = textChanged;
     }
 
-    public void setOrientationChanged(CallableWithArgs<?> orientationChanged) {
+    public void setOrientationChanged(CallableWithArgs<Void> orientationChanged) {
         this.orientationChanged = orientationChanged;
     }
 
-    public void setPercentageChanged(CallableWithArgs<?> percentageChanged) {
+    public void setPercentageChanged(CallableWithArgs<Void> percentageChanged) {
         this.percentageChanged = percentageChanged;
     }
 
