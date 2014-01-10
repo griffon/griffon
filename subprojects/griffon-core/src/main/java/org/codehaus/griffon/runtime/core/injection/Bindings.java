@@ -17,9 +17,9 @@
 package org.codehaus.griffon.runtime.core.injection;
 
 import griffon.core.injection.*;
-import griffon.core.injection.binder.AnnotatedBindingBuilder;
-import griffon.core.injection.binder.LinkedBindingBuilder;
-import griffon.core.injection.binder.SingletonBindingBuilder;
+import org.codehaus.griffon.runtime.core.injection.AnnotatedBindingBuilder;
+import org.codehaus.griffon.runtime.core.injection.LinkedBindingBuilder;
+import org.codehaus.griffon.runtime.core.injection.SingletonBindingBuilder;
 import griffon.util.AnnotationUtils;
 
 import javax.annotation.Nonnull;

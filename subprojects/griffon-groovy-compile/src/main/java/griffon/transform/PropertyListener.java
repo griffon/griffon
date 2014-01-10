@@ -24,7 +24,7 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * <p>Annotates a class.</p>
+ * <p>Annotates a property.</p>
  * <p>This transformation provides a convenient way to register PropertyChangeListeners
  * on an observable bean by leveraging Groovy's closures and the Groovy cast operator.</p>
  * <p/>

@@ -21,7 +21,7 @@ import griffon.core.artifact.ArtifactHandler;
 import griffon.core.artifact.GriffonArtifact;
 import griffon.core.artifact.GriffonClass;
 import griffon.core.injection.Binding;
-import griffon.core.injection.binder.LinkedBindingBuilder;
+import org.codehaus.griffon.runtime.core.injection.LinkedBindingBuilder;
 import org.codehaus.griffon.runtime.core.injection.Bindings;
 import org.codehaus.griffon.runtime.core.injection.TypedImpl;
 

@@ -18,8 +18,8 @@ package org.codehaus.griffon.runtime.core.injection;
 
 import griffon.core.injection.Binding;
 import griffon.core.injection.Module;
-import griffon.core.injection.binder.AnnotatedBindingBuilder;
-import griffon.core.injection.binder.BindingBuilder;
+import org.codehaus.griffon.runtime.core.injection.AnnotatedBindingBuilder;
+import org.codehaus.griffon.runtime.core.injection.BindingBuilder;
 
 import javax.annotation.Nonnull;
 import java.util.ArrayList;
