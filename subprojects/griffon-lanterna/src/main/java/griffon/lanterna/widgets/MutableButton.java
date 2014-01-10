@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package griffon.lanterna.widgets;
 
 import com.googlecode.lanterna.gui.Action;
@@ -29,28 +30,28 @@ import static griffon.util.GriffonNameUtils.isBlank;
  * @author Andres Almiray
  */
 public class MutableButton extends Button {
-    private MutableAction mutableAction;
+    private LanternaAction mutableAction;
 
     public MutableButton() {
-        this("", new MutableAction());
+        this("", new LanternaAction());
     }
 
     public MutableButton(Action action) {
-        this("", action instanceof MutableAction ? action : new MutableAction(action));
+        this("", action instanceof LanternaAction ? action : new LanternaAction(action));
     }
 
     public MutableButton(String text) {
-        this(text, new MutableAction());
+        this(text, new LanternaAction());
     }
 
     public MutableButton(String text, Action action) {
-        super(text, action instanceof MutableAction ? action : new MutableAction(action));
+        super(text, action instanceof LanternaAction ? action : new LanternaAction(action));
         try {
             Field field = getClass().getSuperclass().getDeclaredField("onPressEvent");
             field.setAccessible(true);
-            mutableAction = (MutableAction) field.get(this);
+            mutableAction = (LanternaAction) field.get(this);
 
-            mutableAction.addPropertyChangeListener(MutableAction.NAME, new PropertyChangeListener() {
+            mutableAction.addPropertyChangeListener(LanternaAction.NAME, new PropertyChangeListener() {
                 public void propertyChange(PropertyChangeEvent event) {
                     setText(event.getNewValue().toString());
                 }
@@ -67,7 +68,7 @@ public class MutableButton extends Button {
         mutableAction.setRunnable(runnable);
     }
 
-    public MutableAction getAction() {
+    public LanternaAction getAction() {
         return mutableAction;
     }
 }

@@ -19,7 +19,7 @@ package org.codehaus.griffon.runtime.core.controller;
 import griffon.core.artifact.GriffonController;
 import griffon.core.controller.ActionManager;
 import griffon.core.threading.UIThreadManager;
-import griffon.lanterna.widgets.MutableAction;
+import griffon.lanterna.widgets.LanternaAction;
 
 import javax.annotation.Nonnull;
 import java.beans.PropertyChangeEvent;
@@ -31,13 +31,13 @@ import static java.util.Objects.requireNonNull;
  * @author Andres Almiray
  */
 public class LanternaGriffonControllerAction extends AbstractAction {
-    private final MutableAction toolkitAction;
+    private final LanternaAction toolkitAction;
 
     public LanternaGriffonControllerAction(final @Nonnull UIThreadManager uiThreadManager, @Nonnull final ActionManager actionManager, @Nonnull final GriffonController controller, @Nonnull final String actionName) {
         super(actionManager, controller, actionName);
         requireNonNull(uiThreadManager, "Argument 'uiThreadManager' cannot be null");
 
-        toolkitAction = new MutableAction(new Runnable() {
+        toolkitAction = new LanternaAction(new Runnable() {
             @Override
             public void run() {
                 actionManager.invokeAction(controller, actionName);

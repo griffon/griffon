@@ -17,7 +17,7 @@
 package griffon.builder.lanterna.factory
 
 import com.googlecode.lanterna.gui.Action
-import griffon.lanterna.widgets.MutableAction
+import griffon.lanterna.widgets.LanternaAction
 import griffon.lanterna.widgets.MutableButton
 
 /**
@@ -39,9 +39,9 @@ class ButtonFactory extends ComponentFactory {
 
         def action = attributes.remove('action')
         if (action instanceof Runnable || action instanceof Action) {
-            action = new MutableAction(action)
+            action = new LanternaAction(action)
         } else if (action instanceof Action) {
-            action = new MutableAction()
+            action = new LanternaAction()
         }
 
         new MutableButton(text, action)

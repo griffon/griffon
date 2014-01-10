@@ -6,7 +6,7 @@ import com.googlecode.lanterna.gui.component.Panel;
 import com.googlecode.lanterna.gui.component.TextBox;
 import griffon.core.GriffonApplication;
 import griffon.core.artifact.GriffonView;
-import griffon.lanterna.widgets.MutableAction;
+import griffon.lanterna.widgets.LanternaAction;
 import griffon.lanterna.widgets.MutableButton;
 import org.codehaus.griffon.core.compile.ArtifactProviderFor;
 import org.codehaus.griffon.runtime.core.artifact.AbstractGriffonView;
@@ -47,7 +47,7 @@ public class SampleView extends AbstractGriffonView {
         final TextBox input = new TextBox();
         panel.addComponent(input);
 
-        MutableAction sayHelloAction = (MutableAction) getApplication().getActionManager()
+        LanternaAction sayHelloAction = (LanternaAction) getApplication().getActionManager()
             .actionFor(controller, "sayHello")
             .getToolkitAction();
         final Runnable runnable = sayHelloAction.getRunnable();

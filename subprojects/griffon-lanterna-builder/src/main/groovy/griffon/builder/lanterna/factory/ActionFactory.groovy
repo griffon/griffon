@@ -16,22 +16,22 @@
 
 package griffon.builder.lanterna.factory
 
-import griffon.lanterna.widgets.MutableAction
+import griffon.lanterna.widgets.LanternaAction
 
 /**
  * @author Andres Almiray
  */
 class ActionFactory extends AbstractFactory {
     Object newInstance(FactoryBuilderSupport builder, Object name, Object value, Map attributes) {
-        if (value instanceof MutableAction) {
+        if (value instanceof LanternaAction) {
             return value
         }
 
         if (value instanceof CharSequence) {
-            return new MutableAction(value.toString())
+            return new LanternaAction(value.toString())
         }
 
-        new MutableAction()
+        new LanternaAction()
     }
 
     boolean isHandlesNodeChildren() {

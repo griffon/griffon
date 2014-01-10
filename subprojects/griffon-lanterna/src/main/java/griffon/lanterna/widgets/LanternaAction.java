@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package griffon.lanterna.widgets;
 
 import com.googlecode.lanterna.gui.Action;
@@ -22,7 +23,7 @@ import org.codehaus.griffon.runtime.core.AbstractObservable;
  * @author Andres Almiray
  * @since 2.0.0
  */
-public class MutableAction extends AbstractObservable implements Action {
+public class LanternaAction extends AbstractObservable implements Action {
     public static final String NAME = "name";
 
     private Runnable runnable;
@@ -46,18 +47,18 @@ public class MutableAction extends AbstractObservable implements Action {
         this.resolveStrategy = resolveStrategy != null ? resolveStrategy : ResolveStrategy.DELEGATE_FIRST;
     }
 
-    public MutableAction() {
+    public LanternaAction() {
     }
 
-    public MutableAction(String name) {
+    public LanternaAction(String name) {
         this.name = name;
     }
 
-    public MutableAction(Runnable runnable) {
+    public LanternaAction(Runnable runnable) {
         this.runnable = runnable;
     }
 
-    public MutableAction(Action delegate) {
+    public LanternaAction(Action delegate) {
         this.delegate = delegate;
     }
 
