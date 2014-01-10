@@ -89,16 +89,16 @@ subprojects { subproj ->
         }
 
         javadoc {
-            /*classpath = subproj.sourceSets.main.output +
-                        subproj.configurations.compile +
-                        subproj.configurations.compileOnly*/
-
-            excludes = ['**/*.html', 'META-INF/**']
+            excludes = ['**/*.html', 'META-INF/**', '**/*.groovy']
 
             options.use         = true
             options.splitIndex  = true
+            options.encoding    = 'UTF-8'
+            options.author      = true
+            options.version     = subproj.sourceCompatibility
             options.windowTitle = "${subproj.ext.pomDescription} $version"
             options.docTitle    = "${subproj.ext.pomDescription} $version"
+            options.footer      = "Copyright &amp;copy; 2008-2014 The Griffon Team. All rights reserved."
             options.links       = ['http://www.slf4j.org/apidocs/',
                                    'http://jsr-305.googlecode.com/svn/trunk/javadoc/',
                                    'http://docs.oracle.com/javase/7/docs/api/']
