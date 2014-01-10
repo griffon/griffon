@@ -143,9 +143,6 @@ public abstract class GriffonArtifactASTTransformation extends AbstractASTTransf
         }
         AnnotationNode artifact = annotations.get(0);
         Expression value = artifact.getMember("value");
-        if (value instanceof ClassExpression) {
-            return ((ClassExpression) value).getType().equals(artifactType);
-        }
-        return false;
+        return value instanceof ClassExpression && value.getType().equals(artifactType);
     }
 }

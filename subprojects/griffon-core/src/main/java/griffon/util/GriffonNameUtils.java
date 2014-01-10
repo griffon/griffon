@@ -124,7 +124,7 @@ public class GriffonNameUtils {
     /**
      * Calculate the name for a getter method to retrieve the specified property
      *
-     * @param propertyName
+     * @param propertyName The property name
      * @return The name for the getter method for this property, if it were to exist, i.e. getConstraints
      */
     public static String getGetterName(String propertyName) {

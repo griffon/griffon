@@ -129,7 +129,7 @@ public class ArtifactProviderASTTransformation extends GipsyASTTransformation {
     }
 
     private List<ClassNode> findArtifacts(List<AnnotationNode> annotations) {
-        List<ClassNode> artifacts = new ArrayList<ClassNode>();
+        List<ClassNode> artifacts = new ArrayList<>();
 
         for (AnnotationNode annotation : annotations) {
             for (ClassExpression expr : findClassListValue(annotation)) {

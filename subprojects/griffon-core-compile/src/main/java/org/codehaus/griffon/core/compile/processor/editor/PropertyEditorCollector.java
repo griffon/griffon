@@ -30,7 +30,7 @@ import java.util.TreeMap;
  * @author Andres Almiray
  */
 public final class PropertyEditorCollector {
-    private final Map<String, String> editors = new TreeMap<String, String>();
+    private final Map<String, String> editors = new TreeMap<>();
 
     private final Initializer initializer;
     private final Logger logger;
@@ -63,7 +63,7 @@ public final class PropertyEditorCollector {
         }
 
         logger.note(LogLocation.LOG_FILE, "Removing " + editor);
-        Set<String> keys = new LinkedHashSet<String>();
+        Set<String> keys = new LinkedHashSet<>();
         for (String key : editors.keySet()) {
             if (editor.equals(editors.get(key))) {
                 keys.add(key);

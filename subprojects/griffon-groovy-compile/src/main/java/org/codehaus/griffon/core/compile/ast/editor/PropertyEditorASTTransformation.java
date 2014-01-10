@@ -126,7 +126,7 @@ public class PropertyEditorASTTransformation extends GipsyASTTransformation {
     }
 
     private List<ClassNode> findTypes(List<AnnotationNode> annotations) {
-        List<ClassNode> types = new ArrayList<ClassNode>();
+        List<ClassNode> types = new ArrayList<>();
 
         for (AnnotationNode annotation : annotations) {
             for (ClassExpression expr : findClassListValue(annotation)) {

@@ -32,9 +32,9 @@ class BoundsFactory extends AbstractFactory {
         if (FactoryBuilderSupport.checkValueIsTypeNotString(value, name, Bounds)) {
             return value
         }
-        if (value && value instanceof Bounds) {
+        if (value != null && value instanceof Bounds) {
             return value
-        } else {
+        } else if( value != null) {
             throw new IllegalArgumentException("In $name value must be of type ${Bounds.class.name}")
         }
 
