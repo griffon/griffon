@@ -5,7 +5,8 @@ import com.google.guiceberry.junit4.GuiceBerryRule
 import com.google.inject.AbstractModule
 import griffon.core.ApplicationClassLoader
 import griffon.core.resources.ResourceHandler
-import griffon.core.resources.ResourcesInjector
+import griffon.core.resources.ResourceResolver
+import griffon.core.resources.ResourceInjector
 import griffon.util.CompositeResourceBundleBuilder
 import org.codehaus.griffon.runtime.core.DefaultApplicationClassLoader
 import org.codehaus.griffon.runtime.util.DefaultCompositeResourceBundleBuilder
@@ -24,8 +25,8 @@ class DefaultResourceInjectorTests {
 
     @Test
     void resolveAllFormatsByProperties() {
-        ResourcesInjector resourcesInjector = new DefaultResourcesInjector()
-        resourcesInjector.resourceResolver = new DefaultResourceResolver(bundleBuilder, 'org.codehaus.griffon.runtime.core.resources.injector')
+        ResourceResolver resourceResolver = new DefaultResourceResolver(bundleBuilder, 'org.codehaus.griffon.runtime.core.resources.injector')
+        ResourceInjector resourcesInjector = new DefaultResourceInjector(resourceResolver)
         Bean bean = new Bean()
         resourcesInjector.injectResources(bean)
 

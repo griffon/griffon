@@ -28,13 +28,13 @@ import static java.util.Objects.requireNonNull;
 
 /**
  * @author Andres Almiray
- * @since 1.1.0
+ * @since 2.0.0
  */
-public class DefaultResourcesInjector extends AbstractResourcesInjector {
+public class DefaultResourceInjector extends AbstractResourceInjector {
     private ResourceResolver resourceResolver;
 
     @Inject
-    public void setResourceResolver(@Nonnull ResourceResolver resourceResolver) {
+    public DefaultResourceInjector(@Nonnull ResourceResolver resourceResolver) {
         this.resourceResolver = requireNonNull(resourceResolver, "Argument 'resourceResolver' cannot be null");
     }
 

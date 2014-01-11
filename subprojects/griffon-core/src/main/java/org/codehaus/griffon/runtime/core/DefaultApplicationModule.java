@@ -28,7 +28,7 @@ import griffon.core.i18n.MessageSource;
 import griffon.core.mvc.MVCGroupManager;
 import griffon.core.resources.ResourceHandler;
 import griffon.core.resources.ResourceResolver;
-import griffon.core.resources.ResourcesInjector;
+import griffon.core.resources.ResourceInjector;
 import griffon.core.threading.UIThreadManager;
 import griffon.core.view.WindowManager;
 import griffon.util.CompositeResourceBundleBuilder;
@@ -38,13 +38,16 @@ import org.codehaus.griffon.runtime.core.controller.NoopActionManager;
 import org.codehaus.griffon.runtime.core.event.DefaultEventHandler;
 import org.codehaus.griffon.runtime.core.event.DefaultEventRouter;
 import org.codehaus.griffon.runtime.core.i18n.MessageSourceProvider;
-import org.codehaus.griffon.runtime.core.injection.*;
+import org.codehaus.griffon.runtime.core.injection.AbstractModule;
+import org.codehaus.griffon.runtime.core.injection.NamedImpl;
 import org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroupManager;
+import org.codehaus.griffon.runtime.core.resources.DefaultApplicationResourceInjector;
 import org.codehaus.griffon.runtime.core.resources.DefaultResourceHandler;
-import org.codehaus.griffon.runtime.core.resources.DefaultResourcesInjector;
+import org.codehaus.griffon.runtime.core.resources.ResourceResolverProvider;
 import org.codehaus.griffon.runtime.core.threading.DefaultUIThreadManager;
 import org.codehaus.griffon.runtime.core.view.NoopWindowManager;
 import org.codehaus.griffon.runtime.util.DefaultCompositeResourceBundleBuilder;
+import org.codehaus.griffon.runtime.util.ResourceBundleProvider;
 
 import javax.inject.Named;
 import java.util.ResourceBundle;
@@ -129,19 +132,22 @@ public class DefaultApplicationModule extends AbstractModule {
 
     protected void resourceResolver() {
         bind(ResourceResolver.class)
+            .withClassifier(new NamedImpl("applicationResourceResolver"))
             .toProvider(new ResourceResolverProvider("resources"))
             .asSingleton();
     }
 
     protected void messageSource() {
         bind(MessageSource.class)
+            .withClassifier(new NamedImpl("applicationMessageSource"))
             .toProvider(new MessageSourceProvider("messages"))
             .asSingleton();
     }
 
     protected void resourcesInjector() {
-        bind(ResourcesInjector.class)
-            .to(DefaultResourcesInjector.class)
+        bind(ResourceInjector.class)
+            .withClassifier(new NamedImpl("applicationResourceInjector"))
+            .to(DefaultApplicationResourceInjector.class)
             .asSingleton();
     }
 

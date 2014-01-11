@@ -16,11 +16,9 @@
 
 package org.codehaus.griffon.runtime.core.controller;
 
-import griffon.core.ApplicationConfiguration;
+import griffon.core.GriffonApplication;
 import griffon.core.artifact.GriffonController;
 import griffon.core.controller.Action;
-import griffon.core.i18n.MessageSource;
-import griffon.core.threading.UIThreadManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -39,8 +37,8 @@ public class SwingActionManager extends AbstractActionManager {
     private static final Logger LOG = LoggerFactory.getLogger(SwingActionManager.class);
 
     @Inject
-    public SwingActionManager(@Nonnull ApplicationConfiguration applicationConfiguration, @Nonnull UIThreadManager uiThreadManager, @Nonnull MessageSource messageSource) {
-        super(applicationConfiguration, uiThreadManager, messageSource);
+    public SwingActionManager(@Nonnull GriffonApplication application) {
+        super(application);
     }
 
     @Override

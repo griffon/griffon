@@ -16,11 +16,9 @@
 
 package org.codehaus.griffon.runtime.core.controller;
 
-import griffon.core.ApplicationConfiguration;
+import griffon.core.GriffonApplication;
 import griffon.core.artifact.GriffonController;
 import griffon.core.controller.Action;
-import griffon.core.i18n.MessageSource;
-import griffon.core.threading.UIThreadManager;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
@@ -31,8 +29,8 @@ import javax.inject.Inject;
  */
 public class LanternaActionManager extends AbstractActionManager {
     @Inject
-    public LanternaActionManager(@Nonnull ApplicationConfiguration applicationConfiguration, @Nonnull UIThreadManager uiThreadManager, @Nonnull MessageSource messageSource) {
-        super(applicationConfiguration, uiThreadManager, messageSource);
+    public LanternaActionManager(@Nonnull GriffonApplication application) {
+        super(application);
     }
 
     @Nonnull

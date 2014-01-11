@@ -14,14 +14,15 @@
  * limitations under the License.
  */
 
-package org.codehaus.griffon.runtime.core.injection;
+package org.codehaus.griffon.runtime.core.resources;
 
+import griffon.core.resources.ResourceResolver;
 import griffon.util.CompositeResourceBundleBuilder;
+import org.codehaus.griffon.runtime.core.resources.DefaultResourceResolver;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import javax.inject.Provider;
-import java.util.ResourceBundle;
 
 import static griffon.util.GriffonNameUtils.requireNonBlank;
 import static java.util.Objects.requireNonNull;
@@ -30,12 +31,12 @@ import static java.util.Objects.requireNonNull;
  * @author Andres Almiray
  * @since 2.0.0
  */
-public class ResourceBundleProvider implements Provider<ResourceBundle> {
+public class ResourceResolverProvider implements Provider<ResourceResolver> {
     private final String basename;
 
     private CompositeResourceBundleBuilder resourceBundleBuilder;
 
-    public ResourceBundleProvider(@Nonnull String basename) {
+    public ResourceResolverProvider(@Nonnull String basename) {
         this.basename = requireNonBlank(basename, "Argument 'basename' cannot be blank");
     }
 
@@ -45,7 +46,7 @@ public class ResourceBundleProvider implements Provider<ResourceBundle> {
     }
 
     @Override
-    public ResourceBundle get() {
-        return resourceBundleBuilder.create(basename);
+    public ResourceResolver get() {
+        return new DefaultResourceResolver(resourceBundleBuilder, basename);
     }
 }

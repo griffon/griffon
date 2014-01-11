@@ -16,11 +16,9 @@
 
 package org.codehaus.griffon.runtime.core.controller;
 
-import griffon.core.ApplicationConfiguration;
+import griffon.core.GriffonApplication;
 import griffon.core.artifact.GriffonController;
 import griffon.core.controller.Action;
-import griffon.core.i18n.MessageSource;
-import griffon.core.threading.UIThreadManager;
 import griffon.exceptions.InstanceMethodInvocationException;
 import org.apache.pivot.wtk.Component;
 import org.slf4j.Logger;
@@ -42,8 +40,8 @@ public class PivotActionManager extends AbstractActionManager {
     private static final Logger LOG = LoggerFactory.getLogger(PivotActionManager.class);
 
     @Inject
-    public PivotActionManager(@Nonnull ApplicationConfiguration applicationConfiguration, @Nonnull UIThreadManager uiThreadManager, @Nonnull MessageSource messageSource) {
-        super(applicationConfiguration, uiThreadManager, messageSource);
+    public PivotActionManager(@Nonnull GriffonApplication application) {
+        super(application);
     }
 
     @Nonnull

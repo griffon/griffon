@@ -16,6 +16,7 @@
 package org.codehaus.griffon.runtime.core.controller;
 
 import griffon.core.ApplicationConfiguration;
+import griffon.core.GriffonApplication;
 import griffon.core.artifact.GriffonController;
 import griffon.core.artifact.GriffonControllerClass;
 import griffon.core.controller.*;
@@ -62,31 +63,27 @@ public abstract class AbstractActionManager implements ActionManager {
     private final Map<String, Threading.Policy> threadingPolicies = new ConcurrentHashMap<>();
     private final List<ActionInterceptor> interceptors = new CopyOnWriteArrayList<>();
 
-    private final UIThreadManager uiThreadManager;
-    private final MessageSource messageSource;
-    private final ApplicationConfiguration applicationConfiguration;
+    private final GriffonApplication application;
 
     @Inject
-    public AbstractActionManager(@Nonnull ApplicationConfiguration applicationConfiguration, @Nonnull UIThreadManager uiThreadManager, @Nonnull MessageSource messageSource) {
-        this.applicationConfiguration = requireNonNull(applicationConfiguration, "Argument 'applicationConfiguration' cannot be null");
-        this.uiThreadManager = requireNonNull(uiThreadManager, "Argument 'uiThreadManager' cannot be null");
-        this.messageSource = requireNonNull(messageSource, "Argument 'messageSource' cannot be null");
+    public AbstractActionManager(@Nonnull GriffonApplication application) {
+        this.application = requireNonNull(application, "Argument 'application' cannot be null");
     }
 
     protected ApplicationConfiguration getApplicationConfiguration() {
-        return applicationConfiguration;
+        return application.getApplicationConfiguration();
     }
 
     protected MessageSource getMessageSource() {
-        return messageSource;
+        return application.getMessageSource();
+    }
+
+    protected UIThreadManager getUiThreadManager() {
+        return application.getUIThreadManager();
     }
 
     protected Map<String, Threading.Policy> getThreadingPolicies() {
         return threadingPolicies;
-    }
-
-    protected UIThreadManager getUiThreadManager() {
-        return uiThreadManager;
     }
 
     @Nonnull
@@ -223,13 +220,13 @@ public abstract class AbstractActionManager implements ActionManager {
 
         switch (policy) {
             case OUTSIDE_UITHREAD:
-                uiThreadManager.runOutsideUI(runnable);
+                getUiThreadManager().runOutsideUI(runnable);
                 break;
             case INSIDE_UITHREAD_SYNC:
-                uiThreadManager.runInsideUISync(runnable);
+                getUiThreadManager().runInsideUISync(runnable);
                 break;
             case INSIDE_UITHREAD_ASYNC:
-                uiThreadManager.runInsideUIAsync(runnable);
+                getUiThreadManager().runInsideUIAsync(runnable);
                 break;
             case SKIP:
             default:
@@ -262,11 +259,11 @@ public abstract class AbstractActionManager implements ActionManager {
     }
 
     private boolean isThreadingDisabled(@Nonnull String actionName) {
-        if (applicationConfiguration.getAsBoolean(KEY_DISABLE_THREADING_INJECTION, false)) {
+        if (getApplicationConfiguration().getAsBoolean(KEY_DISABLE_THREADING_INJECTION, false)) {
             return true;
         }
 
-        Map<String, Object> settings = applicationConfiguration.asFlatMap();
+        Map<String, Object> settings = getApplicationConfiguration().asFlatMap();
 
         String keyName = KEY_THREADING + "." + actionName;
         while (!KEY_THREADING.equals(keyName)) {
@@ -325,9 +322,9 @@ public abstract class AbstractActionManager implements ActionManager {
     @Nullable
     protected String msg(@Nonnull String key, @Nonnull String actionName, @Nonnull String subkey, @Nullable String defaultValue) {
         try {
-            return messageSource.getMessage(key + actionName + "." + subkey);
+            return getMessageSource().getMessage(key + actionName + "." + subkey);
         } catch (NoSuchMessageException nsme) {
-            return messageSource.getMessage("application.action." + actionName + "." + subkey, defaultValue);
+            return getMessageSource().getMessage("application.action." + actionName + "." + subkey, defaultValue);
         }
     }
 

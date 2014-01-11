@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.codehaus.griffon.runtime.core.injection;
+package org.codehaus.griffon.runtime.core;
 
 import griffon.core.ApplicationConfiguration;
 import griffon.core.LifecycleHandler;

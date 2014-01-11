@@ -14,13 +14,14 @@
  * limitations under the License.
  */
 
-package org.codehaus.griffon.runtime.core.injection;
+package org.codehaus.griffon.runtime.core;
 
 import griffon.core.ApplicationClassLoader;
 import griffon.core.GriffonApplication;
 import griffon.core.LifecycleHandler;
 import griffon.exceptions.InstanceNotFoundException;
 import griffon.exceptions.TypeNotFoundException;
+import org.codehaus.griffon.runtime.core.injection.NamedImpl;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;

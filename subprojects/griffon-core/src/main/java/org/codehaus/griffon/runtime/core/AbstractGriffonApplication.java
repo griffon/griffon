@@ -28,7 +28,7 @@ import griffon.core.injection.Injector;
 import griffon.core.mvc.MVCGroupManager;
 import griffon.core.resources.ResourceHandler;
 import griffon.core.resources.ResourceResolver;
-import griffon.core.resources.ResourcesInjector;
+import griffon.core.resources.ResourceInjector;
 import griffon.core.threading.UIThreadManager;
 import griffon.core.view.WindowManager;
 import org.codehaus.griffon.runtime.core.injection.NamedImpl;
@@ -142,6 +142,7 @@ public abstract class AbstractGriffonApplication extends AbstractObservable impl
         return injector.getInstance(ApplicationConfiguration.class);
     }
 
+    @Nonnull
     @Override
     public UIThreadManager getUIThreadManager() {
         return injector.getInstance(UIThreadManager.class);
@@ -180,13 +181,13 @@ public abstract class AbstractGriffonApplication extends AbstractObservable impl
     @Nonnull
     @Override
     public MessageSource getMessageSource() {
-        return injector.getInstance(MessageSource.class);
+        return injector.getInstance(MessageSource.class, new NamedImpl("applicationMessageSource"));
     }
 
     @Nonnull
     @Override
     public ResourceResolver getResourceResolver() {
-        return injector.getInstance(ResourceResolver.class);
+        return injector.getInstance(ResourceResolver.class, new NamedImpl("applicationResourceResolver"));
     }
 
     @Nonnull
@@ -197,8 +198,8 @@ public abstract class AbstractGriffonApplication extends AbstractObservable impl
 
     @Nonnull
     @Override
-    public ResourcesInjector getResourcesInjector() {
-        return injector.getInstance(ResourcesInjector.class);
+    public ResourceInjector getResourceInjector() {
+        return injector.getInstance(ResourceInjector.class, new NamedImpl("applicationResourceInjector"));
     }
 
     @Nonnull

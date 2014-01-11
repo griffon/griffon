@@ -17,7 +17,7 @@
 package org.codehaus.griffon.runtime.core.resources;
 
 import griffon.core.resources.InjectedResource;
-import griffon.core.resources.ResourcesInjector;
+import griffon.core.resources.ResourceInjector;
 import griffon.core.resources.editors.ExtendedPropertyEditor;
 import griffon.exceptions.InstanceMethodInvocationException;
 import org.slf4j.Logger;
@@ -48,7 +48,9 @@ import static java.util.Objects.requireNonNull;
  * @author Andres Almiray
  * @since 1.2.0
  */
-public abstract class AbstractResourcesInjector implements ResourcesInjector {
+public abstract class AbstractResourceInjector implements ResourceInjector {
+    private static final Logger LOG = LoggerFactory.getLogger(AbstractResourceInjector.class);
+
     protected static final String ERROR_INSTANCE_NULL = "Argument 'instance' cannot be null";
     protected static final String ERROR_METHOD_NULL = "Argument 'method' cannot be null";
     protected static final String ERROR_FIELD_NULL = "Argument 'field' cannot be null";
@@ -57,8 +59,6 @@ public abstract class AbstractResourcesInjector implements ResourcesInjector {
     protected static final String ERROR_VALUE_NULL = "Argument 'value' cannot be null";
     protected static final String ERROR_FULLY_QUALIFIED_NAME_BLANK = "Argument 'fqName' cannot be blank";
     protected static final String ERROR_FULLY_QUALIFIED_FIELD_NAME_BLANK = "Argument 'fqFieldName' cannot be blank";
-
-    private static final Logger LOG = LoggerFactory.getLogger(AbstractResourcesInjector.class);
 
     @Override
     public void injectResources(@Nonnull Object instance) {
@@ -124,8 +124,9 @@ public abstract class AbstractResourcesInjector implements ResourcesInjector {
         }
 
         for (Field field : klass.getDeclaredFields()) {
-            if (field.isSynthetic() || names.contains(field.getName()))
+            if (field.isSynthetic() || names.contains(field.getName())) {
                 continue;
+            }
             final InjectedResource annotation = field.getAnnotation(InjectedResource.class);
             if (null == annotation) continue;
 
@@ -220,7 +221,6 @@ public abstract class AbstractResourcesInjector implements ResourcesInjector {
                 field.set(instance, value);
             } catch (IllegalAccessException e) {
                 LOG.warn("Cannot set value on field {} of instance {}", fqFieldName, instance, sanitize(e));
-
             }
         }
     }

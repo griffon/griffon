@@ -25,7 +25,7 @@ import griffon.core.env.Lifecycle;
 import griffon.core.event.EventHandler;
 import griffon.core.injection.Injector;
 import griffon.core.mvc.MVCGroupConfiguration;
-import griffon.core.resources.ResourcesInjector;
+import griffon.core.resources.ResourceInjector;
 import griffon.util.ServiceLoaderUtils;
 import org.codehaus.griffon.runtime.core.controller.NoopActionManager;
 import org.codehaus.griffon.runtime.core.injection.NamedImpl;
@@ -122,7 +122,7 @@ public final class GriffonApplicationSupport {
     }
 
     private static void initializeResourcesInjector(@Nonnull GriffonApplication application) {
-        final ResourcesInjector injector = application.getInjector().getInstance(ResourcesInjector.class);
+        final ResourceInjector injector = application.getResourceInjector();
         application.getEventRouter().addEventListener(ApplicationEvent.NEW_INSTANCE.getName(), new CallableWithArgs<Void>() {
             public Void call(@Nonnull Object... args) {
                 Object instance = args[1];

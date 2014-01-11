@@ -26,7 +26,7 @@ import griffon.core.injection.Injector;
 import griffon.core.mvc.MVCGroupManager;
 import griffon.core.resources.ResourceHandler;
 import griffon.core.resources.ResourceResolver;
-import griffon.core.resources.ResourcesInjector;
+import griffon.core.resources.ResourceInjector;
 import griffon.core.threading.UIThreadManager;
 import griffon.core.view.WindowManager;
 import org.slf4j.Logger;
@@ -47,30 +47,43 @@ public interface GriffonApplication extends Observable {
     @Nonnull
     Object createApplicationContainer(@Nonnull Map<String, Object> attributes);
 
+    @Nonnull
     ApplicationConfiguration getApplicationConfiguration();
 
+    @Nonnull
     UIThreadManager getUIThreadManager();
 
+    @Nonnull
     EventRouter getEventRouter();
 
+    @Nonnull
     ArtifactManager getArtifactManager();
 
+    @Nonnull
     ActionManager getActionManager();
 
+    @Nonnull
     AddonManager getAddonManager();
 
+    @Nonnull
     MVCGroupManager getMvcGroupManager();
 
+    @Nonnull
     MessageSource getMessageSource();
 
+    @Nonnull
     ResourceResolver getResourceResolver();
 
+    @Nonnull
     ResourceHandler getResourceHandler();
 
-    ResourcesInjector getResourcesInjector();
+    @Nonnull
+    ResourceInjector getResourceInjector();
 
+    @Nonnull
     Injector<?> getInjector();
 
+    @Nonnull
     <W> WindowManager<W> getWindowManager();
 
     // --== Lifecycle ==--
@@ -169,5 +182,6 @@ public interface GriffonApplication extends Observable {
      * @return a Logger instance.
      * @since 0.9.2
      */
+    @Nonnull
     Logger getLog();
 }
