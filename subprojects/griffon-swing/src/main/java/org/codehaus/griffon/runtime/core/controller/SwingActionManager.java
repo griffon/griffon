@@ -57,7 +57,6 @@ public class SwingActionManager extends AbstractActionManager {
             swingAction.setAccelerator(rsAccelerator);
         }
 
-        /*
         String rsCommand = msg(keyPrefix, normalizeNamed, "command", "");
         if (!isBlank(rsCommand)) {
             if (LOG.isTraceEnabled()) {
@@ -65,7 +64,6 @@ public class SwingActionManager extends AbstractActionManager {
             }
             swingAction.setCommand(rsCommand);
         }
-        */
 
         String rsShortDescription = msg(keyPrefix, normalizeNamed, "short_description", "");
         if (!isBlank(rsShortDescription)) {

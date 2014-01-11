@@ -46,6 +46,7 @@ public class SwingGriffonControllerAction extends AbstractAction {
     private static final String KEY_SELECTED = "selected";
     private static final String KEY_ACCELERATOR = "accelerator";
     private static final String KEY_MNEMONIC = "mnemonic";
+    private static final String KEY_COMMAND = "command";
 
     private String shortDescription;
     private String longDescription;
@@ -53,6 +54,7 @@ public class SwingGriffonControllerAction extends AbstractAction {
     private String largeIcon;
     private String accelerator;
     private String mnemonic;
+    private String command;
     private boolean selected;
     private final SwingAction toolkitAction;
 
@@ -73,6 +75,8 @@ public class SwingGriffonControllerAction extends AbstractAction {
                     public void run() {
                         if (KEY_NAME.equals(evt.getPropertyName())) {
                             toolkitAction.putValue(Action.NAME, evt.getNewValue());
+                        } else if (KEY_COMMAND.equals(evt.getPropertyName())) {
+                            toolkitAction.putValue(Action.ACTION_COMMAND_KEY, evt.getNewValue());
                         } else if (KEY_SHORT_DESCRIPTION.equals(evt.getPropertyName())) {
                             toolkitAction.putValue(Action.SHORT_DESCRIPTION, evt.getNewValue());
                         } else if (KEY_LONG_DESCRIPTION.equals(evt.getPropertyName())) {
@@ -110,6 +114,7 @@ public class SwingGriffonControllerAction extends AbstractAction {
 
     protected void doInitialize() {
         toolkitAction.putValue(Action.NAME, getName());
+        toolkitAction.putValue(Action.ACTION_COMMAND_KEY, getCommand());
         toolkitAction.putValue(Action.SHORT_DESCRIPTION, getShortDescription());
         toolkitAction.putValue(Action.LONG_DESCRIPTION, getLongDescription());
         toolkitAction.setEnabled(isEnabled());
@@ -192,6 +197,15 @@ public class SwingGriffonControllerAction extends AbstractAction {
 
     public void setSmallIcon(@Nullable String smallIcon) {
         firePropertyChange(KEY_SMALL_ICON, this.smallIcon, this.smallIcon = smallIcon);
+    }
+
+    @Nullable
+    public String getCommand() {
+        return command;
+    }
+
+    public void setCommand(@Nullable String command) {
+        firePropertyChange(KEY_SMALL_ICON, this.command, this.command = command);
     }
 
     @Nonnull
