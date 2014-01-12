@@ -24,7 +24,7 @@ import static org.codehaus.griffon.core.compile.MethodDescriptor.type;
  */
 public interface ResourcesAwareConstants extends BaseConstants {
     String RESOURCE_HANDLER_TYPE = "griffon.core.resources.ResourceHandler";
-    String RESOURCE_LOCATOR_PROPERTY = "resourceLocator";
+    String RESOURCE_HANDLER_PROPERTY = "resourceHandler";
 
     String METHOD_GET_RESOURCE_AS_URL = "getResourceAsURL";
     String METHOD_GET_RESOURCE_AS_STREAM = "getResourceAsStream";

@@ -16,7 +16,9 @@
 
 package org.codehaus.griffon.core.compile.ast.transform;
 
-import griffon.transform.Vetoable;
+import griffon.core.Vetoable;
+import org.codehaus.griffon.core.compile.AnnotationHandler;
+import org.codehaus.griffon.core.compile.AnnotationHandlerFor;
 import org.codehaus.griffon.core.compile.VetoableConstants;
 import org.codehaus.groovy.ast.*;
 import org.codehaus.groovy.ast.expr.FieldExpression;
@@ -26,8 +28,11 @@ import org.codehaus.groovy.transform.GroovyASTTransformation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.lang.reflect.Modifier;
+import java.beans.PropertyChangeEvent;
+import java.beans.VetoableChangeSupport;
 
+import static java.lang.reflect.Modifier.FINAL;
+import static java.lang.reflect.Modifier.PROTECTED;
 import static org.codehaus.griffon.core.compile.ast.GriffonASTUtils.*;
 import static org.codehaus.groovy.ast.ClassHelper.OBJECT_TYPE;
 import static org.codehaus.groovy.ast.ClassHelper.STRING_TYPE;
@@ -38,11 +43,12 @@ import static org.codehaus.groovy.ast.ClassHelper.VOID_TYPE;
  *
  * @author Andres Almiray
  */
+@AnnotationHandlerFor(griffon.transform.Vetoable.class)
 @GroovyASTTransformation(phase = CompilePhase.CANONICALIZATION)
-public class VetoableASTTransformation extends AbstractASTTransformation implements VetoableConstants {
+public class VetoableASTTransformation extends AbstractASTTransformation implements VetoableConstants, AnnotationHandler {
     private static final Logger LOG = LoggerFactory.getLogger(VetoableASTTransformation.class);
-    private static final ClassNode VETOABLE_CNODE = makeClassSafe(VETOABLE_TYPE);
-    private static final ClassNode VETOABLE_ANNOTATION_CNODE = makeClassSafe(Vetoable.class);
+    private static final ClassNode VETOABLE_CNODE = makeClassSafe(Vetoable.class);
+    private static final ClassNode VETOABLE_ANNOTATION_CNODE = makeClassSafe(griffon.transform.Vetoable.class);
 
     /**
      * Convenience method to see if an annotated node is {@code @Vetoable}.
@@ -86,14 +92,14 @@ public class VetoableASTTransformation extends AbstractASTTransformation impleme
     public static void apply(ClassNode classNode) {
         injectInterface(classNode, VETOABLE_CNODE);
 
-        ClassNode vcsClassNode = makeClassSafe(VETOABLE_CHANGE_SUPPORT_TYPE);
-        ClassNode pceClassNode = makeClassSafe(PROPERTY_CHANGE_EVENT_TYPE);
+        ClassNode vcsClassNode = makeClassSafe(VetoableChangeSupport.class);
+        ClassNode pceClassNode = makeClassSafe(PropertyChangeEvent.class);
 
         // add field:
         // protected final VetoableChangeSupport this$vetoableChangeSupport = new java.beans.VetoableChangeSupport(this)
         FieldNode vcsField = injectField(classNode,
             VETOABLE_CHANGE_SUPPORT_FIELD_NAME,
-            Modifier.FINAL | Modifier.PROTECTED,
+            FINAL | PROTECTED,
             vcsClassNode,
             ctor(vcsClassNode, args(THIS)));
 
@@ -106,7 +112,7 @@ public class VetoableASTTransformation extends AbstractASTTransformation impleme
         injectMethod(classNode,
             new MethodNode(
                 METHOD_FIRE_VETOABLE_CHANGE,
-                Modifier.PROTECTED,
+                PROTECTED,
                 VOID_TYPE,
                 params(
                     param(STRING_TYPE, NAME),
@@ -125,7 +131,7 @@ public class VetoableASTTransformation extends AbstractASTTransformation impleme
         injectMethod(classNode,
             new MethodNode(
                 METHOD_FIRE_VETOABLE_CHANGE,
-                Modifier.PROTECTED,
+                PROTECTED,
                 VOID_TYPE,
                 params(param(pceClassNode, EVENT)),
                 NO_EXCEPTIONS,

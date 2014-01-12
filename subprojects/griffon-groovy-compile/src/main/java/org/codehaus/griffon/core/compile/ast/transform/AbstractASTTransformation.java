@@ -18,7 +18,9 @@ package org.codehaus.griffon.core.compile.ast.transform;
 
 import griffon.core.GriffonApplication;
 import org.codehaus.griffon.core.compile.MethodDescriptor;
+import org.codehaus.griffon.core.compile.ast.GriffonASTUtils;
 import org.codehaus.groovy.ast.*;
+import org.codehaus.groovy.ast.expr.ConstantExpression;
 import org.codehaus.groovy.ast.expr.Expression;
 import org.codehaus.groovy.ast.expr.FieldExpression;
 import org.codehaus.groovy.ast.expr.StaticMethodCallExpression;
@@ -29,12 +31,16 @@ import org.codehaus.groovy.syntax.SyntaxException;
 import org.codehaus.groovy.transform.ASTTransformation;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import javax.inject.Inject;
+import javax.inject.Named;
+import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
 import static griffon.util.GriffonNameUtils.getGetterName;
+import static griffon.util.GriffonNameUtils.isBlank;
 import static java.lang.reflect.Modifier.PRIVATE;
 import static java.lang.reflect.Modifier.isPrivate;
 import static org.codehaus.griffon.core.compile.ast.GriffonASTUtils.*;
@@ -46,9 +52,10 @@ import static org.codehaus.griffon.core.compile.ast.GriffonASTUtils.*;
  * @since 0.9.3
  */
 public abstract class AbstractASTTransformation implements ASTTransformation {
-    private static final ClassNode COLLECTIONS_CLASS = makeClassSafe(Collections.class);
-    private static final ClassNode GRIFFON_APPLICATION_TYPE = makeClassSafe(GriffonApplication.class);
-    private static final ClassNode INJECT_TYPE = makeClassSafe(Inject.class);
+    public static final ClassNode COLLECTIONS_CLASS = makeClassSafe(Collections.class);
+    public static final ClassNode GRIFFON_APPLICATION_TYPE = makeClassSafe(GriffonApplication.class);
+    public static final ClassNode INJECT_TYPE = makeClassSafe(Inject.class);
+    public static final ClassNode NAMED_TYPE = makeClassSafe(Named.class);
     private static final String PROPERTY_APPLICATION = "application";
     private static final String METHOD_GET_APPLICATION = "getApplication";
 
@@ -105,6 +112,17 @@ public abstract class AbstractASTTransformation implements ASTTransformation {
             FieldNode field = injectField(classNode, PROPERTY_APPLICATION, PRIVATE, GRIFFON_APPLICATION_TYPE, null, false);
             field.addAnnotation(new AnnotationNode(INJECT_TYPE));
         }
+    }
+
+    public static FieldExpression injectedField(@Nonnull ClassNode owner, @Nonnull ClassNode type, @Nonnull String name, @Nullable String qualifierName) {
+        FieldNode fieldNode = GriffonASTUtils.injectField(owner, name, Modifier.PRIVATE, type, null, false);
+        fieldNode.addAnnotation(new AnnotationNode(INJECT_TYPE));
+        if (!isBlank(qualifierName)) {
+            AnnotationNode namedAnnotation = new AnnotationNode(NAMED_TYPE);
+            namedAnnotation.addMember("value", new ConstantExpression(qualifierName));
+            fieldNode.addAnnotation(namedAnnotation);
+        }
+        return new FieldExpression(fieldNode);
     }
 
     protected static ClassNode newClass(ClassNode classNode) {
@@ -246,16 +264,18 @@ public abstract class AbstractASTTransformation implements ASTTransformation {
             returnType.setGenericsTypes(method.getReturnType().getGenericsTypes());
             returnType.setGenericsPlaceHolder(method.getReturnType().isGenericsPlaceHolder());
 
+            boolean isVoid = ClassHelper.VOID_TYPE.equals(method.getReturnType());
+            Expression delegateExpression = call(
+                delegate,
+                method.getName(),
+                args(variables));
             MethodNode newMethod = new MethodNode(
                 method.getName(),
-                method.getModifiers(),
+                method.getModifiers() - Modifier.ABSTRACT,
                 returnType,
                 parameters,
                 exceptions,
-                returns(call(
-                    delegate,
-                    method.getName(),
-                    args(variables)))
+                isVoid ? stmnt(delegateExpression) : returns(delegateExpression)
             );
             newMethod.setGenericsTypes(method.getGenericsTypes());
             injectMethod(classNode, newMethod);

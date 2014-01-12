@@ -16,12 +16,16 @@
 
 package org.codehaus.griffon.core.compile.ast.transform;
 
+import griffon.core.resources.ResourceResolver;
 import griffon.transform.ResourceResolverAware;
+import org.codehaus.griffon.core.compile.AnnotationHandler;
+import org.codehaus.griffon.core.compile.AnnotationHandlerFor;
 import org.codehaus.griffon.core.compile.ResourceResolverAwareConstants;
 import org.codehaus.groovy.ast.ASTNode;
 import org.codehaus.groovy.ast.AnnotatedNode;
 import org.codehaus.groovy.ast.AnnotationNode;
 import org.codehaus.groovy.ast.ClassNode;
+import org.codehaus.groovy.ast.expr.ConstantExpression;
 import org.codehaus.groovy.ast.expr.Expression;
 import org.codehaus.groovy.control.CompilePhase;
 import org.codehaus.groovy.control.SourceUnit;
@@ -29,6 +33,9 @@ import org.codehaus.groovy.transform.GroovyASTTransformation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.annotation.Nonnull;
+
+import static griffon.util.GriffonNameUtils.isBlank;
 import static org.codehaus.griffon.core.compile.ast.GriffonASTUtils.injectInterface;
 
 /**
@@ -36,10 +43,11 @@ import static org.codehaus.griffon.core.compile.ast.GriffonASTUtils.injectInterf
  *
  * @author Andres Almiray
  */
+@AnnotationHandlerFor(ResourceResolverAware.class)
 @GroovyASTTransformation(phase = CompilePhase.CANONICALIZATION)
-public class ResourceResolverAwareASTTransformation extends AbstractASTTransformation implements ResourceResolverAwareConstants {
+public class ResourceResolverAwareASTTransformation extends AbstractASTTransformation implements ResourceResolverAwareConstants, AnnotationHandler {
     private static final Logger LOG = LoggerFactory.getLogger(ResourceResolverAwareASTTransformation.class);
-    private static final ClassNode RESOURCE_RESOLVER_CNODE = makeClassSafe(RESOURCE_RESOLVER_TYPE);
+    private static final ClassNode RESOURCE_RESOLVER_CNODE = makeClassSafe(ResourceResolver.class);
     private static final ClassNode RESOURCE_RESOLVER_AWARE_CNODE = makeClassSafe(ResourceResolverAware.class);
 
     /**
@@ -65,13 +73,16 @@ public class ResourceResolverAwareASTTransformation extends AbstractASTTransform
      */
     public void visit(ASTNode[] nodes, SourceUnit source) {
         checkNodesForAnnotationAndType(nodes[0], nodes[1]);
-        addResourceResolverIfNeeded(source, (ClassNode) nodes[1]);
+        addResourceResolverIfNeeded(source, (AnnotationNode) nodes[0], (ClassNode) nodes[1]);
     }
 
-    public static void addResourceResolverIfNeeded(SourceUnit source, ClassNode classNode) {
+    public static void addResourceResolverIfNeeded(SourceUnit source, AnnotationNode annotationNode, ClassNode classNode) {
         if (needsDelegate(classNode, source, METHODS, "ResourceResolverAware", RESOURCE_RESOLVER_TYPE)) {
             LOG.debug("Injecting {} into {}", RESOURCE_RESOLVER_TYPE, classNode.getName());
-            apply(classNode);
+            ConstantExpression value = (ConstantExpression) annotationNode.getMember("value");
+            String beanName = value != null ? value.getText() : null;
+            beanName = isBlank(beanName) ? "applicationResourceResolver" : beanName;
+            apply(classNode, beanName);
         }
     }
 
@@ -80,10 +91,9 @@ public class ResourceResolverAwareASTTransformation extends AbstractASTTransform
      *
      * @param declaringClass the class to which we add the support field and methods
      */
-    public static void apply(ClassNode declaringClass) {
+    public static void apply(ClassNode declaringClass, @Nonnull String beanName) {
         injectInterface(declaringClass, RESOURCE_RESOLVER_CNODE);
-        injectApplication(declaringClass);
-        Expression resourceLocator = applicationProperty(declaringClass, RESOURCE_RESOLVER_PROPERTY);
-        addDelegateMethods(declaringClass, RESOURCE_RESOLVER_CNODE, resourceLocator);
+        Expression resourceResolver = injectedField(declaringClass, RESOURCE_RESOLVER_CNODE, "this$" + RESOURCE_RESOLVER_PROPERTY, beanName);
+        addDelegateMethods(declaringClass, RESOURCE_RESOLVER_CNODE, resourceResolver);
     }
 }

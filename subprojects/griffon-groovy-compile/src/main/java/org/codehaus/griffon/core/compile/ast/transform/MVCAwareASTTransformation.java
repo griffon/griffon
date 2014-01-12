@@ -16,7 +16,11 @@
 
 package org.codehaus.griffon.core.compile.ast.transform;
 
+import griffon.core.mvc.MVCGroupManager;
+import griffon.core.mvc.MVCHandler;
 import griffon.transform.MVCAware;
+import org.codehaus.griffon.core.compile.AnnotationHandler;
+import org.codehaus.griffon.core.compile.AnnotationHandlerFor;
 import org.codehaus.griffon.core.compile.MVCAwareConstants;
 import org.codehaus.groovy.ast.ASTNode;
 import org.codehaus.groovy.ast.AnnotatedNode;
@@ -36,10 +40,12 @@ import static org.codehaus.griffon.core.compile.ast.GriffonASTUtils.injectInterf
  *
  * @author Andres Almiray
  */
+@AnnotationHandlerFor(MVCAware.class)
 @GroovyASTTransformation(phase = CompilePhase.CANONICALIZATION)
-public class MVCAwareASTTransformation extends AbstractASTTransformation implements MVCAwareConstants {
+public class MVCAwareASTTransformation extends AbstractASTTransformation implements MVCAwareConstants, AnnotationHandler {
     private static final Logger LOG = LoggerFactory.getLogger(MVCAwareASTTransformation.class);
-    private static final ClassNode MVC_HANDLER_CNODE = makeClassSafe(MVC_HANDLER_TYPE);
+    private static final ClassNode MVC_GROUP_MANAGER_CNODE = makeClassSafe(MVCGroupManager.class);
+    private static final ClassNode MVC_HANDLER_CNODE = makeClassSafe(MVCHandler.class);
     private static final ClassNode MVC_AWARE_CNODE = makeClassSafe(MVCAware.class);
 
     /**
@@ -82,8 +88,7 @@ public class MVCAwareASTTransformation extends AbstractASTTransformation impleme
      */
     public static void apply(ClassNode declaringClass) {
         injectInterface(declaringClass, MVC_HANDLER_CNODE);
-        injectApplication(declaringClass);
-        Expression resourceLocator = applicationProperty(declaringClass, MVC_GROUP_MANAGER_PROPERTY);
-        addDelegateMethods(declaringClass, MVC_HANDLER_CNODE, resourceLocator);
+        Expression mvcGroupManager = injectedField(declaringClass, MVC_GROUP_MANAGER_CNODE, "this$" + MVC_GROUP_MANAGER_PROPERTY, null);
+        addDelegateMethods(declaringClass, MVC_HANDLER_CNODE, mvcGroupManager);
     }
 }

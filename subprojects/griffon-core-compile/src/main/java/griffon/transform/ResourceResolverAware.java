@@ -53,8 +53,10 @@ import java.lang.annotation.Target;
  * </ul>
  *
  * @author Andres Almiray
+ * @see griffon.core.resources.ResourceResolver
  */
 @Retention(RetentionPolicy.SOURCE)
 @Target(ElementType.TYPE)
 public @interface ResourceResolverAware {
+    String value() default "";
 }

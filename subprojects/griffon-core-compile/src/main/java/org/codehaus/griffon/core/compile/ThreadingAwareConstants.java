@@ -25,7 +25,7 @@ import static org.codehaus.griffon.core.compile.MethodDescriptor.typeParams;
  */
 public interface ThreadingAwareConstants extends BaseConstants {
     String THREADING_HANDLER_TYPE = "griffon.core.threading.ThreadingHandler";
-    String UITHREAD_MANAGER_PROPERTY = "uIThreadManager";
+    String UITHREAD_MANAGER_PROPERTY = "uiThreadManager";
 
     String METHOD_IS_UITHREAD = "isUIThread";
     String METHOD_RUN_INSIDE_UI_ASYNC = "runInsideUIAsync";

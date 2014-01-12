@@ -16,7 +16,11 @@
 
 package org.codehaus.griffon.core.compile.ast.transform;
 
+import griffon.core.threading.ThreadingHandler;
+import griffon.core.threading.UIThreadManager;
 import griffon.transform.ThreadingAware;
+import org.codehaus.griffon.core.compile.AnnotationHandler;
+import org.codehaus.griffon.core.compile.AnnotationHandlerFor;
 import org.codehaus.griffon.core.compile.ThreadingAwareConstants;
 import org.codehaus.groovy.ast.ASTNode;
 import org.codehaus.groovy.ast.AnnotatedNode;
@@ -36,10 +40,12 @@ import static org.codehaus.griffon.core.compile.ast.GriffonASTUtils.injectInterf
  *
  * @author Andres Almiray
  */
+@AnnotationHandlerFor(ThreadingAware.class)
 @GroovyASTTransformation(phase = CompilePhase.CANONICALIZATION)
-public class ThreadingAwareASTTransformation extends AbstractASTTransformation implements ThreadingAwareConstants {
+public class ThreadingAwareASTTransformation extends AbstractASTTransformation implements ThreadingAwareConstants, AnnotationHandler {
     private static final Logger LOG = LoggerFactory.getLogger(ThreadingAwareASTTransformation.class);
-    private static final ClassNode THREADING_HANDLER_CNODE = makeClassSafe(THREADING_HANDLER_TYPE);
+    private static final ClassNode UITHREAD_MANAGER_CNODE = makeClassSafe(UIThreadManager.class);
+    private static final ClassNode THREADING_HANDLER_CNODE = makeClassSafe(ThreadingHandler.class);
     private static final ClassNode THREADING_AWARE_CNODE = makeClassSafe(ThreadingAware.class);
 
     /**
@@ -82,8 +88,7 @@ public class ThreadingAwareASTTransformation extends AbstractASTTransformation i
      */
     public static void apply(ClassNode declaringClass) {
         injectInterface(declaringClass, THREADING_HANDLER_CNODE);
-        injectApplication(declaringClass);
-        Expression resourceLocator = applicationProperty(declaringClass, UITHREAD_MANAGER_PROPERTY);
-        addDelegateMethods(declaringClass, THREADING_HANDLER_CNODE, resourceLocator);
+        Expression uiThreadManager = injectedField(declaringClass, UITHREAD_MANAGER_CNODE, "this$" + UITHREAD_MANAGER_PROPERTY, null);
+        addDelegateMethods(declaringClass, THREADING_HANDLER_CNODE, uiThreadManager);
     }
 }

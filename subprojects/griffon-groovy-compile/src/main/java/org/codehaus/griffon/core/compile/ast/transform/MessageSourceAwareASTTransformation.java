@@ -16,12 +16,16 @@
 
 package org.codehaus.griffon.core.compile.ast.transform;
 
+import griffon.core.i18n.MessageSource;
 import griffon.transform.MessageSourceAware;
+import org.codehaus.griffon.core.compile.AnnotationHandler;
+import org.codehaus.griffon.core.compile.AnnotationHandlerFor;
 import org.codehaus.griffon.core.compile.MessageSourceAwareConstants;
 import org.codehaus.groovy.ast.ASTNode;
 import org.codehaus.groovy.ast.AnnotatedNode;
 import org.codehaus.groovy.ast.AnnotationNode;
 import org.codehaus.groovy.ast.ClassNode;
+import org.codehaus.groovy.ast.expr.ConstantExpression;
 import org.codehaus.groovy.ast.expr.Expression;
 import org.codehaus.groovy.control.CompilePhase;
 import org.codehaus.groovy.control.SourceUnit;
@@ -29,6 +33,9 @@ import org.codehaus.groovy.transform.GroovyASTTransformation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.annotation.Nonnull;
+
+import static griffon.util.GriffonNameUtils.isBlank;
 import static org.codehaus.griffon.core.compile.ast.GriffonASTUtils.injectInterface;
 
 /**
@@ -36,10 +43,11 @@ import static org.codehaus.griffon.core.compile.ast.GriffonASTUtils.injectInterf
  *
  * @author Andres Almiray
  */
+@AnnotationHandlerFor(MessageSourceAware.class)
 @GroovyASTTransformation(phase = CompilePhase.CANONICALIZATION)
-public class MessageSourceAwareASTTransformation extends AbstractASTTransformation implements MessageSourceAwareConstants {
+public class MessageSourceAwareASTTransformation extends AbstractASTTransformation implements MessageSourceAwareConstants, AnnotationHandler {
     private static final Logger LOG = LoggerFactory.getLogger(MessageSourceAwareASTTransformation.class);
-    private static final ClassNode MESSAGE_SOURCE_CNODE = makeClassSafe(MESSAGE_SOURCE_TYPE);
+    private static final ClassNode MESSAGE_SOURCE_CNODE = makeClassSafe(MessageSource.class);
     private static final ClassNode MESSAGE_SOURCE_AWARE_CNODE = makeClassSafe(MessageSourceAware.class);
 
     /**
@@ -65,13 +73,16 @@ public class MessageSourceAwareASTTransformation extends AbstractASTTransformati
      */
     public void visit(ASTNode[] nodes, SourceUnit source) {
         checkNodesForAnnotationAndType(nodes[0], nodes[1]);
-        addMessageSourceIfNeeded(source, (ClassNode) nodes[1]);
+        addMessageSourceIfNeeded(source, (AnnotationNode) nodes[0], (ClassNode) nodes[1]);
     }
 
-    public static void addMessageSourceIfNeeded(SourceUnit source, ClassNode classNode) {
+    public static void addMessageSourceIfNeeded(SourceUnit source, AnnotationNode annotationNode, ClassNode classNode) {
         if (needsDelegate(classNode, source, METHODS, "MessageSourceAware", MESSAGE_SOURCE_TYPE)) {
             LOG.debug("Injecting {} into {}", MESSAGE_SOURCE_TYPE, classNode.getName());
-            apply(classNode);
+            ConstantExpression value = (ConstantExpression) annotationNode.getMember("value");
+            String beanName = value != null ? value.getText() : null;
+            beanName = isBlank(beanName) ? "applicationMessageSource" : beanName;
+            apply(classNode, beanName);
         }
     }
 
@@ -80,10 +91,9 @@ public class MessageSourceAwareASTTransformation extends AbstractASTTransformati
      *
      * @param declaringClass the class to which we add the support field and methods
      */
-    public static void apply(ClassNode declaringClass) {
+    public static void apply(@Nonnull ClassNode declaringClass, @Nonnull String beanName) {
         injectInterface(declaringClass, MESSAGE_SOURCE_CNODE);
-        injectApplication(declaringClass);
-        Expression resourceLocator = applicationProperty(declaringClass, MESSAGE_SOURCE_PROPERTY);
-        addDelegateMethods(declaringClass, MESSAGE_SOURCE_CNODE, resourceLocator);
+        Expression messageSource = injectedField(declaringClass, MESSAGE_SOURCE_CNODE, "this$" + MESSAGE_SOURCE_PROPERTY, beanName);
+        addDelegateMethods(declaringClass, MESSAGE_SOURCE_CNODE, messageSource);
     }
 }

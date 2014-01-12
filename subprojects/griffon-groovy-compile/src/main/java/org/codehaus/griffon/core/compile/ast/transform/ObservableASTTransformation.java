@@ -16,7 +16,9 @@
 
 package org.codehaus.griffon.core.compile.ast.transform;
 
-import griffon.transform.Observable;
+import griffon.core.Observable;
+import org.codehaus.griffon.core.compile.AnnotationHandler;
+import org.codehaus.griffon.core.compile.AnnotationHandlerFor;
 import org.codehaus.griffon.core.compile.ObservableConstants;
 import org.codehaus.griffon.core.compile.ast.GriffonASTUtils;
 import org.codehaus.groovy.ast.*;
@@ -27,8 +29,10 @@ import org.codehaus.groovy.transform.GroovyASTTransformation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.lang.reflect.Modifier;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeSupport;
 
+import static java.lang.reflect.Modifier.FINAL;
 import static java.lang.reflect.Modifier.PROTECTED;
 import static org.codehaus.griffon.core.compile.ast.GriffonASTUtils.*;
 import static org.codehaus.groovy.ast.ClassHelper.OBJECT_TYPE;
@@ -40,11 +44,12 @@ import static org.codehaus.groovy.ast.ClassHelper.VOID_TYPE;
  *
  * @author Andres Almiray
  */
+@AnnotationHandlerFor(griffon.transform.Observable.class)
 @GroovyASTTransformation(phase = CompilePhase.CANONICALIZATION)
-public class ObservableASTTransformation extends AbstractASTTransformation implements ObservableConstants {
+public class ObservableASTTransformation extends AbstractASTTransformation implements ObservableConstants, AnnotationHandler {
     private static final Logger LOG = LoggerFactory.getLogger(ObservableASTTransformation.class);
-    private static final ClassNode OBSERVABLE_CNODE = makeClassSafe(OBSERVABLE_TYPE);
-    private static final ClassNode OBSERVABLE_ANNOTATION_CNODE = makeClassSafe(Observable.class);
+    private static final ClassNode OBSERVABLE_CNODE = makeClassSafe(Observable.class);
+    private static final ClassNode OBSERVABLE_ANNOTATION_CNODE = makeClassSafe(griffon.transform.Observable.class);
 
     /**
      * Convenience method to see if an annotated node is {@code @Observable}.
@@ -87,14 +92,14 @@ public class ObservableASTTransformation extends AbstractASTTransformation imple
     public static void apply(ClassNode classNode) {
         injectInterface(classNode, OBSERVABLE_CNODE);
 
-        ClassNode pcsClassNode = makeClassSafe(PROPERTY_CHANGE_SUPPORT_TYPE);
-        ClassNode pceClassNode = makeClassSafe(PROPERTY_CHANGE_EVENT_TYPE);
+        ClassNode pcsClassNode = makeClassSafe(PropertyChangeSupport.class);
+        ClassNode pceClassNode = makeClassSafe(PropertyChangeEvent.class);
 
         // add field:
         // protected final PropertyChangeSupport this$propertyChangeSupport = new java.beans.PropertyChangeSupport(this)
         FieldNode pcsField = injectField(classNode,
             PROPERTY_CHANGE_SUPPORT_FIELD_NAME,
-            Modifier.PUBLIC | PROTECTED,
+            FINAL | PROTECTED,
             pcsClassNode,
             ctor(pcsClassNode, args(GriffonASTUtils.THIS)));
 

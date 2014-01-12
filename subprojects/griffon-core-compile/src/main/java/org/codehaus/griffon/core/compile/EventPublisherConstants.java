@@ -24,11 +24,14 @@ import static org.codehaus.griffon.core.compile.MethodDescriptor.typeWithParams;
  * @author Andres Almiray
  */
 public interface EventPublisherConstants extends BaseConstants {
+    String EVENT_ROUTER_PROPERTY = "eventRouter";
     String EVENT_ROUTER_TYPE = "griffon.core.event.EventRouter";
     String EVENT_PUBLISHER_TYPE = "griffon.core.event.EventPublisher";
-    String EVENT_ROUTER_FIELD_NAME = "this$eventrouter";
+    String EVENT_PUBLISHER_FIELD_NAME = "this$eventPublisher";
+    String EVENT_PUBLISHER_FIELD_TYPE = "org.codehaus.griffon.runtime.core.event.DefaultEventPublisher";
     String EVENT_TYPE = "griffon.core.event.Event";
 
+    String METHOD_SET_EVENT_ROUTER = "setEventRouter";
     String METHOD_ADD_EVENT_LISTENER = "addEventListener";
     String METHOD_REMOVE_EVENT_LISTENER = "removeEventListener";
     String METHOD_PUBLISH_EVENT = "publishEvent";

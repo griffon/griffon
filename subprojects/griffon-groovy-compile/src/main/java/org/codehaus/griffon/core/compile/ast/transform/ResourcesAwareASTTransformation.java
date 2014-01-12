@@ -16,7 +16,10 @@
 
 package org.codehaus.griffon.core.compile.ast.transform;
 
+import griffon.core.resources.ResourceHandler;
 import griffon.transform.ResourcesAware;
+import org.codehaus.griffon.core.compile.AnnotationHandler;
+import org.codehaus.griffon.core.compile.AnnotationHandlerFor;
 import org.codehaus.griffon.core.compile.ResourcesAwareConstants;
 import org.codehaus.groovy.ast.ASTNode;
 import org.codehaus.groovy.ast.AnnotatedNode;
@@ -29,6 +32,8 @@ import org.codehaus.groovy.transform.GroovyASTTransformation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.annotation.Nonnull;
+
 import static org.codehaus.griffon.core.compile.ast.GriffonASTUtils.injectInterface;
 
 /**
@@ -36,10 +41,11 @@ import static org.codehaus.griffon.core.compile.ast.GriffonASTUtils.injectInterf
  *
  * @author Andres Almiray
  */
+@AnnotationHandlerFor(ResourcesAware.class)
 @GroovyASTTransformation(phase = CompilePhase.CANONICALIZATION)
-public class ResourcesAwareASTTransformation extends AbstractASTTransformation implements ResourcesAwareConstants {
+public class ResourcesAwareASTTransformation extends AbstractASTTransformation implements ResourcesAwareConstants, AnnotationHandler {
     private static final Logger LOG = LoggerFactory.getLogger(ResourcesAwareASTTransformation.class);
-    private static final ClassNode RESOURCE_HANDLER_CNODE = makeClassSafe(RESOURCE_HANDLER_TYPE);
+    private static final ClassNode RESOURCE_HANDLER_CNODE = makeClassSafe(ResourceHandler.class);
     private static final ClassNode RESOURCES_AWARE_CNODE = makeClassSafe(ResourcesAware.class);
 
     /**
@@ -65,10 +71,10 @@ public class ResourcesAwareASTTransformation extends AbstractASTTransformation i
      */
     public void visit(ASTNode[] nodes, SourceUnit source) {
         checkNodesForAnnotationAndType(nodes[0], nodes[1]);
-        addResourceHandlerIfNeeded(source, (ClassNode) nodes[1]);
+        addResourceHandlerIfNeeded(source, (AnnotationNode) nodes[0], (ClassNode) nodes[1]);
     }
 
-    public static void addResourceHandlerIfNeeded(SourceUnit source, ClassNode classNode) {
+    public static void addResourceHandlerIfNeeded(SourceUnit source, AnnotationNode annotationNode, ClassNode classNode) {
         if (needsDelegate(classNode, source, METHODS, "ResourcesAware", RESOURCE_HANDLER_TYPE)) {
             LOG.debug("Injecting {} into {}", RESOURCE_HANDLER_TYPE, classNode.getName());
             apply(classNode);
@@ -80,10 +86,9 @@ public class ResourcesAwareASTTransformation extends AbstractASTTransformation i
      *
      * @param declaringClass the class to which we add the support field and methods
      */
-    public static void apply(ClassNode declaringClass) {
+    public static void apply(@Nonnull ClassNode declaringClass) {
         injectInterface(declaringClass, RESOURCE_HANDLER_CNODE);
-        injectApplication(declaringClass);
-        Expression resourceLocator = applicationProperty(declaringClass, RESOURCE_LOCATOR_PROPERTY);
-        addDelegateMethods(declaringClass, RESOURCE_HANDLER_CNODE, resourceLocator);
+        Expression resourceHandler = injectedField(declaringClass, RESOURCE_HANDLER_CNODE, "this$" + RESOURCE_HANDLER_PROPERTY, null);
+        addDelegateMethods(declaringClass, RESOURCE_HANDLER_CNODE, resourceHandler);
     }
 }
