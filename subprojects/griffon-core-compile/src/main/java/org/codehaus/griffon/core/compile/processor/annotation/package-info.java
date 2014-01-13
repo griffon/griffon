@@ -21,4 +21,4 @@
  * @see org.codehaus.griffon.core.compile.AnnotationHandlerFor
  */
 
-package org.codehaus.griffon.core.compile.annotation;
+package org.codehaus.griffon.core.compile.processor.annotation;

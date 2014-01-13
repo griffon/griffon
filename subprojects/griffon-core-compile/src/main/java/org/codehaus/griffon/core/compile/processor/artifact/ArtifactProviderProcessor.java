@@ -17,10 +17,8 @@
 package org.codehaus.griffon.core.compile.processor.artifact;
 
 import org.codehaus.griffon.core.compile.ArtifactProviderFor;
-import org.kordamp.jipsy.ServiceProviderFor;
 import org.kordamp.jipsy.processor.*;
 
-import javax.annotation.processing.Processor;
 import javax.annotation.processing.RoundEnvironment;
 import javax.annotation.processing.SupportedAnnotationTypes;
 import javax.annotation.processing.SupportedOptions;
@@ -36,7 +34,6 @@ import java.util.regex.Matcher;
 /**
  * @author Andres Almiray
  */
-@ServiceProviderFor(Processor.class)
 @SupportedAnnotationTypes("*")
 @SupportedOptions({Options.SPI_DIR_OPTION, Options.SPI_LOG_OPTION, Options.SPI_VERBOSE_OPTION, Options.SPI_DISABLED_OPTION})
 public class ArtifactProviderProcessor extends AbstractSpiProcessor {

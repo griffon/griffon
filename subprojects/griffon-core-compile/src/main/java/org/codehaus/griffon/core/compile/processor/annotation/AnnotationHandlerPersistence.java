@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.codehaus.griffon.core.compile.annotation;
+package org.codehaus.griffon.core.compile.processor.annotation;
 
 import org.kordamp.jipsy.processor.AbstractResourcePersistence;
 import org.kordamp.jipsy.processor.Logger;
