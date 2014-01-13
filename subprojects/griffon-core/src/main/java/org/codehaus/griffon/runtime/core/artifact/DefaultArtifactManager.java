@@ -33,7 +33,6 @@ import java.util.List;
 import java.util.Map;
 
 import static java.util.Objects.requireNonNull;
-import static org.codehaus.griffon.runtime.core.GriffonApplicationSupport.loadClass;
 
 /**
  * Default implementation of {@code ArtifactManager}.
@@ -71,7 +70,7 @@ public class DefaultArtifactManager extends AbstractArtifactManager {
 
                     try {
                         String className = line.trim();
-                        Class<? extends GriffonArtifact> clazz = (Class<? extends GriffonArtifact>) loadClass(className, classLoader);
+                        Class<? extends GriffonArtifact> clazz = (Class<? extends GriffonArtifact>) applicationClassLoader.get().loadClass(className);
                         if (Modifier.isAbstract(clazz.getModifiers())) return;
                         list.add(clazz);
                     } catch (ClassNotFoundException e) {

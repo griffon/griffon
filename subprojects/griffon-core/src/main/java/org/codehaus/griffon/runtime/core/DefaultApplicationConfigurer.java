@@ -34,6 +34,8 @@ import org.slf4j.LoggerFactory;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import javax.annotation.concurrent.GuardedBy;
+import javax.inject.Inject;
 import javax.inject.Named;
 import java.beans.PropertyEditor;
 import java.beans.PropertyEditorManager;
@@ -51,39 +53,84 @@ import static java.util.Objects.requireNonNull;
  * @author Danno Ferrin
  * @author Andres Almiray
  */
-public final class GriffonApplicationSupport {
-    private static final Logger LOG = LoggerFactory.getLogger(GriffonApplicationSupport.class);
+public class DefaultApplicationConfigurer implements ApplicationConfigurer {
+    private static final Logger LOG = LoggerFactory.getLogger(DefaultApplicationConfigurer.class);
 
     private static final String ERROR_APPLICATION_NULL = "Argument 'application' cannot be null";
     private static final String KEY_APP_LIFECYCLE_HANDLER_DISABLE = "application.lifecycle.handler.disable";
     private static final String KEY_GRIFFON_CONTROLLER_ACTION_INTERCEPTOR_ORDER = "griffon.controller.action.interceptor.order";
 
-    public static void init(@Nonnull GriffonApplication application) {
-        requireNonNull(application, ERROR_APPLICATION_NULL);
+    private final Object lock = new Object();
+    @GuardedBy("lock")
+    private boolean initialized;
 
-        EventHandler eventHandler = application.getInjector().getInstance(EventHandler.class);
-        application.getEventRouter().addEventListener(eventHandler);
+    private final GriffonApplication application;
 
-        event(application, ApplicationEvent.BOOTSTRAP_START, asList(application));
-
-        initializePropertyEditors(application);
-        initializeResourcesInjector(application);
-        runLifecycleHandler(Lifecycle.INITIALIZE, application);
-        applyPlatformTweaks(application);
-        initializeAddonManager(application);
-        initializeMvcManager(application);
-        initializeActionManager(application);
-        initializeArtifactManager(application);
-
-        event(application, ApplicationEvent.BOOTSTRAP_END, asList(application));
+    @Inject
+    public DefaultApplicationConfigurer(@Nonnull GriffonApplication application) {
+        this.application = requireNonNull(application, ERROR_APPLICATION_NULL);
     }
 
-    protected static void event(@Nonnull GriffonApplication application, @Nonnull ApplicationEvent event, @Nullable List<?> args) {
+    @Override
+    public final void init() {
+        synchronized (lock) {
+            if (!initialized) {
+                doInitialize();
+                initialized = true;
+            }
+        }
+    }
+
+    @Override
+    public void runLifecycleHandler(@Nonnull Lifecycle lifecycle) {
+        requireNonNull(lifecycle, "Argument 'lifecycle' cannot be null");
+
+        boolean skipHandler = application.getApplicationConfiguration().getAsBoolean(KEY_APP_LIFECYCLE_HANDLER_DISABLE, false);
+        if (skipHandler) {
+            LOG.info("Lifecycle handler '{}' has been disabled. SKIPPING.", lifecycle.getName());
+            return;
+        }
+
+        LifecycleHandler handler;
+        try {
+            handler = application.getInjector().getInstance(LifecycleHandler.class, new NamedImpl(lifecycle.getName()));
+        } catch (Exception e) {
+            // the script must not exist, do nothing
+            //LOGME - may be because of chained failures
+            return;
+        }
+
+        handler.execute();
+    }
+
+    protected void doInitialize() {
+        initializeEventHandler();
+
+        event(ApplicationEvent.BOOTSTRAP_START, asList(application));
+
+        initializePropertyEditors();
+        initializeResourcesInjector();
+        runLifecycleHandler(Lifecycle.INITIALIZE);
+        applyPlatformTweaks();
+        initializeAddonManager();
+        initializeMvcManager();
+        initializeActionManager();
+        initializeArtifactManager();
+
+        event(ApplicationEvent.BOOTSTRAP_END, asList(application));
+    }
+
+    protected void initializeEventHandler() {
+        EventHandler eventHandler = application.getInjector().getInstance(EventHandler.class);
+        application.getEventRouter().addEventListener(eventHandler);
+    }
+
+    protected void event(@Nonnull ApplicationEvent event, @Nullable List<?> args) {
         application.getEventRouter().publish(event.getName(), args);
     }
 
-    private static void initializePropertyEditors(final @Nonnull GriffonApplication application) {
-        ServiceLoaderUtils.load(applicationClassLoader(application).get(), "META-INF/editors/", PropertyEditor.class, new ServiceLoaderUtils.LineProcessor() {
+    protected void initializePropertyEditors() {
+        ServiceLoaderUtils.load(applicationClassLoader().get(), "META-INF/editors/", PropertyEditor.class, new ServiceLoaderUtils.LineProcessor() {
             @Override
             public void process(@Nonnull ClassLoader classLoader, @Nonnull Class<?> type, @Nonnull String line) {
                 try {
@@ -121,7 +168,7 @@ public final class GriffonApplicationSupport {
         }
     }
 
-    private static void initializeResourcesInjector(@Nonnull GriffonApplication application) {
+    protected void initializeResourcesInjector() {
         final ResourceInjector injector = application.getResourceInjector();
         application.getEventRouter().addEventListener(ApplicationEvent.NEW_INSTANCE.getName(), new CallableWithArgs<Void>() {
             public Void call(@Nonnull Object... args) {
@@ -132,7 +179,7 @@ public final class GriffonApplicationSupport {
         });
     }
 
-    private static void initializeArtifactManager(@Nonnull GriffonApplication application) {
+    protected void initializeArtifactManager() {
         Injector<?> injector = application.getInjector();
         ArtifactManager artifactManager = application.getArtifactManager();
         for (ArtifactHandler<?> artifactHandler : injector.getInstances(ArtifactHandler.class)) {
@@ -142,17 +189,17 @@ public final class GriffonApplicationSupport {
         application.addShutdownHandler(artifactManager);
     }
 
-    private static void applyPlatformTweaks(@Nonnull GriffonApplication application) {
+    protected void applyPlatformTweaks() {
         PlatformHandler platformHandler = application.getInjector().getInstance(PlatformHandler.class);
         platformHandler.handle(application);
     }
 
-    private static void initializeAddonManager(@Nonnull GriffonApplication application) {
+    protected void initializeAddonManager() {
         application.getAddonManager().initialize();
     }
 
     @SuppressWarnings("unchecked")
-    private static void initializeMvcManager(@Nonnull GriffonApplication application) {
+    protected void initializeMvcManager() {
         Map<String, MVCGroupConfiguration> configurations = new LinkedHashMap<>();
         Map<String, Map<String, Object>> mvcGroups = application.getApplicationConfiguration().get("mvcGroups", Collections.<String, Map<String, Object>>emptyMap());
         if (mvcGroups != null) {
@@ -177,7 +224,7 @@ public final class GriffonApplicationSupport {
         application.getMvcGroupManager().initialize(configurations);
     }
 
-    private static void initializeActionManager(final @Nonnull GriffonApplication application) {
+    protected void initializeActionManager() {
         if (application.getActionManager() instanceof NoopActionManager) {
             return;
         }
@@ -307,7 +354,7 @@ public final class GriffonApplicationSupport {
     }
 
     @Nonnull
-    private static String nameFor(@Nonnull ActionInterceptor actionInterceptor) {
+    private String nameFor(@Nonnull ActionInterceptor actionInterceptor) {
         Named named = actionInterceptor.getClass().getAnnotation(Named.class);
         if (named != null && !isBlank(named.value())) {
             return named.value();
@@ -315,32 +362,10 @@ public final class GriffonApplicationSupport {
         return getLogicalPropertyName(actionInterceptor.getClass().getName(), "ActionInterceptor");
     }
 
-    public static void runLifecycleHandler(@Nonnull Lifecycle lifecycle, @Nonnull GriffonApplication application) {
-        requireNonNull(application, ERROR_APPLICATION_NULL);
-        requireNonNull(lifecycle, "Argument 'lifecycle' cannot be null");
-
-        boolean skipHandler = application.getApplicationConfiguration().getAsBoolean(KEY_APP_LIFECYCLE_HANDLER_DISABLE, false);
-        if (skipHandler) {
-            LOG.info("Lifecycle handler '{}' has been disabled. SKIPPING.", lifecycle.getName());
-            return;
-        }
-
-        LifecycleHandler handler;
-        try {
-            handler = application.getInjector().getInstance(LifecycleHandler.class, new NamedImpl(lifecycle.getName()));
-        } catch (Exception e) {
-            // the script must not exist, do nothing
-            //LOGME - may be because of chained failures
-            return;
-        }
-
-        handler.execute();
-    }
-
-    public static Class<?> loadClass(@Nonnull String className, @Nonnull ClassLoader classLoader) throws ClassNotFoundException {
+    protected Class<?> loadClass(@Nonnull String className, @Nonnull ClassLoader classLoader) throws ClassNotFoundException {
         ClassNotFoundException cnfe;
 
-        ClassLoader cl = GriffonApplicationSupport.class.getClassLoader();
+        ClassLoader cl = DefaultApplicationConfigurer.class.getClassLoader();
         try {
             return cl.loadClass(className);
         } catch (ClassNotFoundException e) {
@@ -357,7 +382,7 @@ public final class GriffonApplicationSupport {
         throw cnfe;
     }
 
-    private static ApplicationClassLoader applicationClassLoader(@Nonnull GriffonApplication application) {
+    private ApplicationClassLoader applicationClassLoader() {
         return application.getInjector().getInstance(ApplicationClassLoader.class);
     }
 }

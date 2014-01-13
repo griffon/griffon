@@ -31,6 +31,7 @@ import java.util.TreeMap;
  */
 public final class PropertyEditorCollector {
     private final Map<String, String> editors = new TreeMap<>();
+    private final Map<String, String> cached = new TreeMap<>();
 
     private final Initializer initializer;
     private final Logger logger;
@@ -50,11 +51,29 @@ public final class PropertyEditorCollector {
         return editors.get(type);
     }
 
+    public boolean isModified() {
+        if (cached.size() != editors.size()) {
+            return true;
+        }
+
+        for (Map.Entry<String, String> e : cached.entrySet()) {
+            if (!editors.containsKey(e.getKey())) {
+                return true;
+            }
+            if (!e.getValue().equals(editors.get(e.getKey()))) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
     public void load() {
         CharSequence initialData = initializer.initialData(PropertyEditor.class.getName());
         if (initialData != null) {
             fromList(initialData.toString());
         }
+        cached.putAll(editors);
     }
 
     public void removeEditor(String editor) {

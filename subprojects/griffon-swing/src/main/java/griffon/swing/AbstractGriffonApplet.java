@@ -27,11 +27,10 @@ import griffon.core.i18n.MessageSource;
 import griffon.core.injection.Injector;
 import griffon.core.mvc.MVCGroupManager;
 import griffon.core.resources.ResourceHandler;
-import griffon.core.resources.ResourceResolver;
 import griffon.core.resources.ResourceInjector;
+import griffon.core.resources.ResourceResolver;
 import griffon.core.threading.UIThreadManager;
 import griffon.core.view.WindowManager;
-import org.codehaus.griffon.runtime.core.GriffonApplicationSupport;
 import org.codehaus.griffon.runtime.core.MVCGroupExceptionHandler;
 import org.codehaus.griffon.runtime.core.injection.NamedImpl;
 import org.slf4j.Logger;
@@ -49,7 +48,6 @@ import java.util.concurrent.CountDownLatch;
 import static griffon.util.GriffonApplicationUtils.parseLocale;
 import static java.util.Arrays.asList;
 import static java.util.Objects.requireNonNull;
-import static org.codehaus.griffon.runtime.core.GriffonApplicationSupport.runLifecycleHandler;
 
 /**
  * Base implementation of {@code GriffonApplication} that runs in applet mode.
@@ -95,7 +93,7 @@ public abstract class AbstractGriffonApplet extends JApplet implements GriffonAp
 
     public void stop() {
         event(ApplicationEvent.STOP_START, asList(this));
-        runLifecycleHandler(Lifecycle.STOP, this);
+        getApplicationConfigurer().runLifecycleHandler(Lifecycle.STOP);
         event(ApplicationEvent.STOP_END, asList(this));
     }
 
@@ -241,16 +239,13 @@ public abstract class AbstractGriffonApplet extends JApplet implements GriffonAp
         return injector.getInstance(WindowManager.class);
     }
 
-    /*
-    @Override
-    public void configure() {
-        //To change body of implemented methods use File | Settings | File Templates.
+    protected ApplicationConfigurer getApplicationConfigurer() {
+        return injector.getInstance(ApplicationConfigurer.class);
     }
-    */
 
     public void initialize() {
         if (getPhase() == ApplicationPhase.INITIALIZE) {
-            GriffonApplicationSupport.init(this);
+            getApplicationConfigurer().init();
         }
     }
 
@@ -262,7 +257,7 @@ public abstract class AbstractGriffonApplet extends JApplet implements GriffonAp
         setPhase(ApplicationPhase.READY);
         event(ApplicationEvent.READY_START, asList(this));
 
-        runLifecycleHandler(Lifecycle.READY, this);
+        getApplicationConfigurer().runLifecycleHandler(Lifecycle.READY);
         event(ApplicationEvent.READY_END, asList(this));
         setPhase(ApplicationPhase.MAIN);
     }
@@ -345,7 +340,7 @@ public abstract class AbstractGriffonApplet extends JApplet implements GriffonAp
 
         // stage 4 - call shutdown script
         log.debug("Shutdown stage 4: execute Shutdown script");
-        runLifecycleHandler(Lifecycle.SHUTDOWN, this);
+        getApplicationConfigurer().runLifecycleHandler(Lifecycle.SHUTDOWN);
 
         injector.getInstance(ExecutorServiceManager.class).shutdownAll();
         injector.close();
@@ -380,7 +375,7 @@ public abstract class AbstractGriffonApplet extends JApplet implements GriffonAp
             }
         }
 
-        runLifecycleHandler(Lifecycle.STARTUP, this);
+        getApplicationConfigurer().runLifecycleHandler(Lifecycle.STARTUP);
 
         event(ApplicationEvent.STARTUP_END, asList(this));
     }

@@ -27,8 +27,8 @@ import griffon.core.i18n.MessageSource;
 import griffon.core.injection.Injector;
 import griffon.core.mvc.MVCGroupManager;
 import griffon.core.resources.ResourceHandler;
-import griffon.core.resources.ResourceResolver;
 import griffon.core.resources.ResourceInjector;
+import griffon.core.resources.ResourceResolver;
 import griffon.core.threading.UIThreadManager;
 import griffon.core.view.WindowManager;
 import org.codehaus.griffon.runtime.core.injection.NamedImpl;
@@ -46,7 +46,6 @@ import java.util.concurrent.CountDownLatch;
 import static griffon.util.GriffonApplicationUtils.parseLocale;
 import static java.util.Arrays.asList;
 import static java.util.Objects.requireNonNull;
-import static org.codehaus.griffon.runtime.core.GriffonApplicationSupport.runLifecycleHandler;
 
 /**
  * Implements the basics for a skeleton GriffonApplication.<p>
@@ -215,16 +214,13 @@ public abstract class AbstractGriffonApplication extends AbstractObservable impl
         return injector.getInstance(WindowManager.class);
     }
 
-    /*
-    @Override
-    public void configure() {
-        //To change body of implemented methods use File | Settings | File Templates.
+    protected ApplicationConfigurer getApplicationConfigurer() {
+        return injector.getInstance(ApplicationConfigurer.class);
     }
-    */
 
     public void initialize() {
         if (getPhase() == ApplicationPhase.INITIALIZE) {
-            GriffonApplicationSupport.init(this);
+            getApplicationConfigurer().init();
         }
     }
 
@@ -235,7 +231,7 @@ public abstract class AbstractGriffonApplication extends AbstractObservable impl
 
         setPhase(ApplicationPhase.READY);
         event(ApplicationEvent.READY_START, asList(this));
-        runLifecycleHandler(Lifecycle.READY, this);
+        getApplicationConfigurer().runLifecycleHandler(Lifecycle.READY);
         event(ApplicationEvent.READY_END, asList(this));
         setPhase(ApplicationPhase.MAIN);
     }
@@ -316,7 +312,7 @@ public abstract class AbstractGriffonApplication extends AbstractObservable impl
 
         // stage 4 - call shutdown script
         log.debug("Shutdown stage 4: execute Shutdown script");
-        runLifecycleHandler(Lifecycle.SHUTDOWN, this);
+        getApplicationConfigurer().runLifecycleHandler(Lifecycle.SHUTDOWN);
 
         injector.getInstance(ExecutorServiceManager.class).shutdownAll();
         injector.close();
@@ -347,7 +343,7 @@ public abstract class AbstractGriffonApplication extends AbstractObservable impl
             }
         }
 
-        runLifecycleHandler(Lifecycle.STARTUP, this);
+        getApplicationConfigurer().runLifecycleHandler(Lifecycle.STARTUP);
 
         event(ApplicationEvent.STARTUP_END, asList(this));
     }

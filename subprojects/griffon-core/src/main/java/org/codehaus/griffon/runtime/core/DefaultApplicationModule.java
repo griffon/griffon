@@ -27,8 +27,8 @@ import griffon.core.event.EventRouter;
 import griffon.core.i18n.MessageSource;
 import griffon.core.mvc.MVCGroupManager;
 import griffon.core.resources.ResourceHandler;
-import griffon.core.resources.ResourceResolver;
 import griffon.core.resources.ResourceInjector;
+import griffon.core.resources.ResourceResolver;
 import griffon.core.threading.UIThreadManager;
 import griffon.core.view.WindowManager;
 import griffon.util.CompositeResourceBundleBuilder;
@@ -61,6 +61,7 @@ public class DefaultApplicationModule extends AbstractModule {
     @Override
     protected void doConfigure() {
         classloader();
+        applicationConfigurer();
         resourceHandler();
         resourceBundleBuilder();
         applicationConfiguration();
@@ -88,6 +89,12 @@ public class DefaultApplicationModule extends AbstractModule {
     protected void classloader() {
         bind(ApplicationClassLoader.class)
             .to(DefaultApplicationClassLoader.class)
+            .asSingleton();
+    }
+
+    protected void applicationConfigurer() {
+        bind(ApplicationConfigurer.class)
+            .to(DefaultApplicationConfigurer.class)
             .asSingleton();
     }
 
