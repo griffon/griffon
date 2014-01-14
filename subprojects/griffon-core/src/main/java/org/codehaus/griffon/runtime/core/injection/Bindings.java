@@ -17,9 +17,6 @@
 package org.codehaus.griffon.runtime.core.injection;
 
 import griffon.core.injection.*;
-import org.codehaus.griffon.runtime.core.injection.AnnotatedBindingBuilder;
-import org.codehaus.griffon.runtime.core.injection.LinkedBindingBuilder;
-import org.codehaus.griffon.runtime.core.injection.SingletonBindingBuilder;
 import griffon.util.AnnotationUtils;
 
 import javax.annotation.Nonnull;
@@ -31,6 +28,7 @@ import java.lang.annotation.Annotation;
 import java.util.ArrayList;
 import java.util.List;
 
+import static griffon.util.AnnotationUtils.named;
 import static griffon.util.GriffonNameUtils.getPropertyName;
 import static griffon.util.GriffonNameUtils.isBlank;
 import static java.util.Objects.requireNonNull;
@@ -182,7 +180,7 @@ public class Bindings {
                     if (Named.class.isAssignableFrom(annotation.getClass())) {
                         Named named = (Named) annotation;
                         if (isBlank(named.value())) {
-                            list.add(new NamedImpl(getPropertyName(klass)));
+                            list.add(named(getPropertyName(klass)));
                             continue;
                         }
                     }

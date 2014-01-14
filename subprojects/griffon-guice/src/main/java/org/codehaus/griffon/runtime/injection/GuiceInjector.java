@@ -29,7 +29,6 @@ import griffon.exceptions.InstanceNotFoundException;
 import griffon.exceptions.MembersInjectionException;
 import griffon.exceptions.TypeNotFoundException;
 import org.codehaus.griffon.runtime.core.injection.InjectorProvider;
-import org.codehaus.griffon.runtime.core.injection.NamedImpl;
 
 import javax.annotation.Nonnull;
 import javax.annotation.PreDestroy;
@@ -41,6 +40,7 @@ import java.util.Collection;
 import java.util.List;
 
 import static com.google.inject.util.Providers.guicify;
+import static griffon.util.AnnotationUtils.named;
 import static griffon.util.GriffonNameUtils.requireNonBlank;
 import static java.util.Objects.requireNonNull;
 import static org.codehaus.griffon.runtime.injection.MethodUtils.invokeAnnotatedMethod;
@@ -173,7 +173,7 @@ public class GuiceInjector implements Injector<com.google.inject.Injector> {
             @Override
             protected void configure() {
                 bind(Injector.class)
-                    .annotatedWith(new NamedImpl(name))
+                    .annotatedWith(named(name))
                     .toProvider(guicify(injectorProvider));
             }
         }));

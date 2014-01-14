@@ -6,10 +6,11 @@ import com.google.inject.Module
 import griffon.core.injection.Injector
 import griffon.exceptions.InstanceNotFoundException
 import griffon.exceptions.MembersInjectionException
-import org.codehaus.griffon.runtime.core.injection.NamedImpl
 import spock.lang.Specification
 
 import javax.inject.Inject
+
+import static griffon.util.AnnotationUtils.named
 
 class GuiceInjectorSpec extends Specification {
     def 'Injector can resolve an object graph'() {
@@ -39,15 +40,15 @@ class GuiceInjectorSpec extends Specification {
         Module module = new AbstractModule() {
             @Override
             protected void configure() {
-                bind(Engine).annotatedWith(new NamedImpl('efficient')).toInstance(engine1)
-                bind(Engine).annotatedWith(new NamedImpl('poor')).toInstance(engine2)
+                bind(Engine).annotatedWith(named('efficient')).toInstance(engine1)
+                bind(Engine).annotatedWith(named('poor')).toInstance(engine2)
             }
         }
         com.google.inject.Injector gi = Guice.createInjector(module)
 
         when:
         Injector injector = new GuiceInjector(gi)
-        Engine engine = injector.getInstance(Engine, new NamedImpl('efficient'))
+        Engine engine = injector.getInstance(Engine, named('efficient'))
 
         then:
         engine == engine1
@@ -85,7 +86,7 @@ class GuiceInjectorSpec extends Specification {
 
         when:
         Injector injector = new GuiceInjector(gi)
-        injector.getInstance(Car, new NamedImpl("foo"))
+        injector.getInstance(Car, named("foo"))
 
         then:
         thrown(InstanceNotFoundException)

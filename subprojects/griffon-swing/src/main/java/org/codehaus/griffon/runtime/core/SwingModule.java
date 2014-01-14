@@ -25,7 +25,6 @@ import griffon.swing.SwingAddon;
 import griffon.swing.SwingWindowDisplayHandler;
 import org.codehaus.griffon.runtime.core.controller.SwingActionManager;
 import org.codehaus.griffon.runtime.core.injection.AbstractModule;
-import org.codehaus.griffon.runtime.core.injection.NamedImpl;
 import org.codehaus.griffon.runtime.swing.ConfigurableSwingWindowDisplayHandler;
 import org.codehaus.griffon.runtime.swing.DefaultSwingWindowDisplayHandler;
 import org.codehaus.griffon.runtime.swing.DefaultSwingWindowManager;
@@ -33,6 +32,8 @@ import org.codehaus.griffon.runtime.swing.SwingUIThreadManager;
 import org.kordamp.jipsy.ServiceProviderFor;
 
 import javax.inject.Named;
+
+import static griffon.util.AnnotationUtils.named;
 
 /**
  * @author Andres Almiray
@@ -44,12 +45,12 @@ public class SwingModule extends AbstractModule {
     @Override
     protected void doConfigure() {
         bind(SwingWindowDisplayHandler.class)
-            .withClassifier(new NamedImpl("defaultWindowDisplayHandler"))
+            .withClassifier(named("defaultWindowDisplayHandler"))
             .to(DefaultSwingWindowDisplayHandler.class)
             .asSingleton();
 
         bind(SwingWindowDisplayHandler.class)
-            .withClassifier(new NamedImpl("windowDisplayHandler"))
+            .withClassifier(named("windowDisplayHandler"))
             .to(ConfigurableSwingWindowDisplayHandler.class)
             .asSingleton();
 

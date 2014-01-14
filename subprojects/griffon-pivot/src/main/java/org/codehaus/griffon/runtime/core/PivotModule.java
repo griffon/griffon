@@ -23,7 +23,6 @@ import griffon.core.view.WindowManager;
 import griffon.pivot.PivotWindowDisplayHandler;
 import org.codehaus.griffon.runtime.core.controller.PivotActionManager;
 import org.codehaus.griffon.runtime.core.injection.AbstractModule;
-import org.codehaus.griffon.runtime.core.injection.NamedImpl;
 import org.codehaus.griffon.runtime.pivot.ConfigurablePivotWindowDisplayHandler;
 import org.codehaus.griffon.runtime.pivot.DefaultPivotWindowDisplayHandler;
 import org.codehaus.griffon.runtime.pivot.DefaultPivotWindowManager;
@@ -31,6 +30,8 @@ import org.codehaus.griffon.runtime.pivot.PivotUIThreadManager;
 import org.kordamp.jipsy.ServiceProviderFor;
 
 import javax.inject.Named;
+
+import static griffon.util.AnnotationUtils.named;
 
 /**
  * @author Andres Almiray
@@ -42,12 +43,12 @@ public class PivotModule extends AbstractModule {
     @Override
     protected void doConfigure() {
         bind(PivotWindowDisplayHandler.class)
-            .withClassifier(new NamedImpl("defaultWindowDisplayHandler"))
+            .withClassifier(named("defaultWindowDisplayHandler"))
             .to(DefaultPivotWindowDisplayHandler.class)
             .asSingleton();
 
         bind(PivotWindowDisplayHandler.class)
-            .withClassifier(new NamedImpl("windowDisplayHandler"))
+            .withClassifier(named("windowDisplayHandler"))
             .to(ConfigurablePivotWindowDisplayHandler.class)
             .asSingleton();
 

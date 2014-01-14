@@ -21,7 +21,6 @@ import griffon.core.GriffonApplication;
 import griffon.core.LifecycleHandler;
 import griffon.exceptions.InstanceNotFoundException;
 import griffon.exceptions.TypeNotFoundException;
-import org.codehaus.griffon.runtime.core.injection.NamedImpl;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
@@ -29,6 +28,7 @@ import javax.inject.Provider;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 
+import static griffon.util.AnnotationUtils.named;
 import static griffon.util.GriffonNameUtils.requireNonBlank;
 import static java.util.Objects.requireNonNull;
 
@@ -63,16 +63,16 @@ public class LifecycleHandlerProvider implements Provider<LifecycleHandler> {
         try {
             handlerClass = (Class<LifecycleHandler>) applicationClassLoader.get().loadClass(basename);
         } catch (ClassNotFoundException e) {
-            throw new TypeNotFoundException(LifecycleHandler.class.getName(), new NamedImpl(basename), e);
+            throw new TypeNotFoundException(LifecycleHandler.class.getName(), named(basename), e);
         }
 
         try {
             Constructor<LifecycleHandler> ctor = handlerClass.getDeclaredConstructor(GriffonApplication.class);
             return ctor.newInstance(application);
         } catch (NoSuchMethodException | InstantiationException | IllegalAccessException e) {
-            throw new InstanceNotFoundException(handlerClass, new NamedImpl(basename), e);
+            throw new InstanceNotFoundException(handlerClass, named(basename), e);
         } catch (InvocationTargetException e) {
-            throw new InstanceNotFoundException(handlerClass, new NamedImpl(basename), e.getTargetException());
+            throw new InstanceNotFoundException(handlerClass, named(basename), e.getTargetException());
         }
     }
 }

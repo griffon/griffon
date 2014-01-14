@@ -21,15 +21,15 @@ import griffon.core.artifact.ArtifactHandler;
 import griffon.core.artifact.GriffonArtifact;
 import griffon.core.artifact.GriffonClass;
 import griffon.core.injection.Binding;
-import org.codehaus.griffon.runtime.core.injection.LinkedBindingBuilder;
 import org.codehaus.griffon.runtime.core.injection.Bindings;
-import org.codehaus.griffon.runtime.core.injection.TypedImpl;
+import org.codehaus.griffon.runtime.core.injection.LinkedBindingBuilder;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.inject.Inject;
 import java.util.*;
 
+import static griffon.util.AnnotationUtils.typed;
 import static griffon.util.GriffonNameUtils.requireNonBlank;
 import static java.util.Objects.requireNonNull;
 
@@ -88,7 +88,7 @@ public abstract class AbstractArtifactHandler<A extends GriffonArtifact> impleme
 
     protected void createBindings(@Nonnull List<Binding<?>> bindings, @Nonnull Class<A> clazz, @Nonnull GriffonClass griffonClass) {
         LinkedBindingBuilder<GriffonClass> builder = Bindings.bind(GriffonClass.class)
-            .withClassifier(new TypedImpl(clazz));
+            .withClassifier(typed(clazz));
         builder.toInstance(griffonClass);
         bindings.add(builder.getBinding());
         bindings.add(Bindings.bind(clazz).getBinding());

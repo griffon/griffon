@@ -24,7 +24,6 @@ import griffon.core.view.WindowManager;
 import griffon.lanterna.LanternaWindowDisplayHandler;
 import org.codehaus.griffon.runtime.core.controller.LanternaActionManager;
 import org.codehaus.griffon.runtime.core.injection.AbstractModule;
-import org.codehaus.griffon.runtime.core.injection.NamedImpl;
 import org.codehaus.griffon.runtime.lanterna.ConfigurableLanternaWindowDisplayHandler;
 import org.codehaus.griffon.runtime.lanterna.DefaultLanternaWindowDisplayHandler;
 import org.codehaus.griffon.runtime.lanterna.DefaultLanternaWindowManager;
@@ -32,6 +31,8 @@ import org.codehaus.griffon.runtime.lanterna.LanternaUIThreadManager;
 import org.kordamp.jipsy.ServiceProviderFor;
 
 import javax.inject.Named;
+
+import static griffon.util.AnnotationUtils.named;
 
 /**
  * @author Andres Almiray
@@ -47,12 +48,12 @@ public class LanternaModule extends AbstractModule {
             .asSingleton();
 
         bind(LanternaWindowDisplayHandler.class)
-            .withClassifier(new NamedImpl("defaultWindowDisplayHandler"))
+            .withClassifier(named("defaultWindowDisplayHandler"))
             .to(DefaultLanternaWindowDisplayHandler.class)
             .asSingleton();
 
         bind(LanternaWindowDisplayHandler.class)
-            .withClassifier(new NamedImpl("windowDisplayHandler"))
+            .withClassifier(named("windowDisplayHandler"))
             .to(ConfigurableLanternaWindowDisplayHandler.class)
             .asSingleton();
 

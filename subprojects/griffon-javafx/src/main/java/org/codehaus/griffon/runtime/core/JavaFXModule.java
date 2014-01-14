@@ -23,7 +23,6 @@ import griffon.core.view.WindowManager;
 import griffon.javafx.JavaFXWindowDisplayHandler;
 import org.codehaus.griffon.runtime.core.controller.JavaFXActionManager;
 import org.codehaus.griffon.runtime.core.injection.AbstractModule;
-import org.codehaus.griffon.runtime.core.injection.NamedImpl;
 import org.codehaus.griffon.runtime.javafx.ConfigurableJavaFXWindowDisplayHandler;
 import org.codehaus.griffon.runtime.javafx.DefaultJavaFXWindowDisplayHandler;
 import org.codehaus.griffon.runtime.javafx.DefaultJavaFXWindowManager;
@@ -31,6 +30,8 @@ import org.codehaus.griffon.runtime.javafx.JavaFXUIThreadManager;
 import org.kordamp.jipsy.ServiceProviderFor;
 
 import javax.inject.Named;
+
+import static griffon.util.AnnotationUtils.named;
 
 /**
  * @author Andres Almiray
@@ -42,12 +43,12 @@ public class JavaFXModule extends AbstractModule {
     @Override
     protected void doConfigure() {
         bind(JavaFXWindowDisplayHandler.class)
-            .withClassifier(new NamedImpl("defaultWindowDisplayHandler"))
+            .withClassifier(named("defaultWindowDisplayHandler"))
             .to(DefaultJavaFXWindowDisplayHandler.class)
             .asSingleton();
 
         bind(JavaFXWindowDisplayHandler.class)
-            .withClassifier(new NamedImpl("windowDisplayHandler"))
+            .withClassifier(named("windowDisplayHandler"))
             .to(ConfigurableJavaFXWindowDisplayHandler.class)
             .asSingleton();
 

@@ -36,7 +36,6 @@ import javafx.event.EventHandler;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 import org.codehaus.griffon.runtime.core.MVCGroupExceptionHandler;
-import org.codehaus.griffon.runtime.core.injection.NamedImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -51,6 +50,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.concurrent.CountDownLatch;
 
+import static griffon.util.AnnotationUtils.named;
 import static griffon.util.GriffonApplicationUtils.parseLocale;
 import static griffon.util.GriffonNameUtils.requireNonBlank;
 import static java.util.Arrays.asList;
@@ -211,7 +211,7 @@ public abstract class AbstractJavaFXGriffonApplication extends Application imple
     @Nonnull
     @Override
     public EventRouter getEventRouter() {
-        return injector.getInstance(EventRouter.class, new NamedImpl("applicationEventRouter"));
+        return injector.getInstance(EventRouter.class, named("applicationEventRouter"));
     }
 
     @Nonnull
@@ -241,13 +241,13 @@ public abstract class AbstractJavaFXGriffonApplication extends Application imple
     @Nonnull
     @Override
     public MessageSource getMessageSource() {
-        return injector.getInstance(MessageSource.class, new NamedImpl("applicationMessageSource"));
+        return injector.getInstance(MessageSource.class, named("applicationMessageSource"));
     }
 
     @Nonnull
     @Override
     public ResourceResolver getResourceResolver() {
-        return injector.getInstance(ResourceResolver.class, new NamedImpl("applicationResourceResolver"));
+        return injector.getInstance(ResourceResolver.class, named("applicationResourceResolver"));
     }
 
     @Nonnull
@@ -259,7 +259,7 @@ public abstract class AbstractJavaFXGriffonApplication extends Application imple
     @Nonnull
     @Override
     public ResourceInjector getResourceInjector() {
-        return injector.getInstance(ResourceInjector.class, new NamedImpl("applicationResourceInjector"));
+        return injector.getInstance(ResourceInjector.class, named("applicationResourceInjector"));
     }
 
     @Nonnull

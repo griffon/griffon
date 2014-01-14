@@ -28,7 +28,6 @@ import griffon.core.mvc.MVCGroupConfiguration;
 import griffon.core.resources.ResourceInjector;
 import griffon.util.ServiceLoaderUtils;
 import org.codehaus.griffon.runtime.core.controller.NoopActionManager;
-import org.codehaus.griffon.runtime.core.injection.NamedImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -42,6 +41,7 @@ import java.beans.PropertyEditorManager;
 import java.util.*;
 
 import static griffon.core.GriffonExceptionHandler.sanitize;
+import static griffon.util.AnnotationUtils.named;
 import static griffon.util.GriffonNameUtils.getLogicalPropertyName;
 import static griffon.util.GriffonNameUtils.isBlank;
 import static java.util.Arrays.asList;
@@ -93,7 +93,7 @@ public class DefaultApplicationConfigurer implements ApplicationConfigurer {
 
         LifecycleHandler handler;
         try {
-            handler = application.getInjector().getInstance(LifecycleHandler.class, new NamedImpl(lifecycle.getName()));
+            handler = application.getInjector().getInstance(LifecycleHandler.class, named(lifecycle.getName()));
         } catch (Exception e) {
             // the script must not exist, do nothing
             //LOGME - may be because of chained failures

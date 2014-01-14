@@ -136,12 +136,10 @@ public interface ArtifactManager extends ShutdownHandler {
      * Triggers the ApplicationEvent.NEW_INSTANCE with the following parameters
      * <ul>
      * <li>clazz - the Class of the object</li>
-     * <li>type - the symbolical type of the object</li>
      * <li>instance -> the object that was created</li>
      * </ul>
      *
-     * @param clazz the Class for which an instance must be created
-     * @param type  a symbolical type, for example 'controller' or 'service'. May be null.
+     * @param griffonClass the GriffonClass for which an instance must be created
      * @return a newly instantiated object of type <tt>clazz</tt>. Implementations must be sure
      *         to trigger an event of type ApplicationEvent.NEW_INSTANCE.
      * @throws griffon.exceptions.ArtifactNotFoundException
@@ -149,5 +147,23 @@ public interface ArtifactManager extends ShutdownHandler {
      *          matching the given criteria
      */
     @Nonnull
-    <A extends GriffonArtifact> A newInstance(@Nonnull Class<A> clazz, @Nonnull String type);
+    <A extends GriffonArtifact> A newInstance(@Nonnull GriffonClass griffonClass);
+
+    /**
+     * Creates a new instance of the specified class and type.<br/>
+     * Triggers the ApplicationEvent.NEW_INSTANCE with the following parameters
+     * <ul>
+     * <li>clazz - the Class of the object</li>
+     * <li>instance -> the object that was created</li>
+     * </ul>
+     *
+     * @param clazz the Class for which an instance must be created
+     * @return a newly instantiated object of type <tt>clazz</tt>. Implementations must be sure
+     *         to trigger an event of type ApplicationEvent.NEW_INSTANCE.
+     * @throws griffon.exceptions.ArtifactNotFoundException
+     *          if there's no artifact configured
+     *          matching the given criteria
+     */
+    @Nonnull
+    <A extends GriffonArtifact> A newInstance(@Nonnull Class<A> clazz);
 }

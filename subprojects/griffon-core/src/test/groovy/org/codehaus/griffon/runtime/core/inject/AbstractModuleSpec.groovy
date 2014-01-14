@@ -1,12 +1,7 @@
 package org.codehaus.griffon.runtime.core.inject
 
-import griffon.core.injection.InstanceBinding
-import griffon.core.injection.Module
-import griffon.core.injection.ProviderBinding
-import griffon.core.injection.ProviderTypeBinding
-import griffon.core.injection.TargetBinding
+import griffon.core.injection.*
 import org.codehaus.griffon.runtime.core.injection.AbstractModule
-import org.codehaus.griffon.runtime.core.injection.NamedImpl
 import spock.lang.Specification
 
 import javax.inject.Inject
@@ -15,6 +10,7 @@ import javax.inject.Provider
 import javax.inject.Qualifier
 import java.lang.annotation.Retention
 
+import static griffon.util.AnnotationUtils.named
 import static java.lang.annotation.RetentionPolicy.RUNTIME
 
 class AbstractModuleSpec extends Specification {
@@ -90,7 +86,7 @@ class AbstractModuleSpec extends Specification {
             bind(Boat).toProvider(provider)
             bind(Plane).toProvider(PlaneProvider)
             bind(Singularity).asSingleton()
-            bind(Vehicle).withClassifier(new NamedImpl('Batmovil')).to(Car).asSingleton()
+            bind(Vehicle).withClassifier(named('Batmovil')).to(Car).asSingleton()
             bind(Vehicle).withClassifier(Fast).to(Car)
         }
     }

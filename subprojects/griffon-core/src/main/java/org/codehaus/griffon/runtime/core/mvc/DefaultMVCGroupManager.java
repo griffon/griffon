@@ -209,7 +209,9 @@ public class DefaultMVCGroupManager extends AbstractMVCGroupManager {
                 ClassHolder classHolder = classEntry.getValue();
                 if (classHolder.artifactClass != null) {
                     Class<? extends GriffonArtifact> memberClass = classHolder.artifactClass;
-                    GriffonArtifact instance = getApplication().getArtifactManager().newInstance(memberClass, memberType);
+                    ArtifactManager artifactManager = getApplication().getArtifactManager();
+                    GriffonClass griffonClass = artifactManager.findGriffonClass(memberClass);
+                    GriffonArtifact instance = artifactManager.newInstance(griffonClass);
                     instanceMap.put(memberType, instance);
                     args.put(memberType, instance);
                 } else {

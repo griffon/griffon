@@ -39,7 +39,6 @@ import org.codehaus.griffon.runtime.core.event.DefaultEventHandler;
 import org.codehaus.griffon.runtime.core.event.DefaultEventRouter;
 import org.codehaus.griffon.runtime.core.i18n.MessageSourceProvider;
 import org.codehaus.griffon.runtime.core.injection.AbstractModule;
-import org.codehaus.griffon.runtime.core.injection.NamedImpl;
 import org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroupManager;
 import org.codehaus.griffon.runtime.core.resources.DefaultApplicationResourceInjector;
 import org.codehaus.griffon.runtime.core.resources.DefaultResourceHandler;
@@ -51,6 +50,8 @@ import org.codehaus.griffon.runtime.util.ResourceBundleProvider;
 
 import javax.inject.Named;
 import java.util.ResourceBundle;
+
+import static griffon.util.AnnotationUtils.named;
 
 /**
  * @author Andres Almiray
@@ -112,7 +113,7 @@ public class DefaultApplicationModule extends AbstractModule {
 
     protected void applicationConfiguration() {
         bind(ResourceBundle.class)
-            .withClassifier(new NamedImpl("applicationResourceBundle"))
+            .withClassifier(named("applicationResourceBundle"))
             .toProvider(new ResourceBundleProvider("Config"))
             .asSingleton();
 
@@ -129,7 +130,7 @@ public class DefaultApplicationModule extends AbstractModule {
 
     protected void eventRouter() {
         bind(EventRouter.class)
-            .withClassifier(new NamedImpl("applicationEventRouter"))
+            .withClassifier(named("applicationEventRouter"))
             .to(DefaultEventRouter.class)
             .asSingleton();
 
@@ -139,21 +140,21 @@ public class DefaultApplicationModule extends AbstractModule {
 
     protected void resourceResolver() {
         bind(ResourceResolver.class)
-            .withClassifier(new NamedImpl("applicationResourceResolver"))
+            .withClassifier(named("applicationResourceResolver"))
             .toProvider(new ResourceResolverProvider("resources"))
             .asSingleton();
     }
 
     protected void messageSource() {
         bind(MessageSource.class)
-            .withClassifier(new NamedImpl("applicationMessageSource"))
+            .withClassifier(named("applicationMessageSource"))
             .toProvider(new MessageSourceProvider("messages"))
             .asSingleton();
     }
 
     protected void resourcesInjector() {
         bind(ResourceInjector.class)
-            .withClassifier(new NamedImpl("applicationResourceInjector"))
+            .withClassifier(named("applicationResourceInjector"))
             .to(DefaultApplicationResourceInjector.class)
             .asSingleton();
     }
@@ -173,7 +174,7 @@ public class DefaultApplicationModule extends AbstractModule {
     private void lifecycleHandlers() {
         for (Lifecycle lifecycle : Lifecycle.values()) {
             bind(LifecycleHandler.class)
-                .withClassifier(new NamedImpl(lifecycle.getName()))
+                .withClassifier(named(lifecycle.getName()))
                 .toProvider(new LifecycleHandlerProvider(lifecycle.getName()))
                 .asSingleton();
         }

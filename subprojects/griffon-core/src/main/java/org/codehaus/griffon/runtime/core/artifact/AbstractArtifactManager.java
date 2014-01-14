@@ -94,10 +94,23 @@ public abstract class AbstractArtifactManager implements ArtifactManager {
 
     @Override
     @Nonnull
-    public <A extends GriffonArtifact> A newInstance(@Nonnull Class<A> clazz, @Nonnull String type) {
-        GriffonClass griffonClass = findGriffonClass(clazz, type);
-        if (griffonClass == null) {
-            throw new ArtifactNotFoundException(clazz, type);
+    @SuppressWarnings("unchecked")
+    public <A extends GriffonArtifact> A newInstance(@Nonnull GriffonClass griffonClass) {
+        try {
+            requireNonNull(griffonClass, "Argument 'griffonClass' cannot be null");
+        } catch (RuntimeException re) {
+            throw new ArtifactNotFoundException(re);
+        }
+
+        return newInstance((Class<A>) griffonClass.getClazz());
+    }
+
+    @Override
+    @Nonnull
+    @SuppressWarnings("unchecked")
+    public <A extends GriffonArtifact> A newInstance(@Nonnull Class<A> clazz) {
+        if (findGriffonClass(clazz) == null) {
+            throw new ArtifactNotFoundException(clazz);
         }
 
         return artifactInjector.getInstance(clazz);

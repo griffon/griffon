@@ -31,7 +31,6 @@ import griffon.core.resources.ResourceInjector;
 import griffon.core.resources.ResourceResolver;
 import griffon.core.threading.UIThreadManager;
 import griffon.core.view.WindowManager;
-import org.codehaus.griffon.runtime.core.injection.NamedImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -43,6 +42,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.concurrent.CountDownLatch;
 
+import static griffon.util.AnnotationUtils.named;
 import static griffon.util.GriffonApplicationUtils.parseLocale;
 import static java.util.Arrays.asList;
 import static java.util.Objects.requireNonNull;
@@ -150,7 +150,7 @@ public abstract class AbstractGriffonApplication extends AbstractObservable impl
     @Nonnull
     @Override
     public EventRouter getEventRouter() {
-        return injector.getInstance(EventRouter.class, new NamedImpl("applicationEventRouter"));
+        return injector.getInstance(EventRouter.class, named("applicationEventRouter"));
     }
 
     @Nonnull
@@ -180,13 +180,13 @@ public abstract class AbstractGriffonApplication extends AbstractObservable impl
     @Nonnull
     @Override
     public MessageSource getMessageSource() {
-        return injector.getInstance(MessageSource.class, new NamedImpl("applicationMessageSource"));
+        return injector.getInstance(MessageSource.class, named("applicationMessageSource"));
     }
 
     @Nonnull
     @Override
     public ResourceResolver getResourceResolver() {
-        return injector.getInstance(ResourceResolver.class, new NamedImpl("applicationResourceResolver"));
+        return injector.getInstance(ResourceResolver.class, named("applicationResourceResolver"));
     }
 
     @Nonnull
@@ -198,7 +198,7 @@ public abstract class AbstractGriffonApplication extends AbstractObservable impl
     @Nonnull
     @Override
     public ResourceInjector getResourceInjector() {
-        return injector.getInstance(ResourceInjector.class, new NamedImpl("applicationResourceInjector"));
+        return injector.getInstance(ResourceInjector.class, named("applicationResourceInjector"));
     }
 
     @Nonnull

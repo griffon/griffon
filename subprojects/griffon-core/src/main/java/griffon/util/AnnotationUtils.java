@@ -17,6 +17,9 @@
 package griffon.util;
 
 import griffon.inject.DependsOn;
+import griffon.inject.Typed;
+import org.codehaus.griffon.runtime.core.injection.NamedImpl;
+import org.codehaus.griffon.runtime.core.injection.TypedImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -198,5 +201,15 @@ public class AnnotationUtils {
         LOG.debug("computed {} order is {}", type, instancesByName.keySet());
 
         return instancesByName;
+    }
+
+    @Nonnull
+    public static Named named(@Nonnull String name) {
+        return new NamedImpl(requireNonNull(name, "Argument 'name' cannot be null"));
+    }
+
+    @Nonnull
+    public static Typed typed(@Nonnull Class<?> clazz) {
+        return new TypedImpl(requireNonNull(clazz, "Argument 'clazz' cannot be null"));
     }
 }
