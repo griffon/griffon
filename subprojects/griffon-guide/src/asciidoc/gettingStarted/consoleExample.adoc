@@ -33,6 +33,7 @@ include::{console-swing-groovy}/build.gradle.txt[]
 <10> An implementation of JSR 330 is required
 <11> Logging framework
 <12> Log4j to Slf4j connector
+<13> Test dependencies
 
 === Maven
 
@@ -57,6 +58,7 @@ include::{console-swing-groovy}/pom.xml.txt[]
 <10> An implementation of JSR 330 is required
 <11> Logging framework
 <12> Log4j to Slf4j connector
+<13> Test dependencies
 
 Notice the similarities with the <<gradle-build-file,gradle>> build file as marked with each one
 of the 12 callouts.
@@ -78,8 +80,10 @@ include::{console-swing-groovy}/build.xml.txt[]
 <3> Load +groovy+ task for compiling Groovy sources
 <4> Standard Griffon project layout
 <5> Run the application
+<6> Compile tests
+<7> Run tests and generate report
 
-These are the dependencies as required by this project
+These are the dependencies as required by this project:
 
 .build
 include::{projectdir}/build/generated-dependencies/build.adoc[]
@@ -92,6 +96,11 @@ include::{projectdir}/build/generated-dependencies/compile.adoc[]
 
 .runtime
 include::{projectdir}/build/generated-dependencies/runtime.adoc[]
+
+.test
+include::{projectdir}/build/generated-dependencies/test.adoc[]
+
+It's assumed that JUnit is properly configured in your Ant distribution.
 
 TODO: insert section on Lazybones templates
 
@@ -141,7 +150,7 @@ to presentation models, and as such, they're used to transfer data between Views
 
 === Controller
 
-The controller is also trivial: throw the contents of the script from the model at a Groovy shell,
+The controller is also trivial: throw the contents of the script from the model at an +Evaluator+,
 then store the result back into the model. Make sure you paste the following code into
 +griffon-app/controllers/console/ConsoleController.groovy+.
 
@@ -152,21 +161,48 @@ then store the result back into the model. Make sure you paste the following cod
 include::{console-swing-groovy}/griffon-app/controllers/console/ConsoleController.groovy[]
 ----
 <1> MVC member injected by +link:api/griffon/core/mvc/MVCGroupManager.html[MVCGroupManager]+
-<2> Controller action; automatically executed off the UI thread
-<3> Evaluate the script
-<4> Write back result to Model
+<2> Injected by JSR 330
+<3> Controller action; automatically executed off the UI thread
+<4> Evaluate the script
+<5> Write back result to Model
 
 The Griffon framework will inject references to the other portions of the MVC triad if fields
 named +model+, +view+, and +controller+ are present in the Model, Controller or View. This allows
-us to access the view widgets and the model data if needed.
+us to access the view widgets and the model data if needed. Any other class members annotated with
++@Inject+ participate in dependency injection as laid out by JSR 330, in this case the controller
+will get an instance of +Evaluator+ if a suitable implementation is bound.
 
-The +executeScript+ [conum,data-value=2]_2_ method will be used later in the View in combination
+The +executeScript+ [conum,data-value=3]_3_ method will be used later in the View in combination
 with a button. You may notice that there's no explicit threading management. All Swing developers
 know they must obey the Swing Rule: long running computations must run outside of the EDT; all UI
 components should be queried/modified inside the EDT. It turns out Griffon is aware of this rule,
 making sure an action is called outside of the EDT by default, all bindings made to UI components
-via the model will be updated inside the EDT [conum,data-value=4]_4_. We'll setup the bindings in
+via the model will be updated inside the EDT [conum,data-value=5]_5_. We'll setup the bindings in
 the next listing.
+
+We must create a +link:api/griffon/core/injection/Module.html[Module]+ in order to bind +Evaluator+.
+These are the required class definitions
+
+.src/main/groovy/console/Evaluator.groovy
+[source,groovy]
+[subs="verbatim,attributes"]
+----
+include::{console-swing-groovy}/src/main/groovy/console/Evaluator.groovy[]
+----
+
+.src/main/groovy/console/GroovyShellEvaluator.groovy
+[source,groovy]
+[subs="verbatim,attributes"]
+----
+include::{console-swing-groovy}/src/main/groovy/console/GroovyShellEvaluator.groovy[]
+----
+
+.src/main/groovy/console/ApplicationModule.groovy
+[source,groovy]
+[subs="verbatim,attributes"]
+----
+include::{console-swing-groovy}/src/main/groovy/console/ApplicationModule.groovy[]
+----
 
 === View
 
@@ -208,4 +244,41 @@ mvn compile exec:java
 [source]
 ----
 ant compile run
+----
+
+== Testing
+
+.src/test/groovy/console/ConsoleControllerTest.groovy
+[source,groovy]
+[subs="verbatim,attributes"]
+----
+include::{console-swing-groovy}/src/test/groovy/console/ConsoleControllerTest.groovy[]
+----
+<1> Indicate class under test
+<2> Injected by +GriffonUnitRule+ given [conum,data-value=1]_1_
+<3> Injected by +GriffonUnitRule+ via JSR 330
+<4> Instantiates and configures a +GriffonAplication+ for testing
+<5> Setup collaborators
+<6> Stimulus
+<7> Validate after waiting 2 seconds at most
+<8> Override +Evaluator+ binding
+
+Running tests requires executing a build tool specific command
+
+.gradle
+[source]
+----
+gradle test
+----
+
+.maven
+[source]
+----
+mvn test
+----
+
+.ant
+[source]
+----
+ant test
 ----
