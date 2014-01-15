@@ -16,8 +16,8 @@
 
 package griffon.pivot.formatters;
 
-import griffon.core.resources.formatters.AbstractFormatter;
-import griffon.core.resources.formatters.ParseException;
+import griffon.core.formatters.AbstractFormatter;
+import griffon.core.formatters.ParseException;
 import griffon.pivot.support.Colors;
 
 import javax.annotation.Nonnull;

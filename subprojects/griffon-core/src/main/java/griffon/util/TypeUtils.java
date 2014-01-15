@@ -16,8 +16,8 @@
 
 package griffon.util;
 
-import griffon.core.resources.editors.ExtendedPropertyEditor;
-import griffon.core.resources.editors.PropertyEditorResolver;
+import griffon.core.editors.ExtendedPropertyEditor;
+import griffon.core.editors.PropertyEditorResolver;
 import griffon.exceptions.TypeConversionException;
 
 import javax.annotation.Nonnull;

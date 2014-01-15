@@ -16,7 +16,7 @@
 
 package griffon.javafx.editors;
 
-import griffon.core.resources.editors.AbstractPropertyEditor;
+import griffon.core.editors.AbstractPropertyEditor;
 import javafx.geometry.Insets;
 import org.codehaus.griffon.core.compile.PropertyEditorFor;
 

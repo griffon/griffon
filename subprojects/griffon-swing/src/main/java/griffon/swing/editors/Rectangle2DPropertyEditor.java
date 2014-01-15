@@ -16,7 +16,7 @@
 
 package griffon.swing.editors;
 
-import griffon.core.resources.editors.AbstractPropertyEditor;
+import griffon.core.editors.AbstractPropertyEditor;
 import org.codehaus.griffon.core.compile.PropertyEditorFor;
 
 import java.awt.geom.Rectangle2D;

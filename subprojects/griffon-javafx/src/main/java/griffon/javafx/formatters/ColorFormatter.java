@@ -16,8 +16,8 @@
 
 package griffon.javafx.formatters;
 
-import griffon.core.resources.formatters.AbstractFormatter;
-import griffon.core.resources.formatters.ParseException;
+import griffon.core.formatters.AbstractFormatter;
+import griffon.core.formatters.ParseException;
 import javafx.scene.paint.Color;
 
 import javax.annotation.Nonnull;

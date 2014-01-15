@@ -18,7 +18,7 @@ package org.codehaus.griffon.runtime.core.resources;
 
 import griffon.core.resources.InjectedResource;
 import griffon.core.resources.ResourceInjector;
-import griffon.core.resources.editors.ExtendedPropertyEditor;
+import griffon.core.editors.ExtendedPropertyEditor;
 import griffon.exceptions.InstanceMethodInvocationException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -35,7 +35,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import static griffon.core.GriffonExceptionHandler.sanitize;
-import static griffon.core.resources.editors.PropertyEditorResolver.findEditor;
+import static griffon.core.editors.PropertyEditorResolver.findEditor;
 import static griffon.util.GriffonClassUtils.getPropertyDescriptors;
 import static griffon.util.GriffonClassUtils.invokeExactInstanceMethod;
 import static griffon.util.GriffonNameUtils.getSetterName;

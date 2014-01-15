@@ -16,9 +16,9 @@
 
 package griffon.pivot.editors;
 
-import griffon.core.resources.editors.AbstractPropertyEditor;
-import griffon.core.resources.formatters.Formatter;
-import griffon.core.resources.formatters.ParseException;
+import griffon.core.editors.AbstractPropertyEditor;
+import griffon.core.formatters.Formatter;
+import griffon.core.formatters.ParseException;
 import griffon.pivot.formatters.ColorFormatter;
 import org.codehaus.griffon.core.compile.PropertyEditorFor;
 

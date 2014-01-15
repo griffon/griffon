@@ -16,7 +16,7 @@
 
 package griffon.pivot.editors;
 
-import griffon.core.resources.editors.AbstractPropertyEditor;
+import griffon.core.editors.AbstractPropertyEditor;
 import org.apache.pivot.wtk.Bounds;
 import org.codehaus.griffon.core.compile.PropertyEditorFor;
 

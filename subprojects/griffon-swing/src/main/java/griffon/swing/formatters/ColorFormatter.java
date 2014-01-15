@@ -16,8 +16,8 @@
 
 package griffon.swing.formatters;
 
-import griffon.core.resources.formatters.AbstractFormatter;
-import griffon.core.resources.formatters.ParseException;
+import griffon.core.formatters.AbstractFormatter;
+import griffon.core.formatters.ParseException;
 import griffon.swing.support.Colors;
 
 import javax.annotation.Nonnull;
@@ -52,7 +52,7 @@ import static java.util.Objects.requireNonNull;
  * </p>
  *
  * @author Andres Almiray
- * @see griffon.core.resources.formatters.Formatter
+ * @see griffon.core.formatters.Formatter
  * @since 1.3.0
  */
 public class ColorFormatter extends AbstractFormatter<Color> {
