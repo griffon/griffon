@@ -39,14 +39,14 @@ import static java.util.Objects.requireNonNull;
  * @since 1.1.0
  */
 public class SwingGriffonControllerAction extends AbstractAction {
-    private static final String KEY_SHORT_DESCRIPTION = "shortDescription";
-    private static final String KEY_LONG_DESCRIPTION = "longDescription";
-    private static final String KEY_SMALL_ICON = "smallIcon";
-    private static final String KEY_LARGE_ICON = "largeIcon";
-    private static final String KEY_SELECTED = "selected";
-    private static final String KEY_ACCELERATOR = "accelerator";
-    private static final String KEY_MNEMONIC = "mnemonic";
-    private static final String KEY_COMMAND = "command";
+    public static final String KEY_SHORT_DESCRIPTION = "shortDescription";
+    public static final String KEY_LONG_DESCRIPTION = "longDescription";
+    public static final String KEY_SMALL_ICON = "smallIcon";
+    public static final String KEY_LARGE_ICON = "largeIcon";
+    public static final String KEY_SELECTED = "selected";
+    public static final String KEY_ACCELERATOR = "accelerator";
+    public static final String KEY_MNEMONIC = "mnemonic";
+    public static final String KEY_COMMAND = "command";
 
     private String shortDescription;
     private String longDescription;

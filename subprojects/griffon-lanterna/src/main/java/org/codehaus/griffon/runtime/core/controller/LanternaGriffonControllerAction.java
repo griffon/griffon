@@ -19,7 +19,7 @@ package org.codehaus.griffon.runtime.core.controller;
 import griffon.core.artifact.GriffonController;
 import griffon.core.controller.ActionManager;
 import griffon.core.threading.UIThreadManager;
-import griffon.lanterna.widgets.LanternaAction;
+import griffon.lanterna.support.LanternaAction;
 
 import javax.annotation.Nonnull;
 import java.beans.PropertyChangeEvent;

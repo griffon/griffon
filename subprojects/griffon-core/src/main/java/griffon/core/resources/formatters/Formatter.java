@@ -20,13 +20,35 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 /**
+ * <p>Strategy for parsing and formatting instances from and to their literal representation</p>
+ *
+ * @param <T> the type of instances this {@code Formatter} can handle.
+ *
  * @author Andres Almiray
  * @since 1.3.0
  */
 public interface Formatter<T> {
+    /**
+     * <p>Formats an instance into its literal representation.</p>
+     * <p>The resulting {@code String} may be set as an argument to {@link Formatter#parse}
+     * resulting in a similar instance as the input.</p>
+     *
+     * @param obj the instance to be formatted
+     * @return A {@code String} representing the instance's state.
+     */
     @Nonnull
     String format(@Nonnull T obj);
 
+    /**
+     * <p>Parses a literal representation into an instance of type {@code T}.</p>
+     * <p>The resulting instance {@code T} may be set as an argument to {@link Formatter#format}
+     * resulting in an equal {@code String} as the input.</p>
+     *
+     * @param str the {@code String} to be parsed
+     * @return an instance of type {@code T} whose state is initialized given the
+     *         parameters of the input {@code String}.
+     * @throws ParseException if the {@code String} cannot be parsed.
+     */
     @Nullable
     T parse(@Nullable String str) throws ParseException;
 }

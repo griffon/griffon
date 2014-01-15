@@ -28,7 +28,7 @@ import java.util.Collection;
  * @author Andres Almiray
  * @since 2.0.0
  */
-public class PivotApplicationBootstrapper extends ApplicationBootstrapper {
+public class PivotApplicationBootstrapper extends DefaultApplicationBootstrapper {
     private final Display display;
 
     public PivotApplicationBootstrapper(@Nonnull GriffonApplication application, @Nonnull Display display) {

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package griffon.lanterna.widgets;
+package griffon.lanterna.support;
 
 import com.googlecode.lanterna.gui.Action;
 import org.codehaus.griffon.runtime.core.AbstractObservable;

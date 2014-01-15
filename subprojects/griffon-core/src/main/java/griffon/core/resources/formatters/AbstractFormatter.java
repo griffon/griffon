@@ -19,6 +19,8 @@ package griffon.core.resources.formatters;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
+import static java.util.Objects.requireNonNull;
+
 /**
  * @author Andres Almiray
  * @since 1.3.0
@@ -26,21 +28,21 @@ import javax.annotation.Nullable;
 public abstract class AbstractFormatter<T> implements Formatter<T> {
     protected static int parseHexInt(@Nonnull String val, @Nonnull Class<?> klass) throws ParseException {
         try {
-            return Integer.parseInt(String.valueOf(val).trim(), 16) & 0xFF;
+            return Integer.parseInt(String.valueOf(requireNonNull(val)).trim(), 16) & 0xFF;
         } catch (NumberFormatException e) {
             throw parseError(val, klass, e);
         }
     }
 
     protected static int parseHexInt(@Nonnull Number val) {
-        return val.intValue() & 0xFF;
+        return requireNonNull(val).intValue() & 0xFF;
     }
 
     protected static ParseException parseError(@Nullable Object value, @Nonnull Class<?> klass) throws ParseException {
-        throw new ParseException("Can't convert '" + value + "' into " + klass.getName());
+        throw new ParseException("Can't convert '" + value + "' into " + requireNonNull(klass).getName());
     }
 
     protected static ParseException parseError(@Nullable Object value, @Nonnull Class<?> klass, @Nonnull Exception e) throws ParseException {
-        throw new ParseException("Can't convert '" + value + "' into " + klass.getName(), e);
+        throw new ParseException("Can't convert '" + value + "' into " + requireNonNull(klass).getName(), requireNonNull(e));
     }
 }

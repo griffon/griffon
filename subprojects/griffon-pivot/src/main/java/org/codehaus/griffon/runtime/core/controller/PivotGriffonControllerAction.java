@@ -35,7 +35,7 @@ import static java.util.Objects.requireNonNull;
  * @since 2.0.0
  */
 public class PivotGriffonControllerAction extends AbstractAction {
-    private static final String KEY_DESCRIPTION = "shortDescription";
+    public static final String KEY_DESCRIPTION = "description";
 
     private String description;
     private final PivotAction toolkitAction;

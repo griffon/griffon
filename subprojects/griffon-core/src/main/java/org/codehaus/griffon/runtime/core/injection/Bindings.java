@@ -17,6 +17,7 @@
 package org.codehaus.griffon.runtime.core.injection;
 
 import griffon.core.injection.*;
+import griffon.inject.BindTo;
 import griffon.util.AnnotationUtils;
 
 import javax.annotation.Nonnull;
@@ -176,6 +177,10 @@ public class Bindings {
             Annotation[] annotations = klass.getAnnotations();
             for (Annotation annotation : annotations) {
                 if (AnnotationUtils.isAnnotatedWith(annotation, Qualifier.class)) {
+                    // special case @BindTo is only used during tests
+                    if (BindTo.class.isAssignableFrom(annotation.getClass())) {
+                        continue;
+                    }
                     // special case for @Named
                     if (Named.class.isAssignableFrom(annotation.getClass())) {
                         Named named = (Named) annotation;

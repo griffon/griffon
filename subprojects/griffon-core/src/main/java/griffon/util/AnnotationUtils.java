@@ -16,8 +16,10 @@
 
 package griffon.util;
 
+import griffon.inject.BindTo;
 import griffon.inject.DependsOn;
 import griffon.inject.Typed;
+import org.codehaus.griffon.runtime.core.injection.BindToImpl;
 import org.codehaus.griffon.runtime.core.injection.NamedImpl;
 import org.codehaus.griffon.runtime.core.injection.TypedImpl;
 import org.slf4j.Logger;
@@ -211,5 +213,10 @@ public class AnnotationUtils {
     @Nonnull
     public static Typed typed(@Nonnull Class<?> clazz) {
         return new TypedImpl(requireNonNull(clazz, "Argument 'clazz' cannot be null"));
+    }
+
+    @Nonnull
+    public static BindTo bindto(@Nonnull Class<?> clazz) {
+        return new BindToImpl(requireNonNull(clazz, "Argument 'clazz' cannot be null"));
     }
 }

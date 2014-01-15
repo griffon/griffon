@@ -16,7 +16,7 @@
 
 package griffon.builder.lanterna.factory
 
-import griffon.lanterna.widgets.LanternaAction
+import griffon.lanterna.support.LanternaAction
 
 /**
  * @author Andres Almiray

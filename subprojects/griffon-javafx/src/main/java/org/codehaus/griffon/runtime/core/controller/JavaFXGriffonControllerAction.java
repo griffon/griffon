@@ -36,10 +36,10 @@ import static java.util.Objects.requireNonNull;
  * @author Andres Almiray
  */
 public class JavaFXGriffonControllerAction extends AbstractAction {
-    private static final String KEY_DESCRIPTION = "description";
-    private static final String KEY_ICON = "icon";
-    private static final String KEY_SELECTED = "selected";
-    private static final String KEY_ACCELERATOR = "accelerator";
+    public static final String KEY_DESCRIPTION = "description";
+    public static final String KEY_ICON = "icon";
+    public static final String KEY_SELECTED = "selected";
+    public static final String KEY_ACCELERATOR = "accelerator";
 
     private String description;
     private String icon;

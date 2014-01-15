@@ -6,7 +6,7 @@ import com.googlecode.lanterna.gui.component.Panel;
 import com.googlecode.lanterna.gui.component.TextBox;
 import griffon.core.GriffonApplication;
 import griffon.core.artifact.GriffonView;
-import griffon.lanterna.widgets.LanternaAction;
+import griffon.lanterna.support.LanternaAction;
 import griffon.lanterna.widgets.MutableButton;
 import org.codehaus.griffon.core.compile.ArtifactProviderFor;
 import org.codehaus.griffon.runtime.core.artifact.AbstractGriffonView;

@@ -17,7 +17,7 @@
 package griffon.builder.lanterna.factory
 
 import com.googlecode.lanterna.gui.Action
-import griffon.lanterna.widgets.LanternaAction
+import griffon.lanterna.support.LanternaAction
 import griffon.lanterna.widgets.MutableButton
 
 /**

@@ -14,19 +14,21 @@
  * limitations under the License.
  */
 
-package griffon.inject;
+package griffon.core.test;
 
 import javax.inject.Qualifier;
-import java.lang.annotation.*;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 
 /**
  * @author Andres Almiray
  * @since 2.0.0
  */
 @Qualifier
-@Documented
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ElementType.TYPE})
-public @interface Typed {
+public @interface TestFor {
     Class<?> value();
 }

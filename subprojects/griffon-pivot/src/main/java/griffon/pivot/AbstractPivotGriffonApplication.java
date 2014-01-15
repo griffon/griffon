@@ -16,13 +16,13 @@
 
 package griffon.pivot;
 
+import griffon.core.ApplicationBootstrapper;
 import griffon.exceptions.InstanceNotFoundException;
 import org.apache.pivot.wtk.Application;
 import org.apache.pivot.wtk.ApplicationContext;
 import org.apache.pivot.wtk.Display;
 import org.apache.pivot.wtk.Window;
 import org.codehaus.griffon.runtime.core.AbstractGriffonApplication;
-import org.codehaus.griffon.runtime.core.ApplicationBootstrapper;
 import org.codehaus.griffon.runtime.core.PivotApplicationBootstrapper;
 
 import javax.annotation.Nonnull;

@@ -357,7 +357,7 @@ public abstract class AbstractGriffonApplication extends AbstractObservable impl
         GriffonExceptionHandler.registerExceptionHandler();
 
         GriffonApplication application = applicationClass.getDeclaredConstructor(CTOR_ARGS).newInstance(new Object[]{args});
-        ApplicationBootstrapper bootstrapper = new ApplicationBootstrapper(application);
+        ApplicationBootstrapper bootstrapper = new DefaultApplicationBootstrapper(application);
         bootstrapper.bootstrap();
         bootstrapper.run();
 

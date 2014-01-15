@@ -14,19 +14,14 @@
  * limitations under the License.
  */
 
-package griffon.inject;
+package griffon.core.test;
 
-import javax.inject.Qualifier;
-import java.lang.annotation.*;
+import javax.annotation.Nonnull;
 
 /**
  * @author Andres Almiray
  * @since 2.0.0
  */
-@Qualifier
-@Documented
-@Retention(RetentionPolicy.RUNTIME)
-@Target({ElementType.TYPE})
-public @interface Typed {
-    Class<?> value();
+public interface TestCaseAware {
+    void setTestCase(@Nonnull Object testCase);
 }

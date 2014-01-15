@@ -19,6 +19,7 @@ package griffon.lanterna.widgets;
 import com.googlecode.lanterna.gui.Action;
 import com.googlecode.lanterna.gui.component.Button;
 import griffon.exceptions.GriffonException;
+import griffon.lanterna.support.LanternaAction;
 
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
@@ -30,7 +31,7 @@ import static griffon.util.GriffonNameUtils.isBlank;
  * @author Andres Almiray
  */
 public class MutableButton extends Button {
-    private LanternaAction mutableAction;
+    private LanternaAction lanternaAction;
 
     public MutableButton() {
         this("", new LanternaAction());
@@ -49,15 +50,15 @@ public class MutableButton extends Button {
         try {
             Field field = getClass().getSuperclass().getDeclaredField("onPressEvent");
             field.setAccessible(true);
-            mutableAction = (LanternaAction) field.get(this);
+            lanternaAction = (LanternaAction) field.get(this);
 
-            mutableAction.addPropertyChangeListener(LanternaAction.NAME, new PropertyChangeListener() {
+            lanternaAction.addPropertyChangeListener(LanternaAction.NAME, new PropertyChangeListener() {
                 public void propertyChange(PropertyChangeEvent event) {
                     setText(event.getNewValue().toString());
                 }
             });
-            if (!isBlank(mutableAction.getName())) {
-                setText(mutableAction.getName());
+            if (!isBlank(lanternaAction.getName())) {
+                setText(lanternaAction.getName());
             }
         } catch (NoSuchFieldException | IllegalAccessException e) {
             throw new GriffonException(e);
@@ -65,10 +66,10 @@ public class MutableButton extends Button {
     }
 
     public void setAction(Runnable runnable) {
-        mutableAction.setRunnable(runnable);
+        lanternaAction.setRunnable(runnable);
     }
 
     public LanternaAction getAction() {
-        return mutableAction;
+        return lanternaAction;
     }
 }

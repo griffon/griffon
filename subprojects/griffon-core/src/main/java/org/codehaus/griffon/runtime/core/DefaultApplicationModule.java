@@ -57,7 +57,7 @@ import static griffon.util.AnnotationUtils.named;
  * @author Andres Almiray
  * @since 2.0.0
  */
-@Named("default")
+@Named("core")
 public class DefaultApplicationModule extends AbstractModule {
     @Override
     protected void doConfigure() {

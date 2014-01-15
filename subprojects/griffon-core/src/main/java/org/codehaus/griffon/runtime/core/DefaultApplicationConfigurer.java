@@ -137,12 +137,12 @@ public class DefaultApplicationConfigurer implements ApplicationConfigurer {
                     String[] parts = line.trim().split("=");
                     Class<?> targetType = loadClass(parts[0].trim(), classLoader);
                     Class<?> editorClass = loadClass(parts[1].trim(), classLoader);
-                    LOG.debug("Registering {} as editor for {}", editorClass.getName(), targetType.getName());
 
                     // Editor must have a no-args constructor
                     // CCE means the class can not be used
                     editorClass.newInstance();
                     PropertyEditorManager.registerEditor(targetType, editorClass);
+                    LOG.debug("Registering {} as editor for {}", editorClass.getName(), targetType.getName());
                 } catch (Exception e) {
                     if (LOG.isWarnEnabled()) {
                         LOG.warn("Could not load " + type.getName() + " with " + line, sanitize(e));

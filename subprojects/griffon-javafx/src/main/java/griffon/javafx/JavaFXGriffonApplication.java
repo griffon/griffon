@@ -16,9 +16,10 @@
 
 package griffon.javafx;
 
+import griffon.core.ApplicationBootstrapper;
 import javafx.application.Application;
 import javafx.stage.Stage;
-import org.codehaus.griffon.runtime.core.ApplicationBootstrapper;
+import org.codehaus.griffon.runtime.core.DefaultApplicationBootstrapper;
 
 import javax.annotation.Nonnull;
 
@@ -55,7 +56,7 @@ public class JavaFXGriffonApplication extends AbstractJavaFXGriffonApplication {
 
     @Override
     public void init() throws Exception {
-        ApplicationBootstrapper bootstrapper = new ApplicationBootstrapper(this);
+        ApplicationBootstrapper bootstrapper = new DefaultApplicationBootstrapper(this);
         bootstrapper.bootstrap();
         initialize();
     }
