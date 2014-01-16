@@ -170,7 +170,7 @@ key must define the aliased key with a special format, for example
 [subs="verbatim"]
 ----
 famous.quote = This is {0}!
-hello.world = +[famous.quote]
+hello.world = @[famous.quote]
 ----
 
 Resolving those keys results in
@@ -178,9 +178,11 @@ Resolving those keys results in
 [source,groovy]
 [subs="verbatim"]
 ----
-assert getApplication().getMessageSource()
-                       .getMessage('famous.quote', ['Sparta']) == 'This is Sparta!'
+assert getApplication()
+           .getMessageSource()
+           .getMessage('famous.quote', ['Sparta']) == 'This is Sparta!'
 
-assert getApplication().getMessageSource()
-                       .getMessage('hello.world', ['Griffon']) == 'This is Griffon!'
+assert getApplication()
+          .getMessageSource()
+          .getMessage('hello.world', ['Griffon']) == 'This is Griffon!'
 ----
