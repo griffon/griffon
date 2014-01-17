@@ -19,6 +19,10 @@ apply plugin: 'java'
 ext.maven = true
 ext.pomDescription = 'Griffon groovy (compile)'
 
+configurations {
+    compileOnly
+}
+
 dependencies {
     compile project(':griffon-core-compile')
     compile project(':griffon-groovy')

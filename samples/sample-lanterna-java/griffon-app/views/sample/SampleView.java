@@ -8,7 +8,7 @@ import griffon.core.GriffonApplication;
 import griffon.core.artifact.GriffonView;
 import griffon.lanterna.support.LanternaAction;
 import griffon.lanterna.widgets.MutableButton;
-import org.codehaus.griffon.core.compile.ArtifactProviderFor;
+import griffon.metadata.ArtifactProviderFor;
 import org.codehaus.griffon.runtime.core.artifact.AbstractGriffonView;
 
 import javax.annotation.Nonnull;

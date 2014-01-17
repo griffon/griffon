@@ -3,7 +3,7 @@ package editor
 import griffon.core.artifact.GriffonModel
 import griffon.transform.PropertyListener
 import groovy.beans.Bindable
-import org.codehaus.griffon.core.compile.ArtifactProviderFor
+import griffon.metadata.ArtifactProviderFor
 
 import javax.swing.event.ChangeEvent
 import javax.swing.event.ChangeListener

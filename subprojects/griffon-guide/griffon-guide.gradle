@@ -61,6 +61,7 @@ task copyDocs(type: Copy) {
         if (projectName.endsWith('-compile')) {
             from(project(projectName).sourceSets.main.allSource) {
                 include 'griffon/transform/**/*'
+                include 'griffon/metadata/**/*'
             }
         } else {
             from(project(projectName).sourceSets.main.allSource)
@@ -75,8 +76,10 @@ task apiDocs(type: Javadoc, dependsOn: copyDocs) {
     destinationDir  = file("$buildDir/api")
     title           = "Griffon $version"
     classpath       = project.ext.childProjects.collect { projectName ->
+        println projectName
                           [project(projectName).sourceSets.main.output,
-                           project(projectName).configurations.compile]
+                           project(projectName).configurations.compile,
+                              project(projectName).configurations.compileOnly]
                       }.flatten().sum() as FileCollection
 
     excludes = ['**/*.html', 'META-INF/**', '**/*.groovy']
@@ -200,6 +203,7 @@ asciidoctor {
             sectlink            : true,
             sectanchors         : true,
             numbered            : true,
+            linkattrs           : true,
             imagesdir           : 'images',
             'source-highlighter': 'coderay',
             'griffon-version'   : project.version,

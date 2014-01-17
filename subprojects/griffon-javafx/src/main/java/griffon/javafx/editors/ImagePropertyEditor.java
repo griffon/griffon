@@ -18,7 +18,7 @@ package griffon.javafx.editors;
 
 import griffon.core.editors.AbstractPropertyEditor;
 import javafx.scene.image.Image;
-import org.codehaus.griffon.core.compile.PropertyEditorFor;
+import griffon.metadata.PropertyEditorFor;
 
 import java.io.File;
 import java.io.InputStream;

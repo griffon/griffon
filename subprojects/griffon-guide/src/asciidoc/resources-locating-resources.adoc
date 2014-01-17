@@ -1,0 +1,40 @@
+
+= Locating Classpath Resources
+
+Resources can be loaded form the classpath using the standard mechanism provided by the
+Java runtime, that is, ask a +ClassLoader+ instance to load a resource +URL+ or obtain
+an +InputStream+ that points to the resource.
+
+But the code can get quite verbose, take for example the following view code that locates
+a text file and displays it on a text component
+
+[source,groovy]
+----
+scrollPane {
+    textArea(columns: 40, rows: 20,
+        text: this.class.classLoader.getResource('someTextFile.txt').text)
+}
+----
+
+In order to reduce visual clutter, also to provide an abstraction over resource location,
+applications rely on +link:api/griffon/core/resources/ResourceHandler.html[ResourceHandler]+,
+which exposes the following contract
+
+ - URL getResourceAsURL(String name)
+ - InputStream getResourceAsStream(String name)
+ - List<URL> getResources(String name)
+ - ClassLoader classloader()
+
+Thus, the previous example can be rewritten in this way
+
+[source,groovy]
+----
+scrollPane {
+    textArea(columns: 40, rows: 20,
+        text: application.resourceHandler.getResourceAsURL('someTextFile.txt').text)
+}
+----
+
+In the future Griffon may switch to a modularized runtime, this abstraction will shield
+you from any problems when the underlying mechanism changes, such as picking the correct
++ClassLoader+.

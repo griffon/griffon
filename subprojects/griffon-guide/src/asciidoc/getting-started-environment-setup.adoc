@@ -1,0 +1,24 @@
+
+= Environment Setup
+
+The following section outlines the minimum environment requirements to get started with Griffon.
+
+== JDK
+
+http://java.oracle.com[JDK7] is the lowest JVM version supported by Griffon. You can safely use
+http://java.oracle.com[JDK8] features such as lambdas too. We strongly suggest to use JDK8 if
+you're planning to build JavaFX based applications as JavaFX8 delivers many enhancements over
+JavaFX 2.2 (the version included in JDK7).
+
+== Gradle
+
+http://gradle.org[Gradle] 1.10 was used to thoroughly test the Griffon source code and as such
+is guaranteed to work. We suggest installing http://gvmtool.net[GVM] as a means to keep your
+Gradle installing up to date. GVM can also install http://github.com/pledbrook/lazybones[Lazybones],
+a templating tool for creating Griffon projects.
+
+== Maven
+
+http://maven.apache.org[Maven] 3.1.0 works perfectly well when building Swing based applications,
+however it does _not_ work with the JavaFX plugin from http://zenjava.com/javafx/maven ; you must
+downgrade to version 3.0.4 in order to use this plugin.

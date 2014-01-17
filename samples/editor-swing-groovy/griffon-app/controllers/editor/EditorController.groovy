@@ -1,7 +1,7 @@
 package editor
 
 import griffon.core.artifact.GriffonController
-import org.codehaus.griffon.core.compile.ArtifactProviderFor
+import griffon.metadata.ArtifactProviderFor
 
 @ArtifactProviderFor(GriffonController)
 class EditorController {

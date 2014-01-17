@@ -21,7 +21,7 @@ import griffon.core.formatters.Formatter;
 import griffon.core.formatters.ParseException;
 import griffon.javafx.formatters.ColorFormatter;
 import javafx.scene.paint.Color;
-import org.codehaus.griffon.core.compile.PropertyEditorFor;
+import griffon.metadata.PropertyEditorFor;
 
 import java.util.ArrayList;
 import java.util.List;

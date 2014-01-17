@@ -16,16 +16,14 @@
 
 package griffon.transform;
 
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
+import java.lang.annotation.*;
 
 /**
  * <p>Annotates a class.</p>
  *
  * @author Andres Almiray
  */
+@Documented
 @Retention(RetentionPolicy.SOURCE)
 @Target(ElementType.TYPE)
 public @interface MessageSourceAware {

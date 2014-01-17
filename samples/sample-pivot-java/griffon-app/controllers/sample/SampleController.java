@@ -2,7 +2,7 @@ package sample;
 
 import griffon.core.GriffonApplication;
 import griffon.core.artifact.GriffonController;
-import org.codehaus.griffon.core.compile.ArtifactProviderFor;
+import griffon.metadata.ArtifactProviderFor;
 import org.codehaus.griffon.runtime.core.artifact.AbstractGriffonController;
 
 import javax.annotation.Nonnull;

@@ -16,7 +16,7 @@
 
 package org.codehaus.griffon.core.compile.processor.editor;
 
-import org.codehaus.griffon.core.compile.PropertyEditorFor;
+import griffon.metadata.PropertyEditorFor;
 import org.kordamp.jipsy.processor.*;
 
 import javax.annotation.processing.RoundEnvironment;

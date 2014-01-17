@@ -19,6 +19,10 @@ apply plugin: 'java'
 ext.maven = true
 ext.pomDescription = 'Griffon core (compile)'
 
+configurations {
+    compileOnly
+}
+
 dependencies {
     compile project(':griffon-core')
     compile 'org.kordamp.jipsy:jipsy:0.2.0'

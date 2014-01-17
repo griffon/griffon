@@ -3,7 +3,7 @@ package sample;
 import griffon.core.GriffonApplication;
 import griffon.core.artifact.GriffonService;
 import griffon.core.i18n.MessageSource;
-import org.codehaus.griffon.core.compile.ArtifactProviderFor;
+import griffon.metadata.ArtifactProviderFor;
 import org.codehaus.griffon.runtime.core.artifact.AbstractGriffonService;
 
 import javax.annotation.Nonnull;

@@ -1,0 +1,190 @@
+
+= MessageSource
+
+Applications have the ability to resolve internationalizable messages by leveraging
+the behavior exposed by +link:api/griffon/core/i18n/MessageSource.html[griffon.core.i18n.MessageSource]+.
+This interface exposes the following methods:
+
+ - String getMessage(String key)
+ - String getMessage(String key, Locale locale)
+ - String getMessage(String key, Object[] args)
+ - String getMessage(String key, Object[] args, Locale locale)
+ - String getMessage(String key, List args)
+ - String getMessage(String key, List args, Locale locale)
+ - String getMessage(String key, Map args)
+ - String getMessage(String key, Map args, Locale locale)
+ - Object resolveMessageValue(String key, Locale locale)
+
+The first set throws +NoSuchMessageException+ if a message could not be resolved given
+the key sent as argument. The following methods take and additional +defaultMessage+ 
+parameter that may be used if no configured message is found. If this optional parameter
+were to be null then the +key+ is used as the message; in other words, these methods
+never throw +NoSuchMessageException+ nor return +null+ unless the passed in +key+ is null.
+
+ - String getMessage(String key, String defaultMessage)
+ - String getMessage(String key, Locale locale, String defaultMessage)
+ - String getMessage(String key, Object[] args, String defaultMessage)
+ - String getMessage(String key, Object[] args, Locale locale, String defaultMessage)
+ - String getMessage(String key, List args, String defaultMessage)
+ - String getMessage(String key, List args, Locale locale, String defaultMessage)
+ - String getMessage(String key, Map args, String defaultMessage)
+ - String getMessage(String key, Map args, Locale locale, String defaultMessage)
+
+The simplest way to resolve a message thus results like this
+
+[source,groovy]
+[subs="verbatim"]
+----
+getApplication().getMessageSource().getMessage('some.key')
+----
+
+The set of methods that take a +List+ as arguments are meant to be used from Groovy
+code whereas those that take an +Object[]+ are meant for Java code; this leads to
+better idiomatic code as the following examples reveal
+
+[source,groovy]
+[subs="verbatim"]
+----
+getApplication().getMessageSource()
+                .getMessage('groovy.message', ['apples', 'bananas'])
+----
+
+[source,java]
+[subs="verbatim"]
+----
+getApplication().getMessageSource()
+                .getMessage("java.message", new Object[]{"unicorns", "rainbows"});
+----
+
+Of course you may also use +List+ versions in Java, like this
+
+[source,java]
+[subs="verbatim"]
+----
+getApplication().getMessageSource()
+                .getMessage("hybrid.message", Arrays.asList("bells", "whistles"));
+----
+
+== Message Formats
+
+There are three types of message formats supported by default. Additional formats may
+be supported if the right plugins are installed. Resources may be configured using
+either properties files or Groovy scripts, please refer to the
+link:internationalization-message-source-configuration/[configuration] section.
+
+=== Standard Format
+
+The first set of message formats are those supported by the JDK's
++http://docs.oracle.com/javase/6/docs/api/java/text/MessageFormat.html[MessageFormat]+
+facilities. These formats work with all versions of the +getMessage()+ method that
+take a +List+ or an +Object[]+ as arguments. Examples follow. First the messages
+stored in a properties file
+
+[source]
+[subs="verbatim"]
+----
+healthy.proverb = An {0} a day keeps the {1} away
+yoda.says = {0} is the path to the dark side. {0} leads to {1}. {1} leads to {2}. {2} leads to suffering.
+----
+
+Then the code used to resolve them
+
+[source,groovy]
+[subs="verbatim"]
+----
+String quote = getApplication().getMessageSource()
+                               .getMessage('healthy.proverb', ['apple', 'doctor'])
+assert quote == 'An apple a day keeps the doctor away'
+----
+
+[source,java]
+----
+String quote = getApplication().getMessageSource()
+                               .getMessage("yoday.says", new Object[]{"Fear", "Anger", "Hate"});
+assertEquals(quote, "Fear is the path to the dark side. Fear leads to Anger. Anger leads to Hate. Hate leads to suffering");
+----
+
+=== Map Format
+
+The following format is non-standard (i.e, not supported by +MessageFormat+) and can
+only be resolved by Griffon. This format uses symbols instead of numbers as placeholders
+for arguments. Thus the previous messages can be rewritten as follows
+
+[source]
+[subs="verbatim"]
+----
+healthy.proverb = An {:fruit} a day keeps the {:occupation} away
+yoda.says = {:foo} is the path to the dark side. {:foo} leads to {:bar}. {:bar} leads to {:foobar}. {:foobar} leads to suffering.
+----
+
+Which may be resolved in this manner
+
+[source,groovy]
+[subs="verbatim"]
+----
+String quote = getApplication().getMessageSource()
+                               .getMessage('healthy.proverb', [fruit: 'apple', occupation: 'doctor'])
+assert quote == 'An apple a day keeps the doctor away
+----
+
+[source,java]
+[subs="verbatim"]
+----
+import static griffon.util.CollectionUtils.map;
+String quote = getApplication().getMessageSource()
+                               .getMessage("yoday.says", map().e("foo", "Fear")
+                                                              .e("bar", "Anger")
+                                                              .e("foobar","Hate"));
+assertEquals(quote, "Fear is the path to the dark side. Fear leads to Anger. Anger leads to Hate. Hate leads to suffering");
+----
+
+=== Groovy format
+
+Groovy scripts have one advantage over properties files as you can embed custom logic
+that may conditionally resolve a message based on environmental values or generate a
+message on the fly. In order to accomplish this feat messages must be defined as
+closures and must return a String value; if they do not then their return value will
+be translated to a String. The following message uses the value of the current running
+environment to determine the text of a warning to be displayed on a label
+
+[source,groovy]
+[subs="verbatim"]
+----
+import griffon.util.Environment
+
+warning.label = { args ->
+    if (Environment.current == Environment.PRODUCTION) {
+        "The application has encountered an error: $args"
+    } else {
+        "Somebody setup us the bomb! $args"
+    }
+}
+----
+
+== Reference Keys
+
+There may be times where you would want to have a 2 keys reference the same value,
+as if one key were an alias for the other. +MessageSource+ supports the notion of
+referenced keys for this matter. In order to achieve this, the value of the alias
+key must define the aliased key with a special format, for example
+
+[source]
+[subs="verbatim"]
+----
+famous.quote = This is {0}!
+hello.world = @[famous.quote]
+----
+
+Resolving those keys results in
+
+[source,groovy]
+[subs="verbatim"]
+----
+assert getApplication()
+           .getMessageSource()
+           .getMessage('famous.quote', ['Sparta']) == 'This is Sparta!'
+
+assert getApplication()
+          .getMessageSource()
+          .getMessage('hello.world', ['Griffon']) == 'This is Griffon!'
+----

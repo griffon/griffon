@@ -10,7 +10,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
-import org.codehaus.griffon.core.compile.ArtifactProviderFor;
+import griffon.metadata.ArtifactProviderFor;
 import org.codehaus.griffon.runtime.core.artifact.AbstractJavaFXGriffonView;
 
 import javax.annotation.Nonnull;

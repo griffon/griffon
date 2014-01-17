@@ -16,10 +16,7 @@
 
 package griffon.transform;
 
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
+import java.lang.annotation.*;
 
 /**
  * <p>Annotates a class.</p>
@@ -65,6 +62,7 @@ import java.lang.annotation.Target;
  * @see griffon.core.mvc.MVCHandler
  * @since 0.9.3
  */
+@Documented
 @Retention(RetentionPolicy.SOURCE)
 @Target({ElementType.TYPE})
 public @interface MVCAware {

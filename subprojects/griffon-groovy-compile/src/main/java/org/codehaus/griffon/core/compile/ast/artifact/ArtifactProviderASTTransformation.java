@@ -16,7 +16,7 @@
 
 package org.codehaus.griffon.core.compile.ast.artifact;
 
-import org.codehaus.griffon.core.compile.ArtifactProviderFor;
+import griffon.metadata.ArtifactProviderFor;
 import org.codehaus.griffon.core.compile.processor.artifact.Artifact;
 import org.codehaus.griffon.core.compile.processor.artifact.ArtifactCollector;
 import org.codehaus.groovy.ast.AnnotationNode;

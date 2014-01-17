@@ -16,7 +16,7 @@
 
 package org.codehaus.griffon.core.compile.ast.editor;
 
-import org.codehaus.griffon.core.compile.PropertyEditorFor;
+import griffon.metadata.PropertyEditorFor;
 import org.codehaus.griffon.core.compile.processor.editor.PropertyEditorCollector;
 import org.codehaus.groovy.ast.AnnotationNode;
 import org.codehaus.groovy.ast.ClassNode;

@@ -18,7 +18,7 @@
  * AST Transformation for {@code @PropertyEditorFor}
  *
  * @since 2.0.0
- * @see org.codehaus.griffon.core.compile.PropertyEditorFor
+ * @see griffon.metadata.PropertyEditorFor
  */
 
 package org.codehaus.griffon.core.compile.ast.editor;

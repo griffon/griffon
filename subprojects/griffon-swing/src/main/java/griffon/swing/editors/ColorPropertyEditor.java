@@ -20,7 +20,7 @@ import griffon.core.editors.AbstractPropertyEditor;
 import griffon.core.formatters.Formatter;
 import griffon.core.formatters.ParseException;
 import griffon.swing.formatters.ColorFormatter;
-import org.codehaus.griffon.core.compile.PropertyEditorFor;
+import griffon.metadata.PropertyEditorFor;
 
 import java.awt.Color;
 import java.util.ArrayList;

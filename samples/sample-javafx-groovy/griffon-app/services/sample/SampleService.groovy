@@ -2,7 +2,7 @@ package sample
 
 import griffon.core.artifact.GriffonService
 import griffon.core.i18n.MessageSource
-import org.codehaus.griffon.core.compile.ArtifactProviderFor
+import griffon.metadata.ArtifactProviderFor
 
 import static griffon.util.GriffonNameUtils.isBlank
 

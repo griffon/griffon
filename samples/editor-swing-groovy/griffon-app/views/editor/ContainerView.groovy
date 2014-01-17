@@ -1,7 +1,7 @@
 package editor
 
 import griffon.core.artifact.GriffonView
-import org.codehaus.griffon.core.compile.ArtifactProviderFor
+import griffon.metadata.ArtifactProviderFor
 
 import java.awt.BorderLayout
 
@@ -25,7 +25,7 @@ class ContainerView {
                 iconImage: imageIcon('/griffon-icon-48x48.png').image,
                 iconImages: [imageIcon('/griffon-icon-48x48.png').image,
                     imageIcon('/griffon-icon-32x32.png').image,
-                    imageIcon('/griffon-icon-16x16.png').image],) {
+                    imageIcon('/griffon-icon-16x16.png').image]) {
                 menuBar {
                     menu('File') {
                         menuItem(openAction)

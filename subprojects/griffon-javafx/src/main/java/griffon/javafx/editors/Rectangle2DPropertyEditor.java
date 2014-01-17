@@ -18,7 +18,7 @@ package griffon.javafx.editors;
 
 import griffon.core.editors.AbstractPropertyEditor;
 import javafx.geometry.Rectangle2D;
-import org.codehaus.griffon.core.compile.PropertyEditorFor;
+import griffon.metadata.PropertyEditorFor;
 
 import java.util.List;
 import java.util.Map;

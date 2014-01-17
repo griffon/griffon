@@ -18,7 +18,7 @@
  * AST transformation for {@code @ArtifactProviderFor}.
  *
  * @since 2.0.0
- * @see org.codehaus.griffon.core.compile.ArtifactProviderFor
+ * @see griffon.metadata.ArtifactProviderFor
  */
 
 package org.codehaus.griffon.core.compile.ast.artifact;

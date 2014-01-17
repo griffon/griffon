@@ -1,7 +1,7 @@
 package console
 
 import griffon.core.artifact.GriffonController
-import org.codehaus.griffon.core.compile.ArtifactProviderFor
+import griffon.metadata.ArtifactProviderFor
 
 import javax.inject.Inject
 

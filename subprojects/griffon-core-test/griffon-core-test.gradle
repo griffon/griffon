@@ -19,6 +19,10 @@ apply plugin: 'java'
 ext.maven = true
 ext.pomDescription = 'Griffon Core Test module'
 
+configurations {
+    compileOnly
+}
+
 dependencies {
     compile project(':griffon-core')
     compile 'junit:junit:4.11'

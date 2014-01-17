@@ -16,7 +16,7 @@
 
 package org.codehaus.griffon.core.compile.processor.artifact;
 
-import org.codehaus.griffon.core.compile.ArtifactProviderFor;
+import griffon.metadata.ArtifactProviderFor;
 import org.kordamp.jipsy.processor.*;
 
 import javax.annotation.processing.RoundEnvironment;

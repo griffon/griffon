@@ -17,7 +17,7 @@
 package griffon.swing.editors;
 
 import griffon.core.editors.AbstractPropertyEditor;
-import org.codehaus.griffon.core.compile.PropertyEditorFor;
+import griffon.metadata.PropertyEditorFor;
 
 import java.awt.geom.Point2D;
 import java.util.List;

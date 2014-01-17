@@ -17,7 +17,7 @@
 package org.codehaus.griffon.core.compile.ast.transform;
 
 import griffon.core.GriffonApplication;
-import org.codehaus.griffon.core.compile.ArtifactProviderFor;
+import griffon.metadata.ArtifactProviderFor;
 import org.codehaus.griffon.core.compile.BaseConstants;
 import org.codehaus.griffon.core.compile.ast.SourceUnitCollector;
 import org.codehaus.groovy.ast.*;
