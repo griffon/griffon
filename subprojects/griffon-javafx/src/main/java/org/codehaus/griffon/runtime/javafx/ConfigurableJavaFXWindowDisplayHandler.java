@@ -16,7 +16,8 @@
 
 package org.codehaus.griffon.runtime.javafx;
 
-import griffon.core.ApplicationConfiguration;
+import griffon.core.GriffonApplication;
+import griffon.exceptions.InstanceNotFoundException;
 import griffon.javafx.JavaFXWindowDisplayHandler;
 import javafx.stage.Window;
 import org.codehaus.griffon.runtime.core.view.ConfigurableWindowDisplayHandler;
@@ -25,19 +26,45 @@ import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import javax.inject.Named;
 
+import static griffon.util.AnnotationUtils.named;
+
 /**
  * @author Andres Almiray
  * @since 2.0.0
  */
 public class ConfigurableJavaFXWindowDisplayHandler extends ConfigurableWindowDisplayHandler<Window> implements JavaFXWindowDisplayHandler {
     @Inject
-    public ConfigurableJavaFXWindowDisplayHandler(@Nonnull ApplicationConfiguration applicationConfiguration, @Nonnull @Named("defaultWindowDisplayHandler") JavaFXWindowDisplayHandler delegateWindowsDisplayHandler) {
-        super(applicationConfiguration, delegateWindowsDisplayHandler);
+    public ConfigurableJavaFXWindowDisplayHandler(@Nonnull GriffonApplication application, @Nonnull @Named("defaultWindowDisplayHandler") JavaFXWindowDisplayHandler delegateWindowsDisplayHandler) {
+        super(application, delegateWindowsDisplayHandler);
     }
 
     @Nonnull
     protected JavaFXWindowDisplayHandler fetchDefaultWindowDisplayHandler() {
         Object handler = windowManagerBlock().get("defaultHandler");
         return (JavaFXWindowDisplayHandler) (handler instanceof JavaFXWindowDisplayHandler ? handler : getDelegateWindowsDisplayHandler());
+    }
+
+    @Override
+    protected boolean handleShowByInjectedHandler(@Nonnull String name, @Nonnull Window window) {
+        try {
+            JavaFXWindowDisplayHandler handler = getApplication().getInjector()
+                .getInstance(JavaFXWindowDisplayHandler.class, named(name));
+            handler.show(name, window);
+            return true;
+        } catch (InstanceNotFoundException infe) {
+            return super.handleShowByInjectedHandler(name, window);
+        }
+    }
+
+    @Override
+    protected boolean handleHideByInjectedHandler(@Nonnull String name, @Nonnull Window window) {
+        try {
+            JavaFXWindowDisplayHandler handler = getApplication().getInjector()
+                .getInstance(JavaFXWindowDisplayHandler.class, named(name));
+            handler.hide(name, window);
+            return true;
+        } catch (InstanceNotFoundException infe) {
+            return super.handleHideByInjectedHandler(name, window);
+        }
     }
 }

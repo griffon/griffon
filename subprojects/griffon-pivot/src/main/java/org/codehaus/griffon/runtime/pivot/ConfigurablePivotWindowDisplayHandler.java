@@ -16,7 +16,8 @@
 
 package org.codehaus.griffon.runtime.pivot;
 
-import griffon.core.ApplicationConfiguration;
+import griffon.core.GriffonApplication;
+import griffon.exceptions.InstanceNotFoundException;
 import griffon.pivot.PivotWindowDisplayHandler;
 import org.apache.pivot.wtk.Window;
 import org.codehaus.griffon.runtime.core.view.ConfigurableWindowDisplayHandler;
@@ -25,19 +26,45 @@ import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import javax.inject.Named;
 
+import static griffon.util.AnnotationUtils.named;
+
 /**
  * @author Andres Almiray
  * @since 2.0.0
  */
 public class ConfigurablePivotWindowDisplayHandler extends ConfigurableWindowDisplayHandler<Window> implements PivotWindowDisplayHandler {
     @Inject
-    public ConfigurablePivotWindowDisplayHandler(@Nonnull ApplicationConfiguration applicationConfiguration, @Nonnull @Named("defaultWindowDisplayHandler") PivotWindowDisplayHandler delegateWindowsDisplayHandler) {
-        super(applicationConfiguration, delegateWindowsDisplayHandler);
+    public ConfigurablePivotWindowDisplayHandler(@Nonnull GriffonApplication application, @Nonnull @Named("defaultWindowDisplayHandler") PivotWindowDisplayHandler delegateWindowsDisplayHandler) {
+        super(application, delegateWindowsDisplayHandler);
     }
 
     @Nonnull
     protected PivotWindowDisplayHandler fetchDefaultWindowDisplayHandler() {
         Object handler = windowManagerBlock().get("defaultHandler");
         return (PivotWindowDisplayHandler) (handler instanceof PivotWindowDisplayHandler ? handler : getDelegateWindowsDisplayHandler());
+    }
+
+    @Override
+    protected boolean handleShowByInjectedHandler(@Nonnull String name, @Nonnull Window window) {
+        try {
+            PivotWindowDisplayHandler handler = getApplication().getInjector()
+                .getInstance(PivotWindowDisplayHandler.class, named(name));
+            handler.show(name, window);
+            return true;
+        } catch (InstanceNotFoundException infe) {
+            return super.handleShowByInjectedHandler(name, window);
+        }
+    }
+
+    @Override
+    protected boolean handleHideByInjectedHandler(@Nonnull String name, @Nonnull Window window) {
+        try {
+            PivotWindowDisplayHandler handler = getApplication().getInjector()
+                .getInstance(PivotWindowDisplayHandler.class, named(name));
+            handler.hide(name, window);
+            return true;
+        } catch (InstanceNotFoundException infe) {
+            return super.handleHideByInjectedHandler(name, window);
+        }
     }
 }

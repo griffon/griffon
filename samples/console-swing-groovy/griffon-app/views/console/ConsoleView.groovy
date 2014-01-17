@@ -16,11 +16,11 @@ class ConsoleView {
             }
 
             application(title: application.applicationConfiguration['application.title'],
-                pack: true, locationByPlatform: true,
-                iconImage: imageIcon('/griffon-icon-48x48.png').image,
+                pack: true, locationByPlatform: true, id: 'mainWindow',
+                iconImage:   imageIcon('/griffon-icon-48x48.png').image,
                 iconImages: [imageIcon('/griffon-icon-48x48.png').image,
-                    imageIcon('/griffon-icon-32x32.png').image,
-                    imageIcon('/griffon-icon-16x16.png').image]) {
+                             imageIcon('/griffon-icon-32x32.png').image,
+                             imageIcon('/griffon-icon-16x16.png').image]) {
                 panel(border: emptyBorder(6)) {
                     borderLayout()
 
@@ -32,10 +32,11 @@ class ConsoleView {
 
                     hbox(constraints: SOUTH) {
                         button(executeScriptAction)                          //<4>
-                        hstrut 5
-                        label 'Result:'
-                        hstrut 5
-                        label text: bind { model.scriptResult }              //<5>
+                        hstrut(5)
+                        label('Result:')
+                        hstrut(5)
+                        textField(editable: false,
+                                  text: bind { model.scriptResult })         //<5>
                     }
                 }
             }

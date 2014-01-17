@@ -132,6 +132,12 @@ console
         └── resources
 ----
 
+To give you an idea of what we're aiming at with this example here's an screenshot
+of the finished application running. A small Groovy script has been executed, you
+can see the result on the bottom right side
+
+image::console-swing-groovy.png[Swing, 50%, 50%, align="center"]
+
 === Model
 
 The model for this application is simple: it contains properties that hold the script to be
@@ -206,6 +212,25 @@ include::{console-swing-groovy}/src/main/groovy/console/GroovyShellEvaluator.gro
 ----
 include::{console-swing-groovy}/src/main/groovy/console/ApplicationModule.groovy[]
 ----
+<1> Binding definition
+<2> Overriding an existing binding
+<3> Loaded after 'swing' module
+
+Modules can define several bindings, even override existing bindings. In our particular
+case we defined a binding [conum,data-value=1]_1_ for +Evaluator+ and override a
+a binding [conum,data-value=2]_2_ for +SwingWindowDisplayHandler+. The latter is
+supplied by the +swing+ module thus me must mark it as a dependency [conum,data-value=3]_3_
+in our module definition. The implementation of out custom +SwingWindowDisplayHandler+
+is quite trivial, as shown by the following snippet
+
+.src/main/groovy/console/CenteringWindowDisplayHandler.groovy
+[source,groovy]
+[subs="verbatim,attributes"]
+----
+include::{console-swing-groovy}/src/main/groovy/console/CenteringWindowDisplayHandler.groovy[]
+----
+
+This handler is only concerned with centering the window on the screen before showing it.
 
 === View
 

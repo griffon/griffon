@@ -15,9 +15,10 @@
  */
 package org.codehaus.griffon.runtime.core.view;
 
-import griffon.core.ApplicationConfiguration;
 import griffon.core.CallableWithArgs;
+import griffon.core.GriffonApplication;
 import griffon.core.view.WindowDisplayHandler;
+import griffon.exceptions.InstanceNotFoundException;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -26,6 +27,7 @@ import javax.inject.Named;
 import java.util.Collections;
 import java.util.Map;
 
+import static griffon.util.AnnotationUtils.named;
 import static griffon.util.ConfigUtils.getConfigValue;
 import static griffon.util.GriffonNameUtils.requireNonBlank;
 import static java.util.Objects.requireNonNull;
@@ -95,12 +97,12 @@ public class ConfigurableWindowDisplayHandler<W> implements WindowDisplayHandler
     protected static final String ERROR_NAME_BLANK = "Argument 'name' cannot be blank";
     protected static final String ERROR_WINDOW_NULL = "Argument 'window' cannot be null";
 
-    private final ApplicationConfiguration applicationConfiguration;
+    private final GriffonApplication application;
     private final WindowDisplayHandler<W> delegateWindowsDisplayHandler;
 
     @Inject
-    public ConfigurableWindowDisplayHandler(@Nonnull ApplicationConfiguration applicationConfiguration, @Nonnull @Named("defaultWindowDisplayHandler") WindowDisplayHandler<W> delegateWindowsDisplayHandler) {
-        this.applicationConfiguration = requireNonNull(applicationConfiguration, "Argument 'applicationConfiguration' cannot be null");
+    public ConfigurableWindowDisplayHandler(@Nonnull GriffonApplication application, @Nonnull @Named("defaultWindowDisplayHandler") WindowDisplayHandler<W> delegateWindowsDisplayHandler) {
+        this.application = requireNonNull(application, "Argument 'application' cannot be null");
         this.delegateWindowsDisplayHandler = requireNonNull(delegateWindowsDisplayHandler, "Argument 'delegateWindowsDisplayHandler' cannot be null");
     }
 
@@ -121,11 +123,15 @@ public class ConfigurableWindowDisplayHandler<W> implements WindowDisplayHandler
             }
         }
 
+        if (handleShowByInjectedHandler(name, window)) {
+            return;
+        }
+
         options = windowManagerBlock();
         if (!options.isEmpty()) {
-            Object handler = options.get("defaultShow");
-            if (canBeRun(handler)) {
-                run((CallableWithArgs<?>) handler, window);
+            Object defaultShow = options.get("defaultShow");
+            if (canBeRun(defaultShow)) {
+                run((CallableWithArgs<?>) defaultShow, window);
                 return;
             }
         }
@@ -150,15 +156,43 @@ public class ConfigurableWindowDisplayHandler<W> implements WindowDisplayHandler
             }
         }
 
+        if (handleHideByInjectedHandler(name, window)) {
+            return;
+        }
+
         options = windowManagerBlock();
         if (!options.isEmpty()) {
-            Object handler = options.get("defaultHide");
-            if (canBeRun(handler)) {
-                run((CallableWithArgs<?>) handler, window);
+            Object defaultHide = options.get("defaultHide");
+            if (canBeRun(defaultHide)) {
+                run((CallableWithArgs<?>) defaultHide, window);
                 return;
             }
         }
         fetchDefaultWindowDisplayHandler().hide(name, window);
+    }
+
+    protected boolean handleShowByInjectedHandler(@Nonnull String name, @Nonnull W window) {
+        try {
+            WindowDisplayHandler handler = getApplication().getInjector()
+                .getInstance(WindowDisplayHandler.class, named(name));
+            handler.show(name, window);
+            return true;
+        } catch (InstanceNotFoundException infe) {
+            // ignore
+        }
+        return false;
+    }
+
+    protected boolean handleHideByInjectedHandler(@Nonnull String name, @Nonnull W window) {
+        try {
+            WindowDisplayHandler handler = getApplication().getInjector()
+                .getInstance(WindowDisplayHandler.class, named(name));
+            handler.hide(name, window);
+            return true;
+        } catch (InstanceNotFoundException infe) {
+            // ignore
+        }
+        return false;
     }
 
     public WindowDisplayHandler<W> getDelegateWindowsDisplayHandler() {
@@ -174,12 +208,16 @@ public class ConfigurableWindowDisplayHandler<W> implements WindowDisplayHandler
     }
 
     protected Map<String, Object> windowManagerBlock() {
-        return applicationConfiguration.get("windowManager", Collections.<String, Object>emptyMap());
+        return application.getApplicationConfiguration().get("windowManager", Collections.<String, Object>emptyMap());
     }
 
     protected Map<String, Object> windowBlock(String windowName) {
         Map<String, Object> options = windowManagerBlock();
         return getConfigValue(options, windowName, Collections.<String, Object>emptyMap());
+    }
+
+    protected GriffonApplication getApplication() {
+        return application;
     }
 
     @Nonnull
