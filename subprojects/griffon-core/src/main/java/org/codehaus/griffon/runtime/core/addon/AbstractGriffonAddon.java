@@ -26,24 +26,16 @@ import javax.inject.Inject;
 import java.util.Collections;
 import java.util.Map;
 
-import static java.util.Objects.requireNonNull;
-
 /**
  * @author Andres Almiray
  * @since 0.9.2
  */
 public class AbstractGriffonAddon implements GriffonAddon {
     private final Logger log;
-    private final GriffonApplication application;
 
     @Inject
-    public AbstractGriffonAddon(@Nonnull GriffonApplication application) {
-        this.application = requireNonNull(application, "Argument 'application' cannot be null");
+    public AbstractGriffonAddon() {
         log = LoggerFactory.getLogger("griffon.addon." + getClass().getSimpleName());
-    }
-
-    public GriffonApplication getApplication() {
-        return application;
     }
 
     @Nonnull

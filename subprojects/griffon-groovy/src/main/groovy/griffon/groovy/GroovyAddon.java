@@ -26,7 +26,6 @@ import groovy.util.FactoryBuilderSupport;
 import org.codehaus.griffon.runtime.core.addon.AbstractGriffonAddon;
 
 import javax.annotation.Nonnull;
-import javax.inject.Inject;
 import javax.inject.Named;
 import java.util.Map;
 
@@ -36,9 +35,10 @@ import java.util.Map;
  */
 @Named("groovy")
 public class GroovyAddon extends AbstractGriffonAddon {
-    @Inject
-    public GroovyAddon(@Nonnull GriffonApplication application) {
-        super(application);
+    private GriffonApplication application;
+
+    public void init(@Nonnull GriffonApplication application) {
+        this.application = application;
     }
 
     public void onInitializeMVCGroup(@Nonnull MVCGroupConfiguration configuration, @Nonnull MVCGroup group) {
@@ -46,9 +46,9 @@ public class GroovyAddon extends AbstractGriffonAddon {
         if (controller == null) return;
         FactoryBuilderSupport builder = (FactoryBuilderSupport) group.getMember("builder");
         if (builder == null) return;
-        Map<String, Action> actions = getApplication().getActionManager().actionsFor(controller);
+        Map<String, Action> actions = application.getActionManager().actionsFor(controller);
         for (Map.Entry<String, Action> action : actions.entrySet()) {
-            String actionKey = getApplication().getActionManager().normalizeName(action.getKey()) + ActionManager.ACTION;
+            String actionKey = application.getActionManager().normalizeName(action.getKey()) + ActionManager.ACTION;
             getLog().trace("Adding action {} to {}:{}:builder", actionKey, configuration.getMvcType(), group.getMvcId());
             builder.setVariable(actionKey, action.getValue().getToolkitAction());
         }

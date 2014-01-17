@@ -25,7 +25,6 @@ import org.jdesktop.swinghelper.debug.EventDispatchThreadHangMonitor;
 import sun.awt.AppContext;
 
 import javax.annotation.Nonnull;
-import javax.inject.Inject;
 import javax.inject.Named;
 import javax.swing.RepaintManager;
 
@@ -50,12 +49,6 @@ public class SwingAddon extends AbstractGriffonAddon {
                 CheckThreadViolationRepaintManager.class.getPackage().getName()
         ).split("(\\s|,)+");
 
-    @Inject
-    public SwingAddon(@Nonnull GriffonApplication application) {
-        super(application);
-    }
-
-    @Override
     public void init(@Nonnull GriffonApplication application) {
         String value = System.getProperty(SWING_EDT_VIOLATIONS_KEY);
         if (value != null && Boolean.parseBoolean(value)) {

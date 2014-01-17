@@ -40,7 +40,7 @@ public interface AddonManager {
     /**
      * Finds an addon by name.<p>
      * Example: findAddon("miglayout") will return a GriffonAddon that
-     * represents the contibutions of the MigLayout plugin.
+     * represents the contributions of the MigLayout plugin.
      *
      * @param name the name of the addon to search for
      * @return an addon instance if there's a match, null otherwise
