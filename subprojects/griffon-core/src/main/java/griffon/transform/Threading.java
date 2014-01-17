@@ -74,7 +74,7 @@ import java.lang.annotation.Target;
  * @since 0.9.2
  */
 @Retention(RetentionPolicy.RUNTIME)
-@Target({ElementType.METHOD, ElementType.FIELD})
+@Target(ElementType.METHOD)
 public @interface Threading {
     Policy value() default Policy.OUTSIDE_UITHREAD;
 

@@ -18,10 +18,7 @@ package org.codehaus.griffon.core.compile.ast.transform;
 
 import griffon.util.ServiceLoaderUtils;
 import org.codehaus.griffon.core.compile.AnnotationHandler;
-import org.codehaus.groovy.ast.ASTNode;
-import org.codehaus.groovy.ast.AnnotationNode;
-import org.codehaus.groovy.ast.ClassNode;
-import org.codehaus.groovy.ast.ModuleNode;
+import org.codehaus.groovy.ast.*;
 import org.codehaus.groovy.control.CompilePhase;
 import org.codehaus.groovy.control.SourceUnit;
 import org.codehaus.groovy.transform.ASTTransformation;
@@ -32,12 +29,13 @@ import javax.annotation.Nonnull;
 import javax.annotation.concurrent.GuardedBy;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * @author Andres Almiray
  */
 @ServiceProviderFor(ASTTransformation.class)
-@GroovyASTTransformation(phase = CompilePhase.CONVERSION)
+@GroovyASTTransformation(phase = CompilePhase.SEMANTIC_ANALYSIS)
 public class AnnotationHandlerASTTransformation extends AbstractASTTransformation {
     private final Object lock = new Object();
     @GuardedBy("lock")
@@ -57,12 +55,29 @@ public class AnnotationHandlerASTTransformation extends AbstractASTTransformatio
         if (nodes.length > 0 && nodes[0] instanceof ModuleNode) {
             ModuleNode moduleNode = (ModuleNode) nodes[0];
             for (ClassNode classNode : moduleNode.getClasses()) {
-                for (AnnotationNode annotationNode : classNode.getAnnotations()) {
-                    Class<? extends ASTTransformation> transformationClass = transformations.get(annotationNode.getClassNode().getName());
-                    if (transformationClass == null) continue;
-                    classNode.addTransform(transformationClass, annotationNode);
+                visitAnnotationsOnNode(classNode, classNode);
+                for (MethodNode method : classNode.getMethods()) {
+                    visitAnnotationsOnNode(method, classNode);
+                }
+                for (PropertyNode propertyNode : classNode.getProperties()) {
+                    visitAnnotationsOnNode(propertyNode, classNode);
+                }
+                for (FieldNode fieldNode : classNode.getFields()) {
+                    visitAnnotationsOnNode(fieldNode, classNode);
                 }
             }
+        }
+    }
+
+    private void visitAnnotationsOnNode(AnnotatedNode node, ClassNode owner) {
+        for (AnnotationNode annotationNode : node.getAnnotations()) {
+            Class<? extends ASTTransformation> transformationClass = transformations.get(annotationNode.getClassNode().getName());
+            if (transformationClass == null) continue;
+            GroovyASTTransformation annotation = transformationClass.getAnnotation(GroovyASTTransformation.class);
+            if (annotation == null) continue;
+            Set<ASTNode> nodes = owner.getTransforms(annotation.phase()).get(transformationClass);
+            if (nodes != null && !nodes.isEmpty()) continue;
+            owner.addTransform(transformationClass, annotationNode);
         }
     }
 
