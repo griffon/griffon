@@ -42,6 +42,7 @@ import static griffon.util.AnnotationUtils.named;
 public class PivotModule extends AbstractModule {
     @Override
     protected void doConfigure() {
+        // tag::bindings[]
         bind(PivotWindowDisplayHandler.class)
             .withClassifier(named("defaultWindowDisplayHandler"))
             .to(DefaultPivotWindowDisplayHandler.class)
@@ -63,5 +64,6 @@ public class PivotModule extends AbstractModule {
         bind(ActionManager.class)
             .to(PivotActionManager.class)
             .asSingleton();
+        // end::bindings[]
     }
 }

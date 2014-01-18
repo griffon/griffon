@@ -21,7 +21,6 @@ import griffon.core.controller.ActionManager;
 import griffon.core.injection.Module;
 import griffon.core.threading.UIThreadManager;
 import griffon.core.view.WindowManager;
-import griffon.swing.SwingAddon;
 import griffon.swing.SwingWindowDisplayHandler;
 import org.codehaus.griffon.runtime.core.controller.SwingActionManager;
 import org.codehaus.griffon.runtime.core.injection.AbstractModule;
@@ -44,6 +43,7 @@ import static griffon.util.AnnotationUtils.named;
 public class SwingModule extends AbstractModule {
     @Override
     protected void doConfigure() {
+        // tag::bindings[]
         bind(SwingWindowDisplayHandler.class)
             .withClassifier(named("defaultWindowDisplayHandler"))
             .to(DefaultSwingWindowDisplayHandler.class)
@@ -69,5 +69,6 @@ public class SwingModule extends AbstractModule {
         bind(GriffonAddon.class)
             .to(SwingAddon.class)
             .asSingleton();
+        // end::bindings[]
     }
 }

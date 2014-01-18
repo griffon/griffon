@@ -42,6 +42,7 @@ import static griffon.util.AnnotationUtils.named;
 public class JavaFXModule extends AbstractModule {
     @Override
     protected void doConfigure() {
+        // tag::bindings[]
         bind(JavaFXWindowDisplayHandler.class)
             .withClassifier(named("defaultWindowDisplayHandler"))
             .to(DefaultJavaFXWindowDisplayHandler.class)
@@ -63,5 +64,6 @@ public class JavaFXModule extends AbstractModule {
         bind(ActionManager.class)
             .to(JavaFXActionManager.class)
             .asSingleton();
+        // end::bindings[]
     }
 }

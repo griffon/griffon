@@ -14,10 +14,9 @@
  * limitations under the License.
  */
 
-package griffon.swing;
+package griffon.swing.support;
 
 import griffon.core.GriffonApplication;
-import griffon.util.GriffonClassUtils;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

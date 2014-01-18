@@ -43,6 +43,7 @@ import static griffon.util.AnnotationUtils.named;
 public class LanternaModule extends AbstractModule {
     @Override
     protected void doConfigure() {
+        // tag::bindings[]
         bind(GUIScreen.class)
             .toProvider(GUIScreenProvider.class)
             .asSingleton();
@@ -68,5 +69,6 @@ public class LanternaModule extends AbstractModule {
         bind(ActionManager.class)
             .to(LanternaActionManager.class)
             .asSingleton();
+        // end::bindings[]
     }
 }

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package griffon.swing;
+package org.codehaus.griffon.runtime.core;
 
 import griffon.core.CallableWithArgs;
 import griffon.core.GriffonApplication;

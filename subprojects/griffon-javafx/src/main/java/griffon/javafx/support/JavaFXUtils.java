@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package griffon.javafx;
+package griffon.javafx.support;
 
 import griffon.javafx.support.JavaFXAction;
 import javafx.beans.value.ChangeListener;

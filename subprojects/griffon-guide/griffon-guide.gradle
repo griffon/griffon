@@ -34,7 +34,6 @@ apply plugin: 'java2html'
 ext.maven = false
 
 ext.childProjects = [
-    ':griffon-core',
     ':griffon-core-compile',
     ':griffon-core-test',
     ':griffon-groovy-compile',
@@ -42,7 +41,8 @@ ext.childProjects = [
     ':griffon-swing',
     ':griffon-javafx',
     ':griffon-lanterna',
-    ':griffon-pivot'
+    ':griffon-pivot',
+    ':griffon-core'
 ]
 
 ext.childProjects.each { evaluationDependsOn it }
@@ -210,4 +210,12 @@ asciidoctor {
             'griffon-source-url': griffonSourceUrl
         ]
     ]
+
+    doLast { task ->
+        copy {
+            into file("${task.outputDir}/images/")
+            from rootProject.file('src/media/banners/large.png')
+            rename '.*', 'griffon-banner-large.png'
+        }
+    }
 }

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package griffon.groovy;
+package org.codehaus.griffon.runtime.core;
 
 import griffon.core.GriffonApplication;
 import griffon.core.artifact.GriffonController;

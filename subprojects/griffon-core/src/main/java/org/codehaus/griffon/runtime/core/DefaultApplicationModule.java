@@ -61,57 +61,23 @@ import static griffon.util.AnnotationUtils.named;
 public class DefaultApplicationModule extends AbstractModule {
     @Override
     protected void doConfigure() {
-        classloader();
-        applicationConfigurer();
-        resourceHandler();
-        resourceBundleBuilder();
-        applicationConfiguration();
-        executorServiceManager();
-        eventRouter();
-        resourceResolver();
-        messageSource();
-        resourcesInjector();
-        uiThreadManager();
-        mvcGroupManager();
-        lifecycleHandlers();
-        windowManager();
-        actionManager();
-        artifactManager();
-        modelArtifactHandler();
-        viewArtifactHandler();
-        controllerArtifactHandler();
-        serviceArtifactHandler();
-        platformHandler();
-        addonManager();
-        applicationEventHandler();
-        exceptionHandler();
-    }
-
-    protected void classloader() {
+        // tag::bindings[]
         bind(ApplicationClassLoader.class)
             .to(DefaultApplicationClassLoader.class)
             .asSingleton();
-    }
 
-    protected void applicationConfigurer() {
         bind(ApplicationConfigurer.class)
             .to(DefaultApplicationConfigurer.class)
             .asSingleton();
-    }
 
-    protected void resourceHandler() {
         bind(ResourceHandler.class)
             .to(DefaultResourceHandler.class)
             .asSingleton();
-    }
 
-    protected void resourceBundleBuilder() {
         bind(CompositeResourceBundleBuilder.class)
             .to(DefaultCompositeResourceBundleBuilder.class)
             .asSingleton();
-    }
 
-    protected void applicationConfiguration() {
         bind(ResourceBundle.class)
             .withClassifier(named("applicationResourceBundle"))
             .toProvider(new ResourceBundleProvider("Config"))
@@ -120,15 +86,11 @@ public class DefaultApplicationModule extends AbstractModule {
         bind(ApplicationConfiguration.class)
             .to(DefaultApplicationConfiguration.class)
             .asSingleton();
-    }
 
-    protected void executorServiceManager() {
         bind(ExecutorServiceManager.class)
             .to(DefaultExecutorServiceManager.class)
             .asSingleton();
-    }
 
-    protected void eventRouter() {
         bind(EventRouter.class)
             .withClassifier(named("applicationEventRouter"))
             .to(DefaultEventRouter.class)
@@ -136,112 +98,79 @@ public class DefaultApplicationModule extends AbstractModule {
 
         bind(EventRouter.class)
             .to(DefaultEventRouter.class);
-    }
 
-    protected void resourceResolver() {
         bind(ResourceResolver.class)
             .withClassifier(named("applicationResourceResolver"))
             .toProvider(new ResourceResolverProvider("resources"))
             .asSingleton();
-    }
 
-    protected void messageSource() {
         bind(MessageSource.class)
             .withClassifier(named("applicationMessageSource"))
             .toProvider(new MessageSourceProvider("messages"))
             .asSingleton();
-    }
 
-    protected void resourcesInjector() {
         bind(ResourceInjector.class)
             .withClassifier(named("applicationResourceInjector"))
             .to(DefaultApplicationResourceInjector.class)
             .asSingleton();
-    }
 
-    protected void uiThreadManager() {
         bind(UIThreadManager.class)
             .to(DefaultUIThreadManager.class)
             .asSingleton();
-    }
 
-    private void mvcGroupManager() {
         bind(MVCGroupManager.class)
             .to(DefaultMVCGroupManager.class)
             .asSingleton();
-    }
 
-    private void lifecycleHandlers() {
         for (Lifecycle lifecycle : Lifecycle.values()) {
             bind(LifecycleHandler.class)
                 .withClassifier(named(lifecycle.getName()))
                 .toProvider(new LifecycleHandlerProvider(lifecycle.getName()))
                 .asSingleton();
         }
-    }
 
-    private void windowManager() {
         bind(WindowManager.class)
             .to(NoopWindowManager.class)
             .asSingleton();
-    }
 
-    private void actionManager() {
         bind(ActionManager.class)
             .to(NoopActionManager.class)
             .asSingleton();
-    }
 
-    private void artifactManager() {
         bind(ArtifactManager.class)
             .to(DefaultArtifactManager.class)
             .asSingleton();
-    }
 
-    private void modelArtifactHandler() {
         bind(ArtifactHandler.class)
             .to(ModelArtifactHandler.class)
             .asSingleton();
-    }
 
-    private void viewArtifactHandler() {
         bind(ArtifactHandler.class)
             .to(ViewArtifactHandler.class)
             .asSingleton();
-    }
 
-    private void controllerArtifactHandler() {
         bind(ArtifactHandler.class)
             .to(ControllerArtifactHandler.class)
             .asSingleton();
-    }
 
-    private void serviceArtifactHandler() {
         bind(ArtifactHandler.class)
             .to(ServiceArtifactHandler.class)
             .asSingleton();
-    }
 
-    private void platformHandler() {
         bind(PlatformHandler.class)
             .toProvider(PlatformHandlerProvider.class)
             .asSingleton();
-    }
 
-    private void addonManager() {
         bind(AddonManager.class)
             .to(DefaultAddonManager.class)
             .asSingleton();
-    }
 
-    private void applicationEventHandler() {
         bind(EventHandler.class)
             .to(DefaultEventHandler.class)
             .asSingleton();
-    }
 
-    private void exceptionHandler() {
         bind(GriffonExceptionHandler.class)
             .asSingleton();
+        // end::bindings[]
     }
 }

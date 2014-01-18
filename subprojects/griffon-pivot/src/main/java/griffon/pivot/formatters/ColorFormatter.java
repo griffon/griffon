@@ -31,14 +31,54 @@ import static java.lang.Integer.toHexString;
 import static java.util.Objects.requireNonNull;
 
 /**
+ * <p>A {@code Formatter} that can parse Strings into {@code java.awt.Color} and back
+ * using several patterns</p>
+ * <p/>
+ * <p>
+ * Supported patterns are:
+ * <ul>
+ * <li>{@code #RGB}</li>
+ * <li>{@code #RGBA}</li>
+ * <li>{@code #RRGGBB}</li>
+ * <li>{@code #RRGGBBAA}</li>
+ * </ul>
+ * Where each letter stands for a particular color components in hexadecimal
+ * <ul>
+ * <li>{@code R} - red</li>
+ * <li>{@code G} - green</li>
+ * <li>{@code B} - blue</li>
+ * <li>{@code A} - alpha</li>
+ * </ul>
+ * </p>
+ *
  * @author Andres Almiray
+ * @see griffon.core.formatters.Formatter
  * @since 2.0.0
  */
 public class ColorFormatter extends AbstractFormatter<Color> {
+    /**
+     * "#RGB"
+     */
     public static final String PATTERN_SHORT = "#RGB";
+
+    /**
+     * "#RGBA"
+     */
     public static final String PATTERN_SHORT_WITH_ALPHA = "#RGBA";
+
+    /**
+     * "#RRGGBB"
+     */
     public static final String PATTERN_LONG = "#RRGGBB";
+
+    /**
+     * "#RRGGBBAA"
+     */
     public static final String PATTERN_LONG_WITH_ALPHA = "#RRGGBBAA";
+
+    /**
+     * "#RRGGBB"
+     */
     public static final String DEFAULT_PATTERN = PATTERN_LONG;
 
     private static final String[] PATTERNS = new String[]{
@@ -48,21 +88,39 @@ public class ColorFormatter extends AbstractFormatter<Color> {
         PATTERN_SHORT_WITH_ALPHA
     };
 
+    /**
+     * {@code ColorFormatter} that uses the <b>{@code PATTERN_SHORT}</b> pattern
+     */
     public static final ColorFormatter SHORT = new ColorFormatter(PATTERN_SHORT);
+
+    /**
+     * {@code ColorFormatter} that uses the <b>{@code PATTERN_SHORT_WITH_ALPHA}</b> pattern
+     */
     public static final ColorFormatter SHORT_WITH_ALPHA = new ColorFormatter(PATTERN_SHORT_WITH_ALPHA);
+
+    /**
+     * {@code ColorFormatter} that uses the <b>{@code PATTERN_LONG}</b> pattern
+     */
     public static final ColorFormatter LONG = new ColorFormatter(PATTERN_LONG);
+
+    /**
+     * {@code ColorFormatter} that uses the <b>{@code PATTERN_LONG_WITH_ALPHA}</b> pattern
+     */
     public static final ColorFormatter LONG_WITH_ALPHA = new ColorFormatter(PATTERN_LONG_WITH_ALPHA);
 
+    /**
+     * <p>Returns a {@code ColorFormatter} given a color pattern.</p>
+     *
+     * @param pattern the input pattern. Must be one of the 4 supported color patterns.
+     * @return a {@code ColorPattern} instance
+     * @throws IllegalArgumentException if the supplied {@code pattern} is not supported
+     */
     @Nonnull
     public static ColorFormatter getInstance(@Nullable String pattern) {
         return new ColorFormatter(pattern);
     }
 
     private final ColorFormatterDelegate delegate;
-
-    public ColorFormatter() {
-        this(DEFAULT_PATTERN);
-    }
 
     protected ColorFormatter(@Nullable String pattern) {
         if (PATTERN_SHORT.equals(pattern)) {
@@ -90,6 +148,34 @@ public class ColorFormatter extends AbstractFormatter<Color> {
         return delegate.parse(str);
     }
 
+    /**
+     * Returns the pattern used by this {@code ColorFormatter}
+     *
+     * @return the pattern this {@code ColorFormatter} uses for parsing/formatting.
+     */
+    @Nonnull
+    public String getPattern() {
+        return delegate.getPattern();
+    }
+
+    /**
+     * <p>Parses a string into a {@code java.awt.Color} instance.</p>
+     * <p>The parsing pattern is chosen given the length of the input string
+     * <ul>
+     * <li>4 - {@code #RGB}</li>
+     * <li>5 - {@code #RGBA}</li>
+     * <li>7 - {@code #RRGGBB}</li>
+     * <li>9 - {@code #RRGGBBAA}</li>
+     * </ul>
+     * </p>
+     * The input string may also be any of the Color constants identified by
+     * {@code griffon.pivot.support.Colors}.
+     *
+     * @param str the string representation of a {@code java.awt.Color}
+     * @return a {@code java.awt.Color} instance matching the supplied RGBA color components
+     * @throws ParseException if the string cannot be parsed by the chosen pattern
+     * @see griffon.pivot.support.Colors
+     */
     @Nonnull
     @SuppressWarnings("ConstantConditions")
     public static Color parseColor(@Nonnull String str) throws ParseException {
@@ -125,7 +211,7 @@ public class ColorFormatter extends AbstractFormatter<Color> {
         String format(@Nonnull Color color);
 
         @Nonnull
-        Color parse(@Nonnull String str) throws ParseException;
+        Color parse(@Nullable String str) throws ParseException;
     }
 
     private static abstract class AbstractColorFormatterDelegate implements ColorFormatterDelegate {
@@ -158,7 +244,7 @@ public class ColorFormatter extends AbstractFormatter<Color> {
         }
 
         @Nonnull
-        public Color parse(@Nonnull String str) throws ParseException {
+        public Color parse(@Nullable String str) throws ParseException {
             if (isBlank(str) || !str.startsWith("#") || str.length() != 4) {
                 throw parseError(str, Color.class);
             }
@@ -198,7 +284,7 @@ public class ColorFormatter extends AbstractFormatter<Color> {
         }
 
         @Nonnull
-        public Color parse(@Nonnull String str) throws ParseException {
+        public Color parse(@Nullable String str) throws ParseException {
             if (isBlank(str) || !str.startsWith("#") || str.length() != 5) {
                 throw parseError(str, Color.class);
             }
@@ -240,7 +326,7 @@ public class ColorFormatter extends AbstractFormatter<Color> {
         }
 
         @Nonnull
-        public Color parse(@Nonnull String str) throws ParseException {
+        public Color parse(@Nullable String str) throws ParseException {
             if (isBlank(str) || !str.startsWith("#") || str.length() != 7) {
                 throw parseError(str, Color.class);
             }
@@ -280,7 +366,7 @@ public class ColorFormatter extends AbstractFormatter<Color> {
         }
 
         @Nonnull
-        public Color parse(@Nonnull String str) throws ParseException {
+        public Color parse(@Nullable String str) throws ParseException {
             if (isBlank(str) || !str.startsWith("#") || str.length() != 9) {
                 throw parseError(str, Color.class);
             }
@@ -325,7 +411,7 @@ public class ColorFormatter extends AbstractFormatter<Color> {
         }
     }
 
-    public static String multiply(String self, Number factor) {
+    private static String multiply(String self, Number factor) {
         int size = factor.intValue();
         if (size == 0)
             return "";

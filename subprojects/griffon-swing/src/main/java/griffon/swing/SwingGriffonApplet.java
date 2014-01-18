@@ -16,6 +16,8 @@
 
 package griffon.swing;
 
+import griffon.swing.support.SwingUtils;
+
 import javax.annotation.Nonnull;
 import java.util.Map;
 

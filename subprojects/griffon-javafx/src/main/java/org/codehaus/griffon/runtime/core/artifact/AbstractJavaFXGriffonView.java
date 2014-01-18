@@ -36,7 +36,7 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.Map;
 
-import static griffon.javafx.JavaFXUtils.findNode;
+import static griffon.javafx.support.JavaFXUtils.findNode;
 import static griffon.util.GriffonNameUtils.isBlank;
 
 /**

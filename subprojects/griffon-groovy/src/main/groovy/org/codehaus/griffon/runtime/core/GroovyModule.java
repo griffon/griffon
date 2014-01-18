@@ -20,7 +20,6 @@ import griffon.builder.core.CoreBuilderCustomizer;
 import griffon.core.addon.GriffonAddon;
 import griffon.core.injection.Module;
 import griffon.core.mvc.MVCGroupManager;
-import griffon.groovy.GroovyAddon;
 import griffon.util.BuilderCustomizer;
 import griffon.util.CompositeResourceBundleBuilder;
 import org.codehaus.griffon.runtime.core.injection.AbstractModule;
@@ -39,6 +38,7 @@ import javax.inject.Named;
 public class GroovyModule extends AbstractModule {
     @Override
     protected void doConfigure() {
+        // tag::bindings[]
         bind(CompositeResourceBundleBuilder.class)
             .to(GroovyAwareCompositeResourceBundleBuilder.class)
             .asSingleton();
@@ -54,5 +54,6 @@ public class GroovyModule extends AbstractModule {
         bind(BuilderCustomizer.class)
             .to(CoreBuilderCustomizer.class)
             .asSingleton();
+        // end::bindings[]
     }
 }

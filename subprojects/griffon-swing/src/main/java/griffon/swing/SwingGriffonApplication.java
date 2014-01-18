@@ -16,6 +16,7 @@
 
 package griffon.swing;
 
+import griffon.swing.support.SwingUtils;
 import org.codehaus.griffon.runtime.core.AbstractGriffonApplication;
 
 import javax.annotation.Nonnull;

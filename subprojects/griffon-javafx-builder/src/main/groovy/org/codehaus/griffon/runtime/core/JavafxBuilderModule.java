@@ -23,16 +23,21 @@ import griffon.util.BuilderCustomizer;
 import org.codehaus.griffon.runtime.core.injection.AbstractModule;
 import org.kordamp.jipsy.ServiceProviderFor;
 
+import javax.inject.Named;
+
 /**
  * @author Andres Almiray
  */
 @ServiceProviderFor(Module.class)
 @DependsOn("javafx")
+@Named("javafx-builder")
 public class JavafxBuilderModule extends AbstractModule {
     @Override
     protected void doConfigure() {
+        // tag::bindings[]
         bind(BuilderCustomizer.class)
             .to(JavafxBuilderCustomizer.class)
             .asSingleton();
+        // end::bindings[]
     }
 }
