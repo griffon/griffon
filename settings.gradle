@@ -1,18 +1,18 @@
-include 'griffon-core'
-include 'griffon-core-compile'
-include 'griffon-core-test'
-include 'griffon-guice'
-include 'griffon-groovy'
-include 'griffon-groovy-compile'
-include 'griffon-swing'
-include 'griffon-swing-builder'
-include 'griffon-javafx'
-include 'griffon-javafx-builder'
-include 'griffon-guide'
-include 'griffon-lanterna'
-include 'griffon-lanterna-builder'
-include 'griffon-pivot'
-include 'griffon-pivot-builder'
+include 'subprojects/griffon-core'
+include 'subprojects/griffon-core-compile'
+include 'subprojects/griffon-core-test'
+include 'subprojects/griffon-guice'
+include 'subprojects/griffon-groovy'
+include 'subprojects/griffon-groovy-compile'
+include 'subprojects/griffon-swing'
+include 'subprojects/griffon-swing-builder'
+include 'subprojects/griffon-javafx'
+include 'subprojects/griffon-javafx-builder'
+include 'subprojects/griffon-guide'
+include 'subprojects/griffon-lanterna'
+include 'subprojects/griffon-lanterna-builder'
+include 'subprojects/griffon-pivot'
+include 'subprojects/griffon-pivot-builder'
 include 'samples/sample-swing-java'
 include 'samples/sample-swing-groovy'
 include 'samples/sample-javafx-java'
@@ -24,13 +24,14 @@ include 'samples/sample-pivot-groovy'
 include 'samples/editor-swing-groovy'
 include 'samples/browser-javafx-groovy'
 include 'samples/console-swing-groovy'
+include 'templates/griffon-standard-templates'
 
 rootProject.name = 'griffon2'
 rootProject.children.each { project ->
-    String projectName = project.name - 'samples/'
-    String fileBaseName = projectName
-    String projectDirName = project.name.startsWith('samples') ? "samples/$fileBaseName" : "subprojects/$fileBaseName"
-    project.name = projectName
+    int slash = project.name.indexOf('/')
+    String fileBaseName = project.name[(slash+1)..-1]
+    String projectDirName = project.name
+    project.name = fileBaseName
     project.projectDir = new File(settingsDir, projectDirName)
     project.buildFileName = "${fileBaseName}.gradle"
     assert project.projectDir.isDirectory()

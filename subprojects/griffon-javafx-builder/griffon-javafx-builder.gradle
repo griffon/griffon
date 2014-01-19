@@ -19,6 +19,16 @@ apply plugin: 'groovy'
 ext.maven = true
 ext.pomDescription = 'Griffon JavaFX Builder module'
 
+for (location in ['lib/jfxrt.jar', 'jre/lib/jfxrt.jar', 'jre/lib/ext/jfxrt.jar']) {
+    File javaHome = new File(System.properties['java.home'])
+    javaHome = javaHome.name == 'jre' ? javaHome.parentFile : javaHome
+    File file = new File(javaHome, location)
+    if (file.exists()) {
+        ext.jfxrtLocation = file.absolutePath
+        break
+    }
+}
+
 configurations {
     compileOnly
 }
@@ -28,5 +38,6 @@ dependencies {
     compile project(':griffon-javafx')
     compile 'org.codehaus.groovyfx:groovyfx:0.3.1'
 
+    compileOnly project.files(project.jfxrtLocation)
     compileOnly project(':griffon-core-compile')
 }

@@ -2,22 +2,22 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
-    <groupId>org.codehaus.griffon.samples</groupId>                     <!--1-->
-    <artifactId>console-swing-groovy</artifactId>
+    <groupId>${project_group}</groupId>
+    <artifactId>${project_name}</artifactId>
     <packaging>jar</packaging>
-    <version>0.1.0</version>
-    <name>console-swing-groovy</name>
+    <version>${project_version}</version>
+    <name>${project_name}</name>
 
-    <properties>                                                        <!--1-->
-        <griffon.version>{griffon-version}</griffon.version>
-        <application.main.class>console.Launcher</application.main.class>
+    <properties>
+        <griffon.version>${griffon_version}</griffon.version>
+        <application.main.class>${project_package}.Launcher</application.main.class>
     </properties>
 
     <build>
         <plugins>
             <plugin>
                 <groupId>org.codehaus.gmavenplus</groupId>
-                <artifactId>gmavenplus-plugin</artifactId>              <!--2-->
+                <artifactId>gmavenplus-plugin</artifactId>
                 <version>1.0-beta-3</version>
                 <executions>
                     <execution>
@@ -28,7 +28,7 @@
                     </execution>
                 </executions>
                 <configuration>
-                    <sources>                                           <!--5-->
+                    <sources>
                         <source>
                             <directory>${project.basedir}/griffon-app</directory>
                             <includes>
@@ -53,7 +53,7 @@
             </plugin>
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
-                <artifactId>exec-maven-plugin</artifactId>              <!--3-->
+                <artifactId>exec-maven-plugin</artifactId>
                 <version>1.2.1</version>
                 <configuration>
                     <mainClass>${application.main.class}</mainClass>
@@ -61,7 +61,7 @@
             </plugin>
             <plugin>
                 <groupId>org.bsc.maven</groupId>
-                <artifactId>maven-processor-plugin</artifactId>         <!--4-->
+                <artifactId>maven-processor-plugin</artifactId>
                 <version>2.2.4</version>
                 <executions>
                     <execution>
@@ -77,7 +77,7 @@
             </plugin>
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
-                <artifactId>build-helper-maven-plugin</artifactId>      <!--5-->
+                <artifactId>build-helper-maven-plugin</artifactId>
                 <version>1.8</version>
                 <executions>
                     <execution>
@@ -113,47 +113,47 @@
     <dependencies>
         <dependency>
             <groupId>org.codehaus.griffon</groupId>
-            <artifactId>griffon-groovy-compile</artifactId>             <!--6-->
+            <artifactId>griffon-groovy-compile</artifactId>
             <version>${griffon.version}</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>org.codehaus.griffon</groupId>
-            <artifactId>griffon-groovy</artifactId>                     <!--7-->
+            <artifactId>griffon-groovy</artifactId>
             <version>${griffon.version}</version>
         </dependency>
         <dependency>
             <groupId>org.codehaus.griffon</groupId>
-            <artifactId>griffon-swing</artifactId>                      <!--8-->
+            <artifactId>griffon-swing</artifactId>
             <version>${griffon.version}</version>
         </dependency>
         <dependency>
             <groupId>org.codehaus.griffon</groupId>
-            <artifactId>griffon-swing-builder</artifactId>              <!--9-->
+            <artifactId>griffon-swing-builder</artifactId>
             <version>${griffon.version}</version>
             <scope>runtime</scope>
         </dependency>
         <dependency>
             <groupId>org.codehaus.griffon</groupId>
-            <artifactId>griffon-guice</artifactId>                     <!--10-->
+            <artifactId>griffon-guice</artifactId>
             <version>${griffon.version}</version>
             <scope>runtime</scope>
         </dependency>
         <dependency>
-            <groupId>log4j</groupId>                                   <!--11-->
+            <groupId>log4j</groupId>
             <artifactId>log4j</artifactId>
             <version>1.2.17</version>
             <scope>runtime</scope>
         </dependency>
         <dependency>
             <groupId>org.slf4j</groupId>
-            <artifactId>slf4j-log4j12</artifactId>                     <!--12-->
+            <artifactId>slf4j-log4j12</artifactId>
             <version>1.7.5</version>
             <scope>runtime</scope>
         </dependency>
         <dependency>
             <groupId>org.codehaus.griffon</groupId>
-            <artifactId>griffon-core-test</artifactId>                 <!--13-->
+            <artifactId>griffon-core-test</artifactId>
             <version>${griffon.version}</version>
             <scope>test</scope>
         </dependency>

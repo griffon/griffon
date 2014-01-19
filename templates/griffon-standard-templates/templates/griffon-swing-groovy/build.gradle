@@ -1,0 +1,76 @@
+apply plugin: 'idea'
+apply plugin: 'groovy'
+apply plugin: 'application'
+
+configurations {
+    compileOnly
+}
+
+mainClassName = '${project_package}.Launcher'
+
+repositories {
+    jcenter()
+    maven { url 'http://dl.bintray.com/content/aalmiray/griffon' }
+    maven { url 'http://dl.bintray.com/content/aalmiray/kordamp' }
+    mavenCentral()
+}
+
+dependencies {
+    compileOnly "org.codehaus.griffon:griffon-groovy-compile:$griffonVersion"
+
+    compile "org.codehaus.griffon:griffon-groovy:$griffonVersion"
+    compile "org.codehaus.griffon:griffon-swing:$griffonVersion"
+
+    runtime "org.codehaus.griffon:griffon-guice:$griffonVersion"
+    runtime "org.codehaus.griffon:griffon-swing-builder:$griffonVersion"
+
+    runtime('log4j:log4j:1.2.17') {
+        exclude group: 'ant',         module: 'ant-nodeps'
+        exclude group: 'ant',         module: 'ant-junit'
+        exclude group: 'ant-contrib', module: 'ant-contrib'
+    }
+    runtime 'org.slf4j:slf4j-log4j12:1.7.5'
+
+    testCompile "org.codehaus.griffon:griffon-core-test:$griffonVersion"
+}
+
+sourceSets {
+    main {
+        compileClasspath += configurations.compileOnly
+        groovy {
+            srcDirs = [
+                'griffon-app/conf',
+                'griffon-app/controllers',
+                'griffon-app/models',
+                'griffon-app/views',
+                'griffon-app/services',
+                'griffon-app/lifecycle',
+                'src/main/groovy'
+            ]
+        }
+        resources {
+            srcDirs = [
+                'griffon-app/resources',
+                'griffon-app/i18n',
+                'src/main/resources'
+            ]
+        }
+    }
+}
+
+javadoc {
+    classpath += configurations.compileOnly
+}
+
+idea {
+    module {
+        scopes.PROVIDED.plus += configurations.compileOnly
+    }
+}
+
+gradle.taskGraph.whenReady {
+    sourceSets.main.groovy.srcDirs.each    { it.mkdirs() }
+    sourceSets.main.resources.srcDirs.each { it.mkdirs() }
+    sourceSets.test.groovy.srcDirs.each    { it.mkdirs() }
+    sourceSets.test.resources.srcDirs.each { it.mkdirs() }
+}
