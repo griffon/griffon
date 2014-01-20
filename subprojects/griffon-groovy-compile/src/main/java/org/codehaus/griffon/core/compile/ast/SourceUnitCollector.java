@@ -32,7 +32,7 @@ import static java.util.Objects.requireNonNull;
  * Keeps track of all SourceUnits that belongs to a CompilationUnit.
  *
  * @author Andres Almiray
- * @since 0.9.3
+ * @since 2.0.0
  */
 public class SourceUnitCollector extends CompilationUnit.SourceUnitOperation {
     private static final Map<String, SourceUnit> SOURCES = new LinkedHashMap<>();

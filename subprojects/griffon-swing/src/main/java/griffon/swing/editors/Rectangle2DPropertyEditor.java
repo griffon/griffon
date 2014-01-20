@@ -25,7 +25,7 @@ import java.util.Map;
 
 /**
  * @author Andres Almiray
- * @since 1.2.0
+ * @since 2.0.0
  */
 @PropertyEditorFor(Rectangle2D.class)
 public class Rectangle2DPropertyEditor extends AbstractPropertyEditor {

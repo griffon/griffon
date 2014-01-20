@@ -33,7 +33,7 @@ import static org.codehaus.griffon.core.compile.ast.GriffonASTUtils.*;
 
 /**
  * @author Andres Almiray
- * @since 0.9.1
+ * @since 2.0.0
  */
 public class GriffonArtifactASTInjector extends AbstractASTInjector implements BaseConstants {
     private static final ClassNode GRIFFON_APPLICATION_TYPE = makeClassSafe(GriffonApplication.class);

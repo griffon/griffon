@@ -23,7 +23,7 @@ import java.lang.annotation.Target;
 
 /**
  * @author Andres Almiray
- * @since 1.1.0
+ * @since 2.0.0
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ElementType.FIELD, ElementType.METHOD})

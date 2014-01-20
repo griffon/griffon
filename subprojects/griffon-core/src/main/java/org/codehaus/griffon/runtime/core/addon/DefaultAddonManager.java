@@ -23,7 +23,7 @@ import javax.inject.Inject;
 
 /**
  * @author Andres Almiray
- * @since 0.9.2
+ * @since 2.0.0
  */
 public class DefaultAddonManager extends AbstractAddonManager {
     @Inject

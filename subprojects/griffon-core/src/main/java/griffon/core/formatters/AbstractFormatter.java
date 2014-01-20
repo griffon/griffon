@@ -23,7 +23,7 @@ import static java.util.Objects.requireNonNull;
 
 /**
  * @author Andres Almiray
- * @since 1.3.0
+ * @since 2.0.0
  */
 public abstract class AbstractFormatter<T> implements Formatter<T> {
     protected static int parseHexInt(@Nonnull String val, @Nonnull Class<?> klass) throws ParseException {

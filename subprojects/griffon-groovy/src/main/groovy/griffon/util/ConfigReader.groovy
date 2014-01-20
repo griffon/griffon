@@ -35,7 +35,7 @@ import static griffon.util.GriffonNameUtils.isBlank
  *
  * @author Graeme Rocher (Groovy 1.5)
  * @author Andres Almiray
- * @since 1.1.0
+ * @since 2.0.0
  */
 @SuppressWarnings("rawtypes")
 class ConfigReader {

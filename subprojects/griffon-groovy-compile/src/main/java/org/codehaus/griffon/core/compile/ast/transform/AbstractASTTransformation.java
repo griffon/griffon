@@ -49,7 +49,7 @@ import static org.codehaus.griffon.core.compile.ast.GriffonASTUtils.*;
  * Base class for all of Griffon's ASTTransformation implementations.
  *
  * @author Andres Almiray
- * @since 0.9.3
+ * @since 2.0.0
  */
 public abstract class AbstractASTTransformation implements ASTTransformation {
     public static final ClassNode COLLECTIONS_CLASS = makeClassSafe(Collections.class);

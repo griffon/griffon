@@ -26,7 +26,7 @@ import javax.annotation.Nullable;
  * An specialized closure for working with MVC members.
  *
  * @author Andres Almiray
- * @since 0.9.3
+ * @since 2.0.0
  */
 public interface MVCCallable<M extends GriffonModel, V extends GriffonView, C extends GriffonController> {
     /**

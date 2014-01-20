@@ -21,7 +21,7 @@ import java.util.Locale;
 
 /**
  * @author Alexander Klein
- * @since 1.1.0
+ * @since 2.0.0
  */
 public class NoSuchMessageException extends RuntimeException {
     private static final long serialVersionUID = -74043113109264466L;

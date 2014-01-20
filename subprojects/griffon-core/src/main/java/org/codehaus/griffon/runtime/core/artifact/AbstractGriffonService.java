@@ -27,7 +27,7 @@ import javax.inject.Inject;
  * Base implementation of the GriffonService interface.
  *
  * @author Andres Almiray
- * @since 0.9.1
+ * @since 2.0.0
  */
 public abstract class AbstractGriffonService extends AbstractGriffonArtifact implements GriffonService {
     @Inject

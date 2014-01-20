@@ -25,7 +25,7 @@ import javax.inject.Inject;
 
 /**
  * @author Andres Almiray
- * @since 1.1.0
+ * @since 2.0.0
  */
 public class LanternaActionManager extends AbstractActionManager {
     @Inject

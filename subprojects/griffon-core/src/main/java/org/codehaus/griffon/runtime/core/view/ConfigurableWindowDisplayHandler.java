@@ -91,7 +91,7 @@ import static java.util.Objects.requireNonNull;
  * <strong>Note:</strong> the value for <code>show</code> and <code>hide</code> can be either a Closure or a {@code RunnableWithArgs}.
  *
  * @author Andres Almiray
- * @since 0.9.2
+ * @since 2.0.0
  */
 public class ConfigurableWindowDisplayHandler<W> implements WindowDisplayHandler<W> {
     protected static final String ERROR_NAME_BLANK = "Argument 'name' cannot be blank";

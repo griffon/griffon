@@ -22,7 +22,7 @@ import static griffon.util.GriffonNameUtils.getClassNameForLowerCaseHyphenSepara
  * Defines all the events triggered by the application.
  *
  * @author Andres Almiray
- * @since 0.9.2
+ * @since 2.0.0
  */
 public enum ApplicationEvent {
     UNCAUGHT_EXCEPTION_THROWN,

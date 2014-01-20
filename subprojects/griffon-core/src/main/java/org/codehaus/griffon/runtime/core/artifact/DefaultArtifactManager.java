@@ -38,7 +38,7 @@ import static java.util.Objects.requireNonNull;
  * Default implementation of {@code ArtifactManager}.
  *
  * @author Andres Almiray
- * @since 0.9.2
+ * @since 2.0.0
  */
 public class DefaultArtifactManager extends AbstractArtifactManager {
     private static final Logger LOG = LoggerFactory.getLogger(DefaultArtifactManager.class);

@@ -2,7 +2,6 @@ package ${project_package}
 
 import griffon.core.test.GriffonUnitRule
 import griffon.core.test.TestFor
-import griffon.inject.BindTo
 import org.junit.Rule
 import org.junit.Test
 
@@ -16,7 +15,7 @@ class ${project_capitalized_name}ControllerTest {
     public final GriffonUnitRule griffon = new GriffonUnitRule()
 
     @Test
-    void testSomeAction() {
+    void testClickAction() {
         fail('Not yet implemented!')
     }
 }

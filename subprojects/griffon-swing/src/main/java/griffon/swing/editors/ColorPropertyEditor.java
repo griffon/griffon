@@ -33,7 +33,7 @@ import static griffon.util.GriffonNameUtils.isBlank;
 /**
  * @author Andres Almiray
  * @author Alexander Klein
- * @since 1.1.0
+ * @since 2.0.0
  */
 @PropertyEditorFor(Color.class)
 public class ColorPropertyEditor extends AbstractPropertyEditor {

@@ -31,7 +31,7 @@ import java.net.URL;
 
 /**
  * @author Andres Almiray
- * @since 1.3.0
+ * @since 2.0.0
  */
 @PropertyEditorFor(BufferedImage.class)
 public class BufferedImagePropertyEditor extends AbstractPropertyEditor {

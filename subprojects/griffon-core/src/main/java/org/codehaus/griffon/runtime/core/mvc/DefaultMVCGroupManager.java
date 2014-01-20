@@ -45,7 +45,7 @@ import static java.util.Objects.requireNonNull;
  * Base implementation of the {@code MVCGroupManager} interface.
  *
  * @author Andres Almiray
- * @since 0.9.4
+ * @since 2.0.0
  */
 public class DefaultMVCGroupManager extends AbstractMVCGroupManager {
     private static final Logger LOG = LoggerFactory.getLogger(DefaultMVCGroupManager.class);

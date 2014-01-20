@@ -25,7 +25,7 @@ import static griffon.util.GriffonNameUtils.isBlank;
 
 /**
  * @author Andres Almiray
- * @since 1.3.0
+ * @since 2.0.0
  */
 public class ByteFormatter extends AbstractFormatter<Byte> {
     private static final String PATTERN_CURRENCY = "currency";

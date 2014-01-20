@@ -22,7 +22,7 @@ import static griffon.util.GriffonNameUtils.isBlank;
 
 /**
  * @author Andres Almiray
- * @since 1.1.0
+ * @since 2.0.0
  */
 public class FilePropertyEditor extends AbstractPropertyEditor {
     protected void setValueInternal(Object value) {

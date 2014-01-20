@@ -30,7 +30,7 @@ import static java.util.Objects.requireNonNull;
  * visible on show() and disposes it on hide().
  *
  * @author Andres Almiray
- * @since 0.3.1
+ * @since 2.0.0
  */
 public class DefaultSwingWindowDisplayHandler implements SwingWindowDisplayHandler {
     private static final String ERROR_NAME_BLANK = "Argument 'name' cannot be null";

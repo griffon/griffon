@@ -22,7 +22,7 @@ import javax.annotation.Nonnull;
 
 /**
  * @author Andres Almiray
- * @since 0.9.1
+ * @since 2.0.0
  */
 public interface ASTInjector {
     void inject(@Nonnull ClassNode classNode, @Nonnull String artifactType);

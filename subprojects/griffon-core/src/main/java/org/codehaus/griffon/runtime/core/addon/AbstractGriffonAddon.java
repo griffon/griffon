@@ -28,7 +28,7 @@ import java.util.Map;
 
 /**
  * @author Andres Almiray
- * @since 0.9.2
+ * @since 2.0.0
  */
 public class AbstractGriffonAddon implements GriffonAddon {
     private final Logger log;

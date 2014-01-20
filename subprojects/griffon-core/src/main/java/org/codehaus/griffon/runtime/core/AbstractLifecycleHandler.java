@@ -32,7 +32,7 @@ import static java.util.Objects.requireNonNull;
  * Base implementation of the {@code LifecycleHandler} interface.
  *
  * @author Andres Almiray
- * @since 0.9.3
+ * @since 2.0.0
  */
 public abstract class AbstractLifecycleHandler implements LifecycleHandler {
     private final GriffonApplication application;

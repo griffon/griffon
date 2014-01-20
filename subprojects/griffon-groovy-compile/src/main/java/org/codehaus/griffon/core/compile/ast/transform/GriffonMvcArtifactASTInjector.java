@@ -29,7 +29,7 @@ import static org.codehaus.groovy.ast.ClassHelper.VOID_TYPE;
 
 /**
  * @author Andres Almiray
- * @since 0.9.1
+ * @since 2.0.0
  */
 public class GriffonMvcArtifactASTInjector extends GriffonArtifactASTInjector {
     public void inject(@Nonnull ClassNode classNode, @Nonnull String artifactType) {

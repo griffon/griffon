@@ -26,7 +26,7 @@ import java.util.Set;
 
 /**
  * @author Andres Almiray
- * @since 0.9.1
+ * @since 2.0.0
  */
 public class DefaultGriffonControllerClass extends DefaultGriffonClass implements GriffonControllerClass {
     protected final Set<String> actionsCache = new LinkedHashSet<>();

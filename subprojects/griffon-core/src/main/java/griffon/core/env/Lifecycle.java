@@ -24,7 +24,7 @@ import static griffon.util.GriffonNameUtils.capitalize;
  * Defines the names of the lifecycle scripts.
  *
  * @author Andres Almiray
- * @since 0.9.2
+ * @since 2.0.0
  */
 public enum Lifecycle {
     INITIALIZE, STARTUP, READY, SHUTDOWN, STOP;

@@ -41,7 +41,7 @@ import static java.util.Objects.requireNonNull;
  * Base implementation of the {@code AddonManager} interface.
  *
  * @author Andres Almiray
- * @since 0.9.2
+ * @since 2.0.0
  */
 public abstract class AbstractAddonManager implements AddonManager {
     private static final Logger LOG = LoggerFactory.getLogger(AbstractAddonManager.class);

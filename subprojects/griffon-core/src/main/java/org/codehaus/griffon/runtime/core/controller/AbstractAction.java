@@ -29,7 +29,7 @@ import static java.util.Objects.requireNonNull;
 
 /**
  * @author Andres Almiray
- * @since 1.1.0
+ * @since 2.0.0
  */
 public abstract class AbstractAction extends AbstractObservable implements Action {
     private String name;

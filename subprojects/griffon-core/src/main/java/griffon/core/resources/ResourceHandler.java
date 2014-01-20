@@ -26,7 +26,7 @@ import java.util.List;
  * Indicates a type that knows how to load resources from the classpath.
  *
  * @author Andres Almiray
- * @since 0.9.5
+ * @since 2.0.0
  */
 public interface ResourceHandler {
     /**

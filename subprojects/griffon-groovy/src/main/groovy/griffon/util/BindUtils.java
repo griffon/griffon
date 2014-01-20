@@ -31,7 +31,7 @@ import static java.util.Objects.requireNonNull;
  * Helper class for constructing bindings between two objects.
  *
  * @author Andres Almiray
- * @since 0.9.2
+ * @since 2.0.0
  */
 public class BindUtils {
     /**

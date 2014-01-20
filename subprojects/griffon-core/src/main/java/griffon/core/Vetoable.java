@@ -26,7 +26,7 @@ import java.beans.VetoableChangeListener;
  * Bean Specification</a>.
  *
  * @author Andres Almiray
- * @since 1.2.0
+ * @since 2.0.0
  */
 public interface Vetoable extends Observable {
     /**

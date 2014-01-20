@@ -38,7 +38,7 @@ import static org.codehaus.groovy.ast.expr.VariableExpression.THIS_EXPRESSION;
 
 /**
  * @author Andres Almiray
- * @since 0.9.5
+ * @since 2.0.0
  */
 public abstract class AbstractASTInjector implements ASTInjector {
     private static final ClassNode THREAD_TYPE = ClassHelper.make(Thread.class).getPlainNodeReference();

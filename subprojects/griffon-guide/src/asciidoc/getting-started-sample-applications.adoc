@@ -1,4 +1,5 @@
 
+[[_getting_started_sample_applications]]
 = Sample Applications
 :sample-swing-java: {rootdir}/samples/sample-swing-java
 :sample-swing-groovy: {rootdir}/samples/sample-swing-groovy
@@ -99,7 +100,7 @@ case as there's a +SampleService+ instance injected into our controllers.
 ----
 include::{sample-swing-java}/griffon-app/controllers/sample/SampleController.java[]
 ----
-<1> MVC member injected by +link:api/griffon/core/mvc/MVCGroupManager.html[MVCGroupManager]+
+<1> MVC member injected by +{link_mvc_group_manager}+
 <2> Injected by JSR 330
 <3> Automatically run off the UI thread
 <4> Get back inside the UI thread
@@ -115,7 +116,7 @@ inside the UI thread [conum,data-value=4]_4_.
 ----
 include::{sample-swing-groovy}/griffon-app/controllers/sample/SampleController.groovy[]
 ----
-<1> MVC member injected by +link:api/griffon/core/mvc/MVCGroupManager.html[MVCGroupManager]+
+<1> MVC member injected by +{link_mvc_group_manager}+
 <2> Injected by JSR 330
 <3> Automatically run off the UI thread
 <4> Get back inside the UI thread
@@ -129,8 +130,8 @@ updated inside the UI thread.
 Services are tasked to work with raw data and I/O, they should *_never_* interact with
 Views and Models directly, though you may have additional components injected to them.
 The following service shows another facility provide by the
-+link:api/griffon/core/GriffonApplication.html[GriffonApplication]+ interface:
-+link:api/griffon/core/i18n/MessageSource.html[MessageSource]+, capable of resolving i18n-able
++{link_griffon_application}+ interface:
++{link_message_source}+, capable of resolving i18n-able
 resources.
 
 .sample-swing-java/griffon-app/services/sample/SampleService.java
@@ -158,8 +159,8 @@ one column vertical grid
 ----
 include::{sample-swing-java}/griffon-app/views/sample/SampleView.java[]
 ----
-<1> MVC member injected by +link:api/griffon/core/mvc/MVCGroupManager.html[MVCGroupManager]+
-<2> Attach window to +link:api/griffon/core/view/WindowManager.html[WindowManager]+
+<1> MVC member injected by +{link_mvc_group_manager}+
+<2> Attach window to +{link_window_manager}+
 <3> Apply component-to-model binding
 <4> Hook in controller action by name
 
@@ -173,8 +174,8 @@ that may be applied to buttons [conum,data-value=4]_4_ for example.
 ----
 include::{sample-swing-groovy}/griffon-app/views/sample/SampleView.groovy[]
 ----
-<1> MVC member injected by +link:api/griffon/core/mvc/MVCGroupManager.html[MVCGroupManager]+
-<2> Create window and attach it to +link:api/griffon/core/view/WindowManager.html[WindowManager]+
+<1> MVC member injected by +{link_mvc_group_manager}+
+<2> Create window and attach it to +{link_window_manager}+
 <3> Apply component-to-model binding
 <4> Hook in controller action by name
 
@@ -247,7 +248,7 @@ between its Swing counterpart.
 ----
 include::{sample-javafx-java}/griffon-app/controllers/sample/SampleController.java[]
 ----
-<1> MVC member injected by +link:api/griffon/core/mvc/MVCGroupManager.html[MVCGroupManager]+
+<1> MVC member injected by +{link_mvc_group_manager}+
 <2> Injected by JSR 330
 <3> Automatically run off the UI thread
 <4> Get back inside the UI thread
@@ -263,7 +264,7 @@ contract for its properties we didn't have to change the Controller at all.
 ----
 include::{sample-javafx-groovy}/griffon-app/controllers/sample/SampleController.groovy[]
 ----
-<1> MVC member injected by +link:api/griffon/core/mvc/MVCGroupManager.html[MVCGroupManager]+
+<1> MVC member injected by +{link_mvc_group_manager}+
 <2> Injected by JSR 330
 <3> Automatically run off the UI thread
 <4> Get back inside the UI thread
@@ -304,8 +305,8 @@ we chose to implement the Java based View by reading an fxml file by convention.
 ----
 include::{sample-javafx-java}/griffon-app/views/sample/SampleView.java[]
 ----
-<1> MVC member injected by +link:api/griffon/core/mvc/MVCGroupManager.html[MVCGroupManager]+
-<2> Create window and attach it to +link:api/griffon/core/view/WindowManager.html[WindowManager]+
+<1> MVC member injected by +{link_mvc_group_manager}+
+<2> Create window and attach it to +{link_window_manager}+
 <3> Injected by FXMLLoader
 <4> Hook actions by convention
 
@@ -338,8 +339,8 @@ a helper method [conum,data-value=4]_4_ as shown in the View.
 ----
 include::{sample-javafx-groovy}/griffon-app/views/sample/SampleView.groovy[]
 ----
-<1> MVC member injected by +link:api/griffon/core/mvc/MVCGroupManager.html[MVCGroupManager]+
-<2> Create window and attach it to +link:api/griffon/core/view/WindowManager.html[WindowManager]+
+<1> MVC member injected by +{link_mvc_group_manager}+
+<2> Create window and attach it to +{link_window_manager}+
 <3> Apply component-to-model binding
 <4> Hook actions by convention
 
@@ -408,7 +409,7 @@ decided to take a shortcut for demonstrations purposes.
 ----
 include::{sample-lanterna-java}/griffon-app/controllers/sample/SampleController.java[]
 ----
-<1> MVC member injected by +link:api/griffon/core/mvc/MVCGroupManager.html[MVCGroupManager]+
+<1> MVC member injected by +{link_mvc_group_manager}+
 <2> Injected by JSR 330
 <3> Automatically run off the UI thread
 <4> Get back inside the UI thread
@@ -419,7 +420,7 @@ include::{sample-lanterna-java}/griffon-app/controllers/sample/SampleController.
 ----
 include::{sample-lanterna-groovy}/griffon-app/controllers/sample/SampleController.groovy[]
 ----
-<1> MVC member injected by +link:api/griffon/core/mvc/MVCGroupManager.html[MVCGroupManager]+
+<1> MVC member injected by +{link_mvc_group_manager}+
 <2> Injected by JSR 330
 <3> Automatically run off the UI thread
 <4> Get back inside the UI thread
@@ -458,8 +459,8 @@ the +input+ Model property as soon as the button is clicked.
 ----
 include::{sample-lanterna-java}/griffon-app/views/sample/SampleView.java[]
 ----
-<1> MVC member injected by +link:api/griffon/core/mvc/MVCGroupManager.html[MVCGroupManager]+
-<2> Create window and attach it to +link:api/griffon/core/view/WindowManager.html[WindowManager]+
+<1> MVC member injected by +{link_mvc_group_manager}+
+<2> Create window and attach it to +{link_window_manager}+
 <3> Apply component-to-model binding
 <4> Hook actions by convention
 
@@ -472,8 +473,8 @@ value to the +output+ component as soon as said property gets updated.
 ----
 include::{sample-lanterna-groovy}/griffon-app/views/sample/SampleView.groovy[]
 ----
-<1> MVC member injected by +link:api/griffon/core/mvc/MVCGroupManager.html[MVCGroupManager]+
-<2> Create window and attach it to +link:api/griffon/core/view/WindowManager.html[WindowManager]+
+<1> MVC member injected by +{link_mvc_group_manager}+
+<2> Create window and attach it to +{link_window_manager}+
 <3> Hook actions by convention
 
 Here we can certify there's no binding code in the View, hence why the Controller has
@@ -523,7 +524,7 @@ see there are no differences between one another.
 ----
 include::{sample-pivot-java}/griffon-app/controllers/sample/SampleController.java[]
 ----
-<1> MVC member injected by +link:api/griffon/core/mvc/MVCGroupManager.html[MVCGroupManager]+
+<1> MVC member injected by +{link_mvc_group_manager}+
 <2> Injected by JSR 330
 <3> Automatically run off the UI thread
 <4> Get back inside the UI thread
@@ -534,7 +535,7 @@ include::{sample-pivot-java}/griffon-app/controllers/sample/SampleController.jav
 ----
 include::{sample-pivot-groovy}/griffon-app/controllers/sample/SampleController.groovy[]
 ----
-<1> MVC member injected by +link:api/griffon/core/mvc/MVCGroupManager.html[MVCGroupManager]+
+<1> MVC member injected by +{link_mvc_group_manager}+
 <2> Injected by JSR 330
 <3> Automatically run off the UI thread
 <4> Get back inside the UI thread
@@ -570,8 +571,8 @@ the native support exposed by the toolkit.
 ----
 include::{sample-pivot-java}/griffon-app/views/sample/SampleView.java[]
 ----
-<1> MVC member injected by +link:api/griffon/core/mvc/MVCGroupManager.html[MVCGroupManager]+
-<2> Create window and attach it to +link:api/griffon/core/view/WindowManager.html[WindowManager]+
+<1> MVC member injected by +{link_mvc_group_manager}+
+<2> Create window and attach it to +{link_window_manager}+
 <3> Apply component-to-model binding
 <4> Hook actions by convention
 
@@ -581,8 +582,8 @@ include::{sample-pivot-java}/griffon-app/views/sample/SampleView.java[]
 ----
 include::{sample-pivot-groovy}/griffon-app/views/sample/SampleView.groovy[]
 ----
-<1> MVC member injected by +link:api/griffon/core/mvc/MVCGroupManager.html[MVCGroupManager]+
-<2> Create window and attach it to +link:api/griffon/core/view/WindowManager.html[WindowManager]+
+<1> MVC member injected by +{link_mvc_group_manager}+
+<2> Create window and attach it to +{link_window_manager}+
 <3> Hook actions by convention
 
 === Resources

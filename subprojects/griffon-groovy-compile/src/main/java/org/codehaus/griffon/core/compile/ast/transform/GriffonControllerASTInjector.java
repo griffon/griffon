@@ -28,7 +28,7 @@ import static org.codehaus.groovy.ast.ClassHelper.VOID_TYPE;
 
 /**
  * @author Andres Almiray
- * @since 1.3.0
+ * @since 2.0.0
  */
 public class GriffonControllerASTInjector extends GriffonMvcArtifactASTInjector {
     private static final ClassNode OBJECT_ARRAY_TYPE = makeClassSafe(Object[].class);

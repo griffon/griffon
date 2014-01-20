@@ -24,7 +24,7 @@ import java.util.Map;
 
 /**
  * @author Andres Almiray
- * @since 1.1.0
+ * @since 2.0.0
  */
 public interface ActionManager {
     String ACTION = "Action";

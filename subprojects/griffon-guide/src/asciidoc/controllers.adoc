@@ -1,4 +1,5 @@
 
+[[_controllers]]
 = Controllers
 
 Controllers are the entry point for your application's logic. Each controller has
@@ -56,7 +57,7 @@ Actions must follow these rules in order to be considered as such:
  - must pass +link:api/griffon/util/GriffonClassUtils.html#isPlainMethod[GriffonClassUtils.isPlainMethod()]+.
  - must have +void+ as return type.
 
-The application's +link:api/griffon/core/controller/ActionManager.html[ActionManager]+
+The application's +{link_action_manager}+
 will automatically configure an +link:api/griffon/core/controller/Action.html[Action]+
 instance for each matching controller action. These +Action+ instances can be later used
 within Views to link them to UI components. The following example shows a Swing View
@@ -86,13 +87,13 @@ class SampleView {
 
 Controllers can perform other tasks too:
 
- - listen to link:overview-application-events/[application events].
+ - listen to <<_events_application_events,application events>>.
  - react to MVC initialization/destruction via a pair of methods (+mvcGroupInit()+, +mvcGroupDestroy()+).
- - hold references to link:services/[services].
+ - hold references to <<_services,services>>.
  - participate in dependency injection (members must be annotated with +@javax.inject.Inject+).
 
 :leveloffset: 2
 include::controllers-actions-and-threads.adoc[]
-include::controllers-action-manager.adoc[]
+include::controllers-actionmanager.adoc[]
 include::controllers-action-interceptors.adoc[]
 :leveloffset: 1

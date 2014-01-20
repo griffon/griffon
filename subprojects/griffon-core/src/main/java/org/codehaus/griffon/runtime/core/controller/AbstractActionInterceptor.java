@@ -30,7 +30,7 @@ import static java.util.Objects.requireNonNull;
 
 /**
  * @author Andres Almiray
- * @since 1.3.0
+ * @since 2.0.0
  */
 public class AbstractActionInterceptor implements ActionInterceptor {
     private static final String ERROR_CONTROLLER_NULL = "Argument 'controller' cannot be null";

@@ -33,7 +33,7 @@ import static java.util.Objects.requireNonNull;
  * An action implementation that relies on a closure to handle events.
  *
  * @author Andres Almiray
- * @since 0.9.3
+ * @since 2.0.0
  */
 public class SwingAction extends AbstractAction {
     private static final long serialVersionUID = 4598888514827528435L;
@@ -67,7 +67,7 @@ public class SwingAction extends AbstractAction {
      * A builder for actions.
      *
      * @author Andres Almiray
-     * @since 0.9.3
+     * @since 2.0.0
      */
     public static class ActionBuilder {
         private String name;

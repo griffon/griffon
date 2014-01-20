@@ -31,7 +31,7 @@ import static java.util.Objects.requireNonNull;
 
 /**
  * @author Andres Almiray
- * @since 1.1.0
+ * @since 2.0.0
  */
 public class GroovyScriptResourceBundle extends ResourceBundle {
     private static final String ERROR_READER_NULL = "Argument 'reader' cannot be null";

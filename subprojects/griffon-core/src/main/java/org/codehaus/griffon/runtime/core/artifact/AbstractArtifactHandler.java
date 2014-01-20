@@ -37,7 +37,7 @@ import static java.util.Objects.requireNonNull;
  * Base implementation of the ArtifactHandler interface.
  *
  * @author Andres Almiray
- * @since 0.9.1
+ * @since 2.0.0
  */
 public abstract class AbstractArtifactHandler<A extends GriffonArtifact> implements ArtifactHandler<A> {
     protected static final String ERROR_CLASS_NULL = "Argument 'class' cannot be null";

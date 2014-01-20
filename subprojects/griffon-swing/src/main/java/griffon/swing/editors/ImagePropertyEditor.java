@@ -32,7 +32,7 @@ import java.net.URL;
 
 /**
  * @author Andres Almiray
- * @since 1.1.0
+ * @since 2.0.0
  */
 @PropertyEditorFor(Image.class)
 public class ImagePropertyEditor extends AbstractPropertyEditor {

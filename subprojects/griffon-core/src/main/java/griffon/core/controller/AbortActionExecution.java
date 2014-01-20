@@ -21,7 +21,7 @@ package griffon.core.controller;
  * BEFORE phase of a ActionInterceptor.
  *
  * @author Andres Almiray
- * @since 1.3.0
+ * @since 2.0.0
  */
 public class AbortActionExecution extends RuntimeException {
     private static final long serialVersionUID = -271597792519147879L;

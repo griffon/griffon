@@ -27,7 +27,7 @@ import java.util.Map;
  * Default implementation of the {@code MVCGroup} interface
  *
  * @author Andres Almiray
- * @since 0.9.3
+ * @since 2.0.0
  */
 public class DefaultMVCGroup extends AbstractMVCGroup {
     public DefaultMVCGroup(@Nonnull MVCGroupManager mvcGroupManager, @Nonnull MVCGroupConfiguration configuration, @Nullable String mvcId, @Nonnull Map<String, Object> members) {

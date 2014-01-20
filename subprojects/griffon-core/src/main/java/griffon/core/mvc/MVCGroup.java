@@ -28,7 +28,7 @@ import java.util.Map;
  * Defines an MVC group and its contents
  *
  * @author Andres Almiray
- * @since 0.9.4
+ * @since 2.0.0
  */
 public interface MVCGroup {
     /**

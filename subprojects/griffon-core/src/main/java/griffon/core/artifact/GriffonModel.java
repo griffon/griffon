@@ -23,7 +23,7 @@ import griffon.core.Vetoable;
  * Models should always be {@code Observable}.
  *
  * @author Andres Almiray
- * @since 0.9.1
+ * @since 2.0.0
  */
 public interface GriffonModel extends GriffonMvcArtifact, Vetoable {
 }

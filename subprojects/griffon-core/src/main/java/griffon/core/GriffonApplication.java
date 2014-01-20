@@ -171,7 +171,6 @@ public interface GriffonApplication extends Observable {
      * Returns the arguments set on the command line (if any).<p>
      *
      * @return an array of command line arguments. Never returns null.
-     * @since 0.9.2
      */
     @Nonnull
     String[] getStartupArgs();
@@ -180,7 +179,6 @@ public interface GriffonApplication extends Observable {
      * Returns a Logger instance suitable for this application.
      *
      * @return a Logger instance.
-     * @since 0.9.2
      */
     @Nonnull
     Logger getLog();

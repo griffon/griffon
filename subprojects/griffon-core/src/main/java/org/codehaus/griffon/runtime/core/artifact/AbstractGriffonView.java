@@ -27,7 +27,7 @@ import javax.inject.Inject;
  * Base implementation of the GriffonView interface.
  *
  * @author Andres Almiray
- * @since 0.9.1
+ * @since 2.0.0
  */
 public abstract class AbstractGriffonView extends AbstractGriffonMvcArtifact implements GriffonView {
     @Inject

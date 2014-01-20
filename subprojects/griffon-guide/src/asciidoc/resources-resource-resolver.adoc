@@ -1,9 +1,9 @@
 
+[[_resources_resource_resolver]]
 = ResourceResolver
 
 Applications have the ability to resolve internationalizable messages by leveraging
-the behavior exposed by +link:api/griffon/core/resources/ResourceResolver.html[griffon.core.resources.ResourceResolver]+.
-This interface exposes the following methods:
+the behavior exposed by +{link_resource_resolver}+. This interface exposes the following methods:
 
  - Object resolveResource(String key)
  - Object resolveResource(String key, Locale locale)
@@ -34,7 +34,7 @@ in +key+ is null.
 The simplest way to resolve a message thus results like this
 
 [source,groovy]
-[subs="verbatim"]
+[subs="verbatim,attributes"]
 ----
 getApplication().getResourceResolver().resolveResource('menu.icon')
 ----
@@ -44,14 +44,14 @@ code whereas those that take an +Object[]+ are meant for Java code; this leads t
 better idiomatic code as the following examples reveal
 
 [source,groovy]
-[subs="verbatim"]
+[subs="verbatim,attributes"]
 ----
 getApplication().getResourceResolver()
                 .resolveResource('groovy.icon.resource', ['small']))
 ----
 
 [source,java]
-[subs="verbatim"]
+[subs="verbatim,attributes"]
 ----
 getApplication().getResourceResolver()
                 .resolveResource("java.icon.resource", new Object[]{"large"});
@@ -60,7 +60,7 @@ getApplication().getResourceResolver()
 Of course you may also use +List+ versions in Java, like this
 
 [source,java]
-[subs="verbatim"]
+[subs="verbatim,attributes"]
 ----
 getApplication().getResourceResolver()
                 .resolveResource("hybrid.icon.resource", Arrays.asList("medium"));
@@ -71,7 +71,7 @@ getApplication().getResourceResolver()
 There are three types of resource formats supported by default. Additional formats may
 be supported if the right plugins are installed. Resources may be configured using
 either properties files or Groovy scripts, please refer to the
-link:resources-resource-resolver-configuration/[configuration] section.
+<<_resources_resource_resolver_configuration,configuration>> section.
 
 === Standard Format
 
@@ -82,7 +82,7 @@ take a +List+ or an +Object[]+ as arguments. Examples follow. First the resource
 definitions stored in a properties file
 
 [source]
-[subs="verbatim"]
+[subs="verbatim,attributes"]
 ----
 menu.icon = /img/icons/menu-{0}.png
 ----
@@ -92,7 +92,7 @@ filenames are +menu-small.png+, +menu-medium.png+ and +menu-large.png+, a compon
 resolve any of them with
 
 [source,groovy]
-[subs="verbatim"]
+[subs="verbatim,attributes"]
 ----
 Object icon = getApplication().getResourceResolver()
                               .resolveResource('menu.icon', ['large'])
@@ -105,7 +105,7 @@ only be resolved by Griffon. This format uses symbols instead of numbers as plac
 for arguments. Thus the previous messages can be rewritten as follows
 
 [source]
-[subs="verbatim"]
+[subs="verbatim,attributes"]
 ----
 menu.icon = /img/icons/menu-{:size}.png
 ----
@@ -113,7 +113,7 @@ menu.icon = /img/icons/menu-{:size}.png
 Which may be resolved in this manner
 
 [source,groovy]
-[subs="verbatim"]
+[subs="verbatim,attributes"]
 ----
 Object icon = getApplication().getResourceResolver()
                               .resolveResource('menu.icon', [size: 'large'])
@@ -128,7 +128,7 @@ closures. The following message uses the value of the current running environmen
 to determine the text of a warning to be displayed on a label
 
 [source,groovy]
-[subs="verbatim"]
+[subs="verbatim,attributes"]
 ----
 import java.awt.Rectangle
 
@@ -141,14 +141,14 @@ computed.instance = { x, y, w, h ->
 == Type Conversion
 
 Note that the return value of +resolveResource+ is marked as +Object+ but you'll get
-a +String+ from the first two formats. You'll have to rely on link:resources-property-editors/[property editors]
-in order to transform the value into the correct type. link:resources-injected-resources/[Injected resources]
+a +String+ from the first two formats. You'll have to rely on <<_resources_property_editors,property editors>>
+in order to transform the value into the correct type. <<_resources_injected_resources,Injected resources>>
 are automatically transformed to the expected type.
 
 Here's how it can be done
 
 [source,groovy]
-[subs="verbatim"]
+[subs="verbatim,attributes"]
 ----
 import javax.swing.Icon
 import java.beans.PropertyEditor
@@ -169,7 +169,7 @@ referenced keys for this matter. In order to achieve this, the value of the alia
 key must define the aliased key with a special format, for example
 
 [source]
-[subs="verbatim"]
+[subs="verbatim,attributes"]
 ----
 action.icon = /img/icons/action-{0}.png
 hello.icon = @[action.icon]
@@ -178,7 +178,7 @@ hello.icon = @[action.icon]
 Resolving those keys results in
 
 [source,groovy]
-[subs="verbatim"]
+[subs="verbatim,attributes"]
 ----
 assert getApplication()
            .getResourceResolver()

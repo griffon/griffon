@@ -27,7 +27,7 @@ import java.util.concurrent.Future;
  * the conventions set by the application.
  *
  * @author Andres Almiray
- * @since 0.9.3
+ * @since 2.0.0
  */
 public interface ThreadingHandler {
     /**

@@ -25,7 +25,7 @@ import javax.annotation.Nullable;
  * @param <T> the type of instances this {@code Formatter} can handle.
  *
  * @author Andres Almiray
- * @since 1.3.0
+ * @since 2.0.0
  */
 public interface Formatter<T> {
     /**

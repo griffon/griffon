@@ -22,7 +22,7 @@ import javax.annotation.Nonnull;
  * Represents a Controller class in Griffon.<p>
  *
  * @author Andres Almiray
- * @since 0.9.1
+ * @since 2.0.0
  */
 public interface GriffonControllerClass extends GriffonClass {
     /**

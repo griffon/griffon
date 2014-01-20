@@ -24,7 +24,7 @@ import java.util.Map;
  * Holds the applicationConfiguration of an MVC group
  *
  * @author Andres Almiray
- * @since 0.9.4
+ * @since 2.0.0
  */
 public interface MVCGroupConfiguration {
     /**

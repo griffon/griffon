@@ -22,7 +22,7 @@ import javax.annotation.Nonnull;
  * A ShutdownHandler may prevent the application from exiting.
  *
  * @author Andres Almiray
- * @since 0.3.1
+ * @since 2.0.0
  */
 public interface ShutdownHandler {
     /**

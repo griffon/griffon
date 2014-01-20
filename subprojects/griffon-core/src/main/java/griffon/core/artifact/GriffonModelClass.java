@@ -23,7 +23,7 @@ import javax.annotation.Nullable;
  * Represents a Model class in Griffon.<p>
  *
  * @author Andres Almiray
- * @since 0.9.1
+ * @since 2.0.0
  */
 public interface GriffonModelClass extends GriffonClass {
     /**

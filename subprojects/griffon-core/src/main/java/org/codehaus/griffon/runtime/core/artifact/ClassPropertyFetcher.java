@@ -31,7 +31,7 @@ import java.util.concurrent.ConcurrentHashMap;
  *
  * @author Lari Hotari, Sagire Software Oy (Grails)
  * @author Andres Almiray
- * @since 0.9.1
+ * @since 2.0.0
  */
 public class ClassPropertyFetcher {
     private final Class<?> clazz;

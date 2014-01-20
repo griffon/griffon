@@ -22,7 +22,7 @@ import java.util.Locale;
 /**
  * @author Andres Almiray
  * @author Alexander Klein
- * @since 1.1.0
+ * @since 2.0.0
  */
 public class NoSuchResourceException extends RuntimeException {
     private static final long serialVersionUID = -8457840608859745331L;

@@ -41,7 +41,7 @@ import static java.util.Objects.requireNonNull;
  * Base implementation of the {@code ArtifactManager} interface.
  *
  * @author Andres Almiray
- * @since 0.9.2
+ * @since 2.0.0
  */
 @SuppressWarnings("rawtypes")
 public abstract class AbstractArtifactManager implements ArtifactManager {

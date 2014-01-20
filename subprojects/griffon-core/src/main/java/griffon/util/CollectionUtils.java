@@ -42,7 +42,7 @@ import java.util.*;
  * </pre></p>
  *
  * @author Andres Almiray
- * @since 0.9.4
+ * @since 2.0.0
  */
 public final class CollectionUtils {
     public static <T> List<T> reverse(List<T> input) {

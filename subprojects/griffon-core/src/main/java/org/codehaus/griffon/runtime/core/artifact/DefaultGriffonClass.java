@@ -24,7 +24,7 @@ import javax.annotation.Nonnull;
  *
  * @author Graeme Rocher (Grails 0.1)
  * @author Andres Almiray
- * @since 0.9.1
+ * @since 2.0.0
  */
 public class DefaultGriffonClass extends AbstractGriffonClass {
     public DefaultGriffonClass(@Nonnull Class<?> clazz, @Nonnull String type, @Nonnull String trailingName) {

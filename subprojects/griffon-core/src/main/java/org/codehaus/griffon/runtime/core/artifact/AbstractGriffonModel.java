@@ -33,7 +33,7 @@ import static java.util.Objects.requireNonNull;
  * Base implementation of the GriffonModel interface.
  *
  * @author Andres Almiray
- * @since 0.9.1
+ * @since 2.0.0
  */
 public abstract class AbstractGriffonModel extends AbstractGriffonMvcArtifact implements GriffonModel {
     private static final String ERROR_EVENT_NULL = "Argument 'event' cannot be null";

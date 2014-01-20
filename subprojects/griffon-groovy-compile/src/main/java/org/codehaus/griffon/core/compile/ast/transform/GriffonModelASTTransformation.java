@@ -33,7 +33,7 @@ import javax.annotation.Nonnull;
  * <p/>
  *
  * @author Andres Almiray
- * @since 0.9.1
+ * @since 2.0.0
  */
 @ServiceProviderFor(ASTTransformation.class)
 @GroovyASTTransformation(phase = CompilePhase.SEMANTIC_ANALYSIS)

@@ -36,7 +36,7 @@ import static java.util.Objects.requireNonNull;
  * Base implementation of the {@code MVCGroup} interface
  *
  * @author Andres Almiray
- * @since 0.9.4
+ * @since 2.0.0
  */
 public abstract class AbstractMVCGroup implements MVCGroup {
     protected final MVCGroupManager mvcGroupManager;

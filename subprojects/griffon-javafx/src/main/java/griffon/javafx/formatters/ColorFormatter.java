@@ -52,7 +52,7 @@ import static java.util.Objects.requireNonNull;
  *
  * @author Andres Almiray
  * @see griffon.core.formatters.Formatter
- * @since 1.3.0
+ * @since 2.0.0
  */
 public class ColorFormatter extends AbstractFormatter<Color> {
     /**

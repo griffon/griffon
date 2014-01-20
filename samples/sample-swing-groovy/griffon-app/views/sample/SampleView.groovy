@@ -3,8 +3,6 @@ package sample
 import griffon.core.artifact.GriffonView
 import griffon.metadata.ArtifactProviderFor
 
-import static javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE
-
 @ArtifactProviderFor(GriffonView)
 class SampleView {
     FactoryBuilderSupport builder                                                              //<1>
@@ -13,7 +11,7 @@ class SampleView {
     void initUI() {
         builder.with {
             application(title: application.applicationConfiguration['application.title'],      //<2>
-                id: 'mainWindow', size: [320, 160], defaultCloseOperation: DO_NOTHING_ON_CLOSE,
+                id: 'mainWindow', size: [320, 160],
                 iconImage: imageIcon('/griffon-icon-48x48.png').image,
                 iconImages: [imageIcon('/griffon-icon-48x48.png').image,
                     imageIcon('/griffon-icon-32x32.png').image,

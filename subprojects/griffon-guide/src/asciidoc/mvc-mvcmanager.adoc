@@ -1,2 +1,77 @@
 
+[[_mvc_mvcmanager]]
 = The MVCGroupManager
+
+This class is responsible for holding the configuration of all MVC groups no matter
+how they were defined, which can be either in +Config.groovy+ or in an <<_addon, addon>> descriptor.
+
+During the startup sequence an instance of +{link_mvc_group_manager}+ will be created
+and initialized. Later the application will instruct this instance to create all startup
+groups as required. +MVCGroupManager+ has a handful set of methods that deal with
+MVC group configuration alone; however those that deal with group instantiation come
+in 3 versions, with 2 flavors each (one Groovy, the other Java friendly).
+
+Locating a group configuration is easily done by specifying the name you're interested in finding
+
+[source,groovy]
+[subs="verbatim,attributes"]
+----
+MVCGroupConfiguration configuration = application.mvcGroupManager.findConfiguration('foo')
+----
+
+Once you have a configuration reference you can instantiate a group with it by calling
+any of the variants of the +create+ method
+
+[source,groovy]
+[subs="verbatim,attributes"]
+----
+MVCGroupConfiguration configuration = application.mvcGroupManager.findConfiguration('foo')
+MVCGroup group1 = configuration.create('foo1')
+MVCGroup group2 = configuration.create('foo2', [someKey: 'someValue'])
+// the following will make the group's id match its name
+MVCGroup group3 = configuration.create()
+MVCGroup group4 = configuration.create(someKey: 'someValue')
+----
+
+Be careful that creating groups with the same name is usually not a good idea. The
+default +MVCGroupManager+ will complain when this happens and will automatically spit
+out an exception. This behavior may be changed by setting a configuration key in +Config.groovy+
+
+[source,groovy]
+[subs="verbatim,attributes"]
+----
+griffon.mvcid.collision = 'warning' // accepted values are 'warning', 'exception' (default)
+----
+
+The manager will log a warning and destroy the previously existing group before instantiating
+the new one when 'warning' is the preferred strategy .
+
+Now, even though you can create group instances based on their configurations the preferred
+way is to call any of +{link_mvc_group_manager_create_mvc_group}+,
++{link_mvc_group_manager_build_mvc_group}+ or +{link_mvc_group_manager_with_mvc_group}+
+methods. Any class annotated with the <<_mvc_mvcaware_transformation,@MVCAware>> will
+also gain access to these methods.
+
+Groups will be available by id regardless of how they were instantiated. You can ask
+the +MVCGroupManager+ for a particular group at any time, for example
+
+[source,groovy]
+[subs="verbatim,attributes"]
+----
+def g1 = application.mvcGroupManager.groups.foo1
+def g2 = application.mvcGroupManager.findGroup('foo1')
+def g3 = application.mvcGroupManager.foo1
+assert g1 == g2
+assert g1 == g3
+----
+
+It's also possible to query all models, views, controllers and builders on their own.
+Say you'd want to inspect all currently instantiated models, this is how it can be done
+
+[source,groovy]
+[subs="verbatim,attributes"]
+----
+application.mvcGroupManager.models.each { model ->
+    // do something with model
+}
+----

@@ -34,7 +34,7 @@ import static java.util.Objects.requireNonNull;
 /**
  * @author Andres Almiray
  * @author Alexander Klein
- * @since 1.1.0
+ * @since 2.0.0
  */
 public abstract class AbstractMessageSource implements MessageSource {
     protected static final String ERROR_KEY_BLANK = "Argument 'key' cannot be blank";

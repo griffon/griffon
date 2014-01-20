@@ -31,7 +31,7 @@ import static griffon.util.TypeUtils.castToBoolean;
 
 /**
  * @author Andres Almiray
- * @since 1.1.0
+ * @since 2.0.0
  */
 public class SwingActionManager extends AbstractActionManager {
     private static final Logger LOG = LoggerFactory.getLogger(SwingActionManager.class);

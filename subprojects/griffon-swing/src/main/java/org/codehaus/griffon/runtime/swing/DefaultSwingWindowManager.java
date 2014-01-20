@@ -55,7 +55,7 @@ public class DefaultSwingWindowManager extends AbstractWindowManager<Window> imp
      *
      * @param name the value of the name: property
      * @return a JInternalFrame if a match is found, null otherwise.
-     * @since 0.9.5
+     * @since 2.0.0
      */
     public JInternalFrame findInternalFrame(String name) {
         if (!GriffonNameUtils.isBlank(name)) {
@@ -70,7 +70,7 @@ public class DefaultSwingWindowManager extends AbstractWindowManager<Window> imp
      * Returns the list of internal frames managed by this manager.
      *
      * @return a List of currently managed internal frames
-     * @since 0.9.5
+     * @since 2.0.0
      */
     public Collection<JInternalFrame> getInternalFrames() {
         return unmodifiableCollection(internalFrames.values());
@@ -82,7 +82,7 @@ public class DefaultSwingWindowManager extends AbstractWindowManager<Window> imp
      *
      * @param name          the value of the of the Window's name
      * @param internalFrame the internal frame to be added to the list of managed internal frames
-     * @since 0.9.5
+     * @since 2.0.0
      */
     public void attach(@Nonnull String name, @Nonnull JInternalFrame internalFrame) {
         requireNonBlank(name, ERROR_NAME_BLANK);
@@ -112,7 +112,7 @@ public class DefaultSwingWindowManager extends AbstractWindowManager<Window> imp
      * is registered with this manager.
      *
      * @param name the value of the of the Window's name
-     * @since 0.9.5
+     * @since 2.0.0
      */
     public void detach(@Nonnull String name) {
         requireNonBlank(name, ERROR_NAME_BLANK);
@@ -137,7 +137,7 @@ public class DefaultSwingWindowManager extends AbstractWindowManager<Window> imp
      * This method is executed <b>SYNCHRONOUSLY</b> in the UI thread.
      *
      * @param internalFrame the internal frame to show
-     * @since 0.9.5
+     * @since 2.0.0
      */
     public void show(@Nonnull final JInternalFrame internalFrame) {
         requireNonNull(internalFrame, ERROR_WINDOW_NULL);
@@ -178,7 +178,7 @@ public class DefaultSwingWindowManager extends AbstractWindowManager<Window> imp
      * This method is executed <b>SYNCHRONOUSLY</b> in the UI thread.
      *
      * @param internalFrame the internal frame to hide
-     * @since 0.9.5
+     * @since 2.0.0
      */
     public void hide(@Nonnull final JInternalFrame internalFrame) {
         requireNonNull(internalFrame, ERROR_WINDOW_NULL);

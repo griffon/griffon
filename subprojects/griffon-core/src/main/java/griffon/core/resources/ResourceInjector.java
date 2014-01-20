@@ -20,7 +20,7 @@ import javax.annotation.Nonnull;
 
 /**
  * @author Andres Almiray
- * @since 1.1.0
+ * @since 2.0.0
  */
 public interface ResourceInjector {
     void injectResources(@Nonnull Object instance);

@@ -6,6 +6,5 @@ import griffon.metadata.ArtifactProviderFor
 
 @ArtifactProviderFor(GriffonModel)
 class ${project_capitalized_name}Model {
-    @Bindable String input
-    @Bindable String output
+    @Bindable int clickCount = 0
 }

@@ -46,7 +46,7 @@ import static java.util.Objects.requireNonNull;
 
 /**
  * @author Andres Almiray
- * @since 1.2.0
+ * @since 2.0.0
  */
 public abstract class AbstractResourceInjector implements ResourceInjector {
     private static final Logger LOG = LoggerFactory.getLogger(AbstractResourceInjector.class);

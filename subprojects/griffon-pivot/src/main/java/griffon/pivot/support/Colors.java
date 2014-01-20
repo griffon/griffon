@@ -22,7 +22,7 @@ import java.awt.Color;
  * Defines all Java, CSS and HTML colors.
  *
  * @author Andres Almiray
- * @since 1.3.0
+ * @since 2.0.0
  */
 public enum Colors {
     BLACK(Color.BLACK),

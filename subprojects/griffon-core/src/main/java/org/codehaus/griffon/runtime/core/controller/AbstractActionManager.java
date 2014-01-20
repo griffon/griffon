@@ -49,7 +49,7 @@ import static java.util.Objects.requireNonNull;
 
 /**
  * @author Andres Almiray
- * @since 1.1.0
+ * @since 2.0.0
  */
 public abstract class AbstractActionManager implements ActionManager {
     private static final Logger LOG = LoggerFactory.getLogger(AbstractActionManager.class);

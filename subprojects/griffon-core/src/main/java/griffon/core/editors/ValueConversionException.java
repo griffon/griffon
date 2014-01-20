@@ -18,7 +18,7 @@ package griffon.core.editors;
 
 /**
  * @author Andres Almiray
- * @since 1.3.0
+ * @since 2.0.0
  */
 public class ValueConversionException extends IllegalArgumentException {
     private static final long serialVersionUID = 6344566641106178891L;

@@ -32,7 +32,7 @@ import static java.util.Objects.requireNonNull;
  * Base implementation of the ThreadingHandler interface.
  *
  * @author Andres Almiray
- * @since 0.9.3
+ * @since 2.0.0
  */
 public abstract class AbstractThreadingHandler implements ThreadingHandler {
     private static final String ERROR_RUNNABLE_NULL = "Argument 'runnable' cannot be bull";

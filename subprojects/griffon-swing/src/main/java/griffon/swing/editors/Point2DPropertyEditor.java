@@ -25,7 +25,7 @@ import java.util.Map;
 
 /**
  * @author Andres Almiray
- * @since 1.2.0
+ * @since 2.0.0
  */
 @PropertyEditorFor(Point2D.class)
 public class Point2DPropertyEditor extends AbstractPropertyEditor {

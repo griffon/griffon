@@ -37,7 +37,7 @@ import static java.util.Objects.requireNonNull;
  * Additional utilities for Swing based applications.
  *
  * @author Andres Almiray
- * @since 0.3.1
+ * @since 2.0.0
  */
 public class SwingUtils {
     private static final String ERROR_WINDOW_NULL = "Argument 'window' cannot be null";

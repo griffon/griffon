@@ -71,7 +71,7 @@ import java.lang.annotation.Target;
  *
  * @author Andres Almiray
  * @see Threading.Policy
- * @since 0.9.2
+ * @since 2.0.0
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.METHOD)
@@ -90,7 +90,7 @@ public @interface Threading {
      *
      * @author Andres Almiray
      * @see Threading
-     * @since 0.9.2
+     * @since 2.0.0
      */
     public enum Policy {
         /**

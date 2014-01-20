@@ -53,7 +53,7 @@ import static java.util.Objects.requireNonNull;
  * Base implementation of {@code GriffonApplication} that runs in applet mode.
  *
  * @author Andres Almiray
- * @since 0.9.3
+ * @since 2.0.0
  */
 public abstract class AbstractGriffonApplet extends JApplet implements GriffonApplication {
     private static final long serialVersionUID = -3489610863053527695L;

@@ -30,7 +30,7 @@ import static java.util.Objects.requireNonNull;
 
 /**
  * @author Andres Almiray
- * @since 1.2.0
+ * @since 2.0.0
  */
 public class AbstractVetoable extends AbstractObservable implements Vetoable {
     protected final VetoableChangeSupport vcs;

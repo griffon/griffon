@@ -27,7 +27,7 @@ import java.util.Map;
  * Identifies an Addon artifact.
  *
  * @author Andres Almiray
- * @since 0.9.2
+ * @since 2.0.0
  */
 public interface GriffonAddon extends ShutdownHandler {
     @Nonnull

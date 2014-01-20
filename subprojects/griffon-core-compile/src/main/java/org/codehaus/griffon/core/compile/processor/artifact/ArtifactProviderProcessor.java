@@ -103,6 +103,10 @@ public class ArtifactProviderProcessor extends AbstractSpiProcessor {
 
     @Override
     protected void handleElement(Element e) {
+        if (!(e instanceof TypeElement)) {
+            return;
+        }
+
         TypeElement currentClass = (TypeElement) e;
 
         CheckResult checkResult = checkCurrentClass(currentClass);

@@ -41,7 +41,7 @@ import static org.codehaus.griffon.core.compile.ast.GriffonASTUtils.*;
  * <p/>
  *
  * @author Andres Almiray
- * @since 0.9.1
+ * @since 2.0.0
  */
 public abstract class GriffonArtifactASTTransformation extends AbstractASTTransformation implements BaseConstants {
     private static final Logger LOG = LoggerFactory.getLogger(GriffonArtifactASTTransformation.class);

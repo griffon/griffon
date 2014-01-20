@@ -29,7 +29,7 @@ import java.util.Map;
  * Manages the applicationConfiguration and instantiation of MVC groups.
  *
  * @author Andres Almiray
- * @since 0.9.4
+ * @since 2.0.0
  */
 public interface MVCGroupManager extends MVCHandler {
     /**
@@ -49,7 +49,6 @@ public interface MVCGroupManager extends MVCHandler {
      * @param mvcType the name of the applicationConfiguration to clone
      * @param config  additional config parameters to be set on the applicationConfiguration
      * @return a ready-to-use MVCGroupConfiguration instance
-     * @since 0.9.5
      */
     @Nonnull
     MVCGroupConfiguration cloneMVCGroupConfiguration(@Nonnull String mvcType, @Nonnull Map<String, Object> config);

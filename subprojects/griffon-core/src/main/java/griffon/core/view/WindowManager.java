@@ -136,7 +136,6 @@ public interface WindowManager<W> extends ShutdownHandler {
      * Counts how many Windows are visible regardless of their attached status to this WindowManager.
      *
      * @return the number of visible Windows
-     * @since 1.3.0
      */
     int countVisibleWindows();
 
@@ -144,7 +143,6 @@ public interface WindowManager<W> extends ShutdownHandler {
      * Returns the value of the "application.autoShutdown" applicationConfiguration flag.
      *
      * @return the value of the "application.autoShutdown" applicationConfiguration flag.
-     * @since 1.3.0
      */
     boolean isAutoShutdown();
 }

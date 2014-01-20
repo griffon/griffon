@@ -36,7 +36,7 @@ import java.util.Map;
  * <p/>
  * It's worth mentioning that the value of the {@code mvcName} parameter must be unique otherwise a collision will occur.
  * When that happens the application will report and exception and terminate. This behavior can be configured to be more
- * lenient, by defining a applicationConfiguration flag {@code griffon.mvcid.collision} in {@code Config.groovy}. <br/>
+ * lenient, by defining a applicationConfiguration flag {@code griffon.mvcid.collision} in {@code Config}. <br/>
  * Accepted values are
  * <ul>
  * <ol>warning - reports the error but allows the application to continue. Destroys the existing group before continuing.</ol>
@@ -44,7 +44,7 @@ import java.util.Map;
  * </ul>
  *
  * @author Andres Almiray
- * @since 0.9.3
+ * @since 2.0.0
  */
 public interface MVCHandler {
     /**
@@ -622,7 +622,6 @@ public interface MVCHandler {
      * @throws griffon.exceptions.MVCGroupInstantiationException
      *          - if the type specified is not found in the application's
      *          applicationConfiguration
-     * @since 0.9.3
      */
     <M extends GriffonModel, V extends GriffonView, C extends GriffonController> void withMVCGroup(@Nonnull String mvcType, @Nonnull MVCCallable<M, V, C> handler);
 
@@ -665,7 +664,6 @@ public interface MVCHandler {
      * @throws griffon.exceptions.MVCGroupInstantiationException
      *          - if the type specified is not found in the application's
      *          applicationConfiguration
-     * @since 0.9.3
      */
     <M extends GriffonModel, V extends GriffonView, C extends GriffonController> void withMVCGroup(@Nonnull String mvcType, @Nonnull String mvcName, @Nonnull MVCCallable<M, V, C> handler);
 
@@ -716,7 +714,6 @@ public interface MVCHandler {
      * @throws griffon.exceptions.MVCGroupInstantiationException
      *          - if the type specified is not found in the application's
      *          applicationConfiguration
-     * @since 0.9.3
      */
     <M extends GriffonModel, V extends GriffonView, C extends GriffonController> void withMVCGroup(@Nonnull String mvcType, @Nonnull String mvcName, @Nonnull Map<String, Object> args, @Nonnull MVCCallable<M, V, C> handler);
 
@@ -767,7 +764,6 @@ public interface MVCHandler {
      * @throws griffon.exceptions.MVCGroupInstantiationException
      *          - if the type specified is not found in the application's
      *          applicationConfiguration
-     * @since 0.9.3
      */
     <M extends GriffonModel, V extends GriffonView, C extends GriffonController> void withMVCGroup(@Nonnull Map<String, Object> args, @Nonnull String mvcType, @Nonnull String mvcName, @Nonnull MVCCallable<M, V, C> handler);
 
@@ -815,7 +811,6 @@ public interface MVCHandler {
      * @throws griffon.exceptions.MVCGroupInstantiationException
      *          - if the type specified is not found in the application's
      *          applicationConfiguration
-     * @since 0.9.3
      */
     <M extends GriffonModel, V extends GriffonView, C extends GriffonController> void withMVCGroup(@Nonnull String mvcType, @Nonnull Map<String, Object> args, @Nonnull MVCCallable<M, V, C> handler);
 
@@ -863,7 +858,6 @@ public interface MVCHandler {
      * @throws griffon.exceptions.MVCGroupInstantiationException
      *          - if the type specified is not found in the application's
      *          applicationConfiguration
-     * @since 0.9.3
      */
     <M extends GriffonModel, V extends GriffonView, C extends GriffonController> void withMVCGroup(@Nonnull Map<String, Object> args, @Nonnull String mvcType, @Nonnull MVCCallable<M, V, C> handler);
 }

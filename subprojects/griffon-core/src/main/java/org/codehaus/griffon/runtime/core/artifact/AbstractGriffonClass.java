@@ -43,7 +43,7 @@ import static org.codehaus.griffon.runtime.core.artifact.ClassPropertyFetcher.fo
  * @author Steven Devijver (Grails 0.1)
  * @author Graeme Rocher (Grails 0.1)
  * @author Andres Almiray
- * @since 0.9.1
+ * @since 2.0.0
  */
 public abstract class AbstractGriffonClass implements GriffonClass {
     private static final String ERROR_NAME_BLANK = "Argument 'name' cannot be blank";

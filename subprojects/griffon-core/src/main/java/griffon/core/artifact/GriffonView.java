@@ -20,7 +20,7 @@ package griffon.core.artifact;
  * Identifies a View artifact.
  *
  * @author Andres Almiray
- * @since 0.9.1
+ * @since 2.0.0
  */
 public interface GriffonView extends GriffonMvcArtifact {
     void initUI();

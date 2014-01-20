@@ -22,7 +22,7 @@ import javax.annotation.Nonnull;
  * Identifies a Controller artifact.
  *
  * @author Andres Almiray
- * @since 0.9.1
+ * @since 2.0.0
  */
 public interface GriffonController extends GriffonMvcArtifact {
     void invokeAction(@Nonnull String name, Object... args);

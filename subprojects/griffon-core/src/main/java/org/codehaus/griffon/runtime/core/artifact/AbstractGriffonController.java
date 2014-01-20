@@ -30,7 +30,7 @@ import static griffon.util.GriffonNameUtils.requireNonBlank;
  * Base implementation of the GriffonController interface.
  *
  * @author Andres Almiray
- * @since 0.9.1
+ * @since 2.0.0
  */
 public abstract class AbstractGriffonController extends AbstractGriffonMvcArtifact implements GriffonController {
     @Inject

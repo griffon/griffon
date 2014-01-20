@@ -60,7 +60,7 @@ import java.lang.annotation.*;
  *
  * @author Andres Almiray
  * @see griffon.core.mvc.MVCHandler
- * @since 0.9.3
+ * @since 2.0.0
  */
 @Documented
 @Retention(RetentionPolicy.SOURCE)

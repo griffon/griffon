@@ -28,7 +28,7 @@ import java.util.Map;
  * event bus.
  *
  * @author Andres Almiray
- * @since 0.9.3
+ * @since 2.0.0
  */
 public interface EventPublisher {
     /**

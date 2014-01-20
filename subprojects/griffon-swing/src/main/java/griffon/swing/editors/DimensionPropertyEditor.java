@@ -26,7 +26,7 @@ import java.util.Map;
 /**
  * @author Andres Almiray
  * @author Alexander Klein
- * @since 1.1.0
+ * @since 2.0.0
  */
 @PropertyEditorFor(Dimension.class)
 public class DimensionPropertyEditor extends AbstractPropertyEditor {

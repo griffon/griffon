@@ -28,7 +28,7 @@ import java.util.Map;
 
 /**
  * @author Andres Almiray
- * @since 1.2.0
+ * @since 2.0.0
  */
 @PropertyEditorFor(LinearGradientPaint.class)
 public class LinearGradientPaintPropertyEditor extends AbstractPropertyEditor {

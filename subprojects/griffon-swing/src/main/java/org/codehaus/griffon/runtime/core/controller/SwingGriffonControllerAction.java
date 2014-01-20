@@ -36,7 +36,7 @@ import static java.util.Objects.requireNonNull;
 
 /**
  * @author Andres Almiray
- * @since 1.1.0
+ * @since 2.0.0
  */
 public class SwingGriffonControllerAction extends AbstractAction {
     public static final String KEY_SHORT_DESCRIPTION = "shortDescription";

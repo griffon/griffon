@@ -1,4 +1,5 @@
 
+[[_getting_started_console_example]]
 = Console Example
 :console-swing-groovy: {rootdir}/samples/console-swing-groovy
 
@@ -169,7 +170,7 @@ then store the result back into the model. Make sure you paste the following cod
 ----
 include::{console-swing-groovy}/griffon-app/controllers/console/ConsoleController.groovy[]
 ----
-<1> MVC member injected by +link:api/griffon/core/mvc/MVCGroupManager.html[MVCGroupManager]+
+<1> MVC member injected by +{link_mvc_group_manager}+
 <2> Injected by JSR 330
 <3> Controller action; automatically executed off the UI thread
 <4> Evaluate the script
@@ -189,7 +190,7 @@ making sure an action is called outside of the EDT by default, all bindings made
 via the model will be updated inside the EDT [conum,data-value=5]_5_. We'll setup the bindings in
 the next listing.
 
-We must create a +link:api/griffon/core/injection/Module.html[Module]+ in order to bind +Evaluator+.
+We must create a +{link_module}+ in order to bind +Evaluator+.
 These are the required class definitions
 
 .src/main/groovy/console/Evaluator.groovy
@@ -243,7 +244,7 @@ into +griffon-app/views/console/ConsoleView.groovy+.
 ----
 include::{console-swing-groovy}/griffon-app/views/console/ConsoleView.groovy[]
 ----
-<1> MVC member injected by +link:api/griffon/core/mvc/MVCGroupManager.html[MVCGroupManager]+
+<1> MVC member injected by +{link_mvc_group_manager}+
 <2> Bind enabled state from model
 <3> Bind script source to model
 <4> Apply controller action by convention

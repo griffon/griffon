@@ -32,7 +32,7 @@ import static java.util.Objects.requireNonNull;
 
 /**
  * @author Andres Almiray
- * @since 0.9.1
+ * @since 2.0.0
  */
 public class DefaultGriffonModelClass extends DefaultGriffonClass implements GriffonModelClass {
     private static final String ERROR_MODEL_NULL = "Argument 'model' cannot be null";

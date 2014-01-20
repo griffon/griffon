@@ -36,7 +36,7 @@ import static java.util.Objects.requireNonNull;
  * Base implementation of the MVCHandler interface.
  *
  * @author Andres Almiray
- * @since 0.9.3
+ * @since 2.0.0
  */
 public abstract class AbstractMVCHandler implements MVCHandler {
     private final MVCGroupManager mvcGroupManager;

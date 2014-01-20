@@ -25,7 +25,7 @@ import java.util.Map;
  * An enum that represents the current running mode.
  *
  * @author Andres Almiray
- * @since 0.3.1
+ * @since 2.0.0
  */
 public enum RunMode {
     STANDALONE, WEBSTART, APPLET, CUSTOM;

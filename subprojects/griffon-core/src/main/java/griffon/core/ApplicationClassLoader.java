@@ -18,7 +18,7 @@ package griffon.core;
 
 /**
  * @author Andres Almiray
- * @since 1.0.0
+ * @since 2.0.0
  */
 public interface ApplicationClassLoader {
     ClassLoader get();

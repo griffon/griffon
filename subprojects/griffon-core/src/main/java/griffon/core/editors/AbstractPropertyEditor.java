@@ -29,7 +29,7 @@ import static griffon.util.GriffonNameUtils.isBlank;
 
 /**
  * @author Andres Almiray
- * @since 1.1.0
+ * @since 2.0.0
  */
 public abstract class AbstractPropertyEditor extends PropertyEditorSupport implements ExtendedPropertyEditor {
     private static final Logger LOG = LoggerFactory.getLogger(AbstractPropertyEditor.class);

@@ -26,7 +26,6 @@ processTemplates 'griffon-app/*/*.groovy', props
 
 File mainSources = new File(projectDir, 'src/main/groovy')
 File testSources = new File(projectDir, 'src/test/groovy')
-File griffonAppSources = new File(projectDir, 'griffon-app')
 
 File mainSourcesPath = new File(mainSources, packagePath)
 mainSourcesPath.mkdirs()

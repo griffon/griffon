@@ -25,7 +25,7 @@ import static java.util.Objects.requireNonNull;
 
 /**
  * @author Andres Almiray
- * @since 0.9.4
+ * @since 2.0.0
  */
 public final class MVCGroupExceptionHandler implements CallableWithArgs<Void> {
     private final GriffonApplication application;

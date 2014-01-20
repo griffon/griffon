@@ -32,7 +32,7 @@ import static java.util.Objects.requireNonNull;
  * <p/>
  *
  * @author Andres Almiray
- * @since 1.3.0
+ * @since 2.0.0
  */
 public final class PropertyEditorResolver {
     private static final Logger LOG = LoggerFactory.getLogger(PropertyEditorResolver.class);

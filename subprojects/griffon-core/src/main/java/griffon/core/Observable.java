@@ -26,7 +26,7 @@ import java.beans.PropertyChangeListener;
  * Bean Specification</a>.
  *
  * @author Andres Almiray
- * @since 0.9.1
+ * @since 2.0.0
  */
 public interface Observable {
     /**

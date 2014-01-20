@@ -1,0 +1,109 @@
+buildscript {
+    repositories {
+        jcenter()
+    }
+    dependencies {
+        classpath 'com.jfrog.bintray.gradle:gradle-bintray-plugin:0.3'
+    }
+}
+
+apply plugin: 'idea'
+apply plugin: 'groovy'
+apply plugin: 'bintray'
+apply plugin: 'maven-publish'
+
+configurations {
+    compileOnly
+}
+
+repositories {
+    jcenter()
+    maven { url 'http://dl.bintray.com/content/aalmiray/griffon' }
+    maven { url 'http://dl.bintray.com/content/aalmiray/kordamp' }
+    mavenCentral()
+}
+
+dependencies {
+    compileOnly "org.codehaus.griffon:griffon-groovy-compile:$griffonVersion"
+
+    compile "org.codehaus.griffon:griffon-groovy:$griffonVersion"
+
+    testCompile "org.codehaus.griffon:griffon-core-test:$griffonVersion"
+
+    testRuntime "org.codehaus.griffon:griffon-guice:$griffonVersion"
+    testRuntime 'org.slf4j:slf4j-simple:1.7.5'
+}
+
+sourceSets {
+    main {
+        compileClasspath += configurations.compileOnly
+        groovy {
+            srcDirs = [
+                'griffon-app/conf',
+                'griffon-app/controllers',
+                'griffon-app/models',
+                'griffon-app/views',
+                'griffon-app/services',
+                'griffon-app/lifecycle',
+                'src/main/groovy'
+            ]
+        }
+        resources {
+            srcDirs = [
+                'griffon-app/resources',
+                'griffon-app/i18n',
+                'src/main/resources'
+            ]
+        }
+    }
+}
+
+javadoc {
+    classpath += configurations.compileOnly
+}
+
+idea {
+    module {
+        scopes.PROVIDED.plus += configurations.compileOnly
+    }
+}
+
+publishing {
+    publications {
+        groovy(MavenPublication) {
+            from components.groovy
+        }
+    }
+}
+
+bintray {
+    def projectRepoName = project.repositoryName
+    def projectName = project.name
+    def projectDescription = project.description
+    def projectLicenses = project.licenses
+
+    user = project.bintrayUser
+    key = project.bintrayKey
+    publications = ['groovy']
+    pkg {
+        repo = projectRepoName
+        name = projectName
+        desc = projectDescription
+        license = projectLicenses.split(',').collect { "'${it}.trim()'" }
+    }
+    dryRun = project.bintrayDryRun
+
+    doFirst { task ->
+        if (project.bintrayUser == 'fake_user' ||
+            project.bintrayKey == 'N0TaR34lS3cR3tK3y') {
+            throw new IllegalArgumentException('Bintray settings are not properly configured!')
+        }
+    }
+}
+
+gradle.taskGraph.whenReady {
+    sourceSets.main.groovy.srcDirs.each    { it.mkdirs() }
+    sourceSets.main.resources.srcDirs.each { it.mkdirs() }
+    sourceSets.test.groovy.srcDirs.each    { it.mkdirs() }
+    sourceSets.test.resources.srcDirs.each { it.mkdirs() }
+}

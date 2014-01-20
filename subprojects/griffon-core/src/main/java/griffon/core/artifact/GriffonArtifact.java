@@ -34,7 +34,7 @@ import javax.annotation.Nonnull;
  * but not enforced.
  *
  * @author Andres Almiray
- * @since 0.9.1
+ * @since 2.0.0
  */
 public interface GriffonArtifact extends ThreadingHandler, MVCHandler, ResourceHandler {
     /**
@@ -60,7 +60,6 @@ public interface GriffonArtifact extends ThreadingHandler, MVCHandler, ResourceH
      * 'griffon.app.controller.com.acme.SampleController'.
      *
      * @return a Logger instance associated with this artifact.
-     * @since 0.9.2
      */
     @Nonnull
     Logger getLog();

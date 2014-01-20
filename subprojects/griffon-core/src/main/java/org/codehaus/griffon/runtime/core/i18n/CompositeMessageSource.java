@@ -28,7 +28,7 @@ import static java.util.Objects.requireNonNull;
 
 /**
  * @author Andres Almiray
- * @since 1.1.0
+ * @since 2.0.0
  */
 public class CompositeMessageSource extends AbstractMessageSource {
     private final MessageSource[] messageSources;
