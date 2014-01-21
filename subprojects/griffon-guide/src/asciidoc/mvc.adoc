@@ -29,8 +29,7 @@ mvcGroups {
 The definition order is very important, it determines the order in which each member
 will be initialized. In the previous example both +model+ and +view+ will be initialized
 before the +controller+. Do not mistake initialization for instantiation, as initialization
-relies on calling +link:api/griffon/core/artifact/GriffonArtifact.html#mvcGroupInit[mvcGroupInit()]+
-on the group member.
+relies on calling +{link_mvc_group_init}+ on the group member.
 
 MVC group configurations accept a special key that defines additional configuration
 for that group, as it can be seen in the following snippet
@@ -59,9 +58,8 @@ mvcGroups {
 ----
 
 Values placed under this key become available to MVC members during the call to
-+link:api/griffon/core/artifact/GriffonMVCArtifact.html#mvcGroupInit[mvcGroupInit()]+,
-as part of the arguments sent to that method. Here's how the +FooController+ can
-reach the key defined in the configuration
++{link_mvc_group_init}+, as part of the arguments sent to that method. Here's how
+the +FooController+ can reach the key defined in the configuration
 
 [source,groovy]
 [subs="verbatim,attributes"]
@@ -81,5 +79,6 @@ For that we'll have to discuss the +MVCGroupManager+ first.
 
 :leveloffset: 2
 include::mvc-mvcmanager.adoc[]
+include::mvc-mvcgroups.adoc[]
 include::mvc-mvcaware-transformation.adoc[]
 :leveloffset: 1

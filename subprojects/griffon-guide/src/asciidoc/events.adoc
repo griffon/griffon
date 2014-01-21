@@ -2,9 +2,19 @@
 [[_events]]
 = Events
 
+Applications have the ability to publish events from time to time to communicate
+that something of interest has happened at runtime. Events will be triggered by
+the application during each of its life cycle phases, also when MVC groups are
+created and destroyed.
+
+NOTE: All application event handlers are guaranteed to be called in the same thread
+that originated the event.
+
 :leveloffset: 2
 include::events-publishing.adoc[]
-include::events-publishing.adoc[]
+include::events-consuming.adoc[]
 include::events-application-events.adoc[]
+include::events-lifecycle-events.adoc[]
+include::events-miscellaneous-events.adoc[]
 include::events-eventpublisher-transformation.adoc[]
 :leveloffset: 1

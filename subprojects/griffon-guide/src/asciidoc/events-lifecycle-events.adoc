@@ -1,0 +1,17 @@
+
+[[_events_lifecycle_events]]
+= Lifecycle Events
+
+The following events will be triggered by the application during each one of its phases
+
+BootstrapStart(GriffonApplication application):: After logging configuration has
+been setup, during the <<_overview_lifecycle_initialize,Initialize>> phase.
+BootstrapEnd(GriffonApplication application):: At the end of the <<_overview_lifecycle_initialize,Initialize>> phase.
+StartupStart(GriffonApplication application):: At the beginning of the <<_overview_lifecycle_startup,Startup>> phase.
+StartupEnd(GriffonApplication application):: At the end of the <<_overview_lifecycle_startup,Startup>> phase.
+ReadyStart(GriffonApplication application):: At the beginning of the <<_overview_lifecycle_ready,Ready>> phase.
+ReadyEnd(GriffonApplication application):: At the end of the <<_overview_lifecycle_ready,ready>> phase.
+ShutdownRequested(GriffonApplication application):: Before the <<_overview_lifecycle_shutdown,Shutdown>> begins.
+ShutdownAborted(GriffonApplication application)::  If a +{link_shutdown_handler}+ prevented
+the application from entering the <<_overview_lifecycle_shutdown,Shutdown>> phase.
+ShutdownStart(GriffonApplication application):: At the beginning of the <<_overview_lifecycle_shutdown,Shutdown>> phase.

@@ -49,10 +49,9 @@ we'll show the Java version of an artifact, then we'll show it's Groovy counterp
 
 === Model
 
-Instances of link:api/griffon/core/artifact/GriffonModel.html[GriffonModel] implement
-the link:api/griffon/core/Observable.html[Observable], interface which means they know
-how to handle observable properties out of the box. We only need to be concerned in
-triggering a +java.beans.PropertyChangeEvent+ when a property changes value.
+Instances of +{link_griffon_model}+ implement the +{link_observable}+ interface which
+means they know how to handle observable properties out of the box. We only need to be
+concerned in triggering a +java.beans.PropertyChangeEvent+ when a property changes value.
 
 .sample-swing-java/griffon-app/models/sample/SampleModel.java
 [source,java]
@@ -71,9 +70,9 @@ a short hand thanks to the usage of the @Bindable AST transformation.
 One key difference between the Java and the Groovy version is that the Groovy Model
 does not extend a particular class. It also This is due to Griffon being aware of its own
 conventions and applying the appropriate byte code manipulation (via AST transformations).
- The compiled Model class does implement the +link:api/griffon/core/artifact/GriffonModel.html[GriffonModel]+
-interface as required by the framework. This type of byte code manipulation is
-expected to work for every Groovy based artifact.
+The compiled Model class does implement the +{link_griffon_model}+ interface as required by
+the framework. This type of byte code manipulation is expected to work for every Groovy
+based artifact.
 
 .sample-swing-groovy/griffon-app/models/sample/SampleModel.groovy
 [source,groovy]

@@ -3,8 +3,7 @@
 = Resource Injection
 
 Resources may be automatically injected to any instance created via the application's
-+Injector+. Injection points must be annotated with
-+link:api/griffon/core/resources/InjectedResource.html[@griffon.core.resources.InjectedResource]+
++Injector+. Injection points must be annotated with +{link_injected_resource}+
 which can be set on properties (Groovy), fields (Java and Groovy) and setter methods (Java and Groovy).
 @InjectedResource is a perfect companion to <<_models,models>> as the following example shows
 
@@ -31,7 +30,7 @@ class SampleModel {
 ----
 
 +@InjectedResource+ assumes a naming convention in order to determine the resource key
-to use. These are the rules applied by the default by +link:api/griffon/core/resources/ResourcesInjector.html[ResourcesInjector]+:
+to use. These are the rules applied by the default by +{link_resources_injector}+:
 
  - If a value is specified for the +key+ argument then use it as is.
  - otherwise construct a key based in the field name prefixed with the full qualified
