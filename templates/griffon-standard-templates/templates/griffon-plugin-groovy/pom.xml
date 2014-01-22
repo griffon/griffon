@@ -30,7 +30,7 @@
                 <configuration>
                     <sources>
                         <source>
-                            <directory>${project.basedir}/griffon-app</directory>
+                            <directory>\${project.basedir}/griffon-app</directory>
                             <includes>
                                 <include>conf/**/*.groovy</include>
                                 <include>controllers/**/*.groovy</include>
@@ -41,7 +41,7 @@
                             </includes>
                         </source>
                         <source>
-                            <directory>${project.basedir}/src/main/groovy
+                            <directory>\${project.basedir}/src/main/groovy
                             </directory>
                             <includes>
                                 <include>**/*.groovy</include>
@@ -56,7 +56,7 @@
                 <artifactId>exec-maven-plugin</artifactId>
                 <version>1.2.1</version>
                 <configuration>
-                    <mainClass>${application.main.class}</mainClass>
+                    <mainClass>\${application.main.class}</mainClass>
                 </configuration>
             </plugin>
             <plugin>
@@ -114,18 +114,18 @@
         <dependency>
             <groupId>org.codehaus.griffon</groupId>
             <artifactId>griffon-groovy-compile</artifactId>
-            <version>${griffon.version}</version>
+            <version>\${griffon.version}</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>org.codehaus.griffon</groupId>
             <artifactId>griffon-groovy</artifactId>
-            <version>${griffon.version}</version>
+            <version>\${griffon.version}</version>
         </dependency>
         <dependency>
             <groupId>org.codehaus.griffon</groupId>
             <artifactId>griffon-guice</artifactId>
-            <version>${griffon.version}</version>
+            <version>\${griffon.version}</version>
             <scope>test</scope>
         </dependency>
         <dependency>
@@ -137,7 +137,7 @@
         <dependency>
             <groupId>org.codehaus.griffon</groupId>
             <artifactId>griffon-core-test</artifactId>
-            <version>${griffon.version}</version>
+            <version>\${griffon.version}</version>
             <scope>test</scope>
         </dependency>
     </dependencies>

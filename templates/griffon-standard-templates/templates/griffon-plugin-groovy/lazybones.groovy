@@ -1,12 +1,6 @@
 import uk.co.cacoethes.util.NameType
 
-Map props = [
-    griffonVersion: '$griffonVersion',
-    project: [basedir: '${project.basedir}'],
-    application: ['main': ['class': '${application.main.class}']],
-    griffon: [version: '${griffon.version}']
-]
-
+Map props = [:]
 File projectDir = targetDir instanceof File ? targetDir : new File(String.valueOf(targetDir))
 props.project_name = transformText(projectDir.name, from: NameType.CAMEL_CASE, to: NameType.HYPHENATED)
 props.project_property_name = transformText(props.project_name, from: NameType.HYPHENATED, to: NameType.PROPERTY)

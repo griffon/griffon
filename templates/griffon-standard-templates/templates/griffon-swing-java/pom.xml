@@ -20,7 +20,7 @@
                 <artifactId>exec-maven-plugin</artifactId>
                 <version>1.2.1</version>
                 <configuration>
-                    <mainClass>${application.main.class}</mainClass>
+                    <mainClass>\${application.main.class}</mainClass>
                 </configuration>
             </plugin>
             <plugin>
@@ -78,18 +78,18 @@
         <dependency>
             <groupId>org.codehaus.griffon</groupId>
             <artifactId>griffon-core-compile</artifactId>
-            <version>${griffon.version}</version>
+            <version>\${griffon.version}</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>org.codehaus.griffon</groupId>
             <artifactId>griffon-swing</artifactId>
-            <version>${griffon.version}</version>
+            <version>\${griffon.version}</version>
         </dependency>
         <dependency>
             <groupId>org.codehaus.griffon</groupId>
             <artifactId>griffon-guice</artifactId>
-            <version>${griffon.version}</version>
+            <version>\${griffon.version}</version>
             <scope>runtime</scope>
         </dependency>
         <dependency>
@@ -107,7 +107,7 @@
         <dependency>
             <groupId>org.codehaus.griffon</groupId>
             <artifactId>griffon-core-test</artifactId>
-            <version>${griffon.version}</version>
+            <version>\${griffon.version}</version>
             <scope>test</scope>
         </dependency>
     </dependencies>
