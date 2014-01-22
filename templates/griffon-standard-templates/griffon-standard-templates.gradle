@@ -1,3 +1,5 @@
+import org.apache.tools.ant.filters.ReplaceTokens
+
 buildscript {
     repositories {
         maven {
@@ -28,3 +30,17 @@ lazybones {
     repositoryApiKey = "your_bintray_api_key"
 }
 */
+
+// A bit hacky but gets the job done -> must replace
+// @griffon.version@ on lazybones.groovy
+tasks.withType(Zip) { task ->
+    task.doFirst {
+        copy {
+            File destDir = task.source.files.iterator().next().parentFile
+            into destDir
+            from(file("sources/${destDir.name}")) {
+                filter(ReplaceTokens, tokens: ['griffon.version': project.version])
+            }
+        }
+    }
+}
