@@ -113,15 +113,24 @@ public class PropertyEditorProcessor extends AbstractSpiProcessor {
 
     @Override
     protected void writeData() {
-        logger.note(LogLocation.LOG_FILE, "Writing output");
-        String content = data.toList();
-        if (content.length() > 0) {
-            try {
-                persistence.write(PropertyEditor.class.getName(), content);
-            } catch (IOException ioe) {
-                processingEnv.getMessager().printMessage(Diagnostic.Kind.ERROR, ioe.getMessage());
+        if (data.isModified()) {
+            String content = data.toList();
+            if (content.length() > 0) {
+                logger.note(LogLocation.LOG_FILE, "Writing output");
+                try {
+                    persistence.write(PropertyEditor.class.getName(), content);
+                } catch (IOException ioe) {
+                    processingEnv.getMessager().printMessage(Diagnostic.Kind.ERROR, ioe.getMessage());
+                }
+                persistence.writeLog();
+            } else {
+                logger.note(LogLocation.LOG_FILE, "Writing output");
+                try {
+                    persistence.delete();
+                } catch (IOException e) {
+                    logger.warning(LogLocation.LOG_FILE, "An error occurred while deleting data file");
+                }
             }
-            persistence.writeLog();
         }
     }
 

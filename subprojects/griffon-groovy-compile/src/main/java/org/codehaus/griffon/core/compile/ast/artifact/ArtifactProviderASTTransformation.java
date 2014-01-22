@@ -23,12 +23,14 @@ import org.codehaus.groovy.ast.AnnotationNode;
 import org.codehaus.groovy.ast.ClassNode;
 import org.codehaus.groovy.ast.ModuleNode;
 import org.codehaus.groovy.ast.expr.ClassExpression;
+import org.codehaus.groovy.ast.expr.Expression;
 import org.codehaus.groovy.control.CompilePhase;
 import org.codehaus.groovy.transform.ASTTransformation;
 import org.codehaus.groovy.transform.GroovyASTTransformation;
 import org.kordamp.gipsy.transform.GipsyASTTransformation;
 import org.kordamp.jipsy.ServiceProviderFor;
 import org.kordamp.jipsy.processor.CheckResult;
+import org.kordamp.jipsy.processor.LogLocation;
 import org.kordamp.jipsy.processor.Persistence;
 
 import java.io.File;
@@ -71,6 +73,7 @@ public class ArtifactProviderASTTransformation extends GipsyASTTransformation {
         for (String artifactName : persistence.tryFind()) {
             data.getArtifact(artifactName);
         }
+        data.cache();
     }
 
     @Override
@@ -97,14 +100,26 @@ public class ArtifactProviderASTTransformation extends GipsyASTTransformation {
 
     @Override
     protected void writeData() {
-        for (Artifact artifact : data.artifacts()) {
-            try {
-                persistence.write(artifact.getName(), artifact.toProviderNamesList());
-            } catch (IOException e) {
-                // TODO print out error
+        if (data.isModified()) {
+            if (data.artifacts().isEmpty()) {
+                logger.note(LogLocation.LOG_FILE, "Writing output");
+                try {
+                    persistence.delete();
+                } catch (IOException e) {
+                    logger.warning(LogLocation.LOG_FILE, "An error occurred while deleting data file");
+                }
+            } else {
+                logger.note(LogLocation.LOG_FILE, "Writing output");
+                for (Artifact artifact : data.artifacts()) {
+                    try {
+                        persistence.write(artifact.getName(), artifact.toProviderNamesList());
+                    } catch (IOException e) {
+                        // TODO print out error
+                    }
+                }
+                persistence.writeLog();
             }
         }
-        persistence.writeLog();
     }
 
     private CheckResult checkCurrentClass(ClassNode currentClass) {
@@ -132,8 +147,10 @@ public class ArtifactProviderASTTransformation extends GipsyASTTransformation {
         List<ClassNode> artifacts = new ArrayList<>();
 
         for (AnnotationNode annotation : annotations) {
-            for (ClassExpression expr : findClassListValue(annotation)) {
-                artifacts.add(expr.getType());
+            for (Expression expr : findCollectionValueMember(annotation, "value")) {
+                if (expr instanceof ClassExpression) {
+                    artifacts.add(((ClassExpression) expr).getType());
+                }
             }
         }
 

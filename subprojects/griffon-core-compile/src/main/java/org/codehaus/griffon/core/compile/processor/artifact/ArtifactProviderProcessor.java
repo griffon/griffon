@@ -76,19 +76,31 @@ public class ArtifactProviderProcessor extends AbstractSpiProcessor {
         for (String artifactName : persistence.tryFind()) {
             data.getArtifact(artifactName);
         }
+        data.cache();
     }
 
     @Override
     protected void writeData() {
-        logger.note(LogLocation.LOG_FILE, "Writing output");
-        for (Artifact artifact : data.artifacts()) {
-            try {
-                persistence.write(artifact.getName(), artifact.toProviderNamesList());
-            } catch (IOException e) {
-                processingEnv.getMessager().printMessage(Kind.ERROR, e.getMessage());
+        if (data.isModified()) {
+            if (data.artifacts().isEmpty()) {
+                logger.note(LogLocation.LOG_FILE, "Writing output");
+                try {
+                    persistence.delete();
+                } catch (IOException e) {
+                    logger.warning(LogLocation.LOG_FILE, "An error occurred while deleting data file");
+                }
+            } else {
+                logger.note(LogLocation.LOG_FILE, "Writing output");
+                for (Artifact artifact : data.artifacts()) {
+                    try {
+                        persistence.write(artifact.getName(), artifact.toProviderNamesList());
+                    } catch (IOException e) {
+                        processingEnv.getMessager().printMessage(Kind.ERROR, e.getMessage());
+                    }
+                }
+                persistence.writeLog();
             }
         }
-        persistence.writeLog();
     }
 
     @Override

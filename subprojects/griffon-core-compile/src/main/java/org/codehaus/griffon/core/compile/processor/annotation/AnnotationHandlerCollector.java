@@ -31,6 +31,7 @@ import java.util.TreeMap;
  */
 public final class AnnotationHandlerCollector {
     private final Map<String, String> handlers = new TreeMap<>();
+    private final Map<String, String> cached = new TreeMap<>();
 
     private final Initializer initializer;
     private final Logger logger;
@@ -38,6 +39,23 @@ public final class AnnotationHandlerCollector {
     public AnnotationHandlerCollector(Initializer initializer, Logger logger) {
         this.initializer = initializer;
         this.logger = logger;
+    }
+
+    public boolean isModified() {
+        if (cached.size() != handlers.size()) {
+            return true;
+        }
+
+        for (Map.Entry<String, String> e : cached.entrySet()) {
+            if (!handlers.containsKey(e.getKey())) {
+                return true;
+            }
+            if (!e.getValue().equals(handlers.get(e.getKey()))) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     public String getAnnotationHandler(String type, String handlerType) {
@@ -55,6 +73,7 @@ public final class AnnotationHandlerCollector {
         if (initialData != null) {
             fromList(initialData.toString());
         }
+        this.cached.putAll(handlers);
     }
 
     public void removeEditor(String handler) {

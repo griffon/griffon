@@ -22,6 +22,7 @@ import org.codehaus.groovy.ast.AnnotationNode;
 import org.codehaus.groovy.ast.ClassNode;
 import org.codehaus.groovy.ast.ModuleNode;
 import org.codehaus.groovy.ast.expr.ClassExpression;
+import org.codehaus.groovy.ast.expr.Expression;
 import org.codehaus.groovy.control.CompilePhase;
 import org.codehaus.groovy.transform.ASTTransformation;
 import org.codehaus.groovy.transform.GroovyASTTransformation;
@@ -94,15 +95,24 @@ public class PropertyEditorASTTransformation extends GipsyASTTransformation {
 
     @Override
     protected void writeData() {
-        logger.note(LogLocation.LOG_FILE, "Writing output");
-        String content = data.toList();
-        if (content.length() > 0) {
-            try {
-                persistence.write(PropertyEditor.class.getName(), content);
-            } catch (IOException ioe) {
-                // TODO print out error
+        if (data.isModified()) {
+            String content = data.toList();
+            if (content.length() > 0) {
+                logger.note(LogLocation.LOG_FILE, "Writing output");
+                try {
+                    persistence.write(PropertyEditor.class.getName(), content);
+                } catch (IOException ioe) {
+                    // TODO print out error
+                }
+                persistence.writeLog();
+            } else {
+                logger.note(LogLocation.LOG_FILE, "Writing output");
+                try {
+                    persistence.delete();
+                } catch (IOException e) {
+                    logger.warning(LogLocation.LOG_FILE, "An error occurred while deleting data file");
+                }
             }
-            persistence.writeLog();
         }
     }
 
@@ -129,8 +139,10 @@ public class PropertyEditorASTTransformation extends GipsyASTTransformation {
         List<ClassNode> types = new ArrayList<>();
 
         for (AnnotationNode annotation : annotations) {
-            for (ClassExpression expr : findClassListValue(annotation)) {
-                types.add(expr.getType());
+            for (Expression expr : findCollectionValueMember(annotation, "value")) {
+                if (expr instanceof ClassExpression) {
+                    types.add(((ClassExpression) expr).getType());
+                }
             }
         }
 

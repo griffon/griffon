@@ -27,6 +27,7 @@ import java.util.*;
  */
 public final class ArtifactCollector {
     private final Map<String, Artifact> artifacts = new LinkedHashMap<>();
+    private final Map<String, Artifact> cached = new LinkedHashMap<>();
 
     private final List<String> removed = new ArrayList<>();
     private final Initializer initializer;
@@ -35,6 +36,27 @@ public final class ArtifactCollector {
     public ArtifactCollector(Initializer initializer, Logger logger) {
         this.initializer = initializer;
         this.logger = logger;
+    }
+
+    public void cache() {
+        this.cached.putAll(artifacts);
+    }
+
+    public boolean isModified() {
+        if (cached.size() != artifacts.size()) {
+            return true;
+        }
+
+        for (Map.Entry<String, Artifact> e : cached.entrySet()) {
+            if (!artifacts.containsKey(e.getKey())) {
+                return true;
+            }
+            if (!e.getValue().equals(artifacts.get(e.getKey()))) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     public Artifact getArtifact(String artifact) {
