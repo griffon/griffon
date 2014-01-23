@@ -45,7 +45,7 @@ import static java.lang.reflect.Modifier.isStatic;
  * @author Andres Almiray
  */
 @ServiceProviderFor(ASTTransformation.class)
-@GroovyASTTransformation(phase = CompilePhase.CANONICALIZATION)
+@GroovyASTTransformation(phase = CompilePhase.CLASS_GENERATION)
 public class ArtifactProviderASTTransformation extends GipsyASTTransformation {
     public static final String NAME = ArtifactProviderASTTransformation.class.getName()
         + " (" + ArtifactProviderASTTransformation.class.getPackage().getImplementationVersion() + ")";

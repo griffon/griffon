@@ -2,17 +2,54 @@
 [[_overview_lifecycle]]
 = Lifecycle
 
+Every Griffon application goes through the same life cycle phases no matter in which
+mode they are running, with the exception of applet mode where there is an additional
+phase due to the intrinsic nature of applets. The application's lifecycle has been
+inspired by JSR-296, the Swing Application Framework.
+
+Every phase has an associated lifecycle class that will be invoked at the appropriate
+time. Class names match each phase name; you'll find them inside +griffon-app/lifecycle+.
+
 [[_overview_lifecycle_initialize]]
 == Initialize
+
+The initialization phase is the first to be called by the application's life cycle.
+The application instance has just been created and its configuration has been read.
+
+This phase is typically used to tweak the application for the current platform,
+including its Look & Feel.
+
+NOTE: The +Initialize+ lifecycle handler will be called right after the configuration
+has been read but before <<_addons,addons>> and managers are initialized.
 
 [[_overview_lifecycle_startup]]
 == Startup
 
+This phase is responsible for instantiating all MVC groups that have been defined
+in the application's configuration and that also have been marked as startup groups
+in the same configuration file.
+
+NOTE: The +Startup+ lifecycle handler will be called after all MVC groups have been
+initialized.
+
 [[_overview_lifecycle_ready]]
 == Ready
+
+This phase will be called right after +Startup+ with the condition that no pending
+events are available in the UI queue. The application's main window will be displayed
+at the end of this phase.
 
 [[_overview_lifecycle_shutdown]]
 == Shutdown
 
+Called when the application is about to close. Any artifact can invoke the shutdown
+sequence by calling +shutdown()+ on the +{link_griffon_application}+ instance.
+
+NOTE: The +Shutdown+ lifecycle handler will be called after all +ShutdownHandler+s and
+event handlers interested in the <<_events_lifecycle_events,ShutdownStart>>+ event.
+
 [[_overview_lifecycle_stop]]
 == Stop
+
+This phase is only available when running on applet mode. It will be called when the
+applet container invokes +destroy()+ on the applet instance.

@@ -45,7 +45,7 @@ import static java.lang.reflect.Modifier.isPublic;
  * @author Andres Almiray
  */
 @ServiceProviderFor(ASTTransformation.class)
-@GroovyASTTransformation(phase = CompilePhase.CANONICALIZATION)
+@GroovyASTTransformation(phase = CompilePhase.CLASS_GENERATION)
 public class PropertyEditorASTTransformation extends GipsyASTTransformation {
     public static final String NAME = PropertyEditorASTTransformation.class.getName()
         + " (" + PropertyEditorASTTransformation.class.getPackage().getImplementationVersion() + ")";

@@ -42,7 +42,7 @@ class ConsoleControllerTest {
             .ofType(Object)
             .andWithName('scriptResult'),
             notNullValue())
-        assertEquals(input, model.scriptResult)
+        assert input == model.scriptResult
     }
 
     @javax.inject.Singleton

@@ -22,8 +22,6 @@ import griffon.core.controller.ActionInterceptor;
 
 import javax.annotation.Nonnull;
 import java.lang.reflect.Method;
-import java.util.Collections;
-import java.util.List;
 
 import static griffon.util.GriffonNameUtils.requireNonBlank;
 import static java.util.Objects.requireNonNull;
@@ -35,12 +33,6 @@ import static java.util.Objects.requireNonNull;
 public class AbstractActionInterceptor implements ActionInterceptor {
     private static final String ERROR_CONTROLLER_NULL = "Argument 'controller' cannot be null";
     private static final String ERROR_ACTION_NAME_BLANK = "Argument 'actionName' cannot be blank";
-
-    @Nonnull
-    @Override
-    public List<String> dependsOn() {
-        return Collections.emptyList();
-    }
 
     @Override
     public void configure(@Nonnull GriffonController controller, @Nonnull String actionName, @Nonnull Method method) {

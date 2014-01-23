@@ -30,6 +30,8 @@ import java.util.Map;
  * @since 2.0.0
  */
 public interface GriffonAddon extends ShutdownHandler {
+    String SUFFIX = "GriffonAddon";
+
     @Nonnull
     Logger getLog();
 

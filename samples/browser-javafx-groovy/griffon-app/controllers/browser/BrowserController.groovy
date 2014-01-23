@@ -38,7 +38,7 @@ class BrowserController {
     }
 
     @Threading(Threading.Policy.SKIP)
-    def openUrl = {
+    void openUrl() {
         String url = model.url
         if (url.indexOf('://') < 0) url = 'http://' + url
         if (builder.browser.engine.location == url) return

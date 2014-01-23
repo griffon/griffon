@@ -116,14 +116,34 @@ public class AnnotationUtils {
 
     @Nonnull
     public static <T> Map<String, T> sortByDependencies(@Nonnull Collection<T> instances, @Nonnull String suffix, @Nonnull String type) {
+        return sortByDependencies(instances, suffix, type, Collections.<String>emptyList());
+    }
+
+    @Nonnull
+    public static <T> Map<String, T> sortByDependencies(@Nonnull Collection<T> instances, @Nonnull String suffix, @Nonnull String type, @Nonnull List<String> order) {
         requireNonNull(instances, "Argument 'instances' cannot be null");
         requireNonNull(suffix, "Argument 'suffix' cannot be null");
         requireNonNull(type, "Argument 'type' cannot be null");
+        requireNonNull(order, "Argument 'order' cannot be null");
 
         Map<String, T> instancesByName = mapInstancesByName(instances, suffix);
 
         Map<String, T> map = new LinkedHashMap<>();
         map.putAll(instancesByName);
+
+        if (!order.isEmpty()) {
+            Map<String, T> tmp1 = new LinkedHashMap<>(instancesByName);
+            Map<String, T> tmp2 = new LinkedHashMap<>();
+            //noinspection ConstantConditions
+            for (String name : order) {
+                if (tmp1.containsKey(name)) {
+                    tmp2.put(name, tmp1.remove(name));
+                }
+            }
+            tmp2.putAll(tmp1);
+            map.clear();
+            map.putAll(tmp2);
+        }
 
         List<T> sorted = new ArrayList<>();
         Set<String> instanceDeps = new LinkedHashSet<>();

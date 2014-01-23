@@ -42,6 +42,7 @@ import java.util.*;
 
 import static griffon.core.GriffonExceptionHandler.sanitize;
 import static griffon.util.AnnotationUtils.named;
+import static griffon.util.AnnotationUtils.sortByDependencies;
 import static griffon.util.GriffonNameUtils.getLogicalPropertyName;
 import static griffon.util.GriffonNameUtils.isBlank;
 import static java.util.Arrays.asList;
@@ -241,114 +242,11 @@ public class DefaultApplicationConfigurer implements ApplicationConfigurer {
         });
 
         Injector<?> injector = application.getInjector();
-        Map<String, ActionInterceptor> actionInterceptors = new LinkedHashMap<>();
-        for (ActionInterceptor actionInterceptor : injector.getInstances(ActionInterceptor.class)) {
-            actionInterceptors.put(nameFor(actionInterceptor), actionInterceptor);
-        }
-
-        // grab application specific order
+        Collection<ActionInterceptor> interceptorInstances = injector.getInstances(ActionInterceptor.class);
         List<String> interceptorOrder = application.getApplicationConfiguration().get(KEY_GRIFFON_CONTROLLER_ACTION_INTERCEPTOR_ORDER, Collections.<String>emptyList());
-        Map<String, ActionInterceptor> tmp = new LinkedHashMap<>(actionInterceptors);
-        Map<String, ActionInterceptor> map = new LinkedHashMap<>();
-        //noinspection ConstantConditions
-        for (String interceptorName : interceptorOrder) {
-            if (tmp.containsKey(interceptorName)) {
-                map.put(interceptorName, tmp.remove(interceptorName));
-            }
-        }
-        map.putAll(tmp);
-        actionInterceptors.clear();
-        actionInterceptors.putAll(map);
-        LOG.debug("Chosen interceptor order is {}", map.keySet());
+        Map<String, ActionInterceptor> sortedInterceptors = sortByDependencies(interceptorInstances, ActionInterceptor.SUFFIX, "interceptor", interceptorOrder);
 
-        List<ActionInterceptor> sortedInterceptors = new ArrayList<>();
-        Set<String> addedDeps = new LinkedHashSet<>();
-
-        while (!map.isEmpty()) {
-            int processed = 0;
-
-            LOG.trace("Current interceptor order is {}", actionInterceptors.keySet());
-
-            for (Iterator<Map.Entry<String, ActionInterceptor>> iter = map.entrySet().iterator(); iter.hasNext(); ) {
-                Map.Entry<String, ActionInterceptor> entry = iter.next();
-                String interceptorName = entry.getKey();
-                List<String> dependsOn = entry.getValue().dependsOn();
-
-                LOG.trace("Processing interceptor '{}'", interceptorName);
-                LOG.trace("    depends on '{}'", dependsOn);
-
-                if (!dependsOn.isEmpty()) {
-                    LOG.trace("  Checking interceptor '" + interceptorName + "' dependencies (" + dependsOn.size() + ")");
-
-                    boolean failedDep = false;
-                    for (String dep : dependsOn) {
-                        LOG.trace("  Checking interceptor '{}' dependencies: {}", interceptorName, dep);
-                        if (!addedDeps.contains(dep)) {
-                            // dep not in the list yet, we need to skip adding this to the list for now
-                            LOG.trace("  Skipped interceptor '{}', since dependency '{}' not yet added", interceptorName, dep);
-                            failedDep = true;
-                            break;
-                        } else {
-                            LOG.trace("  Interceptor '{}' dependency '{}' already added", interceptorName, dep);
-                        }
-                    }
-
-                    if (failedDep) {
-                        // move on to next dependency
-                        continue;
-                    }
-                }
-
-                LOG.trace("  Adding interceptor '{}', since all dependencies have been added", interceptorName);
-                sortedInterceptors.add(entry.getValue());
-                addedDeps.add(interceptorName);
-                iter.remove();
-                processed++;
-            }
-
-            if (processed == 0) {
-                // we have a cyclical dependency, warn the user and load in the order they appeared originally
-                if (LOG.isWarnEnabled()) {
-                    LOG.warn("::::::::::::::::::::::::::::::::::::::::::::::::::::::");
-                    LOG.warn("::   Unresolved interceptor dependencies detected   ::");
-                    LOG.warn("::   Continuing with original interceptor order     ::");
-                    LOG.warn("::::::::::::::::::::::::::::::::::::::::::::::::::::::");
-                }
-                for (Map.Entry<String, ActionInterceptor> entry : map.entrySet()) {
-                    String interceptorName = entry.getKey();
-                    List<String> dependsOn = entry.getValue().dependsOn();
-
-                    // display this as a cyclical dep
-                    LOG.warn("::   Interceptor {}", interceptorName);
-                    if (!dependsOn.isEmpty()) {
-                        for (String dep : dependsOn) {
-                            LOG.warn("::     depends on {}", dep);
-                        }
-                    } else {
-                        // we should only have items left in the list with deps, so this should never happen
-                        // but a wise man once said...check for true, false and otherwise...just in case
-                        LOG.warn("::   Problem while resolving dependencies.");
-                        LOG.warn("::   Unable to resolve dependency hierarchy.");
-                    }
-                    LOG.warn("::::::::::::::::::::::::::::::::::::::::::::::::::::::");
-                }
-                break;
-                // if we have processed all the interceptors, we are done
-            } else if (sortedInterceptors.size() == actionInterceptors.size()) {
-                LOG.trace("Interceptor dependency ordering complete");
-                break;
-            }
-        }
-
-        if (LOG.isDebugEnabled()) {
-            List<String> sortedInterceptorNames = new ArrayList<>();
-            for (ActionInterceptor interceptor : sortedInterceptors) {
-                sortedInterceptorNames.add(nameFor(interceptor));
-            }
-            LOG.debug("Computed interceptor order is {}", sortedInterceptorNames);
-        }
-
-        for (ActionInterceptor interceptor : sortedInterceptors) {
+        for (ActionInterceptor interceptor : sortedInterceptors.values()) {
             application.getActionManager().addActionInterceptor(interceptor);
         }
     }

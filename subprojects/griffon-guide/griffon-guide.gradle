@@ -194,6 +194,7 @@ task computeConsoleDependencies << {
 asciidoctor {
     dependsOn computeConsoleDependencies
     baseDir = project.file('src/asciidoc')
+    sourceDocumentName = project.file('src/asciidoc/index.adoc')
     options = [
         attributes: [
             toc                 : 'left',

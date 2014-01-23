@@ -46,7 +46,6 @@ import static java.util.Objects.requireNonNull;
 public abstract class AbstractAddonManager implements AddonManager {
     private static final Logger LOG = LoggerFactory.getLogger(AbstractAddonManager.class);
 
-    protected static final String GRIFFON_ADDON_SUFFIX = "GriffonAddon";
     private static final String ERROR_NAME_BLANK = "Argument 'name' cannot be blank";
     private final Map<String, GriffonAddon> addons = new LinkedHashMap<>();
     private final Object lock = new Object[0];
@@ -73,7 +72,7 @@ public abstract class AbstractAddonManager implements AddonManager {
     @Nullable
     public GriffonAddon findAddon(@Nonnull String name) {
         requireNonBlank(name, ERROR_NAME_BLANK);
-        if (name.endsWith(GRIFFON_ADDON_SUFFIX)) {
+        if (name.endsWith(GriffonAddon.SUFFIX)) {
             name = name.substring(0, name.length() - 12);
         }
         return addons.get(getPropertyName(name));
@@ -119,7 +118,7 @@ public abstract class AbstractAddonManager implements AddonManager {
     @Nonnull
     protected Map<String, GriffonAddon> preloadAddons() {
         Collection<GriffonAddon> addonInstances = getApplication().getInjector().getInstances(GriffonAddon.class);
-        return sortByDependencies(addonInstances, GRIFFON_ADDON_SUFFIX, "addon");
+        return sortByDependencies(addonInstances, GriffonAddon.SUFFIX, "addon");
     }
 
     @SuppressWarnings("unchecked")

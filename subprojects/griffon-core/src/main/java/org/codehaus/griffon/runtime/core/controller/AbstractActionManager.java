@@ -155,6 +155,7 @@ public abstract class AbstractActionManager implements ActionManager {
                     }
                 }
 
+                LOG.trace("Status before execution of {}.{} is {}", controller.getClass().getName(), actionName, status);
                 RuntimeException exception = null;
                 if (status == ActionExecutionStatus.OK) {
                     try {
@@ -165,6 +166,7 @@ public abstract class AbstractActionManager implements ActionManager {
                         LOG.warn("An exception occurred when executing {}.{}", controller.getClass().getName(), actionName, exception);
                     }
                 }
+                LOG.trace("Status after execution of {}.{} is {}", controller.getClass().getName(), actionName, status);
 
                 boolean exceptionWasHandled = false;
                 if (exception != null) {
