@@ -48,6 +48,7 @@ import static griffon.util.GriffonNameUtils.isBlank;
  */
 public class TestApplicationBootstrapper extends DefaultApplicationBootstrapper implements TestCaseAware {
     private static final String METHOD_MODULES = "modules";
+    private static final String METHOD_MODULE_OVERRIDES = "moduleOverrides";
     private Object testCase;
 
     public TestApplicationBootstrapper(@Nonnull GriffonApplication application) {
@@ -66,6 +67,7 @@ public class TestApplicationBootstrapper extends DefaultApplicationBootstrapper 
             return modules;
         }
         modules = super.loadModules();
+        doCollectOverridingModules(modules);
         doCollectModulesFromInnerClasses(modules);
         return modules;
     }
@@ -76,6 +78,7 @@ public class TestApplicationBootstrapper extends DefaultApplicationBootstrapper 
         Method method = null;
         try {
             method = testCase.getClass().getDeclaredMethod(METHOD_MODULES);
+            method.setAccessible(true);
         } catch (NoSuchMethodException e) {
             return Collections.emptyList();
         }
@@ -84,6 +87,24 @@ public class TestApplicationBootstrapper extends DefaultApplicationBootstrapper 
             return (List<Module>) method.invoke(testCase);
         } catch (Exception e) {
             throw new IllegalArgumentException("An error occurred while initializing modules from " + testCase.getClass().getName() + "." + METHOD_MODULES, e);
+        }
+    }
+
+    @SuppressWarnings("unchecked")
+    private void doCollectOverridingModules(final @Nonnull Collection<Module> modules) {
+        Method method = null;
+        try {
+            method = testCase.getClass().getDeclaredMethod(METHOD_MODULE_OVERRIDES);
+            method.setAccessible(true);
+        } catch (NoSuchMethodException e) {
+            return;
+        }
+
+        try {
+            List<Module> overrides = (List<Module>) method.invoke(testCase);
+            modules.addAll(overrides);
+        } catch (Exception e) {
+            throw new IllegalArgumentException("An error occurred while initializing modules from " + testCase.getClass().getName() + "." + METHOD_MODULE_OVERRIDES, e);
         }
     }
 
