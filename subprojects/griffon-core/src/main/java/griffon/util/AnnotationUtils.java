@@ -19,14 +19,12 @@ package griffon.util;
 import griffon.inject.BindTo;
 import griffon.inject.DependsOn;
 import griffon.inject.Typed;
-import org.codehaus.griffon.runtime.core.injection.BindToImpl;
-import org.codehaus.griffon.runtime.core.injection.NamedImpl;
-import org.codehaus.griffon.runtime.core.injection.TypedImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.annotation.Nonnull;
 import javax.inject.Named;
+import java.io.Serializable;
 import java.lang.annotation.Annotation;
 import java.util.*;
 
@@ -239,4 +237,128 @@ public class AnnotationUtils {
     public static BindTo bindto(@Nonnull Class<?> clazz) {
         return new BindToImpl(requireNonNull(clazz, "Argument 'clazz' cannot be null"));
     }
+
+    /**
+     * @author Andres Almiray
+     * @since 2.0.0
+     */
+    @SuppressWarnings("ClassExplicitlyAnnotation")
+    private static class NamedImpl implements Named, Serializable {
+        private final String value;
+
+        public NamedImpl(String value) {
+            this.value = requireNonNull(value, "name");
+        }
+
+        public String value() {
+            return this.value;
+        }
+
+        public int hashCode() {
+            // This is specified in java.lang.Annotation.
+            return (127 * "value".hashCode()) ^ value.hashCode();
+        }
+
+        public boolean equals(Object o) {
+            if (!(o instanceof Named)) {
+                return false;
+            }
+
+            Named other = (Named) o;
+            return value.equals(other.value());
+        }
+
+        public String toString() {
+            return "@" + Named.class.getName() + "(value=" + value + ")";
+        }
+
+        public Class<? extends Annotation> annotationType() {
+            return Named.class;
+        }
+
+        private static final long serialVersionUID = 0;
+    }
+
+    /**
+     * @author Andres Almiray
+     * @since 2.0.0
+     */
+    @SuppressWarnings("ClassExplicitlyAnnotation")
+    private static class TypedImpl implements Typed, Serializable {
+        private final Class<?> value;
+
+        public TypedImpl(Class<?> value) {
+            this.value = requireNonNull(value, "artifact");
+        }
+
+        public Class<?> value() {
+            return this.value;
+        }
+
+        public int hashCode() {
+            // This is specified in java.lang.Annotation.
+            return (127 * "value".hashCode()) ^ value.hashCode();
+        }
+
+        public boolean equals(Object o) {
+            if (!(o instanceof Typed)) {
+                return false;
+            }
+
+            Typed other = (Typed) o;
+            return value.equals(other.value());
+        }
+
+        public String toString() {
+            return "@" + Typed.class.getName() + "(value=" + value + ")";
+        }
+
+        public Class<? extends Annotation> annotationType() {
+            return Typed.class;
+        }
+
+        private static final long serialVersionUID = 0;
+    }
+
+    /**
+     * @author Andres Almiray
+     * @since 2.0.0
+     */
+    @SuppressWarnings("ClassExplicitlyAnnotation")
+    private static class BindToImpl implements BindTo, Serializable {
+        private final Class<?> value;
+
+        public BindToImpl(Class<?> value) {
+            this.value = requireNonNull(value, "artifact");
+        }
+
+        public Class<?> value() {
+            return this.value;
+        }
+
+        public int hashCode() {
+            // This is specified in java.lang.Annotation.
+            return (127 * "value".hashCode()) ^ value.hashCode();
+        }
+
+        public boolean equals(Object o) {
+            if (!(o instanceof BindTo)) {
+                return false;
+            }
+
+            BindTo other = (BindTo) o;
+            return value.equals(other.value());
+        }
+
+        public String toString() {
+            return "@" + BindTo.class.getName() + "(value=" + value + ")";
+        }
+
+        public Class<? extends Annotation> annotationType() {
+            return BindTo.class;
+        }
+
+        private static final long serialVersionUID = 0;
+    }
+
 }
