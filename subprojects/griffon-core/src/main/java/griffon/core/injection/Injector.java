@@ -37,6 +37,9 @@ public interface Injector<I> {
     @Nonnull
     <T> Collection<T> getInstances(@Nonnull Class<T> type) throws InstanceNotFoundException;
 
+    @Nonnull
+    <T> Collection<Qualified<T>> getQualifiedInstances(@Nonnull Class<T> type) throws InstanceNotFoundException;
+
     void injectMembers(@Nonnull Object instance) throws MembersInjectionException;
 
     @Nonnull

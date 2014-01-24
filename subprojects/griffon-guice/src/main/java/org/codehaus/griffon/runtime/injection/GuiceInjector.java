@@ -28,9 +28,11 @@ import griffon.exceptions.ClosedInjectorException;
 import griffon.exceptions.InstanceNotFoundException;
 import griffon.exceptions.MembersInjectionException;
 import griffon.exceptions.TypeNotFoundException;
+import griffon.util.AnnotationUtils;
 import org.codehaus.griffon.runtime.core.injection.InjectorProvider;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import javax.annotation.PreDestroy;
 import javax.annotation.concurrent.GuardedBy;
 import javax.inject.Singleton;
@@ -123,6 +125,48 @@ public class GuiceInjector implements Injector<com.google.inject.Injector> {
         }
 
         return instances;
+    }
+
+    @Nonnull
+    @Override
+    public <T> Collection<Qualified<T>> getQualifiedInstances(@Nonnull Class<T> type) throws InstanceNotFoundException {
+        requireNonNull(type, "Argument 'type' cannot be null");
+
+        if (isClosed()) {
+            throw new InstanceNotFoundException(type, new ClosedInjectorException(this));
+        }
+
+        List<Qualified<T>> instances = new ArrayList<>();
+
+        List<com.google.inject.Binding<T>> bindings;
+        try {
+            bindings = delegate.findBindingsByType(TypeLiteral.get(type));
+        } catch (RuntimeException e) {
+            throw new InstanceNotFoundException(type, e);
+        }
+        if (bindings == null) {
+            throw new InstanceNotFoundException(type);
+        }
+
+        for (com.google.inject.Binding<T> binding : bindings) {
+            try {
+                Key<T> key = binding.getKey();
+                final T instance = delegate.getInstance(key);
+                instances.add(new Qualified<>(instance, translate(key.getAnnotation())));
+            } catch (RuntimeException e) {
+                throw new InstanceNotFoundException(type, e);
+            }
+        }
+
+        return instances;
+    }
+
+    @Nullable
+    private Annotation translate(@Nullable Annotation annotation) {
+        if (annotation instanceof com.google.inject.name.Named) {
+            return AnnotationUtils.named(((com.google.inject.name.Named) annotation).value());
+        }
+        return annotation;
     }
 
     @Override
