@@ -109,9 +109,10 @@ public abstract class AbstractActionManager implements ActionManager {
             Action action = createAndConfigureAction(controller, actionName);
 
             Method method = findActionAsMethod(controller, actionName);
+            final String qualifiedActionName = controller.getClass().getName() + "." + actionName;
             for (ActionInterceptor interceptor : interceptors) {
                 if (method != null) {
-                    LOG.debug("Configuring action {}.{} with {}", controller.getClass().getName(), actionName, interceptor);
+                    LOG.debug("Configuring action {} with {}", qualifiedActionName, interceptor);
                     interceptor.configure(controller, actionName, method);
                 }
             }
@@ -122,7 +123,7 @@ public abstract class AbstractActionManager implements ActionManager {
                 actionCache.set(controller, actions);
             }
             String actionKey = normalizeName(actionName);
-            LOG.trace("Action for {}.{} stored as {}", controller.getClass().getName(), actionName, actionKey);
+            LOG.trace("Action for {} stored as {}", qualifiedActionName, actionKey);
             actions.put(actionKey, action);
         }
     }
@@ -137,45 +138,49 @@ public abstract class AbstractActionManager implements ActionManager {
                 List<ActionInterceptor> copy = new ArrayList<>(interceptors);
                 List<ActionInterceptor> invokedInterceptors = new ArrayList<>();
 
+                final String qualifiedActionName = controller.getClass().getName() + "." + actionName;
                 ActionExecutionStatus status = ActionExecutionStatus.OK;
 
                 if (LOG.isDebugEnabled()) {
                     int size = copy.size();
-                    LOG.debug("Invoking " + size + " interceptor" + (size != 1 ? "s" : "") + " for " + controller.getClass().getName() + "." + actionName);
+                    LOG.debug("Executing " + size + " interceptor" + (size != 1 ? "s" : "") + " for " + qualifiedActionName);
                 }
 
                 for (ActionInterceptor interceptor : copy) {
                     invokedInterceptors.add(interceptor);
                     try {
+                        LOG.trace("Calling {}.before() on {}", interceptor, qualifiedActionName);
                         updatedArgs = interceptor.before(controller, actionName, updatedArgs);
                     } catch (AbortActionExecution aae) {
                         status = ActionExecutionStatus.ABORTED;
-                        LOG.info("Execution of {}.{} was aborted by ", controller.getClass().getName(), actionName, interceptor);
+                        LOG.debug("Execution of {} was aborted by {}", qualifiedActionName, interceptor);
                         break;
                     }
                 }
 
-                LOG.trace("Status before execution of {}.{} is {}", controller.getClass().getName(), actionName, status);
+                LOG.trace("Status before execution of {} is {}", qualifiedActionName, status);
                 RuntimeException exception = null;
+                boolean exceptionWasHandled = false;
                 if (status == ActionExecutionStatus.OK) {
                     try {
                         doInvokeAction(controller, actionName, updatedArgs);
                     } catch (RuntimeException e) {
                         status = ActionExecutionStatus.EXCEPTION;
                         exception = (RuntimeException) sanitize(e);
-                        LOG.warn("An exception occurred when executing {}.{}", controller.getClass().getName(), actionName, exception);
+                        LOG.warn("An exception occurred when executing {}", qualifiedActionName, exception);
                     }
-                }
-                LOG.trace("Status after execution of {}.{} is {}", controller.getClass().getName(), actionName, status);
+                    LOG.trace("Status after execution of {} is {}", qualifiedActionName, status);
 
-                boolean exceptionWasHandled = false;
-                if (exception != null) {
-                    for (ActionInterceptor interceptor : reverse(invokedInterceptors)) {
-                        exceptionWasHandled = interceptor.exception(exception, controller, actionName, updatedArgs);
+                    if (exception != null) {
+                        for (ActionInterceptor interceptor : reverse(invokedInterceptors)) {
+                            LOG.trace("Calling {}.exception() on {}", interceptor, qualifiedActionName);
+                            exceptionWasHandled = interceptor.exception(exception, controller, actionName, updatedArgs);
+                        }
                     }
                 }
 
                 for (ActionInterceptor interceptor : reverse(invokedInterceptors)) {
+                    LOG.trace("Calling {}.after() on {}", interceptor, qualifiedActionName);
                     interceptor.after(status, controller, actionName, updatedArgs);
                 }
 
