@@ -71,3 +71,19 @@ gradle.taskGraph.whenReady {
     sourceSets.test.java.srcDirs.each    { it.mkdirs() }
     sourceSets.test.resources.srcDirs.each { it.mkdirs() }
 }
+
+processResources {
+    from(sourceSets.main.resources.srcDirs) {
+        include '**/*.properties'
+        include '**/*.xml'
+        filter(org.apache.tools.ant.filters.ReplaceTokens, tokens: [
+            'application.name': project.name,
+            'application.version': project.version,
+            'griffon.version': project.version
+        ])
+    }
+    from(sourceSets.main.resources.srcDirs) {
+        exclude '**/*.properties'
+        exclude '**/*.xml'
+    }
+}
