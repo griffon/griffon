@@ -231,7 +231,8 @@ public class DefaultApplicationConfigurer implements ApplicationConfigurer {
         }
 
         application.getEventRouter().addEventListener(ApplicationEvent.NEW_INSTANCE.getName(), new CallableWithArgs<Void>() {
-            public Void call(@Nonnull Object... args) {
+            @Nullable
+            public Void call(@Nullable Object... args) {
                 Class<?> klass = (Class) args[0];
                 if (GriffonController.class.isAssignableFrom(klass)) {
                     GriffonController controller = (GriffonController) args[1];

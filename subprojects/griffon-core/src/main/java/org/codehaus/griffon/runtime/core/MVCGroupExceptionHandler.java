@@ -20,6 +20,7 @@ import griffon.core.CallableWithArgs;
 import griffon.core.GriffonApplication;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import static java.util.Objects.requireNonNull;
 
@@ -41,7 +42,8 @@ public final class MVCGroupExceptionHandler implements CallableWithArgs<Void> {
         application.getEventRouter().addEventListener("UncaughtMVCGroupInstantiationException", this);
     }
 
-    public Void call(@Nonnull Object... args) {
+    @Nullable
+    public Void call(@Nullable Object... args) {
         Exception exception = (Exception) args[0];
         application.getLog().error("Unrecoverable error", exception);
         // exception.printStackTrace();

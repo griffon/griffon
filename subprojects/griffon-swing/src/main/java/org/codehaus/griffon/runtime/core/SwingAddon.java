@@ -25,6 +25,7 @@ import org.jdesktop.swinghelper.debug.EventDispatchThreadHangMonitor;
 import sun.awt.AppContext;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import javax.inject.Named;
 import javax.swing.RepaintManager;
 
@@ -62,7 +63,8 @@ public class SwingAddon extends AbstractGriffonAddon {
 
             GriffonExceptionHandler.addClassTest(new CallableWithArgs<Boolean>() {
                 @Override
-                public Boolean call(@Nonnull Object... args) {
+                @Nullable
+                public Boolean call(@Nullable Object... args) {
                     String className = (String) args[0];
                     for (String groovyPackage : EXCLUDED_PACKAGES) {
                         if (className.startsWith(groovyPackage)) {

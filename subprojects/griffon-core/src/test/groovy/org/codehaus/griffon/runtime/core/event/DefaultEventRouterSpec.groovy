@@ -14,6 +14,7 @@ import org.junit.Rule
 import spock.lang.Specification
 
 import javax.annotation.Nonnull
+import javax.annotation.Nullable
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -420,7 +421,8 @@ class DefaultEventRouterSpec extends Specification {
         Object[] args
 
         @Override
-        Void call(@Nonnull Object[] args) {
+        @Nullable
+        Void call(@Nullable Object... args) {
             this.args = args
             null
         }
@@ -456,7 +458,8 @@ class Subject {
 
     final Map<String, CallableWithArgs<?>> events = [
         MyEvent1: new CallableWithArgs<Void>() {
-            Void call(@Nonnull Object[] args) {
+            @Nullable
+            Void call(@Nullable Object... args) {
                 Subject.this.args = args
                 null
             }

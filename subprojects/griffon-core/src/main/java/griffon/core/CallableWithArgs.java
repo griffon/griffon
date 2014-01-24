@@ -16,7 +16,7 @@
 
 package griffon.core;
 
-import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * A Callable that can have arguments.
@@ -24,5 +24,6 @@ import javax.annotation.Nonnull;
  * @author Andres Almiray
  */
 public interface CallableWithArgs<V> {
-    V call(@Nonnull Object... args);
+    @Nullable
+    V call(@Nullable Object... args);
 }

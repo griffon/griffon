@@ -309,7 +309,8 @@ public abstract class AbstractGriffonApplet extends JApplet implements GriffonAp
             final CountDownLatch latch = new CountDownLatch(getUIThreadManager().isUIThread() ? 1 : 0);
             getEventRouter().addEventListener(ApplicationEvent.SHUTDOWN_START.getName(), new CallableWithArgs<Void>() {
                 @Override
-                public Void call(@Nonnull Object... args) {
+                @Nullable
+                public Void call(@Nullable Object... args) {
                     latch.countDown();
                     return null;
                 }
