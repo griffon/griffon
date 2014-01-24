@@ -44,6 +44,9 @@ import java.util.Map;
  * @since 0.0.0
  */
 public interface GriffonApplication extends Observable {
+    String PROPERTY_LOCALE = "locale";
+    String PROPERTY_PHASE = "phase";
+
     @Nonnull
     Object createApplicationContainer(@Nonnull Map<String, Object> attributes);
 

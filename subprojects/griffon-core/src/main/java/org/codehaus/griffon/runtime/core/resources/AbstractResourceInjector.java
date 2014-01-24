@@ -113,9 +113,9 @@ public abstract class AbstractResourceInjector implements ResourceInjector {
             }
 
             if (null != value) {
-                Class<?> propertyTpye = method.getParameterTypes()[0];
-                if (!propertyTpye.isAssignableFrom(value.getClass())) {
-                    value = convertValue(propertyTpye, value, format);
+                Class<?> propertyType = method.getParameterTypes()[0];
+                if (!propertyType.isAssignableFrom(value.getClass())) {
+                    value = convertValue(propertyType, value, format);
                 }
                 setPropertyValue(instance, method, value, fqName);
             }

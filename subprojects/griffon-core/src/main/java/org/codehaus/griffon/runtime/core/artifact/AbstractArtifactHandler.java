@@ -92,14 +92,6 @@ public abstract class AbstractArtifactHandler<A extends GriffonArtifact> impleme
         builder.toInstance(griffonClass);
         bindings.add(builder.getBinding());
         bindings.add(Bindings.bind(clazz).getBinding());
-        /*
-        bindings.add(Bindings.bind(GriffonArtifact.class)
-            .withClassifier(new TypedImpl(clazz))
-            .getBinding());
-        bindings.add(Bindings.bind(clazz)
-            .toProvider(new GriffonArtifactProvider(clazz))
-            .getBinding());
-        */
     }
 
     @Nonnull
