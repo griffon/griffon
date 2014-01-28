@@ -1,19 +1,21 @@
 package console
 
 import griffon.core.artifact.ArtifactManager
+import griffon.core.injection.Module
 import griffon.core.test.GriffonUnitRule
 import griffon.core.test.TestFor
-import griffon.inject.BindTo
+import griffon.inject.DependsOn
+import org.codehaus.griffon.runtime.core.injection.AbstractModule
 import org.junit.Rule
 import org.junit.Test
 
+import javax.annotation.Nonnull
 import javax.inject.Inject
 
 import static com.jayway.awaitility.Awaitility.await
 import static com.jayway.awaitility.Awaitility.fieldIn
 import static java.util.concurrent.TimeUnit.SECONDS
 import static org.hamcrest.Matchers.notNullValue
-import static org.junit.Assert.assertEquals
 
 @TestFor(ConsoleController)                                                   //<1>
 class ConsoleControllerTest {
@@ -45,12 +47,25 @@ class ConsoleControllerTest {
         assert input == model.scriptResult
     }
 
-    @javax.inject.Singleton
-    @BindTo(Evaluator)
     private static class EchoEvaluator implements Evaluator {                 //<8>
         @Override
         Object evaluate(String input) {
             input
         }
+    }
+
+    @DependsOn('application')
+    private static class TestModule extends AbstractModule {
+        @Override
+        protected void doConfigure() {
+            bind(Evaluator)
+                .to(EchoEvaluator)
+                .asSingleton()
+        }
+    }
+
+    @Nonnull
+    private List<Module> moduleOverrides() {
+        [new TestModule()]
     }
 }
