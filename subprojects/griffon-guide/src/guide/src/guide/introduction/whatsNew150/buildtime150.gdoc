@@ -1,3 +1,65 @@
 h4. External Resources
 
-It's a well know fact that any resources files placed in @griffon-app/resources@ get packaged with the application's jar. But what if you'd like your application to load resources that are not packaged in said jar?
+It's a well know fact that any resources files placed in @griffon-app/resources@ get
+packaged with the application's jar. But what if you'd like your application to load
+resources that are not packaged in said jar? The answer is to place these resources
+under @griffon-app/resources-external@.
+
+Files found under this location will still be available to the running application
+if you launched it via the @run-app@ command. However, once an application has been
+packaged for distribution (such as with the @griffon package zip@ command) these
+files will be found under @<application_dir>/resources@, allowing you to modify them
+directly if needed be.
+
+h4. Global Setting for Default Archetype
+
+An archetype name is required as part of the command line options if you'd like to
+create develop an application that relies on an archetype that's not the default one.
+This can be a bit tiresome if you want to create multiple projects with the same archetype.
+For this matter, Griffon 1.5.0 has added a new compile time flag that can be used
+to specify the name of the default archetype if non is defined at the command prompt.
+For example, if you're developing multiple JavaFX applications place the following
+flag under @$USER_HOME/.griffon/settings.groovy@
+
+.bc
+griffon.default.archetype = 'javafx'
+
+The flag accepts the following variations for its value
+
+ * <archetype_name>
+ * <archetype_name>-<archetype_version>
+
+h4. \@TestFor AST Transformation
+
+There's a new AST transformation that eases up setting a test for artifact classes.
+This transformation assumes the class-under-test inherits from @griffon.core.GriffonArtifact@.
+The transformation injects a field of type @griffon.core.GriffonApplication@ and name 'app',
+it will also automatically inject a field of the right type and with a conventional name, for
+example
+
+{code}
+package sample
+
+import griffon.test.TestFor
+import org.junit.Test
+import static org.junit.Assert.fail
+
+@TestFor
+class SampleController {
+    @Test
+    void testSomething() {
+        assert controller
+        fail('Not implemented!')
+    }
+}
+{code}
+
+The test class may override the default behavior injected by \@TestFor, the following list
+summarizes the method signatures required by this ASt transformation
+
+ * GriffonApplication createMockApplication()
+ * void configMockApplication()
+ * void setupClassUnderTest()
+ * void cleanupClassUnderTest()
+
+The last two methods are called during the \@Before and \@After steps respectively.

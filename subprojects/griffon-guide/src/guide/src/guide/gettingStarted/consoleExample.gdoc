@@ -45,7 +45,7 @@ The executeScript method will be used in the view for the button action. Hence t
 
 Finally, the Griffon framework can be configured to inject portions of the builders it uses. By default, the Threading classes are injected into the controller, allowing the use of the @edt@, @doOutside@ and @doLater@ methods from SwingBuilder.
 
-You may notice that there's no explicit threading management. All Swing developers know they must obey the Swing Rule: long running computations must run outside of the EDT; all UI components should be queried/modified inside the EDT. It turns out Griffon is aware of this rule, making sure an action is called outside of the EDt by default, all bindings made to UI components via the model will be updated inside the EDT also. We'll setup the bindings in the next example.
+You may notice that there's no explicit threading management. All Swing developers know they must obey the Swing Rule: long running computations must run outside of the EDT; all UI components should be queried/modified inside the EDT. It turns out Griffon is aware of this rule, making sure an action is called outside of the EDT by default, all bindings made to UI components via the model will be updated inside the EDT also. We'll setup the bindings in the next example.
 
 The view classes contain the visual components for your application. Please paste the following code into @griffon-app/views/democonsole/DemoConsoleView.groovy@.
 

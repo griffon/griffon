@@ -30,7 +30,7 @@ class GroovyEditModel implements ChangeListener {
     void stateChanged(ChangeEvent e) {
         int selectedIndex = e.source.selectedIndex
         if(selectedIndex < 0) {
-            setMvcId(null) 
+            setMvcIdentifier(null) 
         } else {
             def tab = e.source[selectedIndex]
             setMvcIdentifier(tab.getClientProperty('mvcIdentifier'))
