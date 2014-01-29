@@ -26,7 +26,7 @@ import static java.util.Collections.unmodifiableSortedSet;
 import static java.util.Objects.requireNonNull;
 
 /**
- * Utility class for reading applicationConfiguration properties.
+ * Utility class for reading configuration properties.
  *
  * @author Andres Almiray
  */
@@ -41,7 +41,7 @@ public final class ConfigUtils {
     /**
      * Returns true if there's a on-null value for the specified key.
      *
-     * @param config the applicationConfiguration object to be searched upon
+     * @param config the configuration object to be searched upon
      * @param key    the key to be searched
      * @return true if there's a value for the specified key, false otherwise
      */
@@ -264,23 +264,23 @@ public final class ConfigUtils {
     /**
      * Returns the value for the specified key coerced to a boolean.
      *
-     * @param config the applicationConfiguration object to be searched upon
+     * @param config the configuration object to be searched upon
      * @param key    the key to be searched
      * @return the value of the key. Returns {@code false} if no match.
      */
-    public static boolean getConfigValueAsBoolean(Map<String, Object> config, String key) {
+    public static boolean getConfigValueAsBoolean(@Nonnull Map<String, Object> config, @Nonnull String key) {
         return getConfigValueAsBoolean(config, key, false);
     }
 
     /**
      * Returns the value for the specified key with an optional default value if no match is found.
      *
-     * @param config       the applicationConfiguration object to be searched upon
+     * @param config       the configuration object to be searched upon
      * @param key          the key to be searched
      * @param defaultValue the value to send back if no match is found
      * @return the value of the key or the default value if no match is found
      */
-    public static boolean getConfigValueAsBoolean(Map<String, Object> config, String key, boolean defaultValue) {
+    public static boolean getConfigValueAsBoolean(@Nonnull Map<String, Object> config, @Nonnull String key, boolean defaultValue) {
         Object value = getConfigValue(config, key, defaultValue);
         return castToBoolean(value);
     }
@@ -288,23 +288,23 @@ public final class ConfigUtils {
     /**
      * Returns the value for the specified key coerced to an int.
      *
-     * @param config the applicationConfiguration object to be searched upon
+     * @param config the configuration object to be searched upon
      * @param key    the key to be searched
      * @return the value of the key. Returns {@code 0} if no match.
      */
-    public static int getConfigValueAsInt(Map<String, Object> config, String key) {
+    public static int getConfigValueAsInt(@Nonnull Map<String, Object> config, @Nonnull String key) {
         return getConfigValueAsInt(config, key, 0);
     }
 
     /**
      * Returns the value for the specified key with an optional default value if no match is found.
      *
-     * @param config       the applicationConfiguration object to be searched upon
+     * @param config       the configuration object to be searched upon
      * @param key          the key to be searched
      * @param defaultValue the value to send back if no match is found
      * @return the value of the key or the default value if no match is found
      */
-    public static int getConfigValueAsInt(Map<String, Object> config, String key, int defaultValue) {
+    public static int getConfigValueAsInt(@Nonnull Map<String, Object> config, @Nonnull String key, int defaultValue) {
         Object value = getConfigValue(config, key, defaultValue);
         return castToInt(value);
     }
@@ -312,23 +312,23 @@ public final class ConfigUtils {
     /**
      * Returns the value for the specified key coerced to a long.
      *
-     * @param config the applicationConfiguration object to be searched upon
+     * @param config the configuration object to be searched upon
      * @param key    the key to be searched
      * @return the value of the key. Returns {@code 0L} if no match.
      */
-    public static long getConfigValueAsLong(Map<String, Object> config, String key) {
+    public static long getConfigValueAsLong(@Nonnull Map<String, Object> config, @Nonnull String key) {
         return getConfigValueAsLong(config, key, 0L);
     }
 
     /**
      * Returns the value for the specified key with an optional default value if no match is found.
      *
-     * @param config       the applicationConfiguration object to be searched upon
+     * @param config       the configuration object to be searched upon
      * @param key          the key to be searched
      * @param defaultValue the value to send back if no match is found
      * @return the value of the key or the default value if no match is found
      */
-    public static long getConfigValueAsLong(Map<String, Object> config, String key, long defaultValue) {
+    public static long getConfigValueAsLong(@Nonnull Map<String, Object> config, @Nonnull String key, long defaultValue) {
         Object value = getConfigValue(config, key, defaultValue);
         return castToLong(value);
     }
@@ -336,23 +336,23 @@ public final class ConfigUtils {
     /**
      * Returns the value for the specified key coerced to a double.
      *
-     * @param config the applicationConfiguration object to be searched upon
+     * @param config the configuration object to be searched upon
      * @param key    the key to be searched
      * @return the value of the key. Returns {@code 0d} if no match.
      */
-    public static double getConfigValueAsDouble(Map<String, Object> config, String key) {
+    public static double getConfigValueAsDouble(@Nonnull Map<String, Object> config, @Nonnull String key) {
         return getConfigValueAsDouble(config, key, 0d);
     }
 
     /**
      * Returns the value for the specified key with an optional default value if no match is found.
      *
-     * @param config       the applicationConfiguration object to be searched upon
+     * @param config       the configuration object to be searched upon
      * @param key          the key to be searched
      * @param defaultValue the value to send back if no match is found
      * @return the value of the key or the default value if no match is found
      */
-    public static double getConfigValueAsDouble(Map<String, Object> config, String key, double defaultValue) {
+    public static double getConfigValueAsDouble(@Nonnull Map<String, Object> config, @Nonnull String key, double defaultValue) {
         Object value = getConfigValue(config, key, defaultValue);
         return castToDouble(value);
     }
@@ -360,23 +360,23 @@ public final class ConfigUtils {
     /**
      * Returns the value for the specified key coerced to a float.
      *
-     * @param config the applicationConfiguration object to be searched upon
+     * @param config the configuration object to be searched upon
      * @param key    the key to be searched
      * @return the value of the key. Returns {@code 0f} if no match.
      */
-    public static float getConfigValueAsFloat(Map<String, Object> config, String key) {
+    public static float getConfigValueAsFloat(@Nonnull Map<String, Object> config, @Nonnull String key) {
         return getConfigValueAsFloat(config, key, 0f);
     }
 
     /**
      * Returns the value for the specified key with an optional default value if no match is found.
      *
-     * @param config       the applicationConfiguration object to be searched upon
+     * @param config       the configuration object to be searched upon
      * @param key          the key to be searched
      * @param defaultValue the value to send back if no match is found
      * @return the value of the key or the default value if no match is found
      */
-    public static float getConfigValueAsFloat(Map<String, Object> config, String key, float defaultValue) {
+    public static float getConfigValueAsFloat(@Nonnull Map<String, Object> config, @Nonnull String key, float defaultValue) {
         Object value = getConfigValue(config, key, defaultValue);
         return castToFloat(value);
     }
@@ -384,23 +384,25 @@ public final class ConfigUtils {
     /**
      * Returns the value for the specified key coerced to a Number.
      *
-     * @param config the applicationConfiguration object to be searched upon
+     * @param config the configuration object to be searched upon
      * @param key    the key to be searched
      * @return the value of the key. Returns {@code null} if no match.
      */
-    public static Number getConfigValueAsNumber(Map<String, Object> config, String key) {
+    @Nullable
+    public static Number getConfigValueAsNumber(@Nonnull Map<String, Object> config, @Nonnull String key) {
         return getConfigValueAsNumber(config, key, null);
     }
 
     /**
      * Returns the value for the specified key with an optional default value if no match is found.
      *
-     * @param config       the applicationConfiguration object to be searched upon
+     * @param config       the configuration object to be searched upon
      * @param key          the key to be searched
      * @param defaultValue the value to send back if no match is found
      * @return the value of the key or the default value if no match is found
      */
-    public static Number getConfigValueAsNumber(Map<String, Object> config, String key, Number defaultValue) {
+    @Nullable
+    public static Number getConfigValueAsNumber(@Nonnull Map<String, Object> config, @Nonnull String key, @Nullable Number defaultValue) {
         Object value = getConfigValue(config, key, defaultValue);
         return castToNumber(value);
     }
@@ -408,23 +410,25 @@ public final class ConfigUtils {
     /**
      * Returns the value for the specified key converted to a String.
      *
-     * @param config the applicationConfiguration object to be searched upon
+     * @param config the configuration object to be searched upon
      * @param key    the key to be searched
      * @return the value of the key. Returns {@code ""} if no match.
      */
-    public static String getConfigValueAsString(Map<String, Object> config, String key) {
+    @Nullable
+    public static String getConfigValueAsString(@Nonnull Map<String, Object> config, @Nonnull String key) {
         return getConfigValueAsString(config, key, "");
     }
 
     /**
      * Returns the value for the specified key with an optional default value if no match is found.
      *
-     * @param config       the applicationConfiguration object to be searched upon
+     * @param config       the configuration object to be searched upon
      * @param key          the key to be searched
      * @param defaultValue the value to send back if no match is found
      * @return the value of the key or the default value if no match is found
      */
-    public static String getConfigValueAsString(Map<String, Object> config, String key, String defaultValue) {
+    @Nullable
+    public static String getConfigValueAsString(@Nonnull Map<String, Object> config, @Nonnull String key, @Nullable String defaultValue) {
         Object value = getConfigValue(config, key, defaultValue);
         return value != null ? String.valueOf(value) : null;
     }

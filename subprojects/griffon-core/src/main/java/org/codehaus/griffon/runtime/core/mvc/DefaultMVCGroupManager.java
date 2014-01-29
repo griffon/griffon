@@ -185,7 +185,7 @@ public class DefaultMVCGroupManager extends AbstractMVCGroupManager {
 
     protected void checkIdIsUnique(@Nonnull String mvcId, @Nonnull MVCGroupConfiguration configuration) {
         if (findGroup(mvcId) != null) {
-            String action = getApplication().getApplicationConfiguration().getAsString("griffon.mvcid.collision", "exception");
+            String action = getApplication().getConfiguration().getAsString("griffon.mvcid.collision", "exception");
             if ("warning".equalsIgnoreCase(action)) {
                 LOG.warn("A previous instance of MVC group '{}' with name '{}' exists. Destroying the old instance first.", configuration.getMvcType(), mvcId);
                 destroyMVCGroup(mvcId);

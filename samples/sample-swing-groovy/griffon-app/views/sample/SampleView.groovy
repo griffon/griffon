@@ -10,7 +10,7 @@ class SampleView {
 
     void initUI() {
         builder.with {
-            application(title: application.applicationConfiguration['application.title'],      //<2>
+            application(title: application.getConfiguration['application.title'],              //<2>
                 id: 'mainWindow', size: [320, 160],
                 iconImage: imageIcon('/griffon-icon-48x48.png').image,
                 iconImages: [imageIcon('/griffon-icon-48x48.png').image,

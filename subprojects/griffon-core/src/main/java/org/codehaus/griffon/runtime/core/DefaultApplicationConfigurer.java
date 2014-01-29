@@ -86,7 +86,7 @@ public class DefaultApplicationConfigurer implements ApplicationConfigurer {
     public void runLifecycleHandler(@Nonnull Lifecycle lifecycle) {
         requireNonNull(lifecycle, "Argument 'lifecycle' cannot be null");
 
-        boolean skipHandler = application.getApplicationConfiguration().getAsBoolean(KEY_APP_LIFECYCLE_HANDLER_DISABLE, false);
+        boolean skipHandler = application.getConfiguration().getAsBoolean(KEY_APP_LIFECYCLE_HANDLER_DISABLE, false);
         if (skipHandler) {
             LOG.info("Lifecycle handler '{}' has been disabled. SKIPPING.", lifecycle.getName());
             return;
@@ -202,7 +202,7 @@ public class DefaultApplicationConfigurer implements ApplicationConfigurer {
     @SuppressWarnings("unchecked")
     protected void initializeMvcManager() {
         Map<String, MVCGroupConfiguration> configurations = new LinkedHashMap<>();
-        Map<String, Map<String, Object>> mvcGroups = application.getApplicationConfiguration().get("mvcGroups", Collections.<String, Map<String, Object>>emptyMap());
+        Map<String, Map<String, Object>> mvcGroups = application.getConfiguration().get("mvcGroups", Collections.<String, Map<String, Object>>emptyMap());
         if (mvcGroups != null) {
             for (Map.Entry<String, Map<String, Object>> groupEntry : mvcGroups.entrySet()) {
                 String type = groupEntry.getKey();
@@ -244,7 +244,7 @@ public class DefaultApplicationConfigurer implements ApplicationConfigurer {
 
         Injector<?> injector = application.getInjector();
         Collection<ActionInterceptor> interceptorInstances = injector.getInstances(ActionInterceptor.class);
-        List<String> interceptorOrder = application.getApplicationConfiguration().get(KEY_GRIFFON_CONTROLLER_ACTION_INTERCEPTOR_ORDER, Collections.<String>emptyList());
+        List<String> interceptorOrder = application.getConfiguration().get(KEY_GRIFFON_CONTROLLER_ACTION_INTERCEPTOR_ORDER, Collections.<String>emptyList());
         Map<String, ActionInterceptor> sortedInterceptors = sortByDependencies(interceptorInstances, ActionInterceptor.SUFFIX, "interceptor", interceptorOrder);
 
         for (ActionInterceptor interceptor : sortedInterceptors.values()) {

@@ -20,7 +20,7 @@ class ContainerView {
             }
 
             fileChooser(id: 'fileChooserWindow')
-            application(title: application.applicationConfiguration['application.title'],
+            application(title: application.getConfiguration['application.title'],
                 size: [480, 320], locationByPlatform: true,
                 iconImage: imageIcon('/griffon-icon-48x48.png').image,
                 iconImages: [imageIcon('/griffon-icon-48x48.png').image,

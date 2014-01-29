@@ -24,7 +24,7 @@ import java.util.Map;
  * @author Andres Almiray
  * @since 2.0.0
  */
-public interface ApplicationConfiguration {
+public interface Configuration {
     boolean containsKey(@Nonnull String key);
 
     @Nonnull

@@ -226,7 +226,7 @@ public class SwingUtils {
         requireNonNull(application, "Argument 'application' cannot be null");
         JFrame frame = null;
         // try config specified first
-        String frameClass = application.getApplicationConfiguration().getAsString("application.frameClass", JFrame.class.getName());
+        String frameClass = application.getConfiguration().getAsString("application.frameClass", JFrame.class.getName());
         if (!isBlank(frameClass)) {
             try {
                 ClassLoader cl = SwingUtils.class.getClassLoader();

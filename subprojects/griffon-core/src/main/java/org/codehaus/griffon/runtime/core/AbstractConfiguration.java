@@ -16,7 +16,7 @@
 
 package org.codehaus.griffon.runtime.core;
 
-import griffon.core.ApplicationConfiguration;
+import griffon.core.Configuration;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -27,7 +27,7 @@ import static griffon.util.TypeUtils.*;
  * @author Andres Almiray
  * @since 2.0.0
  */
-public abstract class AbstractApplicationConfiguration implements ApplicationConfiguration {
+public abstract class AbstractConfiguration implements Configuration {
     @Nullable
     @Override
     @SuppressWarnings("unchecked")

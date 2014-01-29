@@ -15,7 +15,7 @@
 
 package org.codehaus.griffon.runtime.core.controller;
 
-import griffon.core.ApplicationConfiguration;
+import griffon.core.Configuration;
 import griffon.core.GriffonApplication;
 import griffon.core.artifact.GriffonController;
 import griffon.core.artifact.GriffonControllerClass;
@@ -70,18 +70,22 @@ public abstract class AbstractActionManager implements ActionManager {
         this.application = requireNonNull(application, "Argument 'application' cannot be null");
     }
 
-    protected ApplicationConfiguration getApplicationConfiguration() {
-        return application.getApplicationConfiguration();
+    @Nonnull
+    protected Configuration getConfiguration() {
+        return application.getConfiguration();
     }
 
+    @Nonnull
     protected MessageSource getMessageSource() {
         return application.getMessageSource();
     }
 
+    @Nonnull
     protected UIThreadManager getUiThreadManager() {
         return application.getUIThreadManager();
     }
 
+    @Nonnull
     protected Map<String, Threading.Policy> getThreadingPolicies() {
         return threadingPolicies;
     }
@@ -266,11 +270,11 @@ public abstract class AbstractActionManager implements ActionManager {
     }
 
     private boolean isThreadingDisabled(@Nonnull String actionName) {
-        if (getApplicationConfiguration().getAsBoolean(KEY_DISABLE_THREADING_INJECTION, false)) {
+        if (getConfiguration().getAsBoolean(KEY_DISABLE_THREADING_INJECTION, false)) {
             return true;
         }
 
-        Map<String, Object> settings = getApplicationConfiguration().asFlatMap();
+        Map<String, Object> settings = getConfiguration().asFlatMap();
 
         String keyName = KEY_THREADING + "." + actionName;
         while (!KEY_THREADING.equals(keyName)) {

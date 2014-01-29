@@ -67,7 +67,7 @@ public class LanternaGriffonApplication extends AbstractGriffonApplication {
     public Object createApplicationContainer(@Nonnull Map<String, Object> attributes) {
         String title = (String) attributes.remove("title");
         if (title == null) {
-            title = getApplicationConfiguration().getAsString("application.title");
+            title = getConfiguration().getAsString("application.title");
         }
         return new Window(title);
     }

@@ -21,7 +21,7 @@ import javax.annotation.Nullable;
 import java.util.Map;
 
 /**
- * Holds the applicationConfiguration of an MVC group
+ * Holds the configuration of an MVC group
  *
  * @author Andres Almiray
  * @since 2.0.0
@@ -38,21 +38,21 @@ public interface MVCGroupConfiguration {
     /**
      * Returns a Map with the names of all members keyed by type.
      *
-     * @return a Map of all configured members as defined by the application's applicationConfiguration or and addon contribution.
+     * @return a Map of all configured members as defined by the application's configuration or and addon contribution.
      */
     @Nonnull
     Map<String, String> getMembers();
 
     /**
-     * Returns a Map with additional applicationConfiguration for this group.
+     * Returns a Map with additional configuration for this group.
      *
-     * @return a Map with additional applicationConfiguration for this group.
+     * @return a Map with additional configuration for this group.
      */
     @Nonnull
     Map<String, Object> getConfig();
 
     /**
-     * Creates a new MVCGroup instance based in this applicationConfiguration.
+     * Creates a new MVCGroup instance based in this configuration.
      * The group's id will should be set to the group's type and an empty Map should be used as the additional arguments.
      *
      * @return a newly instantiated MVCGroup
@@ -61,7 +61,7 @@ public interface MVCGroupConfiguration {
     MVCGroup create();
 
     /**
-     * Creates a new MVCGroup instance based in this applicationConfiguration.
+     * Creates a new MVCGroup instance based in this configuration.
      * An empty Map should be used as the additional arguments.
      *
      * @param mvcId the id to assign to this group
@@ -71,7 +71,7 @@ public interface MVCGroupConfiguration {
     MVCGroup create(@Nullable String mvcId);
 
     /**
-     * Creates a new MVCGroup instance based in this applicationConfiguration.
+     * Creates a new MVCGroup instance based in this configuration.
      * The group's id will should be set to the group's type.
      *
      * @param args additional arguments sent to each member when initializing
@@ -81,7 +81,7 @@ public interface MVCGroupConfiguration {
     MVCGroup create(@Nonnull Map<String, Object> args);
 
     /**
-     * Creates a new MVCGroup instance based in this applicationConfiguration.
+     * Creates a new MVCGroup instance based in this configuration.
      *
      * @param mvcId the id to assign to this group
      * @param args  additional arguments sent to each member when initializing

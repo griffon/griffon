@@ -50,7 +50,7 @@ public abstract class AbstractWindowManager<W> implements WindowManager<W> {
     @Inject
     public AbstractWindowManager(@Nonnull GriffonApplication application, @Nonnull WindowDisplayHandler<W> windowDisplayHandler) {
         this.application = requireNonNull(application, "Argument 'application' cannot be null");
-        requireNonNull(application.getApplicationConfiguration(), "Argument 'application.configuration' cannot be null");
+        requireNonNull(application.getConfiguration(), "Argument 'application.configuration' cannot be null");
         requireNonNull(application.getUIThreadManager(), "Argument 'application.uiThreadManager' cannot be null");
         this.windowDisplayHandler = requireNonNull(windowDisplayHandler, "Argument 'windowDisplayHandler' cannot be null");
     }
@@ -90,7 +90,7 @@ public abstract class AbstractWindowManager<W> implements WindowManager<W> {
     @Nullable
     public W getStartingWindow() {
         W window;
-        Object value = application.getApplicationConfiguration().get("windowManager.startingWindow", null);
+        Object value = application.getConfiguration().get("windowManager.startingWindow", null);
         LOG.debug("windowManager.startingWindow configured to {}", value);
 
         if (value instanceof String) {
@@ -267,6 +267,6 @@ public abstract class AbstractWindowManager<W> implements WindowManager<W> {
 
     @Override
     public boolean isAutoShutdown() {
-        return application.getApplicationConfiguration().getAsBoolean("application.autoShutdown", true);
+        return application.getConfiguration().getAsBoolean("application.autoShutdown", true);
     }
 }

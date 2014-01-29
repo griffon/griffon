@@ -42,13 +42,13 @@ public class DefaultMacOSXPlatformHandler extends DefaultPlatformHandler {
         System.setProperty("apple.laf.useScreenMenuBar", "true");
 
         // set menu bar title
-        String title = application.getApplicationConfiguration().getAsString("application.title", "Griffon");
+        String title = application.getConfiguration().getAsString("application.title", "Griffon");
         System.setProperty("com.apple.mrj.application.apple.menu.about.name", capitalize(title));
 
 
-        boolean skipAbout = application.getApplicationConfiguration().getAsBoolean("osx.noabout", false);
-        boolean skipPrefs = application.getApplicationConfiguration().getAsBoolean("osx.noprefs", false);
-        boolean skipQuit = application.getApplicationConfiguration().getAsBoolean("osx.noquit", false);
+        boolean skipAbout = application.getConfiguration().getAsBoolean("osx.noabout", false);
+        boolean skipPrefs = application.getConfiguration().getAsBoolean("osx.noprefs", false);
+        boolean skipQuit = application.getConfiguration().getAsBoolean("osx.noquit", false);
 
         GriffonMacOSXSupport handler = new GriffonMacOSXSupport(application, skipQuit);
         if (!skipAbout) MRJApplicationUtils.registerAboutHandler(handler);

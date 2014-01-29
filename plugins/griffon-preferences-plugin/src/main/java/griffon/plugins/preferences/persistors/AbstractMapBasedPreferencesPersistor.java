@@ -79,7 +79,7 @@ public abstract class AbstractMapBasedPreferencesPersistor implements Preference
             "preferences" +
             File.separator +
             "default.prefs";
-        return application.getApplicationConfiguration().getAsString(
+        return application.getConfiguration().getAsString(
             KEY_PREFERENCES_PERSISTOR_LOCATION,
             defaultLocation);
     }

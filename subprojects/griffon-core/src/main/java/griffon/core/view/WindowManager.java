@@ -55,10 +55,10 @@ public interface WindowManager<W> extends ShutdownHandler {
 
     /**
      * Finds the Window that should be displayed during the Ready phase of an application.<p>
-     * The WindowManager expects a applicationConfiguration flag <code>windowManager.startingWindow</code> to be
-     * present in order to determine which Window will be displayed during the Ready phase. If no applicationConfiguration
+     * The WindowManager expects a configuration flag <code>windowManager.startingWindow</code> to be
+     * present in order to determine which Window will be displayed during the Ready phase. If no configuration
      * is found the WindowManager will pick the first Window found in the list of managed windows.<p>
-     * The applicationConfiguration flag accepts two value types:<ul>
+     * The configuration flag accepts two value types:<ul>
      * <li>a String that defines the name of the Window. You must make sure the Window has a matching name property.</li>
      * <li>a Number that defines the index of the Window in the list of managed windows.</li>
      * </ul>
@@ -140,9 +140,9 @@ public interface WindowManager<W> extends ShutdownHandler {
     int countVisibleWindows();
 
     /**
-     * Returns the value of the "application.autoShutdown" applicationConfiguration flag.
+     * Returns the value of the "application.autoShutdown" configuration flag.
      *
-     * @return the value of the "application.autoShutdown" applicationConfiguration flag.
+     * @return the value of the "application.autoShutdown" configuration flag.
      */
     boolean isAutoShutdown();
 }

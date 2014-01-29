@@ -36,7 +36,7 @@ import java.util.Map;
  * <p/>
  * It's worth mentioning that the value of the {@code mvcName} parameter must be unique otherwise a collision will occur.
  * When that happens the application will report and exception and terminate. This behavior can be configured to be more
- * lenient, by defining a applicationConfiguration flag {@code griffon.mvcid.collision} in {@code Config}. <br/>
+ * lenient, by defining a configuration flag {@code griffon.mvcid.collision} in {@code Config}. <br/>
  * Accepted values are
  * <ul>
  * <ol>warning - reports the error but allows the application to continue. Destroys the existing group before continuing.</ol>
@@ -52,7 +52,7 @@ public interface MVCHandler {
      * MVC Groups must be previously configured with the application's metadata
      * before they can be used. This registration process usually takes place automatically
      * at boot time. The type of the group can be normally found in the application's
-     * applicationConfiguration file.<p>
+     * configuration file.<p>
      * For example, with the following entry available in {@code Application.groovy}
      * <p/>
      * <pre>
@@ -76,7 +76,7 @@ public interface MVCHandler {
      * @return an MVCGroup instance of the desired type
      * @throws griffon.exceptions.MVCGroupInstantiationException
      *          - if the type specified is not found in the application's
-     *          applicationConfiguration or if a group with the same mvcName exists already.
+     *          configuration or if a group with the same mvcName exists already.
      */
     @Nonnull
     MVCGroup buildMVCGroup(@Nonnull String mvcType);
@@ -86,7 +86,7 @@ public interface MVCHandler {
      * MVC Groups must be previously configured with the application's metadata
      * before they can be used. This registration process usually takes place automatically
      * at boot time. The type of the group can be normally found in the application's
-     * applicationConfiguration file.<p>
+     * configuration file.<p>
      * For example, with the following entry available in {@code Application.groovy}
      * <p/>
      * <pre>
@@ -113,7 +113,7 @@ public interface MVCHandler {
      * @return an MVCGroup instance of the desired type
      * @throws griffon.exceptions.MVCGroupInstantiationException
      *          - if the type specified is not found in the application's
-     *          applicationConfiguration or if a group with the same mvcName exists already.
+     *          configuration or if a group with the same mvcName exists already.
      */
     @Nonnull
     MVCGroup buildMVCGroup(@Nonnull String mvcType, @Nonnull String mvcName);
@@ -123,7 +123,7 @@ public interface MVCHandler {
      * MVC Groups must be previously configured with the application's metadata
      * before they can be used. This registration process usually takes place automatically
      * at boot time. The type of the group can be normally found in the application's
-     * applicationConfiguration file.<p>
+     * configuration file.<p>
      * The <tt>args</tt> Map can contain any value that will be used in one of the following
      * scenarios <ul>
      * <li>The key matches a member definition; the value will be used as the instance of such member.</li>
@@ -163,7 +163,7 @@ public interface MVCHandler {
      * @return an MVCGroup instance of the desired type
      * @throws griffon.exceptions.MVCGroupInstantiationException
      *          - if the type specified is not found in the application's
-     *          applicationConfiguration or if a group with the same mvcName exists already.
+     *          configuration or if a group with the same mvcName exists already.
      */
     @Nonnull
     MVCGroup buildMVCGroup(@Nonnull Map<String, Object> args, @Nonnull String mvcType);
@@ -173,7 +173,7 @@ public interface MVCHandler {
      * MVC Groups must be previously configured with the application's metadata
      * before they can be used. This registration process usually takes place automatically
      * at boot time. The type of the group can be normally found in the application's
-     * applicationConfiguration file.<p>
+     * configuration file.<p>
      * The <tt>args</tt> Map can contain any value that will be used in one of the following
      * scenarios <ul>
      * <li>The key matches a member definition; the value will be used as the instance of such member.</li>
@@ -213,7 +213,7 @@ public interface MVCHandler {
      * @return an MVCGroup instance of the desired type
      * @throws griffon.exceptions.MVCGroupInstantiationException
      *          - if the type specified is not found in the application's
-     *          applicationConfiguration or if a group with the same mvcName exists already.
+     *          configuration or if a group with the same mvcName exists already.
      */
     @Nonnull
     MVCGroup buildMVCGroup(@Nonnull String mvcType, @Nonnull Map<String, Object> args);
@@ -223,7 +223,7 @@ public interface MVCHandler {
      * MVC Groups must be previously configured with the application's metadata
      * before they can be used. This registration process usually takes place automatically
      * at boot time. The type of the group can be normally found in the application's
-     * applicationConfiguration file.<p>
+     * configuration file.<p>
      * The <tt>args</tt> Map can contain any value that will be used in one of the following
      * scenarios <ul>
      * <li>The key matches a member definition; the value will be used as the instance of such member.</li>
@@ -260,7 +260,7 @@ public interface MVCHandler {
      * @return an MVCGroup instance of the desired type
      * @throws griffon.exceptions.MVCGroupInstantiationException
      *          - if the type specified is not found in the application's
-     *          applicationConfiguration or if a group with the same mvcName exists already.
+     *          configuration or if a group with the same mvcName exists already.
      */
     @Nonnull
     MVCGroup buildMVCGroup(@Nonnull Map<String, Object> args, @Nonnull String mvcType, @Nonnull String mvcName);
@@ -270,7 +270,7 @@ public interface MVCHandler {
      * MVC Groups must be previously configured with the application's metadata
      * before they can be used. This registration process usually takes place automatically
      * at boot time. The type of the group can be normally found in the application's
-     * applicationConfiguration file.<p>
+     * configuration file.<p>
      * The <tt>args</tt> Map can contain any value that will be used in one of the following
      * scenarios <ul>
      * <li>The key matches a member definition; the value will be used as the instance of such member.</li>
@@ -307,7 +307,7 @@ public interface MVCHandler {
      * @return an MVCGroup instance of the desired type
      * @throws griffon.exceptions.MVCGroupInstantiationException
      *          - if the type specified is not found in the application's
-     *          applicationConfiguration or if a group with the same mvcName exists already.
+     *          configuration or if a group with the same mvcName exists already.
      */
     @Nonnull
     MVCGroup buildMVCGroup(@Nonnull String mvcType, @Nonnull String mvcName, @Nonnull Map<String, Object> args);
@@ -317,7 +317,7 @@ public interface MVCHandler {
      * MVC Groups must be previously configured with the application's metadata
      * before they can be used. This registration process usually takes place automatically
      * at boot time. The type of the group can be normally found in the application's
-     * applicationConfiguration file.<p>
+     * configuration file.<p>
      * For example, with the following entry available in {@code Application.groovy}
      * <p/>
      * <pre>
@@ -341,7 +341,7 @@ public interface MVCHandler {
      * @return a List with the canonical MVC members of the group
      * @throws griffon.exceptions.MVCGroupInstantiationException
      *          - if the type specified is not found in the application's
-     *          applicationConfiguration or if a group with the same mvcName exists already.
+     *          configuration or if a group with the same mvcName exists already.
      */
     @Nonnull
     List<? extends GriffonMvcArtifact> createMVCGroup(@Nonnull String mvcType);
@@ -351,7 +351,7 @@ public interface MVCHandler {
      * MVC Groups must be previously configured with the application's metadata
      * before they can be used. This registration process usually takes place automatically
      * at boot time. The type of the group can be normally found in the application's
-     * applicationConfiguration file.<p>
+     * configuration file.<p>
      * The <tt>args</tt> Map can contain any value that will be used in one of the following
      * scenarios <ul>
      * <li>The key matches a member definition; the value will be used as the instance of such member.</li>
@@ -391,7 +391,7 @@ public interface MVCHandler {
      * @return a List with the canonical MVC members of the group
      * @throws griffon.exceptions.MVCGroupInstantiationException
      *          - if the type specified is not found in the application's
-     *          applicationConfiguration or if a group with the same mvcName exists already.
+     *          configuration or if a group with the same mvcName exists already.
      */
     @Nonnull
     List<? extends GriffonMvcArtifact> createMVCGroup(@Nonnull Map<String, Object> args, @Nonnull String mvcType);
@@ -401,7 +401,7 @@ public interface MVCHandler {
      * MVC Groups must be previously configured with the application's metadata
      * before they can be used. This registration process usually takes place automatically
      * at boot time. The type of the group can be normally found in the application's
-     * applicationConfiguration file.<p>
+     * configuration file.<p>
      * The <tt>args</tt> Map can contain any value that will be used in one of the following
      * scenarios <ul>
      * <li>The key matches a member definition; the value will be used as the instance of such member.</li>
@@ -441,7 +441,7 @@ public interface MVCHandler {
      * @return a List with the canonical MVC members of the group
      * @throws griffon.exceptions.MVCGroupInstantiationException
      *          - if the type specified is not found in the application's
-     *          applicationConfiguration or if a group with the same mvcName exists already.
+     *          configuration or if a group with the same mvcName exists already.
      */
     @Nonnull
     List<? extends GriffonMvcArtifact> createMVCGroup(@Nonnull String mvcType, @Nonnull Map<String, Object> args);
@@ -451,7 +451,7 @@ public interface MVCHandler {
      * MVC Groups must be previously configured with the application's metadata
      * before they can be used. This registration process usually takes place automatically
      * at boot time. The type of the group can be normally found in the application's
-     * applicationConfiguration file.<p>
+     * configuration file.<p>
      * For example, with the following entry available in {@code Application.groovy}
      * <p/>
      * <pre>
@@ -478,7 +478,7 @@ public interface MVCHandler {
      * @return a List with the canonical MVC members of the group
      * @throws griffon.exceptions.MVCGroupInstantiationException
      *          - if the type specified is not found in the application's
-     *          applicationConfiguration or if a group with the same mvcName exists already.
+     *          configuration or if a group with the same mvcName exists already.
      */
     @Nonnull
     List<? extends GriffonMvcArtifact> createMVCGroup(@Nonnull String mvcType, @Nonnull String mvcName);
@@ -488,7 +488,7 @@ public interface MVCHandler {
      * MVC Groups must be previously configured with the application's metadata
      * before they can be used. This registration process usually takes place automatically
      * at boot time. The type of the group can be normally found in the application's
-     * applicationConfiguration file.<p>
+     * configuration file.<p>
      * The <tt>args</tt> Map can contain any value that will be used in one of the following
      * scenarios <ul>
      * <li>The key matches a member definition; the value will be used as the instance of such member.</li>
@@ -525,7 +525,7 @@ public interface MVCHandler {
      * @return a List with the canonical MVC members of the group
      * @throws griffon.exceptions.MVCGroupInstantiationException
      *          - if the type specified is not found in the application's
-     *          applicationConfiguration or if a group with the same mvcName exists already.
+     *          configuration or if a group with the same mvcName exists already.
      */
     @Nonnull
     List<? extends GriffonMvcArtifact> createMVCGroup(@Nonnull Map<String, Object> args, @Nonnull String mvcType, @Nonnull String mvcName);
@@ -535,7 +535,7 @@ public interface MVCHandler {
      * MVC Groups must be previously configured with the application's metadata
      * before they can be used. This registration process usually takes place automatically
      * at boot time. The type of the group can be normally found in the application's
-     * applicationConfiguration file.<p>
+     * configuration file.<p>
      * The <tt>args</tt> Map can contain any value that will be used in one of the following
      * scenarios <ul>
      * <li>The key matches a member definition; the value will be used as the instance of such member.</li>
@@ -572,7 +572,7 @@ public interface MVCHandler {
      * @return a List with the canonical MVC members of the group
      * @throws griffon.exceptions.MVCGroupInstantiationException
      *          - if the type specified is not found in the application's
-     *          applicationConfiguration or if a group with the same mvcName exists already.
+     *          configuration or if a group with the same mvcName exists already.
      */
     @Nonnull
     List<? extends GriffonMvcArtifact> createMVCGroup(@Nonnull String mvcType, @Nonnull String mvcName, @Nonnull Map<String, Object> args);
@@ -593,7 +593,7 @@ public interface MVCHandler {
      * <p>MVC Groups must be previously configured with the application's metadata
      * before they can be used. This registration process usually takes place automatically
      * at boot time. The type of the group can be normally found in the application's
-     * applicationConfiguration file.</p>
+     * configuration file.</p>
      * For example, with the following entry available in {@code Application.groovy}
      * <p/>
      * <pre>
@@ -621,7 +621,7 @@ public interface MVCHandler {
      * @param handler a code block used to configure and manage the instantiated group
      * @throws griffon.exceptions.MVCGroupInstantiationException
      *          - if the type specified is not found in the application's
-     *          applicationConfiguration
+     *          configuration
      */
     <M extends GriffonModel, V extends GriffonView, C extends GriffonController> void withMVCGroup(@Nonnull String mvcType, @Nonnull MVCCallable<M, V, C> handler);
 
@@ -632,7 +632,7 @@ public interface MVCHandler {
      * <p>MVC Groups must be previously configured with the application's metadata
      * before they can be used. This registration process usually takes place automatically
      * at boot time. The type of the group can be normally found in the application's
-     * applicationConfiguration file.</p>
+     * configuration file.</p>
      * For example, with the following entry available in {@code Application.groovy}
      * <p/>
      * <pre>
@@ -663,7 +663,7 @@ public interface MVCHandler {
      * @param handler a code block used to configure and manage the instantiated group
      * @throws griffon.exceptions.MVCGroupInstantiationException
      *          - if the type specified is not found in the application's
-     *          applicationConfiguration
+     *          configuration
      */
     <M extends GriffonModel, V extends GriffonView, C extends GriffonController> void withMVCGroup(@Nonnull String mvcType, @Nonnull String mvcName, @Nonnull MVCCallable<M, V, C> handler);
 
@@ -674,7 +674,7 @@ public interface MVCHandler {
      * <p>MVC Groups must be previously configured with the application's metadata
      * before they can be used. This registration process usually takes place automatically
      * at boot time. The type of the group can be normally found in the application's
-     * applicationConfiguration file.</p>
+     * configuration file.</p>
      * The <tt>args</tt> Map can contain any value that will be used in one of the following
      * scenarios <ul>
      * <li>The key matches a member definition; the value will be used as the instance of such member.</li>
@@ -713,7 +713,7 @@ public interface MVCHandler {
      * @param handler a code block used to configure and manage the instantiated group
      * @throws griffon.exceptions.MVCGroupInstantiationException
      *          - if the type specified is not found in the application's
-     *          applicationConfiguration
+     *          configuration
      */
     <M extends GriffonModel, V extends GriffonView, C extends GriffonController> void withMVCGroup(@Nonnull String mvcType, @Nonnull String mvcName, @Nonnull Map<String, Object> args, @Nonnull MVCCallable<M, V, C> handler);
 
@@ -724,7 +724,7 @@ public interface MVCHandler {
      * <p>MVC Groups must be previously configured with the application's metadata
      * before they can be used. This registration process usually takes place automatically
      * at boot time. The type of the group can be normally found in the application's
-     * applicationConfiguration file.</p>
+     * configuration file.</p>
      * The <tt>args</tt> Map can contain any value that will be used in one of the following
      * scenarios <ul>
      * <li>The key matches a member definition; the value will be used as the instance of such member.</li>
@@ -763,7 +763,7 @@ public interface MVCHandler {
      * @param handler a code block used to configure and manage the instantiated group
      * @throws griffon.exceptions.MVCGroupInstantiationException
      *          - if the type specified is not found in the application's
-     *          applicationConfiguration
+     *          configuration
      */
     <M extends GriffonModel, V extends GriffonView, C extends GriffonController> void withMVCGroup(@Nonnull Map<String, Object> args, @Nonnull String mvcType, @Nonnull String mvcName, @Nonnull MVCCallable<M, V, C> handler);
 
@@ -774,7 +774,7 @@ public interface MVCHandler {
      * <p>MVC Groups must be previously configured with the application's metadata
      * before they can be used. This registration process usually takes place automatically
      * at boot time. The type of the group can be normally found in the application's
-     * applicationConfiguration file.</p>
+     * configuration file.</p>
      * The <tt>args</tt> Map can contain any value that will be used in one of the following
      * scenarios <ul>
      * <li>The key matches a member definition; the value will be used as the instance of such member.</li>
@@ -810,7 +810,7 @@ public interface MVCHandler {
      * @param handler a code block used to configure and manage the instantiated group
      * @throws griffon.exceptions.MVCGroupInstantiationException
      *          - if the type specified is not found in the application's
-     *          applicationConfiguration
+     *          configuration
      */
     <M extends GriffonModel, V extends GriffonView, C extends GriffonController> void withMVCGroup(@Nonnull String mvcType, @Nonnull Map<String, Object> args, @Nonnull MVCCallable<M, V, C> handler);
 
@@ -821,7 +821,7 @@ public interface MVCHandler {
      * <p>MVC Groups must be previously configured with the application's metadata
      * before they can be used. This registration process usually takes place automatically
      * at boot time. The type of the group can be normally found in the application's
-     * applicationConfiguration file.</p>
+     * configuration file.</p>
      * The <tt>args</tt> Map can contain any value that will be used in one of the following
      * scenarios <ul>
      * <li>The key matches a member definition; the value will be used as the instance of such member.</li>
@@ -857,7 +857,7 @@ public interface MVCHandler {
      * @param handler a code block used to configure and manage the instantiated group
      * @throws griffon.exceptions.MVCGroupInstantiationException
      *          - if the type specified is not found in the application's
-     *          applicationConfiguration
+     *          configuration
      */
     <M extends GriffonModel, V extends GriffonView, C extends GriffonController> void withMVCGroup(@Nonnull Map<String, Object> args, @Nonnull String mvcType, @Nonnull MVCCallable<M, V, C> handler);
 }

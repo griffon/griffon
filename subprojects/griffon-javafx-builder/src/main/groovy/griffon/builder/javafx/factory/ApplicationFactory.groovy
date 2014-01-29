@@ -54,8 +54,8 @@ class ApplicationFactory extends StageFactory {
                 stage.title = value
         }
 
-        if (!stage.title && builder.application.applicationConfiguration['application.title']) {
-            stage.title = builder.application.applicationConfiguration['application.title']
+        if (!stage.title && builder.application.getConfiguration['application.title']) {
+            stage.title = builder.application.getConfiguration['application.title']
         }
 
         def style = attributes.remove("style")

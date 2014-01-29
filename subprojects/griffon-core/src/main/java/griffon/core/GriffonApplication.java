@@ -51,7 +51,10 @@ public interface GriffonApplication extends Observable {
     Object createApplicationContainer(@Nonnull Map<String, Object> attributes);
 
     @Nonnull
-    ApplicationConfiguration getApplicationConfiguration();
+    ApplicationClassLoader getApplicationClassLoader();
+
+    @Nonnull
+    Configuration getConfiguration();
 
     @Nonnull
     UIThreadManager getUIThreadManager();

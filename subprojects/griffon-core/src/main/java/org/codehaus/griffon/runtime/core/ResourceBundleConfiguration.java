@@ -19,7 +19,6 @@ package org.codehaus.griffon.runtime.core;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.inject.Inject;
-import javax.inject.Named;
 import java.util.*;
 
 import static griffon.util.ConfigUtils.getConfigValue;
@@ -31,13 +30,13 @@ import static java.util.Objects.requireNonNull;
  * @author Andres Almiray
  * @since 2.0.0
  */
-public class DefaultApplicationConfiguration extends AbstractApplicationConfiguration {
+public class ResourceBundleConfiguration extends AbstractConfiguration {
     protected static final String ERROR_KEY_BLANK = "Argument 'key' cannot be blank";
     private final ResourceBundle resourceBundle;
     private final Map<String, Object> flatMap = new LinkedHashMap<>();
 
     @Inject
-    public DefaultApplicationConfiguration(@Nonnull @Named("applicationResourceBundle") ResourceBundle resourceBundle) {
+    public ResourceBundleConfiguration(@Nonnull ResourceBundle resourceBundle) {
         this.resourceBundle = requireNonNull(resourceBundle, "Argument 'resourceBundle' cannot be null");
         Enumeration<String> keys = resourceBundle.getKeys();
         while (keys.hasMoreElements()) {

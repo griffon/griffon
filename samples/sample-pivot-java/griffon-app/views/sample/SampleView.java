@@ -38,7 +38,7 @@ public class SampleView extends AbstractGriffonView {
     public void initUI() {
         Window window = (Window) getApplication()
             .createApplicationContainer(Collections.<String, Object>emptyMap());
-        window.setTitle(getApplication().getApplicationConfiguration().getAsString("application.title"));
+        window.setTitle(getApplication().getConfiguration().getAsString("application.title"));
         window.setMaximized(true);
         getApplication().getWindowManager().attach("mainWindow", window);        //<2>
 

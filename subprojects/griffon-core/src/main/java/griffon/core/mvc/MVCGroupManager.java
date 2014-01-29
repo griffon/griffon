@@ -26,7 +26,7 @@ import javax.annotation.Nullable;
 import java.util.Map;
 
 /**
- * Manages the applicationConfiguration and instantiation of MVC groups.
+ * Manages the configuration and instantiation of MVC groups.
  *
  * @author Andres Almiray
  * @since 2.0.0
@@ -37,7 +37,7 @@ public interface MVCGroupManager extends MVCHandler {
      *
      * @param mvcType the name of the MVC group
      * @param members members of the group
-     * @param config  additional applicationConfiguration required by the group
+     * @param config  additional configuration required by the group
      * @return a ready-to-use MVCGroupConfiguration instance
      */
     @Nonnull
@@ -46,8 +46,8 @@ public interface MVCGroupManager extends MVCHandler {
     /**
      * Clones an existing MVCGroupConfiguration, optionally overriding additional config values.
      *
-     * @param mvcType the name of the applicationConfiguration to clone
-     * @param config  additional config parameters to be set on the applicationConfiguration
+     * @param mvcType the name of the configuration to clone
+     * @param config  additional config parameters to be set on the configuration
      * @return a ready-to-use MVCGroupConfiguration instance
      */
     @Nonnull
@@ -56,7 +56,7 @@ public interface MVCGroupManager extends MVCHandler {
     /**
      * Creates a new MVCGroup instance.
      *
-     * @param configuration the applicationConfiguration of the group
+     * @param configuration the configuration of the group
      * @param mvcId         the id to use for the group
      * @param members       the instance members of the group
      * @return a ready-to-use MVCGroup instance

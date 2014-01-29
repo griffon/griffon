@@ -34,7 +34,7 @@ import static java.util.Objects.requireNonNull;
 
 /**
  * Implementation of a per window {@code WindowDisplayHandler} that can be configured via a DSL.<p>
- * This is the default {@code WindowDisplayHandler} used by {@code SwingApplication}. It expects a applicationConfiguration
+ * This is the default {@code WindowDisplayHandler} used by {@code SwingApplication}. It expects a configuration
  * entry in <code>griffon-app/conf/Config.groovy</code> that looks like the following one<p>
  * <pre>
  *     windowManager {
@@ -50,7 +50,7 @@ import static java.util.Objects.requireNonNull;
  * <p/>
  * For these settings to work you must specify a <code>name:</code> property on the Window/Frame instance. This
  * {@code WindowDisplayHandler} is smart enough to use the default show/hide behavior should any or both are not specified
- * or if a window name does not have a matching applicationConfiguration. The default behavior will also be used if the Window/Frame
+ * or if a window name does not have a matching configuration. The default behavior will also be used if the Window/Frame
  * does not have a value for its <code>name:</code> property.<p>
  * There's a third option that can be set for each configured window, and that is a delegate {@code WindowDisplayHandler} that
  * will be used for that window alone. The following example shows how it can be configured<p>
@@ -208,7 +208,7 @@ public class ConfigurableWindowDisplayHandler<W> implements WindowDisplayHandler
     }
 
     protected Map<String, Object> windowManagerBlock() {
-        return application.getApplicationConfiguration().get("windowManager", Collections.<String, Object>emptyMap());
+        return application.getConfiguration().get("windowManager", Collections.<String, Object>emptyMap());
     }
 
     protected Map<String, Object> windowBlock(String windowName) {

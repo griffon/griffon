@@ -29,7 +29,7 @@ public interface ActionInterceptor {
     String SUFFIX = "ActionInterceptor";
 
     /**
-     * Inspect the action during the applicationConfiguration phase.
+     * Inspect the action during the configuration phase.
      * <p/>
      * This is the perfect time to search for annotations or any other information
      * required by the action. Interceptors have the option to cache such inspections

@@ -28,7 +28,7 @@ class ApplicationFactory extends ComponentFactory {
 
     Object newInstance(FactoryBuilderSupport builder, Object name, Object value, Map attributes) {
         String windowName = attributes.remove('name') ?: computeWindowName()
-        String title = attributes.remove('title') ?: builder.application.applicationConfiguration['application.title']
+        String title = attributes.remove('title') ?: builder.application.getConfiguration['application.title']
         Window window = builder.application.createApplicationContainer([title: title])
         builder.application.windowManager.attach(windowName, window)
         window

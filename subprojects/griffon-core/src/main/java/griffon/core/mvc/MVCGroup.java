@@ -32,15 +32,15 @@ import java.util.Map;
  */
 public interface MVCGroup {
     /**
-     * Returns the applicationConfiguration of this group.
+     * Returns the configuration of this group.
      *
-     * @return the applicationConfiguration used to instantiate this group.
+     * @return the configuration used to instantiate this group.
      */
     @Nonnull
     MVCGroupConfiguration getConfiguration();
 
     /**
-     * Returns the type of this group as set in the application's applicationConfiguration.
+     * Returns the type of this group as set in the application's configuration.
      *
      * @return the type of the group
      */

@@ -198,8 +198,14 @@ public abstract class AbstractJavaFXGriffonApplication extends Application imple
 
     @Nonnull
     @Override
-    public ApplicationConfiguration getApplicationConfiguration() {
-        return injector.getInstance(ApplicationConfiguration.class);
+    public ApplicationClassLoader getApplicationClassLoader() {
+        return injector.getInstance(ApplicationClassLoader.class);
+    }
+
+    @Nonnull
+    @Override
+    public Configuration getConfiguration() {
+        return injector.getInstance(Configuration.class);
     }
 
     @Nonnull
@@ -393,7 +399,7 @@ public abstract class AbstractJavaFXGriffonApplication extends Application imple
         setPhase(ApplicationPhase.STARTUP);
         event(ApplicationEvent.STARTUP_START, asList(this));
 
-        Object startupGroups = getApplicationConfiguration().get("application.startupGroups", null);
+        Object startupGroups = getConfiguration().get("application.startupGroups", null);
         if (startupGroups instanceof List) {
             if (log.isInfoEnabled()) {
                 log.info("Initializing all startup groups: " + startupGroups);

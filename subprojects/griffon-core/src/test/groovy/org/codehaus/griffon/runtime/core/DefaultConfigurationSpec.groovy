@@ -1,6 +1,6 @@
 package org.codehaus.griffon.runtime.core
 
-import griffon.core.ApplicationConfiguration
+import griffon.core.Configuration
 import griffon.util.AbstractMapResourceBundle
 import spock.lang.Specification
 import spock.lang.Unroll
@@ -8,11 +8,11 @@ import spock.lang.Unroll
 import javax.annotation.Nonnull
 
 @Unroll
-class DefaultApplicationConfigurationSpec extends Specification {
+class DefaultConfigurationSpec extends Specification {
     def 'Calling configuration.#method(#key, #defaultValue) gives #value as result'() {
         given:
         ResourceBundle bundle = new MapResourceBundle()
-        ApplicationConfiguration configuration = new DefaultApplicationConfiguration(bundle)
+        Configuration configuration = new DefaultConfiguration(bundle)
 
         expect:
         value == configuration."$method"(key, defaultValue)
@@ -59,7 +59,7 @@ class DefaultApplicationConfigurationSpec extends Specification {
     def 'Can resolved nested keys from sample application configuration'() {
         given:
         ResourceBundle bundle = new AppResourceBundle()
-        ApplicationConfiguration configuration = new DefaultApplicationConfiguration(bundle)
+        Configuration configuration = new DefaultConfiguration(bundle)
 
         expect:
 

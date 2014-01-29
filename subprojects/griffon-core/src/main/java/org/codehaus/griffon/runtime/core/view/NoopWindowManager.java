@@ -103,6 +103,6 @@ public final class NoopWindowManager implements WindowManager<Object> {
 
     @Override
     public boolean isAutoShutdown() {
-        return application.getApplicationConfiguration().getAsBoolean("application.autoShutdown", true);
+        return application.getConfiguration().getAsBoolean("application.autoShutdown", true);
     }
 }

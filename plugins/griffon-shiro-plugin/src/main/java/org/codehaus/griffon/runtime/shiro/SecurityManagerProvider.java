@@ -17,7 +17,7 @@
 package org.codehaus.griffon.runtime.shiro;
 
 
-import griffon.core.ApplicationConfiguration;
+import griffon.core.Configuration;
 import org.apache.shiro.mgt.DefaultSecurityManager;
 import org.apache.shiro.mgt.SecurityManager;
 import org.apache.shiro.realm.text.PropertiesRealm;
@@ -33,12 +33,12 @@ public class SecurityManagerProvider implements Provider<SecurityManager> {
     private static final String KEY_REALM_RESOURCE_PATH = "shiro.realm.resource.path";
 
     @Inject
-    private ApplicationConfiguration applicationConfiguration;
+    private Configuration configuration;
 
     @Override
     public SecurityManager get() {
         PropertiesRealm realm = new PropertiesRealm();
-        String resourcePath = applicationConfiguration.getAsString(KEY_REALM_RESOURCE_PATH, DEFAULT_REALM_RESOURCE_PATH);
+        String resourcePath = configuration.getAsString(KEY_REALM_RESOURCE_PATH, DEFAULT_REALM_RESOURCE_PATH);
         realm.setResourcePath(resourcePath);
         realm.init();
         return new DefaultSecurityManager(realm);

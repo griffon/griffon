@@ -16,7 +16,7 @@
 
 package org.codehaus.griffon.runtime.core;
 
-import griffon.core.ApplicationConfiguration;
+import griffon.core.Configuration;
 import griffon.core.LifecycleHandler;
 import griffon.core.PlatformHandler;
 import griffon.exceptions.InstanceNotFoundException;
@@ -51,14 +51,14 @@ public class PlatformHandlerProvider implements Provider<PlatformHandler> {
         .e("windows64", DEFAULT_PLATFORM_HANDLER);
 
     @Inject
-    private ApplicationConfiguration applicationConfiguration;
+    private Configuration configuration;
 
     @Override
     @SuppressWarnings("unchecked")
     public PlatformHandler get() {
         String platform = GriffonApplicationUtils.platform;
 
-        String handlerClassName = applicationConfiguration.getAsString("platform.handler." + platform, DEFAULT_PLATFORM_HANDLERS.get(platform));
+        String handlerClassName = configuration.getAsString("platform.handler." + platform, DEFAULT_PLATFORM_HANDLERS.get(platform));
         if (isBlank(handlerClassName)) {
             handlerClassName = DEFAULT_PLATFORM_HANDLER;
         }

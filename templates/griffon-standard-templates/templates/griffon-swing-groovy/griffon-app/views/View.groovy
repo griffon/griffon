@@ -12,7 +12,7 @@ class ${project_capitalized_name}View {
     void initUI() {
         builder.with {
             application(size: [320, 160], id: 'mainWindow',
-                title: application.applicationConfiguration['application.title'],
+                title: application.configuration['application.title'],
                 iconImage:   imageIcon('/griffon-icon-48x48.png').image,
                 iconImages: [imageIcon('/griffon-icon-48x48.png').image,
                              imageIcon('/griffon-icon-32x32.png').image,
