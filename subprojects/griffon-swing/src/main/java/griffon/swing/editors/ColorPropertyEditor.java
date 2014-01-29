@@ -19,8 +19,8 @@ package griffon.swing.editors;
 import griffon.core.editors.AbstractPropertyEditor;
 import griffon.core.formatters.Formatter;
 import griffon.core.formatters.ParseException;
-import griffon.swing.formatters.ColorFormatter;
 import griffon.metadata.PropertyEditorFor;
+import griffon.swing.formatters.ColorFormatter;
 
 import java.awt.Color;
 import java.util.ArrayList;

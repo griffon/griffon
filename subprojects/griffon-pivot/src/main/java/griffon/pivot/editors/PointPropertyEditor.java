@@ -17,8 +17,8 @@
 package griffon.pivot.editors;
 
 import griffon.core.editors.AbstractPropertyEditor;
-import org.apache.pivot.wtk.Point;
 import griffon.metadata.PropertyEditorFor;
+import org.apache.pivot.wtk.Point;
 
 import java.util.List;
 import java.util.Map;

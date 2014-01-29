@@ -22,7 +22,6 @@ import javafx.stage.Stage;
 import org.codehaus.griffon.runtime.core.DefaultApplicationBootstrapper;
 
 import javax.annotation.Nonnull;
-
 import java.util.Map;
 
 import static griffon.core.GriffonExceptionHandler.registerExceptionHandler;

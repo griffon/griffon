@@ -16,9 +16,9 @@
 
 package org.codehaus.griffon.runtime.core.resources;
 
+import griffon.core.editors.ExtendedPropertyEditor;
 import griffon.core.resources.InjectedResource;
 import griffon.core.resources.ResourceInjector;
-import griffon.core.editors.ExtendedPropertyEditor;
 import griffon.exceptions.InstanceMethodInvocationException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

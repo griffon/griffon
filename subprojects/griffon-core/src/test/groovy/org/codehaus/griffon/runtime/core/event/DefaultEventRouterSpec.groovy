@@ -13,7 +13,6 @@ import org.codehaus.griffon.runtime.core.threading.UIThreadManagerTestSupport
 import org.junit.Rule
 import spock.lang.Specification
 
-import javax.annotation.Nonnull
 import javax.annotation.Nullable
 import javax.inject.Inject
 import javax.inject.Singleton

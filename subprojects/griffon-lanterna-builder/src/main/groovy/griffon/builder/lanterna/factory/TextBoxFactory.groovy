@@ -16,7 +16,6 @@
 
 package griffon.builder.lanterna.factory
 
-import com.googlecode.lanterna.gui.component.CheckBox
 import com.googlecode.lanterna.gui.component.TextBox
 
 /**

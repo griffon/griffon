@@ -243,7 +243,7 @@ public final class TypeUtils {
      * @return true if the contents of both collections are equal
      */
     public static boolean equals(Object[] left, List right) {
-        return _equals(left, right);
+        return doEquals(left, right);
     }
 
     /**
@@ -256,10 +256,10 @@ public final class TypeUtils {
      * @return true if the contents of both collections are equal
      */
     public static boolean equals(List left, Object[] right) {
-        return _equals(right, left);
+        return doEquals(right, left);
     }
 
-    private static boolean _equals(Object[] left, List right) {
+    private static boolean doEquals(Object[] left, List right) {
         if (left == null) {
             return right == null;
         }

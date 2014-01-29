@@ -20,8 +20,8 @@ import griffon.core.editors.AbstractPropertyEditor;
 import griffon.core.formatters.Formatter;
 import griffon.core.formatters.ParseException;
 import griffon.javafx.formatters.ColorFormatter;
-import javafx.scene.paint.Color;
 import griffon.metadata.PropertyEditorFor;
+import javafx.scene.paint.Color;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -16,8 +16,8 @@
 
 package griffon.builder.pivot.factory
 
-import org.apache.pivot.wtk.Window
 import org.apache.pivot.wtk.Component
+import org.apache.pivot.wtk.Window
 
 /**
  * @author Andres Almiray

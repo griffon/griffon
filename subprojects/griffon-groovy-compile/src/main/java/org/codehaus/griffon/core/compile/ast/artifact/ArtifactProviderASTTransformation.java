@@ -73,7 +73,7 @@ public class ArtifactProviderASTTransformation extends GipsyASTTransformation {
         for (String artifactName : persistence.tryFind()) {
             data.getArtifact(artifactName);
         }
-        data.cache();
+        //data.cache();
     }
 
     @Override
@@ -100,7 +100,7 @@ public class ArtifactProviderASTTransformation extends GipsyASTTransformation {
 
     @Override
     protected void writeData() {
-        if (data.isModified()) {
+        // if (data.isModified()) {
             if (data.artifacts().isEmpty()) {
                 logger.note(LogLocation.LOG_FILE, "Writing output");
                 try {
@@ -119,7 +119,7 @@ public class ArtifactProviderASTTransformation extends GipsyASTTransformation {
                 }
                 persistence.writeLog();
             }
-        }
+        // }
     }
 
     private CheckResult checkCurrentClass(ClassNode currentClass) {

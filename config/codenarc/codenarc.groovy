@@ -17,13 +17,13 @@
 ruleset {
     ruleset('rulesets/basic.xml') {
         exclude 'EmptyCatchBlock'
-		exclude 'EmptyMethod'
+        exclude 'EmptyMethod'
     }
     ruleset('rulesets/imports.xml') {
         exclude 'MisorderedStaticImports'
     }
     /*
-	ruleset('rulesets/naming.xml') {
+    ruleset('rulesets/naming.xml') {
         exclude 'PropertyName'
         'ClassName' {
             regex = '^[A-Z][a-zA-Z0-9]*$'

@@ -19,8 +19,8 @@ package griffon.pivot.editors;
 import griffon.core.editors.AbstractPropertyEditor;
 import griffon.core.formatters.Formatter;
 import griffon.core.formatters.ParseException;
-import griffon.pivot.formatters.ColorFormatter;
 import griffon.metadata.PropertyEditorFor;
+import griffon.pivot.formatters.ColorFormatter;
 
 import java.awt.Color;
 import java.util.ArrayList;

@@ -34,7 +34,7 @@ import griffon.core.view.WindowManager;
 import griffon.util.CompositeResourceBundleBuilder;
 import org.codehaus.griffon.runtime.core.addon.DefaultAddonManager;
 import org.codehaus.griffon.runtime.core.artifact.*;
-import org.codehaus.griffon.runtime.core.controller.NoopActionManager;
+import org.codehaus.griffon.runtime.core.controller.DefaultActionManager;
 import org.codehaus.griffon.runtime.core.event.DefaultEventHandler;
 import org.codehaus.griffon.runtime.core.event.DefaultEventRouter;
 import org.codehaus.griffon.runtime.core.i18n.MessageSourceProvider;
@@ -134,7 +134,7 @@ public class DefaultApplicationModule extends AbstractModule {
             .asSingleton();
 
         bind(ActionManager.class)
-            .to(NoopActionManager.class)
+            .to(DefaultActionManager.class)
             .asSingleton();
 
         bind(ArtifactManager.class)

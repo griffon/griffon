@@ -80,8 +80,8 @@ public class PivotGriffonControllerAction extends AbstractAction {
         return description;
     }
 
-    public void setDescription(@Nullable String Description) {
-        firePropertyChange(KEY_DESCRIPTION, this.description, this.description = Description);
+    public void setDescription(@Nullable String description) {
+        firePropertyChange(KEY_DESCRIPTION, this.description, this.description = description);
     }
 
     @Nonnull

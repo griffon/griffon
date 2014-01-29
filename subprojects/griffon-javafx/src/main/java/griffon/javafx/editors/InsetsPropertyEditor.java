@@ -17,8 +17,8 @@
 package griffon.javafx.editors;
 
 import griffon.core.editors.AbstractPropertyEditor;
-import javafx.geometry.Insets;
 import griffon.metadata.PropertyEditorFor;
+import javafx.geometry.Insets;
 
 import java.util.List;
 import java.util.Map;

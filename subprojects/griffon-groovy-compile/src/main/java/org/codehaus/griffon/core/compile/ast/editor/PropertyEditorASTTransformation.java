@@ -95,7 +95,7 @@ public class PropertyEditorASTTransformation extends GipsyASTTransformation {
 
     @Override
     protected void writeData() {
-        if (data.isModified()) {
+        // if (data.isModified()) {
             String content = data.toList();
             if (content.length() > 0) {
                 logger.note(LogLocation.LOG_FILE, "Writing output");
@@ -113,7 +113,7 @@ public class PropertyEditorASTTransformation extends GipsyASTTransformation {
                     logger.warning(LogLocation.LOG_FILE, "An error occurred while deleting data file");
                 }
             }
-        }
+        // }
     }
 
     private CheckResult checkCurrentClass(ClassNode currentClass) {

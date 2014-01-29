@@ -5,8 +5,8 @@ import com.google.guiceberry.junit4.GuiceBerryRule
 import com.google.inject.AbstractModule
 import griffon.core.ApplicationClassLoader
 import griffon.core.resources.ResourceHandler
-import griffon.core.resources.ResourceResolver
 import griffon.core.resources.ResourceInjector
+import griffon.core.resources.ResourceResolver
 import griffon.util.CompositeResourceBundleBuilder
 import org.codehaus.griffon.runtime.core.DefaultApplicationClassLoader
 import org.codehaus.griffon.runtime.util.DefaultCompositeResourceBundleBuilder
