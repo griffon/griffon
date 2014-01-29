@@ -10,8 +10,6 @@ import griffon.util.CompositeResourceBundleBuilder
 import griffon.util.ConfigReader
 import org.codehaus.griffon.runtime.core.DefaultApplicationClassLoader
 import org.codehaus.griffon.runtime.core.resources.DefaultResourceHandler
-import org.junit.AfterClass
-import org.junit.BeforeClass
 import org.junit.Rule
 import spock.lang.Specification
 
@@ -20,7 +18,7 @@ import javax.inject.Singleton
 
 import static com.google.inject.util.Providers.guicify
 
-class GroovyAwareCompositeResourceBundleBuilderSpec extends Specification {
+class GroovyAwareCompositeResourceBundleBuilder2Spec extends Specification {
     @Rule
     public final GuiceBerryRule guiceBerry = new GuiceBerryRule(TestModule)
 
@@ -28,7 +26,7 @@ class GroovyAwareCompositeResourceBundleBuilderSpec extends Specification {
     private CompositeResourceBundleBuilder bundleBuilder
 
     void setupSpec() {
-        System.setProperty(Environment.KEY, 'dev')
+        System.setProperty(Environment.KEY, 'test')
     }
 
     void cleanupSpec() {
@@ -37,6 +35,7 @@ class GroovyAwareCompositeResourceBundleBuilderSpec extends Specification {
 
     def "Load Groovy and properties bundles"() {
         given:
+        println Environment.current
         ResourceBundle bundle = bundleBuilder.create('org.codehaus.griffon.runtime.util.GroovyBundle')
 
         expect:
@@ -45,20 +44,7 @@ class GroovyAwareCompositeResourceBundleBuilderSpec extends Specification {
         where:
         key              || value
         'properties.key' || 'properties'
-        'groovy.key'     || 'groovy'
-    }
-
-    def "Load Java and properties bundles"() {
-        given:
-        ResourceBundle bundle = bundleBuilder.create('org.codehaus.griffon.runtime.util.JavaBundle')
-
-        expect:
-        bundle.getString(key) == value
-
-        where:
-        key              || value
-        'properties.key' || 'properties'
-        'java.key'       || 'java'
+        'groovy.key'     || 'test'
     }
 
     static final class TestModule extends AbstractModule {

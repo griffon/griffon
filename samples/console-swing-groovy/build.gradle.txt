@@ -78,7 +78,13 @@ gradle.taskGraph.whenReady {
 
 processResources {
     from(sourceSets.main.resources.srcDirs) {
+        exclude '**/*.properties'
+        exclude '**/*.groovy'
+        exclude '**/*.xml'
+    }
+    from(sourceSets.main.resources.srcDirs) {
         include '**/*.properties'
+        include '**/*.groovy'
         include '**/*.xml'
         filter(org.apache.tools.ant.filters.ReplaceTokens, tokens: [
             'application.name': project.name,
@@ -86,8 +92,22 @@ processResources {
             'griffon.version': project.griffonVersion
         ])
     }
-    from(sourceSets.main.resources.srcDirs) {
+}
+
+processTestResources {
+    from(sourceSets.test.resources.srcDirs) {
         exclude '**/*.properties'
+        exclude '**/*.groovy'
         exclude '**/*.xml'
+    }
+    from(sourceSets.test.resources.srcDirs) {
+        include '**/*.properties'
+        include '**/*.groovy'
+        include '**/*.xml'
+        filter(org.apache.tools.ant.filters.ReplaceTokens, tokens: [
+            'application.name': project.name,
+            'application.version': project.version,
+            'griffon.version': project.version
+        ])
     }
 }

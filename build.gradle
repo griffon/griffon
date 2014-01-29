@@ -76,10 +76,45 @@ subprojects { subproj ->
                 scopes.PROVIDED.plus += configurations.compileOnly
             }
         }
+
+        processResources {
+            from(sourceSets.main.resources.srcDirs) {
+                exclude '**/*.properties'
+                exclude '**/*.groovy'
+                exclude '**/*.xml'
+            }
+            from(sourceSets.main.resources.srcDirs) {
+                include '**/*.properties'
+                include '**/*.groovy'
+                include '**/*.xml'
+                filter(org.apache.tools.ant.filters.ReplaceTokens, tokens: [
+                    'application.name': project.name,
+                    'application.version': project.version,
+                    'griffon.version': project.version
+                ])
+            }
+        }
+
+        processTestResources {
+            from(sourceSets.test.resources.srcDirs) {
+                exclude '**/*.properties'
+                exclude '**/*.groovy'
+                exclude '**/*.xml'
+            }
+            from(sourceSets.test.resources.srcDirs) {
+                include '**/*.properties'
+                include '**/*.groovy'
+                include '**/*.xml'
+                filter(org.apache.tools.ant.filters.ReplaceTokens, tokens: [
+                    'application.name': project.name,
+                    'application.version': project.version,
+                    'griffon.version': project.version
+                ])
+            }
+        }
     }
 
     if (subproj.ext.maven == true) {
-        // apply plugin: 'java'
         apply from: "${rootDir}/gradle/maven.gradle"
         apply from: "${rootDir}/gradle/publish.gradle"
         apply from: "${rootDir}/gradle/coverage.gradle"

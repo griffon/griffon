@@ -53,6 +53,11 @@ class ConfigReader {
         @Override
         ConfigReader get() {
             ConfigReader configReader = new ConfigReader(applicationClassLoader)
+            configReader.setBinding(CollectionUtils.map()
+                .e("userHome", System.getProperty("user.home"))
+                .e("appName", Metadata.getCurrent().getApplicationName())
+                .e("appVersion", Metadata.getCurrent().getApplicationVersion())
+                .e("griffonVersion", Metadata.getCurrent().getGriffonVersion()));
             configReader.registerConditionalBlock("environments", Environment.getCurrent().getName())
             configReader.registerConditionalBlock("projects", Metadata.getCurrent().getApplicationName())
             configReader.registerConditionalBlock("platforms", GriffonApplicationUtils.getPlatform())

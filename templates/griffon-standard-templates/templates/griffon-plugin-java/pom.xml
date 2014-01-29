@@ -40,7 +40,6 @@
                         <phase>process-sources</phase>
                         <goals>
                             <goal>add-source</goal>
-                            <goal>add-resource</goal>
                         </goals>
                         <configuration>
                             <sources>
@@ -51,14 +50,66 @@
                                 <source>griffon-app/views</source>
                                 <source>griffon-app/lifecycle</source>
                             </sources>
-                            <resources>
-                                <resource>
-                                    <directory>griffon-app/resources</directory>
-                                </resource>
-                                <resource>
-                                    <directory>griffon-app/i18n</directory>
-                                </resource>
-                            </resources>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-antrun-plugin</artifactId>
+                <version>1.7</version>
+                <executions>
+                    <execution>
+                        <phase>compile</phase>
+                        <goals>
+                            <goal>run</goal>
+                        </goals>
+                        <configuration>
+                            <tasks>
+                                <macrodef name="copy-resources">
+                                    <attribute name="source"/>
+                                    <attribute name="destination"/>
+                                    <sequential>
+                                        <copy todir="@{destination}">
+                                            <fileset dir="@{source}">
+                                                <exclude
+                                                    name="**/*.properties"/>
+                                                <exclude name="**/*.groovy"/>
+                                                <exclude name="**/*.xml"/>
+                                            </fileset>
+                                        </copy>
+                                        <copy todir="@{destination}">
+                                            <fileset dir="@{source}">
+                                                <include
+                                                    name="**/*.properties"/>
+                                                <include name="**/*.groovy"/>
+                                                <include name="**/*.xml"/>
+                                            </fileset>
+                                            <filterset>
+                                                <filter token="application.name"
+                                                        value="\${project.name}"/>
+                                                <filter
+                                                    token="application.version"
+                                                    value="\${project.version}"/>
+                                                <filter token="griffon.version"
+                                                        value="\${griffon.version}"/>
+                                            </filterset>
+                                        </copy>
+                                    </sequential>
+                                </macrodef>
+                                <copy-resources
+                                    destination="\${project.build.testOutputDirectory}"
+                                    source="src/test/resources"/>
+                                <copy-resources
+                                    destination="\${project.build.outputDirectory}"
+                                    source="src/main/resources"/>
+                                <copy-resources
+                                    destination="\${project.build.outputDirectory}"
+                                    source="griffon-app/resources"/>
+                                <copy-resources
+                                    destination="\${project.build.outputDirectory}"
+                                    source="griffon-app/i18n"/>
+                            </tasks>
                         </configuration>
                     </execution>
                 </executions>
