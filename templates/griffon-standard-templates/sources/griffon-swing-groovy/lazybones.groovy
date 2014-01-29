@@ -13,7 +13,7 @@ String packagePath = props.project_package.replace('.' as char, '/' as char)
 
 processTemplates 'build.gradle', props
 processTemplates 'gradle.properties', props
-processTemplates 'pom.xml', props
+processTemplates '*.xml', props
 processTemplates 'src/main/groovy/*.groovy', props
 processTemplates 'src/test/groovy/*.groovy', props
 processTemplates 'griffon-app/*/*.groovy', props

@@ -9,8 +9,7 @@ props.project_group = ask("Define value for 'group' [org.example]: ", "org.examp
 props.project_version = ask("Define value for 'version' [0.1.0-SNAPSHOT]: ", "0.1.0-SNAPSHOT", "version")
 props.project_package = ask("Define value for 'package' ["+ props.project_group +"]: ", props.project_group, "package")
 props.griffon_version = ask("Define value for 'griffonVersion' [@griffon.version@]: ", "@griffon.version@", "griffonVersion")
-String packagePath = props.project_package.replace('.' as char, '/' as char)
 
 processTemplates 'build.gradle', props
 processTemplates 'gradle.properties', props
-processTemplates 'pom.xml', props
+processTemplates '*.xml', props
