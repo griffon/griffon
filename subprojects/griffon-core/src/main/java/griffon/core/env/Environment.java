@@ -72,7 +72,7 @@ public enum Environment {
     };
 
     /**
-     * Returns the current environment which is typcally either DEVELOPMENT, PRODUCTION or TEST.
+     * Returns the current environment which is typically either DEVELOPMENT, PRODUCTION or TEST.
      * For custom environments CUSTOM type is returned.
      *
      * @return The current environment.
@@ -138,5 +138,14 @@ public enum Environment {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public static String getEnvironmentShortName() {
+        switch(Environment.getCurrent()) {
+            case DEVELOPMENT: return "dev";
+            case TEST:        return "test";
+            case PRODUCTION:  return "prod";
+            default: return Environment.getCurrent().getName();
+        }
     }
 }

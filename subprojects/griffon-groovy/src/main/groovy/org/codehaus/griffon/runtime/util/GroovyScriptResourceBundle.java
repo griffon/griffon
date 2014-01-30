@@ -37,27 +37,39 @@ public class GroovyScriptResourceBundle extends ResourceBundle {
     private static final String ERROR_READER_NULL = "Argument 'reader' cannot be null";
     private final ConfigObject config;
     private final List<String> keys = new ArrayList<>();
+    private final String source;
 
     public GroovyScriptResourceBundle(@Nonnull ConfigReader reader, @Nonnull URL location) {
-        this(requireNonNull(reader, ERROR_READER_NULL).parse(requireNonNull(location, "Argument 'location' cannot ne null")));
+        this(requireNonNull(reader, ERROR_READER_NULL).parse(requireNonNull(location, "Argument 'location' cannot ne null")), location.toString());
     }
 
     public GroovyScriptResourceBundle(@Nonnull ConfigReader reader, @Nonnull Script script) {
-        this(requireNonNull(reader, ERROR_READER_NULL).parse(requireNonNull(script, "Argument 'script' cannot ne null")));
+        this(requireNonNull(reader, ERROR_READER_NULL).parse(requireNonNull(script, "Argument 'script' cannot ne null")), script.getClass().getName());
     }
 
     public GroovyScriptResourceBundle(@Nonnull ConfigReader reader, @Nonnull String script) {
-        this(requireNonNull(reader, ERROR_READER_NULL).parse(requireNonBlank(script, "Argument 'script' cannot ne blank")));
+        this(requireNonNull(reader, ERROR_READER_NULL).parse(requireNonBlank(script, "Argument 'script' cannot ne blank")), "<<INLINE SCRIPT>>");
     }
 
     public GroovyScriptResourceBundle(@Nonnull ConfigReader reader, @Nonnull Class<? extends Script> scriptClass) {
-        this(requireNonNull(reader, ERROR_READER_NULL).parse(requireNonNull(scriptClass, "Argument 'scriptClass' cannot ne null")));
+        this(requireNonNull(reader, ERROR_READER_NULL).parse(requireNonNull(scriptClass, "Argument 'scriptClass' cannot ne null")), scriptClass.getName());
     }
 
     @SuppressWarnings("unchecked")
-    private GroovyScriptResourceBundle(@Nonnull ConfigObject config) {
+    private GroovyScriptResourceBundle(@Nonnull ConfigObject config, @Nonnull String source) {
         this.config = requireNonNull(config, "Argument 'config' cannot be null");
+        this.source = source;
         keys.addAll(this.config.flatten(new LinkedHashMap<>()).keySet());
+    }
+
+    @Nonnull
+    public String getSource() {
+        return source;
+    }
+
+    @Override
+    public String toString() {
+        return super.toString() + "[" + source + "]";
     }
 
     @Nullable

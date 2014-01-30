@@ -17,6 +17,7 @@
 package org.codehaus.griffon.runtime.core.i18n;
 
 import griffon.core.resources.NoSuchResourceException;
+import griffon.util.CompositeResourceBundle;
 import griffon.util.CompositeResourceBundleBuilder;
 
 import javax.annotation.Nonnull;
@@ -63,5 +64,15 @@ public class DefaultMessageSource extends AbstractMessageSource {
             bundles.put(locale, rb);
         }
         return rb;
+    }
+
+    @Nonnull
+    @Override
+    public ResourceBundle asResourceBundle() {
+        // force initialization of default bundle
+        if (bundles.isEmpty()) {
+            getBundle(Locale.getDefault());
+        }
+        return new CompositeResourceBundle(bundles.values());
     }
 }

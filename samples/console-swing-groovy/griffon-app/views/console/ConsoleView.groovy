@@ -15,7 +15,7 @@ class ConsoleView {
                     enabled: bind { model.enabled })
             }
 
-            application(title: application.getConfiguration['application.title'],
+            application(title: application.configuration['application.title'],
                 pack: true, locationByPlatform: true, id: 'mainWindow',
                 iconImage:   imageIcon('/griffon-icon-48x48.png').image,
                 iconImages: [imageIcon('/griffon-icon-48x48.png').image,

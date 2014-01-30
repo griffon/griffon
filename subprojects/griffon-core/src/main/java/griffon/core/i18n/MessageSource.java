@@ -21,6 +21,7 @@ import javax.annotation.Nullable;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.ResourceBundle;
 
 /**
  * Interface for resolving messages, with support for the parameterization and internationalization of such messages.
@@ -294,4 +295,13 @@ public interface MessageSource {
      */
     @Nonnull
     String formatMessage(@Nonnull String message, @Nonnull Map<String, Object> args);
+
+    /**
+     * Offers a view of this {@code MessageSource} as a {@code ResourceBundle}.
+     *
+     * @return a {@code ResourceBundle} containing the keys this {@code MessageSource}
+     *         can resolve.
+     */
+    @Nonnull
+    ResourceBundle asResourceBundle();
 }

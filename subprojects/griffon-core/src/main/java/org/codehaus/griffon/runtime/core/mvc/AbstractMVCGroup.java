@@ -27,6 +27,7 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.UUID;
 
+import static griffon.util.GriffonClassUtils.requireState;
 import static griffon.util.GriffonNameUtils.isBlank;
 import static griffon.util.GriffonNameUtils.requireNonBlank;
 import static java.util.Collections.unmodifiableMap;
@@ -129,8 +130,6 @@ public abstract class AbstractMVCGroup implements MVCGroup {
     }
 
     protected void checkIfAlive() {
-        if (!isAlive()) {
-            throw new IllegalStateException("Group " + getMvcType() + ":" + mvcId + " has been destroyed already.");
-        }
+        requireState(isAlive(), "Group " + getMvcType() + ":" + mvcId + " has been destroyed already.");
     }
 }

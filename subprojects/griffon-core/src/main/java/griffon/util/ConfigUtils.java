@@ -46,7 +46,14 @@ public final class ConfigUtils {
      * @return true if there's a value for the specified key, false otherwise
      */
     @SuppressWarnings("unchecked")
-    public static boolean isValueDefined(Map<String, Object> config, String key) {
+    public static boolean isValueDefined(@Nonnull Map<String, Object> config, @Nonnull String key) {
+        requireNonNull(config, ERROR_CONFIG_NULL);
+        requireNonBlank(key, ERROR_KEY_BLANK);
+
+        if (config.containsKey(key)) {
+            return true;
+        }
+
         String[] keys = key.split("\\.");
         for (int i = 0; i < keys.length - 1; i++) {
             if (config != null) {
@@ -66,6 +73,61 @@ public final class ConfigUtils {
     }
 
     /**
+     * Returns true if there's a on-null value for the specified key.
+     *
+     * @param config the configuration object to be searched upon
+     * @param key    the key to be searched
+     * @return true if there's a value for the specified key, false otherwise
+     */
+    @SuppressWarnings("unchecked")
+    public static boolean isValueDefined(@Nonnull ResourceBundle config, @Nonnull String key) {
+        requireNonNull(config, ERROR_CONFIG_NULL);
+        requireNonBlank(key, ERROR_KEY_BLANK);
+
+        String[] keys = key.split("\\.");
+
+        try {
+            Object value = config.getObject(key);
+            if (value != null) {
+                return true;
+            }
+        } catch (MissingResourceException mre) {
+            // OK
+        }
+
+        if (keys.length == 1) {
+            try {
+                Object node = config.getObject(keys[0]);
+                return node != null;
+            } catch (MissingResourceException mre) {
+                return false;
+            }
+        }
+
+        Object node = config.getObject(keys[0]);
+        if (!(node instanceof Map)) {
+            return false;
+        }
+
+        Map<String, Object> map = (Map) node;
+        for (int i = 1; i < keys.length - 1; i++) {
+            if (map != null) {
+                node = map.get(keys[i]);
+                if (node instanceof Map) {
+                    map = (Map) node;
+                } else {
+                    return false;
+                }
+            } else {
+                return false;
+            }
+        }
+        if (map == null) return false;
+        Object value = map.get(keys[keys.length - 1]);
+        return value != null;
+    }
+
+    /**
      * Returns the value for the specified key with an optional default value if no match is found.
      *
      * @param config       the configuration object to be searched upon
@@ -76,7 +138,7 @@ public final class ConfigUtils {
     @Nullable
     @SuppressWarnings({"unchecked", "ConstantConditions"})
     public static <T> T getConfigValue(@Nonnull Map<String, Object> config, @Nonnull String key, @Nullable T defaultValue) {
-        requireNonNull(config, "Argument 'config' cannot be null");
+        requireNonNull(config, ERROR_CONFIG_NULL);
         requireNonBlank(key, ERROR_KEY_BLANK);
 
         if (config.containsKey(key)) {
@@ -164,7 +226,7 @@ public final class ConfigUtils {
     @Nullable
     @SuppressWarnings({"unchecked", "ConstantConditions"})
     public static <T> T getConfigValue(@Nonnull Map<String, Object> config, @Nonnull String key) throws MissingResourceException {
-        requireNonNull(config, "Argument 'config' cannot be null");
+        requireNonNull(config, ERROR_CONFIG_NULL);
         requireNonBlank(key, ERROR_KEY_BLANK);
         String type = config.getClass().getName();
 

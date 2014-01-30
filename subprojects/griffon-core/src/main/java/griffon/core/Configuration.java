@@ -19,6 +19,7 @@ package griffon.core;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.Map;
+import java.util.ResourceBundle;
 
 /**
  * @author Andres Almiray
@@ -29,6 +30,9 @@ public interface Configuration {
 
     @Nonnull
     Map<String, Object> asFlatMap();
+
+    @Nonnull
+    ResourceBundle asResourceBundle();
 
     @Nullable
     Object get(@Nonnull String key);

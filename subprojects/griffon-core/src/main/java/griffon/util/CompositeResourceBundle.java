@@ -23,6 +23,8 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.*;
 
+import static griffon.util.ExpandableResourceBundle.wrapResourceBundle;
+import static griffon.util.GriffonClassUtils.requireState;
 import static griffon.util.GriffonNameUtils.requireNonBlank;
 import static java.util.Objects.requireNonNull;
 
@@ -35,13 +37,19 @@ public class CompositeResourceBundle extends ResourceBundle {
     private final ResourceBundle[] bundles;
     private final List<String> keys = new ArrayList<>();
 
-    public CompositeResourceBundle(@Nonnull List<ResourceBundle> bundles) {
+    public CompositeResourceBundle(@Nonnull Collection<ResourceBundle> bundles) {
         this(toResourceBundleArray(bundles));
     }
 
     public CompositeResourceBundle(@Nonnull ResourceBundle[] bundles) {
-        this.bundles = requireNonNull(bundles, "Argument 'bundles' cannot be null");
-        for (ResourceBundle bundle : bundles) {
+        requireNonNull(bundles, "Argument 'bundles' cannot be null");
+        requireState(bundles.length > 0, "Argument 'bundles' cannot be empty");
+        this.bundles = new ResourceBundle[bundles.length];
+        for (int i = 0; i < bundles.length; i++) {
+            this.bundles[i] = wrapResourceBundle(bundles[i]);
+        }
+
+        for (ResourceBundle bundle : this.bundles) {
             Enumeration<String> ks = bundle.getKeys();
             while (ks.hasMoreElements()) {
                 String key = ks.nextElement();
@@ -94,7 +102,7 @@ public class CompositeResourceBundle extends ResourceBundle {
     }
 
     @Nonnull
-    private static ResourceBundle[] toResourceBundleArray(@Nonnull List<ResourceBundle> bundles) {
+    private static ResourceBundle[] toResourceBundleArray(@Nonnull Collection<ResourceBundle> bundles) {
         requireNonNull(bundles, "Argument 'bundles' cannot be null");
         if (bundles.isEmpty()) {
             return new ResourceBundle[0];

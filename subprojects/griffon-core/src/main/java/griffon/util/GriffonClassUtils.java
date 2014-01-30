@@ -122,7 +122,6 @@ public class GriffonClassUtils {
         ARTIFACT_METHODS.add(new MethodDescriptor("getApp"));
         ARTIFACT_METHODS.add(new MethodDescriptor("getLog"));
         ARTIFACT_METHODS.add(new MethodDescriptor("getGriffonClass"));
-        // ARTIFACT_METHODS.add(new MethodDescriptor("griffonDestroy"));
 
         MVC_METHODS.add(new MethodDescriptor("getMvcGroup"));
         MVC_METHODS.add(new MethodDescriptor("setMvcGroup", new Class<?>[]{MVCGroup.class}));
@@ -154,15 +153,8 @@ public class GriffonClassUtils {
         MVC_METHODS.add(new MethodDescriptor("withMVCGroup", new Class<?>[]{Object[].class}));
 
         MVC_METHODS.add(new MethodDescriptor("initUI"));
-        // MVC_METHODS.add(new MethodDescriptor("getArtifactManager"));
-        // MVC_METHODS.add(new MethodDescriptor("getAddonManager"));
-        // MVC_METHODS.add(new MethodDescriptor("getMvcGroupManager"));
-        // MVC_METHODS.add(new MethodDescriptor("setBuilder", new Class<?>[]{FactoryBuilderSupport.class}));
         MVC_METHODS.add(new MethodDescriptor("invokeAction", new Class<?>[]{String.class, Object[].class}));
         MVC_METHODS.add(new MethodDescriptor("invokeAction", new Class<?>[]{String.class, Object[].class}, Modifier.PUBLIC | Modifier.TRANSIENT));
-
-        // SERVICE_METHODS.add(new MethodDescriptor("serviceInit"));
-        // SERVICE_METHODS.add(new MethodDescriptor("serviceDestroy"));
 
         THREADING_METHODS.add(new MethodDescriptor("isUIThread"));
         THREADING_METHODS.add(new MethodDescriptor("runInsideUIAsync", new Class<?>[]{Runnable.class}));
@@ -244,6 +236,47 @@ public class GriffonClassUtils {
         RESOURCE_RESOLVER_METHODS.add(new MethodDescriptor("formatResource", new Class<?>[]{String.class, Object[].class}));
         RESOURCE_RESOLVER_METHODS.add(new MethodDescriptor("formatResource", new Class<?>[]{String.class, List.class}));
         RESOURCE_RESOLVER_METHODS.add(new MethodDescriptor("formatResource", new Class<?>[]{String.class, Map.class}));
+    }
+
+    /**
+     * Checks that the specified condition is met. This method is designed
+     * primarily for doing parameter validation in methods and constructors,
+     * as demonstrated below:
+     * <blockquote><pre>
+     * public Foo(int[] array) {
+     *     GriffonClassUtils.requireState(array.length > 0);
+     * }
+     * </pre></blockquote>
+     *
+     * @param condition the condition to check
+     * @throws IllegalStateException if {@code condition} evaluates to false
+     */
+    public static void requireState(boolean condition) {
+        if (!condition) {
+            throw new IllegalStateException();
+        }
+    }
+
+    /**
+     * Checks that the specified condition is met and throws a customized
+     * {@link IllegalStateException} if it is. This method is designed primarily
+     * for doing parameter validation in methods and constructors with multiple
+     * parameters, as demonstrated below:
+     * <blockquote><pre>
+     * public Foo(int[] array) {
+     *     GriffonClassUtils.requireState(array.length > 0, "array must not be empty");
+     * }
+     * </pre></blockquote>
+     *
+     * @param condition the condition to check
+     * @param message   detail message to be used in the event that a {@code
+     *                  IllegalStateException} is thrown
+     * @throws IllegalStateException if {@code condition} evaluates to false
+     */
+    public static void requireState(boolean condition, String message) {
+        if (!condition) {
+            throw new IllegalStateException(message);
+        }
     }
 
     /**

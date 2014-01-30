@@ -9,7 +9,7 @@ class SampleView {
     SampleModel model                                                                          //<1>
 
     void initUI() {
-        builder.application(title: application.getConfiguration['application.title'],
+        builder.application(title: application.configuration['application.title'],
             sizeToScene: true, centerOnScreen: true) {                                         //<2>
             scene(fill: WHITE, width: 400, height: 120) {
                 anchorPane {

@@ -1,6 +1,5 @@
-package org.codehaus.griffon.runtime.util
+package griffon.util
 
-import griffon.util.AbstractMapResourceBundle
 import spock.lang.Specification
 import spock.lang.Unroll
 
@@ -24,6 +23,8 @@ class MapResourceBundleSpec extends Specification {
 class MapResourceBundle extends AbstractMapResourceBundle {
     @Override
     protected void initialize(@Nonnull Map<String, Object> entries) {
+        entries['single'] = 'single'
         entries['key.string'] = 'string'
+        entries['key.number'] = 'number'
     }
 }

@@ -9,7 +9,7 @@ class BrowserView {
     def model
 
     void initUI() {
-        builder.application(title: application.getConfiguration['application.title'],
+        builder.application(title: application.configuration['application.title'],
             width: 800, height: 600, centerOnScreen: true) {
             scene {
                 vbox {

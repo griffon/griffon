@@ -24,8 +24,10 @@ class DefaultMessageSourceTests {
     private CompositeResourceBundleBuilder bundleBuilder
 
     @Test
-    void getAllMessagesByProperties() {
+    void testGetAllMessagesByProperties() {
         MessageSource messageSource = new DefaultMessageSource(bundleBuilder, 'org.codehaus.griffon.runtime.core.resources.props')
+
+        assert messageSource.basename == 'org.codehaus.griffon.runtime.core.resources.props'
 
         String quote = messageSource.getMessage('healthy.proverb.index', ['apple', 'doctor'])
         assert quote == 'An apple a day keeps the doctor away'
@@ -56,6 +58,24 @@ class DefaultMessageSourceTests {
         assert quote == 'not found :('
         quote = messageSource.getMessage('famous.quote.bogus', [location: 'Sparta'], 'not found :(')
         assert quote == 'not found :('
+    }
+
+    @Test
+    void getAllMessagesFromResourceBundle() {
+        MessageSource messageSource = new DefaultMessageSource(bundleBuilder, 'org.codehaus.griffon.runtime.core.resources.props')
+        ResourceBundle resourceBundle = messageSource.asResourceBundle()
+
+        assert resourceBundle.getString('healthy.proverb.index')
+        assert resourceBundle.getString('famous.quote.index')
+        assert resourceBundle.getString('healthy.proverb.map')
+        assert resourceBundle.getString('famous.quote.map')
+    }
+
+    @Test(expected = MissingResourceException)
+    void invalidKeysInResourceBundle() {
+        MessageSource messageSource = new DefaultMessageSource(bundleBuilder, 'org.codehaus.griffon.runtime.core.resources.props')
+        ResourceBundle resourceBundle = messageSource.asResourceBundle()
+        assert !resourceBundle.getString('healthy.proverb.bogus')
     }
 
     static final class TestModule extends AbstractModule {

@@ -32,6 +32,7 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Set;
 
+import static griffon.util.GriffonClassUtils.requireState;
 import static griffon.util.GriffonNameUtils.isBlank;
 import static griffon.util.GriffonNameUtils.requireNonBlank;
 import static java.util.Collections.unmodifiableSet;
@@ -56,11 +57,8 @@ public class DefaultThemeManager extends AbstractVetoable implements ThemeManage
             }
         }
 
-        if (themes.size() > 0) {
-            currentTheme = themes.keySet().iterator().next();
-        } else {
-            throw new IllegalStateException("No suitable instances of " + ResourceResolver.class.getName() + " were found.");
-        }
+        requireState(themes.size() > 0, "No suitable instances of " + ResourceResolver.class.getName() + " were found.");
+        currentTheme = themes.keySet().iterator().next();
     }
 
     @Nullable

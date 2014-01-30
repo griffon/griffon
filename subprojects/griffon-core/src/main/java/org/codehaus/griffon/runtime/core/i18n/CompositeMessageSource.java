@@ -18,11 +18,12 @@ package org.codehaus.griffon.runtime.core.i18n;
 
 import griffon.core.i18n.MessageSource;
 import griffon.core.i18n.NoSuchMessageException;
+import griffon.util.CompositeResourceBundle;
 
 import javax.annotation.Nonnull;
-import java.util.List;
-import java.util.Locale;
+import java.util.*;
 
+import static griffon.util.GriffonClassUtils.requireState;
 import static griffon.util.GriffonNameUtils.requireNonBlank;
 import static java.util.Objects.requireNonNull;
 
@@ -33,7 +34,7 @@ import static java.util.Objects.requireNonNull;
 public class CompositeMessageSource extends AbstractMessageSource {
     private final MessageSource[] messageSources;
 
-    public CompositeMessageSource(@Nonnull List<MessageSource> messageSources) {
+    public CompositeMessageSource(@Nonnull Collection<MessageSource> messageSources) {
         this(toMessageSourceArray(messageSources));
     }
 
@@ -41,11 +42,9 @@ public class CompositeMessageSource extends AbstractMessageSource {
         this.messageSources = requireNonNull(messageSources, "Argument 'messageSources' cannot be null");
     }
 
-    private static MessageSource[] toMessageSourceArray(@Nonnull List<MessageSource> messageSources) {
+    private static MessageSource[] toMessageSourceArray(@Nonnull Collection<MessageSource> messageSources) {
         requireNonNull(messageSources, "Argument 'messageSources' cannot be null");
-        if (messageSources.isEmpty()) {
-            return new MessageSource[0];
-        }
+        requireState(!messageSources.isEmpty(), "Argument 'messageSources' cannot be empty");
         return messageSources.toArray(new MessageSource[messageSources.size()]);
     }
 
@@ -62,5 +61,15 @@ public class CompositeMessageSource extends AbstractMessageSource {
             }
         }
         throw new NoSuchMessageException(key, locale);
+    }
+
+    @Nonnull
+    @Override
+    public ResourceBundle asResourceBundle() {
+        List<ResourceBundle> bundles = new ArrayList<>();
+        for (MessageSource messageSource : messageSources) {
+            bundles.add(messageSource.asResourceBundle());
+        }
+        return new CompositeResourceBundle(bundles);
     }
 }

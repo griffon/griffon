@@ -23,6 +23,7 @@ import javax.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.List;
 
+import static griffon.util.GriffonClassUtils.requireState;
 import static java.util.Objects.requireNonNull;
 
 /**
@@ -35,9 +36,7 @@ public abstract class AbstractModule implements Module {
     private boolean configured;
 
     public final void configure() {
-        if (configured) {
-            throw new IllegalStateException("Module " + this + " has already been configured");
-        }
+        requireState(!configured, "Module " + this + " has already been configured");
         doConfigure();
         configured = true;
     }

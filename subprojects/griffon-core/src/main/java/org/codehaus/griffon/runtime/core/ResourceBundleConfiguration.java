@@ -55,6 +55,12 @@ public class ResourceBundleConfiguration extends AbstractConfiguration {
         return unmodifiableMap(flatMap);
     }
 
+    @Nonnull
+    @Override
+    public ResourceBundle asResourceBundle() {
+        return resourceBundle;
+    }
+
     @Nullable
     @Override
     public Object get(@Nonnull String key) {

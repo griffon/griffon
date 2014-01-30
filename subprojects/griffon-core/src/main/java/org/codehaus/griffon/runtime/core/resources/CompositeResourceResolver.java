@@ -20,9 +20,10 @@ import griffon.core.resources.NoSuchResourceException;
 import griffon.core.resources.ResourceResolver;
 
 import javax.annotation.Nonnull;
-import java.util.List;
+import java.util.Collection;
 import java.util.Locale;
 
+import static griffon.util.GriffonClassUtils.requireState;
 import static griffon.util.GriffonNameUtils.requireNonBlank;
 import static java.util.Objects.requireNonNull;
 
@@ -33,7 +34,7 @@ import static java.util.Objects.requireNonNull;
 public class CompositeResourceResolver extends AbstractResourceResolver {
     private final ResourceResolver[] resourceResolvers;
 
-    public CompositeResourceResolver(@Nonnull List<ResourceResolver> resourceResolvers) {
+    public CompositeResourceResolver(@Nonnull Collection<ResourceResolver> resourceResolvers) {
         this(toResourceResolverArray(resourceResolvers));
     }
 
@@ -41,11 +42,9 @@ public class CompositeResourceResolver extends AbstractResourceResolver {
         this.resourceResolvers = requireNonNull(resourceResolvers, "Argument 'resourceResolvers' cannot be null");
     }
 
-    private static ResourceResolver[] toResourceResolverArray(@Nonnull List<ResourceResolver> resourceResolvers) {
+    private static ResourceResolver[] toResourceResolverArray(@Nonnull Collection<ResourceResolver> resourceResolvers) {
         requireNonNull(resourceResolvers, "Argument 'resourceResolvers' cannot be null");
-        if (resourceResolvers.isEmpty()) {
-            return new ResourceResolver[0];
-        }
+        requireState(!resourceResolvers.isEmpty(), "Argument 'resourceResolvers' cannot be empty");
         return resourceResolvers.toArray(new ResourceResolver[resourceResolvers.size()]);
     }
 

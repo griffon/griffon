@@ -72,6 +72,9 @@ public abstract class AbstractCompositeResourceBundleBuilder implements Composit
             bundles.addAll(loadBundlesFor(basename + "_" + suffix));
         }
         bundles.addAll(loadBundlesFor(basename));
+        if (bundles.size() == 0) {
+            throw new IllegalArgumentException("There are no ResourceBundle resources matching " + basename);
+        }
 
         return new CompositeResourceBundle(bundles);
     }
