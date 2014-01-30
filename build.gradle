@@ -52,6 +52,7 @@ subprojects { subproj ->
     if (subproj.plugins.hasPlugin('java')) {
         configurations {
             compileOnly
+            testCompileOnly
         }
 
         repositories {
@@ -65,6 +66,9 @@ subprojects { subproj ->
             main {
                 compileClasspath += configurations.compileOnly
             }
+            test {
+                compileClasspath += configurations.testCompileOnly
+            }
         }
 
         javadoc {
@@ -73,7 +77,7 @@ subprojects { subproj ->
 
         idea {
             module {
-                scopes.PROVIDED.plus += configurations.compileOnly
+                scopes.PROVIDED.plus += configurations.compileOnly + configurations.testCompileOnly
             }
         }
 

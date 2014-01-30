@@ -24,7 +24,7 @@ public class SampleService extends AbstractGriffonService {
         if (isBlank(input)) {
             return messageSource.getMessage("greeting.default");
         } else {
-            return messageSource.getMessage("greeting", asList(input));
+            return messageSource.getMessage("greeting.parameterized", asList(input));
         }
     }
 }

@@ -26,6 +26,7 @@ ext.pomDescription = 'Griffon core'
 
 configurations {
     compileOnly
+    testCompileOnly
 }
 
 dependencies {
@@ -35,4 +36,6 @@ dependencies {
     compile "org.slf4j:slf4j-api:$slf4jVersion"
 
     compileOnly 'mrj:MRJToolkitStubs:1.0'
+
+    testRuntime "org.slf4j:slf4j-simple:$slf4jVersion"
 }

@@ -26,6 +26,7 @@ ext.pomDescription = 'Griffon Shiro Plugin'
 
 configurations {
     compileOnly
+    testCompileOnly
 }
 
 dependencies {
@@ -35,7 +36,7 @@ dependencies {
     compile 'org.apache.shiro:shiro-core:1.2.2'
 
     testCompile project(':griffon-core-test')
-    testCompile project(':griffon-groovy-compile')
+    testCompileOnly project(':griffon-groovy-compile')
 
     testRuntime project(':griffon-guice')
     testRuntime "org.slf4j:slf4j-simple:$slf4jVersion"

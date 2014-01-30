@@ -22,7 +22,10 @@ import spock.lang.Shared
 import spock.lang.Specification
 import spock.lang.Unroll
 
+import javax.annotation.Nonnull
+
 import static griffon.util.ExpandableResourceBundle.wrapResourceBundle
+import static java.util.Arrays.asList
 
 @Unroll
 class ConfigUtilsSpec extends Specification {
@@ -93,5 +96,55 @@ class ConfigUtilsSpec extends Specification {
         expandableResourceBundle | 'key.string' | true
         expandableResourceBundle | 'key.number' | true
         expandableResourceBundle | 'key'        | true
+    }
+
+    def 'Read Java based configuration'() {
+        expect:
+        value == ConfigUtils.getConfigValue(wrapResourceBundle(source), key)
+
+        where:
+        source                 | key                           | value
+        new NestedJavaConfig() | 'application.title'           | 'Swing + Java'
+        new NestedJavaConfig() | 'application.startupGroups'   | ['sample']
+        new NestedJavaConfig() | 'application.autoShutdown'    | true
+        new NestedJavaConfig() | 'mvcGroups.sample.model'      | 'sample.SampleModel'
+        new NestedJavaConfig() | 'mvcGroups.sample.view'       | 'sample.SampleView'
+        new NestedJavaConfig() | 'mvcGroups.sample.controller' | 'sample.SampleController'
+        new FlatJavaConfig()   | 'application.title'           | 'Swing + Java'
+        new FlatJavaConfig()   | 'application.startupGroups'   | ['sample']
+        new FlatJavaConfig()   | 'application.autoShutdown'    | true
+        new FlatJavaConfig()   | 'mvcGroups.sample.model'      | 'sample.SampleModel'
+        new FlatJavaConfig()   | 'mvcGroups.sample.view'       | 'sample.SampleView'
+        new FlatJavaConfig()   | 'mvcGroups.sample.controller' | 'sample.SampleController'
+    }
+}
+
+class NestedJavaConfig extends AbstractMapResourceBundle {
+    @Override
+    protected void initialize(@Nonnull Map<String, Object> entries) {
+        CollectionUtils.map(entries)
+            .e("application", CollectionUtils.map()
+                .e("title", "Swing + Java")
+                .e("startupGroups", asList("sample"))
+                .e("autoShutdown", true))
+            .e("mvcGroups", CollectionUtils.map()
+                .e("sample", CollectionUtils.map()
+                    .e("model", "sample.SampleModel")
+                    .e("view", "sample.SampleView")
+                    .e("controller", "sample.SampleController"))
+            );
+    }
+}
+
+class FlatJavaConfig extends AbstractMapResourceBundle {
+    @Override
+    protected void initialize(@Nonnull Map<String, Object> entries) {
+        CollectionUtils.map(entries)
+            .e("application.title", "Swing + Java")
+            .e("application.startupGroups", asList("sample"))
+            .e("application.autoShutdown", true)
+            .e("mvcGroups.sample.model", "sample.SampleModel")
+            .e("mvcGroups.sample.view", "sample.SampleView")
+            .e("mvcGroups.sample.controller", "sample.SampleController");
     }
 }

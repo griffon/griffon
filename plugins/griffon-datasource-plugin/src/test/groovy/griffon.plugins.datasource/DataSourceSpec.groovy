@@ -62,11 +62,6 @@ class DataSourceSpec extends Specification {
         dataSourceHandler.withConnection { String dataSourceName, DataSource dataSource, Connection connection ->
             dataSourceName == 'default' && dataSource && connection
         }
-
-        where:
-        name       | _
-        'default'  | _
-        'internal' | _
     }
 
     void 'Can connect to #name dataSource'() {
@@ -93,7 +88,7 @@ class DataSourceSpec extends Specification {
         'internal' | _
     }
 
-    void 'Bogus dataSource name results in error'() {
+    void 'Bogus dataSource name (#name) results in error'() {
         when:
         dataSourceHandler.withDataSource(name) { String dataSourceName, DataSource dataSource ->
             true

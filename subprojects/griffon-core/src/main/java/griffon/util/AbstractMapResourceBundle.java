@@ -34,6 +34,7 @@ public abstract class AbstractMapResourceBundle extends ResourceBundle {
     public AbstractMapResourceBundle() {
         initialize(entries);
         keys = collectKeys(entries);
+        // keys = new HashSet<>(entries.keySet());
     }
 
     protected abstract void initialize(@Nonnull Map<String, Object> entries);

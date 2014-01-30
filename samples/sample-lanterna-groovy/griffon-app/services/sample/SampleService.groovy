@@ -10,6 +10,6 @@ import static griffon.util.GriffonNameUtils.isBlank
 class SampleService {
     String sayHello(String input) {
         MessageSource ms = application.messageSource
-        isBlank(input) ? ms.getMessage('greeting.default') : ms.getMessage('greeting', [input])
+        isBlank(input) ? ms.getMessage('greeting.default') : ms.getMessage('greeting.parameterized', [input])
     }
 }

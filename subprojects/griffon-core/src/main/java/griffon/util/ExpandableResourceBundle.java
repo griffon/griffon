@@ -20,6 +20,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.*;
 
+import static griffon.util.ConfigUtils.getConfigValue;
 import static griffon.util.GriffonNameUtils.requireNonBlank;
 import static java.util.Objects.requireNonNull;
 
@@ -42,7 +43,7 @@ public class ExpandableResourceBundle extends ResourceBundle {
     public ExpandableResourceBundle(@Nonnull ResourceBundle delegate) {
         requireNonNull(delegate, "Argument 'delegate' cannot be null");
         for (String key : delegate.keySet()) {
-            Object value = delegate.getObject(key);
+            Object value = getConfigValue(delegate, key);
             processKey(key, entries, value);
             entries.put(key, value);
         }
